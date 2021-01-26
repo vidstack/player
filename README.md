@@ -49,7 +49,7 @@ Vidstack Player is [MIT licensed](./LICENSE).
 [package]: https://www.npmjs.com/package/@vidstack/player
 [package-badge]: https://img.shields.io/npm/v/@vidstack/player/next
 [codecov]: https://codecov.io/gh/vidstack/player
-[codecov-badge]: https://img.shields.io/coveralls/github/vidstack/player
+[codecov-badge]: https://codecov.io/gh/vidstack/player/branch/main/graph/badge.svg?token=0TCCG1EU8I
 [license]: https://github.com/vidstack/player/blob/main/LICENSE
 [license-badge]: https://img.shields.io/github/license/vidstack/player?color=blue
 [semantic-release]: https://github.com/semantic-release/semantic-release
