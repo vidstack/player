@@ -1,0 +1,114 @@
+classDiagram
+
+class YouTube
+class Vimeo
+class Dailymotion
+class Embed
+
+YouTube -- Embed: uses
+Vimeo -- Embed: uses
+Dailymotion -- Embed: uses
+
+class EmbededMediaProvider~ParamsType,MessageType~ {
+    <<abstract>>
+    #embed?: HTMLVmEmbedElement
+    #embedSrc?: string
+
+    getMediaTitle()* string|undefined
+    getOrigin()* string
+    buildParams()* ParamsType
+    getDecoder()* Decoder
+    getPreconnections()*
+    onEmbedLoaded()*
+    onEmbedMessage(CustomEvent~MessageType~ event)*
+    onEmbedSrcChange()*
+}
+
+EmbededMediaProvider <|-- YouTube: extends
+EmbededMediaProvider <|-- Vimeo: extends
+EmbededMediaProvider <|-- Dailymotion: extends
+
+class Video
+class Audio
+class File
+class HLS
+class DASH
+
+class MediaFileProvider {
+    #mediaEl?: HTMLMediaElement
+    +crossOrigin?: true | anonymous | credentials
+    +preload?: true | none | metadata | auto
+    +poster?: string
+    +controlsList?: string
+    +autoPiP?: string
+    +disablePiP?: boolean
+    +disableRemotePlayback?: boolean
+}
+
+File <|-- Audio: extends
+File <|-- Video: extends
+MediaFileProvider <|-- File: extends
+MediaFileProvider <|-- HLS: extends
+MediaFileProvider <|-- DASH: extends
+
+class MediaProvider~InternalPlayerType~ {
+    <<abstract>>
+    #controls: boolean
+    #language: string
+    #playsinline:boolean
+
+    play()* Promise~void~
+    pause()* Promise~void~
+    canPlay(type: string)* void
+    loadMedia(src: Source[])* void
+    getInternalPlayer()* InternalPlayerType
+    getCurrentViewType()* ViewType
+    getCurrentMediaType()* MediaType
+    setCurrentTime(time: number)* void
+    setMuted(muted: boolean)* void
+    setVolume(volume: number)* void
+    canSetPlaybackRate()* boolean
+    setPlaybackRate(rate: number)* void
+    canSetPlaybackQuality()* boolean
+    setPlaybackQuality(quality: string)* void
+    canSetFullscreen()* boolean
+    enterFullscreen(options?: FullscreenOptions)* Promise~void~
+    exitFullscreen()* Promise~void~
+    canSetPiP()* boolean
+    enterPiP()* Promise~void~
+    exitPiP()* Promise~void~
+    setCurrentTextTrack(trackId: number)* void
+    setTextTrackVisibility(isVisible: boolean)* void
+    getMediaTrimming()* MediaTrim|undefined
+    fetchRecommendedAspectRatio()* Promise~string~
+    fetchCurrentPoster()* Promise~string~
+    fetchCurrentMediaTitle()* Promise~string~
+    fetchCurrentMediaDuration()* Promise~number~
+    renderPlayer()* HTMLTemplateString
+    destroy()* void
+    -render() void
+}
+
+MediaProvider <|-- MediaFileProvider
+MediaProvider <|-- EmbededMediaProvider
+
+class MediaType {
+    <<enumeration>>
+    AUDIO
+    VIDEO
+}
+
+class ViewType {
+    <<enumeration>>
+    AUDIO
+    VIDEO
+}
+
+MediaType -- MediaProvider
+ViewType -- MediaProvider
+
+class Player
+
+Player -- MediaType
+Player -- ViewType
+Player "1" --* "0..*" MediaProvider: composition
