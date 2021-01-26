@@ -1,0 +1,33 @@
+name: PR
+
+on: pull_request
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: 14
+
+      - name: Cache Dependencies
+        id: deps
+        uses: actions/cache@v2
+        with:
+          path: './node_modules'
+          key: deps-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Dependencies
+        if: steps.deps.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Test Package
+        run: npm run test
+
+      - name: Build Package
+        run: npm run build

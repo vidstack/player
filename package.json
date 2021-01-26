@@ -56,7 +56,7 @@
     "format": "run-s format:*",
     "format:eslint": "npm run lint:eslint -- --fix",
     "format:prettier": "npm run lint:prettier -- --write",
-    "release": "npx semantic-release --branches next",
+    "release": "npx semantic-release --branches main",
     "test": "wtr \"src/**/*.test.ts\"",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch"
