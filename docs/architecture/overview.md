@@ -1,10 +1,10 @@
-# Vime v6.0
+# Vidstack Player `1.x`
 
 **THIS DOCUMENT IS A WORK IN PROGRESS.**
 
-Vime exists to simplify the process of integrating media with a custom player into a web application.
-The main benefits are that it provides a unified API across multiple providers, and the foundational
-components required to easily build and design the player interface.
+Vidstack Player exists to simplify the process of integrating media with a custom player into a 
+web application. The main benefits are that it provides a unified API across multiple providers, 
+and the foundational components required to easily build and design the player interface.
 
 ## Design Goals
 
@@ -25,8 +25,8 @@ components required to easily build and design the player interface.
 - **Accessible.** Anyone should be able to use the player at its utmost potential, regardless of
   any external factors such as disabilities or network connection.
 - **Universal.** The player should be able to be rendered on both the client-side (CSR) and
-  server-side (SSR), and it should be integrable with any frontend stack/framework.
-- **Responsive.** The player should function appropriately across all devices and screen sizes.
+  server-side (SSR), integrable with any frontend stack/framework, and function appropriately 
+  across all devices/screens.
 - **Modern.** The player should be built for the modern web and avoid bloated polyfills and outdated
   environments as much as possible. This only leads to technical bloat and time wasted. It will not
   support older browsers and will only target modern evergreen browsers that fully implement the
@@ -34,18 +34,8 @@ components required to easily build and design the player interface.
 - **Testable.** All aspects of the player should be built with testability in mind. A comprehensive
   set of tests covering unit, visual, visual regression and integration are required to minimize bugs
   and regressions.
-- **Syncable.** Video players operate in sync to a certain degree. Changes to one player's
-  volume or muted state might propagate to a stored user preference or to the state of other players
-  on the current page (and possibly subsequent pages). The playback position of a video might need to
-  be maintained as the user transitions from a listing view to a detail view containing the same video.
-  The play event of one video might trigger pause of any other actively playing video. Vime does not
-  need to provide/include a manager, but it should be designed with one in mind: an ancestral component
-  that can monitor events and access an imperative API of registered playback components. This may/may
-  not require a registration phase upon connection. DOM traversal may not be sufficient means of
-  discovery as players could be removed and returned from the DOM in certain UIs, such as an
-  infinite scroll.
-
-### Why v6?
+  
+### What's changing from Vime `5.x`?
 
 - **Get Lit 🔥.** Prefer a lightweight alternative to Stencil such as LitElement to:
   - Avoid heavy compilation/transpilation steps and processes.
@@ -67,7 +57,7 @@ components required to easily build and design the player interface.
 - Rethink integration packages and focus on a strong foundation, considering only what's
   necessary. The web has evolved and most modern frameworks completely support web components.
 - Currently there is no way to tell whether an event was initiated by the provider
-  or user. To enable devs to build out features like analytics on top of Vime we'll need to
+  or user. To enable devs to build out features like analytics on top of the player we'll need to
   improve/expand the events API, and clearly differentiate between provider/user initiated events.
 
 ## Project Structure
@@ -97,37 +87,42 @@ The following references have been used in determining an adequate project struc
 
 ### Packaging
 
-The library will be bundled and released as a single package under the `vime` package name. We have
-contemplated releasing all packages under their own namespace such as `vime/player`, `vime/youtube`,
-or `vime/mute-toggle` but there seems to be no inherit value of doing so as no use-case has been
-identified for multiple NPM packages yet. Furthermore, there's no way to split the library in any
-meaningful way as all components are bound to the player component in one way or another. Splitting
-the library into multiple packages will only add more noise to the build/release process.
+The library will be bundled and released as a single package under the `@vidstack/player` package 
+name. We have contemplated releasing all packages under their own namespace such as 
+`@vidstack/player`, `@vidstack/youtube`, or `@vidstack/mute-toggle` but there seems to be no 
+inherit value of doing so as no use-case has been identified for multiple NPM packages yet. 
+Furthermore, there's no way to split the library in any meaningful way as all components are bound 
+to the player component in one way or another. Splitting the library into multiple packages will 
+only add more noise to the build/release process.
 
 Here's a few examples of how modules can be imported:
 
-- `import 'vime/bundle/elements'` → This will import all components provided by Vime and register
-  them in the `Window` custom elements registry.
-- `import { Player, MuteToggle } from 'vime/bundle'` → This will import entities without registering
-  them in the custom elements registry.
-- `import 'vime/core/player/vm-player'` → This will import only the player component and register it.
-- `import 'vime/skins/default/vm-default'` → This will import only the default UI skin and register it.
+- `import '@vidstack/player/bundle/elements'` → This will import all components and register
+them in the `Window` custom elements registry.
+- `import { Player, MuteToggle } from '@vidstack/player/bundle'` → This will import entities without 
+registering them in the custom elements registry.
+- `import '@vidstack/player/core/vds-player'` → This will import only the player component and 
+register it.
+- `import '@vidstack/player/skins/default/vds-default'` → This will import only the default UI skin 
+and register it.
 
-These import paths are made possible thanks to the [exports](https://nodejs.org/api/packages.html#packages_exports)
-field in `package.json` . This field is available in Node 12+ and allows defining entry points of a
-package when imported by name, loaded either via a `node_modules` lookup or a self-reference to its
-own name. This means instead of `vime/dist/bundle` we can import via `vime/bundle` .
+These import paths are made possible thanks to the [exports][node-exports] field in `package.json`. 
+This field is available in Node 12+ and allows defining entry points of a package when imported by 
+name, loaded either via a `node_modules` lookup or a self-reference to its own name. This means 
+instead of `@vidstack/player/dist/bundle` we can import via `@vidstack/player/bundle` .
 
-Furthermore, [conditional exports](https://nodejs.org/api/packages.html#packages_conditional_exports)
-will enable multiple entry points depending on certain conditions, such as providing different ES
-module exports for `require` and `import` . This is primarily useful for providing SSR friendly
-bundles.
+Furthermore, [conditional exports][node-conditional-exports] will enable multiple entry points 
+depending on certain conditions, such as providing different ES module exports for `require` 
+and `import` . This is primarily useful for providing SSR friendly bundles.
+
+[node-exports]: https://nodejs.org/api/packages.html#packages_exports
+[node-conditional-exports]: https://nodejs.org/api/packages.html#packages_conditional_exports
 
 ### Component Anatomy
 
 - _{component-name}_
   - index.ts
-  - vm-_{component-name}_.ts
+  - vds-_{component-name}_.ts
   - _{component-name}_.stories.ts
   - _{component-name}_.styles.ts
   - test

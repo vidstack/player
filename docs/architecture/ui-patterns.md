@@ -8,7 +8,7 @@ For example, a `ToggleMuteControl` will only contain the logic for toggling the 
 player, and handling ARIA attributes on the button.
 
 Functional components are made possible thanks to the `<slot />` element and CSS classes. Following
-the `ToggleMuteControl` example, it may apply classes such as `vmPressed` or `vmFocused` to
+the `ToggleMuteControl` example, it may apply classes such as `vdsPressed` or `vdsFocused` to
 the root element in the light DOM so you can purely style your component with HTML/CSS only.
 
 ### Multiple States
@@ -16,7 +16,7 @@ the root element in the light DOM so you can purely style your component with HT
 If a functional component contains logic for multiple states then multiple `<slot />` elements can
 be used. For example, a Toggle might have a `on` and `off` state which would translate to
 `<slot name="on" />` and `<slot name="off" />`. Both slots should be rendered to enable
-the consumer to style transitions between states. The toggle could apply the `vmHidden` CSS
+the consumer to style transitions between states. The toggle could apply the `vdsHidden` CSS
 class to the root light DOM element in either the `on` or `off` slot depending on which should
 be currently visible.
 
@@ -25,7 +25,7 @@ be currently visible.
 A component may be styled based on some dynamic value. For example, styling a Scrubber
 might require a `background-fill` based on the % of the video that's played. This can be
 solved with [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*). In this
-case a `--vm-played-percent` property could be exposed to enable the consumer to achieve the
+case a `--vds-played-percent` property could be exposed to enable the consumer to achieve the
 styling they desire.
 
 ## Listening to events on the Player

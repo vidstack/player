@@ -16,7 +16,7 @@
     "custom-elements.json"
   ],
   "sideEffects": [
-    "./dist/**/vm-*.ts",
+    "./dist/**/vds-*.ts",
     "./dist/bundle/elements.js"
   ],
   "exports": {
