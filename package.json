@@ -81,9 +81,12 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-lit": "^1.3.0",
     "eslint-plugin-wc": "^1.2.0",
+    "husky": "^4.3.8",
+    "lint-staged": "^10.5.3",
     "lit-analyzer": "^1.2.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
     "rimraf": "^3.0.2",
     "sinon": "^9.2.1",
     "typescript": "^4.0.2"
@@ -92,6 +95,15 @@
     "singleQuote": true,
     "trailingComma": "all",
     "arrowParens": "avoid"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": "eslint --cache --fix",
+    "*": "prettier --write"
   },
   "publishConfig": {
     "tag": "next",
