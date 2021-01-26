@@ -1,0 +1,28 @@
+{
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "env": {
+    "browser": true
+  },
+  "extends": [
+    "airbnb-typescript/base",
+    "plugin:wc/recommended",
+    "plugin:lit/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "no-console": "off",
+    "no-underscore-dangle": "off",
+    "default-case": "off",
+    "class-methods-use-this": "off",
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
+    "@typescript-eslint/no-unused-expressions": "off"
+  }
+}

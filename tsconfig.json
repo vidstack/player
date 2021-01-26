@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "strict": true,
+    "esModuleInterop": true,
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "lib": ["ES2017", "DOM", "DOM.Iterable"],
+    "moduleResolution": "node",
+    "module": "ES6",
+    "target": "ES2017"
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules/**"]
+}
