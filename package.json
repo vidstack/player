@@ -6,8 +6,8 @@
   "engines": {
     "node": ">=14"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/bundle/index.js",
+  "module": "dist/bundle/index.js",
   "type": "module",
   "types": "@types/",
   "files": [
@@ -20,7 +20,7 @@
     "./dist/bundle/elements.js"
   ],
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./dist/bundle/index.js",
     "./bundle": "./dist/bundle/",
     "./core": "./dist/core/",
     "./providers": "./dist/providers/",
