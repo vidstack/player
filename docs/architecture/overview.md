@@ -210,7 +210,7 @@ picture could be a little different...
 
 **Solution**
 
-This is still a WIP and but it might require using [LitElement 3.0 and LitHTML 2.0][lit-3].
+This is still a **WIP** and but it might require using [LitElement 3.0 and LitHTML 2.0][lit-3].
 
 [lit-3]: https://www.polymer-project.org/blog/2020-09-22-lit-element-and-lit-html-next-preview
 [lit-ssr-quarter]: https://twitter.com/justinfagnani/status/1088218448570785797
@@ -221,15 +221,44 @@ This is still a WIP and but it might require using [LitElement 3.0 and LitHTML 2
 
 ### Internationalization (i18n)
 
-**WIP**
-
-[Shaka Player - Talking About Language](https://github.com/google/shaka-player/blob/master/docs/design/talking-about-languages.md)
+Due to the core UI being functional components that don't contain any styling or text, i18n 
+will become the responsibility of [skins](#skins) and potentially media providers.
 
 ### Skins
 
-**WIP**
+A Skin is an amalgamation of UI components, icons and themes to create an out of the box style/s
+for the player. As noted, UI components will be naked functional components. For example, 
+a `MuteToggle` will handle setting ARIA attributes and updating the muted state of the 
+player when pressed, but no true structure/styling. Therefore, these components can be used to 
+build out multiple skins.
 
-Icons + Themes.
+**Icons**
+
+A Skin can also include a set or multiple sets of icons which can then be loaded locally or from 
+a CORS-enabled endpoint (eg: CDN). Icons should be placed in the `icons/` directory inside the 
+root of the skin directory such as `*/skins/default-skin/icons/{icon-name}.svg`.
+
+See the [`IconLibrary`][vime-icon-lib] component in Vime `5.x` as an example of how icons will be 
+loaded and used throughout the player.
+
+[vime-icon-lib]: https://github.com/vime-js/vime/tree/master/core/src/components/ui/icon-library
+
+**Themes**
+
+A Skin can use [CSS Custom Properties][css-props] to enable personalization/customization. A 
+set of default looks/styles for the skin can be included as a theme, which is a `.css` file 
+that contains preset values for the available CSS properties of that skin. Themes should be placed 
+in the `themes/` directory inside the root of the skin directory such as 
+`*/skins/default-skin/themes/{theme-name}.css`.
+
+[css-props]: https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+
+**i18n**
+
+This is a **WIP** as all skins will generally include some text that should be localized. A
+`I18N` component could be created and subclassed by a skin which generally includes a 
+`translations` map and `language` key. Potentially a `lang/` directory could be created at the 
+root of skin directory to make multiple locales available out of the box.
 
 ### Build
 
