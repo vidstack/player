@@ -262,14 +262,25 @@ root of skin directory to make multiple locales available out of the box.
 
 ### Testing
 
-**WIP**
+- Unit tests using [Web Test Runner][web-test-runner] and their [helper package][open-wc-test-helper].
+- Manually interacting with and testing components in the browser using [Storybook][storybook].
+- Integration tests using [Cypress][cypress] on installing the package, importing components 
+and using them in different environments (eg: web/ssr/react/next).
+- Benchmark testing using [Tachometer][tachometer] to measure any important timings such as 
+first-contentful-paint, time-to-player-interactable, time-to-first-frame etc.
+- Visual regression testing on skins/providers using [Pixelmatch][pixelmatch] 
+and [CI Artifacts][ci-artifacts].
+- Manually testing the player across different browsers/versions 
+using [BrowserStack][browser-stack]. This is mainly useful for debugging issues.
 
-- Benchmark - [Tachometer](https://github.com/Polymer/tachometer)
-- Visual Manual - [Storybook](https://storybook.js.org/)
-- Visual Regression - [Pixelmatch](https://github.com/mapbox/pixelmatch) / [CI Artifacts](https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts)
-- Unit - Open WC [Test Runner](https://open-wc.org/guides/developing-components/testing/#web-test-runner) and [Helper Package](https://open-wc.org/docs/testing/testing-package/)
-- Integration - [Cypress](https://www.cypress.io/)?
-- [Browser Stack](https://www.browserstack.com/)?
+[tachometer]:https://github.com/Polymer/tachometer
+[storybook]:https://storybook.js.org
+[pixelmatch]: https://github.com/mapbox/pixelmatch
+[ci-artifacts]:https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
+[web-test-runner]:https://open-wc.org/guides/developing-components/testing/#web-test-runner
+[open-wc-test-helper]: https://open-wc.org/docs/testing/testing-package/
+[cypress]:https://www.cypress.io
+[browser-stack]:https://www.browserstack.com
 
 ### Publish
 
