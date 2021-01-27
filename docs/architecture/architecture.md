@@ -57,16 +57,16 @@ otherwise it'll default to `<slot name="loading" />`.
 
 **WIP**
 
-Video players operate in sync to a certain degree. Changes to one player's volume or muted state 
-might propagate to a stored user preference or to the state of other players on the current page 
-(and possibly subsequent pages). The playback position of a video might need to be maintained as the 
-user transitions from a listing view to a detail view containing the same video. The play event of 
+Video players operate in sync to a certain degree. Changes to one player's volume or muted state
+might propagate to a stored user preference or to the state of other players on the current page
+(and possibly subsequent pages). The playback position of a video might need to be maintained as the
+user transitions from a listing view to a detail view containing the same video. The play event of
 one video might trigger pause of any other actively playing video.
 
-The player does not need to provide/include a manager, but it should be designed with one in mind: an 
-ancestral component that can monitor events and access an imperative API of registered playback 
-components. This may/may not require a registration phase upon connection. DOM traversal may not be 
-sufficient means of discovery as players could be removed and returned from the DOM in certain UIs, 
+The player does not need to provide/include a manager, but it should be designed with one in mind: an
+ancestral component that can monitor events and access an imperative API of registered playback
+components. This may/may not require a registration phase upon connection. DOM traversal may not be
+sufficient means of discovery as players could be removed and returned from the DOM in certain UIs,
 such as an infinite scroll.
 
 ## Media Sync
