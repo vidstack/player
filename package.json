@@ -109,5 +109,29 @@
   "publishConfig": {
     "tag": "next",
     "access": "public"
-  }
+  },
+  "keywords": [
+    "vidstack",
+    "player",
+    "plyr",
+    "vime",
+    "youtube",
+    "vimeo",
+    "dailymotion",
+    "hls",
+    "dash",
+    "file",
+    "html5",
+    "video",
+    "audio",
+    "react",
+    "customizable",
+    "extensible",
+    "accessible",
+    "universal",
+    "lit",
+    "lit-element",
+    "web components",
+    "framework agnostic"
+  ]
 }
