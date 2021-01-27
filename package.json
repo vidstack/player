@@ -11,6 +11,7 @@
   "type": "module",
   "types": "@types/",
   "files": [
+    "src/",
     "dist/",
     "@types/",
     "custom-elements.json"
