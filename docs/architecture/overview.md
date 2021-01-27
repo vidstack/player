@@ -139,11 +139,50 @@ See [ui-patterns.md](./ui-patterns.md).
 
 ### Framework Integrations
 
-**WIP**
+To help our adoptors to test and integrate the player we'll support React due to it's popularity 
+and lack of support for custom web components. This will hopefully be near the tail end of the 
+the `1.0` release. Other frameworks are not considered at this time to reduce maintanence costs, 
+and the web has evolved so most of them already [support custom elements][custom-el-everywhere]. 
+Hopefully it can become a community driven effort to support more frameworks such as Angular, Vue 
+and Svelte.
 
-React only due to poor web component support?
+React requires the following support for non-intrinsic elements:
 
-Reference: [createReactCustomElementType.ts](https://github.com/carbon-design-system/carbon-web-components/blob/master/src/globals/wrappers/createReactCustomElementType.ts)
+- Element attributes mapping to non-string element property values (e.g. Boolean attributes).
+- React props mapping to element props instead of element attributes.
+- Handling custom events.
+
+**How?**
+
+Most likely by parsing component files for `@property()` and `@event()` decorators or using a 
+[custom elements manifest][custom-el-manifest] generator, and then using this information 
+to automatically generate React wrappers that will be located in `dist/react` and imported 
+as regular React components such as `import { Player } from '@vidstack/player/react'`.
+
+We could also consider adding stories for React integrations so we can test them and showcase 
+their usage.
+
+**SSR?**
+
+As web components at this time don't support SSR, and `lit-element` and `lit-html` 
+don't have CJS exports we'll need to create a SSR friendly bundle for React. The 
+components in this bundle will simply render elements in the DOM with the correct attributes and be 
+exported via CJS. This can be located at `dist/react-ssr`. See this [example][carbon-react-ssr] 
+from Carbon Web Components.
+
+Conditional exports in Node can be used to require the correct files when importing them 
+server-side vs. client-side.
+
+**References**
+
+- [`createReactCustomElementType.ts`][create-react-el]
+- [Carbon React Support PR][carbon-react-support]
+
+[custom-el-manifest]: https://github.com/webcomponents/custom-elements-manifest
+[carbon-react-support]: https://github.com/carbon-design-system/carbon-for-ibm-dotcom/pull/3475
+[custom-el-everywhere]: https://custom-elements-everywhere.com
+[create-react-el]:https://github.com/carbon-design-system/carbon-web-components/blob/master/src/globals/wrappers/createReactCustomElementType.ts
+[carbon-react-ssr]: https://cdn.jsdelivr.net/npm/carbon-web-components@1.11.1/lib/components-react-node/button/button.js
 
 ### SSR
 

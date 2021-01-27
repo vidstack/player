@@ -35,35 +35,7 @@ dispatched on the `Player`. For example, there might be options on a `PlaybackCo
 its state when certain keys are pressed. Thus, an event listener needs to be setup on the player
 to listen to the `keydown` event.
 
-To cater for this need a `listen` context is created that can be consumed by components lower in
-the Player subtree.
-
-```ts
-import createContext, { Context } from '@wcom/context';
-
-type StopListeningToEvent = (() => void);
-
-type EventListener = <T extends keyof HTMLElementEventMap>(
-  type: T,
-  handler: (event: HTMLElementEventMap[T]) => void,
-  options?:  boolean | AddEventListenerOptions | EventListenerOptions,
-): StopListeningToEvent;
-
-interface PlayerContext {
-  // ...
-  listen: Context<EventListener>;
-}
-
-export const playerContext: PlayerContext = {
-  // ...
-  listen: createContext((type, handler, options) => {
-    // Dispatch event the player can listen for to attach event listener.
-    return () => {
-      // Dispatch event the player can listen for to remove event listener.
-    };
-  });
-}
-```
+**WIP**
 
 ## Component Communication
 
@@ -76,10 +48,6 @@ There are cases where isolated components need to be aware/communciate with each
 - Settings needs to be aware of any controller that will be used to open/close it.
 
 **Potential Solutions**
-
-- **Context.** 
-
-- **Modules.**
 
 - Add ability to attach new context to the player.
 - Use something similar to a service/observable (https://stackoverflow.com/a/39973879). Means
