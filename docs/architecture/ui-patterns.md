@@ -8,7 +8,7 @@ For example, a `ToggleMuteControl` will only contain the logic for toggling the 
 player, and handling ARIA attributes on the button.
 
 Functional components are made possible thanks to the `<slot />` element and CSS classes. Following
-the `ToggleMuteControl` example, it may apply classes such as `vdsPressed` or `vdsFocused` to
+the `ToggleMuteControl` example, it may apply classes such as `vds-pressed` or `vds-focused` to
 the root element in the light DOM so you can purely style your component with HTML/CSS only.
 
 ### Multiple States
@@ -16,7 +16,7 @@ the root element in the light DOM so you can purely style your component with HT
 If a functional component contains logic for multiple states then multiple `<slot />` elements can
 be used. For example, a Toggle might have a `on` and `off` state which would translate to
 `<slot name="on" />` and `<slot name="off" />`. Both slots should be rendered to enable
-the consumer to style transitions between states. The toggle could apply the `vdsHidden` CSS
+the consumer to style transitions between states. The toggle could apply the `vds-hidden` CSS
 class to the root light DOM element in either the `on` or `off` slot depending on which should
 be currently visible.
 
@@ -49,12 +49,8 @@ There are cases where isolated components need to be aware/communciate with each
 
 **Potential Solutions**
 
-- Add ability to attach new context to the player.
-- Use something similar to a service/observable (https://stackoverflow.com/a/39973879). Means
-  these will need to be predefined on the player or the ability to add custom context from lower
-  in tree is made possible.
-- Use the `playerEventListener` context as a way to communicate (issue: might have missed events as
-  elements are attached to DOM at different times).
+- Use seperate event bus with something like [Mitt](https://www.npmjs.com/package/mitt).
+- Use something similar to a [service/observable](https://stackoverflow.com/a/39973879) with context.
 - Use modules as used in v5 (issue: easily leaks to other player instances as the scope is shared so
   it might be useful where that's desired such as an IconRegistry):
   - [IconRegistry](https://github.com/vime-js/vime/blob/master/core/src/components/ui/icon-library/IconRegistry.ts)
