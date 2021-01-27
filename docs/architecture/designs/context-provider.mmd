@@ -1,0 +1,26 @@
+classDiagram
+
+class PlayerState
+
+class PlayerContext {
+    <<object>>
+    paused: Context<boolean>
+    currentTime: Context<number>
+    volume: Context<number>
+    ...
+}
+
+class ContextProvider {
+    <<library>>
+}
+
+PlayerContext --> ContextProvider: uses
+PlayerContext --> PlayerState: implements
+
+class Player
+
+Player --> PlayerContext: provides
+
+class UIComponent
+
+UIComponent --> PlayerContext: consumes

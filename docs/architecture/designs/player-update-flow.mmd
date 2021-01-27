@@ -1,0 +1,25 @@
+sequenceDiagram
+    alt Provider Update
+        rect rgb(0, 255, 0, .1)
+        Provider -->> Player: ProviderPlay Event
+        Player ->> PlayerContext: Update
+        PlayerContext -->> UI: ContextUpdate
+        end
+    else UI Update
+        rect rgba(0, 0, 255, .1)
+        UI -->> Player: UIPlay Event
+        Player ->> Provider: setPaused(false)
+        Provider -->> Player: ProviderPlay Event
+        Player ->> PlayerContext: Update
+        PlayerContext -->> UI: ContextUpdate
+        end
+    else Consumer Update
+        rect rgba(255, 0, 0, .1)
+        Consumer ->> Player: player.paused = false
+        Player ->> Player: paused setter triggered
+        Player ->> Provider: setPaused(false)
+        Provider -->> Player: ProviderPlay Event
+        Player ->> PlayerContext: Update
+        PlayerContext -->> UI: ContextUpdate
+        end
+    end

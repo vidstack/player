@@ -1,0 +1,50 @@
+classDiagram
+
+class Player {
+    +identifer: symbol
+    +src: Source[]
+    +paused: boolean
+    +volume: number
+    ...
+    +autoAspectRatio: boolean
+    +autoFetchPoster: boolean
+    +heartbeatInterval: number
+    +currentProvider?: MediaProvider~any~
+    #playerStore: PlayerStore
+
+    #handleMediaChange() void
+    #handleProviderChange() void
+    +play() Promise~void~ 
+    +pause() Promise~void~ 
+    +getCaptureStream() MediaStream|undefined
+    +getCurrentPlayerState() PlayerState
+}
+
+Player -- ViewType
+Player -- MediaType
+Player "1" --* "0..*" MediaProvider: composition
+
+class PlayerContext
+Player --> PlayerContext: has
+
+class PlayerState {
+    <<interface>>
+    src: Source[]
+    currentTime: number
+    volume: number
+    trim?: MediaTrim
+    inViewport: boolean
+    ...
+}
+
+Player --> PlayerState: implements
+PlayerContext --> PlayerState: implements
+
+class MediaTrim {
+    <<interface>>
+    startTime: number
+    endTime: number
+    duration: number
+}
+
+PlayerState -- MediaTrim

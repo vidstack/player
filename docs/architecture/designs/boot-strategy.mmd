@@ -1,0 +1,32 @@
+classDiagram
+
+class Player {
+    ...
+    +bootStrategy: click | lazy | immediate | BootStrategy
+}
+
+class Bootable {
+    <<interface>>
+    bootTarget: HTMLElement
+    boot() Promise~void~
+}
+
+Player --> Bootable: implements
+
+class BootStrategy~T extends Bootable~ {
+    <<interface>>
+    hasBooted: boolean
+    register(bootable: Bootable) Promise~void~
+    renderWhileBooting() TemplateResult
+}
+
+class LazyBootStrategy
+class ClickBootStrategy
+class ImmediateBootStrategy
+
+BootStrategy <-- LazyBootStrategy: implements
+BootStrategy <-- ClickBootStrategy: implements
+BootStrategy <-- ImmediateBootStrategy: implements
+BootStrategy --> Bootable
+
+Player -- BootStrategy: use
