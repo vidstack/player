@@ -186,17 +186,38 @@ server-side vs. client-side.
 
 ### SSR
 
-**WIP**
+There are many reasons/advantages as to why someone might decide to render content server-side, 
+this [article][goog-rendering-web] by Google deep dives into rendering on the web.
 
-SSR support might be coming to [Lit this quarter](https://twitter.com/justinfagnani/status/1088218448570785797).
-
-[lit-ssr repo](https://github.com/PolymerLabs/lit-ssr)
+At this time web components are not SSR friendly because: 
 
 > Rendering web components on the server is not possible because there is no way to declaratively
 > represent shadow roots and their content in HTML — or to attach them to a host — without executing
 > imperative JavaScript on the client.
 
-That's where this comes in -> [Declarative Shadow DOM](https://web.dev/declarative-shadow-dom/).
+and...
+
+> Historically, it has been difficult to use Shadow DOM in combination with Server-Side Rendering 
+> because there was no built-in way to express Shadow Roots in the server-generated HTML. There are 
+> also performance implications when attaching Shadow Roots to DOM elements that have already been 
+> rendered without them. This can cause layout shifting after the page has loaded, or temporarily 
+> show a flash of unstyled content ("FOUC") while loading the Shadow Root's stylesheets.
+
+However, [Declarative Shadow DOM][declarative-shadow-dom] removes these limitations and is coming 
+in Chrome 88 with a simple [polyfill][declarative-shadow-dom-polyfill] also available. Thus, 
+an SSR friendly bundle is possible now when using raw web-components but with LitElement the 
+picture could be a little different...
+
+**Solution**
+
+This is still a WIP and but it might require using [LitElement 3.0 and LitHTML 2.0][lit-3].
+
+[lit-3]: https://www.polymer-project.org/blog/2020-09-22-lit-element-and-lit-html-next-preview
+[lit-ssr-quarter]: https://twitter.com/justinfagnani/status/1088218448570785797
+[lit-ssr-repo]: https://github.com/PolymerLabs/lit-ssr
+[declarative-shadow-dom]: https://web.dev/declarative-shadow-dom/
+[declarative-shadow-dom-polyfill]: https://web.dev/declarative-shadow-dom/#polyfill
+[goog-rendering-web]: https://developers.google.com/web/updates/2019/02/rendering-on-the-web#wrapup
 
 ### Internationalization (i18n)
 
