@@ -104,7 +104,7 @@
   },
   "lint-staged": {
     "*.ts": "eslint --cache --fix",
-    "*": "prettier --write"
+    "*.{ts,md,json}": "prettier --write"
   },
   "publishConfig": {
     "tag": "next",

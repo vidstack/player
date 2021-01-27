@@ -30,7 +30,7 @@ speed-measure-plugin*.json
 /bazel-out
 /.pnp
 .pnp.js
-.eslintcache/
+.eslintcache
 .nyc_output/
 .idea/
 .vscode/
