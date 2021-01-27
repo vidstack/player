@@ -260,12 +260,6 @@ This is a **WIP** as all skins will generally include some text that should be l
 `translations` map and `language` key. Potentially a `lang/` directory could be created at the 
 root of skin directory to make multiple locales available out of the box.
 
-### Build
-
-**WIP**
-
-[GitPod](https://www.gitpod.io/) for contributors.
-
 ### Testing
 
 **WIP**
@@ -276,6 +270,17 @@ root of skin directory to make multiple locales available out of the box.
 - Unit - Open WC [Test Runner](https://open-wc.org/guides/developing-components/testing/#web-test-runner) and [Helper Package](https://open-wc.org/docs/testing/testing-package/)
 - Integration - [Cypress](https://www.cypress.io/)?
 - [Browser Stack](https://www.browserstack.com/)?
+
+### Publish
+
+✅ Follow Open WC [recommendations on publishing][open-wc-publish].
+
+This project doesn't require any special build tools or preprocessors outside of 
+TypeScript. The code is bundled as an ESM module targeting ECMAScript version `ESNext`. The 
+general concept is that building is an [application-level concern][open-wc-app-level-concern].
+
+[open-wc-publish]: https://open-wc.org/guides/developing-components/publishing
+[open-wc-app-level-concern]: https://open-wc.org/guides/developing-components/publishing/#general-concept-building-is-an-application-level-concern
 
 ### Documentation
 
