@@ -318,4 +318,15 @@ environments/stacks.
 
 ### Release
 
-**WIP**
+The library is [semantically-released][semantic-release] so version management and package 
+publishing are fully automated and performed by the CI.
+
+Releases will happen on a fixed time-schedule (every 1-2 weeks). Changes are batched on the `main` 
+branch and merged into the `release` branch when it's time for a new release. CI will be setup to 
+trigger a release workflow on this branch. Once the package is published, any changes 
+(Changelog etc.) will need to be merged back into the `main` branch.
+
+In addition, CI will automatically release the latest changes for preview as they are merged 
+into the `main` branch. These changes will be published to NPM under the `next` dist-tag.
+
+[semantic-release]: https://github.com/semantic-release/semantic-release
