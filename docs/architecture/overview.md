@@ -295,13 +295,26 @@ general concept is that building is an [application-level concern][open-wc-app-l
 
 ### Documentation
 
-**WIP**
+Early on in alpha documentation can be auto-generated from the 
+[custom elements manifest][custom-el-manifest] and hosted with [GitHub Pages][gh-pages].
+
+Documentation for `1.0` is a **WIP** and still needs to be planned out.
+
+[gh-pages]: https://pages.github.com
 
 ### Examples
 
-**WIP**
+An `examples` directory will be present at the root of player repository and hosted on 
+[StackBlitz][stackblitz] to: 
 
-- [Stackblitz](https://stackblitz.com/)
+- Showcase how to install and setup the library with different frameworks/libraries.
+- Enable developers to play with and trial the library.
+- Debug the player in different environments.
+- Provide error reproductions for issues/tickets.
+- Run integration tests locally to ensure the library consistently works across different 
+environments/stacks.
+
+[stackblitz]:https://stackblitz.com
 
 ### Release
 
