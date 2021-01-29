@@ -6,41 +6,23 @@
   "engines": {
     "node": ">=14"
   },
-  "main": "dist/bundle/index.js",
-  "module": "dist/bundle/index.js",
+  "main": "bundle/index.js",
+  "module": "bundle/index.js",
   "type": "module",
-  "types": "@types/",
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./@types/*"
-      ]
-    }
-  },
   "files": [
     "src/",
-    "dist/",
-    "@types/",
+    "bundle/",
+    "core/",
+    "providers/",
+    "skins/",
+    "ui/",
+    "utils/",
     "custom-elements.json"
   ],
   "sideEffects": [
-    "./dist/**/vds-*.ts",
-    "./dist/bundle/elements.js"
+    "**/vds-*.ts",
+    "bundle/elements.js"
   ],
-  "exports": {
-    ".": "./dist/bundle/index.js",
-    "./bundle": "./dist/bundle/",
-    "./core": "./dist/core/",
-    "./providers": "./dist/providers/",
-    "./skins": "./dist/skins/",
-    "./ui": "./dist/ui/",
-    "./controls": "./dist/ui/controls/",
-    "./menu": "./dist/ui/menu/",
-    "./settings": "./dist/ui/settings/",
-    "./time": "./dist/ui/time/",
-    "./package.json": "./package.json",
-    "./custom-elements.json": "./custom-elements.json"
-  },
   "contributors": [
     "Dave Furfero <furf@furf.com>",
     "Rahim Alwer <rahim_alwer@outlook.com>",
@@ -55,9 +37,9 @@
   },
   "scripts": {
     "build": "run-s clean build:esm",
-    "build:esm": "tsc -m es6 --outDir dist -p tsconfig-build.json",
+    "build:esm": "tsc -p tsconfig-build.json",
     "build:watch": "npm run build:esm -- -w",
-    "clean": "rimraf dist && rimraf @types",
+    "clean": "rimraf bundle core providers skins ui utils",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts --quiet . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",

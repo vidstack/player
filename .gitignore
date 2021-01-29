@@ -1,6 +1,20 @@
 dist/
 @types/
 
+bundle/
+core/
+providers/
+skins/
+ui/
+utils/
+
+!src/bundle/
+!src/core/
+!src/providers/
+!src/skins/
+!src/ui/
+!src/utils/
+
 *~
 *.sw[mnpcod]
 *.log
