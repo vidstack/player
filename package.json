@@ -10,6 +10,13 @@
   "module": "dist/bundle/index.js",
   "type": "module",
   "types": "@types/",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./@types/*"
+      ]
+    }
+  },
   "files": [
     "src/",
     "dist/",
