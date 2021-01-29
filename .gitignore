@@ -1,19 +1,12 @@
 dist/
 @types/
 
-bundle/
-core/
-providers/
-skins/
-ui/
-utils/
-
-!src/bundle/
-!src/core/
-!src/providers/
-!src/skins/
-!src/ui/
-!src/utils/
+/bundle/
+/core/
+/providers/
+/skins/
+/ui/
+/utils/
 
 *~
 *.sw[mnpcod]
