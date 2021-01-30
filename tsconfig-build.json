@@ -8,5 +8,10 @@
     "outDir": "."
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts", "node_modules/**", "web_modules/**"]
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.stories.ts",
+    "node_modules/**",
+    "web_modules/**"
+  ]
 }
