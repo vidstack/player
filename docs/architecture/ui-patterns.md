@@ -27,31 +27,3 @@ might require a `background-fill` based on the % of the video that's played. Thi
 solved with [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*). In this
 case a `--vds-played-percent` property could be exposed to enable the consumer to achieve the
 styling they desire.
-
-## Listening to events on the Player
-
-It's common for some lower level component in the Player subtree wanting to listen to events
-dispatched on the `Player`. For example, there might be options on a `PlaybackControl` to toggle
-its state when certain keys are pressed. Thus, an event listener needs to be setup on the player
-to listen to the `keydown` event.
-
-**WIP**
-
-## Component Communication
-
-There are cases where isolated components need to be aware/communciate with each other.
-
-**Examples:**
-
-- Controls needs to be aware of components such as captions/settings to implement collision detection.
-- IconLibrary needs to be aware of icons so when the icon library changes all icons can be redrawn.
-- Settings needs to be aware of any controller that will be used to open/close it.
-
-**Potential Solutions**
-
-- Use seperate event bus with something like [Mitt](https://www.npmjs.com/package/mitt).
-- Use something similar to a [service/observable](https://stackoverflow.com/a/39973879) with context.
-- Use modules as used in v5 (issue: easily leaks to other player instances as the scope is shared so
-  it might be useful where that's desired such as an IconRegistry):
-  - [IconRegistry](https://github.com/vime-js/vime/blob/master/core/src/components/ui/icon-library/IconRegistry.ts)
-  - [withControlsCollisionDetection](https://github.com/vime-js/vime/blob/master/core/src/components/ui/controls/controls/withControlsCollisionDetection.ts)
