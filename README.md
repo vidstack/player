@@ -20,7 +20,7 @@ stable release is available. Issues are welcome for unexpected changes.
 ### NPM
 
 ```bash
-$: npm install @vidstack/player@next --save-dev
+$: npm install @vidstack/player@next --save
 ```
 
 ### CDN
