@@ -2,6 +2,25 @@ import { listenTo } from '@wcom/events';
 import { IS_CLIENT } from './support';
 
 /**
+ * Registers a custom element in the CustomElementRegistry. By "safely" we mean:
+ *
+ * - Called only client-side (`window` is defined).
+ * - The element is only registered if it hasn't been registered before under the given `name`.
+ *
+ * @param name - A string representing the name you are giving the element.
+ * @param constructor - A class object that defines the behaviour of the element.
+ */
+export const safelyDefineCustomElement = (
+  name: string,
+  constructor: CustomElementConstructor,
+  isClient = IS_CLIENT,
+) => {
+  const isElementRegistered = isClient && window.customElements.get(name);
+  if (!isClient || isElementRegistered) return;
+  window.customElements.define(name, constructor);
+};
+
+/**
  * Determines whether two elements are interecting in the DOM.
  *
  * @param a - The first element.

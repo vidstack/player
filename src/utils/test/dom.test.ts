@@ -1,7 +1,12 @@
 /* eslint-disable no-param-reassign */
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { LitElement } from 'lit-element';
 import { spy, stub } from 'sinon';
-import { isColliding, onInputDeviceChange } from '../dom';
+import {
+  isColliding,
+  onInputDeviceChange,
+  safelyDefineCustomElement,
+} from '../dom';
 
 describe('isColliding', () => {
   function position(el: HTMLElement, x: number, y: number) {
@@ -131,5 +136,32 @@ describe('onInputDeviceChange', () => {
 
     // No-op: call to include coverage report.
     off();
+  });
+});
+
+describe('safelyDefineCustomElement', () => {
+  class FakeCustomElement extends LitElement {
+    render() {
+      return html`<h1>penguins</h1>`;
+    }
+  }
+
+  it('should not register custom element if not client-side', async () => {
+    safelyDefineCustomElement('fake-el', FakeCustomElement, false);
+    const el = await fixture(html`<fake-el></fake-el>`);
+    expect(el.shadowRoot?.innerHTML ?? '').not.contains('<h1>penguins</h1>');
+  });
+
+  it('should register custom element', async () => {
+    safelyDefineCustomElement('fake-el', FakeCustomElement);
+    const el = await fixture(html`<fake-el></fake-el>`);
+    expect(el.shadowRoot!.innerHTML).contains('<h1>penguins</h1>');
+  });
+
+  it('should not register custom element if registered before', () => {
+    expect(() => {
+      safelyDefineCustomElement('fake-el', FakeCustomElement);
+      safelyDefineCustomElement('fake-el', FakeCustomElement);
+    }).not.throws();
   });
 });
