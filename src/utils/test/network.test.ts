@@ -81,9 +81,13 @@ describe('tryDecodeURIComponent', () => {
     );
   });
 
-  it('should return fallback given window is undefined', () => {
+  it('should return fallback given window.decodeURIComponent is undefined', () => {
     (window as any).decodeURIComponent = undefined;
     expect(tryDecodeURIComponent('', 'apples')).to.equal('apples');
+  });
+
+  it('should return fallback given window is undefined', () => {
+    expect(tryDecodeURIComponent('', 'apples', false)).to.equal('apples');
   });
 });
 
@@ -97,6 +101,10 @@ describe('parseQueryString', () => {
 
   it('should return empty object given undefined', () => {
     expect(parseQueryString(undefined)).to.eql({});
+  });
+
+  it('should return valid key/value map given simple query string', () => {
+    expect(parseQueryString('apples')).to.eql({ apples: '' });
   });
 });
 
@@ -122,9 +130,21 @@ describe('prefetch', () => {
     ) as HTMLLinkElement;
     expect(link.rel).to.equal('preconnect');
   });
+
+  it('should return false given window is undefined', () => {
+    const url = 'https://example.com';
+    const didPreconnect = preconnect(url, 'preconnect', false);
+    expect(didPreconnect).to.be.false;
+  });
 });
 
 describe('appendParamsToURL', () => {
+  it('should append param string as query string to url', () => {
+    expect(appendParamsToURL('https://example.com', 'param=1')).to.equal(
+      'https://example.com?param=1',
+    );
+  });
+
   it('should append params as query string to url', () => {
     expect(
       appendParamsToURL('https://example.com', {
@@ -151,6 +171,10 @@ describe('appendParamsToURL', () => {
 });
 
 describe('decodeQueryString', () => {
+  it('should return undefined given non-string', () => {
+    expect(decodeQueryString(100 as any)).to.eql(undefined);
+  });
+
   it('should return object given query string', () => {
     expect(decodeQueryString('apples=1&apples=2&bees=wombo')).to.eql({
       apples: ['1', '2'],

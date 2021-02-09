@@ -1,5 +1,13 @@
 import { isUndefined } from './unit';
 
+/**
+ * Creates a debounced function that delays invoking func until after wait milliseconds have
+ * elapsed since the last time the debounced function was invoked.
+ *
+ * @param func - The function to debounce.
+ * @param wait - The number of milliseconds to delay.
+ * @param immediate - Whether the first function invocation should be immediate.
+ */
 export const debounce = (
   func: (...args: any[]) => void,
   wait = 1000,

@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { cancellablePromise, deferredPromise } from '../promise';
+import { deferredPromise } from '../promise';
 
 describe('deferredPromise', () => {
   it('should resolve', done => {
@@ -22,22 +22,5 @@ describe('deferredPromise', () => {
     });
 
     deferred.reject(true);
-  });
-});
-
-describe('makeCancellablePromise', () => {
-  it('should cancel promise', done => {
-    const promise = new Promise<boolean>(() => {
-      // no-op
-    });
-
-    const cancellable = cancellablePromise(promise);
-
-    cancellable.catch(err => {
-      expect(err.message === 'Cancelled.');
-      done();
-    });
-
-    cancellable.cancel();
   });
 });
