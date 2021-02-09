@@ -1,34 +1,96 @@
-export const isNull = (input: any): input is null => input === null;
+/**
+ * Checks if `value` is `null`.
+ *
+ * @param value - The value to check.
+ */
+export const isNull = (value: any): value is null => value === null;
 
-export const isUndefined = (input: any): input is undefined =>
-  typeof input === 'undefined';
+/**
+ * Checks if `value` is `undefined`.
+ *
+ * @param value - The value to check.
+ */
+export const isUndefined = (value: any): value is undefined =>
+  typeof value === 'undefined';
 
-export const isNullOrUndefined = (input: any): input is null | undefined =>
-  isNull(input) || isUndefined(input);
+/**
+ * Checks if `value` is `null` or `undefined`.
+ *
+ * @param value - The value to check.
+ */
+export const isNil = (value: any): value is null | undefined =>
+  isNull(value) || isUndefined(value);
 
-export const getConstructor = (input: any): object | undefined =>
-  !isNullOrUndefined(input) ? input.constructor : undefined;
+/**
+ * Returns the constructor of the given `value`.
+ *
+ * @param value - The value to return the constructor of.
+ */
+export const getConstructor = (value: any): object | undefined =>
+  !isNil(value) ? value.constructor : undefined;
 
-export const isObject = (input: any) => getConstructor(input) === Object;
+/**
+ * Checks if `value` is classified as a `Object` object.
+ *
+ * @param value - The value to check.
+ */
+export const isObject = (value: any) => getConstructor(value) === Object;
 
-export const isNumber = (input: any): input is number =>
-  getConstructor(input) === Number && !Number.isNaN(input);
+/**
+ * Checks if `value` is classified as a `Number` object.
+ *
+ * @param value - The value to check.
+ */
+export const isNumber = (value: any): value is number =>
+  getConstructor(value) === Number && !Number.isNaN(value);
 
-export const isString = (input: any): input is string =>
-  getConstructor(input) === String;
+/**
+ * Checks if `value` is classified as a `String` object.
+ *
+ * @param value - The value to check.
+ */
+export const isString = (value: any): value is string =>
+  getConstructor(value) === String;
 
-export const isBoolean = (input: any): input is boolean =>
-  getConstructor(input) === Boolean;
+/**
+ * Checks if `value` is classified as a `Boolean` object.
+ *
+ * @param value - The value to check.
+ */
+export const isBoolean = (value: any): value is boolean =>
+  getConstructor(value) === Boolean;
 
-export const isFunction = (input: any): input is Function =>
-  getConstructor(input) === Function;
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @param value - The value to check.
+ */
+export const isFunction = (value: any): value is Function =>
+  getConstructor(value) === Function;
 
-export const isArray = (input: any): input is any[] => Array.isArray(input);
+/**
+ * Checks if `value` is classified as an `Array` object.
+ *
+ * @param value - The value to check.
+ */
+export const isArray = (value: any): value is any[] => Array.isArray(value);
 
-export const isInstanceOf = (input: any, constructor: any) =>
-  Boolean(input && constructor && input instanceof constructor);
+/**
+ * Checks if `value` is an instanceof the given `constructor`.
+ *
+ * @param value - The value to check.
+ * @param constructor - The constructor to check against.
+ */
+export const isInstanceOf = (value: any, constructor: any) =>
+  Boolean(value && constructor && value instanceof constructor);
 
-export const isPrototypeOf = (input: any, object: any) =>
+/**
+ * Checks if the `value` prototype chain includes the given `object`.
+ *
+ * @param value - The value whose prototype chain to check.
+ * @param object - The object to search for in the prototype chain.
+ */
+export const isPrototypeOf = (value: any, object: any) =>
   Boolean(
-    input && object && Object.isPrototypeOf.call(object.prototype, input),
+    value && object && Object.isPrototypeOf.call(object.prototype, value),
   );

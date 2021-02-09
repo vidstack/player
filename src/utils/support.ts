@@ -1,7 +1,7 @@
-import { listenTo } from '@wcom/events';
 import { isFunction } from './unit';
 
 export const IS_CLIENT = typeof window !== 'undefined';
+/* c8 ignore next */
 export const UA = IS_CLIENT ? window.navigator?.userAgent.toLowerCase() : '';
 export const IS_IOS = /iphone|ipad|ipod|ios|CriOS|FxiOS/.test(UA);
 export const IS_ANDROID = /android/.test(UA);
@@ -13,6 +13,7 @@ export const IS_CHROME = IS_CLIENT && (window as any).chrome;
 export const IS_SAFARI =
   IS_CLIENT && ((window as any).safari || IS_IOS || /Apple/.test(UA));
 
+/* c8 ignore next 4 */
 export const ORIGIN =
   window.location.protocol !== 'file:'
     ? `${window.location.protocol}//${window.location.hostname}`
@@ -23,43 +24,12 @@ export type WebKitPresentationMode =
   | 'inline'
   | 'fullscreen';
 
-export const onTouchInputChange = (callback: (isTouch: boolean) => void) => {
-  if (!IS_CLIENT) return () => {};
-
-  let lastTouchTime = 0;
-
-  const offTouchListener = listenTo(
-    document,
-    'touchstart',
-    () => {
-      lastTouchTime = new Date().getTime();
-      callback(true);
-    },
-    true,
-  );
-
-  const offMouseListener = listenTo(
-    document,
-    'mousemove',
-    () => {
-      // Filter emulated events coming from touch events
-      if (new Date().getTime() - lastTouchTime < 500) return;
-      callback(false);
-    },
-    true,
-  );
-
-  return () => {
-    offTouchListener();
-    offMouseListener();
-  };
-};
-
 /**
  * Checks if a video player can enter fullscreen.
  *
  * @see https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen
  */
+/* c8 ignore next 5 */
 export const canFullscreenVideo = (): boolean => {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
@@ -72,6 +42,7 @@ export const canFullscreenVideo = (): boolean => {
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
  */
+/* c8 ignore next 2 */
 export const canRotateScreen = () =>
   IS_CLIENT && window.screen.orientation && window.screen.orientation.lock;
 
@@ -80,6 +51,7 @@ export const canRotateScreen = () =>
  *
  * @see https://webkit.org/blog/7551/responsive-design-for-motion/
  */
+/* c8 ignore next 4 */
 export const isReducedMotionPreferred = (): boolean =>
   IS_CLIENT &&
   'matchMedia' in window &&
@@ -88,6 +60,7 @@ export const isReducedMotionPreferred = (): boolean =>
 /**
  * Checks if the native HTML5 video player can play HLS.
  */
+/* c8 ignore next 4 */
 export const canPlayHLSNatively = (): boolean => {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
@@ -100,6 +73,7 @@ export const canPlayHLSNatively = (): boolean => {
  *
  * @see  https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture
  */
+/* c8 ignore next 5 */
 export const canUsePiPInChrome = (): boolean => {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
@@ -114,6 +88,7 @@ export const canUsePiPInChrome = (): boolean => {
  *
  * @see https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls
  */
+/* c8 ignore next 8 */
 export const canUsePiPInSafari = (): boolean => {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
@@ -124,7 +99,10 @@ export const canUsePiPInSafari = (): boolean => {
   );
 };
 
-// Checks if the native HTML5 video player can enter PIP.
+/**
+ * Checks if the native HTML5 video player can enter PIP.
+ */
+/* c8 ignore next 2 */
 export const canUsePiP = (): boolean =>
   canUsePiPInChrome() || canUsePiPInSafari();
 
@@ -135,6 +113,7 @@ export const canUsePiP = (): boolean =>
  *
  * @see https://github.com/ampproject/amphtml/blob/9bc8756536956780e249d895f3e1001acdee0bc0/src/utils/video.js#L25
  */
+/* c8 ignore next 32 */
 export const canAutoplay = (
   muted = true,
   playsinline = true,

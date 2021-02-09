@@ -127,35 +127,35 @@ describe('getConstructor', () => {
     expect(getConstructor(undefined)).to.be.undefined;
   });
 
-  it('should return constructor given valid input', () => {
+  it('should return constructor given valid value', () => {
     const str = 'str';
     expect(getConstructor(str)).to.equal(str.constructor);
   });
 });
 
 describe('isInstanceOf`', () => {
-  it('should return true given input is a instance of class', () => {
+  it('should return true given value is a instance of class', () => {
     expect(isInstanceOf(new Mock(), Mock)).to.be.true;
   });
 
-  it('should return false given null input or null constructor', () => {
+  it('should return false given null value or null constructor', () => {
     expect(isInstanceOf(null, Mock)).to.be.false;
     expect(isInstanceOf('', null)).to.be.false;
   });
 
-  it('should return false given input is not a instance of class', () => {
+  it('should return false given value is not a instance of class', () => {
     class MockTwo extends Mock {}
     expect(isInstanceOf(new Mock(), MockTwo)).to.be.false;
   });
 });
 
 describe('isPrototypeOf', () => {
-  it('should return true given input is prototype of object', () => {
+  it('should return true given value is prototype of object', () => {
     class MockTwo extends Mock {}
     expect(isPrototypeOf(new MockTwo(), Mock)).to.be.true;
   });
 
-  it('should return false given input is not prototype of object', () => {
+  it('should return false given value is not prototype of object', () => {
     class MockThree {}
     expect(isPrototypeOf(new MockThree(), Mock)).to.be.false;
   });

@@ -1,14 +1,10 @@
-import {
-  isString,
-  isArray,
-  isNullOrUndefined,
-  isObject,
-  isUndefined,
-} from './unit';
+import { isString, isArray, isNil, isObject, isUndefined } from './unit';
 import { IS_CLIENT } from './support';
 
 /**
  * Attempt to parse json into a POJO.
+ *
+ * @param json - The JSON object to parse.
  */
 export function tryParseJSON<T>(json: string): T | undefined {
   if (!isString(json)) return undefined;
@@ -21,23 +17,29 @@ export function tryParseJSON<T>(json: string): T | undefined {
 }
 
 /**
- * Check if the given input is json or a plain object.
+ * Check if the given value is JSON or a POJO.
+ *
+ * @param value - The value to check.
  */
-export const isObjOrJSON = (input: any): boolean =>
-  !isNullOrUndefined(input) &&
-  (isObject(input) || (isString(input) && input.startsWith('{')));
+export const isObjOrJSON = (value: any): boolean =>
+  !isNil(value) &&
+  (isObject(value) || (isString(value) && value.startsWith('{')));
 
 /**
  * If an object return otherwise try to parse it as json.
  */
-export const objOrParseJSON = <T>(input: any): T | undefined =>
-  isObject(input) ? input : tryParseJSON(input);
+export const objOrParseJSON = <T>(value: any): T | undefined =>
+  isObject(value) ? value : tryParseJSON(value);
 
 /**
  * Load image avoiding xhr/fetch CORS issues. Server status can't be obtained this way
  * unfortunately, so this uses "naturalWidth" to determine if the image has been loaded. By
  * default it checks if it is at least 1px.
+ *
+ * @param src - The URL of where the image resource is located.
+ * @param minWidth - The minimum width for a valid image to be loaded.
  */
+/* c8 ignore next 14 */
 export const loadImage = (
   src: string,
   minWidth = 1,
@@ -54,6 +56,14 @@ export const loadImage = (
     Object.assign(image, { onload: handler, onerror: handler, src });
   });
 
+/**
+ * Loads a script into the DOM.
+ *
+ * @param src - The URL of where the script is located.
+ * @param onLoad - Callback invoked when the script is loaded.
+ * @param onError - Callback invoked when the script loading fails.
+ */
+/* c8 ignore next 11 */
 export const loadScript = (
   src: string,
   onLoad: () => void,
@@ -81,8 +91,9 @@ export const decodeJSON = <T>(data: any): T | undefined => {
 export const tryDecodeURIComponent = (
   component: string,
   fallback = '',
+  isClient = IS_CLIENT,
 ): string => {
-  if (!IS_CLIENT) return fallback;
+  if (!isClient) return fallback;
   try {
     return window.decodeURIComponent(component);
   } catch (e) {
@@ -136,7 +147,7 @@ export const serializeQueryString = (params: Params): string => {
   Object.keys(params).forEach(param => {
     const value = params[param];
 
-    if (isNullOrUndefined(value)) return;
+    if (isNil(value)) return;
 
     if (isArray(value)) {
       (value as string[]).forEach((v: string) => appendQueryParam(param, v));
@@ -154,14 +165,13 @@ export const serializeQueryString = (params: Params): string => {
 export const preconnect = (
   url: string,
   rel: 'preconnect' | 'prefetch' | 'preload' = 'preconnect',
-  as?: string,
+  isClient = IS_CLIENT,
 ): boolean => {
-  if (!IS_CLIENT) return false;
+  if (!isClient) return false;
 
   const link = document.createElement('link');
   link.rel = rel;
   link.href = url;
-  if (!isUndefined(as)) link.as = as!;
   link.crossOrigin = 'true';
 
   document.head.append(link);
@@ -200,20 +210,29 @@ export const decodeQueryString = <T>(qs: string): T | undefined => {
   return parseQueryString(qs);
 };
 
-/**
- * Loads an SDK into the global window namespace.
- *
- * @see https://github.com/CookPete/react-player/blob/master/src/utils.js#L77
- */
 type PendingSDKRequest = {
   resolve: (value?: any) => void;
   reject: (reason?: any) => void;
 };
+
 const pendingSDKRequests: Record<string, PendingSDKRequest[]> = {};
+
+/**
+ * Loads an SDK into the global `Window` namespace.
+ *
+ * @param url - The URL to where the SDK is located.
+ * @param sdkGlobalProp - The property on the Window object that returns the SDK.
+ * @param sdkReadyProp - The property on the SDK object that determines whether the SDK is ready.
+ * @param isLoaded - Function that determines whether the SDK has loaded.
+ * @param loadScriptFn - The function used to load the script.
+ *
+ * @see https://github.com/CookPete/react-player/blob/master/src/utils.js#L77
+ */
+/* c8 ignore next 57 */
 export const loadSDK = <SDKType = any>(
   url: string,
-  sdkGlobalVar: string,
-  sdkReadyVar?: string,
+  sdkGlobalProp: string,
+  sdkReadyProp?: string,
   isLoaded: (sdk: SDKType) => boolean = () => true,
   loadScriptFn = loadScript,
 ) => {
@@ -226,7 +245,7 @@ export const loadSDK = <SDKType = any>(
     return undefined;
   };
 
-  const existingGlobal = getGlobal(sdkGlobalVar);
+  const existingGlobal = getGlobal(sdkGlobalProp);
 
   if (existingGlobal && isLoaded(existingGlobal)) {
     return Promise.resolve(existingGlobal);
@@ -244,19 +263,19 @@ export const loadSDK = <SDKType = any>(
       pendingSDKRequests[url].forEach(request => request.resolve(sdk));
     };
 
-    if (!isUndefined(sdkReadyVar)) {
-      const previousOnReady: () => void = window[sdkReadyVar as any] as any;
+    if (!isUndefined(sdkReadyProp)) {
+      const previousOnReady: () => void = window[sdkReadyProp as any] as any;
       // eslint-disable-next-line func-names
-      (window as any)[sdkReadyVar as any] = function () {
+      (window as any)[sdkReadyProp as any] = function () {
         if (!isUndefined(previousOnReady)) previousOnReady();
-        onLoaded(getGlobal(sdkGlobalVar));
+        onLoaded(getGlobal(sdkGlobalProp));
       };
     }
 
     loadScriptFn(
       url,
       () => {
-        if (isUndefined(sdkReadyVar)) onLoaded(getGlobal(sdkGlobalVar));
+        if (isUndefined(sdkReadyProp)) onLoaded(getGlobal(sdkGlobalProp));
       },
       e => {
         pendingSDKRequests[url].forEach(request => {
@@ -266,19 +285,4 @@ export const loadSDK = <SDKType = any>(
       },
     );
   });
-};
-
-export const loadSprite = (src: string, into?: HTMLElement | ShadowRoot) => {
-  if (!IS_CLIENT) return;
-
-  window
-    .fetch(src)
-    .then(res => res.text())
-    .then(sprite => {
-      const div = document.createElement('div');
-      div.setAttribute('data-sprite', src);
-      div.style.display = 'none';
-      div.innerHTML = sprite;
-      (into ?? document.head).append(div);
-    });
 };
