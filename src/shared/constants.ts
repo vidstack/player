@@ -1,1 +1,1 @@
-export const VIDSTACK_LIB_PREFIX = 'vds';
+export const LIB_PREFIX = 'vds';

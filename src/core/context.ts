@@ -2,9 +2,9 @@ import createContext from '@wcom/context';
 import { MediaType, PlayerContext, ViewType } from './types';
 
 /**
- * The player context object contains a collection of contexts that map 1:1 with a player
- * property. This context enables player state to be passed down to elements lower in the player
- * subtree. It's is updated by the player when it receives updates from the current provider
+ * The player context object contains a collection of contexts that map 1:1 with player
+ * state. This context enables state to be passed down to elements lower in the player
+ * subtree. It's updated by the player when it receives updates from the current provider
  * via events. If you're creating your own elements to place inside the player element you can use
  * it like so...
  *
@@ -29,8 +29,8 @@ export const playerContext: PlayerContext = {
   aspectRatio: createContext('16:9'),
   duration: createContext(-1),
   buffered: createContext(0),
-  isMobile: createContext(false),
-  isTouch: createContext(false),
+  isMobileDevice: createContext(false),
+  isTouchInput: createContext(false),
   isBuffering: createContext(false),
   isPlaying: createContext(false),
   hasPlaybackStarted: createContext(false),

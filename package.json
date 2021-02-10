@@ -39,7 +39,7 @@
     "build": "run-s clean build:esm",
     "build:esm": "tsc -p tsconfig-build.json",
     "build:watch": "npm run build:esm -- -w",
-    "clean": "rimraf bundle core providers skins ui utils",
+    "clean": "rimraf bundle core providers skins ui utils shared",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts --quiet . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",

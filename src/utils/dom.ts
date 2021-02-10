@@ -55,7 +55,7 @@ export const isColliding = (
  * @param callback - Called when the input device is changed.
  */
 export const onInputDeviceChange = (
-  callback: (isTouch: boolean) => void,
+  callback: (isTouchInput: boolean) => void,
   isClient = IS_CLIENT,
 ) => {
   if (!isClient) return () => {};

@@ -6,9 +6,9 @@
     "browser": true
   },
   "extends": [
-    "airbnb-typescript/base",
     "plugin:wc/recommended",
     "plugin:lit/recommended",
+    "airbnb-typescript/base",
     "prettier"
   ],
   "rules": {
@@ -17,6 +17,7 @@
     "default-case": "off",
     "class-methods-use-this": "off",
     "import/prefer-default-export": "off",
+    "max-classes-per-file": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {

@@ -18,6 +18,32 @@ export type PlayerContext = {
   [P in keyof PlayerState]: Context<PlayerState[P]>;
 };
 
+export type ReadonlyPlayerState = Readonly<
+Pick<
+PlayerState,
+| 'duration'
+| 'buffered'
+| 'isMobileDevice'
+| 'isTouchInput'
+| 'isBuffering'
+| 'isPlaying'
+| 'hasPlaybackStarted'
+| 'hasPlaybackEnded'
+| 'isProviderReady'
+| 'isPlaybackReady'
+| 'viewType'
+| 'isAudioView'
+| 'isVideoView'
+| 'mediaType'
+| 'isAudio'
+| 'isVideo'
+>
+>;
+
+export type WritablePlayerState = Omit<PlayerState, keyof ReadonlyPlayerState>;
+
+export type PlayerProps = WritablePlayerState & ReadonlyPlayerState;
+
 export interface PlayerState {
   /**
    * The identifier or URL of a media resource to use. See each provider for what
@@ -67,55 +93,75 @@ export interface PlayerState {
    * A `double` indicating the total playback length of the media in seconds. Defaults
    * to `-1` if no media has been loaded. If the media is being streamed live then the duration is
    * equal to `Infinity`.
+   *
+   * @readonly
    */
   duration: number;
 
   /**
    * The length of the media in seconds (`double`) that has been downloaded by the browser.
+   *
+   * @readonly
    */
   buffered: number;
 
   /**
    * Whether the player has been loaded on a mobile device. This is determined by parsing
    * `window.navigator.userAgent`.
+   *
+   * @readonly
    */
-  isMobile: boolean;
+  isMobileDevice: boolean;
 
   /**
    * Whether the player is being interacted with via touch input. This is determined by listening
    * to mousemove/touchstart events and toggling this value.
+   *
+   * @readonly
    */
-  isTouch: boolean;
+  isTouchInput: boolean;
 
   /**
    * Whether playback has temporarily stopped because of a lack of temporary data.
+   *
+   * @readonly
    */
   isBuffering: boolean;
 
   /**
    * Whether media is actively playing back. Defaults to `false` if no media has
    * loaded or playback has not started.
+   *
+   * @readonly
    */
   isPlaying: boolean;
 
   /**
    * Whether the media playback has started. In other words it will be true if `currentTime > 0`.
+   *
+   * @readonly
    */
   hasPlaybackStarted: boolean;
 
   /**
    * Whether media playback has reached the end. In other words it'll be true
    * if `currentTime === duration`.
+   *
+   * @readonly
    */
   hasPlaybackEnded: boolean;
 
   /**
    * Whether the current provider has loaded and is ready to be interacted with.
+   *
+   * @readonly
    */
   isProviderReady: boolean;
 
   /**
    * Whether media is ready for playback to begin, analgous with `canPlayThrough`.
+   *
+   * @readonly
    */
   isPlaybackReady: boolean;
 
@@ -125,32 +171,44 @@ export interface PlayerState {
    * in some cases it might be desirable to show a different view type. For example, when playing
    * audio with a poster. This is subject to the provider allowing it. Defaults to `unknown`
    * when no media has been loaded.
+   *
+   * @readonly
    */
   viewType: ViewType;
 
   /**
    * Whether the current view is of type `audio`, shorthand for `viewType === ViewType.Audio`.
+   *
+   * @readonly
    */
   isAudioView: boolean;
 
   /**
    * Whether the current view is of type `video`, shorthand for `viewType === ViewType.Video`.
+   *
+   * @readonly
    */
   isVideoView: boolean;
 
   /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
+   *
+   * @readonly
    */
   mediaType: MediaType;
 
   /**
    * Whether the current media is of type `audio`, shorthand for `mediaType === MediaType.Audio`.
+   *
+   * @readonly
    */
   isAudio: boolean;
 
   /**
    * Whether the current media is of type `video`, shorthand for `mediaType === MediaType.Video`.
+   *
+   * @readonly
    */
   isVideo: boolean;
 }
