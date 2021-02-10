@@ -1,16 +1,24 @@
+import { Constructor } from 'lit-element';
+
+/**
+ * No-operation (noop).
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const noop = (): void => {};
+
 /**
  * Checks if `value` is `null`.
  *
  * @param value - The value to check.
  */
-export const isNull = (value: any): value is null => value === null;
+export const isNull = (value: unknown): value is null => value === null;
 
 /**
  * Checks if `value` is `undefined`.
  *
  * @param value - The value to check.
  */
-export const isUndefined = (value: any): value is undefined =>
+export const isUndefined = (value: unknown): value is undefined =>
   typeof value === 'undefined';
 
 /**
@@ -18,7 +26,7 @@ export const isUndefined = (value: any): value is undefined =>
  *
  * @param value - The value to check.
  */
-export const isNil = (value: any): value is null | undefined =>
+export const isNil = (value: unknown): value is null | undefined =>
   isNull(value) || isUndefined(value);
 
 /**
@@ -26,22 +34,24 @@ export const isNil = (value: any): value is null | undefined =>
  *
  * @param value - The value to return the constructor of.
  */
-export const getConstructor = (value: any): object | undefined =>
-  !isNil(value) ? value.constructor : undefined;
+export const getConstructor = <T = unknown>(value: unknown): T | undefined =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  !isNil(value) ? (value as any).constructor : undefined;
 
 /**
  * Checks if `value` is classified as a `Object` object.
  *
  * @param value - The value to check.
  */
-export const isObject = (value: any) => getConstructor(value) === Object;
+export const isObject = (value: unknown): boolean =>
+  getConstructor(value) === Object;
 
 /**
  * Checks if `value` is classified as a `Number` object.
  *
  * @param value - The value to check.
  */
-export const isNumber = (value: any): value is number =>
+export const isNumber = (value: unknown): value is number =>
   getConstructor(value) === Number && !Number.isNaN(value);
 
 /**
@@ -49,7 +59,7 @@ export const isNumber = (value: any): value is number =>
  *
  * @param value - The value to check.
  */
-export const isString = (value: any): value is string =>
+export const isString = (value: unknown): value is string =>
   getConstructor(value) === String;
 
 /**
@@ -57,7 +67,7 @@ export const isString = (value: any): value is string =>
  *
  * @param value - The value to check.
  */
-export const isBoolean = (value: any): value is boolean =>
+export const isBoolean = (value: unknown): value is boolean =>
   getConstructor(value) === Boolean;
 
 /**
@@ -65,7 +75,8 @@ export const isBoolean = (value: any): value is boolean =>
  *
  * @param value - The value to check.
  */
-export const isFunction = (value: any): value is Function =>
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const isFunction = (value: unknown): value is Function =>
   getConstructor(value) === Function;
 
 /**
@@ -73,7 +84,8 @@ export const isFunction = (value: any): value is Function =>
  *
  * @param value - The value to check.
  */
-export const isArray = (value: any): value is any[] => Array.isArray(value);
+export const isArray = (value: unknown): value is never[] =>
+  Array.isArray(value);
 
 /**
  * Checks if `value` is an instanceof the given `constructor`.
@@ -81,8 +93,10 @@ export const isArray = (value: any): value is any[] => Array.isArray(value);
  * @param value - The value to check.
  * @param constructor - The constructor to check against.
  */
-export const isInstanceOf = (value: any, constructor: any) =>
-  Boolean(value && constructor && value instanceof constructor);
+export const isInstanceOf = (
+  value: unknown,
+  constructor: Constructor<unknown>,
+): boolean => Boolean(value && constructor && value instanceof constructor);
 
 /**
  * Checks if the `value` prototype chain includes the given `object`.
@@ -90,7 +104,11 @@ export const isInstanceOf = (value: any, constructor: any) =>
  * @param value - The value whose prototype chain to check.
  * @param object - The object to search for in the prototype chain.
  */
-export const isPrototypeOf = (value: any, object: any) =>
+export const isPrototypeOf = (
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  value: Object,
+  object: Constructor<unknown>,
+): boolean =>
   Boolean(
     value && object && Object.isPrototypeOf.call(object.prototype, value),
   );

@@ -7,7 +7,7 @@ export interface VdsEventInit<OriginalEventType> extends EventInit {
 export interface VdsCustomEventConstructor<DetailType, OriginalEventType> {
   TYPE: string;
 
-  constructor(
+  new (
     type: string,
     eventInit: VdsEventInit<OriginalEventType>,
   ): VdsCustomEvent<DetailType, OriginalEventType>;
@@ -15,7 +15,7 @@ export interface VdsCustomEventConstructor<DetailType, OriginalEventType> {
 
 export abstract class VdsCustomEvent<
   DetailType,
-  OriginalEventType,
+  OriginalEventType
 > extends CustomEvent<DetailType> {
   static TYPE: string;
 
@@ -35,10 +35,11 @@ export abstract class VdsCustomEvent<
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function buildVdsEvent<DetailType>(type: string) {
   return class VdsEvent<OriginalEventType = void> extends VdsCustomEvent<
-  DetailType,
-  OriginalEventType
+    DetailType,
+    OriginalEventType
   > {
     static TYPE = `${LIB_PREFIX}-${type}`;
   };

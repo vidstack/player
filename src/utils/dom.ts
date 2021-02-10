@@ -1,4 +1,6 @@
+import { noop } from '@wcom/context';
 import { listenTo } from '@wcom/events';
+import { Unsubscribe } from '../shared/types';
 import { IS_CLIENT, IS_MOBILE } from './support';
 import { isUndefined } from './unit';
 
@@ -15,7 +17,7 @@ export const safelyDefineCustomElement = (
   name: string,
   constructor: CustomElementConstructor,
   isClient = IS_CLIENT,
-) => {
+): void => {
   const isElementRegistered = isClient && window.customElements.get(name);
   if (!isClient || isElementRegistered) return;
   window.customElements.define(name, constructor);
@@ -38,7 +40,7 @@ export const isColliding = (
   translateAy = 0,
   translateBx = 0,
   translateBy = 0,
-) => {
+): boolean => {
   const aRect = a.getBoundingClientRect();
   const bRect = b.getBoundingClientRect();
   return (
@@ -58,8 +60,8 @@ export const isColliding = (
 export const onInputDeviceChange = (
   callback: (isTouchInput: boolean) => void,
   isClient = IS_CLIENT,
-) => {
-  if (!isClient) return () => {};
+): Unsubscribe => {
+  if (!isClient) return noop;
 
   let lastTouchTime = 0;
 
@@ -103,13 +105,13 @@ export const onDeviceChange = (
   maxWidth = 480,
   isClient = IS_CLIENT,
   isMobile = IS_MOBILE,
-) => {
+): Unsubscribe => {
   const isServerSide = !isClient;
   const isResizeObsDefined = !isUndefined(window.ResizeObserver);
 
   if (isServerSide || !isResizeObsDefined) {
     callback(isMobile);
-    return () => {};
+    return noop;
   }
 
   function handleWindowResize() {

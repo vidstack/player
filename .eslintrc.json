@@ -1,14 +1,17 @@
 {
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
   "env": {
     "browser": true
   },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
   "extends": [
     "plugin:wc/recommended",
     "plugin:lit/recommended",
-    "airbnb-typescript/base",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
     "prettier"
   ],
   "rules": {

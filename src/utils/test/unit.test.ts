@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { expect } from '@open-wc/testing';
+import { noop } from '@wcom/context';
 import {
   getConstructor,
   isArray,
@@ -22,7 +23,7 @@ describe('isArray', () => {
     expect(isArray(undefined)).to.be.false;
     expect(isArray({})).to.be.false;
     expect(isArray(0)).to.be.false;
-    expect(isArray(() => {})).to.be.false;
+    expect(isArray(noop)).to.be.false;
     expect(isArray(false)).to.be.false;
   });
 });
@@ -37,7 +38,7 @@ describe('isBoolean', () => {
     expect(isBoolean(undefined)).to.be.false;
     expect(isBoolean({})).to.be.false;
     expect(isBoolean(0)).to.be.false;
-    expect(isBoolean(() => {})).to.be.false;
+    expect(isBoolean(noop)).to.be.false;
   });
 });
 
@@ -49,7 +50,7 @@ describe('isObject', () => {
     expect(isObject(null)).to.be.false;
     expect(isObject(undefined)).to.be.false;
     expect(isObject(0)).to.be.false;
-    expect(isObject(() => {})).to.be.false;
+    expect(isObject(noop)).to.be.false;
     expect(isObject(false)).to.be.false;
   });
 });
@@ -62,7 +63,7 @@ describe('isString', () => {
     expect(isString(null)).to.be.false;
     expect(isString(undefined)).to.be.false;
     expect(isString(0)).to.be.false;
-    expect(isString(() => {})).to.be.false;
+    expect(isString(noop)).to.be.false;
     expect(isString(false)).to.be.false;
   });
 });
@@ -75,14 +76,14 @@ describe('isNumber', () => {
     expect(isNumber([])).to.be.false;
     expect(isNumber(null)).to.be.false;
     expect(isNumber(undefined)).to.be.false;
-    expect(isNumber(() => {})).to.be.false;
+    expect(isNumber(noop)).to.be.false;
     expect(isNumber(false)).to.be.false;
   });
 });
 
 describe('isFunction', () => {
   it('should return true only if given a function', () => {
-    expect(isFunction(() => {})).to.be.true;
+    expect(isFunction(noop)).to.be.true;
     expect(isFunction(0)).to.be.false;
     expect(isFunction('')).to.be.false;
     expect(isFunction({})).to.be.false;
@@ -96,7 +97,7 @@ describe('isFunction', () => {
 describe('isNull', () => {
   it('should return true only if given null', () => {
     expect(isNull(null)).to.be.true;
-    expect(isNull(() => {})).to.be.false;
+    expect(isNull(noop)).to.be.false;
     expect(isNull(0)).to.be.false;
     expect(isNull('')).to.be.false;
     expect(isNull({})).to.be.false;
@@ -110,7 +111,7 @@ describe('isUndefined', () => {
   it('should return true only if given undefined', () => {
     expect(isUndefined(undefined)).to.be.true;
     expect(isUndefined(null)).to.be.false;
-    expect(isUndefined(() => {})).to.be.false;
+    expect(isUndefined(noop)).to.be.false;
     expect(isUndefined(0)).to.be.false;
     expect(isUndefined('')).to.be.false;
     expect(isUndefined({})).to.be.false;
@@ -140,7 +141,8 @@ describe('isInstanceOf`', () => {
 
   it('should return false given null value or null constructor', () => {
     expect(isInstanceOf(null, Mock)).to.be.false;
-    expect(isInstanceOf('', null)).to.be.false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect(isInstanceOf('', null as any)).to.be.false;
   });
 
   it('should return false given value is not a instance of class', () => {

@@ -1,6 +1,12 @@
 import { Disposal, listen } from '@wcom/events';
 import { v4 as uuid } from '@lukeed/uuid';
-import { CSSResultArray, html, LitElement, property } from 'lit-element';
+import {
+  html,
+  LitElement,
+  property,
+  CSSResultArray,
+  TemplateResult,
+} from 'lit-element';
 import clsx from 'clsx';
 import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
 import { onDeviceChange, onInputDeviceChange } from '../utils';
@@ -73,11 +79,11 @@ export class Player extends LitElement implements PlayerProps {
 
   private disposal = new Disposal();
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.connect();
   }
 
-  disconnectedCallback() {
+  disconnectedCallback(): void {
     this.disposal.empty();
   }
 
@@ -89,7 +95,7 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
-  render() {
+  render(): TemplateResult {
     const isAriaHidden = this.isProviderReady ? 'false' : 'true';
     const isAriaBusy = this.isPlaybackReady ? 'false' : 'true';
     const isProviderUIBlockerVisible = this.isVideoView;
@@ -181,11 +187,11 @@ export class Player extends LitElement implements PlayerProps {
   private _src: PlayerState['src'] = '';
 
   @property({ type: String })
-  get src() {
+  get src(): PlayerState['src'] {
     return this._src;
   }
 
-  set src(newSrc) {
+  set src(newSrc: PlayerState['src']) {
     this._src = newSrc;
     // TODO: call appropriate method.
   }
@@ -193,48 +199,48 @@ export class Player extends LitElement implements PlayerProps {
   // ---
 
   @property({ type: Number })
-  get volume() {
+  get volume(): PlayerState['volume'] {
     // TODO: return property from provider.
     return 30;
   }
 
-  set volume(newVolume) {
+  set volume(newVolume: PlayerState['volume']) {
     this.requestVolumeChange(newVolume);
   }
 
   // ---
 
   @property({ type: Number })
-  get currentTime() {
+  get currentTime(): PlayerState['currentTime'] {
     // TODO: return property from provider.
     return 0;
   }
 
-  set currentTime(newCurrentTime) {
+  set currentTime(newCurrentTime: PlayerState['currentTime']) {
     this.requestTimeChange(newCurrentTime);
   }
 
   // ---
 
   @property({ type: Boolean, reflect: true })
-  get paused() {
+  get paused(): PlayerState['paused'] {
     // TODO: return property from provider.
     return true;
   }
 
-  set paused(newPaused) {
+  set paused(newPaused: PlayerState['paused']) {
     this.requestPlaybackChange(newPaused);
   }
 
   // ---
 
   @property({ type: String })
-  get poster() {
+  get poster(): PlayerState['poster'] {
     // TODO: return property from provider.
     return undefined;
   }
 
-  set poster(newPoster) {
+  set poster(newPoster: PlayerState['poster']) {
     this.requestPosterChange(newPoster);
   }
 
@@ -246,12 +252,12 @@ export class Player extends LitElement implements PlayerProps {
   // ---
 
   @property({ type: Boolean })
-  get muted() {
+  get muted(): PlayerState['muted'] {
     // TODO: return property from provider.
     return false;
   }
 
-  set muted(newMuted) {
+  set muted(newMuted: PlayerState['muted']) {
     this.requestMutedChange(newMuted);
   }
 
@@ -265,85 +271,85 @@ export class Player extends LitElement implements PlayerProps {
 
   private _uuid = uuid();
 
-  get uuid() {
+  get uuid(): PlayerState['uuid'] {
     return this._uuid;
   }
 
-  get duration() {
+  get duration(): PlayerState['duration'] {
     // TODO: return property from provider.
     return -1;
   }
 
-  get buffered() {
+  get buffered(): PlayerState['buffered'] {
     // TODO: return property from provider.
     return 0;
   }
 
-  get isBuffering() {
+  get isBuffering(): PlayerState['isBuffering'] {
     // TODO: return property from provider.
     return false;
   }
 
-  get isPlaying() {
+  get isPlaying(): PlayerState['isPlaying'] {
     // TODO: return property from provider.
     return false;
   }
 
   private _isMobileDevice: PlayerState['isMobileDevice'] = false;
 
-  get isMobileDevice() {
+  get isMobileDevice(): PlayerState['isMobileDevice'] {
     return this._isMobileDevice;
   }
 
   private _isTouchInput: PlayerState['isTouchInput'] = false;
 
-  get isTouchInput() {
+  get isTouchInput(): PlayerState['isTouchInput'] {
     return this._isTouchInput;
   }
 
-  get hasPlaybackStarted() {
+  get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
     // TODO: return property from provider.
     return false;
   }
 
-  get hasPlaybackEnded() {
+  get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
     // TODO: return property from provider.
     return false;
   }
 
-  get isProviderReady() {
+  get isProviderReady(): PlayerState['isProviderReady'] {
     // TODO: return property from provider.
     return false;
   }
 
-  get isPlaybackReady() {
+  get isPlaybackReady(): PlayerState['isPlaybackReady'] {
     // TODO: return property from provider.
     return false;
   }
 
-  get viewType() {
+  get viewType(): PlayerState['viewType'] {
     // TODO: return property from provider.
     return ViewType.Unknown;
   }
 
-  get isAudioView() {
+  get isAudioView(): PlayerState['isAudioView'] {
     return this.viewType === ViewType.Audio;
   }
 
-  get isVideoView() {
+  get isVideoView(): PlayerState['isVideoView'] {
     return this.viewType === ViewType.Video;
   }
 
-  get mediaType() {
+  get mediaType(): PlayerState['mediaType'] {
     // TODO: return property from provider.
     return MediaType.Unknown;
   }
 
-  get isAudio() {
+  get isAudio(): PlayerState['isAudio'] {
     return this.mediaType === MediaType.Audio;
   }
 
-  get isVideo() {
+  get isVideo(): PlayerState['isVideo'] {
     return this.mediaType === MediaType.Video;
   }
 
@@ -356,27 +362,27 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
-  private requestPlaybackChange(paused: boolean) {
+  private requestPlaybackChange(paused: PlayerState['paused']) {
     // TODO: call method on provider - handle play success/fail.
     console.log(paused);
   }
 
-  private requestVolumeChange(volume: number) {
+  private requestVolumeChange(volume: PlayerState['volume']) {
     // TODO: call method on provider.
     console.log(volume);
   }
 
-  private requestTimeChange(time: number) {
+  private requestTimeChange(time: PlayerState['currentTime']) {
     // TODO: call method on provider.
     console.log(time);
   }
 
-  private requestMutedChange(muted: boolean) {
+  private requestMutedChange(muted: PlayerState['muted']) {
     // TODO: call method on provider.
     console.log(muted);
   }
 
-  private requestPosterChange(poster?: string) {
+  private requestPosterChange(poster?: PlayerState['poster']) {
     // TODO: call method on provider.
     console.log(poster);
   }
@@ -439,7 +445,7 @@ export class Player extends LitElement implements PlayerProps {
    * This section is responsible for translating provider events in to player events, and
    * updating context properties.
    *
-   * @example `ProviderPlayEvent` --> `PlayEvent` --> DOM
+   * @example Provider --> `ProviderPlayEvent` --> Player --> `PlayEvent` --> DOM
    * -------------------------------------------------------------------------------------------
    */
 
@@ -455,14 +461,14 @@ export class Player extends LitElement implements PlayerProps {
 
   // TODO: connect provider events
   // TODO: update context.
-  // TODO: listen to some updated lifecycle to update rest context? -> src/aspectRatio?
   // TODO: update audio/video attributes
+  // TODO: listen to some updated lifecycle to update rest context? -> src/aspectRatio?
 
   /**
    * -------------------------------------------------------------------------------------------
    * Context Properties
    *
-   * This section is responsible for defining context properties. They are mostly udpated in the
+   * This section is responsible for defining context properties. They are mostly updated in the
    * "Provider Events" section above.
    * -------------------------------------------------------------------------------------------
    */

@@ -28,7 +28,7 @@ export class BufferedChangeEvent extends buildVdsEvent<PlayerState['buffered']>(
 ) {}
 
 export class BufferingChangeEvent extends buildVdsEvent<
-PlayerState['isBuffering']
+  PlayerState['isBuffering']
 >('buffered-change') {}
 
 export class ViewTypeChangeEvent extends buildVdsEvent<PlayerState['viewType']>(
@@ -36,27 +36,27 @@ export class ViewTypeChangeEvent extends buildVdsEvent<PlayerState['viewType']>(
 ) {}
 
 export class MediaTypeChangeEvent extends buildVdsEvent<
-PlayerState['mediaType']
+  PlayerState['mediaType']
 >('media-type-change') {}
 
 export class PlaybackReadyEvent extends buildVdsEvent<
-PlayerState['isPlaybackReady']
+  PlayerState['isPlaybackReady']
 >('playback-ready') {}
 
 export class PlaybackStartEvent extends buildVdsEvent<
-PlayerState['hasPlaybackStarted']
+  PlayerState['hasPlaybackStarted']
 >('playback-start') {}
 
 export class PlaybackEndEvent extends buildVdsEvent<
-PlayerState['hasPlaybackEnded']
+  PlayerState['hasPlaybackEnded']
 >('playback-end') {}
 
 export class MobileDeviceChangeEvent extends buildVdsEvent<
-PlayerState['isMobileDevice']
+  PlayerState['isMobileDevice']
 >('mobile-device-change') {}
 
 export class TouchInputChangeEvent extends buildVdsEvent<
-PlayerState['isTouchInput']
+  PlayerState['isTouchInput']
 >('touch-input-change') {}
 
-export class ErrorEvent extends buildVdsEvent<any>('error') {}
+export class ErrorEvent extends buildVdsEvent<unknown>('error') {}

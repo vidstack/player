@@ -19,26 +19,26 @@ export type PlayerContext = {
 };
 
 export type ReadonlyPlayerState = Readonly<
-Pick<
-PlayerState,
-| 'uuid'
-| 'duration'
-| 'buffered'
-| 'isMobileDevice'
-| 'isTouchInput'
-| 'isBuffering'
-| 'isPlaying'
-| 'hasPlaybackStarted'
-| 'hasPlaybackEnded'
-| 'isProviderReady'
-| 'isPlaybackReady'
-| 'viewType'
-| 'isAudioView'
-| 'isVideoView'
-| 'mediaType'
-| 'isAudio'
-| 'isVideo'
->
+  Pick<
+    PlayerState,
+    | 'uuid'
+    | 'duration'
+    | 'buffered'
+    | 'isMobileDevice'
+    | 'isTouchInput'
+    | 'isBuffering'
+    | 'isPlaying'
+    | 'hasPlaybackStarted'
+    | 'hasPlaybackEnded'
+    | 'isProviderReady'
+    | 'isPlaybackReady'
+    | 'viewType'
+    | 'isAudioView'
+    | 'isVideoView'
+    | 'mediaType'
+    | 'isAudio'
+    | 'isVideo'
+  >
 >;
 
 export type WritablePlayerState = Omit<PlayerState, keyof ReadonlyPlayerState>;

@@ -16,49 +16,49 @@ export class ProviderPlayingEvent extends buildVdsEvent<void>(
 ) {}
 
 export class ProviderMutedChangeEvent extends buildVdsEvent<
-PlayerState['muted']
+  PlayerState['muted']
 >(`${PROVIDER_EVENT_PREFIX}-muted-change`) {}
 
 export class ProviderVolumeChangeEvent extends buildVdsEvent<
-PlayerState['volume']
+  PlayerState['volume']
 >(`${PROVIDER_EVENT_PREFIX}-volume-change`) {}
 
 export class ProviderTimeChangeEvent extends buildVdsEvent<
-PlayerState['currentTime']
+  PlayerState['currentTime']
 >(`${PROVIDER_EVENT_PREFIX}-time-change`) {}
 
 export class ProviderDurationChangeEvent extends buildVdsEvent<
-PlayerState['duration']
+  PlayerState['duration']
 >(`${PROVIDER_EVENT_PREFIX}-duration-change`) {}
 
 export class ProviderBufferedChangeEvent extends buildVdsEvent<
-PlayerState['buffered']
+  PlayerState['buffered']
 >(`${PROVIDER_EVENT_PREFIX}-buffered-change`) {}
 
 export class ProviderBufferingChangeEvent extends buildVdsEvent<
-PlayerState['isBuffering']
+  PlayerState['isBuffering']
 >(`${PROVIDER_EVENT_PREFIX}-buffered-change`) {}
 
 export class ProviderViewTypeChangeEvent extends buildVdsEvent<
-PlayerState['viewType']
+  PlayerState['viewType']
 >(`${PROVIDER_EVENT_PREFIX}-view-type-change`) {}
 
 export class ProviderMediaTypeChangeEvent extends buildVdsEvent<
-PlayerState['mediaType']
+  PlayerState['mediaType']
 >(`${PROVIDER_EVENT_PREFIX}-media-type-change`) {}
 
 export class ProviderPlaybackReadyEvent extends buildVdsEvent<
-PlayerState['isPlaybackReady']
+  PlayerState['isPlaybackReady']
 >(`${PROVIDER_EVENT_PREFIX}-playback-ready`) {}
 
 export class ProviderPlaybackStartEvent extends buildVdsEvent<
-PlayerState['hasPlaybackStarted']
+  PlayerState['hasPlaybackStarted']
 >(`${PROVIDER_EVENT_PREFIX}-playback-start`) {}
 
 export class ProviderPlaybackEndEvent extends buildVdsEvent<
-PlayerState['hasPlaybackEnded']
+  PlayerState['hasPlaybackEnded']
 >(`${PROVIDER_EVENT_PREFIX}-playback-end`) {}
 
-export class ProviderErrorEvent extends buildVdsEvent<any>(
+export class ProviderErrorEvent extends buildVdsEvent<unknown>(
   `${PROVIDER_EVENT_PREFIX}-error`,
 ) {}

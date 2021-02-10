@@ -12,13 +12,13 @@ export class UserPauseRequestEvent extends buildVdsEvent<void>(
 ) {}
 
 export class UserMutedChangeRequestEvent extends buildVdsEvent<
-PlayerState['muted']
+  PlayerState['muted']
 >(`${USER_EVENT_PREFIX}-muted-change-request`) {}
 
 export class UserVolumeChangeRequestEvent extends buildVdsEvent<
-PlayerState['volume']
+  PlayerState['volume']
 >(`${USER_EVENT_PREFIX}-volume-change-request`) {}
 
 export class UserTimeChangeRequestEvent extends buildVdsEvent<
-PlayerState['currentTime']
+  PlayerState['currentTime']
 >(`${USER_EVENT_PREFIX}-time-change-request`) {}
