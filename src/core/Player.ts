@@ -152,7 +152,7 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    * Readonly Player Properties
    *
-   * This section is responsible for defining readonly player properties.
+   * This section defines readonly player properties.
    * -------------------------------------------------------------------------------------------
    */
 
@@ -273,9 +273,9 @@ export class Player extends LitElement implements PlayerProps {
    * User Events
    *
    * This section is responsible for listening to user events and calling the appropriate
-   * plaer property setter.
+   * provider request method.
    *
-   * @example `UserPlayRequest` --> `this.paused = false`.
+   * @example `UserPlayRequest` --> `this.requestPlaybackChange(false)`.
    * -------------------------------------------------------------------------------------------
    */
 
@@ -292,31 +292,31 @@ export class Player extends LitElement implements PlayerProps {
   @listen(UserPlayRequestEvent.TYPE)
   private handleUserPlayRequest(e: Event) {
     this.userEventGateway(e);
-    this.paused = false;
+    this.requestPlaybackChange(false);
   }
 
   @listen(UserPauseRequestEvent.TYPE)
   private handleUserPauseRequest(e: Event) {
     this.userEventGateway(e);
-    this.paused = true;
+    this.requestPlaybackChange(true);
   }
 
   @listen(UserMutedChangeRequestEvent.TYPE)
   private handleUserMuteRequest(e: UserMutedChangeRequestEvent) {
     this.userEventGateway(e);
-    this.muted = e.detail;
+    this.requestMutedChange(e.detail);
   }
 
   @listen(UserVolumeChangeRequestEvent.TYPE)
   private handleUserVolumeChangeRequest(e: UserVolumeChangeRequestEvent) {
     this.userEventGateway(e);
-    this.volume = e.detail;
+    this.requestVolumeChange(e.detail);
   }
 
   @listen(UserTimeChangeRequestEvent.TYPE)
   private handlerUserTimeChangeRequest(e: UserTimeChangeRequestEvent) {
     this.userEventGateway(e);
-    this.currentTime = e.detail;
+    this.requestTimeChange(e.detail);
   }
 
   /**
