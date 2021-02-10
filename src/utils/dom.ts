@@ -1,5 +1,6 @@
 import { listenTo } from '@wcom/events';
-import { IS_CLIENT } from './support';
+import { IS_CLIENT, IS_MOBILE } from './support';
+import { isUndefined } from './unit';
 
 /**
  * Registers a custom element in the CustomElementRegistry. By "safely" we mean:
@@ -87,4 +88,34 @@ export const onInputDeviceChange = (
     offTouchListener();
     offMouseListener();
   };
+};
+
+/**
+ * Listens for device changes (mobile/desktop) and invokes a callback whether the current device
+ * is a mobile. It determines the type by either listening for `resize` events
+ * on the window (if API is available), otherwise it fallsback to parsing the user agent string.
+ *
+ * @param callback - Called when the device changes.
+ * @param maxWidth - The maximum window width in pixels to consider device as mobile.
+ */
+export const onDeviceChange = (
+  callback: (isMobileDevice: boolean) => void,
+  maxWidth = 480,
+  isClient = IS_CLIENT,
+  isMobile = IS_MOBILE,
+) => {
+  const isServerSide = !isClient;
+  const isResizeObsDefined = !isUndefined(window.ResizeObserver);
+
+  if (isServerSide || !isResizeObsDefined) {
+    callback(isMobile);
+    return () => {};
+  }
+
+  function handleWindowResize() {
+    callback(window.innerWidth <= maxWidth || isMobile);
+  }
+
+  handleWindowResize();
+  return listenTo(window, 'resize', handleWindowResize);
 };

@@ -1,5 +1,5 @@
 import { buildVdsEvent } from '../../shared/events';
-import { PlayerState } from '../types';
+import { PlayerState } from '../player.types';
 
 export class PlayEvent extends buildVdsEvent<void>('play') {}
 

@@ -1,8 +1,10 @@
 import { Disposal, listen } from '@wcom/events';
+import { v4 as uuid } from '@lukeed/uuid';
 import { CSSResultArray, html, LitElement, property } from 'lit-element';
-import { MediaType, PlayerProps, PlayerState, ViewType } from './types';
-import { onInputDeviceChange } from '../utils';
-import { playerContext } from './context';
+import clsx from 'clsx';
+import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
+import { onDeviceChange, onInputDeviceChange } from '../utils';
+import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
 import {
   UserMutedChangeRequestEvent,
@@ -13,7 +15,56 @@ import {
 } from './events';
 
 /**
- * TODO: Document props/methods/events/css parts/slot, desc component
+ * The player sits at the top of the component hierarchy in the library. It encapsulates
+ * Provider/UI components and acts as a message bus between them. It also provides a seamless
+ * experience for interacting with any media provider through the properties/methods/events it
+ * exposes.
+ *
+ * The player accepts any number of providers to be passed in through the default `<slot />`. The
+ * current `MediaLoadStrategy` will determine which provider to load. You can pass in a
+ * custom strategy if desired, by default it'll load the first media provider who can
+ * play the current `src`.
+ *
+ * @example
+ * ```html
+ *  <vds-player>
+ *    <!-- Providers here. -->
+ *    <vds-ui>
+ *      <!-- UI components here. -->
+ *    </vds-ui>
+ *  </vds-player>
+ * ```
+ *
+ * @example
+ * ```html
+ *  <vds-player src="youtube/_MyD_e1jJWc">
+ *    <vds-hls></vds-hls>
+ *    <vds-youtube></vds-youtube>
+ *    <vds-video preload="metadata"></vds-video>
+ *    <vds-ui>
+ *      <!-- UI components here. -->
+ *    </vds-ui>
+ *  </vds-player>
+ * ```
+ *
+ * @event vds-play - Emitted when playback attempts to start.
+ * @event vds-pause - Emitted when playback pauses.
+ * @event vds-playing - Emitted when playback being playback.
+ * @event vds-muted-change - Emitted when the muted state of the current provider changes.
+ * @event vds-volume-change - Emitted when the volume state of the current provider changes.
+ * @event vds-time-change - Emitted when the current playback time changes.
+ * @event vds-duration-change - Emitted when the length of the media changes.
+ * @event vds-buffered-change - Emitted when the length of the media downloaded changes.
+ * @event vds-view-type-change - Emitted when the view type of the current provider/media changes.
+ * @event vds-media-type-change - Emitted when the media type of the current provider/media changes.
+ * @event vds-playback-ready - Emitted when playback is ready to start - analgous with `canPlayThrough`.
+ * @event vds-playback-start - Emitted when playback has started (`currentTime > 0`).
+ * @event vds-playback-end - Emitted when playback ends (`currentTime === duration`).
+ * @event vds-mobile-device-change - Emitted when the type of user device changes between mobile/desktop.
+ * @event vds-touch-input-change - Emitted when the input device changes between touch/mouse.
+ * @event vds-error - Emitted when a provider encounters an error during media loading/playback.
+ *
+ * @slot - Used to pass in Provider/UI components.
  */
 export class Player extends LitElement implements PlayerProps {
   public static get styles(): CSSResultArray {
@@ -30,9 +81,52 @@ export class Player extends LitElement implements PlayerProps {
     this.disposal.empty();
   }
 
-  // TODO: write basic render function
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Render
+   *
+   * This section contains methods involved in the rendering of the player.
+   * -------------------------------------------------------------------------------------------
+   */
+
   render() {
-    return html``;
+    const isAriaHidden = this.isProviderReady ? 'false' : 'true';
+    const isAriaBusy = this.isPlaybackReady ? 'false' : 'true';
+    const isProviderUIBlockerVisible = this.isVideoView;
+
+    const classes = {
+      player: true,
+      audio: this.isAudioView,
+      video: this.isVideoView,
+    };
+
+    const styles = {
+      paddingBottom: this.isVideoView
+        ? `${this.calcAspectRatio()}%`
+        : undefined,
+    };
+
+    return html`
+      <div
+        aria-hidden="${isAriaHidden}"
+        aria-busy="${isAriaBusy}"
+        class="${clsx(classes)}"
+        styles="${clsx(styles)}"
+      >
+        ${isProviderUIBlockerVisible &&
+        html`<div class="provider-ui-blocker"></div>`}
+        <slot></slot>
+      </div>
+    `;
+  }
+
+  private calcAspectRatio() {
+    // TODO: throw error or log if invalid aspect ratio.
+    const [width, height] = /\d{1,2}:\d{1,2}/.test(this.aspectRatio)
+      ? this.aspectRatio.split(':')
+      : [16, 9];
+
+    return (100 / Number(width)) * Number(height);
   }
 
   /**
@@ -45,19 +139,32 @@ export class Player extends LitElement implements PlayerProps {
    */
 
   private connect() {
+    this.setUuid();
+    this.listenToTouchInputChanges();
     this.listenToMobileDeviceChanges();
-    this.listenToMobileDeviceChanges();
+  }
+
+  private setUuid() {
+    this.uuidCtx = this.uuid;
+    this.setAttribute('uuid', this.uuid);
   }
 
   private listenToTouchInputChanges() {
     const off = onInputDeviceChange(isTouchInput => {
       this._isTouchInput = isTouchInput;
+      this.setAttribute('touch', String(isTouchInput));
     });
+
     this.disposal.add(off);
   }
 
   private listenToMobileDeviceChanges() {
-    // TODO: Connect isMobileDevice - also expose for testing
+    const off = onDeviceChange(isMobileDevice => {
+      this._isMobileDevice = isMobileDevice;
+      this.setAttribute('mobile', String(isMobileDevice));
+    });
+
+    this.disposal.add(off);
   }
 
   /**
@@ -156,6 +263,12 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
+  private _uuid = uuid();
+
+  get uuid() {
+    return this._uuid;
+  }
+
   get duration() {
     // TODO: return property from provider.
     return -1;
@@ -244,7 +357,7 @@ export class Player extends LitElement implements PlayerProps {
    */
 
   private requestPlaybackChange(paused: boolean) {
-    // TODO: call method on provider.
+    // TODO: call method on provider - handle play success/fail.
     console.log(paused);
   }
 
@@ -343,6 +456,7 @@ export class Player extends LitElement implements PlayerProps {
   // TODO: connect provider events
   // TODO: update context.
   // TODO: listen to some updated lifecycle to update rest context? -> src/aspectRatio?
+  // TODO: update audio/video attributes
 
   /**
    * -------------------------------------------------------------------------------------------
@@ -352,6 +466,9 @@ export class Player extends LitElement implements PlayerProps {
    * "Provider Events" section above.
    * -------------------------------------------------------------------------------------------
    */
+
+  @playerContext.src.provide()
+  private uuidCtx = playerContext.uuid.defaultValue;
 
   @playerContext.src.provide()
   private srcCtx = playerContext.src.defaultValue;

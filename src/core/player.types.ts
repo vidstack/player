@@ -21,6 +21,7 @@ export type PlayerContext = {
 export type ReadonlyPlayerState = Readonly<
 Pick<
 PlayerState,
+| 'uuid'
 | 'duration'
 | 'buffered'
 | 'isMobileDevice'
@@ -45,6 +46,12 @@ export type WritablePlayerState = Omit<PlayerState, keyof ReadonlyPlayerState>;
 export type PlayerProps = WritablePlayerState & ReadonlyPlayerState;
 
 export interface PlayerState {
+  /**
+   * Randomly generated version 4 [RFC4122](https://www.ietf.org/rfc/rfc4122.txt) UUID which can
+   * be used to identify the player.
+   */
+  uuid: string;
+
   /**
    * The identifier or URL of a media resource to use. See each provider for what
    * `src` values they accept. Generally, HTMLMediaElement will accept a absolute/relative URL,

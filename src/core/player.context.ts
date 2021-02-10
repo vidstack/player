@@ -1,5 +1,5 @@
 import createContext from '@wcom/context';
-import { MediaType, PlayerContext, ViewType } from './types';
+import { MediaType, PlayerContext, ViewType } from './player.types';
 
 /**
  * The player context object contains a collection of contexts that map 1:1 with player
@@ -20,6 +20,7 @@ import { MediaType, PlayerContext, ViewType } from './types';
  * ```
  */
 export const playerContext: PlayerContext = {
+  uuid: createContext(''),
   src: createContext(''),
   volume: createContext(30),
   currentTime: createContext(0),
