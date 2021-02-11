@@ -1,5 +1,4 @@
-import { noop } from '@wcom/context';
-import { isFunction, isUndefined } from './unit';
+import { noop, isFunction, isUndefined } from './unit';
 
 export const IS_CLIENT = typeof window !== 'undefined';
 /* c8 ignore next */

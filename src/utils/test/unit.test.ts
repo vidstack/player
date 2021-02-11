@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { expect } from '@open-wc/testing';
-import { noop } from '@wcom/context';
 import {
+  noop,
   getConstructor,
   isArray,
   isBoolean,
@@ -160,5 +160,13 @@ describe('isPrototypeOf', () => {
   it('should return false given value is not prototype of object', () => {
     class MockThree {}
     expect(isPrototypeOf(new MockThree(), Mock)).to.be.false;
+  });
+});
+
+describe('noop', () => {
+  it('should be defined', () => {
+    expect(noop).to.exist;
+    expect(isFunction(noop)).to.be.true;
+    noop();
   });
 });

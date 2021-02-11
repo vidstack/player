@@ -22,10 +22,13 @@ export abstract class VdsCustomEvent<
 
   originalEvent: OriginalEventType;
 
-  constructor(eventInit: VdsEventInit<DetailType, OriginalEventType>) {
+  constructor(
+    type: string,
+    eventInit: VdsEventInit<DetailType, OriginalEventType>,
+  ) {
     const { originalEvent, ...init } = eventInit;
 
-    super(VdsCustomEvent.TYPE, {
+    super(type, {
       bubbles: true,
       composed: true,
       cancelable: true,
@@ -43,5 +46,9 @@ export function buildVdsEvent<DetailType>(type: string) {
     OriginalEventType
   > {
     static TYPE = `${LIB_PREFIX}-${type}`;
+
+    constructor(eventInit: VdsEventInit<DetailType, OriginalEventType>) {
+      super(VdsEvent.TYPE, eventInit);
+    }
   };
 }

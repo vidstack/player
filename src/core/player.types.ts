@@ -1,4 +1,5 @@
 import { Context } from '@wcom/context';
+import { Device, InputDevice } from '../utils';
 
 export type Source = string;
 
@@ -24,8 +25,13 @@ export type ReadonlyPlayerState = Readonly<
     | 'uuid'
     | 'duration'
     | 'buffered'
+    | 'device'
     | 'isMobileDevice'
-    | 'isTouchInput'
+    | 'isDesktopDevice'
+    | 'inputDevice'
+    | 'isTouchInputDevice'
+    | 'isMouseInputDevice'
+    | 'isKeyboardInputDevice'
     | 'isBuffering'
     | 'isPlaying'
     | 'hasPlaybackStarted'
@@ -113,20 +119,60 @@ export interface PlayerState {
   buffered: number;
 
   /**
-   * Whether the player has been loaded on a mobile device. This is determined by parsing
-   * `window.navigator.userAgent`.
+   * The type of device the player has loaded in. This is determined by using `ResizeObserver`
+   * (if available), otherwise it'll fallback to parsing `window.navigator.userAgent`. The
+   * maximum width for the device to be considered mobile is 480px.
+   *
+   * @readonly
+   */
+  device: Device;
+
+  /**
+   * Whether the current `device` is mobile (shorthand for `device === Device.Mobile`).
    *
    * @readonly
    */
   isMobileDevice: boolean;
 
   /**
-   * Whether the player is being interacted with via touch input. This is determined by listening
-   * to mousemove/touchstart events and toggling this value.
+   * Whether the current `device` is desktop (shorthand for `device === Device.Desktop`).
    *
    * @readonly
    */
-  isTouchInput: boolean;
+  isDesktopDevice: boolean;
+
+  /**
+   * The type of device the player is being interacted with, whether it's mouse/touch/keyboard.
+   * This is determined by listening to mousemove/touchstart/keydown events on `Window` and
+   * toggling this value.
+   *
+   * @readonly
+   */
+  inputDevice: InputDevice;
+
+  /**
+   * Whether the current `inputDevice` is touch (shorthand for
+   * `inputDevice === InputDevice.Touch`).
+   *
+   * @readonly
+   */
+  isTouchInputDevice: boolean;
+
+  /**
+   * Whether the current `inputDevice` is mouse (shorthand for
+   * `inputDevice === InputDevice.Mouse`).
+   *
+   * @readonly
+   */
+  isMouseInputDevice: boolean;
+
+  /**
+   * Whether the current `inputDevice` is keyboard (shorthand for
+   * `inputDevice === InputDevice.Keyboard`).
+   *
+   * @readonly
+   */
+  isKeyboardInputDevice: boolean;
 
   /**
    * Whether playback has temporarily stopped because of a lack of temporary data.

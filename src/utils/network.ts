@@ -1,6 +1,5 @@
-import { isString, isArray, isNil, isObject, isUndefined } from './unit';
+import { noop, isString, isArray, isNil, isObject, isUndefined } from './unit';
 import { IS_CLIENT } from './support';
-import { noop } from '@wcom/context';
 
 /**
  * Attempt to parse json into a POJO.
@@ -62,7 +61,7 @@ export const loadImage = (
  * @param onLoad - Callback invoked when the script is loaded.
  * @param onError - Callback invoked when the script loading fails.
  */
-/* c8 ignore next 11 */
+/* c8 ignore next 14 */
 export const loadScript = (
   src: string,
   onLoad: () => void,

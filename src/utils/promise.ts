@@ -1,4 +1,4 @@
-import { noop } from '@wcom/context';
+import { noop } from './unit';
 
 export interface DeferredPromise<ResolveType, RejectType> {
   promise: Promise<ResolveType>;

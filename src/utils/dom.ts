@@ -1,8 +1,7 @@
-import { noop } from '@wcom/context';
 import { listenTo } from '@wcom/events';
 import { Unsubscribe } from '../shared/types';
 import { IS_CLIENT, IS_MOBILE } from './support';
-import { isUndefined } from './unit';
+import { noop, isUndefined } from './unit';
 
 /**
  * Registers a custom element in the CustomElementRegistry. By "safely" we mean:
@@ -51,15 +50,22 @@ export const isColliding = (
   );
 };
 
+export enum InputDevice {
+  Touch = 'touch',
+  Mouse = 'mouse',
+  Keyboard = 'keyboard',
+}
+
 /**
- * Listens for input device changes (mouse/touch) and invokes a callback whether the current
- * device is touch-based.
+ * Listens for input device changes (mouse/touch) and invokes a callback with the current
+ * input device.
  *
  * @param callback - Called when the input device is changed.
  */
 export const onInputDeviceChange = (
-  callback: (isTouchInput: boolean) => void,
+  callback: (inputDevice: InputDevice) => void,
   isClient = IS_CLIENT,
+  shouldIgnoreEmulatedTouchEvents = true,
 ): Unsubscribe => {
   if (!isClient) return noop;
 
@@ -70,7 +76,7 @@ export const onInputDeviceChange = (
     'touchstart',
     () => {
       lastTouchTime = new Date().getTime();
-      callback(true);
+      callback(InputDevice.Touch);
     },
     true,
   );
@@ -79,29 +85,40 @@ export const onInputDeviceChange = (
     window,
     'mousemove',
     () => {
-      // Filter emulated events coming from touch events
-      if (new Date().getTime() - lastTouchTime < 500) return;
-      callback(false);
+      // Filter emulated events coming from touch events.
+      const isEmulatedEvent = new Date().getTime() - lastTouchTime < 500;
+      if (shouldIgnoreEmulatedTouchEvents && isEmulatedEvent) return;
+      callback(InputDevice.Mouse);
     },
     true,
   );
 
+  const offKeyboardListener = listenTo(window, 'keydown', () => {
+    callback(InputDevice.Keyboard);
+  });
+
   return () => {
     offTouchListener();
     offMouseListener();
+    offKeyboardListener();
   };
 };
 
+export enum Device {
+  Mobile = 'mobile',
+  Desktop = 'desktop',
+}
+
 /**
- * Listens for device changes (mobile/desktop) and invokes a callback whether the current device
- * is a mobile. It determines the type by either listening for `resize` events
- * on the window (if API is available), otherwise it fallsback to parsing the user agent string.
+ * Listens for device changes (mobile/desktop) and invokes a callback whether the current
+ * view is mobile. It determines the type by either listening for `resize` events
+ * on the window (if API is available), otherwise it'll fallback to parsing the user agent string.
  *
  * @param callback - Called when the device changes.
  * @param maxWidth - The maximum window width in pixels to consider device as mobile.
  */
 export const onDeviceChange = (
-  callback: (isMobileDevice: boolean) => void,
+  callback: (device: Device) => void,
   maxWidth = 480,
   isClient = IS_CLIENT,
   isMobile = IS_MOBILE,
@@ -110,12 +127,13 @@ export const onDeviceChange = (
   const isResizeObsDefined = !isUndefined(window.ResizeObserver);
 
   if (isServerSide || !isResizeObsDefined) {
-    callback(isMobile);
+    callback(isMobile ? Device.Mobile : Device.Desktop);
     return noop;
   }
 
   function handleWindowResize() {
-    callback(window.innerWidth <= maxWidth || isMobile);
+    const isMobileScreen = window.innerWidth <= maxWidth;
+    callback(isMobileScreen || isMobile ? Device.Mobile : Device.Desktop);
   }
 
   handleWindowResize();

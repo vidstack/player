@@ -9,7 +9,13 @@ import {
 } from 'lit-element';
 import clsx from 'clsx';
 import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
-import { onDeviceChange, onInputDeviceChange } from '../utils';
+import {
+  Device,
+  InputDevice,
+  IS_CLIENT,
+  onDeviceChange,
+  onInputDeviceChange,
+} from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
 import {
@@ -19,7 +25,7 @@ import {
   BufferingChangeEvent,
   DurationChangeEvent,
   MediaTypeChangeEvent,
-  MobileDeviceChangeEvent,
+  DeviceChangeEvent,
   MutedChangeEvent,
   PauseEvent,
   PlaybackEndEvent,
@@ -45,7 +51,7 @@ import {
   ProviderVolumeChangeEvent,
   ReadyEvent,
   TimeChangeEvent,
-  TouchInputChangeEvent,
+  InputDeviceChangeEvent,
   UserMutedChangeRequestEvent,
   UserPauseRequestEvent,
   UserPlayRequestEvent,
@@ -55,6 +61,7 @@ import {
   VolumeChangeEvent,
 } from './events';
 import { VdsCustomEvent, VdsCustomEventConstructor } from '../shared/events';
+import { isTestEnv } from './env';
 
 /**
  * The player sits at the top of the component hierarchy in the library. It encapsulates
@@ -103,8 +110,8 @@ import { VdsCustomEvent, VdsCustomEventConstructor } from '../shared/events';
  * @fires vds-playback-ready - Emitted when playback is ready to start - analgous with `canPlayThrough`.
  * @fires vds-playback-start - Emitted when playback has started (`currentTime > 0`).
  * @fires vds-playback-end - Emitted when playback ends (`currentTime === duration`).
- * @fires vds-mobile-device-change - Emitted when the type of user device changes between mobile/desktop.
- * @fires vds-touch-input-change - Emitted when the input device changes between touch/mouse.
+ * @fires vds-device-change - Emitted when the type of user device changes between mobile/desktop.
+ * @fires vds-input-device-change - Emitted when the input device changes between touch/mouse/keyboard.
  * @fires vds-error - Emitted when a provider encounters an error during media loading/playback.
  *
  * @slot - Used to pass in Provider/UI components.
@@ -117,10 +124,12 @@ export class Player extends LitElement implements PlayerProps {
   private disposal = new Disposal();
 
   connectedCallback(): void {
+    super.connectedCallback();
     this.connect();
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.disposal.empty();
   }
 
@@ -156,8 +165,9 @@ export class Player extends LitElement implements PlayerProps {
         class="${clsx(classes)}"
         styles="${clsx(styles)}"
       >
-        ${isProviderUIBlockerVisible &&
-        html`<div class="provider-ui-blocker"></div>`}
+        ${isProviderUIBlockerVisible
+          ? html`<div class="provider-ui-blocker"></div>`
+          : undefined}
 
         <slot></slot>
       </div>
@@ -184,8 +194,8 @@ export class Player extends LitElement implements PlayerProps {
 
   private connect() {
     this.setUuid();
-    this.listenToTouchInputChanges();
-    this.listenToMobileDeviceChanges();
+    this.listenToDeviceChanges();
+    this.listenToInputDeviceChanges();
     this.listenToUserEvents();
     this.listenToProviderEvents();
   }
@@ -195,15 +205,20 @@ export class Player extends LitElement implements PlayerProps {
     this.setAttribute('uuid', this.uuid);
   }
 
-  private listenToTouchInputChanges() {
+  private listenToInputDeviceChanges() {
+    // Allow emulated touch events to trigger mouse events in test environment so we don't
+    // have to mock `Date.getTime()`.
     const off = onInputDeviceChange(
-      this.handleTouchInputDeviceChange.bind(this),
+      this.handleInputDeviceChange.bind(this),
+      IS_CLIENT,
+      !isTestEnv(),
     );
+
     this.disposal.add(off);
   }
 
-  private listenToMobileDeviceChanges() {
-    const off = onDeviceChange(this.handleMobileDeviceChange.bind(this));
+  private listenToDeviceChanges() {
+    const off = onDeviceChange(this.handleDeviceChange.bind(this));
     this.disposal.add(off);
   }
 
@@ -233,23 +248,26 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
-  private handleMobileDeviceChange(isMobileDevice: boolean) {
-    this._isMobileDevice = isMobileDevice;
-    this.setAttribute('mobile', String(isMobileDevice));
+  private handleDeviceChange(device: Device) {
+    this._device = device;
+    this.setAttribute('mobile', String(this.isMobileDevice));
+    this.setAttribute('desktop', String(this.isDesktopDevice));
     this.dispatchEvent(
-      new MobileDeviceChangeEvent({
-        detail: isMobileDevice,
+      new DeviceChangeEvent({
+        detail: device,
         originalEvent: undefined,
       }),
     );
   }
 
-  private handleTouchInputDeviceChange(isTouchInput: boolean) {
-    this._isTouchInput = isTouchInput;
-    this.setAttribute('touch', String(isTouchInput));
+  private handleInputDeviceChange(inputDevice: InputDevice) {
+    this._inputDevice = inputDevice;
+    this.setAttribute('touch', String(this.isTouchInputDevice));
+    this.setAttribute('mouse', String(this.isMouseInputDevice));
+    this.setAttribute('keyboard', String(this.isKeyboardInputDevice));
     this.dispatchEvent(
-      new TouchInputChangeEvent({
-        detail: isTouchInput,
+      new InputDeviceChangeEvent({
+        detail: inputDevice,
         originalEvent: undefined,
       }),
     );
@@ -387,16 +405,36 @@ export class Player extends LitElement implements PlayerProps {
     return false;
   }
 
-  private _isMobileDevice: PlayerState['isMobileDevice'] = false;
+  private _device = playerContext.device.defaultValue;
 
-  get isMobileDevice(): PlayerState['isMobileDevice'] {
-    return this._isMobileDevice;
+  get device(): PlayerState['device'] {
+    return this._device;
   }
 
-  private _isTouchInput: PlayerState['isTouchInput'] = false;
+  get isMobileDevice(): PlayerState['isMobileDevice'] {
+    return this._device === Device.Mobile;
+  }
 
-  get isTouchInput(): PlayerState['isTouchInput'] {
-    return this._isTouchInput;
+  get isDesktopDevice(): PlayerState['isDesktopDevice'] {
+    return this._device === Device.Desktop;
+  }
+
+  private _inputDevice = playerContext.inputDevice.defaultValue;
+
+  get inputDevice(): PlayerState['inputDevice'] {
+    return this._inputDevice;
+  }
+
+  get isTouchInputDevice(): PlayerState['isTouchInputDevice'] {
+    return this._inputDevice === InputDevice.Touch;
+  }
+
+  get isMouseInputDevice(): PlayerState['isMouseInputDevice'] {
+    return this._inputDevice === InputDevice.Mouse;
+  }
+
+  get isKeyboardInputDevice(): PlayerState['isKeyboardInputDevice'] {
+    return this._inputDevice === InputDevice.Keyboard;
   }
 
   get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
@@ -544,9 +582,9 @@ export class Player extends LitElement implements PlayerProps {
   @property({ type: Boolean, attribute: 'allow-provider-events-to-bubble' })
   allowProviderEventsToBubble = false;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private providerToPlayerEventMap: Record<
     string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     VdsCustomEventConstructor<any, unknown>
   > = {
     [ProviderPlayEvent.TYPE]: PlayEvent,
@@ -685,11 +723,27 @@ export class Player extends LitElement implements PlayerProps {
   @playerContext.buffered.provide()
   private bufferedCtx = playerContext.buffered.defaultValue;
 
+  @playerContext.device.provide()
+  private deviceCtx = playerContext.device.defaultValue;
+
   @playerContext.isMobileDevice.provide()
   private isMobileDeviceCtx = playerContext.isMobileDevice.defaultValue;
 
-  @playerContext.isTouchInput.provide()
-  private isTouchInputCtx = playerContext.isTouchInput.defaultValue;
+  @playerContext.isDesktopDevice.provide()
+  private isDesktopDeviceCtx = playerContext.isDesktopDevice.defaultValue;
+
+  @playerContext.inputDevice.provide()
+  private inputDeviceCtx = playerContext.inputDevice.defaultValue;
+
+  @playerContext.isTouchInputDevice.provide()
+  private isTouchInputDeviceCtx = playerContext.isTouchInputDevice.defaultValue;
+
+  @playerContext.isMouseInputDevice.provide()
+  private isMouseInputDeviceCtx = playerContext.isMouseInputDevice.defaultValue;
+
+  @playerContext.isKeyboardInputDevice.provide()
+  private isKeyboardInputDeviceCtx =
+    playerContext.isKeyboardInputDevice.defaultValue;
 
   @playerContext.isBuffering.provide()
   private isBufferingCtx = playerContext.isBuffering.defaultValue;

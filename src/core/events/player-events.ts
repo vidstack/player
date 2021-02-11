@@ -55,12 +55,12 @@ export class PlaybackEndEvent extends buildVdsEvent<
   PlayerState['hasPlaybackEnded']
 >('playback-end') {}
 
-export class MobileDeviceChangeEvent extends buildVdsEvent<
-  PlayerState['isMobileDevice']
->('mobile-device-change') {}
+export class DeviceChangeEvent extends buildVdsEvent<PlayerState['device']>(
+  'device-change',
+) {}
 
-export class TouchInputChangeEvent extends buildVdsEvent<
-  PlayerState['isTouchInput']
->('touch-input-change') {}
+export class InputDeviceChangeEvent extends buildVdsEvent<
+  PlayerState['inputDevice']
+>('input-device-change') {}
 
 export class ErrorEvent extends buildVdsEvent<unknown>('error') {}
