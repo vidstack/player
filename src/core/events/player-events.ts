@@ -39,6 +39,10 @@ export class MediaTypeChangeEvent extends buildVdsEvent<
   PlayerState['mediaType']
 >('media-type-change') {}
 
+export class ReadyEvent extends buildVdsEvent<PlayerState['isProviderReady']>(
+  'ready',
+) {}
+
 export class PlaybackReadyEvent extends buildVdsEvent<
   PlayerState['isPlaybackReady']
 >('playback-ready') {}

@@ -22,3 +22,11 @@ export class UserVolumeChangeRequestEvent extends buildVdsEvent<
 export class UserTimeChangeRequestEvent extends buildVdsEvent<
   PlayerState['currentTime']
 >(`${USER_EVENT_PREFIX}-time-change-request`) {}
+
+export const ALL_USER_EVENTS = [
+  UserPlayRequestEvent,
+  UserPauseRequestEvent,
+  UserMutedChangeRequestEvent,
+  UserVolumeChangeRequestEvent,
+  UserTimeChangeRequestEvent,
+];

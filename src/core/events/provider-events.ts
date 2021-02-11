@@ -47,6 +47,10 @@ export class ProviderMediaTypeChangeEvent extends buildVdsEvent<
   PlayerState['mediaType']
 >(`${PROVIDER_EVENT_PREFIX}-media-type-change`) {}
 
+export class ProviderReadyEvent extends buildVdsEvent<
+  PlayerState['isProviderReady']
+>(`${PROVIDER_EVENT_PREFIX}-provider-ready`) {}
+
 export class ProviderPlaybackReadyEvent extends buildVdsEvent<
   PlayerState['isPlaybackReady']
 >(`${PROVIDER_EVENT_PREFIX}-playback-ready`) {}
@@ -62,3 +66,22 @@ export class ProviderPlaybackEndEvent extends buildVdsEvent<
 export class ProviderErrorEvent extends buildVdsEvent<unknown>(
   `${PROVIDER_EVENT_PREFIX}-error`,
 ) {}
+
+export const ALL_PROVIDER_EVENTS = [
+  ProviderPlayEvent,
+  ProviderPauseEvent,
+  ProviderPlayingEvent,
+  ProviderMutedChangeEvent,
+  ProviderVolumeChangeEvent,
+  ProviderTimeChangeEvent,
+  ProviderDurationChangeEvent,
+  ProviderBufferedChangeEvent,
+  ProviderBufferingChangeEvent,
+  ProviderViewTypeChangeEvent,
+  ProviderMediaTypeChangeEvent,
+  ProviderReadyEvent,
+  ProviderPlaybackReadyEvent,
+  ProviderPlaybackStartEvent,
+  ProviderPlaybackEndEvent,
+  ProviderErrorEvent,
+];

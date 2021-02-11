@@ -25,8 +25,8 @@ describe('isColliding', () => {
       </div>`,
     );
 
-    const elA = el.querySelector<HTMLDivElement>('#a')!;
-    const elB = el.querySelector<HTMLDivElement>('#b')!;
+    const elA = el.querySelector<HTMLDivElement>('#a') as HTMLDivElement;
+    const elB = el.querySelector<HTMLDivElement>('#b') as HTMLDivElement;
 
     // Same position
     position(elA, 0, 0);
@@ -134,7 +134,7 @@ describe('onInputDeviceChange', () => {
     await oneEvent(window, 'touchstart');
     expect(callback).not.to.have.been.calledWith(true);
 
-    // No-op: call to include coverage report.
+    // No-op: call to include in coverage report.
     off();
   });
 });
@@ -155,7 +155,7 @@ describe('safelyDefineCustomElement', () => {
   it('should register custom element', async () => {
     safelyDefineCustomElement('fake-el', FakeCustomElement);
     const el = await fixture(html`<fake-el></fake-el>`);
-    expect(el.shadowRoot!.innerHTML).contains('<h1>penguins</h1>');
+    expect(el.shadowRoot?.innerHTML).contains('<h1>penguins</h1>');
   });
 
   it('should not register custom element if registered before', () => {

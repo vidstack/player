@@ -1,4 +1,4 @@
-import { Disposal, listen } from '@wcom/events';
+import { Disposal, listen, listenTo } from '@wcom/events';
 import { v4 as uuid } from '@lukeed/uuid';
 import {
   html,
@@ -13,12 +13,48 @@ import { onDeviceChange, onInputDeviceChange } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
 import {
+  ALL_PROVIDER_EVENTS,
+  ALL_USER_EVENTS,
+  BufferedChangeEvent,
+  BufferingChangeEvent,
+  DurationChangeEvent,
+  MediaTypeChangeEvent,
+  MobileDeviceChangeEvent,
+  MutedChangeEvent,
+  PauseEvent,
+  PlaybackEndEvent,
+  PlaybackReadyEvent,
+  PlaybackStartEvent,
+  PlayEvent,
+  PlayingEvent,
+  ProviderBufferedChangeEvent,
+  ProviderBufferingChangeEvent,
+  ProviderDurationChangeEvent,
+  ProviderErrorEvent,
+  ProviderMediaTypeChangeEvent,
+  ProviderMutedChangeEvent,
+  ProviderPauseEvent,
+  ProviderPlaybackEndEvent,
+  ProviderPlaybackReadyEvent,
+  ProviderPlaybackStartEvent,
+  ProviderPlayEvent,
+  ProviderPlayingEvent,
+  ProviderReadyEvent,
+  ProviderTimeChangeEvent,
+  ProviderViewTypeChangeEvent,
+  ProviderVolumeChangeEvent,
+  ReadyEvent,
+  TimeChangeEvent,
+  TouchInputChangeEvent,
   UserMutedChangeRequestEvent,
   UserPauseRequestEvent,
   UserPlayRequestEvent,
   UserTimeChangeRequestEvent,
   UserVolumeChangeRequestEvent,
+  ViewTypeChangeEvent,
+  VolumeChangeEvent,
 } from './events';
+import { VdsCustomEvent, VdsCustomEventConstructor } from '../shared/events';
 
 /**
  * The player sits at the top of the component hierarchy in the library. It encapsulates
@@ -53,22 +89,23 @@ import {
  *  </vds-player>
  * ```
  *
- * @event vds-play - Emitted when playback attempts to start.
- * @event vds-pause - Emitted when playback pauses.
- * @event vds-playing - Emitted when playback being playback.
- * @event vds-muted-change - Emitted when the muted state of the current provider changes.
- * @event vds-volume-change - Emitted when the volume state of the current provider changes.
- * @event vds-time-change - Emitted when the current playback time changes.
- * @event vds-duration-change - Emitted when the length of the media changes.
- * @event vds-buffered-change - Emitted when the length of the media downloaded changes.
- * @event vds-view-type-change - Emitted when the view type of the current provider/media changes.
- * @event vds-media-type-change - Emitted when the media type of the current provider/media changes.
- * @event vds-playback-ready - Emitted when playback is ready to start - analgous with `canPlayThrough`.
- * @event vds-playback-start - Emitted when playback has started (`currentTime > 0`).
- * @event vds-playback-end - Emitted when playback ends (`currentTime === duration`).
- * @event vds-mobile-device-change - Emitted when the type of user device changes between mobile/desktop.
- * @event vds-touch-input-change - Emitted when the input device changes between touch/mouse.
- * @event vds-error - Emitted when a provider encounters an error during media loading/playback.
+ * @fires vds-play - Emitted when playback attempts to start.
+ * @fires vds-pause - Emitted when playback pauses.
+ * @fires vds-playing - Emitted when playback being playback.
+ * @fires vds-muted-change - Emitted when the muted state of the current provider changes.
+ * @fires vds-volume-change - Emitted when the volume state of the current provider changes.
+ * @fires vds-time-change - Emitted when the current playback time changes.
+ * @fires vds-duration-change - Emitted when the length of the media changes.
+ * @fires vds-buffered-change - Emitted when the length of the media downloaded changes.
+ * @fires vds-view-type-change - Emitted when the view type of the current provider/media changes.
+ * @fires vds-media-type-change - Emitted when the media type of the current provider/media changes.
+ * @fires vds-ready - Emitted when the provider is ready to be interacted with.
+ * @fires vds-playback-ready - Emitted when playback is ready to start - analgous with `canPlayThrough`.
+ * @fires vds-playback-start - Emitted when playback has started (`currentTime > 0`).
+ * @fires vds-playback-end - Emitted when playback ends (`currentTime === duration`).
+ * @fires vds-mobile-device-change - Emitted when the type of user device changes between mobile/desktop.
+ * @fires vds-touch-input-change - Emitted when the input device changes between touch/mouse.
+ * @fires vds-error - Emitted when a provider encounters an error during media loading/playback.
  *
  * @slot - Used to pass in Provider/UI components.
  */
@@ -121,6 +158,7 @@ export class Player extends LitElement implements PlayerProps {
       >
         ${isProviderUIBlockerVisible &&
         html`<div class="provider-ui-blocker"></div>`}
+
         <slot></slot>
       </div>
     `;
@@ -148,6 +186,8 @@ export class Player extends LitElement implements PlayerProps {
     this.setUuid();
     this.listenToTouchInputChanges();
     this.listenToMobileDeviceChanges();
+    this.listenToUserEvents();
+    this.listenToProviderEvents();
   }
 
   private setUuid() {
@@ -156,21 +196,63 @@ export class Player extends LitElement implements PlayerProps {
   }
 
   private listenToTouchInputChanges() {
-    const off = onInputDeviceChange(isTouchInput => {
-      this._isTouchInput = isTouchInput;
-      this.setAttribute('touch', String(isTouchInput));
-    });
-
+    const off = onInputDeviceChange(
+      this.handleTouchInputDeviceChange.bind(this),
+    );
     this.disposal.add(off);
   }
 
   private listenToMobileDeviceChanges() {
-    const off = onDeviceChange(isMobileDevice => {
-      this._isMobileDevice = isMobileDevice;
-      this.setAttribute('mobile', String(isMobileDevice));
-    });
-
+    const off = onDeviceChange(this.handleMobileDeviceChange.bind(this));
     this.disposal.add(off);
+  }
+
+  private listenToUserEvents() {
+    ALL_USER_EVENTS.forEach(event => {
+      const off = listenTo(this, event.TYPE, this.handleUserEvent.bind(this));
+      this.disposal.add(off);
+    });
+  }
+
+  private listenToProviderEvents() {
+    ALL_PROVIDER_EVENTS.forEach(event => {
+      const off = listenTo(
+        this,
+        event.TYPE,
+        this.handleProviderEvent.bind(this),
+      );
+      this.disposal.add(off);
+    });
+  }
+
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Miscellaneous Handlers
+   *
+   * This section contains misc. handler methods that don't belong anywhere else.
+   * -------------------------------------------------------------------------------------------
+   */
+
+  private handleMobileDeviceChange(isMobileDevice: boolean) {
+    this._isMobileDevice = isMobileDevice;
+    this.setAttribute('mobile', String(isMobileDevice));
+    this.dispatchEvent(
+      new MobileDeviceChangeEvent({
+        detail: isMobileDevice,
+        originalEvent: undefined,
+      }),
+    );
+  }
+
+  private handleTouchInputDeviceChange(isTouchInput: boolean) {
+    this._isTouchInput = isTouchInput;
+    this.setAttribute('touch', String(isTouchInput));
+    this.dispatchEvent(
+      new TouchInputChangeEvent({
+        detail: isTouchInput,
+        originalEvent: undefined,
+      }),
+    );
   }
 
   /**
@@ -193,6 +275,7 @@ export class Player extends LitElement implements PlayerProps {
 
   set src(newSrc: PlayerState['src']) {
     this._src = newSrc;
+    this.srcCtx = newSrc;
     // TODO: call appropriate method.
   }
 
@@ -246,8 +329,17 @@ export class Player extends LitElement implements PlayerProps {
 
   // ---
 
+  private _aspectRatio: PlayerState['aspectRatio'] = '16:9';
+
   @property({ type: String, attribute: 'aspect-ratio', reflect: true })
-  aspectRatio = playerContext.aspectRatio.defaultValue;
+  get aspectRatio(): PlayerState['aspectRatio'] {
+    return this._aspectRatio;
+  }
+
+  set aspectRatio(newAspectRatio: PlayerState['aspectRatio']) {
+    this._aspectRatio = newAspectRatio;
+    this.aspectRatioCtx = newAspectRatio;
+  }
 
   // ---
 
@@ -406,36 +498,33 @@ export class Player extends LitElement implements PlayerProps {
 
   private userEventGateway(e: Event) {
     if (!this.allowUserEventsToBubble) e.stopPropagation();
+    return true;
   }
 
-  @listen(UserPlayRequestEvent.TYPE)
-  private handleUserPlayRequest(e: Event) {
-    this.userEventGateway(e);
-    this.requestPlaybackChange(false);
+  // This handler is attached to user events in the "Connect" section above.
+  private handleUserEvent(e: VdsCustomEvent<unknown, unknown>) {
+    if (!this.userEventGateway(e)) return;
+    this.requestProviderUpdate(e);
   }
 
-  @listen(UserPauseRequestEvent.TYPE)
-  private handleUserPauseRequest(e: Event) {
-    this.userEventGateway(e);
-    this.requestPlaybackChange(true);
-  }
-
-  @listen(UserMutedChangeRequestEvent.TYPE)
-  private handleUserMuteRequest(e: UserMutedChangeRequestEvent) {
-    this.userEventGateway(e);
-    this.requestMutedChange(e.detail);
-  }
-
-  @listen(UserVolumeChangeRequestEvent.TYPE)
-  private handleUserVolumeChangeRequest(e: UserVolumeChangeRequestEvent) {
-    this.userEventGateway(e);
-    this.requestVolumeChange(e.detail);
-  }
-
-  @listen(UserTimeChangeRequestEvent.TYPE)
-  private handlerUserTimeChangeRequest(e: UserTimeChangeRequestEvent) {
-    this.userEventGateway(e);
-    this.requestTimeChange(e.detail);
+  private requestProviderUpdate(e: VdsCustomEvent<unknown, unknown>) {
+    switch (e.type) {
+      case UserPlayRequestEvent.TYPE:
+        this.requestPlaybackChange(false);
+        break;
+      case UserPauseRequestEvent.TYPE:
+        this.requestPlaybackChange(true);
+        break;
+      case UserMutedChangeRequestEvent.TYPE:
+        this.requestMutedChange(e.detail as PlayerState['muted']);
+        break;
+      case UserVolumeChangeRequestEvent.TYPE:
+        this.requestVolumeChange(e.detail as PlayerState['volume']);
+        break;
+      case UserTimeChangeRequestEvent.TYPE:
+        this.requestTimeChange(e.detail as PlayerState['currentTime']);
+        break;
+    }
   }
 
   /**
@@ -455,14 +544,107 @@ export class Player extends LitElement implements PlayerProps {
   @property({ type: Boolean, attribute: 'allow-provider-events-to-bubble' })
   allowProviderEventsToBubble = false;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private providerToPlayerEventMap: Record<
+    string,
+    VdsCustomEventConstructor<any, unknown>
+  > = {
+    [ProviderPlayEvent.TYPE]: PlayEvent,
+    [ProviderPauseEvent.TYPE]: PauseEvent,
+    [ProviderPlayingEvent.TYPE]: PlayingEvent,
+    [ProviderMutedChangeEvent.TYPE]: MutedChangeEvent,
+    [ProviderVolumeChangeEvent.TYPE]: VolumeChangeEvent,
+    [ProviderTimeChangeEvent.TYPE]: TimeChangeEvent,
+    [ProviderDurationChangeEvent.TYPE]: DurationChangeEvent,
+    [ProviderBufferedChangeEvent.TYPE]: BufferedChangeEvent,
+    [ProviderBufferingChangeEvent.TYPE]: BufferingChangeEvent,
+    [ProviderViewTypeChangeEvent.TYPE]: ViewTypeChangeEvent,
+    [ProviderMediaTypeChangeEvent.TYPE]: MediaTypeChangeEvent,
+    [ProviderReadyEvent.TYPE]: ReadyEvent,
+    [ProviderPlaybackReadyEvent.TYPE]: PlaybackReadyEvent,
+    [ProviderPlaybackStartEvent.TYPE]: PlaybackStartEvent,
+    [ProviderPlaybackEndEvent.TYPE]: PlaybackEndEvent,
+  };
+
   private providerEventGateway(e: Event) {
     if (!this.allowUserEventsToBubble) e.stopPropagation();
+    return true;
   }
 
-  // TODO: connect provider events
-  // TODO: update context.
-  // TODO: update audio/video attributes
-  // TODO: listen to some updated lifecycle to update rest context? -> src/aspectRatio?
+  // This handler is attached to provider events in the "Connect" section above.
+  private handleProviderEvent(e: VdsCustomEvent<unknown, unknown>) {
+    if (!this.providerEventGateway(e)) return;
+    this.updateContext(e);
+    this.translateProviderEventAndDispatch(e);
+  }
+
+  private translateProviderEventAndDispatch(
+    e: VdsCustomEvent<unknown, unknown>,
+  ) {
+    const playerEvent = this.providerToPlayerEventMap[e.type];
+    this.dispatchEvent(new playerEvent({ originalEvent: e, detail: e.detail }));
+  }
+
+  private updateContext(e: VdsCustomEvent<unknown, unknown>) {
+    switch (e.type) {
+      case ProviderPlayEvent.TYPE:
+        this.pausedCtx = false;
+        break;
+      case ProviderPauseEvent.TYPE:
+        this.pausedCtx = false;
+        break;
+      case ProviderPlayingEvent.TYPE:
+        this.pausedCtx = false;
+        break;
+      case ProviderMutedChangeEvent.TYPE:
+        this.mutedCtx = e.detail as PlayerState['muted'];
+        break;
+      case ProviderVolumeChangeEvent.TYPE:
+        this.volumeCtx = e.detail as PlayerState['volume'];
+        break;
+      case ProviderTimeChangeEvent.TYPE:
+        this.currentTimeCtx = e.detail as PlayerState['currentTime'];
+        break;
+      case ProviderDurationChangeEvent.TYPE:
+        this.durationCtx = e.detail as PlayerState['duration'];
+        break;
+      case ProviderBufferedChangeEvent.TYPE:
+        this.bufferedCtx = e.detail as PlayerState['buffered'];
+        break;
+      case ProviderBufferingChangeEvent.TYPE:
+        this.isBufferingCtx = e.detail as PlayerState['isBuffering'];
+        break;
+      case ProviderViewTypeChangeEvent.TYPE:
+        this.viewTypeCtx = e.detail as PlayerState['viewType'];
+        break;
+      case ProviderMediaTypeChangeEvent.TYPE:
+        this.mediaTypeCtx = e.detail as PlayerState['mediaType'];
+        break;
+      case ProviderReadyEvent.TYPE:
+        this.isProviderReadyCtx = e.detail as PlayerState['isProviderReady'];
+        break;
+      case ProviderPlaybackReadyEvent.TYPE:
+        this.isPlaybackReadyCtx = e.detail as PlayerState['isPlaybackReady'];
+        break;
+      case ProviderPlaybackStartEvent.TYPE:
+        this.hasPlaybackStartedCtx = e.detail as PlayerState['hasPlaybackStarted'];
+        break;
+      case ProviderPlaybackEndEvent.TYPE:
+        this.hasPlaybackEndedCtx = e.detail as PlayerState['hasPlaybackEnded'];
+        break;
+    }
+  }
+
+  @listen(ProviderViewTypeChangeEvent.TYPE)
+  private handleProviderViewTypeChange() {
+    this.setAttribute('audio', String(this.isAudioView));
+    this.setAttribute('video', String(this.isVideoView));
+  }
+
+  @listen(ProviderErrorEvent.TYPE)
+  private handleProviderError() {
+    // TODO: handle this error.
+  }
 
   /**
    * -------------------------------------------------------------------------------------------
