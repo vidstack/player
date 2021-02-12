@@ -120,6 +120,10 @@ import { isTestEnv } from './env';
  * @slot - Used to pass in Provider/UI components.
  *
  * @csspart player - The root player container.
+ *
+ * @cssprop --vds-player-font-family - A custom font family to be used throughout the player.
+ * @cssprop --vds-player-bg - The background color of the player.
+ * @cssprop --vds-blocker-z-index - The provider UI blocker position in the root z-axis stack inside the player.
  */
 export class Player extends LitElement implements PlayerProps {
   public static get styles(): CSSResultArray {
