@@ -1,5 +1,26 @@
 import { listenTo } from '@wcom/events';
-import { IS_CLIENT } from './support';
+import { Unsubscribe } from '../shared/types';
+import { IS_CLIENT, IS_MOBILE } from './support';
+import { noop, isUndefined } from './unit';
+
+/**
+ * Registers a custom element in the CustomElementRegistry. By "safely" we mean:
+ *
+ * - Called only client-side (`window` is defined).
+ * - The element is only registered if it hasn't been registered before under the given `name`.
+ *
+ * @param name - A string representing the name you are giving the element.
+ * @param constructor - A class object that defines the behaviour of the element.
+ */
+export const safelyDefineCustomElement = (
+  name: string,
+  constructor: CustomElementConstructor,
+  isClient = IS_CLIENT,
+): void => {
+  const isElementRegistered = isClient && window.customElements.get(name);
+  if (!isClient || isElementRegistered) return;
+  window.customElements.define(name, constructor);
+};
 
 /**
  * Determines whether two elements are interecting in the DOM.
@@ -18,7 +39,7 @@ export const isColliding = (
   translateAy = 0,
   translateBx = 0,
   translateBy = 0,
-) => {
+): boolean => {
   const aRect = a.getBoundingClientRect();
   const bRect = b.getBoundingClientRect();
   return (
@@ -29,17 +50,24 @@ export const isColliding = (
   );
 };
 
+export enum InputDevice {
+  Touch = 'touch',
+  Mouse = 'mouse',
+  Keyboard = 'keyboard',
+}
+
 /**
- * Listens for input device changes (mouse/touch) and invokes a callback whether the current
- * device is touch-based.
+ * Listens for input device changes (mouse/touch) and invokes a callback with the current
+ * input device.
  *
  * @param callback - Called when the input device is changed.
  */
 export const onInputDeviceChange = (
-  callback: (isTouch: boolean) => void,
+  callback: (inputDevice: InputDevice) => void,
   isClient = IS_CLIENT,
-) => {
-  if (!isClient) return () => {};
+  shouldIgnoreEmulatedTouchEvents = true,
+): Unsubscribe => {
+  if (!isClient) return noop;
 
   let lastTouchTime = 0;
 
@@ -48,7 +76,7 @@ export const onInputDeviceChange = (
     'touchstart',
     () => {
       lastTouchTime = new Date().getTime();
-      callback(true);
+      callback(InputDevice.Touch);
     },
     true,
   );
@@ -57,15 +85,57 @@ export const onInputDeviceChange = (
     window,
     'mousemove',
     () => {
-      // Filter emulated events coming from touch events
-      if (new Date().getTime() - lastTouchTime < 500) return;
-      callback(false);
+      // Filter emulated events coming from touch events.
+      const isEmulatedEvent = new Date().getTime() - lastTouchTime < 500;
+      if (shouldIgnoreEmulatedTouchEvents && isEmulatedEvent) return;
+      callback(InputDevice.Mouse);
     },
     true,
   );
 
+  const offKeyboardListener = listenTo(window, 'keydown', () => {
+    callback(InputDevice.Keyboard);
+  });
+
   return () => {
     offTouchListener();
     offMouseListener();
+    offKeyboardListener();
   };
+};
+
+export enum Device {
+  Mobile = 'mobile',
+  Desktop = 'desktop',
+}
+
+/**
+ * Listens for device changes (mobile/desktop) and invokes a callback whether the current
+ * view is mobile. It determines the type by either listening for `resize` events
+ * on the window (if API is available), otherwise it'll fallback to parsing the user agent string.
+ *
+ * @param callback - Called when the device changes.
+ * @param maxWidth - The maximum window width in pixels to consider device as mobile.
+ */
+export const onDeviceChange = (
+  callback: (device: Device) => void,
+  maxWidth = 480,
+  isClient = IS_CLIENT,
+  isMobile = IS_MOBILE,
+): Unsubscribe => {
+  const isServerSide = !isClient;
+  const isResizeObsDefined = !isUndefined(window.ResizeObserver);
+
+  if (isServerSide || !isResizeObsDefined) {
+    callback(isMobile ? Device.Mobile : Device.Desktop);
+    return noop;
+  }
+
+  function handleWindowResize() {
+    const isMobileScreen = window.innerWidth <= maxWidth;
+    callback(isMobileScreen || isMobile ? Device.Mobile : Device.Desktop);
+  }
+
+  handleWindowResize();
+  return listenTo(window, 'resize', handleWindowResize);
 };

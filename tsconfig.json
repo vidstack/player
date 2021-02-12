@@ -6,7 +6,7 @@
     "alwaysStrict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
@@ -14,7 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "lib": ["ES2017", "DOM", "DOM.Iterable"],
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "module": "ES6",
     "target": "ES2017"
   },

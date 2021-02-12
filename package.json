@@ -10,7 +10,6 @@
   "module": "bundle/index.js",
   "type": "module",
   "files": [
-    "src/",
     "bundle/",
     "core/",
     "providers/",
@@ -25,7 +24,7 @@
   ],
   "contributors": [
     "Dave Furfero <furf@furf.com>",
-    "Rahim Alwer <rahim_alwer@outlook.com>",
+    "Rahim Alwer <rahim.alwer@gmail.com>",
     "Sam Potts <sam@potts.es>"
   ],
   "repository": {
@@ -39,7 +38,7 @@
     "build": "run-s clean build:esm",
     "build:esm": "tsc -p tsconfig-build.json",
     "build:watch": "npm run build:esm -- -w",
-    "clean": "rimraf bundle core providers skins ui utils",
+    "clean": "rimraf bundle core providers skins ui utils shared",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts --quiet . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
@@ -54,6 +53,7 @@
     "storybook:build": "build-storybook"
   },
   "dependencies": {
+    "@lukeed/uuid": "^2.0.0",
     "@wcom/context": "^2.0.0",
     "@wcom/events": "^1.0.0",
     "clsx": "^1.1.1",
@@ -72,9 +72,9 @@
     "@typescript-eslint/parser": "^4.11.1",
     "@web/dev-server-esbuild": "^0.2.6",
     "@web/test-runner": "^0.9.7",
+    "@web/test-runner-commands": "^0.2.1",
     "babel-loader": "^8.2.2",
     "eslint": "^7.17.0",
-    "eslint-config-airbnb-typescript": "^12.0.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-lit": "^1.3.0",

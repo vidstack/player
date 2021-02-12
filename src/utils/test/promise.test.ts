@@ -5,7 +5,7 @@ describe('deferredPromise', () => {
   it('should resolve', done => {
     const deferred = deferredPromise();
 
-    deferred.promise.then((res: any) => {
+    deferred.promise.then((res: unknown) => {
       expect(res).to.be.true;
       done();
     });
@@ -16,7 +16,7 @@ describe('deferredPromise', () => {
   it('should reject', done => {
     const deferred = deferredPromise();
 
-    deferred.promise.catch((res: any) => {
+    deferred.promise.catch((res: unknown) => {
       expect(res).to.be.true;
       done();
     });

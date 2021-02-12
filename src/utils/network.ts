@@ -1,4 +1,4 @@
-import { isString, isArray, isNil, isObject, isUndefined } from './unit';
+import { noop, isString, isArray, isNil, isObject, isUndefined } from './unit';
 import { IS_CLIENT } from './support';
 
 /**
@@ -6,7 +6,7 @@ import { IS_CLIENT } from './support';
  *
  * @param json - The JSON object to parse.
  */
-export function tryParseJSON<T>(json: string): T | undefined {
+export function tryParseJSON<T>(json: unknown): T | undefined {
   if (!isString(json)) return undefined;
 
   try {
@@ -21,15 +21,15 @@ export function tryParseJSON<T>(json: string): T | undefined {
  *
  * @param value - The value to check.
  */
-export const isObjOrJSON = (value: any): boolean =>
+export const isObjOrJSON = (value: unknown): boolean =>
   !isNil(value) &&
   (isObject(value) || (isString(value) && value.startsWith('{')));
 
 /**
  * If an object return otherwise try to parse it as json.
  */
-export const objOrParseJSON = <T>(value: any): T | undefined =>
-  isObject(value) ? value : tryParseJSON(value);
+export const objOrParseJSON = <T>(value: unknown): T | undefined =>
+  (isObject(value) ? value : tryParseJSON(value)) as T;
 
 /**
  * Load image avoiding xhr/fetch CORS issues. Server status can't be obtained this way
@@ -39,20 +39,18 @@ export const objOrParseJSON = <T>(value: any): T | undefined =>
  * @param src - The URL of where the image resource is located.
  * @param minWidth - The minimum width for a valid image to be loaded.
  */
-/* c8 ignore next 14 */
+/* c8 ignore next 12 */
 export const loadImage = (
   src: string,
   minWidth = 1,
 ): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
     const image = new Image();
+
     const handler = () => {
-      // @ts-ignore
-      delete image.onload;
-      // @ts-ignore
-      delete image.onerror;
       image.naturalWidth >= minWidth ? resolve(image) : reject(image);
     };
+
     Object.assign(image, { onload: handler, onerror: handler, src });
   });
 
@@ -63,24 +61,27 @@ export const loadImage = (
  * @param onLoad - Callback invoked when the script is loaded.
  * @param onError - Callback invoked when the script loading fails.
  */
-/* c8 ignore next 11 */
+/* c8 ignore next 14 */
 export const loadScript = (
   src: string,
   onLoad: () => void,
-  onError: (e: any) => void = () => {},
-) => {
+  onError: (e: unknown) => void = noop,
+): void => {
   const script = document.createElement('script');
   script.src = src;
   script.onload = onLoad;
   script.onerror = onError;
+
   const firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode!.insertBefore(script, firstScriptTag);
+  if (!isNil(firstScriptTag.parentNode)) {
+    firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+  }
 };
 
 /**
  * Tries to parse json and return a object.
  */
-export const decodeJSON = <T>(data: any): T | undefined => {
+export const decodeJSON = <T>(data: unknown): T | undefined => {
   if (!isObjOrJSON(data)) return undefined;
   return objOrParseJSON(data);
 };
@@ -115,7 +116,7 @@ export const parseQueryString = <T>(qs?: string): T => {
   let match;
 
   // eslint-disable-next-line no-cond-assign
-  while ((match = QUERY_STRING_REGEX.exec(qs!))) {
+  while ((match = QUERY_STRING_REGEX.exec(qs))) {
     const name = tryDecodeURIComponent(match[1], match[1]).replace('[]', '');
 
     const value = isString(match[2])
@@ -132,7 +133,7 @@ export const parseQueryString = <T>(qs?: string): T => {
   return params;
 };
 
-export type Params = Record<string, any>;
+export type Params = Record<string, unknown>;
 
 /**
  * Serializes the given params into a query string.
@@ -182,8 +183,8 @@ export const preconnect = (
 /**
  * Safely appends the given query string to the given URL.
  */
-export const appendQueryStringToURL = (url: string, qs?: string) => {
-  if (isUndefined(qs) || qs!.length === 0) return url;
+export const appendQueryStringToURL = (url: string, qs?: string): string => {
+  if (isUndefined(qs) || qs.length === 0) return url;
   const mainAndQuery = url.split('?', 2);
   return (
     mainAndQuery[0] +
@@ -194,7 +195,10 @@ export const appendQueryStringToURL = (url: string, qs?: string) => {
 /**
  * Serializes the given params into a query string and appends them to the given URL.
  */
-export const appendParamsToURL = (url: string, params: string | Params) =>
+export const appendParamsToURL = (
+  url: string,
+  params: string | Params,
+): string =>
   appendQueryStringToURL(
     url,
     isObject(params)
@@ -208,81 +212,4 @@ export const appendParamsToURL = (url: string, params: string | Params) =>
 export const decodeQueryString = <T>(qs: string): T | undefined => {
   if (!isString(qs)) return undefined;
   return parseQueryString(qs);
-};
-
-type PendingSDKRequest = {
-  resolve: (value?: any) => void;
-  reject: (reason?: any) => void;
-};
-
-const pendingSDKRequests: Record<string, PendingSDKRequest[]> = {};
-
-/**
- * Loads an SDK into the global `Window` namespace.
- *
- * @param url - The URL to where the SDK is located.
- * @param sdkGlobalProp - The property on the Window object that returns the SDK.
- * @param sdkReadyProp - The property on the SDK object that determines whether the SDK is ready.
- * @param isLoaded - Function that determines whether the SDK has loaded.
- * @param loadScriptFn - The function used to load the script.
- *
- * @see https://github.com/CookPete/react-player/blob/master/src/utils.js#L77
- */
-/* c8 ignore next 57 */
-export const loadSDK = <SDKType = any>(
-  url: string,
-  sdkGlobalProp: string,
-  sdkReadyProp?: string,
-  isLoaded: (sdk: SDKType) => boolean = () => true,
-  loadScriptFn = loadScript,
-) => {
-  const getGlobal = (key: any) => {
-    if (!isUndefined(window[key])) return window[key];
-    if (window.exports && window.exports[key]) return window.exports[key];
-    if (window.module && window.module.exports && window.module.exports[key]) {
-      return window.module.exports[key];
-    }
-    return undefined;
-  };
-
-  const existingGlobal = getGlobal(sdkGlobalProp);
-
-  if (existingGlobal && isLoaded(existingGlobal)) {
-    return Promise.resolve(existingGlobal);
-  }
-
-  return new Promise<SDKType>((resolve, reject) => {
-    if (!isUndefined(pendingSDKRequests[url])) {
-      pendingSDKRequests[url].push({ resolve, reject });
-      return;
-    }
-
-    pendingSDKRequests[url] = [{ resolve, reject }];
-
-    const onLoaded = (sdk: SDKType) => {
-      pendingSDKRequests[url].forEach(request => request.resolve(sdk));
-    };
-
-    if (!isUndefined(sdkReadyProp)) {
-      const previousOnReady: () => void = window[sdkReadyProp as any] as any;
-      // eslint-disable-next-line func-names
-      (window as any)[sdkReadyProp as any] = function () {
-        if (!isUndefined(previousOnReady)) previousOnReady();
-        onLoaded(getGlobal(sdkGlobalProp));
-      };
-    }
-
-    loadScriptFn(
-      url,
-      () => {
-        if (isUndefined(sdkReadyProp)) onLoaded(getGlobal(sdkGlobalProp));
-      },
-      e => {
-        pendingSDKRequests[url].forEach(request => {
-          request.reject(e);
-        });
-        delete pendingSDKRequests[url];
-      },
-    );
-  });
 };

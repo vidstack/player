@@ -1,14 +1,17 @@
 {
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
   "env": {
     "browser": true
   },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
   "extends": [
-    "airbnb-typescript/base",
     "plugin:wc/recommended",
     "plugin:lit/recommended",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
     "prettier"
   ],
   "rules": {
@@ -17,6 +20,7 @@
     "default-case": "off",
     "class-methods-use-this": "off",
     "import/prefer-default-export": "off",
+    "max-classes-per-file": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {

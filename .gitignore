@@ -1,5 +1,4 @@
 dist/
-@types/
 
 /bundle/
 /core/
@@ -7,6 +6,7 @@ dist/
 /skins/
 /ui/
 /utils/
+/shared/
 
 *~
 *.sw[mnpcod]

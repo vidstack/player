@@ -1,4 +1,4 @@
-import { isFunction } from './unit';
+import { noop, isFunction, isUndefined } from './unit';
 
 export const IS_CLIENT = typeof window !== 'undefined';
 /* c8 ignore next */
@@ -9,20 +9,15 @@ export const IS_MOBILE = IS_IOS || IS_ANDROID;
 export const IS_IPHONE =
   IS_CLIENT && /(iPhone|iPod)/gi.test(window.navigator?.platform);
 export const IS_FIREFOX = /firefox/.test(UA);
-export const IS_CHROME = IS_CLIENT && (window as any).chrome;
+export const IS_CHROME = IS_CLIENT && window.chrome;
 export const IS_SAFARI =
-  IS_CLIENT && ((window as any).safari || IS_IOS || /Apple/.test(UA));
+  IS_CLIENT && (window.safari || IS_IOS || /Apple/.test(UA));
 
 /* c8 ignore next 4 */
 export const ORIGIN =
   window.location.protocol !== 'file:'
     ? `${window.location.protocol}//${window.location.hostname}`
     : undefined;
-
-export type WebKitPresentationMode =
-  | 'picture-in-picture'
-  | 'inline'
-  | 'fullscreen';
 
 /**
  * Checks if a video player can enter fullscreen.
@@ -33,7 +28,6 @@ export type WebKitPresentationMode =
 export const canFullscreenVideo = (): boolean => {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
-  // @ts-ignore
   return isFunction(video.webkitEnterFullscreen);
 };
 
@@ -42,9 +36,11 @@ export const canFullscreenVideo = (): boolean => {
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
  */
-/* c8 ignore next 2 */
-export const canRotateScreen = () =>
-  IS_CLIENT && window.screen.orientation && window.screen.orientation.lock;
+/* c8 ignore next 4 */
+export const canRotateScreen = (): boolean =>
+  IS_CLIENT &&
+  !isUndefined(window.screen.orientation) &&
+  !isUndefined(window.screen.orientation.lock);
 
 /**
  * Reduced motion iOS & MacOS setting.
@@ -77,7 +73,6 @@ export const canPlayHLSNatively = (): boolean => {
 export const canUsePiPInChrome = (): boolean => {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
-  // @ts-ignore
   return !!document.pictureInPictureEnabled && !video.disablePictureInPicture;
 };
 
@@ -88,13 +83,15 @@ export const canUsePiPInChrome = (): boolean => {
  *
  * @see https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls
  */
-/* c8 ignore next 8 */
+/* c8 ignore next 9 */
 export const canUsePiPInSafari = (): boolean => {
   if (!IS_CLIENT) return false;
+
   const video = document.createElement('video');
+
   return (
-    isFunction((video as any).webkitSupportsPresentationMode) &&
-    isFunction((video as any).webkitSetPresentationMode) &&
+    isFunction(video.webkitSupportsPresentationMode) &&
+    isFunction(video.webkitSetPresentationMode) &&
     !IS_IPHONE
   );
 };
@@ -143,7 +140,7 @@ export const canAutoplay = (
 
   // Promise wrapped this way to catch both sync throws and async rejections.
   // More info: https://github.com/tc39/proposal-promise-try
-  new Promise(resolve => resolve(video.play())).catch(() => {});
+  new Promise(resolve => resolve(video.play())).catch(noop);
 
   return Promise.resolve(!video.paused);
 };
