@@ -2,7 +2,9 @@ import { Player } from './Player';
 import { safelyDefineCustomElement } from '../utils';
 import { LIB_PREFIX } from '../shared/constants';
 
-safelyDefineCustomElement(`${LIB_PREFIX}-player`, Player);
+export const PLAYER_TAG_NAME = `${LIB_PREFIX}-player`;
+
+safelyDefineCustomElement(PLAYER_TAG_NAME, Player);
 
 declare global {
   interface HTMLElementTagNameMap {

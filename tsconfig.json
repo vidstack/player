@@ -14,7 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "lib": ["ES2017", "DOM", "DOM.Iterable"],
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "module": "ES6",
     "target": "ES2017"
   },

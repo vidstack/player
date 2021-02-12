@@ -19,6 +19,11 @@ export type PlayerContext = {
   [P in keyof PlayerState]: Context<PlayerState[P]>;
 };
 
+export type PlayerContextProvider = Record<string, unknown> &
+  {
+    [P in keyof PlayerState as `${P}Ctx`]: PlayerState[P];
+  };
+
 export type ReadonlyPlayerState = Readonly<
   Pick<
     PlayerState,
@@ -84,6 +89,14 @@ export interface PlayerState {
    * not started. Setting this to `true` will begin/resume playback.
    */
   paused: boolean;
+
+  /**
+   * Indicates whether a user interface should be shown for controlling the resource. Set this to
+   * `false` when you want to provide your own custom controls, and `true` if you want the current
+   * provider to supply its own default controls. Depending on the provider, changing this prop
+   * may cause the player to completely reset.
+   */
+  controls: boolean;
 
   /**
    * The URL of the poster for the current media resource. Defaults to `undefined` if media/poster

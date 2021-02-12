@@ -1,95 +1,133 @@
-import { LitElement } from 'lit-element';
-import { LIB_PREFIX } from '../../shared/constants';
-import { safelyDefineCustomElement } from '../../utils';
+import {
+  html,
+  internalProperty,
+  LitElement,
+  TemplateResult,
+} from 'lit-element';
 import { playerContext } from '../player.context';
 
 export class FakeConsumer extends LitElement {
+  @internalProperty()
   @playerContext.uuid.consume()
   uuid = playerContext.uuid.defaultValue;
 
+  @internalProperty()
   @playerContext.src.consume()
   src = playerContext.src.defaultValue;
 
+  @internalProperty()
   @playerContext.volume.consume()
   volume = playerContext.volume.defaultValue;
 
+  @internalProperty()
   @playerContext.currentTime.consume()
   currentTime = playerContext.currentTime.defaultValue;
 
+  @internalProperty()
   @playerContext.paused.consume()
   paused = playerContext.paused.defaultValue;
 
+  @internalProperty()
+  @playerContext.controls.consume()
+  controls = playerContext.controls.defaultValue;
+
+  @internalProperty()
   @playerContext.poster.consume()
   poster = playerContext.poster.defaultValue;
 
+  @internalProperty()
   @playerContext.muted.consume()
   muted = playerContext.muted.defaultValue;
 
+  @internalProperty()
   @playerContext.aspectRatio.consume()
   aspectRatio = playerContext.aspectRatio.defaultValue;
 
+  @internalProperty()
   @playerContext.duration.consume()
   duration = playerContext.duration.defaultValue;
 
+  @internalProperty()
   @playerContext.buffered.consume()
   buffered = playerContext.buffered.defaultValue;
 
+  @internalProperty()
   @playerContext.device.consume()
-  deviceCtx = playerContext.device.defaultValue;
+  device = playerContext.device.defaultValue;
 
+  @internalProperty()
   @playerContext.isMobileDevice.consume()
-  isMobileCtx = playerContext.isMobileDevice.defaultValue;
+  isMobileDevice = playerContext.isMobileDevice.defaultValue;
 
+  @internalProperty()
   @playerContext.isDesktopDevice.consume()
-  isDesktopDeviceCtx = playerContext.isDesktopDevice.defaultValue;
+  isDesktopDevice = playerContext.isDesktopDevice.defaultValue;
 
+  @internalProperty()
   @playerContext.inputDevice.consume()
-  inputDeviceCtx = playerContext.inputDevice.defaultValue;
+  inputDevice = playerContext.inputDevice.defaultValue;
 
+  @internalProperty()
   @playerContext.isTouchInputDevice.consume()
-  isTouchInputDeviceCtx = playerContext.isTouchInputDevice.defaultValue;
+  isTouchInputDevice = playerContext.isTouchInputDevice.defaultValue;
 
+  @internalProperty()
   @playerContext.isMouseInputDevice.consume()
-  isMouseInputDeviceCtx = playerContext.isMouseInputDevice.defaultValue;
+  isMouseInputDevice = playerContext.isMouseInputDevice.defaultValue;
 
+  @internalProperty()
   @playerContext.isKeyboardInputDevice.consume()
-  isKeyboardInputDeviceCtx = playerContext.isKeyboardInputDevice.defaultValue;
+  isKeyboardInputDevice = playerContext.isKeyboardInputDevice.defaultValue;
 
+  @internalProperty()
   @playerContext.isBuffering.consume()
   isBuffering = playerContext.isBuffering.defaultValue;
 
+  @internalProperty()
   @playerContext.isPlaying.consume()
   isPlaying = playerContext.isPlaying.defaultValue;
 
+  @internalProperty()
   @playerContext.hasPlaybackStarted.consume()
   hasPlaybackStarted = playerContext.hasPlaybackStarted.defaultValue;
 
+  @internalProperty()
   @playerContext.hasPlaybackEnded.consume()
   hasPlaybackEnded = playerContext.hasPlaybackEnded.defaultValue;
 
+  @internalProperty()
   @playerContext.isProviderReady.consume()
   isProviderReady = playerContext.isProviderReady.defaultValue;
 
+  @internalProperty()
   @playerContext.isPlaybackReady.consume()
   isPlaybackReady = playerContext.isPlaybackReady.defaultValue;
 
+  @internalProperty()
   @playerContext.viewType.consume()
   viewType = playerContext.viewType.defaultValue;
 
+  @internalProperty()
   @playerContext.isAudioView.consume()
   isAudioView = playerContext.isAudioView.defaultValue;
 
+  @internalProperty()
   @playerContext.isVideoView.consume()
   isVideoView = playerContext.isVideoView.defaultValue;
 
+  @internalProperty()
   @playerContext.mediaType.consume()
   mediaType = playerContext.mediaType.defaultValue;
 
+  @internalProperty()
   @playerContext.isAudio.consume()
   isAudio = playerContext.isAudio.defaultValue;
 
+  @internalProperty()
   @playerContext.isVideo.consume()
   isVideo = playerContext.isVideo.defaultValue;
-}
 
-safelyDefineCustomElement(`${LIB_PREFIX}-fake-consumer`, FakeConsumer);
+  render(): TemplateResult {
+    return html`<div>fake consumer</div>`;
+  }
+}

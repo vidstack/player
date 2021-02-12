@@ -7,12 +7,14 @@ import {
   CSSResultArray,
   TemplateResult,
 } from 'lit-element';
+import { styleMap } from 'lit-html/directives/style-map';
 import clsx from 'clsx';
 import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
 import {
   Device,
   InputDevice,
   IS_CLIENT,
+  noop,
   onDeviceChange,
   onInputDeviceChange,
 } from '../utils';
@@ -59,6 +61,7 @@ import {
   UserVolumeChangeRequestEvent,
   ViewTypeChangeEvent,
   VolumeChangeEvent,
+  ErrorEvent,
 } from './events';
 import { VdsCustomEvent, VdsCustomEventConstructor } from '../shared/events';
 import { isTestEnv } from './env';
@@ -115,6 +118,8 @@ import { isTestEnv } from './env';
  * @fires vds-error - Emitted when a provider encounters an error during media loading/playback.
  *
  * @slot - Used to pass in Provider/UI components.
+ *
+ * @csspart player - The root player container.
  */
 export class Player extends LitElement implements PlayerProps {
   public static get styles(): CSSResultArray {
@@ -142,9 +147,9 @@ export class Player extends LitElement implements PlayerProps {
    */
 
   render(): TemplateResult {
-    const isAriaHidden = this.isProviderReady ? 'false' : 'true';
     const isAriaBusy = this.isPlaybackReady ? 'false' : 'true';
-    const isProviderUIBlockerVisible = this.isVideoView;
+    // TODO: should have check for custom controls otherwise it'll block chromeless native player.
+    const isProviderUIBlockerVisible = this.isVideoView && !this.controls;
 
     const classes = {
       player: true,
@@ -153,17 +158,15 @@ export class Player extends LitElement implements PlayerProps {
     };
 
     const styles = {
-      paddingBottom: this.isVideoView
-        ? `${this.calcAspectRatio()}%`
-        : undefined,
+      paddingBottom: `padding-bottom: ${this.calcAspectRatio()}%;`,
     };
 
     return html`
       <div
-        aria-hidden="${isAriaHidden}"
+        part="player"
         aria-busy="${isAriaBusy}"
         class="${clsx(classes)}"
-        styles="${clsx(styles)}"
+        style="${styleMap(styles)}"
       >
         ${isProviderUIBlockerVisible
           ? html`<div class="provider-ui-blocker"></div>`
@@ -250,27 +253,22 @@ export class Player extends LitElement implements PlayerProps {
 
   private handleDeviceChange(device: Device) {
     this._device = device;
+    this.isMobileDeviceCtx = this.isMobileDevice;
+    this.isDesktopDeviceCtx = this.isDesktopDevice;
     this.setAttribute('mobile', String(this.isMobileDevice));
     this.setAttribute('desktop', String(this.isDesktopDevice));
-    this.dispatchEvent(
-      new DeviceChangeEvent({
-        detail: device,
-        originalEvent: undefined,
-      }),
-    );
+    this.dispatchEvent(new DeviceChangeEvent({ detail: device }));
   }
 
   private handleInputDeviceChange(inputDevice: InputDevice) {
     this._inputDevice = inputDevice;
+    this.isMouseInputDeviceCtx = this.isMouseInputDevice;
+    this.isTouchInputDeviceCtx = this.isTouchInputDevice;
+    this.isKeyboardInputDeviceCtx = this.isKeyboardInputDevice;
     this.setAttribute('touch', String(this.isTouchInputDevice));
     this.setAttribute('mouse', String(this.isMouseInputDevice));
     this.setAttribute('keyboard', String(this.isKeyboardInputDevice));
-    this.dispatchEvent(
-      new InputDeviceChangeEvent({
-        detail: inputDevice,
-        originalEvent: undefined,
-      }),
-    );
+    this.dispatchEvent(new InputDeviceChangeEvent({ detail: inputDevice }));
   }
 
   /**
@@ -302,7 +300,7 @@ export class Player extends LitElement implements PlayerProps {
   @property({ type: Number })
   get volume(): PlayerState['volume'] {
     // TODO: return property from provider.
-    return 30;
+    return 0.3;
   }
 
   set volume(newVolume: PlayerState['volume']) {
@@ -331,6 +329,18 @@ export class Player extends LitElement implements PlayerProps {
 
   set paused(newPaused: PlayerState['paused']) {
     this.requestPlaybackChange(newPaused);
+  }
+
+  // ---
+
+  @property({ type: Boolean })
+  get controls(): PlayerState['controls'] {
+    // TODO: return property from provider.
+    return false;
+  }
+
+  set controls(isControlsVisible: PlayerState['controls']) {
+    this.requestControls(isControlsVisible);
   }
 
   // ---
@@ -494,27 +504,32 @@ export class Player extends LitElement implements PlayerProps {
 
   private requestPlaybackChange(paused: PlayerState['paused']) {
     // TODO: call method on provider - handle play success/fail.
-    console.log(paused);
+    noop(paused);
+  }
+
+  private requestControls(isControlsVisible: PlayerState['controls']) {
+    // TODO: call method on provider.
+    noop(isControlsVisible);
   }
 
   private requestVolumeChange(volume: PlayerState['volume']) {
     // TODO: call method on provider.
-    console.log(volume);
+    noop(volume);
   }
 
   private requestTimeChange(time: PlayerState['currentTime']) {
     // TODO: call method on provider.
-    console.log(time);
+    noop(time);
   }
 
   private requestMutedChange(muted: PlayerState['muted']) {
     // TODO: call method on provider.
-    console.log(muted);
+    noop(muted);
   }
 
   private requestPosterChange(poster?: PlayerState['poster']) {
     // TODO: call method on provider.
-    console.log(poster);
+    noop(poster);
   }
 
   /**
@@ -602,10 +617,11 @@ export class Player extends LitElement implements PlayerProps {
     [ProviderPlaybackReadyEvent.TYPE]: PlaybackReadyEvent,
     [ProviderPlaybackStartEvent.TYPE]: PlaybackStartEvent,
     [ProviderPlaybackEndEvent.TYPE]: PlaybackEndEvent,
+    [ProviderErrorEvent.TYPE]: ErrorEvent,
   };
 
   private providerEventGateway(e: Event) {
-    if (!this.allowUserEventsToBubble) e.stopPropagation();
+    if (!this.allowProviderEventsToBubble) e.stopPropagation();
     return true;
   }
 
@@ -629,10 +645,12 @@ export class Player extends LitElement implements PlayerProps {
         this.pausedCtx = false;
         break;
       case ProviderPauseEvent.TYPE:
-        this.pausedCtx = false;
+        this.pausedCtx = true;
+        this.isPlayingCtx = false;
         break;
       case ProviderPlayingEvent.TYPE:
         this.pausedCtx = false;
+        this.isPlayingCtx = true;
         break;
       case ProviderMutedChangeEvent.TYPE:
         this.mutedCtx = e.detail as PlayerState['muted'];
@@ -654,21 +672,25 @@ export class Player extends LitElement implements PlayerProps {
         break;
       case ProviderViewTypeChangeEvent.TYPE:
         this.viewTypeCtx = e.detail as PlayerState['viewType'];
+        this.isAudioViewCtx = this.isAudioView;
+        this.isVideoCtx = this.isVideoView;
         break;
       case ProviderMediaTypeChangeEvent.TYPE:
         this.mediaTypeCtx = e.detail as PlayerState['mediaType'];
+        this.isAudioCtx = this.isAudio;
+        this.isVideoCtx = this.isVideo;
         break;
       case ProviderReadyEvent.TYPE:
-        this.isProviderReadyCtx = e.detail as PlayerState['isProviderReady'];
+        this.isProviderReadyCtx = true;
         break;
       case ProviderPlaybackReadyEvent.TYPE:
-        this.isPlaybackReadyCtx = e.detail as PlayerState['isPlaybackReady'];
+        this.isPlaybackReadyCtx = true;
         break;
       case ProviderPlaybackStartEvent.TYPE:
-        this.hasPlaybackStartedCtx = e.detail as PlayerState['hasPlaybackStarted'];
+        this.hasPlaybackStartedCtx = true;
         break;
       case ProviderPlaybackEndEvent.TYPE:
-        this.hasPlaybackEndedCtx = e.detail as PlayerState['hasPlaybackEnded'];
+        this.hasPlaybackEndedCtx = true;
         break;
     }
   }
@@ -693,7 +715,7 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
-  @playerContext.src.provide()
+  @playerContext.uuid.provide()
   private uuidCtx = playerContext.uuid.defaultValue;
 
   @playerContext.src.provide()
@@ -707,6 +729,9 @@ export class Player extends LitElement implements PlayerProps {
 
   @playerContext.paused.provide()
   private pausedCtx = playerContext.paused.defaultValue;
+
+  @playerContext.controls.provide()
+  private controlsCtx = playerContext.controls.defaultValue;
 
   @playerContext.poster.provide()
   private posterCtx = playerContext.poster.defaultValue;

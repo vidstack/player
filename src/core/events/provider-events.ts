@@ -37,7 +37,7 @@ export class ProviderBufferedChangeEvent extends buildVdsEvent<
 
 export class ProviderBufferingChangeEvent extends buildVdsEvent<
   PlayerState['isBuffering']
->(`${PROVIDER_EVENT_PREFIX}-buffered-change`) {}
+>(`${PROVIDER_EVENT_PREFIX}-buffering-change`) {}
 
 export class ProviderViewTypeChangeEvent extends buildVdsEvent<
   PlayerState['viewType']
@@ -47,21 +47,21 @@ export class ProviderMediaTypeChangeEvent extends buildVdsEvent<
   PlayerState['mediaType']
 >(`${PROVIDER_EVENT_PREFIX}-media-type-change`) {}
 
-export class ProviderReadyEvent extends buildVdsEvent<
-  PlayerState['isProviderReady']
->(`${PROVIDER_EVENT_PREFIX}-provider-ready`) {}
+export class ProviderReadyEvent extends buildVdsEvent<void>(
+  `${PROVIDER_EVENT_PREFIX}-provider-ready`,
+) {}
 
-export class ProviderPlaybackReadyEvent extends buildVdsEvent<
-  PlayerState['isPlaybackReady']
->(`${PROVIDER_EVENT_PREFIX}-playback-ready`) {}
+export class ProviderPlaybackReadyEvent extends buildVdsEvent<void>(
+  `${PROVIDER_EVENT_PREFIX}-playback-ready`,
+) {}
 
-export class ProviderPlaybackStartEvent extends buildVdsEvent<
-  PlayerState['hasPlaybackStarted']
->(`${PROVIDER_EVENT_PREFIX}-playback-start`) {}
+export class ProviderPlaybackStartEvent extends buildVdsEvent<void>(
+  `${PROVIDER_EVENT_PREFIX}-playback-start`,
+) {}
 
-export class ProviderPlaybackEndEvent extends buildVdsEvent<
-  PlayerState['hasPlaybackEnded']
->(`${PROVIDER_EVENT_PREFIX}-playback-end`) {}
+export class ProviderPlaybackEndEvent extends buildVdsEvent<void>(
+  `${PROVIDER_EVENT_PREFIX}-playback-end`,
+) {}
 
 export class ProviderErrorEvent extends buildVdsEvent<unknown>(
   `${PROVIDER_EVENT_PREFIX}-error`,

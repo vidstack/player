@@ -2,7 +2,7 @@ import { LIB_PREFIX } from './constants';
 
 export interface VdsEventInit<DetailType, OriginalEventType>
   extends CustomEventInit<DetailType> {
-  originalEvent: OriginalEventType;
+  originalEvent?: OriginalEventType;
 }
 
 export interface VdsCustomEventConstructor<DetailType, OriginalEventType> {
@@ -20,13 +20,13 @@ export abstract class VdsCustomEvent<
 > extends CustomEvent<DetailType> {
   static TYPE: string;
 
-  originalEvent: OriginalEventType;
+  originalEvent?: OriginalEventType;
 
   constructor(
     type: string,
-    eventInit: VdsEventInit<DetailType, OriginalEventType>,
+    eventInit?: VdsEventInit<DetailType, OriginalEventType>,
   ) {
-    const { originalEvent, ...init } = eventInit;
+    const { originalEvent, ...init } = eventInit ?? {};
 
     super(type, {
       bubbles: true,
@@ -47,7 +47,7 @@ export function buildVdsEvent<DetailType>(type: string) {
   > {
     static TYPE = `${LIB_PREFIX}-${type}`;
 
-    constructor(eventInit: VdsEventInit<DetailType, OriginalEventType>) {
+    constructor(eventInit?: VdsEventInit<DetailType, OriginalEventType>) {
       super(VdsEvent.TYPE, eventInit);
     }
   };

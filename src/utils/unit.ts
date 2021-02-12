@@ -4,7 +4,10 @@ import { Constructor } from 'lit-element';
  * No-operation (noop).
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-export const noop = (): void => {};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const noop = (..._: unknown[]): void => {
+  // ...
+};
 
 /**
  * Checks if `value` is `null`.

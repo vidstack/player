@@ -198,11 +198,11 @@ describe('onDeviceChange', () => {
     const callback = spy();
     const off = onDeviceChange(callback, 480, true, false);
     expect(callback.args[0][0]).to.equal(Device.Desktop);
-    await setViewport({ width: 360, height: 640 });
+    setTimeout(() => setViewport({ width: 360, height: 640 }));
     await oneEvent(window, 'resize');
     expect(callback.args[1][0]).to.equal(Device.Mobile);
     expect(off).to.exist;
-    await setViewport({ width: 640, height: 640 });
+    setTimeout(() => setViewport({ width: 640, height: 640 }));
     await oneEvent(window, 'resize');
     expect(callback.args[2][0]).to.equal(Device.Desktop);
     off();

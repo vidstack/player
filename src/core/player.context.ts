@@ -26,9 +26,10 @@ const guessInputDevice = IS_MOBILE ? InputDevice.Touch : InputDevice.Mouse;
 export const playerContext: PlayerContext = {
   uuid: createContext(''),
   src: createContext(''),
-  volume: createContext(30),
+  volume: createContext(0.3),
   currentTime: createContext(0),
   paused: createContext(true),
+  controls: createContext(false),
   poster: createContext(undefined),
   muted: createContext(false),
   aspectRatio: createContext('16:9'),
