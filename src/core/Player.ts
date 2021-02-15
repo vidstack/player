@@ -130,7 +130,7 @@ export class Player extends LitElement implements PlayerProps {
     return [playerStyles];
   }
 
-  private disposal = new Disposal();
+  protected disposal = new Disposal();
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -181,7 +181,7 @@ export class Player extends LitElement implements PlayerProps {
     `;
   }
 
-  private calcAspectRatio() {
+  protected calcAspectRatio(): number {
     // TODO: throw error or log if invalid aspect ratio.
     const [width, height] = /\d{1,2}:\d{1,2}/.test(this.aspectRatio)
       ? this.aspectRatio.split(':')
@@ -199,7 +199,7 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
-  private connect() {
+  protected connect(): void {
     this.setUuid();
     this.listenToDeviceChanges();
     this.listenToInputDeviceChanges();
@@ -207,12 +207,12 @@ export class Player extends LitElement implements PlayerProps {
     this.listenToProviderEvents();
   }
 
-  private setUuid() {
+  protected setUuid(): void {
     this.uuidCtx = this.uuid;
     this.setAttribute('uuid', this.uuid);
   }
 
-  private listenToInputDeviceChanges() {
+  protected listenToInputDeviceChanges(): void {
     // Allow emulated touch events to trigger mouse events in test environment so we don't
     // have to mock `Date.getTime()`.
     const off = onInputDeviceChange(
@@ -224,19 +224,19 @@ export class Player extends LitElement implements PlayerProps {
     this.disposal.add(off);
   }
 
-  private listenToDeviceChanges() {
+  protected listenToDeviceChanges(): void {
     const off = onDeviceChange(this.handleDeviceChange.bind(this));
     this.disposal.add(off);
   }
 
-  private listenToUserEvents() {
+  protected listenToUserEvents(): void {
     ALL_USER_EVENTS.forEach(event => {
       const off = listenTo(this, event.TYPE, this.handleUserEvent.bind(this));
       this.disposal.add(off);
     });
   }
 
-  private listenToProviderEvents() {
+  protected listenToProviderEvents(): void {
     ALL_PROVIDER_EVENTS.forEach(event => {
       const off = listenTo(
         this,
@@ -255,7 +255,7 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
-  private handleDeviceChange(device: Device) {
+  protected handleDeviceChange(device: Device): void {
     this._device = device;
     this.isMobileDeviceCtx = this.isMobileDevice;
     this.isDesktopDeviceCtx = this.isDesktopDevice;
@@ -264,7 +264,7 @@ export class Player extends LitElement implements PlayerProps {
     this.dispatchEvent(new DeviceChangeEvent({ detail: device }));
   }
 
-  private handleInputDeviceChange(inputDevice: InputDevice) {
+  protected handleInputDeviceChange(inputDevice: InputDevice): void {
     this._inputDevice = inputDevice;
     this.isMouseInputDeviceCtx = this.isMouseInputDevice;
     this.isTouchInputDeviceCtx = this.isTouchInputDevice;
@@ -286,7 +286,7 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
-  private _src: PlayerState['src'] = '';
+  protected _src: PlayerState['src'] = '';
 
   @property({ type: String })
   get src(): PlayerState['src'] {
@@ -361,7 +361,7 @@ export class Player extends LitElement implements PlayerProps {
 
   // ---
 
-  private _aspectRatio: PlayerState['aspectRatio'] = '16:9';
+  protected _aspectRatio: PlayerState['aspectRatio'] = '16:9';
 
   @property({ type: String, attribute: 'aspect-ratio', reflect: true })
   get aspectRatio(): PlayerState['aspectRatio'] {
@@ -393,7 +393,7 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
-  private _uuid = uuid();
+  protected _uuid = uuid();
 
   get uuid(): PlayerState['uuid'] {
     return this._uuid;
@@ -419,7 +419,7 @@ export class Player extends LitElement implements PlayerProps {
     return false;
   }
 
-  private _device = playerContext.device.defaultValue;
+  protected _device = playerContext.device.defaultValue;
 
   get device(): PlayerState['device'] {
     return this._device;
@@ -433,7 +433,7 @@ export class Player extends LitElement implements PlayerProps {
     return this._device === Device.Desktop;
   }
 
-  private _inputDevice = playerContext.inputDevice.defaultValue;
+  protected _inputDevice = playerContext.inputDevice.defaultValue;
 
   get inputDevice(): PlayerState['inputDevice'] {
     return this._inputDevice;
@@ -506,32 +506,32 @@ export class Player extends LitElement implements PlayerProps {
    * -------------------------------------------------------------------------------------------
    */
 
-  private requestPlaybackChange(paused: PlayerState['paused']) {
+  protected requestPlaybackChange(paused: PlayerState['paused']): void {
     // TODO: call method on provider - handle play success/fail.
     noop(paused);
   }
 
-  private requestControls(isControlsVisible: PlayerState['controls']) {
+  protected requestControls(isControlsVisible: PlayerState['controls']): void {
     // TODO: call method on provider.
     noop(isControlsVisible);
   }
 
-  private requestVolumeChange(volume: PlayerState['volume']) {
+  protected requestVolumeChange(volume: PlayerState['volume']): void {
     // TODO: call method on provider.
     noop(volume);
   }
 
-  private requestTimeChange(time: PlayerState['currentTime']) {
+  protected requestTimeChange(time: PlayerState['currentTime']): void {
     // TODO: call method on provider.
     noop(time);
   }
 
-  private requestMutedChange(muted: PlayerState['muted']) {
+  protected requestMutedChange(muted: PlayerState['muted']): void {
     // TODO: call method on provider.
     noop(muted);
   }
 
-  private requestPosterChange(poster?: PlayerState['poster']) {
+  protected requestPosterChange(poster?: PlayerState['poster']): void {
     // TODO: call method on provider.
     noop(poster);
   }
@@ -553,18 +553,18 @@ export class Player extends LitElement implements PlayerProps {
   @property({ type: Boolean, attribute: 'allow-user-events-to-bubble' })
   allowUserEventsToBubble = false;
 
-  private userEventGateway(e: Event) {
+  protected userEventGateway(e: Event): boolean {
     if (!this.allowUserEventsToBubble) e.stopPropagation();
     return true;
   }
 
   // This handler is attached to user events in the "Connect" section above.
-  private handleUserEvent(e: VdsCustomEvent<unknown, unknown>) {
+  protected handleUserEvent(e: VdsCustomEvent<unknown, unknown>): void {
     if (!this.userEventGateway(e)) return;
     this.requestProviderUpdate(e);
   }
 
-  private requestProviderUpdate(e: VdsCustomEvent<unknown, unknown>) {
+  protected requestProviderUpdate(e: VdsCustomEvent<unknown, unknown>): void {
     switch (e.type) {
       case UserPlayRequestEvent.TYPE:
         this.requestPlaybackChange(false);
@@ -601,7 +601,7 @@ export class Player extends LitElement implements PlayerProps {
   @property({ type: Boolean, attribute: 'allow-provider-events-to-bubble' })
   allowProviderEventsToBubble = false;
 
-  private providerToPlayerEventMap: Record<
+  protected providerToPlayerEventMap: Record<
     string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     VdsCustomEventConstructor<any, unknown>
@@ -624,26 +624,26 @@ export class Player extends LitElement implements PlayerProps {
     [ProviderErrorEvent.TYPE]: ErrorEvent,
   };
 
-  private providerEventGateway(e: Event) {
+  protected providerEventGateway(e: Event): boolean {
     if (!this.allowProviderEventsToBubble) e.stopPropagation();
     return true;
   }
 
   // This handler is attached to provider events in the "Connect" section above.
-  private handleProviderEvent(e: VdsCustomEvent<unknown, unknown>) {
+  protected handleProviderEvent(e: VdsCustomEvent<unknown, unknown>): void {
     if (!this.providerEventGateway(e)) return;
     this.updateContext(e);
     this.translateProviderEventAndDispatch(e);
   }
 
-  private translateProviderEventAndDispatch(
+  protected translateProviderEventAndDispatch(
     e: VdsCustomEvent<unknown, unknown>,
-  ) {
+  ): void {
     const playerEvent = this.providerToPlayerEventMap[e.type];
     this.dispatchEvent(new playerEvent({ originalEvent: e, detail: e.detail }));
   }
 
-  private updateContext(e: VdsCustomEvent<unknown, unknown>) {
+  protected updateContext(e: VdsCustomEvent<unknown, unknown>): void {
     switch (e.type) {
       case ProviderPlayEvent.TYPE:
         this.pausedCtx = false;
@@ -700,13 +700,13 @@ export class Player extends LitElement implements PlayerProps {
   }
 
   @listen(ProviderViewTypeChangeEvent.TYPE)
-  private handleProviderViewTypeChange() {
+  protected handleProviderViewTypeChange(): void {
     this.setAttribute('audio', String(this.isAudioView));
     this.setAttribute('video', String(this.isVideoView));
   }
 
   @listen(ProviderErrorEvent.TYPE)
-  private handleProviderError() {
+  protected handleProviderError(): void {
     // TODO: handle this error.
   }
 
@@ -720,93 +720,96 @@ export class Player extends LitElement implements PlayerProps {
    */
 
   @playerContext.uuid.provide()
-  private uuidCtx = playerContext.uuid.defaultValue;
+  protected uuidCtx = playerContext.uuid.defaultValue;
 
   @playerContext.src.provide()
-  private srcCtx = playerContext.src.defaultValue;
+  protected srcCtx = playerContext.src.defaultValue;
 
   @playerContext.volume.provide()
-  private volumeCtx = playerContext.volume.defaultValue;
+  protected volumeCtx = playerContext.volume.defaultValue;
 
   @playerContext.currentTime.provide()
-  private currentTimeCtx = playerContext.currentTime.defaultValue;
+  protected currentTimeCtx = playerContext.currentTime.defaultValue;
 
   @playerContext.paused.provide()
-  private pausedCtx = playerContext.paused.defaultValue;
+  protected pausedCtx = playerContext.paused.defaultValue;
 
   @playerContext.controls.provide()
-  private controlsCtx = playerContext.controls.defaultValue;
+  protected controlsCtx = playerContext.controls.defaultValue;
 
   @playerContext.poster.provide()
-  private posterCtx = playerContext.poster.defaultValue;
+  protected posterCtx = playerContext.poster.defaultValue;
 
   @playerContext.muted.provide()
-  private mutedCtx = playerContext.muted.defaultValue;
+  protected mutedCtx = playerContext.muted.defaultValue;
 
   @playerContext.aspectRatio.provide()
-  private aspectRatioCtx = playerContext.aspectRatio.defaultValue;
+  protected aspectRatioCtx = playerContext.aspectRatio.defaultValue;
 
   @playerContext.duration.provide()
-  private durationCtx = playerContext.duration.defaultValue;
+  protected durationCtx = playerContext.duration.defaultValue;
 
   @playerContext.buffered.provide()
-  private bufferedCtx = playerContext.buffered.defaultValue;
+  protected bufferedCtx = playerContext.buffered.defaultValue;
 
   @playerContext.device.provide()
-  private deviceCtx = playerContext.device.defaultValue;
+  protected deviceCtx = playerContext.device.defaultValue;
 
   @playerContext.isMobileDevice.provide()
-  private isMobileDeviceCtx = playerContext.isMobileDevice.defaultValue;
+  protected isMobileDeviceCtx = playerContext.isMobileDevice.defaultValue;
 
   @playerContext.isDesktopDevice.provide()
-  private isDesktopDeviceCtx = playerContext.isDesktopDevice.defaultValue;
+  protected isDesktopDeviceCtx = playerContext.isDesktopDevice.defaultValue;
 
   @playerContext.inputDevice.provide()
-  private inputDeviceCtx = playerContext.inputDevice.defaultValue;
+  protected inputDeviceCtx = playerContext.inputDevice.defaultValue;
 
   @playerContext.isTouchInputDevice.provide()
-  private isTouchInputDeviceCtx = playerContext.isTouchInputDevice.defaultValue;
+  protected isTouchInputDeviceCtx =
+    playerContext.isTouchInputDevice.defaultValue;
 
   @playerContext.isMouseInputDevice.provide()
-  private isMouseInputDeviceCtx = playerContext.isMouseInputDevice.defaultValue;
+  protected isMouseInputDeviceCtx =
+    playerContext.isMouseInputDevice.defaultValue;
 
   @playerContext.isKeyboardInputDevice.provide()
-  private isKeyboardInputDeviceCtx =
+  protected isKeyboardInputDeviceCtx =
     playerContext.isKeyboardInputDevice.defaultValue;
 
   @playerContext.isBuffering.provide()
-  private isBufferingCtx = playerContext.isBuffering.defaultValue;
+  protected isBufferingCtx = playerContext.isBuffering.defaultValue;
 
   @playerContext.isPlaying.provide()
-  private isPlayingCtx = playerContext.isPlaying.defaultValue;
+  protected isPlayingCtx = playerContext.isPlaying.defaultValue;
 
   @playerContext.hasPlaybackStarted.provide()
-  private hasPlaybackStartedCtx = playerContext.hasPlaybackStarted.defaultValue;
+  protected hasPlaybackStartedCtx =
+    playerContext.hasPlaybackStarted.defaultValue;
 
   @playerContext.hasPlaybackEnded.provide()
-  private hasPlaybackEndedCtx = playerContext.hasPlaybackEnded.defaultValue;
+  protected hasPlaybackEndedCtx = playerContext.hasPlaybackEnded.defaultValue;
 
   @playerContext.isProviderReady.provide()
-  private isProviderReadyCtx = playerContext.isProviderReady.defaultValue;
+  protected isProviderReadyCtx = playerContext.isProviderReady.defaultValue;
 
   @playerContext.isPlaybackReady.provide()
-  private isPlaybackReadyCtx = playerContext.isPlaybackReady.defaultValue;
+  protected isPlaybackReadyCtx = playerContext.isPlaybackReady.defaultValue;
 
   @playerContext.viewType.provide()
-  private viewTypeCtx = playerContext.viewType.defaultValue;
+  protected viewTypeCtx = playerContext.viewType.defaultValue;
 
   @playerContext.isAudioView.provide()
-  private isAudioViewCtx = playerContext.isAudioView.defaultValue;
+  protected isAudioViewCtx = playerContext.isAudioView.defaultValue;
 
   @playerContext.isVideoView.provide()
-  private isVideoViewCtx = playerContext.isVideoView.defaultValue;
+  protected isVideoViewCtx = playerContext.isVideoView.defaultValue;
 
   @playerContext.mediaType.provide()
-  private mediaTypeCtx = playerContext.mediaType.defaultValue;
+  protected mediaTypeCtx = playerContext.mediaType.defaultValue;
 
   @playerContext.isAudio.provide()
-  private isAudioCtx = playerContext.isAudio.defaultValue;
+  protected isAudioCtx = playerContext.isAudio.defaultValue;
 
   @playerContext.isVideo.provide()
-  private isVideoCtx = playerContext.isVideo.defaultValue;
+  protected isVideoCtx = playerContext.isVideo.defaultValue;
 }
