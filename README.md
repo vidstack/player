@@ -36,6 +36,25 @@ $: npm install @vidstack/player@next --save
 
 Documentation is currently not available.
 
+## 🖥️ Browsers
+
+Vidstack Player is built for the modern web and avoids bloated polyfills and outdated environments
+as much as possible. It'll only support browsers that fully implement the
+[Custom Elements V1][caniuse-custom-el-v1] and [CSS Parts][caniuse-css-parts] specifications.
+
+- Edge 79+
+- Firefox 72+
+- Chrome 73+
+- Safari 13.1+
+- Opera 64+
+- iOS Safari 13.7+
+- Android Browser 81+
+- Opera Mobile 59+
+- Chrome for Android 88+
+
+[caniuse-custom-el-v1]: https://caniuse.com/custom-elementsv1
+[caniuse-css-parts]: https://caniuse.com/mdn-css_selectors_part
+
 ## 🔨 Contributing
 
 See [CONTRIBUTING.md](./.github/CONTRIBUTING.md).
