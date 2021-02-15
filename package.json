@@ -108,6 +108,17 @@
   "publishConfig": {
     "access": "public"
   },
+  "release": {
+    "branches": [
+      {
+        "name": "main"
+      },
+      {
+        "name": "next",
+        "prerelease": true
+      }
+    ]
+  },
   "keywords": [
     "vidstack",
     "player",
