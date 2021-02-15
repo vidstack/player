@@ -13,6 +13,7 @@
     "bundle/",
     "core/",
     "providers/",
+    "shared/",
     "skins/",
     "ui/",
     "utils/",
