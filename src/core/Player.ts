@@ -6,6 +6,8 @@ import {
   property,
   CSSResultArray,
   TemplateResult,
+  internalProperty,
+  PropertyValues,
 } from 'lit-element';
 import { styleMap } from 'lit-html/directives/style-map';
 import clsx from 'clsx';
@@ -13,6 +15,8 @@ import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
 import {
   Device,
   InputDevice,
+  isString,
+  isUndefined,
   IS_CLIENT,
   noop,
   onDeviceChange,
@@ -62,9 +66,17 @@ import {
   ViewTypeChangeEvent,
   VolumeChangeEvent,
   ErrorEvent,
+  BootStartEvent,
+  BootEndEvent,
 } from './events';
 import { VdsCustomEvent, VdsCustomEventConstructor } from '../shared/events';
 import { isTestEnv } from './env';
+import {
+  Bootable,
+  BootStrategy,
+  LazyBootStrategy,
+  BootStrategyFactory,
+} from './strategies/boot';
 
 /**
  * The player sits at the top of the component hierarchy in the library. It encapsulates
@@ -84,6 +96,9 @@ import { isTestEnv } from './env';
  *    <vds-ui>
  *      <!-- UI components here. -->
  *    </vds-ui>
+ *    <div slot="booting">
+ *      <!-- Rendered while player is booting. -->
+ *    </div>
  *  </vds-player>
  * ```
  *
@@ -99,6 +114,8 @@ import { isTestEnv } from './env';
  *  </vds-player>
  * ```
  *
+ * @fires vds-boot-start - Emitted when the player begins booting.
+ * @fires vds-boot-end - Emitted when the player has booted.
  * @fires vds-play - Emitted when playback attempts to start.
  * @fires vds-pause - Emitted when playback pauses.
  * @fires vds-playing - Emitted when playback being playback.
@@ -125,7 +142,7 @@ import { isTestEnv } from './env';
  * @cssprop --vds-player-bg - The background color of the player.
  * @cssprop --vds-blocker-z-index - The provider UI blocker position in the root z-axis stack inside the player.
  */
-export class Player extends LitElement implements PlayerProps {
+export class Player extends LitElement implements PlayerProps, Bootable {
   public static get styles(): CSSResultArray {
     return [playerStyles];
   }
@@ -139,7 +156,86 @@ export class Player extends LitElement implements PlayerProps {
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.disposal.empty();
+    this.disconnect();
+  }
+
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Boot
+   *
+   * This section contains props/methods involved in the booting of the player.
+   * -------------------------------------------------------------------------------------------
+   */
+
+  /**
+   * A `BootStrategy` determines when the player should begin rendering the current provider and
+   * loading media.
+   */
+  @property({
+    type: String,
+    attribute: 'boot-strategy',
+    converter: {
+      fromAttribute(value) {
+        return isString(value) && BootStrategyFactory.isValidType(value)
+          ? BootStrategyFactory.build(value)
+          : BootStrategyFactory.buildLazyBootStrategy();
+      },
+    },
+  })
+  bootStrategy: BootStrategy = new LazyBootStrategy();
+
+  /**
+   * An artificial delay in milliseconds before the player boots. Use this if you'd like to
+   * extend showing the boot screen.
+   */
+  @property({ type: Number, attribute: 'boot-delay' })
+  bootDelay = 0;
+
+  @internalProperty()
+  protected _hasBooted = false;
+
+  get hasBooted(): boolean {
+    return this._hasBooted;
+  }
+
+  /**
+   * Part of the `Bootable` interface.
+   */
+  get bootTarget(): HTMLElement {
+    return this;
+  }
+
+  /**
+   * This method is called by the current `BootStrategy` when it's time to boot. Part of the
+   * `Bootable` interface.
+   */
+  async boot(): Promise<void> {
+    if (this._hasBooted) return;
+
+    setTimeout(() => {
+      this._hasBooted = true;
+      this.setAttribute(this.getBootedAttrName(), 'true');
+      this.dispatchEvent(new BootEndEvent());
+    }, this.bootDelay);
+  }
+
+  protected getBootedAttrName(): string {
+    return 'booted';
+  }
+
+  protected previousBootStrategy: BootStrategy | undefined;
+
+  protected handleBootStrategyChange(): void {
+    this.destroyBootStrategy();
+    this.bootStrategy.register(this);
+    this.dispatchEvent(new BootStartEvent());
+    this.previousBootStrategy = this.bootStrategy;
+  }
+
+  protected destroyBootStrategy(): void {
+    this._hasBooted = false;
+    this.setAttribute(this.getBootedAttrName(), 'false');
+    this.previousBootStrategy?.destroy();
   }
 
   /**
@@ -152,8 +248,6 @@ export class Player extends LitElement implements PlayerProps {
 
   render(): TemplateResult {
     const isAriaBusy = this.isPlaybackReady ? 'false' : 'true';
-    // TODO: should have check for custom controls otherwise it'll block chromeless native player.
-    const isProviderUIBlockerVisible = this.isVideoView && !this.controls;
 
     const classes = {
       player: true,
@@ -172,13 +266,29 @@ export class Player extends LitElement implements PlayerProps {
         class="${clsx(classes)}"
         style="${styleMap(styles)}"
       >
-        ${isProviderUIBlockerVisible
-          ? html`<div class="provider-ui-blocker"></div>`
-          : undefined}
-
+        ${this.renderProviderUIBlocker()} ${this.renderBooting()}
         <slot></slot>
       </div>
     `;
+  }
+
+  protected renderProviderUIBlocker(): TemplateResult | undefined {
+    // TODO: should have check for custom controls otherwise it'll block chromeless native player.
+    const isProviderUIBlockerVisible = this.isVideoView && !this.controls;
+
+    return isProviderUIBlockerVisible
+      ? html`<div class="provider-ui-blocker"></div>`
+      : undefined;
+  }
+
+  protected renderBooting(): TemplateResult | undefined {
+    if (this.hasBooted) {
+      return undefined;
+    }
+
+    return !isUndefined(this.bootStrategy.renderWhileBooting)
+      ? this.bootStrategy.renderWhileBooting()
+      : html`<slot name="booting"></slot>`;
   }
 
   protected calcAspectRatio(): number {
@@ -192,10 +302,9 @@ export class Player extends LitElement implements PlayerProps {
 
   /**
    * -------------------------------------------------------------------------------------------
-   * Connect
+   * Lifecycle
    *
-   * This section contains methods that are called when the player connects to the DOM. In other
-   * words initialization methods.
+   * This section contains component lifecycle methods.
    * -------------------------------------------------------------------------------------------
    */
 
@@ -207,10 +316,29 @@ export class Player extends LitElement implements PlayerProps {
     this.listenToProviderEvents();
   }
 
+  protected disconnect(): void {
+    this.disposal.empty();
+    this.destroyBootStrategy();
+  }
+
+  protected updated(changed: PropertyValues): void {
+    if (changed.has('bootStrategy')) {
+      this.handleBootStrategyChange();
+    }
+  }
+
   protected setUuid(): void {
     this.uuidCtx = this.uuid;
     this.setAttribute('uuid', this.uuid);
   }
+
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Listeners
+   *
+   * This section contains methods involved in setting up any event listeners.
+   * -------------------------------------------------------------------------------------------
+   */
 
   protected listenToInputDeviceChanges(): void {
     // Allow emulated touch events to trigger mouse events in test environment so we don't
@@ -249,9 +377,9 @@ export class Player extends LitElement implements PlayerProps {
 
   /**
    * -------------------------------------------------------------------------------------------
-   * Miscellaneous Handlers
+   * Device Handlers
    *
-   * This section contains misc. handler methods that don't belong anywhere else.
+   * This section contains handler methods for I/O device changes.
    * -------------------------------------------------------------------------------------------
    */
 
@@ -259,9 +387,17 @@ export class Player extends LitElement implements PlayerProps {
     this._device = device;
     this.isMobileDeviceCtx = this.isMobileDevice;
     this.isDesktopDeviceCtx = this.isDesktopDevice;
-    this.setAttribute('mobile', String(this.isMobileDevice));
-    this.setAttribute('desktop', String(this.isDesktopDevice));
+    this.setAttribute(this.getMobileAttrName(), String(this.isMobileDevice));
+    this.setAttribute(this.getDesktopAttrName(), String(this.isDesktopDevice));
     this.dispatchEvent(new DeviceChangeEvent({ detail: device }));
+  }
+
+  protected getMobileAttrName(): string {
+    return 'mobile';
+  }
+
+  protected getDesktopAttrName(): string {
+    return 'desktop';
   }
 
   protected handleInputDeviceChange(inputDevice: InputDevice): void {
@@ -269,10 +405,25 @@ export class Player extends LitElement implements PlayerProps {
     this.isMouseInputDeviceCtx = this.isMouseInputDevice;
     this.isTouchInputDeviceCtx = this.isTouchInputDevice;
     this.isKeyboardInputDeviceCtx = this.isKeyboardInputDevice;
-    this.setAttribute('touch', String(this.isTouchInputDevice));
-    this.setAttribute('mouse', String(this.isMouseInputDevice));
-    this.setAttribute('keyboard', String(this.isKeyboardInputDevice));
+    this.setAttribute(this.getTouchAttrName(), String(this.isTouchInputDevice));
+    this.setAttribute(this.getMouseAttrName(), String(this.isMouseInputDevice));
+    this.setAttribute(
+      this.getKeyboardAttrName(),
+      String(this.isKeyboardInputDevice),
+    );
     this.dispatchEvent(new InputDeviceChangeEvent({ detail: inputDevice }));
+  }
+
+  protected getTouchAttrName(): string {
+    return 'touch';
+  }
+
+  protected getMouseAttrName(): string {
+    return 'mouse';
+  }
+
+  protected getKeyboardAttrName(): string {
+    return 'keyboard';
   }
 
   /**
@@ -701,8 +852,16 @@ export class Player extends LitElement implements PlayerProps {
 
   @listen(ProviderViewTypeChangeEvent.TYPE)
   protected handleProviderViewTypeChange(): void {
-    this.setAttribute('audio', String(this.isAudioView));
-    this.setAttribute('video', String(this.isVideoView));
+    this.setAttribute(this.getAudioAttrName(), String(this.isAudioView));
+    this.setAttribute(this.getVideoAttrName(), String(this.isVideoView));
+  }
+
+  protected getAudioAttrName(): string {
+    return 'audio';
+  }
+
+  protected getVideoAttrName(): string {
+    return 'video';
   }
 
   @listen(ProviderErrorEvent.TYPE)

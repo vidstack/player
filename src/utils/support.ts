@@ -22,7 +22,7 @@ export const ORIGIN =
 /**
  * Checks if a video player can enter fullscreen.
  *
- * @see https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen
+ * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen
  */
 /* c8 ignore next 5 */
 export const canFullscreenVideo = (): boolean => {
@@ -32,9 +32,17 @@ export const canFullscreenVideo = (): boolean => {
 };
 
 /**
+ * Checks whether the `IntersectionObserver` API is available.
+ */
+/* c8 ignore next 3 */
+export const canObserveIntersection = (): boolean => {
+  return IS_CLIENT && !isUndefined(window.IntersectionObserver);
+};
+
+/**
  * Checks if the screen orientation can be changed.
  *
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
  */
 /* c8 ignore next 4 */
 export const canRotateScreen = (): boolean =>
@@ -45,7 +53,7 @@ export const canRotateScreen = (): boolean =>
 /**
  * Reduced motion iOS & MacOS setting.
  *
- * @see https://webkit.org/blog/7551/responsive-design-for-motion/
+ * @link https://webkit.org/blog/7551/responsive-design-for-motion/
  */
 /* c8 ignore next 4 */
 export const isReducedMotionPreferred = (): boolean =>
@@ -67,7 +75,7 @@ export const canPlayHLSNatively = (): boolean => {
  * Checks if the native HTML5 video player can enter picture-in-picture (PIP) mode when using
  * the Chrome browser.
  *
- * @see  https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture
+ * @link  https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture
  */
 /* c8 ignore next 5 */
 export const canUsePiPInChrome = (): boolean => {
@@ -81,7 +89,7 @@ export const canUsePiPInChrome = (): boolean => {
  * the desktop Safari browser, iOS Safari appears to "support" PiP through the check, however PiP
  * does not function.
  *
- * @see https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls
+ * @link https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls
  */
 /* c8 ignore next 9 */
 export const canUsePiPInSafari = (): boolean => {
@@ -108,7 +116,7 @@ export const canUsePiP = (): boolean =>
  * a `play()` call, autoplay is supported. Although this unintuitive, it works across browsers
  * and is currently the lightest way to detect autoplay without using a data source.
  *
- * @see https://github.com/ampproject/amphtml/blob/9bc8756536956780e249d895f3e1001acdee0bc0/src/utils/video.js#L25
+ * @link https://github.com/ampproject/amphtml/blob/9bc8756536956780e249d895f3e1001acdee0bc0/src/utils/video.js#L25
  */
 /* c8 ignore next 32 */
 export const canAutoplay = (
