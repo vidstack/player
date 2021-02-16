@@ -4,7 +4,7 @@
   "description": "Customizable, extensible, accessible and universal media player.",
   "license": "MIT",
   "engines": {
-    "node": ">=14"
+    "node": ">=12.12.0"
   },
   "main": "bundle/index.js",
   "module": "bundle/index.js",
