@@ -25,8 +25,14 @@ import {
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
 import {
-  ALL_PROVIDER_EVENTS,
-  ALL_USER_EVENTS,
+  ReadyEvent,
+  TimeChangeEvent,
+  InputDeviceChangeEvent,
+  ViewTypeChangeEvent,
+  VolumeChangeEvent,
+  ErrorEvent,
+  BootStartEvent,
+  BootEndEvent,
   BufferedChangeEvent,
   BufferingChangeEvent,
   DurationChangeEvent,
@@ -39,6 +45,17 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
+} from './player.events';
+import {
+  ALL_USER_EVENTS,
+  UserMutedChangeRequestEvent,
+  UserPauseRequestEvent,
+  UserPlayRequestEvent,
+  UserTimeChangeRequestEvent,
+  UserVolumeChangeRequestEvent,
+} from './user';
+import {
+  ALL_PROVIDER_EVENTS,
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
   ProviderDurationChangeEvent,
@@ -55,20 +72,7 @@ import {
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
-  ReadyEvent,
-  TimeChangeEvent,
-  InputDeviceChangeEvent,
-  UserMutedChangeRequestEvent,
-  UserPauseRequestEvent,
-  UserPlayRequestEvent,
-  UserTimeChangeRequestEvent,
-  UserVolumeChangeRequestEvent,
-  ViewTypeChangeEvent,
-  VolumeChangeEvent,
-  ErrorEvent,
-  BootStartEvent,
-  BootEndEvent,
-} from './events';
+} from './provider';
 import { VdsCustomEvent, VdsCustomEventConstructor } from '../shared/events';
 import { isTestEnv } from './env';
 import {

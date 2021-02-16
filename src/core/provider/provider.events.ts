@@ -1,7 +1,16 @@
 import { buildVdsEvent } from '../../shared/events';
 import { PlayerState } from '../player.types';
+import { MediaProvider } from './MediaProvider';
 
 export const PROVIDER_EVENT_PREFIX = 'provider';
+
+export class ProviderConnectEvent extends buildVdsEvent<MediaProvider>(
+  `${PROVIDER_EVENT_PREFIX}-connect`,
+) {}
+
+export class ProviderDisconnectEvent extends buildVdsEvent<MediaProvider>(
+  `${PROVIDER_EVENT_PREFIX}-disconnect`,
+) {}
 
 export class ProviderPlayEvent extends buildVdsEvent<void>(
   `${PROVIDER_EVENT_PREFIX}-play`,

@@ -1,6 +1,6 @@
 import { oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
-import { DeviceChangeEvent, InputDeviceChangeEvent } from '../events';
+import { DeviceChangeEvent, InputDeviceChangeEvent } from '../player.events';
 import { Player } from '../Player';
 
 export async function switchToMobileDevice(

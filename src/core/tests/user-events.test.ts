@@ -7,7 +7,7 @@ import {
   UserPlayRequestEvent,
   UserTimeChangeRequestEvent,
   UserVolumeChangeRequestEvent,
-} from '../events';
+} from '../user';
 import { Player } from '../Player';
 
 describe('user events', () => {
