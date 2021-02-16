@@ -105,7 +105,7 @@ export const tryDecodeURIComponent = (
 /**
  * Returns a simple key/value map and duplicate keys are merged into an array.
  *
- * @see https://github.com/ampproject/amphtml/blob/c7c46cec71bac92f5c5da31dcc6366c18577f566/src/url-parse-query-string.js#L31
+ * @link https://github.com/ampproject/amphtml/blob/c7c46cec71bac92f5c5da31dcc6366c18577f566/src/url-parse-query-string.js#L31
  */
 const QUERY_STRING_REGEX = /(?:^[#?]?|&)([^=&]+)(?:=([^&]*))?/g;
 export const parseQueryString = <T>(qs?: string): T => {
