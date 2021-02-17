@@ -32,6 +32,7 @@ pnpm-debug.log*
 chrome-profiler-events*.json
 speed-measure-plugin*.json
 
+/.link
 /tmp
 /out-tsc
 /bazel-out
