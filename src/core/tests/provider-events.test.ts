@@ -5,6 +5,10 @@ import { Player } from '../Player';
 import { MediaType, ViewType } from '../player.types';
 import { FakeConsumer } from './FakeConsumer';
 import {
+  ReadyEvent,
+  TimeChangeEvent,
+  ViewTypeChangeEvent,
+  VolumeChangeEvent,
   BufferedChangeEvent,
   BufferingChangeEvent,
   DurationChangeEvent,
@@ -17,6 +21,8 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
+} from '../player.events';
+import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
   ProviderDurationChangeEvent,
@@ -33,11 +39,7 @@ import {
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
-  ReadyEvent,
-  TimeChangeEvent,
-  ViewTypeChangeEvent,
-  VolumeChangeEvent,
-} from '../events';
+} from '../provider';
 import { spy } from 'sinon';
 
 describe('provider events', () => {

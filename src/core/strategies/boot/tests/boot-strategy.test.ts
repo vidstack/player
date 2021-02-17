@@ -76,17 +76,17 @@ describe('boot strategy factory', () => {
     expect(strategy).to.instanceOf(CustomStrategy);
   });
 
-  it('should build immediate startegy', () => {
+  it('should build immediate strategy', () => {
     const strategy = BootStrategyFactory.build('immediate');
     expect(strategy).to.instanceOf(ImmediateBootStrategy);
   });
 
-  it('should build click startegy', () => {
+  it('should build click strategy', () => {
     const strategy = BootStrategyFactory.build('click');
     expect(strategy).to.instanceOf(ClickBootStrategy);
   });
 
-  it('should build lazy startegy', () => {
+  it('should build lazy strategy', () => {
     const strategy = BootStrategyFactory.build('lazy');
     expect(strategy).to.instanceOf(LazyBootStrategy);
   });

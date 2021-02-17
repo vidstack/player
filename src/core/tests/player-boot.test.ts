@@ -8,7 +8,7 @@ import {
 } from '@open-wc/testing';
 import { spy } from 'sinon';
 import { isNil } from '../../utils';
-import { BootEndEvent } from '../events';
+import { BootEndEvent } from '../player.events';
 import { Player } from '../Player';
 import { Bootable, BootStrategy, ImmediateBootStrategy } from '../strategies';
 import '../vds-player';
