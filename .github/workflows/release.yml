@@ -1,6 +1,10 @@
 name: Release
 
-on: push
+on:
+  push:
+    branches:
+      - 'release'
+      - 'next'
 
 jobs:
   release:

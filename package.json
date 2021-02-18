@@ -112,7 +112,7 @@
   "release": {
     "branches": [
       {
-        "name": "main"
+        "name": "release"
       },
       {
         "name": "next",
