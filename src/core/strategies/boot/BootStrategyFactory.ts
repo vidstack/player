@@ -5,22 +5,24 @@ import { ClickBootStrategy } from './ClickBootStrategy';
 import { ImmediateBootStrategy } from './ImmediateBootStrategy';
 import { LazyBootStrategy } from './LazyBootStrategy';
 
-export type BootStrategyType =
-  | 'immediate'
-  | 'click'
-  | 'lazy'
-  | Constructor<BootStrategy>;
+export type BootStrategyType = 'immediate' | 'click' | 'lazy';
 
-const validStrategyType = new Set(['immediate', 'click', 'lazy']);
+export type CustomBootStrategy = Constructor<BootStrategy>;
+
+const validStrategyType = new Set<BootStrategyType>([
+  'immediate',
+  'click',
+  'lazy',
+]);
 
 export class BootStrategyFactory {
-  static isValidType(
-    strategyType: string,
-  ): strategyType is 'immediate' | 'click' | 'lazy' {
-    return validStrategyType.has(strategyType);
+  static isValidType(strategyType: string): strategyType is BootStrategyType {
+    return validStrategyType.has(strategyType as BootStrategyType);
   }
 
-  static build(strategyType: BootStrategyType): BootStrategy {
+  static build(
+    strategyType: BootStrategyType | CustomBootStrategy,
+  ): BootStrategy {
     if (!isString(strategyType)) {
       return new strategyType();
     }
