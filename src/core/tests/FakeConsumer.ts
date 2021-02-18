@@ -64,22 +64,6 @@ export class FakeConsumer extends LitElement {
   isDesktopDevice = playerContext.isDesktopDevice.defaultValue;
 
   @internalProperty()
-  @playerContext.inputDevice.consume()
-  inputDevice = playerContext.inputDevice.defaultValue;
-
-  @internalProperty()
-  @playerContext.isTouchInputDevice.consume()
-  isTouchInputDevice = playerContext.isTouchInputDevice.defaultValue;
-
-  @internalProperty()
-  @playerContext.isMouseInputDevice.consume()
-  isMouseInputDevice = playerContext.isMouseInputDevice.defaultValue;
-
-  @internalProperty()
-  @playerContext.isKeyboardInputDevice.consume()
-  isKeyboardInputDevice = playerContext.isKeyboardInputDevice.defaultValue;
-
-  @internalProperty()
   @playerContext.isBuffering.consume()
   isBuffering = playerContext.isBuffering.defaultValue;
 

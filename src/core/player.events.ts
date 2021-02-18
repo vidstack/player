@@ -55,8 +55,4 @@ export class DeviceChangeEvent extends buildVdsEvent<PlayerState['device']>(
   'device-change',
 ) {}
 
-export class InputDeviceChangeEvent extends buildVdsEvent<
-  PlayerState['inputDevice']
->('input-device-change') {}
-
 export class ErrorEvent extends buildVdsEvent<unknown>('error') {}

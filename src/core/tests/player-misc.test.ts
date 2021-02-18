@@ -1,14 +1,8 @@
 import '../vds-player';
 import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
-import { Device, InputDevice } from '../../utils/dom';
+import { Device } from '../../utils/dom';
 import { Player } from '../Player';
-import {
-  switchToDesktopDevice,
-  switchToMobileDevice,
-  useKeyboardInputDevice,
-  useMouseInputDevice,
-  useTouchInputDevice,
-} from './helpers';
+import { switchToDesktopDevice, switchToMobileDevice } from './helpers';
 import { PlayerContextProvider } from '../player.types';
 
 describe('render', () => {
@@ -94,61 +88,5 @@ describe('device change', () => {
     expect(provider.isDesktopDeviceCtx).to.be.true;
     expect(player).to.have.attribute('desktop', 'true');
     expect(player).to.not.have.attribute('mobile', 'true');
-  });
-});
-
-describe('input device change', () => {
-  it('should update when screen is touched', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
-    const provider = (player as unknown) as PlayerContextProvider;
-    const { detail } = await useTouchInputDevice(player);
-    const expectedInputDevice = InputDevice.Touch;
-    expect(detail).to.be.equal(expectedInputDevice);
-    expect(player.inputDevice).to.equal(expectedInputDevice);
-    expect(player.isTouchInputDevice).to.be.true;
-    expect(player.isMouseInputDevice).to.be.false;
-    expect(player.isKeyboardInputDevice).to.be.false;
-    expect(provider.isTouchInputDeviceCtx).to.be.true;
-    expect(provider.isMouseInputDeviceCtx).to.be.false;
-    expect(provider.isKeyboardInputDeviceCtx).to.be.false;
-    expect(player).to.have.attribute('touch', 'true');
-    expect(player).to.not.have.attribute('mouse', 'true');
-    expect(player).to.not.have.attribute('keyboard', 'true');
-  });
-
-  it('should update mouse is moved', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
-    const provider = (player as unknown) as PlayerContextProvider;
-    const { detail } = await useMouseInputDevice(player);
-    const expectedInputDevice = InputDevice.Mouse;
-    expect(detail).to.be.equal(expectedInputDevice);
-    expect(player.inputDevice).to.equal(expectedInputDevice);
-    expect(player.isTouchInputDevice).to.be.false;
-    expect(player.isMouseInputDevice).to.be.true;
-    expect(player.isKeyboardInputDevice).to.be.false;
-    expect(provider.isTouchInputDeviceCtx).to.be.false;
-    expect(provider.isMouseInputDeviceCtx).to.be.true;
-    expect(provider.isKeyboardInputDeviceCtx).to.be.false;
-    expect(player).to.have.attribute('mouse', 'true');
-    expect(player).to.not.have.attribute('touch', 'true');
-    expect(player).to.not.have.attribute('keyboard', 'true');
-  });
-
-  it('should update when keyboard is used', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
-    const provider = (player as unknown) as PlayerContextProvider;
-    const { detail } = await useKeyboardInputDevice(player);
-    const expectedInputDevice = InputDevice.Keyboard;
-    expect(detail).to.be.equal(expectedInputDevice);
-    expect(player.inputDevice).to.equal(expectedInputDevice);
-    expect(player.isTouchInputDevice).to.be.false;
-    expect(player.isMouseInputDevice).to.be.false;
-    expect(player.isKeyboardInputDevice).to.be.true;
-    expect(provider.isTouchInputDeviceCtx).to.be.false;
-    expect(provider.isMouseInputDeviceCtx).to.be.false;
-    expect(provider.isKeyboardInputDeviceCtx).to.be.true;
-    expect(player).to.have.attribute('keyboard', 'true');
-    expect(player).to.not.have.attribute('touch', 'true');
-    expect(player).to.not.have.attribute('mouse', 'true');
   });
 });

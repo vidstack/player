@@ -1,6 +1,6 @@
 import '../vds-player';
 import { expect, fixture, html } from '@open-wc/testing';
-import { Device, InputDevice } from '../../utils';
+import { Device } from '../../utils';
 import { Player } from '../Player';
 import { playerContext } from '../player.context';
 import {
@@ -34,10 +34,6 @@ describe('props', async () => {
       device: Device.Mobile,
       isMobileDevice: false,
       isDesktopDevice: false,
-      inputDevice: InputDevice.Mouse,
-      isTouchInputDevice: false,
-      isMouseInputDevice: false,
-      isKeyboardInputDevice: false,
       isBuffering: false,
       isPlaying: false,
       hasPlaybackStarted: false,

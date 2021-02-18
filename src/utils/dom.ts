@@ -50,60 +50,6 @@ export const isColliding = (
   );
 };
 
-export enum InputDevice {
-  Touch = 'touch',
-  Mouse = 'mouse',
-  Keyboard = 'keyboard',
-}
-
-/**
- * Listens for input device changes (mouse/touch) and invokes a callback with the current
- * input device.
- *
- * @param callback - Called when the input device is changed.
- */
-export const onInputDeviceChange = (
-  callback: (inputDevice: InputDevice) => void,
-  isClient = IS_CLIENT,
-  shouldIgnoreEmulatedTouchEvents = true,
-): Unsubscribe => {
-  if (!isClient) return noop;
-
-  let lastTouchTime = 0;
-
-  const offTouchListener = listenTo(
-    window,
-    'touchstart',
-    () => {
-      lastTouchTime = new Date().getTime();
-      callback(InputDevice.Touch);
-    },
-    true,
-  );
-
-  const offMouseListener = listenTo(
-    window,
-    'mousemove',
-    () => {
-      // Filter emulated events coming from touch events.
-      const isEmulatedEvent = new Date().getTime() - lastTouchTime < 500;
-      if (shouldIgnoreEmulatedTouchEvents && isEmulatedEvent) return;
-      callback(InputDevice.Mouse);
-    },
-    true,
-  );
-
-  const offKeyboardListener = listenTo(window, 'keydown', () => {
-    callback(InputDevice.Keyboard);
-  });
-
-  return () => {
-    offTouchListener();
-    offMouseListener();
-    offKeyboardListener();
-  };
-};
-
 export enum Device {
   Mobile = 'mobile',
   Desktop = 'desktop',
