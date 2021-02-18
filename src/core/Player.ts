@@ -12,22 +12,12 @@ import {
 import { styleMap } from 'lit-html/directives/style-map';
 import clsx from 'clsx';
 import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
-import {
-  Device,
-  InputDevice,
-  isString,
-  isUndefined,
-  IS_CLIENT,
-  noop,
-  onDeviceChange,
-  onInputDeviceChange,
-} from '../utils';
+import { Device, isString, isUndefined, noop, onDeviceChange } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
 import {
   ReadyEvent,
   TimeChangeEvent,
-  InputDeviceChangeEvent,
   ViewTypeChangeEvent,
   VolumeChangeEvent,
   ErrorEvent,
@@ -74,7 +64,6 @@ import {
   ProviderVolumeChangeEvent,
 } from './provider';
 import { VdsCustomEvent, VdsCustomEventConstructor } from '../shared/events';
-import { isTestEnv } from './env';
 import {
   Bootable,
   BootStrategy,
@@ -135,7 +124,6 @@ import {
  * @fires vds-playback-start - Emitted when playback has started (`currentTime > 0`).
  * @fires vds-playback-end - Emitted when playback ends (`currentTime === duration`).
  * @fires vds-device-change - Emitted when the type of user device changes between mobile/desktop.
- * @fires vds-input-device-change - Emitted when the input device changes between touch/mouse/keyboard.
  * @fires vds-error - Emitted when a provider encounters an error during media loading/playback.
  *
  * @slot - Used to pass in Provider/UI components.
@@ -315,7 +303,6 @@ export class Player extends LitElement implements PlayerProps, Bootable {
   protected connect(): void {
     this.setUuid();
     this.listenToDeviceChanges();
-    this.listenToInputDeviceChanges();
     this.listenToUserEvents();
     this.listenToProviderEvents();
   }
@@ -343,18 +330,6 @@ export class Player extends LitElement implements PlayerProps, Bootable {
    * This section contains methods involved in setting up any event listeners.
    * -------------------------------------------------------------------------------------------
    */
-
-  protected listenToInputDeviceChanges(): void {
-    // Allow emulated touch events to trigger mouse events in test environment so we don't
-    // have to mock `Date.getTime()`.
-    const off = onInputDeviceChange(
-      this.handleInputDeviceChange.bind(this),
-      IS_CLIENT,
-      !isTestEnv(),
-    );
-
-    this.disposal.add(off);
-  }
 
   protected listenToDeviceChanges(): void {
     const off = onDeviceChange(this.handleDeviceChange.bind(this));
@@ -402,32 +377,6 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   protected getDesktopAttrName(): string {
     return 'desktop';
-  }
-
-  protected handleInputDeviceChange(inputDevice: InputDevice): void {
-    this._inputDevice = inputDevice;
-    this.isMouseInputDeviceCtx = this.isMouseInputDevice;
-    this.isTouchInputDeviceCtx = this.isTouchInputDevice;
-    this.isKeyboardInputDeviceCtx = this.isKeyboardInputDevice;
-    this.setAttribute(this.getTouchAttrName(), String(this.isTouchInputDevice));
-    this.setAttribute(this.getMouseAttrName(), String(this.isMouseInputDevice));
-    this.setAttribute(
-      this.getKeyboardAttrName(),
-      String(this.isKeyboardInputDevice),
-    );
-    this.dispatchEvent(new InputDeviceChangeEvent({ detail: inputDevice }));
-  }
-
-  protected getTouchAttrName(): string {
-    return 'touch';
-  }
-
-  protected getMouseAttrName(): string {
-    return 'mouse';
-  }
-
-  protected getKeyboardAttrName(): string {
-    return 'keyboard';
   }
 
   /**
@@ -586,24 +535,6 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   get isDesktopDevice(): PlayerState['isDesktopDevice'] {
     return this._device === Device.Desktop;
-  }
-
-  protected _inputDevice = playerContext.inputDevice.defaultValue;
-
-  get inputDevice(): PlayerState['inputDevice'] {
-    return this._inputDevice;
-  }
-
-  get isTouchInputDevice(): PlayerState['isTouchInputDevice'] {
-    return this._inputDevice === InputDevice.Touch;
-  }
-
-  get isMouseInputDevice(): PlayerState['isMouseInputDevice'] {
-    return this._inputDevice === InputDevice.Mouse;
-  }
-
-  get isKeyboardInputDevice(): PlayerState['isKeyboardInputDevice'] {
-    return this._inputDevice === InputDevice.Keyboard;
   }
 
   get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
@@ -923,21 +854,6 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   @playerContext.isDesktopDevice.provide()
   protected isDesktopDeviceCtx = playerContext.isDesktopDevice.defaultValue;
-
-  @playerContext.inputDevice.provide()
-  protected inputDeviceCtx = playerContext.inputDevice.defaultValue;
-
-  @playerContext.isTouchInputDevice.provide()
-  protected isTouchInputDeviceCtx =
-    playerContext.isTouchInputDevice.defaultValue;
-
-  @playerContext.isMouseInputDevice.provide()
-  protected isMouseInputDeviceCtx =
-    playerContext.isMouseInputDevice.defaultValue;
-
-  @playerContext.isKeyboardInputDevice.provide()
-  protected isKeyboardInputDeviceCtx =
-    playerContext.isKeyboardInputDevice.defaultValue;
 
   @playerContext.isBuffering.provide()
   protected isBufferingCtx = playerContext.isBuffering.defaultValue;

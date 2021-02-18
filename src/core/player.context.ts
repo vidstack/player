@@ -1,9 +1,9 @@
 import createContext from '@wcom/context';
-import { Device, InputDevice, IS_MOBILE } from '../utils';
+import { Device, IS_MOBILE } from '../utils';
 import { MediaType, PlayerContext, ViewType } from './player.types';
 
-const guessDevice = IS_MOBILE ? Device.Mobile : Device.Desktop;
-const guessInputDevice = IS_MOBILE ? InputDevice.Touch : InputDevice.Mouse;
+const guessDevice =
+  window.innerWidth <= 480 || IS_MOBILE ? Device.Mobile : Device.Desktop;
 
 /**
  * The player context object contains a collection of contexts that map 1:1 with player
@@ -38,10 +38,6 @@ export const playerContext: PlayerContext = {
   device: createContext(guessDevice),
   isMobileDevice: createContext(guessDevice === Device.Mobile),
   isDesktopDevice: createContext(guessDevice === Device.Desktop),
-  inputDevice: createContext(guessInputDevice),
-  isTouchInputDevice: createContext(guessInputDevice === InputDevice.Touch),
-  isMouseInputDevice: createContext(guessInputDevice === InputDevice.Mouse),
-  isKeyboardInputDevice: createContext(false),
   isBuffering: createContext(false),
   isPlaying: createContext(false),
   hasPlaybackStarted: createContext(false),

@@ -1,5 +1,5 @@
 import { Context } from '@wcom/context';
-import { Device, InputDevice } from '../utils';
+import { Device } from '../utils';
 
 export type Source = string;
 
@@ -33,10 +33,6 @@ export type ReadonlyPlayerState = Readonly<
     | 'device'
     | 'isMobileDevice'
     | 'isDesktopDevice'
-    | 'inputDevice'
-    | 'isTouchInputDevice'
-    | 'isMouseInputDevice'
-    | 'isKeyboardInputDevice'
     | 'isBuffering'
     | 'isPlaying'
     | 'hasPlaybackStarted'
@@ -153,39 +149,6 @@ export interface PlayerState {
    * @readonly
    */
   isDesktopDevice: boolean;
-
-  /**
-   * The type of device the player is being interacted with, whether it's mouse/touch/keyboard.
-   * This is determined by listening to mousemove/touchstart/keydown events on `Window` and
-   * toggling this value.
-   *
-   * @readonly
-   */
-  inputDevice: InputDevice;
-
-  /**
-   * Whether the current `inputDevice` is touch (shorthand for
-   * `inputDevice === InputDevice.Touch`).
-   *
-   * @readonly
-   */
-  isTouchInputDevice: boolean;
-
-  /**
-   * Whether the current `inputDevice` is mouse (shorthand for
-   * `inputDevice === InputDevice.Mouse`).
-   *
-   * @readonly
-   */
-  isMouseInputDevice: boolean;
-
-  /**
-   * Whether the current `inputDevice` is keyboard (shorthand for
-   * `inputDevice === InputDevice.Keyboard`).
-   *
-   * @readonly
-   */
-  isKeyboardInputDevice: boolean;
 
   /**
    * Whether playback has temporarily stopped because of a lack of temporary data.

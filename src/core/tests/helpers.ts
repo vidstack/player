@@ -1,6 +1,6 @@
 import { oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
-import { DeviceChangeEvent, InputDeviceChangeEvent } from '../player.events';
+import { DeviceChangeEvent } from '../player.events';
 import { Player } from '../Player';
 
 export async function switchToMobileDevice(
@@ -21,40 +21,4 @@ export async function switchToDesktopDevice(
     player,
     DeviceChangeEvent.TYPE,
   ) as unknown) as DeviceChangeEvent;
-}
-
-export async function useTouchInputDevice(
-  player: Player,
-): Promise<InputDeviceChangeEvent> {
-  setTimeout(() => {
-    window.dispatchEvent(new TouchEvent('touchstart'));
-  });
-  return (oneEvent(
-    player,
-    InputDeviceChangeEvent.TYPE,
-  ) as unknown) as InputDeviceChangeEvent;
-}
-
-export async function useMouseInputDevice(
-  player: Player,
-): Promise<InputDeviceChangeEvent> {
-  setTimeout(() => {
-    window.dispatchEvent(new MouseEvent('mousemove'));
-  });
-  return (oneEvent(
-    player,
-    InputDeviceChangeEvent.TYPE,
-  ) as unknown) as InputDeviceChangeEvent;
-}
-
-export async function useKeyboardInputDevice(
-  player: Player,
-): Promise<InputDeviceChangeEvent> {
-  setTimeout(() => {
-    window.dispatchEvent(new KeyboardEvent('keydown'));
-  });
-  return (oneEvent(
-    player,
-    InputDeviceChangeEvent.TYPE,
-  ) as unknown) as InputDeviceChangeEvent;
 }
