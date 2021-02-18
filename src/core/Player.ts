@@ -1,4 +1,5 @@
-import { Disposal, listen, listenTo } from '@wcom/events';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { Disposal, listenTo } from '@wcom/events';
 import { v4 as uuid } from '@lukeed/uuid';
 import {
   html,
@@ -11,8 +12,14 @@ import {
 } from 'lit-element';
 import { styleMap } from 'lit-html/directives/style-map';
 import clsx from 'clsx';
-import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
-import { Device, isString, isUndefined, noop, onDeviceChange } from '../utils';
+import {
+  MediaType,
+  PlayerProps,
+  PlayerState,
+  Source,
+  ViewType,
+} from './player.types';
+import { Device, isString, isUndefined, onDeviceChange } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
 import {
@@ -46,8 +53,11 @@ import {
 } from './user';
 import {
   ALL_PROVIDER_EVENTS,
+  MediaProvider,
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
+  ProviderConnectEvent,
+  ProviderDisconnectEvent,
   ProviderDurationChangeEvent,
   ProviderErrorEvent,
   ProviderMediaTypeChangeEvent,
@@ -153,85 +163,6 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   /**
    * -------------------------------------------------------------------------------------------
-   * Boot
-   *
-   * This section contains props/methods involved in the booting of the player.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  /**
-   * A `BootStrategy` determines when the player should begin rendering the current provider and
-   * loading media.
-   */
-  @property({
-    type: String,
-    attribute: 'boot-strategy',
-    converter: {
-      fromAttribute(value) {
-        return isString(value) && BootStrategyFactory.isValidType(value)
-          ? BootStrategyFactory.build(value)
-          : BootStrategyFactory.buildLazyBootStrategy();
-      },
-    },
-  })
-  bootStrategy: BootStrategy = new LazyBootStrategy();
-
-  /**
-   * An artificial delay in milliseconds before the player boots. Use this if you'd like to
-   * extend showing the boot screen.
-   */
-  @property({ type: Number, attribute: 'boot-delay' })
-  bootDelay = 0;
-
-  @internalProperty()
-  protected _hasBooted = false;
-
-  get hasBooted(): boolean {
-    return this._hasBooted;
-  }
-
-  /**
-   * Part of the `Bootable` interface.
-   */
-  get bootTarget(): HTMLElement {
-    return this;
-  }
-
-  /**
-   * This method is called by the current `BootStrategy` when it's time to boot. Part of the
-   * `Bootable` interface.
-   */
-  async boot(): Promise<void> {
-    if (this._hasBooted) return;
-
-    setTimeout(() => {
-      this._hasBooted = true;
-      this.setAttribute(this.getBootedAttrName(), 'true');
-      this.dispatchEvent(new BootEndEvent());
-    }, this.bootDelay);
-  }
-
-  protected getBootedAttrName(): string {
-    return 'booted';
-  }
-
-  protected previousBootStrategy: BootStrategy | undefined;
-
-  protected handleBootStrategyChange(): void {
-    this.destroyBootStrategy();
-    this.bootStrategy.register(this);
-    this.dispatchEvent(new BootStartEvent());
-    this.previousBootStrategy = this.bootStrategy;
-  }
-
-  protected destroyBootStrategy(): void {
-    this._hasBooted = false;
-    this.setAttribute(this.getBootedAttrName(), 'false');
-    this.previousBootStrategy?.destroy();
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
    * Render
    *
    * This section contains methods involved in the rendering of the player.
@@ -294,6 +225,204 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   /**
    * -------------------------------------------------------------------------------------------
+   * Boot
+   *
+   * This section contains props/methods involved in the booting of the player.
+   * -------------------------------------------------------------------------------------------
+   */
+
+  /**
+   * A `BootStrategy` determines when the player should begin rendering the current provider and
+   * loading media.
+   */
+  @property({
+    type: String,
+    attribute: 'boot-strategy',
+    converter: {
+      fromAttribute(value) {
+        return isString(value) && BootStrategyFactory.isValidType(value)
+          ? BootStrategyFactory.build(value)
+          : BootStrategyFactory.buildLazyBootStrategy();
+      },
+    },
+  })
+  bootStrategy: BootStrategy = new LazyBootStrategy();
+
+  /**
+   * An artificial delay in milliseconds before the player boots. Use this if you'd like to
+   * extend showing the boot screen.
+   */
+  @property({ type: Number, attribute: 'boot-delay' })
+  bootDelay = 0;
+
+  @internalProperty()
+  protected _hasBooted = false;
+
+  get hasBooted(): boolean {
+    return this._hasBooted;
+  }
+
+  /**
+   * Part of the `Bootable` interface.
+   */
+  get bootTarget(): HTMLElement {
+    return this;
+  }
+
+  /**
+   * This method is called by the current `BootStrategy` when it's time to boot. Part of the
+   * `Bootable` interface.
+   */
+  async boot(): Promise<void> {
+    if (this._hasBooted) return;
+
+    setTimeout(async () => {
+      this._hasBooted = true;
+      this.setAttribute(this.getBootedAttrName(), 'true');
+      await this.updateComplete;
+      this.dispatchEvent(new BootEndEvent());
+      this.loadMedia();
+    }, this.bootDelay);
+  }
+
+  protected getBootedAttrName(): string {
+    return 'booted';
+  }
+
+  protected previousBootStrategy: BootStrategy | undefined;
+
+  protected handleBootStrategyChange(): void {
+    this.destroyBootStrategy();
+    this.bootStrategy.register(this);
+    this.dispatchEvent(new BootStartEvent());
+    this.previousBootStrategy = this.bootStrategy;
+  }
+
+  protected destroyBootStrategy(): void {
+    this._hasBooted = false;
+    this.setAttribute(this.getBootedAttrName(), 'false');
+    this.previousBootStrategy?.destroy();
+  }
+
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Provider Management.
+   *
+   * This section contains logic for managing providers.
+   * -------------------------------------------------------------------------------------------
+   */
+
+  @internalProperty()
+  protected _currentProvider?: MediaProvider;
+
+  /**
+   * The current media provider.
+   */
+  get currentProvider(): MediaProvider | undefined {
+    return this._currentProvider;
+  }
+
+  protected mediaProviders = new Set<MediaProvider>();
+
+  // Called when a provider connects/disconnects via events (see the 'Provider Events' section).
+  protected async handleMediaProviderSetChange(): Promise<void> {
+    this.loadMedia();
+  }
+
+  protected async updateCurrentProvider(): Promise<void> {
+    const newProvider = Array.from(this.mediaProviders).find(provider =>
+      provider.canPlayType(this.src),
+    );
+
+    if (this._currentProvider === newProvider) return;
+
+    await this._currentProvider?.destroy();
+    await this._currentProvider?.updateComplete;
+
+    this._currentProvider = newProvider;
+    await this._currentProvider?.init();
+    await this._currentProvider?.updateComplete;
+
+    // Trigger re-render to update rendering of provider.
+    await this.requestUpdate();
+  }
+
+  protected throwIfNoMediaProvider(): void {
+    if (!isUndefined(this.currentProvider)) return;
+    throw Error('No media provider is currently available.');
+  }
+
+  /**
+   * Begins/resumes playback of the media. If this method is called programmatically before the
+   * user has interacted with the player, the promise may be rejected subject to the browser's
+   * autoplay policies.
+   */
+  play(): Promise<void> {
+    this.throwIfNoMediaProvider();
+    return this.currentProvider!.play();
+  }
+
+  /**
+   * Pauses playback of the media.
+   */
+  pause(): Promise<void> {
+    this.throwIfNoMediaProvider();
+    return this.currentProvider!.pause();
+  }
+
+  /**
+   * Determines if any connected media provider can play the given `type`. The `type` is
+   * generally the media resource identifier, URL or MIME type (optional Codecs parameter).
+   *
+   * @examples
+   * - `audio/mp3`
+   * - `video/mp4`
+   * - `video/webm; codecs="vp8, vorbis"`
+   * - `/my-audio-file.mp3`
+   * - `youtube/RO7VcUAsf-I`
+   * - `vimeo.com/411652396`
+   * - `https://www.youtube.com/watch?v=OQoz7FCWkfU`
+   * - `https://media.vidstack.io/hls/index.m3u8`
+   * - `https://media.vidstack.io/dash/index.mpd`
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
+   */
+  canPlayType(type: string): boolean {
+    return Array.from(this.mediaProviders).some(provider =>
+      provider.canPlayType(type),
+    );
+  }
+
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Media Management
+   *
+   * This section contains logic for managing media.
+   * -------------------------------------------------------------------------------------------
+   */
+
+  protected currentlyLoadedSrc?: Source;
+
+  /**
+   * Checks:
+   * - Has the player booted?
+   * - Has the media already loaded?
+   * - Has the provider changed?
+   * - Does the new/old current provider still exist?
+   * - Is the current provider ready?
+   */
+  protected async loadMedia(): Promise<void> {
+    const hasAlreadyLoaded = this.src === this.currentlyLoadedSrc;
+    if (!this.hasBooted || hasAlreadyLoaded) return;
+    this.updateCurrentProvider();
+    if (!this.currentProvider?.isReady()) return;
+    this.currentProvider!.setPoster(this.poster);
+    await this.currentProvider!.loadMedia(this.src);
+    this.currentlyLoadedSrc = this.src;
+  }
+
+  /**
+   * -------------------------------------------------------------------------------------------
    * Lifecycle
    *
    * This section contains component lifecycle methods.
@@ -310,6 +439,8 @@ export class Player extends LitElement implements PlayerProps, Bootable {
   protected disconnect(): void {
     this.disposal.empty();
     this.destroyBootStrategy();
+    this._currentProvider = undefined;
+    this.currentlyLoadedSrc = undefined;
   }
 
   protected updated(changed: PropertyValues): void {
@@ -400,15 +531,14 @@ export class Player extends LitElement implements PlayerProps, Bootable {
   set src(newSrc: PlayerState['src']) {
     this._src = newSrc;
     this.srcCtx = newSrc;
-    // TODO: call appropriate method.
+    this.loadMedia();
   }
 
   // ---
 
   @property({ type: Number })
   get volume(): PlayerState['volume'] {
-    // TODO: return property from provider.
-    return 0.3;
+    return this.currentProvider?.getVolume() ?? 0.3;
   }
 
   set volume(newVolume: PlayerState['volume']) {
@@ -419,8 +549,7 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   @property({ type: Number })
   get currentTime(): PlayerState['currentTime'] {
-    // TODO: return property from provider.
-    return 0;
+    return this.currentProvider?.getCurrentTime() ?? 0;
   }
 
   set currentTime(newCurrentTime: PlayerState['currentTime']) {
@@ -431,8 +560,7 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   @property({ type: Boolean, reflect: true })
   get paused(): PlayerState['paused'] {
-    // TODO: return property from provider.
-    return true;
+    return this.currentProvider?.isPaused() ?? true;
   }
 
   set paused(newPaused: PlayerState['paused']) {
@@ -443,8 +571,7 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   @property({ type: Boolean })
   get controls(): PlayerState['controls'] {
-    // TODO: return property from provider.
-    return false;
+    return this.currentProvider?.isControlsVisible() ?? false;
   }
 
   set controls(isControlsVisible: PlayerState['controls']) {
@@ -455,8 +582,7 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   @property({ type: String })
   get poster(): PlayerState['poster'] {
-    // TODO: return property from provider.
-    return undefined;
+    return this.currentProvider?.getPoster();
   }
 
   set poster(newPoster: PlayerState['poster']) {
@@ -481,8 +607,7 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   @property({ type: Boolean })
   get muted(): PlayerState['muted'] {
-    // TODO: return property from provider.
-    return false;
+    return this.currentProvider?.isMuted() ?? false;
   }
 
   set muted(newMuted: PlayerState['muted']) {
@@ -504,23 +629,20 @@ export class Player extends LitElement implements PlayerProps, Bootable {
   }
 
   get duration(): PlayerState['duration'] {
-    // TODO: return property from provider.
-    return -1;
+    return this.currentProvider?.getDuration() ?? -1;
   }
 
   get buffered(): PlayerState['buffered'] {
-    // TODO: return property from provider.
-    return 0;
+    return this.currentProvider?.getBuffered() ?? 0;
   }
 
   get isBuffering(): PlayerState['isBuffering'] {
-    // TODO: return property from provider.
-    return false;
+    return this.currentProvider?.isBuffering() ?? false;
   }
 
   get isPlaying(): PlayerState['isPlaying'] {
-    // TODO: return property from provider.
-    return false;
+    const isPaused = this.currentProvider?.isPaused() ?? true;
+    return !isPaused;
   }
 
   protected _device = playerContext.device.defaultValue;
@@ -538,28 +660,23 @@ export class Player extends LitElement implements PlayerProps, Bootable {
   }
 
   get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
-    // TODO: return property from provider.
-    return false;
+    return this.currentProvider?.hasPlaybackStarted() ?? false;
   }
 
   get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
-    // TODO: return property from provider.
-    return false;
+    return this.currentProvider?.hasPlaybackEnded() ?? false;
   }
 
   get isProviderReady(): PlayerState['isProviderReady'] {
-    // TODO: return property from provider.
-    return false;
+    return this.currentProvider?.isReady() ?? false;
   }
 
   get isPlaybackReady(): PlayerState['isPlaybackReady'] {
-    // TODO: return property from provider.
-    return false;
+    return this.currentProvider?.isPlaybackReady() ?? false;
   }
 
   get viewType(): PlayerState['viewType'] {
-    // TODO: return property from provider.
-    return ViewType.Unknown;
+    return this.currentProvider?.getViewType() ?? ViewType.Unknown;
   }
 
   get isAudioView(): PlayerState['isAudioView'] {
@@ -571,8 +688,7 @@ export class Player extends LitElement implements PlayerProps, Bootable {
   }
 
   get mediaType(): PlayerState['mediaType'] {
-    // TODO: return property from provider.
-    return MediaType.Unknown;
+    return this.currentProvider?.getMediaType() ?? MediaType.Unknown;
   }
 
   get isAudio(): PlayerState['isAudio'] {
@@ -593,33 +709,37 @@ export class Player extends LitElement implements PlayerProps, Bootable {
    */
 
   protected requestPlaybackChange(paused: PlayerState['paused']): void {
-    // TODO: call method on provider - handle play success/fail.
-    noop(paused);
+    // TODO: how should we handle play success/fail? Throw error??
+    if (paused) {
+      this.currentProvider?.pause();
+    } else {
+      this.currentProvider?.play();
+    }
   }
 
   protected requestControls(isControlsVisible: PlayerState['controls']): void {
-    // TODO: call method on provider.
-    noop(isControlsVisible);
+    // TODO: probably log if controls are requested but no provider.
+    this.currentProvider?.setControlsVisibility(isControlsVisible);
   }
 
   protected requestVolumeChange(volume: PlayerState['volume']): void {
-    // TODO: call method on provider.
-    noop(volume);
+    // TODO: probably log if volume change requested but no provider.
+    this.currentProvider?.setVolume(volume);
   }
 
   protected requestTimeChange(time: PlayerState['currentTime']): void {
-    // TODO: call method on provider.
-    noop(time);
+    // TODO: probably log if time change requested but no provider.
+    this.currentProvider?.setCurrentTime(time);
   }
 
   protected requestMutedChange(muted: PlayerState['muted']): void {
-    // TODO: call method on provider.
-    noop(muted);
+    // TODO: probably log if muted change requested but no provider.
+    this.currentProvider?.setMuted(muted);
   }
 
   protected requestPosterChange(poster?: PlayerState['poster']): void {
-    // TODO: call method on provider.
-    noop(poster);
+    // TODO: probably log if poster change requested but no provider.
+    this.currentProvider?.setPoster(poster);
   }
 
   /**
@@ -718,15 +838,38 @@ export class Player extends LitElement implements PlayerProps, Bootable {
   // This handler is attached to provider events in the "Connect" section above.
   protected handleProviderEvent(e: VdsCustomEvent<unknown, unknown>): void {
     if (!this.providerEventGateway(e)) return;
+
     this.updateContext(e);
     this.translateProviderEventAndDispatch(e);
+
+    switch (e.type) {
+      case ProviderConnectEvent.TYPE:
+        this.handleProviderConnect(e as ProviderConnectEvent);
+        break;
+      case ProviderReadyEvent.TYPE:
+        this.handleProviderReady();
+        break;
+      case ProviderDisconnectEvent.TYPE:
+        this.handleProviderDisconnect(e as ProviderDisconnectEvent);
+        break;
+      case ProviderViewTypeChangeEvent.TYPE:
+        this.handleProviderViewTypeChange();
+        break;
+      case ProviderErrorEvent.TYPE:
+        this.handleProviderError();
+        break;
+    }
   }
 
   protected translateProviderEventAndDispatch(
     e: VdsCustomEvent<unknown, unknown>,
   ): void {
     const playerEvent = this.providerToPlayerEventMap[e.type];
-    this.dispatchEvent(new playerEvent({ originalEvent: e, detail: e.detail }));
+    if (!isUndefined(playerEvent)) {
+      this.dispatchEvent(
+        new playerEvent({ originalEvent: e, detail: e.detail }),
+      );
+    }
   }
 
   protected updateContext(e: VdsCustomEvent<unknown, unknown>): void {
@@ -742,14 +885,14 @@ export class Player extends LitElement implements PlayerProps, Bootable {
         this.pausedCtx = false;
         this.isPlayingCtx = true;
         break;
+      case ProviderTimeChangeEvent.TYPE:
+        this.currentTimeCtx = e.detail as PlayerState['currentTime'];
+        break;
       case ProviderMutedChangeEvent.TYPE:
         this.mutedCtx = e.detail as PlayerState['muted'];
         break;
       case ProviderVolumeChangeEvent.TYPE:
         this.volumeCtx = e.detail as PlayerState['volume'];
-        break;
-      case ProviderTimeChangeEvent.TYPE:
-        this.currentTimeCtx = e.detail as PlayerState['currentTime'];
         break;
       case ProviderDurationChangeEvent.TYPE:
         this.durationCtx = e.detail as PlayerState['duration'];
@@ -785,7 +928,32 @@ export class Player extends LitElement implements PlayerProps, Bootable {
     }
   }
 
-  @listen(ProviderViewTypeChangeEvent.TYPE)
+  protected handleProviderConnect(e: ProviderConnectEvent): void {
+    const connectedProvider = e.detail;
+    this.mediaProviders.add(connectedProvider);
+    this.handleMediaProviderSetChange();
+  }
+
+  protected handleProviderDisconnect(e: ProviderDisconnectEvent): void {
+    const disconnectedProvider = e.detail;
+
+    if (this._currentProvider === disconnectedProvider) {
+      this._currentProvider = undefined;
+      this.currentlyLoadedSrc = undefined;
+    }
+
+    this.mediaProviders.delete(disconnectedProvider);
+    this.handleMediaProviderSetChange();
+  }
+
+  protected handleProviderReady(): void {
+    this.loadMedia();
+  }
+
+  protected handleProviderError(): void {
+    // TODO: handle this error.
+  }
+
   protected handleProviderViewTypeChange(): void {
     this.setAttribute(this.getAudioAttrName(), String(this.isAudioView));
     this.setAttribute(this.getVideoAttrName(), String(this.isVideoView));
@@ -797,11 +965,6 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   protected getVideoAttrName(): string {
     return 'video';
-  }
-
-  @listen(ProviderErrorEvent.TYPE)
-  protected handleProviderError(): void {
-    // TODO: handle this error.
   }
 
   /**

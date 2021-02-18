@@ -1,4 +1,4 @@
-import { html, TemplateResult } from 'lit-html';
+import { html, TemplateResult } from 'lit-element';
 import { playerContext } from '../player.context';
 import { ViewType, MediaType, PlayerState } from '../player.types';
 import { MediaProvider } from './MediaProvider';
@@ -44,15 +44,11 @@ export class MockMediaProvider extends MediaProvider {
     this.currentTime = newTime;
   }
 
-  getPaused(): boolean {
+  isPaused(): boolean {
     return this.paused;
   }
 
-  setPaused(isPaused: PlayerState['paused']): void {
-    this.paused = isPaused;
-  }
-
-  getMuted(): boolean {
+  isMuted(): boolean {
     return this.muted;
   }
 
@@ -60,7 +56,7 @@ export class MockMediaProvider extends MediaProvider {
     this.muted = isMuted;
   }
 
-  getControlsVisibility(): boolean {
+  isControlsVisible(): boolean {
     return this.controls;
   }
 
@@ -164,19 +160,21 @@ export class MockMediaProvider extends MediaProvider {
     // no-op mock it.
   }
 
+  async init(): Promise<void> {
+    super.init();
+    // no-op mock it.
+  }
+
+  async destroy(): Promise<void> {
+    super.destroy();
+    // no-op mock it.
+  }
+
   async loadMedia(): Promise<void> {
     // no-op mock it.
   }
 
-  moveToBackground(): void {
-    // no-op mock it.
-  }
-
-  destroy(): void {
-    // no-op mock it.
-  }
-
-  renderPlayer(): TemplateResult {
-    return html`<div class="mock-media-provider"><slot></slot></div>`;
+  protected renderProvider(): TemplateResult {
+    return html`<div>MockMediaProvider</div>`;
   }
 }

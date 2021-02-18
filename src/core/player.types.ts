@@ -64,6 +64,15 @@ export interface PlayerState {
    * `src` values they accept. Generally, HTMLMediaElement will accept a absolute/relative URL,
    * and a third-party provider such as YouTube will accept a video identifier in the form
    * `youtube/{video-id}`.
+   *
+   * @examples
+   * - `/my-audio-file.mp3`
+   * - `/my-video-file.mp4`
+   * - `youtube/RO7VcUAsf-I`
+   * - `vimeo.com/411652396`
+   * - `www.youtube.com/watch?v=OQoz7FCWkfU`
+   * - `https://media.vidstack.io/hls/index.m3u8`
+   * - `https://media.vidstack.io/dash/index.mpd`
    */
   src: Source;
 
