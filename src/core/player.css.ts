@@ -30,14 +30,4 @@ export const playerStyles = css`
     overflow: hidden;
     background-color: var(--vds-player-bg, #000);
   }
-
-  .provider-ui-blocker {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: inline-block;
-    z-index: var(--vds-blocker-z-index, 1);
-  }
 `;

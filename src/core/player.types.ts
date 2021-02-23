@@ -64,8 +64,7 @@ export interface PlayerState {
   /**
    * The identifier or URL of a media resource to use. See each provider for what
    * `src` values they accept. Generally, HTMLMediaElement will accept a absolute/relative URL,
-   * and a third-party provider such as YouTube will accept a video identifier in the form
-   * `youtube/{video-id}`.
+   * and a third-party provider such as YouTube will accept a video identifier.
    *
    * @examples
    * - `/my-audio-file.mp3`

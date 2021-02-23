@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Disposal, listen, listenTo } from '@wcom/events';
 import { v4 as uuid } from '@lukeed/uuid';
 import {
@@ -7,26 +6,14 @@ import {
   property,
   CSSResultArray,
   TemplateResult,
-  internalProperty,
-  PropertyValues,
 } from 'lit-element';
 import { styleMap } from 'lit-html/directives/style-map';
 import clsx from 'clsx';
-import {
-  MediaType,
-  PlayerProps,
-  PlayerState,
-  Source,
-  ViewType,
-} from './player.types';
-import { Device, isString, isUndefined, onDeviceChange } from '../utils';
+import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
+import { Device, isUndefined, onDeviceChange } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
-import {
-  BootStartEvent,
-  BootEndEvent,
-  DeviceChangeEvent,
-} from './player.events';
+import { DeviceChangeEvent } from './player.events';
 import {
   ALL_USER_EVENT_TYPES,
   UserMutedChangeRequestEvent,
@@ -41,19 +28,11 @@ import {
   ProviderConnectEvent,
   ProviderDisconnectEvent,
   ProviderErrorEvent,
-  ProviderPlaybackReadyEvent,
-  ProviderReadyEvent,
   ProviderViewTypeChangeEvent,
   PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP,
   VdsProviderEventType,
 } from './provider';
 import { VdsCustomEvent } from '../shared/events';
-import {
-  Bootable,
-  BootStrategy,
-  LazyBootStrategy,
-  BootStrategyFactory,
-} from './strategies/boot';
 import { PlayerContextMixin } from './PlayerContextMixin';
 
 /**
@@ -62,11 +41,6 @@ import { PlayerContextMixin } from './PlayerContextMixin';
  * experience for interacting with any media provider through the properties/methods/events it
  * exposes.
  *
- * The player accepts any number of providers to be passed in through the default `<slot />`. The
- * current `MediaLoadStrategy` will determine which provider to load. You can pass in a
- * custom strategy if desired, by default it'll load the first media provider who can
- * play the current `src`.
- *
  * @example
  * ```html
  *  <vds-player>
@@ -74,26 +48,19 @@ import { PlayerContextMixin } from './PlayerContextMixin';
  *    <vds-ui>
  *      <!-- UI components here. -->
  *    </vds-ui>
- *    <div slot="booting">
- *      <!-- Rendered while player is booting. -->
- *    </div>
  *  </vds-player>
  * ```
  *
  * @example
  * ```html
- *  <vds-player src="youtube/_MyD_e1jJWc">
- *    <vds-hls></vds-hls>
+ *  <vds-player src="_MyD_e1jJWc">
  *    <vds-youtube></vds-youtube>
- *    <vds-video preload="metadata"></vds-video>
  *    <vds-ui>
  *      <!-- UI components here. -->
  *    </vds-ui>
  *  </vds-player>
  * ```
  *
- * @fires vds-boot-start - Emitted when the player begins booting.
- * @fires vds-boot-end - Emitted when the player has booted.
  * @fires vds-play - Emitted when playback attempts to start.
  * @fires vds-pause - Emitted when playback pauses.
  * @fires vds-playing - Emitted when playback being playback.
@@ -121,21 +88,38 @@ import { PlayerContextMixin } from './PlayerContextMixin';
  */
 export class Player
   extends PlayerContextMixin(LitElement)
-  implements PlayerProps, Bootable {
+  implements PlayerProps {
   public static get styles(): CSSResultArray {
     return [playerStyles];
   }
 
-  protected disposal = new Disposal();
+  protected readonly disposal = new Disposal();
+
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Lifecycle
+   *
+   * This section contains component lifecycle methods.
+   * -------------------------------------------------------------------------------------------
+   */
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.connect();
+    this.setUuid();
+    this.listenToDeviceChanges();
+    this.listenToUserEvents();
+    this.listenToProviderEvents();
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.disconnect();
+    this.disposal.empty();
+    this._currentProvider = undefined;
+  }
+
+  protected setUuid(): void {
+    this.context.uuidCtx = this.uuid;
+    this.setAttribute('uuid', this.uuid);
   }
 
   /**
@@ -166,33 +150,12 @@ export class Player
         class="${clsx(classes)}"
         style="${styleMap(styles)}"
       >
-        ${this.renderProviderUIBlocker()} ${this.renderBooting()}
         <slot></slot>
       </div>
     `;
   }
 
-  protected renderProviderUIBlocker(): TemplateResult | undefined {
-    // TODO: should have check for custom controls otherwise it'll block chromeless native player.
-    const isProviderUIBlockerVisible = this.isVideoView && !this.controls;
-
-    return isProviderUIBlockerVisible
-      ? html`<div class="provider-ui-blocker"></div>`
-      : undefined;
-  }
-
-  protected renderBooting(): TemplateResult | undefined {
-    if (this.hasBooted) {
-      return undefined;
-    }
-
-    return !isUndefined(this.bootStrategy.renderWhileBooting)
-      ? this.bootStrategy.renderWhileBooting()
-      : html`<slot name="booting"></slot>`;
-  }
-
   protected calcAspectRatio(): number {
-    // TODO: throw error or log if invalid aspect ratio.
     const [width, height] = /\d{1,2}:\d{1,2}/.test(this.aspectRatio)
       ? this.aspectRatio.split(':')
       : [16, 9];
@@ -202,140 +165,20 @@ export class Player
 
   /**
    * -------------------------------------------------------------------------------------------
-   * Boot
+   * Provider API
    *
-   * This section contains props/methods involved in the booting of the player.
+   * This section contains logic for interacting with the current provider.
    * -------------------------------------------------------------------------------------------
    */
 
-  /**
-   * A `BootStrategy` determines when the player should begin rendering the current provider and
-   * loading media.
-   */
-  @property({
-    type: String,
-    attribute: 'boot-strategy',
-    converter: {
-      fromAttribute(value) {
-        return isString(value) && BootStrategyFactory.isValidType(value)
-          ? BootStrategyFactory.build(value)
-          : BootStrategyFactory.buildLazyBootStrategy();
-      },
-    },
-  })
-  bootStrategy: BootStrategy = new LazyBootStrategy();
-
-  /**
-   * An artificial delay in milliseconds before the player boots. Use this if you'd like to
-   * extend showing the boot screen.
-   */
-  @property({ type: Number, attribute: 'boot-delay' })
-  bootDelay = 0;
-
-  @internalProperty()
-  protected _hasBooted = false;
-
-  /**
-   * Whether the player has booted or not.
-   */
-  get hasBooted(): boolean {
-    return this._hasBooted;
-  }
-
-  /**
-   * Part of the `Bootable` interface.
-   */
-  get bootTarget(): HTMLElement {
-    return this;
-  }
-
-  /**
-   * This method is called by the current `BootStrategy` when it's time to boot. Part of the
-   * `Bootable` interface. **DO NOT CALL THIS METHOD.**
-   */
-  async boot(): Promise<void> {
-    if (this._hasBooted) return;
-
-    setTimeout(async () => {
-      this._hasBooted = true;
-      this.setAttribute(this.getBootedAttrName(), 'true');
-      await this.updateComplete;
-      this.dispatchEvent(new BootEndEvent());
-      this.loadMedia();
-    }, this.bootDelay);
-  }
-
-  /**
-   * The name of the attribute on the player for which to set when the player has booted. The
-   * attribute will be set to `true`/`false` accordingly.
-   */
-  protected getBootedAttrName(): string {
-    return 'booted';
-  }
-
-  protected previousBootStrategy: BootStrategy | undefined;
-
-  protected handleBootStrategyChange(): void {
-    this.destroyBootStrategy();
-    this.bootStrategy.register(this);
-    this.dispatchEvent(new BootStartEvent());
-    this.previousBootStrategy = this.bootStrategy;
-  }
-
-  protected destroyBootStrategy(): void {
-    this._hasBooted = false;
-    this.setAttribute(this.getBootedAttrName(), 'false');
-    this.previousBootStrategy?.destroy();
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Provider Management.
-   *
-   * This section contains logic for managing providers.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  @internalProperty()
   protected _currentProvider?: MediaProvider;
 
   /**
-   * The current media provider.
+   * The current media provider who has connected to the player and is responsible for
+   * loading media.
    */
   get currentProvider(): MediaProvider | undefined {
     return this._currentProvider;
-  }
-
-  protected readonly _mediaProviders = new Set<MediaProvider>();
-
-  /**
-   * The current set of media providers that are connected to the player.
-   */
-  get mediaProviders(): Set<MediaProvider> {
-    return new Set(this._mediaProviders);
-  }
-
-  // Called when a provider connects/disconnects via events (see the 'Provider Events' section).
-  protected async handleMediaProviderSetChange(): Promise<void> {
-    this.loadMedia();
-  }
-
-  protected async updateCurrentProvider(): Promise<void> {
-    const newProvider = Array.from(this._mediaProviders).find(provider =>
-      provider.canPlayType(this.src),
-    );
-
-    if (this._currentProvider === newProvider) return;
-
-    await this._currentProvider?.destroy();
-    await this._currentProvider?.updateComplete;
-
-    this._currentProvider = newProvider;
-    await this._currentProvider?.init();
-    await this._currentProvider?.updateComplete;
-
-    // Trigger re-render to update rendering of provider.
-    await this.requestUpdate();
   }
 
   protected throwIfNoMediaProvider(): void {
@@ -350,6 +193,7 @@ export class Player
    */
   play(): Promise<void> {
     this.throwIfNoMediaProvider();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.currentProvider!.play();
   }
 
@@ -358,11 +202,12 @@ export class Player
    */
   pause(): Promise<void> {
     this.throwIfNoMediaProvider();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.currentProvider!.pause();
   }
 
   /**
-   * Determines if any connected media provider can play the given `type`. The `type` is
+   * Determines if the connected media provider can play the given `type`. The `type` is
    * generally the media resource identifier, URL or MIME type (optional Codecs parameter).
    *
    * @examples
@@ -379,103 +224,7 @@ export class Player
    * @link https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
    */
   canPlayType(type: string): boolean {
-    return Array.from(this._mediaProviders).some(provider =>
-      provider.canPlayType(type),
-    );
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Media Management
-   *
-   * This section contains logic for managing media.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  protected currentlyLoadedSrc?: Source;
-
-  /**
-   * Checks:
-   * - Has the player booted?
-   * - Has the media already loaded?
-   * - Has the provider changed?
-   * - Does the new/old current provider still exist?
-   * - Is the current provider ready?
-   */
-  protected async loadMedia(): Promise<void> {
-    const hasAlreadyLoaded = this.src === this.currentlyLoadedSrc;
-    if (!this.hasBooted || hasAlreadyLoaded) return;
-
-    this.updateCurrentProvider();
-
-    if (!this.currentProvider?.isReady()) return;
-
-    this.currentProvider!.setPoster(this.poster);
-    await this.currentProvider!.loadMedia(this.src);
-
-    this.currentlyLoadedSrc = this.src;
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Lifecycle
-   *
-   * This section contains component lifecycle methods.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  protected connect(): void {
-    this.setUuid();
-    this.listenToDeviceChanges();
-    this.listenToUserEvents();
-    this.listenToProviderEvents();
-  }
-
-  protected disconnect(): void {
-    this.disposal.empty();
-    this.destroyBootStrategy();
-    this._currentProvider = undefined;
-    this.currentlyLoadedSrc = undefined;
-  }
-
-  protected updated(changed: PropertyValues): void {
-    super.updated(changed);
-
-    if (changed.has('bootStrategy')) {
-      this.handleBootStrategyChange();
-    }
-  }
-
-  protected setUuid(): void {
-    this.context.uuidCtx = this.uuid;
-    this.setAttribute('uuid', this.uuid);
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Listeners
-   *
-   * This section contains methods involved in setting up any event listeners.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  protected listenToDeviceChanges(): void {
-    const off = onDeviceChange(this.handleDeviceChange.bind(this));
-    this.disposal.add(off);
-  }
-
-  protected listenToUserEvents(): void {
-    ALL_USER_EVENT_TYPES.forEach(event => {
-      const off = listenTo(this, event, this.catchAllUserEvents.bind(this));
-      this.disposal.add(off);
-    });
-  }
-
-  protected listenToProviderEvents(): void {
-    ALL_PROVIDER_EVENT_TYPES.forEach(event => {
-      const off = listenTo(this, event, this.catchAllProviderEvents.bind(this));
-      this.disposal.add(off);
-    });
+    return this._currentProvider?.canPlayType(type) ?? false;
   }
 
   /**
@@ -485,6 +234,11 @@ export class Player
    * This section contains handler methods for I/O device changes.
    * -------------------------------------------------------------------------------------------
    */
+
+  protected listenToDeviceChanges(): void {
+    const off = onDeviceChange(this.handleDeviceChange.bind(this));
+    this.disposal.add(off);
+  }
 
   protected handleDeviceChange(device: Device): void {
     this._device = device;
@@ -577,6 +331,13 @@ export class Player
     return true;
   }
 
+  protected listenToUserEvents(): void {
+    ALL_USER_EVENT_TYPES.forEach(event => {
+      const off = listenTo(this, event, this.catchAllUserEvents.bind(this));
+      this.disposal.add(off);
+    });
+  }
+
   /**
    * This handler is attached in the "Connect" section above. Use it for processing all user
    * events.
@@ -633,6 +394,13 @@ export class Player
     return true;
   }
 
+  protected listenToProviderEvents(): void {
+    ALL_PROVIDER_EVENT_TYPES.forEach(event => {
+      const off = listenTo(this, event, this.catchAllProviderEvents.bind(this));
+      this.disposal.add(off);
+    });
+  }
+
   /**
    * This handler is attached in the "Connect" section above. Use it for processing all provider
    * events.
@@ -659,39 +427,12 @@ export class Player
   @listen(ProviderConnectEvent.TYPE)
   protected handleProviderConnect(e: ProviderConnectEvent): void {
     const connectedProvider = e.detail;
-    this._mediaProviders.add(connectedProvider);
-    this.handleMediaProviderSetChange();
+    this._currentProvider = connectedProvider;
   }
 
   @listen(ProviderDisconnectEvent.TYPE)
-  protected handleProviderDisconnect(e: ProviderDisconnectEvent): void {
-    const disconnectedProvider = e.detail;
-
-    if (this._currentProvider === disconnectedProvider) {
-      this._currentProvider = undefined;
-      this.currentlyLoadedSrc = undefined;
-    }
-
-    this._mediaProviders.delete(disconnectedProvider);
-    this.handleMediaProviderSetChange();
-  }
-
-  @listen(ProviderReadyEvent.TYPE)
-  protected handleProviderReady(): void {
-    this.loadMedia();
-  }
-
-  @listen(ProviderPlaybackReadyEvent.TYPE)
-  protected async handleProviderPlaybackReady(): Promise<void> {
-    /**
-     * TODO: figure out how to handle these calls once we start embedding third-party
-     * providers such as YouTube, Vimeo etc. Should these properties automatically
-     * update properties on the player? Should they be enabled via properties such as
-     * `autoFetchPoster: boolean`?
-     */
-    await this.currentProvider?.fetchDuration();
-    await this.currentProvider?.fetchDefaultPoster();
-    await this.currentProvider?.fetchRecommendedAspectRatio();
+  protected handleProviderDisconnect(): void {
+    this._currentProvider = undefined;
   }
 
   @listen(ProviderErrorEvent.TYPE)
@@ -742,7 +483,6 @@ export class Player
   set src(newSrc: PlayerState['src']) {
     this._src = newSrc;
     this.context.srcCtx = newSrc;
-    this.loadMedia();
   }
 
   // ---

@@ -52,19 +52,6 @@ export abstract class MediaProvider<
 
   /**
    * -------------------------------------------------------------------------------------------
-   * Fetch
-   *
-   * This section lists abstract methods for fetching (local/remote) information
-   * about the current media.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  abstract fetchDuration(): Promise<PlayerState['duration']>;
-  abstract fetchDefaultPoster(): Promise<PlayerState['poster']>;
-  abstract fetchRecommendedAspectRatio(): Promise<PlayerState['aspectRatio']>;
-
-  /**
-   * -------------------------------------------------------------------------------------------
    * Support
    *
    * This section list abstract methods for determining feature support.
@@ -81,41 +68,6 @@ export abstract class MediaProvider<
    * -------------------------------------------------------------------------------------------
    */
 
-  @internalProperty()
-  protected shouldRenderProvider = false;
-
   abstract play(): Promise<void>;
   abstract pause(): Promise<void>;
-  abstract loadMedia(newSrc: Source): Promise<void>;
-
-  /**
-   * Render your provider in this method. It won't be mounted immediately, the player will
-   * decide when it's your time by calling the `init` method on the provider, which will
-   * automatically trigger the render to happen as long as you call `super.init()` in your
-   * override.
-   */
-  protected abstract renderProvider(): TemplateResult;
-
-  /**
-   * Override this method to initialize the provider. Remember to call `super.init()`!
-   */
-  async init(): Promise<void> {
-    this.shouldRenderProvider = true;
-  }
-
-  /**
-   * Override this method to perform any cleanup operations. Remember to call `super.destroy()`!
-   */
-  async destroy(): Promise<void> {
-    this.shouldRenderProvider = false;
-  }
-
-  /**
-   * **DO NOT OVERRIDE!** - render inside the `renderProvider` method instead. The player
-   * must control the provider render cycle.
-   */
-  protected render(): TemplateResult {
-    if (!this.shouldRenderProvider) return html``;
-    return this.renderProvider();
-  }
 }

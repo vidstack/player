@@ -117,10 +117,6 @@ export class MediaTypeChangeEvent extends buildsVdsPlayerEvent(
   'media-type-change',
 ) {}
 
-export class BootStartEvent extends buildsVdsPlayerEvent('boot-start') {}
-
-export class BootEndEvent extends buildsVdsPlayerEvent('boot-end') {}
-
 export class ReadyEvent extends buildsVdsPlayerEvent('ready') {}
 
 export class PlaybackReadyEvent extends buildsVdsPlayerEvent(

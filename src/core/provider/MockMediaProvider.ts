@@ -160,21 +160,15 @@ export class MockMediaProvider extends MediaProvider {
     // no-op mock it.
   }
 
-  async init(): Promise<void> {
-    super.init();
-    // no-op mock it.
-  }
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Render
+   *
+   * This section contains rendering logic.
+   * -------------------------------------------------------------------------------------------
+   */
 
-  async destroy(): Promise<void> {
-    super.destroy();
-    // no-op mock it.
-  }
-
-  async loadMedia(): Promise<void> {
-    // no-op mock it.
-  }
-
-  protected renderProvider(): TemplateResult {
+  render(): TemplateResult {
     return html`<div>MockMediaProvider</div>`;
   }
 }
