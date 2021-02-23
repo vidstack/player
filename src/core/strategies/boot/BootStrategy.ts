@@ -1,7 +1,7 @@
 import { TemplateResult } from 'lit-html';
 
 export interface Bootable {
-  bootTarget: HTMLElement;
+  readonly bootTarget: HTMLElement;
   boot(): Promise<void>;
 }
 

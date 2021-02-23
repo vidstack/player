@@ -16,12 +16,12 @@ export enum MediaType {
 }
 
 export type PlayerContext = {
-  [P in keyof PlayerState]: Context<PlayerState[P]>;
+  readonly [P in keyof PlayerState]: Context<PlayerState[P]>;
 };
 
 export type PlayerContextProvider = Record<string, unknown> &
   {
-    [P in keyof PlayerState as `${P}Ctx`]: PlayerState[P];
+    -readonly [P in keyof PlayerState as `${P}Ctx`]: PlayerState[P];
   };
 
 export type ReadonlyPlayerState = Readonly<
@@ -56,8 +56,10 @@ export interface PlayerState {
   /**
    * Randomly generated version 4 [RFC4122](https://www.ietf.org/rfc/rfc4122.txt) UUID which can
    * be used to identify the player.
+   *
+   * @readonly
    */
-  uuid: string;
+  readonly uuid: string;
 
   /**
    * The identifier or URL of a media resource to use. See each provider for what
@@ -127,14 +129,14 @@ export interface PlayerState {
    *
    * @readonly
    */
-  duration: number;
+  readonly duration: number;
 
   /**
    * The length of the media in seconds (`double`) that has been downloaded by the browser.
    *
    * @readonly
    */
-  buffered: number;
+  readonly buffered: number;
 
   /**
    * The type of device the player has loaded in. This is determined by using `ResizeObserver`
@@ -143,28 +145,28 @@ export interface PlayerState {
    *
    * @readonly
    */
-  device: Device;
+  readonly device: Device;
 
   /**
    * Whether the current `device` is mobile (shorthand for `device === Device.Mobile`).
    *
    * @readonly
    */
-  isMobileDevice: boolean;
+  readonly isMobileDevice: boolean;
 
   /**
    * Whether the current `device` is desktop (shorthand for `device === Device.Desktop`).
    *
    * @readonly
    */
-  isDesktopDevice: boolean;
+  readonly isDesktopDevice: boolean;
 
   /**
    * Whether playback has temporarily stopped because of a lack of temporary data.
    *
    * @readonly
    */
-  isBuffering: boolean;
+  readonly isBuffering: boolean;
 
   /**
    * Whether media is actively playing back. Defaults to `false` if no media has
@@ -172,14 +174,14 @@ export interface PlayerState {
    *
    * @readonly
    */
-  isPlaying: boolean;
+  readonly isPlaying: boolean;
 
   /**
    * Whether the media playback has started. In other words it will be true if `currentTime > 0`.
    *
    * @readonly
    */
-  hasPlaybackStarted: boolean;
+  readonly hasPlaybackStarted: boolean;
 
   /**
    * Whether media playback has reached the end. In other words it'll be true
@@ -187,21 +189,21 @@ export interface PlayerState {
    *
    * @readonly
    */
-  hasPlaybackEnded: boolean;
+  readonly hasPlaybackEnded: boolean;
 
   /**
    * Whether the current provider has loaded and is ready to be interacted with.
    *
    * @readonly
    */
-  isProviderReady: boolean;
+  readonly isProviderReady: boolean;
 
   /**
    * Whether media is ready for playback to begin, analgous with `canPlayThrough`.
    *
    * @readonly
    */
-  isPlaybackReady: boolean;
+  readonly isPlaybackReady: boolean;
 
   /**
    * The type of player view that is being used, whether it's an audio player view or
@@ -212,21 +214,21 @@ export interface PlayerState {
    *
    * @readonly
    */
-  viewType: ViewType;
+  readonly viewType: ViewType;
 
   /**
    * Whether the current view is of type `audio`, shorthand for `viewType === ViewType.Audio`.
    *
    * @readonly
    */
-  isAudioView: boolean;
+  readonly isAudioView: boolean;
 
   /**
    * Whether the current view is of type `video`, shorthand for `viewType === ViewType.Video`.
    *
    * @readonly
    */
-  isVideoView: boolean;
+  readonly isVideoView: boolean;
 
   /**
    * The type of media that is currently active, whether it's audio or video. Defaults
@@ -234,19 +236,19 @@ export interface PlayerState {
    *
    * @readonly
    */
-  mediaType: MediaType;
+  readonly mediaType: MediaType;
 
   /**
    * Whether the current media is of type `audio`, shorthand for `mediaType === MediaType.Audio`.
    *
    * @readonly
    */
-  isAudio: boolean;
+  readonly isAudio: boolean;
 
   /**
    * Whether the current media is of type `video`, shorthand for `mediaType === MediaType.Video`.
    *
    * @readonly
    */
-  isVideo: boolean;
+  readonly isVideo: boolean;
 }

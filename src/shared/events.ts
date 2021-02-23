@@ -1,31 +1,29 @@
 import { LIB_PREFIX } from './constants';
 
-export interface VdsEventInit<DetailType, OriginalEventType>
-  extends CustomEventInit<DetailType> {
-  originalEvent?: OriginalEventType;
+export interface VdsEventInit<DetailType> extends CustomEventInit<DetailType> {
+  readonly originalEvent?: unknown;
 }
 
-export interface VdsCustomEventConstructor<DetailType, OriginalEventType> {
-  TYPE: string;
+export interface VdsCustomEventConstructor<
+  DetailType,
+  Type extends string = string
+> {
+  readonly TYPE: Type;
 
-  new (eventInit: VdsEventInit<DetailType, OriginalEventType>): VdsCustomEvent<
-    DetailType,
-    OriginalEventType
-  >;
+  new (eventInit?: VdsEventInit<DetailType>): VdsCustomEvent<DetailType, Type>;
 }
 
 export abstract class VdsCustomEvent<
   DetailType,
-  OriginalEventType
+  Type extends string = string
 > extends CustomEvent<DetailType> {
-  static TYPE: string;
+  static readonly TYPE: string;
 
-  originalEvent?: OriginalEventType;
+  readonly type!: Type;
 
-  constructor(
-    type: string,
-    eventInit?: VdsEventInit<DetailType, OriginalEventType>,
-  ) {
+  readonly originalEvent?: unknown;
+
+  constructor(type: string, eventInit?: VdsEventInit<DetailType>) {
     const { originalEvent, ...init } = eventInit ?? {};
 
     super(type, {
@@ -39,15 +37,15 @@ export abstract class VdsCustomEvent<
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function buildVdsEvent<DetailType>(type: string) {
-  return class VdsEvent<OriginalEventType = unknown> extends VdsCustomEvent<
-    DetailType,
-    OriginalEventType
-  > {
-    static TYPE = `${LIB_PREFIX}-${type}`;
+export function buildVdsEvent<
+  DetailType,
+  Type extends string,
+  NamespacedType extends string = `${typeof LIB_PREFIX}-${Type}`
+>(type: Type): VdsCustomEventConstructor<DetailType, NamespacedType> {
+  return class VdsEvent extends VdsCustomEvent<DetailType, NamespacedType> {
+    static readonly TYPE = `${LIB_PREFIX}-${type}` as NamespacedType;
 
-    constructor(eventInit?: VdsEventInit<DetailType, OriginalEventType>) {
+    constructor(eventInit?: VdsEventInit<DetailType>) {
       super(VdsEvent.TYPE, eventInit);
     }
   };
