@@ -1,9 +1,11 @@
 import createContext from '@wcom/context';
-import { Device, IS_MOBILE } from '../utils';
+import { Device, IS_CLIENT, IS_MOBILE } from '../utils';
 import { MediaType, PlayerContext, ViewType } from './player.types';
 
 const guessDevice =
-  window.innerWidth <= 480 || IS_MOBILE ? Device.Mobile : Device.Desktop;
+  (IS_CLIENT && window.innerWidth <= 480) || IS_MOBILE
+    ? Device.Mobile
+    : Device.Desktop;
 
 /**
  * The player context object contains a collection of contexts that map 1:1 with player
@@ -25,7 +27,7 @@ const guessDevice =
  */
 export const playerContext: PlayerContext = {
   uuid: createContext(''),
-  src: createContext(''),
+  currentSrc: createContext(''),
   volume: createContext(0.3),
   currentTime: createContext(0),
   paused: createContext(true),

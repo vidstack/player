@@ -12,8 +12,8 @@ export class FakeConsumer extends LitElement {
   uuid = playerContext.uuid.defaultValue;
 
   @internalProperty()
-  @playerContext.src.consume()
-  src = playerContext.src.defaultValue;
+  @playerContext.currentSrc.consume()
+  currentSrc = playerContext.currentSrc.defaultValue;
 
   @internalProperty()
   @playerContext.volume.consume()

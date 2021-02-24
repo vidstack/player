@@ -1,4 +1,5 @@
-import { html, TemplateResult } from 'lit-html';
+/* c8 ignore next 1000 */
+import { html, TemplateResult } from 'lit-element';
 import { playerContext } from '../player.context';
 import { ViewType, MediaType, PlayerState } from '../player.types';
 import { MediaProvider } from './MediaProvider';
@@ -28,6 +29,10 @@ export class MockMediaProvider extends MediaProvider {
    * -------------------------------------------------------------------------------------------
    */
 
+  getCurrentSrc(): PlayerState['currentSrc'] {
+    return '';
+  }
+
   getVolume(): number {
     return this.volume;
   }
@@ -44,15 +49,11 @@ export class MockMediaProvider extends MediaProvider {
     this.currentTime = newTime;
   }
 
-  getPaused(): boolean {
+  isPaused(): boolean {
     return this.paused;
   }
 
-  setPaused(isPaused: PlayerState['paused']): void {
-    this.paused = isPaused;
-  }
-
-  getMuted(): boolean {
+  isMuted(): boolean {
     return this.muted;
   }
 
@@ -60,7 +61,7 @@ export class MockMediaProvider extends MediaProvider {
     this.muted = isMuted;
   }
 
-  getControlsVisibility(): boolean {
+  isControlsVisible(): boolean {
     return this.controls;
   }
 
@@ -118,26 +119,6 @@ export class MockMediaProvider extends MediaProvider {
 
   /**
    * -------------------------------------------------------------------------------------------
-   * Fetch
-   *
-   * This section lists methods for fetching (local/remote) informationabout the current media.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  async fetchDuration(): Promise<number> {
-    return 0;
-  }
-
-  async fetchDefaultPoster(): Promise<string | undefined> {
-    return 'https://media.vidstack.io/poster.png';
-  }
-
-  async fetchRecommendedAspectRatio(): Promise<string> {
-    return '16:9';
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
    * Support
    *
    * This section list methods for determining feature support.
@@ -164,19 +145,15 @@ export class MockMediaProvider extends MediaProvider {
     // no-op mock it.
   }
 
-  async loadMedia(): Promise<void> {
-    // no-op mock it.
-  }
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Render
+   *
+   * This section contains rendering logic.
+   * -------------------------------------------------------------------------------------------
+   */
 
-  moveToBackground(): void {
-    // no-op mock it.
-  }
-
-  destroy(): void {
-    // no-op mock it.
-  }
-
-  renderPlayer(): TemplateResult {
-    return html`<div class="mock-media-provider"><slot></slot></div>`;
+  render(): TemplateResult {
+    return html`<div>MockMediaProvider</div>`;
   }
 }

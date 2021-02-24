@@ -7,37 +7,16 @@ import {
   CSSResultArray,
   TemplateResult,
   internalProperty,
-  PropertyValues,
 } from 'lit-element';
 import { styleMap } from 'lit-html/directives/style-map';
 import clsx from 'clsx';
 import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
-import { Device, isString, isUndefined, noop, onDeviceChange } from '../utils';
+import { Device, isUndefined, onDeviceChange } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
+import { DeviceChangeEvent } from './player.events';
 import {
-  ReadyEvent,
-  TimeChangeEvent,
-  ViewTypeChangeEvent,
-  VolumeChangeEvent,
-  ErrorEvent,
-  BootStartEvent,
-  BootEndEvent,
-  BufferedChangeEvent,
-  BufferingChangeEvent,
-  DurationChangeEvent,
-  MediaTypeChangeEvent,
-  DeviceChangeEvent,
-  MutedChangeEvent,
-  PauseEvent,
-  PlaybackEndEvent,
-  PlaybackReadyEvent,
-  PlaybackStartEvent,
-  PlayEvent,
-  PlayingEvent,
-} from './player.events';
-import {
-  ALL_USER_EVENTS,
+  ALL_USER_EVENT_TYPES,
   UserMutedChangeRequestEvent,
   UserPauseRequestEvent,
   UserPlayRequestEvent,
@@ -45,42 +24,23 @@ import {
   UserVolumeChangeRequestEvent,
 } from './user';
 import {
-  ALL_PROVIDER_EVENTS,
-  ProviderBufferedChangeEvent,
-  ProviderBufferingChangeEvent,
-  ProviderDurationChangeEvent,
+  ALL_PROVIDER_EVENT_TYPES,
+  MediaProvider,
+  ProviderConnectEvent,
+  ProviderDisconnectEvent,
   ProviderErrorEvent,
-  ProviderMediaTypeChangeEvent,
-  ProviderMutedChangeEvent,
-  ProviderPauseEvent,
-  ProviderPlaybackEndEvent,
-  ProviderPlaybackReadyEvent,
-  ProviderPlaybackStartEvent,
-  ProviderPlayEvent,
-  ProviderPlayingEvent,
-  ProviderReadyEvent,
-  ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
-  ProviderVolumeChangeEvent,
+  PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP,
+  VdsProviderEventType,
 } from './provider';
-import { VdsCustomEvent, VdsCustomEventConstructor } from '../shared/events';
-import {
-  Bootable,
-  BootStrategy,
-  LazyBootStrategy,
-  BootStrategyFactory,
-} from './strategies/boot';
+import { VdsCustomEvent } from '../shared/events';
+import { PlayerContextMixin } from './PlayerContextMixin';
 
 /**
  * The player sits at the top of the component hierarchy in the library. It encapsulates
  * Provider/UI components and acts as a message bus between them. It also provides a seamless
  * experience for interacting with any media provider through the properties/methods/events it
  * exposes.
- *
- * The player accepts any number of providers to be passed in through the default `<slot />`. The
- * current `MediaLoadStrategy` will determine which provider to load. You can pass in a
- * custom strategy if desired, by default it'll load the first media provider who can
- * play the current `src`.
  *
  * @example
  * ```html
@@ -89,26 +49,19 @@ import {
  *    <vds-ui>
  *      <!-- UI components here. -->
  *    </vds-ui>
- *    <div slot="booting">
- *      <!-- Rendered while player is booting. -->
- *    </div>
  *  </vds-player>
  * ```
  *
  * @example
  * ```html
- *  <vds-player src="youtube/_MyD_e1jJWc">
- *    <vds-hls></vds-hls>
- *    <vds-youtube></vds-youtube>
- *    <vds-video preload="metadata"></vds-video>
+ *  <vds-player>
+ *    <vds-youtube src="_MyD_e1jJWc"></vds-youtube>
  *    <vds-ui>
  *      <!-- UI components here. -->
  *    </vds-ui>
  *  </vds-player>
  * ```
  *
- * @fires vds-boot-start - Emitted when the player begins booting.
- * @fires vds-boot-end - Emitted when the player has booted.
  * @fires vds-play - Emitted when playback attempts to start.
  * @fires vds-pause - Emitted when playback pauses.
  * @fires vds-playing - Emitted when playback being playback.
@@ -134,100 +87,40 @@ import {
  * @cssprop --vds-player-bg - The background color of the player.
  * @cssprop --vds-blocker-z-index - The provider UI blocker position in the root z-axis stack inside the player.
  */
-export class Player extends LitElement implements PlayerProps, Bootable {
+export class Player
+  extends PlayerContextMixin(LitElement)
+  implements PlayerProps {
   public static get styles(): CSSResultArray {
     return [playerStyles];
   }
 
-  protected disposal = new Disposal();
+  protected readonly disposal = new Disposal();
+
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Lifecycle
+   *
+   * This section contains component lifecycle methods.
+   * -------------------------------------------------------------------------------------------
+   */
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.connect();
+    this.setUuid();
+    this.listenToDeviceChanges();
+    this.listenToUserEvents();
+    this.listenToProviderEvents();
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.disconnect();
+    this.disposal.empty();
+    this._currentProvider = undefined;
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Boot
-   *
-   * This section contains props/methods involved in the booting of the player.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  /**
-   * A `BootStrategy` determines when the player should begin rendering the current provider and
-   * loading media.
-   */
-  @property({
-    type: String,
-    attribute: 'boot-strategy',
-    converter: {
-      fromAttribute(value) {
-        return isString(value) && BootStrategyFactory.isValidType(value)
-          ? BootStrategyFactory.build(value)
-          : BootStrategyFactory.buildLazyBootStrategy();
-      },
-    },
-  })
-  bootStrategy: BootStrategy = new LazyBootStrategy();
-
-  /**
-   * An artificial delay in milliseconds before the player boots. Use this if you'd like to
-   * extend showing the boot screen.
-   */
-  @property({ type: Number, attribute: 'boot-delay' })
-  bootDelay = 0;
-
-  @internalProperty()
-  protected _hasBooted = false;
-
-  get hasBooted(): boolean {
-    return this._hasBooted;
-  }
-
-  /**
-   * Part of the `Bootable` interface.
-   */
-  get bootTarget(): HTMLElement {
-    return this;
-  }
-
-  /**
-   * This method is called by the current `BootStrategy` when it's time to boot. Part of the
-   * `Bootable` interface.
-   */
-  async boot(): Promise<void> {
-    if (this._hasBooted) return;
-
-    setTimeout(() => {
-      this._hasBooted = true;
-      this.setAttribute(this.getBootedAttrName(), 'true');
-      this.dispatchEvent(new BootEndEvent());
-    }, this.bootDelay);
-  }
-
-  protected getBootedAttrName(): string {
-    return 'booted';
-  }
-
-  protected previousBootStrategy: BootStrategy | undefined;
-
-  protected handleBootStrategyChange(): void {
-    this.destroyBootStrategy();
-    this.bootStrategy.register(this);
-    this.dispatchEvent(new BootStartEvent());
-    this.previousBootStrategy = this.bootStrategy;
-  }
-
-  protected destroyBootStrategy(): void {
-    this._hasBooted = false;
-    this.setAttribute(this.getBootedAttrName(), 'false');
-    this.previousBootStrategy?.destroy();
+  protected setUuid(): void {
+    this.context.uuidCtx = this.uuid;
+    this.setAttribute('uuid', this.uuid);
   }
 
   /**
@@ -239,52 +132,43 @@ export class Player extends LitElement implements PlayerProps, Bootable {
    */
 
   render(): TemplateResult {
-    const isAriaBusy = this.isPlaybackReady ? 'false' : 'true';
-
-    const classes = {
-      player: true,
-      audio: this.isAudioView,
-      video: this.isVideoView,
-    };
-
-    const styles = {
-      paddingBottom: `padding-bottom: ${this.calcAspectRatio()}%;`,
-    };
-
     return html`
       <div
         part="player"
-        aria-busy="${isAriaBusy}"
-        class="${clsx(classes)}"
-        style="${styleMap(styles)}"
+        aria-busy="${this.buildAriaBusy()}"
+        class="${clsx(this.buildClassMap())}"
+        style="${styleMap(this.buildStyleMap())}"
       >
-        ${this.renderProviderUIBlocker()} ${this.renderBooting()}
-        <slot></slot>
+        ${this.renderContent()}
       </div>
     `;
   }
 
-  protected renderProviderUIBlocker(): TemplateResult | undefined {
-    // TODO: should have check for custom controls otherwise it'll block chromeless native player.
-    const isProviderUIBlockerVisible = this.isVideoView && !this.controls;
-
-    return isProviderUIBlockerVisible
-      ? html`<div class="provider-ui-blocker"></div>`
-      : undefined;
+  protected renderContent(): TemplateResult {
+    return html`<slot></slot>`;
   }
 
-  protected renderBooting(): TemplateResult | undefined {
-    if (this.hasBooted) {
-      return undefined;
-    }
+  protected buildAriaBusy(): 'true' | 'false' {
+    return this.isPlaybackReady ? 'false' : 'true';
+  }
 
-    return !isUndefined(this.bootStrategy.renderWhileBooting)
-      ? this.bootStrategy.renderWhileBooting()
-      : html`<slot name="booting"></slot>`;
+  protected buildClassMap(): Record<string, boolean> {
+    return {
+      player: true,
+      audio: this.isAudioView,
+      video: this.isVideoView,
+    };
+  }
+
+  protected buildStyleMap(): Record<string, string> {
+    return {
+      paddingBottom: this.isVideoView
+        ? `padding-bottom: ${this.calcAspectRatio()}%;`
+        : '',
+    };
   }
 
   protected calcAspectRatio(): number {
-    // TODO: throw error or log if invalid aspect ratio.
     const [width, height] = /\d{1,2}:\d{1,2}/.test(this.aspectRatio)
       ? this.aspectRatio.split(':')
       : [16, 9];
@@ -294,64 +178,67 @@ export class Player extends LitElement implements PlayerProps, Bootable {
 
   /**
    * -------------------------------------------------------------------------------------------
-   * Lifecycle
+   * Provider API
    *
-   * This section contains component lifecycle methods.
+   * This section contains logic for interacting with the current provider.
    * -------------------------------------------------------------------------------------------
    */
 
-  protected connect(): void {
-    this.setUuid();
-    this.listenToDeviceChanges();
-    this.listenToUserEvents();
-    this.listenToProviderEvents();
+  @internalProperty()
+  protected _currentProvider?: MediaProvider;
+
+  /**
+   * The current media provider who has connected to the player and is responsible for
+   * loading media.
+   */
+  get currentProvider(): MediaProvider | undefined {
+    return this._currentProvider;
   }
 
-  protected disconnect(): void {
-    this.disposal.empty();
-    this.destroyBootStrategy();
-  }
-
-  protected updated(changed: PropertyValues): void {
-    if (changed.has('bootStrategy')) {
-      this.handleBootStrategyChange();
-    }
-  }
-
-  protected setUuid(): void {
-    this.uuidCtx = this.uuid;
-    this.setAttribute('uuid', this.uuid);
+  protected throwIfNoMediaProvider(): void {
+    if (!isUndefined(this.currentProvider)) return;
+    throw Error('No media provider is currently available.');
   }
 
   /**
-   * -------------------------------------------------------------------------------------------
-   * Listeners
-   *
-   * This section contains methods involved in setting up any event listeners.
-   * -------------------------------------------------------------------------------------------
+   * Begins/resumes playback of the media. If this method is called programmatically before the
+   * user has interacted with the player, the promise may be rejected subject to the browser's
+   * autoplay policies.
    */
-
-  protected listenToDeviceChanges(): void {
-    const off = onDeviceChange(this.handleDeviceChange.bind(this));
-    this.disposal.add(off);
+  play(): Promise<void> {
+    this.throwIfNoMediaProvider();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.currentProvider!.play();
   }
 
-  protected listenToUserEvents(): void {
-    ALL_USER_EVENTS.forEach(event => {
-      const off = listenTo(this, event.TYPE, this.handleUserEvent.bind(this));
-      this.disposal.add(off);
-    });
+  /**
+   * Pauses playback of the media.
+   */
+  pause(): Promise<void> {
+    this.throwIfNoMediaProvider();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.currentProvider!.pause();
   }
 
-  protected listenToProviderEvents(): void {
-    ALL_PROVIDER_EVENTS.forEach(event => {
-      const off = listenTo(
-        this,
-        event.TYPE,
-        this.handleProviderEvent.bind(this),
-      );
-      this.disposal.add(off);
-    });
+  /**
+   * Determines if the connected media provider can play the given `type`. The `type` is
+   * generally the media resource identifier, URL or MIME type (optional Codecs parameter).
+   *
+   * @examples
+   * - `audio/mp3`
+   * - `video/mp4`
+   * - `video/webm; codecs="vp8, vorbis"`
+   * - `/my-audio-file.mp3`
+   * - `youtube/RO7VcUAsf-I`
+   * - `vimeo.com/411652396`
+   * - `https://www.youtube.com/watch?v=OQoz7FCWkfU`
+   * - `https://media.vidstack.io/hls/index.m3u8`
+   * - `https://media.vidstack.io/dash/index.mpd`
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
+   */
+  canPlayType(type: string): boolean {
+    return this._currentProvider?.canPlayType(type) ?? false;
   }
 
   /**
@@ -362,225 +249,40 @@ export class Player extends LitElement implements PlayerProps, Bootable {
    * -------------------------------------------------------------------------------------------
    */
 
+  protected listenToDeviceChanges(): void {
+    const off = onDeviceChange(this.handleDeviceChange.bind(this));
+    this.disposal.add(off);
+  }
+
   protected handleDeviceChange(device: Device): void {
     this._device = device;
-    this.isMobileDeviceCtx = this.isMobileDevice;
-    this.isDesktopDeviceCtx = this.isDesktopDevice;
-    this.setAttribute(this.getMobileAttrName(), String(this.isMobileDevice));
-    this.setAttribute(this.getDesktopAttrName(), String(this.isDesktopDevice));
+    this.context.isMobileDeviceCtx = this.isMobileDevice;
+    this.context.isDesktopDeviceCtx = this.isDesktopDevice;
+    this.setAttribute(
+      this.getMobileDeviceAttrName(),
+      String(this.isMobileDevice),
+    );
+    this.setAttribute(
+      this.getDesktopDeviceAttrName(),
+      String(this.isDesktopDevice),
+    );
     this.dispatchEvent(new DeviceChangeEvent({ detail: device }));
   }
 
-  protected getMobileAttrName(): string {
+  /**
+   * The name of the attribute on the player for which to set whether the current device is
+   * mobile. The attribute will be set to `true`/`false` accordingly.
+   */
+  protected getMobileDeviceAttrName(): string {
     return 'mobile';
   }
 
-  protected getDesktopAttrName(): string {
+  /**
+   * The name of the attribute on the player for which to set whether the current device is
+   * desktop. The attribute will be set to `true`/`false` accordingly.
+   */
+  protected getDesktopDeviceAttrName(): string {
     return 'desktop';
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Writable Player Properties
-   *
-   * This section defines writable player properties and ensures their setters call the appropriate
-   * provider handler method when required.
-   *
-   * @example `this.paused = false` -> `this.togglePlayback(false)`.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  protected _src: PlayerState['src'] = '';
-
-  @property({ type: String })
-  get src(): PlayerState['src'] {
-    return this._src;
-  }
-
-  set src(newSrc: PlayerState['src']) {
-    this._src = newSrc;
-    this.srcCtx = newSrc;
-    // TODO: call appropriate method.
-  }
-
-  // ---
-
-  @property({ type: Number })
-  get volume(): PlayerState['volume'] {
-    // TODO: return property from provider.
-    return 0.3;
-  }
-
-  set volume(newVolume: PlayerState['volume']) {
-    this.requestVolumeChange(newVolume);
-  }
-
-  // ---
-
-  @property({ type: Number })
-  get currentTime(): PlayerState['currentTime'] {
-    // TODO: return property from provider.
-    return 0;
-  }
-
-  set currentTime(newCurrentTime: PlayerState['currentTime']) {
-    this.requestTimeChange(newCurrentTime);
-  }
-
-  // ---
-
-  @property({ type: Boolean, reflect: true })
-  get paused(): PlayerState['paused'] {
-    // TODO: return property from provider.
-    return true;
-  }
-
-  set paused(newPaused: PlayerState['paused']) {
-    this.requestPlaybackChange(newPaused);
-  }
-
-  // ---
-
-  @property({ type: Boolean })
-  get controls(): PlayerState['controls'] {
-    // TODO: return property from provider.
-    return false;
-  }
-
-  set controls(isControlsVisible: PlayerState['controls']) {
-    this.requestControls(isControlsVisible);
-  }
-
-  // ---
-
-  @property({ type: String })
-  get poster(): PlayerState['poster'] {
-    // TODO: return property from provider.
-    return undefined;
-  }
-
-  set poster(newPoster: PlayerState['poster']) {
-    this.requestPosterChange(newPoster);
-  }
-
-  // ---
-
-  protected _aspectRatio: PlayerState['aspectRatio'] = '16:9';
-
-  @property({ type: String, attribute: 'aspect-ratio', reflect: true })
-  get aspectRatio(): PlayerState['aspectRatio'] {
-    return this._aspectRatio;
-  }
-
-  set aspectRatio(newAspectRatio: PlayerState['aspectRatio']) {
-    this._aspectRatio = newAspectRatio;
-    this.aspectRatioCtx = newAspectRatio;
-  }
-
-  // ---
-
-  @property({ type: Boolean })
-  get muted(): PlayerState['muted'] {
-    // TODO: return property from provider.
-    return false;
-  }
-
-  set muted(newMuted: PlayerState['muted']) {
-    this.requestMutedChange(newMuted);
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Readonly Player Properties
-   *
-   * This section defines readonly player properties.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  protected _uuid = uuid();
-
-  get uuid(): PlayerState['uuid'] {
-    return this._uuid;
-  }
-
-  get duration(): PlayerState['duration'] {
-    // TODO: return property from provider.
-    return -1;
-  }
-
-  get buffered(): PlayerState['buffered'] {
-    // TODO: return property from provider.
-    return 0;
-  }
-
-  get isBuffering(): PlayerState['isBuffering'] {
-    // TODO: return property from provider.
-    return false;
-  }
-
-  get isPlaying(): PlayerState['isPlaying'] {
-    // TODO: return property from provider.
-    return false;
-  }
-
-  protected _device = playerContext.device.defaultValue;
-
-  get device(): PlayerState['device'] {
-    return this._device;
-  }
-
-  get isMobileDevice(): PlayerState['isMobileDevice'] {
-    return this._device === Device.Mobile;
-  }
-
-  get isDesktopDevice(): PlayerState['isDesktopDevice'] {
-    return this._device === Device.Desktop;
-  }
-
-  get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
-    // TODO: return property from provider.
-    return false;
-  }
-
-  get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
-    // TODO: return property from provider.
-    return false;
-  }
-
-  get isProviderReady(): PlayerState['isProviderReady'] {
-    // TODO: return property from provider.
-    return false;
-  }
-
-  get isPlaybackReady(): PlayerState['isPlaybackReady'] {
-    // TODO: return property from provider.
-    return false;
-  }
-
-  get viewType(): PlayerState['viewType'] {
-    // TODO: return property from provider.
-    return ViewType.Unknown;
-  }
-
-  get isAudioView(): PlayerState['isAudioView'] {
-    return this.viewType === ViewType.Audio;
-  }
-
-  get isVideoView(): PlayerState['isVideoView'] {
-    return this.viewType === ViewType.Video;
-  }
-
-  get mediaType(): PlayerState['mediaType'] {
-    // TODO: return property from provider.
-    return MediaType.Unknown;
-  }
-
-  get isAudio(): PlayerState['isAudio'] {
-    return this.mediaType === MediaType.Audio;
-  }
-
-  get isVideo(): PlayerState['isVideo'] {
-    return this.mediaType === MediaType.Video;
   }
 
   /**
@@ -592,34 +294,33 @@ export class Player extends LitElement implements PlayerProps, Bootable {
    * -------------------------------------------------------------------------------------------
    */
 
-  protected requestPlaybackChange(paused: PlayerState['paused']): void {
-    // TODO: call method on provider - handle play success/fail.
-    noop(paused);
+  protected requestPlay(): void {
+    // TODO: how should we handle play success/fail? Throw error??
+    this.currentProvider?.play();
+  }
+
+  protected requestPause(): void {
+    this.currentProvider?.pause();
   }
 
   protected requestControls(isControlsVisible: PlayerState['controls']): void {
-    // TODO: call method on provider.
-    noop(isControlsVisible);
+    this.currentProvider?.setControlsVisibility(isControlsVisible);
   }
 
   protected requestVolumeChange(volume: PlayerState['volume']): void {
-    // TODO: call method on provider.
-    noop(volume);
+    this.currentProvider?.setVolume(volume);
   }
 
   protected requestTimeChange(time: PlayerState['currentTime']): void {
-    // TODO: call method on provider.
-    noop(time);
+    this.currentProvider?.setCurrentTime(time);
   }
 
   protected requestMutedChange(muted: PlayerState['muted']): void {
-    // TODO: call method on provider.
-    noop(muted);
+    this.currentProvider?.setMuted(muted);
   }
 
   protected requestPosterChange(poster?: PlayerState['poster']): void {
-    // TODO: call method on provider.
-    noop(poster);
+    this.currentProvider?.setPoster(poster);
   }
 
   /**
@@ -629,7 +330,7 @@ export class Player extends LitElement implements PlayerProps, Bootable {
    * This section is responsible for listening to user events and calling the appropriate
    * provider request method.
    *
-   * @example `UserPlayRequest` --> `this.requestPlaybackChange(false)`.
+   * @example `UserPlayRequest` --> `this.requestPlay()`.
    * -------------------------------------------------------------------------------------------
    */
 
@@ -644,30 +345,45 @@ export class Player extends LitElement implements PlayerProps, Bootable {
     return true;
   }
 
-  // This handler is attached to user events in the "Connect" section above.
-  protected handleUserEvent(e: VdsCustomEvent<unknown, unknown>): void {
-    if (!this.userEventGateway(e)) return;
-    this.requestProviderUpdate(e);
+  protected listenToUserEvents(): void {
+    ALL_USER_EVENT_TYPES.forEach(event => {
+      const off = listenTo(this, event, this.catchAllUserEvents.bind(this));
+      this.disposal.add(off);
+    });
   }
 
-  protected requestProviderUpdate(e: VdsCustomEvent<unknown, unknown>): void {
-    switch (e.type) {
-      case UserPlayRequestEvent.TYPE:
-        this.requestPlaybackChange(false);
-        break;
-      case UserPauseRequestEvent.TYPE:
-        this.requestPlaybackChange(true);
-        break;
-      case UserMutedChangeRequestEvent.TYPE:
-        this.requestMutedChange(e.detail as PlayerState['muted']);
-        break;
-      case UserVolumeChangeRequestEvent.TYPE:
-        this.requestVolumeChange(e.detail as PlayerState['volume']);
-        break;
-      case UserTimeChangeRequestEvent.TYPE:
-        this.requestTimeChange(e.detail as PlayerState['currentTime']);
-        break;
-    }
+  /**
+   * This handler is attached in the "Connect" section above. Use it for processing all user
+   * events.
+   */
+  protected catchAllUserEvents(e: VdsCustomEvent<unknown>): void {
+    if (!this.userEventGateway(e)) return;
+    // ...
+  }
+
+  @listen(UserPlayRequestEvent.TYPE)
+  handleUserPlayRequest(): void {
+    this.requestPlay();
+  }
+
+  @listen(UserPauseRequestEvent.TYPE)
+  handleUserPauseRequest(): void {
+    this.requestPause();
+  }
+
+  @listen(UserMutedChangeRequestEvent.TYPE)
+  handleUserMutedChangeRequest(e: UserMutedChangeRequestEvent): void {
+    this.requestMutedChange(e.detail);
+  }
+
+  @listen(UserVolumeChangeRequestEvent.TYPE)
+  handleUserVolumeChangeRequest(e: UserVolumeChangeRequestEvent): void {
+    this.requestVolumeChange(e.detail);
+  }
+
+  @listen(UserTimeChangeRequestEvent.TYPE)
+  handleUserTimeChangeRequest(e: UserTimeChangeRequestEvent): void {
+    this.requestTimeChange(e.detail);
   }
 
   /**
@@ -687,116 +403,50 @@ export class Player extends LitElement implements PlayerProps, Bootable {
   @property({ type: Boolean, attribute: 'allow-provider-events-to-bubble' })
   allowProviderEventsToBubble = false;
 
-  protected providerToPlayerEventMap: Record<
-    string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    VdsCustomEventConstructor<any, unknown>
-  > = {
-    [ProviderPlayEvent.TYPE]: PlayEvent,
-    [ProviderPauseEvent.TYPE]: PauseEvent,
-    [ProviderPlayingEvent.TYPE]: PlayingEvent,
-    [ProviderMutedChangeEvent.TYPE]: MutedChangeEvent,
-    [ProviderVolumeChangeEvent.TYPE]: VolumeChangeEvent,
-    [ProviderTimeChangeEvent.TYPE]: TimeChangeEvent,
-    [ProviderDurationChangeEvent.TYPE]: DurationChangeEvent,
-    [ProviderBufferedChangeEvent.TYPE]: BufferedChangeEvent,
-    [ProviderBufferingChangeEvent.TYPE]: BufferingChangeEvent,
-    [ProviderViewTypeChangeEvent.TYPE]: ViewTypeChangeEvent,
-    [ProviderMediaTypeChangeEvent.TYPE]: MediaTypeChangeEvent,
-    [ProviderReadyEvent.TYPE]: ReadyEvent,
-    [ProviderPlaybackReadyEvent.TYPE]: PlaybackReadyEvent,
-    [ProviderPlaybackStartEvent.TYPE]: PlaybackStartEvent,
-    [ProviderPlaybackEndEvent.TYPE]: PlaybackEndEvent,
-    [ProviderErrorEvent.TYPE]: ErrorEvent,
-  };
-
   protected providerEventGateway(e: Event): boolean {
     if (!this.allowProviderEventsToBubble) e.stopPropagation();
     return true;
   }
 
-  // This handler is attached to provider events in the "Connect" section above.
-  protected handleProviderEvent(e: VdsCustomEvent<unknown, unknown>): void {
+  protected listenToProviderEvents(): void {
+    ALL_PROVIDER_EVENT_TYPES.forEach(event => {
+      const off = listenTo(this, event, this.catchAllProviderEvents.bind(this));
+      this.disposal.add(off);
+    });
+  }
+
+  /**
+   * This handler is attached in the "Connect" section above. Use it for processing all provider
+   * events.
+   */
+  protected catchAllProviderEvents(
+    e: VdsCustomEvent<unknown, VdsProviderEventType>,
+  ): void {
     if (!this.providerEventGateway(e)) return;
-    this.updateContext(e);
     this.translateProviderEventAndDispatch(e);
   }
 
   protected translateProviderEventAndDispatch(
-    e: VdsCustomEvent<unknown, unknown>,
+    e: VdsCustomEvent<unknown, VdsProviderEventType>,
   ): void {
-    const playerEvent = this.providerToPlayerEventMap[e.type];
-    this.dispatchEvent(new playerEvent({ originalEvent: e, detail: e.detail }));
-  }
-
-  protected updateContext(e: VdsCustomEvent<unknown, unknown>): void {
-    switch (e.type) {
-      case ProviderPlayEvent.TYPE:
-        this.pausedCtx = false;
-        break;
-      case ProviderPauseEvent.TYPE:
-        this.pausedCtx = true;
-        this.isPlayingCtx = false;
-        break;
-      case ProviderPlayingEvent.TYPE:
-        this.pausedCtx = false;
-        this.isPlayingCtx = true;
-        break;
-      case ProviderMutedChangeEvent.TYPE:
-        this.mutedCtx = e.detail as PlayerState['muted'];
-        break;
-      case ProviderVolumeChangeEvent.TYPE:
-        this.volumeCtx = e.detail as PlayerState['volume'];
-        break;
-      case ProviderTimeChangeEvent.TYPE:
-        this.currentTimeCtx = e.detail as PlayerState['currentTime'];
-        break;
-      case ProviderDurationChangeEvent.TYPE:
-        this.durationCtx = e.detail as PlayerState['duration'];
-        break;
-      case ProviderBufferedChangeEvent.TYPE:
-        this.bufferedCtx = e.detail as PlayerState['buffered'];
-        break;
-      case ProviderBufferingChangeEvent.TYPE:
-        this.isBufferingCtx = e.detail as PlayerState['isBuffering'];
-        break;
-      case ProviderViewTypeChangeEvent.TYPE:
-        this.viewTypeCtx = e.detail as PlayerState['viewType'];
-        this.isAudioViewCtx = this.isAudioView;
-        this.isVideoCtx = this.isVideoView;
-        break;
-      case ProviderMediaTypeChangeEvent.TYPE:
-        this.mediaTypeCtx = e.detail as PlayerState['mediaType'];
-        this.isAudioCtx = this.isAudio;
-        this.isVideoCtx = this.isVideo;
-        break;
-      case ProviderReadyEvent.TYPE:
-        this.isProviderReadyCtx = true;
-        break;
-      case ProviderPlaybackReadyEvent.TYPE:
-        this.isPlaybackReadyCtx = true;
-        break;
-      case ProviderPlaybackStartEvent.TYPE:
-        this.hasPlaybackStartedCtx = true;
-        break;
-      case ProviderPlaybackEndEvent.TYPE:
-        this.hasPlaybackEndedCtx = true;
-        break;
+    const PlayerEvent = PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP[e.type];
+    if (!isUndefined(PlayerEvent)) {
+      this.dispatchEvent(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new PlayerEvent({ originalEvent: e, detail: e.detail as any }),
+      );
     }
   }
 
-  @listen(ProviderViewTypeChangeEvent.TYPE)
-  protected handleProviderViewTypeChange(): void {
-    this.setAttribute(this.getAudioAttrName(), String(this.isAudioView));
-    this.setAttribute(this.getVideoAttrName(), String(this.isVideoView));
+  @listen(ProviderConnectEvent.TYPE)
+  protected handleProviderConnect(e: ProviderConnectEvent): void {
+    const connectedProvider = e.detail;
+    this._currentProvider = connectedProvider;
   }
 
-  protected getAudioAttrName(): string {
-    return 'audio';
-  }
-
-  protected getVideoAttrName(): string {
-    return 'video';
+  @listen(ProviderDisconnectEvent.TYPE)
+  protected handleProviderDisconnect(): void {
+    this._currentProvider = undefined;
   }
 
   @listen(ProviderErrorEvent.TYPE)
@@ -804,91 +454,207 @@ export class Player extends LitElement implements PlayerProps, Bootable {
     // TODO: handle this error.
   }
 
+  @listen(ProviderViewTypeChangeEvent.TYPE)
+  protected handleProviderViewTypeChange(): void {
+    this.setAttribute(this.getAudioViewAttrName(), String(this.isAudioView));
+    this.setAttribute(this.getVideoViewAttrName(), String(this.isVideoView));
+  }
+
+  /**
+   * The attribute name on the player for which to set whether the player view is of type
+   * audio. This attribute will be set to `true`/`false` accordingly.
+   */
+  protected getAudioViewAttrName(): string {
+    return 'audio';
+  }
+
+  /**
+   * The attribute name on the player for which to set whether the player view is of type
+   * video. This attribute will be set to `true`/`false` accordingly.
+   */
+  protected getVideoViewAttrName(): string {
+    return 'video';
+  }
+
   /**
    * -------------------------------------------------------------------------------------------
-   * Context Properties
+   * Writable Player Properties
    *
-   * This section is responsible for defining context properties. They are mostly updated in the
-   * "Provider Events" section above.
+   * This section defines writable player properties and ensures their setters call the appropriate
+   * provider handler method when required.
+   *
+   * @example `this.paused = false` -> `this.togglePlayback(false)`.
    * -------------------------------------------------------------------------------------------
    */
 
-  @playerContext.uuid.provide()
-  protected uuidCtx = playerContext.uuid.defaultValue;
+  @property({ type: Number })
+  get volume(): PlayerState['volume'] {
+    return this.currentProvider?.getVolume() ?? 0.3;
+  }
 
-  @playerContext.src.provide()
-  protected srcCtx = playerContext.src.defaultValue;
+  set volume(newVolume: PlayerState['volume']) {
+    this.requestVolumeChange(newVolume);
+  }
 
-  @playerContext.volume.provide()
-  protected volumeCtx = playerContext.volume.defaultValue;
+  // ---
 
-  @playerContext.currentTime.provide()
-  protected currentTimeCtx = playerContext.currentTime.defaultValue;
+  @property({ type: Number })
+  get currentTime(): PlayerState['currentTime'] {
+    return this.currentProvider?.getCurrentTime() ?? 0;
+  }
 
-  @playerContext.paused.provide()
-  protected pausedCtx = playerContext.paused.defaultValue;
+  set currentTime(newCurrentTime: PlayerState['currentTime']) {
+    this.requestTimeChange(newCurrentTime);
+  }
 
-  @playerContext.controls.provide()
-  protected controlsCtx = playerContext.controls.defaultValue;
+  // ---
 
-  @playerContext.poster.provide()
-  protected posterCtx = playerContext.poster.defaultValue;
+  @property({ type: Boolean, reflect: true })
+  get paused(): PlayerState['paused'] {
+    return this.currentProvider?.isPaused() ?? true;
+  }
 
-  @playerContext.muted.provide()
-  protected mutedCtx = playerContext.muted.defaultValue;
+  set paused(isPaused: PlayerState['paused']) {
+    if (isPaused) {
+      this.requestPlay();
+    } else {
+      this.requestPause();
+    }
+  }
 
-  @playerContext.aspectRatio.provide()
-  protected aspectRatioCtx = playerContext.aspectRatio.defaultValue;
+  // ---
 
-  @playerContext.duration.provide()
-  protected durationCtx = playerContext.duration.defaultValue;
+  @property({ type: Boolean })
+  get controls(): PlayerState['controls'] {
+    return this.currentProvider?.isControlsVisible() ?? false;
+  }
 
-  @playerContext.buffered.provide()
-  protected bufferedCtx = playerContext.buffered.defaultValue;
+  set controls(isControlsVisible: PlayerState['controls']) {
+    this.requestControls(isControlsVisible);
+  }
 
-  @playerContext.device.provide()
-  protected deviceCtx = playerContext.device.defaultValue;
+  // ---
 
-  @playerContext.isMobileDevice.provide()
-  protected isMobileDeviceCtx = playerContext.isMobileDevice.defaultValue;
+  @property({ type: String })
+  get poster(): PlayerState['poster'] {
+    return this.currentProvider?.getPoster();
+  }
 
-  @playerContext.isDesktopDevice.provide()
-  protected isDesktopDeviceCtx = playerContext.isDesktopDevice.defaultValue;
+  set poster(newPoster: PlayerState['poster']) {
+    this.requestPosterChange(newPoster);
+  }
 
-  @playerContext.isBuffering.provide()
-  protected isBufferingCtx = playerContext.isBuffering.defaultValue;
+  // ---
 
-  @playerContext.isPlaying.provide()
-  protected isPlayingCtx = playerContext.isPlaying.defaultValue;
+  protected _aspectRatio: PlayerState['aspectRatio'] = '16:9';
 
-  @playerContext.hasPlaybackStarted.provide()
-  protected hasPlaybackStartedCtx =
-    playerContext.hasPlaybackStarted.defaultValue;
+  @property({ type: String, attribute: 'aspect-ratio', reflect: true })
+  get aspectRatio(): PlayerState['aspectRatio'] {
+    return this._aspectRatio;
+  }
 
-  @playerContext.hasPlaybackEnded.provide()
-  protected hasPlaybackEndedCtx = playerContext.hasPlaybackEnded.defaultValue;
+  set aspectRatio(newAspectRatio: PlayerState['aspectRatio']) {
+    this._aspectRatio = newAspectRatio;
+    this.context.aspectRatioCtx = newAspectRatio;
+  }
 
-  @playerContext.isProviderReady.provide()
-  protected isProviderReadyCtx = playerContext.isProviderReady.defaultValue;
+  // ---
 
-  @playerContext.isPlaybackReady.provide()
-  protected isPlaybackReadyCtx = playerContext.isPlaybackReady.defaultValue;
+  @property({ type: Boolean })
+  get muted(): PlayerState['muted'] {
+    return this.currentProvider?.isMuted() ?? false;
+  }
 
-  @playerContext.viewType.provide()
-  protected viewTypeCtx = playerContext.viewType.defaultValue;
+  set muted(newMuted: PlayerState['muted']) {
+    this.requestMutedChange(newMuted);
+  }
 
-  @playerContext.isAudioView.provide()
-  protected isAudioViewCtx = playerContext.isAudioView.defaultValue;
+  /**
+   * -------------------------------------------------------------------------------------------
+   * Readonly Player Properties
+   *
+   * This section defines readonly player properties.
+   * -------------------------------------------------------------------------------------------
+   */
 
-  @playerContext.isVideoView.provide()
-  protected isVideoViewCtx = playerContext.isVideoView.defaultValue;
+  protected _uuid = uuid();
 
-  @playerContext.mediaType.provide()
-  protected mediaTypeCtx = playerContext.mediaType.defaultValue;
+  get currentSrc(): PlayerState['currentSrc'] {
+    return this.currentProvider?.getCurrentSrc?.() ?? '';
+  }
 
-  @playerContext.isAudio.provide()
-  protected isAudioCtx = playerContext.isAudio.defaultValue;
+  get uuid(): PlayerState['uuid'] {
+    return this._uuid;
+  }
 
-  @playerContext.isVideo.provide()
-  protected isVideoCtx = playerContext.isVideo.defaultValue;
+  get duration(): PlayerState['duration'] {
+    return this.currentProvider?.getDuration?.() ?? -1;
+  }
+
+  get buffered(): PlayerState['buffered'] {
+    return this.currentProvider?.getBuffered?.() ?? 0;
+  }
+
+  get isBuffering(): PlayerState['isBuffering'] {
+    return this.currentProvider?.isBuffering?.() ?? false;
+  }
+
+  get isPlaying(): PlayerState['isPlaying'] {
+    const isPaused = this.currentProvider?.isPaused?.() ?? true;
+    return !isPaused;
+  }
+
+  protected _device = playerContext.device.defaultValue;
+
+  get device(): PlayerState['device'] {
+    return this._device;
+  }
+
+  get isMobileDevice(): PlayerState['isMobileDevice'] {
+    return this._device === Device.Mobile;
+  }
+
+  get isDesktopDevice(): PlayerState['isDesktopDevice'] {
+    return this._device === Device.Desktop;
+  }
+
+  get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
+    return this.currentProvider?.hasPlaybackStarted?.() ?? false;
+  }
+
+  get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
+    return this.currentProvider?.hasPlaybackEnded?.() ?? false;
+  }
+
+  get isProviderReady(): PlayerState['isProviderReady'] {
+    return this.currentProvider?.isReady?.() ?? false;
+  }
+
+  get isPlaybackReady(): PlayerState['isPlaybackReady'] {
+    return this.currentProvider?.isPlaybackReady?.() ?? false;
+  }
+
+  get viewType(): PlayerState['viewType'] {
+    return this.currentProvider?.getViewType?.() ?? ViewType.Unknown;
+  }
+
+  get isAudioView(): PlayerState['isAudioView'] {
+    return this.viewType === ViewType.Audio;
+  }
+
+  get isVideoView(): PlayerState['isVideoView'] {
+    return this.viewType === ViewType.Video;
+  }
+
+  get mediaType(): PlayerState['mediaType'] {
+    return this.currentProvider?.getMediaType?.() ?? MediaType.Unknown;
+  }
+
+  get isAudio(): PlayerState['isAudio'] {
+    return this.mediaType === MediaType.Audio;
+  }
+
+  get isVideo(): PlayerState['isVideo'] {
+    return this.mediaType === MediaType.Video;
+  }
 }

@@ -1,4 +1,4 @@
-import { LitElement, TemplateResult } from 'lit-element';
+import { LitElement } from 'lit-element';
 import { PlayerState, Source } from '../../core';
 
 /**
@@ -23,13 +23,10 @@ export abstract class MediaProvider<
   abstract getCurrentTime(): PlayerState['currentTime'];
   abstract setCurrentTime(newTime: PlayerState['currentTime']): void;
 
-  abstract getPaused(): PlayerState['paused'];
-  abstract setPaused(isPaused: PlayerState['paused']): void;
-
-  abstract getMuted(): PlayerState['muted'];
+  abstract isMuted(): PlayerState['muted'];
   abstract setMuted(isMuted: PlayerState['muted']): void;
 
-  abstract getControlsVisibility(): PlayerState['controls'];
+  abstract isControlsVisible(): PlayerState['controls'];
   abstract setControlsVisibility(isVisible: PlayerState['controls']): void;
 
   abstract getPoster(): PlayerState['poster'];
@@ -38,6 +35,8 @@ export abstract class MediaProvider<
   // Readonly.
   abstract isReady(): PlayerState['isProviderReady'];
   abstract isPlaybackReady(): PlayerState['isPlaybackReady'];
+  abstract isPaused(): PlayerState['paused'];
+  abstract getCurrentSrc(): PlayerState['currentSrc'];
   abstract getInternalPlayer(): InternalPlayerType;
   abstract getViewType(): PlayerState['viewType'];
   abstract getMediaType(): PlayerState['mediaType'];
@@ -46,19 +45,6 @@ export abstract class MediaProvider<
   abstract isBuffering(): PlayerState['isBuffering'];
   abstract hasPlaybackStarted(): PlayerState['hasPlaybackStarted'];
   abstract hasPlaybackEnded(): PlayerState['hasPlaybackEnded'];
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Fetch
-   *
-   * This section lists abstract methods for fetching (local/remote) information
-   * about the current media.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  abstract fetchDuration(): Promise<PlayerState['duration']>;
-  abstract fetchDefaultPoster(): Promise<PlayerState['poster']>;
-  abstract fetchRecommendedAspectRatio(): Promise<PlayerState['aspectRatio']>;
 
   /**
    * -------------------------------------------------------------------------------------------
@@ -80,16 +66,4 @@ export abstract class MediaProvider<
 
   abstract play(): Promise<void>;
   abstract pause(): Promise<void>;
-  abstract loadMedia(newSrc: Source): Promise<void>;
-  abstract renderPlayer(): TemplateResult;
-  abstract moveToBackground(): void;
-  abstract destroy(): void;
-
-  protected render(): void {
-    throw Error(
-      '[PROBLEM] Using the `render` method is not allowed!' +
-        "The Player is responsible for managing the provider's rendering.\n\n" +
-        `[SOLUTION] Move rendering inside the \`renderPlayer\` method in \`${this.constructor.name}\`.`,
-    );
-  }
 }
