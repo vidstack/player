@@ -5,3 +5,4 @@ export * from './player.types';
 export * from './player.events';
 export * from './player.context';
 export * from './Player';
+export * from './Source';

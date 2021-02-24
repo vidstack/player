@@ -10,7 +10,13 @@ import {
 } from 'lit-element';
 import { styleMap } from 'lit-html/directives/style-map';
 import clsx from 'clsx';
-import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
+import {
+  MediaType,
+  PlayerProps,
+  PlayerState,
+  SrcType,
+  ViewType,
+} from './player.types';
 import { Device, isUndefined, onDeviceChange } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
@@ -55,7 +61,17 @@ import { PlayerContextMixin } from './PlayerContextMixin';
  * @example
  * ```html
  *  <vds-player>
- *    <vds-youtube src="_MyD_e1jJWc"></vds-youtube>
+ *    <vds-source src="my-video-file.mp4"></vds-source>
+ *    <vds-ui>
+ *      <!-- UI components here. -->
+ *    </vds-ui>
+ *  </vds-player>
+ * ```
+ *
+ * @example
+ * ```html
+ *  <vds-player>
+ *    <vds-source src="_MyD_e1jJWc" type="youtube"></vds-source>
  *    <vds-ui>
  *      <!-- UI components here. -->
  *    </vds-ui>
@@ -221,23 +237,35 @@ export class Player
   }
 
   /**
-   * Determines if the connected media provider can play the given `type`. The `type` is
-   * generally the media resource identifier, URL or MIME type (optional Codecs parameter).
+   * Determines if the player can play the given `type`. The `type` is generally the platform
+   * identifier (optional stream type) _or_ media resource MIME type (optional codecs parameter)
+   * _or_ streaming protocol (optional container format).
+   *
+   * @examples
+   * - `{platform}`
+   * - `{platform}/{streamType}`
+   * - `{mediaType}/{container format}`
+   * - `{mediaType}/{container format}; codecs={audio codec}`
+   * - `{mediaType}/{container format}; codecs="{video codec}, {audio codec}"`
+   * - `{streamingProtocol}/{container format}`
    *
    * @examples
    * - `audio/mp3`
    * - `video/mp4`
    * - `video/webm; codecs="vp8, vorbis"`
-   * - `/my-audio-file.mp3`
-   * - `youtube/RO7VcUAsf-I`
-   * - `vimeo.com/411652396`
-   * - `https://www.youtube.com/watch?v=OQoz7FCWkfU`
-   * - `https://media.vidstack.io/hls/index.m3u8`
-   * - `https://media.vidstack.io/dash/index.mpd`
+   * - `youtube`
+   * - `youtube/live`
+   * - `vimeo`
+   * - `vimeo/live`
+   * - `dailymotion`
+   * - `hls/mts`
+   * - `dash/fmp4`
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
    */
-  canPlayType(type: string): boolean {
+  canPlayType(type: SrcType): boolean {
+    // TODO: this should be called on something else (src selection algorithm).
     return this._currentProvider?.canPlayType(type) ?? false;
   }
 

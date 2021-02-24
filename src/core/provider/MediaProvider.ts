@@ -1,5 +1,6 @@
 import { LitElement } from 'lit-element';
-import { PlayerState, Source } from '../../core';
+import { PlayerState } from '../../core';
+import { SrcType } from '../player.types';
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by
@@ -54,7 +55,7 @@ export abstract class MediaProvider<
    * -------------------------------------------------------------------------------------------
    */
 
-  abstract canPlayType(type: Source): boolean;
+  abstract canPlayType(type: SrcType): boolean;
 
   /**
    * -------------------------------------------------------------------------------------------

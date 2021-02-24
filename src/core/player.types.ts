@@ -1,7 +1,9 @@
 import { Context } from '@wcom/context';
 import { Device } from '../utils';
 
-export type Source = string;
+export type Src = string;
+
+export type SrcType = string;
 
 export enum ViewType {
   Unknown = 'unknown',
@@ -68,7 +70,7 @@ export interface PlayerState {
    *
    * @readonly
    */
-  readonly currentSrc: Source;
+  readonly currentSrc: Src;
 
   /**
    * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume.
