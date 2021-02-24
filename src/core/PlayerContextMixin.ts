@@ -3,6 +3,7 @@ import { UpdatingElement } from 'lit-element';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
+  ProviderCurrentSrcChange,
   ProviderDurationChangeEvent,
   ProviderMediaTypeChangeEvent,
   ProviderMutedChangeEvent,
@@ -31,7 +32,9 @@ export type PlayerContextCocktail<T extends PlayerContextMixinBase> = T &
 export function PlayerContextMixin<T extends PlayerContextMixinBase>(
   Base: T,
 ): PlayerContextCocktail<T> {
-  class PlayerContextMixin extends Base {
+  class PlayerContextMixin extends Base implements PlayerContextProvider {
+    [x: string]: unknown;
+
     /**
      * **DO NOT CALL FROM OUTSIDE THE PLAYER.**
      */
@@ -68,6 +71,11 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
     @listen(ProviderTimeChangeEvent.TYPE)
     protected handleTimeContextUpdate(e: ProviderTimeChangeEvent) {
       this.currentTimeCtx = e.detail;
+    }
+
+    @listen(ProviderCurrentSrcChange.TYPE)
+    protected handleCurrentSrcContextUpdate(e: ProviderCurrentSrcChange) {
+      this.currentSrcCtx = e.detail;
     }
 
     @listen(ProviderMutedChangeEvent.TYPE)
@@ -141,80 +149,82 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
      */
 
     @playerContext.uuid.provide()
-    protected uuidCtx = playerContext.uuid.defaultValue;
+    uuidCtx = playerContext.uuid.defaultValue;
+
+    @playerContext.currentSrc.provide()
+    currentSrcCtx = playerContext.currentSrc.defaultValue;
 
     @playerContext.volume.provide()
-    protected volumeCtx = playerContext.volume.defaultValue;
+    volumeCtx = playerContext.volume.defaultValue;
 
     @playerContext.currentTime.provide()
-    protected currentTimeCtx = playerContext.currentTime.defaultValue;
+    currentTimeCtx = playerContext.currentTime.defaultValue;
 
     @playerContext.paused.provide()
-    protected pausedCtx = playerContext.paused.defaultValue;
+    pausedCtx = playerContext.paused.defaultValue;
 
     @playerContext.controls.provide()
-    protected controlsCtx = playerContext.controls.defaultValue;
+    controlsCtx = playerContext.controls.defaultValue;
 
     @playerContext.poster.provide()
-    protected posterCtx = playerContext.poster.defaultValue;
+    posterCtx = playerContext.poster.defaultValue;
 
     @playerContext.muted.provide()
-    protected mutedCtx = playerContext.muted.defaultValue;
+    mutedCtx = playerContext.muted.defaultValue;
 
     @playerContext.aspectRatio.provide()
-    protected aspectRatioCtx = playerContext.aspectRatio.defaultValue;
+    aspectRatioCtx = playerContext.aspectRatio.defaultValue;
 
     @playerContext.duration.provide()
-    protected durationCtx = playerContext.duration.defaultValue;
+    durationCtx = playerContext.duration.defaultValue;
 
     @playerContext.buffered.provide()
-    protected bufferedCtx = playerContext.buffered.defaultValue;
+    bufferedCtx = playerContext.buffered.defaultValue;
 
     @playerContext.device.provide()
-    protected deviceCtx = playerContext.device.defaultValue;
+    deviceCtx = playerContext.device.defaultValue;
 
     @playerContext.isMobileDevice.provide()
-    protected isMobileDeviceCtx = playerContext.isMobileDevice.defaultValue;
+    isMobileDeviceCtx = playerContext.isMobileDevice.defaultValue;
 
     @playerContext.isDesktopDevice.provide()
-    protected isDesktopDeviceCtx = playerContext.isDesktopDevice.defaultValue;
+    isDesktopDeviceCtx = playerContext.isDesktopDevice.defaultValue;
 
     @playerContext.isBuffering.provide()
-    protected isBufferingCtx = playerContext.isBuffering.defaultValue;
+    isBufferingCtx = playerContext.isBuffering.defaultValue;
 
     @playerContext.isPlaying.provide()
-    protected isPlayingCtx = playerContext.isPlaying.defaultValue;
+    isPlayingCtx = playerContext.isPlaying.defaultValue;
 
     @playerContext.hasPlaybackStarted.provide()
-    protected hasPlaybackStartedCtx =
-      playerContext.hasPlaybackStarted.defaultValue;
+    hasPlaybackStartedCtx = playerContext.hasPlaybackStarted.defaultValue;
 
     @playerContext.hasPlaybackEnded.provide()
-    protected hasPlaybackEndedCtx = playerContext.hasPlaybackEnded.defaultValue;
+    hasPlaybackEndedCtx = playerContext.hasPlaybackEnded.defaultValue;
 
     @playerContext.isProviderReady.provide()
-    protected isProviderReadyCtx = playerContext.isProviderReady.defaultValue;
+    isProviderReadyCtx = playerContext.isProviderReady.defaultValue;
 
     @playerContext.isPlaybackReady.provide()
-    protected isPlaybackReadyCtx = playerContext.isPlaybackReady.defaultValue;
+    isPlaybackReadyCtx = playerContext.isPlaybackReady.defaultValue;
 
     @playerContext.viewType.provide()
-    protected viewTypeCtx = playerContext.viewType.defaultValue;
+    viewTypeCtx = playerContext.viewType.defaultValue;
 
     @playerContext.isAudioView.provide()
-    protected isAudioViewCtx = playerContext.isAudioView.defaultValue;
+    isAudioViewCtx = playerContext.isAudioView.defaultValue;
 
     @playerContext.isVideoView.provide()
-    protected isVideoViewCtx = playerContext.isVideoView.defaultValue;
+    isVideoViewCtx = playerContext.isVideoView.defaultValue;
 
     @playerContext.mediaType.provide()
-    protected mediaTypeCtx = playerContext.mediaType.defaultValue;
+    mediaTypeCtx = playerContext.mediaType.defaultValue;
 
     @playerContext.isAudio.provide()
-    protected isAudioCtx = playerContext.isAudio.defaultValue;
+    isAudioCtx = playerContext.isAudio.defaultValue;
 
     @playerContext.isVideo.provide()
-    protected isVideoCtx = playerContext.isVideo.defaultValue;
+    isVideoCtx = playerContext.isVideo.defaultValue;
   }
 
   return PlayerContextMixin;

@@ -36,6 +36,7 @@ export abstract class MediaProvider<
   abstract isReady(): PlayerState['isProviderReady'];
   abstract isPlaybackReady(): PlayerState['isPlaybackReady'];
   abstract isPaused(): PlayerState['paused'];
+  abstract getCurrentSrc(): PlayerState['currentSrc'];
   abstract getInternalPlayer(): InternalPlayerType;
   abstract getViewType(): PlayerState['viewType'];
   abstract getMediaType(): PlayerState['mediaType'];

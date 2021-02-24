@@ -22,11 +22,13 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
+  CurrentSrcChange,
 } from '../player.events';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
   ProviderConnectEvent,
+  ProviderCurrentSrcChange,
   ProviderDurationChangeEvent,
   ProviderErrorEvent,
   ProviderMediaTypeChangeEvent,
@@ -95,6 +97,16 @@ describe('provider events', () => {
     await oneEvent(player, PlayingEvent.TYPE);
     expect(consumer.paused).to.equal(false);
     expect(consumer.isPlaying).to.equal(true);
+  });
+
+  it('should handle current src change event', async () => {
+    const currentSrc = 'penguins on an apple tree';
+    dispatchProviderUpdate(
+      new ProviderCurrentSrcChange({ detail: currentSrc }),
+    );
+    const { detail } = await oneEvent(player, CurrentSrcChange.TYPE);
+    expect(detail).to.equal(currentSrc);
+    expect(consumer.currentSrc).to.equal(currentSrc);
   });
 
   it('should handle muted change event', async () => {

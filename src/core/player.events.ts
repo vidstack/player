@@ -16,6 +16,7 @@ export type RawPlayerEventType =
   | 'play'
   | 'pause'
   | 'playing'
+  | 'current-src-change'
   | 'muted-change'
   | 'volume-change'
   | 'time-change'
@@ -37,6 +38,7 @@ export type RawPlayerEventDetailType = {
   play: void;
   pause: void;
   playing: void;
+  'current-src-change': PlayerState['currentSrc'];
   'muted-change': PlayerState['muted'];
   'volume-change': PlayerState['volume'];
   'time-change': PlayerState['currentTime'];
@@ -90,6 +92,10 @@ export class PlayEvent extends buildsVdsPlayerEvent('play') {}
 export class PauseEvent extends buildsVdsPlayerEvent('pause') {}
 
 export class PlayingEvent extends buildsVdsPlayerEvent('playing') {}
+
+export class CurrentSrcChange extends buildsVdsPlayerEvent(
+  'current-src-change',
+) {}
 
 export class MutedChangeEvent extends buildsVdsPlayerEvent('muted-change') {}
 

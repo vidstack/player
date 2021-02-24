@@ -579,6 +579,10 @@ export class Player
 
   protected _uuid = uuid();
 
+  get currentSrc(): PlayerState['currentSrc'] {
+    return this.currentProvider?.getCurrentSrc?.() ?? '';
+  }
+
   get uuid(): PlayerState['uuid'] {
     return this._uuid;
   }

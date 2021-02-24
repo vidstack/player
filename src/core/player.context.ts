@@ -27,6 +27,7 @@ const guessDevice =
  */
 export const playerContext: PlayerContext = {
   uuid: createContext(''),
+  currentSrc: createContext(''),
   volume: createContext(0.3),
   currentTime: createContext(0),
   paused: createContext(true),

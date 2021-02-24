@@ -28,6 +28,7 @@ export type ReadonlyPlayerState = Readonly<
   Pick<
     PlayerState,
     | 'uuid'
+    | 'currentSrc'
     | 'duration'
     | 'buffered'
     | 'device'
@@ -60,6 +61,14 @@ export interface PlayerState {
    * @readonly
    */
   readonly uuid: string;
+
+  /**
+   * The absolute URL of the media resource that has been chosen. Defaults to `''` if no
+   * media has been loaded.
+   *
+   * @readonly
+   */
+  readonly currentSrc: Source;
 
   /**
    * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume.

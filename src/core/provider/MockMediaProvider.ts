@@ -29,6 +29,10 @@ export class MockMediaProvider extends MediaProvider {
    * -------------------------------------------------------------------------------------------
    */
 
+  getCurrentSrc(): PlayerState['currentSrc'] {
+    return '';
+  }
+
   getVolume(): number {
     return this.volume;
   }

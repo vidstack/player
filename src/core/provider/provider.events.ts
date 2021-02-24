@@ -1,3 +1,4 @@
+import { CurrentSrcChange } from '..';
 import { LIB_PREFIX } from '../../shared/constants';
 import {
   buildVdsEvent,
@@ -38,6 +39,7 @@ export type RawProviderEventType =
   | 'play'
   | 'pause'
   | 'playing'
+  | 'current-src-change'
   | 'muted-change'
   | 'volume-change'
   | 'time-change'
@@ -58,6 +60,7 @@ export type RawProviderEventDetailType = {
   play: void;
   pause: void;
   playing: void;
+  'current-src-change': PlayerState['currentSrc'];
   'muted-change': PlayerState['muted'];
   'volume-change': PlayerState['volume'];
   'time-change': PlayerState['currentTime'];
@@ -117,6 +120,10 @@ export class ProviderPauseEvent extends buildVdsProviderEvent('pause') {}
 
 export class ProviderPlayingEvent extends buildVdsProviderEvent('playing') {}
 
+export class ProviderCurrentSrcChange extends buildVdsProviderEvent(
+  'current-src-change',
+) {}
+
 export class ProviderMutedChangeEvent extends buildVdsProviderEvent(
   'muted-change',
 ) {}
@@ -171,6 +178,7 @@ export const ALL_PROVIDER_EVENT_TYPES: VdsProviderEventType[] = [
   ProviderPlayEvent.TYPE,
   ProviderPauseEvent.TYPE,
   ProviderPlayingEvent.TYPE,
+  ProviderCurrentSrcChange.TYPE,
   ProviderMutedChangeEvent.TYPE,
   ProviderVolumeChangeEvent.TYPE,
   ProviderTimeChangeEvent.TYPE,
@@ -197,6 +205,7 @@ export const PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP = {
   [ProviderPlayEvent.TYPE]: PlayEvent,
   [ProviderPauseEvent.TYPE]: PauseEvent,
   [ProviderPlayingEvent.TYPE]: PlayingEvent,
+  [ProviderCurrentSrcChange.TYPE]: CurrentSrcChange,
   [ProviderMutedChangeEvent.TYPE]: MutedChangeEvent,
   [ProviderVolumeChangeEvent.TYPE]: VolumeChangeEvent,
   [ProviderTimeChangeEvent.TYPE]: TimeChangeEvent,
