@@ -6,6 +6,7 @@ import {
   property,
   CSSResultArray,
   TemplateResult,
+  internalProperty,
 } from 'lit-element';
 import { styleMap } from 'lit-html/directives/style-map';
 import clsx from 'clsx';
@@ -53,8 +54,8 @@ import { PlayerContextMixin } from './PlayerContextMixin';
  *
  * @example
  * ```html
- *  <vds-player src="_MyD_e1jJWc">
- *    <vds-youtube></vds-youtube>
+ *  <vds-player>
+ *    <vds-youtube src="_MyD_e1jJWc"></vds-youtube>
  *    <vds-ui>
  *      <!-- UI components here. -->
  *    </vds-ui>
@@ -131,28 +132,40 @@ export class Player
    */
 
   render(): TemplateResult {
-    const isAriaBusy = this.isPlaybackReady ? 'false' : 'true';
+    return html`
+      <div
+        part="player"
+        aria-busy="${this.buildAriaBusy()}"
+        class="${clsx(this.buildClassMap())}"
+        style="${styleMap(this.buildStyleMap())}"
+      >
+        ${this.renderContent()}
+      </div>
+    `;
+  }
 
-    const classes = {
+  protected renderContent(): TemplateResult {
+    return html`<slot></slot>`;
+  }
+
+  protected buildAriaBusy(): 'true' | 'false' {
+    return this.isPlaybackReady ? 'false' : 'true';
+  }
+
+  protected buildClassMap(): Record<string, boolean> {
+    return {
       player: true,
       audio: this.isAudioView,
       video: this.isVideoView,
     };
+  }
 
-    const styles = {
-      paddingBottom: `padding-bottom: ${this.calcAspectRatio()}%;`,
+  protected buildStyleMap(): Record<string, string> {
+    return {
+      paddingBottom: this.isVideoView
+        ? `padding-bottom: ${this.calcAspectRatio()}%;`
+        : '',
     };
-
-    return html`
-      <div
-        part="player"
-        aria-busy="${isAriaBusy}"
-        class="${clsx(classes)}"
-        style="${styleMap(styles)}"
-      >
-        <slot></slot>
-      </div>
-    `;
   }
 
   protected calcAspectRatio(): number {
@@ -171,6 +184,7 @@ export class Player
    * -------------------------------------------------------------------------------------------
    */
 
+  @internalProperty()
   protected _currentProvider?: MediaProvider;
 
   /**
@@ -473,20 +487,6 @@ export class Player
    * -------------------------------------------------------------------------------------------
    */
 
-  protected _src: PlayerState['src'] = '';
-
-  @property({ type: String })
-  get src(): PlayerState['src'] {
-    return this._src;
-  }
-
-  set src(newSrc: PlayerState['src']) {
-    this._src = newSrc;
-    this.context.srcCtx = newSrc;
-  }
-
-  // ---
-
   @property({ type: Number })
   get volume(): PlayerState['volume'] {
     return this.currentProvider?.getVolume() ?? 0.3;
@@ -584,19 +584,19 @@ export class Player
   }
 
   get duration(): PlayerState['duration'] {
-    return this.currentProvider?.getDuration() ?? -1;
+    return this.currentProvider?.getDuration?.() ?? -1;
   }
 
   get buffered(): PlayerState['buffered'] {
-    return this.currentProvider?.getBuffered() ?? 0;
+    return this.currentProvider?.getBuffered?.() ?? 0;
   }
 
   get isBuffering(): PlayerState['isBuffering'] {
-    return this.currentProvider?.isBuffering() ?? false;
+    return this.currentProvider?.isBuffering?.() ?? false;
   }
 
   get isPlaying(): PlayerState['isPlaying'] {
-    const isPaused = this.currentProvider?.isPaused() ?? true;
+    const isPaused = this.currentProvider?.isPaused?.() ?? true;
     return !isPaused;
   }
 
@@ -615,23 +615,23 @@ export class Player
   }
 
   get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
-    return this.currentProvider?.hasPlaybackStarted() ?? false;
+    return this.currentProvider?.hasPlaybackStarted?.() ?? false;
   }
 
   get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
-    return this.currentProvider?.hasPlaybackEnded() ?? false;
+    return this.currentProvider?.hasPlaybackEnded?.() ?? false;
   }
 
   get isProviderReady(): PlayerState['isProviderReady'] {
-    return this.currentProvider?.isReady() ?? false;
+    return this.currentProvider?.isReady?.() ?? false;
   }
 
   get isPlaybackReady(): PlayerState['isPlaybackReady'] {
-    return this.currentProvider?.isPlaybackReady() ?? false;
+    return this.currentProvider?.isPlaybackReady?.() ?? false;
   }
 
   get viewType(): PlayerState['viewType'] {
-    return this.currentProvider?.getViewType() ?? ViewType.Unknown;
+    return this.currentProvider?.getViewType?.() ?? ViewType.Unknown;
   }
 
   get isAudioView(): PlayerState['isAudioView'] {
@@ -643,7 +643,7 @@ export class Player
   }
 
   get mediaType(): PlayerState['mediaType'] {
-    return this.currentProvider?.getMediaType() ?? MediaType.Unknown;
+    return this.currentProvider?.getMediaType?.() ?? MediaType.Unknown;
   }
 
   get isAudio(): PlayerState['isAudio'] {

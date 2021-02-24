@@ -1,4 +1,5 @@
 import '../vds-player';
+import '../provider/vds-mock-media-provider';
 import { expect, fixture, html } from '@open-wc/testing';
 import { Device } from '../../utils';
 import { Player } from '../Player';
@@ -11,8 +12,14 @@ import {
   ViewType,
   WritablePlayerState,
 } from '../player.types';
+import { buildPlayerWithMockProvider } from './helpers';
+import sinon, { spy } from 'sinon';
 
 describe('props', async () => {
+  afterEach(() => {
+    sinon.reset();
+  });
+
   const player = await fixture<Player>(html`<vds-player></vds-player>`);
 
   it('should have defined all player state props', () => {
@@ -65,7 +72,6 @@ describe('props', async () => {
   it('should have defined writable properties as writable', async () => {
     // Values here are irrelevant - used an object to force defining all properties.
     const writableProperties: WritablePlayerState = {
-      src: '',
       volume: 0,
       currentTime: 0,
       poster: '',
@@ -90,18 +96,6 @@ describe('props', async () => {
     });
   });
 
-  // TODO: once we have a MockMediaProvider - test if triggering writable prop setters calls the
-  // correct method on the provider.
-  it('should handle src change through settter', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
-    const provider = (player as unknown) as PlayerContextProvider;
-    const newSrc = 'kangaroo';
-    player.src = newSrc;
-    expect(player.src).to.equal(newSrc);
-    expect(provider.srcCtx).to.equal(newSrc);
-    // TODO: src change handled?
-  });
-
   it('should handle aspect ratio change through setter', async () => {
     const player = await fixture<Player>(html`<vds-player></vds-player>`);
     const provider = (player as unknown) as PlayerContextProvider;
@@ -112,44 +106,50 @@ describe('props', async () => {
   });
 
   it('should update provider when volume is set', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
+    const [player, provider] = await buildPlayerWithMockProvider();
     const volume = 0.75;
+    const mspy = spy(provider, 'setVolume');
     player.volume = volume;
-    // TODO: test this once a mock media provider is ready.
+    expect(mspy).to.have.been.calledWith(volume);
   });
 
   it('should update provider when currentTime is set', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
+    const [player, provider] = await buildPlayerWithMockProvider();
     const currentTime = 420;
+    const mspy = spy(provider, 'setCurrentTime');
     player.currentTime = currentTime;
-    // TODO: test this once a mock media provider is ready.
+    expect(mspy).to.have.been.calledWith(currentTime);
   });
 
   it('should update provider when paused is set', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
+    const [player, provider] = await buildPlayerWithMockProvider();
     const paused = false;
+    const mspy = spy(provider, 'pause');
     player.paused = paused;
-    // TODO: test this once a mock media provider is ready.
+    expect(mspy).to.have.been.calledOnce;
   });
 
   it('should update provider when controls is set', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
+    const [player, provider] = await buildPlayerWithMockProvider();
     const controls = false;
+    const mspy = spy(provider, 'setControlsVisibility');
     player.controls = controls;
-    // TODO: test this once a mock media provider is ready.
+    expect(mspy).to.have.been.calledWith(controls);
   });
 
   it('should update provider when poster is set', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
+    const [player, provider] = await buildPlayerWithMockProvider();
     const poster = 'koala';
+    const mspy = spy(provider, 'setPoster');
     player.poster = poster;
-    // TODO: test this once a mock media provider is ready.
+    expect(mspy).to.have.been.calledWith(poster);
   });
 
   it('should update provider when muted is set', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
+    const [player, provider] = await buildPlayerWithMockProvider();
     const muted = true;
+    const mspy = spy(provider, 'setMuted');
     player.muted = muted;
-    // TODO: test this once a mock media provider is ready.
+    expect(mspy).to.have.been.calledWith(muted);
   });
 });

@@ -1,3 +1,4 @@
+/* c8 ignore next 1000 */
 import { html, TemplateResult } from 'lit-element';
 import { playerContext } from '../player.context';
 import { ViewType, MediaType, PlayerState } from '../player.types';
@@ -110,26 +111,6 @@ export class MockMediaProvider extends MediaProvider {
 
   hasPlaybackEnded(): boolean {
     return playerContext.hasPlaybackEnded.defaultValue;
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Fetch
-   *
-   * This section lists methods for fetching (local/remote) informationabout the current media.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  async fetchDuration(): Promise<number> {
-    return 0;
-  }
-
-  async fetchDefaultPoster(): Promise<string | undefined> {
-    return 'https://media.vidstack.io/poster.png';
-  }
-
-  async fetchRecommendedAspectRatio(): Promise<string> {
-    return '16:9';
   }
 
   /**

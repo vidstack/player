@@ -143,9 +143,6 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
     @playerContext.uuid.provide()
     protected uuidCtx = playerContext.uuid.defaultValue;
 
-    @playerContext.src.provide()
-    protected srcCtx = playerContext.src.defaultValue;
-
     @playerContext.volume.provide()
     protected volumeCtx = playerContext.volume.defaultValue;
 

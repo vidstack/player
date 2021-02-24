@@ -1,9 +1,4 @@
-import {
-  html,
-  internalProperty,
-  LitElement,
-  TemplateResult,
-} from 'lit-element';
+import { LitElement } from 'lit-element';
 import { PlayerState, Source } from '../../core';
 
 /**
