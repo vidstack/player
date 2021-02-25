@@ -80,10 +80,6 @@ export class FakeConsumer extends LitElement {
   hasPlaybackEnded = playerContext.hasPlaybackEnded.defaultValue;
 
   @internalProperty()
-  @playerContext.isProviderReady.consume()
-  isProviderReady = playerContext.isProviderReady.defaultValue;
-
-  @internalProperty()
   @playerContext.isPlaybackReady.consume()
   isPlaybackReady = playerContext.isPlaybackReady.defaultValue;
 

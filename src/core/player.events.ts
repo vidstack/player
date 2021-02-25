@@ -16,6 +16,7 @@ export type RawPlayerEventType =
   | 'play'
   | 'pause'
   | 'playing'
+  | 'poster-change'
   | 'current-src-change'
   | 'muted-change'
   | 'volume-change'
@@ -28,7 +29,6 @@ export type RawPlayerEventType =
   | 'device-change'
   | 'boot-start'
   | 'boot-end'
-  | 'ready'
   | 'playback-ready'
   | 'playback-start'
   | 'playback-end'
@@ -38,6 +38,7 @@ export type RawPlayerEventDetailType = {
   play: void;
   pause: void;
   playing: void;
+  'poster-change': PlayerState['poster'];
   'current-src-change': PlayerState['currentSrc'];
   'muted-change': PlayerState['muted'];
   'volume-change': PlayerState['volume'];
@@ -50,7 +51,6 @@ export type RawPlayerEventDetailType = {
   'device-change': Device;
   'boot-start': void;
   'boot-end': void;
-  ready: void;
   'playback-ready': void;
   'playback-start': void;
   'playback-end': void;
@@ -97,6 +97,8 @@ export class CurrentSrcChangeEvent extends buildsVdsPlayerEvent(
   'current-src-change',
 ) {}
 
+export class PosterChangeEvent extends buildsVdsPlayerEvent('poster-change') {}
+
 export class MutedChangeEvent extends buildsVdsPlayerEvent('muted-change') {}
 
 export class VolumeChangeEvent extends buildsVdsPlayerEvent('volume-change') {}
@@ -122,8 +124,6 @@ export class ViewTypeChangeEvent extends buildsVdsPlayerEvent(
 export class MediaTypeChangeEvent extends buildsVdsPlayerEvent(
   'media-type-change',
 ) {}
-
-export class ReadyEvent extends buildsVdsPlayerEvent('ready') {}
 
 export class PlaybackReadyEvent extends buildsVdsPlayerEvent(
   'playback-ready',

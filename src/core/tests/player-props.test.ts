@@ -37,6 +37,7 @@ describe('props', async () => {
     const readonlyProperties: ReadonlyPlayerState = {
       uuid: '',
       currentSrc: '',
+      poster: '',
       duration: 0,
       buffered: 0,
       device: Device.Mobile,
@@ -46,7 +47,6 @@ describe('props', async () => {
       isPlaying: false,
       hasPlaybackStarted: false,
       hasPlaybackEnded: false,
-      isProviderReady: false,
       isPlaybackReady: false,
       viewType: ViewType.Unknown,
       isAudioView: false,
@@ -75,7 +75,6 @@ describe('props', async () => {
     const writableProperties: WritablePlayerState = {
       volume: 0,
       currentTime: 0,
-      poster: '',
       muted: false,
       aspectRatio: '',
       paused: false,
@@ -140,15 +139,6 @@ describe('props', async () => {
     stub(provider, 'isPlaybackReady').returns(true);
     player.controls = controls;
     expect(setControlsVisibilitySpy).to.have.been.calledWith(controls);
-  });
-
-  it('should update provider when poster is set', async () => {
-    const [player, provider] = await buildPlayerWithMockProvider();
-    const poster = 'koala';
-    const setPosterSpy = spy(provider, 'setPoster');
-    stub(provider, 'isPlaybackReady').returns(true);
-    player.poster = poster;
-    expect(setPosterSpy).to.have.been.calledWith(poster);
   });
 
   it('should update provider when muted is set', async () => {

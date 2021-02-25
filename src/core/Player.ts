@@ -382,12 +382,6 @@ export class Player
     );
   }
 
-  protected requestPosterChange(poster?: PlayerState['poster']): void {
-    this.attemptRequestOrQueue('poster', () =>
-      this.currentProvider?.setPoster(poster),
-    );
-  }
-
   /**
    * -------------------------------------------------------------------------------------------
    * User Events
@@ -609,18 +603,6 @@ export class Player
 
   // ---
 
-  @property({ type: String })
-  get poster(): PlayerState['poster'] {
-    if (!this.isPlaybackReady) return playerContext.poster.defaultValue;
-    return this.currentProvider!.getPoster();
-  }
-
-  set poster(newPoster: PlayerState['poster']) {
-    this.requestPosterChange(newPoster);
-  }
-
-  // ---
-
   protected _aspectRatio: PlayerState['aspectRatio'] = '16:9';
 
   @property({ type: String, attribute: 'aspect-ratio', reflect: true })
@@ -658,6 +640,11 @@ export class Player
   get currentSrc(): PlayerState['currentSrc'] {
     if (!this.isPlaybackReady) return playerContext.currentSrc.defaultValue;
     return this.currentProvider!.getCurrentSrc();
+  }
+
+  get poster(): PlayerState['poster'] {
+    if (!this.isPlaybackReady) return playerContext.poster.defaultValue;
+    return this.currentProvider!.getPoster();
   }
 
   get uuid(): PlayerState['uuid'] {
@@ -709,13 +696,6 @@ export class Player
     if (!this.isPlaybackReady)
       return playerContext.hasPlaybackEnded.defaultValue;
     return this.currentProvider!.hasPlaybackEnded();
-  }
-
-  get isProviderReady(): PlayerState['isProviderReady'] {
-    return (
-      this.currentProvider?.isReady?.() ??
-      playerContext.isProviderReady.defaultValue
-    );
   }
 
   get isPlaybackReady(): PlayerState['isPlaybackReady'] {

@@ -13,7 +13,7 @@ import {
   ProviderPlaybackStartEvent,
   ProviderPlayEvent,
   ProviderPlayingEvent,
-  ProviderReadyEvent,
+  ProviderPosterChangeEvent,
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
@@ -119,6 +119,11 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
       this.resetPlayerContext();
     }
 
+    @listen(ProviderPosterChangeEvent.TYPE)
+    protected handlePosterContextUpdate(e: ProviderPosterChangeEvent) {
+      this.posterCtx = e.detail;
+    }
+
     @listen(ProviderMutedChangeEvent.TYPE)
     protected handleMutedContextUpdate(e: ProviderMutedChangeEvent) {
       this.mutedCtx = e.detail;
@@ -158,11 +163,6 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
       this.mediaTypeCtx = mediaType;
       this.isAudioCtx = mediaType === MediaType.Audio;
       this.isVideoCtx = mediaType === MediaType.Video;
-    }
-
-    @listen(ProviderReadyEvent.TYPE)
-    protected handleReadyContextUpdate() {
-      this.isProviderReadyCtx = true;
     }
 
     @listen(ProviderPlaybackReadyEvent.TYPE)
@@ -242,9 +242,6 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
 
     @playerContext.hasPlaybackEnded.provide()
     hasPlaybackEndedCtx = playerContext.hasPlaybackEnded.defaultValue;
-
-    @playerContext.isProviderReady.provide()
-    isProviderReadyCtx = playerContext.isProviderReady.defaultValue;
 
     @playerContext.isPlaybackReady.provide()
     isPlaybackReadyCtx = playerContext.isPlaybackReady.defaultValue;

@@ -12,8 +12,6 @@ export abstract class MediaProvider<
   /**
    * -------------------------------------------------------------------------------------------
    * Getters + Setters
-   *
-   * This section lists abstract methods for getting/setting state on the provider.
    * -------------------------------------------------------------------------------------------
    */
 
@@ -29,14 +27,11 @@ export abstract class MediaProvider<
   abstract isControlsVisible(): PlayerState['controls'];
   abstract setControlsVisibility(isVisible: PlayerState['controls']): void;
 
-  abstract getPoster(): PlayerState['poster'];
-  abstract setPoster(newPoster: PlayerState['poster']): void;
-
   // Readonly.
-  abstract isReady(): PlayerState['isProviderReady'];
   abstract isPlaybackReady(): PlayerState['isPlaybackReady'];
   abstract isPaused(): PlayerState['paused'];
   abstract getCurrentSrc(): PlayerState['currentSrc'];
+  abstract getPoster(): PlayerState['poster'];
   abstract getInternalPlayer(): InternalPlayerType;
   abstract getViewType(): PlayerState['viewType'];
   abstract getMediaType(): PlayerState['mediaType'];
@@ -58,9 +53,7 @@ export abstract class MediaProvider<
 
   /**
    * -------------------------------------------------------------------------------------------
-   * Function
-   *
-   * This section lists abstract methods for performing some function on the player.
+   * Methods
    * -------------------------------------------------------------------------------------------
    */
 

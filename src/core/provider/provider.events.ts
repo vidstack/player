@@ -18,7 +18,7 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
-  ReadyEvent,
+  PosterChangeEvent,
   TimeChangeEvent,
   ViewTypeChangeEvent,
   VolumeChangeEvent,
@@ -39,6 +39,7 @@ export type RawProviderEventType =
   | 'play'
   | 'pause'
   | 'playing'
+  | 'poster-change'
   | 'current-src-change'
   | 'muted-change'
   | 'volume-change'
@@ -48,7 +49,6 @@ export type RawProviderEventType =
   | 'buffering-change'
   | 'view-type-change'
   | 'media-type-change'
-  | 'provider-ready'
   | 'playback-ready'
   | 'playback-start'
   | 'playback-end'
@@ -60,6 +60,7 @@ export type RawProviderEventDetailType = {
   play: void;
   pause: void;
   playing: void;
+  'poster-change': PlayerState['poster'];
   'current-src-change': PlayerState['currentSrc'];
   'muted-change': PlayerState['muted'];
   'volume-change': PlayerState['volume'];
@@ -69,7 +70,6 @@ export type RawProviderEventDetailType = {
   'buffering-change': PlayerState['isBuffering'];
   'view-type-change': PlayerState['viewType'];
   'media-type-change': PlayerState['mediaType'];
-  'provider-ready': void;
   'playback-ready': void;
   'playback-start': void;
   'playback-end': void;
@@ -124,6 +124,10 @@ export class ProviderCurrentSrcChangeEvent extends buildVdsProviderEvent(
   'current-src-change',
 ) {}
 
+export class ProviderPosterChangeEvent extends buildVdsProviderEvent(
+  'poster-change',
+) {}
+
 export class ProviderMutedChangeEvent extends buildVdsProviderEvent(
   'muted-change',
 ) {}
@@ -156,10 +160,6 @@ export class ProviderMediaTypeChangeEvent extends buildVdsProviderEvent(
   'media-type-change',
 ) {}
 
-export class ProviderReadyEvent extends buildVdsProviderEvent(
-  'provider-ready',
-) {}
-
 export class ProviderPlaybackReadyEvent extends buildVdsProviderEvent(
   'playback-ready',
 ) {}
@@ -178,6 +178,7 @@ export const ALL_PROVIDER_EVENT_TYPES: VdsProviderEventType[] = [
   ProviderPlayEvent.TYPE,
   ProviderPauseEvent.TYPE,
   ProviderPlayingEvent.TYPE,
+  ProviderPosterChangeEvent.TYPE,
   ProviderCurrentSrcChangeEvent.TYPE,
   ProviderMutedChangeEvent.TYPE,
   ProviderVolumeChangeEvent.TYPE,
@@ -187,7 +188,6 @@ export const ALL_PROVIDER_EVENT_TYPES: VdsProviderEventType[] = [
   ProviderBufferingChangeEvent.TYPE,
   ProviderViewTypeChangeEvent.TYPE,
   ProviderMediaTypeChangeEvent.TYPE,
-  ProviderReadyEvent.TYPE,
   ProviderPlaybackReadyEvent.TYPE,
   ProviderPlaybackStartEvent.TYPE,
   ProviderPlaybackEndEvent.TYPE,
@@ -205,6 +205,7 @@ export const PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP = {
   [ProviderPlayEvent.TYPE]: PlayEvent,
   [ProviderPauseEvent.TYPE]: PauseEvent,
   [ProviderPlayingEvent.TYPE]: PlayingEvent,
+  [ProviderPosterChangeEvent.TYPE]: PosterChangeEvent,
   [ProviderCurrentSrcChangeEvent.TYPE]: CurrentSrcChangeEvent,
   [ProviderMutedChangeEvent.TYPE]: MutedChangeEvent,
   [ProviderVolumeChangeEvent.TYPE]: VolumeChangeEvent,
@@ -214,7 +215,6 @@ export const PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP = {
   [ProviderBufferingChangeEvent.TYPE]: BufferingChangeEvent,
   [ProviderViewTypeChangeEvent.TYPE]: ViewTypeChangeEvent,
   [ProviderMediaTypeChangeEvent.TYPE]: MediaTypeChangeEvent,
-  [ProviderReadyEvent.TYPE]: ReadyEvent,
   [ProviderPlaybackReadyEvent.TYPE]: PlaybackReadyEvent,
   [ProviderPlaybackStartEvent.TYPE]: PlaybackStartEvent,
   [ProviderPlaybackEndEvent.TYPE]: PlaybackEndEvent,

@@ -39,7 +39,6 @@ import {
   ProviderPlaybackStartEvent,
   ProviderPlayEvent,
   ProviderPlayingEvent,
-  ProviderReadyEvent,
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
@@ -247,12 +246,6 @@ describe('provider events', () => {
     expect(consumer.mediaType).to.equal(mediaType);
     expect(consumer.isAudio).to.equal(false);
     expect(consumer.isVideo).to.equal(false);
-  });
-
-  it('should handle provider ready event', async () => {
-    dispatchProviderUpdate(new ProviderReadyEvent());
-    await oneEvent(player, ReadyEvent.TYPE);
-    expect(consumer.isProviderReady).to.equal(true);
   });
 
   it('should handle playback ready event', async () => {
