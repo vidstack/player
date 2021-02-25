@@ -71,7 +71,7 @@ export interface PlayerState {
   readonly currentSrc: Source;
 
   /**
-   * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume.
+   * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
    */
   volume: number;
 

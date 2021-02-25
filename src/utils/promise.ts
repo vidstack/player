@@ -1,8 +1,8 @@
 import { noop } from './unit';
 
 export interface DeferredPromise<ResolveType, RejectType> {
-  promise: Promise<ResolveType>;
-  resolve: (value: ResolveType) => void;
+  promise: Promise<ResolveType | undefined>;
+  resolve: (value?: ResolveType) => void;
   reject: (reason: RejectType) => void;
 }
 
@@ -13,10 +13,10 @@ export const deferredPromise = <ResolveType, RejectType>(): DeferredPromise<
   ResolveType,
   RejectType
 > => {
-  let resolve: (value: ResolveType | PromiseLike<ResolveType>) => void = noop;
+  let resolve: (value?: ResolveType | PromiseLike<ResolveType>) => void = noop;
   let reject: (reason: RejectType) => void = noop;
 
-  const promise = new Promise<ResolveType>((res, rej) => {
+  const promise = new Promise<ResolveType | undefined>((res, rej) => {
     resolve = res;
     reject = rej;
   });

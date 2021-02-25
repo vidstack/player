@@ -1,4 +1,4 @@
-import { CurrentSrcChange } from '..';
+import { CurrentSrcChangeEvent } from '..';
 import { LIB_PREFIX } from '../../shared/constants';
 import {
   buildVdsEvent,
@@ -120,7 +120,7 @@ export class ProviderPauseEvent extends buildVdsProviderEvent('pause') {}
 
 export class ProviderPlayingEvent extends buildVdsProviderEvent('playing') {}
 
-export class ProviderCurrentSrcChange extends buildVdsProviderEvent(
+export class ProviderCurrentSrcChangeEvent extends buildVdsProviderEvent(
   'current-src-change',
 ) {}
 
@@ -178,7 +178,7 @@ export const ALL_PROVIDER_EVENT_TYPES: VdsProviderEventType[] = [
   ProviderPlayEvent.TYPE,
   ProviderPauseEvent.TYPE,
   ProviderPlayingEvent.TYPE,
-  ProviderCurrentSrcChange.TYPE,
+  ProviderCurrentSrcChangeEvent.TYPE,
   ProviderMutedChangeEvent.TYPE,
   ProviderVolumeChangeEvent.TYPE,
   ProviderTimeChangeEvent.TYPE,
@@ -205,7 +205,7 @@ export const PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP = {
   [ProviderPlayEvent.TYPE]: PlayEvent,
   [ProviderPauseEvent.TYPE]: PauseEvent,
   [ProviderPlayingEvent.TYPE]: PlayingEvent,
-  [ProviderCurrentSrcChange.TYPE]: CurrentSrcChange,
+  [ProviderCurrentSrcChangeEvent.TYPE]: CurrentSrcChangeEvent,
   [ProviderMutedChangeEvent.TYPE]: MutedChangeEvent,
   [ProviderVolumeChangeEvent.TYPE]: VolumeChangeEvent,
   [ProviderTimeChangeEvent.TYPE]: TimeChangeEvent,

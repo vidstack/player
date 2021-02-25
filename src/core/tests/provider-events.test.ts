@@ -22,13 +22,13 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
-  CurrentSrcChange,
+  CurrentSrcChangeEvent,
 } from '../player.events';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
   ProviderConnectEvent,
-  ProviderCurrentSrcChange,
+  ProviderCurrentSrcChangeEvent,
   ProviderDurationChangeEvent,
   ProviderErrorEvent,
   ProviderMediaTypeChangeEvent,
@@ -102,9 +102,9 @@ describe('provider events', () => {
   it('should handle current src change event', async () => {
     const currentSrc = 'penguins on an apple tree';
     dispatchProviderUpdate(
-      new ProviderCurrentSrcChange({ detail: currentSrc }),
+      new ProviderCurrentSrcChangeEvent({ detail: currentSrc }),
     );
-    const { detail } = await oneEvent(player, CurrentSrcChange.TYPE);
+    const { detail } = await oneEvent(player, CurrentSrcChangeEvent.TYPE);
     expect(detail).to.equal(currentSrc);
     expect(consumer.currentSrc).to.equal(currentSrc);
   });
@@ -166,6 +166,7 @@ describe('provider events', () => {
   it('should handle view type (audio) change event', async () => {
     const viewType = ViewType.Audio;
     stub(provider, 'getViewType').returns(viewType);
+    stub(provider, 'isPlaybackReady').returns(true);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
     );
@@ -181,6 +182,7 @@ describe('provider events', () => {
   it('should handle view type (video) change event', async () => {
     const viewType = ViewType.Video;
     stub(provider, 'getViewType').returns(viewType);
+    stub(provider, 'isPlaybackReady').returns(true);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
     );

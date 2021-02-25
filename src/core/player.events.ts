@@ -93,7 +93,7 @@ export class PauseEvent extends buildsVdsPlayerEvent('pause') {}
 
 export class PlayingEvent extends buildsVdsPlayerEvent('playing') {}
 
-export class CurrentSrcChange extends buildsVdsPlayerEvent(
+export class CurrentSrcChangeEvent extends buildsVdsPlayerEvent(
   'current-src-change',
 ) {}
 

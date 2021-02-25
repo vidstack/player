@@ -4,6 +4,12 @@ export type Constructor<T = Record<string, unknown>> = {
   prototype: T;
 };
 
+export type MethodsOnly<T> = Omit<
+  T,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  { [K in keyof T]-?: T[K] extends Function ? never : K }[keyof T]
+>;
+
 export type Callback<T> = (value: T) => void;
 
 export type Unsubscribe = () => void;
