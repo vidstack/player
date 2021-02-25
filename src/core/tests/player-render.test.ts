@@ -2,7 +2,7 @@
 import '../vds-player';
 import '../provider/vds-mock-media-provider';
 import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
-import { Device } from '../../utils/dom';
+import { Device } from '../../utils';
 import { Player } from '../Player';
 import {
   buildPlayerWithMockProvider,
@@ -45,6 +45,7 @@ describe('render', () => {
   it('should set audio class given view change to audio view', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
 
+    stub(provider, 'isPlaybackReady').returns(true);
     stub(provider, 'getViewType').returns(ViewType.Audio);
     await player.requestUpdate();
 
@@ -56,6 +57,7 @@ describe('render', () => {
   it('should set video class given view change to video view', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
 
+    stub(provider, 'isPlaybackReady').returns(true);
     stub(provider, 'getViewType').returns(ViewType.Video);
     await player.requestUpdate();
 

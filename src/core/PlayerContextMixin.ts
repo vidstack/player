@@ -3,7 +3,7 @@ import { UpdatingElement } from 'lit-element';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
-  ProviderCurrentSrcChange,
+  ProviderCurrentSrcChangeEvent,
   ProviderDurationChangeEvent,
   ProviderMediaTypeChangeEvent,
   ProviderMutedChangeEvent,
@@ -13,14 +13,19 @@ import {
   ProviderPlaybackStartEvent,
   ProviderPlayEvent,
   ProviderPlayingEvent,
-  ProviderReadyEvent,
+  ProviderPosterChangeEvent,
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
 } from './provider/provider.events';
 import { Constructor } from '../shared/types';
 import { playerContext } from './player.context';
-import { MediaType, PlayerContextProvider, ViewType } from './player.types';
+import {
+  MediaType,
+  PlayerContext,
+  PlayerContextProvider,
+  ViewType,
+} from './player.types';
 
 export type PlayerContextMixinBase = Constructor<UpdatingElement>;
 
@@ -40,6 +45,41 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
      */
     get context(): PlayerContextProvider {
       return this as PlayerContextProvider;
+    }
+
+    /**
+     * Context properties that should be reset when media is changed.
+     */
+    protected resettableCtxProps = new Set<keyof PlayerContext>([
+      'paused',
+      'currentTime',
+      'duration',
+      'buffered',
+      'isPlaying',
+      'isBuffering',
+      'isPlaybackReady',
+      'hasPlaybackStarted',
+      'hasPlaybackEnded',
+      'mediaType',
+    ]);
+
+    /**
+     * When the `currentSrc` is changed this method is called to update any context properties
+     * that need to be reset. Important to note that not all properties are reset, only the
+     * properties in the `resettableCtxProps` set.
+     */
+    protected resetPlayerContext() {
+      const props = (Object.keys(
+        playerContext,
+      ) as unknown) as (keyof PlayerContext)[];
+
+      const ctx = this.context;
+
+      props.forEach(prop => {
+        if (this.resettableCtxProps.has(prop)) {
+          ctx[`${prop}Ctx`] = playerContext[prop].defaultValue;
+        }
+      });
     }
 
     /**
@@ -73,9 +113,15 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
       this.currentTimeCtx = e.detail;
     }
 
-    @listen(ProviderCurrentSrcChange.TYPE)
-    protected handleCurrentSrcContextUpdate(e: ProviderCurrentSrcChange) {
+    @listen(ProviderCurrentSrcChangeEvent.TYPE)
+    protected handleCurrentSrcContextUpdate(e: ProviderCurrentSrcChangeEvent) {
       this.currentSrcCtx = e.detail;
+      this.resetPlayerContext();
+    }
+
+    @listen(ProviderPosterChangeEvent.TYPE)
+    protected handlePosterContextUpdate(e: ProviderPosterChangeEvent) {
+      this.posterCtx = e.detail;
     }
 
     @listen(ProviderMutedChangeEvent.TYPE)
@@ -117,11 +163,6 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
       this.mediaTypeCtx = mediaType;
       this.isAudioCtx = mediaType === MediaType.Audio;
       this.isVideoCtx = mediaType === MediaType.Video;
-    }
-
-    @listen(ProviderReadyEvent.TYPE)
-    protected handleReadyContextUpdate() {
-      this.isProviderReadyCtx = true;
     }
 
     @listen(ProviderPlaybackReadyEvent.TYPE)
@@ -201,9 +242,6 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
 
     @playerContext.hasPlaybackEnded.provide()
     hasPlaybackEndedCtx = playerContext.hasPlaybackEnded.defaultValue;
-
-    @playerContext.isProviderReady.provide()
-    isProviderReadyCtx = playerContext.isProviderReady.defaultValue;
 
     @playerContext.isPlaybackReady.provide()
     isPlaybackReadyCtx = playerContext.isPlaybackReady.defaultValue;

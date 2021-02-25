@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Disposal, listen, listenTo } from '@wcom/events';
 import { v4 as uuid } from '@lukeed/uuid';
 import {
@@ -11,10 +12,10 @@ import {
 import { styleMap } from 'lit-html/directives/style-map';
 import clsx from 'clsx';
 import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
-import { Device, isUndefined, onDeviceChange } from '../utils';
+import { deferredPromise, Device, isUndefined, onDeviceChange } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
-import { DeviceChangeEvent } from './player.events';
+import { DeviceChangeEvent, ErrorEvent } from './player.events';
 import {
   ALL_USER_EVENT_TYPES,
   UserMutedChangeRequestEvent,
@@ -29,6 +30,7 @@ import {
   ProviderConnectEvent,
   ProviderDisconnectEvent,
   ProviderErrorEvent,
+  ProviderPlaybackReadyEvent,
   ProviderViewTypeChangeEvent,
   PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP,
   VdsProviderEventType,
@@ -197,7 +199,12 @@ export class Player
 
   protected throwIfNoMediaProvider(): void {
     if (!isUndefined(this.currentProvider)) return;
-    throw Error('No media provider is currently available.');
+    throw Error(
+      '[PROBLEM] No media provider is currently available.\n\n' +
+        '[SOLUTION] Make sure a provider has been passed into the player AND you wait for either ' +
+        'the `vds-ready` or preferably the `vds-playback-ready` event to fire before accessing ' +
+        'provider methods.',
+    );
   }
 
   /**
@@ -207,7 +214,6 @@ export class Player
    */
   play(): Promise<void> {
     this.throwIfNoMediaProvider();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.currentProvider!.play();
   }
 
@@ -216,7 +222,6 @@ export class Player
    */
   pause(): Promise<void> {
     this.throwIfNoMediaProvider();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.currentProvider!.pause();
   }
 
@@ -294,33 +299,87 @@ export class Player
    * -------------------------------------------------------------------------------------------
    */
 
+  /**
+   * Requests are queued if called before media is ready for playback. Once the media is
+   * ready (`ProviderPlaybackReadyEvent`) the queue is flushed. Each request is associated with
+   * a request key to avoid making duplicate requests of the same "type".
+   */
+  protected requestQueue = new Map<string, () => void | Promise<void>>();
+
+  protected pendingRequestQueueFlush = deferredPromise();
+
+  /**
+   * Returns a clone of the current request queue for testing and/or debugging purposes.
+   */
+  getRequestQueue(): Map<string, () => void | Promise<void>> {
+    return new Map(this.requestQueue);
+  }
+
+  /**
+   * Waits for the current request queue to be flushed.
+   */
+  async waitForRequestQueueToFlush(): Promise<void> {
+    await this.pendingRequestQueueFlush.promise;
+  }
+
+  protected async safelyMakeRequest(requestKey: string): Promise<void> {
+    try {
+      await this.requestQueue.get(requestKey)?.();
+    } catch (e) {
+      this.dispatchEvent(new ErrorEvent({ detail: e }));
+    }
+
+    this.requestQueue.delete(requestKey);
+  }
+
+  protected attemptRequestOrQueue(
+    requestKey: string,
+    request: () => void | Promise<void>,
+  ): void {
+    this.requestQueue.set(requestKey, request);
+    if (!this.isPlaybackReady) return;
+    this.safelyMakeRequest(requestKey);
+    this.requestQueue.delete(requestKey);
+  }
+
+  protected async flushRequestQueue(): Promise<void> {
+    const requests = Array.from(this.requestQueue.keys());
+    await Promise.all(requests.map(reqKey => this.safelyMakeRequest(reqKey)));
+    this.requestQueue.clear();
+    this.pendingRequestQueueFlush.resolve();
+    this.pendingRequestQueueFlush = deferredPromise();
+  }
+
   protected requestPlay(): void {
-    // TODO: how should we handle play success/fail? Throw error??
-    this.currentProvider?.play();
+    this.attemptRequestOrQueue('playback', () => this.currentProvider?.play());
   }
 
   protected requestPause(): void {
-    this.currentProvider?.pause();
+    this.attemptRequestOrQueue('playback', () => this.currentProvider?.pause());
   }
 
   protected requestControls(isControlsVisible: PlayerState['controls']): void {
-    this.currentProvider?.setControlsVisibility(isControlsVisible);
+    this.attemptRequestOrQueue('ctrls', () =>
+      this.currentProvider?.setControlsVisibility(isControlsVisible),
+    );
   }
 
   protected requestVolumeChange(volume: PlayerState['volume']): void {
-    this.currentProvider?.setVolume(volume);
+    this.attemptRequestOrQueue('vol', () =>
+      this.currentProvider?.setVolume(volume),
+    );
   }
 
   protected requestTimeChange(time: PlayerState['currentTime']): void {
-    this.currentProvider?.setCurrentTime(time);
+    this.attemptRequestOrQueue('time', () =>
+      this.currentProvider?.setCurrentTime(time),
+    );
   }
 
   protected requestMutedChange(muted: PlayerState['muted']): void {
-    this.currentProvider?.setMuted(muted);
-  }
-
-  protected requestPosterChange(poster?: PlayerState['poster']): void {
-    this.currentProvider?.setPoster(poster);
+    this.attemptRequestOrQueue('mute', () =>
+      this.currentProvider?.setMuted(muted),
+    );
   }
 
   /**
@@ -444,6 +503,11 @@ export class Player
     this._currentProvider = connectedProvider;
   }
 
+  @listen(ProviderPlaybackReadyEvent.TYPE)
+  protected async handleProviderPlaybackReady(): Promise<void> {
+    await this.flushRequestQueue();
+  }
+
   @listen(ProviderDisconnectEvent.TYPE)
   protected handleProviderDisconnect(): void {
     this._currentProvider = undefined;
@@ -489,7 +553,8 @@ export class Player
 
   @property({ type: Number })
   get volume(): PlayerState['volume'] {
-    return this.currentProvider?.getVolume() ?? 0.3;
+    if (!this.isPlaybackReady) return playerContext.volume.defaultValue;
+    return this.currentProvider!.getVolume();
   }
 
   set volume(newVolume: PlayerState['volume']) {
@@ -500,7 +565,8 @@ export class Player
 
   @property({ type: Number })
   get currentTime(): PlayerState['currentTime'] {
-    return this.currentProvider?.getCurrentTime() ?? 0;
+    if (!this.isPlaybackReady) return playerContext.currentTime.defaultValue;
+    return this.currentProvider!.getCurrentTime();
   }
 
   set currentTime(newCurrentTime: PlayerState['currentTime']) {
@@ -511,11 +577,12 @@ export class Player
 
   @property({ type: Boolean, reflect: true })
   get paused(): PlayerState['paused'] {
-    return this.currentProvider?.isPaused() ?? true;
+    if (!this.isPlaybackReady) return playerContext.paused.defaultValue;
+    return this.currentProvider!.isPaused();
   }
 
   set paused(isPaused: PlayerState['paused']) {
-    if (isPaused) {
+    if (!isPaused) {
       this.requestPlay();
     } else {
       this.requestPause();
@@ -526,22 +593,12 @@ export class Player
 
   @property({ type: Boolean })
   get controls(): PlayerState['controls'] {
-    return this.currentProvider?.isControlsVisible() ?? false;
+    if (!this.isPlaybackReady) return playerContext.controls.defaultValue;
+    return this.currentProvider!.isControlsVisible();
   }
 
   set controls(isControlsVisible: PlayerState['controls']) {
     this.requestControls(isControlsVisible);
-  }
-
-  // ---
-
-  @property({ type: String })
-  get poster(): PlayerState['poster'] {
-    return this.currentProvider?.getPoster();
-  }
-
-  set poster(newPoster: PlayerState['poster']) {
-    this.requestPosterChange(newPoster);
   }
 
   // ---
@@ -562,7 +619,8 @@ export class Player
 
   @property({ type: Boolean })
   get muted(): PlayerState['muted'] {
-    return this.currentProvider?.isMuted() ?? false;
+    if (!this.isPlaybackReady) return playerContext.muted.defaultValue;
+    return this.currentProvider!.isMuted();
   }
 
   set muted(newMuted: PlayerState['muted']) {
@@ -580,7 +638,13 @@ export class Player
   protected _uuid = uuid();
 
   get currentSrc(): PlayerState['currentSrc'] {
-    return this.currentProvider?.getCurrentSrc?.() ?? '';
+    if (!this.isPlaybackReady) return playerContext.currentSrc.defaultValue;
+    return this.currentProvider!.getCurrentSrc();
+  }
+
+  get poster(): PlayerState['poster'] {
+    if (!this.isPlaybackReady) return playerContext.poster.defaultValue;
+    return this.currentProvider!.getPoster();
   }
 
   get uuid(): PlayerState['uuid'] {
@@ -588,19 +652,23 @@ export class Player
   }
 
   get duration(): PlayerState['duration'] {
-    return this.currentProvider?.getDuration?.() ?? -1;
+    if (!this.isPlaybackReady) return playerContext.duration.defaultValue;
+    return this.currentProvider!.getDuration();
   }
 
   get buffered(): PlayerState['buffered'] {
-    return this.currentProvider?.getBuffered?.() ?? 0;
+    if (!this.isPlaybackReady) return playerContext.buffered.defaultValue;
+    return this.currentProvider!.getBuffered();
   }
 
   get isBuffering(): PlayerState['isBuffering'] {
-    return this.currentProvider?.isBuffering?.() ?? false;
+    if (!this.isPlaybackReady) return playerContext.isBuffering.defaultValue;
+    return this.currentProvider!.isBuffering();
   }
 
   get isPlaying(): PlayerState['isPlaying'] {
-    const isPaused = this.currentProvider?.isPaused?.() ?? true;
+    if (!this.isPlaybackReady) return playerContext.isPlaying.defaultValue;
+    const isPaused = this.currentProvider!.isPaused();
     return !isPaused;
   }
 
@@ -619,23 +687,27 @@ export class Player
   }
 
   get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
-    return this.currentProvider?.hasPlaybackStarted?.() ?? false;
+    if (!this.isPlaybackReady)
+      return playerContext.hasPlaybackStarted.defaultValue;
+    return this.currentProvider!.hasPlaybackStarted();
   }
 
   get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
-    return this.currentProvider?.hasPlaybackEnded?.() ?? false;
-  }
-
-  get isProviderReady(): PlayerState['isProviderReady'] {
-    return this.currentProvider?.isReady?.() ?? false;
+    if (!this.isPlaybackReady)
+      return playerContext.hasPlaybackEnded.defaultValue;
+    return this.currentProvider!.hasPlaybackEnded();
   }
 
   get isPlaybackReady(): PlayerState['isPlaybackReady'] {
-    return this.currentProvider?.isPlaybackReady?.() ?? false;
+    return (
+      this.currentProvider?.isPlaybackReady?.() ??
+      playerContext.isPlaybackReady.defaultValue
+    );
   }
 
   get viewType(): PlayerState['viewType'] {
-    return this.currentProvider?.getViewType?.() ?? ViewType.Unknown;
+    if (!this.isPlaybackReady) return playerContext.viewType.defaultValue;
+    return this.currentProvider!.getViewType();
   }
 
   get isAudioView(): PlayerState['isAudioView'] {
@@ -647,7 +719,8 @@ export class Player
   }
 
   get mediaType(): PlayerState['mediaType'] {
-    return this.currentProvider?.getMediaType?.() ?? MediaType.Unknown;
+    if (!this.isPlaybackReady) return playerContext.mediaType.defaultValue;
+    return this.currentProvider!.getMediaType();
   }
 
   get isAudio(): PlayerState['isAudio'] {

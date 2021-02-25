@@ -1,11 +1,20 @@
 import '../vds-player';
 import './vds-fake-consumer';
-import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
+import {
+  elementUpdated,
+  expect,
+  fixture,
+  html,
+  oneEvent,
+} from '@open-wc/testing';
 import { isBoolean, isNumber, isString, isUndefined } from '../../utils';
 import { Player } from '../Player';
 import { playerContext } from '../player.context';
-import { PlayerContext, PlayerContextProvider } from '../player.types';
+import { PlayerContext } from '../player.types';
 import { FakeConsumer } from './FakeConsumer';
+import { ProviderCurrentSrcChangeEvent } from '..';
+import { CurrentSrcChangeEvent } from '../player.events';
+import { emitEvent } from './helpers';
 
 describe('context', () => {
   it.skip('should have defined all context properties', async () => {
@@ -35,8 +44,8 @@ describe('context', () => {
 
     const consumer = player.querySelector('vds-fake-consumer') as FakeConsumer;
 
-    function genRandomNewValue(prop: keyof PlayerContext, value: unknown) {
-      if (isString(value) || prop == 'poster') {
+    function genRandomNewValue(_: keyof PlayerContext, value: unknown) {
+      if (isString(value)) {
         return Math.random().toString(36).substring(7);
       } else if (isNumber(value)) {
         return Math.random();
@@ -51,8 +60,7 @@ describe('context', () => {
       playerContext,
     ) as unknown) as (keyof PlayerContext)[]).map(async prop => {
       const ctxProp = `${prop}Ctx`;
-      const provider = (player as unknown) as PlayerContextProvider;
-      const newValue = genRandomNewValue(prop, provider[ctxProp]);
+      const newValue = genRandomNewValue(prop, player.context[ctxProp]);
 
       expect(
         newValue,
@@ -66,7 +74,7 @@ describe('context', () => {
       ).to.exist;
 
       if (!isUndefined(newValue)) {
-        provider[ctxProp] = newValue;
+        player.context[ctxProp] = newValue;
         await elementUpdated(consumer);
         expect(
           consumer[prop],
@@ -82,5 +90,30 @@ describe('context', () => {
     });
 
     await Promise.all(promises);
+  });
+
+  it('should reset context when media is changed', async () => {
+    const player = await fixture<Player>(
+      html`
+        <vds-player>
+          <vds-fake-consumer></vds-fake-consumer>
+        </vds-player>
+      `,
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const consumer = player.querySelector('vds-fake-consumer')!;
+
+    player.context.pausedCtx = false;
+    player.context.durationCtx = 200;
+    await elementUpdated(consumer);
+
+    emitEvent(consumer, new ProviderCurrentSrcChangeEvent({ detail: '' }));
+
+    await oneEvent(player, CurrentSrcChangeEvent.TYPE);
+
+    await elementUpdated(consumer);
+    expect(consumer.paused, 'paused').to.equal(true);
+    expect(consumer.duration, 'duration').to.equal(-1);
   });
 });

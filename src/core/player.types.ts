@@ -30,6 +30,7 @@ export type ReadonlyPlayerState = Readonly<
     | 'uuid'
     | 'currentSrc'
     | 'duration'
+    | 'poster'
     | 'buffered'
     | 'device'
     | 'isMobileDevice'
@@ -38,7 +39,6 @@ export type ReadonlyPlayerState = Readonly<
     | 'isPlaying'
     | 'hasPlaybackStarted'
     | 'hasPlaybackEnded'
-    | 'isProviderReady'
     | 'isPlaybackReady'
     | 'viewType'
     | 'isAudioView'
@@ -71,7 +71,7 @@ export interface PlayerState {
   readonly currentSrc: Source;
 
   /**
-   * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume.
+   * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
    */
   volume: number;
 
@@ -98,10 +98,12 @@ export interface PlayerState {
   controls: boolean;
 
   /**
-   * The URL of the poster for the current media resource. Defaults to `undefined` if media/poster
-   * has been given.
+   * The URL of the current poster. Defaults to `''` if no media/poster has been given or
+   * loaded.
+   *
+   * @readonly
    */
-  poster: string | undefined;
+  readonly poster: string;
 
   /**
    * Whether the audio is muted or not.
@@ -182,13 +184,6 @@ export interface PlayerState {
    * @readonly
    */
   readonly hasPlaybackEnded: boolean;
-
-  /**
-   * Whether the current provider has loaded and is ready to be interacted with.
-   *
-   * @readonly
-   */
-  readonly isProviderReady: boolean;
 
   /**
    * Whether media is ready for playback to begin, analgous with `canPlayThrough`.

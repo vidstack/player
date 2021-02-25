@@ -19,8 +19,6 @@ export class MockMediaProvider extends MediaProvider {
 
   protected controls = playerContext.controls.defaultValue;
 
-  protected poster = playerContext.poster.defaultValue;
-
   /**
    * -------------------------------------------------------------------------------------------
    * Getters + Setters
@@ -33,7 +31,7 @@ export class MockMediaProvider extends MediaProvider {
     return '';
   }
 
-  getVolume(): number {
+  getVolume(): PlayerState['volume'] {
     return this.volume;
   }
 
@@ -41,7 +39,7 @@ export class MockMediaProvider extends MediaProvider {
     this.volume = newVolume;
   }
 
-  getCurrentTime(): number {
+  getCurrentTime(): PlayerState['currentTime'] {
     return this.currentTime;
   }
 
@@ -49,11 +47,11 @@ export class MockMediaProvider extends MediaProvider {
     this.currentTime = newTime;
   }
 
-  isPaused(): boolean {
+  isPaused(): PlayerState['paused'] {
     return this.paused;
   }
 
-  isMuted(): boolean {
+  isMuted(): PlayerState['muted'] {
     return this.muted;
   }
 
@@ -61,7 +59,7 @@ export class MockMediaProvider extends MediaProvider {
     this.muted = isMuted;
   }
 
-  isControlsVisible(): boolean {
+  isControlsVisible(): PlayerState['controls'] {
     return this.controls;
   }
 
@@ -69,19 +67,11 @@ export class MockMediaProvider extends MediaProvider {
     this.controls = isVisible;
   }
 
-  getPoster(): string | undefined {
-    return this.poster;
+  getPoster(): PlayerState['poster'] {
+    return playerContext.poster.defaultValue;
   }
 
-  setPoster(newPoster: PlayerState['poster']): void {
-    this.poster = newPoster;
-  }
-
-  isReady(): boolean {
-    return playerContext.isProviderReady.defaultValue;
-  }
-
-  isPlaybackReady(): boolean {
+  isPlaybackReady(): PlayerState['isPlaybackReady'] {
     return playerContext.isPlaybackReady.defaultValue;
   }
 
@@ -89,31 +79,31 @@ export class MockMediaProvider extends MediaProvider {
     return undefined;
   }
 
-  getViewType(): ViewType {
+  getViewType(): PlayerState['viewType'] {
     return ViewType.Unknown;
   }
 
-  getMediaType(): MediaType {
+  getMediaType(): PlayerState['mediaType'] {
     return MediaType.Unknown;
   }
 
-  getDuration(): number {
+  getDuration(): PlayerState['duration'] {
     return playerContext.duration.defaultValue;
   }
 
-  getBuffered(): number {
+  getBuffered(): PlayerState['buffered'] {
     return playerContext.buffered.defaultValue;
   }
 
-  isBuffering(): boolean {
+  isBuffering(): PlayerState['isBuffering'] {
     return playerContext.isBuffering.defaultValue;
   }
 
-  hasPlaybackStarted(): boolean {
+  hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
     return playerContext.hasPlaybackStarted.defaultValue;
   }
 
-  hasPlaybackEnded(): boolean {
+  hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
     return playerContext.hasPlaybackEnded.defaultValue;
   }
 

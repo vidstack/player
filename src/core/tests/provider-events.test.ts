@@ -22,13 +22,13 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
-  CurrentSrcChange,
+  CurrentSrcChangeEvent,
 } from '../player.events';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
   ProviderConnectEvent,
-  ProviderCurrentSrcChange,
+  ProviderCurrentSrcChangeEvent,
   ProviderDurationChangeEvent,
   ProviderErrorEvent,
   ProviderMediaTypeChangeEvent,
@@ -39,7 +39,6 @@ import {
   ProviderPlaybackStartEvent,
   ProviderPlayEvent,
   ProviderPlayingEvent,
-  ProviderReadyEvent,
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
@@ -102,9 +101,9 @@ describe('provider events', () => {
   it('should handle current src change event', async () => {
     const currentSrc = 'penguins on an apple tree';
     dispatchProviderUpdate(
-      new ProviderCurrentSrcChange({ detail: currentSrc }),
+      new ProviderCurrentSrcChangeEvent({ detail: currentSrc }),
     );
-    const { detail } = await oneEvent(player, CurrentSrcChange.TYPE);
+    const { detail } = await oneEvent(player, CurrentSrcChangeEvent.TYPE);
     expect(detail).to.equal(currentSrc);
     expect(consumer.currentSrc).to.equal(currentSrc);
   });
@@ -166,6 +165,7 @@ describe('provider events', () => {
   it('should handle view type (audio) change event', async () => {
     const viewType = ViewType.Audio;
     stub(provider, 'getViewType').returns(viewType);
+    stub(provider, 'isPlaybackReady').returns(true);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
     );
@@ -181,6 +181,7 @@ describe('provider events', () => {
   it('should handle view type (video) change event', async () => {
     const viewType = ViewType.Video;
     stub(provider, 'getViewType').returns(viewType);
+    stub(provider, 'isPlaybackReady').returns(true);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
     );
@@ -245,12 +246,6 @@ describe('provider events', () => {
     expect(consumer.mediaType).to.equal(mediaType);
     expect(consumer.isAudio).to.equal(false);
     expect(consumer.isVideo).to.equal(false);
-  });
-
-  it('should handle provider ready event', async () => {
-    dispatchProviderUpdate(new ProviderReadyEvent());
-    await oneEvent(player, ReadyEvent.TYPE);
-    expect(consumer.isProviderReady).to.equal(true);
   });
 
   it('should handle playback ready event', async () => {

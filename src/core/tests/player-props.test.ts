@@ -13,7 +13,7 @@ import {
   WritablePlayerState,
 } from '../player.types';
 import { buildPlayerWithMockProvider } from './helpers';
-import sinon, { spy } from 'sinon';
+import sinon, { spy, stub } from 'sinon';
 
 describe('props', async () => {
   afterEach(() => {
@@ -26,7 +26,7 @@ describe('props', async () => {
     ((Object.keys(playerContext) as unknown) as (keyof PlayerState)[]).forEach(
       prop => {
         if (prop !== 'uuid') {
-          expect(player[prop]).to.equal(playerContext[prop].defaultValue);
+          expect(player[prop], prop).to.equal(playerContext[prop].defaultValue);
         }
       },
     );
@@ -36,6 +36,8 @@ describe('props', async () => {
     // Values here are irrelevant - used an object to force defining all properties.
     const readonlyProperties: ReadonlyPlayerState = {
       uuid: '',
+      currentSrc: '',
+      poster: '',
       duration: 0,
       buffered: 0,
       device: Device.Mobile,
@@ -45,7 +47,6 @@ describe('props', async () => {
       isPlaying: false,
       hasPlaybackStarted: false,
       hasPlaybackEnded: false,
-      isProviderReady: false,
       isPlaybackReady: false,
       viewType: ViewType.Unknown,
       isAudioView: false,
@@ -74,7 +75,6 @@ describe('props', async () => {
     const writableProperties: WritablePlayerState = {
       volume: 0,
       currentTime: 0,
-      poster: '',
       muted: false,
       aspectRatio: '',
       paused: false,
@@ -108,48 +108,45 @@ describe('props', async () => {
   it('should update provider when volume is set', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
     const volume = 0.75;
-    const mspy = spy(provider, 'setVolume');
+    const setVolumeSpy = spy(provider, 'setVolume');
+    stub(provider, 'isPlaybackReady').returns(true);
     player.volume = volume;
-    expect(mspy).to.have.been.calledWith(volume);
+    expect(setVolumeSpy).to.have.been.calledWith(volume);
   });
 
   it('should update provider when currentTime is set', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
     const currentTime = 420;
-    const mspy = spy(provider, 'setCurrentTime');
+    const setCurrentTimeSpy = spy(provider, 'setCurrentTime');
+    stub(provider, 'isPlaybackReady').returns(true);
     player.currentTime = currentTime;
-    expect(mspy).to.have.been.calledWith(currentTime);
+    expect(setCurrentTimeSpy).to.have.been.calledWith(currentTime);
   });
 
   it('should update provider when paused is set', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
     const paused = false;
-    const mspy = spy(provider, 'pause');
+    const playSpy = spy(provider, 'play');
+    stub(provider, 'isPlaybackReady').returns(true);
     player.paused = paused;
-    expect(mspy).to.have.been.calledOnce;
+    expect(playSpy).to.have.been.calledOnce;
   });
 
   it('should update provider when controls is set', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
     const controls = false;
-    const mspy = spy(provider, 'setControlsVisibility');
+    const setControlsVisibilitySpy = spy(provider, 'setControlsVisibility');
+    stub(provider, 'isPlaybackReady').returns(true);
     player.controls = controls;
-    expect(mspy).to.have.been.calledWith(controls);
-  });
-
-  it('should update provider when poster is set', async () => {
-    const [player, provider] = await buildPlayerWithMockProvider();
-    const poster = 'koala';
-    const mspy = spy(provider, 'setPoster');
-    player.poster = poster;
-    expect(mspy).to.have.been.calledWith(poster);
+    expect(setControlsVisibilitySpy).to.have.been.calledWith(controls);
   });
 
   it('should update provider when muted is set', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
     const muted = true;
-    const mspy = spy(provider, 'setMuted');
+    const setMutedSpy = spy(provider, 'setMuted');
+    stub(provider, 'isPlaybackReady').returns(true);
     player.muted = muted;
-    expect(mspy).to.have.been.calledWith(muted);
+    expect(setMutedSpy).to.have.been.calledWith(muted);
   });
 });

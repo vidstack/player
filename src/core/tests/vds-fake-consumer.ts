@@ -1,5 +1,5 @@
 import { LIB_PREFIX } from '../../shared/constants';
-import { safelyDefineCustomElement } from '../../utils/dom';
+import { safelyDefineCustomElement } from '../../utils';
 import { FakeConsumer } from './FakeConsumer';
 
 export const FAKE_CONSUMER_TAG_NAME = `${LIB_PREFIX}-fake-consumer`;
