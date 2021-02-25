@@ -1,6 +1,11 @@
 import { css } from 'lit-element';
 
 export const playerStyles = css`
+  :host {
+    width: 100%;
+    display: block;
+  }
+
   .player {
     box-sizing: border-box;
     direction: ltr;

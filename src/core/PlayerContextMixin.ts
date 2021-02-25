@@ -4,6 +4,7 @@ import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
   ProviderCurrentSrcChangeEvent,
+  ProviderDisconnectEvent,
   ProviderDurationChangeEvent,
   ProviderMediaTypeChangeEvent,
   ProviderMutedChangeEvent,
@@ -50,7 +51,7 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
     /**
      * Context properties that should be reset when media is changed.
      */
-    protected resettableCtxProps = new Set<keyof PlayerContext>([
+    protected softResettableCtxProps = new Set<keyof PlayerContext>([
       'paused',
       'currentTime',
       'duration',
@@ -66,9 +67,9 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
     /**
      * When the `currentSrc` is changed this method is called to update any context properties
      * that need to be reset. Important to note that not all properties are reset, only the
-     * properties in the `resettableCtxProps` set.
+     * properties in the `softResettableCtxProps` set.
      */
-    protected resetPlayerContext() {
+    protected softResetPlayerContext() {
       const props = (Object.keys(
         playerContext,
       ) as unknown) as (keyof PlayerContext)[];
@@ -76,9 +77,24 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
       const ctx = this.context;
 
       props.forEach(prop => {
-        if (this.resettableCtxProps.has(prop)) {
+        if (this.softResettableCtxProps.has(prop)) {
           ctx[`${prop}Ctx`] = playerContext[prop].defaultValue;
         }
+      });
+    }
+
+    /**
+     * Called when the provider disconnects, resets the player context completely.
+     */
+    protected hardResetPlayerContext() {
+      const props = (Object.keys(
+        playerContext,
+      ) as unknown) as (keyof PlayerContext)[];
+
+      const ctx = this.context;
+
+      props.forEach(prop => {
+        ctx[`${prop}Ctx`] = playerContext[prop].defaultValue;
       });
     }
 
@@ -90,6 +106,11 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
      * are emitted.
      * -------------------------------------------------------------------------------------------
      */
+
+    @listen(ProviderDisconnectEvent.TYPE)
+    protected handleDisconnectContextUpdate() {
+      this.hardResetPlayerContext();
+    }
 
     @listen(ProviderPlayEvent.TYPE)
     protected handlePlayContextUpdate() {
@@ -116,7 +137,7 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
     @listen(ProviderCurrentSrcChangeEvent.TYPE)
     protected handleCurrentSrcContextUpdate(e: ProviderCurrentSrcChangeEvent) {
       this.currentSrcCtx = e.detail;
-      this.resetPlayerContext();
+      this.softResetPlayerContext();
     }
 
     @listen(ProviderPosterChangeEvent.TYPE)

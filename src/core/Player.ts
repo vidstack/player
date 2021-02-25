@@ -165,7 +165,7 @@ export class Player
   protected buildStyleMap(): Record<string, string> {
     return {
       paddingBottom: this.isVideoView
-        ? `padding-bottom: ${this.calcAspectRatio()}%;`
+        ? `min(98vh, ${this.calcAspectRatio()}%)`
         : '',
     };
   }
@@ -522,6 +522,7 @@ export class Player
   protected handleProviderViewTypeChange(): void {
     this.setAttribute(this.getAudioViewAttrName(), String(this.isAudioView));
     this.setAttribute(this.getVideoViewAttrName(), String(this.isVideoView));
+    this.requestUpdate();
   }
 
   /**
@@ -563,7 +564,7 @@ export class Player
 
   // ---
 
-  @property({ type: Number })
+  @property({ type: Number, attribute: 'current-time' })
   get currentTime(): PlayerState['currentTime'] {
     if (!this.isPlaybackReady) return playerContext.currentTime.defaultValue;
     return this.currentProvider!.getCurrentTime();
@@ -706,8 +707,9 @@ export class Player
   }
 
   get viewType(): PlayerState['viewType'] {
-    if (!this.isPlaybackReady) return playerContext.viewType.defaultValue;
-    return this.currentProvider!.getViewType();
+    return (
+      this.currentProvider?.getViewType() ?? playerContext.viewType.defaultValue
+    );
   }
 
   get isAudioView(): PlayerState['isAudioView'] {
@@ -719,8 +721,10 @@ export class Player
   }
 
   get mediaType(): PlayerState['mediaType'] {
-    if (!this.isPlaybackReady) return playerContext.mediaType.defaultValue;
-    return this.currentProvider!.getMediaType();
+    return (
+      this.currentProvider?.getMediaType() ??
+      playerContext.mediaType.defaultValue
+    );
   }
 
   get isAudio(): PlayerState['isAudio'] {

@@ -10,9 +10,9 @@ import {
 import { isBoolean, isNumber, isString, isUndefined } from '../../utils';
 import { Player } from '../Player';
 import { playerContext } from '../player.context';
-import { PlayerContext } from '../player.types';
+import { PlayerContext, ViewType } from '../player.types';
 import { FakeConsumer } from './FakeConsumer';
-import { ProviderCurrentSrcChangeEvent } from '..';
+import { ProviderCurrentSrcChangeEvent, ProviderDisconnectEvent } from '..';
 import { CurrentSrcChangeEvent } from '../player.events';
 import { emitEvent } from './helpers';
 
@@ -92,7 +92,7 @@ describe('context', () => {
     await Promise.all(promises);
   });
 
-  it('should reset context when media is changed', async () => {
+  it('should soft reset context when media is changed', async () => {
     const player = await fixture<Player>(
       html`
         <vds-player>
@@ -109,11 +109,32 @@ describe('context', () => {
     await elementUpdated(consumer);
 
     emitEvent(consumer, new ProviderCurrentSrcChangeEvent({ detail: '' }));
-
     await oneEvent(player, CurrentSrcChangeEvent.TYPE);
-
     await elementUpdated(consumer);
+
     expect(consumer.paused, 'paused').to.equal(true);
     expect(consumer.duration, 'duration').to.equal(-1);
+  });
+
+  it('should hard reset context when provider disconnects', async () => {
+    const player = await fixture<Player>(
+      html`
+        <vds-player>
+          <vds-fake-consumer></vds-fake-consumer>
+        </vds-player>
+      `,
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const consumer = player.querySelector('vds-fake-consumer')!;
+
+    player.context.viewTypeCtx = ViewType.Video;
+    await elementUpdated(consumer);
+
+    emitEvent(consumer, new ProviderDisconnectEvent());
+    await oneEvent(player, ProviderDisconnectEvent.TYPE);
+    await elementUpdated(consumer);
+
+    expect(consumer.viewType, 'viewType').to.equal(ViewType.Unknown);
   });
 });

@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Disposal, listenTo } from '@wcom/events';
-import { html, property, query, TemplateResult } from 'lit-element';
+import {
+  html,
+  property,
+  PropertyValues,
+  query,
+  TemplateResult,
+} from 'lit-element';
 import {
   MediaProvider,
   MediaType,
@@ -21,7 +27,7 @@ import {
   ProviderVolumeChangeEvent,
   ViewType,
 } from '../../core';
-import { isNumber, isUndefined } from '../../utils';
+import { isNil, isNumber } from '../../utils';
 import { MediaCrossOriginOption, MediaPreloadOption } from './file.types';
 
 /**
@@ -32,20 +38,26 @@ import { MediaCrossOriginOption, MediaPreloadOption } from './file.types';
  * @slot - Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
 export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
-  @query('.mediaEl', true)
   protected mediaEl!: HTMLMediaElement;
 
   protected disposal = new Disposal();
-
-  protected viewType = ViewType.Unknown;
-
-  protected mediaType = MediaType.Unknown;
 
   protected _isBuffering = false;
 
   protected _hasPlaybackStarted = false;
 
   protected _hasPlaybackEnded = false;
+
+  connectedCallback(): void {
+    super.connectedCallback();
+  }
+
+  firstUpdated(changedProps: PropertyValues): void {
+    super.firstUpdated(changedProps);
+    this.listenToMediaEl();
+    this.mediaEl.src = this._src;
+    this.mediaEl.load();
+  }
 
   disconnectedCallback(): void {
     this.cancelTimeUpdates();
@@ -73,12 +85,30 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
    * -------------------------------------------------------------------------------------------
    */
 
+  protected _src = '';
+
+  /**
+   * The URL of a media resource to use.
+   */
+  @property()
+  get src(): string {
+    return this.src;
+  }
+
+  set src(newSrc: string) {
+    this._src = newSrc;
+
+    if (!isNil(this.mediaEl)) {
+      this.mediaEl.src = newSrc;
+    }
+  }
+
   /**
    * Whether to use CORS to fetch the related image. See
    * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin) for more
    * information.
    */
-  @property()
+  @property({ attribute: 'cross-origin' })
   crossOrigin?: MediaCrossOriginOption;
 
   /**
@@ -88,7 +118,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
    * information.
    */
   @property()
-  preload?: MediaPreloadOption;
+  preload?: MediaPreloadOption = 'metadata';
 
   /**
    * -------------------------------------------------------------------------------------------
@@ -123,13 +153,14 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
    * -------------------------------------------------------------------------------------------
    */
 
-  protected handleSlotChange(): void {
+  protected async handleSlotChange(): Promise<void> {
     this.cancelTimeUpdates();
     this._isBuffering = false;
     this._hasPlaybackStarted = false;
     this._hasPlaybackEnded = false;
-    this.mediaEl.load();
     this.dispatchEvent(new ProviderCurrentSrcChangeEvent({ detail: '' }));
+    await this.updateComplete;
+    this.mediaEl?.load();
   }
 
   protected listenToMediaEl(): void {
@@ -357,7 +388,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   }
 
   isPlaybackReady(): PlayerState['isPlaybackReady'] {
-    return !isUndefined(this.mediaEl) && this.mediaEl.readyState === 1;
+    return !isNil(this.mediaEl) && this.mediaEl.readyState === 1;
   }
 
   isPaused(): PlayerState['paused'] {
@@ -377,11 +408,11 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   }
 
   getViewType(): PlayerState['viewType'] {
-    return this.viewType;
+    return ViewType.Unknown;
   }
 
   getMediaType(): PlayerState['mediaType'] {
-    return this.mediaType;
+    return MediaType.Unknown;
   }
 
   getDuration(): PlayerState['duration'] {

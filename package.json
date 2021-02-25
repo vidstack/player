@@ -8,7 +8,6 @@
   },
   "main": "bundle/index.js",
   "module": "bundle/index.js",
-  "type": "module",
   "files": [
     "bundle/",
     "core/",
@@ -50,7 +49,7 @@
     "test": "wtr \"src/**/*.test.ts\"",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "wds -c .storybook/server.mjs",
     "storybook:build": "build-storybook"
   },
   "dependencies": {
@@ -71,7 +70,9 @@
     "@types/sinon": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
+    "@web/dev-server": "^0.1.8",
     "@web/dev-server-esbuild": "^0.2.6",
+    "@web/dev-server-storybook": "^0.3.5",
     "@web/test-runner": "^0.9.7",
     "@web/test-runner-commands": "^0.2.1",
     "babel-loader": "^8.2.2",

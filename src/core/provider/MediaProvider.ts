@@ -1,5 +1,10 @@
 import { LitElement } from 'lit-element';
-import { PlayerState, Source } from '../../core';
+import {
+  PlayerState,
+  ProviderConnectEvent,
+  ProviderDisconnectEvent,
+  Source,
+} from '../../core';
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by
@@ -9,6 +14,16 @@ import { PlayerState, Source } from '../../core';
 export abstract class MediaProvider<
   InternalPlayerType = unknown
 > extends LitElement {
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.dispatchEvent(new ProviderConnectEvent({ detail: this }));
+  }
+
+  disconnectedCallback(): void {
+    this.dispatchEvent(new ProviderDisconnectEvent({ detail: this }));
+    super.disconnectedCallback();
+  }
+
   /**
    * -------------------------------------------------------------------------------------------
    * Getters + Setters
