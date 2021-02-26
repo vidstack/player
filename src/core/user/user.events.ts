@@ -1,9 +1,10 @@
-import { LIB_PREFIX } from '../../shared/constants';
 import {
+  LIB_PREFIX,
   buildVdsEvent,
   VdsCustomEvent,
   VdsCustomEventConstructor,
-} from '../../shared/events';
+} from '../../shared';
+
 import { PlayerState } from '../player.types';
 
 declare global {

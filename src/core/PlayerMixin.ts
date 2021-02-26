@@ -1,0 +1,38 @@
+import { UpdatingElement } from 'lit-element';
+import { Constructor } from '../shared';
+import { DeviceObserverCocktail, DeviceObserverMixin } from './device';
+import {
+  PlayerContextCocktail,
+  PlayerContextMixin,
+  ViewTypeCocktail,
+  ViewTypeMixin,
+  MediaTypeMixin,
+  MediaTypeCocktail,
+  AspectRatioCocktail,
+  AspectRatioMixin,
+} from './mixins';
+import { UuidMixin } from './uuid';
+
+export type PlayerMixinBase = Constructor<UpdatingElement>;
+
+export type PlayerCocktail<T extends PlayerMixinBase> = T &
+  PlayerContextCocktail<T> &
+  DeviceObserverCocktail<T> &
+  ViewTypeCocktail<T> &
+  MediaTypeCocktail<T> &
+  AspectRatioCocktail<ViewTypeCocktail<T>>;
+
+/**
+ * Composite mixin that mixes in all player required mixins.
+ *
+ * @param Base - the constructor to mix into.
+ */
+export function PlayerMixin<T extends PlayerMixinBase>(
+  Base: T,
+): PlayerCocktail<T> {
+  return class PlayerMixin extends PlayerContextMixin(
+    DeviceObserverMixin(
+      AspectRatioMixin(ViewTypeMixin(MediaTypeMixin(UuidMixin(Base)))),
+    ),
+  ) {};
+}

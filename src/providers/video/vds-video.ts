@@ -1,4 +1,4 @@
-import { LIB_PREFIX } from '../../shared/constants';
+import { LIB_PREFIX } from '../../shared';
 import { safelyDefineCustomElement } from '../../utils';
 import { VideoProvider } from './VideoProvider';
 

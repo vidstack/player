@@ -1,7 +1,6 @@
 import '../vds-player';
 import '../provider/vds-mock-media-provider';
 import { expect, fixture, html } from '@open-wc/testing';
-import { Device } from '../../utils';
 import { Player } from '../Player';
 import { playerContext } from '../player.context';
 import {
@@ -25,9 +24,7 @@ describe('props', async () => {
   it('should have defined all player state props', () => {
     ((Object.keys(playerContext) as unknown) as (keyof PlayerState)[]).forEach(
       prop => {
-        if (prop !== 'uuid') {
-          expect(player[prop], prop).to.equal(playerContext[prop].defaultValue);
-        }
+        expect(player[prop], prop).to.equal(playerContext[prop].defaultValue);
       },
     );
   });
@@ -35,14 +32,10 @@ describe('props', async () => {
   it('should have defined readonly properties as readonly', async () => {
     // Values here are irrelevant - used an object to force defining all properties.
     const readonlyProperties: ReadonlyPlayerState = {
-      uuid: '',
       currentSrc: '',
-      poster: '',
+      currentPoster: '',
       duration: 0,
       buffered: 0,
-      device: Device.Mobile,
-      isMobileDevice: false,
-      isDesktopDevice: false,
       isBuffering: false,
       isPlaying: false,
       hasPlaybackStarted: false,

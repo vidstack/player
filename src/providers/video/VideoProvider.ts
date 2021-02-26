@@ -53,17 +53,15 @@ export class VideoProvider extends MediaFileProvider {
     super.firstUpdated(changedProps);
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Render
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------------------------
 
   protected render(): TemplateResult {
     return html`
       <video
         id="media-element"
-        poster="${ifDefined(this.poster)}"
+        poster="${ifDefined(this.currentPoster)}"
         preload="${ifDefined(this.preload)}"
         crossorigin="${ifDefined(this.crossOrigin)}"
         controlslist="${ifDefined(this.controlsList)}"
@@ -76,11 +74,9 @@ export class VideoProvider extends MediaFileProvider {
     `;
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Events
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Events
+  // -------------------------------------------------------------------------------------------
 
   handleLoadedMetadata(originalEvent: Event): void {
     this.dispatchEvent(
@@ -93,11 +89,9 @@ export class VideoProvider extends MediaFileProvider {
     super.handleLoadedMetadata(originalEvent);
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Properties
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
 
   /**
    * A URL for an image to be shown while the video is downloading. If this attribute isn't
@@ -105,7 +99,7 @@ export class VideoProvider extends MediaFileProvider {
    * shown as the poster frame.
    */
   @property()
-  poster?: string;
+  currentPoster?: string;
 
   /**
    * Determines what controls to show on the media element whenever the browser shows its own set
@@ -138,11 +132,9 @@ export class VideoProvider extends MediaFileProvider {
   @property({ type: Boolean, attribute: 'disable-remote-playback' })
   disableRemotePlayback?: boolean;
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Methods
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Methods
+  // -------------------------------------------------------------------------------------------
 
   getViewType(): PlayerState['viewType'] {
     return ViewType.Video;
@@ -162,7 +154,7 @@ export class VideoProvider extends MediaFileProvider {
     return MediaType.Unknown;
   }
 
-  getPoster(): PlayerState['poster'] {
-    return this.poster ?? '';
+  getPoster(): PlayerState['currentPoster'] {
+    return this.currentPoster ?? '';
   }
 }

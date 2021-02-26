@@ -12,7 +12,7 @@ import { Player } from '../Player';
 import { playerContext } from '../player.context';
 import { PlayerContext, ViewType } from '../player.types';
 import { FakeConsumer } from './FakeConsumer';
-import { ProviderCurrentSrcChangeEvent, ProviderDisconnectEvent } from '..';
+import { ProviderSrcChangeEvent, ProviderDisconnectEvent } from '..';
 import { CurrentSrcChangeEvent } from '../player.events';
 import { emitEvent } from './helpers';
 
@@ -108,7 +108,7 @@ describe('context', () => {
     player.context.durationCtx = 200;
     await elementUpdated(consumer);
 
-    emitEvent(consumer, new ProviderCurrentSrcChangeEvent({ detail: '' }));
+    emitEvent(consumer, new ProviderSrcChangeEvent({ detail: '' }));
     await oneEvent(player, CurrentSrcChangeEvent.TYPE);
     await elementUpdated(consumer);
 

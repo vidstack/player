@@ -1,10 +1,9 @@
-import { LIB_PREFIX } from '../shared/constants';
 import {
+  LIB_PREFIX,
   buildVdsEvent,
   VdsCustomEvent,
   VdsCustomEventConstructor,
-} from '../shared/events';
-import { Device } from '../utils';
+} from '../shared';
 import { PlayerState } from './player.types';
 
 declare global {
@@ -17,7 +16,7 @@ export type RawPlayerEventType =
   | 'pause'
   | 'playing'
   | 'poster-change'
-  | 'current-src-change'
+  | 'src-change'
   | 'muted-change'
   | 'volume-change'
   | 'time-change'
@@ -26,7 +25,6 @@ export type RawPlayerEventType =
   | 'buffering-change'
   | 'view-type-change'
   | 'media-type-change'
-  | 'device-change'
   | 'boot-start'
   | 'boot-end'
   | 'playback-ready'
@@ -38,8 +36,8 @@ export type RawPlayerEventDetailType = {
   play: void;
   pause: void;
   playing: void;
-  'poster-change': PlayerState['poster'];
-  'current-src-change': PlayerState['currentSrc'];
+  'poster-change': PlayerState['currentPoster'];
+  'src-change': PlayerState['currentSrc'];
   'muted-change': PlayerState['muted'];
   'volume-change': PlayerState['volume'];
   'time-change': PlayerState['currentTime'];
@@ -48,7 +46,6 @@ export type RawPlayerEventDetailType = {
   'buffering-change': PlayerState['isBuffering'];
   'view-type-change': PlayerState['viewType'];
   'media-type-change': PlayerState['mediaType'];
-  'device-change': Device;
   'boot-start': void;
   'boot-end': void;
   'playback-ready': void;
@@ -93,9 +90,7 @@ export class PauseEvent extends buildsVdsPlayerEvent('pause') {}
 
 export class PlayingEvent extends buildsVdsPlayerEvent('playing') {}
 
-export class CurrentSrcChangeEvent extends buildsVdsPlayerEvent(
-  'current-src-change',
-) {}
+export class CurrentSrcChangeEvent extends buildsVdsPlayerEvent('src-change') {}
 
 export class PosterChangeEvent extends buildsVdsPlayerEvent('poster-change') {}
 
@@ -134,7 +129,5 @@ export class PlaybackStartEvent extends buildsVdsPlayerEvent(
 ) {}
 
 export class PlaybackEndEvent extends buildsVdsPlayerEvent('playback-end') {}
-
-export class DeviceChangeEvent extends buildsVdsPlayerEvent('device-change') {}
 
 export class ErrorEvent extends buildsVdsPlayerEvent('error') {}

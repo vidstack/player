@@ -19,13 +19,9 @@ export class MockMediaProvider extends MediaProvider {
 
   protected controls = playerContext.controls.defaultValue;
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Getters + Setters
-   *
-   * This section lists methods for getting/setting state on the provider.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Getters + Setters
+  // -------------------------------------------------------------------------------------------
 
   getCurrentSrc(): PlayerState['currentSrc'] {
     return '';
@@ -67,8 +63,8 @@ export class MockMediaProvider extends MediaProvider {
     this.controls = isVisible;
   }
 
-  getPoster(): PlayerState['poster'] {
-    return playerContext.poster.defaultValue;
+  getPoster(): PlayerState['currentPoster'] {
+    return playerContext.currentPoster.defaultValue;
   }
 
   isPlaybackReady(): PlayerState['isPlaybackReady'] {
@@ -107,25 +103,17 @@ export class MockMediaProvider extends MediaProvider {
     return playerContext.hasPlaybackEnded.defaultValue;
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Support
-   *
-   * This section list methods for determining feature support.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Support Checks
+  // -------------------------------------------------------------------------------------------
 
   canPlayType(): boolean {
     return false;
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Function
-   *
-   * This section lists methods for performing some function on the provider.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Methods
+  // -------------------------------------------------------------------------------------------
 
   async play(): Promise<void> {
     // no-op mock it.
@@ -135,13 +123,9 @@ export class MockMediaProvider extends MediaProvider {
     // no-op mock it.
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Render
-   *
-   * This section contains rendering logic.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------------------------
 
   render(): TemplateResult {
     return html`<div>MockMediaProvider</div>`;

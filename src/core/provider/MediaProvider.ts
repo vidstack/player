@@ -3,17 +3,18 @@ import {
   PlayerState,
   ProviderConnectEvent,
   ProviderDisconnectEvent,
-  Source,
+  ProviderMixin,
 } from '../../core';
+import { PlayerMethods } from '../player.types';
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by
  * all concrete media providers. Extending this class enables provider-agnostic communication
  * between the Player and any Provider 💬
  */
-export abstract class MediaProvider<
-  InternalPlayerType = unknown
-> extends LitElement {
+export abstract class MediaProvider<InternalPlayerType = unknown>
+  extends ProviderMixin(LitElement)
+  implements PlayerState, PlayerMethods {
   connectedCallback(): void {
     super.connectedCallback();
     this.dispatchEvent(new ProviderConnectEvent({ detail: this }));
@@ -24,53 +25,42 @@ export abstract class MediaProvider<
     super.disconnectedCallback();
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Getters + Setters
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Writable Properties
+  // -------------------------------------------------------------------------------------------
 
-  abstract getVolume(): PlayerState['volume'];
-  abstract setVolume(newVolume: PlayerState['volume']): void;
+  abstract paused: PlayerState['paused'];
+  abstract volume: PlayerState['volume'];
+  abstract currentTime: PlayerState['currentTime'];
+  abstract muted: PlayerState['muted'];
+  abstract controls: PlayerState['controls'];
 
-  abstract getCurrentTime(): PlayerState['currentTime'];
-  abstract setCurrentTime(newTime: PlayerState['currentTime']): void;
+  // -------------------------------------------------------------------------------------------
+  // Readonly Properties
+  // -------------------------------------------------------------------------------------------
 
-  abstract isMuted(): PlayerState['muted'];
-  abstract setMuted(isMuted: PlayerState['muted']): void;
+  abstract readonly isPlaybackReady: PlayerState['isPlaybackReady'];
+  abstract readonly isPlaying: PlayerState['isPlaying'];
+  abstract readonly currentSrc: PlayerState['currentSrc'];
+  abstract readonly currentPoster: PlayerState['currentPoster'];
+  abstract readonly internalPlayer: InternalPlayerType;
+  abstract readonly viewType: PlayerState['viewType'];
+  abstract readonly mediaType: PlayerState['mediaType'];
+  abstract readonly duration: PlayerState['duration'];
+  abstract readonly buffered: PlayerState['buffered'];
+  abstract readonly isBuffering: PlayerState['isBuffering'];
+  abstract readonly hasPlaybackStarted: PlayerState['hasPlaybackStarted'];
+  abstract readonly hasPlaybackEnded: PlayerState['hasPlaybackEnded'];
 
-  abstract isControlsVisible(): PlayerState['controls'];
-  abstract setControlsVisibility(isVisible: PlayerState['controls']): void;
+  // -------------------------------------------------------------------------------------------
+  // Support Checks
+  // -------------------------------------------------------------------------------------------
 
-  // Readonly.
-  abstract isPlaybackReady(): PlayerState['isPlaybackReady'];
-  abstract isPaused(): PlayerState['paused'];
-  abstract getCurrentSrc(): PlayerState['currentSrc'];
-  abstract getPoster(): PlayerState['poster'];
-  abstract getInternalPlayer(): InternalPlayerType;
-  abstract getViewType(): PlayerState['viewType'];
-  abstract getMediaType(): PlayerState['mediaType'];
-  abstract getDuration(): PlayerState['duration'];
-  abstract getBuffered(): PlayerState['buffered'];
-  abstract isBuffering(): PlayerState['isBuffering'];
-  abstract hasPlaybackStarted(): PlayerState['hasPlaybackStarted'];
-  abstract hasPlaybackEnded(): PlayerState['hasPlaybackEnded'];
+  abstract canPlayType(type: string): boolean;
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Support
-   *
-   * This section list abstract methods for determining feature support.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  abstract canPlayType(type: Source): boolean;
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Methods
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Methods
+  // -------------------------------------------------------------------------------------------
 
   abstract play(): Promise<void>;
   abstract pause(): Promise<void>;

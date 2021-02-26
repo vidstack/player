@@ -6,7 +6,6 @@ import { Player } from '../Player';
 import { MediaType, ViewType } from '../player.types';
 import { FakeConsumer } from './FakeConsumer';
 import {
-  ReadyEvent,
   TimeChangeEvent,
   ViewTypeChangeEvent,
   VolumeChangeEvent,
@@ -28,7 +27,7 @@ import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
   ProviderConnectEvent,
-  ProviderCurrentSrcChangeEvent,
+  ProviderSrcChangeEvent,
   ProviderDurationChangeEvent,
   ProviderErrorEvent,
   ProviderMediaTypeChangeEvent,
@@ -100,9 +99,7 @@ describe('provider events', () => {
 
   it('should handle current src change event', async () => {
     const currentSrc = 'penguins on an apple tree';
-    dispatchProviderUpdate(
-      new ProviderCurrentSrcChangeEvent({ detail: currentSrc }),
-    );
+    dispatchProviderUpdate(new ProviderSrcChangeEvent({ detail: currentSrc }));
     const { detail } = await oneEvent(player, CurrentSrcChangeEvent.TYPE);
     expect(detail).to.equal(currentSrc);
     expect(consumer.currentSrc).to.equal(currentSrc);

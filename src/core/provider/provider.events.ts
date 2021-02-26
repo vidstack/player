@@ -1,10 +1,10 @@
-import { CurrentSrcChangeEvent } from '..';
-import { LIB_PREFIX } from '../../shared/constants';
+import { CurrentSrcChangeEvent as SrcChangeEvent } from '..';
 import {
+  LIB_PREFIX,
   buildVdsEvent,
   VdsCustomEvent,
   VdsCustomEventConstructor,
-} from '../../shared/events';
+} from '../../shared';
 import {
   BufferedChangeEvent,
   BufferingChangeEvent,
@@ -40,7 +40,7 @@ export type RawProviderEventType =
   | 'pause'
   | 'playing'
   | 'poster-change'
-  | 'current-src-change'
+  | 'src-change'
   | 'muted-change'
   | 'volume-change'
   | 'time-change'
@@ -60,8 +60,8 @@ export type RawProviderEventDetailType = {
   play: void;
   pause: void;
   playing: void;
-  'poster-change': PlayerState['poster'];
-  'current-src-change': PlayerState['currentSrc'];
+  'poster-change': PlayerState['currentPoster'];
+  'src-change': PlayerState['currentSrc'];
   'muted-change': PlayerState['muted'];
   'volume-change': PlayerState['volume'];
   'time-change': PlayerState['currentTime'];
@@ -120,8 +120,8 @@ export class ProviderPauseEvent extends buildVdsProviderEvent('pause') {}
 
 export class ProviderPlayingEvent extends buildVdsProviderEvent('playing') {}
 
-export class ProviderCurrentSrcChangeEvent extends buildVdsProviderEvent(
-  'current-src-change',
+export class ProviderSrcChangeEvent extends buildVdsProviderEvent(
+  'src-change',
 ) {}
 
 export class ProviderPosterChangeEvent extends buildVdsProviderEvent(
@@ -179,7 +179,7 @@ export const ALL_PROVIDER_EVENT_TYPES: VdsProviderEventType[] = [
   ProviderPauseEvent.TYPE,
   ProviderPlayingEvent.TYPE,
   ProviderPosterChangeEvent.TYPE,
-  ProviderCurrentSrcChangeEvent.TYPE,
+  ProviderSrcChangeEvent.TYPE,
   ProviderMutedChangeEvent.TYPE,
   ProviderVolumeChangeEvent.TYPE,
   ProviderTimeChangeEvent.TYPE,
@@ -205,8 +205,8 @@ export const PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP = {
   [ProviderPlayEvent.TYPE]: PlayEvent,
   [ProviderPauseEvent.TYPE]: PauseEvent,
   [ProviderPlayingEvent.TYPE]: PlayingEvent,
+  [ProviderSrcChangeEvent.TYPE]: SrcChangeEvent,
   [ProviderPosterChangeEvent.TYPE]: PosterChangeEvent,
-  [ProviderCurrentSrcChangeEvent.TYPE]: CurrentSrcChangeEvent,
   [ProviderMutedChangeEvent.TYPE]: MutedChangeEvent,
   [ProviderVolumeChangeEvent.TYPE]: VolumeChangeEvent,
   [ProviderTimeChangeEvent.TYPE]: TimeChangeEvent,

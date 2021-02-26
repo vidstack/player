@@ -7,7 +7,7 @@ import {
   PlayerState,
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
-  ProviderCurrentSrcChangeEvent,
+  ProviderSrcChangeEvent,
   ProviderDurationChangeEvent,
   ProviderErrorEvent,
   ProviderMutedChangeEvent,
@@ -58,11 +58,9 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     super.disconnectedCallback();
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Render
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------------------------
 
   protected renderContent(): TemplateResult {
     return html`
@@ -72,11 +70,9 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     `;
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Properties
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
 
   protected _src = '';
 
@@ -120,15 +116,12 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   @property()
   preload?: MediaPreloadOption = 'metadata';
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Time Updates
-   *
-   * The `timeupdate` event fires surprisingly infrequently during playback, meaning your progress
-   * bar (or whatever else is synced to the currentTime) moves in a choppy fashion. This helps
-   * resolve that :)
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Time Updates
+  // The `timeupdate` event fires surprisingly infrequently during playback, meaning your progress
+  // bar (or whatever else is synced to the currentTime) moves in a choppy fashion. This helps
+  // resolve that :)
+  // -------------------------------------------------------------------------------------------
 
   protected timeRAF?: number;
 
@@ -147,11 +140,9 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     });
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Events
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Events
+  // -------------------------------------------------------------------------------------------
 
   protected async handleSlotChange(): Promise<void> {
     // TODO: remove previous source tags, clone over new ones, call load().
@@ -161,7 +152,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     this._isBuffering = false;
     this._hasPlaybackStarted = false;
     this._hasPlaybackEnded = false;
-    this.dispatchEvent(new ProviderCurrentSrcChangeEvent({ detail: '' }));
+    this.dispatchEvent(new ProviderSrcChangeEvent({ detail: '' }));
   }
 
   protected listenToMediaEl(): void {
@@ -198,7 +189,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     this.requestTimeUpdates();
 
     this.dispatchEvent(
-      new ProviderCurrentSrcChangeEvent({
+      new ProviderSrcChangeEvent({
         detail: this.getCurrentSrc(),
         originalEvent,
       }),
@@ -352,11 +343,9 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     );
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Getters + Setters
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Getters + Setters
+  // -------------------------------------------------------------------------------------------
 
   getVolume(): PlayerState['volume'] {
     return this.mediaEl!.volume;
@@ -440,11 +429,9 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     return this._hasPlaybackEnded;
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Methods
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Methods
+  // -------------------------------------------------------------------------------------------
 
   canPlayType(type: string): boolean {
     return this.mediaEl?.canPlayType(type) === 'probably';

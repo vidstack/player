@@ -6,3 +6,6 @@ export * from './player.events';
 export * from './player.context';
 export * from './player.storybook';
 export * from './Player';
+export * from './PlayerMixin';
+export * from './device';
+export * from './mixins';

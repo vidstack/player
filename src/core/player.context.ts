@@ -1,11 +1,7 @@
 import createContext from '@wcom/context';
-import { Device, IS_CLIENT, IS_MOBILE } from '../utils';
+import { deviceContext } from './device';
 import { MediaType, PlayerContext, ViewType } from './player.types';
-
-const guessDevice =
-  (IS_CLIENT && window.innerWidth <= 480) || IS_MOBILE
-    ? Device.Mobile
-    : Device.Desktop;
+import { uuidContext } from './uuid';
 
 /**
  * The player context object contains a collection of contexts that map 1:1 with player
@@ -25,21 +21,18 @@ const guessDevice =
  * }
  * ```
  */
-export const playerContext: PlayerContext = {
-  uuid: createContext(''),
+export const playerContext: PlayerContext = Object.freeze({
+  uuid: uuidContext,
   currentSrc: createContext(''),
   volume: createContext(1),
   currentTime: createContext(0),
   paused: createContext(true),
   controls: createContext(false),
-  poster: createContext(''),
+  currentPoster: createContext(''),
   muted: createContext(false),
   aspectRatio: createContext('16:9'),
   duration: createContext(-1),
   buffered: createContext(0),
-  device: createContext(guessDevice),
-  isMobileDevice: createContext(guessDevice === Device.Mobile),
-  isDesktopDevice: createContext(guessDevice === Device.Desktop),
   isBuffering: createContext(false),
   isPlaying: createContext(false),
   hasPlaybackStarted: createContext(false),
@@ -51,4 +44,5 @@ export const playerContext: PlayerContext = {
   mediaType: createContext(MediaType.Unknown),
   isAudio: createContext(false),
   isVideo: createContext(false),
-};
+  ...deviceContext,
+});

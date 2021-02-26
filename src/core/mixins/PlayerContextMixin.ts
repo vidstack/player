@@ -3,7 +3,7 @@ import { UpdatingElement } from 'lit-element';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
-  ProviderCurrentSrcChangeEvent,
+  ProviderSrcChangeEvent,
   ProviderDisconnectEvent,
   ProviderDurationChangeEvent,
   ProviderMediaTypeChangeEvent,
@@ -18,15 +18,16 @@ import {
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
-} from './provider/provider.events';
-import { Constructor } from '../shared/types';
-import { playerContext } from './player.context';
+} from '../provider/provider.events';
+import { Constructor } from '../../shared';
+import { playerContext } from '../player.context';
 import {
   MediaType,
   PlayerContext,
   PlayerContextProvider,
   ViewType,
-} from './player.types';
+} from '../player.types';
+import { AspectRatioChangeEvent } from './AspectRatioMixin';
 
 export type PlayerContextMixinBase = Constructor<UpdatingElement>;
 
@@ -35,6 +36,12 @@ export type PlayerContextCocktail<T extends PlayerContextMixinBase> = T &
     readonly context: PlayerContextProvider;
   }>;
 
+/**
+ * Mixes in context properties (providers) and handles updating them when provider events are
+ * emitted.
+ *
+ * @param Base - The constructor to mix into.
+ */
 export function PlayerContextMixin<T extends PlayerContextMixinBase>(
   Base: T,
 ): PlayerContextCocktail<T> {
@@ -98,14 +105,14 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
       });
     }
 
-    /**
-     * -------------------------------------------------------------------------------------------
-     * Context Updates
-     *
-     * This section contains the logic for updating context properties when provider events
-     * are emitted.
-     * -------------------------------------------------------------------------------------------
-     */
+    // -------------------------------------------------------------------------------------------
+    // Context Updates
+    // -------------------------------------------------------------------------------------------
+
+    @listen(AspectRatioChangeEvent.TYPE)
+    protected handleAspectRatioContextUpdate(e: AspectRatioChangeEvent) {
+      this.aspectRatioCtx = e.detail;
+    }
 
     @listen(ProviderDisconnectEvent.TYPE)
     protected handleDisconnectContextUpdate() {
@@ -134,15 +141,15 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
       this.currentTimeCtx = e.detail;
     }
 
-    @listen(ProviderCurrentSrcChangeEvent.TYPE)
-    protected handleCurrentSrcContextUpdate(e: ProviderCurrentSrcChangeEvent) {
+    @listen(ProviderSrcChangeEvent.TYPE)
+    protected handleCurrentSrcContextUpdate(e: ProviderSrcChangeEvent) {
       this.currentSrcCtx = e.detail;
       this.softResetPlayerContext();
     }
 
     @listen(ProviderPosterChangeEvent.TYPE)
     protected handlePosterContextUpdate(e: ProviderPosterChangeEvent) {
-      this.posterCtx = e.detail;
+      this.currentPosterCtx = e.detail;
     }
 
     @listen(ProviderMutedChangeEvent.TYPE)
@@ -201,17 +208,9 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
       this.hasPlaybackEndedCtx = true;
     }
 
-    /**
-     * -------------------------------------------------------------------------------------------
-     * Context Properties
-     *
-     * This section is responsible for defining context properties. They are mostly updated in the
-     * "Context Updates" section above.
-     * -------------------------------------------------------------------------------------------
-     */
-
-    @playerContext.uuid.provide()
-    uuidCtx = playerContext.uuid.defaultValue;
+    // -------------------------------------------------------------------------------------------
+    // Context Properties
+    // -------------------------------------------------------------------------------------------
 
     @playerContext.currentSrc.provide()
     currentSrcCtx = playerContext.currentSrc.defaultValue;
@@ -228,8 +227,8 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
     @playerContext.controls.provide()
     controlsCtx = playerContext.controls.defaultValue;
 
-    @playerContext.poster.provide()
-    posterCtx = playerContext.poster.defaultValue;
+    @playerContext.currentPoster.provide()
+    currentPosterCtx = playerContext.currentPoster.defaultValue;
 
     @playerContext.muted.provide()
     mutedCtx = playerContext.muted.defaultValue;
@@ -242,15 +241,6 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
 
     @playerContext.buffered.provide()
     bufferedCtx = playerContext.buffered.defaultValue;
-
-    @playerContext.device.provide()
-    deviceCtx = playerContext.device.defaultValue;
-
-    @playerContext.isMobileDevice.provide()
-    isMobileDeviceCtx = playerContext.isMobileDevice.defaultValue;
-
-    @playerContext.isDesktopDevice.provide()
-    isDesktopDeviceCtx = playerContext.isDesktopDevice.defaultValue;
 
     @playerContext.isBuffering.provide()
     isBufferingCtx = playerContext.isBuffering.defaultValue;
