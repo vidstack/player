@@ -1,105 +1,74 @@
 /* c8 ignore next 1000 */
-import { html, TemplateResult } from 'lit-element';
+import { html, property, TemplateResult } from 'lit-element';
 import { playerContext } from '../player.context';
-import { ViewType, MediaType, PlayerState } from '../player.types';
+import { PlayerState } from '../player.types';
 import { MediaProvider } from './MediaProvider';
 
 /**
  * A mock media provider that's used for testing. This class alone does nothing special. It can
- * combined with Sinon spies/stubs/mocks to set the provider in the desired state.
+ * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
 export class MockMediaProvider extends MediaProvider {
-  protected volume = playerContext.volume.defaultValue;
-
-  protected currentTime = playerContext.currentTime.defaultValue;
-
-  protected paused = playerContext.paused.defaultValue;
-
-  protected muted = playerContext.muted.defaultValue;
-
-  protected controls = playerContext.controls.defaultValue;
-
   // -------------------------------------------------------------------------------------------
-  // Getters + Setters
+  // Properties
   // -------------------------------------------------------------------------------------------
 
-  getCurrentSrc(): PlayerState['currentSrc'] {
+  @property({ type: Number })
+  volume = playerContext.volume.defaultValue;
+
+  @property({ type: Number })
+  currentTime = playerContext.currentTime.defaultValue;
+
+  @property({ type: Boolean })
+  paused = playerContext.paused.defaultValue;
+
+  @property({ type: Boolean })
+  muted = playerContext.muted.defaultValue;
+
+  @property({ type: Boolean })
+  controls = playerContext.controls.defaultValue;
+
+  // -------------------------------------------------------------------------------------------
+  // Readonly Properties
+  // -------------------------------------------------------------------------------------------
+
+  get currentSrc(): PlayerState['currentSrc'] {
     return '';
   }
 
-  getVolume(): PlayerState['volume'] {
-    return this.volume;
-  }
-
-  setVolume(newVolume: PlayerState['volume']): void {
-    this.volume = newVolume;
-  }
-
-  getCurrentTime(): PlayerState['currentTime'] {
-    return this.currentTime;
-  }
-
-  setCurrentTime(newTime: PlayerState['currentTime']): void {
-    this.currentTime = newTime;
-  }
-
-  isPaused(): PlayerState['paused'] {
-    return this.paused;
-  }
-
-  isMuted(): PlayerState['muted'] {
-    return this.muted;
-  }
-
-  setMuted(isMuted: PlayerState['muted']): void {
-    this.muted = isMuted;
-  }
-
-  isControlsVisible(): PlayerState['controls'] {
-    return this.controls;
-  }
-
-  setControlsVisibility(isVisible: PlayerState['controls']): void {
-    this.controls = isVisible;
-  }
-
-  getPoster(): PlayerState['currentPoster'] {
+  get currentPoster(): PlayerState['currentPoster'] {
     return playerContext.currentPoster.defaultValue;
   }
 
-  isPlaybackReady(): PlayerState['isPlaybackReady'] {
+  get isPlaybackReady(): PlayerState['isPlaybackReady'] {
     return playerContext.isPlaybackReady.defaultValue;
   }
 
-  getInternalPlayer(): unknown {
+  get isPlaying(): PlayerState['isPlaying'] {
+    return playerContext.isPlaying.defaultValue;
+  }
+
+  get internalPlayer(): unknown {
     return undefined;
   }
 
-  getViewType(): PlayerState['viewType'] {
-    return ViewType.Unknown;
-  }
-
-  getMediaType(): PlayerState['mediaType'] {
-    return MediaType.Unknown;
-  }
-
-  getDuration(): PlayerState['duration'] {
+  get duration(): PlayerState['duration'] {
     return playerContext.duration.defaultValue;
   }
 
-  getBuffered(): PlayerState['buffered'] {
+  get buffered(): PlayerState['buffered'] {
     return playerContext.buffered.defaultValue;
   }
 
-  isBuffering(): PlayerState['isBuffering'] {
+  get isBuffering(): PlayerState['isBuffering'] {
     return playerContext.isBuffering.defaultValue;
   }
 
-  hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
+  get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
     return playerContext.hasPlaybackStarted.defaultValue;
   }
 
-  hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
+  get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
     return playerContext.hasPlaybackEnded.defaultValue;
   }
 

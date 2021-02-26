@@ -8,13 +8,14 @@ import {
   ViewTypeMixin,
   AspectRatioMixin,
 } from '../mixins';
-import { UuidMixin } from '../uuid';
+import { UuidCocktail, UuidMixin } from '../uuid';
 
 export type ProviderMixinBase = Constructor<UpdatingElement>;
 
 export type ProviderCocktail<T extends ProviderMixinBase> = T &
   ViewTypeCocktail<T> &
   MediaTypeCocktail<T> &
+  UuidCocktail<T> &
   AspectRatioCocktail<ViewTypeCocktail<T>>;
 
 /**

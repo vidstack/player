@@ -11,7 +11,7 @@ import {
   AspectRatioCocktail,
   AspectRatioMixin,
 } from './mixins';
-import { UuidMixin } from './uuid';
+import { UuidCocktail, UuidMixin } from './uuid';
 
 export type PlayerMixinBase = Constructor<UpdatingElement>;
 
@@ -20,6 +20,7 @@ export type PlayerCocktail<T extends PlayerMixinBase> = T &
   DeviceObserverCocktail<T> &
   ViewTypeCocktail<T> &
   MediaTypeCocktail<T> &
+  UuidCocktail<T> &
   AspectRatioCocktail<ViewTypeCocktail<T>>;
 
 /**

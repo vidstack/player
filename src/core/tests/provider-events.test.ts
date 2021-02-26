@@ -161,7 +161,6 @@ describe('provider events', () => {
 
   it('should handle view type (audio) change event', async () => {
     const viewType = ViewType.Audio;
-    stub(provider, 'getViewType').returns(viewType);
     stub(provider, 'isPlaybackReady').returns(true);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
@@ -177,7 +176,6 @@ describe('provider events', () => {
 
   it('should handle view type (video) change event', async () => {
     const viewType = ViewType.Video;
-    stub(provider, 'getViewType').returns(viewType);
     stub(provider, 'isPlaybackReady').returns(true);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
@@ -193,7 +191,6 @@ describe('provider events', () => {
 
   it('should handle view type (unknown) change event', async () => {
     const viewType = ViewType.Unknown;
-    stub(provider, 'getViewType').returns(viewType);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
     );
@@ -208,7 +205,6 @@ describe('provider events', () => {
 
   it('should handle media type (audio) change event', async () => {
     const mediaType = MediaType.Audio;
-    stub(provider, 'getMediaType').returns(mediaType);
     dispatchProviderUpdate(
       new ProviderMediaTypeChangeEvent({ detail: mediaType }),
     );
@@ -221,7 +217,6 @@ describe('provider events', () => {
 
   it('should handle media type (video) change event', async () => {
     const mediaType = MediaType.Video;
-    stub(provider, 'getMediaType').returns(mediaType);
     dispatchProviderUpdate(
       new ProviderMediaTypeChangeEvent({ detail: mediaType }),
     );
@@ -234,7 +229,6 @@ describe('provider events', () => {
 
   it('should handle media type (unknown) change event', async () => {
     const mediaType = MediaType.Unknown;
-    stub(provider, 'getMediaType').returns(mediaType);
     dispatchProviderUpdate(
       new ProviderMediaTypeChangeEvent({ detail: mediaType }),
     );

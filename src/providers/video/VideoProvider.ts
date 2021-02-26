@@ -43,7 +43,7 @@ export class VideoProvider extends MediaFileProvider {
 
     this.dispatchEvent(
       new ProviderViewTypeChangeEvent({
-        detail: this.getViewType(),
+        detail: ViewType.Video,
       }),
     );
   }
@@ -60,8 +60,7 @@ export class VideoProvider extends MediaFileProvider {
   protected render(): TemplateResult {
     return html`
       <video
-        id="media-element"
-        poster="${ifDefined(this.currentPoster)}"
+        poster="${ifDefined(this.poster)}"
         preload="${ifDefined(this.preload)}"
         crossorigin="${ifDefined(this.crossOrigin)}"
         controlslist="${ifDefined(this.controlsList)}"
@@ -99,7 +98,11 @@ export class VideoProvider extends MediaFileProvider {
    * shown as the poster frame.
    */
   @property()
-  currentPoster?: string;
+  poster?: string;
+
+  get currentPoster(): PlayerState['currentPoster'] {
+    return this.poster ?? '';
+  }
 
   /**
    * Determines what controls to show on the media element whenever the browser shows its own set
@@ -136,25 +139,15 @@ export class VideoProvider extends MediaFileProvider {
   // Methods
   // -------------------------------------------------------------------------------------------
 
-  getViewType(): PlayerState['viewType'] {
-    return ViewType.Video;
-  }
-
   getMediaType(): PlayerState['mediaType'] {
-    const currentSrc = this.getCurrentSrc();
-
-    if (AUDIO_EXTENSIONS.test(currentSrc)) {
+    if (AUDIO_EXTENSIONS.test(this.currentSrc)) {
       return MediaType.Audio;
     }
 
-    if (VIDEO_EXTENSIONS.test(currentSrc)) {
+    if (VIDEO_EXTENSIONS.test(this.currentSrc)) {
       return MediaType.Video;
     }
 
     return MediaType.Unknown;
-  }
-
-  getPoster(): PlayerState['currentPoster'] {
-    return this.currentPoster ?? '';
   }
 }

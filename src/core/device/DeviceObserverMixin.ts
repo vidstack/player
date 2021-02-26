@@ -45,13 +45,13 @@ export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
     protected readonly [DISPOSAL] = new Disposal();
 
     @deviceContext.device.provide()
-    protected _device = deviceContext.device.defaultValue;
+    protected deviceCtx = deviceContext.device.defaultValue;
 
     @deviceContext.isMobileDevice.provide()
-    protected _isMobileDevice = deviceContext.isMobileDevice.defaultValue;
+    protected isMobileDeviceCtx = deviceContext.isMobileDevice.defaultValue;
 
     @deviceContext.isDesktopDevice.provide()
-    protected _isDesktopDevice = deviceContext.isDesktopDevice.defaultValue;
+    protected isDesktopDeviceCtx = deviceContext.isDesktopDevice.defaultValue;
 
     mobileDeviceAttrName = 'mobile';
 
@@ -73,9 +73,9 @@ export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
     }
 
     protected handleDeviceChange(device: Device): void {
-      this._device = device;
-      this._isMobileDevice = this.isMobileDevice;
-      this._isDesktopDevice = this.isDesktopDevice;
+      this.deviceCtx = device;
+      this.isMobileDeviceCtx = this.isMobileDevice;
+      this.isDesktopDeviceCtx = this.isDesktopDevice;
 
       this.setAttribute(this.mobileDeviceAttrName, String(this.isMobileDevice));
 
@@ -88,15 +88,15 @@ export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
     }
 
     get device(): DeviceObserver['device'] {
-      return this._device;
+      return this.deviceCtx;
     }
 
     get isMobileDevice(): DeviceObserver['isMobileDevice'] {
-      return this._device === Device.Mobile;
+      return this.deviceCtx === Device.Mobile;
     }
 
     get isDesktopDevice(): DeviceObserver['isDesktopDevice'] {
-      return this._device === Device.Desktop;
+      return this.deviceCtx === Device.Desktop;
     }
   }
 

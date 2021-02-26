@@ -56,16 +56,25 @@ describe('context', () => {
       return undefined;
     }
 
+    const dontTest = new Set<keyof PlayerContext>([
+      'uuid',
+      'device',
+      'isMobileDevice',
+      'isDesktopDevice',
+    ]);
+
     const promises = ((Object.keys(
       playerContext,
     ) as unknown) as (keyof PlayerContext)[]).map(async prop => {
+      if (dontTest.has(prop)) return;
+
       const ctxProp = `${prop}Ctx`;
       const newValue = genRandomNewValue(prop, player.context[ctxProp]);
 
       expect(
         newValue,
         `
-            Failed to generate random value for context update [${prop}]
+            Failed to generate random value for context update [${prop}] 
 
             It might be because the value is \`undefined\` or a non-primitive value so the 
             type can't be automatically determined. Handle this outlier in the \`genRandomNewValue\` 

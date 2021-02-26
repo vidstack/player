@@ -1,2 +1,2 @@
-export * from './MediaFileProvider';
 export * from './file.types';
+export * from './MediaFileProvider';

@@ -9,7 +9,7 @@ import { spy, stub } from 'sinon';
 describe('provider requests', () => {
   it('should queue request given provider is not ready and flush once ready', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
-    const setVolumeSpy = spy(provider, 'setVolume');
+    const volumeSpy = spy(provider, 'volume', ['set']);
 
     // Queue.
     player.volume = 0.53;
@@ -24,20 +24,20 @@ describe('provider requests', () => {
     // Check.
     const newQueue = player.getRequestQueue();
     expect(newQueue.size, 'new queue size').to.equal(0);
-    expect(setVolumeSpy).to.have.been.calledWith(0.53);
+    expect(volumeSpy.set).to.have.been.calledWith(0.53);
   });
 
   it('should make request immediately if provider is ready', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
-    const setVolumeSpy = spy(provider, 'setVolume');
-    stub(provider, 'isPlaybackReady').returns(true);
+    const volumeSpy = spy(provider, 'volume', ['set']);
+    stub(provider, 'isPlaybackReady').get(() => true);
 
     player.volume = 0.53;
 
     const queue = player.getRequestQueue();
     expect(queue.size, 'queue size').to.equal(0);
 
-    expect(setVolumeSpy).to.have.been.calledWith(0.53);
+    expect(volumeSpy.set).to.have.been.calledWith(0.53);
   });
 
   it('should overwrite request keys and only call once per "type"', async () => {
@@ -64,7 +64,7 @@ describe('provider requests', () => {
   it('should gracefully handle errors when flushing queue', async () => {
     const [player, provider] = await buildPlayerWithMockProvider();
     stub(provider, 'play').throws(new Error('No play.'));
-    stub(provider, 'isPlaybackReady').returns(true);
+    stub(provider, 'isPlaybackReady').get(() => true);
 
     setTimeout(() => {
       player.paused = false;

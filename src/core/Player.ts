@@ -162,7 +162,7 @@ export class Player
   }
 
   /**
-   * The underlying player that is actually responsible for rendering/loading current media.
+   * The underlying player that is actually responsible for rendering/loading media.
    */
   get internalPlayer(): unknown {
     return this.currentProvider?.internalPlayer;
