@@ -17,9 +17,9 @@ export default {
 };
 
 export type VideoArgTypes = PlayerStorybookArgTypes & {
-  src?: string;
-  type?: string;
-  poster?: string;
+  src: string;
+  type: string;
+  poster: string;
 };
 
 const Template: Story<VideoArgTypes> = ({
@@ -29,8 +29,7 @@ const Template: Story<VideoArgTypes> = ({
 }) =>
   renderPlayerStorybookTemplate({
     content: html`
-      <vds-video poster="${poster}" cross-origin="anonymous">
-        <source src="${src}" type="${type}" />
+      <vds-video src="${src}" poster="${poster}" cross-origin="anonymous">
       </vds-video>
     `,
   });

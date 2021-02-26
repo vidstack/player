@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Disposal, listenTo } from '@wcom/events';
-import {
-  html,
-  property,
-  PropertyValues,
-  query,
-  TemplateResult,
-} from 'lit-element';
+import { html, property, PropertyValues, TemplateResult } from 'lit-element';
 import {
   MediaProvider,
   MediaType,
@@ -27,7 +21,7 @@ import {
   ProviderVolumeChangeEvent,
   ViewType,
 } from '../../core';
-import { isNil, isNumber } from '../../utils';
+import { getSlottedChildren, isNil, isNumber } from '../../utils';
 import { MediaCrossOriginOption, MediaPreloadOption } from './file.types';
 
 /**
@@ -38,7 +32,7 @@ import { MediaCrossOriginOption, MediaPreloadOption } from './file.types';
  * @slot - Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
 export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
-  protected mediaEl!: HTMLMediaElement;
+  protected mediaEl?: HTMLMediaElement;
 
   protected disposal = new Disposal();
 
@@ -55,8 +49,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   firstUpdated(changedProps: PropertyValues): void {
     super.firstUpdated(changedProps);
     this.listenToMediaEl();
-    this.mediaEl.src = this._src;
-    this.mediaEl.load();
+    this.updateSrc();
   }
 
   disconnectedCallback(): void {
@@ -92,14 +85,21 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
    */
   @property()
   get src(): string {
-    return this.src;
+    return this._src;
   }
 
   set src(newSrc: string) {
     this._src = newSrc;
+    this.updateSrc();
+  }
 
-    if (!isNil(this.mediaEl)) {
-      this.mediaEl.src = newSrc;
+  protected updateSrc(): void {
+    if (isNil(this.mediaEl)) return;
+
+    if (this._src.length > 0) {
+      this.mediaEl.setAttribute('src', this._src);
+    } else {
+      this.mediaEl.removeAttribute('src');
     }
   }
 
@@ -154,17 +154,20 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
    */
 
   protected async handleSlotChange(): Promise<void> {
+    // TODO: remove previous source tags, clone over new ones, call load().
+    console.log(getSlottedChildren(this));
+
     this.cancelTimeUpdates();
     this._isBuffering = false;
     this._hasPlaybackStarted = false;
     this._hasPlaybackEnded = false;
     this.dispatchEvent(new ProviderCurrentSrcChangeEvent({ detail: '' }));
-    await this.updateComplete;
-    this.mediaEl?.load();
   }
 
   protected listenToMediaEl(): void {
     this.disposal.empty();
+
+    if (isNil(this.mediaEl)) return;
 
     const listeners = [
       listenTo(
@@ -356,47 +359,47 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
    */
 
   getVolume(): PlayerState['volume'] {
-    return this.mediaEl.volume;
+    return this.mediaEl!.volume;
   }
 
   setVolume(newVolume: PlayerState['volume']): void {
-    this.mediaEl.volume = newVolume;
+    this.mediaEl!.volume = newVolume;
   }
 
   getCurrentTime(): PlayerState['currentTime'] {
-    return this.mediaEl.currentTime;
+    return this.mediaEl!.currentTime;
   }
 
   setCurrentTime(newTime: PlayerState['currentTime']): void {
-    this.mediaEl.currentTime = newTime;
+    this.mediaEl!.currentTime = newTime;
   }
 
   isMuted(): PlayerState['muted'] {
-    return this.mediaEl.muted;
+    return this.mediaEl!.muted;
   }
 
   setMuted(isMuted: PlayerState['muted']): void {
-    this.mediaEl.muted = isMuted;
+    this.mediaEl!.muted = isMuted;
   }
 
   isControlsVisible(): PlayerState['controls'] {
-    return this.mediaEl.controls;
+    return this.mediaEl!.controls;
   }
 
   setControlsVisibility(isVisible: PlayerState['controls']): void {
-    this.mediaEl.controls = isVisible;
+    this.mediaEl!.controls = isVisible;
   }
 
   isPlaybackReady(): PlayerState['isPlaybackReady'] {
-    return !isNil(this.mediaEl) && this.mediaEl.readyState === 1;
+    return !isNil(this.mediaEl!) && this.mediaEl!.readyState === 1;
   }
 
   isPaused(): PlayerState['paused'] {
-    return this.mediaEl.paused;
+    return this.mediaEl!.paused;
   }
 
   getCurrentSrc(): PlayerState['currentSrc'] {
-    return this.mediaEl.currentSrc;
+    return this.mediaEl!.currentSrc;
   }
 
   getPoster(): PlayerState['poster'] {
@@ -404,7 +407,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   }
 
   getInternalPlayer(): HTMLMediaElement {
-    return this.mediaEl;
+    return this.mediaEl!;
   }
 
   getViewType(): PlayerState['viewType'] {
@@ -416,11 +419,11 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   }
 
   getDuration(): PlayerState['duration'] {
-    return this.mediaEl.duration;
+    return this.mediaEl!.duration;
   }
 
   getBuffered(): PlayerState['buffered'] {
-    const { buffered, duration } = this.mediaEl;
+    const { buffered, duration } = this.mediaEl!;
     const end = buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
     return end > duration ? duration : end;
   }
@@ -444,14 +447,22 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
    */
 
   canPlayType(type: string): boolean {
-    return this.mediaEl.canPlayType(type) === 'probably';
+    return this.mediaEl?.canPlayType(type) === 'probably';
   }
 
   async play(): Promise<void> {
-    return this.mediaEl.play();
+    this.throwIfNotReady();
+    return this.mediaEl!.play();
   }
 
   async pause(): Promise<void> {
-    return this.mediaEl.pause();
+    this.throwIfNotReady();
+    return this.mediaEl!.pause();
+  }
+
+  protected throwIfNotReady(): void {
+    if (isNil(this.mediaEl)) {
+      throw Error('Media element is not ready.');
+    }
   }
 }

@@ -12,17 +12,17 @@ export const PLAYER_STORYBOOK_ARG_TYPES = {
 };
 
 export interface PlayerStorybookArgTypes {
-  aspectRatio?: string;
-  paused?: boolean;
-  controls?: boolean;
-  muted?: boolean;
-  volume?: number;
-  currentTime?: number;
-  content?: TemplateResult;
+  aspectRatio: string;
+  paused: boolean;
+  controls: boolean;
+  muted: boolean;
+  volume: number;
+  currentTime: number;
+  content: TemplateResult;
 }
 
 export function renderPlayerStorybookTemplate<
-  T extends PlayerStorybookArgTypes
+  T extends Partial<PlayerStorybookArgTypes>
 >({
   aspectRatio = '16:9',
   paused = true,

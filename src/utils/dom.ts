@@ -23,32 +23,20 @@ export const safelyDefineCustomElement = (
 };
 
 /**
- * Determines whether two elements are interecting in the DOM.
+ * Returns elements assigned to the default slot in the shadow root. Filters out all nodes
+ * which are not of type `Node.ELEMENT_NODE`.
  *
- * @param a - The first element.
- * @param b - The second element.
- * @param translateAx - Transpose element `a` along the x-axis by +/- pixels.
- * @param translateAy - Transpose element `a` along the y-axis by +/- pixels.
- * @param translateBx - Transpose element `b` along the x-axis by +/- pixels.
- * @param translateBx - Transpose element `b` along the y-axis by +/- pixels.
+ * @param el - The element containing the slot.
  */
-export const isColliding = (
-  a: HTMLElement,
-  b: HTMLElement,
-  translateAx = 0,
-  translateAy = 0,
-  translateBx = 0,
-  translateBy = 0,
-): boolean => {
-  const aRect = a.getBoundingClientRect();
-  const bRect = b.getBoundingClientRect();
-  return (
-    aRect.left + translateAx < bRect.right + translateBx &&
-    aRect.right + translateAx > bRect.left + translateBx &&
-    aRect.top + translateAy < bRect.bottom + translateBy &&
-    aRect.bottom + translateAy > bRect.top + translateBy
+export function getSlottedChildren(el: HTMLElement): Element[] {
+  const slot = el.shadowRoot?.querySelector('slot');
+  const childNodes = slot?.assignedNodes({ flatten: true }) ?? [];
+
+  return Array.prototype.filter.call(
+    childNodes,
+    node => node.nodeType == Node.ELEMENT_NODE,
   );
-};
+}
 
 export enum Device {
   Mobile = 'mobile',

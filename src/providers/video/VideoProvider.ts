@@ -49,8 +49,7 @@ export class VideoProvider extends MediaFileProvider {
   }
 
   firstUpdated(changedProps: PropertyValues): void {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.mediaEl = this.shadowRoot!.querySelector('video')!;
+    this.mediaEl = this.shadowRoot?.querySelector('video') as HTMLMediaElement;
     super.firstUpdated(changedProps);
   }
 
