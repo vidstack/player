@@ -56,15 +56,15 @@ export function ViewTypeMixin<T extends ViewTypeMixinBase>(
       this._viewType = ViewType.Unknown;
     }
 
-    get viewType(): PlayerState['viewType'] {
+    get viewType(): ViewType {
       return this._viewType;
     }
 
-    get isAudioView(): PlayerState['isAudioView'] {
+    get isAudioView(): boolean {
       return this.viewType === ViewType.Audio;
     }
 
-    get isVideoView(): PlayerState['isVideoView'] {
+    get isVideoView(): boolean {
       return this.viewType === ViewType.Video;
     }
   }

@@ -4,7 +4,7 @@ import {
   VdsCustomEvent,
   VdsCustomEventConstructor,
 } from '../shared';
-import { PlayerState } from './player.types';
+import { MediaType, ViewType } from './player.types';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -36,16 +36,16 @@ export type RawPlayerEventDetailType = {
   play: void;
   pause: void;
   playing: void;
-  'poster-change': PlayerState['currentPoster'];
-  'src-change': PlayerState['currentSrc'];
-  'muted-change': PlayerState['muted'];
-  'volume-change': PlayerState['volume'];
-  'time-change': PlayerState['currentTime'];
-  'duration-change': PlayerState['duration'];
-  'buffered-change': PlayerState['buffered'];
-  'buffering-change': PlayerState['isBuffering'];
-  'view-type-change': PlayerState['viewType'];
-  'media-type-change': PlayerState['mediaType'];
+  'poster-change': string;
+  'src-change': string;
+  'muted-change': boolean;
+  'volume-change': number;
+  'time-change': number;
+  'duration-change': number;
+  'buffered-change': number;
+  'buffering-change': boolean;
+  'view-type-change': ViewType;
+  'media-type-change': MediaType;
   'boot-start': void;
   'boot-end': void;
   'playback-ready': void;

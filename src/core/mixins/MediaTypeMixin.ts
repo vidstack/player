@@ -35,15 +35,15 @@ export function MediaTypeMixin<T extends MediaTypeMixinBase>(
       this._mediaType = MediaType.Unknown;
     }
 
-    get mediaType(): PlayerState['mediaType'] {
+    get mediaType(): MediaType {
       return this._mediaType;
     }
 
-    get isAudio(): PlayerState['isAudio'] {
+    get isAudio(): boolean {
       return this.mediaType === MediaType.Audio;
     }
 
-    get isVideo(): PlayerState['isVideo'] {
+    get isVideo(): boolean {
       return this.mediaType === MediaType.Video;
     }
   }

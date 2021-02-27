@@ -5,8 +5,6 @@ import {
   VdsCustomEventConstructor,
 } from '../../shared';
 
-import { PlayerState } from '../player.types';
-
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface GlobalEventHandlersEventMap extends VdsUserEvents {}
@@ -24,9 +22,9 @@ export type RawUserEventType =
 export interface RawUserEventDetailType {
   play: void;
   pause: void;
-  'muted-change': PlayerState['muted'];
-  'volume-change': PlayerState['volume'];
-  'time-change': PlayerState['currentTime'];
+  'muted-change': boolean;
+  'volume-change': number;
+  'time-change': number;
 }
 
 export type GenericVdsUserEventType<

@@ -1,7 +1,6 @@
 /* c8 ignore next 1000 */
 import { html, property, TemplateResult } from 'lit-element';
 import { playerContext } from '../player.context';
-import { PlayerState } from '../player.types';
 import { MediaProvider } from './MediaProvider';
 
 /**
@@ -14,37 +13,37 @@ export class MockMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   @property({ type: Number })
-  volume = playerContext.volume.defaultValue;
+  volume = 1;
 
   @property({ type: Number })
-  currentTime = playerContext.currentTime.defaultValue;
+  currentTime = 0;
 
   @property({ type: Boolean })
-  paused = playerContext.paused.defaultValue;
+  paused = true;
 
   @property({ type: Boolean })
-  muted = playerContext.muted.defaultValue;
+  muted = false;
 
   @property({ type: Boolean })
-  controls = playerContext.controls.defaultValue;
+  controls = false;
 
   // -------------------------------------------------------------------------------------------
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
 
-  get currentSrc(): PlayerState['currentSrc'] {
+  get currentSrc(): string {
     return '';
   }
 
-  get currentPoster(): PlayerState['currentPoster'] {
+  get currentPoster(): string {
     return playerContext.currentPoster.defaultValue;
   }
 
-  get isPlaybackReady(): PlayerState['isPlaybackReady'] {
+  get isPlaybackReady(): boolean {
     return playerContext.isPlaybackReady.defaultValue;
   }
 
-  get isPlaying(): PlayerState['isPlaying'] {
+  get isPlaying(): boolean {
     return playerContext.isPlaying.defaultValue;
   }
 
@@ -52,23 +51,23 @@ export class MockMediaProvider extends MediaProvider {
     return undefined;
   }
 
-  get duration(): PlayerState['duration'] {
+  get duration(): number {
     return playerContext.duration.defaultValue;
   }
 
-  get buffered(): PlayerState['buffered'] {
+  get buffered(): number {
     return playerContext.buffered.defaultValue;
   }
 
-  get isBuffering(): PlayerState['isBuffering'] {
+  get isBuffering(): boolean {
     return playerContext.isBuffering.defaultValue;
   }
 
-  get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
+  get hasPlaybackStarted(): boolean {
     return playerContext.hasPlaybackStarted.defaultValue;
   }
 
-  get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
+  get hasPlaybackEnded(): boolean {
     return playerContext.hasPlaybackEnded.defaultValue;
   }
 

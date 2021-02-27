@@ -37,6 +37,7 @@
   "scripts": {
     "build": "run-s clean build:esm",
     "build:esm": "tsc -p tsconfig-build.json",
+    "build:manifest": "cem analyze",
     "build:watch": "npm run build:esm -- -w",
     "clean": "rimraf bundle core providers skins ui utils shared",
     "lint": "run-s lint:*",
@@ -61,6 +62,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@custom-elements-manifest/analyzer": "^0.1.8",
     "@open-wc/testing": "^2.5.32",
     "@storybook/addon-actions": "^6.1.15",
     "@storybook/addon-essentials": "^6.1.15",
@@ -144,5 +146,6 @@
     "lit-element",
     "web components",
     "framework agnostic"
-  ]
+  ],
+  "customElementsManifest": "custom-elements.json"
 }

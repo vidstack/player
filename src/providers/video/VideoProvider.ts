@@ -7,7 +7,6 @@ import {
 } from 'lit-element';
 import {
   MediaType,
-  PlayerState,
   ProviderMediaTypeChangeEvent,
   ProviderViewTypeChangeEvent,
   ViewType,
@@ -100,7 +99,7 @@ export class VideoProvider extends MediaFileProvider {
   @property()
   poster?: string;
 
-  get currentPoster(): PlayerState['currentPoster'] {
+  get currentPoster(): string {
     return this.poster ?? '';
   }
 
@@ -139,7 +138,7 @@ export class VideoProvider extends MediaFileProvider {
   // Methods
   // -------------------------------------------------------------------------------------------
 
-  getMediaType(): PlayerState['mediaType'] {
+  getMediaType(): MediaType {
     if (AUDIO_EXTENSIONS.test(this.currentSrc)) {
       return MediaType.Audio;
     }

@@ -61,25 +61,25 @@ import { PlayerMixin } from './PlayerMixin';
  *  </vds-player>
  * ```
  *
- * @fires {PlayEvent} vds-play - Emitted when playback attempts to start.
- * @fires {PauseEvent} vds-pause - Emitted when playback pauses.
- * @fires {PlayingEvent} vds-playing - Emitted when playback being playback.
- * @fires {SrcChangeEvent} vds-src-change - Emitted when the current src changes.
- * @fires {PosterChangeEvent} vds-poster-change - Emitted when the current poster changes.
- * @fires {MutedChangeEvent} vds-muted-change - Emitted when the muted state of the current provider changes.
- * @fires {VolumeChangeEvent} vds-volume-change - Emitted when the volume state of the current provider changes.
- * @fires {TimeChangeEvent} vds-time-change - Emitted when the current playback time changes.
- * @fires {DurationChangeEvent} vds-duration-change - Emitted when the length of the media changes.
- * @fires {BufferedChangeEvent} vds-buffered-change - Emitted when the length of the media downloaded changes.
- * @fires {BufferingChangeEvent} vds-buffering-change - Emitted when playback resumes/stops due to lack of data.
- * @fires {ViewTypeChangeEvent} vds-view-type-change - Emitted when the view type of the current provider/media changes.
- * @fires {MediaTypeChangeEvent} vds-media-type-change - Emitted when the media type of the current provider/media changes.
- * @fires {PlaybackReadyEvent} vds-playback-ready - Emitted when playback is ready to start - analgous with `canPlayThrough`.
- * @fires {PlaybackStartEvent} vds-playback-start - Emitted when playback has started (`currentTime > 0`).
- * @fires {PlaybackEndEvent} vds-playback-end - Emitted when playback ends (`currentTime === duration`).
- * @fires {DeviceChangeEvent} vds-device-change - Emitted when the type of user device changes between mobile/desktop.
- * @fires {AspectRatioChangeEvent} vds-aspect-ratio-change - Emitted when the aspect ratio changes.
- * @fires {ErrorEvent} vds-error - Emitted when a provider encounters an error during media loading/playback.
+ * @event {PlayEvent} vds-play - Emitted when playback attempts to start.
+ * @event {PauseEvent} vds-pause - Emitted when playback pauses.
+ * @event {PlayingEvent} vds-playing - Emitted when playback being playback.
+ * @event {SrcChangeEvent} vds-src-change - Emitted when the current src changes.
+ * @event {PosterChangeEvent} vds-poster-change - Emitted when the current poster changes.
+ * @event {MutedChangeEvent} vds-muted-change - Emitted when the muted state of the current provider changes.
+ * @event {VolumeChangeEvent} vds-volume-change - Emitted when the volume state of the current provider changes.
+ * @event {TimeChangeEvent} vds-time-change - Emitted when the current playback time changes.
+ * @event {DurationChangeEvent} vds-duration-change - Emitted when the length of the media changes.
+ * @event {BufferedChangeEvent} vds-buffered-change - Emitted when the length of the media downloaded changes.
+ * @event {BufferingChangeEvent} vds-buffering-change - Emitted when playback resumes/stops due to lack of data.
+ * @event {ViewTypeChangeEvent} vds-view-type-change - Emitted when the view type of the current provider/media changes.
+ * @event {MediaTypeChangeEvent} vds-media-type-change - Emitted when the media type of the current provider/media changes.
+ * @event {PlaybackReadyEvent} vds-playback-ready - Emitted when playback is ready to start - analgous with `canPlayThrough`.
+ * @event {PlaybackStartEvent} vds-playback-start - Emitted when playback has started (`currentTime > 0`).
+ * @event {PlaybackEndEvent} vds-playback-end - Emitted when playback ends (`currentTime === duration`).
+ * @event {DeviceChangeEvent} vds-device-change - Emitted when the type of user device changes between mobile/desktop.
+ * @event {AspectRatioChangeEvent} vds-aspect-ratio-change - Emitted when the aspect ratio changes.
+ * @event {ErrorEvent} vds-error - Emitted when a provider encounters an error during media loading/playback.
  *
  * @slot - Used to pass in Provider/UI components.
  *
@@ -88,6 +88,8 @@ import { PlayerMixin } from './PlayerMixin';
  * @cssprop --vds-player-font-family - A custom font family to be used throughout the player.
  * @cssprop --vds-player-bg - The background color of the player.
  * @cssprop --vds-blocker-z-index - The provider UI blocker position in the root z-axis stack inside the player.
+ *
+ * @tagname vds-player
  */
 export class Player
   extends PlayerMixin(LitElement)
@@ -255,25 +257,25 @@ export class Player
     this.attemptRequestOrQueue('playback', () => this.currentProvider?.pause());
   }
 
-  protected requestControls(isControlsVisible: PlayerState['controls']): void {
+  protected requestControls(isControlsVisible: boolean): void {
     this.attemptRequestOrQueue('ctrls', () => {
       this.currentProvider!.controls = isControlsVisible;
     });
   }
 
-  protected requestVolumeChange(volume: PlayerState['volume']): void {
+  protected requestVolumeChange(volume: number): void {
     this.attemptRequestOrQueue('vol', () => {
       this.currentProvider!.volume = volume;
     });
   }
 
-  protected requestTimeChange(time: PlayerState['currentTime']): void {
+  protected requestTimeChange(time: number): void {
     this.attemptRequestOrQueue('time', () => {
       this.currentProvider!.currentTime = time;
     });
   }
 
-  protected requestMutedChange(muted: PlayerState['muted']): void {
+  protected requestMutedChange(muted: boolean): void {
     this.attemptRequestOrQueue('mute', () => {
       this.currentProvider!.muted = muted;
     });
@@ -406,36 +408,36 @@ export class Player
   // -------------------------------------------------------------------------------------------
 
   @property({ type: Number })
-  get volume(): PlayerState['volume'] {
+  get volume(): number {
     if (!this.isPlaybackReady) return playerContext.volume.defaultValue;
     return this.currentProvider!.volume;
   }
 
-  set volume(newVolume: PlayerState['volume']) {
+  set volume(newVolume: number) {
     this.requestVolumeChange(newVolume);
   }
 
   // ---
 
   @property({ type: Number, attribute: 'current-time' })
-  get currentTime(): PlayerState['currentTime'] {
+  get currentTime(): number {
     if (!this.isPlaybackReady) return playerContext.currentTime.defaultValue;
     return this.currentProvider!.currentTime;
   }
 
-  set currentTime(newCurrentTime: PlayerState['currentTime']) {
+  set currentTime(newCurrentTime: number) {
     this.requestTimeChange(newCurrentTime);
   }
 
   // ---
 
   @property({ type: Boolean, reflect: true })
-  get paused(): PlayerState['paused'] {
+  get paused(): boolean {
     if (!this.isPlaybackReady) return playerContext.paused.defaultValue;
     return this.currentProvider!.paused;
   }
 
-  set paused(isPaused: PlayerState['paused']) {
+  set paused(isPaused: boolean) {
     if (!isPaused) {
       this.requestPlay();
     } else {
@@ -446,24 +448,24 @@ export class Player
   // ---
 
   @property({ type: Boolean })
-  get controls(): PlayerState['controls'] {
+  get controls(): boolean {
     if (!this.isPlaybackReady) return playerContext.controls.defaultValue;
     return this.currentProvider!.controls;
   }
 
-  set controls(isControlsVisible: PlayerState['controls']) {
+  set controls(isControlsVisible: boolean) {
     this.requestControls(isControlsVisible);
   }
 
   // ---
 
   @property({ type: Boolean })
-  get muted(): PlayerState['muted'] {
+  get muted(): boolean {
     if (!this.isPlaybackReady) return playerContext.muted.defaultValue;
     return this.currentProvider!.muted;
   }
 
-  set muted(newMuted: PlayerState['muted']) {
+  set muted(newMuted: boolean) {
     this.requestMutedChange(newMuted);
   }
 
@@ -471,50 +473,50 @@ export class Player
   // Readonly Player Properties
   // -------------------------------------------------------------------------------------------
 
-  get currentSrc(): PlayerState['currentSrc'] {
+  get currentSrc(): string {
     if (!this.isPlaybackReady) return playerContext.currentSrc.defaultValue;
     return this.currentProvider!.currentSrc;
   }
 
-  get currentPoster(): PlayerState['currentPoster'] {
+  get currentPoster(): string {
     if (!this.isPlaybackReady) return playerContext.currentPoster.defaultValue;
     return this.currentProvider!.currentPoster;
   }
 
-  get duration(): PlayerState['duration'] {
+  get duration(): number {
     if (!this.isPlaybackReady) return playerContext.duration.defaultValue;
     return this.currentProvider!.duration;
   }
 
-  get buffered(): PlayerState['buffered'] {
+  get buffered(): number {
     if (!this.isPlaybackReady) return playerContext.buffered.defaultValue;
     return this.currentProvider!.buffered;
   }
 
-  get isBuffering(): PlayerState['isBuffering'] {
+  get isBuffering(): boolean {
     if (!this.isPlaybackReady) return playerContext.isBuffering.defaultValue;
     return this.currentProvider!.isBuffering;
   }
 
-  get isPlaying(): PlayerState['isPlaying'] {
+  get isPlaying(): boolean {
     if (!this.isPlaybackReady) return playerContext.isPlaying.defaultValue;
     const isPaused = this.currentProvider!.paused;
     return !isPaused;
   }
 
-  get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
+  get hasPlaybackStarted(): boolean {
     if (!this.isPlaybackReady)
       return playerContext.hasPlaybackStarted.defaultValue;
     return this.currentProvider!.hasPlaybackStarted;
   }
 
-  get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
+  get hasPlaybackEnded(): boolean {
     if (!this.isPlaybackReady)
       return playerContext.hasPlaybackEnded.defaultValue;
     return this.currentProvider!.hasPlaybackEnded;
   }
 
-  get isPlaybackReady(): PlayerState['isPlaybackReady'] {
+  get isPlaybackReady(): boolean {
     return (
       this.currentProvider?.isPlaybackReady ??
       playerContext.isPlaybackReady.defaultValue
