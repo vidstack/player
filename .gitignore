@@ -8,6 +8,8 @@ dist/
 /utils/
 /shared/
 
+custom-elements.json
+
 *~
 *.sw[mnpcod]
 *.log

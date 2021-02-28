@@ -1,16 +1,29 @@
 /* eslint-disable */
 import ts from 'typescript';
-import { compileOnce, parseGlobs } from './cem-helpers.mjs';
+import { getDocumentation } from './cem-helpers.mjs';
 
-const filePaths = await parseGlobs('src/{core,providers,ui}/**/*.ts');
-const program = compileOnce(filePaths);
-const checker = program.getTypeChecker();
+function visitMember(member, doc, typeChecker) {
+  const identifier = member.name;
+  const description = getDocumentation(typeChecker, identifier);
+
+  const memberDoc = (doc.members ?? []).find(
+    member => member.name === identifier?.escapedText,
+  );
+
+  if (memberDoc) {
+    memberDoc.description = description;
+  }
+}
 
 export function cemDocsPlugin() {
   return {
-    analyzePhase({ node }) {
-      if (node.kind === ts.SyntaxKind.FunctionDeclaration) {
-        console.log(node.name?.escapedText);
+    analyzePhase({ node, moduleDoc, typeChecker }) {
+      if (ts.isClassDeclaration(node)) {
+        const name = node.name?.escapedText;
+        const classDoc = moduleDoc.declarations.find(d => d.name === name);
+        node.members?.forEach(member =>
+          visitMember(member, classDoc, typeChecker),
+        );
       }
     },
   };

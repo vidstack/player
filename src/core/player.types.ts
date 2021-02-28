@@ -64,6 +64,8 @@ export interface PlayerState {
 
   /**
    * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
+   *
+   * @default 1
    */
   volume: number;
 
