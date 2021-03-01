@@ -16,7 +16,8 @@
     "skins/",
     "ui/",
     "utils/",
-    "custom-elements.json"
+    "custom-elements.json",
+    "vscode.html-data.json"
   ],
   "sideEffects": [
     "**/vds-*.ts",
@@ -37,7 +38,7 @@
   "scripts": {
     "build": "run-s clean build:esm build:manifest",
     "build:esm": "tsc -p tsconfig-build.json",
-    "build:manifest": "wcom transform src/**/*.ts -t vscode markdown",
+    "build:manifest": "wcom transform \"src/**/*.ts\" -t vscode markdown",
     "build:watch": "npm run build:esm -- -w",
     "clean": "rimraf bundle core providers skins ui utils shared custom-elements.json",
     "lint": "run-s lint:*",
@@ -93,7 +94,7 @@
     "rimraf": "^3.0.2",
     "semantic-release": "^17.3.7",
     "sinon": "^9.2.1",
-    "typescript": "^4.0.2"
+    "typescript": "^4.1.3"
   },
   "prettier": {
     "singleQuote": true,

@@ -4,22 +4,16 @@ export interface VdsEventInit<DetailType> extends CustomEventInit<DetailType> {
   readonly originalEvent?: unknown;
 }
 
-export interface VdsCustomEventConstructor<
-  DetailType,
-  Type extends string = string
-> {
-  readonly TYPE: Type;
+export interface VdsCustomEventConstructor<DetailType> {
+  readonly TYPE: string;
 
-  new (eventInit?: VdsEventInit<DetailType>): VdsCustomEvent<DetailType, Type>;
+  new (eventInit?: VdsEventInit<DetailType>): VdsCustomEvent<DetailType>;
 }
 
 export abstract class VdsCustomEvent<
-  DetailType,
-  Type extends string = string
+  DetailType
 > extends CustomEvent<DetailType> {
   static readonly TYPE: string;
-
-  readonly type!: Type;
 
   readonly originalEvent?: unknown;
 
@@ -37,13 +31,11 @@ export abstract class VdsCustomEvent<
   }
 }
 
-export function buildVdsEvent<
-  DetailType,
-  Type extends string,
-  NamespacedType extends string = `${typeof LIB_PREFIX}-${Type}`
->(type: Type): VdsCustomEventConstructor<DetailType, NamespacedType> {
-  return class VdsEvent extends VdsCustomEvent<DetailType, NamespacedType> {
-    static readonly TYPE = `${LIB_PREFIX}-${type}` as NamespacedType;
+export function buildVdsEvent<DetailType>(
+  type: string,
+): VdsCustomEventConstructor<DetailType> {
+  return class VdsEvent extends VdsCustomEvent<DetailType> {
+    static readonly TYPE = `${LIB_PREFIX}-${type}`;
 
     constructor(eventInit?: VdsEventInit<DetailType>) {
       super(VdsEvent.TYPE, eventInit);

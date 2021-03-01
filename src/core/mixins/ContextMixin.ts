@@ -30,9 +30,9 @@ import {
 } from '../provider/provider.events';
 import { AspectRatioChangeEvent } from './AspectRatioMixin';
 
-export type PlayerContextMixinBase = Constructor<UpdatingElement>;
+export type ContextMixinBase = Constructor<UpdatingElement>;
 
-export type PlayerContextCocktail<T extends PlayerContextMixinBase> = T &
+export type ContextCocktail<T extends ContextMixinBase> = T &
   Constructor<{
     readonly context: PlayerContextProvider;
   }>;
@@ -43,10 +43,10 @@ export type PlayerContextCocktail<T extends PlayerContextMixinBase> = T &
  *
  * @param Base - The constructor to mix into.
  */
-export function PlayerContextMixin<T extends PlayerContextMixinBase>(
+export function ContextMixin<T extends ContextMixinBase>(
   Base: T,
-): PlayerContextCocktail<T> {
-  class PlayerContextMixin extends Base implements PlayerContextProvider {
+): ContextCocktail<T> {
+  class ContextMixin extends Base implements PlayerContextProvider {
     [x: string]: unknown;
 
     /**
@@ -277,5 +277,5 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
     isVideoCtx = playerContext.isVideo.defaultValue;
   }
 
-  return PlayerContextMixin;
+  return ContextMixin;
 }

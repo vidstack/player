@@ -9,6 +9,7 @@ dist/
 /shared/
 
 custom-elements.json
+vscode.html-data.json
 
 *~
 *.sw[mnpcod]

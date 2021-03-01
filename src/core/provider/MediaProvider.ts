@@ -1,10 +1,12 @@
+import { event } from '@wcom/events';
 import { LitElement } from 'lit-element';
 
+import { VdsProviderEvents } from '../../bundle';
 import {
   PlayerState,
+  ProviderCompositeMixin,
   ProviderConnectEvent,
   ProviderDisconnectEvent,
-  ProviderMixin,
 } from '../../core';
 import { PlayerMethods } from '../player.types';
 
@@ -12,30 +14,9 @@ import { PlayerMethods } from '../player.types';
  * Base abstract media provider class that defines the interface to be implemented by
  * all concrete media providers. Extending this class enables provider-agnostic communication
  * between the Player and any Provider 💬
- *
- * @event {AspectRatioChangeEvent} vds-aspect-ratio-change - Emitted when the aspect ratio changes.
- * @event {ProviderConnectEvent} vds-provider-connect - Emitted when the provider attempts to connect to the player.
- * @event {ProviderDisconnectEvent} vds-provider-disconnect - Emitted when the provider attempts to disconnect from the player.
- * @event {ProviderPlayEvent} vds-provider-play - Emitted when playback attempts to start.
- * @event {ProviderPauseEvent} vds-provider-pause - Emitted when playback pauses.
- * @event {ProviderPlayingEvent} vds-provider-playing - Emitted when playback being playback.
- * @event {ProviderSrcChangeEvent} vds-provider-src-change - Emitted when the current src changes.
- * @event {ProviderPosterChangeEvent} vds-provider-poster-change - Emitted when the current poster changes.
- * @event {ProviderMutedChangeEvent} vds-provider-muted-change - Emitted when the muted state of the current provider changes.
- * @event {ProviderVolumeChangeEvent} vds-provider-volume-change - Emitted when the volume state of the current provider changes.
- * @event {ProviderTimeChangeEvent} vds-provider-time-change - Emitted when the current playback time changes.
- * @event {ProviderDurationChangeEvent} vds-provider-duration-change - Emitted when the length of the media changes.
- * @event {ProviderBufferedChangeEvent} vds-provider-buffered-change - Emitted when the length of the media downloaded changes.
- * @event {ProviderBufferingChangeEvent} vds-provider-buffering-change - Emitted when playback resumes/stops due to lack of data.
- * @event {ProviderViewTypeChangeEvent} vds-provider-view-type-change - Emitted when the view type of the current provider/media changes.
- * @event {ProviderMediaTypeChangeEvent} vds-provider-media-type-change - Emitted when the media type of the current provider/media changes.
- * @event {ProviderPlaybackReadyEvent} vds-provider-playback-ready - Emitted when playback is ready to start - analgous with `canPlayThrough`.
- * @event {ProviderPlaybackStartEvent} vds-provider-playback-start - Emitted when playback has started (`currentTime > 0`).
- * @event {ProviderPlaybackEndEvent} vds-provider-playback-end - Emitted when playback ends (`currentTime === duration`).
- * @event {ProviderErrorEvent} vds-provider-error - Emitted when a provider encounters an error during media loading/playback.
  */
 export abstract class MediaProvider<InternalPlayerType = unknown>
-  extends ProviderMixin(LitElement)
+  extends ProviderCompositeMixin(LitElement)
   implements PlayerState, PlayerMethods {
   connectedCallback(): void {
     super.connectedCallback();
@@ -88,4 +69,126 @@ export abstract class MediaProvider<InternalPlayerType = unknown>
 
   abstract play(): Promise<void>;
   abstract pause(): Promise<void>;
+
+  // -------------------------------------------------------------------------------------------
+  // Event Documentation
+  //
+  // Purely for documentation purposes only. The `@wcom/cli` library will pick up on these
+  // and include them in any transformations such as docs. Any minifier should notice these
+  // are not used and drop them.
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Emitted when the provider attempts to connect to the player.
+   */
+  @event({ name: 'vds-provider-connect' })
+  protected connectEvent!: VdsProviderEvents['vds-provider-connect'];
+
+  /**
+   * Emitted when the provider attempts to disconnect from the player.
+   */
+  @event({ name: 'vds-provider-disconnect' })
+  protected disconnectEvent!: VdsProviderEvents['vds-provider-disconnect'];
+
+  /**
+   * Emitted when playback attempts to start.
+   */
+  @event({ name: 'vds-provider-play' })
+  protected playEvent!: VdsProviderEvents['vds-provider-play'];
+
+  /**
+   * Emitted when playback pauses.
+   */
+  @event({ name: 'vds-provider-pause' })
+  protected pauseEvent!: VdsProviderEvents['vds-provider-pause'];
+
+  /**
+   * Emitted when playback being playback.
+   */
+  @event({ name: 'vds-provider-playing' })
+  protected playingEvent!: VdsProviderEvents['vds-provider-playing'];
+
+  /**
+   * Emitted when the current src changes.
+   */
+  @event({ name: 'vds-provider-src-change' })
+  protected srcChangeEvent!: VdsProviderEvents['vds-provider-src-change'];
+
+  /**
+   * Emitted when the current poster changes.
+   */
+  @event({ name: 'vds-provider-poster-change' })
+  protected posterChangeEvent!: VdsProviderEvents['vds-provider-poster-change'];
+
+  /**
+   * Emitted when the muted state of the current provider changes.
+   */
+  @event({ name: 'vds-provider-muted-change' })
+  protected mutedChangeEvent!: VdsProviderEvents['vds-provider-muted-change'];
+
+  /**
+   * Emitted when the volume state of the current provider changes.
+   */
+  @event({ name: 'vds-provider-volume-change' })
+  protected volumeChangeEvent!: VdsProviderEvents['vds-provider-volume-change'];
+
+  /**
+   * Emitted when the current playback time changes.
+   */
+  @event({ name: 'vds-provider-time-change' })
+  protected timeChangeEvent!: VdsProviderEvents['vds-provider-time-change'];
+
+  /**
+   * Emitted when the length of the media changes.
+   */
+  @event({ name: 'vds-provider-duration-change' })
+  protected durationChangeEvent!: VdsProviderEvents['vds-provider-duration-change'];
+
+  /**
+   * Emitted when the length of the media downloaded changes.
+   */
+  @event({ name: 'vds-provider-buffered-change' })
+  protected bufferedChangeEvent!: VdsProviderEvents['vds-provider-buffered-change'];
+
+  /**
+   * Emitted when playback resumes/stops due to lack of data.
+   */
+  @event({ name: 'vds-provider-buffering-change' })
+  protected bufferingChangeEvent!: VdsProviderEvents['vds-provider-buffering-change'];
+
+  /**
+   * Emitted when the view type of the current provider/media changes.
+   */
+  @event({ name: 'vds-provider-view-type-change' })
+  protected viewTypeChangeEvent!: VdsProviderEvents['vds-provider-view-type-change'];
+
+  /**
+   * Emitted when the media type of the current provider/media changes.
+   */
+  @event({ name: 'vds-provider-media-type-change' })
+  protected mediaTypeChangeEvent!: VdsProviderEvents['vds-provider-media-type-change'];
+
+  /**
+   * Emitted when playback is ready to start - analgous with `canPlayThrough`.
+   */
+  @event({ name: 'vds-provider-playback-ready' })
+  protected playbackReadyEvent!: VdsProviderEvents['vds-provider-playback-ready'];
+
+  /**
+   * Emitted when playback has started (`currentTime > 0`).
+   */
+  @event({ name: 'vds-provider-playback-start' })
+  protected playbackStartEvent!: VdsProviderEvents['vds-provider-playback-start'];
+
+  /**
+   * Emitted when playback ends (`currentTime === duration`).
+   */
+  @event({ name: 'vds-provider-playback-end' })
+  protected playbackEndEvent!: VdsProviderEvents['vds-provider-playback-end'];
+
+  /**
+   * Emitted when a provider encounters an error during media loading/playback.
+   */
+  @event({ name: 'vds-provider-error' })
+  protected error!: VdsProviderEvents['vds-provider-error'];
 }

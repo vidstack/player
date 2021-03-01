@@ -33,10 +33,7 @@ export type GenericVdsUserEventType<
 
 export type UserEventConstructor<
   T extends RawUserEventType
-> = VdsCustomEventConstructor<
-  RawUserEventDetailType[T],
-  GenericVdsUserEventType<T>
->;
+> = VdsCustomEventConstructor<RawUserEventDetailType[T]>;
 
 export type VdsUserEventConstructors = {
   [P in RawUserEventType as GenericVdsUserEventType<P>]: UserEventConstructor<P>;
@@ -44,8 +41,7 @@ export type VdsUserEventConstructors = {
 
 export type VdsUserEvents = {
   [P in RawUserEventType as GenericVdsUserEventType<P>]: VdsCustomEvent<
-    RawUserEventDetailType[P],
-    GenericVdsUserEventType<P>
+    RawUserEventDetailType[P]
   >;
 };
 
@@ -75,10 +71,10 @@ export class UserVolumeChangeRequestEvent extends buildVdsUserEvent(
   'volume-change',
 ) {}
 
-export const ALL_USER_EVENT_TYPES: VdsUserEventType[] = [
+export const ALL_USER_EVENT_TYPES = [
   UserPlayRequestEvent.TYPE,
   UserPauseRequestEvent.TYPE,
   UserMutedChangeRequestEvent.TYPE,
   UserVolumeChangeRequestEvent.TYPE,
   UserTimeChangeRequestEvent.TYPE,
-];
+] as VdsUserEventType[];

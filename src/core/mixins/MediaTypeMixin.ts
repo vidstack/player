@@ -1,12 +1,12 @@
 import { listen } from '@wcom/events';
 import { Constructor, UpdatingElement } from 'lit-element';
 
+import { MediaType, PlayerState } from '../player.types';
 import {
   ProviderDisconnectEvent,
   ProviderMediaTypeChangeEvent,
   ProviderSrcChangeEvent,
-} from '..';
-import { MediaType, PlayerState } from '../player.types';
+} from '../provider';
 
 export type MediaTypeMixinBase = Constructor<UpdatingElement>;
 

@@ -1,4 +1,4 @@
-import { listen } from '@wcom/events';
+import { event, listen } from '@wcom/events';
 import { property, UpdatingElement } from 'lit-element';
 
 import { buildVdsEvent, Constructor } from '../../shared';
@@ -22,8 +22,7 @@ export type AspectRatioCocktail<T extends AspectRatioMixinBase> = T &
   >;
 
 export class AspectRatioChangeEvent extends buildVdsEvent<
-  PlayerState['aspectRatio'],
-  'aspect-ratio-change'
+  PlayerState['aspectRatio']
 >('aspect-ratio-change') {}
 
 /**
@@ -37,6 +36,12 @@ export function AspectRatioMixin<T extends AspectRatioMixinBase>(
 ): AspectRatioCocktail<T> {
   class AspectRatioMixin extends Base {
     protected _aspectRatio = '16:9';
+
+    /**
+     * Emitted when the aspect ratio changes.
+     */
+    @event({ name: 'vds-aspect-ratio-change' })
+    protected AspectRatioChangeEvent!: AspectRatioChangeEvent;
 
     @property({ attribute: 'aspect-ratio' })
     get aspectRatio() {

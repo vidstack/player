@@ -31,6 +31,8 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  * </vds-player>
  * ```
  *
+ * @tagname vds-video
+ *
  * @slot - Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
 export class VideoProvider extends MediaFileProvider {
@@ -64,6 +66,7 @@ export class VideoProvider extends MediaFileProvider {
         preload="${ifDefined(this.preload)}"
         crossorigin="${ifDefined(this.crossOrigin)}"
         controlslist="${ifDefined(this.controlsList)}"
+        ?controls="${this.controls}"
         ?autopictureinpicture="${this.autoPiP}"
         ?disablepictureinpicture="${this.disablePiP}"
         ?disableremoteplayback="${this.disableRemotePlayback}"
@@ -77,7 +80,7 @@ export class VideoProvider extends MediaFileProvider {
   // Events
   // -------------------------------------------------------------------------------------------
 
-  handleLoadedMetadata(originalEvent: Event): void {
+  protected handleLoadedMetadata(originalEvent: Event): void {
     this.dispatchEvent(
       new ProviderMediaTypeChangeEvent({
         detail: this.getMediaType(),
@@ -139,7 +142,7 @@ export class VideoProvider extends MediaFileProvider {
   // Methods
   // -------------------------------------------------------------------------------------------
 
-  getMediaType(): MediaType {
+  protected getMediaType(): MediaType {
     if (AUDIO_EXTENSIONS.test(this.currentSrc)) {
       return MediaType.Audio;
     }

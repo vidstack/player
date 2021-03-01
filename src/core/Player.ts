@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Disposal, listen, listenTo } from '@wcom/events';
+import { Disposal, event, listen, listenTo } from '@wcom/events';
 import clsx from 'clsx';
 import {
   CSSResultArray,
@@ -11,12 +11,12 @@ import {
 } from 'lit-element';
 
 import { VdsCustomEvent } from '../shared';
-import { deferredPromise, isUndefined } from '../utils';
+import { isUndefined } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
-import { ErrorEvent } from './player.events';
+import { VdsPlayerEvents } from './player.events';
 import { PlayerMethods, PlayerState } from './player.types';
-import { PlayerMixin } from './PlayerMixin';
+import { PlayerCompositeMixin } from './PlayerCompositeMixin';
 import {
   ALL_PROVIDER_EVENT_TYPES,
   MediaProvider,
@@ -24,8 +24,6 @@ import {
   ProviderConnectEvent,
   ProviderDisconnectEvent,
   ProviderErrorEvent,
-  ProviderPlaybackReadyEvent,
-  VdsProviderEventType,
 } from './provider';
 import {
   ALL_USER_EVENT_TYPES,
@@ -62,38 +60,18 @@ import {
  *  </vds-player>
  * ```
  *
- * @event {PlayEvent} vds-play - Emitted when playback attempts to start.
- * @event {PauseEvent} vds-pause - Emitted when playback pauses.
- * @event {PlayingEvent} vds-playing - Emitted when playback being playback.
- * @event {SrcChangeEvent} vds-src-change - Emitted when the current src changes.
- * @event {PosterChangeEvent} vds-poster-change - Emitted when the current poster changes.
- * @event {MutedChangeEvent} vds-muted-change - Emitted when the muted state of the current provider changes.
- * @event {VolumeChangeEvent} vds-volume-change - Emitted when the volume state of the current provider changes.
- * @event {TimeChangeEvent} vds-time-change - Emitted when the current playback time changes.
- * @event {DurationChangeEvent} vds-duration-change - Emitted when the length of the media changes.
- * @event {BufferedChangeEvent} vds-buffered-change - Emitted when the length of the media downloaded changes.
- * @event {BufferingChangeEvent} vds-buffering-change - Emitted when playback resumes/stops due to lack of data.
- * @event {ViewTypeChangeEvent} vds-view-type-change - Emitted when the view type of the current provider/media changes.
- * @event {MediaTypeChangeEvent} vds-media-type-change - Emitted when the media type of the current provider/media changes.
- * @event {PlaybackReadyEvent} vds-playback-ready - Emitted when playback is ready to start - analgous with `canPlayThrough`.
- * @event {PlaybackStartEvent} vds-playback-start - Emitted when playback has started (`currentTime > 0`).
- * @event {PlaybackEndEvent} vds-playback-end - Emitted when playback ends (`currentTime === duration`).
- * @event {DeviceChangeEvent} vds-device-change - Emitted when the type of user device changes between mobile/desktop.
- * @event {AspectRatioChangeEvent} vds-aspect-ratio-change - Emitted when the aspect ratio changes.
- * @event {ErrorEvent} vds-error - Emitted when a provider encounters an error during media loading/playback.
- *
- * @slot - Used to pass in Provider/UI components.
- *
- * @csspart player - The root player container.
- *
- * @cssprop --vds-player-font-family - A custom font family to be used throughout the player.
- * @cssprop --vds-player-bg - The background color of the player.
- * @cssprop --vds-blocker-z-index - The provider UI blocker position in the root z-axis stack inside the player.
- *
  * @tagname vds-player
+ *
+ * @slot Used to pass in Provider/UI components.
+ *
+ * @csspart player: The root player container.
+ *
+ * @cssprop --vds-player-font-family: A custom font family to be used throughout the player.
+ * @cssprop --vds-player-bg: The background color of the player.
+ * @cssprop --vds-blocker-z-index: The provider UI blocker position in the root z-axis stack inside the player.
  */
 export class Player
-  extends PlayerMixin(LitElement)
+  extends PlayerCompositeMixin(LitElement)
   implements PlayerState, PlayerMethods {
   public static get styles(): CSSResultArray {
     return [playerStyles];
@@ -196,88 +174,37 @@ export class Player
   }
 
   // -------------------------------------------------------------------------------------------
-  // Provider Request Management
+  // Provider Requests
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * Requests are queued if called before media is ready for playback. Once the media is
-   * ready (`ProviderPlaybackReadyEvent`) the queue is flushed. Each request is associated with
-   * a request key to avoid making duplicate requests of the same "type".
-   */
-  protected requestQueue = new Map<string, () => void | Promise<void>>();
-
-  protected pendingRequestQueueFlush = deferredPromise();
-
-  /**
-   * Returns a clone of the current request queue for testing and/or debugging purposes.
-   */
-  getRequestQueue(): Map<string, () => void | Promise<void>> {
-    return new Map(this.requestQueue);
-  }
-
-  /**
-   * Waits for the current request queue to be flushed.
-   */
-  async waitForRequestQueueToFlush(): Promise<void> {
-    await this.pendingRequestQueueFlush.promise;
-  }
-
-  protected async safelyMakeRequest(requestKey: string): Promise<void> {
-    try {
-      await this.requestQueue.get(requestKey)?.();
-    } catch (e) {
-      this.dispatchEvent(new ErrorEvent({ detail: e }));
-    }
-
-    this.requestQueue.delete(requestKey);
-  }
-
-  protected attemptRequestOrQueue(
-    requestKey: string,
-    request: () => void | Promise<void>,
-  ): void {
-    this.requestQueue.set(requestKey, request);
-    if (!this.isPlaybackReady) return;
-    this.safelyMakeRequest(requestKey);
-    this.requestQueue.delete(requestKey);
-  }
-
-  protected async flushRequestQueue(): Promise<void> {
-    const requests = Array.from(this.requestQueue.keys());
-    await Promise.all(requests.map(reqKey => this.safelyMakeRequest(reqKey)));
-    this.requestQueue.clear();
-    this.pendingRequestQueueFlush.resolve();
-    this.pendingRequestQueueFlush = deferredPromise();
-  }
-
   protected requestPlay(): void {
-    this.attemptRequestOrQueue('playback', () => this.currentProvider?.play());
+    this.makeRequest('playback', () => this.currentProvider!.play());
   }
 
   protected requestPause(): void {
-    this.attemptRequestOrQueue('playback', () => this.currentProvider?.pause());
+    this.makeRequest('playback', () => this.currentProvider!.pause());
   }
 
   protected requestControls(isControlsVisible: boolean): void {
-    this.attemptRequestOrQueue('ctrls', () => {
+    this.makeRequest('ctrls', () => {
       this.currentProvider!.controls = isControlsVisible;
     });
   }
 
   protected requestVolumeChange(volume: number): void {
-    this.attemptRequestOrQueue('vol', () => {
+    this.makeRequest('vol', () => {
       this.currentProvider!.volume = volume;
     });
   }
 
   protected requestTimeChange(time: number): void {
-    this.attemptRequestOrQueue('time', () => {
+    this.makeRequest('time', () => {
       this.currentProvider!.currentTime = time;
     });
   }
 
   protected requestMutedChange(muted: boolean): void {
-    this.attemptRequestOrQueue('mute', () => {
+    this.makeRequest('mute', () => {
       this.currentProvider!.muted = muted;
     });
   }
@@ -314,27 +241,29 @@ export class Player
   }
 
   @listen(UserPlayRequestEvent.TYPE)
-  handleUserPlayRequest(): void {
+  protected handleUserPlayRequest(): void {
     this.requestPlay();
   }
 
   @listen(UserPauseRequestEvent.TYPE)
-  handleUserPauseRequest(): void {
+  protected handleUserPauseRequest(): void {
     this.requestPause();
   }
 
   @listen(UserMutedChangeRequestEvent.TYPE)
-  handleUserMutedChangeRequest(e: UserMutedChangeRequestEvent): void {
+  protected handleUserMutedChangeRequest(e: UserMutedChangeRequestEvent): void {
     this.requestMutedChange(e.detail);
   }
 
   @listen(UserVolumeChangeRequestEvent.TYPE)
-  handleUserVolumeChangeRequest(e: UserVolumeChangeRequestEvent): void {
+  protected handleUserVolumeChangeRequest(
+    e: UserVolumeChangeRequestEvent,
+  ): void {
     this.requestVolumeChange(e.detail);
   }
 
   @listen(UserTimeChangeRequestEvent.TYPE)
-  handleUserTimeChangeRequest(e: UserTimeChangeRequestEvent): void {
+  protected handleUserTimeChangeRequest(e: UserTimeChangeRequestEvent): void {
     this.requestTimeChange(e.detail);
   }
 
@@ -364,15 +293,13 @@ export class Player
    * This handler is attached in the "Connect" section above. Use it for processing all provider
    * events.
    */
-  protected catchAllProviderEvents(
-    e: VdsCustomEvent<unknown, VdsProviderEventType>,
-  ): void {
+  protected catchAllProviderEvents(e: VdsCustomEvent<unknown>): void {
     if (!this.providerEventGateway(e)) return;
     this.translateProviderEventAndDispatch(e);
   }
 
   protected translateProviderEventAndDispatch(
-    e: VdsCustomEvent<unknown, VdsProviderEventType>,
+    e: VdsCustomEvent<unknown>,
   ): void {
     const PlayerEvent = PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP[e.type];
     if (!isUndefined(PlayerEvent)) {
@@ -387,11 +314,6 @@ export class Player
   protected handleProviderConnect(e: ProviderConnectEvent): void {
     const connectedProvider = e.detail;
     this._currentProvider = connectedProvider;
-  }
-
-  @listen(ProviderPlaybackReadyEvent.TYPE)
-  protected async handleProviderPlaybackReady(): Promise<void> {
-    await this.flushRequestQueue();
   }
 
   @listen(ProviderDisconnectEvent.TYPE)
@@ -523,4 +445,114 @@ export class Player
       playerContext.isPlaybackReady.defaultValue
     );
   }
+
+  // -------------------------------------------------------------------------------------------
+  // Event Documentation
+  //
+  // Purely for documentation purposes only. The `@wcom/cli` library will pick up on these
+  // and include them in any transformations such as docs. Any minifier should notice these
+  // are not used and drop them.
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Emitted when playback attempts to start.
+   */
+  @event({ name: 'vds-play' })
+  protected playEvent!: VdsPlayerEvents['vds-play'];
+
+  /**
+   * Emitted when playback pauses.
+   */
+  @event({ name: 'vds-pause' })
+  protected pauseEvent!: VdsPlayerEvents['vds-pause'];
+
+  /**
+   * Emitted when playback being playback.
+   */
+  @event({ name: 'vds-playing' })
+  protected playingEvent!: VdsPlayerEvents['vds-playing'];
+
+  /**
+   * Emitted when the current src changes.
+   */
+  @event({ name: 'vds-src-change' })
+  protected srcChangeEvent!: VdsPlayerEvents['vds-src-change'];
+
+  /**
+   * Emitted when the current poster changes.
+   */
+  @event({ name: 'vds-poster-change' })
+  protected posterChangeEvent!: VdsPlayerEvents['vds-poster-change'];
+
+  /**
+   * Emitted when the muted state of the current provider changes.
+   */
+  @event({ name: 'vds-muted-change' })
+  protected mutedChangeEvent!: VdsPlayerEvents['vds-muted-change'];
+
+  /**
+   * Emitted when the volume state of the current provider changes.
+   */
+  @event({ name: 'vds-volume-change' })
+  protected volumeChangeEvent!: VdsPlayerEvents['vds-volume-change'];
+
+  /**
+   * Emitted when the current playback time changes.
+   */
+  @event({ name: 'vds-time-change' })
+  protected timeChangeEvent!: VdsPlayerEvents['vds-time-change'];
+
+  /**
+   * Emitted when the length of the media changes.
+   */
+  @event({ name: 'vds-duration-change' })
+  protected durationChangeEvent!: VdsPlayerEvents['vds-duration-change'];
+
+  /**
+   * Emitted when the length of the media downloaded changes.
+   */
+  @event({ name: 'vds-buffered-change' })
+  protected bufferedChangeEvent!: VdsPlayerEvents['vds-buffered-change'];
+
+  /**
+   * Emitted when playback resumes/stops due to lack of data.
+   */
+  @event({ name: 'vds-buffering-change' })
+  protected bufferingChangeEvent!: VdsPlayerEvents['vds-buffering-change'];
+
+  /**
+   * Emitted when the view type of the current provider/media changes.
+   */
+  @event({ name: 'vds-view-type-change' })
+  protected viewTypeChangeEvent!: VdsPlayerEvents['vds-view-type-change'];
+
+  /**
+   * Emitted when the media type of the current provider/media changes.
+   */
+  @event({ name: 'vds-media-type-change' })
+  protected mediaTypeChangeEvent!: VdsPlayerEvents['vds-media-type-change'];
+
+  /**
+   * Emitted when playback is ready to start - analgous with `canPlayThrough`.
+   */
+  @event({ name: 'vds-playback-ready' })
+  protected playbackReadyEvent!: VdsPlayerEvents['vds-playback-ready'];
+
+  /**
+   * Emitted when playback has started (`currentTime > 0`).
+   */
+  @event({ name: 'vds-playback-start' })
+  protected playbackStartEvent!: VdsPlayerEvents['vds-playback-start'];
+
+  /**
+   * Emitted when playback ends (`currentTime === duration`).
+   */
+  @event({ name: 'vds-playback-end' })
+  protected playbackEndEvent!: VdsPlayerEvents['vds-playback-end'];
+
+  /**
+   * Emitted when a provider encounters an error during media loading/playback.
+   */
+  @event({ name: 'vds-error' })
+  protected errorEvent!: VdsPlayerEvents['vds-error'];
 }

@@ -1,3 +1,3 @@
 export * from './MediaProvider';
 export * from './provider.events';
-export * from './ProviderMixin';
+export * from './ProviderCompositeMixin';

@@ -8,9 +8,7 @@ export enum Device {
   Desktop = 'desktop',
 }
 
-export class DeviceChangeEvent extends buildVdsEvent<Device, 'device-change'>(
-  'device-change',
-) {}
+export class DeviceChangeEvent extends buildVdsEvent<Device>('device-change') {}
 
 export interface DeviceObserver {
   /**

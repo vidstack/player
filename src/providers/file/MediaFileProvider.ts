@@ -42,10 +42,6 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   protected _isPlaying = false;
 
-  connectedCallback(): void {
-    super.connectedCallback();
-  }
-
   firstUpdated(changedProps: PropertyValues): void {
     super.firstUpdated(changedProps);
     this.listenToMediaEl();
@@ -97,6 +93,8 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     } else {
       this.mediaEl.removeAttribute('src');
     }
+
+    this.dispatchEvent(new ProviderSrcChangeEvent({ detail: this._src }));
   }
 
   // ---
@@ -107,7 +105,9 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   }
 
   set volume(newVolume: number) {
-    // ...
+    this.makeRequest('vol', () => {
+      this.mediaEl!.volume = newVolume;
+    });
   }
 
   // ---
@@ -118,7 +118,13 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   }
 
   set paused(isPaused: boolean) {
-    // ...
+    this.makeRequest('paused', () => {
+      if (!isPaused) {
+        this.mediaEl!.play();
+      } else {
+        this.mediaEl!.pause();
+      }
+    });
   }
 
   // ---
@@ -129,7 +135,9 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   }
 
   set currentTime(newTime: number) {
-    // ...
+    this.makeRequest('time', () => {
+      this.mediaEl!.currentTime = newTime;
+    });
   }
 
   // ---
@@ -140,19 +148,15 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   }
 
   set muted(isMuted: boolean) {
-    // ...
+    this.makeRequest('muted', () => {
+      this.mediaEl!.muted = isMuted;
+    });
   }
 
   // ---
 
   @property({ type: Boolean })
-  get controls(): boolean {
-    return this.mediaEl?.controls ?? false;
-  }
-
-  set controls(isControlsVisible: boolean) {
-    // ...
-  }
+  controls = false;
 
   /**
    * Whether to use CORS to fetch the related image. See
@@ -242,13 +246,6 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   protected handleLoadedMetadata(originalEvent: Event): void {
     this.requestTimeUpdates();
-
-    this.dispatchEvent(
-      new ProviderSrcChangeEvent({
-        detail: this.currentSrc,
-        originalEvent,
-      }),
-    );
 
     this.dispatchEvent(
       new ProviderDurationChangeEvent({

@@ -82,10 +82,7 @@ export type GenericVdsProviderEventType<
 
 export type ProviderEventConstructor<
   T extends RawProviderEventType
-> = VdsCustomEventConstructor<
-  RawProviderEventDetailType[T],
-  GenericVdsProviderEventType<T>
->;
+> = VdsCustomEventConstructor<RawProviderEventDetailType[T]>;
 
 export type VdsProviderEventConstructors = {
   [P in RawProviderEventType as GenericVdsProviderEventType<P>]: ProviderEventConstructor<P>;
@@ -93,8 +90,7 @@ export type VdsProviderEventConstructors = {
 
 export type VdsProviderEvents = {
   [P in RawProviderEventType as GenericVdsProviderEventType<P>]: VdsCustomEvent<
-    RawProviderEventDetailType[P],
-    GenericVdsProviderEventType<P>
+    RawProviderEventDetailType[P]
   >;
 };
 
@@ -174,7 +170,7 @@ export class ProviderPlaybackEndEvent extends buildVdsProviderEvent(
 
 export class ProviderErrorEvent extends buildVdsProviderEvent('error') {}
 
-export const ALL_PROVIDER_EVENT_TYPES: VdsProviderEventType[] = [
+export const ALL_PROVIDER_EVENT_TYPES = [
   ProviderPlayEvent.TYPE,
   ProviderPauseEvent.TYPE,
   ProviderPlayingEvent.TYPE,
@@ -192,7 +188,7 @@ export const ALL_PROVIDER_EVENT_TYPES: VdsProviderEventType[] = [
   ProviderPlaybackStartEvent.TYPE,
   ProviderPlaybackEndEvent.TYPE,
   ProviderErrorEvent.TYPE,
-];
+] as VdsProviderEventType[];
 
 /**
  * Map of provider event types to the corresponding player event constructor. Most provider events

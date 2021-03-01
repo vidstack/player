@@ -1,4 +1,4 @@
-import { Disposal } from '@wcom/events';
+import { Disposal, event } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
 
 import { Constructor } from '../../shared';
@@ -53,6 +53,12 @@ export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
 
     @deviceContext.isDesktopDevice.provide()
     protected isDesktopDeviceCtx = deviceContext.isDesktopDevice.defaultValue;
+
+    /**
+     * Emitted when the type of user device changes between mobile/desktop.
+     */
+    @event({ name: 'vds-device-change' })
+    protected DeviceChangeEvent!: DeviceChangeEvent;
 
     mobileDeviceAttrName = 'mobile';
 

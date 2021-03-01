@@ -60,10 +60,7 @@ export type GenericVdsPlayerEventType<
 
 export type PlayerEventConstructor<
   T extends RawPlayerEventType
-> = VdsCustomEventConstructor<
-  RawPlayerEventDetailType[T],
-  GenericVdsPlayerEventType<T>
->;
+> = VdsCustomEventConstructor<RawPlayerEventDetailType[T]>;
 
 export type VdsPlayerEventConstructors = {
   [P in RawPlayerEventType as GenericVdsPlayerEventType<P>]: PlayerEventConstructor<P>;
@@ -71,8 +68,7 @@ export type VdsPlayerEventConstructors = {
 
 export type VdsPlayerEvents = {
   [P in RawPlayerEventType as GenericVdsPlayerEventType<P>]: VdsCustomEvent<
-    RawPlayerEventDetailType[P],
-    GenericVdsPlayerEventType<P>
+    RawPlayerEventDetailType[P]
   >;
 };
 
