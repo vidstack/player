@@ -4,7 +4,6 @@ import {
   VdsCustomEvent,
   VdsCustomEventConstructor,
 } from '../../shared';
-import { CurrentSrcChangeEvent as SrcChangeEvent } from '..';
 import {
   BufferedChangeEvent,
   BufferingChangeEvent,
@@ -19,6 +18,7 @@ import {
   PlayEvent,
   PlayingEvent,
   PosterChangeEvent,
+  SrcChangeEvent,
   TimeChangeEvent,
   ViewTypeChangeEvent,
   VolumeChangeEvent,

@@ -13,7 +13,7 @@ import { isBoolean, isNumber, isString, isUndefined } from '../../utils';
 import { ProviderDisconnectEvent, ProviderSrcChangeEvent } from '..';
 import { Player } from '../Player';
 import { playerContext } from '../player.context';
-import { CurrentSrcChangeEvent } from '../player.events';
+import { SrcChangeEvent } from '../player.events';
 import { PlayerContext, ViewType } from '../player.types';
 import { FakeConsumer } from './FakeConsumer';
 import { emitEvent } from './helpers';
@@ -120,7 +120,7 @@ describe('context', () => {
     await elementUpdated(consumer);
 
     emitEvent(consumer, new ProviderSrcChangeEvent({ detail: '' }));
-    await oneEvent(player, CurrentSrcChangeEvent.TYPE);
+    await oneEvent(player, SrcChangeEvent.TYPE);
     await elementUpdated(consumer);
 
     expect(consumer.paused, 'paused').to.equal(true);

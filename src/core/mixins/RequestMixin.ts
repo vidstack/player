@@ -1,14 +1,15 @@
 import { listen } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
 
-import {
-  ErrorEvent,
-  ProviderDisconnectEvent,
-  ProviderPlaybackReadyEvent,
-  ProviderSrcChangeEvent,
-} from '../../bundle';
 import { Constructor } from '../../shared';
 import { deferredPromise } from '../../utils';
+import { ErrorEvent } from '../player.events';
+import { MediaProvider } from '../provider';
+import {
+  ProviderConnectEvent,
+  ProviderDisconnectEvent,
+  ProviderPlaybackReadyEvent,
+} from '../provider/provider.events';
 
 export type RequestMixinBase = Constructor<UpdatingElement>;
 
@@ -59,7 +60,7 @@ export function RequestMixin<T extends RequestMixinBase>(
      */
     protected requestQueue: RequestQueue = new Map();
 
-    protected canRequestsBeMade = false;
+    protected requestProvider?: MediaProvider;
 
     protected pendingRequestQueueFlush = deferredPromise();
 
@@ -83,7 +84,9 @@ export function RequestMixin<T extends RequestMixinBase>(
 
     makeRequest(requestKey: RequestKey, request: RequestAction): void {
       this.requestQueue.set(requestKey, request);
-      if (!this.canRequestsBeMade) return;
+
+      if (!this.requestProvider?.isPlaybackReady) return;
+
       this.safelyMakeRequest(requestKey);
       this.requestQueue.delete(requestKey);
     }
@@ -95,21 +98,24 @@ export function RequestMixin<T extends RequestMixinBase>(
       this.pendingRequestQueueFlush.resolve();
     }
 
+    @listen(ProviderConnectEvent.TYPE)
+    protected async handleRequestConnect(
+      e: ProviderConnectEvent,
+    ): Promise<void> {
+      this.requestProvider = e.detail;
+    }
+
     @listen(ProviderPlaybackReadyEvent.TYPE)
-    protected async handleRequestsStart(): Promise<void> {
-      this.canRequestsBeMade = true;
+    protected async handleFlushRequestQueue(): Promise<void> {
       await this.flushRequestQueue();
     }
 
-    @listen(ProviderSrcChangeEvent.TYPE)
     @listen(ProviderDisconnectEvent.TYPE)
-    protected handleRequestsStop(): void {
-      this.canRequestsBeMade = false;
+    protected handleResetRequestQueue(): void {
+      this.requestProvider = undefined;
       this.requestQueue.clear();
-      // Reject anyone currently waiting.
-      this.pendingRequestQueueFlush.reject(
-        'Request queue stopped due to src/provider change.',
-      );
+      // Release anyone waiting.
+      this.pendingRequestQueueFlush.resolve();
       this.pendingRequestQueueFlush = deferredPromise();
     }
   }

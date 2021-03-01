@@ -32,9 +32,9 @@ export type ProviderCompositeCocktail<
 export function ProviderCompositeMixin<T extends ProviderCompositeMixinBase>(
   Base: T,
 ): ProviderCompositeCocktail<T> {
-  class ProviderMixin extends RequestMixin(
+  class ProviderCompositeMixin extends RequestMixin(
     AspectRatioMixin(ViewTypeMixin(MediaTypeMixin(UuidMixin(Base)))),
   ) {}
 
-  return ProviderMixin;
+  return ProviderCompositeMixin;
 }

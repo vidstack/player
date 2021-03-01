@@ -6,7 +6,7 @@ import {
   ProviderDisconnectEvent,
   ProviderMediaTypeChangeEvent,
   ProviderSrcChangeEvent,
-} from '../provider';
+} from '../provider/provider.events';
 
 export type MediaTypeMixinBase = Constructor<UpdatingElement>;
 

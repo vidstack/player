@@ -51,7 +51,7 @@
     "test": "wtr \"src/**/*.test.ts\"",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
-    "storybook": "run-s build:manifest \"wds -c .storybook/server.mjs\"",
+    "storybook": "npm run build:manifest && wds -c .storybook/server.mjs",
     "storybook:build": "run-s build:manifest build-storybook"
   },
   "dependencies": {

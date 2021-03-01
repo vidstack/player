@@ -6,7 +6,6 @@ export interface VdsEventInit<DetailType> extends CustomEventInit<DetailType> {
 
 export interface VdsCustomEventConstructor<DetailType> {
   readonly TYPE: string;
-
   new (eventInit?: VdsEventInit<DetailType>): VdsCustomEvent<DetailType>;
 }
 
@@ -34,11 +33,13 @@ export abstract class VdsCustomEvent<
 export function buildVdsEvent<DetailType>(
   type: string,
 ): VdsCustomEventConstructor<DetailType> {
-  return class VdsEvent extends VdsCustomEvent<DetailType> {
+  class VdsEvent extends VdsCustomEvent<DetailType> {
     static readonly TYPE = `${LIB_PREFIX}-${type}`;
 
     constructor(eventInit?: VdsEventInit<DetailType>) {
       super(VdsEvent.TYPE, eventInit);
     }
-  };
+  }
+
+  return VdsEvent;
 }

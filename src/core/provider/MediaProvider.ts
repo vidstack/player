@@ -1,14 +1,13 @@
 import { event } from '@wcom/events';
 import { LitElement } from 'lit-element';
 
-import { VdsProviderEvents } from '../../bundle';
+import { PlayerMethods, PlayerState } from '../player.types';
 import {
-  PlayerState,
-  ProviderCompositeMixin,
   ProviderConnectEvent,
   ProviderDisconnectEvent,
-} from '../../core';
-import { PlayerMethods } from '../player.types';
+  VdsProviderEvents,
+} from './provider.events';
+import { ProviderCompositeMixin } from './ProviderCompositeMixin';
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by

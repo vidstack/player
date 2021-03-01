@@ -129,14 +129,16 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   // ---
 
-  @property({ type: Number })
+  @property({ type: Number, attribute: 'current-time' })
   get currentTime(): number {
     return this.mediaEl?.currentTime ?? 0;
   }
 
   set currentTime(newTime: number) {
     this.makeRequest('time', () => {
-      this.mediaEl!.currentTime = newTime;
+      if (this.mediaEl!.currentTime !== newTime) {
+        this.mediaEl!.currentTime = newTime;
+      }
     });
   }
 
@@ -404,7 +406,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   // -------------------------------------------------------------------------------------------
 
   get isPlaybackReady(): boolean {
-    return !isNil(this.mediaEl!) && this.mediaEl!.readyState === 1;
+    return !isNil(this.mediaEl!) && this.mediaEl!.readyState >= 1;
   }
 
   get currentSrc(): string {

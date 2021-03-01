@@ -9,7 +9,6 @@ import { Player } from '../Player';
 import {
   BufferedChangeEvent,
   BufferingChangeEvent,
-  CurrentSrcChangeEvent,
   DurationChangeEvent,
   ErrorEvent,
   MediaTypeChangeEvent,
@@ -20,6 +19,7 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
+  SrcChangeEvent,
   TimeChangeEvent,
   ViewTypeChangeEvent,
   VolumeChangeEvent,
@@ -102,7 +102,7 @@ describe('provider events', () => {
   it('should handle current src change event', async () => {
     const currentSrc = 'penguins on an apple tree';
     dispatchProviderUpdate(new ProviderSrcChangeEvent({ detail: currentSrc }));
-    const { detail } = await oneEvent(player, CurrentSrcChangeEvent.TYPE);
+    const { detail } = await oneEvent(player, SrcChangeEvent.TYPE);
     expect(detail).to.equal(currentSrc);
     expect(consumer.currentSrc).to.equal(currentSrc);
   });

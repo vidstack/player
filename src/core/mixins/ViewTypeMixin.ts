@@ -6,7 +6,7 @@ import { PlayerState, ViewType } from '../player.types';
 import {
   ProviderDisconnectEvent,
   ProviderViewTypeChangeEvent,
-} from '../provider';
+} from '../provider/provider.events';
 
 export type ViewTypeMixinBase = Constructor<UpdatingElement>;
 

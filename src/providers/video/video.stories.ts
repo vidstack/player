@@ -1,32 +1,122 @@
-// import './vds-video';
-// import { html } from 'lit-element';
-// import {
-//   PlayerStorybookArgTypes,
-//   renderPlayerStorybookTemplate,
-// } from '../../core';
-// import { Story } from '../../shared';
+import './vds-video';
 
-// export default {
-//   title: 'Providers/Video',
-//   component: 'vds-video',
-// };
+import { html } from 'lit-element';
+import { ifDefined } from 'lit-html/directives/if-defined';
 
-// export type VideoArgTypes = PlayerStorybookArgTypes & {
-//   src: string;
-//   type: string;
-//   poster: string;
-// };
+import { VideoControlsList } from '../../bundle';
+import { Story } from '../../shared';
+import { MediaCrossOriginOption, MediaPreloadOption } from '../file';
 
-// // const Template: Story<VideoArgTypes> = ({
-// //   src = 'https://media.vidstack.io/720p.mp4',
-// //   type = 'video/mp4',
-// //   poster = 'https://media.vidstack.io/poster.png',
-// // }) =>
-// //   renderPlayerStorybookTemplate({
-// //     content: html`
-// //       <vds-video src="${src}" poster="${poster}" cross-origin="anonymous">
-// //       </vds-video>
-// //     `,
-// //   });
+export default {
+  title: 'Providers/Video',
+  component: 'vds-video',
+  argTypes: {
+    src: {
+      control: 'text',
+      defaultValue: 'https://media.vidstack.io/720p.mp4',
+    },
+    poster: {
+      control: 'text',
+      defaultValue: 'https://media.vidstack.io/poster.png',
+    },
+    paused: {
+      control: 'boolean',
+      defaultValue: true,
+    },
+    volume: {
+      control: {
+        type: 'number',
+        step: 0.01,
+      },
+      defaultValue: 1,
+    },
+    currentTime: {
+      control: 'number',
+      defaultValue: 0,
+    },
+    muted: {
+      control: 'boolean',
+      defaultValue: false,
+    },
+    controls: {
+      control: 'boolean',
+      defaultValue: false,
+    },
+    crossOrigin: {
+      control: 'text',
+      defaultValue: 'anonymous',
+    },
+    preload: {
+      control: 'text',
+      defaultValue: 'metadata',
+    },
+    controlsList: {
+      control: 'text',
+      defaultValue: undefined,
+    },
+    autoPiP: {
+      control: 'boolean',
+      defaultValue: false,
+    },
+    disablePiP: {
+      control: 'boolean',
+      defaultValue: false,
+    },
+    disableRemotePlayback: {
+      control: 'boolean',
+      defaultValue: false,
+    },
+  },
+};
 
-// // export const Video = Template.bind({});
+export type VideoArgTypes = {
+  src: string;
+  poster: string;
+  paused: boolean;
+  volume: number;
+  currentTime: number;
+  muted: boolean;
+  controls: boolean;
+  crossOrigin: MediaCrossOriginOption;
+  preload: MediaPreloadOption;
+  controlsList?: VideoControlsList;
+  autoPiP: boolean;
+  disablePiP: boolean;
+  disableRemotePlayback: boolean;
+};
+
+const Template: Story<VideoArgTypes> = ({
+  src,
+  poster,
+  paused,
+  volume,
+  currentTime,
+  muted,
+  controls,
+  crossOrigin,
+  preload,
+  controlsList,
+  autoPiP,
+  disablePiP,
+  disableRemotePlayback,
+}) =>
+  html`
+    <vds-video
+      src="${src}"
+      poster="${poster}"
+      ?paused="${paused}"
+      volume="${volume}"
+      current-time="${currentTime}"
+      ?muted="${muted}"
+      ?controls="${controls}"
+      cross-origin="${crossOrigin}"
+      preload="${preload}"
+      controls-list="${ifDefined(controlsList)}"
+      ?auto-pip="${autoPiP}"
+      ?disable-pip="${disablePiP}"
+      ?disable-remote-playback="${disableRemotePlayback}"
+    >
+    </vds-video>
+  `;
+
+export const Video = Template.bind({});

@@ -86,7 +86,7 @@ export class PauseEvent extends buildsVdsPlayerEvent('pause') {}
 
 export class PlayingEvent extends buildsVdsPlayerEvent('playing') {}
 
-export class CurrentSrcChangeEvent extends buildsVdsPlayerEvent('src-change') {}
+export class SrcChangeEvent extends buildsVdsPlayerEvent('src-change') {}
 
 export class PosterChangeEvent extends buildsVdsPlayerEvent('poster-change') {}
 

@@ -15,6 +15,7 @@ import {
 } from '../../core';
 import { MediaFileProvider } from '../file';
 import { videoStyles } from './video.css';
+import { VideoControlsList } from './video.types';
 import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
 
 /**
@@ -114,7 +115,7 @@ export class VideoProvider extends MediaFileProvider {
    * @example 'nodownload nofullscreen noremoteplayback'
    */
   @property({ attribute: 'controls-list' })
-  controlsList?: 'nodownload' | 'nofullscreen' | 'noremoteplayback';
+  controlsList?: VideoControlsList;
 
   /**
    * 🧑‍🔬 **EXPERIMENTAL:** Whether the browser should automatically toggle picture-in-picture mode as
