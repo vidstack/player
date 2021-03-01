@@ -213,7 +213,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   protected async handleSlotChange(): Promise<void> {
     // TODO: remove previous source tags, clone over new ones, call load().
-    console.log(getSlottedChildren(this));
+    // console.log(getSlottedChildren(this));
 
     this.cancelTimeUpdates();
     this._isBuffering = false;

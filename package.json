@@ -20,7 +20,7 @@
     "vscode.html-data.json"
   ],
   "sideEffects": [
-    "**/vds-*.ts",
+    "**/vds-*.js",
     "bundle/elements.js"
   ],
   "contributors": [
@@ -41,20 +41,25 @@
     "build:storybook": "tsc -p tsconfig-storybook.json",
     "build:manifest": "wcom transform \"src/**/*.ts\" -t vscode markdown",
     "build:watch": "npm run build:esm -- -w",
-    "clean": "rimraf bundle core providers skins ui utils shared storybook custom-elements.json",
+    "clean": "run-p clean:*",
+    "clean:build": "rimraf bundle core providers skins ui utils shared",
+    "clean:storybook": "rimraf storybook-build storybook-static",
+    "clean:test": "rimraf coverage",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts --quiet . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
     "format": "run-s format:*",
     "format:eslint": "npm run lint:eslint -- --fix",
     "format:prettier": "npm run lint:prettier -- --write",
-    "release": "npx semantic-release",
+    "storybook": "npm run storybook:prepare && run-p \"build:storybook -- -w\" storybook:serve",
+    "storybook:prepare": "run-s clean:storybook build:storybook",
+    "storybook:build": "build-storybook && cp .storybook/public/** storybook-static",
+    "storybook:serve": "wds -c .storybook/server.mjs",
+    "storybook:static": "run-s storybook:prepare storybook:build",
     "test": "wtr \"src/**/*.test.ts\"",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
-    "storybook": "npm run build:storybook && run-p \"build:storybook -- -w\" storybook:serve",
-    "storybook:serve": "wds -c .storybook/server.mjs",
-    "storybook:build": "npm run build:storybook && build-storybook"
+    "release": "npx semantic-release"
   },
   "dependencies": {
     "@lukeed/uuid": "^2.0.0",
@@ -67,7 +72,7 @@
     "@babel/core": "^7.12.10",
     "@open-wc/testing": "^2.5.32",
     "@storybook/addon-actions": "^6.1.15",
-    "@storybook/addon-essentials": "^6.1.15",
+    "@storybook/addon-essentials": "^6.1.20",
     "@storybook/addon-links": "^6.1.15",
     "@storybook/web-components": "^6.1.15",
     "@types/mocha": "^8.0.3",
@@ -93,6 +98,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
+    "react": "^17.0.0",
     "rimraf": "^3.0.2",
     "semantic-release": "^17.3.7",
     "sinon": "^9.2.1",

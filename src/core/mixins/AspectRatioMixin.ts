@@ -2,7 +2,7 @@ import { event, listen } from '@wcom/events';
 import { property, UpdatingElement } from 'lit-element';
 
 import { buildVdsEvent, Constructor } from '../../shared';
-import { isUndefined } from '../../utils';
+import { isString, isUndefined } from '../../utils';
 import { PlayerState } from '../player.types';
 import { MediaProvider } from '../provider/MediaProvider';
 
@@ -34,7 +34,7 @@ export function AspectRatioMixin<T extends AspectRatioMixinBase>(
   Base: T,
 ): AspectRatioCocktail<T> {
   class AspectRatioMixin extends Base {
-    protected _aspectRatio = '16:9';
+    protected _aspectRatio?: string;
 
     /**
      * Emitted when the aspect ratio changes.
@@ -63,14 +63,20 @@ export function AspectRatioMixin<T extends AspectRatioMixinBase>(
     }
 
     calcAspectRatio(): number {
-      const [width, height] = /\d{1,2}:\d{1,2}/.test(this.aspectRatio)
-        ? this.aspectRatio.split(':')
-        : [16, 9];
+      if (
+        !isString(this.aspectRatio) ||
+        !/\d{1,2}:\d{1,2}/.test(this.aspectRatio)
+      )
+        return NaN;
+
+      const [width, height] = this.aspectRatio.split(':');
 
       return (100 / Number(width)) * Number(height);
     }
 
     getAspectRatioPadding(minPadding = '98vh'): string {
+      const ratio = this.calcAspectRatio();
+      if (isNaN(ratio)) return '';
       return `min(${minPadding}, ${this.calcAspectRatio()}%)`;
     }
 

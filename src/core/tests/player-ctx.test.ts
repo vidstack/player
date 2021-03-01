@@ -46,8 +46,8 @@ describe('context', () => {
 
     const consumer = player.querySelector('vds-fake-consumer') as FakeConsumer;
 
-    function genRandomNewValue(_: keyof PlayerContext, value: unknown) {
-      if (isString(value)) {
+    function genRandomNewValue(prop: keyof PlayerContext, value: unknown) {
+      if (isString(value) || prop === 'aspectRatio') {
         return Math.random().toString(36).substring(7);
       } else if (isNumber(value)) {
         return Math.random();

@@ -55,7 +55,7 @@ export interface PlayerState {
    * The aspect ratio of the player expressed as `width:height` (`16:9`). This is only applied if
    * the `viewType` is `video` and the player is not in fullscreen mode. Defaults to `16:9`.
    */
-  aspectRatio: string;
+  aspectRatio: string | undefined;
 
   /**
    * The absolute URL of the media resource that has been chosen. Defaults to `''` if no
@@ -208,3 +208,6 @@ export interface PlayerMethods {
    */
   canPlayType(type: string): boolean;
 }
+
+// V8ToIstanbul fails when no value is exported.
+export default class {}

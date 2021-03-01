@@ -38,3 +38,6 @@ declare global {
     ResizeObserver: typeof ResizeObserver;
   }
 }
+
+// V8ToIstanbul fails when no value is exported.
+export default class {}

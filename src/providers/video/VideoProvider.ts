@@ -64,6 +64,27 @@ export class VideoProvider extends MediaFileProvider {
 
   protected render(): TemplateResult {
     return html`
+      <div
+        class="${this.buildContainerClass()}"
+        style="${styleMap(this.buildContainerStyleMap())}"
+      >
+        ${this.renderVideo()}
+      </div>
+    `;
+  }
+
+  protected buildContainerClass(): string {
+    return 'container';
+  }
+
+  protected buildContainerStyleMap(): StyleInfo {
+    return {
+      'padding-bottom': this.getAspectRatioPadding(),
+    };
+  }
+
+  protected renderVideo(): TemplateResult {
+    return html`
       <video
         width="${ifDefined(isNumber(this.width) ? this.width : undefined)}"
         poster="${ifDefined(this.poster)}"
@@ -74,17 +95,10 @@ export class VideoProvider extends MediaFileProvider {
         ?autopictureinpicture="${this.autoPiP}"
         ?disablepictureinpicture="${this.disablePiP}"
         ?disableremoteplayback="${this.disableRemotePlayback}"
-        style="${styleMap(this.buildStyleMap())}"
       >
         ${this.renderContent()}
       </video>
     `;
-  }
-
-  protected buildStyleMap(): StyleInfo {
-    return {
-      'padding-bottom': this.getAspectRatioPadding(),
-    };
   }
 
   // -------------------------------------------------------------------------------------------

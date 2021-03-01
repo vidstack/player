@@ -36,3 +36,6 @@ declare global {
     webkitSetPresentationMode(mode: WebKitPresentationMode): Promise<void>;
   }
 }
+
+// V8ToIstanbul fails when no value is exported.
+export default class {}

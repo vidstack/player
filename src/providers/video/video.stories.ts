@@ -13,11 +13,9 @@ export default {
   argTypes: {
     width: {
       control: 'number',
-      defaultValue: undefined,
     },
     aspectRatio: {
       control: 'text',
-      defaultValue: '16:9',
     },
     src: {
       control: 'text',

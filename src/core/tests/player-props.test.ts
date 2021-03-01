@@ -10,7 +10,6 @@ import {
   MediaType,
   PlayerContext,
   PlayerContextProvider,
-  PlayerState,
   ReadonlyPlayerState,
   ViewType,
   WritablePlayerState,
