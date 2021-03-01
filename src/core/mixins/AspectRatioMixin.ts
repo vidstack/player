@@ -9,7 +9,6 @@ import { MediaProvider } from '../provider/MediaProvider';
 export type AspectRatioMixinBase = Constructor<
   UpdatingElement & {
     currentProvider?: MediaProvider;
-    readonly isVideoView: PlayerState['isVideoView'];
   }
 >;
 
@@ -17,7 +16,7 @@ export type AspectRatioCocktail<T extends AspectRatioMixinBase> = T &
   Constructor<
     Pick<PlayerState, 'aspectRatio'> & {
       calcAspectRatio(): number;
-      getAspectRatioPadding(): string;
+      getAspectRatioPadding(minPadding?: string): string;
     }
   >;
 
@@ -59,6 +58,8 @@ export function AspectRatioMixin<T extends AspectRatioMixinBase>(
       if (!isUndefined(this.currentProvider)) {
         this.currentProvider.aspectRatio = this._aspectRatio;
       }
+
+      this.requestUpdate();
     }
 
     calcAspectRatio(): number {
@@ -69,8 +70,8 @@ export function AspectRatioMixin<T extends AspectRatioMixinBase>(
       return (100 / Number(width)) * Number(height);
     }
 
-    getAspectRatioPadding(): string {
-      return this.isVideoView ? `min(98vh, ${this.calcAspectRatio()}%)` : '';
+    getAspectRatioPadding(minPadding = '98vh'): string {
+      return `min(${minPadding}, ${this.calcAspectRatio()}%)`;
     }
 
     @listen(AspectRatioChangeEvent.TYPE)

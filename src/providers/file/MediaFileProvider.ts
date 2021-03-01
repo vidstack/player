@@ -161,6 +161,12 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   controls = false;
 
   /**
+   * The width of the media player.
+   */
+  @property({ type: Number })
+  width?: number;
+
+  /**
    * Whether to use CORS to fetch the related image. See
    * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin) for more
    * information.

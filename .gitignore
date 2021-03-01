@@ -7,6 +7,7 @@ dist/
 /ui/
 /utils/
 /shared/
+/storybook/
 
 custom-elements.json
 vscode.html-data.json
@@ -50,6 +51,7 @@ node_modules/
 web_modules/
 coverage/
 cypress-coverage/
+storybook-static/
 $RECYCLE.BIN/
 
 .DS_Store

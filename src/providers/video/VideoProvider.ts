@@ -6,6 +6,7 @@ import {
   TemplateResult,
 } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
+import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
 import {
   MediaType,
@@ -13,6 +14,7 @@ import {
   ProviderViewTypeChangeEvent,
   ViewType,
 } from '../../core';
+import { isNumber } from '../../utils';
 import { MediaFileProvider } from '../file';
 import { videoStyles } from './video.css';
 import { VideoControlsList } from './video.types';
@@ -63,6 +65,7 @@ export class VideoProvider extends MediaFileProvider {
   protected render(): TemplateResult {
     return html`
       <video
+        width="${ifDefined(isNumber(this.width) ? this.width : undefined)}"
         poster="${ifDefined(this.poster)}"
         preload="${ifDefined(this.preload)}"
         crossorigin="${ifDefined(this.crossOrigin)}"
@@ -71,10 +74,17 @@ export class VideoProvider extends MediaFileProvider {
         ?autopictureinpicture="${this.autoPiP}"
         ?disablepictureinpicture="${this.disablePiP}"
         ?disableremoteplayback="${this.disableRemotePlayback}"
+        style="${styleMap(this.buildStyleMap())}"
       >
         ${this.renderContent()}
       </video>
     `;
+  }
+
+  protected buildStyleMap(): StyleInfo {
+    return {
+      'padding-bottom': this.getAspectRatioPadding(),
+    };
   }
 
   // -------------------------------------------------------------------------------------------

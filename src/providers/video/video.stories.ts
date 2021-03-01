@@ -11,6 +11,14 @@ export default {
   title: 'Providers/Video',
   component: 'vds-video',
   argTypes: {
+    width: {
+      control: 'number',
+      defaultValue: undefined,
+    },
+    aspectRatio: {
+      control: 'text',
+      defaultValue: '16:9',
+    },
     src: {
       control: 'text',
       defaultValue: 'https://media.vidstack.io/720p.mp4',
@@ -70,6 +78,8 @@ export default {
 };
 
 export type VideoArgTypes = {
+  width: number;
+  aspectRatio: string;
   src: string;
   poster: string;
   paused: boolean;
@@ -86,6 +96,8 @@ export type VideoArgTypes = {
 };
 
 const Template: Story<VideoArgTypes> = ({
+  width,
+  aspectRatio,
   src,
   poster,
   paused,
@@ -102,7 +114,9 @@ const Template: Story<VideoArgTypes> = ({
 }) =>
   html`
     <vds-video
+      width="${width}"
       src="${src}"
+      aspect-ratio="${aspectRatio}"
       poster="${poster}"
       ?paused="${paused}"
       volume="${volume}"

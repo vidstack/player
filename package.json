@@ -38,9 +38,10 @@
   "scripts": {
     "build": "run-s clean build:esm build:manifest",
     "build:esm": "tsc -p tsconfig-build.json",
+    "build:storybook": "tsc -p tsconfig-storybook.json",
     "build:manifest": "wcom transform \"src/**/*.ts\" -t vscode markdown",
     "build:watch": "npm run build:esm -- -w",
-    "clean": "rimraf bundle core providers skins ui utils shared custom-elements.json",
+    "clean": "rimraf bundle core providers skins ui utils shared storybook custom-elements.json",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts --quiet . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
@@ -51,8 +52,9 @@
     "test": "wtr \"src/**/*.test.ts\"",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
-    "storybook": "npm run build:manifest && wds -c .storybook/server.mjs",
-    "storybook:build": "run-s build:manifest build-storybook"
+    "storybook": "npm run build:storybook && run-p \"build:storybook -- -w\" storybook:serve",
+    "storybook:serve": "wds -c .storybook/server.mjs",
+    "storybook:build": "npm run build:storybook && build-storybook"
   },
   "dependencies": {
     "@lukeed/uuid": "^2.0.0",
