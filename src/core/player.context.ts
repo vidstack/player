@@ -1,4 +1,5 @@
 import createContext from '@wcom/context';
+
 import { deviceContext } from './device';
 import { MediaType, PlayerContext, ViewType } from './player.types';
 import { uuidContext } from './uuid';

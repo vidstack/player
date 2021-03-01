@@ -1,5 +1,6 @@
 import '../vds-player';
 import './vds-fake-consumer';
+
 import {
   elementUpdated,
   expect,
@@ -7,13 +8,14 @@ import {
   html,
   oneEvent,
 } from '@open-wc/testing';
+
 import { isBoolean, isNumber, isString, isUndefined } from '../../utils';
+import { ProviderDisconnectEvent, ProviderSrcChangeEvent } from '..';
 import { Player } from '../Player';
 import { playerContext } from '../player.context';
+import { CurrentSrcChangeEvent } from '../player.events';
 import { PlayerContext, ViewType } from '../player.types';
 import { FakeConsumer } from './FakeConsumer';
-import { ProviderSrcChangeEvent, ProviderDisconnectEvent } from '..';
-import { CurrentSrcChangeEvent } from '../player.events';
 import { emitEvent } from './helpers';
 
 describe('context', () => {

@@ -1,7 +1,8 @@
-import { spy } from 'sinon';
-import { setViewport } from '@web/test-runner-commands';
-import { Device, onDeviceChange } from './DeviceObserver';
 import { expect, oneEvent } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import { spy } from 'sinon';
+
+import { Device, onDeviceChange } from './DeviceObserver';
 
 describe('onDeviceChange', () => {
   it('should not call resize observer when server-side', () => {

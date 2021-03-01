@@ -1,15 +1,16 @@
 import { UpdatingElement } from 'lit-element';
+
 import { Constructor } from '../shared';
 import { DeviceObserverCocktail, DeviceObserverMixin } from './device';
 import {
+  AspectRatioCocktail,
+  AspectRatioMixin,
+  MediaTypeCocktail,
+  MediaTypeMixin,
   PlayerContextCocktail,
   PlayerContextMixin,
   ViewTypeCocktail,
   ViewTypeMixin,
-  MediaTypeMixin,
-  MediaTypeCocktail,
-  AspectRatioCocktail,
-  AspectRatioMixin,
 } from './mixins';
 import { UuidCocktail, UuidMixin } from './uuid';
 

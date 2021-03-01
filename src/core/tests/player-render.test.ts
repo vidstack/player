@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import '../vds-player';
 import '../provider/vds-mock-media-provider';
+
 import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
+import sinon, { stub } from 'sinon';
+
+import { Device } from '../device';
 import { Player } from '../Player';
+import { PlayerContextProvider, ViewType } from '../player.types';
 import {
   buildPlayerWithMockProvider,
   switchToDesktopDevice,
   switchToMobileDevice,
 } from './helpers';
-import { PlayerContextProvider, ViewType } from '../player.types';
-import sinon, { stub } from 'sinon';
-import { Device } from '../device';
 
 describe('render', () => {
   afterEach(() => {

@@ -1,7 +1,11 @@
 import '../vds-player';
 import '../provider/vds-mock-media-provider';
+
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
+
+import { Player } from '../Player';
+import { MockMediaProvider } from '../provider/MockMediaProvider';
 import {
   UserMutedChangeRequestEvent,
   UserPauseRequestEvent,
@@ -9,8 +13,6 @@ import {
   UserTimeChangeRequestEvent,
   UserVolumeChangeRequestEvent,
 } from '../user';
-import { Player } from '../Player';
-import { MockMediaProvider } from '../provider/MockMediaProvider';
 import { connectProviderToPlayer, emitEvent } from './helpers';
 
 describe('user events', () => {

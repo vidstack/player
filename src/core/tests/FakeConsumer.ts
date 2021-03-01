@@ -4,6 +4,7 @@ import {
   LitElement,
   TemplateResult,
 } from 'lit-element';
+
 import { playerContext } from '../player.context';
 
 export class FakeConsumer extends LitElement {

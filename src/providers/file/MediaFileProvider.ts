@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Disposal, listenTo } from '@wcom/events';
 import { html, property, PropertyValues, TemplateResult } from 'lit-element';
+
 import {
   MediaProvider,
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
-  ProviderSrcChangeEvent,
   ProviderDurationChangeEvent,
   ProviderErrorEvent,
   ProviderMutedChangeEvent,
@@ -15,6 +15,7 @@ import {
   ProviderPlaybackStartEvent,
   ProviderPlayEvent,
   ProviderPlayingEvent,
+  ProviderSrcChangeEvent,
   ProviderTimeChangeEvent,
   ProviderVolumeChangeEvent,
 } from '../../core';

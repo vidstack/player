@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+
 import { deferredPromise } from '../promise';
 
 describe('deferredPromise', () => {

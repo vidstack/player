@@ -1,6 +1,6 @@
 import {
-  LIB_PREFIX,
   buildVdsEvent,
+  LIB_PREFIX,
   VdsCustomEvent,
   VdsCustomEventConstructor,
 } from '../shared';

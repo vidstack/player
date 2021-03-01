@@ -1,6 +1,6 @@
-import { Player } from './Player';
-import { safelyDefineCustomElement } from '../utils';
 import { LIB_PREFIX } from '../shared';
+import { safelyDefineCustomElement } from '../utils';
+import { Player } from './Player';
 
 export const PLAYER_TAG_NAME = `${LIB_PREFIX}-player`;
 

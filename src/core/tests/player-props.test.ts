@@ -1,6 +1,9 @@
 import '../vds-player';
 import '../provider/vds-mock-media-provider';
+
 import { expect, fixture, html } from '@open-wc/testing';
+import sinon, { spy, stub } from 'sinon';
+
 import { Player } from '../Player';
 import { playerContext } from '../player.context';
 import {
@@ -13,7 +16,6 @@ import {
   WritablePlayerState,
 } from '../player.types';
 import { buildPlayerWithMockProvider } from './helpers';
-import sinon, { spy, stub } from 'sinon';
 
 describe('props', async () => {
   afterEach(() => {

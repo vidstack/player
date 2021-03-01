@@ -1,4 +1,5 @@
 import './vds-player';
+
 import { html, TemplateResult } from 'lit-element';
 
 export const PLAYER_STORYBOOK_ARG_TYPES = {

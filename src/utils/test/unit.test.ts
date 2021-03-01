@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { expect } from '@open-wc/testing';
+
 import {
-  noop,
   getConstructor,
   isArray,
   isBoolean,
@@ -13,6 +13,7 @@ import {
   isPrototypeOf,
   isString,
   isUndefined,
+  noop,
 } from '../unit';
 
 describe('isArray', () => {

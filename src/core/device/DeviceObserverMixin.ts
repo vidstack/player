@@ -1,5 +1,6 @@
 import { Disposal } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
+
 import { Constructor } from '../../shared';
 import { deviceContext } from './device.context';
 import {

@@ -1,9 +1,17 @@
 import { listen } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
+
+import { Constructor } from '../../shared';
+import { playerContext } from '../player.context';
+import {
+  MediaType,
+  PlayerContext,
+  PlayerContextProvider,
+  ViewType,
+} from '../player.types';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
-  ProviderSrcChangeEvent,
   ProviderDisconnectEvent,
   ProviderDurationChangeEvent,
   ProviderMediaTypeChangeEvent,
@@ -15,18 +23,11 @@ import {
   ProviderPlayEvent,
   ProviderPlayingEvent,
   ProviderPosterChangeEvent,
+  ProviderSrcChangeEvent,
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
 } from '../provider/provider.events';
-import { Constructor } from '../../shared';
-import { playerContext } from '../player.context';
-import {
-  MediaType,
-  PlayerContext,
-  PlayerContextProvider,
-  ViewType,
-} from '../player.types';
 import { AspectRatioChangeEvent } from './AspectRatioMixin';
 
 export type PlayerContextMixinBase = Constructor<UpdatingElement>;

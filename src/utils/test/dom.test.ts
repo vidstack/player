@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { expect, fixture, html } from '@open-wc/testing';
 import { LitElement } from 'lit-element';
+
 import { isColliding, safelyDefineCustomElement } from '../dom';
 
 describe('isColliding', () => {

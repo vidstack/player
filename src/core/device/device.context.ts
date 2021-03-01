@@ -1,4 +1,5 @@
 import createContext from '@wcom/context';
+
 import { IS_CLIENT, IS_MOBILE } from '../../utils';
 import { Device } from './DeviceObserver';
 

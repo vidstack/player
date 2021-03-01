@@ -1,9 +1,10 @@
 import { listen } from '@wcom/events';
 import { property, UpdatingElement } from 'lit-element';
-import { MediaProvider } from '../provider/MediaProvider';
+
 import { buildVdsEvent, Constructor } from '../../shared';
 import { isUndefined } from '../../utils';
 import { PlayerState } from '../player.types';
+import { MediaProvider } from '../provider/MediaProvider';
 
 export type AspectRatioMixinBase = Constructor<
   UpdatingElement & {

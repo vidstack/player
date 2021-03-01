@@ -1,9 +1,10 @@
 import { listen } from '@wcom/events';
 import { Constructor, UpdatingElement } from 'lit-element';
+
 import {
-  ProviderSrcChangeEvent,
   ProviderDisconnectEvent,
   ProviderMediaTypeChangeEvent,
+  ProviderSrcChangeEvent,
 } from '..';
 import { MediaType, PlayerState } from '../player.types';
 

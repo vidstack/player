@@ -1,19 +1,32 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Disposal, listen, listenTo } from '@wcom/events';
+import clsx from 'clsx';
 import {
+  CSSResultArray,
   html,
+  internalProperty,
   LitElement,
   property,
-  CSSResultArray,
   TemplateResult,
-  internalProperty,
 } from 'lit-element';
-import clsx from 'clsx';
-import { PlayerMethods, PlayerState } from './player.types';
+
+import { VdsCustomEvent } from '../shared';
 import { deferredPromise, isUndefined } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
 import { ErrorEvent } from './player.events';
+import { PlayerMethods, PlayerState } from './player.types';
+import { PlayerMixin } from './PlayerMixin';
+import {
+  ALL_PROVIDER_EVENT_TYPES,
+  MediaProvider,
+  PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP,
+  ProviderConnectEvent,
+  ProviderDisconnectEvent,
+  ProviderErrorEvent,
+  ProviderPlaybackReadyEvent,
+  VdsProviderEventType,
+} from './provider';
 import {
   ALL_USER_EVENT_TYPES,
   UserMutedChangeRequestEvent,
@@ -22,18 +35,6 @@ import {
   UserTimeChangeRequestEvent,
   UserVolumeChangeRequestEvent,
 } from './user';
-import {
-  ALL_PROVIDER_EVENT_TYPES,
-  MediaProvider,
-  ProviderConnectEvent,
-  ProviderDisconnectEvent,
-  ProviderErrorEvent,
-  ProviderPlaybackReadyEvent,
-  PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP,
-  VdsProviderEventType,
-} from './provider';
-import { VdsCustomEvent } from '../shared';
-import { PlayerMixin } from './PlayerMixin';
 
 /**
  * The player sits at the top of the component hierarchy in the library. It encapsulates

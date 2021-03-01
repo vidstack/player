@@ -5,6 +5,8 @@ import {
   PropertyValues,
   TemplateResult,
 } from 'lit-element';
+import { ifDefined } from 'lit-html/directives/if-defined';
+
 import {
   MediaType,
   ProviderMediaTypeChangeEvent,
@@ -12,9 +14,8 @@ import {
   ViewType,
 } from '../../core';
 import { MediaFileProvider } from '../file';
-import { ifDefined } from 'lit-html/directives/if-defined';
-import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
 import { videoStyles } from './video.css';
+import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.

@@ -1,5 +1,6 @@
 /* c8 ignore next 1000 */
 import { html, property, TemplateResult } from 'lit-element';
+
 import { playerContext } from '../player.context';
 import { MediaProvider } from './MediaProvider';
 

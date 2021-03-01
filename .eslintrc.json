@@ -3,15 +3,12 @@
     "browser": true
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "simple-import-sort"],
   "extends": [
     "plugin:wc/recommended",
     "plugin:lit/recommended",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
     "prettier"
   ],
   "rules": {
@@ -19,14 +16,9 @@
     "no-underscore-dangle": "off",
     "default-case": "off",
     "class-methods-use-this": "off",
-    "import/prefer-default-export": "off",
     "max-classes-per-file": "off",
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": true
-      }
-    ],
-    "@typescript-eslint/no-unused-expressions": "off"
+    "@typescript-eslint/no-unused-expressions": "off",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
   }
 }

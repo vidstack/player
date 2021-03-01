@@ -1,10 +1,10 @@
-import { CurrentSrcChangeEvent as SrcChangeEvent } from '..';
 import {
-  LIB_PREFIX,
   buildVdsEvent,
+  LIB_PREFIX,
   VdsCustomEvent,
   VdsCustomEventConstructor,
 } from '../../shared';
+import { CurrentSrcChangeEvent as SrcChangeEvent } from '..';
 import {
   BufferedChangeEvent,
   BufferingChangeEvent,

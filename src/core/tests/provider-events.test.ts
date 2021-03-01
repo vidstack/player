@@ -1,16 +1,15 @@
 import '../vds-player';
 import './vds-fake-consumer';
 import '../provider/vds-mock-media-provider';
+
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { spy, stub } from 'sinon';
+
 import { Player } from '../Player';
-import { MediaType, ViewType } from '../player.types';
-import { FakeConsumer } from './FakeConsumer';
 import {
-  TimeChangeEvent,
-  ViewTypeChangeEvent,
-  VolumeChangeEvent,
   BufferedChangeEvent,
   BufferingChangeEvent,
+  CurrentSrcChangeEvent,
   DurationChangeEvent,
   ErrorEvent,
   MediaTypeChangeEvent,
@@ -21,13 +20,15 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
-  CurrentSrcChangeEvent,
+  TimeChangeEvent,
+  ViewTypeChangeEvent,
+  VolumeChangeEvent,
 } from '../player.events';
+import { MediaType, ViewType } from '../player.types';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
   ProviderConnectEvent,
-  ProviderSrcChangeEvent,
   ProviderDurationChangeEvent,
   ProviderErrorEvent,
   ProviderMediaTypeChangeEvent,
@@ -38,12 +39,13 @@ import {
   ProviderPlaybackStartEvent,
   ProviderPlayEvent,
   ProviderPlayingEvent,
+  ProviderSrcChangeEvent,
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
 } from '../provider';
-import { spy, stub } from 'sinon';
 import { MockMediaProvider } from '../provider/MockMediaProvider';
+import { FakeConsumer } from './FakeConsumer';
 import { emitEvent } from './helpers';
 
 describe('provider events', () => {

@@ -1,10 +1,12 @@
 import '../vds-player';
 import '../provider/vds-mock-media-provider';
-import { buildPlayerWithMockProvider, emitEvent } from './helpers';
+
 import { expect, oneEvent } from '@open-wc/testing';
-import { ProviderPlaybackReadyEvent } from '../provider';
-import { ErrorEvent, PlaybackReadyEvent } from '../player.events';
 import { spy, stub } from 'sinon';
+
+import { ErrorEvent, PlaybackReadyEvent } from '../player.events';
+import { ProviderPlaybackReadyEvent } from '../provider';
+import { buildPlayerWithMockProvider, emitEvent } from './helpers';
 
 describe('provider requests', () => {
   it('should queue request given provider is not ready and flush once ready', async () => {

@@ -1,10 +1,11 @@
 import { fixture, html, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
+import { TemplateResult } from 'lit-html';
+
 import { DeviceChangeEvent } from '../device/DeviceObserver';
 import { Player } from '../Player';
-import { ProviderConnectEvent } from '../provider/provider.events';
 import { MockMediaProvider } from '../provider/MockMediaProvider';
-import { TemplateResult } from 'lit-html';
+import { ProviderConnectEvent } from '../provider/provider.events';
 
 export function emitEvent(el: HTMLElement, event: Event): void {
   setTimeout(() => el.dispatchEvent(event));

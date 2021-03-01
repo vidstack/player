@@ -1,4 +1,4 @@
-import { noop, isFunction, isUndefined } from './unit';
+import { isFunction, isUndefined, noop } from './unit';
 
 export const IS_CLIENT = typeof window !== 'undefined';
 /* c8 ignore next */

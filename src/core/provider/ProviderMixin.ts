@@ -1,12 +1,13 @@
 import { UpdatingElement } from 'lit-element';
+
 import { Constructor } from '../../shared';
 import {
+  AspectRatioCocktail,
+  AspectRatioMixin,
   MediaTypeCocktail,
   MediaTypeMixin,
-  AspectRatioCocktail,
   ViewTypeCocktail,
   ViewTypeMixin,
-  AspectRatioMixin,
 } from '../mixins';
 import { UuidCocktail, UuidMixin } from '../uuid';
 
