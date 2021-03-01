@@ -4,6 +4,7 @@ import {
   LitElement,
   TemplateResult,
 } from 'lit-element';
+
 import { playerContext } from '../player.context';
 
 export class FakeConsumer extends LitElement {
@@ -32,8 +33,8 @@ export class FakeConsumer extends LitElement {
   controls = playerContext.controls.defaultValue;
 
   @internalProperty()
-  @playerContext.poster.consume()
-  poster = playerContext.poster.defaultValue;
+  @playerContext.currentPoster.consume()
+  currentPoster = playerContext.currentPoster.defaultValue;
 
   @internalProperty()
   @playerContext.muted.consume()

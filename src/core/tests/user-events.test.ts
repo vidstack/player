@@ -1,7 +1,11 @@
 import '../vds-player';
 import '../provider/vds-mock-media-provider';
+
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
+
+import { Player } from '../Player';
+import { MockMediaProvider } from '../provider/MockMediaProvider';
 import {
   UserMutedChangeRequestEvent,
   UserPauseRequestEvent,
@@ -9,8 +13,6 @@ import {
   UserTimeChangeRequestEvent,
   UserVolumeChangeRequestEvent,
 } from '../user';
-import { Player } from '../Player';
-import { MockMediaProvider } from '../provider/MockMediaProvider';
 import { connectProviderToPlayer, emitEvent } from './helpers';
 
 describe('user events', () => {
@@ -39,7 +41,7 @@ describe('user events', () => {
 
   it('should request provider to play when user play request is received', async () => {
     const playSpy = spy(provider, 'play');
-    stub(provider, 'isPlaybackReady').returns(true);
+    stub(provider, 'isPlaybackReady').get(() => true);
     dispatchUserRequest(new UserPlayRequestEvent());
     await oneEvent(player, UserPlayRequestEvent.TYPE);
     expect(playSpy).to.have.been.calledOnce;
@@ -47,34 +49,34 @@ describe('user events', () => {
 
   it('should request provider to pause when user pause request is received', async () => {
     const pauseSpy = spy(provider, 'pause');
-    stub(provider, 'isPlaybackReady').returns(true);
+    stub(provider, 'isPlaybackReady').get(() => true);
     dispatchUserRequest(new UserPauseRequestEvent());
     await oneEvent(player, UserPauseRequestEvent.TYPE);
     expect(pauseSpy).to.have.been.calledOnce;
   });
 
   it('should request provider to mute when user mute request is received', async () => {
-    const setMutedSpy = spy(provider, 'setMuted');
-    stub(provider, 'isPlaybackReady').returns(true);
+    const mutedSpy = spy(provider, 'muted', ['set']);
+    stub(provider, 'isPlaybackReady').get(() => true);
     dispatchUserRequest(new UserMutedChangeRequestEvent({ detail: true }));
     await oneEvent(player, UserMutedChangeRequestEvent.TYPE);
-    expect(setMutedSpy).to.have.been.calledOnceWith(true);
+    expect(mutedSpy.set).to.have.been.calledOnceWith(true);
   });
 
   it('should request provider to change volume when user volume change request is received', async () => {
-    const setVolumeSpy = spy(provider, 'setVolume');
-    stub(provider, 'isPlaybackReady').returns(true);
+    const volumeSpy = spy(provider, 'volume', ['set']);
+    stub(provider, 'isPlaybackReady').get(() => true);
     dispatchUserRequest(new UserVolumeChangeRequestEvent({ detail: 0.83 }));
     await oneEvent(player, UserVolumeChangeRequestEvent.TYPE);
-    expect(setVolumeSpy).to.have.been.calledOnceWith(0.83);
+    expect(volumeSpy.set).to.have.been.calledOnceWith(0.83);
   });
 
   it('should request provider to change time when user time change request is received', async () => {
-    const setCurrentTimeSpy = spy(provider, 'setCurrentTime');
-    stub(provider, 'isPlaybackReady').returns(true);
+    const currentTimeSpy = spy(provider, 'currentTime', ['set']);
+    stub(provider, 'isPlaybackReady').get(() => true);
     dispatchUserRequest(new UserTimeChangeRequestEvent({ detail: 23 }));
     await oneEvent(player, UserTimeChangeRequestEvent.TYPE);
-    expect(setCurrentTimeSpy).to.have.been.calledOnceWith(23);
+    expect(currentTimeSpy.set).to.have.been.calledOnceWith(23);
   });
 
   it('should prevent user events from bubbling by default', async () => {

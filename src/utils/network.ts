@@ -1,5 +1,5 @@
-import { noop, isString, isArray, isNil, isObject, isUndefined } from './unit';
 import { IS_CLIENT } from './support';
+import { isArray, isNil, isObject, isString, isUndefined, noop } from './unit';
 
 /**
  * Attempt to parse json into a POJO.

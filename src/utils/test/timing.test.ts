@@ -1,5 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { spy, useFakeTimers } from 'sinon';
+
 import { debounce } from '../timing';
 
 describe('debounce', () => {

@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig-build.json",
+  "compilerOptions": {
+    "outDir": "storybook"
+  },
+  "exclude": ["src/**/*.test.ts", "node_modules/**", "web_modules/**"]
+}

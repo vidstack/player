@@ -1,5 +1,7 @@
 import { Context } from '@wcom/context';
-import { Device } from '../utils';
+
+import { deviceContext } from './device';
+import { uuidContext } from './uuid';
 
 export type Source = string;
 
@@ -17,7 +19,8 @@ export enum MediaType {
 
 export type PlayerContext = {
   readonly [P in keyof PlayerState]: Context<PlayerState[P]>;
-};
+} &
+  typeof deviceContext & { uuid: typeof uuidContext };
 
 export type PlayerContextProvider = Record<string, unknown> &
   {
@@ -27,14 +30,10 @@ export type PlayerContextProvider = Record<string, unknown> &
 export type ReadonlyPlayerState = Readonly<
   Pick<
     PlayerState,
-    | 'uuid'
     | 'currentSrc'
+    | 'currentPoster'
     | 'duration'
-    | 'poster'
     | 'buffered'
-    | 'device'
-    | 'isMobileDevice'
-    | 'isDesktopDevice'
     | 'isBuffering'
     | 'isPlaying'
     | 'hasPlaybackStarted'
@@ -51,22 +50,16 @@ export type ReadonlyPlayerState = Readonly<
 
 export type WritablePlayerState = Omit<PlayerState, keyof ReadonlyPlayerState>;
 
-export type PlayerProps = WritablePlayerState & ReadonlyPlayerState;
-
 export interface PlayerState {
   /**
-   * Randomly generated version 4 [RFC4122](https://www.ietf.org/rfc/rfc4122.txt) UUID which can
-   * be used to identify the player.
-   *
-   * @readonly
+   * The aspect ratio of the player expressed as `width:height` (`16:9`). This is only applied if
+   * the `viewType` is `video` and the player is not in fullscreen mode. Defaults to `16:9`.
    */
-  readonly uuid: string;
+  aspectRatio: string;
 
   /**
    * The absolute URL of the media resource that has been chosen. Defaults to `''` if no
    * media has been loaded.
-   *
-   * @readonly
    */
   readonly currentSrc: Source;
 
@@ -100,10 +93,8 @@ export interface PlayerState {
   /**
    * The URL of the current poster. Defaults to `''` if no media/poster has been given or
    * loaded.
-   *
-   * @readonly
    */
-  readonly poster: string;
+  readonly currentPoster: string;
 
   /**
    * Whether the audio is muted or not.
@@ -111,84 +102,41 @@ export interface PlayerState {
   muted: boolean;
 
   /**
-   * The aspect ratio of the player expressed as `width:height` (`16:9`). This is only applied if
-   * the `viewType` is `video` and the player is not in fullscreen mode. Defaults to `16:9`.
-   */
-  aspectRatio: string;
-
-  /**
    * A `double` indicating the total playback length of the media in seconds. Defaults
    * to `-1` if no media has been loaded. If the media is being streamed live then the duration is
    * equal to `Infinity`.
-   *
-   * @readonly
    */
   readonly duration: number;
 
   /**
    * The length of the media in seconds (`double`) that has been downloaded by the browser.
-   *
-   * @readonly
    */
   readonly buffered: number;
 
   /**
-   * The type of device the player has loaded in. This is determined by using `ResizeObserver`
-   * (if available), otherwise it'll fallback to parsing `window.navigator.userAgent`. The
-   * maximum width for the device to be considered mobile is 480px.
-   *
-   * @readonly
-   */
-  readonly device: Device;
-
-  /**
-   * Whether the current `device` is mobile (shorthand for `device === Device.Mobile`).
-   *
-   * @readonly
-   */
-  readonly isMobileDevice: boolean;
-
-  /**
-   * Whether the current `device` is desktop (shorthand for `device === Device.Desktop`).
-   *
-   * @readonly
-   */
-  readonly isDesktopDevice: boolean;
-
-  /**
    * Whether playback has temporarily stopped because of a lack of temporary data.
-   *
-   * @readonly
    */
   readonly isBuffering: boolean;
 
   /**
    * Whether media is actively playing back. Defaults to `false` if no media has
    * loaded or playback has not started.
-   *
-   * @readonly
    */
   readonly isPlaying: boolean;
 
   /**
    * Whether the media playback has started. In other words it will be true if `currentTime > 0`.
-   *
-   * @readonly
    */
   readonly hasPlaybackStarted: boolean;
 
   /**
    * Whether media playback has reached the end. In other words it'll be true
    * if `currentTime === duration`.
-   *
-   * @readonly
    */
   readonly hasPlaybackEnded: boolean;
 
   /**
    * Whether media is ready for playback to begin, analgous with `canPlayThrough`.
-   *
-   * @readonly
    */
   readonly isPlaybackReady: boolean;
 
@@ -198,44 +146,65 @@ export interface PlayerState {
    * in some cases it might be desirable to show a different view type. For example, when playing
    * audio with a poster. This is subject to the provider allowing it. Defaults to `unknown`
    * when no media has been loaded.
-   *
-   * @readonly
    */
   readonly viewType: ViewType;
 
   /**
    * Whether the current view is of type `audio`, shorthand for `viewType === ViewType.Audio`.
-   *
-   * @readonly
    */
   readonly isAudioView: boolean;
 
   /**
    * Whether the current view is of type `video`, shorthand for `viewType === ViewType.Video`.
-   *
-   * @readonly
    */
   readonly isVideoView: boolean;
 
   /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
-   *
-   * @readonly
    */
   readonly mediaType: MediaType;
 
   /**
    * Whether the current media is of type `audio`, shorthand for `mediaType === MediaType.Audio`.
-   *
-   * @readonly
    */
   readonly isAudio: boolean;
 
   /**
    * Whether the current media is of type `video`, shorthand for `mediaType === MediaType.Video`.
-   *
-   * @readonly
    */
   readonly isVideo: boolean;
+}
+
+export interface PlayerMethods {
+  /**
+   * Begins/resumes playback of the media. If this method is called programmatically before the
+   * user has interacted with the player, the promise may be rejected subject to the browser's
+   * autoplay policies.
+   */
+  play(): Promise<void>;
+
+  /**
+   * Pauses playback of the media.
+   */
+  pause(): Promise<void>;
+
+  /**
+   * Determines if the connected media provider can play the given `type`. The `type` is
+   * generally the media resource identifier, URL or MIME type (optional Codecs parameter).
+   *
+   * @examples
+   * - `audio/mp3`
+   * - `video/mp4`
+   * - `video/webm; codecs="vp8, vorbis"`
+   * - `/my-audio-file.mp3`
+   * - `youtube/RO7VcUAsf-I`
+   * - `vimeo.com/411652396`
+   * - `https://www.youtube.com/watch?v=OQoz7FCWkfU`
+   * - `https://media.vidstack.io/hls/index.m3u8`
+   * - `https://media.vidstack.io/dash/index.mpd`
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
+   */
+  canPlayType(type: string): boolean;
 }

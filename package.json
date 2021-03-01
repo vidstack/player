@@ -8,7 +8,6 @@
   },
   "main": "bundle/index.js",
   "module": "bundle/index.js",
-  "type": "module",
   "files": [
     "bundle/",
     "core/",
@@ -17,7 +16,8 @@
     "skins/",
     "ui/",
     "utils/",
-    "custom-elements.json"
+    "custom-elements.json",
+    "vscode.html-data.json"
   ],
   "sideEffects": [
     "**/vds-*.ts",
@@ -36,10 +36,12 @@
     "url": "https://github.com/vidstack/player/issues"
   },
   "scripts": {
-    "build": "run-s clean build:esm",
+    "build": "run-s clean build:esm build:manifest",
     "build:esm": "tsc -p tsconfig-build.json",
+    "build:storybook": "tsc -p tsconfig-storybook.json",
+    "build:manifest": "wcom transform \"src/**/*.ts\" -t vscode markdown",
     "build:watch": "npm run build:esm -- -w",
-    "clean": "rimraf bundle core providers skins ui utils shared",
+    "clean": "rimraf bundle core providers skins ui utils shared storybook custom-elements.json",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts --quiet . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
@@ -50,8 +52,9 @@
     "test": "wtr \"src/**/*.test.ts\"",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
-    "storybook": "start-storybook -p 6006",
-    "storybook:build": "build-storybook"
+    "storybook": "npm run build:storybook && run-p \"build:storybook -- -w\" storybook:serve",
+    "storybook:serve": "wds -c .storybook/server.mjs",
+    "storybook:build": "npm run build:storybook && build-storybook"
   },
   "dependencies": {
     "@lukeed/uuid": "^2.0.0",
@@ -71,14 +74,17 @@
     "@types/sinon": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
+    "@wcom/cli": "^1.0.3",
+    "@web/dev-server": "^0.1.8",
     "@web/dev-server-esbuild": "^0.2.6",
+    "@web/dev-server-storybook": "^0.3.5",
     "@web/test-runner": "^0.9.7",
     "@web/test-runner-commands": "^0.2.1",
     "babel-loader": "^8.2.2",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-lit": "^1.3.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-wc": "^1.2.0",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.3",
@@ -90,7 +96,7 @@
     "rimraf": "^3.0.2",
     "semantic-release": "^17.3.7",
     "sinon": "^9.2.1",
-    "typescript": "^4.0.2"
+    "typescript": "^4.1.3"
   },
   "prettier": {
     "singleQuote": true,
@@ -143,5 +149,6 @@
     "lit-element",
     "web components",
     "framework agnostic"
-  ]
+  ],
+  "customElementsManifest": "custom-elements.json"
 }

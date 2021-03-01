@@ -1,10 +1,9 @@
-import { CurrentSrcChangeEvent } from '..';
-import { LIB_PREFIX } from '../../shared/constants';
 import {
   buildVdsEvent,
+  LIB_PREFIX,
   VdsCustomEvent,
   VdsCustomEventConstructor,
-} from '../../shared/events';
+} from '../../shared';
 import {
   BufferedChangeEvent,
   BufferingChangeEvent,
@@ -19,11 +18,12 @@ import {
   PlayEvent,
   PlayingEvent,
   PosterChangeEvent,
+  SrcChangeEvent,
   TimeChangeEvent,
   ViewTypeChangeEvent,
   VolumeChangeEvent,
 } from '../player.events';
-import { PlayerState } from '../player.types';
+import { MediaType, ViewType } from '../player.types';
 import { MediaProvider } from './MediaProvider';
 
 declare global {
@@ -40,7 +40,7 @@ export type RawProviderEventType =
   | 'pause'
   | 'playing'
   | 'poster-change'
-  | 'current-src-change'
+  | 'src-change'
   | 'muted-change'
   | 'volume-change'
   | 'time-change'
@@ -60,16 +60,16 @@ export type RawProviderEventDetailType = {
   play: void;
   pause: void;
   playing: void;
-  'poster-change': PlayerState['poster'];
-  'current-src-change': PlayerState['currentSrc'];
-  'muted-change': PlayerState['muted'];
-  'volume-change': PlayerState['volume'];
-  'time-change': PlayerState['currentTime'];
-  'duration-change': PlayerState['duration'];
-  'buffered-change': PlayerState['buffered'];
-  'buffering-change': PlayerState['isBuffering'];
-  'view-type-change': PlayerState['viewType'];
-  'media-type-change': PlayerState['mediaType'];
+  'poster-change': string;
+  'src-change': string;
+  'muted-change': boolean;
+  'volume-change': number;
+  'time-change': number;
+  'duration-change': number;
+  'buffered-change': number;
+  'buffering-change': boolean;
+  'view-type-change': ViewType;
+  'media-type-change': MediaType;
   'playback-ready': void;
   'playback-start': void;
   'playback-end': void;
@@ -82,10 +82,7 @@ export type GenericVdsProviderEventType<
 
 export type ProviderEventConstructor<
   T extends RawProviderEventType
-> = VdsCustomEventConstructor<
-  RawProviderEventDetailType[T],
-  GenericVdsProviderEventType<T>
->;
+> = VdsCustomEventConstructor<RawProviderEventDetailType[T]>;
 
 export type VdsProviderEventConstructors = {
   [P in RawProviderEventType as GenericVdsProviderEventType<P>]: ProviderEventConstructor<P>;
@@ -93,8 +90,7 @@ export type VdsProviderEventConstructors = {
 
 export type VdsProviderEvents = {
   [P in RawProviderEventType as GenericVdsProviderEventType<P>]: VdsCustomEvent<
-    RawProviderEventDetailType[P],
-    GenericVdsProviderEventType<P>
+    RawProviderEventDetailType[P]
   >;
 };
 
@@ -120,8 +116,8 @@ export class ProviderPauseEvent extends buildVdsProviderEvent('pause') {}
 
 export class ProviderPlayingEvent extends buildVdsProviderEvent('playing') {}
 
-export class ProviderCurrentSrcChangeEvent extends buildVdsProviderEvent(
-  'current-src-change',
+export class ProviderSrcChangeEvent extends buildVdsProviderEvent(
+  'src-change',
 ) {}
 
 export class ProviderPosterChangeEvent extends buildVdsProviderEvent(
@@ -174,12 +170,12 @@ export class ProviderPlaybackEndEvent extends buildVdsProviderEvent(
 
 export class ProviderErrorEvent extends buildVdsProviderEvent('error') {}
 
-export const ALL_PROVIDER_EVENT_TYPES: VdsProviderEventType[] = [
+export const ALL_PROVIDER_EVENT_TYPES = [
   ProviderPlayEvent.TYPE,
   ProviderPauseEvent.TYPE,
   ProviderPlayingEvent.TYPE,
   ProviderPosterChangeEvent.TYPE,
-  ProviderCurrentSrcChangeEvent.TYPE,
+  ProviderSrcChangeEvent.TYPE,
   ProviderMutedChangeEvent.TYPE,
   ProviderVolumeChangeEvent.TYPE,
   ProviderTimeChangeEvent.TYPE,
@@ -192,7 +188,7 @@ export const ALL_PROVIDER_EVENT_TYPES: VdsProviderEventType[] = [
   ProviderPlaybackStartEvent.TYPE,
   ProviderPlaybackEndEvent.TYPE,
   ProviderErrorEvent.TYPE,
-];
+] as VdsProviderEventType[];
 
 /**
  * Map of provider event types to the corresponding player event constructor. Most provider events
@@ -205,8 +201,8 @@ export const PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP = {
   [ProviderPlayEvent.TYPE]: PlayEvent,
   [ProviderPauseEvent.TYPE]: PauseEvent,
   [ProviderPlayingEvent.TYPE]: PlayingEvent,
+  [ProviderSrcChangeEvent.TYPE]: SrcChangeEvent,
   [ProviderPosterChangeEvent.TYPE]: PosterChangeEvent,
-  [ProviderCurrentSrcChangeEvent.TYPE]: CurrentSrcChangeEvent,
   [ProviderMutedChangeEvent.TYPE]: MutedChangeEvent,
   [ProviderVolumeChangeEvent.TYPE]: VolumeChangeEvent,
   [ProviderTimeChangeEvent.TYPE]: TimeChangeEvent,

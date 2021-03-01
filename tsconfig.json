@@ -18,6 +18,6 @@
     "module": "ES6",
     "target": "ES2017"
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules/**"]
+  "include": ["**/*.ts", "**/*.mjs"],
+  "exclude": ["node_modules/**", "dist/**"]
 }

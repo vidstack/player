@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+
 import {
   appendParamsToURL,
   decodeJSON,

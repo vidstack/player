@@ -1,21 +1,30 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Disposal, listen, listenTo } from '@wcom/events';
-import { v4 as uuid } from '@lukeed/uuid';
+import { Disposal, event, listen, listenTo } from '@wcom/events';
+import clsx from 'clsx';
 import {
+  CSSResultArray,
   html,
+  internalProperty,
   LitElement,
   property,
-  CSSResultArray,
   TemplateResult,
-  internalProperty,
 } from 'lit-element';
-import { styleMap } from 'lit-html/directives/style-map';
-import clsx from 'clsx';
-import { MediaType, PlayerProps, PlayerState, ViewType } from './player.types';
-import { deferredPromise, Device, isUndefined, onDeviceChange } from '../utils';
+
+import { VdsCustomEvent } from '../shared';
+import { isUndefined } from '../utils';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
-import { DeviceChangeEvent, ErrorEvent } from './player.events';
+import { VdsPlayerEvents } from './player.events';
+import { PlayerMethods, PlayerState } from './player.types';
+import { PlayerCompositeMixin } from './PlayerCompositeMixin';
+import {
+  ALL_PROVIDER_EVENT_TYPES,
+  MediaProvider,
+  PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP,
+  ProviderConnectEvent,
+  ProviderDisconnectEvent,
+  ProviderErrorEvent,
+} from './provider';
 import {
   ALL_USER_EVENT_TYPES,
   UserMutedChangeRequestEvent,
@@ -24,19 +33,6 @@ import {
   UserTimeChangeRequestEvent,
   UserVolumeChangeRequestEvent,
 } from './user';
-import {
-  ALL_PROVIDER_EVENT_TYPES,
-  MediaProvider,
-  ProviderConnectEvent,
-  ProviderDisconnectEvent,
-  ProviderErrorEvent,
-  ProviderPlaybackReadyEvent,
-  ProviderViewTypeChangeEvent,
-  PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP,
-  VdsProviderEventType,
-} from './provider';
-import { VdsCustomEvent } from '../shared/events';
-import { PlayerContextMixin } from './PlayerContextMixin';
 
 /**
  * The player sits at the top of the component hierarchy in the library. It encapsulates
@@ -64,52 +60,31 @@ import { PlayerContextMixin } from './PlayerContextMixin';
  *  </vds-player>
  * ```
  *
- * @fires vds-play - Emitted when playback attempts to start.
- * @fires vds-pause - Emitted when playback pauses.
- * @fires vds-playing - Emitted when playback being playback.
- * @fires vds-muted-change - Emitted when the muted state of the current provider changes.
- * @fires vds-volume-change - Emitted when the volume state of the current provider changes.
- * @fires vds-time-change - Emitted when the current playback time changes.
- * @fires vds-duration-change - Emitted when the length of the media changes.
- * @fires vds-buffered-change - Emitted when the length of the media downloaded changes.
- * @fires vds-view-type-change - Emitted when the view type of the current provider/media changes.
- * @fires vds-media-type-change - Emitted when the media type of the current provider/media changes.
- * @fires vds-ready - Emitted when the provider is ready to be interacted with.
- * @fires vds-playback-ready - Emitted when playback is ready to start - analgous with `canPlayThrough`.
- * @fires vds-playback-start - Emitted when playback has started (`currentTime > 0`).
- * @fires vds-playback-end - Emitted when playback ends (`currentTime === duration`).
- * @fires vds-device-change - Emitted when the type of user device changes between mobile/desktop.
- * @fires vds-error - Emitted when a provider encounters an error during media loading/playback.
+ * @tagname vds-player
  *
- * @slot - Used to pass in Provider/UI components.
+ * @slot Used to pass in Provider/UI components.
  *
- * @csspart player - The root player container.
+ * @csspart player: The root player container.
  *
- * @cssprop --vds-player-font-family - A custom font family to be used throughout the player.
- * @cssprop --vds-player-bg - The background color of the player.
- * @cssprop --vds-blocker-z-index - The provider UI blocker position in the root z-axis stack inside the player.
+ * @cssprop --vds-player-font-family: A custom font family to be used throughout the player.
+ * @cssprop --vds-player-bg: The background color of the player.
+ * @cssprop --vds-blocker-z-index: The provider UI blocker position in the root z-axis stack inside the player.
  */
 export class Player
-  extends PlayerContextMixin(LitElement)
-  implements PlayerProps {
+  extends PlayerCompositeMixin(LitElement)
+  implements PlayerState, PlayerMethods {
   public static get styles(): CSSResultArray {
     return [playerStyles];
   }
 
   protected readonly disposal = new Disposal();
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Lifecycle
-   *
-   * This section contains component lifecycle methods.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Lifecycle
+  // -------------------------------------------------------------------------------------------
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.setUuid();
-    this.listenToDeviceChanges();
     this.listenToUserEvents();
     this.listenToProviderEvents();
   }
@@ -120,18 +95,9 @@ export class Player
     this._currentProvider = undefined;
   }
 
-  protected setUuid(): void {
-    this.context.uuidCtx = this.uuid;
-    this.setAttribute('uuid', this.uuid);
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Render
-   *
-   * This section contains methods involved in the rendering of the player.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------------------------
 
   render(): TemplateResult {
     return html`
@@ -139,7 +105,6 @@ export class Player
         part="player"
         aria-busy="${this.buildAriaBusy()}"
         class="${clsx(this.buildClassMap())}"
-        style="${styleMap(this.buildStyleMap())}"
       >
         ${this.renderContent()}
       </div>
@@ -162,29 +127,9 @@ export class Player
     };
   }
 
-  protected buildStyleMap(): Record<string, string> {
-    return {
-      paddingBottom: this.isVideoView
-        ? `padding-bottom: ${this.calcAspectRatio()}%;`
-        : '',
-    };
-  }
-
-  protected calcAspectRatio(): number {
-    const [width, height] = /\d{1,2}:\d{1,2}/.test(this.aspectRatio)
-      ? this.aspectRatio.split(':')
-      : [16, 9];
-
-    return (100 / Number(width)) * Number(height);
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Provider API
-   *
-   * This section contains logic for interacting with the current provider.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Methods
+  // -------------------------------------------------------------------------------------------
 
   @internalProperty()
   protected _currentProvider?: MediaProvider;
@@ -197,6 +142,13 @@ export class Player
     return this._currentProvider;
   }
 
+  /**
+   * The underlying player that is actually responsible for rendering/loading media.
+   */
+  get internalPlayer(): unknown {
+    return this.currentProvider?.internalPlayer;
+  }
+
   protected throwIfNoMediaProvider(): void {
     if (!isUndefined(this.currentProvider)) return;
     throw Error(
@@ -207,191 +159,59 @@ export class Player
     );
   }
 
-  /**
-   * Begins/resumes playback of the media. If this method is called programmatically before the
-   * user has interacted with the player, the promise may be rejected subject to the browser's
-   * autoplay policies.
-   */
   play(): Promise<void> {
     this.throwIfNoMediaProvider();
     return this.currentProvider!.play();
   }
 
-  /**
-   * Pauses playback of the media.
-   */
   pause(): Promise<void> {
     this.throwIfNoMediaProvider();
     return this.currentProvider!.pause();
   }
 
-  /**
-   * Determines if the connected media provider can play the given `type`. The `type` is
-   * generally the media resource identifier, URL or MIME type (optional Codecs parameter).
-   *
-   * @examples
-   * - `audio/mp3`
-   * - `video/mp4`
-   * - `video/webm; codecs="vp8, vorbis"`
-   * - `/my-audio-file.mp3`
-   * - `youtube/RO7VcUAsf-I`
-   * - `vimeo.com/411652396`
-   * - `https://www.youtube.com/watch?v=OQoz7FCWkfU`
-   * - `https://media.vidstack.io/hls/index.m3u8`
-   * - `https://media.vidstack.io/dash/index.mpd`
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
-   */
   canPlayType(type: string): boolean {
     return this._currentProvider?.canPlayType(type) ?? false;
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Device Handlers
-   *
-   * This section contains handler methods for I/O device changes.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  protected listenToDeviceChanges(): void {
-    const off = onDeviceChange(this.handleDeviceChange.bind(this));
-    this.disposal.add(off);
-  }
-
-  protected handleDeviceChange(device: Device): void {
-    this._device = device;
-    this.context.isMobileDeviceCtx = this.isMobileDevice;
-    this.context.isDesktopDeviceCtx = this.isDesktopDevice;
-    this.setAttribute(
-      this.getMobileDeviceAttrName(),
-      String(this.isMobileDevice),
-    );
-    this.setAttribute(
-      this.getDesktopDeviceAttrName(),
-      String(this.isDesktopDevice),
-    );
-    this.dispatchEvent(new DeviceChangeEvent({ detail: device }));
-  }
-
-  /**
-   * The name of the attribute on the player for which to set whether the current device is
-   * mobile. The attribute will be set to `true`/`false` accordingly.
-   */
-  protected getMobileDeviceAttrName(): string {
-    return 'mobile';
-  }
-
-  /**
-   * The name of the attribute on the player for which to set whether the current device is
-   * desktop. The attribute will be set to `true`/`false` accordingly.
-   */
-  protected getDesktopDeviceAttrName(): string {
-    return 'desktop';
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Provider Requests
-   *
-   * This section contains methods responsible for requesting a state change on the current
-   * provider.
-   * -------------------------------------------------------------------------------------------
-   */
-
-  /**
-   * Requests are queued if called before media is ready for playback. Once the media is
-   * ready (`ProviderPlaybackReadyEvent`) the queue is flushed. Each request is associated with
-   * a request key to avoid making duplicate requests of the same "type".
-   */
-  protected requestQueue = new Map<string, () => void | Promise<void>>();
-
-  protected pendingRequestQueueFlush = deferredPromise();
-
-  /**
-   * Returns a clone of the current request queue for testing and/or debugging purposes.
-   */
-  getRequestQueue(): Map<string, () => void | Promise<void>> {
-    return new Map(this.requestQueue);
-  }
-
-  /**
-   * Waits for the current request queue to be flushed.
-   */
-  async waitForRequestQueueToFlush(): Promise<void> {
-    await this.pendingRequestQueueFlush.promise;
-  }
-
-  protected async safelyMakeRequest(requestKey: string): Promise<void> {
-    try {
-      await this.requestQueue.get(requestKey)?.();
-    } catch (e) {
-      this.dispatchEvent(new ErrorEvent({ detail: e }));
-    }
-
-    this.requestQueue.delete(requestKey);
-  }
-
-  protected attemptRequestOrQueue(
-    requestKey: string,
-    request: () => void | Promise<void>,
-  ): void {
-    this.requestQueue.set(requestKey, request);
-    if (!this.isPlaybackReady) return;
-    this.safelyMakeRequest(requestKey);
-    this.requestQueue.delete(requestKey);
-  }
-
-  protected async flushRequestQueue(): Promise<void> {
-    const requests = Array.from(this.requestQueue.keys());
-    await Promise.all(requests.map(reqKey => this.safelyMakeRequest(reqKey)));
-    this.requestQueue.clear();
-    this.pendingRequestQueueFlush.resolve();
-    this.pendingRequestQueueFlush = deferredPromise();
-  }
+  // -------------------------------------------------------------------------------------------
+  // Provider Requests
+  // -------------------------------------------------------------------------------------------
 
   protected requestPlay(): void {
-    this.attemptRequestOrQueue('playback', () => this.currentProvider?.play());
+    this.makeRequest('playback', () => this.currentProvider!.play());
   }
 
   protected requestPause(): void {
-    this.attemptRequestOrQueue('playback', () => this.currentProvider?.pause());
+    this.makeRequest('playback', () => this.currentProvider!.pause());
   }
 
-  protected requestControls(isControlsVisible: PlayerState['controls']): void {
-    this.attemptRequestOrQueue('ctrls', () =>
-      this.currentProvider?.setControlsVisibility(isControlsVisible),
-    );
+  protected requestControls(isControlsVisible: boolean): void {
+    this.makeRequest('ctrls', () => {
+      this.currentProvider!.controls = isControlsVisible;
+    });
   }
 
-  protected requestVolumeChange(volume: PlayerState['volume']): void {
-    this.attemptRequestOrQueue('vol', () =>
-      this.currentProvider?.setVolume(volume),
-    );
+  protected requestVolumeChange(volume: number): void {
+    this.makeRequest('vol', () => {
+      this.currentProvider!.volume = volume;
+    });
   }
 
-  protected requestTimeChange(time: PlayerState['currentTime']): void {
-    this.attemptRequestOrQueue('time', () =>
-      this.currentProvider?.setCurrentTime(time),
-    );
+  protected requestTimeChange(time: number): void {
+    this.makeRequest('time', () => {
+      this.currentProvider!.currentTime = time;
+    });
   }
 
-  protected requestMutedChange(muted: PlayerState['muted']): void {
-    this.attemptRequestOrQueue('mute', () =>
-      this.currentProvider?.setMuted(muted),
-    );
+  protected requestMutedChange(muted: boolean): void {
+    this.makeRequest('mute', () => {
+      this.currentProvider!.muted = muted;
+    });
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * User Events
-   *
-   * This section is responsible for listening to user events and calling the appropriate
-   * provider request method.
-   *
-   * @example `UserPlayRequest` --> `this.requestPlay()`.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // User Events
+  // -------------------------------------------------------------------------------------------
 
   /**
    * Allows user events to bubble up through the player.
@@ -421,40 +241,35 @@ export class Player
   }
 
   @listen(UserPlayRequestEvent.TYPE)
-  handleUserPlayRequest(): void {
+  protected handleUserPlayRequest(): void {
     this.requestPlay();
   }
 
   @listen(UserPauseRequestEvent.TYPE)
-  handleUserPauseRequest(): void {
+  protected handleUserPauseRequest(): void {
     this.requestPause();
   }
 
   @listen(UserMutedChangeRequestEvent.TYPE)
-  handleUserMutedChangeRequest(e: UserMutedChangeRequestEvent): void {
+  protected handleUserMutedChangeRequest(e: UserMutedChangeRequestEvent): void {
     this.requestMutedChange(e.detail);
   }
 
   @listen(UserVolumeChangeRequestEvent.TYPE)
-  handleUserVolumeChangeRequest(e: UserVolumeChangeRequestEvent): void {
+  protected handleUserVolumeChangeRequest(
+    e: UserVolumeChangeRequestEvent,
+  ): void {
     this.requestVolumeChange(e.detail);
   }
 
   @listen(UserTimeChangeRequestEvent.TYPE)
-  handleUserTimeChangeRequest(e: UserTimeChangeRequestEvent): void {
+  protected handleUserTimeChangeRequest(e: UserTimeChangeRequestEvent): void {
     this.requestTimeChange(e.detail);
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Provider Events
-   *
-   * This section is responsible for translating provider events in to player events, and
-   * updating context properties.
-   *
-   * @example Provider --> `ProviderPlayEvent` --> Player --> `PlayEvent` --> DOM
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Provider Events
+  // -------------------------------------------------------------------------------------------
 
   /**
    * Allows provider events to bubble up through the player.
@@ -478,15 +293,13 @@ export class Player
    * This handler is attached in the "Connect" section above. Use it for processing all provider
    * events.
    */
-  protected catchAllProviderEvents(
-    e: VdsCustomEvent<unknown, VdsProviderEventType>,
-  ): void {
+  protected catchAllProviderEvents(e: VdsCustomEvent<unknown>): void {
     if (!this.providerEventGateway(e)) return;
     this.translateProviderEventAndDispatch(e);
   }
 
   protected translateProviderEventAndDispatch(
-    e: VdsCustomEvent<unknown, VdsProviderEventType>,
+    e: VdsCustomEvent<unknown>,
   ): void {
     const PlayerEvent = PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP[e.type];
     if (!isUndefined(PlayerEvent)) {
@@ -503,11 +316,6 @@ export class Player
     this._currentProvider = connectedProvider;
   }
 
-  @listen(ProviderPlaybackReadyEvent.TYPE)
-  protected async handleProviderPlaybackReady(): Promise<void> {
-    await this.flushRequestQueue();
-  }
-
   @listen(ProviderDisconnectEvent.TYPE)
   protected handleProviderDisconnect(): void {
     this._currentProvider = undefined;
@@ -518,70 +326,41 @@ export class Player
     // TODO: handle this error.
   }
 
-  @listen(ProviderViewTypeChangeEvent.TYPE)
-  protected handleProviderViewTypeChange(): void {
-    this.setAttribute(this.getAudioViewAttrName(), String(this.isAudioView));
-    this.setAttribute(this.getVideoViewAttrName(), String(this.isVideoView));
-  }
-
-  /**
-   * The attribute name on the player for which to set whether the player view is of type
-   * audio. This attribute will be set to `true`/`false` accordingly.
-   */
-  protected getAudioViewAttrName(): string {
-    return 'audio';
-  }
-
-  /**
-   * The attribute name on the player for which to set whether the player view is of type
-   * video. This attribute will be set to `true`/`false` accordingly.
-   */
-  protected getVideoViewAttrName(): string {
-    return 'video';
-  }
-
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Writable Player Properties
-   *
-   * This section defines writable player properties and ensures their setters call the appropriate
-   * provider handler method when required.
-   *
-   * @example `this.paused = false` -> `this.togglePlayback(false)`.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Writable Player Properties
+  // -------------------------------------------------------------------------------------------
 
   @property({ type: Number })
-  get volume(): PlayerState['volume'] {
+  get volume(): number {
     if (!this.isPlaybackReady) return playerContext.volume.defaultValue;
-    return this.currentProvider!.getVolume();
+    return this.currentProvider!.volume;
   }
 
-  set volume(newVolume: PlayerState['volume']) {
+  set volume(newVolume: number) {
     this.requestVolumeChange(newVolume);
   }
 
   // ---
 
-  @property({ type: Number })
-  get currentTime(): PlayerState['currentTime'] {
+  @property({ type: Number, attribute: 'current-time' })
+  get currentTime(): number {
     if (!this.isPlaybackReady) return playerContext.currentTime.defaultValue;
-    return this.currentProvider!.getCurrentTime();
+    return this.currentProvider!.currentTime;
   }
 
-  set currentTime(newCurrentTime: PlayerState['currentTime']) {
+  set currentTime(newCurrentTime: number) {
     this.requestTimeChange(newCurrentTime);
   }
 
   // ---
 
   @property({ type: Boolean, reflect: true })
-  get paused(): PlayerState['paused'] {
+  get paused(): boolean {
     if (!this.isPlaybackReady) return playerContext.paused.defaultValue;
-    return this.currentProvider!.isPaused();
+    return this.currentProvider!.paused;
   }
 
-  set paused(isPaused: PlayerState['paused']) {
+  set paused(isPaused: boolean) {
     if (!isPaused) {
       this.requestPlay();
     } else {
@@ -592,142 +371,188 @@ export class Player
   // ---
 
   @property({ type: Boolean })
-  get controls(): PlayerState['controls'] {
+  get controls(): boolean {
     if (!this.isPlaybackReady) return playerContext.controls.defaultValue;
-    return this.currentProvider!.isControlsVisible();
+    return this.currentProvider!.controls;
   }
 
-  set controls(isControlsVisible: PlayerState['controls']) {
+  set controls(isControlsVisible: boolean) {
     this.requestControls(isControlsVisible);
   }
 
   // ---
 
-  protected _aspectRatio: PlayerState['aspectRatio'] = '16:9';
-
-  @property({ type: String, attribute: 'aspect-ratio', reflect: true })
-  get aspectRatio(): PlayerState['aspectRatio'] {
-    return this._aspectRatio;
-  }
-
-  set aspectRatio(newAspectRatio: PlayerState['aspectRatio']) {
-    this._aspectRatio = newAspectRatio;
-    this.context.aspectRatioCtx = newAspectRatio;
-  }
-
-  // ---
-
   @property({ type: Boolean })
-  get muted(): PlayerState['muted'] {
+  get muted(): boolean {
     if (!this.isPlaybackReady) return playerContext.muted.defaultValue;
-    return this.currentProvider!.isMuted();
+    return this.currentProvider!.muted;
   }
 
-  set muted(newMuted: PlayerState['muted']) {
+  set muted(newMuted: boolean) {
     this.requestMutedChange(newMuted);
   }
 
-  /**
-   * -------------------------------------------------------------------------------------------
-   * Readonly Player Properties
-   *
-   * This section defines readonly player properties.
-   * -------------------------------------------------------------------------------------------
-   */
+  // -------------------------------------------------------------------------------------------
+  // Readonly Player Properties
+  // -------------------------------------------------------------------------------------------
 
-  protected _uuid = uuid();
-
-  get currentSrc(): PlayerState['currentSrc'] {
+  get currentSrc(): string {
     if (!this.isPlaybackReady) return playerContext.currentSrc.defaultValue;
-    return this.currentProvider!.getCurrentSrc();
+    return this.currentProvider!.currentSrc;
   }
 
-  get poster(): PlayerState['poster'] {
-    if (!this.isPlaybackReady) return playerContext.poster.defaultValue;
-    return this.currentProvider!.getPoster();
+  get currentPoster(): string {
+    if (!this.isPlaybackReady) return playerContext.currentPoster.defaultValue;
+    return this.currentProvider!.currentPoster;
   }
 
-  get uuid(): PlayerState['uuid'] {
-    return this._uuid;
-  }
-
-  get duration(): PlayerState['duration'] {
+  get duration(): number {
     if (!this.isPlaybackReady) return playerContext.duration.defaultValue;
-    return this.currentProvider!.getDuration();
+    return this.currentProvider!.duration;
   }
 
-  get buffered(): PlayerState['buffered'] {
+  get buffered(): number {
     if (!this.isPlaybackReady) return playerContext.buffered.defaultValue;
-    return this.currentProvider!.getBuffered();
+    return this.currentProvider!.buffered;
   }
 
-  get isBuffering(): PlayerState['isBuffering'] {
+  get isBuffering(): boolean {
     if (!this.isPlaybackReady) return playerContext.isBuffering.defaultValue;
-    return this.currentProvider!.isBuffering();
+    return this.currentProvider!.isBuffering;
   }
 
-  get isPlaying(): PlayerState['isPlaying'] {
+  get isPlaying(): boolean {
     if (!this.isPlaybackReady) return playerContext.isPlaying.defaultValue;
-    const isPaused = this.currentProvider!.isPaused();
+    const isPaused = this.currentProvider!.paused;
     return !isPaused;
   }
 
-  protected _device = playerContext.device.defaultValue;
-
-  get device(): PlayerState['device'] {
-    return this._device;
-  }
-
-  get isMobileDevice(): PlayerState['isMobileDevice'] {
-    return this._device === Device.Mobile;
-  }
-
-  get isDesktopDevice(): PlayerState['isDesktopDevice'] {
-    return this._device === Device.Desktop;
-  }
-
-  get hasPlaybackStarted(): PlayerState['hasPlaybackStarted'] {
+  get hasPlaybackStarted(): boolean {
     if (!this.isPlaybackReady)
       return playerContext.hasPlaybackStarted.defaultValue;
-    return this.currentProvider!.hasPlaybackStarted();
+    return this.currentProvider!.hasPlaybackStarted;
   }
 
-  get hasPlaybackEnded(): PlayerState['hasPlaybackEnded'] {
+  get hasPlaybackEnded(): boolean {
     if (!this.isPlaybackReady)
       return playerContext.hasPlaybackEnded.defaultValue;
-    return this.currentProvider!.hasPlaybackEnded();
+    return this.currentProvider!.hasPlaybackEnded;
   }
 
-  get isPlaybackReady(): PlayerState['isPlaybackReady'] {
+  get isPlaybackReady(): boolean {
     return (
-      this.currentProvider?.isPlaybackReady?.() ??
+      this.currentProvider?.isPlaybackReady ??
       playerContext.isPlaybackReady.defaultValue
     );
   }
 
-  get viewType(): PlayerState['viewType'] {
-    if (!this.isPlaybackReady) return playerContext.viewType.defaultValue;
-    return this.currentProvider!.getViewType();
-  }
+  // -------------------------------------------------------------------------------------------
+  // Event Documentation
+  //
+  // Purely for documentation purposes only. The `@wcom/cli` library will pick up on these
+  // and include them in any transformations such as docs. Any minifier should notice these
+  // are not used and drop them.
+  // -------------------------------------------------------------------------------------------
 
-  get isAudioView(): PlayerState['isAudioView'] {
-    return this.viewType === ViewType.Audio;
-  }
+  /**
+   * Emitted when playback attempts to start.
+   */
+  @event({ name: 'vds-play' })
+  protected playEvent!: VdsPlayerEvents['vds-play'];
 
-  get isVideoView(): PlayerState['isVideoView'] {
-    return this.viewType === ViewType.Video;
-  }
+  /**
+   * Emitted when playback pauses.
+   */
+  @event({ name: 'vds-pause' })
+  protected pauseEvent!: VdsPlayerEvents['vds-pause'];
 
-  get mediaType(): PlayerState['mediaType'] {
-    if (!this.isPlaybackReady) return playerContext.mediaType.defaultValue;
-    return this.currentProvider!.getMediaType();
-  }
+  /**
+   * Emitted when playback being playback.
+   */
+  @event({ name: 'vds-playing' })
+  protected playingEvent!: VdsPlayerEvents['vds-playing'];
 
-  get isAudio(): PlayerState['isAudio'] {
-    return this.mediaType === MediaType.Audio;
-  }
+  /**
+   * Emitted when the current src changes.
+   */
+  @event({ name: 'vds-src-change' })
+  protected srcChangeEvent!: VdsPlayerEvents['vds-src-change'];
 
-  get isVideo(): PlayerState['isVideo'] {
-    return this.mediaType === MediaType.Video;
-  }
+  /**
+   * Emitted when the current poster changes.
+   */
+  @event({ name: 'vds-poster-change' })
+  protected posterChangeEvent!: VdsPlayerEvents['vds-poster-change'];
+
+  /**
+   * Emitted when the muted state of the current provider changes.
+   */
+  @event({ name: 'vds-muted-change' })
+  protected mutedChangeEvent!: VdsPlayerEvents['vds-muted-change'];
+
+  /**
+   * Emitted when the volume state of the current provider changes.
+   */
+  @event({ name: 'vds-volume-change' })
+  protected volumeChangeEvent!: VdsPlayerEvents['vds-volume-change'];
+
+  /**
+   * Emitted when the current playback time changes.
+   */
+  @event({ name: 'vds-time-change' })
+  protected timeChangeEvent!: VdsPlayerEvents['vds-time-change'];
+
+  /**
+   * Emitted when the length of the media changes.
+   */
+  @event({ name: 'vds-duration-change' })
+  protected durationChangeEvent!: VdsPlayerEvents['vds-duration-change'];
+
+  /**
+   * Emitted when the length of the media downloaded changes.
+   */
+  @event({ name: 'vds-buffered-change' })
+  protected bufferedChangeEvent!: VdsPlayerEvents['vds-buffered-change'];
+
+  /**
+   * Emitted when playback resumes/stops due to lack of data.
+   */
+  @event({ name: 'vds-buffering-change' })
+  protected bufferingChangeEvent!: VdsPlayerEvents['vds-buffering-change'];
+
+  /**
+   * Emitted when the view type of the current provider/media changes.
+   */
+  @event({ name: 'vds-view-type-change' })
+  protected viewTypeChangeEvent!: VdsPlayerEvents['vds-view-type-change'];
+
+  /**
+   * Emitted when the media type of the current provider/media changes.
+   */
+  @event({ name: 'vds-media-type-change' })
+  protected mediaTypeChangeEvent!: VdsPlayerEvents['vds-media-type-change'];
+
+  /**
+   * Emitted when playback is ready to start - analgous with `canPlayThrough`.
+   */
+  @event({ name: 'vds-playback-ready' })
+  protected playbackReadyEvent!: VdsPlayerEvents['vds-playback-ready'];
+
+  /**
+   * Emitted when playback has started (`currentTime > 0`).
+   */
+  @event({ name: 'vds-playback-start' })
+  protected playbackStartEvent!: VdsPlayerEvents['vds-playback-start'];
+
+  /**
+   * Emitted when playback ends (`currentTime === duration`).
+   */
+  @event({ name: 'vds-playback-end' })
+  protected playbackEndEvent!: VdsPlayerEvents['vds-playback-end'];
+
+  /**
+   * Emitted when a provider encounters an error during media loading/playback.
+   */
+  @event({ name: 'vds-error' })
+  protected errorEvent!: VdsPlayerEvents['vds-error'];
 }

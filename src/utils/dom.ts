@@ -1,7 +1,4 @@
-import { listenTo } from '@wcom/events';
-import { Unsubscribe } from '../shared/types';
-import { IS_CLIENT, IS_MOBILE } from './support';
-import { noop, isUndefined } from './unit';
+import { IS_CLIENT } from './support';
 
 /**
  * Registers a custom element in the CustomElementRegistry. By "safely" we mean:
@@ -21,6 +18,22 @@ export const safelyDefineCustomElement = (
   if (!isClient || isElementRegistered) return;
   window.customElements.define(name, constructor);
 };
+
+/**
+ * Returns elements assigned to the default slot in the shadow root. Filters out all nodes
+ * which are not of type `Node.ELEMENT_NODE`.
+ *
+ * @param el - The element containing the slot.
+ */
+export function getSlottedChildren(el: HTMLElement): Element[] {
+  const slot = el.shadowRoot?.querySelector('slot');
+  const childNodes = slot?.assignedNodes({ flatten: true }) ?? [];
+
+  return Array.prototype.filter.call(
+    childNodes,
+    node => node.nodeType == Node.ELEMENT_NODE,
+  );
+}
 
 /**
  * Determines whether two elements are interecting in the DOM.
@@ -48,40 +61,4 @@ export const isColliding = (
     aRect.top + translateAy < bRect.bottom + translateBy &&
     aRect.bottom + translateAy > bRect.top + translateBy
   );
-};
-
-export enum Device {
-  Mobile = 'mobile',
-  Desktop = 'desktop',
-}
-
-/**
- * Listens for device changes (mobile/desktop) and invokes a callback whether the current
- * view is mobile. It determines the type by either listening for `resize` events
- * on the window (if API is available), otherwise it'll fallback to parsing the user agent string.
- *
- * @param callback - Called when the device changes.
- * @param maxWidth - The maximum window width in pixels to consider device as mobile.
- */
-export const onDeviceChange = (
-  callback: (device: Device) => void,
-  maxWidth = 480,
-  isClient = IS_CLIENT,
-  isMobile = IS_MOBILE,
-): Unsubscribe => {
-  const isServerSide = !isClient;
-  const isResizeObsDefined = !isUndefined(window.ResizeObserver);
-
-  if (isServerSide || !isResizeObsDefined) {
-    callback(isMobile ? Device.Mobile : Device.Desktop);
-    return noop;
-  }
-
-  function handleWindowResize() {
-    const isMobileScreen = window.innerWidth <= maxWidth;
-    callback(isMobileScreen || isMobile ? Device.Mobile : Device.Desktop);
-  }
-
-  handleWindowResize();
-  return listenTo(window, 'resize', handleWindowResize);
 };

@@ -1,15 +1,12 @@
 import '../vds-player';
 import './vds-fake-consumer';
 import '../provider/vds-mock-media-provider';
+
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { spy, stub } from 'sinon';
+
 import { Player } from '../Player';
-import { MediaType, ViewType } from '../player.types';
-import { FakeConsumer } from './FakeConsumer';
 import {
-  ReadyEvent,
-  TimeChangeEvent,
-  ViewTypeChangeEvent,
-  VolumeChangeEvent,
   BufferedChangeEvent,
   BufferingChangeEvent,
   DurationChangeEvent,
@@ -22,13 +19,16 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
-  CurrentSrcChangeEvent,
+  SrcChangeEvent,
+  TimeChangeEvent,
+  ViewTypeChangeEvent,
+  VolumeChangeEvent,
 } from '../player.events';
+import { MediaType, ViewType } from '../player.types';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
   ProviderConnectEvent,
-  ProviderCurrentSrcChangeEvent,
   ProviderDurationChangeEvent,
   ProviderErrorEvent,
   ProviderMediaTypeChangeEvent,
@@ -39,12 +39,13 @@ import {
   ProviderPlaybackStartEvent,
   ProviderPlayEvent,
   ProviderPlayingEvent,
+  ProviderSrcChangeEvent,
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
 } from '../provider';
-import { spy, stub } from 'sinon';
 import { MockMediaProvider } from '../provider/MockMediaProvider';
+import { FakeConsumer } from './FakeConsumer';
 import { emitEvent } from './helpers';
 
 describe('provider events', () => {
@@ -100,10 +101,8 @@ describe('provider events', () => {
 
   it('should handle current src change event', async () => {
     const currentSrc = 'penguins on an apple tree';
-    dispatchProviderUpdate(
-      new ProviderCurrentSrcChangeEvent({ detail: currentSrc }),
-    );
-    const { detail } = await oneEvent(player, CurrentSrcChangeEvent.TYPE);
+    dispatchProviderUpdate(new ProviderSrcChangeEvent({ detail: currentSrc }));
+    const { detail } = await oneEvent(player, SrcChangeEvent.TYPE);
     expect(detail).to.equal(currentSrc);
     expect(consumer.currentSrc).to.equal(currentSrc);
   });
@@ -164,7 +163,6 @@ describe('provider events', () => {
 
   it('should handle view type (audio) change event', async () => {
     const viewType = ViewType.Audio;
-    stub(provider, 'getViewType').returns(viewType);
     stub(provider, 'isPlaybackReady').returns(true);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
@@ -180,7 +178,6 @@ describe('provider events', () => {
 
   it('should handle view type (video) change event', async () => {
     const viewType = ViewType.Video;
-    stub(provider, 'getViewType').returns(viewType);
     stub(provider, 'isPlaybackReady').returns(true);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
@@ -196,7 +193,6 @@ describe('provider events', () => {
 
   it('should handle view type (unknown) change event', async () => {
     const viewType = ViewType.Unknown;
-    stub(provider, 'getViewType').returns(viewType);
     dispatchProviderUpdate(
       new ProviderViewTypeChangeEvent({ detail: viewType }),
     );
@@ -211,7 +207,6 @@ describe('provider events', () => {
 
   it('should handle media type (audio) change event', async () => {
     const mediaType = MediaType.Audio;
-    stub(provider, 'getMediaType').returns(mediaType);
     dispatchProviderUpdate(
       new ProviderMediaTypeChangeEvent({ detail: mediaType }),
     );
@@ -224,7 +219,6 @@ describe('provider events', () => {
 
   it('should handle media type (video) change event', async () => {
     const mediaType = MediaType.Video;
-    stub(provider, 'getMediaType').returns(mediaType);
     dispatchProviderUpdate(
       new ProviderMediaTypeChangeEvent({ detail: mediaType }),
     );
@@ -237,7 +231,6 @@ describe('provider events', () => {
 
   it('should handle media type (unknown) change event', async () => {
     const mediaType = MediaType.Unknown;
-    stub(provider, 'getMediaType').returns(mediaType);
     dispatchProviderUpdate(
       new ProviderMediaTypeChangeEvent({ detail: mediaType }),
     );

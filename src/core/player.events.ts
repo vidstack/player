@@ -1,11 +1,10 @@
-import { LIB_PREFIX } from '../shared/constants';
 import {
   buildVdsEvent,
+  LIB_PREFIX,
   VdsCustomEvent,
   VdsCustomEventConstructor,
-} from '../shared/events';
-import { Device } from '../utils';
-import { PlayerState } from './player.types';
+} from '../shared';
+import { MediaType, ViewType } from './player.types';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -17,7 +16,7 @@ export type RawPlayerEventType =
   | 'pause'
   | 'playing'
   | 'poster-change'
-  | 'current-src-change'
+  | 'src-change'
   | 'muted-change'
   | 'volume-change'
   | 'time-change'
@@ -26,7 +25,6 @@ export type RawPlayerEventType =
   | 'buffering-change'
   | 'view-type-change'
   | 'media-type-change'
-  | 'device-change'
   | 'boot-start'
   | 'boot-end'
   | 'playback-ready'
@@ -38,17 +36,16 @@ export type RawPlayerEventDetailType = {
   play: void;
   pause: void;
   playing: void;
-  'poster-change': PlayerState['poster'];
-  'current-src-change': PlayerState['currentSrc'];
-  'muted-change': PlayerState['muted'];
-  'volume-change': PlayerState['volume'];
-  'time-change': PlayerState['currentTime'];
-  'duration-change': PlayerState['duration'];
-  'buffered-change': PlayerState['buffered'];
-  'buffering-change': PlayerState['isBuffering'];
-  'view-type-change': PlayerState['viewType'];
-  'media-type-change': PlayerState['mediaType'];
-  'device-change': Device;
+  'poster-change': string;
+  'src-change': string;
+  'muted-change': boolean;
+  'volume-change': number;
+  'time-change': number;
+  'duration-change': number;
+  'buffered-change': number;
+  'buffering-change': boolean;
+  'view-type-change': ViewType;
+  'media-type-change': MediaType;
   'boot-start': void;
   'boot-end': void;
   'playback-ready': void;
@@ -63,10 +60,7 @@ export type GenericVdsPlayerEventType<
 
 export type PlayerEventConstructor<
   T extends RawPlayerEventType
-> = VdsCustomEventConstructor<
-  RawPlayerEventDetailType[T],
-  GenericVdsPlayerEventType<T>
->;
+> = VdsCustomEventConstructor<RawPlayerEventDetailType[T]>;
 
 export type VdsPlayerEventConstructors = {
   [P in RawPlayerEventType as GenericVdsPlayerEventType<P>]: PlayerEventConstructor<P>;
@@ -74,8 +68,7 @@ export type VdsPlayerEventConstructors = {
 
 export type VdsPlayerEvents = {
   [P in RawPlayerEventType as GenericVdsPlayerEventType<P>]: VdsCustomEvent<
-    RawPlayerEventDetailType[P],
-    GenericVdsPlayerEventType<P>
+    RawPlayerEventDetailType[P]
   >;
 };
 
@@ -93,9 +86,7 @@ export class PauseEvent extends buildsVdsPlayerEvent('pause') {}
 
 export class PlayingEvent extends buildsVdsPlayerEvent('playing') {}
 
-export class CurrentSrcChangeEvent extends buildsVdsPlayerEvent(
-  'current-src-change',
-) {}
+export class SrcChangeEvent extends buildsVdsPlayerEvent('src-change') {}
 
 export class PosterChangeEvent extends buildsVdsPlayerEvent('poster-change') {}
 
@@ -134,7 +125,5 @@ export class PlaybackStartEvent extends buildsVdsPlayerEvent(
 ) {}
 
 export class PlaybackEndEvent extends buildsVdsPlayerEvent('playback-end') {}
-
-export class DeviceChangeEvent extends buildsVdsPlayerEvent('device-change') {}
 
 export class ErrorEvent extends buildsVdsPlayerEvent('error') {}

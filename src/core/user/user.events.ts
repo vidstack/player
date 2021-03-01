@@ -1,10 +1,9 @@
-import { LIB_PREFIX } from '../../shared/constants';
 import {
   buildVdsEvent,
+  LIB_PREFIX,
   VdsCustomEvent,
   VdsCustomEventConstructor,
-} from '../../shared/events';
-import { PlayerState } from '../player.types';
+} from '../../shared';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -23,9 +22,9 @@ export type RawUserEventType =
 export interface RawUserEventDetailType {
   play: void;
   pause: void;
-  'muted-change': PlayerState['muted'];
-  'volume-change': PlayerState['volume'];
-  'time-change': PlayerState['currentTime'];
+  'muted-change': boolean;
+  'volume-change': number;
+  'time-change': number;
 }
 
 export type GenericVdsUserEventType<
@@ -34,10 +33,7 @@ export type GenericVdsUserEventType<
 
 export type UserEventConstructor<
   T extends RawUserEventType
-> = VdsCustomEventConstructor<
-  RawUserEventDetailType[T],
-  GenericVdsUserEventType<T>
->;
+> = VdsCustomEventConstructor<RawUserEventDetailType[T]>;
 
 export type VdsUserEventConstructors = {
   [P in RawUserEventType as GenericVdsUserEventType<P>]: UserEventConstructor<P>;
@@ -45,8 +41,7 @@ export type VdsUserEventConstructors = {
 
 export type VdsUserEvents = {
   [P in RawUserEventType as GenericVdsUserEventType<P>]: VdsCustomEvent<
-    RawUserEventDetailType[P],
-    GenericVdsUserEventType<P>
+    RawUserEventDetailType[P]
   >;
 };
 
@@ -76,10 +71,10 @@ export class UserVolumeChangeRequestEvent extends buildVdsUserEvent(
   'volume-change',
 ) {}
 
-export const ALL_USER_EVENT_TYPES: VdsUserEventType[] = [
+export const ALL_USER_EVENT_TYPES = [
   UserPlayRequestEvent.TYPE,
   UserPauseRequestEvent.TYPE,
   UserMutedChangeRequestEvent.TYPE,
   UserVolumeChangeRequestEvent.TYPE,
   UserTimeChangeRequestEvent.TYPE,
-];
+] as VdsUserEventType[];
