@@ -16,6 +16,7 @@ export const videoStyles = css`
     border: 0;
     height: auto;
     user-select: none;
+    max-height: 98vh;
   }
 
   video:not([width]) {
