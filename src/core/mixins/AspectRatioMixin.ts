@@ -3,8 +3,8 @@ import { property, UpdatingElement } from 'lit-element';
 
 import { buildVdsEvent } from '../../shared/events';
 import { Constructor } from '../../shared/types';
-import { isString, isUndefined } from '../../utils/unit';
-import { PlayerState } from '../player.types';
+import { isString } from '../../utils/unit';
+import { PlayerProps } from '../player.types';
 import { MediaProvider } from '../provider/MediaProvider';
 
 export type AspectRatioMixinBase = Constructor<
@@ -15,14 +15,14 @@ export type AspectRatioMixinBase = Constructor<
 
 export type AspectRatioCocktail<T extends AspectRatioMixinBase> = T &
   Constructor<
-    Pick<PlayerState, 'aspectRatio'> & {
+    Pick<PlayerProps, 'aspectRatio'> & {
       calcAspectRatio(): number;
       getAspectRatioPadding(minPadding?: string): string;
     }
   >;
 
 export class AspectRatioChangeEvent extends buildVdsEvent<
-  PlayerState['aspectRatio']
+  PlayerProps['aspectRatio']
 >('aspect-ratio-change') {}
 
 /**
@@ -48,17 +48,12 @@ export function AspectRatioMixin<T extends AspectRatioMixinBase>(
       return this._aspectRatio;
     }
 
-    set aspectRatio(newAspectRatio: PlayerState['aspectRatio']) {
+    set aspectRatio(newAspectRatio: PlayerProps['aspectRatio']) {
       this._aspectRatio = newAspectRatio;
 
       this.dispatchEvent(
         new AspectRatioChangeEvent({ detail: newAspectRatio }),
       );
-
-      // TODO: this will end up firing the event twice (player then provider).
-      if (!isUndefined(this.currentProvider)) {
-        this.currentProvider.aspectRatio = this._aspectRatio;
-      }
 
       this.requestUpdate();
     }

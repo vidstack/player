@@ -3,15 +3,19 @@ import {
   buildVdsEvent,
   VdsCustomEvent,
   VdsCustomEventConstructor,
+  VdsEventInit,
 } from '../shared/events';
 import { MediaType, ViewType } from './player.types';
+import { MediaProvider } from './provider/MediaProvider';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface GlobalEventHandlersEventMap extends VdsPlayerEvents {}
+  interface GlobalEventHandlersEventMap extends PlayerEvents {}
 }
 
 export type RawPlayerEventType =
+  | 'connect'
+  | 'disconnect'
   | 'play'
   | 'pause'
   | 'playing'
@@ -33,6 +37,8 @@ export type RawPlayerEventType =
   | 'error';
 
 export type RawPlayerEventDetailType = {
+  connect: MediaProvider;
+  disconnect: MediaProvider;
   play: void;
   pause: void;
   playing: void;
@@ -62,68 +68,71 @@ export type PlayerEventConstructor<
   T extends RawPlayerEventType
 > = VdsCustomEventConstructor<RawPlayerEventDetailType[T]>;
 
-export type VdsPlayerEventConstructors = {
+export type PlayerEventConstructors = {
   [P in RawPlayerEventType as GenericVdsPlayerEventType<P>]: PlayerEventConstructor<P>;
 };
 
-export type VdsPlayerEvents = {
+export type PlayerEvents = {
   [P in RawPlayerEventType as GenericVdsPlayerEventType<P>]: VdsCustomEvent<
     RawPlayerEventDetailType[P]
   >;
 };
 
-export type VdsPlayerEventType = keyof VdsPlayerEvents;
+export type PlayerEventType = keyof PlayerEvents;
 
-export function buildsVdsPlayerEvent<T extends RawPlayerEventType>(
-  type: T,
-): PlayerEventConstructor<T> {
-  return buildVdsEvent(type) as PlayerEventConstructor<T>;
+export function buildPlayerEvent<P extends RawPlayerEventType>(
+  type: P,
+): VdsCustomEventConstructor<RawPlayerEventDetailType[P]> {
+  class PlayerEvent extends buildVdsEvent<RawPlayerEventDetailType[P]>(type) {
+    constructor(eventInit?: VdsEventInit<RawPlayerEventDetailType[P]>) {
+      super({
+        bubbles: false,
+        ...(eventInit ?? {}),
+      });
+    }
+  }
+
+  return PlayerEvent;
 }
 
-export class PlayEvent extends buildsVdsPlayerEvent('play') {}
+export class ConnectEvent extends buildPlayerEvent('connect') {}
 
-export class PauseEvent extends buildsVdsPlayerEvent('pause') {}
+export class DisconnectEvent extends buildPlayerEvent('disconnect') {}
 
-export class PlayingEvent extends buildsVdsPlayerEvent('playing') {}
+export class PlayEvent extends buildPlayerEvent('play') {}
 
-export class SrcChangeEvent extends buildsVdsPlayerEvent('src-change') {}
+export class PauseEvent extends buildPlayerEvent('pause') {}
 
-export class PosterChangeEvent extends buildsVdsPlayerEvent('poster-change') {}
+export class PlayingEvent extends buildPlayerEvent('playing') {}
 
-export class MutedChangeEvent extends buildsVdsPlayerEvent('muted-change') {}
+export class SrcChangeEvent extends buildPlayerEvent('src-change') {}
 
-export class VolumeChangeEvent extends buildsVdsPlayerEvent('volume-change') {}
+export class PosterChangeEvent extends buildPlayerEvent('poster-change') {}
 
-export class TimeChangeEvent extends buildsVdsPlayerEvent('time-change') {}
+export class MutedChangeEvent extends buildPlayerEvent('muted-change') {}
 
-export class DurationChangeEvent extends buildsVdsPlayerEvent(
-  'duration-change',
+export class VolumeChangeEvent extends buildPlayerEvent('volume-change') {}
+
+export class TimeChangeEvent extends buildPlayerEvent('time-change') {}
+
+export class DurationChangeEvent extends buildPlayerEvent('duration-change') {}
+
+export class BufferedChangeEvent extends buildPlayerEvent('buffered-change') {}
+
+export class BufferingChangeEvent extends buildPlayerEvent(
+  'buffering-change',
 ) {}
 
-export class BufferedChangeEvent extends buildsVdsPlayerEvent(
-  'buffered-change',
-) {}
+export class ViewTypeChangeEvent extends buildPlayerEvent('view-type-change') {}
 
-export class BufferingChangeEvent extends buildsVdsPlayerEvent(
-  'buffered-change',
-) {}
-
-export class ViewTypeChangeEvent extends buildsVdsPlayerEvent(
-  'view-type-change',
-) {}
-
-export class MediaTypeChangeEvent extends buildsVdsPlayerEvent(
+export class MediaTypeChangeEvent extends buildPlayerEvent(
   'media-type-change',
 ) {}
 
-export class PlaybackReadyEvent extends buildsVdsPlayerEvent(
-  'playback-ready',
-) {}
+export class PlaybackReadyEvent extends buildPlayerEvent('playback-ready') {}
 
-export class PlaybackStartEvent extends buildsVdsPlayerEvent(
-  'playback-start',
-) {}
+export class PlaybackStartEvent extends buildPlayerEvent('playback-start') {}
 
-export class PlaybackEndEvent extends buildsVdsPlayerEvent('playback-end') {}
+export class PlaybackEndEvent extends buildPlayerEvent('playback-end') {}
 
-export class ErrorEvent extends buildsVdsPlayerEvent('error') {}
+export class ErrorEvent extends buildPlayerEvent('error') {}

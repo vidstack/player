@@ -7,19 +7,25 @@ Enables loading, playing and controlling videos via the HTML5 `<video>` element.
 ## Examples
 
 ```html
-<vds-player>
-  <vds-video poster="/media/poster.png">
-    <source src="/media/video.mp4" type="video/mp4" />
-    <track
-      default
-      kind="subtitles"
-      src="/media/subs/en.vtt"
-      srclang="en"
-      label="English"
-    />
-  </vds-video>
+<vds-video src="/media/video.mp4" poster="/media/poster.png">
   <!-- ... -->
-</vds-player>
+</vds-video>
+```
+
+```html
+<vds-video poster="/media/poster.png">
+  <source src="/media/video.mp4" type="video/mp4" />
+  <track
+    default
+    kind="subtitles"
+    src="/media/subs/en.vtt"
+    srclang="en"
+    label="English"
+  />
+  <vds-ui>
+    <!-- ... -->
+  </vds-ui>
+</vds-video>
 ```
 
 ## Properties
@@ -36,6 +42,13 @@ Enables loading, playing and controlling videos via the HTML5 `<video>` element.
 
 ## Slots
 
-| Slot | Description                                                                    |
-| ---- | ------------------------------------------------------------------------------ |
-|      | - Pass `<source>` and `<track>` elements to the underlying HTML5 media player. |
+| Slot | Description                                                                                   |
+| ---- | --------------------------------------------------------------------------------------------- |
+|      | Pass in UI components and `<source>`/`<track>` elements to the underlying HTML5 media player. |
+
+## CSS Parts
+
+| Name        | Description                                 |
+| ----------- | ------------------------------------------- |
+| `container` | The container element that wraps the video. |
+| `video`     | The video element.                          |

@@ -3,24 +3,29 @@ import { Disposal, listenTo } from '@wcom/events';
 import { html, property, PropertyValues, TemplateResult } from 'lit-element';
 
 import {
+  BufferedChangeEvent,
+  BufferingChangeEvent,
+  DurationChangeEvent,
+  ErrorEvent,
   MediaProvider,
-  ProviderBufferedChangeEvent,
-  ProviderBufferingChangeEvent,
-  ProviderDurationChangeEvent,
-  ProviderErrorEvent,
-  ProviderMutedChangeEvent,
-  ProviderPauseEvent,
-  ProviderPlaybackEndEvent,
-  ProviderPlaybackReadyEvent,
-  ProviderPlaybackStartEvent,
-  ProviderPlayEvent,
-  ProviderPlayingEvent,
-  ProviderSrcChangeEvent,
-  ProviderTimeChangeEvent,
-  ProviderVolumeChangeEvent,
+  MutedChangeEvent,
+  PauseEvent,
+  PlaybackEndEvent,
+  PlaybackReadyEvent,
+  PlaybackStartEvent,
+  PlayEvent,
+  PlayingEvent,
+  SrcChangeEvent,
+  TimeChangeEvent,
+  VolumeChangeEvent,
 } from '../../core';
 import { isNil, isNumber } from '../../utils/unit';
-import { MediaCrossOriginOption, MediaPreloadOption } from './file.types';
+import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from '../video/video.utils';
+import {
+  MediaCrossOriginOption,
+  MediaFileProviderEngine,
+  MediaPreloadOption,
+} from './file.types';
 
 /**
  * Enables loading, playing and controlling media files via the HTML5 MediaElement API. This is
@@ -29,7 +34,7 @@ import { MediaCrossOriginOption, MediaPreloadOption } from './file.types';
  *
  * @slot - Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
-export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
+export class MediaFileProvider extends MediaProvider<MediaFileProviderEngine> {
   protected mediaEl?: HTMLMediaElement;
 
   protected disposal = new Disposal();
@@ -45,7 +50,6 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   firstUpdated(changedProps: PropertyValues): void {
     super.firstUpdated(changedProps);
     this.listenToMediaEl();
-    this.updateSrc();
   }
 
   disconnectedCallback(): void {
@@ -82,83 +86,8 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   set src(newSrc: string) {
     this._src = newSrc;
-    this.updateSrc();
+    this.dispatchEvent(new SrcChangeEvent({ detail: this._src }));
   }
-
-  protected updateSrc(): void {
-    if (isNil(this.mediaEl)) return;
-
-    if (this._src.length > 0) {
-      this.mediaEl.setAttribute('src', this._src);
-    } else {
-      this.mediaEl.removeAttribute('src');
-    }
-
-    this.dispatchEvent(new ProviderSrcChangeEvent({ detail: this._src }));
-  }
-
-  // ---
-
-  @property({ type: Number })
-  get volume(): number {
-    return this.mediaEl?.volume ?? 1;
-  }
-
-  set volume(newVolume: number) {
-    this.makeRequest('vol', () => {
-      this.mediaEl!.volume = newVolume;
-    });
-  }
-
-  // ---
-
-  @property({ type: Boolean })
-  get paused(): boolean {
-    return this.mediaEl?.paused ?? true;
-  }
-
-  set paused(isPaused: boolean) {
-    this.makeRequest('paused', () => {
-      if (!isPaused) {
-        this.mediaEl!.play();
-      } else {
-        this.mediaEl!.pause();
-      }
-    });
-  }
-
-  // ---
-
-  @property({ type: Number, attribute: 'current-time' })
-  get currentTime(): number {
-    return this.mediaEl?.currentTime ?? 0;
-  }
-
-  set currentTime(newTime: number) {
-    this.makeRequest('time', () => {
-      if (this.mediaEl!.currentTime !== newTime) {
-        this.mediaEl!.currentTime = newTime;
-      }
-    });
-  }
-
-  // ---
-
-  @property({ type: Boolean })
-  get muted(): boolean {
-    return this.mediaEl?.muted ?? false;
-  }
-
-  set muted(isMuted: boolean) {
-    this.makeRequest('muted', () => {
-      this.mediaEl!.muted = isMuted;
-    });
-  }
-
-  // ---
-
-  @property({ type: Boolean })
-  controls = false;
 
   /**
    * The width of the media player.
@@ -200,7 +129,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   private requestTimeUpdates() {
     const newTime = this.mediaEl?.currentTime ?? 0;
 
-    this.dispatchEvent(new ProviderTimeChangeEvent({ detail: newTime }));
+    this.dispatchEvent(new TimeChangeEvent({ detail: newTime }));
 
     this.timeRAF = window.requestAnimationFrame(() => {
       this.requestTimeUpdates();
@@ -219,7 +148,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     this._isBuffering = false;
     this._hasPlaybackStarted = false;
     this._hasPlaybackEnded = false;
-    this.dispatchEvent(new ProviderSrcChangeEvent({ detail: '' }));
+    this.dispatchEvent(new SrcChangeEvent({ detail: '' }));
   }
 
   protected listenToMediaEl(): void {
@@ -256,14 +185,14 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     this.requestTimeUpdates();
 
     this.dispatchEvent(
-      new ProviderDurationChangeEvent({
+      new DurationChangeEvent({
         detail: this.duration,
         originalEvent,
       }),
     );
 
     this.dispatchEvent(
-      new ProviderPlaybackReadyEvent({
+      new PlaybackReadyEvent({
         originalEvent,
       }),
     );
@@ -273,7 +202,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     this.requestTimeUpdates();
 
     this.dispatchEvent(
-      new ProviderPlayEvent({
+      new PlayEvent({
         originalEvent,
       }),
     );
@@ -281,7 +210,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     if (!this._hasPlaybackStarted) {
       this._hasPlaybackStarted = true;
       this.dispatchEvent(
-        new ProviderPlaybackStartEvent({
+        new PlaybackStartEvent({
           originalEvent,
         }),
       );
@@ -294,14 +223,14 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     this._isPlaying = false;
 
     this.dispatchEvent(
-      new ProviderPauseEvent({
+      new PauseEvent({
         originalEvent,
       }),
     );
 
     this._isBuffering = false;
     this.dispatchEvent(
-      new ProviderBufferingChangeEvent({
+      new BufferingChangeEvent({
         detail: false,
         originalEvent,
       }),
@@ -312,14 +241,14 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     this._isPlaying = true;
 
     this.dispatchEvent(
-      new ProviderPlayingEvent({
+      new PlayingEvent({
         originalEvent,
       }),
     );
 
     this._isBuffering = false;
     this.dispatchEvent(
-      new ProviderBufferingChangeEvent({
+      new BufferingChangeEvent({
         detail: false,
         originalEvent,
       }),
@@ -328,7 +257,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   protected handleDurationChange(originalEvent: Event): void {
     this.dispatchEvent(
-      new ProviderDurationChangeEvent({
+      new DurationChangeEvent({
         detail: this.duration,
         originalEvent,
       }),
@@ -337,7 +266,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   protected handleProgress(originalEvent: Event): void {
     this.dispatchEvent(
-      new ProviderBufferedChangeEvent({
+      new BufferedChangeEvent({
         detail: this.buffered,
         originalEvent,
       }),
@@ -346,7 +275,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   protected handleTimeUpdate(originalEvent: Event): void {
     this.dispatchEvent(
-      new ProviderTimeChangeEvent({
+      new TimeChangeEvent({
         detail: this.currentTime,
         originalEvent,
       }),
@@ -355,14 +284,14 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   protected handleVolumeChange(originalEvent: Event): void {
     this.dispatchEvent(
-      new ProviderVolumeChangeEvent({
+      new VolumeChangeEvent({
         detail: this.volume,
         originalEvent,
       }),
     );
 
     this.dispatchEvent(
-      new ProviderMutedChangeEvent({
+      new MutedChangeEvent({
         detail: this.muted,
         originalEvent,
       }),
@@ -372,7 +301,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   protected handleWaiting(originalEvent: Event): void {
     this._isBuffering = true;
     this.dispatchEvent(
-      new ProviderBufferingChangeEvent({
+      new BufferingChangeEvent({
         detail: true,
         originalEvent,
       }),
@@ -382,7 +311,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   protected handleSuspend(originalEvent: Event): void {
     this._isBuffering = false;
     this.dispatchEvent(
-      new ProviderBufferingChangeEvent({
+      new BufferingChangeEvent({
         detail: false,
         originalEvent,
       }),
@@ -392,7 +321,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   protected handleEnded(originalEvent: Event): void {
     this._hasPlaybackEnded = true;
     this.dispatchEvent(
-      new ProviderPlaybackEndEvent({
+      new PlaybackEndEvent({
         originalEvent,
       }),
     );
@@ -400,7 +329,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
 
   protected handleError(originalEvent: Event): void {
     this.dispatchEvent(
-      new ProviderErrorEvent({
+      new ErrorEvent({
         detail: originalEvent,
         originalEvent,
       }),
@@ -408,11 +337,45 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   }
 
   // -------------------------------------------------------------------------------------------
+  // Provider Methods
+  // -------------------------------------------------------------------------------------------
+
+  protected getPaused(): boolean {
+    return this.mediaEl!.paused;
+  }
+
+  protected getVolume(): number {
+    return this.mediaEl!.volume;
+  }
+
+  protected setVolume(newVolume: number): void {
+    this.mediaEl!.volume = newVolume;
+  }
+
+  protected getCurrentTime(): number {
+    return this.mediaEl!.currentTime;
+  }
+
+  protected setCurrentTime(newTime: number): void {
+    if (this.mediaEl!.currentTime !== newTime) {
+      this.mediaEl!.currentTime = newTime;
+    }
+  }
+
+  protected getMuted(): boolean {
+    return this.mediaEl!.muted;
+  }
+
+  protected setMuted(isMuted: boolean): void {
+    this.mediaEl!.muted = isMuted;
+  }
+
+  // -------------------------------------------------------------------------------------------
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
 
   get isPlaybackReady(): boolean {
-    return !isNil(this.mediaEl!) && this.mediaEl!.readyState >= 1;
+    return !isNil(this.mediaEl) && this.mediaEl!.readyState >= 2;
   }
 
   get currentSrc(): string {
@@ -423,7 +386,7 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
     return '';
   }
 
-  get internalPlayer(): HTMLMediaElement | undefined {
+  get engine(): HTMLMediaElement | undefined {
     return this.mediaEl;
   }
 
@@ -459,22 +422,20 @@ export class MediaFileProvider extends MediaProvider<HTMLMediaElement> {
   // -------------------------------------------------------------------------------------------
 
   canPlayType(type: string): boolean {
-    return this.mediaEl?.canPlayType(type) === 'probably';
+    if (isNil(this.mediaEl)) {
+      return AUDIO_EXTENSIONS.test(type) || VIDEO_EXTENSIONS.test(type);
+    }
+
+    return this.mediaEl.canPlayType(type) === 'probably';
   }
 
   async play(): Promise<void> {
-    this.throwIfNotReady();
+    super.play();
     return this.mediaEl!.play();
   }
 
   async pause(): Promise<void> {
-    this.throwIfNotReady();
+    super.pause();
     return this.mediaEl!.pause();
-  }
-
-  protected throwIfNotReady(): void {
-    if (isNil(this.mediaEl)) {
-      throw Error('Media element is not ready.');
-    }
   }
 }

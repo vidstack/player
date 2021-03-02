@@ -18,18 +18,18 @@ export enum MediaType {
 }
 
 export type PlayerContext = {
-  readonly [P in keyof PlayerState]: Context<PlayerState[P]>;
+  readonly [P in keyof PlayerProps]: Context<PlayerProps[P]>;
 } &
   typeof deviceContext & { uuid: typeof uuidContext };
 
 export type PlayerContextProvider = Record<string, unknown> &
   {
-    -readonly [P in keyof PlayerState as `${P}Ctx`]: PlayerState[P];
+    -readonly [P in keyof PlayerProps as `${P}Ctx`]: PlayerProps[P];
   };
 
 export type ReadonlyPlayerState = Readonly<
   Pick<
-    PlayerState,
+    PlayerProps,
     | 'currentSrc'
     | 'currentPoster'
     | 'duration'
@@ -48,9 +48,9 @@ export type ReadonlyPlayerState = Readonly<
   >
 >;
 
-export type WritablePlayerState = Omit<PlayerState, keyof ReadonlyPlayerState>;
+export type WritablePlayerState = Omit<PlayerProps, keyof ReadonlyPlayerState>;
 
-export interface PlayerState {
+export interface PlayerProps {
   /**
    * The aspect ratio of the player expressed as `width:height` (`16:9`). This is only applied if
    * the `viewType` is `video` and the player is not in fullscreen mode. Defaults to `16:9`.
@@ -136,7 +136,7 @@ export interface PlayerState {
   readonly hasPlaybackEnded: boolean;
 
   /**
-   * Whether media is ready for playback to begin, analgous with `canPlayThrough`.
+   * Whether media is ready for playback to begin, analgous with `canPlay`.
    */
   readonly isPlaybackReady: boolean;
 

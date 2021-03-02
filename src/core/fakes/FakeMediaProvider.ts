@@ -1,39 +1,52 @@
 /* c8 ignore next 1000 */
-import { html, property, TemplateResult } from 'lit-element';
+import { html, TemplateResult } from 'lit-element';
 
 import { playerContext } from '../player.context';
-import { MediaProvider } from './MediaProvider';
+import { MediaProvider } from '../provider/MediaProvider';
 
 /**
- * A mock media provider that's used for testing. This class alone does nothing special. It can
+ * A fake media provider that's used for testing. This class alone does nothing special. It can
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
-export class MockMediaProvider extends MediaProvider {
+export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
-  // Properties
+  // Provider Metods
   // -------------------------------------------------------------------------------------------
 
-  @property({ type: Number })
-  volume = 1;
+  getPaused(): boolean {
+    return true;
+  }
 
-  @property({ type: Number })
-  currentTime = 0;
+  getVolume(): number {
+    return 1;
+  }
 
-  @property({ type: Boolean })
-  paused = true;
+  setVolume(): void {
+    // no-op
+  }
 
-  @property({ type: Boolean })
-  muted = false;
+  getCurrentTime(): number {
+    return 0;
+  }
 
-  @property({ type: Boolean })
-  controls = false;
+  setCurrentTime(): void {
+    // no-op
+  }
+
+  getMuted(): boolean {
+    return false;
+  }
+
+  setMuted(): void {
+    // no-op
+  }
 
   // -------------------------------------------------------------------------------------------
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
 
   get currentSrc(): string {
-    return '';
+    return playerContext.currentSrc.defaultValue;
   }
 
   get currentPoster(): string {
@@ -48,7 +61,7 @@ export class MockMediaProvider extends MediaProvider {
     return playerContext.isPlaying.defaultValue;
   }
 
-  get internalPlayer(): unknown {
+  get engine(): unknown {
     return undefined;
   }
 
@@ -85,11 +98,11 @@ export class MockMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   async play(): Promise<void> {
-    // no-op mock it.
+    // no-op
   }
 
   async pause(): Promise<void> {
-    // no-op mock it.
+    // no-op
   }
 
   // -------------------------------------------------------------------------------------------
@@ -97,6 +110,6 @@ export class MockMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   render(): TemplateResult {
-    return html`<div>MockMediaProvider</div>`;
+    return html`<div><slot></slot></div>`;
   }
 }

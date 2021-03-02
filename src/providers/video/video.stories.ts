@@ -3,9 +3,9 @@ import './vds-video';
 import { html } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { VideoControlsList } from '../../bundle';
-import { Story } from '../../shared';
+import { Story } from '../../shared/storybook';
 import { MediaCrossOriginOption, MediaPreloadOption } from '../file';
+import { VideoControlsList } from './video.types';
 
 export default {
   title: 'Providers/Video',

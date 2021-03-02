@@ -10,9 +10,9 @@ import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
 import {
   MediaType,
-  ProviderMediaTypeChangeEvent,
-  ProviderViewTypeChangeEvent,
+  MediaTypeChangeEvent,
   ViewType,
+  ViewTypeChangeEvent,
 } from '../../core';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { isNumber } from '../../utils/unit';
@@ -24,20 +24,30 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
  *
+ * @tagname vds-video
+ *
+ * @slot Pass in UI components and `<source>`/`<track>` elements to the underlying HTML5 media player.
+ *
+ * @csspart container: The container element that wraps the video.
+ * @csspart video: The video element.
+ *
  * @example
  * ```html
- * <vds-player>
+ * <vds-video src="/media/video.mp4" poster="/media/poster.png">
+ *   <!-- ... -->
+ * </vds-video>
+ * ```
+ *
+ * @example
+ * ```html
  *  <vds-video poster="/media/poster.png">
  *    <source src="/media/video.mp4" type="video/mp4" />
  *    <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
+ *    <vds-ui>
+ *      <!-- ... -->
+ *    </vds-ui>
  *  </vds-video>
- *   <!-- ... -->
- * </vds-player>
  * ```
- *
- * @tagname vds-video
- *
- * @slot - Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
 export class VideoProvider extends MediaFileProvider {
   public static get styles(): CSSResultArray {
@@ -48,7 +58,7 @@ export class VideoProvider extends MediaFileProvider {
     super.connectedCallback();
 
     this.dispatchEvent(
-      new ProviderViewTypeChangeEvent({
+      new ViewTypeChangeEvent({
         detail: ViewType.Video,
       }),
     );
@@ -66,6 +76,8 @@ export class VideoProvider extends MediaFileProvider {
   protected render(): TemplateResult {
     return html`
       <div
+        part="container"
+        aria-busy="${this.getAriaBusy()}"
         class="${this.buildContainerClass()}"
         style="${styleMap(this.buildContainerStyleMap())}"
       >
@@ -87,6 +99,8 @@ export class VideoProvider extends MediaFileProvider {
   protected renderVideo(): TemplateResult {
     return html`
       <video
+        part="video"
+        src="${ifNonEmpty(this.src)}"
         width="${ifDefined(isNumber(this.width) ? this.width : undefined)}"
         poster="${ifDefined(this.poster)}"
         preload="${ifNonEmpty(this.preload)}"
@@ -108,7 +122,7 @@ export class VideoProvider extends MediaFileProvider {
 
   protected handleLoadedMetadata(originalEvent: Event): void {
     this.dispatchEvent(
-      new ProviderMediaTypeChangeEvent({
+      new MediaTypeChangeEvent({
         detail: this.getMediaType(),
         originalEvent,
       }),

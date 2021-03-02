@@ -1,3 +1,7 @@
+import { MediaFileProviderEngine } from '../file';
+
+export type VideoProviderEngine = MediaFileProviderEngine;
+
 export type VideoControlsList =
   | 'nodownload'
   | 'nofullscreen'

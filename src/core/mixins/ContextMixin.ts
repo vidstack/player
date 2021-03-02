@@ -4,36 +4,41 @@ import { UpdatingElement } from 'lit-element';
 import { Constructor } from '../../shared/types';
 import { playerContext } from '../player.context';
 import {
+  BufferedChangeEvent,
+  BufferingChangeEvent,
+  DisconnectEvent,
+  DurationChangeEvent,
+  MediaTypeChangeEvent,
+  MutedChangeEvent,
+  PauseEvent,
+  PlaybackEndEvent,
+  PlaybackReadyEvent,
+  PlaybackStartEvent,
+  PlayEvent,
+  PlayingEvent,
+  PosterChangeEvent,
+  SrcChangeEvent,
+  TimeChangeEvent,
+  ViewTypeChangeEvent,
+  VolumeChangeEvent,
+} from '../player.events';
+import {
   MediaType,
   PlayerContext,
   PlayerContextProvider,
   ViewType,
 } from '../player.types';
-import {
-  ProviderBufferedChangeEvent,
-  ProviderBufferingChangeEvent,
-  ProviderDisconnectEvent,
-  ProviderDurationChangeEvent,
-  ProviderMediaTypeChangeEvent,
-  ProviderMutedChangeEvent,
-  ProviderPauseEvent,
-  ProviderPlaybackEndEvent,
-  ProviderPlaybackReadyEvent,
-  ProviderPlaybackStartEvent,
-  ProviderPlayEvent,
-  ProviderPlayingEvent,
-  ProviderPosterChangeEvent,
-  ProviderSrcChangeEvent,
-  ProviderTimeChangeEvent,
-  ProviderViewTypeChangeEvent,
-  ProviderVolumeChangeEvent,
-} from '../provider/provider.events';
 import { AspectRatioChangeEvent } from './AspectRatioMixin';
 
 export type ContextMixinBase = Constructor<UpdatingElement>;
 
 export type ContextCocktail<T extends ContextMixinBase> = T &
   Constructor<{
+    /**
+     * **DO NOT CALL FROM OUTSIDE THE PLAYER.**
+     *
+     * @internal - Used for testing.
+     */
     readonly context: PlayerContextProvider;
   }>;
 
@@ -49,9 +54,6 @@ export function ContextMixin<T extends ContextMixinBase>(
   class ContextMixin extends Base implements PlayerContextProvider {
     [x: string]: unknown;
 
-    /**
-     * **DO NOT CALL FROM OUTSIDE THE PLAYER.**
-     */
     get context(): PlayerContextProvider {
       return this as PlayerContextProvider;
     }
@@ -115,96 +117,96 @@ export function ContextMixin<T extends ContextMixinBase>(
       this.aspectRatioCtx = e.detail;
     }
 
-    @listen(ProviderDisconnectEvent.TYPE)
+    @listen(DisconnectEvent.TYPE)
     protected handleDisconnectContextUpdate() {
       this.hardResetPlayerContext();
     }
 
-    @listen(ProviderPlayEvent.TYPE)
+    @listen(PlayEvent.TYPE)
     protected handlePlayContextUpdate() {
       this.pausedCtx = false;
     }
 
-    @listen(ProviderPauseEvent.TYPE)
+    @listen(PauseEvent.TYPE)
     protected handlePauseContextUpdate() {
       this.pausedCtx = true;
       this.isPlayingCtx = false;
     }
 
-    @listen(ProviderPlayingEvent.TYPE)
+    @listen(PlayingEvent.TYPE)
     protected handlePlayingContextUpdate() {
       this.pausedCtx = false;
       this.isPlayingCtx = true;
     }
 
-    @listen(ProviderTimeChangeEvent.TYPE)
-    protected handleTimeContextUpdate(e: ProviderTimeChangeEvent) {
+    @listen(TimeChangeEvent.TYPE)
+    protected handleTimeContextUpdate(e: TimeChangeEvent) {
       this.currentTimeCtx = e.detail;
     }
 
-    @listen(ProviderSrcChangeEvent.TYPE)
-    protected handleCurrentSrcContextUpdate(e: ProviderSrcChangeEvent) {
+    @listen(SrcChangeEvent.TYPE)
+    protected handleCurrentSrcContextUpdate(e: SrcChangeEvent) {
       this.currentSrcCtx = e.detail;
       this.softResetPlayerContext();
     }
 
-    @listen(ProviderPosterChangeEvent.TYPE)
-    protected handlePosterContextUpdate(e: ProviderPosterChangeEvent) {
+    @listen(PosterChangeEvent.TYPE)
+    protected handlePosterContextUpdate(e: PosterChangeEvent) {
       this.currentPosterCtx = e.detail;
     }
 
-    @listen(ProviderMutedChangeEvent.TYPE)
-    protected handleMutedContextUpdate(e: ProviderMutedChangeEvent) {
+    @listen(MutedChangeEvent.TYPE)
+    protected handleMutedContextUpdate(e: MutedChangeEvent) {
       this.mutedCtx = e.detail;
     }
 
-    @listen(ProviderVolumeChangeEvent.TYPE)
-    protected handleVolumeContextUpdate(e: ProviderVolumeChangeEvent) {
+    @listen(VolumeChangeEvent.TYPE)
+    protected handleVolumeContextUpdate(e: VolumeChangeEvent) {
       this.volumeCtx = e.detail;
     }
 
-    @listen(ProviderDurationChangeEvent.TYPE)
-    protected handleDurationContextUpdate(e: ProviderDurationChangeEvent) {
+    @listen(DurationChangeEvent.TYPE)
+    protected handleDurationContextUpdate(e: DurationChangeEvent) {
       this.durationCtx = e.detail;
     }
 
-    @listen(ProviderBufferedChangeEvent.TYPE)
-    protected handleBufferedContextUpdate(e: ProviderBufferedChangeEvent) {
+    @listen(BufferedChangeEvent.TYPE)
+    protected handleBufferedContextUpdate(e: BufferedChangeEvent) {
       this.bufferedCtx = e.detail;
     }
 
-    @listen(ProviderBufferingChangeEvent.TYPE)
-    protected handleBufferingContextUpdate(e: ProviderBufferingChangeEvent) {
+    @listen(BufferingChangeEvent.TYPE)
+    protected handleBufferingContextUpdate(e: BufferingChangeEvent) {
       this.isBufferingCtx = e.detail;
     }
 
-    @listen(ProviderViewTypeChangeEvent.TYPE)
-    protected handleViewTypeContextUpdate(e: ProviderViewTypeChangeEvent) {
+    @listen(ViewTypeChangeEvent.TYPE)
+    protected handleViewTypeContextUpdate(e: ViewTypeChangeEvent) {
       const viewType = e.detail;
       this.viewTypeCtx = viewType;
       this.isAudioViewCtx = viewType === ViewType.Audio;
       this.isVideoViewCtx = viewType === ViewType.Video;
     }
 
-    @listen(ProviderMediaTypeChangeEvent.TYPE)
-    protected handleMediaTypeContextUpdate(e: ProviderMediaTypeChangeEvent) {
+    @listen(MediaTypeChangeEvent.TYPE)
+    protected handleMediaTypeContextUpdate(e: MediaTypeChangeEvent) {
       const mediaType = e.detail;
       this.mediaTypeCtx = mediaType;
       this.isAudioCtx = mediaType === MediaType.Audio;
       this.isVideoCtx = mediaType === MediaType.Video;
     }
 
-    @listen(ProviderPlaybackReadyEvent.TYPE)
+    @listen(PlaybackReadyEvent.TYPE)
     protected handlePlaybackReadyContextUpdate() {
       this.isPlaybackReadyCtx = true;
     }
 
-    @listen(ProviderPlaybackStartEvent.TYPE)
+    @listen(PlaybackStartEvent.TYPE)
     protected handlePlaybackStartContextUpdate() {
       this.hasPlaybackStartedCtx = true;
     }
 
-    @listen(ProviderPlaybackEndEvent.TYPE)
+    @listen(PlaybackEndEvent.TYPE)
     protected handlePlaybackEndContextUpdate() {
       this.hasPlaybackEndedCtx = true;
     }

@@ -7,7 +7,7 @@ import {
 
 import { playerContext } from '../player.context';
 
-export class FakeConsumer extends LitElement {
+export class FakeContextConsumer extends LitElement {
   @internalProperty()
   @playerContext.uuid.consume()
   uuid = playerContext.uuid.defaultValue;

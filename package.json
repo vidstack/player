@@ -63,7 +63,8 @@
     "@wcom/context": "^2.0.0",
     "@wcom/events": "^1.0.0",
     "clsx": "^1.1.1",
-    "lit-element": "^2.0.0"
+    "lit-element": "^2.0.0",
+    "tslib": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

@@ -6,5 +6,4 @@ Follow the links below to find out more information about any of our components.
 
 <!-- AUTO GENERATED BELOW -->
 
-- [`vds-player`](./../src/core/Player.md)
 - [`vds-video`](./../src/providers/video/VideoProvider.md)

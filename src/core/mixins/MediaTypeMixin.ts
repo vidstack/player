@@ -1,17 +1,17 @@
 import { listen } from '@wcom/events';
 import { Constructor, UpdatingElement } from 'lit-element';
 
-import { MediaType, PlayerState } from '../player.types';
 import {
-  ProviderDisconnectEvent,
-  ProviderMediaTypeChangeEvent,
-  ProviderSrcChangeEvent,
-} from '../provider/provider.events';
+  DisconnectEvent,
+  MediaTypeChangeEvent,
+  SrcChangeEvent,
+} from '../player.events';
+import { MediaType, PlayerProps } from '../player.types';
 
 export type MediaTypeMixinBase = Constructor<UpdatingElement>;
 
 export type MediaTypeCocktail<T extends MediaTypeMixinBase> = T &
-  Constructor<Pick<PlayerState, 'mediaType' | 'isAudio' | 'isVideo'>>;
+  Constructor<Pick<PlayerProps, 'mediaType' | 'isAudio' | 'isVideo'>>;
 
 /**
  * Mixes in properties for checking the current view type, and handles updating the media
@@ -25,13 +25,13 @@ export function MediaTypeMixin<T extends MediaTypeMixinBase>(
   class MediaTypeMixin extends Base {
     protected _mediaType = MediaType.Unknown;
 
-    @listen(ProviderMediaTypeChangeEvent.TYPE)
-    protected handleMediaTypeChange(e: ProviderMediaTypeChangeEvent) {
+    @listen(MediaTypeChangeEvent.TYPE)
+    protected handleMediaTypeChange(e: MediaTypeChangeEvent) {
       this._mediaType = e.detail;
     }
 
-    @listen(ProviderSrcChangeEvent.TYPE)
-    @listen(ProviderDisconnectEvent.TYPE)
+    @listen(SrcChangeEvent.TYPE)
+    @listen(DisconnectEvent.TYPE)
     protected handleMediaTypeReset() {
       this._mediaType = MediaType.Unknown;
     }

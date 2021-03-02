@@ -3,13 +3,13 @@ import { UpdatingElement } from 'lit-element';
 
 import { Constructor } from '../../shared/types';
 import { deferredPromise } from '../../utils/promise';
-import { ErrorEvent } from '../player.events';
-import { MediaProvider } from '../provider/MediaProvider';
 import {
-  ProviderConnectEvent,
-  ProviderDisconnectEvent,
-  ProviderPlaybackReadyEvent,
-} from '../provider/provider.events';
+  ConnectEvent,
+  DisconnectEvent,
+  ErrorEvent,
+  PlaybackReadyEvent,
+} from '../player.events';
+import { MediaProvider } from '../provider/MediaProvider';
 
 export type RequestMixinBase = Constructor<UpdatingElement>;
 
@@ -80,6 +80,7 @@ export function RequestMixin<T extends RequestMixinBase>(
       }
 
       this.requestQueue.delete(requestKey);
+      this.requestUpdate();
     }
 
     makeRequest(requestKey: RequestKey, request: RequestAction): void {
@@ -98,19 +99,17 @@ export function RequestMixin<T extends RequestMixinBase>(
       this.pendingRequestQueueFlush.resolve();
     }
 
-    @listen(ProviderConnectEvent.TYPE)
-    protected async handleRequestConnect(
-      e: ProviderConnectEvent,
-    ): Promise<void> {
+    @listen(ConnectEvent.TYPE)
+    protected async handleRequestConnect(e: ConnectEvent): Promise<void> {
       this.requestProvider = e.detail;
     }
 
-    @listen(ProviderPlaybackReadyEvent.TYPE)
+    @listen(PlaybackReadyEvent.TYPE)
     protected async handleFlushRequestQueue(): Promise<void> {
       await this.flushRequestQueue();
     }
 
-    @listen(ProviderDisconnectEvent.TYPE)
+    @listen(DisconnectEvent.TYPE)
     protected handleResetRequestQueue(): void {
       this.requestProvider = undefined;
       this.requestQueue.clear();

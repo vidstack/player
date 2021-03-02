@@ -2,19 +2,24 @@ import { UpdatingElement } from 'lit-element';
 
 import { Constructor } from '../../shared/types';
 import {
+  DeviceObserverCocktail,
+  DeviceObserverMixin,
+} from '../device/DeviceObserverMixin';
+import {
   AspectRatioCocktail,
   AspectRatioMixin,
 } from '../mixins/AspectRatioMixin';
+import { ContextCocktail, ContextMixin } from '../mixins/ContextMixin';
 import { MediaTypeCocktail, MediaTypeMixin } from '../mixins/MediaTypeMixin';
 import { RequestCocktail, RequestMixin } from '../mixins/RequestMixin';
 import { ViewTypeCocktail, ViewTypeMixin } from '../mixins/ViewTypeMixin';
 import { UuidCocktail, UuidMixin } from '../uuid/UuidMixin';
 
-export type ProviderCompositeMixinBase = Constructor<UpdatingElement>;
+export type MediaProviderMixinBase = Constructor<UpdatingElement>;
 
-export type ProviderCompositeCocktail<
-  T extends ProviderCompositeMixinBase
-> = T &
+export type MediaProviderCocktail<T extends MediaProviderMixinBase> = T &
+  ContextCocktail<T> &
+  DeviceObserverCocktail<T> &
   ViewTypeCocktail<T> &
   MediaTypeCocktail<T> &
   UuidCocktail<T> &
@@ -26,12 +31,16 @@ export type ProviderCompositeCocktail<
  *
  * @param Base - the constructor to mix into.
  */
-export function ProviderCompositeMixin<T extends ProviderCompositeMixinBase>(
+export function MediaProviderMixin<T extends MediaProviderMixinBase>(
   Base: T,
-): ProviderCompositeCocktail<T> {
-  class ProviderCompositeMixin extends RequestMixin(
-    AspectRatioMixin(ViewTypeMixin(MediaTypeMixin(UuidMixin(Base)))),
+): MediaProviderCocktail<T> {
+  class MediaProviderMixin extends DeviceObserverMixin(
+    ContextMixin(
+      RequestMixin(
+        AspectRatioMixin(ViewTypeMixin(MediaTypeMixin(UuidMixin(Base)))),
+      ),
+    ),
   ) {}
 
-  return ProviderCompositeMixin;
+  return MediaProviderMixin;
 }

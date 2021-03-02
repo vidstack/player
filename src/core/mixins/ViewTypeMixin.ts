@@ -2,17 +2,14 @@ import { listen } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
 
 import { Constructor } from '../../shared/types';
-import { PlayerState, ViewType } from '../player.types';
-import {
-  ProviderDisconnectEvent,
-  ProviderViewTypeChangeEvent,
-} from '../provider/provider.events';
+import { DisconnectEvent, ViewTypeChangeEvent } from '../player.events';
+import { PlayerProps, ViewType } from '../player.types';
 
 export type ViewTypeMixinBase = Constructor<UpdatingElement>;
 
 export type ViewTypeCocktail<T extends ViewTypeMixinBase> = T &
   Constructor<
-    Pick<PlayerState, 'viewType' | 'isAudioView' | 'isVideoView'> & {
+    Pick<PlayerProps, 'viewType' | 'isAudioView' | 'isVideoView'> & {
       /**
        * The attribute name on the player for which to set whether the player view is of type
        * audio. This attribute will be set to `true`/`false` accordingly.
@@ -44,15 +41,15 @@ export function ViewTypeMixin<T extends ViewTypeMixinBase>(
 
     videoViewAttrName = 'video';
 
-    @listen(ProviderViewTypeChangeEvent.TYPE)
-    protected handleViewTypeChange(e: ProviderViewTypeChangeEvent): void {
+    @listen(ViewTypeChangeEvent.TYPE)
+    protected handleViewTypeChange(e: ViewTypeChangeEvent): void {
       this._viewType = e.detail;
       this.setAttribute(this.audioViewAttrName, String(this.isAudioView));
       this.setAttribute(this.videoViewAttrName, String(this.isVideoView));
       this.requestUpdate();
     }
 
-    @listen(ProviderDisconnectEvent.TYPE)
+    @listen(DisconnectEvent.TYPE)
     protected handleViewTypeReset() {
       this._viewType = ViewType.Unknown;
     }

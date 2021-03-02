@@ -3,6 +3,7 @@ import {
   buildVdsEvent,
   VdsCustomEvent,
   VdsCustomEventConstructor,
+  VdsEventInit,
 } from '../../shared/events';
 
 declare global {
@@ -47,34 +48,32 @@ export type VdsUserEvents = {
 
 export type VdsUserEventType = keyof VdsUserEvents;
 
-export function buildVdsUserEvent<T extends RawUserEventType>(
-  type: T,
-): UserEventConstructor<T> {
-  return buildVdsEvent(
-    `${USER_EVENT_PREFIX}-${type}-request`,
-  ) as UserEventConstructor<T>;
+export function buildUserEvent<P extends RawUserEventType>(
+  type: P,
+): VdsCustomEventConstructor<RawUserEventDetailType[P]> {
+  const prefixedType = `${USER_EVENT_PREFIX}-${type}`;
+
+  class UserEvent extends buildVdsEvent<RawUserEventDetailType[P]>(
+    prefixedType,
+  ) {
+    constructor(eventInit?: VdsEventInit<RawUserEventDetailType[P]>) {
+      super(eventInit);
+    }
+  }
+
+  return UserEvent;
 }
 
-export class UserPlayRequestEvent extends buildVdsUserEvent('play') {}
+export class UserPlayRequestEvent extends buildUserEvent('play') {}
 
-export class UserPauseRequestEvent extends buildVdsUserEvent('pause') {}
+export class UserPauseRequestEvent extends buildUserEvent('pause') {}
 
-export class UserMutedChangeRequestEvent extends buildVdsUserEvent(
+export class UserMutedChangeRequestEvent extends buildUserEvent(
   'muted-change',
 ) {}
 
-export class UserTimeChangeRequestEvent extends buildVdsUserEvent(
-  'time-change',
-) {}
+export class UserTimeChangeRequestEvent extends buildUserEvent('time-change') {}
 
-export class UserVolumeChangeRequestEvent extends buildVdsUserEvent(
+export class UserVolumeChangeRequestEvent extends buildUserEvent(
   'volume-change',
 ) {}
-
-export const ALL_USER_EVENT_TYPES = [
-  UserPlayRequestEvent.TYPE,
-  UserPauseRequestEvent.TYPE,
-  UserMutedChangeRequestEvent.TYPE,
-  UserVolumeChangeRequestEvent.TYPE,
-  UserTimeChangeRequestEvent.TYPE,
-] as VdsUserEventType[];

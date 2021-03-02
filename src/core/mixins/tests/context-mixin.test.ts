@@ -1,31 +1,31 @@
-import '../vds-player';
-import './vds-fake-consumer';
+import '../../fakes/vds-fake-context-consumer';
+import '../../fakes/vds-fake-media-provider';
+
+import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 
 import {
-  elementUpdated,
-  expect,
-  fixture,
-  html,
-  oneEvent,
-} from '@open-wc/testing';
+  isBoolean,
+  isNumber,
+  isString,
+  isUndefined,
+} from '../../../utils/unit';
+import {
+  buildFakeMediaProvider,
+  buildFakeMediaProviderWithFakeConsumer,
+  emitEvent,
+} from '../../fakes/helpers';
+import { playerContext } from '../../player.context';
+import { DisconnectEvent, SrcChangeEvent } from '../../player.events';
+import { PlayerContext, ViewType } from '../../player.types';
 
-import { isBoolean, isNumber, isString, isUndefined } from '../../utils/unit';
-import { ProviderDisconnectEvent, ProviderSrcChangeEvent } from '..';
-import { Player } from '../Player';
-import { playerContext } from '../player.context';
-import { SrcChangeEvent } from '../player.events';
-import { PlayerContext, ViewType } from '../player.types';
-import { FakeConsumer } from './FakeConsumer';
-import { emitEvent } from './helpers';
-
-describe('context', () => {
+describe('context mixin', () => {
   it.skip('should have defined all context properties', async () => {
-    const player = await fixture<Player>(html`<vds-player></vds-player>`);
+    const provider = await buildFakeMediaProvider();
 
     Object.keys(playerContext).forEach(prop => {
       const ctxProp = `${prop}Ctx`;
       const descriptor = Object.getOwnPropertyDescriptor(
-        player.constructor.prototype,
+        provider.constructor.prototype,
         ctxProp,
       );
       expect(
@@ -36,15 +36,7 @@ describe('context', () => {
   });
 
   it('should update context consumer', async () => {
-    const player = await fixture<Player>(
-      html`
-        <vds-player>
-          <vds-fake-consumer></vds-fake-consumer>
-        </vds-player>
-      `,
-    );
-
-    const consumer = player.querySelector('vds-fake-consumer') as FakeConsumer;
+    const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
 
     function genRandomNewValue(prop: keyof PlayerContext, value: unknown) {
       if (isString(value) || prop === 'aspectRatio') {
@@ -71,7 +63,7 @@ describe('context', () => {
       if (dontTest.has(prop)) return;
 
       const ctxProp = `${prop}Ctx`;
-      const newValue = genRandomNewValue(prop, player.context[ctxProp]);
+      const newValue = genRandomNewValue(prop, provider.context[ctxProp]);
 
       expect(
         newValue,
@@ -85,7 +77,7 @@ describe('context', () => {
       ).to.exist;
 
       if (!isUndefined(newValue)) {
-        player.context[ctxProp] = newValue;
+        provider.context[ctxProp] = newValue;
         await elementUpdated(consumer);
         expect(
           consumer[prop],
@@ -104,23 +96,14 @@ describe('context', () => {
   });
 
   it('should soft reset context when media is changed', async () => {
-    const player = await fixture<Player>(
-      html`
-        <vds-player>
-          <vds-fake-consumer></vds-fake-consumer>
-        </vds-player>
-      `,
-    );
+    const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const consumer = player.querySelector('vds-fake-consumer')!;
-
-    player.context.pausedCtx = false;
-    player.context.durationCtx = 200;
+    provider.context.pausedCtx = false;
+    provider.context.durationCtx = 200;
     await elementUpdated(consumer);
 
-    emitEvent(consumer, new ProviderSrcChangeEvent({ detail: '' }));
-    await oneEvent(player, SrcChangeEvent.TYPE);
+    emitEvent(provider, new SrcChangeEvent({ detail: '' }));
+    await oneEvent(provider, SrcChangeEvent.TYPE);
     await elementUpdated(consumer);
 
     expect(consumer.paused, 'paused').to.equal(true);
@@ -128,22 +111,13 @@ describe('context', () => {
   });
 
   it('should hard reset context when provider disconnects', async () => {
-    const player = await fixture<Player>(
-      html`
-        <vds-player>
-          <vds-fake-consumer></vds-fake-consumer>
-        </vds-player>
-      `,
-    );
+    const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const consumer = player.querySelector('vds-fake-consumer')!;
-
-    player.context.viewTypeCtx = ViewType.Video;
+    provider.context.viewTypeCtx = ViewType.Video;
     await elementUpdated(consumer);
 
-    emitEvent(consumer, new ProviderDisconnectEvent());
-    await oneEvent(player, ProviderDisconnectEvent.TYPE);
+    emitEvent(provider, new DisconnectEvent());
+    await oneEvent(provider, DisconnectEvent.TYPE);
     await elementUpdated(consumer);
 
     expect(consumer.viewType, 'viewType').to.equal(ViewType.Unknown);

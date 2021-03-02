@@ -1,7 +1,7 @@
 import { listenTo } from '@wcom/events';
 
 import { buildVdsEvent } from '../../shared/events';
-import { Unsubscribe } from '../../shared/types';
+import { Callback, Unsubscribe } from '../../shared/types';
 import { IS_CLIENT, IS_MOBILE } from '../../utils/support';
 import { isUndefined, noop } from '../../utils/unit';
 
@@ -40,7 +40,7 @@ export interface DeviceObserver {
  * @param maxWidth - The maximum window width in pixels to consider device as mobile.
  */
 export const onDeviceChange = (
-  callback: (device: Device) => void,
+  callback: Callback<Device>,
   maxWidth = 480,
   isClient = IS_CLIENT,
   isMobile = IS_MOBILE,
