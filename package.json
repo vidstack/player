@@ -86,7 +86,7 @@
     "@web/dev-server": "^0.1.8",
     "@web/dev-server-esbuild": "^0.2.6",
     "@web/test-runner": "^0.9.7",
-    "@web/test-runner-commands": "^0.2.1",
+    "@web/test-runner-commands": "^0.4.1",
     "babel-loader": "^8.2.2",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
