@@ -38,6 +38,7 @@
   "scripts": {
     "build": "run-s clean build:esm build:manifest",
     "build:esm": "tsc -p tsconfig-build.json",
+    "build:storybook": "tsc -p tsconfig-storybook.json",
     "build:manifest": "wcom transform \"src/**/*.ts\" -t vscode markdown",
     "build:watch": "npm run build:esm -- -w",
     "clean": "run-p clean:*",
@@ -51,8 +52,11 @@
     "format:eslint": "npm run lint:eslint -- --fix",
     "format:prettier": "npm run lint:prettier -- --write",
     "start": "npm run storybook",
-    "storybook": "start-storybook -s .storybook/public",
+    "storybook": "npm run storybook:prepare && run-p \"build:storybook -- -w\" storybook:serve",
+    "storybook:prepare": "run-s clean:storybook build:storybook",
     "storybook:build": "build-storybook -s .storybook/public",
+    "storybook:serve": "start-storybook -s .storybook/public",
+    "storybook:static": "run-s storybook:prepare storybook:build",
     "test": "wtr \"src/**/*.test.ts\"",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
@@ -67,7 +71,7 @@
     "tslib": "^2.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
+    "@babel/core": "^7.6.4",
     "@open-wc/testing": "^2.5.32",
     "@storybook/addon-a11y": "^6.1.20",
     "@storybook/addon-essentials": "^6.1.20",
