@@ -1,10 +1,10 @@
 import { listen } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
 
-import { Constructor } from '../../shared';
-import { deferredPromise } from '../../utils';
+import { Constructor } from '../../shared/types';
+import { deferredPromise } from '../../utils/promise';
 import { ErrorEvent } from '../player.events';
-import { MediaProvider } from '../provider';
+import { MediaProvider } from '../provider/MediaProvider';
 import {
   ProviderConnectEvent,
   ProviderDisconnectEvent,

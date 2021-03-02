@@ -5,7 +5,7 @@ import { expect, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
 
 import { ErrorEvent, PlaybackReadyEvent } from '../player.events';
-import { ProviderPlaybackReadyEvent } from '../provider';
+import { ProviderPlaybackReadyEvent } from '../provider/provider.events';
 import { buildPlayerWithMockProvider, emitEvent } from './helpers';
 
 describe('provider requests', () => {

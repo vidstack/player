@@ -9,7 +9,7 @@ import {
   oneEvent,
 } from '@open-wc/testing';
 
-import { isBoolean, isNumber, isString, isUndefined } from '../../utils';
+import { isBoolean, isNumber, isString, isUndefined } from '../../utils/unit';
 import { ProviderDisconnectEvent, ProviderSrcChangeEvent } from '..';
 import { Player } from '../Player';
 import { playerContext } from '../player.context';

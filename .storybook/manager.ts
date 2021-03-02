@@ -1,13 +1,11 @@
 import theme from './theme';
-import { addons } from '@web/storybook-prebuilt/addons';
-
-const isProduction = !window.origin.includes('localhost');
+import { addons } from '@storybook/addons';
 
 addons.setConfig({
   isFullscreen: false,
   showNav: true,
   showPanel: true,
-  theme: theme(isProduction),
+  theme,
   panelPosition: 'right',
   sidebarAnimations: true,
   enableShortcuts: true,

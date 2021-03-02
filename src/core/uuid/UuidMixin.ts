@@ -1,7 +1,7 @@
 import { v4 as uuid } from '@lukeed/uuid';
 import { UpdatingElement } from 'lit-element';
 
-import { Constructor } from '../../shared';
+import { Constructor } from '../../shared/types';
 import { uuidContext } from './uuid.context';
 
 export type UuidMixinBase = Constructor<UpdatingElement>;

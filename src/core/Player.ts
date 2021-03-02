@@ -10,21 +10,21 @@ import {
   TemplateResult,
 } from 'lit-element';
 
-import { VdsCustomEvent } from '../shared';
-import { isUndefined } from '../utils';
+import { VdsCustomEvent } from '../shared/events';
+import { isUndefined } from '../utils/unit';
 import { playerContext } from './player.context';
 import { playerStyles } from './player.css';
 import { VdsPlayerEvents } from './player.events';
 import { PlayerMethods, PlayerState } from './player.types';
 import { PlayerCompositeMixin } from './PlayerCompositeMixin';
+import { MediaProvider } from './provider/MediaProvider';
 import {
   ALL_PROVIDER_EVENT_TYPES,
-  MediaProvider,
   PROVIDER_EVENT_TYPE_TO_PLAYER_EVENT_MAP,
   ProviderConnectEvent,
   ProviderDisconnectEvent,
   ProviderErrorEvent,
-} from './provider';
+} from './provider/provider.events';
 import {
   ALL_USER_EVENT_TYPES,
   UserMutedChangeRequestEvent,
@@ -32,7 +32,7 @@ import {
   UserPlayRequestEvent,
   UserTimeChangeRequestEvent,
   UserVolumeChangeRequestEvent,
-} from './user';
+} from './user/user.events';
 
 /**
  * The player sits at the top of the component hierarchy in the library. It encapsulates

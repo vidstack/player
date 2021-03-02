@@ -1,8 +1,8 @@
 import createContext from '@wcom/context';
 
-import { deviceContext } from './device';
+import { deviceContext } from './device/device.context';
 import { MediaType, PlayerContext, ViewType } from './player.types';
-import { uuidContext } from './uuid';
+import { uuidContext } from './uuid/uuid.context';
 
 /**
  * The player context object contains a collection of contexts that map 1:1 with player

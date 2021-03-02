@@ -5,9 +5,9 @@ import '../provider/vds-mock-media-provider';
 import { elementUpdated, expect, fixture, html } from '@open-wc/testing';
 import sinon, { stub } from 'sinon';
 
-import { Device } from '../device';
+import { Device } from '../device/DeviceObserver';
 import { Player } from '../Player';
-import { PlayerContextProvider, ViewType } from '../player.types';
+import { ViewType } from '../player.types';
 import {
   buildPlayerWithMockProvider,
   switchToDesktopDevice,

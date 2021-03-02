@@ -1,9 +1,9 @@
+import { LIB_PREFIX } from '../../shared/constants';
 import {
   buildVdsEvent,
-  LIB_PREFIX,
   VdsCustomEvent,
   VdsCustomEventConstructor,
-} from '../../shared';
+} from '../../shared/events';
 import {
   BufferedChangeEvent,
   BufferingChangeEvent,

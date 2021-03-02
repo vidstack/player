@@ -1,8 +1,9 @@
 import { event, listen } from '@wcom/events';
 import { property, UpdatingElement } from 'lit-element';
 
-import { buildVdsEvent, Constructor } from '../../shared';
-import { isString, isUndefined } from '../../utils';
+import { buildVdsEvent } from '../../shared/events';
+import { Constructor } from '../../shared/types';
+import { isString, isUndefined } from '../../utils/unit';
 import { PlayerState } from '../player.types';
 import { MediaProvider } from '../provider/MediaProvider';
 

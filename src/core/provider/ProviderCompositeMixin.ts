@@ -1,17 +1,14 @@
 import { UpdatingElement } from 'lit-element';
 
-import { Constructor } from '../../shared';
+import { Constructor } from '../../shared/types';
 import {
   AspectRatioCocktail,
   AspectRatioMixin,
-  MediaTypeCocktail,
-  MediaTypeMixin,
-  RequestCocktail,
-  RequestMixin,
-  ViewTypeCocktail,
-  ViewTypeMixin,
-} from '../mixins';
-import { UuidCocktail, UuidMixin } from '../uuid';
+} from '../mixins/AspectRatioMixin';
+import { MediaTypeCocktail, MediaTypeMixin } from '../mixins/MediaTypeMixin';
+import { RequestCocktail, RequestMixin } from '../mixins/RequestMixin';
+import { ViewTypeCocktail, ViewTypeMixin } from '../mixins/ViewTypeMixin';
+import { UuidCocktail, UuidMixin } from '../uuid/UuidMixin';
 
 export type ProviderCompositeMixinBase = Constructor<UpdatingElement>;
 

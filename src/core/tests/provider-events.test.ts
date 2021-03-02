@@ -25,6 +25,7 @@ import {
   VolumeChangeEvent,
 } from '../player.events';
 import { MediaType, ViewType } from '../player.types';
+import { MockMediaProvider } from '../provider/MockMediaProvider';
 import {
   ProviderBufferedChangeEvent,
   ProviderBufferingChangeEvent,
@@ -43,8 +44,7 @@ import {
   ProviderTimeChangeEvent,
   ProviderViewTypeChangeEvent,
   ProviderVolumeChangeEvent,
-} from '../provider';
-import { MockMediaProvider } from '../provider/MockMediaProvider';
+} from '../provider/provider.events';
 import { FakeConsumer } from './FakeConsumer';
 import { emitEvent } from './helpers';
 

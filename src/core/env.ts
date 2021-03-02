@@ -1,4 +1,4 @@
-import { isUndefined } from '../utils';
+import { isUndefined } from '../utils/unit';
 
 declare global {
   interface Window {

@@ -1,7 +1,7 @@
 import { Context } from '@wcom/context';
 
-import { deviceContext } from './device';
-import { uuidContext } from './uuid';
+import { deviceContext } from './device/device.context';
+import { uuidContext } from './uuid/uuid.context';
 
 export type Source = string;
 

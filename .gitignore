@@ -7,7 +7,6 @@ dist/
 /ui/
 /utils/
 /shared/
-/storybook-build/
 /storybook-static/
 
 custom-elements.json

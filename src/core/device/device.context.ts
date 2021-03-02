@@ -1,6 +1,6 @@
 import createContext from '@wcom/context';
 
-import { IS_CLIENT, IS_MOBILE } from '../../utils';
+import { IS_CLIENT, IS_MOBILE } from '../../utils/support';
 import { Device } from './DeviceObserver';
 
 const guessDevice =

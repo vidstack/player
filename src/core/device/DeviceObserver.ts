@@ -1,7 +1,9 @@
 import { listenTo } from '@wcom/events';
 
-import { buildVdsEvent, Unsubscribe } from '../../shared';
-import { IS_CLIENT, IS_MOBILE, isUndefined, noop } from '../../utils';
+import { buildVdsEvent } from '../../shared/events';
+import { Unsubscribe } from '../../shared/types';
+import { IS_CLIENT, IS_MOBILE } from '../../utils/support';
+import { isUndefined, noop } from '../../utils/unit';
 
 export enum Device {
   Mobile = 'mobile',

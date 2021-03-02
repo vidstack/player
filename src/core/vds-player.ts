@@ -1,5 +1,5 @@
-import { LIB_PREFIX } from '../shared';
-import { safelyDefineCustomElement } from '../utils';
+import { LIB_PREFIX } from '../shared/constants';
+import { safelyDefineCustomElement } from '../utils/dom';
 import { Player } from './Player';
 
 export const PLAYER_TAG_NAME = `${LIB_PREFIX}-player`;

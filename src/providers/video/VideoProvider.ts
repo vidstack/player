@@ -14,7 +14,8 @@ import {
   ProviderViewTypeChangeEvent,
   ViewType,
 } from '../../core';
-import { isNumber } from '../../utils';
+import { ifNonEmpty } from '../../shared/directives/if-non-empty';
+import { isNumber } from '../../utils/unit';
 import { MediaFileProvider } from '../file';
 import { videoStyles } from './video.css';
 import { VideoControlsList } from './video.types';
@@ -88,9 +89,9 @@ export class VideoProvider extends MediaFileProvider {
       <video
         width="${ifDefined(isNumber(this.width) ? this.width : undefined)}"
         poster="${ifDefined(this.poster)}"
-        preload="${ifDefined(this.preload)}"
-        crossorigin="${ifDefined(this.crossOrigin)}"
-        controlslist="${ifDefined(this.controlsList)}"
+        preload="${ifNonEmpty(this.preload)}"
+        crossorigin="${ifNonEmpty(this.crossOrigin)}"
+        controlslist="${ifNonEmpty(this.controlsList)}"
         ?controls="${this.controls}"
         ?autopictureinpicture="${this.autoPiP}"
         ?disablepictureinpicture="${this.disablePiP}"

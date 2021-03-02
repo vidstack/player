@@ -12,7 +12,7 @@ import {
   UserPlayRequestEvent,
   UserTimeChangeRequestEvent,
   UserVolumeChangeRequestEvent,
-} from '../user';
+} from '../user/user.events';
 import { connectProviderToPlayer, emitEvent } from './helpers';
 
 describe('user events', () => {

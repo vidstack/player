@@ -1,20 +1,19 @@
 import { UpdatingElement } from 'lit-element';
 
-import { Constructor } from '../shared';
-import { DeviceObserverCocktail, DeviceObserverMixin } from './device';
+import { Constructor } from '../shared/types';
+import {
+  DeviceObserverCocktail,
+  DeviceObserverMixin,
+} from './device/DeviceObserverMixin';
 import {
   AspectRatioCocktail,
   AspectRatioMixin,
-  ContextCocktail,
-  ContextMixin,
-  MediaTypeCocktail,
-  MediaTypeMixin,
-  RequestCocktail,
-  RequestMixin,
-  ViewTypeCocktail,
-  ViewTypeMixin,
-} from './mixins';
-import { UuidCocktail, UuidMixin } from './uuid';
+} from './mixins/AspectRatioMixin';
+import { ContextCocktail, ContextMixin } from './mixins/ContextMixin';
+import { MediaTypeCocktail, MediaTypeMixin } from './mixins/MediaTypeMixin';
+import { RequestCocktail, RequestMixin } from './mixins/RequestMixin';
+import { ViewTypeCocktail, ViewTypeMixin } from './mixins/ViewTypeMixin';
+import { UuidCocktail, UuidMixin } from './uuid/UuidMixin';
 
 export type PlayerCompositeMixinBase = Constructor<UpdatingElement>;
 

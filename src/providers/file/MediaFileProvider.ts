@@ -19,7 +19,7 @@ import {
   ProviderTimeChangeEvent,
   ProviderVolumeChangeEvent,
 } from '../../core';
-import { getSlottedChildren, isNil, isNumber } from '../../utils';
+import { isNil, isNumber } from '../../utils/unit';
 import { MediaCrossOriginOption, MediaPreloadOption } from './file.types';
 
 /**
