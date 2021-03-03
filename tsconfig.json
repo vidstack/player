@@ -7,7 +7,6 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noUnusedLocals": false,
-    "importHelpers": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,

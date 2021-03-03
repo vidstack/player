@@ -112,8 +112,8 @@ const Template: Story<VideoArgTypes> = ({
 }) =>
   html`
     <vds-video
-      width="${width}"
       src="${src}"
+      width="${width}"
       aspect-ratio="${aspectRatio}"
       poster="${poster}"
       ?paused="${paused}"
@@ -127,8 +127,7 @@ const Template: Story<VideoArgTypes> = ({
       ?auto-pip="${autoPiP}"
       ?disable-pip="${disablePiP}"
       ?disable-remote-playback="${disableRemotePlayback}"
-    >
-    </vds-video>
+    ></vds-video>
   `;
 
 export const Video = Template.bind({});

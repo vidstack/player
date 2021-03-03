@@ -6,6 +6,7 @@ export const videoStyles = css`
     width: 100%;
     display: block;
     overflow: hidden;
+    z-index: 0;
   }
 
   video {

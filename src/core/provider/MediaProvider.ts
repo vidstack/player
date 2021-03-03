@@ -118,7 +118,7 @@ export abstract class MediaProvider<EngineType = unknown>
    *
    * - `VideProvider` engine is `HTMLMediaElement`.
    * - `YoutubeProvider` engine is `HTMLIFrameElement`.
-   * - `HLSProvider` engine is the `ShakaPlayer` instance.
+   * - `HLSProvider` engine is the `Hls.js` instance.
    *
    * Refer to the respective provider documentation to find out which engine is powering it.
    */
@@ -152,13 +152,8 @@ export abstract class MediaProvider<EngineType = unknown>
     }
   }
 
-  async play(): Promise<void> {
-    this.throwIfNotReady();
-  }
-
-  async pause(): Promise<void> {
-    this.throwIfNotReady();
-  }
+  abstract play(): Promise<void>;
+  abstract pause(): Promise<void>;
 
   // -------------------------------------------------------------------------------------------
   // ARIA Helpers
