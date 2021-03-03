@@ -100,11 +100,19 @@ export class VideoProvider<
     };
   }
 
+  /**
+   * Can be used by attaching engine such as `hls.js` to prevent src attr being set on
+   * `<video>` element.
+   */
+  protected shouldSetVideoSrcAttr(): boolean {
+    return true;
+  }
+
   protected renderVideo(): TemplateResult {
     return html`
       <video
         part="video"
-        src="${ifNonEmpty(this.src)}"
+        src="${ifNonEmpty(this.shouldSetVideoSrcAttr() ? this.src : '')}"
         width="${ifNumber(this.width)}"
         height="${ifNumber(this.height)}"
         poster="${ifDefined(this.poster)}"

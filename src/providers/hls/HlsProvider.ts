@@ -1,18 +1,34 @@
-import { Disposal } from '@wcom/events';
+import { event, listen } from '@wcom/events';
 import type Hls from 'hls.js';
 import { property, PropertyValues } from 'lit-element';
 
-import { EngineBuildEvent, EngineNoSupportEvent, MediaType } from '../../core';
+import {
+  DurationChangeEvent,
+  ErrorEvent,
+  MediaType,
+  PlaybackReadyEvent,
+  SrcChangeEvent,
+} from '../../core';
 import { LibLoader } from '../../shared/LibLoader';
 import { isNil, isUndefined } from '../../utils/unit';
 import { VideoProvider } from '../video';
+import {
+  HlsEngineAttachEvent,
+  HlsEngineBuiltEvent,
+  HlsEngineDetachEvent,
+  HlsEngineNoSuppotEvent,
+  HlsEvents,
+} from './hls.events';
 import { HlsProviderEngine } from './hls.types';
 import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element. This provider
  * also introduces support for the [HTTP Live Streaming protocol](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
- * (also known as HLS) via the [`video-dev/hls.js`](https://github.com/video-dev/hls.js) library.
+ * (also known as HLS).
+ *
+ * This provider will load the [`video-dev/hls.js`](https://github.com/video-dev/hls.js) library
+ * if the browser doesn't have native HLS support.
  *
  * @tagname vds-hls
  *
@@ -41,15 +57,13 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  * ```
  */
 export class HlsProvider extends VideoProvider<HlsProviderEngine> {
-  protected _engine?: HlsProviderEngine;
+  protected _hlsEngine?: HlsProviderEngine;
 
   protected HlsLib?: typeof Hls;
 
   protected libLoader: LibLoader<typeof Hls>;
 
-  protected _hasEngineAttached = false;
-
-  protected engineDisposal = new Disposal();
+  protected _isHlsEngineAttached = false;
 
   constructor() {
     super();
@@ -57,18 +71,17 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
   }
 
   connectedCallback(): void {
-    this.buildAndAttachEngine();
+    super.connectedCallback();
+    this.handleSrcChange();
   }
 
   async firstUpdated(changedProps: PropertyValues): Promise<void> {
     super.firstUpdated(changedProps);
-    this.buildAndAttachEngine();
+    this.handleSrcChange();
   }
 
   disconnectedCallback(): void {
-    this.engineDisposal.empty();
-    this._engine?.destroy();
-    this._hasEngineAttached = false;
+    this.destroyHlsEngine();
     super.disconnectedCallback();
   }
 
@@ -79,18 +92,39 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
   /**
    * The URL where the `hls.js` library source can be found.
    */
-  @property()
+  @property({ attribute: 'lib-src' })
   libSrc = 'https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.min.js';
 
-  get engine(): HlsProviderEngine {
-    return this._engine;
+  /**
+   * The `hls.js` configuration object.
+   */
+  @property({ attribute: 'hls-config', type: Object })
+  hlsConfig?: Hls.Config;
+
+  /**
+   * The `hls.js` instance.
+   */
+  get hlsEngine(): HlsProviderEngine {
+    return this._hlsEngine;
   }
 
   /**
-   * Whether the current engine has mounted the underlying HTML5 media element.
+   * Whether the `hls.js` instance has mounted the `HtmlMediaElement`.
    */
-  get hasEngineAttached(): boolean {
-    return this.hasEngineAttached;
+  get isHlsEngineAttached(): boolean {
+    return this._isHlsEngineAttached;
+  }
+
+  get isPlaybackReady(): boolean {
+    return this.isCurrentlyHls && !this.hasNativeHlsSupport
+      ? this._isPlaybackReady
+      : this.isMediaElReadyForPlayback();
+  }
+
+  get currentSrc(): string {
+    return this.isCurrentlyHls && !this.hasNativeHlsSupport
+      ? this.src
+      : this.mediaEl?.currentSrc ?? '';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -101,68 +135,227 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
     return HLS_TYPES.has(type) || super.canPlayType(type);
   }
 
-  protected async buildAndAttachEngine(): Promise<void> {
-    if (isNil(this.mediaEl)) return;
+  /**
+   * Whether the current src is using HLS.
+   */
+  get isCurrentlyHls(): boolean {
+    return HLS_EXTENSIONS.test(this.src);
+  }
 
-    if (!isUndefined(this.engine)) {
-      this.attachEngine();
+  /**
+   * Whether the browser natively supports HLS, mostly only true in Safari. Only call this method
+   * after the provider has connected to the DOM (wait for `ConnectEvent`).
+   */
+  get hasNativeHlsSupport(): boolean {
+    return super.canPlayType('application/vnd.apple.mpegurl') ?? false;
+  }
+
+  protected shouldSetVideoSrcAttr(): boolean {
+    return this.hasNativeHlsSupport || !this.isCurrentlyHls;
+  }
+
+  protected isHlsEngineInitializing = false;
+
+  protected async initHlsEngine(): Promise<void> {
+    if (
+      isNil(this.mediaEl) ||
+      this.hasNativeHlsSupport ||
+      this.isHlsEngineInitializing ||
+      !this.isCurrentlyHls
+    )
       return;
-    }
+
+    this.isHlsEngineInitializing = true;
 
     this.libLoader.src = this.libSrc;
     this.HlsLib = await this.libLoader.download();
 
-    if (!this.HlsLib.isSupported()) {
-      this.dispatchEvent(new EngineNoSupportEvent());
+    if (this.HlsLib.isSupported()) {
+      this.buildHlsEngine();
+      this.attachHlsEngine();
+      this.loadSrcOnHlsEngine();
+    }
+
+    this.isHlsEngineInitializing = false;
+  }
+
+  protected destroyHlsEngine(): void {
+    this.hlsEngine?.destroy();
+    this._prevHlsSrc = '';
+    this._isHlsEngineAttached = false;
+    this._isPlaybackReady = false;
+  }
+
+  protected _prevHlsSrc = '';
+
+  protected loadSrcOnHlsEngine(): void {
+    if (
+      !this.isCurrentlyHls ||
+      this.hasNativeHlsSupport ||
+      this.src === this._prevHlsSrc
+    )
+      return;
+
+    this.hlsEngine?.loadSource(this.src);
+    this._prevHlsSrc = this.src;
+  }
+
+  protected buildHlsEngine(): void {
+    if (isNil(this.mediaEl)) return;
+
+    if (!isUndefined(this.hlsEngine)) {
+      this.attachHlsEngine();
+      this.loadSrcOnHlsEngine();
       return;
     }
 
-    // TODO: pass in configuration
-    this._engine = new this.HlsLib();
-    this.dispatchEvent(new EngineBuildEvent({ detail: this.engine }));
-    this.attachEngine();
+    if (!this.HlsLib?.isSupported()) {
+      this.dispatchEvent(new HlsEngineNoSuppotEvent());
+      return;
+    }
+
+    this._hlsEngine = new this.HlsLib(this.hlsConfig ?? {});
+    this.dispatchEvent(new HlsEngineBuiltEvent({ detail: this.hlsEngine }));
+    this.listenToHlsEngine();
   }
 
-  protected attachEngine(): void {
-    if (!isUndefined(this.engine) || isNil(this.mediaEl)) return;
-    // ...
+  // Let `MediaFileProvider` know we're taking over ready events.
+  protected willAnotherEngineAttach(): boolean {
+    return !this.hasNativeHlsSupport && (this.HlsLib?.isSupported() ?? false);
   }
 
-  protected listenToEngine(): void {
-    this.engineDisposal.empty();
+  protected attachHlsEngine(): void {
+    if (
+      this.isHlsEngineAttached ||
+      isUndefined(this.hlsEngine) ||
+      isNil(this.mediaEl)
+    )
+      return;
 
-    // this.hls!.on(Hls.Events.MEDIA_ATTACHED, () => {
-    //   this._hasAttached = true;
-    //   this.onSrcChange();
-    // this.dispatchEvent(new EngineAttachEvent({ detail: this.engine }));
-    // });
-    // this.hls!.on(Hls.Events.ERROR, (event: any, data: any) => {
-    //   if (data.fatal) {
-    //     switch (data.type) {
-    //       case Hls.ErrorTypes.NETWORK_ERROR:
-    //         this.hls.startLoad();
-    //         break;
-    //       case Hls.ErrorTypes.MEDIA_ERROR:
-    //         this.hls.recoverMediaError();
-    //         break;
-    //       default:
-    //         this.destroyHls();
-    //         break;
-    //     }
-    //   }
-    //   this.vmError.emit({ event, data });
-    // });
-    // this.hls!.on(Hls.Events.MANIFEST_PARSED, () => {
-    //   this.dispatch('currentSrc', this.src);
-    // });
-    // this.hls?.attachMedia(this.mediaEl);
+    this.hlsEngine.attachMedia(this.mediaEl);
+    this._isHlsEngineAttached = true;
+    this.dispatchEvent(new HlsEngineAttachEvent({ detail: this.hlsEngine }));
+  }
+
+  protected detachHlsEngine(): void {
+    if (!this.isHlsEngineAttached) return;
+    this.hlsEngine?.detachMedia();
+    this._isHlsEngineAttached = false;
+    this._prevHlsSrc = '';
+    this.dispatchEvent(new HlsEngineDetachEvent({ detail: this.engine }));
   }
 
   protected getMediaType(): MediaType {
-    if (HLS_EXTENSIONS.test(this.currentSrc)) {
+    if (this.isCurrentlyHls) {
       return MediaType.Video;
     }
 
     return super.getMediaType();
   }
+
+  // -------------------------------------------------------------------------------------------
+  // Events
+  // -------------------------------------------------------------------------------------------
+
+  @listen(SrcChangeEvent.TYPE)
+  protected handleSrcChange(): void {
+    this._isPlaybackReady = false;
+
+    if (!this.isCurrentlyHls) {
+      this.detachHlsEngine();
+      return;
+    }
+
+    // Need to wait for `src` attribute on `<video>` to clear if last `src` was not using
+    // HLS engine.
+    window.requestAnimationFrame(async () => {
+      await this.requestUpdate();
+
+      if (isUndefined(this.hlsEngine)) {
+        this.initHlsEngine();
+      } else {
+        this.attachHlsEngine();
+        this.loadSrcOnHlsEngine();
+      }
+    });
+  }
+
+  protected listenToHlsEngine(): void {
+    if (isUndefined(this.hlsEngine) || isUndefined(this.HlsLib)) return;
+
+    this.hlsEngine.on(
+      this.HlsLib.Events.LEVEL_LOADED,
+      this.handleHlsLevelLoaded.bind(this),
+    );
+  }
+
+  protected handleHlsError(originalEvent: string, data: Hls.errorData): void {
+    if (data.fatal) {
+      switch (data.type) {
+        case this.HlsLib?.ErrorTypes.NETWORK_ERROR:
+          this.hlsEngine?.startLoad();
+          break;
+        case this.HlsLib?.ErrorTypes.MEDIA_ERROR:
+          this.hlsEngine?.recoverMediaError();
+          break;
+        default:
+          this.destroyHlsEngine();
+          break;
+      }
+    }
+
+    this.dispatchEvent(new ErrorEvent({ detail: data, originalEvent }));
+  }
+
+  protected _isPlaybackReady = false;
+
+  protected handleHlsLevelLoaded(
+    originalEvent: string,
+    data: Hls.levelLoadedData,
+  ): void {
+    if (this._isPlaybackReady) return;
+
+    this.dispatchEvent(
+      new DurationChangeEvent({
+        detail: data.details.totalduration,
+        originalEvent,
+      }),
+    );
+
+    this._isPlaybackReady = true;
+    this.dispatchEvent(new PlaybackReadyEvent());
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Event Documentation
+  //
+  // Purely documentation purposes only, it'll be picked up by `@wcom/cli`.
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Emitted when the `hls.js` instance is built. This will not fire if the browser natively
+   * supports HLS.
+   */
+  @event({ name: 'vds-hls-engine-built' })
+  protected engineBuildEvent!: HlsEvents['vds-hls-engine-built'];
+
+  /**
+   * Emitted when the `hls.js` instance has attached itself to the media element. This will not
+   * fire if the browser natively supports HLS.
+   */
+  @event({ name: 'vds-hls-engine-attach' })
+  protected engineAttachEvent!: HlsEvents['vds-hls-engine-attach'];
+
+  /**
+   * Emitted when the `hls.js` instance has detached itself from the media element.
+   */
+  @event({ name: 'vds-hls-engine-detach' })
+  protected engineDetachEvent!: HlsEvents['vds-hls-engine-detach'];
+
+  /**
+   * Emitted when the browser doesn't support HLS natively and `hls.js` doesn't support
+   * this enviroment either, most likely due to missing Media Extensions.
+   */
+  @event({ name: 'vds-hls-engine-no-support' })
+  protected engineNoSupportEvent!: HlsEvents['vds-hls-engine-no-support'];
 }

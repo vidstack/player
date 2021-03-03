@@ -20,8 +20,7 @@ import {
   VolumeChangeEvent,
 } from '../../core';
 import { getSlottedChildren } from '../../utils/dom';
-import { isNil, isNumber } from '../../utils/unit';
-import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from '../video/video.utils';
+import { isNil, isNumber, isUndefined } from '../../utils/unit';
 import {
   CanPlayTypeResult,
   MediaCrossOriginOption,
@@ -144,6 +143,7 @@ export class MediaFileProvider<
     this.dispatchEvent(new TimeChangeEvent({ detail: newTime }));
 
     this.timeRAF = window.requestAnimationFrame(() => {
+      if (isUndefined(this.timeRAF)) return;
       this.requestTimeUpdates();
     });
   }
@@ -155,20 +155,20 @@ export class MediaFileProvider<
   protected handleSlotChange(): void {
     if (isNil(this.mediaEl)) return;
     this.cancelTimeUpdates();
-    this.cleanupOldSource();
+    this.cleanupOldSourceNodes();
     this._isBuffering = false;
     this._hasPlaybackStarted = false;
     this._hasPlaybackEnded = false;
     this.dispatchEvent(new SrcChangeEvent({ detail: '' }));
-    this.attachNewSource();
+    this.attachNewSourceNodes();
   }
 
-  protected cleanupOldSource(): void {
+  protected cleanupOldSourceNodes(): void {
     const nodes = this.mediaEl?.querySelectorAll('source,track');
     nodes?.forEach(node => node.remove());
   }
 
-  protected attachNewSource(): void {
+  protected attachNewSourceNodes(): void {
     const validTags = new Set(['source', 'track']);
 
     getSlottedChildren(this)
@@ -178,6 +178,16 @@ export class MediaFileProvider<
     window.requestAnimationFrame(() => {
       this.mediaEl?.load();
     });
+  }
+
+  /**
+   * Can be used by extending class to override `isPlaybackReady`.
+   */
+  protected isMediaElReadyForPlayback(): boolean {
+    return (
+      !isNil(this.mediaEl) &&
+      this.mediaEl!.readyState >= ReadyState.HaveMetaData
+    );
   }
 
   // -------------------------------------------------------------------------------------------
@@ -221,8 +231,18 @@ export class MediaFileProvider<
     );
   }
 
+  /**
+   * Can be used to indicate another engine such as `hls.js` will attach to the media element
+   * so it can handle certain ready events.
+   */
+  protected willAnotherEngineAttach(): boolean {
+    return false;
+  }
+
   protected handleLoadedMetadata(originalEvent: Event): void {
     this.requestTimeUpdates();
+
+    if (this.willAnotherEngineAttach()) return;
 
     this.dispatchEvent(
       new DurationChangeEvent({ detail: this.duration, originalEvent }),
@@ -363,14 +383,11 @@ export class MediaFileProvider<
   }
 
   get isPlaybackReady(): boolean {
-    return (
-      !isNil(this.mediaEl) &&
-      this.mediaEl!.readyState >= ReadyState.HaveEnoughData
-    );
+    return this.isMediaElReadyForPlayback();
   }
 
   get currentSrc(): string {
-    return this.mediaEl!.currentSrc;
+    return this.mediaEl?.currentSrc ?? '';
   }
 
   get currentPoster(): string {
@@ -410,7 +427,7 @@ export class MediaFileProvider<
 
   canPlayType(type: string): boolean {
     if (isNil(this.mediaEl)) {
-      return AUDIO_EXTENSIONS.test(type) || VIDEO_EXTENSIONS.test(type);
+      return false;
     }
 
     return this.mediaEl.canPlayType(type) === CanPlayTypeResult.Probably;

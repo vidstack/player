@@ -29,9 +29,6 @@ export type RawPlayerEventType =
   | 'buffering-change'
   | 'view-type-change'
   | 'media-type-change'
-  | 'engine-build'
-  | 'engine-attach'
-  | 'engine-no-support'
   | 'boot-start'
   | 'boot-end'
   | 'playback-ready'
@@ -55,9 +52,6 @@ export type RawPlayerEventDetailType = {
   'buffering-change': boolean;
   'view-type-change': ViewType;
   'media-type-change': MediaType;
-  'engine-build': unknown;
-  'engine-attach': unknown;
-  'engine-no-support': void;
   'boot-start': void;
   'boot-end': void;
   'playback-ready': void;
@@ -195,24 +189,6 @@ export class PlaybackStartEvent extends buildPlayerEvent('playback-start') {}
  * Emitted when playback ends (`currentTime === duration`).
  */
 export class PlaybackEndEvent extends buildPlayerEvent('playback-end') {}
-
-/**
- * Emitted when the underlying provider engine is built.
- */
-export class EngineBuildEvent extends buildPlayerEvent('engine-build') {}
-
-/**
- * Emitted when the underlying provider engine has attached to the DOM. For example,
- * `hls.js` will attach to the `<video>` element.
- */
-export class EngineAttachEvent extends buildPlayerEvent('engine-attach') {}
-
-/**
- * Emitted when the underlying provider engine does not support the current environment.
- */
-export class EngineNoSupportEvent extends buildPlayerEvent(
-  'engine-no-support',
-) {}
 
 /**
  * Emitted when a provider encounters any error.
