@@ -80,11 +80,12 @@ export type PlayerEvents = {
 
 export type PlayerEventType = keyof PlayerEvents;
 
-export function buildPlayerEvent<P extends RawPlayerEventType>(
-  type: P,
-): VdsCustomEventConstructor<RawPlayerEventDetailType[P]> {
-  class PlayerEvent extends buildVdsEvent<RawPlayerEventDetailType[P]>(type) {
-    constructor(eventInit?: VdsEventInit<RawPlayerEventDetailType[P]>) {
+export function buildPlayerEvent<
+  P extends RawPlayerEventType,
+  DetailType = RawPlayerEventDetailType[P]
+>(type: P): VdsCustomEventConstructor<DetailType> {
+  class PlayerEvent extends buildVdsEvent<DetailType>(type) {
+    constructor(eventInit?: VdsEventInit<DetailType>) {
       super({
         bubbles: false,
         ...(eventInit ?? {}),

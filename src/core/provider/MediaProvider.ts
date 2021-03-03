@@ -209,14 +209,6 @@ export abstract class MediaProvider<EngineType = unknown>
     this.volume = e.detail;
   }
 
-  // -------------------------------------------------------------------------------------------
-  // Event Documentation
-  //
-  // Purely for documentation purposes only. The `@wcom/cli` library will pick up on these
-  // and include them in any transformations such as docs. Any minifier should notice these
-  // are not used and drop them.
-  // -------------------------------------------------------------------------------------------
-
   /**
    * Emitted when the provider connects to the DOM.
    */
