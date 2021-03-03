@@ -90,6 +90,7 @@ export class MediaFileProvider extends MediaProvider<MediaFileProviderEngine> {
   set src(newSrc: string) {
     this._src = newSrc;
     this.dispatchEvent(new SrcChangeEvent({ detail: this._src }));
+    this.requestUpdate();
   }
 
   /**
