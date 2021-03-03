@@ -8,6 +8,7 @@
   },
   "main": "bundle/index.js",
   "module": "bundle/index.js",
+  "types": "bundle/index.d.ts",
   "files": [
     "bundle/",
     "core/",
@@ -64,6 +65,7 @@
   },
   "dependencies": {
     "@lukeed/uuid": "^2.0.0",
+    "@types/hls.js": "^0.13.3",
     "@wcom/context": "^2.0.0",
     "@wcom/events": "^1.0.0",
     "clsx": "^1.1.1",

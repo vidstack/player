@@ -14,6 +14,9 @@ export default {
     width: {
       control: 'number',
     },
+    height: {
+      control: 'number',
+    },
     aspectRatio: {
       control: 'text',
     },
@@ -77,6 +80,7 @@ export default {
 
 export type VideoArgTypes = {
   width: number;
+  height: number;
   aspectRatio: string;
   src: string;
   poster: string;
@@ -95,6 +99,7 @@ export type VideoArgTypes = {
 
 const Template: Story<VideoArgTypes> = ({
   width,
+  height,
   aspectRatio,
   src,
   poster,
@@ -114,6 +119,7 @@ const Template: Story<VideoArgTypes> = ({
     <vds-video
       src="${src}"
       width="${width}"
+      height="${height}"
       aspect-ratio="${aspectRatio}"
       poster="${poster}"
       ?paused="${paused}"

@@ -65,7 +65,7 @@ export class MediaFileProvider extends MediaProvider<MediaFileProviderEngine> {
   // Render
   // -------------------------------------------------------------------------------------------
 
-  protected renderContent(): TemplateResult {
+  protected renderMediaContent(): TemplateResult {
     return html`
       <slot @slotchange="${this.handleSlotChange}"></slot>
       Your browser does not support the <code>audio</code> or
@@ -98,6 +98,12 @@ export class MediaFileProvider extends MediaProvider<MediaFileProviderEngine> {
    */
   @property({ type: Number })
   width?: number;
+
+  /**
+   * The height of the media player.
+   */
+  @property({ type: Number })
+  height?: number;
 
   /**
    * Whether to use CORS to fetch the related image. See

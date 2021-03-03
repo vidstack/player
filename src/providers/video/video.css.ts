@@ -6,7 +6,6 @@ export const videoStyles = css`
     width: 100%;
     display: block;
     overflow: hidden;
-    z-index: 0;
   }
 
   video {
@@ -15,13 +14,17 @@ export const videoStyles = css`
     vertical-align: middle;
     outline: 0;
     border: 0;
-    height: auto;
     user-select: none;
     max-height: 98vh;
+    z-index: 0;
   }
 
   video:not([width]) {
     width: 100%;
+  }
+
+  video:not([height]) {
+    height: auto;
   }
 
   .container[style*='padding-bottom'] > video {

@@ -15,7 +15,7 @@ import {
   ViewTypeChangeEvent,
 } from '../../core';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
-import { isNumber } from '../../utils/unit';
+import { ifNumber } from '../../shared/directives/if-number';
 import { MediaFileProvider } from '../file';
 import { videoStyles } from './video.css';
 import { VideoControlsList } from './video.types';
@@ -26,7 +26,8 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  *
  * @tagname vds-video
  *
- * @slot Pass in UI components and `<source>`/`<track>` elements to the underlying HTML5 media player.
+ * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
+ * @slot ui: Used to pass in `<vds-ui>` to customize the player user interface.
  *
  * @csspart container: The container element that wraps the video.
  * @csspart video: The video element.
@@ -43,7 +44,7 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  *  <vds-video poster="/media/poster.png">
  *    <source src="/media/video.mp4" type="video/mp4" />
  *    <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
- *    <vds-ui>
+ *    <vds-ui slot="ui">
  *      <!-- ... -->
  *    </vds-ui>
  *  </vds-video>
@@ -82,6 +83,7 @@ export class VideoProvider extends MediaFileProvider {
         style="${styleMap(this.buildContainerStyleMap())}"
       >
         ${this.renderVideo()}
+        <slot name="ui"></slot>
       </div>
     `;
   }
@@ -101,7 +103,8 @@ export class VideoProvider extends MediaFileProvider {
       <video
         part="video"
         src="${ifNonEmpty(this.src)}"
-        width="${ifDefined(isNumber(this.width) ? this.width : undefined)}"
+        width="${ifNumber(this.width)}"
+        height="${ifNumber(this.height)}"
         poster="${ifDefined(this.poster)}"
         preload="${ifNonEmpty(this.preload)}"
         crossorigin="${ifNonEmpty(this.crossOrigin)}"
@@ -111,7 +114,7 @@ export class VideoProvider extends MediaFileProvider {
         ?disablepictureinpicture="${this.disablePiP}"
         ?disableremoteplayback="${this.disableRemotePlayback}"
       >
-        ${this.renderContent()}
+        ${this.renderMediaContent()}
       </video>
     `;
   }
