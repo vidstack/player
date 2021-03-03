@@ -11,7 +11,7 @@ import {
 } from '../../core';
 import { LibLoader } from '../../shared/LibLoader';
 import { isNil, isUndefined } from '../../utils/unit';
-import { VideoProvider } from '../video';
+import { VideoProvider, VideoProviderEngine } from '../video';
 import {
   HlsEngineAttachEvent,
   HlsEngineBuiltEvent,
@@ -104,8 +104,15 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
   /**
    * The `hls.js` instance.
    */
-  get hlsEngine(): HlsProviderEngine {
+  get engine(): HlsProviderEngine {
     return this._hlsEngine;
+  }
+
+  /**
+   * The underlying `HTMLMediaElement`.
+   */
+  get videoEngine(): VideoProviderEngine {
+    return this.mediaEl;
   }
 
   /**
@@ -124,7 +131,7 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
   get currentSrc(): string {
     return this.isCurrentlyHls && !this.hasNativeHlsSupport
       ? this.src
-      : this.mediaEl?.currentSrc ?? '';
+      : this.videoEngine?.currentSrc ?? '';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -158,7 +165,7 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
 
   protected async initHlsEngine(): Promise<void> {
     if (
-      isNil(this.mediaEl) ||
+      isNil(this.videoEngine) ||
       this.hasNativeHlsSupport ||
       this.isHlsEngineInitializing ||
       !this.isCurrentlyHls
@@ -180,7 +187,7 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
   }
 
   protected destroyHlsEngine(): void {
-    this.hlsEngine?.destroy();
+    this.engine?.destroy();
     this._prevHlsSrc = '';
     this._isHlsEngineAttached = false;
     this._isPlaybackReady = false;
@@ -196,14 +203,14 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
     )
       return;
 
-    this.hlsEngine?.loadSource(this.src);
+    this.engine?.loadSource(this.src);
     this._prevHlsSrc = this.src;
   }
 
   protected buildHlsEngine(): void {
-    if (isNil(this.mediaEl)) return;
+    if (isNil(this.videoEngine)) return;
 
-    if (!isUndefined(this.hlsEngine)) {
+    if (!isUndefined(this.engine)) {
       this.attachHlsEngine();
       this.loadSrcOnHlsEngine();
       return;
@@ -215,7 +222,7 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
     }
 
     this._hlsEngine = new this.HlsLib(this.hlsConfig ?? {});
-    this.dispatchEvent(new HlsEngineBuiltEvent({ detail: this.hlsEngine }));
+    this.dispatchEvent(new HlsEngineBuiltEvent({ detail: this.engine }));
     this.listenToHlsEngine();
   }
 
@@ -227,19 +234,19 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
   protected attachHlsEngine(): void {
     if (
       this.isHlsEngineAttached ||
-      isUndefined(this.hlsEngine) ||
-      isNil(this.mediaEl)
+      isUndefined(this.engine) ||
+      isNil(this.videoEngine)
     )
       return;
 
-    this.hlsEngine.attachMedia(this.mediaEl);
+    this.engine.attachMedia(this.videoEngine);
     this._isHlsEngineAttached = true;
-    this.dispatchEvent(new HlsEngineAttachEvent({ detail: this.hlsEngine }));
+    this.dispatchEvent(new HlsEngineAttachEvent({ detail: this.engine }));
   }
 
   protected detachHlsEngine(): void {
     if (!this.isHlsEngineAttached) return;
-    this.hlsEngine?.detachMedia();
+    this.engine?.detachMedia();
     this._isHlsEngineAttached = false;
     this._prevHlsSrc = '';
     this.dispatchEvent(new HlsEngineDetachEvent({ detail: this.engine }));
@@ -271,7 +278,7 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
     window.requestAnimationFrame(async () => {
       await this.requestUpdate();
 
-      if (isUndefined(this.hlsEngine)) {
+      if (isUndefined(this.engine)) {
         this.initHlsEngine();
       } else {
         this.attachHlsEngine();
@@ -281,9 +288,9 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
   }
 
   protected listenToHlsEngine(): void {
-    if (isUndefined(this.hlsEngine) || isUndefined(this.HlsLib)) return;
+    if (isUndefined(this.engine) || isUndefined(this.HlsLib)) return;
 
-    this.hlsEngine.on(
+    this.engine.on(
       this.HlsLib.Events.LEVEL_LOADED,
       this.handleHlsLevelLoaded.bind(this),
     );
@@ -293,10 +300,10 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
     if (data.fatal) {
       switch (data.type) {
         case this.HlsLib?.ErrorTypes.NETWORK_ERROR:
-          this.hlsEngine?.startLoad();
+          this.engine?.startLoad();
           break;
         case this.HlsLib?.ErrorTypes.MEDIA_ERROR:
-          this.hlsEngine?.recoverMediaError();
+          this.engine?.recoverMediaError();
           break;
         default:
           this.destroyHlsEngine();
