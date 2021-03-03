@@ -85,7 +85,7 @@ describe('context mixin', () => {
               Context [${prop}] failed to update
 
               1. Check that you've included it correctly in \`player.context.ts\`
-              2. Check that you've defined the provider correctly in \`Player.ts\`.
+              2. Check that you've defined the provider correctly in \`ContextMixin.ts\`.
               3. Check that you've defined the consumer correctly in \`FakeConsumer.ts\`\n
             `,
         ).to.equal(newValue);

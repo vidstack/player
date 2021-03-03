@@ -209,14 +209,6 @@ export abstract class MediaProvider<EngineType = unknown>
     this.volume = e.detail;
   }
 
-  // -------------------------------------------------------------------------------------------
-  // Event Documentation
-  //
-  // Purely for documentation purposes only. The `@wcom/cli` library will pick up on these
-  // and include them in any transformations such as docs. Any minifier should notice these
-  // are not used and drop them.
-  // -------------------------------------------------------------------------------------------
-
   /**
    * Emitted when the provider connects to the DOM.
    */
@@ -330,4 +322,23 @@ export abstract class MediaProvider<EngineType = unknown>
    */
   @event({ name: 'vds-error' })
   protected errorEvent!: PlayerEvents['vds-error'];
+
+  /**
+   * Emitted when the underlying provider engine is built.
+   */
+  @event({ name: 'vds-engine-build' })
+  protected engineBuildEvent!: PlayerEvents['vds-engine-build'];
+
+  /**
+   * Emitted when the underlying provider engine has attached to the DOM. For example,
+   * `hls.js` will attach to the `<video>` element.
+   */
+  @event({ name: 'vds-engine-attach' })
+  protected engineAttachEvent!: PlayerEvents['vds-engine-attach'];
+
+  /**
+   * Emitted when the underlying provider engine does not support the current environment.
+   */
+  @event({ name: 'vds-engine-no-support' })
+  protected engineNoSupportEvent!: PlayerEvents['vds-engine-no-support'];
 }

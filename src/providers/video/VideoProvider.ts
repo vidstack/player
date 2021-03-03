@@ -16,7 +16,7 @@ import {
 } from '../../core';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
-import { MediaFileProvider } from '../file';
+import { MediaFileProvider, MediaFileProviderEngine } from '../file';
 import { videoStyles } from './video.css';
 import { VideoControlsList } from './video.types';
 import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
@@ -50,7 +50,9 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  *  </vds-video>
  * ```
  */
-export class VideoProvider extends MediaFileProvider {
+export class VideoProvider<
+  EngineType = MediaFileProviderEngine
+> extends MediaFileProvider<EngineType> {
   public static get styles(): CSSResultArray {
     return [videoStyles];
   }

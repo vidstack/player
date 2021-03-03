@@ -37,7 +37,9 @@ import {
  *
  * @slot - Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
-export class MediaFileProvider extends MediaProvider<MediaFileProviderEngine> {
+export class MediaFileProvider<
+  EngineType = MediaFileProviderEngine
+> extends MediaProvider<EngineType> {
   protected mediaEl?: HTMLMediaElement;
 
   protected disposal = new Disposal();
@@ -355,6 +357,11 @@ export class MediaFileProvider extends MediaProvider<MediaFileProviderEngine> {
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
 
+  get engine(): EngineType {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return this.mediaEl as any;
+  }
+
   get isPlaybackReady(): boolean {
     return (
       !isNil(this.mediaEl) &&
@@ -368,10 +375,6 @@ export class MediaFileProvider extends MediaProvider<MediaFileProviderEngine> {
 
   get currentPoster(): string {
     return '';
-  }
-
-  get engine(): HTMLMediaElement | undefined {
-    return this.mediaEl;
   }
 
   get duration(): number {

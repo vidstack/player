@@ -48,15 +48,14 @@ export type VdsUserEvents = {
 
 export type VdsUserEventType = keyof VdsUserEvents;
 
-export function buildUserEvent<P extends RawUserEventType>(
-  type: P,
-): VdsCustomEventConstructor<RawUserEventDetailType[P]> {
+export function buildUserEvent<
+  P extends RawUserEventType,
+  DetailType = RawUserEventDetailType[P]
+>(type: P): VdsCustomEventConstructor<DetailType> {
   const prefixedType = `${USER_EVENT_PREFIX}-${type}`;
 
-  class UserEvent extends buildVdsEvent<RawUserEventDetailType[P]>(
-    prefixedType,
-  ) {
-    constructor(eventInit?: VdsEventInit<RawUserEventDetailType[P]>) {
+  class UserEvent extends buildVdsEvent<DetailType>(prefixedType) {
+    constructor(eventInit?: VdsEventInit<DetailType>) {
       super(eventInit);
     }
   }
