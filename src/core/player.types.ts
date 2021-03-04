@@ -1,8 +1,5 @@
 import { Context } from '@wcom/context';
 
-import { deviceContext } from './device/device.context';
-import { uuidContext } from './uuid/uuid.context';
-
 export type Source = string;
 
 export enum ViewType {
@@ -19,8 +16,7 @@ export enum MediaType {
 
 export type PlayerContext = {
   readonly [P in keyof PlayerProps]: Context<PlayerProps[P]>;
-} &
-  typeof deviceContext & { uuid: typeof uuidContext };
+};
 
 export type PlayerContextProvider = Record<string, unknown> &
   {

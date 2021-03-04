@@ -30,16 +30,16 @@ import {
 } from '../player.types';
 import { AspectRatioChangeEvent } from './AspectRatioMixin';
 
-export type ContextMixinBase = Constructor<UpdatingElement>;
+export type PlayerContextMixinBase = Constructor<UpdatingElement>;
 
-export type ContextCocktail<T extends ContextMixinBase> = T &
+export type PlayerContextCocktail<T extends PlayerContextMixinBase> = T &
   Constructor<{
     /**
      * **DO NOT CALL FROM OUTSIDE THE PLAYER.**
      *
      * @internal - Used for testing.
      */
-    readonly context: PlayerContextProvider;
+    readonly playerContext: PlayerContextProvider;
   }>;
 
 /**
@@ -48,13 +48,13 @@ export type ContextCocktail<T extends ContextMixinBase> = T &
  *
  * @param Base - The constructor to mix into.
  */
-export function ContextMixin<T extends ContextMixinBase>(
+export function PlayerContextMixin<T extends PlayerContextMixinBase>(
   Base: T,
-): ContextCocktail<T> {
-  class ContextMixin extends Base implements PlayerContextProvider {
+): PlayerContextCocktail<T> {
+  class PlayerContextMixin extends Base implements PlayerContextProvider {
     [x: string]: unknown;
 
-    get context(): PlayerContextProvider {
+    get playerContext(): PlayerContextProvider {
       return this as PlayerContextProvider;
     }
 
@@ -84,7 +84,7 @@ export function ContextMixin<T extends ContextMixinBase>(
         playerContext,
       ) as unknown) as (keyof PlayerContext)[];
 
-      const ctx = this.context;
+      const ctx = this.playerContext;
 
       props.forEach(prop => {
         if (this.softResettableCtxProps.has(prop)) {
@@ -101,7 +101,7 @@ export function ContextMixin<T extends ContextMixinBase>(
         playerContext,
       ) as unknown) as (keyof PlayerContext)[];
 
-      const ctx = this.context;
+      const ctx = this.playerContext;
 
       props.forEach(prop => {
         ctx[`${prop}Ctx`] = playerContext[prop].defaultValue;
@@ -279,5 +279,5 @@ export function ContextMixin<T extends ContextMixinBase>(
     isVideoCtx = playerContext.isVideo.defaultValue;
   }
 
-  return ContextMixin;
+  return PlayerContextMixin;
 }

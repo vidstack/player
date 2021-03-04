@@ -41,8 +41,8 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  *
  * ## CSS Parts
  *
- * @csspart container - The container element that wraps the video.
- * @csspart video - The video element.
+ * @csspart root - The root component element that wraps the video (`<div>`).
+ * @csspart video - The video element (`<video>`).
  *
  * ## Examples
  *

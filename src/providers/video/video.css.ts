@@ -1,7 +1,12 @@
 import { css } from 'lit-element';
 
 export const videoStyles = css`
-  .container {
+  :host {
+    display: block;
+    contain: content;
+  }
+
+  .root {
     position: relative;
     width: 100%;
     display: block;
@@ -27,7 +32,7 @@ export const videoStyles = css`
     height: auto;
   }
 
-  .container[style*='padding-bottom'] > video {
+  .root[style*='padding-bottom'] > video {
     position: absolute;
     top: 0;
     left: 0;

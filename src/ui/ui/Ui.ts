@@ -30,10 +30,10 @@ import { uiStyles } from './ui.css';
  *
  * ## CSS Parts
  *
- * @csspart ui - The root container element.
- * @csspart ui-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
- * @csspart ui-audio - Applied when the current `viewType` is `audio`.
- * @csspart ui-video - Applied when the current `viewType` is `video`.
+ * @csspart root - The root component element (`<div>`).
+ * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
+ * @csspart root-audio - Applied when the current `viewType` is `audio`.
+ * @csspart root-video - Applied when the current `viewType` is `video`.
  *
  * ## Examples
  *
@@ -49,13 +49,13 @@ import { uiStyles } from './ui.css';
  *
  * @example
  * ```css
- * vds-ui::part(ui) {
+ * vds-ui::part(root) {
  *   opacity: 1;
  *   visibility: visible;
  *   transition: opacity 0.3s ease-in;
  * }
  *
- * vds-ui::part(ui-hidden) {
+ * vds-ui::part(root-hidden) {
  *   opacity: 0;
  *   visibility: hidden;
  * }
@@ -80,35 +80,52 @@ export class Ui extends LitElement {
 
   render(): TemplateResult {
     return html`
-      <div class="${this.buildClass()}" part="${this.buildPart()}">
-        <slot></slot>
+      <div
+        class="${this.buildRootClassAttr()}"
+        part="${this.buildRootPartAttr()}"
+      >
+        ${this.renderRootContent()}
       </div>
     `;
   }
 
   /**
-   * Returns CSS Classes.
+   * Override this to modify the content rendered inside the root UI container.
    */
-  protected buildClass(): string {
-    return clsx('ui');
+  protected renderRootContent(): TemplateResult {
+    return html`<slot @slotchange="${this.handleDefaultSlotChange}"></slot>`;
   }
 
   /**
-   * Returns CSS Parts.
+   * Override this to modify root UI CSS Classes.
    */
-  protected buildPart(): string {
+  protected buildRootClassAttr(): string {
+    return clsx('root');
+  }
+
+  /**
+   * Override this to modify root UI CSS parts.
+   */
+  protected buildRootPartAttr(): string {
     return clsx(
-      'ui',
-      this.isHidden() && 'ui-hidden',
-      this.isAudioView && 'ui-audio',
-      this.isVideoView && 'ui-video',
+      'root',
+      this.isUiHidden() && 'root-hidden',
+      this.isAudioView && 'root-audio',
+      this.isVideoView && 'root-video',
     );
   }
 
   /**
    * Whether the UI should be hidden.
    */
-  protected isHidden(): boolean {
+  protected isUiHidden(): boolean {
     return !this.isPlaybackReady;
+  }
+
+  /**
+   * Override to listen to slot changes.
+   */
+  protected handleDefaultSlotChange(): void {
+    // no-op
   }
 }

@@ -9,8 +9,11 @@ import {
   AspectRatioCocktail,
   AspectRatioMixin,
 } from '../mixins/AspectRatioMixin';
-import { ContextCocktail, ContextMixin } from '../mixins/ContextMixin';
 import { MediaTypeCocktail, MediaTypeMixin } from '../mixins/MediaTypeMixin';
+import {
+  PlayerContextCocktail,
+  PlayerContextMixin,
+} from '../mixins/PlayerContextMixin';
 import { RequestCocktail, RequestMixin } from '../mixins/RequestMixin';
 import { ViewTypeCocktail, ViewTypeMixin } from '../mixins/ViewTypeMixin';
 import { UuidCocktail, UuidMixin } from '../uuid/UuidMixin';
@@ -18,7 +21,7 @@ import { UuidCocktail, UuidMixin } from '../uuid/UuidMixin';
 export type MediaProviderMixinBase = Constructor<UpdatingElement>;
 
 export type MediaProviderCocktail<T extends MediaProviderMixinBase> = T &
-  ContextCocktail<T> &
+  PlayerContextCocktail<T> &
   DeviceObserverCocktail<T> &
   ViewTypeCocktail<T> &
   MediaTypeCocktail<T> &
@@ -35,7 +38,7 @@ export function MediaProviderMixin<T extends MediaProviderMixinBase>(
   Base: T,
 ): MediaProviderCocktail<T> {
   class MediaProviderMixin extends DeviceObserverMixin(
-    ContextMixin(
+    PlayerContextMixin(
       RequestMixin(
         AspectRatioMixin(ViewTypeMixin(MediaTypeMixin(UuidMixin(Base)))),
       ),

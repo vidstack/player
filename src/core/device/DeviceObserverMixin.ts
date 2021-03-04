@@ -2,7 +2,7 @@ import { Disposal, event } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
 
 import { Constructor } from '../../shared/types';
-import { deviceContext } from './device.context';
+import { deviceContext, DeviceContextProvider } from './device.context';
 import {
   Device,
   DeviceChangeEvent,
@@ -15,6 +15,13 @@ export type DeviceObserverMixinBase = Constructor<UpdatingElement>;
 export type DeviceObserverCocktail<T extends DeviceObserverMixinBase> = T &
   Constructor<
     DeviceObserver & {
+      /**
+       * **DO NOT CALL FROM OUTSIDE THE PLAYER.**
+       *
+       * @internal - Used for testing.
+       */
+      readonly deviceContext: DeviceContextProvider;
+
       /**
        * The name of the attribute on the player for which to set whether the current device is
        * mobile. The attribute will be set to `true`/`false` accordingly.
@@ -42,17 +49,21 @@ const DISPOSAL = Symbol();
 export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
   Base: T,
 ): DeviceObserverCocktail<T> {
-  class DeviceObserverMixin extends Base {
+  class DeviceObserverMixin extends Base implements DeviceContextProvider {
     protected readonly [DISPOSAL] = new Disposal();
 
+    get deviceContext(): DeviceContextProvider {
+      return this;
+    }
+
     @deviceContext.device.provide()
-    protected deviceCtx = deviceContext.device.defaultValue;
+    deviceCtx = deviceContext.device.defaultValue;
 
     @deviceContext.isMobileDevice.provide()
-    protected isMobileDeviceCtx = deviceContext.isMobileDevice.defaultValue;
+    isMobileDeviceCtx = deviceContext.isMobileDevice.defaultValue;
 
     @deviceContext.isDesktopDevice.provide()
-    protected isDesktopDeviceCtx = deviceContext.isDesktopDevice.defaultValue;
+    isDesktopDeviceCtx = deviceContext.isDesktopDevice.defaultValue;
 
     /**
      * Emitted when the type of user device changes between mobile/desktop.

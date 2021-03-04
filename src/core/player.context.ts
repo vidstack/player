@@ -1,6 +1,5 @@
 import createContext from '@wcom/context';
 
-import { deviceContext } from './device/device.context';
 import { MediaType, PlayerContext, ViewType } from './player.types';
 import { uuidContext } from './uuid/uuid.context';
 
@@ -45,5 +44,4 @@ export const playerContext: PlayerContext = Object.freeze({
   mediaType: createContext(MediaType.Unknown),
   isAudio: createContext(false),
   isVideo: createContext(false),
-  ...deviceContext,
 });
