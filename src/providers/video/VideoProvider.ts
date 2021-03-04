@@ -61,7 +61,7 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
 export class VideoProvider<
   EngineType = MediaFileProviderEngine
 > extends MediaFileProvider<EngineType> {
-  public static get styles(): CSSResultArray {
+  static get styles(): CSSResultArray {
     return [videoStyles];
   }
 

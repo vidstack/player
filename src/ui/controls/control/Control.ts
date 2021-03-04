@@ -60,7 +60,7 @@ import { ControlType } from './control.types';
  * ```
  */
 export class Control extends FocusMixin(LitElement) {
-  public static get styles(): CSSResultArray {
+  static get styles(): CSSResultArray {
     return [controlStyles];
   }
 

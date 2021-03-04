@@ -1,4 +1,5 @@
 import { IS_CLIENT } from './support';
+import { isUndefined } from './unit';
 
 /**
  * Registers a custom element in the CustomElementRegistry. By "safely" we mean:
@@ -20,13 +21,35 @@ export const safelyDefineCustomElement = (
 };
 
 /**
+ * Sets an attribute on the given `el`. If the `attrValue` is `undefined` the attribute will
+ * be removed.
+ *
+ * @param el - The element to set the attribute on.
+ * @param attrName - The name of the attribute.
+ * @param attrValue - The value of the attribute.
+ */
+export function setAttribute(
+  el: HTMLElement,
+  attrName: string,
+  attrValue?: string,
+): void {
+  if (isUndefined(attrValue)) {
+    el.removeAttribute(attrName);
+  } else {
+    el.setAttribute(attrName, attrValue);
+  }
+}
+
+/**
  * Returns elements assigned to the default slot in the shadow root. Filters out all nodes
  * which are not of type `Node.ELEMENT_NODE`.
  *
  * @param el - The element containing the slot.
+ * @param name - The name of the slot (optional).
  */
-export function getSlottedChildren(el: HTMLElement): Element[] {
-  const slot = el.shadowRoot?.querySelector('slot');
+export function getSlottedChildren(el: HTMLElement, name?: string): Element[] {
+  const selector = name ? `slot[name="${name}"]` : 'slot';
+  const slot = el.shadowRoot?.querySelector(selector) as HTMLSlotElement | null;
   const childNodes = slot?.assignedNodes({ flatten: true }) ?? [];
 
   return Array.prototype.filter.call(
