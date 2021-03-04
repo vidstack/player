@@ -6,6 +6,7 @@ export const uiStyles = css`
     contain: content;
     /* Position above provider players such as <video>. */
     z-index: 1;
+    pointer-events: none;
   }
 
   div[part*='ui'] {
