@@ -24,13 +24,21 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
  *
+ * ## Tag
+ *
  * @tagname vds-video
  *
- * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
- * @slot ui: Used to pass in `<vds-ui>` to customize the player user interface.
+ * ## Slots
  *
- * @csspart container: The container element that wraps the video.
- * @csspart video: The video element.
+ * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
+ * @slot ui - Used to pass in `<vds-ui>` to customize the player user interface.
+ *
+ * ## CSS Parts
+ *
+ * @csspart container - The container element that wraps the video.
+ * @csspart video - The video element.
+ *
+ * ## Examples
  *
  * @example
  * ```html
