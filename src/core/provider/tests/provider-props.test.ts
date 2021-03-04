@@ -19,7 +19,7 @@ describe('provider props', () => {
       playerContext,
     ) as unknown) as (keyof PlayerContext)[]).forEach(prop => {
       // Skip uuid because it generates a value as the component mounts.
-      if (prop === 'uuid') return;
+      if ((prop as unknown) === 'uuid') return;
       expect(provider[prop], prop).to.equal(playerContext[prop].defaultValue);
     });
   });
@@ -29,7 +29,7 @@ describe('provider props', () => {
     const newAspectRatio = '20:100';
     provider.aspectRatio = newAspectRatio;
     expect(provider.aspectRatio).to.equal(newAspectRatio);
-    expect(provider.context.aspectRatioCtx).to.equal(newAspectRatio);
+    expect(provider.playerContext.aspectRatioCtx).to.equal(newAspectRatio);
   });
 
   it('should update provider when volume is set', async () => {

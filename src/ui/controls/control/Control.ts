@@ -11,7 +11,7 @@ import {
 } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { playerContext } from '../../../core';
+import { deviceContext } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { currentSafariVersion } from '../../../utils/support';
@@ -65,8 +65,8 @@ export class Control extends FocusMixin(LitElement) {
   }
 
   @internalProperty()
-  @playerContext.isMobileDevice.consume()
-  protected isMobileDevice = playerContext.isMobileDevice.defaultValue;
+  @deviceContext.isMobileDevice.consume()
+  protected isMobileDevice = deviceContext.isMobileDevice.defaultValue;
 
   protected disposal = new Disposal();
 

@@ -50,20 +50,11 @@ describe('context mixin', () => {
       return undefined;
     }
 
-    const dontTest = new Set<keyof PlayerContext>([
-      'uuid',
-      'device',
-      'isMobileDevice',
-      'isDesktopDevice',
-    ]);
-
     const promises = ((Object.keys(
       playerContext,
     ) as unknown) as (keyof PlayerContext)[]).map(async prop => {
-      if (dontTest.has(prop)) return;
-
       const ctxProp = `${prop}Ctx`;
-      const newValue = genRandomNewValue(prop, provider.context[ctxProp]);
+      const newValue = genRandomNewValue(prop, provider.playerContext[ctxProp]);
 
       expect(
         newValue,
@@ -77,7 +68,7 @@ describe('context mixin', () => {
       ).to.exist;
 
       if (!isUndefined(newValue)) {
-        provider.context[ctxProp] = newValue;
+        provider.playerContext[ctxProp] = newValue;
         await elementUpdated(consumer);
         expect(
           consumer[prop],
@@ -98,8 +89,8 @@ describe('context mixin', () => {
   it('should soft reset context when media is changed', async () => {
     const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
 
-    provider.context.pausedCtx = false;
-    provider.context.durationCtx = 200;
+    provider.playerContext.pausedCtx = false;
+    provider.playerContext.durationCtx = 200;
     await elementUpdated(consumer);
 
     emitEvent(provider, new SrcChangeEvent({ detail: '' }));
@@ -113,7 +104,7 @@ describe('context mixin', () => {
   it('should hard reset context when provider disconnects', async () => {
     const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
 
-    provider.context.viewTypeCtx = ViewType.Video;
+    provider.playerContext.viewTypeCtx = ViewType.Video;
     await elementUpdated(consumer);
 
     emitEvent(provider, new DisconnectEvent());

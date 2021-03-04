@@ -5,12 +5,13 @@ import {
   TemplateResult,
 } from 'lit-element';
 
+import { deviceContext, uuidContext } from '../../bundle';
 import { playerContext } from '../player.context';
 
 export class FakeContextConsumer extends LitElement {
   @internalProperty()
-  @playerContext.uuid.consume()
-  uuid = playerContext.uuid.defaultValue;
+  @uuidContext.consume()
+  uuid = uuidContext.defaultValue;
 
   @internalProperty()
   @playerContext.currentSrc.consume()
@@ -53,16 +54,16 @@ export class FakeContextConsumer extends LitElement {
   buffered = playerContext.buffered.defaultValue;
 
   @internalProperty()
-  @playerContext.device.consume()
-  device = playerContext.device.defaultValue;
+  @deviceContext.device.consume()
+  device = deviceContext.device.defaultValue;
 
   @internalProperty()
-  @playerContext.isMobileDevice.consume()
-  isMobileDevice = playerContext.isMobileDevice.defaultValue;
+  @deviceContext.isMobileDevice.consume()
+  isMobileDevice = deviceContext.isMobileDevice.defaultValue;
 
   @internalProperty()
-  @playerContext.isDesktopDevice.consume()
-  isDesktopDevice = playerContext.isDesktopDevice.defaultValue;
+  @deviceContext.isDesktopDevice.consume()
+  isDesktopDevice = deviceContext.isDesktopDevice.defaultValue;
 
   @internalProperty()
   @playerContext.isBuffering.consume()

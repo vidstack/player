@@ -37,7 +37,7 @@ describe(CONTROL_TAG_NAME, () => {
       expect(root?.getAttribute('part')).to.not.include('root-mobile');
 
       // Yay.
-      provider.context.isMobileDeviceCtx = true;
+      provider.deviceContext.isMobileDeviceCtx = true;
       await elementUpdated(control);
       expect(root?.getAttribute('part')).to.include('root-mobile');
     });
