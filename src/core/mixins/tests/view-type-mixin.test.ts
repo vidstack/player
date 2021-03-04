@@ -4,7 +4,7 @@ import { expect, oneEvent } from '@open-wc/testing';
 
 import { buildFakeMediaProvider, emitEvent } from '../../fakes/helpers';
 import { DisconnectEvent, ViewTypeChangeEvent } from '../../player.events';
-import { ViewType } from '../../player.types';
+import { ViewType } from '../../ViewType';
 
 describe('view type mixin', () => {
   it('should update view type when view type change event is fired [audio]', async () => {

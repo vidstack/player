@@ -84,7 +84,7 @@ export class VideoProvider<
   // Render
   // -------------------------------------------------------------------------------------------
 
-  protected render(): TemplateResult {
+  render(): TemplateResult {
     return html`
       <div
         class="${this.buildRootClassAttr()}"

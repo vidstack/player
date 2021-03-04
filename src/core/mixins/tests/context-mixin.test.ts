@@ -16,7 +16,8 @@ import {
 } from '../../fakes/helpers';
 import { playerContext } from '../../player.context';
 import { DisconnectEvent, SrcChangeEvent } from '../../player.events';
-import { PlayerContext, ViewType } from '../../player.types';
+import { PlayerContext } from '../../player.types';
+import { ViewType } from '../../ViewType';
 
 describe('context mixin', () => {
   it.skip('should have defined all context properties', async () => {

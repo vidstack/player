@@ -1,18 +1,9 @@
 import { Context } from '@wcom/context';
 
+import { MediaType } from './MediaType';
+import { ViewType } from './ViewType';
+
 export type Source = string;
-
-export enum ViewType {
-  Unknown = 'unknown',
-  Audio = 'audio',
-  Video = 'video',
-}
-
-export enum MediaType {
-  Unknown = 'unknown',
-  Audio = 'audio',
-  Video = 'video',
-}
 
 export type PlayerContext = {
   readonly [P in keyof PlayerProps]: Context<PlayerProps[P]>;

@@ -8,7 +8,7 @@ import {
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface GlobalEventHandlersEventMap extends VdsUserEvents {}
+  interface GlobalEventHandlersEventMap extends UserEvents {}
 }
 
 export const USER_EVENT_PREFIX = 'user';
@@ -36,17 +36,17 @@ export type UserEventConstructor<
   T extends RawUserEventType
 > = VdsCustomEventConstructor<RawUserEventDetailType[T]>;
 
-export type VdsUserEventConstructors = {
+export type UserEventConstructors = {
   [P in RawUserEventType as GenericVdsUserEventType<P>]: UserEventConstructor<P>;
 };
 
-export type VdsUserEvents = {
+export type UserEvents = {
   [P in RawUserEventType as GenericVdsUserEventType<P>]: VdsCustomEvent<
     RawUserEventDetailType[P]
   >;
 };
 
-export type VdsUserEventType = keyof VdsUserEvents;
+export type UserEventType = keyof UserEvents;
 
 export function buildUserEvent<
   P extends RawUserEventType,

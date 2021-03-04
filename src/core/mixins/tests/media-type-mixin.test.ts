@@ -3,12 +3,12 @@ import '../../fakes/vds-fake-media-provider';
 import { expect, oneEvent } from '@open-wc/testing';
 
 import { buildFakeMediaProvider, emitEvent } from '../../fakes/helpers';
+import { MediaType } from '../../MediaType';
 import {
   DisconnectEvent,
   MediaTypeChangeEvent,
   SrcChangeEvent,
 } from '../../player.events';
-import { MediaType } from '../../player.types';
 
 describe('media type mixin', () => {
   it('should update media type when media type change event is fired [audio]', async () => {

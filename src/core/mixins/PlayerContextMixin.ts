@@ -2,6 +2,7 @@ import { listen } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
 
 import { Constructor } from '../../shared/types';
+import { MediaType } from '../MediaType';
 import { playerContext } from '../player.context';
 import {
   BufferedChangeEvent,
@@ -22,12 +23,8 @@ import {
   ViewTypeChangeEvent,
   VolumeChangeEvent,
 } from '../player.events';
-import {
-  MediaType,
-  PlayerContext,
-  PlayerContextProvider,
-  ViewType,
-} from '../player.types';
+import { PlayerContext, PlayerContextProvider } from '../player.types';
+import { ViewType } from '../ViewType';
 import { AspectRatioChangeEvent } from './AspectRatioMixin';
 
 export type PlayerContextMixinBase = Constructor<UpdatingElement>;

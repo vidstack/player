@@ -5,8 +5,9 @@ import {
   VdsCustomEventConstructor,
   VdsEventInit,
 } from '../shared/events';
-import { MediaType, ViewType } from './player.types';
+import { MediaType } from './MediaType';
 import { MediaProvider } from './provider/MediaProvider';
+import { ViewType } from './ViewType';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -29,8 +30,6 @@ export type RawPlayerEventType =
   | 'buffering-change'
   | 'view-type-change'
   | 'media-type-change'
-  | 'boot-start'
-  | 'boot-end'
   | 'playback-ready'
   | 'playback-start'
   | 'playback-end'
@@ -52,8 +51,6 @@ export type RawPlayerEventDetailType = {
   'buffering-change': boolean;
   'view-type-change': ViewType;
   'media-type-change': MediaType;
-  'boot-start': void;
-  'boot-end': void;
   'playback-ready': void;
   'playback-start': void;
   'playback-end': void;

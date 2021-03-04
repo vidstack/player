@@ -3,7 +3,8 @@ import { UpdatingElement } from 'lit-element';
 
 import { Constructor } from '../../shared/types';
 import { DisconnectEvent, ViewTypeChangeEvent } from '../player.events';
-import { PlayerProps, ViewType } from '../player.types';
+import { PlayerProps } from '../player.types';
+import { ViewType } from '../ViewType';
 
 export type ViewTypeMixinBase = Constructor<UpdatingElement>;
 

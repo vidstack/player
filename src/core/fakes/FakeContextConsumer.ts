@@ -5,8 +5,9 @@ import {
   TemplateResult,
 } from 'lit-element';
 
-import { deviceContext, uuidContext } from '../../bundle';
+import { deviceContext } from '../device/device.context';
 import { playerContext } from '../player.context';
+import { uuidContext } from '../uuid/uuid.context';
 
 export class FakeContextConsumer extends LitElement {
   @internalProperty()
