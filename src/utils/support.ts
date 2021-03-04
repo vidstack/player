@@ -1,7 +1,8 @@
+/* c8 ignore next 1000 */
+
 import { isFunction, isUndefined, noop } from './unit';
 
 export const IS_CLIENT = typeof window !== 'undefined';
-/* c8 ignore next */
 export const UA = IS_CLIENT ? window.navigator?.userAgent.toLowerCase() : '';
 export const IS_IOS = /iphone|ipad|ipod|ios|CriOS|FxiOS/.test(UA);
 export const IS_ANDROID = /android/.test(UA);
@@ -13,18 +14,24 @@ export const IS_CHROME = IS_CLIENT && window.chrome;
 export const IS_SAFARI =
   IS_CLIENT && (window.safari || IS_IOS || /Apple/.test(UA));
 
-/* c8 ignore next 4 */
 export const ORIGIN =
   window.location.protocol !== 'file:'
     ? `${window.location.protocol}//${window.location.hostname}`
     : undefined;
 
 /**
+ * Returns the current version of Safari. Defaults to `0` if unknown.
+ */
+export const currentSafariVersion = (): number =>
+  IS_CLIENT
+    ? Number((/Safari\/(\d+)/.exec(navigator.userAgent) ?? ['', 0])[1])
+    : 0;
+
+/**
  * Checks if a video player can enter fullscreen.
  *
  * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen
  */
-/* c8 ignore next 5 */
 export const canFullscreenVideo = (): boolean => {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
@@ -34,7 +41,6 @@ export const canFullscreenVideo = (): boolean => {
 /**
  * Checks whether the `IntersectionObserver` API is available.
  */
-/* c8 ignore next 3 */
 export const canObserveIntersection = (): boolean => {
   return IS_CLIENT && !isUndefined(window.IntersectionObserver);
 };
@@ -44,7 +50,6 @@ export const canObserveIntersection = (): boolean => {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
  */
-/* c8 ignore next 4 */
 export const canRotateScreen = (): boolean =>
   IS_CLIENT &&
   !isUndefined(window.screen.orientation) &&
@@ -55,7 +60,6 @@ export const canRotateScreen = (): boolean =>
  *
  * @link https://webkit.org/blog/7551/responsive-design-for-motion/
  */
-/* c8 ignore next 4 */
 export const isReducedMotionPreferred = (): boolean =>
   IS_CLIENT &&
   'matchMedia' in window &&
@@ -64,7 +68,6 @@ export const isReducedMotionPreferred = (): boolean =>
 /**
  * Checks if the native HTML5 video player can play HLS.
  */
-/* c8 ignore next 4 */
 export const canPlayHLSNatively = (): boolean => {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
@@ -77,7 +80,6 @@ export const canPlayHLSNatively = (): boolean => {
  *
  * @link  https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture
  */
-/* c8 ignore next 5 */
 export const canUsePiPInChrome = (): boolean => {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
@@ -91,7 +93,6 @@ export const canUsePiPInChrome = (): boolean => {
  *
  * @link https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls
  */
-/* c8 ignore next 9 */
 export const canUsePiPInSafari = (): boolean => {
   if (!IS_CLIENT) return false;
 
@@ -107,7 +108,6 @@ export const canUsePiPInSafari = (): boolean => {
 /**
  * Checks if the native HTML5 video player can enter PIP.
  */
-/* c8 ignore next 2 */
 export const canUsePiP = (): boolean =>
   canUsePiPInChrome() || canUsePiPInSafari();
 
@@ -118,7 +118,6 @@ export const canUsePiP = (): boolean =>
  *
  * @link https://github.com/ampproject/amphtml/blob/9bc8756536956780e249d895f3e1001acdee0bc0/src/utils/video.js#L25
  */
-/* c8 ignore next 32 */
 export const canAutoplay = (
   muted = true,
   playsinline = true,

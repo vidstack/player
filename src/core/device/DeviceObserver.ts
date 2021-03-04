@@ -10,6 +10,12 @@ export enum Device {
   Desktop = 'desktop',
 }
 
+export interface DeviceProps {
+  readonly device: Device;
+  readonly isMobileDevice: boolean;
+  readonly isDesktopDevice: boolean;
+}
+
 export class DeviceChangeEvent extends buildVdsEvent<Device>('device-change') {}
 
 export interface DeviceObserver {

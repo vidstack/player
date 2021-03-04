@@ -66,9 +66,12 @@ export class MediaFileProvider<
   // Render
   // -------------------------------------------------------------------------------------------
 
+  /**
+   * Override this to modify the content rendered inside `<audio>` and `<video>` elements.
+   */
   protected renderMediaContent(): TemplateResult {
     return html`
-      <slot @slotchange="${this.handleSlotChange}"></slot>
+      <slot @slotchange="${this.handleDefaultSlotChange}"></slot>
       Your browser does not support the <code>audio</code> or
       <code>video</code> element.
     `;
@@ -152,7 +155,7 @@ export class MediaFileProvider<
   // Slots
   // -------------------------------------------------------------------------------------------
 
-  protected handleSlotChange(): void {
+  protected handleDefaultSlotChange(): void {
     if (isNil(this.mediaEl)) return;
     this.cancelTimeUpdates();
     this.cleanupOldSourceNodes();

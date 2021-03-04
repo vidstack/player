@@ -35,8 +35,8 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  *
  * ## CSS Parts
  *
- * @csspart container - The container element that wraps the video.
- * @csspart video - The video element.
+ * @csspart root - The root component element that wraps the video (`<div>`).
+ * @csspart video - The video element (`<video>`).
  *
  * ## Examples
  *
@@ -87,25 +87,45 @@ export class VideoProvider<
   protected render(): TemplateResult {
     return html`
       <div
-        part="container"
+        class="${this.buildRootClassAttr()}"
+        part="${this.buildRootPartAttr()}"
         aria-busy="${this.getAriaBusy()}"
-        class="${this.buildContainerClass()}"
-        style="${styleMap(this.buildContainerStyleMap())}"
+        style="${styleMap(this.buildRootStyleMap())}"
       >
         ${this.renderVideo()}
-        <slot name="ui"></slot>
+        <slot name="ui" @slotchange="${this.handleUiSlotChange}"></slot>
       </div>
     `;
   }
 
-  protected buildContainerClass(): string {
-    return 'container';
+  /**
+   * Override this to modify root provider CSS Classes.
+   */
+  protected buildRootClassAttr(): string {
+    return 'root';
   }
 
-  protected buildContainerStyleMap(): StyleInfo {
+  /**
+   * Override this to modify root provider CSS Parts.
+   */
+  protected buildRootPartAttr(): string {
+    return 'root';
+  }
+
+  /**
+   * Override this to modify root provider styles.
+   */
+  protected buildRootStyleMap(): StyleInfo {
     return {
       'padding-bottom': this.getAspectRatioPadding(),
     };
+  }
+
+  /**
+   * Override this to modify video CSS Parts.
+   */
+  protected buildVideoPartAttr(): string {
+    return 'video';
   }
 
   /**
@@ -119,7 +139,7 @@ export class VideoProvider<
   protected renderVideo(): TemplateResult {
     return html`
       <video
-        part="video"
+        part="${this.buildVideoPartAttr()}"
         src="${ifNonEmpty(this.shouldSetVideoSrcAttr() ? this.src : '')}"
         width="${ifNumber(this.width)}"
         height="${ifNumber(this.height)}"
@@ -150,6 +170,13 @@ export class VideoProvider<
     );
 
     super.handleLoadedMetadata(originalEvent);
+  }
+
+  /**
+   * Override to listen to slot changes.
+   */
+  protected handleUiSlotChange(): void {
+    // no-op
   }
 
   // -------------------------------------------------------------------------------------------
