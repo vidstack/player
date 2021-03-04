@@ -62,7 +62,7 @@ import { uiStyles } from './ui.css';
  * ```
  */
 export class Ui extends LitElement {
-  public static get styles(): CSSResultArray {
+  static get styles(): CSSResultArray {
     return [uiStyles];
   }
 
