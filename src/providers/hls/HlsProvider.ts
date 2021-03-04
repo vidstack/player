@@ -30,13 +30,21 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  * This provider will load the [`video-dev/hls.js`](https://github.com/video-dev/hls.js) library
  * if the browser doesn't have native HLS support.
  *
+ * ## Tag
+ *
  * @tagname vds-hls
  *
- * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
- * @slot ui: Used to pass in `<vds-ui>` to customize the player user interface.
+ * ## Slots
  *
- * @csspart container: The container element that wraps the video.
- * @csspart video: The video element.
+ * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
+ * @slot ui - Used to pass in `<vds-ui>` to customize the player user interface.
+ *
+ * ## CSS Parts
+ *
+ * @csspart container - The container element that wraps the video.
+ * @csspart video - The video element.
+ *
+ * ## Examples
  *
  * @example
  * ```html
@@ -344,7 +352,7 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
    * supports HLS.
    */
   @event({ name: 'vds-hls-engine-built' })
-  protected engineBuildEvent!: HlsEvents['vds-hls-engine-built'];
+  protected engineBuiltEvent!: HlsEvents['vds-hls-engine-built'];
 
   /**
    * Emitted when the `hls.js` instance has attached itself to the media element. This will not
