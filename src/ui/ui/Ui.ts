@@ -100,7 +100,7 @@ export class Ui extends LitElement {
    * Override this to modify root UI CSS Classes.
    */
   protected buildRootClassAttr(): string {
-    return clsx('root');
+    return 'root';
   }
 
   /**

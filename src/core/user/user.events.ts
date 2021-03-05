@@ -52,7 +52,7 @@ export function buildUserEvent<
   P extends RawUserEventType,
   DetailType = RawUserEventDetailType[P]
 >(type: P): VdsCustomEventConstructor<DetailType> {
-  const prefixedType = `${USER_EVENT_PREFIX}-${type}`;
+  const prefixedType = `${USER_EVENT_PREFIX}-${type}-request`;
 
   class UserEvent extends buildVdsEvent<DetailType>(prefixedType) {
     constructor(eventInit?: VdsEventInit<DetailType>) {

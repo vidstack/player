@@ -88,10 +88,8 @@ export class Control extends FocusMixin(LitElement) {
 
   /**
    * **ARIA** The `aria-label` property of the control.
-   *
-   * @required
    */
-  @property() label!: string;
+  @property() label?: string;
 
   /**
    * **ARIA** - Identifies the element (or elements) whose contents or presence are controlled by
@@ -247,7 +245,6 @@ export class Control extends FocusMixin(LitElement) {
   click(): void {
     if (this.disabled) return;
     this.buttonEl?.click();
-    super.click();
   }
 
   // -------------------------------------------------------------------------------------------
