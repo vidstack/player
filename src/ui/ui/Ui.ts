@@ -110,8 +110,8 @@ export class Ui extends LitElement {
     return clsx(
       'root',
       this.isUiHidden() && 'root-hidden',
-      this.isAudioView && 'root-audio',
-      this.isVideoView && 'root-video',
+      this.isAudioView && 'root-audio-ui',
+      this.isVideoView && 'root-video-ui',
     );
   }
 

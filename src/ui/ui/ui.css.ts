@@ -9,10 +9,10 @@ export const uiStyles = css`
     pointer-events: none;
   }
 
-  div[part*='ui'] {
+  div[part*='-ui'] {
     width: 100%;
     height: 100%;
     position: relative;
-    pointer-events: none;
+    pointer-events: initial;
   }
 `;
