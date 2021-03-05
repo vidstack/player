@@ -39,9 +39,10 @@
   "scripts": {
     "build": "run-s clean build:esm build:manifest",
     "build:esm": "tsc -p tsconfig-build.json",
-    "build:storybook": "tsc -p tsconfig-storybook.json",
     "build:manifest": "wcom transform \"src/**/*.ts\" -t vscode markdown",
     "build:watch": "npm run build:esm -- -w",
+    "build:fast": "node .scripts/fast-build",
+    "build:storybook": "node .scripts/fast-storybook-build",
     "clean": "run-p clean:*",
     "clean:build": "rimraf bundle core providers skins ui utils shared",
     "clean:storybook": "rimraf storybook-build storybook-static",
@@ -90,11 +91,13 @@
     "@web/test-runner": "^0.12.15",
     "@web/test-runner-commands": "^0.4.1",
     "babel-loader": "^8.2.2",
+    "esbuild": "^0.8.55",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-lit": "^1.3.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-wc": "^1.2.0",
+    "fast-glob": "^3.2.5",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.3",
     "lit-analyzer": "^1.2.1",
@@ -106,6 +109,7 @@
     "rimraf": "^3.0.2",
     "semantic-release": "^17.3.7",
     "sinon": "^9.2.1",
+    "storybook-addon-turbo-build": "^1.0.0-beta.0",
     "typescript": "^4.1.3"
   },
   "prettier": {
