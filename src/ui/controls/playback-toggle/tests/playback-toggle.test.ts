@@ -37,22 +37,22 @@ describe(PLAYBACK_TOGGLE_TAG_NAME, () => {
     expect(pauseSlot).to.have.class('pause');
   });
 
-  it('should set play slot to hidden when paused is true', async () => {
+  it('should set pause slot to hidden when paused is true', async () => {
     const [, toggle] = await buildFixture();
     const playSlot = getSlottedChildren(toggle, 'play')[0];
     const pauseSlot = getSlottedChildren(toggle, 'pause')[0];
-    expect(playSlot).to.have.attribute('hidden', '');
-    expect(pauseSlot).to.not.have.attribute('hidden');
+    expect(pauseSlot).to.have.attribute('hidden', '');
+    expect(playSlot).to.not.have.attribute('hidden');
   });
 
-  it('should set pause slot to hidden when paused is true', async () => {
+  it('should set play slot to hidden when paused is true', async () => {
     const [, toggle] = await buildFixture();
     toggle.on = false;
     await elementUpdated(toggle);
     const playSlot = getSlottedChildren(toggle, 'play')[0];
     const pauseSlot = getSlottedChildren(toggle, 'pause')[0];
-    expect(pauseSlot).to.have.attribute('hidden', '');
-    expect(playSlot).to.not.have.attribute('hidden');
+    expect(playSlot).to.have.attribute('hidden', '');
+    expect(pauseSlot).to.not.have.attribute('hidden');
   });
 
   it('should toggle pressed state correctly', async () => {
