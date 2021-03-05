@@ -25,7 +25,7 @@ import { toggleStyles } from './toggle.css';
  * @slot on - The content to show when the toggle is `on`.
  * @slot off - The content to show when the toggle is `off`.
  *
- * ## Example
+ * ## Examples
  *
  * @example
  * ```html
@@ -46,28 +46,24 @@ export class Toggle extends LitElement {
 
   protected currentOffSlotElement?: HTMLElement;
 
-  protected _on = false;
-
   /**
    * Whether the toggle is in the `on` state.
    */
   @property({ type: Boolean, reflect: true })
-  get on(): boolean {
-    return this._on;
-  }
-
-  set on(isOn: boolean) {
-    this._on = isOn;
-    this.toggle();
-  }
-
-  render(): TemplateResult {
-    return html`${this.renderOnSlot()} ${this.renderOffSlot()}`;
-  }
+  on = false;
 
   disconnectedCallback(): void {
     this.currentOnSlotElement = undefined;
     this.currentOffSlotElement = undefined;
+  }
+
+  render(): TemplateResult {
+    return this.renderToggle();
+  }
+
+  protected renderToggle(): TemplateResult {
+    this.toggle();
+    return html`${this.renderOnSlot()} ${this.renderOffSlot()}`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -123,8 +119,8 @@ export class Toggle extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   protected toggle(): void {
-    this.toggleHiddenAttr(this.currentOnSlotElement, !this._on);
-    this.toggleHiddenAttr(this.currentOffSlotElement, this._on);
+    this.toggleHiddenAttr(this.currentOnSlotElement, !this.on);
+    this.toggleHiddenAttr(this.currentOffSlotElement, this.on);
   }
 
   protected toggleHiddenAttr(el?: HTMLElement, isHidden?: boolean): void {
