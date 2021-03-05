@@ -22,8 +22,8 @@ import { toggleStyles } from './toggle.css';
  *
  * ## Slots
  *
- * @slot on - The content to show when the toggle is `on`. The name can be changed via the `onSlotName` property.
- * @slot off - The content to show when the toggle is `off`. The name can be changed via the `offSlotName` property.
+ * @slot on - The content to show when the toggle is `on`.
+ * @slot off - The content to show when the toggle is `off`.
  *
  * ## Example
  *
@@ -74,15 +74,13 @@ export class Toggle extends LitElement {
   // On
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * The name of the `on` slot.
-   */
-  @property({ attribute: 'on-slot-name' })
-  onSlotName = 'on';
+  protected getOnSlotName(): string {
+    return 'on';
+  }
 
   protected renderOnSlot(): TemplateResult {
     return html`<slot
-      name=${this.onSlotName}
+      name=${this.getOnSlotName()}
       @slotchange="${this.handleOnSlotChange}"
     ></slot>`;
   }
@@ -90,7 +88,7 @@ export class Toggle extends LitElement {
   protected handleOnSlotChange(): void {
     this.currentOnSlotElement = getSlottedChildren(
       this,
-      this.onSlotName,
+      this.getOnSlotName(),
     )[0] as HTMLElement;
 
     this.toggle();
@@ -100,15 +98,13 @@ export class Toggle extends LitElement {
   // Off
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * The name of the `off` slot.
-   */
-  @property({ attribute: 'off-slot-name' })
-  offSlotName = 'off';
+  protected getOffSlotName(): string {
+    return 'off';
+  }
 
   protected renderOffSlot(): TemplateResult {
     return html`<slot
-      name=${this.offSlotName}
+      name=${this.getOffSlotName()}
       @slotchange="${this.handleOffSlotChange}"
     ></slot>`;
   }
@@ -116,7 +112,7 @@ export class Toggle extends LitElement {
   protected handleOffSlotChange(): void {
     this.currentOffSlotElement = getSlottedChildren(
       this,
-      this.offSlotName,
+      this.getOffSlotName(),
     )[0] as HTMLElement;
 
     this.toggle();
