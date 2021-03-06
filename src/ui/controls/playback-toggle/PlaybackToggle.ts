@@ -109,11 +109,11 @@ export class PlaybackToggle extends FocusMixin(Toggle) {
   }
 
   protected getOnSlotName(): string {
-    return 'pause';
+    return 'play';
   }
 
   protected getOffSlotName(): string {
-    return 'play';
+    return 'pause';
   }
 
   protected handleTogglingPlayback(originalEvent: Event): void {
