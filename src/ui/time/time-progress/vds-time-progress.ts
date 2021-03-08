@@ -1,6 +1,6 @@
 // ** Dependencies **
-import '../current-time/vds-current-time';
-import '../duration/vds-duration';
+import '../time-current/vds-time-current';
+import '../time-duration/vds-time-duration';
 
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';

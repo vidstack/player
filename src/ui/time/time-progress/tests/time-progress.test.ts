@@ -4,7 +4,8 @@ import { expect, html } from '@open-wc/testing';
 
 import { FakeMediaProvider } from '../../../../core';
 import { buildFakeMediaProvider } from '../../../../core/fakes/helpers';
-import { CurrentTime } from '../../current-time';
+import { TimeCurrent } from '../../time-current';
+import { TimeDuration } from '../../time-duration';
 import { TimeProgress } from '../TimeProgress';
 import { TIME_PROGRESS_TAG_NAME } from '../vds-time-progress';
 
@@ -25,24 +26,24 @@ describe(TIME_PROGRESS_TAG_NAME, () => {
 
   it('should render current time label', async () => {
     const [, timeProgress] = await buildFixture();
-    const currentTime = timeProgress.shadowRoot?.querySelector(
-      'vds-current-time',
-    ) as CurrentTime;
-    expect(currentTime).to.have.attribute('label', 'Current time');
+    const timeCurrent = timeProgress.shadowRoot?.querySelector(
+      'vds-time-current',
+    ) as TimeCurrent;
+    expect(timeCurrent).to.have.attribute('label', 'Current time');
   });
 
   it('should render duration label', async () => {
     const [, timeProgress] = await buildFixture();
-    const duration = timeProgress.shadowRoot?.querySelector(
-      'vds-duration',
-    ) as CurrentTime;
-    expect(duration).to.have.attribute('label', 'Duration');
+    const timeDuration = timeProgress.shadowRoot?.querySelector(
+      'vds-time-duration',
+    ) as TimeDuration;
+    expect(timeDuration).to.have.attribute('label', 'Duration');
   });
 
   it('should render separator', async () => {
     const [, timeProgress] = await buildFixture();
     const timeSeparator = timeProgress.shadowRoot?.querySelector(
-      "span[part='time-separator']",
+      "span[part~='separator']",
     ) as HTMLSpanElement;
     expect(timeSeparator).to.exist;
     expect(timeSeparator.innerHTML).to.include(timeProgress.timeSeparator);

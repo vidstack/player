@@ -18,11 +18,11 @@ import { timeProgressStyles } from './time-progress.css';
  *
  * ## CSS Parts
  *
- * @csspart current-time - The `vds-current-time` component.
- * @csspart current-time-root - The `vds-current-time` component's root element (`<time>`).
- * @csspart duration - The `vds-duration` component.
- * @csspart duration-root - The `vds-duration` component's root element (`<time>`).
- * @csspart time-separator - The time separator element (`<span>`).
+ * @csspart current-time - The `vds-time-current` component.
+ * @csspart current-time-root - The `vds-time-current` component's root element (`<time>`).
+ * @csspart duration - The `vds-time-duration` component.
+ * @csspart duration-root - The `vds-time-duration` component's root element (`<time>`).
+ * @csspart separator - The time separator element (`<span>`).
  *
  * ## Examples
  *
@@ -46,7 +46,7 @@ import { timeProgressStyles } from './time-progress.css';
  *   font-size: 16px;
  * }
  *
- * vds-time-progress::part(time-separator) {
+ * vds-time-progress::part(separator) {
  *   margin: 0 2px;
  *   font-size: 16px;
  * }
@@ -100,13 +100,13 @@ export class TimeProgress extends LitElement {
 
   protected renderCurrentTime(): TemplateResult {
     return html`
-      <vds-current-time
+      <vds-time-current
         label="${this.currentTimeLabel}"
         part="${this.buildCurrentTimePartAttr()}"
         ?always-show-hours="${this.alwaysShowHours}"
         ?pad-hours="${this.padHours}"
         exportparts="${this.buildCurrentTimeExportPartsAttr()}"
-      ></vds-current-time>
+      ></vds-time-current>
     `;
   }
 
@@ -120,13 +120,13 @@ export class TimeProgress extends LitElement {
 
   protected renderDuration(): TemplateResult {
     return html`
-      <vds-duration
+      <vds-time-duration
         label="${this.durationLabel}"
         part="${this.buildDurationPartAttr()}"
         ?always-show-hours="${this.alwaysShowHours}"
         ?pad-hours="${this.padHours}"
         exportparts="${this.buildDurationExportPartsAttr()}"
-      ></vds-duration>
+      ></vds-time-duration>
     `;
   }
 
@@ -147,6 +147,6 @@ export class TimeProgress extends LitElement {
   }
 
   protected buildTimeSeparatorPartAttr(): string {
-    return 'time-separator';
+    return 'separator time-separator';
   }
 }

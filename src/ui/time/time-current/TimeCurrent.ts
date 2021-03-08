@@ -2,12 +2,12 @@ import { playerContext } from '../../../core';
 import { Time } from '../time';
 
 /**
- * Formats and displays the `duration` of the current media. Do not mess with the component's
+ * Formats and displays the `currentTime` of media playback. Do not mess with the component's
  * `duration` property as it's automatically managed.
  *
  * ## Tag
  *
- * @tagname vds-duration
+ * @tagname vds-time-current
  *
  * ## CSS Parts
  *
@@ -17,26 +17,26 @@ import { Time } from '../time';
  *
  * @example
  * ```html
- * <vds-duration
- *   label="Duration"
+ * <vds-time-current
+ *   label="Current time"
  *   pad-hours
  *   always-show-hours
- * ></vds-duration>
+ * ></vds-time-current>
  * ```
  *
  * @example
  * ```css
- * vds-duration::part(root) {
+ * vds-time-current::part(root) {
  *   font-size: 16px;
  * }
  * ```
  */
-export class Duration extends Time {
-  label = 'Duration';
+export class TimeCurrent extends Time {
+  label = 'Current time';
 
   /**
    * @internal
    */
-  @playerContext.duration.consume({ transform: d => (d >= 0 ? d : 0) })
-  duration = 0;
+  @playerContext.currentTime.consume()
+  duration = playerContext.currentTime.defaultValue;
 }
