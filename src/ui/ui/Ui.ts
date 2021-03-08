@@ -30,7 +30,7 @@ import { uiStyles } from './ui.css';
  *
  * ## CSS Parts
  *
- * @csspart root - The root component element (`<div>`).
+ * @csspart root - The component's root element (`<div>`).
  * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
  * @csspart root-audio - Applied when the current `viewType` is `audio`.
  * @csspart root-video - Applied when the current `viewType` is `video`.
@@ -97,14 +97,14 @@ export class Ui extends LitElement {
   }
 
   /**
-   * Override this to modify root UI CSS Classes.
+   * Override this to modify root CSS Classes.
    */
   protected buildRootClassAttr(): string {
     return 'root';
   }
 
   /**
-   * Override this to modify root UI CSS parts.
+   * Override this to modify root CSS parts.
    */
   protected buildRootPartAttr(): string {
     return clsx(

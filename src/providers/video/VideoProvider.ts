@@ -35,7 +35,7 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  *
  * ## CSS Parts
  *
- * @csspart root - The root component element that wraps the video (`<div>`).
+ * @csspart root - The component's root element that wraps the video (`<div>`).
  * @csspart video - The video element (`<video>`).
  *
  * ## Examples

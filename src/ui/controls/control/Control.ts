@@ -33,8 +33,8 @@ import { ControlType } from './control.types';
  *
  * ## CSS Parts
  *
- * @csspart root - The root component element (`<button>`).
- * @csspart root-mobile - Applied to root component when the current device is mobile.
+ * @csspart root - The component's root element (`<button>`).
+ * @csspart root-mobile - Applied to component's root element when the current device is mobile.
  *
  * ## Examples
  *

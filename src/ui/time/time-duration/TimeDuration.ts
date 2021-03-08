@@ -11,7 +11,7 @@ import { Time } from '../time';
  *
  * ## CSS Parts
  *
- * @csspart root - The root component element (`<time>`).
+ * @csspart root - The component's root element (`<time>`).
  *
  * ## Examples
  *
