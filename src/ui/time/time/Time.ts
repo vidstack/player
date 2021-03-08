@@ -74,10 +74,6 @@ export class Time extends LitElement {
   padHours = false;
 
   render(): TemplateResult {
-    return this.renderTime();
-  }
-
-  protected renderTime(): TemplateResult {
     return html`
       <time
         class="${this.buildRootClassAttr()}"
@@ -85,32 +81,40 @@ export class Time extends LitElement {
         aria-label="${ifNonEmpty(this.label)}"
         datetime="${this.getFormattedDuration()}"
       >
-        ${this.renderContent()}
+        ${this.renderRootContent()}
       </time>
     `;
   }
 
-  protected renderContent(): TemplateResult {
+  protected renderRootContent(): TemplateResult {
     return html`${this.getFormattedTime()}`;
   }
 
+  /**
+   * @returns The duration formatted into human readable form.
+   */
   protected getFormattedTime(): string {
     return formatTime(this.duration, this.padHours, this.alwaysShowHours);
   }
 
+  /**
+   * @returns A valid HTML5 duration.
+   *
+   * @spec https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
+   */
   protected getFormattedDuration(): string {
     return formatHtml5Duration(this.duration);
   }
 
   /**
-   * Override this to modify root UI CSS Classes.
+   * Override this to modify root CSS Classes.
    */
   protected buildRootClassAttr(): string {
     return 'root';
   }
 
   /**
-   * Override this to modify root UI CSS parts.
+   * Override this to modify root CSS parts.
    */
   protected buildRootPartAttr(): string {
     return 'root';
