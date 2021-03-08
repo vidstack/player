@@ -233,6 +233,9 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
     @playerContext.muted.provide()
     mutedCtx = playerContext.muted.defaultValue;
 
+    @playerContext.playsinline.provide()
+    playsinlineCtx = playerContext.playsinline.defaultValue;
+
     @playerContext.aspectRatio.provide()
     aspectRatioCtx = playerContext.aspectRatio.defaultValue;
 

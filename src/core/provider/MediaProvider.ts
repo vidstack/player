@@ -108,6 +108,11 @@ export abstract class MediaProvider<EngineType = unknown>
   @property({ type: Boolean })
   controls = false;
 
+  // ---
+
+  @property({ type: Boolean })
+  playsinline = false;
+
   // -------------------------------------------------------------------------------------------
   // Readonly Properties
   // -------------------------------------------------------------------------------------------

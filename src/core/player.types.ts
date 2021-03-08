@@ -40,7 +40,7 @@ export type WritablePlayerState = Omit<PlayerProps, keyof ReadonlyPlayerState>;
 export interface PlayerProps {
   /**
    * The aspect ratio of the player expressed as `width:height` (`16:9`). This is only applied if
-   * the `viewType` is `video` and the player is not in fullscreen mode. Defaults to `16:9`.
+   * the `viewType` is `video` and the player is not in fullscreen mode. Defaults to `undefined`.
    */
   aspectRatio: string | undefined;
 
@@ -87,6 +87,13 @@ export interface PlayerProps {
    * Whether the audio is muted or not.
    */
   muted: boolean;
+
+  /**
+   * Whether the video is to be played "inline", that is within the element's playback area. Note
+   * that setting this to `false` does not imply that the video will always be played in fullscreen.
+   * Depending on the provider, changing this prop may cause the player to completely reset.
+   */
+  playsinline: boolean;
 
   /**
    * A `double` indicating the total playback length of the media in seconds. Defaults

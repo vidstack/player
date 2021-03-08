@@ -147,6 +147,7 @@ export class VideoProvider<
         preload="${ifNonEmpty(this.preload)}"
         crossorigin="${ifNonEmpty(this.crossOrigin)}"
         controlslist="${ifNonEmpty(this.controlsList)}"
+        ?playsinline="${this.playsinline}"
         ?controls="${this.controls}"
         ?autopictureinpicture="${this.autoPiP}"
         ?disablepictureinpicture="${this.disablePiP}"
