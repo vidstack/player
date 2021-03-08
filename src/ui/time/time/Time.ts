@@ -31,7 +31,12 @@ import { formatHtml5Duration, formatTime } from './time.utils';
  *
  * @example
  * ```html
- * <vds-time duration="3650" pad-hours always-show-hours></vds-time>
+ * <vds-time
+ *   label="Current time"
+ *   duration="3650"
+ *   pad-hours
+ *   always-show-hours
+ * ></vds-time>
  * ```
  *
  * @example
@@ -47,7 +52,7 @@ export class Time extends LitElement {
   }
 
   /**
-   * The `aria-label` property of the time.
+   * **ARIA** The `aria-label` property of the time.
    */
   @property() label?: string;
 

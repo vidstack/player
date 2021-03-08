@@ -9,4 +9,5 @@ export * from '../ui/controls/toggle';
 export * from '../ui/time/current-time';
 export * from '../ui/time/duration';
 export * from '../ui/time/time';
+export * from '../ui/time/time-progress';
 export * from '../ui/ui';

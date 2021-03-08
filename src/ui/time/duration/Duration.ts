@@ -17,12 +17,11 @@ import { Time } from '../time';
  *
  * @example
  * ```html
- * <vds-duration></vds-duration>
- * ```
- *
- * @example
- * ```html
- * <vds-duration pad-hours always-show-hours></vds-duration>
+ * <vds-duration
+ *   label="Duration"
+ *   pad-hours
+ *   always-show-hours
+ * ></vds-duration>
  * ```
  *
  * @example

@@ -5,7 +5,7 @@ import { elementUpdated, expect, html } from '@open-wc/testing';
 import { FakeMediaProvider } from '../../../../core/fakes/FakeMediaProvider';
 import { buildFakeMediaProvider } from '../../../../core/fakes/helpers';
 import { Duration } from '../Duration';
-import { DURATION_TAG_NAME } from '../vds-end-time';
+import { DURATION_TAG_NAME } from '../vds-duration';
 
 describe(`${DURATION_TAG_NAME}`, () => {
   async function buildFixture(): Promise<[FakeMediaProvider, Duration]> {

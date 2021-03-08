@@ -8,5 +8,6 @@ import '../ui/controls/mute-toggle/vds-mute-toggle';
 import '../ui/time/time/vds-time';
 import '../ui/time/current-time/vds-current-time';
 import '../ui/time/duration/vds-duration';
+import '../ui/time/time-progress/vds-time-progress';
 
 export * from './index';
