@@ -81,8 +81,8 @@ export class Time extends LitElement {
   render(): TemplateResult {
     return html`
       <time
-        class="${this.buildRootClassAttr()}"
-        part="${this.buildRootPartAttr()}"
+        class="${this.getRootClassAttr()}"
+        part="${this.getRootPartAttr()}"
         aria-label="${ifNonEmpty(this.label)}"
         datetime="${this.getFormattedDuration()}"
       >
@@ -114,14 +114,14 @@ export class Time extends LitElement {
   /**
    * Override this to modify root CSS Classes.
    */
-  protected buildRootClassAttr(): string {
+  protected getRootClassAttr(): string {
     return 'root';
   }
 
   /**
    * Override this to modify root CSS parts.
    */
-  protected buildRootPartAttr(): string {
+  protected getRootPartAttr(): string {
     return 'root';
   }
 }

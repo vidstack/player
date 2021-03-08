@@ -168,8 +168,8 @@ export class Control extends FocusMixin(LitElement) {
   render(): TemplateResult {
     return html`
       <button
-        class="${this.buildRootClassAttr()}"
-        part="${this.buildRootPartAttr()}"
+        class="${this.getRootClassAttr()}"
+        part="${this.getRootPartAttr()}"
         type="${ifNonEmpty(this.type)}"
         aria-label="${ifNonEmpty(this.label)}"
         aria-controls="${ifNonEmpty(this.controls)}"
@@ -195,14 +195,14 @@ export class Control extends FocusMixin(LitElement) {
   /**
    * Override this to modify CSS Classes.
    */
-  protected buildRootClassAttr(): string {
+  protected getRootClassAttr(): string {
     return 'root';
   }
 
   /**
    * Override this to modify CSS Parts.
    */
-  protected buildRootPartAttr(): string {
+  protected getRootPartAttr(): string {
     return clsx({
       root: true,
       'root-mobile': this.isMobileDevice,

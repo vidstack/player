@@ -80,10 +80,7 @@ export class Ui extends LitElement {
 
   render(): TemplateResult {
     return html`
-      <div
-        class="${this.buildRootClassAttr()}"
-        part="${this.buildRootPartAttr()}"
-      >
+      <div class="${this.getRootClassAttr()}" part="${this.getRootPartAttr()}">
         ${this.renderRootContent()}
       </div>
     `;
@@ -99,14 +96,14 @@ export class Ui extends LitElement {
   /**
    * Override this to modify root CSS Classes.
    */
-  protected buildRootClassAttr(): string {
+  protected getRootClassAttr(): string {
     return 'root';
   }
 
   /**
    * Override this to modify root CSS parts.
    */
-  protected buildRootPartAttr(): string {
+  protected getRootPartAttr(): string {
     return clsx(
       'root',
       this.isUiHidden() && 'root-hidden',

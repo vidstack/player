@@ -102,19 +102,19 @@ export class TimeProgress extends LitElement {
     return html`
       <vds-time-current
         label="${this.currentTimeLabel}"
-        part="${this.buildCurrentTimePartAttr()}"
+        part="${this.getCurrentTimePartAttr()}"
         ?always-show-hours="${this.alwaysShowHours}"
         ?pad-hours="${this.padHours}"
-        exportparts="${this.buildCurrentTimeExportPartsAttr()}"
+        exportparts="${this.getCurrentTimeExportPartsAttr()}"
       ></vds-time-current>
     `;
   }
 
-  protected buildCurrentTimePartAttr(): string {
+  protected getCurrentTimePartAttr(): string {
     return 'current-time';
   }
 
-  protected buildCurrentTimeExportPartsAttr(): string {
+  protected getCurrentTimeExportPartsAttr(): string {
     return 'root: current-time-root';
   }
 
@@ -122,31 +122,31 @@ export class TimeProgress extends LitElement {
     return html`
       <vds-time-duration
         label="${this.durationLabel}"
-        part="${this.buildDurationPartAttr()}"
+        part="${this.getDurationPartAttr()}"
         ?always-show-hours="${this.alwaysShowHours}"
         ?pad-hours="${this.padHours}"
-        exportparts="${this.buildDurationExportPartsAttr()}"
+        exportparts="${this.getDurationExportPartsAttr()}"
       ></vds-time-duration>
     `;
   }
 
-  protected buildDurationPartAttr(): string {
+  protected getDurationPartAttr(): string {
     return 'duration';
   }
 
-  protected buildDurationExportPartsAttr(): string {
+  protected getDurationExportPartsAttr(): string {
     return 'root: duration-root';
   }
 
   protected renderTimeSeparator(): TemplateResult {
     return html`
-      <span part="${this.buildTimeSeparatorPartAttr()}">
+      <span part="${this.getTimeSeparatorPartAttr()}">
         ${this.timeSeparator}
       </span>
     `;
   }
 
-  protected buildTimeSeparatorPartAttr(): string {
+  protected getTimeSeparatorPartAttr(): string {
     return 'separator time-separator';
   }
 }

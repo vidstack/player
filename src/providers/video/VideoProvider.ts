@@ -87,10 +87,10 @@ export class VideoProvider<
   render(): TemplateResult {
     return html`
       <div
-        class="${this.buildRootClassAttr()}"
-        part="${this.buildRootPartAttr()}"
+        class="${this.getRootClassAttr()}"
+        part="${this.getRootPartAttr()}"
         aria-busy="${this.getAriaBusy()}"
-        style="${styleMap(this.buildRootStyleMap())}"
+        style="${styleMap(this.getRootStyleMap())}"
       >
         ${this.renderVideo()}
         <slot name="ui" @slotchange="${this.handleUiSlotChange}"></slot>
@@ -101,21 +101,21 @@ export class VideoProvider<
   /**
    * Override this to modify root provider CSS Classes.
    */
-  protected buildRootClassAttr(): string {
+  protected getRootClassAttr(): string {
     return 'root';
   }
 
   /**
    * Override this to modify root provider CSS Parts.
    */
-  protected buildRootPartAttr(): string {
+  protected getRootPartAttr(): string {
     return 'root';
   }
 
   /**
    * Override this to modify root provider styles.
    */
-  protected buildRootStyleMap(): StyleInfo {
+  protected getRootStyleMap(): StyleInfo {
     return {
       'padding-bottom': this.getAspectRatioPadding(),
     };
@@ -124,7 +124,7 @@ export class VideoProvider<
   /**
    * Override this to modify video CSS Parts.
    */
-  protected buildVideoPartAttr(): string {
+  protected getVideoPartAttr(): string {
     return 'video';
   }
 
@@ -139,7 +139,7 @@ export class VideoProvider<
   protected renderVideo(): TemplateResult {
     return html`
       <video
-        part="${this.buildVideoPartAttr()}"
+        part="${this.getVideoPartAttr()}"
         src="${ifNonEmpty(this.shouldSetVideoSrcAttr() ? this.src : '')}"
         width="${ifNumber(this.width)}"
         height="${ifNumber(this.height)}"

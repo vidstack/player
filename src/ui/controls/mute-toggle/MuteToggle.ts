@@ -71,8 +71,8 @@ export class MuteToggle extends FocusMixin(Toggle) {
   render(): TemplateResult {
     return html`
       <vds-control
-        class="${this.buildRootClassAttr()}"
-        part="${this.buildRootClassAttr()}"
+        class="${this.getRootClassAttr()}"
+        part="${this.getRootPartAttr()}"
         label="${ifNonEmpty(this.label)}"
         ?pressed="${this.on}"
         ?disabled="${this.disabled}"
@@ -93,14 +93,14 @@ export class MuteToggle extends FocusMixin(Toggle) {
   /**
    * Override this to modify root CSS Classes.
    */
-  protected buildRootClassAttr(): string {
+  protected getRootClassAttr(): string {
     return 'root';
   }
 
   /**
    * Override this to modify root CSS parts.
    */
-  protected buildRootPartAttr(): string {
+  protected getRootPartAttr(): string {
     return 'root control';
   }
 
