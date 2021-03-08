@@ -4,5 +4,6 @@ export const timeStyles = css`
   :host {
     display: inline-block;
     contain: content;
+    font-variant-numeric: tabular-nums;
   }
 `;
