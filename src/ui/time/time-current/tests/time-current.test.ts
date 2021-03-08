@@ -20,6 +20,32 @@ describe(`${TIME_CURRENT_TAG_NAME}`, () => {
     return [provider, timeCurrent];
   }
 
+  it('should render dom correctly', async () => {
+    const [, timeCurrent] = await buildFixture();
+
+    expect(timeCurrent).dom.to.equal(`
+      <vds-time-current></vds-time-current>
+    `);
+  });
+
+  it('should render shadow dom correctly', async () => {
+    const [provider, timeCurrent] = await buildFixture();
+
+    provider.playerContext.currentTimeCtx = 3750;
+    await elementUpdated(timeCurrent);
+
+    expect(timeCurrent).shadowDom.to.equal(`
+      <time
+        aria-label="Current time"
+        class="root"
+        datetime="PT1H2M30S"
+        part="root"
+      >
+        1:02:30
+      </time>
+    `);
+  });
+
   it('should update current time as context updates', async () => {
     const [provider, timeCurrent] = await buildFixture();
     expect(timeCurrent.duration).to.equal(0);

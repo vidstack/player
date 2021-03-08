@@ -5,6 +5,33 @@ import { html } from 'lit-html';
 import { TIME_TAG_NAME } from '../vds-time';
 
 describe(`${TIME_TAG_NAME}`, () => {
+  it('should render dom correctly', async () => {
+    const time = await fixture(
+      html`<vds-time label="current-time"></vds-time>`,
+    );
+
+    expect(time).dom.to.equal(`
+      <vds-time label="current-time"></vds-toggle>
+    `);
+  });
+
+  it('should render shadow dom correctly', async () => {
+    const time = await fixture(
+      html`<vds-time label="current-time" duration="3750"></vds-time>`,
+    );
+
+    expect(time).shadowDom.to.equal(`
+      <time
+        class="root"
+        part="root"
+        datetime="PT1H2M30S"
+        aria-label="current-time"
+      >
+        1:02:30
+      </time>
+    `);
+  });
+
   it('should render label', async () => {
     const time = await fixture(
       html`<vds-time label="current-time"></vds-time>`,

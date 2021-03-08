@@ -1,6 +1,6 @@
 import '../../../../core/fakes/vds-fake-media-provider';
 
-import { expect, html } from '@open-wc/testing';
+import { elementUpdated, expect, html } from '@open-wc/testing';
 
 import { FakeMediaProvider } from '../../../../core';
 import { buildFakeMediaProvider } from '../../../../core/fakes/helpers';
@@ -8,8 +8,6 @@ import { TimeCurrent } from '../../time-current';
 import { TimeDuration } from '../../time-duration';
 import { TimeProgress } from '../TimeProgress';
 import { TIME_PROGRESS_TAG_NAME } from '../vds-time-progress';
-
-// TODO: add some dom diff tests.
 
 describe(TIME_PROGRESS_TAG_NAME, () => {
   async function buildFixture(): Promise<[FakeMediaProvider, TimeProgress]> {
@@ -23,6 +21,34 @@ describe(TIME_PROGRESS_TAG_NAME, () => {
 
     return [provider, timeProgress];
   }
+
+  it('should render dom correctly', async () => {
+    const [, timeProgress] = await buildFixture();
+
+    expect(timeProgress).dom.to.equal(`
+      <vds-time-progress></vds-time-progress>
+    `);
+  });
+
+  it('should render shadow dom correctly', async () => {
+    const [, timeProgress] = await buildFixture();
+
+    expect(timeProgress).shadowDom.to.equal(`
+      <vds-time-current
+        exportparts="root: current-time-root"
+        label="Current time"
+        part="current-time"
+      ></vds-time-current>
+
+      <span part="separator time-separator">/</span>
+      
+      <vds-time-duration
+        exportparts="root: duration-root"
+        label="Duration"
+        part="duration"
+      ></vds-time-duration>
+    `);
+  });
 
   it('should render current time label', async () => {
     const [, timeProgress] = await buildFixture();

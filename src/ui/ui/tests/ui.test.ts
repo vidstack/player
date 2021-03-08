@@ -21,6 +21,27 @@ describe(UI_TAG_NAME, () => {
     return [provider, ui];
   }
 
+  it('should render dom correctly', async () => {
+    const [, ui] = await buildFixture();
+    expect(ui).dom.to.equal(`
+      <vds-ui>
+        <div class="slot"></div>
+      </vds-ui>
+    `);
+  });
+
+  it('should render shadow dom correctly', async () => {
+    const [, ui] = await buildFixture();
+    expect(ui).shadowDom.to.equal(`
+      <div 
+        class="root"
+        part="root root-hidden"
+      >
+        <slot />
+      </div>
+    `);
+  });
+
   it('should render <slot>', async () => {
     const [, ui] = await buildFixture();
     const slottedChildren = getSlottedChildren(ui);

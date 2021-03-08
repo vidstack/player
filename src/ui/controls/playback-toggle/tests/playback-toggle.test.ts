@@ -29,6 +29,31 @@ describe(PLAYBACK_TOGGLE_TAG_NAME, () => {
     return [provider, toggle];
   }
 
+  it('should render dom correctly', async () => {
+    const [, toggle] = await buildFixture();
+    expect(toggle).dom.to.equal(`
+      <vds-playback-toggle>
+        <div class="play" slot="play"></div>
+        <div class="pause" slot="pause" hidden></div>
+      </vds-playback-toggle>
+    `);
+  });
+
+  it('should render shadow dom correctly', async () => {
+    const [, toggle] = await buildFixture();
+    expect(toggle).shadowDom.to.equal(`
+      <vds-control
+        class="root"
+        label="Play"
+        part="root control"
+        exportparts="root: control-root, root-mobile: control-root-mobile"
+      >
+        <slot name="pause"></slot>
+        <slot name="play"></slot>
+      </button>
+    `);
+  });
+
   it('should render play/pause slots', async () => {
     const [, toggle] = await buildFixture();
     const playSlot = getSlottedChildren(toggle, 'play')[0];

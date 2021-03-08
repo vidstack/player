@@ -26,6 +26,31 @@ describe(MUTE_TOGGLE_TAG_NAME, () => {
     return [provider, toggle];
   }
 
+  it('should render dom correctly', async () => {
+    const [, toggle] = await buildFixture();
+    expect(toggle).dom.to.equal(`
+      <vds-mute-toggle>
+        <div class="mute" slot="mute"></div>
+        <div class="unmute" slot="unmute" hidden></div>
+      </vds-mute-toggle>
+    `);
+  });
+
+  it('should render shadow dom correctly', async () => {
+    const [, toggle] = await buildFixture();
+    expect(toggle).shadowDom.to.equal(`
+      <vds-control
+        class="root"
+        label="Mute"
+        part="root control"
+        exportparts="root: control-root, root-mobile: control-root-mobile"
+      >
+        <slot name="unmute"></slot>
+        <slot name="mute"></slot>
+      </button>
+    `);
+  });
+
   it('should render mute/unmute slots', async () => {
     const [, toggle] = await buildFixture();
     const muteSlot = getSlottedChildren(toggle, 'mute')[0];

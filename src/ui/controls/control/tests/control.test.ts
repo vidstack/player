@@ -22,14 +22,38 @@ describe(CONTROL_TAG_NAME, () => {
     return [provider, control];
   }
 
-  describe('props/attrs', () => {
+  describe('render', () => {
+    it('should render dom correctly', async () => {
+      const [, control] = await buildFixture();
+      expect(control).dom.to.equal(`
+      <vds-control>
+        <div class="slot"></div>
+      </vds-control>
+    `);
+    });
+
+    it('should render shadow dom correctly', async () => {
+      const [, control] = await buildFixture();
+      expect(control).shadowDom.to.equal(`
+      <button
+        class="root"
+        type="button"
+        part="root"
+      >
+        <slot />
+      </button>
+    `);
+    });
+
     it('should render <slot>', async () => {
       const [, control] = await buildFixture();
       const slottedChildren = getSlottedChildren(control);
       expect(slottedChildren).to.have.length(1);
       expect(slottedChildren[0]).to.have.class('slot');
     });
+  });
 
+  describe('props/attrs', () => {
     it('should toggle root-mobile css part as context updates', async () => {
       // Nay.
       const [provider, control] = await buildFixture();

@@ -20,6 +20,32 @@ describe(`${TIME_DURATION_TAG_NAME}`, () => {
     return [provider, timeDuration];
   }
 
+  it('should render dom correctly', async () => {
+    const [, timeDuration] = await buildFixture();
+
+    expect(timeDuration).dom.to.equal(`
+      <vds-time-duration></vds-time-duration>
+    `);
+  });
+
+  it('should render shadow dom correctly', async () => {
+    const [provider, timeDuration] = await buildFixture();
+
+    provider.playerContext.durationCtx = 3750;
+    await elementUpdated(timeDuration);
+
+    expect(timeDuration).shadowDom.to.equal(`
+      <time
+        aria-label="Duration"
+        class="root"
+        datetime="PT1H2M30S"
+        part="root"
+      >
+        1:02:30
+      </time>
+    `);
+  });
+
   it('should update duration time as context updates', async () => {
     const [provider, timeDuration] = await buildFixture();
     expect(timeDuration.duration).to.equal(0);
