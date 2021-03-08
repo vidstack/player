@@ -39,15 +39,17 @@ describe(PLAYBACK_TOGGLE_TAG_NAME, () => {
 
   it('should set pause slot to hidden when paused is true', async () => {
     const [, toggle] = await buildFixture();
+    toggle.on = false;
+    await elementUpdated(toggle);
     const playSlot = getSlottedChildren(toggle, 'play')[0];
     const pauseSlot = getSlottedChildren(toggle, 'pause')[0];
     expect(pauseSlot).to.have.attribute('hidden', '');
     expect(playSlot).to.not.have.attribute('hidden');
   });
 
-  it('should set play slot to hidden when paused is true', async () => {
+  it('should set play slot to hidden when paused is false', async () => {
     const [, toggle] = await buildFixture();
-    toggle.on = false;
+    toggle.on = true;
     await elementUpdated(toggle);
     const playSlot = getSlottedChildren(toggle, 'play')[0];
     const pauseSlot = getSlottedChildren(toggle, 'pause')[0];
@@ -58,12 +60,16 @@ describe(PLAYBACK_TOGGLE_TAG_NAME, () => {
   it('should toggle pressed state correctly', async () => {
     const [, toggle] = await buildFixture();
     const control = toggle.shadowRoot?.querySelector('vds-control');
-    expect(control).to.have.attribute('pressed');
 
     toggle.on = false;
     await elementUpdated(toggle);
 
     expect(control).to.not.have.attribute('pressed');
+
+    toggle.on = true;
+    await elementUpdated(toggle);
+
+    expect(control).to.have.attribute('pressed');
   });
 
   it('should set disabled attribute', async () => {
@@ -78,25 +84,27 @@ describe(PLAYBACK_TOGGLE_TAG_NAME, () => {
 
   it(`should emit ${UserPlayRequestEvent.TYPE} when clicked while paused`, async () => {
     const [, toggle] = await buildFixture();
+    toggle.on = false;
+    await elementUpdated(toggle);
     setTimeout(() => toggle.click());
     await oneEvent(toggle, UserPlayRequestEvent.TYPE);
   });
 
   it(`should emit ${UserPauseRequestEvent.TYPE} when clicked while not paused`, async () => {
     const [, toggle] = await buildFixture();
-    toggle.on = false;
+    toggle.on = true;
     await elementUpdated(toggle);
     setTimeout(() => toggle.click());
     await oneEvent(toggle, UserPauseRequestEvent.TYPE);
   });
 
-  it('should receive paused context updates', async () => {
+  it('should receive transfromed paused context updates', async () => {
     const [provider, toggle] = await buildFixture();
     provider.playerContext.pausedCtx = false;
     await elementUpdated(toggle);
-    expect(toggle.on).to.be.false;
+    expect(toggle.on).to.be.true;
     provider.playerContext.pausedCtx = true;
     await elementUpdated(toggle);
-    expect(toggle.on).to.be.true;
+    expect(toggle.on).to.be.false;
   });
 });

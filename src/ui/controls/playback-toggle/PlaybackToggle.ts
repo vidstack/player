@@ -20,8 +20,8 @@ import { Toggle } from '../toggle';
  *
  * ## Slots
  *
- * @slot play - The content to show when the `paused` state is `false`.
- * @slot pause - The content to show when the `paused` state is `true`.
+ * @slot play - The content to show when the `paused` state is `true`.
+ * @slot pause - The content to show when the `paused` state is `false`.
  *
  * ## CSS Parts
  *
@@ -42,8 +42,10 @@ import { Toggle } from '../toggle';
  * ```
  */
 export class PlaybackToggle extends FocusMixin(Toggle) {
-  @playerContext.paused.consume()
-  on = playerContext.paused.defaultValue;
+  // Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
+  // use `isPlaying` becuase there could be a buffering delay (we want immediate feedback).
+  @playerContext.paused.consume({ transform: p => !p })
+  on = false;
 
   @query('vds-control') controlEl?: Control;
 
@@ -52,7 +54,7 @@ export class PlaybackToggle extends FocusMixin(Toggle) {
    *
    * @required
    */
-  @property() label?: string = 'Pause';
+  @property() label?: string = 'Play';
 
   /**
    * Whether the underlying control should be disabled (not-interactable).
@@ -109,15 +111,15 @@ export class PlaybackToggle extends FocusMixin(Toggle) {
   }
 
   protected getOnSlotName(): string {
-    return 'play';
-  }
-
-  protected getOffSlotName(): string {
     return 'pause';
   }
 
+  protected getOffSlotName(): string {
+    return 'play';
+  }
+
   protected handleTogglingPlayback(originalEvent: Event): void {
-    const Request = this.on ? UserPlayRequestEvent : UserPauseRequestEvent;
+    const Request = this.on ? UserPauseRequestEvent : UserPlayRequestEvent;
 
     this.dispatchEvent(
       new Request({
