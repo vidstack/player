@@ -5,7 +5,7 @@ import { LIB_PREFIX } from '../constants';
 /**
  * A selector selecting focusable nodes.
  *
- * @inspiredBy https://github.com/carbon-design-system/carbon-web-components
+ * @inspiration https://github.com/carbon-design-system/carbon-web-components
  */
 export const focusableSelector = `
   a[href], area[href], input:not([disabled]):not([tabindex='-1']),
@@ -25,7 +25,7 @@ export type FocusCocktail<T extends FocusMixinBase> = T;
  *
  * @param Base - The constructor to mix into.
  *
- * @inspiredBy https://github.com/carbon-design-system/carbon-web-components
+ * @inspiration https://github.com/carbon-design-system/carbon-web-components
  */
 export function FocusMixin<T extends FocusMixinBase>(
   Base: T,
