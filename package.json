@@ -75,6 +75,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
+    "@open-wc/semantic-dom-diff": "^0.19.4",
     "@open-wc/testing": "^2.5.32",
     "@storybook/addon-a11y": "^6.1.20",
     "@storybook/addon-essentials": "^6.1.20",
