@@ -6,5 +6,6 @@ import '../ui/controls/toggle/vds-toggle';
 import '../ui/controls/playback-toggle/vds-playback-toggle';
 import '../ui/controls/mute-toggle/vds-mute-toggle';
 import '../ui/time/time/vds-time';
+import '../ui/time/current-time/vds-current-time';
 
 export * from './index';

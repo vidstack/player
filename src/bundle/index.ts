@@ -6,5 +6,6 @@ export * from '../ui/controls/control';
 export * from '../ui/controls/mute-toggle';
 export * from '../ui/controls/playback-toggle';
 export * from '../ui/controls/toggle';
+export * from '../ui/time/current-time';
 export * from '../ui/time/time';
 export * from '../ui/ui';
