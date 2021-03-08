@@ -1,6 +1,3 @@
-// ** Dependencies **
-import '../time/vds-time';
-
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
 import { CurrentTime } from './CurrentTime';
