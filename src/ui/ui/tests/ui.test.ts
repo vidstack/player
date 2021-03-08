@@ -61,27 +61,27 @@ describe(UI_TAG_NAME, () => {
     expect(root.getAttribute('part')).to.not.include('root-hidden');
   });
 
-  it('should toggle root-audio css part as context updates', async () => {
+  it('should toggle root-audio-view css part as context updates', async () => {
     // Nay.
     const [provider, ui] = await buildFixture();
     const root = ui.shadowRoot?.querySelector('.root') as HTMLDivElement;
-    expect(root.getAttribute('part')).to.not.include('root-audio');
+    expect(root.getAttribute('part')).to.not.include('root-audio-view');
 
     // Yay.
     provider.playerContext.isAudioViewCtx = true;
     await elementUpdated(ui);
-    expect(root.getAttribute('part')).to.include('root-audio');
+    expect(root.getAttribute('part')).to.include('root-audio-view');
   });
 
-  it('should toggle root-video css part as context updates', async () => {
+  it('should toggle root-video-view css part as context updates', async () => {
     // Nay.
     const [provider, ui] = await buildFixture();
     const root = ui.shadowRoot?.querySelector('.root') as HTMLDivElement;
-    expect(root.getAttribute('part')).to.not.include('root-video');
+    expect(root.getAttribute('part')).to.not.include('root-video-view');
 
     // Yay.
     provider.playerContext.isVideoViewCtx = true;
     await elementUpdated(ui);
-    expect(root.getAttribute('part')).to.include('root-video');
+    expect(root.getAttribute('part')).to.include('root-video-view');
   });
 });

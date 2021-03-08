@@ -14,11 +14,11 @@ import { uiStyles } from './ui.css';
  * Simple container that holds a collection of user interface components.
  *
  * This is a general container to hold your UI components but it also enables you to show/hide
- * the player UI when media is not ready for playback by applying styles to the `ui/ui-hidden`
+ * the player UI when media is not ready for playback by applying styles to the `root/root-hidden`
  * CSS parts. It might contain future enhancements such as show/hiding UI depending on whether
  * native UI can't be hidden (*cough* iOS).
  *
- * **Important:** The styling is left to you, it will only apply the `ui-hidden` CSS part.
+ * **Important:** The styling is left to you, it will only apply the `root-hidden` CSS part.
  *
  * ## Tag
  *
@@ -32,8 +32,8 @@ import { uiStyles } from './ui.css';
  *
  * @csspart root - The component's root element (`<div>`).
  * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
- * @csspart root-audio - Applied when the current `viewType` is `audio`.
- * @csspart root-video - Applied when the current `viewType` is `video`.
+ * @csspart root-audio-view - Applied when the current `viewType` is `audio`.
+ * @csspart root-video-view - Applied when the current `viewType` is `video`.
  *
  * ## Examples
  *
@@ -107,8 +107,8 @@ export class Ui extends LitElement {
     return clsx(
       'root',
       this.isUiHidden() && 'root-hidden',
-      this.isAudioView && 'root-audio',
-      this.isVideoView && 'root-video',
+      this.isAudioView && 'root-audio-view',
+      this.isVideoView && 'root-video-view',
     );
   }
 
