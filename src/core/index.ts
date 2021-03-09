@@ -1,4 +1,5 @@
 export * from '../shared/constants';
+export * from './CanPlayType';
 export * from './device/device.context';
 export * from './device/DeviceObserver';
 export * from './device/DeviceObserverMixin';

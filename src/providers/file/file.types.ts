@@ -12,30 +12,6 @@ export type MediaCrossOriginOption = 'anonymous' | 'use-credentials';
 export type MediaPreloadOption = 'none' | 'metadata' | 'auto';
 
 /**
- * The `HTMLMediaElement` method `canPlayType()` reports how likely it is that the current browser
- * will be able to play media of a given MIME type.
- *
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType
- */
-export enum CanPlayTypeResult {
-  /**
-   * Media of the given type definitely can't be played on the current device.
-   */
-  No = '',
-
-  /**
-   * Not enough information is available to determine for sure whether or not the media will play
-   * until playback is actually attempted.
-   */
-  Maybe = 'maybe',
-
-  /**
-   * Media of the type indicated by the `mediaType` parameter is probably playable on this device.
-   */
-  Probably = 'probably',
-}
-
-/**
  * The `HTMLMediaElement.readyState` property indicates the readiness state of the media.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState

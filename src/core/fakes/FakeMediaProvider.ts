@@ -1,6 +1,7 @@
 /* c8 ignore next 1000 */
 import { html, TemplateResult } from 'lit-element';
 
+import { CanPlayType } from '../CanPlayType';
 import { playerContext } from '../player.context';
 import { MediaProvider } from '../provider/MediaProvider';
 
@@ -89,8 +90,8 @@ export class FakeMediaProvider extends MediaProvider {
   // Support Checks
   // -------------------------------------------------------------------------------------------
 
-  canPlayType(): boolean {
-    return false;
+  canPlayType(): CanPlayType {
+    return CanPlayType.No;
   }
 
   // -------------------------------------------------------------------------------------------

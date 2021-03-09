@@ -1,6 +1,7 @@
 import { event, listen } from '@wcom/events';
 import { LitElement, property } from 'lit-element';
 
+import { CanPlayType } from '../CanPlayType';
 import {
   ConnectEvent,
   DisconnectEvent,
@@ -148,7 +149,14 @@ export abstract class MediaProvider<EngineType = unknown>
   // Support Checks
   // -------------------------------------------------------------------------------------------
 
-  abstract canPlayType(type: string): boolean;
+  abstract canPlayType(type: string): CanPlayType;
+
+  shouldPlayType(type: string): boolean {
+    const canPlayType = this.canPlayType(type);
+    return (
+      canPlayType === CanPlayType.Maybe || canPlayType === CanPlayType.Probably
+    );
+  }
 
   // -------------------------------------------------------------------------------------------
   // Methods

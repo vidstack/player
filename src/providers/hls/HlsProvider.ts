@@ -3,6 +3,7 @@ import type Hls from 'hls.js';
 import { property, PropertyValues } from 'lit-element';
 
 import {
+  CanPlayType,
   DurationChangeEvent,
   ErrorEvent,
   MediaType,
@@ -146,8 +147,14 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
   // Methods
   // -------------------------------------------------------------------------------------------
 
-  canPlayType(type: string): boolean {
-    return HLS_TYPES.has(type) || super.canPlayType(type);
+  canPlayType(type: string): CanPlayType {
+    if (HLS_TYPES.has(type)) {
+      return this.HlsLib?.isSupported()
+        ? CanPlayType.Probably
+        : CanPlayType.Maybe;
+    }
+
+    return super.canPlayType(type);
   }
 
   /**
@@ -162,7 +169,7 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
    * after the provider has connected to the DOM (wait for `ConnectEvent`).
    */
   get hasNativeHlsSupport(): boolean {
-    return super.canPlayType('application/vnd.apple.mpegurl') ?? false;
+    return this.shouldPlayType('application/vnd.apple.mpegurl');
   }
 
   protected shouldSetVideoSrcAttr(): boolean {

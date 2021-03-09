@@ -5,6 +5,7 @@ import { html, property, PropertyValues, TemplateResult } from 'lit-element';
 import {
   BufferedChangeEvent,
   BufferingChangeEvent,
+  CanPlayType,
   DurationChangeEvent,
   ErrorEvent,
   MediaProvider,
@@ -430,12 +431,12 @@ export class MediaFileProvider<
   // Methods
   // -------------------------------------------------------------------------------------------
 
-  canPlayType(type: string): boolean {
+  canPlayType(type: string): CanPlayType {
     if (isNil(this.mediaEl)) {
-      return false;
+      return CanPlayType.No;
     }
 
-    return this.mediaEl.canPlayType(type) === CanPlayTypeResult.Probably;
+    return this.mediaEl.canPlayType(type) as CanPlayType;
   }
 
   async play(): Promise<void> {

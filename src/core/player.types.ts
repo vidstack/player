@@ -1,5 +1,6 @@
 import { Context } from '@wcom/context';
 
+import { CanPlayType } from './CanPlayType';
 import { MediaType } from './MediaType';
 import { ViewType } from './ViewType';
 
@@ -206,7 +207,15 @@ export interface PlayerMethods {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
    */
-  canPlayType(type: string): boolean;
+  canPlayType(type: string): CanPlayType;
+
+  /**
+   * Determines if the connected media provider "should" play the given type. "Should" in this
+   * context refers to the `canPlayType()` method returning `Maybe` or `Probably`.
+   *
+   * @param type - refer to `canPlayType`.
+   */
+  shouldPlayType(type: string): boolean;
 }
 
 // V8ToIstanbul fails when no value is exported.
