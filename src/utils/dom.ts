@@ -1,5 +1,18 @@
+import { Callback } from '../shared/types';
 import { IS_CLIENT } from './support';
 import { isUndefined } from './unit';
+
+/**
+ * Requests an animation frame and waits for it to be resolved.
+ */
+export function raf(callback?: Callback<void>): Promise<void> {
+  return new Promise<void>(resolve => {
+    window.requestAnimationFrame(() => {
+      callback?.();
+      resolve();
+    });
+  });
+}
 
 /**
  * Registers a custom element in the CustomElementRegistry. By "safely" we mean:

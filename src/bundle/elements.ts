@@ -9,5 +9,6 @@ import '../ui/time/time/vds-time';
 import '../ui/time/time-current/vds-time-current';
 import '../ui/time/time-duration/vds-time-duration';
 import '../ui/time/time-progress/vds-time-progress';
+import '../ui/buffering-indicator/vds-buffering-indicator';
 
 export * from './index';
