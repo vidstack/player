@@ -1,5 +1,3 @@
-import '../../fakes/vds-fake-media-provider';
-
 import { expect, oneEvent } from '@open-wc/testing';
 
 import { buildFakeMediaProvider, emitEvent } from '../../fakes/helpers';

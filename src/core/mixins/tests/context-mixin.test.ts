@@ -1,6 +1,3 @@
-import '../../fakes/vds-fake-context-consumer';
-import '../../fakes/vds-fake-media-provider';
-
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 
 import {

@@ -1,5 +1,3 @@
-import '../../../../core/fakes/vds-fake-media-provider';
-
 import { elementUpdated, expect, html } from '@open-wc/testing';
 import { spy } from 'sinon';
 
@@ -17,7 +15,7 @@ describe(CONTROL_TAG_NAME, () => {
       </vds-control>
     `);
 
-    const control = provider.querySelector('vds-control') as Control;
+    const control = provider.querySelector(CONTROL_TAG_NAME) as Control;
 
     return [provider, control];
   }

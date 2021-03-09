@@ -1,5 +1,3 @@
-import '../../../../core/fakes/vds-fake-media-provider';
-
 import { elementUpdated, expect, html } from '@open-wc/testing';
 
 import { FakeMediaProvider } from '../../../../core/fakes/FakeMediaProvider';
@@ -14,7 +12,7 @@ describe(`${TIME_CURRENT_TAG_NAME}`, () => {
     `);
 
     const timeCurrent = provider.querySelector(
-      'vds-time-current',
+      TIME_CURRENT_TAG_NAME,
     ) as TimeCurrent;
 
     return [provider, timeCurrent];

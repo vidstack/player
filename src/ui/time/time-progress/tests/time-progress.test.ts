@@ -1,6 +1,4 @@
-import '../../../../core/fakes/vds-fake-media-provider';
-
-import { elementUpdated, expect, html } from '@open-wc/testing';
+import { expect, html } from '@open-wc/testing';
 
 import { FakeMediaProvider } from '../../../../core';
 import { buildFakeMediaProvider } from '../../../../core/fakes/helpers';
@@ -16,7 +14,7 @@ describe(TIME_PROGRESS_TAG_NAME, () => {
     `);
 
     const timeProgress = provider.querySelector(
-      'vds-time-progress',
+      TIME_PROGRESS_TAG_NAME,
     ) as TimeProgress;
 
     return [provider, timeProgress];

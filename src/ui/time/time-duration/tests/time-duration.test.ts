@@ -1,5 +1,3 @@
-import '../../../../core/fakes/vds-fake-media-provider';
-
 import { elementUpdated, expect, html } from '@open-wc/testing';
 
 import { FakeMediaProvider } from '../../../../core/fakes/FakeMediaProvider';
@@ -14,7 +12,7 @@ describe(`${TIME_DURATION_TAG_NAME}`, () => {
     `);
 
     const timeDuration = provider.querySelector(
-      'vds-time-duration',
+      TIME_DURATION_TAG_NAME,
     ) as TimeDuration;
 
     return [provider, timeDuration];

@@ -1,3 +1,6 @@
+import './vds-fake-media-provider';
+import './vds-fake-context-consumer';
+
 import { fixture, html, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import { TemplateResult } from 'lit-html';

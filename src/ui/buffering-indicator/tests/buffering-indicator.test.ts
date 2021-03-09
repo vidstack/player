@@ -1,5 +1,3 @@
-import '../../../core/fakes/vds-fake-media-provider';
-
 import {
   aTimeout,
   elementUpdated,

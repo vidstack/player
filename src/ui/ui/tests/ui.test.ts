@@ -1,5 +1,3 @@
-import '../../../core/fakes/vds-fake-media-provider';
-
 import { elementUpdated, expect, html } from '@open-wc/testing';
 
 import { FakeMediaProvider } from '../../../core';
@@ -16,7 +14,7 @@ describe(UI_TAG_NAME, () => {
       </vds-ui>
     `);
 
-    const ui = provider.querySelector('vds-ui') as Ui;
+    const ui = provider.querySelector(UI_TAG_NAME) as Ui;
 
     return [provider, ui];
   }

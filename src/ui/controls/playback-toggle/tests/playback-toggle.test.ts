@@ -1,6 +1,3 @@
-import '../vds-playback-toggle';
-import '../../../../core/fakes/vds-fake-media-provider';
-
 import { elementUpdated, expect, html, oneEvent } from '@open-wc/testing';
 
 import {
@@ -23,7 +20,7 @@ describe(PLAYBACK_TOGGLE_TAG_NAME, () => {
     `);
 
     const toggle = provider.querySelector(
-      'vds-playback-toggle',
+      PLAYBACK_TOGGLE_TAG_NAME,
     ) as PlaybackToggle;
 
     return [provider, toggle];

@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import '../../fakes/vds-fake-media-provider';
-
 import { expect, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import { spy } from 'sinon';

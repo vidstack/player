@@ -1,6 +1,3 @@
-import '../vds-mute-toggle';
-import '../../../../core/fakes/vds-fake-media-provider';
-
 import { elementUpdated, expect, html, oneEvent } from '@open-wc/testing';
 
 import {
@@ -21,7 +18,7 @@ describe(MUTE_TOGGLE_TAG_NAME, () => {
       </vds-mute-toggle>
     `);
 
-    const toggle = provider.querySelector('vds-mute-toggle') as MuteToggle;
+    const toggle = provider.querySelector(MUTE_TOGGLE_TAG_NAME) as MuteToggle;
 
     return [provider, toggle];
   }

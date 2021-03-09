@@ -1,5 +1,3 @@
-import '../../fakes/vds-fake-media-provider';
-
 import { expect } from '@open-wc/testing';
 
 import { buildFakeMediaProvider } from '../../fakes/helpers';

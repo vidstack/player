@@ -1,5 +1,3 @@
-import '../../fakes/vds-fake-media-provider';
-
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
 
