@@ -214,6 +214,12 @@ export abstract class MediaProvider<EngineType = unknown>
     this.volume = e.detail;
   }
 
+  // -------------------------------------------------------------------------------------------
+  // Event Documentation
+  //
+  // Purely documentation purposes only, it'll be picked up by `@wcom/cli`.
+  // -------------------------------------------------------------------------------------------
+
   /**
    * Emitted when the provider connects to the DOM.
    */

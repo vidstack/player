@@ -2,6 +2,7 @@ export * from '../core';
 export * from '../providers/file';
 export * from '../providers/hls';
 export * from '../providers/video';
+export * from '../ui/buffering-indicator';
 export * from '../ui/controls/control';
 export * from '../ui/controls/mute-toggle';
 export * from '../ui/controls/playback-toggle';
