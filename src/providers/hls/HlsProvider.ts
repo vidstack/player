@@ -169,7 +169,15 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
    * after the provider has connected to the DOM (wait for `ConnectEvent`).
    */
   get hasNativeHlsSupport(): boolean {
-    return this.shouldPlayType('application/vnd.apple.mpegurl');
+    /**
+     * We need to call this directly on `HTMLMediaElement`, calling `this.shouldPlayType(...)`
+     * won't work here because it'll use the `CanPlayType` result from this provider override
+     * which will incorrectly indicate that HLS can natively played due to `hls.js` support.
+     */
+    const canPlayType = super.canPlayType('application/vnd.apple.mpegurl');
+    return (
+      canPlayType === CanPlayType.Maybe || canPlayType === CanPlayType.Probably
+    );
   }
 
   protected shouldSetVideoSrcAttr(): boolean {

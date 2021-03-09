@@ -24,7 +24,6 @@ import {
 import { getSlottedChildren } from '../../utils/dom';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';
 import {
-  CanPlayTypeResult,
   MediaCrossOriginOption,
   MediaFileProviderEngine,
   MediaPreloadOption,
