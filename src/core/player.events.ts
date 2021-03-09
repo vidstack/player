@@ -33,6 +33,7 @@ export type RawPlayerEventType =
   | 'playback-ready'
   | 'playback-start'
   | 'playback-end'
+  | 'replay'
   | 'error';
 
 export type RawPlayerEventDetailType = {
@@ -54,6 +55,7 @@ export type RawPlayerEventDetailType = {
   'playback-ready': void;
   'playback-start': void;
   'playback-end': void;
+  replay: void;
   error: unknown;
 };
 
@@ -186,6 +188,11 @@ export class PlaybackStartEvent extends buildPlayerEvent('playback-start') {}
  * Emitted when playback ends (`currentTime === duration`).
  */
 export class PlaybackEndEvent extends buildPlayerEvent('playback-end') {}
+
+/**
+ * Emitted when playback ends and then starts again due to the `loop` property being `true`.
+ */
+export class ReplayEvent extends buildPlayerEvent('replay') {}
 
 /**
  * Emitted when a provider encounters any error.

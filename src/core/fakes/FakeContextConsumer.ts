@@ -47,6 +47,10 @@ export class FakeContextConsumer extends LitElement {
   playsinline = playerContext.playsinline.defaultValue;
 
   @internalProperty()
+  @playerContext.loop.consume()
+  loop = playerContext.loop.defaultValue;
+
+  @internalProperty()
   @playerContext.aspectRatio.consume()
   aspectRatio = playerContext.aspectRatio.defaultValue;
 

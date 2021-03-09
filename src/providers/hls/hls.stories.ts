@@ -39,6 +39,8 @@ const Template: Story<HlsArgTypes> = ({
   volume,
   currentTime,
   muted,
+  playsinline,
+  loop,
   controls,
   crossOrigin,
   preload,
@@ -58,6 +60,8 @@ const Template: Story<HlsArgTypes> = ({
       volume="${volume}"
       current-time="${currentTime}"
       ?muted="${muted}"
+      ?playsinline="${playsinline}"
+      ?loop="${loop}"
       ?controls="${controls}"
       cross-origin="${crossOrigin}"
       preload="${preload}"

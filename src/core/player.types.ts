@@ -96,6 +96,12 @@ export interface PlayerProps {
   playsinline: boolean;
 
   /**
+   * Whether media should automatically start playing from the beginning (replay) every time
+   * it ends.
+   */
+  loop: boolean;
+
+  /**
    * A `double` indicating the total playback length of the media in seconds. Defaults
    * to `-1` if no media has been loaded. If the media is being streamed live then the duration is
    * equal to `Infinity`.
