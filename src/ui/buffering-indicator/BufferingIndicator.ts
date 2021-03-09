@@ -97,7 +97,9 @@ export class BufferingIndicator extends LitElement {
   }
 
   protected handleTogglingHiddenAttr(): void {
-    if (this.delay === 0) {
+    const shouldBeHidden = this.isIndicatorHidden();
+
+    if (shouldBeHidden || this.delay === 0) {
       this.toggleHiddenAttr();
       return;
     }
