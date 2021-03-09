@@ -113,6 +113,11 @@ export abstract class MediaProvider<EngineType = unknown>
   @property({ type: Boolean })
   playsinline = false;
 
+  // ---
+
+  @property({ type: Boolean })
+  loop = false;
+
   // -------------------------------------------------------------------------------------------
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
@@ -327,6 +332,12 @@ export abstract class MediaProvider<EngineType = unknown>
    */
   @event({ name: 'vds-playback-end' })
   protected playbackEndEvent!: PlayerEvents['vds-playback-end'];
+
+  /**
+   * Emitted when playback ends and then starts again due to the `loop` property being `true`.
+   */
+  @event({ name: 'vds-replay' })
+  protected replayEvent!: PlayerEvents['vds-replay'];
 
   /**
    * Emitted when a provider encounters any error.

@@ -33,6 +33,7 @@ export const playerContext: PlayerContext = Object.freeze({
   currentPoster: createContext(''),
   muted: createContext(false),
   playsinline: createContext(false),
+  loop: createContext(false),
   aspectRatio: createContext<string | undefined>(undefined),
   duration: createContext(-1),
   buffered: createContext(0),

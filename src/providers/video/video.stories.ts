@@ -22,6 +22,8 @@ const Template: Story<VideoArgTypes> = ({
   volume,
   currentTime,
   muted,
+  playsinline,
+  loop,
   controls,
   crossOrigin,
   preload,
@@ -41,6 +43,8 @@ const Template: Story<VideoArgTypes> = ({
       volume="${volume}"
       current-time="${currentTime}"
       ?muted="${muted}"
+      ?playsinline="${playsinline}"
+      ?loop="${loop}"
       ?controls="${controls}"
       cross-origin="${crossOrigin}"
       preload="${preload}"

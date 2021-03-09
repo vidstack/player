@@ -11,6 +11,8 @@ export interface VideoArgTypes {
   volume: number;
   currentTime: number;
   muted: boolean;
+  playsinline: boolean;
+  loop: boolean;
   controls: boolean;
   crossOrigin: MediaCrossOriginOption;
   preload: MediaPreloadOption;
@@ -54,6 +56,14 @@ export const VIDEO_ARG_TYPES = {
     defaultValue: 0,
   },
   muted: {
+    control: 'boolean',
+    defaultValue: false,
+  },
+  playsinline: {
+    control: 'boolean',
+    defaultValue: false,
+  },
+  loop: {
     control: 'boolean',
     defaultValue: false,
   },

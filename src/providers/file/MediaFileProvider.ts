@@ -15,6 +15,7 @@ import {
   PlaybackStartEvent,
   PlayEvent,
   PlayingEvent,
+  ReplayEvent,
   SrcChangeEvent,
   TimeChangeEvent,
   VolumeChangeEvent,
@@ -332,8 +333,9 @@ export class MediaFileProvider<
   }
 
   protected handleEnded(originalEvent: Event): void {
-    this._hasPlaybackEnded = true;
-    this.dispatchEvent(new PlaybackEndEvent({ originalEvent }));
+    this._hasPlaybackEnded = !this.loop;
+    const Event = this.loop ? ReplayEvent : PlaybackEndEvent;
+    this.dispatchEvent(new Event({ originalEvent }));
   }
 
   protected handleError(originalEvent: Event): void {
