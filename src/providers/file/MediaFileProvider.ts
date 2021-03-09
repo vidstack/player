@@ -433,7 +433,10 @@ export class MediaFileProvider<
       return false;
     }
 
-    return this.mediaEl.canPlayType(type) === CanPlayTypeResult.Probably;
+    return (
+      this.mediaEl.canPlayType(type) === CanPlayTypeResult.Probably ||
+      this.mediaEl.canPlayType(type) === CanPlayTypeResult.Maybe
+    );
   }
 
   async play(): Promise<void> {
