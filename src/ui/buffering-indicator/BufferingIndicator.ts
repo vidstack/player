@@ -1,5 +1,6 @@
 import { event } from '@wcom/events';
 import {
+  CSSResultArray,
   html,
   internalProperty,
   LitElement,
@@ -9,8 +10,9 @@ import {
 } from 'lit-element';
 
 import { playerContext } from '../../core';
-import { getSlottedChildren, raf, setAttribute } from '../../utils/dom';
+import { getSlottedChildren, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
+import { bufferingIndicatorStyles } from './buffering-indicator.css';
 import {
   HideBufferingIndicatorEvent,
   ShowBufferingIndicatorEvent,
@@ -44,6 +46,10 @@ import {
  * ```
  */
 export class BufferingIndicator extends LitElement {
+  static get styles(): CSSResultArray {
+    return [bufferingIndicatorStyles];
+  }
+
   @internalProperty()
   @playerContext.isBuffering.consume()
   protected isBuffering = playerContext.isBuffering.defaultValue;
