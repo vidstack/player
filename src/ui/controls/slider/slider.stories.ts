@@ -6,7 +6,7 @@ import { Story } from '../../../shared/storybook';
 import { SLIDER_ARG_TYPES, SliderArgTypes } from './slider.args';
 
 export default {
-  title: 'Foundational UI/Slider',
+  title: 'UI/Foundation/Slider',
   component: 'vds-slider',
   argTypes: SLIDER_ARG_TYPES,
 };

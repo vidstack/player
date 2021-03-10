@@ -6,4 +6,6 @@ import { ifDefined } from 'lit-html/directives/if-defined';
  * addition to `null`/`undefined`.
  */
 export const ifNonEmpty = (value: unknown): ((part: Part) => void) =>
-  ifDefined(value === '' ? undefined : value ?? undefined);
+  ifDefined(
+    value === '' || value === 'undefined' ? undefined : value ?? undefined,
+  );

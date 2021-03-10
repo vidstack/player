@@ -3,6 +3,7 @@ import { css } from 'lit-element';
 export const sliderStyles = css`
   * {
     box-sizing: border-box;
+    touch-action: manipulation;
   }
 
   :host {
@@ -27,41 +28,31 @@ export const sliderStyles = css`
     user-select: none;
   }
 
-  #root.vertical-orientation {
-    transform: rotate(270deg);
-  }
-
   #thumb {
     position: absolute;
     border: 0;
     outline: 0;
     top: 0px;
     z-index: 3;
-    width: 16px;
-    height: 16px;
+    width: var(--vds-slider-thumb-width, 16px);
+    height: var(--vds-slider-thumb-height, 16px);
     outline: none;
-    border-radius: 50%;
+    border-radius: var(--vds-slider-thumb-border-radius, 50%);
     cursor: pointer;
-    background: var(--cds-ui-05, #161616);
+    background: var(--vds-slider-thumb-bg, #161616);
     transform: translate(-50%, -54%);
-  }
-
-  :host(:focus) #thumb,
-  :host(:active) #thumb {
-    border: 0;
-    outline: 0;
-    background-color: var(--cds-interactive-04, #0f62fe);
   }
 
   #track {
     position: absolute;
     top: 1;
     left: 0;
-    z-index: 0;
+    z-index: 1;
     width: 100%;
+    height: var(--vds-slider-track-height);
     min-height: 2.5px;
     cursor: pointer;
-    background: var(--cds-ui-03, #e0e0e0);
+    background: var(--vds-slider-track-bg, #b3b3b3);
     transform: translate(0%, -50%);
   }
 
@@ -71,16 +62,29 @@ export const sliderStyles = css`
     top: 0;
     left: 0;
     width: 100%;
+    height: var(--vds-slider-track-height);
     min-height: 2.5px;
     pointer-events: none;
-    background: var(--cds-ui-05, #161616);
+    background: var(--vds-slider-track-fill-bg, #161616);
     transform-origin: left center;
     transform: translate(0%, -98%) scaleX(var(--vds-slider-fill-rate));
   }
 
+  :host(:focus) #thumb,
+  :host(:active) #thumb,
+  #root.dragging #thumb,
   :host(:focus) #track-fill,
-  :host(:focus) #track-fill {
-    background-color: var(--cds-interactive-04, #0f62fe);
+  :host(:active) #track-fill,
+  #root.dragging #track-fill {
+    border: 0;
+    outline: 0;
+    background-color: var(--vds-slider-active-color, #0f62fe);
+  }
+
+  :host([disabled]) #thumb,
+  :host([disabled]) #track,
+  :host([disabled]) #track-fill {
+    background-color: var(--vds-slider-disabled-color, #e0e0e0);
   }
 
   input {

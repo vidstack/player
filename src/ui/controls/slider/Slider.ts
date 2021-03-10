@@ -26,15 +26,78 @@ import {
 import { SliderKeyDirection } from './slider.types';
 
 /**
- * TODO: DOCUMENTATION
+ * A custom built `input[type="range"]` that is cross-browser friendly, ARIA friendly, mouse/touch
+ * friendly and easily styleable. This component allows users to input numeric values between a
+ * minimum and maxmimum value. Generally used in the player for volume or scrubber controls.
  *
- * root, root-dragging, root-vertical-orientation, thumb, track, track-fill
+ * @inspriation https://github.com/carbon-design-system/carbon-web-components
  *
- * --slider-fill-rate, --slider-fill-value, --slider-fill-percentage
+ * ## Tag
  *
- * default slot
+ * @tagname vds-slider
  *
- * @inspriation https://github.com/carbon-design-system/carbon-web-components/blob/master/src/components/slider/slider.ts
+ * ## Slots
+ *
+ * @slot Used to pass in additional content inside the slider.
+ *
+ * ## CSS Parts
+ *
+ * @csspart root - The component's root element, in this case the slider container (`<div>`).
+ * @csspart root-dragging - The component's root element when the user is dragging the thumb.
+ * @csspart root-orientation-vertical - The component's root element when the slider orientation is `vertical`.
+ * @csspart thumb - The slider's handle the user drags left/right (`<div>`).
+ * @csspart thumb-dragging - The slider's handle when the user is dragging.
+ * @csspart track - The background of the slider in which the thumb slides along (`<div>`).
+ * @csspart track-dragging - The slider's track when the user is dragging.
+ * @csspart track-fill - The part of the track that is currently filled which fills left-to-right (`<div>`).
+ * @csspart track-fill-dragging - The slider's track fill when the user is dragging.
+ *
+ * ## CSS Properties
+ *
+ * @cssprop --vds-slider-fill-rate - The ratio of the slider that is filled such as `0.3`.
+ * @cssprop --vds-slider-fill-value - The current amount the slider is filled such as `30`.
+ * @cssprop --vds-slider-fill-percentage - The fill rate expressed as a precetange such as `30%`.
+ *
+ * @cssprop --vds-slider-thumb-width - The slider handle width.
+ * @cssprop --vds-slider-thumb-height - The slider handle height.
+ * @cssprop --vds-slider-thumb-bg - The background color of the slider handle.
+ * @cssprop --vds-slider-thumb-border-radius - The border radius of the slider handle.
+ *
+ * @cssprop --vds-slider-track-height - The height of the slider track.
+ * @cssprop --vds-slider-track-bg - The background color of the slider track.
+ *
+ * @cssprop --vds-slider-track-fill-bg - The background color of the slider track fill.
+ *
+ * @cssprop --vds-slider-active-color - The slider thumb and track fill background color when focused, active or being dragged.
+ * @cssprop --vds-slider-disabled-color - The slider thumb, track, and track fill background color when disabled.
+ *
+ * ## Examples
+ *
+ * @example
+ * ```html
+ * <vds-slider
+ *   min="0"
+ *   max="100"
+ *   value="50"
+ *   throttle="10"
+ * ></vds-slider>
+ * ```
+ *
+ * @example
+ * ```css
+ * vds-slider {
+ *   --vds-slider-active-color: pink;
+ * }
+ *
+ * vds-slider::part(thumb) {
+ *   box-shadow: transparent 0px 0px 0px 1px inset;
+ * }
+ *
+ * vds-slider::part(track),
+ * vds-slider::part(track-fill) {
+ *   border-radius: 3px;
+ * }
+ * ```
  */
 export class Slider extends FocusMixin(LitElement) {
   static get styles(): CSSResultArray {
@@ -46,7 +109,7 @@ export class Slider extends FocusMixin(LitElement) {
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.initMouseMoveThrottle();
+    this.initMoveThrottle();
   }
 
   update(changedProperties: PropertyValues): void {
@@ -55,17 +118,14 @@ export class Slider extends FocusMixin(LitElement) {
     }
 
     if (changedProperties.has('throttle')) {
-      this.initMouseMoveThrottle();
+      this.initMoveThrottle();
     }
 
     super.update(changedProperties);
   }
 
   disconnectedCallback(): void {
-    // Avoid memory leak.
-    this.mouseMoveThrottle?.cancel();
-    this.mouseMoveThrottle = undefined;
-
+    this.destroyMoveThrottle();
     super.disconnectedCallback();
   }
 
@@ -127,7 +187,7 @@ export class Slider extends FocusMixin(LitElement) {
   @property() orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   /**
-   * The amount of milliseconds to throttle slider thumb move events.
+   * The amount of milliseconds to throttle slider thumb during `mousemove` / `touchmove` events.
    */
   @property({ type: Number }) throttle = 10;
 
@@ -189,7 +249,7 @@ export class Slider extends FocusMixin(LitElement) {
   }
 
   /**
-   * The percetange of the slider that should be filled based on the current value.
+   * The fill rate expressed as a percentage (`fillRate * 100`).
    */
   get fillPercent(): number {
     return this._fillRate * 100;
@@ -231,20 +291,23 @@ export class Slider extends FocusMixin(LitElement) {
   }
 
   protected getSliderClassAttr(): string {
-    return clsx(this.isVerticalOrientation && 'vertical-orientation');
+    return clsx(
+      this.isDragging && 'dragging',
+      this.isVerticalOrientation && 'orientation-vertical',
+    );
   }
 
   protected getSliderPartAttr(): string {
     return clsx(
       'root',
       this.isDragging && 'root-dragging',
-      this.isVerticalOrientation && 'root-vertical-orientation',
+      this.isVerticalOrientation && 'root-orientation-vertical',
     );
   }
 
   protected getSliderStyleMap(): StyleInfo {
     return {
-      '--vds-slider-value': String(this.value),
+      '--vds-slider-fill-value': String(this.value),
       '--vds-slider-fill-rate': String(this.fillRate),
       '--vds-slider-fill-percent': `${this.fillPercent}%`,
     };
@@ -272,13 +335,14 @@ export class Slider extends FocusMixin(LitElement) {
         autocomplete="off"
         style="left: ${this.fillPercent}%"
         @keydown="${this.handleThumbKeydown}"
-        @mousedown="${this.handleThumbMouseDown}"
+        @touchstart="${this.handleThumbPress}"
+        @mousedown="${this.handleThumbPress}"
       ></div>
     `;
   }
 
   protected getThumbPartAttr(): string {
-    return 'thumb';
+    return clsx('thumb', this.isDragging && 'thumb-dragging');
   }
 
   protected getValueAsTextFallback(): string {
@@ -315,13 +379,9 @@ export class Slider extends FocusMixin(LitElement) {
     );
   }
 
-  protected handleThumbMouseDown(originalEvent: MouseEvent): void {
-    this._isDragging = true;
-    this.dispatchEvent(
-      new SliderDragStartEvent({
-        originalEvent,
-      }),
-    );
+  protected handleThumbPress(event: Event): void {
+    if (this.disabled) return;
+    this.startDragging(event);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -333,16 +393,119 @@ export class Slider extends FocusMixin(LitElement) {
       <div
         id="track"
         part="${this.getTrackPartAttr()}"
-        @mousedown="${this.handleTrackMouseDown}"
+        @touchstart="${this.handleTouchMove}"
+        @mousedown="${this.handleMouseMove}"
       ></div>
     `;
   }
 
   protected getTrackPartAttr(): string {
-    return 'track';
+    return clsx('track', this.isDragging && 'track-dragging');
   }
 
-  protected handleTrackMouseDown(event: MouseEvent): void {
+  // -------------------------------------------------------------------------------------------
+  // Render (Track Fill)
+  // -------------------------------------------------------------------------------------------
+
+  protected renderTrackFill(): TemplateResult {
+    return html`
+      <div id="track-fill" part="${this.getTrackFillPartAttr()}"></div>
+    `;
+  }
+
+  protected getTrackFillPartAttr(): string {
+    return clsx('track-fill', this.isDragging && 'track-fill-dragging');
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Render (Input)
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Why? Used to emit native `input` events.
+   */
+  protected renderInput(): TemplateResult {
+    return html`
+      <input
+        type="hidden"
+        min="${this.min}"
+        max="${this.max}"
+        value="${this.value}"
+      />
+    `;
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Drag
+  // -------------------------------------------------------------------------------------------
+
+  protected startDragging(originalEvent: Event): void {
+    this._isDragging = true;
+
+    this.dispatchEvent(
+      new SliderDragStartEvent({
+        originalEvent,
+      }),
+    );
+  }
+
+  protected stopDragging(originalEvent: Event): void {
+    this._isDragging = false;
+
+    this.dispatchEvent(
+      new SliderDragEndEvent({
+        originalEvent,
+      }),
+    );
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Document
+  // -------------------------------------------------------------------------------------------
+
+  protected moveThrottle?: CancelableCallback<Event>;
+
+  protected initMoveThrottle(): void {
+    this.moveThrottle?.cancel();
+    this.moveThrottle = throttle(this.handleThrottledMove, this.throttle);
+  }
+
+  protected destroyMoveThrottle(): void {
+    this.moveThrottle?.cancel();
+    this.moveThrottle = undefined;
+  }
+
+  @listen('mouseup', { target: 'document' })
+  @listen('touchend', { target: 'document' })
+  protected handleDocumentMoveEnd(event: Event): void {
+    if (this.disabled || !this._isDragging) return;
+    this.stopDragging(event);
+  }
+
+  @listen('mousemove', { target: 'document' })
+  @listen('touchmove', { target: 'document' })
+  protected handleDocumentMove(event: Event): void {
+    if (this.disabled || !this._isDragging) return;
+    this.moveThrottle?.(event);
+  }
+
+  protected handleThrottledMove(event: Event): void {
+    if (this.disabled || !this._isDragging) return;
+
+    if ((event as TouchEvent).touches) {
+      this.handleTouchMove(event as TouchEvent);
+    } else {
+      this.handleMouseMove(event as MouseEvent);
+    }
+  }
+
+  protected handleTouchMove(event: TouchEvent): void {
+    if (this.disabled) return;
+    const thumbPosition = event.changedTouches[0].clientX;
+    this.updateValueBasedOnThumbPosition(thumbPosition, event);
+  }
+
+  protected handleMouseMove(event: MouseEvent): void {
     if (this.disabled) return;
     const thumbPosition = event.clientX;
     this.updateValueBasedOnThumbPosition(thumbPosition, event);
@@ -366,75 +529,6 @@ export class Slider extends FocusMixin(LitElement) {
         originalEvent,
       }),
     );
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render (Track Fill)
-  // -------------------------------------------------------------------------------------------
-
-  protected renderTrackFill(): TemplateResult {
-    return html`
-      <div id="track-fill" part="${this.getTrackFillPartAttr()}"></div>
-    `;
-  }
-
-  protected getTrackFillPartAttr(): string {
-    return 'track-fill';
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render (Input)
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * Why? Used to emit native `input` events.
-   */
-  protected renderInput(): TemplateResult {
-    return html`
-      <input
-        type="hidden"
-        min="${this.min}"
-        max="${this.max}"
-        value="${this.value}"
-      />
-    `;
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Document
-  // -------------------------------------------------------------------------------------------
-
-  protected mouseMoveThrottle?: CancelableCallback<MouseEvent>;
-
-  protected initMouseMoveThrottle(): void {
-    this.mouseMoveThrottle?.cancel();
-    this.mouseMoveThrottle = throttle(
-      this.handleThrottledDocumentMouseMove,
-      this.throttle,
-    );
-  }
-
-  @listen('mouseup', { target: 'document' })
-  protected handleDocumentMouseUp(originalEvent: MouseEvent): void {
-    if (!this._isDragging) return;
-    this._isDragging = false;
-    this.dispatchEvent(
-      new SliderDragEndEvent({
-        originalEvent,
-      }),
-    );
-  }
-
-  @listen('mousemove', { target: 'document' })
-  protected handleDocumentMouseMove(event: MouseEvent): void {
-    if (this.disabled || !this._isDragging) return;
-    this.mouseMoveThrottle?.(event);
-  }
-
-  protected handleThrottledDocumentMouseMove(event: MouseEvent): void {
-    if (this.disabled || !this._isDragging) return;
-    const thumbPosition = event.clientX;
-    this.updateValueBasedOnThumbPosition(thumbPosition, event);
   }
 
   // -------------------------------------------------------------------------------------------
