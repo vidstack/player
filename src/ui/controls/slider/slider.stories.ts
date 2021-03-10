@@ -1,15 +1,9 @@
 import './vds-slider';
 
-import { action } from '@storybook/addon-actions';
 import { html } from 'lit-element';
 
 import { Story } from '../../../shared/storybook';
 import { SLIDER_ARG_TYPES, SliderArgTypes } from './slider.args';
-import {
-  SliderDragEndEvent,
-  SliderDragStartEvent,
-  SliderValueChangeEvent,
-} from './slider.events';
 
 export default {
   title: 'Foundational UI/Slider',
@@ -18,21 +12,38 @@ export default {
 };
 
 const Template: Story<SliderArgTypes> = ({
+  label,
   min = 0,
   max,
+  step,
+  stepRatio,
+  hidden,
+  disabled,
   value,
-  onValueChange = action(SliderValueChangeEvent.TYPE),
-  onDragStart = action(SliderDragStartEvent.TYPE),
-  onDragEnd = action(SliderDragEndEvent.TYPE),
+  valueText,
+  orientation,
+  throttle,
+  onValueChange,
+  onDragStart,
+  onDragEnd,
 }) =>
   html`
     <vds-slider
+      label="${label}"
       min="${min}"
       max="${max}"
+      step="${step}"
+      step-ratio="${stepRatio}"
       value="${value}"
+      value-text="${valueText}"
+      orientation="${orientation}"
+      throttle="${throttle}"
+      ?disabled="${disabled}"
+      ?hidden="${hidden}"
       @vds-slider-value-change="${onValueChange}"
       @vds-slider-drag-start="${onDragStart}"
       @vds-slider-drag-end="${onDragEnd}"
+      style="max-width: 25%;"
     ></vds-slider>
   `;
 

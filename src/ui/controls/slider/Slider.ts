@@ -129,7 +129,7 @@ export class Slider extends FocusMixin(LitElement) {
   /**
    * The amount of milliseconds to throttle slider thumb move events.
    */
-  @property({ type: Number, attribute: 'throttle' }) throttle = 10;
+  @property({ type: Number }) throttle = 10;
 
   // -------------------------------------------------------------------------------------------
   // Readonly Properties
