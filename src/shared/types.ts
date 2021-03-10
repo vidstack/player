@@ -14,6 +14,12 @@ export type Callback<T> = (value: T) => void;
 
 export type Unsubscribe = () => void;
 
+export interface Cancelable {
+  cancel(): void;
+}
+
+export type CancelableCallback<T> = Callback<T> & Cancelable;
+
 export type WebKitPresentationMode =
   | 'picture-in-picture'
   | 'inline'
