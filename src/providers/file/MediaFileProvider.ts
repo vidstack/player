@@ -458,7 +458,7 @@ export class MediaFileProvider<
     this.throwIfNotReady();
     // Playback may have "roughly" ended. Therefore, we need to force back to 0.
     // This value is not actually updated when context is updated :/
-    if (this.hasPlaybackEnded) {
+    if (this.playerContext.hasPlaybackEndedCtx) {
       this.setCurrentTime(0);
     }
     return this.mediaEl!.play();
