@@ -18,6 +18,8 @@ import {
   PlayEvent,
   PlayingEvent,
   PosterChangeEvent,
+  SeekedEvent,
+  SeekingEvent,
   SrcChangeEvent,
   TimeChangeEvent,
   ViewTypeChangeEvent,
@@ -26,6 +28,10 @@ import {
 import { PlayerContext, PlayerContextProvider } from '../player.types';
 import { ViewType } from '../ViewType';
 import { AspectRatioChangeEvent } from './AspectRatioMixin';
+
+function roughlyEqual(valueA: number, valueB: number, precision = 3) {
+  return valueA.toFixed(precision) === valueB.toFixed(precision);
+}
 
 export type PlayerContextMixinBase = Constructor<UpdatingElement>;
 
@@ -141,6 +147,39 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
       this.currentTimeCtx = e.detail;
     }
 
+    @listen(SeekingEvent.TYPE)
+    protected handleSeekingContextUpdate(e: SeekingEvent) {
+      console.log('seeking', e.detail, this.currentTimeCtx);
+      // You may or may not want to update currentTime while seeking.
+      this.currentTimeCtx = e.detail;
+
+      // If playback was ended…
+      if (this.hasPlaybackEndedCtx) {
+        // And currentTime is no longer "roughly equal" to duration, update.
+        if (!roughlyEqual(this.currentTimeCtx, this.durationCtx)) {
+          console.log('roughly unended!');
+          this.hasPlaybackEndedCtx = false;
+        }
+      }
+    }
+
+    @listen(SeekedEvent.TYPE)
+    protected handleSeekedContextUpdate(e: SeekedEvent) {
+      console.log('seeked', e.detail, this.currentTimeCtx);
+      // This is pretty much redundant. AFAIK, `timeUpdate` always fires right
+      // before `seeked`.
+      this.currentTimeCtx = e.detail;
+
+      // If playback was not ended…
+      if (!this.hasPlaybackEndedCtx) {
+        // And currentTime is "roughly equal" to duration, update.
+        if (roughlyEqual(this.currentTimeCtx, this.durationCtx)) {
+          console.log('roughly ended!');
+          this.hasPlaybackEndedCtx = true;
+        }
+      }
+    }
+
     @listen(SrcChangeEvent.TYPE)
     protected handleCurrentSrcContextUpdate(e: SrcChangeEvent) {
       this.currentSrcCtx = e.detail;
@@ -205,6 +244,7 @@ export function PlayerContextMixin<T extends PlayerContextMixinBase>(
 
     @listen(PlaybackEndEvent.TYPE)
     protected handlePlaybackEndContextUpdate() {
+      console.log('Ended! ');
       this.hasPlaybackEndedCtx = true;
     }
 

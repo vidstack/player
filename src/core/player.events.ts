@@ -25,6 +25,8 @@ export type RawPlayerEventType =
   | 'muted-change'
   | 'volume-change'
   | 'time-change'
+  | 'seeked'
+  | 'seeking'
   | 'duration-change'
   | 'buffered-change'
   | 'buffering-change'
@@ -56,6 +58,8 @@ export type RawPlayerEventDetailType = {
   'playback-start': void;
   'playback-end': void;
   replay: void;
+  seeked: number;
+  seeking: number;
   error: unknown;
 };
 
@@ -144,6 +148,16 @@ export class VolumeChangeEvent extends buildPlayerEvent('volume-change') {}
  * Emitted when the current playback time changes.
  */
 export class TimeChangeEvent extends buildPlayerEvent('time-change') {}
+
+/**
+ * Emitted when the player finishes seeking.
+ */
+export class SeekedEvent extends buildPlayerEvent('seeked') {}
+
+/**
+ * Emitted while the player is seeking.
+ */
+export class SeekingEvent extends buildPlayerEvent('seeking') {}
 
 /**
  * Emitted when the length of the media changes.

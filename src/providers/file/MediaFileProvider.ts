@@ -17,6 +17,8 @@ import {
   PlayEvent,
   PlayingEvent,
   ReplayEvent,
+  SeekedEvent,
+  SeekingEvent,
   SrcChangeEvent,
   TimeChangeEvent,
   VolumeChangeEvent,
@@ -212,6 +214,8 @@ export class MediaFileProvider<
       ),
       listenTo(this.mediaEl, 'progress', this.handleProgress.bind(this)),
       listenTo(this.mediaEl, 'timeupdate', this.handleTimeUpdate.bind(this)),
+      listenTo(this.mediaEl, 'seeked', this.handleSeeked.bind(this)),
+      listenTo(this.mediaEl, 'seeking', this.handleSeeking.bind(this)),
       listenTo(this.mediaEl, 'play', this.handlePlay.bind(this)),
       listenTo(this.mediaEl, 'pause', this.handlePause.bind(this)),
       listenTo(this.mediaEl, 'playing', this.handlePlaying.bind(this)),
@@ -305,6 +309,18 @@ export class MediaFileProvider<
   protected handleTimeUpdate(originalEvent: Event): void {
     this.dispatchEvent(
       new TimeChangeEvent({ detail: this.currentTime, originalEvent }),
+    );
+  }
+
+  protected handleSeeked(originalEvent: Event): void {
+    this.dispatchEvent(
+      new SeekedEvent({ detail: this.currentTime, originalEvent }),
+    );
+  }
+
+  protected handleSeeking(originalEvent: Event): void {
+    this.dispatchEvent(
+      new SeekingEvent({ detail: this.currentTime, originalEvent }),
     );
   }
 
@@ -440,6 +456,11 @@ export class MediaFileProvider<
 
   async play(): Promise<void> {
     this.throwIfNotReady();
+    // Playback may have "roughly" ended. Therefore, we need to force back to 0.
+    // This value is not actually updated when context is updated :/
+    if (this.hasPlaybackEnded) {
+      this.setCurrentTime(0);
+    }
     return this.mediaEl!.play();
   }
 
