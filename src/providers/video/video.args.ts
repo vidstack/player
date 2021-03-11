@@ -1,19 +1,12 @@
+import { PROVIDER_ARG_TYPES, ProviderArgTypes } from '../../core';
 import { MediaCrossOriginOption, MediaPreloadOption } from '../file';
 import { VideoControlsList } from './video.types';
 
-export interface VideoArgTypes {
+export interface VideoArgTypes extends ProviderArgTypes {
   width: number;
   height: number;
-  aspectRatio: string;
   src: string;
   poster: string;
-  paused: boolean;
-  volume: number;
-  currentTime: number;
-  muted: boolean;
-  playsinline: boolean;
-  loop: boolean;
-  controls: boolean;
   crossOrigin: MediaCrossOriginOption;
   preload: MediaPreloadOption;
   controlsList?: VideoControlsList;
@@ -23,14 +16,12 @@ export interface VideoArgTypes {
 }
 
 export const VIDEO_ARG_TYPES = {
+  ...PROVIDER_ARG_TYPES,
   width: {
     control: 'number',
   },
   height: {
     control: 'number',
-  },
-  aspectRatio: {
-    control: 'text',
   },
   src: {
     control: 'text',
@@ -40,43 +31,18 @@ export const VIDEO_ARG_TYPES = {
     control: 'text',
     defaultValue: 'https://media.vidstack.io/poster.png',
   },
-  paused: {
-    control: 'boolean',
-    defaultValue: true,
-  },
-  volume: {
-    control: {
-      type: 'number',
-      step: 0.01,
-    },
-    defaultValue: 1,
-  },
-  currentTime: {
-    control: 'number',
-    defaultValue: 0,
-  },
-  muted: {
-    control: 'boolean',
-    defaultValue: false,
-  },
-  playsinline: {
-    control: 'boolean',
-    defaultValue: false,
-  },
-  loop: {
-    control: 'boolean',
-    defaultValue: false,
-  },
-  controls: {
-    control: 'boolean',
-    defaultValue: false,
-  },
   crossOrigin: {
-    control: 'text',
+    control: {
+      type: 'select',
+      options: ['anonymous', 'use-credentials'],
+    },
     defaultValue: 'anonymous',
   },
   preload: {
-    control: 'text',
+    control: {
+      type: 'select',
+      options: ['none', 'metadata', 'auto'],
+    },
     defaultValue: 'metadata',
   },
   controlsList: {

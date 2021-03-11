@@ -7,15 +7,12 @@ import {
 
 export const SLIDER_EVENT_PREFIX = 'slider';
 
-export type RawSliderEventType =
-  | 'slider-value-change'
-  | 'slider-drag-start'
-  | 'slider-drag-end';
+export type RawSliderEventType = 'value-change' | 'drag-start' | 'drag-end';
 
 export type RawSliderEventDetailType = {
-  'slider-value-change': number;
-  'slider-drag-start': void;
-  'slider-drag-end': void;
+  'value-change': number;
+  'drag-start': void;
+  'drag-end': void;
 };
 
 export type GenericVdsSliderEventType<
@@ -50,18 +47,14 @@ export function buildSliderEvent<
 /**
  * Emitted when the slider value changes.
  */
-export class SliderValueChangeEvent extends buildSliderEvent(
-  'slider-value-change',
-) {}
+export class SliderValueChangeEvent extends buildSliderEvent('value-change') {}
 
 /**
  * Emitted when the user begins interacting with the slider and dragging the thumb.
  */
-export class SliderDragStartEvent extends buildSliderEvent(
-  'slider-drag-start',
-) {}
+export class SliderDragStartEvent extends buildSliderEvent('drag-start') {}
 
 /**
  * Emitted when the user stops dragging the slider thumb.
  */
-export class SliderDragEndEvent extends buildSliderEvent('slider-drag-end') {}
+export class SliderDragEndEvent extends buildSliderEvent('drag-end') {}

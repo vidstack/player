@@ -5,6 +5,23 @@ import {
   SliderValueChangeEvent,
 } from './slider.events';
 
+export interface SliderArgTypes {
+  min: number;
+  max: number;
+  value: number;
+  valueText: string;
+  label: string;
+  step: number;
+  stepRatio: number;
+  hidden: boolean;
+  disabled: boolean;
+  orientation: 'horizontal' | 'vertical';
+  throttle: number;
+  onValueChange: Callback<CustomEvent>;
+  onDragStart: Callback<CustomEvent>;
+  onDragEnd: Callback<CustomEvent>;
+}
+
 export const SLIDER_ARG_TYPES = {
   label: {
     control: 'text',
@@ -60,20 +77,3 @@ export const SLIDER_ARG_TYPES = {
     action: SliderDragEndEvent.TYPE,
   },
 };
-
-export interface SliderArgTypes {
-  min: number;
-  max: number;
-  value: number;
-  valueText: string;
-  label: string;
-  step: number;
-  stepRatio: number;
-  hidden: boolean;
-  disabled: boolean;
-  orientation: 'horizontal' | 'vertical';
-  throttle: number;
-  onValueChange: Callback<CustomEvent>;
-  onDragStart: Callback<CustomEvent>;
-  onDragEnd: Callback<CustomEvent>;
-}

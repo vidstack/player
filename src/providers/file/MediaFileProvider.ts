@@ -144,7 +144,9 @@ export class MediaFileProvider<
   private requestTimeUpdates() {
     const newTime = this.mediaEl?.currentTime ?? 0;
 
-    this.dispatchEvent(new TimeChangeEvent({ detail: newTime }));
+    if (this.playerContext.currentTimeCtx !== newTime) {
+      this.dispatchEvent(new TimeChangeEvent({ detail: newTime }));
+    }
 
     this.timeRAF = window.requestAnimationFrame(() => {
       if (isUndefined(this.timeRAF)) return;
@@ -244,8 +246,6 @@ export class MediaFileProvider<
   }
 
   protected handleLoadedMetadata(originalEvent: Event): void {
-    this.requestTimeUpdates();
-
     if (this.willAnotherEngineAttach()) return;
 
     this.dispatchEvent(

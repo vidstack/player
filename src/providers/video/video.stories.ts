@@ -31,6 +31,25 @@ const Template: Story<VideoArgTypes> = ({
   autoPiP,
   disablePiP,
   disableRemotePlayback,
+  onConnect,
+  onDisconnect,
+  onPause,
+  onPlay,
+  onPlaying,
+  onPosterChange,
+  onMutedChange,
+  onVolumeChange,
+  onTimeChange,
+  onDurationChange,
+  onBufferedChange,
+  onBufferingChange,
+  onViewTypeChange,
+  onMediaTypeChange,
+  onPlaybackReady,
+  onPlaybackStart,
+  onPlaybackEnd,
+  onReplay,
+  onError,
 }) =>
   html`
     <vds-video
@@ -52,6 +71,25 @@ const Template: Story<VideoArgTypes> = ({
       ?auto-pip="${autoPiP}"
       ?disable-pip="${disablePiP}"
       ?disable-remote-playback="${disableRemotePlayback}"
+      @vds-connect="${onConnect}"
+      @vds-disconnect="${onDisconnect}"
+      @vds-pause="${onPause}"
+      @vds-play="${onPlay}"
+      @vds-playing="${onPlaying}"
+      @vds-poster-change="${onPosterChange}"
+      @vds-muted-change="${onMutedChange}"
+      @vds-volume-change="${onVolumeChange}"
+      @vds-time-change="${onTimeChange}"
+      @vds-duration-change="${onDurationChange}"
+      @vds-buffered-change="${onBufferedChange}"
+      @vds-buffering-change="${onBufferingChange}"
+      @vds-view-type-change="${onViewTypeChange}"
+      @vds-media-type-change="${onMediaTypeChange}"
+      @vds-playback-ready="${onPlaybackReady}"
+      @vds-playback-start="${onPlaybackStart}"
+      @vds-playback-end="${onPlaybackEnd}"
+      @vds-replay="${onReplay}"
+      @vds-error="${onError}"
     ></vds-video>
   `;
 

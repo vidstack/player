@@ -5,28 +5,13 @@ import { ifDefined } from 'lit-html/directives/if-defined';
 
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { Story } from '../../shared/storybook';
-import { VIDEO_ARG_TYPES, VideoArgTypes } from '../video/video.args';
+import { HLS_ARG_TYPES, HlsArgTypes } from './hls.args';
 
 export default {
   title: 'Providers/Hls',
   component: 'vds-hls',
-  argTypes: {
-    ...VIDEO_ARG_TYPES,
-    src: {
-      control: 'text',
-      defaultValue: 'https://media.vidstack.io/hls/index.m3u8',
-    },
-    libSrc: {
-      control: 'text',
-      defaultValue:
-        'https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.min.js',
-    },
-  },
+  argTypes: HLS_ARG_TYPES,
 };
-
-export interface HlsArgTypes extends VideoArgTypes {
-  libSrc: string;
-}
 
 const Template: Story<HlsArgTypes> = ({
   width,
@@ -48,6 +33,25 @@ const Template: Story<HlsArgTypes> = ({
   autoPiP,
   disablePiP,
   disableRemotePlayback,
+  onConnect,
+  onDisconnect,
+  onPause,
+  onPlay,
+  onPlaying,
+  onPosterChange,
+  onMutedChange,
+  onVolumeChange,
+  onTimeChange,
+  onDurationChange,
+  onBufferedChange,
+  onBufferingChange,
+  onViewTypeChange,
+  onMediaTypeChange,
+  onPlaybackReady,
+  onPlaybackStart,
+  onPlaybackEnd,
+  onReplay,
+  onError,
 }) =>
   html`
     <vds-hls
@@ -70,6 +74,25 @@ const Template: Story<HlsArgTypes> = ({
       ?auto-pip="${autoPiP}"
       ?disable-pip="${disablePiP}"
       ?disable-remote-playback="${disableRemotePlayback}"
+      @vds-connect="${onConnect}"
+      @vds-disconnect="${onDisconnect}"
+      @vds-pause="${onPause}"
+      @vds-play="${onPlay}"
+      @vds-playing="${onPlaying}"
+      @vds-poster-change="${onPosterChange}"
+      @vds-muted-change="${onMutedChange}"
+      @vds-volume-change="${onVolumeChange}"
+      @vds-time-change="${onTimeChange}"
+      @vds-duration-change="${onDurationChange}"
+      @vds-buffered-change="${onBufferedChange}"
+      @vds-buffering-change="${onBufferingChange}"
+      @vds-view-type-change="${onViewTypeChange}"
+      @vds-media-type-change="${onMediaTypeChange}"
+      @vds-playback-ready="${onPlaybackReady}"
+      @vds-playback-start="${onPlaybackStart}"
+      @vds-playback-end="${onPlaybackEnd}"
+      @vds-replay="${onReplay}"
+      @vds-error="${onError}"
     ></vds-hls>
   `;
 
