@@ -67,12 +67,12 @@
   "dependencies": {
     "@lukeed/uuid": "^2.0.0",
     "@types/hls.js": "^0.13.3",
-    "@types/lodash.throttle": "^4.1.6",
+    "@types/lodash-es": "^4.17.4",
     "@wcom/context": "^2.0.0",
     "@wcom/events": "^1.0.0",
     "clsx": "^1.1.1",
     "lit-element": "^2.0.0",
-    "lodash.throttle": "^4.1.1",
+    "lodash-es": "^4.17.21",
     "tslib": "^2.1.0"
   },
   "devDependencies": {

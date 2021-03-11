@@ -1,4 +1,4 @@
-import { event, listen } from '@wcom/events';
+import { listen } from '@wcom/events';
 import clsx from 'clsx';
 import {
   CSSResultArray,
@@ -11,7 +11,7 @@ import {
   TemplateResult,
 } from 'lit-element';
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
-import throttle from 'lodash.throttle';
+import { throttle } from 'lodash-es';
 
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
@@ -113,6 +113,11 @@ export class Slider extends FocusMixin(LitElement) {
   }
 
   update(changedProperties: PropertyValues): void {
+    if (changedProperties.has('value')) {
+      // Bound value between min/max.
+      this.value = Math.min(this.max, Math.max(this.min, this.value));
+    }
+
     if (changedProperties.has('disabled') && this.disabled) {
       this._isDragging = false;
     }
@@ -201,14 +206,14 @@ export class Slider extends FocusMixin(LitElement) {
   /**
    * Whether the current orientation is horizontal.
    */
-  get isHorizontalOrientation(): boolean {
+  get isOrientationHorizontal(): boolean {
     return this.orientation === 'horizontal';
   }
 
   /**
    * Whether the current orientation is vertical.
    */
-  get isVerticalOrientation(): boolean {
+  get isOrientationVertical(): boolean {
     return this.orientation === 'vertical';
   }
 
@@ -293,7 +298,7 @@ export class Slider extends FocusMixin(LitElement) {
   protected getSliderClassAttr(): string {
     return clsx(
       this.isDragging && 'dragging',
-      this.isVerticalOrientation && 'orientation-vertical',
+      this.isOrientationVertical && 'orientation-vertical',
     );
   }
 
@@ -301,7 +306,7 @@ export class Slider extends FocusMixin(LitElement) {
     return clsx(
       'root',
       this.isDragging && 'root-dragging',
-      this.isVerticalOrientation && 'root-orientation-vertical',
+      this.isOrientationVertical && 'root-orientation-vertical',
     );
   }
 
@@ -530,28 +535,4 @@ export class Slider extends FocusMixin(LitElement) {
       }),
     );
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Event Documentation
-  //
-  // Purely documentation purposes only, it'll be picked up by `@wcom/cli`.
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * Emitted when the slider value changes.
-   */
-  @event({ name: 'vds-slider-value-change' })
-  protected sliderValueChangeEvent!: number;
-
-  /**
-   * Emitted when the user begins interacting with the slider and dragging the thumb.
-   */
-  @event({ name: 'vds-slider-drag-start' })
-  protected sliderDragStartEvent!: boolean;
-
-  /**
-   * Emitted when the user stops dragging the slider thumb.
-   */
-  @event({ name: 'vds-slider-drag-end' })
-  protected sliderDragEndEvent!: boolean;
 }
