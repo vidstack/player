@@ -23,7 +23,7 @@ const Template: Story<VideoProviderProps & ProviderActions> = ({
   poster,
   paused,
   volume,
-  currentTime,
+  currentTime = 0,
   muted,
   playsinline,
   loop,

@@ -133,12 +133,6 @@ export class HlsProvider
     return this._isHlsEngineAttached;
   }
 
-  get isPlaybackReady(): boolean {
-    return this.isCurrentlyHls && !this.hasNativeHlsSupport
-      ? this._isPlaybackReady
-      : this.isMediaElReadyForPlayback();
-  }
-
   get currentSrc(): string {
     return this.isCurrentlyHls && !this.hasNativeHlsSupport
       ? this.src
@@ -215,20 +209,21 @@ export class HlsProvider
     this.engine?.destroy();
     this._prevHlsSrc = '';
     this._isHlsEngineAttached = false;
-    this._isPlaybackReady = false;
+    this.isPlaybackReadyCtx = false;
   }
 
   protected _prevHlsSrc = '';
 
   protected loadSrcOnHlsEngine(): void {
     if (
+      isNil(this.engine) ||
       !this.isCurrentlyHls ||
       this.hasNativeHlsSupport ||
       this.src === this._prevHlsSrc
     )
       return;
 
-    this.engine?.loadSource(this.src);
+    this.engine.loadSource(this.src);
     this._prevHlsSrc = this.src;
   }
 
@@ -291,7 +286,7 @@ export class HlsProvider
 
   @listen(SrcChangeEvent.TYPE)
   protected handleSrcChange(): void {
-    this._isPlaybackReady = false;
+    this.isPlaybackReadyCtx = false;
 
     if (!this.isCurrentlyHls) {
       this.detachHlsEngine();
@@ -317,8 +312,10 @@ export class HlsProvider
 
     this.engine.on(
       this.HlsLib.Events.LEVEL_LOADED,
-      this.handleHlsLevelLoaded.bind(this),
+      this.handleHlsMediaReady.bind(this),
     );
+
+    this.engine.on(this.HlsLib.Events.ERROR, this.handleHlsError.bind(this));
   }
 
   protected handleHlsError(originalEvent: string, data: Hls.errorData): void {
@@ -339,22 +336,22 @@ export class HlsProvider
     this.dispatchEvent(new ErrorEvent({ detail: data, originalEvent }));
   }
 
-  protected _isPlaybackReady = false;
-
-  protected handleHlsLevelLoaded(
+  protected handleHlsMediaReady(
     originalEvent: string,
     data: Hls.levelLoadedData,
   ): void {
-    if (this._isPlaybackReady) return;
+    if (this.isPlaybackReadyCtx) return;
 
+    const duration = data.details.totalduration;
+    this.durationCtx = duration;
     this.dispatchEvent(
       new DurationChangeEvent({
-        detail: data.details.totalduration,
+        detail: duration,
         originalEvent,
       }),
     );
 
-    this._isPlaybackReady = true;
+    this.isPlaybackReadyCtx = true;
     this.dispatchEvent(new PlaybackReadyEvent());
   }
 }

@@ -18,17 +18,13 @@ import { MediaProvider } from '../provider/MediaProvider';
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
 export class FakeMediaProvider extends MediaProvider {
-  /***
-   * Trigger playback ready event when it mounts.
-   */
-  @property({ type: Boolean, attribute: 'playback-ready' })
-  playbackReady = false;
+  @property({ type: Boolean }) playbackReady = false;
 
   connectedCallback(): void {
     super.connectedCallback();
 
     if (this.playbackReady) {
-      this.playerContext.isPlaybackReadyCtx = true;
+      this.context.isPlaybackReadyCtx = true;
       this.dispatchEvent(new PlaybackReadyEvent());
     }
   }
@@ -38,30 +34,33 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   getPaused(): boolean {
-    return this.playerContext.pausedCtx;
+    return this.context.pausedCtx;
   }
 
   getVolume(): number {
-    return this.playerContext.volumeCtx;
+    return this.context.volumeCtx;
   }
 
   setVolume(detail: number): void {
+    this.volumeCtx = detail;
     this.dispatchEvent(new VolumeChangeEvent({ detail }));
   }
 
   getCurrentTime(): number {
-    return this.playerContext.currentTimeCtx;
+    return this.context.currentTimeCtx;
   }
 
   setCurrentTime(detail: number): void {
+    this.currentTimeCtx = detail;
     this.dispatchEvent(new TimeChangeEvent({ detail }));
   }
 
   getMuted(): boolean {
-    return this.playerContext.mutedCtx;
+    return this.context.mutedCtx;
   }
 
   setMuted(detail: boolean): void {
+    this.mutedCtx = detail;
     this.dispatchEvent(new MutedChangeEvent({ detail }));
   }
 
@@ -70,19 +69,19 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   get currentSrc(): string {
-    return this.playerContext.currentSrcCtx;
+    return this.context.currentSrcCtx;
   }
 
   get currentPoster(): string {
-    return this.playerContext.currentPosterCtx;
+    return this.context.currentPosterCtx;
   }
 
   get isPlaybackReady(): boolean {
-    return this.playerContext.isPlaybackReadyCtx;
+    return this.context.isPlaybackReadyCtx;
   }
 
   get isPlaying(): boolean {
-    return this.playerContext.isPlayingCtx;
+    return this.context.isPlayingCtx;
   }
 
   get engine(): unknown {
@@ -90,23 +89,23 @@ export class FakeMediaProvider extends MediaProvider {
   }
 
   get duration(): number {
-    return this.playerContext.durationCtx;
+    return this.context.durationCtx;
   }
 
   get buffered(): number {
-    return this.playerContext.bufferedCtx;
+    return this.context.bufferedCtx;
   }
 
   get isBuffering(): boolean {
-    return this.playerContext.isBufferingCtx;
+    return this.context.isBufferingCtx;
   }
 
   get hasPlaybackStarted(): boolean {
-    return this.playerContext.hasPlaybackStartedCtx;
+    return this.context.hasPlaybackStartedCtx;
   }
 
   get hasPlaybackEnded(): boolean {
-    return this.playerContext.hasPlaybackEndedCtx;
+    return this.context.hasPlaybackEndedCtx;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -122,10 +121,12 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   async play(): Promise<void> {
+    this.pausedCtx = false;
     this.dispatchEvent(new PlayEvent());
   }
 
   async pause(): Promise<void> {
+    this.pausedCtx = true;
     this.dispatchEvent(new PauseEvent());
   }
 

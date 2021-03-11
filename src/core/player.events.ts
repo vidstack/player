@@ -15,6 +15,7 @@ declare global {
 }
 
 export type RawPlayerEventType =
+  | 'aspect-ratio-change'
   | 'connect'
   | 'disconnect'
   | 'play'
@@ -37,6 +38,7 @@ export type RawPlayerEventType =
   | 'error';
 
 export type RawPlayerEventDetailType = {
+  'aspect-ratio-change': string | undefined;
   connect: MediaProvider;
   disconnect: MediaProvider;
   play: void;
@@ -96,6 +98,13 @@ export class ConnectEvent extends buildPlayerEvent('connect') {}
  * Emitted when the provider disconnects from the DOM.
  */
 export class DisconnectEvent extends buildPlayerEvent('disconnect') {}
+
+/**
+ * Emitted when the aspect ratio changes.
+ */
+export class AspectRatioChangeEvent extends buildPlayerEvent(
+  'aspect-ratio-change',
+) {}
 
 /**
  * Emitted when playback attempts to start.

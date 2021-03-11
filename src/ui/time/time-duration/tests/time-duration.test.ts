@@ -29,7 +29,7 @@ describe(`${TIME_DURATION_TAG_NAME}`, () => {
   it('should render shadow dom correctly', async () => {
     const [provider, timeDuration] = await buildFixture();
 
-    provider.playerContext.durationCtx = 3750;
+    provider.context.durationCtx = 3750;
     await elementUpdated(timeDuration);
 
     expect(timeDuration).shadowDom.to.equal(`
@@ -47,10 +47,10 @@ describe(`${TIME_DURATION_TAG_NAME}`, () => {
   it('should update duration time as context updates', async () => {
     const [provider, timeDuration] = await buildFixture();
     expect(timeDuration.duration).to.equal(0);
-    provider.playerContext.durationCtx = 50;
+    provider.context.durationCtx = 50;
     await elementUpdated(timeDuration);
     expect(timeDuration.duration).to.equal(50);
-    provider.playerContext.durationCtx = -1;
+    provider.context.durationCtx = -1;
     await elementUpdated(timeDuration);
     expect(timeDuration.duration).to.equal(0);
   });

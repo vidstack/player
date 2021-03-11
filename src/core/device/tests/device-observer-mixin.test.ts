@@ -13,7 +13,7 @@ import { Device, onDeviceChange } from '../DeviceObserver';
 describe('device mixin', () => {
   it('should update when screen size <= mobile max width', async () => {
     const provider = await buildFakeMediaProvider();
-    const ctx = provider.playerContext;
+    const ctx = provider.context;
     const { detail } = await switchToMobileDevice(provider);
     const expectedDevice = Device.Mobile;
     expect(detail).to.equal(expectedDevice);
@@ -28,7 +28,7 @@ describe('device mixin', () => {
 
   it('should update when screen size > mobile max width', async () => {
     const provider = await buildFakeMediaProvider();
-    const ctx = provider.playerContext;
+    const ctx = provider.context;
     const { detail } = await switchToDesktopDevice(provider);
     const expectedDevice = Device.Desktop;
     expect(detail).to.equal(expectedDevice);

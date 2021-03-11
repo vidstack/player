@@ -4,7 +4,7 @@ import { spy, stub } from 'sinon';
 import { buildFakeMediaProvider, emitEvent } from '../../fakes/helpers';
 import { ErrorEvent, PlaybackReadyEvent } from '../../player.events';
 
-describe('request mixin', () => {
+describe('provider request queue', () => {
   it('should queue request given provider is not ready and flush once ready', async () => {
     const provider = await buildFakeMediaProvider();
     const volumeSpy = spy(provider, 'setVolume');

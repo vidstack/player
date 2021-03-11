@@ -69,6 +69,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
   connectedCallback(): void {
     super.connectedCallback();
 
+    this.viewTypeCtx = ViewType.Video;
     this.dispatchEvent(
       new ViewTypeChangeEvent({
         detail: ViewType.Video,
@@ -167,9 +168,10 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
   // -------------------------------------------------------------------------------------------
 
   protected handleLoadedMetadata(originalEvent: Event): void {
+    this.mediaTypeCtx = this.getMediaType();
     this.dispatchEvent(
       new MediaTypeChangeEvent({
-        detail: this.getMediaType(),
+        detail: this.mediaTypeCtx,
         originalEvent,
       }),
     );

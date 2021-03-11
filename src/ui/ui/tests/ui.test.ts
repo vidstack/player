@@ -54,7 +54,7 @@ describe(UI_TAG_NAME, () => {
     expect(root.getAttribute('part')).to.include('root-hidden');
 
     // Ready.
-    provider.playerContext.isPlaybackReadyCtx = true;
+    provider.context.isPlaybackReadyCtx = true;
     await elementUpdated(ui);
     expect(root.getAttribute('part')).to.not.include('root-hidden');
   });
@@ -66,7 +66,7 @@ describe(UI_TAG_NAME, () => {
     expect(root.getAttribute('part')).to.not.include('root-audio-view');
 
     // Yay.
-    provider.playerContext.isAudioViewCtx = true;
+    provider.context.isAudioViewCtx = true;
     await elementUpdated(ui);
     expect(root.getAttribute('part')).to.include('root-audio-view');
   });
@@ -78,7 +78,7 @@ describe(UI_TAG_NAME, () => {
     expect(root.getAttribute('part')).to.not.include('root-video-view');
 
     // Yay.
-    provider.playerContext.isVideoViewCtx = true;
+    provider.context.isVideoViewCtx = true;
     await elementUpdated(ui);
     expect(root.getAttribute('part')).to.include('root-video-view');
   });

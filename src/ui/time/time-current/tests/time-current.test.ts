@@ -29,7 +29,7 @@ describe(`${TIME_CURRENT_TAG_NAME}`, () => {
   it('should render shadow dom correctly', async () => {
     const [provider, timeCurrent] = await buildFixture();
 
-    provider.playerContext.currentTimeCtx = 3750;
+    provider.context.currentTimeCtx = 3750;
     await elementUpdated(timeCurrent);
 
     expect(timeCurrent).shadowDom.to.equal(`
@@ -47,7 +47,7 @@ describe(`${TIME_CURRENT_TAG_NAME}`, () => {
   it('should update current time as context updates', async () => {
     const [provider, timeCurrent] = await buildFixture();
     expect(timeCurrent.duration).to.equal(0);
-    provider.playerContext.currentTimeCtx = 50;
+    provider.context.currentTimeCtx = 50;
     await elementUpdated(timeCurrent);
     expect(timeCurrent.duration).to.equal(50);
   });

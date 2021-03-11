@@ -24,7 +24,10 @@ const Template: Story<PlaybackToggleProps & PlaybackToggleFakeProps> = ({
   fakePaused,
 }) =>
   html`
-    <vds-fake-media-provider playback-ready .pausedCtx="${fakePaused}">
+    <vds-fake-media-provider
+      .isPlaybackReadyCtx="${true}"
+      .pausedCtx="${fakePaused}"
+    >
       <vds-playback-toggle
         label="${ifNonEmpty(label)}"
         described-by="${ifNonEmpty(describedBy)}"

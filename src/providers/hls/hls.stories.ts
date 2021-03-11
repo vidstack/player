@@ -25,7 +25,7 @@ const Template: Story<HlsProviderProps & HlsProviderActions> = ({
   poster,
   paused,
   volume,
-  currentTime,
+  currentTime = 0,
   muted,
   playsinline,
   loop,

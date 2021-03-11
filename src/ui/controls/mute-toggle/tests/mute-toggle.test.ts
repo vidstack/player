@@ -121,10 +121,10 @@ describe(MUTE_TOGGLE_TAG_NAME, () => {
 
   it('should receive muted context updates', async () => {
     const [provider, toggle] = await buildFixture();
-    provider.playerContext.mutedCtx = true;
+    provider.context.mutedCtx = true;
     await elementUpdated(toggle);
     expect(toggle.on).to.be.true;
-    provider.playerContext.mutedCtx = false;
+    provider.context.mutedCtx = false;
     await elementUpdated(toggle);
     expect(toggle.on).to.be.false;
   });
