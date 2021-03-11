@@ -10,6 +10,7 @@ import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { currentSafariVersion } from '../../../utils/support';
 import { Control } from '../control';
 import { Toggle } from '../toggle';
+import { PlaybackToggleProps } from './playback-toggle.args';
 
 /**
  * A control for toggling the playback state (play/pause) of the current media.
@@ -41,7 +42,9 @@ import { Toggle } from '../toggle';
  * </vds-playback-toggle>
  * ```
  */
-export class PlaybackToggle extends FocusMixin(Toggle) {
+export class PlaybackToggle
+  extends FocusMixin(Toggle)
+  implements PlaybackToggleProps {
   // Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
   // use `isPlaying` becuase there could be a buffering delay (we want immediate feedback).
   @playerContext.paused.consume({ transform: p => !p })
@@ -49,21 +52,10 @@ export class PlaybackToggle extends FocusMixin(Toggle) {
 
   @query('vds-control') controlEl?: Control;
 
-  /**
-   * **ARIA** The `aria-label` property of the underlying playback control.
-   *
-   * @required
-   */
   @property() label?: string = 'Play';
 
-  /**
-   * Whether the underlying control should be disabled (not-interactable).
-   */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  /**
-   * **ARIA** - Identifies the element (or elements) that describes the underlying control.
-   */
   @property({ attribute: 'described-by' }) describedBy?: string;
 
   createRenderRoot(): ShadowRoot {

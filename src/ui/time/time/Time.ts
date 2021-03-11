@@ -7,6 +7,7 @@ import {
 } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
+import { TimeProps } from './time.args';
 import { timeStyles } from './time.css';
 import { formatHtml5Duration, formatTime } from './time.utils';
 
@@ -46,35 +47,18 @@ import { formatHtml5Duration, formatTime } from './time.utils';
  * }
  * ```
  */
-export class Time extends LitElement {
+export class Time extends LitElement implements TimeProps {
   static get styles(): CSSResultArray {
     return [timeStyles];
   }
 
-  /**
-   * **ARIA** The `aria-label` property of the time.
-   */
   @property() label?: string;
 
-  /**
-   * The length of time in seconds.
-   */
   @property({ type: Number }) duration = 0;
 
-  /**
-   * Whether the time should always show the hours unit, even if the time is less than
-   * 1 hour.
-   *
-   * @example `20:30` -> `0:20:35`
-   */
   @property({ type: Boolean, attribute: 'always-show-hours' })
   alwaysShowHours = false;
 
-  /**
-   * Whether the hours unit should be padded with zeroes to a length of 2.
-   *
-   * @example `1:20:03` -> `01:20:03`
-   */
   @property({ type: Boolean, attribute: 'pad-hours' })
   padHours = false;
 

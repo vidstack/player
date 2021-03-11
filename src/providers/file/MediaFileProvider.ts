@@ -23,6 +23,7 @@ import {
 } from '../../core';
 import { getSlottedChildren } from '../../utils/dom';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';
+import { FileProviderProps } from './file.args';
 import {
   MediaCrossOriginOption,
   MediaFileProviderEngine,
@@ -37,9 +38,9 @@ import {
  *
  * @slot Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
-export class MediaFileProvider<
-  EngineType = MediaFileProviderEngine
-> extends MediaProvider<EngineType> {
+export class MediaFileProvider<EngineType = MediaFileProviderEngine>
+  extends MediaProvider<EngineType>
+  implements FileProviderProps {
   protected mediaEl?: HTMLMediaElement;
 
   protected disposal = new Disposal();
@@ -84,9 +85,6 @@ export class MediaFileProvider<
 
   protected _src = '';
 
-  /**
-   * The URL of a media resource to use.
-   */
   @property()
   get src(): string {
     return this._src;
@@ -98,32 +96,15 @@ export class MediaFileProvider<
     this.requestUpdate();
   }
 
-  /**
-   * The width of the media player.
-   */
   @property({ type: Number })
   width?: number;
 
-  /**
-   * The height of the media player.
-   */
   @property({ type: Number })
   height?: number;
 
-  /**
-   * Whether to use CORS to fetch the related image. See
-   * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin) for more
-   * information.
-   */
   @property({ attribute: 'cross-origin' })
   crossOrigin?: MediaCrossOriginOption;
 
-  /**
-   * Provides a hint to the browser about what the author thinks will lead to the best user
-   * experience with regards to what content is loaded before the video is played. See
-   * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload) for more
-   * information.
-   */
   @property()
   preload?: MediaPreloadOption = 'metadata';
 

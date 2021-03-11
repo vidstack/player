@@ -15,20 +15,12 @@ export type RawSliderEventDetailType = {
   'drag-end': void;
 };
 
-export type GenericVdsSliderEventType<
+export type GenericSliderEventType<
   T extends string
 > = `${typeof LIB_PREFIX}-${typeof SLIDER_EVENT_PREFIX}-${T}`;
 
-export type SliderEventConstructor<
-  T extends RawSliderEventType
-> = VdsCustomEventConstructor<RawSliderEventDetailType[T]>;
-
-export type SliderEventConstructors = {
-  [P in RawSliderEventType as GenericVdsSliderEventType<P>]: SliderEventConstructor<P>;
-};
-
 export type SliderEvents = {
-  [P in RawSliderEventType as GenericVdsSliderEventType<P>]: VdsCustomEvent<
+  [P in RawSliderEventType as GenericSliderEventType<P>]: VdsCustomEvent<
     RawSliderEventDetailType[P]
   >;
 };

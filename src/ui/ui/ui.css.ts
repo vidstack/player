@@ -8,7 +8,7 @@ export const uiStyles = css`
     z-index: 1;
   }
 
-  div[part*='root'] {
+  #root {
     width: 100%;
     height: 100%;
     position: relative;

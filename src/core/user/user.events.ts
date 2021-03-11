@@ -28,20 +28,12 @@ export interface RawUserEventDetailType {
   'time-change': number;
 }
 
-export type GenericVdsUserEventType<
+export type GenericUserEventType<
   T extends string
 > = `${typeof LIB_PREFIX}-${typeof USER_EVENT_PREFIX}-${T}-request`;
 
-export type UserEventConstructor<
-  T extends RawUserEventType
-> = VdsCustomEventConstructor<RawUserEventDetailType[T]>;
-
-export type UserEventConstructors = {
-  [P in RawUserEventType as GenericVdsUserEventType<P>]: UserEventConstructor<P>;
-};
-
 export type UserEvents = {
-  [P in RawUserEventType as GenericVdsUserEventType<P>]: VdsCustomEvent<
+  [P in RawUserEventType as GenericUserEventType<P>]: VdsCustomEvent<
     RawUserEventDetailType[P]
   >;
 };

@@ -17,6 +17,7 @@ import {
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
 import { MediaFileProvider, MediaFileProviderEngine } from '../file';
+import { VideoProviderProps } from './video.args';
 import { videoStyles } from './video.css';
 import { VideoControlsList } from './video.types';
 import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
@@ -58,9 +59,9 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  *  </vds-video>
  * ```
  */
-export class VideoProvider<
-  EngineType = MediaFileProviderEngine
-> extends MediaFileProvider<EngineType> {
+export class VideoProvider<EngineType = MediaFileProviderEngine>
+  extends MediaFileProvider<EngineType>
+  implements VideoProviderProps {
   static get styles(): CSSResultArray {
     return [videoStyles];
   }
@@ -87,6 +88,7 @@ export class VideoProvider<
   render(): TemplateResult {
     return html`
       <div
+        id="root"
         class="${this.getRootClassAttr()}"
         part="${this.getRootPartAttr()}"
         aria-busy="${this.getAriaBusy()}"
@@ -102,7 +104,7 @@ export class VideoProvider<
    * Override this to modify root provider CSS Classes.
    */
   protected getRootClassAttr(): string {
-    return 'root';
+    return '';
   }
 
   /**
@@ -185,11 +187,6 @@ export class VideoProvider<
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * A URL for an image to be shown while the video is downloading. If this attribute isn't
-   * specified, nothing is displayed until the first frame is available, then the first frame is
-   * shown as the poster frame.
-   */
   @property()
   poster?: string;
 
@@ -197,34 +194,15 @@ export class VideoProvider<
     return this.poster ?? '';
   }
 
-  /**
-   * Determines what controls to show on the media element whenever the browser shows its own set
-   * of controls (e.g. when the controls attribute is specified).
-   *
-   * @example 'nodownload nofullscreen noremoteplayback'
-   */
   @property({ attribute: 'controls-list' })
   controlsList?: VideoControlsList;
 
-  /**
-   * 🧑‍🔬 **EXPERIMENTAL:** Whether the browser should automatically toggle picture-in-picture mode as
-   * the user switches back and forth between this document and another document or application.
-   */
   @property({ type: Boolean, attribute: 'auto-pip' })
   autoPiP?: boolean;
 
-  /**
-   * 🧑‍🔬 **EXPERIMENTAL:** Prevents the browser from suggesting a picture-in-picture context menu or
-   * to request picture-in-picture automatically in some cases.
-   */
   @property({ type: Boolean, attribute: 'disable-pip' })
   disablePiP?: boolean;
 
-  /**
-   * 🧑‍🔬 **EXPERIMENTAL:** Whether to disable the capability of remote playback in devices that are
-   * attached using wired (HDMI, DVI, etc.) and wireless technologies (Miracast, Chromecast,
-   * DLNA, AirPlay, etc).
-   */
   @property({ type: Boolean, attribute: 'disable-remote-playback' })
   disableRemotePlayback?: boolean;
 

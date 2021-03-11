@@ -1,4 +1,4 @@
-import { event, listen } from '@wcom/events';
+import { listen } from '@wcom/events';
 import type Hls from 'hls.js';
 import { property, PropertyValues } from 'lit-element';
 
@@ -13,12 +13,12 @@ import {
 import { LibLoader } from '../../shared/LibLoader';
 import { isNil, isUndefined } from '../../utils/unit';
 import { VideoProvider, VideoProviderEngine } from '../video';
+import { HlsProviderProps } from './hls.args';
 import {
   HlsEngineAttachEvent,
   HlsEngineBuiltEvent,
   HlsEngineDetachEvent,
   HlsEngineNoSuppotEvent,
-  HlsEvents,
 } from './hls.events';
 import { HlsProviderEngine } from './hls.types';
 import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
@@ -65,7 +65,9 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  *  </vds-hls>
  * ```
  */
-export class HlsProvider extends VideoProvider<HlsProviderEngine> {
+export class HlsProvider
+  extends VideoProvider<HlsProviderEngine>
+  implements HlsProviderProps {
   protected _hlsEngine?: HlsProviderEngine;
 
   protected HlsLib?: typeof Hls;
@@ -355,37 +357,4 @@ export class HlsProvider extends VideoProvider<HlsProviderEngine> {
     this._isPlaybackReady = true;
     this.dispatchEvent(new PlaybackReadyEvent());
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Event Documentation
-  //
-  // Purely documentation purposes only, it'll be picked up by `@wcom/cli`.
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * Emitted when the `hls.js` instance is built. This will not fire if the browser natively
-   * supports HLS.
-   */
-  @event({ name: 'vds-hls-engine-built' })
-  protected engineBuiltEvent!: HlsEvents['vds-hls-engine-built'];
-
-  /**
-   * Emitted when the `hls.js` instance has attached itself to the media element. This will not
-   * fire if the browser natively supports HLS.
-   */
-  @event({ name: 'vds-hls-engine-attach' })
-  protected engineAttachEvent!: HlsEvents['vds-hls-engine-attach'];
-
-  /**
-   * Emitted when the `hls.js` instance has detached itself from the media element.
-   */
-  @event({ name: 'vds-hls-engine-detach' })
-  protected engineDetachEvent!: HlsEvents['vds-hls-engine-detach'];
-
-  /**
-   * Emitted when the browser doesn't support HLS natively and `hls.js` doesn't support
-   * this enviroment either, most likely due to missing Media Extensions.
-   */
-  @event({ name: 'vds-hls-engine-no-support' })
-  protected engineNoSupportEvent!: HlsEvents['vds-hls-engine-no-support'];
 }

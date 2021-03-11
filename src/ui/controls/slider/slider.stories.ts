@@ -1,17 +1,21 @@
-import './vds-slider';
-
 import { html } from 'lit-element';
 
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
-import { SLIDER_ARG_TYPES, SliderArgTypes } from './slider.args';
+import {
+  SLIDER_STORYBOOK_ARG_TYPES,
+  SliderActions,
+  SliderProps,
+} from './slider.args';
+import { SLIDER_TAG_NAME } from './vds-slider';
 
 export default {
-  title: 'UI/Foundation/Slider',
-  component: 'vds-slider',
-  argTypes: SLIDER_ARG_TYPES,
+  title: 'UI/Foundation/Controls/Slider',
+  component: SLIDER_TAG_NAME,
+  argTypes: SLIDER_STORYBOOK_ARG_TYPES,
 };
 
-const Template: Story<SliderArgTypes> = ({
+const Template: Story<SliderProps & SliderActions> = ({
   label,
   min = 0,
   max,
@@ -29,13 +33,13 @@ const Template: Story<SliderArgTypes> = ({
 }) =>
   html`
     <vds-slider
-      label="${label}"
+      label="${ifNonEmpty(label)}"
       min="${min}"
       max="${max}"
       step="${step}"
       step-ratio="${stepRatio}"
       value="${value}"
-      value-text="${valueText}"
+      value-text="${ifNonEmpty(valueText)}"
       orientation="${orientation}"
       throttle="${throttle}"
       ?disabled="${disabled}"

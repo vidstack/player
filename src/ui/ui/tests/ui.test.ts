@@ -32,7 +32,7 @@ describe(UI_TAG_NAME, () => {
     const [, ui] = await buildFixture();
     expect(ui).shadowDom.to.equal(`
       <div 
-        class="root"
+        id="root"
         part="root root-hidden"
       >
         <slot />
@@ -50,7 +50,7 @@ describe(UI_TAG_NAME, () => {
   it('should toggle root-hidden css part as context updates', async () => {
     // Not ready.
     const [provider, ui] = await buildFixture();
-    const root = ui.shadowRoot?.querySelector('.root') as HTMLDivElement;
+    const root = ui.shadowRoot?.querySelector('#root') as HTMLDivElement;
     expect(root.getAttribute('part')).to.include('root-hidden');
 
     // Ready.
@@ -62,7 +62,7 @@ describe(UI_TAG_NAME, () => {
   it('should toggle root-audio-view css part as context updates', async () => {
     // Nay.
     const [provider, ui] = await buildFixture();
-    const root = ui.shadowRoot?.querySelector('.root') as HTMLDivElement;
+    const root = ui.shadowRoot?.querySelector('#root') as HTMLDivElement;
     expect(root.getAttribute('part')).to.not.include('root-audio-view');
 
     // Yay.
@@ -74,7 +74,7 @@ describe(UI_TAG_NAME, () => {
   it('should toggle root-video-view css part as context updates', async () => {
     // Nay.
     const [provider, ui] = await buildFixture();
-    const root = ui.shadowRoot?.querySelector('.root') as HTMLDivElement;
+    const root = ui.shadowRoot?.querySelector('#root') as HTMLDivElement;
     expect(root.getAttribute('part')).to.not.include('root-video-view');
 
     // Yay.

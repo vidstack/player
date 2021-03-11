@@ -6,7 +6,13 @@ export const timeProgressStyles = css`
     contain: content;
   }
 
-  span[part='separator'] {
+  #root {
+    display: flex;
+    align-items: center;
+  }
+
+  #separator {
     display: inline-block;
+    margin: 0 4px;
   }
 `;

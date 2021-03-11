@@ -21,8 +21,8 @@ import {
   VolumeChangeEvent,
 } from '../player.events';
 
-export interface ProviderArgTypes {
-  aspectRatio: string;
+export interface ProviderProps {
+  aspectRatio: string | undefined;
   paused: boolean;
   volume: number;
   currentTime: number;
@@ -30,6 +30,9 @@ export interface ProviderArgTypes {
   playsinline: boolean;
   loop: boolean;
   controls: boolean;
+}
+
+export interface ProviderActions {
   onConnect: Callback<CustomEvent>;
   onDisconnect: Callback<CustomEvent>;
   onPause: Callback<CustomEvent>;
@@ -51,7 +54,11 @@ export interface ProviderArgTypes {
   onError: Callback<CustomEvent>;
 }
 
-export const PROVIDER_ARG_TYPES = {
+export type ProviderStorybookArgs = {
+  [P in keyof ProviderProps & ProviderActions]: unknown;
+};
+
+export const PROVIDER_STORYBOOK_ARG_TYPES: ProviderStorybookArgs = {
   aspectRatio: {
     control: 'text',
   },

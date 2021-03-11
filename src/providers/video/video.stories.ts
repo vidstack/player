@@ -1,18 +1,21 @@
-import './vds-video';
-
 import { html } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
+import { ProviderActions } from '../../core';
 import { Story } from '../../shared/storybook';
-import { VIDEO_ARG_TYPES, VideoArgTypes } from './video.args';
+import { VIDEO_TAG_NAME } from './vds-video';
+import {
+  VIDEO_PROVIDER_STORYBOOK_ARG_TYPES,
+  VideoProviderProps,
+} from './video.args';
 
 export default {
   title: 'Providers/Video',
-  component: 'vds-video',
-  argTypes: VIDEO_ARG_TYPES,
+  component: VIDEO_TAG_NAME,
+  argTypes: VIDEO_PROVIDER_STORYBOOK_ARG_TYPES,
 };
 
-const Template: Story<VideoArgTypes> = ({
+const Template: Story<VideoProviderProps & ProviderActions> = ({
   width,
   height,
   aspectRatio,
@@ -54,10 +57,10 @@ const Template: Story<VideoArgTypes> = ({
   html`
     <vds-video
       src="${src}"
-      width="${width}"
-      height="${height}"
-      aspect-ratio="${aspectRatio}"
-      poster="${poster}"
+      width="${ifDefined(width)}"
+      height="${ifDefined(height)}"
+      aspect-ratio="${ifDefined(aspectRatio)}"
+      poster="${ifDefined(poster)}"
       ?paused="${paused}"
       volume="${volume}"
       current-time="${currentTime}"
@@ -65,8 +68,8 @@ const Template: Story<VideoArgTypes> = ({
       ?playsinline="${playsinline}"
       ?loop="${loop}"
       ?controls="${controls}"
-      cross-origin="${crossOrigin}"
-      preload="${preload}"
+      cross-origin="${ifDefined(crossOrigin)}"
+      preload="${ifDefined(preload)}"
       controls-list="${ifDefined(controlsList)}"
       ?auto-pip="${autoPiP}"
       ?disable-pip="${disablePiP}"

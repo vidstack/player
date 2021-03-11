@@ -23,20 +23,12 @@ export type RawHlsEventDetailType = {
   'engine-no-support': void;
 };
 
-export type GenericVdsHlsEventType<
+export type GenericHlsEventType<
   T extends string
 > = `${typeof LIB_PREFIX}-${typeof HLS_EVENT_PREFIX}-${T}`;
 
-export type HlsEventConstructor<
-  T extends RawHlsEventType
-> = VdsCustomEventConstructor<RawHlsEventDetailType[T]>;
-
-export type HlsEventConstructors = {
-  [P in RawHlsEventType as GenericVdsHlsEventType<P>]: HlsEventConstructor<P>;
-};
-
 export type HlsEvents = {
-  [P in RawHlsEventType as GenericVdsHlsEventType<P>]: VdsCustomEvent<
+  [P in RawHlsEventType as GenericHlsEventType<P>]: VdsCustomEvent<
     RawHlsEventDetailType[P]
   >;
 };

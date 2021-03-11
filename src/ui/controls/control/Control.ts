@@ -16,6 +16,7 @@ import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { currentSafariVersion } from '../../../utils/support';
 import { isUndefined } from '../../../utils/unit';
+import { ControlProps } from './control.args';
 import { controlStyles } from './control.css';
 import { ControlType } from './control.types';
 
@@ -59,7 +60,7 @@ import { ControlType } from './control.types';
  * }
  * ```
  */
-export class Control extends FocusMixin(LitElement) {
+export class Control extends FocusMixin(LitElement) implements ControlProps {
   static get styles(): CSSResultArray {
     return [controlStyles];
   }
@@ -86,65 +87,22 @@ export class Control extends FocusMixin(LitElement) {
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * **ARIA** The `aria-label` property of the control.
-   */
   @property() label?: string;
 
-  /**
-   * **ARIA** - Identifies the element (or elements) whose contents or presence are controlled by
-   * the current control. See related `aria-owns`.
-   */
   @property() controls?: string;
 
-  /**
-   * Indicates the availability and type of interactive popup element, such as menu or dialog,
-   * that can be triggered by the control.
-   */
   @property({ type: Boolean, attribute: 'has-popup' }) hasPopup?: boolean;
 
-  /**
-   * Whether the control should be hidden.
-   */
   @property({ type: Boolean, reflect: true }) hidden = false;
 
-  /**
-   * Whether the control should be disabled (not-interactable).
-   */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  /**
-   * Sets the default behaviour of the button.
-   *
-   * - `submit`: The button submits the form data to the server. This is the default if the
-   * attribute is not specified for buttons associated with a <form>, or if the attribute is an
-   * empty or invalid value.
-   *
-   * - `reset`: The button resets all the controls to their initial values,
-   * like `<input type="reset">`. (This behavior tends to annoy users.)
-   *
-   * - `button`: The button has no default behavior, and does nothing when pressed by default. It
-   * can have client-side scripts listen to the element's events, which are triggered when the
-   * events occur.
-   */
   @property() type: ControlType = 'button';
 
-  /**
-   * **ARIA** - Indicates whether the control, or another grouping element it controls, is
-   * currently expanded or collapsed.
-   */
   @property({ type: Boolean, reflect: true }) expanded?: boolean;
 
-  /**
-   * **ARIA** - Indicates the current "pressed" state of toggle buttons. See related `aria-checked`
-   * and `aria-selected`.
-   */
   @property({ type: Boolean, reflect: true }) pressed?: boolean;
 
-  /**
-   * **ARIA** - Identifies the element (or elements) that describes the control. See related
-   * `aria-labelledby`.
-   */
   @property({ attribute: 'described-by' }) describedBy?: string;
 
   // -------------------------------------------------------------------------------------------

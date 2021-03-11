@@ -8,6 +8,7 @@ import {
 
 import { getSlottedChildren, setAttribute } from '../../../utils/dom';
 import { isNil } from '../../../utils/unit';
+import { ToggleProps } from './toggle.args';
 import { toggleStyles } from './toggle.css';
 
 /**
@@ -37,7 +38,7 @@ import { toggleStyles } from './toggle.css';
  * </vds-toggle>
  * ```
  */
-export class Toggle extends LitElement {
+export class Toggle extends LitElement implements ToggleProps {
   static get styles(): CSSResultArray {
     return [toggleStyles];
   }
@@ -46,9 +47,6 @@ export class Toggle extends LitElement {
 
   protected currentOffSlotElement?: HTMLElement;
 
-  /**
-   * Whether the toggle is in the `on` state.
-   */
   @property({ type: Boolean, reflect: true })
   on = false;
 

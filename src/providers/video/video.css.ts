@@ -6,7 +6,7 @@ export const videoStyles = css`
     contain: content;
   }
 
-  .root {
+  #root {
     position: relative;
     width: 100%;
     display: block;
@@ -32,7 +32,7 @@ export const videoStyles = css`
     height: auto;
   }
 
-  .root[style*='padding-bottom'] > video {
+  #root[style*='padding-bottom'] > video {
     position: absolute;
     top: 0;
     left: 0;

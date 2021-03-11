@@ -59,20 +59,12 @@ export type RawPlayerEventDetailType = {
   error: unknown;
 };
 
-export type GenericVdsPlayerEventType<
+export type GenericPlayerEventType<
   T extends string
 > = `${typeof LIB_PREFIX}-${T}`;
 
-export type PlayerEventConstructor<
-  T extends RawPlayerEventType
-> = VdsCustomEventConstructor<RawPlayerEventDetailType[T]>;
-
-export type PlayerEventConstructors = {
-  [P in RawPlayerEventType as GenericVdsPlayerEventType<P>]: PlayerEventConstructor<P>;
-};
-
 export type PlayerEvents = {
-  [P in RawPlayerEventType as GenericVdsPlayerEventType<P>]: VdsCustomEvent<
+  [P in RawPlayerEventType as GenericPlayerEventType<P>]: VdsCustomEvent<
     RawPlayerEventDetailType[P]
   >;
 };

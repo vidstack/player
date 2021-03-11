@@ -6,6 +6,7 @@ import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { currentSafariVersion } from '../../../utils/support';
 import { Control } from '../control';
 import { Toggle } from '../toggle';
+import { MuteToggleProps } from './mute-toggle.args';
 
 /**
  * A control for toggling the muted state of the player.
@@ -37,27 +38,16 @@ import { Toggle } from '../toggle';
  * </vds-mute-toggle>
  * ```
  */
-export class MuteToggle extends FocusMixin(Toggle) {
+export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
   @playerContext.muted.consume()
   on = playerContext.muted.defaultValue;
 
   @query('vds-control') controlEl?: Control;
 
-  /**
-   * **ARIA** The `aria-label` property of the underlying playback control.
-   *
-   * @required
-   */
   @property() label?: string = 'Mute';
 
-  /**
-   * Whether the underlying control should be disabled (not-interactable).
-   */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  /**
-   * **ARIA** - Identifies the element (or elements) that describes the underlying control.
-   */
   @property({ attribute: 'described-by' }) describedBy?: string;
 
   createRenderRoot(): ShadowRoot {

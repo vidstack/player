@@ -1,4 +1,4 @@
-import { event, listen } from '@wcom/events';
+import { listen } from '@wcom/events';
 import { LitElement, property } from 'lit-element';
 
 import { CanPlayType } from '../CanPlayType';
@@ -6,7 +6,6 @@ import {
   ConnectEvent,
   DisconnectEvent,
   PlaybackReadyEvent,
-  PlayerEvents,
 } from '../player.events';
 import { PlayerMethods, PlayerProps } from '../player.types';
 import {
@@ -17,6 +16,7 @@ import {
   UserVolumeChangeRequestEvent,
 } from '../user/user.events';
 import { MediaProviderMixin } from './MediaProviderMixin';
+import { ProviderProps } from './provider.args';
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by
@@ -24,7 +24,7 @@ import { MediaProviderMixin } from './MediaProviderMixin';
  */
 export abstract class MediaProvider<EngineType = unknown>
   extends MediaProviderMixin(LitElement)
-  implements PlayerProps, PlayerMethods {
+  implements PlayerProps, PlayerMethods, ProviderProps {
   connectedCallback(): void {
     super.connectedCallback();
     this.dispatchEvent(new ConnectEvent({ detail: this }));
@@ -226,130 +226,4 @@ export abstract class MediaProvider<EngineType = unknown>
     this.userEventGateway(e);
     this.volume = e.detail;
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Event Documentation
-  //
-  // Purely documentation purposes only, it'll be picked up by `@wcom/cli`.
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * Emitted when the provider connects to the DOM.
-   */
-  @event({ name: 'vds-connect' })
-  protected connectEvent!: PlayerEvents['vds-connect'];
-
-  /**
-   * Emitted when the provider disconnects from the DOM.
-   */
-  @event({ name: 'vds-disconnect' })
-  protected disconnectEvent!: PlayerEvents['vds-disconnect'];
-
-  /**
-   * Emitted when playback attempts to start.
-   */
-  @event({ name: 'vds-play' })
-  protected playEvent!: PlayerEvents['vds-play'];
-
-  /**
-   * Emitted when playback pauses.
-   */
-  @event({ name: 'vds-pause' })
-  protected pauseEvent!: PlayerEvents['vds-pause'];
-
-  /**
-   * Emitted when playback being playback.
-   */
-  @event({ name: 'vds-playing' })
-  protected playingEvent!: PlayerEvents['vds-playing'];
-
-  /**
-   * Emitted when the current src changes.
-   */
-  @event({ name: 'vds-src-change' })
-  protected srcChangeEvent!: PlayerEvents['vds-src-change'];
-
-  /**
-   * Emitted when the current poster changes.
-   */
-  @event({ name: 'vds-poster-change' })
-  protected posterChangeEvent!: PlayerEvents['vds-poster-change'];
-
-  /**
-   * Emitted when the muted state changes.
-   */
-  @event({ name: 'vds-muted-change' })
-  protected mutedChangeEvent!: PlayerEvents['vds-muted-change'];
-
-  /**
-   * Emitted when the volume state changes.
-   */
-  @event({ name: 'vds-volume-change' })
-  protected volumeChangeEvent!: PlayerEvents['vds-volume-change'];
-
-  /**
-   * Emitted when the current playback time changes.
-   */
-  @event({ name: 'vds-time-change' })
-  protected timeChangeEvent!: PlayerEvents['vds-time-change'];
-
-  /**
-   * Emitted when the length of the media changes.
-   */
-  @event({ name: 'vds-duration-change' })
-  protected durationChangeEvent!: PlayerEvents['vds-duration-change'];
-
-  /**
-   * Emitted when the length of the media downloaded changes.
-   */
-  @event({ name: 'vds-buffered-change' })
-  protected bufferedChangeEvent!: PlayerEvents['vds-buffered-change'];
-
-  /**
-   * Emitted when playback resumes/stops due to lack of data.
-   */
-  @event({ name: 'vds-buffering-change' })
-  protected bufferingChangeEvent!: PlayerEvents['vds-buffering-change'];
-
-  /**
-   * Emitted when the view type of the current provider/media changes.
-   */
-  @event({ name: 'vds-view-type-change' })
-  protected viewTypeChangeEvent!: PlayerEvents['vds-view-type-change'];
-
-  /**
-   * Emitted when the media type of the current provider/media changes.
-   */
-  @event({ name: 'vds-media-type-change' })
-  protected mediaTypeChangeEvent!: PlayerEvents['vds-media-type-change'];
-
-  /**
-   * Emitted when playback is ready to start - analgous with `canPlay`.
-   */
-  @event({ name: 'vds-playback-ready' })
-  protected playbackReadyEvent!: PlayerEvents['vds-playback-ready'];
-
-  /**
-   * Emitted when playback has started (`currentTime > 0`).
-   */
-  @event({ name: 'vds-playback-start' })
-  protected playbackStartEvent!: PlayerEvents['vds-playback-start'];
-
-  /**
-   * Emitted when playback ends (`currentTime === duration`).
-   */
-  @event({ name: 'vds-playback-end' })
-  protected playbackEndEvent!: PlayerEvents['vds-playback-end'];
-
-  /**
-   * Emitted when playback ends and then starts again due to the `loop` property being `true`.
-   */
-  @event({ name: 'vds-replay' })
-  protected replayEvent!: PlayerEvents['vds-replay'];
-
-  /**
-   * Emitted when a provider encounters any error.
-   */
-  @event({ name: 'vds-error' })
-  protected errorEvent!: PlayerEvents['vds-error'];
 }

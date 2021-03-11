@@ -17,6 +17,7 @@ import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { CancelableCallback } from '../../../shared/types';
 import { currentSafariVersion } from '../../../utils/support';
+import { SliderProps } from './slider.args';
 import { sliderStyles } from './slider.css';
 import {
   SliderDragEndEvent,
@@ -99,7 +100,7 @@ import { SliderKeyDirection } from './slider.types';
  * }
  * ```
  */
-export class Slider extends FocusMixin(LitElement) {
+export class Slider extends FocusMixin(LitElement) implements SliderProps {
   static get styles(): CSSResultArray {
     return [sliderStyles];
   }
@@ -138,62 +139,27 @@ export class Slider extends FocusMixin(LitElement) {
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * ♿ **ARIA:** The `aria-label` property of the slider.
-   */
   @property() label?: string;
 
-  /**
-   * A number that specifies the granularity that the value must adhere to.
-   */
   @property({ type: Number, reflect: true }) step = 1;
 
-  /**
-   * A number determining how much the value should increase/decrease by Shift+Arrow keys,
-   * which will be `(max - min) / stepRatio`.
-   */
   @property({ type: Number, reflect: true, attribute: 'step-ratio' })
   stepRatio = 4;
 
-  /**
-   * The lowest value in the range of permitted values.
-   */
   @property({ type: Number, reflect: true }) min = 0;
 
-  /**
-   * The greatest value in the range of permitted values.
-   */
   @property({ type: Number, reflect: true }) max = 100;
 
-  /**
-   * Whether the slider should be hidden.
-   */
   @property({ type: Boolean, reflect: true }) hidden = false;
 
-  /**
-   * Whether the slider should be disabled (not-interactable).
-   */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  /**
-   * The current value.
-   */
   @property({ type: Number }) value = 50;
 
-  /**
-   * ♿ **ARIA:** Human-readable text alternative for the current value. Defaults to
-   * `value:max` ratio as a percentage.
-   */
   @property({ attribute: 'value-text' }) valueText?: string;
 
-  /**
-   * ♿ **ARIA:** Indicates the orientation of the slider.
-   */
   @property() orientation: 'horizontal' | 'vertical' = 'horizontal';
 
-  /**
-   * The amount of milliseconds to throttle slider thumb during `mousemove` / `touchmove` events.
-   */
   @property({ type: Number }) throttle = 10;
 
   // -------------------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ import {
   TemplateResult,
 } from 'lit-element';
 
+import { TimeProgressProps } from './time-progress.args';
 import { timeProgressStyles } from './time-progress.css';
 
 /**
@@ -18,6 +19,7 @@ import { timeProgressStyles } from './time-progress.css';
  *
  * ## CSS Parts
  *
+ * @csspart root - The component's root element (`<div>`).
  * @csspart current-time - The `vds-time-current` component.
  * @csspart current-time-root - The `vds-time-current` component's root element (`<time>`).
  * @csspart duration - The `vds-time-duration` component.
@@ -52,49 +54,31 @@ import { timeProgressStyles } from './time-progress.css';
  * }
  * ```
  */
-export class TimeProgress extends LitElement {
+export class TimeProgress extends LitElement implements TimeProgressProps {
   static get styles(): CSSResultArray {
     return [timeProgressStyles];
   }
 
-  /**
-   * **ARIA** The `aria-label` property for the current time.
-   */
   @property({ attribute: 'current-time-label' })
   currentTimeLabel = 'Current time';
 
-  /**
-   * **ARIA** The `aria-label` property for the duration.
-   */
   @property({ attribute: 'duration-label' })
   durationLabel = 'Duration';
 
-  /**
-   * A string that is used to separate the current time and duration.
-   */
   @property({ attribute: 'time-separator' })
   timeSeparator = '/';
 
-  /**
-   * Whether the time should always show the hours unit, even if the time is less than
-   * 1 hour.
-   *
-   * @example `20:30` -> `0:20:35`
-   */
   @property({ type: Boolean, attribute: 'always-show-hours' })
   alwaysShowHours = false;
 
-  /**
-   * Whether the hours unit should be padded with zeroes to a length of 2.
-   *
-   * @example `1:20:03` -> `01:20:03`
-   */
   @property({ type: Boolean, attribute: 'pad-hours' })
   padHours = false;
 
   render(): TemplateResult {
     return html`
-      ${this.renderCurrentTime()}${this.renderTimeSeparator()}${this.renderDuration()}
+      <div id="root" part="root">
+        ${this.renderCurrentTime()}${this.renderTimeSeparator()}${this.renderDuration()}
+      </div>
     `;
   }
 
@@ -140,7 +124,7 @@ export class TimeProgress extends LitElement {
 
   protected renderTimeSeparator(): TemplateResult {
     return html`
-      <span part="${this.getTimeSeparatorPartAttr()}">
+      <span id="separator" part="${this.getTimeSeparatorPartAttr()}">
         ${this.timeSeparator}
       </span>
     `;

@@ -1,19 +1,22 @@
-import './vds-hls';
-
 import { html } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { Story } from '../../shared/storybook';
-import { HLS_ARG_TYPES, HlsArgTypes } from './hls.args';
+import {
+  HLS_PROVIDER_STORYBOOK_ARG_TYPES,
+  HlsProviderActions,
+  HlsProviderProps,
+} from './hls.args';
+import { HLS_TAG_NAME } from './vds-hls';
 
 export default {
   title: 'Providers/Hls',
-  component: 'vds-hls',
-  argTypes: HLS_ARG_TYPES,
+  component: HLS_TAG_NAME,
+  argTypes: HLS_PROVIDER_STORYBOOK_ARG_TYPES,
 };
 
-const Template: Story<HlsArgTypes> = ({
+const Template: Story<HlsProviderProps & HlsProviderActions> = ({
   width,
   height,
   aspectRatio,
@@ -52,14 +55,18 @@ const Template: Story<HlsArgTypes> = ({
   onPlaybackEnd,
   onReplay,
   onError,
+  onEngineBuilt,
+  onEngineAttach,
+  onEngineDetach,
+  onEngineNoSupport,
 }) =>
   html`
     <vds-hls
       src="${src}"
-      width="${width}"
-      height="${height}"
-      aspect-ratio="${aspectRatio}"
-      poster="${poster}"
+      width="${ifDefined(width)}"
+      height="${ifDefined(height)}"
+      aspect-ratio="${ifDefined(aspectRatio)}"
+      poster="${ifDefined(poster)}"
       ?paused="${paused}"
       volume="${volume}"
       current-time="${currentTime}"
@@ -67,8 +74,8 @@ const Template: Story<HlsArgTypes> = ({
       ?playsinline="${playsinline}"
       ?loop="${loop}"
       ?controls="${controls}"
-      cross-origin="${crossOrigin}"
-      preload="${preload}"
+      cross-origin="${ifDefined(crossOrigin)}"
+      preload="${ifDefined(preload)}"
       lib-src="${ifNonEmpty(libSrc)}"
       controls-list="${ifDefined(controlsList)}"
       ?auto-pip="${autoPiP}"
@@ -93,6 +100,10 @@ const Template: Story<HlsArgTypes> = ({
       @vds-playback-end="${onPlaybackEnd}"
       @vds-replay="${onReplay}"
       @vds-error="${onError}"
+      @vds-hls-engine-built="${onEngineBuilt}"
+      @vds-hls-engine-attach="${onEngineAttach}"
+      @vds-hls-engine-detach="${onEngineDetach}"
+      @vds-hls-engine-no-support="${onEngineNoSupport}"
     ></vds-hls>
   `;
 

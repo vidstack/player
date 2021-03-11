@@ -32,19 +32,21 @@ describe(TIME_PROGRESS_TAG_NAME, () => {
     const [, timeProgress] = await buildFixture();
 
     expect(timeProgress).shadowDom.to.equal(`
-      <vds-time-current
-        exportparts="root: current-time-root"
-        label="Current time"
-        part="current-time"
-      ></vds-time-current>
+      <div id="root" part="root">
+        <vds-time-current
+          exportparts="root: current-time-root"
+          label="Current time"
+          part="current-time"
+        ></vds-time-current>
 
-      <span part="separator time-separator">/</span>
-      
-      <vds-time-duration
-        exportparts="root: duration-root"
-        label="Duration"
-        part="duration"
-      ></vds-time-duration>
+        <span id="separator" part="separator time-separator">/</span>
+        
+        <vds-time-duration
+          exportparts="root: duration-root"
+          label="Duration"
+          part="duration"
+        ></vds-time-duration>
+      </div>
     `);
   });
 

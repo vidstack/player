@@ -1,8 +1,16 @@
 /* c8 ignore next 1000 */
-import { html, TemplateResult } from 'lit-element';
+import { html, property, TemplateResult } from 'lit-element';
 
 import { CanPlayType } from '../CanPlayType';
 import { playerContext } from '../player.context';
+import {
+  MutedChangeEvent,
+  PauseEvent,
+  PlaybackReadyEvent,
+  PlayEvent,
+  TimeChangeEvent,
+  VolumeChangeEvent,
+} from '../player.events';
 import { MediaProvider } from '../provider/MediaProvider';
 
 /**
@@ -10,6 +18,20 @@ import { MediaProvider } from '../provider/MediaProvider';
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
 export class FakeMediaProvider extends MediaProvider {
+  /***
+   * Trigger playback ready event when it mounts.
+   */
+  @property({ type: Boolean, attribute: 'playback-ready' })
+  playbackReady = false;
+
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    if (this.playbackReady) {
+      this.dispatchEvent(new PlaybackReadyEvent());
+    }
+  }
+
   // -------------------------------------------------------------------------------------------
   // Provider Metods
   // -------------------------------------------------------------------------------------------
@@ -22,24 +44,24 @@ export class FakeMediaProvider extends MediaProvider {
     return 1;
   }
 
-  setVolume(): void {
-    // no-op
+  setVolume(detail: number): void {
+    this.dispatchEvent(new VolumeChangeEvent({ detail }));
   }
 
   getCurrentTime(): number {
     return 0;
   }
 
-  setCurrentTime(): void {
-    // no-op
+  setCurrentTime(detail: number): void {
+    this.dispatchEvent(new TimeChangeEvent({ detail }));
   }
 
   getMuted(): boolean {
     return false;
   }
 
-  setMuted(): void {
-    // no-op
+  setMuted(detail: boolean): void {
+    this.dispatchEvent(new MutedChangeEvent({ detail }));
   }
 
   // -------------------------------------------------------------------------------------------
@@ -55,7 +77,7 @@ export class FakeMediaProvider extends MediaProvider {
   }
 
   get isPlaybackReady(): boolean {
-    return playerContext.isPlaybackReady.defaultValue;
+    return this.playbackReady;
   }
 
   get isPlaying(): boolean {
@@ -99,11 +121,11 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   async play(): Promise<void> {
-    // no-op
+    this.dispatchEvent(new PlayEvent());
   }
 
   async pause(): Promise<void> {
-    // no-op
+    this.dispatchEvent(new PauseEvent());
   }
 
   // -------------------------------------------------------------------------------------------

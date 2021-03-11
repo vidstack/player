@@ -10,8 +10,8 @@ import { FakeMediaProvider } from '../../../core';
 import { buildFakeMediaProvider } from '../../../core/fakes/helpers';
 import { getSlottedChildren } from '../../../utils/dom';
 import {
-  HideBufferingIndicatorEvent,
-  ShowBufferingIndicatorEvent,
+  BufferingIndicatorHideEvent,
+  BufferingIndicatorShowEvent,
 } from '../buffering-indicator.events';
 import { BufferingIndicator } from '../BufferingIndicator';
 import { BUFFERING_INDICATOR_TAG_NAME } from '../vds-buffering-indicator';
@@ -104,17 +104,17 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
     expect(slot).to.not.have.attribute('hidden');
   });
 
-  it(`should emit ${ShowBufferingIndicatorEvent.TYPE} event when hidden attr changes`, async () => {
+  it(`should emit ${BufferingIndicatorShowEvent.TYPE} event when hidden attr changes`, async () => {
     const [provider, bufferingIndicator] = await buildFixture();
 
     setTimeout(() => {
       provider.playerContext.isBufferingCtx = true;
     });
 
-    await oneEvent(bufferingIndicator, ShowBufferingIndicatorEvent.TYPE);
+    await oneEvent(bufferingIndicator, BufferingIndicatorShowEvent.TYPE);
   });
 
-  it(`should emit ${HideBufferingIndicatorEvent.TYPE} event when hidden attr changes`, async () => {
+  it(`should emit ${BufferingIndicatorHideEvent.TYPE} event when hidden attr changes`, async () => {
     const [provider, bufferingIndicator] = await buildFixture();
 
     provider.playerContext.isBufferingCtx = true;
@@ -124,6 +124,6 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
       provider.playerContext.isBufferingCtx = false;
     });
 
-    await oneEvent(bufferingIndicator, HideBufferingIndicatorEvent.TYPE);
+    await oneEvent(bufferingIndicator, BufferingIndicatorHideEvent.TYPE);
   });
 });

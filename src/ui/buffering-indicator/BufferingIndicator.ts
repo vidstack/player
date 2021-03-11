@@ -1,4 +1,3 @@
-import { event } from '@wcom/events';
 import {
   CSSResultArray,
   html,
@@ -12,10 +11,11 @@ import {
 import { playerContext } from '../../core';
 import { getSlottedChildren, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
+import { BufferingIndicatorProps } from './buffering-indicator.args';
 import { bufferingIndicatorStyles } from './buffering-indicator.css';
 import {
-  HideBufferingIndicatorEvent,
-  ShowBufferingIndicatorEvent,
+  BufferingIndicatorHideEvent,
+  BufferingIndicatorShowEvent,
 } from './buffering-indicator.events';
 
 /**
@@ -45,7 +45,9 @@ import {
  * </vds-buffering-indicator>
  * ```
  */
-export class BufferingIndicator extends LitElement {
+export class BufferingIndicator
+  extends LitElement
+  implements BufferingIndicatorProps {
   static get styles(): CSSResultArray {
     return [bufferingIndicatorStyles];
   }
@@ -60,20 +62,9 @@ export class BufferingIndicator extends LitElement {
 
   protected defaultSlotEl?: HTMLElement;
 
-  /**
-   * Whether the indicator should be shown while the provider/media is booting, in other words
-   * before it's ready for playback (`isPlaybackReady === false`).
-   */
   @property({ type: Boolean, attribute: 'show-while-booting' })
   showWhileBooting = false;
 
-  /**
-   * Delays the showing of the buffering indicator in the hopes that it resolves itself within
-   * that delay. This can be helpful in avoiding unnecessary or fast flashing indicators that
-   * may stress the user out. The delay number is in milliseconds.
-   *
-   * @example `300` => 300 milliseconds
-   */
   @property({ type: Number })
   delay = 0;
 
@@ -87,7 +78,11 @@ export class BufferingIndicator extends LitElement {
   }
 
   disconnectedCallback(): void {
+    window.clearTimeout(this.delayTimeout as number);
+    this.delayTimeout = undefined;
+
     super.disconnectedCallback();
+
     this.wasPrevHidden = true;
   }
 
@@ -102,7 +97,11 @@ export class BufferingIndicator extends LitElement {
     );
   }
 
+  protected delayTimeout?: unknown;
+
   protected handleTogglingHiddenAttr(): void {
+    window.clearTimeout(this.delayTimeout as number);
+
     const shouldBeHidden = this.isIndicatorHidden();
 
     if (shouldBeHidden || this.delay === 0) {
@@ -110,7 +109,7 @@ export class BufferingIndicator extends LitElement {
       return;
     }
 
-    setTimeout(() => {
+    this.delayTimeout = setTimeout(() => {
       this.toggleHiddenAttr();
     }, this.delay);
   }
@@ -132,27 +131,9 @@ export class BufferingIndicator extends LitElement {
 
   protected dispatchIndicatorChangeEvent(): void {
     const Event = !this.wasPrevHidden
-      ? HideBufferingIndicatorEvent
-      : ShowBufferingIndicatorEvent;
+      ? BufferingIndicatorHideEvent
+      : BufferingIndicatorShowEvent;
 
     this.dispatchEvent(new Event());
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Event Documentation
-  //
-  // Purely documentation purposes only, it'll be picked up by `@wcom/cli`.
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * Emitted when the buffering indicator is shown.
-   */
-  @event({ name: 'vds-show-buffering-indicator' })
-  protected showBufferingIndicatorEvent!: void;
-
-  /**
-   * Emitted when the buffering indicator is hidden.
-   */
-  @event({ name: 'vds-hide-buffering-indicator' })
-  protected hiddeBufferingIndicatorEvent!: void;
 }

@@ -2,7 +2,11 @@ import { css } from 'lit-element';
 
 export const toggleStyles = css`
   :host {
-    display: block;
+    display: contents;
     contain: content;
+  }
+
+  :host(:focus) {
+    outline: 0;
   }
 `;
