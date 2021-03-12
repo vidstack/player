@@ -1,8 +1,8 @@
 /* c8 ignore next 1000 */
 import { html, property, TemplateResult } from 'lit-element';
+import { styleMap } from 'lit-html/directives/style-map';
 
 import { CanPlayType } from '../CanPlayType';
-import { playerContext } from '../player.context';
 import {
   MutedChangeEvent,
   PauseEvent,
@@ -28,6 +28,7 @@ export class FakeMediaProvider extends MediaProvider {
     super.connectedCallback();
 
     if (this.playbackReady) {
+      this.playerContext.isPlaybackReadyCtx = true;
       this.dispatchEvent(new PlaybackReadyEvent());
     }
   }
@@ -37,11 +38,11 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   getPaused(): boolean {
-    return true;
+    return this.playerContext.pausedCtx;
   }
 
   getVolume(): number {
-    return 1;
+    return this.playerContext.volumeCtx;
   }
 
   setVolume(detail: number): void {
@@ -49,7 +50,7 @@ export class FakeMediaProvider extends MediaProvider {
   }
 
   getCurrentTime(): number {
-    return 0;
+    return this.playerContext.currentTimeCtx;
   }
 
   setCurrentTime(detail: number): void {
@@ -57,7 +58,7 @@ export class FakeMediaProvider extends MediaProvider {
   }
 
   getMuted(): boolean {
-    return false;
+    return this.playerContext.mutedCtx;
   }
 
   setMuted(detail: boolean): void {
@@ -69,19 +70,19 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   get currentSrc(): string {
-    return playerContext.currentSrc.defaultValue;
+    return this.playerContext.currentSrcCtx;
   }
 
   get currentPoster(): string {
-    return playerContext.currentPoster.defaultValue;
+    return this.playerContext.currentPosterCtx;
   }
 
   get isPlaybackReady(): boolean {
-    return this.playbackReady;
+    return this.playerContext.isPlaybackReadyCtx;
   }
 
   get isPlaying(): boolean {
-    return playerContext.isPlaying.defaultValue;
+    return this.playerContext.isPlayingCtx;
   }
 
   get engine(): unknown {
@@ -89,23 +90,23 @@ export class FakeMediaProvider extends MediaProvider {
   }
 
   get duration(): number {
-    return playerContext.duration.defaultValue;
+    return this.playerContext.durationCtx;
   }
 
   get buffered(): number {
-    return playerContext.buffered.defaultValue;
+    return this.playerContext.bufferedCtx;
   }
 
   get isBuffering(): boolean {
-    return playerContext.isBuffering.defaultValue;
+    return this.playerContext.isBufferingCtx;
   }
 
   get hasPlaybackStarted(): boolean {
-    return playerContext.hasPlaybackStarted.defaultValue;
+    return this.playerContext.hasPlaybackStartedCtx;
   }
 
   get hasPlaybackEnded(): boolean {
-    return playerContext.hasPlaybackEnded.defaultValue;
+    return this.playerContext.hasPlaybackEndedCtx;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -133,6 +134,10 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   render(): TemplateResult {
-    return html`<div><slot></slot></div>`;
+    return html`
+      <div style="${styleMap(this.getContextStyleMap())}">
+        <slot></slot>
+      </div>
+    `;
   }
 }

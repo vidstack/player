@@ -105,12 +105,26 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     return [sliderStyles];
   }
 
+  static get parts(): string[] {
+    return [
+      'root',
+      'root-dragging',
+      'root-orientation-vertical',
+      'thumb',
+      'thumb-dragging',
+      'track',
+      'track-dragging',
+      'track-fill',
+      'track-fill-dragging',
+    ];
+  }
+
   @query('#thumb') thumbEl!: HTMLDivElement;
   @query('#track') trackEl!: HTMLDivElement;
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.initMoveThrottle();
+    this.initPointerMoveThrottle();
   }
 
   update(changedProperties: PropertyValues): void {
@@ -124,14 +138,14 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     }
 
     if (changedProperties.has('throttle')) {
-      this.initMoveThrottle();
+      this.initPointerMoveThrottle();
     }
 
     super.update(changedProperties);
   }
 
   disconnectedCallback(): void {
-    this.destroyMoveThrottle();
+    this.destroyPointerMoveThrottle();
     super.disconnectedCallback();
   }
 
@@ -143,8 +157,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   @property({ type: Number, reflect: true }) step = 1;
 
-  @property({ type: Number, reflect: true, attribute: 'step-ratio' })
-  stepRatio = 4;
+  @property({ type: Number, reflect: true, attribute: 'step-multiplier' })
+  stepMultiplier = 10;
 
   @property({ type: Number, reflect: true }) min = 0;
 
@@ -306,8 +320,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
         autocomplete="off"
         style="left: ${this.fillPercent}%"
         @keydown="${this.handleThumbKeydown}"
-        @touchstart="${this.handleThumbPress}"
-        @mousedown="${this.handleThumbPress}"
+        @pointerdown="${this.handleThumbPointerDown}"
       ></div>
     `;
   }
@@ -326,8 +339,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
     if (this.disabled || !isValidKey) return;
 
-    const range = this.max - this.min;
-    const modified = !shiftKey ? this.step : range / this.stepRatio;
+    const modified = !shiftKey ? this.step : this.step * this.stepMultiplier;
     const direction =
       SliderKeyDirection[key as keyof typeof SliderKeyDirection];
     const diff = modified * direction;
@@ -350,7 +362,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     );
   }
 
-  protected handleThumbPress(event: Event): void {
+  protected handleThumbPointerDown(event: PointerEvent): void {
     if (this.disabled) return;
     this.startDragging(event);
   }
@@ -364,8 +376,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
       <div
         id="track"
         part="${this.getTrackPartAttr()}"
-        @touchstart="${this.handleTouchMove}"
-        @mousedown="${this.handleMouseMove}"
+        @pointerdown="${this.handlePointerMove}"
       ></div>
     `;
   }
@@ -410,7 +421,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   // Drag
   // -------------------------------------------------------------------------------------------
 
-  protected startDragging(originalEvent: Event): void {
+  protected startDragging(originalEvent: PointerEvent): void {
     this._isDragging = true;
 
     this.dispatchEvent(
@@ -420,7 +431,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     );
   }
 
-  protected stopDragging(originalEvent: Event): void {
+  protected stopDragging(originalEvent: PointerEvent): void {
     this._isDragging = false;
 
     this.dispatchEvent(
@@ -434,49 +445,39 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   // Document
   // -------------------------------------------------------------------------------------------
 
-  protected moveThrottle?: CancelableCallback<Event>;
+  protected pointerMoveThrottle?: CancelableCallback<PointerEvent>;
 
-  protected initMoveThrottle(): void {
-    this.moveThrottle?.cancel();
-    this.moveThrottle = throttle(this.handleThrottledMove, this.throttle);
+  protected initPointerMoveThrottle(): void {
+    this.pointerMoveThrottle?.cancel();
+    this.pointerMoveThrottle = throttle(
+      this.handleThrottledPointerMove,
+      this.throttle,
+    );
   }
 
-  protected destroyMoveThrottle(): void {
-    this.moveThrottle?.cancel();
-    this.moveThrottle = undefined;
+  protected destroyPointerMoveThrottle(): void {
+    this.pointerMoveThrottle?.cancel();
+    this.pointerMoveThrottle = undefined;
   }
 
-  @listen('mouseup', { target: 'document' })
-  @listen('touchend', { target: 'document' })
-  protected handleDocumentMoveEnd(event: Event): void {
+  @listen('pointerup', { target: 'document' })
+  protected handleDocumentPointerUp(event: PointerEvent): void {
     if (this.disabled || !this._isDragging) return;
     this.stopDragging(event);
   }
 
-  @listen('mousemove', { target: 'document' })
-  @listen('touchmove', { target: 'document' })
-  protected handleDocumentMove(event: Event): void {
+  @listen('pointermove', { target: 'document' })
+  protected handleDocumentPointerMove(event: PointerEvent): void {
     if (this.disabled || !this._isDragging) return;
-    this.moveThrottle?.(event);
+    this.pointerMoveThrottle?.(event);
   }
 
-  protected handleThrottledMove(event: Event): void {
+  protected handleThrottledPointerMove(event: PointerEvent): void {
     if (this.disabled || !this._isDragging) return;
-
-    if ((event as TouchEvent).touches) {
-      this.handleTouchMove(event as TouchEvent);
-    } else {
-      this.handleMouseMove(event as MouseEvent);
-    }
+    this.handlePointerMove(event);
   }
 
-  protected handleTouchMove(event: TouchEvent): void {
-    if (this.disabled) return;
-    const thumbPosition = event.changedTouches[0].clientX;
-    this.updateValueBasedOnThumbPosition(thumbPosition, event);
-  }
-
-  protected handleMouseMove(event: MouseEvent): void {
+  protected handlePointerMove(event: PointerEvent): void {
     if (this.disabled) return;
     const thumbPosition = event.clientX;
     this.updateValueBasedOnThumbPosition(thumbPosition, event);
@@ -484,7 +485,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   protected updateValueBasedOnThumbPosition(
     thumbPosition: number,
-    originalEvent?: Event,
+    originalEvent?: PointerEvent,
   ): void {
     const {
       left: trackLeft,

@@ -119,6 +119,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
    */
   protected getRootStyleMap(): StyleInfo {
     return {
+      ...this.getContextStyleMap(),
       'padding-bottom': this.getAspectRatioPadding(),
     };
   }
