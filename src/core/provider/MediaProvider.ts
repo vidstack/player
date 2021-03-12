@@ -1,5 +1,6 @@
 import { listen } from '@wcom/events';
 import { LitElement, property } from 'lit-element';
+import { StyleInfo } from 'lit-html/directives/style-map';
 
 import { CanPlayType } from '../CanPlayType';
 import {
@@ -174,11 +175,20 @@ export abstract class MediaProvider<EngineType = unknown>
   abstract pause(): Promise<void>;
 
   // -------------------------------------------------------------------------------------------
-  // ARIA Helpers
+  // Helpers
   // -------------------------------------------------------------------------------------------
 
   protected getAriaBusy(): 'true' | 'false' {
     return this.isPlaybackReady ? 'false' : 'true';
+  }
+
+  protected getContextStyleMap(): StyleInfo {
+    return {
+      '--vds-volume': String(this.volume),
+      '--vds-current-time': String(this.currentTime),
+      '--vds-duration': String(this.duration > 0 ? this.duration : 0),
+      '--vds-buffered': String(this.buffered),
+    };
   }
 
   // -------------------------------------------------------------------------------------------

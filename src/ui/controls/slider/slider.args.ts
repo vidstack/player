@@ -12,17 +12,17 @@ export interface SliderProps {
   label?: string;
 
   /**
-   * The lowest value in the range of permitted values.
+   * The lowest slider value in the range of permitted values.
    */
   min: number;
 
   /**
-   * The greatest value in the range of permitted values.
+   * The greatest slider value in the range of permitted values.
    */
   max: number;
 
   /**
-   * The current value.
+   * The current slider value.
    */
   value: number;
 
@@ -33,15 +33,15 @@ export interface SliderProps {
   valueText?: string;
 
   /**
-   * A number that specifies the granularity that the value must adhere to.
+   * A number that specifies the granularity that the slider value must adhere to.
    */
   step: number;
 
   /**
-   * A number determining how much the value should increase/decrease by Shift+Arrow keys,
-   * which will be `(max - min) / stepRatio`.
+   * A number that will be used to multiply the `step` when the `Shift` key is held down and the
+   * slider value is changed by pressing `LeftArrow` or `RightArrow`.
    */
-  stepRatio: number;
+  stepMultiplier: number;
 
   /**
    * Whether the slider should be hidden.
@@ -59,7 +59,8 @@ export interface SliderProps {
   orientation: 'horizontal' | 'vertical';
 
   /**
-   * The amount of milliseconds to throttle slider thumb during `mousemove` / `touchmove` events.
+   * The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove`
+   * events.
    */
   throttle: number;
 }
@@ -90,9 +91,9 @@ export const SLIDER_STORYBOOK_ARG_TYPES: SliderStorybookArgs = {
     control: 'number',
     defaultValue: 1,
   },
-  stepRatio: {
+  stepMultiplier: {
     control: 'number',
-    defaultValue: 4,
+    defaultValue: 10,
   },
   value: {
     control: 'number',
@@ -106,6 +107,7 @@ export const SLIDER_STORYBOOK_ARG_TYPES: SliderStorybookArgs = {
       type: 'select',
       options: ['horizontal', 'vertical'],
     },
+    defaultValue: 'horizontal',
   },
   throttle: {
     control: 'number',

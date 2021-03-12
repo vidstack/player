@@ -13,6 +13,10 @@ export const focusableSelector = `
   textarea:not([disabled]):not([tabindex='-1']),
   iframe, object, embed, *[tabindex]:not([tabindex='-1']), *[contenteditable=true],
   ${LIB_PREFIX}-control,
+  ${LIB_PREFIX}-slider,
+  ${LIB_PREFIX}-playback-toggle,
+  ${LIB_PREFIX}-mute-toggle,
+  ${LIB_PREFIX}-scrubber,
 `;
 
 export type FocusMixinBase = Constructor<UpdatingElement>;

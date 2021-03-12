@@ -3,7 +3,7 @@ import { css } from 'lit-element';
 export const sliderStyles = css`
   * {
     box-sizing: border-box;
-    touch-action: manipulation;
+    touch-action: none;
   }
 
   :host {
@@ -33,7 +33,7 @@ export const sliderStyles = css`
     border: 0;
     outline: 0;
     top: 0px;
-    z-index: 3;
+    z-index: 30;
     width: var(--vds-slider-thumb-width, 16px);
     height: var(--vds-slider-thumb-height, 16px);
     outline: none;
@@ -45,9 +45,9 @@ export const sliderStyles = css`
 
   #track {
     position: absolute;
-    top: 1;
+    top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 10;
     width: 100%;
     height: var(--vds-slider-track-height);
     min-height: 2.5px;
@@ -57,7 +57,7 @@ export const sliderStyles = css`
   }
 
   #track-fill {
-    z-index: 2;
+    z-index: 20;
     position: absolute;
     top: 0;
     left: 0;
@@ -67,7 +67,7 @@ export const sliderStyles = css`
     pointer-events: none;
     background: var(--vds-slider-track-fill-bg, #161616);
     transform-origin: left center;
-    transform: translate(0%, -98%) scaleX(var(--vds-slider-fill-rate));
+    transform: translate(0%, -50%) scaleX(var(--vds-slider-fill-rate));
   }
 
   :host(:focus) #thumb,

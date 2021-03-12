@@ -18,7 +18,7 @@ describe(SLIDER_TAG_NAME, () => {
         min="0"
         max="100"
         step="1"
-        step-ratio="4"
+        step-multiplier="10"
       ></vds-slider>
     `);
   });
@@ -169,7 +169,7 @@ describe(SLIDER_TAG_NAME, () => {
     );
 
     await elementUpdated(slider);
-    expect(slider.value).to.equal(25);
+    expect(slider.value).to.equal(40);
 
     thumb.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -182,28 +182,15 @@ describe(SLIDER_TAG_NAME, () => {
     expect(slider.value).to.equal(50);
   });
 
-  it('should start dragging on thumb touchstart and stop on document touchend', async () => {
+  it('should start dragging on thumb pointerdown and stop on document pointerup', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
     const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
 
-    setTimeout(() => thumb.dispatchEvent(new TouchEvent('touchstart')));
+    setTimeout(() => thumb.dispatchEvent(new PointerEvent('pointerdown')));
     await oneEvent(slider, SliderDragStartEvent.TYPE);
     expect(slider.isDragging).to.be.true;
 
-    setTimeout(() => document.dispatchEvent(new TouchEvent('touchend')));
-    await oneEvent(slider, SliderDragEndEvent.TYPE);
-    expect(slider.isDragging).to.be.false;
-  });
-
-  it('should start dragging on thumb mousedown and stop on document mouseup', async () => {
-    const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
-
-    setTimeout(() => thumb.dispatchEvent(new MouseEvent('mousedown')));
-    await oneEvent(slider, SliderDragStartEvent.TYPE);
-    expect(slider.isDragging).to.be.true;
-
-    setTimeout(() => document.dispatchEvent(new MouseEvent('mouseup')));
+    setTimeout(() => document.dispatchEvent(new PointerEvent('pointerup')));
     await oneEvent(slider, SliderDragEndEvent.TYPE);
     expect(slider.isDragging).to.be.false;
   });
@@ -212,7 +199,7 @@ describe(SLIDER_TAG_NAME, () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
     const track = slider.shadowRoot?.querySelector('#track') as HTMLElement;
     track.dispatchEvent(
-      new MouseEvent('mousedown', {
+      new PointerEvent('pointerdown', {
         clientX: Math.floor(track.clientWidth / 4),
       }),
     );
@@ -223,7 +210,7 @@ describe(SLIDER_TAG_NAME, () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
 
     document.dispatchEvent(
-      new MouseEvent('mousemove', {
+      new PointerEvent('pointermove', {
         clientX: 25,
       }),
     );
@@ -235,15 +222,14 @@ describe(SLIDER_TAG_NAME, () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
     const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
 
-    thumb.dispatchEvent(new MouseEvent('mousedown'));
+    thumb.dispatchEvent(new PointerEvent('pointerdown'));
     expect(slider.isDragging).to.be.true;
 
     slider.disabled = true;
-
     await elementUpdated(slider);
 
     document.dispatchEvent(
-      new MouseEvent('mousemove', {
+      new PointerEvent('pointermove', {
         clientX: 25,
       }),
     );
@@ -259,7 +245,7 @@ describe(SLIDER_TAG_NAME, () => {
     slider.disabled = true;
 
     track.dispatchEvent(
-      new MouseEvent('mousedown', {
+      new PointerEvent('pointerdown', {
         clientX: Math.floor(track.clientWidth / 4),
       }),
     );
@@ -273,8 +259,7 @@ describe(SLIDER_TAG_NAME, () => {
 
     slider.disabled = true;
 
-    thumb.dispatchEvent(new MouseEvent('mousedown'));
-    thumb.dispatchEvent(new TouchEvent('touchdown'));
+    thumb.dispatchEvent(new PointerEvent('pointerdown'));
 
     expect(slider.isDragging).to.be.false;
   });

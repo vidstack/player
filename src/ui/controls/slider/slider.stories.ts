@@ -20,7 +20,7 @@ const Template: Story<SliderProps & SliderActions> = ({
   min = 0,
   max,
   step,
-  stepRatio,
+  stepMultiplier,
   hidden,
   disabled,
   value,
@@ -37,7 +37,7 @@ const Template: Story<SliderProps & SliderActions> = ({
       min="${min}"
       max="${max}"
       step="${step}"
-      step-ratio="${stepRatio}"
+      step-multiplier="${stepMultiplier}"
       value="${value}"
       value-text="${ifNonEmpty(valueText)}"
       orientation="${orientation}"
