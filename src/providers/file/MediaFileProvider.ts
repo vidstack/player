@@ -27,6 +27,7 @@ import {
   TimeChangeEvent,
   VolumeChangeEvent,
 } from '../../core';
+import { Callback } from '../../shared/types';
 import { getSlottedChildren } from '../../utils/dom';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';
 import { FileProviderProps } from './file.args';
@@ -52,7 +53,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
   firstUpdated(changedProps: PropertyValues): void {
     super.firstUpdated(changedProps);
-    this.listenToMediaEl();
+    this.listenToMediaEvents();
   }
 
   disconnectedCallback(): void {
@@ -170,35 +171,30 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   // Events
   // -------------------------------------------------------------------------------------------
 
-  protected listenToMediaEl(): void {
+  protected listenToMediaEvents(): void {
     this.disposal.empty();
 
     if (isNil(this.mediaEl)) return;
 
-    const listeners = [
-      listenTo(this.mediaEl, 'loadstart', this.handleLoadStart.bind(this)),
-      listenTo(
-        this.mediaEl,
-        'loadedmetadata',
-        this.handleLoadedMetadata.bind(this),
-      ),
-      listenTo(this.mediaEl, 'progress', this.handleProgress.bind(this)),
-      listenTo(this.mediaEl, 'timeupdate', this.handleTimeUpdate.bind(this)),
-      listenTo(this.mediaEl, 'play', this.handlePlay.bind(this)),
-      listenTo(this.mediaEl, 'pause', this.handlePause.bind(this)),
-      listenTo(this.mediaEl, 'playing', this.handlePlaying.bind(this)),
-      listenTo(
-        this.mediaEl,
-        'volumechange',
-        this.handleVolumeChange.bind(this),
-      ),
-      listenTo(this.mediaEl, 'waiting', this.handleWaiting.bind(this)),
-      listenTo(this.mediaEl, 'suspend', this.handleSuspend.bind(this)),
-      listenTo(this.mediaEl, 'ended', this.handleEnded.bind(this)),
-      listenTo(this.mediaEl, 'error', this.handleError.bind(this)),
-    ];
+    const eventMap: Record<string, Callback<Event>> = {
+      loadstart: this.handleLoadStart,
+      loadedmetadata: this.handleLoadedMetadata,
+      progress: this.handleProgress,
+      timeupdate: this.handleTimeUpdate,
+      play: this.handlePlay,
+      pause: this.handlePause,
+      playing: this.handlePlaying,
+      volumechange: this.handleVolumeChange,
+      waiting: this.handleWaiting,
+      suspend: this.handleSuspend,
+      ended: this.handleEnded,
+      error: this.handleError,
+    };
 
-    listeners.forEach(off => this.disposal.add(off));
+    Object.keys(eventMap).forEach(type => {
+      const handler = eventMap[type];
+      this.disposal.add(listenTo(this.mediaEl!, type, handler.bind(this)));
+    });
   }
 
   protected handleLoadStart(originalEvent: Event): void {
