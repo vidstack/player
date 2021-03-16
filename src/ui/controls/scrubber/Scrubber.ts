@@ -457,6 +457,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected hidePreview(): void {
+    if (this.isDragging) return;
     this.shouldShowPreview = false;
     this.currentPreviewEl?.setAttribute('hidden', '');
   }
