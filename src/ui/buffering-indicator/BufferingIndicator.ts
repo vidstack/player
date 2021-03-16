@@ -53,8 +53,8 @@ export class BufferingIndicator
   }
 
   @internalProperty()
-  @playerContext.isBuffering.consume()
-  protected isBuffering = playerContext.isBuffering.defaultValue;
+  @playerContext.buffering.consume()
+  protected isBuffering = playerContext.buffering.defaultValue;
 
   @internalProperty()
   @playerContext.isPlaybackReady.consume()

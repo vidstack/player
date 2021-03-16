@@ -233,8 +233,8 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.context.paused = false;
     this.dispatchEvent(new PlayEvent({ originalEvent }));
 
-    if (!this.context.hasPlaybackStarted) {
-      this.context.hasPlaybackStarted = true;
+    if (!this.context.started) {
+      this.context.started = true;
       this.dispatchEvent(new PlaybackStartEvent({ originalEvent }));
     }
   }
@@ -243,20 +243,20 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.cancelTimeUpdates();
 
     this.context.paused = true;
-    this.context.isPlaying = false;
+    this.context.playing = false;
     this.dispatchEvent(new PauseEvent({ originalEvent }));
 
-    this.context.isBuffering = false;
+    this.context.buffering = false;
     this.dispatchEvent(
       new BufferingChangeEvent({ detail: false, originalEvent }),
     );
   }
 
   protected handlePlaying(originalEvent: Event): void {
-    this.context.isPlaying = true;
+    this.context.playing = true;
     this.dispatchEvent(new PlayingEvent({ originalEvent }));
 
-    this.context.isBuffering = false;
+    this.context.buffering = false;
     this.dispatchEvent(
       new BufferingChangeEvent({ detail: false, originalEvent }),
     );
@@ -305,24 +305,24 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleWaiting(originalEvent: Event): void {
-    this.context.isBuffering = true;
+    this.context.buffering = true;
     this.dispatchEvent(
       new BufferingChangeEvent({
-        detail: this.context.isBuffering,
+        detail: this.context.buffering,
         originalEvent,
       }),
     );
   }
 
   protected handleSuspend(originalEvent: Event): void {
-    this.context.isBuffering = false;
+    this.context.buffering = false;
     this.dispatchEvent(
       new BufferingChangeEvent({ detail: false, originalEvent }),
     );
   }
 
   protected handleEnded(originalEvent: Event): void {
-    this.context.hasPlaybackEnded = !this.loop;
+    this.context.ended = !this.loop;
     const Event = this.loop ? ReplayEvent : PlaybackEndEvent;
     this.dispatchEvent(new Event({ originalEvent }));
   }

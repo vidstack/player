@@ -11,6 +11,13 @@ export interface VideoProviderProps extends FileProviderProps, ProviderProps {
   poster?: string;
 
   /**
+   * Reflects the muted attribute, which indicates whether the audio output should be muted by
+   * default.  This property has no dynamic effect. To mute and unmute the audio output, use
+   * the `muted` property.
+   */
+  defaultMuted: boolean;
+
+  /**
    * Determines what controls to show on the media element whenever the browser shows its own set
    * of controls (e.g. when the controls attribute is specified).
    *

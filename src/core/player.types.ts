@@ -102,31 +102,37 @@ export interface PlayerProps {
   readonly duration: number;
 
   /**
+   * Returns a `TimeRanges` object that indicates the ranges of the media source that the
+   * browser has buffered (if any) at the moment the buffered property is accessed.
+   */
+  readonly buffered: TimeRanges;
+
+  /**
    * The length of the media in seconds (`double`) that has been downloaded by the browser.
    */
-  readonly buffered: number;
+  readonly bufferedAmount: number;
 
   /**
    * Whether playback has temporarily stopped because of a lack of temporary data.
    */
-  readonly isBuffering: boolean;
+  readonly buffering: boolean;
 
   /**
    * Whether media is actively playing back. Defaults to `false` if no media has
    * loaded or playback has not started.
    */
-  readonly isPlaying: boolean;
+  readonly playing: boolean;
 
   /**
    * Whether the media playback has started. In other words it will be true if `currentTime > 0`.
    */
-  readonly hasPlaybackStarted: boolean;
+  readonly started: boolean;
 
   /**
    * Whether media playback has reached the end. In other words it'll be true
    * if `currentTime === duration`.
    */
-  readonly hasPlaybackEnded: boolean;
+  readonly ended: boolean;
 
   /**
    * Whether media is ready for playback to begin, analgous with `canPlay`.

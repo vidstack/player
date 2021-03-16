@@ -78,20 +78,20 @@ export class FakeContextConsumer
   isDesktopDevice = deviceContext.isDesktopDevice.defaultValue;
 
   @internalProperty()
-  @playerContext.isBuffering.consume()
-  isBuffering = playerContext.isBuffering.defaultValue;
+  @playerContext.buffering.consume()
+  buffering = playerContext.buffering.defaultValue;
 
   @internalProperty()
-  @playerContext.isPlaying.consume()
-  isPlaying = playerContext.isPlaying.defaultValue;
+  @playerContext.playing.consume()
+  playing = playerContext.playing.defaultValue;
 
   @internalProperty()
-  @playerContext.hasPlaybackStarted.consume()
-  hasPlaybackStarted = playerContext.hasPlaybackStarted.defaultValue;
+  @playerContext.started.consume()
+  started = playerContext.started.defaultValue;
 
   @internalProperty()
-  @playerContext.hasPlaybackEnded.consume()
-  hasPlaybackEnded = playerContext.hasPlaybackEnded.defaultValue;
+  @playerContext.ended.consume()
+  ended = playerContext.ended.defaultValue;
 
   @internalProperty()
   @playerContext.isPlaybackReady.consume()

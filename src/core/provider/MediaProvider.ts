@@ -207,20 +207,20 @@ export abstract class MediaProvider<EngineType = unknown>
     return this.context.buffered;
   }
 
-  get isBuffering(): boolean {
-    return this.context.isBuffering;
+  get buffering(): boolean {
+    return this.context.buffering;
   }
 
-  get isPlaying(): boolean {
-    return this.context.isPlaying;
+  get playing(): boolean {
+    return this.context.playing;
   }
 
-  get hasPlaybackStarted(): boolean {
-    return this.context.hasPlaybackStarted;
+  get started(): boolean {
+    return this.context.started;
   }
 
-  get hasPlaybackEnded(): boolean {
-    return this.context.hasPlaybackEnded;
+  get ended(): boolean {
+    return this.context.ended;
   }
 
   get mediaType(): MediaType {
