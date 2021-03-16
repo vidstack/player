@@ -92,9 +92,9 @@ export abstract class MediaProvider<EngineType = unknown>
     return this.isPlaybackReady ? this.getVolume() : 1;
   }
 
-  set volume(newVolume: number) {
+  set volume(requestedVolume: number) {
     this.makeRequest('volume', () => {
-      this.setVolume(newVolume);
+      this.setVolume(requestedVolume);
     });
   }
 
@@ -108,9 +108,9 @@ export abstract class MediaProvider<EngineType = unknown>
     return this.isPlaybackReady ? this.getPaused() : true;
   }
 
-  set paused(isPaused: boolean) {
+  set paused(shouldPause: boolean) {
     this.makeRequest('paused', () => {
-      if (!isPaused) {
+      if (!shouldPause) {
         this.play();
       } else {
         this.pause();
@@ -127,9 +127,9 @@ export abstract class MediaProvider<EngineType = unknown>
     return this.isPlaybackReady ? this.getCurrentTime() : 0;
   }
 
-  set currentTime(newTime: number) {
+  set currentTime(requestedTime: number) {
     this.makeRequest('time', () => {
-      this.setCurrentTime(newTime);
+      this.setCurrentTime(requestedTime);
     });
   }
 
@@ -143,9 +143,9 @@ export abstract class MediaProvider<EngineType = unknown>
     return this.isPlaybackReady ? this.getMuted() : false;
   }
 
-  set muted(isMuted: boolean) {
+  set muted(shouldMute: boolean) {
     this.makeRequest('muted', () => {
-      this.setMuted(isMuted);
+      this.setMuted(shouldMute);
     });
   }
 
