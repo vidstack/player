@@ -61,8 +61,14 @@ import { ControlType } from './control.types';
  * ```
  */
 export class Control extends FocusMixin(LitElement) implements ControlProps {
+  @query('#root') rootEl!: HTMLButtonElement;
+
   static get styles(): CSSResultArray {
     return [controlStyles];
+  }
+
+  static get parts(): string[] {
+    return ['button', 'root', 'root-mobile'];
   }
 
   @internalProperty()
@@ -70,8 +76,6 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
   protected isMobileDevice = deviceContext.isMobileDevice.defaultValue;
 
   protected disposal = new Disposal();
-
-  @query('button') buttonEl?: HTMLButtonElement;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -105,6 +109,13 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
 
   @property({ attribute: 'described-by' }) describedBy?: string;
 
+  /**
+   * The component's root element.
+   */
+  get rootElement(): HTMLButtonElement {
+    return this.rootEl;
+  }
+
   // -------------------------------------------------------------------------------------------
   // Render
   // -------------------------------------------------------------------------------------------
@@ -126,6 +137,7 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
   render(): TemplateResult {
     return html`
       <button
+        id="root"
         class="${this.getRootClassAttr()}"
         part="${this.getRootPartAttr()}"
         type="${ifNonEmpty(this.type)}"
@@ -163,6 +175,7 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
   protected getRootPartAttr(): string {
     return clsx({
       root: true,
+      button: true,
       'root-mobile': this.isMobileDevice,
     });
   }
@@ -202,7 +215,7 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
   // Forward click event to button and prevent it from working when disabled.
   click(): void {
     if (this.disabled) return;
-    this.buttonEl?.click();
+    this.rootEl?.click();
   }
 
   // -------------------------------------------------------------------------------------------

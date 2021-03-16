@@ -34,10 +34,11 @@ describe(`${TIME_CURRENT_TAG_NAME}`, () => {
 
     expect(timeCurrent).shadowDom.to.equal(`
       <time
+        id="root"
         aria-label="Current time"
         class="root"
         datetime="PT1H2M30S"
-        part="root"
+        part="root time"
       >
         1:02:30
       </time>

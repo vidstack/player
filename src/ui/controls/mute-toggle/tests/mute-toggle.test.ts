@@ -37,10 +37,11 @@ describe(MUTE_TOGGLE_TAG_NAME, () => {
     const [, toggle] = await buildFixture();
     expect(toggle).shadowDom.to.equal(`
       <vds-control
+        id="root"
         class="root"
         label="Mute"
         part="root control"
-        exportparts="root: control-root, root-mobile: control-root-mobile"
+        exportparts="button: control-button, root: control-root, root-mobile: control-root-mobile"
       >
         <slot name="unmute"></slot>
         <slot name="mute"></slot>

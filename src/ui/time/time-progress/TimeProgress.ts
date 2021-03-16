@@ -3,9 +3,14 @@ import {
   html,
   LitElement,
   property,
+  query,
   TemplateResult,
 } from 'lit-element';
 
+import { buildExportPartsAttr } from '../../../utils/dom';
+import { Time } from '../time';
+import { TimeCurrent } from '../time-current';
+import { TimeDuration } from '../time-duration';
 import { TimeProgressProps } from './time-progress.args';
 import { timeProgressStyles } from './time-progress.css';
 
@@ -21,9 +26,9 @@ import { timeProgressStyles } from './time-progress.css';
  *
  * @csspart root - The component's root element (`<div>`).
  * @csspart current-time - The `vds-time-current` component.
- * @csspart current-time-root - The `vds-time-current` component's root element (`<time>`).
+ * @csspart current-time-* - All `vds-time` parts re-exported with the `current-time` prefix such as `current-time-root`.
  * @csspart duration - The `vds-time-duration` component.
- * @csspart duration-root - The `vds-time-duration` component's root element (`<time>`).
+ * @csspart duration-* - All `vds-time` parts re-exported with the `duration` prefix such as `duration-root`.
  * @csspart separator - The time separator element (`<span>`).
  *
  * ## Examples
@@ -55,8 +60,24 @@ import { timeProgressStyles } from './time-progress.css';
  * ```
  */
 export class TimeProgress extends LitElement implements TimeProgressProps {
+  @query('#root') rootEl!: HTMLDivElement;
+  @query('#time-current') timeCurrentEl!: TimeCurrent;
+  @query('#time-duration') timeDurationEl!: TimeDuration;
+  @query('#separator') separatorEl!: HTMLSpanElement;
+
   static get styles(): CSSResultArray {
     return [timeProgressStyles];
+  }
+
+  static get parts(): string[] {
+    return [
+      'root',
+      'current-time',
+      'duration',
+      'separator',
+      ...Time.parts.map(part => `current-time-${part}`),
+      ...Time.parts.map(part => `duration-${part}`),
+    ];
   }
 
   @property({ attribute: 'current-time-label' })
@@ -74,6 +95,34 @@ export class TimeProgress extends LitElement implements TimeProgressProps {
   @property({ type: Boolean, attribute: 'pad-hours' })
   padHours = false;
 
+  /**
+   * The component's root element.
+   */
+  get rootElement(): HTMLDivElement {
+    return this.rootEl;
+  }
+
+  /**
+   * The underlying `vds-time-current` component.
+   */
+  get timeCurrent(): TimeCurrent {
+    return this.timeCurrentEl;
+  }
+
+  /**
+   * The underlying `vds-time-duration` component.
+   */
+  get timeDuration(): TimeDuration {
+    return this.timeDurationEl;
+  }
+
+  /**
+   * The separator element.
+   */
+  get separatorElement(): HTMLSpanElement {
+    return this.separatorEl;
+  }
+
   render(): TemplateResult {
     return html`
       <div id="root" part="root">
@@ -85,6 +134,7 @@ export class TimeProgress extends LitElement implements TimeProgressProps {
   protected renderCurrentTime(): TemplateResult {
     return html`
       <vds-time-current
+        id="time-current"
         label="${this.currentTimeLabel}"
         part="${this.getCurrentTimePartAttr()}"
         ?always-show-hours="${this.alwaysShowHours}"
@@ -99,12 +149,13 @@ export class TimeProgress extends LitElement implements TimeProgressProps {
   }
 
   protected getCurrentTimeExportPartsAttr(): string {
-    return 'root: current-time-root';
+    return buildExportPartsAttr(Time.parts, 'current-time');
   }
 
   protected renderDuration(): TemplateResult {
     return html`
       <vds-time-duration
+        id="time-duration"
         label="${this.durationLabel}"
         part="${this.getDurationPartAttr()}"
         ?always-show-hours="${this.alwaysShowHours}"
@@ -119,7 +170,7 @@ export class TimeProgress extends LitElement implements TimeProgressProps {
   }
 
   protected getDurationExportPartsAttr(): string {
-    return 'root: duration-root';
+    return buildExportPartsAttr(Time.parts, 'duration');
   }
 
   protected renderTimeSeparator(): TemplateResult {
@@ -131,6 +182,6 @@ export class TimeProgress extends LitElement implements TimeProgressProps {
   }
 
   protected getTimeSeparatorPartAttr(): string {
-    return 'separator time-separator';
+    return 'separator';
   }
 }

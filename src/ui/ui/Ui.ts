@@ -4,6 +4,7 @@ import {
   html,
   internalProperty,
   LitElement,
+  query,
   TemplateResult,
 } from 'lit-element';
 
@@ -62,8 +63,14 @@ import { uiStyles } from './ui.css';
  * ```
  */
 export class Ui extends LitElement {
+  @query('#root') rootEl!: HTMLDivElement;
+
   static get styles(): CSSResultArray {
     return [uiStyles];
+  }
+
+  static get parts(): string[] {
+    return ['root', 'root-hidden', 'root-audio-view', 'root-video-view'];
   }
 
   @internalProperty()
@@ -77,6 +84,13 @@ export class Ui extends LitElement {
   @internalProperty()
   @playerContext.isVideoView.consume()
   protected isVideoView = playerContext.isVideoView.defaultValue;
+
+  /**
+   * The component's root element.
+   */
+  get rootElement(): HTMLDivElement {
+    return this.rootEl;
+  }
 
   render(): TemplateResult {
     return html`

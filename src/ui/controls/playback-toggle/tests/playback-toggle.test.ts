@@ -40,10 +40,11 @@ describe(PLAYBACK_TOGGLE_TAG_NAME, () => {
     const [, toggle] = await buildFixture();
     expect(toggle).shadowDom.to.equal(`
       <vds-control
+        id="root"
         class="root"
         label="Play"
         part="root control"
-        exportparts="root: control-root, root-mobile: control-root-mobile"
+        exportparts="button: control-button, root: control-root, root-mobile: control-root-mobile"
       >
         <slot name="pause"></slot>
         <slot name="play"></slot>

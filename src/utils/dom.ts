@@ -15,6 +15,15 @@ export function raf(callback?: Callback<void>): Promise<void> {
 }
 
 /**
+ * Builds an `exportsparts` attribute value given an array of `parts` and an optional `prefix`.
+ */
+export function buildExportPartsAttr(parts: string[], prefix?: string): string {
+  return parts
+    .map(part => `${part}: ${prefix ? `${prefix}-` : ''}${part}`)
+    .join(', ');
+}
+
+/**
  * Registers a custom element in the CustomElementRegistry. By "safely" we mean:
  *
  * - Called only client-side (`window` is defined).

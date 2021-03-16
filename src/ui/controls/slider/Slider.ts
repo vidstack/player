@@ -101,6 +101,11 @@ import { SliderKeyDirection } from './slider.types';
  * ```
  */
 export class Slider extends FocusMixin(LitElement) implements SliderProps {
+  @query('#root') rootEl!: HTMLDivElement;
+  @query('#thumb') thumbEl!: HTMLDivElement;
+  @query('#track') trackEl!: HTMLDivElement;
+  @query('#track-fill') trackFillEl!: HTMLDivElement;
+
   static get styles(): CSSResultArray {
     return [sliderStyles];
   }
@@ -118,9 +123,6 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
       'track-fill-dragging',
     ];
   }
-
-  @query('#thumb') thumbEl!: HTMLDivElement;
-  @query('#track') trackEl!: HTMLDivElement;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -238,6 +240,34 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
    */
   get fillPercent(): number {
     return this._fillRate * 100;
+  }
+
+  /**
+   * The component's root element.
+   */
+  get rootElement(): HTMLDivElement {
+    return this.rootEl;
+  }
+
+  /**
+   * The thumb element.
+   */
+  get thumbElement(): HTMLDivElement {
+    return this.thumbEl;
+  }
+
+  /**
+   * The track element.
+   */
+  get trackElement(): HTMLDivElement {
+    return this.trackEl;
+  }
+
+  /**
+   * The track fill element.
+   */
+  get trackFillElement(): HTMLDivElement {
+    return this.trackFillEl;
   }
 
   // -------------------------------------------------------------------------------------------

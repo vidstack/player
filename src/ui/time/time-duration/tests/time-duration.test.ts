@@ -34,10 +34,11 @@ describe(`${TIME_DURATION_TAG_NAME}`, () => {
 
     expect(timeDuration).shadowDom.to.equal(`
       <time
+        id="root"
         aria-label="Duration"
         class="root"
         datetime="PT1H2M30S"
-        part="root"
+        part="root time"
       >
         1:02:30
       </time>

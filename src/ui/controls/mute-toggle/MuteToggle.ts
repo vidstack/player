@@ -3,6 +3,7 @@ import { html, property, query, TemplateResult } from 'lit-element';
 import { playerContext, UserMutedChangeRequestEvent } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
+import { buildExportPartsAttr } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { Control } from '../control';
 import { Toggle } from '../toggle';
@@ -23,8 +24,7 @@ import { MuteToggleProps } from './mute-toggle.args';
  * ## CSS Parts
  *
  * @csspart control - The root control (`<vds-control>`).
- * @csspart control-root - The root control's root (`<button>`).
- * @csspart control-root-mobile - The root control's root (`<button>`) when the current device is mobile.
+ * @csspart control-* - All `vds-control` parts re-exported with the `control` prefix such as `control-root`.
  *
  * ## Examples
  *
@@ -39,16 +39,27 @@ import { MuteToggleProps } from './mute-toggle.args';
  * ```
  */
 export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
+  @query('#root') rootEl!: Control;
+
+  static get parts(): string[] {
+    return ['root', 'control', ...Control.parts.map(part => `control-${part}`)];
+  }
+
   @playerContext.muted.consume()
   on = playerContext.muted.defaultValue;
-
-  @query('vds-control') controlEl?: Control;
 
   @property() label?: string = 'Mute';
 
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   @property({ attribute: 'described-by' }) describedBy?: string;
+
+  /**
+   * The component's root element.
+   */
+  get rootElement(): Control {
+    return this.rootEl;
+  }
 
   createRenderRoot(): ShadowRoot {
     return this.attachShadow({
@@ -61,6 +72,7 @@ export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
   render(): TemplateResult {
     return html`
       <vds-control
+        id="root"
         class="${this.getRootClassAttr()}"
         part="${this.getRootPartAttr()}"
         label="${ifNonEmpty(this.label)}"
@@ -68,7 +80,7 @@ export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
         ?disabled="${this.disabled}"
         described-by="${ifNonEmpty(this.describedBy)}"
         @click="${this.handleTogglingMute}"
-        exportparts="root: control-root, root-mobile: control-root-mobile"
+        exportparts="${this.getRootExportPartsAttr()}"
       >
         ${this.renderToggle()}
       </vds-control>
@@ -77,7 +89,7 @@ export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
 
   click(): void {
     if (this.disabled) return;
-    this.controlEl?.click();
+    this.rootEl?.click();
   }
 
   /**
@@ -92,6 +104,10 @@ export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
    */
   protected getRootPartAttr(): string {
     return 'root control';
+  }
+
+  protected getRootExportPartsAttr(): string {
+    return buildExportPartsAttr(Control.parts, 'control');
   }
 
   protected getOnSlotName(): string {

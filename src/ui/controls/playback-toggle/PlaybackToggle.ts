@@ -7,6 +7,7 @@ import {
 } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
+import { buildExportPartsAttr } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { Control } from '../control';
 import { Toggle } from '../toggle';
@@ -27,8 +28,7 @@ import { PlaybackToggleProps } from './playback-toggle.args';
  * ## CSS Parts
  *
  * @csspart control - The root control (`<vds-control>`).
- * @csspart control-root - The root control's root (`<button>`).
- * @csspart control-root-mobile - The root control's root (`<button>`) when the current device is mobile.
+ * @csspart control-* - All `vds-control` parts re-exported with the `control` prefix such as `control-root`.
  *
  * ## Examples
  *
@@ -45,18 +45,29 @@ import { PlaybackToggleProps } from './playback-toggle.args';
 export class PlaybackToggle
   extends FocusMixin(Toggle)
   implements PlaybackToggleProps {
+  @query('#root') rootEl!: Control;
+
+  static get parts(): string[] {
+    return ['root', 'control', ...Control.parts.map(part => `control-${part}`)];
+  }
+
   // Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
   // use `isPlaying` becuase there could be a buffering delay (we want immediate feedback).
   @playerContext.paused.consume({ transform: p => !p })
   on = false;
-
-  @query('vds-control') controlEl?: Control;
 
   @property() label?: string = 'Play';
 
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   @property({ attribute: 'described-by' }) describedBy?: string;
+
+  /**
+   * The component's root element.
+   */
+  get rootElement(): Control {
+    return this.rootEl;
+  }
 
   createRenderRoot(): ShadowRoot {
     return this.attachShadow({
@@ -69,6 +80,7 @@ export class PlaybackToggle
   render(): TemplateResult {
     return html`
       <vds-control
+        id="root"
         class="${this.getRootClassAttr()}"
         part="${this.getRootPartAttr()}"
         label="${ifNonEmpty(this.label)}"
@@ -76,7 +88,7 @@ export class PlaybackToggle
         ?disabled="${this.disabled}"
         described-by="${ifNonEmpty(this.describedBy)}"
         @click="${this.handleTogglingPlayback}"
-        exportparts="root: control-root, root-mobile: control-root-mobile"
+        exportparts="${this.getRootExportPartsAttr()}"
       >
         ${this.renderToggle()}
       </vds-control>
@@ -85,7 +97,7 @@ export class PlaybackToggle
 
   click(): void {
     if (this.disabled) return;
-    this.controlEl?.click();
+    this.rootEl?.click();
   }
 
   /**
@@ -100,6 +112,10 @@ export class PlaybackToggle
    */
   protected getRootPartAttr(): string {
     return 'root control';
+  }
+
+  protected getRootExportPartsAttr(): string {
+    return buildExportPartsAttr(Control.parts, 'control');
   }
 
   protected getOnSlotName(): string {

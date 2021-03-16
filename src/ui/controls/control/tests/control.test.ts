@@ -34,9 +34,10 @@ describe(CONTROL_TAG_NAME, () => {
       const [, control] = await buildFixture();
       expect(control).shadowDom.to.equal(`
       <button
+        id="root"
         class="root"
         type="button"
-        part="root"
+        part="root button"
       >
         <slot />
       </button>

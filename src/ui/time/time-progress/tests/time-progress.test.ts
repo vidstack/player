@@ -34,15 +34,17 @@ describe(TIME_PROGRESS_TAG_NAME, () => {
     expect(timeProgress).shadowDom.to.equal(`
       <div id="root" part="root">
         <vds-time-current
-          exportparts="root: current-time-root"
+          id="time-current"
+          exportparts="root: current-time-root, time: current-time-time"
           label="Current time"
           part="current-time"
         ></vds-time-current>
 
-        <span id="separator" part="separator time-separator">/</span>
+        <span id="separator" part="separator">/</span>
         
         <vds-time-duration
-          exportparts="root: duration-root"
+          id="time-duration"
+          exportparts="root: duration-root, time: duration-time"
           label="Duration"
           part="duration"
         ></vds-time-duration>

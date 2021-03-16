@@ -325,7 +325,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   // -------------------------------------------------------------------------------------------
 
   /**
-   * Returns the underlying `vds-slider` element.
+   * Returns the underlying `vds-slider` component.
    */
   get slider(): Slider {
     return this.sliderEl;

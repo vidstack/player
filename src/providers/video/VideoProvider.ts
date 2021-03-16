@@ -66,6 +66,10 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
     return [videoStyles];
   }
 
+  static get parts(): string[] {
+    return ['root', 'video'];
+  }
+
   connectedCallback(): void {
     super.connectedCallback();
 

@@ -3,6 +3,7 @@ import {
   html,
   LitElement,
   property,
+  query,
   TemplateResult,
 } from 'lit-element';
 
@@ -48,8 +49,14 @@ import { formatHtml5Duration, formatTime } from './time.utils';
  * ```
  */
 export class Time extends LitElement implements TimeProps {
+  @query('#root') rootEl!: HTMLTimeElement;
+
   static get styles(): CSSResultArray {
     return [timeStyles];
+  }
+
+  static get parts(): string[] {
+    return ['root', 'time'];
   }
 
   @property() label?: string;
@@ -62,9 +69,17 @@ export class Time extends LitElement implements TimeProps {
   @property({ type: Boolean, attribute: 'pad-hours' })
   padHours = false;
 
+  /**
+   * The component's root element.
+   */
+  get rootElement(): HTMLTimeElement {
+    return this.rootEl;
+  }
+
   render(): TemplateResult {
     return html`
       <time
+        id="root"
         class="${this.getRootClassAttr()}"
         part="${this.getRootPartAttr()}"
         aria-label="${ifNonEmpty(this.label)}"
@@ -106,6 +121,6 @@ export class Time extends LitElement implements TimeProps {
    * Override this to modify root CSS parts.
    */
   protected getRootPartAttr(): string {
-    return 'root';
+    return 'root time';
   }
 }
