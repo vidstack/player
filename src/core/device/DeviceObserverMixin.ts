@@ -1,7 +1,9 @@
-import { Disposal, event } from '@wcom/events';
+import { contextRecordProvider, provideContextRecord } from '@wcom/context';
+import { event } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
 
-import { Constructor } from '../../shared/types';
+import { Constructor, Unsubscribe } from '../../shared/types';
+import { transformContextName } from '../player.context';
 import { deviceContext, DeviceContextProvider } from './device.context';
 import {
   Device,
@@ -16,7 +18,7 @@ export type DeviceObserverCocktail<T extends DeviceObserverMixinBase> = T &
   Constructor<
     DeviceObserver & {
       /**
-       * **DO NOT CALL FROM OUTSIDE THE PLAYER.**
+       * Device context record.
        *
        * @internal - Used for testing.
        */
@@ -36,9 +38,6 @@ export type DeviceObserverCocktail<T extends DeviceObserverMixinBase> = T &
     }
   >;
 
-// Keep disposal key a symbol to avoid clashing with other mixins.
-const DISPOSAL = Symbol();
-
 /**
  * Mixes in device properties and contexts which are automatically updated when the
  * device is changed. This mixin also dispatches a `DeviceChangeEvent` and sets mobile/desktop
@@ -49,21 +48,10 @@ const DISPOSAL = Symbol();
 export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
   Base: T,
 ): DeviceObserverCocktail<T> {
-  class DeviceObserverMixin extends Base implements DeviceContextProvider {
-    protected readonly [DISPOSAL] = new Disposal();
-
-    get deviceContext(): DeviceContextProvider {
-      return this;
-    }
-
-    @deviceContext.device.provide()
-    deviceCtx = deviceContext.device.defaultValue;
-
-    @deviceContext.isMobileDevice.provide()
-    isMobileDeviceCtx = deviceContext.isMobileDevice.defaultValue;
-
-    @deviceContext.isDesktopDevice.provide()
-    isDesktopDeviceCtx = deviceContext.isDesktopDevice.defaultValue;
+  @provideContextRecord(deviceContext, transformContextName)
+  class DeviceObserverMixin extends Base {
+    @contextRecordProvider(deviceContext, transformContextName)
+    readonly deviceContext!: DeviceContextProvider;
 
     /**
      * Emitted when the type of user device changes between mobile/desktop.
@@ -75,25 +63,29 @@ export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
 
     desktopDeviceAttrName = 'desktop';
 
+    private unsubDeviceChanges?: Unsubscribe;
+
     connectedCallback(): void {
       this.listenToDeviceChanges();
       super.connectedCallback();
     }
 
     disconnectedCallback(): void {
-      this[DISPOSAL].empty();
+      this.unsubDeviceChanges?.();
+      this.unsubDeviceChanges = undefined;
       super.disconnectedCallback();
     }
 
     protected listenToDeviceChanges(): void {
-      const off = onDeviceChange(this.handleDeviceChange.bind(this));
-      this[DISPOSAL].add(off);
+      this.unsubDeviceChanges = onDeviceChange(
+        this.handleDeviceChange.bind(this),
+      );
     }
 
     protected handleDeviceChange(device: Device): void {
-      this.deviceCtx = device;
-      this.isMobileDeviceCtx = this.isMobileDevice;
-      this.isDesktopDeviceCtx = this.isDesktopDevice;
+      this.deviceContext.device = device;
+      this.deviceContext.isMobileDevice = device === Device.Mobile;
+      this.deviceContext.isDesktopDevice = device === Device.Desktop;
 
       this.setAttribute(this.mobileDeviceAttrName, String(this.isMobileDevice));
 
@@ -106,15 +98,15 @@ export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
     }
 
     get device(): DeviceObserver['device'] {
-      return this.deviceCtx;
+      return this.deviceContext.device;
     }
 
     get isMobileDevice(): DeviceObserver['isMobileDevice'] {
-      return this.deviceCtx === Device.Mobile;
+      return this.deviceContext.isMobileDevice;
     }
 
     get isDesktopDevice(): DeviceObserver['isDesktopDevice'] {
-      return this.deviceCtx === Device.Desktop;
+      return this.deviceContext.isDesktopDevice;
     }
   }
 

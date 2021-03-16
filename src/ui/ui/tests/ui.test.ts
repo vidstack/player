@@ -1,6 +1,6 @@
 import { elementUpdated, expect, html } from '@open-wc/testing';
 
-import { FakeMediaProvider } from '../../../core';
+import { FakeMediaProvider, ViewType } from '../../../core';
 import { buildFakeMediaProvider } from '../../../core/fakes/helpers';
 import { getSlottedChildren } from '../../../utils/dom';
 import { Ui } from '../Ui';
@@ -54,7 +54,7 @@ describe(UI_TAG_NAME, () => {
     expect(root.getAttribute('part')).to.include('root-hidden');
 
     // Ready.
-    provider.playerContext.isPlaybackReadyCtx = true;
+    provider.context.isPlaybackReady = true;
     await elementUpdated(ui);
     expect(root.getAttribute('part')).to.not.include('root-hidden');
   });
@@ -66,7 +66,7 @@ describe(UI_TAG_NAME, () => {
     expect(root.getAttribute('part')).to.not.include('root-audio-view');
 
     // Yay.
-    provider.playerContext.isAudioViewCtx = true;
+    provider.context.viewType = ViewType.Audio;
     await elementUpdated(ui);
     expect(root.getAttribute('part')).to.include('root-audio-view');
   });
@@ -78,7 +78,7 @@ describe(UI_TAG_NAME, () => {
     expect(root.getAttribute('part')).to.not.include('root-video-view');
 
     // Yay.
-    provider.playerContext.isVideoViewCtx = true;
+    provider.context.viewType = ViewType.Video;
     await elementUpdated(ui);
     expect(root.getAttribute('part')).to.include('root-video-view');
   });

@@ -1,9 +1,21 @@
-import createContext from '@wcom/context';
+import createContext, {
+  ContextRecord,
+  ContextRecordProvider,
+  derivedContext,
+} from '@wcom/context';
 
 import { MediaType } from './MediaType';
-import { PlayerContext } from './player.types';
-import { uuidContext } from './uuid/uuid.context';
+import { PlayerProps } from './player.types';
 import { ViewType } from './ViewType';
+
+export type PlayerContext = ContextRecord<PlayerProps>;
+export type PlayerContextProvider = ContextRecordProvider<PlayerProps>;
+
+/**
+ * Avoid declaring context properties with the same name as class properties.
+ */
+export const transformContextName = (propName: string): string =>
+  `${propName}Ctx`;
 
 /**
  * The player context object contains a collection of contexts that map 1:1 with player
@@ -23,29 +35,30 @@ import { ViewType } from './ViewType';
  * }
  * ```
  */
-export const playerContext: PlayerContext = Object.freeze({
-  uuid: uuidContext,
+const viewType = createContext<ViewType>(ViewType.Unknown);
+const mediaType = createContext<MediaType>(MediaType.Unknown);
+export const playerContext: PlayerContext = {
   currentSrc: createContext(''),
   volume: createContext(1),
   currentTime: createContext(0),
-  paused: createContext(true),
-  controls: createContext(false),
+  paused: createContext<boolean>(true),
+  controls: createContext<boolean>(false),
   currentPoster: createContext(''),
-  muted: createContext(false),
-  playsinline: createContext(false),
-  loop: createContext(false),
+  muted: createContext<boolean>(false),
+  playsinline: createContext<boolean>(false),
+  loop: createContext<boolean>(false),
   aspectRatio: createContext<string | undefined>(undefined),
-  duration: createContext(-1),
-  buffered: createContext(0),
-  isBuffering: createContext(false),
-  isPlaying: createContext(false),
-  hasPlaybackStarted: createContext(false),
-  hasPlaybackEnded: createContext(false),
-  isPlaybackReady: createContext(false),
-  viewType: createContext(ViewType.Unknown),
-  isAudioView: createContext(false),
-  isVideoView: createContext(false),
-  mediaType: createContext(MediaType.Unknown),
-  isAudio: createContext(false),
-  isVideo: createContext(false),
-});
+  duration: createContext<number>(-1),
+  buffered: createContext<number>(0),
+  isBuffering: createContext<boolean>(false),
+  isPlaying: createContext<boolean>(false),
+  hasPlaybackStarted: createContext<boolean>(false),
+  hasPlaybackEnded: createContext<boolean>(false),
+  isPlaybackReady: createContext<boolean>(false),
+  viewType,
+  isAudioView: derivedContext(viewType, v => v === ViewType.Audio),
+  isVideoView: derivedContext(viewType, v => v === ViewType.Video),
+  mediaType,
+  isAudio: derivedContext(mediaType, m => m === MediaType.Audio),
+  isVideo: derivedContext(mediaType, m => m === MediaType.Video),
+};

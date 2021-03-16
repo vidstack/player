@@ -1,6 +1,5 @@
 /* c8 ignore next 1000 */
 import { html, property, TemplateResult } from 'lit-element';
-import { styleMap } from 'lit-html/directives/style-map';
 
 import { CanPlayType } from '../CanPlayType';
 import {
@@ -18,17 +17,13 @@ import { MediaProvider } from '../provider/MediaProvider';
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
 export class FakeMediaProvider extends MediaProvider {
-  /***
-   * Trigger playback ready event when it mounts.
-   */
-  @property({ type: Boolean, attribute: 'playback-ready' })
-  playbackReady = false;
+  @property({ type: Boolean }) playbackReady = false;
 
   connectedCallback(): void {
     super.connectedCallback();
 
     if (this.playbackReady) {
-      this.playerContext.isPlaybackReadyCtx = true;
+      this.context.isPlaybackReady = true;
       this.dispatchEvent(new PlaybackReadyEvent());
     }
   }
@@ -38,30 +33,33 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   getPaused(): boolean {
-    return this.playerContext.pausedCtx;
+    return this.context.paused;
   }
 
   getVolume(): number {
-    return this.playerContext.volumeCtx;
+    return this.context.volume;
   }
 
   setVolume(detail: number): void {
+    this.context.volume = detail;
     this.dispatchEvent(new VolumeChangeEvent({ detail }));
   }
 
   getCurrentTime(): number {
-    return this.playerContext.currentTimeCtx;
+    return this.context.currentTime;
   }
 
   setCurrentTime(detail: number): void {
+    this.context.currentTime = detail;
     this.dispatchEvent(new TimeChangeEvent({ detail }));
   }
 
   getMuted(): boolean {
-    return this.playerContext.mutedCtx;
+    return this.context.muted;
   }
 
   setMuted(detail: boolean): void {
+    this.context.muted = detail;
     this.dispatchEvent(new MutedChangeEvent({ detail }));
   }
 
@@ -69,44 +67,8 @@ export class FakeMediaProvider extends MediaProvider {
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
 
-  get currentSrc(): string {
-    return this.playerContext.currentSrcCtx;
-  }
-
-  get currentPoster(): string {
-    return this.playerContext.currentPosterCtx;
-  }
-
-  get isPlaybackReady(): boolean {
-    return this.playerContext.isPlaybackReadyCtx;
-  }
-
-  get isPlaying(): boolean {
-    return this.playerContext.isPlayingCtx;
-  }
-
   get engine(): unknown {
     return undefined;
-  }
-
-  get duration(): number {
-    return this.playerContext.durationCtx;
-  }
-
-  get buffered(): number {
-    return this.playerContext.bufferedCtx;
-  }
-
-  get isBuffering(): boolean {
-    return this.playerContext.isBufferingCtx;
-  }
-
-  get hasPlaybackStarted(): boolean {
-    return this.playerContext.hasPlaybackStartedCtx;
-  }
-
-  get hasPlaybackEnded(): boolean {
-    return this.playerContext.hasPlaybackEndedCtx;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -122,10 +84,12 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   async play(): Promise<void> {
+    this.context.paused = false;
     this.dispatchEvent(new PlayEvent());
   }
 
   async pause(): Promise<void> {
+    this.context.paused = true;
     this.dispatchEvent(new PauseEvent());
   }
 
@@ -135,7 +99,7 @@ export class FakeMediaProvider extends MediaProvider {
 
   render(): TemplateResult {
     return html`
-      <div style="${styleMap(this.getContextStyleMap())}">
+      <div>
         <slot></slot>
       </div>
     `;

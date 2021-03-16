@@ -11,6 +11,9 @@ export enum Device {
 }
 
 export interface DeviceProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [prop: string]: any;
+
   readonly device: Device;
   readonly isMobileDevice: boolean;
   readonly isDesktopDevice: boolean;

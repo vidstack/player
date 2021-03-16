@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Disposal, listenTo } from '@wcom/events';
-import { html, property, PropertyValues, TemplateResult } from 'lit-element';
+import {
+  html,
+  internalProperty,
+  property,
+  PropertyValues,
+  TemplateResult,
+} from 'lit-element';
 
 import {
   BufferedChangeEvent,
@@ -28,7 +34,6 @@ import {
   MediaCrossOriginOption,
   MediaFileProviderEngine,
   MediaPreloadOption,
-  ReadyState,
 } from './file.types';
 
 /**
@@ -44,14 +49,6 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   protected mediaEl?: HTMLMediaElement;
 
   protected disposal = new Disposal();
-
-  protected _isBuffering = false;
-
-  protected _hasPlaybackStarted = false;
-
-  protected _hasPlaybackEnded = false;
-
-  protected _isPlaying = false;
 
   firstUpdated(changedProps: PropertyValues): void {
     super.firstUpdated(changedProps);
@@ -83,6 +80,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   // Properties
   // -------------------------------------------------------------------------------------------
 
+  @internalProperty()
   protected _src = '';
 
   @property()
@@ -91,9 +89,10 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   set src(newSrc: string) {
+    this.softResetContext();
+    this.context.currentSrc = '';
+    this.dispatchEvent(new SrcChangeEvent({ detail: '' }));
     this._src = newSrc;
-    this.dispatchEvent(new SrcChangeEvent({ detail: this._src }));
-    this.requestUpdate();
   }
 
   @property({ type: Number })
@@ -125,7 +124,8 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   private requestTimeUpdates() {
     const newTime = this.mediaEl?.currentTime ?? 0;
 
-    if (this.playerContext.currentTimeCtx !== newTime) {
+    if (this.context.currentTime !== newTime) {
+      this.context.currentTime = newTime;
       this.dispatchEvent(new TimeChangeEvent({ detail: newTime }));
     }
 
@@ -143,9 +143,8 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     if (isNil(this.mediaEl)) return;
     this.cancelTimeUpdates();
     this.cleanupOldSourceNodes();
-    this._isBuffering = false;
-    this._hasPlaybackStarted = false;
-    this._hasPlaybackEnded = false;
+    this.softResetContext();
+    this.context.currentSrc = '';
     this.dispatchEvent(new SrcChangeEvent({ detail: '' }));
     this.attachNewSourceNodes();
   }
@@ -165,16 +164,6 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     window.requestAnimationFrame(() => {
       this.mediaEl?.load();
     });
-  }
-
-  /**
-   * Can be used by extending class to override `isPlaybackReady`.
-   */
-  protected isMediaElReadyForPlayback(): boolean {
-    return (
-      !isNil(this.mediaEl) &&
-      this.mediaEl!.readyState >= ReadyState.HaveMetaData
-    );
   }
 
   // -------------------------------------------------------------------------------------------
@@ -213,8 +202,9 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleLoadStart(originalEvent: Event): void {
+    this.context.currentSrc = this.mediaEl!.currentSrc;
     this.dispatchEvent(
-      new SrcChangeEvent({ detail: this.currentSrc, originalEvent }),
+      new SrcChangeEvent({ detail: this.context.currentSrc, originalEvent }),
     );
   }
 
@@ -229,20 +219,26 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   protected handleLoadedMetadata(originalEvent: Event): void {
     if (this.willAnotherEngineAttach()) return;
 
+    this.context.duration = this.mediaEl!.duration;
     this.dispatchEvent(
-      new DurationChangeEvent({ detail: this.duration, originalEvent }),
+      new DurationChangeEvent({
+        detail: this.context.duration,
+        originalEvent,
+      }),
     );
 
+    this.context.isPlaybackReady = true;
     this.dispatchEvent(new PlaybackReadyEvent({ originalEvent }));
   }
 
   protected handlePlay(originalEvent: Event): void {
     this.requestTimeUpdates();
 
+    this.context.paused = false;
     this.dispatchEvent(new PlayEvent({ originalEvent }));
 
-    if (!this._hasPlaybackStarted) {
-      this._hasPlaybackStarted = true;
+    if (!this.context.hasPlaybackStarted) {
+      this.context.hasPlaybackStarted = true;
       this.dispatchEvent(new PlaybackStartEvent({ originalEvent }));
     }
   }
@@ -250,71 +246,87 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   protected handlePause(originalEvent: Event): void {
     this.cancelTimeUpdates();
 
-    this._isPlaying = false;
-
+    this.context.paused = true;
+    this.context.isPlaying = false;
     this.dispatchEvent(new PauseEvent({ originalEvent }));
 
-    this._isBuffering = false;
+    this.context.isBuffering = false;
     this.dispatchEvent(
       new BufferingChangeEvent({ detail: false, originalEvent }),
     );
   }
 
   protected handlePlaying(originalEvent: Event): void {
-    this._isPlaying = true;
-
+    this.context.isPlaying = true;
     this.dispatchEvent(new PlayingEvent({ originalEvent }));
 
-    this._isBuffering = false;
+    this.context.isBuffering = false;
     this.dispatchEvent(
       new BufferingChangeEvent({ detail: false, originalEvent }),
     );
   }
 
   protected handleDurationChange(originalEvent: Event): void {
+    this.context.duration = this.mediaEl!.duration;
     this.dispatchEvent(
-      new DurationChangeEvent({ detail: this.duration, originalEvent }),
+      new DurationChangeEvent({
+        detail: this.context.duration,
+        originalEvent,
+      }),
     );
   }
 
   protected handleProgress(originalEvent: Event): void {
+    this.context.buffered = this.buffered;
     this.dispatchEvent(
-      new BufferedChangeEvent({ detail: this.buffered, originalEvent }),
+      new BufferedChangeEvent({
+        detail: this.context.buffered,
+        originalEvent,
+      }),
     );
   }
 
   protected handleTimeUpdate(originalEvent: Event): void {
+    this.context.currentTime = this.mediaEl!.currentTime;
     this.dispatchEvent(
-      new TimeChangeEvent({ detail: this.currentTime, originalEvent }),
+      new TimeChangeEvent({
+        detail: this.context.currentTime,
+        originalEvent,
+      }),
     );
   }
 
   protected handleVolumeChange(originalEvent: Event): void {
+    this.context.volume = this.mediaEl!.volume;
     this.dispatchEvent(
-      new VolumeChangeEvent({ detail: this.volume, originalEvent }),
+      new VolumeChangeEvent({ detail: this.context.volume, originalEvent }),
     );
 
+    this.context.muted = this.mediaEl!.muted;
     this.dispatchEvent(
-      new MutedChangeEvent({ detail: this.muted, originalEvent }),
+      new MutedChangeEvent({ detail: this.context.muted, originalEvent }),
     );
   }
 
   protected handleWaiting(originalEvent: Event): void {
-    this._isBuffering = true;
+    this.context.isBuffering = true;
     this.dispatchEvent(
-      new BufferingChangeEvent({ detail: true, originalEvent }),
+      new BufferingChangeEvent({
+        detail: this.context.isBuffering,
+        originalEvent,
+      }),
     );
   }
 
   protected handleSuspend(originalEvent: Event): void {
-    this._isBuffering = false;
+    this.context.isBuffering = false;
     this.dispatchEvent(
       new BufferingChangeEvent({ detail: false, originalEvent }),
     );
   }
 
   protected handleEnded(originalEvent: Event): void {
-    this._hasPlaybackEnded = !this.loop;
+    this.context.hasPlaybackEnded = !this.loop;
     const Event = this.loop ? ReplayEvent : PlaybackEndEvent;
     this.dispatchEvent(new Event({ originalEvent }));
   }
@@ -368,43 +380,11 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     return this.mediaEl as any;
   }
 
-  get isPlaybackReady(): boolean {
-    return this.isMediaElReadyForPlayback();
-  }
-
-  get currentSrc(): string {
-    return this.mediaEl?.currentSrc ?? '';
-  }
-
-  get currentPoster(): string {
-    return '';
-  }
-
-  get duration(): number {
-    return this.mediaEl?.duration ?? -1;
-  }
-
   get buffered(): number {
     if (isNil(this.mediaEl)) return 0;
     const { buffered, duration } = this.mediaEl;
     const end = buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
     return end > duration ? duration : end;
-  }
-
-  get isPlaying(): boolean {
-    return this._isPlaying;
-  }
-
-  get isBuffering(): boolean {
-    return this._isBuffering;
-  }
-
-  get hasPlaybackStarted(): boolean {
-    return this._hasPlaybackStarted;
-  }
-
-  get hasPlaybackEnded(): boolean {
-    return this._hasPlaybackEnded;
   }
 
   // -------------------------------------------------------------------------------------------

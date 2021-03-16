@@ -24,7 +24,10 @@ const Template: Story<MuteToggleProps & MuteToggleFakeProps> = ({
   fakeMuted,
 }) =>
   html`
-    <vds-fake-media-provider playback-ready .mutedCtx="${fakeMuted}">
+    <vds-fake-media-provider
+      .isPlaybackReadyCtx="${true}"
+      .mutedCtx="${fakeMuted}"
+    >
       <vds-mute-toggle
         label="${ifNonEmpty(label)}"
         described-by="${ifNonEmpty(describedBy)}"

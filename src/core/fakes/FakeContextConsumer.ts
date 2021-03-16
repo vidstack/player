@@ -1,3 +1,4 @@
+/* c8 ignore next 1000 */
 import {
   html,
   internalProperty,
@@ -6,10 +7,12 @@ import {
 } from 'lit-element';
 
 import { deviceContext } from '../device/device.context';
-import { playerContext } from '../player.context';
+import { playerContext, PlayerContextProvider } from '../player.context';
 import { uuidContext } from '../uuid/uuid.context';
 
-export class FakeContextConsumer extends LitElement {
+export class FakeContextConsumer
+  extends LitElement
+  implements PlayerContextProvider {
   @internalProperty()
   @uuidContext.consume()
   uuid = uuidContext.defaultValue;

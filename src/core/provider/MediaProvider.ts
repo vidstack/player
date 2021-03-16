@@ -1,12 +1,28 @@
+import {
+  contextRecordProvider,
+  DerivedContext,
+  provideContextRecord,
+} from '@wcom/context';
 import { listen } from '@wcom/events';
-import { LitElement, property } from 'lit-element';
-import { StyleInfo } from 'lit-html/directives/style-map';
+import { LitElement, property, PropertyValues } from 'lit-element';
 
+import { deferredPromise } from '../../utils/promise';
+import { isString, isUndefined } from '../../utils/unit';
 import { CanPlayType } from '../CanPlayType';
+import { DeviceObserverMixin } from '../device/DeviceObserverMixin';
+import { MediaType } from '../MediaType';
+import {
+  PlayerContext,
+  playerContext,
+  PlayerContextProvider,
+  transformContextName,
+} from '../player.context';
 import {
   ConnectEvent,
   DisconnectEvent,
+  ErrorEvent,
   PlaybackReadyEvent,
+  ViewTypeChangeEvent,
 } from '../player.events';
 import { PlayerMethods, PlayerProps } from '../player.types';
 import {
@@ -16,22 +32,53 @@ import {
   UserTimeChangeRequestEvent,
   UserVolumeChangeRequestEvent,
 } from '../user/user.events';
-import { MediaProviderMixin } from './MediaProviderMixin';
+import { UuidMixin } from '../uuid/UuidMixin';
+import { ViewType } from '../ViewType';
 import { ProviderProps } from './provider.args';
+import {
+  ProviderRequestAction,
+  ProviderRequestKey,
+  ProviderRequestQueue,
+} from './provider.types';
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by
  * all concrete media providers. Extending this class enables provider-agnostic communication 💬
  */
+@provideContextRecord(playerContext, transformContextName)
 export abstract class MediaProvider<EngineType = unknown>
-  extends MediaProviderMixin(LitElement)
+  extends DeviceObserverMixin(UuidMixin(LitElement))
   implements PlayerProps, PlayerMethods, ProviderProps {
   connectedCallback(): void {
     super.connectedCallback();
     this.dispatchEvent(new ConnectEvent({ detail: this }));
   }
 
+  updated(changedProperties: PropertyValues): void {
+    if (changedProperties.has('controls')) {
+      this.context.controls = this.controls;
+    }
+
+    if (changedProperties.has('loop')) {
+      this.context.loop = this.loop;
+    }
+
+    if (changedProperties.has('playsinline')) {
+      this.context.playsinline = this.playsinline;
+    }
+
+    if (changedProperties.has('aspectRatio')) {
+      this.context.aspectRatio = this.aspectRatio;
+    }
+
+    super.updated(changedProperties);
+  }
+
   disconnectedCallback(): void {
+    this.resetRequestQueue();
+    this.hardResetContext();
+    this.context.viewType = ViewType.Unknown;
+    this.dispatchEvent(new ViewTypeChangeEvent({ detail: ViewType.Unknown }));
     this.dispatchEvent(new DisconnectEvent({ detail: this }));
     super.disconnectedCallback();
   }
@@ -120,6 +167,10 @@ export abstract class MediaProvider<EngineType = unknown>
   @property({ type: Boolean })
   loop = false;
 
+  // ---
+
+  @property() aspectRatio: string | undefined = undefined;
+
   // -------------------------------------------------------------------------------------------
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
@@ -136,15 +187,65 @@ export abstract class MediaProvider<EngineType = unknown>
    */
   abstract readonly engine: EngineType;
 
-  abstract readonly isPlaybackReady: boolean;
-  abstract readonly isPlaying: boolean;
-  abstract readonly currentSrc: string;
-  abstract readonly currentPoster: string;
-  abstract readonly duration: number;
-  abstract readonly buffered: number;
-  abstract readonly isBuffering: boolean;
-  abstract readonly hasPlaybackStarted: boolean;
-  abstract readonly hasPlaybackEnded: boolean;
+  get isPlaybackReady(): boolean {
+    return this.context.isPlaybackReady;
+  }
+
+  get currentSrc(): string {
+    return this.context.currentSrc;
+  }
+
+  get currentPoster(): string {
+    return this.context.currentPoster;
+  }
+
+  get duration(): number {
+    return this.context.duration;
+  }
+
+  get buffered(): number {
+    return this.context.buffered;
+  }
+
+  get isBuffering(): boolean {
+    return this.context.isBuffering;
+  }
+
+  get isPlaying(): boolean {
+    return this.context.isPlaying;
+  }
+
+  get hasPlaybackStarted(): boolean {
+    return this.context.hasPlaybackStarted;
+  }
+
+  get hasPlaybackEnded(): boolean {
+    return this.context.hasPlaybackEnded;
+  }
+
+  get mediaType(): MediaType {
+    return this.context.mediaType;
+  }
+
+  get isAudio(): boolean {
+    return this.context.isAudio;
+  }
+
+  get isVideo(): boolean {
+    return this.context.isVideo;
+  }
+
+  get viewType(): ViewType {
+    return this.context.viewType;
+  }
+
+  get isAudioView(): boolean {
+    return this.context.isAudioView;
+  }
+
+  get isVideoView(): boolean {
+    return this.context.isVideoView;
+  }
 
   // -------------------------------------------------------------------------------------------
   // Support Checks
@@ -174,6 +275,24 @@ export abstract class MediaProvider<EngineType = unknown>
   abstract play(): Promise<void>;
   abstract pause(): Promise<void>;
 
+  protected calcAspectRatio(): number {
+    if (
+      !isString(this.aspectRatio) ||
+      !/\d{1,2}:\d{1,2}/.test(this.aspectRatio)
+    )
+      return NaN;
+
+    const [width, height] = this.aspectRatio.split(':');
+
+    return (100 / Number(width)) * Number(height);
+  }
+
+  protected getAspectRatioPadding(minPadding = '98vh'): string {
+    const ratio = this.calcAspectRatio();
+    if (isNaN(ratio)) return '';
+    return `min(${minPadding}, ${this.calcAspectRatio()}%)`;
+  }
+
   // -------------------------------------------------------------------------------------------
   // Helpers
   // -------------------------------------------------------------------------------------------
@@ -182,17 +301,8 @@ export abstract class MediaProvider<EngineType = unknown>
     return this.isPlaybackReady ? 'false' : 'true';
   }
 
-  protected getContextStyleMap(): StyleInfo {
-    return {
-      '--vds-volume': String(this.volume),
-      '--vds-current-time': String(this.currentTime),
-      '--vds-duration': String(this.duration > 0 ? this.duration : 0),
-      '--vds-buffered': String(this.buffered),
-    };
-  }
-
   // -------------------------------------------------------------------------------------------
-  // User Handlers
+  // User Event Handlers
   // -------------------------------------------------------------------------------------------
 
   /**
@@ -235,5 +345,138 @@ export abstract class MediaProvider<EngineType = unknown>
   ): void {
     this.userEventGateway(e);
     this.volume = e.detail;
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Request Queue
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Requests are queued if called before media is ready for playback. Once the media is
+   * ready (`ProviderPlaybackReadyEvent`) the queue is flushed. Each request is associated with
+   * a request key to avoid making duplicate requests of the same "type".
+   */
+  protected requestQueue: ProviderRequestQueue = new Map();
+
+  protected pendingRequestQueueFlush = deferredPromise();
+
+  /**
+   * Returns a clone of the current request queue.
+   */
+  getRequestQueue(): ProviderRequestQueue {
+    return new Map(this.requestQueue);
+  }
+
+  /**
+   * Waits for the current request queue to be flushed.
+   */
+  async waitForRequestQueueToFlush(): Promise<void> {
+    await this.pendingRequestQueueFlush.promise;
+  }
+
+  protected async safelyMakeRequest(
+    requestKey: ProviderRequestKey,
+  ): Promise<void> {
+    try {
+      await this.requestQueue.get(requestKey)?.();
+    } catch (e) {
+      this.dispatchEvent(new ErrorEvent({ detail: e }));
+    }
+
+    this.requestQueue.delete(requestKey);
+    this.requestUpdate();
+  }
+
+  /**
+   * This method will attempt to make a request if the current provider is ready
+   * for playback, otherwise it'll queue the request to be fulfilled when the
+   * `ProviderPlaybackReadyEvent` is fired.
+   *
+   * @param requestKey - A unique key to identify the request.
+   * @param action - The action to be performed when the request is fulfilled.
+   */
+  protected makeRequest(
+    requestKey: ProviderRequestKey,
+    request: ProviderRequestAction,
+  ): void {
+    this.requestQueue.set(requestKey, request);
+
+    if (!this.isPlaybackReady) return;
+
+    this.safelyMakeRequest(requestKey);
+    this.requestQueue.delete(requestKey);
+  }
+
+  protected async flushRequestQueue(): Promise<void> {
+    const requests = Array.from(this.requestQueue.keys());
+    await Promise.all(requests.map(reqKey => this.safelyMakeRequest(reqKey)));
+    this.requestQueue.clear();
+    this.pendingRequestQueueFlush.resolve();
+  }
+
+  @listen(PlaybackReadyEvent.TYPE)
+  protected async handleFlushRequestQueue(): Promise<void> {
+    await this.flushRequestQueue();
+  }
+
+  protected resetRequestQueue(): void {
+    this.requestQueue.clear();
+    // Release anyone waiting.
+    this.pendingRequestQueueFlush.resolve();
+    this.pendingRequestQueueFlush = deferredPromise();
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Context
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Player context record. Any property updated inside this object will trigger a context
+   * update.
+   *
+   * @internal - Used for testing.
+   */
+  @contextRecordProvider(playerContext, transformContextName)
+  readonly context!: PlayerContextProvider;
+
+  /**
+   * Context properties that should be reset when media is changed.
+   */
+  protected softResettableCtxProps = new Set<keyof PlayerContext>([
+    'paused',
+    'currentTime',
+    'duration',
+    'buffered',
+    'isPlaying',
+    'isBuffering',
+    'isPlaybackReady',
+    'hasPlaybackStarted',
+    'hasPlaybackEnded',
+    'mediaType',
+  ]);
+
+  /**
+   * When the `currentSrc` is changed this method is called to update any context properties
+   * that need to be reset. Important to note that not all properties are reset, only the
+   * properties in the `softResettableCtxProps` set.
+   */
+  protected softResetContext(): void {
+    Object.keys(playerContext).forEach(prop => {
+      if (this.softResettableCtxProps.has(prop)) {
+        this.context[prop] = playerContext[prop].defaultValue;
+      }
+    });
+  }
+
+  /**
+   * Called when the provider disconnects, resets the player context completely.
+   */
+  protected hardResetContext(): void {
+    Object.keys(playerContext).forEach(prop => {
+      // We can't set values on a derived context.
+      if (isUndefined((playerContext[prop] as DerivedContext<unknown>).key)) {
+        this.context[prop] = playerContext[prop].defaultValue;
+      }
+    });
   }
 }

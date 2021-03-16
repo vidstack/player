@@ -122,10 +122,10 @@ describe(PLAYBACK_TOGGLE_TAG_NAME, () => {
 
   it('should receive transfromed paused context updates', async () => {
     const [provider, toggle] = await buildFixture();
-    provider.playerContext.pausedCtx = false;
+    provider.context.paused = false;
     await elementUpdated(toggle);
     expect(toggle.on).to.be.true;
-    provider.playerContext.pausedCtx = true;
+    provider.context.paused = true;
     await elementUpdated(toggle);
     expect(toggle.on).to.be.false;
   });

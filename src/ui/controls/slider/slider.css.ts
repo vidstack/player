@@ -78,7 +78,7 @@ export const sliderStyles = css`
   #root.dragging #track-fill {
     border: 0;
     outline: 0;
-    background-color: var(--vds-slider-active-color, #0f62fe);
+    background-color: var(--vds-slider-active-color, #ff2a5d);
   }
 
   :host([disabled]) #thumb,
