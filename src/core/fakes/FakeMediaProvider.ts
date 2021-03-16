@@ -1,6 +1,5 @@
 /* c8 ignore next 1000 */
 import { html, property, TemplateResult } from 'lit-element';
-import { styleMap } from 'lit-html/directives/style-map';
 
 import { CanPlayType } from '../CanPlayType';
 import {
@@ -24,7 +23,7 @@ export class FakeMediaProvider extends MediaProvider {
     super.connectedCallback();
 
     if (this.playbackReady) {
-      this.context.isPlaybackReadyCtx = true;
+      this.context.isPlaybackReady = true;
       this.dispatchEvent(new PlaybackReadyEvent());
     }
   }
@@ -34,33 +33,33 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   getPaused(): boolean {
-    return this.context.pausedCtx;
+    return this.context.paused;
   }
 
   getVolume(): number {
-    return this.context.volumeCtx;
+    return this.context.volume;
   }
 
   setVolume(detail: number): void {
-    this.volumeCtx = detail;
+    this.context.volume = detail;
     this.dispatchEvent(new VolumeChangeEvent({ detail }));
   }
 
   getCurrentTime(): number {
-    return this.context.currentTimeCtx;
+    return this.context.currentTime;
   }
 
   setCurrentTime(detail: number): void {
-    this.currentTimeCtx = detail;
+    this.context.currentTime = detail;
     this.dispatchEvent(new TimeChangeEvent({ detail }));
   }
 
   getMuted(): boolean {
-    return this.context.mutedCtx;
+    return this.context.muted;
   }
 
   setMuted(detail: boolean): void {
-    this.mutedCtx = detail;
+    this.context.muted = detail;
     this.dispatchEvent(new MutedChangeEvent({ detail }));
   }
 
@@ -68,44 +67,8 @@ export class FakeMediaProvider extends MediaProvider {
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
 
-  get currentSrc(): string {
-    return this.context.currentSrcCtx;
-  }
-
-  get currentPoster(): string {
-    return this.context.currentPosterCtx;
-  }
-
-  get isPlaybackReady(): boolean {
-    return this.context.isPlaybackReadyCtx;
-  }
-
-  get isPlaying(): boolean {
-    return this.context.isPlayingCtx;
-  }
-
   get engine(): unknown {
     return undefined;
-  }
-
-  get duration(): number {
-    return this.context.durationCtx;
-  }
-
-  get buffered(): number {
-    return this.context.bufferedCtx;
-  }
-
-  get isBuffering(): boolean {
-    return this.context.isBufferingCtx;
-  }
-
-  get hasPlaybackStarted(): boolean {
-    return this.context.hasPlaybackStartedCtx;
-  }
-
-  get hasPlaybackEnded(): boolean {
-    return this.context.hasPlaybackEndedCtx;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -121,12 +84,12 @@ export class FakeMediaProvider extends MediaProvider {
   // -------------------------------------------------------------------------------------------
 
   async play(): Promise<void> {
-    this.pausedCtx = false;
+    this.context.paused = false;
     this.dispatchEvent(new PlayEvent());
   }
 
   async pause(): Promise<void> {
-    this.pausedCtx = true;
+    this.context.paused = true;
     this.dispatchEvent(new PauseEvent());
   }
 
@@ -136,7 +99,7 @@ export class FakeMediaProvider extends MediaProvider {
 
   render(): TemplateResult {
     return html`
-      <div style="${styleMap(this.getContextStyleMap())}">
+      <div>
         <slot></slot>
       </div>
     `;

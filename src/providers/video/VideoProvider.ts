@@ -69,7 +69,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
   connectedCallback(): void {
     super.connectedCallback();
 
-    this.viewTypeCtx = ViewType.Video;
+    this.context.viewType = ViewType.Video;
     this.dispatchEvent(
       new ViewTypeChangeEvent({
         detail: ViewType.Video,
@@ -120,7 +120,6 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
    */
   protected getRootStyleMap(): StyleInfo {
     return {
-      ...this.getContextStyleMap(),
       'padding-bottom': this.getAspectRatioPadding(),
     };
   }
@@ -168,10 +167,10 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
   // -------------------------------------------------------------------------------------------
 
   protected handleLoadedMetadata(originalEvent: Event): void {
-    this.mediaTypeCtx = this.getMediaType();
+    this.context.mediaType = this.getMediaType();
     this.dispatchEvent(
       new MediaTypeChangeEvent({
-        detail: this.mediaTypeCtx,
+        detail: this.context.mediaType,
         originalEvent,
       }),
     );

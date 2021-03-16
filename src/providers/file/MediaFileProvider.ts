@@ -90,7 +90,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
   set src(newSrc: string) {
     this.softResetContext();
-    this.currentSrcCtx = '';
+    this.context.currentSrc = '';
     this.dispatchEvent(new SrcChangeEvent({ detail: '' }));
     this._src = newSrc;
   }
@@ -124,8 +124,8 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   private requestTimeUpdates() {
     const newTime = this.mediaEl?.currentTime ?? 0;
 
-    if (this.currentTimeCtx !== newTime) {
-      this.currentTimeCtx = newTime;
+    if (this.context.currentTime !== newTime) {
+      this.context.currentTime = newTime;
       this.dispatchEvent(new TimeChangeEvent({ detail: newTime }));
     }
 
@@ -144,7 +144,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.cancelTimeUpdates();
     this.cleanupOldSourceNodes();
     this.softResetContext();
-    this.currentSrcCtx = '';
+    this.context.currentSrc = '';
     this.dispatchEvent(new SrcChangeEvent({ detail: '' }));
     this.attachNewSourceNodes();
   }
@@ -202,9 +202,9 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleLoadStart(originalEvent: Event): void {
-    this.currentSrcCtx = this.mediaEl!.currentSrc;
+    this.context.currentSrc = this.mediaEl!.currentSrc;
     this.dispatchEvent(
-      new SrcChangeEvent({ detail: this.currentSrcCtx, originalEvent }),
+      new SrcChangeEvent({ detail: this.context.currentSrc, originalEvent }),
     );
   }
 
@@ -219,23 +219,26 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   protected handleLoadedMetadata(originalEvent: Event): void {
     if (this.willAnotherEngineAttach()) return;
 
-    this.durationCtx = this.mediaEl!.duration;
+    this.context.duration = this.mediaEl!.duration;
     this.dispatchEvent(
-      new DurationChangeEvent({ detail: this.durationCtx, originalEvent }),
+      new DurationChangeEvent({
+        detail: this.context.duration,
+        originalEvent,
+      }),
     );
 
-    this.isPlaybackReadyCtx = true;
+    this.context.isPlaybackReady = true;
     this.dispatchEvent(new PlaybackReadyEvent({ originalEvent }));
   }
 
   protected handlePlay(originalEvent: Event): void {
     this.requestTimeUpdates();
 
-    this.pausedCtx = false;
+    this.context.paused = false;
     this.dispatchEvent(new PlayEvent({ originalEvent }));
 
-    if (!this.hasPlaybackStartedCtx) {
-      this.hasPlaybackStartedCtx = true;
+    if (!this.context.hasPlaybackStarted) {
+      this.context.hasPlaybackStarted = true;
       this.dispatchEvent(new PlaybackStartEvent({ originalEvent }));
     }
   }
@@ -243,75 +246,87 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   protected handlePause(originalEvent: Event): void {
     this.cancelTimeUpdates();
 
-    this.pausedCtx = true;
-    this.isPlayingCtx = false;
+    this.context.paused = true;
+    this.context.isPlaying = false;
     this.dispatchEvent(new PauseEvent({ originalEvent }));
 
-    this.isBufferingCtx = false;
+    this.context.isBuffering = false;
     this.dispatchEvent(
       new BufferingChangeEvent({ detail: false, originalEvent }),
     );
   }
 
   protected handlePlaying(originalEvent: Event): void {
-    this.isPlayingCtx = true;
+    this.context.isPlaying = true;
     this.dispatchEvent(new PlayingEvent({ originalEvent }));
 
-    this.isBufferingCtx = false;
+    this.context.isBuffering = false;
     this.dispatchEvent(
       new BufferingChangeEvent({ detail: false, originalEvent }),
     );
   }
 
   protected handleDurationChange(originalEvent: Event): void {
-    this.durationCtx = this.mediaEl!.duration;
+    this.context.duration = this.mediaEl!.duration;
     this.dispatchEvent(
-      new DurationChangeEvent({ detail: this.durationCtx, originalEvent }),
+      new DurationChangeEvent({
+        detail: this.context.duration,
+        originalEvent,
+      }),
     );
   }
 
   protected handleProgress(originalEvent: Event): void {
-    this.bufferedCtx = this.buffered;
+    this.context.buffered = this.buffered;
     this.dispatchEvent(
-      new BufferedChangeEvent({ detail: this.bufferedCtx, originalEvent }),
+      new BufferedChangeEvent({
+        detail: this.context.buffered,
+        originalEvent,
+      }),
     );
   }
 
   protected handleTimeUpdate(originalEvent: Event): void {
-    this.currentTimeCtx = this.mediaEl!.currentTime;
+    this.context.currentTime = this.mediaEl!.currentTime;
     this.dispatchEvent(
-      new TimeChangeEvent({ detail: this.currentTimeCtx, originalEvent }),
+      new TimeChangeEvent({
+        detail: this.context.currentTime,
+        originalEvent,
+      }),
     );
   }
 
   protected handleVolumeChange(originalEvent: Event): void {
-    this.volumeCtx = this.mediaEl!.volume;
+    this.context.volume = this.mediaEl!.volume;
     this.dispatchEvent(
-      new VolumeChangeEvent({ detail: this.volumeCtx, originalEvent }),
+      new VolumeChangeEvent({ detail: this.context.volume, originalEvent }),
     );
 
-    this.mutedCtx = this.mediaEl!.muted;
+    this.context.muted = this.mediaEl!.muted;
     this.dispatchEvent(
-      new MutedChangeEvent({ detail: this.mutedCtx, originalEvent }),
+      new MutedChangeEvent({ detail: this.context.muted, originalEvent }),
     );
   }
 
   protected handleWaiting(originalEvent: Event): void {
-    this.isBufferingCtx = true;
+    this.context.isBuffering = true;
     this.dispatchEvent(
-      new BufferingChangeEvent({ detail: this.isBufferingCtx, originalEvent }),
+      new BufferingChangeEvent({
+        detail: this.context.isBuffering,
+        originalEvent,
+      }),
     );
   }
 
   protected handleSuspend(originalEvent: Event): void {
-    this.isBufferingCtx = false;
+    this.context.isBuffering = false;
     this.dispatchEvent(
       new BufferingChangeEvent({ detail: false, originalEvent }),
     );
   }
 
   protected handleEnded(originalEvent: Event): void {
-    this.hasPlaybackEndedCtx = !this.loop;
+    this.context.hasPlaybackEnded = !this.loop;
     const Event = this.loop ? ReplayEvent : PlaybackEndEvent;
     this.dispatchEvent(new Event({ originalEvent }));
   }

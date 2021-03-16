@@ -5,7 +5,6 @@ import { buildFakeMediaProvider, emitEvent } from '../../fakes/helpers';
 import { MediaType } from '../../MediaType';
 import { playerContext } from '../../player.context';
 import { MediaTypeChangeEvent, ViewTypeChangeEvent } from '../../player.events';
-import { PlayerContext } from '../../player.types';
 import { ViewType } from '../../ViewType';
 
 describe('provider props', () => {
@@ -16,12 +15,12 @@ describe('provider props', () => {
   it('should have defined all provider state props', async () => {
     const provider = await buildFakeMediaProvider();
 
-    ((Object.keys(
-      playerContext,
-    ) as unknown) as (keyof PlayerContext)[]).forEach(prop => {
+    Object.keys(playerContext).forEach(prop => {
       // Skip uuid because it generates a value as the component mounts.
       if ((prop as unknown) === 'uuid') return;
-      expect(provider[prop], prop).to.equal(playerContext[prop].defaultValue);
+      expect(provider.context[prop], prop).to.equal(
+        playerContext[prop].defaultValue,
+      );
     });
   });
 
@@ -66,28 +65,25 @@ describe('provider props', () => {
 });
 
 describe('view type', () => {
-  it('should update view type when view type change event is fired [audio]', async () => {
+  it('should update view type when context is updated [audio]', async () => {
     const provider = await buildFakeMediaProvider();
-    emitEvent(provider, new ViewTypeChangeEvent({ detail: ViewType.Audio }));
-    await oneEvent(provider, ViewTypeChangeEvent.TYPE);
+    provider.context.viewType = ViewType.Audio;
     expect(provider.viewType).to.equal(ViewType.Audio);
     expect(provider.isAudioView).to.be.true;
     expect(provider.isVideoView).to.be.false;
   });
 
-  it('should update view type when view type change event is fired [video]', async () => {
+  it('should update view type when context is updated [video]', async () => {
     const provider = await buildFakeMediaProvider();
-    emitEvent(provider, new ViewTypeChangeEvent({ detail: ViewType.Video }));
-    await oneEvent(provider, ViewTypeChangeEvent.TYPE);
+    provider.context.viewType = ViewType.Video;
     expect(provider.viewType).to.equal(ViewType.Video);
     expect(provider.isAudioView).to.be.false;
     expect(provider.isVideoView).to.be.true;
   });
 
-  it('should update view type when view type change event is fired [unknown]', async () => {
+  it('should update view type when context is updated [unknown]', async () => {
     const provider = await buildFakeMediaProvider();
-    emitEvent(provider, new ViewTypeChangeEvent({ detail: ViewType.Unknown }));
-    await oneEvent(provider, ViewTypeChangeEvent.TYPE);
+    provider.context.viewType = ViewType.Unknown;
     expect(provider.viewType).to.equal(ViewType.Unknown);
     expect(provider.isAudioView).to.be.false;
     expect(provider.isVideoView).to.be.false;
@@ -105,31 +101,25 @@ describe('view type', () => {
 });
 
 describe('media type', () => {
-  it('should update media type when media type change event is fired [audio]', async () => {
+  it('should update media type when context is updated [audio]', async () => {
     const provider = await buildFakeMediaProvider();
-    emitEvent(provider, new MediaTypeChangeEvent({ detail: MediaType.Audio }));
-    await oneEvent(provider, MediaTypeChangeEvent.TYPE);
+    provider.context.mediaType = MediaType.Audio;
     expect(provider.mediaType).to.equal(MediaType.Audio);
     expect(provider.isAudio).to.be.true;
     expect(provider.isVideo).to.be.false;
   });
 
-  it('should update media type when media type change event is fired [video]', async () => {
+  it('should update media type when context is updated [video]', async () => {
     const provider = await buildFakeMediaProvider();
-    emitEvent(provider, new MediaTypeChangeEvent({ detail: MediaType.Video }));
-    await oneEvent(provider, MediaTypeChangeEvent.TYPE);
+    provider.context.mediaType = MediaType.Video;
     expect(provider.mediaType).to.equal(MediaType.Video);
     expect(provider.isAudio).to.be.false;
     expect(provider.isVideo).to.be.true;
   });
 
-  it('should update media type when media type change event is fired [unknown]', async () => {
+  it('should update media type when context is updated [unknown]', async () => {
     const provider = await buildFakeMediaProvider();
-    emitEvent(
-      provider,
-      new MediaTypeChangeEvent({ detail: MediaType.Unknown }),
-    );
-    await oneEvent(provider, MediaTypeChangeEvent.TYPE);
+    provider.context.mediaType = MediaType.Unknown;
     expect(provider.mediaType).to.equal(MediaType.Unknown);
     expect(provider.isAudio).to.be.false;
     expect(provider.isVideo).to.be.false;

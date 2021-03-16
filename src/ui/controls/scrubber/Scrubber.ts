@@ -8,6 +8,7 @@ import {
   query,
   TemplateResult,
 } from 'lit-element';
+import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
 import { playerContext } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
@@ -67,9 +68,9 @@ import { scrubberStyles } from './scrubber.css';
  * ## CSS Properties
  *
  * @cssprop --vds-slider-* - All slider CSS properties can be used to style the underlying `<vds-slider>` component.
- * @cssprop --vds-current-time - Passed down from the provider, it contains the current time of playback.
- * @cssprop --vds-buffered - Passed down from the provider, it contains the amount buffered.
- * @cssprop --vds-duration - Passed down from the provider, it contains the length of playback.
+ * @cssprop --vds-scrubber-current-time - Current time of playback.
+ * @cssprop --vds-scrubber-buffered - The amount of media thas has buffered.
+ * @cssprop --vds-scrubber-duration - The length of media playback.
  * @cssprop --vds-scrubber-progress-bg: The background color of the amount of buffered.
  *
  * ## Examples
@@ -202,6 +203,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
       <div
         id="root"
         part="${this.getScrubberPartAttr()}"
+        style="${styleMap(this.getScrubberStyleMap())}"
         @pointerenter="${this.handleScrubberPointerEnter}"
         @pointerleave="${this.handleScrubberPointerLeave}"
         @pointermove="${this.handleScrubberPointerMove}"
@@ -219,6 +221,14 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
       'root-hidden' && this.hidden,
       'root-disabled' && this.disabled,
     );
+  }
+
+  protected getScrubberStyleMap(): StyleInfo {
+    return {
+      '--vds-scrubber-current-time': String(this.currentTime),
+      '--vds-scrubber-buffered': String(this.buffered),
+      '--vds-scrubber-duration': String(this.duration),
+    };
   }
 
   protected handleScrubberPointerEnter(e: PointerEvent): void {

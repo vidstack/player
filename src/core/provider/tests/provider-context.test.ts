@@ -1,17 +1,10 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 
 import {
-  isBoolean,
-  isNumber,
-  isString,
-  isUndefined,
-} from '../../../utils/unit';
-import {
   buildFakeMediaProvider,
   buildFakeMediaProviderWithFakeConsumer,
 } from '../../fakes/helpers';
 import { playerContext } from '../../player.context';
-import { PlayerContext } from '../../player.types';
 import { ViewType } from '../../ViewType';
 
 describe('provider context', () => {
@@ -31,62 +24,27 @@ describe('provider context', () => {
     });
   });
 
-  it('should update context consumer', async () => {
+  it('should update any context', async () => {
     const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
+    provider.context.currentSrc = 'apples';
+    expect(consumer.currentSrc).to.equal('apples');
+  });
 
-    function genRandomNewValue(prop: keyof PlayerContext, value: unknown) {
-      if (isString(value) || prop === 'aspectRatio') {
-        return Math.random().toString(36).substring(7);
-      } else if (isNumber(value)) {
-        return Math.random();
-      } else if (isBoolean(value)) {
-        return !value;
-      }
-
-      return undefined;
-    }
-
-    const promises = ((Object.keys(
-      playerContext,
-    ) as unknown) as (keyof PlayerContext)[]).map(async prop => {
-      const ctxProp = `${prop}Ctx`;
-      const newValue = genRandomNewValue(prop, provider.context[ctxProp]);
-
-      expect(
-        newValue,
-        `
-            Failed to generate random value for context update [${prop}] 
-
-            It might be because the value is \`undefined\` or a non-primitive value so the 
-            type can't be automatically determined. Handle this outlier in the \`genRandomNewValue\` 
-            function inside this test case.\n
-          `,
-      ).to.exist;
-
-      if (!isUndefined(newValue)) {
-        provider.context[ctxProp] = newValue;
-        await elementUpdated(consumer);
-        expect(
-          consumer[prop],
-          `
-              Context [${prop}] failed to update
-
-              1. Check that you've included it correctly in \`player.context.ts\`
-              2. Check that you've defined the provider correctly in \`ContextMixin.ts\`.
-              3. Check that you've defined the consumer correctly in \`FakeConsumer.ts\`\n
-            `,
-        ).to.equal(newValue);
-      }
-    });
-
-    await Promise.all(promises);
+  it('should update derived context', async () => {
+    const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
+    provider.context.viewType = ViewType.Video;
+    expect(consumer.isAudioView).to.equal(false);
+    expect(consumer.isVideoView).to.equal(true);
+    provider.context.viewType = ViewType.Audio;
+    expect(consumer.isAudioView).to.equal(true);
+    expect(consumer.isVideoView).to.equal(false);
   });
 
   it('should soft reset context', async () => {
     const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
 
-    provider.context.pausedCtx = false;
-    provider.context.durationCtx = 200;
+    provider.context.paused = false;
+    provider.context.duration = 200;
     await elementUpdated(consumer);
 
     ((provider as unknown) as { softResetContext(): void }).softResetContext();
@@ -99,7 +57,7 @@ describe('provider context', () => {
   it.skip('should hard reset context when provider disconnects', async () => {
     const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
 
-    provider.context.viewTypeCtx = ViewType.Video;
+    provider.context.viewType = ViewType.Video;
     await elementUpdated(consumer);
 
     provider.disconnectedCallback();

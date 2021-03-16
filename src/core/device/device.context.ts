@@ -1,4 +1,7 @@
-import createContext, { Context } from '@wcom/context';
+import createContext, {
+  ContextRecord,
+  ContextRecordProvider,
+} from '@wcom/context';
 
 import { IS_CLIENT, IS_MOBILE } from '../../utils/support';
 import { Device, DeviceProps } from './DeviceObserver';
@@ -8,13 +11,8 @@ const guessDevice =
     ? Device.Mobile
     : Device.Desktop;
 
-export type DeviceContext = {
-  readonly [P in keyof DeviceProps]: Context<DeviceProps[P]>;
-};
-
-export type DeviceContextProvider = {
-  -readonly [P in keyof DeviceProps as `${P}Ctx`]: DeviceProps[P];
-};
+export type DeviceContext = ContextRecord<DeviceProps>;
+export type DeviceContextProvider = ContextRecordProvider<DeviceProps>;
 
 export const deviceContext: DeviceContext = Object.freeze({
   device: createContext(guessDevice),

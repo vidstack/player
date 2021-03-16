@@ -43,6 +43,6 @@ export const scrubberStyles = css`
     background: var(--vds-scrubber-progress-bg, #616161);
     transform-origin: left center;
     transform: translate(0%, -50%)
-      scaleX(calc(var(--vds-buffered) / var(--vds-duration)));
+      scaleX(calc(var(--vds-scrubber-buffered) / var(--vds-scrubber-duration)));
   }
 `;

@@ -209,7 +209,7 @@ export class HlsProvider
     this.engine?.destroy();
     this._prevHlsSrc = '';
     this._isHlsEngineAttached = false;
-    this.isPlaybackReadyCtx = false;
+    this.context.isPlaybackReady = false;
   }
 
   protected _prevHlsSrc = '';
@@ -286,7 +286,7 @@ export class HlsProvider
 
   @listen(SrcChangeEvent.TYPE)
   protected handleSrcChange(): void {
-    this.isPlaybackReadyCtx = false;
+    this.context.isPlaybackReady = false;
 
     if (!this.isCurrentlyHls) {
       this.detachHlsEngine();
@@ -340,10 +340,10 @@ export class HlsProvider
     originalEvent: string,
     data: Hls.levelLoadedData,
   ): void {
-    if (this.isPlaybackReadyCtx) return;
+    if (this.context.isPlaybackReady) return;
 
     const duration = data.details.totalduration;
-    this.durationCtx = duration;
+    this.context.duration = duration;
     this.dispatchEvent(
       new DurationChangeEvent({
         detail: duration,
@@ -351,7 +351,7 @@ export class HlsProvider
       }),
     );
 
-    this.isPlaybackReadyCtx = true;
+    this.context.isPlaybackReady = true;
     this.dispatchEvent(new PlaybackReadyEvent());
   }
 }

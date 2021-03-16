@@ -1,27 +1,30 @@
+import {
+  contextRecordProvider,
+  DerivedContext,
+  provideContextRecord,
+} from '@wcom/context';
 import { listen } from '@wcom/events';
-import { LitElement, property } from 'lit-element';
-import { StyleInfo } from 'lit-html/directives/style-map';
+import { LitElement, property, PropertyValues } from 'lit-element';
 
 import { deferredPromise } from '../../utils/promise';
-import { isString } from '../../utils/unit';
+import { isString, isUndefined } from '../../utils/unit';
 import { CanPlayType } from '../CanPlayType';
 import { DeviceObserverMixin } from '../device/DeviceObserverMixin';
 import { MediaType } from '../MediaType';
-import { playerContext } from '../player.context';
+import {
+  PlayerContext,
+  playerContext,
+  PlayerContextProvider,
+  transformContextName,
+} from '../player.context';
 import {
   ConnectEvent,
   DisconnectEvent,
   ErrorEvent,
-  MediaTypeChangeEvent,
   PlaybackReadyEvent,
   ViewTypeChangeEvent,
 } from '../player.events';
-import {
-  PlayerContext,
-  PlayerContextProvider,
-  PlayerMethods,
-  PlayerProps,
-} from '../player.types';
+import { PlayerMethods, PlayerProps } from '../player.types';
 import {
   UserMutedChangeRequestEvent,
   UserPauseRequestEvent,
@@ -42,6 +45,7 @@ import {
  * Base abstract media provider class that defines the interface to be implemented by
  * all concrete media providers. Extending this class enables provider-agnostic communication 💬
  */
+@provideContextRecord(playerContext, transformContextName)
 export abstract class MediaProvider<EngineType = unknown>
   extends DeviceObserverMixin(UuidMixin(LitElement))
   implements PlayerProps, PlayerMethods, ProviderProps {
@@ -50,9 +54,30 @@ export abstract class MediaProvider<EngineType = unknown>
     this.dispatchEvent(new ConnectEvent({ detail: this }));
   }
 
+  updated(changedProperties: PropertyValues): void {
+    if (changedProperties.has('controls')) {
+      this.context.controls = this.controls;
+    }
+
+    if (changedProperties.has('loop')) {
+      this.context.loop = this.loop;
+    }
+
+    if (changedProperties.has('playsinline')) {
+      this.context.playsinline = this.playsinline;
+    }
+
+    if (changedProperties.has('aspectRatio')) {
+      this.context.aspectRatio = this.aspectRatio;
+    }
+
+    super.updated(changedProperties);
+  }
+
   disconnectedCallback(): void {
     this.resetRequestQueue();
     this.hardResetContext();
+    this.context.viewType = ViewType.Unknown;
     this.dispatchEvent(new ViewTypeChangeEvent({ detail: ViewType.Unknown }));
     this.dispatchEvent(new DisconnectEvent({ detail: this }));
     super.disconnectedCallback();
@@ -163,63 +188,63 @@ export abstract class MediaProvider<EngineType = unknown>
   abstract readonly engine: EngineType;
 
   get isPlaybackReady(): boolean {
-    return this.isPlaybackReadyCtx;
+    return this.context.isPlaybackReady;
   }
 
   get currentSrc(): string {
-    return this.currentSrcCtx;
+    return this.context.currentSrc;
   }
 
   get currentPoster(): string {
-    return this.currentPosterCtx;
+    return this.context.currentPoster;
   }
 
   get duration(): number {
-    return this.durationCtx;
+    return this.context.duration;
   }
 
   get buffered(): number {
-    return this.bufferedCtx;
+    return this.context.buffered;
   }
 
   get isBuffering(): boolean {
-    return this.isBufferingCtx;
+    return this.context.isBuffering;
   }
 
   get isPlaying(): boolean {
-    return this.isPlayingCtx;
+    return this.context.isPlaying;
   }
 
   get hasPlaybackStarted(): boolean {
-    return this.hasPlaybackStartedCtx;
+    return this.context.hasPlaybackStarted;
   }
 
   get hasPlaybackEnded(): boolean {
-    return this.hasPlaybackEndedCtx;
+    return this.context.hasPlaybackEnded;
   }
 
   get mediaType(): MediaType {
-    return this.mediaTypeCtx;
+    return this.context.mediaType;
   }
 
   get isAudio(): boolean {
-    return this.mediaType === MediaType.Audio;
+    return this.context.isAudio;
   }
 
   get isVideo(): boolean {
-    return this.mediaType === MediaType.Video;
+    return this.context.isVideo;
   }
 
   get viewType(): ViewType {
-    return this.viewTypeCtx;
+    return this.context.viewType;
   }
 
   get isAudioView(): boolean {
-    return this.viewType === ViewType.Audio;
+    return this.context.isAudioView;
   }
 
   get isVideoView(): boolean {
-    return this.viewType === ViewType.Video;
+    return this.context.isVideoView;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -274,15 +299,6 @@ export abstract class MediaProvider<EngineType = unknown>
 
   protected getAriaBusy(): 'true' | 'false' {
     return this.isPlaybackReady ? 'false' : 'true';
-  }
-
-  protected getContextStyleMap(): StyleInfo {
-    return {
-      '--vds-volume': String(this.volume),
-      '--vds-current-time': String(this.currentTime),
-      '--vds-duration': String(this.duration > 0 ? this.duration : 0),
-      '--vds-buffered': String(this.buffered),
-    };
   }
 
   // -------------------------------------------------------------------------------------------
@@ -414,9 +430,14 @@ export abstract class MediaProvider<EngineType = unknown>
   // Context
   // -------------------------------------------------------------------------------------------
 
-  get context(): PlayerContextProvider {
-    return this as PlayerContextProvider;
-  }
+  /**
+   * Player context record. Any property updated inside this object will trigger a context
+   * update.
+   *
+   * @internal - Used for testing.
+   */
+  @contextRecordProvider(playerContext, transformContextName)
+  readonly context!: PlayerContextProvider;
 
   /**
    * Context properties that should be reset when media is changed.
@@ -440,15 +461,9 @@ export abstract class MediaProvider<EngineType = unknown>
    * properties in the `softResettableCtxProps` set.
    */
   protected softResetContext(): void {
-    const props = (Object.keys(
-      playerContext,
-    ) as unknown) as (keyof PlayerContext)[];
-
-    const ctx = this.context;
-
-    props.forEach(prop => {
+    Object.keys(playerContext).forEach(prop => {
       if (this.softResettableCtxProps.has(prop)) {
-        ctx[`${prop}Ctx`] = playerContext[prop].defaultValue;
+        this.context[prop] = playerContext[prop].defaultValue;
       }
     });
   }
@@ -457,112 +472,11 @@ export abstract class MediaProvider<EngineType = unknown>
    * Called when the provider disconnects, resets the player context completely.
    */
   protected hardResetContext(): void {
-    const props = (Object.keys(
-      playerContext,
-    ) as unknown) as (keyof PlayerContext)[];
-
-    const ctx = this.context;
-
-    props.forEach(prop => {
-      ctx[`${prop}Ctx`] = playerContext[prop].defaultValue;
+    Object.keys(playerContext).forEach(prop => {
+      // We can't set values on a derived context.
+      if (isUndefined((playerContext[prop] as DerivedContext<unknown>).key)) {
+        this.context[prop] = playerContext[prop].defaultValue;
+      }
     });
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Context Properties
-  // -------------------------------------------------------------------------------------------
-
-  @playerContext.currentSrc.provide()
-  protected currentSrcCtx = playerContext.currentSrc.defaultValue;
-
-  @playerContext.volume.provide()
-  protected volumeCtx = playerContext.volume.defaultValue;
-
-  @playerContext.currentTime.provide()
-  protected currentTimeCtx = playerContext.currentTime.defaultValue;
-
-  @playerContext.paused.provide()
-  protected pausedCtx = playerContext.paused.defaultValue;
-
-  @playerContext.controls.provide()
-  protected controlsCtx = playerContext.controls.defaultValue;
-
-  @playerContext.currentPoster.provide()
-  protected currentPosterCtx = playerContext.currentPoster.defaultValue;
-
-  @playerContext.muted.provide()
-  protected mutedCtx = playerContext.muted.defaultValue;
-
-  @playerContext.playsinline.provide()
-  protected playsinlineCtx = playerContext.playsinline.defaultValue;
-
-  @playerContext.loop.provide()
-  protected loopCtx = playerContext.loop.defaultValue;
-
-  @playerContext.aspectRatio.provide()
-  protected aspectRatioCtx = playerContext.aspectRatio.defaultValue;
-
-  @playerContext.duration.provide()
-  protected durationCtx = playerContext.duration.defaultValue;
-
-  @playerContext.buffered.provide()
-  protected bufferedCtx = playerContext.buffered.defaultValue;
-
-  @playerContext.isBuffering.provide()
-  protected isBufferingCtx = playerContext.isBuffering.defaultValue;
-
-  @playerContext.isPlaying.provide()
-  protected isPlayingCtx = playerContext.isPlaying.defaultValue;
-
-  @playerContext.hasPlaybackStarted.provide()
-  protected hasPlaybackStartedCtx =
-    playerContext.hasPlaybackStarted.defaultValue;
-
-  @playerContext.hasPlaybackEnded.provide()
-  protected hasPlaybackEndedCtx = playerContext.hasPlaybackEnded.defaultValue;
-
-  @playerContext.isPlaybackReady.provide()
-  protected isPlaybackReadyCtx = playerContext.isPlaybackReady.defaultValue;
-
-  @playerContext.viewType.provide()
-  protected viewTypeCtx = playerContext.viewType.defaultValue;
-
-  @playerContext.isAudioView.provide()
-  protected isAudioViewCtx = playerContext.isAudioView.defaultValue;
-
-  @playerContext.isVideoView.provide()
-  protected isVideoViewCtx = playerContext.isVideoView.defaultValue;
-
-  @playerContext.mediaType.provide()
-  protected mediaTypeCtx = playerContext.mediaType.defaultValue;
-
-  @playerContext.isAudio.provide()
-  protected isAudioCtx = playerContext.isAudio.defaultValue;
-
-  @playerContext.isVideo.provide()
-  protected isVideoCtx = playerContext.isVideo.defaultValue;
-
-  // -------------------------------------------------------------------------------------------
-  // Context Updates
-  // -------------------------------------------------------------------------------------------
-
-  // TODO: Create derived context provider in `@wcom/context`.
-
-  @listen(ViewTypeChangeEvent.TYPE)
-  protected handleViewTypeContextUpdate(e: ViewTypeChangeEvent): void {
-    const viewType = e.detail;
-    this.viewTypeCtx = viewType;
-    this.isAudioViewCtx = viewType === ViewType.Audio;
-    this.isVideoViewCtx = viewType === ViewType.Video;
-    this.setAttribute('audio', String(this.isAudioViewCtx));
-    this.setAttribute('video', String(this.isVideoViewCtx));
-  }
-
-  @listen(MediaTypeChangeEvent.TYPE)
-  protected handleMediaTypeContextUpdate(e: MediaTypeChangeEvent): void {
-    const mediaType = e.detail;
-    this.mediaTypeCtx = mediaType;
-    this.isAudioCtx = mediaType === MediaType.Audio;
-    this.isVideoCtx = mediaType === MediaType.Video;
   }
 }

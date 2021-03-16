@@ -51,11 +51,11 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
     const [provider, bufferingIndicator] = await buildFixture();
     const slot = getSlottedChildren(bufferingIndicator)[0] as HTMLElement;
 
-    provider.context.isBufferingCtx = true;
+    provider.context.isBuffering = true;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.not.have.attribute('hidden');
 
-    provider.context.isBufferingCtx = false;
+    provider.context.isBuffering = false;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.have.attribute('hidden', '');
   });
@@ -68,23 +68,23 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
 
     const slot = getSlottedChildren(bufferingIndicator)[0] as HTMLElement;
 
-    provider.context.isBufferingCtx = false;
-    provider.context.isPlaybackReadyCtx = false;
+    provider.context.isBuffering = false;
+    provider.context.isPlaybackReady = false;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.not.have.attribute('hidden');
 
-    provider.context.isBufferingCtx = false;
-    provider.context.isPlaybackReadyCtx = true;
+    provider.context.isBuffering = false;
+    provider.context.isPlaybackReady = true;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.have.attribute('hidden');
 
-    provider.context.isBufferingCtx = true;
-    provider.context.isPlaybackReadyCtx = false;
+    provider.context.isBuffering = true;
+    provider.context.isPlaybackReady = false;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.not.have.attribute('hidden');
 
-    provider.context.isBufferingCtx = true;
-    provider.context.isPlaybackReadyCtx = true;
+    provider.context.isBuffering = true;
+    provider.context.isPlaybackReady = true;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.not.have.attribute('hidden');
   });
@@ -96,7 +96,7 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
     bufferingIndicator.delay = 10;
     await elementUpdated(bufferingIndicator);
 
-    provider.context.isBufferingCtx = true;
+    provider.context.isBuffering = true;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.have.attribute('hidden');
 
@@ -108,7 +108,7 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
     const [provider, bufferingIndicator] = await buildFixture();
 
     setTimeout(() => {
-      provider.context.isBufferingCtx = true;
+      provider.context.isBuffering = true;
     });
 
     await oneEvent(bufferingIndicator, BufferingIndicatorShowEvent.TYPE);
@@ -117,11 +117,11 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
   it(`should emit ${BufferingIndicatorHideEvent.TYPE} event when hidden attr changes`, async () => {
     const [provider, bufferingIndicator] = await buildFixture();
 
-    provider.context.isBufferingCtx = true;
+    provider.context.isBuffering = true;
     await elementUpdated(bufferingIndicator);
 
     setTimeout(() => {
-      provider.context.isBufferingCtx = false;
+      provider.context.isBuffering = false;
     });
 
     await oneEvent(bufferingIndicator, BufferingIndicatorHideEvent.TYPE);

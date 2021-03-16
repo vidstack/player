@@ -1,19 +1,8 @@
-import { Context } from '@wcom/context';
-
 import { CanPlayType } from './CanPlayType';
 import { MediaType } from './MediaType';
 import { ViewType } from './ViewType';
 
 export type Source = string;
-
-export type PlayerContext = {
-  readonly [P in keyof PlayerProps]: Context<PlayerProps[P]>;
-};
-
-export type PlayerContextProvider = Record<string, unknown> &
-  {
-    -readonly [P in keyof PlayerProps as `${P}Ctx`]: PlayerProps[P];
-  };
 
 export type ReadonlyPlayerState = Readonly<
   Pick<
@@ -39,6 +28,9 @@ export type ReadonlyPlayerState = Readonly<
 export type WritablePlayerState = Omit<PlayerProps, keyof ReadonlyPlayerState>;
 
 export interface PlayerProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [prop: string]: any;
+
   /**
    * The aspect ratio of the player expressed as `width:height` (`16:9`). This is only applied if
    * the `viewType` is `video` and the player is not in fullscreen mode. Defaults to `undefined`.
