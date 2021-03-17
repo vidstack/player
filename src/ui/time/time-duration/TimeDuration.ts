@@ -1,6 +1,6 @@
 import { playerContext } from '../../../core';
 import { Time } from '../time';
-import { TimeDurationProps } from './time-duration.args';
+import { TimeDurationProps } from './time-duration.types';
 
 /**
  * Formats and displays the `duration` of the current media. Do not mess with the component's

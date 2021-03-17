@@ -2,11 +2,8 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
-import {
-  SLIDER_STORYBOOK_ARG_TYPES,
-  SliderActions,
-  SliderProps,
-} from './slider.args';
+import { SLIDER_STORYBOOK_ARG_TYPES } from './slider.args';
+import { SliderActions, SliderProps } from './slider.types';
 import { SLIDER_TAG_NAME } from './vds-slider';
 
 export default {
@@ -44,9 +41,9 @@ const Template: Story<SliderProps & SliderActions> = ({
       throttle="${throttle}"
       ?disabled="${disabled}"
       ?hidden="${hidden}"
-      @vds-slider-value-change="${onValueChange}"
-      @vds-slider-drag-start="${onDragStart}"
-      @vds-slider-drag-end="${onDragEnd}"
+      @vds-slidervaluechange="${onValueChange}"
+      @vds-sliderdragstart="${onDragStart}"
+      @vds-sliderdragend="${onDragEnd}"
       style="max-width: 25%;"
     ></vds-slider>
   `;

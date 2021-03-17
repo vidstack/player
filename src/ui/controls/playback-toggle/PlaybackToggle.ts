@@ -2,8 +2,8 @@ import { html, property, query, TemplateResult } from 'lit-element';
 
 import {
   playerContext,
-  UserPauseRequestEvent,
-  UserPlayRequestEvent,
+  VdsUserPauseEvent,
+  VdsUserPlayEvent,
 } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
@@ -11,7 +11,7 @@ import { buildExportPartsAttr } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { Control } from '../control';
 import { Toggle } from '../toggle';
-import { PlaybackToggleProps } from './playback-toggle.args';
+import { PlaybackToggleProps } from './playback-toggle.types';
 
 /**
  * A control for toggling the playback state (play/pause) of the current media.
@@ -127,7 +127,7 @@ export class PlaybackToggle
   }
 
   protected handleTogglingPlayback(originalEvent: Event): void {
-    const Request = this.on ? UserPauseRequestEvent : UserPlayRequestEvent;
+    const Request = this.on ? VdsUserPauseEvent : VdsUserPlayEvent;
 
     this.dispatchEvent(
       new Request({

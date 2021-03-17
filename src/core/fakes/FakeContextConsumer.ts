@@ -14,8 +14,12 @@ export class FakeContextConsumer
   extends LitElement
   implements PlayerContextProvider {
   @internalProperty()
-  @uuidContext.consume()
-  uuid = uuidContext.defaultValue;
+  @playerContext.aspectRatio.consume()
+  aspectRatio = playerContext.aspectRatio.defaultValue;
+
+  @internalProperty()
+  @playerContext.autoplay.consume()
+  autoplay = playerContext.autoplay.defaultValue;
 
   @internalProperty()
   @playerContext.currentSrc.consume()
@@ -54,16 +58,16 @@ export class FakeContextConsumer
   loop = playerContext.loop.defaultValue;
 
   @internalProperty()
-  @playerContext.aspectRatio.consume()
-  aspectRatio = playerContext.aspectRatio.defaultValue;
-
-  @internalProperty()
   @playerContext.duration.consume()
   duration = playerContext.duration.defaultValue;
 
   @internalProperty()
   @playerContext.buffered.consume()
   buffered = playerContext.buffered.defaultValue;
+
+  @internalProperty()
+  @playerContext.bufferedAmount.consume()
+  bufferedAmount = playerContext.bufferedAmount.defaultValue;
 
   @internalProperty()
   @deviceContext.device.consume()
@@ -78,24 +82,28 @@ export class FakeContextConsumer
   isDesktopDevice = deviceContext.isDesktopDevice.defaultValue;
 
   @internalProperty()
-  @playerContext.isBuffering.consume()
-  isBuffering = playerContext.isBuffering.defaultValue;
+  @playerContext.waiting.consume()
+  waiting = playerContext.waiting.defaultValue;
 
   @internalProperty()
-  @playerContext.isPlaying.consume()
-  isPlaying = playerContext.isPlaying.defaultValue;
+  @playerContext.playing.consume()
+  playing = playerContext.playing.defaultValue;
 
   @internalProperty()
-  @playerContext.hasPlaybackStarted.consume()
-  hasPlaybackStarted = playerContext.hasPlaybackStarted.defaultValue;
+  @playerContext.started.consume()
+  started = playerContext.started.defaultValue;
 
   @internalProperty()
-  @playerContext.hasPlaybackEnded.consume()
-  hasPlaybackEnded = playerContext.hasPlaybackEnded.defaultValue;
+  @playerContext.ended.consume()
+  ended = playerContext.ended.defaultValue;
 
   @internalProperty()
-  @playerContext.isPlaybackReady.consume()
-  isPlaybackReady = playerContext.isPlaybackReady.defaultValue;
+  @playerContext.canPlay.consume()
+  canPlay = playerContext.canPlay.defaultValue;
+
+  @internalProperty()
+  @playerContext.canPlayThrough.consume()
+  canPlayThrough = playerContext.canPlayThrough.defaultValue;
 
   @internalProperty()
   @playerContext.viewType.consume()
@@ -120,6 +128,22 @@ export class FakeContextConsumer
   @internalProperty()
   @playerContext.isVideo.consume()
   isVideo = playerContext.isVideo.defaultValue;
+
+  @internalProperty()
+  @playerContext.played.consume()
+  played = playerContext.played.defaultValue;
+
+  @internalProperty()
+  @playerContext.seekable.consume()
+  seekable = playerContext.seekable.defaultValue;
+
+  @internalProperty()
+  @playerContext.seekableAmount.consume()
+  seekableAmount = playerContext.seekableAmount.defaultValue;
+
+  @internalProperty()
+  @uuidContext.consume()
+  uuid = uuidContext.defaultValue;
 
   render(): TemplateResult {
     return html`<div>fake consumer</div>`;

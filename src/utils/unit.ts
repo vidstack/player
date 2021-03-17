@@ -87,7 +87,7 @@ export const isFunction = (value: unknown): value is Function =>
  *
  * @param value - The value to check.
  */
-export const isArray = (value: unknown): value is never[] =>
+export const isArray = (value: unknown): value is unknown[] =>
   Array.isArray(value);
 
 /**

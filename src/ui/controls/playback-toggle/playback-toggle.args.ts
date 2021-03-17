@@ -1,34 +1,17 @@
-export interface PlaybackToggleProps {
-  /**
-   * ♿ **ARIA:** The `aria-label` property of the underlying playback control.
-   *
-   * @required
-   */
-  label?: string;
-
-  /**
-   * Whether the underlying control should be disabled (not-interactable).
-   */
-  disabled: boolean;
-
-  /**
-   * ♿ **ARIA:** Identifies the element (or elements) that describes the underlying control.
-   */
-  describedBy?: string;
-}
-
-export interface PlaybackToggleFakeProps {
-  fakePaused: boolean;
-}
+import { VdsUserPauseEvent, VdsUserPlayEvent } from '../../../core';
+import {
+  PlaybackToggleActions,
+  PlaybackToggleFakeProps,
+  PlaybackToggleProps,
+} from './playback-toggle.types';
 
 export type PlaybackToggleStorybookArgs = {
-  [P in keyof (PlaybackToggleProps & PlaybackToggleFakeProps)]: unknown;
+  [P in keyof (PlaybackToggleProps &
+    PlaybackToggleFakeProps &
+    PlaybackToggleActions)]: unknown;
 };
 
 export const PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES: PlaybackToggleStorybookArgs = {
-  label: {
-    control: 'text',
-  },
   describedBy: {
     control: 'text',
   },
@@ -36,8 +19,17 @@ export const PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES: PlaybackToggleStorybookArgs = 
     control: 'boolean',
     defaultValue: false,
   },
+  label: {
+    control: 'text',
+  },
   fakePaused: {
     control: 'boolean',
     defaultValue: true,
+  },
+  onUserPlay: {
+    action: VdsUserPlayEvent.TYPE,
+  },
+  onUserPause: {
+    action: VdsUserPauseEvent.TYPE,
   },
 };

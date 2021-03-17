@@ -1,28 +1,14 @@
-export interface MuteToggleProps {
-  /**
-   * ♿ **ARIA:** The `aria-label` property of the underlying playback control.
-   *
-   * @required
-   */
-  label?: string;
-
-  /**
-   * Whether the underlying control should be disabled (not-interactable).
-   */
-  disabled: boolean;
-
-  /**
-   * ♿ **ARIA:** Identifies the element (or elements) that describes the underlying control.
-   */
-  describedBy?: string;
-}
-
-export interface MuteToggleFakeProps {
-  fakeMuted: boolean;
-}
+import { VdsUserMutedChange } from '../../../core';
+import {
+  MuteToggleActions,
+  MuteToggleFakeProps,
+  MuteToggleProps,
+} from './mute-toggle.types';
 
 export type MuteToggleStorybookArgs = {
-  [P in keyof (MuteToggleProps & MuteToggleFakeProps)]: unknown;
+  [P in keyof (MuteToggleProps &
+    MuteToggleFakeProps &
+    MuteToggleActions)]: unknown;
 };
 
 export const MUTE_TOGGLE_STORYBOOK_ARG_TYPES: MuteToggleStorybookArgs = {
@@ -39,5 +25,8 @@ export const MUTE_TOGGLE_STORYBOOK_ARG_TYPES: MuteToggleStorybookArgs = {
   fakeMuted: {
     control: 'boolean',
     defaultValue: false,
+  },
+  onUserMutedChange: {
+    action: VdsUserMutedChange.TYPE,
   },
 };

@@ -1,13 +1,13 @@
 import { html, property, query, TemplateResult } from 'lit-element';
 
-import { playerContext, UserMutedChangeRequestEvent } from '../../../core';
+import { playerContext, VdsUserMutedChange } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { buildExportPartsAttr } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { Control } from '../control';
 import { Toggle } from '../toggle';
-import { MuteToggleProps } from './mute-toggle.args';
+import { MuteToggleProps } from './mute-toggle.types';
 
 /**
  * A control for toggling the muted state of the player.
@@ -120,7 +120,7 @@ export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
 
   protected handleTogglingMute(originalEvent: Event): void {
     this.dispatchEvent(
-      new UserMutedChangeRequestEvent({
+      new VdsUserMutedChange({
         originalEvent,
         detail: !this.on,
       }),

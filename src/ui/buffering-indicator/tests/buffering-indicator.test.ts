@@ -10,8 +10,8 @@ import { FakeMediaProvider } from '../../../core';
 import { buildFakeMediaProvider } from '../../../core/fakes/helpers';
 import { getSlottedChildren } from '../../../utils/dom';
 import {
-  BufferingIndicatorHideEvent,
-  BufferingIndicatorShowEvent,
+  VdsBufferingIndicatorHideEvent,
+  VdsBufferingIndicatorShowEvent,
 } from '../buffering-indicator.events';
 import { BufferingIndicator } from '../BufferingIndicator';
 import { BUFFERING_INDICATOR_TAG_NAME } from '../vds-buffering-indicator';
@@ -51,11 +51,11 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
     const [provider, bufferingIndicator] = await buildFixture();
     const slot = getSlottedChildren(bufferingIndicator)[0] as HTMLElement;
 
-    provider.context.isBuffering = true;
+    provider.context.waiting = true;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.not.have.attribute('hidden');
 
-    provider.context.isBuffering = false;
+    provider.context.waiting = false;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.have.attribute('hidden', '');
   });
@@ -68,23 +68,23 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
 
     const slot = getSlottedChildren(bufferingIndicator)[0] as HTMLElement;
 
-    provider.context.isBuffering = false;
-    provider.context.isPlaybackReady = false;
+    provider.context.waiting = false;
+    provider.context.canPlay = false;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.not.have.attribute('hidden');
 
-    provider.context.isBuffering = false;
-    provider.context.isPlaybackReady = true;
+    provider.context.waiting = false;
+    provider.context.canPlay = true;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.have.attribute('hidden');
 
-    provider.context.isBuffering = true;
-    provider.context.isPlaybackReady = false;
+    provider.context.waiting = true;
+    provider.context.canPlay = false;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.not.have.attribute('hidden');
 
-    provider.context.isBuffering = true;
-    provider.context.isPlaybackReady = true;
+    provider.context.waiting = true;
+    provider.context.canPlay = true;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.not.have.attribute('hidden');
   });
@@ -96,7 +96,7 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
     bufferingIndicator.delay = 10;
     await elementUpdated(bufferingIndicator);
 
-    provider.context.isBuffering = true;
+    provider.context.waiting = true;
     await elementUpdated(bufferingIndicator);
     expect(slot).to.have.attribute('hidden');
 
@@ -104,26 +104,26 @@ describe(BUFFERING_INDICATOR_TAG_NAME, () => {
     expect(slot).to.not.have.attribute('hidden');
   });
 
-  it(`should emit ${BufferingIndicatorShowEvent.TYPE} event when hidden attr changes`, async () => {
+  it(`should emit ${VdsBufferingIndicatorShowEvent.TYPE} event when hidden attr changes`, async () => {
     const [provider, bufferingIndicator] = await buildFixture();
 
     setTimeout(() => {
-      provider.context.isBuffering = true;
+      provider.context.waiting = true;
     });
 
-    await oneEvent(bufferingIndicator, BufferingIndicatorShowEvent.TYPE);
+    await oneEvent(bufferingIndicator, VdsBufferingIndicatorShowEvent.TYPE);
   });
 
-  it(`should emit ${BufferingIndicatorHideEvent.TYPE} event when hidden attr changes`, async () => {
+  it(`should emit ${VdsBufferingIndicatorHideEvent.TYPE} event when hidden attr changes`, async () => {
     const [provider, bufferingIndicator] = await buildFixture();
 
-    provider.context.isBuffering = true;
+    provider.context.waiting = true;
     await elementUpdated(bufferingIndicator);
 
     setTimeout(() => {
-      provider.context.isBuffering = false;
+      provider.context.waiting = false;
     });
 
-    await oneEvent(bufferingIndicator, BufferingIndicatorHideEvent.TYPE);
+    await oneEvent(bufferingIndicator, VdsBufferingIndicatorHideEvent.TYPE);
   });
 });

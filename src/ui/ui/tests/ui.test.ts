@@ -54,7 +54,7 @@ describe(UI_TAG_NAME, () => {
     expect(root.getAttribute('part')).to.include('root-hidden');
 
     // Ready.
-    provider.context.isPlaybackReady = true;
+    provider.context.canPlay = true;
     await elementUpdated(ui);
     expect(root.getAttribute('part')).to.not.include('root-hidden');
   });

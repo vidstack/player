@@ -8,8 +8,8 @@ import {
 
 import { getSlottedChildren, setAttribute } from '../../../utils/dom';
 import { isNil } from '../../../utils/unit';
-import { ToggleProps } from './toggle.args';
 import { toggleStyles } from './toggle.css';
+import { ToggleProps } from './toggle.types';
 
 /**
  * A toggle component to render different state depending on whether it's `on` or `off`. This

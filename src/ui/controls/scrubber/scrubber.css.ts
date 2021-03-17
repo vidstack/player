@@ -33,7 +33,7 @@ export const scrubberStyles = css`
 
   #progress {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 0;
     width: 100%;
     z-index: 10;
@@ -43,6 +43,6 @@ export const scrubberStyles = css`
     background: var(--vds-scrubber-progress-bg, #616161);
     transform-origin: left center;
     transform: translate(0%, -50%)
-      scaleX(calc(var(--vds-scrubber-buffered) / var(--vds-scrubber-duration)));
+      scaleX(calc(var(--vds-scrubber-seekable) / var(--vds-scrubber-duration)));
   }
 `;

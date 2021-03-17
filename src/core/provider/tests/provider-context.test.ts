@@ -5,6 +5,7 @@ import {
   buildFakeMediaProviderWithFakeConsumer,
 } from '../../fakes/helpers';
 import { playerContext } from '../../player.context';
+import { createTimeRanges } from '../../time-ranges';
 import { ViewType } from '../../ViewType';
 
 describe('provider context', () => {
@@ -40,6 +41,18 @@ describe('provider context', () => {
     expect(consumer.isVideoView).to.equal(false);
   });
 
+  it('should update multi-part derived context', async () => {
+    const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
+    provider.context.buffered = createTimeRanges([
+      [0, 0],
+      [15, 20],
+    ]);
+    provider.context.duration = 15;
+    expect(consumer.bufferedAmount).to.equal(15);
+    provider.context.duration = 25;
+    expect(consumer.bufferedAmount).to.equal(20);
+  });
+
   it('should soft reset context', async () => {
     const [provider, consumer] = await buildFakeMediaProviderWithFakeConsumer();
 
@@ -51,7 +64,7 @@ describe('provider context', () => {
     await elementUpdated(consumer);
 
     expect(consumer.paused, 'paused').to.equal(true);
-    expect(consumer.duration, 'duration').to.equal(-1);
+    expect(isNaN(consumer.duration), 'duration').to.be.true;
   });
 
   it.skip('should hard reset context when provider disconnects', async () => {

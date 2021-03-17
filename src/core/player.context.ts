@@ -6,10 +6,11 @@ import createContext, {
 
 import { MediaType } from './MediaType';
 import { PlayerProps } from './player.types';
+import { createTimeRanges } from './time-ranges';
 import { ViewType } from './ViewType';
 
-export type PlayerContext = ContextRecord<PlayerProps>;
-export type PlayerContextProvider = ContextRecordProvider<PlayerProps>;
+export type PlayerContext = ContextRecord<PlayerContextProps>;
+export type PlayerContextProvider = ContextRecordProvider<PlayerContextProps>;
 
 /**
  * Avoid declaring context properties with the same name as class properties.
@@ -35,30 +36,87 @@ export const transformContextName = (propName: string): string =>
  * }
  * ```
  */
-const viewType = createContext<ViewType>(ViewType.Unknown);
-const mediaType = createContext<MediaType>(MediaType.Unknown);
+const buffered = createContext(createTimeRanges());
+const duration = createContext(NaN);
+const mediaType = createContext(MediaType.Unknown);
+const seekable = createContext(createTimeRanges());
+const viewType = createContext(ViewType.Unknown);
+
 export const playerContext: PlayerContext = {
-  currentSrc: createContext(''),
-  volume: createContext(1),
-  currentTime: createContext(0),
-  paused: createContext<boolean>(true),
+  aspectRatio: createContext<string | undefined>(undefined),
+  autoplay: createContext<boolean>(false),
+  buffered,
+  bufferedAmount: derivedContext(
+    [buffered, duration] as const,
+    (buffered, duration) => {
+      const end = buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
+      return end > duration ? duration : end;
+    },
+  ),
+  waiting: createContext<boolean>(false),
   controls: createContext<boolean>(false),
   currentPoster: createContext(''),
-  muted: createContext<boolean>(false),
-  playsinline: createContext<boolean>(false),
+  currentSrc: createContext(''),
+  currentTime: createContext(0),
+  duration,
+  ended: createContext<boolean>(false),
+  isAudio: derivedContext([mediaType], m => m === MediaType.Audio),
+  isAudioView: derivedContext([viewType], v => v === ViewType.Audio),
+  isVideo: derivedContext([mediaType], m => m === MediaType.Video),
+  isVideoView: derivedContext([viewType], v => v === ViewType.Video),
   loop: createContext<boolean>(false),
-  aspectRatio: createContext<string | undefined>(undefined),
-  duration: createContext<number>(-1),
-  buffered: createContext<number>(0),
-  isBuffering: createContext<boolean>(false),
-  isPlaying: createContext<boolean>(false),
-  hasPlaybackStarted: createContext<boolean>(false),
-  hasPlaybackEnded: createContext<boolean>(false),
-  isPlaybackReady: createContext<boolean>(false),
-  viewType,
-  isAudioView: derivedContext(viewType, v => v === ViewType.Audio),
-  isVideoView: derivedContext(viewType, v => v === ViewType.Video),
   mediaType,
-  isAudio: derivedContext(mediaType, m => m === MediaType.Audio),
-  isVideo: derivedContext(mediaType, m => m === MediaType.Video),
+  muted: createContext<boolean>(false),
+  paused: createContext<boolean>(true),
+  canPlay: createContext<boolean>(false),
+  canPlayThrough: createContext<boolean>(false),
+  played: createContext(createTimeRanges()),
+  playing: createContext<boolean>(false),
+  playsinline: createContext<boolean>(false),
+  seekable,
+  seekableAmount: derivedContext(
+    [seekable, duration] as const,
+    (seekable, duration) => {
+      const end = seekable.length === 0 ? 0 : seekable.end(seekable.length - 1);
+      return end > duration ? duration : end;
+    },
+  ),
+  started: createContext<boolean>(false),
+  viewType,
+  volume: createContext(1),
 };
+
+export interface PlayerContextProps extends PlayerProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [prop: string]: any;
+
+  /**
+   * The end point of the last time range that has buffered.
+   */
+  readonly bufferedAmount: number;
+
+  /**
+   * Whether the current media is of type `audio`, shorthand for `mediaType === MediaType.Audio`.
+   */
+  readonly isAudio: boolean;
+
+  /**
+   * Whether the current view is of type `audio`, shorthand for `viewType === ViewType.Audio`.
+   */
+  readonly isAudioView: boolean;
+
+  /**
+   * Whether the current media is of type `video`, shorthand for `mediaType === MediaType.Video`.
+   */
+  readonly isVideo: boolean;
+
+  /**
+   * Whether the current view is of type `video`, shorthand for `viewType === ViewType.Video`.
+   */
+  readonly isVideoView: boolean;
+
+  /**
+   * The end point of the last time range that is seekable.
+   */
+  readonly seekableAmount: number;
+}

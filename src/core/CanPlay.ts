@@ -8,7 +8,7 @@
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType
  */
-export enum CanPlayType {
+export enum CanPlay {
   /**
    * Media of the given type definitely can't be played on the current device.
    */

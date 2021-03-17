@@ -4,11 +4,11 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
+import { TIME_DURATION_STORYBOOK_ARG_TYPES } from './time-duration.args';
 import {
-  TIME_DURATION_STORYBOOK_ARG_TYPES,
   TimeDurationFakeProps,
   TimeDurationProps,
-} from './time-duration.args';
+} from './time-duration.types';
 import { TIME_DURATION_TAG_NAME } from './vds-time-duration';
 
 export default {

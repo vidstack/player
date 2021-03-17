@@ -7,7 +7,10 @@ import {
 } from '@open-wc/testing';
 
 import { Slider } from '../Slider';
-import { SliderDragEndEvent, SliderDragStartEvent } from '../slider.events';
+import {
+  VdsSliderDragEndEvent,
+  VdsSliderDragStartEvent,
+} from '../slider.events';
 import { SLIDER_TAG_NAME } from '../vds-slider';
 
 describe(SLIDER_TAG_NAME, () => {
@@ -100,7 +103,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should delegate focus', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
+    const thumb = slider.thumbElement;
 
     // Focus root.
     slider.focus();
@@ -119,7 +122,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should step to the left when up/left arrow key is pressed', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
+    const thumb = slider.thumbElement;
 
     thumb.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -139,7 +142,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should step one to the right when down/right arrow key is pressed', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
+    const thumb = slider.thumbElement;
 
     thumb.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -159,7 +162,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should multiply steps when shift key is held down', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
+    const thumb = slider.thumbElement;
 
     thumb.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -184,20 +187,20 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should start dragging on thumb pointerdown and stop on document pointerup', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
+    const thumb = slider.thumbElement;
 
     setTimeout(() => thumb.dispatchEvent(new PointerEvent('pointerdown')));
-    await oneEvent(slider, SliderDragStartEvent.TYPE);
+    await oneEvent(slider, VdsSliderDragStartEvent.TYPE);
     expect(slider.isDragging).to.be.true;
 
     setTimeout(() => document.dispatchEvent(new PointerEvent('pointerup')));
-    await oneEvent(slider, SliderDragEndEvent.TYPE);
+    await oneEvent(slider, VdsSliderDragEndEvent.TYPE);
     expect(slider.isDragging).to.be.false;
   });
 
   it('should update slider value to new thumb position when track is clicked', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const track = slider.shadowRoot?.querySelector('#track') as HTMLElement;
+    const track = slider.trackElement;
     track.dispatchEvent(
       new PointerEvent('pointerdown', {
         clientX: Math.floor(track.clientWidth / 4),
@@ -220,7 +223,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should not change value when move events are fired on document and slider is disabled', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
+    const thumb = slider.thumbElement;
 
     thumb.dispatchEvent(new PointerEvent('pointerdown'));
     expect(slider.isDragging).to.be.true;
@@ -240,7 +243,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should not update value when track is clicked and slider is disabled', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const track = slider.shadowRoot?.querySelector('#track') as HTMLElement;
+    const track = slider.trackElement;
 
     slider.disabled = true;
 
@@ -255,7 +258,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should not start dragging when thumb is pressed and slider is disabled', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
+    const thumb = slider.thumbElement;
 
     slider.disabled = true;
 

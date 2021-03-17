@@ -17,8 +17,8 @@ describe('device mixin', () => {
     const expectedDevice = Device.Mobile;
     expect(detail).to.equal(expectedDevice);
     expect(provider.device).to.equal(expectedDevice);
-    expect(provider.isMobileDevice).to.be.true;
-    expect(provider.isDesktopDevice).to.be.false;
+    expect(provider.deviceContext.isMobileDevice).to.be.true;
+    expect(provider.deviceContext.isDesktopDevice).to.be.false;
     expect(provider).to.have.attribute('mobile', 'true');
     expect(provider).to.not.have.attribute('desktop', 'true');
   });
@@ -29,8 +29,8 @@ describe('device mixin', () => {
     const expectedDevice = Device.Desktop;
     expect(detail).to.equal(expectedDevice);
     expect(provider.device).to.equal(expectedDevice);
-    expect(provider.isMobileDevice).to.be.false;
-    expect(provider.isDesktopDevice).to.be.true;
+    expect(provider.deviceContext.isMobileDevice).to.be.false;
+    expect(provider.deviceContext.isDesktopDevice).to.be.true;
     expect(provider).to.have.attribute('desktop', 'true');
     expect(provider).to.not.have.attribute('mobile', 'true');
   });

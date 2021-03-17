@@ -2,14 +2,15 @@ import '../../../core/fakes/vds-fake-media-provider';
 
 import { html } from 'lit-element';
 
+import { createTimeRanges } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
-import { SliderActions } from '../slider';
+import { SCRUBBER_STORYBOOK_ARG_TYPES } from './scrubber.args';
 import {
-  SCRUBBER_STORYBOOK_ARG_TYPES,
+  ScrubberActions,
   ScrubberFakeProps,
   ScrubberProps,
-} from './scrubber.args';
+} from './scrubber.types';
 import { SCRUBBER_TAG_NAME } from './vds-scrubber';
 
 export default {
@@ -18,7 +19,7 @@ export default {
   argTypes: SCRUBBER_STORYBOOK_ARG_TYPES,
 };
 
-const Template: Story<ScrubberProps & ScrubberFakeProps & SliderActions> = ({
+const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
   sliderLabel,
   progressLabel,
   progressText,
@@ -29,18 +30,20 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & SliderActions> = ({
   orientation,
   throttle,
   fakeCurrentTime,
-  fakeBuffered,
+  fakeSeekableAmount,
   fakeDuration,
   onValueChange,
   onDragStart,
   onDragEnd,
+  onUserSeeked,
+  onUserSeeking,
 }) =>
   html`
     <vds-fake-media-provider
-      playback-ready
+      .canPlayCtx="${true}"
       .currentTimeCtx="${fakeCurrentTime}"
       .durationCtx="${fakeDuration}"
-      .bufferedCtx="${fakeBuffered}"
+      .seekableCtx="${createTimeRanges(0, fakeSeekableAmount)}"
     >
       <vds-scrubber
         slider-label="${ifNonEmpty(sliderLabel)}"
@@ -52,9 +55,11 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & SliderActions> = ({
         step-multiplier="${stepMultiplier}"
         orientation="${orientation}"
         throttle="${throttle}"
-        @vds-slider-value-change="${onValueChange}"
-        @vds-slider-drag-start="${onDragStart}"
-        @vds-slider-drag-end="${onDragEnd}"
+        @vds-slidervaluechange="${onValueChange}"
+        @vds-sliderdragstart="${onDragStart}"
+        @vds-sliderdragend="${onDragEnd}"
+        @vds-userseeked="${onUserSeeked}"
+        @vds-userseeking="${onUserSeeking}"
       >
         <div class="preview" slot="preview">Preview</div>
       </vds-scrubber>
@@ -72,7 +77,7 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & SliderActions> = ({
         opacity: 1;
         position: absolute;
         left: 0;
-        bottom: 12px;
+        bottom: 28px;
         transition: opacity 0.3s ease-in;
       }
 

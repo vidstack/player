@@ -1,14 +1,12 @@
 /* c8 ignore next 1000 */
-import { html, property, TemplateResult } from 'lit-element';
+import { html, TemplateResult } from 'lit-element';
 
-import { CanPlayType } from '../CanPlayType';
+import { CanPlay } from '../CanPlay';
 import {
-  MutedChangeEvent,
-  PauseEvent,
-  PlaybackReadyEvent,
-  PlayEvent,
-  TimeChangeEvent,
-  VolumeChangeEvent,
+  VdsPauseEvent,
+  VdsPlayEvent,
+  VdsTimeUpdateEvent,
+  VdsVolumeChangeEvent,
 } from '../player.events';
 import { MediaProvider } from '../provider/MediaProvider';
 
@@ -17,20 +15,38 @@ import { MediaProvider } from '../provider/MediaProvider';
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
 export class FakeMediaProvider extends MediaProvider {
-  @property({ type: Boolean }) playbackReady = false;
-
   connectedCallback(): void {
     super.connectedCallback();
-
-    if (this.playbackReady) {
-      this.context.isPlaybackReady = true;
-      this.dispatchEvent(new PlaybackReadyEvent());
-    }
   }
 
   // -------------------------------------------------------------------------------------------
   // Provider Metods
   // -------------------------------------------------------------------------------------------
+
+  getCurrentTime(): number {
+    return this.context.currentTime;
+  }
+
+  setCurrentTime(detail: number): void {
+    this.context.currentTime = detail;
+    this.dispatchEvent(new VdsTimeUpdateEvent({ detail }));
+  }
+
+  getMuted(): boolean {
+    return this.context.muted;
+  }
+
+  setMuted(muted: boolean): void {
+    this.context.muted = muted;
+    this.dispatchEvent(
+      new VdsVolumeChangeEvent({
+        detail: {
+          volume: this.context.volume,
+          muted,
+        },
+      }),
+    );
+  }
 
   getPaused(): boolean {
     return this.context.paused;
@@ -40,27 +56,16 @@ export class FakeMediaProvider extends MediaProvider {
     return this.context.volume;
   }
 
-  setVolume(detail: number): void {
-    this.context.volume = detail;
-    this.dispatchEvent(new VolumeChangeEvent({ detail }));
-  }
-
-  getCurrentTime(): number {
-    return this.context.currentTime;
-  }
-
-  setCurrentTime(detail: number): void {
-    this.context.currentTime = detail;
-    this.dispatchEvent(new TimeChangeEvent({ detail }));
-  }
-
-  getMuted(): boolean {
-    return this.context.muted;
-  }
-
-  setMuted(detail: boolean): void {
-    this.context.muted = detail;
-    this.dispatchEvent(new MutedChangeEvent({ detail }));
+  setVolume(volume: number): void {
+    this.context.volume = volume;
+    this.dispatchEvent(
+      new VdsVolumeChangeEvent({
+        detail: {
+          volume,
+          muted: this.context.muted,
+        },
+      }),
+    );
   }
 
   // -------------------------------------------------------------------------------------------
@@ -75,8 +80,8 @@ export class FakeMediaProvider extends MediaProvider {
   // Support Checks
   // -------------------------------------------------------------------------------------------
 
-  canPlayType(): CanPlayType {
-    return CanPlayType.No;
+  canPlayType(): CanPlay {
+    return CanPlay.No;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -85,12 +90,12 @@ export class FakeMediaProvider extends MediaProvider {
 
   async play(): Promise<void> {
     this.context.paused = false;
-    this.dispatchEvent(new PlayEvent());
+    this.dispatchEvent(new VdsPlayEvent());
   }
 
   async pause(): Promise<void> {
     this.context.paused = true;
-    this.dispatchEvent(new PauseEvent());
+    this.dispatchEvent(new VdsPauseEvent());
   }
 
   // -------------------------------------------------------------------------------------------

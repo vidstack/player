@@ -1,10 +1,5 @@
-import { TIME_STORYBOOK_ARG_TYPES, TimeProps } from '../time';
-
-export type TimeCurrentProps = Omit<TimeProps, 'duration'>;
-
-export interface TimeCurrentFakeProps {
-  fakeCurrentTime: number;
-}
+import { TIME_STORYBOOK_ARG_TYPES } from '../time';
+import { TimeCurrentFakeProps, TimeCurrentProps } from './time-current.types';
 
 export type TimeCurrentStorybookArgs = {
   [P in keyof (TimeCurrentProps & TimeCurrentFakeProps)]: unknown;

@@ -1,52 +1,48 @@
-import { LIB_PREFIX } from '../../../shared/constants';
 import {
   buildVdsEvent,
+  ExtractEventDetailType,
   VdsCustomEvent,
   VdsCustomEventConstructor,
+  VdsEvents,
 } from '../../../shared/events';
 
-export const SLIDER_EVENT_PREFIX = 'slider';
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface GlobalEventHandlersEventMap extends VdsSliderEvents {}
+}
 
-export type RawSliderEventType = 'value-change' | 'drag-start' | 'drag-end';
+export interface SliderEvents {
+  slidervaluechange: VdsCustomEvent<number>;
+  sliderdragstart: VdsCustomEvent<void>;
+  sliderdragend: VdsCustomEvent<void>;
+}
 
-export type RawSliderEventDetailType = {
-  'value-change': number;
-  'drag-start': void;
-  'drag-end': void;
-};
+export type VdsSliderEvents = VdsEvents<SliderEvents>;
 
-export type GenericSliderEventType<
-  T extends string
-> = `${typeof LIB_PREFIX}-${typeof SLIDER_EVENT_PREFIX}-${T}`;
-
-export type SliderEvents = {
-  [P in RawSliderEventType as GenericSliderEventType<P>]: VdsCustomEvent<
-    RawSliderEventDetailType[P]
-  >;
-};
-
-export type SliderEventType = keyof SliderEvents;
-
-export function buildSliderEvent<
-  P extends RawSliderEventType,
-  DetailType = RawSliderEventDetailType[P]
+export function buildVdsSliderEvent<
+  P extends keyof SliderEvents,
+  DetailType = ExtractEventDetailType<SliderEvents[P]>
 >(type: P): VdsCustomEventConstructor<DetailType> {
-  const prefixedType = `${SLIDER_EVENT_PREFIX}-${type}`;
-  class SliderEvent extends buildVdsEvent<DetailType>(prefixedType) {}
-  return SliderEvent;
+  return class VdsSliderEvent extends buildVdsEvent<DetailType>(type) {};
 }
 
 /**
- * Emitted when the slider value changes.
+ * Fired when the slider value changes.
  */
-export class SliderValueChangeEvent extends buildSliderEvent('value-change') {}
+export class VdsSliderValueChangeEvent extends buildVdsSliderEvent(
+  'slidervaluechange',
+) {}
 
 /**
- * Emitted when the user begins interacting with the slider and dragging the thumb.
+ * Fired when the user begins interacting with the slider and dragging the thumb.
  */
-export class SliderDragStartEvent extends buildSliderEvent('drag-start') {}
+export class VdsSliderDragStartEvent extends buildVdsSliderEvent(
+  'sliderdragstart',
+) {}
 
 /**
- * Emitted when the user stops dragging the slider thumb.
+ * Fired when the user stops dragging the slider thumb.
  */
-export class SliderDragEndEvent extends buildSliderEvent('drag-end') {}
+export class VdsSliderDragEndEvent extends buildVdsSliderEvent(
+  'sliderdragend',
+) {}

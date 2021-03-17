@@ -1,5 +1,5 @@
 export * from '../shared/constants';
-export * from './CanPlayType';
+export * from './CanPlay';
 export * from './device/device.context';
 export * from './device/DeviceObserver';
 export * from './device/DeviceObserverMixin';
@@ -12,6 +12,7 @@ export * from './player.types';
 export * from './provider/MediaProvider';
 export * from './provider/provider.args';
 export * from './provider/provider.types';
+export * from './time-ranges';
 export * from './user/user.events';
 export * from './uuid/uuid.context';
 export * from './uuid/UuidMixin';

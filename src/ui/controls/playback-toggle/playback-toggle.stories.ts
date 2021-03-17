@@ -4,11 +4,12 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
+import { PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES } from './playback-toggle.args';
 import {
-  PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES,
+  PlaybackToggleActions,
   PlaybackToggleFakeProps,
   PlaybackToggleProps,
-} from './playback-toggle.args';
+} from './playback-toggle.types';
 import { PLAYBACK_TOGGLE_TAG_NAME } from './vds-playback-toggle';
 
 export default {
@@ -17,22 +18,18 @@ export default {
   argTypes: PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES,
 };
 
-const Template: Story<PlaybackToggleProps & PlaybackToggleFakeProps> = ({
-  label,
-  describedBy,
-  disabled,
-  fakePaused,
-}) =>
+const Template: Story<
+  PlaybackToggleProps & PlaybackToggleFakeProps & PlaybackToggleActions
+> = ({ label, describedBy, disabled, fakePaused, onUserPlay, onUserPause }) =>
   html`
-    <vds-fake-media-provider
-      .isPlaybackReadyCtx="${true}"
-      .pausedCtx="${fakePaused}"
-    >
+    <vds-fake-media-provider .canPlayCtx="${true}" .pausedCtx="${fakePaused}">
       <vds-playback-toggle
         label="${ifNonEmpty(label)}"
         described-by="${ifNonEmpty(describedBy)}"
         ?disabled="${disabled}"
         style="color: #FF2A5D;"
+        @vds-userplay="${onUserPlay}"
+        @vds-userpause="${onUserPause}"
       >
         <div slot="play">Play</div>
         <div slot="pause">Pause</div>

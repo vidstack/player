@@ -1,52 +1,42 @@
-import { LIB_PREFIX } from '../../shared/constants';
 import {
   buildVdsEvent,
+  ExtractEventDetailType,
   VdsCustomEvent,
   VdsCustomEventConstructor,
+  VdsEvents,
 } from '../../shared/events';
 
-export const BUFFERING_INDICATOR_EVENT_PREFIX = 'buffering-indicator';
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface GlobalEventHandlersEventMap extends VdsBufferingIndicatorEvents {}
+}
 
-export type RawBufferingIndicatorEventType = 'show' | 'hide';
+export interface BufferingIndicatorEvents {
+  bufferingshow: VdsCustomEvent<void>;
+  bufferinghide: VdsCustomEvent<void>;
+}
 
-export type RawBufferingIndicatorEventDetailType = {
-  show: void;
-  hide: void;
-};
+export type VdsBufferingIndicatorEvents = VdsEvents<BufferingIndicatorEvents>;
 
-export type GenericBufferingIndicatorEventType<
-  T extends string
-> = `${typeof LIB_PREFIX}-${typeof BUFFERING_INDICATOR_EVENT_PREFIX}-${T}`;
-
-export type BufferingIndicatorEvents = {
-  [P in RawBufferingIndicatorEventType as GenericBufferingIndicatorEventType<P>]: VdsCustomEvent<
-    RawBufferingIndicatorEventDetailType[P]
-  >;
-};
-
-export type BufferingIndicatorEventType = keyof BufferingIndicatorEvents;
-
-export function buildBufferingIndicatorEvent<
-  P extends RawBufferingIndicatorEventType,
-  DetailType = RawBufferingIndicatorEventDetailType[P]
+export function buildVdsBufferingIndicatorEvent<
+  P extends keyof BufferingIndicatorEvents,
+  DetailType = ExtractEventDetailType<BufferingIndicatorEvents[P]>
 >(type: P): VdsCustomEventConstructor<DetailType> {
-  const prefixedType = `${BUFFERING_INDICATOR_EVENT_PREFIX}-${type}`;
-  class BufferingIndicatorEvent extends buildVdsEvent<DetailType>(
-    prefixedType,
-  ) {}
-  return BufferingIndicatorEvent;
+  return class VdsBufferingIndicatorEvent extends buildVdsEvent<DetailType>(
+    type,
+  ) {};
 }
 
 /**
  * Emitted when the buffering indicator is shown.
  */
-export class BufferingIndicatorShowEvent extends buildBufferingIndicatorEvent(
-  'show',
+export class VdsBufferingIndicatorShowEvent extends buildVdsBufferingIndicatorEvent(
+  'bufferingshow',
 ) {}
 
 /**
  * Emitted when the buffering indicator is hidden.
  */
-export class BufferingIndicatorHideEvent extends buildBufferingIndicatorEvent(
-  'hide',
+export class VdsBufferingIndicatorHideEvent extends buildVdsBufferingIndicatorEvent(
+  'bufferinghide',
 ) {}

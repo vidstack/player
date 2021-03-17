@@ -19,7 +19,7 @@ import { uiStyles } from './ui.css';
  * CSS parts. It might contain future enhancements such as show/hiding UI depending on whether
  * native UI can't be hidden (*cough* iOS).
  *
- * **Important:** The styling is left to you, it will only apply the `root-hidden` CSS part.
+ * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `root-hidden` CSS part.
  *
  * ## Tag
  *
@@ -74,8 +74,8 @@ export class Ui extends LitElement {
   }
 
   @internalProperty()
-  @playerContext.isPlaybackReady.consume()
-  protected isPlaybackReady = playerContext.isPlaybackReady.defaultValue;
+  @playerContext.canPlay.consume()
+  protected canPlay = playerContext.canPlay.defaultValue;
 
   @internalProperty()
   @playerContext.isAudioView.consume()
@@ -134,7 +134,7 @@ export class Ui extends LitElement {
    * Whether the UI should be hidden.
    */
   protected isUiHidden(): boolean {
-    return !this.isPlaybackReady;
+    return !this.canPlay;
   }
 
   /**
