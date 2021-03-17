@@ -103,11 +103,13 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   set src(newSrc: string) {
-    this.softResetContext();
-    this._src = newSrc;
-    this.handleSrcChange();
-    // No other action requried as the `src` attribute should be updated on the underlying
-    // `<audio>` or `<video>` element.
+    if (this._src !== newSrc) {
+      this._src = newSrc;
+      this.softResetContext();
+      this.handleSrcChange();
+      // No other action requried as the `src` attribute should be updated on the underlying
+      // `<audio>` or `<video>` element.
+    }
   }
 
   @property({ type: Number })
@@ -139,10 +141,12 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   set srcObject(newSrcObject: SrcObject | undefined) {
-    this.softResetContext();
-    this.mediaEl!.srcObject = newSrcObject ?? null;
-    this.mediaEl!.load();
-    this.handleSrcChange();
+    if (this.mediaEl?.srcObject !== newSrcObject) {
+      this.softResetContext();
+      this.mediaEl!.srcObject = newSrcObject ?? null;
+      this.mediaEl!.load();
+      this.handleSrcChange();
+    }
   }
 
   get readyState(): ReadyState {
@@ -251,7 +255,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
         listenTo(this.mediaEl!, type, e => {
           handler(e);
           // re-dispatch native event for spec-compliance.
-          this.dispatchEvent(e);
+          // self.dispatchEvent(e);
         }),
       );
     });
@@ -322,7 +326,6 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.cancelTimeUpdates();
     this.context.paused = true;
     this.context.playing = false;
-    this.context.waiting = false;
     this.dispatchEvent(new VdsPauseEvent({ originalEvent }));
   }
 
@@ -413,6 +416,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleSuspend(originalEvent: Event): void {
+    this.context.waiting = false;
     this.dispatchEvent(new VdsSuspendEvent({ originalEvent }));
   }
 

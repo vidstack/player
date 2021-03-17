@@ -26,7 +26,7 @@ describe(`${TIME_DURATION_TAG_NAME}`, () => {
     `);
   });
 
-  it('should render shadow dom correctly', async () => {
+  it.only('should render shadow dom correctly', async () => {
     const [provider, timeDuration] = await buildFixture();
 
     provider.context.duration = 3750;
