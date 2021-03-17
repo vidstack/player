@@ -3,14 +3,13 @@ import { css } from 'lit-element';
 export const videoStyles = css`
   :host {
     display: block;
-    contain: content;
+    contain: layout;
   }
 
   #root {
     position: relative;
     width: 100%;
     display: block;
-    overflow: hidden;
   }
 
   video {

@@ -23,6 +23,7 @@ import {
   VdsSliderDragStartEvent,
   VdsSliderValueChangeEvent,
 } from '../slider';
+import { scrubberPreviewContext } from './scrubber.context';
 import { scrubberStyles } from './scrubber.css';
 import { ScrubberProps } from './scrubber.types';
 
@@ -132,7 +133,6 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected currentPreviewEl?: HTMLElement;
-  protected previewTime = 0;
 
   /**
    * The root element passed in to the `preview` slot.
@@ -142,7 +142,12 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   @internalProperty()
-  protected shouldShowPreview = false;
+  @scrubberPreviewContext.time.provide()
+  protected previewTime = 0;
+
+  @internalProperty()
+  @scrubberPreviewContext.hidden.provide()
+  protected shouldHidePreview = true;
 
   @internalProperty()
   @playerContext.currentTime.consume()
@@ -410,10 +415,10 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected handleSliderValueChange(e: VdsSliderValueChangeEvent): void {
-    if (this._isDragging) {
-      this.previewTime = e.detail;
-      this.dispatchEvent(new VdsUserSeeking({ detail: e.detail }));
-      return;
+    this.previewTime = e.detail;
+    this.dispatchEvent(new VdsUserSeeking({ detail: e.detail }));
+    if (!this._isDragging) {
+      this.dispatchEvent(new VdsUserSeeked({ detail: this.previewTime }));
     }
   }
 
@@ -464,18 +469,18 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
   protected showPreview(): void {
     if (this.disabled) return;
-    this.shouldShowPreview = true;
+    this.shouldHidePreview = false;
     this.currentPreviewEl?.removeAttribute('hidden');
   }
 
   protected hidePreview(): void {
     if (this._isDragging) return;
-    this.shouldShowPreview = false;
+    this.shouldHidePreview = true;
     this.currentPreviewEl?.setAttribute('hidden', '');
   }
 
   protected updatePreviewPosition(event: PointerEvent): void {
-    if (isNil(this.currentPreviewEl) || !this.shouldShowPreview) return;
+    if (isNil(this.currentPreviewEl) || this.shouldHidePreview) return;
 
     const thumbPosition = event.clientX;
     const rootRect = this.rootEl.getBoundingClientRect();
