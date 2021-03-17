@@ -60,9 +60,9 @@ export const SCRUBBER_STORYBOOK_ARG_TYPES: Partial<ScrubberStorybookArgs> = {
     control: 'number',
     defaultValue: 3600,
   },
-  fakeBuffered: {
+  fakeSeekableAmount: {
     control: 'number',
-    defaultValue: 1350,
+    defaultValue: 1800,
   },
   onUserSeeked: {
     action: VdsUserSeeked.TYPE,

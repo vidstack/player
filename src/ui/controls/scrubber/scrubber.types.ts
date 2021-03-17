@@ -34,7 +34,7 @@ export interface ScrubberProps
 export interface ScrubberFakeProps {
   fakeCurrentTime: number;
   fakeDuration: number;
-  fakeBuffered: number;
+  fakeSeekableAmount: number;
 }
 
 export interface ScrubberActions extends SliderActions {

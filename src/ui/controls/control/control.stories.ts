@@ -1,3 +1,5 @@
+import '../../../core/fakes/vds-fake-media-provider';
+
 import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
@@ -27,23 +29,25 @@ const Template: Story<ControlProps & ControlActions> = ({
   onBlur,
 }) =>
   html`
-    <vds-control
-      label="${ifNonEmpty(label)}"
-      described-by="${ifNonEmpty(describedBy)}"
-      controls="${ifNonEmpty(controls)}"
-      type="${ifNonEmpty(type)}"
-      ?hidden="${hidden}"
-      ?disabled="${disabled}"
-      ?has-popup="${hasPopup}"
-      ?expanded="${expanded}"
-      ?pressed="${pressed}"
-      style="color: #FF2A5D;"
-      @click="${onClick}"
-      @focus="${onFocus}"
-      @blur="${onBlur}"
-    >
-      Hello
-    </vds-control>
+    <vds-fake-media-provider>
+      <vds-control
+        label="${ifNonEmpty(label)}"
+        described-by="${ifNonEmpty(describedBy)}"
+        controls="${ifNonEmpty(controls)}"
+        type="${ifNonEmpty(type)}"
+        ?hidden="${hidden}"
+        ?disabled="${disabled}"
+        ?has-popup="${hasPopup}"
+        ?expanded="${expanded}"
+        ?pressed="${pressed}"
+        style="color: #FF2A5D;"
+        @click="${onClick}"
+        @focus="${onFocus}"
+        @blur="${onBlur}"
+      >
+        Hello
+      </vds-control>
+    </vds-fake-media-provider>
   `;
 
 export const Control = Template.bind({});

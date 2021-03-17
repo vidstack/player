@@ -132,6 +132,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected currentPreviewEl?: HTMLElement;
+  protected previewTime = 0;
 
   /**
    * The root element passed in to the `preview` slot.
@@ -329,6 +330,9 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   // Slider
   // -------------------------------------------------------------------------------------------
 
+  @internalProperty()
+  protected _isDragging = false;
+
   /**
    * Returns the underlying `vds-slider` component.
    */
@@ -340,7 +344,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
    * Whether the scrubber thumb/handle is currently being actively dragged left/right.
    */
   get isDragging(): boolean {
-    return this.sliderEl.isDragging;
+    return this._isDragging;
   }
 
   protected renderSlider(): TemplateResult {
@@ -350,16 +354,16 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
         label="${ifNonEmpty(this.sliderLabel)}"
         min="0"
         max="${this.duration}"
-        value="${this.currentTime}"
+        value="${this._isDragging ? this.previewTime : this.currentTime}"
         step="${this.step}"
         step-multiplier="${this.stepMultiplier}"
         part="${this.getSliderPartAttr()}"
         orientation="${this.orientation}"
         throttle="${this.throttle}"
         value-text="${this.getSliderProgressText()}"
-        @vds-slider-value-change="${this.handleSliderValueChange}"
-        @vds-slider-drag-start="${this.handleSliderDragStart}"
-        @vds-slider-drag-end="${this.handleSliderDragEnd}"
+        @vds-slidervaluechange="${this.handleSliderValueChange}"
+        @vds-sliderdragstart="${this.handleSliderDragStart}"
+        @vds-sliderdragend="${this.handleSliderDragEnd}"
         exportparts="${this.getSliderExportPartsAttr()}"
         ?hidden="${this.hidden}"
         ?disabled="${this.disabled}"
@@ -406,22 +410,25 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected handleSliderValueChange(e: VdsSliderValueChangeEvent): void {
-    if (this.isDragging) {
+    if (this._isDragging) {
+      this.previewTime = e.detail;
       this.dispatchEvent(new VdsUserSeeking({ detail: e.detail }));
       return;
     }
-
-    this.dispatchEvent(new VdsUserSeeked({ detail: e.detail }));
   }
 
   protected handleSliderDragStart(e: VdsSliderDragStartEvent): void {
+    this.previewTime = this.slider.value;
+    this._isDragging = true;
     this.updatePreviewPosition(e.originalEvent as PointerEvent);
     this.showPreview();
   }
 
   protected handleSliderDragEnd(e: VdsSliderDragEndEvent): void {
+    this._isDragging = false;
     this.updatePreviewPosition(e.originalEvent as PointerEvent);
     this.hidePreview();
+    this.dispatchEvent(new VdsUserSeeked({ detail: this.previewTime }));
   }
 
   // -------------------------------------------------------------------------------------------
@@ -462,7 +469,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected hidePreview(): void {
-    if (this.isDragging) return;
+    if (this._isDragging) return;
     this.shouldShowPreview = false;
     this.currentPreviewEl?.setAttribute('hidden', '');
   }
@@ -482,13 +489,15 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     const left = (percent / 100) * rootRect.width - previewRect.width / 2;
     const rightLimit = rootRect.width - previewRect.width;
     const xPos = Math.max(0, Math.min(left, rightLimit));
-    const previewTime = ((percent / 100) * this.duration).toFixed(0);
 
     this.currentPreviewEl.style.left = `${xPos}px`;
-    this.currentPreviewEl.setAttribute('vds-preview-time', String(previewTime));
+    this.currentPreviewEl.setAttribute(
+      'vds-preview-time',
+      this.previewTime.toFixed(0),
+    );
     this.currentPreviewEl.style.setProperty(
       '--vds-preview-time',
-      String(previewTime),
+      this.previewTime.toFixed(0),
     );
   }
 }

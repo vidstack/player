@@ -1,5 +1,4 @@
 import { contextRecordProvider, provideContextRecord } from '@wcom/context';
-import { event } from '@wcom/events';
 import { UpdatingElement } from 'lit-element';
 
 import { Constructor, Unsubscribe } from '../../shared/types';
@@ -23,18 +22,6 @@ export type DeviceObserverCocktail<T extends DeviceObserverMixinBase> = T &
        * @internal - Used for testing.
        */
       readonly deviceContext: DeviceContextProvider;
-
-      /**
-       * The name of the attribute on the player for which to set whether the current device is
-       * mobile. The attribute will be set to `true`/`false` accordingly.
-       */
-      mobileDeviceAttrName: string;
-
-      /**
-       * The name of the attribute on the player for which to set whether the current device is
-       * desktop. The attribute will be set to `true`/`false` accordingly.
-       */
-      desktopDeviceAttrName: string;
     }
   >;
 
@@ -52,16 +39,6 @@ export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
   class DeviceObserverMixin extends Base {
     @contextRecordProvider(deviceContext, transformContextName)
     readonly deviceContext!: DeviceContextProvider;
-
-    /**
-     * Emitted when the type of user device changes between mobile/desktop.
-     */
-    @event({ name: 'vds-device-change' })
-    protected DeviceChangeEvent!: DeviceChangeEvent;
-
-    mobileDeviceAttrName = 'mobile';
-
-    desktopDeviceAttrName = 'desktop';
 
     private unsubDeviceChanges?: Unsubscribe;
 
@@ -86,27 +63,13 @@ export function DeviceObserverMixin<T extends DeviceObserverMixinBase>(
       this.deviceContext.device = device;
       this.deviceContext.isMobileDevice = device === Device.Mobile;
       this.deviceContext.isDesktopDevice = device === Device.Desktop;
-
-      this.setAttribute(this.mobileDeviceAttrName, String(this.isMobileDevice));
-
-      this.setAttribute(
-        this.desktopDeviceAttrName,
-        String(this.isDesktopDevice),
-      );
-
+      this.setAttribute('mobile', String(this.deviceContext.isMobileDevice));
+      this.setAttribute('desktop', String(this.deviceContext.isDesktopDevice));
       this.dispatchEvent(new DeviceChangeEvent({ detail: device }));
     }
 
     get device(): DeviceObserver['device'] {
       return this.deviceContext.device;
-    }
-
-    get isMobileDevice(): DeviceObserver['isMobileDevice'] {
-      return this.deviceContext.isMobileDevice;
-    }
-
-    get isDesktopDevice(): DeviceObserver['isDesktopDevice'] {
-      return this.deviceContext.isDesktopDevice;
     }
   }
 

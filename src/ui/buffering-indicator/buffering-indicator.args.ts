@@ -23,7 +23,7 @@ export const BUFFERING_INDICATOR_STORYBOOK_ARG_TYPES: BufferingIndicatorStoryboo
     control: 'boolean',
     defaultValue: false,
   },
-  fakeBuffering: {
+  fakeWaiting: {
     control: 'boolean',
     defaultValue: true,
   },

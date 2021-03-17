@@ -266,6 +266,8 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleCanPlay(originalEvent: Event): void {
+    this.context.buffered = this.mediaEl!.buffered;
+    this.context.seekable = this.mediaEl!.seekable;
     if (!this.willAnotherEngineAttach()) this.mediaReady(originalEvent);
   }
 

@@ -18,7 +18,7 @@ export interface BufferingIndicatorProps {
 }
 
 export interface BufferingIndicatorFakeProps {
-  fakeBuffering: boolean;
+  fakeWaiting: boolean;
 }
 
 export interface BufferingIndicatorActions {

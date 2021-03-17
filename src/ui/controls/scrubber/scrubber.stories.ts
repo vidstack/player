@@ -2,6 +2,7 @@ import '../../../core/fakes/vds-fake-media-provider';
 
 import { html } from 'lit-element';
 
+import { createTimeRanges } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
 import { SCRUBBER_STORYBOOK_ARG_TYPES } from './scrubber.args';
@@ -29,7 +30,7 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
   orientation,
   throttle,
   fakeCurrentTime,
-  fakeBuffered,
+  fakeSeekableAmount,
   fakeDuration,
   onValueChange,
   onDragStart,
@@ -42,7 +43,7 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
       .canPlayCtx="${true}"
       .currentTimeCtx="${fakeCurrentTime}"
       .durationCtx="${fakeDuration}"
-      .bufferedCtx="${fakeBuffered}"
+      .seekableCtx="${createTimeRanges(0, fakeSeekableAmount)}"
     >
       <vds-scrubber
         slider-label="${ifNonEmpty(sliderLabel)}"
@@ -76,7 +77,7 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
         opacity: 1;
         position: absolute;
         left: 0;
-        bottom: 12px;
+        bottom: 28px;
         transition: opacity 0.3s ease-in;
       }
 

@@ -10,15 +10,9 @@ export enum Device {
   Desktop = 'desktop',
 }
 
-export interface DeviceProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
-
-  readonly device: Device;
-  readonly isMobileDevice: boolean;
-  readonly isDesktopDevice: boolean;
-}
-
+/**
+ * Emitted when the type of user device changes between mobile/desktop.
+ */
 export class DeviceChangeEvent extends buildVdsEvent<Device>('device-change') {}
 
 export interface DeviceObserver {
@@ -28,16 +22,6 @@ export interface DeviceObserver {
    * maximum width for the device to be considered mobile is 480px.
    */
   readonly device: Device;
-
-  /**
-   * Whether the current `device` is mobile (shorthand for `device === Device.Mobile`).
-   */
-  readonly isMobileDevice: boolean;
-
-  /**
-   * Whether the current `device` is desktop (shorthand for `device === Device.Desktop`).
-   */
-  readonly isDesktopDevice: boolean;
 }
 
 /**

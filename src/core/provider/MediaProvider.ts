@@ -341,7 +341,7 @@ export abstract class MediaProvider<EngineType = unknown>
   }
 
   @listen(VdsUserSeeked.TYPE)
-  protected handleUserTimeChange(e: VdsUserSeeked): void {
+  protected handleUserSeeked(e: VdsUserSeeked): void {
     this.userEventGateway(e);
     this.currentTime = e.detail;
   }

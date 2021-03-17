@@ -21,12 +21,9 @@ const Template: Story<
   BufferingIndicatorProps &
     BufferingIndicatorFakeProps &
     BufferingIndicatorActions
-> = ({ showWhileBooting, delay = 0, fakeBuffering, onShow, onHide }) =>
+> = ({ showWhileBooting, delay = 0, fakeWaiting, onShow, onHide }) =>
   html`
-    <vds-fake-media-provider
-      .canPlayCtx="${true}"
-      .isBufferingCtx="${fakeBuffering}"
-    >
+    <vds-fake-media-provider .canPlayCtx="${true}" .waitingCtx="${fakeWaiting}">
       <vds-buffering-indicator
         ?show-while-booting="${showWhileBooting}"
         delay="${delay}"
