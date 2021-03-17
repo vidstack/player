@@ -11,8 +11,8 @@ import { buildExportPartsAttr } from '../../../utils/dom';
 import { Time } from '../time';
 import { TimeCurrent } from '../time-current';
 import { TimeDuration } from '../time-duration';
-import { TimeProgressProps } from './time-progress.args';
 import { timeProgressStyles } from './time-progress.css';
+import { TimeProgressProps } from './time-progress.types';
 
 /**
  * Formats and displays the progression of playback. The output is displayed as

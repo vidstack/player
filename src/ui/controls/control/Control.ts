@@ -16,9 +16,8 @@ import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { currentSafariVersion } from '../../../utils/support';
 import { isUndefined } from '../../../utils/unit';
-import { ControlProps } from './control.args';
 import { controlStyles } from './control.css';
-import { ControlType } from './control.types';
+import { ControlProps, ControlType } from './control.types';
 
 /**
  * Base control that is basically a naked (not styled) button that helps manage ARIA

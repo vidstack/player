@@ -1,10 +1,8 @@
-import { TIME_STORYBOOK_ARG_TYPES, TimeProps } from '../time';
-
-export type TimeDurationProps = Omit<TimeProps, 'duration'>;
-
-export interface TimeDurationFakeProps {
-  fakeDuration: number;
-}
+import { TIME_STORYBOOK_ARG_TYPES } from '../time';
+import {
+  TimeDurationFakeProps,
+  TimeDurationProps,
+} from './time-duration.types';
 
 export type TimeDurationStorybookArgs = {
   [P in keyof (TimeDurationProps & TimeDurationFakeProps)]: unknown;

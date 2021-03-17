@@ -8,8 +8,8 @@ import {
 } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { TimeProps } from './time.args';
 import { timeStyles } from './time.css';
+import { TimeProps } from './time.types';
 import { formatHtml5Duration, formatTime } from './time.utils';
 
 /**

@@ -4,11 +4,8 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
-import {
-  TIME_CURRENT_STORYBOOK_ARG_TYPES,
-  TimeCurrentFakeProps,
-  TimeCurrentProps,
-} from './time-current.args';
+import { TIME_CURRENT_STORYBOOK_ARG_TYPES } from './time-current.args';
+import { TimeCurrentFakeProps, TimeCurrentProps } from './time-current.types';
 import { TIME_CURRENT_TAG_NAME } from './vds-time-current';
 
 export default {

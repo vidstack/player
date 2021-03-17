@@ -1,9 +1,4 @@
-export interface ToggleProps {
-  /**
-   * Whether the toggle is in the `on` state.
-   */
-  on: boolean;
-}
+import { ToggleProps } from './toggle.types';
 
 export type ToggleStorybookArgs = {
   [P in keyof ToggleProps]: unknown;

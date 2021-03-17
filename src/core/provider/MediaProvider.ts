@@ -6,11 +6,19 @@ import {
 import { listen } from '@wcom/events';
 import { LitElement, property, PropertyValues } from 'lit-element';
 
+import {
+  VdsUserMutedChange,
+  VdsUserPauseEvent,
+  VdsUserPlayEvent,
+  VdsUserSeeked,
+  VdsUserVolumeChange,
+} from '../../bundle';
 import { deferredPromise } from '../../utils/promise';
 import { isString, isUndefined } from '../../utils/unit';
-import { CanPlayType } from '../CanPlayType';
+import { CanPlay } from '../CanPlay';
 import { DeviceObserverMixin } from '../device/DeviceObserverMixin';
 import { MediaType } from '../MediaType';
+import { NetworkState } from '../NetworkState';
 import {
   PlayerContext,
   playerContext,
@@ -18,20 +26,14 @@ import {
   transformContextName,
 } from '../player.context';
 import {
-  ConnectEvent,
-  DisconnectEvent,
-  ErrorEvent,
-  PlaybackReadyEvent,
-  ViewTypeChangeEvent,
+  VdsCanPlayEvent,
+  VdsConnectEvent,
+  VdsDisconnectEvent,
+  VdsErrorEvent,
+  VdsViewTypeChangeEvent,
 } from '../player.events';
 import { PlayerMethods, PlayerProps } from '../player.types';
-import {
-  UserMutedChangeRequestEvent,
-  UserPauseRequestEvent,
-  UserPlayRequestEvent,
-  UserTimeChangeRequestEvent,
-  UserVolumeChangeRequestEvent,
-} from '../user/user.events';
+import { ReadyState } from '../ReadyState';
 import { UuidMixin } from '../uuid/UuidMixin';
 import { ViewType } from '../ViewType';
 import { ProviderProps } from './provider.args';
@@ -51,7 +53,7 @@ export abstract class MediaProvider<EngineType = unknown>
   implements PlayerProps, PlayerMethods, ProviderProps {
   connectedCallback(): void {
     super.connectedCallback();
-    this.dispatchEvent(new ConnectEvent({ detail: this }));
+    this.dispatchEvent(new VdsConnectEvent({ detail: this }));
   }
 
   updated(changedProperties: PropertyValues): void {
@@ -78,8 +80,10 @@ export abstract class MediaProvider<EngineType = unknown>
     this.resetRequestQueue();
     this.hardResetContext();
     this.context.viewType = ViewType.Unknown;
-    this.dispatchEvent(new ViewTypeChangeEvent({ detail: ViewType.Unknown }));
-    this.dispatchEvent(new DisconnectEvent({ detail: this }));
+    this.dispatchEvent(
+      new VdsViewTypeChangeEvent({ detail: ViewType.Unknown }),
+    );
+    this.dispatchEvent(new VdsDisconnectEvent({ detail: this }));
     super.disconnectedCallback();
   }
 
@@ -89,7 +93,7 @@ export abstract class MediaProvider<EngineType = unknown>
 
   @property({ type: Number })
   get volume(): number {
-    return this.isPlaybackReady ? this.getVolume() : 1;
+    return this.canPlay ? this.getVolume() : 1;
   }
 
   set volume(requestedVolume: number) {
@@ -105,7 +109,7 @@ export abstract class MediaProvider<EngineType = unknown>
 
   @property({ type: Boolean })
   get paused(): boolean {
-    return this.isPlaybackReady ? this.getPaused() : true;
+    return this.canPlay ? this.getPaused() : true;
   }
 
   set paused(shouldPause: boolean) {
@@ -124,7 +128,7 @@ export abstract class MediaProvider<EngineType = unknown>
 
   @property({ type: Number, attribute: 'current-time' })
   get currentTime(): number {
-    return this.isPlaybackReady ? this.getCurrentTime() : 0;
+    return this.canPlay ? this.getCurrentTime() : 0;
   }
 
   set currentTime(requestedTime: number) {
@@ -140,7 +144,7 @@ export abstract class MediaProvider<EngineType = unknown>
 
   @property({ type: Boolean })
   get muted(): boolean {
-    return this.isPlaybackReady ? this.getMuted() : false;
+    return this.canPlay ? this.getMuted() : false;
   }
 
   set muted(shouldMute: boolean) {
@@ -187,87 +191,89 @@ export abstract class MediaProvider<EngineType = unknown>
    */
   abstract readonly engine: EngineType;
 
-  get isPlaybackReady(): boolean {
-    return this.context.isPlaybackReady;
+  get buffered(): TimeRanges {
+    return this.context.buffered;
   }
 
-  get currentSrc(): string {
-    return this.context.currentSrc;
+  get canPlay(): boolean {
+    return this.context.canPlay;
+  }
+
+  get canPlayThrough(): boolean {
+    return this.context.canPlayThrough;
   }
 
   get currentPoster(): string {
     return this.context.currentPoster;
   }
 
+  get currentSrc(): string {
+    return this.context.currentSrc;
+  }
+
   get duration(): number {
     return this.context.duration;
-  }
-
-  get buffered(): number {
-    return this.context.buffered;
-  }
-
-  get buffering(): boolean {
-    return this.context.buffering;
-  }
-
-  get playing(): boolean {
-    return this.context.playing;
-  }
-
-  get started(): boolean {
-    return this.context.started;
   }
 
   get ended(): boolean {
     return this.context.ended;
   }
 
+  get networkState(): NetworkState {
+    return this.context.networkState;
+  }
+
   get mediaType(): MediaType {
     return this.context.mediaType;
   }
 
-  get isAudio(): boolean {
-    return this.context.isAudio;
+  get played(): TimeRanges {
+    return this.context.played;
   }
 
-  get isVideo(): boolean {
-    return this.context.isVideo;
+  get playing(): boolean {
+    return this.context.playing;
+  }
+
+  get seekable(): TimeRanges {
+    return this.context.seekable;
+  }
+
+  get started(): boolean {
+    return this.context.started;
+  }
+
+  get readyState(): ReadyState {
+    return this.context.readyState;
   }
 
   get viewType(): ViewType {
     return this.context.viewType;
   }
 
-  get isAudioView(): boolean {
-    return this.context.isAudioView;
-  }
-
-  get isVideoView(): boolean {
-    return this.context.isVideoView;
+  get waiting(): boolean {
+    return this.context.waiting;
   }
 
   // -------------------------------------------------------------------------------------------
   // Support Checks
   // -------------------------------------------------------------------------------------------
 
-  abstract canPlayType(type: string): CanPlayType;
+  abstract canPlayType(type: string): CanPlay;
 
   shouldPlayType(type: string): boolean {
     const canPlayType = this.canPlayType(type);
-    return (
-      canPlayType === CanPlayType.Maybe || canPlayType === CanPlayType.Probably
-    );
+    return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
   }
 
   // -------------------------------------------------------------------------------------------
   // Methods
   // -------------------------------------------------------------------------------------------
 
-  protected throwIfNotReady(): void {
-    if (!this.isPlaybackReady) {
+  protected throwIfNotReadyForPlayback(): void {
+    if (!this.canPlay) {
       throw Error(
-        `Media is not ready - wait for \`${PlaybackReadyEvent.TYPE}\` event.`,
+        `Media is not ready - wait for \`${VdsCanPlayEvent.TYPE}\` event.`,
       );
     }
   }
@@ -298,7 +304,7 @@ export abstract class MediaProvider<EngineType = unknown>
   // -------------------------------------------------------------------------------------------
 
   protected getAriaBusy(): 'true' | 'false' {
-    return this.isPlaybackReady ? 'false' : 'true';
+    return this.canPlay ? 'false' : 'true';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -315,34 +321,32 @@ export abstract class MediaProvider<EngineType = unknown>
     if (!this.allowUserEventsToBubble) e.stopPropagation();
   }
 
-  @listen(UserPlayRequestEvent.TYPE)
-  protected handleUserPlayRequest(e: UserPlayRequestEvent): void {
+  @listen(VdsUserPlayEvent.TYPE)
+  protected handleUserPlay(e: VdsUserPlayEvent): void {
     this.userEventGateway(e);
     this.paused = false;
   }
 
-  @listen(UserPauseRequestEvent.TYPE)
-  protected handleUserPauseRequest(e: UserPauseRequestEvent): void {
+  @listen(VdsUserPauseEvent.TYPE)
+  protected handleUserPause(e: VdsUserPauseEvent): void {
     this.userEventGateway(e);
     this.paused = true;
   }
 
-  @listen(UserMutedChangeRequestEvent.TYPE)
-  protected handleUserMutedChangeRequest(e: UserMutedChangeRequestEvent): void {
+  @listen(VdsUserMutedChange.TYPE)
+  protected handleUserMuteChange(e: VdsUserMutedChange): void {
     this.userEventGateway(e);
     this.muted = e.detail;
   }
 
-  @listen(UserTimeChangeRequestEvent.TYPE)
-  protected handleUserTimeChangeRequest(e: UserTimeChangeRequestEvent): void {
+  @listen(VdsUserSeeked.TYPE)
+  protected handleUserTimeChange(e: VdsUserSeeked): void {
     this.userEventGateway(e);
     this.currentTime = e.detail;
   }
 
-  @listen(UserVolumeChangeRequestEvent.TYPE)
-  protected handleUserVolumeChangeRequest(
-    e: UserVolumeChangeRequestEvent,
-  ): void {
+  @listen(VdsUserVolumeChange.TYPE)
+  protected handleUserVolumeChange(e: VdsUserVolumeChange): void {
     this.userEventGateway(e);
     this.volume = e.detail;
   }
@@ -353,7 +357,7 @@ export abstract class MediaProvider<EngineType = unknown>
 
   /**
    * Requests are queued if called before media is ready for playback. Once the media is
-   * ready (`ProviderPlaybackReadyEvent`) the queue is flushed. Each request is associated with
+   * ready (`PlaybackReadyEvent`) the queue is flushed. Each request is associated with
    * a request key to avoid making duplicate requests of the same "type".
    */
   protected requestQueue: ProviderRequestQueue = new Map();
@@ -371,6 +375,7 @@ export abstract class MediaProvider<EngineType = unknown>
    * Waits for the current request queue to be flushed.
    */
   async waitForRequestQueueToFlush(): Promise<void> {
+    if (this.canPlay) return;
     await this.pendingRequestQueueFlush.promise;
   }
 
@@ -380,7 +385,7 @@ export abstract class MediaProvider<EngineType = unknown>
     try {
       await this.requestQueue.get(requestKey)?.();
     } catch (e) {
-      this.dispatchEvent(new ErrorEvent({ detail: e }));
+      this.dispatchEvent(new VdsErrorEvent({ detail: e }));
     }
 
     this.requestQueue.delete(requestKey);
@@ -401,7 +406,7 @@ export abstract class MediaProvider<EngineType = unknown>
   ): void {
     this.requestQueue.set(requestKey, request);
 
-    if (!this.isPlaybackReady) return;
+    if (!this.canPlay) return;
 
     this.safelyMakeRequest(requestKey);
     this.requestQueue.delete(requestKey);
@@ -412,11 +417,6 @@ export abstract class MediaProvider<EngineType = unknown>
     await Promise.all(requests.map(reqKey => this.safelyMakeRequest(reqKey)));
     this.requestQueue.clear();
     this.pendingRequestQueueFlush.resolve();
-  }
-
-  @listen(PlaybackReadyEvent.TYPE)
-  protected async handleFlushRequestQueue(): Promise<void> {
-    await this.flushRequestQueue();
   }
 
   protected resetRequestQueue(): void {
@@ -434,7 +434,7 @@ export abstract class MediaProvider<EngineType = unknown>
    * Player context record. Any property updated inside this object will trigger a context
    * update.
    *
-   * @internal - Used for testing.
+   * @internal - Used internally to keep `MediaProvider` and UI in sync with engine state.
    */
   @contextRecordProvider(playerContext, transformContextName)
   readonly context!: PlayerContextProvider;
@@ -443,16 +443,24 @@ export abstract class MediaProvider<EngineType = unknown>
    * Context properties that should be reset when media is changed.
    */
   protected softResettableCtxProps = new Set<keyof PlayerContext>([
-    'paused',
+    'buffered',
+    'buffering',
+    'canPlay',
+    'canPlayThrough',
+    'currentSrc',
     'currentTime',
     'duration',
-    'buffered',
-    'isPlaying',
-    'isBuffering',
-    'isPlaybackReady',
-    'hasPlaybackStarted',
-    'hasPlaybackEnded',
+    'ended',
     'mediaType',
+    'networkState',
+    'paused',
+    'canPlay',
+    'played',
+    'playing',
+    'seekable',
+    'started',
+    'readyState',
+    'waiting',
   ]);
 
   /**

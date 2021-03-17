@@ -3,11 +3,8 @@ import { ifDefined } from 'lit-html/directives/if-defined';
 
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { Story } from '../../shared/storybook';
-import {
-  HLS_PROVIDER_STORYBOOK_ARG_TYPES,
-  HlsProviderActions,
-  HlsProviderProps,
-} from './hls.args';
+import { HLS_PROVIDER_STORYBOOK_ARG_TYPES } from './hls.args';
+import { HlsProviderActions, HlsProviderProps } from './hls.types';
 import { HLS_TAG_NAME } from './vds-hls';
 
 export default {

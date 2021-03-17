@@ -28,7 +28,7 @@ describe('provider props', () => {
     const provider = await buildFakeMediaProvider();
     const volume = 0.75;
     const volumeSpy = spy(provider, 'setVolume');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
     provider.volume = volume;
     expect(volumeSpy).to.have.been.calledWith(volume);
   });
@@ -37,7 +37,7 @@ describe('provider props', () => {
     const provider = await buildFakeMediaProvider();
     const currentTime = 420;
     const currentTimeSpy = spy(provider, 'setCurrentTime');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
     provider.currentTime = currentTime;
     expect(currentTimeSpy).to.have.been.calledWith(currentTime);
   });
@@ -47,7 +47,7 @@ describe('provider props', () => {
     const paused = false;
     const playSpy = spy(provider, 'play');
     const pauseSpy = spy(provider, 'pause');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
     provider.paused = paused;
     expect(playSpy).to.have.been.calledOnce;
     provider.paused = true;
@@ -58,7 +58,7 @@ describe('provider props', () => {
     const provider = await buildFakeMediaProvider();
     const muted = true;
     const mutedSpy = spy(provider, 'setMuted');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
     provider.muted = muted;
     expect(mutedSpy).to.have.been.calledWith(muted);
   });

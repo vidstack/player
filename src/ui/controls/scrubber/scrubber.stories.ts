@@ -5,11 +5,8 @@ import { html } from 'lit-element';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
 import { SliderActions } from '../slider';
-import {
-  SCRUBBER_STORYBOOK_ARG_TYPES,
-  ScrubberFakeProps,
-  ScrubberProps,
-} from './scrubber.args';
+import { SCRUBBER_STORYBOOK_ARG_TYPES } from './scrubber.args';
+import { ScrubberFakeProps, ScrubberProps } from './scrubber.types';
 import { SCRUBBER_TAG_NAME } from './vds-scrubber';
 
 export default {
@@ -37,7 +34,7 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & SliderActions> = ({
 }) =>
   html`
     <vds-fake-media-provider
-      playback-ready
+      .canPlayCtx="${true}"
       .currentTimeCtx="${fakeCurrentTime}"
       .durationCtx="${fakeDuration}"
       .bufferedCtx="${fakeBuffered}"

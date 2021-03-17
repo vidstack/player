@@ -2,11 +2,8 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
-import {
-  SLIDER_STORYBOOK_ARG_TYPES,
-  SliderActions,
-  SliderProps,
-} from './slider.args';
+import { SLIDER_STORYBOOK_ARG_TYPES } from './slider.args';
+import { SliderActions, SliderProps } from './slider.types';
 import { SLIDER_TAG_NAME } from './vds-slider';
 
 export default {

@@ -9,6 +9,14 @@ export interface VdsCustomEventConstructor<DetailType> {
   new (eventInit?: VdsEventInit<DetailType>): VdsCustomEvent<DetailType>;
 }
 
+export type VdsEvents<T> = {
+  [P in Extract<keyof T, string> as `${typeof LIB_PREFIX}-${P}`]: T[P];
+};
+
+export type ExtractEventDetailType<Type> = Type extends VdsCustomEvent<infer X>
+  ? X
+  : void;
+
 export abstract class VdsCustomEvent<
   DetailType
 > extends CustomEvent<DetailType> {
@@ -16,10 +24,10 @@ export abstract class VdsCustomEvent<
 
   readonly originalEvent?: unknown;
 
-  constructor(type: string, eventInit?: VdsEventInit<DetailType>) {
+  constructor(eventInit?: VdsEventInit<DetailType>) {
     const { originalEvent, ...init } = eventInit ?? {};
 
-    super(type, {
+    super(VdsCustomEvent.TYPE, {
       bubbles: true,
       composed: true,
       cancelable: true,
@@ -33,13 +41,11 @@ export abstract class VdsCustomEvent<
 export function buildVdsEvent<DetailType>(
   type: string,
 ): VdsCustomEventConstructor<DetailType> {
-  class VdsEvent extends VdsCustomEvent<DetailType> {
+  return class VdsEvent extends VdsCustomEvent<DetailType> {
     static readonly TYPE = `${LIB_PREFIX}-${type}`;
 
     constructor(eventInit?: VdsEventInit<DetailType>) {
-      super(VdsEvent.TYPE, eventInit);
+      super(eventInit);
     }
-  }
-
-  return VdsEvent;
+  };
 }

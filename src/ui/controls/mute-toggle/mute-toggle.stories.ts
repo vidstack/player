@@ -4,11 +4,8 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
-import {
-  MUTE_TOGGLE_STORYBOOK_ARG_TYPES,
-  MuteToggleFakeProps,
-  MuteToggleProps,
-} from './mute-toggle.args';
+import { MUTE_TOGGLE_STORYBOOK_ARG_TYPES } from './mute-toggle.args';
+import { MuteToggleFakeProps, MuteToggleProps } from './mute-toggle.types';
 import { MUTE_TOGGLE_TAG_NAME } from './vds-mute-toggle';
 
 export default {
@@ -24,10 +21,7 @@ const Template: Story<MuteToggleProps & MuteToggleFakeProps> = ({
   fakeMuted,
 }) =>
   html`
-    <vds-fake-media-provider
-      .isPlaybackReadyCtx="${true}"
-      .mutedCtx="${fakeMuted}"
-    >
+    <vds-fake-media-provider .canPlayCtx="${true}" .mutedCtx="${fakeMuted}">
       <vds-mute-toggle
         label="${ifNonEmpty(label)}"
         described-by="${ifNonEmpty(describedBy)}"

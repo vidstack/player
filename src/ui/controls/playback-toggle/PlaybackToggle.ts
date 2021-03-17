@@ -11,7 +11,7 @@ import { buildExportPartsAttr } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { Control } from '../control';
 import { Toggle } from '../toggle';
-import { PlaybackToggleProps } from './playback-toggle.args';
+import { PlaybackToggleProps } from './playback-toggle.types';
 
 /**
  * A control for toggling the playback state (play/pause) of the current media.

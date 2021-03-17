@@ -10,16 +10,15 @@ import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
 import {
   MediaType,
-  MediaTypeChangeEvent,
+  VdsMediaTypeChangeEvent,
+  VdsViewTypeChangeEvent,
   ViewType,
-  ViewTypeChangeEvent,
 } from '../../core';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
 import { MediaFileProvider, MediaFileProviderEngine } from '../file';
-import { VideoProviderProps } from './video.args';
 import { videoStyles } from './video.css';
-import { VideoControlsList } from './video.types';
+import { VideoControlsList, VideoProviderProps } from './video.types';
 import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
 
 /**
@@ -75,7 +74,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
 
     this.context.viewType = ViewType.Video;
     this.dispatchEvent(
-      new ViewTypeChangeEvent({
+      new VdsViewTypeChangeEvent({
         detail: ViewType.Video,
       }),
     );
@@ -160,6 +159,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
         ?autopictureinpicture="${this.autoPiP}"
         ?disablepictureinpicture="${this.disablePiP}"
         ?disableremoteplayback="${this.disableRemotePlayback}"
+        .defaultMuted="${this.defaultMuted ?? this.muted}"
       >
         ${this.renderMediaContent()}
       </video>
@@ -173,7 +173,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
   protected handleLoadedMetadata(originalEvent: Event): void {
     this.context.mediaType = this.getMediaType();
     this.dispatchEvent(
-      new MediaTypeChangeEvent({
+      new VdsMediaTypeChangeEvent({
         detail: this.context.mediaType,
         originalEvent,
       }),

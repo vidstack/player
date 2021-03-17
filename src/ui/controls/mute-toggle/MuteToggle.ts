@@ -7,7 +7,7 @@ import { buildExportPartsAttr } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { Control } from '../control';
 import { Toggle } from '../toggle';
-import { MuteToggleProps } from './mute-toggle.args';
+import { MuteToggleProps } from './mute-toggle.types';
 
 /**
  * A control for toggling the muted state of the player.

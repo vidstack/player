@@ -4,11 +4,11 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
+import { PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES } from './playback-toggle.args';
 import {
-  PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES,
   PlaybackToggleFakeProps,
   PlaybackToggleProps,
-} from './playback-toggle.args';
+} from './playback-toggle.types';
 import { PLAYBACK_TOGGLE_TAG_NAME } from './vds-playback-toggle';
 
 export default {
@@ -24,10 +24,7 @@ const Template: Story<PlaybackToggleProps & PlaybackToggleFakeProps> = ({
   fakePaused,
 }) =>
   html`
-    <vds-fake-media-provider
-      .isPlaybackReadyCtx="${true}"
-      .pausedCtx="${fakePaused}"
-    >
+    <vds-fake-media-provider .canPlayCtx="${true}" .pausedCtx="${fakePaused}">
       <vds-playback-toggle
         label="${ifNonEmpty(label)}"
         described-by="${ifNonEmpty(describedBy)}"

@@ -35,6 +35,10 @@ declare global {
     safari: boolean;
   }
 
+  interface HTMLMediaElement {
+    captureStream?(): MediaStream;
+  }
+
   interface HTMLVideoElement {
     disablePictureInPicture: boolean;
     webkitEnterFullscreen(): Promise<void>;

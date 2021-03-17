@@ -3,12 +3,12 @@ import '../../core/fakes/vds-fake-media-provider';
 import { html } from 'lit-element';
 
 import { Story } from '../../shared/storybook';
+import { BUFFERING_INDICATOR_STORYBOOK_ARG_TYPES } from './buffering-indicator.args';
 import {
-  BUFFERING_INDICATOR_STORYBOOK_ARG_TYPES,
   BufferingIndicatorActions,
   BufferingIndicatorFakeProps,
   BufferingIndicatorProps,
-} from './buffering-indicator.args';
+} from './buffering-indicator.types';
 import { BUFFERING_INDICATOR_TAG_NAME } from './vds-buffering-indicator';
 
 export default {
@@ -24,7 +24,7 @@ const Template: Story<
 > = ({ showWhileBooting, delay = 0, fakeBuffering, onShow, onHide }) =>
   html`
     <vds-fake-media-provider
-      .isPlaybackReadyCtx="${true}"
+      .canPlayCtx="${true}"
       .isBufferingCtx="${fakeBuffering}"
     >
       <vds-buffering-indicator

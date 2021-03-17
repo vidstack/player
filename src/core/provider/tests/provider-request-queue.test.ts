@@ -28,7 +28,7 @@ describe('provider request queue', () => {
   it('should make request immediately if provider is ready', async () => {
     const provider = await buildFakeMediaProvider();
     const volumeSpy = spy(provider, 'setVolume');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
 
     provider.volume = 0.53;
 
@@ -62,7 +62,7 @@ describe('provider request queue', () => {
   it('should gracefully handle errors when flushing queue', async () => {
     const provider = await buildFakeMediaProvider();
     stub(provider, 'play').throws(new Error('No play.'));
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
 
     setTimeout(() => {
       provider.paused = false;

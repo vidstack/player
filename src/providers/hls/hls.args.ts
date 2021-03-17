@@ -1,26 +1,11 @@
-import { ProviderActions } from '../../core';
-import { Callback } from '../../shared/types';
-import {
-  VIDEO_PROVIDER_STORYBOOK_ARG_TYPES,
-  VideoProviderProps,
-} from '../video';
+import { VIDEO_PROVIDER_STORYBOOK_ARG_TYPES } from '../video';
 import {
   HlsEngineAttachEvent,
   HlsEngineBuiltEvent,
   HlsEngineDetachEvent,
   HlsEngineNoSuppotEvent,
 } from './hls.events';
-
-export interface HlsProviderProps extends VideoProviderProps {
-  libSrc: string;
-}
-
-export interface HlsProviderActions extends ProviderActions {
-  onEngineBuilt: Callback<CustomEvent>;
-  onEngineAttach: Callback<CustomEvent>;
-  onEngineDetach: Callback<CustomEvent>;
-  onEngineNoSupport: Callback<CustomEvent>;
-}
+import { HlsProviderActions, HlsProviderProps } from './hls.types';
 
 export type HlsProviderStorybookArgs = {
   [P in keyof HlsProviderProps & HlsProviderActions]: unknown;

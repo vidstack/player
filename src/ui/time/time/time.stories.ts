@@ -2,7 +2,8 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
-import { TIME_STORYBOOK_ARG_TYPES, TimeProps } from './time.args';
+import { TIME_STORYBOOK_ARG_TYPES } from './time.args';
+import { TimeProps } from './time.types';
 import { TIME_TAG_NAME } from './vds-time';
 
 export default {

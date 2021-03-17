@@ -10,19 +10,24 @@ import {
 } from 'lit-element';
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
-import { playerContext } from '../../../core';
+import { playerContext, VdsUserSeeked, VdsUserSeeking } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { getSlottedChildren } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { isNil } from '../../../utils/unit';
 import { formatSpokenTime } from '../../time/time';
-import { Slider, SliderDragEndEvent, SliderDragStartEvent } from '../slider';
-import { ScrubberProps } from './scrubber.args';
+import {
+  Slider,
+  VdsSliderDragEndEvent,
+  VdsSliderDragStartEvent,
+  VdsSliderValueChangeEvent,
+} from '../slider';
 import { scrubberStyles } from './scrubber.css';
+import { ScrubberProps } from './scrubber.types';
 
 /**
- * A control that displays the progression of playback and the amount buffered on a slider. This
+ * A control that displays the progression of playback and the amount seekable on a slider. This
  * control can be used to update the current playback time by interacting with the slider.
  *
  * ## Previews / Storyboards
@@ -69,9 +74,9 @@ import { scrubberStyles } from './scrubber.css';
  *
  * @cssprop --vds-slider-* - All slider CSS properties can be used to style the underlying `<vds-slider>` component.
  * @cssprop --vds-scrubber-current-time - Current time of playback.
- * @cssprop --vds-scrubber-buffered - The amount of media thas has buffered.
+ * @cssprop --vds-scrubber-seekable - The amount of media that is seekable.
  * @cssprop --vds-scrubber-duration - The length of media playback.
- * @cssprop --vds-scrubber-progress-bg: The background color of the amount of buffered.
+ * @cssprop --vds-scrubber-progress-bg: The background color of the amount that is seekable.
  *
  * ## Examples
  *
@@ -79,7 +84,7 @@ import { scrubberStyles } from './scrubber.css';
  * ```html
  * <vds-scrubber
  *  slider-label="Time scrubber"
- *  progress-label="Amount buffered"
+ *  progress-label="Amount seekable"
  * >
  *  <!-- `hidden` attribute will automatically be applied/removed -->
  *  <div class="preview" slot="preview" hidden>Preview</div>
@@ -147,8 +152,8 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   protected duration = 0;
 
   @internalProperty()
-  @playerContext.buffered.consume()
-  protected buffered = playerContext.buffered.defaultValue;
+  @playerContext.seekableAmount.consume()
+  protected seekableAmount = playerContext.seekableAmount.defaultValue;
 
   // -------------------------------------------------------------------------------------------
   // Properties
@@ -156,7 +161,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
   @property({ attribute: 'slider-label' }) sliderLabel = 'Time scrubber';
 
-  @property({ attribute: 'progress-label' }) progressLabel = 'Amount buffered';
+  @property({ attribute: 'progress-label' }) progressLabel = 'Amount seekable';
 
   @property({ attribute: 'progress-text' }) progressText =
     '{currentTime} out of {duration}';
@@ -226,7 +231,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   protected getScrubberStyleMap(): StyleInfo {
     return {
       '--vds-scrubber-current-time': String(this.currentTime),
-      '--vds-scrubber-buffered': String(this.buffered),
+      '--vds-scrubber-seekable': String(this.seekableAmount),
       '--vds-scrubber-duration': String(this.duration),
     };
   }
@@ -275,7 +280,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
   protected renderProgress(): TemplateResult {
     const valueText = `${(this.duration > 0
-      ? (this.buffered / this.duration) * 100
+      ? (this.seekableAmount / this.duration) * 100
       : 0
     ).toFixed(0)}%`;
 
@@ -288,7 +293,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
         aria-label="${this.progressLabel}"
         aria-valuemin="0"
         aria-valuemax="${this.duration}"
-        aria-valuenow="${this.buffered}"
+        aria-valuenow="${this.seekableAmount}"
         aria-valuetext="${valueText}"
       >
         ${this.renderProgressSlot()}
@@ -400,21 +405,21 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     // no-op
   }
 
-  protected handleSliderValueChange(): void {
+  protected handleSliderValueChange(e: VdsSliderValueChangeEvent): void {
     if (this.isDragging) {
-      // TODO: send user seeking request - blocked by #148
+      this.dispatchEvent(new VdsUserSeeking({ detail: e.detail }));
       return;
     }
 
-    // TODO: send seeked request + time change request? - blocked by #148
+    this.dispatchEvent(new VdsUserSeeked({ detail: e.detail }));
   }
 
-  protected handleSliderDragStart(e: SliderDragStartEvent): void {
+  protected handleSliderDragStart(e: VdsSliderDragStartEvent): void {
     this.updatePreviewPosition(e.originalEvent as PointerEvent);
     this.showPreview();
   }
 
-  protected handleSliderDragEnd(e: SliderDragEndEvent): void {
+  protected handleSliderDragEnd(e: VdsSliderDragEndEvent): void {
     this.updatePreviewPosition(e.originalEvent as PointerEvent);
     this.hidePreview();
   }

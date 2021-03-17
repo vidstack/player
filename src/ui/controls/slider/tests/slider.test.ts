@@ -7,7 +7,10 @@ import {
 } from '@open-wc/testing';
 
 import { Slider } from '../Slider';
-import { SliderDragEndEvent, SliderDragStartEvent } from '../slider.events';
+import {
+  VdsSliderDragEndEvent,
+  VdsSliderDragStartEvent,
+} from '../slider.events';
 import { SLIDER_TAG_NAME } from '../vds-slider';
 
 describe(SLIDER_TAG_NAME, () => {
@@ -187,11 +190,11 @@ describe(SLIDER_TAG_NAME, () => {
     const thumb = slider.shadowRoot?.querySelector('#thumb') as HTMLElement;
 
     setTimeout(() => thumb.dispatchEvent(new PointerEvent('pointerdown')));
-    await oneEvent(slider, SliderDragStartEvent.TYPE);
+    await oneEvent(slider, VdsSliderDragStartEvent.TYPE);
     expect(slider.isDragging).to.be.true;
 
     setTimeout(() => document.dispatchEvent(new PointerEvent('pointerup')));
-    await oneEvent(slider, SliderDragEndEvent.TYPE);
+    await oneEvent(slider, VdsSliderDragEndEvent.TYPE);
     expect(slider.isDragging).to.be.false;
   });
 

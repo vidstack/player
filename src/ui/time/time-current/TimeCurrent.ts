@@ -1,6 +1,6 @@
 import { playerContext } from '../../../core';
 import { Time } from '../time';
-import { TimeCurrentProps } from './time-current.args';
+import { TimeCurrentProps } from './time-current.types';
 
 /**
  * Formats and displays the `currentTime` of media playback. Do not mess with the component's

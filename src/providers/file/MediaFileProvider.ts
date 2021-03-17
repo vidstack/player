@@ -9,32 +9,41 @@ import {
 } from 'lit-element';
 
 import {
-  BufferedChangeEvent,
-  BufferingChangeEvent,
-  CanPlayType,
-  DurationChangeEvent,
-  ErrorEvent,
+  CanPlay,
   MediaProvider,
-  MutedChangeEvent,
-  PauseEvent,
-  PlaybackEndEvent,
-  PlaybackReadyEvent,
-  PlaybackStartEvent,
-  PlayEvent,
-  PlayingEvent,
-  ReplayEvent,
-  SrcChangeEvent,
-  TimeChangeEvent,
-  VolumeChangeEvent,
+  VdsAbortEvent,
+  VdsCanPlayEvent,
+  VdsCanPlayThroughEvent,
+  VdsDurationChangeEvent,
+  VdsEmpitedEvent,
+  VdsEndedEvent,
+  VdsErrorEvent,
+  VdsLoadedDataEvent,
+  VdsLoadStartEvent,
+  VdsPauseEvent,
+  VdsPlayEvent,
+  VdsPlayingEvent,
+  VdsProgressEvent,
+  VdsReplayEvent,
+  VdsSeekedEvent,
+  VdsSeekingEvent,
+  VdsStalledEvent,
+  VdsStartedEvent,
+  VdsSuspendEvent,
+  VdsTimeUpdateEvent,
+  VdsVolumeChangeEvent,
+  VdsWaitingEvent,
 } from '../../core';
 import { Callback } from '../../shared/types';
 import { getSlottedChildren } from '../../utils/dom';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';
-import { FileProviderProps } from './file.args';
 import {
+  FileProviderMethods,
+  FileProviderProps,
   MediaCrossOriginOption,
   MediaFileProviderEngine,
   MediaPreloadOption,
+  SrcObject,
 } from './file.types';
 
 /**
@@ -46,7 +55,7 @@ import {
  */
 export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   extends MediaProvider<EngineType>
-  implements FileProviderProps {
+  implements FileProviderProps, FileProviderMethods {
   protected mediaEl?: HTMLMediaElement;
 
   protected disposal = new Disposal();
@@ -91,9 +100,10 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
   set src(newSrc: string) {
     this.softResetContext();
-    this.context.currentSrc = '';
-    this.dispatchEvent(new SrcChangeEvent({ detail: '' }));
     this._src = newSrc;
+    this.handleSrcChange();
+    // No other action requried as the `src` attribute should be updated on the underlying
+    // `<audio>` or `<video>` element.
   }
 
   @property({ type: Number })
@@ -107,6 +117,20 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
   @property()
   preload?: MediaPreloadOption = 'metadata';
+
+  @property({ type: Boolean, attribute: 'default-muted' })
+  defaultMuted?: boolean;
+
+  get srcObject(): SrcObject | undefined {
+    return this.mediaEl?.srcObject ?? undefined;
+  }
+
+  set srcObject(newSrcObject: SrcObject | undefined) {
+    this.softResetContext();
+    this.mediaEl!.srcObject = newSrcObject ?? null;
+    this.mediaEl!.load();
+    this.handleSrcChange();
+  }
 
   // -------------------------------------------------------------------------------------------
   // Time Updates
@@ -127,7 +151,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
     if (this.context.currentTime !== newTime) {
       this.context.currentTime = newTime;
-      this.dispatchEvent(new TimeChangeEvent({ detail: newTime }));
+      this.dispatchEvent(new VdsTimeUpdateEvent({ detail: newTime }));
     }
 
     this.timeRAF = window.requestAnimationFrame(() => {
@@ -145,8 +169,6 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.cancelTimeUpdates();
     this.cleanupOldSourceNodes();
     this.softResetContext();
-    this.context.currentSrc = '';
-    this.dispatchEvent(new SrcChangeEvent({ detail: '' }));
     this.attachNewSourceNodes();
   }
 
@@ -164,6 +186,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
     window.requestAnimationFrame(() => {
       this.mediaEl?.load();
+      this.handleSrcChange();
     });
   }
 
@@ -177,31 +200,79 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     if (isNil(this.mediaEl)) return;
 
     const eventMap: Record<string, Callback<Event>> = {
-      loadstart: this.handleLoadStart,
-      loadedmetadata: this.handleLoadedMetadata,
-      progress: this.handleProgress,
-      timeupdate: this.handleTimeUpdate,
-      play: this.handlePlay,
-      pause: this.handlePause,
-      playing: this.handlePlaying,
-      volumechange: this.handleVolumeChange,
-      waiting: this.handleWaiting,
-      suspend: this.handleSuspend,
+      abort: this.handleAbort,
+      canplay: this.handleCanPlay,
+      canplaythrough: this.handleCanPlayThrough,
+      durationchange: this.handleDurationChange,
+      emptied: this.handleEmptied,
       ended: this.handleEnded,
       error: this.handleError,
+      loadeddata: this.handleLoadedData,
+      loadedmetadata: this.handleLoadedMetadata,
+      loadstart: this.handleLoadStart,
+      pause: this.handlePause,
+      play: this.handlePlay,
+      playing: this.handlePlaying,
+      progress: this.handleProgress,
+      ratechange: this.handleRateChange,
+      seeked: this.handleSeeked,
+      seeking: this.handleSeeking,
+      stalled: this.handleStalled,
+      suspend: this.handleSuspend,
+      timeupdate: this.handleTimeUpdate,
+      volumechange: this.handleVolumeChange,
+      waiting: this.handleWaiting,
     };
 
     Object.keys(eventMap).forEach(type => {
-      const handler = eventMap[type];
-      this.disposal.add(listenTo(this.mediaEl!, type, handler.bind(this)));
+      const handler = eventMap[type].bind(this);
+      this.disposal.add(
+        listenTo(this.mediaEl!, type, e => {
+          handler(e);
+          // re-dispatch native event for spec-compliance.
+          this.dispatchEvent(e);
+        }),
+      );
     });
   }
 
+  protected handleAbort(originalEvent: Event): void {
+    this.context.readyState = this.mediaEl!.readyState;
+    this.context.networkState = this.mediaEl!.networkState;
+    this.dispatchEvent(new VdsAbortEvent({ originalEvent }));
+  }
+
+  protected handleCanPlay(originalEvent: Event): void {
+    if (!this.willAnotherEngineAttach()) this.mediaReady(originalEvent);
+  }
+
+  protected mediaReady(originalEvent?: Event): void {
+    this.context.readyState = this.mediaEl!.readyState;
+    this.context.canPlay = true;
+    this.dispatchEvent(new VdsCanPlayEvent({ originalEvent }));
+    this.flushRequestQueue();
+  }
+
+  protected handleCanPlayThrough(originalEvent: Event): void {
+    this.context.readyState = this.mediaEl!.readyState;
+    this.context.canPlayThrough = true;
+    this.dispatchEvent(new VdsCanPlayThroughEvent({ originalEvent }));
+  }
+
   protected handleLoadStart(originalEvent: Event): void {
+    this.context.readyState = this.mediaEl!.readyState;
     this.context.currentSrc = this.mediaEl!.currentSrc;
-    this.dispatchEvent(
-      new SrcChangeEvent({ detail: this.context.currentSrc, originalEvent }),
-    );
+    this.dispatchEvent(new VdsLoadStartEvent({ originalEvent }));
+  }
+
+  protected handleEmptied(originalEvent: Event): void {
+    this.context.readyState = this.mediaEl!.readyState;
+    this.dispatchEvent(new VdsEmpitedEvent({ originalEvent }));
+  }
+
+  protected handleLoadedData(originalEvent: Event): void {
+    this.context.readyState = this.mediaEl!.readyState;
+    this.dispatchEvent(new VdsLoadedDataEvent({ originalEvent }));
   }
 
   /**
@@ -213,59 +284,44 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleLoadedMetadata(originalEvent: Event): void {
-    if (this.willAnotherEngineAttach()) return;
-
+    this.context.readyState = this.mediaEl!.readyState;
     this.context.duration = this.mediaEl!.duration;
     this.dispatchEvent(
-      new DurationChangeEvent({
+      new VdsDurationChangeEvent({
         detail: this.context.duration,
         originalEvent,
       }),
     );
-
-    this.context.isPlaybackReady = true;
-    this.dispatchEvent(new PlaybackReadyEvent({ originalEvent }));
   }
 
   protected handlePlay(originalEvent: Event): void {
     this.requestTimeUpdates();
-
     this.context.paused = false;
-    this.dispatchEvent(new PlayEvent({ originalEvent }));
-
+    this.dispatchEvent(new VdsPlayEvent({ originalEvent }));
     if (!this.context.started) {
       this.context.started = true;
-      this.dispatchEvent(new PlaybackStartEvent({ originalEvent }));
+      this.dispatchEvent(new VdsStartedEvent({ originalEvent }));
     }
   }
 
   protected handlePause(originalEvent: Event): void {
     this.cancelTimeUpdates();
-
     this.context.paused = true;
     this.context.playing = false;
-    this.dispatchEvent(new PauseEvent({ originalEvent }));
-
-    this.context.buffering = false;
-    this.dispatchEvent(
-      new BufferingChangeEvent({ detail: false, originalEvent }),
-    );
+    this.context.waiting = false;
+    this.dispatchEvent(new VdsPauseEvent({ originalEvent }));
   }
 
   protected handlePlaying(originalEvent: Event): void {
     this.context.playing = true;
-    this.dispatchEvent(new PlayingEvent({ originalEvent }));
-
-    this.context.buffering = false;
-    this.dispatchEvent(
-      new BufferingChangeEvent({ detail: false, originalEvent }),
-    );
+    this.context.waiting = false;
+    this.dispatchEvent(new VdsPlayingEvent({ originalEvent }));
   }
 
   protected handleDurationChange(originalEvent: Event): void {
     this.context.duration = this.mediaEl!.duration;
     this.dispatchEvent(
-      new DurationChangeEvent({
+      new VdsDurationChangeEvent({
         detail: this.context.duration,
         originalEvent,
       }),
@@ -273,19 +329,52 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleProgress(originalEvent: Event): void {
-    this.context.buffered = this.buffered;
+    this.context.buffered = this.mediaEl!.buffered;
+    this.context.seekable = this.mediaEl!.seekable;
+    this.context.readyState = this.mediaEl!.readyState;
+    this.context.networkState = this.mediaEl!.networkState;
+    this.dispatchEvent(new VdsProgressEvent({ originalEvent }));
+  }
+
+  protected handleRateChange(): void {
+    // TODO: no-op for now but we'll add playback rate support later.
+  }
+
+  protected handleSeeked(originalEvent: Event): void {
+    this.context.currentTime = this.mediaEl!.currentTime;
     this.dispatchEvent(
-      new BufferedChangeEvent({
-        detail: this.context.buffered,
+      new VdsSeekedEvent({
+        detail: this.context.currentTime,
         originalEvent,
       }),
     );
   }
 
+  protected handleSeeking(originalEvent: Event): void {
+    this.context.currentTime = this.mediaEl!.currentTime;
+    this.dispatchEvent(
+      new VdsSeekingEvent({
+        detail: this.context.currentTime,
+        originalEvent,
+      }),
+    );
+  }
+
+  /**
+   * Override to be notified of source changes.
+   */
+  protected handleSrcChange(): void {
+    // no-op
+  }
+
+  protected handleStalled(originalEvent: Event): void {
+    this.dispatchEvent(new VdsStalledEvent({ originalEvent }));
+  }
+
   protected handleTimeUpdate(originalEvent: Event): void {
     this.context.currentTime = this.mediaEl!.currentTime;
     this.dispatchEvent(
-      new TimeChangeEvent({
+      new VdsTimeUpdateEvent({
         detail: this.context.currentTime,
         originalEvent,
       }),
@@ -294,42 +383,40 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
   protected handleVolumeChange(originalEvent: Event): void {
     this.context.volume = this.mediaEl!.volume;
-    this.dispatchEvent(
-      new VolumeChangeEvent({ detail: this.context.volume, originalEvent }),
-    );
-
     this.context.muted = this.mediaEl!.muted;
     this.dispatchEvent(
-      new MutedChangeEvent({ detail: this.context.muted, originalEvent }),
-    );
-  }
-
-  protected handleWaiting(originalEvent: Event): void {
-    this.context.buffering = true;
-    this.dispatchEvent(
-      new BufferingChangeEvent({
-        detail: this.context.buffering,
+      new VdsVolumeChangeEvent({
+        detail: {
+          volume: this.context.volume,
+          muted: this.context.muted,
+        },
         originalEvent,
       }),
     );
   }
 
+  protected handleWaiting(originalEvent: Event): void {
+    this.context.waiting = true;
+    this.context.networkState = this.mediaEl!.networkState;
+    this.dispatchEvent(new VdsWaitingEvent({ originalEvent }));
+  }
+
   protected handleSuspend(originalEvent: Event): void {
-    this.context.buffering = false;
-    this.dispatchEvent(
-      new BufferingChangeEvent({ detail: false, originalEvent }),
-    );
+    this.context.networkState = this.mediaEl!.networkState;
+    this.dispatchEvent(new VdsSuspendEvent({ originalEvent }));
   }
 
   protected handleEnded(originalEvent: Event): void {
     this.context.ended = !this.loop;
-    const Event = this.loop ? ReplayEvent : PlaybackEndEvent;
+    const Event = this.loop ? VdsReplayEvent : VdsEndedEvent;
     this.dispatchEvent(new Event({ originalEvent }));
   }
 
   protected handleError(originalEvent: Event): void {
+    this.context.readyState = this.mediaEl!.readyState;
+    this.context.networkState = this.mediaEl!.networkState;
     this.dispatchEvent(
-      new ErrorEvent({ detail: originalEvent, originalEvent }),
+      new VdsErrorEvent({ detail: this.mediaEl!.error, originalEvent }),
     );
   }
 
@@ -376,32 +463,43 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     return this.mediaEl as any;
   }
 
-  get buffered(): number {
-    if (isNil(this.mediaEl)) return 0;
-    const { buffered, duration } = this.mediaEl;
-    const end = buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
-    return end > duration ? duration : end;
+  get buffered(): TimeRanges {
+    if (isNil(this.mediaEl)) return new TimeRanges();
+    return this.mediaEl!.buffered;
+  }
+
+  get error(): MediaError | undefined {
+    return this.mediaEl?.error ?? undefined;
   }
 
   // -------------------------------------------------------------------------------------------
   // Methods
   // -------------------------------------------------------------------------------------------
 
-  canPlayType(type: string): CanPlayType {
+  canPlayType(type: string): CanPlay {
     if (isNil(this.mediaEl)) {
-      return CanPlayType.No;
+      return CanPlay.No;
     }
 
-    return this.mediaEl.canPlayType(type) as CanPlayType;
+    return this.mediaEl.canPlayType(type) as CanPlay;
   }
 
   async play(): Promise<void> {
-    this.throwIfNotReady();
+    this.throwIfNotReadyForPlayback();
     return this.mediaEl!.play();
   }
 
   async pause(): Promise<void> {
-    this.throwIfNotReady();
+    this.throwIfNotReadyForPlayback();
     return this.mediaEl!.pause();
+  }
+
+  captureStream(): MediaStream | undefined {
+    this.throwIfNotReadyForPlayback();
+    return this.mediaEl!.captureStream?.();
+  }
+
+  load(): void {
+    this.mediaEl?.load();
   }
 }

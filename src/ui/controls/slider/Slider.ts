@@ -17,14 +17,13 @@ import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { CancelableCallback } from '../../../shared/types';
 import { currentSafariVersion } from '../../../utils/support';
-import { SliderProps } from './slider.args';
 import { sliderStyles } from './slider.css';
 import {
-  SliderDragEndEvent,
-  SliderDragStartEvent,
-  SliderValueChangeEvent,
+  VdsSliderDragEndEvent,
+  VdsSliderDragStartEvent,
+  VdsSliderValueChangeEvent,
 } from './slider.events';
-import { SliderKeyDirection } from './slider.types';
+import { SliderKeyDirection, SliderProps } from './slider.types';
 
 /**
  * A custom built `input[type="range"]` that is cross-browser friendly, ARIA friendly, mouse/touch
@@ -385,7 +384,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     );
 
     this.dispatchEvent(
-      new SliderValueChangeEvent({
+      new VdsSliderValueChangeEvent({
         detail: this.value,
         originalEvent: event,
       }),
@@ -455,7 +454,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     this._isDragging = true;
 
     this.dispatchEvent(
-      new SliderDragStartEvent({
+      new VdsSliderDragStartEvent({
         originalEvent,
       }),
     );
@@ -465,7 +464,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     this._isDragging = false;
 
     this.dispatchEvent(
-      new SliderDragEndEvent({
+      new VdsSliderDragEndEvent({
         originalEvent,
       }),
     );
@@ -526,7 +525,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     this._fillRate = (thumbPosition - trackLeft) / trackWidth;
 
     this.dispatchEvent(
-      new SliderValueChangeEvent({
+      new VdsSliderValueChangeEvent({
         detail: this.value,
         originalEvent,
       }),

@@ -35,7 +35,7 @@ describe('user events', () => {
 
   it('should request provider to play when user play request is received', async () => {
     const playSpy = spy(provider, 'play');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
     dispatchUserRequest(new UserPlayRequestEvent());
     await oneEvent(provider, UserPlayRequestEvent.TYPE);
     expect(playSpy).to.have.been.calledOnce;
@@ -43,7 +43,7 @@ describe('user events', () => {
 
   it('should request provider to pause when user pause request is received', async () => {
     const pauseSpy = spy(provider, 'pause');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
     dispatchUserRequest(new UserPauseRequestEvent());
     await oneEvent(provider, UserPauseRequestEvent.TYPE);
     expect(pauseSpy).to.have.been.calledOnce;
@@ -51,7 +51,7 @@ describe('user events', () => {
 
   it('should request provider to mute when user mute request is received', async () => {
     const mutedSpy = spy(provider, 'setMuted');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
     dispatchUserRequest(new UserMutedChangeRequestEvent({ detail: true }));
     await oneEvent(provider, UserMutedChangeRequestEvent.TYPE);
     expect(mutedSpy).to.have.been.calledOnceWith(true);
@@ -59,7 +59,7 @@ describe('user events', () => {
 
   it('should request provider to change volume when user volume change request is received', async () => {
     const volumeSpy = spy(provider, 'setVolume');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
     dispatchUserRequest(new UserVolumeChangeRequestEvent({ detail: 0.83 }));
     await oneEvent(provider, UserVolumeChangeRequestEvent.TYPE);
     expect(volumeSpy).to.have.been.calledOnceWith(0.83);
@@ -67,7 +67,7 @@ describe('user events', () => {
 
   it('should request provider to change time when user time change request is received', async () => {
     const currentTimeSpy = spy(provider, 'setCurrentTime');
-    stub(provider, 'isPlaybackReady').get(() => true);
+    stub(provider, 'canPlay').get(() => true);
     dispatchUserRequest(new UserTimeChangeRequestEvent({ detail: 23 }));
     await oneEvent(provider, UserTimeChangeRequestEvent.TYPE);
     expect(currentTimeSpy).to.have.been.calledOnceWith(23);

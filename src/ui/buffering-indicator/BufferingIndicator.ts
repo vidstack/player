@@ -11,19 +11,19 @@ import {
 import { playerContext } from '../../core';
 import { getSlottedChildren, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
-import { BufferingIndicatorProps } from './buffering-indicator.args';
 import { bufferingIndicatorStyles } from './buffering-indicator.css';
 import {
-  BufferingIndicatorHideEvent,
-  BufferingIndicatorShowEvent,
+  VdsBufferingIndicatorHideEvent,
+  VdsBufferingIndicatorShowEvent,
 } from './buffering-indicator.events';
+import { BufferingIndicatorProps } from './buffering-indicator.types';
 
 /**
- * Display an indicator when either the provider/media is booting or the player is buffering. This
- * component will always render the default `<slot>`, however, a `hidden` attribute will be
- * applied to the slot when it shoud not be visible.
+ * Display an indicator when either the provider/media is booting or media playback has
+ * stopped because of a lack of temporary day. This component will always render the default
+ * `<slot>`, however, a `hidden` attribute will be applied to the slot when it shoud not be visible.
  *
- * **Important:** The styling is left to you, it will only apply the `hidden` attribute.
+ * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `hidden` attribute.
  *
  * ## Tag
  *
@@ -53,20 +53,20 @@ export class BufferingIndicator
   }
 
   @internalProperty()
-  @playerContext.buffering.consume()
-  protected isBuffering = playerContext.buffering.defaultValue;
+  @playerContext.waiting.consume()
+  protected isWaiting = playerContext.waiting.defaultValue;
 
   @internalProperty()
-  @playerContext.isPlaybackReady.consume()
-  protected isPlaybackReady = playerContext.isPlaybackReady.defaultValue;
+  @playerContext.canPlay.consume()
+  protected canPlay = playerContext.canPlay.defaultValue;
 
   protected defaultSlotEl?: HTMLElement;
 
-  @property({ type: Boolean, attribute: 'show-while-booting' })
-  showWhileBooting = false;
-
   @property({ type: Number })
   delay = 0;
+
+  @property({ type: Boolean, attribute: 'show-while-booting' })
+  showWhileBooting = false;
 
   render(): TemplateResult {
     return html`<slot @slotchange="${this.handleDefaultSlotChange}"></slot>`;
@@ -92,9 +92,7 @@ export class BufferingIndicator
   }
 
   protected isIndicatorHidden(): boolean {
-    return (
-      (!this.showWhileBooting || this.isPlaybackReady) && !this.isBuffering
-    );
+    return (!this.showWhileBooting || this.canPlay) && !this.isWaiting;
   }
 
   protected delayTimeout?: unknown;
@@ -131,8 +129,8 @@ export class BufferingIndicator
 
   protected dispatchIndicatorChangeEvent(): void {
     const Event = !this.wasPrevHidden
-      ? BufferingIndicatorHideEvent
-      : BufferingIndicatorShowEvent;
+      ? VdsBufferingIndicatorHideEvent
+      : VdsBufferingIndicatorShowEvent;
 
     this.dispatchEvent(new Event());
   }

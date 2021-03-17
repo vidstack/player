@@ -4,11 +4,11 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
+import { TIME_PROGRESS_STORYBOOK_ARG_TYPES } from './time-progress.args';
 import {
-  TIME_PROGRESS_STORYBOOK_ARG_TYPES,
   TimeProgressFakeProps,
   TimeProgressProps,
-} from './time-progress.args';
+} from './time-progress.types';
 import { TIME_PROGRESS_TAG_NAME } from './vds-time-progress';
 
 export default {

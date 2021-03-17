@@ -1,9 +1,10 @@
-import { LIB_PREFIX } from '../shared/constants';
 import {
   buildVdsEvent,
+  ExtractEventDetailType,
   VdsCustomEvent,
   VdsCustomEventConstructor,
   VdsEventInit,
+  VdsEvents,
 } from '../shared/events';
 import { MediaType } from './MediaType';
 import { MediaProvider } from './provider/MediaProvider';
@@ -11,191 +12,246 @@ import { ViewType } from './ViewType';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface GlobalEventHandlersEventMap extends PlayerEvents {}
+  interface GlobalEventHandlersEventMap extends VdsPlayerEvents {}
 }
 
-export type RawPlayerEventType =
-  | 'aspect-ratio-change'
-  | 'connect'
-  | 'disconnect'
-  | 'play'
-  | 'pause'
-  | 'playing'
-  | 'poster-change'
-  | 'src-change'
-  | 'muted-change'
-  | 'volume-change'
-  | 'time-change'
-  | 'duration-change'
-  | 'buffered-change'
-  | 'buffering-change'
-  | 'view-type-change'
-  | 'media-type-change'
-  | 'playback-ready'
-  | 'playback-start'
-  | 'playback-end'
-  | 'replay'
-  | 'error';
+export interface PlayerEvents {
+  abort: VdsCustomEvent<void>;
+  canplay: VdsCustomEvent<void>;
+  canplaythrough: VdsCustomEvent<void>;
+  connect: VdsCustomEvent<MediaProvider>;
+  disconnect: VdsCustomEvent<MediaProvider>;
+  durationchange: VdsCustomEvent<number>;
+  emptied: VdsCustomEvent<void>;
+  ended: VdsCustomEvent<void>;
+  error: VdsCustomEvent<unknown>;
+  loadeddata: VdsCustomEvent<void>;
+  loadedmetadata: VdsCustomEvent<void>;
+  loadstart: VdsCustomEvent<void>;
+  mediatypechange: VdsCustomEvent<MediaType>;
+  pause: VdsCustomEvent<void>;
+  play: VdsCustomEvent<void>;
+  playing: VdsCustomEvent<void>;
+  progress: VdsCustomEvent<void>;
+  seeked: VdsCustomEvent<number>;
+  seeking: VdsCustomEvent<number>;
+  stalled: VdsCustomEvent<void>;
+  started: VdsCustomEvent<void>;
+  suspend: VdsCustomEvent<void>;
+  replay: VdsCustomEvent<void>;
+  timeupdate: VdsCustomEvent<number>;
+  viewtypechange: VdsCustomEvent<ViewType>;
+  volumechange: VdsCustomEvent<{ volume: number; muted: boolean }>;
+  waiting: VdsCustomEvent<void>;
+}
 
-export type RawPlayerEventDetailType = {
-  'aspect-ratio-change': string | undefined;
-  connect: MediaProvider;
-  disconnect: MediaProvider;
-  play: void;
-  pause: void;
-  playing: void;
-  'poster-change': string;
-  'src-change': string;
-  'muted-change': boolean;
-  'volume-change': number;
-  'time-change': number;
-  'duration-change': number;
-  'buffered-change': number;
-  'buffering-change': boolean;
-  'view-type-change': ViewType;
-  'media-type-change': MediaType;
-  'playback-ready': void;
-  'playback-start': void;
-  'playback-end': void;
-  replay: void;
-  error: unknown;
-};
+export type VdsPlayerEvents = VdsEvents<PlayerEvents>;
 
-export type GenericPlayerEventType<
-  T extends string
-> = `${typeof LIB_PREFIX}-${T}`;
-
-export type PlayerEvents = {
-  [P in RawPlayerEventType as GenericPlayerEventType<P>]: VdsCustomEvent<
-    RawPlayerEventDetailType[P]
-  >;
-};
-
-export type PlayerEventType = keyof PlayerEvents;
-
-export function buildPlayerEvent<
-  P extends RawPlayerEventType,
-  DetailType = RawPlayerEventDetailType[P]
+export function buildVdsPlayerEvent<
+  P extends keyof PlayerEvents,
+  DetailType = ExtractEventDetailType<PlayerEvents[P]>
 >(type: P): VdsCustomEventConstructor<DetailType> {
-  class PlayerEvent extends buildVdsEvent<DetailType>(type) {
+  return class VdsPlayerEvent extends buildVdsEvent<DetailType>(type) {
     constructor(eventInit?: VdsEventInit<DetailType>) {
       super({
         bubbles: false,
         ...(eventInit ?? {}),
       });
     }
-  }
-
-  return PlayerEvent;
+  };
 }
 
 /**
- * Emitted when the provider connects to the DOM.
+ * Fired when the resource was not fully loaded, but not as the result of an error.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/abort_event
  */
-export class ConnectEvent extends buildPlayerEvent('connect') {}
+export class VdsAbortEvent extends buildVdsPlayerEvent('abort') {}
 
 /**
- * Emitted when the provider disconnects from the DOM.
+ * Fired when the user agent can play the media, but estimates that **not enough** data has been
+ * loaded to play the media up to its end without having to stop for further buffering of content.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
  */
-export class DisconnectEvent extends buildPlayerEvent('disconnect') {}
+export class VdsCanPlayEvent extends buildVdsPlayerEvent('canplay') {}
 
 /**
- * Emitted when the aspect ratio changes.
+ * Fired when the user agent can play the media, and estimates that **enough** data has been
+ * loaded to play the media up to its end without having to stop for further buffering of content.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
  */
-export class AspectRatioChangeEvent extends buildPlayerEvent(
-  'aspect-ratio-change',
+export class VdsCanPlayThroughEvent extends buildVdsPlayerEvent(
+  'canplaythrough',
 ) {}
 
 /**
- * Emitted when playback attempts to start.
+ * Fired when the provider connects to the DOM.
  */
-export class PlayEvent extends buildPlayerEvent('play') {}
+export class VdsConnectEvent extends buildVdsPlayerEvent('connect') {}
 
 /**
- * Emitted when playback pauses.
+ * Fired when the provider disconnects from the DOM.
  */
-export class PauseEvent extends buildPlayerEvent('pause') {}
+export class VdsDisconnectEvent extends buildVdsPlayerEvent('disconnect') {}
 
 /**
- * Emitted when playback being playback.
+ * Fired when the `duration` property changes.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/durationchange_event
  */
-export class PlayingEvent extends buildPlayerEvent('playing') {}
-
-/**
- * Emitted when the current src changes.
- */
-export class SrcChangeEvent extends buildPlayerEvent('src-change') {}
-
-/**
- * Emitted when the current poster changes.
- */
-export class PosterChangeEvent extends buildPlayerEvent('poster-change') {}
-
-/**
- * Emitted when the muted state changes.
- */
-export class MutedChangeEvent extends buildPlayerEvent('muted-change') {}
-
-/**
- * Emitted when the volume state changes.
- */
-export class VolumeChangeEvent extends buildPlayerEvent('volume-change') {}
-
-/**
- * Emitted when the current playback time changes.
- */
-export class TimeChangeEvent extends buildPlayerEvent('time-change') {}
-
-/**
- * Emitted when the length of the media changes.
- */
-export class DurationChangeEvent extends buildPlayerEvent('duration-change') {}
-
-/**
- * Emitted when the length of the media downloaded changes.
- */
-export class BufferedChangeEvent extends buildPlayerEvent('buffered-change') {}
-
-/**
- * Emitted when playback resumes/stops due to lack of data.
- */
-export class BufferingChangeEvent extends buildPlayerEvent(
-  'buffering-change',
+export class VdsDurationChangeEvent extends buildVdsPlayerEvent(
+  'durationchange',
 ) {}
 
 /**
- * Emitted when the view type of the current provider/media changes.
+ * Fired when the media has become empty.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/emptied_event
  */
-export class ViewTypeChangeEvent extends buildPlayerEvent('view-type-change') {}
+export class VdsEmpitedEvent extends buildVdsPlayerEvent('emptied') {}
 
 /**
- * Emitted when the media type of the current provider/media changes.
+ * Fired when playback or streaming has stopped because the end of the media was reached or
+ * because no further data is available. This is not fired if playback will start from the
+ * beginning again due to the `loop` property being `true` (see `VdsReplayEvent`).
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended_event
  */
-export class MediaTypeChangeEvent extends buildPlayerEvent(
-  'media-type-change',
+export class VdsEndedEvent extends buildVdsPlayerEvent('ended') {}
+
+/**
+ * Fired when the resource could not be loaded due to an error (for example, a network connectivity
+ * problem).
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
+ */
+export class VdsErrorEvent extends buildVdsPlayerEvent('error') {}
+
+/**
+ * Fired when the frame at the current playback position of the media has finished loading; often
+ * the first frame.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadeddata_event
+ */
+export class VdsLoadedDataEvent extends buildVdsPlayerEvent('loadeddata') {}
+
+/**
+ * Fired when the browser has started to load a resource.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event
+ */
+export class VdsLoadStartEvent extends buildVdsPlayerEvent('loadstart') {}
+
+/**
+ * Fired when the `mediaType` property changes value.
+ */
+export class VdsMediaTypeChangeEvent extends buildVdsPlayerEvent(
+  'mediatypechange',
 ) {}
 
 /**
- * Emitted when playback is ready to start - analgous with `canPlay`.
+ * Fired when a request to `pause` an activity is handled and the activity has entered its
+ * `paused` state, most commonly after the media has been paused through a call to the
+ * `pause()` method.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event
  */
-export class PlaybackReadyEvent extends buildPlayerEvent('playback-ready') {}
+export class VdsPauseEvent extends buildVdsPlayerEvent('pause') {}
 
 /**
- * Emitted when playback has started (`currentTime > 0`).
+ * Fired when the `paused` property is changed from `true` to `false`, as a result of the `play()`
+ * method, or the `autoplay` attribute.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play_event
  */
-export class PlaybackStartEvent extends buildPlayerEvent('playback-start') {}
+export class VdsPlayEvent extends buildVdsPlayerEvent('play') {}
 
 /**
- * Emitted when playback ends (`currentTime === duration`).
+ * Fired when playback is ready to start after having been paused or delayed due to lack of data.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event
  */
-export class PlaybackEndEvent extends buildPlayerEvent('playback-end') {}
+export class VdsPlayingEvent extends buildVdsPlayerEvent('playing') {}
 
 /**
- * Emitted when playback ends and then starts again due to the `loop` property being `true`.
+ * Fired periodically as the browser loads a resource.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event
  */
-export class ReplayEvent extends buildPlayerEvent('replay') {}
+export class VdsProgressEvent extends buildVdsPlayerEvent('progress') {}
 
 /**
- * Emitted when a provider encounters any error.
+ * Fired when a seek operation completed, the current playback position has changed, and the
+ * `seeking` property is changed to `false`.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event
  */
-export class ErrorEvent extends buildPlayerEvent('error') {}
+export class VdsSeekedEvent extends buildVdsPlayerEvent('seeked') {}
+
+/**
+ * Fired when a seek operation starts, meaning the seeking property has changed to `true` and the
+ * media is seeking to a new position.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event
+ */
+export class VdsSeekingEvent extends buildVdsPlayerEvent('seeking') {}
+
+/**
+ * Fired when the user agent is trying to fetch media data, but data is unexpectedly not
+ * forthcoming.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/stalled_event
+ */
+export class VdsStalledEvent extends buildVdsPlayerEvent('stalled') {}
+
+/**
+ * Fired when media playback has just started, in other words the at the moment the following
+ * happens: `currentTime > 0`.
+ */
+export class VdsStartedEvent extends buildVdsPlayerEvent('started') {}
+
+/**
+ * Fired when media data loading has been suspended.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/suspend_event
+ */
+export class VdsSuspendEvent extends buildVdsPlayerEvent('suspend') {}
+
+/**
+ * Fired when media playback starts from the beginning again due to the `loop` property being
+ * set to `true`.
+ */
+export class VdsReplayEvent extends buildVdsPlayerEvent('replay') {}
+
+/**
+ * Fired when the `currentTime` property value changes due to media playback or the
+ * user seeking.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event
+ */
+export class VdsTimeUpdateEvent extends buildVdsPlayerEvent('timeupdate') {}
+
+/**
+ * Fired when the `viewType` property changes `value`. This will generally fire when the
+ * new provider has mounted and determined what type of player view is appropriate given
+ * the type of media it can play.
+ */
+export class VdsViewTypeChangeEvent extends buildVdsPlayerEvent(
+  'viewtypechange',
+) {}
+
+/**
+ * Fired when the `volume` or `muted` properties change value.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event
+ */
+export class VdsVolumeChangeEvent extends buildVdsPlayerEvent('volumechange') {}
+
+/**
+ * Fired when playback has stopped because of a temporary lack of data.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/waiting_event
+ */
+export class VdsWaitingEvent extends buildVdsPlayerEvent('waiting') {}

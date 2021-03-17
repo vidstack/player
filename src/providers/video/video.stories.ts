@@ -4,10 +4,8 @@ import { ifDefined } from 'lit-html/directives/if-defined';
 import { ProviderActions } from '../../core';
 import { Story } from '../../shared/storybook';
 import { VIDEO_TAG_NAME } from './vds-video';
-import {
-  VIDEO_PROVIDER_STORYBOOK_ARG_TYPES,
-  VideoProviderProps,
-} from './video.args';
+import { VIDEO_PROVIDER_STORYBOOK_ARG_TYPES } from './video.args';
+import { VideoProviderProps } from './video.types';
 
 export default {
   title: 'Providers/Video',
@@ -48,7 +46,7 @@ const Template: Story<VideoProviderProps & ProviderActions> = ({
   onBufferingChange,
   onViewTypeChange,
   onMediaTypeChange,
-  onPlaybackReady,
+  onCanPlay,
   onPlaybackStart,
   onPlaybackEnd,
   onReplay,
@@ -86,11 +84,11 @@ const Template: Story<VideoProviderProps & ProviderActions> = ({
       @vds-duration-change="${onDurationChange}"
       @vds-buffered-change="${onBufferedChange}"
       @vds-buffering-change="${onBufferingChange}"
-      @vds-view-type-change="${onViewTypeChange}"
-      @vds-media-type-change="${onMediaTypeChange}"
-      @vds-playback-ready="${onPlaybackReady}"
-      @vds-playback-start="${onPlaybackStart}"
-      @vds-playback-end="${onPlaybackEnd}"
+      @vds-viewtypechange="${onViewTypeChange}"
+      @vds-mediatypechange="${onMediaTypeChange}"
+      @vds-canplay="${onCanPlay}"
+      @vds-start="${onPlaybackStart}"
+      @vds-end="${onPlaybackEnd}"
       @vds-replay="${onReplay}"
       @vds-error="${onError}"
     ></vds-video>

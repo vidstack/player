@@ -47,7 +47,7 @@ export interface ProviderActions {
   onBufferingChange: Callback<CustomEvent>;
   onViewTypeChange: Callback<CustomEvent>;
   onMediaTypeChange: Callback<CustomEvent>;
-  onPlaybackReady: Callback<CustomEvent>;
+  onCanPlay: Callback<CustomEvent>;
   onPlaybackStart: Callback<CustomEvent>;
   onPlaybackEnd: Callback<CustomEvent>;
   onReplay: Callback<CustomEvent>;

@@ -2,7 +2,8 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
-import { CONTROL_STORYBOOK_ARG_TYPES, ControlProps } from './control.args';
+import { CONTROL_STORYBOOK_ARG_TYPES } from './control.args';
+import { ControlProps } from './control.types';
 import { CONTROL_TAG_NAME } from './vds-control';
 
 export default {
