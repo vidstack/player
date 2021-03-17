@@ -1,12 +1,9 @@
 import './vds-fake-media-provider';
 import './vds-fake-context-consumer';
 
-import { fixture, html, oneEvent } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
+import { fixture, html } from '@open-wc/testing';
 import { TemplateResult } from 'lit-html';
 
-import { DeviceChangeEvent } from '../device/DeviceObserver';
-import { MediaProvider } from '../provider/MediaProvider';
 import { FakeContextConsumer } from './FakeContextConsumer';
 import { FakeMediaProvider } from './FakeMediaProvider';
 
@@ -35,24 +32,4 @@ export async function buildFakeMediaProviderWithFakeConsumer(
   ) as FakeContextConsumer;
 
   return [provider, consumer];
-}
-
-export async function switchToMobileDevice(
-  provider: MediaProvider,
-): Promise<DeviceChangeEvent> {
-  setTimeout(() => setViewport({ width: 360, height: 640 }));
-  return (oneEvent(
-    provider,
-    DeviceChangeEvent.TYPE,
-  ) as unknown) as DeviceChangeEvent;
-}
-
-export async function switchToDesktopDevice(
-  player: MediaProvider,
-): Promise<DeviceChangeEvent> {
-  setTimeout(() => setViewport({ width: 1024, height: 640 }));
-  return (oneEvent(
-    player,
-    DeviceChangeEvent.TYPE,
-  ) as unknown) as DeviceChangeEvent;
 }

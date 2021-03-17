@@ -6,7 +6,6 @@ import {
   TemplateResult,
 } from 'lit-element';
 
-import { deviceContext } from '../device/device.context';
 import { playerContext, PlayerContextProvider } from '../player.context';
 import { uuidContext } from '../uuid/uuid.context';
 
@@ -68,18 +67,6 @@ export class FakeContextConsumer
   @internalProperty()
   @playerContext.bufferedAmount.consume()
   bufferedAmount = playerContext.bufferedAmount.defaultValue;
-
-  @internalProperty()
-  @deviceContext.device.consume()
-  device = deviceContext.device.defaultValue;
-
-  @internalProperty()
-  @deviceContext.isMobileDevice.consume()
-  isMobileDevice = deviceContext.isMobileDevice.defaultValue;
-
-  @internalProperty()
-  @deviceContext.isDesktopDevice.consume()
-  isDesktopDevice = deviceContext.isDesktopDevice.defaultValue;
 
   @internalProperty()
   @playerContext.waiting.consume()

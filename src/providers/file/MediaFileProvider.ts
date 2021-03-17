@@ -144,7 +144,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     if (this.mediaEl?.srcObject !== newSrcObject) {
       this.softResetContext();
       this.mediaEl!.srcObject = newSrcObject ?? null;
-      this.mediaEl!.load();
+      if (!this.willAnotherEngineAttach()) this.mediaEl!.load();
       this.handleSrcChange();
     }
   }
@@ -210,8 +210,8 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
       .forEach(node => this.mediaEl?.appendChild(node.cloneNode()));
 
     window.requestAnimationFrame(() => {
-      this.mediaEl?.load();
       this.handleSrcChange();
+      if (!this.willAnotherEngineAttach()) this.mediaEl?.load();
     });
   }
 

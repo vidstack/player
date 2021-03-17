@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import {
   CSSResultArray,
   html,
-  internalProperty,
   LitElement,
   property,
   query,
@@ -11,7 +10,6 @@ import {
 } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { deviceContext } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { currentSafariVersion } from '../../../utils/support';
@@ -34,7 +32,6 @@ import { ControlProps, ControlType } from './control.types';
  * ## CSS Parts
  *
  * @csspart root - The component's root element (`<button>`).
- * @csspart root-mobile - Applied to component's root element when the current device is mobile.
  *
  * ## Examples
  *
@@ -69,10 +66,6 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
   static get parts(): string[] {
     return ['button', 'root', 'root-mobile'];
   }
-
-  @internalProperty()
-  @deviceContext.isMobileDevice.consume()
-  protected isMobileDevice = deviceContext.isMobileDevice.defaultValue;
 
   protected disposal = new Disposal();
 
@@ -175,7 +168,6 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
     return clsx({
       root: true,
       button: true,
-      'root-mobile': this.isMobileDevice,
     });
   }
 

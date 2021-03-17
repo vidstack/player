@@ -9,7 +9,6 @@ import { LitElement, property, PropertyValues } from 'lit-element';
 import { deferredPromise } from '../../utils/promise';
 import { isString, isUndefined } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
-import { DeviceObserverMixin } from '../device/DeviceObserverMixin';
 import { MediaType } from '../MediaType';
 import {
   PlayerContext,
@@ -47,7 +46,7 @@ import {
  */
 @provideContextRecord(playerContext, transformContextName)
 export abstract class MediaProvider<EngineType = unknown>
-  extends DeviceObserverMixin(UuidMixin(LitElement))
+  extends UuidMixin(LitElement)
   implements PlayerProps, PlayerMethods, ProviderProps {
   connectedCallback(): void {
     super.connectedCallback();

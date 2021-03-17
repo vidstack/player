@@ -1,6 +1,8 @@
-import { Callback } from '../shared/types';
-import { IS_CLIENT } from './support';
-import { isUndefined } from './unit';
+import { listenTo } from '@wcom/events';
+
+import { Callback, Unsubscribe } from '../shared/types';
+import { IS_CLIENT, IS_MOBILE } from './support';
+import { isUndefined, noop } from './unit';
 
 /**
  * Requests an animation frame and waits for it to be resolved.
@@ -106,4 +108,40 @@ export const isColliding = (
     aRect.top + translateAy < bRect.bottom + translateBy &&
     aRect.bottom + translateAy > bRect.top + translateBy
   );
+};
+
+export enum Device {
+  Mobile = 'mobile',
+  Desktop = 'desktop',
+}
+
+/**
+ * Listens for device changes (mobile/desktop) and invokes a callback whether the current
+ * view is mobile. It determines the type by either listening for `resize` events
+ * on the window (if API is available), otherwise it'll fallback to parsing the user agent string.
+ *
+ * @param callback - Called when the device changes.
+ * @param maxWidth - The maximum window width in pixels to consider device as mobile.
+ */
+export const onDeviceChange = (
+  callback: Callback<Device>,
+  maxWidth = 480,
+  isClient = IS_CLIENT,
+  isMobile = IS_MOBILE,
+): Unsubscribe => {
+  const isServerSide = !isClient;
+  const isResizeObsDefined = !isUndefined(window.ResizeObserver);
+
+  if (isServerSide || !isResizeObsDefined) {
+    callback(isMobile ? Device.Mobile : Device.Desktop);
+    return noop;
+  }
+
+  function handleWindowResize() {
+    const isMobileScreen = window.innerWidth <= maxWidth;
+    callback(isMobileScreen || isMobile ? Device.Mobile : Device.Desktop);
+  }
+
+  handleWindowResize();
+  return listenTo(window, 'resize', handleWindowResize);
 };

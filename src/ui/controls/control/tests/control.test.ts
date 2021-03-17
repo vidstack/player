@@ -53,18 +53,6 @@ describe(CONTROL_TAG_NAME, () => {
   });
 
   describe('props/attrs', () => {
-    it('should toggle root-mobile css part as context updates', async () => {
-      // Nay.
-      const [provider, control] = await buildFixture();
-      const root = control.shadowRoot?.querySelector('.root');
-      expect(root?.getAttribute('part')).to.not.include('root-mobile');
-
-      // Yay.
-      provider.deviceContext.isMobileDevice = true;
-      await elementUpdated(control);
-      expect(root?.getAttribute('part')).to.include('root-mobile');
-    });
-
     it('should update button type as type property changes', async () => {
       const [, control] = await buildFixture();
       const root = control.shadowRoot?.querySelector('.root');
