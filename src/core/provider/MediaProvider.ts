@@ -6,6 +6,8 @@ import {
 import { listen } from '@wcom/events';
 import { LitElement, property, PropertyValues } from 'lit-element';
 
+import { raf } from '../../utils/dom';
+import { areNumbersRoughlyEqual } from '../../utils/number';
 import { deferredPromise } from '../../utils/promise';
 import { isString, isUndefined } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
@@ -20,7 +22,9 @@ import {
   VdsCanPlayEvent,
   VdsConnectEvent,
   VdsDisconnectEvent,
+  VdsEndedEvent,
   VdsErrorEvent,
+  VdsReplayEvent,
   VdsViewTypeChangeEvent,
 } from '../player.events';
 import { PlayerMethods, PlayerProps } from '../player.types';
@@ -270,6 +274,9 @@ export abstract class MediaProvider<EngineType = unknown>
   // Methods
   // -------------------------------------------------------------------------------------------
 
+  abstract play(): Promise<void>;
+  abstract pause(): Promise<void>;
+
   protected throwIfNotReadyForPlayback(): void {
     if (!this.canPlay) {
       throw Error(
@@ -278,8 +285,42 @@ export abstract class MediaProvider<EngineType = unknown>
     }
   }
 
-  abstract play(): Promise<void>;
-  abstract pause(): Promise<void>;
+  protected hasPlaybackRoughlyEnded(): boolean {
+    return areNumbersRoughlyEqual(this.currentTime, this.duration, 3);
+  }
+
+  /**
+   * Call if you suspect that playback might have resumed/ended again.
+   */
+  protected validatePlaybackEndedState(): void {
+    if (this.context.ended && !this.hasPlaybackRoughlyEnded()) {
+      this.context.ended = false;
+    } else if (!this.context.ended && this.hasPlaybackRoughlyEnded()) {
+      this.context.ended = true;
+      this.dispatchEvent(new VdsEndedEvent());
+    }
+  }
+
+  protected async resetPlayback(): Promise<void> {
+    this.context.currentTime = 0;
+    this.context.ended = false;
+    this.setCurrentTime(0);
+    // Give the browser a moment to re-paint and recalibrate media engine.
+    await raf();
+  }
+
+  protected async resetPlaybackIfEnded(): Promise<void> {
+    if (!this.hasPlaybackRoughlyEnded()) return;
+    return this.resetPlayback();
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Helpers
+  // -------------------------------------------------------------------------------------------
+
+  protected getAriaBusy(): 'true' | 'false' {
+    return this.canPlay ? 'false' : 'true';
+  }
 
   protected calcAspectRatio(): number {
     if (
@@ -297,14 +338,6 @@ export abstract class MediaProvider<EngineType = unknown>
     const ratio = this.calcAspectRatio();
     if (isNaN(ratio)) return '';
     return `min(${minPadding}, ${this.calcAspectRatio()}%)`;
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Helpers
-  // -------------------------------------------------------------------------------------------
-
-  protected getAriaBusy(): 'true' | 'false' {
-    return this.canPlay ? 'false' : 'true';
   }
 
   // -------------------------------------------------------------------------------------------

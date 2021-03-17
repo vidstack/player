@@ -177,6 +177,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     if (this.context.currentTime !== newTime) {
       this.context.currentTime = newTime;
       this.dispatchEvent(new VdsTimeUpdateEvent({ detail: newTime }));
+      this.validatePlaybackEndedState();
     }
 
     this.timeRAF = window.requestAnimationFrame(() => {
@@ -318,6 +319,8 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.requestTimeUpdates();
     this.context.paused = false;
     this.dispatchEvent(new VdsPlayEvent({ originalEvent }));
+    if (this.context.ended) this.dispatchEvent(new VdsReplayEvent());
+    this.validatePlaybackEndedState();
     if (!this.context.started) {
       this.context.started = true;
       this.dispatchEvent(new VdsStartedEvent({ originalEvent }));
@@ -358,6 +361,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleSeeked(originalEvent: Event): void {
+    this.validatePlaybackEndedState();
     this.context.currentTime = this.mediaEl!.currentTime;
     this.dispatchEvent(
       new VdsSeekedEvent({
@@ -423,9 +427,14 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleEnded(originalEvent: Event): void {
-    this.context.ended = !this.loop;
-    const Event = this.loop ? VdsReplayEvent : VdsEndedEvent;
-    this.dispatchEvent(new Event({ originalEvent }));
+    // Check becuase might've been handled elsewhere.
+    if (!this.context.ended && !this.loop) {
+      this.context.ended = true;
+      this.dispatchEvent(new VdsEndedEvent({ originalEvent }));
+      this.cancelTimeUpdates();
+    } else if (this.loop) {
+      this.dispatchEvent(new VdsReplayEvent({ originalEvent }));
+    }
   }
 
   protected handleError(originalEvent: Event): void {
@@ -500,6 +509,8 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
   async play(): Promise<void> {
     this.throwIfNotReadyForPlayback();
+    if (this.context.ended) this.dispatchEvent(new VdsReplayEvent());
+    await this.resetPlaybackIfEnded();
     return this.mediaEl!.play();
   }
 
