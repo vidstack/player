@@ -18,6 +18,12 @@ export type PlayerContextProvider = ContextRecordProvider<PlayerContextProps>;
 export const transformContextName = (propName: string): string =>
   `${propName}Ctx`;
 
+const buffered = createContext(createTimeRanges());
+const duration = createContext(NaN);
+const mediaType = createContext(MediaType.Unknown);
+const seekable = createContext(createTimeRanges());
+const viewType = createContext(ViewType.Unknown);
+
 /**
  * The player context object contains a collection of contexts that map 1:1 with player
  * state. This context enables state to be passed down to elements lower in the player
@@ -36,12 +42,6 @@ export const transformContextName = (propName: string): string =>
  * }
  * ```
  */
-const buffered = createContext(createTimeRanges());
-const duration = createContext(NaN);
-const mediaType = createContext(MediaType.Unknown);
-const seekable = createContext(createTimeRanges());
-const viewType = createContext(ViewType.Unknown);
-
 export const playerContext: PlayerContext = {
   aspectRatio: createContext<string | undefined>(undefined),
   autoplay: createContext<boolean>(false),
