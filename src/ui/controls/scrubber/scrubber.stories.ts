@@ -4,9 +4,12 @@ import { html } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
-import { SliderActions } from '../slider';
 import { SCRUBBER_STORYBOOK_ARG_TYPES } from './scrubber.args';
-import { ScrubberFakeProps, ScrubberProps } from './scrubber.types';
+import {
+  ScrubberActions,
+  ScrubberFakeProps,
+  ScrubberProps,
+} from './scrubber.types';
 import { SCRUBBER_TAG_NAME } from './vds-scrubber';
 
 export default {
@@ -15,7 +18,7 @@ export default {
   argTypes: SCRUBBER_STORYBOOK_ARG_TYPES,
 };
 
-const Template: Story<ScrubberProps & ScrubberFakeProps & SliderActions> = ({
+const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
   sliderLabel,
   progressLabel,
   progressText,
@@ -31,6 +34,8 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & SliderActions> = ({
   onValueChange,
   onDragStart,
   onDragEnd,
+  onUserSeeked,
+  onUserSeeking,
 }) =>
   html`
     <vds-fake-media-provider
@@ -49,9 +54,11 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & SliderActions> = ({
         step-multiplier="${stepMultiplier}"
         orientation="${orientation}"
         throttle="${throttle}"
-        @vds-slider-value-change="${onValueChange}"
-        @vds-slider-drag-start="${onDragStart}"
-        @vds-slider-drag-end="${onDragEnd}"
+        @vds-slidervaluechange="${onValueChange}"
+        @vds-sliderdragstart="${onDragStart}"
+        @vds-sliderdragend="${onDragEnd}"
+        @vds-userseeked="${onUserSeeked}"
+        @vds-userseeking="${onUserSeeking}"
       >
         <div class="preview" slot="preview">Preview</div>
       </vds-scrubber>

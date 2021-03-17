@@ -19,6 +19,7 @@ import {
   VdsEndedEvent,
   VdsErrorEvent,
   VdsLoadedDataEvent,
+  VdsLoadedMetadataEvent,
   VdsLoadStartEvent,
   VdsPauseEvent,
   VdsPlayEvent,
@@ -40,9 +41,12 @@ import { isNil, isNumber, isUndefined } from '../../utils/unit';
 import {
   FileProviderMethods,
   FileProviderProps,
+  MediaControlsList,
   MediaCrossOriginOption,
   MediaFileProviderEngine,
   MediaPreloadOption,
+  NetworkState,
+  ReadyState,
   SrcObject,
 } from './file.types';
 
@@ -107,19 +111,28 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   @property({ type: Number })
-  width?: number;
-
-  @property({ type: Number })
   height?: number;
+
+  @property({ attribute: 'controls-list' })
+  controlsList?: MediaControlsList;
 
   @property({ attribute: 'cross-origin' })
   crossOrigin?: MediaCrossOriginOption;
 
+  @property({ type: Boolean, attribute: 'default-muted' })
+  defaultMuted?: boolean;
+
+  @property({ type: Number, attribute: 'default-playback-rate' })
+  defaultPlaybackRate?: number;
+
+  @property({ type: Boolean, attribute: 'disable-remote-playback' })
+  disableRemotePlayback?: boolean;
+
   @property()
   preload?: MediaPreloadOption = 'metadata';
 
-  @property({ type: Boolean, attribute: 'default-muted' })
-  defaultMuted?: boolean;
+  @property({ type: Number })
+  width?: number;
 
   get srcObject(): SrcObject | undefined {
     return this.mediaEl?.srcObject ?? undefined;
@@ -130,6 +143,14 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.mediaEl!.srcObject = newSrcObject ?? null;
     this.mediaEl!.load();
     this.handleSrcChange();
+  }
+
+  get readyState(): ReadyState {
+    return this.mediaEl?.readyState ?? ReadyState.HaveNothing;
+  }
+
+  get networkState(): NetworkState {
+    return this.mediaEl?.networkState ?? NetworkState.NoSource;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -237,8 +258,6 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleAbort(originalEvent: Event): void {
-    this.context.readyState = this.mediaEl!.readyState;
-    this.context.networkState = this.mediaEl!.networkState;
     this.dispatchEvent(new VdsAbortEvent({ originalEvent }));
   }
 
@@ -247,31 +266,26 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected mediaReady(originalEvent?: Event): void {
-    this.context.readyState = this.mediaEl!.readyState;
     this.context.canPlay = true;
     this.dispatchEvent(new VdsCanPlayEvent({ originalEvent }));
     this.flushRequestQueue();
   }
 
   protected handleCanPlayThrough(originalEvent: Event): void {
-    this.context.readyState = this.mediaEl!.readyState;
     this.context.canPlayThrough = true;
     this.dispatchEvent(new VdsCanPlayThroughEvent({ originalEvent }));
   }
 
   protected handleLoadStart(originalEvent: Event): void {
-    this.context.readyState = this.mediaEl!.readyState;
     this.context.currentSrc = this.mediaEl!.currentSrc;
     this.dispatchEvent(new VdsLoadStartEvent({ originalEvent }));
   }
 
   protected handleEmptied(originalEvent: Event): void {
-    this.context.readyState = this.mediaEl!.readyState;
     this.dispatchEvent(new VdsEmpitedEvent({ originalEvent }));
   }
 
   protected handleLoadedData(originalEvent: Event): void {
-    this.context.readyState = this.mediaEl!.readyState;
     this.dispatchEvent(new VdsLoadedDataEvent({ originalEvent }));
   }
 
@@ -284,7 +298,6 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleLoadedMetadata(originalEvent: Event): void {
-    this.context.readyState = this.mediaEl!.readyState;
     this.context.duration = this.mediaEl!.duration;
     this.dispatchEvent(
       new VdsDurationChangeEvent({
@@ -292,6 +305,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
         originalEvent,
       }),
     );
+    this.dispatchEvent(new VdsLoadedMetadataEvent({ originalEvent }));
   }
 
   protected handlePlay(originalEvent: Event): void {
@@ -331,8 +345,6 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   protected handleProgress(originalEvent: Event): void {
     this.context.buffered = this.mediaEl!.buffered;
     this.context.seekable = this.mediaEl!.seekable;
-    this.context.readyState = this.mediaEl!.readyState;
-    this.context.networkState = this.mediaEl!.networkState;
     this.dispatchEvent(new VdsProgressEvent({ originalEvent }));
   }
 
@@ -397,12 +409,10 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
   protected handleWaiting(originalEvent: Event): void {
     this.context.waiting = true;
-    this.context.networkState = this.mediaEl!.networkState;
     this.dispatchEvent(new VdsWaitingEvent({ originalEvent }));
   }
 
   protected handleSuspend(originalEvent: Event): void {
-    this.context.networkState = this.mediaEl!.networkState;
     this.dispatchEvent(new VdsSuspendEvent({ originalEvent }));
   }
 
@@ -413,8 +423,6 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleError(originalEvent: Event): void {
-    this.context.readyState = this.mediaEl!.readyState;
-    this.context.networkState = this.mediaEl!.networkState;
     this.dispatchEvent(
       new VdsErrorEvent({ detail: this.mediaEl!.error, originalEvent }),
     );

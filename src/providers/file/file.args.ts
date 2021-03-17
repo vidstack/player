@@ -11,11 +11,9 @@ export const FILE_PROVIDER_STORYBOOK_ARG_TYPES = {
     control: 'text',
     defaultValue: 'https://media.vidstack.io/720p.mp4',
   },
-  width: {
-    control: 'number',
-  },
-  height: {
-    control: 'number',
+  controlsList: {
+    control: 'text',
+    defaultValue: undefined,
   },
   crossOrigin: {
     control: {
@@ -24,11 +22,21 @@ export const FILE_PROVIDER_STORYBOOK_ARG_TYPES = {
     },
     defaultValue: 'anonymous',
   },
+  disableRemotePlayback: {
+    control: 'boolean',
+    defaultValue: false,
+  },
+  height: {
+    control: 'number',
+  },
   preload: {
     control: {
       type: 'select',
       options: ['none', 'metadata', 'auto'],
     },
     defaultValue: 'metadata',
+  },
+  width: {
+    control: 'number',
   },
 };

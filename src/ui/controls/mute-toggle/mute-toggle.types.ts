@@ -1,3 +1,5 @@
+import { Callback } from '../../../shared/types';
+
 export interface MuteToggleProps {
   /**
    * Whether the underlying control should be disabled (not-interactable).
@@ -19,4 +21,8 @@ export interface MuteToggleProps {
 
 export interface MuteToggleFakeProps {
   fakeMuted: boolean;
+}
+
+export interface MuteToggleActions {
+  onUserMutedChange: Callback<CustomEvent>;
 }

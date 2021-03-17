@@ -18,7 +18,7 @@ import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
 import { MediaFileProvider, MediaFileProviderEngine } from '../file';
 import { videoStyles } from './video.css';
-import { VideoControlsList, VideoProviderProps } from './video.types';
+import { VideoProviderProps } from './video.types';
 import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
 
 /**
@@ -153,6 +153,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
         preload="${ifNonEmpty(this.preload)}"
         crossorigin="${ifNonEmpty(this.crossOrigin)}"
         controlslist="${ifNonEmpty(this.controlsList)}"
+        ?autoplay="${this.autoplay}"
         ?loop="${this.loop}"
         ?playsinline="${this.playsinline}"
         ?controls="${this.controls}"
@@ -160,6 +161,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
         ?disablepictureinpicture="${this.disablePiP}"
         ?disableremoteplayback="${this.disableRemotePlayback}"
         .defaultMuted="${this.defaultMuted ?? this.muted}"
+        .defaultPlaybackRate="${this.defaultPlaybackRate ?? 1}"
       >
         ${this.renderMediaContent()}
       </video>
@@ -194,23 +196,19 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
   // -------------------------------------------------------------------------------------------
 
   @property()
-  poster?: string;
-
-  get currentPoster(): string {
-    return this.poster ?? '';
+  get poster(): string {
+    return this.context.currentPoster;
   }
 
-  @property({ attribute: 'controls-list' })
-  controlsList?: VideoControlsList;
+  set poster(newPoster: string) {
+    this.context.currentPoster = newPoster;
+  }
 
   @property({ type: Boolean, attribute: 'auto-pip' })
   autoPiP?: boolean;
 
   @property({ type: Boolean, attribute: 'disable-pip' })
   disablePiP?: boolean;
-
-  @property({ type: Boolean, attribute: 'disable-remote-playback' })
-  disableRemotePlayback?: boolean;
 
   // -------------------------------------------------------------------------------------------
   // Methods

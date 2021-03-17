@@ -6,19 +6,11 @@ import {
 import { listen } from '@wcom/events';
 import { LitElement, property, PropertyValues } from 'lit-element';
 
-import {
-  VdsUserMutedChange,
-  VdsUserPauseEvent,
-  VdsUserPlayEvent,
-  VdsUserSeeked,
-  VdsUserVolumeChange,
-} from '../../bundle';
 import { deferredPromise } from '../../utils/promise';
 import { isString, isUndefined } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
 import { DeviceObserverMixin } from '../device/DeviceObserverMixin';
 import { MediaType } from '../MediaType';
-import { NetworkState } from '../NetworkState';
 import {
   PlayerContext,
   playerContext,
@@ -33,7 +25,13 @@ import {
   VdsViewTypeChangeEvent,
 } from '../player.events';
 import { PlayerMethods, PlayerProps } from '../player.types';
-import { ReadyState } from '../ReadyState';
+import {
+  VdsUserMutedChange,
+  VdsUserPauseEvent,
+  VdsUserPlayEvent,
+  VdsUserSeeked,
+  VdsUserVolumeChange,
+} from '../user/user.events';
 import { UuidMixin } from '../uuid/UuidMixin';
 import { ViewType } from '../ViewType';
 import { ProviderProps } from './provider.args';
@@ -57,6 +55,10 @@ export abstract class MediaProvider<EngineType = unknown>
   }
 
   updated(changedProperties: PropertyValues): void {
+    if (changedProperties.has('autoplay')) {
+      this.context.autoplay = this.autoplay;
+    }
+
     if (changedProperties.has('controls')) {
       this.context.controls = this.controls;
     }
@@ -159,6 +161,11 @@ export abstract class MediaProvider<EngineType = unknown>
   // ---
 
   @property({ type: Boolean })
+  autoplay = false;
+
+  // ---
+
+  @property({ type: Boolean })
   controls = false;
 
   // ---
@@ -173,7 +180,9 @@ export abstract class MediaProvider<EngineType = unknown>
 
   // ---
 
-  @property() aspectRatio: string | undefined = undefined;
+  @property({ attribute: 'aspect-ratio' }) aspectRatio:
+    | string
+    | undefined = undefined;
 
   // -------------------------------------------------------------------------------------------
   // Readonly Properties
@@ -219,10 +228,6 @@ export abstract class MediaProvider<EngineType = unknown>
     return this.context.ended;
   }
 
-  get networkState(): NetworkState {
-    return this.context.networkState;
-  }
-
   get mediaType(): MediaType {
     return this.context.mediaType;
   }
@@ -241,10 +246,6 @@ export abstract class MediaProvider<EngineType = unknown>
 
   get started(): boolean {
     return this.context.started;
-  }
-
-  get readyState(): ReadyState {
-    return this.context.readyState;
   }
 
   get viewType(): ViewType {
@@ -452,14 +453,12 @@ export abstract class MediaProvider<EngineType = unknown>
     'duration',
     'ended',
     'mediaType',
-    'networkState',
     'paused',
     'canPlay',
     'played',
     'playing',
     'seekable',
     'started',
-    'readyState',
     'waiting',
   ]);
 

@@ -1,8 +1,8 @@
 import { FILE_PROVIDER_STORYBOOK_ARG_TYPES } from '../file';
-import { VideoProviderProps } from './video.types';
+import { VideoProviderActions, VideoProviderProps } from './video.types';
 
 export type VideoProviderStorybookArgs = {
-  [P in keyof VideoProviderProps]: unknown;
+  [P in keyof (VideoProviderProps & VideoProviderActions)]: unknown;
 };
 
 export const VIDEO_PROVIDER_STORYBOOK_ARG_TYPES: Partial<VideoProviderStorybookArgs> = {
@@ -11,15 +11,7 @@ export const VIDEO_PROVIDER_STORYBOOK_ARG_TYPES: Partial<VideoProviderStorybookA
     control: 'boolean',
     defaultValue: false,
   },
-  controlsList: {
-    control: 'text',
-    defaultValue: undefined,
-  },
   disablePiP: {
-    control: 'boolean',
-    defaultValue: false,
-  },
-  disableRemotePlayback: {
     control: 'boolean',
     defaultValue: false,
   },

@@ -1,7 +1,7 @@
-import { ControlProps } from './control.types';
+import { ControlActions, ControlProps } from './control.types';
 
 export type ControlStorybookArgs = {
-  [P in keyof ControlProps]: unknown;
+  [P in keyof (ControlProps & ControlActions)]: unknown;
 };
 
 export const CONTROL_STORYBOOK_ARG_TYPES: ControlStorybookArgs = {
@@ -40,5 +40,14 @@ export const CONTROL_STORYBOOK_ARG_TYPES: ControlStorybookArgs = {
   pressed: {
     control: 'boolean',
     defaultValue: false,
+  },
+  onClick: {
+    action: 'click',
+  },
+  onFocus: {
+    action: 'focus',
+  },
+  onBlur: {
+    action: 'blur',
   },
 };

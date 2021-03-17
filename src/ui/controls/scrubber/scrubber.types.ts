@@ -1,4 +1,5 @@
-import { SliderProps } from '../slider';
+import { Callback } from '../../../shared/types';
+import { SliderActions, SliderProps } from '../slider';
 
 export interface ScrubberProps
   extends Omit<SliderProps, 'label' | 'min' | 'max' | 'value' | 'valueText'> {
@@ -34,4 +35,9 @@ export interface ScrubberFakeProps {
   fakeCurrentTime: number;
   fakeDuration: number;
   fakeBuffered: number;
+}
+
+export interface ScrubberActions extends SliderActions {
+  onUserSeeking: Callback<CustomEvent>;
+  onUserSeeked: Callback<CustomEvent>;
 }

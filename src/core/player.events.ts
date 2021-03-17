@@ -138,6 +138,15 @@ export class VdsErrorEvent extends buildVdsPlayerEvent('error') {}
 export class VdsLoadedDataEvent extends buildVdsPlayerEvent('loadeddata') {}
 
 /**
+ * Fired when the metadata has been loaded.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event
+ */
+export class VdsLoadedMetadataEvent extends buildVdsPlayerEvent(
+  'loadedmetadata',
+) {}
+
+/**
  * Fired when the browser has started to load a resource.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event

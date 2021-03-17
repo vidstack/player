@@ -1,10 +1,14 @@
+import { VdsUserPauseEvent, VdsUserPlayEvent } from '../../../core';
 import {
+  PlaybackToggleActions,
   PlaybackToggleFakeProps,
   PlaybackToggleProps,
 } from './playback-toggle.types';
 
 export type PlaybackToggleStorybookArgs = {
-  [P in keyof (PlaybackToggleProps & PlaybackToggleFakeProps)]: unknown;
+  [P in keyof (PlaybackToggleProps &
+    PlaybackToggleFakeProps &
+    PlaybackToggleActions)]: unknown;
 };
 
 export const PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES: PlaybackToggleStorybookArgs = {
@@ -21,5 +25,11 @@ export const PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES: PlaybackToggleStorybookArgs = 
   fakePaused: {
     control: 'boolean',
     defaultValue: true,
+  },
+  onUserPlay: {
+    action: VdsUserPlayEvent.TYPE,
+  },
+  onUserPause: {
+    action: VdsUserPauseEvent.TYPE,
   },
 };

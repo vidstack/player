@@ -1,6 +1,6 @@
 import { html, property, query, TemplateResult } from 'lit-element';
 
-import { playerContext, UserMutedChangeRequestEvent } from '../../../core';
+import { playerContext, VdsUserMutedChange } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { buildExportPartsAttr } from '../../../utils/dom';
@@ -120,7 +120,7 @@ export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
 
   protected handleTogglingMute(originalEvent: Event): void {
     this.dispatchEvent(
-      new UserMutedChangeRequestEvent({
+      new VdsUserMutedChange({
         originalEvent,
         detail: !this.on,
       }),

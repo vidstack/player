@@ -1,3 +1,5 @@
+import { Callback } from '../../../shared/types';
+
 export interface PlaybackToggleProps {
   /**
    * Whether the underlying control should be disabled (not-interactable).
@@ -15,6 +17,11 @@ export interface PlaybackToggleProps {
    * @required
    */
   label?: string;
+}
+
+export interface PlaybackToggleActions {
+  onUserPlay: Callback<CustomEvent>;
+  onUserPause: Callback<CustomEvent>;
 }
 
 export interface PlaybackToggleFakeProps {

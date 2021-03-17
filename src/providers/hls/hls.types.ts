@@ -1,14 +1,13 @@
 import type Hls from 'hls.js';
 
-import { ProviderActions } from '../../core';
 import { Callback } from '../../shared/types';
-import { VideoProviderProps } from '../video';
+import { VideoProviderActions, VideoProviderProps } from '../video';
 
 export interface HlsProviderProps extends VideoProviderProps {
   libSrc: string;
 }
 
-export interface HlsProviderActions extends ProviderActions {
+export interface HlsProviderActions extends VideoProviderActions {
   onEngineBuilt: Callback<CustomEvent>;
   onEngineAttach: Callback<CustomEvent>;
   onEngineDetach: Callback<CustomEvent>;

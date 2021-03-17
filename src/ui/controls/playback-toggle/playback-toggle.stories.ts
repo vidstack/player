@@ -6,6 +6,7 @@ import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { Story } from '../../../shared/storybook';
 import { PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES } from './playback-toggle.args';
 import {
+  PlaybackToggleActions,
   PlaybackToggleFakeProps,
   PlaybackToggleProps,
 } from './playback-toggle.types';
@@ -17,12 +18,9 @@ export default {
   argTypes: PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES,
 };
 
-const Template: Story<PlaybackToggleProps & PlaybackToggleFakeProps> = ({
-  label,
-  describedBy,
-  disabled,
-  fakePaused,
-}) =>
+const Template: Story<
+  PlaybackToggleProps & PlaybackToggleFakeProps & PlaybackToggleActions
+> = ({ label, describedBy, disabled, fakePaused, onUserPlay, onUserPause }) =>
   html`
     <vds-fake-media-provider .canPlayCtx="${true}" .pausedCtx="${fakePaused}">
       <vds-playback-toggle
@@ -30,6 +28,8 @@ const Template: Story<PlaybackToggleProps & PlaybackToggleFakeProps> = ({
         described-by="${ifNonEmpty(describedBy)}"
         ?disabled="${disabled}"
         style="color: #FF2A5D;"
+        @vds-userplay="${onUserPlay}"
+        @vds-userpause="${onUserPause}"
       >
         <div slot="play">Play</div>
         <div slot="pause">Pause</div>

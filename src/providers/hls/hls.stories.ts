@@ -33,25 +33,33 @@ const Template: Story<HlsProviderProps & HlsProviderActions> = ({
   autoPiP,
   disablePiP,
   disableRemotePlayback,
+  onAbort,
+  onCanPlay,
+  onCanPlayThrough,
   onConnect,
   onDisconnect,
+  onDurationChange,
+  onEmptied,
+  onEnded,
+  onError,
+  onLoadedData,
+  onLoadedMetadata,
+  onLoadStart,
+  onMediaTypeChange,
   onPause,
   onPlay,
   onPlaying,
-  onPosterChange,
-  onMutedChange,
-  onVolumeChange,
-  onTimeChange,
-  onDurationChange,
-  onBufferedChange,
-  onBufferingChange,
-  onViewTypeChange,
-  onMediaTypeChange,
-  onPlaybackReady,
-  onPlaybackStart,
-  onPlaybackEnd,
+  onProgress,
+  onSeeked,
+  onSeeking,
+  onStalled,
+  onStarted,
+  onSuspend,
   onReplay,
-  onError,
+  onTimeUpdate,
+  onViewTypeChange,
+  onVolumeChange,
+  onWaiting,
   onEngineBuilt,
   onEngineAttach,
   onEngineDetach,
@@ -78,29 +86,37 @@ const Template: Story<HlsProviderProps & HlsProviderActions> = ({
       ?auto-pip="${autoPiP}"
       ?disable-pip="${disablePiP}"
       ?disable-remote-playback="${disableRemotePlayback}"
+      @vds-abort="${onAbort}"
+      @vds-canplay="${onCanPlay}"
+      @vds-canplaythrough="${onCanPlayThrough}"
       @vds-connect="${onConnect}"
       @vds-disconnect="${onDisconnect}"
+      @vds-durationchange="${onDurationChange}"
+      @vds-emptied="${onEmptied}"
+      @vds-ended="${onEnded}"
+      @vds-error="${onError}"
+      @vds-loadeddata="${onLoadedData}"
+      @vds-loadstart="${onLoadStart}"
+      @vds-loadedmetadata="${onLoadedMetadata}"
+      @vds-mediatypechange="${onMediaTypeChange}"
       @vds-pause="${onPause}"
       @vds-play="${onPlay}"
       @vds-playing="${onPlaying}"
-      @vds-poster-change="${onPosterChange}"
-      @vds-muted-change="${onMutedChange}"
-      @vds-volume-change="${onVolumeChange}"
-      @vds-time-change="${onTimeChange}"
-      @vds-duration-change="${onDurationChange}"
-      @vds-buffered-change="${onBufferedChange}"
-      @vds-buffering-change="${onBufferingChange}"
-      @vds-view-type-change="${onViewTypeChange}"
-      @vds-media-type-change="${onMediaTypeChange}"
-      @vds-playback-ready="${onPlaybackReady}"
-      @vds-playback-start="${onPlaybackStart}"
-      @vds-playback-end="${onPlaybackEnd}"
+      @vds-progress="${onProgress}"
+      @vds-seeked="${onSeeked}"
+      @vds-seeking="${onSeeking}"
+      @vds-stalled="${onStalled}"
+      @vds-started="${onStarted}"
+      @vds-suspend="${onSuspend}"
       @vds-replay="${onReplay}"
-      @vds-error="${onError}"
-      @vds-hls-engine-built="${onEngineBuilt}"
-      @vds-hls-engine-attach="${onEngineAttach}"
-      @vds-hls-engine-detach="${onEngineDetach}"
-      @vds-hls-engine-no-support="${onEngineNoSupport}"
+      @vds-timeupdate="${onTimeUpdate}"
+      @vds-viewtypechange="${onViewTypeChange}"
+      @vds-volumechange="${onVolumeChange}"
+      @vds-waiting="${onWaiting}"
+      @vds-hlsenginebuilt="${onEngineBuilt}"
+      @vds-hlsengineattach="${onEngineAttach}"
+      @vds-hlsenginedetach="${onEngineDetach}"
+      @vds-hlsenginenosupport="${onEngineNoSupport}"
     ></vds-hls>
   `;
 

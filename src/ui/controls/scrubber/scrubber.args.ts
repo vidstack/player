@@ -1,8 +1,13 @@
+import { VdsUserSeeked, VdsUserSeeking } from '../../../core';
 import { SLIDER_STORYBOOK_ARG_TYPES } from '../slider';
-import { ScrubberFakeProps, ScrubberProps } from './scrubber.types';
+import {
+  ScrubberActions,
+  ScrubberFakeProps,
+  ScrubberProps,
+} from './scrubber.types';
 
 export type ScrubberStorybookArgs = {
-  [P in keyof (ScrubberProps & ScrubberFakeProps)]: unknown;
+  [P in keyof (ScrubberProps & ScrubberFakeProps & ScrubberActions)]: unknown;
 } & {
   // Only so we can remove from arg types.
   label?: undefined;
@@ -58,5 +63,11 @@ export const SCRUBBER_STORYBOOK_ARG_TYPES: Partial<ScrubberStorybookArgs> = {
   fakeBuffered: {
     control: 'number',
     defaultValue: 1350,
+  },
+  onUserSeeked: {
+    action: VdsUserSeeked.TYPE,
+  },
+  onUserSeeking: {
+    action: VdsUserSeeking.TYPE,
   },
 };

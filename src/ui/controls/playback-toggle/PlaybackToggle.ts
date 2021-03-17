@@ -2,8 +2,8 @@ import { html, property, query, TemplateResult } from 'lit-element';
 
 import {
   playerContext,
-  UserPauseRequestEvent,
-  UserPlayRequestEvent,
+  VdsUserPauseEvent,
+  VdsUserPlayEvent,
 } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
@@ -127,7 +127,7 @@ export class PlaybackToggle
   }
 
   protected handleTogglingPlayback(originalEvent: Event): void {
-    const Request = this.on ? UserPauseRequestEvent : UserPlayRequestEvent;
+    const Request = this.on ? VdsUserPauseEvent : VdsUserPlayEvent;
 
     this.dispatchEvent(
       new Request({

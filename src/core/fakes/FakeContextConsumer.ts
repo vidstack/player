@@ -18,6 +18,10 @@ export class FakeContextConsumer
   aspectRatio = playerContext.aspectRatio.defaultValue;
 
   @internalProperty()
+  @playerContext.autoplay.consume()
+  autoplay = playerContext.autoplay.defaultValue;
+
+  @internalProperty()
   @playerContext.currentSrc.consume()
   currentSrc = playerContext.currentSrc.defaultValue;
 
@@ -134,10 +138,6 @@ export class FakeContextConsumer
   played = playerContext.played.defaultValue;
 
   @internalProperty()
-  @playerContext.networkState.consume()
-  networkState = playerContext.networkState.defaultValue;
-
-  @internalProperty()
   @playerContext.seekable.consume()
   seekable = playerContext.seekable.defaultValue;
 
@@ -148,10 +148,6 @@ export class FakeContextConsumer
   @internalProperty()
   @playerContext.seekablePercentage.consume()
   seekablePercentage = playerContext.seekablePercentage.defaultValue;
-
-  @internalProperty()
-  @playerContext.readyState.consume()
-  readyState = playerContext.readyState.defaultValue;
 
   @internalProperty()
   @uuidContext.consume()

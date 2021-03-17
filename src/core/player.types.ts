@@ -1,7 +1,5 @@
 import { CanPlay } from './CanPlay';
 import { MediaType } from './MediaType';
-import { NetworkState } from './NetworkState';
-import { ReadyState } from './ReadyState';
 import { ViewType } from './ViewType';
 
 export type Source = string;
@@ -9,6 +7,7 @@ export type Source = string;
 export type WritablePlayerState = Pick<
   PlayerProps,
   | 'aspectRatio'
+  | 'autoplay'
   | 'controls'
   | 'currentTime'
   | 'muted'
@@ -28,6 +27,21 @@ export interface PlayerProps {
    * the `viewType` is `video` and the player is not in fullscreen mode. Defaults to `undefined`.
    */
   aspectRatio: string | undefined;
+
+  /**
+   * Whether playback should automatically begin as soon as enough media is available to do so
+   * without interruption.
+   *
+   * Sites which automatically play audio (or videos with an audio track) can be an unpleasant
+   * experience for users, so it should be avoided when possible. If you must offer autoplay
+   * functionality, you should make it opt-in (requiring a user to specifically enable it).
+   *
+   * However, autoplay can be useful when creating media elements whose source will be set at a
+   * later time, under user control.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay
+   */
+  autoplay: boolean;
 
   /**
    * Returns a `TimeRanges` object that indicates the ranges of the media source that the
@@ -62,7 +76,7 @@ export interface PlayerProps {
 
   /**
    * The absolute URL of the media resource that has been chosen. Defaults to `''` if no
-   * media has been loaded (`networkState` is `Empty`).
+   * media has been loaded.
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc
    */
@@ -115,11 +129,6 @@ export interface PlayerProps {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted
    */
   muted: boolean;
-
-  /**
-   * Indicates the current state of the fetching of media over the network.
-   */
-  readonly networkState: NetworkState;
 
   /**
    * Whether playback should be paused. Defaults to `true` if no media has loaded or playback has
@@ -180,13 +189,6 @@ export interface PlayerProps {
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    */
   readonly started: boolean;
-
-  /**
-   * Indicates the readiness state of the media.
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState
-   */
-  readonly readyState: ReadyState;
 
   /**
    * The type of player view that is being used, whether it's an audio player view or
