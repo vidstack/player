@@ -4,11 +4,11 @@ import { spy, stub } from 'sinon';
 import { FakeMediaProvider } from '../../fakes/FakeMediaProvider';
 import { emitEvent } from '../../fakes/helpers';
 import {
-  UserMutedChangeRequestEvent,
-  UserPauseRequestEvent,
-  UserPlayRequestEvent,
-  UserTimeChangeRequestEvent,
-  UserVolumeChangeRequestEvent,
+  VdsUserMutedChange,
+  VdsUserPauseEvent,
+  VdsUserPlayEvent,
+  VdsUserSeeked,
+  VdsUserVolumeChange,
 } from '../user.events';
 
 describe('user events', () => {
@@ -33,52 +33,52 @@ describe('user events', () => {
     emitEvent(user, e);
   }
 
-  it('should request provider to play when user play request is received', async () => {
+  it(`should request provider to play when ${VdsUserPlayEvent.TYPE} is fired`, async () => {
     const playSpy = spy(provider, 'play');
     stub(provider, 'canPlay').get(() => true);
-    dispatchUserRequest(new UserPlayRequestEvent());
-    await oneEvent(provider, UserPlayRequestEvent.TYPE);
+    dispatchUserRequest(new VdsUserPlayEvent());
+    await oneEvent(provider, VdsUserPlayEvent.TYPE);
     expect(playSpy).to.have.been.calledOnce;
   });
 
-  it('should request provider to pause when user pause request is received', async () => {
+  it(`should request provider to pause when ${VdsUserPauseEvent.TYPE} is fired`, async () => {
     const pauseSpy = spy(provider, 'pause');
     stub(provider, 'canPlay').get(() => true);
-    dispatchUserRequest(new UserPauseRequestEvent());
-    await oneEvent(provider, UserPauseRequestEvent.TYPE);
+    dispatchUserRequest(new VdsUserPauseEvent());
+    await oneEvent(provider, VdsUserPauseEvent.TYPE);
     expect(pauseSpy).to.have.been.calledOnce;
   });
 
-  it('should request provider to mute when user mute request is received', async () => {
+  it(`should request provider to mute when ${VdsUserMutedChange.TYPE} is fired`, async () => {
     const mutedSpy = spy(provider, 'setMuted');
     stub(provider, 'canPlay').get(() => true);
-    dispatchUserRequest(new UserMutedChangeRequestEvent({ detail: true }));
-    await oneEvent(provider, UserMutedChangeRequestEvent.TYPE);
+    dispatchUserRequest(new VdsUserMutedChange({ detail: true }));
+    await oneEvent(provider, VdsUserMutedChange.TYPE);
     expect(mutedSpy).to.have.been.calledOnceWith(true);
   });
 
-  it('should request provider to change volume when user volume change request is received', async () => {
+  it(`should request provider to change volume when ${VdsUserVolumeChange.TYPE} is fired`, async () => {
     const volumeSpy = spy(provider, 'setVolume');
     stub(provider, 'canPlay').get(() => true);
-    dispatchUserRequest(new UserVolumeChangeRequestEvent({ detail: 0.83 }));
-    await oneEvent(provider, UserVolumeChangeRequestEvent.TYPE);
+    dispatchUserRequest(new VdsUserVolumeChange({ detail: 0.83 }));
+    await oneEvent(provider, VdsUserVolumeChange.TYPE);
     expect(volumeSpy).to.have.been.calledOnceWith(0.83);
   });
 
-  it('should request provider to change time when user time change request is received', async () => {
+  it(`should request provider to change time when ${VdsUserSeeked.TYPE} is fired`, async () => {
     const currentTimeSpy = spy(provider, 'setCurrentTime');
     stub(provider, 'canPlay').get(() => true);
-    dispatchUserRequest(new UserTimeChangeRequestEvent({ detail: 23 }));
-    await oneEvent(provider, UserTimeChangeRequestEvent.TYPE);
+    dispatchUserRequest(new VdsUserSeeked({ detail: 23 }));
+    await oneEvent(provider, VdsUserSeeked.TYPE);
     expect(currentTimeSpy).to.have.been.calledOnceWith(23);
   });
 
   it('should prevent user events from bubbling by default', async () => {
     const callback = spy();
-    container.addEventListener(UserPlayRequestEvent.TYPE, callback);
+    container.addEventListener(VdsUserPlayEvent.TYPE, callback);
 
-    dispatchUserRequest(new UserPlayRequestEvent());
-    await oneEvent(provider, UserPlayRequestEvent.TYPE);
+    dispatchUserRequest(new VdsUserPlayEvent());
+    await oneEvent(provider, VdsUserPlayEvent.TYPE);
 
     expect(callback).to.not.have.been.called;
   });
@@ -87,10 +87,10 @@ describe('user events', () => {
     const callback = spy();
 
     provider.allowUserEventsToBubble = true;
-    container.addEventListener(UserPlayRequestEvent.TYPE, callback);
+    container.addEventListener(VdsUserPlayEvent.TYPE, callback);
 
-    dispatchUserRequest(new UserPlayRequestEvent());
-    await oneEvent(container, UserPlayRequestEvent.TYPE);
+    dispatchUserRequest(new VdsUserPlayEvent());
+    await oneEvent(container, VdsUserPlayEvent.TYPE);
 
     expect(callback).to.have.been.called;
   });

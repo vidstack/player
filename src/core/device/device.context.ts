@@ -14,8 +14,8 @@ const guessDevice =
 export type DeviceContext = ContextRecord<DeviceProps>;
 export type DeviceContextProvider = ContextRecordProvider<DeviceProps>;
 
-export const deviceContext: DeviceContext = Object.freeze({
+export const deviceContext: DeviceContext = {
   device: createContext(guessDevice),
   isMobileDevice: createContext(guessDevice === Device.Mobile),
   isDesktopDevice: createContext(guessDevice === Device.Desktop),
-});
+};

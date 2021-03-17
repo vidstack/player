@@ -2,8 +2,8 @@ import { elementUpdated, expect, html, oneEvent } from '@open-wc/testing';
 
 import {
   FakeMediaProvider,
-  UserPauseRequestEvent,
-  UserPlayRequestEvent,
+  VdsUserPauseEvent,
+  VdsUserPlayEvent,
 } from '../../../../core';
 import { buildFakeMediaProvider } from '../../../../core/fakes/helpers';
 import { getSlottedChildren } from '../../../../utils/dom';
@@ -105,20 +105,20 @@ describe(PLAYBACK_TOGGLE_TAG_NAME, () => {
     expect(control).to.have.attribute('disabled');
   });
 
-  it(`should emit ${UserPlayRequestEvent.TYPE} when clicked while paused`, async () => {
+  it(`should emit ${VdsUserPlayEvent.TYPE} when clicked while paused`, async () => {
     const [, toggle] = await buildFixture();
     toggle.on = false;
     await elementUpdated(toggle);
     setTimeout(() => toggle.click());
-    await oneEvent(toggle, UserPlayRequestEvent.TYPE);
+    await oneEvent(toggle, VdsUserPlayEvent.TYPE);
   });
 
-  it(`should emit ${UserPauseRequestEvent.TYPE} when clicked while not paused`, async () => {
+  it(`should emit ${VdsUserPauseEvent.TYPE} when clicked while not paused`, async () => {
     const [, toggle] = await buildFixture();
     toggle.on = true;
     await elementUpdated(toggle);
     setTimeout(() => toggle.click());
-    await oneEvent(toggle, UserPauseRequestEvent.TYPE);
+    await oneEvent(toggle, VdsUserPauseEvent.TYPE);
   });
 
   it('should receive transfromed paused context updates', async () => {

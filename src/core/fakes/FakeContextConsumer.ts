@@ -70,10 +70,6 @@ export class FakeContextConsumer
   bufferedAmount = playerContext.bufferedAmount.defaultValue;
 
   @internalProperty()
-  @playerContext.bufferedPercentage.consume()
-  bufferedPercentage = playerContext.bufferedPercentage.defaultValue;
-
-  @internalProperty()
   @deviceContext.device.consume()
   device = deviceContext.device.defaultValue;
 
@@ -144,10 +140,6 @@ export class FakeContextConsumer
   @internalProperty()
   @playerContext.seekableAmount.consume()
   seekableAmount = playerContext.seekableAmount.defaultValue;
-
-  @internalProperty()
-  @playerContext.seekablePercentage.consume()
-  seekablePercentage = playerContext.seekablePercentage.defaultValue;
 
   @internalProperty()
   @uuidContext.consume()

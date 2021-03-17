@@ -452,7 +452,6 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   protected startDragging(originalEvent: PointerEvent): void {
     this._isDragging = true;
-
     this.dispatchEvent(
       new VdsSliderDragStartEvent({
         originalEvent,
@@ -462,7 +461,6 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   protected stopDragging(originalEvent: PointerEvent): void {
     this._isDragging = false;
-
     this.dispatchEvent(
       new VdsSliderDragEndEvent({
         originalEvent,

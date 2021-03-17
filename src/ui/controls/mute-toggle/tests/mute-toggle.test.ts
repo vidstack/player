@@ -1,9 +1,6 @@
 import { elementUpdated, expect, html, oneEvent } from '@open-wc/testing';
 
-import {
-  FakeMediaProvider,
-  UserMutedChangeRequestEvent,
-} from '../../../../core';
+import { FakeMediaProvider, VdsUserMutedChange } from '../../../../core';
 import { buildFakeMediaProvider } from '../../../../core/fakes/helpers';
 import { getSlottedChildren } from '../../../../utils/dom';
 import { MuteToggle } from '../MuteToggle';
@@ -102,21 +99,21 @@ describe(MUTE_TOGGLE_TAG_NAME, () => {
     expect(control).to.have.attribute('disabled');
   });
 
-  it(`should emit ${UserMutedChangeRequestEvent.TYPE} with true detail clicked while unmuted`, async () => {
+  it(`should emit ${VdsUserMutedChange.TYPE} with true detail clicked while unmuted`, async () => {
     const [, toggle] = await buildFixture();
     toggle.on = false;
     await elementUpdated(toggle);
     setTimeout(() => toggle.click());
-    const { detail } = await oneEvent(toggle, UserMutedChangeRequestEvent.TYPE);
+    const { detail } = await oneEvent(toggle, VdsUserMutedChange.TYPE);
     expect(detail).to.be.true;
   });
 
-  it(`should emit ${UserMutedChangeRequestEvent.TYPE} with false detail when clicked while muted`, async () => {
+  it(`should emit ${VdsUserMutedChange.TYPE} with false detail when clicked while muted`, async () => {
     const [, toggle] = await buildFixture();
     toggle.on = true;
     await elementUpdated(toggle);
     setTimeout(() => toggle.click());
-    const { detail } = await oneEvent(toggle, UserMutedChangeRequestEvent.TYPE);
+    const { detail } = await oneEvent(toggle, VdsUserMutedChange.TYPE);
     expect(detail).to.be.false;
   });
 

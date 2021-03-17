@@ -28,7 +28,7 @@ describe(SCRUBBER_TAG_NAME, () => {
       <div
         id="root"
         part="root"
-        style="--vds-scrubber-current-time:0; --vds-scrubber-buffered:0; --vds-scrubber-duration:0;"
+        style="--vds-scrubber-current-time:0; --vds-scrubber-seekable:0; --vds-scrubber-duration:0;"
       >
         <vds-slider
           exportparts="root: slider-root, root-dragging: slider-root-dragging, root-orientation-vertical: slider-root-orientation-vertical, thumb: slider-thumb, thumb-dragging: slider-thumb-dragging, track: slider-track, track-dragging: slider-track-dragging, track-fill: slider-track-fill, track-fill-dragging: slider-track-fill-dragging"
@@ -47,7 +47,7 @@ describe(SCRUBBER_TAG_NAME, () => {
           <slot name="slider"></slot>
           
           <div
-            aria-label="Amount buffered"
+            aria-label="Amount seekable"
             aria-valuemax="0"
             aria-valuemin="0"
             aria-valuenow="0"

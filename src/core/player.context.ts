@@ -6,6 +6,7 @@ import createContext, {
 
 import { MediaType } from './MediaType';
 import { PlayerProps } from './player.types';
+import { createTimeRanges } from './time-ranges';
 import { ViewType } from './ViewType';
 
 export type PlayerContext = ContextRecord<PlayerContextProps>;
@@ -35,48 +36,55 @@ export const transformContextName = (propName: string): string =>
  * }
  * ```
  */
-const buffered = createContext<TimeRanges>(new TimeRanges());
-const mediaType = createContext<MediaType>(MediaType.Unknown);
-const seekable = createContext<TimeRanges>(new TimeRanges());
-const viewType = createContext<ViewType>(ViewType.Unknown);
+const buffered = createContext(createTimeRanges());
+const duration = createContext(NaN);
+const mediaType = createContext(MediaType.Unknown);
+const seekable = createContext(createTimeRanges());
+const viewType = createContext(ViewType.Unknown);
+
 export const playerContext: PlayerContext = {
   aspectRatio: createContext<string | undefined>(undefined),
   autoplay: createContext<boolean>(false),
   buffered,
-  bufferedAmount: createContext<number>(0),
+  bufferedAmount: derivedContext(
+    [buffered, duration] as const,
+    (buffered, duration) => {
+      const end = buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
+      return end > duration ? duration : end;
+    },
+  ),
   waiting: createContext<boolean>(false),
   controls: createContext<boolean>(false),
   currentPoster: createContext(''),
   currentSrc: createContext(''),
   currentTime: createContext(0),
-  duration: createContext<number>(NaN),
+  duration,
   ended: createContext<boolean>(false),
-  isAudio: derivedContext(mediaType, m => m === MediaType.Audio),
-  isAudioView: derivedContext(viewType, v => v === ViewType.Audio),
-  isVideo: derivedContext(mediaType, m => m === MediaType.Video),
-  isVideoView: derivedContext(viewType, v => v === ViewType.Video),
+  isAudio: derivedContext([mediaType], m => m === MediaType.Audio),
+  isAudioView: derivedContext([viewType], v => v === ViewType.Audio),
+  isVideo: derivedContext([mediaType], m => m === MediaType.Video),
+  isVideoView: derivedContext([viewType], v => v === ViewType.Video),
   loop: createContext<boolean>(false),
   mediaType,
   muted: createContext<boolean>(false),
   paused: createContext<boolean>(true),
   canPlay: createContext<boolean>(false),
   canPlayThrough: createContext<boolean>(false),
-  played: createContext<TimeRanges>(new TimeRanges()),
+  played: createContext(createTimeRanges()),
   playing: createContext<boolean>(false),
   playsinline: createContext<boolean>(false),
   seekable,
-  seekableAmount: createContext<number>(0),
+  seekableAmount: derivedContext(
+    [seekable, duration] as const,
+    (seekable, duration) => {
+      const end = seekable.length === 0 ? 0 : seekable.end(seekable.length - 1);
+      return end > duration ? duration : end;
+    },
+  ),
   started: createContext<boolean>(false),
   viewType,
   volume: createContext(1),
 };
-
-// Derived context should take multiple props []
-// const end =
-//   this.buffered.length === 0
-//     ? 0
-//     : this.buffered.end(this.buffered.length - 1);
-// return end > this.duration ? this.duration : end;
 
 export interface PlayerContextProps extends PlayerProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

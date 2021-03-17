@@ -2,7 +2,7 @@ import { expect, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
 
 import { buildFakeMediaProvider, emitEvent } from '../../fakes/helpers';
-import { ErrorEvent, PlaybackReadyEvent } from '../../player.events';
+import { VdsErrorEvent } from '../../player.events';
 
 describe('provider request queue', () => {
   it('should queue request given provider is not ready and flush once ready', async () => {
@@ -15,8 +15,9 @@ describe('provider request queue', () => {
     expect(queue.size, 'queue size').to.equal(1);
 
     // Flush.
-    emitEvent(provider, new PlaybackReadyEvent());
-    await oneEvent(provider, PlaybackReadyEvent.TYPE);
+    ((provider as unknown) as {
+      flushRequestQueue(): void;
+    }).flushRequestQueue();
     await provider.waitForRequestQueueToFlush();
 
     // Check.
@@ -49,10 +50,11 @@ describe('provider request queue', () => {
       provider.paused = true;
       const queue = provider.getRequestQueue();
       expect(queue.size, 'queue size').to.equal(1);
-      emitEvent(provider, new PlaybackReadyEvent());
+      ((provider as unknown) as {
+        flushRequestQueue(): void;
+      }).flushRequestQueue();
     });
 
-    await oneEvent(provider, PlaybackReadyEvent.TYPE);
     await provider.waitForRequestQueueToFlush();
 
     expect(playSpy).to.not.have.been.called;
@@ -68,7 +70,7 @@ describe('provider request queue', () => {
       provider.paused = false;
     });
 
-    const { detail } = await oneEvent(provider, ErrorEvent.TYPE);
+    const { detail } = await oneEvent(provider, VdsErrorEvent.TYPE);
     expect(detail.message).to.equal('No play.');
   });
 });
