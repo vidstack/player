@@ -24,7 +24,6 @@ import {
   VdsDisconnectEvent,
   VdsEndedEvent,
   VdsErrorEvent,
-  VdsReplayEvent,
   VdsViewTypeChangeEvent,
 } from '../player.events';
 import { PlayerMethods, PlayerProps } from '../player.types';
@@ -390,7 +389,7 @@ export abstract class MediaProvider<EngineType = unknown>
 
   /**
    * Requests are queued if called before media is ready for playback. Once the media is
-   * ready (`PlaybackReadyEvent`) the queue is flushed. Each request is associated with
+   * ready (`VdsCanPlayEvent`) the queue is flushed. Each request is associated with
    * a request key to avoid making duplicate requests of the same "type".
    */
   protected requestQueue: ProviderRequestQueue = new Map();
@@ -428,7 +427,7 @@ export abstract class MediaProvider<EngineType = unknown>
   /**
    * This method will attempt to make a request if the current provider is ready
    * for playback, otherwise it'll queue the request to be fulfilled when the
-   * `ProviderPlaybackReadyEvent` is fired.
+   * `VdsCanPlayEvent` is fired.
    *
    * @param requestKey - A unique key to identify the request.
    * @param action - The action to be performed when the request is fulfilled.
@@ -467,7 +466,8 @@ export abstract class MediaProvider<EngineType = unknown>
    * Player context record. Any property updated inside this object will trigger a context
    * update.
    *
-   * @internal - Used internally to keep `MediaProvider` and UI in sync with engine state.
+   * @internal - Used internally to keep `MediaProvider` and UI in sync with engine state. Exposed
+   * for testing.
    */
   @contextRecordProvider(playerContext, transformContextName)
   readonly context!: PlayerContextProvider;
