@@ -40,6 +40,7 @@ const Template: Story<VideoProviderProps & VideoProviderActions> = ({
   onEmptied,
   onEnded,
   onError,
+  onFullscreenChange,
   onLoadedData,
   onLoadedMetadata,
   onLoadStart,
@@ -88,6 +89,7 @@ const Template: Story<VideoProviderProps & VideoProviderActions> = ({
       @vds-emptied="${onEmptied}"
       @vds-ended="${onEnded}"
       @vds-error="${onError}"
+      @vds-fullscreenchange="${onFullscreenChange}"
       @vds-loadeddata="${onLoadedData}"
       @vds-loadstart="${onLoadStart}"
       @vds-loadedmetadata="${onLoadedMetadata}"

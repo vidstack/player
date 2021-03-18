@@ -18,6 +18,7 @@ import {
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
 import { Unsubscribe } from '../../shared/types';
+import { IS_IOS } from '../../utils/support';
 import { isFunction, isUndefined, noop } from '../../utils/unit';
 import { MediaFileProvider, MediaFileProviderEngine } from '../file';
 import { videoStyles } from './video.css';
@@ -252,6 +253,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
    */
   get canRequestFullscreenOniOS(): boolean {
     return (
+      IS_IOS &&
       isFunction(this.mediaEl?.webkitEnterFullscreen) &&
       (this.mediaEl?.webkitSupportsFullscreen ?? false)
     );

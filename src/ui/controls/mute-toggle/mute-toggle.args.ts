@@ -1,4 +1,4 @@
-import { VdsUserMutedChange } from '../../../core';
+import { VdsUserMutedChangeEvent } from '../../../core';
 import {
   MuteToggleActions,
   MuteToggleFakeProps,
@@ -27,6 +27,6 @@ export const MUTE_TOGGLE_STORYBOOK_ARG_TYPES: MuteToggleStorybookArgs = {
     defaultValue: false,
   },
   onUserMutedChange: {
-    action: VdsUserMutedChange.TYPE,
+    action: VdsUserMutedChangeEvent.TYPE,
   },
 };

@@ -27,16 +27,18 @@ import {
   VdsDisconnectEvent,
   VdsEndedEvent,
   VdsErrorEvent,
+  VdsFullscreenChangeEvent,
   VdsViewTypeChangeEvent,
 } from '../player.events';
 import { PlayerMethods, PlayerProps } from '../player.types';
 import { ScreenOrientation, ScreenOrientationLock } from '../ScreenOrientation';
 import {
-  VdsUserMutedChange,
+  VdsUserFullscreenChangeEvent,
+  VdsUserMutedChangeEvent,
   VdsUserPauseEvent,
   VdsUserPlayEvent,
-  VdsUserSeeked,
-  VdsUserVolumeChange,
+  VdsUserSeekedEvent,
+  VdsUserVolumeChangeEvent,
 } from '../user/user.events';
 import { UuidMixin } from '../uuid/UuidMixin';
 import { ViewType } from '../ViewType';
@@ -367,6 +369,27 @@ export abstract class MediaProvider<EngineType = unknown>
     if (!this.allowUserEventsToBubble) e.stopPropagation();
   }
 
+  @listen(VdsUserMutedChangeEvent.TYPE)
+  protected handleUserMuteChange(e: VdsUserMutedChangeEvent): void {
+    this.userEventGateway(e);
+    this.muted = e.detail;
+  }
+
+  @listen(VdsUserFullscreenChangeEvent.TYPE)
+  protected async handleUserFullscreenChange(
+    e: VdsUserFullscreenChangeEvent,
+  ): Promise<void> {
+    this.userEventGateway(e);
+    const shouldEnterFullscreen = e.detail;
+    this.makeRequest('fullscreen', async () => {
+      if (shouldEnterFullscreen) {
+        await this.requestFullscreen();
+      } else {
+        await this.exitFullscreen();
+      }
+    });
+  }
+
   @listen(VdsUserPlayEvent.TYPE)
   protected handleUserPlay(e: VdsUserPlayEvent): void {
     this.userEventGateway(e);
@@ -379,20 +402,14 @@ export abstract class MediaProvider<EngineType = unknown>
     this.paused = true;
   }
 
-  @listen(VdsUserMutedChange.TYPE)
-  protected handleUserMuteChange(e: VdsUserMutedChange): void {
-    this.userEventGateway(e);
-    this.muted = e.detail;
-  }
-
-  @listen(VdsUserSeeked.TYPE)
-  protected handleUserSeeked(e: VdsUserSeeked): void {
+  @listen(VdsUserSeekedEvent.TYPE)
+  protected handleUserSeeked(e: VdsUserSeekedEvent): void {
     this.userEventGateway(e);
     this.currentTime = e.detail;
   }
 
-  @listen(VdsUserVolumeChange.TYPE)
-  protected handleUserVolumeChange(e: VdsUserVolumeChange): void {
+  @listen(VdsUserVolumeChangeEvent.TYPE)
+  protected handleUserVolumeChange(e: VdsUserVolumeChangeEvent): void {
     this.userEventGateway(e);
     this.volume = e.detail;
   }
@@ -541,6 +558,10 @@ export abstract class MediaProvider<EngineType = unknown>
   }
 
   async requestFullscreen(): Promise<void> {
+    if (this.isRequestingFullscreen) {
+      return super.requestFullscreen();
+    }
+
     this.throwIfNoFullscreenSupport();
     if (this.fullscreen) return;
 
@@ -563,8 +584,14 @@ export abstract class MediaProvider<EngineType = unknown>
     return response;
   }
 
+  // Ye... find a better way later.
+  protected isRequestingFullscreen = false;
+
   protected async makeEnterFullscreenRequest(): Promise<void> {
-    return fscreen.requestFullscreen(this);
+    this.isRequestingFullscreen = true;
+    const response = await fscreen.requestFullscreen(this);
+    this.isRequestingFullscreen = false;
+    return response;
   }
 
   protected async lockFullscreenOrientation(): Promise<void> {
@@ -605,10 +632,16 @@ export abstract class MediaProvider<EngineType = unknown>
     this.context.screenOrientationLocked = false;
   }
 
-  protected handleFullscreenChange(): void {
+  protected handleFullscreenChange(originalEvent: Event): void {
     const isActive = this.fullscreen;
     this.context.fullscreen = isActive;
     if (!isActive) this.fullscreenDisposal.empty();
+    this.dispatchEvent(
+      new VdsFullscreenChangeEvent({
+        detail: isActive,
+        originalEvent,
+      }),
+    );
   }
 
   protected handleFullscreenError(event: Event): void {

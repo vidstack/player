@@ -25,6 +25,7 @@ export interface PlayerEvents {
   emptied: VdsCustomEvent<void>;
   ended: VdsCustomEvent<void>;
   error: VdsCustomEvent<unknown>;
+  fullscreenchange: VdsCustomEvent<boolean>;
   loadeddata: VdsCustomEvent<void>;
   loadedmetadata: VdsCustomEvent<void>;
   loadstart: VdsCustomEvent<void>;
@@ -128,6 +129,14 @@ export class VdsEndedEvent extends buildVdsPlayerEvent('ended') {}
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
  */
 export class VdsErrorEvent extends buildVdsPlayerEvent('error') {}
+
+/**
+ * Fired when the player enters/exits fullscreen mode. When the detail is `true` it means
+ * the player has entered fullscreen, `false` represents the opposite.
+ */
+export class VdsFullscreenChangeEvent extends buildVdsPlayerEvent(
+  'fullscreenchange',
+) {}
 
 /**
  * Fired when the frame at the current playback position of the media has finished loading; often

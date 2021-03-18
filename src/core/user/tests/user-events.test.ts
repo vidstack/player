@@ -4,11 +4,11 @@ import { spy, stub } from 'sinon';
 import { FakeMediaProvider } from '../../fakes/FakeMediaProvider';
 import { emitEvent } from '../../fakes/helpers';
 import {
-  VdsUserMutedChange,
+  VdsUserMutedChangeEvent,
   VdsUserPauseEvent,
   VdsUserPlayEvent,
-  VdsUserSeeked,
-  VdsUserVolumeChange,
+  VdsUserSeekedEvent,
+  VdsUserVolumeChangeEvent,
 } from '../user.events';
 
 describe('user events', () => {
@@ -49,27 +49,27 @@ describe('user events', () => {
     expect(pauseSpy).to.have.been.calledOnce;
   });
 
-  it(`should request provider to mute when ${VdsUserMutedChange.TYPE} is fired`, async () => {
+  it(`should request provider to mute when ${VdsUserMutedChangeEvent.TYPE} is fired`, async () => {
     const mutedSpy = spy(provider, 'setMuted');
     stub(provider, 'canPlay').get(() => true);
-    dispatchUserRequest(new VdsUserMutedChange({ detail: true }));
-    await oneEvent(provider, VdsUserMutedChange.TYPE);
+    dispatchUserRequest(new VdsUserMutedChangeEvent({ detail: true }));
+    await oneEvent(provider, VdsUserMutedChangeEvent.TYPE);
     expect(mutedSpy).to.have.been.calledOnceWith(true);
   });
 
-  it(`should request provider to change volume when ${VdsUserVolumeChange.TYPE} is fired`, async () => {
+  it(`should request provider to change volume when ${VdsUserVolumeChangeEvent.TYPE} is fired`, async () => {
     const volumeSpy = spy(provider, 'setVolume');
     stub(provider, 'canPlay').get(() => true);
-    dispatchUserRequest(new VdsUserVolumeChange({ detail: 0.83 }));
-    await oneEvent(provider, VdsUserVolumeChange.TYPE);
+    dispatchUserRequest(new VdsUserVolumeChangeEvent({ detail: 0.83 }));
+    await oneEvent(provider, VdsUserVolumeChangeEvent.TYPE);
     expect(volumeSpy).to.have.been.calledOnceWith(0.83);
   });
 
-  it(`should request provider to change time when ${VdsUserSeeked.TYPE} is fired`, async () => {
+  it(`should request provider to change time when ${VdsUserSeekedEvent.TYPE} is fired`, async () => {
     const currentTimeSpy = spy(provider, 'setCurrentTime');
     stub(provider, 'canPlay').get(() => true);
-    dispatchUserRequest(new VdsUserSeeked({ detail: 23 }));
-    await oneEvent(provider, VdsUserSeeked.TYPE);
+    dispatchUserRequest(new VdsUserSeekedEvent({ detail: 23 }));
+    await oneEvent(provider, VdsUserSeekedEvent.TYPE);
     expect(currentTimeSpy).to.have.been.calledOnceWith(23);
   });
 

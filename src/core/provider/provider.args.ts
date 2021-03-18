@@ -28,6 +28,7 @@ import {
   VdsWaitingEvent,
 } from '../../core';
 import { Callback } from '../../shared/types';
+import { VdsFullscreenChangeEvent } from '../player.events';
 
 export interface ProviderProps {
   aspectRatio: string | undefined;
@@ -50,6 +51,7 @@ export interface ProviderActions {
   onEmptied: Callback<CustomEvent>;
   onEnded: Callback<CustomEvent>;
   onError: Callback<CustomEvent>;
+  onFullscreenChange: Callback<CustomEvent>;
   onLoadedData: Callback<CustomEvent>;
   onLoadedMetadata: Callback<CustomEvent>;
   onLoadStart: Callback<CustomEvent>;
@@ -135,6 +137,9 @@ export const PROVIDER_STORYBOOK_ARG_TYPES: ProviderStorybookArgs = {
   },
   onError: {
     action: VdsErrorEvent.TYPE,
+  },
+  onFullscreenChange: {
+    action: VdsFullscreenChangeEvent.TYPE,
   },
   onLoadedData: {
     action: VdsLoadedDataEvent.TYPE,

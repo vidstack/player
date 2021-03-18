@@ -42,6 +42,7 @@ const Template: Story<HlsProviderProps & HlsProviderActions> = ({
   onEmptied,
   onEnded,
   onError,
+  onFullscreenChange,
   onLoadedData,
   onLoadedMetadata,
   onLoadStart,
@@ -95,6 +96,7 @@ const Template: Story<HlsProviderProps & HlsProviderActions> = ({
       @vds-emptied="${onEmptied}"
       @vds-ended="${onEnded}"
       @vds-error="${onError}"
+      @vds-fullscreenchange="${onFullscreenChange}"
       @vds-loadeddata="${onLoadedData}"
       @vds-loadstart="${onLoadStart}"
       @vds-loadedmetadata="${onLoadedMetadata}"
