@@ -209,10 +209,10 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
     this.context.currentPoster = newPoster;
   }
 
-  @property({ type: Boolean, attribute: 'auto-pip' })
+  @property({ type: Boolean, attribute: 'autopictureinpicture' })
   autoPiP?: boolean;
 
-  @property({ type: Boolean, attribute: 'disable-pip' })
+  @property({ type: Boolean, attribute: 'disablepictureinpicture' })
   disablePiP?: boolean;
 
   // -------------------------------------------------------------------------------------------

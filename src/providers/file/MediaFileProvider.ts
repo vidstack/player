@@ -116,19 +116,19 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   @property({ type: Number })
   height?: number;
 
-  @property({ attribute: 'controls-list' })
+  @property({ attribute: 'controlslist' })
   controlsList?: MediaControlsList;
 
-  @property({ attribute: 'cross-origin' })
+  @property({ attribute: 'crossorigin' })
   crossOrigin?: MediaCrossOriginOption;
 
-  @property({ type: Boolean, attribute: 'default-muted' })
+  @property({ type: Boolean, attribute: 'defaultmuted' })
   defaultMuted?: boolean;
 
-  @property({ type: Number, attribute: 'default-playback-rate' })
+  @property({ type: Number, attribute: 'defaultplaybackrate' })
   defaultPlaybackRate?: number;
 
-  @property({ type: Boolean, attribute: 'disable-remote-playback' })
+  @property({ type: Boolean, attribute: 'disableremoteplayback' })
   disableRemotePlayback?: boolean;
 
   @property()
