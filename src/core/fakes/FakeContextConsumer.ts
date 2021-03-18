@@ -132,6 +132,26 @@ export class FakeContextConsumer
   @uuidContext.consume()
   uuid = uuidContext.defaultValue;
 
+  @internalProperty()
+  @playerContext.fullscreen.consume()
+  fullscreen = playerContext.fullscreen.defaultValue;
+
+  @internalProperty()
+  @playerContext.canRequestFullscreen.consume()
+  canRequestFullscreen = playerContext.canRequestFullscreen.defaultValue;
+
+  @internalProperty()
+  @playerContext.screenOrientation.consume()
+  screenOrientation = playerContext.screenOrientation.defaultValue;
+
+  @internalProperty()
+  @playerContext.canOrientScreen.consume()
+  canOrientScreen = playerContext.canOrientScreen.defaultValue;
+
+  @internalProperty()
+  @playerContext.screenOrientationLocked.consume()
+  screenOrientationLocked = playerContext.screenOrientationLocked.defaultValue;
+
   render(): TemplateResult {
     return html`<div>fake consumer</div>`;
   }

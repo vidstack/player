@@ -4,8 +4,10 @@ import createContext, {
   derivedContext,
 } from '@wcom/context';
 
+import { canOrientScreen, IS_CLIENT } from '../utils/support';
 import { MediaType } from './MediaType';
 import { PlayerProps } from './player.types';
+import { ScreenOrientation } from './ScreenOrientation';
 import { createTimeRanges } from './time-ranges';
 import { ViewType } from './ViewType';
 
@@ -54,12 +56,17 @@ export const playerContext: PlayerContext = {
     },
   ),
   waiting: createContext<boolean>(false),
+  canOrientScreen: createContext<boolean>(canOrientScreen()),
+  canPlay: createContext<boolean>(false),
+  canPlayThrough: createContext<boolean>(false),
+  canRequestFullscreen: createContext<boolean>(false),
   controls: createContext<boolean>(false),
   currentPoster: createContext(''),
   currentSrc: createContext(''),
   currentTime: createContext(0),
   duration,
   ended: createContext<boolean>(false),
+  fullscreen: createContext<boolean>(false),
   isAudio: derivedContext([mediaType], m => m === MediaType.Audio),
   isAudioView: derivedContext([viewType], v => v === ViewType.Audio),
   isVideo: derivedContext([mediaType], m => m === MediaType.Video),
@@ -68,11 +75,13 @@ export const playerContext: PlayerContext = {
   mediaType,
   muted: createContext<boolean>(false),
   paused: createContext<boolean>(true),
-  canPlay: createContext<boolean>(false),
-  canPlayThrough: createContext<boolean>(false),
   played: createContext(createTimeRanges()),
   playing: createContext<boolean>(false),
   playsinline: createContext<boolean>(false),
+  screenOrientation: createContext<ScreenOrientation | undefined>(
+    IS_CLIENT ? (screen?.orientation?.type as ScreenOrientation) : undefined,
+  ),
+  screenOrientationLocked: createContext<boolean>(false),
   seekable,
   seekableAmount: derivedContext(
     [seekable, duration] as const,
