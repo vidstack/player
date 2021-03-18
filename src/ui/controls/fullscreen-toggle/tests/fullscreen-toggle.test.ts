@@ -1,21 +1,28 @@
 import { elementUpdated, expect, html, oneEvent } from '@open-wc/testing';
 
-import { FakeMediaProvider, VdsUserMutedChangeEvent } from '../../../../core';
+import {
+  FakeMediaProvider,
+  VdsUserFullscreenChangeEvent,
+} from '../../../../core';
 import { buildFakeMediaProvider } from '../../../../core/fakes/helpers';
 import { getSlottedChildren } from '../../../../utils/dom';
-import { MuteToggle } from '../MuteToggle';
-import { MUTE_TOGGLE_TAG_NAME } from '../vds-mute-toggle';
+import { FullscreenToggle } from '../FullscreenToggle';
+import { FULLSCREEN_TOGGLE_TAG_NAME } from '../vds-fullscreen-toggle';
 
-describe(MUTE_TOGGLE_TAG_NAME, () => {
-  async function buildFixture(): Promise<[FakeMediaProvider, MuteToggle]> {
+describe(FULLSCREEN_TOGGLE_TAG_NAME, () => {
+  async function buildFixture(): Promise<
+    [FakeMediaProvider, FullscreenToggle]
+  > {
     const provider = await buildFakeMediaProvider(html`
-      <vds-mute-toggle>
-        <div class="mute" slot="mute"></div>
-        <div class="unmute" slot="unmute"></div>
-      </vds-mute-toggle>
+      <vds-fullscreen-toggle>
+        <div class="enter" slot="enter"></div>
+        <div class="exit" slot="exit"></div>
+      </vds-fullscreen-toggle>
     `);
 
-    const toggle = provider.querySelector(MUTE_TOGGLE_TAG_NAME) as MuteToggle;
+    const toggle = provider.querySelector(
+      FULLSCREEN_TOGGLE_TAG_NAME,
+    ) as FullscreenToggle;
 
     return [provider, toggle];
   }
@@ -23,10 +30,10 @@ describe(MUTE_TOGGLE_TAG_NAME, () => {
   it('should render dom correctly', async () => {
     const [, toggle] = await buildFixture();
     expect(toggle).dom.to.equal(`
-      <vds-mute-toggle>
-        <div class="mute" slot="mute"></div>
-        <div class="unmute" slot="unmute" hidden></div>
-      </vds-mute-toggle>
+      <vds-fullscreen-toggle>
+        <div class="enter" slot="enter"></div>
+        <div class="exit" slot="exit" hidden></div>
+      </vds-fullscreen-toggle>
     `);
   });
 
@@ -36,42 +43,42 @@ describe(MUTE_TOGGLE_TAG_NAME, () => {
       <vds-control
         id="root"
         class="root"
-        label="Mute"
+        label="Fullscreen"
         part="root control"
         exportparts="button: control-button, root: control-root, root-mobile: control-root-mobile"
       >
-        <slot name="unmute"></slot>
-        <slot name="mute"></slot>
+        <slot name="exit"></slot>
+        <slot name="enter"></slot>
       </button>
     `);
   });
 
-  it('should render mute/unmute slots', async () => {
+  it('should render enter/exit slots', async () => {
     const [, toggle] = await buildFixture();
-    const muteSlot = getSlottedChildren(toggle, 'mute')[0];
-    const unmuteSlot = getSlottedChildren(toggle, 'unmute')[0];
-    expect(muteSlot).to.have.class('mute');
-    expect(unmuteSlot).to.have.class('unmute');
+    const enterSlot = getSlottedChildren(toggle, 'enter')[0];
+    const exitSlot = getSlottedChildren(toggle, 'exit')[0];
+    expect(enterSlot).to.have.class('enter');
+    expect(exitSlot).to.have.class('exit');
   });
 
-  it('should set unmute slot to hidden when unmuted', async () => {
+  it('should set exit slot to hidden when not fullscreened', async () => {
     const [, toggle] = await buildFixture();
     toggle.on = false;
     await elementUpdated(toggle);
-    const muteSlot = getSlottedChildren(toggle, 'mute')[0];
-    const unmuteSlot = getSlottedChildren(toggle, 'unmute')[0];
-    expect(muteSlot).to.not.have.attribute('hidden');
-    expect(unmuteSlot).to.have.attribute('hidden', '');
+    const enterSlot = getSlottedChildren(toggle, 'enter')[0];
+    const exitSlot = getSlottedChildren(toggle, 'exit')[0];
+    expect(enterSlot).to.not.have.attribute('hidden');
+    expect(exitSlot).to.have.attribute('hidden', '');
   });
 
-  it('should set mute slot to hidden when muted', async () => {
+  it('should set enter slot to hidden when fullscreened', async () => {
     const [, toggle] = await buildFixture();
     toggle.on = true;
     await elementUpdated(toggle);
-    const muteSlot = getSlottedChildren(toggle, 'mute')[0];
-    const unmuteSlot = getSlottedChildren(toggle, 'unmute')[0];
-    expect(muteSlot).to.have.attribute('hidden', '');
-    expect(unmuteSlot).to.not.have.attribute('hidden');
+    const enterSlot = getSlottedChildren(toggle, 'enter')[0];
+    const exitSlot = getSlottedChildren(toggle, 'exit')[0];
+    expect(enterSlot).to.have.attribute('hidden', '');
+    expect(exitSlot).to.not.have.attribute('hidden');
   });
 
   it('should toggle pressed state correctly', async () => {
@@ -99,30 +106,36 @@ describe(MUTE_TOGGLE_TAG_NAME, () => {
     expect(control).to.have.attribute('disabled');
   });
 
-  it(`should emit ${VdsUserMutedChangeEvent.TYPE} with true detail clicked while unmuted`, async () => {
+  it(`should emit ${VdsUserFullscreenChangeEvent.TYPE} with true detail when clicked while not fullscreened`, async () => {
     const [, toggle] = await buildFixture();
     toggle.on = false;
     await elementUpdated(toggle);
     setTimeout(() => toggle.click());
-    const { detail } = await oneEvent(toggle, VdsUserMutedChangeEvent.TYPE);
+    const { detail } = await oneEvent(
+      toggle,
+      VdsUserFullscreenChangeEvent.TYPE,
+    );
     expect(detail).to.be.true;
   });
 
-  it(`should emit ${VdsUserMutedChangeEvent.TYPE} with false detail when clicked while muted`, async () => {
+  it(`should emit ${VdsUserFullscreenChangeEvent.TYPE} with false detail when clicked while fullscreened`, async () => {
     const [, toggle] = await buildFixture();
     toggle.on = true;
     await elementUpdated(toggle);
     setTimeout(() => toggle.click());
-    const { detail } = await oneEvent(toggle, VdsUserMutedChangeEvent.TYPE);
+    const { detail } = await oneEvent(
+      toggle,
+      VdsUserFullscreenChangeEvent.TYPE,
+    );
     expect(detail).to.be.false;
   });
 
-  it('should receive muted context updates', async () => {
+  it('should receive fullscreen context updates', async () => {
     const [provider, toggle] = await buildFixture();
-    provider.context.muted = true;
+    provider.context.fullscreen = true;
     await elementUpdated(toggle);
     expect(toggle.on).to.be.true;
-    provider.context.muted = false;
+    provider.context.fullscreen = false;
     await elementUpdated(toggle);
     expect(toggle.on).to.be.false;
   });

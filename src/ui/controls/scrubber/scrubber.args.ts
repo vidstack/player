@@ -1,4 +1,4 @@
-import { VdsUserSeeked, VdsUserSeeking } from '../../../core';
+import { VdsUserSeekedEvent, VdsUserSeekingEvent } from '../../../core';
 import { SLIDER_STORYBOOK_ARG_TYPES } from '../slider';
 import {
   ScrubberActions,
@@ -65,9 +65,9 @@ export const SCRUBBER_STORYBOOK_ARG_TYPES: Partial<ScrubberStorybookArgs> = {
     defaultValue: 1800,
   },
   onUserSeeked: {
-    action: VdsUserSeeked.TYPE,
+    action: VdsUserSeekedEvent.TYPE,
   },
   onUserSeeking: {
-    action: VdsUserSeeking.TYPE,
+    action: VdsUserSeekingEvent.TYPE,
   },
 };

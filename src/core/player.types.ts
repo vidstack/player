@@ -55,9 +55,32 @@ export interface PlayerProps {
   readonly buffered: TimeRanges;
 
   /**
-   * Whether playback has temporarily stopped because of a lack of temporary data.
+   * Whether the native Screen Orientation API is available.
    */
-  readonly waiting: boolean;
+  readonly canOrientScreen: boolean;
+
+  /**
+   * Whether the user agent can play the media, but estimates that **not enough** data has been
+   * loaded to play the media up to its end without having to stop for further buffering of
+   * content.
+   */
+  readonly canPlay: boolean;
+
+  /**
+   * Whether the user agent can play the media, and estimates that enough data has been
+   * loaded to play the media up to its end without having to stop for further buffering
+   * of content.
+   */
+  readonly canPlayThrough: boolean;
+
+  /**
+   * Whether the native browser fullscreen API is available, or the current provider can
+   * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
+   * only that it can be attempted.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   */
+  readonly canRequestFullscreen: boolean;
 
   /**
    * Indicates whether a user interface should be shown for controlling the resource. Set this to
@@ -111,6 +134,11 @@ export interface PlayerProps {
   readonly ended: boolean;
 
   /**
+   * Whether the player is currently in fullscreen mode.
+   */
+  readonly fullscreen: boolean;
+
+  /**
    * Whether media should automatically start playing from the beginning (replay) every time
    * it ends.
    *
@@ -138,39 +166,6 @@ export interface PlayerProps {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused
    */
   paused: boolean;
-
-  /**
-   * Whether the native Screen Orientation API is available.
-   */
-  readonly canOrientScreen: boolean;
-
-  /**
-   * Whether the user agent can play the media, but estimates that **not enough** data has been
-   * loaded to play the media up to its end without having to stop for further buffering of
-   * content.
-   */
-  readonly canPlay: boolean;
-
-  /**
-   * Whether the user agent can play the media, and estimates that enough data has been
-   * loaded to play the media up to its end without having to stop for further buffering
-   * of content.
-   */
-  readonly canPlayThrough: boolean;
-
-  /**
-   * Whether the native browser fullscreen API is available, or the current provider can
-   * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
-   * only that it can be attempted.
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
-   */
-  readonly canRequestFullscreen: boolean;
-
-  /**
-   * Whether the player is currently in fullscreen mode.
-   */
-  readonly fullscreen: boolean;
 
   /**
    * Contains the ranges of the media source that the browser has played, if any.
@@ -236,6 +231,11 @@ export interface PlayerProps {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
    */
   volume: number;
+
+  /**
+   * Whether playback has temporarily stopped because of a lack of temporary data.
+   */
+  readonly waiting: boolean;
 }
 
 export interface PlayerMethods {

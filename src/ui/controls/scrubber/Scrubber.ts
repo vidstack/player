@@ -10,7 +10,11 @@ import {
 } from 'lit-element';
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
-import { playerContext, VdsUserSeeked, VdsUserSeeking } from '../../../core';
+import {
+  playerContext,
+  VdsUserSeekedEvent,
+  VdsUserSeekingEvent,
+} from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { getSlottedChildren } from '../../../utils/dom';
@@ -416,9 +420,9 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
   protected handleSliderValueChange(e: VdsSliderValueChangeEvent): void {
     this.previewTime = e.detail;
-    this.dispatchEvent(new VdsUserSeeking({ detail: e.detail }));
+    this.dispatchEvent(new VdsUserSeekingEvent({ detail: e.detail }));
     if (!this._isDragging) {
-      this.dispatchEvent(new VdsUserSeeked({ detail: this.previewTime }));
+      this.dispatchEvent(new VdsUserSeekedEvent({ detail: this.previewTime }));
     }
   }
 
@@ -433,7 +437,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     this._isDragging = false;
     this.updatePreviewPosition(e.originalEvent as PointerEvent);
     this.hidePreview();
-    this.dispatchEvent(new VdsUserSeeked({ detail: this.previewTime }));
+    this.dispatchEvent(new VdsUserSeekedEvent({ detail: this.previewTime }));
   }
 
   // -------------------------------------------------------------------------------------------

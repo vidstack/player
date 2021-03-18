@@ -55,7 +55,6 @@ export const playerContext: PlayerContext = {
       return end > duration ? duration : end;
     },
   ),
-  waiting: createContext<boolean>(false),
   canOrientScreen: createContext<boolean>(canOrientScreen()),
   canPlay: createContext<boolean>(false),
   canPlayThrough: createContext<boolean>(false),
@@ -93,6 +92,7 @@ export const playerContext: PlayerContext = {
   started: createContext<boolean>(false),
   viewType,
   volume: createContext(1),
+  waiting: createContext<boolean>(false),
 };
 
 export interface PlayerContextProps extends PlayerProps {

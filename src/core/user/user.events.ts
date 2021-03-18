@@ -12,12 +12,13 @@ declare global {
 }
 
 export interface UserEvents {
-  userplay: VdsCustomEvent<void>;
-  userpause: VdsCustomEvent<void>;
   usermutedchange: VdsCustomEvent<boolean>;
-  uservolumechange: VdsCustomEvent<number>;
-  userseeking: VdsCustomEvent<number>;
+  userfullscreenchange: VdsCustomEvent<boolean>;
+  userpause: VdsCustomEvent<void>;
+  userplay: VdsCustomEvent<void>;
   userseeked: VdsCustomEvent<number>;
+  userseeking: VdsCustomEvent<number>;
+  uservolumechange: VdsCustomEvent<number>;
 }
 
 export type VdsUserEvents = VdsEvents<UserEvents>;
@@ -29,16 +30,22 @@ export function buildVdsUserEvent<
   return class VdsUserEvent extends buildVdsEvent<DetailType>(type) {};
 }
 
-export class VdsUserPlayEvent extends buildVdsUserEvent('userplay') {}
+export class VdsUserMutedChangeEvent extends buildVdsUserEvent(
+  'usermutedchange',
+) {}
+
+export class VdsUserFullscreenChangeEvent extends buildVdsUserEvent(
+  'userfullscreenchange',
+) {}
 
 export class VdsUserPauseEvent extends buildVdsUserEvent('userpause') {}
 
-export class VdsUserMutedChange extends buildVdsUserEvent('usermutedchange') {}
+export class VdsUserPlayEvent extends buildVdsUserEvent('userplay') {}
 
-export class VdsUserVolumeChange extends buildVdsUserEvent(
+export class VdsUserSeekedEvent extends buildVdsUserEvent('userseeked') {}
+
+export class VdsUserSeekingEvent extends buildVdsUserEvent('userseeking') {}
+
+export class VdsUserVolumeChangeEvent extends buildVdsUserEvent(
   'uservolumechange',
 ) {}
-
-export class VdsUserSeeking extends buildVdsUserEvent('userseeking') {}
-
-export class VdsUserSeeked extends buildVdsUserEvent('userseeked') {}

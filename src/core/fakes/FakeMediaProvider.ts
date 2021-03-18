@@ -77,16 +77,12 @@ export class FakeMediaProvider extends MediaProvider {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Support Checks
+  // Playback
   // -------------------------------------------------------------------------------------------
 
   canPlayType(): CanPlay {
     return CanPlay.No;
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Methods
-  // -------------------------------------------------------------------------------------------
 
   async play(): Promise<void> {
     this.context.paused = false;
@@ -96,6 +92,18 @@ export class FakeMediaProvider extends MediaProvider {
   async pause(): Promise<void> {
     this.context.paused = true;
     this.dispatchEvent(new VdsPauseEvent());
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Fullscreen
+  // -------------------------------------------------------------------------------------------
+
+  async requestFullscreen(): Promise<void> {
+    this.context.fullscreen = true;
+  }
+
+  async exitFullscreen(): Promise<void> {
+    this.context.fullscreen = false;
   }
 
   // -------------------------------------------------------------------------------------------

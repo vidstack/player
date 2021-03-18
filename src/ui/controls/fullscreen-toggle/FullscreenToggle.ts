@@ -1,25 +1,25 @@
 import { html, property, query, TemplateResult } from 'lit-element';
 
-import { playerContext, VdsUserMutedChangeEvent } from '../../../core';
+import { playerContext, VdsUserFullscreenChangeEvent } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { buildExportPartsAttr } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { Control } from '../control';
 import { Toggle } from '../toggle';
-import { MuteToggleProps } from './mute-toggle.types';
+import { FullscreenToggleProps } from './fullscreen-toggle.types';
 
 /**
- * A control for toggling the muted state of the player.
+ * A control for toggling the fullscreen mode of the player.
  *
  * ## Tag
  *
- * @tagname vds-mute-toggle
+ * @tagname vds-fullscreen-toggle
  *
  * ## Slots
  *
- * @slot mute - The content to show when the `muted` state is `false`.
- * @slot unmute - The content to show when the `muted` state is `true`.
+ * @slot enter - The content to show when the `fullscreen` state is `false`.
+ * @slot exit - The content to show when the `fullscreen` state is `true`.
  *
  * ## CSS Parts
  *
@@ -30,25 +30,27 @@ import { MuteToggleProps } from './mute-toggle.types';
  *
  * @example
  * ```html
- * <vds-mute-toggle>
+ * <vds-fullscreen-toggle>
  *   <!-- Showing -->
- *   <div slot="mute"></div>
+ *   <div slot="enter"></div>
  *   <!-- Hidden - `hidden` attribute will automatically be applied/removed -->
- *   <div slot="unmute" hidden></div>
- * </vds-mute-toggle>
+ *   <div slot="exit" hidden></div>
+ * </vds-fullscreen-toggle>
  * ```
  */
-export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
+export class FullscreenToggle
+  extends FocusMixin(Toggle)
+  implements FullscreenToggleProps {
   @query('#root') rootEl!: Control;
 
   static get parts(): string[] {
     return ['root', 'control', ...Control.parts.map(part => `control-${part}`)];
   }
 
-  @playerContext.muted.consume()
-  on = playerContext.muted.defaultValue;
+  @playerContext.fullscreen.consume()
+  on = playerContext.fullscreen.defaultValue;
 
-  @property() label?: string = 'Mute';
+  @property() label?: string = 'Fullscreen';
 
   @property({ type: Boolean, reflect: true }) disabled = false;
 
@@ -79,7 +81,7 @@ export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
         ?pressed="${this.on}"
         ?disabled="${this.disabled}"
         described-by="${ifNonEmpty(this.describedBy)}"
-        @click="${this.handleTogglingMute}"
+        @click="${this.handleTogglingFullscreen}"
         exportparts="${this.getRootExportPartsAttr()}"
       >
         ${this.renderToggle()}
@@ -111,16 +113,16 @@ export class MuteToggle extends FocusMixin(Toggle) implements MuteToggleProps {
   }
 
   protected getOnSlotName(): string {
-    return 'unmute';
+    return 'exit';
   }
 
   protected getOffSlotName(): string {
-    return 'mute';
+    return 'enter';
   }
 
-  protected handleTogglingMute(originalEvent: Event): void {
+  protected handleTogglingFullscreen(originalEvent: Event): void {
     this.dispatchEvent(
-      new VdsUserMutedChangeEvent({
+      new VdsUserFullscreenChangeEvent({
         originalEvent,
         detail: !this.on,
       }),
