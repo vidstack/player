@@ -40,12 +40,13 @@ export abstract class VdsCustomEvent<
 
 export function buildVdsEvent<DetailType>(
   type: string,
+  prefix = `${LIB_PREFIX}-`,
 ): VdsCustomEventConstructor<DetailType> {
   return class VdsEvent extends VdsCustomEvent<DetailType> {
-    static readonly TYPE = `${LIB_PREFIX}-${type}`;
+    static readonly TYPE = `${prefix}${type}`;
 
     constructor(eventInit?: VdsEventInit<DetailType>) {
-      super(`${LIB_PREFIX}-${type}`, eventInit);
+      super(`${prefix}${type}`, eventInit);
     }
   };
 }
