@@ -46,6 +46,17 @@ export const canObserveIntersection = (): boolean => {
 };
 
 /**
+ * Checks if the ScreenOrientation API is available.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+ */
+export const canOrientScreen = (): boolean =>
+  IS_CLIENT &&
+  !isUndefined(screen.orientation) &&
+  isFunction(screen.orientation.lock) &&
+  isFunction(screen.orientation.unlock);
+
+/**
  * Checks if the screen orientation can be changed.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation

@@ -9,6 +9,7 @@ import {
 } from 'lit-element';
 
 import { playerContext } from '../../core';
+import { IS_IOS } from '../../utils/support';
 import { uiStyles } from './ui.css';
 
 /**
@@ -16,8 +17,8 @@ import { uiStyles } from './ui.css';
  *
  * This is a general container to hold your UI components but it also enables you to show/hide
  * the player UI when media is not ready for playback by applying styles to the `root/root-hidden`
- * CSS parts. It might contain future enhancements such as show/hiding UI depending on whether
- * native UI can't be hidden (*cough* iOS).
+ * CSS parts. It also handles showing/hiding UI depending on whether native UI can't be
+ * hidden (*cough* iOS).
  *
  * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `root-hidden` CSS part.
  *
@@ -82,8 +83,16 @@ export class Ui extends LitElement {
   protected isAudioView = playerContext.isAudioView.defaultValue;
 
   @internalProperty()
+  @playerContext.fullscreen.consume()
+  protected isFulscreenActive = playerContext.fullscreen.defaultValue;
+
+  @internalProperty()
   @playerContext.isVideoView.consume()
   protected isVideoView = playerContext.isVideoView.defaultValue;
+
+  @internalProperty()
+  @playerContext.playsinline.consume()
+  protected playsinline = playerContext.playsinline.defaultValue;
 
   /**
    * The component's root element.
@@ -134,7 +143,15 @@ export class Ui extends LitElement {
    * Whether the UI should be hidden.
    */
   protected isUiHidden(): boolean {
-    return !this.canPlay;
+    return (
+      !this.canPlay ||
+      // If iOS Safari and the view type is currently video then we hide the custom UI depending
+      // on whether playsinline is set and fullscreen is not active, or if fullscreen is active
+      // we should always hide.
+      (IS_IOS &&
+        this.isVideoView &&
+        (!this.playsinline || this.isFulscreenActive))
+    );
   }
 
   /**

@@ -1,3 +1,4 @@
+import { listenTo } from '@wcom/events';
 import {
   CSSResultArray,
   html,
@@ -16,6 +17,8 @@ import {
 } from '../../core';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
+import { Unsubscribe } from '../../shared/types';
+import { isFunction, isUndefined, noop } from '../../utils/unit';
 import { MediaFileProvider, MediaFileProviderEngine } from '../file';
 import { videoStyles } from './video.css';
 import { VideoProviderProps } from './video.types';
@@ -61,6 +64,8 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
 export class VideoProvider<EngineType = MediaFileProviderEngine>
   extends MediaFileProvider<EngineType>
   implements VideoProviderProps {
+  protected mediaEl?: HTMLVideoElement;
+
   static get styles(): CSSResultArray {
     return [videoStyles];
   }
@@ -81,7 +86,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
   }
 
   firstUpdated(changedProps: PropertyValues): void {
-    this.mediaEl = this.shadowRoot?.querySelector('video') as HTMLMediaElement;
+    this.mediaEl = this.shadowRoot?.querySelector('video') as HTMLVideoElement;
     super.firstUpdated(changedProps);
   }
 
@@ -224,5 +229,95 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
     }
 
     return MediaType.Unknown;
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Fullscreen
+  // -------------------------------------------------------------------------------------------
+
+  get fullscreen(): boolean {
+    return this.canRequestFullscreenNatively
+      ? this.isNativeFullscreenActive
+      : this.mediaEl?.webkitDisplayingFullscreen ?? false;
+  }
+
+  get canRequestFullscreen(): boolean {
+    return this.canRequestFullscreenNatively || this.canRequestFullscreenOniOS;
+  }
+
+  /**
+   * Whether the video fullscreen API is available on iOS Safari.
+   *
+   * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1628805-webkitsupportsfullscreen
+   */
+  get canRequestFullscreenOniOS(): boolean {
+    return (
+      isFunction(this.mediaEl?.webkitEnterFullscreen) &&
+      (this.mediaEl?.webkitSupportsFullscreen ?? false)
+    );
+  }
+
+  protected async requestFullscreenOniOS(): Promise<void> {
+    return this.mediaEl?.webkitEnterFullscreen?.();
+  }
+
+  protected async exitFullscreenOniOS(): Promise<void> {
+    return this.mediaEl?.webkitExitFullscreen?.();
+  }
+
+  async makeEnterFullscreenRequest(): Promise<void> {
+    return this.canRequestFullscreenNatively
+      ? super.makeEnterFullscreenRequest()
+      : this.requestFullscreenOniOS();
+  }
+
+  protected async makeExitFullscreenRequest(): Promise<void> {
+    return this.canRequestFullscreenNatively
+      ? super.makeExitFullscreenRequest()
+      : this.exitFullscreenOniOS();
+  }
+
+  protected addFullscreenChangeEventListener(
+    handler: (this: HTMLElement, event: Event) => void,
+  ): Unsubscribe {
+    if (this.canRequestFullscreenNatively) {
+      return super.addFullscreenChangeEventListener(handler);
+    }
+
+    if (this.canRequestFullscreenOniOS && !isUndefined(this.mediaEl)) {
+      const listeners = [
+        listenTo(
+          this.mediaEl,
+          'webkitbeginfullscreen',
+          this.handleFullscreenChange.bind(this),
+        ),
+        listenTo(
+          this.mediaEl,
+          'webkitendfullscreen',
+          this.handleFullscreenChange.bind(this),
+        ),
+      ];
+
+      return () => {
+        listeners.forEach(fn => fn());
+      };
+    }
+
+    return noop;
+  }
+
+  protected addFullscreenErrorEventListener(
+    handler: (this: HTMLElement, event: Event) => void,
+  ): Unsubscribe {
+    if (!this.canRequestFullscreenNatively) return noop;
+    return super.addFullscreenErrorEventListener(handler);
+  }
+
+  protected throwIfNoFullscreenSupport(): void {
+    if (this.canRequestFullscreen) {
+      super.throwIfNoFullscreenSupport();
+    } else if (!this.canRequestFullscreenOniOS) {
+      throw Error('The fullscreen API is currently not available on iOS.');
+    }
   }
 }

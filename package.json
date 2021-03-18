@@ -66,11 +66,13 @@
   },
   "dependencies": {
     "@lukeed/uuid": "^2.0.0",
+    "@types/fscreen": "^1.0.1",
     "@types/hls.js": "^0.13.3",
     "@types/lodash-es": "^4.17.4",
     "@wcom/context": "^2.6.1",
     "@wcom/events": "^1.0.0",
     "clsx": "^1.1.1",
+    "fscreen": "^1.2.0",
     "lit-element": "^2.0.0",
     "lodash-es": "^4.17.21",
     "tslib": "^2.1.0"

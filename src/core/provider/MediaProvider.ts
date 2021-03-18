@@ -3,13 +3,16 @@ import {
   DerivedContext,
   provideContextRecord,
 } from '@wcom/context';
-import { listen } from '@wcom/events';
+import { Disposal, listen, listenTo } from '@wcom/events';
+import fscreen from 'fscreen';
 import { LitElement, property, PropertyValues } from 'lit-element';
 
+import { Unsubscribe } from '../../shared/types';
 import { raf } from '../../utils/dom';
 import { areNumbersRoughlyEqual } from '../../utils/number';
 import { deferredPromise } from '../../utils/promise';
-import { isString, isUndefined } from '../../utils/unit';
+import { canOrientScreen } from '../../utils/support';
+import { isString, isUndefined, noop } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
 import { MediaType } from '../MediaType';
 import {
@@ -27,6 +30,7 @@ import {
   VdsViewTypeChangeEvent,
 } from '../player.events';
 import { PlayerMethods, PlayerProps } from '../player.types';
+import { ScreenOrientation, ScreenOrientationLock } from '../ScreenOrientation';
 import {
   VdsUserMutedChange,
   VdsUserPauseEvent,
@@ -53,6 +57,8 @@ export abstract class MediaProvider<EngineType = unknown>
   implements PlayerProps, PlayerMethods, ProviderProps {
   connectedCallback(): void {
     super.connectedCallback();
+    this.initScreenOrientation();
+    this.initFullscreen();
     this.dispatchEvent(new VdsConnectEvent({ detail: this }));
   }
 
@@ -81,6 +87,8 @@ export abstract class MediaProvider<EngineType = unknown>
   }
 
   disconnectedCallback(): void {
+    this.destroyScreenOrientation();
+    this.destroyFullscreen();
     this.resetRequestQueue();
     this.hardResetContext();
     this.context.viewType = ViewType.Unknown;
@@ -270,7 +278,7 @@ export abstract class MediaProvider<EngineType = unknown>
   }
 
   // -------------------------------------------------------------------------------------------
-  // Methods
+  // Playback
   // -------------------------------------------------------------------------------------------
 
   abstract play(): Promise<void>;
@@ -339,6 +347,12 @@ export abstract class MediaProvider<EngineType = unknown>
     return `min(${minPadding}, ${this.calcAspectRatio()}%)`;
   }
 
+  protected throwIfNotVideoView(): void {
+    if (!this.context.isVideoView) {
+      throw Error('Player is currently not in a video view.');
+    }
+  }
+
   // -------------------------------------------------------------------------------------------
   // User Event Handlers
   // -------------------------------------------------------------------------------------------
@@ -381,6 +395,233 @@ export abstract class MediaProvider<EngineType = unknown>
   protected handleUserVolumeChange(e: VdsUserVolumeChange): void {
     this.userEventGateway(e);
     this.volume = e.detail;
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Orientation
+  // -------------------------------------------------------------------------------------------
+
+  protected screenOrientationDisposal = new Disposal();
+
+  get screenOrientation(): ScreenOrientation | undefined {
+    return this.canOrientScreen
+      ? (screen.orientation.type as ScreenOrientation)
+      : undefined;
+  }
+
+  get screenOrientationLocked(): boolean {
+    return this.context.screenOrientationLocked;
+  }
+
+  get canOrientScreen(): boolean {
+    return canOrientScreen();
+  }
+
+  protected initScreenOrientation(): void {
+    this.context.canOrientScreen = this.canOrientScreen;
+    if (!this.canOrientScreen) return;
+    this.screenOrientationDisposal.add(
+      this.addScreenOrientationChangeEventListener(
+        this.handleOrientationChange.bind(this),
+      ),
+    );
+  }
+
+  protected destroyScreenOrientation(): void {
+    if (!this.canOrientScreen) return;
+    this.screenOrientationDisposal.empty();
+  }
+
+  protected addScreenOrientationChangeEventListener(
+    handler: (this: ScreenOrientation, event: Event) => void,
+  ): Unsubscribe {
+    return listenTo(screen.orientation, 'change', handler);
+  }
+
+  protected handleOrientationChange(): void {
+    this.context.screenOrientation = this.screenOrientation;
+  }
+
+  async lockOrientation(lockType: ScreenOrientationLock): Promise<void> {
+    this.throwIfScreenOrientationUnavailable();
+    const response = await screen.orientation.lock(lockType);
+    this.context.screenOrientationLocked = true;
+    return response;
+  }
+
+  async unlockOrientation(): Promise<void> {
+    this.throwIfScreenOrientationUnavailable();
+    const response = await screen.orientation.unlock();
+    this.context.screenOrientationLocked = false;
+    return response;
+  }
+
+  protected throwIfScreenOrientationUnavailable(): void {
+    if (!this.canOrientScreen) {
+      throw Error('Screen orientation API is not available.');
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Fullscreen
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * This will indicate the orientation to lock the screen to when in fullscreen mode and
+   * the Screen Orientation API is available. The default is `undefined` which indicates
+   * no screen orientation change.
+   */
+  @property({ attribute: 'fullscreen-orientation' })
+  fullscreenOrientation?: ScreenOrientationLock;
+
+  protected fullscreenDisposal = new Disposal();
+
+  get canRequestFullscreen(): boolean {
+    return this.context.isVideoView && this.canRequestFullscreenNatively;
+  }
+
+  /**
+   * Whether the native fullscreen API is enabled.
+   */
+  get canRequestFullscreenNatively(): boolean {
+    return fscreen.fullscreenEnabled;
+  }
+
+  get fullscreen(): boolean {
+    return this.isNativeFullscreenActive;
+  }
+
+  /**
+   * Whether the player is in fullscreen mode via the native Fullscreen API.
+   */
+  get isNativeFullscreenActive(): boolean {
+    return (
+      fscreen.fullscreenElement === this ||
+      this.matches(
+        // Property `fullscreenPseudoClass` is missing from `@types/fscreen`.
+        ((fscreen as unknown) as { fullscreenPseudoClass: string })
+          .fullscreenPseudoClass,
+      )
+    );
+  }
+
+  // Listening to ourselves here to keep state in-sync.
+  @listen(VdsViewTypeChangeEvent.TYPE)
+  protected initFullscreen(): void {
+    this.context.canRequestFullscreen =
+      this.context.isVideoView && this.canRequestFullscreen;
+  }
+
+  protected destroyFullscreen(): void {
+    if (!this.canRequestFullscreen) return;
+    if (this.fullscreen) this.exitFullscreen();
+    this.fullscreenDisposal.empty();
+  }
+
+  protected addFullscreenChangeEventListener(
+    handler: (this: HTMLElement, event: Event) => void,
+  ): Unsubscribe {
+    if (!this.canRequestFullscreen) return noop;
+    return listenTo(
+      (fscreen as unknown) as EventTarget,
+      'fullscreenchange',
+      handler,
+    );
+  }
+
+  protected addFullscreenErrorEventListener(
+    handler: (this: HTMLElement, event: Event) => void,
+  ): Unsubscribe {
+    if (!this.canRequestFullscreen) return noop;
+    return listenTo(
+      (fscreen as unknown) as EventTarget,
+      'fullscreenerror',
+      handler,
+    );
+  }
+
+  async requestFullscreen(): Promise<void> {
+    this.throwIfNoFullscreenSupport();
+    if (this.fullscreen) return;
+
+    // TODO: Check if PiP is active, if so make sure to exit.
+
+    this.fullscreenDisposal.add(
+      this.addFullscreenChangeEventListener(
+        this.handleFullscreenChange.bind(this),
+      ),
+    );
+
+    this.fullscreenDisposal.add(
+      this.addFullscreenErrorEventListener(
+        this.handleFullscreenError.bind(this),
+      ),
+    );
+
+    const response = await this.makeEnterFullscreenRequest();
+    await this.lockFullscreenOrientation();
+    return response;
+  }
+
+  protected async makeEnterFullscreenRequest(): Promise<void> {
+    return fscreen.requestFullscreen(this);
+  }
+
+  protected async lockFullscreenOrientation(): Promise<void> {
+    if (!this.canOrientScreen || isUndefined(this.fullscreenOrientation)) {
+      return;
+    }
+
+    try {
+      await this.lockOrientation(this.fullscreenOrientation);
+    } catch (e) {
+      this.dispatchEvent(new VdsErrorEvent({ detail: e }));
+    }
+  }
+
+  async exitFullscreen(): Promise<void> {
+    this.throwIfNoFullscreenSupport();
+    if (!this.fullscreen) return;
+    const response = await this.makeExitFullscreenRequest();
+    await this.unlockFullscreenOrientation();
+    return response;
+  }
+
+  protected async makeExitFullscreenRequest(): Promise<void> {
+    return fscreen.exitFullscreen();
+  }
+
+  protected async unlockFullscreenOrientation(): Promise<void> {
+    if (!this.canOrientScreen || isUndefined(this.fullscreenOrientation)) {
+      return;
+    }
+
+    try {
+      await this.unlockOrientation();
+    } catch (e) {
+      this.dispatchEvent(new VdsErrorEvent({ detail: e }));
+    }
+
+    this.context.screenOrientationLocked = false;
+  }
+
+  protected handleFullscreenChange(): void {
+    const isActive = this.fullscreen;
+    this.context.fullscreen = isActive;
+    if (!isActive) this.fullscreenDisposal.empty();
+  }
+
+  protected handleFullscreenError(event: Event): void {
+    this.dispatchEvent(new VdsErrorEvent({ detail: event }));
+  }
+
+  protected throwIfNoFullscreenSupport(): void {
+    this.throwIfNotVideoView();
+    if (!this.canRequestFullscreenNatively) {
+      throw Error(
+        'Fullscreen API is not enabled or supported in this environment.',
+      );
+    }
   }
 
   // -------------------------------------------------------------------------------------------

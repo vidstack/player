@@ -122,8 +122,8 @@ export class VdsEmpitedEvent extends buildVdsPlayerEvent('emptied') {}
 export class VdsEndedEvent extends buildVdsPlayerEvent('ended') {}
 
 /**
- * Fired when the resource could not be loaded due to an error (for example, a network connectivity
- * problem).
+ * Fired when any error has occurred within the player such as a media error, or
+ * potentially a request that cannot be fulfilled such as calling `requestFullscreen()`.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
  */

@@ -1,5 +1,6 @@
 import { CanPlay } from './CanPlay';
 import { MediaType } from './MediaType';
+import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 import { ViewType } from './ViewType';
 
 export type Source = string;
@@ -139,6 +140,11 @@ export interface PlayerProps {
   paused: boolean;
 
   /**
+   * Whether the native Screen Orientation API is available.
+   */
+  readonly canOrientScreen: boolean;
+
+  /**
    * Whether the user agent can play the media, but estimates that **not enough** data has been
    * loaded to play the media up to its end without having to stop for further buffering of
    * content.
@@ -151,6 +157,20 @@ export interface PlayerProps {
    * of content.
    */
   readonly canPlayThrough: boolean;
+
+  /**
+   * Whether the native browser fullscreen API is available, or the current provider can
+   * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
+   * only that it can be attempted.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   */
+  readonly canRequestFullscreen: boolean;
+
+  /**
+   * Whether the player is currently in fullscreen mode.
+   */
+  readonly fullscreen: boolean;
 
   /**
    * Contains the ranges of the media source that the browser has played, if any.
@@ -169,6 +189,17 @@ export interface PlayerProps {
    * Depending on the provider, changing this prop may cause the player to completely reset.
    */
   playsinline: boolean;
+
+  /**
+   * The current player orientation. It will return `undefined` if the Screen Orientation API
+   * is not available.
+   */
+  readonly screenOrientation: ScreenOrientation | undefined;
+
+  /**
+   * Whether the screen orientation is currently locked.
+   */
+  readonly screenOrientationLocked: boolean;
 
   /**
    * Contains the time ranges that the user is able to seek to, if any. This tells us which parts
@@ -221,7 +252,7 @@ export interface PlayerMethods {
   pause(): Promise<void>;
 
   /**
-   * Determines if the connected media provider can play the given `type`. The `type` is
+   * Determines if the media provider can play the given `type`. The `type` is
    * generally the media resource identifier, URL or MIME type (optional Codecs parameter).
    *
    * @examples
@@ -240,12 +271,66 @@ export interface PlayerMethods {
   canPlayType(type: string): CanPlay;
 
   /**
-   * Determines if the connected media provider "should" play the given type. "Should" in this
+   * Determines if the media provider "should" play the given type. "Should" in this
    * context refers to the `canPlayType()` method returning `Maybe` or `Probably`.
    *
    * @param type - refer to `canPlayType`.
    */
   shouldPlayType(type: string): boolean;
+
+  /**
+   * Locks the orientation of the player to the desired orientation type using the
+   * Screen Orientation API. This method will throw an error if the API is unavailable.
+   *
+   * @param lockType - The screen lock orientation type.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+   * @spec https://w3c.github.io/screen-orientation
+   */
+  lockOrientation(lockType: ScreenOrientationLock): Promise<void>;
+
+  /**
+   * Unlocks the orientation of the player to it's default state using the Screen Orientation
+   * API. This method will throw an error if the API is unavailable.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+   * @spec https://w3c.github.io/screen-orientation
+   */
+  unlockOrientation(): Promise<void>;
+
+  /**
+   * Requests to enter fullscreen mode, returning a `Promise` that will resolve if the request is
+   * made, or reject with a reason for failure.
+   *
+   * Do not rely on a resolved promise to determine if the player is in fullscreen or not. The only
+   * way to be certain is by listening to the `vds-fullscreen-change` event.
+   *
+   * Some common reasons for failure are:
+   *
+   * - The fullscreen API is not available.
+   * - The request is made when `viewType` is `audio`.
+   * - The user has not interacted with the page yet.
+   *
+   * @param options - When supplied, options's navigationUI member indicates whether showing
+   * navigation UI while in fullscreen is preferred or not. If set to "show", navigation simplicity
+   * is preferred over screen space, and if set to "hide", more screen space is preferred. User
+   * agents are always free to honor user preference over the application's. The default value
+   * "auto" indicates no application preference.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   * @spec https://fullscreen.spec.whatwg.org
+   */
+  requestFullscreen(): Promise<void>;
+
+  /**
+   * Requests to exit fullscreen mode, returning a `Promise` that will resolve if the request
+   * is successful, or reject with a reason for failure. Refer to `requestFullscreen()` for more
+   * information.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   * @spec https://fullscreen.spec.whatwg.org
+   */
+  exitFullscreen(): Promise<void>;
 }
 
 // V8ToIstanbul fails when no value is exported.
