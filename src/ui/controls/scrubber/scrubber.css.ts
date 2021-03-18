@@ -39,7 +39,7 @@ export const scrubberStyles = css`
     z-index: 10;
     min-height: 2.5px;
     pointer-events: none;
-    height: var(--vds-slider-track-height);
+    height: var(--vds-scrubber-progress-height, var(--vds-slider-track-height));
     background: var(--vds-scrubber-progress-bg, #616161);
     transform-origin: left center;
     transform: translate(0%, -50%)

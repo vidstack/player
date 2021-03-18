@@ -8,7 +8,7 @@ export const sliderStyles = css`
 
   :host {
     display: block;
-    contain: layout;
+    contain: content;
   }
 
   :host(:focus),
@@ -22,6 +22,7 @@ export const sliderStyles = css`
     border: 0;
     outline: 0;
     height: 100%;
+    margin: 0 calc(var(--vds-slider-thumb-width, 16px) / 2);
     position: relative;
     min-width: 12.5px;
     user-select: none;

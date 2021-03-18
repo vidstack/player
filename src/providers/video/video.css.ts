@@ -3,7 +3,7 @@ import { css } from 'lit-element';
 export const videoStyles = css`
   :host {
     display: block;
-    contain: layout;
+    contain: content;
   }
 
   #root {

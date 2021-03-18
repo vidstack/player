@@ -78,6 +78,7 @@ import { ScrubberProps } from './scrubber.types';
  * ## CSS Properties
  *
  * @cssprop --vds-slider-* - All slider CSS properties can be used to style the underlying `<vds-slider>` component.
+ * @cssprop --vds-scrubber-progress-height - The height of the progress bar (defaults to `--vds-slider-track-height`).
  * @cssprop --vds-scrubber-current-time - Current time of playback.
  * @cssprop --vds-scrubber-seekable - The amount of media that is seekable.
  * @cssprop --vds-scrubber-duration - The length of media playback.
@@ -490,14 +491,22 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     const rootRect = this.rootEl.getBoundingClientRect();
     const previewRect = this.currentPreviewEl.getBoundingClientRect();
 
+    // Margin on slider usually represents (thumb width / 2) so thumb is contained when on edge.
+    const sliderLeftMargin = parseFloat(
+      window.getComputedStyle(this.sliderEl.rootElement).marginLeft,
+    );
+    const sliderRightMargin = parseFloat(
+      window.getComputedStyle(this.sliderEl.rootElement).marginRight,
+    );
+
     const percent = Math.max(
       0,
       Math.min(100, (100 / rootRect.width) * (thumbPosition - rootRect.left)),
     );
 
     const left = (percent / 100) * rootRect.width - previewRect.width / 2;
-    const rightLimit = rootRect.width - previewRect.width;
-    const xPos = Math.max(0, Math.min(left, rightLimit));
+    const rightLimit = rootRect.width - previewRect.width - sliderRightMargin;
+    const xPos = Math.max(sliderLeftMargin, Math.min(left, rightLimit));
 
     this.currentPreviewEl.style.left = `${xPos}px`;
     this.currentPreviewEl.setAttribute(
