@@ -206,7 +206,7 @@ describe(SLIDER_TAG_NAME, () => {
         clientX: Math.floor(track.clientWidth / 4),
       }),
     );
-    expect(slider.value).to.equal(24);
+    expect(slider.value).to.equal(23);
   });
 
   it('should not change value when move events are fired on document and slider is not being dragged', async () => {
