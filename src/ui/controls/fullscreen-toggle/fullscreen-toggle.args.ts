@@ -1,4 +1,5 @@
 import { VdsUserFullscreenChangeEvent } from '../../../core';
+import { TOGGLE_CONTROL_STORYBOOK_ARG_TYPES } from '../toggle-control';
 import {
   FullscreenToggleActions,
   FullscreenToggleFakeProps,
@@ -12,16 +13,7 @@ export type FullscreenToggleStorybookArgs = {
 };
 
 export const FULLSCREEN_TOGGLE_STORYBOOK_ARG_TYPES: FullscreenToggleStorybookArgs = {
-  label: {
-    control: 'text',
-  },
-  describedBy: {
-    control: 'text',
-  },
-  disabled: {
-    control: 'boolean',
-    defaultValue: false,
-  },
+  ...TOGGLE_CONTROL_STORYBOOK_ARG_TYPES,
   fakeFullscreen: {
     control: 'boolean',
     defaultValue: false,

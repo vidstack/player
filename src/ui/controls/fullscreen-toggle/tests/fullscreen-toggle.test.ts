@@ -81,31 +81,6 @@ describe(FULLSCREEN_TOGGLE_TAG_NAME, () => {
     expect(exitSlot).to.not.have.attribute('hidden');
   });
 
-  it('should toggle pressed state correctly', async () => {
-    const [, toggle] = await buildFixture();
-    const control = toggle.shadowRoot?.querySelector('vds-control');
-
-    toggle.on = false;
-    await elementUpdated(toggle);
-
-    expect(control).to.not.have.attribute('pressed');
-
-    toggle.on = true;
-    await elementUpdated(toggle);
-
-    expect(control).to.have.attribute('pressed');
-  });
-
-  it('should set disabled attribute', async () => {
-    const [, toggle] = await buildFixture();
-    const control = toggle.shadowRoot?.querySelector('vds-control');
-
-    toggle.disabled = true;
-    await elementUpdated(toggle);
-
-    expect(control).to.have.attribute('disabled');
-  });
-
   it(`should emit ${VdsUserFullscreenChangeEvent.TYPE} with true detail when clicked while not fullscreened`, async () => {
     const [, toggle] = await buildFixture();
     toggle.on = false;

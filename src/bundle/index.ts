@@ -9,6 +9,7 @@ export * from '../ui/controls/playback-toggle';
 export * from '../ui/controls/scrubber';
 export * from '../ui/controls/slider';
 export * from '../ui/controls/toggle';
+export * from '../ui/controls/toggle-control';
 export * from '../ui/time/time';
 export * from '../ui/time/time-current';
 export * from '../ui/time/time-duration';

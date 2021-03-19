@@ -4,6 +4,7 @@ import '../ui/ui/vds-ui';
 import '../ui/controls/slider/vds-slider';
 import '../ui/controls/control/vds-control';
 import '../ui/controls/toggle/vds-toggle';
+import '../ui/controls/toggle-control/vds-toggle-control';
 import '../ui/controls/playback-toggle/vds-playback-toggle';
 import '../ui/controls/mute-toggle/vds-mute-toggle';
 import '../ui/controls/scrubber/vds-scrubber';

@@ -1,4 +1,5 @@
 import { VdsUserMutedChangeEvent } from '../../../core';
+import { TOGGLE_CONTROL_STORYBOOK_ARG_TYPES } from '../toggle-control';
 import {
   MuteToggleActions,
   MuteToggleFakeProps,
@@ -12,16 +13,7 @@ export type MuteToggleStorybookArgs = {
 };
 
 export const MUTE_TOGGLE_STORYBOOK_ARG_TYPES: MuteToggleStorybookArgs = {
-  label: {
-    control: 'text',
-  },
-  describedBy: {
-    control: 'text',
-  },
-  disabled: {
-    control: 'boolean',
-    defaultValue: false,
-  },
+  ...TOGGLE_CONTROL_STORYBOOK_ARG_TYPES,
   fakeMuted: {
     control: 'boolean',
     defaultValue: false,

@@ -1,4 +1,5 @@
 import { VdsUserPauseEvent, VdsUserPlayEvent } from '../../../core';
+import { TOGGLE_CONTROL_STORYBOOK_ARG_TYPES } from '../toggle-control';
 import {
   PlaybackToggleActions,
   PlaybackToggleFakeProps,
@@ -12,16 +13,7 @@ export type PlaybackToggleStorybookArgs = {
 };
 
 export const PLAYBACK_TOGGLE_STORYBOOK_ARG_TYPES: PlaybackToggleStorybookArgs = {
-  describedBy: {
-    control: 'text',
-  },
-  disabled: {
-    control: 'boolean',
-    defaultValue: false,
-  },
-  label: {
-    control: 'text',
-  },
+  ...TOGGLE_CONTROL_STORYBOOK_ARG_TYPES,
   fakePaused: {
     control: 'boolean',
     defaultValue: true,

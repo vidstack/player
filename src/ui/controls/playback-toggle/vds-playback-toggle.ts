@@ -1,6 +1,5 @@
 // ** Dependencies **
-import '../toggle/vds-toggle';
-import '../control/vds-control';
+import '../toggle-control/vds-toggle-control';
 
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
