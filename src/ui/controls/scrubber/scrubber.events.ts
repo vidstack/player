@@ -43,6 +43,6 @@ export class VdsScrubberPreviewHideEvent extends buildVdsScrubberEvent(
 /**
  * Emitted when the time being previewed changes.
  */
-export class VdsScrubberPreviewTimeUpdate extends buildVdsScrubberEvent(
+export class VdsScrubberPreviewTimeUpdateEvent extends buildVdsScrubberEvent(
   'scrubber-preview-time-update',
 ) {}

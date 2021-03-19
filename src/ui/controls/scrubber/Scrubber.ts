@@ -32,7 +32,7 @@ import { scrubberStyles } from './scrubber.css';
 import {
   VdsScrubberPreviewHideEvent,
   VdsScrubberPreviewShowEvent,
-  VdsScrubberPreviewTimeUpdate,
+  VdsScrubberPreviewTimeUpdateEvent,
 } from './scrubber.events';
 import { ScrubberProps } from './scrubber.types';
 
@@ -507,7 +507,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
     this.previewTime = this.slider.value;
     this.dispatchEvent(
-      new VdsScrubberPreviewTimeUpdate({ detail: this.previewTime }),
+      new VdsScrubberPreviewTimeUpdateEvent({ detail: this.previewTime }),
     );
 
     const thumbPosition = event.clientX;

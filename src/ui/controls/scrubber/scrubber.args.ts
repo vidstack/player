@@ -3,7 +3,7 @@ import { SLIDER_STORYBOOK_ARG_TYPES } from '../slider';
 import {
   VdsScrubberPreviewHideEvent,
   VdsScrubberPreviewShowEvent,
-  VdsScrubberPreviewTimeUpdate,
+  VdsScrubberPreviewTimeUpdateEvent,
 } from './scrubber.events';
 import {
   ScrubberActions,
@@ -82,6 +82,6 @@ export const SCRUBBER_STORYBOOK_ARG_TYPES: Partial<ScrubberStorybookArgs> = {
     action: VdsScrubberPreviewHideEvent.TYPE,
   },
   onPreviewTimeUpdate: {
-    action: VdsScrubberPreviewTimeUpdate.TYPE,
+    action: VdsScrubberPreviewTimeUpdateEvent.TYPE,
   },
 };
