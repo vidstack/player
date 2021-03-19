@@ -3,6 +3,7 @@ import {
   ExtractEventDetailType,
   VdsCustomEvent,
   VdsCustomEventConstructor,
+  VdsEventInit,
   VdsEvents,
 } from '../../shared/events';
 
@@ -27,7 +28,15 @@ export function buildVdsUserEvent<
   P extends keyof UserEvents,
   DetailType = ExtractEventDetailType<UserEvents[P]>
 >(type: P): VdsCustomEventConstructor<DetailType> {
-  return class VdsUserEvent extends buildVdsEvent<DetailType>(type) {};
+  return class VdsUserEvent extends buildVdsEvent<DetailType>(type) {
+    constructor(eventInit?: VdsEventInit<DetailType>) {
+      super({
+        composed: true,
+        bubbles: true,
+        ...(eventInit ?? {}),
+      });
+    }
+  };
 }
 
 export class VdsUserMutedChangeEvent extends buildVdsUserEvent(
