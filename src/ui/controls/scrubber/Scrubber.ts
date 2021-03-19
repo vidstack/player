@@ -17,7 +17,7 @@ import {
 } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { getSlottedChildren } from '../../../utils/dom';
+import { getSlottedChildren, raf } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { isNil } from '../../../utils/unit';
 import { formatSpokenTime } from '../../time/time';
@@ -29,6 +29,11 @@ import {
 } from '../slider';
 import { scrubberPreviewContext } from './scrubber.context';
 import { scrubberStyles } from './scrubber.css';
+import {
+  VdsScrubberPreviewHideEvent,
+  VdsScrubberPreviewShowEvent,
+  VdsScrubberPreviewTimeUpdate,
+} from './scrubber.events';
 import { ScrubberProps } from './scrubber.types';
 
 /**
@@ -207,6 +212,8 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   // Scrubber
   // -------------------------------------------------------------------------------------------
 
+  protected pointerInsideScrubber = false;
+
   /**
    * The component's root element.
    */
@@ -249,11 +256,13 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
   protected handleScrubberPointerEnter(e: PointerEvent): void {
     if (this.disabled) return;
+    this.pointerInsideScrubber = true;
     this.updatePreviewPosition(e);
     this.showPreview();
   }
 
   protected handleScrubberPointerLeave(e: PointerEvent): void {
+    this.pointerInsideScrubber = false;
     this.updatePreviewPosition(e);
     this.hidePreview();
   }
@@ -420,23 +429,25 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected handleSliderValueChange(e: VdsSliderValueChangeEvent): void {
-    this.previewTime = e.detail;
     this.dispatchEvent(new VdsUserSeekingEvent({ detail: e.detail }));
     if (!this._isDragging) {
       this.dispatchEvent(new VdsUserSeekedEvent({ detail: this.previewTime }));
     }
   }
 
-  protected handleSliderDragStart(e: VdsSliderDragStartEvent): void {
-    this.previewTime = this.slider.value;
+  protected async handleSliderDragStart(
+    e: VdsSliderDragStartEvent,
+  ): Promise<void> {
     this._isDragging = true;
     this.updatePreviewPosition(e.originalEvent as PointerEvent);
+    await raf();
     this.showPreview();
   }
 
-  protected handleSliderDragEnd(e: VdsSliderDragEndEvent): void {
+  protected async handleSliderDragEnd(e: VdsSliderDragEndEvent): Promise<void> {
     this._isDragging = false;
     this.updatePreviewPosition(e.originalEvent as PointerEvent);
+    await raf();
     this.hidePreview();
     this.dispatchEvent(new VdsUserSeekedEvent({ detail: this.previewTime }));
   }
@@ -473,19 +484,31 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected showPreview(): void {
-    if (this.disabled) return;
+    if (this.disabled || !this.shouldHidePreview) return;
     this.shouldHidePreview = false;
     this.currentPreviewEl?.removeAttribute('hidden');
+    this.dispatchEvent(new VdsScrubberPreviewShowEvent());
   }
 
   protected hidePreview(): void {
-    if (this._isDragging) return;
+    if (
+      this._isDragging ||
+      this.pointerInsideScrubber ||
+      this.currentPreviewEl?.hasAttribute('hidden')
+    )
+      return;
     this.shouldHidePreview = true;
     this.currentPreviewEl?.setAttribute('hidden', '');
+    this.dispatchEvent(new VdsScrubberPreviewHideEvent());
   }
 
   protected updatePreviewPosition(event: PointerEvent): void {
     if (isNil(this.currentPreviewEl) || this.shouldHidePreview) return;
+
+    this.previewTime = this.slider.value;
+    this.dispatchEvent(
+      new VdsScrubberPreviewTimeUpdate({ detail: this.previewTime }),
+    );
 
     const thumbPosition = event.clientX;
     const rootRect = this.rootEl.getBoundingClientRect();

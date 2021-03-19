@@ -1,6 +1,11 @@
 import { VdsUserSeekedEvent, VdsUserSeekingEvent } from '../../../core';
 import { SLIDER_STORYBOOK_ARG_TYPES } from '../slider';
 import {
+  VdsScrubberPreviewHideEvent,
+  VdsScrubberPreviewShowEvent,
+  VdsScrubberPreviewTimeUpdate,
+} from './scrubber.events';
+import {
   ScrubberActions,
   ScrubberFakeProps,
   ScrubberProps,
@@ -69,5 +74,14 @@ export const SCRUBBER_STORYBOOK_ARG_TYPES: Partial<ScrubberStorybookArgs> = {
   },
   onUserSeeking: {
     action: VdsUserSeekingEvent.TYPE,
+  },
+  onPreviewShow: {
+    action: VdsScrubberPreviewShowEvent.TYPE,
+  },
+  onPreviewHide: {
+    action: VdsScrubberPreviewHideEvent.TYPE,
+  },
+  onPreviewTimeUpdate: {
+    action: VdsScrubberPreviewTimeUpdate.TYPE,
   },
 };

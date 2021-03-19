@@ -40,4 +40,7 @@ export interface ScrubberFakeProps {
 export interface ScrubberActions extends SliderActions {
   onUserSeeking: Callback<CustomEvent>;
   onUserSeeked: Callback<CustomEvent>;
+  onPreviewShow: Callback<CustomEvent>;
+  onPreviewHide: Callback<CustomEvent>;
+  onPreviewTimeUpdate: Callback<CustomEvent>;
 }

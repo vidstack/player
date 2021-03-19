@@ -32,11 +32,13 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
   fakeCurrentTime,
   fakeSeekableAmount,
   fakeDuration,
-  onValueChange,
   onDragStart,
   onDragEnd,
   onUserSeeked,
   onUserSeeking,
+  onPreviewShow,
+  onPreviewHide,
+  onPreviewTimeUpdate,
 }) =>
   html`
     <vds-fake-media-provider
@@ -55,11 +57,13 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
         step-multiplier="${stepMultiplier}"
         orientation="${orientation}"
         throttle="${throttle}"
-        @vds-slidervaluechange="${onValueChange}"
         @vds-sliderdragstart="${onDragStart}"
         @vds-sliderdragend="${onDragEnd}"
         @vds-userseeked="${onUserSeeked}"
         @vds-userseeking="${onUserSeeking}"
+        @vds-scrubberpreviewshow="${onPreviewShow}"
+        @vds-scrubberpreviewhide="${onPreviewHide}"
+        @vds-scrubberpreviewtimeupdate="${onPreviewTimeUpdate}"
       >
         <div class="preview" slot="preview">Preview</div>
       </vds-scrubber>
