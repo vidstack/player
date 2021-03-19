@@ -6,7 +6,6 @@ import {
   ExtractEventDetailType,
   VdsCustomEvent,
   VdsCustomEventConstructor,
-  VdsEventInit,
 } from '../../shared/events';
 
 declare global {
@@ -29,14 +28,7 @@ export function buildVdsHlsEvent<
   P extends keyof HlsEvents,
   DetailType = ExtractEventDetailType<HlsEvents[P]>
 >(type: P): VdsCustomEventConstructor<DetailType> {
-  return class VdsHlsEvent extends buildVdsEvent<DetailType>(type) {
-    constructor(eventInit?: VdsEventInit<DetailType>) {
-      super({
-        bubbles: false,
-        ...(eventInit ?? {}),
-      });
-    }
-  };
+  return class VdsHlsEvent extends buildVdsEvent<DetailType>(type) {};
 }
 
 /**

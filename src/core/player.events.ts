@@ -3,7 +3,6 @@ import {
   ExtractEventDetailType,
   VdsCustomEvent,
   VdsCustomEventConstructor,
-  VdsEventInit,
   VdsEvents,
 } from '../shared/events';
 import { MediaType } from './MediaType';
@@ -52,14 +51,7 @@ export function buildVdsPlayerEvent<
   P extends keyof PlayerEvents,
   DetailType = ExtractEventDetailType<PlayerEvents[P]>
 >(type: P): VdsCustomEventConstructor<DetailType> {
-  return class VdsPlayerEvent extends buildVdsEvent<DetailType>(type) {
-    constructor(eventInit?: VdsEventInit<DetailType>) {
-      super({
-        bubbles: false,
-        ...(eventInit ?? {}),
-      });
-    }
-  };
+  return class VdsPlayerEvent extends buildVdsEvent<DetailType>(type) {};
 }
 
 /**

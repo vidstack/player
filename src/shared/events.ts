@@ -26,14 +26,7 @@ export abstract class VdsCustomEvent<
 
   constructor(type: string, eventInit?: VdsEventInit<DetailType>) {
     const { originalEvent, ...init } = eventInit ?? {};
-
-    super(type, {
-      bubbles: true,
-      composed: true,
-      cancelable: true,
-      ...init,
-    });
-
+    super(type, init);
     this.originalEvent = originalEvent;
   }
 }
