@@ -28,8 +28,8 @@ const Template: Story<
         described-by="${ifNonEmpty(describedBy)}"
         ?disabled="${disabled}"
         style="color: #FF2A5D;"
-        @vds-userplay="${onUserPlay}"
-        @vds-userpause="${onUserPause}"
+        @vds-user-play="${onUserPlay}"
+        @vds-user-pause="${onUserPause}"
       >
         <div slot="play">Play</div>
         <div slot="pause">Pause</div>

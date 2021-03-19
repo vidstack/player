@@ -17,19 +17,19 @@ declare global {
 
 export interface PlayerEvents {
   abort: VdsCustomEvent<void>;
-  canplay: VdsCustomEvent<void>;
-  canplaythrough: VdsCustomEvent<void>;
+  'can-play': VdsCustomEvent<void>;
+  'can-play-through': VdsCustomEvent<void>;
   connect: VdsCustomEvent<MediaProvider>;
   disconnect: VdsCustomEvent<MediaProvider>;
-  durationchange: VdsCustomEvent<number>;
+  'duration-change': VdsCustomEvent<number>;
   emptied: VdsCustomEvent<void>;
   ended: VdsCustomEvent<void>;
   error: VdsCustomEvent<unknown>;
-  fullscreenchange: VdsCustomEvent<boolean>;
-  loadeddata: VdsCustomEvent<void>;
-  loadedmetadata: VdsCustomEvent<void>;
-  loadstart: VdsCustomEvent<void>;
-  mediatypechange: VdsCustomEvent<MediaType>;
+  'fullscreen-change': VdsCustomEvent<boolean>;
+  'loaded-data': VdsCustomEvent<void>;
+  'loaded-metadata': VdsCustomEvent<void>;
+  'load-start': VdsCustomEvent<void>;
+  'media-type-change': VdsCustomEvent<MediaType>;
   pause: VdsCustomEvent<void>;
   play: VdsCustomEvent<void>;
   playing: VdsCustomEvent<void>;
@@ -40,9 +40,9 @@ export interface PlayerEvents {
   started: VdsCustomEvent<void>;
   suspend: VdsCustomEvent<void>;
   replay: VdsCustomEvent<void>;
-  timeupdate: VdsCustomEvent<number>;
-  viewtypechange: VdsCustomEvent<ViewType>;
-  volumechange: VdsCustomEvent<{ volume: number; muted: boolean }>;
+  'time-update': VdsCustomEvent<number>;
+  'view-type-change': VdsCustomEvent<ViewType>;
+  'volume-change': VdsCustomEvent<{ volume: number; muted: boolean }>;
   waiting: VdsCustomEvent<void>;
 }
 
@@ -75,7 +75,7 @@ export class VdsAbortEvent extends buildVdsPlayerEvent('abort') {}
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
  */
-export class VdsCanPlayEvent extends buildVdsPlayerEvent('canplay') {}
+export class VdsCanPlayEvent extends buildVdsPlayerEvent('can-play') {}
 
 /**
  * Fired when the user agent can play the media, and estimates that **enough** data has been
@@ -84,7 +84,7 @@ export class VdsCanPlayEvent extends buildVdsPlayerEvent('canplay') {}
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
  */
 export class VdsCanPlayThroughEvent extends buildVdsPlayerEvent(
-  'canplaythrough',
+  'can-play-through',
 ) {}
 
 /**
@@ -103,7 +103,7 @@ export class VdsDisconnectEvent extends buildVdsPlayerEvent('disconnect') {}
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/durationchange_event
  */
 export class VdsDurationChangeEvent extends buildVdsPlayerEvent(
-  'durationchange',
+  'duration-change',
 ) {}
 
 /**
@@ -135,7 +135,7 @@ export class VdsErrorEvent extends buildVdsPlayerEvent('error') {}
  * the player has entered fullscreen, `false` represents the opposite.
  */
 export class VdsFullscreenChangeEvent extends buildVdsPlayerEvent(
-  'fullscreenchange',
+  'fullscreen-change',
 ) {}
 
 /**
@@ -144,7 +144,7 @@ export class VdsFullscreenChangeEvent extends buildVdsPlayerEvent(
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadeddata_event
  */
-export class VdsLoadedDataEvent extends buildVdsPlayerEvent('loadeddata') {}
+export class VdsLoadedDataEvent extends buildVdsPlayerEvent('loaded-data') {}
 
 /**
  * Fired when the metadata has been loaded.
@@ -152,7 +152,7 @@ export class VdsLoadedDataEvent extends buildVdsPlayerEvent('loadeddata') {}
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event
  */
 export class VdsLoadedMetadataEvent extends buildVdsPlayerEvent(
-  'loadedmetadata',
+  'loaded-metadata',
 ) {}
 
 /**
@@ -160,13 +160,13 @@ export class VdsLoadedMetadataEvent extends buildVdsPlayerEvent(
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event
  */
-export class VdsLoadStartEvent extends buildVdsPlayerEvent('loadstart') {}
+export class VdsLoadStartEvent extends buildVdsPlayerEvent('load-start') {}
 
 /**
  * Fired when the `mediaType` property changes value.
  */
 export class VdsMediaTypeChangeEvent extends buildVdsPlayerEvent(
-  'mediatypechange',
+  'media-type-change',
 ) {}
 
 /**
@@ -249,7 +249,7 @@ export class VdsReplayEvent extends buildVdsPlayerEvent('replay') {}
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event
  */
-export class VdsTimeUpdateEvent extends buildVdsPlayerEvent('timeupdate') {}
+export class VdsTimeUpdateEvent extends buildVdsPlayerEvent('time-update') {}
 
 /**
  * Fired when the `viewType` property changes `value`. This will generally fire when the
@@ -257,7 +257,7 @@ export class VdsTimeUpdateEvent extends buildVdsPlayerEvent('timeupdate') {}
  * the type of media it can play.
  */
 export class VdsViewTypeChangeEvent extends buildVdsPlayerEvent(
-  'viewtypechange',
+  'view-type-change',
 ) {}
 
 /**
@@ -265,7 +265,9 @@ export class VdsViewTypeChangeEvent extends buildVdsPlayerEvent(
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event
  */
-export class VdsVolumeChangeEvent extends buildVdsPlayerEvent('volumechange') {}
+export class VdsVolumeChangeEvent extends buildVdsPlayerEvent(
+  'volume-change',
+) {}
 
 /**
  * Fired when playback has stopped because of a temporary lack of data.

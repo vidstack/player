@@ -28,7 +28,7 @@ const Template: Story<
         described-by="${ifNonEmpty(describedBy)}"
         ?disabled="${disabled}"
         style="color: #FF2A5D;"
-        @vds-usermutedchange="${onUserMutedChange}"
+        @vds-user-muted-change="${onUserMutedChange}"
       >
         <div slot="mute">Mute</div>
         <div slot="unmute">Unmute</div>

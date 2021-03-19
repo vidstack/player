@@ -57,13 +57,13 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
         step-multiplier="${stepMultiplier}"
         orientation="${orientation}"
         throttle="${throttle}"
-        @vds-sliderdragstart="${onDragStart}"
-        @vds-sliderdragend="${onDragEnd}"
-        @vds-userseeked="${onUserSeeked}"
-        @vds-userseeking="${onUserSeeking}"
-        @vds-scrubberpreviewshow="${onPreviewShow}"
-        @vds-scrubberpreviewhide="${onPreviewHide}"
-        @vds-scrubberpreviewtimeupdate="${onPreviewTimeUpdate}"
+        @vds-slider-drag-start="${onDragStart}"
+        @vds-slider-drag-end="${onDragEnd}"
+        @vds-user-seeked="${onUserSeeked}"
+        @vds-user-seeking="${onUserSeeking}"
+        @vds-scrubber-preview-show="${onPreviewShow}"
+        @vds-scrubber-preview-hide="${onPreviewHide}"
+        @vds-scrubber-preview-time-update="${onPreviewTimeUpdate}"
       >
         <div class="preview" slot="preview">Preview</div>
       </vds-scrubber>

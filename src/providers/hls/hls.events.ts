@@ -15,10 +15,10 @@ declare global {
 }
 
 export interface HlsEvents {
-  hlsenginebuilt: VdsCustomEvent<Hls>;
-  hlsengineattach: VdsCustomEvent<Hls>;
-  hlsenginedetach: VdsCustomEvent<Hls>;
-  hlsenginenosupport: void;
+  'hls-engine-built': VdsCustomEvent<Hls>;
+  'hls-engine-attach': VdsCustomEvent<Hls>;
+  'hls-engine-detach': VdsCustomEvent<Hls>;
+  'hls-engine-no-support': void;
 }
 
 export type VdsHlsEvents = {
@@ -44,7 +44,7 @@ export function buildVdsHlsEvent<
  * supports HLS.
  */
 export class VdsHlsEngineBuiltEvent extends buildVdsHlsEvent(
-  'hlsenginebuilt',
+  'hls-engine-built',
 ) {}
 
 /**
@@ -52,14 +52,14 @@ export class VdsHlsEngineBuiltEvent extends buildVdsHlsEvent(
  * fire if the browser natively supports HLS.
  */
 export class VdsHlsEngineAttachEvent extends buildVdsHlsEvent(
-  'hlsengineattach',
+  'hls-engine-attach',
 ) {}
 
 /**
  * Fired when the `hls.js` instance has detached itself from the media element.
  */
 export class VdsHlsEngineDetachEvent extends buildVdsHlsEvent(
-  'hlsenginedetach',
+  'hls-engine-detach',
 ) {}
 
 /**
@@ -67,5 +67,5 @@ export class VdsHlsEngineDetachEvent extends buildVdsHlsEvent(
  * this enviroment either, most likely due to missing Media Extensions.
  */
 export class VdsHlsEngineNoSuppotEvent extends buildVdsHlsEvent(
-  'hlsenginenosupport',
+  'hls-engine-no-support',
 ) {}

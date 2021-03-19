@@ -37,7 +37,7 @@ const Template: Story<
         described-by="${ifNonEmpty(describedBy)}"
         ?disabled="${disabled}"
         style="color: #FF2A5D;"
-        @vds-userfullscreenchange="${onUserFullscreenChange}"
+        @vds-user-fullscreen-change="${onUserFullscreenChange}"
       >
         <div slot="enter">Enter</div>
         <div slot="exit">Exit</div>

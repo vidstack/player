@@ -12,9 +12,9 @@ declare global {
 }
 
 export interface ScrubberEvents {
-  scrubberpreviewshow: VdsCustomEvent<void>;
-  scrubberpreviewhide: VdsCustomEvent<void>;
-  scrubberpreviewtimeupdate: VdsCustomEvent<number>;
+  'scrubber-preview-show': VdsCustomEvent<void>;
+  'scrubber-preview-hide': VdsCustomEvent<void>;
+  'scrubber-preview-time-update': VdsCustomEvent<number>;
 }
 
 export type VdsScrubberEvents = VdsEvents<ScrubberEvents>;
@@ -30,19 +30,19 @@ export function buildVdsScrubberEvent<
  * Emitted when the preview transitions from hdiden to showing.
  */
 export class VdsScrubberPreviewShowEvent extends buildVdsScrubberEvent(
-  'scrubberpreviewshow',
+  'scrubber-preview-show',
 ) {}
 
 /**
  * Emitted when the preview transitions from showing to hidden.
  */
 export class VdsScrubberPreviewHideEvent extends buildVdsScrubberEvent(
-  'scrubberpreviewhide',
+  'scrubber-preview-hide',
 ) {}
 
 /**
  * Emitted when the time being previewed changes.
  */
 export class VdsScrubberPreviewTimeUpdate extends buildVdsScrubberEvent(
-  'scrubberpreviewtimeupdate',
+  'scrubber-preview-time-update',
 ) {}

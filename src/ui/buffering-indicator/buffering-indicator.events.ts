@@ -12,8 +12,8 @@ declare global {
 }
 
 export interface BufferingIndicatorEvents {
-  bufferingshow: VdsCustomEvent<void>;
-  bufferinghide: VdsCustomEvent<void>;
+  'buffering-show': VdsCustomEvent<void>;
+  'buffering-hide': VdsCustomEvent<void>;
 }
 
 export type VdsBufferingIndicatorEvents = VdsEvents<BufferingIndicatorEvents>;
@@ -31,12 +31,12 @@ export function buildVdsBufferingIndicatorEvent<
  * Emitted when the buffering indicator is shown.
  */
 export class VdsBufferingIndicatorShowEvent extends buildVdsBufferingIndicatorEvent(
-  'bufferingshow',
+  'buffering-show',
 ) {}
 
 /**
  * Emitted when the buffering indicator is hidden.
  */
 export class VdsBufferingIndicatorHideEvent extends buildVdsBufferingIndicatorEvent(
-  'bufferinghide',
+  'buffering-hide',
 ) {}
