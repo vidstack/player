@@ -35,6 +35,76 @@ and the foundational components required to easily build and design the player i
   set of tests covering unit, visual, visual regression and integration are required to minimize bugs
   and regressions.
 
+## Ecosystem Compatability
+
+### Spec-compliance
+
+The player must be designed to be spec-compliant and mirror the existing API of any provider
+(eg: `HTMLMediaElement`) as much as possible. This is to ensure wider ecosystem compatibility so
+someone can easily transition from another player to `vds`, and also transition out when needed.
+Secondly, it'll reduce the learning overhead for someone switching over to `vds` from
+another provider such as the native `<video>` element, as they'll be able to use the same API
+they've been using all along. In addition, it also reduces the burden of coming up with names
+and writing documentation because it's already been done in the spec and by the
+community (eg: MDN) - WIN!.
+
+The base `MediaProvider` will follow the `HTMLMediaElement` spec closely and any API
+that can't be accurately implemented across all providers will be pushed down. For example,
+the `HTMLMediaElement` contains a `readyState` property that indicates the readiness of media.
+The YouTube IFrame API surface is minimal and isn't information rich so it would be hard to
+accurately determine when the player has hit certain "ready states". In this case, some API can be
+pushed down from the top-level `MediaProvider` down to where it belongs. In the `readyState` example
+it would exist at the `MediaFileProvider` level, which would still mean that the
+`AudioProvider` and `VideoProvider` who inherit from it are spec-compliant.
+
+Finally, any time there's an opporunity to make developers lives easier with an API extension
+we'll take it. The idea here is start at spec and extend + enhance when needed. Let's call
+this progressive spec-enhancement?
+
+### Markup
+
+The markup for any `vds` provider should mirror the native implementation as much as possible.
+
+```html
+<!-- Native. -->
+<video poster="/media/poster.png" crossorigin="anonymous" controls>
+  <source src="/media/video.mp4" type="video/mp4" />
+  <track default src="/media/captions.vtt" kind="captions" srclang="en" />
+</video>
+
+<!-- Vds. -->
+<vds-video poster="/media/poster.png" crossorigin="anonymous" controls>
+  <source src="/media/video.mp4" type="video/mp4" />
+  <track default src="/media/captions.vtt" kind="captions" srclang="en" />
+</vds-video>
+```
+
+```html
+<!-- Native. -->
+<iframe
+  src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
+  width="640"
+  height="390"
+></iframe>
+
+<!-- Vds. Here we can also offer a `video-id` attribute to make life easier. -->
+<vds-youtube
+  src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
+  width="640"
+  height="390"
+></vds-youtube>
+```
+
+### Events
+
+All native provider events will be re-dispatched for backwards compatability. There'll be `vds`
+specific events that are provider agnostic, which the developer can migrate over to
+when they are ready. The top-level player `vds` events will mirror the existing
+`HTMLMediaElement` events such as `canplay`, `canplaythrough`, `loadedmetadata` etc.
+
+The `vds` specific events will enable developers to not have to use a different event API every
+time they switch providers, they can enjoy one unified API across providers over-time.
+
 ### What's changing from Vime `5.x`?
 
 - **Get Lit 🔥.** Prefer a lightweight alternative to Stencil such as LitElement to:
