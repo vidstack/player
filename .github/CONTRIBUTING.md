@@ -41,9 +41,9 @@ right corner. After the project has been forked, run the following commands in y
 
 ```bash
 # Replace {github-username} with your GitHub username.
-$: git clone https://github.com/{github-username}/player --depth=1
+$: git clone https://github.com/{github-username}/vds-player --depth=1
 
-$: cd player
+$: cd vds-player
 
 # Create a branch for your PR, replace {issue-no} with the GitHub issue number.
 $: git checkout -b issue-{issue-no}
@@ -54,7 +54,7 @@ pull requests from the forked branch.
 
 ```bash
 # Add the original repository as a "remote" called "upstream".
-$: git remote add upstream git@github.com:vidstack/player.git
+$: git remote add upstream git@github.com:vidstack/vds-player.git
 
 # Fetch the git information from the remote.
 $: git fetch upstream
@@ -78,7 +78,7 @@ writing unit tests follow the link to the Web Test Runner site, and see other te
 ### Visual
 
 This project uses [Storybook][storybook] to render components and view them in the browser. Simply
-create a `*.stories.ts` file next to the component you're testing and run `npm run serve` in
+create a `*.stories.ts` file next to the component you're testing and run `npm run start` in
 your terminal. To learn more about writing stories follow the link to the Storybook site, and see
 other stories in the project.
 
@@ -112,6 +112,6 @@ contribution is appreciated more then you can imagine, and even a failed PR can 
 [lit-element]: https://lit-element.polymer-project.org/guide
 [web-components]: https://developer.mozilla.org/en-US/docs/Web/Web_Components
 [web-test-runner]: https://modern-web.dev/docs/test-runner/overview
-[player-repo]: https://github.com/vidstack/player
+[player-repo]: https://github.com/vidstack/vds-player
 [semantic-commit-style]: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
 [pr-beginner-series]: https://app.egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github
