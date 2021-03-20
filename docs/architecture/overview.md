@@ -47,10 +47,6 @@ and the foundational components required to easily build and design the player i
     simplify tooling/processes around development/building/testing/packaging.
   - Make it easier for contributors as no knowledge of JSX is required with LitElement.
 - The data flow between player, provider and UI will need to be assessed and improved.
-- Features such as boot strategy (controls when/how providers are loaded) are not possible in v5
-  because the player doesn't control the rendering of the provider. In addition there are
-  inconsistencies with how providers are loaded because some logic is split between the player
-  and the provider. Most logic will need to be housed in the player for better consistency.
 - Simplify the process of designing custom components and reduce opinionated designs that cause
   developers to fight the system. In other words provide naked/functional components that the developer
   can do whatever they want with.
@@ -76,7 +72,7 @@ The following references have been used in determining an adequate project struc
   - `src/bundle/elements.ts` → Exports all code that is not side-effect free which
     registers all elements in the custom elements registry.
 - `src/core` → This directory contains any functionality that is at the top of the player
-  hierarchy such as the `Player` component.
+  hierarchy such as the `MediaProvider` component, `PlayerContext` etc.
 - `src/providers` → This directory contains components/code that are responsible for
   loading players/media.
 - `src/ui` → This directory contains components/code that are rendered in the browser
@@ -99,9 +95,9 @@ Here's a few examples of how modules can be imported:
 
 - `import '@vidstack/player/bundle/elements'` → This will import all components and register
   them in the `Window` custom elements registry.
-- `import { Player, MuteToggle } from '@vidstack/player/bundle'` → This will import entities without
+- `import { VideoProvider, MuteToggle } from '@vidstack/player/bundle'` → This will import entities without
   registering them in the custom elements registry.
-- `import '@vidstack/player/core/vds-player'` → This will import only the player component and
+- `import '@vidstack/player/providers/video/vds-video'` → This will import only the video provider component and
   register it.
 - `import '@vidstack/player/skins/default/vds-default'` → This will import only the default UI skin
   and register it.
@@ -131,7 +127,7 @@ and `import` . This is primarily useful for providing SSR friendly bundles.
 
 ## Architecture
 
-See [architecture.md](./architecture.md) and [player-api.md](./player-api.md).
+See [architecture.md](./architecture.md).
 
 ### UI Design Patterns
 
@@ -222,7 +218,7 @@ This is still a **WIP** and but it might require using [LitElement 3.0 and LitHT
 ### Internationalization (i18n)
 
 Due to the core UI being functional components that don't contain any styling or text, i18n
-will become the responsibility of [skins](#skins) and potentially media providers.
+will become the responsibility of [Skins](#skins).
 
 ### Skins
 
@@ -326,7 +322,7 @@ branch and merged into the `release` branch when it's time for a new release. CI
 trigger a release workflow on this branch. Once the package is published, any changes
 (Changelog etc.) will need to be merged back into the `main` branch.
 
-In addition, CI will automatically release the latest changes for preview as they are merged
-into the `main` branch. These changes will be published to NPM under the `next` dist-tag.
+In addition, a `next` branch will be used to release the latest changes for preview. These changes
+will be published to NPM under the `next` dist-tag.
 
 [semantic-release]: https://github.com/semantic-release/semantic-release

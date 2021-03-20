@@ -1,6 +1,6 @@
 classDiagram
 
-class PlayerState
+class PlayerProps
 
 class PlayerContext {
     <<object>>
@@ -15,7 +15,7 @@ class ContextProvider {
 }
 
 PlayerContext --> ContextProvider: uses
-PlayerContext --> PlayerState: implements
+PlayerContext --> PlayerProps: implements
 
 class Player
 

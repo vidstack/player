@@ -9,8 +9,8 @@ player, and handling ARIA attributes on the button.
 
 Functional components are made possible thanks to the `<slot />` element and
 [CSS parts][mdn-css-part]. Following the `ToggleMuteControl` example, it may create CSS parts
-such as `mute-control`, `mute-control-focused`, `unmute-control` and `unmute-control-focused` to
-enable consumers to style the component from the light DOM.
+such as `mute-control`, `unmute-control` to enable consumers to style the component from the
+light DOM.
 
 [mdn-css-parts]: https://developer.mozilla.org/en-US/docs/Web/CSS/::part
 
@@ -24,7 +24,7 @@ enable the consumer to style transitions between states.
 ### Dynamic Styling
 
 A component may be styled based on some dynamic value. For example, styling a Scrubber
-might require a `background-fill` based on the % of the video that's played. This can be
+might require a `background-fill` based on the % of the video that's seekable. This can be
 solved with [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*). In this
-example a `--vds-played-percent` property could be exposed to enable the consumer to achieve the
-styling they desire.
+example a `--vds-scrubber-seekable-percent` property could be exposed to enable the consumer to
+achieve the styling they desire.

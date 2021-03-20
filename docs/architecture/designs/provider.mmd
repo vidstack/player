@@ -1,0 +1,46 @@
+classDiagram
+
+class MediaProvider~EngineType~ {
+    +paused: boolean
+    +volume: number
+    +currentTime: number
+    +mediaType: MediaType
+    +viewType: ViewType
+    +engine: EngineType
+    ...
+    +play() Promise~void~ 
+    +pause() Promise~void~ 
+}
+
+MediaProvider -- ViewType
+MediaProvider -- MediaType
+MediaProvider --> Engine: has
+
+class PlayerContext
+MediaProvider--> PlayerContext: provides
+
+class PlayerProps {
+    <<interface>>
+    paused: boolean;
+    currentTime: number
+    volume: number
+    ...
+}
+
+MediaProvider --> PlayerProps: implements
+PlayerContext --> PlayerProps: extends
+
+class MediaType {
+    <<enumeration>>
+    AUDIO
+    VIDEO
+}
+
+class ViewType {
+    <<enumeration>>
+    AUDIO
+    VIDEO
+}
+
+
+UI --> PlayerContext: consumes
