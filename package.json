@@ -31,10 +31,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/vidstack/elements.git"
+    "url": "https://github.com/vidstack/vds-elements.git"
   },
   "bugs": {
-    "url": "https://github.com/vidstack/elements/issues"
+    "url": "https://github.com/vidstack/vds-elements/issues"
   },
   "scripts": {
     "build": "run-s clean build:esm build:manifest",
