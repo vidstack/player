@@ -17,6 +17,6 @@ export const VIDEO_PROVIDER_STORYBOOK_ARG_TYPES: Partial<VideoProviderStorybookA
   },
   poster: {
     control: 'text',
-    defaultValue: 'https://media.vidstack.io/poster.png',
+    defaultValue: 'https://media-files.vidstack.io/poster.png',
   },
 };

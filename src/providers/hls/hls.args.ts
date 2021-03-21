@@ -15,7 +15,8 @@ export const HLS_PROVIDER_STORYBOOK_ARG_TYPES: Partial<HlsProviderStorybookArgs>
   ...VIDEO_PROVIDER_STORYBOOK_ARG_TYPES,
   src: {
     control: 'text',
-    defaultValue: 'https://media.vidstack.io/hls/index.m3u8',
+    defaultValue:
+      'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8',
   },
   libSrc: {
     control: 'text',
