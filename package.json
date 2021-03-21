@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/elements",
-  "version": "0.0.0",
+  "version": "0.0.0-semantically-released",
   "description": "Spec-compliant, customizable, extensible, accessible and universal media elements.",
   "license": "MIT",
   "engines": {
