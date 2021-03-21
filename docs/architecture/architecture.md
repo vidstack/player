@@ -9,7 +9,7 @@ The following is a simple overview of the top-level architecture.
 ## Update Flow
 
 The following uses setting the `paused` property to `false` as an example to show how updates flow
-through Provider (eg: `vds-video`), Engine (eg: `HTMLMediaElement`), Context (eg: `playerContext`),
+through Provider (eg: `vds-video`), Engine (eg: `HTMLMediaElement`), Context (eg: `PlayerContext`),
 and UI (eg: `vds-playback-toggle`).
 
 [![](https://mermaid.ink/img/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG4gICAgYWx0IFByb3ZpZGVyIFVwZGF0ZVxuICAgICAgICByZWN0IHJnYigwLCAyNTUsIDAsIC4xKVxuICAgICAgICBQcm92aWRlciAtPj4gRW5naW5lOiBMaXN0ZW4gdG8gYHBsYXlgIGV2ZW50XG4gICAgICAgIEVuZ2luZSAtLT4-IFByb3ZpZGVyOiBGaXJlcyBgcGxheWAgZXZlbnRcbiAgICAgICAgUHJvdmlkZXIgLT4-IENvbnRleHQ6IFVwZGF0ZVxuICAgICAgICBDb250ZXh0IC0tPj4gVUk6IGBDb250ZXh0VXBkYXRlYFxuICAgICAgICBVSSAtPj4gVUk6IFRyaWdnZXIgYHJlbmRlcigpYFxuICAgICAgICBlbmRcbiAgICBlbHNlIFVJIFVwZGF0ZVxuICAgICAgICByZWN0IHJnYmEoMCwgMCwgMjU1LCAuMSlcbiAgICAgICAgUHJvdmlkZXIgLT4-IEVuZ2luZTogTGlzdGVuIHRvIGBwbGF5YCBldmVudFxuICAgICAgICBQcm92aWRlciAtPj4gUHJvdmlkZXI6IExpc3RlbiBmb3IgYFVzZXJQbGF5RXZlbnRgIGV2ZW50XG4gICAgICAgIFVJIC0tPj4gUHJvdmlkZXI6IEZpcmVzIGBVc2VyUGxheUV2ZW50YFxuICAgICAgICBQcm92aWRlciAtPj4gRW5naW5lOiBzZXRQYXVzZWQoZmFsc2UpXG4gICAgICAgIEVuZ2luZSAtLT4-IFByb3ZpZGVyOiBGaXJlcyBgcGxheWAgZXZlbnRcbiAgICAgICAgUHJvdmlkZXIgLT4-IENvbnRleHQ6IFVwZGF0ZVxuICAgICAgICBDb250ZXh0IC0tPj4gVUk6IGBDb250ZXh0VXBkYXRlYFxuICAgICAgICBVSSAtPj4gVUk6IFRyaWdnZXIgYHJlbmRlcigpYFxuICAgICAgICBlbmRcbiAgICBlbmQiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ)](https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG4gICAgYWx0IFByb3ZpZGVyIFVwZGF0ZVxuICAgICAgICByZWN0IHJnYigwLCAyNTUsIDAsIC4xKVxuICAgICAgICBQcm92aWRlciAtPj4gRW5naW5lOiBMaXN0ZW4gdG8gYHBsYXlgIGV2ZW50XG4gICAgICAgIEVuZ2luZSAtLT4-IFByb3ZpZGVyOiBGaXJlcyBgcGxheWAgZXZlbnRcbiAgICAgICAgUHJvdmlkZXIgLT4-IENvbnRleHQ6IFVwZGF0ZVxuICAgICAgICBDb250ZXh0IC0tPj4gVUk6IGBDb250ZXh0VXBkYXRlYFxuICAgICAgICBVSSAtPj4gVUk6IFRyaWdnZXIgYHJlbmRlcigpYFxuICAgICAgICBlbmRcbiAgICBlbHNlIFVJIFVwZGF0ZVxuICAgICAgICByZWN0IHJnYmEoMCwgMCwgMjU1LCAuMSlcbiAgICAgICAgUHJvdmlkZXIgLT4-IEVuZ2luZTogTGlzdGVuIHRvIGBwbGF5YCBldmVudFxuICAgICAgICBQcm92aWRlciAtPj4gUHJvdmlkZXI6IExpc3RlbiBmb3IgYFVzZXJQbGF5RXZlbnRgIGV2ZW50XG4gICAgICAgIFVJIC0tPj4gUHJvdmlkZXI6IEZpcmVzIGBVc2VyUGxheUV2ZW50YFxuICAgICAgICBQcm92aWRlciAtPj4gRW5naW5lOiBzZXRQYXVzZWQoZmFsc2UpXG4gICAgICAgIEVuZ2luZSAtLT4-IFByb3ZpZGVyOiBGaXJlcyBgcGxheWAgZXZlbnRcbiAgICAgICAgUHJvdmlkZXIgLT4-IENvbnRleHQ6IFVwZGF0ZVxuICAgICAgICBDb250ZXh0IC0tPj4gVUk6IGBDb250ZXh0VXBkYXRlYFxuICAgICAgICBVSSAtPj4gVUk6IFRyaWdnZXIgYHJlbmRlcigpYFxuICAgICAgICBlbmRcbiAgICBlbmQiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ)
@@ -30,11 +30,11 @@ might propagate to a stored user preference or to the state of other players on 
 user transitions from a listing view to a detail view containing the same video. The play event of
 one video might trigger pause of any other actively playing video.
 
-The player does not need to provide/include a manager, but it should be designed with one in mind: an
-ancestral component that can monitor events and access an imperative API of registered playback
-components. This may/may not require a registration phase upon connection. DOM traversal may not be
-sufficient means of discovery as players could be removed and returned from the DOM in certain UIs,
-such as an infinite scroll.
+The base `MediaProvider` does not need to provide/include a manager, but it should be designed
+with one in mind: an ancestral component that can monitor events and access an imperative
+API of registered playback components. This may/may not require a registration phase upon
+connection. DOM traversal may not be sufficient means of discovery as players could be removed
+and returned from the DOM in certain UIs, such as an infinite scroll.
 
 ## Context + UI
 

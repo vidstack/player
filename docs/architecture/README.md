@@ -1,8 +1,8 @@
-# Vidstack Player `1.x`
+# Vidstack Elements `1.x`
 
 **THIS DOCUMENT IS A WORK IN PROGRESS.**
 
-Vidstack Player exists to simplify the process of integrating media with a custom player into a
+Vidstack Elements exists to simplify the process of integrating media with a custom player into a
 web application. The main benefits are that it provides a unified API across multiple providers,
 and the foundational components required to easily build and design the player interface.
 
@@ -22,16 +22,16 @@ and the foundational components required to easily build and design the player i
   simple defaults out of the box.
 - **Lightweight.** To avoid delaying page loads or time to first frame for the user, the library
   should be as light as possible. Preferably less than ~30kB.
-- **Accessible.** Anyone should be able to use the player at its utmost potential, regardless of
+- **Accessible.** Anyone should be able to use any element at its utmost potential, regardless of
   any external factors such as disabilities or network connection.
-- **Universal.** The player should be able to be rendered on both the client-side (CSR) and
+- **Universal.** The elements should be able to be rendered on both the client-side (CSR) and
   server-side (SSR), integrable with any frontend stack/framework, and function appropriately
   across all devices/screens.
-- **Modern.** The player should be built for the modern web and avoid bloated polyfills and outdated
+- **Modern.** The elements should be built for the modern web and avoid bloated polyfills and outdated
   environments as much as possible. This only leads to technical bloat and time wasted. It will not
   support older browsers and will only target modern evergreen browsers that fully implement the
   Custom Elements V1 specification, e.g. Chrome, Firefox, Safari.
-- **Testable.** All aspects of the player should be built with testability in mind. A comprehensive
+- **Testable.** All aspects of each element should be built with testability in mind. A comprehensive
   set of tests covering unit, visual, visual regression and integration are required to minimize bugs
   and regressions.
 
@@ -39,11 +39,11 @@ and the foundational components required to easily build and design the player i
 
 ### Spec-compliance
 
-The player must be designed to be spec-compliant and mirror the existing API of any provider
-(eg: `HTMLMediaElement`) as much as possible. This is to ensure wider ecosystem compatibility so
-someone can easily transition from another player to `vds`, and also transition out when needed.
-Secondly, it'll reduce the learning overhead for someone switching over to `vds` from
-another provider such as the native `<video>` element, as they'll be able to use the same API
+The `vds` provider elements must be designed to be spec-compliant and mirror the existing API of any
+native provider (eg: `HTMLMediaElement`) as much as possible. This is to ensure wider ecosystem
+compatibility so someone can easily transition from another player to `vds`, and also transition
+out when needed. Secondly, it'll reduce the learning overhead for someone switching over to `vds`
+from another provider such as the native `<video>` element, as they'll be able to use the same API
 they've been using all along. In addition, it also reduces the burden of coming up with names
 and writing documentation because it's already been done in the spec and by the
 community (eg: MDN) - WIN!.
@@ -141,21 +141,21 @@ The following references have been used in determining an adequate project struc
     elements in the `Window` custom elements registry.
   - `src/bundle/elements.ts` → Exports all code that is not side-effect free which
     registers all elements in the custom elements registry.
-- `src/core` → This directory contains any functionality that is at the top of the player
+- `src/core` → This directory contains any functionality that is at the top of the elements
   hierarchy such as the `MediaProvider` component, `PlayerContext` etc.
 - `src/providers` → This directory contains components/code that are responsible for
   loading players/media.
 - `src/ui` → This directory contains components/code that are rendered in the browser
   generally for the end-user to interact with.
 - `src/skins` → This directory contains components that are an amalgamation of UI components
-  to build an out of the box look/style for the player which includes themes and icons.
-- `src/utils` → This directory contains common helper functions that are used throughout the player.
+  to build an out of the box look/style for a player which includes themes and icons.
+- `src/utils` → This directory contains common helper functions that are used throughout the library.
 
 ### Packaging
 
-The library will be bundled and released as a single package under the `@vidstack/player` package
+The library will be bundled and released as a single package under the `@vidstack/elements` package
 name. We have contemplated releasing all packages under their own namespace such as
-`@vidstack/player`, `@vidstack/youtube`, or `@vidstack/mute-toggle` but there seems to be no
+`@vidstack/video`, `@vidstack/youtube`, and `@vidstack/mute-toggle` but there seems to be no
 inherit value of doing so as no use-case has been identified for multiple NPM packages yet.
 Furthermore, there's no way to split the library in any meaningful way as all components are bound
 to the player component in one way or another. Splitting the library into multiple packages will
@@ -163,19 +163,19 @@ only add more noise to the build/release process.
 
 Here's a few examples of how modules can be imported:
 
-- `import '@vidstack/player/bundle/elements'` → This will import all components and register
+- `import '@vidstack/elements/bundle/define'` → This will import all components and register
   them in the `Window` custom elements registry.
-- `import { VideoProvider, MuteToggle } from '@vidstack/player/bundle'` → This will import entities without
-  registering them in the custom elements registry.
-- `import '@vidstack/player/providers/video/vds-video'` → This will import only the video provider component and
-  register it.
-- `import '@vidstack/player/skins/default/vds-default'` → This will import only the default UI skin
+- `import { VideoProvider, MuteToggle } from '@vidstack/elements/bundle'` → This will import
+  entities without registering them in the custom elements registry.
+- `import '@vidstack/elements/providers/video/vds-video'` → This will import only the video
+  provider component and register it.
+- `import '@vidstack/elements/skins/default/vds-default'` → This will import only the default UI skin
   and register it.
 
 These import paths are made possible thanks to the [exports][node-exports] field in `package.json`.
 This field is available in Node 12+ and allows defining entry points of a package when imported by
 name, loaded either via a `node_modules` lookup or a self-reference to its own name. This means
-instead of `@vidstack/player/dist/bundle` we can import via `@vidstack/player/bundle` .
+instead of `@vidstack/elements/dist/bundle` we can import via `@vidstack/elements/bundle` .
 
 Furthermore, [conditional exports][node-conditional-exports] will enable multiple entry points
 depending on certain conditions, such as providing different ES module exports for `require`
@@ -205,7 +205,7 @@ See [ui-patterns.md](./ui-patterns.md).
 
 ### Framework Integrations
 
-To help our adoptors to test and integrate the player we'll support React due to it's popularity
+To help our adoptors to test and integrate the elements we'll support React due to it's popularity
 and lack of support for custom web components. This will hopefully be near the tail end of the
 the `1.0` release. Other frameworks are not considered at this time to reduce maintanence costs,
 and the web has evolved so most of them already [support custom elements][custom-el-everywhere].
@@ -223,7 +223,7 @@ React requires the following support for non-intrinsic elements:
 Most likely by parsing component files for `@property()` and `@event()` decorators or using a
 [custom elements manifest][custom-el-manifest] generator, and then using this information
 to automatically generate React wrappers that will be located in `dist/react` and imported
-as regular React components such as `import { Player } from '@vidstack/player/react'`.
+as regular React components such as `import { Player } from '@vidstack/elements/react'`.
 
 We could also consider adding stories for React integrations so we can test them and showcase
 their usage.
@@ -293,7 +293,7 @@ will become the responsibility of [Skins](#skins).
 ### Skins
 
 A Skin is an amalgamation of UI components, icons and themes to create an out of the box style/s
-for the player. As noted, UI components will be naked functional components. For example,
+for a player. As noted, UI components will be naked functional components. For example,
 a `MuteToggle` will handle setting ARIA attributes and updating the muted state of the
 player when pressed, but no true structure/styling. Therefore, these components can be used to
 build out multiple skins.
@@ -305,7 +305,7 @@ a CORS-enabled endpoint (eg: CDN). Icons should be placed in the `icons/` direct
 root of the skin directory such as `*/skins/default-skin/icons/{icon-name}.svg`.
 
 See the [`IconLibrary`][vime-icon-lib] component in Vime `5.x` as an example of how icons will be
-loaded and used throughout the player.
+loaded and used throughout a player.
 
 [vime-icon-lib]: https://github.com/vime-js/vime/tree/master/core/src/components/ui/icon-library
 
@@ -336,7 +336,7 @@ root of skin directory to make multiple locales available out of the box.
   first-contentful-paint, time-to-player-interactable, time-to-first-frame etc.
 - Visual regression testing on skins/providers using [Pixelmatch][pixelmatch]
   and [CI Artifacts][ci-artifacts].
-- Manually testing the player across different browsers/versions
+- Manually testing the elements across different browsers/versions
   using [BrowserStack][browser-stack]. This is mainly useful for debugging issues.
 
 [tachometer]: https://github.com/Polymer/tachometer
@@ -370,12 +370,12 @@ Documentation for `1.0` is a **WIP** and still needs to be planned out.
 
 ### Examples
 
-An `examples` directory will be present at the root of player repository and hosted on
+An `examples` directory will be present at the root of repository and hosted on
 [StackBlitz][stackblitz] to:
 
 - Showcase how to install and setup the library with different frameworks/libraries.
 - Enable developers to play with and trial the library.
-- Debug the player in different environments.
+- Debug elements in different environments.
 - Provide error reproductions for issues/tickets.
 - Run integration tests locally to ensure the library consistently works across different
   environments/stacks.

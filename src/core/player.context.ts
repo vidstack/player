@@ -35,7 +35,7 @@ const viewType = createContext(ViewType.Unknown);
  *
  * ```ts
  * import { internalProperty, LitElement } from "lit-element";
- * import { playerContext } from "@vidstack/player/core";
+ * import { playerContext } from "@vidstack/elements/core";
  *
  * class MyElement extends LitElement {
  *  \@internalProperty()

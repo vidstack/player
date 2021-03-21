@@ -1,7 +1,7 @@
 {
-  "name": "@vidstack/player",
+  "name": "@vidstack/elements",
   "version": "0.0.0",
-  "description": "Customizable, extensible, accessible and universal media player.",
+  "description": "Spec-compliant, customizable, extensible, accessible and universal media elements.",
   "license": "MIT",
   "engines": {
     "node": ">=12.12.0"
@@ -31,10 +31,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/vidstack/player.git"
+    "url": "https://github.com/vidstack/elements.git"
   },
   "bugs": {
-    "url": "https://github.com/vidstack/player/issues"
+    "url": "https://github.com/vidstack/elements/issues"
   },
   "scripts": {
     "build": "run-s clean build:esm build:manifest",
@@ -147,7 +147,7 @@
   },
   "keywords": [
     "vidstack",
-    "player",
+    "elements",
     "plyr",
     "vime",
     "youtube",
@@ -164,6 +164,7 @@
     "extensible",
     "accessible",
     "universal",
+    "spec-compliant",
     "lit",
     "lit-element",
     "web components",
