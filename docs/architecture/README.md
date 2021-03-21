@@ -105,7 +105,7 @@ when they are ready. The top-level player `vds` events will mirror the existing
 The `vds` specific events will enable developers to not have to use a different event API every
 time they switch providers, they can enjoy one unified API across providers over-time.
 
-### What's changing from Vime `5.x`?
+## What's changing from Vime `5.x`?
 
 - **Get Lit 🔥.** Prefer a lightweight alternative to Stencil such as LitElement to:
   - Avoid heavy compilation/transpilation steps and processes.
