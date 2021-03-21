@@ -137,7 +137,8 @@
   "release": {
     "branches": [
       {
-        "name": "release"
+        "name": "release",
+        "channel": false
       },
       {
         "name": "next",
