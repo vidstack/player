@@ -63,6 +63,34 @@ See [CONTRIBUTING.md](./.github/CONTRIBUTING.md).
 
 Vidstack Elements is [MIT licensed](./LICENSE).
 
+## ❤️ Sponsors
+
+A huge thanks to our sponsors who support open-source projects like Vidstack Elements.
+
+<a href="https://mux.com">
+  <img
+    width="100%"
+    alt="mux"
+    src="./assets/images/sponsors/mux.png"
+  />
+</a>
+
+<a href="https://vercel.com">
+  <img
+    width="100%"
+    alt="vercel"
+    src="./assets/images/sponsors/vercel.png"
+  />
+</a>
+
+<a href="https://www.cypress.io">
+  <img
+    width="100%"
+    alt="cypress"
+    src="./assets/images/sponsors/cypress.png"
+  />
+</a>
+
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr
 [package]: https://www.npmjs.com/package/@vidstack/elements
