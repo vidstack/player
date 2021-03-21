@@ -139,7 +139,7 @@ The following references have been used in determining an adequate project struc
   entities (classes, interfaces, components, types etc.).
   - `src/bundle/index.ts` → Exports all side-effect free code that doesn't register any
     elements in the `Window` custom elements registry.
-  - `src/bundle/elements.ts` → Exports all code that is not side-effect free which
+  - `src/bundle/define.ts` → Exports all code that is not side-effect free which
     registers all elements in the custom elements registry.
 - `src/core` → This directory contains any functionality that is at the top of the elements
   hierarchy such as the `MediaProvider` component, `PlayerContext` etc.
