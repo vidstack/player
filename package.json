@@ -38,6 +38,7 @@
   },
   "scripts": {
     "build": "run-s clean build:esm build:manifest",
+    "build:changelog": "npx conventional-changelog-cli -p angular -i CHANGELOG.md -s",
     "build:esm": "tsc -p tsconfig-build.json",
     "build:manifest": "wcom transform \"src/**/*.ts\" -t vscode markdown",
     "build:watch": "npm run build:esm -- -w",
