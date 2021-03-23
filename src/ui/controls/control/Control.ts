@@ -151,7 +151,11 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
    * Override this to modify content rendered inside root control (`<button>`).
    */
   protected renderRootContent(): TemplateResult {
-    return html`<slot @slotchange="${this.handleDefaultSlotChange}"></slot>`;
+    return html`${this.renderDefaultSlot()}`;
+  }
+
+  protected renderDefaultSlot(): TemplateResult {
+    return html`<slot></slot>`;
   }
 
   /**
@@ -228,12 +232,5 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
       event.stopPropagation();
       return false;
     }
-  }
-
-  /**
-   * Override to listen to slot changes.
-   */
-  protected handleDefaultSlotChange(): void {
-    // no-op
   }
 }

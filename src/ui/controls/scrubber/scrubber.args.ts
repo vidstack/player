@@ -49,6 +49,18 @@ export const SCRUBBER_STORYBOOK_ARG_TYPES: Partial<ScrubberStorybookArgs> = {
     control: 'text',
     defaultValue: '{currentTime} out of {duration}',
   },
+  previewThrottle: {
+    control: 'number',
+    defaultValue: 30,
+  },
+  userSeekingThrottle: {
+    control: 'number',
+    defaultValue: 150,
+  },
+  noPreviewTrack: {
+    control: 'boolean',
+    defaultValue: false,
+  },
   hidden: {
     control: 'boolean',
     defaultValue: false,

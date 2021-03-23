@@ -89,6 +89,7 @@ export const playerContext: PlayerContext = {
       return end > duration ? duration : end;
     },
   ),
+  seeking: createContext<boolean>(false),
   started: createContext<boolean>(false),
   viewType,
   volume: createContext(1),

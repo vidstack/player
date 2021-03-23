@@ -28,10 +28,10 @@ describe(SCRUBBER_TAG_NAME, () => {
       <div
         id="root"
         part="root"
-        style="--vds-scrubber-current-time:0; --vds-scrubber-seekable:0; --vds-scrubber-duration:0;"
+        style="--vds-scrubber-current-time:0; --vds-scrubber-seekable:0; --vds-scrubber-duration:0; --vds-scrubber-preview-time:0;"
       >
         <vds-slider
-          exportparts="root: slider-root, root-dragging: slider-root-dragging, root-orientation-vertical: slider-root-orientation-vertical, thumb: slider-thumb, thumb-dragging: slider-thumb-dragging, track: slider-track, track-dragging: slider-track-dragging, track-fill: slider-track-fill, track-fill-dragging: slider-track-fill-dragging"
+          exportparts="root: slider-root, thumb: slider-thumb, track: slider-track, track-fill: slider-track-fill"
           id="slider"
           label="Time scrubber"
           max="0"
@@ -43,6 +43,7 @@ describe(SCRUBBER_TAG_NAME, () => {
           throttle="10"
           value="0"
           value-text="0 seconds out of 0 seconds"
+          dragging="false"
         >
           <slot name="slider"></slot>
           
@@ -58,6 +59,12 @@ describe(SCRUBBER_TAG_NAME, () => {
           >
             <slot name="progress"></slot>
           </div>
+            
+          <div
+            hidden=""
+            id="preview-track"
+            part="preview-track"
+          ></div>
         </vds-slider>
 
         <slot></slot>

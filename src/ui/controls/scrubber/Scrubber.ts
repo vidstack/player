@@ -5,19 +5,24 @@ import {
   internalProperty,
   LitElement,
   property,
+  PropertyValues,
   query,
   TemplateResult,
 } from 'lit-element';
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
+import { throttle } from 'lodash-es';
 
 import {
   playerContext,
+  VdsUserPauseEvent,
+  VdsUserPlayEvent,
   VdsUserSeekedEvent,
   VdsUserSeekingEvent,
 } from '../../../core';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { getSlottedChildren, raf } from '../../../utils/dom';
+import { CancelableCallback } from '../../../shared/types';
+import { getSlottedChildren } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { isNil } from '../../../utils/unit';
 import { formatSpokenTime } from '../../time/time';
@@ -54,11 +59,16 @@ import { ScrubberProps } from './scrubber.types';
  * **The Scrubber will automatically do the following to the root preview element passed in:**
  *
  * - Set a `hidden` attribute when it should be hidden (it's left to you to hide it with CSS).
- * - Set a `vds-preview-time` attribute with the time (seconds) that's currently being interacted
- * with. You can listen to changes on this attribute and react accordingly.
- * - Set a `--vds-preview-time` CSS property that matches the `vds-preview-time` attribute value.
  * - Set a safe `z-index` value so the preview is above all other components and is visible.
- * - Update the `left` CSS property to position the preview accordingly.
+ * - Update the `translateX()` CSS property to position the preview accordingly.
+ *
+ * ### How do I get the current preview time?
+ *
+ * You can either listen to `vds-scrubber-preview-time-update` event on this component, or you can
+ * use the `scrubberPreviewContext`.
+ *
+ * For styling you have access to the `--vds-scrubber-preview-time` CSS property which contains
+ * the current time in seconds the user is previewing.
  *
  * ## Tag
  *
@@ -67,27 +77,36 @@ import { ScrubberProps } from './scrubber.types';
  * ## Slots
  *
  * @slot Used to pass content into the root.
- * @slot slider - Used to pass content into the slider component (`<vds-slider>`).
  * @slot progress - Used to pass content into the progress element (`<div>`).
  * @slot preview - Used to pass in a preview to be shown while the user is interacting (hover/drag) with the scrubber.
+ * @slot slider - Used to pass content into the slider component (`<vds-slider>`).
  *
  * ## CSS Parts
  *
  * @csspart root - The component's root element (`<div>`).
- * @csspart root-disabled - The component's root element when the scrubber is disabled.
- * @csspart root-hidden - The component's root element when the scrubber is hidden.
+ *
  * @csspart slider - The slider component (`<vds-slider>`).
  * @csspart slider-* - All slider parts re-exported with the `slider` prefix such as `slider-root` and `slider-thumb`.
+ *
  * @csspart progress - The progress element (`<div>`).
+ *
+ * @csspart preview-track - The part of the slider track that displays
+ * @csspart preview-track-hidden - Targets the `preview-track` part when it's hidden.
  *
  * ## CSS Properties
  *
  * @cssprop --vds-slider-* - All slider CSS properties can be used to style the underlying `<vds-slider>` component.
- * @cssprop --vds-scrubber-progress-height - The height of the progress bar (defaults to `--vds-slider-track-height`).
+ *
  * @cssprop --vds-scrubber-current-time - Current time of playback.
  * @cssprop --vds-scrubber-seekable - The amount of media that is seekable.
  * @cssprop --vds-scrubber-duration - The length of media playback.
+ *
  * @cssprop --vds-scrubber-progress-bg: The background color of the amount that is seekable.
+ * @cssprop --vds-scrubber-progress-height - The height of the progress bar (defaults to `--vds-slider-track-height`).
+ *
+ * @cssprop --vds-scrubber-preview-time: The current time in seconds that is being previewed (hover/drag).
+ * @cssprop --vds-scrubber-preview-track-height - The height of the preview track (defaults to `--vds-slider-track-height`).
+ * @cssprop --vds-preview-track-bg - The background color of the preview track.
  *
  * ## Examples
  *
@@ -125,6 +144,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   @query('#root') rootEl!: HTMLDivElement;
   @query('#slider') sliderEl!: Slider;
   @query('#progress') progressEl!: HTMLProgressElement;
+  @query('#preview-track') previewTrackEl?: HTMLDivElement;
 
   static get styles(): CSSResultArray {
     return [scrubberStyles];
@@ -132,14 +152,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
   static get parts(): string[] {
     const sliderExportParts = Slider.parts.map(part => `slider-${part}`);
-    return [
-      'root',
-      'root-hidden',
-      'root-disabled',
-      'slider',
-      'progress',
-      ...sliderExportParts,
-    ];
+    return ['root', 'slider', 'progress', ...sliderExportParts];
   }
 
   protected currentPreviewEl?: HTMLElement;
@@ -151,13 +164,16 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     return this.currentPreviewEl;
   }
 
+  @playerContext.paused.consume()
+  protected paused = playerContext.paused.defaultValue;
+
   @internalProperty()
   @scrubberPreviewContext.time.provide()
   protected previewTime = 0;
 
   @internalProperty()
-  @scrubberPreviewContext.hidden.provide()
-  protected shouldHidePreview = true;
+  @scrubberPreviewContext.showing.provide()
+  protected isPreviewShowing = false;
 
   @internalProperty()
   @playerContext.currentTime.consume()
@@ -170,6 +186,35 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   @internalProperty()
   @playerContext.seekableAmount.consume()
   protected seekableAmount = playerContext.seekableAmount.defaultValue;
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.initThrottles();
+  }
+
+  update(changedProperties: PropertyValues): void {
+    this.isPreviewShowing = this.isSeeking;
+
+    if (
+      changedProperties.has('previewTimeThrottle') ||
+      changedProperties.has('userSeekingThrottle')
+    ) {
+      this.initThrottles();
+    }
+
+    if (changedProperties.has('disabled') && this.disabled) {
+      this.isPointerInsideScrubber = false;
+      this.isDraggingThumb = false;
+      this.hidePreview();
+    }
+
+    super.update(changedProperties);
+  }
+
+  disconnectedCallback(): void {
+    this.destroyThrottles();
+    super.disconnectedCallback();
+  }
 
   // -------------------------------------------------------------------------------------------
   // Properties
@@ -185,6 +230,18 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   @property({ type: Boolean, reflect: true }) hidden = false;
 
   @property({ type: Boolean, reflect: true }) disabled = false;
+
+  @property({ type: Number, attribute: 'preview-throttle' })
+  previewThrottle = 30;
+
+  @property({ type: Boolean, attribute: 'pause-while-dragging' })
+  pauseWhileDragging = false;
+
+  @property({ type: Boolean, attribute: 'no-preview-track' })
+  noPreviewTrack = false;
+
+  @property({ type: Number, attribute: 'user-seeking-throttle' })
+  userSeekingThrottle = 150;
 
   // Slider properties.
   @property({ type: Number }) step = 0.01;
@@ -212,7 +269,8 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   // Scrubber
   // -------------------------------------------------------------------------------------------
 
-  protected pointerInsideScrubber = false;
+  @internalProperty()
+  protected isPointerInsideScrubber = false;
 
   /**
    * The component's root element.
@@ -239,11 +297,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected getScrubberPartAttr(): string {
-    return clsx(
-      'root',
-      'root-hidden' && this.hidden,
-      'root-disabled' && this.disabled,
-    );
+    return 'root';
   }
 
   protected getScrubberStyleMap(): StyleInfo {
@@ -251,40 +305,33 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
       '--vds-scrubber-current-time': String(this.currentTime),
       '--vds-scrubber-seekable': String(this.seekableAmount),
       '--vds-scrubber-duration': String(this.duration),
+      '--vds-scrubber-preview-time': String(this.previewTime),
     };
   }
 
-  protected handleScrubberPointerEnter(e: PointerEvent): void {
+  protected async handleScrubberPointerEnter(e: PointerEvent): Promise<void> {
     if (this.disabled) return;
-    this.pointerInsideScrubber = true;
+    this.isPointerInsideScrubber = true;
     this.updatePreviewPosition(e);
+    await this.updateComplete;
     this.showPreview();
   }
 
-  protected handleScrubberPointerLeave(e: PointerEvent): void {
-    this.pointerInsideScrubber = false;
+  protected async handleScrubberPointerLeave(e: PointerEvent): Promise<void> {
+    this.isPointerInsideScrubber = false;
     this.updatePreviewPosition(e);
+    await this.updateComplete;
     this.hidePreview();
   }
 
   protected handleScrubberPointerMove(e: PointerEvent): void {
     if (this.disabled) return;
-    this.updatePreviewPosition(e);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.previewPositionThrottler!(e);
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Slots
-  // -------------------------------------------------------------------------------------------
 
   protected renderDefaultSlot(): TemplateResult {
-    return html`<slot @slotchange="${this.handleDefaultSlotChange}"></slot>`;
-  }
-
-  /**
-   * Override to listen to default slot changes.
-   */
-  protected handleDefaultSlotChange(): void {
-    // no-op
+    return html`<slot></slot>`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -326,23 +373,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   protected renderProgressSlot(): TemplateResult {
-    return html`
-      <slot
-        name="${this.getProgressSlotName()}"
-        @slotchange="${this.handleProgressSlotChange}"
-      ></slot>
-    `;
-  }
-
-  protected getProgressSlotName(): string {
-    return 'progress';
-  }
-
-  /**
-   * Override to listen to progress slot changes.
-   */
-  protected handleProgressSlotChange(): void {
-    // no-op
+    return html`<slot name="progress"></slot>`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -350,7 +381,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   // -------------------------------------------------------------------------------------------
 
   @internalProperty()
-  protected _isDragging = false;
+  protected isDraggingThumb = false;
 
   /**
    * Returns the underlying `vds-slider` component.
@@ -360,10 +391,10 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   /**
-   * Whether the scrubber thumb/handle is currently being actively dragged left/right.
+   * Whether the user is seeking by either hovering over the scrubber or by dragging the thumb.
    */
-  get isDragging(): boolean {
-    return this._isDragging;
+  get isSeeking(): boolean {
+    return this.isPointerInsideScrubber || this.isDraggingThumb;
   }
 
   protected renderSlider(): TemplateResult {
@@ -373,7 +404,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
         label="${ifNonEmpty(this.sliderLabel)}"
         min="0"
         max="${this.duration}"
-        value="${this._isDragging ? this.previewTime : this.currentTime}"
+        value="${this.isDraggingThumb ? this.previewTime : this.currentTime}"
         step="${this.step}"
         step-multiplier="${this.stepMultiplier}"
         part="${this.getSliderPartAttr()}"
@@ -387,7 +418,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
         ?hidden="${this.hidden}"
         ?disabled="${this.disabled}"
       >
-        ${this.renderSliderSlot()}
+        ${this.renderSliderContent()}
       </vds-slider>
     `;
   }
@@ -407,30 +438,20 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
       .replace('{duration}', formatSpokenTime(this.duration));
   }
 
-  protected renderSliderSlot(): TemplateResult {
+  protected renderSliderContent(): TemplateResult {
     return html`
-      <slot
-        name="${this.getSliderSlotName()}"
-        @slotchange="${this.handleSliderSlotChange}"
-      ></slot>
-      ${this.renderProgress()}
+      <slot name="slider"></slot>
+      ${this.renderProgress()} ${this.renderPreviewTrack()}
     `;
   }
 
-  protected getSliderSlotName(): string {
-    return 'slider';
-  }
-
-  /**
-   * Override to listen to slider slot changes.
-   */
-  protected handleSliderSlotChange(): void {
-    // no-op
-  }
-
   protected handleSliderValueChange(e: VdsSliderValueChangeEvent): void {
-    this.dispatchEvent(new VdsUserSeekingEvent({ detail: e.detail }));
-    if (!this._isDragging) {
+    if (this.isDraggingThumb) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.previewTimeThrottler!(e.detail);
+    } else {
+      this.currentTime = e.detail;
+      this.previewTime = e.detail;
       this.dispatchEvent(new VdsUserSeekedEvent({ detail: this.previewTime }));
     }
   }
@@ -438,23 +459,104 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   protected async handleSliderDragStart(
     e: VdsSliderDragStartEvent,
   ): Promise<void> {
-    this._isDragging = true;
-    this.updatePreviewPosition(e.originalEvent as PointerEvent);
-    await raf();
+    this.isDraggingThumb = true;
+    await this.updatePreviewPosition(e.originalEvent as PointerEvent);
+    await this.updateComplete;
     this.showPreview();
+    this.togglePlaybackWhileDragging(e);
   }
 
   protected async handleSliderDragEnd(e: VdsSliderDragEndEvent): Promise<void> {
-    this._isDragging = false;
-    this.updatePreviewPosition(e.originalEvent as PointerEvent);
-    await raf();
+    this.isDraggingThumb = false;
+    await this.updatePreviewPosition(e.originalEvent as PointerEvent);
+    await this.updateComplete;
     this.hidePreview();
+    this.currentTime = e.detail;
     this.dispatchEvent(new VdsUserSeekedEvent({ detail: this.previewTime }));
+    this.togglePlaybackWhileDragging(e);
+  }
+
+  protected wasPausedBeforeDragStart = false;
+  protected togglePlaybackWhileDragging(originalEvent: Event): void {
+    if (!this.pauseWhileDragging) return;
+
+    if (this.isDraggingThumb && !this.paused) {
+      this.wasPausedBeforeDragStart = this.paused;
+      this.dispatchEvent(new VdsUserPauseEvent({ originalEvent }));
+    } else if (
+      !this.isDraggingThumb &&
+      !this.wasPausedBeforeDragStart &&
+      this.paused
+    ) {
+      this.dispatchEvent(new VdsUserPlayEvent({ originalEvent }));
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Preview Track Fill
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Returns the underlying preview track fill element (`<div>`). This will be `undefined` if
+   * you set the `noPreviewTrack` property to true.
+   */
+  get previewTrackElement(): HTMLDivElement | undefined {
+    return this.previewTrackEl ?? undefined;
+  }
+
+  protected renderPreviewTrack(): TemplateResult {
+    if (this.noPreviewTrack) return html``;
+
+    return html`
+      <div
+        id="preview-track"
+        part="${this.getPreviewTrackPartAttr()}"
+        ?hidden="${!this.isSeeking}"
+        ?disabled="${this.disabled}"
+      ></div>
+    `;
+  }
+
+  protected getPreviewTrackPartAttr(): string {
+    return clsx('preview-track', 'preview-track-hidden' && !this.isSeeking);
   }
 
   // -------------------------------------------------------------------------------------------
   // Preview
   // -------------------------------------------------------------------------------------------
+
+  protected userSeekingThrottler?: CancelableCallback<number>;
+  protected previewTimeThrottler?: CancelableCallback<number>;
+  protected previewPositionThrottler?: CancelableCallback<PointerEvent>;
+
+  protected initThrottles(): void {
+    this.previewTimeThrottler?.cancel();
+    this.previewTimeThrottler = throttle(
+      this.updatePreviewTime.bind(this),
+      this.previewThrottle,
+    );
+
+    this.userSeekingThrottler?.cancel();
+    this.userSeekingThrottler = throttle(
+      this.dispatchUserSeekingEvent.bind(this),
+      this.userSeekingThrottle,
+    );
+
+    this.previewPositionThrottler?.cancel();
+    this.previewPositionThrottler = throttle(
+      this.updatePreviewPosition.bind(this),
+      this.previewThrottle,
+    );
+  }
+
+  protected destroyThrottles(): void {
+    this.previewTimeThrottler?.cancel();
+    this.previewTimeThrottler = undefined;
+    this.userSeekingThrottler?.cancel();
+    this.userSeekingThrottler = undefined;
+    this.previewPositionThrottler?.cancel();
+    this.previewPositionThrottler = undefined;
+  }
 
   protected renderPreviewSlot(): TemplateResult {
     return html`
@@ -479,40 +581,60 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
       this.currentPreviewEl.style.position = 'absolute';
       this.currentPreviewEl.style.left = '0';
       this.currentPreviewEl.style.zIndex = '90';
+      this.currentPreviewEl.style.willChange = 'transform';
       this.hidePreview();
     }
   }
 
+  protected isCurrentPreviewHidden(): boolean {
+    return this.currentPreviewEl?.hasAttribute('hidden') ?? true;
+  }
+
   protected showPreview(): void {
-    if (this.disabled || !this.shouldHidePreview) return;
-    this.shouldHidePreview = false;
+    if (
+      this.disabled ||
+      isNil(this.currentPreviewEl) ||
+      !this.isSeeking ||
+      (this.isSeeking && !this.isCurrentPreviewHidden())
+    ) {
+      return;
+    }
+
     this.currentPreviewEl?.removeAttribute('hidden');
     this.dispatchEvent(new VdsScrubberPreviewShowEvent());
+    this.requestUpdate();
   }
 
   protected hidePreview(): void {
-    if (
-      this._isDragging ||
-      this.pointerInsideScrubber ||
-      this.currentPreviewEl?.hasAttribute('hidden')
-    )
+    if (this.isSeeking || (!this.isSeeking && this.isCurrentPreviewHidden())) {
       return;
-    this.shouldHidePreview = true;
+    }
+
     this.currentPreviewEl?.setAttribute('hidden', '');
     this.dispatchEvent(new VdsScrubberPreviewHideEvent());
+    this.requestUpdate();
+  }
+
+  protected dispatchUserSeekingEvent(time: number): void {
+    if (!this.isSeeking) return;
+    this.dispatchEvent(new VdsUserSeekingEvent({ detail: time }));
+  }
+
+  protected updatePreviewTime(time: number): void {
+    if (!this.isSeeking) return;
+    this.previewTime = time;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.userSeekingThrottler!(time);
+    this.dispatchEvent(new VdsScrubberPreviewTimeUpdateEvent({ detail: time }));
+    this.requestUpdate();
   }
 
   protected updatePreviewPosition(event: PointerEvent): void {
-    if (isNil(this.currentPreviewEl) || this.shouldHidePreview) return;
-
-    this.previewTime = this.slider.value;
-    this.dispatchEvent(
-      new VdsScrubberPreviewTimeUpdateEvent({ detail: this.previewTime }),
-    );
-
     const thumbPosition = event.clientX;
     const rootRect = this.rootEl.getBoundingClientRect();
-    const previewRect = this.currentPreviewEl.getBoundingClientRect();
+    const trackRect = this.sliderEl.trackEl.getBoundingClientRect();
+    const previewRectWidth =
+      this.currentPreviewEl?.getBoundingClientRect().width ?? 0;
 
     // Margin on slider usually represents (thumb width / 2) so thumb is contained when on edge.
     const sliderLeftMargin = parseFloat(
@@ -524,21 +646,18 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
     const percent = Math.max(
       0,
-      Math.min(100, (100 / rootRect.width) * (thumbPosition - rootRect.left)),
+      Math.min(100, (100 / trackRect.width) * (thumbPosition - trackRect.left)),
     );
 
-    const left = (percent / 100) * rootRect.width - previewRect.width / 2;
-    const rightLimit = rootRect.width - previewRect.width - sliderRightMargin;
+    const left = (percent / 100) * rootRect.width - previewRectWidth / 2;
+    const rightLimit = rootRect.width - previewRectWidth - sliderRightMargin;
     const xPos = Math.max(sliderLeftMargin, Math.min(left, rightLimit));
 
-    this.currentPreviewEl.style.left = `${xPos}px`;
-    this.currentPreviewEl.setAttribute(
-      'vds-preview-time',
-      this.previewTime.toFixed(0),
-    );
-    this.currentPreviewEl.style.setProperty(
-      '--vds-preview-time',
-      this.previewTime.toFixed(0),
-    );
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.previewTimeThrottler!((percent / 100) * this.duration);
+
+    if (!isNil(this.currentPreviewEl)) {
+      this.currentPreviewEl.style.transform = `translateX(${xPos}px)`;
+    }
   }
 }

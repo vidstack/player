@@ -39,18 +39,18 @@ import { SliderKeyDirection, SliderProps } from './slider.types';
  * ## Slots
  *
  * @slot Used to pass in additional content inside the slider.
+ * @slot thumb-container - Used to pass content into the thumb container.
+ * @slot thumb - Used to pass content inside the thumb.
+ * @slot track - Used to pass content inside the track.
+ * @slot track-fill - Used to pass content inside the track fill.
  *
  * ## CSS Parts
  *
  * @csspart root - The component's root element, in this case the slider container (`<div>`).
- * @csspart root-dragging - The component's root element when the user is dragging the thumb.
- * @csspart root-orientation-vertical - The component's root element when the slider orientation is `vertical`.
+ * @csspart thumb-container - The container for the slider's handle.
  * @csspart thumb - The slider's handle the user drags left/right (`<div>`).
- * @csspart thumb-dragging - The slider's handle when the user is dragging.
  * @csspart track - The background of the slider in which the thumb slides along (`<div>`).
- * @csspart track-dragging - The slider's track when the user is dragging.
  * @csspart track-fill - The part of the track that is currently filled which fills left-to-right (`<div>`).
- * @csspart track-fill-dragging - The slider's track fill when the user is dragging.
  *
  * ## CSS Properties
  *
@@ -62,6 +62,8 @@ import { SliderKeyDirection, SliderProps } from './slider.types';
  * @cssprop --vds-slider-thumb-height - The slider handle height.
  * @cssprop --vds-slider-thumb-bg - The background color of the slider handle.
  * @cssprop --vds-slider-thumb-border-radius - The border radius of the slider handle.
+ * @cssprop --vds-slider-thumb-scale - The base scale of thumb when it is inactive, it'll scale to 1 when active.
+ * @cssprop --vds-slider-thumb-transition - The CSS transitions to use for the thumb, defaults to `transform 100ms ease-out 0s`.
  *
  * @cssprop --vds-slider-track-height - The height of the slider track.
  * @cssprop --vds-slider-track-bg - The background color of the slider track.
@@ -102,6 +104,7 @@ import { SliderKeyDirection, SliderProps } from './slider.types';
 export class Slider extends FocusMixin(LitElement) implements SliderProps {
   @query('#root') rootEl!: HTMLDivElement;
   @query('#thumb') thumbEl!: HTMLDivElement;
+  @query('#thumb-container') thumbContainerEl!: HTMLDivElement;
   @query('#track') trackEl!: HTMLDivElement;
   @query('#track-fill') trackFillEl!: HTMLDivElement;
 
@@ -110,17 +113,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   }
 
   static get parts(): string[] {
-    return [
-      'root',
-      'root-dragging',
-      'root-orientation-vertical',
-      'thumb',
-      'thumb-dragging',
-      'track',
-      'track-dragging',
-      'track-fill',
-      'track-fill-dragging',
-    ];
+    return ['root', 'thumb', 'track', 'track-fill'];
   }
 
   connectedCallback(): void {
@@ -129,6 +122,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   }
 
   update(changedProperties: PropertyValues): void {
+    this.setAttribute('dragging', String(this.isDragging));
+
     if (changedProperties.has('value')) {
       // Bound value between min/max.
       this.value = Math.min(this.max, Math.max(this.min, this.value));
@@ -143,6 +138,11 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     }
 
     super.update(changedProperties);
+  }
+
+  async firstUpdated(changedProperties: PropertyValues): Promise<void> {
+    super.firstUpdated(changedProperties);
+    await this.requestUpdate();
   }
 
   disconnectedCallback(): void {
@@ -169,7 +169,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  @property({ type: Number }) value = 50;
+  @property({ type: Number, reflect: true }) value = 50;
 
   @property({ attribute: 'value-text' }) valueText?: string;
 
@@ -249,6 +249,13 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   }
 
   /**
+   * The thumb container element.
+   */
+  get thumbContainerElement(): HTMLDivElement {
+    return this.thumbContainerEl;
+  }
+
+  /**
    * The thumb element.
    */
   get thumbElement(): HTMLDivElement {
@@ -297,8 +304,9 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
         class="${this.getSliderClassAttr()}"
         part="${this.getSliderPartAttr()}"
         style="${styleMap(this.getSliderStyleMap())}"
+        @pointerdown="${this.handleSliderPointerMove}"
       >
-        ${this.renderThumb()}${this.renderTrack()}${this.renderTrackFill()}${this.renderInput()}
+        ${this.renderThumbContainer()}${this.renderTrack()}${this.renderTrackFill()}${this.renderInput()}
         <slot></slot>
       </div>
     `;
@@ -312,11 +320,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   }
 
   protected getSliderPartAttr(): string {
-    return clsx(
-      'root',
-      this.isDragging && 'root-dragging',
-      this.isOrientationVertical && 'root-orientation-vertical',
-    );
+    return 'root';
   }
 
   protected getSliderStyleMap(): StyleInfo {
@@ -327,17 +331,22 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     };
   }
 
+  protected handleSliderPointerMove(event: PointerEvent): void {
+    if (this.disabled) return;
+    this.startDragging(event);
+    this.handlePointerMove(event);
+  }
+
   // -------------------------------------------------------------------------------------------
-  // Render (Thumb)
+  // Render (Thumb Container)
   // -------------------------------------------------------------------------------------------
 
-  protected renderThumb(): TemplateResult {
+  protected renderThumbContainer(): TemplateResult {
     return html`
       <div
-        id="thumb"
+        id="thumb-container"
         role="slider"
         tabindex="0"
-        part="${this.getThumbPartAttr()}"
         aria-label="${ifNonEmpty(this.label)}"
         aria-valuemax="${this.max}"
         aria-valuemin="${this.min}"
@@ -347,26 +356,34 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
         aria-disabled="${this.disabled}"
         aria-hidden="${this.hidden}"
         autocomplete="off"
-        style="left: ${this.fillPercent}%"
-        @keydown="${this.handleThumbKeydown}"
-        @pointerdown="${this.handleThumbPointerDown}"
-      ></div>
+        part="${this.getThumbContainerPartAttr()}"
+        @keydown="${this.handleThumbContainerKeydown}"
+        @pointerdown="${this.handleThumbContainerPointerDown}"
+      >
+        ${this.renderThumb()} ${this.renderThumbContainerSlot()}
+      </div>
     `;
-  }
-
-  protected getThumbPartAttr(): string {
-    return clsx('thumb', this.isDragging && 'thumb-dragging');
   }
 
   protected getValueAsTextFallback(): string {
     return `${(this.value / this.max) * 100}%`;
   }
 
-  protected handleThumbKeydown(event: KeyboardEvent): void {
+  protected getThumbContainerPartAttr(): string {
+    return 'thumb-container';
+  }
+
+  protected renderThumbContainerSlot(): TemplateResult {
+    return html`<slot name="thumb-container"></slot> `;
+  }
+
+  protected handleThumbContainerKeydown(event: KeyboardEvent): void {
+    if (this.disabled) return;
+
     const { key, shiftKey } = event;
     const isValidKey = Object.keys(SliderKeyDirection).includes(key);
 
-    if (this.disabled || !isValidKey) return;
+    if (!isValidKey) return;
 
     const modified = !shiftKey ? this.step : this.step * this.stepMultiplier;
     const direction =
@@ -391,9 +408,29 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     );
   }
 
-  protected handleThumbPointerDown(event: PointerEvent): void {
+  protected handleThumbContainerPointerDown(event: PointerEvent): void {
     if (this.disabled) return;
     this.startDragging(event);
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Render (Thumb)
+  // -------------------------------------------------------------------------------------------
+
+  protected renderThumb(): TemplateResult {
+    return html`
+      <div id="thumb" part="${this.getThumbPartAttr()}">
+        ${this.renderThumbSlot()}
+      </div>
+    `;
+  }
+
+  protected getThumbPartAttr(): string {
+    return 'thumb';
+  }
+
+  protected renderThumbSlot(): TemplateResult {
+    return html`<slot name="thumb"></slot>`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -402,16 +439,18 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   protected renderTrack(): TemplateResult {
     return html`
-      <div
-        id="track"
-        part="${this.getTrackPartAttr()}"
-        @pointerdown="${this.handlePointerMove}"
-      ></div>
+      <div id="track" part="${this.getTrackPartAttr()}">
+        ${this.renderTrackSlot()}
+      </div>
     `;
   }
 
+  protected renderTrackSlot(): TemplateResult {
+    return html`<slot name="track"></slot>`;
+  }
+
   protected getTrackPartAttr(): string {
-    return clsx('track', this.isDragging && 'track-dragging');
+    return 'track';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -420,12 +459,17 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   protected renderTrackFill(): TemplateResult {
     return html`
-      <div id="track-fill" part="${this.getTrackFillPartAttr()}"></div>
+      <div id="track-fill" part="${this.getTrackFillPartAttr()}">
+        ${this.renderTrackFillSlot()}
+      </div>
     `;
   }
 
+  protected renderTrackFillSlot(): TemplateResult {
+    return html`<slot name="track-fill"></slot>`;
+  }
   protected getTrackFillPartAttr(): string {
-    return clsx('track-fill', this.isDragging && 'track-fill-dragging');
+    return 'track-fill';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -451,35 +495,38 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   // -------------------------------------------------------------------------------------------
 
   protected startDragging(originalEvent: PointerEvent): void {
+    if (this._isDragging) return;
     this._isDragging = true;
+    this.updateValueBasedOnThumbPosition(originalEvent, false);
     this.dispatchEvent(
       new VdsSliderDragStartEvent({
         originalEvent,
+        detail: this.value,
       }),
     );
   }
 
   protected stopDragging(originalEvent: PointerEvent): void {
+    if (!this._isDragging) return;
     this._isDragging = false;
+    this.updateValueBasedOnThumbPosition(originalEvent, false);
     this.dispatchEvent(
       new VdsSliderDragEndEvent({
         originalEvent,
+        detail: this.value,
       }),
     );
   }
 
   // -------------------------------------------------------------------------------------------
-  // Document
+  // Document (Pointer Events)
   // -------------------------------------------------------------------------------------------
 
   protected pointerMoveThrottle?: CancelableCallback<PointerEvent>;
 
   protected initPointerMoveThrottle(): void {
     this.pointerMoveThrottle?.cancel();
-    this.pointerMoveThrottle = throttle(
-      this.handleThrottledPointerMove,
-      this.throttle,
-    );
+    this.pointerMoveThrottle = throttle(this.handlePointerMove, this.throttle);
   }
 
   protected destroyPointerMoveThrottle(): void {
@@ -495,25 +542,26 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   @listen('pointermove', { target: 'document' })
   protected handleDocumentPointerMove(event: PointerEvent): void {
-    if (this.disabled || !this._isDragging) return;
-    this.pointerMoveThrottle?.(event);
-  }
+    if (this.disabled || !this._isDragging) {
+      this.pointerMoveThrottle?.cancel();
+      return;
+    }
 
-  protected handleThrottledPointerMove(event: PointerEvent): void {
-    if (this.disabled || !this._isDragging) return;
-    this.handlePointerMove(event);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.pointerMoveThrottle!(event);
   }
 
   protected handlePointerMove(event: PointerEvent): void {
-    if (this.disabled) return;
-    const thumbPosition = event.clientX;
-    this.updateValueBasedOnThumbPosition(thumbPosition, event);
+    if (this.disabled || !this._isDragging) return;
+    this.updateValueBasedOnThumbPosition(event);
   }
 
   protected updateValueBasedOnThumbPosition(
-    thumbPosition: number,
-    originalEvent?: PointerEvent,
+    originalEvent: PointerEvent,
+    shouldFireValueChange = true,
   ): void {
+    const thumbPosition = originalEvent.clientX;
+
     const {
       left: trackLeft,
       width: trackWidth,
@@ -522,11 +570,13 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     // Calling this will update `this.value`.
     this._fillRate = (thumbPosition - trackLeft) / trackWidth;
 
-    this.dispatchEvent(
-      new VdsSliderValueChangeEvent({
-        detail: this.value,
-        originalEvent,
-      }),
-    );
+    if (shouldFireValueChange) {
+      this.dispatchEvent(
+        new VdsSliderValueChangeEvent({
+          detail: this.value,
+          originalEvent,
+        }),
+      );
+    }
   }
 }

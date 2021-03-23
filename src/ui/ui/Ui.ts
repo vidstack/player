@@ -117,7 +117,11 @@ export class Ui extends LitElement {
    * Override this to modify the content rendered inside the root UI container.
    */
   protected renderRootContent(): TemplateResult {
-    return html`<slot @slotchange="${this.handleDefaultSlotChange}"></slot>`;
+    return html`${this.renderDefaultSlot()}`;
+  }
+
+  protected renderDefaultSlot(): TemplateResult {
+    return html`<slot></slot>`;
   }
 
   /**
@@ -152,12 +156,5 @@ export class Ui extends LitElement {
         this.isVideoView &&
         (!this.playsinline || this.isFulscreenActive))
     );
-  }
-
-  /**
-   * Override to listen to slot changes.
-   */
-  protected handleDefaultSlotChange(): void {
-    // no-op
   }
 }

@@ -256,6 +256,10 @@ export abstract class MediaProvider<EngineType = unknown>
     return this.context.seekable;
   }
 
+  get seeking(): boolean {
+    return this.context.seeking;
+  }
+
   get started(): boolean {
     return this.context.started;
   }

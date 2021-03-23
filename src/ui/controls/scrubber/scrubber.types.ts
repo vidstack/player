@@ -29,6 +29,28 @@ export interface ScrubberProps
    * Whether the scubber is disabled.
    */
   disabled: boolean;
+
+  /**
+   * Whether to remove the preview track.
+   */
+  noPreviewTrack: boolean;
+
+  /**
+   * Whether the scrubber should request playback to pause while the user is dragging the
+   * thumb. If the media was playing before the dragging starts, the state will be restored by
+   * dispatching a user play request once the dragging ends.
+   */
+  pauseWhileDragging: boolean;
+
+  /**
+   * The amount of milliseconds to throttle preview time/position updates by.
+   */
+  previewThrottle: number;
+
+  /**
+   * The amount of milliseconds to throttle user seeking events being dispatched.
+   */
+  userSeekingThrottle: number;
 }
 
 export interface ScrubberFakeProps {

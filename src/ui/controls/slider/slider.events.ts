@@ -13,8 +13,8 @@ declare global {
 
 export interface SliderEvents {
   'slider-value-change': VdsCustomEvent<number>;
-  'slider-drag-start': VdsCustomEvent<void>;
-  'slider-drag-end': VdsCustomEvent<void>;
+  'slider-drag-start': VdsCustomEvent<number>;
+  'slider-drag-end': VdsCustomEvent<number>;
 }
 
 export type VdsSliderEvents = VdsEvents<SliderEvents>;

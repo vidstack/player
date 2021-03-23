@@ -212,6 +212,11 @@ export interface PlayerProps {
   readonly seekable: TimeRanges;
 
   /**
+   * Whether media is actively seeking to an new playback position.
+   */
+  readonly seeking: boolean;
+
+  /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    */
   readonly started: boolean;

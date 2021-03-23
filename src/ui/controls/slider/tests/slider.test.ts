@@ -22,6 +22,8 @@ describe(SLIDER_TAG_NAME, () => {
         max="100"
         step="1"
         step-multiplier="10"
+        value="50"
+        dragging="false"
       ></vds-slider>
     `);
   });
@@ -44,20 +46,31 @@ describe(SLIDER_TAG_NAME, () => {
           aria-valuenow="50"
           aria-valuetext="50%"
           autocomplete="off"
-          id="thumb"
-          part="thumb"
+          id="thumb-container"
+          part="thumb-container"
           role="slider"
-          style="left: 50%"
           tabindex="0"
-        ></div>
+        >
+          <div
+            id="thumb"
+            part="thumb"
+          >
+            <slot name="thumb"></slot>
+          </div>
+          <slot name="thumb-container"></slot>
+        </div>
         <div
           id="track"
           part="track"
-        ></div>
+        >
+          <slot name="track"></slot>
+        </div>
         <div
           id="track-fill"
           part="track-fill"
-        ></div>
+        >
+          <slot name="track-fill"></slot>
+        </div>
         <input
           type="hidden"
           max="100"
@@ -103,7 +116,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should delegate focus', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.thumbElement;
+    const thumb = slider.thumbContainerElement;
 
     // Focus root.
     slider.focus();
@@ -122,7 +135,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should step to the left when up/left arrow key is pressed', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.thumbElement;
+    const thumb = slider.thumbContainerElement;
 
     thumb.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -142,7 +155,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should step one to the right when down/right arrow key is pressed', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.thumbElement;
+    const thumb = slider.thumbContainerElement;
 
     thumb.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -162,7 +175,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should multiply steps when shift key is held down', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.thumbElement;
+    const thumb = slider.thumbContainerElement;
 
     thumb.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -187,7 +200,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should start dragging on thumb pointerdown and stop on document pointerup', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.thumbElement;
+    const thumb = slider.thumbContainerElement;
 
     setTimeout(() => thumb.dispatchEvent(new PointerEvent('pointerdown')));
     await oneEvent(slider, VdsSliderDragStartEvent.TYPE);
@@ -198,12 +211,12 @@ describe(SLIDER_TAG_NAME, () => {
     expect(slider.isDragging).to.be.false;
   });
 
-  it('should update slider value to new thumb position when track is clicked', async () => {
+  it('should update slider value to new thumb position when root is clicked', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const track = slider.trackElement;
-    track.dispatchEvent(
+    const root = slider.rootElement;
+    root.dispatchEvent(
       new PointerEvent('pointerdown', {
-        clientX: Math.floor(track.clientWidth / 4),
+        clientX: Math.floor(root.clientWidth / 4),
       }),
     );
     expect(slider.value).to.equal(23);
@@ -223,9 +236,13 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should not change value when move events are fired on document and slider is disabled', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.thumbElement;
+    const thumb = slider.thumbContainerElement;
 
-    thumb.dispatchEvent(new PointerEvent('pointerdown'));
+    thumb.dispatchEvent(
+      new PointerEvent('pointerdown', {
+        clientX: 400,
+      }),
+    );
     expect(slider.isDragging).to.be.true;
 
     slider.disabled = true;
@@ -258,7 +275,7 @@ describe(SLIDER_TAG_NAME, () => {
 
   it('should not start dragging when thumb is pressed and slider is disabled', async () => {
     const slider = await fixture<Slider>(html`<vds-slider></vds-slider>`);
-    const thumb = slider.thumbElement;
+    const thumb = slider.thumbContainerElement;
 
     slider.disabled = true;
 

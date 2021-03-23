@@ -370,6 +370,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   protected handleSeeked(originalEvent: Event): void {
     this.validatePlaybackEndedState();
     this.context.currentTime = this.mediaEl!.currentTime;
+    this.context.seeking = false;
     this.dispatchEvent(
       new VdsSeekedEvent({
         detail: this.context.currentTime,
@@ -380,6 +381,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
   protected handleSeeking(originalEvent: Event): void {
     this.context.currentTime = this.mediaEl!.currentTime;
+    this.context.seeking = true;
     this.dispatchEvent(
       new VdsSeekingEvent({
         detail: this.context.currentTime,

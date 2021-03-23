@@ -129,6 +129,10 @@ export class FakeContextConsumer
   seekableAmount = playerContext.seekableAmount.defaultValue;
 
   @internalProperty()
+  @playerContext.seeking.consume()
+  seeking = playerContext.sekeing.defaultValue;
+
+  @internalProperty()
   @uuidContext.consume()
   uuid = uuidContext.defaultValue;
 

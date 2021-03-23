@@ -29,6 +29,9 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
   stepMultiplier,
   orientation,
   throttle,
+  previewThrottle,
+  userSeekingThrottle,
+  noPreviewTrack,
   fakeCurrentTime,
   fakeSeekableAmount,
   fakeDuration,
@@ -56,7 +59,10 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
         step="${step}"
         step-multiplier="${stepMultiplier}"
         orientation="${orientation}"
+        ?no-preview-track="${noPreviewTrack}"
         throttle="${throttle}"
+        preview-throttle="${previewThrottle}"
+        user-seeking-throttle="${userSeekingThrottle}"
         @vds-slider-drag-start="${onDragStart}"
         @vds-slider-drag-end="${onDragEnd}"
         @vds-user-seeked="${onUserSeeked}"
@@ -72,7 +78,6 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
     <style>
       vds-scrubber {
         margin-top: 48px;
-        max-width: 50%;
       }
 
       .preview {
@@ -81,7 +86,7 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
         opacity: 1;
         position: absolute;
         left: 0;
-        bottom: 28px;
+        bottom: 40px;
         transition: opacity 0.3s ease-in;
       }
 

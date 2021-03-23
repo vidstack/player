@@ -44,7 +44,6 @@ const Template: Story<SliderProps & SliderActions> = ({
       @vds-slider-value-change="${onValueChange}"
       @vds-slider-drag-start="${onDragStart}"
       @vds-slider-drag-end="${onDragEnd}"
-      style="max-width: 25%;"
     ></vds-slider>
   `;
 
