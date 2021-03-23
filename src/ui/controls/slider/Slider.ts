@@ -16,6 +16,7 @@ import { throttle } from 'lodash-es';
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { CancelableCallback } from '../../../shared/types';
+import { setAttribute } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { sliderStyles } from './slider.css';
 import {
@@ -122,7 +123,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   }
 
   update(changedProperties: PropertyValues): void {
-    this.setAttribute('dragging', String(this.isDragging));
+    setAttribute(this, 'dragging', this.isDragging ? '' : undefined);
 
     if (changedProperties.has('value')) {
       // Bound value between min/max.
@@ -313,10 +314,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   }
 
   protected getSliderClassAttr(): string {
-    return clsx(
-      this.isDragging && 'dragging',
-      this.isOrientationVertical && 'orientation-vertical',
-    );
+    return '';
   }
 
   protected getSliderPartAttr(): string {

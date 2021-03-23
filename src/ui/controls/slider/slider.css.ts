@@ -65,7 +65,7 @@ export const sliderStyles = css`
     will-change: transform;
   }
 
-  :host([dragging='true']) #thumb {
+  :host([dragging]) #thumb {
     transform: translateY(-50%) scale3d(1, 1, 1);
   }
 
@@ -100,10 +100,10 @@ export const sliderStyles = css`
 
   :host(:focus) #thumb,
   :host(:active) #thumb,
-  :host([dragging='true']) #thumb,
+  :host([dragging]) #thumb,
   :host(:focus) #track-fill,
   :host(:active) #track-fill,
-  :host([dragging='true']) #track-fill {
+  :host([dragging]) #track-fill {
     border: 0;
     outline: 0;
     background-color: var(--vds-slider-active-color, #ff2a5d);

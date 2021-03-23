@@ -23,7 +23,6 @@ describe(SLIDER_TAG_NAME, () => {
         step="1"
         step-multiplier="10"
         value="50"
-        dragging="false"
       ></vds-slider>
     `);
   });

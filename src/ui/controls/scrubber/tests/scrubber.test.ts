@@ -43,7 +43,6 @@ describe(SCRUBBER_TAG_NAME, () => {
           throttle="10"
           value="0"
           value-text="0 seconds out of 0 seconds"
-          dragging="false"
         >
           <slot name="slider"></slot>
           
