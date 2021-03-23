@@ -4,7 +4,7 @@ import { TimeDurationProps } from './time-duration.types';
 
 /**
  * Formats and displays the `duration` of the current media. Do not mess with the component's
- * `duration` property as it's automatically managed.
+ * `seconds` property as it's automatically managed.
  *
  * ## Tag
  *
@@ -39,5 +39,5 @@ export class TimeDuration extends Time implements TimeDurationProps {
    * @internal
    */
   @playerContext.duration.consume({ transform: d => (d >= 0 ? d : 0) })
-  duration = 0;
+  seconds = 0;
 }

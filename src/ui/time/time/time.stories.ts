@@ -14,13 +14,13 @@ export default {
 
 const Template: Story<TimeProps> = ({
   label,
-  duration,
+  seconds,
   alwaysShowHours,
   padHours,
 }) =>
   html`<vds-time
     label="${ifNonEmpty(label)}"
-    duration="${duration}"
+    seconds="${seconds}"
     ?always-show-hours="${alwaysShowHours}"
     ?pad-hours="${padHours}"
     style="color: #FF2A5D;"

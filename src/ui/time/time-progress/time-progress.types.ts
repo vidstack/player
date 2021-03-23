@@ -1,6 +1,6 @@
 import { TimeProps } from '../time';
 
-export type TimeProgressProps = Omit<TimeProps, 'duration'> & {
+export type TimeProgressProps = Omit<TimeProps, 'seconds'> & {
   /**
    * ♿ **ARIA:** The `aria-label` property for the current time.
    */

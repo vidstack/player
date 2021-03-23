@@ -4,7 +4,7 @@ import { TimeCurrentProps } from './time-current.types';
 
 /**
  * Formats and displays the `currentTime` of media playback. Do not mess with the component's
- * `duration` property as it's automatically managed.
+ * `seconds` property as it's automatically managed.
  *
  * ## Tag
  *
@@ -39,5 +39,5 @@ export class TimeCurrent extends Time implements TimeCurrentProps {
    * @internal
    */
   @playerContext.currentTime.consume()
-  duration = playerContext.currentTime.defaultValue;
+  seconds = playerContext.currentTime.defaultValue;
 }

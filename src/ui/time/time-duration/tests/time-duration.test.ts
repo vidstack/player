@@ -47,12 +47,12 @@ describe(`${TIME_DURATION_TAG_NAME}`, () => {
 
   it('should update duration time as context updates', async () => {
     const [provider, timeDuration] = await buildFixture();
-    expect(timeDuration.duration).to.equal(0);
+    expect(timeDuration.seconds).to.equal(0);
     provider.context.duration = 50;
     await elementUpdated(timeDuration);
-    expect(timeDuration.duration).to.equal(50);
+    expect(timeDuration.seconds).to.equal(50);
     provider.context.duration = -1;
     await elementUpdated(timeDuration);
-    expect(timeDuration.duration).to.equal(0);
+    expect(timeDuration.seconds).to.equal(0);
   });
 });

@@ -47,9 +47,9 @@ describe(`${TIME_CURRENT_TAG_NAME}`, () => {
 
   it('should update current time as context updates', async () => {
     const [provider, timeCurrent] = await buildFixture();
-    expect(timeCurrent.duration).to.equal(0);
+    expect(timeCurrent.seconds).to.equal(0);
     provider.context.currentTime = 50;
     await elementUpdated(timeCurrent);
-    expect(timeCurrent.duration).to.equal(50);
+    expect(timeCurrent.seconds).to.equal(50);
   });
 });

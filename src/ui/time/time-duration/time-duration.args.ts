@@ -7,12 +7,12 @@ import {
 export type TimeDurationStorybookArgs = {
   [P in keyof (TimeDurationProps & TimeDurationFakeProps)]: unknown;
 } & {
-  duration: undefined;
+  seconds: undefined;
 };
 
 export const TIME_DURATION_STORYBOOK_ARG_TYPES: TimeDurationStorybookArgs = {
   ...TIME_STORYBOOK_ARG_TYPES,
-  duration: undefined,
+  seconds: undefined,
   fakeDuration: {
     control: 'number',
     defaultValue: 3750,

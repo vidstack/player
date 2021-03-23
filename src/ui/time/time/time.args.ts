@@ -9,7 +9,7 @@ export const TIME_STORYBOOK_ARG_TYPES: TimeStorybookArgs = {
     control: 'text',
     defaultValue: '',
   },
-  duration: {
+  seconds: {
     control: 'number',
     defaultValue: 3750,
   },

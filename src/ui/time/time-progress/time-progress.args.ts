@@ -7,12 +7,12 @@ import {
 export type TimeProgressStorybookArgs = {
   [P in keyof (TimeProgressProps & TimeProgressFakeProps)]: unknown;
 } & {
-  duration: undefined;
+  seconds: undefined;
 };
 
 export const TIME_PROGRESS_STORYBOOK_ARG_TYPES: TimeProgressStorybookArgs = {
   ...TIME_STORYBOOK_ARG_TYPES,
-  duration: undefined,
+  seconds: undefined,
   currentTimeLabel: {
     control: 'text',
     defaultValue: 'Current time',

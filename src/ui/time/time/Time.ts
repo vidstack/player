@@ -13,8 +13,7 @@ import { TimeProps } from './time.types';
 import { formatHtml5Duration, formatTime } from './time.utils';
 
 /**
- * Formats and displays a length of time (defined as `duration`). The duration should be provided
- * in seconds.
+ * Formats and displays a length of time given in `seconds`.
  *
  * ## Tag
  *
@@ -28,14 +27,14 @@ import { formatHtml5Duration, formatTime } from './time.utils';
  *
  * @example
  * ```html
- * <vds-time duration="50"></vds-time>
+ * <vds-time seconds="50"></vds-time>
  * ```
  *
  * @example
  * ```html
  * <vds-time
  *   label="Current time"
- *   duration="3650"
+ *   seconds="3650"
  *   pad-hours
  *   always-show-hours
  * ></vds-time>
@@ -61,7 +60,7 @@ export class Time extends LitElement implements TimeProps {
 
   @property() label?: string;
 
-  @property({ type: Number }) duration = 0;
+  @property({ type: Number }) seconds = 0;
 
   @property({ type: Boolean, attribute: 'always-show-hours' })
   alwaysShowHours = false;
@@ -95,10 +94,10 @@ export class Time extends LitElement implements TimeProps {
   }
 
   /**
-   * @returns The duration formatted into human readable form.
+   * @returns The seconds formatted into human readable form.
    */
   protected getFormattedTime(): string {
-    return formatTime(this.duration, this.padHours, this.alwaysShowHours);
+    return formatTime(this.seconds, this.padHours, this.alwaysShowHours);
   }
 
   /**
@@ -107,7 +106,7 @@ export class Time extends LitElement implements TimeProps {
    * @spec https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
    */
   protected getFormattedDuration(): string {
-    return formatHtml5Duration(this.duration);
+    return formatHtml5Duration(this.seconds);
   }
 
   /**

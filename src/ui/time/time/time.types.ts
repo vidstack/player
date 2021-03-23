@@ -7,7 +7,7 @@ export interface TimeProps {
   /**
    * The length of time in seconds.
    */
-  duration: number;
+  seconds: number;
 
   /**
    * Whether the time should always show the hours unit, even if the time is less than
