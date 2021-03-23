@@ -130,7 +130,7 @@ export class FakeContextConsumer
 
   @internalProperty()
   @playerContext.seeking.consume()
-  seeking = playerContext.sekeing.defaultValue;
+  seeking = playerContext.seeking.defaultValue;
 
   @internalProperty()
   @uuidContext.consume()

@@ -768,6 +768,7 @@ export abstract class MediaProvider<EngineType = unknown>
     'played',
     'playing',
     'seekable',
+    'seeking',
     'started',
     'waiting',
   ]);
