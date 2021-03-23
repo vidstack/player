@@ -476,18 +476,23 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     this.togglePlaybackWhileDragging(e);
   }
 
+  // TODO: Clean up later.
   protected wasPausedBeforeDragStart = false;
+  protected shouldTogglePlaybackWhileDragging = false;
   protected togglePlaybackWhileDragging(originalEvent: Event): void {
     if (!this.pauseWhileDragging) return;
 
     if (this.isDraggingThumb && !this.paused) {
       this.wasPausedBeforeDragStart = this.paused;
+      this.shouldTogglePlaybackWhileDragging = true;
       this.dispatchEvent(new VdsUserPauseEvent({ originalEvent }));
     } else if (
+      this.shouldTogglePlaybackWhileDragging &&
       !this.isDraggingThumb &&
       !this.wasPausedBeforeDragStart &&
       this.paused
     ) {
+      this.shouldTogglePlaybackWhileDragging = false;
       this.dispatchEvent(new VdsUserPlayEvent({ originalEvent }));
     }
   }
