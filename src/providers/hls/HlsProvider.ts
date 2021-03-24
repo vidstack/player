@@ -320,6 +320,7 @@ export class HlsProvider
       }
     }
 
+    this.context.error = data;
     this.dispatchEvent(new VdsErrorEvent({ detail: data, originalEvent }));
   }
 

@@ -65,6 +65,7 @@ export const playerContext: PlayerContext = {
   currentTime: createContext(0),
   duration,
   ended: createContext<boolean>(false),
+  error: createContext<unknown | undefined>(undefined),
   fullscreen: createContext<boolean>(false),
   isAudio: derivedContext([mediaType], m => m === MediaType.Audio),
   isAudioView: derivedContext([viewType], v => v === ViewType.Audio),

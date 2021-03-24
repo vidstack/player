@@ -240,6 +240,10 @@ export abstract class MediaProvider<EngineType = unknown>
     return this.context.ended;
   }
 
+  get error(): unknown | undefined {
+    return this.context.ended;
+  }
+
   get mediaType(): MediaType {
     return this.context.mediaType;
   }
@@ -610,6 +614,7 @@ export abstract class MediaProvider<EngineType = unknown>
     try {
       await this.lockOrientation(this.fullscreenOrientation);
     } catch (e) {
+      this.context.error = e;
       this.dispatchEvent(new VdsErrorEvent({ detail: e }));
     }
   }
@@ -634,6 +639,7 @@ export abstract class MediaProvider<EngineType = unknown>
     try {
       await this.unlockOrientation();
     } catch (e) {
+      this.context.error = e;
       this.dispatchEvent(new VdsErrorEvent({ detail: e }));
     }
 
@@ -700,6 +706,7 @@ export abstract class MediaProvider<EngineType = unknown>
     try {
       await this.requestQueue.get(requestKey)?.();
     } catch (e) {
+      this.context.error = e;
       this.dispatchEvent(new VdsErrorEvent({ detail: e }));
     }
 

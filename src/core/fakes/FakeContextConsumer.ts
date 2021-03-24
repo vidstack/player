@@ -85,6 +85,10 @@ export class FakeContextConsumer
   ended = playerContext.ended.defaultValue;
 
   @internalProperty()
+  @playerContext.error.consume()
+  error = playerContext.error.defaultValue;
+
+  @internalProperty()
   @playerContext.canPlay.consume()
   canPlay = playerContext.canPlay.defaultValue;
 

@@ -441,6 +441,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleError(originalEvent: Event): void {
+    this.context.error = this.mediaEl?.error;
     this.dispatchEvent(
       new VdsErrorEvent({ detail: this.mediaEl!.error, originalEvent }),
     );

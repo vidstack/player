@@ -134,6 +134,15 @@ export interface PlayerProps {
   readonly ended: boolean;
 
   /**
+   * Contains the most recent error or undefined if there's been none. You can listen for
+   * `vds-error` event updates and examine this object to debug further. The error could be a
+   * native `MediaError` object or something else.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
+   */
+  readonly error: unknown | undefined;
+
+  /**
    * Whether the player is currently in fullscreen mode.
    */
   readonly fullscreen: boolean;
