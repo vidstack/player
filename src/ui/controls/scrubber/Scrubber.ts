@@ -448,7 +448,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   protected handleSliderValueChange(e: VdsSliderValueChangeEvent): void {
     if (this.isDraggingThumb) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.previewTimeThrottler!(e.detail);
+      this.previewPositionThrottler!(e.originalEvent as PointerEvent);
     } else {
       this.currentTime = e.detail;
       this.previewTime = e.detail;
