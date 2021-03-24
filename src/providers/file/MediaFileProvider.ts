@@ -35,7 +35,7 @@ import {
   VdsVolumeChangeEvent,
   VdsWaitingEvent,
 } from '../../core';
-import { buildVdsEvent } from '../../shared/events';
+import { buildVdsEvent, redispatchNativeEvent } from '../../shared/events';
 import { Callback } from '../../shared/types';
 import { getSlottedChildren } from '../../utils/dom';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';
@@ -257,13 +257,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
         listenTo(this.mediaEl!, type, e => {
           handler(e);
           // re-dispatch native event for spec-compliance.
-          const event = new (buildVdsEvent(e.type, ''))({
-            originalEvent: e,
-            bubbles: e.bubbles,
-            cancelable: e.cancelable,
-            composed: e.composed,
-          });
-          this.dispatchEvent(event);
+          redispatchNativeEvent(this, e);
         }),
       );
     });

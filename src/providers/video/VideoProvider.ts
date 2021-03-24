@@ -17,7 +17,8 @@ import {
 } from '../../core';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
-import { Unsubscribe } from '../../shared/types';
+import { redispatchNativeEvent } from '../../shared/events';
+import { Unsubscribe, WebKitPresentationMode } from '../../shared/types';
 import { IS_IOS } from '../../utils/support';
 import { isFunction, isUndefined, noop } from '../../utils/unit';
 import { MediaFileProvider, MediaFileProviderEngine } from '../file';
@@ -236,14 +237,26 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
   // Fullscreen
   // -------------------------------------------------------------------------------------------
 
+  protected currentPresentationMode?: WebKitPresentationMode;
+
   get fullscreen(): boolean {
     return this.canRequestFullscreenNatively
       ? this.isNativeFullscreenActive
-      : this.mediaEl?.webkitDisplayingFullscreen ?? false;
+      : this.currentPresentationMode === 'fullscreen';
   }
 
   get canRequestFullscreen(): boolean {
     return this.canRequestFullscreenNatively || this.canRequestFullscreenOniOS;
+  }
+
+  /**
+   * The current presentation mode, possible values include `inline`, `picture-in-picture` and
+   * `fullscreen`. Only available in Safari.
+   *
+   * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
+   */
+  get presentationMode(): WebKitPresentationMode | undefined {
+    return this.currentPresentationMode;
   }
 
   /**
@@ -287,22 +300,11 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
     }
 
     if (this.canRequestFullscreenOniOS && !isUndefined(this.mediaEl)) {
-      const listeners = [
-        listenTo(
-          this.mediaEl,
-          'webkitbeginfullscreen',
-          this.handleFullscreenChange.bind(this),
-        ),
-        listenTo(
-          this.mediaEl,
-          'webkitendfullscreen',
-          this.handleFullscreenChange.bind(this),
-        ),
-      ];
-
-      return () => {
-        listeners.forEach(fn => fn());
-      };
+      return listenTo(
+        this.mediaEl,
+        'webkitpresentationmodechanged',
+        this.handlePresentationModeChange.bind(this),
+      );
     }
 
     return noop;
@@ -315,8 +317,15 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
     return super.addFullscreenErrorEventListener(handler);
   }
 
+  protected handlePresentationModeChange(e: Event): void {
+    redispatchNativeEvent(this, e);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.currentPresentationMode = this.mediaEl!.webkitPresentationMode;
+    this.handleFullscreenChange(e);
+  }
+
   protected throwIfNoFullscreenSupport(): void {
-    if (this.canRequestFullscreen) {
+    if (this.canRequestFullscreenNatively) {
       super.throwIfNoFullscreenSupport();
     } else if (!this.canRequestFullscreenOniOS) {
       throw Error('The fullscreen API is currently not available on iOS.');

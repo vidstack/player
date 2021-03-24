@@ -43,3 +43,16 @@ export function buildVdsEvent<DetailType>(
     }
   };
 }
+
+export function redispatchNativeEvent(
+  el: HTMLElement,
+  originalEvent: Event,
+): void {
+  const event = new (buildVdsEvent(originalEvent.type, ''))({
+    originalEvent: originalEvent,
+    bubbles: originalEvent.bubbles,
+    cancelable: originalEvent.cancelable,
+    composed: originalEvent.composed,
+  });
+  el.dispatchEvent(event);
+}

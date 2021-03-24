@@ -516,14 +516,18 @@ export abstract class MediaProvider<EngineType = unknown>
    * Whether the player is in fullscreen mode via the native Fullscreen API.
    */
   get isNativeFullscreenActive(): boolean {
-    return (
-      fscreen.fullscreenElement === this ||
-      this.matches(
+    if (fscreen.fullscreenElement === this) return true;
+
+    try {
+      // Throws in iOS Safari...
+      return this.matches(
         // Property `fullscreenPseudoClass` is missing from `@types/fscreen`.
         ((fscreen as unknown) as { fullscreenPseudoClass: string })
           .fullscreenPseudoClass,
-      )
-    );
+      );
+    } catch (e) {
+      return false;
+    }
   }
 
   // Listening to ourselves here to keep state in-sync.
@@ -637,6 +641,7 @@ export abstract class MediaProvider<EngineType = unknown>
   }
 
   protected handleFullscreenChange(originalEvent: Event): void {
+    if (this.context.fullscreen === this.fullscreen) return;
     const isActive = this.fullscreen;
     this.context.fullscreen = isActive;
     if (!isActive) this.fullscreenDisposal.empty();
