@@ -5,7 +5,7 @@ import {
   VdsConnectEvent,
   VdsDisconnectEvent,
   VdsDurationChangeEvent,
-  VdsEmpitedEvent,
+  VdsEmptiedEvent,
   VdsEndedEvent,
   VdsErrorEvent,
   VdsLoadedDataEvent,
@@ -130,7 +130,7 @@ export const PROVIDER_STORYBOOK_ARG_TYPES: ProviderStorybookArgs = {
     action: VdsDurationChangeEvent.TYPE,
   },
   onEmptied: {
-    action: VdsEmpitedEvent.TYPE,
+    action: VdsEmptiedEvent.TYPE,
   },
   onEnded: {
     action: VdsEndedEvent.TYPE,

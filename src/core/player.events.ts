@@ -103,7 +103,7 @@ export class VdsDurationChangeEvent extends buildVdsPlayerEvent(
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/emptied_event
  */
-export class VdsEmpitedEvent extends buildVdsPlayerEvent('emptied') {}
+export class VdsEmptiedEvent extends buildVdsPlayerEvent('emptied') {}
 
 /**
  * Fired when playback or streaming has stopped because the end of the media was reached or

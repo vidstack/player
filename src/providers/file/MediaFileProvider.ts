@@ -15,7 +15,7 @@ import {
   VdsCanPlayEvent,
   VdsCanPlayThroughEvent,
   VdsDurationChangeEvent,
-  VdsEmpitedEvent,
+  VdsEmptiedEvent,
   VdsEndedEvent,
   VdsErrorEvent,
   VdsLoadedDataEvent,
@@ -35,7 +35,7 @@ import {
   VdsVolumeChangeEvent,
   VdsWaitingEvent,
 } from '../../core';
-import { buildVdsEvent, redispatchNativeEvent } from '../../shared/events';
+import { redispatchNativeEvent } from '../../shared/events';
 import { Callback } from '../../shared/types';
 import { getSlottedChildren } from '../../utils/dom';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';
@@ -290,7 +290,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleEmptied(originalEvent: Event): void {
-    this.dispatchEvent(new VdsEmpitedEvent({ originalEvent }));
+    this.dispatchEvent(new VdsEmptiedEvent({ originalEvent }));
   }
 
   protected handleLoadedData(originalEvent: Event): void {
