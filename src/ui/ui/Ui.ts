@@ -84,7 +84,7 @@ export class Ui extends LitElement {
 
   @internalProperty()
   @playerContext.fullscreen.consume()
-  protected isFulscreenActive = playerContext.fullscreen.defaultValue;
+  protected isFullscreenActive = playerContext.fullscreen.defaultValue;
 
   @internalProperty()
   @playerContext.isVideoView.consume()
@@ -154,7 +154,7 @@ export class Ui extends LitElement {
       // we should always hide.
       (IS_IOS &&
         this.isVideoView &&
-        (!this.playsinline || this.isFulscreenActive))
+        (!this.playsinline || this.isFullscreenActive))
     );
   }
 }
