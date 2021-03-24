@@ -25,7 +25,7 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  * (also known as HLS).
  *
  * This provider will load the [`video-dev/hls.js`](https://github.com/video-dev/hls.js) library
- * if the browser doesn't have native HLS support.
+ * if the browser supports Media Source Extensions OR it doesn't have native HLS support.
  *
  * ## Tag
  *
@@ -52,8 +52,7 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  *
  * @example
  * ```html
- *  <vds-hls poster="/media/poster.png">
- *    <source src="/media/index.m3u8" type="application/x-mpegURL" />
+ *  <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
  *    <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
  *    <vds-ui slot="ui">
  *      <!-- ... -->
@@ -126,7 +125,7 @@ export class HlsProvider
   }
 
   get currentSrc(): string {
-    return this.isCurrentlyHls && !this.hasNativeHlsSupport
+    return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport
       ? this.src
       : this.videoEngine?.currentSrc ?? '';
   }
@@ -164,8 +163,18 @@ export class HlsProvider
     return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
   }
 
+  /**
+   * Whether native HLS support is available and whether it should be used. Generally defaults
+   * to `false` as long as `window.MediaSource` is defined to enforce consistency by
+   * using `hls.js` where ever possible.
+   */
+  get shouldUseNativeHlsSupport(): boolean {
+    if (!isUndefined(window.MediaSource)) return false;
+    return this.hasNativeHlsSupport;
+  }
+
   protected shouldSetVideoSrcAttr(): boolean {
-    return this.hasNativeHlsSupport || !this.isCurrentlyHls;
+    return this.shouldUseNativeHlsSupport || !this.isCurrentlyHls;
   }
 
   protected isHlsEngineInitializing = false;
@@ -173,7 +182,7 @@ export class HlsProvider
   protected async initHlsEngine(): Promise<void> {
     if (
       isNil(this.videoEngine) ||
-      this.hasNativeHlsSupport ||
+      this.shouldUseNativeHlsSupport ||
       this.isHlsEngineInitializing ||
       !this.isCurrentlyHls
     )
@@ -206,7 +215,7 @@ export class HlsProvider
     if (
       isNil(this.engine) ||
       !this.isCurrentlyHls ||
-      this.hasNativeHlsSupport ||
+      this.shouldUseNativeHlsSupport ||
       this.src === this._prevHlsSrc
     )
       return;
@@ -236,7 +245,9 @@ export class HlsProvider
 
   // Let `MediaFileProvider` know we're taking over ready events.
   protected willAnotherEngineAttach(): boolean {
-    return !this.hasNativeHlsSupport && (this.HlsLib?.isSupported() ?? false);
+    return (
+      !this.shouldUseNativeHlsSupport && (this.HlsLib?.isSupported() ?? false)
+    );
   }
 
   protected attachHlsEngine(): void {
