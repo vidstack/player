@@ -303,6 +303,7 @@ export abstract class MediaProvider<EngineType = unknown>
   }
 
   protected hasPlaybackRoughlyEnded(): boolean {
+    if (isNaN(this.duration) || this.duration === 0) return false;
     return areNumbersRoughlyEqual(this.currentTime, this.duration, 3);
   }
 
