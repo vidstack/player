@@ -22,7 +22,7 @@ import {
 import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { CancelableCallback } from '../../../shared/types';
-import { getSlottedChildren } from '../../../utils/dom';
+import { getSlottedChildren, raf } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { isNil } from '../../../utils/unit';
 import { formatSpokenTime } from '../../time/time';
@@ -250,6 +250,26 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   @property({ type: Number }) throttle = 10;
 
   // -------------------------------------------------------------------------------------------
+  // User
+  // -------------------------------------------------------------------------------------------
+
+  protected dispatchUserSeekingEvent(time: number): void {
+    if (!this.isSeeking) return;
+    this.dispatchEvent(new VdsUserSeekingEvent({ detail: time }));
+  }
+
+  protected async dispatchUserSeeked(): Promise<void> {
+    await raf();
+    this.dispatchEvent(
+      new VdsUserSeekedEvent({
+        detail: this.sliderEl.hasThumbReachedHumanPerceivedEnd
+          ? this.duration
+          : this.previewTime,
+      }),
+    );
+  }
+
+  // -------------------------------------------------------------------------------------------
   // Render (Root)
   // -------------------------------------------------------------------------------------------
 
@@ -445,14 +465,16 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     `;
   }
 
-  protected handleSliderValueChange(e: VdsSliderValueChangeEvent): void {
+  protected async handleSliderValueChange(
+    e: VdsSliderValueChangeEvent,
+  ): Promise<void> {
     if (this.isDraggingThumb) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.previewPositionThrottler!(e.originalEvent as PointerEvent);
     } else {
       this.currentTime = e.detail;
       this.previewTime = e.detail;
-      this.dispatchEvent(new VdsUserSeekedEvent({ detail: this.previewTime }));
+      await this.dispatchUserSeeked();
     }
   }
 
@@ -472,7 +494,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     await this.updateComplete;
     this.hidePreview();
     this.currentTime = e.detail;
-    this.dispatchEvent(new VdsUserSeekedEvent({ detail: this.previewTime }));
+    await this.dispatchUserSeeked();
     this.togglePlaybackWhileDragging(e);
   }
 
@@ -618,11 +640,6 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     this.currentPreviewEl?.setAttribute('hidden', '');
     this.dispatchEvent(new VdsScrubberPreviewHideEvent());
     this.requestUpdate();
-  }
-
-  protected dispatchUserSeekingEvent(time: number): void {
-    if (!this.isSeeking) return;
-    this.dispatchEvent(new VdsUserSeekingEvent({ detail: time }));
   }
 
   protected updatePreviewTime(time: number): void {

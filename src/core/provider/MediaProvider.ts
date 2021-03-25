@@ -9,7 +9,6 @@ import { LitElement, property, PropertyValues } from 'lit-element';
 
 import { Unsubscribe } from '../../shared/types';
 import { raf } from '../../utils/dom';
-import { areNumbersRoughlyEqual } from '../../utils/number';
 import { deferredPromise } from '../../utils/promise';
 import { canOrientScreen } from '../../utils/support';
 import { isString, isUndefined, noop } from '../../utils/unit';
@@ -304,7 +303,7 @@ export abstract class MediaProvider<EngineType = unknown>
 
   protected hasPlaybackRoughlyEnded(): boolean {
     if (isNaN(this.duration) || this.duration === 0) return false;
-    return areNumbersRoughlyEqual(this.currentTime, this.duration, 3);
+    return Math.abs(this.duration - Math.floor(this.currentTime)) < 1;
   }
 
   /**

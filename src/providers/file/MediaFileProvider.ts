@@ -362,9 +362,9 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleSeeked(originalEvent: Event): void {
-    this.validatePlaybackEndedState();
     this.context.currentTime = this.mediaEl!.currentTime;
     this.context.seeking = false;
+    this.validatePlaybackEndedState();
     this.dispatchEvent(
       new VdsSeekedEvent({
         detail: this.context.currentTime,
@@ -430,7 +430,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   }
 
   protected handleEnded(originalEvent: Event): void {
-    // Check becuase might've been handled elsewhere.
+    // Check becuase might've been handled in `validatePlaybackEnded()`.
     if (!this.context.ended && !this.loop) {
       this.context.ended = true;
       this.dispatchEvent(new VdsEndedEvent({ originalEvent }));

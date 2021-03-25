@@ -18,6 +18,7 @@ import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { CancelableCallback } from '../../../shared/types';
 import { setAttribute } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
+import { isNil } from '../../../utils/unit';
 import { sliderStyles } from './slider.css';
 import {
   VdsSliderDragEndEvent,
@@ -421,6 +422,29 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
         ${this.renderThumbSlot()}
       </div>
     `;
+  }
+
+  /**
+   * Whether the thumb has been dragged to what a human would perceive as the end.
+   */
+  get hasThumbReachedHumanPerceivedEnd(): boolean {
+    if (isNil(this.thumbEl)) return false;
+    const rootRect = this.rootEl.getBoundingClientRect();
+    const thumbRect = this.thumbEl.getBoundingClientRect();
+    const rootLeftMargin = parseFloat(
+      window.getComputedStyle(this.rootElement).marginLeft,
+    );
+    const thumbScale = parseFloat(
+      window
+        .getComputedStyle(this)
+        .getPropertyValue('--vds-slider-thumb-scale'),
+    );
+    return (
+      Math.floor(thumbRect.right - rootLeftMargin) >=
+      rootRect.right -
+        Math.round(thumbRect.width * (isNaN(thumbScale) ? 0.75 : thumbScale)) /
+          2
+    );
   }
 
   protected getThumbPartAttr(): string {
