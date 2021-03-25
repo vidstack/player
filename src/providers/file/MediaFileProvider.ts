@@ -332,6 +332,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.cancelTimeUpdates();
     this.context.paused = true;
     this.context.playing = false;
+    this.context.waiting = false;
     this.dispatchEvent(new VdsPauseEvent({ originalEvent }));
   }
 
