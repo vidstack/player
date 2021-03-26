@@ -101,7 +101,7 @@ export class HlsProvider
    * The `hls.js` configuration object.
    */
   @property({ attribute: 'hls-config', type: Object })
-  hlsConfig?: Hls.Config;
+  hlsConfig?: Partial<Hls.Config>;
 
   /**
    * The `hls.js` instance.
