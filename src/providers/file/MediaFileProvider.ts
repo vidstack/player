@@ -399,6 +399,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
 
   protected handleTimeUpdate(): void {
     // -- Time updates are performed in `requestTimeUpdates()`.
+    this.context.waiting = false;
     this.validatePlaybackEndedState();
   }
 
