@@ -138,6 +138,10 @@ const Template: Story<VideoProviderProps & VideoProviderActions> = ({
     </vds-video>
 
     <style>
+      vds-video::part(video) {
+        background-color: black;
+      }
+
       h2 {
         font-size: 24px;
         margin: 24px 0;

@@ -10,7 +10,7 @@ import { LitElement, property, PropertyValues } from 'lit-element';
 import { Unsubscribe } from '../../shared/types';
 import { raf } from '../../utils/dom';
 import { deferredPromise } from '../../utils/promise';
-import { canOrientScreen } from '../../utils/support';
+import { canOrientScreen, IS_SAFARI } from '../../utils/support';
 import { isString, isUndefined, noop } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
 import { MediaType } from '../MediaType';
@@ -321,6 +321,7 @@ export abstract class MediaProvider<EngineType = unknown>
   protected async resetPlayback(): Promise<void> {
     this.context.currentTime = 0;
     this.context.ended = false;
+    if (IS_SAFARI) return;
     this.setCurrentTime(0);
     // Give the browser a moment to re-paint and recalibrate media engine.
     await raf();

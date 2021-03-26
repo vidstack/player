@@ -12,7 +12,7 @@ export const IS_IPHONE =
 export const IS_FIREFOX = /firefox/.test(UA);
 export const IS_CHROME = IS_CLIENT && window.chrome;
 export const IS_SAFARI =
-  IS_CLIENT && (window.safari || IS_IOS || /Apple/.test(UA));
+  IS_CLIENT && (window.safari || IS_IOS || /(apple|safari)/.test(UA));
 
 export const ORIGIN =
   window.location.protocol !== 'file:'
