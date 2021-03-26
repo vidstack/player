@@ -193,8 +193,6 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   }
 
   update(changedProperties: PropertyValues): void {
-    this.isPreviewShowing = this.isSeeking;
-
     if (
       changedProperties.has('previewTimeThrottle') ||
       changedProperties.has('userSeekingThrottle')
@@ -625,6 +623,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
     this.showPreviewTimeout = window.setTimeout(
       async () => {
+        this.isPreviewShowing = true;
         this.currentPreviewEl?.removeAttribute('hidden');
         await raf();
         await this.updatePreviewPosition(originalEvent);
@@ -649,6 +648,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
       await this.updateComplete;
     }
 
+    this.isPreviewShowing = false;
     this.currentPreviewEl?.setAttribute('hidden', '');
     this.dispatchEvent(new VdsScrubberPreviewHideEvent({ originalEvent }));
     this.requestUpdate();
