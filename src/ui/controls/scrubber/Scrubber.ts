@@ -256,13 +256,20 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     this.dispatchEvent(new VdsUserSeekingEvent({ detail: time }));
   }
 
-  protected async dispatchUserSeeked(): Promise<void> {
+  protected async dispatchUserSeeked(originalEvent: Event): Promise<void> {
     await raf();
+
+    const time = this.sliderEl.hasThumbReachedHumanPerceivedEnd
+      ? this.duration
+      : this.previewTime;
+
+    this.previewTime = time;
+    this.currentTime = time;
+
     this.dispatchEvent(
       new VdsUserSeekedEvent({
-        detail: this.sliderEl.hasThumbReachedHumanPerceivedEnd
-          ? this.duration
-          : this.previewTime,
+        detail: time,
+        originalEvent,
       }),
     );
   }
@@ -468,7 +475,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     } else {
       this.currentTime = e.detail;
       this.previewTime = e.detail;
-      await this.dispatchUserSeeked();
+      await this.dispatchUserSeeked(e);
     }
   }
 
@@ -484,7 +491,7 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     this.isDraggingThumb = false;
     this.hidePreview(e.originalEvent as PointerEvent);
     this.currentTime = e.detail;
-    await this.dispatchUserSeeked();
+    await this.dispatchUserSeeked(e);
     this.togglePlaybackWhileDragging(e);
   }
 
