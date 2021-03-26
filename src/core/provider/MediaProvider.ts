@@ -303,7 +303,11 @@ export abstract class MediaProvider<EngineType = unknown>
 
   protected hasPlaybackRoughlyEnded(): boolean {
     if (isNaN(this.duration) || this.duration === 0) return false;
-    return Math.abs(this.duration - Math.floor(this.currentTime)) < 1;
+    return (
+      Math.abs(
+        Math.round(this.duration * 10) - Math.round(this.currentTime * 10),
+      ) < 1
+    );
   }
 
   /**
@@ -321,6 +325,7 @@ export abstract class MediaProvider<EngineType = unknown>
   protected async resetPlayback(): Promise<void> {
     this.context.currentTime = 0;
     this.context.ended = false;
+    // Don't call on Safari as it results in `NotAllowedError`.
     if (IS_SAFARI) return;
     this.setCurrentTime(0);
     // Give the browser a moment to re-paint and recalibrate media engine.

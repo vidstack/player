@@ -54,6 +54,7 @@ export const sliderStyles = css`
     border: 0;
     top: 50%;
     left: 0px;
+    user-select: none;
     width: var(--vds-slider-thumb-width, 16px);
     height: var(--vds-slider-thumb-height, 16px);
     outline: none;

@@ -38,6 +38,7 @@ import {
 import { redispatchNativeEvent } from '../../shared/events';
 import { Callback } from '../../shared/types';
 import { getSlottedChildren } from '../../utils/dom';
+import { IS_SAFARI } from '../../utils/support';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';
 import {
   FileProviderMethods,
@@ -178,7 +179,6 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     if (this.context.currentTime !== newTime) {
       this.context.currentTime = newTime;
       this.dispatchEvent(new VdsTimeUpdateEvent({ detail: newTime }));
-      this.validatePlaybackEndedState();
     }
 
     this.timeRAF = window.requestAnimationFrame(() => {
@@ -321,11 +321,11 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.context.paused = false;
     this.dispatchEvent(new VdsPlayEvent({ originalEvent }));
     if (this.context.ended) this.dispatchEvent(new VdsReplayEvent());
-    this.validatePlaybackEndedState();
     if (!this.context.started) {
       this.context.started = true;
       this.dispatchEvent(new VdsStartedEvent({ originalEvent }));
     }
+    this.validatePlaybackEndedState();
   }
 
   protected handlePause(originalEvent: Event): void {
@@ -350,6 +350,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
         originalEvent,
       }),
     );
+    this.validatePlaybackEndedState();
   }
 
   protected handleProgress(originalEvent: Event): void {
@@ -365,13 +366,13 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   protected handleSeeked(originalEvent: Event): void {
     this.context.currentTime = this.mediaEl!.currentTime;
     this.context.seeking = false;
-    this.validatePlaybackEndedState();
     this.dispatchEvent(
       new VdsSeekedEvent({
         detail: this.context.currentTime,
         originalEvent,
       }),
     );
+    this.validatePlaybackEndedState();
   }
 
   protected handleSeeking(originalEvent: Event): void {
@@ -396,14 +397,9 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     this.dispatchEvent(new VdsStalledEvent({ originalEvent }));
   }
 
-  protected handleTimeUpdate(originalEvent: Event): void {
-    this.context.currentTime = this.mediaEl!.currentTime;
-    this.dispatchEvent(
-      new VdsTimeUpdateEvent({
-        detail: this.context.currentTime,
-        originalEvent,
-      }),
-    );
+  protected handleTimeUpdate(): void {
+    // -- Time updates are performed in `requestTimeUpdates()`.
+    this.validatePlaybackEndedState();
   }
 
   protected handleVolumeChange(originalEvent: Event): void {
@@ -471,6 +467,8 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   protected setCurrentTime(newTime: number): void {
     if (this.mediaEl!.currentTime !== newTime) {
       this.mediaEl!.currentTime = newTime;
+      // Doesn't fire `seeked` near end.
+      if (IS_SAFARI) this.validatePlaybackEndedState();
     }
   }
 

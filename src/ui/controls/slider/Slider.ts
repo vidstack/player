@@ -440,7 +440,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
         .getPropertyValue('--vds-slider-thumb-scale'),
     );
     return (
-      Math.floor(thumbRect.right - rootLeftMargin) >=
+      Math.round(thumbRect.right - rootLeftMargin) >=
       rootRect.right -
         Math.round(thumbRect.width * (isNaN(thumbScale) ? 0.75 : thumbScale)) /
           2
