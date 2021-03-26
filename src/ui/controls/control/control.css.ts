@@ -9,4 +9,9 @@ export const controlStyles = css`
   :host(:focus) {
     outline: 0;
   }
+
+  button {
+    min-width: 48px;
+    min-height: 48px;
+  }
 `;

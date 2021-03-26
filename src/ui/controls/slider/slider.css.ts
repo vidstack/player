@@ -28,7 +28,7 @@ export const sliderStyles = css`
     position: relative;
     min-width: 12.5px;
     user-select: none;
-    min-height: max(40px, var(--vds-slider-thumb-height, 16px));
+    min-height: max(48px, var(--vds-slider-thumb-height, 16px));
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 
