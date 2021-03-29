@@ -22,7 +22,7 @@
   ],
   "sideEffects": [
     "**/vds-*.js",
-    "bundle/elements.js"
+    "bundle/define.js"
   ],
   "contributors": [
     "Dave Furfero <furf@furf.com>",
