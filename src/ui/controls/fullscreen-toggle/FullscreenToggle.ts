@@ -7,21 +7,13 @@ import { FullscreenToggleProps } from './fullscreen-toggle.types';
 /**
  * A control for toggling the fullscreen mode of the player.
  *
- * ## Tag
- *
  * @tagname vds-fullscreen-toggle
- *
- * ## Slots
  *
  * @slot enter - The content to show when the `fullscreen` state is `false`.
  * @slot exit - The content to show when the `fullscreen` state is `true`.
  *
- * ## CSS Parts
- *
  * @csspart control - The root control (`<vds-control>`).
  * @csspart control-* - All `vds-control` parts re-exported with the `control` prefix such as `control-root`.
- *
- * ## Examples
  *
  * @example
  * ```html

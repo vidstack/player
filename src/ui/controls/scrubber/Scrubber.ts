@@ -70,18 +70,12 @@ import { ScrubberProps } from './scrubber.types';
  * For styling you have access to the `--vds-scrubber-preview-time` CSS property which contains
  * the current time in seconds the user is previewing.
  *
- * ## Tag
- *
  * @tagname vds-scrubber
- *
- * ## Slots
  *
  * @slot Used to pass content into the root.
  * @slot progress - Used to pass content into the progress element (`<div>`).
  * @slot preview - Used to pass in a preview to be shown while the user is interacting (hover/drag) with the scrubber.
  * @slot slider - Used to pass content into the slider component (`<vds-slider>`).
- *
- * ## CSS Parts
  *
  * @csspart root - The component's root element (`<div>`).
  *
@@ -93,22 +87,18 @@ import { ScrubberProps } from './scrubber.types';
  * @csspart preview-track - The part of the slider track that displays
  * @csspart preview-track-hidden - Targets the `preview-track` part when it's hidden.
  *
- * ## CSS Properties
- *
  * @cssprop --vds-slider-* - All slider CSS properties can be used to style the underlying `<vds-slider>` component.
  *
  * @cssprop --vds-scrubber-current-time - Current time of playback.
  * @cssprop --vds-scrubber-seekable - The amount of media that is seekable.
  * @cssprop --vds-scrubber-duration - The length of media playback.
  *
- * @cssprop --vds-scrubber-progress-bg: The background color of the amount that is seekable.
+ * @cssprop --vds-scrubber-progress-bg - The background color of the amount that is seekable.
  * @cssprop --vds-scrubber-progress-height - The height of the progress bar (defaults to `--vds-slider-track-height`).
  *
- * @cssprop --vds-scrubber-preview-time: The current time in seconds that is being previewed (hover/drag).
+ * @cssprop --vds-scrubber-preview-time - The current time in seconds that is being previewed (hover/drag).
  * @cssprop --vds-scrubber-preview-track-height - The height of the preview track (defaults to `--vds-slider-track-height`).
  * @cssprop --vds-preview-track-bg - The background color of the preview track.
- *
- * ## Examples
  *
  * @example
  * ```html

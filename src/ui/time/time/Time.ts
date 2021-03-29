@@ -15,15 +15,9 @@ import { formatHtml5Duration, formatTime } from './time.utils';
 /**
  * Formats and displays a length of time given in `seconds`.
  *
- * ## Tag
- *
  * @tagname vds-time
  *
- * ## CSS Parts
- *
  * @csspart root - The component's root element (`<time>`).
- *
- * ## Examples
  *
  * @example
  * ```html

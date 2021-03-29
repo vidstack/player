@@ -34,11 +34,7 @@ import { SliderKeyDirection, SliderProps } from './slider.types';
  *
  * @inspriation https://github.com/carbon-design-system/carbon-web-components
  *
- * ## Tag
- *
  * @tagname vds-slider
- *
- * ## Slots
  *
  * @slot Used to pass in additional content inside the slider.
  * @slot thumb-container - Used to pass content into the thumb container.
@@ -46,15 +42,11 @@ import { SliderKeyDirection, SliderProps } from './slider.types';
  * @slot track - Used to pass content inside the track.
  * @slot track-fill - Used to pass content inside the track fill.
  *
- * ## CSS Parts
- *
  * @csspart root - The component's root element, in this case the slider container (`<div>`).
  * @csspart thumb-container - The container for the slider's handle.
  * @csspart thumb - The slider's handle the user drags left/right (`<div>`).
  * @csspart track - The background of the slider in which the thumb slides along (`<div>`).
  * @csspart track-fill - The part of the track that is currently filled which fills left-to-right (`<div>`).
- *
- * ## CSS Properties
  *
  * @cssprop --vds-slider-fill-rate - The ratio of the slider that is filled such as `0.3`.
  * @cssprop --vds-slider-fill-value - The current amount the slider is filled such as `30`.
@@ -74,8 +66,6 @@ import { SliderKeyDirection, SliderProps } from './slider.types';
  *
  * @cssprop --vds-slider-active-color - The slider thumb and track fill background color when focused, active or being dragged.
  * @cssprop --vds-slider-disabled-color - The slider thumb, track, and track fill background color when disabled.
- *
- * ## Examples
  *
  * @example
  * ```html

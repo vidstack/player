@@ -6,15 +6,9 @@ import { TimeCurrentProps } from './time-current.types';
  * Formats and displays the `currentTime` of media playback. Do not mess with the component's
  * `seconds` property as it's automatically managed.
  *
- * ## Tag
- *
  * @tagname vds-time-current
  *
- * ## CSS Parts
- *
  * @csspart root - The component's root element (`<time>`).
- *
- * ## Examples
  *
  * @example
  * ```html

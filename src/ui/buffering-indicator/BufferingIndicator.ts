@@ -25,15 +25,9 @@ import { BufferingIndicatorProps } from './buffering-indicator.types';
  *
  * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `hidden` attribute.
  *
- * ## Tag
- *
  * @tagname vds-buffering-indicator
  *
- * ## Slots
- *
  * @slot Used to pass in the content to be displayed while buffering.
- *
- * ## Examples
  *
  * @example
  * ```html

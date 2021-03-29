@@ -12,16 +12,10 @@ import { ToggleControlProps } from './toggle-control.types';
 /**
  * The foundation for any toggle control such as a `playback-toggle` or `mute-toggle`.
  *
- * ## Tag
- *
  * @tagname vds-toggle-control
- *
- * ## CSS Parts
  *
  * @csspart control - The root control (`<vds-control>`).
  * @csspart control-* - All `vds-control` parts re-exported with the `control` prefix such as `control-root`.
- *
- * ## Examples
  *
  * @example
  * ```html

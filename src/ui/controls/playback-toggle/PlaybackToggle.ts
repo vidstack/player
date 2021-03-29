@@ -11,21 +11,13 @@ import { PlaybackToggleProps } from './playback-toggle.types';
 /**
  * A control for toggling the playback state (play/pause) of the current media.
  *
- * ## Tag
- *
  * @tagname vds-playback-toggle
- *
- * ## Slots
  *
  * @slot play - The content to show when the `paused` state is `true`.
  * @slot pause - The content to show when the `paused` state is `false`.
  *
- * ## CSS Parts
- *
  * @csspart control - The root control (`<vds-control>`).
  * @csspart control-* - All `vds-control` parts re-exported with the `control` prefix such as `control-root`.
- *
- * ## Examples
  *
  * @example
  * ```html

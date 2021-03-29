@@ -17,16 +17,10 @@ import { ToggleProps } from './toggle.types';
  * state so you can perform CSS animations. A `hidden` attribute will be applied to the slot
  * that's currently `off`.
  *
- * ## Tag
- *
  * @tagname vds-toggle
- *
- * ## Slots
  *
  * @slot on - The content to show when the toggle is `on`.
  * @slot off - The content to show when the toggle is `off`.
- *
- * ## Examples
  *
  * @example
  * ```html

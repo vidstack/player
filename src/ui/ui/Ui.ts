@@ -22,22 +22,14 @@ import { uiStyles } from './ui.css';
  *
  * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `root-hidden` CSS part.
  *
- * ## Tag
- *
  * @tagname vds-ui
  *
- * ## Slots
- *
  * @slot Used to pass in UI components.
- *
- * ## CSS Parts
  *
  * @csspart root - The component's root element (`<div>`).
  * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
  * @csspart root-audio-view - Applied when the current `viewType` is `audio`.
  * @csspart root-video-view - Applied when the current `viewType` is `video`.
- *
- * ## Examples
  *
  * @example
  * ```html

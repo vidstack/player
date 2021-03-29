@@ -27,21 +27,13 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  * This provider will load the [`video-dev/hls.js`](https://github.com/video-dev/hls.js) library
  * if the browser supports Media Source Extensions OR it doesn't have native HLS support.
  *
- * ## Tag
- *
  * @tagname vds-hls
- *
- * ## Slots
  *
  * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
  * @slot ui - Used to pass in `<vds-ui>` to customize the player user interface.
  *
- * ## CSS Parts
- *
  * @csspart root - The component's root element that wraps the video (`<div>`).
  * @csspart video - The video element (`<video>`).
- *
- * ## Examples
  *
  * @example
  * ```html
@@ -91,15 +83,9 @@ export class HlsProvider
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * The URL where the `hls.js` library source can be found.
-   */
   @property({ attribute: 'lib-src' })
   libSrc = 'https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.min.js';
 
-  /**
-   * The `hls.js` configuration object.
-   */
   @property({ attribute: 'hls-config', type: Object })
   hlsConfig?: Partial<Hls.Config>;
 
@@ -110,16 +96,10 @@ export class HlsProvider
     return this._hlsEngine;
   }
 
-  /**
-   * The underlying `HTMLMediaElement`.
-   */
   get videoEngine(): VideoProviderEngine {
     return this.mediaEl;
   }
 
-  /**
-   * Whether the `hls.js` instance has mounted the `HtmlMediaElement`.
-   */
   get isHlsEngineAttached(): boolean {
     return this._isHlsEngineAttached;
   }
@@ -142,17 +122,10 @@ export class HlsProvider
     return super.canPlayType(type);
   }
 
-  /**
-   * Whether the current src is using HLS.
-   */
   get isCurrentlyHls(): boolean {
     return HLS_EXTENSIONS.test(this.src);
   }
 
-  /**
-   * Whether the browser natively supports HLS, mostly only true in Safari. Only call this method
-   * after the provider has connected to the DOM (wait for `ConnectEvent`).
-   */
   get hasNativeHlsSupport(): boolean {
     /**
      * We need to call this directly on `HTMLMediaElement`, calling `this.shouldPlayType(...)`
@@ -163,11 +136,6 @@ export class HlsProvider
     return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
   }
 
-  /**
-   * Whether native HLS support is available and whether it should be used. Generally defaults
-   * to `false` as long as `window.MediaSource` is defined to enforce consistency by
-   * using `hls.js` where ever possible.
-   */
   get shouldUseNativeHlsSupport(): boolean {
     if (!isUndefined(window.MediaSource)) return false;
     return this.hasNativeHlsSupport;

@@ -7,21 +7,13 @@ import { MuteToggleProps } from './mute-toggle.types';
 /**
  * A control for toggling the muted state of the player.
  *
- * ## Tag
- *
  * @tagname vds-mute-toggle
- *
- * ## Slots
  *
  * @slot mute - The content to show when the `muted` state is `false`.
  * @slot unmute - The content to show when the `muted` state is `true`.
  *
- * ## CSS Parts
- *
  * @csspart control - The root control (`<vds-control>`).
  * @csspart control-* - All `vds-control` parts re-exported with the `control` prefix such as `control-root`.
- *
- * ## Examples
  *
  * @example
  * ```html

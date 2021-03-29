@@ -18,11 +18,7 @@ import { TimeProgressProps } from './time-progress.types';
  * Formats and displays the progression of playback. The output is displayed as
  * `{currentTime}{timeSeparator}{duration}`.
  *
- * ## Tag
- *
  * @tagname vds-time-progress
- *
- * ## CSS Parts
  *
  * @csspart root - The component's root element (`<div>`).
  * @csspart current-time - The `vds-time-current` component.
@@ -30,8 +26,6 @@ import { TimeProgressProps } from './time-progress.types';
  * @csspart duration - The `vds-time-duration` component.
  * @csspart duration-* - All `vds-time` parts re-exported with the `duration` prefix such as `duration-root`.
  * @csspart separator - The time separator element (`<span>`).
- *
- * ## Examples
  *
  * @example
  * ```html

@@ -21,19 +21,11 @@ import { ControlProps, ControlType } from './control.types';
  * Base control that is basically a naked (not styled) button that helps manage ARIA
  * attributes and normalizes any web-component or cross-browser related issues.
  *
- * ## Tag
- *
  * @tagname vds-control
- *
- * ## Slots
  *
  * @slot Used to pass content into the control `<button>`.
  *
- * ## CSS Parts
- *
  * @csspart root - The component's root element (`<button>`).
- *
- * ## Examples
  *
  * @example
  * ```html
