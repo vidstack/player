@@ -46,6 +46,7 @@ speed-measure-plugin*.json
 .eslintcache
 .nyc_output/
 .idea/
+.husky/
 .vscode/
 .versions/
 node_modules/
