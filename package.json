@@ -123,11 +123,6 @@
     "trailingComma": "all",
     "arrowParens": "avoid"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.ts": "eslint --cache --fix",
     "*.{ts,md,json}": "prettier --write"
