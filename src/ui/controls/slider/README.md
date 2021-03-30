@@ -39,7 +39,7 @@ vds-slider::part(track-fill) {
 | `isDragging` _(readonly)_                       | Whether the slider thumb is currently being dragged.                                                                                                         | `boolean`                   | `false`          |
 | `isOrientationHorizontal` _(readonly)_          | Whether the current orientation is horizontal.                                                                                                               | `boolean`                   | `true`           |
 | `isOrientationVertical` _(readonly)_            | Whether the current orientation is vertical.                                                                                                                 | `boolean`                   | `false`          |
-| `label`                                         | ♿ **ARIA:** The `aria-label` property of the slider.                                                                                                        | `string ∣ undefined`        |                  |
+| `label`                                         | ♿ **ARIA:** The `aria-label` property of the slider.                                                                                                        | `string ∣ undefined`        | `undefined`      |
 | `max`                                           | The greatest slider value in the range of permitted values.                                                                                                  | `number`                    | `100`            |
 | `min`                                           | The lowest slider value in the range of permitted values.                                                                                                    | `number`                    | `0`              |
 | `orientation`                                   | ♿ **ARIA:** Indicates the orientation of the slider.                                                                                                        | `"horizontal" ∣ "vertical"` | `'horizontal'`   |
@@ -54,7 +54,7 @@ vds-slider::part(track-fill) {
 | `trackElement` _(readonly)_                     | The track element.                                                                                                                                           | `HTMLDivElement`            | `HTMLDivElement` |
 | `trackFillElement` _(readonly)_                 | The track fill element.                                                                                                                                      | `HTMLDivElement`            | `HTMLDivElement` |
 | `value`                                         | The current slider value.                                                                                                                                    | `number`                    | `50`             |
-| `valueText`                                     | ♿ **ARIA:** Human-readable text alternative for the current value. Defaults to `value:max` ratio as a percentage.                                           | `string ∣ undefined`        |                  |
+| `valueText`                                     | ♿ **ARIA:** Human-readable text alternative for the current value. Defaults to `value:max` ratio as a percentage.                                           | `string ∣ undefined`        | `undefined`      |
 
 ## Slots
 

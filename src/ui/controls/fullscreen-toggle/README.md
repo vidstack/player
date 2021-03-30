@@ -19,7 +19,7 @@ A control for toggling the fullscreen mode of the player.
 
 | Property                     | Description                                                                              | Type                 | Default        |
 | ---------------------------- | ---------------------------------------------------------------------------------------- | -------------------- | -------------- |
-| `describedBy`                | ♿ **ARIA:** Identifies the element (or elements) that describes the underlying control. | `string ∣ undefined` |                |
+| `describedBy`                | ♿ **ARIA:** Identifies the element (or elements) that describes the underlying control. | `string ∣ undefined` | `undefined`    |
 | `disabled`                   | Whether the underlying control should be disabled (not-interactable).                    | `boolean`            | `false`        |
 | `label` _(required)_         | ♿ **ARIA:** The `aria-label` property of the underlying playback control.               | `string`             | `'Fullscreen'` |
 | `on`                         | Whether the toggle is in the `on` state.                                                 | `boolean`            | `false`        |
