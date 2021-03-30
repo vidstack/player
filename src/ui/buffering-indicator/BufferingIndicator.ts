@@ -20,7 +20,7 @@ import { BufferingIndicatorProps } from './buffering-indicator.types';
 
 /**
  * Display an indicator when either the provider/media is booting or media playback has
- * stopped because of a lack of temporary day. This component will always render the default
+ * stopped because of a lack of temporary data. This component will always render the default
  * `<slot>`, however, a `hidden` attribute will be applied to the slot when it shoud not be visible.
  *
  * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `hidden` attribute.
