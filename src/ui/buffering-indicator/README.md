@@ -21,11 +21,11 @@ stopped because of a lack of temporary day. This component will always render th
 
 ## Properties
 
-| Property                     | Description                                                                                                                                                                                                                                      | Type             | Default     |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- | ----------- |
-| `delay`                      | Delays the showing of the buffering indicator in the hopes that it resolves itself within that delay. This can be helpful in avoiding unnecessary or fast flashing indicators that may stress the user out. The delay number is in milliseconds. | `number`         | `0`         |
-| `showWhileBooting`           | Whether the indicator should be shown while the provider/media is booting, in other words before it's ready for playback (`canPlay === false`).                                                                                                  | `boolean`        | `false`     |
-| `styles` _(readonly/static)_ |                                                                                                                                                                                                                                                  | `CSSResultArray` | `undefined` |
+| Property                     | Description                                                                                                                                                                                                                                      | Type             | Default |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- | ------- |
+| `delay`                      | Delays the showing of the buffering indicator in the hopes that it resolves itself within that delay. This can be helpful in avoiding unnecessary or fast flashing indicators that may stress the user out. The delay number is in milliseconds. | `number`         | `0`     |
+| `showWhileBooting`           | Whether the indicator should be shown while the provider/media is booting, in other words before it's ready for playback (`canPlay === false`).                                                                                                  | `boolean`        | `false` |
+| `styles` _(readonly/static)_ |                                                                                                                                                                                                                                                  | `CSSResultArray` |         |
 
 ## Slots
 

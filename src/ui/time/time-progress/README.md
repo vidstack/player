@@ -39,10 +39,10 @@ vds-time-progress::part(separator) {
 | `currentTimeLabel`              | ♿ **ARIA:** The `aria-label` property for the current time.                              | `string`          | `'Current time'`  |
 | `durationLabel`                 | ♿ **ARIA:** The `aria-label` property for the duration.                                  | `string`          | `'Duration'`      |
 | `padHours`                      | Whether the hours unit should be padded with zeroes to a length of 2.                     | `boolean`         | `false`           |
-| `parts` _(readonly/static)_     |                                                                                           | `string[]`        | `undefined`       |
+| `parts` _(readonly/static)_     |                                                                                           | `string[]`        |                   |
 | `rootElement` _(readonly)_      | The component's root element.                                                             | `HTMLDivElement`  | `HTMLDivElement`  |
 | `separatorElement` _(readonly)_ | The separator element.                                                                    | `HTMLSpanElement` | `HTMLSpanElement` |
-| `styles` _(readonly/static)_    |                                                                                           | `CSSResultArray`  | `undefined`       |
+| `styles` _(readonly/static)_    |                                                                                           | `CSSResultArray`  |                   |
 | `timeCurrent` _(readonly)_      | The underlying `vds-time-current` component.                                              | `TimeCurrent`     | `TimeCurrent`     |
 | `timeDuration` _(readonly)_     | The underlying `vds-time-duration` component.                                             | `TimeDuration`    | `TimeDuration`    |
 | `timeSeparator`                 | A string that is used to separate the current time and duration.                          | `string`          | `'/'`             |

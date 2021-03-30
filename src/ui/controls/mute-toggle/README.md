@@ -17,15 +17,15 @@ A control for toggling the muted state of the player.
 
 ## Properties
 
-| Property                     | Description                                                                              | Type                 | Default     |
-| ---------------------------- | ---------------------------------------------------------------------------------------- | -------------------- | ----------- |
-| `describedBy`                | ♿ **ARIA:** Identifies the element (or elements) that describes the underlying control. | `string ∣ undefined` | `undefined` |
-| `disabled`                   | Whether the underlying control should be disabled (not-interactable).                    | `boolean`            | `false`     |
-| `label` _(required)_         | ♿ **ARIA:** The `aria-label` property of the underlying playback control.               | `string`             | `'Mute'`    |
-| `on`                         | Whether the toggle is in the `on` state.                                                 | `boolean`            | `false`     |
-| `parts` _(readonly/static)_  |                                                                                          | `string[]`           | `undefined` |
-| `rootElement` _(readonly)_   | The component's root element.                                                            | `Control`            | `undefined` |
-| `styles` _(readonly/static)_ |                                                                                          | `CSSResultArray`     | `undefined` |
+| Property                     | Description                                                                              | Type                 | Default  |
+| ---------------------------- | ---------------------------------------------------------------------------------------- | -------------------- | -------- |
+| `describedBy`                | ♿ **ARIA:** Identifies the element (or elements) that describes the underlying control. | `string ∣ undefined` |          |
+| `disabled`                   | Whether the underlying control should be disabled (not-interactable).                    | `boolean`            | `false`  |
+| `label` _(required)_         | ♿ **ARIA:** The `aria-label` property of the underlying playback control.               | `string`             | `'Mute'` |
+| `on`                         | Whether the toggle is in the `on` state.                                                 | `boolean`            | `false`  |
+| `parts` _(readonly/static)_  |                                                                                          | `string[]`           |          |
+| `rootElement` _(readonly)_   | The component's root element.                                                            | `Control`            |          |
+| `styles` _(readonly/static)_ |                                                                                          | `CSSResultArray`     |          |
 
 ## Slots
 

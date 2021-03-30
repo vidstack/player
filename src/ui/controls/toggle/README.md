@@ -20,10 +20,10 @@ that's currently `off`.
 
 ## Properties
 
-| Property                     | Description                              | Type             | Default     |
-| ---------------------------- | ---------------------------------------- | ---------------- | ----------- |
-| `on`                         | Whether the toggle is in the `on` state. | `boolean`        | `false`     |
-| `styles` _(readonly/static)_ |                                          | `CSSResultArray` | `undefined` |
+| Property                     | Description                              | Type             | Default |
+| ---------------------------- | ---------------------------------------- | ---------------- | ------- |
+| `on`                         | Whether the toggle is in the `on` state. | `boolean`        | `false` |
+| `styles` _(readonly/static)_ |                                          | `CSSResultArray` |         |
 
 ## Slots
 
