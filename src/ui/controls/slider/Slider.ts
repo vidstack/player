@@ -203,21 +203,6 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     return this._isDragging;
   }
 
-  protected get _fillRate(): number {
-    const boundValue = Math.min(this.max, Math.max(this.min, this.value));
-    const range = this.max - this.min;
-    return boundValue / range;
-  }
-
-  protected set _fillRate(rate: number) {
-    const boundRate = Math.min(1, Math.max(0, rate));
-    const range = this.max - this.min;
-    const fill = range * boundRate;
-    const fillToStepRatio = Math.round(fill / this.step);
-    const fillAmount = fillToStepRatio * this.step;
-    this.value = this.min + fillAmount;
-  }
-
   /**
    * The current value to range ratio.
    *
@@ -231,7 +216,9 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
    * `fillRate` = 0.5 (result)
    */
   get fillRate(): number {
-    return this._fillRate;
+    const boundValue = Math.min(this.max, Math.max(this.min, this.value));
+    const range = this.max - this.min;
+    return boundValue / range;
   }
 
   /**
@@ -240,7 +227,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
    * @default 50
    */
   get fillPercent(): number {
-    return this._fillRate * 100;
+    return this.fillRate * 100;
   }
 
   /**
@@ -590,6 +577,14 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     this.updateValueBasedOnThumbPosition(event);
   }
 
+  protected updateValueByRate(rate: number): void {
+    const boundRate = Math.min(1, Math.max(0, rate));
+    const range = this.max - this.min;
+    const fill = range * boundRate;
+    const fillToStepRatio = Math.round(fill / this.step);
+    this.value = this.min + fillToStepRatio * this.step;
+  }
+
   protected updateValueBasedOnThumbPosition(
     originalEvent: PointerEvent,
     shouldFireValueChange = true,
@@ -602,7 +597,7 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
     } = this.trackEl.getBoundingClientRect();
 
     // Calling this will update `this.value`.
-    this._fillRate = (thumbPosition - trackLeft) / trackWidth;
+    this.updateValueByRate((thumbPosition - trackLeft) / trackWidth);
 
     if (shouldFireValueChange) {
       this.dispatchEvent(
