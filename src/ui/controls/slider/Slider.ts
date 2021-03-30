@@ -178,6 +178,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * Whether the current orientation is horizontal.
+   *
+   * @default true
    */
   get isOrientationHorizontal(): boolean {
     return this.orientation === 'horizontal';
@@ -185,6 +187,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * Whether the current orientation is vertical.
+   *
+   * @default false
    */
   get isOrientationVertical(): boolean {
     return this.orientation === 'vertical';
@@ -192,6 +196,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * Whether the slider thumb is currently being dragged.
+   *
+   * @default false
    */
   get isDragging(): boolean {
     return this._isDragging;
@@ -215,6 +221,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
   /**
    * The current value to range ratio.
    *
+   * @default 0.5
+   *
    * @example
    * `min` = 0
    * `max` = 10
@@ -228,6 +236,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * The fill rate expressed as a percentage (`fillRate * 100`).
+   *
+   * @default 50
    */
   get fillPercent(): number {
     return this._fillRate * 100;
@@ -235,6 +245,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * The component's root element.
+   *
+   * @default HTMLDivElement
    */
   get rootElement(): HTMLDivElement {
     return this.rootEl;
@@ -242,6 +254,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * The thumb container element.
+   *
+   * @default HTMLDivElement
    */
   get thumbContainerElement(): HTMLDivElement {
     return this.thumbContainerEl;
@@ -249,6 +263,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * The thumb element.
+   *
+   * @default HTMLDivElement
    */
   get thumbElement(): HTMLDivElement {
     return this.thumbEl;
@@ -256,6 +272,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * The track element.
+   *
+   * @default HTMLDivElement
    */
   get trackElement(): HTMLDivElement {
     return this.trackEl;
@@ -263,6 +281,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * The track fill element.
+   *
+   * @default HTMLDivElement
    */
   get trackFillElement(): HTMLDivElement {
     return this.trackFillEl;
@@ -416,6 +436,8 @@ export class Slider extends FocusMixin(LitElement) implements SliderProps {
 
   /**
    * Whether the thumb has been dragged to what a human would perceive as the end.
+   *
+   * @default false
    */
   get hasThumbReachedHumanPerceivedEnd(): boolean {
     if (isNil(this.thumbEl)) return false;

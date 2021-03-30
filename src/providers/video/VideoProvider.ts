@@ -245,6 +245,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
    * The current presentation mode, possible values include `inline`, `picture-in-picture` and
    * `fullscreen`. Only available in Safari.
    *
+   * @default undefined
    * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
    */
   get presentationMode(): WebKitPresentationMode | undefined {

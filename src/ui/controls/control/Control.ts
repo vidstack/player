@@ -95,6 +95,8 @@ export class Control extends FocusMixin(LitElement) implements ControlProps {
 
   /**
    * The component's root element.
+   *
+   * @default HTMLButtonElement
    */
   get rootElement(): HTMLButtonElement {
     return this.rootEl;

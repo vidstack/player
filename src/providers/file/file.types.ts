@@ -132,6 +132,7 @@ export interface FileProviderProps extends ProviderProps {
    * Returns a `MediaError` object for the most recent error, or `undefined` if there has not been
    * an error.
    *
+   * @default undefined
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
    */
   readonly error: MediaError | undefined;
@@ -143,6 +144,8 @@ export interface FileProviderProps extends ProviderProps {
 
   /**
    * Indicates the current state of the fetching of media over the network.
+   *
+   * @default NetworkState.Empty
    */
   readonly networkState: NetworkState;
 
@@ -157,6 +160,7 @@ export interface FileProviderProps extends ProviderProps {
   /**
    * Indicates the readiness state of the media.
    *
+   * @default ReadyState.HaveNothing
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState
    */
   readonly readyState: ReadyState;

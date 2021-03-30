@@ -91,6 +91,8 @@ export class TimeProgress extends LitElement implements TimeProgressProps {
 
   /**
    * The component's root element.
+   *
+   * @default HTMLDivElement
    */
   get rootElement(): HTMLDivElement {
     return this.rootEl;
@@ -98,6 +100,8 @@ export class TimeProgress extends LitElement implements TimeProgressProps {
 
   /**
    * The underlying `vds-time-current` component.
+   *
+   * @default TimeCurrent
    */
   get timeCurrent(): TimeCurrent {
     return this.timeCurrentEl;
@@ -105,6 +109,8 @@ export class TimeProgress extends LitElement implements TimeProgressProps {
 
   /**
    * The underlying `vds-time-duration` component.
+   *
+   * @default TimeDuration
    */
   get timeDuration(): TimeDuration {
     return this.timeDurationEl;
@@ -112,6 +118,8 @@ export class TimeProgress extends LitElement implements TimeProgressProps {
 
   /**
    * The separator element.
+   *
+   * @default HTMLSpanElement
    */
   get separatorElement(): HTMLSpanElement {
     return this.separatorEl;

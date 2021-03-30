@@ -88,6 +88,8 @@ export class Ui extends LitElement {
 
   /**
    * The component's root element.
+   *
+   * @default HTMLDivElement
    */
   get rootElement(): HTMLDivElement {
     return this.rootEl;

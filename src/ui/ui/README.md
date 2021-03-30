@@ -37,11 +37,11 @@ vds-ui::part(root-hidden) {
 
 ## Properties
 
-| Property                     | Description                   | Type             | Default     |
-| ---------------------------- | ----------------------------- | ---------------- | ----------- |
-| `parts` _(readonly/static)_  |                               | `string[]`       | `undefined` |
-| `rootElement` _(readonly)_   | The component's root element. | `HTMLDivElement` | `undefined` |
-| `styles` _(readonly/static)_ |                               | `CSSResultArray` | `undefined` |
+| Property                     | Description                   | Type             | Default          |
+| ---------------------------- | ----------------------------- | ---------------- | ---------------- |
+| `parts` _(readonly/static)_  |                               | `string[]`       | `undefined`      |
+| `rootElement` _(readonly)_   | The component's root element. | `HTMLDivElement` | `HTMLDivElement` |
+| `styles` _(readonly/static)_ |                               | `CSSResultArray` | `undefined`      |
 
 ## Slots
 

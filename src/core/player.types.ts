@@ -51,11 +51,15 @@ export interface PlayerProps {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/buffered
+   *
+   * @default TimeRanges
    */
   readonly buffered: TimeRanges;
 
   /**
    * Whether the native Screen Orientation API is available.
+   *
+   * @default BrowserSupport
    */
   readonly canOrientScreen: boolean;
 
@@ -63,6 +67,8 @@ export interface PlayerProps {
    * Whether the user agent can play the media, but estimates that **not enough** data has been
    * loaded to play the media up to its end without having to stop for further buffering of
    * content.
+   *
+   * @default false
    */
   readonly canPlay: boolean;
 
@@ -70,6 +76,8 @@ export interface PlayerProps {
    * Whether the user agent can play the media, and estimates that enough data has been
    * loaded to play the media up to its end without having to stop for further buffering
    * of content.
+   *
+   * @default false
    */
   readonly canPlayThrough: boolean;
 
@@ -78,6 +86,7 @@ export interface PlayerProps {
    * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
    * only that it can be attempted.
    *
+   * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
    */
   readonly canRequestFullscreen: boolean;
@@ -102,6 +111,7 @@ export interface PlayerProps {
    * The absolute URL of the media resource that has been chosen. Defaults to `''` if no
    * media has been loaded.
    *
+   * @default ''
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc
    */
   readonly currentSrc: Source;
@@ -112,6 +122,7 @@ export interface PlayerProps {
    * time. The value can be set to a minimum of `0` and maximum of the total length of the
    * media (indicated by the duration prop).
    *
+   * @default 0
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime
    */
   currentTime: number;
@@ -121,6 +132,7 @@ export interface PlayerProps {
    * available, the returned value is `NaN`. If the media is of indefinite length (such as
    * streamed live media, a WebRTC call's media, or similar), the value is `+Infinity`.
    *
+   * @default NaN
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration
    */
   readonly duration: number;
@@ -129,6 +141,7 @@ export interface PlayerProps {
    * Whether media playback has reached the end. In other words it'll be true
    * if `currentTime === duration`.
    *
+   * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended
    */
   readonly ended: boolean;
@@ -138,12 +151,15 @@ export interface PlayerProps {
    * `vds-error` event updates and examine this object to debug further. The error could be a
    * native `MediaError` object or something else.
    *
+   * @default undefined
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
    */
   readonly error: unknown | undefined;
 
   /**
    * Whether the player is currently in fullscreen mode.
+   *
+   * @default false
    */
   readonly fullscreen: boolean;
 
@@ -151,6 +167,7 @@ export interface PlayerProps {
    * Whether media should automatically start playing from the beginning (replay) every time
    * it ends.
    *
+   * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop
    */
   loop: boolean;
@@ -158,6 +175,8 @@ export interface PlayerProps {
   /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
+   *
+   * @default MediaType.Unknown
    */
   readonly mediaType: MediaType;
 
@@ -178,12 +197,16 @@ export interface PlayerProps {
 
   /**
    * Contains the ranges of the media source that the browser has played, if any.
+   *
+   * @default TimeRanges
    */
   readonly played: TimeRanges;
 
   /**
    * Whether media is actively playing back. Defaults to `false` if no media has
    * loaded or playback has not started.
+   *
+   * @default false
    */
   readonly playing: boolean;
 
@@ -197,11 +220,15 @@ export interface PlayerProps {
   /**
    * The current player orientation. It will return `undefined` if the Screen Orientation API
    * is not available.
+   *
+   * @default undefined
    */
   readonly screenOrientation: ScreenOrientation | undefined;
 
   /**
    * Whether the screen orientation is currently locked.
+   *
+   * @default false
    */
   readonly screenOrientationLocked: boolean;
 
@@ -215,6 +242,7 @@ export interface PlayerProps {
    * be delivered from the server and so can be ready to play almost immediately — thus they are
    * seekable.
    *
+   * @default TimeRanges
    * @link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seekable
    */
@@ -222,11 +250,15 @@ export interface PlayerProps {
 
   /**
    * Whether media is actively seeking to an new playback position.
+   *
+   * @default false
    */
   readonly seeking: boolean;
 
   /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
+   *
+   * @default false
    */
   readonly started: boolean;
 
@@ -236,6 +268,8 @@ export interface PlayerProps {
    * in some cases it might be desirable to show a different view type. For example, when playing
    * audio with a poster. This is subject to the provider allowing it. Defaults to `unknown`
    * when no media has been loaded.
+   *
+   * @default ViewType.Unknown
    */
   readonly viewType: ViewType;
 
@@ -248,6 +282,8 @@ export interface PlayerProps {
 
   /**
    * Whether playback has temporarily stopped because of a lack of temporary data.
+   *
+   * @default false
    */
   readonly waiting: boolean;
 }

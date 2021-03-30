@@ -147,9 +147,6 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
 
   protected currentPreviewEl?: HTMLElement;
 
-  /**
-   * The root element passed in to the `preview` slot.
-   */
   get currentPreviewElement(): HTMLElement | undefined {
     return this.currentPreviewEl;
   }
@@ -287,9 +284,6 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   @internalProperty()
   protected isPointerInsideScrubber = false;
 
-  /**
-   * The component's root element.
-   */
   get rootElement(): HTMLDivElement {
     return this.rootEl;
   }
@@ -349,9 +343,6 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   // Progress
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * Returns the underlying `<progress>` element.
-   */
   get progressElement(): HTMLProgressElement {
     return this.progressEl;
   }
@@ -394,16 +385,10 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   @internalProperty()
   protected isDraggingThumb = false;
 
-  /**
-   * Returns the underlying `vds-slider` component.
-   */
   get slider(): Slider {
     return this.sliderEl;
   }
 
-  /**
-   * Whether the user is seeking by either hovering over the scrubber or by dragging the thumb.
-   */
   get isSeeking(): boolean {
     return this.isPointerInsideScrubber || this.isDraggingThumb;
   }
@@ -510,10 +495,6 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   // Preview Track Fill
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * Returns the underlying preview track fill element (`<div>`). This will be `undefined` if
-   * you set the `noPreviewTrack` property to true.
-   */
   get previewTrackElement(): HTMLDivElement | undefined {
     return this.previewTrackEl ?? undefined;
   }

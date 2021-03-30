@@ -1,5 +1,5 @@
 import { Callback } from '../../../shared/types';
-import { SliderActions, SliderProps } from '../slider';
+import { Slider, SliderActions, SliderProps } from '../slider';
 
 export interface ScrubberProps
   extends Omit<SliderProps, 'label' | 'min' | 'max' | 'value' | 'valueText'> {
@@ -51,6 +51,47 @@ export interface ScrubberProps
    * The amount of milliseconds to throttle user seeking events being dispatched.
    */
   userSeekingThrottle: number;
+
+  /**
+   * The component's root element.
+   *
+   * @default HTMLElement
+   */
+  readonly rootElement: HTMLElement;
+
+  /**
+   * Returns the underlying `<progress>` element.
+   *
+   * @default HTMLProgressElement
+   */
+  readonly progressElement: HTMLProgressElement;
+
+  /**
+   * Returns the underlying preview track fill element (`<div>`). This will be `undefined` if
+   * you set the `noPreviewTrack` property to true.
+   *
+   * @default HTMLDivElement
+   */
+  readonly previewTrackElement: HTMLDivElement | undefined;
+
+  /**
+   * Returns the underlying `vds-slider` component.
+   */
+  readonly slider: Slider;
+
+  /**
+   * Whether the user is seeking by either hovering over the scrubber or by dragging the thumb.
+   *
+   * @default false
+   */
+  readonly isSeeking: boolean;
+
+  /**
+   * The root element passed in to the `preview` slot.
+   *
+   * @default undefined
+   */
+  readonly currentPreviewElement: HTMLElement | undefined;
 }
 
 export interface ScrubberFakeProps {

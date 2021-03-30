@@ -513,6 +513,8 @@ export abstract class MediaProvider<EngineType = unknown>
 
   /**
    * Whether the native fullscreen API is enabled.
+   *
+   * @default BrowserSupport
    */
   get canRequestFullscreenNatively(): boolean {
     return fscreen.fullscreenEnabled;
@@ -524,6 +526,8 @@ export abstract class MediaProvider<EngineType = unknown>
 
   /**
    * Whether the player is in fullscreen mode via the native Fullscreen API.
+   *
+   * @default false
    */
   get isNativeFullscreenActive(): boolean {
     if (fscreen.fullscreenElement === this) return true;

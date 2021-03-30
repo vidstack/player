@@ -21,16 +21,22 @@ export interface HlsProviderProps extends VideoProviderProps {
   /**
    * Whether the browser natively supports HLS, mostly only true in Safari. Only call this method
    * after the provider has connected to the DOM (wait for `ConnectEvent`).
+   *
+   * @default BrowserSupport
    */
   readonly hasNativeHlsSupport: boolean;
 
   /**
    * Whether the current src is using HLS.
+   *
+   * @default false
    */
   readonly isCurrentlyHls: boolean;
 
   /**
    * Whether the `hls.js` instance has mounted the `HtmlMediaElement`.
+   *
+   * @default false
    */
   readonly isHlsEngineAttached: boolean;
 
@@ -38,6 +44,8 @@ export interface HlsProviderProps extends VideoProviderProps {
    * Whether native HLS support is available and whether it should be used. Generally defaults
    * to `false` as long as `window.MediaSource` is defined to enforce consistency by
    * using `hls.js` where ever possible.
+   *
+   * @default false
    */
   readonly shouldUseNativeHlsSupport: boolean;
 
