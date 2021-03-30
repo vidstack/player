@@ -191,6 +191,7 @@ export interface PlayerProps {
    * Whether playback should be paused. Defaults to `true` if no media has loaded or playback has
    * not started. Setting this to `true` will begin/resume playback.
    *
+   * @default true
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused
    */
   paused: boolean;
@@ -276,6 +277,7 @@ export interface PlayerProps {
   /**
    * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
    *
+   * @default 1
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
    */
   volume: number;

@@ -176,6 +176,7 @@ export interface FileProviderProps extends ProviderProps {
    * Sets or returns the object which serves as the source of the media associated with the
    * `HTMLMediaElement`.
    *
+   * @default undefined
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
    */
   srcObject?: SrcObject;
