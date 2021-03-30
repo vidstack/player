@@ -238,9 +238,12 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   // User
   // -------------------------------------------------------------------------------------------
 
-  protected dispatchUserSeekingEvent(time: number): void {
+  protected dispatchUserSeekingEvent(eventInit: {
+    detail: number;
+    originalEvent?: Event;
+  }): void {
     if (!this.isSeeking) return;
-    this.dispatchEvent(new VdsUserSeekingEvent({ detail: time }));
+    this.dispatchEvent(new VdsUserSeekingEvent(eventInit));
   }
 
   protected async dispatchUserSeeked(originalEvent: Event): Promise<void> {
@@ -520,9 +523,17 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   // Preview
   // -------------------------------------------------------------------------------------------
 
-  protected userSeekingThrottler?: CancelableCallback<number>;
-  protected previewTimeThrottler?: CancelableCallback<number>;
+  protected previewTimeThrottler?: CancelableCallback<{
+    detail: number;
+    originalEvent?: Event;
+  }>;
+
   protected previewPositionThrottler?: CancelableCallback<PointerEvent>;
+
+  protected userSeekingThrottler?: CancelableCallback<{
+    detail: number;
+    originalEvent?: Event;
+  }>;
 
   protected initThrottles(): void {
     this.previewTimeThrottler?.cancel();
@@ -632,12 +643,15 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     this.requestUpdate();
   }
 
-  protected updatePreviewTime(time: number): void {
+  protected updatePreviewTime(eventInit: {
+    detail: number;
+    originalEvent?: Event;
+  }): void {
     if (!this.isSeeking) return;
-    this.previewTime = time;
+    this.previewTime = eventInit.detail;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.userSeekingThrottler!(time);
-    this.dispatchEvent(new VdsScrubberPreviewTimeUpdateEvent({ detail: time }));
+    this.userSeekingThrottler!(eventInit);
+    this.dispatchEvent(new VdsScrubberPreviewTimeUpdateEvent(eventInit));
     this.requestUpdate();
   }
 
@@ -666,7 +680,10 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
     const xPos = Math.max(sliderLeftMargin, Math.min(left, rightLimit));
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.previewTimeThrottler!((percent / 100) * this.duration);
+    this.previewTimeThrottler!({
+      detail: (percent / 100) * this.duration,
+      originalEvent: event,
+    });
 
     if (!isNil(this.currentPreviewEl)) {
       this.currentPreviewEl.style.transform = `translateX(${xPos}px)`;
