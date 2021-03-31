@@ -56,6 +56,14 @@ vds-slider::part(track-fill) {
 | `value`                                         | The current slider value.                                                                                                                                    | `number`                    | `50`             |
 | `valueText`                                     | ♿ **ARIA:** Human-readable text alternative for the current value. Defaults to `value:max` ratio as a percentage.                                           | `string ∣ undefined`        | `undefined`      |
 
+## Events
+
+| Event                     | Description                                                                    | Type                     |
+| ------------------------- | ------------------------------------------------------------------------------ | ------------------------ |
+| `vds-slider-drag-end`     | Fired when the user stops dragging the slider thumb.                           | `VdsCustomEvent<number>` |
+| `vds-slider-drag-start`   | Fired when the user begins interacting with the slider and dragging the thumb. | `VdsCustomEvent<number>` |
+| `vds-slider-value-change` | Fired when the slider value changes.                                           | `VdsCustomEvent<number>` |
+
 ## Slots
 
 | Slot                | Description                                           |

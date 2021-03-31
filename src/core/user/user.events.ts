@@ -39,22 +39,64 @@ export function buildVdsUserEvent<
   };
 }
 
+/**
+ * Fired when the user is requesting the muted state to change.
+ *
+ * @bubbles
+ * @composed
+ */
 export class VdsUserMutedChangeEvent extends buildVdsUserEvent(
   'user-muted-change',
 ) {}
 
+/**
+ * Fired when the user is requesting the current fullscreen mode to change.
+ *
+ * @bubbles
+ * @composed
+ */
 export class VdsUserFullscreenChangeEvent extends buildVdsUserEvent(
   'user-fullscreen-change',
 ) {}
 
+/**
+ * Fired when the user is requesting playback to pause.
+ *
+ * @bubbles
+ * @composed
+ */
 export class VdsUserPauseEvent extends buildVdsUserEvent('user-pause') {}
 
+/**
+ * Fired when the user is requesting playback to begin/resume.
+ *
+ * @bubbles
+ * @composed
+ */
 export class VdsUserPlayEvent extends buildVdsUserEvent('user-play') {}
 
+/**
+ * Fired when the user has seeked to a new playback position and is requesting a time change.
+ *
+ * @bubbles
+ * @composed
+ */
 export class VdsUserSeekedEvent extends buildVdsUserEvent('user-seeked') {}
 
+/**
+ * Fired when the user is seeking/scrubbing to a new playback position.
+ *
+ * @bubbles
+ * @composed
+ */
 export class VdsUserSeekingEvent extends buildVdsUserEvent('user-seeking') {}
 
+/**
+ * Fired when the user requests a volume change.
+ *
+ * @bubbles
+ * @composed
+ */
 export class VdsUserVolumeChangeEvent extends buildVdsUserEvent(
   'user-volume-change',
 ) {}

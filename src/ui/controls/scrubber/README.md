@@ -1,33 +1,3 @@
-# vds-scrubber
-
-A control that displays the progression of playback and the amount seekable on a slider. This
-control can be used to update the current playback time by interacting with the slider.
-
-## Previews / Storyboards
-
-You can pass in a preview to be shown while the user is interacting (hover/drag) with the
-scrubber by passing an element into the `preview` slot, such as `<div slot="preview"></div>`.
-
-**You need to do the following on your root preview element:**
-
-- Expect that your root preview element will be positioned absolutely.
-- Set the `bottom` CSS property on it to adjust it to the desired position above the slider.
-- Create CSS styles for when it has a hidden attribute (`.preview[hidden] {}`).
-
-**The Scrubber will automatically do the following to the root preview element passed in:**
-
-- Set a `hidden` attribute when it should be hidden (it's left to you to hide it with CSS).
-- Set a safe `z-index` value so the preview is above all other components and is visible.
-- Update the `translateX()` CSS property to position the preview accordingly.
-
-### How do I get the current preview time?
-
-You can either listen to `vds-scrubber-preview-time-update` event on this component, or you can
-use the `scrubberPreviewContext`.
-
-For styling you have access to the `--vds-scrubber-preview-time` CSS property which contains
-the current time in seconds the user is previewing.
-
 <!-- [@wcom/cli] AUTO GENERATED BELOW -->
 
 ## Examples
@@ -85,6 +55,14 @@ vds-scrubber {
 | `styles` _(readonly/static)_         |                                                                                                                                                                                                                                                        | `CSSResultArray`             |                                     |
 | `throttle`                           | The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove` events.                                                                                                                                                       | `number`                     | `10`                                |
 | `userSeekingThrottle`                | The amount of milliseconds to throttle user seeking events being dispatched.                                                                                                                                                                           | `number`                     | `150`                               |
+
+## Events
+
+| Event                              | Description                                                  | Type                     |
+| ---------------------------------- | ------------------------------------------------------------ | ------------------------ |
+| `vds-scrubber-preview-hide`        | Emitted when the preview transitions from showing to hidden. | `VdsCustomEvent<void>`   |
+| `vds-scrubber-preview-show`        | Emitted when the preview transitions from hidden to showing. | `VdsCustomEvent<void>`   |
+| `vds-scrubber-preview-time-update` | Emitted when the time being previewed changes.               | `VdsCustomEvent<number>` |
 
 ## Slots
 

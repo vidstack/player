@@ -27,7 +27,7 @@ export function buildVdsScrubberEvent<
 }
 
 /**
- * Emitted when the preview transitions from hdiden to showing.
+ * Emitted when the preview transitions from hidden to showing.
  */
 export class VdsScrubberPreviewShowEvent extends buildVdsScrubberEvent(
   'scrubber-preview-show',

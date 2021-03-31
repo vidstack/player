@@ -8,9 +8,8 @@ import {
   TemplateResult,
 } from 'lit-element';
 
+import { CanPlay, MediaProvider } from '../../core';
 import {
-  CanPlay,
-  MediaProvider,
   VdsAbortEvent,
   VdsCanPlayEvent,
   VdsCanPlayThroughEvent,
@@ -34,7 +33,7 @@ import {
   VdsTimeUpdateEvent,
   VdsVolumeChangeEvent,
   VdsWaitingEvent,
-} from '../../core';
+} from '../../core/player.events';
 import { redispatchNativeEvent } from '../../shared/events';
 import { Callback } from '../../shared/types';
 import { getSlottedChildren } from '../../utils/dom';
@@ -62,6 +61,14 @@ import {
 export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   extends MediaProvider<EngineType>
   implements FileProviderProps, FileProviderMethods {
+  aspectRatio: string | undefined;
+  paused: boolean;
+  volume: number;
+  currentTime: number;
+  muted: boolean;
+  playsinline: boolean;
+  loop: boolean;
+  controls: boolean;
   protected mediaEl?: HTMLMediaElement;
 
   protected disposal = new Disposal();
