@@ -102,3 +102,9 @@ vds-slider::part(track-fill) {
 | `thumb-container` | The container for the slider's handle.                                              |
 | `track`           | The background of the slider in which the thumb slides along (`<div>`).             |
 | `track-fill`      | The part of the track that is currently filled which fills left-to-right (`<div>`). |
+
+## Dependencies
+
+### Used by
+
+- [vds-scrubber](../scrubber)

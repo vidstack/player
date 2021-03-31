@@ -61,14 +61,6 @@ import {
 export class MediaFileProvider<EngineType = MediaFileProviderEngine>
   extends MediaProvider<EngineType>
   implements FileProviderProps, FileProviderMethods {
-  aspectRatio: string | undefined;
-  paused: boolean;
-  volume: number;
-  currentTime: number;
-  muted: boolean;
-  playsinline: boolean;
-  loop: boolean;
-  controls: boolean;
   protected mediaEl?: HTMLMediaElement;
 
   protected disposal = new Disposal();

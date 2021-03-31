@@ -57,3 +57,10 @@ vds-time-progress::part(separator) {
 | `duration-*`     | All `vds-time` parts re-exported with the `duration` prefix such as `duration-root`.         |
 | `root`           | The component's root element (`<div>`).                                                      |
 | `separator`      | The time separator element (`<span>`).                                                       |
+
+## Dependencies
+
+### Depends on
+
+- [vds-time-current](../time-current)
+- [vds-time-duration](../time-duration)

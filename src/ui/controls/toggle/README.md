@@ -31,3 +31,11 @@ that's currently `off`.
 | ------- | --------------------------------------------- |
 | `"off"` | The content to show when the toggle is `off`. |
 | `"on"`  | The content to show when the toggle is `on`.  |
+
+## Dependencies
+
+### Used by
+
+- [vds-fullscreen-toggle](../fullscreen-toggle)
+- [vds-mute-toggle](../mute-toggle)
+- [vds-toggle-control](../toggle-control)

@@ -54,3 +54,11 @@ vds-control::part(root):focus {
 | Name   | Description                                |
 | ------ | ------------------------------------------ |
 | `root` | The component's root element (`<button>`). |
+
+## Dependencies
+
+### Used by
+
+- [vds-fullscreen-toggle](../fullscreen-toggle)
+- [vds-mute-toggle](../mute-toggle)
+- [vds-toggle-control](../toggle-control)

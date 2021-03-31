@@ -27,6 +27,7 @@ import {
   isInterfaceDeclaration,
   NamedImports,
   PropertySignature,
+  SourceFile,
   StringLiteral,
   TypeChecker,
 } from 'typescript';
@@ -161,15 +162,49 @@ function discoverComponentEvents(
 // Dependency Discovery Plugin
 // -------------------------------------------------------------------------------------------
 
-// TODO: Plugin to discover component dependencies/dependents.
 function dependencyDiscoveryPlugin(): Plugin {
   return {
     name: 'vds-deps',
-    async postbuild(components) {
-      // look for deps in the side effect file `vds-*.ts`.
+    async postbuild(components, sourceFiles) {
+      sourceFiles.forEach(sourceFile => {
+        const path = sourceFile.fileName;
+        components.forEach(component => {
+          const definitionFile = `${component.tagName!}.ts`;
+          if (path.endsWith(definitionFile)) {
+            const deps = findDependencies(components, sourceFile);
+            component.dependencies.push(...deps);
+            deps.forEach(dep => {
+              const notFound = !dep.dependents.some(
+                c => c.tagName === component.tagName,
+              );
+              if (notFound) dep.dependents.push(component);
+            });
+          }
+        });
+      });
+
       return components;
     },
   };
+}
+
+function findDependencies(
+  components: ComponentMeta[],
+  sourceFile: SourceFile,
+): ComponentMeta[] {
+  const deps: ComponentMeta[] = [];
+
+  sourceFile.forEachChild(node => {
+    if (isImportDeclaration(node)) {
+      const importPath = escapeQuotes(node.moduleSpecifier.getText());
+      if (importPath.startsWith('../')) {
+        const dep = components.find(c => importPath.includes(c.tagName!));
+        if (!isUndefined(dep)) deps.push(dep);
+      }
+    }
+  });
+
+  return deps;
 }
 
 // -------------------------------------------------------------------------------------------

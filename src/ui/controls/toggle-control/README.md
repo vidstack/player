@@ -33,3 +33,14 @@ The foundation for any toggle control such as a `playback-toggle` or `mute-toggl
 | ----------- | ------------------------------------------------------------------------------------- |
 | `control`   | The root control (`<vds-control>`).                                                   |
 | `control-*` | All `vds-control` parts re-exported with the `control` prefix such as `control-root`. |
+
+## Dependencies
+
+### Used by
+
+- [vds-playback-toggle](../playback-toggle)
+
+### Depends on
+
+- [vds-control](../control)
+- [vds-toggle](../toggle)

@@ -97,3 +97,9 @@ vds-scrubber {
 | `root`                 | The component's root element (`<div>`).                                                         |
 | `slider`               | The slider component (`<vds-slider>`).                                                          |
 | `slider-*`             | All slider parts re-exported with the `slider` prefix such as `slider-root` and `slider-thumb`. |
+
+## Dependencies
+
+### Depends on
+
+- [vds-slider](../slider)

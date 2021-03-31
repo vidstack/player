@@ -40,3 +40,10 @@ A control for toggling the fullscreen mode of the player.
 | ----------- | ------------------------------------------------------------------------------------- |
 | `control`   | The root control (`<vds-control>`).                                                   |
 | `control-*` | All `vds-control` parts re-exported with the `control` prefix such as `control-root`. |
+
+## Dependencies
+
+### Depends on
+
+- [vds-control](../control)
+- [vds-toggle](../toggle)

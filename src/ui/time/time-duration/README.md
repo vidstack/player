@@ -38,3 +38,9 @@ vds-time-duration::part(root) {
 | Name   | Description                              |
 | ------ | ---------------------------------------- |
 | `root` | The component's root element (`<time>`). |
+
+## Dependencies
+
+### Used by
+
+- [vds-time-progress](../time-progress)

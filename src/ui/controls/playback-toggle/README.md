@@ -40,3 +40,9 @@ A control for toggling the playback state (play/pause) of the current media.
 | ----------- | ------------------------------------------------------------------------------------- |
 | `control`   | The root control (`<vds-control>`).                                                   |
 | `control-*` | All `vds-control` parts re-exported with the `control` prefix such as `control-root`. |
+
+## Dependencies
+
+### Depends on
+
+- [vds-toggle-control](../toggle-control)
