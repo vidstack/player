@@ -203,7 +203,7 @@ export abstract class MediaProvider<EngineType = unknown>
    * The underlying engine that is actually responsible for rendering/loading media. Some examples
    * are:
    *
-   * - `VideProvider` engine is `HTMLMediaElement`.
+   * - `VideoProvider` engine is `HTMLMediaElement`.
    * - `YoutubeProvider` engine is `HTMLIFrameElement`.
    * - `HLSProvider` engine is the `Hls.js` instance.
    *
