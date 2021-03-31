@@ -28,6 +28,7 @@ export const sliderStyles = css`
     position: relative;
     min-width: 12.5px;
     user-select: none;
+    -webkit-user-select: none;
     min-height: max(48px, var(--vds-slider-thumb-height, 16px));
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
@@ -43,6 +44,7 @@ export const sliderStyles = css`
     width: var(--vds-slider-thumb-width, 16px);
     height: 100%;
     user-select: none;
+    -webkit-user-select: none;
     will-change: left;
     z-index: 300;
     transform: translateX(-50%);
@@ -55,6 +57,7 @@ export const sliderStyles = css`
     top: 50%;
     left: 0px;
     user-select: none;
+    -webkit-user-select: none;
     width: var(--vds-slider-thumb-width, 16px);
     height: var(--vds-slider-thumb-height, 16px);
     outline: none;

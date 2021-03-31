@@ -24,6 +24,7 @@ export const scrubberStyles = css`
     min-width: 12.5px;
     position: relative;
     user-select: none;
+    -webkit-user-select: none;
   }
 
   #slider {

@@ -19,6 +19,7 @@ export const videoStyles = css`
     outline: 0;
     border: 0;
     user-select: none;
+    -webkit-user-select: none;
     max-height: 100vh;
     z-index: 0;
   }
