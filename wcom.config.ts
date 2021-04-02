@@ -208,10 +208,10 @@ function findDependencies(
 }
 
 // -------------------------------------------------------------------------------------------
-// Discovery Plugin
+// Storybook Plugin
 // -------------------------------------------------------------------------------------------
 
-// TODO: Plugin to generate component Storybook controls/stories.
+// TODO: Storybook plugin to generate stories/controls.
 function storybookPlugin(): Plugin {
   return {
     name: 'vds-storybook',
