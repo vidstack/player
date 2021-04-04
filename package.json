@@ -86,7 +86,7 @@
     "@storybook/addon-essentials": "^6.1.20",
     "@storybook/addon-links": "^6.1.15",
     "@storybook/addon-storysource": "^6.1.20",
-    "@storybook/web-components": "^6.1.15",
+    "@storybook/web-components": "^6.2.2",
     "@types/mocha": "^8.0.3",
     "@types/prettier": "^2.2.3",
     "@types/sinon": "^9.0.8",
