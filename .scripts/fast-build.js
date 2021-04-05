@@ -2,13 +2,14 @@ const { build } = require('esbuild');
 const glob = require('fast-glob');
 
 const shouldWatch = process.argv.includes('-w');
+const isStorybook = process.argv.includes('--storybook');
 
 (async () => {
-  let entryPoints = await glob('src/**/!(*.test).ts');
+  const entryPoints = await glob('src/**/!(*.test).ts');
   await build({
     entryPoints,
-    outdir: '.',
-    tsconfig: 'tsconfig-build.json',
+    outdir: isStorybook ? 'storybook-build' : '.',
+    tsconfig: isStorybook ? 'tsconfig-storybook.json' : 'tsconfig-build.json',
     sourcemap: true,
     watch: shouldWatch,
   });
