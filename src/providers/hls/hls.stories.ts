@@ -1,7 +1,6 @@
 import { html } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { Story } from '../../shared/storybook';
 import { HLS_PROVIDER_STORYBOOK_ARG_TYPES } from './hls.args';
 import { HlsProviderActions, HlsProviderProps } from './hls.types';
@@ -18,7 +17,6 @@ const Template: Story<HlsProviderProps & HlsProviderActions> = ({
   height,
   aspectRatio,
   src,
-  libSrc,
   poster,
   paused,
   volume,
@@ -82,7 +80,6 @@ const Template: Story<HlsProviderProps & HlsProviderActions> = ({
       ?controls="${controls}"
       cross-origin="${ifDefined(crossOrigin)}"
       preload="${ifDefined(preload)}"
-      lib-src="${ifNonEmpty(libSrc)}"
       controls-list="${ifDefined(controlsList)}"
       ?auto-pip="${autoPiP}"
       ?disable-pip="${disablePiP}"

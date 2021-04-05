@@ -1,4 +1,5 @@
 import type Hls from 'hls.js';
+import type { HlsConfig } from 'hls.js';
 
 import { Callback } from '../../shared/types';
 import {
@@ -9,14 +10,9 @@ import {
 
 export interface HlsProviderProps extends VideoProviderProps {
   /**
-   * The URL where the `hls.js` library source can be found.
-   */
-  libSrc: string;
-
-  /**
    * The `hls.js` configuration object.
    */
-  hlsConfig?: Partial<Hls.Config>;
+  hlsConfig?: Partial<HlsConfig>;
 
   /**
    * Whether the browser natively supports HLS, mostly only true in Safari. Only call this method

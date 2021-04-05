@@ -1,4 +1,10 @@
-import type Hls from 'hls.js';
+import Hls, {
+  ErrorData,
+  ErrorTypes,
+  Events as HlsEvents,
+  HlsConfig,
+  LevelLoadedData,
+} from 'hls.js';
 import { property, PropertyValues } from 'lit-element';
 
 import {
@@ -7,7 +13,6 @@ import {
   VdsDurationChangeEvent,
   VdsErrorEvent,
 } from '../../core';
-import { LibLoader } from '../../shared/LibLoader';
 import { isNil, isUndefined } from '../../utils/unit';
 import { VideoProvider, VideoProviderEngine } from '../video';
 import {
@@ -22,10 +27,13 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element. This provider
  * also introduces support for the [HTTP Live Streaming protocol](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
- * (also known as HLS).
+ * (also known as HLS) via the [`video-dev/hls.js`](https://github.com/video-dev/hls.js) library.
  *
- * This provider will load the [`video-dev/hls.js`](https://github.com/video-dev/hls.js) library
- * if the browser supports Media Source Extensions OR it doesn't have native HLS support.
+ * You'll need to install `hls.js` to use this provider...
+ *
+ * ```bash
+ * $: npm install hls.js
+ * ```
  *
  * @tagname vds-hls
  *
@@ -57,15 +65,10 @@ export class HlsProvider
   implements HlsProviderProps {
   protected _hlsEngine?: HlsProviderEngine;
 
-  protected HlsLib?: typeof Hls;
-
-  protected libLoader!: LibLoader<typeof Hls>;
-
   protected _isHlsEngineAttached = false;
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.libLoader = new LibLoader(this.libSrc, 'Hls');
     this.handleSrcChange();
   }
 
@@ -83,11 +86,8 @@ export class HlsProvider
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  @property({ attribute: 'lib-src' })
-  libSrc = 'https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.min.js';
-
   @property({ attribute: 'hls-config', type: Object })
-  hlsConfig?: Partial<Hls.Config>;
+  hlsConfig?: Partial<HlsConfig>;
 
   /**
    * The `hls.js` instance.
@@ -116,7 +116,7 @@ export class HlsProvider
 
   canPlayType(type: string): CanPlay {
     if (HLS_TYPES.has(type)) {
-      return this.HlsLib?.isSupported() ? CanPlay.Probably : CanPlay.Maybe;
+      return Hls.isSupported() ? CanPlay.Probably : CanPlay.Maybe;
     }
 
     return super.canPlayType(type);
@@ -137,37 +137,12 @@ export class HlsProvider
   }
 
   get shouldUseNativeHlsSupport(): boolean {
-    if (!isUndefined(window.MediaSource)) return false;
+    if (Hls.isSupported()) return false;
     return this.hasNativeHlsSupport;
   }
 
   protected shouldSetVideoSrcAttr(): boolean {
     return this.shouldUseNativeHlsSupport || !this.isCurrentlyHls;
-  }
-
-  protected isHlsEngineInitializing = false;
-
-  protected async initHlsEngine(): Promise<void> {
-    if (
-      isNil(this.videoEngine) ||
-      this.shouldUseNativeHlsSupport ||
-      this.isHlsEngineInitializing ||
-      !this.isCurrentlyHls
-    )
-      return;
-
-    this.isHlsEngineInitializing = true;
-
-    this.libLoader.src = this.libSrc;
-    this.HlsLib = await this.libLoader.download();
-
-    if (this.HlsLib.isSupported()) {
-      this.buildHlsEngine();
-      this.attachHlsEngine();
-      this.loadSrcOnHlsEngine();
-    }
-
-    this.isHlsEngineInitializing = false;
   }
 
   protected destroyHlsEngine(): void {
@@ -193,29 +168,21 @@ export class HlsProvider
   }
 
   protected buildHlsEngine(): void {
-    if (isNil(this.videoEngine)) return;
+    if (isNil(this.videoEngine) || !isUndefined(this.engine)) return;
 
-    if (!isUndefined(this.engine)) {
-      this.attachHlsEngine();
-      this.loadSrcOnHlsEngine();
-      return;
-    }
-
-    if (!this.HlsLib?.isSupported()) {
+    if (!Hls.isSupported()) {
       this.dispatchEvent(new VdsHlsEngineNoSuppotEvent());
       return;
     }
 
-    this._hlsEngine = new this.HlsLib(this.hlsConfig ?? {});
+    this._hlsEngine = new Hls(this.hlsConfig ?? {});
     this.dispatchEvent(new VdsHlsEngineBuiltEvent({ detail: this.engine }));
     this.listenToHlsEngine();
   }
 
   // Let `MediaFileProvider` know we're taking over ready events.
   protected willAnotherEngineAttach(): boolean {
-    return (
-      !this.shouldUseNativeHlsSupport && (this.HlsLib?.isSupported() ?? false)
-    );
+    return !this.shouldUseNativeHlsSupport && (Hls.isSupported() ?? false);
   }
 
   protected attachHlsEngine(): void {
@@ -265,32 +232,27 @@ export class HlsProvider
       await this.requestUpdate();
 
       if (isUndefined(this.engine)) {
-        this.initHlsEngine();
-      } else {
-        this.attachHlsEngine();
-        this.loadSrcOnHlsEngine();
+        this.buildHlsEngine();
       }
+
+      this.attachHlsEngine();
+      this.loadSrcOnHlsEngine();
     });
   }
 
   protected listenToHlsEngine(): void {
-    if (isUndefined(this.engine) || isUndefined(this.HlsLib)) return;
-
-    this.engine.on(
-      this.HlsLib.Events.LEVEL_LOADED,
-      this.handleHlsMediaReady.bind(this),
-    );
-
-    this.engine.on(this.HlsLib.Events.ERROR, this.handleHlsError.bind(this));
+    if (isUndefined(this.engine)) return;
+    this.engine.on(HlsEvents.LEVEL_LOADED, this.handleHlsMediaReady.bind(this));
+    this.engine.on(HlsEvents.ERROR, this.handleHlsError.bind(this));
   }
 
-  protected handleHlsError(originalEvent: string, data: Hls.errorData): void {
+  protected handleHlsError(originalEvent: string, data: ErrorData): void {
     if (data.fatal) {
       switch (data.type) {
-        case this.HlsLib?.ErrorTypes.NETWORK_ERROR:
+        case ErrorTypes.NETWORK_ERROR:
           this.engine?.startLoad();
           break;
-        case this.HlsLib?.ErrorTypes.MEDIA_ERROR:
+        case ErrorTypes.MEDIA_ERROR:
           this.engine?.recoverMediaError();
           break;
         default:
@@ -305,7 +267,7 @@ export class HlsProvider
 
   protected handleHlsMediaReady(
     originalEvent: string,
-    data: Hls.levelLoadedData,
+    data: LevelLoadedData,
   ): void {
     if (this.context.canPlay) return;
 
