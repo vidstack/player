@@ -1,6 +1,7 @@
 import { property } from 'lit-element';
 
-import { playerContext, VdsUserMutedChangeEvent } from '../../../core';
+import { playerContext } from '../../../core';
+import { VdsUserMutedChangeEvent } from '../../../core/user/user.events';
 import { ToggleControl } from '../toggle-control';
 import { MuteToggleProps } from './mute-toggle.types';
 

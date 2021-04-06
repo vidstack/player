@@ -2,12 +2,12 @@ import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
 import { TimeCurrent } from './TimeCurrent';
 
-export const TIME_CURRENT_TAG_NAME = `${LIB_PREFIX}-time-current`;
+export const TIME_CURRENT_TAG_NAME = `${LIB_PREFIX}-time-current` as const;
 
 safelyDefineCustomElement(TIME_CURRENT_TAG_NAME, TimeCurrent);
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-time-current': TimeCurrent;
+    [TIME_CURRENT_TAG_NAME]: TimeCurrent;
   }
 }

@@ -1,12 +1,7 @@
 import type Hls from 'hls.js';
 import type { HlsConfig } from 'hls.js';
 
-import { Callback } from '../../shared/types';
-import {
-  VideoProviderActions,
-  VideoProviderEngine,
-  VideoProviderProps,
-} from '../video';
+import { VideoProviderEngine, VideoProviderProps } from '../video';
 
 export interface HlsProviderProps extends VideoProviderProps {
   /**
@@ -17,8 +12,6 @@ export interface HlsProviderProps extends VideoProviderProps {
   /**
    * Whether the browser natively supports HLS, mostly only true in Safari. Only call this method
    * after the provider has connected to the DOM (wait for `ConnectEvent`).
-   *
-   * @default BrowserSupport
    */
   readonly hasNativeHlsSupport: boolean;
 
@@ -49,13 +42,6 @@ export interface HlsProviderProps extends VideoProviderProps {
    * The underlying `HTMLMediaElement`.
    */
   readonly videoEngine: VideoProviderEngine;
-}
-
-export interface HlsProviderActions extends VideoProviderActions {
-  onEngineBuilt: Callback<CustomEvent>;
-  onEngineAttach: Callback<CustomEvent>;
-  onEngineDetach: Callback<CustomEvent>;
-  onEngineNoSupport: Callback<CustomEvent>;
 }
 
 export type HlsProviderEngine = Hls | undefined;

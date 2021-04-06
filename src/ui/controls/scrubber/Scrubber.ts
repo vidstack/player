@@ -12,15 +12,15 @@ import {
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 import { throttle } from 'lodash-es';
 
+import { playerContext } from '../../../core';
 import {
-  playerContext,
   VdsUserPauseEvent,
   VdsUserPlayEvent,
   VdsUserSeekedEvent,
   VdsUserSeekingEvent,
-} from '../../../core';
-import { FocusMixin } from '../../../shared/directives/FocusMixin';
+} from '../../../core/user/user.events';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
+import { FocusMixin } from '../../../shared/mixins/FocusMixin';
 import { CancelableCallback } from '../../../shared/types';
 import { getSlottedChildren, raf } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';

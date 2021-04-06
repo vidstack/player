@@ -1,29 +1,37 @@
-import { html } from 'lit-element';
+import { html, TemplateResult } from 'lit-html';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { Story } from '../../../shared/storybook';
-import { TIME_STORYBOOK_ARG_TYPES } from './time.args';
+import {
+  buildStorybookControlsFromManifest,
+  SB_THEME_COLOR,
+} from '../../../shared/storybook';
 import { TimeProps } from './time.types';
 import { TIME_TAG_NAME } from './vds-time';
 
 export default {
   title: 'UI/Foundation/Time/Time',
   component: TIME_TAG_NAME,
-  argTypes: TIME_STORYBOOK_ARG_TYPES,
+  argTypes: buildStorybookControlsFromManifest(TIME_TAG_NAME),
 };
 
-const Template: Story<TimeProps> = ({
+type Args = TimeProps;
+
+function Template({
+  // Props
   label,
   seconds,
   alwaysShowHours,
   padHours,
-}) =>
-  html`<vds-time
-    label="${ifNonEmpty(label)}"
-    seconds="${seconds}"
-    ?always-show-hours="${alwaysShowHours}"
-    ?pad-hours="${padHours}"
-    style="color: #FF2A5D;"
-  ></vds-time> `;
+}: Args): TemplateResult {
+  return html`
+    <vds-time
+      label="${ifNonEmpty(label)}"
+      seconds="${seconds}"
+      ?always-show-hours="${alwaysShowHours}"
+      ?pad-hours="${padHours}"
+      style="color: ${SB_THEME_COLOR};"
+    ></vds-time>
+  `;
+}
 
 export const Time = Template.bind({});

@@ -1,4 +1,6 @@
-export interface ToggleControlProps {
+import { ToggleProps } from '../toggle/toggle.types';
+
+export interface ToggleControlProps extends ToggleProps {
   /**
    * Whether the underlying control should be disabled (not-interactable).
    */

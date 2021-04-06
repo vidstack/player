@@ -1,33 +1,53 @@
 import '../../../core/fakes/vds-fake-media-provider';
 
-import { html } from 'lit-element';
+import { html, TemplateResult } from 'lit-html';
 
+import { VdsUserEvents } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { Story } from '../../../shared/storybook';
-import { FULLSCREEN_TOGGLE_STORYBOOK_ARG_TYPES } from './fullscreen-toggle.args';
 import {
-  FullscreenToggleActions,
-  FullscreenToggleFakeProps,
-  FullscreenToggleProps,
-} from './fullscreen-toggle.types';
+  buildStorybookControlsFromManifest,
+  SB_THEME_COLOR,
+  VdsEventsToStorybookActions,
+} from '../../../shared/storybook';
+import { FullscreenToggleProps } from './fullscreen-toggle.types';
 import { FULLSCREEN_TOGGLE_TAG_NAME } from './vds-fullscreen-toggle';
 
 export default {
   title: 'UI/Foundation/Controls/Fullscreen Toggle',
   component: FULLSCREEN_TOGGLE_TAG_NAME,
-  argTypes: FULLSCREEN_TOGGLE_STORYBOOK_ARG_TYPES,
+  argTypes: {
+    ...buildStorybookControlsFromManifest(FULLSCREEN_TOGGLE_TAG_NAME),
+    on: {
+      table: {
+        disable: true,
+      },
+    },
+    fakeFullscreen: {
+      control: 'boolean',
+      defaultValue: false,
+    },
+  },
 };
 
-const Template: Story<
-  FullscreenToggleProps & FullscreenToggleFakeProps & FullscreenToggleActions
-> = ({
+interface FakeProps {
+  fakeFullscreen: boolean;
+}
+
+type Args = FakeProps &
+  FullscreenToggleProps &
+  VdsEventsToStorybookActions<VdsUserEvents>;
+
+function Template({
+  // Fakes
+  fakeFullscreen,
+  // Props
   label,
   describedBy,
   disabled,
-  fakeFullscreen,
-  onUserFullscreenChange,
-}) =>
-  html`
+  // Events
+  onVdsUserFullscreenChange,
+}: Args): TemplateResult {
+  return html`
     <vds-fake-media-provider
       .canPlayCtx="${true}"
       .fullscreenCtx="${fakeFullscreen}"
@@ -36,13 +56,14 @@ const Template: Story<
         label="${ifNonEmpty(label)}"
         described-by="${ifNonEmpty(describedBy)}"
         ?disabled="${disabled}"
-        style="color: #FF2A5D;"
-        @vds-user-fullscreen-change="${onUserFullscreenChange}"
+        style="color: ${SB_THEME_COLOR};"
+        @vds-user-fullscreen-change="${onVdsUserFullscreenChange}"
       >
         <div slot="enter">Enter</div>
         <div slot="exit">Exit</div>
       </vds-fullscreen-toggle>
     </vds-fake-media-provider>
   `;
+}
 
 export const FullscreenToggle = Template.bind({});

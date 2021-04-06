@@ -58,8 +58,6 @@ export interface PlayerProps {
 
   /**
    * Whether the native Screen Orientation API is available.
-   *
-   * @default BrowserSupport
    */
   readonly canOrientScreen: boolean;
 

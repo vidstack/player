@@ -1,37 +1,54 @@
 import '../../../core/fakes/vds-fake-media-provider';
 
-import { html } from 'lit-element';
+import { html, TemplateResult } from 'lit-html';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { Story } from '../../../shared/storybook';
-import { TIME_DURATION_STORYBOOK_ARG_TYPES } from './time-duration.args';
 import {
-  TimeDurationFakeProps,
-  TimeDurationProps,
-} from './time-duration.types';
+  buildStorybookControlsFromManifest,
+  SB_THEME_COLOR,
+} from '../../../shared/storybook';
+import { TimeDurationProps } from './time-duration.types';
 import { TIME_DURATION_TAG_NAME } from './vds-time-duration';
 
 export default {
   title: 'UI/Foundation/Time/Time Duration',
   component: TIME_DURATION_TAG_NAME,
-  argTypes: TIME_DURATION_STORYBOOK_ARG_TYPES,
+  argTypes: {
+    ...buildStorybookControlsFromManifest(TIME_DURATION_TAG_NAME),
+    seconds: {
+      table: {
+        disable: true,
+      },
+    },
+    fakeDuration: {
+      control: 'number',
+      defaultValue: 3750,
+    },
+  },
 };
 
-const Template: Story<TimeDurationProps & TimeDurationFakeProps> = ({
+interface FakeProps {
+  fakeDuration: number;
+}
+
+type Args = FakeProps & TimeDurationProps;
+
+function Template({
+  fakeDuration,
   label,
   alwaysShowHours,
   padHours,
-  fakeDuration,
-}) =>
-  html`
+}: Args): TemplateResult {
+  return html`
     <vds-fake-media-provider .durationCtx="${fakeDuration}">
       <vds-time-duration
         label="${ifNonEmpty(label)}"
         ?always-show-hours="${alwaysShowHours}"
         ?pad-hours="${padHours}"
-        style="color: #FF2A5D;"
+        style="color: ${SB_THEME_COLOR};"
       ></vds-time-duration>
     </vds-fake-media-provider>
   `;
+}
 
 export const TimeDuration = Template.bind({});

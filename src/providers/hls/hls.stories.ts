@@ -1,18 +1,36 @@
-import { html } from 'lit-element';
+import { html, TemplateResult } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { Story } from '../../shared/storybook';
-import { HLS_PROVIDER_STORYBOOK_ARG_TYPES } from './hls.args';
-import { HlsProviderActions, HlsProviderProps } from './hls.types';
+import { VdsPlayerEvents } from '../../core';
+import {
+  buildStorybookControlsFromManifest,
+  VdsEventsToStorybookActions,
+} from '../../shared/storybook';
+import { VdsHlsEvents } from './hls.events';
+import { HlsProviderProps } from './hls.types';
 import { HLS_TAG_NAME } from './vds-hls';
 
 export default {
-  title: 'Providers/Hls',
+  title: 'UI/Providers/HLS',
   component: HLS_TAG_NAME,
-  argTypes: HLS_PROVIDER_STORYBOOK_ARG_TYPES,
+  argTypes: {
+    ...buildStorybookControlsFromManifest(HLS_TAG_NAME),
+    src: {
+      defaultValue:
+        'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8',
+    },
+    poster: {
+      defaultValue: 'https://media-files.vidstack.io/poster.png',
+    },
+  },
 };
 
-const Template: Story<HlsProviderProps & HlsProviderActions> = ({
+type Args = HlsProviderProps &
+  VdsEventsToStorybookActions<VdsPlayerEvents> &
+  VdsEventsToStorybookActions<VdsHlsEvents>;
+
+function Template({
+  // Props
   width,
   height,
   aspectRatio,
@@ -31,40 +49,42 @@ const Template: Story<HlsProviderProps & HlsProviderActions> = ({
   autoPiP,
   disablePiP,
   disableRemotePlayback,
-  onAbort,
-  onCanPlay,
-  onCanPlayThrough,
-  onConnect,
-  onDisconnect,
-  onDurationChange,
-  onEmptied,
-  onEnded,
-  onError,
-  onFullscreenChange,
-  onLoadedData,
-  onLoadedMetadata,
-  onLoadStart,
-  onMediaTypeChange,
-  onPause,
-  onPlay,
-  onPlaying,
-  onProgress,
-  onSeeked,
-  onSeeking,
-  onStalled,
-  onStarted,
-  onSuspend,
-  onReplay,
-  onTimeUpdate,
-  onViewTypeChange,
-  onVolumeChange,
-  onWaiting,
-  onEngineBuilt,
-  onEngineAttach,
-  onEngineDetach,
-  onEngineNoSupport,
-}) =>
-  html`
+  // HLS Events
+  onVdsHlsEngineAttach,
+  onVdsHlsEngineBuilt,
+  onVdsHlsEngineDetach,
+  onVdsHlsEngineNoSupport,
+  // Player Events
+  onVdsAbort,
+  onVdsCanPlay,
+  onVdsCanPlayThrough,
+  onVdsConnect,
+  onVdsDisconnect,
+  onVdsDurationChange,
+  onVdsEmptied,
+  onVdsEnded,
+  onVdsError,
+  onVdsFullscreenChange,
+  onVdsLoadedData,
+  onVdsLoadedMetadata,
+  onVdsLoadStart,
+  onVdsMediaTypeChange,
+  onVdsPause,
+  onVdsPlay,
+  onVdsPlaying,
+  onVdsProgress,
+  onVdsSeeked,
+  onVdsSeeking,
+  onVdsStalled,
+  onVdsStarted,
+  onVdsSuspend,
+  onVdsReplay,
+  onVdsTimeUpdate,
+  onVdsViewTypeChange,
+  onVdsVolumeChange,
+  onVdsWaiting,
+}: Args): TemplateResult {
+  return html`
     <vds-hls
       src="${src}"
       width="${ifDefined(width)}"
@@ -84,39 +104,40 @@ const Template: Story<HlsProviderProps & HlsProviderActions> = ({
       ?auto-pip="${autoPiP}"
       ?disable-pip="${disablePiP}"
       ?disable-remote-playback="${disableRemotePlayback}"
-      @vds-abort="${onAbort}"
-      @vds-can-play="${onCanPlay}"
-      @vds-can-play-through="${onCanPlayThrough}"
-      @vds-connect="${onConnect}"
-      @vds-disconnect="${onDisconnect}"
-      @vds-duration-change="${onDurationChange}"
-      @vds-emptied="${onEmptied}"
-      @vds-ended="${onEnded}"
-      @vds-error="${onError}"
-      @vds-fullscreen-change="${onFullscreenChange}"
-      @vds-loaded-data="${onLoadedData}"
-      @vds-load-start="${onLoadStart}"
-      @vds-loaded-metadata="${onLoadedMetadata}"
-      @vds-media-type-change="${onMediaTypeChange}"
-      @vds-pause="${onPause}"
-      @vds-play="${onPlay}"
-      @vds-playing="${onPlaying}"
-      @vds-progress="${onProgress}"
-      @vds-seeked="${onSeeked}"
-      @vds-seeking="${onSeeking}"
-      @vds-stalled="${onStalled}"
-      @vds-started="${onStarted}"
-      @vds-suspend="${onSuspend}"
-      @vds-replay="${onReplay}"
-      @vds-time-update="${onTimeUpdate}"
-      @vds-view-type-change="${onViewTypeChange}"
-      @vds-volume-change="${onVolumeChange}"
-      @vds-waiting="${onWaiting}"
-      @vds-hls-engine-built="${onEngineBuilt}"
-      @vds-hls-engine-attach="${onEngineAttach}"
-      @vds-hls-engine-detach="${onEngineDetach}"
-      @vds-hls-engine-no-support="${onEngineNoSupport}"
+      @vds-abort="${onVdsAbort}"
+      @vds-can-play="${onVdsCanPlay}"
+      @vds-can-play-through="${onVdsCanPlayThrough}"
+      @vds-connect="${onVdsConnect}"
+      @vds-disconnect="${onVdsDisconnect}"
+      @vds-duration-change="${onVdsDurationChange}"
+      @vds-emptied="${onVdsEmptied}"
+      @vds-ended="${onVdsEnded}"
+      @vds-error="${onVdsError}"
+      @vds-fullscreen-change="${onVdsFullscreenChange}"
+      @vds-loaded-data="${onVdsLoadedData}"
+      @vds-load-start="${onVdsLoadStart}"
+      @vds-loaded-metadata="${onVdsLoadedMetadata}"
+      @vds-media-type-change="${onVdsMediaTypeChange}"
+      @vds-pause="${onVdsPause}"
+      @vds-play="${onVdsPlay}"
+      @vds-playing="${onVdsPlaying}"
+      @vds-progress="${onVdsProgress}"
+      @vds-seeked="${onVdsSeeked}"
+      @vds-seeking="${onVdsSeeking}"
+      @vds-stalled="${onVdsStalled}"
+      @vds-started="${onVdsStarted}"
+      @vds-suspend="${onVdsSuspend}"
+      @vds-replay="${onVdsReplay}"
+      @vds-time-update="${onVdsTimeUpdate}"
+      @vds-view-type-change="${onVdsViewTypeChange}"
+      @vds-volume-change="${onVdsVolumeChange}"
+      @vds-waiting="${onVdsWaiting}"
+      @vds-hls-engine-built="${onVdsHlsEngineBuilt}"
+      @vds-hls-engine-attach="${onVdsHlsEngineAttach}"
+      @vds-hls-engine-detach="${onVdsHlsEngineDetach}"
+      @vds-hls-engine-no-support="${onVdsHlsEngineNoSupport}"
     ></vds-hls>
   `;
+}
 
-export const Hls = Template.bind({});
+export const HLS = Template.bind({});

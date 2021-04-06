@@ -4,6 +4,7 @@ export * from '../providers/hls';
 export * from '../providers/video';
 export * from '../ui/buffering-indicator';
 export * from '../ui/controls/control';
+export * from '../ui/controls/fullscreen-toggle';
 export * from '../ui/controls/mute-toggle';
 export * from '../ui/controls/playback-toggle';
 export * from '../ui/controls/scrubber';

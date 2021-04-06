@@ -1,18 +1,24 @@
-import { html } from 'lit-element';
+import { html, TemplateResult } from 'lit-html';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { Story } from '../../../shared/storybook';
-import { SLIDER_STORYBOOK_ARG_TYPES } from './slider.args';
-import { SliderActions, SliderProps } from './slider.types';
+import {
+  buildStorybookControlsFromManifest,
+  VdsEventsToStorybookActions,
+} from '../../../shared/storybook';
+import { VdsSliderEvents } from './slider.events';
+import { SliderProps } from './slider.types';
 import { SLIDER_TAG_NAME } from './vds-slider';
 
 export default {
   title: 'UI/Foundation/Controls/Slider',
   component: SLIDER_TAG_NAME,
-  argTypes: SLIDER_STORYBOOK_ARG_TYPES,
+  argTypes: buildStorybookControlsFromManifest(SLIDER_TAG_NAME),
 };
 
-const Template: Story<SliderProps & SliderActions> = ({
+type Args = SliderProps & VdsEventsToStorybookActions<VdsSliderEvents>;
+
+function Template({
+  // Props
   label,
   min = 0,
   max,
@@ -24,11 +30,12 @@ const Template: Story<SliderProps & SliderActions> = ({
   valueText,
   orientation,
   throttle,
-  onValueChange,
-  onDragStart,
-  onDragEnd,
-}) =>
-  html`
+  // Events
+  onVdsSliderDragStart,
+  onVdsSliderDragEnd,
+  onVdsSliderValueChange,
+}: Args): TemplateResult {
+  return html`
     <vds-slider
       label="${ifNonEmpty(label)}"
       min="${min}"
@@ -41,10 +48,11 @@ const Template: Story<SliderProps & SliderActions> = ({
       throttle="${throttle}"
       ?disabled="${disabled}"
       ?hidden="${hidden}"
-      @vds-slider-value-change="${onValueChange}"
-      @vds-slider-drag-start="${onDragStart}"
-      @vds-slider-drag-end="${onDragEnd}"
+      @vds-slider-value-change="${onVdsSliderValueChange}"
+      @vds-slider-drag-start="${onVdsSliderDragStart}"
+      @vds-slider-drag-end="${onVdsSliderDragEnd}"
     ></vds-slider>
   `;
+}
 
 export const Slider = Template.bind({});

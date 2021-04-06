@@ -1,7 +1,7 @@
 import { html, property, query, TemplateResult } from 'lit-element';
 
-import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
+import { FocusMixin } from '../../../shared/mixins/FocusMixin';
 import { buildExportPartsAttr } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';
 import { noop } from '../../../utils/unit';
@@ -16,6 +16,9 @@ import { ToggleControlProps } from './toggle-control.types';
  *
  * @csspart control - The root control (`<vds-control>`).
  * @csspart control-* - All `vds-control` parts re-exported with the `control` prefix such as `control-root`.
+ *
+ * @slot on - The content to show when the toggle is `on`.
+ * @slot off - The content to show when the toggle is `off`.
  *
  * @example
  * ```html
@@ -103,5 +106,6 @@ export class ToggleControl
    */
   protected handleControlClick(event: Event): void {
     noop(event);
+    this.on = !this.on;
   }
 }

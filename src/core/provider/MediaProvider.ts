@@ -40,7 +40,6 @@ import {
 } from '../user/user.events';
 import { UuidMixin } from '../uuid/UuidMixin';
 import { ViewType } from '../ViewType';
-import { ProviderProps } from './provider.args';
 import {
   ProviderRequestAction,
   ProviderRequestKey,
@@ -54,7 +53,7 @@ import {
 @provideContextRecord(playerContext, transformContextName)
 export abstract class MediaProvider<EngineType = unknown>
   extends UuidMixin(LitElement)
-  implements PlayerProps, PlayerMethods, ProviderProps {
+  implements PlayerProps, PlayerMethods {
   connectedCallback(): void {
     super.connectedCallback();
     this.initScreenOrientation();
@@ -506,8 +505,6 @@ export abstract class MediaProvider<EngineType = unknown>
 
   /**
    * Whether the native fullscreen API is enabled.
-   *
-   * @default BrowserSupport
    */
   get canRequestFullscreenNatively(): boolean {
     return fscreen.fullscreenEnabled;

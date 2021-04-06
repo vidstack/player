@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   ComponentMeta,
+  customElementsManifestPlugin,
   EventMeta,
-  litPlugin,
-  markdownPlugin,
+  litElementPlugin,
   Plugin,
-  vscodePlugin,
+  storybookManifestPlugin,
+  vscodeCustomDataPlugin,
 } from '@wcom/cli';
 import {
   escapeQuotes,
@@ -17,11 +18,11 @@ import {
   isUndefined,
   traverseHeritageTree,
 } from '@wcom/cli/dist/utils';
-import prettier from 'prettier';
 import {
   CallExpression,
   ClassDeclaration,
   Declaration,
+  Identifier,
   ImportSpecifier,
   isImportDeclaration,
   isInterfaceDeclaration,
@@ -33,22 +34,62 @@ import {
 } from 'typescript';
 
 export default [
-  litPlugin(),
+  litElementPlugin(),
+  addImportPathExamplePlugin(),
   eventDiscoveryPlugin(),
   dependencyDiscoveryPlugin(),
-  storybookPlugin(),
-  markdownPlugin({
-    async transformContent(_, content) {
-      return prettier.format(content, {
-        arrowParens: 'avoid',
-        parser: 'markdown',
-        singleQuote: true,
-        trailingComma: 'all',
+  storybookManifestPlugin({
+    extendProperty(prop) {
+      const enumMembers = prop.enumDeclaration?.members;
+      const labels: Record<string, string> = {};
+      const options: string[] = [];
+
+      enumMembers?.forEach(member => {
+        const name = (member.name as Identifier).escapedText as string;
+        const value = (member.initializer as StringLiteral).text;
+        labels[name] = value;
+        options.push(name);
       });
+
+      return {
+        enum: prop.enum,
+        readonly: prop.readonly,
+        labels: prop.enum ? labels : undefined,
+        options: prop.enum ? options : undefined,
+        typeInfo: {
+          text: prop.typeText,
+          original: prop.typeInfo.original,
+          resolved: prop.typeInfo.resolved,
+        },
+      };
     },
   }),
-  vscodePlugin(),
+  vscodeCustomDataPlugin(),
+  customElementsManifestPlugin(),
 ];
+
+// -------------------------------------------------------------------------------------------
+// Import Path Example Plugin
+// -------------------------------------------------------------------------------------------
+
+function addImportPathExamplePlugin(): Plugin {
+  return {
+    name: 'vds-import-path-example',
+    async postbuild(components) {
+      components.forEach(component => {
+        const path = component.source.dirPath.replace(/.+src\//, '');
+
+        component.docTags.unshift({
+          node: {} as never,
+          name: 'example',
+          text: `\`\`\`ts\nimport '@vidstack/elements/${path}/${component.tagName}';\n\`\`\``,
+        });
+      });
+
+      return components;
+    },
+  };
+}
 
 // -------------------------------------------------------------------------------------------
 // Event Discovery Plugin
@@ -205,17 +246,6 @@ function findDependencies(
   });
 
   return deps;
-}
-
-// -------------------------------------------------------------------------------------------
-// Storybook Plugin
-// -------------------------------------------------------------------------------------------
-
-// TODO: Storybook plugin to generate stories/controls.
-function storybookPlugin(): Plugin {
-  return {
-    name: 'vds-storybook',
-  };
 }
 
 // -------------------------------------------------------------------------------------------

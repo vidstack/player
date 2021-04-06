@@ -1,5 +1,3 @@
-import { Callback } from '../../../shared/types';
-
 export type ControlType = 'button' | 'submit' | 'reset' | 'menu';
 
 export interface ControlProps {
@@ -63,10 +61,4 @@ export interface ControlProps {
    * `aria-labelledby`.
    */
   describedBy?: string;
-}
-
-export interface ControlActions {
-  onClick: Callback<CustomEvent>;
-  onFocus: Callback<CustomEvent>;
-  onBlur: Callback<CustomEvent>;
 }

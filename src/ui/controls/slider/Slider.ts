@@ -1,5 +1,4 @@
 import { listen } from '@wcom/events';
-import clsx from 'clsx';
 import {
   CSSResultArray,
   html,
@@ -13,8 +12,8 @@ import {
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 import { throttle } from 'lodash-es';
 
-import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
+import { FocusMixin } from '../../../shared/mixins/FocusMixin';
 import { CancelableCallback } from '../../../shared/types';
 import { setAttribute } from '../../../utils/dom';
 import { currentSafariVersion } from '../../../utils/support';

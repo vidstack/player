@@ -1,5 +1,4 @@
-import { Callback } from '../../../shared/types';
-import { Slider, SliderActions, SliderProps } from '../slider';
+import { Slider, SliderProps } from '../slider';
 
 export interface ScrubberProps
   extends Omit<SliderProps, 'label' | 'min' | 'max' | 'value' | 'valueText'> {
@@ -92,18 +91,4 @@ export interface ScrubberProps
    * @default undefined
    */
   readonly currentPreviewElement: HTMLElement | undefined;
-}
-
-export interface ScrubberFakeProps {
-  fakeCurrentTime: number;
-  fakeDuration: number;
-  fakeSeekableAmount: number;
-}
-
-export interface ScrubberActions extends SliderActions {
-  onUserSeeking: Callback<CustomEvent>;
-  onUserSeeked: Callback<CustomEvent>;
-  onPreviewShow: Callback<CustomEvent>;
-  onPreviewHide: Callback<CustomEvent>;
-  onPreviewTimeUpdate: Callback<CustomEvent>;
 }

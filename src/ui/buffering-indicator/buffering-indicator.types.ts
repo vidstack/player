@@ -1,5 +1,3 @@
-import { Callback } from '../../shared/types';
-
 export interface BufferingIndicatorProps {
   /**
    * Delays the showing of the buffering indicator in the hopes that it resolves itself within
@@ -15,13 +13,4 @@ export interface BufferingIndicatorProps {
    * before it's ready for playback (`canPlay === false`).
    */
   showWhileBooting: boolean;
-}
-
-export interface BufferingIndicatorFakeProps {
-  fakeWaiting: boolean;
-}
-
-export interface BufferingIndicatorActions {
-  onShow: Callback<CustomEvent>;
-  onHide: Callback<CustomEvent>;
 }

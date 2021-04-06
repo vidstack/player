@@ -1,10 +1,10 @@
 import { property } from 'lit-element';
 
+import { playerContext } from '../../../core';
 import {
-  playerContext,
   VdsUserPauseEvent,
   VdsUserPlayEvent,
-} from '../../../core';
+} from '../../../core/user/user.events';
 import { ToggleControl } from '../toggle-control';
 import { PlaybackToggleProps } from './playback-toggle.types';
 

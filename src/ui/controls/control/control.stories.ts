@@ -1,20 +1,22 @@
-import '../../../core/fakes/vds-fake-media-provider';
-
-import { html } from 'lit-element';
+import { html, TemplateResult } from 'lit-html';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { Story } from '../../../shared/storybook';
-import { CONTROL_STORYBOOK_ARG_TYPES } from './control.args';
-import { ControlActions, ControlProps } from './control.types';
+import {
+  buildStorybookControlsFromManifest,
+  SB_THEME_COLOR,
+} from '../../../shared/storybook';
+import { ControlProps } from './control.types';
 import { CONTROL_TAG_NAME } from './vds-control';
 
 export default {
   title: 'UI/Foundation/Controls/Control',
   component: CONTROL_TAG_NAME,
-  argTypes: CONTROL_STORYBOOK_ARG_TYPES,
+  argTypes: buildStorybookControlsFromManifest(CONTROL_TAG_NAME),
 };
 
-const Template: Story<ControlProps & ControlActions> = ({
+type Args = ControlProps;
+
+function Template({
   label,
   describedBy,
   controls,
@@ -24,30 +26,23 @@ const Template: Story<ControlProps & ControlActions> = ({
   type,
   expanded,
   pressed,
-  onClick,
-  onFocus,
-  onBlur,
-}) =>
-  html`
-    <vds-fake-media-provider>
-      <vds-control
-        label="${ifNonEmpty(label)}"
-        described-by="${ifNonEmpty(describedBy)}"
-        controls="${ifNonEmpty(controls)}"
-        type="${ifNonEmpty(type)}"
-        ?hidden="${hidden}"
-        ?disabled="${disabled}"
-        ?has-popup="${hasPopup}"
-        ?expanded="${expanded}"
-        ?pressed="${pressed}"
-        style="color: #FF2A5D;"
-        @click="${onClick}"
-        @focus="${onFocus}"
-        @blur="${onBlur}"
-      >
-        Hello
-      </vds-control>
-    </vds-fake-media-provider>
+}: Args): TemplateResult {
+  return html`
+    <vds-control
+      label="${ifNonEmpty(label)}"
+      described-by="${ifNonEmpty(describedBy)}"
+      controls="${ifNonEmpty(controls)}"
+      type="${ifNonEmpty(type)}"
+      ?hidden="${hidden}"
+      ?disabled="${disabled}"
+      ?has-popup="${hasPopup}"
+      ?expanded="${expanded}"
+      ?pressed="${pressed}"
+      style="color: ${SB_THEME_COLOR};"
+    >
+      Hello
+    </vds-control>
   `;
+}
 
 export const Control = Template.bind({});

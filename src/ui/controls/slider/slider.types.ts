@@ -1,5 +1,3 @@
-import { Callback } from '../../../shared/types';
-
 /**
  * The direction to move the thumb, associated with key symbols.
  */
@@ -72,10 +70,4 @@ export interface SliderProps {
    * events.
    */
   throttle: number;
-}
-
-export interface SliderActions {
-  onValueChange: Callback<CustomEvent>;
-  onDragStart: Callback<CustomEvent>;
-  onDragEnd: Callback<CustomEvent>;
 }

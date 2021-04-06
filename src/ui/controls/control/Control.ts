@@ -10,8 +10,8 @@ import {
 } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { FocusMixin } from '../../../shared/directives/FocusMixin';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
+import { FocusMixin } from '../../../shared/mixins/FocusMixin';
 import { currentSafariVersion } from '../../../utils/support';
 import { isUndefined } from '../../../utils/unit';
 import { controlStyles } from './control.css';

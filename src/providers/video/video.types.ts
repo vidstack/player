@@ -1,4 +1,3 @@
-import { ProviderActions } from '../../core';
 import {
   FileProviderMethods,
   FileProviderProps,
@@ -31,8 +30,6 @@ export interface VideoProviderProps extends FileProviderProps {
 }
 
 export type VideoProviderMethods = FileProviderMethods;
-
-export type VideoProviderActions = ProviderActions;
 
 // V8ToIstanbul fails when no value is exported.
 export default class {}

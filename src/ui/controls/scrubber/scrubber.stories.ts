@@ -1,25 +1,52 @@
-import '../../../core/fakes/vds-fake-media-provider';
+import { html, TemplateResult } from 'lit-html';
 
-import { html } from 'lit-element';
-
-import { createTimeRanges } from '../../../core';
+import { createTimeRanges, VdsUserEvents } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { Story } from '../../../shared/storybook';
-import { SCRUBBER_STORYBOOK_ARG_TYPES } from './scrubber.args';
 import {
-  ScrubberActions,
-  ScrubberFakeProps,
-  ScrubberProps,
-} from './scrubber.types';
+  buildStorybookControlsFromManifest,
+  VdsEventsToStorybookActions,
+} from '../../../shared/storybook';
+import { VdsScrubberEvents } from './scrubber.events';
+import { ScrubberProps } from './scrubber.types';
 import { SCRUBBER_TAG_NAME } from './vds-scrubber';
 
 export default {
   title: 'UI/Foundation/Controls/Scrubber',
   component: SCRUBBER_TAG_NAME,
-  argTypes: SCRUBBER_STORYBOOK_ARG_TYPES,
+  argTypes: {
+    ...buildStorybookControlsFromManifest(SCRUBBER_TAG_NAME),
+    fakeCurrentTime: {
+      control: 'number',
+      defaultValue: 1000,
+    },
+    fakeDuration: {
+      control: 'number',
+      defaultValue: 3600,
+    },
+    fakeSeekableAmount: {
+      control: 'number',
+      defaultValue: 1800,
+    },
+  },
 };
 
-const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
+interface FakeProps {
+  fakeCurrentTime: number;
+  fakeDuration: number;
+  fakeSeekableAmount: number;
+}
+
+type Args = FakeProps &
+  ScrubberProps &
+  VdsEventsToStorybookActions<VdsScrubberEvents> &
+  VdsEventsToStorybookActions<VdsUserEvents>;
+
+function Template({
+  // Fakes
+  fakeCurrentTime,
+  fakeSeekableAmount,
+  fakeDuration,
+  // Props
   sliderLabel,
   progressLabel,
   progressText,
@@ -32,18 +59,15 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
   previewThrottle,
   userSeekingThrottle,
   noPreviewTrack,
-  fakeCurrentTime,
-  fakeSeekableAmount,
-  fakeDuration,
-  onDragStart,
-  onDragEnd,
-  onUserSeeked,
-  onUserSeeking,
-  onPreviewShow,
-  onPreviewHide,
-  onPreviewTimeUpdate,
-}) =>
-  html`
+  // Scrubber Events
+  onVdsScrubberPreviewShow,
+  onVdsScrubberPreviewHide,
+  onVdsScrubberPreviewTimeUpdate,
+  // User Events
+  onVdsUserSeeking,
+  onVdsUserSeeked,
+}: Args): TemplateResult {
+  return html`
     <vds-fake-media-provider
       .canPlayCtx="${true}"
       .currentTimeCtx="${fakeCurrentTime}"
@@ -63,13 +87,11 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
         throttle="${throttle}"
         preview-throttle="${previewThrottle}"
         user-seeking-throttle="${userSeekingThrottle}"
-        @vds-slider-drag-start="${onDragStart}"
-        @vds-slider-drag-end="${onDragEnd}"
-        @vds-user-seeked="${onUserSeeked}"
-        @vds-user-seeking="${onUserSeeking}"
-        @vds-scrubber-preview-show="${onPreviewShow}"
-        @vds-scrubber-preview-hide="${onPreviewHide}"
-        @vds-scrubber-preview-time-update="${onPreviewTimeUpdate}"
+        @vds-user-seeking="${onVdsUserSeeking}"
+        @vds-user-seeked="${onVdsUserSeeked}"
+        @vds-scrubber-preview-show="${onVdsScrubberPreviewShow}"
+        @vds-scrubber-preview-hide="${onVdsScrubberPreviewHide}"
+        @vds-scrubber-preview-time-update="${onVdsScrubberPreviewTimeUpdate}"
       >
         <div class="preview" slot="preview">Preview</div>
       </vds-scrubber>
@@ -95,5 +117,6 @@ const Template: Story<ScrubberProps & ScrubberFakeProps & ScrubberActions> = ({
       }
     </style>
   `;
+}
 
 export const Scrubber = Template.bind({});

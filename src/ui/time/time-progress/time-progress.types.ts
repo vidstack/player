@@ -16,8 +16,3 @@ export type TimeProgressProps = Omit<TimeProps, 'seconds'> & {
    */
   timeSeparator: string;
 };
-
-export interface TimeProgressFakeProps {
-  fakeCurrentTime: number;
-  fakeDuration: number;
-}

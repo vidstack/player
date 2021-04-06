@@ -1,5 +1,5 @@
-// TODO: uncomment this once `@wcom/cli` can generate `custom-elements-manifest.json`.
-// import { setCustomElements } from '@storybook/web-components';
-// import customElementsMetadata from '../custom-elements.json';
+import { setCustomElements } from '@storybook/web-components';
 
-// setCustomElements(customElementsMetadata);
+import manifest from '../storybook.json';
+
+setCustomElements(manifest);

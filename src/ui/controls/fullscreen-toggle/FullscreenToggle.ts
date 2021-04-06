@@ -1,6 +1,7 @@
 import { property } from 'lit-element';
 
-import { playerContext, VdsUserFullscreenChangeEvent } from '../../../core';
+import { playerContext } from '../../../core';
+import { VdsUserFullscreenChangeEvent } from '../../../core/user/user.events';
 import { ToggleControl } from '../toggle-control';
 import { FullscreenToggleProps } from './fullscreen-toggle.types';
 

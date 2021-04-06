@@ -273,7 +273,7 @@ export class VideoProvider<EngineType = MediaFileProviderEngine>
     return this.mediaEl?.webkitExitFullscreen?.();
   }
 
-  async makeEnterFullscreenRequest(): Promise<void> {
+  protected async makeEnterFullscreenRequest(): Promise<void> {
     return this.canRequestFullscreenNatively
       ? super.makeEnterFullscreenRequest()
       : this.requestFullscreenOniOS();

@@ -35,7 +35,7 @@ import { uiStyles } from './ui.css';
  * ```html
  * <vds-video src="/media/video.mp4" poster="/media/poster.png">
  *   <!-- ... -->
- *   <vds-ui>
+ *   <vds-ui slot="ui">
  *     <!-- ... -->
  *   </vds-ui>
  * </vds-video>

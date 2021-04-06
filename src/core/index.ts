@@ -7,7 +7,6 @@ export * from './player.context';
 export * from './player.events';
 export * from './player.types';
 export * from './provider/MediaProvider';
-export * from './provider/provider.args';
 export * from './provider/provider.types';
 export * from './ScreenOrientation';
 export * from './time-ranges';
