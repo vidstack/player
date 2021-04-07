@@ -75,7 +75,7 @@
     "fscreen": "^1.2.0",
     "lit-element": "^2.0.0",
     "lodash-es": "^4.17.21",
-    "tslib": "^2.1.0"
+    "tslib": "^2.2.0"
   },
   "devDependencies": {
     "@open-wc/semantic-dom-diff": "^0.19.4",
