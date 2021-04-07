@@ -12,6 +12,7 @@
   "exclude": [
     "src/**/*.test.ts",
     "src/**/*.stories.ts",
+    "src/shared/storybook.ts",
     "node_modules/**",
     "web_modules/**"
   ]
