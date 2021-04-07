@@ -81,7 +81,7 @@
     "@open-wc/semantic-dom-diff": "^0.19.4",
     "@open-wc/testing": "^2.5.32",
     "@storybook/addon-a11y": "^6.1.20",
-    "@storybook/addon-essentials": "^6.1.20",
+    "@storybook/addon-essentials": "^6.2.4",
     "@storybook/addon-links": "^6.1.15",
     "@storybook/builder-webpack5": "^6.2.2",
     "@storybook/web-components": "^6.2.4",
