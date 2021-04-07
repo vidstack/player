@@ -37,7 +37,7 @@
     "url": "https://github.com/vidstack/vds-elements/issues"
   },
   "scripts": {
-    "build": "run-s clean build:esm transform",
+    "build": "run-s clean build:esm",
     "build:esm": "tsc -p tsconfig-build.json",
     "build:watch": "npm run build:esm -- -w",
     "build:fast": "node .scripts/fast-build",
@@ -52,10 +52,10 @@
     "format": "run-s format:*",
     "format:eslint": "npm run lint:eslint -- --fix",
     "format:prettier": "npm run lint:prettier -- --write",
-    "prepare": "husky install",
+    "prepare": "husky install && npm run transform",
     "start": "npm run storybook",
     "storybook": "npm run storybook:prepare && run-p \"build:storybook -- -w\" storybook:serve",
-    "storybook:prepare": "run-s clean:storybook build:storybook transform",
+    "storybook:prepare": "run-s clean:storybook build:storybook",
     "storybook:build": "build-storybook -s .storybook/public",
     "storybook:serve": "start-storybook -s .storybook/public",
     "storybook:static": "run-s storybook:prepare storybook:build",
