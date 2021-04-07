@@ -316,6 +316,7 @@ export abstract class MediaProvider<EngineType = unknown>
       this.context.ended = false;
     } else if (!this.context.ended && this.hasPlaybackRoughlyEnded()) {
       this.context.ended = true;
+      this.context.waiting = false;
       this.dispatchEvent(new VdsEndedEvent());
     }
   }

@@ -430,6 +430,7 @@ export class MediaFileProvider<EngineType = MediaFileProviderEngine>
     // Check becuase might've been handled in `validatePlaybackEnded()`.
     if (!this.context.ended && !this.loop) {
       this.context.ended = true;
+      this.context.waiting = false;
       this.dispatchEvent(new VdsEndedEvent({ originalEvent }));
       this.cancelTimeUpdates();
     } else if (this.loop) {
