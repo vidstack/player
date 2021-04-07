@@ -84,7 +84,7 @@
     "@storybook/addon-essentials": "^6.1.20",
     "@storybook/addon-links": "^6.1.15",
     "@storybook/builder-webpack5": "^6.2.2",
-    "@storybook/web-components": "^6.2.2",
+    "@storybook/web-components": "^6.2.4",
     "@types/estree": "^0.0.47",
     "@types/mocha": "^8.0.3",
     "@types/prettier": "^2.2.3",
