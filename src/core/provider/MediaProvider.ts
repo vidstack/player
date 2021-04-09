@@ -238,7 +238,7 @@ export abstract class MediaProvider<EngineType = unknown>
   }
 
   get error(): unknown | undefined {
-    return this.context.ended;
+    return this.context.error;
   }
 
   get mediaType(): MediaType {
