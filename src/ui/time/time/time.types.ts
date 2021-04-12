@@ -1,4 +1,6 @@
-export interface TimeProps {
+export const TIME_ELEMENT_TAG_NAME = `time`;
+
+export interface TimeElementProps {
   /**
    * ♿ **ARIA:** The `aria-label` property of the time.
    */
@@ -23,4 +25,11 @@ export interface TimeProps {
    * @example `1:20:03` -> `01:20:03`
    */
   padHours: boolean;
+
+  /**
+   * The component's root element.
+   *
+   * @default HTMLTimeElement
+   */
+  readonly rootElement: HTMLTimeElement;
 }

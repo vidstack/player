@@ -1,6 +1,6 @@
 import { css } from 'lit-element';
 
-export const timeProgressStyles = css`
+export const timeProgressElementStyles = css`
   :host {
     display: table;
     contain: content;

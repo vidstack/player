@@ -6,16 +6,16 @@ import {
   VdsEventsToStorybookActions,
 } from '../../../shared/storybook';
 import { VdsSliderEvents } from './slider.events';
-import { SliderProps } from './slider.types';
-import { SLIDER_TAG_NAME } from './vds-slider';
+import { SliderElementProps } from './slider.types';
+import { VDS_SLIDER_ELEMENT_TAG_NAME } from './vds-slider';
 
 export default {
   title: 'UI/Foundation/Controls/Slider',
-  component: SLIDER_TAG_NAME,
-  argTypes: buildStorybookControlsFromManifest(SLIDER_TAG_NAME),
+  component: VDS_SLIDER_ELEMENT_TAG_NAME,
+  argTypes: buildStorybookControlsFromManifest(VDS_SLIDER_ELEMENT_TAG_NAME),
 };
 
-type Args = SliderProps & VdsEventsToStorybookActions<VdsSliderEvents>;
+type Args = SliderElementProps & VdsEventsToStorybookActions<VdsSliderEvents>;
 
 function Template({
   // Props

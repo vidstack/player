@@ -1,6 +1,6 @@
 import { css } from 'lit-element';
 
-export const scrubberStyles = css`
+export const scrubberElementStyles = css`
   * {
     box-sizing: border-box;
     touch-action: none;

@@ -4,14 +4,18 @@ import '../time-duration/vds-time-duration';
 
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
-import { TimeProgress } from './TimeProgress';
+import { TIME_PROGRESS_ELEMENT_TAG_NAME } from './time-progress.types';
+import { TimeProgressElement } from './TimeProgressElement';
 
-export const TIME_PROGRESS_TAG_NAME = `${LIB_PREFIX}-time-progress` as const;
+export const VDS_TIME_PROGRESS_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${TIME_PROGRESS_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(TIME_PROGRESS_TAG_NAME, TimeProgress);
+safelyDefineCustomElement(
+  VDS_TIME_PROGRESS_ELEMENT_TAG_NAME,
+  TimeProgressElement,
+);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [TIME_PROGRESS_TAG_NAME]: TimeProgress;
+    [VDS_TIME_PROGRESS_ELEMENT_TAG_NAME]: TimeProgressElement;
   }
 }

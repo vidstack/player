@@ -7,14 +7,14 @@ import {
   buildStorybookControlsFromManifest,
   SB_THEME_COLOR,
 } from '../../../shared/storybook';
-import { TimeProgressProps } from './time-progress.types';
-import { TIME_PROGRESS_TAG_NAME } from './vds-time-progress';
+import { TimeProgressElementProps } from './time-progress.types';
+import { VDS_TIME_PROGRESS_ELEMENT_TAG_NAME } from './vds-time-progress';
 
 export default {
   title: 'UI/Foundation/Time/Time Progress',
-  component: TIME_PROGRESS_TAG_NAME,
+  component: VDS_TIME_PROGRESS_ELEMENT_TAG_NAME,
   argTypes: {
-    ...buildStorybookControlsFromManifest(TIME_PROGRESS_TAG_NAME),
+    ...buildStorybookControlsFromManifest(VDS_TIME_PROGRESS_ELEMENT_TAG_NAME),
     seconds: {
       table: {
         disable: true,
@@ -36,7 +36,7 @@ interface FakeProps {
   fakeDuration: number;
 }
 
-type Args = FakeProps & TimeProgressProps;
+type Args = FakeProps & TimeProgressElementProps;
 
 function Template({
   // Fakes

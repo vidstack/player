@@ -1,4 +1,6 @@
-export interface BufferingIndicatorProps {
+export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'buffering-indicator';
+
+export interface BufferingIndicatorElementProps {
   /**
    * Delays the showing of the buffering indicator in the hopes that it resolves itself within
    * that delay. This can be helpful in avoiding unnecessary or fast flashing indicators that

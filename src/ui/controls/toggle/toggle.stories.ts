@@ -4,18 +4,18 @@ import {
   buildStorybookControlsFromManifest,
   SB_THEME_COLOR,
 } from '../../../shared/storybook';
-import { ToggleProps } from './toggle.types';
-import { TOGGLE_TAG_NAME } from './vds-toggle';
+import { ToggleElementProps } from './toggle.types';
+import { VDS_TOGGLE_ELEMENT_TAG_NAME } from './vds-toggle';
 
 export default {
   title: 'UI/Foundation/Controls/Toggle',
-  component: TOGGLE_TAG_NAME,
+  component: VDS_TOGGLE_ELEMENT_TAG_NAME,
   argTypes: {
-    // Avoid clashing with `on` slot name.
-    'on ': {
+    // Avoid clashing with `pressed` slot name.
+    'pressed ': {
       control: 'boolean',
       default: false,
-      description: 'Whether the toggle is in the `on` state.',
+      description: 'Whether the toggle is in the pressed state.',
       table: {
         category: 'properties',
         defaultValue: {
@@ -26,17 +26,20 @@ export default {
         },
       },
     },
-    ...buildStorybookControlsFromManifest(TOGGLE_TAG_NAME),
+    ...buildStorybookControlsFromManifest(VDS_TOGGLE_ELEMENT_TAG_NAME),
   },
 };
 
-type Args = ToggleProps & { 'on ': boolean };
+type Args = ToggleElementProps & { 'pressed ': boolean };
 
 function Template(args: Args): TemplateResult {
   return html`
-    <vds-toggle ?on="${args['on ']}" style="color: ${SB_THEME_COLOR};">
-      <div slot="on">On</div>
-      <div slot="off">Off</div>
+    <vds-toggle
+      ?pressed="${args['pressed ']}"
+      style="color: ${SB_THEME_COLOR};"
+    >
+      <div slot="pressed">Pressed</div>
+      <div slot="not-pressed">Not Pressed</div>
     </vds-toggle>
   `;
 }

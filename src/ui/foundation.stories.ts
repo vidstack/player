@@ -3,8 +3,11 @@ import '../bundle/define';
 import { html } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { VdsPlayerEvents } from '../bundle/define';
-import { VIDEO_TAG_NAME, VideoProviderProps } from '../providers/video';
+import { VdsMediaEvents } from '../bundle/define';
+import {
+  VDS_VIDEO_ELEMENT_TAG_NAME,
+  VideoElementProps,
+} from '../providers/video';
 import {
   buildStorybookControlsFromManifest,
   VdsEventsToStorybookActions,
@@ -12,9 +15,9 @@ import {
 
 export default {
   title: 'UI/Foundation',
-  component: VIDEO_TAG_NAME,
+  component: VDS_VIDEO_ELEMENT_TAG_NAME,
   argTypes: {
-    ...buildStorybookControlsFromManifest(VIDEO_TAG_NAME),
+    ...buildStorybookControlsFromManifest(VDS_VIDEO_ELEMENT_TAG_NAME),
     src: {
       defaultValue:
         'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4',
@@ -25,7 +28,7 @@ export default {
   },
 };
 
-type Args = VideoProviderProps & VdsEventsToStorybookActions<VdsPlayerEvents>;
+type Args = VideoElementProps & VdsEventsToStorybookActions<VdsMediaEvents>;
 
 function Template({
   // Props
@@ -130,20 +133,20 @@ function Template({
         <h2>Toggles</h2>
 
         <div style="display: flex;">
-          <vds-playback-toggle>
+          <vds-play-button>
             <span slot="play">Play</span>
             <span slot="pause">Pause</span>
-          </vds-playback-toggle>
+          </vds-play-button>
 
-          <vds-mute-toggle>
+          <vds-mute-button>
             <span slot="mute">Mute</span>
             <span slot="unmute">Unmute</span>
-          </vds-mute-toggle>
+          </vds-mute-button>
 
-          <vds-fullscreen-toggle>
+          <vds-fullscreen-button>
             <span slot="enter">Enter Fullscreen</span>
             <span slot="exit">Exit Fullscreen</span>
-          </vds-fullscreen-toggle>
+          </vds-fullscreen-button>
         </div>
 
         <h2>Scrubber</h2>

@@ -1,12 +1,14 @@
 import {
-  FileProviderMethods,
-  FileProviderProps,
-  MediaFileProviderEngine,
-} from '../file';
+  Html5MediaElementEngine,
+  Html5MediaElementMethods,
+  Html5MediaElementProps,
+} from '../html5';
 
-export type VideoProviderEngine = MediaFileProviderEngine;
+export const VIDEO_ELEMENT_TAG_NAME = `video`;
 
-export interface VideoProviderProps extends FileProviderProps {
+export type VideoElementEngine = Html5MediaElementEngine;
+
+export interface VideoElementProps extends Html5MediaElementProps {
   /**
    * 🧑‍🔬 **EXPERIMENTAL:** Whether the browser should automatically toggle picture-in-picture mode as
    * the user switches back and forth between this document and another document or application.
@@ -29,7 +31,7 @@ export interface VideoProviderProps extends FileProviderProps {
   poster?: string;
 }
 
-export type VideoProviderMethods = FileProviderMethods;
+export type VideoElementMethods = Html5MediaElementMethods;
 
 // V8ToIstanbul fails when no value is exported.
 export default class {}

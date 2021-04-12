@@ -1,19 +1,19 @@
 import { html, TemplateResult } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { VdsPlayerEvents } from '../../core';
+import { VdsMediaEvents } from '../../core';
 import {
   buildStorybookControlsFromManifest,
   VdsEventsToStorybookActions,
 } from '../../shared/storybook';
-import { VIDEO_TAG_NAME } from './vds-video';
-import { VideoProviderProps } from './video.types';
+import { VDS_VIDEO_ELEMENT_TAG_NAME } from './vds-video';
+import { VideoElementProps } from './video.types';
 
 export default {
   title: 'UI/Providers/Video',
-  component: VIDEO_TAG_NAME,
+  component: VDS_VIDEO_ELEMENT_TAG_NAME,
   argTypes: {
-    ...buildStorybookControlsFromManifest(VIDEO_TAG_NAME),
+    ...buildStorybookControlsFromManifest(VDS_VIDEO_ELEMENT_TAG_NAME),
     src: {
       defaultValue:
         'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4',
@@ -24,7 +24,7 @@ export default {
   },
 };
 
-type Args = VideoProviderProps & VdsEventsToStorybookActions<VdsPlayerEvents>;
+type Args = VideoElementProps & VdsEventsToStorybookActions<VdsMediaEvents>;
 
 function Template({
   // Props

@@ -1,6 +1,6 @@
 import { css } from 'lit-element';
 
-export const timeStyles = css`
+export const timeElementStyles = css`
   :host {
     display: table;
     contain: content;

@@ -1,6 +1,6 @@
 import { css } from 'lit-element';
 
-export const uiStyles = css`
+export const uiElementStyles = css`
   :host {
     display: block;
     contain: content;

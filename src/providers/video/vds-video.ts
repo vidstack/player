@@ -1,13 +1,14 @@
 import { LIB_PREFIX } from '../../shared/constants';
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { VideoProvider } from './VideoProvider';
+import { VIDEO_ELEMENT_TAG_NAME } from './video.types';
+import { VideoElement } from './VideoElement';
 
-export const VIDEO_TAG_NAME = `${LIB_PREFIX}-video` as const;
+export const VDS_VIDEO_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${VIDEO_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(VIDEO_TAG_NAME, VideoProvider);
+safelyDefineCustomElement(VDS_VIDEO_ELEMENT_TAG_NAME, VideoElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [VIDEO_TAG_NAME]: VideoProvider;
+    [VDS_VIDEO_ELEMENT_TAG_NAME]: VideoElement;
   }
 }

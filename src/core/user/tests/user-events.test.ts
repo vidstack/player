@@ -1,8 +1,8 @@
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
 
-import { FakeMediaProvider } from '../../fakes/FakeMediaProvider';
-import { emitEvent } from '../../fakes/helpers';
+import { FakeMediaProviderElement } from '../../fakes/FakeMediaProviderElement';
+import { emitEvent } from '../../fakes/fakes.helpers';
 import {
   VdsUserMutedChangeEvent,
   VdsUserPauseEvent,
@@ -13,7 +13,7 @@ import {
 
 describe('user events', () => {
   let container: HTMLDivElement;
-  let provider: FakeMediaProvider;
+  let provider: FakeMediaProviderElement;
   let user: HTMLDivElement;
 
   beforeEach(async () => {
@@ -25,7 +25,7 @@ describe('user events', () => {
       </div>
     `);
 
-    provider = container.firstElementChild as FakeMediaProvider;
+    provider = container.firstElementChild as FakeMediaProviderElement;
     user = provider.firstElementChild as HTMLDivElement;
   });
 

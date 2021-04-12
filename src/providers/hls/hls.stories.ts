@@ -1,20 +1,20 @@
 import { html, TemplateResult } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { VdsPlayerEvents } from '../../core';
+import { VdsMediaEvents } from '../../core';
 import {
   buildStorybookControlsFromManifest,
   VdsEventsToStorybookActions,
 } from '../../shared/storybook';
 import { VdsHlsEvents } from './hls.events';
-import { HlsProviderProps } from './hls.types';
-import { HLS_TAG_NAME } from './vds-hls';
+import { HlsElementProps } from './hls.types';
+import { VDS_HLS_ELEMENT_TAG_NAME } from './vds-hls';
 
 export default {
   title: 'UI/Providers/HLS',
-  component: HLS_TAG_NAME,
+  component: VDS_HLS_ELEMENT_TAG_NAME,
   argTypes: {
-    ...buildStorybookControlsFromManifest(HLS_TAG_NAME),
+    ...buildStorybookControlsFromManifest(VDS_HLS_ELEMENT_TAG_NAME),
     src: {
       defaultValue:
         'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8',
@@ -25,8 +25,8 @@ export default {
   },
 };
 
-type Args = HlsProviderProps &
-  VdsEventsToStorybookActions<VdsPlayerEvents> &
+type Args = HlsElementProps &
+  VdsEventsToStorybookActions<VdsMediaEvents> &
   VdsEventsToStorybookActions<VdsHlsEvents>;
 
 function Template({

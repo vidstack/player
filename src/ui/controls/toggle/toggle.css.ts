@@ -1,6 +1,6 @@
 import { css } from 'lit-element';
 
-export const toggleStyles = css`
+export const toggleElementStyles = css`
   :host {
     display: table;
     contain: content;

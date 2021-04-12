@@ -1,13 +1,14 @@
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
-import { Toggle } from './Toggle';
+import { TOGGLE_ELEMENT_TAG_NAME } from './toggle.types';
+import { ToggleElement } from './ToggleElement';
 
-export const TOGGLE_TAG_NAME = `${LIB_PREFIX}-toggle` as const;
+export const VDS_TOGGLE_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${TOGGLE_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(TOGGLE_TAG_NAME, Toggle);
+safelyDefineCustomElement(VDS_TOGGLE_ELEMENT_TAG_NAME, ToggleElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [TOGGLE_TAG_NAME]: Toggle;
+    [VDS_TOGGLE_ELEMENT_TAG_NAME]: ToggleElement;
   }
 }

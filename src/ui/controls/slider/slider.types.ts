@@ -1,3 +1,5 @@
+export const SLIDER_ELEMENT_TAG_NAME = `slider`;
+
 /**
  * The direction to move the thumb, associated with key symbols.
  */
@@ -12,7 +14,7 @@ export enum SliderKeyDirection {
   ArrowDown = 1,
 }
 
-export interface SliderProps {
+export interface SliderElementProps {
   /**
    * ♿ **ARIA:** The `aria-label` property of the slider.
    */
@@ -70,4 +72,81 @@ export interface SliderProps {
    * events.
    */
   throttle: number;
+
+  /**
+   * Whether the current orientation is horizontal.
+   *
+   * @default true
+   */
+  readonly isOrientationHorizontal: boolean;
+
+  /**
+   * Whether the current orientation is vertical.
+   *
+   * @default false
+   */
+  readonly isOrientationVertical: boolean;
+
+  /**
+   * Whether the slider thumb is currently being dragged.
+   *
+   * @default false
+   */
+  readonly isDragging: boolean;
+
+  /**
+   * The current value to range ratio.
+   *
+   * @default 0.5
+   *
+   * @example
+   * `min` = 0
+   * `max` = 10
+   * `value` = 5
+   * `range` = 10 (max - min)
+   * `fillRate` = 0.5 (result)
+   */
+  readonly fillRate: number;
+
+  /**
+   * The fill rate expressed as a percentage (`fillRate * 100`).
+   *
+   * @default 50
+   */
+  readonly fillPercent: number;
+
+  /**
+   * The component's root element.
+   *
+   * @default HTMLDivElement
+   */
+  readonly rootElement: HTMLDivElement;
+
+  /**
+   * The thumb container element.
+   *
+   * @default HTMLDivElement
+   */
+  readonly thumbContainerElement: HTMLDivElement;
+
+  /**
+   * The thumb element.
+   *
+   * @default HTMLDivElement
+   */
+  readonly thumbElement: HTMLDivElement;
+
+  /**
+   * The track element.
+   *
+   * @default HTMLDivElement
+   */
+  readonly trackElement: HTMLDivElement;
+
+  /**
+   * The track fill element.
+   *
+   * @default HTMLDivElement
+   */
+  readonly trackFillElement: HTMLDivElement;
 }

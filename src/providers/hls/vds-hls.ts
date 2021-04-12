@@ -1,13 +1,14 @@
 import { LIB_PREFIX } from '../../shared/constants';
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { HlsProvider } from './HlsProvider';
+import { HLS_ELEMENT_TAG_NAME } from './hls.types';
+import { HlsElement } from './HlsElement';
 
-export const HLS_TAG_NAME = `${LIB_PREFIX}-hls` as const;
+export const VDS_HLS_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${HLS_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(HLS_TAG_NAME, HlsProvider);
+safelyDefineCustomElement(VDS_HLS_ELEMENT_TAG_NAME, HlsElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [HLS_TAG_NAME]: HlsProvider;
+    [VDS_HLS_ELEMENT_TAG_NAME]: HlsElement;
   }
 }
