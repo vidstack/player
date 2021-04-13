@@ -129,20 +129,22 @@ function Template({
       <vds-ui slot="ui">
         <h2>Toggles</h2>
 
-        <vds-playback-toggle>
-          <span slot="play">Play</span>
-          <span slot="pause">Pause</span>
-        </vds-playback-toggle>
+        <div style="display: flex;">
+          <vds-playback-toggle>
+            <span slot="play">Play</span>
+            <span slot="pause">Pause</span>
+          </vds-playback-toggle>
 
-        <vds-mute-toggle>
-          <span slot="mute">Mute</span>
-          <span slot="unmute">Unmute</span>
-        </vds-mute-toggle>
+          <vds-mute-toggle>
+            <span slot="mute">Mute</span>
+            <span slot="unmute">Unmute</span>
+          </vds-mute-toggle>
 
-        <vds-fullscreen-toggle>
-          <span slot="enter">Enter Fullscreen</span>
-          <span slot="exit">Exit Fullscreen</span>
-        </vds-fullscreen-toggle>
+          <vds-fullscreen-toggle>
+            <span slot="enter">Enter Fullscreen</span>
+            <span slot="exit">Exit Fullscreen</span>
+          </vds-fullscreen-toggle>
+        </div>
 
         <h2>Scrubber</h2>
 
