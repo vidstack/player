@@ -182,7 +182,7 @@ export class HlsProvider
 
   // Let `MediaFileProvider` know we're taking over ready events.
   protected willAnotherEngineAttach(): boolean {
-    return !this.shouldUseNativeHlsSupport && (Hls.isSupported() ?? false);
+    return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport;
   }
 
   protected attachHlsEngine(): void {
