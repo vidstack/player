@@ -229,8 +229,8 @@ export class Scrubber extends FocusMixin(LitElement) implements ScrubberProps {
   userSeekingThrottle = 150;
 
   // Slider properties.
-  @property({ type: Number }) step = 0.01;
-  @property({ type: Number, attribute: 'step-ratio' }) stepMultiplier = 5;
+  @property({ type: Number }) step = 5;
+  @property({ type: Number, attribute: 'step-ratio' }) stepMultiplier = 2;
   @property() orientation: 'horizontal' | 'vertical' = 'horizontal';
   @property({ type: Number }) throttle = 10;
 
