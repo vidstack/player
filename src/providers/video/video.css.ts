@@ -7,8 +7,8 @@ export const videoStyles = css`
   }
 
   #root {
+    display: block;
     position: relative;
-    display: inline-block;
   }
 
   video {
