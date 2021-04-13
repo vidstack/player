@@ -2,7 +2,7 @@ import { css } from 'lit-element';
 
 export const toggleStyles = css`
   :host {
-    display: inline-block;
+    display: table;
     contain: content;
   }
 

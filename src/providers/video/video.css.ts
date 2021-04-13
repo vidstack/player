@@ -2,13 +2,14 @@ import { css } from 'lit-element';
 
 export const videoStyles = css`
   :host {
-    display: inline-block;
+    display: block;
     contain: content;
   }
 
   #root {
     display: block;
     position: relative;
+    width: 100%;
   }
 
   video {

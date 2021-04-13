@@ -2,7 +2,7 @@ import { css } from 'lit-element';
 
 export const timeProgressStyles = css`
   :host {
-    display: inline-block;
+    display: table;
     contain: content;
   }
 
@@ -12,7 +12,7 @@ export const timeProgressStyles = css`
   }
 
   #separator {
-    display: inline-block;
+    display: table;
     margin: 0 4px;
   }
 `;
