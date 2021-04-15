@@ -1,6 +1,6 @@
 import { css } from 'lit-element';
 
-export const sliderStyles = css`
+export const sliderElementStyles = css`
   * {
     box-sizing: border-box;
     touch-action: none;

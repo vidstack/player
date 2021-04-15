@@ -1,2 +1,2 @@
 export * from './time-duration.types';
-export * from './TimeDuration';
+export * from './TimeDurationElement';

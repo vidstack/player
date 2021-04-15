@@ -1,5 +1,12 @@
 import { Constructor, UpdatingElement } from 'lit-element';
 
+import { BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/button/button.types';
+import { FULLSCREEN_BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/fullscreen-button/fullscreen-button.types';
+import { MUTE_BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/mute-button/mute-button.types';
+import { PLAY_BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/play-button/play-button.types';
+import { SCRUBBER_ELEMENT_TAG_NAME } from '../../ui/controls/scrubber/scrubber.types';
+import { SLIDER_ELEMENT_TAG_NAME } from '../../ui/controls/slider/slider.types';
+import { currentSafariVersion } from '../../utils/support';
 import { LIB_PREFIX } from '../constants';
 
 /**
@@ -12,11 +19,16 @@ export const focusableSelector = `
   button:not([disabled]):not([tabindex='-1']),select:not([disabled]):not([tabindex='-1']),
   textarea:not([disabled]):not([tabindex='-1']),
   iframe, object, embed, *[tabindex]:not([tabindex='-1']), *[contenteditable=true],
-  ${LIB_PREFIX}-control,
-  ${LIB_PREFIX}-slider,
-  ${LIB_PREFIX}-playback-toggle,
-  ${LIB_PREFIX}-mute-toggle,
-  ${LIB_PREFIX}-scrubber,
+  ${[
+    BUTTON_ELEMENT_TAG_NAME,
+    SLIDER_ELEMENT_TAG_NAME,
+    PLAY_BUTTON_ELEMENT_TAG_NAME,
+    MUTE_BUTTON_ELEMENT_TAG_NAME,
+    FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
+    SCRUBBER_ELEMENT_TAG_NAME,
+  ]
+    .map(tagName => `${LIB_PREFIX}-${tagName}`)
+    .join(', ')}
 `;
 
 export type FocusMixinBase = Constructor<UpdatingElement>;
@@ -35,6 +47,20 @@ export function FocusMixin<T extends FocusMixinBase>(
   Base: T,
 ): FocusCocktail<T> {
   class FocusMixin extends Base {
+    createRenderRoot(): ShadowRoot {
+      return this.attachShadow({
+        mode: 'open',
+        /**
+         * This change disables delegatesFocus feature in shadow DOM in recent Safari, notably `14.x`.
+         * Safari `14.x` introduced delegatesFocus, but using it causes the browser to crash.
+         *
+         * @op https://github.com/carbon-design-system/carbon-web-components/pull/496
+         * @report https://bugs.webkit.org/show_bug.cgi?id=215622.
+         */
+        delegatesFocus: currentSafariVersion() <= 537,
+      });
+    }
+
     /**
      * Focuses on the first focusable element in the shadow DOM.
      */

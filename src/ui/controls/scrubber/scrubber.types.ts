@@ -1,7 +1,12 @@
-import { Slider, SliderProps } from '../slider';
+import { SliderElement, SliderElementProps } from '../slider';
 
-export interface ScrubberProps
-  extends Omit<SliderProps, 'label' | 'min' | 'max' | 'value' | 'valueText'> {
+export const SCRUBBER_ELEMENT_TAG_NAME = `scrubber`;
+
+export interface ScrubberElementProps
+  extends Pick<
+    SliderElementProps,
+    'step' | 'stepMultiplier' | 'orientation' | 'throttle'
+  > {
   /**
    * ♿ **ARIA:** The `aria-label` for the slider.
    */
@@ -76,7 +81,7 @@ export interface ScrubberProps
   /**
    * Returns the underlying `vds-slider` component.
    */
-  readonly slider: Slider;
+  readonly slider: SliderElement;
 
   /**
    * Whether the user is seeking by either hovering over the scrubber or by dragging the thumb.

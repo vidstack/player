@@ -1,13 +1,14 @@
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
-import { Slider } from './Slider';
+import { SLIDER_ELEMENT_TAG_NAME } from './slider.types';
+import { SliderElement } from './SliderElement';
 
-export const SLIDER_TAG_NAME = `${LIB_PREFIX}-slider` as const;
+export const VDS_SLIDER_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${SLIDER_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(SLIDER_TAG_NAME, Slider);
+safelyDefineCustomElement(VDS_SLIDER_ELEMENT_TAG_NAME, SliderElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [SLIDER_TAG_NAME]: Slider;
+    [VDS_SLIDER_ELEMENT_TAG_NAME]: SliderElement;
   }
 }

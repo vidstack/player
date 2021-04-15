@@ -8,14 +8,16 @@ import {
   VdsEventsToStorybookActions,
 } from '../../shared/storybook';
 import { VdsBufferingIndicatorEvents } from './buffering-indicator.events';
-import { BufferingIndicatorProps } from './buffering-indicator.types';
-import { BUFFERING_INDICATOR_TAG_NAME } from './vds-buffering-indicator';
+import { BufferingIndicatorElementProps } from './buffering-indicator.types';
+import { VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from './vds-buffering-indicator';
 
 export default {
   title: 'UI/Foundation/Buffering Indicator',
-  component: BUFFERING_INDICATOR_TAG_NAME,
+  component: VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
   argTypes: {
-    ...buildStorybookControlsFromManifest(BUFFERING_INDICATOR_TAG_NAME),
+    ...buildStorybookControlsFromManifest(
+      VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
+    ),
     fakeCanPlay: {
       control: 'boolean',
       defaultValue: true,
@@ -33,7 +35,7 @@ interface FakeProps {
 }
 
 type Args = FakeProps &
-  BufferingIndicatorProps &
+  BufferingIndicatorElementProps &
   VdsEventsToStorybookActions<VdsBufferingIndicatorEvents>;
 
 function Template({

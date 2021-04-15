@@ -7,14 +7,14 @@ import {
   buildStorybookControlsFromManifest,
   SB_THEME_COLOR,
 } from '../../../shared/storybook';
-import { TimeCurrentProps } from './time-current.types';
-import { TIME_CURRENT_TAG_NAME } from './vds-time-current';
+import { TimeCurrentElementProps } from './time-current.types';
+import { VDS_TIME_CURRENT_ELEMENT_TAG_NAME } from './vds-time-current';
 
 export default {
   title: 'UI/Foundation/Time/Time Current',
-  component: TIME_CURRENT_TAG_NAME,
+  component: VDS_TIME_CURRENT_ELEMENT_TAG_NAME,
   argTypes: {
-    ...buildStorybookControlsFromManifest(TIME_CURRENT_TAG_NAME),
+    ...buildStorybookControlsFromManifest(VDS_TIME_CURRENT_ELEMENT_TAG_NAME),
     seconds: {
       table: {
         disable: true,
@@ -31,7 +31,7 @@ interface FakeProps {
   fakeCurrentTime: number;
 }
 
-type Args = FakeProps & TimeCurrentProps;
+type Args = FakeProps & TimeCurrentElementProps;
 
 function Template({
   fakeCurrentTime,

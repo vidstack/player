@@ -1,6 +1,6 @@
 import { css } from 'lit-element';
 
-export const videoStyles = css`
+export const videoElementStyles = css`
   :host {
     display: block;
     contain: content;

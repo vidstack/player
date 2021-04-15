@@ -3,14 +3,15 @@ import '../slider/vds-slider';
 
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
-import { Scrubber } from './Scrubber';
+import { SCRUBBER_ELEMENT_TAG_NAME } from './scrubber.types';
+import { ScrubberElement } from './ScrubberElement';
 
-export const SCRUBBER_TAG_NAME = `${LIB_PREFIX}-scrubber` as const;
+export const VDS_SCRUBBER_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${SCRUBBER_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(SCRUBBER_TAG_NAME, Scrubber);
+safelyDefineCustomElement(VDS_SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [SCRUBBER_TAG_NAME]: Scrubber;
+    [VDS_SCRUBBER_ELEMENT_TAG_NAME]: ScrubberElement;
   }
 }

@@ -6,13 +6,13 @@ import {
   buildStorybookControlsFromManifest,
   SB_THEME_COLOR,
 } from '../../shared/storybook';
-import { UI_TAG_NAME } from './vds-ui';
+import { VDS_UI_ELEMENT_TAG_NAME } from './vds-ui';
 
 export default {
   title: 'UI/Foundation/Ui',
-  component: UI_TAG_NAME,
+  component: VDS_UI_ELEMENT_TAG_NAME,
   argTypes: {
-    ...buildStorybookControlsFromManifest(UI_TAG_NAME),
+    ...buildStorybookControlsFromManifest(VDS_UI_ELEMENT_TAG_NAME),
     fakeCanPlay: {
       control: 'boolean',
       defaultValue: true,

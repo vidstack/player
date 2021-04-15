@@ -1,9 +1,11 @@
 import type Hls from 'hls.js';
 import type { HlsConfig } from 'hls.js';
 
-import { VideoProviderEngine, VideoProviderProps } from '../video';
+import { VideoElementEngine, VideoElementProps } from '../video';
 
-export interface HlsProviderProps extends VideoProviderProps {
+export const HLS_ELEMENT_TAG_NAME = `hls`;
+
+export interface HlsElementProps extends VideoElementProps {
   /**
    * The `hls.js` configuration object.
    */
@@ -41,7 +43,7 @@ export interface HlsProviderProps extends VideoProviderProps {
   /**
    * The underlying `HTMLMediaElement`.
    */
-  readonly videoEngine: VideoProviderEngine;
+  readonly videoEngine: VideoElementEngine;
 }
 
-export type HlsProviderEngine = Hls | undefined;
+export type HlsElementEngine = Hls | undefined;

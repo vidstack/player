@@ -1,13 +1,17 @@
 import { LIB_PREFIX } from '../../shared/constants';
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { FakeContextConsumer } from './FakeContextConsumer';
+import { FakeMediaConsumerElement } from './FakeMediaConsumerElement';
+import { FAKE_MEDIA_CONSUMER_ELEMENT_TAG_NAME } from './fakes.types';
 
-export const FAKE_CONTEXT_CONSUMER_TAG_NAME = `${LIB_PREFIX}-fake-context-consumer`;
+export const VDS_FAKE_MEDIA_CONSUMER_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${FAKE_MEDIA_CONSUMER_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(FAKE_CONTEXT_CONSUMER_TAG_NAME, FakeContextConsumer);
+safelyDefineCustomElement(
+  VDS_FAKE_MEDIA_CONSUMER_ELEMENT_TAG_NAME,
+  FakeMediaConsumerElement,
+);
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-fake-context-consumer': FakeContextConsumer;
+    [VDS_FAKE_MEDIA_CONSUMER_ELEMENT_TAG_NAME]: FakeMediaConsumerElement;
   }
 }

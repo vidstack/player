@@ -1,13 +1,17 @@
 import { LIB_PREFIX } from '../../shared/constants';
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { FakeMediaProvider } from './FakeMediaProvider';
+import { FakeMediaProviderElement } from './FakeMediaProviderElement';
+import { FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME } from './fakes.types';
 
-export const FAKE_MEDIA_PROVIDER_TAG_NAME = `${LIB_PREFIX}-fake-media-provider` as const;
+export const VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(FAKE_MEDIA_PROVIDER_TAG_NAME, FakeMediaProvider);
+safelyDefineCustomElement(
+  VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
+  FakeMediaProviderElement,
+);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [FAKE_MEDIA_PROVIDER_TAG_NAME]: FakeMediaProvider;
+    [VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME]: FakeMediaProviderElement;
   }
 }

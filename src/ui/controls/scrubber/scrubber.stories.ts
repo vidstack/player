@@ -7,14 +7,14 @@ import {
   VdsEventsToStorybookActions,
 } from '../../../shared/storybook';
 import { VdsScrubberEvents } from './scrubber.events';
-import { ScrubberProps } from './scrubber.types';
-import { SCRUBBER_TAG_NAME } from './vds-scrubber';
+import { ScrubberElementProps } from './scrubber.types';
+import { VDS_SCRUBBER_ELEMENT_TAG_NAME } from './vds-scrubber';
 
 export default {
   title: 'UI/Foundation/Controls/Scrubber',
-  component: SCRUBBER_TAG_NAME,
+  component: VDS_SCRUBBER_ELEMENT_TAG_NAME,
   argTypes: {
-    ...buildStorybookControlsFromManifest(SCRUBBER_TAG_NAME),
+    ...buildStorybookControlsFromManifest(VDS_SCRUBBER_ELEMENT_TAG_NAME),
     fakeCurrentTime: {
       control: 'number',
       defaultValue: 1000,
@@ -37,7 +37,7 @@ interface FakeProps {
 }
 
 type Args = FakeProps &
-  ScrubberProps &
+  ScrubberElementProps &
   VdsEventsToStorybookActions<VdsScrubberEvents> &
   VdsEventsToStorybookActions<VdsUserEvents>;
 

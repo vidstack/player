@@ -1,3 +1,5 @@
-import { TimeProps } from '../time';
+import { TimeElementProps } from '../time';
 
-export type TimeDurationProps = Omit<TimeProps, 'seconds'>;
+export const TIME_DURATION_ELEMENT_TAG_NAME = `time-duration`;
+
+export type TimeDurationElementProps = Omit<TimeElementProps, 'seconds'>;

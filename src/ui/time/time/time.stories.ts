@@ -5,16 +5,16 @@ import {
   buildStorybookControlsFromManifest,
   SB_THEME_COLOR,
 } from '../../../shared/storybook';
-import { TimeProps } from './time.types';
-import { TIME_TAG_NAME } from './vds-time';
+import { TimeElementProps } from './time.types';
+import { VDS_TIME_ELEMENT_TAG_NAME } from './vds-time';
 
 export default {
   title: 'UI/Foundation/Time/Time',
-  component: TIME_TAG_NAME,
-  argTypes: buildStorybookControlsFromManifest(TIME_TAG_NAME),
+  component: VDS_TIME_ELEMENT_TAG_NAME,
+  argTypes: buildStorybookControlsFromManifest(VDS_TIME_ELEMENT_TAG_NAME),
 };
 
-type Args = TimeProps;
+type Args = TimeElementProps;
 
 function Template({
   // Props

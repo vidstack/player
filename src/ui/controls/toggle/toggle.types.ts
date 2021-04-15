@@ -1,6 +1,8 @@
-export interface ToggleProps {
+export const TOGGLE_ELEMENT_TAG_NAME = `toggle`;
+
+export interface ToggleElementProps {
   /**
-   * Whether the toggle is in the `on` state.
+   * Whether the toggle is in the `pressed` state.
    */
-  on: boolean;
+  pressed: boolean;
 }

@@ -1,13 +1,17 @@
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
-import { TimeDuration } from './TimeDuration';
+import { TIME_DURATION_ELEMENT_TAG_NAME } from './time-duration.types';
+import { TimeDurationElement } from './TimeDurationElement';
 
-export const TIME_DURATION_TAG_NAME = `${LIB_PREFIX}-time-duration` as const;
+export const VDS_TIME_DURATION_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${TIME_DURATION_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(TIME_DURATION_TAG_NAME, TimeDuration);
+safelyDefineCustomElement(
+  VDS_TIME_DURATION_ELEMENT_TAG_NAME,
+  TimeDurationElement,
+);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [TIME_DURATION_TAG_NAME]: TimeDuration;
+    [VDS_TIME_DURATION_ELEMENT_TAG_NAME]: TimeDurationElement;
   }
 }

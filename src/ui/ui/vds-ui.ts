@@ -1,13 +1,14 @@
 import { LIB_PREFIX } from '../../shared/constants';
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { Ui } from './Ui';
+import { UI_ELEMENT_TAG_NAME } from './ui.types';
+import { UiElement } from './UiElement';
 
-export const UI_TAG_NAME = `${LIB_PREFIX}-ui` as const;
+export const VDS_UI_ELEMENT_TAG_NAME = `${LIB_PREFIX}-${UI_ELEMENT_TAG_NAME}` as const;
 
-safelyDefineCustomElement(UI_TAG_NAME, Ui);
+safelyDefineCustomElement(VDS_UI_ELEMENT_TAG_NAME, UiElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [UI_TAG_NAME]: Ui;
+    [VDS_UI_ELEMENT_TAG_NAME]: UiElement;
   }
 }

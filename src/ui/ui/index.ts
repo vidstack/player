@@ -1,2 +1,2 @@
-export * from './Ui';
 export * from './ui.css';
+export * from './UiElement';
