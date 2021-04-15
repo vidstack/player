@@ -7,7 +7,7 @@ import {
 } from '@open-wc/testing';
 
 import { FakeMediaProviderElement } from '../../../core';
-import { buildFakeMediaProvider } from '../../../core/fakes/fakes.helpers';
+import { buildMediaFixture } from '../../../core/fakes/fakes.helpers';
 import { getSlottedChildren } from '../../../utils/dom';
 import {
   VdsBufferingIndicatorHideEvent,
@@ -17,24 +17,25 @@ import { BufferingIndicatorElement } from '../BufferingIndicatorElement';
 import { VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from '../vds-buffering-indicator';
 
 describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, () => {
-  async function buildFixture(): Promise<
-    [FakeMediaProviderElement, BufferingIndicatorElement]
-  > {
-    const provider = await buildFakeMediaProvider(html`
+  async function buildFixture(): Promise<{
+    provider: FakeMediaProviderElement;
+    bufferingIndicator: BufferingIndicatorElement;
+  }> {
+    const { container, provider } = await buildMediaFixture(html`
       <vds-buffering-indicator>
         <div class="slot"></div>
       </vds-buffering-indicator>
     `);
 
-    const bufferingIndicator = provider.querySelector(
+    const bufferingIndicator = container.querySelector(
       VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
     ) as BufferingIndicatorElement;
 
-    return [provider, bufferingIndicator];
+    return { provider, bufferingIndicator };
   }
 
-  it('should render dom correctly', async () => {
-    const [, bufferingIndicator] = await buildFixture();
+  it('should render DOM correctly', async () => {
+    const { bufferingIndicator } = await buildFixture();
     expect(bufferingIndicator).dom.to.equal(`
       <vds-buffering-indicator>
         <div class="slot" hidden></div>
@@ -42,13 +43,13 @@ describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, () => {
     `);
   });
 
-  it('should render shadow dom correctly', async () => {
-    const [, bufferingIndicator] = await buildFixture();
+  it('should render shadow DOM correctly', async () => {
+    const { bufferingIndicator } = await buildFixture();
     expect(bufferingIndicator).shadowDom.to.equal(`<slot></slot>`);
   });
 
   it('should toggle hidden attribute correctly on default slot', async () => {
-    const [provider, bufferingIndicator] = await buildFixture();
+    const { provider, bufferingIndicator } = await buildFixture();
     const slot = getSlottedChildren(bufferingIndicator)[0] as HTMLElement;
 
     provider.context.waiting = true;
@@ -61,7 +62,7 @@ describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, () => {
   });
 
   it('should toggle hidden attribute correctly when `showWhileBooting` is `true` ', async () => {
-    const [provider, bufferingIndicator] = await buildFixture();
+    const { provider, bufferingIndicator } = await buildFixture();
 
     bufferingIndicator.showWhileBooting = true;
     await elementUpdated(bufferingIndicator);
@@ -90,7 +91,7 @@ describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, () => {
   });
 
   it('should delay toggling hidden attribute', async () => {
-    const [provider, bufferingIndicator] = await buildFixture();
+    const { provider, bufferingIndicator } = await buildFixture();
     const slot = getSlottedChildren(bufferingIndicator)[0] as HTMLElement;
 
     bufferingIndicator.delay = 10;
@@ -105,7 +106,7 @@ describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, () => {
   });
 
   it(`should emit ${VdsBufferingIndicatorShowEvent.TYPE} event when hidden attr changes`, async () => {
-    const [provider, bufferingIndicator] = await buildFixture();
+    const { provider, bufferingIndicator } = await buildFixture();
 
     setTimeout(() => {
       provider.context.waiting = true;
@@ -115,7 +116,7 @@ describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, () => {
   });
 
   it(`should emit ${VdsBufferingIndicatorHideEvent.TYPE} event when hidden attr changes`, async () => {
-    const [provider, bufferingIndicator] = await buildFixture();
+    const { provider, bufferingIndicator } = await buildFixture();
 
     provider.context.waiting = true;
     await elementUpdated(bufferingIndicator);

@@ -1,10 +1,10 @@
 import { property } from 'lit-element';
 
-import { mediaContext } from '../../../core';
 import {
-  VdsUserPauseEvent,
-  VdsUserPlayEvent,
-} from '../../../core/user/user.events';
+  mediaContext,
+  VdsPauseRequestEvent,
+  VdsPlayRequestEvent,
+} from '../../../core';
 import { ToggleButtonElement } from '../toggle-button';
 import { PlayButtonElementProps } from './play-button.types';
 
@@ -48,7 +48,10 @@ export class PlayButtonElement
   }
 
   protected handleButtonClick(originalEvent: Event): void {
-    const Request = this.pressed ? VdsUserPauseEvent : VdsUserPlayEvent;
-    this.dispatchEvent(new Request({ originalEvent }));
+    const RequestEvent = this.pressed
+      ? VdsPauseRequestEvent
+      : VdsPlayRequestEvent;
+
+    this.dispatchEvent(new RequestEvent({ originalEvent }));
   }
 }

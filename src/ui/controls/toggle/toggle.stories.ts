@@ -38,8 +38,8 @@ function Template(args: Args): TemplateResult {
       ?pressed="${args['pressed ']}"
       style="color: ${SB_THEME_COLOR};"
     >
+      <div>Not Pressed</div>
       <div slot="pressed">Pressed</div>
-      <div slot="not-pressed">Not Pressed</div>
     </vds-toggle>
   `;
 }

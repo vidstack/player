@@ -1,14 +1,13 @@
 /* c8 ignore next 1000 */
-import { html, TemplateResult } from 'lit-element';
 
-import { CanPlay } from '../CanPlay';
 import {
+  CanPlay,
+  MediaProviderElement,
   VdsPauseEvent,
   VdsPlayEvent,
   VdsTimeUpdateEvent,
   VdsVolumeChangeEvent,
-} from '../media/media.events';
-import { MediaProviderElement } from '../provider/MediaProviderElement';
+} from '../media';
 
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can
@@ -17,6 +16,7 @@ import { MediaProviderElement } from '../provider/MediaProviderElement';
 export class FakeMediaProviderElement extends MediaProviderElement {
   connectedCallback(): void {
     super.connectedCallback();
+    if (this.canPlay) this.handleMediaReady();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -27,9 +27,9 @@ export class FakeMediaProviderElement extends MediaProviderElement {
     return this.context.currentTime;
   }
 
-  setCurrentTime(detail: number): void {
-    this.context.currentTime = detail;
-    this.dispatchEvent(new VdsTimeUpdateEvent({ detail }));
+  setCurrentTime(time: number): void {
+    this.context.currentTime = time;
+    this.dispatchEvent(new VdsTimeUpdateEvent({ detail: time }));
   }
 
   getMuted(): boolean {
@@ -104,17 +104,5 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   async exitFullscreen(): Promise<void> {
     this.context.fullscreen = false;
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render
-  // -------------------------------------------------------------------------------------------
-
-  render(): TemplateResult {
-    return html`
-      <div>
-        <slot></slot>
-      </div>
-    `;
   }
 }

@@ -1,13 +1,15 @@
+import '../../../core/media/controller/vds-media-controller';
+import '../../../core/media/container/vds-media-container';
 import '../../../core/fakes/vds-fake-media-provider';
 
 import { html, TemplateResult } from 'lit-html';
 
-import { VdsUserEvents } from '../../../core';
+import { VdsMediaRequestEvents } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import {
   buildStorybookControlsFromManifest,
+  DOMEventsToStorybookActions,
   SB_THEME_COLOR,
-  VdsEventsToStorybookActions,
 } from '../../../shared/storybook';
 import { FullscreenButtonElementProps } from './fullscreen-button.types';
 import { VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME } from './vds-fullscreen-button';
@@ -37,7 +39,7 @@ interface FakeProps {
 
 type Args = FakeProps &
   FullscreenButtonElementProps &
-  VdsEventsToStorybookActions<VdsUserEvents>;
+  DOMEventsToStorybookActions<VdsMediaRequestEvents>;
 
 function Template({
   // Fakes
@@ -47,24 +49,33 @@ function Template({
   describedBy,
   disabled,
   // Events
-  onVdsUserFullscreenChange,
+  onVdsEnterFullscreenRequest,
+  onVdsExitFullscreenRequest,
 }: Args): TemplateResult {
   return html`
-    <vds-fake-media-provider
-      .canPlayCtx="${true}"
-      .fullscreenCtx="${fakeFullscreen}"
-    >
-      <vds-fullscreen-button
-        label="${ifNonEmpty(label)}"
-        described-by="${ifNonEmpty(describedBy)}"
-        ?disabled="${disabled}"
-        style="color: ${SB_THEME_COLOR};"
-        @vds-user-fullscreen-change="${onVdsUserFullscreenChange}"
-      >
-        <div slot="enter">Enter</div>
-        <div slot="exit">Exit</div>
-      </vds-fullscreen-button>
-    </vds-fake-media-provider>
+    <vds-media-controller .canPlay="${true}" .fullscreen="${fakeFullscreen}">
+      <vds-media-container>
+        <vds-fake-media-provider slot="media"></vds-fake-media-provider>
+
+        <vds-fullscreen-button
+          label="${ifNonEmpty(label)}"
+          described-by="${ifNonEmpty(describedBy)}"
+          ?disabled="${disabled}"
+          style="color: ${SB_THEME_COLOR};"
+          @vds-enter-fullscreen-request="${onVdsEnterFullscreenRequest}"
+          @vds-exit-fullscreen-request="${onVdsExitFullscreenRequest}"
+        >
+          <div slot="enter">Enter</div>
+          <div slot="exit">Exit</div>
+        </vds-fullscreen-button>
+      </vds-media-container>
+    </vds-media-controller>
+
+    <style>
+      vds-media-container::part(ui) {
+        position: relative;
+      }
+    </style>
   `;
 }
 

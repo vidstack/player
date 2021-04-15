@@ -65,14 +65,14 @@ export function setAttribute(
 }
 
 /**
- * Returns elements assigned to the default slot in the shadow root. Filters out all nodes
+ * Returns elements assigned to the given slot in the shadow root. Filters out all nodes
  * which are not of type `Node.ELEMENT_NODE`.
  *
  * @param el - The element containing the slot.
  * @param name - The name of the slot (optional).
  */
 export function getSlottedChildren(el: HTMLElement, name?: string): Element[] {
-  const selector = name ? `slot[name="${name}"]` : 'slot';
+  const selector = name ? `slot[name="${name}"]` : 'slot:not([name])';
   const slot = el.shadowRoot?.querySelector(selector) as HTMLSlotElement | null;
   const childNodes = slot?.assignedNodes({ flatten: true }) ?? [];
 

@@ -1,7 +1,10 @@
 import { property } from 'lit-element';
 
-import { mediaContext } from '../../../core';
-import { VdsUserMutedChangeEvent } from '../../../core/user/user.events';
+import {
+  mediaContext,
+  VdsMuteRequestEvent,
+  VdsUnmuteRequestEvent,
+} from '../../../core';
 import { ToggleButtonElement } from '../toggle-button';
 import { MuteButtonElementProps } from './mute-button.types';
 
@@ -43,11 +46,10 @@ export class MuteButtonElement
   }
 
   protected handleButtonClick(originalEvent: Event): void {
-    this.dispatchEvent(
-      new VdsUserMutedChangeEvent({
-        originalEvent,
-        detail: !this.pressed,
-      }),
-    );
+    const RequestEvent = this.pressed
+      ? VdsUnmuteRequestEvent
+      : VdsMuteRequestEvent;
+
+    this.dispatchEvent(new RequestEvent({ originalEvent }));
   }
 }

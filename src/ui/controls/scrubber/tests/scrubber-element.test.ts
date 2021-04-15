@@ -1,33 +1,32 @@
 import { expect } from '@open-wc/testing';
 import { html } from 'lit-element';
 
-import { FakeMediaProviderElement } from '../../../../core';
-import { buildFakeMediaProvider } from '../../../../core/fakes/fakes.helpers';
+import { buildMediaFixture } from '../../../../core/fakes/fakes.helpers';
 import { ScrubberElement } from '../ScrubberElement';
 import { VDS_SCRUBBER_ELEMENT_TAG_NAME } from '../vds-scrubber';
 
 describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, () => {
-  async function buildFixture(): Promise<
-    [FakeMediaProviderElement, ScrubberElement]
-  > {
-    const provider = await buildFakeMediaProvider(html`
+  async function buildFixture(): Promise<{
+    scrubber: ScrubberElement;
+  }> {
+    const { container } = await buildMediaFixture(html`
       <vds-scrubber></vds-scrubber>
     `);
 
-    const scrubber = provider.querySelector(
+    const scrubber = container.querySelector(
       VDS_SCRUBBER_ELEMENT_TAG_NAME,
     ) as ScrubberElement;
 
-    return [provider, scrubber];
+    return { scrubber };
   }
 
-  it('should render dom correctly', async () => {
-    const [, scrubber] = await buildFixture();
+  it('should render DOM correctly', async () => {
+    const { scrubber } = await buildFixture();
     expect(scrubber).dom.to.equal(`<vds-scrubber></vds-scrubber>`);
   });
 
-  it('should render shadow dom correctly', async () => {
-    const [, scrubber] = await buildFixture();
+  it('should render shadow DOM correctly', async () => {
+    const { scrubber } = await buildFixture();
     expect(scrubber).shadowDom.to.equal(`
       <div
         id="root"
