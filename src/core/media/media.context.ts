@@ -27,20 +27,19 @@ const seekable = createContext(createTimeRanges());
 const viewType = createContext(ViewType.Unknown);
 
 /**
- * The media context object contains a collection of contexts that map 1:1 with player
+ * The media context object contains a collection of contexts that map 1:1 with media
  * state. This context enables state to be passed down to elements lower in the player
- * subtree. It's updated by the player when it receives updates from the current provider
- * via events. If you're creating your own elements to place inside the player element you can use
- * it like so...
+ * subtree. It's updated by the media controller. If you're creating your own elements to place
+ * inside the media container you can use it like so...
  *
  * ```ts
  * import { internalProperty, LitElement } from "lit-element";
- * import { playerContext } from "@vidstack/elements/core";
+ * import { mediaContext } from "@vidstack/elements";
  *
  * class MyElement extends LitElement {
  *  \@internalProperty()
- *  \@playerContext.paused.consume()
- *  paused = playerContext.paused.defaultValue;
+ *  \@mediaContext.paused.consume()
+ *  paused = mediaContext.paused.defaultValue;
  * }
  * ```
  */
