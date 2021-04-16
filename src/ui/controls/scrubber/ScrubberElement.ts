@@ -432,11 +432,8 @@ export class ScrubberElement
   protected async handleSliderValueChange(
     e: VdsSliderValueChangeEvent,
   ): Promise<void> {
-    if (this.isDraggingThumb) {
-      this.updatePreviewPosition(e.originalEvent as PointerEvent);
-    } else {
-      this.currentTime = e.detail;
-      this.previewTime = e.detail;
+    await this.updatePreviewPosition(e.originalEvent as PointerEvent);
+    if (!this.isDraggingThumb) {
       this.dispatchUserSeeked(e);
     }
   }
@@ -626,8 +623,8 @@ export class ScrubberElement
     this.dispatchEvent(new VdsScrubberPreviewTimeUpdateEvent(eventInit));
   }
 
-  protected updatePreviewPosition(event: PointerEvent): void {
-    raf(async () => {
+  protected async updatePreviewPosition(event: PointerEvent): Promise<void> {
+    await raf(async () => {
       const thumbPosition = event.clientX;
       const rootRect = this.rootEl.getBoundingClientRect();
       const trackRect = this.sliderEl.trackEl.getBoundingClientRect();
@@ -654,9 +651,7 @@ export class ScrubberElement
       const rightLimit = rootRect.width - previewRectWidth - sliderRightMargin;
       const xPos = Math.max(sliderLeftMargin, Math.min(left, rightLimit));
 
-      this.previewTime = parseFloat(
-        ((percent / 100) * this.duration).toFixed(2),
-      );
+      this.previewTime = (percent / 100) * this.duration;
 
       this.rootEl.style.setProperty(
         '--vds-scrubber-preview-time',

@@ -9,8 +9,8 @@ import { isUndefined, noop } from './unit';
  */
 export function raf(callback?: Callback<void>): Promise<void> {
   return new Promise<void>(resolve => {
-    window.requestAnimationFrame(() => {
-      callback?.();
+    window.requestAnimationFrame(async () => {
+      await callback?.();
       resolve();
     });
   });
