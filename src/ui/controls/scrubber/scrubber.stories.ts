@@ -59,6 +59,7 @@ function Template({
   previewTimeThrottle,
   userSeekingThrottle,
   noPreviewTrack,
+  noPreviewClamp,
   // Scrubber Events
   onVdsScrubberPreviewShow,
   onVdsScrubberPreviewHide,
@@ -84,6 +85,7 @@ function Template({
         step-multiplier="${stepMultiplier}"
         orientation="${orientation}"
         ?no-preview-track="${noPreviewTrack}"
+        ?no-preview-clamp="${noPreviewClamp}"
         throttle="${throttle}"
         preview-time-throttle="${previewTimeThrottle}"
         user-seeking-throttle="${userSeekingThrottle}"

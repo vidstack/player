@@ -226,6 +226,9 @@ export class ScrubberElement
   @property({ type: Boolean, attribute: 'no-preview-track' })
   noPreviewTrack = false;
 
+  @property({ type: Boolean, attribute: 'no-preview-clamp' })
+  noPreviewClamp = false;
+
   @property({ type: Number, attribute: 'user-seeking-throttle' })
   userSeekingThrottle = 150;
 
@@ -247,7 +250,9 @@ export class ScrubberElement
     this.dispatchEvent(new VdsUserSeekingEvent(eventInit));
   }
 
-  protected dispatchUserSeeked(originalEvent: Event): void {
+  protected async dispatchUserSeeked(originalEvent: Event): Promise<void> {
+    // Prevent slider value (time) jumping while `isDragging` is being updated to `false`.
+    await this.updateComplete;
     this.currentTime = this.previewTime;
     this.dispatchEvent(
       new VdsUserSeekedEvent({
@@ -433,9 +438,7 @@ export class ScrubberElement
     e: VdsSliderValueChangeEvent,
   ): Promise<void> {
     await this.updatePreviewPosition(e.originalEvent as PointerEvent);
-    if (!this.isDraggingThumb) {
-      this.dispatchUserSeeked(e);
-    }
+    if (!this.isDraggingThumb) this.dispatchUserSeeked(e);
   }
 
   protected async handleSliderDragStart(
@@ -503,7 +506,7 @@ export class ScrubberElement
   // Preview
   // -------------------------------------------------------------------------------------------
 
-  protected updatePreviewTimeThrottler?: CancelableCallback<{
+  protected dispatchPreviewTimeChangeEventsThrottler?: CancelableCallback<{
     detail: number;
     originalEvent?: Event;
   }>;
@@ -514,9 +517,9 @@ export class ScrubberElement
   }>;
 
   protected initThrottles(): void {
-    this.updatePreviewTimeThrottler?.cancel();
-    this.updatePreviewTimeThrottler = throttle(
-      this.updatePreviewTime.bind(this),
+    this.dispatchPreviewTimeChangeEventsThrottler?.cancel();
+    this.dispatchPreviewTimeChangeEventsThrottler = throttle(
+      this.dispatchPreviewTimeChangeEvents.bind(this),
       this.previewTimeThrottle,
     );
 
@@ -528,8 +531,8 @@ export class ScrubberElement
   }
 
   protected destroyThrottles(): void {
-    this.updatePreviewTimeThrottler?.cancel();
-    this.updatePreviewTimeThrottler = undefined;
+    this.dispatchPreviewTimeChangeEventsThrottler?.cancel();
+    this.dispatchPreviewTimeChangeEventsThrottler = undefined;
     this.dispatchUserSeekingEventThrottler?.cancel();
     this.dispatchUserSeekingEventThrottler = undefined;
   }
@@ -613,7 +616,7 @@ export class ScrubberElement
     this.requestUpdate();
   }
 
-  protected updatePreviewTime(eventInit: {
+  protected dispatchPreviewTimeChangeEvents(eventInit: {
     detail: number;
     originalEvent?: Event;
   }): void {
@@ -623,52 +626,56 @@ export class ScrubberElement
     this.dispatchEvent(new VdsScrubberPreviewTimeUpdateEvent(eventInit));
   }
 
+  protected calcPercentageOfMediaDurationOnThumb(
+    thumbPosition: number,
+  ): number {
+    const trackRect = this.sliderEl.trackEl.getBoundingClientRect();
+    return Math.max(
+      0,
+      Math.min(100, (100 / trackRect.width) * (thumbPosition - trackRect.left)),
+    );
+  }
+
+  protected calcPreviewXPosition(durationPercentage: number): number {
+    const rootRect = this.rootEl.getBoundingClientRect();
+
+    const previewRectWidth =
+      this.currentPreviewEl?.getBoundingClientRect().width ?? 0;
+
+    // Margin on slider usually represents (thumb width / 2) so thumb is contained when on edge.
+    const sliderXMargin = parseFloat(
+      window.getComputedStyle(this.sliderEl.rootElement).marginLeft,
+    );
+
+    const left =
+      (durationPercentage / 100) * rootRect.width - previewRectWidth / 2;
+
+    const rightLimit = rootRect.width - previewRectWidth - sliderXMargin;
+
+    return this.noPreviewClamp
+      ? left
+      : Math.max(sliderXMargin, Math.min(left, rightLimit));
+  }
+
+  protected updatePreviewTime(time: number, originalEvent?: Event): void {
+    this.previewTime = time;
+    this.rootEl.style.setProperty('--vds-scrubber-preview-time', String(time));
+    if (this.isDraggingThumb) this.sliderEl.value = time;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.dispatchPreviewTimeChangeEventsThrottler!({
+      detail: this.previewTime,
+      originalEvent,
+    });
+  }
+
+  protected previewPositionRafId = 0;
   protected async updatePreviewPosition(event: PointerEvent): Promise<void> {
-    await raf(async () => {
-      const thumbPosition = event.clientX;
-      const rootRect = this.rootEl.getBoundingClientRect();
-      const trackRect = this.sliderEl.trackEl.getBoundingClientRect();
-      const previewRectWidth =
-        this.currentPreviewEl?.getBoundingClientRect().width ?? 0;
-
-      // Margin on slider usually represents (thumb width / 2) so thumb is contained when on edge.
-      const sliderLeftMargin = parseFloat(
-        window.getComputedStyle(this.sliderEl.rootElement).marginLeft,
-      );
-      const sliderRightMargin = parseFloat(
-        window.getComputedStyle(this.sliderEl.rootElement).marginRight,
-      );
-
-      const percent = Math.max(
-        0,
-        Math.min(
-          100,
-          (100 / trackRect.width) * (thumbPosition - trackRect.left),
-        ),
-      );
-
-      const left = (percent / 100) * rootRect.width - previewRectWidth / 2;
-      const rightLimit = rootRect.width - previewRectWidth - sliderRightMargin;
-      const xPos = Math.max(sliderLeftMargin, Math.min(left, rightLimit));
-
-      this.previewTime = (percent / 100) * this.duration;
-
-      this.rootEl.style.setProperty(
-        '--vds-scrubber-preview-time',
-        String(this.previewTime),
-      );
-
-      if (this.isDraggingThumb) {
-        this.sliderEl.value = this.previewTime;
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.updatePreviewTimeThrottler!({
-        detail: this.previewTime,
-        originalEvent: event,
-      });
-
+    window.cancelAnimationFrame(this.previewPositionRafId);
+    this.previewPositionRafId = await raf(async () => {
+      const percent = this.calcPercentageOfMediaDurationOnThumb(event.clientX);
+      this.updatePreviewTime((percent / 100) * this.duration, event);
       if (!isNil(this.currentPreviewEl)) {
+        const xPos = this.calcPreviewXPosition(percent);
         this.currentPreviewEl.style.transform = `translateX(${xPos}px)`;
       }
     });

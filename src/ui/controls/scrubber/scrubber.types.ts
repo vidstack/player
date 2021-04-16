@@ -35,6 +35,12 @@ export interface ScrubberElementProps
   disabled: boolean;
 
   /**
+   * Whether the preview passed in should NOT be clamped to the scrubber edges. In other words,
+   * setting this to `true` means the preview element can escape the scrubber bounds.
+   */
+  noPreviewClamp: boolean;
+
+  /**
    * Whether to remove the preview track.
    */
   noPreviewTrack: boolean;

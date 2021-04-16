@@ -7,11 +7,11 @@ import { isUndefined, noop } from './unit';
 /**
  * Requests an animation frame and waits for it to be resolved.
  */
-export function raf(callback?: Callback<void>): Promise<void> {
-  return new Promise<void>(resolve => {
-    window.requestAnimationFrame(async () => {
+export function raf(callback?: Callback<void>): Promise<number> {
+  return new Promise<number>(resolve => {
+    const rafId = window.requestAnimationFrame(async () => {
       await callback?.();
-      resolve();
+      resolve(rafId);
     });
   });
 }
