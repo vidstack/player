@@ -32,7 +32,7 @@ describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, () => {
       <div
         id="root"
         part="root"
-        style="--vds-scrubber-current-time:0; --vds-scrubber-seekable:0; --vds-scrubber-duration:0; --vds-scrubber-preview-time:0;"
+        style="--vds-scrubber-current-time:0; --vds-scrubber-seekable:0; --vds-scrubber-duration:0;"
       >
         <vds-slider
           exportparts="root: slider-root, thumb: slider-thumb, track: slider-track, track-fill: slider-track-fill"
@@ -44,7 +44,7 @@ describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, () => {
           part="slider"
           step="5"
           step-multiplier="2"
-          throttle="10"
+          throttle="0"
           value="0"
           value-text="0 seconds out of 0 seconds"
         >

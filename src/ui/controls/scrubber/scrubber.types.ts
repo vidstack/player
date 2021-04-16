@@ -47,9 +47,9 @@ export interface ScrubberElementProps
   pauseWhileDragging: boolean;
 
   /**
-   * The amount of milliseconds to throttle preview time/position updates by.
+   * The amount of milliseconds to throttle preview time updates by.
    */
-  previewThrottle: number;
+  previewTimeThrottle: number;
 
   /**
    * The amount of milliseconds to throttle user seeking events being dispatched.

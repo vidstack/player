@@ -217,8 +217,8 @@ export class ScrubberElement
 
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  @property({ type: Number, attribute: 'preview-throttle' })
-  previewThrottle = 30;
+  @property({ type: Number, attribute: 'preview-time-throttle' })
+  previewTimeThrottle = 30;
 
   @property({ type: Boolean, attribute: 'pause-while-dragging' })
   pauseWhileDragging = false;
@@ -233,7 +233,7 @@ export class ScrubberElement
   @property({ type: Number }) step = 5;
   @property({ type: Number, attribute: 'step-ratio' }) stepMultiplier = 2;
   @property() orientation: 'horizontal' | 'vertical' = 'horizontal';
-  @property({ type: Number }) throttle = 10;
+  @property({ type: Number }) throttle = 0;
 
   // -------------------------------------------------------------------------------------------
   // User
@@ -310,7 +310,6 @@ export class ScrubberElement
       '--vds-scrubber-current-time': String(this.currentTime),
       '--vds-scrubber-seekable': String(this.seekableAmount),
       '--vds-scrubber-duration': String(this.duration),
-      '--vds-scrubber-preview-time': String(this.previewTime),
     };
   }
 
@@ -327,8 +326,7 @@ export class ScrubberElement
 
   protected handleScrubberPointerMove(e: PointerEvent): void {
     if (this.disabled) return;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.previewPositionThrottler!(e);
+    this.updatePreviewPosition(e);
   }
 
   protected renderDefaultSlot(): TemplateResult {
@@ -443,8 +441,7 @@ export class ScrubberElement
     e: VdsSliderValueChangeEvent,
   ): Promise<void> {
     if (this.isDraggingThumb) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.previewPositionThrottler!(e.originalEvent as PointerEvent);
+      this.updatePreviewPosition(e.originalEvent as PointerEvent);
     } else {
       this.currentTime = e.detail;
       this.previewTime = e.detail;
@@ -463,7 +460,6 @@ export class ScrubberElement
   protected async handleSliderDragEnd(e: VdsSliderDragEndEvent): Promise<void> {
     this.isDraggingThumb = false;
     this.hidePreview(e.originalEvent as PointerEvent);
-    this.currentTime = e.detail;
     await this.dispatchUserSeeked(e);
     this.togglePlaybackWhileDragging(e);
   }
@@ -518,45 +514,35 @@ export class ScrubberElement
   // Preview
   // -------------------------------------------------------------------------------------------
 
-  protected previewTimeThrottler?: CancelableCallback<{
+  protected updatePreviewTimeThrottler?: CancelableCallback<{
     detail: number;
     originalEvent?: Event;
   }>;
 
-  protected previewPositionThrottler?: CancelableCallback<PointerEvent>;
-
-  protected userSeekingThrottler?: CancelableCallback<{
+  protected dispatchUserSeekingEventThrottler?: CancelableCallback<{
     detail: number;
     originalEvent?: Event;
   }>;
 
   protected initThrottles(): void {
-    this.previewTimeThrottler?.cancel();
-    this.previewTimeThrottler = throttle(
+    this.updatePreviewTimeThrottler?.cancel();
+    this.updatePreviewTimeThrottler = throttle(
       this.updatePreviewTime.bind(this),
-      this.previewThrottle,
+      this.previewTimeThrottle,
     );
 
-    this.userSeekingThrottler?.cancel();
-    this.userSeekingThrottler = throttle(
+    this.dispatchUserSeekingEventThrottler?.cancel();
+    this.dispatchUserSeekingEventThrottler = throttle(
       this.dispatchUserSeekingEvent.bind(this),
       this.userSeekingThrottle,
-    );
-
-    this.previewPositionThrottler?.cancel();
-    this.previewPositionThrottler = throttle(
-      this.updatePreviewPosition.bind(this),
-      this.previewThrottle,
     );
   }
 
   protected destroyThrottles(): void {
-    this.previewTimeThrottler?.cancel();
-    this.previewTimeThrottler = undefined;
-    this.userSeekingThrottler?.cancel();
-    this.userSeekingThrottler = undefined;
-    this.previewPositionThrottler?.cancel();
-    this.previewPositionThrottler = undefined;
+    this.updatePreviewTimeThrottler?.cancel();
+    this.updatePreviewTimeThrottler = undefined;
+    this.dispatchUserSeekingEventThrottler?.cancel();
+    this.dispatchUserSeekingEventThrottler = undefined;
   }
 
   protected renderPreviewSlot(): TemplateResult {
@@ -643,45 +629,61 @@ export class ScrubberElement
     originalEvent?: Event;
   }): void {
     if (!this.isSeeking) return;
-    this.previewTime = eventInit.detail;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.userSeekingThrottler!(eventInit);
+    this.dispatchUserSeekingEventThrottler!(eventInit);
     this.dispatchEvent(new VdsScrubberPreviewTimeUpdateEvent(eventInit));
-    this.requestUpdate();
   }
 
   protected updatePreviewPosition(event: PointerEvent): void {
-    const thumbPosition = event.clientX;
-    const rootRect = this.rootEl.getBoundingClientRect();
-    const trackRect = this.sliderEl.trackEl.getBoundingClientRect();
-    const previewRectWidth =
-      this.currentPreviewEl?.getBoundingClientRect().width ?? 0;
+    raf(async () => {
+      const thumbPosition = event.clientX;
+      const rootRect = this.rootEl.getBoundingClientRect();
+      const trackRect = this.sliderEl.trackEl.getBoundingClientRect();
+      const previewRectWidth =
+        this.currentPreviewEl?.getBoundingClientRect().width ?? 0;
 
-    // Margin on slider usually represents (thumb width / 2) so thumb is contained when on edge.
-    const sliderLeftMargin = parseFloat(
-      window.getComputedStyle(this.sliderEl.rootElement).marginLeft,
-    );
-    const sliderRightMargin = parseFloat(
-      window.getComputedStyle(this.sliderEl.rootElement).marginRight,
-    );
+      // Margin on slider usually represents (thumb width / 2) so thumb is contained when on edge.
+      const sliderLeftMargin = parseFloat(
+        window.getComputedStyle(this.sliderEl.rootElement).marginLeft,
+      );
+      const sliderRightMargin = parseFloat(
+        window.getComputedStyle(this.sliderEl.rootElement).marginRight,
+      );
 
-    const percent = Math.max(
-      0,
-      Math.min(100, (100 / trackRect.width) * (thumbPosition - trackRect.left)),
-    );
+      const percent = Math.max(
+        0,
+        Math.min(
+          100,
+          (100 / trackRect.width) * (thumbPosition - trackRect.left),
+        ),
+      );
 
-    const left = (percent / 100) * rootRect.width - previewRectWidth / 2;
-    const rightLimit = rootRect.width - previewRectWidth - sliderRightMargin;
-    const xPos = Math.max(sliderLeftMargin, Math.min(left, rightLimit));
+      const left = (percent / 100) * rootRect.width - previewRectWidth / 2;
+      const rightLimit = rootRect.width - previewRectWidth - sliderRightMargin;
+      const xPos = Math.max(sliderLeftMargin, Math.min(left, rightLimit));
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.previewTimeThrottler!({
-      detail: (percent / 100) * this.duration,
-      originalEvent: event,
+      this.previewTime = parseFloat(
+        ((percent / 100) * this.duration).toFixed(2),
+      );
+
+      this.rootEl.style.setProperty(
+        '--vds-scrubber-preview-time',
+        String(this.previewTime),
+      );
+
+      if (this.isDraggingThumb) {
+        this.sliderEl.value = this.previewTime;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.updatePreviewTimeThrottler!({
+        detail: this.previewTime,
+        originalEvent: event,
+      });
+
+      if (!isNil(this.currentPreviewEl)) {
+        this.currentPreviewEl.style.transform = `translateX(${xPos}px)`;
+      }
     });
-
-    if (!isNil(this.currentPreviewEl)) {
-      this.currentPreviewEl.style.transform = `translateX(${xPos}px)`;
-    }
   }
 }
