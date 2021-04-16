@@ -247,19 +247,11 @@ export class ScrubberElement
     this.dispatchEvent(new VdsUserSeekingEvent(eventInit));
   }
 
-  protected async dispatchUserSeeked(originalEvent: Event): Promise<void> {
-    await raf();
-
-    const time = this.sliderEl.hasThumbReachedHumanPerceivedEnd
-      ? this.duration
-      : this.previewTime;
-
-    this.previewTime = time;
-    this.currentTime = time;
-
+  protected dispatchUserSeeked(originalEvent: Event): void {
+    this.currentTime = this.previewTime;
     this.dispatchEvent(
       new VdsUserSeekedEvent({
-        detail: time,
+        detail: this.previewTime,
         originalEvent,
       }),
     );
@@ -445,7 +437,7 @@ export class ScrubberElement
     } else {
       this.currentTime = e.detail;
       this.previewTime = e.detail;
-      await this.dispatchUserSeeked(e);
+      this.dispatchUserSeeked(e);
     }
   }
 
@@ -460,7 +452,7 @@ export class ScrubberElement
   protected async handleSliderDragEnd(e: VdsSliderDragEndEvent): Promise<void> {
     this.isDraggingThumb = false;
     this.hidePreview(e.originalEvent as PointerEvent);
-    await this.dispatchUserSeeked(e);
+    this.dispatchUserSeeked(e);
     this.togglePlaybackWhileDragging(e);
   }
 

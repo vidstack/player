@@ -356,31 +356,6 @@ export class SliderElement
     `;
   }
 
-  /**
-   * Whether the thumb has been dragged to what a human would perceive as the end.
-   *
-   * @default false
-   */
-  get hasThumbReachedHumanPerceivedEnd(): boolean {
-    if (isNil(this.thumbEl)) return false;
-    const rootRect = this.rootEl.getBoundingClientRect();
-    const thumbRect = this.thumbEl.getBoundingClientRect();
-    const rootLeftMargin = parseFloat(
-      window.getComputedStyle(this.rootElement).marginLeft,
-    );
-    const thumbScale = parseFloat(
-      window
-        .getComputedStyle(this)
-        .getPropertyValue('--vds-slider-thumb-scale'),
-    );
-    return (
-      Math.round(thumbRect.right - rootLeftMargin) >=
-      rootRect.right -
-        Math.round(thumbRect.width * (isNaN(thumbScale) ? 0.75 : thumbScale)) /
-          2
-    );
-  }
-
   protected getThumbPartAttr(): string {
     return 'thumb';
   }
