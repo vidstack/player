@@ -1,5 +1,4 @@
 import type Hls from 'hls.js';
-import type { HlsConfig } from 'hls.js';
 
 import { VideoElementEngine, VideoElementProps } from '../video';
 
@@ -9,7 +8,7 @@ export interface HlsElementProps extends VideoElementProps {
   /**
    * The `hls.js` configuration object.
    */
-  hlsConfig?: Partial<HlsConfig>;
+  hlsConfig?: Partial<Hls.Config>;
 
   /**
    * Whether the browser natively supports HLS, mostly only true in Safari. Only call this method

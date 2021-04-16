@@ -1,10 +1,4 @@
-import Hls, {
-  ErrorData,
-  ErrorTypes,
-  Events as HlsEvents,
-  HlsConfig,
-  LevelLoadedData,
-} from 'hls.js';
+import Hls from 'hls.js';
 import { property, PropertyValues } from 'lit-element';
 
 import {
@@ -32,7 +26,7 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  * You'll need to install `hls.js` to use this provider...
  *
  * ```bash
- * $: npm install hls.js
+ * $: npm install hls.js@^0.14.0
  * ```
  *
  * @tagname vds-hls
@@ -87,7 +81,7 @@ export class HlsElement
   // -------------------------------------------------------------------------------------------
 
   @property({ attribute: 'hls-config', type: Object })
-  hlsConfig?: Partial<HlsConfig>;
+  hlsConfig?: Partial<Hls.Config>;
 
   /**
    * The `hls.js` instance.
@@ -242,17 +236,20 @@ export class HlsElement
 
   protected listenToHlsEngine(): void {
     if (isUndefined(this.engine)) return;
-    this.engine.on(HlsEvents.LEVEL_LOADED, this.handleHlsMediaReady.bind(this));
-    this.engine.on(HlsEvents.ERROR, this.handleHlsError.bind(this));
+    this.engine.on(
+      Hls.Events.LEVEL_LOADED,
+      this.handleHlsMediaReady.bind(this),
+    );
+    this.engine.on(Hls.Events.ERROR, this.handleHlsError.bind(this));
   }
 
-  protected handleHlsError(originalEvent: string, data: ErrorData): void {
+  protected handleHlsError(originalEvent: string, data: Hls.errorData): void {
     if (data.fatal) {
       switch (data.type) {
-        case ErrorTypes.NETWORK_ERROR:
+        case Hls.ErrorTypes.NETWORK_ERROR:
           this.engine?.startLoad();
           break;
-        case ErrorTypes.MEDIA_ERROR:
+        case Hls.ErrorTypes.MEDIA_ERROR:
           this.engine?.recoverMediaError();
           break;
         default:
@@ -267,7 +264,7 @@ export class HlsElement
 
   protected handleHlsMediaReady(
     originalEvent: string,
-    data: LevelLoadedData,
+    data: Hls.levelLoadedData,
   ): void {
     if (this.context.canPlay) return;
 
