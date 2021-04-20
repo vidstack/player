@@ -7,7 +7,7 @@ import {
   VdsDurationChangeEvent,
   VdsErrorEvent,
 } from '../../core';
-import { isNil, isUndefined } from '../../utils/unit';
+import { isNil, isUndefined, noop } from '../../utils/unit';
 import { VideoElement, VideoElementEngine } from '../video';
 import {
   VdsHlsEngineAttachEvent,
@@ -244,22 +244,38 @@ export class HlsElement
   }
 
   protected handleHlsError(originalEvent: string, data: Hls.errorData): void {
+    this.context.error = data;
+
     if (data.fatal) {
       switch (data.type) {
         case Hls.ErrorTypes.NETWORK_ERROR:
-          this.engine?.startLoad();
+          this.handleHlsNetworkError(data);
           break;
         case Hls.ErrorTypes.MEDIA_ERROR:
-          this.engine?.recoverMediaError();
+          this.handleHlsMediaError(data);
           break;
         default:
-          this.destroyHlsEngine();
+          this.handleHlsIrrecoverableError(data);
           break;
       }
     }
 
-    this.context.error = data;
     this.dispatchEvent(new VdsErrorEvent({ detail: data, originalEvent }));
+  }
+
+  protected handleHlsNetworkError(data: Hls.errorData): void {
+    noop(data);
+    this.engine?.startLoad();
+  }
+
+  protected handleHlsMediaError(data: Hls.errorData): void {
+    noop(data);
+    this.engine?.recoverMediaError();
+  }
+
+  protected handleHlsIrrecoverableError(data: Hls.errorData): void {
+    noop(data);
+    this.destroyHlsEngine();
   }
 
   protected handleHlsMediaReady(
