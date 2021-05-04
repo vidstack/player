@@ -70,6 +70,7 @@ export const mediaContext: MediaContext = {
   isAudioView: derivedContext([viewType], v => v === ViewType.Audio),
   isVideo: derivedContext([mediaType], m => m === MediaType.Video),
   isVideoView: derivedContext([viewType], v => v === ViewType.Video),
+  live: createContext<boolean>(false),
   loop: createContext<boolean>(false),
   mediaType,
   muted: createContext<boolean>(false),

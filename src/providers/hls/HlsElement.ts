@@ -6,6 +6,7 @@ import {
   MediaType,
   VdsDurationChangeEvent,
   VdsErrorEvent,
+  VdsLiveEvent,
 } from '../../core';
 import { isNil, isUndefined, noop } from '../../utils/unit';
 import { VideoElement, VideoElementEngine } from '../video';
@@ -282,6 +283,12 @@ export class HlsElement
     originalEvent: string,
     data: Hls.levelLoadedData,
   ): void {
+    const live = data.details.live;
+    if (live !== this.context.live) {
+      this.context.live = live;
+      this.dispatchEvent(new VdsLiveEvent({ detail: live }));
+    }
+
     if (this.context.canPlay) return;
 
     const duration = data.details.totalduration;
