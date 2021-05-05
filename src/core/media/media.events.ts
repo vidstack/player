@@ -25,6 +25,7 @@ export interface MediaEvents {
   ended: VdsCustomEvent<void>;
   error: VdsCustomEvent<unknown>;
   'fullscreen-change': VdsCustomEvent<boolean>;
+  live: VdsCustomEvent<boolean>;
   'loaded-data': VdsCustomEvent<void>;
   'loaded-metadata': VdsCustomEvent<void>;
   'load-start': VdsCustomEvent<void>;
@@ -129,6 +130,13 @@ export class VdsErrorEvent extends buildVdsMediaEvent('error') {}
 export class VdsFullscreenChangeEvent extends buildVdsMediaEvent(
   'fullscreen-change',
 ) {}
+
+/**
+ * Fired when the media's live status changes.
+ *
+ * @link https://github.com/video-dev/hls.js/blob/master/docs/API.md#runtime-events
+ */
+export class VdsLiveEvent extends buildVdsMediaEvent('live') {}
 
 /**
  * Fired when the frame at the current playback position of the media has finished loading; often

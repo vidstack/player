@@ -53,6 +53,10 @@ export class FakeMediaConsumerElement
   playsinline = mediaContext.playsinline.defaultValue;
 
   @internalProperty()
+  @mediaContext.live.consume()
+  live = mediaContext.live.defaultValue;
+
+  @internalProperty()
   @mediaContext.loop.consume()
   loop = mediaContext.loop.defaultValue;
 
