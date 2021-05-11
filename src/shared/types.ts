@@ -1,11 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type Constructor<T = object> = {
+export type Constructor<T = Record<string, unknown>> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new (...args: any[]): T;
   prototype: T;
 };
-
-export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 
 export type Separator = ' ' | '-' | '_';
 

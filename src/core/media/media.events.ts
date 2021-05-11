@@ -1,26 +1,31 @@
-import { VdsCustomEvent, VdsEventInit, VdsEvents } from '../../shared/events';
-import { MediaType } from './MediaType';
-import { ViewType } from './ViewType';
+import {
+  buildVdsEvent,
+  ExtractEventDetailType,
+  VdsCustomEvent,
+  VdsCustomEventConstructor,
+  VdsEvents,
+} from '../../shared/events';
+import { MediaType } from '../MediaType';
+import { MediaProviderElement } from '../provider/MediaProviderElement';
+import { ViewType } from '../ViewType';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface GlobalEventHandlersEventMap extends VdsMediaEvents {}
 }
 
-export interface VolumeChange {
-  volume: number;
-  muted: boolean;
-}
-
 export interface MediaEvents {
   abort: VdsCustomEvent<void>;
   'can-play': VdsCustomEvent<void>;
   'can-play-through': VdsCustomEvent<void>;
+  connect: VdsCustomEvent<MediaProviderElement>;
+  disconnect: VdsCustomEvent<MediaProviderElement>;
   'duration-change': VdsCustomEvent<number>;
   emptied: VdsCustomEvent<void>;
   ended: VdsCustomEvent<void>;
   error: VdsCustomEvent<unknown>;
   'fullscreen-change': VdsCustomEvent<boolean>;
+  live: VdsCustomEvent<boolean>;
   'loaded-data': VdsCustomEvent<void>;
   'loaded-metadata': VdsCustomEvent<void>;
   'load-start': VdsCustomEvent<void>;
@@ -37,14 +42,17 @@ export interface MediaEvents {
   replay: VdsCustomEvent<void>;
   'time-update': VdsCustomEvent<number>;
   'view-type-change': VdsCustomEvent<ViewType>;
-  'volume-change': VdsCustomEvent<VolumeChange>;
+  'volume-change': VdsCustomEvent<{ volume: number; muted: boolean }>;
   waiting: VdsCustomEvent<void>;
 }
 
 export type VdsMediaEvents = VdsEvents<MediaEvents>;
 
-export class VdsMediaEvent<DetailType> extends VdsCustomEvent<DetailType> {
-  static readonly TYPE: keyof VdsMediaEvents;
+export function buildVdsMediaEvent<
+  P extends keyof MediaEvents,
+  DetailType = ExtractEventDetailType<MediaEvents[P]>
+>(type: P): VdsCustomEventConstructor<DetailType> {
+  return class VdsMediaEvent extends buildVdsEvent<DetailType>(type) {};
 }
 
 /**
@@ -52,12 +60,7 @@ export class VdsMediaEvent<DetailType> extends VdsCustomEvent<DetailType> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/abort_event
  */
-export class VdsAbortEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-abort';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsAbortEvent.TYPE, eventInit);
-  }
-}
+export class VdsAbortEvent extends buildVdsMediaEvent('abort') {}
 
 /**
  * Fired when the user agent can play the media, but estimates that **not enough** data has been
@@ -65,12 +68,7 @@ export class VdsAbortEvent extends VdsMediaEvent<void> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
  */
-export class VdsCanPlayEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-can-play';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsCanPlayEvent.TYPE, eventInit);
-  }
-}
+export class VdsCanPlayEvent extends buildVdsMediaEvent('can-play') {}
 
 /**
  * Fired when the user agent can play the media, and estimates that **enough** data has been
@@ -78,50 +76,44 @@ export class VdsCanPlayEvent extends VdsMediaEvent<void> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
  */
-export class VdsCanPlayThroughEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-can-play-through';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsCanPlayThroughEvent.TYPE, eventInit);
-  }
-}
+export class VdsCanPlayThroughEvent extends buildVdsMediaEvent(
+  'can-play-through',
+) {}
+
+/**
+ * Fired when the provider connects to the DOM.
+ */
+export class VdsConnectEvent extends buildVdsMediaEvent('connect') {}
+
+/**
+ * Fired when the provider disconnects from the DOM.
+ */
+export class VdsDisconnectEvent extends buildVdsMediaEvent('disconnect') {}
 
 /**
  * Fired when the `duration` property changes.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/durationchange_event
  */
-export class VdsDurationChangeEvent extends VdsMediaEvent<number> {
-  static readonly TYPE = 'vds-duration-change';
-  constructor(eventInit: VdsEventInit<number>) {
-    super(VdsDurationChangeEvent.TYPE, eventInit);
-  }
-}
+export class VdsDurationChangeEvent extends buildVdsMediaEvent(
+  'duration-change',
+) {}
 
 /**
  * Fired when the media has become empty.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/emptied_event
  */
-export class VdsEmptiedEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-emptied';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsEmptiedEvent.TYPE, eventInit);
-  }
-}
+export class VdsEmptiedEvent extends buildVdsMediaEvent('emptied') {}
 
 /**
  * Fired when playback or streaming has stopped because the end of the media was reached or
  * because no further data is available. This is not fired if playback will start from the
- * beginning again due to the `loop` property being `true` (see `MediaReplayEvent`).
+ * beginning again due to the `loop` property being `true` (see `VdsReplayEvent`).
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended_event
  */
-export class VdsEndedEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-ended';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsEndedEvent.TYPE, eventInit);
-  }
-}
+export class VdsEndedEvent extends buildVdsMediaEvent('ended') {}
 
 /**
  * Fired when any error has occurred within the player such as a media error, or
@@ -129,23 +121,22 @@ export class VdsEndedEvent extends VdsMediaEvent<void> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
  */
-export class VdsErrorEvent extends VdsMediaEvent<unknown> {
-  static readonly TYPE = 'vds-error';
-  constructor(eventInit: VdsEventInit<unknown>) {
-    super(VdsErrorEvent.TYPE, eventInit);
-  }
-}
+export class VdsErrorEvent extends buildVdsMediaEvent('error') {}
 
 /**
  * Fired when the player enters/exits fullscreen mode. When the detail is `true` it means
  * the player has entered fullscreen, `false` represents the opposite.
  */
-export class VdsFullscreenChangeEvent extends VdsMediaEvent<boolean> {
-  static readonly TYPE = 'vds-fullscreen-change';
-  constructor(eventInit: VdsEventInit<boolean>) {
-    super(VdsFullscreenChangeEvent.TYPE, eventInit);
-  }
-}
+export class VdsFullscreenChangeEvent extends buildVdsMediaEvent(
+  'fullscreen-change',
+) {}
+
+/**
+ * Fired when the media's live status changes.
+ *
+ * @link https://github.com/video-dev/hls.js/blob/master/docs/API.md#runtime-events
+ */
+export class VdsLiveEvent extends buildVdsMediaEvent('live') {}
 
 /**
  * Fired when the frame at the current playback position of the media has finished loading; often
@@ -153,46 +144,30 @@ export class VdsFullscreenChangeEvent extends VdsMediaEvent<boolean> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadeddata_event
  */
-export class VdsLoadedDataEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-loaded-data';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsLoadedDataEvent.TYPE, eventInit);
-  }
-}
+export class VdsLoadedDataEvent extends buildVdsMediaEvent('loaded-data') {}
 
 /**
  * Fired when the metadata has been loaded.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event
  */
-export class VdsLoadedMetadataEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-loaded-metadata';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsLoadedMetadataEvent.TYPE, eventInit);
-  }
-}
+export class VdsLoadedMetadataEvent extends buildVdsMediaEvent(
+  'loaded-metadata',
+) {}
 
 /**
  * Fired when the browser has started to load a resource.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event
  */
-export class VdsLoadStartEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-load-start';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsLoadStartEvent.TYPE, eventInit);
-  }
-}
+export class VdsLoadStartEvent extends buildVdsMediaEvent('load-start') {}
 
 /**
  * Fired when the `mediaType` property changes value.
  */
-export class VdsMediaTypeChangeEvent extends VdsMediaEvent<MediaType> {
-  static readonly TYPE = 'vds-media-type-change';
-  constructor(eventInit: VdsEventInit<MediaType>) {
-    super(VdsMediaTypeChangeEvent.TYPE, eventInit);
-  }
-}
+export class VdsMediaTypeChangeEvent extends buildVdsMediaEvent(
+  'media-type-change',
+) {}
 
 /**
  * Fired when a request to `pause` an activity is handled and the activity has entered its
@@ -201,12 +176,7 @@ export class VdsMediaTypeChangeEvent extends VdsMediaEvent<MediaType> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event
  */
-export class VdsPauseEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-pause';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsPauseEvent.TYPE, eventInit);
-  }
-}
+export class VdsPauseEvent extends buildVdsMediaEvent('pause') {}
 
 /**
  * Fired when the `paused` property is changed from `true` to `false`, as a result of the `play()`
@@ -214,36 +184,21 @@ export class VdsPauseEvent extends VdsMediaEvent<void> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play_event
  */
-export class VdsPlayEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-play';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsPlayEvent.TYPE, eventInit);
-  }
-}
+export class VdsPlayEvent extends buildVdsMediaEvent('play') {}
 
 /**
  * Fired when playback is ready to start after having been paused or delayed due to lack of data.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event
  */
-export class VdsPlayingEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-playing';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsPlayingEvent.TYPE, eventInit);
-  }
-}
+export class VdsPlayingEvent extends buildVdsMediaEvent('playing') {}
 
 /**
  * Fired periodically as the browser loads a resource.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event
  */
-export class VdsProgressEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-progress';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsProgressEvent.TYPE, eventInit);
-  }
-}
+export class VdsProgressEvent extends buildVdsMediaEvent('progress') {}
 
 /**
  * Fired when a seek operation completed, the current playback position has changed, and the
@@ -251,12 +206,7 @@ export class VdsProgressEvent extends VdsMediaEvent<void> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event
  */
-export class VdsSeekedEvent extends VdsMediaEvent<number> {
-  static readonly TYPE = 'vds-seeked';
-  constructor(eventInit: VdsEventInit<number>) {
-    super(VdsSeekedEvent.TYPE, eventInit);
-  }
-}
+export class VdsSeekedEvent extends buildVdsMediaEvent('seeked') {}
 
 /**
  * Fired when a seek operation starts, meaning the seeking property has changed to `true` and the
@@ -264,12 +214,7 @@ export class VdsSeekedEvent extends VdsMediaEvent<number> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event
  */
-export class VdsSeekingEvent extends VdsMediaEvent<number> {
-  static readonly TYPE = 'vds-seeking';
-  constructor(eventInit: VdsEventInit<number>) {
-    super(VdsSeekingEvent.TYPE, eventInit);
-  }
-}
+export class VdsSeekingEvent extends buildVdsMediaEvent('seeking') {}
 
 /**
  * Fired when the user agent is trying to fetch media data, but data is unexpectedly not
@@ -277,46 +222,26 @@ export class VdsSeekingEvent extends VdsMediaEvent<number> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/stalled_event
  */
-export class VdsStalledEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-stalled';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsStalledEvent.TYPE, eventInit);
-  }
-}
+export class VdsStalledEvent extends buildVdsMediaEvent('stalled') {}
 
 /**
  * Fired when media playback has just started, in other words the at the moment the following
  * happens: `currentTime > 0`.
  */
-export class VdsStartedEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-started';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsStartedEvent.TYPE, eventInit);
-  }
-}
+export class VdsStartedEvent extends buildVdsMediaEvent('started') {}
 
 /**
  * Fired when media data loading has been suspended.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/suspend_event
  */
-export class VdsSuspendEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-suspend';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsSuspendEvent.TYPE, eventInit);
-  }
-}
+export class VdsSuspendEvent extends buildVdsMediaEvent('suspend') {}
 
 /**
  * Fired when media playback starts from the beginning again due to the `loop` property being
  * set to `true`.
  */
-export class VdsReplayEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-replay';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsReplayEvent.TYPE, eventInit);
-  }
-}
+export class VdsReplayEvent extends buildVdsMediaEvent('replay') {}
 
 /**
  * Fired when the `currentTime` property value changes due to media playback or the
@@ -324,45 +249,27 @@ export class VdsReplayEvent extends VdsMediaEvent<void> {
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event
  */
-export class VdsTimeUpdateEvent extends VdsMediaEvent<number> {
-  static readonly TYPE = 'vds-time-update';
-  constructor(eventInit: VdsEventInit<number>) {
-    super(VdsTimeUpdateEvent.TYPE, eventInit);
-  }
-}
+export class VdsTimeUpdateEvent extends buildVdsMediaEvent('time-update') {}
 
 /**
  * Fired when the `viewType` property changes `value`. This will generally fire when the
  * new provider has mounted and determined what type of player view is appropriate given
  * the type of media it can play.
  */
-export class VdsViewTypeChangeEvent extends VdsMediaEvent<ViewType> {
-  static readonly TYPE = 'vds-view-type-change';
-  constructor(eventInit: VdsEventInit<ViewType>) {
-    super(VdsViewTypeChangeEvent.TYPE, eventInit);
-  }
-}
+export class VdsViewTypeChangeEvent extends buildVdsMediaEvent(
+  'view-type-change',
+) {}
 
 /**
  * Fired when the `volume` or `muted` properties change value.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event
  */
-export class VdsVolumeChangeEvent extends VdsMediaEvent<VolumeChange> {
-  static readonly TYPE = 'vds-volume-change';
-  constructor(eventInit: VdsEventInit<VolumeChange>) {
-    super(VdsVolumeChangeEvent.TYPE, eventInit);
-  }
-}
+export class VdsVolumeChangeEvent extends buildVdsMediaEvent('volume-change') {}
 
 /**
  * Fired when playback has stopped because of a temporary lack of data.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/waiting_event
  */
-export class VdsWaitingEvent extends VdsMediaEvent<void> {
-  static readonly TYPE = 'vds-waiting';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsWaitingEvent.TYPE, eventInit);
-  }
-}
+export class VdsWaitingEvent extends buildVdsMediaEvent('waiting') {}

@@ -107,6 +107,7 @@ export class BufferingIndicatorElement
   }
 
   protected wasPrevHidden = true;
+
   protected toggleHiddenAttr(): void {
     if (isNil(this.defaultSlotEl)) return;
 

@@ -1,10 +1,10 @@
 import { html, TemplateResult } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { VdsMediaEvents, VdsMediaProviderEvents } from '../../core';
+import { VdsMediaEvents } from '../../core';
 import {
   buildStorybookControlsFromManifest,
-  DOMEventsToStorybookActions,
+  VdsEventsToStorybookActions,
 } from '../../shared/storybook';
 import { VdsHlsEvents } from './hls.events';
 import { HlsElementProps } from './hls.types';
@@ -26,14 +26,14 @@ export default {
 };
 
 type Args = HlsElementProps &
-  DOMEventsToStorybookActions<VdsMediaEvents> &
-  DOMEventsToStorybookActions<VdsHlsEvents> &
-  DOMEventsToStorybookActions<VdsMediaProviderEvents>;
+  VdsEventsToStorybookActions<VdsMediaEvents> &
+  VdsEventsToStorybookActions<VdsHlsEvents>;
 
 function Template({
   // Props
   width,
   height,
+  aspectRatio,
   src,
   poster,
   paused,
@@ -54,12 +54,12 @@ function Template({
   onVdsHlsEngineBuilt,
   onVdsHlsEngineDetach,
   onVdsHlsEngineNoSupport,
-  // Media Provider Events
-  onVdsMediaProviderConnect,
-  // Media Events
+  // Player Events
   onVdsAbort,
   onVdsCanPlay,
   onVdsCanPlayThrough,
+  onVdsConnect,
+  onVdsDisconnect,
   onVdsDurationChange,
   onVdsEmptied,
   onVdsEnded,
@@ -89,6 +89,7 @@ function Template({
       src="${src}"
       width="${ifDefined(width)}"
       height="${ifDefined(height)}"
+      aspect-ratio="${ifDefined(aspectRatio)}"
       poster="${ifDefined(poster)}"
       ?paused="${paused}"
       volume="${volume}"
@@ -103,10 +104,11 @@ function Template({
       ?auto-pip="${autoPiP}"
       ?disable-pip="${disablePiP}"
       ?disable-remote-playback="${disableRemotePlayback}"
-      @vds-media-provider-connect="${onVdsMediaProviderConnect}"
       @vds-abort="${onVdsAbort}"
       @vds-can-play="${onVdsCanPlay}"
       @vds-can-play-through="${onVdsCanPlayThrough}"
+      @vds-connect="${onVdsConnect}"
+      @vds-disconnect="${onVdsDisconnect}"
       @vds-duration-change="${onVdsDurationChange}"
       @vds-emptied="${onVdsEmptied}"
       @vds-ended="${onVdsEnded}"

@@ -3,39 +3,20 @@ import '../bundle/define';
 import { html } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import {
-  MediaContainerElementProps,
-  VdsMediaContainerEvents,
-  VdsMediaEvents,
-  VdsMediaProviderEvents,
-  VdsMediaRequestEvents,
-} from '../bundle/define';
-import { VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME } from '../core/media/controller/vds-media-controller';
+import { VdsMediaEvents } from '../bundle/define';
 import {
   VDS_VIDEO_ELEMENT_TAG_NAME,
   VideoElementProps,
 } from '../providers/video';
 import {
   buildStorybookControlsFromManifest,
-  DOMEventsToStorybookActions,
+  VdsEventsToStorybookActions,
 } from '../shared/storybook';
 
 export default {
   title: 'UI/Foundation',
   component: VDS_VIDEO_ELEMENT_TAG_NAME,
   argTypes: {
-    aspectRatio: {
-      control: 'text',
-      description:
-        'The aspect ratio of the media container expressed as `width:height` (eg: `16:9`).',
-      defaultValue: undefined,
-      table: {
-        category: 'properties',
-        type: {
-          summary: 'string | undefined',
-        },
-      },
-    },
     ...buildStorybookControlsFromManifest(VDS_VIDEO_ELEMENT_TAG_NAME),
     src: {
       defaultValue:
@@ -47,17 +28,13 @@ export default {
   },
 };
 
-type Args = VideoElementProps &
-  MediaContainerElementProps &
-  DOMEventsToStorybookActions<VdsMediaEvents> &
-  DOMEventsToStorybookActions<VdsMediaProviderEvents> &
-  DOMEventsToStorybookActions<VdsMediaRequestEvents> &
-  DOMEventsToStorybookActions<VdsMediaContainerEvents>;
+type Args = VideoElementProps & VdsEventsToStorybookActions<VdsMediaEvents>;
 
 function Template({
-  // Media Provider Props
+  // Props
   width,
   height,
+  aspectRatio,
   src,
   poster,
   paused,
@@ -73,12 +50,12 @@ function Template({
   autoPiP,
   disablePiP,
   disableRemotePlayback,
-  // Media Container Props
-  aspectRatio,
-  // Media Provider Events
+  // Events
   onVdsAbort,
   onVdsCanPlay,
   onVdsCanPlayThrough,
+  onVdsConnect,
+  onVdsDisconnect,
   onVdsDurationChange,
   onVdsEmptied,
   onVdsEnded,
@@ -88,7 +65,6 @@ function Template({
   onVdsLoadedMetadata,
   onVdsLoadStart,
   onVdsMediaTypeChange,
-  onVdsMediaProviderConnect,
   onVdsPause,
   onVdsPlay,
   onVdsPlaying,
@@ -103,84 +79,57 @@ function Template({
   onVdsViewTypeChange,
   onVdsVolumeChange,
   onVdsWaiting,
-  // Media Container Events
-  onVdsMediaContainerConnect,
-  // Media Request Events
-  onVdsMuteRequest,
-  onVdsUnmuteRequest,
-  onVdsEnterFullscreenRequest,
-  onVdsExitFullscreenRequest,
-  onVdsPlayRequest,
-  onVdsPauseRequest,
-  onVdsSeekRequest,
-  onVdsSeekingRequest,
-  onVdsVolumeChangeRequest,
 }: Args) {
   return html`
-    <vds-media-controller
-      @vds-mute-request="${onVdsMuteRequest}"
-      @vds-unmute-request="${onVdsUnmuteRequest}"
-      @vds-enter-fullscreen-request="${onVdsEnterFullscreenRequest}"
-      @vds-exit-fullscreen-request="${onVdsExitFullscreenRequest}"
-      @vds-play-request="${onVdsPlayRequest}"
-      @vds-pause-request="${onVdsPauseRequest}"
-      @vds-seek-request="${onVdsSeekRequest}"
-      @vds-seeking-request="${onVdsSeekingRequest}"
-      @vds-volume-change-request="${onVdsVolumeChangeRequest}"
+    <vds-video
+      src="${src}"
+      width="${ifDefined(width)}"
+      height="${ifDefined(height)}"
+      aspect-ratio="${ifDefined(aspectRatio)}"
+      poster="${ifDefined(poster)}"
+      ?paused="${paused}"
+      volume="${volume}"
+      current-time="${currentTime}"
+      ?muted="${muted}"
+      ?playsinline="${playsinline}"
+      ?loop="${loop}"
+      ?controls="${controls}"
+      crossorigin="${ifDefined(crossOrigin)}"
+      preload="${ifDefined(preload)}"
+      controlslist="${ifDefined(controlsList)}"
+      ?autopictureinpicture="${autoPiP}"
+      ?disablepictureinpicture="${disablePiP}"
+      ?disableremoteplayback="${disableRemotePlayback}"
+      @vds-abort="${onVdsAbort}"
+      @vds-can-play="${onVdsCanPlay}"
+      @vds-can-play-through="${onVdsCanPlayThrough}"
+      @vds-connect="${onVdsConnect}"
+      @vds-disconnect="${onVdsDisconnect}"
+      @vds-duration-change="${onVdsDurationChange}"
+      @vds-emptied="${onVdsEmptied}"
+      @vds-ended="${onVdsEnded}"
+      @vds-error="${onVdsError}"
+      @vds-fullscreen-change="${onVdsFullscreenChange}"
+      @vds-loaded-data="${onVdsLoadedData}"
+      @vds-load-start="${onVdsLoadStart}"
+      @vds-loaded-metadata="${onVdsLoadedMetadata}"
+      @vds-media-type-change="${onVdsMediaTypeChange}"
+      @vds-pause="${onVdsPause}"
+      @vds-play="${onVdsPlay}"
+      @vds-playing="${onVdsPlaying}"
+      @vds-progress="${onVdsProgress}"
+      @vds-seeked="${onVdsSeeked}"
+      @vds-seeking="${onVdsSeeking}"
+      @vds-stalled="${onVdsStalled}"
+      @vds-started="${onVdsStarted}"
+      @vds-suspend="${onVdsSuspend}"
+      @vds-replay="${onVdsReplay}"
+      @vds-time-update="${onVdsTimeUpdate}"
+      @vds-view-type-change="${onVdsViewTypeChange}"
+      @vds-volume-change="${onVdsVolumeChange}"
+      @vds-waiting="${onVdsWaiting}"
     >
-      <vds-media-container
-        aspect-ratio="${ifDefined(aspectRatio)}"
-        @vds-media-container-connect="${onVdsMediaContainerConnect}"
-      >
-        <vds-video
-          slot="media"
-          src="${src}"
-          width="${ifDefined(width)}"
-          height="${ifDefined(height)}"
-          aspect-ratio="${ifDefined(aspectRatio)}"
-          poster="${ifDefined(poster)}"
-          ?paused="${paused}"
-          volume="${volume}"
-          current-time="${currentTime}"
-          ?muted="${muted}"
-          ?playsinline="${playsinline}"
-          ?loop="${loop}"
-          ?controls="${controls}"
-          crossorigin="${ifDefined(crossOrigin)}"
-          preload="${ifDefined(preload)}"
-          controlslist="${ifDefined(controlsList)}"
-          ?autopictureinpicture="${autoPiP}"
-          ?disablepictureinpicture="${disablePiP}"
-          ?disableremoteplayback="${disableRemotePlayback}"
-          @vds-abort="${onVdsAbort}"
-          @vds-can-play="${onVdsCanPlay}"
-          @vds-can-play-through="${onVdsCanPlayThrough}"
-          @vds-media-provider-connect="${onVdsMediaProviderConnect}"
-          @vds-duration-change="${onVdsDurationChange}"
-          @vds-emptied="${onVdsEmptied}"
-          @vds-ended="${onVdsEnded}"
-          @vds-error="${onVdsError}"
-          @vds-fullscreen-change="${onVdsFullscreenChange}"
-          @vds-loaded-data="${onVdsLoadedData}"
-          @vds-load-start="${onVdsLoadStart}"
-          @vds-loaded-metadata="${onVdsLoadedMetadata}"
-          @vds-media-type-change="${onVdsMediaTypeChange}"
-          @vds-pause="${onVdsPause}"
-          @vds-play="${onVdsPlay}"
-          @vds-playing="${onVdsPlaying}"
-          @vds-progress="${onVdsProgress}"
-          @vds-seeked="${onVdsSeeked}"
-          @vds-seeking="${onVdsSeeking}"
-          @vds-stalled="${onVdsStalled}"
-          @vds-started="${onVdsStarted}"
-          @vds-suspend="${onVdsSuspend}"
-          @vds-replay="${onVdsReplay}"
-          @vds-time-update="${onVdsTimeUpdate}"
-          @vds-view-type-change="${onVdsViewTypeChange}"
-          @vds-volume-change="${onVdsVolumeChange}"
-          @vds-waiting="${onVdsWaiting}"
-        ></vds-video>
-
+      <vds-ui slot="ui">
         <h2>Toggles</h2>
 
         <div style="display: flex;">
@@ -222,14 +171,10 @@ function Template({
             <span>Not Buffering</span>
           </div>
         </vds-buffering-indicator>
-      </vds-media-container>
-    </vds-media-controller>
+      </vds-ui>
+    </vds-video>
 
     <style>
-      vds-media-container::part(ui) {
-        position: relative;
-      }
-
       vds-video::part(video) {
         background-color: black;
       }

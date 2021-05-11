@@ -10,12 +10,12 @@ describe(VDS_TOGGLE_ELEMENT_TAG_NAME, () => {
     return fixture<ToggleElement>(html`
       <vds-toggle>
         <div class="pressed" slot="pressed"></div>
-        <div class="not-pressed"></div>
+        <div class="not-pressed" slot="not-pressed"></div>
       </vds-toggle>
     `);
   }
 
-  it('should render DOM correctly', async () => {
+  it('should render dom correctly', async () => {
     const toggle = await buildFixture();
     expect(toggle).dom.to.equal(`
       <vds-toggle>
@@ -24,16 +24,19 @@ describe(VDS_TOGGLE_ELEMENT_TAG_NAME, () => {
           hidden=""
           slot="pressed"
         ></div>
-       <div class="not-pressed"></div>
+       <div
+         class="not-pressed"
+         slot="not-pressed"
+       ></div>
       </vds-toggle>
     `);
   });
 
-  it('should render shadow DOM correctly', async () => {
+  it('should render shadow dom correctly', async () => {
     const toggle = await buildFixture();
     expect(toggle).shadowDom.to.equal(`
       <slot name="pressed"></slot>
-      <slot></slot> 
+      <slot name="not-pressed"></slot> 
     `);
   });
 
@@ -51,20 +54,23 @@ describe(VDS_TOGGLE_ELEMENT_TAG_NAME, () => {
   it('it should update hidden attribute on slots when `pressed` state changes', async () => {
     const toggle = await buildFixture();
 
-    const pressedSlot = getSlottedChildren(toggle, 'pressed')[0];
-    const notPressedSlot = getSlottedChildren(toggle).find(
-      el => el.slot !== 'pressed',
-    ) as HTMLElement;
-
     // Not Pressed.
-    expect(pressedSlot.getAttribute('hidden')).to.equal('');
-    expect(notPressedSlot.getAttribute('hidden')).to.not.exist;
+    expect(
+      getSlottedChildren(toggle, 'pressed')[0].getAttribute('hidden'),
+    ).to.equal('');
+
+    expect(getSlottedChildren(toggle, 'not-pressed')[0].getAttribute('hidden'))
+      .to.not.exist;
 
     toggle.pressed = true;
     await elementUpdated(toggle);
 
     // Pressed.
-    expect(pressedSlot.getAttribute('hidden')).to.not.exist;
-    expect(notPressedSlot.getAttribute('hidden')).to.equal('');
+    expect(getSlottedChildren(toggle, 'pressed')[0].getAttribute('hidden')).to
+      .not.exist;
+
+    expect(
+      getSlottedChildren(toggle, 'not-pressed')[0].getAttribute('hidden'),
+    ).to.equal('');
   });
 });

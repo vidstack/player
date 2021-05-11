@@ -16,15 +16,14 @@ import {
   getTypeSourceFile,
   hasDocTag,
   isUndefined,
-  pascalToDashCase,
   traverseHeritageTree,
 } from '@wcom/cli/dist/utils';
 import {
+  CallExpression,
   ClassDeclaration,
   Declaration,
   Identifier,
   ImportSpecifier,
-  isClassDeclaration,
   isImportDeclaration,
   isInterfaceDeclaration,
   NamedImports,
@@ -132,80 +131,72 @@ function discoverComponentEvents(
   checker: TypeChecker,
   component: ComponentMeta,
 ): EventMeta[] {
+  function getEventNameFromClass(declaration: ClassDeclaration) {
+    const heritage = declaration.heritageClauses![0].types[0];
+    const callExpression = heritage.expression as CallExpression;
+    return (callExpression.arguments[0] as StringLiteral).text;
+  }
+
   const events: EventMeta[] = [];
 
   component.source.file.forEachChild(node => {
     if (isImportDeclaration(node)) {
-      const imports = node.importClause?.namedBindings as NamedImports;
+      const importPath = escapeQuotes(node.moduleSpecifier.getText());
+      if (importPath.endsWith('.events')) {
+        const imports = node.importClause?.namedBindings as NamedImports;
+        imports.elements.forEach(el => {
+          const declaration = getSourceDeclaration(
+            checker,
+            el,
+          ) as ClassDeclaration;
 
-      imports?.elements.forEach(importSpecifier => {
-        const declaration = getSourceDeclaration(checker, importSpecifier);
+          const eventName = getEventNameFromClass(declaration);
+          const vdsEventName = `vds-${eventName}`;
+          const docTags = getDocTags(declaration);
 
-        if (declaration && isClassDeclaration(declaration)) {
-          const className = declaration.name?.escapedText as string;
-          if (className.endsWith('Event') && className !== 'VdsCustomEvent') {
-            const event = buildEventMeta(checker, declaration);
-            events.push(event);
-          }
-        }
-      });
+          if (component.events.some(e => e.name === vdsEventName)) return;
+
+          const eventsInterface = declaration
+            .getSourceFile()
+            .forEachChild(node => {
+              if (
+                isInterfaceDeclaration(node) &&
+                (node.name.escapedText as string).includes('Events')
+              ) {
+                return node;
+              }
+
+              return undefined;
+            });
+
+          const eventType = eventsInterface?.members.find(member => {
+            const memberEventName = (member.name as StringLiteral)?.text;
+            return memberEventName === eventName;
+          }) as PropertySignature;
+
+          const typeInfo = getPropTypeInfo(
+            checker,
+            eventType,
+            checker.getTypeAtLocation(eventType),
+          );
+
+          events.push({
+            node: declaration,
+            name: vdsEventName,
+            typeInfo,
+            documentation: getDocumentation(checker, declaration.name!),
+            docTags,
+            bubbles: hasDocTag(docTags, 'bubbles'),
+            composed: hasDocTag(docTags, 'composed'),
+            internal: hasDocTag(docTags, 'internal'),
+            deprecated: hasDocTag(docTags, 'deprecated'),
+          });
+        });
+      }
     }
   });
 
-  return events.filter(
-    event => !component.events.some(e => e.name === event.name),
-  );
-}
-
-function buildEventMeta(
-  checker: TypeChecker,
-  eventDeclaration: ClassDeclaration,
-): EventMeta {
-  const className = eventDeclaration.name?.escapedText as string;
-
-  const eventName = pascalToDashCase(className)
-    // some reason a `-` is appearing at the start?
-    .slice(1)
-    .trim()
-    .replace('-event', '');
-
-  const docTags = getDocTags(eventDeclaration);
-
-  const eventsInterface = eventDeclaration
-    .getSourceFile()
-    .forEachChild(node => {
-      if (
-        isInterfaceDeclaration(node) &&
-        (node.name.escapedText as string).includes('Events')
-      ) {
-        return node;
-      }
-
-      return undefined;
-    });
-
-  const eventType = eventsInterface?.members.find(member => {
-    const memberEventName = (member.name as StringLiteral)?.text;
-    return memberEventName === eventName.replace('vds-', '');
-  }) as PropertySignature;
-
-  const typeInfo = getPropTypeInfo(
-    checker,
-    eventType,
-    checker.getTypeAtLocation(eventType),
-  );
-
-  return {
-    node: eventDeclaration,
-    name: eventName,
-    typeInfo,
-    documentation: getDocumentation(checker, eventDeclaration.name!),
-    docTags,
-    bubbles: hasDocTag(docTags, 'bubbles'),
-    composed: hasDocTag(docTags, 'composed'),
-    internal: hasDocTag(docTags, 'internal'),
-    deprecated: hasDocTag(docTags, 'deprecated'),
-  };
+  return events;
 }
 
 // -------------------------------------------------------------------------------------------
@@ -219,14 +210,10 @@ function dependencyDiscoveryPlugin(): Plugin {
       sourceFiles.forEach(sourceFile => {
         const path = sourceFile.fileName;
         components.forEach(component => {
-          const definitionFile = `${component.className!}.ts`;
+          const definitionFile = `${component.tagName!}.ts`;
           if (path.endsWith(definitionFile)) {
-            const deps = findDependencies(components, sourceFile).filter(
-              dep => dep.tagName !== component.tagName,
-            );
-
+            const deps = findDependencies(components, sourceFile);
             component.dependencies.push(...deps);
-
             deps.forEach(dep => {
               const notFound = !dep.dependents.some(
                 c => c.tagName === component.tagName,
@@ -269,13 +256,9 @@ function getSourceDeclaration(
   checker: TypeChecker,
   importSpecifier: ImportSpecifier,
 ): Declaration | undefined {
-  try {
-    const type = checker.getTypeAtLocation(importSpecifier);
-    const sourceFile = getTypeSourceFile(type);
-    const fileSymbol = checker.getSymbolAtLocation(sourceFile);
-    const symbol = fileSymbol?.exports?.get(importSpecifier.name.escapedText);
-    return symbol?.getDeclarations()?.[0];
-  } catch (e) {
-    return undefined;
-  }
+  const type = checker.getTypeAtLocation(importSpecifier);
+  const sourceFile = getTypeSourceFile(type);
+  const fileSymbol = checker.getSymbolAtLocation(sourceFile);
+  const symbol = fileSymbol?.exports?.get(importSpecifier.name.escapedText);
+  return symbol?.getDeclarations()?.[0];
 }

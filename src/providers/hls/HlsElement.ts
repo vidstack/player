@@ -6,16 +6,15 @@ import {
   MediaType,
   VdsDurationChangeEvent,
   VdsErrorEvent,
-  VdsMediaTypeChangeEvent,
+  VdsLiveEvent,
 } from '../../core';
-import { VdsCustomEvent } from '../../shared/events';
 import { isNil, isUndefined, noop } from '../../utils/unit';
 import { VideoElement, VideoElementEngine } from '../video';
 import {
   VdsHlsEngineAttachEvent,
   VdsHlsEngineBuiltEvent,
   VdsHlsEngineDetachEvent,
-  VdsHlsEngineNoSupportEvent,
+  VdsHlsEngineNoSuppotEvent,
 } from './hls.events';
 import { HlsElementEngine, HlsElementProps } from './hls.types';
 import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
@@ -65,12 +64,12 @@ export class HlsElement
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.handleMediaSrcChange();
+    this.handleSrcChange();
   }
 
   async firstUpdated(changedProps: PropertyValues): Promise<void> {
     super.firstUpdated(changedProps);
-    this.handleMediaSrcChange();
+    this.handleSrcChange();
   }
 
   disconnectedCallback(): void {
@@ -167,7 +166,7 @@ export class HlsElement
     if (isNil(this.videoEngine) || !isUndefined(this.engine)) return;
 
     if (!Hls.isSupported()) {
-      this.dispatchEvent(new VdsHlsEngineNoSupportEvent());
+      this.dispatchEvent(new VdsHlsEngineNoSuppotEvent());
       return;
     }
 
@@ -214,9 +213,7 @@ export class HlsElement
   // Events
   // -------------------------------------------------------------------------------------------
 
-  protected handleMediaSrcChange(): void {
-    super.handleMediaSrcChange();
-
+  protected handleSrcChange(): void {
     this.context.canPlay = false;
 
     if (!this.isCurrentlyHls) {
@@ -242,87 +239,67 @@ export class HlsElement
     if (isUndefined(this.engine)) return;
     this.engine.on(
       Hls.Events.LEVEL_LOADED,
-      this.handleHlsLevelLoaded.bind(this),
+      this.handleHlsMediaReady.bind(this),
     );
     this.engine.on(Hls.Events.ERROR, this.handleHlsError.bind(this));
   }
 
-  protected handleHlsError(eventType: string, data: Hls.errorData): void {
+  protected handleHlsError(originalEvent: string, data: Hls.errorData): void {
     this.context.error = data;
 
     if (data.fatal) {
       switch (data.type) {
         case Hls.ErrorTypes.NETWORK_ERROR:
-          this.handleHlsNetworkError(eventType, data);
+          this.handleHlsNetworkError(data);
           break;
         case Hls.ErrorTypes.MEDIA_ERROR:
-          this.handleHlsMediaError(eventType, data);
+          this.handleHlsMediaError(data);
           break;
         default:
-          this.handleHlsIrrecoverableError(eventType, data);
+          this.handleHlsIrrecoverableError(data);
           break;
       }
     }
 
-    this.dispatchEvent(
-      new VdsErrorEvent({
-        originalEvent: new VdsCustomEvent(eventType, { detail: data }),
-      }),
-    );
+    this.dispatchEvent(new VdsErrorEvent({ detail: data, originalEvent }));
   }
 
-  protected handleHlsNetworkError(
-    eventType: string,
-    data: Hls.errorData,
-  ): void {
-    noop(eventType, data);
+  protected handleHlsNetworkError(data: Hls.errorData): void {
+    noop(data);
     this.engine?.startLoad();
   }
 
-  protected handleHlsMediaError(eventType: string, data: Hls.errorData): void {
-    noop(eventType, data);
+  protected handleHlsMediaError(data: Hls.errorData): void {
+    noop(data);
     this.engine?.recoverMediaError();
   }
 
-  protected handleHlsIrrecoverableError(
-    eventType: string,
-    data: Hls.errorData,
-  ): void {
-    noop(eventType, data);
+  protected handleHlsIrrecoverableError(data: Hls.errorData): void {
+    noop(data);
     this.destroyHlsEngine();
   }
 
-  protected handleHlsLevelLoaded(
-    eventType: string,
-    data: Hls.levelLoadedData,
-  ): void {
-    if (this.context.canPlay) return;
-    this.handleHlsMediaReady(eventType, data);
-  }
-
   protected handleHlsMediaReady(
-    eventType: string,
+    originalEvent: string,
     data: Hls.levelLoadedData,
   ): void {
-    const { live, totalduration: duration } = data.details;
-
-    const originalEvent = new VdsCustomEvent(eventType, { detail: data });
-
-    const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
-    if (this.context.mediaType !== mediaType) {
-      this.context.mediaType = mediaType;
-      this.dispatchEvent(
-        new VdsMediaTypeChangeEvent({ detail: mediaType, originalEvent }),
-      );
+    const live = data.details.live;
+    if (live !== this.context.live) {
+      this.context.live = live;
+      this.dispatchEvent(new VdsLiveEvent({ detail: live }));
     }
 
-    if (this.context.duration !== duration) {
-      this.context.duration = duration;
-      this.dispatchEvent(
-        new VdsDurationChangeEvent({ detail: duration, originalEvent }),
-      );
-    }
+    if (this.context.canPlay) return;
 
-    this.handleMediaReady(originalEvent);
+    const duration = data.details.totalduration;
+    this.context.duration = duration;
+    this.dispatchEvent(
+      new VdsDurationChangeEvent({
+        detail: duration,
+        originalEvent,
+      }),
+    );
+
+    this.mediaReady();
   }
 }

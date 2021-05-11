@@ -5,7 +5,7 @@ import { html } from 'lit-html';
 import { VDS_TIME_ELEMENT_TAG_NAME } from '../vds-time';
 
 describe(`${VDS_TIME_ELEMENT_TAG_NAME}`, () => {
-  it('should render DOM correctly', async () => {
+  it('should render dom correctly', async () => {
     const time = await fixture(
       html`<vds-time label="current-time"></vds-time>`,
     );
@@ -15,7 +15,7 @@ describe(`${VDS_TIME_ELEMENT_TAG_NAME}`, () => {
     `);
   });
 
-  it('should render shadow DOM correctly', async () => {
+  it('should render shadow dom correctly', async () => {
     const time = await fixture(
       html`<vds-time label="current-time" seconds="3750"></vds-time>`,
     );

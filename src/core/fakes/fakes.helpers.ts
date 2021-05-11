@@ -1,54 +1,36 @@
-/** Dependencies  */
 import './vds-fake-media-provider';
-import '../media/container/vds-media-container';
-import '../media/controller/vds-media-controller';
+import './vds-fake-context-consumer';
 
 import { fixture, html } from '@open-wc/testing';
 import { TemplateResult } from 'lit-html';
 
-import { MediaContainerElement, MediaControllerElement } from '../media';
-import { VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME } from '../media/container/vds-media-container';
+import { FakeMediaConsumerElement } from './FakeMediaConsumerElement';
 import { FakeMediaProviderElement } from './FakeMediaProviderElement';
-import { VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME } from './vds-fake-media-provider';
+import { VDS_FAKE_MEDIA_CONSUMER_ELEMENT_TAG_NAME } from './vds-fake-context-consumer';
 
-export function emitEventWithTimeout(el: HTMLElement, event: Event): void {
+export function emitEvent(el: HTMLElement, event: Event): void {
   setTimeout(() => el.dispatchEvent(event));
 }
 
-export interface MediaFixture {
-  controller: MediaControllerElement;
-  container: MediaContainerElement;
-  provider: FakeMediaProviderElement;
+export async function buildFakeMediaProvider(
+  slot?: TemplateResult,
+): Promise<FakeMediaProviderElement> {
+  return await fixture<FakeMediaProviderElement>(
+    html`<vds-fake-media-provider>${html`${slot}`}</vds-fake-media-provider>`,
+  );
 }
 
-export async function buildMediaFixture(
-  uiSlot: TemplateResult = html``,
-  mediaSlot: TemplateResult = html``,
-): Promise<MediaFixture> {
-  const controller = await fixture<MediaControllerElement>(
-    html`
-      <vds-media-controller>
-        <vds-media-container>
-          <vds-fake-media-provider slot="media">
-            ${mediaSlot}
-          </vds-fake-media-provider>
-          ${uiSlot}
-        </vds-media-container>
-      </vds-media-controller>
-    `,
-  );
+export async function buildFakeMediaProviderWithFakeConsumer(
+  slot?: TemplateResult,
+): Promise<[FakeMediaProviderElement, FakeMediaConsumerElement]> {
+  const provider = await buildFakeMediaProvider(html`
+    ${slot}
+    <vds-fake-media-consumer></vds-fake-media-consumer>
+  `);
 
-  const container = controller.querySelector(
-    VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME,
-  ) as MediaContainerElement;
+  const consumer = provider.querySelector(
+    VDS_FAKE_MEDIA_CONSUMER_ELEMENT_TAG_NAME,
+  ) as FakeMediaConsumerElement;
 
-  const provider = controller.querySelector(
-    VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
-  ) as FakeMediaProviderElement;
-
-  return {
-    controller,
-    container,
-    provider,
-  };
+  return [provider, consumer];
 }

@@ -1,3 +1,7 @@
+// ** Dependencies **
+import '../time-current/vds-time-current';
+import '../time-duration/vds-time-duration';
+
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
 import { TIME_PROGRESS_ELEMENT_TAG_NAME } from './time-progress.types';

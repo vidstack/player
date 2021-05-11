@@ -1,6 +1,3 @@
-// ** Dependencies **
-import '../slider/vds-slider';
-
 import clsx from 'clsx';
 import {
   CSSResultArray,
@@ -15,15 +12,15 @@ import {
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 import { throttle } from 'lodash-es';
 
+import { mediaContext } from '../../../core';
 import {
-  mediaContext,
-  VdsPauseRequestEvent,
-  VdsPlayRequestEvent,
-  VdsSeekingRequestEvent,
-  VdsSeekRequestEvent,
-} from '../../../core';
+  VdsUserPauseEvent,
+  VdsUserPlayEvent,
+  VdsUserSeekedEvent,
+  VdsUserSeekingEvent,
+} from '../../../core/user/user.events';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { WithFocus } from '../../../shared/mixins/WithFocus';
+import { FocusMixin } from '../../../shared/mixins/FocusMixin';
 import { CancelableCallback } from '../../../shared/types';
 import { getSlottedChildren, raf } from '../../../utils/dom';
 import { isNil, isUndefined } from '../../../utils/unit';
@@ -133,7 +130,7 @@ import { ScrubberElementProps } from './scrubber.types';
  * ```
  */
 export class ScrubberElement
-  extends WithFocus(LitElement)
+  extends FocusMixin(LitElement)
   implements ScrubberElementProps {
   @query('#root') rootEl!: HTMLDivElement;
   @query('#slider') sliderEl!: SliderElement;
@@ -250,7 +247,7 @@ export class ScrubberElement
     originalEvent?: Event;
   }): void {
     if (!this.isSeeking) return;
-    this.dispatchEvent(new VdsSeekingRequestEvent(eventInit));
+    this.dispatchEvent(new VdsUserSeekingEvent(eventInit));
   }
 
   protected async dispatchUserSeeked(originalEvent: Event): Promise<void> {
@@ -258,7 +255,7 @@ export class ScrubberElement
     await this.updateComplete;
     this.currentTime = this.previewTime;
     this.dispatchEvent(
-      new VdsSeekRequestEvent({
+      new VdsUserSeekedEvent({
         detail: this.previewTime,
         originalEvent,
       }),
@@ -468,7 +465,7 @@ export class ScrubberElement
     if (this.isDraggingThumb && !this.paused) {
       this.wasPausedBeforeDragStart = this.paused;
       this.shouldTogglePlaybackWhileDragging = true;
-      this.dispatchEvent(new VdsPauseRequestEvent({ originalEvent }));
+      this.dispatchEvent(new VdsUserPauseEvent({ originalEvent }));
     } else if (
       this.shouldTogglePlaybackWhileDragging &&
       !this.isDraggingThumb &&
@@ -476,7 +473,7 @@ export class ScrubberElement
       this.paused
     ) {
       this.shouldTogglePlaybackWhileDragging = false;
-      this.dispatchEvent(new VdsPlayRequestEvent({ originalEvent }));
+      this.dispatchEvent(new VdsUserPlayEvent({ originalEvent }));
     }
   }
 

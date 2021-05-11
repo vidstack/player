@@ -49,7 +49,7 @@ function Template({
       style="color: ${SB_THEME_COLOR};"
     >
       <div slot="pressed">Pressed</div>
-      <div>Not Pressed</div>
+      <div slot="not-pressed">Not Pressed</div>
     </vds-toggle-button>
   `;
 }

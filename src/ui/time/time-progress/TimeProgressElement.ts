@@ -1,7 +1,3 @@
-// ** Dependencies **
-import '../time-current/vds-time-current';
-import '../time-duration/vds-time-duration';
-
 import {
   CSSResultArray,
   html,

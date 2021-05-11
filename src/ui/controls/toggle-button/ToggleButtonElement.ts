@@ -1,10 +1,7 @@
-// ** Dependencies **
-import '../button/vds-button';
-
 import { html, property, query, TemplateResult } from 'lit-element';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { WithFocus } from '../../../shared/mixins/WithFocus';
+import { FocusMixin } from '../../../shared/mixins/FocusMixin';
 import { buildExportPartsAttr } from '../../../utils/dom';
 import { noop } from '../../../utils/unit';
 import { ButtonElement } from '../button';
@@ -19,8 +16,8 @@ import { ToggleButtonElementProps } from './toggle-button.types';
  * @csspart button - The root button component (`<vds-button>`).
  * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix such as `button-root`.
  *
- * @slot The content to show when the toggle is not pressed.
  * @slot pressed - The content to show when the toggle is pressed.
+ * @slot not-pressed - The content to show when the toggle is not pressed.
  *
  * @example
  * ```html
@@ -28,12 +25,12 @@ import { ToggleButtonElementProps } from './toggle-button.types';
  *   <!-- Showing -->
  *   <div slot="pressed"></div>
  *   <!-- Hidden - `hidden` attribute will automatically be applied/removed -->
- *   <div hidden></div>
+ *   <div slot="not-pressed" hidden></div>
  * </vds-toggle-button>
  * ```
  */
 export class ToggleButtonElement
-  extends WithFocus(ToggleElement)
+  extends FocusMixin(ToggleElement)
   implements ToggleButtonElementProps {
   @query('#root') rootEl!: ButtonElement;
 

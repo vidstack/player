@@ -4,13 +4,21 @@ import createContext, {
   derivedContext,
 } from '@wcom/context';
 
-import { MediaType } from './MediaType';
-import { MediaProviderElementProps } from './provider/media-provider.types';
-import { createTimeRanges } from './time-ranges';
-import { ViewType } from './ViewType';
+import { canOrientScreen, IS_CLIENT } from '../../utils/support';
+import { MediaType } from '../MediaType';
+import { MediaProviderElementProps } from '../provider/media-provider.types';
+import { ScreenOrientation } from '../ScreenOrientation';
+import { createTimeRanges } from '../time-ranges';
+import { ViewType } from '../ViewType';
 
-export type MediaContextRecord = ContextRecord<MediaContextProps>;
-export type MediaContextRecordProvider = ContextRecordProvider<MediaContextProps>;
+export type MediaContext = ContextRecord<MediaContextProps>;
+export type MediaContextProvider = ContextRecordProvider<MediaContextProps>;
+
+/**
+ * Avoid declaring context properties with the same name as class properties.
+ */
+export const transformContextName = (propName: string): string =>
+  `${propName}Ctx`;
 
 const buffered = createContext(createTimeRanges());
 const duration = createContext(NaN);
@@ -35,7 +43,8 @@ const viewType = createContext(ViewType.Unknown);
  * }
  * ```
  */
-export const mediaContext: MediaContextRecord = {
+export const mediaContext: MediaContext = {
+  aspectRatio: createContext<string | undefined>(undefined),
   autoplay: createContext<boolean>(false),
   buffered,
   bufferedAmount: derivedContext(
@@ -45,9 +54,10 @@ export const mediaContext: MediaContextRecord = {
       return end > duration ? duration : end;
     },
   ),
-  canRequestFullscreen: createContext<boolean>(false),
+  canOrientScreen: createContext<boolean>(canOrientScreen()),
   canPlay: createContext<boolean>(false),
   canPlayThrough: createContext<boolean>(false),
+  canRequestFullscreen: createContext<boolean>(false),
   controls: createContext<boolean>(false),
   currentPoster: createContext(''),
   currentSrc: createContext(''),
@@ -60,7 +70,7 @@ export const mediaContext: MediaContextRecord = {
   isAudioView: derivedContext([viewType], v => v === ViewType.Audio),
   isVideo: derivedContext([mediaType], m => m === MediaType.Video),
   isVideoView: derivedContext([viewType], v => v === ViewType.Video),
-  isLiveVideo: derivedContext([mediaType], m => m === MediaType.LiveVideo),
+  live: createContext<boolean>(false),
   loop: createContext<boolean>(false),
   mediaType,
   muted: createContext<boolean>(false),
@@ -68,6 +78,10 @@ export const mediaContext: MediaContextRecord = {
   played: createContext(createTimeRanges()),
   playing: createContext<boolean>(false),
   playsinline: createContext<boolean>(false),
+  screenOrientation: createContext<ScreenOrientation | undefined>(
+    IS_CLIENT ? (screen?.orientation?.type as ScreenOrientation) : undefined,
+  ),
+  screenOrientationLocked: createContext<boolean>(false),
   seekable,
   seekableAmount: derivedContext(
     [seekable, duration] as const,
@@ -82,41 +96,6 @@ export const mediaContext: MediaContextRecord = {
   volume: createContext(1),
   waiting: createContext<boolean>(false),
 };
-
-export const mediaContextRecord = createContext(initMediaContextProvider());
-
-export function initMediaContextProvider(): MediaContextRecordProvider {
-  return Object.keys(mediaContext).reduce(
-    (state, prop) => ({
-      ...state,
-      [prop]: mediaContext[prop].defaultValue,
-    }),
-    {},
-  ) as MediaContextRecordProvider;
-}
-
-/**
- * Media context properties that should be reset when media is changed.
- */
-export const softResettableMediaContextProps = new Set([
-  'buffered',
-  'buffering',
-  'canPlay',
-  'canPlayThrough',
-  'currentSrc',
-  'currentTime',
-  'duration',
-  'ended',
-  'mediaType',
-  'paused',
-  'canPlay',
-  'played',
-  'playing',
-  'seekable',
-  'seeking',
-  'started',
-  'waiting',
-]);
 
 export interface MediaContextProps extends MediaProviderElementProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -146,11 +125,6 @@ export interface MediaContextProps extends MediaProviderElementProps {
    * Whether the current view is of type `video`, shorthand for `viewType === ViewType.Video`.
    */
   readonly isVideoView: boolean;
-
-  /**
-   * Whether the current media is of type `live-video`, shorthand for `mediaType === MediaType.LiveVideo`.
-   */
-  readonly isLiveVideo: boolean;
 
   /**
    * The end point of the last time range that is seekable.

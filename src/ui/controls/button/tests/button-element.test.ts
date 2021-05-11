@@ -1,31 +1,32 @@
 import { elementUpdated, expect, html } from '@open-wc/testing';
 import { spy } from 'sinon';
 
-import { buildMediaFixture } from '../../../../core/fakes/fakes.helpers';
+import { FakeMediaProviderElement } from '../../../../core';
+import { buildFakeMediaProvider } from '../../../../core/fakes/fakes.helpers';
 import { getSlottedChildren } from '../../../../utils/dom';
 import { ButtonElement } from '../ButtonElement';
 import { VDS_BUTTON_ELEMENT_TAG_NAME } from '../vds-button';
 
 describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
-  async function buildFixture(): Promise<{
-    button: ButtonElement;
-  }> {
-    const { container } = await buildMediaFixture(html`
+  async function buildFixture(): Promise<
+    [FakeMediaProviderElement, ButtonElement]
+  > {
+    const provider = await buildFakeMediaProvider(html`
       <vds-button>
         <div class="slot"></div>
       </vds-button>
     `);
 
-    const button = container.querySelector(
+    const button = provider.querySelector(
       VDS_BUTTON_ELEMENT_TAG_NAME,
     ) as ButtonElement;
 
-    return { button };
+    return [provider, button];
   }
 
   describe('render', () => {
-    it('should render DOM correctly', async () => {
-      const { button } = await buildFixture();
+    it('should render dom correctly', async () => {
+      const [, button] = await buildFixture();
       expect(button).dom.to.equal(`
       <vds-button>
         <div class="slot"></div>
@@ -33,8 +34,8 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     `);
     });
 
-    it('should render shadow DOM correctly', async () => {
-      const { button } = await buildFixture();
+    it('should render shadow dom correctly', async () => {
+      const [, button] = await buildFixture();
       expect(button).shadowDom.to.equal(`
       <button
         id="root"
@@ -48,7 +49,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should render <slot>', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const slottedChildren = getSlottedChildren(button);
       expect(slottedChildren).to.have.length(1);
       expect(slottedChildren[0]).to.have.class('slot');
@@ -57,7 +58,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
 
   describe('props/attrs', () => {
     it('should update button type as type property changes', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.type = 'submit';
       await elementUpdated(button);
@@ -65,7 +66,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should set aria-label if defined', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.label = 'label';
       await elementUpdated(button);
@@ -73,13 +74,13 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not set aria-label if not defined', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       expect(root?.getAttribute('aria-label')).to.not.exist;
     });
 
     it('should set aria-controls if defined', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.controls = 'id';
       await elementUpdated(button);
@@ -87,13 +88,13 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not set aria-label if not defined', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       expect(root?.getAttribute('aria-controls')).to.not.exist;
     });
 
     it('should set aria-haspopup if true', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.hasPopup = true;
       await elementUpdated(button);
@@ -101,7 +102,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not set aria-haspopup if not defined or false', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       expect(root?.getAttribute('aria-haspopup')).to.not.exist;
       button.hasPopup = false;
@@ -110,7 +111,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should set aria-pressed if true or false', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.pressed = true;
       await elementUpdated(button);
@@ -121,13 +122,13 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not set aria-pressed if not defined', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       expect(root?.getAttribute('aria-pressed')).to.not.exist;
     });
 
     it('should set aria-expanded if true or false and controls is set', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.controls = 'id';
       button.expanded = true;
@@ -139,13 +140,13 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not set aria-expanded if not defined', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       expect(root?.getAttribute('aria-expanded')).to.not.exist;
     });
 
     it('should not set aria-expanded if controls is not defined', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.expanded = true;
       await elementUpdated(button);
@@ -153,7 +154,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should set aria-describedby if defined', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.describedBy = 'id';
       await elementUpdated(button);
@@ -161,13 +162,13 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not set aria-label if not defined', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       expect(root?.getAttribute('aria-describedby')).to.not.exist;
     });
 
     it('should set/reflect hidden if true', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.hidden = true;
       await elementUpdated(button);
@@ -176,7 +177,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not set/reflect hidden if false', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.hidden = false;
       await elementUpdated(button);
@@ -185,7 +186,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should set/reflect disabled if true', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.disabled = true;
       await elementUpdated(button);
@@ -194,7 +195,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not set/reflect disabled if false', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root');
       button.disabled = false;
       await elementUpdated(button);
@@ -205,7 +206,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
 
   describe('click/focus', () => {
     it('should forward clicks to root button', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root') as HTMLElement;
       const clickSpy = spy(root, 'click');
       button.click();
@@ -213,7 +214,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not forward clicks to root button if disabled', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root') as HTMLElement;
       const clickSpy = spy(root, 'click');
       button.disabled = true;
@@ -223,7 +224,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should delegate focus', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root') as HTMLElement;
 
       // Focus root button.
@@ -238,7 +239,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, () => {
     });
 
     it('should not delegate focus if disabled', async () => {
-      const { button } = await buildFixture();
+      const [, button] = await buildFixture();
       const root = button.shadowRoot?.querySelector('.root') as HTMLElement;
       button.disabled = true;
       await elementUpdated(button);

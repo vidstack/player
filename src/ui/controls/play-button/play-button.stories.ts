@@ -1,15 +1,13 @@
-import '../../../core/media/controller/vds-media-controller';
-import '../../../core/media/container/vds-media-container';
 import '../../../core/fakes/vds-fake-media-provider';
 
 import { html, TemplateResult } from 'lit-html';
 
-import { VdsMediaRequestEvents } from '../../../core';
+import { VdsUserEvents } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import {
   buildStorybookControlsFromManifest,
-  DOMEventsToStorybookActions,
   SB_THEME_COLOR,
+  VdsEventsToStorybookActions,
 } from '../../../shared/storybook';
 import { PlayButtonElementProps } from './play-button.types';
 import { VDS_PLAY_BUTTON_ELEMENT_TAG_NAME } from './vds-play-button';
@@ -37,7 +35,7 @@ interface FakeProps {
 
 type Args = FakeProps &
   PlayButtonElementProps &
-  DOMEventsToStorybookActions<VdsMediaRequestEvents>;
+  VdsEventsToStorybookActions<VdsUserEvents>;
 
 function Template({
   // Fakes
@@ -47,33 +45,23 @@ function Template({
   describedBy,
   disabled,
   // Events
-  onVdsPlayRequest,
-  onVdsPauseRequest,
+  onVdsUserPlay,
+  onVdsUserPause,
 }: Args): TemplateResult {
   return html`
-    <vds-media-controller .canPlay="${true}" .paused="${fakePaused}">
-      <vds-media-container>
-        <vds-fake-media-provider slot="media"></vds-fake-media-provider>
-
-        <vds-play-button
-          label="${ifNonEmpty(label)}"
-          described-by="${ifNonEmpty(describedBy)}"
-          ?disabled="${disabled}"
-          style="color: ${SB_THEME_COLOR};"
-          @vds-play-request="${onVdsPlayRequest}"
-          @vds-pause-request="${onVdsPauseRequest}"
-        >
-          <div slot="play">Play</div>
-          <div slot="pause">Pause</div>
-        </vds-play-button>
-      </vds-media-container>
-    </vds-media-controller>
-
-    <style>
-      vds-media-container::part(ui) {
-        position: relative;
-      }
-    </style>
+    <vds-fake-media-provider .canPlayCtx="${true}" .pausedCtx="${fakePaused}">
+      <vds-play-button
+        label="${ifNonEmpty(label)}"
+        described-by="${ifNonEmpty(describedBy)}"
+        ?disabled="${disabled}"
+        style="color: ${SB_THEME_COLOR};"
+        @vds-user-play="${onVdsUserPlay}"
+        @vds-user-pause="${onVdsUserPause}"
+      >
+        <div slot="play">Play</div>
+        <div slot="pause">Pause</div>
+      </vds-play-button>
+    </vds-fake-media-provider>
   `;
 }
 

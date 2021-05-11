@@ -1,5 +1,4 @@
-import '../../../core/media/controller/vds-media-controller';
-import '../../../core/media/container/vds-media-container';
+import '../../../core/fakes/vds-fake-media-provider';
 
 import { html, TemplateResult } from 'lit-html';
 
@@ -41,22 +40,14 @@ function Template({
   padHours,
 }: Args): TemplateResult {
   return html`
-    <vds-media-controller .duration="${fakeDuration}">
-      <vds-media-container>
-        <vds-time-duration
-          label="${ifNonEmpty(label)}"
-          ?always-show-hours="${alwaysShowHours}"
-          ?pad-hours="${padHours}"
-          style="color: ${SB_THEME_COLOR};"
-        ></vds-time-duration>
-      </vds-media-container>
-    </vds-media-controller>
-
-    <style>
-      vds-media-container::part(ui) {
-        position: relative;
-      }
-    </style>
+    <vds-fake-media-provider .durationCtx="${fakeDuration}">
+      <vds-time-duration
+        label="${ifNonEmpty(label)}"
+        ?always-show-hours="${alwaysShowHours}"
+        ?pad-hours="${padHours}"
+        style="color: ${SB_THEME_COLOR};"
+      ></vds-time-duration>
+    </vds-fake-media-provider>
   `;
 }
 

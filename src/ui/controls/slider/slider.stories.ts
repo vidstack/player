@@ -3,7 +3,7 @@ import { html, TemplateResult } from 'lit-html';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import {
   buildStorybookControlsFromManifest,
-  DOMEventsToStorybookActions,
+  VdsEventsToStorybookActions,
 } from '../../../shared/storybook';
 import { VdsSliderEvents } from './slider.events';
 import { SliderElementProps } from './slider.types';
@@ -15,7 +15,7 @@ export default {
   argTypes: buildStorybookControlsFromManifest(VDS_SLIDER_ELEMENT_TAG_NAME),
 };
 
-type Args = SliderElementProps & DOMEventsToStorybookActions<VdsSliderEvents>;
+type Args = SliderElementProps & VdsEventsToStorybookActions<VdsSliderEvents>;
 
 function Template({
   // Props

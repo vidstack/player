@@ -1,10 +1,10 @@
 import { html, TemplateResult } from 'lit-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
-import { VdsMediaEvents, VdsMediaProviderEvents } from '../../core';
+import { VdsMediaEvents } from '../../core';
 import {
   buildStorybookControlsFromManifest,
-  DOMEventsToStorybookActions,
+  VdsEventsToStorybookActions,
 } from '../../shared/storybook';
 import { VDS_VIDEO_ELEMENT_TAG_NAME } from './vds-video';
 import { VideoElementProps } from './video.types';
@@ -24,14 +24,13 @@ export default {
   },
 };
 
-type Args = VideoElementProps &
-  DOMEventsToStorybookActions<VdsMediaEvents> &
-  DOMEventsToStorybookActions<VdsMediaProviderEvents>;
+type Args = VideoElementProps & VdsEventsToStorybookActions<VdsMediaEvents>;
 
 function Template({
   // Props
   width,
   height,
+  aspectRatio,
   src,
   poster,
   paused,
@@ -47,12 +46,12 @@ function Template({
   autoPiP,
   disablePiP,
   disableRemotePlayback,
-  // Media Provider Events
-  onVdsMediaProviderConnect,
-  // Media Events
+  // Events
   onVdsAbort,
   onVdsCanPlay,
   onVdsCanPlayThrough,
+  onVdsConnect,
+  onVdsDisconnect,
   onVdsDurationChange,
   onVdsEmptied,
   onVdsEnded,
@@ -82,6 +81,7 @@ function Template({
       src="${src}"
       width="${ifDefined(width)}"
       height="${ifDefined(height)}"
+      aspect-ratio="${ifDefined(aspectRatio)}"
       poster="${ifDefined(poster)}"
       ?paused="${paused}"
       volume="${volume}"
@@ -96,10 +96,11 @@ function Template({
       ?autopictureinpicture="${autoPiP}"
       ?disablepictureinpicture="${disablePiP}"
       ?disableremoteplayback="${disableRemotePlayback}"
-      @vds-media-provider-connect="${onVdsMediaProviderConnect}"
       @vds-abort="${onVdsAbort}"
       @vds-can-play="${onVdsCanPlay}"
       @vds-can-play-through="${onVdsCanPlayThrough}"
+      @vds-connect="${onVdsConnect}"
+      @vds-disconnect="${onVdsDisconnect}"
       @vds-duration-change="${onVdsDurationChange}"
       @vds-emptied="${onVdsEmptied}"
       @vds-ended="${onVdsEnded}"

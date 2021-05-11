@@ -8,7 +8,7 @@ import { Callback, PascalCase } from './types';
 
 export const SB_THEME_COLOR = '#ff2A5d';
 
-// TODO: At some point pull this code out into a separate repo to use across different projects.
+// TODO: At some point I need to pull this code out into a separate repo to use across different projects.
 
 export function buildStorybookControlsFromManifest(
   tagName: string,
@@ -270,6 +270,6 @@ export enum StorybookControlType {
   Date = 'date',
 }
 
-export type DOMEventsToStorybookActions<T> = {
+export type VdsEventsToStorybookActions<T> = {
   [P in keyof T as `on${PascalCase<P & string>}`]: Callback<T[P]>;
 };

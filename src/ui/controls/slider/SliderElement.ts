@@ -13,9 +13,10 @@ import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 import { throttle } from 'lodash-es';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { WithFocus } from '../../../shared/mixins/WithFocus';
+import { FocusMixin } from '../../../shared/mixins/FocusMixin';
 import { CancelableCallback } from '../../../shared/types';
 import { setAttribute } from '../../../utils/dom';
+import { isNil } from '../../../utils/unit';
 import { sliderElementStyles } from './slider.css';
 import {
   VdsSliderDragEndEvent,
@@ -91,7 +92,7 @@ import { SliderElementProps, SliderKeyDirection } from './slider.types';
  * ```
  */
 export class SliderElement
-  extends WithFocus(LitElement)
+  extends FocusMixin(LitElement)
   implements SliderElementProps {
   @query('#root') rootEl!: HTMLDivElement;
   @query('#thumb') thumbEl!: HTMLDivElement;

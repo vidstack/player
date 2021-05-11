@@ -1,3 +1,6 @@
+// ** Dependencies **
+import '../toggle-button/vds-toggle-button';
+
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
 import { PLAY_BUTTON_ELEMENT_TAG_NAME } from './play-button.types';

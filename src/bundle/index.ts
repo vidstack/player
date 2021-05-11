@@ -15,3 +15,4 @@ export * from '../ui/time/time';
 export * from '../ui/time/time-current';
 export * from '../ui/time/time-duration';
 export * from '../ui/time/time-progress';
+export * from '../ui/ui';

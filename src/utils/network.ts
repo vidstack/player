@@ -11,7 +11,7 @@ export function tryParseJSON<T>(json: unknown): T | undefined {
 
   try {
     return JSON.parse(json);
-  } catch (error) {
+  } catch (e) {
     return undefined;
   }
 }
@@ -97,7 +97,7 @@ export const tryDecodeURIComponent = (
   if (!isClient) return fallback;
   try {
     return window.decodeURIComponent(component);
-  } catch (error) {
+  } catch (e) {
     return fallback;
   }
 };
