@@ -1,4 +1,5 @@
-import '../../../core/fakes/vds-fake-media-provider';
+import '../../../core/media/controller/vds-media-controller';
+import '../../../core/media/container/vds-media-container';
 
 import { html, TemplateResult } from 'lit-html';
 
@@ -51,20 +52,28 @@ function Template({
   timeSeparator,
 }: Args): TemplateResult {
   return html`
-    <vds-fake-media-provider
-      .currentTimeCtx="${fakeCurrentTime}"
-      .durationCtx="${fakeDuration}"
+    <vds-media-controller
+      .currentTime="${fakeCurrentTime}"
+      .duration="${fakeDuration}"
     >
-      <vds-time-progress
-        label="${ifNonEmpty(label)}"
-        time-separator="${timeSeparator}"
-        current-time-label="${ifNonEmpty(currentTimeLabel)}"
-        duration-label="${ifNonEmpty(durationLabel)}"
-        ?always-show-hours="${alwaysShowHours}"
-        ?pad-hours="${padHours}"
-        style="color: ${SB_THEME_COLOR};"
-      ></vds-time-progress>
-    </vds-fake-media-provider>
+      <vds-media-container>
+        <vds-time-progress
+          label="${ifNonEmpty(label)}"
+          time-separator="${timeSeparator}"
+          current-time-label="${ifNonEmpty(currentTimeLabel)}"
+          duration-label="${ifNonEmpty(durationLabel)}"
+          ?always-show-hours="${alwaysShowHours}"
+          ?pad-hours="${padHours}"
+          style="color: ${SB_THEME_COLOR};"
+        ></vds-time-progress>
+      </vds-media-container>
+    </vds-media-controller>
+
+    <style>
+      vds-media-container::part(ui) {
+        position: relative;
+      }
+    </style>
   `;
 }
 

@@ -1,7 +1,3 @@
-// ** Dependencies **
-import '../toggle/vds-toggle';
-import '../button/vds-button';
-
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
 import { FULLSCREEN_BUTTON_ELEMENT_TAG_NAME } from './fullscreen-button.types';

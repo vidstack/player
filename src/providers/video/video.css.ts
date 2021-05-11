@@ -21,7 +21,6 @@ export const videoElementStyles = css`
     user-select: none;
     -webkit-user-select: none;
     max-height: 100vh;
-    z-index: 0;
   }
 
   video:not([width]) {
@@ -30,13 +29,5 @@ export const videoElementStyles = css`
 
   video:not([height]) {
     height: auto;
-  }
-
-  #root[style*='padding-bottom'] > video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
   }
 `;

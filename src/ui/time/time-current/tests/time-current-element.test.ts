@@ -1,35 +1,35 @@
 import { elementUpdated, expect, html } from '@open-wc/testing';
 
-import { FakeMediaProviderElement } from '../../../../core/fakes/FakeMediaProviderElement';
-import { buildFakeMediaProvider } from '../../../../core/fakes/fakes.helpers';
+import { FakeMediaProviderElement } from '../../../../core';
+import { buildMediaFixture } from '../../../../core/fakes/fakes.helpers';
 import { TimeCurrentElement } from '../TimeCurrentElement';
 import { VDS_TIME_CURRENT_ELEMENT_TAG_NAME } from '../vds-time-current';
 
 describe(`${VDS_TIME_CURRENT_ELEMENT_TAG_NAME}`, () => {
-  async function buildFixture(): Promise<
-    [FakeMediaProviderElement, TimeCurrentElement]
-  > {
-    const provider = await buildFakeMediaProvider(html`
+  async function buildFixture(): Promise<{
+    provider: FakeMediaProviderElement;
+    timeCurrent: TimeCurrentElement;
+  }> {
+    const { container, provider } = await buildMediaFixture(html`
       <vds-time-current></vds-time-current>
     `);
 
-    const timeCurrent = provider.querySelector(
+    const timeCurrent = container.querySelector(
       VDS_TIME_CURRENT_ELEMENT_TAG_NAME,
     ) as TimeCurrentElement;
 
-    return [provider, timeCurrent];
+    return { provider, timeCurrent };
   }
 
-  it('should render dom correctly', async () => {
-    const [, timeCurrent] = await buildFixture();
-
+  it('should render DOM correctly', async () => {
+    const { timeCurrent } = await buildFixture();
     expect(timeCurrent).dom.to.equal(`
       <vds-time-current></vds-time-current>
     `);
   });
 
-  it('should render shadow dom correctly', async () => {
-    const [provider, timeCurrent] = await buildFixture();
+  it('should render shadow DOM correctly', async () => {
+    const { provider, timeCurrent } = await buildFixture();
 
     provider.context.currentTime = 3750;
     await elementUpdated(timeCurrent);
@@ -48,7 +48,7 @@ describe(`${VDS_TIME_CURRENT_ELEMENT_TAG_NAME}`, () => {
   });
 
   it('should update current time as context updates', async () => {
-    const [provider, timeCurrent] = await buildFixture();
+    const { provider, timeCurrent } = await buildFixture();
     expect(timeCurrent.seconds).to.equal(0);
     provider.context.currentTime = 50;
     await elementUpdated(timeCurrent);

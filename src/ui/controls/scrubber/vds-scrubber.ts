@@ -1,6 +1,3 @@
-// ** Dependencies **
-import '../slider/vds-slider';
-
 import { LIB_PREFIX } from '../../../shared/constants';
 import { safelyDefineCustomElement } from '../../../utils/dom';
 import { SCRUBBER_ELEMENT_TAG_NAME } from './scrubber.types';

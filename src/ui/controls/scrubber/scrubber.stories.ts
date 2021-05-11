@@ -1,10 +1,14 @@
+import '../../../core/media/controller/vds-media-controller';
+import '../../../core/media/container/vds-media-container';
+import '../../../core/fakes/vds-fake-media-provider';
+
 import { html, TemplateResult } from 'lit-html';
 
-import { createTimeRanges, VdsUserEvents } from '../../../core';
+import { createTimeRanges, VdsMediaRequestEvents } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import {
   buildStorybookControlsFromManifest,
-  VdsEventsToStorybookActions,
+  DOMEventsToStorybookActions,
 } from '../../../shared/storybook';
 import { VdsScrubberEvents } from './scrubber.events';
 import { ScrubberElementProps } from './scrubber.types';
@@ -38,8 +42,8 @@ interface FakeProps {
 
 type Args = FakeProps &
   ScrubberElementProps &
-  VdsEventsToStorybookActions<VdsScrubberEvents> &
-  VdsEventsToStorybookActions<VdsUserEvents>;
+  DOMEventsToStorybookActions<VdsScrubberEvents> &
+  DOMEventsToStorybookActions<VdsMediaRequestEvents>;
 
 function Template({
   // Fakes
@@ -64,42 +68,50 @@ function Template({
   onVdsScrubberPreviewShow,
   onVdsScrubberPreviewHide,
   onVdsScrubberPreviewTimeUpdate,
-  // User Events
-  onVdsUserSeeking,
-  onVdsUserSeeked,
+  // Media Request Events
+  onVdsSeekRequest,
+  onVdsSeekingRequest,
 }: Args): TemplateResult {
   return html`
-    <vds-fake-media-provider
-      .canPlayCtx="${true}"
-      .currentTimeCtx="${fakeCurrentTime}"
-      .durationCtx="${fakeDuration}"
-      .seekableCtx="${createTimeRanges(0, fakeSeekableAmount)}"
+    <vds-media-controller
+      .canPlay="${true}"
+      .currentTime="${fakeCurrentTime}"
+      .duration="${fakeDuration}"
+      .seekable="${createTimeRanges(0, fakeSeekableAmount)}"
     >
-      <vds-scrubber
-        slider-label="${ifNonEmpty(sliderLabel)}"
-        progress-label="${ifNonEmpty(progressLabel)}"
-        progress-text="${ifNonEmpty(progressText)}"
-        ?hidden="${hidden}"
-        ?disabled="${disabled}"
-        step="${step}"
-        step-multiplier="${stepMultiplier}"
-        orientation="${orientation}"
-        ?no-preview-track="${noPreviewTrack}"
-        ?no-preview-clamp="${noPreviewClamp}"
-        throttle="${throttle}"
-        preview-time-throttle="${previewTimeThrottle}"
-        user-seeking-throttle="${userSeekingThrottle}"
-        @vds-user-seeking="${onVdsUserSeeking}"
-        @vds-user-seeked="${onVdsUserSeeked}"
-        @vds-scrubber-preview-show="${onVdsScrubberPreviewShow}"
-        @vds-scrubber-preview-hide="${onVdsScrubberPreviewHide}"
-        @vds-scrubber-preview-time-update="${onVdsScrubberPreviewTimeUpdate}"
-      >
-        <div class="preview" slot="preview">Preview</div>
-      </vds-scrubber>
-    </vds-fake-media-provider>
+      <vds-media-container>
+        <vds-fake-media-provider slot="media"></vds-fake-media-provider>
+
+        <vds-scrubber
+          slider-label="${ifNonEmpty(sliderLabel)}"
+          progress-label="${ifNonEmpty(progressLabel)}"
+          progress-text="${ifNonEmpty(progressText)}"
+          ?hidden="${hidden}"
+          ?disabled="${disabled}"
+          step="${step}"
+          step-multiplier="${stepMultiplier}"
+          orientation="${orientation}"
+          ?no-preview-track="${noPreviewTrack}"
+          ?no-preview-clamp="${noPreviewClamp}"
+          throttle="${throttle}"
+          preview-time-throttle="${previewTimeThrottle}"
+          user-seeking-throttle="${userSeekingThrottle}"
+          @vds-seek-request="${onVdsSeekRequest}"
+          @vds-seeking-request="${onVdsSeekingRequest}"
+          @vds-scrubber-preview-show="${onVdsScrubberPreviewShow}"
+          @vds-scrubber-preview-hide="${onVdsScrubberPreviewHide}"
+          @vds-scrubber-preview-time-update="${onVdsScrubberPreviewTimeUpdate}"
+        >
+          <div class="preview" slot="preview">Preview</div>
+        </vds-scrubber>
+      </vds-media-container>
+    </vds-media-controller>
 
     <style>
+      vds-media-container::part(ui) {
+        position: relative;
+      }
+
       vds-scrubber {
         margin-top: 48px;
       }

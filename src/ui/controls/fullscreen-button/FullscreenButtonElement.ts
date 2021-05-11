@@ -1,7 +1,10 @@
 import { property } from 'lit-element';
 
-import { mediaContext } from '../../../core';
-import { VdsUserFullscreenChangeEvent } from '../../../core/user/user.events';
+import {
+  mediaContext,
+  VdsEnterFullscreenRequestEvent,
+  VdsExitFullscreenRequestEvent,
+} from '../../../core';
 import { ToggleButtonElement } from '../toggle-button';
 import { FullscreenButtonElementProps } from './fullscreen-button.types';
 
@@ -43,11 +46,10 @@ export class FullscreenButtonElement
   }
 
   protected handleButtonClick(originalEvent: Event): void {
-    this.dispatchEvent(
-      new VdsUserFullscreenChangeEvent({
-        originalEvent,
-        detail: !this.pressed,
-      }),
-    );
+    const RequestEvent = this.pressed
+      ? VdsExitFullscreenRequestEvent
+      : VdsEnterFullscreenRequestEvent;
+
+    this.dispatchEvent(new RequestEvent({ originalEvent }));
   }
 }

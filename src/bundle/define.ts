@@ -1,6 +1,8 @@
 import '../providers/video/vds-video';
 import '../providers/hls/vds-hls';
-import '../ui/ui/vds-ui';
+import '../core/media/ui/vds-media-ui';
+import '../core/media/controller/vds-media-controller';
+import '../core/media/container/vds-media-container';
 import '../ui/controls/slider/vds-slider';
 import '../ui/controls/button/vds-button';
 import '../ui/controls/toggle/vds-toggle';

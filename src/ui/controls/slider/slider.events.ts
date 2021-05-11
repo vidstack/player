@@ -1,8 +1,6 @@
 import {
-  buildVdsEvent,
-  ExtractEventDetailType,
   VdsCustomEvent,
-  VdsCustomEventConstructor,
+  VdsEventInit,
   VdsEvents,
 } from '../../../shared/events';
 
@@ -19,30 +17,36 @@ export interface SliderEvents {
 
 export type VdsSliderEvents = VdsEvents<SliderEvents>;
 
-export function buildVdsSliderEvent<
-  P extends keyof SliderEvents,
-  DetailType = ExtractEventDetailType<SliderEvents[P]>
->(type: P): VdsCustomEventConstructor<DetailType> {
-  return class VdsSliderEvent extends buildVdsEvent<DetailType>(type) {};
+export class VdsSliderEvent<DetailType> extends VdsCustomEvent<DetailType> {
+  static readonly TYPE: keyof VdsSliderEvents;
 }
 
 /**
  * Fired when the slider value changes.
  */
-export class VdsSliderValueChangeEvent extends buildVdsSliderEvent(
-  'slider-value-change',
-) {}
+export class VdsSliderValueChangeEvent extends VdsSliderEvent<number> {
+  static readonly TYPE = 'vds-slider-value-change';
+  constructor(eventInit: VdsEventInit<number>) {
+    super(VdsSliderValueChangeEvent.TYPE, eventInit);
+  }
+}
 
 /**
  * Fired when the user begins interacting with the slider and dragging the thumb.
  */
-export class VdsSliderDragStartEvent extends buildVdsSliderEvent(
-  'slider-drag-start',
-) {}
+export class VdsSliderDragStartEvent extends VdsSliderEvent<number> {
+  static readonly TYPE = 'vds-slider-drag-start';
+  constructor(eventInit: VdsEventInit<number>) {
+    super(VdsSliderDragStartEvent.TYPE, eventInit);
+  }
+}
 
 /**
  * Fired when the user stops dragging the slider thumb.
  */
-export class VdsSliderDragEndEvent extends buildVdsSliderEvent(
-  'slider-drag-end',
-) {}
+export class VdsSliderDragEndEvent extends VdsSliderEvent<number> {
+  static readonly TYPE = 'vds-slider-drag-end';
+  constructor(eventInit: VdsEventInit<number>) {
+    super(VdsSliderDragEndEvent.TYPE, eventInit);
+  }
+}
