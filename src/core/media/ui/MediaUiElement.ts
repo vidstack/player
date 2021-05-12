@@ -1,12 +1,6 @@
 import clsx from 'clsx';
-import {
-  CSSResultArray,
-  html,
-  internalProperty,
-  LitElement,
-  query,
-  TemplateResult,
-} from 'lit-element';
+import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import { query, state } from 'lit/decorators';
 
 import { IS_IOS } from '../../../utils/support';
 import { mediaContext } from '../media.context';
@@ -32,7 +26,7 @@ import { mediaUiElementStyles } from './media-ui.css';
 export class MediaUiElement extends LitElement {
   @query('#root') rootEl!: HTMLDivElement;
 
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [mediaUiElementStyles];
   }
 
@@ -40,19 +34,19 @@ export class MediaUiElement extends LitElement {
     return ['root', 'root-hidden'];
   }
 
-  @internalProperty()
+  @state()
   @mediaContext.canPlay.consume()
   protected canPlay = mediaContext.canPlay.defaultValue;
 
-  @internalProperty()
+  @state()
   @mediaContext.fullscreen.consume()
   protected isFullscreenActive = mediaContext.fullscreen.defaultValue;
 
-  @internalProperty()
+  @state()
   @mediaContext.isVideoView.consume()
   protected isVideoView = mediaContext.isVideoView.defaultValue;
 
-  @internalProperty()
+  @state()
   @mediaContext.playsinline.consume()
   protected playsinline = mediaContext.playsinline.defaultValue;
 

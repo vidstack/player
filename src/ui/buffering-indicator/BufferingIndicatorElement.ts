@@ -1,12 +1,11 @@
 import {
-  CSSResultArray,
+  CSSResultGroup,
   html,
-  internalProperty,
   LitElement,
-  property,
   PropertyValues,
   TemplateResult,
-} from 'lit-element';
+} from 'lit';
+import { property, state } from 'lit/decorators';
 
 import { mediaContext } from '../../core';
 import { getSlottedChildren, setAttribute } from '../../utils/dom';
@@ -42,15 +41,15 @@ import { BufferingIndicatorElementProps } from './buffering-indicator.types';
 export class BufferingIndicatorElement
   extends LitElement
   implements BufferingIndicatorElementProps {
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [bufferingIndicatorElementStyles];
   }
 
-  @internalProperty()
+  @state()
   @mediaContext.waiting.consume()
   protected isWaiting = mediaContext.waiting.defaultValue;
 
-  @internalProperty()
+  @state()
   @mediaContext.canPlay.consume()
   protected canPlay = mediaContext.canPlay.defaultValue;
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
-import { LitElement } from 'lit-element';
+import { LitElement } from 'lit';
 import { spy } from 'sinon';
 
 import {

@@ -1,14 +1,12 @@
 import { listen } from '@wcom/events';
 import {
-  CSSResultArray,
+  CSSResultGroup,
   html,
-  internalProperty,
   LitElement,
-  property,
   PropertyValues,
-  query,
   TemplateResult,
-} from 'lit-element';
+} from 'lit';
+import { property, query, state } from 'lit/decorators';
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 import { throttle } from 'lodash-es';
 
@@ -99,7 +97,7 @@ export class SliderElement
   @query('#track') trackEl!: HTMLDivElement;
   @query('#track-fill') trackFillEl!: HTMLDivElement;
 
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [sliderElementStyles];
   }
 
@@ -133,7 +131,8 @@ export class SliderElement
 
   async firstUpdated(changedProperties: PropertyValues): Promise<void> {
     super.firstUpdated(changedProperties);
-    await this.requestUpdate();
+    this.requestUpdate();
+    await this.updateComplete;
   }
 
   disconnectedCallback(): void {
@@ -172,7 +171,7 @@ export class SliderElement
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
 
-  @internalProperty()
+  @state()
   protected _isDragging = false;
 
   get isOrientationHorizontal(): boolean {

@@ -1,11 +1,6 @@
-import {
-  CSSResultArray,
-  html,
-  property,
-  PropertyValues,
-  TemplateResult,
-} from 'lit-element';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { CSSResultGroup, html, PropertyValues, TemplateResult } from 'lit';
+import { property } from 'lit/decorators';
+import { ifDefined } from 'lit/directives/if-defined';
 
 import {
   MediaType,
@@ -59,7 +54,7 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
   implements VideoElementProps, VideoPresentationControllerHost {
   protected mediaEl?: HTMLVideoElement;
 
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [videoElementStyles];
   }
 

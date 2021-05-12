@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Disposal, listenTo } from '@wcom/events';
-import {
-  html,
-  internalProperty,
-  property,
-  PropertyValues,
-  TemplateResult,
-} from 'lit-element';
+import { html, PropertyValues, TemplateResult } from 'lit';
+import { property, state } from 'lit/decorators';
 
 import {
   CanPlay,
@@ -94,7 +89,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  @internalProperty()
+  @state()
   protected _src = '';
 
   @property()

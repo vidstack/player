@@ -1,6 +1,7 @@
 import { DerivedContext } from '@wcom/context';
 import { Disposal } from '@wcom/events';
-import { LitElement, property, PropertyValues } from 'lit-element';
+import { LitElement, PropertyValues } from 'lit';
+import { property } from 'lit/decorators';
 
 import { isUndefined } from '../../../utils/unit';
 import {
@@ -357,7 +358,7 @@ export abstract class MediaProviderElement<EngineType = unknown>
    * If there's no media controller then this will be a plain JS object that's used to keep
    * track of media state.
    *
-   * @internal Exposed for testing.
+   * @state Exposed for testing.
    */
   @mediaContextRecord.consume()
   readonly context = mediaContextRecord.defaultValue;

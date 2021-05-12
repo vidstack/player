@@ -1,4 +1,4 @@
-import { LitElement } from 'lit-element';
+import { LitElement } from 'lit';
 
 export interface FullscreenControllerHost extends LitElement {
   /**

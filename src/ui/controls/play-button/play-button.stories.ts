@@ -2,7 +2,7 @@ import '../../../core/media/controller/vds-media-controller';
 import '../../../core/media/container/vds-media-container';
 import '../../../core/fakes/vds-fake-media-provider';
 
-import { html, TemplateResult } from 'lit-html';
+import { html, TemplateResult } from 'lit';
 
 import { VdsMediaRequestEvents } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';

@@ -3,16 +3,9 @@ import '../ui/vds-media-ui';
 
 import { Disposal } from '@wcom/events';
 import clsx from 'clsx';
-import {
-  CSSResultArray,
-  html,
-  internalProperty,
-  LitElement,
-  property,
-  query,
-  TemplateResult,
-} from 'lit-element';
-import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
+import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import { property, query, state } from 'lit/decorators';
+import { StyleInfo, styleMap } from 'lit/directives/style-map';
 
 import { getSlottedChildren } from '../../../utils/dom';
 import { isNil, isString, isUndefined } from '../../../utils/unit';
@@ -85,7 +78,7 @@ export class MediaContainerElement
   @query('#media-ui') mediaUiEl!: MediaUiElement;
   @query('#media-container') mediaContainerEl!: HTMLDivElement;
 
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [mediaContainerElementStyles];
   }
 
@@ -96,15 +89,15 @@ export class MediaContainerElement
 
   protected disconnectDisposal = new Disposal();
 
-  @internalProperty()
+  @state()
   @mediaContext.canPlay.consume()
   protected canPlay = mediaContext.canPlay.defaultValue;
 
-  @internalProperty()
+  @state()
   @mediaContext.fullscreen.consume()
   protected isFullscreenActive = mediaContext.fullscreen.defaultValue;
 
-  @internalProperty()
+  @state()
   @mediaContext.isVideoView.consume()
   protected isVideoView = mediaContext.isVideoView.defaultValue;
 

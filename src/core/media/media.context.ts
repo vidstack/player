@@ -25,11 +25,11 @@ const viewType = createContext(ViewType.Unknown);
  * inside the media container you can use it like so...
  *
  * ```ts
- * import { internalProperty, LitElement } from "lit-element";
+ * import { state, LitElement } from "lit";
  * import { mediaContext } from "@vidstack/elements";
  *
  * class MyElement extends LitElement {
- *  \@internalProperty()
+ *  \@state()
  *  \@mediaContext.paused.consume()
  *  paused = mediaContext.paused.defaultValue;
  * }

@@ -1,3 +1,3 @@
-import { LitElement } from 'lit-element';
+import { LitElement } from 'lit';
 
 export type ScreenOrientationControllerHost = LitElement;

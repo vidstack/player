@@ -1,12 +1,12 @@
 import {
-  CSSResultArray,
+  CSSResultGroup,
   html,
   LitElement,
-  property,
   PropertyValues,
   TemplateResult,
-} from 'lit-element';
-import { ifDefined } from 'lit-html/directives/if-defined';
+} from 'lit';
+import { property } from 'lit/decorators';
+import { ifDefined } from 'lit/directives/if-defined';
 
 import { getSlottedChildren, setAttribute } from '../../../utils/dom';
 import { isNil } from '../../../utils/unit';
@@ -35,7 +35,7 @@ import { ToggleElementProps } from './toggle.types';
  * ```
  */
 export class ToggleElement extends LitElement implements ToggleElementProps {
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [toggleElementStyles];
   }
 

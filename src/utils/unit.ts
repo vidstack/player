@@ -1,12 +1,11 @@
-import { Constructor } from 'lit-element';
+import { Constructor } from '../shared/types';
 
 /**
  * No-operation (noop).
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const noop = (..._: unknown[]): void => {
-  // ...
+  // no-op
 };
 
 /**

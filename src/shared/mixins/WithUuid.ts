@@ -1,12 +1,12 @@
 import { v4 as uuid } from '@lukeed/uuid';
 import createContext from '@wcom/context';
-import { UpdatingElement } from 'lit-element';
+import { ReactiveElement } from 'lit';
 
 import { Constructor } from '../types';
 
 export const uuidContext = createContext('');
 
-export type WithUuidBase = Constructor<UpdatingElement>;
+export type WithUuidBase = Constructor<ReactiveElement>;
 
 export type WithUuidCocktail<T extends WithUuidBase> = T &
   Constructor<{

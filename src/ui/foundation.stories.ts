@@ -1,7 +1,7 @@
 import '../bundle/define';
 
-import { html } from 'lit-element';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { html } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined';
 
 import {
   MediaContainerElementProps,

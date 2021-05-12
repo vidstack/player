@@ -1,5 +1,5 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
-import { html } from 'lit-html';
+import { html } from 'lit';
 
 import { getSlottedChildren } from '../../../../utils/dom';
 import { ToggleElement } from '../ToggleElement';

@@ -1,11 +1,5 @@
-import {
-  CSSResultArray,
-  html,
-  LitElement,
-  property,
-  query,
-  TemplateResult,
-} from 'lit-element';
+import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import { property, query } from 'lit/decorators';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { timeElementStyles } from './time.css';
@@ -44,7 +38,7 @@ import { formatHtml5Duration, formatTime } from './time.utils';
 export class TimeElement extends LitElement implements TimeElementProps {
   @query('#root') rootEl!: HTMLTimeElement;
 
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [timeElementStyles];
   }
 

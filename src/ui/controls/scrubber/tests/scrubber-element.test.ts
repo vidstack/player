@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { html } from 'lit-element';
+import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../core/fakes/fakes.helpers';
 import { ScrubberElement } from '../ScrubberElement';

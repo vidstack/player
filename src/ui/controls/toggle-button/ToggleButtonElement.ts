@@ -1,7 +1,8 @@
 // ** Dependencies **
 import '../button/vds-button';
 
-import { html, property, query, TemplateResult } from 'lit-element';
+import { html, TemplateResult } from 'lit';
+import { property, query } from 'lit/decorators';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { WithFocus } from '../../../shared/mixins/WithFocus';

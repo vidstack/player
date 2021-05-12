@@ -3,8 +3,8 @@ import './vds-fake-media-provider';
 import '../media/container/vds-media-container';
 import '../media/controller/vds-media-controller';
 
-import { fixture, html } from '@open-wc/testing';
-import { TemplateResult } from 'lit-html';
+import { fixture } from '@open-wc/testing';
+import { html } from 'lit';
 
 import { MediaContainerElement, MediaControllerElement } from '../media';
 import { VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME } from '../media/container/vds-media-container';
@@ -22,8 +22,8 @@ export interface MediaFixture {
 }
 
 export async function buildMediaFixture(
-  uiSlot: TemplateResult = html``,
-  mediaSlot: TemplateResult = html``,
+  uiSlot = html``,
+  mediaSlot = html``,
 ): Promise<MediaFixture> {
   const controller = await fixture<MediaControllerElement>(
     html`

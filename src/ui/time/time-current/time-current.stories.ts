@@ -1,7 +1,7 @@
 import '../../../core/media/controller/vds-media-controller';
 import '../../../core/media/container/vds-media-container';
 
-import { html, TemplateResult } from 'lit-html';
+import { html, TemplateResult } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import {

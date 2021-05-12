@@ -1,5 +1,5 @@
 import { expect, fixture } from '@open-wc/testing';
-import { html } from 'lit-html';
+import { html } from 'lit';
 import { mock, spy } from 'sinon';
 
 import { buildMediaFixture } from '../../../fakes/fakes.helpers';

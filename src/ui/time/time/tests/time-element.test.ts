@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { fixture } from '@open-wc/testing-helpers';
-import { html } from 'lit-html';
+import { html } from 'lit';
 
 import { VDS_TIME_ELEMENT_TAG_NAME } from '../vds-time';
 

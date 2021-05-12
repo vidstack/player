@@ -1,5 +1,5 @@
 import { Disposal, listenTo } from '@wcom/events';
-import { PropertyValues } from 'lit-element';
+import { PropertyValues } from 'lit';
 
 import { redispatchNativeEvent } from '../../../shared/events';
 import { WithEvents } from '../../../shared/mixins/WithEvents';

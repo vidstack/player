@@ -3,15 +3,13 @@ import '../slider/vds-slider';
 
 import clsx from 'clsx';
 import {
-  CSSResultArray,
+  CSSResultGroup,
   html,
-  internalProperty,
   LitElement,
-  property,
   PropertyValues,
-  query,
   TemplateResult,
-} from 'lit-element';
+} from 'lit';
+import { property, query, state } from 'lit/decorators';
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 import { throttle } from 'lodash-es';
 
@@ -140,7 +138,7 @@ export class ScrubberElement
   @query('#progress') progressEl!: HTMLProgressElement;
   @query('#preview-track') previewTrackEl?: HTMLDivElement;
 
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [scrubberElementStyles];
   }
 
@@ -158,23 +156,23 @@ export class ScrubberElement
   @mediaContext.paused.consume()
   protected paused = mediaContext.paused.defaultValue;
 
-  @internalProperty()
+  @state()
   @scrubberPreviewContext.time.provide()
   protected previewTime = 0;
 
-  @internalProperty()
+  @state()
   @scrubberPreviewContext.showing.provide()
   protected isPreviewShowing = false;
 
-  @internalProperty()
+  @state()
   @mediaContext.currentTime.consume()
   protected currentTime = mediaContext.currentTime.defaultValue;
 
-  @internalProperty()
+  @state()
   @mediaContext.duration.consume({ transform: d => (d >= 0 ? d : 0) })
   protected duration = 0;
 
-  @internalProperty()
+  @state()
   @mediaContext.seekableAmount.consume()
   protected seekableAmount = mediaContext.seekableAmount.defaultValue;
 
@@ -277,7 +275,7 @@ export class ScrubberElement
   // Scrubber
   // -------------------------------------------------------------------------------------------
 
-  @internalProperty()
+  @state()
   protected isPointerInsideScrubber = false;
 
   get rootElement(): HTMLDivElement {
@@ -376,7 +374,7 @@ export class ScrubberElement
   // Slider
   // -------------------------------------------------------------------------------------------
 
-  @internalProperty()
+  @state()
   protected isDraggingThumb = false;
 
   get slider(): SliderElement {

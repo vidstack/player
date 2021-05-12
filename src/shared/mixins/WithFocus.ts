@@ -1,4 +1,4 @@
-import { Constructor, UpdatingElement } from 'lit-element';
+import { ReactiveElement } from 'lit';
 
 import { BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/button/button.types';
 import { FULLSCREEN_BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/fullscreen-button/fullscreen-button.types';
@@ -8,6 +8,7 @@ import { SCRUBBER_ELEMENT_TAG_NAME } from '../../ui/controls/scrubber/scrubber.t
 import { SLIDER_ELEMENT_TAG_NAME } from '../../ui/controls/slider/slider.types';
 import { currentSafariVersion } from '../../utils/support';
 import { LIB_PREFIX } from '../constants';
+import { Constructor } from '../types';
 
 /**
  * A selector selecting focusable nodes.
@@ -39,7 +40,7 @@ export const focusableSelector = `
  *
  * @inspiration https://github.com/carbon-design-system/carbon-web-components
  */
-export function WithFocus<T extends Constructor<UpdatingElement>>(Base: T): T {
+export function WithFocus<T extends Constructor<ReactiveElement>>(Base: T): T {
   return class WithFocus extends Base {
     createRenderRoot(): ShadowRoot {
       return this.attachShadow({

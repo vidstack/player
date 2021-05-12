@@ -1,4 +1,4 @@
-import { html, TemplateResult } from 'lit-html';
+import { html, TemplateResult } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import {

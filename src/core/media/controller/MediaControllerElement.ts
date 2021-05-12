@@ -1,6 +1,6 @@
 import { contextRecordProvider, provideContextRecord } from '@wcom/context';
 import { listen } from '@wcom/events';
-import { CSSResultArray, html, LitElement, TemplateResult } from 'lit-element';
+import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
 import { isNil } from '../../../utils/unit';
 import {
@@ -63,7 +63,7 @@ import { mediaControllerStyles } from './media-controller.css';
  */
 @provideContextRecord(mediaContext)
 export class MediaControllerElement extends LitElement {
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [mediaControllerStyles];
   }
 
@@ -76,7 +76,7 @@ export class MediaControllerElement extends LitElement {
    * update that will flow down to all consumer components. This record is consumed by
    * a media provider element as it's responsible for managing it (ie: updating context properties).
    *
-   * @internal Exposed for testing.
+   * @state Exposed for testing.
    */
   // Has to be in this order otherwise the `provide()` decorator will overwrite the context record.
   // Remember decorators are evaluated top-to-bottom! - https://www.typescriptlang.org/docs/handbook/decorators.html#decorator-composition

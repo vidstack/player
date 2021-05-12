@@ -1,5 +1,6 @@
 import Hls from 'hls.js';
-import { property, PropertyValues } from 'lit-element';
+import { PropertyValues } from 'lit';
+import { property } from 'lit/decorators';
 
 import {
   CanPlay,
@@ -227,7 +228,8 @@ export class HlsElement
     // Need to wait for `src` attribute on `<video>` to clear if last `src` was not using
     // HLS engine.
     window.requestAnimationFrame(async () => {
-      await this.requestUpdate();
+      this.requestUpdate();
+      await this.updateComplete;
 
       if (isUndefined(this.engine)) {
         this.buildHlsEngine();

@@ -1,13 +1,7 @@
 import { Disposal, listenTo } from '@wcom/events';
-import {
-  CSSResultArray,
-  html,
-  LitElement,
-  property,
-  query,
-  TemplateResult,
-} from 'lit-element';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import { property, query } from 'lit/decorators';
+import { ifDefined } from 'lit/directives/if-defined';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { WithFocus } from '../../../shared/mixins/WithFocus';
@@ -51,7 +45,7 @@ export class ButtonElement
   implements ButtonElementProps {
   @query('#root') rootEl!: HTMLButtonElement;
 
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [buttonElementStyles];
   }
 

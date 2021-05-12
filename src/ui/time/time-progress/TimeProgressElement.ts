@@ -2,14 +2,8 @@
 import '../time-current/vds-time-current';
 import '../time-duration/vds-time-duration';
 
-import {
-  CSSResultArray,
-  html,
-  LitElement,
-  property,
-  query,
-  TemplateResult,
-} from 'lit-element';
+import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import { property, query } from 'lit/decorators';
 
 import { buildExportPartsAttr } from '../../../utils/dom';
 import { TimeElement } from '../time';
@@ -65,7 +59,7 @@ export class TimeProgressElement
   @query('#time-duration') timeDurationEl!: TimeDurationElement;
   @query('#separator') separatorEl!: HTMLSpanElement;
 
-  static get styles(): CSSResultArray {
+  static get styles(): CSSResultGroup {
     return [timeProgressElementStyles];
   }
 
