@@ -14,7 +14,7 @@ import { SliderElement } from '../SliderElement';
 import { VDS_SLIDER_ELEMENT_TAG_NAME } from '../vds-slider';
 
 describe(VDS_SLIDER_ELEMENT_TAG_NAME, () => {
-  it('should render dom correctly', async () => {
+  it('should render DOM correctly', async () => {
     const slider = await fixture(html`<vds-slider></vds-slider>`);
     expect(slider).dom.to.equal(`
       <vds-slider
@@ -27,7 +27,7 @@ describe(VDS_SLIDER_ELEMENT_TAG_NAME, () => {
     `);
   });
 
-  it('should render shadow dom correctly', async () => {
+  it('should render shadow DOM correctly', async () => {
     const slider = await fixture(html`<vds-slider></vds-slider>`);
     expect(slider).shadowDom.to.equal(`
       <div

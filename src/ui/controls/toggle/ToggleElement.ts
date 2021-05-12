@@ -6,6 +6,7 @@ import {
   PropertyValues,
   TemplateResult,
 } from 'lit-element';
+import { ifDefined } from 'lit-html/directives/if-defined';
 
 import { getSlottedChildren, setAttribute } from '../../../utils/dom';
 import { isNil } from '../../../utils/unit';
@@ -14,14 +15,14 @@ import { ToggleElementProps } from './toggle.types';
 
 /**
  * A toggle component to render different state depending on whether it's pressed or not. This
- * component will always render both the `pressed` and `not-pressed` slots regardless of the current
+ * component will always render both the `pressed` and the default slots regardless of the current
  * state so you can perform CSS animations. A `hidden` attribute will be applied to the slot
  * that's currently not active.
  *
  * @tagname vds-toggle
  *
+ * @slot The content to show when the toggle is not pressed.
  * @slot pressed - The content to show when the toggle is pressed.
- * @slot not-pressed - The content to show when the toggle is not pressed.
  *
  * @example
  * ```html
@@ -29,7 +30,7 @@ import { ToggleElementProps } from './toggle.types';
  *   <!-- Showing -->
  *   <div slot="pressed"></div>
  *   <!-- Hidden - `hidden` attribute will automatically be applied/removed -->
- *   <div slot="not-pressed" hidden></div>
+ *   <div hidden></div>
  * </vds-toggle>
  * ```
  */
@@ -45,6 +46,7 @@ export class ToggleElement extends LitElement implements ToggleElementProps {
   pressed = false;
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.currentPressedSlotElement = undefined;
     this.currentNotPressedSlotElement = undefined;
   }
@@ -92,13 +94,13 @@ export class ToggleElement extends LitElement implements ToggleElementProps {
   // Not Pressed
   // -------------------------------------------------------------------------------------------
 
-  protected getNotPressedSlotName(): string {
-    return 'not-pressed';
+  protected getNotPressedSlotName(): string | undefined {
+    return undefined;
   }
 
   protected renderNotPressedSlot(): TemplateResult {
     return html`<slot
-      name=${this.getNotPressedSlotName()}
+      name=${ifDefined(this.getNotPressedSlotName())}
       @slotchange="${this.handleNotPressedSlotChange}"
     ></slot>`;
   }

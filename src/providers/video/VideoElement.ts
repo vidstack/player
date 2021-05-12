@@ -1,4 +1,3 @@
-import { listenTo } from '@wcom/events';
 import {
   CSSResultArray,
   html,
@@ -7,7 +6,6 @@ import {
   TemplateResult,
 } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
-import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
 import {
   MediaType,
@@ -17,11 +15,12 @@ import {
 } from '../../core';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
-import { redispatchNativeEvent } from '../../shared/events';
-import { Unsubscribe, WebKitPresentationMode } from '../../shared/types';
-import { IS_IOS } from '../../utils/support';
-import { isFunction, isUndefined, noop } from '../../utils/unit';
 import { Html5MediaElement, Html5MediaElementEngine } from '../html5';
+import { VideoFullscreenController } from './fullscreen';
+import {
+  VideoPresentationController,
+  VideoPresentationControllerHost,
+} from './presentation';
 import { videoElementStyles } from './video.css';
 import { VideoElementProps } from './video.types';
 import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
@@ -57,7 +56,7 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  */
 export class VideoElement<EngineType = Html5MediaElementEngine>
   extends Html5MediaElement<EngineType>
-  implements VideoElementProps {
+  implements VideoElementProps, VideoPresentationControllerHost {
   protected mediaEl?: HTMLVideoElement;
 
   static get styles(): CSSResultArray {
@@ -94,8 +93,6 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
         id="root"
         class="${this.getRootClassAttr()}"
         part="${this.getRootPartAttr()}"
-        aria-busy="${this.getAriaBusy()}"
-        style="${styleMap(this.getRootStyleMap())}"
       >
         ${this.renderVideo()}
         <slot name="ui" @slotchange="${this.handleUiSlotChange}"></slot>
@@ -115,15 +112,6 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
    */
   protected getRootPartAttr(): string {
     return 'root';
-  }
-
-  /**
-   * Override this to modify root provider styles.
-   */
-  protected getRootStyleMap(): StyleInfo {
-    return {
-      'padding-bottom': this.getAspectRatioPadding(),
-    };
   }
 
   /**
@@ -200,7 +188,10 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
   }
 
   set poster(newPoster: string) {
-    this.context.currentPoster = newPoster;
+    this.contextQueue.queue('currentPoster', () => {
+      this.context.currentPoster = newPoster;
+      this.requestUpdate();
+    });
   }
 
   @property({ type: Boolean, attribute: 'autopictureinpicture' })
@@ -229,99 +220,15 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
   // Fullscreen
   // -------------------------------------------------------------------------------------------
 
-  protected currentPresentationMode?: WebKitPresentationMode;
-
-  get fullscreen(): boolean {
-    return this.canRequestFullscreenNatively
-      ? this.isNativeFullscreenActive
-      : this.currentPresentationMode === 'fullscreen';
+  get videoElement(): HTMLVideoElement | undefined {
+    return this.mediaEl;
   }
 
-  get canRequestFullscreen(): boolean {
-    return this.canRequestFullscreenNatively || this.canRequestFullscreenOniOS;
-  }
+  presentationController = new VideoPresentationController(this);
 
-  /**
-   * The current presentation mode, possible values include `inline`, `picture-in-picture` and
-   * `fullscreen`. Only available in Safari.
-   *
-   * @default undefined
-   * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
-   */
-  get presentationMode(): WebKitPresentationMode | undefined {
-    return this.currentPresentationMode;
-  }
-
-  /**
-   * Whether the video fullscreen API is available on iOS Safari.
-   *
-   * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1628805-webkitsupportsfullscreen
-   */
-  get canRequestFullscreenOniOS(): boolean {
-    return (
-      IS_IOS &&
-      isFunction(this.mediaEl?.webkitEnterFullscreen) &&
-      (this.mediaEl?.webkitSupportsFullscreen ?? false)
-    );
-  }
-
-  protected async requestFullscreenOniOS(): Promise<void> {
-    return this.mediaEl?.webkitEnterFullscreen?.();
-  }
-
-  protected async exitFullscreenOniOS(): Promise<void> {
-    return this.mediaEl?.webkitExitFullscreen?.();
-  }
-
-  protected async makeEnterFullscreenRequest(): Promise<void> {
-    return this.canRequestFullscreenNatively
-      ? super.makeEnterFullscreenRequest()
-      : this.requestFullscreenOniOS();
-  }
-
-  protected async makeExitFullscreenRequest(): Promise<void> {
-    return this.canRequestFullscreenNatively
-      ? super.makeExitFullscreenRequest()
-      : this.exitFullscreenOniOS();
-  }
-
-  protected addFullscreenChangeEventListener(
-    handler: (this: HTMLElement, event: Event) => void,
-  ): Unsubscribe {
-    if (this.canRequestFullscreenNatively) {
-      return super.addFullscreenChangeEventListener(handler);
-    }
-
-    if (this.canRequestFullscreenOniOS && !isUndefined(this.mediaEl)) {
-      return listenTo(
-        this.mediaEl,
-        'webkitpresentationmodechanged',
-        this.handlePresentationModeChange.bind(this),
-      );
-    }
-
-    return noop;
-  }
-
-  protected addFullscreenErrorEventListener(
-    handler: (this: HTMLElement, event: Event) => void,
-  ): Unsubscribe {
-    if (!this.canRequestFullscreenNatively) return noop;
-    return super.addFullscreenErrorEventListener(handler);
-  }
-
-  protected handlePresentationModeChange(e: Event): void {
-    redispatchNativeEvent(this, e);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.currentPresentationMode = this.mediaEl!.webkitPresentationMode;
-    this.handleFullscreenChange(e);
-  }
-
-  protected throwIfNoFullscreenSupport(): void {
-    if (this.canRequestFullscreenNatively) {
-      super.throwIfNoFullscreenSupport();
-    } else if (!this.canRequestFullscreenOniOS) {
-      throw Error('The fullscreen API is currently not available on iOS.');
-    }
-  }
+  fullscreenController = new VideoFullscreenController(
+    this,
+    this.screenOrientationController,
+    this.presentationController,
+  );
 }

@@ -1,8 +1,6 @@
 import {
-  buildVdsEvent,
-  ExtractEventDetailType,
   VdsCustomEvent,
-  VdsCustomEventConstructor,
+  VdsEventInit,
   VdsEvents,
 } from '../../../shared/events';
 
@@ -19,30 +17,36 @@ export interface ScrubberEvents {
 
 export type VdsScrubberEvents = VdsEvents<ScrubberEvents>;
 
-export function buildVdsScrubberEvent<
-  P extends keyof ScrubberEvents,
-  DetailType = ExtractEventDetailType<ScrubberEvents[P]>
->(type: P): VdsCustomEventConstructor<DetailType> {
-  return class VdsScrubberEvent extends buildVdsEvent<DetailType>(type) {};
+export class VdsScrubberEvent<DetailType> extends VdsCustomEvent<DetailType> {
+  static readonly TYPE: keyof VdsScrubberEvents;
 }
 
 /**
  * Emitted when the preview transitions from hidden to showing.
  */
-export class VdsScrubberPreviewShowEvent extends buildVdsScrubberEvent(
-  'scrubber-preview-show',
-) {}
+export class VdsScrubberPreviewShowEvent extends VdsScrubberEvent<void> {
+  static readonly TYPE = 'vds-scrubber-preview-show';
+  constructor(eventInit?: VdsEventInit<void>) {
+    super(VdsScrubberPreviewShowEvent.TYPE, eventInit);
+  }
+}
 
 /**
  * Emitted when the preview transitions from showing to hidden.
  */
-export class VdsScrubberPreviewHideEvent extends buildVdsScrubberEvent(
-  'scrubber-preview-hide',
-) {}
+export class VdsScrubberPreviewHideEvent extends VdsScrubberEvent<void> {
+  static readonly TYPE = 'vds-scrubber-preview-hide';
+  constructor(eventInit?: VdsEventInit<void>) {
+    super(VdsScrubberPreviewHideEvent.TYPE, eventInit);
+  }
+}
 
 /**
  * Emitted when the time being previewed changes.
  */
-export class VdsScrubberPreviewTimeUpdateEvent extends buildVdsScrubberEvent(
-  'scrubber-preview-time-update',
-) {}
+export class VdsScrubberPreviewTimeUpdateEvent extends VdsScrubberEvent<number> {
+  static readonly TYPE = 'vds-scrubber-preview-time-update';
+  constructor(eventInit: VdsEventInit<number>) {
+    super(VdsScrubberPreviewTimeUpdateEvent.TYPE, eventInit);
+  }
+}

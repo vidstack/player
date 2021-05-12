@@ -10,7 +10,7 @@ import {
 import { ifDefined } from 'lit-html/directives/if-defined';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { FocusMixin } from '../../../shared/mixins/FocusMixin';
+import { WithFocus } from '../../../shared/mixins/WithFocus';
 import { isUndefined } from '../../../utils/unit';
 import { buttonElementStyles } from './button.css';
 import { ButtonElementProps, ButtonType } from './button.types';
@@ -47,7 +47,7 @@ import { ButtonElementProps, ButtonType } from './button.types';
  * ```
  */
 export class ButtonElement
-  extends FocusMixin(LitElement)
+  extends WithFocus(LitElement)
   implements ButtonElementProps {
   @query('#root') rootEl!: HTMLButtonElement;
 

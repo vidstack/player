@@ -6,15 +6,16 @@ import {
   MediaType,
   VdsDurationChangeEvent,
   VdsErrorEvent,
-  VdsLiveEvent,
+  VdsMediaTypeChangeEvent,
 } from '../../core';
+import { VdsCustomEvent } from '../../shared/events';
 import { isNil, isUndefined, noop } from '../../utils/unit';
 import { VideoElement, VideoElementEngine } from '../video';
 import {
   VdsHlsEngineAttachEvent,
   VdsHlsEngineBuiltEvent,
   VdsHlsEngineDetachEvent,
-  VdsHlsEngineNoSuppotEvent,
+  VdsHlsEngineNoSupportEvent,
 } from './hls.events';
 import { HlsElementEngine, HlsElementProps } from './hls.types';
 import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
@@ -64,12 +65,12 @@ export class HlsElement
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.handleSrcChange();
+    this.handleMediaSrcChange();
   }
 
   async firstUpdated(changedProps: PropertyValues): Promise<void> {
     super.firstUpdated(changedProps);
-    this.handleSrcChange();
+    this.handleMediaSrcChange();
   }
 
   disconnectedCallback(): void {
@@ -166,7 +167,7 @@ export class HlsElement
     if (isNil(this.videoEngine) || !isUndefined(this.engine)) return;
 
     if (!Hls.isSupported()) {
-      this.dispatchEvent(new VdsHlsEngineNoSuppotEvent());
+      this.dispatchEvent(new VdsHlsEngineNoSupportEvent());
       return;
     }
 
@@ -213,7 +214,9 @@ export class HlsElement
   // Events
   // -------------------------------------------------------------------------------------------
 
-  protected handleSrcChange(): void {
+  protected handleMediaSrcChange(): void {
+    super.handleMediaSrcChange();
+
     this.context.canPlay = false;
 
     if (!this.isCurrentlyHls) {
@@ -239,67 +242,87 @@ export class HlsElement
     if (isUndefined(this.engine)) return;
     this.engine.on(
       Hls.Events.LEVEL_LOADED,
-      this.handleHlsMediaReady.bind(this),
+      this.handleHlsLevelLoaded.bind(this),
     );
     this.engine.on(Hls.Events.ERROR, this.handleHlsError.bind(this));
   }
 
-  protected handleHlsError(originalEvent: string, data: Hls.errorData): void {
+  protected handleHlsError(eventType: string, data: Hls.errorData): void {
     this.context.error = data;
 
     if (data.fatal) {
       switch (data.type) {
         case Hls.ErrorTypes.NETWORK_ERROR:
-          this.handleHlsNetworkError(data);
+          this.handleHlsNetworkError(eventType, data);
           break;
         case Hls.ErrorTypes.MEDIA_ERROR:
-          this.handleHlsMediaError(data);
+          this.handleHlsMediaError(eventType, data);
           break;
         default:
-          this.handleHlsIrrecoverableError(data);
+          this.handleHlsIrrecoverableError(eventType, data);
           break;
       }
     }
 
-    this.dispatchEvent(new VdsErrorEvent({ detail: data, originalEvent }));
+    this.dispatchEvent(
+      new VdsErrorEvent({
+        originalEvent: new VdsCustomEvent(eventType, { detail: data }),
+      }),
+    );
   }
 
-  protected handleHlsNetworkError(data: Hls.errorData): void {
-    noop(data);
+  protected handleHlsNetworkError(
+    eventType: string,
+    data: Hls.errorData,
+  ): void {
+    noop(eventType, data);
     this.engine?.startLoad();
   }
 
-  protected handleHlsMediaError(data: Hls.errorData): void {
-    noop(data);
+  protected handleHlsMediaError(eventType: string, data: Hls.errorData): void {
+    noop(eventType, data);
     this.engine?.recoverMediaError();
   }
 
-  protected handleHlsIrrecoverableError(data: Hls.errorData): void {
-    noop(data);
+  protected handleHlsIrrecoverableError(
+    eventType: string,
+    data: Hls.errorData,
+  ): void {
+    noop(eventType, data);
     this.destroyHlsEngine();
   }
 
-  protected handleHlsMediaReady(
-    originalEvent: string,
+  protected handleHlsLevelLoaded(
+    eventType: string,
     data: Hls.levelLoadedData,
   ): void {
-    const live = data.details.live;
-    if (live !== this.context.live) {
-      this.context.live = live;
-      this.dispatchEvent(new VdsLiveEvent({ detail: live }));
+    if (this.context.canPlay) return;
+    this.handleHlsMediaReady(eventType, data);
+  }
+
+  protected handleHlsMediaReady(
+    eventType: string,
+    data: Hls.levelLoadedData,
+  ): void {
+    const { live, totalduration: duration } = data.details;
+
+    const originalEvent = new VdsCustomEvent(eventType, { detail: data });
+
+    const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
+    if (this.context.mediaType !== mediaType) {
+      this.context.mediaType = mediaType;
+      this.dispatchEvent(
+        new VdsMediaTypeChangeEvent({ detail: mediaType, originalEvent }),
+      );
     }
 
-    if (this.context.canPlay) return;
+    if (this.context.duration !== duration) {
+      this.context.duration = duration;
+      this.dispatchEvent(
+        new VdsDurationChangeEvent({ detail: duration, originalEvent }),
+      );
+    }
 
-    const duration = data.details.totalduration;
-    this.context.duration = duration;
-    this.dispatchEvent(
-      new VdsDurationChangeEvent({
-        detail: duration,
-        originalEvent,
-      }),
-    );
-
-    this.mediaReady();
+    this.handleMediaReady(originalEvent);
   }
 }

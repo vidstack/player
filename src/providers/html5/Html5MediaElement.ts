@@ -8,10 +8,10 @@ import {
   TemplateResult,
 } from 'lit-element';
 
-import { CanPlay, MediaProviderElement } from '../../core';
 import {
+  CanPlay,
+  MediaProviderElement,
   VdsAbortEvent,
-  VdsCanPlayEvent,
   VdsCanPlayThroughEvent,
   VdsDurationChangeEvent,
   VdsEmptiedEvent,
@@ -33,7 +33,7 @@ import {
   VdsTimeUpdateEvent,
   VdsVolumeChangeEvent,
   VdsWaitingEvent,
-} from '../../core/media/media.events';
+} from '../../core';
 import { redispatchNativeEvent } from '../../shared/events';
 import { Callback } from '../../shared/types';
 import { getSlottedChildren } from '../../utils/dom';
@@ -63,7 +63,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
   implements Html5MediaElementProps, Html5MediaElementMethods {
   protected mediaEl?: HTMLMediaElement;
 
-  protected disposal = new Disposal();
+  protected mediaEventsDisposal = new Disposal();
 
   firstUpdated(changedProps: PropertyValues): void {
     super.firstUpdated(changedProps);
@@ -72,7 +72,6 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 
   disconnectedCallback(): void {
     this.cancelTimeUpdates();
-    this.disposal.empty();
     super.disconnectedCallback();
   }
 
@@ -106,8 +105,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
   set src(newSrc: string) {
     if (this._src !== newSrc) {
       this._src = newSrc;
-      this.softResetMediaContext();
-      this.handleSrcChange();
+      this.handleMediaSrcChange();
       // No other action requried as the `src` attribute should be updated on the underlying
       // `<audio>` or `<video>` element.
     }
@@ -143,10 +141,9 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 
   set srcObject(newSrcObject: MediaSrcObject | undefined) {
     if (this.mediaEl?.srcObject !== newSrcObject) {
-      this.softResetMediaContext();
       this.mediaEl!.srcObject = newSrcObject ?? null;
       if (!this.willAnotherEngineAttach()) this.mediaEl!.load();
-      this.handleSrcChange();
+      this.handleMediaSrcChange();
     }
   }
 
@@ -194,7 +191,6 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
     if (isNil(this.mediaEl)) return;
     this.cancelTimeUpdates();
     this.cleanupOldSourceNodes();
-    this.softResetMediaContext();
     this.attachNewSourceNodes();
   }
 
@@ -211,7 +207,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
       .forEach(node => this.mediaEl?.appendChild(node.cloneNode()));
 
     window.requestAnimationFrame(() => {
-      this.handleSrcChange();
+      this.handleMediaSrcChange();
       if (!this.willAnotherEngineAttach()) this.mediaEl?.load();
     });
   }
@@ -221,7 +217,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
   // -------------------------------------------------------------------------------------------
 
   protected listenToMediaEvents(): void {
-    this.disposal.empty();
+    this.mediaEventsDisposal.empty();
 
     if (isNil(this.mediaEl)) return;
 
@@ -252,7 +248,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 
     Object.keys(eventMap).forEach(type => {
       const handler = eventMap[type].bind(this);
-      this.disposal.add(
+      this.mediaEventsDisposal.add(
         listenTo(this.mediaEl!, type, e => {
           handler(e);
           // re-dispatch native event for spec-compliance.
@@ -269,13 +265,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
   protected handleCanPlay(originalEvent: Event): void {
     this.context.buffered = this.mediaEl!.buffered;
     this.context.seekable = this.mediaEl!.seekable;
-    if (!this.willAnotherEngineAttach()) this.mediaReady(originalEvent);
-  }
-
-  protected mediaReady(originalEvent?: Event): void {
-    this.context.canPlay = true;
-    this.dispatchEvent(new VdsCanPlayEvent({ originalEvent }));
-    this.flushRequestQueue();
+    if (!this.willAnotherEngineAttach()) this.handleMediaReady(originalEvent);
   }
 
   protected handleCanPlayThrough(originalEvent: Event): void {
@@ -383,13 +373,6 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
         originalEvent,
       }),
     );
-  }
-
-  /**
-   * Override to be notified of source changes.
-   */
-  protected handleSrcChange(): void {
-    // no-op
   }
 
   protected handleStalled(originalEvent: Event): void {

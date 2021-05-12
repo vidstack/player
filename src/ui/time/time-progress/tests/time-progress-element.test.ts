@@ -1,38 +1,35 @@
 import { expect, html } from '@open-wc/testing';
 
-import { FakeMediaProviderElement } from '../../../../core';
-import { buildFakeMediaProvider } from '../../../../core/fakes/fakes.helpers';
+import { buildMediaFixture } from '../../../../core/fakes/fakes.helpers';
 import { TimeCurrentElement } from '../../time-current';
 import { TimeDurationElement } from '../../time-duration';
 import { TimeProgressElement } from '../TimeProgressElement';
 import { VDS_TIME_PROGRESS_ELEMENT_TAG_NAME } from '../vds-time-progress';
 
 describe(VDS_TIME_PROGRESS_ELEMENT_TAG_NAME, () => {
-  async function buildFixture(): Promise<
-    [FakeMediaProviderElement, TimeProgressElement]
-  > {
-    const provider = await buildFakeMediaProvider(html`
+  async function buildFixture(): Promise<{
+    timeProgress: TimeProgressElement;
+  }> {
+    const { container } = await buildMediaFixture(html`
       <vds-time-progress></vds-time-progress>
     `);
 
-    const timeProgress = provider.querySelector(
+    const timeProgress = container.querySelector(
       VDS_TIME_PROGRESS_ELEMENT_TAG_NAME,
     ) as TimeProgressElement;
 
-    return [provider, timeProgress];
+    return { timeProgress };
   }
 
-  it('should render dom correctly', async () => {
-    const [, timeProgress] = await buildFixture();
-
+  it('should render DOM correctly', async () => {
+    const { timeProgress } = await buildFixture();
     expect(timeProgress).dom.to.equal(`
       <vds-time-progress></vds-time-progress>
     `);
   });
 
-  it('should render shadow dom correctly', async () => {
-    const [, timeProgress] = await buildFixture();
-
+  it('should render shadow DOM correctly', async () => {
+    const { timeProgress } = await buildFixture();
     expect(timeProgress).shadowDom.to.equal(`
       <div id="root" part="root">
         <vds-time-current
@@ -55,7 +52,7 @@ describe(VDS_TIME_PROGRESS_ELEMENT_TAG_NAME, () => {
   });
 
   it('should render current time label', async () => {
-    const [, timeProgress] = await buildFixture();
+    const { timeProgress } = await buildFixture();
     const timeCurrent = timeProgress.shadowRoot?.querySelector(
       'vds-time-current',
     ) as TimeCurrentElement;
@@ -63,7 +60,7 @@ describe(VDS_TIME_PROGRESS_ELEMENT_TAG_NAME, () => {
   });
 
   it('should render duration label', async () => {
-    const [, timeProgress] = await buildFixture();
+    const { timeProgress } = await buildFixture();
     const timeDuration = timeProgress.shadowRoot?.querySelector(
       'vds-time-duration',
     ) as TimeDurationElement;
@@ -71,7 +68,7 @@ describe(VDS_TIME_PROGRESS_ELEMENT_TAG_NAME, () => {
   });
 
   it('should render separator', async () => {
-    const [, timeProgress] = await buildFixture();
+    const { timeProgress } = await buildFixture();
     const timeSeparator = timeProgress.shadowRoot?.querySelector(
       "span[part~='separator']",
     ) as HTMLSpanElement;
