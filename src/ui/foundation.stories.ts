@@ -10,7 +10,6 @@ import {
   VdsMediaProviderEvents,
   VdsMediaRequestEvents,
 } from '../bundle/define';
-import { VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME } from '../core/media/controller/vds-media-controller';
 import {
   VDS_VIDEO_ELEMENT_TAG_NAME,
   VideoElementProps,
