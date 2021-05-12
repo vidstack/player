@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "@open-wc/semantic-dom-diff": "^0.19.4",
-    "@open-wc/testing": "^2.5.32",
+    "@open-wc/testing": "^3.0.0-next.1",
     "@storybook/addon-a11y": "^6.2.8",
     "@storybook/addon-essentials": "^6.1.21",
     "@storybook/addon-links": "^6.2.8",
