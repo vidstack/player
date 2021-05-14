@@ -1,4 +1,5 @@
-import { expect, html } from '@open-wc/testing';
+import { expect } from '@open-wc/testing';
+import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../core/fakes/fakes.helpers';
 import { TimeCurrentElement } from '../../time-current';

@@ -4,8 +4,8 @@ import '../ui/vds-media-ui';
 import { Disposal } from '@wcom/events';
 import clsx from 'clsx';
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-import { property, query, state } from 'lit/decorators';
-import { StyleInfo, styleMap } from 'lit/directives/style-map';
+import { property, query, state } from 'lit/decorators.js';
+import { StyleInfo, styleMap } from 'lit-html/directives/style-map.js';
 
 import { getSlottedChildren } from '../../../utils/dom';
 import { isNil, isString, isUndefined } from '../../../utils/unit';
@@ -129,14 +129,14 @@ export class MediaContainerElement
     return this.rootEl;
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <div
         id="root"
-        aria-busy="${this.getAriaBusy()}"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
-        style="${styleMap(this.getRootStyleMap())}"
+        aria-busy=${this.getAriaBusy()}
+        class=${this.getRootClassAttr()}
+        part=${this.getRootPartAttr()}
+        style=${styleMap(this.getRootStyleMap())}
       >
         ${this.renderRootContent()}
       </div>
@@ -169,7 +169,7 @@ export class MediaContainerElement
    */
   protected getRootStyleMap(): StyleInfo {
     return {
-      'padding-bottom': this.getAspectRatioPadding(),
+      paddingBottom: this.getAspectRatioPadding(),
     };
   }
 
@@ -200,10 +200,10 @@ export class MediaContainerElement
     return (100 / Number(width)) * Number(height);
   }
 
-  protected getAspectRatioPadding(maxPadding = '100vh'): string {
+  protected getAspectRatioPadding(): string {
     const ratio = this.calcAspectRatio();
     if (isNaN(ratio)) return '';
-    return `min(${maxPadding}, ${this.calcAspectRatio()}%)`;
+    return `min(100vh, ${this.calcAspectRatio()}%)`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -222,7 +222,7 @@ export class MediaContainerElement
 
   protected renderMedia(): TemplateResult {
     return html`
-      <div id="media-container" part="${this.getMediaPartAttr()}">
+      <div id="media-container" part=${this.getMediaPartAttr()}>
         ${this.renderMediaSlot()}
       </div>
     `;
@@ -233,10 +233,12 @@ export class MediaContainerElement
   }
 
   protected renderMediaSlot(): TemplateResult {
-    return html` <slot
-      name="${this.getMediaSlotName()}"
-      @slotchange="${this.handleMediaSlotChange}"
-    ></slot>`;
+    return html`
+      <slot
+        name=${this.getMediaSlotName()}
+        @slotchange=${this.handleMediaSlotChange}
+      ></slot>
+    `;
   }
 
   protected getMediaSlotName(): string {
@@ -272,7 +274,7 @@ export class MediaContainerElement
       <vds-media-ui
         id="media-ui"
         part="ui"
-        exportparts="${this.getUIExportPartsAttr()}"
+        exportparts=${this.getUIExportPartsAttr()}
       >
         ${this.renderUIDefaultSlot()}
       </vds-media-ui>

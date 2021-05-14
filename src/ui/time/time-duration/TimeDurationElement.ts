@@ -32,7 +32,7 @@ export class TimeDurationElement
   label = 'Duration';
 
   /**
-   * @state
+   * @internal
    */
   @mediaContext.duration.consume({ transform: d => (d >= 0 ? d : 0) })
   seconds = 0;

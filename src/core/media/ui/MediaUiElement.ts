@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-import { query, state } from 'lit/decorators';
+import { query, state } from 'lit/decorators.js';
 
 import { IS_IOS } from '../../../utils/support';
 import { mediaContext } from '../media.context';
@@ -59,12 +59,12 @@ export class MediaUiElement extends LitElement {
     return this.rootEl;
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <div
         id="root"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
+        class=${this.getRootClassAttr()}
+        part=${this.getRootPartAttr()}
       >
         ${this.renderRootContent()}
       </div>

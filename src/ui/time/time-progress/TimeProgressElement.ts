@@ -3,7 +3,7 @@ import '../time-current/vds-time-current';
 import '../time-duration/vds-time-duration';
 
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-import { property, query } from 'lit/decorators';
+import { property, query } from 'lit/decorators.js';
 
 import { buildExportPartsAttr } from '../../../utils/dom';
 import { TimeElement } from '../time';
@@ -105,7 +105,7 @@ export class TimeProgressElement
     return this.separatorEl;
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <div id="root" part="root">
         ${this.renderTimeCurrent()}${this.renderTimeSeparator()}${this.renderTimeDuration()}
@@ -117,11 +117,11 @@ export class TimeProgressElement
     return html`
       <vds-time-current
         id="time-current"
-        label="${this.currentTimeLabel}"
-        part="${this.getTimeCurrentPartAttr()}"
-        ?always-show-hours="${this.alwaysShowHours}"
-        ?pad-hours="${this.padHours}"
-        exportparts="${this.getTimeCurrentExportPartsAttr()}"
+        label=${this.currentTimeLabel}
+        part=${this.getTimeCurrentPartAttr()}
+        ?always-show-hours=${this.alwaysShowHours}
+        ?pad-hours=${this.padHours}
+        exportparts=${this.getTimeCurrentExportPartsAttr()}
       ></vds-time-current>
     `;
   }
@@ -138,11 +138,11 @@ export class TimeProgressElement
     return html`
       <vds-time-duration
         id="time-duration"
-        label="${this.durationLabel}"
-        part="${this.getTimeDurationPartAttr()}"
-        ?always-show-hours="${this.alwaysShowHours}"
-        ?pad-hours="${this.padHours}"
-        exportparts="${this.getTimeDurationExportPartsAttr()}"
+        label=${this.durationLabel}
+        part=${this.getTimeDurationPartAttr()}
+        ?always-show-hours=${this.alwaysShowHours}
+        ?pad-hours=${this.padHours}
+        exportparts=${this.getTimeDurationExportPartsAttr()}
       ></vds-time-duration>
     `;
   }
@@ -157,7 +157,7 @@ export class TimeProgressElement
 
   protected renderTimeSeparator(): TemplateResult {
     return html`
-      <span id="separator" part="${this.getTimeSeparatorPartAttr()}">
+      <span id="separator" part=${this.getTimeSeparatorPartAttr()}>
         ${this.timeSeparator}
       </span>
     `;

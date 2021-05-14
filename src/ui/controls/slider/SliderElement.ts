@@ -6,8 +6,8 @@ import {
   PropertyValues,
   TemplateResult,
 } from 'lit';
-import { property, query, state } from 'lit/decorators';
-import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
+import { property, query, state } from 'lit/decorators.js';
+import { StyleInfo, styleMap } from 'lit-html/directives/style-map.js';
 import { throttle } from 'lodash-es';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
@@ -110,7 +110,7 @@ export class SliderElement
     this.initPointerMoveThrottle();
   }
 
-  update(changedProperties: PropertyValues): void {
+  protected update(changedProperties: PropertyValues<this>): void {
     setAttribute(this, 'dragging', this.isDragging ? '' : undefined);
 
     if (changedProperties.has('value')) {
@@ -129,7 +129,9 @@ export class SliderElement
     super.update(changedProperties);
   }
 
-  async firstUpdated(changedProperties: PropertyValues): Promise<void> {
+  protected async firstUpdated(
+    changedProperties: PropertyValues<this>,
+  ): Promise<void> {
     super.firstUpdated(changedProperties);
     this.requestUpdate();
     await this.updateComplete;
@@ -220,7 +222,7 @@ export class SliderElement
   // Render (Root)
   // -------------------------------------------------------------------------------------------
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return this.renderSlider();
   }
 
@@ -233,10 +235,10 @@ export class SliderElement
       <div
         id="root"
         role="presentation"
-        class="${this.getSliderClassAttr()}"
-        part="${this.getSliderPartAttr()}"
-        style="${styleMap(this.getSliderStyleMap())}"
-        @pointerdown="${this.handleSliderPointerMove}"
+        class=${this.getSliderClassAttr()}
+        part=${this.getSliderPartAttr()}
+        style=${styleMap(this.getSliderStyleMap())}
+        @pointerdown=${this.handleSliderPointerMove}
       >
         ${this.renderThumbContainer()}${this.renderTrack()}${this.renderTrackFill()}${this.renderInput()}
         <slot></slot>
@@ -276,18 +278,18 @@ export class SliderElement
         id="thumb-container"
         role="slider"
         tabindex="0"
-        aria-label="${ifNonEmpty(this.label)}"
-        aria-valuemax="${this.max}"
-        aria-valuemin="${this.min}"
-        aria-valuenow="${this.value}"
-        aria-valuetext="${this.valueText ?? this.getValueAsTextFallback()}"
-        aria-orientation="${this.orientation}"
-        aria-disabled="${this.disabled}"
-        aria-hidden="${this.hidden}"
+        aria-label=${ifNonEmpty(this.label)}
+        aria-valuemax=${this.max}
+        aria-valuemin=${this.min}
+        aria-valuenow=${this.value}
+        aria-valuetext=${this.valueText ?? this.getValueAsTextFallback()}
+        aria-orientation=${this.orientation}
+        aria-disabled=${this.disabled}
+        aria-hidden=${this.hidden}
         autocomplete="off"
-        part="${this.getThumbContainerPartAttr()}"
-        @keydown="${this.handleThumbContainerKeydown}"
-        @pointerdown="${this.handleThumbContainerPointerDown}"
+        part=${this.getThumbContainerPartAttr()}
+        @keydown=${this.handleThumbContainerKeydown}
+        @pointerdown=${this.handleThumbContainerPointerDown}
       >
         ${this.renderThumb()} ${this.renderThumbContainerSlot()}
       </div>
@@ -348,7 +350,7 @@ export class SliderElement
 
   protected renderThumb(): TemplateResult {
     return html`
-      <div id="thumb" part="${this.getThumbPartAttr()}">
+      <div id="thumb" part=${this.getThumbPartAttr()}>
         ${this.renderThumbSlot()}
       </div>
     `;
@@ -368,7 +370,7 @@ export class SliderElement
 
   protected renderTrack(): TemplateResult {
     return html`
-      <div id="track" part="${this.getTrackPartAttr()}">
+      <div id="track" part=${this.getTrackPartAttr()}>
         ${this.renderTrackSlot()}
       </div>
     `;
@@ -388,7 +390,7 @@ export class SliderElement
 
   protected renderTrackFill(): TemplateResult {
     return html`
-      <div id="track-fill" part="${this.getTrackFillPartAttr()}">
+      <div id="track-fill" part=${this.getTrackFillPartAttr()}>
         ${this.renderTrackFillSlot()}
       </div>
     `;
@@ -412,9 +414,9 @@ export class SliderElement
     return html`
       <input
         type="hidden"
-        min="${this.min}"
-        max="${this.max}"
-        value="${this.value}"
+        min=${this.min}
+        max=${this.max}
+        value=${this.value}
       />
     `;
   }

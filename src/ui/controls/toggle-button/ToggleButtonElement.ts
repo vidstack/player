@@ -2,7 +2,7 @@
 import '../button/vds-button';
 
 import { html, TemplateResult } from 'lit';
-import { property, query } from 'lit/decorators';
+import { property, query } from 'lit/decorators.js';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { WithFocus } from '../../../shared/mixins/WithFocus';
@@ -56,18 +56,18 @@ export class ToggleButtonElement
     return this.rootEl;
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <vds-button
         id="root"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
-        label="${ifNonEmpty(this.label)}"
-        ?pressed="${this.pressed}"
-        ?disabled="${this.disabled}"
-        described-by="${ifNonEmpty(this.describedBy)}"
-        @click="${this.handleButtonClick}"
-        exportparts="${this.getRootExportPartsAttr()}"
+        class=${this.getRootClassAttr()}
+        part=${this.getRootPartAttr()}
+        label=${ifNonEmpty(this.label)}
+        ?pressed=${this.pressed}
+        ?disabled=${this.disabled}
+        described-by=${ifNonEmpty(this.describedBy)}
+        @click=${this.handleButtonClick}
+        exportparts=${this.getRootExportPartsAttr()}
       >
         ${this.renderToggle()}
       </vds-button>

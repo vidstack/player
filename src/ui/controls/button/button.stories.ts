@@ -29,15 +29,15 @@ function Template({
 }: Args): TemplateResult {
   return html`
     <vds-button
-      label="${ifNonEmpty(label)}"
-      described-by="${ifNonEmpty(describedBy)}"
-      controls="${ifNonEmpty(controls)}"
-      type="${ifNonEmpty(type)}"
-      ?hidden="${hidden}"
-      ?disabled="${disabled}"
-      ?has-popup="${hasPopup}"
-      ?expanded="${expanded}"
-      ?pressed="${pressed}"
+      label=${ifNonEmpty(label)}
+      described-by=${ifNonEmpty(describedBy)}
+      controls=${ifNonEmpty(controls)}
+      type=${ifNonEmpty(type)}
+      ?hidden=${hidden}
+      ?disabled=${disabled}
+      ?has-popup=${hasPopup}
+      ?expanded=${expanded}
+      ?pressed=${pressed}
       style="color: ${SB_THEME_COLOR};"
     >
       Hello

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
-import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
-import { LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { spy } from 'sinon';
 
 import {
@@ -60,7 +60,7 @@ describe('isColliding', () => {
 
 describe('safelyDefineCustomElement', () => {
   class FakeCustomElement extends LitElement {
-    render() {
+    protected render() {
       return html`<h1>penguins</h1>`;
     }
   }

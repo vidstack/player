@@ -53,17 +53,17 @@ function Template({
   onVdsExitFullscreenRequest,
 }: Args): TemplateResult {
   return html`
-    <vds-media-controller .canPlay="${true}" .fullscreen="${fakeFullscreen}">
+    <vds-media-controller .canPlay=${true} .fullscreen=${fakeFullscreen}>
       <vds-media-container>
         <vds-fake-media-provider slot="media"></vds-fake-media-provider>
 
         <vds-fullscreen-button
-          label="${ifNonEmpty(label)}"
-          described-by="${ifNonEmpty(describedBy)}"
-          ?disabled="${disabled}"
+          label=${ifNonEmpty(label)}
+          described-by=${ifNonEmpty(describedBy)}
+          ?disabled=${disabled}
           style="color: ${SB_THEME_COLOR};"
-          @vds-enter-fullscreen-request="${onVdsEnterFullscreenRequest}"
-          @vds-exit-fullscreen-request="${onVdsExitFullscreenRequest}"
+          @vds-enter-fullscreen-request=${onVdsEnterFullscreenRequest}
+          @vds-exit-fullscreen-request=${onVdsExitFullscreenRequest}
         >
           <div slot="enter">Enter</div>
           <div slot="exit">Exit</div>

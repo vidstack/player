@@ -9,8 +9,8 @@ import {
   PropertyValues,
   TemplateResult,
 } from 'lit';
-import { property, query, state } from 'lit/decorators';
-import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
+import { property, query, state } from 'lit/decorators.js';
+import { StyleInfo, styleMap } from 'lit-html/directives/style-map.js';
 import { throttle } from 'lodash-es';
 
 import {
@@ -181,7 +181,7 @@ export class ScrubberElement
     this.initThrottles();
   }
 
-  update(changedProperties: PropertyValues): void {
+  protected update(changedProperties: PropertyValues<this>): void {
     if (
       changedProperties.has('previewTimeThrottle') ||
       changedProperties.has('userSeekingThrottle')
@@ -267,7 +267,7 @@ export class ScrubberElement
   // Render (Root)
   // -------------------------------------------------------------------------------------------
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return this.renderScrubber();
   }
 
@@ -286,12 +286,12 @@ export class ScrubberElement
     return html`
       <div
         id="root"
-        part="${this.getScrubberPartAttr()}"
-        style="${styleMap(this.getScrubberStyleMap())}"
-        @pointerenter="${this.handleScrubberPointerEnter}"
-        @pointerleave="${this.handleScrubberPointerLeave}"
-        @pointermove="${this.handleScrubberPointerMove}"
-        ?hidden="${this.hidden}"
+        part=${this.getScrubberPartAttr()}
+        style=${styleMap(this.getScrubberStyleMap())}
+        @pointerenter=${this.handleScrubberPointerEnter}
+        @pointerleave=${this.handleScrubberPointerLeave}
+        @pointermove=${this.handleScrubberPointerMove}
+        ?hidden=${this.hidden}
       >
         ${this.renderSlider()} ${this.renderDefaultSlot()}
         ${this.renderPreviewSlot()}
@@ -349,13 +349,13 @@ export class ScrubberElement
       <div
         id="progress"
         role="progressbar"
-        part="${this.getProgressPartAttr()}"
-        ?hidden="${this.hidden}"
-        aria-label="${this.progressLabel}"
+        part=${this.getProgressPartAttr()}
+        ?hidden=${this.hidden}
+        aria-label=${this.progressLabel}
         aria-valuemin="0"
-        aria-valuemax="${this.duration}"
-        aria-valuenow="${this.seekableAmount}"
-        aria-valuetext="${valueText}"
+        aria-valuemax=${this.duration}
+        aria-valuenow=${this.seekableAmount}
+        aria-valuetext=${valueText}
       >
         ${this.renderProgressSlot()}
       </div>
@@ -389,22 +389,22 @@ export class ScrubberElement
     return html`
       <vds-slider
         id="slider"
-        label="${ifNonEmpty(this.sliderLabel)}"
+        label=${ifNonEmpty(this.sliderLabel)}
         min="0"
-        max="${this.duration}"
-        value="${this.isDraggingThumb ? this.previewTime : this.currentTime}"
-        step="${this.step}"
-        step-multiplier="${this.stepMultiplier}"
-        part="${this.getSliderPartAttr()}"
-        orientation="${this.orientation}"
-        throttle="${this.throttle}"
-        value-text="${this.getSliderProgressText()}"
-        @vds-slider-value-change="${this.handleSliderValueChange}"
-        @vds-slider-drag-start="${this.handleSliderDragStart}"
-        @vds-slider-drag-end="${this.handleSliderDragEnd}"
-        exportparts="${this.getSliderExportPartsAttr()}"
-        ?hidden="${this.hidden}"
-        ?disabled="${this.disabled}"
+        max=${this.duration}
+        value=${this.isDraggingThumb ? this.previewTime : this.currentTime}
+        step=${this.step}
+        step-multiplier=${this.stepMultiplier}
+        part=${this.getSliderPartAttr()}
+        orientation=${this.orientation}
+        throttle=${this.throttle}
+        value-text=${this.getSliderProgressText()}
+        @vds-slider-value-change=${this.handleSliderValueChange}
+        @vds-slider-drag-start=${this.handleSliderDragStart}
+        @vds-slider-drag-end=${this.handleSliderDragEnd}
+        exportparts=${this.getSliderExportPartsAttr()}
+        ?hidden=${this.hidden}
+        ?disabled=${this.disabled}
       >
         ${this.renderSliderContent()}
       </vds-slider>
@@ -492,9 +492,9 @@ export class ScrubberElement
     return html`
       <div
         id="preview-track"
-        part="${this.getPreviewTrackPartAttr()}"
-        ?hidden="${!this.isSeeking}"
-        ?disabled="${this.disabled}"
+        part=${this.getPreviewTrackPartAttr()}
+        ?hidden=${!this.isSeeking}
+        ?disabled=${this.disabled}
       ></div>
     `;
   }
@@ -541,8 +541,8 @@ export class ScrubberElement
   protected renderPreviewSlot(): TemplateResult {
     return html`
       <slot
-        name="${this.getPreviewSlotName()}"
-        @slotchange="${this.handlePreviewSlotChange}"
+        name=${this.getPreviewSlotName()}
+        @slotchange=${this.handlePreviewSlotChange}
       ></slot>
     `;
   }

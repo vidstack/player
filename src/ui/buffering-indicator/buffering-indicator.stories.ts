@@ -51,14 +51,14 @@ function Template({
   onVdsBufferingIndicatorHide,
 }: Args): TemplateResult {
   return html`
-    <vds-media-controller .canPlay="${fakeCanPlay}" .waiting="${fakeBuffering}">
+    <vds-media-controller .canPlay=${fakeCanPlay} .waiting=${fakeBuffering}>
       <vds-media-container>
         <vds-buffering-indicator
-          ?show-while-booting="${showWhileBooting}"
-          delay="${delay}"
+          delay=${delay}
+          ?show-while-booting=${showWhileBooting}
           style="color: ${SB_THEME_COLOR};"
-          @vds-buffering-indicator-show="${onVdsBufferingIndicatorShow}"
-          @vds-buffering-indicator-hide="${onVdsBufferingIndicatorHide}"
+          @vds-buffering-indicator-show=${onVdsBufferingIndicatorShow}
+          @vds-buffering-indicator-hide=${onVdsBufferingIndicatorHide}
         >
           <div>I'm Buffering!</div>
         </vds-buffering-indicator>

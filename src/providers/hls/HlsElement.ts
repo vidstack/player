@@ -1,6 +1,6 @@
 import Hls from 'hls.js';
 import { PropertyValues } from 'lit';
-import { property } from 'lit/decorators';
+import { property } from 'lit/decorators.js';
 
 import {
   CanPlay,
@@ -69,8 +69,10 @@ export class HlsElement
     this.handleMediaSrcChange();
   }
 
-  async firstUpdated(changedProps: PropertyValues): Promise<void> {
-    super.firstUpdated(changedProps);
+  protected async firstUpdated(
+    changedProperties: PropertyValues<this>,
+  ): Promise<void> {
+    super.firstUpdated(changedProperties);
     this.handleMediaSrcChange();
   }
 

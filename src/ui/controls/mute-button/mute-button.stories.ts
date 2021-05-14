@@ -51,17 +51,17 @@ function Template({
   onVdsUnmuteRequest,
 }: Args): TemplateResult {
   return html`
-    <vds-media-controller .canPlay="${true}" .muted="${fakeMuted}">
+    <vds-media-controller .canPlay=${true} .muted=${fakeMuted}>
       <vds-media-container>
         <vds-fake-media-provider slot="media"></vds-fake-media-provider>
 
         <vds-mute-button
-          label="${ifNonEmpty(label)}"
-          described-by="${ifNonEmpty(describedBy)}"
-          ?disabled="${disabled}"
+          label=${ifNonEmpty(label)}
+          described-by=${ifNonEmpty(describedBy)}
+          ?disabled=${disabled}
           style="color: ${SB_THEME_COLOR};"
-          @vds-mute-request="${onVdsMuteRequest}"
-          @vds-unmute-request="${onVdsUnmuteRequest}"
+          @vds-mute-request=${onVdsMuteRequest}
+          @vds-unmute-request=${onVdsUnmuteRequest}
         >
           <div slot="mute">Mute</div>
           <div slot="unmute">Unmute</div>

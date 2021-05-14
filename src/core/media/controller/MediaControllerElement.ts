@@ -76,7 +76,7 @@ export class MediaControllerElement extends LitElement {
    * update that will flow down to all consumer components. This record is consumed by
    * a media provider element as it's responsible for managing it (ie: updating context properties).
    *
-   * @state Exposed for testing.
+   * @internal Exposed for testing.
    */
   // Has to be in this order otherwise the `provide()` decorator will overwrite the context record.
   // Remember decorators are evaluated top-to-bottom! - https://www.typescriptlang.org/docs/handbook/decorators.html#decorator-composition
@@ -88,7 +88,7 @@ export class MediaControllerElement extends LitElement {
   // Render
   // -------------------------------------------------------------------------------------------
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`<slot></slot>`;
   }
 

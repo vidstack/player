@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Disposal, listenTo } from '@wcom/events';
 import { html, PropertyValues, TemplateResult } from 'lit';
-import { property, state } from 'lit/decorators';
+import { property, state } from 'lit/decorators.js';
 
 import {
   CanPlay,
@@ -60,8 +60,8 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 
   protected mediaEventsDisposal = new Disposal();
 
-  firstUpdated(changedProps: PropertyValues): void {
-    super.firstUpdated(changedProps);
+  protected firstUpdated(changedProperties: PropertyValues<this>): void {
+    super.firstUpdated(changedProperties);
     this.listenToMediaEvents();
   }
 
@@ -79,7 +79,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
    */
   protected renderMediaContent(): TemplateResult {
     return html`
-      <slot @slotchange="${this.handleDefaultSlotChange}"></slot>
+      <slot @slotchange=${this.handleDefaultSlotChange}></slot>
       Your browser does not support the <code>audio</code> or
       <code>video</code> element.
     `;

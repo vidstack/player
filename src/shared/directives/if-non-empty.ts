@@ -1,5 +1,4 @@
-import { nothing } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 /**
  * For AttributeParts, sets the attribute if the value is defined and non-empty, and removes
@@ -7,9 +6,6 @@ import { ifDefined } from 'lit/directives/if-defined';
  *
  * For other part types, this directive is a no-op.
  */
-export const ifNonEmpty = <T extends string | undefined>(
-  value: T,
-): typeof nothing | NonNullable<T> =>
-  ifDefined(
-    value === '' || value === 'undefined' ? undefined : value ?? undefined,
-  );
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const ifNonEmpty = <T extends string | undefined>(value: T) =>
+  ifDefined(value === '' || value === 'undefined' ? undefined : value);

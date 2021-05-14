@@ -74,33 +74,33 @@ function Template({
 }: Args): TemplateResult {
   return html`
     <vds-media-controller
-      .canPlay="${true}"
-      .currentTime="${fakeCurrentTime}"
-      .duration="${fakeDuration}"
-      .seekable="${createTimeRanges(0, fakeSeekableAmount)}"
+      .canPlay=${true}
+      .currentTime=${fakeCurrentTime}
+      .duration=${fakeDuration}
+      .seekable=${createTimeRanges(0, fakeSeekableAmount)}
     >
       <vds-media-container>
         <vds-fake-media-provider slot="media"></vds-fake-media-provider>
 
         <vds-scrubber
-          slider-label="${ifNonEmpty(sliderLabel)}"
-          progress-label="${ifNonEmpty(progressLabel)}"
-          progress-text="${ifNonEmpty(progressText)}"
-          ?hidden="${hidden}"
-          ?disabled="${disabled}"
-          step="${step}"
-          step-multiplier="${stepMultiplier}"
-          orientation="${orientation}"
-          ?no-preview-track="${noPreviewTrack}"
-          ?no-preview-clamp="${noPreviewClamp}"
-          throttle="${throttle}"
-          preview-time-throttle="${previewTimeThrottle}"
-          user-seeking-throttle="${userSeekingThrottle}"
-          @vds-seek-request="${onVdsSeekRequest}"
-          @vds-seeking-request="${onVdsSeekingRequest}"
-          @vds-scrubber-preview-show="${onVdsScrubberPreviewShow}"
-          @vds-scrubber-preview-hide="${onVdsScrubberPreviewHide}"
-          @vds-scrubber-preview-time-update="${onVdsScrubberPreviewTimeUpdate}"
+          slider-label=${ifNonEmpty(sliderLabel)}
+          progress-label=${ifNonEmpty(progressLabel)}
+          progress-text=${ifNonEmpty(progressText)}
+          ?hidden=${hidden}
+          ?disabled=${disabled}
+          step=${step}
+          step-multiplier=${stepMultiplier}
+          orientation=${orientation}
+          ?no-preview-track=${noPreviewTrack}
+          ?no-preview-clamp=${noPreviewClamp}
+          throttle=${throttle}
+          preview-time-throttle=${previewTimeThrottle}
+          user-seeking-throttle=${userSeekingThrottle}
+          @vds-seek-request=${onVdsSeekRequest}
+          @vds-seeking-request=${onVdsSeekingRequest}
+          @vds-scrubber-preview-show=${onVdsScrubberPreviewShow}
+          @vds-scrubber-preview-hide=${onVdsScrubberPreviewHide}
+          @vds-scrubber-preview-time-update=${onVdsScrubberPreviewTimeUpdate}
         >
           <div class="preview" slot="preview">Preview</div>
         </vds-scrubber>

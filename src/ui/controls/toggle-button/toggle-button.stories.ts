@@ -42,10 +42,10 @@ function Template({
 }: Args): TemplateResult {
   return html`
     <vds-toggle-button
-      label="${ifNonEmpty(label)}"
-      described-by="${ifNonEmpty(describedBy)}"
-      ?pressed="${args['pressed ']}"
-      ?disabled="${disabled}"
+      label=${ifNonEmpty(label)}
+      described-by=${ifNonEmpty(describedBy)}
+      ?pressed=${args['pressed ']}
+      ?disabled=${disabled}
       style="color: ${SB_THEME_COLOR};"
     >
       <div slot="pressed">Pressed</div>

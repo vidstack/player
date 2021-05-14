@@ -5,7 +5,7 @@ import {
   PropertyValues,
   TemplateResult,
 } from 'lit';
-import { property, state } from 'lit/decorators';
+import { property, state } from 'lit/decorators.js';
 
 import { mediaContext } from '../../core';
 import { getSlottedChildren, setAttribute } from '../../utils/dom';
@@ -61,13 +61,9 @@ export class BufferingIndicatorElement
   @property({ type: Boolean, attribute: 'show-while-booting' })
   showWhileBooting = false;
 
-  render(): TemplateResult {
-    return html`<slot @slotchange="${this.handleDefaultSlotChange}"></slot>`;
-  }
-
-  updated(changedProps: PropertyValues): void {
+  protected updated(changedProperties: PropertyValues<this>): void {
     this.handleTogglingHiddenAttr();
-    super.updated(changedProps);
+    super.updated(changedProperties);
   }
 
   disconnectedCallback(): void {
@@ -77,6 +73,10 @@ export class BufferingIndicatorElement
     super.disconnectedCallback();
 
     this.wasPrevHidden = true;
+  }
+
+  protected render(): TemplateResult {
+    return html`<slot @slotchange=${this.handleDefaultSlotChange}></slot>`;
   }
 
   protected handleDefaultSlotChange(): void {

@@ -32,7 +32,7 @@ export class TimeCurrentElement
   label = 'Current time';
 
   /**
-   * @state
+   * @internal
    */
   @mediaContext.currentTime.consume()
   seconds = mediaContext.currentTime.defaultValue;

@@ -1,4 +1,4 @@
-import { property } from 'lit/decorators';
+import { property } from 'lit/decorators.js';
 
 import {
   mediaContext,

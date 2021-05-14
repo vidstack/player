@@ -1,10 +1,5 @@
-import {
-  aTimeout,
-  elementUpdated,
-  expect,
-  html,
-  oneEvent,
-} from '@open-wc/testing';
+import { aTimeout, elementUpdated, expect, oneEvent } from '@open-wc/testing';
+import { html } from 'lit';
 
 import { FakeMediaProviderElement } from '../../../core';
 import { buildMediaFixture } from '../../../core/fakes/fakes.helpers';

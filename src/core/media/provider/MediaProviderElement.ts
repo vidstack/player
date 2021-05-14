@@ -1,7 +1,7 @@
 import { DerivedContext } from '@wcom/context';
 import { Disposal } from '@wcom/events';
 import { LitElement, PropertyValues } from 'lit';
-import { property } from 'lit/decorators';
+import { property } from 'lit/decorators.js';
 
 import { isUndefined } from '../../../utils/unit';
 import {
@@ -66,7 +66,7 @@ export abstract class MediaProviderElement<EngineType = unknown>
     this.contextQueue.serveImmediately = true;
   }
 
-  updated(changedProperties: PropertyValues): void {
+  protected updated(changedProperties: PropertyValues<this>): void {
     if (changedProperties.has('autoplay')) {
       this.context.autoplay = this.autoplay;
     }
@@ -358,7 +358,7 @@ export abstract class MediaProviderElement<EngineType = unknown>
    * If there's no media controller then this will be a plain JS object that's used to keep
    * track of media state.
    *
-   * @state Exposed for testing.
+   * @internal Exposed for testing.
    */
   @mediaContextRecord.consume()
   readonly context = mediaContextRecord.defaultValue;

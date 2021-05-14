@@ -1,10 +1,5 @@
-import {
-  elementUpdated,
-  expect,
-  fixture,
-  html,
-  oneEvent,
-} from '@open-wc/testing';
+import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
+import { html } from 'lit';
 import { mock } from 'sinon';
 
 import { VdsCustomEvent } from '../../../../shared/events';
@@ -71,15 +66,11 @@ describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, () => {
     it('should set aria busy attribute correctly', async () => {
       const { provider, container } = await buildMediaFixture();
 
-      const root = container.shadowRoot?.querySelector(
-        '#root',
-      ) as HTMLDivElement;
-
-      expect(root).to.have.attribute('aria-busy', 'true');
+      expect(container.rootElement).to.have.attribute('aria-busy', 'true');
 
       provider.context.canPlay = true;
       await elementUpdated(container);
-      expect(root).to.have.attribute('aria-busy', 'false');
+      expect(container.rootElement).to.have.attribute('aria-busy', 'false');
     });
 
     it('should apply aspect ratio given it is valid', async () => {
@@ -90,12 +81,10 @@ describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, () => {
       container.aspectRatio = '16:9';
       await elementUpdated(container);
 
-      const root = container.shadowRoot?.querySelector(
-        '#root',
-      ) as HTMLDivElement;
-
-      expect(root).to.have.class('with-aspect-ratio');
-      expect(root.style.paddingBottom).to.equal('min(100vh, 56.25%)');
+      expect(container.rootElement).to.have.class('with-aspect-ratio');
+      expect(container.rootElement.style.paddingBottom).to.equal(
+        'min(100vh, 56.25%)',
+      );
     });
 
     it('should not apply aspect ratio given it is invalid', async () => {
@@ -106,12 +95,8 @@ describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, () => {
       container.aspectRatio = '16-9';
       await elementUpdated(container);
 
-      const root = container.shadowRoot?.querySelector(
-        '#root',
-      ) as HTMLDivElement;
-
-      expect(root).to.not.have.class('with-aspect-ratio');
-      expect(root.style.paddingBottom).to.equal('');
+      expect(container.rootElement).to.not.have.class('with-aspect-ratio');
+      expect(container.rootElement.style.paddingBottom).to.equal('');
     });
 
     it('should not apply aspect ratio given view type is not video', async () => {

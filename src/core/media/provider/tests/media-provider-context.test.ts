@@ -1,4 +1,5 @@
-import { elementUpdated, expect, html } from '@open-wc/testing';
+import { elementUpdated, expect } from '@open-wc/testing';
+import { html } from 'lit';
 
 import { safelyDefineCustomElement } from '../../../../utils/dom';
 import { buildMediaFixture, MediaFixture } from '../../../fakes/fakes.helpers';

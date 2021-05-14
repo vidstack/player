@@ -1,4 +1,5 @@
-import { elementUpdated, expect, html, oneEvent } from '@open-wc/testing';
+import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
+import { html } from 'lit';
 
 import {
   FakeMediaProviderElement,

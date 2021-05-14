@@ -51,17 +51,17 @@ function Template({
   onVdsPauseRequest,
 }: Args): TemplateResult {
   return html`
-    <vds-media-controller .canPlay="${true}" .paused="${fakePaused}">
+    <vds-media-controller .canPlay=${true} .paused=${fakePaused}>
       <vds-media-container>
         <vds-fake-media-provider slot="media"></vds-fake-media-provider>
 
         <vds-play-button
-          label="${ifNonEmpty(label)}"
-          described-by="${ifNonEmpty(describedBy)}"
-          ?disabled="${disabled}"
+          label=${ifNonEmpty(label)}
+          described-by=${ifNonEmpty(describedBy)}
+          ?disabled=${disabled}
           style="color: ${SB_THEME_COLOR};"
-          @vds-play-request="${onVdsPlayRequest}"
-          @vds-pause-request="${onVdsPauseRequest}"
+          @vds-play-request=${onVdsPlayRequest}
+          @vds-pause-request=${onVdsPauseRequest}
         >
           <div slot="play">Play</div>
           <div slot="pause">Pause</div>

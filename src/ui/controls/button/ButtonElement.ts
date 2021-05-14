@@ -1,7 +1,7 @@
 import { Disposal, listenTo } from '@wcom/events';
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-import { property, query } from 'lit/decorators';
-import { ifDefined } from 'lit/directives/if-defined';
+import { property, query } from 'lit/decorators.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { WithFocus } from '../../../shared/mixins/WithFocus';
@@ -95,21 +95,21 @@ export class ButtonElement
   // Render
   // -------------------------------------------------------------------------------------------
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <button
         id="root"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
-        type="${ifNonEmpty(this.type)}"
-        aria-label="${ifNonEmpty(this.label)}"
-        aria-controls="${ifNonEmpty(this.controls)}"
-        aria-haspopup="${ifDefined(this.hasAriaPopupMenu())}"
-        aria-pressed="${ifDefined(this.isAriaPressed())}"
-        aria-expanded="${ifDefined(this.isAriaExpanded())}"
-        aria-describedby="${ifNonEmpty(this.describedBy)}"
-        ?hidden="${this.hidden}"
-        ?disabled="${this.disabled}"
+        class=${this.getRootClassAttr()}
+        part=${this.getRootPartAttr()}
+        type=${ifNonEmpty(this.type)}
+        aria-label=${ifNonEmpty(this.label)}
+        aria-controls=${ifNonEmpty(this.controls)}
+        aria-haspopup=${ifDefined(this.hasAriaPopupMenu())}
+        aria-pressed=${ifDefined(this.isAriaPressed())}
+        aria-expanded=${ifDefined(this.isAriaExpanded())}
+        aria-describedby=${ifNonEmpty(this.describedBy)}
+        ?hidden=${this.hidden}
+        ?disabled=${this.disabled}
       >
         ${this.renderRootContent()}
       </button>

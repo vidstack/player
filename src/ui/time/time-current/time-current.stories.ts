@@ -41,12 +41,12 @@ function Template({
   padHours,
 }: Args): TemplateResult {
   return html`
-    <vds-media-controller .currentTime="${fakeCurrentTime}">
+    <vds-media-controller .currentTime=${fakeCurrentTime}>
       <vds-media-container>
         <vds-time-current
-          label="${ifNonEmpty(label)}"
-          ?always-show-hours="${alwaysShowHours}"
-          ?pad-hours="${padHours}"
+          label=${ifNonEmpty(label)}
+          ?always-show-hours=${alwaysShowHours}
+          ?pad-hours=${padHours}
           style="color: ${SB_THEME_COLOR};"
         ></vds-time-current>
       </vds-media-container>

@@ -1,4 +1,5 @@
-import { elementUpdated, expect, html } from '@open-wc/testing';
+import { elementUpdated, expect } from '@open-wc/testing';
+import { html } from 'lit';
 
 import { getSlottedChildren } from '../../../../utils/dom';
 import { FakeMediaProviderElement } from '../../../fakes/FakeMediaProviderElement';
@@ -55,13 +56,12 @@ describe(VDS_MEDIA_UI_ELEMENT_TAG_NAME, () => {
   it('should toggle root-hidden css part as context updates', async () => {
     // Not ready.
     const { provider, ui } = await buildFixture();
-    const root = ui.shadowRoot?.querySelector('#root') as HTMLDivElement;
-    expect(root.getAttribute('part')).to.include('root-hidden');
+    expect(ui.rootElement.getAttribute('part')).to.include('root-hidden');
 
     // Ready.
     provider.context.canPlay = true;
     await elementUpdated(ui);
-    expect(root.getAttribute('part')).to.not.include('root-hidden');
+    expect(ui.rootElement.getAttribute('part')).to.not.include('root-hidden');
   });
 
   it('should return element [rootElement]', async () => {

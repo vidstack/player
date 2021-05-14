@@ -1,6 +1,6 @@
 import { CSSResultGroup, html, PropertyValues, TemplateResult } from 'lit';
-import { property } from 'lit/decorators';
-import { ifDefined } from 'lit/directives/if-defined';
+import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 import {
   MediaType,
@@ -73,24 +73,24 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
     );
   }
 
-  firstUpdated(changedProps: PropertyValues): void {
+  protected firstUpdated(changedProperties: PropertyValues<this>): void {
     this.mediaEl = this.shadowRoot?.querySelector('video') as HTMLVideoElement;
-    super.firstUpdated(changedProps);
+    super.firstUpdated(changedProperties);
   }
 
   // -------------------------------------------------------------------------------------------
   // Render
   // -------------------------------------------------------------------------------------------
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <div
         id="root"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
+        class=${this.getRootClassAttr()}
+        part=${this.getRootPartAttr()}
       >
         ${this.renderVideo()}
-        <slot name="ui" @slotchange="${this.handleUiSlotChange}"></slot>
+        <slot name="ui" @slotchange=${this.handleUiSlotChange}></slot>
       </div>
     `;
   }
@@ -127,23 +127,23 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
   protected renderVideo(): TemplateResult {
     return html`
       <video
-        part="${this.getVideoPartAttr()}"
-        src="${ifNonEmpty(this.shouldSetVideoSrcAttr() ? this.src : '')}"
-        width="${ifNumber(this.width)}"
-        height="${ifNumber(this.height)}"
-        poster="${ifDefined(this.poster)}"
-        preload="${ifNonEmpty(this.preload)}"
-        crossorigin="${ifNonEmpty(this.crossOrigin)}"
-        controlslist="${ifNonEmpty(this.controlsList)}"
-        ?autoplay="${this.autoplay}"
-        ?loop="${this.loop}"
-        ?playsinline="${this.playsinline}"
-        ?controls="${this.controls}"
-        ?autopictureinpicture="${this.autoPiP}"
-        ?disablepictureinpicture="${this.disablePiP}"
-        ?disableremoteplayback="${this.disableRemotePlayback}"
-        .defaultMuted="${this.defaultMuted ?? this.muted}"
-        .defaultPlaybackRate="${this.defaultPlaybackRate ?? 1}"
+        part=${this.getVideoPartAttr()}
+        src=${ifNonEmpty(this.shouldSetVideoSrcAttr() ? this.src : '')}
+        width=${ifNumber(this.width)}
+        height=${ifNumber(this.height)}
+        poster=${ifDefined(this.poster)}
+        preload=${ifNonEmpty(this.preload)}
+        crossorigin=${ifNonEmpty(this.crossOrigin)}
+        controlslist=${ifNonEmpty(this.controlsList)}
+        ?autoplay=${this.autoplay}
+        ?loop=${this.loop}
+        ?playsinline=${this.playsinline}
+        ?controls=${this.controls}
+        ?autopictureinpicture=${this.autoPiP}
+        ?disablepictureinpicture=${this.disablePiP}
+        ?disableremoteplayback=${this.disableRemotePlayback}
+        .defaultMuted=${this.defaultMuted ?? this.muted}
+        .defaultPlaybackRate=${this.defaultPlaybackRate ?? 1}
       >
         ${this.renderMediaContent()}
       </video>

@@ -1,7 +1,7 @@
 import '../bundle/define';
 
 import { html } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 import {
   MediaContainerElementProps,
@@ -117,67 +117,67 @@ function Template({
 }: Args) {
   return html`
     <vds-media-controller
-      @vds-mute-request="${onVdsMuteRequest}"
-      @vds-unmute-request="${onVdsUnmuteRequest}"
-      @vds-enter-fullscreen-request="${onVdsEnterFullscreenRequest}"
-      @vds-exit-fullscreen-request="${onVdsExitFullscreenRequest}"
-      @vds-play-request="${onVdsPlayRequest}"
-      @vds-pause-request="${onVdsPauseRequest}"
-      @vds-seek-request="${onVdsSeekRequest}"
-      @vds-seeking-request="${onVdsSeekingRequest}"
-      @vds-volume-change-request="${onVdsVolumeChangeRequest}"
+      @vds-mute-request=${onVdsMuteRequest}
+      @vds-unmute-request=${onVdsUnmuteRequest}
+      @vds-enter-fullscreen-request=${onVdsEnterFullscreenRequest}
+      @vds-exit-fullscreen-request=${onVdsExitFullscreenRequest}
+      @vds-play-request=${onVdsPlayRequest}
+      @vds-pause-request=${onVdsPauseRequest}
+      @vds-seek-request=${onVdsSeekRequest}
+      @vds-seeking-request=${onVdsSeekingRequest}
+      @vds-volume-change-request=${onVdsVolumeChangeRequest}
     >
       <vds-media-container
-        aspect-ratio="${ifDefined(aspectRatio)}"
-        @vds-media-container-connect="${onVdsMediaContainerConnect}"
+        aspect-ratio=${ifDefined(aspectRatio)}
+        @vds-media-container-connect=${onVdsMediaContainerConnect}
       >
         <vds-video
           slot="media"
-          src="${src}"
-          width="${ifDefined(width)}"
-          height="${ifDefined(height)}"
-          aspect-ratio="${ifDefined(aspectRatio)}"
-          poster="${ifDefined(poster)}"
-          ?paused="${paused}"
-          volume="${volume}"
-          current-time="${currentTime}"
-          ?muted="${muted}"
-          ?playsinline="${playsinline}"
-          ?loop="${loop}"
-          ?controls="${controls}"
-          crossorigin="${ifDefined(crossOrigin)}"
-          preload="${ifDefined(preload)}"
-          controlslist="${ifDefined(controlsList)}"
-          ?autopictureinpicture="${autoPiP}"
-          ?disablepictureinpicture="${disablePiP}"
-          ?disableremoteplayback="${disableRemotePlayback}"
-          @vds-abort="${onVdsAbort}"
-          @vds-can-play="${onVdsCanPlay}"
-          @vds-can-play-through="${onVdsCanPlayThrough}"
-          @vds-media-provider-connect="${onVdsMediaProviderConnect}"
-          @vds-duration-change="${onVdsDurationChange}"
-          @vds-emptied="${onVdsEmptied}"
-          @vds-ended="${onVdsEnded}"
-          @vds-error="${onVdsError}"
-          @vds-fullscreen-change="${onVdsFullscreenChange}"
-          @vds-loaded-data="${onVdsLoadedData}"
-          @vds-load-start="${onVdsLoadStart}"
-          @vds-loaded-metadata="${onVdsLoadedMetadata}"
-          @vds-media-type-change="${onVdsMediaTypeChange}"
-          @vds-pause="${onVdsPause}"
-          @vds-play="${onVdsPlay}"
-          @vds-playing="${onVdsPlaying}"
-          @vds-progress="${onVdsProgress}"
-          @vds-seeked="${onVdsSeeked}"
-          @vds-seeking="${onVdsSeeking}"
-          @vds-stalled="${onVdsStalled}"
-          @vds-started="${onVdsStarted}"
-          @vds-suspend="${onVdsSuspend}"
-          @vds-replay="${onVdsReplay}"
-          @vds-time-update="${onVdsTimeUpdate}"
-          @vds-view-type-change="${onVdsViewTypeChange}"
-          @vds-volume-change="${onVdsVolumeChange}"
-          @vds-waiting="${onVdsWaiting}"
+          src=${src}
+          width=${ifDefined(width)}
+          height=${ifDefined(height)}
+          aspect-ratio=${ifDefined(aspectRatio)}
+          poster=${ifDefined(poster)}
+          ?paused=${paused}
+          volume=${volume}
+          current-time=${currentTime}
+          ?muted=${muted}
+          ?playsinline=${playsinline}
+          ?loop=${loop}
+          ?controls=${controls}
+          crossorigin=${ifDefined(crossOrigin)}
+          preload=${ifDefined(preload)}
+          controlslist=${ifDefined(controlsList)}
+          ?autopictureinpicture=${autoPiP}
+          ?disablepictureinpicture=${disablePiP}
+          ?disableremoteplayback=${disableRemotePlayback}
+          @vds-abort=${onVdsAbort}
+          @vds-can-play=${onVdsCanPlay}
+          @vds-can-play-through=${onVdsCanPlayThrough}
+          @vds-media-provider-connect=${onVdsMediaProviderConnect}
+          @vds-duration-change=${onVdsDurationChange}
+          @vds-emptied=${onVdsEmptied}
+          @vds-ended=${onVdsEnded}
+          @vds-error=${onVdsError}
+          @vds-fullscreen-change=${onVdsFullscreenChange}
+          @vds-loaded-data=${onVdsLoadedData}
+          @vds-load-start=${onVdsLoadStart}
+          @vds-loaded-metadata=${onVdsLoadedMetadata}
+          @vds-media-type-change=${onVdsMediaTypeChange}
+          @vds-pause=${onVdsPause}
+          @vds-play=${onVdsPlay}
+          @vds-playing=${onVdsPlaying}
+          @vds-progress=${onVdsProgress}
+          @vds-seeked=${onVdsSeeked}
+          @vds-seeking=${onVdsSeeking}
+          @vds-stalled=${onVdsStalled}
+          @vds-started=${onVdsStarted}
+          @vds-suspend=${onVdsSuspend}
+          @vds-replay=${onVdsReplay}
+          @vds-time-update=${onVdsTimeUpdate}
+          @vds-view-type-change=${onVdsViewTypeChange}
+          @vds-volume-change=${onVdsVolumeChange}
+          @vds-waiting=${onVdsWaiting}
         ></vds-video>
 
         <h2>Toggles</h2>

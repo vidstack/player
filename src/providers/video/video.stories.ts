@@ -1,5 +1,5 @@
 import { html, TemplateResult } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 import { VdsMediaEvents, VdsMediaProviderEvents } from '../../core';
 import {
@@ -79,50 +79,50 @@ function Template({
 }: Args): TemplateResult {
   return html`
     <vds-video
-      src="${src}"
-      width="${ifDefined(width)}"
-      height="${ifDefined(height)}"
-      poster="${ifDefined(poster)}"
-      ?paused="${paused}"
-      volume="${volume}"
-      current-time="${currentTime}"
-      ?muted="${muted}"
-      ?playsinline="${playsinline}"
-      ?loop="${loop}"
-      ?controls="${controls}"
-      crossorigin="${ifDefined(crossOrigin)}"
-      preload="${ifDefined(preload)}"
-      controlslist="${ifDefined(controlsList)}"
-      ?autopictureinpicture="${autoPiP}"
-      ?disablepictureinpicture="${disablePiP}"
-      ?disableremoteplayback="${disableRemotePlayback}"
-      @vds-media-provider-connect="${onVdsMediaProviderConnect}"
-      @vds-abort="${onVdsAbort}"
-      @vds-can-play="${onVdsCanPlay}"
-      @vds-can-play-through="${onVdsCanPlayThrough}"
-      @vds-duration-change="${onVdsDurationChange}"
-      @vds-emptied="${onVdsEmptied}"
-      @vds-ended="${onVdsEnded}"
-      @vds-error="${onVdsError}"
-      @vds-fullscreen-change="${onVdsFullscreenChange}"
-      @vds-loaded-data="${onVdsLoadedData}"
-      @vds-load-start="${onVdsLoadStart}"
-      @vds-loaded-metadata="${onVdsLoadedMetadata}"
-      @vds-media-type-change="${onVdsMediaTypeChange}"
-      @vds-pause="${onVdsPause}"
-      @vds-play="${onVdsPlay}"
-      @vds-playing="${onVdsPlaying}"
-      @vds-progress="${onVdsProgress}"
-      @vds-seeked="${onVdsSeeked}"
-      @vds-seeking="${onVdsSeeking}"
-      @vds-stalled="${onVdsStalled}"
-      @vds-started="${onVdsStarted}"
-      @vds-suspend="${onVdsSuspend}"
-      @vds-replay="${onVdsReplay}"
-      @vds-time-update="${onVdsTimeUpdate}"
-      @vds-view-type-change="${onVdsViewTypeChange}"
-      @vds-volume-change="${onVdsVolumeChange}"
-      @vds-waiting="${onVdsWaiting}"
+      src=${src}
+      width=${ifDefined(width)}
+      height=${ifDefined(height)}
+      poster=${ifDefined(poster)}
+      ?paused=${paused}
+      volume=${volume}
+      current-time=${currentTime}
+      ?muted=${muted}
+      ?playsinline=${playsinline}
+      ?loop=${loop}
+      ?controls=${controls}
+      crossorigin=${ifDefined(crossOrigin)}
+      preload=${ifDefined(preload)}
+      controlslist=${ifDefined(controlsList)}
+      ?autopictureinpicture=${autoPiP}
+      ?disablepictureinpicture=${disablePiP}
+      ?disableremoteplayback=${disableRemotePlayback}
+      @vds-media-provider-connect=${onVdsMediaProviderConnect}
+      @vds-abort=${onVdsAbort}
+      @vds-can-play=${onVdsCanPlay}
+      @vds-can-play-through=${onVdsCanPlayThrough}
+      @vds-duration-change=${onVdsDurationChange}
+      @vds-emptied=${onVdsEmptied}
+      @vds-ended=${onVdsEnded}
+      @vds-error=${onVdsError}
+      @vds-fullscreen-change=${onVdsFullscreenChange}
+      @vds-loaded-data=${onVdsLoadedData}
+      @vds-load-start=${onVdsLoadStart}
+      @vds-loaded-metadata=${onVdsLoadedMetadata}
+      @vds-media-type-change=${onVdsMediaTypeChange}
+      @vds-pause=${onVdsPause}
+      @vds-play=${onVdsPlay}
+      @vds-playing=${onVdsPlaying}
+      @vds-progress=${onVdsProgress}
+      @vds-seeked=${onVdsSeeked}
+      @vds-seeking=${onVdsSeeking}
+      @vds-stalled=${onVdsStalled}
+      @vds-started=${onVdsStarted}
+      @vds-suspend=${onVdsSuspend}
+      @vds-replay=${onVdsReplay}
+      @vds-time-update=${onVdsTimeUpdate}
+      @vds-view-type-change=${onVdsViewTypeChange}
+      @vds-volume-change=${onVdsVolumeChange}
+      @vds-waiting=${onVdsWaiting}
     ></vds-video>
   `;
 }

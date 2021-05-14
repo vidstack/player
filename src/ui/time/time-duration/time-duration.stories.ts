@@ -41,12 +41,12 @@ function Template({
   padHours,
 }: Args): TemplateResult {
   return html`
-    <vds-media-controller .duration="${fakeDuration}">
+    <vds-media-controller .duration=${fakeDuration}>
       <vds-media-container>
         <vds-time-duration
-          label="${ifNonEmpty(label)}"
-          ?always-show-hours="${alwaysShowHours}"
-          ?pad-hours="${padHours}"
+          label=${ifNonEmpty(label)}
+          ?always-show-hours=${alwaysShowHours}
+          ?pad-hours=${padHours}
           style="color: ${SB_THEME_COLOR};"
         ></vds-time-duration>
       </vds-media-container>

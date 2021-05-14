@@ -53,17 +53,17 @@ function Template({
 }: Args): TemplateResult {
   return html`
     <vds-media-controller
-      .currentTime="${fakeCurrentTime}"
-      .duration="${fakeDuration}"
+      .currentTime=${fakeCurrentTime}
+      .duration=${fakeDuration}
     >
       <vds-media-container>
         <vds-time-progress
-          label="${ifNonEmpty(label)}"
-          time-separator="${timeSeparator}"
-          current-time-label="${ifNonEmpty(currentTimeLabel)}"
-          duration-label="${ifNonEmpty(durationLabel)}"
-          ?always-show-hours="${alwaysShowHours}"
-          ?pad-hours="${padHours}"
+          label=${ifNonEmpty(label)}
+          time-separator=${timeSeparator}
+          current-time-label=${ifNonEmpty(currentTimeLabel)}
+          duration-label=${ifNonEmpty(durationLabel)}
+          ?always-show-hours=${alwaysShowHours}
+          ?pad-hours=${padHours}
           style="color: ${SB_THEME_COLOR};"
         ></vds-time-progress>
       </vds-media-container>

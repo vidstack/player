@@ -1,10 +1,5 @@
-import {
-  elementUpdated,
-  expect,
-  fixture,
-  html,
-  oneEvent,
-} from '@open-wc/testing';
+import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
+import { html } from 'lit';
 
 import {
   VdsSliderDragEndEvent,

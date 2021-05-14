@@ -5,8 +5,8 @@ import {
   PropertyValues,
   TemplateResult,
 } from 'lit';
-import { property } from 'lit/decorators';
-import { ifDefined } from 'lit/directives/if-defined';
+import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 import { getSlottedChildren, setAttribute } from '../../../utils/dom';
 import { isNil } from '../../../utils/unit';
@@ -51,14 +51,14 @@ export class ToggleElement extends LitElement implements ToggleElementProps {
     this.currentNotPressedSlotElement = undefined;
   }
 
-  update(changedProperties: PropertyValues): void {
+  protected update(changedProperties: PropertyValues<this>): void {
     super.update(changedProperties);
     if (changedProperties.has('pressed')) {
       this.toggle();
     }
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return this.renderToggle();
   }
 
@@ -77,7 +77,7 @@ export class ToggleElement extends LitElement implements ToggleElementProps {
   protected renderPressedSlot(): TemplateResult {
     return html`<slot
       name=${this.getPressedSlotName()}
-      @slotchange="${this.handlePressedSlotChange}"
+      @slotchange=${this.handlePressedSlotChange}
     ></slot>`;
   }
 
@@ -101,7 +101,7 @@ export class ToggleElement extends LitElement implements ToggleElementProps {
   protected renderNotPressedSlot(): TemplateResult {
     return html`<slot
       name=${ifDefined(this.getNotPressedSlotName())}
-      @slotchange="${this.handleNotPressedSlotChange}"
+      @slotchange=${this.handleNotPressedSlotChange}
     ></slot>`;
   }
 

@@ -1,4 +1,5 @@
-import { elementUpdated, expect, html } from '@open-wc/testing';
+import { elementUpdated, expect } from '@open-wc/testing';
+import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../core/fakes/fakes.helpers';
 import { ToggleButtonElement } from '../ToggleButtonElement';

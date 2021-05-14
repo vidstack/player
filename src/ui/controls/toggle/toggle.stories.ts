@@ -34,10 +34,7 @@ type Args = ToggleElementProps & { 'pressed ': boolean };
 
 function Template(args: Args): TemplateResult {
   return html`
-    <vds-toggle
-      ?pressed="${args['pressed ']}"
-      style="color: ${SB_THEME_COLOR};"
-    >
+    <vds-toggle ?pressed=${args['pressed ']} style="color: ${SB_THEME_COLOR};">
       <div>Not Pressed</div>
       <div slot="pressed">Pressed</div>
     </vds-toggle>

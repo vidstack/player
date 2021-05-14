@@ -33,11 +33,10 @@ export class VideoPresentationController extends WithEvents<VideoPresentationCon
   constructor(protected host: VideoPresentationControllerHost) {
     super();
 
-    // Cast to `any` to get past `protected` modifier.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const firstUpdated = (host as any).firstUpdated;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (host as any).firstUpdated = (changedProperties: PropertyValues) => {
+    (host as any).firstUpdated = (changedProperties: PropertyValues<this>) => {
       firstUpdated?.call(host, changedProperties);
       this.disposal.add(this.addPresentationModeChangeEventListener());
     };

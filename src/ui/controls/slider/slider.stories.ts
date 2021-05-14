@@ -37,20 +37,20 @@ function Template({
 }: Args): TemplateResult {
   return html`
     <vds-slider
-      label="${ifNonEmpty(label)}"
-      min="${min}"
-      max="${max}"
-      step="${step}"
-      step-multiplier="${stepMultiplier}"
-      value="${value}"
-      value-text="${ifNonEmpty(valueText)}"
-      orientation="${orientation}"
-      throttle="${throttle}"
-      ?disabled="${disabled}"
-      ?hidden="${hidden}"
-      @vds-slider-value-change="${onVdsSliderValueChange}"
-      @vds-slider-drag-start="${onVdsSliderDragStart}"
-      @vds-slider-drag-end="${onVdsSliderDragEnd}"
+      label=${ifNonEmpty(label)}
+      min=${min}
+      max=${max}
+      step=${step}
+      step-multiplier=${stepMultiplier}
+      value=${value}
+      value-text=${ifNonEmpty(valueText)}
+      orientation=${orientation}
+      throttle=${throttle}
+      ?disabled=${disabled}
+      ?hidden=${hidden}
+      @vds-slider-value-change=${onVdsSliderValueChange}
+      @vds-slider-drag-start=${onVdsSliderDragStart}
+      @vds-slider-drag-end=${onVdsSliderDragEnd}
     ></vds-slider>
   `;
 }

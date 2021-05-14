@@ -11,10 +11,6 @@ import { VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME } from '../media/container/vds-med
 import { FakeMediaProviderElement } from './FakeMediaProviderElement';
 import { VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME } from './vds-fake-media-provider';
 
-export function emitEventWithTimeout(el: HTMLElement, event: Event): void {
-  setTimeout(() => el.dispatchEvent(event));
-}
-
 export interface MediaFixture {
   controller: MediaControllerElement;
   container: MediaContainerElement;

@@ -1,5 +1,5 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-import { property, query } from 'lit/decorators';
+import { property, query } from 'lit/decorators.js';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { timeElementStyles } from './time.css';
@@ -60,14 +60,14 @@ export class TimeElement extends LitElement implements TimeElementProps {
     return this.rootEl;
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <time
         id="root"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
-        aria-label="${ifNonEmpty(this.label)}"
-        datetime="${this.getFormattedDuration()}"
+        class=${this.getRootClassAttr()}
+        part=${this.getRootPartAttr()}
+        aria-label=${ifNonEmpty(this.label)}
+        datetime=${this.getFormattedDuration()}
       >
         ${this.renderRootContent()}
       </time>

@@ -25,10 +25,10 @@ function Template({
 }: Args): TemplateResult {
   return html`
     <vds-time
-      label="${ifNonEmpty(label)}"
-      seconds="${seconds}"
-      ?always-show-hours="${alwaysShowHours}"
-      ?pad-hours="${padHours}"
+      label=${ifNonEmpty(label)}
+      seconds=${seconds}
+      ?always-show-hours=${alwaysShowHours}
+      ?pad-hours=${padHours}
       style="color: ${SB_THEME_COLOR};"
     ></vds-time>
   `;
