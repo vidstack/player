@@ -1,5 +1,4 @@
-import { listenTo } from '@wcom/events';
-
+import { listen } from '../shared/events';
 import { Callback, Unsubscribe } from '../shared/types.utils';
 import { IS_CLIENT, IS_MOBILE } from './support';
 import { isUndefined, noop } from './unit';
@@ -143,5 +142,5 @@ export const onDeviceChange = (
   }
 
   handleWindowResize();
-  return listenTo(window, 'resize', handleWindowResize);
+  return listen(window, 'resize', handleWindowResize);
 };

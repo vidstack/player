@@ -1,7 +1,7 @@
 import { contextRecordProvider, provideContextRecord } from '@wcom/context';
-import { listen } from '@wcom/events';
 import { CSSResultArray, html, LitElement, TemplateResult } from 'lit-element';
 
+import { eventListener } from '../../../shared/events';
 import { isNil } from '../../../utils/unit';
 import {
   MediaContainerElement,
@@ -106,7 +106,7 @@ export class MediaControllerElement extends LitElement {
     return this._mediaContainer;
   }
 
-  @listen(VdsMediaContainerConnectEvent.TYPE)
+  @eventListener(VdsMediaContainerConnectEvent.TYPE)
   protected handleMediaContainerConnect(
     e: VdsMediaContainerConnectEvent,
   ): void {
@@ -131,9 +131,11 @@ export class MediaControllerElement extends LitElement {
     return this._mediaProvider;
   }
 
-  @listen(VdsMediaProviderConnectEvent.TYPE)
-  protected handleMediaProviderConnect(e: VdsMediaProviderConnectEvent): void {
-    const { provider, onDisconnect } = e.detail;
+  @eventListener(VdsMediaProviderConnectEvent.TYPE)
+  protected handleMediaProviderConnect(
+    event: VdsMediaProviderConnectEvent,
+  ): void {
+    const { provider, onDisconnect } = event.detail;
     this._mediaProvider = provider;
     onDisconnect(() => {
       this._mediaProvider = undefined;
@@ -144,59 +146,61 @@ export class MediaControllerElement extends LitElement {
   // Media Request Events
   // -------------------------------------------------------------------------------------------
 
-  protected mediaRequestEventGateway(e: Event): void {
-    e.stopPropagation();
+  protected mediaRequestEventGateway(event: Event): void {
+    event.stopPropagation();
   }
 
-  @listen(VdsMuteRequestEvent.TYPE)
-  protected handleMuteRequest(e: VdsMuteRequestEvent): void {
-    this.mediaRequestEventGateway(e);
+  @eventListener(VdsMuteRequestEvent.TYPE)
+  protected handleMuteRequest(event: VdsMuteRequestEvent): void {
+    this.mediaRequestEventGateway(event);
     if (!isNil(this.mediaProvider)) {
       this.mediaProvider.muted = true;
     }
   }
 
-  @listen(VdsUnmuteRequestEvent.TYPE)
-  protected handleUnmuteRequest(e: VdsUnmuteRequestEvent): void {
-    this.mediaRequestEventGateway(e);
+  @eventListener(VdsUnmuteRequestEvent.TYPE)
+  protected handleUnmuteRequest(event: VdsUnmuteRequestEvent): void {
+    this.mediaRequestEventGateway(event);
     if (!isNil(this.mediaProvider)) {
       this.mediaProvider.muted = false;
     }
   }
 
-  @listen(VdsPlayRequestEvent.TYPE)
-  protected handlePlayRequest(e: VdsPlayRequestEvent): void {
-    this.mediaRequestEventGateway(e);
+  @eventListener(VdsPlayRequestEvent.TYPE)
+  protected handlePlayRequest(event: VdsPlayRequestEvent): void {
+    this.mediaRequestEventGateway(event);
     if (!isNil(this.mediaProvider)) {
       this.mediaProvider.paused = false;
     }
   }
 
-  @listen(VdsPauseRequestEvent.TYPE)
-  protected handlePauseRequest(e: VdsPauseRequestEvent): void {
-    this.mediaRequestEventGateway(e);
+  @eventListener(VdsPauseRequestEvent.TYPE)
+  protected handlePauseRequest(event: VdsPauseRequestEvent): void {
+    this.mediaRequestEventGateway(event);
     if (!isNil(this.mediaProvider)) {
       this.mediaProvider.paused = true;
     }
   }
 
-  @listen(VdsSeekRequestEvent.TYPE)
-  protected handleSeekRequest(e: VdsSeekRequestEvent): void {
-    this.mediaRequestEventGateway(e);
+  @eventListener(VdsSeekRequestEvent.TYPE)
+  protected handleSeekRequest(event: VdsSeekRequestEvent): void {
+    this.mediaRequestEventGateway(event);
     if (!isNil(this.mediaProvider)) {
-      this.mediaProvider.currentTime = e.detail;
+      this.mediaProvider.currentTime = event.detail;
     }
   }
 
-  @listen(VdsVolumeChangeRequestEvent.TYPE)
-  protected handleVolumeChangeRequest(e: VdsVolumeChangeRequestEvent): void {
-    this.mediaRequestEventGateway(e);
+  @eventListener(VdsVolumeChangeRequestEvent.TYPE)
+  protected handleVolumeChangeRequest(
+    event: VdsVolumeChangeRequestEvent,
+  ): void {
+    this.mediaRequestEventGateway(event);
     if (!isNil(this.mediaProvider)) {
-      this.mediaProvider.volume = e.detail;
+      this.mediaProvider.volume = event.detail;
     }
   }
 
-  @listen(VdsEnterFullscreenRequestEvent.TYPE)
+  @eventListener(VdsEnterFullscreenRequestEvent.TYPE)
   protected async handleEnterFullscreenRequest(
     e: VdsEnterFullscreenRequestEvent,
   ): Promise<void> {
@@ -208,7 +212,7 @@ export class MediaControllerElement extends LitElement {
     }
   }
 
-  @listen(VdsExitFullscreenRequestEvent.TYPE)
+  @eventListener(VdsExitFullscreenRequestEvent.TYPE)
   protected async handleExitFullscreenRequest(
     e: VdsExitFullscreenRequestEvent,
   ): Promise<void> {

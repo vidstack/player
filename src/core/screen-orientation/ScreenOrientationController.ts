@@ -1,5 +1,4 @@
-import { Disposal, listenTo } from '@wcom/events';
-
+import { DisposalBin, listen } from '../../shared/events';
 import { WithEvents } from '../../shared/mixins/WithEvents';
 import { Unsubscribe } from '../../shared/types.utils';
 import { canOrientScreen, IS_CLIENT } from '../../utils/support';
@@ -20,7 +19,7 @@ import { ScreenOrientationControllerHost } from './ScreenOrientationControllerHo
 export class ScreenOrientationController extends WithEvents<ScreenOrientationControllerEvents>(
   class {},
 ) {
-  protected disposal = new Disposal();
+  protected disposal = new DisposalBin();
 
   protected screenOrientation?: ScreenOrientation;
 
@@ -120,7 +119,7 @@ export class ScreenOrientationController extends WithEvents<ScreenOrientationCon
   }
 
   protected addScreenOrientationChangeEventListener(): Unsubscribe {
-    return listenTo(
+    return listen(
       screen.orientation,
       'change',
       this.handleOrientationChange.bind(this),

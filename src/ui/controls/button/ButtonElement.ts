@@ -1,4 +1,3 @@
-import { Disposal, listenTo } from '@wcom/events';
 import {
   CSSResultArray,
   html,
@@ -10,6 +9,7 @@ import {
 import { ifDefined } from 'lit-html/directives/if-defined';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
+import { DisposalBin, listen } from '../../../shared/events';
 import { WithFocus } from '../../../shared/mixins/WithFocus';
 import { isUndefined } from '../../../utils/unit';
 import { buttonElementStyles } from './button.css';
@@ -59,7 +59,7 @@ export class ButtonElement
     return ['root'];
   }
 
-  protected disposal = new Disposal();
+  protected disposal = new DisposalBin();
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -194,7 +194,7 @@ export class ButtonElement
 
   protected addDefaultEventListeners(): void {
     this.disposal.add(
-      listenTo(this, 'click', this.handleClickCapture.bind(this), {
+      listen(this, 'click', this.handleClickCapture.bind(this), {
         capture: true,
       }),
     );

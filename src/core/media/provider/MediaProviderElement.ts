@@ -1,7 +1,7 @@
 import { DerivedContext } from '@wcom/context';
-import { Disposal } from '@wcom/events';
 import { LitElement, property, PropertyValues } from 'lit-element';
 
+import { DisposalBin } from '../../../shared/events';
 import { isUndefined } from '../../../utils/unit';
 import {
   FullscreenController,
@@ -45,7 +45,7 @@ export abstract class MediaProviderElement<EngineType = unknown>
     MediaProviderElementMethods,
     FullscreenControllerHost,
     ScreenOrientationControllerHost {
-  protected disconnectDisposal = new Disposal();
+  protected disconnectDisposal = new DisposalBin();
 
   connectedCallback(): void {
     super.connectedCallback();

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Disposal, listenTo } from '@wcom/events';
 import {
   html,
   internalProperty,
@@ -34,7 +33,11 @@ import {
   VdsVolumeChangeEvent,
   VdsWaitingEvent,
 } from '../../core';
-import { redispatchNativeEvent } from '../../shared/events';
+import {
+  DisposalBin,
+  listen,
+  redispatchNativeEvent,
+} from '../../shared/events';
 import { Callback } from '../../shared/types.utils';
 import { getSlottedChildren } from '../../utils/dom';
 import { IS_SAFARI } from '../../utils/support';
@@ -63,7 +66,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
   implements Html5MediaElementProps, Html5MediaElementMethods {
   protected mediaEl?: HTMLMediaElement;
 
-  protected mediaEventsDisposal = new Disposal();
+  protected mediaEventsDisposal = new DisposalBin();
 
   firstUpdated(changedProps: PropertyValues): void {
     super.firstUpdated(changedProps);
@@ -249,7 +252,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
     Object.keys(eventMap).forEach(type => {
       const handler = eventMap[type].bind(this);
       this.mediaEventsDisposal.add(
-        listenTo(this.mediaEl!, type, e => {
+        listen(this.mediaEl!, type, e => {
           handler(e);
           // re-dispatch native event for spec-compliance.
           redispatchNativeEvent(this, e);

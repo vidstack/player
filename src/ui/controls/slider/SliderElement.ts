@@ -1,4 +1,3 @@
-import { listen } from '@wcom/events';
 import {
   CSSResultArray,
   html,
@@ -12,6 +11,7 @@ import {
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
+import { eventListener } from '../../../shared/events';
 import { WithFocus } from '../../../shared/mixins/WithFocus';
 import { setAttribute } from '../../../utils/dom';
 import { throttle, ThrottledFunction } from '../../../utils/timing';
@@ -465,13 +465,13 @@ export class SliderElement
     this.pointerMoveThrottle = undefined;
   }
 
-  @listen('pointerup', { target: 'document' })
+  @eventListener('pointerup', { target: 'document' })
   protected handleDocumentPointerUp(event: PointerEvent): void {
     if (this.disabled || !this._isDragging) return;
     this.stopDragging(event);
   }
 
-  @listen('pointermove', { target: 'document' })
+  @eventListener('pointermove', { target: 'document' })
   protected handleDocumentPointerMove(event: PointerEvent): void {
     if (this.disabled || !this._isDragging) {
       this.pointerMoveThrottle?.cancel();

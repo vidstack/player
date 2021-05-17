@@ -103,8 +103,8 @@ export class LibLoader<LibType> {
     this.getPendingRequests().forEach(request => request.resolve(this.lib));
   }
 
-  protected handleLoadFail(e: unknown): void {
-    this.getPendingRequests().forEach(request => request.reject(e));
+  protected handleLoadFail(event: unknown): void {
+    this.getPendingRequests().forEach(request => request.reject(event));
     this.destroyPendingRequests();
   }
 }

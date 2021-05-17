@@ -65,7 +65,7 @@ export const loadImage = (
 export const loadScript = (
   src: string,
   onLoad: () => void,
-  onError: (e: unknown) => void = noop,
+  onError: (error: unknown) => void = noop,
 ): void => {
   const script = document.createElement('script');
   script.src = src;

@@ -312,20 +312,24 @@ export class ScrubberElement
     };
   }
 
-  protected async handleScrubberPointerEnter(e: PointerEvent): Promise<void> {
+  protected async handleScrubberPointerEnter(
+    event: PointerEvent,
+  ): Promise<void> {
     if (this.disabled) return;
     this.isPointerInsideScrubber = true;
-    this.showPreview(e);
+    this.showPreview(event);
   }
 
-  protected async handleScrubberPointerLeave(e: PointerEvent): Promise<void> {
+  protected async handleScrubberPointerLeave(
+    event: PointerEvent,
+  ): Promise<void> {
     this.isPointerInsideScrubber = false;
-    this.hidePreview(e);
+    this.hidePreview(event);
   }
 
-  protected handleScrubberPointerMove(e: PointerEvent): void {
+  protected handleScrubberPointerMove(event: PointerEvent): void {
     if (this.disabled) return;
-    this.updatePreviewPosition(e);
+    this.updatePreviewPosition(event);
   }
 
   protected renderDefaultSlot(): TemplateResult {
@@ -451,11 +455,13 @@ export class ScrubberElement
     this.togglePlaybackWhileDragging(e);
   }
 
-  protected async handleSliderDragEnd(e: VdsSliderDragEndEvent): Promise<void> {
+  protected async handleSliderDragEnd(
+    event: VdsSliderDragEndEvent,
+  ): Promise<void> {
     this.isDraggingThumb = false;
-    this.hidePreview(e.originalEvent as PointerEvent);
-    this.dispatchUserSeeked(e);
-    this.togglePlaybackWhileDragging(e);
+    this.hidePreview(event.originalEvent as PointerEvent);
+    this.dispatchUserSeeked(event);
+    this.togglePlaybackWhileDragging(event);
   }
 
   // TODO: Clean up later.

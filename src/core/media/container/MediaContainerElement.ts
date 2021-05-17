@@ -1,7 +1,6 @@
 // ** Dependencies **
 import '../ui/vds-media-ui';
 
-import { Disposal } from '@wcom/events';
 import clsx from 'clsx';
 import {
   CSSResultArray,
@@ -14,6 +13,7 @@ import {
 } from 'lit-element';
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
+import { DisposalBin } from '../../../shared/events';
 import { getSlottedChildren } from '../../../utils/dom';
 import { isNil, isString, isUndefined } from '../../../utils/unit';
 import {
@@ -94,7 +94,7 @@ export class MediaContainerElement
     return ['root', 'media', 'ui', ...uiExportParts];
   }
 
-  protected disconnectDisposal = new Disposal();
+  protected disconnectDisposal = new DisposalBin();
 
   @internalProperty()
   @mediaContext.canPlay.consume()

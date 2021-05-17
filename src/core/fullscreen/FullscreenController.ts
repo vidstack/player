@@ -1,6 +1,6 @@
-import { Disposal, listenTo } from '@wcom/events';
 import fscreen from 'fscreen';
 
+import { DisposalBin, listen } from '../../shared/events';
 import { WithEvents } from '../../shared/mixins/WithEvents';
 import { Unsubscribe } from '../../shared/types.utils';
 import { isUndefined, noop } from '../../utils/unit';
@@ -42,7 +42,7 @@ import { FullscreenControllerHost } from './FullscreenControllerHost';
 export class FullscreenController extends WithEvents<FullscreenControllerEvents>(
   class {},
 ) {
-  protected disposal = new Disposal();
+  protected disposal = new DisposalBin();
 
   /**
    * Used to avoid an inifinite loop by indicating when the native `requestFullscreen()` method
@@ -127,7 +127,7 @@ export class FullscreenController extends WithEvents<FullscreenControllerEvents>
     handler: (this: HTMLElement, event: Event) => void,
   ): Unsubscribe {
     if (!this.isSupported) return noop;
-    return listenTo(
+    return listen(
       (fscreen as unknown) as EventTarget,
       'fullscreenchange',
       handler,
@@ -138,7 +138,7 @@ export class FullscreenController extends WithEvents<FullscreenControllerEvents>
     handler: (this: HTMLElement, event: Event) => void,
   ): Unsubscribe {
     if (!this.isSupported) return noop;
-    return listenTo(
+    return listen(
       (fscreen as unknown) as EventTarget,
       'fullscreenerror',
       handler,

@@ -1,7 +1,10 @@
-import { Disposal, listenTo } from '@wcom/events';
 import { PropertyValues } from 'lit-element';
 
-import { redispatchNativeEvent } from '../../../shared/events';
+import {
+  DisposalBin,
+  listen,
+  redispatchNativeEvent,
+} from '../../../shared/events';
 import { WithEvents } from '../../../shared/mixins/WithEvents';
 import { WebKitPresentationMode } from '../../../shared/types.global';
 import { Unsubscribe } from '../../../shared/types.utils';
@@ -29,7 +32,7 @@ import { VideoPresentationControllerHost } from './VideoPresentationControllerHo
 export class VideoPresentationController extends WithEvents<VideoPresentationControllerEvents>(
   class {},
 ) {
-  protected disposal = new Disposal();
+  protected disposal = new DisposalBin();
 
   constructor(protected host: VideoPresentationControllerHost) {
     super();
@@ -107,7 +110,7 @@ export class VideoPresentationController extends WithEvents<VideoPresentationCon
 
   protected addPresentationModeChangeEventListener(): Unsubscribe {
     if (!this.isSupported || isNil(this.host.videoElement)) return noop;
-    return listenTo(
+    return listen(
       this.host.videoElement,
       'webkitpresentationmodechanged',
       this.handlePresentationModeChange.bind(this),
