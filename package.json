@@ -66,7 +66,6 @@
     "release": "npx semantic-release"
   },
   "dependencies": {
-    "@lukeed/uuid": "^2.0.0",
     "@types/fscreen": "^1.0.1",
     "@types/hls.js": "^0.13.3",
     "@wcom/context": "^2.7.0",
