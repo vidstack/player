@@ -27,15 +27,15 @@ export type MethodsOnly<T> = Omit<
   { [K in keyof T]-?: T[K] extends Function ? never : K }[keyof T]
 >;
 
-export type Callback<T> = (value: T) => void;
+export type Callback<ValueType> = (value: ValueType) => void;
 
-export type Unsubscribe = () => void;
+export type UnknownFunction = (...args: unknown[]) => unknown;
+
+export type Unsubscribe = Callback<void>;
 
 export interface Cancelable {
   cancel(): void;
 }
-
-export type CancelableCallback<T> = Callback<T> & Cancelable;
 
 export type WebKitPresentationMode =
   | 'picture-in-picture'

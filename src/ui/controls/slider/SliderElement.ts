@@ -10,12 +10,11 @@ import {
   TemplateResult,
 } from 'lit-element';
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
-import { throttle } from 'lodash-es';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { WithFocus } from '../../../shared/mixins/WithFocus';
-import { CancelableCallback } from '../../../shared/types';
 import { setAttribute } from '../../../utils/dom';
+import { throttle, ThrottledFunction } from '../../../utils/timing';
 import { sliderElementStyles } from './slider.css';
 import {
   VdsSliderDragEndEvent,
@@ -452,7 +451,9 @@ export class SliderElement
   // Document (Pointer Events)
   // -------------------------------------------------------------------------------------------
 
-  protected pointerMoveThrottle?: CancelableCallback<PointerEvent>;
+  protected pointerMoveThrottle?: ThrottledFunction<
+    Parameters<SliderElement['handlePointerMove']>
+  >;
 
   protected initPointerMoveThrottle(): void {
     this.pointerMoveThrottle?.cancel();

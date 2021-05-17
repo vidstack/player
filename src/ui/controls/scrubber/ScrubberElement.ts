@@ -13,7 +13,6 @@ import {
   TemplateResult,
 } from 'lit-element';
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
-import { throttle } from 'lodash-es';
 
 import {
   mediaContext,
@@ -24,8 +23,8 @@ import {
 } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { WithFocus } from '../../../shared/mixins/WithFocus';
-import { CancelableCallback } from '../../../shared/types';
 import { getSlottedChildren, raf } from '../../../utils/dom';
+import { throttle, ThrottledFunction } from '../../../utils/timing';
 import { isNil, isUndefined } from '../../../utils/unit';
 import { formatSpokenTime } from '../../time/time';
 import {
@@ -509,15 +508,13 @@ export class ScrubberElement
   // Preview
   // -------------------------------------------------------------------------------------------
 
-  protected dispatchPreviewTimeChangeEventsThrottler?: CancelableCallback<{
-    detail: number;
-    originalEvent?: Event;
-  }>;
+  protected dispatchPreviewTimeChangeEventsThrottler?: ThrottledFunction<
+    Parameters<ScrubberElement['dispatchPreviewTimeChangeEvents']>
+  >;
 
-  protected dispatchUserSeekingEventThrottler?: CancelableCallback<{
-    detail: number;
-    originalEvent?: Event;
-  }>;
+  protected dispatchUserSeekingEventThrottler?: ThrottledFunction<
+    Parameters<ScrubberElement['dispatchUserSeekingEvent']>
+  >;
 
   protected initThrottles(): void {
     this.dispatchPreviewTimeChangeEventsThrottler?.cancel();
