@@ -1,5 +1,5 @@
 import { LIB_PREFIX } from './constants';
-import { Writeable } from './types';
+import { Writeable } from './types.utils';
 
 export type EventRecord = {
   [EventType: string]: VdsCustomEvent<unknown>;

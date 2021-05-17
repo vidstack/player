@@ -1,7 +1,7 @@
 import { Disposal, listenTo } from '@wcom/events';
 
 import { WithEvents } from '../../shared/mixins/WithEvents';
-import { Unsubscribe } from '../../shared/types';
+import { Unsubscribe } from '../../shared/types.utils';
 import { canOrientScreen, IS_CLIENT } from '../../utils/support';
 import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 import { ScreenOrientationControllerEvents } from './ScreenOrientationControllerEvents';

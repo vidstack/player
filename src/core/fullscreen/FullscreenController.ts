@@ -2,7 +2,7 @@ import { Disposal, listenTo } from '@wcom/events';
 import fscreen from 'fscreen';
 
 import { WithEvents } from '../../shared/mixins/WithEvents';
-import { Unsubscribe } from '../../shared/types';
+import { Unsubscribe } from '../../shared/types.utils';
 import { isUndefined, noop } from '../../utils/unit';
 import {
   ScreenOrientationController,

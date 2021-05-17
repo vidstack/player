@@ -35,7 +35,7 @@ import {
   VdsWaitingEvent,
 } from '../../core';
 import { redispatchNativeEvent } from '../../shared/events';
-import { Callback } from '../../shared/types';
+import { Callback } from '../../shared/types.utils';
 import { getSlottedChildren } from '../../utils/dom';
 import { IS_SAFARI } from '../../utils/support';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';

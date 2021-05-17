@@ -4,7 +4,7 @@ import {
   VdsCustomEvent,
   VdsEventInit,
 } from '../events';
-import { Callback, Constructor, Unsubscribe } from '../types';
+import { Callback, Constructor, Unsubscribe } from '../types.utils';
 
 /**
  * Mixes in the ability to dispatch events and for consumers to add event listeners to be notified.

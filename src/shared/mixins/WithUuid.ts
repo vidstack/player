@@ -2,7 +2,7 @@ import { v4 as uuid } from '@lukeed/uuid';
 import createContext from '@wcom/context';
 import { UpdatingElement } from 'lit-element';
 
-import { Constructor } from '../types';
+import { Constructor } from '../types.utils';
 
 export const uuidContext = createContext('');
 

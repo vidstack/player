@@ -3,7 +3,8 @@ import { PropertyValues } from 'lit-element';
 
 import { redispatchNativeEvent } from '../../../shared/events';
 import { WithEvents } from '../../../shared/mixins/WithEvents';
-import { Unsubscribe, WebKitPresentationMode } from '../../../shared/types';
+import { WebKitPresentationMode } from '../../../shared/types.global';
+import { Unsubscribe } from '../../../shared/types.utils';
 import { IS_IOS } from '../../../utils/support';
 import { isFunction, isNil, noop } from '../../../utils/unit';
 import { VideoPresentationControllerEvents } from './VideoPresentationControllerEvents';

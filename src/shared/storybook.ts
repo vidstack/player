@@ -4,7 +4,7 @@ import { dashToPascalCase } from '@wcom/cli/dist/utils/string';
 
 import manifest from '../../storybook.json';
 import { isNumber } from '../utils/unit';
-import { Callback, PascalCase } from './types';
+import { Callback, PascalCase } from './types.utils';
 
 export const SB_THEME_COLOR = '#ff2A5d';
 

@@ -1,6 +1,6 @@
 import { listenTo } from '@wcom/events';
 
-import { Callback, Unsubscribe } from '../shared/types';
+import { Callback, Unsubscribe } from '../shared/types.utils';
 import { IS_CLIENT, IS_MOBILE } from './support';
 import { isUndefined, noop } from './unit';
 
