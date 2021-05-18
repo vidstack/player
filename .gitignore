@@ -1,13 +1,5 @@
 dist/
 
-/bundle/
-/core/
-/providers/
-/skins/
-/ui/
-/utils/
-/shared/
-/storybook-build/
 /storybook-static/
 
 storybook.json

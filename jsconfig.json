@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"checkJs": true,
+		"lib": ["dom", "es7"],
+		"moduleResolution": "node",
+		"target": "es2020"
+	},
+	"exclude": ["node_modules"]
+}
