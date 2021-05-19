@@ -4,6 +4,7 @@ import { isUndefined } from '../../utils/unit';
 /**
  * Mixes in the ability to dispatch events and for consumers to add event listeners to be notified.
  *
+ * @mixin
  * @template EventRecordType
  * @param {import('../../types/misc').Constructor} Base
  */

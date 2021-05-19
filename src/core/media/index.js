@@ -1,6 +1,7 @@
 export * from './CanPlay';
 export * from './container';
 export * from './controller';
+export * from './media.context';
 export * from './media.events';
 export * from './media-request.events';
 export * from './MediaType';

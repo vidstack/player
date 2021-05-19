@@ -1,17 +1,8 @@
-import { UpdatingElement } from 'lit-element';
-
 import { noop, notEqual } from '../utils/unit';
+import { VdsElement } from './elements';
 
 /**
- * @typedef {{
- *   onConnect(): void;
- *   onUpdate(newValue: any): void;
- *   onDisconnect(callback: () => void): void;
- * }} ContextConsumer
- */
-
-/**
- * @extends CustomEvent<ContextConsumer>
+ * @extends CustomEvent<import('../types/context').ContextConsumerDetail>
  */
 class ConsumerConnectEvent extends CustomEvent {
 	static TYPE = 'vds-context-connect';
@@ -25,7 +16,7 @@ class ConsumerConnectEvent extends CustomEvent {
 	}
 
 	/**
-	 * @param {ContextConsumer} detail
+	 * @param {import('../types/context').ContextConsumerDetail} detail
 	 */
 	constructor(detail) {
 		super(ConsumerConnectEvent.TYPE, {
@@ -42,15 +33,20 @@ class ConsumerConnectEvent extends CustomEvent {
  * @returns {import('../types/context').Context<T>}
  */
 export function createContext(initialValue) {
+	const key = Symbol('VDS_CTX_PROVIDER');
+
 	// Privately declared event to safely pair context providers and consumers.
 	class ContextConsumerConnectEvent extends ConsumerConnectEvent {}
 
 	/** @type {import('../types/context').Context<T>['provide']} */
 	function provide(host) {
+		// Re-use existing providers on the same host.
+		if (host[key]) return host[key];
+
 		let currentValue = initialValue;
 
 		/**
-		 * @type {Set<ContextConsumer>}
+		 * @type {Set<import('../types/context').ContextConsumerDetail>}
 		 */
 		let consumers = new Set();
 
@@ -77,80 +73,82 @@ export function createContext(initialValue) {
 			consumers.add(consumer);
 		}
 
-		function updateConsumers(newValue) {
+		function update(newValue) {
+			currentValue = newValue;
 			consumers.forEach((consumer) => {
 				consumer.onUpdate(newValue);
 			});
 		}
 
-		const connectedCallback = host.connectedCallback;
-		host.connectedCallback = function () {
-			host.addEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
-			connectedCallback?.call(this);
-		};
+		host.addController({
+			hostConnected() {
+				host.addEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
+			},
+			hostDisconnected() {
+				host.removeEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
+				update(initialValue);
+				consumers.clear();
+			}
+		});
 
-		const disconnectedCallback = host.disconnectedCallback;
-		host.disconnectedCallback = function () {
-			host.removeEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
-			currentValue = initialValue;
-			updateConsumers(initialValue);
-			consumers.clear();
-			disconnectedCallback?.call(this);
-		};
-
-		return {
+		const context = {
 			get value() {
 				return currentValue;
 			},
 			set value(newValue) {
 				if (notEqual(newValue, currentValue)) {
-					updateConsumers(newValue);
+					update(newValue);
 				}
+			},
+			reset() {
+				update(initialValue);
 			}
 		};
+
+		host[key] = context;
+		return context;
 	}
 
 	/** @type {import('../types/context').Context<T>['consume']} */
-	function consume(host, options) {
+	function consume(host, options = {}) {
 		let currentValue = initialValue;
 		let disconnectFromProviderCallback = noop;
 
 		function onConnect() {
-			options?.onConnect?.();
+			options.onConnect?.();
+			options.onUpdate?.(currentValue);
 		}
 
 		function onUpdate(newValue) {
-			currentValue = newValue;
-			host.requestUpdate();
-			options?.onUpdate?.(newValue);
+			if (notEqual(newValue, currentValue)) {
+				currentValue = newValue;
+				host.requestUpdate();
+				options.onUpdate?.(newValue);
+			}
 		}
 
 		function onDisconnect(callback) {
 			disconnectFromProviderCallback = callback;
 		}
 
-		const connectedCallback = host.connectedCallback;
-		host.connectedCallback = function () {
-			this.dispatchEvent(
-				new ContextConsumerConnectEvent({
-					onConnect,
-					onUpdate,
-					onDisconnect
-				})
-			);
+		host.addController({
+			hostConnected() {
+				host.dispatchEvent(
+					new ContextConsumerConnectEvent({
+						onConnect,
+						onUpdate,
+						onDisconnect
+					})
+				);
+			},
 
-			connectedCallback?.call(this);
-		};
-
-		const disconnectedCallback = host.disconnectedCallback;
-		host.disconnectedCallback = function () {
-			disconnectFromProviderCallback();
-			disconnectFromProviderCallback = noop;
-			currentValue = initialValue;
-			options?.onUpdate?.(initialValue);
-			disconnectedCallback?.call(this);
-			options?.onDisconnect?.();
-		};
+			hostDisconnected() {
+				disconnectFromProviderCallback();
+				disconnectFromProviderCallback = noop;
+				onUpdate(initialValue);
+				options.onDisconnect?.();
+			}
+		});
 
 		return {
 			get value() {
@@ -170,15 +168,15 @@ export function createContext(initialValue) {
  * Derives a context from others that was created with `createContext`. This assumes the
  * given `contexts` are ALL provided by the same host element.
  *
- * @template {readonly import('../types/context').Context<unknown>[]} T
+ * @template {import('../types/context').ContextTuple} T
  * @template R
  * @param {T} contexts - The contexts to derive values from as it updates.
- * @param {(...values: import('../types/context').ExtractContextArray<T>) => R} derivation - Takes the original context values and outputs the derived value.
+ * @param {(values: import('../types/context').ContextTupleValues<T>) => R} derivation - Takes the original context values and outputs the derived value.
  * @returns {import('../types/context').DerivedContext<R>}
  */
 export function derivedContext(contexts, derivation) {
 	const initialValue = derivation(
-		.../** @type {any} */ (contexts.map((c) => c.initialValue))
+		/** @type {any} */ (contexts.map((c) => c.initialValue))
 	);
 
 	const derivedContext = createContext(initialValue);
@@ -187,35 +185,29 @@ export function derivedContext(contexts, derivation) {
 		initialValue,
 		consume: derivedContext.consume,
 		provide(host) {
-			let ready = false;
-
 			const values = [];
-			const provider = derivedContext.provide(host);
+			const derivedProvider = derivedContext.provide(host);
 
 			contexts.forEach((context, i) => {
 				context.consume(host, {
-					onConnect() {
-						ready = values.length === contexts.length;
-					},
-
 					onUpdate(newValue) {
 						values[i] = newValue;
 
-						if (ready) {
-							provider.value = derivation(.../** @type {any} */ (values));
+						if (values.length === contexts.length) {
+							derivedProvider.value = derivation(/** @type {any} */ (values));
 						}
 					},
 
 					onDisconnect() {
-						ready = false;
 						values.splice(i, 1);
+						if (values.length === 0) derivedProvider.value = initialValue;
 					}
 				});
 			});
 
 			return {
 				get value() {
-					return provider.value;
+					return derivedProvider.value;
 				}
 			};
 		}
@@ -227,15 +219,16 @@ export function derivedContext(contexts, derivation) {
  * the given `host` element as the provider of all the contexts within the given record.
  *
  * @template {import('../types/context').ContextRecord<unknown>} ContextRecordType
- * @param {UpdatingElement} host
+ * @param {VdsElement} host
  * @param {ContextRecordType} contextRecord
- * @returns {{ [P in keyof ContextRecordType]: ReturnType<ContextRecordType[P]['provide']> }}
+ * @returns {import('../types/context').ContextProviderRecord<ContextRecordType>}
  */
-export function contextRecord(host, contextRecord) {
+export function provideContextRecord(host, contextRecord) {
 	/** @type {any} */
 	const providers = {};
 
 	Object.keys(contextRecord).forEach((contextKey) => {
+		/** @type {import('../types/context').Context<unknown>} */
 		const context = contextRecord[contextKey];
 		providers[contextKey] = context.provide(host);
 	});

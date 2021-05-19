@@ -35,6 +35,7 @@ export const focusableSelector = `
  * Mixes in a `focus()` method that focuses the first focusable element in the shadow DOM.
  * Technically a polyfill for `shadowRoot.delegatesFocus`.
  *
+ * @mixin
  * @template {import('../../types/misc').Constructor<UpdatingElement>} T
  * @param {T} Base - The constructor to mix into.
  * @returns {T}

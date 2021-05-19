@@ -1,29 +1,18 @@
-import { LitElement } from 'lit-element';
-
-import { DisposalBin, listen, VdsCustomEvent } from '../../shared/events';
+import { DisposalBin, listen } from '../../shared/events';
 import { WithEvents } from '../../shared/mixins/WithEvents';
 import { canOrientScreen, IS_CLIENT } from '../../utils/support';
 import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 
 /**
- * @typedef {LitElement} ScreenOrientationControllerHost
- */
-
-/**
- * @typedef {{
- *  'orientation-lock-change': VdsCustomEvent<boolean>;
- *  'orientation-change': VdsCustomEvent<ScreenOrientation>;
- * }} ScreenOrientationControllerEvents
- */
-
-/**
  * Contains the logic for managing the window's screen orientation.
  *
- * @mixes WithEvents<ScreenOrientationControllerEvents>
+ * @mixes WithEvents<import('./screen-orientation.types').ScreenOrientationControllerEvents>
  *
  * @example
  * ```js
- * class MyElement extends LitElement {
+ * import { VdsElement, ScreenOrientationController } from '@vidstack/elements';
+ *
+ * class MyElement extends VdsElement {
  *   screenOrientationController = new ScreenOrientationController(this);
  * }
  * ```
@@ -50,12 +39,12 @@ export class ScreenOrientationController extends WithEvents(class {}) {
 	/**
 	 * @protected
 	 * @readonly
-	 * @type {ScreenOrientationControllerHost}
+	 * @type {import('.').ScreenOrientationControllerHost}
 	 */
 	host;
 
 	/**
-	 * @param {ScreenOrientationControllerHost} host
+	 * @param {import('.').ScreenOrientationControllerHost} host
 	 */
 	constructor(host) {
 		super();
@@ -64,18 +53,15 @@ export class ScreenOrientationController extends WithEvents(class {}) {
 
 		this.updateScreenOrientation();
 
-		const connectedCallback = host.connectedCallback;
-		host.connectedCallback = () => {
-			this.updateScreenOrientation();
-			this.addScreenOrientationEventListeners();
-			connectedCallback?.call(host);
-		};
-
-		const disconnectedCallback = host.disconnectedCallback;
-		host.disconnectedCallback = async () => {
-			await this.destroy();
-			disconnectedCallback?.call(host);
-		};
+		host.addController({
+			hostConnected: () => {
+				this.updateScreenOrientation();
+				this.addScreenOrientationEventListeners();
+			},
+			hostDisconnected: () => {
+				this.destroy();
+			}
+		});
 	}
 
 	/**

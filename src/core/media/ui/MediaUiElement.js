@@ -1,8 +1,9 @@
 import clsx from 'clsx';
-import { html, LitElement, TemplateResult } from 'lit-element';
+import { html, TemplateResult } from 'lit-element';
 
-import { internalState } from '../../../shared/lit-helpers';
+import { VdsElement } from '../../../shared/elements';
 import { IS_IOS } from '../../../utils/support';
+import { mediaContext } from '../media.context';
 import { mediaUiElementStyles } from './media-ui.css';
 
 /**
@@ -22,7 +23,7 @@ import { mediaUiElementStyles } from './media-ui.css';
  * @csspart root - The component's root element (`<div>`).
  * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
  */
-export class MediaUiElement extends LitElement {
+export class MediaUiElement extends VdsElement {
 	/** @type {import('lit-element').CSSResultArray} */
 	static get styles() {
 		return [mediaUiElementStyles];
@@ -33,29 +34,17 @@ export class MediaUiElement extends LitElement {
 		return ['root', 'root-hidden'];
 	}
 
-	/** @type {import('lit-element').PropertyDeclarations} */
-	static get properties() {
-		return internalState(MediaUiElement, [
-			'canPlay',
-			'isFullscreenActive',
-			'isVideoView',
-			'playsinline'
-		]);
-	}
+	/** @protected @readonly */
+	canPlay = mediaContext.canPlay.consume(this);
 
-	// TODO: MEDIA CONTEXT
+	/** @protected @readonly */
+	fullscreen = mediaContext.fullscreen.consume(this);
 
-	/** @readonly */
-	canPlay = false;
+	/** @protected @readonly */
+	isVideoView = mediaContext.isVideoView.consume(this);
 
-	/** @readonly */
-	isFullscreenActive = false;
-
-	/** @readonly */
-	isVideoView = false;
-
-	/** @readonly */
-	playsinline = false;
+	/** @protected @readonly */
+	playsinline = mediaContext.playsinline.consume(this);
 
 	/**
 	 * @protected
@@ -138,13 +127,13 @@ export class MediaUiElement extends LitElement {
 	 */
 	isUiHidden() {
 		return (
-			!this.canPlay ||
+			!this.canPlay.value ||
 			// If iOS Safari and the view type is currently video then we hide the custom UI depending
 			// on whether playsinline is set and fullscreen is not active, or if fullscreen is active
 			// we should always hide.
 			(IS_IOS &&
-				this.isVideoView &&
-				(!this.playsinline || this.isFullscreenActive))
+				this.isVideoView.value &&
+				(!this.playsinline.value || this.fullscreen.value))
 		);
 	}
 }
