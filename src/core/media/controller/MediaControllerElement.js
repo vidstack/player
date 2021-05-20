@@ -1,17 +1,11 @@
-import { contextRecordProvider, provideContextRecord } from '@wcom/context';
-import { CSSResultArray, html, LitElement, TemplateResult } from 'lit-element';
+import { html } from 'lit-element';
 
-import { eventListener } from '../../../shared/events';
-import { isNil } from '../../../utils/unit';
+import { VdsElement } from '../../../shared/elements';
 import {
   MediaContainerElement,
   VdsMediaContainerConnectEvent,
 } from '../container';
-import {
-  mediaContext,
-  mediaContextRecord,
-  MediaContextRecordProvider,
-} from '../media.context';
+import { mediaContextProviderRecord } from '../media.context';
 import {
   VdsEnterFullscreenRequestEvent,
   VdsExitFullscreenRequestEvent,
@@ -61,9 +55,9 @@ import { mediaControllerStyles } from './media-controller.css';
  * </vds-media-controller>
  * ```
  */
-@provideContextRecord(mediaContext)
-export class MediaControllerElement extends LitElement {
-  static get styles(): CSSResultArray {
+export class MediaControllerElement extends VdsElement {
+	/** @type {import('lit-element').CSSResultArray} */
+  static get styles() {
     return [mediaControllerStyles];
   }
 
@@ -76,19 +70,16 @@ export class MediaControllerElement extends LitElement {
    * update that will flow down to all consumer components. This record is consumed by
    * a media provider element as it's responsible for managing it (ie: updating context properties).
    *
+   * @readonly
    * @internal Exposed for testing.
    */
-  // Has to be in this order otherwise the `provide()` decorator will overwrite the context record.
-  // Remember decorators are evaluated top-to-bottom! - https://www.typescriptlang.org/docs/handbook/decorators.html#decorator-composition
-  @contextRecordProvider(mediaContext)
-  @mediaContextRecord.provide()
-  readonly context!: MediaContextRecordProvider;
+  context = mediaContextProviderRecord.provide(this);
 
   // -------------------------------------------------------------------------------------------
   // Render
   // -------------------------------------------------------------------------------------------
 
-  render(): TemplateResult {
+  render() {
     return html`<slot></slot>`;
   }
 
@@ -96,13 +87,19 @@ export class MediaControllerElement extends LitElement {
   // Media Container
   // -------------------------------------------------------------------------------------------
 
-  protected _mediaContainer?: MediaContainerElement;
+  /**
+   * @protected
+   * @type {MediaContainerElement | undefined}
+   */
+  _mediaContainer;
 
   /**
    * The current media container that belongs to this controller. Defaults to `undefined` if
    * there is none.
+   * 
+   * @returns {MediaContainerElement | undefined}
    */
-  get mediaContainer(): MediaContainerElement | undefined {
+  get mediaContainer() {
     return this._mediaContainer;
   }
 
