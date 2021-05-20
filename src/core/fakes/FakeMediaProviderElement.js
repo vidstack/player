@@ -12,9 +12,11 @@ import {
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
+ *
+ * @extends MediaProviderElement<undefined>
  */
 export class FakeMediaProviderElement extends MediaProviderElement {
-	connectedCallback(): void {
+	connectedCallback() {
 		super.connectedCallback();
 		if (this.canPlay) this.handleMediaReady();
 	}
@@ -23,20 +25,20 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 	// Provider Metods
 	// -------------------------------------------------------------------------------------------
 
-	getCurrentTime(): number {
+	getCurrentTime() {
 		return this.context.currentTime;
 	}
 
-	setCurrentTime(time: number): void {
+	setCurrentTime(time) {
 		this.context.currentTime = time;
 		this.dispatchEvent(new VdsTimeUpdateEvent({ detail: time }));
 	}
 
-	getMuted(): boolean {
+	getMuted() {
 		return this.context.muted;
 	}
 
-	setMuted(muted: boolean): void {
+	setMuted(muted) {
 		this.context.muted = muted;
 		this.dispatchEvent(
 			new VdsVolumeChangeEvent({
@@ -48,15 +50,15 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 		);
 	}
 
-	getPaused(): boolean {
+	getPaused() {
 		return this.context.paused;
 	}
 
-	getVolume(): number {
+	getVolume() {
 		return this.context.volume;
 	}
 
-	setVolume(volume: number): void {
+	setVolume(volume) {
 		this.context.volume = volume;
 		this.dispatchEvent(
 			new VdsVolumeChangeEvent({
@@ -72,7 +74,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 	// Readonly Properties
 	// -------------------------------------------------------------------------------------------
 
-	get engine(): unknown {
+	get engine() {
 		return undefined;
 	}
 
@@ -80,16 +82,16 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 	// Playback
 	// -------------------------------------------------------------------------------------------
 
-	canPlayType(): CanPlay {
+	canPlayType() {
 		return CanPlay.No;
 	}
 
-	async play(): Promise<void> {
+	async play() {
 		this.context.paused = false;
 		this.dispatchEvent(new VdsPlayEvent());
 	}
 
-	async pause(): Promise<void> {
+	async pause() {
 		this.context.paused = true;
 		this.dispatchEvent(new VdsPauseEvent());
 	}
@@ -98,11 +100,11 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 	// Fullscreen
 	// -------------------------------------------------------------------------------------------
 
-	async requestFullscreen(): Promise<void> {
+	async requestFullscreen() {
 		this.context.fullscreen = true;
 	}
 
-	async exitFullscreen(): Promise<void> {
+	async exitFullscreen() {
 		this.context.fullscreen = false;
 	}
 }

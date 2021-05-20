@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { html, TemplateResult } from 'lit-element';
 
+import { consumeContextRecord } from '../../../shared/context';
 import { VdsElement } from '../../../shared/elements';
 import { IS_IOS } from '../../../utils/support';
 import { mediaContext } from '../media.context';
@@ -35,27 +36,23 @@ export class MediaUiElement extends VdsElement {
 	}
 
 	/** @protected @readonly */
-	canPlay = mediaContext.canPlay.consume(this);
-
-	/** @protected @readonly */
-	fullscreen = mediaContext.fullscreen.consume(this);
-
-	/** @protected @readonly */
-	isVideoView = mediaContext.isVideoView.consume(this);
-
-	/** @protected @readonly */
-	playsinline = mediaContext.playsinline.consume(this);
+	mediaCtx = consumeContextRecord(this, {
+		canPlay: mediaContext.canPlay,
+		fullscreen: mediaContext.fullscreen,
+		isVideoView: mediaContext.isVideoView,
+		playsinline: mediaContext.playsinline
+	});
 
 	/**
 	 * @protected
-	 * @type {HTMLDivElement}
+	 * @returns {HTMLDivElement}
 	 */
 	rootEl;
 
 	/**
 	 * The component's root element.
 	 *
-	 * @returns {HTMLDivElement}
+	 * @type {HTMLDivElement}
 	 */
 	get rootElement() {
 		return this.rootEl;
@@ -127,13 +124,13 @@ export class MediaUiElement extends VdsElement {
 	 */
 	isUiHidden() {
 		return (
-			!this.canPlay.value ||
+			!this.mediaCtx.canPlay ||
 			// If iOS Safari and the view type is currently video then we hide the custom UI depending
 			// on whether playsinline is set and fullscreen is not active, or if fullscreen is active
 			// we should always hide.
 			(IS_IOS &&
-				this.isVideoView.value &&
-				(!this.playsinline.value || this.fullscreen.value))
+				this.mediaCtx.isVideoView &&
+				(!this.mediaCtx.playsinline || this.mediaCtx.fullscreen))
 		);
 	}
 }

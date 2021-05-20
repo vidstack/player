@@ -1,7 +1,7 @@
 import { VdsElement } from '../../shared/elements';
 import { VdsCustomEvent } from '../../shared/events';
 
-export interface FullscreenControllerHost extends VdsElement {
+export interface FullscreenHost extends VdsElement {
 	/**
 	 * Requests to enter fullscreen mode, returning a `Promise` that will resolve if the request is
 	 * made, or reject with a reason for failure.
@@ -37,7 +37,7 @@ export interface FullscreenControllerHost extends VdsElement {
 	exitFullscreen(): Promise<void>;
 }
 
-export interface FullscreenControllerEvents {
+export interface FullscreenEvents {
 	'fullscreen-change': VdsCustomEvent<boolean>;
 	error: VdsCustomEvent<void>;
 }

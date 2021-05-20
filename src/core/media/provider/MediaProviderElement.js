@@ -1,22 +1,15 @@
-import { DerivedContext } from '@wcom/context';
-import { LitElement, property, PropertyValues } from 'lit-element';
-
+import { VdsElement } from '../../../shared/elements';
 import { DisposalBin } from '../../../shared/events';
-import { isUndefined } from '../../../utils/unit';
-import {
-	FullscreenController,
-	FullscreenControllerHost
-} from '../../fullscreen';
+import { FullscreenController } from '../../fullscreen';
 import { RequestQueue } from '../../queue';
 import {
 	ScreenOrientationController,
-	ScreenOrientationControllerHost,
 	ScreenOrientationLock
 } from '../../screen-orientation';
 import { CanPlay } from '../CanPlay';
 import {
 	mediaContext,
-	mediaContextRecord,
+	mediaContextProviderRecord,
 	mediaPropsToResetOnSrcChange
 } from '../media.context';
 import {
@@ -26,46 +19,72 @@ import {
 	VdsFullscreenChangeEvent,
 	VdsSuspendEvent
 } from '../media.events';
-import { MediaType } from '../MediaType';
-import { ViewType } from '../ViewType';
 import { VdsMediaProviderConnectEvent } from './media-provider.events';
-import {
-	MediaProviderElementMethods,
-	MediaProviderElementProps
-} from './media-provider.types';
+
+/** @typedef {import('.').MediaProviderElementProps} MediaProviderElementProps */
+/** @typedef {import('.').MediaProviderElementMethods} MediaProviderElementMethods */
+/** @typedef {import('../../fullscreen').FullscreenHost} FullscreenHost */
+/** @typedef {import('../../screen-orientation').ScreenOrientationHost} ScreenOrientationHost */
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by
  * all concrete media providers. Extending this class enables provider-agnostic communication 💬
+ *
+ * @implements {MediaProviderElementProps}
+ * @implements {MediaProviderElementMethods}
+ * @implements {FullscreenHost}
+ * @implements {ScreenOrientationHost}
+ *
+ * @template EngineType
  */
-export abstract class MediaProviderElement<EngineType = unknown>
-	extends LitElement
-	implements
-		MediaProviderElementProps,
-		MediaProviderElementMethods,
-		FullscreenControllerHost,
-		ScreenOrientationControllerHost {
-	protected disconnectDisposal = new DisposalBin();
+export class MediaProviderElement extends VdsElement {
+	/**
+	 * @protected
+	 * @readonly
+	 */
+	disconnectDisposal = new DisposalBin();
 
-	connectedCallback(): void {
+	/**
+	 * Queue actions to be applied safely after the element has connected to the DOM.
+	 *
+	 * @protected
+	 * @readonly
+	 */
+	connectedQueue = new RequestQueue();
+
+	constructor() {
+		super();
+
+		// Consume media context record from media controller if available.
+		mediaContextProviderRecord.consume(this, {
+			onUpdate: (newMediaContextRecord) => {
+				// Bypass readonly.
+				/** @type {any} */ (this).context = newMediaContextRecord;
+			}
+		});
+	}
+
+	connectedCallback() {
 		super.connectedCallback();
+
 		this.addFullscreenController(this.fullscreenController);
+
 		this.dispatchEvent(
 			new VdsMediaProviderConnectEvent({
 				detail: {
 					provider: this,
-					onDisconnect: (callback) => {
-						this.disconnectDisposal.add(callback);
-					}
+					onDisconnect: this.disconnectDisposal.add
 				}
 			})
 		);
 
-		this.contextQueue.flush();
-		this.contextQueue.serveImmediately = true;
+		this.connectedQueue.flush();
+		this.connectedQueue.serveImmediately = true;
 	}
 
-	updated(changedProperties: PropertyValues): void {
+	updated(changedProperties) {
+		super.updated(changedProperties);
+
 		if (changedProperties.has('autoplay')) {
 			this.context.autoplay = this.autoplay;
 		}
@@ -81,44 +100,78 @@ export abstract class MediaProviderElement<EngineType = unknown>
 		if (changedProperties.has('playsinline')) {
 			this.context.playsinline = this.playsinline;
 		}
-
-		super.updated(changedProperties);
 	}
 
-	disconnectedCallback(): void {
-		this.disconnectDisposal.empty();
-		this.contextQueue.destroy();
-		this.mediaRequestQueue.destroy();
-		this.hardResetMediaContext();
+	disconnectedCallback() {
 		super.disconnectedCallback();
+		this.disconnectDisposal.empty();
+		this.connectedQueue.destroy();
+		this.mediaRequestQueue.destroy();
 	}
 
 	// -------------------------------------------------------------------------------------------
 	// Writable Properties
 	// -------------------------------------------------------------------------------------------
 
-	@property({ type: Number })
-	get volume(): number {
+	/** @type {import('lit-element').PropertyDeclarations} */
+	static get properties() {
+		return {
+			paused: { type: Boolean },
+			muted: { type: Boolean },
+			autoplay: { type: Boolean },
+			controls: { type: Boolean },
+			loop: { type: Boolean },
+			playsinline: { type: Boolean },
+			volume: { type: Number },
+			currentTime: { type: Number, attribute: 'current-time' },
+			fullscreenOrientation: { attribute: 'fullscreen-orientation' }
+		};
+	}
+
+	autoplay = false;
+	controls = false;
+	loop = false;
+	playsinline = false;
+
+	// --
+
+	get volume() {
 		return this.canPlay ? this.getVolume() : 1;
 	}
 
-	set volume(requestedVolume: number) {
+	set volume(requestedVolume) {
 		this.mediaRequestQueue.queue('volume', () => {
 			this.setVolume(requestedVolume);
 		});
 	}
 
-	protected abstract getVolume(): number;
-	protected abstract setVolume(newVolume: number): void;
+	/**
+	 * @protected
+	 * @abstract
+	 * @returns {number}
+	 */
+	getVolume() {
+		throw Error('Not implemented.');
+	}
+
+	/**
+	 * @protected
+	 * @abstract
+	 * @param {number} newVolume
+	 * @returns {void}
+	 */
+	setVolume(newVolume) {
+		throw Error('Not implemented.');
+	}
 
 	// ---
 
-	@property({ type: Boolean })
-	get paused(): boolean {
+	get paused() {
 		return this.canPlay ? this.getPaused() : true;
 	}
 
-	set paused(shouldPause: boolean) {
+	/** @param {boolean} shouldPause */
+	set paused(shouldPause) {
 		this.mediaRequestQueue.queue('paused', () => {
 			if (!shouldPause) {
 				this.play();
@@ -128,59 +181,78 @@ export abstract class MediaProviderElement<EngineType = unknown>
 		});
 	}
 
-	protected abstract getPaused(): boolean;
+	/**
+	 * @protected
+	 * @abstract
+	 * @returns {boolean}
+	 */
+	getPaused() {
+		throw Error('Not implemented.');
+	}
 
 	// ---
 
-	@property({ type: Number, attribute: 'current-time' })
-	get currentTime(): number {
+	get currentTime() {
 		return this.canPlay ? this.getCurrentTime() : 0;
 	}
 
-	set currentTime(requestedTime: number) {
+	/** @param {number} requestedTime */
+	set currentTime(requestedTime) {
 		this.mediaRequestQueue.queue('time', () => {
 			this.setCurrentTime(requestedTime);
 		});
 	}
 
-	protected abstract getCurrentTime(): number;
-	protected abstract setCurrentTime(newTime: number): void;
+	/**
+	 * @protected
+	 * @abstract
+	 * @returns {number}
+	 */
+	getCurrentTime() {
+		throw Error('Not implemented.');
+	}
+
+	/**
+	 * @protected
+	 * @abstract
+	 * @param {number} newTime
+	 * @returns {void}
+	 */
+	setCurrentTime(newTime) {
+		throw Error('Not implemented.');
+	}
 
 	// ---
 
-	@property({ type: Boolean })
-	get muted(): boolean {
+	get muted() {
 		return this.canPlay ? this.getMuted() : false;
 	}
 
-	set muted(shouldMute: boolean) {
+	/** @param {boolean} shouldMute */
+	set muted(shouldMute) {
 		this.mediaRequestQueue.queue('muted', () => {
 			this.setMuted(shouldMute);
 		});
 	}
 
-	protected abstract getMuted(): boolean;
-	protected abstract setMuted(isMuted: boolean): void;
+	/**
+	 * @protected
+	 * @abstract
+	 * @returns {boolean}
+	 */
+	getMuted() {
+		throw Error('Not implemented.');
+	}
 
-	// ---
-
-	@property({ type: Boolean })
-	autoplay = false;
-
-	// ---
-
-	@property({ type: Boolean })
-	controls = false;
-
-	// ---
-
-	@property({ type: Boolean })
-	playsinline = false;
-
-	// ---
-
-	@property({ type: Boolean })
-	loop = false;
+	/**
+	 * @protected
+	 * @abstract
+	 * @param {boolean} isMuted
+	 * @returns {void}
+	 */
+	setMuted(isMuted) {
+		throw Error('Not implemented.');
+	}
 
 	// -------------------------------------------------------------------------------------------
 	// Readonly Properties
@@ -195,70 +267,75 @@ export abstract class MediaProviderElement<EngineType = unknown>
 	 * - The `YoutubeElement` engine is `HTMLIFrameElement`.
 	 *
 	 * Refer to the respective provider documentation to find out which engine is powering it.
+	 *
+	 * @abstract
+	 * @readonly
+	 * @type {EngineType}
 	 */
-	abstract readonly engine: EngineType;
+	get engine() {
+		throw Error('Not implemented.');
+	}
 
-	get buffered(): TimeRanges {
+	get buffered() {
 		return this.context.buffered;
 	}
 
-	get canPlay(): boolean {
+	get canPlay() {
 		return this.context.canPlay;
 	}
 
-	get canPlayThrough(): boolean {
+	get canPlayThrough() {
 		return this.context.canPlayThrough;
 	}
 
-	get currentPoster(): string {
+	get currentPoster() {
 		return this.context.currentPoster;
 	}
 
-	get currentSrc(): string {
+	get currentSrc() {
 		return this.context.currentSrc;
 	}
 
-	get duration(): number {
+	get duration() {
 		return this.context.duration;
 	}
 
-	get ended(): boolean {
+	get ended() {
 		return this.context.ended;
 	}
 
-	get error(): unknown | undefined {
+	get error() {
 		return this.context.error;
 	}
 
-	get mediaType(): MediaType {
+	get mediaType() {
 		return this.context.mediaType;
 	}
 
-	get played(): TimeRanges {
+	get played() {
 		return this.context.played;
 	}
 
-	get playing(): boolean {
+	get playing() {
 		return this.context.playing;
 	}
 
-	get seekable(): TimeRanges {
+	get seekable() {
 		return this.context.seekable;
 	}
 
-	get seeking(): boolean {
+	get seeking() {
 		return this.context.seeking;
 	}
-
-	get started(): boolean {
+	get started() {
 		return this.context.started;
 	}
 
-	get viewType(): ViewType {
+	get viewType() {
 		return this.context.viewType;
 	}
 
-	get waiting(): boolean {
+	get waiting() {
 		return this.context.waiting;
 	}
 
@@ -266,9 +343,20 @@ export abstract class MediaProviderElement<EngineType = unknown>
 	// Support Checks
 	// -------------------------------------------------------------------------------------------
 
-	abstract canPlayType(type: string): CanPlay;
+	/**
+	 * @abstract
+	 * @param {string} type
+	 * @returns {CanPlay}
+	 */
+	canPlayType(type) {
+		throw Error('Not implemented');
+	}
 
-	shouldPlayType(type: string): boolean {
+	/**
+	 * @param {string} type
+	 * @returns {boolean}
+	 */
+	shouldPlayType(type) {
 		const canPlayType = this.canPlayType(type);
 		return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
 	}
@@ -277,10 +365,24 @@ export abstract class MediaProviderElement<EngineType = unknown>
 	// Playback
 	// -------------------------------------------------------------------------------------------
 
-	abstract play(): Promise<void>;
-	abstract pause(): Promise<void>;
+	/**
+	 * @abstract
+	 * @returns {Promise<void>}
+	 */
+	async play() {}
 
-	protected throwIfNotReadyForPlayback(): void {
+	/**
+	 * @abstract
+	 * @returns {Promise<void>}
+	 */
+	async pause() {}
+
+	/**
+	 * @protected
+	 * @returns {void}
+	 * @throws {Error} - Will throw if media is not ready for playback.
+	 */
+	throwIfNotReadyForPlayback() {
 		if (!this.canPlay) {
 			throw Error(
 				`Media is not ready - wait for \`${VdsCanPlayEvent.TYPE}\` event.`
@@ -288,7 +390,11 @@ export abstract class MediaProviderElement<EngineType = unknown>
 		}
 	}
 
-	protected hasPlaybackRoughlyEnded(): boolean {
+	/**
+	 * @protected
+	 * @returns {boolean}
+	 */
+	hasPlaybackRoughlyEnded() {
 		if (isNaN(this.duration) || this.duration === 0) return false;
 		return (
 			Math.abs(
@@ -299,8 +405,11 @@ export abstract class MediaProviderElement<EngineType = unknown>
 
 	/**
 	 * Call if you suspect that playback might have resumed/ended again.
+	 *
+	 * @protected
+	 * @returns {void}
 	 */
-	protected validatePlaybackEndedState(): void {
+	validatePlaybackEndedState() {
 		if (this.context.ended && !this.hasPlaybackRoughlyEnded()) {
 			this.context.ended = false;
 		} else if (!this.context.ended && this.hasPlaybackRoughlyEnded()) {
@@ -311,29 +420,51 @@ export abstract class MediaProviderElement<EngineType = unknown>
 		}
 	}
 
-	protected async resetPlayback(): Promise<void> {
+	/**
+	 * @protected
+	 * @returns {Promise<void>}
+	 */
+	async resetPlayback() {
 		this.setCurrentTime(0);
 	}
 
-	protected async resetPlaybackIfEnded(): Promise<void> {
+	/**
+	 * @protected
+	 * @returns {Promise<void>}
+	 */
+	async resetPlaybackIfEnded() {
 		if (!this.hasPlaybackRoughlyEnded()) return;
 		return this.resetPlayback();
 	}
 
-	protected throwIfNotVideoView(): void {
+	/**
+	 * @protected
+	 * @returns {void}
+	 * @throws {Error} - Will throw if player is not in a video view.
+	 */
+	throwIfNotVideoView() {
 		if (!this.context.isVideoView) {
 			throw Error('Player is currently not in a video view.');
 		}
 	}
 
-	protected handleMediaReady(originalEvent?: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} [originalEvent]
+	 * @returns {void}
+	 */
+	handleMediaReady(originalEvent) {
 		this.context.canPlay = true;
 		this.dispatchEvent(new VdsCanPlayEvent({ originalEvent }));
 		this.mediaRequestQueue.flush();
 		this.mediaRequestQueue.serveImmediately = true;
 	}
 
-	protected handleMediaSrcChange(): void {
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	handleMediaSrcChange() {
 		this.mediaRequestQueue.serveImmediately = false;
 		this.mediaRequestQueue.reset();
 		this.softResetMediaContext();
@@ -344,12 +475,6 @@ export abstract class MediaProviderElement<EngineType = unknown>
 	// -------------------------------------------------------------------------------------------
 
 	/**
-	 * Queue actions to be applied to any context safely after the element has connected to the
-	 * DOM.
-	 */
-	protected contextQueue = new RequestQueue();
-
-	/**
 	 * Any property updated inside this object will trigger a context update. The media controller
 	 * will provide (inject) the context record to be managed by this media provider. Any updates here
 	 * will flow down from the media controller to all components.
@@ -357,16 +482,19 @@ export abstract class MediaProviderElement<EngineType = unknown>
 	 * If there's no media controller then this will be a plain JS object that's used to keep
 	 * track of media state.
 	 *
+	 * @readonly
 	 * @internal Exposed for testing.
 	 */
-	@mediaContextRecord.consume()
-	readonly context = mediaContextRecord.defaultValue;
+	context = mediaContextProviderRecord.initialValue;
 
 	/**
 	 * Media context properties that should be reset when media is changed. Override this
 	 * to include additional properties.
+	 *
+	 * @protected
+	 * @returns {Set<string>}
 	 */
-	protected getSoftResettableMediaContextProps(): Set<string> {
+	getMediaPropsToResetWhenSrcChanges() {
 		return mediaPropsToResetOnSrcChange;
 	}
 
@@ -374,24 +502,15 @@ export abstract class MediaProviderElement<EngineType = unknown>
 	 * When the `currentSrc` is changed this method is called to update any context properties
 	 * that need to be reset. Important to note that not all properties are reset, only the
 	 * properties returned from `getSoftResettableMediaContextProps()`.
+	 *
+	 * @protected
+	 * @returns {void}
 	 */
-	protected softResetMediaContext(): void {
-		const softResettable = this.getSoftResettableMediaContextProps();
+	softResetMediaContext() {
+		const propsToReset = this.getMediaPropsToResetWhenSrcChanges();
 		Object.keys(mediaContext).forEach((prop) => {
-			if (softResettable.has(prop)) {
-				this.context[prop] = mediaContext[prop].defaultValue;
-			}
-		});
-	}
-
-	/**
-	 * Called when the provider disconnects, resets the media context completely.
-	 */
-	protected hardResetMediaContext(): void {
-		Object.keys(mediaContext).forEach((prop) => {
-			// We can't set values on a derived context.
-			if (isUndefined((mediaContext[prop] as DerivedContext<unknown>).key)) {
-				this.context[prop] = mediaContext[prop].defaultValue;
+			if (propsToReset.has(prop)) {
+				this.context[prop] = mediaContext[prop].initialValue;
 			}
 		});
 	}
@@ -399,7 +518,6 @@ export abstract class MediaProviderElement<EngineType = unknown>
 	// -------------------------------------------------------------------------------------------
 	// Request Queue
 	// -------------------------------------------------------------------------------------------
-
 	/**
 	 * Queue actions to be taken on the current media provider when it's ready for playback, marked
 	 * by the `canPlay` property. If the media provider is ready, actions will be invoked immediately.
@@ -421,11 +539,11 @@ export abstract class MediaProviderElement<EngineType = unknown>
 		this.screenOrientationController
 	);
 
-	get canRequestFullscreen(): boolean {
+	get canRequestFullscreen() {
 		return this.fullscreenController.isSupported;
 	}
 
-	get fullscreen(): boolean {
+	get fullscreen() {
 		return this.fullscreenController.isFullscreen;
 	}
 
@@ -433,35 +551,39 @@ export abstract class MediaProviderElement<EngineType = unknown>
 	 * This will indicate the orientation to lock the screen to when in fullscreen mode and
 	 * the Screen Orientation API is available. The default is `undefined` which indicates
 	 * no screen orientation change.
+	 *
+	 * @attribute fullscreen-orientation
+	 * @type {ScreenOrientationLock | undefined}
 	 */
-	@property({ attribute: 'fullscreen-orientation' })
-	get fullscreenOrientation(): ScreenOrientationLock | undefined {
+	get fullscreenOrientation() {
 		return this.fullscreenController.screenOrientationLock;
 	}
 
-	set fullscreenOrientation(lockType: ScreenOrientationLock | undefined) {
+	set fullscreenOrientation(lockType) {
 		this.fullscreenController.screenOrientationLock = lockType;
 	}
 
-	requestFullscreen(): Promise<void> {
+	/** @returns {Promise<void>} */
+	requestFullscreen() {
 		if (this.fullscreenController.isRequestingNativeFullscreen) {
 			return super.requestFullscreen();
 		}
-
 		return this.fullscreenController.requestFullscreen();
 	}
 
-	exitFullscreen(): Promise<void> {
+	/** @returns {Promise<void>} */
+	exitFullscreen() {
 		return this.fullscreenController.exitFullscreen();
 	}
 
 	/**
 	 * This can be used to add additional fullscreen controller event listeners to update the
 	 * appropriate contexts and dispatch events.
+	 *
+	 * @param {FullscreenController} controller
+	 * @returns {void}
 	 */
-	addFullscreenController(controller: FullscreenController): void {
-		// NOTE: Events are cleaned up automatically when the controller's host element is disconnected.
-
+	addFullscreenController(controller) {
 		controller.addEventListener('fullscreen-change', (e) => {
 			const isFullscreen = e.detail;
 			this.context.fullscreen = isFullscreen;

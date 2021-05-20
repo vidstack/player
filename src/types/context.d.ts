@@ -1,4 +1,5 @@
 import { VdsElement } from '../shared/elements';
+import { ReadonlyIfType } from '../types/misc';
 
 export interface ContextConsumerDetail {
 	onConnect(): void;
@@ -41,17 +42,28 @@ export type ContextTupleValues<Tuple> = {
 };
 
 export type DerivedContext<T> = Omit<Context<T>, 'provide'> & {
-	provide(host: VdsElement): Readonly<ContextProvider>;
+	provide(host: VdsElement): Readonly<ContextProvider<T>>;
+	isDerived: true;
 };
 
 export type ContextRecord<RecordType> = {
-	readonly [P in keyof RecordType]: Context<RecordType[P]>;
+	readonly [P in keyof RecordType]:
+		| Context<RecordType[P]>
+		| DerivedContext<RecordType[P]>;
+};
+
+export type ExtractContextRecordTypes<
+	ContextRecordType extends ContextRecord<any>
+> = {
+	[P in keyof ContextRecordType]: ExtractContextType<ContextRecordType[P]>;
 };
 
 export type ContextProviderRecord<
 	ContextRecordType extends ContextRecord<any>
-> = {
-	readonly [P in keyof ContextRecordType]: ReturnType<
-		ContextRecordType[P]['provide']
-	>;
-};
+> = ExtractContextRecordTypes<
+	ReadonlyIfType<DerivedContext<any>, ContextRecordType>
+>;
+
+export type ContextConsumerRecord<
+	ContextRecordType extends ContextRecord<any>
+> = ExtractContextRecordTypes<Readonly<ContextRecordType>>;

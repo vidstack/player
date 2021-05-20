@@ -3,6 +3,7 @@ import { elementUpdated, fixture } from '@open-wc/testing-helpers';
 import { html } from 'lit-element';
 
 import {
+	consumeContextRecord,
 	createContext,
 	derivedContext,
 	provideContextRecord
@@ -29,6 +30,9 @@ class FakeConsumerElement extends VdsElement {
 	ctxA = ctxA.consume(this);
 	ctxB = ctxB.consume(this);
 	ctxC = ctxC.consume(this);
+	ctxD = consumeContextRecord(this, {
+		...ctxRecord
+	});
 
 	render() {
 		return html`<span>${this.ctxA.value}-${this.ctxB.value}</span>`;
@@ -93,18 +97,28 @@ describe('context', function () {
 	it('should update consumer via context record', async function () {
 		const { provider, consumer } = await buildFixture();
 
-		provider.ctxD.ctxA.value = 20;
+		provider.ctxD.ctxA = 20;
 		await elementUpdated(consumer);
 		expect(consumer.ctxA.value).to.equal(20);
 		expect(consumer.ctxB.value).to.equal('B');
 		expect(consumer.ctxC.value).to.equal('20-B');
 		expect(consumer).shadowDom.to.equal('<span>20-B</span>');
 
-		provider.ctxD.ctxB.value = 'B2';
+		provider.ctxD.ctxB = 'B2';
 		await elementUpdated(consumer);
 		expect(consumer.ctxA.value).to.equal(20);
 		expect(consumer.ctxB.value).to.equal('B2');
 		expect(consumer.ctxC.value).to.equal('20-B2');
 		expect(consumer).shadowDom.to.equal('<span>20-B2</span>');
+	});
+
+	it('should consume context record', async function () {
+		const { provider, consumer } = await buildFixture();
+
+		provider.ctxA.value = 20;
+		expect(consumer.ctxD.ctxA).to.equal(20);
+
+		provider.ctxB.value = 'B2';
+		expect(consumer.ctxD.ctxB).to.equal('B2');
 	});
 });

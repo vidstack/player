@@ -104,19 +104,14 @@ export const mediaPropsToResetOnSrcChange = new Set([
 // down from the media controller to the media provider so it can manage it.
 
 /** @type {import('../../types/context').ContextProviderRecord<typeof mediaContext>} */
-const initialMediaContextProviderRecordValue = Object.keys(mediaContext).reduce(
+const initialMediaContextProviderRecord = Object.keys(mediaContext).reduce(
 	(state, contextProp) => ({
 		...state,
-		[contextProp]: {
-			value: mediaContext[contextProp].initialValue,
-			reset() {
-				this.value = mediaContext[contextProp].initialValue;
-			}
-		}
+		[contextProp]: mediaContext[contextProp].initialValue
 	}),
 	/** @type {any} */ ({})
 );
 
 export const mediaContextProviderRecord = createContext(
-	initialMediaContextProviderRecordValue
+	initialMediaContextProviderRecord
 );

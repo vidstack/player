@@ -1,25 +1,25 @@
 import {
-  CSSResultArray,
-  html,
-  property,
-  PropertyValues,
-  TemplateResult,
+	CSSResultArray,
+	html,
+	property,
+	PropertyValues,
+	TemplateResult
 } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
 import {
-  MediaType,
-  VdsMediaTypeChangeEvent,
-  VdsViewTypeChangeEvent,
-  ViewType,
+	MediaType,
+	VdsMediaTypeChangeEvent,
+	VdsViewTypeChangeEvent,
+	ViewType
 } from '../../core';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
 import { Html5MediaElement, Html5MediaElementEngine } from '../html5';
 import { VideoFullscreenController } from './fullscreen';
 import {
-  VideoPresentationController,
-  VideoPresentationControllerHost,
+	VideoPresentationController,
+	VideoPresentationControllerHost
 } from './presentation';
 import { videoElementStyles } from './video.css';
 import { VideoElementProps } from './video.types';
@@ -55,180 +55,180 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  * ```
  */
 export class VideoElement<EngineType = Html5MediaElementEngine>
-  extends Html5MediaElement<EngineType>
-  implements VideoElementProps, VideoPresentationControllerHost {
-  protected mediaEl?: HTMLVideoElement;
+	extends Html5MediaElement<EngineType>
+	implements VideoElementProps, VideoPresentationControllerHost {
+	protected mediaEl?: HTMLVideoElement;
 
-  static get styles(): CSSResultArray {
-    return [videoElementStyles];
-  }
+	static get styles(): CSSResultArray {
+		return [videoElementStyles];
+	}
 
-  static get parts(): string[] {
-    return ['root', 'video'];
-  }
+	static get parts(): string[] {
+		return ['root', 'video'];
+	}
 
-  connectedCallback(): void {
-    super.connectedCallback();
+	connectedCallback(): void {
+		super.connectedCallback();
 
-    this.context.viewType = ViewType.Video;
-    this.dispatchEvent(
-      new VdsViewTypeChangeEvent({
-        detail: ViewType.Video,
-      }),
-    );
-  }
+		this.context.viewType = ViewType.Video;
+		this.dispatchEvent(
+			new VdsViewTypeChangeEvent({
+				detail: ViewType.Video
+			})
+		);
+	}
 
-  firstUpdated(changedProps: PropertyValues): void {
-    this.mediaEl = this.shadowRoot?.querySelector('video') as HTMLVideoElement;
-    super.firstUpdated(changedProps);
-  }
+	firstUpdated(changedProps: PropertyValues): void {
+		this.mediaEl = this.shadowRoot?.querySelector('video') as HTMLVideoElement;
+		super.firstUpdated(changedProps);
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Render
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Render
+	// -------------------------------------------------------------------------------------------
 
-  render(): TemplateResult {
-    return html`
-      <div
-        id="root"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
-      >
-        ${this.renderVideo()}
-        <slot name="ui" @slotchange="${this.handleUiSlotChange}"></slot>
-      </div>
-    `;
-  }
+	render(): TemplateResult {
+		return html`
+			<div
+				id="root"
+				class="${this.getRootClassAttr()}"
+				part="${this.getRootPartAttr()}"
+			>
+				${this.renderVideo()}
+				<slot name="ui" @slotchange="${this.handleUiSlotChange}"></slot>
+			</div>
+		`;
+	}
 
-  /**
-   * Override this to modify root provider CSS Classes.
-   */
-  protected getRootClassAttr(): string {
-    return '';
-  }
+	/**
+	 * Override this to modify root provider CSS Classes.
+	 */
+	protected getRootClassAttr(): string {
+		return '';
+	}
 
-  /**
-   * Override this to modify root provider CSS Parts.
-   */
-  protected getRootPartAttr(): string {
-    return 'root';
-  }
+	/**
+	 * Override this to modify root provider CSS Parts.
+	 */
+	protected getRootPartAttr(): string {
+		return 'root';
+	}
 
-  /**
-   * Override this to modify video CSS Parts.
-   */
-  protected getVideoPartAttr(): string {
-    return 'video';
-  }
+	/**
+	 * Override this to modify video CSS Parts.
+	 */
+	protected getVideoPartAttr(): string {
+		return 'video';
+	}
 
-  /**
-   * Can be used by attaching engine such as `hls.js` to prevent src attr being set on
-   * `<video>` element.
-   */
-  protected shouldSetVideoSrcAttr(): boolean {
-    return true;
-  }
+	/**
+	 * Can be used by attaching engine such as `hls.js` to prevent src attr being set on
+	 * `<video>` element.
+	 */
+	protected shouldSetVideoSrcAttr(): boolean {
+		return true;
+	}
 
-  protected renderVideo(): TemplateResult {
-    return html`
-      <video
-        part="${this.getVideoPartAttr()}"
-        src="${ifNonEmpty(this.shouldSetVideoSrcAttr() ? this.src : '')}"
-        width="${ifNumber(this.width)}"
-        height="${ifNumber(this.height)}"
-        poster="${ifDefined(this.poster)}"
-        preload="${ifNonEmpty(this.preload)}"
-        crossorigin="${ifNonEmpty(this.crossOrigin)}"
-        controlslist="${ifNonEmpty(this.controlsList)}"
-        ?autoplay="${this.autoplay}"
-        ?loop="${this.loop}"
-        ?playsinline="${this.playsinline}"
-        ?controls="${this.controls}"
-        ?autopictureinpicture="${this.autoPiP}"
-        ?disablepictureinpicture="${this.disablePiP}"
-        ?disableremoteplayback="${this.disableRemotePlayback}"
-        .defaultMuted="${this.defaultMuted ?? this.muted}"
-        .defaultPlaybackRate="${this.defaultPlaybackRate ?? 1}"
-      >
-        ${this.renderMediaContent()}
-      </video>
-    `;
-  }
+	protected renderVideo(): TemplateResult {
+		return html`
+			<video
+				part="${this.getVideoPartAttr()}"
+				src="${ifNonEmpty(this.shouldSetVideoSrcAttr() ? this.src : '')}"
+				width="${ifNumber(this.width)}"
+				height="${ifNumber(this.height)}"
+				poster="${ifDefined(this.poster)}"
+				preload="${ifNonEmpty(this.preload)}"
+				crossorigin="${ifNonEmpty(this.crossOrigin)}"
+				controlslist="${ifNonEmpty(this.controlsList)}"
+				?autoplay="${this.autoplay}"
+				?loop="${this.loop}"
+				?playsinline="${this.playsinline}"
+				?controls="${this.controls}"
+				?autopictureinpicture="${this.autoPiP}"
+				?disablepictureinpicture="${this.disablePiP}"
+				?disableremoteplayback="${this.disableRemotePlayback}"
+				.defaultMuted="${this.defaultMuted ?? this.muted}"
+				.defaultPlaybackRate="${this.defaultPlaybackRate ?? 1}"
+			>
+				${this.renderMediaContent()}
+			</video>
+		`;
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Events
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Events
+	// -------------------------------------------------------------------------------------------
 
-  protected handleLoadedMetadata(originalEvent: Event): void {
-    this.context.mediaType = this.getMediaType();
-    this.dispatchEvent(
-      new VdsMediaTypeChangeEvent({
-        detail: this.context.mediaType,
-        originalEvent,
-      }),
-    );
+	protected handleLoadedMetadata(originalEvent: Event): void {
+		this.context.mediaType = this.getMediaType();
+		this.dispatchEvent(
+			new VdsMediaTypeChangeEvent({
+				detail: this.context.mediaType,
+				originalEvent
+			})
+		);
 
-    super.handleLoadedMetadata(originalEvent);
-  }
+		super.handleLoadedMetadata(originalEvent);
+	}
 
-  /**
-   * Override to listen to slot changes.
-   */
-  protected handleUiSlotChange(): void {
-    // no-op
-  }
+	/**
+	 * Override to listen to slot changes.
+	 */
+	protected handleUiSlotChange(): void {
+		// no-op
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Properties
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Properties
+	// -------------------------------------------------------------------------------------------
 
-  @property()
-  get poster(): string {
-    return this.context.currentPoster;
-  }
+	@property()
+	get poster(): string {
+		return this.context.currentPoster;
+	}
 
-  set poster(newPoster: string) {
-    this.contextQueue.queue('currentPoster', () => {
-      this.context.currentPoster = newPoster;
-      this.requestUpdate();
-    });
-  }
+	set poster(newPoster: string) {
+		this.connectedQueue.queue('currentPoster', () => {
+			this.context.currentPoster = newPoster;
+			this.requestUpdate();
+		});
+	}
 
-  @property({ type: Boolean, attribute: 'autopictureinpicture' })
-  autoPiP?: boolean;
+	@property({ type: Boolean, attribute: 'autopictureinpicture' })
+	autoPiP?: boolean;
 
-  @property({ type: Boolean, attribute: 'disablepictureinpicture' })
-  disablePiP?: boolean;
+	@property({ type: Boolean, attribute: 'disablepictureinpicture' })
+	disablePiP?: boolean;
 
-  // -------------------------------------------------------------------------------------------
-  // Methods
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Methods
+	// -------------------------------------------------------------------------------------------
 
-  protected getMediaType(): MediaType {
-    if (AUDIO_EXTENSIONS.test(this.currentSrc)) {
-      return MediaType.Audio;
-    }
+	protected getMediaType(): MediaType {
+		if (AUDIO_EXTENSIONS.test(this.currentSrc)) {
+			return MediaType.Audio;
+		}
 
-    if (VIDEO_EXTENSIONS.test(this.currentSrc)) {
-      return MediaType.Video;
-    }
+		if (VIDEO_EXTENSIONS.test(this.currentSrc)) {
+			return MediaType.Video;
+		}
 
-    return MediaType.Unknown;
-  }
+		return MediaType.Unknown;
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Fullscreen
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Fullscreen
+	// -------------------------------------------------------------------------------------------
 
-  get videoElement(): HTMLVideoElement | undefined {
-    return this.mediaEl;
-  }
+	get videoElement(): HTMLVideoElement | undefined {
+		return this.mediaEl;
+	}
 
-  presentationController = new VideoPresentationController(this);
+	presentationController = new VideoPresentationController(this);
 
-  fullscreenController = new VideoFullscreenController(
-    this,
-    this.screenOrientationController,
-    this.presentationController,
-  );
+	fullscreenController = new VideoFullscreenController(
+		this,
+		this.screenOrientationController,
+		this.presentationController
+	);
 }

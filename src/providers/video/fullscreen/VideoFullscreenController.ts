@@ -1,6 +1,6 @@
 import {
 	FullscreenController,
-	FullscreenControllerHost,
+	FullscreenHost,
 	ScreenOrientationController
 } from '../../../core';
 import { VdsCustomEvent } from '../../../shared/events';
@@ -46,7 +46,7 @@ import { VideoPresentationController } from '../presentation/VideoPresentationCo
  */
 export class VideoFullscreenController extends FullscreenController {
 	constructor(
-		protected host: FullscreenControllerHost,
+		protected host: FullscreenHost,
 		protected screenOrientationController: ScreenOrientationController,
 		protected presentationController: VideoPresentationController
 	) {

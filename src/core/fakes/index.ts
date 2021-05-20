@@ -1,2 +1,2 @@
 export * from './FakeMediaProviderElement';
-export * from './fakes.types';
+export * from './fakes.constants';

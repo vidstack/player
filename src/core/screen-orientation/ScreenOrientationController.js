@@ -6,7 +6,7 @@ import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 /**
  * Contains the logic for managing the window's screen orientation.
  *
- * @mixes WithEvents<import('./screen-orientation.types').ScreenOrientationControllerEvents>
+ * @mixes WithEvents<import('.').ScreenOrientationEvents>
  *
  * @example
  * ```js
@@ -39,12 +39,12 @@ export class ScreenOrientationController extends WithEvents(class {}) {
 	/**
 	 * @protected
 	 * @readonly
-	 * @type {import('.').ScreenOrientationControllerHost}
+	 * @type {import('.').ScreenOrientationHost}
 	 */
 	host;
 
 	/**
-	 * @param {import('.').ScreenOrientationControllerHost} host
+	 * @param {import('.').ScreenOrientationHost} host
 	 */
 	constructor(host) {
 		super();

@@ -12,7 +12,7 @@ import {
  * Unfortunately fullscreen isn't straight forward due to cross-browser inconsistencies. This
  * class abstract the logic for handling fullscreen across browsers.
  *
- * @mixes WithEvents<import('.').FullscreenControllerEvents>
+ * @mixes WithEvents<import('.').FullscreenEvents>
  *
  * @example
  * ```js
@@ -65,7 +65,7 @@ export class FullscreenController extends WithEvents(class {}) {
 	/**
 	 * @protected
 	 * @readonly
-	 * @type {import('.').FullscreenControllerHost}
+	 * @type {import('.').FullscreenHost}
 	 */
 	host;
 
@@ -77,7 +77,7 @@ export class FullscreenController extends WithEvents(class {}) {
 	screenOrientationController;
 
 	/**
-	 * @param {import('./fullscreen.types').FullscreenControllerHost} host
+	 * @param {import('./fullscreen.types').FullscreenHost} host
 	 * @param {ScreenOrientationController} screenOrientationController
 	 */
 	constructor(host, screenOrientationController) {

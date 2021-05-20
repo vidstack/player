@@ -45,9 +45,7 @@ export function createContext(initialValue) {
 
 		let currentValue = initialValue;
 
-		/**
-		 * @type {Set<import('../types/context').ContextConsumerDetail>}
-		 */
+		/** @type {Set<import('../types/context').ContextConsumerDetail>} */
 		let consumers = new Set();
 
 		/**
@@ -184,6 +182,7 @@ export function derivedContext(contexts, derivation) {
 	return {
 		initialValue,
 		consume: derivedContext.consume,
+		isDerived: true,
 		provide(host) {
 			const values = [];
 			const derivedProvider = derivedContext.provide(host);
@@ -208,6 +207,9 @@ export function derivedContext(contexts, derivation) {
 			return {
 				get value() {
 					return derivedProvider.value;
+				},
+				reset() {
+					derivedProvider.value = initialValue;
 				}
 			};
 		}
@@ -228,10 +230,49 @@ export function provideContextRecord(host, contextRecord) {
 	const providers = {};
 
 	Object.keys(contextRecord).forEach((contextKey) => {
-		/** @type {import('../types/context').Context<unknown>} */
+		/** @type {import('../types/context').Context<unknown> & import('../types/context').DerivedContext<unknown>} */
 		const context = contextRecord[contextKey];
-		providers[contextKey] = context.provide(host);
+		const provider = context.provide(host);
+
+		Object.defineProperty(providers, contextKey, {
+			get() {
+				return provider.value;
+			},
+			set: context.isDerived
+				? undefined
+				: (newValue) => {
+						provider.value = newValue;
+				  }
+		});
 	});
 
 	return providers;
+}
+
+/**
+ * Takes in a context record which is essentially an object containing 0 or more contexts, and
+ * consumes them on the given `host` element.
+ *
+ * @template {import('../types/context').ContextRecord<unknown>} ContextRecordType
+ * @param {VdsElement} host
+ * @param {ContextRecordType} contextRecord
+ * @returns {import('../types/context').ContextConsumerRecord<ContextRecordType>}
+ */
+export function consumeContextRecord(host, contextRecord) {
+	/** @type {any} */
+	const consumers = {};
+
+	Object.keys(contextRecord).forEach((contextKey) => {
+		/** @type {import('../types/context').Context<unknown> & import('../types/context').DerivedContext<unknown>} */
+		const context = contextRecord[contextKey];
+		const consumer = context.consume(host);
+
+		Object.defineProperty(consumers, contextKey, {
+			get() {
+				return consumer.value;
+			}
+		});
+	});
+
+	return consumers;
 }
