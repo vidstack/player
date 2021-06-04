@@ -4,8 +4,8 @@ import {
 	ScreenOrientationController
 } from '../../../core';
 import { VdsCustomEvent } from '../../../shared/events';
-import { WebKitPresentationMode } from '../../../types/media';
-import { Unsubscribe } from '../../../types/misc';
+import { WebKitPresentationMode } from '../../../ts/media';
+import { Unsubscribe } from '../../../ts/utils';
 import { noop } from '../../../utils/unit';
 import { VideoPresentationController } from '../presentation/VideoPresentationController';
 

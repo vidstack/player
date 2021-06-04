@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
 	html,
 	internalProperty,
@@ -38,7 +37,7 @@ import {
 	listen,
 	redispatchNativeEvent
 } from '../../shared/events';
-import { Callback } from '../../types/misc';
+import { Callback } from '../../ts/utils';
 import { getSlottedChildren } from '../../utils/dom';
 import { IS_SAFARI } from '../../utils/support';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';

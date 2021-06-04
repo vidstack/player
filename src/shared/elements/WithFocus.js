@@ -1,4 +1,4 @@
-import { UpdatingElement } from 'lit-element';
+import { LitElement } from 'lit';
 
 import { BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/button/button.types';
 import { FULLSCREEN_BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/fullscreen-button/fullscreen-button.types';
@@ -36,7 +36,7 @@ export const focusableSelector = `
  * Technically a polyfill for `shadowRoot.delegatesFocus`.
  *
  * @mixin
- * @template {import('../../types/misc').Constructor<UpdatingElement>} T
+ * @template {import('../../types/utils').Constructor<LitElement>} T
  * @param {T} Base - The constructor to mix into.
  * @returns {T}
  *

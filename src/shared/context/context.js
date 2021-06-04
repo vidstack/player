@@ -1,8 +1,7 @@
-import { noop, notEqual } from '../utils/unit';
-import { VdsElement } from './elements';
+import { noop, notEqual } from '../../utils/unit';
 
 /**
- * @extends CustomEvent<import('../types/context').ContextConsumerDetail>
+ * @extends CustomEvent<import('../../types/context').ContextConsumerDetail>
  */
 class ConsumerConnectEvent extends CustomEvent {
 	static TYPE = 'vds-context-connect';
@@ -16,7 +15,7 @@ class ConsumerConnectEvent extends CustomEvent {
 	}
 
 	/**
-	 * @param {import('../types/context').ContextConsumerDetail} detail
+	 * @param {import('../../types/context').ContextConsumerDetail} detail
 	 */
 	constructor(detail) {
 		super(ConsumerConnectEvent.TYPE, {
@@ -30,7 +29,7 @@ class ConsumerConnectEvent extends CustomEvent {
 /**
  * @template T
  * @param {T} initialValue
- * @returns {import('../types/context').Context<T>}
+ * @returns {import('../../types/context').Context<T>}
  */
 export function createContext(initialValue) {
 	const key = Symbol('VDS_CTX_PROVIDER');
@@ -38,14 +37,14 @@ export function createContext(initialValue) {
 	// Privately declared event to safely pair context providers and consumers.
 	class ContextConsumerConnectEvent extends ConsumerConnectEvent {}
 
-	/** @type {import('../types/context').Context<T>['provide']} */
+	/** @type {import('../../types/context').Context<T>['provide']} */
 	function provide(host) {
 		// Re-use existing providers on the same host.
 		if (host[key]) return host[key];
 
 		let currentValue = initialValue;
 
-		/** @type {Set<import('../types/context').ContextConsumerDetail>} */
+		/** @type {Set<import('../../types/context').ContextConsumerDetail>} */
 		let consumers = new Set();
 
 		/**
@@ -107,7 +106,7 @@ export function createContext(initialValue) {
 		return context;
 	}
 
-	/** @type {import('../types/context').Context<T>['consume']} */
+	/** @type {import('../../types/context').Context<T>['consume']} */
 	function consume(host, options = {}) {
 		let currentValue = initialValue;
 		let disconnectFromProviderCallback = noop;
@@ -120,7 +119,6 @@ export function createContext(initialValue) {
 		function onUpdate(newValue) {
 			if (notEqual(newValue, currentValue)) {
 				currentValue = newValue;
-				host.requestUpdate();
 				options.onUpdate?.(newValue);
 			}
 		}
@@ -166,11 +164,11 @@ export function createContext(initialValue) {
  * Derives a context from others that was created with `createContext`. This assumes the
  * given `contexts` are ALL provided by the same host element.
  *
- * @template {import('../types/context').ContextTuple} T
+ * @template {import('../../types/context').ContextTuple} T
  * @template R
  * @param {T} contexts - The contexts to derive values from as it updates.
- * @param {(values: import('../types/context').ContextTupleValues<T>) => R} derivation - Takes the original context values and outputs the derived value.
- * @returns {import('../types/context').DerivedContext<R>}
+ * @param {(values: import('../../types/context').ContextTupleValues<T>) => R} derivation - Takes the original context values and outputypes the derived value.
+ * @returns {import('../../types/context').DerivedContext<R>}
  */
 export function derivedContext(contexts, derivation) {
 	const initialValue = derivation(
@@ -217,20 +215,32 @@ export function derivedContext(contexts, derivation) {
 }
 
 /**
+ * @template T
+ * @param {import('../../types/context').Context<T> | import('../../types/context').DerivedContext<T>} context
+ * @returns {context is import('../../types/context').DerivedContext<T>}
+ */
+export function isDerviedContext(context) {
+	return !!(
+		/** @type {import('../../types/context').DerivedContext<any>} */ (context)
+			.isDerived
+	);
+}
+
+/**
  * Takes in a context record which is essentially an object containing 0 or more contexts, and sets
  * the given `host` element as the provider of all the contexts within the given record.
  *
- * @template {import('../types/context').ContextRecord<unknown>} ContextRecordType
- * @param {VdsElement} host
+ * @template {import('../../types/context').ContextRecord<unknown>} ContextRecordType
+ * @param {import('../../types/context').ContextHost} host
  * @param {ContextRecordType} contextRecord
- * @returns {import('../types/context').ContextProviderRecord<ContextRecordType>}
+ * @returns {import('../../types/context').ContextProviderRecord<ContextRecordType>}
  */
 export function provideContextRecord(host, contextRecord) {
 	/** @type {any} */
 	const providers = {};
 
 	Object.keys(contextRecord).forEach((contextKey) => {
-		/** @type {import('../types/context').Context<unknown> & import('../types/context').DerivedContext<unknown>} */
+		/** @type {import('../../types/context').Context<unknown>} */
 		const context = contextRecord[contextKey];
 		const provider = context.provide(host);
 
@@ -238,7 +248,7 @@ export function provideContextRecord(host, contextRecord) {
 			get() {
 				return provider.value;
 			},
-			set: context.isDerived
+			set: isDerviedContext(context)
 				? undefined
 				: (newValue) => {
 						provider.value = newValue;
@@ -247,32 +257,4 @@ export function provideContextRecord(host, contextRecord) {
 	});
 
 	return providers;
-}
-
-/**
- * Takes in a context record which is essentially an object containing 0 or more contexts, and
- * consumes them on the given `host` element.
- *
- * @template {import('../types/context').ContextRecord<unknown>} ContextRecordType
- * @param {VdsElement} host
- * @param {ContextRecordType} contextRecord
- * @returns {import('../types/context').ContextConsumerRecord<ContextRecordType>}
- */
-export function consumeContextRecord(host, contextRecord) {
-	/** @type {any} */
-	const consumers = {};
-
-	Object.keys(contextRecord).forEach((contextKey) => {
-		/** @type {import('../types/context').Context<unknown> & import('../types/context').DerivedContext<unknown>} */
-		const context = contextRecord[contextKey];
-		const consumer = context.consume(host);
-
-		Object.defineProperty(consumers, contextKey, {
-			get() {
-				return consumer.value;
-			}
-		});
-	});
-
-	return consumers;
 }

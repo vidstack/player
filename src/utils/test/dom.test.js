@@ -1,5 +1,5 @@
-import { expect, fixture, html } from '@open-wc/testing';
-import { LitElement } from 'lit-element';
+import { expect, fixture } from '@open-wc/testing';
+import { html, LitElement } from 'lit';
 
 import { safelyDefineCustomElement, willElementsCollide } from '../dom';
 

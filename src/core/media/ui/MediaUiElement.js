@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { html, TemplateResult } from 'lit-element';
+import { html, TemplateResult } from 'lit';
 
 import { consumeContextRecord } from '../../../shared/context';
 import { VdsElement } from '../../../shared/elements';
@@ -25,7 +25,7 @@ import { mediaUiElementStyles } from './media-ui.css';
  * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
  */
 export class MediaUiElement extends VdsElement {
-	/** @type {import('lit-element').CSSResultArray} */
+	/** @type {import('lit').CSSResultArray} */
 	static get styles() {
 		return [mediaUiElementStyles];
 	}

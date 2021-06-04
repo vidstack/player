@@ -1,5 +1,26 @@
-import { VdsElement } from '../shared/elements';
-import { ReadonlyIfType } from '../types/misc';
+import { Lit, LitElement, PropertyDeclarations } from 'lit';
+
+import { ReadonlyIfType } from './utils';
+
+export type ContextConsumerDeclaration = Context<any>;
+
+export interface ContextConsumerDeclarations {
+	readonly [key: string]: ContextConsumerDeclaration;
+}
+
+export type ContextProviderDeclaration = Context<any>;
+
+export interface ContextProviderDeclarations {
+	readonly [key: string]: ContextProviderDeclaration;
+}
+
+export type ContextHost = LitElement;
+
+export interface ContextHostConstructor {
+	new (...args: any[]): ContextHost;
+	readonly contextConsumers?: ContextConsumerDeclarations;
+	readonly contextProviders?: ContextProviderDeclarations;
+}
 
 export interface ContextConsumerDetail {
 	onConnect(): void;
@@ -25,10 +46,10 @@ export interface ContextConsumeOptions<T> {
 export interface Context<T> {
 	initialValue: T;
 
-	provide(host: VdsElement): ContextProvider<T>;
+	provide(host: ContextHost): ContextProvider<T>;
 
 	consume(
-		host: VdsElement,
+		host: ContextHost,
 		options?: ContextConsumeOptions<T>
 	): ContextConsumer<T>;
 }
@@ -42,7 +63,7 @@ export type ContextTupleValues<Tuple> = {
 };
 
 export type DerivedContext<T> = Omit<Context<T>, 'provide'> & {
-	provide(host: VdsElement): Readonly<ContextProvider<T>>;
+	provide(host: ContextHost): Readonly<ContextProvider<T>>;
 	isDerived: true;
 };
 
@@ -63,7 +84,3 @@ export type ContextProviderRecord<
 > = ExtractContextRecordTypes<
 	ReadonlyIfType<DerivedContext<any>, ContextRecordType>
 >;
-
-export type ContextConsumerRecord<
-	ContextRecordType extends ContextRecord<any>
-> = ExtractContextRecordTypes<Readonly<ContextRecordType>>;

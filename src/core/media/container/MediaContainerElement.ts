@@ -14,6 +14,7 @@ import {
 import { StyleInfo, styleMap } from 'lit-html/directives/style-map';
 
 import { DisposalBin } from '../../../shared/events';
+import { ReactiveController } from '../../../ts/elements';
 import { getSlottedChildren } from '../../../utils/dom';
 import { isNil, isString, isUndefined } from '../../../utils/unit';
 import { FullscreenController, FullscreenHost } from '../../fullscreen';
@@ -27,7 +28,6 @@ import { MediaUiElement } from '../ui';
 import { mediaContainerElementStyles } from './media-container.css';
 import { VdsMediaContainerConnectEvent } from './media-container.events';
 import { MediaContainerElementProps } from './media-container.types';
-import { ElementController } from '../../../types/elements';
 
 /**
  * Simple container for a media provider and the media user interface (UI).
@@ -76,10 +76,10 @@ import { ElementController } from '../../../types/elements';
 export class MediaContainerElement
 	extends LitElement
 	implements MediaContainerElementProps, FullscreenHost, ScreenOrientationHost {
-	public addController(controller: ElementController): void {
+	public addController(controller: ReactiveController): void {
 		throw new Error('Method not implemented.');
 	}
-	public removeController(controller: ElementController): void {
+	public removeController(controller: ReactiveController): void {
 		throw new Error('Method not implemented.');
 	}
 	@query('#root') rootEl!: HTMLDivElement;

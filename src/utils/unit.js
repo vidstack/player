@@ -46,7 +46,7 @@ export const isNil = (value) => isNull(value) || isUndefined(value);
  *
  * @template T
  * @param {unknown} value - The value to return the constructor of.
- * @returns {import("../types/misc").Constructor<T>}
+ * @returns {import("../types/utils").Constructor<T>}
  */
 export const getConstructor = (value) =>
 	// @ts-ignore
@@ -105,7 +105,7 @@ export const isArray = (value) => Array.isArray(value);
  * Checks if the given `value` is an instanceof the given `constructor`.
  *
  * @param {unknown} value - The value to check.
- * @param {import("../types/misc").Constructor<unknown>} constructor - The constructor to check against.
+ * @param {import("../types/utils").Constructor<unknown>} constructor - The constructor to check against.
  * @returns {boolean}
  */
 export const isInstanceOf = (value, constructor) =>
@@ -115,7 +115,7 @@ export const isInstanceOf = (value, constructor) =>
  * Checks if the given `value` prototype chain includes the given `object`.
  *
  * @param {object} value - The value whose prototype chain to check.
- * @param {import("../types/misc").Constructor<unknown>} object - The object to search for in the prototype chain.
+ * @param {import("../types/utils").Constructor<unknown>} object - The object to search for in the prototype chain.
  * @returns {boolean}
  */
 export const isPrototypeOf = (value, object) =>

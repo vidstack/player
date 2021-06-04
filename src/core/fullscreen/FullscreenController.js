@@ -1,7 +1,7 @@
 import fscreen from 'fscreen';
 
 import { DisposalBin, listen } from '../../shared/events';
-import { WithEvents } from '../../shared/mixins/WithEvents';
+import { WithEvents } from '../../shared/events';
 import { isUndefined, noop } from '../../utils/unit';
 import {
 	ScreenOrientationController,
@@ -12,7 +12,7 @@ import {
  * Unfortunately fullscreen isn't straight forward due to cross-browser inconsistencies. This
  * class abstract the logic for handling fullscreen across browsers.
  *
- * @mixes WithEvents<import('.').FullscreenEvents>
+ * @mixes WithEvents<import('./fullscreen.types').FullscreenEvents>
  *
  * @example
  * ```js
@@ -153,7 +153,7 @@ export class FullscreenController extends WithEvents(class {}) {
 	/**
 	 * @protected
 	 * @param {(this: HTMLElement, event: Event) => void} handler
-	 * @returns {import('../../types/misc').Unsubscribe}
+	 * @returns {import('../../types/utils').Unsubscribe}
 	 */
 	addFullscreenChangeEventListener(handler) {
 		if (!this.isSupported) return noop;
@@ -163,7 +163,7 @@ export class FullscreenController extends WithEvents(class {}) {
 	/**
 	 * @protected
 	 * @param {(this: HTMLElement, event: Event) => void} handler
-	 * @returns {import('../../types/misc').Unsubscribe}
+	 * @returns {import('../../types/utils').Unsubscribe}
 	 */
 	addFullscreenErrorEventListener(handler) {
 		if (!this.isSupported) return noop;

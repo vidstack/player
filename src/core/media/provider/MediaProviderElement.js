@@ -113,7 +113,7 @@ export class MediaProviderElement extends VdsElement {
 	// Writable Properties
 	// -------------------------------------------------------------------------------------------
 
-	/** @type {import('lit-element').PropertyDeclarations} */
+	/** @type {import('lit').PropertyDeclarations} */
 	static get properties() {
 		return {
 			paused: { type: Boolean },

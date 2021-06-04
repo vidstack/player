@@ -6,18 +6,18 @@ import { isUndefined } from '../../utils/unit';
  *
  * @mixin
  * @template EventRecordType
- * @param {import('../../types/misc').Constructor} Base
+ * @param {import('../../types/utils').Constructor} Base
  */
 export function WithEvents(Base) {
 	return class WithEvents extends Base {
-		/** @type {Map<keyof EventRecordType, import('../../types/misc').Callback<any>[]>} */
+		/** @type {Map<keyof EventRecordType, import('../../types/utils').Callback<any>[]>} */
 		eventListeners = new Map();
 
 		/**
 		 * @template {keyof EventRecordType} EventType
 		 * @param {EventType} type
-		 * @param {import('../../types/misc').Callback<EventRecordType[EventType]>} listener
-		 * @returns {import('../../types/misc').Unsubscribe}
+		 * @param {import('../../types/utils').Callback<EventRecordType[EventType]>} listener
+		 * @returns {import('../../types/utils').Unsubscribe}
 		 */
 		addEventListener(type, listener) {
 			const callbacks = this.eventListeners.get(type) ?? [];
@@ -31,7 +31,7 @@ export function WithEvents(Base) {
 		/**
 		 * @template {keyof EventRecordType} EventType
 		 * @param {EventType} type
-		 * @param {import('../../types/misc').Callback<EventRecordType[EventType]>} listener
+		 * @param {import('../../types/utils').Callback<EventRecordType[EventType]>} listener
 		 * @returns {void}
 		 */
 		removeEventListener(type, listener) {

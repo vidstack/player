@@ -1,4 +1,4 @@
-import { html } from 'lit-element';
+import { html } from 'lit';
 
 import { VdsElement } from '../../../shared/elements';
 import {
@@ -56,7 +56,7 @@ import { mediaControllerStyles } from './media-controller.css';
  * ```
  */
 export class MediaControllerElement extends VdsElement {
-	/** @type {import('lit-element').CSSResultArray} */
+	/** @type {import('@lit/reactive-element').CSSResultGroup} */
   static get styles() {
     return [mediaControllerStyles];
   }

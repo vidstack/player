@@ -44,7 +44,7 @@ export class VdsCustomEvent extends CustomEvent {
 
 	/**
 	 * @param {string} typeArg
-	 * @param {import('../types/events').VdsEventInit<DetailType>} [eventInit]
+	 * @param {import('../../types/events').VdsEventInit<DetailType>} [eventInit]
 	 */
 	constructor(typeArg, eventInit) {
 		const { originalEvent, ...init } = eventInit ?? {};
@@ -77,20 +77,20 @@ export function redispatchNativeEvent(el, originalEvent) {
  */
 export class DisposalBin {
 	/**
-	 * @type {import('../types/misc').Callback<void>[]}
+	 * @type {import('../../types/utils').Callback<void>[]}
 	 * @private
 	 */
 	dispose;
 
 	/**
-	 * @param {import('../types/misc').Callback<void>[]} [dispose]
+	 * @param {import('../../types/utils').Callback<void>[]} [dispose]
 	 */
 	constructor(dispose) {
 		this.dispose = dispose ?? [];
 	}
 
 	/**
-	 * @param {import('../types/misc').Callback<void>} callback
+	 * @param {import('../../types/utils').Callback<void>} callback
 	 * @returns {void}
 	 */
 	add(callback) {
@@ -113,10 +113,10 @@ export class DisposalBin {
  * @param {string} type - The name of the event to listen to.
  * @param {EventListenerOrEventListenerObject} listener - The function to be called when the event is fired.
  * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options] - Configures the event listener.
- * @returns {import('../types/misc').Unsubscribe}
+ * @returns {import('../../types/utils').Unsubscribe}
  *
  * @example
- * ```typescript
+ * ```tscript
  * const off = listen(window, 'resize', () => {});
  *
  * // Stop listening.

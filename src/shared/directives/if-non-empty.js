@@ -1,13 +1,13 @@
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 /**
- * A variant of `if-non-null` which stops rendering if the given value is an emptry string in
- * addition to `null`/`undefined`.
+ * For AttributeParts, sets the attribute if the value is defined and non-empty, and removes
+ * the attribute if the value is undefined or empty (`''`).
  *
- * @param {unknown} value
- * @returns {(part: import('lit-html').Part) => void}
+ * For other part types, this directive is a no-op.
+ *
+ * @template {string | undefined} T
+ * @param {T} value
  */
 export const ifNonEmpty = (value) =>
-	ifDefined(
-		value === '' || value === 'undefined' ? undefined : value ?? undefined
-	);
+	ifDefined(value === '' || value === 'undefined' ? undefined : value);

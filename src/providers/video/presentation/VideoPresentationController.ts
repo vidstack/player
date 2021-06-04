@@ -3,11 +3,11 @@ import { PropertyValues } from 'lit-element';
 import {
 	DisposalBin,
 	listen,
-	redispatchNativeEvent
+	redispatchNativeEvent,
+	WithEvents
 } from '../../../shared/events';
-import { WithEvents } from '../../../shared/mixins/WithEvents';
-import { WebKitPresentationMode } from '../../../types/media';
-import { Unsubscribe } from '../../../types/misc';
+import { WebKitPresentationMode } from '../../../ts/media';
+import { Unsubscribe } from '../../../ts/utils';
 import { IS_IOS } from '../../../utils/support';
 import { isFunction, isNil, noop } from '../../../utils/unit';
 import { VideoPresentationControllerEvents } from './VideoPresentationControllerEvents';
@@ -37,10 +37,7 @@ export class VideoPresentationController extends WithEvents<VideoPresentationCon
 	constructor(protected host: VideoPresentationControllerHost) {
 		super();
 
-		// Cast to `any` to get past `protected` modifier.
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const firstUpdated = (host as any).firstUpdated;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(host as any).firstUpdated = (changedProperties: PropertyValues) => {
 			firstUpdated?.call(host, changedProperties);
 			this.disposal.add(this.addPresentationModeChangeEventListener());

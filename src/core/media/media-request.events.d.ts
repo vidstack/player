@@ -1,5 +1,5 @@
 import { VdsCustomEvent } from '../../shared/events';
-import { VdsEventInit, VdsEvents } from '../../types/events';
+import { VdsEventInit, VdsEvents } from '../../ts/events';
 
 declare global {
 	interface GlobalEventHandlersEventMap extends VdsMediaRequestEvents {}
