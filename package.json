@@ -6,6 +6,7 @@
 	"engines": {
 		"node": ">=14.16.0"
 	},
+	"type": "module",
 	"main": "src/bundle/index.js",
 	"module": "src/bundle/index.js",
 	"files": [
@@ -18,7 +19,9 @@
 		"src/bundle/define.js"
 	],
 	"exports": {
-		".": "./src"
+		".": "./src",
+		"./custom-elements.json": "./custom-elements.json",
+		"./vscode.html-data.json": "./vscode.html-data.json"
 	},
 	"contributors": [
 		"Dave Furfero <furf@furf.com>",

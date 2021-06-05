@@ -1,6 +1,6 @@
 import { Lit, LitElement, PropertyDeclarations } from 'lit';
 
-import { ReadonlyIfType } from './utils';
+import { Constructor, ReadonlyIfType } from './utils';
 
 export type ContextConsumerDeclaration = Context<any>;
 
@@ -20,6 +20,11 @@ export interface ContextHostConstructor {
 	new (...args: any[]): ContextHost;
 	readonly contextConsumers?: ContextConsumerDeclarations;
 	readonly contextProviders?: ContextProviderDeclarations;
+}
+
+export interface ContextInitializer extends Constructor {
+	defineContextConsumer(context: Context<any>, name: string): void;
+	defineContextProvider(context: Context<any>, name: string): void;
 }
 
 export interface ContextConsumerDetail {

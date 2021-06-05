@@ -7,7 +7,7 @@ const FINALIZED = Symbol();
 /**
  * @template {ContextHostConstructor} T
  * @param {T} Base
- * @returns {T}
+ * @returns {import('../../types/context').ContextInitializer & T}
  */
 export function WithContext(Base) {
 	return class WithContext extends Base {
@@ -52,40 +52,50 @@ export function WithContext(Base) {
 			Object.keys(contextProviders).forEach((contextPropertyName) => {
 				/** @type {import('../../types/context').Context<any>} */
 				const context = contextProviders[contextPropertyName];
+				this.defineContextProvider(context, contextPropertyName);
+			});
+		}
 
-				/** @type {import('../../types/context').ContextProvider<any>} */
-				let provider;
+		/**
+		 * @param {import('../../types/context').Context<any>} context
+		 * @param {string} name
+		 */
+		static defineContextProvider(context, name) {
+			// eslint-disable-next-line no-prototype-builtins
+			if (this.prototype.hasOwnProperty(name)) return;
 
-				/** @type {any} */ (this).addInitializer((element) => {
-					provider = context.provide(element);
-				});
+			// Might be called by decorator.
+			this.finalize();
 
-				// eslint-disable-next-line no-prototype-builtins
-				if (!this.prototype.hasOwnProperty(contextPropertyName)) {
-					const hasUserDefined = new WeakSet();
+			/** @type {import('../../types/context').ContextProvider<any>} */
+			let provider;
 
-					Object.defineProperty(this.prototype, contextPropertyName, {
-						enumerable: true,
-						configurable: false,
-						get() {
-							return provider.value;
-						},
-						set: isDerviedContext(context)
-							? function () {
-									if (!hasUserDefined.has(this)) {
-										hasUserDefined.add(this);
-										return;
-									}
+			/** @type {any} */ (this).addInitializer((element) => {
+				provider = context.provide(element);
+			});
 
-									throw Error(
-										`Context provider property [${contextPropertyName}] is dervied, thus it's readonly.`
-									);
-							  }
-							: function (newValue) {
-									provider.value = newValue;
-							  }
-					});
-				}
+			const hasUserDefined = new WeakSet();
+
+			Object.defineProperty(this.prototype, name, {
+				enumerable: true,
+				configurable: false,
+				get() {
+					return provider.value;
+				},
+				set: isDerviedContext(context)
+					? function () {
+							if (!hasUserDefined.has(this)) {
+								hasUserDefined.add(this);
+								return;
+							}
+
+							throw Error(
+								`Context provider property [${name}] is derived, thus it's readonly.`
+							);
+					  }
+					: function (newValue) {
+							provider.value = newValue;
+					  }
 			});
 		}
 
@@ -99,41 +109,49 @@ export function WithContext(Base) {
 			Object.keys(contextConsumers).forEach((contextPropertyName) => {
 				/** @type {import('../../types/context').Context<any>} */
 				const context = contextConsumers[contextPropertyName];
+				this.defineContextConsumer(context, contextPropertyName);
+			});
+		}
 
-				/** @type {import('../../types/context').ContextConsumer<any>} */
-				let consumer;
+		/**
+		 * @param {import('../../types/context').Context<any>} context
+		 * @param {string} name
+		 */
+		static defineContextConsumer(context, name) {
+			// eslint-disable-next-line no-prototype-builtins
+			if (this.prototype.hasOwnProperty(name)) return;
 
-				/** @type {any} */ (this).addInitializer((element) => {
-					let oldValue = context.initialValue;
-					consumer = context.consume(element, {
-						onUpdate: (newValue) => {
-							element.requestUpdate(contextPropertyName, oldValue);
-							oldValue = newValue;
-						}
-					});
+			// Might be called by decorator.
+			this.finalize();
+
+			/** @type {import('../../types/context').ContextConsumer<any>} */
+			let consumer;
+
+			/** @type {any} */ (this).addInitializer((element) => {
+				let oldValue = context.initialValue;
+				consumer = context.consume(element, {
+					onUpdate: (newValue) => {
+						element.requestUpdate(name, oldValue);
+						oldValue = newValue;
+					}
 				});
+			});
 
-				// eslint-disable-next-line no-prototype-builtins
-				if (!this.prototype.hasOwnProperty(contextPropertyName)) {
-					const hasUserDefined = new WeakSet();
+			const hasUserDefined = new WeakSet();
 
-					Object.defineProperty(this.prototype, contextPropertyName, {
-						enumerable: true,
-						configurable: false,
-						get() {
-							return consumer.value;
-						},
-						set() {
-							if (!hasUserDefined.has(this)) {
-								hasUserDefined.add(this);
-								return;
-							}
+			Object.defineProperty(this.prototype, name, {
+				enumerable: true,
+				configurable: false,
+				get() {
+					return consumer.value;
+				},
+				set() {
+					if (!hasUserDefined.has(this)) {
+						hasUserDefined.add(this);
+						return;
+					}
 
-							throw Error(
-								`Context consumer property [${contextPropertyName}] is readonly.`
-							);
-						}
-					});
+					throw Error(`Context consumer property [${name}] is readonly.`);
 				}
 			});
 		}
