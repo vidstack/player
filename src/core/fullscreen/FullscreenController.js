@@ -1,7 +1,6 @@
 import fscreen from 'fscreen';
 
-import { DisposalBin, listen } from '../../shared/events';
-import { WithEvents } from '../../shared/events';
+import { DisposalBin, EventDispatcher, listen } from '../../shared/events';
 import { isUndefined, noop } from '../../utils/unit';
 import {
 	ScreenOrientationController,
@@ -12,7 +11,7 @@ import {
  * Unfortunately fullscreen isn't straight forward due to cross-browser inconsistencies. This
  * class abstract the logic for handling fullscreen across browsers.
  *
- * @mixes WithEvents<import('./fullscreen.types').FullscreenEvents>
+ * @extends EventDispatcher<import('./fullscreen.types').FullscreenEvents>
  *
  * @example
  * ```js
@@ -38,7 +37,7 @@ import {
  * }
  * ```
  */
-export class FullscreenController extends WithEvents(class {}) {
+export class FullscreenController extends EventDispatcher {
 	/** @protected @readonly */
 	disposal = new DisposalBin();
 

@@ -7,11 +7,7 @@ import {
 	ScreenOrientationLock
 } from '../../screen-orientation';
 import { CanPlay } from '../CanPlay';
-import {
-	mediaContext,
-	mediaContextProviderRecord,
-	mediaPropsToResetOnSrcChange
-} from '../media.context';
+import { createMediaContextRecord, mediaContext } from '../media.context';
 import {
 	VdsCanPlayEvent,
 	VdsEndedEvent,
@@ -51,18 +47,6 @@ export class MediaProviderElement extends VdsElement {
 	 * @readonly
 	 */
 	connectedQueue = new RequestQueue();
-
-	constructor() {
-		super();
-
-		// Consume media context record from media controller if available.
-		mediaContextProviderRecord.consume(this, {
-			onUpdate: (newMediaContextRecord) => {
-				// Bypass readonly.
-				/** @type {any} */ (this).context = newMediaContextRecord;
-			}
-		});
-	}
 
 	connectedCallback() {
 		super.connectedCallback();
@@ -485,7 +469,7 @@ export class MediaProviderElement extends VdsElement {
 	 * @readonly
 	 * @internal Exposed for testing.
 	 */
-	context = mediaContextProviderRecord.initialValue;
+	context = createMediaContextRecord();
 
 	/**
 	 * Media context properties that should be reset when media is changed. Override this
@@ -495,7 +479,25 @@ export class MediaProviderElement extends VdsElement {
 	 * @returns {Set<string>}
 	 */
 	getMediaPropsToResetWhenSrcChanges() {
-		return mediaPropsToResetOnSrcChange;
+		return new Set([
+			'buffered',
+			'buffering',
+			'canPlay',
+			'canPlayThrough',
+			'currentSrc',
+			'currentTime',
+			'duration',
+			'ended',
+			'mediaType',
+			'paused',
+			'canPlay',
+			'played',
+			'playing',
+			'seekable',
+			'seeking',
+			'started',
+			'waiting'
+		]);
 	}
 
 	/**

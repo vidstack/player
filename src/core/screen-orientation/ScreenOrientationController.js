@@ -1,11 +1,11 @@
-import { DisposalBin, listen, WithEvents } from '../../shared/events';
+import { DisposalBin, EventDispatcher, listen } from '../../shared/events';
 import { canOrientScreen, IS_CLIENT } from '../../utils/support';
 import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 
 /**
  * Contains the logic for managing the window's screen orientation.
  *
- * @mixes WithEvents<import('./screen-orientation.types').ScreenOrientationEvents>
+ * @extends EventDispatcher<import('./screen-orientation.types').ScreenOrientationEvents>
  *
  * @example
  * ```js
@@ -16,7 +16,7 @@ import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
  * }
  * ```
  */
-export class ScreenOrientationController extends WithEvents(class {}) {
+export class ScreenOrientationController extends EventDispatcher {
 	/**
 	 * @protected
 	 * @readonly

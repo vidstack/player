@@ -78,40 +78,14 @@ export const mediaContext = {
 };
 
 /**
- * Media context properties that should be reset when media is changed.
+ * @returns {import('../../types/context').ContextProviderRecord<typeof mediaContext>}
  */
-export const mediaPropsToResetOnSrcChange = new Set([
-	'buffered',
-	'buffering',
-	'canPlay',
-	'canPlayThrough',
-	'currentSrc',
-	'currentTime',
-	'duration',
-	'ended',
-	'mediaType',
-	'paused',
-	'canPlay',
-	'played',
-	'playing',
-	'seekable',
-	'seeking',
-	'started',
-	'waiting'
-]);
-
-// TODO: Can we simplify the following? Need a clean solution for passing the media context record
-// down from the media controller to the media provider so it can manage it.
-
-/** @type {import('../../types/context').ContextProviderRecord<typeof mediaContext>} */
-const initialMediaContextProviderRecord = Object.keys(mediaContext).reduce(
-	(state, contextProp) => ({
-		...state,
-		[contextProp]: mediaContext[contextProp].initialValue
-	}),
-	/** @type {any} */ ({})
-);
-
-export const mediaContextProviderRecord = createContext(
-	initialMediaContextProviderRecord
-);
+export function createMediaContextRecord() {
+	return Object.keys(mediaContext).reduce(
+		(state, contextProp) => ({
+			...state,
+			[contextProp]: mediaContext[contextProp].initialValue
+		}),
+		/** @type {any} */ ({})
+	);
+}
