@@ -36,7 +36,7 @@ export const focusableSelector = `
  * Technically a polyfill for `shadowRoot.delegatesFocus`.
  *
  * @mixin
- * @template {import('../../types/utils').Constructor<LitElement>} T
+ * @template {import('../types/utils').Constructor<LitElement>} T
  * @param {T} Base - The constructor to mix into.
  * @returns {T}
  *

@@ -1,7 +1,7 @@
 import { isUndefined } from '../../utils/unit';
 
 /**
- * @param {import("../../types/context").Context<any>} context
+ * @param {import("./types").Context<any>} context
  * @return {PropertyDecorator}
  */
 export function consumeContext(context) {
@@ -13,7 +13,7 @@ export function consumeContext(context) {
 	 * @link https://www.typescriptlang.org/docs/handbook/decorators.html
 	 */
 	function legacy(proto, name) {
-		/** @type {import('../../types/context').ContextInitializer} */
+		/** @type {import('./types').ContextInitializer} */
 		const ctor = proto.constructor;
 
 		if (isUndefined(ctor.defineContextConsumer)) {
@@ -51,7 +51,7 @@ export function consumeContext(context) {
 }
 
 /**
- * @param {import("../../types/context").Context<any>} context
+ * @param {import("./types").Context<any>} context
  * @return {PropertyDecorator}
  */
 export function provideContext(context) {
@@ -63,7 +63,7 @@ export function provideContext(context) {
 	 * @link https://www.typescriptlang.org/docs/handbook/decorators.html
 	 */
 	function legacy(proto, name) {
-		/** @type {import('../../types/context').ContextInitializer} */
+		/** @type {import('./types').ContextInitializer} */
 		const ctor = proto.constructor;
 
 		if (isUndefined(ctor.defineContextProvider)) {

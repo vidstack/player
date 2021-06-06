@@ -5,14 +5,14 @@ import { isUndefined } from '../../utils/unit';
  * @template EventRecordType
  */
 export class EventDispatcher {
-	/** @type {Map<keyof EventRecordType, import('../../types/utils').Callback<any>[]>} */
+	/** @type {Map<keyof EventRecordType, import('../types/utils').Callback<any>[]>} */
 	eventListeners = new Map();
 
 	/**
 	 * @template {keyof EventRecordType} EventType
 	 * @param {EventType} type
-	 * @param {import('../../types/utils').Callback<EventRecordType[EventType]>} listener
-	 * @returns {import('../../types/utils').Unsubscribe}
+	 * @param {import('../types/utils').Callback<EventRecordType[EventType]>} listener
+	 * @returns {import('../types/utils').Unsubscribe}
 	 */
 	addEventListener(type, listener) {
 		const callbacks = this.eventListeners.get(type) ?? [];
@@ -26,7 +26,7 @@ export class EventDispatcher {
 	/**
 	 * @template {keyof EventRecordType} EventType
 	 * @param {EventType} type
-	 * @param {import('../../types/utils').Callback<EventRecordType[EventType]>} listener
+	 * @param {import('../types/utils').Callback<EventRecordType[EventType]>} listener
 	 * @returns {void}
 	 */
 	removeEventListener(type, listener) {
@@ -39,7 +39,7 @@ export class EventDispatcher {
 	/**
 	 * @template {keyof EventRecordType} EventType
 	 * @param {EventType} typeArg
-	 * @param {import('../../types/events').ExtractVdsEventInit<EventRecordType[EventType]>} eventInit
+	 * @param {import('./types').ExtractVdsEventInit<EventRecordType[EventType]>} eventInit
 	 * @returns {void}
 	 */
 	dispatchEvent(typeArg, eventInit) {

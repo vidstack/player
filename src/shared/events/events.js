@@ -44,7 +44,7 @@ export class VdsCustomEvent extends CustomEvent {
 
 	/**
 	 * @param {string} typeArg
-	 * @param {import('../../types/events').VdsEventInit<DetailType>} [eventInit]
+	 * @param {import('./types').VdsEventInit<DetailType>} [eventInit]
 	 */
 	constructor(typeArg, eventInit) {
 		const { originalEvent, ...init } = eventInit ?? {};
@@ -77,20 +77,20 @@ export function redispatchNativeEvent(el, originalEvent) {
  */
 export class DisposalBin {
 	/**
-	 * @type {import('../../types/utils').Callback<void>[]}
+	 * @type {import('../types/utils').Callback<void>[]}
 	 * @private
 	 */
 	dispose;
 
 	/**
-	 * @param {import('../../types/utils').Callback<void>[]} [dispose]
+	 * @param {import('../types/utils').Callback<void>[]} [dispose]
 	 */
 	constructor(dispose) {
 		this.dispose = dispose ?? [];
 	}
 
 	/**
-	 * @param {import('../../types/utils').Callback<void>} callback
+	 * @param {import('../types/utils').Callback<void>} callback
 	 * @returns {void}
 	 */
 	add(callback) {
@@ -113,14 +113,14 @@ export class DisposalBin {
  * @param {string} type - The name of the event to listen to.
  * @param {EventListenerOrEventListenerObject} listener - The function to be called when the event is fired.
  * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options] - Configures the event listener.
- * @returns {import('../../types/utils').Unsubscribe}
+ * @returns {import('../types/utils').Unsubscribe}
  *
  * @example
  * ```tscript
- * const off = listen(window, 'resize', () => {});
+ * const dispose = listen(window, 'resize', () => {});
  *
  * // Stop listening.
- * off();
+ * dispose();
  * ```
  */
 export function listen(target, type, listener, options) {
@@ -128,4 +128,16 @@ export function listen(target, type, listener, options) {
 	return () => {
 		target.removeEventListener(type, listener, options);
 	};
+}
+
+/**
+ * @param {HTMLElement} host
+ * @param {import('./types').EventHandlerRecord} record
+ * @param {DisposalBin} disposal
+ */
+export function bindEventListeners(host, record, disposal) {
+	Object.keys(record).forEach((eventType) => {
+		const dispose = listen(host, eventType, record[eventType].bind(host));
+		disposal.add(dispose);
+	});
 }

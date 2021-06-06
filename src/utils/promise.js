@@ -5,7 +5,7 @@ import { noop } from './unit';
  *
  * @template ResolveType
  * @template RejectType
- * @returns {import('../types/promise').DeferredPromise<ResolveType, RejectType>}
+ * @returns {import('./promise.types').DeferredPromise<ResolveType, RejectType>}
  */
 export const deferredPromise = () => {
 	/** @type {(value: ResolveType | undefined) => void} */

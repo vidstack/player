@@ -8,7 +8,7 @@ import { isUndefined } from './unit';
  * @param {(...Args) => void} func - The function to debounce.
  * @param {number} delay - The number of milliseconds to delay.
  * @param {boolean} immediate - Whether the function should be triggered at the start of a sequence of calls instead of end.
- * @returns {import('../types/timing').DebouncedFunction<Args>}
+ * @returns {import('./timing.types').DebouncedFunction<Args>}
  * @link https://github.com/jashkenas/underscore/blob/master/modules/debounce.js
  */
 export function debounce(func, delay, immediate = false) {
@@ -77,8 +77,8 @@ export function debounce(func, delay, immediate = false) {
  * @template {unknown[]} Args
  * @param {(...Args) => void} func - The function to throttle.
  * @param {number} delay - The number of milliseconds to throttle invocations by.
- * @param {import('../types/timing').ThorttleOptions} options - The throttle options.
- * @returns {import('../types/timing').ThrottledFunction<Args>}
+ * @param {import('./timing.types').ThorttleOptions} options - The throttle options.
+ * @returns {import('./timing.types').ThrottledFunction<Args>}
  * @link https://github.com/jashkenas/underscore/blob/master/modules/throttle.js
  */
 export function throttle(

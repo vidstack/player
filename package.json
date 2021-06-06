@@ -10,18 +10,13 @@
 	"main": "src/bundle/index.js",
 	"module": "src/bundle/index.js",
 	"files": [
-		"src/",
-		"custom-elements.json",
-		"vscode.html-data.json"
+		"src/"
 	],
 	"sideEffects": [
-		"src/**/vds-*.js",
-		"src/bundle/define.js"
+		"src/**/define.js"
 	],
 	"exports": {
-		".": "./src",
-		"./custom-elements.json": "./custom-elements.json",
-		"./vscode.html-data.json": "./vscode.html-data.json"
+		".": "./src"
 	},
 	"contributors": [
 		"Dave Furfero <furf@furf.com>",
@@ -138,6 +133,7 @@
 		"react",
 		"spec-compliant",
 		"universal",
+		"vds",
 		"video",
 		"vidstack",
 		"vime",

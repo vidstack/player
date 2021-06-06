@@ -1,4 +1,4 @@
-/** @typedef {import('../../types/context').ContextHostConstructor} ContextHostConstructor */
+/** @typedef {import('./types').ContextHostConstructor} ContextHostConstructor */
 
 import { isDerviedContext } from './context';
 
@@ -7,16 +7,16 @@ const FINALIZED = Symbol();
 /**
  * @template {ContextHostConstructor} T
  * @param {T} Base
- * @returns {import('../../types/context').ContextInitializer & T}
+ * @returns {import('./types').ContextInitializer & T}
  */
 export function WithContext(Base) {
 	return class WithContext extends Base {
-		/** @return {import('../../types/context').ContextConsumerDeclarations} */
+		/** @return {import('./types').ContextConsumerDeclarations} */
 		static get contextConsumers() {
 			return {};
 		}
 
-		/** @return {import('../../types/context').ContextConsumerDeclarations} */
+		/** @return {import('./types').ContextConsumerDeclarations} */
 		static get contextProviders() {
 			return {};
 		}
@@ -50,14 +50,14 @@ export function WithContext(Base) {
 			const contextProviders = this.contextProviders ?? {};
 
 			Object.keys(contextProviders).forEach((contextPropertyName) => {
-				/** @type {import('../../types/context').Context<any>} */
+				/** @type {import('./types').Context<any>} */
 				const context = contextProviders[contextPropertyName];
 				this.defineContextProvider(context, contextPropertyName);
 			});
 		}
 
 		/**
-		 * @param {import('../../types/context').Context<any>} context
+		 * @param {import('./types').Context<any>} context
 		 * @param {string} name
 		 */
 		static defineContextProvider(context, name) {
@@ -67,7 +67,7 @@ export function WithContext(Base) {
 			// Might be called by decorator.
 			this.finalize();
 
-			/** @type {import('../../types/context').ContextProvider<any>} */
+			/** @type {import('./types').ContextProvider<any>} */
 			let provider;
 
 			/** @type {any} */ (this).addInitializer((element) => {
@@ -107,14 +107,14 @@ export function WithContext(Base) {
 			const contextConsumers = this.contextConsumers ?? {};
 
 			Object.keys(contextConsumers).forEach((contextPropertyName) => {
-				/** @type {import('../../types/context').Context<any>} */
+				/** @type {import('./types').Context<any>} */
 				const context = contextConsumers[contextPropertyName];
 				this.defineContextConsumer(context, contextPropertyName);
 			});
 		}
 
 		/**
-		 * @param {import('../../types/context').Context<any>} context
+		 * @param {import('./types').Context<any>} context
 		 * @param {string} name
 		 */
 		static defineContextConsumer(context, name) {
@@ -124,7 +124,7 @@ export function WithContext(Base) {
 			// Might be called by decorator.
 			this.finalize();
 
-			/** @type {import('../../types/context').ContextConsumer<any>} */
+			/** @type {import('./types').ContextConsumer<any>} */
 			let consumer;
 
 			/** @type {any} */ (this).addInitializer((element) => {
