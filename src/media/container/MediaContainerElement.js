@@ -3,7 +3,7 @@ import '../ui/define';
 
 import clsx from 'clsx';
 import { html } from 'lit';
-import { createRef, Ref, ref } from 'lit/directives/ref';
+import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit-html/directives/style-map';
 
 import { VdsElement } from '../../shared/elements';
@@ -130,8 +130,9 @@ export class MediaContainerElement extends VdsElement {
 			new VdsMediaContainerConnectEvent({
 				detail: {
 					container: this,
-					// Pipe callbacks into the disconnect disposal bin.
-					onDisconnect: this.disconnectDisposal.add
+					onDisconnect: (callback) => {
+						this.disconnectDisposal.add(callback);
+					}
 				}
 			})
 		);
@@ -144,7 +145,7 @@ export class MediaContainerElement extends VdsElement {
 	/**
 	 * @protected
 	 * @readonly
-	 * @type {Ref<HTMLDivElement>}
+	 * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
 	 */
 	rootRef = createRef();
 
@@ -156,10 +157,10 @@ export class MediaContainerElement extends VdsElement {
 		return html`
 			<div
 				id="root"
-				aria-busy="${this.getAriaBusy()}"
-				class="${this.getRootClassAttr()}"
-				part="${this.getRootPartAttr()}"
-				style="${styleMap(this.getRootStyleMap())}"
+				aria-busy=${this.getAriaBusy()}
+				class=${this.getRootClassAttr()}
+				part=${this.getRootPartAttr()}
+				style=${styleMap(this.getRootStyleMap())}
 				${ref(this.rootRef)}
 			>
 				${this.renderRootContent()}
@@ -171,7 +172,7 @@ export class MediaContainerElement extends VdsElement {
 	 * Override this to modify the content rendered inside the root cotnainer.
 	 *
 	 * @protected
-	 * @return {import('lit').TemplateResult}
+	 * @returns {import('lit').TemplateResult}
 	 */
 	renderRootContent() {
 		return html`${this.renderMedia()}${this.renderUI()}`;
@@ -181,10 +182,12 @@ export class MediaContainerElement extends VdsElement {
 	 * Override this to modify root container CSS Classes.
 	 *
 	 * @protected
-	 * @return {string}
+	 * @returns {string}
 	 */
 	getRootClassAttr() {
-		return clsx(this.shouldApplyAspectRatio() && 'with-aspect-ratio');
+		return clsx({
+			'with-aspect-ratio': this.shouldApplyAspectRatio()
+		});
 	}
 
 	/**
@@ -272,7 +275,7 @@ export class MediaContainerElement extends VdsElement {
 	/**
 	 * @protected
 	 * @readonly
-	 * @type {Ref<HTMLDivElement>}
+	 * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
 	 */
 	mediaContainerRef = createRef();
 
@@ -286,7 +289,11 @@ export class MediaContainerElement extends VdsElement {
 	 */
 	renderMedia() {
 		return html`
-			<div id="media-container" part="${this.getMediaPartAttr()}">
+			<div
+				id="media-container"
+				part="${this.getMediaPartAttr()}"
+				${ref(this.mediaContainerRef)}
+			>
 				${this.renderMediaSlot()}
 			</div>
 		`;
@@ -346,7 +353,7 @@ export class MediaContainerElement extends VdsElement {
 	/**
 	 * @protected
 	 * @readonly
-	 * @type {Ref<MediaUiElement>}
+	 * @type {import('lit/directives/ref').Ref<MediaUiElement>}
 	 */
 	mediaUiRef = createRef();
 
@@ -395,7 +402,7 @@ export class MediaContainerElement extends VdsElement {
 	 * Override this to modify rendering of UI default slot.
 	 *
 	 * @protected
-	 * @return {import('lit').TemplateResult}
+	 * @returns {import('lit').TemplateResult}
 	 */
 	renderUIDefaultSlot() {
 		return html`<slot></slot>`;

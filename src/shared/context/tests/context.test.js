@@ -17,7 +17,7 @@ const ctxRecord = { ctxA, ctxB, ctxC };
 class FakeProviderElement extends VdsElement {
 	ctxD = provideContextRecord(this, ctxRecord);
 
-	/** @return {import('../types').ContextProviderDeclarations} */
+	/** @returns {import('../types').ContextProviderDeclarations} */
 	static get contextProviders() {
 		return {
 			ctxA,
@@ -39,7 +39,7 @@ class FakeProviderElement extends VdsElement {
 }
 
 class FakeConsumerElement extends VdsElement {
-	/** @return {import('../types').ContextConsumerDeclarations} */
+	/** @returns {import('../types').ContextConsumerDeclarations} */
 	static get contextConsumers() {
 		return {
 			ctxA,

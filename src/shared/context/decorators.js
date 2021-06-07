@@ -2,7 +2,7 @@ import { isUndefined } from '../../utils/unit';
 
 /**
  * @param {import("./types").Context<any>} context
- * @return {PropertyDecorator}
+ * @returns {PropertyDecorator}
  */
 export function consumeContext(context) {
 	/**
@@ -52,7 +52,7 @@ export function consumeContext(context) {
 
 /**
  * @param {import("./types").Context<any>} context
- * @return {PropertyDecorator}
+ * @returns {PropertyDecorator}
  */
 export function provideContext(context) {
 	/**

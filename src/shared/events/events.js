@@ -77,32 +77,25 @@ export function redispatchNativeEvent(el, originalEvent) {
  */
 export class DisposalBin {
 	/**
+	 * @protected
 	 * @type {import('../types/utils').Callback<void>[]}
-	 * @private
 	 */
-	dispose;
-
-	/**
-	 * @param {import('../types/utils').Callback<void>[]} [dispose]
-	 */
-	constructor(dispose) {
-		this.dispose = dispose ?? [];
-	}
+	disposal = this.disposal ?? [];
 
 	/**
 	 * @param {import('../types/utils').Callback<void>} callback
 	 * @returns {void}
 	 */
 	add(callback) {
-		this.dispose.push(callback);
+		this.disposal.push(callback);
 	}
 
 	/**
 	 * @returns {void}
 	 */
 	empty() {
-		this.dispose.forEach((fn) => fn());
-		this.dispose = [];
+		this.disposal.forEach((fn) => fn());
+		this.disposal = [];
 	}
 }
 

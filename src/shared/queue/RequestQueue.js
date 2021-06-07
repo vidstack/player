@@ -42,7 +42,7 @@ export class RequestQueue {
 	/**
 	 * Waits for the queue to be flushed.
 	 *
-	 * @return {Promise<void>}
+	 * @returns {Promise<void>}
 	 */
 	async waitForFlush() {
 		if (this.serveImmediately) return;

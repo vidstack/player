@@ -11,12 +11,12 @@ const FINALIZED = Symbol();
  */
 export function WithContext(Base) {
 	return class WithContext extends Base {
-		/** @return {import('./types').ContextConsumerDeclarations} */
+		/** @returns {import('./types').ContextConsumerDeclarations} */
 		static get contextConsumers() {
 			return {};
 		}
 
-		/** @return {import('./types').ContextConsumerDeclarations} */
+		/** @returns {import('./types').ContextConsumerDeclarations} */
 		static get contextProviders() {
 			return {};
 		}

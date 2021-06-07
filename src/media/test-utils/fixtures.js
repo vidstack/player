@@ -1,7 +1,7 @@
 /** Dependencies  */
 import './define';
-import '../media/container/define';
-import '../media/controller/define';
+import '../container/define';
+import '../controller/define';
 
 import { fixture } from '@open-wc/testing';
 import { html } from 'lit';

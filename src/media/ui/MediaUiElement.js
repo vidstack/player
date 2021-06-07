@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { html, TemplateResult } from 'lit';
-import { createRef, Ref, ref } from 'lit/directives/ref';
+import { html } from 'lit';
+import { createRef, ref } from 'lit/directives/ref.js';
 
 import { VdsElement } from '../../shared/elements';
 import { IS_IOS } from '../../utils/support';
@@ -64,7 +64,7 @@ export class MediaUiElement extends VdsElement {
 	/**
 	 * @protected
 	 * @readonly
-	 * @type {Ref<HTMLDivElement>}
+	 * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
 	 */
 	rootRef = createRef();
 
@@ -81,8 +81,8 @@ export class MediaUiElement extends VdsElement {
 		return html`
 			<div
 				id="root"
-				class="${this.getRootClassAttr()}"
-				part="${this.getRootPartAttr()}"
+				class=${this.getRootClassAttr()}
+				part=${this.getRootPartAttr()}
 				${ref(this.rootRef)}
 			>
 				${this.renderRootContent()}
@@ -103,7 +103,7 @@ export class MediaUiElement extends VdsElement {
 	 * Override this to modify rendering of default slot.
 	 *
 	 * @protected
-	 * @returns {TemplateResult}
+	 * @returns {import('lit').TemplateResult}
 	 */
 	renderDefaultSlot() {
 		return html`<slot></slot>`;
@@ -126,7 +126,10 @@ export class MediaUiElement extends VdsElement {
 	 * @returns {string}
 	 */
 	getRootPartAttr() {
-		return clsx('root', this.isUiHidden() && 'root-hidden');
+		return clsx({
+			root: true,
+			'root-hidden': this.isUiHidden()
+		});
 	}
 
 	/**

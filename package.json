@@ -6,7 +6,6 @@
 	"engines": {
 		"node": ">=14.16.0"
 	},
-	"type": "module",
 	"main": "src/bundle/index.js",
 	"module": "src/bundle/index.js",
 	"files": [
@@ -41,7 +40,7 @@
 		"start": "npm run storybook",
 		"storybook": "start-storybook -s .storybook/public",
 		"storybook:build": "build-storybook -s .storybook/public",
-		"test": "wtr \"src/**/*.test.{js,ts}\" --node-resolve",
+		"test": "wtr \"src/**/*.test.{js,ts}\"",
 		"test:coverage": "npm run test -- --coverage",
 		"test:watch": "npm run test -- --watch",
 		"release": "npx semantic-release"

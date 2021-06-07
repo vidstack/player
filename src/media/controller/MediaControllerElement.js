@@ -65,10 +65,12 @@ export class MediaControllerElement extends VdsElement {
 	}
 
 	connectedCallback() {
+		super.connectedCallback();
 		this.bindEventListeners();
 	}
 
 	disconnectedCallback() {
+		super.disconnectedCallback();
 		this.unbindEventListeners();
 	}
 
@@ -130,7 +132,7 @@ export class MediaControllerElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
-	 * @protected
+	 * @private
 	 * @type {MediaContainerElement | undefined}
 	 */
 	_mediaContainer;
@@ -163,7 +165,7 @@ export class MediaControllerElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
-	 * @protected
+	 * @private
 	 * @type {MediaProviderElement | undefined}
 	 */
 	_mediaProvider;
@@ -190,10 +192,10 @@ export class MediaControllerElement extends VdsElement {
 		// We are injecting our context object into the `MediaProviderElement` so it can be managed by it.
 		/** @type {any} */ (this._mediaProvider).context = this.context;
 		onDisconnect(() => {
-			this._mediaProvider = undefined;
 			// Bypass readonly `context`.
 			/** @type {any} */ (this
 				._mediaProvider).context = createMediaContextRecord();
+			this._mediaProvider = undefined;
 		});
 	}
 
@@ -202,6 +204,8 @@ export class MediaControllerElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
+	 * Override this to allow media events to bubble up the DOM.
+	 *
 	 * @protected
 	 * @param {Event} event
 	 * @returns {void}

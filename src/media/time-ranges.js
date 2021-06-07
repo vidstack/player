@@ -2,7 +2,7 @@
  * @inspiration https://github.com/videojs/video.js/blob/main/src/js/utils/time-ranges.js
  */
 
-import { isArray, isNumber, isUndefined } from '../../utils/unit';
+import { isArray, isNumber, isUndefined } from '../utils/unit';
 
 /**
  * Check if any of the time ranges are over the maximum index.

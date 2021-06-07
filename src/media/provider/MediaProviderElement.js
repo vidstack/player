@@ -79,7 +79,9 @@ export class MediaProviderElement extends VdsElement {
 				detail: {
 					provider: this,
 					// Pipe callbacks into the disconnect disposal bin.
-					onDisconnect: this.disconnectDisposal.add
+					onDisconnect: (callback) => {
+						this.disconnectDisposal.add(callback);
+					}
 				}
 			})
 		);
