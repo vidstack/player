@@ -58,6 +58,7 @@ describe('MediaProviderElement/queue', function () {
 	});
 
 	// TODO: should this be the case??
+	// eslint-disable-next-line mocha/no-skipped-tests
 	it.skip('should gracefully handle errors when flushing queue', async function () {
 		const { provider } = await buildMediaFixture();
 

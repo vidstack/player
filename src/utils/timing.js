@@ -5,7 +5,7 @@ import { isUndefined } from './unit';
  * elapsed since the last time the debounced function was invoked.
  *
  * @template {unknown[]} Args
- * @param {(...Args) => void} func - The function to debounce.
+ * @param {(...args: Args) => void} func - The function to debounce.
  * @param {number} delay - The number of milliseconds to delay.
  * @param {boolean} immediate - Whether the function should be triggered at the start of a sequence of calls instead of end.
  * @returns {import('./timing.types').DebouncedFunction<Args>}
@@ -18,7 +18,7 @@ export function debounce(func, delay, immediate = false) {
 	/** @type {unknown} */
 	let currentThis;
 
-	/** @type {Args} */
+	/** @type {Args | undefined} */
 	let currentArgs;
 
 	/** @type {number} */
@@ -44,7 +44,8 @@ export function debounce(func, delay, immediate = false) {
 			timerId = window.setTimeout(handleTimeout, delay - elapsedTime);
 		} else {
 			timerId = undefined;
-			if (!immediate) func.apply(currentThis, currentArgs);
+			if (!immediate)
+				func.apply(currentThis, /** @type {Args} */ (currentArgs));
 			// This check is needed because `func` can recursively invoke `debounced`.
 			if (!pending()) clearContext();
 		}
@@ -75,7 +76,7 @@ export function debounce(func, delay, immediate = false) {
  * Creates a throttled function that only invokes `func` at most once per every `wait` milliseconds.
  *
  * @template {unknown[]} Args
- * @param {(...Args) => void} func - The function to throttle.
+ * @param {(...args: Args) => void} func - The function to throttle.
  * @param {number} delay - The number of milliseconds to throttle invocations by.
  * @param {import('./timing.types').ThorttleOptions} options - The throttle options.
  * @returns {import('./timing.types').ThrottledFunction<Args>}
@@ -92,7 +93,7 @@ export function throttle(
 	/** @type {unknown} */
 	let currentThis;
 
-	/** @type {Args} */
+	/** @type {Args | undefined} */
 	let currentArgs;
 
 	/** @type {number} */
@@ -119,7 +120,7 @@ export function throttle(
 	const handleTimeout = () => {
 		lastCallTime = !options.leading ? 0 : Date.now();
 		timerId = undefined;
-		func.apply(currentThis, currentArgs);
+		func.apply(currentThis, /** @type {Args} */ (currentArgs));
 		if (!pending()) clearContext();
 	};
 
@@ -129,7 +130,7 @@ export function throttle(
 	const ding = (time) => {
 		if (pending()) clearTimer();
 		lastCallTime = time;
-		func.apply(currentThis, currentArgs);
+		func.apply(currentThis, /** @type {Args} */ (currentArgs));
 		if (!pending()) clearContext();
 	};
 

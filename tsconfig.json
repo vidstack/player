@@ -1,0 +1,6 @@
+{
+	"extends": "./jsconfig.json",
+	"compilerOptions": {
+		"types": ["@types/mocha"]
+	}
+}

@@ -84,7 +84,7 @@ describe('utils/network', function () {
 		});
 
 		it('should return fallback given window.decodeURIComponent is undefined', function () {
-			window.decodeURIComponent = undefined;
+			window.decodeURIComponent = /** @type {any} */ (undefined);
 			expect(tryDecodeURIComponent('', 'apples')).to.equal('apples');
 		});
 
@@ -129,8 +129,9 @@ describe('utils/network', function () {
 
 			preconnect(url);
 
-			/** @type {HTMLLinkElement} */
-			const link = document.head.querySelector(`link[href="${url}"]`);
+			const link = /** @type {HTMLLinkElement} */ (document.head.querySelector(
+				`link[href="${url}"]`
+			));
 
 			expect(link.rel).to.equal('preconnect');
 		});

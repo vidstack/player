@@ -1,10 +1,5 @@
-import {
-	html,
-	internalProperty,
-	property,
-	PropertyValues,
-	TemplateResult
-} from 'lit-element';
+import { createRef } from 'lit/directives/ref.js';
+import { html } from 'lit-element';
 
 import {
 	CanPlay,
@@ -31,50 +26,91 @@ import {
 	VdsTimeUpdateEvent,
 	VdsVolumeChangeEvent,
 	VdsWaitingEvent
-} from '../../core';
-import {
-	DisposalBin,
-	listen,
-	redispatchNativeEvent
-} from '../../shared/events';
-import { Callback } from '../../ts/utils';
+} from '../../media';
+import { listen, redispatchNativeEvent } from '../../shared/events';
 import { getSlottedChildren } from '../../utils/dom';
 import { IS_SAFARI } from '../../utils/support';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';
-import {
-	Html5MediaElementEngine,
-	Html5MediaElementMethods,
-	Html5MediaElementProps,
-	MediaControlsList,
-	MediaCrossOriginOption,
-	MediaNetworkState,
-	MediaPreloadOption,
-	MediaReadyState,
-	MediaSrcObject
-} from './html5.types';
+import { MediaNetworkState } from './MediaNetworkState';
+import { MediaReadyState } from './MediaReadyState';
+
+/**
+ * @typedef {import('./types').Html5MediaHost} IHtml5MediaHost
+ */
 
 /**
  * Enables loading, playing and controlling media files via the HTML5 MediaElement API. This is
  * used internally by the `vds-audio` and `vds-video` components. This provider only contains
  * glue code so don't bother using it on it's own.
  *
+ * @extends MediaProviderElement<import('./types').Html5MediaElementEngine>
+ * @implements {IHtml5MediaHost}
+ *
  * @slot Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
-export class Html5MediaElement<EngineType = Html5MediaElementEngine>
-	extends MediaProviderElement<EngineType>
-	implements Html5MediaElementProps, Html5MediaElementMethods {
-	protected mediaEl?: HTMLMediaElement;
-
-	protected mediaEventsDisposal = new DisposalBin();
-
-	firstUpdated(changedProps: PropertyValues): void {
-		super.firstUpdated(changedProps);
-		this.listenToMediaEvents();
+export class Html5MediaElement extends MediaProviderElement {
+	/** @type {import('lit-element').PropertyDeclarations} */
+	static get properties() {
+		return {
+			_src: { state: true },
+			height: { type: Number },
+			controlsList: {},
+			defaultMuted: { type: Boolean },
+			defaultPlaybackRate: { type: Number },
+			disableRemotePlayback: { type: Boolean },
+			preload: {},
+			width: { type: Number }
+		};
 	}
 
-	disconnectedCallback(): void {
-		this.cancelTimeUpdates();
+	/**
+	 * @protected
+	 * @readonly
+	 * @type {import('lit/directives/ref').Ref<HTMLMediaElement>}
+	 */
+	mediaRef = createRef();
+
+	/** @type {HTMLMediaElement} */
+	get mediaElement() {
+		return /** @type {HTMLMediaElement} */ (this.mediaRef.value);
+	}
+
+	constructor() {
+		super();
+
+		/** @protected @type {string} */
+		this._src = '';
+		/** @type {number | undefined} */
+		this.height;
+		/** @type {import('./types').MediaControlsList} */
+		this.controlsList;
+		/** @type {boolean | undefined} */
+		this.defaultMuted;
+		/** @type {number | undefined} */
+		this.defaultPlaybackRate;
+		/** @type {boolean | undefined} */
+		this.disableRemotePlayback;
+		/** @type {import('./types').MediaPreloadOption | undefined} */
+		this.preload;
+		/** @type {number | undefined} */
+		this.width;
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// Lifecycle
+	// -------------------------------------------------------------------------------------------
+
+	/**
+	 * @param {import('lit-element').PropertyValues} changedProps
+	 */
+	firstUpdated(changedProps) {
+		super.firstUpdated(changedProps);
+		this.bindMediaEventListeners();
+	}
+
+	disconnectedCallback() {
 		super.disconnectedCallback();
+		this.cancelTimeUpdates();
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -83,8 +119,11 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 
 	/**
 	 * Override this to modify the content rendered inside `<audio>` and `<video>` elements.
+	 *
+	 * @protected
+	 * @returns {import('lit-html').TemplateResult}
 	 */
-	protected renderMediaChildren(): TemplateResult {
+	renderMediaChildren() {
 		return html`
 			<slot @slotchange="${this.handleDefaultSlotChange}"></slot>
 			Your browser does not support the <code>audio</code> or
@@ -96,15 +135,11 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 	// Properties
 	// -------------------------------------------------------------------------------------------
 
-	@internalProperty()
-	protected _src = '';
-
-	@property()
-	get src(): string {
+	get src() {
 		return this._src;
 	}
 
-	set src(newSrc: string) {
+	set src(newSrc) {
 		if (this._src !== newSrc) {
 			this._src = newSrc;
 			this.handleMediaSrcChange();
@@ -113,48 +148,29 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		}
 	}
 
-	@property({ type: Number })
-	height?: number;
-
-	@property({ attribute: 'controlslist' })
-	controlsList?: MediaControlsList;
-
-	@property({ attribute: 'crossorigin' })
-	crossOrigin?: MediaCrossOriginOption;
-
-	@property({ type: Boolean, attribute: 'defaultmuted' })
-	defaultMuted?: boolean;
-
-	@property({ type: Number, attribute: 'defaultplaybackrate' })
-	defaultPlaybackRate?: number;
-
-	@property({ type: Boolean, attribute: 'disableremoteplayback' })
-	disableRemotePlayback?: boolean;
-
-	@property()
-	preload?: MediaPreloadOption = 'metadata';
-
-	@property({ type: Number })
-	width?: number;
-
-	get srcObject(): MediaSrcObject | undefined {
-		return this.mediaEl?.srcObject ?? undefined;
+	/**
+	 * @type {import('./types').MediaSrcObject | undefined}
+	 */
+	get srcObject() {
+		return this.mediaElement.srcObject ?? undefined;
 	}
 
-	set srcObject(newSrcObject: MediaSrcObject | undefined) {
-		if (this.mediaEl?.srcObject !== newSrcObject) {
-			this.mediaEl!.srcObject = newSrcObject ?? null;
-			if (!this.willAnotherEngineAttach()) this.mediaEl!.load();
+	set srcObject(newSrcObject) {
+		if (this.mediaElement.srcObject !== newSrcObject) {
+			this.mediaElement.srcObject = newSrcObject ?? null;
+			if (!this.willAnotherEngineAttach()) this.mediaElement.load();
 			this.handleMediaSrcChange();
 		}
 	}
 
-	get readyState(): MediaReadyState {
-		return this.mediaEl?.readyState ?? MediaReadyState.HaveNothing;
+	/** @type {MediaReadyState} */
+	get readyState() {
+		return this.mediaElement.readyState;
 	}
 
-	get networkState(): MediaNetworkState {
-		return this.mediaEl?.networkState ?? MediaNetworkState.NoSource;
+	/** @type {MediaNetworkState} */
+	get networkState() {
+		return this.mediaElement.networkState;
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -164,15 +180,25 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 	// resolve that :)
 	// -------------------------------------------------------------------------------------------
 
-	protected timeRAF?: number;
+	/**
+	 * @protected
+	 * @type {number}
+	 */
+	timeRAF = -1;
 
-	private cancelTimeUpdates() {
-		if (isNumber(this.timeRAF)) window.cancelAnimationFrame(this.timeRAF!);
-		this.timeRAF = undefined;
+	/**
+	 * @protected
+	 */
+	cancelTimeUpdates() {
+		if (isNumber(this.timeRAF)) window.cancelAnimationFrame(this.timeRAF);
+		this.timeRAF = -1;
 	}
 
-	private requestTimeUpdates() {
-		const newTime = this.mediaEl?.currentTime ?? 0;
+	/**
+	 * @protected
+	 */
+	requestTimeUpdates() {
+		const newTime = this.mediaElement.currentTime;
 
 		if (this.context.currentTime !== newTime) {
 			this.context.currentTime = newTime;
@@ -189,28 +215,40 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 	// Slots
 	// -------------------------------------------------------------------------------------------
 
-	protected handleDefaultSlotChange(): void {
-		if (isNil(this.mediaEl)) return;
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	handleDefaultSlotChange() {
+		if (isNil(this.mediaElement)) return;
 		this.cancelTimeUpdates();
 		this.cleanupOldSourceNodes();
 		this.attachNewSourceNodes();
 	}
 
-	protected cleanupOldSourceNodes(): void {
-		const nodes = this.mediaEl?.querySelectorAll('source,track');
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	cleanupOldSourceNodes() {
+		const nodes = this.mediaElement?.querySelectorAll('source,track');
 		nodes?.forEach((node) => node.remove());
 	}
 
-	protected attachNewSourceNodes(): void {
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	attachNewSourceNodes() {
 		const validTags = new Set(['source', 'track']);
 
 		getSlottedChildren(this)
 			.filter((node) => validTags.has(node.tagName.toLowerCase()))
-			.forEach((node) => this.mediaEl?.appendChild(node.cloneNode()));
+			.forEach((node) => this.mediaElement?.appendChild(node.cloneNode()));
 
 		window.requestAnimationFrame(() => {
 			this.handleMediaSrcChange();
-			if (!this.willAnotherEngineAttach()) this.mediaEl?.load();
+			if (!this.willAnotherEngineAttach()) this.mediaElement?.load();
 		});
 	}
 
@@ -218,12 +256,14 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 	// Events
 	// -------------------------------------------------------------------------------------------
 
-	protected listenToMediaEvents(): void {
-		this.mediaEventsDisposal.empty();
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	bindMediaEventListeners() {
+		if (isNil(this.mediaElement)) return;
 
-		if (isNil(this.mediaEl)) return;
-
-		const eventMap: Record<string, Callback<Event>> = {
+		const events = {
 			abort: this.handleAbort,
 			canplay: this.handleCanPlay,
 			canplaythrough: this.handleCanPlayThrough,
@@ -248,10 +288,10 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 			waiting: this.handleWaiting
 		};
 
-		Object.keys(eventMap).forEach((type) => {
-			const handler = eventMap[type].bind(this);
-			this.mediaEventsDisposal.add(
-				listen(this.mediaEl!, type, (e) => {
+		Object.keys(events).forEach((type) => {
+			const handler = events[type].bind(this);
+			this.disconnectDisposal.add(
+				listen(this.mediaElement, type, (e) => {
 					handler(e);
 					// re-dispatch native event for spec-compliance.
 					redispatchNativeEvent(this, e);
@@ -260,44 +300,82 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		});
 	}
 
-	protected handleAbort(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleAbort(originalEvent) {
 		this.dispatchEvent(new VdsAbortEvent({ originalEvent }));
 	}
 
-	protected handleCanPlay(originalEvent: Event): void {
-		this.context.buffered = this.mediaEl!.buffered;
-		this.context.seekable = this.mediaEl!.seekable;
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleCanPlay(originalEvent) {
+		this.context.buffered = this.mediaElement.buffered;
+		this.context.seekable = this.mediaElement.seekable;
 		if (!this.willAnotherEngineAttach()) this.handleMediaReady(originalEvent);
 	}
 
-	protected handleCanPlayThrough(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleCanPlayThrough(originalEvent) {
 		this.context.canPlayThrough = true;
 		this.dispatchEvent(new VdsCanPlayThroughEvent({ originalEvent }));
 	}
 
-	protected handleLoadStart(originalEvent: Event): void {
-		this.context.currentSrc = this.mediaEl!.currentSrc;
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleLoadStart(originalEvent) {
+		this.context.currentSrc = this.mediaElement.currentSrc;
 		this.dispatchEvent(new VdsLoadStartEvent({ originalEvent }));
 	}
 
-	protected handleEmptied(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleEmptied(originalEvent) {
 		this.dispatchEvent(new VdsEmptiedEvent({ originalEvent }));
 	}
 
-	protected handleLoadedData(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleLoadedData(originalEvent) {
 		this.dispatchEvent(new VdsLoadedDataEvent({ originalEvent }));
 	}
 
 	/**
 	 * Can be used to indicate another engine such as `hls.js` will attach to the media element
 	 * so it can handle certain ready events.
+	 *
+	 * @protected
+	 * @returns {boolean}
 	 */
-	protected willAnotherEngineAttach(): boolean {
+	willAnotherEngineAttach() {
 		return false;
 	}
 
-	protected handleLoadedMetadata(originalEvent: Event): void {
-		this.context.duration = this.mediaEl!.duration;
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleLoadedMetadata(originalEvent) {
+		this.context.duration = this.mediaElement.duration;
 		this.dispatchEvent(
 			new VdsDurationChangeEvent({
 				detail: this.context.duration,
@@ -307,7 +385,12 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		this.dispatchEvent(new VdsLoadedMetadataEvent({ originalEvent }));
 	}
 
-	protected handlePlay(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handlePlay(originalEvent) {
 		this.requestTimeUpdates();
 		this.context.paused = false;
 		this.dispatchEvent(new VdsPlayEvent({ originalEvent }));
@@ -319,7 +402,12 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		this.validatePlaybackEndedState();
 	}
 
-	protected handlePause(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handlePause(originalEvent) {
 		this.cancelTimeUpdates();
 		this.context.paused = true;
 		this.context.playing = false;
@@ -327,14 +415,24 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		this.dispatchEvent(new VdsPauseEvent({ originalEvent }));
 	}
 
-	protected handlePlaying(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handlePlaying(originalEvent) {
 		this.context.playing = true;
 		this.context.waiting = false;
 		this.dispatchEvent(new VdsPlayingEvent({ originalEvent }));
 	}
 
-	protected handleDurationChange(originalEvent: Event): void {
-		this.context.duration = this.mediaEl!.duration;
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleDurationChange(originalEvent) {
+		this.context.duration = this.mediaElement.duration;
 		this.dispatchEvent(
 			new VdsDurationChangeEvent({
 				detail: this.context.duration,
@@ -344,18 +442,34 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		this.validatePlaybackEndedState();
 	}
 
-	protected handleProgress(originalEvent: Event): void {
-		this.context.buffered = this.mediaEl!.buffered;
-		this.context.seekable = this.mediaEl!.seekable;
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleProgress(originalEvent) {
+		this.context.buffered = this.mediaElement.buffered;
+		this.context.seekable = this.mediaElement.seekable;
 		this.dispatchEvent(new VdsProgressEvent({ originalEvent }));
 	}
 
-	protected handleRateChange(): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleRateChange(originalEvent) {
 		// TODO: no-op for now but we'll add playback rate support later.
+		throw Error('Not implemented');
 	}
 
-	protected handleSeeked(originalEvent: Event): void {
-		this.context.currentTime = this.mediaEl!.currentTime;
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleSeeked(originalEvent) {
+		this.context.currentTime = this.mediaElement.currentTime;
 		this.context.seeking = false;
 		this.dispatchEvent(
 			new VdsSeekedEvent({
@@ -366,8 +480,13 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		this.validatePlaybackEndedState();
 	}
 
-	protected handleSeeking(originalEvent: Event): void {
-		this.context.currentTime = this.mediaEl!.currentTime;
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleSeeking(originalEvent) {
+		this.context.currentTime = this.mediaElement.currentTime;
 		this.context.seeking = true;
 		this.dispatchEvent(
 			new VdsSeekingEvent({
@@ -377,19 +496,34 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		);
 	}
 
-	protected handleStalled(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleStalled(originalEvent) {
 		this.dispatchEvent(new VdsStalledEvent({ originalEvent }));
 	}
 
-	protected handleTimeUpdate(): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleTimeUpdate(originalEvent) {
 		// -- Time updates are performed in `requestTimeUpdates()`.
 		this.context.waiting = false;
 		this.validatePlaybackEndedState();
 	}
 
-	protected handleVolumeChange(originalEvent: Event): void {
-		this.context.volume = this.mediaEl!.volume;
-		this.context.muted = this.mediaEl!.muted;
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleVolumeChange(originalEvent) {
+		this.context.volume = this.mediaElement.volume;
+		this.context.muted = this.mediaElement.muted;
 		this.dispatchEvent(
 			new VdsVolumeChangeEvent({
 				detail: {
@@ -401,17 +535,32 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		);
 	}
 
-	protected handleWaiting(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleWaiting(originalEvent) {
 		this.context.waiting = true;
 		this.dispatchEvent(new VdsWaitingEvent({ originalEvent }));
 	}
 
-	protected handleSuspend(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleSuspend(originalEvent) {
 		this.context.waiting = false;
 		this.dispatchEvent(new VdsSuspendEvent({ originalEvent }));
 	}
 
-	protected handleEnded(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleEnded(originalEvent) {
 		// Check becuase might've been handled in `validatePlaybackEnded()`.
 		if (!this.context.ended && !this.loop) {
 			this.context.ended = true;
@@ -423,10 +572,15 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 		}
 	}
 
-	protected handleError(originalEvent: Event): void {
-		this.context.error = this.mediaEl?.error;
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleError(originalEvent) {
+		this.context.error = this.mediaElement.error;
 		this.dispatchEvent(
-			new VdsErrorEvent({ detail: this.mediaEl!.error, originalEvent })
+			new VdsErrorEvent({ detail: this.mediaElement.error, originalEvent })
 		);
 	}
 
@@ -434,86 +588,120 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 	// Provider Methods
 	// -------------------------------------------------------------------------------------------
 
-	protected getPaused(): boolean {
-		return this.mediaEl!.paused;
+	/**
+	 * @protected
+	 * @returns {boolean}
+	 */
+	getPaused() {
+		return this.mediaElement.paused;
 	}
 
-	protected getVolume(): number {
-		return this.mediaEl!.volume;
+	/**
+	 * @protected
+	 * @returns {number}
+	 */
+	getVolume() {
+		return this.mediaElement.volume;
 	}
 
-	protected setVolume(newVolume: number): void {
-		this.mediaEl!.volume = newVolume;
+	/**
+	 * @protected
+	 * @param {number} newVolume
+	 * @returns {void}
+	 */
+	setVolume(newVolume) {
+		this.mediaElement.volume = newVolume;
 	}
 
-	protected getCurrentTime(): number {
-		return this.mediaEl!.currentTime;
+	/**
+	 * @protected
+	 * @returns {number}
+	 */
+	getCurrentTime() {
+		return this.mediaElement.currentTime;
 	}
 
-	protected setCurrentTime(newTime: number): void {
-		if (this.mediaEl!.currentTime !== newTime) {
-			this.mediaEl!.currentTime = newTime;
+	/**
+	 * @protected
+	 * @param {number} newTime
+	 * @returns {void}
+	 */
+	setCurrentTime(newTime) {
+		if (this.mediaElement.currentTime !== newTime) {
+			this.mediaElement.currentTime = newTime;
 			// Doesn't fire `seeked` near end.
 			if (IS_SAFARI) this.validatePlaybackEndedState();
 		}
 	}
 
-	protected getMuted(): boolean {
-		return this.mediaEl!.muted;
+	/**
+	 * @protected
+	 * @returns {boolean}
+	 */
+	getMuted() {
+		return this.mediaElement.muted;
 	}
 
-	protected setMuted(isMuted: boolean): void {
-		this.mediaEl!.muted = isMuted;
+	/**
+	 * @protected
+	 * @param {boolean} isMuted
+	 * @returns {void}
+	 */
+	setMuted(isMuted) {
+		this.mediaElement.muted = isMuted;
 	}
 
 	// -------------------------------------------------------------------------------------------
 	// Readonly Properties
 	// -------------------------------------------------------------------------------------------
 
-	get engine(): EngineType {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return this.mediaEl as any;
+	get engine() {
+		return this.mediaElement;
 	}
 
-	get buffered(): TimeRanges {
-		if (isNil(this.mediaEl)) return new TimeRanges();
-		return this.mediaEl!.buffered;
+	get buffered() {
+		if (isNil(this.mediaElement)) return new TimeRanges();
+		return this.mediaElement.buffered;
 	}
 
-	get error(): MediaError | undefined {
-		return this.mediaEl?.error ?? undefined;
+	get error() {
+		return this.mediaElement?.error ?? undefined;
 	}
 
 	// -------------------------------------------------------------------------------------------
 	// Methods
 	// -------------------------------------------------------------------------------------------
 
-	canPlayType(type: string): CanPlay {
-		if (isNil(this.mediaEl)) {
+	/**
+	 * @param {string} type
+	 * @returns {CanPlay}
+	 */
+	canPlayType(type) {
+		if (isNil(this.mediaElement)) {
 			return CanPlay.No;
 		}
 
-		return this.mediaEl.canPlayType(type) as CanPlay;
+		return this.mediaElement.canPlayType(type);
 	}
 
-	async play(): Promise<void> {
+	async play() {
 		this.throwIfNotReadyForPlayback();
 		if (this.context.ended) this.dispatchEvent(new VdsReplayEvent());
 		await this.resetPlaybackIfEnded();
-		return this.mediaEl!.play();
+		return this.mediaElement.play();
 	}
 
-	async pause(): Promise<void> {
+	async pause() {
 		this.throwIfNotReadyForPlayback();
-		return this.mediaEl!.pause();
+		return this.mediaElement.pause();
 	}
 
-	captureStream(): MediaStream | undefined {
+	captureStream() {
 		this.throwIfNotReadyForPlayback();
-		return this.mediaEl!.captureStream?.();
+		return this.mediaElement.captureStream?.();
 	}
 
-	load(): void {
-		this.mediaEl?.load();
+	load() {
+		this.mediaElement?.load();
 	}
 }

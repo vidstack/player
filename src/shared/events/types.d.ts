@@ -5,9 +5,13 @@ export interface VdsEventInit<DetailType> extends CustomEventInit<DetailType> {
 	readonly originalEvent?: Event;
 }
 
-export interface EventHandlerRecord {
-	[eventType: string]: (event: Event) => void;
-}
+export type EventCallback = <EventType extends Event>(event: EventType) => void;
+
+export type EventHandlerRecord = {
+	[EventType in keyof GlobalEventHandlersEventMap]?: (
+		event: GlobalEventHandlersEventMap[EventType]
+	) => void;
+};
 
 export type VdsEvents<EventRecordType> = {
 	[EventType in Extract<
@@ -27,7 +31,7 @@ export type ExtractCustomEventInit<
 	: VdsEventInit<any>;
 
 export type ExtractVdsEventInit<
-	EventType extends VdsCustomEvent
+	EventType extends VdsCustomEvent<unknown>
 > = EventType extends VdsCustomEvent<infer X>
 	? VdsEventInit<X>
 	: VdsEventInit<any>;

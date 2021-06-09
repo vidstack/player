@@ -35,7 +35,7 @@ export const isObjOrJSON = (value) =>
  * @returns {T | undefined}
  */
 export const objOrParseJSON = (value) =>
-	isObject(value) ? value : tryParseJSON(value);
+	/** @type {any} */ (isObject(value) ? value : tryParseJSON(value));
 
 /**
  * Load image avoiding xhr/fetch CORS issues. Server status can't be obtained this way
@@ -130,7 +130,9 @@ export const parseQueryString = (qs) => {
 	/** @type {RegExpExecArray} */
 	let match;
 
-	while ((match = QUERY_STRING_REGEX.exec(qs))) {
+	while (
+		(match = /** @type {RegExpExecArray} */ (QUERY_STRING_REGEX.exec(qs)))
+	) {
 		const name = tryDecodeURIComponent(match[1], match[1]).replace('[]', '');
 
 		const value = isString(match[2])

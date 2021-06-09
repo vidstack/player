@@ -64,21 +64,18 @@ export class MediaControllerElement extends VdsElement {
 		return [mediaControllerStyles];
 	}
 
+	// -------------------------------------------------------------------------------------------
+	// Lifecycle
+	// -------------------------------------------------------------------------------------------
+
 	connectedCallback() {
 		super.connectedCallback();
 		this.bindEventListeners();
 	}
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.unbindEventListeners();
-	}
-
 	// -------------------------------------------------------------------------------------------
 	// Event Bindings
 	// -------------------------------------------------------------------------------------------
-
-	eventsDisposal = new DisposalBin();
 
 	/**
 	 * @protected
@@ -98,11 +95,7 @@ export class MediaControllerElement extends VdsElement {
 			[VdsExitFullscreenRequestEvent.TYPE]: this.handleExitFullscreenRequest
 		};
 
-		bindEventListeners(this, events, this.eventsDisposal);
-	}
-
-	unbindEventListeners() {
-		this.eventsDisposal.empty();
+		bindEventListeners(this, events, this.disconnectDisposal);
 	}
 
 	// -------------------------------------------------------------------------------------------

@@ -74,7 +74,7 @@ export class MediaUiElement extends VdsElement {
 	 * @type {HTMLDivElement}
 	 */
 	get rootElement() {
-		return this.rootRef.value;
+		return /** @type {HTMLDivElement} */ (this.rootRef.value);
 	}
 
 	render() {

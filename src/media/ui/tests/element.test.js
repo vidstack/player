@@ -17,7 +17,9 @@ describe(VDS_MEDIA_UI_ELEMENT_TAG_NAME, function () {
 			</vds-media-ui>
 		`);
 
-		const ui = container.querySelector(VDS_MEDIA_UI_ELEMENT_TAG_NAME);
+		const ui = /** @type {MediaUiElement} */ (container.querySelector(
+			VDS_MEDIA_UI_ELEMENT_TAG_NAME
+		));
 
 		return { provider, ui };
 	}

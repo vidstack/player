@@ -150,7 +150,7 @@ export class MediaContainerElement extends VdsElement {
 	rootRef = createRef();
 
 	get rootElement() {
-		return this.rootRef.value;
+		return /** @type {HTMLDivElement} */ (this.rootRef.value);
 	}
 
 	render() {
@@ -280,7 +280,7 @@ export class MediaContainerElement extends VdsElement {
 	mediaContainerRef = createRef();
 
 	get mediaContainerElement() {
-		return this.mediaContainerRef.value;
+		return /** @type {HTMLDivElement} */ (this.mediaContainerRef.value);
 	}
 
 	/**
@@ -358,7 +358,7 @@ export class MediaContainerElement extends VdsElement {
 	mediaUiRef = createRef();
 
 	get mediaUiElement() {
-		return this.mediaUiRef.value;
+		return /** @type {MediaUiElement} */ (this.mediaUiRef.value);
 	}
 
 	/**
@@ -423,9 +423,9 @@ export class MediaContainerElement extends VdsElement {
 	/**
 	 * @returns {Promise<void>}
 	 */
-	requestFullscreen() {
+	async requestFullscreen() {
 		if (this.shouldFullscreenMediaProvider()) {
-			return this.mediaProvider.requestFullscreen();
+			return this.mediaProvider?.requestFullscreen();
 		}
 
 		if (this.fullscreenController.isRequestingNativeFullscreen) {
@@ -438,9 +438,9 @@ export class MediaContainerElement extends VdsElement {
 	/**
 	 * @returns {Promise<void>}
 	 */
-	exitFullscreen() {
+	async exitFullscreen() {
 		if (this.shouldFullscreenMediaProvider()) {
-			return this.mediaProvider.exitFullscreen();
+			return this.mediaProvider?.exitFullscreen();
 		}
 
 		return this.fullscreenController.exitFullscreen();
