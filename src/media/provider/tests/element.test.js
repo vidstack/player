@@ -1,13 +1,9 @@
 import { expect, oneEvent } from '@open-wc/testing';
 import { mock } from 'sinon';
 
-import { VdsCustomEvent } from '../../../../shared/events';
-import { isFunction } from '../../../../utils/unit';
-import { buildMediaFixture } from '../../../fakes/fakes.helpers';
-import {
-	MediaProviderConnectEventDetail,
-	VdsMediaProviderConnectEvent
-} from '../events';
+import { isFunction } from '../../../utils/unit';
+import { buildMediaFixture } from '../../test-utils';
+import { VdsMediaProviderConnectEvent } from '../events';
 import { MediaProviderElement } from '../MediaProviderElement';
 
 describe('MediaProviderElement', function () {
@@ -33,10 +29,12 @@ describe('MediaProviderElement', function () {
 				window.document.body.append(provider);
 			});
 
-			const { detail } = (await oneEvent(
+			const {
+				detail
+			} = /** @type {VdsMediaProviderConnectEvent} */ (await oneEvent(
 				document,
 				VdsMediaProviderConnectEvent.TYPE
-			)) as VdsCustomEvent<MediaProviderConnectEventDetail>;
+			));
 
 			expect(detail.provider).to.be.instanceOf(MediaProviderElement);
 			expect(isFunction(detail.onDisconnect)).to.be.true;
@@ -49,10 +47,12 @@ describe('MediaProviderElement', function () {
 				window.document.body.append(provider);
 			});
 
-			const { detail } = (await oneEvent(
+			const {
+				detail
+			} = /** @type {VdsMediaProviderConnectEvent} */ (await oneEvent(
 				document,
 				VdsMediaProviderConnectEvent.TYPE
-			)) as VdsCustomEvent<MediaProviderConnectEventDetail>;
+			));
 
 			const callback = mock();
 			detail.onDisconnect(callback);

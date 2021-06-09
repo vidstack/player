@@ -1,8 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
-import { html } from 'lit-html';
+import { html } from 'lit';
 import { mock, spy } from 'sinon';
 
-import { buildMediaFixture } from '../../../fakes/fakes.helpers';
 import {
 	VdsEnterFullscreenRequestEvent,
 	VdsExitFullscreenRequestEvent,
@@ -13,7 +12,8 @@ import {
 	VdsUnmuteRequestEvent,
 	VdsVolumeChangeRequestEvent
 } from '../../media-request.events';
-import { VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME } from '../define';
+import { buildMediaFixture } from '../../test-utils';
+import { VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME } from '../constants';
 import { MediaControllerElement } from '../MediaControllerElement';
 
 describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
@@ -37,7 +37,8 @@ describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
 	describe('media container', function () {
 		it('should connect/disconnect', async function () {
-			const controller = await fixture<MediaControllerElement>(
+			/** @type {MediaControllerElement} */
+			const controller = await fixture(
 				html`<vds-media-controller></vds-media-controller>`
 			);
 
@@ -52,7 +53,8 @@ describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
 	describe('media provider', function () {
 		it('should connect/disconnect', async function () {
-			const controller = await fixture<MediaControllerElement>(
+			/** @type {MediaControllerElement} */
+			const controller = await fixture(
 				html`<vds-media-controller></vds-media-controller>`
 			);
 

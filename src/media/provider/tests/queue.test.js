@@ -1,10 +1,10 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
 
-import { buildMediaFixture } from '../../../fakes/fakes.helpers';
-import { VdsErrorEvent } from '../../events';
+import { VdsErrorEvent } from '../../media.events';
+import { buildMediaFixture } from '../../test-utils';
 
-describe('media provider request queue', function () {
+describe('MediaProviderElement/queue', function () {
 	it('should queue request given provider is not ready and flush once ready', async function () {
 		const { provider } = await buildMediaFixture();
 

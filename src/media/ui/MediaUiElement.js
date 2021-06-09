@@ -85,7 +85,7 @@ export class MediaUiElement extends VdsElement {
 				part=${this.getRootPartAttr()}
 				${ref(this.rootRef)}
 			>
-				${this.renderRootContent()}
+				${this.renderRootChildren()}
 			</div>
 		`;
 	}
@@ -95,7 +95,7 @@ export class MediaUiElement extends VdsElement {
 	 *
 	 * @protected
 	 */
-	renderRootContent() {
+	renderRootChildren() {
 		return html`${this.renderDefaultSlot()}`;
 	}
 

@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { mock } from 'sinon';
 
 import { isFunction } from '../../../utils/unit';
-import { buildMediaFixture } from '../../test-utils/fixtures';
+import { buildMediaFixture } from '../../test-utils';
 import { MediaUiElement } from '../../ui';
 import { ViewType } from '../../ViewType';
 import { VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME } from '../constants';
@@ -34,9 +34,7 @@ describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
       `);
 		});
 
-		// TODO: shadow DOM snapshots don't work at the moment
-		// eslint-disable-next-line mocha/no-skipped-tests
-		it.skip('should render shadow DOM correctly', async function () {
+		it('should render shadow DOM correctly', async function () {
 			const container = await buildFixture();
 			expect(container).shadowDom.to.equal(`
         <div

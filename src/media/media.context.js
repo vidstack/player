@@ -32,6 +32,7 @@ const viewType = createContext(ViewType.Unknown);
 export const mediaContext = {
 	autoplay: createContext(false),
 	buffered,
+	duration,
 	bufferedAmount: derivedContext(
 		[buffered, duration],
 		([buffered, duration]) => {
@@ -46,17 +47,14 @@ export const mediaContext = {
 	currentPoster: createContext(''),
 	currentSrc: createContext(''),
 	currentTime: createContext(0),
-	duration,
 	ended: createContext(false),
 	error: /** @type {Context<unknown | undefined>} */ (createContext(undefined)),
 	fullscreen: createContext(false),
-	isAudio: derivedContext([mediaType], ([m]) => m === MediaType.Audio),
-	isAudioView: derivedContext([viewType], ([v]) => v === ViewType.Audio),
-	isVideo: derivedContext([mediaType], ([m]) => m === MediaType.Video),
-	isVideoView: derivedContext([viewType], ([v]) => v === ViewType.Video),
-	isLiveVideo: derivedContext([mediaType], ([m]) => m === MediaType.LiveVideo),
 	loop: createContext(false),
 	mediaType,
+	isAudio: derivedContext([mediaType], ([m]) => m === MediaType.Audio),
+	isVideo: derivedContext([mediaType], ([m]) => m === MediaType.Video),
+	isLiveVideo: derivedContext([mediaType], ([m]) => m === MediaType.LiveVideo),
 	muted: createContext(false),
 	paused: createContext(true),
 	played: createContext(createTimeRanges()),
@@ -73,6 +71,8 @@ export const mediaContext = {
 	seeking: createContext(false),
 	started: createContext(false),
 	viewType,
+	isAudioView: derivedContext([viewType], ([v]) => v === ViewType.Audio),
+	isVideoView: derivedContext([viewType], ([v]) => v === ViewType.Video),
 	volume: createContext(1),
 	waiting: createContext(false)
 };

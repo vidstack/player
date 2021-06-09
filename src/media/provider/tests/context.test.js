@@ -1,48 +1,52 @@
-import { elementUpdated, expect, html } from '@open-wc/testing';
+import { elementUpdated, expect } from '@open-wc/testing';
+import { html, LitElement } from 'lit';
 
-import { safelyDefineCustomElement } from '../../../../utils/dom';
-import { buildMediaFixture, MediaFixture } from '../../../fakes/fakes.helpers';
+import { WithContext } from '../../../shared/context';
+import { safelyDefineCustomElement } from '../../../utils/dom';
 import { mediaContext } from '../../media.context';
+import { buildMediaFixture } from '../../test-utils';
 import { createTimeRanges } from '../../time-ranges';
 import { ViewType } from '../../ViewType';
 
-class FakeMediaConsumerElement extends HTMLElement {
-	@mediaContext.paused.consume()
-	paused = mediaContext.paused.defaultValue;
+class FakeMediaConsumerElement extends WithContext(LitElement) {
+	/** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+	static get contextConsumers() {
+		return {
+			paused: mediaContext.paused,
+			duration: mediaContext.duration,
+			currentSrc: mediaContext.currentSrc,
+			viewType: mediaContext.viewType,
+			isAudioView: mediaContext.isAudioView,
+			isVideoView: mediaContext.isVideoView,
+			bufferedAmount: mediaContext.bufferedAmount
+		};
+	}
 
-	@mediaContext.duration.consume()
-	duration = mediaContext.duration.defaultValue;
-
-	@mediaContext.currentSrc.consume()
-	currentSrc = mediaContext.currentSrc.defaultValue;
-
-	@mediaContext.viewType.consume()
-	viewType = mediaContext.viewType.defaultValue;
-
-	@mediaContext.isAudioView.consume()
-	isAudioView = mediaContext.isAudioView.defaultValue;
-
-	@mediaContext.isVideoView.consume()
-	isVideoView = mediaContext.isVideoView.defaultValue;
-
-	@mediaContext.bufferedAmount.consume()
-	bufferedAmount = mediaContext.bufferedAmount.defaultValue;
+	constructor() {
+		super();
+		this.paused = mediaContext.paused.initialValue;
+		this.duration = mediaContext.duration.initialValue;
+		this.currentSrc = mediaContext.currentSrc.initialValue;
+		this.viewType = mediaContext.viewType.initialValue;
+		this.isAudioView = mediaContext.isAudioView.initialValue;
+		this.isVideoView = mediaContext.isVideoView.initialValue;
+		this.bufferedAmount = mediaContext.bufferedAmount.initialValue;
+	}
 }
 
 safelyDefineCustomElement('vds-fake-media-consumer', FakeMediaConsumerElement);
 
-describe('media provider context', function () {
-	async function buildFixture(): Promise<
-		MediaFixture & { consumer: FakeMediaConsumerElement }
-	> {
+describe('MediaProviderElement/context', function () {
+	/**
+	 * @returns {Promise<import('../../test-utils').MediaFixture & { consumer: FakeMediaConsumerElement }>}
+	 */
+	async function buildFixture() {
 		const fixture = await buildMediaFixture(
 			html`<vds-fake-media-consumer></vds-fake-media-consumer>`
 		);
 		return {
 			...fixture,
-			consumer: fixture.container.querySelector(
-				'vds-fake-media-consumer'
-			) as FakeMediaConsumerElement
+			consumer: fixture.container.querySelector('vds-fake-media-consumer')
 		};
 	}
 
@@ -81,15 +85,14 @@ describe('media provider context', function () {
 		provider.context.duration = 200;
 		await elementUpdated(consumer);
 
-		((provider as unknown) as {
-			softResetMediaContext(): void;
-		}).softResetMediaContext();
+		/** @type {any} */ (provider).softResetMediaContext();
 		await elementUpdated(consumer);
 
 		expect(consumer.paused, 'paused').to.equal(true);
 		expect(isNaN(consumer.duration), 'duration').to.be.true;
 	});
 
+	// eslint-disable-next-line mocha/no-skipped-tests
 	it.skip('should hard reset context when provider disconnects', async function () {
 		const { provider, consumer } = await buildFixture();
 

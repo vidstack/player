@@ -132,4 +132,14 @@ describe('context', function () {
 		expect(consumer.ctxC).to.equal('20-B2');
 		expect(consumer).shadowDom.to.equal('<span>20-B2</span>');
 	});
+
+	it('should update derived context in context record', async function () {
+		const { provider } = await buildFixture();
+
+		provider.ctxD.ctxA = 20;
+		expect(provider.ctxD.ctxC).to.equal('20-B');
+
+		provider.ctxD.ctxB = 'B2';
+		expect(provider.ctxD.ctxC).to.equal('20-B2');
+	});
 });

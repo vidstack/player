@@ -150,7 +150,7 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
 				.defaultMuted="${this.defaultMuted ?? this.muted}"
 				.defaultPlaybackRate="${this.defaultPlaybackRate ?? 1}"
 			>
-				${this.renderMediaContent()}
+				${this.renderMediaChildren()}
 			</video>
 		`;
 	}

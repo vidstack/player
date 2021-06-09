@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: 14
 
+      - name: Setup Playwright
+        run: npx playwright install-deps
+
       - name: Cache Dependencies
         id: deps
         uses: actions/cache@v2
@@ -31,7 +34,7 @@ jobs:
         run: npm install
 
       - name: Test
-        run: npm run test:coverage
+        run: npm run test:ci:coverage
 
       - name: Submit Coverage Report
         run: bash <(curl -s https://codecov.io/bash)

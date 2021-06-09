@@ -4,7 +4,7 @@ import '../ui/define';
 import clsx from 'clsx';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { styleMap } from 'lit-html/directives/style-map';
+import { styleMap } from 'lit-html/directives/style-map.js';
 
 import { VdsElement } from '../../shared/elements';
 import { FullscreenController } from '../../shared/fullscreen';
@@ -163,7 +163,7 @@ export class MediaContainerElement extends VdsElement {
 				style=${styleMap(this.getRootStyleMap())}
 				${ref(this.rootRef)}
 			>
-				${this.renderRootContent()}
+				${this.renderRootChildren()}
 			</div>
 		`;
 	}
@@ -174,7 +174,7 @@ export class MediaContainerElement extends VdsElement {
 	 * @protected
 	 * @returns {import('lit').TemplateResult}
 	 */
-	renderRootContent() {
+	renderRootChildren() {
 		return html`${this.renderMedia()}${this.renderUI()}`;
 	}
 
@@ -250,11 +250,11 @@ export class MediaContainerElement extends VdsElement {
 	/**
 	 * @protected
 	 * @param {string} maxPadding
-	 * @returns {string}
+	 * @returns {string | undefined}
 	 */
 	getAspectRatioPadding(maxPadding = '100vh') {
 		const ratio = this.calcAspectRatio();
-		if (isNaN(ratio)) return '';
+		if (isNaN(ratio)) return undefined;
 		return `min(${maxPadding}, ${this.calcAspectRatio()}%)`;
 	}
 

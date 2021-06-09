@@ -18,6 +18,17 @@ export const notEqual = (valueA, valueB) => {
 };
 
 /**
+ * Whether two values are equal.
+ *
+ * @param {unknown} valueA
+ * @param {unknown} valueB
+ * @returns {boolean}
+ */
+export const equal = (valueA, valueB) => {
+	return !notEqual(valueA, valueB);
+};
+
+/**
  * Checks if the given `value` is `null`.
  *
  * @param {unknown} value - The value to check.

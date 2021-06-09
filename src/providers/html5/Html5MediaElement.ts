@@ -84,7 +84,7 @@ export class Html5MediaElement<EngineType = Html5MediaElementEngine>
 	/**
 	 * Override this to modify the content rendered inside `<audio>` and `<video>` elements.
 	 */
-	protected renderMediaContent(): TemplateResult {
+	protected renderMediaChildren(): TemplateResult {
 		return html`
 			<slot @slotchange="${this.handleDefaultSlotChange}"></slot>
 			Your browser does not support the <code>audio</code> or

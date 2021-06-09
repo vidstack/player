@@ -111,8 +111,9 @@ export class MediaControllerElement extends VdsElement {
 
 	/**
 	 * The media context record. Any property updated inside this object will trigger a context
-	 * update that will flow down to all consumer components. This record is consumed by
-	 * a media provider element as it's responsible for managing it (ie: updating context properties).
+	 * update that will flow down to all consumer components. This record is injected into a
+	 * a media provider element (see `handleMediaProviderConnect`) as it's responsible for managing
+	 * it (ie: updating context properties).
 	 *
 	 * @readonly
 	 * @internal Exposed for testing.

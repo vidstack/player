@@ -1,10 +1,10 @@
 import {
-  CSSResultArray,
-  html,
-  LitElement,
-  property,
-  query,
-  TemplateResult,
+	CSSResultArray,
+	html,
+	LitElement,
+	property,
+	query,
+	TemplateResult
 } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined';
 
@@ -47,164 +47,164 @@ import { ButtonElementProps, ButtonType } from './button.types';
  * ```
  */
 export class ButtonElement
-  extends WithFocus(LitElement)
-  implements ButtonElementProps {
-  @query('#root') rootEl!: HTMLButtonElement;
+	extends WithFocus(LitElement)
+	implements ButtonElementProps {
+	@query('#root') rootEl!: HTMLButtonElement;
 
-  static get styles(): CSSResultArray {
-    return [buttonElementStyles];
-  }
+	static get styles(): CSSResultArray {
+		return [buttonElementStyles];
+	}
 
-  static get parts(): string[] {
-    return ['root'];
-  }
+	static get parts(): string[] {
+		return ['root'];
+	}
 
-  protected disposal = new DisposalBin();
+	protected disposal = new DisposalBin();
 
-  connectedCallback(): void {
-    super.connectedCallback();
-    this.addDefaultEventListeners();
-  }
+	connectedCallback(): void {
+		super.connectedCallback();
+		this.addDefaultEventListeners();
+	}
 
-  disconnectedCallback(): void {
-    super.disconnectedCallback();
-    this.disposal.empty();
-  }
+	disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this.disposal.empty();
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Properties
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Properties
+	// -------------------------------------------------------------------------------------------
 
-  @property() label?: string;
+	@property() label?: string;
 
-  @property() controls?: string;
+	@property() controls?: string;
 
-  @property({ type: Boolean, attribute: 'has-popup' }) hasPopup?: boolean;
+	@property({ type: Boolean, attribute: 'has-popup' }) hasPopup?: boolean;
 
-  @property({ type: Boolean, reflect: true }) hidden = false;
+	@property({ type: Boolean, reflect: true }) hidden = false;
 
-  @property({ type: Boolean, reflect: true }) disabled = false;
+	@property({ type: Boolean, reflect: true }) disabled = false;
 
-  @property() type: ButtonType = 'button';
+	@property() type: ButtonType = 'button';
 
-  @property({ type: Boolean, reflect: true }) expanded?: boolean;
+	@property({ type: Boolean, reflect: true }) expanded?: boolean;
 
-  @property({ type: Boolean, reflect: true }) pressed?: boolean;
+	@property({ type: Boolean, reflect: true }) pressed?: boolean;
 
-  @property({ attribute: 'described-by' }) describedBy?: string;
+	@property({ attribute: 'described-by' }) describedBy?: string;
 
-  get rootElement(): HTMLButtonElement {
-    return this.rootEl;
-  }
+	get rootElement(): HTMLButtonElement {
+		return this.rootEl;
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Render
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Render
+	// -------------------------------------------------------------------------------------------
 
-  render(): TemplateResult {
-    return html`
-      <button
-        id="root"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
-        type="${ifNonEmpty(this.type)}"
-        aria-label="${ifNonEmpty(this.label)}"
-        aria-controls="${ifNonEmpty(this.controls)}"
-        aria-haspopup="${ifDefined(this.hasAriaPopupMenu())}"
-        aria-pressed="${ifDefined(this.isAriaPressed())}"
-        aria-expanded="${ifDefined(this.isAriaExpanded())}"
-        aria-describedby="${ifNonEmpty(this.describedBy)}"
-        ?hidden="${this.hidden}"
-        ?disabled="${this.disabled}"
-      >
-        ${this.renderRootContent()}
-      </button>
-    `;
-  }
+	render(): TemplateResult {
+		return html`
+			<button
+				id="root"
+				class="${this.getRootClassAttr()}"
+				part="${this.getRootPartAttr()}"
+				type="${ifNonEmpty(this.type)}"
+				aria-label="${ifNonEmpty(this.label)}"
+				aria-controls="${ifNonEmpty(this.controls)}"
+				aria-haspopup="${ifDefined(this.hasAriaPopupMenu())}"
+				aria-pressed="${ifDefined(this.isAriaPressed())}"
+				aria-expanded="${ifDefined(this.isAriaExpanded())}"
+				aria-describedby="${ifNonEmpty(this.describedBy)}"
+				?hidden="${this.hidden}"
+				?disabled="${this.disabled}"
+			>
+				${this.renderRootChildren()}
+			</button>
+		`;
+	}
 
-  /**
-   * Override this to modify content rendered inside root control (`<button>`).
-   */
-  protected renderRootContent(): TemplateResult {
-    return html`${this.renderDefaultSlot()}`;
-  }
+	/**
+	 * Override this to modify content rendered inside root control (`<button>`).
+	 */
+	protected renderRootChildren(): TemplateResult {
+		return html`${this.renderDefaultSlot()}`;
+	}
 
-  /**
-   * Override this to modify rendering of default slot.
-   */
-  protected renderDefaultSlot(): TemplateResult {
-    return html`<slot></slot>`;
-  }
+	/**
+	 * Override this to modify rendering of default slot.
+	 */
+	protected renderDefaultSlot(): TemplateResult {
+		return html`<slot></slot>`;
+	}
 
-  /**
-   * Override this to modify CSS Classes.
-   */
-  protected getRootClassAttr(): string {
-    return 'root';
-  }
+	/**
+	 * Override this to modify CSS Classes.
+	 */
+	protected getRootClassAttr(): string {
+		return 'root';
+	}
 
-  /**
-   * Override this to modify CSS Parts.
-   */
-  protected getRootPartAttr(): string {
-    return 'root';
-  }
+	/**
+	 * Override this to modify CSS Parts.
+	 */
+	protected getRootPartAttr(): string {
+		return 'root';
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // ARIA
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// ARIA
+	// -------------------------------------------------------------------------------------------
 
-  /**
-   * The `aria-pressed` attribute value.
-   */
-  protected isAriaPressed(): 'true' | 'false' | undefined {
-    if (isUndefined(this.pressed)) return undefined;
-    return this.pressed ? 'true' : 'false';
-  }
+	/**
+	 * The `aria-pressed` attribute value.
+	 */
+	protected isAriaPressed(): 'true' | 'false' | undefined {
+		if (isUndefined(this.pressed)) return undefined;
+		return this.pressed ? 'true' : 'false';
+	}
 
-  /**
-   * The `aria-expanded` attribute value.
-   */
-  protected isAriaExpanded(): 'true' | 'false' | undefined {
-    if (isUndefined(this.controls)) return undefined;
-    return this.expanded ? 'true' : 'false';
-  }
+	/**
+	 * The `aria-expanded` attribute value.
+	 */
+	protected isAriaExpanded(): 'true' | 'false' | undefined {
+		if (isUndefined(this.controls)) return undefined;
+		return this.expanded ? 'true' : 'false';
+	}
 
-  /**
-   * The `aria-haspopup` attribute value.
-   */
-  protected hasAriaPopupMenu(): 'true' | undefined {
-    if (isUndefined(this.hasPopup)) return undefined;
-    return this.hasPopup ? 'true' : undefined;
-  }
+	/**
+	 * The `aria-haspopup` attribute value.
+	 */
+	protected hasAriaPopupMenu(): 'true' | undefined {
+		if (isUndefined(this.hasPopup)) return undefined;
+		return this.hasPopup ? 'true' : undefined;
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Methods
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Methods
+	// -------------------------------------------------------------------------------------------
 
-  // Forward click event to button and prevent it from working when disabled.
-  click(): void {
-    if (this.disabled) return;
-    this.rootEl?.click();
-  }
+	// Forward click event to button and prevent it from working when disabled.
+	click(): void {
+		if (this.disabled) return;
+		this.rootEl?.click();
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Events
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Events
+	// -------------------------------------------------------------------------------------------
 
-  protected addDefaultEventListeners(): void {
-    this.disposal.add(
-      listen(this, 'click', this.handleClickCapture.bind(this), {
-        capture: true,
-      }),
-    );
-  }
+	protected addDefaultEventListeners(): void {
+		this.disposal.add(
+			listen(this, 'click', this.handleClickCapture.bind(this), {
+				capture: true
+			})
+		);
+	}
 
-  protected handleClickCapture(event: Event): void | boolean {
-    if (!this.disabled) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    event.stopPropagation();
-    return false;
-  }
+	protected handleClickCapture(event: Event): void | boolean {
+		if (!this.disabled) return;
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		event.stopPropagation();
+		return false;
+	}
 }
