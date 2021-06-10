@@ -1,11 +1,6 @@
-import {
-	FullscreenController,
-	FullscreenHost,
-	ScreenOrientationController
-} from '../../../core';
 import { VdsCustomEvent } from '../../../shared/events';
-import { WebKitPresentationMode } from '../../../ts/media';
-import { Unsubscribe } from '../../../ts/utils';
+import { FullscreenController } from '../../../shared/fullscreen';
+import { ScreenOrientationController } from '../../../shared/screen-orientation';
 import { noop } from '../../../utils/unit';
 import { VideoPresentationController } from '../presentation/VideoPresentationController';
 
@@ -16,21 +11,25 @@ import { VideoPresentationController } from '../presentation/VideoPresentationCo
  *
  * @example
  * ```ts
- * class MyElement extends LitElement implements
- *   FullscreenControllerHost,
- *   PresentationControllerHost,
- *   ScreenOrientationControllerHost {
+ * import {
+ *   VdsElement,
+ *   FullscreenController,
+ *   ScreenOrientationController,
+ *   VideoPresentationController
+ * } from '@vidstack/elements';
+ *
+ * class MyElement extends VdsElement {
  *   fullscreenController = new VideoFullscreenController(
  *     this,
  *     new ScreenOrientationController(this),
- *     new PresentationController(this),
+ *     new VideoPresentationController(this),
  *   );
  *
- *   get videoElement(): HTMLVideoElement | undefined {
+ *   get videoElement() {
  *     return this.videoEl;
  *   }
  *
- *   requestFullscreen(): Promise<void> {
+ *   async requestFullscreen() {
  *     if (this.fullscreenController.isRequestingNativeFullscreen) {
  *       return super.requestFullscreen();
  *     }
@@ -38,28 +37,38 @@ import { VideoPresentationController } from '../presentation/VideoPresentationCo
  *     return this.fullscreenController.requestFullscreen();
  *   }
  *
- *   exitFullscreen(): Promise<void> {
+ *   async exitFullscreen() {
  *     return this.fullscreenController.exitFullscreen();
  *   }
  * }
  * ```
  */
 export class VideoFullscreenController extends FullscreenController {
-	constructor(
-		protected host: FullscreenHost,
-		protected screenOrientationController: ScreenOrientationController,
-		protected presentationController: VideoPresentationController
-	) {
+	/**
+	 * @param {import('../../../shared/fullscreen').FullscreenHost} host
+	 * @param {ScreenOrientationController} screenOrientationController
+	 * @param {VideoPresentationController} presentationController
+	 */
+	constructor(host, screenOrientationController, presentationController) {
 		super(host, screenOrientationController);
+
+		/**
+		 * @protected
+		 * @readonly
+		 * @type {VideoPresentationController}
+		 */
+		this.presentationController = presentationController;
 	}
 
-	get isFullscreen(): boolean {
+	/** @type {boolean} */
+	get isFullscreen() {
 		return this.isSupportedNatively
 			? this.isNativeFullscreen
 			: this.presentationController.isFullscreenMode;
 	}
 
-	get isSupported(): boolean {
+	/** @type {boolean} */
+	get isSupported() {
 		return this.isSupportedNatively || this.isSupportedOnSafari;
 	}
 
@@ -67,35 +76,55 @@ export class VideoFullscreenController extends FullscreenController {
 	 * Whether a fallback fullscreen API is available on Safari using presentation modes. This
 	 * is only used on iOS where the native fullscreen API is not available.
 	 *
+	 * @type {boolean}
 	 * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
 	 */
-	get isSupportedOnSafari(): boolean {
+	get isSupportedOnSafari() {
 		return this.presentationController.isSupported;
 	}
 
-	protected async makeEnterFullscreenRequest(): Promise<void> {
+	/**
+	 * @protected
+	 * @returns {Promise<void>}
+	 */
+	async makeEnterFullscreenRequest() {
 		return this.isSupportedNatively
 			? super.makeEnterFullscreenRequest()
 			: this.makeFullscreenRequestOnSafari();
 	}
 
-	protected async makeFullscreenRequestOnSafari(): Promise<void> {
+	/**
+	 * @protected
+	 * @returns {Promise<void>}
+	 */
+	async makeFullscreenRequestOnSafari() {
 		return this.presentationController.setPresentationMode('fullscreen');
 	}
 
-	protected async makeExitFullscreenRequest(): Promise<void> {
+	/**
+	 * @protected
+	 * @returns {Promise<void>}
+	 */
+	async makeExitFullscreenRequest() {
 		return this.isSupportedNatively
 			? super.makeExitFullscreenRequest()
 			: this.makeExitFullscreenRequestOnSafari();
 	}
 
-	protected async makeExitFullscreenRequestOnSafari(): Promise<void> {
+	/**
+	 * @protected
+	 * @returns {Promise<void>}
+	 */
+	async makeExitFullscreenRequestOnSafari() {
 		return this.presentationController.setPresentationMode('inline');
 	}
 
-	protected addFullscreenChangeEventListener(
-		handler: (this: HTMLElement, event: Event) => void
-	): Unsubscribe {
+	/**
+	 * @protected
+	 * @param {(this: HTMLElement, event: Event) => void} handler
+	 * @returns {import('../../../shared/types/utils').Unsubscribe}
+	 */
+	addFullscreenChangeEventListener(handler) {
 		if (this.isSupportedNatively) {
 			return super.addFullscreenChangeEventListener(handler);
 		}
@@ -110,15 +139,21 @@ export class VideoFullscreenController extends FullscreenController {
 		return noop;
 	}
 
-	protected handlePresentationModeChange(
-		originalEvent: VdsCustomEvent<WebKitPresentationMode>
-	): void {
+	/**
+	 * @protected
+	 * @param {VdsCustomEvent<import('../../../shared/types/media').WebKitPresentationMode>} originalEvent
+	 * @returns {void}
+	 */
+	handlePresentationModeChange(originalEvent) {
 		this.handleFullscreenChange(originalEvent);
 	}
 
-	protected addFullscreenErrorEventListener(
-		handler: (this: HTMLElement, event: Event) => void
-	): Unsubscribe {
+	/**
+	 * @protected
+	 * @param {(this: HTMLElement, event: Event) => void} handler
+	 * @returns {import('../../../shared/types/utils').Unsubscribe}
+	 */
+	addFullscreenErrorEventListener(handler) {
 		if (!this.isSupportedNatively) return noop;
 		return super.addFullscreenErrorEventListener(handler);
 	}

@@ -1,5 +1,5 @@
 /** Dependencies  */
-import './define';
+import './fake-media-provider/define';
 import '../container/define';
 import '../controller/define';
 
@@ -11,8 +11,10 @@ import {
 	VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME
 } from '../container';
 import { MediaControllerElement } from '../controller';
-import { VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME } from './constants';
-import { FakeMediaProviderElement } from './FakeMediaProviderElement';
+import {
+	FakeMediaProviderElement,
+	VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
+} from './fake-media-provider';
 
 /**
  * @param {import('lit').TemplateResult} [uiSlot]

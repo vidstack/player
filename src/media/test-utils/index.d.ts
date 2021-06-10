@@ -1,4 +1,3 @@
-export * from './constants';
-export * from './FakeMediaProviderElement';
+export * from './fake-media-provider';
 export * from './fixtures';
 export * from './types';

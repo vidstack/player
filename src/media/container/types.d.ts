@@ -1,6 +1,5 @@
 import { FullscreenHost } from '../../shared/fullscreen';
 import { ScreenOrientationHost } from '../../shared/screen-orientation';
-import { MediaUiElement } from '../ui';
 
 export type MediaContainerHost = FullscreenHost &
 	ScreenOrientationHost &
@@ -19,13 +18,6 @@ export interface MediaContainerElementProps {
 	 * @default HTMLDivElement
 	 */
 	readonly mediaContainerElement: HTMLDivElement;
-
-	/**
-	 * The media UI component.
-	 *
-	 * @default MediaUiElement
-	 */
-	readonly mediaUiElement: MediaUiElement;
 
 	/**
 	 * The component's root element.

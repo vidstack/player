@@ -62,27 +62,24 @@ export class FullscreenController extends EventDispatcher {
 	screenOrientationLock;
 
 	/**
-	 * @protected
-	 * @readonly
-	 * @type {import('.').FullscreenHost}
-	 */
-	host;
-
-	/**
-	 * @protected
-	 * @readonly
-	 * @type {ScreenOrientationController}
-	 */
-	screenOrientationController;
-
-	/**
 	 * @param {import('./types').FullscreenHost} host
 	 * @param {ScreenOrientationController} screenOrientationController
 	 */
 	constructor(host, screenOrientationController) {
 		super();
 
+		/**
+		 * @protected
+		 * @readonly
+		 * @type {import('.').FullscreenHost}
+		 */
 		this.host = host;
+
+		/**
+		 * @protected
+		 * @readonly
+		 * @type {ScreenOrientationController}
+		 */
 		this.screenOrientationController = screenOrientationController;
 
 		host.addController({
@@ -141,6 +138,7 @@ export class FullscreenController extends EventDispatcher {
 	/**
 	 * Dispose of any event listeners and exit fullscreen (if active).
 	 *
+	 * @protected
 	 * @returns {Promise<void>}
 	 */
 	async destroy() {
@@ -264,7 +262,10 @@ export class FullscreenController extends EventDispatcher {
 	 * @returns {Promise<void>}
 	 */
 	async lockScreenOrientation() {
-		if (!this.shouldOrientScreen()) return;
+		if (isUndefined(this.screenOrientationLock) || !this.shouldOrientScreen()) {
+			return;
+		}
+
 		await this.screenOrientationController.lock(this.screenOrientationLock);
 	}
 

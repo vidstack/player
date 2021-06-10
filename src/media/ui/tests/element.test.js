@@ -1,3 +1,5 @@
+import '../define';
+
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
@@ -5,6 +7,9 @@ import { getSlottedChildren } from '../../../utils/dom';
 import { buildMediaFixture, FakeMediaProviderElement } from '../../test-utils';
 import { VDS_MEDIA_UI_ELEMENT_TAG_NAME } from '../constants';
 import { MediaUiElement } from '../MediaUiElement';
+
+// Why do we need this? `../define ` import at the top of this file is being called correctly.
+window.customElements.define(VDS_MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);
 
 describe(VDS_MEDIA_UI_ELEMENT_TAG_NAME, function () {
 	/**
@@ -24,7 +29,7 @@ describe(VDS_MEDIA_UI_ELEMENT_TAG_NAME, function () {
 		return { provider, ui };
 	}
 
-	it('should render DOM correctly', async function () {
+	it.only('should render DOM correctly', async function () {
 		const { ui } = await buildFixture();
 		expect(ui).dom.to.equal(`
       <vds-media-ui>

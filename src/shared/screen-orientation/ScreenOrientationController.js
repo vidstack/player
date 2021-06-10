@@ -135,6 +135,7 @@ export class ScreenOrientationController extends EventDispatcher {
 	/**
 	 * Dispose of any event listeners and unlock screen orientation (if locked).
 	 *
+	 * @protected
 	 * @returns {Promise<void>}
 	 */
 	async destroy() {

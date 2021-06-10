@@ -2,20 +2,26 @@ import Hls from 'hls.js';
 import { property, PropertyValues } from 'lit-element';
 
 import {
-  CanPlay,
-  MediaType,
-  VdsDurationChangeEvent,
-  VdsErrorEvent,
-  VdsMediaTypeChangeEvent,
+	CanPlay,
+	MediaType,
+	VdsDurationChangeEvent,
+	VdsErrorEvent,
+	VdsMediaTypeChangeEvent
 } from '../../core';
 import { VdsCustomEvent } from '../../shared/events';
 import { isNil, isUndefined, noop } from '../../utils/unit';
+import {
+	MediaControlsList,
+	MediaCrossOriginOption,
+	MediaPreloadOption,
+	MediaSrcObject
+} from '../html5';
 import { VideoElement, VideoElementEngine } from '../video';
 import {
-  VdsHlsEngineAttachEvent,
-  VdsHlsEngineBuiltEvent,
-  VdsHlsEngineDetachEvent,
-  VdsHlsEngineNoSupportEvent,
+	VdsHlsEngineAttachEvent,
+	VdsHlsEngineBuiltEvent,
+	VdsHlsEngineDetachEvent,
+	VdsHlsEngineNoSupportEvent
 } from './hls.events';
 import { HlsElementEngine, HlsElementProps } from './hls.types';
 import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
@@ -57,272 +63,312 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  * ```
  */
 export class HlsElement
-  extends VideoElement<HlsElementEngine>
-  implements HlsElementProps {
-  protected _hlsEngine?: HlsElementEngine;
+	extends VideoElement<HlsElementEngine>
+	implements HlsElementProps {
+	autoPiP?: boolean | undefined;
+	disablePiP?: boolean | undefined;
+	poster?: string | undefined;
+	controlsList?: MediaControlsList | undefined;
+	crossOrigin?: MediaCrossOriginOption | undefined;
+	defaultMuted?: boolean | undefined;
+	defaultPlaybackRate?: number | undefined;
+	disableRemotePlayback?: boolean | undefined;
+	error: MediaError | undefined;
+	height?: number | undefined;
+	networkState: number;
+	preload?: MediaPreloadOption | undefined;
+	readyState: number;
+	src: string;
+	srcObject?: MediaSrcObject | undefined;
+	width?: number | undefined;
+	autoplay: boolean;
+	buffered: TimeRanges;
+	canPlay: boolean;
+	canPlayThrough: boolean;
+	canRequestFullscreen: boolean;
+	controls: boolean;
+	currentPoster: string;
+	currentTime: number;
+	duration: number;
+	ended: boolean;
+	fullscreen: boolean;
+	loop: boolean;
+	mediaType: string;
+	muted: boolean;
+	paused: boolean;
+	played: TimeRanges;
+	playing: boolean;
+	playsinline: boolean;
+	seekable: TimeRanges;
+	seeking: boolean;
+	started: boolean;
+	viewType: string;
+	volume: number;
+	waiting: boolean;
+	protected _hlsEngine?: HlsElementEngine;
 
-  protected _isHlsEngineAttached = false;
+	protected _isHlsEngineAttached = false;
 
-  connectedCallback(): void {
-    super.connectedCallback();
-    this.handleMediaSrcChange();
-  }
+	connectedCallback(): void {
+		super.connectedCallback();
+		this.handleMediaSrcChange();
+	}
 
-  async firstUpdated(changedProps: PropertyValues): Promise<void> {
-    super.firstUpdated(changedProps);
-    this.handleMediaSrcChange();
-  }
+	firstUpdated(changedProps: PropertyValues): void {
+		super.firstUpdated(changedProps);
+		this.handleMediaSrcChange();
+	}
 
-  disconnectedCallback(): void {
-    this.destroyHlsEngine();
-    super.disconnectedCallback();
-  }
+	disconnectedCallback(): void {
+		this.destroyHlsEngine();
+		super.disconnectedCallback();
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Properties
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Properties
+	// -------------------------------------------------------------------------------------------
 
-  @property({ attribute: 'hls-config', type: Object })
-  hlsConfig?: Partial<Hls.Config>;
+	@property({ attribute: 'hls-config', type: Object })
+	hlsConfig?: Partial<Hls.Config>;
 
-  /**
-   * The `hls.js` instance.
-   */
-  get engine(): HlsElementEngine {
-    return this._hlsEngine;
-  }
+	/**
+	 * The `hls.js` instance.
+	 */
+	get engine(): HlsElementEngine {
+		return this._hlsEngine;
+	}
 
-  get videoEngine(): VideoElementEngine {
-    return this.mediaEl;
-  }
+	get videoEngine(): VideoElementEngine {
+		return this.mediaEl;
+	}
 
-  get isHlsEngineAttached(): boolean {
-    return this._isHlsEngineAttached;
-  }
+	get isHlsEngineAttached(): boolean {
+		return this._isHlsEngineAttached;
+	}
 
-  get currentSrc(): string {
-    return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport
-      ? this.src
-      : this.videoEngine?.currentSrc ?? '';
-  }
+	get currentSrc(): string {
+		return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport
+			? this.src
+			: this.videoEngine?.currentSrc ?? '';
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Methods
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Methods
+	// -------------------------------------------------------------------------------------------
 
-  canPlayType(type: string): CanPlay {
-    if (HLS_TYPES.has(type)) {
-      return Hls.isSupported() ? CanPlay.Probably : CanPlay.Maybe;
-    }
+	canPlayType(type: string): CanPlay {
+		if (HLS_TYPES.has(type)) {
+			return Hls.isSupported() ? CanPlay.Probably : CanPlay.Maybe;
+		}
 
-    return super.canPlayType(type);
-  }
+		return super.canPlayType(type);
+	}
 
-  get isCurrentlyHls(): boolean {
-    return HLS_EXTENSIONS.test(this.src);
-  }
+	get isCurrentlyHls(): boolean {
+		return HLS_EXTENSIONS.test(this.src);
+	}
 
-  get hasNativeHlsSupport(): boolean {
-    /**
-     * We need to call this directly on `HTMLMediaElement`, calling `this.shouldPlayType(...)`
-     * won't work here because it'll use the `CanPlayType` result from this provider override
-     * which will incorrectly indicate that HLS can natively played due to `hls.js` support.
-     */
-    const canPlayType = super.canPlayType('application/vnd.apple.mpegurl');
-    return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
-  }
+	get hasNativeHlsSupport(): boolean {
+		/**
+		 * We need to call this directly on `HTMLMediaElement`, calling `this.shouldPlayType(...)`
+		 * won't work here because it'll use the `CanPlayType` result from this provider override
+		 * which will incorrectly indicate that HLS can natively played due to `hls.js` support.
+		 */
+		const canPlayType = super.canPlayType('application/vnd.apple.mpegurl');
+		return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
+	}
 
-  get shouldUseNativeHlsSupport(): boolean {
-    if (Hls.isSupported()) return false;
-    return this.hasNativeHlsSupport;
-  }
+	get shouldUseNativeHlsSupport(): boolean {
+		if (Hls.isSupported()) return false;
+		return this.hasNativeHlsSupport;
+	}
 
-  protected shouldSetVideoSrcAttr(): boolean {
-    return this.shouldUseNativeHlsSupport || !this.isCurrentlyHls;
-  }
+	protected shouldSetVideoSrcAttr(): boolean {
+		return this.shouldUseNativeHlsSupport || !this.isCurrentlyHls;
+	}
 
-  protected destroyHlsEngine(): void {
-    this.engine?.destroy();
-    this._prevHlsSrc = '';
-    this._isHlsEngineAttached = false;
-    this.context.canPlay = false;
-  }
+	protected destroyHlsEngine(): void {
+		this.engine?.destroy();
+		this._prevHlsSrc = '';
+		this._isHlsEngineAttached = false;
+		this.context.canPlay = false;
+	}
 
-  protected _prevHlsSrc = '';
+	protected _prevHlsSrc = '';
 
-  protected loadSrcOnHlsEngine(): void {
-    if (
-      isNil(this.engine) ||
-      !this.isCurrentlyHls ||
-      this.shouldUseNativeHlsSupport ||
-      this.src === this._prevHlsSrc
-    )
-      return;
+	protected loadSrcOnHlsEngine(): void {
+		if (
+			isNil(this.engine) ||
+			!this.isCurrentlyHls ||
+			this.shouldUseNativeHlsSupport ||
+			this.src === this._prevHlsSrc
+		)
+			return;
 
-    this.engine.loadSource(this.src);
-    this._prevHlsSrc = this.src;
-  }
+		this.engine.loadSource(this.src);
+		this._prevHlsSrc = this.src;
+	}
 
-  protected buildHlsEngine(): void {
-    if (isNil(this.videoEngine) || !isUndefined(this.engine)) return;
+	protected buildHlsEngine(): void {
+		if (isNil(this.videoEngine) || !isUndefined(this.engine)) return;
 
-    if (!Hls.isSupported()) {
-      this.dispatchEvent(new VdsHlsEngineNoSupportEvent());
-      return;
-    }
+		if (!Hls.isSupported()) {
+			this.dispatchEvent(new VdsHlsEngineNoSupportEvent());
+			return;
+		}
 
-    this._hlsEngine = new Hls(this.hlsConfig ?? {});
-    this.dispatchEvent(new VdsHlsEngineBuiltEvent({ detail: this.engine }));
-    this.listenToHlsEngine();
-  }
+		this._hlsEngine = new Hls(this.hlsConfig ?? {});
+		this.dispatchEvent(new VdsHlsEngineBuiltEvent({ detail: this.engine }));
+		this.listenToHlsEngine();
+	}
 
-  // Let `Html5MediaElement` know we're taking over ready events.
-  protected willAnotherEngineAttach(): boolean {
-    return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport;
-  }
+	// Let `Html5MediaElement` know we're taking over ready events.
+	protected willAnotherEngineAttach(): boolean {
+		return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport;
+	}
 
-  protected attachHlsEngine(): void {
-    if (
-      this.isHlsEngineAttached ||
-      isUndefined(this.engine) ||
-      isNil(this.videoEngine)
-    )
-      return;
+	protected attachHlsEngine(): void {
+		if (
+			this.isHlsEngineAttached ||
+			isUndefined(this.engine) ||
+			isNil(this.videoEngine)
+		)
+			return;
 
-    this.engine.attachMedia(this.videoEngine);
-    this._isHlsEngineAttached = true;
-    this.dispatchEvent(new VdsHlsEngineAttachEvent({ detail: this.engine }));
-  }
+		this.engine.attachMedia(this.videoEngine);
+		this._isHlsEngineAttached = true;
+		this.dispatchEvent(new VdsHlsEngineAttachEvent({ detail: this.engine }));
+	}
 
-  protected detachHlsEngine(): void {
-    if (!this.isHlsEngineAttached) return;
-    this.engine?.detachMedia();
-    this._isHlsEngineAttached = false;
-    this._prevHlsSrc = '';
-    this.dispatchEvent(new VdsHlsEngineDetachEvent({ detail: this.engine }));
-  }
+	protected detachHlsEngine(): void {
+		if (!this.isHlsEngineAttached) return;
+		this.engine?.detachMedia();
+		this._isHlsEngineAttached = false;
+		this._prevHlsSrc = '';
+		this.dispatchEvent(new VdsHlsEngineDetachEvent({ detail: this.engine }));
+	}
 
-  protected getMediaType(): MediaType {
-    if (this.isCurrentlyHls) {
-      return MediaType.Video;
-    }
+	protected getMediaType(): MediaType {
+		if (this.isCurrentlyHls) {
+			return MediaType.Video;
+		}
 
-    return super.getMediaType();
-  }
+		return super.getMediaType();
+	}
 
-  // -------------------------------------------------------------------------------------------
-  // Events
-  // -------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+	// Events
+	// -------------------------------------------------------------------------------------------
 
-  protected handleMediaSrcChange(): void {
-    super.handleMediaSrcChange();
+	protected handleMediaSrcChange(): void {
+		super.handleMediaSrcChange();
 
-    this.context.canPlay = false;
+		this.context.canPlay = false;
 
-    if (!this.isCurrentlyHls) {
-      this.detachHlsEngine();
-      return;
-    }
+		if (!this.isCurrentlyHls) {
+			this.detachHlsEngine();
+			return;
+		}
 
-    // Need to wait for `src` attribute on `<video>` to clear if last `src` was not using
-    // HLS engine.
-    window.requestAnimationFrame(async () => {
-      await this.requestUpdate();
+		// Need to wait for `src` attribute on `<video>` to clear if last `src` was not using
+		// HLS engine.
+		window.requestAnimationFrame(async () => {
+			await this.requestUpdate();
 
-      if (isUndefined(this.engine)) {
-        this.buildHlsEngine();
-      }
+			if (isUndefined(this.engine)) {
+				this.buildHlsEngine();
+			}
 
-      this.attachHlsEngine();
-      this.loadSrcOnHlsEngine();
-    });
-  }
+			this.attachHlsEngine();
+			this.loadSrcOnHlsEngine();
+		});
+	}
 
-  protected listenToHlsEngine(): void {
-    if (isUndefined(this.engine)) return;
-    this.engine.on(
-      Hls.Events.LEVEL_LOADED,
-      this.handleHlsLevelLoaded.bind(this),
-    );
-    this.engine.on(Hls.Events.ERROR, this.handleHlsError.bind(this));
-  }
+	protected listenToHlsEngine(): void {
+		if (isUndefined(this.engine)) return;
+		this.engine.on(
+			Hls.Events.LEVEL_LOADED,
+			this.handleHlsLevelLoaded.bind(this)
+		);
+		this.engine.on(Hls.Events.ERROR, this.handleHlsError.bind(this));
+	}
 
-  protected handleHlsError(eventType: string, data: Hls.errorData): void {
-    this.context.error = data;
+	protected handleHlsError(eventType: string, data: Hls.errorData): void {
+		this.context.error = data;
 
-    if (data.fatal) {
-      switch (data.type) {
-        case Hls.ErrorTypes.NETWORK_ERROR:
-          this.handleHlsNetworkError(eventType, data);
-          break;
-        case Hls.ErrorTypes.MEDIA_ERROR:
-          this.handleHlsMediaError(eventType, data);
-          break;
-        default:
-          this.handleHlsIrrecoverableError(eventType, data);
-          break;
-      }
-    }
+		if (data.fatal) {
+			switch (data.type) {
+				case Hls.ErrorTypes.NETWORK_ERROR:
+					this.handleHlsNetworkError(eventType, data);
+					break;
+				case Hls.ErrorTypes.MEDIA_ERROR:
+					this.handleHlsMediaError(eventType, data);
+					break;
+				default:
+					this.handleHlsIrrecoverableError(eventType, data);
+					break;
+			}
+		}
 
-    this.dispatchEvent(
-      new VdsErrorEvent({
-        originalEvent: new VdsCustomEvent(eventType, { detail: data }),
-      }),
-    );
-  }
+		this.dispatchEvent(
+			new VdsErrorEvent({
+				originalEvent: new VdsCustomEvent(eventType, { detail: data })
+			})
+		);
+	}
 
-  protected handleHlsNetworkError(
-    eventType: string,
-    data: Hls.errorData,
-  ): void {
-    noop(eventType, data);
-    this.engine?.startLoad();
-  }
+	protected handleHlsNetworkError(
+		eventType: string,
+		data: Hls.errorData
+	): void {
+		noop(eventType, data);
+		this.engine?.startLoad();
+	}
 
-  protected handleHlsMediaError(eventType: string, data: Hls.errorData): void {
-    noop(eventType, data);
-    this.engine?.recoverMediaError();
-  }
+	protected handleHlsMediaError(eventType: string, data: Hls.errorData): void {
+		noop(eventType, data);
+		this.engine?.recoverMediaError();
+	}
 
-  protected handleHlsIrrecoverableError(
-    eventType: string,
-    data: Hls.errorData,
-  ): void {
-    noop(eventType, data);
-    this.destroyHlsEngine();
-  }
+	protected handleHlsIrrecoverableError(
+		eventType: string,
+		data: Hls.errorData
+	): void {
+		noop(eventType, data);
+		this.destroyHlsEngine();
+	}
 
-  protected handleHlsLevelLoaded(
-    eventType: string,
-    data: Hls.levelLoadedData,
-  ): void {
-    if (this.context.canPlay) return;
-    this.handleHlsMediaReady(eventType, data);
-  }
+	protected handleHlsLevelLoaded(
+		eventType: string,
+		data: Hls.levelLoadedData
+	): void {
+		if (this.context.canPlay) return;
+		this.handleHlsMediaReady(eventType, data);
+	}
 
-  protected handleHlsMediaReady(
-    eventType: string,
-    data: Hls.levelLoadedData,
-  ): void {
-    const { live, totalduration: duration } = data.details;
+	protected handleHlsMediaReady(
+		eventType: string,
+		data: Hls.levelLoadedData
+	): void {
+		const { live, totalduration: duration } = data.details;
 
-    const originalEvent = new VdsCustomEvent(eventType, { detail: data });
+		const originalEvent = new VdsCustomEvent(eventType, { detail: data });
 
-    const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
-    if (this.context.mediaType !== mediaType) {
-      this.context.mediaType = mediaType;
-      this.dispatchEvent(
-        new VdsMediaTypeChangeEvent({ detail: mediaType, originalEvent }),
-      );
-    }
+		const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
+		if (this.context.mediaType !== mediaType) {
+			this.context.mediaType = mediaType;
+			this.dispatchEvent(
+				new VdsMediaTypeChangeEvent({ detail: mediaType, originalEvent })
+			);
+		}
 
-    if (this.context.duration !== duration) {
-      this.context.duration = duration;
-      this.dispatchEvent(
-        new VdsDurationChangeEvent({ detail: duration, originalEvent }),
-      );
-    }
+		if (this.context.duration !== duration) {
+			this.context.duration = duration;
+			this.dispatchEvent(
+				new VdsDurationChangeEvent({ detail: duration, originalEvent })
+			);
+		}
 
-    this.handleMediaReady(originalEvent);
-  }
+		this.handleMediaReady(originalEvent);
+	}
 }

@@ -7,7 +7,7 @@ import {
 	VdsPlayEvent,
 	VdsTimeUpdateEvent,
 	VdsVolumeChangeEvent
-} from '..';
+} from '../..';
 
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can

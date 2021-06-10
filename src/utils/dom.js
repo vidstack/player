@@ -45,7 +45,8 @@ export const safelyDefineCustomElement = (
 	constructor,
 	isClient = IS_CLIENT
 ) => {
-	const isElementRegistered = isClient && window.customElements.get(name);
+	const isElementRegistered =
+		isClient && !isUndefined(window.customElements.get(name));
 	if (!isClient || isElementRegistered) return;
 	window.customElements.define(name, constructor);
 };

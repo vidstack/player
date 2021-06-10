@@ -25,7 +25,7 @@ import { mediaUiElementStyles } from './css';
  * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
  */
 export class MediaUiElement extends VdsElement {
-	/** @type {import('lit').CSSResultArray} */
+	/** @type {import('lit').CSSResultGroup} */
 	static get styles() {
 		return [mediaUiElementStyles];
 	}

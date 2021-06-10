@@ -1,37 +1,33 @@
-import {
-	CSSResultArray,
-	html,
-	property,
-	PropertyValues,
-	TemplateResult
-} from 'lit-element';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { html } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import { ref } from 'lit/directives/ref.js';
 
 import {
 	MediaType,
 	VdsMediaTypeChangeEvent,
 	VdsViewTypeChangeEvent,
 	ViewType
-} from '../../core';
+} from '../../media';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty';
 import { ifNumber } from '../../shared/directives/if-number';
-import { Html5MediaElement, Html5MediaElementEngine } from '../html5';
+import { Html5MediaElement } from '../html5';
+import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './constants';
+import { videoElementStyles } from './css';
 import { VideoFullscreenController } from './fullscreen';
-import {
-	VideoPresentationController,
-	VideoPresentationControllerHost
-} from './presentation';
-import { videoElementStyles } from './video.css';
-import { VideoElementProps } from './video.types';
-import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
+import { VideoPresentationController } from './presentation';
+
+/** @typedef {import('./types').VideoHost} IVideoHost */
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
  *
+ * @template {import('./types').VideoElementEngine} EngineType
+ * @extends Html5MediaElement<EngineType>
+ * @implements {IVideoHost}
+ *
  * @tagname vds-video
  *
  * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
- * @slot ui - Used to pass in `<vds-ui>` to customize the player user interface.
  *
  * @csspart root - The component's root element that wraps the video (`<div>`).
  * @csspart video - The video element (`<video>`).
@@ -45,29 +41,63 @@ import { AUDIO_EXTENSIONS, VIDEO_EXTENSIONS } from './video.utils';
  *
  * @example
  * ```html
- *  <vds-video poster="/media/poster.png">
- *    <source src="/media/video.mp4" type="video/mp4" />
- *    <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
- *    <vds-ui slot="ui">
- *      <!-- ... -->
- *    </vds-ui>
- *  </vds-video>
+ * <vds-video poster="/media/poster.png">
+ *   <source src="/media/video.mp4" type="video/mp4" />
+ *   <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
+ * </vds-video>
  * ```
  */
-export class VideoElement<EngineType = Html5MediaElementEngine>
-	extends Html5MediaElement<EngineType>
-	implements VideoElementProps, VideoPresentationControllerHost {
-	protected mediaEl?: HTMLVideoElement;
+export class VideoElement extends Html5MediaElement {
+	/** @type {HTMLVideoElement} */
+	get mediaElement() {
+		return this.mediaElement;
+	}
 
-	static get styles(): CSSResultArray {
+	/** @type {import('lit').CSSResultGroup} */
+	static get styles() {
 		return [videoElementStyles];
 	}
 
-	static get parts(): string[] {
+	/** @type {string[]} */
+	static get parts() {
 		return ['root', 'video'];
 	}
 
-	connectedCallback(): void {
+	/** @type {import('lit').PropertyDeclarations} */
+	static get properties() {
+		return {
+			poster: {},
+			autoPiP: { type: Boolean, attribute: 'autopictureinpicture' },
+			disablePiP: { type: Boolean, attribute: 'disablepictureinpicture' }
+		};
+	}
+
+	/** @type {string} */
+	get poster() {
+		return this.context.currentPoster;
+	}
+
+	set poster(newPoster) {
+		this.connectedQueue.queue('currentPoster', () => {
+			this.context.currentPoster = newPoster;
+			this.requestUpdate();
+		});
+	}
+
+	constructor() {
+		super();
+
+		/** @type {boolean | undefined} */
+		this.autoPiP;
+		/** @type {boolean | undefined} */
+		this.disablePiP;
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// Lifecycle
+	// -------------------------------------------------------------------------------------------
+
+	connectedCallback() {
 		super.connectedCallback();
 
 		this.context.viewType = ViewType.Video;
@@ -78,16 +108,12 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
 		);
 	}
 
-	firstUpdated(changedProps: PropertyValues): void {
-		this.mediaEl = this.shadowRoot?.querySelector('video') as HTMLVideoElement;
-		super.firstUpdated(changedProps);
-	}
-
 	// -------------------------------------------------------------------------------------------
 	// Render
 	// -------------------------------------------------------------------------------------------
 
-	render(): TemplateResult {
+	/** @returns {import('lit').TemplateResult} */
+	render() {
 		return html`
 			<div
 				id="root"
@@ -95,41 +121,56 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
 				part="${this.getRootPartAttr()}"
 			>
 				${this.renderVideo()}
-				<slot name="ui" @slotchange="${this.handleUiSlotChange}"></slot>
 			</div>
 		`;
 	}
 
 	/**
 	 * Override this to modify root provider CSS Classes.
+	 *
+	 * @protected
+	 * @returns {string}
 	 */
-	protected getRootClassAttr(): string {
+	getRootClassAttr() {
 		return '';
 	}
 
 	/**
 	 * Override this to modify root provider CSS Parts.
+	 *
+	 * @protected
+	 * @returns {string}
 	 */
-	protected getRootPartAttr(): string {
+	getRootPartAttr() {
 		return 'root';
 	}
 
 	/**
 	 * Override this to modify video CSS Parts.
+	 *
+	 * @protected
+	 * @returns {string}
 	 */
-	protected getVideoPartAttr(): string {
+	getVideoPartAttr() {
 		return 'video';
 	}
 
 	/**
 	 * Can be used by attaching engine such as `hls.js` to prevent src attr being set on
 	 * `<video>` element.
+	 *
+	 * @protected
+	 * @returns {boolean}
 	 */
-	protected shouldSetVideoSrcAttr(): boolean {
+	shouldSetVideoSrcAttr() {
 		return true;
 	}
 
-	protected renderVideo(): TemplateResult {
+	/**
+	 * @protected
+	 * @returns {import('lit').TemplateResult}
+	 */
+	renderVideo() {
 		return html`
 			<video
 				part="${this.getVideoPartAttr()}"
@@ -149,6 +190,7 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
 				?disableremoteplayback="${this.disableRemotePlayback}"
 				.defaultMuted="${this.defaultMuted ?? this.muted}"
 				.defaultPlaybackRate="${this.defaultPlaybackRate ?? 1}"
+				${ref(this.mediaRef)}
 			>
 				${this.renderMediaChildren()}
 			</video>
@@ -159,7 +201,12 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
 	// Events
 	// -------------------------------------------------------------------------------------------
 
-	protected handleLoadedMetadata(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handleLoadedMetadata(originalEvent) {
 		this.context.mediaType = this.getMediaType();
 		this.dispatchEvent(
 			new VdsMediaTypeChangeEvent({
@@ -171,40 +218,15 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
 		super.handleLoadedMetadata(originalEvent);
 	}
 
-	/**
-	 * Override to listen to slot changes.
-	 */
-	protected handleUiSlotChange(): void {
-		// no-op
-	}
-
-	// -------------------------------------------------------------------------------------------
-	// Properties
-	// -------------------------------------------------------------------------------------------
-
-	@property()
-	get poster(): string {
-		return this.context.currentPoster;
-	}
-
-	set poster(newPoster: string) {
-		this.connectedQueue.queue('currentPoster', () => {
-			this.context.currentPoster = newPoster;
-			this.requestUpdate();
-		});
-	}
-
-	@property({ type: Boolean, attribute: 'autopictureinpicture' })
-	autoPiP?: boolean;
-
-	@property({ type: Boolean, attribute: 'disablepictureinpicture' })
-	disablePiP?: boolean;
-
 	// -------------------------------------------------------------------------------------------
 	// Methods
 	// -------------------------------------------------------------------------------------------
 
-	protected getMediaType(): MediaType {
+	/**
+	 * @protected
+	 * @returns {MediaType}
+	 */
+	getMediaType() {
 		if (AUDIO_EXTENSIONS.test(this.currentSrc)) {
 			return MediaType.Audio;
 		}
@@ -220,8 +242,8 @@ export class VideoElement<EngineType = Html5MediaElementEngine>
 	// Fullscreen
 	// -------------------------------------------------------------------------------------------
 
-	get videoElement(): HTMLVideoElement | undefined {
-		return this.mediaEl;
+	get videoElement() {
+		return /** @type {HTMLVideoElement} */ (this.mediaRef.value);
 	}
 
 	presentationController = new VideoPresentationController(this);

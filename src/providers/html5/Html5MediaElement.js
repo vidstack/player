@@ -43,7 +43,8 @@ import { MediaReadyState } from './MediaReadyState';
  * used internally by the `vds-audio` and `vds-video` components. This provider only contains
  * glue code so don't bother using it on it's own.
  *
- * @extends MediaProviderElement<import('./types').Html5MediaElementEngine>
+ * @template {import('./types').Html5MediaElementEngine} EngineType
+ * @extends MediaProviderElement<EngineType>
  * @implements {IHtml5MediaHost}
  *
  * @slot Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
@@ -55,6 +56,7 @@ export class Html5MediaElement extends MediaProviderElement {
 			_src: { state: true },
 			height: { type: Number },
 			controlsList: {},
+			crossOrigin: {},
 			defaultMuted: { type: Boolean },
 			defaultPlaybackRate: { type: Number },
 			disableRemotePlayback: { type: Boolean },
@@ -84,6 +86,8 @@ export class Html5MediaElement extends MediaProviderElement {
 		this.height;
 		/** @type {import('./types').MediaControlsList} */
 		this.controlsList;
+		/** @type {import('./types').MediaCrossOriginOption} */
+		this.crossOrigin;
 		/** @type {boolean | undefined} */
 		this.defaultMuted;
 		/** @type {number | undefined} */

@@ -1,26 +1,24 @@
-import { PropertyValues } from 'lit-element';
-
 import {
 	DisposalBin,
+	EventDispatcher,
 	listen,
-	redispatchNativeEvent,
-	WithEvents
+	redispatchNativeEvent
 } from '../../../shared/events';
-import { WebKitPresentationMode } from '../../../ts/media';
-import { Unsubscribe } from '../../../ts/utils';
 import { IS_IOS } from '../../../utils/support';
 import { isFunction, isNil, noop } from '../../../utils/unit';
-import { VideoPresentationControllerEvents } from './VideoPresentationControllerEvents';
-import { VideoPresentationControllerHost } from './VideoPresentationControllerHost';
 
 /**
  * Contains the logic for handling presentation modes on Safari. This class is used by
  * the `VideoFullscreenController` as a fallback when the native Fullscreen API is not
  * available (ie: iOS Safari).
  *
+ * @extends EventDispatcher<import('./types').VideoPresentationControllerEvents>
+ *
  * @example
  * ```ts
- * class MyElement extends LitElement implements PresentationControllerHost {
+ * import { VdsElement } from '@vidstack/elements';
+ *
+ * class MyElement extends VdsElement {
  *   presentationController = new PresentationController(this);
  *
  *   get videoElement(): HTMLVideoElement | undefined {
@@ -29,65 +27,84 @@ import { VideoPresentationControllerHost } from './VideoPresentationControllerHo
  * }
  * ```
  */
-export class VideoPresentationController extends WithEvents<VideoPresentationControllerEvents>(
-	class {}
-) {
-	protected disposal = new DisposalBin();
+export class VideoPresentationController extends EventDispatcher {
+	/**
+	 * @protected
+	 * @readonly
+	 */
+	disposal = new DisposalBin();
 
-	constructor(protected host: VideoPresentationControllerHost) {
+	/**
+	 * @param {import('./types').VideoPresentationControllerHost} host
+	 */
+	constructor(host) {
 		super();
 
-		const firstUpdated = (host as any).firstUpdated;
-		(host as any).firstUpdated = (changedProperties: PropertyValues) => {
+		/**
+		 * @type {import('./types').VideoPresentationControllerHost}
+		 * @protected
+		 * @readonly
+		 */
+		this.host = host;
+
+		const firstUpdated = /** @type {any} */ (host).firstUpdated;
+		/** @type {any} */ (host).firstUpdated = (changedProperties) => {
 			firstUpdated?.call(host, changedProperties);
 			this.disposal.add(this.addPresentationModeChangeEventListener());
 		};
 
-		const disconnectedCallback = host.disconnectedCallback;
-		host.disconnectedCallback = async () => {
-			await this.destroy();
-			disconnectedCallback?.call(host);
-		};
+		host.addController({
+			hostDisconnected: async () => {
+				await this.destroy();
+			}
+		});
 	}
 
 	/**
 	 * The current presentation mode, possible values include `inline`, `picture-in-picture` and
 	 * `fullscreen`. Only available in Safari.
 	 *
+	 * @type {import('../../../shared/types/media').WebKitPresentationMode | undefined}
 	 * @default undefined
 	 * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
 	 */
-	get presentationMode(): WebKitPresentationMode | undefined {
+	get presentationMode() {
 		return this.host.videoElement?.webkitPresentationMode;
 	}
 
 	/**
+	 * @type {boolean}
 	 * Whether the current `presentationMode` is `inline`.
 	 */
-	get isInlineMode(): boolean {
+	get isInlineMode() {
 		return this.presentationMode === 'inline';
 	}
 
 	/**
 	 * Whether the current `presentationMode` is `picture-in-picture`.
+	 *
+	 * @type {boolean}
 	 */
-	get isPictureInPictureMode(): boolean {
+	get isPictureInPictureMode() {
 		return this.presentationMode === 'inline';
 	}
 
 	/**
 	 * Whether the current `presentationMode` is `fullscreen`.
+	 *
+	 * @type {boolean}
 	 */
-	get isFullscreenMode(): boolean {
+	get isFullscreenMode() {
 		return this.presentationMode === 'fullscreen';
 	}
 
 	/**
 	 * Whether the presentation mode API is available.
 	 *
+	 * @type {boolean}
 	 * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1628805-webkitsupportsfullscreen
 	 */
-	get isSupported(): boolean {
+	get isSupported() {
 		return (
 			IS_IOS &&
 			isFunction(this.host.videoElement?.webkitSetPresentationMode) &&
@@ -95,17 +112,29 @@ export class VideoPresentationController extends WithEvents<VideoPresentationCon
 		);
 	}
 
-	setPresentationMode(mode: WebKitPresentationMode): void {
+	/**
+	 * @param {import('../../../shared/types/media').WebKitPresentationMode} mode
+	 * @returns {void}
+	 */
+	setPresentationMode(mode) {
 		this.host.videoElement?.webkitSetPresentationMode?.(mode);
 	}
 
-	destroy(): void {
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	destroy() {
 		this.setPresentationMode('inline');
 		this.disposal.empty();
 		super.destroy();
 	}
 
-	protected addPresentationModeChangeEventListener(): Unsubscribe {
+	/**
+	 * @protected
+	 * @returns {import('../../../shared/types/utils').Unsubscribe}
+	 */
+	addPresentationModeChangeEventListener() {
 		if (!this.isSupported || isNil(this.host.videoElement)) return noop;
 		return listen(
 			this.host.videoElement,
@@ -114,7 +143,12 @@ export class VideoPresentationController extends WithEvents<VideoPresentationCon
 		);
 	}
 
-	protected handlePresentationModeChange(originalEvent: Event): void {
+	/**
+	 * @protected
+	 * @param {Event} originalEvent
+	 * @returns {void}
+	 */
+	handlePresentationModeChange(originalEvent) {
 		redispatchNativeEvent(this.host, originalEvent);
 		this.dispatchEvent('presentation-mode-change', {
 			detail: this.presentationMode,

@@ -28,13 +28,13 @@ export const mediaContainerElementStyles = css`
 		z-index: 0;
 	}
 
-	#media-ui {
+	::slotted(vds-media-ui) {
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		/* Position above media provider. */
+		/* Position above media container. */
 		z-index: 1;
 	}
 `;

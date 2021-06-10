@@ -52,6 +52,7 @@ export class EventDispatcher {
 	}
 
 	/**
+	 * @protected
 	 * @returns {void}
 	 */
 	destroy() {

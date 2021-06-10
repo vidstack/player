@@ -1,6 +1,3 @@
-// ** Dependencies **
-import '../ui/define';
-
 import clsx from 'clsx';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
@@ -13,7 +10,6 @@ import { getSlottedChildren } from '../../utils/dom';
 import { isNil, isString, isUndefined } from '../../utils/unit';
 import { mediaContext } from '../media.context';
 import { MediaProviderElement } from '../provider';
-import { MediaUiElement } from '../ui';
 import { mediaContainerElementStyles } from './css';
 import { VdsMediaContainerConnectEvent } from './events';
 
@@ -31,8 +27,6 @@ import { VdsMediaContainerConnectEvent } from './events';
  *
  * @csspart root - The component's root element (`<div>`).
  * @csspart media - The media container element (`<div>`).
- * @csspart ui - The media UI component (`<vds-media-ui>`).
- * @csspart ui-* - All media UI components parts re-exported with the `ui` prefix such as `ui-root`.
  *
  * @example
  * ```html
@@ -46,35 +40,22 @@ import { VdsMediaContainerConnectEvent } from './events';
  *       <!-- ... -->
  *     </vds-video>
  *
- *     <!-- UI components here. -->
+ *     <vds-media-ui>
+ *       <!-- UI components here. -->
+ *     </vds-media-ui>
  *   </vds-media-container>
  * </vds-media-controller>
  * ```
- *
- * @example
- * ```css
- * vds-media-container::part(ui-root) {
- *   opacity: 1;
- *   visibility: visible;
- *   transition: opacity 0.3s ease-in;
- * }
- *
- * vds-media-container::part(ui-root-hidden) {
- *   opacity: 0;
- *   visibility: hidden;
- * }
- * ```
  */
 export class MediaContainerElement extends VdsElement {
-	/** @type {import('lit').CSSResultArray} */
+	/** @type {import('lit').CSSResultGroup} */
 	static get styles() {
 		return [mediaContainerElementStyles];
 	}
 
 	/** @type {string[]} */
 	static get parts() {
-		const uiExportParts = MediaUiElement.parts.map((part) => `ui-${part}`);
-		return ['root', 'media', 'ui', ...uiExportParts];
+		return ['root', 'media'];
 	}
 
 	/** @type {import('lit').PropertyDeclarations} */
@@ -175,7 +156,17 @@ export class MediaContainerElement extends VdsElement {
 	 * @returns {import('lit').TemplateResult}
 	 */
 	renderRootChildren() {
-		return html`${this.renderMedia()}${this.renderUI()}`;
+		return html`${this.renderMedia()}${this.renderDefaultSlot()}`;
+	}
+
+	/**
+	 * Override this to modify rendering of default slot.
+	 *
+	 * @protected
+	 * @returns {import('lit').TemplateResult}
+	 */
+	renderDefaultSlot() {
+		return html`<slot></slot>`;
 	}
 
 	/**
@@ -331,10 +322,9 @@ export class MediaContainerElement extends VdsElement {
 	 * @returns {void}
 	 */
 	handleMediaSlotChange() {
-		const mediaProvider = /** @type {MediaProviderElement} */ (getSlottedChildren(
-			this,
-			this.getMediaSlotName()
-		)[0]);
+		const mediaProvider = /** @type {MediaProviderElement} */ (
+			getSlottedChildren(this, this.getMediaSlotName())[0]
+		);
 
 		// Not a bulletproof check, but it's a good enough safety-check to warn devs if they pass the
 		// wrong element.
@@ -344,68 +334,6 @@ export class MediaContainerElement extends VdsElement {
 
 		this._mediaProvider = mediaProvider;
 		this._mediaProvider?.addFullscreenController(this.fullscreenController);
-	}
-
-	// -------------------------------------------------------------------------------------------
-	// Render - UI
-	// -------------------------------------------------------------------------------------------
-
-	/**
-	 * @protected
-	 * @readonly
-	 * @type {import('lit/directives/ref').Ref<MediaUiElement>}
-	 */
-	mediaUiRef = createRef();
-
-	get mediaUiElement() {
-		return /** @type {MediaUiElement} */ (this.mediaUiRef.value);
-	}
-
-	/**
-	 * @protected
-	 * @returns {import('lit').TemplateResult}
-	 */
-	renderUI() {
-		return html`
-			<vds-media-ui
-				id="media-ui"
-				part="ui"
-				exportparts="${this.getUIExportPartsAttr()}"
-				${ref(this.mediaUiRef)}
-			>
-				${this.renderUIDefaultSlot()}
-			</vds-media-ui>
-		`;
-	}
-
-	/**
-	 * Override this to modify UI CSS parts.
-	 *
-	 * @protected
-	 * @returns {string}
-	 */
-	getUIPartAttr() {
-		return 'ui';
-	}
-
-	/**
-	 * Override this to modify UI CSS export parts.
-	 *
-	 * @protected
-	 * @returns {string}
-	 */
-	getUIExportPartsAttr() {
-		return MediaUiElement.parts.map((part) => `${part}: ui-${part}`).join(', ');
-	}
-
-	/**
-	 * Override this to modify rendering of UI default slot.
-	 *
-	 * @protected
-	 * @returns {import('lit').TemplateResult}
-	 */
-	renderUIDefaultSlot() {
-		return html`<slot></slot>`;
 	}
 
 	// -------------------------------------------------------------------------------------------

@@ -4,7 +4,6 @@ import { mock } from 'sinon';
 
 import { isFunction } from '../../../utils/unit';
 import { buildMediaFixture } from '../../test-utils';
-import { MediaUiElement } from '../../ui';
 import { ViewType } from '../../ViewType';
 import { VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME } from '../constants';
 import { VdsMediaContainerConnectEvent } from '../events';
@@ -50,13 +49,7 @@ describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
             <slot name="media"></slot>
           </div>
 
-          <vds-media-ui
-            id="media-ui"
-            part="ui"
-            exportparts="root: ui-root, root-hidden: ui-root-hidden"
-          >
-            <slot></slot>
-          </vds-media-ui>
+					<slot></slot>
         </div>
       `);
 		});
@@ -178,11 +171,6 @@ describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
 		it('should return element [mediaContainerElement]', async function () {
 			const container = await buildFixture();
 			expect(container.mediaContainerElement).to.be.instanceOf(HTMLDivElement);
-		});
-
-		it('should return element [mediaUiElement]', async function () {
-			const container = await buildFixture();
-			expect(container.mediaUiElement).to.be.instanceOf(MediaUiElement);
 		});
 	});
 
