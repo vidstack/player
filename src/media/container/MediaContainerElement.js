@@ -58,6 +58,31 @@ export class MediaContainerElement extends VdsElement {
 		return ['root', 'media'];
 	}
 
+	constructor() {
+		super();
+
+		// Properties
+		/**
+		 * The aspect ratio of the container expressed as `width:height` (`16:9`). This is only applied if
+		 * the `viewType` is `video` and the media is not in fullscreen mode. Defaults to `undefined`.
+		 *
+		 * @type {string | undefined}
+		 */
+		this.aspectRatio = undefined;
+
+		// Context
+		/** @protected @readonly */
+		this.canPlay = mediaContext.canPlay.initialValue;
+		/** @protected @readonly */
+		this.fullscreen = mediaContext.fullscreen.initialValue;
+		/** @protected @readonly */
+		this.isVideoView = mediaContext.isVideoView.initialValue;
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// Properties
+	// -------------------------------------------------------------------------------------------
+
 	/** @type {import('lit').PropertyDeclarations} */
 	static get properties() {
 		return {
@@ -72,21 +97,6 @@ export class MediaContainerElement extends VdsElement {
 			fullscreen: mediaContext.fullscreen,
 			isVideoView: mediaContext.isVideoView
 		};
-	}
-
-	constructor() {
-		super();
-
-		// Properties
-		this.aspectRatio = undefined;
-
-		// Context
-		/** @protected @readonly */
-		this.canPlay = mediaContext.canPlay.initialValue;
-		/** @protected @readonly */
-		this.fullscreen = mediaContext.fullscreen.initialValue;
-		/** @protected @readonly */
-		this.isVideoView = mediaContext.isVideoView.initialValue;
 	}
 
 	// -------------------------------------------------------------------------------------------

@@ -1,11 +1,10 @@
+import { Fallback } from '../../shared/types/utils';
 import {
 	Html5MediaElementEngine,
 	Html5MediaElementMethods,
 	Html5MediaElementProps
 } from '../html5';
 import { VideoPresentationControllerHost } from './presentation';
-
-export type VideoElementEngine = Html5MediaElementEngine;
 
 export interface VideoElementProps extends Html5MediaElementProps {
 	/**
@@ -21,6 +20,8 @@ export interface VideoElementProps extends Html5MediaElementProps {
 	 * @spec https://w3c.github.io/picture-in-picture/#disable-pip
 	 */
 	disablePiP?: boolean;
+
+	readonly engine: HTMLVideoElement;
 
 	/**
 	 * A URL for an image to be shown while the video is downloading. If this attribute isn't

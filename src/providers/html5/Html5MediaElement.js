@@ -43,13 +43,38 @@ import { MediaReadyState } from './MediaReadyState';
  * used internally by the `vds-audio` and `vds-video` components. This provider only contains
  * glue code so don't bother using it on it's own.
  *
- * @template {import('./types').Html5MediaElementEngine} EngineType
- * @extends MediaProviderElement<EngineType>
  * @implements {IHtml5MediaHost}
  *
  * @slot Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
 export class Html5MediaElement extends MediaProviderElement {
+	constructor() {
+		super();
+
+		/** @protected @type {string} */
+		this._src = '';
+		/** @type {number | undefined} */
+		this.height;
+		/** @type {import('./types').MediaControlsList} */
+		this.controlsList;
+		/** @type {import('./types').MediaCrossOriginOption} */
+		this.crossOrigin;
+		/** @type {boolean | undefined} */
+		this.defaultMuted;
+		/** @type {number | undefined} */
+		this.defaultPlaybackRate;
+		/** @type {boolean | undefined} */
+		this.disableRemotePlayback;
+		/** @type {import('./types').MediaPreloadOption | undefined} */
+		this.preload;
+		/** @type {number | undefined} */
+		this.width;
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// Properties
+	// -------------------------------------------------------------------------------------------
+
 	/** @type {import('lit-element').PropertyDeclarations} */
 	static get properties() {
 		return {
@@ -76,68 +101,6 @@ export class Html5MediaElement extends MediaProviderElement {
 	get mediaElement() {
 		return /** @type {HTMLMediaElement} */ (this.mediaRef.value);
 	}
-
-	constructor() {
-		super();
-
-		/** @protected @type {string} */
-		this._src = '';
-		/** @type {number | undefined} */
-		this.height;
-		/** @type {import('./types').MediaControlsList} */
-		this.controlsList;
-		/** @type {import('./types').MediaCrossOriginOption} */
-		this.crossOrigin;
-		/** @type {boolean | undefined} */
-		this.defaultMuted;
-		/** @type {number | undefined} */
-		this.defaultPlaybackRate;
-		/** @type {boolean | undefined} */
-		this.disableRemotePlayback;
-		/** @type {import('./types').MediaPreloadOption | undefined} */
-		this.preload;
-		/** @type {number | undefined} */
-		this.width;
-	}
-
-	// -------------------------------------------------------------------------------------------
-	// Lifecycle
-	// -------------------------------------------------------------------------------------------
-
-	/**
-	 * @param {import('lit-element').PropertyValues} changedProps
-	 */
-	firstUpdated(changedProps) {
-		super.firstUpdated(changedProps);
-		this.bindMediaEventListeners();
-	}
-
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.cancelTimeUpdates();
-	}
-
-	// -------------------------------------------------------------------------------------------
-	// Render
-	// -------------------------------------------------------------------------------------------
-
-	/**
-	 * Override this to modify the content rendered inside `<audio>` and `<video>` elements.
-	 *
-	 * @protected
-	 * @returns {import('lit-html').TemplateResult}
-	 */
-	renderMediaChildren() {
-		return html`
-			<slot @slotchange="${this.handleDefaultSlotChange}"></slot>
-			Your browser does not support the <code>audio</code> or
-			<code>video</code> element.
-		`;
-	}
-
-	// -------------------------------------------------------------------------------------------
-	// Properties
-	// -------------------------------------------------------------------------------------------
 
 	get src() {
 		return this._src;
@@ -175,6 +138,41 @@ export class Html5MediaElement extends MediaProviderElement {
 	/** @type {MediaNetworkState} */
 	get networkState() {
 		return this.mediaElement.networkState;
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// Lifecycle
+	// -------------------------------------------------------------------------------------------
+
+	/**
+	 * @param {import('lit-element').PropertyValues} changedProps
+	 */
+	firstUpdated(changedProps) {
+		super.firstUpdated(changedProps);
+		this.bindMediaEventListeners();
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.cancelTimeUpdates();
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// Render
+	// -------------------------------------------------------------------------------------------
+
+	/**
+	 * Override this to modify the content rendered inside `<audio>` and `<video>` elements.
+	 *
+	 * @protected
+	 * @returns {import('lit-html').TemplateResult}
+	 */
+	renderMediaChildren() {
+		return html`
+			<slot @slotchange="${this.handleDefaultSlotChange}"></slot>
+			Your browser does not support the <code>audio</code> or
+			<code>video</code> element.
+		`;
 	}
 
 	// -------------------------------------------------------------------------------------------

@@ -1,15 +1,15 @@
 classDiagram
 
-class MediaProvider~EngineType~ {
+class MediaProvider~Engine~ {
     +paused: boolean
     +volume: number
     +currentTime: number
     +mediaType: MediaType
     +viewType: ViewType
-    +engine: EngineType
+    +engine: Engine
     ...
-    +play() Promise~void~ 
-    +pause() Promise~void~ 
+    +play() Promise~void~
+    +pause() Promise~void~
 }
 
 MediaProvider -- ViewType

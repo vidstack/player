@@ -14,15 +14,11 @@ export interface MediaContainerElementProps {
 
 	/**
 	 * The media container element.
-	 *
-	 * @default HTMLDivElement
 	 */
 	readonly mediaContainerElement: HTMLDivElement;
 
 	/**
 	 * The component's root element.
-	 *
-	 * @default HTMLDivElement
 	 */
 	readonly rootElement: HTMLDivElement;
 }

@@ -1,5 +1,4 @@
 import Hls from 'hls.js';
-import { property, PropertyValues } from 'lit-element';
 
 import {
 	CanPlay,
@@ -7,24 +6,19 @@ import {
 	VdsDurationChangeEvent,
 	VdsErrorEvent,
 	VdsMediaTypeChangeEvent
-} from '../../core';
+} from '../../media';
 import { VdsCustomEvent } from '../../shared/events';
-import { isNil, isUndefined, noop } from '../../utils/unit';
-import {
-	MediaControlsList,
-	MediaCrossOriginOption,
-	MediaPreloadOption,
-	MediaSrcObject
-} from '../html5';
-import { VideoElement, VideoElementEngine } from '../video';
+import { isNil, isUndefined } from '../../utils/unit';
+import { VideoElement } from '../video';
+import { HLS_EXTENSIONS, HLS_TYPES } from './constants';
 import {
 	VdsHlsEngineAttachEvent,
 	VdsHlsEngineBuiltEvent,
 	VdsHlsEngineDetachEvent,
 	VdsHlsEngineNoSupportEvent
-} from './hls.events';
-import { HlsElementEngine, HlsElementProps } from './hls.types';
-import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
+} from './events';
+
+/** @typedef {import('./types').HlsHost} IHlsHost */
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element. This provider
@@ -36,6 +30,8 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  * ```bash
  * $: npm install hls.js@^0.14.0
  * ```
+ *
+ * @implements {IHlsHost}
  *
  * @tagname vds-hls
  *
@@ -62,101 +58,83 @@ import { HLS_EXTENSIONS, HLS_TYPES } from './hls.utils';
  *  </vds-hls>
  * ```
  */
-export class HlsElement
-	extends VideoElement<HlsElementEngine>
-	implements HlsElementProps {
-	autoPiP?: boolean | undefined;
-	disablePiP?: boolean | undefined;
-	poster?: string | undefined;
-	controlsList?: MediaControlsList | undefined;
-	crossOrigin?: MediaCrossOriginOption | undefined;
-	defaultMuted?: boolean | undefined;
-	defaultPlaybackRate?: number | undefined;
-	disableRemotePlayback?: boolean | undefined;
-	error: MediaError | undefined;
-	height?: number | undefined;
-	networkState: number;
-	preload?: MediaPreloadOption | undefined;
-	readyState: number;
-	src: string;
-	srcObject?: MediaSrcObject | undefined;
-	width?: number | undefined;
-	autoplay: boolean;
-	buffered: TimeRanges;
-	canPlay: boolean;
-	canPlayThrough: boolean;
-	canRequestFullscreen: boolean;
-	controls: boolean;
-	currentPoster: string;
-	currentTime: number;
-	duration: number;
-	ended: boolean;
-	fullscreen: boolean;
-	loop: boolean;
-	mediaType: string;
-	muted: boolean;
-	paused: boolean;
-	played: TimeRanges;
-	playing: boolean;
-	playsinline: boolean;
-	seekable: TimeRanges;
-	seeking: boolean;
-	started: boolean;
-	viewType: string;
-	volume: number;
-	waiting: boolean;
-	protected _hlsEngine?: HlsElementEngine;
+export class HlsElement extends VideoElement {
+	constructor() {
+		super();
 
-	protected _isHlsEngineAttached = false;
-
-	connectedCallback(): void {
-		super.connectedCallback();
-		this.handleMediaSrcChange();
-	}
-
-	firstUpdated(changedProps: PropertyValues): void {
-		super.firstUpdated(changedProps);
-		this.handleMediaSrcChange();
-	}
-
-	disconnectedCallback(): void {
-		this.destroyHlsEngine();
-		super.disconnectedCallback();
+		/** @type {Hls.Config | undefined} */
+		this.hlsConfig;
 	}
 
 	// -------------------------------------------------------------------------------------------
 	// Properties
 	// -------------------------------------------------------------------------------------------
 
-	@property({ attribute: 'hls-config', type: Object })
-	hlsConfig?: Partial<Hls.Config>;
+	/** @type {import('lit').PropertyDeclarations} */
+	static get properties() {
+		return {
+			hlsConfig: { type: Object, attribute: 'hls-config' }
+		};
+	}
 
 	/**
-	 * The `hls.js` instance.
+	 * @protected
+	 * @type {Hls | undefined}
 	 */
-	get engine(): HlsElementEngine {
+	_hlsEngine;
+
+	/**
+	 * @protected
+	 * @type {boolean}
+	 */
+	_isHlsEngineAttached = false;
+
+	get hlsEngine() {
 		return this._hlsEngine;
 	}
 
-	get videoEngine(): VideoElementEngine {
-		return this.mediaEl;
+	get videoEngine() {
+		return this.videoElement;
 	}
 
-	get isHlsEngineAttached(): boolean {
+	get isHlsEngineAttached() {
 		return this._isHlsEngineAttached;
 	}
 
-	get currentSrc(): string {
+	get currentSrc() {
 		return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport
 			? this.src
 			: this.videoEngine?.currentSrc ?? '';
 	}
 
 	// -------------------------------------------------------------------------------------------
+	// Lifecycle
+	// -------------------------------------------------------------------------------------------
+
+	connectedCallback() {
+		super.connectedCallback();
+		this.handleMediaSrcChange();
+	}
+
+	firstUpdated(changedProps) {
+		super.firstUpdated(changedProps);
+		this.handleMediaSrcChange();
+	}
+
+	disconnectedCallback() {
+		this.destroyHlsEngine();
+		super.disconnectedCallback();
+	}
+
+	// -------------------------------------------------------------------------------------------
 	// Methods
 	// -------------------------------------------------------------------------------------------
 
-	canPlayType(type: string): CanPlay {
+	/**
+	 * @param {string} type
+	 * @returns {CanPlay}
+	 */
+	canPlayType(type) {
 		if (HLS_TYPES.has(type)) {
 			return Hls.isSupported() ? CanPlay.Probably : CanPlay.Maybe;
 		}
@@ -164,11 +142,11 @@ export class HlsElement
 		return super.canPlayType(type);
 	}
 
-	get isCurrentlyHls(): boolean {
+	get isCurrentlyHls() {
 		return HLS_EXTENSIONS.test(this.src);
 	}
 
-	get hasNativeHlsSupport(): boolean {
+	get hasNativeHlsSupport() {
 		/**
 		 * We need to call this directly on `HTMLMediaElement`, calling `this.shouldPlayType(...)`
 		 * won't work here because it'll use the `CanPlayType` result from this provider override
@@ -178,39 +156,56 @@ export class HlsElement
 		return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
 	}
 
-	get shouldUseNativeHlsSupport(): boolean {
+	get shouldUseNativeHlsSupport() {
 		if (Hls.isSupported()) return false;
 		return this.hasNativeHlsSupport;
 	}
 
-	protected shouldSetVideoSrcAttr(): boolean {
+	/**
+	 * @protected
+	 * @returns {boolean}
+	 */
+	shouldSetVideoSrcAttr() {
 		return this.shouldUseNativeHlsSupport || !this.isCurrentlyHls;
 	}
 
-	protected destroyHlsEngine(): void {
-		this.engine?.destroy();
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	destroyHlsEngine() {
+		this.hlsEngine?.destroy();
 		this._prevHlsSrc = '';
 		this._isHlsEngineAttached = false;
 		this.context.canPlay = false;
 	}
 
-	protected _prevHlsSrc = '';
+	/** @type {string} */
+	_prevHlsSrc = '';
 
-	protected loadSrcOnHlsEngine(): void {
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	loadSrcOnHlsEngine() {
 		if (
-			isNil(this.engine) ||
+			isNil(this.hlsEngine) ||
 			!this.isCurrentlyHls ||
 			this.shouldUseNativeHlsSupport ||
 			this.src === this._prevHlsSrc
 		)
 			return;
 
-		this.engine.loadSource(this.src);
+		this.hlsEngine.loadSource(this.src);
 		this._prevHlsSrc = this.src;
 	}
 
-	protected buildHlsEngine(): void {
-		if (isNil(this.videoEngine) || !isUndefined(this.engine)) return;
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	buildHlsEngine() {
+		if (isNil(this.videoEngine) || !isUndefined(this.hlsEngine)) return;
 
 		if (!Hls.isSupported()) {
 			this.dispatchEvent(new VdsHlsEngineNoSupportEvent());
@@ -218,37 +213,53 @@ export class HlsElement
 		}
 
 		this._hlsEngine = new Hls(this.hlsConfig ?? {});
-		this.dispatchEvent(new VdsHlsEngineBuiltEvent({ detail: this.engine }));
+		this.dispatchEvent(new VdsHlsEngineBuiltEvent({ detail: this.hlsEngine }));
 		this.listenToHlsEngine();
 	}
 
+	/**
+	 * @protected
+	 * @returns {boolean}
+	 */
 	// Let `Html5MediaElement` know we're taking over ready events.
-	protected willAnotherEngineAttach(): boolean {
+	willAnotherEngineAttach() {
 		return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport;
 	}
 
-	protected attachHlsEngine(): void {
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	attachHlsEngine() {
 		if (
 			this.isHlsEngineAttached ||
-			isUndefined(this.engine) ||
+			isUndefined(this.hlsEngine) ||
 			isNil(this.videoEngine)
 		)
 			return;
 
-		this.engine.attachMedia(this.videoEngine);
+		this.hlsEngine.attachMedia(this.videoEngine);
 		this._isHlsEngineAttached = true;
-		this.dispatchEvent(new VdsHlsEngineAttachEvent({ detail: this.engine }));
+		this.dispatchEvent(new VdsHlsEngineAttachEvent({ detail: this.hlsEngine }));
 	}
 
-	protected detachHlsEngine(): void {
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	detachHlsEngine() {
 		if (!this.isHlsEngineAttached) return;
-		this.engine?.detachMedia();
+		this.hlsEngine?.detachMedia();
 		this._isHlsEngineAttached = false;
 		this._prevHlsSrc = '';
-		this.dispatchEvent(new VdsHlsEngineDetachEvent({ detail: this.engine }));
+		this.dispatchEvent(new VdsHlsEngineDetachEvent({ detail: this.hlsEngine }));
 	}
 
-	protected getMediaType(): MediaType {
+	/**
+	 * @protected
+	 * @returns {MediaType}
+	 */
+	getMediaType() {
 		if (this.isCurrentlyHls) {
 			return MediaType.Video;
 		}
@@ -260,7 +271,11 @@ export class HlsElement
 	// Events
 	// -------------------------------------------------------------------------------------------
 
-	protected handleMediaSrcChange(): void {
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	handleMediaSrcChange() {
 		super.handleMediaSrcChange();
 
 		this.context.canPlay = false;
@@ -275,7 +290,7 @@ export class HlsElement
 		window.requestAnimationFrame(async () => {
 			await this.requestUpdate();
 
-			if (isUndefined(this.engine)) {
+			if (isUndefined(this.hlsEngine)) {
 				this.buildHlsEngine();
 			}
 
@@ -284,16 +299,26 @@ export class HlsElement
 		});
 	}
 
-	protected listenToHlsEngine(): void {
-		if (isUndefined(this.engine)) return;
-		this.engine.on(
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	listenToHlsEngine() {
+		if (isUndefined(this.hlsEngine)) return;
+		this.hlsEngine.on(
 			Hls.Events.LEVEL_LOADED,
 			this.handleHlsLevelLoaded.bind(this)
 		);
-		this.engine.on(Hls.Events.ERROR, this.handleHlsError.bind(this));
+		this.hlsEngine.on(Hls.Events.ERROR, this.handleHlsError.bind(this));
 	}
 
-	protected handleHlsError(eventType: string, data: Hls.errorData): void {
+	/**
+	 * @protected
+	 * @param {string} eventType
+	 * @param {Hls.errorData} data
+	 * @returns {void}
+	 */
+	handleHlsError(eventType, data) {
 		this.context.error = data;
 
 		if (data.fatal) {
@@ -317,39 +342,54 @@ export class HlsElement
 		);
 	}
 
-	protected handleHlsNetworkError(
-		eventType: string,
-		data: Hls.errorData
-	): void {
-		noop(eventType, data);
-		this.engine?.startLoad();
+	/**
+	 * @protected
+	 * @param {string} eventType
+	 * @param {Hls.errorData} data
+	 * @returns {void}
+	 */
+	handleHlsNetworkError(eventType, data) {
+		this.hlsEngine?.startLoad();
 	}
 
-	protected handleHlsMediaError(eventType: string, data: Hls.errorData): void {
-		noop(eventType, data);
-		this.engine?.recoverMediaError();
+	/**
+	 * @protected
+	 * @param {string} eventType
+	 * @param {Hls.errorData} data
+	 * @returns {void}
+	 */
+	handleHlsMediaError(eventType, data) {
+		this.hlsEngine?.recoverMediaError();
 	}
 
-	protected handleHlsIrrecoverableError(
-		eventType: string,
-		data: Hls.errorData
-	): void {
-		noop(eventType, data);
+	/**
+	 * @protected
+	 * @param {string} eventType
+	 * @param {Hls.errorData} data
+	 * @returns {void}
+	 */
+	handleHlsIrrecoverableError(eventType, data) {
 		this.destroyHlsEngine();
 	}
 
-	protected handleHlsLevelLoaded(
-		eventType: string,
-		data: Hls.levelLoadedData
-	): void {
+	/**
+	 * @protected
+	 * @param {string} eventType
+	 * @param {Hls.levelLoadedData} data
+	 * @returns {void}
+	 */
+	handleHlsLevelLoaded(eventType, data) {
 		if (this.context.canPlay) return;
 		this.handleHlsMediaReady(eventType, data);
 	}
 
-	protected handleHlsMediaReady(
-		eventType: string,
-		data: Hls.levelLoadedData
-	): void {
+	/**
+	 * @protected
+	 * @param {string} eventType
+	 * @param {Hls.levelLoadedData} data
+	 * @returns {void}
+	 */
+	handleHlsMediaReady(eventType, data) {
 		const { live, totalduration: duration } = data.details;
 
 		const originalEvent = new VdsCustomEvent(eventType, { detail: data });

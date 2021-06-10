@@ -1,9 +1,10 @@
 /**
  * No-operation (noop).
  *
+ * @param {...*} [args]
  * @returns {void}
  */
-export const noop = () => {};
+export const noop = (args) => {};
 
 /**
  * Whether two values are NOT equal.

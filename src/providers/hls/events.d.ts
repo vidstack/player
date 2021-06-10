@@ -3,21 +3,20 @@ import type Hls from 'hls.js';
 import { VdsCustomEvent, VdsEventInit, VdsEvents } from '../../shared/events';
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface GlobalEventHandlersEventMap extends VdsHlsEvents {}
+	interface GlobalEventHandlersEventMap extends VdsHlsEvents {}
 }
 
 export interface HlsEvents {
-  'hls-engine-built': VdsCustomEvent<Hls>;
-  'hls-engine-attach': VdsCustomEvent<Hls>;
-  'hls-engine-detach': VdsCustomEvent<Hls>;
-  'hls-engine-no-support': VdsCustomEvent<void>;
+	'hls-engine-built': VdsCustomEvent<Hls>;
+	'hls-engine-attach': VdsCustomEvent<Hls>;
+	'hls-engine-detach': VdsCustomEvent<Hls>;
+	'hls-engine-no-support': VdsCustomEvent<void>;
 }
 
 export type VdsHlsEvents = VdsEvents<HlsEvents>;
 
 export class VdsHlsEvent<DetailType> extends VdsCustomEvent<DetailType> {
-  static readonly TYPE: keyof VdsHlsEvents;
+	static readonly TYPE: keyof VdsHlsEvents;
 }
 
 /**
@@ -25,10 +24,10 @@ export class VdsHlsEvent<DetailType> extends VdsCustomEvent<DetailType> {
  * supports HLS.
  */
 export class VdsHlsEngineBuiltEvent extends VdsHlsEvent<Hls> {
-  static readonly TYPE = 'vds-hls-engine-built';
-  constructor(eventInit: VdsEventInit<Hls>) {
-    super(VdsHlsEngineBuiltEvent.TYPE, eventInit);
-  }
+	static readonly TYPE = 'vds-hls-engine-built';
+	constructor(eventInit: VdsEventInit<Hls>) {
+		super(VdsHlsEngineBuiltEvent.TYPE, eventInit);
+	}
 }
 
 /**
@@ -36,20 +35,20 @@ export class VdsHlsEngineBuiltEvent extends VdsHlsEvent<Hls> {
  * fire if the browser natively supports HLS.
  */
 export class VdsHlsEngineAttachEvent extends VdsHlsEvent<Hls> {
-  static readonly TYPE = 'vds-hls-engine-attach';
-  constructor(eventInit: VdsEventInit<Hls>) {
-    super(VdsHlsEngineAttachEvent.TYPE, eventInit);
-  }
+	static readonly TYPE = 'vds-hls-engine-attach';
+	constructor(eventInit: VdsEventInit<Hls>) {
+		super(VdsHlsEngineAttachEvent.TYPE, eventInit);
+	}
 }
 
 /**
  * Fired when the `hls.js` instance has detached itself from the media element.
  */
 export class VdsHlsEngineDetachEvent extends VdsHlsEvent<Hls> {
-  static readonly TYPE = 'vds-hls-engine-detach';
-  constructor(eventInit: VdsEventInit<Hls>) {
-    super(VdsHlsEngineDetachEvent.TYPE, eventInit);
-  }
+	static readonly TYPE = 'vds-hls-engine-detach';
+	constructor(eventInit: VdsEventInit<Hls>) {
+		super(VdsHlsEngineDetachEvent.TYPE, eventInit);
+	}
 }
 
 /**
@@ -57,8 +56,8 @@ export class VdsHlsEngineDetachEvent extends VdsHlsEvent<Hls> {
  * this enviroment either, most likely due to missing Media Extensions.
  */
 export class VdsHlsEngineNoSupportEvent extends VdsHlsEvent<void> {
-  static readonly TYPE = 'vds-hls-engine-no-support';
-  constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsHlsEngineNoSupportEvent.TYPE, eventInit);
-  }
+	static readonly TYPE = 'vds-hls-engine-no-support';
+	constructor(eventInit?: VdsEventInit<void>) {
+		super(VdsHlsEngineNoSupportEvent.TYPE, eventInit);
+	}
 }

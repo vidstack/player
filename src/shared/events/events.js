@@ -22,11 +22,14 @@ export class VdsCustomEvent extends CustomEvent {
 	 * @returns {Event | undefined}
 	 */
 	get originEvent() {
-		let originalEvent = /** @type {VdsCustomEvent<unknown>} */ (this
-			.originalEvent);
+		let originalEvent = /** @type {VdsCustomEvent<unknown>} */ (
+			this.originalEvent
+		);
 
 		while (originalEvent && originalEvent.originalEvent) {
-			originalEvent = /** @type {VdsCustomEvent<unknown>} */ (originalEvent.originalEvent);
+			originalEvent = /** @type {VdsCustomEvent<unknown>} */ (
+				originalEvent.originalEvent
+			);
 		}
 
 		return originalEvent;

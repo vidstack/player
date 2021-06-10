@@ -23,8 +23,6 @@ import { VdsMediaProviderConnectEvent } from './events';
  * all concrete media providers. Extending this class enables provider-agnostic communication 💬
  *
  * @implements {IMediaProviderHost}
- *
- * @template EngineType
  */
 export class MediaProviderElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
@@ -88,7 +86,7 @@ export class MediaProviderElement extends VdsElement {
 	}
 
 	// -------------------------------------------------------------------------------------------
-	// Writable Properties
+	// Properties
 	// -------------------------------------------------------------------------------------------
 
 	/** @type {import('lit').PropertyDeclarations} */
@@ -240,7 +238,7 @@ export class MediaProviderElement extends VdsElement {
 	 * The underlying engine that is actually responsible for rendering/loading media. Some examples
 	 * are:
 	 *
-	 * - The `VideoElement` engine is `HTMLMediaElement`.
+	 * - The `VideoElement` engine is `HTMLVideoElement`.
 	 * - The `HlsElement` engine is the `hls.js` instance.
 	 * - The `YoutubeElement` engine is `HTMLIFrameElement`.
 	 *
@@ -248,7 +246,7 @@ export class MediaProviderElement extends VdsElement {
 	 *
 	 * @abstract
 	 * @readonly
-	 * @type {EngineType}
+	 * @type {unknown}
 	 */
 	get engine() {
 		throw Error('Not implemented.');

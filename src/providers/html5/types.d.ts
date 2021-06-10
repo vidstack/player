@@ -1,4 +1,5 @@
 import { MediaProviderElementProps } from '../../media';
+import { Fallback } from '../../shared/types/utils';
 import { MediaNetworkState } from './MediaNetworkState';
 import { MediaReadyState } from './MediaReadyState';
 
@@ -97,6 +98,8 @@ export interface Html5MediaElementProps extends MediaProviderElementProps {
 	 */
 	readonly error: MediaError | undefined;
 
+	readonly engine: HTMLMediaElement;
+
 	/**
 	 * The height of the media player.
 	 */
@@ -170,8 +173,6 @@ export interface Html5MediaElementMethods {
 	 */
 	load(): void;
 }
-
-export type Html5MediaElementEngine = HTMLMediaElement | undefined;
 
 export type Html5MediaHost = Html5MediaElementProps & Html5MediaElementMethods;
 

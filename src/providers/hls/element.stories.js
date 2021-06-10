@@ -1,15 +1,15 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined';
 
-import { VDS_VIDEO_ELEMENT_TAG_NAME } from './constants';
+import { VDS_HLS_ELEMENT_TAG_NAME } from './constants';
 
 export default {
-	title: 'UI/Providers/Video',
-	component: VDS_VIDEO_ELEMENT_TAG_NAME,
+	title: 'UI/Providers/HLS',
+	component: VDS_HLS_ELEMENT_TAG_NAME,
 	argTypes: {
 		src: {
 			defaultValue:
-				'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4'
+				'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8'
 		},
 		poster: {
 			defaultValue: 'https://media-files.vidstack.io/poster.png'
@@ -36,6 +36,11 @@ function Template({
 	autoPiP,
 	disablePiP,
 	disableRemotePlayback,
+	// HLS Events
+	onVdsHlsEngineAttach,
+	onVdsHlsEngineBuilt,
+	onVdsHlsEngineDetach,
+	onVdsHlsEngineNoSupport,
 	// Media Provider Events
 	onVdsMediaProviderConnect,
 	// Media Events
@@ -67,7 +72,7 @@ function Template({
 	onVdsWaiting
 }) {
 	return html`
-		<vds-video
+		<vds-hls
 			src="${src}"
 			width="${ifDefined(width)}"
 			height="${ifDefined(height)}"
@@ -79,12 +84,12 @@ function Template({
 			?playsinline="${playsinline}"
 			?loop="${loop}"
 			?controls="${controls}"
-			crossorigin="${ifDefined(crossOrigin)}"
+			cross-origin="${ifDefined(crossOrigin)}"
 			preload="${ifDefined(preload)}"
-			controlslist="${ifDefined(controlsList)}"
-			?autopictureinpicture="${autoPiP}"
-			?disablepictureinpicture="${disablePiP}"
-			?disableremoteplayback="${disableRemotePlayback}"
+			controls-list="${ifDefined(controlsList)}"
+			?auto-pip="${autoPiP}"
+			?disable-pip="${disablePiP}"
+			?disable-remote-playback="${disableRemotePlayback}"
 			@vds-media-provider-connect="${onVdsMediaProviderConnect}"
 			@vds-abort="${onVdsAbort}"
 			@vds-can-play="${onVdsCanPlay}"
@@ -112,8 +117,12 @@ function Template({
 			@vds-view-type-change="${onVdsViewTypeChange}"
 			@vds-volume-change="${onVdsVolumeChange}"
 			@vds-waiting="${onVdsWaiting}"
-		></vds-video>
+			@vds-hls-engine-built="${onVdsHlsEngineBuilt}"
+			@vds-hls-engine-attach="${onVdsHlsEngineAttach}"
+			@vds-hls-engine-detach="${onVdsHlsEngineDetach}"
+			@vds-hls-engine-no-support="${onVdsHlsEngineNoSupport}"
+		></vds-hls>
 	`;
 }
 
-export const Video = Template.bind({});
+export const HLS = Template.bind({});

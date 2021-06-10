@@ -21,8 +21,6 @@ import { VideoPresentationController } from './presentation';
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
  *
- * @template {import('./types').VideoElementEngine} EngineType
- * @extends Html5MediaElement<EngineType>
  * @implements {IVideoHost}
  *
  * @tagname vds-video
@@ -63,6 +61,19 @@ export class VideoElement extends Html5MediaElement {
 		return ['root', 'video'];
 	}
 
+	constructor() {
+		super();
+
+		/** @type {boolean | undefined} */
+		this.autoPiP;
+		/** @type {boolean | undefined} */
+		this.disablePiP;
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// Properties
+	// -------------------------------------------------------------------------------------------
+
 	/** @type {import('lit').PropertyDeclarations} */
 	static get properties() {
 		return {
@@ -84,13 +95,8 @@ export class VideoElement extends Html5MediaElement {
 		});
 	}
 
-	constructor() {
-		super();
-
-		/** @type {boolean | undefined} */
-		this.autoPiP;
-		/** @type {boolean | undefined} */
-		this.disablePiP;
+	get engine() {
+		return /** @type {HTMLVideoElement} */ (this.mediaElement);
 	}
 
 	// -------------------------------------------------------------------------------------------
