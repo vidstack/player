@@ -1,4 +1,3 @@
-import { Fallback } from '../../shared/types/utils';
 import {
 	Html5MediaElementEngine,
 	Html5MediaElementMethods,

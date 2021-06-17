@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined';
 
-import { VDS_HLS_ELEMENT_TAG_NAME } from './constants';
+import { VDS_HLS_ELEMENT_TAG_NAME } from './HlsElement';
 
 export default {
 	title: 'UI/Providers/HLS',

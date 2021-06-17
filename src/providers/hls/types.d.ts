@@ -1,6 +1,5 @@
 import type Hls from 'hls.js';
 
-import { Fallback } from '../../shared/types/utils';
 import { VideoElementEngine, VideoElementProps } from '../video';
 
 export type HlsProvider = HlsElementProps;

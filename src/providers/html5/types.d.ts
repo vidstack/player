@@ -1,5 +1,4 @@
 import { MediaProviderElementProps } from '../../media';
-import { Fallback } from '../../shared/types/utils';
 import { MediaNetworkState } from './MediaNetworkState';
 import { MediaReadyState } from './MediaReadyState';
 

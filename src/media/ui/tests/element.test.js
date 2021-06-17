@@ -5,8 +5,10 @@ import { html } from 'lit';
 
 import { getSlottedChildren } from '../../../utils/dom';
 import { buildMediaFixture } from '../../test-utils';
-import { VDS_MEDIA_UI_ELEMENT_TAG_NAME } from '../constants';
-import { MediaUiElement } from '../MediaUiElement';
+import {
+	MediaUiElement,
+	VDS_MEDIA_UI_ELEMENT_TAG_NAME
+} from '../MediaUiElement';
 
 // Why do we need this? `../define ` import at the top of this file is being called correctly.
 window.customElements.define(VDS_MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);

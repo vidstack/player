@@ -13,8 +13,10 @@ import {
 	VdsVolumeChangeRequestEvent
 } from '../../media-request.events';
 import { buildMediaFixture } from '../../test-utils';
-import { VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME } from '../constants';
-import { MediaControllerElement } from '../MediaControllerElement';
+import {
+	MediaControllerElement,
+	VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME
+} from '../MediaControllerElement';
 
 describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 	describe('render', function () {

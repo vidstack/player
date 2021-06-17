@@ -1,5 +1,7 @@
-import { VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME } from './media-controller.constants';
-import { MediaControllerElement } from './MediaControllerElement';
+import {
+	MediaControllerElement,
+	VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME
+} from './MediaControllerElement';
 
 declare global {
 	interface HTMLElementTagNameMap {

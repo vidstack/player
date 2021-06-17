@@ -1,5 +1,7 @@
-import { VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME } from './constants';
-import { FakeMediaProviderElement } from './FakeMediaProviderElement';
+import {
+	FakeMediaProviderElement,
+	VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
+} from './FakeMediaProviderElement';
 
 declare global {
 	interface HTMLElementTagNameMap {

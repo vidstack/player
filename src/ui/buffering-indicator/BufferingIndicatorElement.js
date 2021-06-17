@@ -1,6 +1,7 @@
 import { html } from 'lit';
 
 import { mediaContext } from '../../media';
+import { LIB_PREFIX } from '../../shared/constants';
 import { VdsElement } from '../../shared/elements';
 import { getSlottedChildren, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
@@ -11,6 +12,13 @@ import {
 } from './events';
 
 /** @typedef {import('./types').BufferingIndicator} IBufferingIndicator */
+
+export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'buffering-indicator';
+
+export const VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME =
+	/** @type {`${LIB_PREFIX}-${BUFFERING_INDICATOR_ELEMENT_TAG_NAME}`} */ (
+		`${LIB_PREFIX}-${BUFFERING_INDICATOR_ELEMENT_TAG_NAME}`
+	);
 
 /**
  * Display an indicator when either the provider/media is booting or media playback has
@@ -104,7 +112,7 @@ export class BufferingIndicatorElement extends VdsElement {
 
 	/** @returns {import('lit').TemplateResult} */
 	render() {
-		return html`<slot @slotchange="${this.handleDefaultSlotChange}"></slot>`;
+		return html`<slot @slotchange=${this.handleDefaultSlotChange}></slot>`;
 	}
 
 	/**
