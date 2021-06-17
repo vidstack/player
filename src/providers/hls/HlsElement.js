@@ -18,7 +18,7 @@ import {
 	VdsHlsEngineNoSupportEvent
 } from './events';
 
-/** @typedef {import('./types').HlsHost} IHlsHost */
+/** @typedef {import('./types').HlsProvider} IHlsProvider */
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element. This provider
@@ -31,7 +31,7 @@ import {
  * $: npm install hls.js@^0.14.0
  * ```
  *
- * @implements {IHlsHost}
+ * @implements {IHlsProvider}
  *
  * @tagname vds-hls
  *

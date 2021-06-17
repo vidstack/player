@@ -1,8 +1,6 @@
 import '../providers/video/define';
 import '../providers/hls/define';
-import '../media/ui/define';
-import '../media/controller/define';
-import '../media/container/define';
+import '../media/define';
 import '../ui/controls/slider/define';
 import '../ui/controls/button/define';
 import '../ui/controls/toggle/define';

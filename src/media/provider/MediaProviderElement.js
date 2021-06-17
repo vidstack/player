@@ -16,13 +16,13 @@ import {
 } from '../media.events';
 import { VdsMediaProviderConnectEvent } from './events';
 
-/** @typedef {import('./types').MediaProviderHost} IMediaProviderHost */
+/** @typedef {import('./types').MediaProvider} IMediaProvider */
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by
  * all concrete media providers. Extending this class enables provider-agnostic communication 💬
  *
- * @implements {IMediaProviderHost}
+ * @implements {IMediaProvider}
  */
 export class MediaProviderElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------

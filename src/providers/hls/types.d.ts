@@ -3,7 +3,7 @@ import type Hls from 'hls.js';
 import { Fallback } from '../../shared/types/utils';
 import { VideoElementEngine, VideoElementProps } from '../video';
 
-export type HlsHost = HlsElementProps;
+export type HlsProvider = HlsElementProps;
 
 export interface HlsElementProps extends VideoElementProps {
 	/**

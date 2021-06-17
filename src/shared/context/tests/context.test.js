@@ -14,13 +14,26 @@ const ctxB = createContext('B');
 const ctxC = derivedContext([ctxA, ctxB], ([a, b]) => `${a}-${b}`);
 const ctxRecord = { ctxA, ctxB, ctxC };
 
-class FakeProviderElement extends VdsElement {
+class BaseProviderElement extends VdsElement {
+	/** @returns {import('../types').ContextProviderDeclarations} */
+	static get contextProviders() {
+		return {
+			ctxA
+		};
+	}
+
+	constructor() {
+		super();
+		this.ctxA = ctxA.initialValue;
+	}
+}
+
+class FakeProviderElement extends BaseProviderElement {
 	ctxD = provideContextRecord(this, ctxRecord);
 
 	/** @returns {import('../types').ContextProviderDeclarations} */
 	static get contextProviders() {
 		return {
-			ctxA,
 			ctxB,
 			ctxC
 		};
@@ -28,7 +41,6 @@ class FakeProviderElement extends VdsElement {
 
 	constructor() {
 		super();
-		this.ctxA = ctxA.initialValue;
 		this.ctxB = ctxB.initialValue;
 		this.ctxC = ctxC.initialValue;
 	}
@@ -38,11 +50,24 @@ class FakeProviderElement extends VdsElement {
 	}
 }
 
-class FakeConsumerElement extends VdsElement {
+class BaseConsumerElement extends VdsElement {
 	/** @returns {import('../types').ContextConsumerDeclarations} */
 	static get contextConsumers() {
 		return {
-			ctxA,
+			ctxA
+		};
+	}
+
+	constructor() {
+		super();
+		this.ctxA = ctxA.initialValue;
+	}
+}
+
+class FakeConsumerElement extends BaseConsumerElement {
+	/** @returns {import('../types').ContextConsumerDeclarations} */
+	static get contextConsumers() {
+		return {
 			ctxB,
 			ctxC
 		};
@@ -50,7 +75,6 @@ class FakeConsumerElement extends VdsElement {
 
 	constructor() {
 		super();
-		this.ctxA = ctxA.initialValue;
 		this.ctxB = ctxB.initialValue;
 		this.ctxC = ctxC.initialValue;
 	}

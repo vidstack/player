@@ -1,7 +1,7 @@
 import { FullscreenHost } from '../../shared/fullscreen';
 import { ScreenOrientationHost } from '../../shared/screen-orientation';
 
-export type MediaContainerHost = FullscreenHost &
+export type MediaContainer = FullscreenHost &
 	ScreenOrientationHost &
 	MediaContainerElementProps;
 

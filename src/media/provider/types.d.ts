@@ -4,7 +4,7 @@ import { CanPlay } from '../CanPlay';
 import { MediaType } from '../MediaType';
 import { ViewType } from '../ViewType';
 
-export type MediaProviderHost = MediaProviderElementProps &
+export type MediaProvider = MediaProviderElementProps &
 	MediaProviderElementMethods &
 	FullscreenHost &
 	ScreenOrientationHost;

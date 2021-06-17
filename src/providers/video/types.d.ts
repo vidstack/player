@@ -33,7 +33,7 @@ export interface VideoElementProps extends Html5MediaElementProps {
 
 export type VideoElementMethods = Html5MediaElementMethods;
 
-export type VideoHost = VideoElementProps &
+export type VideoProvider = VideoElementProps &
 	VideoElementMethods &
 	VideoPresentationControllerHost;
 

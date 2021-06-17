@@ -47,13 +47,13 @@ export class MediaUiElement extends VdsElement {
 
 	constructor() {
 		super();
-		/** @protected @readonly */
+		/** @protected @readonly @type {boolean} */
 		this.canPlay = mediaContext.canPlay.initialValue;
-		/** @protected @readonly */
+		/** @protected @readonly @type {boolean} */
 		this.fullscreen = mediaContext.fullscreen.initialValue;
-		/** @protected @readonly */
+		/** @protected @readonly @type {boolean} */
 		this.isVideoView = mediaContext.isVideoView.initialValue;
-		/** @protected @readonly */
+		/** @protected @readonly @type {boolean} */
 		this.playsinline = mediaContext.playsinline.initialValue;
 	}
 

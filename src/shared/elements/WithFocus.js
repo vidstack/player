@@ -43,7 +43,7 @@ export const focusableSelector = `
  * @inspiration https://github.com/carbon-design-system/carbon-web-components
  */
 export function WithFocus(Base) {
-	return class WithFocus extends Base {
+	return class WithFocusMixin extends Base {
 		createRenderRoot() {
 			return this.attachShadow({
 				mode: 'open',

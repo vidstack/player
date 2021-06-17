@@ -1,5 +1,6 @@
 /** @typedef {import('./types').ContextHostConstructor} ContextHostConstructor */
 
+import { isFunction } from '../../utils/unit';
 import { isDerviedContext } from './context';
 
 const FINALIZED = Symbol();
@@ -10,7 +11,7 @@ const FINALIZED = Symbol();
  * @returns {import('./types').ContextInitializer & T}
  */
 export function WithContext(Base) {
-	return class WithContext extends Base {
+	return class WithContextMixin extends Base {
 		/** @returns {import('./types').ContextConsumerDeclarations} */
 		static get contextConsumers() {
 			return {};
@@ -25,18 +26,27 @@ export function WithContext(Base) {
 		// Context
 		// -------------------------------------------------------------------------------------------
 
+		static get observedAttributes() {
+			// @ts-ignore
+			const attributes = super.observedAttributes;
+			// Piggy backing on this to ensure we're finalized.
+			this.finalizeContext();
+			return attributes;
+		}
+
 		/**
 		 * @protected
 		 * @returns {void}
 		 */
-		static finalize() {
+		static finalizeContext() {
 			// eslint-disable-next-line no-prototype-builtins
 			if (this.hasOwnProperty(FINALIZED)) return;
 			this[FINALIZED] = true;
 
-			/** @type {typeof WithContext} */
 			const superCtor = Object.getPrototypeOf(this);
-			superCtor.finalize();
+			if (isFunction(superCtor?.finalizeContext)) {
+				superCtor.finalizeContext();
+			}
 
 			this.defineContextProviders();
 			this.defineContextConsumers();
@@ -65,7 +75,7 @@ export function WithContext(Base) {
 			if (this.prototype.hasOwnProperty(name)) return;
 
 			// Might be called by decorator.
-			this.finalize();
+			this.finalizeContext();
 
 			/** @type {import('./types').ContextProvider<any>} */
 			let provider;
@@ -83,7 +93,7 @@ export function WithContext(Base) {
 					return provider.value;
 				},
 				set: isDerviedContext(context)
-					? function () {
+					? /** @type {(this: any) => void} */ function () {
 							if (!hasUserDefined.has(this)) {
 								hasUserDefined.add(this);
 								return;
@@ -122,7 +132,7 @@ export function WithContext(Base) {
 			if (this.prototype.hasOwnProperty(name)) return;
 
 			// Might be called by decorator.
-			this.finalize();
+			this.finalizeContext();
 
 			/** @type {import('./types').ContextConsumer<any>} */
 			let consumer;

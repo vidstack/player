@@ -1,24 +1,13 @@
-import '../../core/media/controller/define';
-import '../../core/media/container/vds-media-container';
+import '../../media/define';
 
-import { html, TemplateResult } from 'lit-html';
+import { html } from 'lit';
 
-import {
-	buildStorybookControlsFromManifest,
-	DOMEventsToStorybookActions,
-	SB_THEME_COLOR
-} from '../../shared/storybook';
-import { VdsBufferingIndicatorEvents } from './buffering-indicator.events';
-import { BufferingIndicatorElementProps } from './buffering-indicator.types';
-import { VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from './vds-buffering-indicator';
+import { VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from './constants';
 
 export default {
 	title: 'UI/Foundation/Buffering Indicator',
 	component: VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
 	argTypes: {
-		...buildStorybookControlsFromManifest(
-			VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME
-		),
 		fakeCanPlay: {
 			control: 'boolean',
 			defaultValue: true
@@ -30,15 +19,6 @@ export default {
 	}
 };
 
-interface FakeProps {
-	fakeCanPlay: boolean;
-	fakeBuffering: boolean;
-}
-
-type Args = FakeProps &
-	BufferingIndicatorElementProps &
-	DOMEventsToStorybookActions<VdsBufferingIndicatorEvents>;
-
 function Template({
 	// Fakes
 	fakeCanPlay,
@@ -49,14 +29,13 @@ function Template({
 	// Events
 	onVdsBufferingIndicatorShow,
 	onVdsBufferingIndicatorHide
-}: Args): TemplateResult {
+}) {
 	return html`
 		<vds-media-controller .canPlay="${fakeCanPlay}" .waiting="${fakeBuffering}">
 			<vds-media-container>
 				<vds-buffering-indicator
 					?show-while-booting="${showWhileBooting}"
 					delay="${delay}"
-					style="color: ${SB_THEME_COLOR};"
 					@vds-buffering-indicator-show="${onVdsBufferingIndicatorShow}"
 					@vds-buffering-indicator-hide="${onVdsBufferingIndicatorHide}"
 				>

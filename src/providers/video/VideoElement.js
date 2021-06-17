@@ -16,12 +16,12 @@ import { videoElementStyles } from './css';
 import { VideoFullscreenController } from './fullscreen';
 import { VideoPresentationController } from './presentation';
 
-/** @typedef {import('./types').VideoHost} IVideoHost */
+/** @typedef {import('./types').VideoProvider} IVideoProvider */
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
  *
- * @implements {IVideoHost}
+ * @implements {IVideoProvider}
  *
  * @tagname vds-video
  *

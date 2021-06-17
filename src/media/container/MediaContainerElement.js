@@ -13,12 +13,12 @@ import { MediaProviderElement } from '../provider';
 import { mediaContainerElementStyles } from './css';
 import { VdsMediaContainerConnectEvent } from './events';
 
-/** @typedef {import('./types').MediaContainerHost} IMediaContainerHost */
+/** @typedef {import('./types').MediaContainer} IMediaContainer */
 
 /**
  * Simple container for a media provider and the media user interface (UI).
  *
- * @implements {IMediaContainerHost}
+ * @implements {IMediaContainer}
  *
  * @tagname vds-media-container
  *
@@ -71,11 +71,11 @@ export class MediaContainerElement extends VdsElement {
 		this.aspectRatio = undefined;
 
 		// Context
-		/** @protected @readonly */
+		/** @protected @readonly @type {boolean} */
 		this.canPlay = mediaContext.canPlay.initialValue;
-		/** @protected @readonly */
+		/** @protected @readonly @type {boolean} */
 		this.fullscreen = mediaContext.fullscreen.initialValue;
-		/** @protected @readonly */
+		/** @protected @readonly @type {boolean} */
 		this.isVideoView = mediaContext.isVideoView.initialValue;
 	}
 

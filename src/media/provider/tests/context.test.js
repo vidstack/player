@@ -44,9 +44,9 @@ describe('MediaProviderElement/context', function () {
 		const fixture = await buildMediaFixture(
 			html`<vds-fake-media-consumer></vds-fake-media-consumer>`
 		);
-		const consumer = /** @type {FakeMediaConsumerElement} */ (fixture.container.querySelector(
-			'vds-fake-media-consumer'
-		));
+		const consumer = /** @type {FakeMediaConsumerElement} */ (
+			fixture.container.querySelector('vds-fake-media-consumer')
+		);
 		return {
 			...fixture,
 			consumer

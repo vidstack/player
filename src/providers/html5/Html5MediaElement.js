@@ -35,7 +35,7 @@ import { MediaNetworkState } from './MediaNetworkState';
 import { MediaReadyState } from './MediaReadyState';
 
 /**
- * @typedef {import('./types').Html5MediaHost} IHtml5MediaHost
+ * @typedef {import('./types').Html5MediaProvider} IHtml5MediaProvider
  */
 
 /**
@@ -43,7 +43,7 @@ import { MediaReadyState } from './MediaReadyState';
  * used internally by the `vds-audio` and `vds-video` components. This provider only contains
  * glue code so don't bother using it on it's own.
  *
- * @implements {IHtml5MediaHost}
+ * @implements {IHtml5MediaProvider}
  *
  * @slot Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */

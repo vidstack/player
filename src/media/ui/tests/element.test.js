@@ -4,7 +4,7 @@ import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
 import { getSlottedChildren } from '../../../utils/dom';
-import { buildMediaFixture, FakeMediaProviderElement } from '../../test-utils';
+import { buildMediaFixture } from '../../test-utils';
 import { VDS_MEDIA_UI_ELEMENT_TAG_NAME } from '../constants';
 import { MediaUiElement } from '../MediaUiElement';
 
@@ -12,9 +12,6 @@ import { MediaUiElement } from '../MediaUiElement';
 window.customElements.define(VDS_MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);
 
 describe(VDS_MEDIA_UI_ELEMENT_TAG_NAME, function () {
-	/**
-	 * @returns {Promise<{ provider: FakeMediaProviderElement, ui: MediaUiElement }>}
-	 */
 	async function buildFixture() {
 		const { container, provider } = await buildMediaFixture(html`
 			<vds-media-ui>
@@ -22,14 +19,14 @@ describe(VDS_MEDIA_UI_ELEMENT_TAG_NAME, function () {
 			</vds-media-ui>
 		`);
 
-		const ui = /** @type {MediaUiElement} */ (container.querySelector(
-			VDS_MEDIA_UI_ELEMENT_TAG_NAME
-		));
+		const ui = /** @type {MediaUiElement} */ (
+			container.querySelector(VDS_MEDIA_UI_ELEMENT_TAG_NAME)
+		);
 
 		return { provider, ui };
 	}
 
-	it.only('should render DOM correctly', async function () {
+	it('should render DOM correctly', async function () {
 		const { ui } = await buildFixture();
 		expect(ui).dom.to.equal(`
       <vds-media-ui>
@@ -41,7 +38,7 @@ describe(VDS_MEDIA_UI_ELEMENT_TAG_NAME, function () {
 	it('should render shadow DOM correctly', async function () {
 		const { ui } = await buildFixture();
 		expect(ui).shadowDom.to.equal(`
-      <div 
+      <div
         id="root"
         part="root root-hidden"
       >

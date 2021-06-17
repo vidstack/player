@@ -12,8 +12,6 @@ import {
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
- *
- * @extends MediaProviderElement<undefined>
  */
 export class FakeMediaProviderElement extends MediaProviderElement {
 	connectedCallback() {

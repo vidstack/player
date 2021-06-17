@@ -174,7 +174,8 @@ export interface Html5MediaElementMethods {
 	load(): void;
 }
 
-export type Html5MediaHost = Html5MediaElementProps & Html5MediaElementMethods;
+export type Html5MediaProvider = Html5MediaElementProps &
+	Html5MediaElementMethods;
 
 // V8ToIstanbul fails when no value is exported.
 export default class {}
