@@ -1,21 +1,15 @@
-import '../../../core/media/controller/define';
-import '../../../core/media/container/vds-media-container';
+import '../../../media/define';
+import './define';
 
-import { html, TemplateResult } from 'lit-html';
+import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import {
-	buildStorybookControlsFromManifest,
-	SB_THEME_COLOR
-} from '../../../shared/storybook';
-import { TimeProgressElementProps } from './time-progress.types';
-import { VDS_TIME_PROGRESS_ELEMENT_TAG_NAME } from './vds-time-progress';
+import { VDS_TIME_PROGRESS_ELEMENT_TAG_NAME } from './TimeProgressElement';
 
 export default {
 	title: 'UI/Foundation/Time/Time Progress',
 	component: VDS_TIME_PROGRESS_ELEMENT_TAG_NAME,
 	argTypes: {
-		...buildStorybookControlsFromManifest(VDS_TIME_PROGRESS_ELEMENT_TAG_NAME),
 		seconds: {
 			table: {
 				disable: true
@@ -32,13 +26,6 @@ export default {
 	}
 };
 
-interface FakeProps {
-	fakeCurrentTime: number;
-	fakeDuration: number;
-}
-
-type Args = FakeProps & TimeProgressElementProps;
-
 function Template({
 	// Fakes
 	fakeCurrentTime,
@@ -50,7 +37,7 @@ function Template({
 	currentTimeLabel,
 	durationLabel,
 	timeSeparator
-}: Args): TemplateResult {
+}) {
 	return html`
 		<vds-media-controller
 			.currentTime="${fakeCurrentTime}"
@@ -64,16 +51,9 @@ function Template({
 					duration-label="${ifNonEmpty(durationLabel)}"
 					?always-show-hours="${alwaysShowHours}"
 					?pad-hours="${padHours}"
-					style="color: ${SB_THEME_COLOR};"
 				></vds-time-progress>
 			</vds-media-container>
 		</vds-media-controller>
-
-		<style>
-			vds-media-container::part(ui) {
-				position: relative;
-			}
-		</style>
 	`;
 }
 
