@@ -116,7 +116,7 @@ export class HlsElement extends VideoElement {
 	}
 
 	get currentSrc() {
-		return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport
+		return this.isHlsStream && !this.shouldUseNativeHlsSupport
 			? this.src
 			: this.videoEngine?.currentSrc ?? '';
 	}
@@ -156,7 +156,7 @@ export class HlsElement extends VideoElement {
 		return super.canPlayType(type);
 	}
 
-	get isCurrentlyHls() {
+	get isHlsStream() {
 		return HLS_EXTENSIONS.test(this.src);
 	}
 
@@ -180,7 +180,7 @@ export class HlsElement extends VideoElement {
 	 * @returns {boolean}
 	 */
 	shouldSetVideoSrcAttr() {
-		return this.shouldUseNativeHlsSupport || !this.isCurrentlyHls;
+		return this.shouldUseNativeHlsSupport || !this.isHlsStream;
 	}
 
 	/**
@@ -204,7 +204,7 @@ export class HlsElement extends VideoElement {
 	loadSrcOnHlsEngine() {
 		if (
 			isNil(this.hlsEngine) ||
-			!this.isCurrentlyHls ||
+			!this.isHlsStream ||
 			this.shouldUseNativeHlsSupport ||
 			this.src === this._prevHlsSrc
 		)
@@ -237,7 +237,7 @@ export class HlsElement extends VideoElement {
 	 */
 	// Let `Html5MediaElement` know we're taking over ready events.
 	willAnotherEngineAttach() {
-		return this.isCurrentlyHls && !this.shouldUseNativeHlsSupport;
+		return this.isHlsStream && !this.shouldUseNativeHlsSupport;
 	}
 
 	/**
@@ -274,7 +274,7 @@ export class HlsElement extends VideoElement {
 	 * @returns {MediaType}
 	 */
 	getMediaType() {
-		if (this.isCurrentlyHls) {
+		if (this.isHlsStream) {
 			return MediaType.Video;
 		}
 
@@ -294,7 +294,7 @@ export class HlsElement extends VideoElement {
 
 		this.context.canPlay = false;
 
-		if (!this.isCurrentlyHls) {
+		if (!this.isHlsStream) {
 			this.detachHlsEngine();
 			return;
 		}

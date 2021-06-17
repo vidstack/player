@@ -84,8 +84,6 @@ export function WithContext(Base) {
 				provider = context.provide(element);
 			});
 
-			const hasUserDefined = new WeakSet();
-
 			Object.defineProperty(this.prototype, name, {
 				enumerable: true,
 				configurable: false,
@@ -93,15 +91,8 @@ export function WithContext(Base) {
 					return provider.value;
 				},
 				set: isDerviedContext(context)
-					? /** @type {(this: any) => void} */ function () {
-							if (!hasUserDefined.has(this)) {
-								hasUserDefined.add(this);
-								return;
-							}
-
-							throw Error(
-								`Context provider property [${name}] is derived, thus it's readonly.`
-							);
+					? function () {
+							// console.warn(`Context provider property [${name}] is derived, thus it's readonly.`);
 					  }
 					: function (newValue) {
 							provider.value = newValue;
@@ -147,8 +138,6 @@ export function WithContext(Base) {
 				});
 			});
 
-			const hasUserDefined = new WeakSet();
-
 			Object.defineProperty(this.prototype, name, {
 				enumerable: true,
 				configurable: false,
@@ -156,12 +145,7 @@ export function WithContext(Base) {
 					return consumer.value;
 				},
 				set() {
-					if (!hasUserDefined.has(this)) {
-						hasUserDefined.add(this);
-						return;
-					}
-
-					throw Error(`Context consumer property [${name}] is readonly.`);
+					// console.warn(`Context consumer property [${name}] is readonly.`);
 				}
 			});
 		}

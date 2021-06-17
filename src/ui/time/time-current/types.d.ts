@@ -1,5 +1,5 @@
 import { TimeElementProps } from '../time';
 
-export const TIME_CURRENT_ELEMENT_TAG_NAME = `time-current`;
+export type CurrentTimeDisplay = TimeElementProps;
 
 export type TimeCurrentElementProps = Omit<TimeElementProps, 'seconds'>;

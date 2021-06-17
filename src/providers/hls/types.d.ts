@@ -23,7 +23,7 @@ export interface HlsElementProps extends VideoElementProps {
 	 *
 	 * @default false
 	 */
-	readonly isCurrentlyHls: boolean;
+	readonly isHlsStream: boolean;
 
 	/**
 	 * Whether the `hls.js` instance has mounted the `HtmlMediaElement`.

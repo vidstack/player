@@ -1,0 +1,58 @@
+import { mediaContext } from '../../../media';
+import { LIB_PREFIX } from '../../../shared/constants';
+import { TimeElement } from '../time';
+
+export const TIME_CURRENT_ELEMENT_TAG_NAME = `time-current`;
+
+export const VDS_TIME_CURRENT_ELEMENT_TAG_NAME =
+	/** @type {`${typeof LIB_PREFIX}-${typeof TIME_CURRENT_ELEMENT_TAG_NAME}`} */ (
+		`${LIB_PREFIX}-${TIME_CURRENT_ELEMENT_TAG_NAME}`
+	);
+
+/** @typedef {import('./types').CurrentTimeDisplay} ICurrentTimeDisplay */
+
+/**
+ * Formats and displays the `currentTime` of media playback. Do not mess with the component's
+ * `seconds` property as it's automatically managed.
+ *
+ * @implements {ICurrentTimeDisplay}
+ *
+ * @tagname vds-time-current
+ *
+ * @csspart root - The component's root element (`<time>`).
+ *
+ * @example
+ * ```html
+ * <vds-time-current
+ *   label="Current time"
+ *   pad-hours
+ *   always-show-hours
+ * ></vds-time-current>
+ * ```
+ *
+ * @example
+ * ```css
+ * vds-time-current::part(root) {
+ *   font-size: 16px;
+ * }
+ * ```
+ */
+export class TimeCurrentElement extends TimeElement {
+	constructor() {
+		super();
+
+		// Properties
+		this.label = 'Current time';
+
+		// Context
+		/** @internal @readonly @type {number} */
+		this.seconds = mediaContext.currentTime.initialValue;
+	}
+
+	/** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+	static get contextConsumers() {
+		return {
+			seconds: mediaContext.currentTime
+		};
+	}
+}

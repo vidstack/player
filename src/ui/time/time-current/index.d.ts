@@ -1,2 +1,2 @@
-export * from './time-current.types';
 export * from './TimeCurrentElement';
+export * from './types';
