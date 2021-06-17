@@ -1,4 +1,4 @@
-import { noop, notEqual } from '../../utils/unit';
+import { isUndefined, noop, notEqual } from '../../utils/unit';
 
 /**
  * @extends CustomEvent<import('./types').ContextConsumerDetail>
@@ -38,17 +38,22 @@ export function createContext(initialValue) {
 	class ContextConsumerConnectEvent extends ConsumerConnectEvent {}
 
 	/** @type {import('./types').Context<T>['provide']} */
-	function provide(host) {
-		// Re-use existing providers on the same host.
+	function provide(host, options = {}) {
+		// TODO: this means only the first `transform` option will apply but we need to re-use providers
+		// on the same host so derived context properties work.
 		if (host[key]) return host[key];
 
-		let currentValue = initialValue;
+		const transformer = !isUndefined(options.transform)
+			? options.transform
+			: (v) => v;
+
+		let currentValue = transformer(initialValue);
 
 		/** @type {Set<import('./types').ContextConsumerDetail>} */
 		let consumers = new Set();
 
 		/**
-		 * @param {ContextConsumerConnectEvent} event
+		 * @param {Event | ContextConsumerConnectEvent} event
 		 */
 		function onConsumerConnect(event) {
 			// Validate event was dispatched by a pairable consumer.
@@ -70,8 +75,9 @@ export function createContext(initialValue) {
 			consumers.add(consumer);
 		}
 
-		function update(newValue) {
+		function onUpdate(newValue) {
 			currentValue = newValue;
+			options.onUpdate?.(newValue);
 			consumers.forEach((consumer) => {
 				consumer.onUpdate(newValue);
 			});
@@ -79,11 +85,13 @@ export function createContext(initialValue) {
 
 		host.addController({
 			hostConnected() {
+				options.onConnect?.();
 				host.addEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
 			},
 			hostDisconnected() {
+				options.onDisconnect?.();
 				host.removeEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
-				update(initialValue);
+				onUpdate(transformer(initialValue));
 				consumers.clear();
 			}
 		});
@@ -93,12 +101,13 @@ export function createContext(initialValue) {
 				return currentValue;
 			},
 			set value(newValue) {
-				if (notEqual(newValue, currentValue)) {
-					update(newValue);
+				const transformedValue = transformer(newValue);
+				if (notEqual(transformedValue, currentValue)) {
+					onUpdate(transformedValue);
 				}
 			},
 			reset() {
-				update(initialValue);
+				onUpdate(transformer(initialValue));
 			}
 		};
 
@@ -108,7 +117,11 @@ export function createContext(initialValue) {
 
 	/** @type {import('./types').Context<T>['consume']} */
 	function consume(host, options = {}) {
-		let currentValue = initialValue;
+		const transformer = !isUndefined(options.transform)
+			? options.transform
+			: (v) => v;
+
+		let currentValue = transformer(initialValue);
 		let disconnectFromProviderCallback = noop;
 
 		function onConnect() {
@@ -117,9 +130,10 @@ export function createContext(initialValue) {
 		}
 
 		function onUpdate(newValue) {
-			if (notEqual(newValue, currentValue)) {
-				currentValue = newValue;
-				options.onUpdate?.(newValue);
+			const transformedValue = transformer(newValue);
+			if (notEqual(transformedValue, currentValue)) {
+				currentValue = transformedValue;
+				options.onUpdate?.(transformedValue);
 			}
 		}
 
@@ -141,7 +155,7 @@ export function createContext(initialValue) {
 			hostDisconnected() {
 				disconnectFromProviderCallback();
 				disconnectFromProviderCallback = noop;
-				onUpdate(initialValue);
+				onUpdate(transformer(initialValue));
 				options.onDisconnect?.();
 			}
 		});

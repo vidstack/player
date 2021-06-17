@@ -60,17 +60,22 @@ export function WithContext(Base) {
 			const contextProviders = this.contextProviders ?? {};
 
 			Object.keys(contextProviders).forEach((contextPropertyName) => {
-				/** @type {import('./types').Context<any>} */
-				const context = contextProviders[contextPropertyName];
-				this.defineContextProvider(context, contextPropertyName);
+				/** @type {import('./types').ContextProviderDeclaration<any>} */
+				const declaration = contextProviders[contextPropertyName];
+				const context =
+					'context' in declaration ? declaration.context : declaration;
+				const options = 'context' in declaration ? declaration : {};
+				this.defineContextProvider(contextPropertyName, context, options);
 			});
 		}
 
 		/**
-		 * @param {import('./types').Context<any>} context
+		 * @template {any} T
 		 * @param {string} name
+		 * @param {import('./types').Context<T>} context
+		 * @param {import('./types').ContextOptions<T>} [options]
 		 */
-		static defineContextProvider(context, name) {
+		static defineContextProvider(name, context, options = {}) {
 			// eslint-disable-next-line no-prototype-builtins
 			if (this.prototype.hasOwnProperty(name)) return;
 
@@ -81,7 +86,7 @@ export function WithContext(Base) {
 			let provider;
 
 			/** @type {any} */ (this).addInitializer((element) => {
-				provider = context.provide(element);
+				provider = context.provide(element, options);
 			});
 
 			Object.defineProperty(this.prototype, name, {
@@ -108,17 +113,22 @@ export function WithContext(Base) {
 			const contextConsumers = this.contextConsumers ?? {};
 
 			Object.keys(contextConsumers).forEach((contextPropertyName) => {
-				/** @type {import('./types').Context<any>} */
-				const context = contextConsumers[contextPropertyName];
-				this.defineContextConsumer(context, contextPropertyName);
+				/** @type {import('./types').ContextConsumerDeclaration<any>} */
+				const declaration = contextConsumers[contextPropertyName];
+				const context =
+					'context' in declaration ? declaration.context : declaration;
+				const options = 'context' in declaration ? declaration : {};
+				this.defineContextConsumer(contextPropertyName, context, options);
 			});
 		}
 
 		/**
-		 * @param {import('./types').Context<any>} context
+		 * @template {any} T
 		 * @param {string} name
+		 * @param {import('./types').Context<T>} context
+		 * @param {import('./types').ContextOptions<T>} [options]
 		 */
-		static defineContextConsumer(context, name) {
+		static defineContextConsumer(name, context, options = {}) {
 			// eslint-disable-next-line no-prototype-builtins
 			if (this.prototype.hasOwnProperty(name)) return;
 
@@ -131,7 +141,9 @@ export function WithContext(Base) {
 			/** @type {any} */ (this).addInitializer((element) => {
 				let oldValue = context.initialValue;
 				consumer = context.consume(element, {
+					...options,
 					onUpdate: (newValue) => {
+						options.onUpdate?.(newValue);
 						element.requestUpdate(name, oldValue);
 						oldValue = newValue;
 					}

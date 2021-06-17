@@ -1,15 +1,17 @@
 import { isUndefined } from '../../utils/unit';
 
 /**
- * @param {import("./types").Context<any>} context
+ * @template T
+ * @param {import("./types").Context<T>} context
+ * @param {import("./types").ContextOptions<T>} [options]
  * @returns {PropertyDecorator}
  */
-export function consumeContext(context) {
+export function consumeContext(context, options = {}) {
 	/**
 	 * Legacy Decorator
 	 *
 	 * @param {any} proto
-	 * @param {string} name
+	 * @param {string | symbol} name
 	 * @link https://www.typescriptlang.org/docs/handbook/decorators.html
 	 */
 	function legacy(proto, name) {
@@ -22,7 +24,7 @@ export function consumeContext(context) {
 			);
 		}
 
-		ctor.defineContextConsumer(context, name);
+		ctor.defineContextConsumer(name, context, options);
 	}
 
 	/**
@@ -38,11 +40,10 @@ export function consumeContext(context) {
 
 	/**
 	 * @param {any} protoOrContext
-	 * @param {(string|undefined)} [propertyKey]
+	 * @param {string | symbol} [propertyKey]
 	 */
 	function decorator(protoOrContext, propertyKey) {
-		const hasPropertyKey = propertyKey !== undefined;
-		return hasPropertyKey
+		return !isUndefined(propertyKey)
 			? legacy(protoOrContext, propertyKey)
 			: standard(protoOrContext);
 	}
@@ -51,15 +52,17 @@ export function consumeContext(context) {
 }
 
 /**
- * @param {import("./types").Context<any>} context
+ * @template T
+ * @param {import("./types").Context<T>} context
+ * @param {import("./types").ContextOptions<T>} [options]
  * @returns {PropertyDecorator}
  */
-export function provideContext(context) {
+export function provideContext(context, options = {}) {
 	/**
 	 * Legacy Decorator
 	 *
 	 * @param {any} proto
-	 * @param {string} name
+	 * @param {string | symbol} name
 	 * @link https://www.typescriptlang.org/docs/handbook/decorators.html
 	 */
 	function legacy(proto, name) {
@@ -72,7 +75,7 @@ export function provideContext(context) {
 			);
 		}
 
-		ctor.defineContextProvider(context, name);
+		ctor.defineContextProvider(name, context, options);
 	}
 
 	/**
@@ -88,11 +91,10 @@ export function provideContext(context) {
 
 	/**
 	 * @param {any} protoOrContext
-	 * @param {(string|undefined)} [propertyKey]
+	 * @param {string | symbol} [propertyKey]
 	 */
 	function decorator(protoOrContext, propertyKey) {
-		const hasPropertyKey = propertyKey !== undefined;
-		return hasPropertyKey
+		return !isUndefined(propertyKey)
 			? legacy(protoOrContext, propertyKey)
 			: standard(protoOrContext);
 	}
