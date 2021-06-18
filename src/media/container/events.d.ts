@@ -1,4 +1,4 @@
-import { VdsCustomEvent, VdsEventInit, VdsEvents } from '../../shared/events';
+import { VdsCustomEvent, VdsEventInit } from '../../shared/events';
 import { MediaContainerElement } from './MediaContainerElement';
 
 declare global {
@@ -10,11 +10,9 @@ export interface MediaContainerConnectEventDetail {
 	onDisconnect: (callback: () => void) => void;
 }
 
-export interface MediaContainerEvents {
-	'media-container-connect': VdsCustomEvent<MediaContainerConnectEventDetail>;
+export interface VdsMediaContainerEvents {
+	'vds-media-container-connect': VdsCustomEvent<MediaContainerConnectEventDetail>;
 }
-
-export type VdsMediaContainerEvents = VdsEvents<MediaContainerEvents>;
 
 export class VdsMediaContainerEvent<
 	DetailType

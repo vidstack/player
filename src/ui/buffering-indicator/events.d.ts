@@ -1,15 +1,13 @@
-import { VdsCustomEvent, VdsEventInit, VdsEvents } from '../../shared/events';
+import { VdsCustomEvent, VdsEventInit } from '../../shared/events';
 
 declare global {
 	interface GlobalEventHandlersEventMap extends VdsBufferingIndicatorEvents {}
 }
 
-export interface BufferingIndicatorEvents {
-	'buffering-indicator-show': VdsCustomEvent<void>;
-	'buffering-indicator-hide': VdsCustomEvent<void>;
+export interface VdsBufferingIndicatorEvents {
+	'vds-buffering-indicator-show': VdsCustomEvent<void>;
+	'vds-buffering-indicator-hide': VdsCustomEvent<void>;
 }
-
-export type VdsBufferingIndicatorEvents = VdsEvents<BufferingIndicatorEvents>;
 
 export class VdsBufferingIndicatorEvent<
 	DetailType

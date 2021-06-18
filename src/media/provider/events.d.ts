@@ -1,4 +1,4 @@
-import { VdsCustomEvent, VdsEventInit, VdsEvents } from '../../shared/events';
+import { VdsCustomEvent, VdsEventInit } from '../../shared/events';
 import { MediaProviderElement } from './MediaProviderElement';
 
 declare global {
@@ -10,11 +10,9 @@ export interface MediaProviderConnectEventDetail {
 	onDisconnect: (callback: () => void) => void;
 }
 
-export interface MediaProviderEvents {
-	'media-provider-connect': VdsCustomEvent<MediaProviderConnectEventDetail>;
+export interface VdsMediaProviderEvents {
+	'vds-media-provider-connect': VdsCustomEvent<MediaProviderConnectEventDetail>;
 }
-
-export type VdsMediaProviderEvents = VdsEvents<MediaProviderEvents>;
 
 export class VdsMediaProviderEvent<
 	DetailType

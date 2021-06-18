@@ -130,10 +130,15 @@ export function listen(target, type, listener, options) {
  * @param {HTMLElement} host
  * @param {import('./types').EventHandlerRecord} record
  * @param {DisposalBin} disposal
+ * @param {{ target?: EventTarget }} [options]
  */
-export function bindEventListeners(host, record, disposal) {
+export function bindEventListeners(host, record, disposal, options = {}) {
 	Object.keys(record).forEach((eventType) => {
-		const dispose = listen(host, eventType, record[eventType].bind(host));
+		const dispose = listen(
+			options.target ?? host,
+			eventType,
+			record[eventType].bind(host)
+		);
 		disposal.add(dispose);
 	});
 }

@@ -1,23 +1,21 @@
 import { VdsCustomEvent } from '../shared/events';
-import { VdsEventInit, VdsEvents } from '../shared/events';
+import { VdsEventInit } from '../shared/events';
 
 declare global {
 	interface GlobalEventHandlersEventMap extends VdsMediaRequestEvents {}
 }
 
-export interface MediaRequestEvents {
-	'mute-request': VdsCustomEvent<void>;
-	'unmute-request': VdsCustomEvent<void>;
-	'enter-fullscreen-request': VdsCustomEvent<void>;
-	'exit-fullscreen-request': VdsCustomEvent<void>;
-	'play-request': VdsCustomEvent<void>;
-	'pause-request': VdsCustomEvent<void>;
-	'seek-request': VdsCustomEvent<number>;
-	'seeking-request': VdsCustomEvent<number>;
-	'volume-change-request': VdsCustomEvent<number>;
+export interface VdsMediaRequestEvents {
+	'vds-mute-request': VdsCustomEvent<void>;
+	'vds-unmute-request': VdsCustomEvent<void>;
+	'vds-enter-fullscreen-request': VdsCustomEvent<void>;
+	'vds-exit-fullscreen-request': VdsCustomEvent<void>;
+	'vds-play-request': VdsCustomEvent<void>;
+	'vds-pause-request': VdsCustomEvent<void>;
+	'vds-seek-request': VdsCustomEvent<number>;
+	'vds-seeking-request': VdsCustomEvent<number>;
+	'vds-volume-change-request': VdsCustomEvent<number>;
 }
-
-export type VdsMediaRequestEvents = VdsEvents<MediaRequestEvents>;
 
 export class VdsMediaRequestEvent<
 	DetailType

@@ -1,5 +1,5 @@
 import { VdsCustomEvent } from '../shared/events';
-import { VdsEventInit, VdsEvents } from '../shared/events';
+import { VdsEventInit } from '../shared/events';
 import { MediaType } from './MediaType';
 import { ViewType } from './ViewType';
 
@@ -12,36 +12,34 @@ export interface VolumeChange {
 	muted: boolean;
 }
 
-export interface MediaEvents {
-	abort: VdsCustomEvent<void>;
-	'can-play': VdsCustomEvent<void>;
-	'can-play-through': VdsCustomEvent<void>;
-	'duration-change': VdsCustomEvent<number>;
-	emptied: VdsCustomEvent<void>;
-	ended: VdsCustomEvent<void>;
-	error: VdsCustomEvent<unknown>;
-	'fullscreen-change': VdsCustomEvent<boolean>;
-	'loaded-data': VdsCustomEvent<void>;
-	'loaded-metadata': VdsCustomEvent<void>;
-	'load-start': VdsCustomEvent<void>;
-	'media-type-change': VdsCustomEvent<MediaType>;
-	pause: VdsCustomEvent<void>;
-	play: VdsCustomEvent<void>;
-	playing: VdsCustomEvent<void>;
-	progress: VdsCustomEvent<void>;
-	seeked: VdsCustomEvent<number>;
-	seeking: VdsCustomEvent<number>;
-	stalled: VdsCustomEvent<void>;
-	started: VdsCustomEvent<void>;
-	suspend: VdsCustomEvent<void>;
-	replay: VdsCustomEvent<void>;
-	'time-update': VdsCustomEvent<number>;
-	'view-type-change': VdsCustomEvent<ViewType>;
-	'volume-change': VdsCustomEvent<VolumeChange>;
-	waiting: VdsCustomEvent<void>;
+export interface VdsMediaEvents {
+	'vds-abort': VdsCustomEvent<void>;
+	'vds-can-play': VdsCustomEvent<void>;
+	'vds-can-play-through': VdsCustomEvent<void>;
+	'vds-duration-change': VdsCustomEvent<number>;
+	'vds-emptied': VdsCustomEvent<void>;
+	'vds-ended': VdsCustomEvent<void>;
+	'vds-error': VdsCustomEvent<unknown>;
+	'vds-fullscreen-change': VdsCustomEvent<boolean>;
+	'vds-loaded-data': VdsCustomEvent<void>;
+	'vds-loaded-metadata': VdsCustomEvent<void>;
+	'vds-load-start': VdsCustomEvent<void>;
+	'vds-media-type-change': VdsCustomEvent<MediaType>;
+	'vds-pause': VdsCustomEvent<void>;
+	'vds-play': VdsCustomEvent<void>;
+	'vds-playing': VdsCustomEvent<void>;
+	'vds-progress': VdsCustomEvent<void>;
+	'vds-seeked': VdsCustomEvent<number>;
+	'vds-seeking': VdsCustomEvent<number>;
+	'vds-stalled': VdsCustomEvent<void>;
+	'vds-started': VdsCustomEvent<void>;
+	'vds-suspend': VdsCustomEvent<void>;
+	'vds-replay': VdsCustomEvent<void>;
+	'vds-time-update': VdsCustomEvent<number>;
+	'vds-view-type-change': VdsCustomEvent<ViewType>;
+	'vds-volume-change': VdsCustomEvent<VolumeChange>;
+	'vds-waiting': VdsCustomEvent<void>;
 }
-
-export type VdsMediaEvents = VdsEvents<MediaEvents>;
 
 export class VdsMediaEvent<DetailType> extends VdsCustomEvent<DetailType> {
 	static readonly TYPE: keyof VdsMediaEvents;

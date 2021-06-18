@@ -1,20 +1,14 @@
-import {
-	VdsCustomEvent,
-	VdsEventInit,
-	VdsEvents
-} from '../../../shared/events';
+import { VdsCustomEvent, VdsEventInit } from '../../../shared/events';
 
 declare global {
 	interface GlobalEventHandlersEventMap extends VdsScrubberEvents {}
 }
 
-export interface ScrubberEvents {
-	'scrubber-preview-show': VdsCustomEvent<void>;
-	'scrubber-preview-hide': VdsCustomEvent<void>;
-	'scrubber-preview-time-update': VdsCustomEvent<number>;
+export interface VdsScrubberEvents {
+	'vds-scrubber-preview-show': VdsCustomEvent<void>;
+	'vds-scrubber-preview-hide': VdsCustomEvent<void>;
+	'vds-scrubber-preview-time-update': VdsCustomEvent<number>;
 }
-
-export type VdsScrubberEvents = VdsEvents<ScrubberEvents>;
 
 export class VdsScrubberEvent<DetailType> extends VdsCustomEvent<DetailType> {
 	static readonly TYPE: keyof VdsScrubberEvents;

@@ -1,5 +1,5 @@
 // ** Dependencies **
-import '../slider/vds-slider';
+import '../slider/define';
 
 import clsx from 'clsx';
 import {
@@ -133,7 +133,8 @@ import { ScrubberElementProps } from './scrubber.types';
  */
 export class ScrubberElement
 	extends WithFocus(LitElement)
-	implements ScrubberElementProps {
+	implements ScrubberElementProps
+{
 	@query('#root') rootEl!: HTMLDivElement;
 	@query('#slider') sliderEl!: SliderElement;
 	@query('#progress') progressEl!: HTMLProgressElement;

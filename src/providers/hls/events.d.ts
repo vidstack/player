@@ -1,19 +1,17 @@
 import type Hls from 'hls.js';
 
-import { VdsCustomEvent, VdsEventInit, VdsEvents } from '../../shared/events';
+import { VdsCustomEvent, VdsEventInit } from '../../shared/events';
 
 declare global {
 	interface GlobalEventHandlersEventMap extends VdsHlsEvents {}
 }
 
-export interface HlsEvents {
-	'hls-engine-built': VdsCustomEvent<Hls>;
-	'hls-engine-attach': VdsCustomEvent<Hls>;
-	'hls-engine-detach': VdsCustomEvent<Hls>;
-	'hls-engine-no-support': VdsCustomEvent<void>;
+export interface VdsHlsEvents {
+	'vds-hls-engine-built': VdsCustomEvent<Hls>;
+	'vds-hls-engine-detach': VdsCustomEvent<Hls>;
+	'vds-hls-engine-attach': VdsCustomEvent<Hls>;
+	'vds-hls-engine-no-support': VdsCustomEvent<void>;
 }
-
-export type VdsHlsEvents = VdsEvents<HlsEvents>;
 
 export class VdsHlsEvent<DetailType> extends VdsCustomEvent<DetailType> {
 	static readonly TYPE: keyof VdsHlsEvents;
