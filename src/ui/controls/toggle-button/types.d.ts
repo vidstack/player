@@ -1,7 +1,7 @@
 import { ButtonElement } from '../button';
-import { ToggleElementProps } from '../toggle/types';
+import { ToggleElementProps } from '../toggle';
 
-export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = `toggle-button`;
+export type ToggleButton = ToggleButtonElementProps;
 
 export interface ToggleButtonElementProps extends ToggleElementProps {
 	/**
@@ -23,8 +23,6 @@ export interface ToggleButtonElementProps extends ToggleElementProps {
 
 	/**
 	 * The component's root element.
-	 *
-	 * @default ButtonElement
 	 */
 	readonly rootElement: ButtonElement;
 }

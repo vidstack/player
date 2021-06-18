@@ -120,7 +120,7 @@ export class ToggleElement extends VdsElement {
 	renderPressedSlot() {
 		return html`<slot
 			name=${this.getPressedSlotName()}
-			@slotchange="${this.handlePressedSlotChange}"
+			@slotchange=${this.handlePressedSlotChange}
 		></slot>`;
 	}
 
@@ -166,7 +166,7 @@ export class ToggleElement extends VdsElement {
 	renderNotPressedSlot() {
 		return html`<slot
 			name=${ifDefined(this.getNotPressedSlotName())}
-			@slotchange="${this.handleNotPressedSlotChange}"
+			@slotchange=${this.handleNotPressedSlotChange}
 		></slot>`;
 	}
 
