@@ -1,24 +1,15 @@
-import '../../../core/media/controller/define';
-import '../../../core/media/container/vds-media-container';
-import '../../../core/fakes/vds-fake-media-provider';
+import '../../../media/define';
+import './define';
 
-import { html, TemplateResult } from 'lit-html';
+import { html } from 'lit';
 
-import { VdsMediaRequestEvents } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import {
-	buildStorybookControlsFromManifest,
-	DOMEventsToStorybookActions,
-	SB_THEME_COLOR
-} from '../../../shared/storybook';
-import { MuteButtonElementProps } from './mute-button.types';
-import { VDS_MUTE_BUTTON_ELEMENT_TAG_NAME } from './vds-mute-button';
+import { VDS_MUTE_BUTTON_ELEMENT_TAG_NAME } from './MuteButtonElement';
 
 export default {
 	title: 'UI/Foundation/Controls/Mute Button',
 	component: VDS_MUTE_BUTTON_ELEMENT_TAG_NAME,
 	argTypes: {
-		...buildStorybookControlsFromManifest(VDS_MUTE_BUTTON_ELEMENT_TAG_NAME),
 		pressed: {
 			table: {
 				disable: true
@@ -31,14 +22,6 @@ export default {
 	}
 };
 
-interface FakeProps {
-	fakeMuted: boolean;
-}
-
-type Args = FakeProps &
-	MuteButtonElementProps &
-	DOMEventsToStorybookActions<VdsMediaRequestEvents>;
-
 function Template({
 	// Fakes
 	fakeMuted,
@@ -49,7 +32,7 @@ function Template({
 	// Events
 	onVdsMuteRequest,
 	onVdsUnmuteRequest
-}: Args): TemplateResult {
+}) {
 	return html`
 		<vds-media-controller .canPlay="${true}" .muted="${fakeMuted}">
 			<vds-media-container>
@@ -59,7 +42,6 @@ function Template({
 					label="${ifNonEmpty(label)}"
 					described-by="${ifNonEmpty(describedBy)}"
 					?disabled="${disabled}"
-					style="color: ${SB_THEME_COLOR};"
 					@vds-mute-request="${onVdsMuteRequest}"
 					@vds-unmute-request="${onVdsUnmuteRequest}"
 				>
@@ -68,12 +50,6 @@ function Template({
 				</vds-mute-button>
 			</vds-media-container>
 		</vds-media-controller>
-
-		<style>
-			vds-media-container::part(ui) {
-				position: relative;
-			}
-		</style>
 	`;
 }
 
