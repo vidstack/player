@@ -14,13 +14,13 @@ import { timeProgressElementStyles } from './css';
 
 export const VDS_TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
 
-/** @typedef {import('./types').TimeProgressDisplay} ITimeProgressDisplay */
+/** @typedef {import('./types').TimeProgressDisplay} TimeProgressDisplay */
 
 /**
  * Formats and displays the progression of playback. The output is displayed as
  * `{currentTime}{timeSeparator}{duration}`.
  *
- * @implements {ITimeProgressDisplay}
+ * @implements {TimeProgressDisplay}
  *
  * @tagname vds-time-progress
  *

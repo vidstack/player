@@ -13,7 +13,7 @@ import {
 export const VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME =
 	'vds-buffering-indicator';
 
-/** @typedef {import('./types').BufferingIndicator} IBufferingIndicator */
+/** @typedef {import('./types').BufferingIndicator} BufferingIndicator */
 
 /**
  * Display an indicator when either the provider/media is booting or media playback has
@@ -22,7 +22,7 @@ export const VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME =
  *
  * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `hidden` attribute.
  *
- * @implements {IBufferingIndicator}
+ * @implements {BufferingIndicator}
  *
  * @tagname vds-buffering-indicator
  *

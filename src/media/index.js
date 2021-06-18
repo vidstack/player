@@ -4,6 +4,7 @@ export * from './controller';
 export * from './media.context';
 export * from './media.events';
 export * from './media-request.events';
+export * from './MediaRemoteControl';
 export * from './MediaType';
 export * from './provider';
 export * from './time-ranges';

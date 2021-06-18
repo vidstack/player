@@ -22,12 +22,12 @@ export const AUDIO_EXTENSIONS =
 
 export const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v)($|\?)/i;
 
-/** @typedef {import('./types').VideoProvider} IVideoProvider */
+/** @typedef {import('./types').VideoProvider} VideoProvider */
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
  *
- * @implements {IVideoProvider}
+ * @implements {VideoProvider}
  *
  * @tagname vds-video
  *

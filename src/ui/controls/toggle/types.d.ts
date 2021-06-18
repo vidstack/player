@@ -7,12 +7,12 @@ export interface ToggleElementProps {
 	pressed: boolean;
 
 	/**
-	 * The element to display when the toggle is in the `pressed` state.
+	 * The slotted element to display when the toggle is in the `pressed` state.
 	 */
 	readonly pressedSlotElement: HTMLElement | undefined;
 
 	/**
-	 * The element to display when the toggle is in the `not-pressed` state.
+	 * The slotted element to display when the toggle is in the `not-pressed` state.
 	 */
 	readonly notPressedSlotElement: HTMLElement | undefined;
 }

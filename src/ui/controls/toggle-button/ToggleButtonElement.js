@@ -12,12 +12,12 @@ import { ToggleElement } from '../toggle';
 
 export const VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
 
-/** @typedef {import('./types').ToggleButton} IToggleButton */
+/** @typedef {import('./types').ToggleButton} ToggleButton */
 
 /**
  * The foundation for any toggle button such as a `play-button` or `mute-button`.
  *
- * @implements {IToggleButton}
+ * @implements {ToggleButton}
  *
  * @tagname vds-toggle-button
  *

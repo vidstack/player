@@ -8,12 +8,12 @@ import { timeElementStyles } from './css';
 
 export const VDS_TIME_ELEMENT_TAG_NAME = 'vds-time';
 
-/** @typedef {import('./types').TimeDisplay} ITimeDisplay */
+/** @typedef {import('./types').TimeDisplay} TimeDisplay */
 
 /**
  * Formats and displays a length of time given in `seconds`.
  *
- * @implements {ITimeDisplay}
+ * @implements {TimeDisplay}
  *
  * @tagname vds-time
  *

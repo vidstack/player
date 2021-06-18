@@ -1,24 +1,15 @@
-import '../../../core/media/controller/define';
-import '../../../core/media/container/vds-media-container';
-import '../../../core/fakes/vds-fake-media-provider';
+import '../../../media/define';
+import './define';
 
-import { html, TemplateResult } from 'lit-html';
+import { html } from 'lit';
 
-import { VdsMediaRequestEvents } from '../../../core';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import {
-	buildStorybookControlsFromManifest,
-	DOMEventsToStorybookActions,
-	SB_THEME_COLOR
-} from '../../../shared/storybook';
-import { PlayButtonElementProps } from './play-button.types';
-import { VDS_PLAY_BUTTON_ELEMENT_TAG_NAME } from './vds-play-button';
+import { VDS_PLAY_BUTTON_ELEMENT_TAG_NAME } from './PlayButtonElement';
 
 export default {
 	title: 'UI/Foundation/Controls/Play Button',
 	component: VDS_PLAY_BUTTON_ELEMENT_TAG_NAME,
 	argTypes: {
-		...buildStorybookControlsFromManifest(VDS_PLAY_BUTTON_ELEMENT_TAG_NAME),
 		pressed: {
 			table: {
 				disable: true
@@ -31,14 +22,6 @@ export default {
 	}
 };
 
-interface FakeProps {
-	fakePaused: boolean;
-}
-
-type Args = FakeProps &
-	PlayButtonElementProps &
-	DOMEventsToStorybookActions<VdsMediaRequestEvents>;
-
 function Template({
 	// Fakes
 	fakePaused,
@@ -49,7 +32,7 @@ function Template({
 	// Events
 	onVdsPlayRequest,
 	onVdsPauseRequest
-}: Args): TemplateResult {
+}) {
 	return html`
 		<vds-media-controller .canPlay="${true}" .paused="${fakePaused}">
 			<vds-media-container>
@@ -59,7 +42,6 @@ function Template({
 					label="${ifNonEmpty(label)}"
 					described-by="${ifNonEmpty(describedBy)}"
 					?disabled="${disabled}"
-					style="color: ${SB_THEME_COLOR};"
 					@vds-play-request="${onVdsPlayRequest}"
 					@vds-pause-request="${onVdsPauseRequest}"
 				>
@@ -68,12 +50,6 @@ function Template({
 				</vds-play-button>
 			</vds-media-container>
 		</vds-media-controller>
-
-		<style>
-			vds-media-container::part(ui) {
-				position: relative;
-			}
-		</style>
 	`;
 }
 

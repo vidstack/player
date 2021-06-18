@@ -22,6 +22,10 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 		if (this.canPlay) this.handleMediaReady();
 	}
 
+	forceMediaReady() {
+		this.handleMediaReady();
+	}
+
 	// -------------------------------------------------------------------------------------------
 	// Provider Metods
 	// -------------------------------------------------------------------------------------------

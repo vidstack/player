@@ -26,7 +26,7 @@ export const HLS_TYPES = new Set([
 	'application/vnd.apple.mpegurl'
 ]);
 
-/** @typedef {import('./types').HlsProvider} IHlsProvider */
+/** @typedef {import('./types').HlsProvider} HlsProvider */
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element. This provider
@@ -39,7 +39,7 @@ export const HLS_TYPES = new Set([
  * $: npm install hls.js@^0.14.0
  * ```
  *
- * @implements {IHlsProvider}
+ * @implements {HlsProvider}
  *
  * @tagname vds-hls
  *

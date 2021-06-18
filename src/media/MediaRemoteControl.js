@@ -26,79 +26,115 @@ export class MediaRemoteControl {
 	}
 
 	/**
+	 * @param {Event} [originalEvent]
 	 * @returns {void}
 	 */
-	play() {
-		this.host.dispatchEvent(new VdsPlayRequestEvent());
-	}
-
-	/**
-	 * @returns {void}
-	 */
-	pause() {
-		this.host.dispatchEvent(new VdsPauseRequestEvent());
-	}
-
-	/**
-	 * @returns {void}
-	 */
-	mute() {
-		this.host.dispatchEvent(new VdsMuteRequestEvent());
-	}
-
-	/**
-	 * @returns {void}
-	 */
-	unmute() {
-		this.host.dispatchEvent(new VdsUnmuteRequestEvent());
-	}
-
-	/**
-	 * @returns {void}
-	 */
-	enterFullscreen() {
-		this.host.dispatchEvent(new VdsEnterFullscreenRequestEvent());
-	}
-
-	/**
-	 * @returns {void}
-	 */
-	exitFullscreen() {
-		this.host.dispatchEvent(new VdsExitFullscreenRequestEvent());
-	}
-
-	/**
-	 * @param {number} time
-	 * @returns {void}
-	 */
-	seeking(time) {
+	play(originalEvent) {
 		this.host.dispatchEvent(
-			new VdsSeekingRequestEvent({
-				detail: time
+			new VdsPlayRequestEvent({
+				originalEvent
+			})
+		);
+	}
+
+	/**
+	 * @param {Event} [originalEvent]
+	 * @returns {void}
+	 */
+	pause(originalEvent) {
+		this.host.dispatchEvent(
+			new VdsPauseRequestEvent({
+				originalEvent
+			})
+		);
+	}
+
+	/**
+	 * @param {Event} [originalEvent]
+	 * @returns {void}
+	 */
+	mute(originalEvent) {
+		this.host.dispatchEvent(
+			new VdsMuteRequestEvent({
+				originalEvent
+			})
+		);
+	}
+
+	/**
+	 * @param {Event} [originalEvent]
+	 * @returns {void}
+	 */
+	unmute(originalEvent) {
+		this.host.dispatchEvent(
+			new VdsUnmuteRequestEvent({
+				originalEvent
+			})
+		);
+	}
+
+	/**
+	 * @param {Event} [originalEvent]
+	 * @returns {void}
+	 */
+	enterFullscreen(originalEvent) {
+		this.host.dispatchEvent(
+			new VdsEnterFullscreenRequestEvent({
+				originalEvent
+			})
+		);
+	}
+
+	/**
+	 * @param {Event} [originalEvent]
+	 * @returns {void}
+	 */
+	exitFullscreen(originalEvent) {
+		this.host.dispatchEvent(
+			new VdsExitFullscreenRequestEvent({
+				originalEvent
 			})
 		);
 	}
 
 	/**
 	 * @param {number} time
+	 * @param {Event} originalEvent
 	 * @returns {void}
 	 */
-	seek(time) {
+	seeking(time, originalEvent) {
+		this.host.dispatchEvent(
+			new VdsSeekingRequestEvent({
+				detail: time,
+				originalEvent
+			})
+		);
+	}
+
+	/**
+	 * @param {number} time
+	 * @param {Event} [originalEvent]
+	 * @returns {void}
+	 */
+	seek(time, originalEvent) {
 		this.host.dispatchEvent(
 			new VdsSeekRequestEvent({
-				detail: time
+				detail: time,
+				originalEvent
 			})
 		);
 	}
 
 	/**
 	 * @param {number} volume
+	 * @param {Event} [originalEvent]
 	 * @returns {void}
 	 */
-	changeVolume(volume) {
+	changeVolume(volume, originalEvent) {
 		this.host.dispatchEvent(
 			new VdsVolumeChangeRequestEvent({
-				detail: volume
+				detail: volume,
+				originalEvent
 			})
 		);
 	}

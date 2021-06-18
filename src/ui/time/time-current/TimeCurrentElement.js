@@ -3,13 +3,13 @@ import { TimeElement } from '../time';
 
 export const VDS_TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
 
-/** @typedef {import('./types').CurrentTimeDisplay} ICurrentTimeDisplay */
+/** @typedef {import('./types').CurrentTimeDisplay} CurrentTimeDisplay */
 
 /**
  * Formats and displays the `currentTime` of media playback. Do not mess with the component's
  * `seconds` property as it's automatically managed.
  *
- * @implements {ICurrentTimeDisplay}
+ * @implements {CurrentTimeDisplay}
  *
  * @tagname vds-time-current
  *

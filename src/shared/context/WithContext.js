@@ -73,7 +73,7 @@ export function WithContext(Base) {
 		 * @template {any} T
 		 * @param {string} name
 		 * @param {import('./types').Context<T>} context
-		 * @param {import('./types').ContextOptions<T>} [options]
+		 * @param {import('./types').ContextProvideOptions<T>} [options]
 		 */
 		static defineContextProvider(name, context, options = {}) {
 			// eslint-disable-next-line no-prototype-builtins
@@ -126,7 +126,7 @@ export function WithContext(Base) {
 		 * @template {any} T
 		 * @param {string} name
 		 * @param {import('./types').Context<T>} context
-		 * @param {import('./types').ContextOptions<T>} [options]
+		 * @param {import('./types').ContextConsumeOptions<T>} [options]
 		 */
 		static defineContextConsumer(name, context, options = {}) {
 			// eslint-disable-next-line no-prototype-builtins
@@ -139,7 +139,8 @@ export function WithContext(Base) {
 			let consumer;
 
 			/** @type {any} */ (this).addInitializer((element) => {
-				let oldValue = context.initialValue;
+				let oldValue =
+					options.transform?.(context.initialValue) ?? context.initialValue;
 				consumer = context.consume(element, {
 					...options,
 					onUpdate: (newValue) => {

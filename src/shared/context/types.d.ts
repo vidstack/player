@@ -15,7 +15,6 @@ export interface ContextOptions<T = unknown> {
 	onConnect?(): void;
 	onUpdate?(newValue: T): void;
 	onDisconnect?(): void;
-	transform?: (newValue: T) => T;
 }
 
 export type ContextConsumerDetail<T = any> = {
@@ -24,10 +23,22 @@ export type ContextConsumerDetail<T = any> = {
 	onDisconnect(callback: () => void): void;
 };
 
+export type ContextConsumeOptions<T> = ContextOptions<T> & {
+	transform?: (newValue: T) => T;
+};
+
+export type ContextProvideOptions<T> = ContextOptions<T>;
+
 export interface Context<T> {
 	initialValue: T;
-	provide(host: ContextHost, options?: ContextOptions<T>): ContextProvider<T>;
-	consume(host: ContextHost, options?: ContextOptions<T>): ContextConsumer<T>;
+	provide(
+		host: ContextHost,
+		options?: ContextProvideOptions<T>
+	): ContextProvider<T>;
+	consume(
+		host: ContextHost,
+		options?: ContextConsumeOptions<T>
+	): ContextConsumer<T>;
 }
 
 export type DerivedContext<T> = Omit<Context<T>, 'provide'> & {
@@ -37,7 +48,7 @@ export type DerivedContext<T> = Omit<Context<T>, 'provide'> & {
 
 export type ContextConsumerDeclarationOptions<T> = {
 	context: Context<T>;
-} & ContextOptions<T>;
+} & ContextConsumeOptions<T>;
 
 export type ContextConsumerDeclaration<T> =
 	| Context<T>
@@ -45,7 +56,7 @@ export type ContextConsumerDeclaration<T> =
 
 export type ContextProviderDeclarationOptions<T> = {
 	context: Context<T>;
-} & ContextOptions<T>;
+} & ContextProvideOptions<T>;
 
 export type ContextProviderDeclaration<T> =
 	| Context<T>
@@ -71,12 +82,12 @@ export interface ContextInitializer extends Constructor {
 	defineContextConsumer<T>(
 		name: string | symbol,
 		context: Context<T>,
-		options?: ContextOptions<T>
+		options?: ContextConsumeOptions<T>
 	): void;
 	defineContextProvider<T>(
 		name: string | symbol,
 		context: Context<T>,
-		options?: ContextOptions<T>
+		options?: ContextProvideOptions<T>
 	): void;
 }
 

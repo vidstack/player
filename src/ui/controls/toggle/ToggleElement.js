@@ -8,7 +8,7 @@ import { toggleElementStyles } from './css';
 
 export const VDS_TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
 
-/** @typedef {import('./types').Toggle} IToggle */
+/** @typedef {import('./types').Toggle} Toggle */
 
 /**
  * A toggle component to render different state depending on whether it's pressed or not. This
@@ -16,7 +16,7 @@ export const VDS_TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
  * state so you can perform CSS animations. A `hidden` attribute will be applied to the slot
  * that's currently not active.
  *
- * @implements {IToggle}
+ * @implements {Toggle}
  *
  * @tagname vds-toggle
  *

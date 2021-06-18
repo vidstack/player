@@ -3,7 +3,7 @@ import { isUndefined } from '../../utils/unit';
 /**
  * @template T
  * @param {import("./types").Context<T>} context
- * @param {import("./types").ContextOptions<T>} [options]
+ * @param {import("./types").ContextConsumeOptions<T>} [options]
  * @returns {PropertyDecorator}
  */
 export function consumeContext(context, options = {}) {
@@ -54,7 +54,7 @@ export function consumeContext(context, options = {}) {
 /**
  * @template T
  * @param {import("./types").Context<T>} context
- * @param {import("./types").ContextOptions<T>} [options]
+ * @param {import("./types").ContextProvideOptions<T>} [options]
  * @returns {PropertyDecorator}
  */
 export function provideContext(context, options = {}) {

@@ -11,13 +11,13 @@ import { buttonElementStyles } from './css';
 
 export const VDS_BUTTON_ELEMENT_TAG_NAME = 'vds-button';
 
-/** @typedef {import('./types').Button} IButton */
+/** @typedef {import('./types').Button} Button */
 
 /**
  * Base control that is basically a naked (not styled) button that helps manage ARIA
  * attributes and normalizes any web-component or cross-browser related issues.
  *
- * @implements {IButton}
+ * @implements {Button}
  *
  * @tagname vds-button
  *
