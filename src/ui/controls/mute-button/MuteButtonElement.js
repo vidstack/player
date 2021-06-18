@@ -71,14 +71,14 @@ export class MuteButtonElement extends ToggleButtonElement {
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleButtonClick(originalEvent) {
+	handleButtonClick(event) {
 		if (this.pressed) {
-			this.remoteControl.unmute(originalEvent);
+			this.remoteControl.unmute(event);
 		} else {
-			this.remoteControl.mute(originalEvent);
+			this.remoteControl.mute(event);
 		}
 	}
 }

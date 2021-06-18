@@ -1,34 +1,34 @@
 import { mediaContext, MediaRemoteControl } from '../../../media';
 import { ToggleButtonElement } from '../toggle-button';
 
-export const VDS_PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
+export const VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
 
-/** @typedef {import('./types').PlayButton} PlayButton */
+/** @typedef {import('./types').FullscreenButton} FullscreenButton */
 
 /**
- * A button for toggling the playback state (play/pause) of the current media.
+ * A button for toggling the fullscreen mode of the player.
  *
- * @implements {PlayButton}
+ * @implements {FullscreenButton}
  *
- * @tagname vds-play-button
+ * @tagname vds-fullscreen-button
  *
- * @slot play - The content to show when the `paused` state is `true`.
- * @slot pause - The content to show when the `paused` state is `false`.
+ * @slot enter - The content to show when the `fullscreen` state is `false`.
+ * @slot exit - The content to show when the `fullscreen` state is `true`.
  *
  * @csspart button - The root button (`<vds-button>`).
  * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix such as `button-root`.
  *
  * @example
  * ```html
- * <vds-play-button>
+ * <vds-fullscreen-button>
  *   <!-- Showing -->
- *   <div slot="play"></div>
+ *   <div slot="enter"></div>
  *   <!-- Hidden - `hidden` attribute will automatically be applied/removed -->
- *   <div slot="pause" hidden></div>
- * </vds-play-button>
+ *   <div slot="exit" hidden></div>
+ * </vds-fullscreen-button>
  * ```
  */
-export class PlayButtonElement extends ToggleButtonElement {
+export class FullscreenButtonElement extends ToggleButtonElement {
 	/**
 	 * @protected
 	 * @readonly
@@ -39,39 +39,34 @@ export class PlayButtonElement extends ToggleButtonElement {
 		super();
 
 		// Properties
-		this.label = 'Play';
+		this.label = 'Fullscreen';
 		/** @internal @readonly @type {boolean} */
-		this.pressed = false;
+		this.pressed = mediaContext.fullscreen.initialValue;
 	}
 
 	/** @type {import('../../../shared/context').ContextConsumerDeclarations} */
 	static get contextConsumers() {
 		return {
-			pressed: {
-				context: mediaContext.paused,
-				// Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
-				// use `playing` because there could be a buffering delay (we want immediate feedback).
-				transform: (p) => !p
-			}
+			pressed: mediaContext.fullscreen
 		};
 	}
 
-	get playSlotElement() {
+	get enterSlotElement() {
 		return this.currentNotPressedSlotElement;
 	}
 
-	get pauseSlotElement() {
+	get exitSlotElement() {
 		return this.currentPressedSlotElement;
 	}
 
 	/** @protected */
 	getPressedSlotName() {
-		return 'pause';
+		return 'exit';
 	}
 
 	/** @protected */
 	getNotPressedSlotName() {
-		return 'play';
+		return 'enter';
 	}
 
 	/**
@@ -81,9 +76,9 @@ export class PlayButtonElement extends ToggleButtonElement {
 	 */
 	handleButtonClick(event) {
 		if (this.pressed) {
-			this.remoteControl.pause(event);
+			this.remoteControl.exitFullscreen(event);
 		} else {
-			this.remoteControl.play(event);
+			this.remoteControl.enterFullscreen(event);
 		}
 	}
 }

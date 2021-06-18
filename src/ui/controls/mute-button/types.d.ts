@@ -4,12 +4,12 @@ export type MuteButton = MuteButtonElementProps;
 
 export type MuteButtonElementProps = ToggleButtonElementProps & {
 	/**
-	 * The slotted element to display when the muted state is `false`.
+	 * The `mute` slotted element.
 	 */
 	readonly muteSlotElement: HTMLElement | undefined;
 
 	/**
-	 * The slotted element to display when the muted state is `true`.
+	 * The `unmute` slotted element.
 	 */
 	readonly unmuteSlotElement: HTMLElement | undefined;
 };

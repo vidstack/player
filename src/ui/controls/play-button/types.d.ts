@@ -4,12 +4,12 @@ export type PlayButton = ToggleButtonElementProps;
 
 export type PlayButtonElementProps = ToggleButtonElementProps & {
 	/**
-	 * The slotted element to display when the pause state is `true`.
+	 * The `play` slotted element.
 	 */
 	readonly playSlotElement: HTMLElement | undefined;
 
 	/**
-	 * The slotted element to display when the pause state is `false`.
+	 * The `pause` slotted element.
 	 */
 	readonly pauseSlotElement: HTMLElement | undefined;
 };
