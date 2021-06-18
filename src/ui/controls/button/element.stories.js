@@ -1,3 +1,5 @@
+import './define';
+
 import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
@@ -32,7 +34,7 @@ function Template({
 			?expanded="${expanded}"
 			?pressed="${pressed}"
 		>
-			Hello
+			Button
 		</vds-button>
 	`;
 }
