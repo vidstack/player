@@ -1,6 +1,5 @@
 /* c8 ignore next 1000 */
 
-import { LIB_PREFIX } from '../../../shared/constants';
 import {
 	CanPlay,
 	MediaProviderElement,
@@ -10,12 +9,8 @@ import {
 	VdsVolumeChangeEvent
 } from '../..';
 
-export const FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME = `fake-media-provider`;
-
 export const VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME =
-	/** @type {`${typeof LIB_PREFIX}-${typeof FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME}`} */ (
-		`${LIB_PREFIX}-${FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME}`
-	);
+	'vds-fake-media-provider';
 
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can

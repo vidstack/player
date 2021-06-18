@@ -1,13 +1,6 @@
 import { LitElement } from 'lit';
 
-import { BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/button/button.types';
-import { FULLSCREEN_BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/fullscreen-button/fullscreen-button.types';
-import { MUTE_BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/mute-button/mute-button.types';
-import { PLAY_BUTTON_ELEMENT_TAG_NAME } from '../../ui/controls/play-button/play-button.types';
-import { SCRUBBER_ELEMENT_TAG_NAME } from '../../ui/controls/scrubber/scrubber.types';
-import { SLIDER_ELEMENT_TAG_NAME } from '../../ui/controls/slider/slider.types';
 import { currentSafariVersion } from '../../utils/support';
-import { LIB_PREFIX } from '../constants';
 
 /**
  * A selector selecting focusable nodes.
@@ -15,20 +8,25 @@ import { LIB_PREFIX } from '../constants';
  * @inspiration https://github.com/carbon-design-system/carbon-web-components
  */
 export const focusableSelector = `
-  a[href], area[href], input:not([disabled]):not([tabindex='-1']),
-  button:not([disabled]):not([tabindex='-1']),select:not([disabled]):not([tabindex='-1']),
-  textarea:not([disabled]):not([tabindex='-1']),
-  iframe, object, embed, *[tabindex]:not([tabindex='-1']), *[contenteditable=true],
   ${[
-		BUTTON_ELEMENT_TAG_NAME,
-		SLIDER_ELEMENT_TAG_NAME,
-		PLAY_BUTTON_ELEMENT_TAG_NAME,
-		MUTE_BUTTON_ELEMENT_TAG_NAME,
-		FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
-		SCRUBBER_ELEMENT_TAG_NAME
-	]
-		.map((tagName) => `${LIB_PREFIX}-${tagName}`)
-		.join(', ')}
+		'a[href]',
+		'area[href]',
+		`input:not([disabled]):not([tabindex='-1'])`,
+		`button:not([disabled]):not([tabindex='-1'])`,
+		`select:not([disabled]):not([tabindex='-1'])`,
+		`textarea:not([disabled]):not([tabindex='-1'])`,
+		'iframe',
+		'object',
+		'embed',
+		`*[tabindex]:not([tabindex='-1'])`,
+		'*[contenteditable=true]',
+		'vds-button',
+		'vds-slider',
+		'vds-play-button',
+		'vds-mute-button',
+		'vds-fullscreen-button',
+		'vds-scrubber'
+	].join(', ')}
 `;
 
 /**

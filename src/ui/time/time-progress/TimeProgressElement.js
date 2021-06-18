@@ -5,7 +5,6 @@ import '../time-duration/define';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { LIB_PREFIX } from '../../../shared/constants';
 import { VdsElement } from '../../../shared/elements';
 import { buildExportPartsAttr } from '../../../utils/dom';
 import { TimeElement } from '../time';
@@ -13,12 +12,7 @@ import { TimeCurrentElement } from '../time-current';
 import { TimeDurationElement } from '../time-duration';
 import { timeProgressElementStyles } from './css';
 
-export const TIME_PROGRESS_ELEMENT_TAG_NAME = `time-progress`;
-
-export const VDS_TIME_PROGRESS_ELEMENT_TAG_NAME =
-	/** @type {`${typeof LIB_PREFIX}-${typeof TIME_PROGRESS_ELEMENT_TAG_NAME}`} */ (
-		`${LIB_PREFIX}-${TIME_PROGRESS_ELEMENT_TAG_NAME}`
-	);
+export const VDS_TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
 
 /** @typedef {import('./types').TimeProgressDisplay} ITimeProgressDisplay */
 
@@ -96,7 +90,7 @@ export class TimeProgressElement extends VdsElement {
 	// Properties
 	// -------------------------------------------------------------------------------------------
 
-	/** @type {import('lit-element').PropertyDeclarations} */
+	/** @type {import('lit').PropertyDeclarations} */
 	static get properties() {
 		return {
 			currentTimeLabel: { attribute: 'current-time-label' },
@@ -145,7 +139,7 @@ export class TimeProgressElement extends VdsElement {
 
 	/**
 	 * @protected
-	 * @returns {import('lit-html').TemplateResult}
+	 * @returns {import('lit').TemplateResult}
 	 */
 	renderTimeCurrent() {
 		return html`
@@ -193,7 +187,7 @@ export class TimeProgressElement extends VdsElement {
 
 	/**
 	 * @protected
-	 * @returns {import('lit-html').TemplateResult}
+	 * @returns {import('lit').TemplateResult}
 	 */
 	renderTimeDuration() {
 		return html`
@@ -241,7 +235,7 @@ export class TimeProgressElement extends VdsElement {
 
 	/**
 	 * @protected
-	 * @returns {import('lit-html').TemplateResult}
+	 * @returns {import('lit').TemplateResult}
 	 */
 	renderTimeSeparator() {
 		return html`

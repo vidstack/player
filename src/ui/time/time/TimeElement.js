@@ -1,18 +1,12 @@
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { LIB_PREFIX } from '../../../shared/constants';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
 import { VdsElement } from '../../../shared/elements';
 import { formatHtml5Duration, formatTime } from '../../../utils/time';
 import { timeElementStyles } from './css';
 
-export const TIME_ELEMENT_TAG_NAME = `time`;
-
-export const VDS_TIME_ELEMENT_TAG_NAME =
-	/** @type {`${typeof LIB_PREFIX}-${typeof TIME_ELEMENT_TAG_NAME}`} */ (
-		`${LIB_PREFIX}-${TIME_ELEMENT_TAG_NAME}`
-	);
+export const VDS_TIME_ELEMENT_TAG_NAME = 'vds-time';
 
 /** @typedef {import('./types').TimeDisplay} ITimeDisplay */
 

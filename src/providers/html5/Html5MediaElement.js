@@ -1,5 +1,5 @@
+import { html } from 'lit';
 import { createRef } from 'lit/directives/ref.js';
-import { html } from 'lit-element';
 
 import {
 	CanPlay,
@@ -75,7 +75,7 @@ export class Html5MediaElement extends MediaProviderElement {
 	// Properties
 	// -------------------------------------------------------------------------------------------
 
-	/** @type {import('lit-element').PropertyDeclarations} */
+	/** @type {import('lit').PropertyDeclarations} */
 	static get properties() {
 		return {
 			_src: { state: true },
@@ -145,7 +145,7 @@ export class Html5MediaElement extends MediaProviderElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
-	 * @param {import('lit-element').PropertyValues} changedProps
+	 * @param {import('lit').PropertyValues} changedProps
 	 */
 	firstUpdated(changedProps) {
 		super.firstUpdated(changedProps);
@@ -165,7 +165,7 @@ export class Html5MediaElement extends MediaProviderElement {
 	 * Override this to modify the content rendered inside `<audio>` and `<video>` elements.
 	 *
 	 * @protected
-	 * @returns {import('lit-html').TemplateResult}
+	 * @returns {import('lit').TemplateResult}
 	 */
 	renderMediaChildren() {
 		return html`

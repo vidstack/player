@@ -2,18 +2,12 @@ import clsx from 'clsx';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { LIB_PREFIX } from '../../shared/constants';
 import { VdsElement } from '../../shared/elements';
 import { IS_IOS } from '../../utils/support';
 import { mediaContext } from '../media.context';
 import { mediaUiElementStyles } from './css';
 
-export const MEDIA_UI_ELEMENT_TAG_NAME = `media-ui`;
-
-export const VDS_MEDIA_UI_ELEMENT_TAG_NAME =
-	/** @type {`${typeof LIB_PREFIX}-${typeof MEDIA_UI_ELEMENT_TAG_NAME}`} */ (
-		`${LIB_PREFIX}-${MEDIA_UI_ELEMENT_TAG_NAME}`
-	);
+export const VDS_MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
 
 /**
  * Simple container that holds a collection of user interface components.

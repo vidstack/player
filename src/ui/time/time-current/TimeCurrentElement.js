@@ -1,13 +1,7 @@
 import { mediaContext } from '../../../media';
-import { LIB_PREFIX } from '../../../shared/constants';
 import { TimeElement } from '../time';
 
-export const TIME_CURRENT_ELEMENT_TAG_NAME = `time-current`;
-
-export const VDS_TIME_CURRENT_ELEMENT_TAG_NAME =
-	/** @type {`${typeof LIB_PREFIX}-${typeof TIME_CURRENT_ELEMENT_TAG_NAME}`} */ (
-		`${LIB_PREFIX}-${TIME_CURRENT_ELEMENT_TAG_NAME}`
-	);
+export const VDS_TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
 
 /** @typedef {import('./types').CurrentTimeDisplay} ICurrentTimeDisplay */
 

@@ -1,5 +1,5 @@
 // ** Dependencies **
-import '../button/vds-button';
+import '../button/define';
 
 import { html, property, query, TemplateResult } from 'lit-element';
 
@@ -33,77 +33,79 @@ import { ToggleButtonElementProps } from './toggle-button.types';
  * ```
  */
 export class ToggleButtonElement
-  extends WithFocus(ToggleElement)
-  implements ToggleButtonElementProps {
-  @query('#root') rootEl!: ButtonElement;
+	extends WithFocus(ToggleElement)
+	implements ToggleButtonElementProps
+{
+	pressed: boolean;
+	@query('#root') rootEl!: ButtonElement;
 
-  static get parts(): string[] {
-    return [
-      'root',
-      'button',
-      ...ButtonElement.parts.map(part => `button-${part}`),
-    ];
-  }
+	static get parts(): string[] {
+		return [
+			'root',
+			'button',
+			...ButtonElement.parts.map((part) => `button-${part}`)
+		];
+	}
 
-  @property() label?: string;
+	@property() label?: string;
 
-  @property({ type: Boolean, reflect: true }) disabled = false;
+	@property({ type: Boolean, reflect: true }) disabled = false;
 
-  @property({ attribute: 'described-by' }) describedBy?: string;
+	@property({ attribute: 'described-by' }) describedBy?: string;
 
-  get rootElement(): ButtonElement {
-    return this.rootEl;
-  }
+	get rootElement(): ButtonElement {
+		return this.rootEl;
+	}
 
-  render(): TemplateResult {
-    return html`
-      <vds-button
-        id="root"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
-        label="${ifNonEmpty(this.label)}"
-        ?pressed="${this.pressed}"
-        ?disabled="${this.disabled}"
-        described-by="${ifNonEmpty(this.describedBy)}"
-        @click="${this.handleButtonClick}"
-        exportparts="${this.getRootExportPartsAttr()}"
-      >
-        ${this.renderToggle()}
-      </vds-button>
-    `;
-  }
+	render(): TemplateResult {
+		return html`
+			<vds-button
+				id="root"
+				class="${this.getRootClassAttr()}"
+				part="${this.getRootPartAttr()}"
+				label="${ifNonEmpty(this.label)}"
+				?pressed="${this.pressed}"
+				?disabled="${this.disabled}"
+				described-by="${ifNonEmpty(this.describedBy)}"
+				@click="${this.handleButtonClick}"
+				exportparts="${this.getRootExportPartsAttr()}"
+			>
+				${this.renderToggle()}
+			</vds-button>
+		`;
+	}
 
-  click(): void {
-    if (this.disabled) return;
-    this.rootEl?.click();
-  }
+	click(): void {
+		if (this.disabled) return;
+		this.rootEl?.click();
+	}
 
-  /**
-   * Override this to modify root CSS Classes.
-   */
-  protected getRootClassAttr(): string {
-    return 'root';
-  }
+	/**
+	 * Override this to modify root CSS Classes.
+	 */
+	protected getRootClassAttr(): string {
+		return 'root';
+	}
 
-  /**
-   * Override this to modify root CSS parts.
-   */
-  protected getRootPartAttr(): string {
-    return 'root button';
-  }
+	/**
+	 * Override this to modify root CSS parts.
+	 */
+	protected getRootPartAttr(): string {
+		return 'root button';
+	}
 
-  /**
-   * Override this to modify root CSS export parts.
-   */
-  protected getRootExportPartsAttr(): string {
-    return buildExportPartsAttr(ButtonElement.parts, 'button');
-  }
+	/**
+	 * Override this to modify root CSS export parts.
+	 */
+	protected getRootExportPartsAttr(): string {
+		return buildExportPartsAttr(ButtonElement.parts, 'button');
+	}
 
-  /**
-   * Override this to modify on button click behaviour.
-   */
-  protected handleButtonClick(event: Event): void {
-    noop(event);
-    this.pressed = !this.pressed;
-  }
+	/**
+	 * Override this to modify on button click behaviour.
+	 */
+	protected handleButtonClick(event: Event): void {
+		noop(event);
+		this.pressed = !this.pressed;
+	}
 }

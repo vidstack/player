@@ -1,13 +1,7 @@
 import { mediaContext } from '../../../media';
-import { LIB_PREFIX } from '../../../shared/constants';
 import { TimeElement } from '../time';
 
-export const TIME_DURATION_ELEMENT_TAG_NAME = `time-duration`;
-
-export const VDS_TIME_DURATION_ELEMENT_TAG_NAME =
-	/** @type {`${typeof LIB_PREFIX}-${typeof TIME_DURATION_ELEMENT_TAG_NAME}`} */ (
-		`${LIB_PREFIX}-${TIME_DURATION_ELEMENT_TAG_NAME}`
-	);
+export const VDS_TIME_DURATION_ELEMENT_TAG_NAME = 'vds-time-duration';
 
 /**
  * Formats and displays the `duration` of the current media. Do not mess with the component's
@@ -50,6 +44,7 @@ export class TimeDurationElement extends TimeElement {
 		return {
 			seconds: {
 				context: mediaContext.duration,
+				// Duration can be -1 when unknown but we want to display >=0.
 				transform: (d) => (d >= 0 ? d : 0)
 			}
 		};

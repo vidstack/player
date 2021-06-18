@@ -7,7 +7,6 @@ import {
 	VdsErrorEvent,
 	VdsMediaTypeChangeEvent
 } from '../../media';
-import { LIB_PREFIX } from '../../shared/constants';
 import { VdsCustomEvent } from '../../shared/events';
 import { isNil, isUndefined } from '../../utils/unit';
 import { VideoElement } from '../video';
@@ -18,12 +17,7 @@ import {
 	VdsHlsEngineNoSupportEvent
 } from './events';
 
-export const HLS_ELEMENT_TAG_NAME = `hls`;
-
-export const VDS_HLS_ELEMENT_TAG_NAME =
-	/** @type {`${typeof LIB_PREFIX}-${typeof HLS_ELEMENT_TAG_NAME}`} */ (
-		`${LIB_PREFIX}-${HLS_ELEMENT_TAG_NAME}`
-	);
+export const VDS_HLS_ELEMENT_TAG_NAME = 'vds-hls';
 
 export const HLS_EXTENSIONS = /\.(m3u8)($|\?)/i;
 

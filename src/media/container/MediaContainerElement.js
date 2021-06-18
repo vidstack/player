@@ -3,7 +3,6 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit-html/directives/style-map.js';
 
-import { LIB_PREFIX } from '../../shared/constants';
 import { VdsElement } from '../../shared/elements';
 import { FullscreenController } from '../../shared/fullscreen';
 import { ScreenOrientationController } from '../../shared/screen-orientation';
@@ -14,12 +13,7 @@ import { MediaProviderElement } from '../provider';
 import { mediaContainerElementStyles } from './css';
 import { VdsMediaContainerConnectEvent } from './events';
 
-export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = 'media-container';
-
-export const VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME =
-	/** @type {`${typeof LIB_PREFIX}-${typeof MEDIA_CONTAINER_ELEMENT_TAG_NAME}`} */ (
-		`${LIB_PREFIX}-${MEDIA_CONTAINER_ELEMENT_TAG_NAME}`
-	);
+export const VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
 
 /** @typedef {import('./types').MediaContainer} IMediaContainer */
 

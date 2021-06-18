@@ -1,6 +1,5 @@
 import { html } from 'lit';
 
-import { LIB_PREFIX } from '../../shared/constants';
 import { provideContextRecord } from '../../shared/context';
 import { VdsElement } from '../../shared/elements';
 import { bindEventListeners, DisposalBin } from '../../shared/events';
@@ -26,12 +25,7 @@ import {
 } from '../provider';
 import { mediaControllerStyles } from './css';
 
-export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'media-controller';
-
-export const VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME =
-	/** @type {`${typeof LIB_PREFIX}-${typeof MEDIA_CONTROLLER_ELEMENT_TAG_NAME}`} */ (
-		`${LIB_PREFIX}-${MEDIA_CONTROLLER_ELEMENT_TAG_NAME}`
-	);
+export const VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
 
 /**
  * The media controller acts as a message bus between the media provider and all other
