@@ -1,11 +1,11 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../../media/test-utils';
+import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
 	ToggleButtonElement,
 	VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME
-} from '../ToggleButtonElement';
+} from '../ToggleButtonElement.js';
 
 window.customElements.define(
 	VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME,

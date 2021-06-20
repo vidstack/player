@@ -1,4 +1,4 @@
-import { deferredPromise } from '../../utils/promise';
+import { deferredPromise } from '../../utils/promise.js';
 
 /**
  * @template {string} RequestKey

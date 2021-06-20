@@ -1,7 +1,7 @@
 import {
 	MediaContainerElement,
 	VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME
-} from './MediaContainerElement';
+} from './MediaContainerElement.js';
 
 declare global {
 	interface HTMLElementTagNameMap {

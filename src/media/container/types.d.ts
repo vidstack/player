@@ -1,5 +1,5 @@
-import { FullscreenHost } from '../../shared/fullscreen';
-import { ScreenOrientationHost } from '../../shared/screen-orientation';
+import { FullscreenHost } from '../../shared/fullscreen/index.js';
+import { ScreenOrientationHost } from '../../shared/screen-orientation.js';
 
 export type MediaContainer = FullscreenHost &
 	ScreenOrientationHost &

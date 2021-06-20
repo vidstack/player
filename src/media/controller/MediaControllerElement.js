@@ -1,14 +1,14 @@
 import { html } from 'lit';
 
-import { provideContextRecord } from '../../shared/context';
-import { VdsElement } from '../../shared/elements';
-import { bindEventListeners, DisposalBin } from '../../shared/events';
-import { isNil } from '../../utils/unit';
+import { provideContextRecord } from '../../shared/context/index.js';
+import { VdsElement } from '../../shared/elements/index.js';
+import { bindEventListeners } from '../../shared/events/index.js';
+import { isNil } from '../../utils/unit.js';
 import {
 	MediaContainerElement,
 	VdsMediaContainerConnectEvent
-} from '../container';
-import { createMediaContextRecord, mediaContext } from '../media.context';
+} from '../container/index.js';
+import { createMediaContextRecord, mediaContext } from '../media.context.js';
 import {
 	VdsEnterFullscreenRequestEvent,
 	VdsExitFullscreenRequestEvent,
@@ -18,12 +18,12 @@ import {
 	VdsSeekRequestEvent,
 	VdsUnmuteRequestEvent,
 	VdsVolumeChangeRequestEvent
-} from '../media-request.events';
+} from '../media-request.events.js';
 import {
 	MediaProviderElement,
 	VdsMediaProviderConnectEvent
-} from '../provider';
-import { mediaControllerStyles } from './css';
+} from '../provider/index.js';
+import { mediaControllerStyles } from './css.js';
 
 export const VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
 

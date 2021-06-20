@@ -1,2 +1,2 @@
-export * from './FullscreenButtonElement';
-export * from './types';
+export * from './FullscreenButtonElement.js';
+export * from './types.js';

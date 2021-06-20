@@ -1,7 +1,7 @@
 import '../bundle/define.js';
 
 import { html } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 export default {
 	title: 'UI/Foundation',

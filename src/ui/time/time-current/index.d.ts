@@ -1,2 +1,2 @@
-export * from './TimeCurrentElement';
-export * from './types';
+export * from './TimeCurrentElement.js';
+export * from './types.js';

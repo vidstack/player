@@ -8,7 +8,7 @@ import {
 	VdsSeekRequestEvent,
 	VdsUnmuteRequestEvent,
 	VdsVolumeChangeRequestEvent
-} from './media-request.events';
+} from './media-request.events.js';
 
 export class MediaRemoteControl {
 	/**

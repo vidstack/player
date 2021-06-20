@@ -2,18 +2,17 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VdsElement } from '../../../shared/elements';
-import { WithFocus } from '../../../shared/elements/WithFocus';
-import { bindEventListeners } from '../../../shared/events';
-import { setAttribute } from '../../../utils/dom';
-import { throttle } from '../../../utils/timing';
-import { sliderElementStyles } from './css';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VdsElement, WithFocus } from '../../../shared/elements/index.js';
+import { bindEventListeners } from '../../../shared/events/index.js';
+import { setAttribute } from '../../../utils/dom.js';
+import { throttle } from '../../../utils/timing.js';
+import { sliderElementStyles } from './css.js';
 import {
 	VdsSliderDragEndEvent,
 	VdsSliderDragStartEvent,
 	VdsSliderValueChangeEvent
-} from './events';
+} from './events.js';
 
 export const VDS_SLIDER_ELEMENT_TAG_NAME = 'vds-slider';
 

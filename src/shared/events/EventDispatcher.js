@@ -1,5 +1,5 @@
-import { VdsCustomEvent } from '../../shared/events';
-import { isUndefined } from '../../utils/unit';
+import { VdsCustomEvent } from '../../shared/events/index.js';
+import { isUndefined } from '../../utils/unit.js';
 
 /**
  * @template EventRecordType

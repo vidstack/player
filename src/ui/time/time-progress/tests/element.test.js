@@ -1,11 +1,11 @@
 import { expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../../media/test-utils';
+import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
 	TimeProgressElement,
 	VDS_TIME_PROGRESS_ELEMENT_TAG_NAME
-} from '../TimeProgressElement';
+} from '../TimeProgressElement.js';
 
 window.customElements.define(
 	VDS_TIME_PROGRESS_ELEMENT_TAG_NAME,

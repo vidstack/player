@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 
-import { currentSafariVersion } from '../../utils/support';
+import { currentSafariVersion } from '../../utils/support.js';
 
 /**
  * A selector selecting focusable nodes.

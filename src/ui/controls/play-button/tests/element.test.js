@@ -1,12 +1,15 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { VdsPauseRequestEvent, VdsPlayRequestEvent } from '../../../../media';
-import { buildMediaFixture } from '../../../../media/test-utils';
+import {
+	VdsPauseRequestEvent,
+	VdsPlayRequestEvent
+} from '../../../../media/index.js';
+import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
 	PlayButtonElement,
 	VDS_PLAY_BUTTON_ELEMENT_TAG_NAME
-} from '../PlayButtonElement';
+} from '../PlayButtonElement.js';
 
 window.customElements.define(
 	VDS_PLAY_BUTTON_ELEMENT_TAG_NAME,

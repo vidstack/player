@@ -1,12 +1,15 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { VdsMuteRequestEvent, VdsUnmuteRequestEvent } from '../../../../media';
-import { buildMediaFixture } from '../../../../media/test-utils';
+import {
+	VdsMuteRequestEvent,
+	VdsUnmuteRequestEvent
+} from '../../../../media/index.js';
+import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
 	MuteButtonElement,
 	VDS_MUTE_BUTTON_ELEMENT_TAG_NAME
-} from '../MuteButtonElement';
+} from '../MuteButtonElement.js';
 
 window.customElements.define(
 	VDS_MUTE_BUTTON_ELEMENT_TAG_NAME,

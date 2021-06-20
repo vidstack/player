@@ -2,12 +2,11 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VdsElement } from '../../../shared/elements';
-import { WithFocus } from '../../../shared/elements/WithFocus';
-import { listen } from '../../../shared/events';
-import { isUndefined } from '../../../utils/unit';
-import { buttonElementStyles } from './css';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VdsElement, WithFocus } from '../../../shared/elements/index.js';
+import { listen } from '../../../shared/events/index.js';
+import { isUndefined } from '../../../utils/unit.js';
+import { buttonElementStyles } from './css.js';
 
 export const VDS_BUTTON_ELEMENT_TAG_NAME = 'vds-button';
 

@@ -1,14 +1,14 @@
 import { html } from 'lit';
 
-import { mediaContext } from '../../media';
-import { VdsElement } from '../../shared/elements';
-import { getSlottedChildren, setAttribute } from '../../utils/dom';
-import { isNil } from '../../utils/unit';
-import { bufferingIndicatorElementStyles } from './css';
+import { mediaContext } from '../../media/index.js';
+import { VdsElement } from '../../shared/elements/index.js';
+import { getSlottedChildren, setAttribute } from '../../utils/dom.js';
+import { isNil } from '../../utils/unit.js';
+import { bufferingIndicatorElementStyles } from './css.js';
 import {
 	VdsBufferingIndicatorHideEvent,
 	VdsBufferingIndicatorShowEvent
-} from './events';
+} from './events.js';
 
 export const VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME =
 	'vds-buffering-indicator';

@@ -1,14 +1,14 @@
 // ** Dependencies **
-import '../button/define';
+import '../button/define.js';
 
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { WithFocus } from '../../../shared/elements/WithFocus';
-import { buildExportPartsAttr } from '../../../utils/dom';
-import { ButtonElement } from '../button';
-import { ToggleElement } from '../toggle';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { WithFocus } from '../../../shared/elements/index.js';
+import { buildExportPartsAttr } from '../../../utils/dom.js';
+import { ButtonElement } from '../button/index.js';
+import { ToggleElement } from '../toggle/index.js';
 
 export const VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
 

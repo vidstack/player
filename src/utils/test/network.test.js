@@ -11,7 +11,7 @@ import {
 	serializeQueryString,
 	tryDecodeURIComponent,
 	tryParseJSON
-} from '../network';
+} from '../network.js';
 
 describe('utils/network', function () {
 	describe('tryParseJSON', function () {

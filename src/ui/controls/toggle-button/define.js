@@ -1,8 +1,8 @@
-import { safelyDefineCustomElement } from '../../../utils/dom';
+import { safelyDefineCustomElement } from '../../../utils/dom.js';
 import {
 	ToggleButtonElement,
 	VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME
-} from './ToggleButtonElement';
+} from './ToggleButtonElement.js';
 
 safelyDefineCustomElement(
 	VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME,

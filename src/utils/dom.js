@@ -1,5 +1,5 @@
-import { IS_CLIENT } from './support';
-import { isUndefined } from './unit';
+import { IS_CLIENT } from './support.js';
+import { isUndefined } from './unit.js';
 
 /**
  * Requests an animation frame and waits for it to be resolved.

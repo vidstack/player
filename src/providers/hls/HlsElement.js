@@ -6,16 +6,16 @@ import {
 	VdsDurationChangeEvent,
 	VdsErrorEvent,
 	VdsMediaTypeChangeEvent
-} from '../../media';
-import { VdsCustomEvent } from '../../shared/events';
-import { isNil, isUndefined } from '../../utils/unit';
-import { VideoElement } from '../video';
+} from '../../media/index.js';
+import { VdsCustomEvent } from '../../shared/events/index.js';
+import { isNil, isUndefined } from '../../utils/unit.js';
+import { VideoElement } from '../video/index.js';
 import {
 	VdsHlsEngineAttachEvent,
 	VdsHlsEngineBuiltEvent,
 	VdsHlsEngineDetachEvent,
 	VdsHlsEngineNoSupportEvent
-} from './events';
+} from './events.js';
 
 export const VDS_HLS_ELEMENT_TAG_NAME = 'vds-hls';
 

@@ -1,1 +1,1 @@
-export * from './VideoPresentationController';
+export * from './VideoPresentationController.js';

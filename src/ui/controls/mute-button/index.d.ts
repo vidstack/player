@@ -1,2 +1,2 @@
-export * from './MuteButtonElement';
-export * from './types';
+export * from './MuteButtonElement.js';
+export * from './types.js';

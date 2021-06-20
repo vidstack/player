@@ -1,3 +1,3 @@
-export * from './events';
-export * from './HlsElement';
-export * from './types';
+export * from './events.js';
+export * from './HlsElement.js';
+export * from './types.js';

@@ -1,3 +1,3 @@
-import './container/define';
-import './controller/define';
-import './ui/define';
+import './container/define.js';
+import './controller/define.js';
+import './ui/define.js';

@@ -1,2 +1,2 @@
-export * from './fake-media-provider';
-export * from './fixtures';
+export * from './fake-media-provider/index.js';
+export * from './fixtures.js';

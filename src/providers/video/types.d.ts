@@ -2,8 +2,8 @@ import {
 	Html5MediaElementEngine,
 	Html5MediaElementMethods,
 	Html5MediaElementProps
-} from '../html5';
-import { VideoPresentationControllerHost } from './presentation';
+} from '../html5.js';
+import { VideoPresentationControllerHost } from './presentation.js';
 
 export interface VideoElementProps extends Html5MediaElementProps {
 	/**

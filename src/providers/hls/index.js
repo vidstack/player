@@ -1,2 +1,2 @@
-export * from './events';
-export * from './HlsElement';
+export * from './events.js';
+export * from './HlsElement.js';

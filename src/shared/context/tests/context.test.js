@@ -2,12 +2,12 @@ import { expect } from '@open-wc/testing';
 import { elementUpdated, fixture } from '@open-wc/testing-helpers';
 import { html } from 'lit';
 
-import { VdsElement } from '../../elements';
+import { VdsElement } from '../../elements/index.js';
 import {
 	createContext,
 	derivedContext,
 	provideContextRecord
-} from '../context';
+} from '../context.js';
 
 const ctxA = createContext(10);
 const ctxB = createContext('B');

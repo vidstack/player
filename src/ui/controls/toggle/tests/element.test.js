@@ -1,7 +1,10 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { ToggleElement, VDS_TOGGLE_ELEMENT_TAG_NAME } from '../ToggleElement';
+import {
+	ToggleElement,
+	VDS_TOGGLE_ELEMENT_TAG_NAME
+} from '../ToggleElement.js';
 
 window.customElements.define(VDS_TOGGLE_ELEMENT_TAG_NAME, ToggleElement);
 

@@ -1,6 +1,6 @@
-import { VdsElement } from '../elements';
-import { VdsCustomEvent } from '../events';
-import { ScreenOrientation } from './ScreenOrientation';
+import { VdsElement } from '../elements/index.js';
+import { VdsCustomEvent } from '../events/index.js';
+import { ScreenOrientation } from './ScreenOrientation.js';
 
 export type ScreenOrientationHost = VdsElement;
 

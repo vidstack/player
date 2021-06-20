@@ -1,7 +1,7 @@
-import { createContext, derivedContext } from '../shared/context';
-import { MediaType } from './MediaType';
-import { createTimeRanges } from './time-ranges';
-import { ViewType } from './ViewType';
+import { createContext, derivedContext } from '../shared/context/index.js';
+import { MediaType } from './MediaType.js';
+import { createTimeRanges } from './time-ranges.js';
+import { ViewType } from './ViewType.js';
 
 /**
  * @template T

@@ -11,12 +11,12 @@ import {
 	VdsSeekRequestEvent,
 	VdsUnmuteRequestEvent,
 	VdsVolumeChangeRequestEvent
-} from '../../media-request.events';
-import { buildMediaFixture } from '../../test-utils';
+} from '../../media-request.events.js';
+import { buildMediaFixture } from '../../test-utils/index.js';
 import {
 	MediaControllerElement,
 	VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME
-} from '../MediaControllerElement';
+} from '../MediaControllerElement.js';
 
 describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 	describe('render', function () {

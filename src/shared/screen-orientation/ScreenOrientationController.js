@@ -1,6 +1,9 @@
-import { canOrientScreen, IS_CLIENT } from '../../utils/support';
-import { DisposalBin, EventDispatcher, listen } from '../events';
-import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
+import { canOrientScreen, IS_CLIENT } from '../../utils/support.js';
+import { DisposalBin, EventDispatcher, listen } from '../events/index.js';
+import {
+	ScreenOrientation,
+	ScreenOrientationLock
+} from './ScreenOrientation.js';
 
 /**
  * Contains the logic for managing the window's screen orientation.

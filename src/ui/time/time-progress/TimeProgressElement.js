@@ -1,16 +1,16 @@
 // ** Dependencies **
-import '../time-current/define';
-import '../time-duration/define';
+import '../time-current/define.js';
+import '../time-duration/define.js';
 
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { VdsElement } from '../../../shared/elements';
-import { buildExportPartsAttr } from '../../../utils/dom';
-import { TimeElement } from '../time';
-import { TimeCurrentElement } from '../time-current';
-import { TimeDurationElement } from '../time-duration';
-import { timeProgressElementStyles } from './css';
+import { VdsElement } from '../../../shared/elements/index.js';
+import { buildExportPartsAttr } from '../../../utils/dom.js';
+import { TimeElement } from '../time/index.js';
+import { TimeCurrentElement } from '../time-current/index.js';
+import { TimeDurationElement } from '../time-duration/index.js';
+import { timeProgressElementStyles } from './css.js';
 
 export const VDS_TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
 

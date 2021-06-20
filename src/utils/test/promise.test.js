@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { deferredPromise } from '../promise';
+import { deferredPromise } from '../promise.js';
 
 describe('utils/promise', function () {
 	describe('deferredPromise', function () {

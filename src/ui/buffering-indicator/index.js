@@ -1,3 +1,3 @@
-export * from './BufferingIndicatorElement';
-export * from './css';
-export * from './events';
+export * from './BufferingIndicatorElement.js';
+export * from './css.js';
+export * from './events.js';

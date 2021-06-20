@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { areNumbersRoughlyEqual } from '../number';
+import { areNumbersRoughlyEqual } from '../number.js';
 
 describe('utils/number', function () {
 	describe('roughlyEqual', function () {

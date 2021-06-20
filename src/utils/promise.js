@@ -1,4 +1,4 @@
-import { noop } from './unit';
+import { noop } from './unit.js';
 
 /**
  * Creates an empty Promise and defers resolving/rejecting it.

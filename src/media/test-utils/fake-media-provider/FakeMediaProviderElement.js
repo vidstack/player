@@ -7,7 +7,7 @@ import {
 	VdsPlayEvent,
 	VdsTimeUpdateEvent,
 	VdsVolumeChangeEvent
-} from '../..';
+} from '../../index.js';
 
 export const VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME =
 	'vds-fake-media-provider';

@@ -1,1 +1,1 @@
-export * from './RequestQueue';
+export * from './RequestQueue.js';

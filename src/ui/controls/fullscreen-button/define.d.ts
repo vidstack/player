@@ -1,7 +1,7 @@
 import {
 	FullscreenButtonElement,
 	VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME
-} from './FullscreenButtonElement';
+} from './FullscreenButtonElement.js';
 
 declare global {
 	interface HTMLElementTagNameMap {

@@ -1,12 +1,12 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
 
-import { WithContext } from '../../../shared/context';
-import { safelyDefineCustomElement } from '../../../utils/dom';
-import { mediaContext } from '../../media.context';
-import { buildMediaFixture } from '../../test-utils';
-import { createTimeRanges } from '../../time-ranges';
-import { ViewType } from '../../ViewType';
+import { WithContext } from '../../../shared/context/index.js';
+import { safelyDefineCustomElement } from '../../../utils/dom.js';
+import { mediaContext } from '../../media.context.js';
+import { buildMediaFixture } from '../../test-utils/index.js';
+import { createTimeRanges } from '../../time-ranges.js';
+import { ViewType } from '../../ViewType.js';
 
 class FakeMediaConsumerElement extends WithContext(LitElement) {
 	/** @type {import('../../../shared/context').ContextConsumerDeclarations} */

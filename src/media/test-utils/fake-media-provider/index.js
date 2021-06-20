@@ -1,1 +1,1 @@
-export * from './FakeMediaProviderElement';
+export * from './FakeMediaProviderElement.js';

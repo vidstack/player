@@ -1,7 +1,7 @@
 /** Dependencies  */
-import './fake-media-provider/define';
-import '../container/define';
-import '../controller/define';
+import './fake-media-provider/define.js';
+import '../container/define.js';
+import '../controller/define.js';
 
 import { fixture } from '@open-wc/testing';
 import { html } from 'lit';
@@ -9,12 +9,12 @@ import { html } from 'lit';
 import {
 	MediaContainerElement,
 	VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME
-} from '../container';
-import { MediaControllerElement } from '../controller';
+} from '../container/index.js';
+import { MediaControllerElement } from '../controller/index.js';
 import {
 	FakeMediaProviderElement,
 	VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
-} from './fake-media-provider';
+} from './fake-media-provider/index.js';
 
 /**
  * @param {import('lit').TemplateResult} [uiSlot]

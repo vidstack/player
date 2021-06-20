@@ -1,1 +1,1 @@
-export * from './PlayButtonElement';
+export * from './PlayButtonElement.js';

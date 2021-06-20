@@ -1,2 +1,2 @@
-export * from './ToggleButtonElement';
-export * from './types';
+export * from './ToggleButtonElement.js';
+export * from './types.js';

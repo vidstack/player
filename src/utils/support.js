@@ -1,6 +1,6 @@
 /* c8 ignore next 1000 */
 
-import { isFunction, isUndefined, noop } from './unit';
+import { isFunction, isUndefined, noop } from './unit.js';
 
 export const IS_CLIENT = typeof window !== 'undefined';
 export const UA = IS_CLIENT ? window.navigator?.userAgent.toLowerCase() : '';

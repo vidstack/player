@@ -1,14 +1,14 @@
-import '../define';
+import '../define.js';
 
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { getSlottedChildren } from '../../../utils/dom';
-import { buildMediaFixture } from '../../test-utils';
+import { getSlottedChildren } from '../../../utils/dom.js';
+import { buildMediaFixture } from '../../test-utils/index.js';
 import {
 	MediaUiElement,
 	VDS_MEDIA_UI_ELEMENT_TAG_NAME
-} from '../MediaUiElement';
+} from '../MediaUiElement.js';
 
 // Why do we need this? `../define ` import at the top of this file is being called correctly.
 window.customElements.define(VDS_MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);

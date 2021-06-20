@@ -7,13 +7,13 @@ import {
 	VdsMediaTypeChangeEvent,
 	VdsViewTypeChangeEvent,
 	ViewType
-} from '../../media';
-import { ifNonEmpty } from '../../shared/directives/if-non-empty';
-import { ifNumber } from '../../shared/directives/if-number';
-import { Html5MediaElement } from '../html5';
-import { videoElementStyles } from './css';
-import { VideoFullscreenController } from './fullscreen';
-import { VideoPresentationController } from './presentation';
+} from '../../media/index.js';
+import { ifNonEmpty } from '../../shared/directives/if-non-empty.js';
+import { ifNumber } from '../../shared/directives/if-number.js';
+import { Html5MediaElement } from '../html5/index.js';
+import { videoElementStyles } from './css.js';
+import { VideoFullscreenController } from './fullscreen/index.js';
+import { VideoPresentationController } from './presentation/index.js';
 
 export const VDS_VIDEO_ELEMENT_TAG_NAME = 'vds-video';
 

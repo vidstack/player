@@ -1,7 +1,7 @@
 import { LitElement } from 'lit';
 
-import { WithContext } from '../context';
-import { DisposalBin } from '../events';
+import { WithContext } from '../context/index.js';
+import { DisposalBin } from '../events/index.js';
 
 export class VdsElement extends WithContext(LitElement) {
 	/**

@@ -1,32 +1,31 @@
 // ** Dependencies **
-import '../slider/define';
+import '../slider/define.js';
 
 import clsx from 'clsx';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { mediaContext, MediaRemoteControl } from '../../../media';
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VdsElement } from '../../../shared/elements';
-import { WithFocus } from '../../../shared/elements/WithFocus';
-import { getSlottedChildren, raf } from '../../../utils/dom';
-import { formatSpokenTime } from '../../../utils/time';
-import { throttle } from '../../../utils/timing';
-import { isNil, isUndefined } from '../../../utils/unit';
+import { mediaContext, MediaRemoteControl } from '../../../media/index.js';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VdsElement, WithFocus } from '../../../shared/elements/index.js';
+import { getSlottedChildren, raf } from '../../../utils/dom.js';
+import { formatSpokenTime } from '../../../utils/time.js';
+import { throttle } from '../../../utils/timing.js';
+import { isNil, isUndefined } from '../../../utils/unit.js';
 import {
 	SliderElement,
 	VdsSliderDragEndEvent,
 	VdsSliderDragStartEvent,
 	VdsSliderValueChangeEvent
-} from '../slider';
-import { scrubberContext } from './context';
-import { scrubberElementStyles } from './css';
+} from '../slider/index.js';
+import { scrubberContext } from './context.js';
+import { scrubberElementStyles } from './css.js';
 import {
 	VdsScrubberPreviewHideEvent,
 	VdsScrubberPreviewShowEvent,
 	VdsScrubberPreviewTimeUpdateEvent
-} from './events';
+} from './events.js';
 
 export const VDS_SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
 

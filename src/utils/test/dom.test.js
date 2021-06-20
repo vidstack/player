@@ -1,7 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
 
-import { safelyDefineCustomElement, willElementsCollide } from '../dom';
+import { safelyDefineCustomElement, willElementsCollide } from '../dom.js';
 
 describe('utils/dom', function () {
 	describe('willElementsCollide', function () {

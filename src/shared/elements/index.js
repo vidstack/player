@@ -1,2 +1,2 @@
-export * from './VdsElement';
-// export * from './WithFocus';
+export * from './VdsElement.js';
+export * from './WithFocus.js';

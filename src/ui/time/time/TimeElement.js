@@ -1,10 +1,10 @@
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VdsElement } from '../../../shared/elements';
-import { formatHtml5Duration, formatTime } from '../../../utils/time';
-import { timeElementStyles } from './css';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VdsElement } from '../../../shared/elements/index.js';
+import { formatHtml5Duration, formatTime } from '../../../utils/time.js';
+import { timeElementStyles } from './css.js';
 
 export const VDS_TIME_ELEMENT_TAG_NAME = 'vds-time';
 

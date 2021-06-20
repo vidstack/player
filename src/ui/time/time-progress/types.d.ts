@@ -1,6 +1,6 @@
-import { TimeElementProps } from '../time';
-import { TimeCurrentElement } from '../time-current';
-import { TimeDurationElement } from '../time-duration';
+import { TimeElementProps } from '../time.js';
+import { TimeCurrentElement } from '../time-current.js';
+import { TimeDurationElement } from '../time-duration.js';
 
 export type TimeProgressDisplay = TimeProgressElementProps;
 

@@ -1,9 +1,9 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
 
-import { VdsElement } from '../../elements';
-import { createContext } from '../context';
-import { consumeContext, provideContext } from '../decorators';
+import { VdsElement } from '../../elements/index.js';
+import { createContext } from '../context.js';
+import { consumeContext, provideContext } from '../decorators.js';
 
 const testContext = createContext(10);
 

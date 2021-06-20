@@ -1,6 +1,6 @@
 import { Lit, LitElement, PropertyDeclarations } from 'lit';
 
-import { Constructor, ReadonlyIfType } from '../types/utils';
+import { Constructor, ReadonlyIfType } from '../types/utils.js';
 
 export interface ContextProvider<T> {
 	value: T;

@@ -1,5 +1,5 @@
-import { VdsElement } from '../elements';
-import { VdsCustomEvent } from '../events';
+import { VdsElement } from '../elements/index.js';
+import { VdsCustomEvent } from '../events/index.js';
 
 export interface FullscreenHost extends VdsElement {
 	/**

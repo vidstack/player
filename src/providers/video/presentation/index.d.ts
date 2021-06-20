@@ -1,2 +1,2 @@
-export * from './types';
-export * from './VideoPresentationController';
+export * from './types.js';
+export * from './VideoPresentationController.js';

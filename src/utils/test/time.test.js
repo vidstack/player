@@ -6,7 +6,7 @@ import {
 	formatTime,
 	padNumberWithZeroes,
 	parseTime
-} from '../time';
+} from '../time.js';
 
 describe('utils/time', function () {
 	describe('padNumberWithZeroes', function () {

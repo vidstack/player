@@ -1,10 +1,10 @@
-import '../../../media/define';
-import './define';
+import '../../../media/define.js';
+import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VDS_TIME_CURRENT_ELEMENT_TAG_NAME } from './TimeCurrentElement';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VDS_TIME_CURRENT_ELEMENT_TAG_NAME } from './TimeCurrentElement.js';
 
 export default {
 	title: 'UI/Foundation/Time/Time Current',

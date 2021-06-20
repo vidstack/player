@@ -1,7 +1,7 @@
 /** @typedef {import('./types').ContextHostConstructor} ContextHostConstructor */
 
-import { isFunction } from '../../utils/unit';
-import { isDerviedContext } from './context';
+import { isFunction } from '../../utils/unit.js';
+import { isDerviedContext } from './context.js';
 
 const FINALIZED = Symbol();
 

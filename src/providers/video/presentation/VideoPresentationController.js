@@ -3,9 +3,9 @@ import {
 	EventDispatcher,
 	listen,
 	redispatchNativeEvent
-} from '../../../shared/events';
-import { IS_IOS } from '../../../utils/support';
-import { isFunction, isNil, noop } from '../../../utils/unit';
+} from '../../../shared/events/index.js';
+import { IS_IOS } from '../../../utils/support.js';
+import { isFunction, isNil, noop } from '../../../utils/unit.js';
 
 /**
  * Contains the logic for handling presentation modes on Safari. This class is used by

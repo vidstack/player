@@ -1,5 +1,5 @@
-import { mediaContext, MediaRemoteControl } from '../../../media';
-import { ToggleButtonElement } from '../toggle-button';
+import { mediaContext, MediaRemoteControl } from '../../../media/index.js';
+import { ToggleButtonElement } from '../toggle-button/index.js';
 
 export const VDS_PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
 

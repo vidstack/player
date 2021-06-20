@@ -5,12 +5,12 @@ import { stub } from 'sinon';
 import {
 	VdsEnterFullscreenRequestEvent,
 	VdsExitFullscreenRequestEvent
-} from '../../../../media';
-import { buildMediaFixture } from '../../../../media/test-utils';
+} from '../../../../media/index.js';
+import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
 	FullscreenButtonElement,
 	VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME
-} from '../FullscreenButtonElement';
+} from '../FullscreenButtonElement.js';
 
 window.customElements.define(
 	VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,

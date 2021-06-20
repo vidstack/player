@@ -1,11 +1,11 @@
 import fscreen from 'fscreen';
 
-import { isUndefined, noop } from '../../utils/unit';
-import { DisposalBin, EventDispatcher, listen } from '../events';
+import { isUndefined, noop } from '../../utils/unit.js';
+import { DisposalBin, EventDispatcher, listen } from '../events/index.js';
 import {
 	ScreenOrientationController,
 	ScreenOrientationLock
-} from '../screen-orientation';
+} from '../screen-orientation/index.js';
 
 /**
  * Unfortunately fullscreen isn't straight forward due to cross-browser inconsistencies. This

@@ -1,7 +1,7 @@
 import {
 	MuteButtonElement,
 	VDS_MUTE_BUTTON_ELEMENT_TAG_NAME
-} from './MuteButtonElement';
+} from './MuteButtonElement.js';
 
 declare global {
 	interface HTMLElementTagNameMap {

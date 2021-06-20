@@ -1,11 +1,11 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import sinon, { spy } from 'sinon';
 
-import { equal } from '../../../utils/unit';
-import { mediaContext } from '../../media.context';
-import { MediaType } from '../../MediaType';
-import { buildMediaFixture } from '../../test-utils';
-import { ViewType } from '../../ViewType';
+import { equal } from '../../../utils/unit.js';
+import { mediaContext } from '../../media.context.js';
+import { MediaType } from '../../MediaType.js';
+import { buildMediaFixture } from '../../test-utils/index.js';
+import { ViewType } from '../../ViewType.js';
 
 describe('MediaProviderElement/props', function () {
 	afterEach(function () {

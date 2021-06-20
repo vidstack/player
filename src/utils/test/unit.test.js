@@ -13,7 +13,7 @@ import {
 	isString,
 	isUndefined,
 	noop
-} from '../unit';
+} from '../unit.js';
 
 describe('utils/unit', function () {
 	describe('isArray', function () {

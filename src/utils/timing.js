@@ -1,4 +1,4 @@
-import { isUndefined } from './unit';
+import { isUndefined } from './unit.js';
 
 /**
  * Creates a debounced function that delays invoking `func` until after `delay` milliseconds have

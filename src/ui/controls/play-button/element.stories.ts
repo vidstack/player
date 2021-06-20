@@ -1,10 +1,10 @@
-import '../../../media/define';
-import './define';
+import '../../../media/define.js';
+import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VDS_PLAY_BUTTON_ELEMENT_TAG_NAME } from './PlayButtonElement';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VDS_PLAY_BUTTON_ELEMENT_TAG_NAME } from './PlayButtonElement.js';
 
 export default {
 	title: 'UI/Foundation/Controls/Play Button',

@@ -1,6 +1,6 @@
 import type Hls from 'hls.js';
 
-import { VdsCustomEvent, VdsEventInit } from '../../shared/events';
+import { VdsCustomEvent, VdsEventInit } from '../../shared/events/index.js';
 
 declare global {
 	interface GlobalEventHandlersEventMap extends VdsHlsEvents {}

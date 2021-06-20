@@ -2,14 +2,14 @@ import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 import { mock } from 'sinon';
 
-import { isFunction } from '../../../utils/unit';
-import { buildMediaFixture } from '../../test-utils';
-import { ViewType } from '../../ViewType';
-import { VdsMediaContainerConnectEvent } from '../events';
+import { isFunction } from '../../../utils/unit.js';
+import { buildMediaFixture } from '../../test-utils/index.js';
+import { ViewType } from '../../ViewType.js';
+import { VdsMediaContainerConnectEvent } from '../events.js';
 import {
 	MediaContainerElement,
 	VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME
-} from '../MediaContainerElement';
+} from '../MediaContainerElement.js';
 
 describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
 	/**

@@ -1,16 +1,16 @@
 import { aTimeout, elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils';
-import { getSlottedChildren } from '../../../utils/dom';
+import { buildMediaFixture } from '../../../media/test-utils/index.js';
+import { getSlottedChildren } from '../../../utils/dom.js';
 import {
 	BufferingIndicatorElement,
 	VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME
-} from '../BufferingIndicatorElement';
+} from '../BufferingIndicatorElement.js';
 import {
 	VdsBufferingIndicatorHideEvent,
 	VdsBufferingIndicatorShowEvent
-} from '../events';
+} from '../events.js';
 
 window.customElements.define(
 	VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME,

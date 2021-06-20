@@ -1,9 +1,12 @@
 import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { IS_FIREFOX } from '../../../../utils/support';
-import { VdsSliderDragEndEvent, VdsSliderDragStartEvent } from '../events';
-import { SliderElement, VDS_SLIDER_ELEMENT_TAG_NAME } from '../SliderElement';
+import { IS_FIREFOX } from '../../../../utils/support.js';
+import { VdsSliderDragEndEvent, VdsSliderDragStartEvent } from '../events.js';
+import {
+	SliderElement,
+	VDS_SLIDER_ELEMENT_TAG_NAME
+} from '../SliderElement.js';
 
 window.customElements.define(VDS_SLIDER_ELEMENT_TAG_NAME, SliderElement);
 

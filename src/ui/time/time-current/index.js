@@ -1,1 +1,1 @@
-export * from './TimeCurrentElement';
+export * from './TimeCurrentElement.js';

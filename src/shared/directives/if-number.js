@@ -1,6 +1,6 @@
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { isNumber } from '../../utils/unit';
+import { isNumber } from '../../utils/unit.js';
 
 /**
  * A variant of `lit/directives/if-defined` which stops rendering if the given value is

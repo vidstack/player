@@ -1,5 +1,5 @@
-import { VdsCustomEvent } from '../shared/events';
-import { VdsEventInit } from '../shared/events';
+import { VdsCustomEvent } from '../shared/events/index.js';
+import { VdsEventInit } from '../shared/events/index.js';
 
 declare global {
 	interface GlobalEventHandlersEventMap extends VdsMediaRequestEvents {}

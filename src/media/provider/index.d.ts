@@ -1,3 +1,3 @@
-export * from './events';
-export * from './MediaProviderElement';
-export * from './types';
+export * from './events.js';
+export * from './MediaProviderElement.js';
+export * from './types.js';

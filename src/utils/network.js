@@ -1,5 +1,12 @@
-import { IS_CLIENT } from './support';
-import { isArray, isNil, isObject, isString, isUndefined, noop } from './unit';
+import { IS_CLIENT } from './support.js';
+import {
+	isArray,
+	isNil,
+	isObject,
+	isString,
+	isUndefined,
+	noop
+} from './unit.js';
 
 /**
  * Attempt to parse json into a POJO.

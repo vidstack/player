@@ -1,2 +1,2 @@
-export * from './ScreenOrientation';
-export * from './ScreenOrientationController';
+export * from './ScreenOrientation.js';
+export * from './ScreenOrientationController.js';

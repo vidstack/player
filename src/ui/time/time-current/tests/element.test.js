@@ -1,11 +1,11 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../../media/test-utils';
+import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
 	TimeCurrentElement,
 	VDS_TIME_CURRENT_ELEMENT_TAG_NAME
-} from '../TimeCurrentElement';
+} from '../TimeCurrentElement.js';
 
 window.customElements.define(
 	VDS_TIME_CURRENT_ELEMENT_TAG_NAME,

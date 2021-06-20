@@ -1,8 +1,8 @@
-import { FullscreenHost } from '../../shared/fullscreen';
-import { ScreenOrientationHost } from '../../shared/screen-orientation';
-import { CanPlay } from '../CanPlay';
-import { MediaType } from '../MediaType';
-import { ViewType } from '../ViewType';
+import { FullscreenHost } from '../../shared/fullscreen/index.js';
+import { ScreenOrientationHost } from '../../shared/screen-orientation.js';
+import { CanPlay } from '../CanPlay.js';
+import { MediaType } from '../MediaType.js';
+import { ViewType } from '../ViewType.js';
 
 export type MediaProvider = MediaProviderElementProps &
 	MediaProviderElementMethods &

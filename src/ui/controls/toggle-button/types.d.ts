@@ -1,5 +1,5 @@
-import { ButtonElement } from '../button';
-import { ToggleElementProps } from '../toggle';
+import { ButtonElement } from '../button.js';
+import { ToggleElementProps } from '../toggle.js';
 
 export type ToggleButton = ToggleButtonElementProps;
 

@@ -1,4 +1,4 @@
-import { TimeElementProps } from '../time';
+import { TimeElementProps } from '../time.js';
 
 export type DurationDisplay = TimeDurationElementProps;
 

@@ -1,11 +1,11 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../../media/test-utils';
+import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
 	TimeDurationElement,
 	VDS_TIME_DURATION_ELEMENT_TAG_NAME
-} from '../TimeDurationElement';
+} from '../TimeDurationElement.js';
 
 window.customElements.define(
 	VDS_TIME_DURATION_ELEMENT_TAG_NAME,

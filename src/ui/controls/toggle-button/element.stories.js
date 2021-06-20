@@ -1,9 +1,9 @@
-import './define';
+import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME } from './ToggleButtonElement';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME } from './ToggleButtonElement.js';
 
 export default {
 	title: 'UI/Foundation/Controls/Toggle Button',

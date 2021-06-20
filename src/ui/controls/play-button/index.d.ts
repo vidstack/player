@@ -1,2 +1,2 @@
-export * from './PlayButtonElement';
-export * from './types';
+export * from './PlayButtonElement.js';
+export * from './types.js';

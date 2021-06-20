@@ -1,8 +1,8 @@
-import './define';
+import './define.js';
 
 import { html } from 'lit';
 
-import { VDS_TOGGLE_ELEMENT_TAG_NAME } from './ToggleElement';
+import { VDS_TOGGLE_ELEMENT_TAG_NAME } from './ToggleElement.js';
 
 export default {
 	title: 'UI/Foundation/Controls/Toggle',

@@ -1,3 +1,3 @@
-export * from './ScreenOrientation';
-export * from './ScreenOrientationController';
-export * from './types';
+export * from './ScreenOrientation.js';
+export * from './ScreenOrientationController.js';
+export * from './types.js';

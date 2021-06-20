@@ -1,5 +1,5 @@
-import { mediaContext } from '../../../media';
-import { TimeElement } from '../time';
+import { mediaContext } from '../../../media/index.js';
+import { TimeElement } from '../time/index.js';
 
 export const VDS_TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
 

@@ -1,20 +1,20 @@
-import { VdsElement } from '../../shared/elements';
-import { FullscreenController } from '../../shared/fullscreen';
-import { RequestQueue } from '../../shared/queue';
+import { VdsElement } from '../../shared/elements/index.js';
+import { FullscreenController } from '../../shared/fullscreen/index.js';
+import { RequestQueue } from '../../shared/queue/index.js';
 import {
 	ScreenOrientationController,
 	ScreenOrientationLock
-} from '../../shared/screen-orientation';
-import { CanPlay } from '../CanPlay';
-import { createMediaContextRecord, mediaContext } from '../media.context';
+} from '../../shared/screen-orientation/index.js';
+import { CanPlay } from '../CanPlay.js';
+import { createMediaContextRecord, mediaContext } from '../media.context.js';
 import {
 	VdsCanPlayEvent,
 	VdsEndedEvent,
 	VdsErrorEvent,
 	VdsFullscreenChangeEvent,
 	VdsSuspendEvent
-} from '../media.events';
-import { VdsMediaProviderConnectEvent } from './events';
+} from '../media.events.js';
+import { VdsMediaProviderConnectEvent } from './events.js';
 
 /** @typedef {import('./types').MediaProvider} IMediaProvider */
 

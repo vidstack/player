@@ -1,6 +1,6 @@
-import { MediaProviderElementProps } from '../../media';
-import { MediaNetworkState } from './MediaNetworkState';
-import { MediaReadyState } from './MediaReadyState';
+import { MediaProviderElementProps } from '../../media/index.js';
+import { MediaNetworkState } from './MediaNetworkState.js';
+import { MediaReadyState } from './MediaReadyState.js';
 
 /**
  * A DOMString` indicating the `CORS` setting for this media element.

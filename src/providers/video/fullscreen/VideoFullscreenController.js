@@ -1,8 +1,8 @@
-import { VdsCustomEvent } from '../../../shared/events';
-import { FullscreenController } from '../../../shared/fullscreen';
-import { ScreenOrientationController } from '../../../shared/screen-orientation';
-import { noop } from '../../../utils/unit';
-import { VideoPresentationController } from '../presentation/VideoPresentationController';
+import { VdsCustomEvent } from '../../../shared/events/index.js';
+import { FullscreenController } from '../../../shared/fullscreen/index.js';
+import { ScreenOrientationController } from '../../../shared/screen-orientation/index.js';
+import { noop } from '../../../utils/unit.js';
+import { VideoPresentationController } from '../presentation/VideoPresentationController.js';
 
 /**
  * Extends the base `FullscreenController` with additional logic for handling fullscreen

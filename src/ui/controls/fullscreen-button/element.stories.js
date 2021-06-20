@@ -1,10 +1,10 @@
-import '../../../media/define';
-import './define';
+import '../../../media/define.js';
+import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME } from './FullscreenButtonElement';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME } from './FullscreenButtonElement.js';
 
 export default {
 	title: 'UI/Foundation/Controls/Fullscreen Button',

@@ -1,4 +1,4 @@
-import { ToggleElement, VDS_TOGGLE_ELEMENT_TAG_NAME } from './ToggleElement';
+import { ToggleElement, VDS_TOGGLE_ELEMENT_TAG_NAME } from './ToggleElement.js';
 
 declare global {
 	interface HTMLElementTagNameMap {

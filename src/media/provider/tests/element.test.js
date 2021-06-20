@@ -1,10 +1,10 @@
 import { expect, oneEvent } from '@open-wc/testing';
 import { mock } from 'sinon';
 
-import { isFunction } from '../../../utils/unit';
-import { buildMediaFixture } from '../../test-utils';
-import { VdsMediaProviderConnectEvent } from '../events';
-import { MediaProviderElement } from '../MediaProviderElement';
+import { isFunction } from '../../../utils/unit.js';
+import { buildMediaFixture } from '../../test-utils/index.js';
+import { VdsMediaProviderConnectEvent } from '../events.js';
+import { MediaProviderElement } from '../MediaProviderElement.js';
 
 describe('MediaProviderElement', function () {
 	describe('render', function () {

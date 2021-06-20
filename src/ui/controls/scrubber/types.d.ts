@@ -1,5 +1,5 @@
-import { ThrottledFunction } from '../../../utils/timing.types';
-import { SliderElement, SliderElementProps } from '../slider';
+import { ThrottledFunction } from '../../../utils/timing.types.js';
+import { SliderElement, SliderElementProps } from '../slider.js';
 
 export type Scrubber = ScrubberElementProps;
 

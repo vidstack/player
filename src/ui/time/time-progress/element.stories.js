@@ -1,10 +1,10 @@
-import '../../../media/define';
-import './define';
+import '../../../media/define.js';
+import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VDS_TIME_PROGRESS_ELEMENT_TAG_NAME } from './TimeProgressElement';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VDS_TIME_PROGRESS_ELEMENT_TAG_NAME } from './TimeProgressElement.js';
 
 export default {
 	title: 'UI/Foundation/Time/Time Progress',

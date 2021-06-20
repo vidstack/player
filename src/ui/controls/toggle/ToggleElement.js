@@ -1,10 +1,10 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { VdsElement } from '../../../shared/elements';
-import { getSlottedChildren, setAttribute } from '../../../utils/dom';
-import { isNil } from '../../../utils/unit';
-import { toggleElementStyles } from './css';
+import { VdsElement } from '../../../shared/elements/index.js';
+import { getSlottedChildren, setAttribute } from '../../../utils/dom.js';
+import { isNil } from '../../../utils/unit.js';
+import { toggleElementStyles } from './css.js';
 
 export const VDS_TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
 

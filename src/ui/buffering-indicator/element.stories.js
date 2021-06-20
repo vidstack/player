@@ -1,9 +1,9 @@
-import '../../media/define';
-import './define';
+import '../../media/define.js';
+import './define.js';
 
 import { html } from 'lit';
 
-import { VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from './BufferingIndicatorElement';
+import { VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from './BufferingIndicatorElement.js';
 
 export default {
 	title: 'UI/Foundation/Buffering Indicator',

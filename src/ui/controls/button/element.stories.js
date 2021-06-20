@@ -1,9 +1,9 @@
-import './define';
+import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VDS_BUTTON_ELEMENT_TAG_NAME } from './ButtonElement';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VDS_BUTTON_ELEMENT_TAG_NAME } from './ButtonElement.js';
 
 export default {
 	title: 'UI/Foundation/Controls/Button',

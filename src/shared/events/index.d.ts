@@ -1,3 +1,3 @@
-export * from './EventDispatcher';
-export * from './events';
-export * from './types';
+export * from './EventDispatcher.js';
+export * from './events.js';
+export * from './types.js';

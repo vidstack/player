@@ -1,4 +1,4 @@
-import { HlsElement, VDS_HLS_ELEMENT_TAG_NAME } from './HlsElement';
+import { HlsElement, VDS_HLS_ELEMENT_TAG_NAME } from './HlsElement.js';
 
 declare global {
 	interface HTMLElementTagNameMap {

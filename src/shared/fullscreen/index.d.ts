@@ -1,2 +1,2 @@
-export * from './FullscreenController';
-export * from './types';
+export * from './FullscreenController.js';
+export * from './types.js';

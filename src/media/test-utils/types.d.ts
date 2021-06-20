@@ -1,6 +1,6 @@
-import { MediaContainerElement } from '../container';
-import { MediaControllerElement } from '../controller';
-import { FakeMediaProviderElement } from './fake-media-provider';
+import { MediaContainerElement } from '../container.js';
+import { MediaControllerElement } from '../controller.js';
+import { FakeMediaProviderElement } from './fake-media-provider.js';
 
 export interface MediaFixture {
 	controller: MediaControllerElement;

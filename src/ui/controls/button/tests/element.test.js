@@ -2,9 +2,12 @@ import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 import { spy } from 'sinon';
 
-import { buildMediaFixture } from '../../../../media/test-utils';
-import { getSlottedChildren } from '../../../../utils/dom';
-import { ButtonElement, VDS_BUTTON_ELEMENT_TAG_NAME } from '../ButtonElement';
+import { buildMediaFixture } from '../../../../media/test-utils/index.js';
+import { getSlottedChildren } from '../../../../utils/dom.js';
+import {
+	ButtonElement,
+	VDS_BUTTON_ELEMENT_TAG_NAME
+} from '../ButtonElement.js';
 
 window.customElements.define(VDS_BUTTON_ELEMENT_TAG_NAME, ButtonElement);
 

@@ -3,15 +3,15 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { VdsElement } from '../../shared/elements';
-import { FullscreenController } from '../../shared/fullscreen';
-import { ScreenOrientationController } from '../../shared/screen-orientation';
-import { getSlottedChildren } from '../../utils/dom';
-import { isNil, isString, isUndefined } from '../../utils/unit';
-import { mediaContext } from '../media.context';
-import { MediaProviderElement } from '../provider';
-import { mediaContainerElementStyles } from './css';
-import { VdsMediaContainerConnectEvent } from './events';
+import { VdsElement } from '../../shared/elements/index.js';
+import { FullscreenController } from '../../shared/fullscreen/index.js';
+import { ScreenOrientationController } from '../../shared/screen-orientation/index.js';
+import { getSlottedChildren } from '../../utils/dom.js';
+import { isNil, isString, isUndefined } from '../../utils/unit.js';
+import { mediaContext } from '../media.context.js';
+import { MediaProviderElement } from '../provider/index.js';
+import { mediaContainerElementStyles } from './css.js';
+import { VdsMediaContainerConnectEvent } from './events.js';
 
 export const VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
 

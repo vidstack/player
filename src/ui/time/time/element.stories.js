@@ -1,9 +1,9 @@
-import './define';
+import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VDS_TIME_ELEMENT_TAG_NAME } from './TimeElement';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VDS_TIME_ELEMENT_TAG_NAME } from './TimeElement.js';
 
 export default {
 	title: 'UI/Foundation/Time/Time',

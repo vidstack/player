@@ -26,13 +26,13 @@ import {
 	VdsTimeUpdateEvent,
 	VdsVolumeChangeEvent,
 	VdsWaitingEvent
-} from '../../media';
-import { listen, redispatchNativeEvent } from '../../shared/events';
-import { getSlottedChildren } from '../../utils/dom';
-import { IS_SAFARI } from '../../utils/support';
-import { isNil, isNumber, isUndefined } from '../../utils/unit';
-import { MediaNetworkState } from './MediaNetworkState';
-import { MediaReadyState } from './MediaReadyState';
+} from '../../media/index.js';
+import { listen, redispatchNativeEvent } from '../../shared/events/index.js';
+import { getSlottedChildren } from '../../utils/dom.js';
+import { IS_SAFARI } from '../../utils/support.js';
+import { isNil, isNumber, isUndefined } from '../../utils/unit.js';
+import { MediaNetworkState } from './MediaNetworkState.js';
+import { MediaReadyState } from './MediaReadyState.js';
 
 /**
  * @typedef {import('./types').Html5MediaProvider} Html5MediaProvider

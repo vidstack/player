@@ -1,9 +1,9 @@
-import './define';
+import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import { VDS_SLIDER_ELEMENT_TAG_NAME } from './SliderElement';
+import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { VDS_SLIDER_ELEMENT_TAG_NAME } from './SliderElement.js';
 
 export default {
 	title: 'UI/Foundation/Controls/Slider',

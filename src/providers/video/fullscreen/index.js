@@ -1,1 +1,1 @@
-export * from './VideoFullscreenController';
+export * from './VideoFullscreenController.js';
