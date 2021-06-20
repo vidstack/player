@@ -36,13 +36,13 @@ export async function buildMediaFixture(uiSlot = html``, mediaSlot = html``) {
 		`
 	);
 
-	const container = /** @type {MediaContainerElement} */ (controller.querySelector(
-		VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME
-	));
+	const container = /** @type {MediaContainerElement} */ (
+		controller.querySelector(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME)
+	);
 
-	const provider = /** @type {FakeMediaProviderElement} */ (controller.querySelector(
-		VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
-	));
+	const provider = /** @type {FakeMediaProviderElement} */ (
+		controller.querySelector(VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME)
+	);
 
 	return {
 		controller,

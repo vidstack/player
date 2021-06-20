@@ -29,12 +29,9 @@ describe('MediaProviderElement', function () {
 				window.document.body.append(provider);
 			});
 
-			const {
-				detail
-			} = /** @type {VdsMediaProviderConnectEvent} */ (await oneEvent(
-				document,
-				VdsMediaProviderConnectEvent.TYPE
-			));
+			const { detail } = /** @type {VdsMediaProviderConnectEvent} */ (
+				await oneEvent(document, VdsMediaProviderConnectEvent.TYPE)
+			);
 
 			expect(detail.provider).to.be.instanceOf(MediaProviderElement);
 			expect(isFunction(detail.onDisconnect)).to.be.true;
@@ -47,12 +44,9 @@ describe('MediaProviderElement', function () {
 				window.document.body.append(provider);
 			});
 
-			const {
-				detail
-			} = /** @type {VdsMediaProviderConnectEvent} */ (await oneEvent(
-				document,
-				VdsMediaProviderConnectEvent.TYPE
-			));
+			const { detail } = /** @type {VdsMediaProviderConnectEvent} */ (
+				await oneEvent(document, VdsMediaProviderConnectEvent.TYPE)
+			);
 
 			const callback = mock();
 			detail.onDisconnect(callback);

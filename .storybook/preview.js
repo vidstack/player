@@ -1,7 +1,7 @@
 module.exports = {
-  parameters: {
-    controls: {
-      expanded: true,
-    },
-  },
+	parameters: {
+		controls: {
+			expanded: true
+		}
+	}
 };

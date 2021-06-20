@@ -129,9 +129,9 @@ describe('utils/network', function () {
 
 			preconnect(url);
 
-			const link = /** @type {HTMLLinkElement} */ (document.head.querySelector(
-				`link[href="${url}"]`
-			));
+			const link = /** @type {HTMLLinkElement} */ (
+				document.head.querySelector(`link[href="${url}"]`)
+			);
 
 			expect(link.rel).to.equal('preconnect');
 		});
