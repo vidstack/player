@@ -67,6 +67,7 @@ export function WithFocus(Base) {
 				const delegateTarget =
 					this.shadowRoot?.querySelector(focusableSelector) ||
 					this.querySelector(focusableSelector);
+
 				if (delegateTarget) {
 					/** @type {HTMLElement} */ (delegateTarget).focus();
 				} else {

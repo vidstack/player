@@ -10,7 +10,7 @@ export const IS_MOBILE = IS_CLIENT && (IS_IOS || IS_ANDROID);
 export const IS_IPHONE =
 	IS_CLIENT && /(iPhone|iPod)/gi.test(window.navigator?.platform);
 export const IS_FIREFOX = /firefox/.test(UA);
-export const IS_CHROME = IS_CLIENT && window.chrome;
+export const IS_CHROME = IS_CLIENT && !!window.chrome;
 export const IS_SAFARI =
 	IS_CLIENT &&
 	!IS_CHROME &&
