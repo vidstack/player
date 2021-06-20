@@ -1,23 +1,10 @@
-import '../bundle/define';
+import '../bundle/define.js';
 
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined';
 
-import {
-	MediaContainerElementProps,
-	VdsMediaContainerEvents,
-	VdsMediaEvents,
-	VdsMediaProviderEvents,
-	VdsMediaRequestEvents
-} from '../bundle/define';
-import {
-	VDS_VIDEO_ELEMENT_TAG_NAME,
-	VideoElementProps
-} from '../providers/video';
-
 export default {
 	title: 'UI/Foundation',
-	component: VDS_VIDEO_ELEMENT_TAG_NAME,
 	argTypes: {
 		aspectRatio: {
 			control: 'text',
@@ -31,7 +18,6 @@ export default {
 				}
 			}
 		},
-		...buildStorybookControlsFromManifest(VDS_VIDEO_ELEMENT_TAG_NAME),
 		src: {
 			defaultValue:
 				'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4'
@@ -41,13 +27,6 @@ export default {
 		}
 	}
 };
-
-type Args = VideoElementProps &
-	MediaContainerElementProps &
-	DOMEventsToStorybookActions<VdsMediaEvents> &
-	DOMEventsToStorybookActions<VdsMediaProviderEvents> &
-	DOMEventsToStorybookActions<VdsMediaRequestEvents> &
-	DOMEventsToStorybookActions<VdsMediaContainerEvents>;
 
 function Template({
 	// Media Provider Props
@@ -110,7 +89,7 @@ function Template({
 	onVdsSeekRequest,
 	onVdsSeekingRequest,
 	onVdsVolumeChangeRequest
-}: Args) {
+}) {
 	return html`
 		<vds-media-controller
 			@vds-mute-request="${onVdsMuteRequest}"
@@ -176,51 +155,57 @@ function Template({
 					@vds-waiting="${onVdsWaiting}"
 				></vds-video>
 
-				<h2>Toggles</h2>
+				<vds-media-ui>
+					<h2>Toggles</h2>
 
-				<div style="display: flex;">
-					<vds-play-button>
-						<span slot="play">Play</span>
-						<span slot="pause">Pause</span>
-					</vds-play-button>
+					<div style="display: flex;">
+						<vds-play-button>
+							<span slot="play">Play</span>
+							<span slot="pause">Pause</span>
+						</vds-play-button>
 
-					<vds-mute-button>
-						<span slot="mute">Mute</span>
-						<span slot="unmute">Unmute</span>
-					</vds-mute-button>
+						<vds-mute-button>
+							<span slot="mute">Mute</span>
+							<span slot="unmute">Unmute</span>
+						</vds-mute-button>
 
-					<vds-fullscreen-button>
-						<span slot="enter">Enter Fullscreen</span>
-						<span slot="exit">Exit Fullscreen</span>
-					</vds-fullscreen-button>
-				</div>
-
-				<h2>Scrubber</h2>
-
-				<vds-scrubber pause-while-dragging></vds-scrubber>
-
-				<h2>Time</h2>
-
-				<h3>Current Time</h3>
-				<vds-time-current></vds-time-current>
-				<h3>Duration</h3>
-				<vds-time-duration></vds-time-duration>
-				<h3>Progress</h3>
-				<vds-time-progress></vds-time-progress>
-
-				<h2>Indicators</h2>
-
-				<h3>Buffering</h3>
-				<vds-buffering-indicator>
-					<div class="buffering-indicator">
-						<span>Buffering</span>
-						<span>Not Buffering</span>
+						<vds-fullscreen-button>
+							<span slot="enter">Enter Fullscreen</span>
+							<span slot="exit">Exit Fullscreen</span>
+						</vds-fullscreen-button>
 					</div>
-				</vds-buffering-indicator>
+
+					<h2>Scrubber</h2>
+
+					<vds-scrubber pause-while-dragging></vds-scrubber>
+
+					<h2>Time</h2>
+
+					<h3>Current Time</h3>
+					<vds-time-current></vds-time-current>
+					<h3>Duration</h3>
+					<vds-time-duration></vds-time-duration>
+					<h3>Progress</h3>
+					<vds-time-progress></vds-time-progress>
+
+					<h2>Indicators</h2>
+
+					<h3>Buffering</h3>
+					<vds-buffering-indicator>
+						<div class="buffering-indicator">
+							<span>Buffering</span>
+							<span>Not Buffering</span>
+						</div>
+					</vds-buffering-indicator>
+				</vds-media-ui>
 			</vds-media-container>
 		</vds-media-controller>
 
 		<style>
+			vds-media-ui {
+				position: relative;
+			}
+
 			vds-media-container::part(ui) {
 				position: relative;
 			}
