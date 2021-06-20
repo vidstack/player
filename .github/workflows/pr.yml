@@ -31,6 +31,3 @@ jobs:
 
       - name: Test Package
         run: npm run test
-
-      - name: Build Package
-        run: npm run build

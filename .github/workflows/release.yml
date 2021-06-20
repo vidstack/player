@@ -44,9 +44,6 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Build
-        run: npm run build
-
       - name: Setup Git Identity
         run: |
           git config --global user.name 'github-actions[bot]'
