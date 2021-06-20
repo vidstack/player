@@ -142,6 +142,7 @@ describe('utils/unit', function () {
 
 		it('should return false given null value or null constructor', function () {
 			expect(isInstanceOf(null, Mock)).to.be.false;
+			// @ts-ignore
 			expect(isInstanceOf('', null)).to.be.false;
 		});
 

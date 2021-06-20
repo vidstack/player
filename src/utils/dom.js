@@ -79,8 +79,9 @@ export function setAttribute(el, attrName, attrValue) {
 export function getSlottedChildren(el, name) {
 	const selector = name ? `slot[name="${name}"]` : 'slot:not([name])';
 
-	/** @type {HTMLSlotElement | null} */
-	const slot = el.shadowRoot?.querySelector(selector);
+	const slot = /** @type {HTMLSlotElement | null} */ (
+		el.shadowRoot?.querySelector(selector)
+	);
 
 	const childNodes = slot?.assignedNodes({ flatten: true }) ?? [];
 

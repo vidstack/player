@@ -96,8 +96,9 @@ describe('context', function () {
 			</fake-provider>
 		`);
 
-		/** @type {FakeConsumerElement}  */
-		const consumer = provider.querySelector('fake-consumer');
+		const consumer = /** @type {FakeConsumerElement}  */ (
+			provider.querySelector('fake-consumer')
+		);
 
 		return { provider, consumer };
 	}

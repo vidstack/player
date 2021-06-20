@@ -27,11 +27,8 @@ describe('utils/dom', function () {
 				</div>`
 			);
 
-			/** @type {HTMLDivElement} */
-			const elA = el.querySelector('#a');
-
-			/** @type {HTMLDivElement} */
-			const elB = el.querySelector('#b');
+			const elA = /** @type {HTMLDivElement} */ (el.querySelector('#a'));
+			const elB = /** @type {HTMLDivElement} */ (el.querySelector('#b'));
 
 			// Same position
 			position(elA, 0, 0);
