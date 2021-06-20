@@ -1,24 +1,16 @@
-import '../../../core/media/controller/define';
-import '../../../core/media/container/vds-media-container';
-import '../../../core/fakes/vds-fake-media-provider';
+import '../../../media/define';
+import './define';
 
-import { html, TemplateResult } from 'lit-html';
+import { html } from 'lit';
 
-import { createTimeRanges, VdsMediaRequestEvents } from '../../../core';
+import { createTimeRanges } from '../../../media';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty';
-import {
-	buildStorybookControlsFromManifest,
-	DOMEventsToStorybookActions
-} from '../../../shared/storybook';
-import { VdsScrubberEvents } from './scrubber.events';
-import { ScrubberElementProps } from './scrubber.types';
-import { VDS_SCRUBBER_ELEMENT_TAG_NAME } from './vds-scrubber';
+import { VDS_SCRUBBER_ELEMENT_TAG_NAME } from './ScrubberElement';
 
 export default {
 	title: 'UI/Foundation/Controls/Scrubber',
 	component: VDS_SCRUBBER_ELEMENT_TAG_NAME,
 	argTypes: {
-		...buildStorybookControlsFromManifest(VDS_SCRUBBER_ELEMENT_TAG_NAME),
 		fakeCurrentTime: {
 			control: 'number',
 			defaultValue: 1000
@@ -33,17 +25,6 @@ export default {
 		}
 	}
 };
-
-interface FakeProps {
-	fakeCurrentTime: number;
-	fakeDuration: number;
-	fakeSeekableAmount: number;
-}
-
-type Args = FakeProps &
-	ScrubberElementProps &
-	DOMEventsToStorybookActions<VdsScrubberEvents> &
-	DOMEventsToStorybookActions<VdsMediaRequestEvents>;
 
 function Template({
 	// Fakes
@@ -71,7 +52,7 @@ function Template({
 	// Media Request Events
 	onVdsSeekRequest,
 	onVdsSeekingRequest
-}: Args): TemplateResult {
+}) {
 	return html`
 		<vds-media-controller
 			.canPlay="${true}"
@@ -108,10 +89,6 @@ function Template({
 		</vds-media-controller>
 
 		<style>
-			vds-media-container::part(ui) {
-				position: relative;
-			}
-
 			vds-scrubber {
 				margin-top: 48px;
 			}

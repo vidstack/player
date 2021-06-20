@@ -141,11 +141,11 @@ export class VideoFullscreenController extends FullscreenController {
 
 	/**
 	 * @protected
-	 * @param {VdsCustomEvent<import('../../../shared/types/media').WebKitPresentationMode>} originalEvent
+	 * @param {VdsCustomEvent<import('../../../shared/types/media').WebKitPresentationMode>} event
 	 * @returns {void}
 	 */
-	handlePresentationModeChange(originalEvent) {
-		this.handleFullscreenChange(originalEvent);
+	handlePresentationModeChange(event) {
+		this.handleFullscreenChange(event);
 	}
 
 	/**

@@ -4,7 +4,7 @@ import { isUndefined } from './unit';
 /**
  * Requests an animation frame and waits for it to be resolved.
  *
- * @param {import('../shared/types/utils').Callback<void>} callback - Invoked on the next animation frame.
+ * @param {import('../shared/types/utils').Callback<void>} [callback] - Invoked on the next animation frame.
  * @returns {Promise<number>}
  */
 export function raf(callback) {

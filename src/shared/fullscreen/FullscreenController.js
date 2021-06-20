@@ -207,24 +207,24 @@ export class FullscreenController extends EventDispatcher {
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleFullscreenChange(originalEvent) {
+	handleFullscreenChange(event) {
 		if (!this.isFullscreen) this.disposal.empty();
 		this.dispatchEvent('fullscreen-change', {
 			detail: this.isFullscreen,
-			originalEvent
+			originalEvent: event
 		});
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleFullscreenError(originalEvent) {
-		this.dispatchEvent('error', { originalEvent });
+	handleFullscreenError(event) {
+		this.dispatchEvent('error', { originalEvent: event });
 	}
 
 	/**

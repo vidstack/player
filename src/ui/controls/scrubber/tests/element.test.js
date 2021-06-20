@@ -1,37 +1,39 @@
 import { expect } from '@open-wc/testing';
-import { html } from 'lit-element';
+import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../../core/fakes/fakes.helpers';
-import { ScrubberElement } from '../ScrubberElement';
-import { VDS_SCRUBBER_ELEMENT_TAG_NAME } from '../vds-scrubber';
+import { buildMediaFixture } from '../../../../media/test-utils';
+import {
+	ScrubberElement,
+	VDS_SCRUBBER_ELEMENT_TAG_NAME
+} from '../ScrubberElement';
 
-describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, () => {
-  async function buildFixture(): Promise<{
-    scrubber: ScrubberElement;
-  }> {
-    const { container } = await buildMediaFixture(html`
-      <vds-scrubber></vds-scrubber>
-    `);
+window.customElements.define(VDS_SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
 
-    const scrubber = container.querySelector(
-      VDS_SCRUBBER_ELEMENT_TAG_NAME,
-    ) as ScrubberElement;
+describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, function () {
+	async function buildFixture() {
+		const { container } = await buildMediaFixture(html`
+			<vds-scrubber></vds-scrubber>
+		`);
 
-    return { scrubber };
-  }
+		const scrubber = /** @type {ScrubberElement} */ (
+			container.querySelector(VDS_SCRUBBER_ELEMENT_TAG_NAME)
+		);
 
-  it('should render DOM correctly', async () => {
-    const { scrubber } = await buildFixture();
-    expect(scrubber).dom.to.equal(`<vds-scrubber></vds-scrubber>`);
-  });
+		return { scrubber };
+	}
 
-  it('should render shadow DOM correctly', async () => {
-    const { scrubber } = await buildFixture();
-    expect(scrubber).shadowDom.to.equal(`
+	it('should render DOM correctly', async function () {
+		const { scrubber } = await buildFixture();
+		expect(scrubber).dom.to.equal(`<vds-scrubber></vds-scrubber>`);
+	});
+
+	it('should render shadow DOM correctly', async function () {
+		const { scrubber } = await buildFixture();
+		expect(scrubber).shadowDom.to.equal(`
       <div
         id="root"
         part="root"
-        style="--vds-scrubber-current-time:0; --vds-scrubber-seekable:0; --vds-scrubber-duration:0;"
+        style="--vds-scrubber-current-time:0;--vds-scrubber-seekable:0;--vds-scrubber-duration:0;"
       >
         <vds-slider
           exportparts="root: slider-root, thumb: slider-thumb, track: slider-track, track-fill: slider-track-fill"
@@ -48,7 +50,7 @@ describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, () => {
           value-text="0 seconds out of 0 seconds"
         >
           <slot name="slider"></slot>
-          
+
           <div
             aria-label="Amount seekable"
             aria-valuemax="0"
@@ -61,7 +63,7 @@ describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, () => {
           >
             <slot name="progress"></slot>
           </div>
-            
+
           <div
             hidden=""
             id="preview-track"
@@ -70,9 +72,9 @@ describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, () => {
         </vds-slider>
 
         <slot></slot>
-        
+
         <slot name="preview"></slot>
       </div>
     `);
-  });
+	});
 });

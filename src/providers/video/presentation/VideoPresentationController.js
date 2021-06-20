@@ -145,14 +145,14 @@ export class VideoPresentationController extends EventDispatcher {
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handlePresentationModeChange(originalEvent) {
-		redispatchNativeEvent(this.host, originalEvent);
+	handlePresentationModeChange(event) {
+		redispatchNativeEvent(this.host, event);
 		this.dispatchEvent('presentation-mode-change', {
 			detail: this.presentationMode,
-			originalEvent
+			originalEvent: event
 		});
 	}
 }

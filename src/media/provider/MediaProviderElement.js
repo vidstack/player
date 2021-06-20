@@ -426,12 +426,12 @@ export class MediaProviderElement extends VdsElement {
 
 	/**
 	 * @protected
-	 * @param {Event} [originalEvent]
+	 * @param {Event} [event]
 	 * @returns {void}
 	 */
-	handleMediaReady(originalEvent) {
+	handleMediaReady(event) {
 		this.context.canPlay = true;
-		this.dispatchEvent(new VdsCanPlayEvent({ originalEvent }));
+		this.dispatchEvent(new VdsCanPlayEvent({ originalEvent: event }));
 		this.mediaRequestQueue.flush();
 		this.mediaRequestQueue.serveImmediately = true;
 	}
@@ -595,24 +595,24 @@ export class MediaProviderElement extends VdsElement {
 	 * @returns {void}
 	 */
 	addFullscreenController(controller) {
-		controller.addEventListener('fullscreen-change', (e) => {
-			const isFullscreen = e.detail;
+		controller.addEventListener('fullscreen-change', (event) => {
+			const isFullscreen = event.detail;
 			this.context.fullscreen = isFullscreen;
 			this.dispatchEvent(
 				new VdsFullscreenChangeEvent({
 					detail: isFullscreen,
-					originalEvent: e.originalEvent
+					originalEvent: event
 				})
 			);
 		});
 
-		controller.addEventListener('error', (e) => {
-			const error = e.detail;
+		controller.addEventListener('error', (event) => {
+			const error = event.detail;
 			this.context.error = error;
 			this.dispatchEvent(
 				new VdsErrorEvent({
 					detail: error,
-					originalEvent: e.originalEvent
+					originalEvent: event
 				})
 			);
 		});

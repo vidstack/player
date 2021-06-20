@@ -26,115 +26,115 @@ export class MediaRemoteControl {
 	}
 
 	/**
-	 * @param {Event} [originalEvent]
+	 * @param {Event} [event]
 	 * @returns {void}
 	 */
-	play(originalEvent) {
+	play(event) {
 		this.host.dispatchEvent(
 			new VdsPlayRequestEvent({
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
-	 * @param {Event} [originalEvent]
+	 * @param {Event} [event]
 	 * @returns {void}
 	 */
-	pause(originalEvent) {
+	pause(event) {
 		this.host.dispatchEvent(
 			new VdsPauseRequestEvent({
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
-	 * @param {Event} [originalEvent]
+	 * @param {Event} [event]
 	 * @returns {void}
 	 */
-	mute(originalEvent) {
+	mute(event) {
 		this.host.dispatchEvent(
 			new VdsMuteRequestEvent({
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
-	 * @param {Event} [originalEvent]
+	 * @param {Event} [event]
 	 * @returns {void}
 	 */
-	unmute(originalEvent) {
+	unmute(event) {
 		this.host.dispatchEvent(
 			new VdsUnmuteRequestEvent({
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
-	 * @param {Event} [originalEvent]
+	 * @param {Event} [event]
 	 * @returns {void}
 	 */
-	enterFullscreen(originalEvent) {
+	enterFullscreen(event) {
 		this.host.dispatchEvent(
 			new VdsEnterFullscreenRequestEvent({
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
-	 * @param {Event} [originalEvent]
+	 * @param {Event} [event]
 	 * @returns {void}
 	 */
-	exitFullscreen(originalEvent) {
+	exitFullscreen(event) {
 		this.host.dispatchEvent(
 			new VdsExitFullscreenRequestEvent({
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
 	 * @param {number} time
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	seeking(time, originalEvent) {
+	seeking(time, event) {
 		this.host.dispatchEvent(
 			new VdsSeekingRequestEvent({
 				detail: time,
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
 	 * @param {number} time
-	 * @param {Event} [originalEvent]
+	 * @param {Event} [event]
 	 * @returns {void}
 	 */
-	seek(time, originalEvent) {
+	seek(time, event) {
 		this.host.dispatchEvent(
 			new VdsSeekRequestEvent({
 				detail: time,
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
 	 * @param {number} volume
-	 * @param {Event} [originalEvent]
+	 * @param {Event} [event]
 	 * @returns {void}
 	 */
-	changeVolume(volume, originalEvent) {
+	changeVolume(volume, event) {
 		this.host.dispatchEvent(
 			new VdsVolumeChangeRequestEvent({
 				detail: volume,
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}

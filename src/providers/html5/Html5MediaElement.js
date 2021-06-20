@@ -304,60 +304,60 @@ export class Html5MediaElement extends MediaProviderElement {
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleAbort(originalEvent) {
-		this.dispatchEvent(new VdsAbortEvent({ originalEvent }));
+	handleAbort(event) {
+		this.dispatchEvent(new VdsAbortEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleCanPlay(originalEvent) {
+	handleCanPlay(event) {
 		this.context.buffered = this.mediaElement.buffered;
 		this.context.seekable = this.mediaElement.seekable;
-		if (!this.willAnotherEngineAttach()) this.handleMediaReady(originalEvent);
+		if (!this.willAnotherEngineAttach()) this.handleMediaReady(event);
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleCanPlayThrough(originalEvent) {
+	handleCanPlayThrough(event) {
 		this.context.canPlayThrough = true;
-		this.dispatchEvent(new VdsCanPlayThroughEvent({ originalEvent }));
+		this.dispatchEvent(new VdsCanPlayThroughEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleLoadStart(originalEvent) {
+	handleLoadStart(event) {
 		this.context.currentSrc = this.mediaElement.currentSrc;
-		this.dispatchEvent(new VdsLoadStartEvent({ originalEvent }));
+		this.dispatchEvent(new VdsLoadStartEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleEmptied(originalEvent) {
-		this.dispatchEvent(new VdsEmptiedEvent({ originalEvent }));
+	handleEmptied(event) {
+		this.dispatchEvent(new VdsEmptiedEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleLoadedData(originalEvent) {
-		this.dispatchEvent(new VdsLoadedDataEvent({ originalEvent }));
+	handleLoadedData(event) {
+		this.dispatchEvent(new VdsLoadedDataEvent({ originalEvent: event }));
 	}
 
 	/**
@@ -373,72 +373,72 @@ export class Html5MediaElement extends MediaProviderElement {
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleLoadedMetadata(originalEvent) {
+	handleLoadedMetadata(event) {
 		this.context.duration = this.mediaElement.duration;
 		this.dispatchEvent(
 			new VdsDurationChangeEvent({
 				detail: this.context.duration,
-				originalEvent
+				originalEvent: event
 			})
 		);
-		this.dispatchEvent(new VdsLoadedMetadataEvent({ originalEvent }));
+		this.dispatchEvent(new VdsLoadedMetadataEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handlePlay(originalEvent) {
+	handlePlay(event) {
 		this.requestTimeUpdates();
 		this.context.paused = false;
-		this.dispatchEvent(new VdsPlayEvent({ originalEvent }));
+		this.dispatchEvent(new VdsPlayEvent({ originalEvent: event }));
 		if (this.context.ended) this.dispatchEvent(new VdsReplayEvent());
 		if (!this.context.started) {
 			this.context.started = true;
-			this.dispatchEvent(new VdsStartedEvent({ originalEvent }));
+			this.dispatchEvent(new VdsStartedEvent({ originalEvent: event }));
 		}
 		this.validatePlaybackEndedState();
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handlePause(originalEvent) {
+	handlePause(event) {
 		this.cancelTimeUpdates();
 		this.context.paused = true;
 		this.context.playing = false;
 		this.context.waiting = false;
-		this.dispatchEvent(new VdsPauseEvent({ originalEvent }));
+		this.dispatchEvent(new VdsPauseEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handlePlaying(originalEvent) {
+	handlePlaying(event) {
 		this.context.playing = true;
 		this.context.waiting = false;
-		this.dispatchEvent(new VdsPlayingEvent({ originalEvent }));
+		this.dispatchEvent(new VdsPlayingEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleDurationChange(originalEvent) {
+	handleDurationChange(event) {
 		this.context.duration = this.mediaElement.duration;
 		this.dispatchEvent(
 			new VdsDurationChangeEvent({
 				detail: this.context.duration,
-				originalEvent
+				originalEvent: event
 			})
 		);
 		this.validatePlaybackEndedState();
@@ -446,37 +446,37 @@ export class Html5MediaElement extends MediaProviderElement {
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleProgress(originalEvent) {
+	handleProgress(event) {
 		this.context.buffered = this.mediaElement.buffered;
 		this.context.seekable = this.mediaElement.seekable;
-		this.dispatchEvent(new VdsProgressEvent({ originalEvent }));
+		this.dispatchEvent(new VdsProgressEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleRateChange(originalEvent) {
+	handleRateChange(event) {
 		// TODO: no-op for now but we'll add playback rate support later.
 		throw Error('Not implemented');
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleSeeked(originalEvent) {
+	handleSeeked(event) {
 		this.context.currentTime = this.mediaElement.currentTime;
 		this.context.seeking = false;
 		this.dispatchEvent(
 			new VdsSeekedEvent({
 				detail: this.context.currentTime,
-				originalEvent
+				originalEvent: event
 			})
 		);
 		this.validatePlaybackEndedState();
@@ -484,35 +484,35 @@ export class Html5MediaElement extends MediaProviderElement {
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleSeeking(originalEvent) {
+	handleSeeking(event) {
 		this.context.currentTime = this.mediaElement.currentTime;
 		this.context.seeking = true;
 		this.dispatchEvent(
 			new VdsSeekingEvent({
 				detail: this.context.currentTime,
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleStalled(originalEvent) {
-		this.dispatchEvent(new VdsStalledEvent({ originalEvent }));
+	handleStalled(event) {
+		this.dispatchEvent(new VdsStalledEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleTimeUpdate(originalEvent) {
+	handleTimeUpdate(event) {
 		// -- Time updates are performed in `requestTimeUpdates()`.
 		this.context.waiting = false;
 		this.validatePlaybackEndedState();
@@ -520,10 +520,10 @@ export class Html5MediaElement extends MediaProviderElement {
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleVolumeChange(originalEvent) {
+	handleVolumeChange(event) {
 		this.context.volume = this.mediaElement.volume;
 		this.context.muted = this.mediaElement.muted;
 		this.dispatchEvent(
@@ -532,57 +532,60 @@ export class Html5MediaElement extends MediaProviderElement {
 					volume: this.context.volume,
 					muted: this.context.muted
 				},
-				originalEvent
+				originalEvent: event
 			})
 		);
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleWaiting(originalEvent) {
+	handleWaiting(event) {
 		this.context.waiting = true;
-		this.dispatchEvent(new VdsWaitingEvent({ originalEvent }));
+		this.dispatchEvent(new VdsWaitingEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleSuspend(originalEvent) {
+	handleSuspend(event) {
 		this.context.waiting = false;
-		this.dispatchEvent(new VdsSuspendEvent({ originalEvent }));
+		this.dispatchEvent(new VdsSuspendEvent({ originalEvent: event }));
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleEnded(originalEvent) {
+	handleEnded(event) {
 		// Check becuase might've been handled in `validatePlaybackEnded()`.
 		if (!this.context.ended && !this.loop) {
 			this.context.ended = true;
 			this.context.waiting = false;
-			this.dispatchEvent(new VdsEndedEvent({ originalEvent }));
+			this.dispatchEvent(new VdsEndedEvent({ originalEvent: event }));
 			this.cancelTimeUpdates();
 		} else if (this.loop) {
-			this.dispatchEvent(new VdsReplayEvent({ originalEvent }));
+			this.dispatchEvent(new VdsReplayEvent({ originalEvent: event }));
 		}
 	}
 
 	/**
 	 * @protected
-	 * @param {Event} originalEvent
+	 * @param {Event} event
 	 * @returns {void}
 	 */
-	handleError(originalEvent) {
+	handleError(event) {
 		this.context.error = this.mediaElement.error;
 		this.dispatchEvent(
-			new VdsErrorEvent({ detail: this.mediaElement.error, originalEvent })
+			new VdsErrorEvent({
+				detail: this.mediaElement.error,
+				originalEvent: event
+			})
 		);
 	}
 

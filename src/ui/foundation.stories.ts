@@ -1,7 +1,7 @@
 import '../bundle/define';
 
 import { html } from 'lit';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { ifDefined } from 'lit/directives/if-defined';
 
 import {
 	MediaContainerElementProps,
@@ -14,10 +14,6 @@ import {
 	VDS_VIDEO_ELEMENT_TAG_NAME,
 	VideoElementProps
 } from '../providers/video';
-import {
-	buildStorybookControlsFromManifest,
-	DOMEventsToStorybookActions
-} from '../shared/storybook';
 
 export default {
 	title: 'UI/Foundation',

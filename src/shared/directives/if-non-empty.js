@@ -1,4 +1,4 @@
-import { ifDefined } from 'lit-html/directives/if-defined.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 /**
  * For AttributeParts, sets the attribute if the value is defined and non-empty, and removes

@@ -585,16 +585,16 @@ export class SliderElement extends WithFocus(VdsElement) {
 
 	/**
 	 * @protected
-	 * @param {PointerEvent} originalEvent
+	 * @param {PointerEvent} event
 	 * @returns {void}
 	 */
-	startDragging(originalEvent) {
+	startDragging(event) {
 		if (this._isDragging) return;
 		this._isDragging = true;
-		this.updateValueBasedOnThumbPosition(originalEvent, false);
+		this.updateValueBasedOnThumbPosition(event, false);
 		this.dispatchEvent(
 			new VdsSliderDragStartEvent({
-				originalEvent,
+				originalEvent: event,
 				detail: this.value
 			})
 		);
@@ -602,16 +602,16 @@ export class SliderElement extends WithFocus(VdsElement) {
 
 	/**
 	 * @protected
-	 * @param {PointerEvent} originalEvent
+	 * @param {PointerEvent} event
 	 * @returns {void}
 	 */
-	stopDragging(originalEvent) {
+	stopDragging(event) {
 		if (!this._isDragging) return;
 		this._isDragging = false;
-		this.updateValueBasedOnThumbPosition(originalEvent, false);
+		this.updateValueBasedOnThumbPosition(event, false);
 		this.dispatchEvent(
 			new VdsSliderDragEndEvent({
-				originalEvent,
+				originalEvent: event,
 				detail: this.value
 			})
 		);
@@ -710,12 +710,12 @@ export class SliderElement extends WithFocus(VdsElement) {
 
 	/**
 	 * @protected
-	 * @param {PointerEvent} originalEvent
+	 * @param {PointerEvent} event
 	 * @param {boolean} [shouldFireValueChange=true]
 	 * @returns {void}
 	 */
-	updateValueBasedOnThumbPosition(originalEvent, shouldFireValueChange = true) {
-		const thumbPosition = originalEvent.clientX;
+	updateValueBasedOnThumbPosition(event, shouldFireValueChange = true) {
+		const thumbPosition = event.clientX;
 
 		const { left: trackLeft, width: trackWidth } =
 			this.trackElement.getBoundingClientRect();
@@ -727,7 +727,7 @@ export class SliderElement extends WithFocus(VdsElement) {
 			this.dispatchEvent(
 				new VdsSliderValueChangeEvent({
 					detail: this.value,
-					originalEvent
+					originalEvent: event
 				})
 			);
 		}

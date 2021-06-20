@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { styleMap } from 'lit-html/directives/style-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
 import { VdsElement } from '../../shared/elements';
 import { FullscreenController } from '../../shared/fullscreen';
