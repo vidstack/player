@@ -45,7 +45,7 @@ export type VideoProvider = VideoElementProps &
 	VideoPresentationControllerHost;
 
 export type VideoElementStorybookArgTypes =
-	MediaProviderElementStorybookArgTypes & StorybookArgTypes<VideoElementProps>;
+	StorybookArgTypes<VideoElementProps>;
 
 export type VideoElementStorybookArgs = MediaProviderElementStorybookArgs &
 	StorybookArgs<VideoElementProps>;

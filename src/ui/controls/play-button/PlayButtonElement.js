@@ -1,5 +1,17 @@
-import { mediaContext, MediaRemoteControl } from '../../../media/index.js';
-import { ToggleButtonElement } from '../toggle-button/index.js';
+import {
+	mediaContext,
+	MediaRemoteControl,
+	VdsPauseRequestEvent,
+	VdsPlayRequestEvent
+} from '../../../media/index.js';
+import {
+	storybookAction,
+	StorybookControlType
+} from '../../../shared/storybook/index.js';
+import {
+	ToggleButtonElement,
+	VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+} from '../toggle-button/index.js';
 
 export const VDS_PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
 
@@ -87,3 +99,19 @@ export class PlayButtonElement extends ToggleButtonElement {
 		}
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').PlayButtonElementStorybookArgTypes}
+ */
+export const VDS_PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+	...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+	label: { control: StorybookControlType.Text, defaultValue: 'Play' },
+	pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
+	fakePaused: {
+		control: StorybookControlType.Boolean,
+		defaultValue: true
+	},
+	onVdsPlayRequest: storybookAction(VdsPlayRequestEvent.TYPE),
+	onVdsPauseRequest: storybookAction(VdsPauseRequestEvent.TYPE)
+};

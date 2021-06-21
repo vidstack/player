@@ -2,6 +2,10 @@ import { html } from 'lit';
 
 import { mediaContext } from '../../media/index.js';
 import { VdsElement } from '../../shared/elements/index.js';
+import {
+	storybookAction,
+	StorybookControlType
+} from '../../shared/storybook/index.js';
 import { getSlottedChildren, setAttribute } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
 import { bufferingIndicatorElementStyles } from './css.js';
@@ -202,3 +206,29 @@ export class BufferingIndicatorElement extends VdsElement {
 		this.dispatchEvent(new Event());
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').BufferingIndicatorElementStorybookArgTypes}
+ */
+export const VDS_BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
+	delay: { control: StorybookControlType.Number, defaultValue: 0 },
+	showWhileBooting: {
+		control: StorybookControlType.Boolean,
+		defaultValue: false
+	},
+	fakeCanPlay: {
+		control: StorybookControlType.Boolean,
+		defaultValue: true
+	},
+	fakeBuffering: {
+		control: StorybookControlType.Boolean,
+		defaultValue: true
+	},
+	onVdsBufferingIndicatorShow: storybookAction(
+		VdsBufferingIndicatorShowEvent.TYPE
+	),
+	onVdsBufferingIndicatorHide: storybookAction(
+		VdsBufferingIndicatorHideEvent.TYPE
+	)
+};

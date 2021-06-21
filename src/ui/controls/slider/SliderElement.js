@@ -5,6 +5,10 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import { VdsElement, WithFocus } from '../../../shared/elements/index.js';
 import { bindEventListeners } from '../../../shared/events/index.js';
+import {
+	storybookAction,
+	StorybookControlType
+} from '../../../shared/storybook/index.js';
 import { setAttribute } from '../../../utils/dom.js';
 import { throttle } from '../../../utils/timing.js';
 import { sliderElementStyles } from './css.js';
@@ -732,3 +736,28 @@ export class SliderElement extends WithFocus(VdsElement) {
 		}
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').SliderElementStorybookArgTypes}
+ */
+export const VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
+	disabled: { control: StorybookControlType.Boolean, defaultValue: false },
+	hidden: { control: StorybookControlType.Boolean, defaultValue: false },
+	label: { control: StorybookControlType.Text },
+	max: { control: StorybookControlType.Number, defaultValue: 100 },
+	min: { control: StorybookControlType.Number, defaultValue: 0 },
+	orientation: {
+		control: StorybookControlType.Select,
+		options: ['horizontal', 'vertical'],
+		defaultValue: 'horizontal'
+	},
+	step: { control: StorybookControlType.Number, defaultValue: 1 },
+	stepMultiplier: { control: StorybookControlType.Number, defaultValue: 10 },
+	throttle: { control: StorybookControlType.Number, defaultValue: 10 },
+	value: { control: StorybookControlType.Number, defaultValue: 50 },
+	valueText: { control: StorybookControlType.Text },
+	onVdsSliderDragStart: storybookAction(VdsSliderDragStartEvent.TYPE),
+	onVdsSliderDragEnd: storybookAction(VdsSliderDragEndEvent.TYPE),
+	onVdsSliderValueChange: storybookAction(VdsSliderValueChangeEvent.TYPE)
+};

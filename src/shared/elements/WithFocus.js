@@ -42,9 +42,10 @@ export const focusableSelector = `
  */
 export function WithFocus(Base) {
 	return class WithFocusMixin extends Base {
-		createRenderRoot() {
-			return this.attachShadow({
-				mode: 'open',
+		static get shadowRootOptions() {
+			return {
+				// @ts-ignore
+				...Base.shadowRootOptions,
 				/**
 				 * This change disables delegatesFocus feature in shadow DOM in recent Safari, notably `14.x`.
 				 * Safari `14.x` introduced delegatesFocus, but using it causes the browser to crash.
@@ -53,7 +54,7 @@ export function WithFocus(Base) {
 				 * @report https://bugs.webkit.org/show_bug.cgi?id=215622.
 				 */
 				delegatesFocus: currentSafariVersion() <= 537
-			});
+			};
 		}
 
 		/**

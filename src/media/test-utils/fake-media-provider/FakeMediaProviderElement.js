@@ -8,6 +8,7 @@ import {
 	VdsTimeUpdateEvent,
 	VdsVolumeChangeEvent
 } from '../../index.js';
+import { mediaContext } from '../../media.context.js';
 
 export const VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME =
 	'vds-fake-media-provider';
@@ -17,18 +18,49 @@ export const VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME =
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
 export class FakeMediaProviderElement extends MediaProviderElement {
+	constructor() {
+		super();
+		this.defineContextAccessors();
+	}
+
+	/**
+	 * Used to define accessors that are used during testing to update the context object.
+	 *
+	 * @protected
+	 */
+	defineContextAccessors() {
+		Object.keys(mediaContext).forEach((ctxProp) => {
+			Object.defineProperty(this, `${ctxProp}Context`, {
+				get: () => {
+					return this.context[ctxProp];
+				},
+				set: (newValue) => {
+					// Only run context updates after we've connected to the DOM so we update the inject
+					// media context object on the `MediaControllerElement`.
+					this.connectedQueue.queue(`contextUpdate[${ctxProp}]`, () => {
+						this.context[ctxProp] = newValue;
+					});
+				}
+			});
+		});
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// Lifecycle
+	// -------------------------------------------------------------------------------------------
+
 	connectedCallback() {
 		super.connectedCallback();
-		if (this.canPlay) this.handleMediaReady();
+		if (this.canPlay) this.forceMediaReady();
 	}
+
+	// -------------------------------------------------------------------------------------------
+	// Provider Methods
+	// -------------------------------------------------------------------------------------------
 
 	forceMediaReady() {
 		this.handleMediaReady();
 	}
-
-	// -------------------------------------------------------------------------------------------
-	// Provider Metods
-	// -------------------------------------------------------------------------------------------
 
 	getCurrentTime() {
 		return this.context.currentTime;

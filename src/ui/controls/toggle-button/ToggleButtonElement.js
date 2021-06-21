@@ -6,9 +6,14 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import { WithFocus } from '../../../shared/elements/index.js';
+import {
+	storybookAction,
+	StorybookControlType
+} from '../../../shared/storybook/index.js';
 import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { ButtonElement } from '../button/index.js';
 import { ToggleElement } from '../toggle/index.js';
+import { toggleButtonElementStyles } from './css.js';
 
 export const VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
 
@@ -38,6 +43,11 @@ export const VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
  * ```
  */
 export class ToggleButtonElement extends WithFocus(ToggleElement) {
+	/** @type {import('lit').CSSResultGroup} */
+	static get styles() {
+		return [super.styles, toggleButtonElementStyles];
+	}
+
 	/** @type {string[]} */
 	static get parts() {
 		return [
@@ -151,3 +161,17 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
 		this.pressed = !this.pressed;
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').ToggleButtonElementStorybookArgTypes}
+ */
+export const VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+	label: { control: StorybookControlType.Text },
+	describedBy: { control: StorybookControlType.Text },
+	disabled: { control: StorybookControlType.Boolean },
+	pressed: { control: StorybookControlType.Boolean, defaultValue: false },
+	onClick: storybookAction('click'),
+	onFocus: storybookAction('focus'),
+	onBlur: storybookAction('blur')
+};

@@ -3,38 +3,53 @@ import './define.js';
 import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
-import { VDS_BUTTON_ELEMENT_TAG_NAME } from './ButtonElement.js';
+import {
+	VDS_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+	VDS_BUTTON_ELEMENT_TAG_NAME
+} from './ButtonElement.js';
 
 export default {
 	title: 'UI/Foundation/Controls/Button',
 	component: VDS_BUTTON_ELEMENT_TAG_NAME,
-	argTypes: {}
+	argTypes: VDS_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
+/**
+ * @param {import('./types').ButtonElementStorybookArgs} args
+ */
 function Template({
-	label,
-	describedBy,
+	// Properties
 	controls,
+	describedBy,
+	disabled,
+	expanded,
 	hasPopup,
 	hidden,
-	disabled,
+	label,
+	pressed,
+	title,
 	type,
-	expanded,
-	pressed
+	// Actions
+	onClick,
+	onFocus,
+	onBlur
 }) {
 	return html`
 		<vds-button
-			label="${ifNonEmpty(label)}"
-			described-by="${ifNonEmpty(describedBy)}"
-			controls="${ifNonEmpty(controls)}"
-			type="${ifNonEmpty(type)}"
-			?hidden="${hidden}"
-			?disabled="${disabled}"
-			?has-popup="${hasPopup}"
-			?expanded="${expanded}"
-			?pressed="${pressed}"
+			label=${ifNonEmpty(label)}
+			described-by=${ifNonEmpty(describedBy)}
+			controls=${ifNonEmpty(controls)}
+			type=${ifNonEmpty(type)}
+			?hidden=${hidden}
+			?disabled=${disabled}
+			?has-popup=${hasPopup}
+			?expanded=${expanded}
+			?pressed=${pressed}
+			@click=${onClick}
+			@focus=${onFocus}
+			@blur=${onBlur}
 		>
-			Button
+			${title}
 		</vds-button>
 	`;
 }

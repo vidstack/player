@@ -6,18 +6,18 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-	VDS_MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-	VDS_MUTE_BUTTON_ELEMENT_TAG_NAME
-} from './MuteButtonElement.js';
+	VDS_PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+	VDS_PLAY_BUTTON_ELEMENT_TAG_NAME
+} from './PlayButtonElement.js';
 
 export default {
-	title: 'UI/Foundation/Controls/Mute Button',
-	component: VDS_MUTE_BUTTON_ELEMENT_TAG_NAME,
-	argTypes: VDS_MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+	title: 'UI/Foundation/Controls/Play Button',
+	component: VDS_PLAY_BUTTON_ELEMENT_TAG_NAME,
+	argTypes: VDS_PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**
- * @param {import('./types').MuteButtonElementStorybookArgs} args
+ * @param {import('./types').PlayButtonElementStorybookArgs} args
  */
 function Template({
 	// Properties
@@ -25,34 +25,34 @@ function Template({
 	describedBy,
 	disabled,
 	// Actions
-	onVdsMuteRequest,
-	onVdsUnmuteRequest,
+	onVdsPlayRequest,
+	onVdsPauseRequest,
 	// Fake Properties
-	fakeMuted
+	fakePaused
 }) {
 	return html`
 		<vds-media-controller
-			@vds-mute-request=${onVdsMuteRequest}
-			@vds-unmute-request=${onVdsUnmuteRequest}
+			@vds-pause-request=${onVdsPauseRequest}
+			@vds-play-request=${onVdsPlayRequest}
 		>
 			<vds-media-container>
 				<vds-fake-media-provider
 					.canPlayContext=${true}
-					.mutedContext=${fakeMuted}
+					.pausedContext=${fakePaused}
 					slot="media"
 				></vds-fake-media-provider>
 
-				<vds-mute-button
+				<vds-play-button
 					label=${ifNonEmpty(label)}
 					described-by=${ifNonEmpty(describedBy)}
 					?disabled=${disabled}
 				>
-					<div slot="mute">Mute</div>
-					<div slot="unmute">Unmute</div>
-				</vds-mute-button>
+					<div slot="play">Play</div>
+					<div slot="pause">Pause</div>
+				</vds-play-button>
 			</vds-media-container>
 		</vds-media-controller>
 	`;
 }
 
-export const MuteButton = Template.bind({});
+export const PlayButton = Template.bind({});

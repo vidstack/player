@@ -1,55 +1,52 @@
 import '../../media/define.js';
+import '../../media/test-utils/define.js';
 import './define.js';
 
 import { html } from 'lit';
 
-import { VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from './BufferingIndicatorElement.js';
+import {
+	VDS_BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES,
+	VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME
+} from './BufferingIndicatorElement.js';
 
 export default {
 	title: 'UI/Foundation/Buffering Indicator',
 	component: VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
-	argTypes: {
-		fakeCanPlay: {
-			control: 'boolean',
-			defaultValue: true
-		},
-		fakeBuffering: {
-			control: 'boolean',
-			defaultValue: true
-		}
-	}
+	argTypes: VDS_BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
+/**
+ * @param {import('./types.js').BufferingIndicatorElementStorybookArgs} args
+ */
 function Template({
-	// Fakes
-	fakeCanPlay,
-	fakeBuffering,
-	// Props
+	// Properties
 	delay,
 	showWhileBooting,
-	// Events
+	// Actions
 	onVdsBufferingIndicatorShow,
-	onVdsBufferingIndicatorHide
+	onVdsBufferingIndicatorHide,
+	// Fake Properties
+	fakeCanPlay,
+	fakeBuffering
 }) {
 	return html`
-		<vds-media-controller .canPlay="${fakeCanPlay}" .waiting="${fakeBuffering}">
+		<vds-media-controller>
 			<vds-media-container>
+				<vds-fake-media-provider
+					.canPlayContext=${fakeCanPlay}
+					.waitingContext=${fakeBuffering}
+					slot="media"
+				></vds-fake-media-provider>
 				<vds-buffering-indicator
-					?show-while-booting="${showWhileBooting}"
-					delay="${delay}"
-					@vds-buffering-indicator-show="${onVdsBufferingIndicatorShow}"
-					@vds-buffering-indicator-hide="${onVdsBufferingIndicatorHide}"
+					?show-while-booting=${showWhileBooting}
+					delay=${delay}
+					@vds-buffering-indicator-show=${onVdsBufferingIndicatorShow}
+					@vds-buffering-indicator-hide=${onVdsBufferingIndicatorHide}
 				>
 					<div>I'm Buffering!</div>
 				</vds-buffering-indicator>
 			</vds-media-container>
 		</vds-media-controller>
-
-		<style>
-			vds-media-container::part(ui) {
-				position: relative;
-			}
-		</style>
 	`;
 }
 

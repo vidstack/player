@@ -1,3 +1,8 @@
+import {
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../../shared/storybook/index.js';
+
 export type Button = ButtonElementProps;
 
 export type ButtonType = 'button' | 'submit' | 'reset' | 'menu';
@@ -71,3 +76,19 @@ export interface ButtonElementProps {
 	 */
 	readonly rootElement: HTMLButtonElement;
 }
+
+interface TrackedNativeButtonEvents {
+	click: MouseEvent | TouchEvent;
+	focus: FocusEvent;
+	blur: FocusEvent;
+}
+
+export type ButtonElementStorybookArgTypes = StorybookArgTypes<
+	ButtonElementProps & { title: string },
+	TrackedNativeButtonEvents
+>;
+
+export type ButtonElementStorybookArgs = StorybookArgs<
+	ButtonElementProps & { title: string },
+	TrackedNativeButtonEvents
+>;

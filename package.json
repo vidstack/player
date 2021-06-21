@@ -9,13 +9,15 @@
 	"main": "src/bundle/index.js",
 	"module": "src/bundle/index.js",
 	"files": [
-		"src/"
+		"src/",
+		"custom-elements.json"
 	],
 	"sideEffects": [
 		"src/**/define.js"
 	],
 	"exports": {
-		".": "./src"
+		".": "./src",
+		"./custom-elements.json": "./custom-elements.json"
 	},
 	"contributors": [
 		"Dave Furfero <furf@furf.com>",
@@ -57,7 +59,7 @@
 		"lit": "^2.0.0-rc.2"
 	},
 	"devDependencies": {
-		"@custom-elements-manifest/analyzer": "^0.3.1",
+		"@custom-elements-manifest/analyzer": "^0.3.2",
 		"@open-wc/semantic-dom-diff": "^0.19.4",
 		"@open-wc/testing": "^3.0.0-next.1",
 		"@storybook/addon-essentials": "^6.3.0-rc.11",

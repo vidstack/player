@@ -1,3 +1,9 @@
+import {
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../../shared/storybook/index.js';
+import { VdsSliderEvents } from './events.js';
+
 export type Slider = SliderElementProps;
 
 export interface SliderElementProps {
@@ -136,3 +142,13 @@ export interface SliderElementProps {
 	 */
 	readonly trackFillElement: HTMLDivElement;
 }
+
+export type SliderElementStorybookArgTypes = StorybookArgTypes<
+	SliderElementProps,
+	VdsSliderEvents
+>;
+
+export type SliderElementStorybookArgs = StorybookArgs<
+	SliderElementProps,
+	VdsSliderEvents
+>;

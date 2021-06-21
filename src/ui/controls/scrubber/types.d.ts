@@ -1,5 +1,11 @@
+import { VdsMediaRequestEvents } from '../../../media/index.js';
+import {
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../../shared/storybook/index.js';
 import { ThrottledFunction } from '../../../utils/timing.types.js';
-import { SliderElement, SliderElementProps } from '../slider.js';
+import { SliderElement, SliderElementProps } from '../slider/index.js';
+import { VdsScrubberEvents } from './events.js';
 
 export type Scrubber = ScrubberElementProps;
 
@@ -112,3 +118,34 @@ export type PreviewTimeChangeThrottle =
 export type MediaSeekingRequestThrottle =
 	| ThrottledFunction<[time: number, event: Event]>
 	| undefined;
+
+export interface FakeScrubberElementProps {
+	fakeCurrentTime: number;
+	fakeDuration: number;
+	fakePaused: boolean;
+	fakeSeekableAmount: number;
+}
+
+export type ScrubberElementStorybookArgTypes = StorybookArgTypes<
+	ScrubberElementProps & FakeScrubberElementProps,
+	VdsScrubberEvents &
+		Pick<
+			VdsMediaRequestEvents,
+			| 'vds-seek-request'
+			| 'vds-seeking-request'
+			| 'vds-play-request'
+			| 'vds-pause-request'
+		>
+>;
+
+export type ScrubberElementStorybookArgs = StorybookArgs<
+	ScrubberElementProps & FakeScrubberElementProps,
+	VdsScrubberEvents &
+		Pick<
+			VdsMediaRequestEvents,
+			| 'vds-seek-request'
+			| 'vds-seeking-request'
+			| 'vds-play-request'
+			| 'vds-pause-request'
+		>
+>;

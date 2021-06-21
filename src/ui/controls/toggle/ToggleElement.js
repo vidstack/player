@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { VdsElement } from '../../../shared/elements/index.js';
+import { StorybookControlType } from '../../../shared/storybook/index.js';
 import { getSlottedChildren, setAttribute } from '../../../utils/dom.js';
 import { isNil } from '../../../utils/unit.js';
 import { toggleElementStyles } from './css.js';
@@ -207,3 +208,11 @@ export class ToggleElement extends VdsElement {
 		}
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').ToggleElementStorybookArgTypes}
+ */
+export const VDS_TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES = {
+	pressed: { control: StorybookControlType.Boolean, defaultValue: false }
+};

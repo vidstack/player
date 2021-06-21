@@ -6,6 +6,7 @@ export const buttonElementStyles = css`
 		contain: content;
 	}
 
+	/* Only show focus outline on 'button' element. */
 	:host(:focus) {
 		outline: 0;
 	}

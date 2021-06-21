@@ -1,3 +1,8 @@
+import {
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../../shared/storybook/index.js';
+
 export type Toggle = ToggleElementProps;
 
 export interface ToggleElementProps {
@@ -16,3 +21,8 @@ export interface ToggleElementProps {
 	 */
 	readonly notPressedSlotElement: HTMLElement | undefined;
 }
+
+export type ToggleElementStorybookArgTypes =
+	StorybookArgTypes<ToggleElementProps>;
+
+export type ToggleElementStorybookArgs = StorybookArgs<ToggleElementProps>;

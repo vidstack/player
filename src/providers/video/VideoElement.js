@@ -275,7 +275,7 @@ export class VideoElement extends Html5MediaElement {
 
 /**
  * @readonly
- * @type {import('./types.js').VideoElementStorybookArgTypes}
+ * @type {import('./types').VideoElementStorybookArgTypes}
  */
 export const VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES = {
 	...VDS_MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,

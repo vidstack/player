@@ -12,6 +12,11 @@ module.exports = {
 		controls: {
 			expanded: false,
 			sort: 'alpha'
+		},
+		previewTabs: {
+			'storybook/docs/panel': {
+				hidden: true
+			}
 		}
 	}
 };

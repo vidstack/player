@@ -5,6 +5,8 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import { VdsElement, WithFocus } from '../../../shared/elements/index.js';
 import { listen } from '../../../shared/events/index.js';
+import { storybookAction } from '../../../shared/storybook/helpers.js';
+import { StorybookControlType } from '../../../shared/storybook/StorybookControlType.js';
 import { isUndefined } from '../../../utils/unit.js';
 import { buttonElementStyles } from './css.js';
 
@@ -261,3 +263,27 @@ export class ButtonElement extends WithFocus(VdsElement) {
 		return false;
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').ButtonElementStorybookArgTypes}
+ */
+export const VDS_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+	controls: { control: StorybookControlType.Text },
+	describedBy: { control: StorybookControlType.Text },
+	disabled: { control: StorybookControlType.Boolean },
+	expanded: { control: StorybookControlType.Boolean },
+	hasPopup: { control: StorybookControlType.Boolean },
+	hidden: { control: StorybookControlType.Boolean },
+	label: { control: StorybookControlType.Text },
+	pressed: { control: StorybookControlType.Boolean },
+	title: { control: StorybookControlType.Text, defaultValue: 'Title' },
+	type: {
+		control: StorybookControlType.Select,
+		options: ['button', 'submit', 'reset', 'menu'],
+		defaultValue: 'button'
+	},
+	onClick: storybookAction('click'),
+	onFocus: storybookAction('focus'),
+	onBlur: storybookAction('blur')
+};

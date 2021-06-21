@@ -6,15 +6,27 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { mediaContext, MediaRemoteControl } from '../../../media/index.js';
+import {
+	mediaContext,
+	MediaRemoteControl,
+	VdsPauseRequestEvent,
+	VdsPlayRequestEvent,
+	VdsSeekingRequestEvent,
+	VdsSeekRequestEvent
+} from '../../../media/index.js';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import { VdsElement, WithFocus } from '../../../shared/elements/index.js';
+import {
+	storybookAction,
+	StorybookControlType
+} from '../../../shared/storybook/index.js';
 import { getSlottedChildren, raf } from '../../../utils/dom.js';
 import { formatSpokenTime } from '../../../utils/time.js';
 import { throttle } from '../../../utils/timing.js';
 import { isNil, isUndefined } from '../../../utils/unit.js';
 import {
 	SliderElement,
+	VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
 	VdsSliderDragEndEvent,
 	VdsSliderDragStartEvent,
 	VdsSliderValueChangeEvent
@@ -165,7 +177,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 		/** @type {number} */
 		this.stepMultiplier = 2;
 		/** @type {number} */
-		this.throttle = 0;
+		this.throttle = 30;
 		/** @type {number} */
 		this.userSeekingThrottle = 150;
 
@@ -303,7 +315,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	async dispatchUserSeeked(time, event) {
 		// Prevent slider value (time) jumping while `isDragging` is being updated to `false`.
 		await this.updateComplete;
-		// this.currentTime = this.previewTime;
+		// @ts-ignore
+		this.currentTime = this.previewTime;
 		this.remoteControl.seek(time, event);
 	}
 
@@ -565,8 +578,13 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 * @returns {Promise<void>}
 	 */
 	async handleSliderValueChange(event) {
-		const pointerEvent = /** @type {PointerEvent} */ (event.originalEvent);
-		await this.updatePreviewPosition(pointerEvent);
+		if (!event.type.includes('pointer')) {
+			this.previewTime = event.detail;
+		} else {
+			const pointerEvent = /** @type {PointerEvent} */ (event.originalEvent);
+			await this.updatePreviewPosition(pointerEvent);
+		}
+
 		if (!this.isDraggingThumb) this.dispatchUserSeeked(this.previewTime, event);
 	}
 
@@ -599,13 +617,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 * @protected
 	 * @type {boolean}
 	 */
-	wasPausedBeforeDragStart = false;
-
-	/**
-	 * @protected
-	 * @type {boolean}
-	 */
-	shouldTogglePlaybackWhileDragging = false;
+	wasPlayingBeforeDragStart = false;
 
 	/**
 	 * @protected
@@ -616,16 +628,14 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 		if (!this.pauseWhileDragging) return;
 
 		if (this.isDraggingThumb && !this.paused) {
-			this.wasPausedBeforeDragStart = this.paused;
-			this.shouldTogglePlaybackWhileDragging = true;
+			this.wasPlayingBeforeDragStart = true;
 			this.remoteControl.pause(event);
 		} else if (
-			this.shouldTogglePlaybackWhileDragging &&
+			this.wasPlayingBeforeDragStart &&
 			!this.isDraggingThumb &&
-			!this.wasPausedBeforeDragStart &&
 			this.paused
 		) {
-			this.shouldTogglePlaybackWhileDragging = false;
+			this.wasPlayingBeforeDragStart = false;
 			this.remoteControl.play(event);
 		}
 	}
@@ -936,3 +946,68 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 		this.mediaSeekingRequestThrottle = undefined;
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').ScrubberElementStorybookArgTypes}
+ */
+export const VDS_SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
+	// Properties
+	disabled: VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,
+	hidden: VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
+	noPreviewClamp: {
+		control: StorybookControlType.Boolean,
+		defaultValue: false
+	},
+	noPreviewTrack: {
+		control: StorybookControlType.Boolean,
+		defaultValue: false
+	},
+	orientation: VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
+	pauseWhileDragging: {
+		control: StorybookControlType.Boolean,
+		defaultValue: false
+	},
+	previewTimeThrottle: {
+		control: StorybookControlType.Number,
+		defaultValue: 30
+	},
+	progressLabel: {
+		control: StorybookControlType.Text,
+		defaultValue: 'Amount seekable'
+	},
+	progressText: {
+		control: StorybookControlType.Text,
+		defaultValue: '{currentTime} out of {duration}'
+	},
+	sliderLabel: {
+		control: StorybookControlType.Text,
+		defaultValue: 'Time scrubber'
+	},
+	step: { control: StorybookControlType.Number, defaultValue: 5 },
+	stepMultiplier: { control: StorybookControlType.Number, defaultValue: 2 },
+	throttle: { control: StorybookControlType.Number, defaultValue: 30 },
+	userSeekingThrottle: {
+		control: StorybookControlType.Number,
+		defaultValue: 150
+	},
+	// Scrubber Actions
+	onVdsScrubberPreviewShow: storybookAction(VdsScrubberPreviewShowEvent.TYPE),
+	onVdsScrubberPreviewHide: storybookAction(VdsScrubberPreviewHideEvent.TYPE),
+	onVdsScrubberPreviewTimeUpdate: storybookAction(
+		VdsScrubberPreviewTimeUpdateEvent.TYPE
+	),
+	// Media Request Actions
+	onVdsPlayRequest: storybookAction(VdsPlayRequestEvent.TYPE),
+	onVdsPauseRequest: storybookAction(VdsPauseRequestEvent.TYPE),
+	onVdsSeekRequest: storybookAction(VdsSeekRequestEvent.TYPE),
+	onVdsSeekingRequest: storybookAction(VdsSeekingRequestEvent.TYPE),
+	// Fake Properties
+	fakeCurrentTime: { control: StorybookControlType.Number, defaultValue: 1000 },
+	fakeDuration: { control: StorybookControlType.Number, defaultValue: 3600 },
+	fakePaused: { control: StorybookControlType.Boolean, defaultValue: true },
+	fakeSeekableAmount: {
+		control: StorybookControlType.Number,
+		defaultValue: 1800
+	}
+};

@@ -1,3 +1,9 @@
+import {
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../shared/storybook/index.js';
+import { VdsBufferingIndicatorEvents } from './events.js';
+
 export type BufferingIndicator = BufferingIndicatorElementProps;
 
 export interface BufferingIndicatorElementProps {
@@ -16,3 +22,18 @@ export interface BufferingIndicatorElementProps {
 	 */
 	showWhileBooting: boolean;
 }
+
+export interface FakeBufferingIndicatorElementProps {
+	fakeCanPlay: boolean;
+	fakeBuffering: boolean;
+}
+
+export type BufferingIndicatorElementStorybookArgTypes = StorybookArgTypes<
+	BufferingIndicatorElementProps & FakeBufferingIndicatorElementProps,
+	VdsBufferingIndicatorEvents
+>;
+
+export type BufferingIndicatorElementStorybookArgs = StorybookArgs<
+	BufferingIndicatorElementProps & FakeBufferingIndicatorElementProps,
+	VdsBufferingIndicatorEvents
+>;

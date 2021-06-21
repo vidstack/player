@@ -5,8 +5,4 @@ export const toggleElementStyles = css`
 		display: table;
 		contain: content;
 	}
-
-	:host(:focus) {
-		outline: 0;
-	}
 `;
