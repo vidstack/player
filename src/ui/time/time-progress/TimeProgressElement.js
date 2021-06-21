@@ -6,6 +6,7 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { VdsElement } from '../../../shared/elements/index.js';
+import { StorybookControlType } from '../../../shared/storybook/index.js';
 import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { TimeElement } from '../time/index.js';
 import { TimeCurrentElement } from '../time-current/index.js';
@@ -257,3 +258,29 @@ export class TimeProgressElement extends VdsElement {
 		return 'separator';
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').TimeProgressElementStorybookArgTypes}
+ */
+export const VDS_TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES = {
+	alwaysShowHours: {
+		control: StorybookControlType.Boolean,
+		defaultValue: false
+	},
+	currentTimeLabel: {
+		control: StorybookControlType.Text,
+		defaultValue: 'Current time'
+	},
+	durationLabel: {
+		control: StorybookControlType.Text,
+		defaultValue: 'Duration'
+	},
+	padHours: { control: StorybookControlType.Boolean, defaultValue: false },
+	timeSeparator: { control: StorybookControlType.Text, defaultValue: '/' },
+	mediaCurrentTime: {
+		control: StorybookControlType.Number,
+		defaultValue: 1800
+	},
+	mediaDuration: { control: StorybookControlType.Number, defaultValue: 3600 }
+};

@@ -19,16 +19,16 @@ export type PlayButtonElementProps = ToggleButtonElementProps & {
 	readonly pauseSlotElement: HTMLElement | undefined;
 };
 
-export interface FakePlayButtonElementProps {
-	fakePaused: boolean;
+export interface PlayButtonElementMediaProps {
+	mediaPaused: boolean;
 }
 
 export type PlayButtonElementStorybookArgTypes = StorybookArgTypes<
-	PlayButtonElementProps & FakePlayButtonElementProps,
+	PlayButtonElementProps & PlayButtonElementMediaProps,
 	Pick<VdsMediaRequestEvents, 'vds-play-request' | 'vds-pause-request'>
 >;
 
 export type PlayButtonElementStorybookArgs = StorybookArgs<
-	PlayButtonElementProps & FakePlayButtonElementProps,
+	PlayButtonElementProps & PlayButtonElementMediaProps,
 	Pick<VdsMediaRequestEvents, 'vds-play-request' | 'vds-pause-request'>
 >;

@@ -19,12 +19,12 @@ export type FullscreenButton = FullscreenButtonElementProps & {
 
 export type FullscreenButtonElementProps = ToggleButtonElementProps;
 
-export interface FakeFullscreenButtonElementProps {
-	fakeFullscreen: boolean;
+export interface FullscreenButtonElementMediaProps {
+	mediaFullscreen: boolean;
 }
 
 export type FullscreenButtonElementStorybookArgTypes = StorybookArgTypes<
-	FullscreenButtonElementProps & FakeFullscreenButtonElementProps,
+	FullscreenButtonElementProps & FullscreenButtonElementMediaProps,
 	Pick<
 		VdsMediaRequestEvents,
 		'vds-enter-fullscreen-request' | 'vds-exit-fullscreen-request'
@@ -32,7 +32,7 @@ export type FullscreenButtonElementStorybookArgTypes = StorybookArgTypes<
 >;
 
 export type FullscreenButtonElementStorybookArgs = StorybookArgs<
-	FullscreenButtonElementProps & FakeFullscreenButtonElementProps,
+	FullscreenButtonElementProps & FullscreenButtonElementMediaProps,
 	Pick<
 		VdsMediaRequestEvents,
 		'vds-enter-fullscreen-request' | 'vds-exit-fullscreen-request'

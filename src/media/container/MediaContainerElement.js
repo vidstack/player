@@ -6,6 +6,8 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { VdsElement } from '../../shared/elements/index.js';
 import { FullscreenController } from '../../shared/fullscreen/index.js';
 import { ScreenOrientationController } from '../../shared/screen-orientation/index.js';
+import { storybookAction } from '../../shared/storybook/helpers.js';
+import { StorybookControlType } from '../../shared/storybook/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
 import { isNil, isString, isUndefined } from '../../utils/unit.js';
 import { mediaContext } from '../media.context.js';
@@ -401,3 +403,14 @@ export class MediaContainerElement extends VdsElement {
 		);
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').MediaContainerElementStorybookArgTypes}
+ */
+export const VDS_MEDIA_CONTAINER_ELEMENT_STORYBOOK_ARG_TYPES = {
+	aspectRatio: { control: StorybookControlType.Text },
+	onVdsMediaContainerConnect: storybookAction(
+		VdsMediaContainerConnectEvent.TYPE
+	)
+};

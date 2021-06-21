@@ -103,7 +103,7 @@ export const VDS_FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
 	...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
 	label: { control: StorybookControlType.Text, defaultValue: 'Fullscreen' },
 	pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
-	fakeFullscreen: {
+	mediaFullscreen: {
 		control: StorybookControlType.Boolean,
 		defaultValue: false
 	},

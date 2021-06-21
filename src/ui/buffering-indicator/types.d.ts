@@ -23,17 +23,17 @@ export interface BufferingIndicatorElementProps {
 	showWhileBooting: boolean;
 }
 
-export interface FakeBufferingIndicatorElementProps {
-	fakeCanPlay: boolean;
-	fakeBuffering: boolean;
+export interface BufferingIndicatorElementMediaProps {
+	mediaCanPlay: boolean;
+	mediaBuffering: boolean;
 }
 
 export type BufferingIndicatorElementStorybookArgTypes = StorybookArgTypes<
-	BufferingIndicatorElementProps & FakeBufferingIndicatorElementProps,
+	BufferingIndicatorElementProps & BufferingIndicatorElementMediaProps,
 	VdsBufferingIndicatorEvents
 >;
 
 export type BufferingIndicatorElementStorybookArgs = StorybookArgs<
-	BufferingIndicatorElementProps & FakeBufferingIndicatorElementProps,
+	BufferingIndicatorElementProps & BufferingIndicatorElementMediaProps,
 	VdsBufferingIndicatorEvents
 >;

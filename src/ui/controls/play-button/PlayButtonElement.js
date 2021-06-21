@@ -108,7 +108,7 @@ export const VDS_PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
 	...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
 	label: { control: StorybookControlType.Text, defaultValue: 'Play' },
 	pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
-	fakePaused: {
+	mediaPaused: {
 		control: StorybookControlType.Boolean,
 		defaultValue: true
 	},

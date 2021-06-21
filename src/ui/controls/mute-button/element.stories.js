@@ -27,8 +27,8 @@ function Template({
 	// Actions
 	onVdsMuteRequest,
 	onVdsUnmuteRequest,
-	// Fake Properties
-	fakeMuted
+	// Media Properties
+	mediaMuted
 }) {
 	return html`
 		<vds-media-controller
@@ -38,7 +38,7 @@ function Template({
 			<vds-media-container>
 				<vds-fake-media-provider
 					.canPlayContext=${true}
-					.mutedContext=${fakeMuted}
+					.mutedContext=${mediaMuted}
 					slot="media"
 				></vds-fake-media-provider>
 

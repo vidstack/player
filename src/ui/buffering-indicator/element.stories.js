@@ -25,16 +25,16 @@ function Template({
 	// Actions
 	onVdsBufferingIndicatorShow,
 	onVdsBufferingIndicatorHide,
-	// Fake Properties
-	fakeCanPlay,
-	fakeBuffering
+	// Media Properties
+	mediaCanPlay,
+	mediaBuffering
 }) {
 	return html`
 		<vds-media-controller>
 			<vds-media-container>
 				<vds-fake-media-provider
-					.canPlayContext=${fakeCanPlay}
-					.waitingContext=${fakeBuffering}
+					.canPlayContext=${mediaCanPlay}
+					.waitingContext=${mediaBuffering}
 					slot="media"
 				></vds-fake-media-provider>
 				<vds-buffering-indicator
@@ -43,7 +43,7 @@ function Template({
 					@vds-buffering-indicator-show=${onVdsBufferingIndicatorShow}
 					@vds-buffering-indicator-hide=${onVdsBufferingIndicatorHide}
 				>
-					<div>I'm Buffering!</div>
+					<div>BUFFERING!</div>
 				</vds-buffering-indicator>
 			</vds-media-container>
 		</vds-media-controller>

@@ -27,8 +27,8 @@ function Template({
 	// Actions
 	onVdsEnterFullscreenRequest,
 	onVdsExitFullscreenRequest,
-	// Fake Properties
-	fakeFullscreen
+	// Media Properties
+	mediaFullscreen
 }) {
 	return html`
 		<vds-media-controller
@@ -38,7 +38,7 @@ function Template({
 			<vds-media-container>
 				<vds-fake-media-provider
 					.canPlayContext="${true}"
-					.fullscreenContext="${fakeFullscreen}"
+					.fullscreenContext="${mediaFullscreen}"
 					slot="media"
 				></vds-fake-media-provider>
 

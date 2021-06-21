@@ -1,3 +1,8 @@
+import {
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../../shared/storybook/index.js';
+
 export type TimeDisplay = TimeElementProps;
 
 export interface TimeElementProps {
@@ -33,3 +38,7 @@ export interface TimeElementProps {
 	 */
 	readonly rootElement: HTMLTimeElement;
 }
+
+export type TimeElementStorybookArgTypes = StorybookArgTypes<TimeElementProps>;
+
+export type TimeElementStorybookArgs = StorybookArgs<TimeElementProps>;

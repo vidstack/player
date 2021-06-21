@@ -1002,11 +1002,14 @@ export const VDS_SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
 	onVdsPauseRequest: storybookAction(VdsPauseRequestEvent.TYPE),
 	onVdsSeekRequest: storybookAction(VdsSeekRequestEvent.TYPE),
 	onVdsSeekingRequest: storybookAction(VdsSeekingRequestEvent.TYPE),
-	// Fake Properties
-	fakeCurrentTime: { control: StorybookControlType.Number, defaultValue: 1000 },
-	fakeDuration: { control: StorybookControlType.Number, defaultValue: 3600 },
-	fakePaused: { control: StorybookControlType.Boolean, defaultValue: true },
-	fakeSeekableAmount: {
+	// Media Properties
+	mediaCurrentTime: {
+		control: StorybookControlType.Number,
+		defaultValue: 1000
+	},
+	mediaDuration: { control: StorybookControlType.Number, defaultValue: 3600 },
+	mediaPaused: { control: StorybookControlType.Boolean, defaultValue: true },
+	mediaSeekableAmount: {
 		control: StorybookControlType.Number,
 		defaultValue: 1800
 	}

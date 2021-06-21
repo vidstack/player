@@ -19,16 +19,16 @@ export type MuteButtonElementProps = ToggleButtonElementProps & {
 	readonly unmuteSlotElement: HTMLElement | undefined;
 };
 
-export interface FakeMuteButtonElementProps {
-	fakeMuted: boolean;
+export interface MuteButtonElementMediaProps {
+	mediaMuted: boolean;
 }
 
 export type MuteButtonElementStorybookArgTypes = StorybookArgTypes<
-	MuteButtonElementProps & FakeMuteButtonElementProps,
+	MuteButtonElementProps & MuteButtonElementMediaProps,
 	Pick<VdsMediaRequestEvents, 'vds-mute-request' | 'vds-unmute-request'>
 >;
 
 export type MuteButtonElementStorybookArgs = StorybookArgs<
-	MuteButtonElementProps & FakeMuteButtonElementProps,
+	MuteButtonElementProps & MuteButtonElementMediaProps,
 	Pick<VdsMediaRequestEvents, 'vds-mute-request' | 'vds-unmute-request'>
 >;

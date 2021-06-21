@@ -103,7 +103,7 @@ export const VDS_MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
 	...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
 	label: { control: StorybookControlType.Text, defaultValue: 'Mute' },
 	pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
-	fakeMuted: {
+	mediaMuted: {
 		control: StorybookControlType.Boolean,
 		defaultValue: false
 	},

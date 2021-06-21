@@ -666,7 +666,7 @@ export const VDS_MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
 	muted: { control: StorybookControlType.Boolean },
 	paused: { control: StorybookControlType.Boolean, defaultValue: true },
 	playsinline: { control: StorybookControlType.Boolean },
-	volume: { control: StorybookControlType.Number, defaultValue: 50 },
+	volume: { control: StorybookControlType.Number, defaultValue: 0.5 },
 	// Media Actions
 	onVdsAbort: storybookAction(VdsAbortEvent.TYPE),
 	onVdsCanPlay: storybookAction(VdsCanPlayEvent.TYPE),

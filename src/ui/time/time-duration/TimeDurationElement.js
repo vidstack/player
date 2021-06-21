@@ -1,5 +1,9 @@
 import { mediaContext } from '../../../media/index.js';
-import { TimeElement } from '../time/index.js';
+import { StorybookControlType } from '../../../shared/storybook/index.js';
+import {
+	TimeElement,
+	VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES
+} from '../time/index.js';
 
 export const VDS_TIME_DURATION_ELEMENT_TAG_NAME = 'vds-time-duration';
 
@@ -50,3 +54,14 @@ export class TimeDurationElement extends TimeElement {
 		};
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').TimeDurationElementStorybookArgTypes}
+ */
+export const VDS_TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES = {
+	...VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES,
+	// @ts-ignore
+	seconds: { table: { disable: true } },
+	mediaDuration: { control: StorybookControlType.Number, defaultValue: 1800 }
+};

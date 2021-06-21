@@ -119,15 +119,15 @@ export type MediaSeekingRequestThrottle =
 	| ThrottledFunction<[time: number, event: Event]>
 	| undefined;
 
-export interface FakeScrubberElementProps {
-	fakeCurrentTime: number;
-	fakeDuration: number;
-	fakePaused: boolean;
-	fakeSeekableAmount: number;
+export interface ScrubberElementMediaProps {
+	mediaCurrentTime: number;
+	mediaDuration: number;
+	mediaPaused: boolean;
+	mediaSeekableAmount: number;
 }
 
 export type ScrubberElementStorybookArgTypes = StorybookArgTypes<
-	ScrubberElementProps & FakeScrubberElementProps,
+	ScrubberElementProps & ScrubberElementMediaProps,
 	VdsScrubberEvents &
 		Pick<
 			VdsMediaRequestEvents,
@@ -139,7 +139,7 @@ export type ScrubberElementStorybookArgTypes = StorybookArgTypes<
 >;
 
 export type ScrubberElementStorybookArgs = StorybookArgs<
-	ScrubberElementProps & FakeScrubberElementProps,
+	ScrubberElementProps & ScrubberElementMediaProps,
 	VdsScrubberEvents &
 		Pick<
 			VdsMediaRequestEvents,

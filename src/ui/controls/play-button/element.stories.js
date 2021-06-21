@@ -27,8 +27,8 @@ function Template({
 	// Actions
 	onVdsPlayRequest,
 	onVdsPauseRequest,
-	// Fake Properties
-	fakePaused
+	// Media Properties
+	mediaPaused
 }) {
 	return html`
 		<vds-media-controller
@@ -38,7 +38,7 @@ function Template({
 			<vds-media-container>
 				<vds-fake-media-provider
 					.canPlayContext=${true}
-					.pausedContext=${fakePaused}
+					.pausedContext=${mediaPaused}
 					slot="media"
 				></vds-fake-media-provider>
 

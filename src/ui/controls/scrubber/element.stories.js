@@ -45,11 +45,11 @@ function Template({
 	onVdsPlayRequest,
 	onVdsSeekRequest,
 	onVdsSeekingRequest,
-	// Fake Properties
-	fakeCurrentTime,
-	fakeDuration,
-	fakePaused,
-	fakeSeekableAmount
+	// Media Properties
+	mediaCurrentTime,
+	mediaDuration,
+	mediaPaused,
+	mediaSeekableAmount
 }) {
 	return html`
 		<vds-media-controller
@@ -61,10 +61,10 @@ function Template({
 			<vds-media-container>
 				<vds-fake-media-provider
 					.canPlayContext=${true}
-					.currentTimeContext=${fakeCurrentTime}
-					.durationContext=${fakeDuration}
-					.pausedContext=${fakePaused}
-					.seekableContext=${createTimeRanges(0, fakeSeekableAmount)}
+					.currentTimeContext=${mediaCurrentTime}
+					.durationContext=${mediaDuration}
+					.pausedContext=${mediaPaused}
+					.seekableContext=${createTimeRanges(0, mediaSeekableAmount)}
 					slot="media"
 				></vds-fake-media-provider>
 

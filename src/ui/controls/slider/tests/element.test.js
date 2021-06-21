@@ -227,7 +227,8 @@ describe(VDS_SLIDER_ELEMENT_TAG_NAME, function () {
 				clientX: Math.floor(root.clientWidth / 4)
 			})
 		);
-		expect(slider.value).to.equal(24);
+		expect(slider.value).to.be.greaterThanOrEqual(23);
+		expect(slider.value).to.be.lessThanOrEqual(24);
 	});
 
 	it('should not change value when move events are fired on document and slider is not being dragged', async function () {

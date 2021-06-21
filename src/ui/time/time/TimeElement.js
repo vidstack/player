@@ -3,6 +3,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import { VdsElement } from '../../../shared/elements/index.js';
+import { StorybookControlType } from '../../../shared/storybook/index.js';
 import { formatHtml5Duration, formatTime } from '../../../utils/time.js';
 import { timeElementStyles } from './css.js';
 
@@ -74,8 +75,8 @@ export class TimeElement extends VdsElement {
 		return {
 			label: {},
 			seconds: { type: Number },
-			alwaysShowHours: { type: Boolean },
-			padHours: { type: Boolean }
+			alwaysShowHours: { type: Boolean, attribute: 'always-show-hours' },
+			padHours: { type: Boolean, attribute: 'pad-hours' }
 		};
 	}
 
@@ -155,3 +156,17 @@ export class TimeElement extends VdsElement {
 		return 'root time';
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').TimeElementStorybookArgTypes}
+ */
+export const VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES = {
+	alwaysShowHours: {
+		control: StorybookControlType.Boolean,
+		defaultValue: false
+	},
+	label: { control: StorybookControlType.Text },
+	padHours: { control: StorybookControlType.Boolean, defaultValue: false },
+	seconds: { control: StorybookControlType.Number, defaultValue: 0 }
+};

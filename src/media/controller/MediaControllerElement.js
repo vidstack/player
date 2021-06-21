@@ -3,6 +3,7 @@ import { html } from 'lit';
 import { provideContextRecord } from '../../shared/context/index.js';
 import { VdsElement } from '../../shared/elements/index.js';
 import { bindEventListeners } from '../../shared/events/index.js';
+import { storybookAction } from '../../shared/storybook/index.js';
 import { isNil } from '../../utils/unit.js';
 import {
 	MediaContainerElement,
@@ -15,6 +16,7 @@ import {
 	VdsMuteRequestEvent,
 	VdsPauseRequestEvent,
 	VdsPlayRequestEvent,
+	VdsSeekingRequestEvent,
 	VdsSeekRequestEvent,
 	VdsUnmuteRequestEvent,
 	VdsVolumeChangeRequestEvent
@@ -310,3 +312,23 @@ export class MediaControllerElement extends VdsElement {
 		}
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').MediaControllerElementStorybookArgTypes}
+ */
+export const VDS_MEDIA_CONTROLLER_ELEMENT_STORYBOOK_ARG_TYPES = {
+	onVdsEnterFullscreenRequest: storybookAction(
+		VdsEnterFullscreenRequestEvent.TYPE
+	),
+	onVdsExitFullscreenRequest: storybookAction(
+		VdsExitFullscreenRequestEvent.TYPE
+	),
+	onVdsMuteRequest: storybookAction(VdsMuteRequestEvent.TYPE),
+	onVdsPauseRequest: storybookAction(VdsPauseRequestEvent.TYPE),
+	onVdsPlayRequest: storybookAction(VdsPlayRequestEvent.TYPE),
+	onVdsSeekingRequest: storybookAction(VdsSeekingRequestEvent.TYPE),
+	onVdsSeekRequest: storybookAction(VdsSeekRequestEvent.TYPE),
+	onVdsUnmuteRequest: storybookAction(VdsUnmuteRequestEvent.TYPE),
+	onVdsVolumeChangeRequest: storybookAction(VdsVolumeChangeRequestEvent.TYPE)
+};

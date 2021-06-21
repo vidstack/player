@@ -6,18 +6,18 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-	VDS_TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES,
-	VDS_TIME_DURATION_ELEMENT_TAG_NAME
-} from './TimeDurationElement.js';
+	VDS_TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES,
+	VDS_TIME_CURRENT_ELEMENT_TAG_NAME
+} from './TimeCurrentElement.js';
 
 export default {
-	title: 'UI/Foundation/Time/Time Duration',
-	component: VDS_TIME_DURATION_ELEMENT_TAG_NAME,
-	argTypes: VDS_TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES
+	title: 'UI/Foundation/Time/Time Current',
+	component: VDS_TIME_CURRENT_ELEMENT_TAG_NAME,
+	argTypes: VDS_TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**
- * @param {import('./types').TimeDurationElementStorybookArgs} args
+ * @param {import('./types').TimeCurrentElementStorybookArgs} args
  */
 function Template({
 	// Properties
@@ -25,25 +25,25 @@ function Template({
 	label,
 	padHours,
 	// Media Properties
-	mediaDuration
+	mediaCurrentTime
 }) {
 	return html`
-		<vds-media-controller>
+		<vds-media-controller .currentTime=${mediaCurrentTime}>
 			<vds-media-container>
 				<vds-fake-media-provider
 					.canPlayContext=${true}
-					.durationContext=${mediaDuration}
+					.currentTimeContext=${mediaCurrentTime}
 					slot="media"
 				></vds-fake-media-provider>
 
-				<vds-time-duration
+				<vds-time-current
 					label=${ifNonEmpty(label)}
 					?always-show-hours=${alwaysShowHours}
 					?pad-hours=${padHours}
-				></vds-time-duration>
+				></vds-time-current>
 			</vds-media-container>
 		</vds-media-controller>
 	`;
 }
 
-export const TimeDuration = Template.bind({});
+export const TimeCurrent = Template.bind({});

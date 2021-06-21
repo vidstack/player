@@ -217,11 +217,11 @@ export const VDS_BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
 		control: StorybookControlType.Boolean,
 		defaultValue: false
 	},
-	fakeCanPlay: {
+	mediaCanPlay: {
 		control: StorybookControlType.Boolean,
 		defaultValue: true
 	},
-	fakeBuffering: {
+	mediaBuffering: {
 		control: StorybookControlType.Boolean,
 		defaultValue: true
 	},

@@ -1,6 +1,10 @@
-import { TimeElementProps } from '../time.js';
-import { TimeCurrentElement } from '../time-current.js';
-import { TimeDurationElement } from '../time-duration.js';
+import {
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../../shared/storybook/index.js';
+import { TimeElementProps } from '../time/index.js';
+import { TimeCurrentElement } from '../time-current/index.js';
+import { TimeDurationElement } from '../time-duration/index.js';
 
 export type TimeProgressDisplay = TimeProgressElementProps;
 
@@ -51,3 +55,16 @@ export type TimeProgressElementProps = Omit<
 	 */
 	readonly separatorElement: HTMLSpanElement;
 };
+
+export interface TimeProgressElementMediaProps {
+	mediaCurrentTime: number;
+	mediaDuration: number;
+}
+
+export type TimeProgressElementStorybookArgTypes = StorybookArgTypes<
+	TimeProgressElementProps & TimeProgressElementMediaProps
+>;
+
+export type TimeProgressElementStorybookArgs = StorybookArgs<
+	TimeProgressElementProps & TimeProgressElementMediaProps
+>;
