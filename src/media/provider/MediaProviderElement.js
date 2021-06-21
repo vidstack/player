@@ -5,14 +5,39 @@ import {
 	ScreenOrientationController,
 	ScreenOrientationLock
 } from '../../shared/screen-orientation/index.js';
+import {
+	storybookAction,
+	StorybookControlType
+} from '../../shared/storybook/index.js';
 import { CanPlay } from '../CanPlay.js';
 import { createMediaContextRecord, mediaContext } from '../media.context.js';
 import {
+	VdsAbortEvent,
 	VdsCanPlayEvent,
+	VdsCanPlayThroughEvent,
+	VdsDurationChangeEvent,
+	VdsEmptiedEvent,
 	VdsEndedEvent,
 	VdsErrorEvent,
 	VdsFullscreenChangeEvent,
-	VdsSuspendEvent
+	VdsLoadedDataEvent,
+	VdsLoadedMetadataEvent,
+	VdsLoadStartEvent,
+	VdsMediaTypeChangeEvent,
+	VdsPauseEvent,
+	VdsPlayEvent,
+	VdsPlayingEvent,
+	VdsProgressEvent,
+	VdsReplayEvent,
+	VdsSeekedEvent,
+	VdsSeekingEvent,
+	VdsStalledEvent,
+	VdsStartedEvent,
+	VdsSuspendEvent,
+	VdsTimeUpdateEvent,
+	VdsViewTypeChangeEvent,
+	VdsVolumeChangeEvent,
+	VdsWaitingEvent
 } from '../media.events.js';
 import { VdsMediaProviderConnectEvent } from './events.js';
 
@@ -25,6 +50,20 @@ import { VdsMediaProviderConnectEvent } from './events.js';
  * @implements {IMediaProvider}
  */
 export class MediaProviderElement extends VdsElement {
+	constructor() {
+		super();
+
+		// Properties
+		/** @type {boolean} */
+		this.autoplay = false;
+		/** @type {boolean} */
+		this.controls = false;
+		/** @type {boolean} */
+		this.loop = false;
+		/** @type {boolean} */
+		this.playsinline = false;
+	}
+
 	// -------------------------------------------------------------------------------------------
 	// Lifecycle
 	// -------------------------------------------------------------------------------------------
@@ -103,11 +142,6 @@ export class MediaProviderElement extends VdsElement {
 			fullscreenOrientation: { attribute: 'fullscreen-orientation' }
 		};
 	}
-
-	autoplay = false;
-	controls = false;
-	loop = false;
-	playsinline = false;
 
 	// --
 
@@ -618,3 +652,48 @@ export class MediaProviderElement extends VdsElement {
 		});
 	}
 }
+
+/**
+ * @readonly
+ * @type {import("./types").MediaProviderElementStorybookArgTypes}
+ */
+export const VDS_MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
+	// Properties
+	autoplay: { control: false },
+	controls: { control: StorybookControlType.Boolean, defaultValue: true },
+	currentTime: { control: StorybookControlType.Number, defaultValue: 0 },
+	loop: { control: StorybookControlType.Boolean },
+	muted: { control: StorybookControlType.Boolean },
+	paused: { control: StorybookControlType.Boolean, defaultValue: true },
+	playsinline: { control: StorybookControlType.Boolean },
+	volume: { control: StorybookControlType.Number, defaultValue: 50 },
+	// Media Actions
+	onVdsAbort: storybookAction(VdsAbortEvent.TYPE),
+	onVdsCanPlay: storybookAction(VdsCanPlayEvent.TYPE),
+	onVdsCanPlayThrough: storybookAction(VdsCanPlayThroughEvent.TYPE),
+	onVdsDurationChange: storybookAction(VdsDurationChangeEvent.TYPE),
+	onVdsEmptied: storybookAction(VdsEmptiedEvent.TYPE),
+	onVdsEnded: storybookAction(VdsEndedEvent.TYPE),
+	onVdsError: storybookAction(VdsErrorEvent.TYPE),
+	onVdsFullscreenChange: storybookAction(VdsFullscreenChangeEvent.TYPE),
+	onVdsLoadedData: storybookAction(VdsLoadedDataEvent.TYPE),
+	onVdsLoadedMetadata: storybookAction(VdsLoadedMetadataEvent.TYPE),
+	onVdsLoadStart: storybookAction(VdsLoadStartEvent.TYPE),
+	onVdsMediaTypeChange: storybookAction(VdsMediaTypeChangeEvent.TYPE),
+	onVdsPause: storybookAction(VdsPauseEvent.TYPE),
+	onVdsPlay: storybookAction(VdsPlayEvent.TYPE),
+	onVdsPlaying: storybookAction(VdsPlayingEvent.TYPE),
+	onVdsProgress: storybookAction(VdsProgressEvent.TYPE),
+	onVdsReplay: storybookAction(VdsReplayEvent.TYPE),
+	onVdsSeeked: storybookAction(VdsSeekedEvent.TYPE),
+	onVdsSeeking: storybookAction(VdsSeekingEvent.TYPE),
+	onVdsStalled: storybookAction(VdsStalledEvent.TYPE),
+	onVdsStarted: storybookAction(VdsStartedEvent.TYPE),
+	onVdsSuspend: storybookAction(VdsSuspendEvent.TYPE),
+	onVdsTimeUpdate: storybookAction(VdsTimeUpdateEvent.TYPE),
+	onVdsViewTypeChange: storybookAction(VdsViewTypeChangeEvent.TYPE),
+	onVdsVolumeChange: storybookAction(VdsVolumeChangeEvent.TYPE),
+	onVdsWaiting: storybookAction(VdsWaitingEvent.TYPE),
+	// Media Provider Actions
+	onVdsMediaProviderConnect: storybookAction(VdsMediaProviderConnectEvent.TYPE)
+};

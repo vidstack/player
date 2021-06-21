@@ -1,8 +1,17 @@
 import { FullscreenHost } from '../../shared/fullscreen/index.js';
 import { ScreenOrientationHost } from '../../shared/screen-orientation.js';
+import {
+	DOMEventToPascalCase,
+	StorybookActionArgs,
+	StorybookActionCallbacks,
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../shared/storybook/types.js';
 import { CanPlay } from '../CanPlay.js';
+import { VdsMediaEvents } from '../media.events.js';
 import { MediaType } from '../MediaType.js';
 import { ViewType } from '../ViewType.js';
+import { VdsMediaProviderEvents } from './events.js';
 
 export type MediaProvider = MediaProviderElementProps &
 	MediaProviderElementMethods &
@@ -305,3 +314,13 @@ export interface MediaProviderElementMethods {
 	 */
 	shouldPlayType(type: string): boolean;
 }
+
+export type MediaProviderElementStorybookArgTypes = StorybookArgTypes<
+	MediaProviderElementProps,
+	VdsMediaEvents & VdsMediaProviderEvents
+>;
+
+export type MediaProviderElementStorybookArgs = StorybookArgs<
+	MediaProviderElementProps,
+	VdsMediaEvents & VdsMediaProviderEvents
+>;

@@ -8,8 +8,15 @@ import {
 	VdsMediaTypeChangeEvent
 } from '../../media/index.js';
 import { VdsCustomEvent } from '../../shared/events/index.js';
+import {
+	storybookAction,
+	StorybookControlType
+} from '../../shared/storybook/index.js';
 import { isNil, isUndefined } from '../../utils/unit.js';
-import { VideoElement } from '../video/index.js';
+import {
+	VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
+	VideoElement
+} from '../video/index.js';
 import {
 	VdsHlsEngineAttachEvent,
 	VdsHlsEngineBuiltEvent,
@@ -71,7 +78,7 @@ export class HlsElement extends VideoElement {
 		super();
 
 		/** @type {Hls.Config | undefined} */
-		this.hlsConfig;
+		this.hlsConfig = undefined;
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -99,10 +106,6 @@ export class HlsElement extends VideoElement {
 
 	get hlsEngine() {
 		return this._hlsEngine;
-	}
-
-	get videoEngine() {
-		return this.videoElement;
 	}
 
 	get isHlsEngineAttached() {
@@ -268,6 +271,10 @@ export class HlsElement extends VideoElement {
 	 * @returns {MediaType}
 	 */
 	getMediaType() {
+		if (this.context.isLiveVideo) {
+			return MediaType.LiveVideo;
+		}
+
 		if (this.isHlsStream) {
 			return MediaType.Video;
 		}
@@ -293,10 +300,11 @@ export class HlsElement extends VideoElement {
 			return;
 		}
 
-		// Need to wait for `src` attribute on `<video>` to clear if last `src` was not using
-		// HLS engine.
+		// Need to wait for `src` attribute on `<video>` to clear if last `src` was not using HLS engine.
 		window.requestAnimationFrame(async () => {
-			await this.requestUpdate();
+			this.requestUpdate();
+
+			await this.updateComplete;
 
 			if (isUndefined(this.hlsEngine)) {
 				this.buildHlsEngine();
@@ -313,10 +321,12 @@ export class HlsElement extends VideoElement {
 	 */
 	listenToHlsEngine() {
 		if (isUndefined(this.hlsEngine)) return;
+
 		this.hlsEngine.on(
 			Hls.Events.LEVEL_LOADED,
 			this.handleHlsLevelLoaded.bind(this)
 		);
+
 		this.hlsEngine.on(Hls.Events.ERROR, this.handleHlsError.bind(this));
 	}
 
@@ -400,23 +410,41 @@ export class HlsElement extends VideoElement {
 	handleHlsMediaReady(eventType, data) {
 		const { live, totalduration: duration } = data.details;
 
-		const originalEvent = new VdsCustomEvent(eventType, { detail: data });
+		const event = new VdsCustomEvent(eventType, { detail: data });
 
 		const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
 		if (this.context.mediaType !== mediaType) {
 			this.context.mediaType = mediaType;
 			this.dispatchEvent(
-				new VdsMediaTypeChangeEvent({ detail: mediaType, originalEvent })
+				new VdsMediaTypeChangeEvent({ detail: mediaType, originalEvent: event })
 			);
 		}
 
 		if (this.context.duration !== duration) {
 			this.context.duration = duration;
 			this.dispatchEvent(
-				new VdsDurationChangeEvent({ detail: duration, originalEvent })
+				new VdsDurationChangeEvent({ detail: duration, originalEvent: event })
 			);
 		}
 
-		this.handleMediaReady(originalEvent);
+		this.handleMediaReady(event);
 	}
 }
+
+/**
+ * @readonly
+ * @type {import('./types').HlsElementStorybookArgTypes}
+ */
+export const VDS_HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
+	...VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
+	hlsConfig: { control: StorybookControlType.Object },
+	src: {
+		control: StorybookControlType.Text,
+		defaultValue:
+			'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8'
+	},
+	onVdsHlsEngineAttach: storybookAction(VdsHlsEngineAttachEvent.TYPE),
+	onVdsHlsEngineBuilt: storybookAction(VdsHlsEngineBuiltEvent.TYPE),
+	onVdsHlsEngineDetach: storybookAction(VdsHlsEngineDetachEvent.TYPE),
+	onVdsHlsEngineNoSupport: storybookAction(VdsHlsEngineNoSupportEvent.TYPE)
+};

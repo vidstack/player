@@ -4,12 +4,14 @@ import { ref } from 'lit/directives/ref.js';
 
 import {
 	MediaType,
+	VDS_MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
 	VdsMediaTypeChangeEvent,
 	VdsViewTypeChangeEvent,
 	ViewType
 } from '../../media/index.js';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty.js';
 import { ifNumber } from '../../shared/directives/if-number.js';
+import { StorybookControlType } from '../../shared/storybook/index.js';
 import { Html5MediaElement } from '../html5/index.js';
 import { videoElementStyles } from './css.js';
 import { VideoFullscreenController } from './fullscreen/index.js';
@@ -52,11 +54,6 @@ export const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v)($|\?)/i;
  * ```
  */
 export class VideoElement extends Html5MediaElement {
-	/** @type {HTMLVideoElement} */
-	get mediaElement() {
-		return this.mediaElement;
-	}
-
 	/** @type {import('lit').CSSResultGroup} */
 	static get styles() {
 		return [videoElementStyles];
@@ -101,8 +98,21 @@ export class VideoElement extends Html5MediaElement {
 		});
 	}
 
+	/** @type {HTMLVideoElement} */
+	get mediaElement() {
+		return /** @type {HTMLVideoElement} */ (this.mediaRef.value);
+	}
+
+	get videoElement() {
+		return /** @type {HTMLVideoElement} */ (this.mediaRef.value);
+	}
+
 	get engine() {
-		return /** @type {HTMLVideoElement} */ (this.mediaElement);
+		return this.mediaElement;
+	}
+
+	get videoEngine() {
+		return this.videoElement;
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -254,10 +264,6 @@ export class VideoElement extends Html5MediaElement {
 	// Fullscreen
 	// -------------------------------------------------------------------------------------------
 
-	get videoElement() {
-		return /** @type {HTMLVideoElement} */ (this.mediaRef.value);
-	}
-
 	presentationController = new VideoPresentationController(this);
 
 	fullscreenController = new VideoFullscreenController(
@@ -266,3 +272,31 @@ export class VideoElement extends Html5MediaElement {
 		this.presentationController
 	);
 }
+
+/**
+ * @readonly
+ * @type {import('./types.js').VideoElementStorybookArgTypes}
+ */
+export const VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES = {
+	...VDS_MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
+	autoPiP: { control: StorybookControlType.Boolean },
+	controlsList: { control: StorybookControlType.Text },
+	crossOrigin: { control: StorybookControlType.Text },
+	defaultMuted: { control: StorybookControlType.Boolean },
+	defaultPlaybackRate: { control: StorybookControlType.Number },
+	disablePiP: { control: StorybookControlType.Boolean },
+	disableRemotePlayback: { control: StorybookControlType.Boolean },
+	height: { control: StorybookControlType.Number },
+	poster: {
+		control: StorybookControlType.Text,
+		defaultValue: 'https://media-files.vidstack.io/poster.png'
+	},
+	preload: { control: StorybookControlType.Text },
+	src: {
+		control: StorybookControlType.Text,
+		defaultValue:
+			'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4'
+	},
+	srcObject: { control: StorybookControlType.Text },
+	width: { control: StorybookControlType.Number }
+};

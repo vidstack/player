@@ -1,24 +1,23 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { VDS_VIDEO_ELEMENT_TAG_NAME } from './VideoElement.js';
+import {
+	VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
+	VDS_VIDEO_ELEMENT_TAG_NAME
+} from './VideoElement.js';
 
 export default {
 	title: 'UI/Providers/Video',
 	component: VDS_VIDEO_ELEMENT_TAG_NAME,
-	argTypes: {
-		src: {
-			defaultValue:
-				'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4'
-		},
-		poster: {
-			defaultValue: 'https://media-files.vidstack.io/poster.png'
-		}
-	}
+	argTypes: VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
+/**
+ * @param {import('./types.js').VideoElementStorybookArgs} args
+ */
 function Template({
-	// Props
+	// Properties
+	autoplay,
 	width,
 	height,
 	src,
@@ -29,16 +28,16 @@ function Template({
 	muted,
 	playsinline,
 	loop,
-	controls,
+	controls = true,
 	crossOrigin,
 	preload,
 	controlsList,
 	autoPiP,
 	disablePiP,
 	disableRemotePlayback,
-	// Media Provider Events
+	// Media Provider Actions
 	onVdsMediaProviderConnect,
-	// Media Events
+	// Media Actions
 	onVdsAbort,
 	onVdsCanPlay,
 	onVdsCanPlayThrough,
@@ -68,50 +67,51 @@ function Template({
 }) {
 	return html`
 		<vds-video
-			src="${src}"
-			width="${ifDefined(width)}"
-			height="${ifDefined(height)}"
-			poster="${ifDefined(poster)}"
-			?paused="${paused}"
-			volume="${volume}"
-			current-time="${currentTime}"
-			?muted="${muted}"
-			?playsinline="${playsinline}"
-			?loop="${loop}"
-			?controls="${controls}"
-			crossorigin="${ifDefined(crossOrigin)}"
-			preload="${ifDefined(preload)}"
-			controlslist="${ifDefined(controlsList)}"
-			?autopictureinpicture="${autoPiP}"
-			?disablepictureinpicture="${disablePiP}"
-			?disableremoteplayback="${disableRemotePlayback}"
-			@vds-media-provider-connect="${onVdsMediaProviderConnect}"
-			@vds-abort="${onVdsAbort}"
-			@vds-can-play="${onVdsCanPlay}"
-			@vds-can-play-through="${onVdsCanPlayThrough}"
-			@vds-duration-change="${onVdsDurationChange}"
-			@vds-emptied="${onVdsEmptied}"
-			@vds-ended="${onVdsEnded}"
-			@vds-error="${onVdsError}"
-			@vds-fullscreen-change="${onVdsFullscreenChange}"
-			@vds-loaded-data="${onVdsLoadedData}"
-			@vds-load-start="${onVdsLoadStart}"
-			@vds-loaded-metadata="${onVdsLoadedMetadata}"
-			@vds-media-type-change="${onVdsMediaTypeChange}"
-			@vds-pause="${onVdsPause}"
-			@vds-play="${onVdsPlay}"
-			@vds-playing="${onVdsPlaying}"
-			@vds-progress="${onVdsProgress}"
-			@vds-seeked="${onVdsSeeked}"
-			@vds-seeking="${onVdsSeeking}"
-			@vds-stalled="${onVdsStalled}"
-			@vds-started="${onVdsStarted}"
-			@vds-suspend="${onVdsSuspend}"
-			@vds-replay="${onVdsReplay}"
-			@vds-time-update="${onVdsTimeUpdate}"
-			@vds-view-type-change="${onVdsViewTypeChange}"
-			@vds-volume-change="${onVdsVolumeChange}"
-			@vds-waiting="${onVdsWaiting}"
+			width=${ifDefined(width)}
+			volume=${volume}
+			src=${src}
+			preload=${ifDefined(preload)}
+			poster=${ifDefined(poster)}
+			height=${ifDefined(height)}
+			current-time=${currentTime}
+			crossorigin=${ifDefined(crossOrigin)}
+			controlslist=${ifDefined(controlsList)}
+			?playsinline=${playsinline}
+			?paused=${paused}
+			?muted=${muted}
+			?loop=${loop}
+			?disableremoteplayback=${disableRemotePlayback}
+			?disablepictureinpicture=${disablePiP}
+			?controls=${controls}
+			?autoplay=${autoplay}
+			?autopictureinpicture=${autoPiP}
+			@vds-waiting=${onVdsWaiting}
+			@vds-volume-change=${onVdsVolumeChange}
+			@vds-view-type-change=${onVdsViewTypeChange}
+			@vds-time-update=${onVdsTimeUpdate}
+			@vds-suspend=${onVdsSuspend}
+			@vds-started=${onVdsStarted}
+			@vds-stalled=${onVdsStalled}
+			@vds-seeking=${onVdsSeeking}
+			@vds-seeked=${onVdsSeeked}
+			@vds-replay=${onVdsReplay}
+			@vds-progress=${onVdsProgress}
+			@vds-playing=${onVdsPlaying}
+			@vds-play=${onVdsPlay}
+			@vds-pause=${onVdsPause}
+			@vds-media-type-change=${onVdsMediaTypeChange}
+			@vds-media-provider-connect=${onVdsMediaProviderConnect}
+			@vds-loaded-metadata=${onVdsLoadedMetadata}
+			@vds-loaded-data=${onVdsLoadedData}
+			@vds-load-start=${onVdsLoadStart}
+			@vds-fullscreen-change=${onVdsFullscreenChange}
+			@vds-error=${onVdsError}
+			@vds-ended=${onVdsEnded}
+			@vds-emptied=${onVdsEmptied}
+			@vds-duration-change=${onVdsDurationChange}
+			@vds-can-play=${onVdsCanPlay}
+			@vds-can-play-through=${onVdsCanPlayThrough}
+			@vds-abort=${onVdsAbort}
 		></vds-video>
 	`;
 }

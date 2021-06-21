@@ -1,8 +1,16 @@
 import {
+	MediaProviderElementStorybookArgs,
+	MediaProviderElementStorybookArgTypes
+} from '../../media/index.js';
+import {
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../shared/storybook/index.js';
+import {
 	Html5MediaElementEngine,
 	Html5MediaElementMethods,
 	Html5MediaElementProps
-} from '../html5.js';
+} from '../html5/index.js';
 import { VideoPresentationControllerHost } from './presentation.js';
 
 export interface VideoElementProps extends Html5MediaElementProps {
@@ -36,5 +44,8 @@ export type VideoProvider = VideoElementProps &
 	VideoElementMethods &
 	VideoPresentationControllerHost;
 
-// V8ToIstanbul fails when no value is exported.
-export default class {}
+export type VideoElementStorybookArgTypes =
+	MediaProviderElementStorybookArgTypes & StorybookArgTypes<VideoElementProps>;
+
+export type VideoElementStorybookArgs = MediaProviderElementStorybookArgs &
+	StorybookArgs<VideoElementProps>;

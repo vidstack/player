@@ -1,6 +1,16 @@
 import type Hls from 'hls.js';
 
-import { VideoElementEngine, VideoElementProps } from '../video.js';
+import {
+	StorybookArgs,
+	StorybookArgTypes
+} from '../../shared/storybook/index.js';
+import {
+	VideoElementEngine,
+	VideoElementProps,
+	VideoElementStorybookArgs,
+	VideoElementStorybookArgTypes
+} from '../video/index.js';
+import { VdsHlsEvents } from './events.js';
 
 export type HlsProvider = HlsElementProps;
 
@@ -46,3 +56,9 @@ export interface HlsElementProps extends VideoElementProps {
 	 */
 	readonly videoEngine: VideoElementEngine;
 }
+
+export type HlsElementStorybookArgTypes = VideoElementStorybookArgTypes &
+	StorybookArgTypes<HlsElementProps, VdsHlsEvents>;
+
+export type HlsElementStorybookArgs = VideoElementStorybookArgs &
+	StorybookArgs<HlsElementProps, VdsHlsEvents>;

@@ -1,24 +1,23 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { VDS_HLS_ELEMENT_TAG_NAME } from './HlsElement.js';
+import {
+	VDS_HLS_ELEMENT_STORYBOOK_ARG_TYPES,
+	VDS_HLS_ELEMENT_TAG_NAME
+} from './HlsElement.js';
 
 export default {
 	title: 'UI/Providers/HLS',
 	component: VDS_HLS_ELEMENT_TAG_NAME,
-	argTypes: {
-		src: {
-			defaultValue:
-				'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8'
-		},
-		poster: {
-			defaultValue: 'https://media-files.vidstack.io/poster.png'
-		}
-	}
+	argTypes: VDS_HLS_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
+/**
+ * @param {import('./types.js').HlsElementStorybookArgs} args
+ */
 function Template({
-	// Props
+	// Properties
+	autoplay,
 	width,
 	height,
 	src,
@@ -29,21 +28,16 @@ function Template({
 	muted,
 	playsinline,
 	loop,
-	controls,
+	controls = true,
 	crossOrigin,
 	preload,
 	controlsList,
 	autoPiP,
 	disablePiP,
 	disableRemotePlayback,
-	// HLS Events
-	onVdsHlsEngineAttach,
-	onVdsHlsEngineBuilt,
-	onVdsHlsEngineDetach,
-	onVdsHlsEngineNoSupport,
-	// Media Provider Events
+	// Media Provider Actions
 	onVdsMediaProviderConnect,
-	// Media Events
+	// Media Actions
 	onVdsAbort,
 	onVdsCanPlay,
 	onVdsCanPlayThrough,
@@ -69,58 +63,67 @@ function Template({
 	onVdsTimeUpdate,
 	onVdsViewTypeChange,
 	onVdsVolumeChange,
-	onVdsWaiting
+	onVdsWaiting,
+	/// HLS Properties,
+	hlsConfig,
+	// HLS Events
+	onVdsHlsEngineAttach,
+	onVdsHlsEngineBuilt,
+	onVdsHlsEngineDetach,
+	onVdsHlsEngineNoSupport
 }) {
 	return html`
 		<vds-hls
-			src="${src}"
-			width="${ifDefined(width)}"
-			height="${ifDefined(height)}"
-			poster="${ifDefined(poster)}"
-			?paused="${paused}"
-			volume="${volume}"
-			current-time="${currentTime}"
-			?muted="${muted}"
-			?playsinline="${playsinline}"
-			?loop="${loop}"
-			?controls="${controls}"
-			cross-origin="${ifDefined(crossOrigin)}"
-			preload="${ifDefined(preload)}"
-			controls-list="${ifDefined(controlsList)}"
-			?auto-pip="${autoPiP}"
-			?disable-pip="${disablePiP}"
-			?disable-remote-playback="${disableRemotePlayback}"
-			@vds-media-provider-connect="${onVdsMediaProviderConnect}"
-			@vds-abort="${onVdsAbort}"
-			@vds-can-play="${onVdsCanPlay}"
-			@vds-can-play-through="${onVdsCanPlayThrough}"
-			@vds-duration-change="${onVdsDurationChange}"
-			@vds-emptied="${onVdsEmptied}"
-			@vds-ended="${onVdsEnded}"
-			@vds-error="${onVdsError}"
-			@vds-fullscreen-change="${onVdsFullscreenChange}"
-			@vds-loaded-data="${onVdsLoadedData}"
-			@vds-load-start="${onVdsLoadStart}"
-			@vds-loaded-metadata="${onVdsLoadedMetadata}"
-			@vds-media-type-change="${onVdsMediaTypeChange}"
-			@vds-pause="${onVdsPause}"
-			@vds-play="${onVdsPlay}"
-			@vds-playing="${onVdsPlaying}"
-			@vds-progress="${onVdsProgress}"
-			@vds-seeked="${onVdsSeeked}"
-			@vds-seeking="${onVdsSeeking}"
-			@vds-stalled="${onVdsStalled}"
-			@vds-started="${onVdsStarted}"
-			@vds-suspend="${onVdsSuspend}"
-			@vds-replay="${onVdsReplay}"
-			@vds-time-update="${onVdsTimeUpdate}"
-			@vds-view-type-change="${onVdsViewTypeChange}"
-			@vds-volume-change="${onVdsVolumeChange}"
-			@vds-waiting="${onVdsWaiting}"
-			@vds-hls-engine-built="${onVdsHlsEngineBuilt}"
-			@vds-hls-engine-attach="${onVdsHlsEngineAttach}"
-			@vds-hls-engine-detach="${onVdsHlsEngineDetach}"
-			@vds-hls-engine-no-support="${onVdsHlsEngineNoSupport}"
+			width=${ifDefined(width)}
+			volume=${volume}
+			src=${src}
+			preload=${ifDefined(preload)}
+			poster=${ifDefined(poster)}
+			height=${ifDefined(height)}
+			current-time=${currentTime}
+			cross-origin=${ifDefined(crossOrigin)}
+			controls-list=${ifDefined(controlsList)}
+			.hls-config=${hlsConfig}
+			?autoplay=${autoplay}
+			?playsinline=${playsinline}
+			?paused=${paused}
+			?muted=${muted}
+			?loop=${loop}
+			?disable-remote-playback=${disableRemotePlayback}
+			?disable-pip=${disablePiP}
+			?controls=${controls}
+			?auto-pip=${autoPiP}
+			@vds-media-provider-connect=${onVdsMediaProviderConnect}
+			@vds-abort=${onVdsAbort}
+			@vds-can-play=${onVdsCanPlay}
+			@vds-can-play-through=${onVdsCanPlayThrough}
+			@vds-duration-change=${onVdsDurationChange}
+			@vds-emptied=${onVdsEmptied}
+			@vds-ended=${onVdsEnded}
+			@vds-error=${onVdsError}
+			@vds-fullscreen-change=${onVdsFullscreenChange}
+			@vds-loaded-data=${onVdsLoadedData}
+			@vds-load-start=${onVdsLoadStart}
+			@vds-loaded-metadata=${onVdsLoadedMetadata}
+			@vds-media-type-change=${onVdsMediaTypeChange}
+			@vds-pause=${onVdsPause}
+			@vds-play=${onVdsPlay}
+			@vds-playing=${onVdsPlaying}
+			@vds-progress=${onVdsProgress}
+			@vds-seeked=${onVdsSeeked}
+			@vds-seeking=${onVdsSeeking}
+			@vds-stalled=${onVdsStalled}
+			@vds-started=${onVdsStarted}
+			@vds-suspend=${onVdsSuspend}
+			@vds-replay=${onVdsReplay}
+			@vds-time-update=${onVdsTimeUpdate}
+			@vds-view-type-change=${onVdsViewTypeChange}
+			@vds-volume-change=${onVdsVolumeChange}
+			@vds-waiting=${onVdsWaiting}
+			@vds-hls-engine-built=${onVdsHlsEngineBuilt}
+			@vds-hls-engine-attach=${onVdsHlsEngineAttach}
+			@vds-hls-engine-detach=${onVdsHlsEngineDetach}
+			@vds-hls-engine-no-support=${onVdsHlsEngineNoSupport}
 		></vds-hls>
 	`;
 }

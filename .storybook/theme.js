@@ -1,6 +1,6 @@
-import { create } from '@storybook/theming';
+const { create } = require('@storybook/theming');
 
-export default create({
+module.exports = create({
 	base: 'dark',
 	brandTitle: 'Vidstack Elements',
 	brandUrl: 'https://vidstack.io',

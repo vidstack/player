@@ -1,5 +1,5 @@
-import theme from './theme';
-import { addons } from '@storybook/addons';
+const theme = require('./theme.js');
+const { addons } = require('@storybook/addons');
 
 addons.setConfig({
 	isFullscreen: false,

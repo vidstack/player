@@ -51,8 +51,7 @@ export class Html5MediaElement extends MediaProviderElement {
 	constructor() {
 		super();
 
-		/** @protected @type {string} */
-		this._src = '';
+		// Properties
 		/** @type {number | undefined} */
 		this.height;
 		/** @type {import('./types').MediaControlsList} */
@@ -69,6 +68,10 @@ export class Html5MediaElement extends MediaProviderElement {
 		this.preload;
 		/** @type {number | undefined} */
 		this.width;
+
+		// State
+		/** @protected @type {string} */
+		this._src = '';
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -78,7 +81,7 @@ export class Html5MediaElement extends MediaProviderElement {
 	/** @type {import('lit').PropertyDeclarations} */
 	static get properties() {
 		return {
-			_src: { state: true },
+			// Properties
 			height: { type: Number },
 			controlsList: {},
 			crossOrigin: {},
@@ -86,7 +89,10 @@ export class Html5MediaElement extends MediaProviderElement {
 			defaultPlaybackRate: { type: Number },
 			disableRemotePlayback: { type: Boolean },
 			preload: {},
-			width: { type: Number }
+			src: {},
+			width: { type: Number },
+			// State
+			_src: { state: true }
 		};
 	}
 
