@@ -77,7 +77,7 @@ export interface ButtonElementProps {
 	readonly rootElement: HTMLButtonElement;
 }
 
-interface TrackedNativeButtonEvents {
+export interface NativeButtonElementStorybookEvents {
 	click: MouseEvent | TouchEvent;
 	focus: FocusEvent;
 	blur: FocusEvent;
@@ -85,10 +85,10 @@ interface TrackedNativeButtonEvents {
 
 export type ButtonElementStorybookArgTypes = StorybookArgTypes<
 	ButtonElementProps & { title: string },
-	TrackedNativeButtonEvents
+	NativeButtonElementStorybookEvents
 >;
 
 export type ButtonElementStorybookArgs = StorybookArgs<
 	ButtonElementProps & { title: string },
-	TrackedNativeButtonEvents
+	NativeButtonElementStorybookEvents
 >;
