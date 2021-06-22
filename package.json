@@ -68,7 +68,7 @@
 		"@storybook/manager-webpack5": "^6.3.0-rc.11",
 		"@storybook/web-components": "^6.3.0-rc.11",
 		"@types/mocha": "^8.0.3",
-		"@types/sinon": "^9.0.11",
+		"@types/sinon": "^10.0.2",
 		"@typescript-eslint/parser": "^4.24.0",
 		"@web/dev-server": "^0.1.8",
 		"@web/dev-server-esbuild": "^0.2.12",
