@@ -287,6 +287,18 @@ export class HlsElement extends VideoElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
+	 * @param {Event} event
+	 * @returns {void}
+	 */
+	handleLoadedMetadata(event) {
+		super.handleLoadedMetadata(event);
+		// iOS doesn't fire `canplay` event when loading HLS videos natively.
+		if (this.shouldUseNativeHlsSupport && this.isHlsStream) {
+			this.handleCanPlay(event);
+		}
+	}
+
+	/**
 	 * @protected
 	 * @returns {void}
 	 */
