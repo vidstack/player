@@ -45,10 +45,10 @@ describe('utils/time', function () {
 		});
 
 		it('parses decimals correctly', function () {
-			expect(parseTime(0).decimal).to.equal(0);
-			expect(parseTime(0.1).decimal).to.equal(0.1);
-			expect(parseTime(1.05).decimal).to.equal(0.05);
-			expect(parseTime(1.00256453).decimal).to.equal(0.00256);
+			expect(parseTime(0).fraction).to.equal(0);
+			expect(parseTime(0.1).fraction).to.equal(0.1);
+			expect(parseTime(1.05).fraction).to.equal(0.05);
+			expect(parseTime(1.00256453).fraction).to.equal(0.00256);
 		});
 	});
 
