@@ -3,7 +3,9 @@
 import { isFunction } from '../../utils/unit.js';
 import { isDerviedContext } from './context.js';
 
-const FINALIZED = Symbol();
+const FINALIZED = Symbol('finalized');
+const PROVIDERS = Symbol('providers');
+const CONSUMERS = Symbol('consumers');
 
 /**
  * @template {ContextHostConstructor} T
@@ -82,24 +84,34 @@ export function WithContext(Base) {
 			// Might be called by decorator.
 			this.finalizeContext();
 
-			/** @type {import('./types').ContextProvider<any>} */
-			let provider;
+			function defineProvider(element) {
+				const provider = context.provide(element, options);
 
-			/** @type {any} */ (this).addInitializer((element) => {
-				provider = context.provide(element, options);
-			});
+				if (!element[PROVIDERS]) {
+					element[PROVIDERS] = new Map();
+				}
+
+				element[PROVIDERS].set(name, provider);
+
+				return provider;
+			}
 
 			Object.defineProperty(this.prototype, name, {
 				enumerable: true,
 				configurable: false,
 				get() {
-					return provider.value;
+					return (
+						this[PROVIDERS]?.get(name)?.value ?? defineProvider(this).value
+					);
 				},
 				set: isDerviedContext(context)
 					? function () {
 							// console.warn(`Context provider property [${name}] is derived, thus it's readonly.`);
 					  }
 					: function (newValue) {
+							const provider =
+								// @ts-ignore
+								this[PROVIDERS]?.get(name) ?? defineProvider(this);
 							provider.value = newValue;
 					  }
 			});
@@ -135,27 +147,38 @@ export function WithContext(Base) {
 			// Might be called by decorator.
 			this.finalizeContext();
 
-			/** @type {import('./types').ContextConsumer<any>} */
-			let consumer;
-
-			/** @type {any} */ (this).addInitializer((element) => {
+			function defineConsumer(element) {
+				let initialized = false;
 				let oldValue =
 					options.transform?.(context.initialValue) ?? context.initialValue;
-				consumer = context.consume(element, {
+
+				const consumer = context.consume(element, {
 					...options,
 					onUpdate: (newValue) => {
-						options.onUpdate?.(newValue);
+						if (!initialized) return;
 						element.requestUpdate(name, oldValue);
 						oldValue = newValue;
+						options.onUpdate?.(newValue);
 					}
 				});
-			});
+
+				if (!element[CONSUMERS]) {
+					element[CONSUMERS] = new Map();
+				}
+
+				element[CONSUMERS].set(name, consumer);
+				initialized = true;
+
+				return consumer;
+			}
 
 			Object.defineProperty(this.prototype, name, {
 				enumerable: true,
 				configurable: false,
 				get() {
-					return consumer.value;
+					return (
+						this[CONSUMERS]?.get(name)?.value ?? defineConsumer(this).value
+					);
 				},
 				set() {
 					// console.warn(`Context consumer property [${name}] is readonly.`);

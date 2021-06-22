@@ -177,7 +177,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 		/** @type {number} */
 		this.stepMultiplier = 2;
 		/** @type {number} */
-		this.throttle = 30;
+		this.throttle = 0;
 		/** @type {number} */
 		this.userSeekingThrottle = 150;
 
@@ -986,7 +986,7 @@ export const VDS_SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
 	},
 	step: { control: StorybookControlType.Number, defaultValue: 5 },
 	stepMultiplier: { control: StorybookControlType.Number, defaultValue: 2 },
-	throttle: { control: StorybookControlType.Number, defaultValue: 30 },
+	throttle: { control: StorybookControlType.Number, defaultValue: 0 },
 	userSeekingThrottle: {
 		control: StorybookControlType.Number,
 		defaultValue: 150
