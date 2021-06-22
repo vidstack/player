@@ -12,7 +12,10 @@ import {
 	VdsUnmuteRequestEvent,
 	VdsVolumeChangeRequestEvent
 } from '../../media-request.events.js';
-import { buildMediaFixture } from '../../test-utils/index.js';
+import {
+	buildMediaFixture,
+	VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
+} from '../../test-utils/index.js';
 import {
 	MediaControllerElement,
 	VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME
@@ -60,12 +63,30 @@ describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 				html`<vds-media-controller></vds-media-controller>`
 			);
 
-			const provider = document.createElement('vds-fake-media-provider');
+			const provider = document.createElement(
+				VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
+			);
+
 			controller.append(provider);
 			expect(controller.mediaProvider).to.equal(provider);
 
 			provider.remove();
 			expect(controller.mediaProvider).to.be.undefined;
+		});
+
+		it.only('should bridge controller to provider', async function () {
+			const { controller, provider } = await buildMediaFixture();
+
+			// TODO: wip
+
+			// console.log(controller.play);
+			// controller.setAttribute('paused', 'false');
+
+			// controller.addEventListener('vds-can-play', (e) => {
+			// 	console.log(e);
+			// });
+
+			// provider.forceMediaReady();
 		});
 	});
 

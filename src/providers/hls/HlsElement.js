@@ -74,6 +74,16 @@ export const HLS_TYPES = new Set([
  * ```
  */
 export class HlsElement extends VideoElement {
+	/** @type {string[]} */
+	static get events() {
+		return [
+			VdsHlsEngineAttachEvent.TYPE,
+			VdsHlsEngineBuiltEvent.TYPE,
+			VdsHlsEngineDetachEvent.TYPE,
+			VdsHlsEngineNoSupportEvent.TYPE
+		];
+	}
+
 	constructor() {
 		super();
 

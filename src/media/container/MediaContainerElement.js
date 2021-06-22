@@ -62,6 +62,11 @@ export class MediaContainerElement extends VdsElement {
 		return ['root', 'media'];
 	}
 
+	/** @type {string[]} */
+	static get events() {
+		return [VdsMediaContainerConnectEvent.TYPE];
+	}
+
 	constructor() {
 		super();
 

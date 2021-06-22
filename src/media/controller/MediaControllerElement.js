@@ -2,7 +2,12 @@ import { html } from 'lit';
 
 import { provideContextRecord } from '../../shared/context/index.js';
 import { VdsElement } from '../../shared/elements/index.js';
-import { bindEventListeners } from '../../shared/events/index.js';
+import {
+	bindEventListeners,
+	DisposalBin,
+	listen,
+	redispatchNativeEvent
+} from '../../shared/events/index.js';
 import { storybookAction } from '../../shared/storybook/index.js';
 import { isNil } from '../../utils/unit.js';
 import {
@@ -77,6 +82,11 @@ export class MediaControllerElement extends VdsElement {
 		this.bindEventListeners();
 	}
 
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.destroyMediaProviderBridge();
+	}
+
 	// -------------------------------------------------------------------------------------------
 	// Event Bindings
 	// -------------------------------------------------------------------------------------------
@@ -130,20 +140,12 @@ export class MediaControllerElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
-	 * @private
-	 * @type {MediaContainerElement | undefined}
-	 */
-	_mediaContainer;
-
-	/**
 	 * The current media container that belongs to this controller. Defaults to `undefined` if
 	 * there is none.
 	 *
-	 * @returns {MediaContainerElement | undefined}
+	 * @type {MediaContainerElement | undefined}
 	 */
-	get mediaContainer() {
-		return this._mediaContainer;
-	}
+	mediaContainer;
 
 	/**
 	 * @protected
@@ -152,9 +154,9 @@ export class MediaControllerElement extends VdsElement {
 	 */
 	handleMediaContainerConnect(event) {
 		const { container, onDisconnect } = event.detail;
-		this._mediaContainer = container;
+		this.mediaContainer = container;
 		onDisconnect(() => {
-			this._mediaContainer = undefined;
+			this.mediaContainer = undefined;
 		});
 	}
 
@@ -163,20 +165,12 @@ export class MediaControllerElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
-	 * @private
-	 * @type {MediaProviderElement | undefined}
-	 */
-	_mediaProvider;
-
-	/**
 	 * The current media provider that belongs to this controller. Defaults to `undefined` if there
 	 * is none.
 	 *
 	 * @type {MediaProviderElement | undefined}
 	 */
-	get mediaProvider() {
-		return this._mediaProvider;
-	}
+	mediaProvider;
 
 	/**
 	 * @protected
@@ -185,16 +179,146 @@ export class MediaControllerElement extends VdsElement {
 	 */
 	handleMediaProviderConnect(event) {
 		const { provider, onDisconnect } = event.detail;
-		this._mediaProvider = provider;
-		// Bypass readonly `context`.
-		// We are injecting our context object into the `MediaProviderElement` so it can be managed by it.
-		/** @type {any} */ (this._mediaProvider).context = this.context;
+		this.mediaProvider = provider;
+		this.buildMediaProviderBridge();
+		/**
+		 * Using type `any` to bypass readonly `context`. We are injecting our context object into the
+		 * `MediaProviderElement` so it can be managed by it.
+		 */
+		/** @type {any} */ (provider).context = this.context;
 		onDisconnect(() => {
-			// Bypass readonly `context`.
-			/** @type {any} */ (this._mediaProvider).context =
-				createMediaContextRecord();
-			this._mediaProvider = undefined;
+			this.destroyMediaProviderBridge();
+			/**
+			 * Using type `any` to bypass readonly `context`. Detach the media context.
+			 */
+			/** @type {any} */ (provider).context = createMediaContextRecord();
+			this.mediaProvider = undefined;
 		});
+	}
+
+	/**
+	 * @protected
+	 * @readonly
+	 */
+	mediaProviderBridgeDisposal = new DisposalBin();
+
+	/**
+	 * Bridges attributes, events and operations across the media controller to the connected
+	 * media provider.
+	 *
+	 * @protected
+	 * @returns {void}
+	 */
+	buildMediaProviderBridge() {
+		if (isNil(this.mediaProvider)) return;
+		this.proxyOperationsToMediaProvider();
+		this.forwardMediaProviderAttributesAndEvents();
+	}
+
+	/**
+	 * Proxies unknown operations to the connected media provider (if it exists).
+	 *
+	 * @protected
+	 * @returns {void}
+	 */
+	proxyOperationsToMediaProvider() {
+		if (isNil(this.mediaProvider)) return;
+
+		const provider = this.mediaProvider;
+		const shouldProxyOperation = (prop) => !(prop in this) && prop in provider;
+
+		const proto = Object.getPrototypeOf(this);
+		const newProto = Object.create(proto);
+
+		Object.setPrototypeOf(
+			this,
+			new Proxy(newProto, {
+				get(target, prop) {
+					if (shouldProxyOperation(prop)) {
+						return provider[prop];
+					}
+
+					return target[prop];
+				},
+				set(target, prop, value) {
+					if (shouldProxyOperation(prop)) {
+						provider[prop] = value;
+					}
+
+					target[prop] = value;
+					return true;
+				}
+			})
+		);
+
+		this.mediaProviderBridgeDisposal.add(() => {
+			Object.setPrototypeOf(this, proto);
+		});
+	}
+
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	forwardMediaProviderAttributesAndEvents() {
+		if (isNil(this.mediaProvider)) return;
+
+		const provider = this.mediaProvider;
+
+		/** @type {Set<string>} */
+		const attributes = new Set();
+		/** @type {Set<string>} */
+		const eventTypes = new Set();
+
+		let ctor = provider.constructor;
+
+		// Walk proto chain and collect attributes + events.
+		while (ctor) {
+			const props = /** @type {any} */ (ctor).properties ?? {};
+			Object.keys(props)
+				.map((prop) => props[prop].attribute ?? prop.toLowerCase())
+				.forEach((attr) => {
+					attributes.add(attr);
+				});
+
+			const events = /** @type {any} */ (ctor).events ?? [];
+			events.forEach((eventType) => {
+				eventTypes.add(eventType);
+			});
+
+			ctor = Object.getPrototypeOf(ctor);
+		}
+
+		// Observe attributes and forward changes to provider.
+		const observer = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (mutation.type === 'attributes') {
+					const attrName = /** @type {string} **/ (mutation.attributeName);
+					const attrValue = /** @type {string} */ (this.getAttribute(attrName));
+					provider.setAttribute(attrName, attrValue);
+				}
+			}
+		});
+
+		observer.observe(this, { attributeFilter: Array.from(attributes) });
+		this.mediaProviderBridgeDisposal.add(() => observer.disconnect());
+
+		// Listen to dispatched events on provider and forward them.
+		Array.from(eventTypes)
+			.map((eventType) =>
+				listen(provider, eventType, (e) => {
+					redispatchNativeEvent(this, e);
+				})
+			)
+			.forEach((dispose) => this.mediaProviderBridgeDisposal.add(dispose));
+	}
+
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	destroyMediaProviderBridge() {
+		this.mediaProviderBridgeDisposal.empty();
 	}
 
 	// -------------------------------------------------------------------------------------------

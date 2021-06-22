@@ -651,6 +651,43 @@ export class MediaProviderElement extends VdsElement {
 			);
 		});
 	}
+
+	// -------------------------------------------------------------------------------------------
+	// Metadata
+	// -------------------------------------------------------------------------------------------
+
+	/** @type {string[]} */
+	static get events() {
+		return [
+			VdsAbortEvent.TYPE,
+			VdsCanPlayEvent.TYPE,
+			VdsCanPlayThroughEvent.TYPE,
+			VdsDurationChangeEvent.TYPE,
+			VdsEmptiedEvent.TYPE,
+			VdsEndedEvent.TYPE,
+			VdsErrorEvent.TYPE,
+			VdsFullscreenChangeEvent.TYPE,
+			VdsLoadedDataEvent.TYPE,
+			VdsLoadedMetadataEvent.TYPE,
+			VdsLoadStartEvent.TYPE,
+			VdsMediaTypeChangeEvent.TYPE,
+			VdsPauseEvent.TYPE,
+			VdsPlayEvent.TYPE,
+			VdsPlayingEvent.TYPE,
+			VdsProgressEvent.TYPE,
+			VdsReplayEvent.TYPE,
+			VdsSeekedEvent.TYPE,
+			VdsSeekingEvent.TYPE,
+			VdsStalledEvent.TYPE,
+			VdsStartedEvent.TYPE,
+			VdsSuspendEvent.TYPE,
+			VdsTimeUpdateEvent.TYPE,
+			VdsViewTypeChangeEvent.TYPE,
+			VdsVolumeChangeEvent.TYPE,
+			VdsWaitingEvent.TYPE,
+			VdsMediaProviderConnectEvent.TYPE
+		];
+	}
 }
 
 /**

@@ -48,6 +48,14 @@ export class BufferingIndicatorElement extends VdsElement {
 		return [bufferingIndicatorElementStyles];
 	}
 
+	/** @type {string[]} */
+	static get events() {
+		return [
+			VdsBufferingIndicatorHideEvent.TYPE,
+			VdsBufferingIndicatorShowEvent.TYPE
+		];
+	}
+
 	constructor() {
 		super();
 
