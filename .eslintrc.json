@@ -1,24 +1,28 @@
 {
-  "env": {
-    "browser": true
-  },
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "simple-import-sort"],
-  "extends": [
-    "plugin:wc/recommended",
-    "plugin:lit/recommended",
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
-  "rules": {
-    "no-console": "off",
-    "no-underscore-dangle": "off",
-    "default-case": "off",
-    "class-methods-use-this": "off",
-    "max-classes-per-file": "off",
-    "@typescript-eslint/no-unused-expressions": "off",
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error"
-  }
+	"env": {
+		"browser": true,
+		"es6": true
+	},
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "./jsconfig.json"
+	},
+	"plugins": ["mocha", "simple-import-sort"],
+	"extends": [
+		"plugin:wc/recommended",
+		"plugin:lit/recommended",
+		"plugin:mocha/recommended",
+		"eslint:recommended",
+		"prettier"
+	],
+	"rules": {
+		"no-console": "off",
+		"no-unused-vars": "off",
+		"no-underscore-dangle": "off",
+		"default-case": "off",
+		"class-methods-use-this": "off",
+		"max-classes-per-file": "off",
+		"simple-import-sort/imports": "error",
+		"simple-import-sort/exports": "error"
+	}
 }

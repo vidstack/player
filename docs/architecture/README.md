@@ -68,30 +68,30 @@ The markup for any `vds` provider should mirror the native implementation as muc
 ```html
 <!-- Native. -->
 <video poster="/media/poster.png" crossorigin="anonymous" controls>
-  <source src="/media/video.mp4" type="video/mp4" />
-  <track default src="/media/captions.vtt" kind="captions" srclang="en" />
+	<source src="/media/video.mp4" type="video/mp4" />
+	<track default src="/media/captions.vtt" kind="captions" srclang="en" />
 </video>
 
 <!-- Vds. -->
 <vds-video poster="/media/poster.png" crossorigin="anonymous" controls>
-  <source src="/media/video.mp4" type="video/mp4" />
-  <track default src="/media/captions.vtt" kind="captions" srclang="en" />
+	<source src="/media/video.mp4" type="video/mp4" />
+	<track default src="/media/captions.vtt" kind="captions" srclang="en" />
 </vds-video>
 ```
 
 ```html
 <!-- Native. -->
 <iframe
-  src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
-  width="640"
-  height="390"
+	src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
+	width="640"
+	height="390"
 ></iframe>
 
 <!-- Vds. Here we can also offer a `video-id` attribute to make life easier. -->
 <vds-youtube
-  src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
-  width="640"
-  height="390"
+	src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
+	width="640"
+	height="390"
 ></vds-youtube>
 ```
 

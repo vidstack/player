@@ -26,8 +26,8 @@ jobs:
         if: steps.deps.outputs.cache-hit != 'true'
         run: npm install
 
+      - name: Static Analysis (TS)
+        run: npm run check
+
       - name: Test Package
         run: npm run test
-
-      - name: Build Package
-        run: npm run build

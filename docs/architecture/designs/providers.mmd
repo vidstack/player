@@ -21,12 +21,12 @@ MediaEmbedProvider <|-- YouTubeProvider: extends
 MediaEmbedProvider <|-- VimeoProvider: extends
 MediaEmbedProvider <|-- DailymotionProvider: extends
 
-class VideoProvider~EngineType = HTMLVideoElement~
-class AudioProvider~EngineType = HTMLAudioElement~
-class HlsProvider~EngineType = Hls~
-class DashProvider~EngineType = Dash~
+class VideoProvider~Engine = HTMLVideoElement~
+class AudioProvider~Engine = HTMLAudioElement~
+class HlsProvider~Engine = Hls~
+class DashProvider~Engine = Dash~
 
-class MediaFileProvider~EngineType = HTMLMediaElement~ {
+class MediaFileProvider~Engine = HTMLMediaElement~ {
     #mediaEl?: HTMLMediaElement
     +src: string
     +readyState: ReadyState
@@ -45,7 +45,7 @@ MediaFileProvider <|-- VideoProvider: extends
 VideoProvider <|-- HlsProvider: extends
 VideoProvider <|-- DashProvider: extends
 
-class MediaProvider~EngineType~ {
+class MediaProvider~Engine~ {
     <<abstract>>
     +currentTime: number
     +volume: number
@@ -58,7 +58,7 @@ class MediaProvider~EngineType~ {
     play()* Promise~void~
     pause()* Promise~void~
     canPlay(type: string)* CanPlayType
-    engine()* EngineType
+    engine()* Engine
     requestFullscreen()* Promise~void~
     exitFullscreen()* Promise~void~
 }

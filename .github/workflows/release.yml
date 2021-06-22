@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: 14
 
+      - name: Setup Playwright
+        run: npx playwright install-deps
+
       - name: Cache Dependencies
         id: deps
         uses: actions/cache@v2
@@ -30,16 +33,19 @@ jobs:
         if: steps.deps.outputs.cache-hit != 'true'
         run: npm install
 
-      - name: Test
-        run: npm run test:coverage
+      - name: Static Analysis (TS)
+        run: npm run check
+
+      - name: Test (UNIT)
+        run: npm run test:ci:coverage
+
+      - name: Analyze (CEM)
+        run: npm run analyze
 
       - name: Submit Coverage Report
         run: bash <(curl -s https://codecov.io/bash)
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Build
-        run: npm run build
 
       - name: Setup Git Identity
         run: |
