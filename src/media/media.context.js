@@ -25,7 +25,15 @@ const viewType = createContext(ViewType.Unknown);
  * import { mediaContext, VdsElement } from "@vidstack/elements";
  *
  * class MyElement extends VdsElement {
- *  paused = mediaContext.paused.consume(this);
+ *  constructor() {
+ *    this.mediaPaused = mediaContext.paused.initialValue;
+ *  }
+ *
+ *  static get contextConsumers() {
+ *    return {
+ *      mediaPaused: mediaContext.paused
+ *    }
+ *  }
  * }
  * ```
  */

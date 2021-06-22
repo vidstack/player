@@ -76,11 +76,11 @@ export class MediaContainerElement extends VdsElement {
 
 		// Context
 		/** @protected @readonly @type {boolean} */
-		this.canPlay = mediaContext.canPlay.initialValue;
+		this.mediaCanPlay = mediaContext.canPlay.initialValue;
 		/** @protected @readonly @type {boolean} */
-		this.fullscreen = mediaContext.fullscreen.initialValue;
+		this.mediaFullscreen = mediaContext.fullscreen.initialValue;
 		/** @protected @readonly @type {boolean} */
-		this.isVideoView = mediaContext.isVideoView.initialValue;
+		this.mediaIsVideoView = mediaContext.isVideoView.initialValue;
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -97,9 +97,9 @@ export class MediaContainerElement extends VdsElement {
 	/** @type {import('../../shared/context').ContextConsumerDeclarations} */
 	static get contextConsumers() {
 		return {
-			canPlay: mediaContext.canPlay,
-			fullscreen: mediaContext.fullscreen,
-			isVideoView: mediaContext.isVideoView
+			mediaCanPlay: mediaContext.canPlay,
+			mediaFullscreen: mediaContext.fullscreen,
+			mediaIsVideoView: mediaContext.isVideoView
 		};
 	}
 
@@ -222,7 +222,7 @@ export class MediaContainerElement extends VdsElement {
 	 * @returns {'true' | 'false'}
 	 */
 	getAriaBusy() {
-		return this.canPlay ? 'false' : 'true';
+		return this.mediaCanPlay ? 'false' : 'true';
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -235,8 +235,8 @@ export class MediaContainerElement extends VdsElement {
 	 */
 	shouldApplyAspectRatio() {
 		return (
-			this.isVideoView &&
-			!this.fullscreen &&
+			this.mediaIsVideoView &&
+			!this.mediaFullscreen &&
 			isString(this.aspectRatio) &&
 			/\d{1,2}:\d{1,2}/.test(this.aspectRatio)
 		);

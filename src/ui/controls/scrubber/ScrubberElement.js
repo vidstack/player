@@ -182,6 +182,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 		this.userSeekingThrottle = 150;
 
 		// State
+		/** @protected @type {number} */
+		this.currentTime = 0;
 		/** @protected @type {boolean} */
 		this.isPointerInsideScrubber = false;
 		/** @protected @type {boolean} */
@@ -189,13 +191,15 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
 		// Context Consumers
 		/** @protected @readonly @type {number} */
-		this.currentTime = mediaContext.currentTime.initialValue;
+		this.mediaCurrentTime = mediaContext.currentTime.initialValue;
 		/** @protected @readonly @type {number} */
-		this.duration = 0;
+		this.mediaDuration = 0;
 		/** @protected @readonly @type {boolean} */
-		this.paused = mediaContext.paused.initialValue;
+		this.mediaPaused = mediaContext.paused.initialValue;
+		/** @protected @readonly @type {boolean} */
+		this.mediaSeeking = mediaContext.seeking.initialValue;
 		/** @protected @readonly @type {number} */
-		this.seekableAmount = mediaContext.seekableAmount.initialValue;
+		this.mediaSeekableAmount = mediaContext.seekableAmount.initialValue;
 
 		// Context Providers
 		/** @protected @type {boolean} */
@@ -228,7 +232,9 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 			userSeekingThrottle: { type: Number, attribute: 'user-seeking-throttle' },
 			// State
 			isPointerInsideScrubber: { state: true },
-			isDraggingThumb: { state: true }
+			isDraggingThumb: { state: true },
+			previewTime: { state: true },
+			currentTime: { state: true }
 		};
 	}
 
@@ -243,13 +249,14 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	/** @type {import('../../../shared/context').ContextConsumerDeclarations} */
 	static get contextConsumers() {
 		return {
-			currentTime: mediaContext.currentTime,
-			duration: {
+			mediaCurrentTime: mediaContext.currentTime,
+			mediaDuration: {
 				context: mediaContext.duration,
 				transform: (d) => (d >= 0 ? d : 0)
 			},
-			paused: mediaContext.paused,
-			seekableAmount: mediaContext.seekableAmount
+			mediaPaused: mediaContext.paused,
+			mediaSeeking: mediaContext.seeking,
+			mediaSeekableAmount: mediaContext.seekableAmount
 		};
 	}
 
@@ -264,6 +271,14 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
 	/** @param {import('lit').PropertyValues} changedProperties */
 	update(changedProperties) {
+		if (
+			changedProperties.has('mediaCurrentTime') &&
+			!changedProperties.has('isDraggingThumb') &&
+			!this.isDraggingThumb
+		) {
+			this.currentTime = this.mediaCurrentTime;
+		}
+
 		if (
 			changedProperties.has('previewTimeThrottle') ||
 			changedProperties.has('userSeekingThrottle')
@@ -302,7 +317,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 * @returns {void}
 	 */
 	dispatchUserSeekingEvent(time, event) {
-		if (!this.isSeeking) return;
+		if (!this.isInteractive) return;
 		this.remoteControl.seeking(time, event);
 	}
 
@@ -315,8 +330,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	async dispatchUserSeeked(time, event) {
 		// Prevent slider value (time) jumping while `isDragging` is being updated to `false`.
 		await this.updateComplete;
-		// @ts-ignore
-		this.currentTime = this.previewTime;
+		this.currentTime = time;
 		this.remoteControl.seek(time, event);
 	}
 
@@ -378,9 +392,10 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 */
 	getScrubberStyleMap() {
 		return {
-			'--vds-scrubber-current-time': String(this.currentTime),
-			'--vds-scrubber-seekable': String(this.seekableAmount),
-			'--vds-scrubber-duration': String(this.duration)
+			'--vds-scrubber-current-time': String(this.mediaCurrentTime),
+			'--vds-scrubber-seekable': String(this.mediaSeekableAmount),
+			'--vds-scrubber-duration': String(this.mediaDuration),
+			'--vds-scrubber-preview-time': String(this.previewTime)
 		};
 	}
 
@@ -443,8 +458,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 * @returns {import('lit').TemplateResult}
 	 */
 	renderProgress() {
-		const valueText = `${(this.duration > 0
-			? (this.seekableAmount / this.duration) * 100
+		const valueText = `${(this.mediaDuration > 0
+			? (this.mediaSeekableAmount / this.mediaDuration) * 100
 			: 0
 		).toFixed(0)}%`;
 
@@ -456,8 +471,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 				?hidden=${this.hidden}
 				aria-label=${this.progressLabel}
 				aria-valuemin="0"
-				aria-valuemax=${this.duration}
-				aria-valuenow=${this.seekableAmount}
+				aria-valuemax=${this.mediaDuration}
+				aria-valuenow=${this.mediaSeekableAmount}
 				aria-valuetext=${valueText}
 				${ref(this.progressRef)}
 			>
@@ -497,8 +512,12 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 		return /** @type {SliderElement} */ (this.sliderRef.value);
 	}
 
-	get isSeeking() {
+	get isInteractive() {
 		return this.isPointerInsideScrubber || this.isDraggingThumb;
+	}
+
+	get shouldDisplayPreviewTime() {
+		return this.isDraggingThumb;
 	}
 
 	/**
@@ -511,8 +530,10 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 				id="slider"
 				label=${ifNonEmpty(this.sliderLabel)}
 				min="0"
-				max=${this.duration}
-				value=${this.isDraggingThumb ? this.previewTime : this.currentTime}
+				max=${this.mediaDuration}
+				value=${this.shouldDisplayPreviewTime
+					? this.previewTime
+					: this.currentTime}
 				step=${this.step}
 				step-multiplier=${this.stepMultiplier}
 				part=${this.getSliderPartAttr()}
@@ -557,8 +578,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 */
 	getSliderProgressText() {
 		return this.progressText
-			.replace('{currentTime}', formatSpokenTime(this.currentTime))
-			.replace('{duration}', formatSpokenTime(this.duration));
+			.replace('{currentTime}', formatSpokenTime(this.mediaCurrentTime))
+			.replace('{duration}', formatSpokenTime(this.mediaDuration));
 	}
 
 	/**
@@ -578,11 +599,14 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 * @returns {Promise<void>}
 	 */
 	async handleSliderValueChange(event) {
-		if (!event.type.includes('pointer')) {
-			this.previewTime = event.detail;
+		const originalEvent = /** @type {Event} */ (event.originalEvent);
+
+		if (!originalEvent.type.includes('pointer')) {
+			this.updatePreviewTime(event.detail, event);
 		} else {
-			const pointerEvent = /** @type {PointerEvent} */ (event.originalEvent);
-			await this.updatePreviewPosition(pointerEvent);
+			await this.updatePreviewPosition(
+				/** @type {PointerEvent} */ (originalEvent)
+			);
 		}
 
 		if (!this.isDraggingThumb) this.dispatchUserSeeked(this.previewTime, event);
@@ -627,13 +651,13 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	togglePlaybackWhileDragging(event) {
 		if (!this.pauseWhileDragging) return;
 
-		if (this.isDraggingThumb && !this.paused) {
+		if (this.isDraggingThumb && !this.mediaPaused) {
 			this.wasPlayingBeforeDragStart = true;
 			this.remoteControl.pause(event);
 		} else if (
 			this.wasPlayingBeforeDragStart &&
 			!this.isDraggingThumb &&
-			this.paused
+			this.mediaPaused
 		) {
 			this.wasPlayingBeforeDragStart = false;
 			this.remoteControl.play(event);
@@ -666,7 +690,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 			<div
 				id="preview-track"
 				part=${this.getPreviewTrackPartAttr()}
-				?hidden=${!this.isSeeking}
+				?hidden=${!this.isInteractive}
 				?disabled=${this.disabled}
 			></div>
 		`;
@@ -677,7 +701,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 * @returns {string}
 	 */
 	getPreviewTrackPartAttr() {
-		return clsx('preview-track', 'preview-track-hidden' && !this.isSeeking);
+		return clsx('preview-track', 'preview-track-hidden' && !this.isInteractive);
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -758,8 +782,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 		if (
 			this.disabled ||
 			isNil(this.currentPreviewSlotElement) ||
-			!this.isSeeking ||
-			(this.isSeeking && !this.isCurrentPreviewHidden())
+			!this.isInteractive ||
+			(this.isInteractive && !this.isCurrentPreviewHidden())
 		) {
 			return;
 		}
@@ -789,7 +813,10 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	async hidePreview(event) {
 		window.clearTimeout(this.showPreviewTimeout);
 
-		if (this.isSeeking || (!this.isSeeking && this.isCurrentPreviewHidden())) {
+		if (
+			this.isInteractive ||
+			(!this.isInteractive && this.isCurrentPreviewHidden())
+		) {
 			return;
 		}
 
@@ -813,7 +840,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 * @returns {void}
 	 */
 	dispatchPreviewTimeChangeEvent(time, event) {
-		if (!this.isSeeking) return;
+		if (!this.isInteractive) return;
 		this.mediaSeekingRequestThrottle?.(time, event);
 		this.dispatchEvent(
 			new VdsScrubberPreviewTimeUpdateEvent({
@@ -870,11 +897,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 	 */
 	updatePreviewTime(time, event) {
 		this.previewTime = time;
-		this.rootElement.style.setProperty(
-			'--vds-scrubber-preview-time',
-			String(time)
-		);
-		if (this.isDraggingThumb) this.sliderElement.value = time;
 		this.previewTimeChangeThrottle?.(this.previewTime, event);
 	}
 
@@ -893,7 +915,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 		window.cancelAnimationFrame(this.previewPositionRafId);
 		this.previewPositionRafId = await raf(async () => {
 			const percent = this.calcPercentageOfMediaDurationOnThumb(event.clientX);
-			this.updatePreviewTime((percent / 100) * this.duration, event);
+			this.updatePreviewTime((percent / 100) * this.mediaDuration, event);
 			if (!isNil(this.currentPreviewSlotElement)) {
 				const xPos = this.calcPreviewXPosition(percent);
 				this.currentPreviewSlotElement.style.transform = `translateX(${xPos}px)`;

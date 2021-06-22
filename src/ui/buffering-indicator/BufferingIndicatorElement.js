@@ -59,9 +59,9 @@ export class BufferingIndicatorElement extends VdsElement {
 
 		// Context
 		/** @protected @readonly @type {boolean} */
-		this.canPlay = mediaContext.canPlay.initialValue;
+		this.mediaCanPlay = mediaContext.canPlay.initialValue;
 		/** @protected @readonly @type {boolean} */
-		this.isWaiting = mediaContext.waiting.initialValue;
+		this.mediaIsWaiting = mediaContext.waiting.initialValue;
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -85,8 +85,8 @@ export class BufferingIndicatorElement extends VdsElement {
 	/** @type {import('../../shared/context').ContextConsumerDeclarations} */
 	static get contextConsumers() {
 		return {
-			canPlay: mediaContext.canPlay,
-			isWaiting: mediaContext.waiting
+			mediaCanPlay: mediaContext.canPlay,
+			mediaIsWaiting: mediaContext.waiting
 		};
 	}
 
@@ -130,7 +130,9 @@ export class BufferingIndicatorElement extends VdsElement {
 	 * @returns {boolean}
 	 */
 	isIndicatorHidden() {
-		return (!this.showWhileBooting || this.canPlay) && !this.isWaiting;
+		return (
+			(!this.showWhileBooting || this.mediaCanPlay) && !this.mediaIsWaiting
+		);
 	}
 
 	/**

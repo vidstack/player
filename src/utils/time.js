@@ -36,7 +36,7 @@ export const TimeUnit = {
 	/**
 	 * Represents a fraction of a second in decimal form.
 	 */
-	Decimal: 'decimal'
+	Fraction: 'fraction'
 };
 
 /**
@@ -45,7 +45,7 @@ export const TimeUnit = {
 
 /**
  * Parses the given `duration` into the following units of time: hours, minutes,
- * seconds, decimal (fraction of a second).
+ * seconds, fraction (fraction of a second).
  *
  * @param {number} duration - The length of time to parse in seconds.
  * @returns {ParsedTime}
@@ -54,13 +54,13 @@ export function parseTime(duration) {
 	const hours = Math.trunc(duration / 3600);
 	const minutes = Math.trunc((duration % 3600) / 60);
 	const seconds = Math.trunc(duration % 60);
-	const decimal = Number((duration - Math.trunc(duration)).toPrecision(3));
+	const fraction = Number((duration - Math.trunc(duration)).toPrecision(3));
 
 	return {
 		[TimeUnit.Hours]: hours,
 		[TimeUnit.Minutes]: minutes,
 		[TimeUnit.Seconds]: seconds,
-		[TimeUnit.Decimal]: decimal
+		[TimeUnit.Fraction]: fraction
 	};
 }
 
@@ -138,6 +138,6 @@ export const formatSpokenTime = (duration) => {
  * @spec https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
  */
 export const formatHtml5Duration = (duration) => {
-	const { hours, minutes, seconds, decimal } = parseTime(duration);
-	return `PT${hours}H${minutes}M${seconds + decimal}S`;
+	const { hours, minutes, seconds, fraction } = parseTime(duration);
+	return `PT${hours}H${minutes}M${seconds + fraction}S`;
 };

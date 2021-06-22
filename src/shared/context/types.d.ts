@@ -62,13 +62,13 @@ export type ContextProviderDeclaration<T> =
 	| Context<T>
 	| ContextProviderDeclarationOptions<T>;
 
-export interface ContextConsumerDeclarations {
-	readonly [key: string]: ContextConsumerDeclaration<any>;
-}
+export type ContextConsumerDeclarations<T = any> = {
+	readonly [P in keyof T]: ContextConsumerDeclaration<any>;
+};
 
-export interface ContextProviderDeclarations {
-	readonly [key: string]: ContextProviderDeclaration<any>;
-}
+export type ContextProviderDeclarations<T = any> = {
+	readonly [P in keyof T]: ContextProviderDeclaration<any>;
+};
 
 export type ContextHost = LitElement;
 

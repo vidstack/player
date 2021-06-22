@@ -40,23 +40,23 @@ export class MediaUiElement extends VdsElement {
 	/** @type {import('../../shared/context').ContextConsumerDeclarations} */
 	static get contextConsumers() {
 		return {
-			canPlay: mediaContext.canPlay,
-			fullscreen: mediaContext.fullscreen,
-			isVideoView: mediaContext.isVideoView,
-			playsinline: mediaContext.playsinline
+			mediaCanPlay: mediaContext.canPlay,
+			mediaFullscreen: mediaContext.fullscreen,
+			mediaIsVideoView: mediaContext.isVideoView,
+			mediaPlaysinline: mediaContext.playsinline
 		};
 	}
 
 	constructor() {
 		super();
 		/** @protected @readonly @type {boolean} */
-		this.canPlay = mediaContext.canPlay.initialValue;
+		this.mediaCanPlay = mediaContext.canPlay.initialValue;
 		/** @protected @readonly @type {boolean} */
-		this.fullscreen = mediaContext.fullscreen.initialValue;
+		this.mediaFullscreen = mediaContext.fullscreen.initialValue;
 		/** @protected @readonly @type {boolean} */
-		this.isVideoView = mediaContext.isVideoView.initialValue;
+		this.mediaIsVideoView = mediaContext.isVideoView.initialValue;
 		/** @protected @readonly @type {boolean} */
-		this.playsinline = mediaContext.playsinline.initialValue;
+		this.mediaPlaysinline = mediaContext.playsinline.initialValue;
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -142,11 +142,13 @@ export class MediaUiElement extends VdsElement {
 	 */
 	isUiHidden() {
 		return (
-			!this.canPlay ||
+			!this.mediaCanPlay ||
 			// If iOS Safari and the view type is currently video then we hide the custom UI depending
 			// on whether playsinline is set and fullscreen is not active, or if fullscreen is active
 			// we should always hide.
-			(IS_IOS && this.isVideoView && (!this.playsinline || this.fullscreen))
+			(IS_IOS &&
+				this.mediaIsVideoView &&
+				(!this.mediaPlaysinline || this.mediaFullscreen))
 		);
 	}
 }

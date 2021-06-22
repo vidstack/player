@@ -84,35 +84,25 @@ export function WithContext(Base) {
 			// Might be called by decorator.
 			this.finalizeContext();
 
-			function defineProvider(element) {
+			/** @type {any} */ (this).addInitializer((element) => {
+				if (!element[PROVIDERS]) element[PROVIDERS] = new Map();
 				const provider = context.provide(element, options);
-
-				if (!element[PROVIDERS]) {
-					element[PROVIDERS] = new Map();
-				}
-
 				element[PROVIDERS].set(name, provider);
-
-				return provider;
-			}
+			});
 
 			Object.defineProperty(this.prototype, name, {
 				enumerable: true,
 				configurable: false,
 				get() {
-					return (
-						this[PROVIDERS]?.get(name)?.value ?? defineProvider(this).value
-					);
+					return this[PROVIDERS].get(name).value;
 				},
 				set: isDerviedContext(context)
 					? function () {
 							// console.warn(`Context provider property [${name}] is derived, thus it's readonly.`);
 					  }
 					: function (newValue) {
-							const provider =
-								// @ts-ignore
-								this[PROVIDERS]?.get(name) ?? defineProvider(this);
-							provider.value = newValue;
+							// @ts-ignore
+							this[PROVIDERS].get(name).value = newValue;
 					  }
 			});
 		}
@@ -147,7 +137,7 @@ export function WithContext(Base) {
 			// Might be called by decorator.
 			this.finalizeContext();
 
-			function defineConsumer(element) {
+			function initConsumer(element) {
 				let initialized = false;
 				let oldValue =
 					options.transform?.(context.initialValue) ?? context.initialValue;
@@ -162,23 +152,22 @@ export function WithContext(Base) {
 					}
 				});
 
-				if (!element[CONSUMERS]) {
-					element[CONSUMERS] = new Map();
-				}
-
 				element[CONSUMERS].set(name, consumer);
 				initialized = true;
 
 				return consumer;
 			}
 
+			/** @type {any} */ (this).addInitializer((element) => {
+				if (!element[CONSUMERS]) element[CONSUMERS] = new Map();
+				initConsumer(element);
+			});
+
 			Object.defineProperty(this.prototype, name, {
 				enumerable: true,
 				configurable: false,
 				get() {
-					return (
-						this[CONSUMERS]?.get(name)?.value ?? defineConsumer(this).value
-					);
+					return this[CONSUMERS].get(name).value;
 				},
 				set() {
 					// console.warn(`Context consumer property [${name}] is readonly.`);

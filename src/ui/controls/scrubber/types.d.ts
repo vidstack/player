@@ -101,7 +101,7 @@ export interface ScrubberElementProps
 	 *
 	 * @default false
 	 */
-	readonly isSeeking: boolean;
+	readonly isInteractive: boolean;
 
 	/**
 	 * The element passed in to the `preview` slot.
