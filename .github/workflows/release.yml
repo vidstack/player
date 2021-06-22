@@ -39,7 +39,7 @@ jobs:
       - name: Test (UNIT)
         run: npm run test:ci:coverage
 
-			- name: Analyze (CEM)
+      - name: Analyze (CEM)
         run: npm run analyze
 
       - name: Submit Coverage Report
