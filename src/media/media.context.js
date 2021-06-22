@@ -9,6 +9,10 @@ const duration = createContext(NaN);
 const mediaType = createContext(MediaType.Unknown);
 const seekable = createContext(createTimeRanges());
 const viewType = createContext(ViewType.Unknown);
+const isLiveVideo = derivedContext(
+	[mediaType],
+	([m]) => m === MediaType.LiveVideo
+);
 
 /**
  * The media context record contains a collection of contexts that map 1:1 with media
@@ -57,10 +61,11 @@ export const mediaContext = {
 		),
 	fullscreen: createContext(false),
 	loop: createContext(false),
+	live: derivedContext([isLiveVideo], (d) => d),
 	mediaType,
 	isAudio: derivedContext([mediaType], ([m]) => m === MediaType.Audio),
 	isVideo: derivedContext([mediaType], ([m]) => m === MediaType.Video),
-	isLiveVideo: derivedContext([mediaType], ([m]) => m === MediaType.LiveVideo),
+	isLiveVideo,
 	muted: createContext(false),
 	paused: createContext(true),
 	played: createContext(createTimeRanges()),
