@@ -3,11 +3,6 @@ import { MediaType } from './MediaType.js';
 import { createTimeRanges } from './time-ranges.js';
 import { ViewType } from './ViewType.js';
 
-/**
- * @template T
- * @typedef {import('../shared/context').Context<T>} Context<T>
- */
-
 // Decalred here as they are used within derived contexts below.
 const buffered = createContext(createTimeRanges());
 const duration = createContext(NaN);
@@ -56,7 +51,10 @@ export const mediaContext = {
 	currentSrc: createContext(''),
 	currentTime: createContext(0),
 	ended: createContext(false),
-	error: /** @type {Context<unknown | undefined>} */ (createContext(undefined)),
+	error:
+		/** @type {import('../shared/context/types').Context<unknown | undefined>} */ (
+			createContext(undefined)
+		),
 	fullscreen: createContext(false),
 	loop: createContext(false),
 	mediaType,
