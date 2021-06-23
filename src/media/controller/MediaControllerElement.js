@@ -140,12 +140,21 @@ export class MediaControllerElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
+	 * @protected
+	 * @type {MediaContainerElement | undefined}
+	 */
+	_mediaContainer;
+
+	/**
 	 * The current media container that belongs to this controller. Defaults to `undefined` if
 	 * there is none.
 	 *
+	 * @readonly
 	 * @type {MediaContainerElement | undefined}
 	 */
-	mediaContainer;
+	get mediaContainer() {
+		return this._mediaContainer;
+	}
 
 	/**
 	 * @protected
@@ -154,9 +163,9 @@ export class MediaControllerElement extends VdsElement {
 	 */
 	handleMediaContainerConnect(event) {
 		const { container, onDisconnect } = event.detail;
-		this.mediaContainer = container;
+		this._mediaContainer = container;
 		onDisconnect(() => {
-			this.mediaContainer = undefined;
+			this._mediaContainer = undefined;
 		});
 	}
 
@@ -165,12 +174,21 @@ export class MediaControllerElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
+	 * @protected
+	 * @type {MediaProviderElement | undefined}
+	 */
+	_mediaProvider;
+
+	/**
 	 * The current media provider that belongs to this controller. Defaults to `undefined` if there
 	 * is none.
 	 *
+	 * @readonly
 	 * @type {MediaProviderElement | undefined}
 	 */
-	mediaProvider;
+	get mediaProvider() {
+		return this._mediaProvider;
+	}
 
 	/**
 	 * @protected
@@ -179,7 +197,7 @@ export class MediaControllerElement extends VdsElement {
 	 */
 	handleMediaProviderConnect(event) {
 		const { provider, onDisconnect } = event.detail;
-		this.mediaProvider = provider;
+		this._mediaProvider = provider;
 		this.buildMediaProviderBridge();
 		/**
 		 * Using type `any` to bypass readonly `context`. We are injecting our context object into the
@@ -192,7 +210,7 @@ export class MediaControllerElement extends VdsElement {
 			 * Using type `any` to bypass readonly `context`. Detach the media context.
 			 */
 			/** @type {any} */ (provider).context = createMediaContextRecord();
-			this.mediaProvider = undefined;
+			this._mediaProvider = undefined;
 		});
 	}
 

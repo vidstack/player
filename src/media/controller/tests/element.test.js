@@ -77,16 +77,11 @@ describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 		it('should bridge controller to provider', async function () {
 			const { controller, provider } = await buildMediaFixture();
 
-			// TODO: wip
+			const playSpy = spy(provider, 'play');
 
-			// console.log(controller.play);
-			// controller.setAttribute('paused', 'false');
+			/** @type {any} */ (controller).play();
 
-			// controller.addEventListener('vds-can-play', (e) => {
-			// 	console.log(e);
-			// });
-
-			// provider.forceMediaReady();
+			expect(playSpy).to.have.been.called;
 		});
 	});
 
