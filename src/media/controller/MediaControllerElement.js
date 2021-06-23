@@ -2,13 +2,9 @@ import { html } from 'lit';
 
 import { provideContextRecord } from '../../shared/context/index.js';
 import { VdsElement } from '../../shared/elements/index.js';
-import {
-	bindEventListeners,
-	DisposalBin,
-	listen,
-	redispatchNativeEvent
-} from '../../shared/events/index.js';
+import { bindEventListeners, DisposalBin } from '../../shared/events/index.js';
 import { storybookAction } from '../../shared/storybook/index.js';
+import { bridgeElements } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
 import {
 	MediaContainerElement,
@@ -36,13 +32,17 @@ export const VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
 
 /**
  * The media controller acts as a message bus between the media provider and all other
- * components, such as UI components. The two primary responsibilities are:
+ * components, such as UI components. The main responsibilities are:
  *
  * - Provide the media context that is used to pass media state down to components (this
  * context is injected into and managed by the media provider).
  *
  * - Listen for media request events and fulfill them by calling the appropriate props/methods on
  * the current media provider.
+ *
+ * - Create a bridge between itself and the connected media provider. The bridge enables
+ * attributes, events and operations to be forwarded between the two seamlessly. In other words,
+ * the media controller acts as a proxy to the connected media provider.
  *
  * @tagname vds-media-controller
  *
@@ -68,7 +68,7 @@ export const VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  * ```
  */
 export class MediaControllerElement extends VdsElement {
-	/** @type {import('@lit/reactive-element').CSSResultGroup} */
+	/** @type {import('lit').CSSResultGroup} */
 	static get styles() {
 		return [mediaControllerStyles];
 	}
@@ -211,106 +211,8 @@ export class MediaControllerElement extends VdsElement {
 	 */
 	buildMediaProviderBridge() {
 		if (isNil(this.mediaProvider)) return;
-		this.proxyOperationsToMediaProvider();
-		this.forwardMediaProviderAttributesAndEvents();
-	}
-
-	/**
-	 * Proxies unknown operations to the connected media provider (if it exists).
-	 *
-	 * @protected
-	 * @returns {void}
-	 */
-	proxyOperationsToMediaProvider() {
-		if (isNil(this.mediaProvider)) return;
-
-		const provider = this.mediaProvider;
-		const shouldProxyOperation = (prop) => !(prop in this) && prop in provider;
-
-		const proto = Object.getPrototypeOf(this);
-		const newProto = Object.create(proto);
-
-		Object.setPrototypeOf(
-			this,
-			new Proxy(newProto, {
-				get(target, prop) {
-					if (shouldProxyOperation(prop)) {
-						return provider[prop];
-					}
-
-					return target[prop];
-				},
-				set(target, prop, value) {
-					if (shouldProxyOperation(prop)) {
-						provider[prop] = value;
-					}
-
-					target[prop] = value;
-					return true;
-				}
-			})
-		);
-
-		this.mediaProviderBridgeDisposal.add(() => {
-			Object.setPrototypeOf(this, proto);
-		});
-	}
-
-	/**
-	 * @protected
-	 * @returns {void}
-	 */
-	forwardMediaProviderAttributesAndEvents() {
-		if (isNil(this.mediaProvider)) return;
-
-		const provider = this.mediaProvider;
-
-		/** @type {Set<string>} */
-		const attributes = new Set();
-		/** @type {Set<string>} */
-		const eventTypes = new Set();
-
-		let ctor = provider.constructor;
-
-		// Walk proto chain and collect attributes + events.
-		while (ctor) {
-			const props = /** @type {any} */ (ctor).properties ?? {};
-			Object.keys(props)
-				.map((prop) => props[prop].attribute ?? prop.toLowerCase())
-				.forEach((attr) => {
-					attributes.add(attr);
-				});
-
-			const events = /** @type {any} */ (ctor).events ?? [];
-			events.forEach((eventType) => {
-				eventTypes.add(eventType);
-			});
-
-			ctor = Object.getPrototypeOf(ctor);
-		}
-
-		// Observe attributes and forward changes to provider.
-		const observer = new MutationObserver((mutations) => {
-			for (const mutation of mutations) {
-				if (mutation.type === 'attributes') {
-					const attrName = /** @type {string} **/ (mutation.attributeName);
-					const attrValue = /** @type {string} */ (this.getAttribute(attrName));
-					provider.setAttribute(attrName, attrValue);
-				}
-			}
-		});
-
-		observer.observe(this, { attributeFilter: Array.from(attributes) });
-		this.mediaProviderBridgeDisposal.add(() => observer.disconnect());
-
-		// Listen to dispatched events on provider and forward them.
-		Array.from(eventTypes)
-			.map((eventType) =>
-				listen(provider, eventType, (e) => {
-					redispatchNativeEvent(this, e);
-				})
-			)
-			.forEach((dispose) => this.mediaProviderBridgeDisposal.add(dispose));
+		const destroyBridge = bridgeElements(this, this.mediaProvider);
+		this.mediaProviderBridgeDisposal.add(destroyBridge);
 	}
 
 	/**

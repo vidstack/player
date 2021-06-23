@@ -74,7 +74,7 @@ describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 			expect(controller.mediaProvider).to.be.undefined;
 		});
 
-		it.only('should bridge controller to provider', async function () {
+		it('should bridge controller to provider', async function () {
 			const { controller, provider } = await buildMediaFixture();
 
 			// TODO: wip

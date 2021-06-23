@@ -1,3 +1,8 @@
+import {
+	DisposalBin,
+	listen,
+	redispatchNativeEvent
+} from '../shared/events/index.js';
 import { IS_CLIENT } from './support.js';
 import { isUndefined } from './unit.js';
 
@@ -119,3 +124,120 @@ export const willElementsCollide = (
 		aRect.bottom + translateAy > bRect.top + translateBy
 	);
 };
+
+/**
+ * Proxy unknown operations on `objA` to `objB`.
+ *
+ * @param {object} objA
+ * @param {object} objB
+ * @returns {(() => void)} Cleanup function.
+ */
+export function proxyUnknownOperations(objA, objB) {
+	const shouldProxyOperation = (prop) => !(prop in objA) && prop in objB;
+
+	const proto = Object.getPrototypeOf(objA);
+	const newProto = Object.create(proto);
+
+	Object.setPrototypeOf(
+		objA,
+		new Proxy(newProto, {
+			get(target, prop) {
+				if (shouldProxyOperation(prop)) {
+					return objB[prop];
+				}
+
+				return target[prop];
+			},
+			set(target, prop, value) {
+				if (shouldProxyOperation(prop)) {
+					objB[prop] = value;
+				}
+
+				target[prop] = value;
+				return true;
+			}
+		})
+	);
+
+	return () => {
+		Object.setPrototypeOf(objA, proto);
+	};
+}
+
+/**
+ * Creates a bridge from `elementA` to `elementB`.
+ *
+ * @param {HTMLElement} elementA
+ * @param {HTMLElement} elementB
+ * @returns {(() => void)} Cleanup function.
+ */
+export function bridgeElements(elementA, elementB) {
+	const disposal = new DisposalBin();
+
+	/** @type {Set<string>} */
+	const attributeNames = new Set();
+
+	/** @type {Set<string>} */
+	const eventTypes = new Set();
+
+	// Proxy unknown operations on `elementA` to `elementB`.
+	const disposeProxy = proxyUnknownOperations(elementA, elementB);
+	disposal.add(disposeProxy);
+
+	// Walk proto chain and collect attributes + events.
+	let ctor = elementB.constructor;
+	while (ctor) {
+		const props = /** @type {any} */ (ctor).properties ?? {};
+		Object.keys(props)
+			.map((prop) => props[prop].attribute ?? prop.toLowerCase())
+			.forEach((attr) => {
+				attributeNames.add(attr);
+			});
+
+		const events = /** @type {any} */ (ctor).events ?? [];
+		events.forEach((eventType) => {
+			eventTypes.add(eventType);
+		});
+
+		ctor = Object.getPrototypeOf(ctor);
+	}
+
+	// Forward initial attributes on `elementA` to `elementB` attributes.
+	attributeNames.forEach((attrName) => {
+		if (elementA.hasAttribute(attrName)) {
+			const attrValue = /** @type {string} */ (elementA.getAttribute(attrName));
+			elementB.setAttribute(attrName, attrValue);
+		}
+	});
+
+	// Observe attribute changes and forward to `elementB`.
+	const observer = new MutationObserver((mutations) => {
+		for (const mutation of mutations) {
+			if (mutation.type === 'attributes') {
+				const attrName = /** @type {string} **/ (mutation.attributeName);
+				const attrValue = /** @type {string} */ (
+					elementA.getAttribute(attrName)
+				);
+				elementB.setAttribute(attrName, attrValue);
+			}
+		}
+	});
+
+	observer.observe(elementA, { attributeFilter: Array.from(attributeNames) });
+	disposal.add(() => observer.disconnect());
+
+	// Listen to dispatched events on `elementB` and forward them.
+	Array.from(eventTypes)
+		.map((eventType) =>
+			listen(elementB, eventType, (e) => {
+				redispatchNativeEvent(elementA, e);
+			})
+		)
+		.forEach((dispose) => {
+			disposal.add(dispose);
+		});
+
+	return () => {
+		disposal.empty();
+	};
+}
