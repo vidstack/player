@@ -1,3 +1,5 @@
+import { LitElement, ReactiveElement } from 'lit';
+
 import {
 	DisposalBin,
 	listen,
@@ -133,8 +135,6 @@ export const willElementsCollide = (
  * @returns {(() => void)} Cleanup function.
  */
 export function proxyUnknownOperations(objA, objB) {
-	const shouldProxyOperation = (prop) => !(prop in objA) && prop in objB;
-
 	const proto = Object.getPrototypeOf(objA);
 	const newProto = Object.create(proto);
 
@@ -142,19 +142,18 @@ export function proxyUnknownOperations(objA, objB) {
 		objA,
 		new Proxy(newProto, {
 			get(target, prop) {
-				if (shouldProxyOperation(prop)) {
-					return objB[prop];
+				if (!(prop in objA) && prop in objB) {
+					return Reflect.get(objB, prop, objB);
 				}
 
-				return target[prop];
+				return Reflect.get(target, prop, objA);
 			},
 			set(target, prop, value) {
-				if (shouldProxyOperation(prop)) {
-					objB[prop] = value;
+				if (!(prop in objA) && prop in objB) {
+					return Reflect.set(objB, prop, value, objB);
 				}
 
-				target[prop] = value;
-				return true;
+				return Reflect.set(target, prop, value, objA);
 			}
 		})
 	);
