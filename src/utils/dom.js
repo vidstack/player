@@ -141,20 +141,23 @@ export function proxyProperties(objA, objB, whitelist) {
 
 	function warnIfTargetDeclaredProp(target, prop) {
 		if (Reflect.has(target, prop)) {
-			const targetName = target.constructor.name;
-			const proxyName = objB.constructor?.name || objB.name;
+			const targetName = objA.constructor?.name ?? objA.name;
+			const proxyName = objB.constructor?.name ?? objB.name;
 			console.warn(
 				`[vds]: ${targetName} declared a property [\`${prop}\`] that is being proxied to ${proxyName}.`
 			);
 		}
 	}
 
+	whitelist.forEach((prop) => {
+		warnIfTargetDeclaredProp(objA, prop);
+	});
+
 	Object.setPrototypeOf(
 		objA,
 		new Proxy(newProto, {
 			get(target, prop) {
 				if (whitelist.has(prop)) {
-					warnIfTargetDeclaredProp(target, prop);
 					return Reflect.get(objB, prop, objB);
 				}
 
@@ -162,7 +165,6 @@ export function proxyProperties(objA, objB, whitelist) {
 			},
 			set(target, prop, value) {
 				if (whitelist.has(prop)) {
-					warnIfTargetDeclaredProp(target, prop);
 					return Reflect.set(objB, prop, value, objB);
 				}
 
@@ -178,10 +180,9 @@ export function proxyProperties(objA, objB, whitelist) {
 
 /**
  * @typedef {{
- *   attributes: Set<string>;
- *   events: Set<string>;
- *   methods: Set<string>;
- *   properties: Set<string>;
+ *   attributes?: Set<string>;
+ *   events?: Set<string>;
+ *   properties?: Set<string>;
  * }} ElementBridgeWhitelist
  */
 
@@ -197,51 +198,59 @@ export function bridgeElements(elementA, elementB, whitelist) {
 	const disposal = new DisposalBin();
 
 	// Proxy propeties/methods on `elementA` to `elementB`.
-	const disposeProxy = proxyProperties(
-		elementA,
-		elementB,
-		new Set([...whitelist.properties, ...whitelist.methods])
-	);
+	if (!isUndefined(whitelist.properties)) {
+		const disposeProxy = proxyProperties(
+			elementA,
+			elementB,
+			new Set(whitelist.properties ?? [])
+		);
 
-	disposal.add(disposeProxy);
+		disposal.add(disposeProxy);
+	}
 
-	// Forward initial attributes on `elementA` to `elementB` attributes.
-	whitelist.attributes.forEach((attrName) => {
-		if (elementA.hasAttribute(attrName)) {
-			const attrValue = /** @type {string} */ (elementA.getAttribute(attrName));
-			elementB.setAttribute(attrName, attrValue);
-		}
-	});
-
-	// Observe attribute changes and forward to `elementB`.
-	const observer = new MutationObserver((mutations) => {
-		for (const mutation of mutations) {
-			if (mutation.type === 'attributes') {
-				const attrName = /** @type {string} **/ (mutation.attributeName);
+	if (!isUndefined(whitelist.attributes)) {
+		// Forward initial attributes on `elementA` to `elementB` attributes.
+		whitelist.attributes.forEach((attrName) => {
+			if (elementA.hasAttribute(attrName)) {
 				const attrValue = /** @type {string} */ (
 					elementA.getAttribute(attrName)
 				);
 				elementB.setAttribute(attrName, attrValue);
 			}
-		}
-	});
+		});
 
-	observer.observe(elementA, {
-		attributeFilter: Array.from(whitelist.attributes)
-	});
+		// Observe attribute changes and forward to `elementB`.
+		const observer = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (mutation.type === 'attributes') {
+					const attrName = /** @type {string} **/ (mutation.attributeName);
+					const attrValue = /** @type {string} */ (
+						elementA.getAttribute(attrName)
+					);
+					elementB.setAttribute(attrName, attrValue);
+				}
+			}
+		});
 
-	disposal.add(() => observer.disconnect());
+		observer.observe(elementA, {
+			attributeFilter: Array.from(whitelist.attributes)
+		});
+
+		disposal.add(() => observer.disconnect());
+	}
 
 	// Listen to dispatched events on `elementB` and forward them.
-	Array.from(whitelist.events)
-		.map((eventType) =>
-			listen(elementB, eventType, (e) => {
-				redispatchNativeEvent(elementA, e);
-			})
-		)
-		.forEach((dispose) => {
-			disposal.add(dispose);
-		});
+	if (!isUndefined(whitelist.events)) {
+		Array.from(whitelist.events)
+			.map((eventType) =>
+				listen(elementB, eventType, (e) => {
+					redispatchNativeEvent(elementA, e);
+				})
+			)
+			.forEach((dispose) => {
+				disposal.add(dispose);
+			});
+	}
 
 	return () => {
 		disposal.empty();
