@@ -73,16 +73,6 @@ describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 			provider.remove();
 			expect(controller.mediaProvider).to.be.undefined;
 		});
-
-		it('should bridge controller to provider', async function () {
-			const { controller, provider } = await buildMediaFixture();
-
-			const playSpy = spy(provider, 'play');
-
-			/** @type {any} */ (controller).play();
-
-			expect(playSpy).to.have.been.called;
-		});
 	});
 
 	describe('media requests', function () {

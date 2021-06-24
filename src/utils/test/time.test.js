@@ -9,7 +9,7 @@ import {
 } from '../time.js';
 
 describe('utils/time', function () {
-	describe('padNumberWithZeroes', function () {
+	describe(padNumberWithZeroes.name, function () {
 		it('should pad correctly', function () {
 			expect(padNumberWithZeroes(1, 0)).to.equal('1');
 			expect(padNumberWithZeroes(1, 1)).to.equal('1');
@@ -21,7 +21,7 @@ describe('utils/time', function () {
 		});
 	});
 
-	describe('parseTime', function () {
+	describe(parseTime.name, function () {
 		it('parses hours correctly', function () {
 			expect(parseTime(3599).hours).to.equal(0);
 			expect(parseTime(3600).hours).to.equal(1);
@@ -52,7 +52,7 @@ describe('utils/time', function () {
 		});
 	});
 
-	describe('formatTime', function () {
+	describe(formatTime.name, function () {
 		it('adds a leading zero to seconds if seconds < 10', function () {
 			expect(formatTime(0)).to.equal('0:00');
 			expect(formatTime(1)).to.equal('0:01');
@@ -91,7 +91,7 @@ describe('utils/time', function () {
 		});
 	});
 
-	describe('formatSpokenTime', function () {
+	describe(formatSpokenTime.name, function () {
 		it('should format spoken time correctly', function () {
 			expect(formatSpokenTime(0)).to.equal('0 seconds');
 			expect(formatSpokenTime(59)).to.equal('59 seconds');
@@ -106,7 +106,7 @@ describe('utils/time', function () {
 		});
 	});
 
-	describe('formatHtml5Duration', function () {
+	describe(formatHtml5Duration.name, function () {
 		it('formats PT datetime format correctly', function () {
 			expect(formatHtml5Duration(0)).to.equal('PT0H0M0S');
 			expect(formatHtml5Duration(1)).to.equal('PT0H0M1S');

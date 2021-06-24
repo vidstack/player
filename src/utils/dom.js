@@ -128,28 +128,41 @@ export const willElementsCollide = (
 };
 
 /**
- * Proxy unknown operations on `objA` to `objB`.
+ * Proxy whitelisted properties on `objA` to `objB`.
  *
  * @param {object} objA
  * @param {object} objB
- * @returns {(() => void)} Cleanup function.
+ * @param {Set<string | symbol>} whitelist
+ * @returns {(() => void)} Cleanup function to remove proxy.
  */
-export function proxyUnknownOperations(objA, objB) {
+export function proxyProperties(objA, objB, whitelist) {
 	const proto = Object.getPrototypeOf(objA);
 	const newProto = Object.create(proto);
+
+	function warnIfTargetDeclaredProp(target, prop) {
+		if (Reflect.has(target, prop)) {
+			const targetName = target.constructor.name;
+			const proxyName = objB.constructor?.name || objB.name;
+			console.warn(
+				`[vds]: ${targetName} declared a property [\`${prop}\`] that is being proxied to ${proxyName}.`
+			);
+		}
+	}
 
 	Object.setPrototypeOf(
 		objA,
 		new Proxy(newProto, {
 			get(target, prop) {
-				if (!(prop in objA) && prop in objB) {
+				if (whitelist.has(prop)) {
+					warnIfTargetDeclaredProp(target, prop);
 					return Reflect.get(objB, prop, objB);
 				}
 
 				return Reflect.get(target, prop, objA);
 			},
 			set(target, prop, value) {
-				if (!(prop in objA) && prop in objB) {
+				if (whitelist.has(prop)) {
+					warnIfTargetDeclaredProp(target, prop);
 					return Reflect.set(objB, prop, value, objB);
 				}
 
@@ -164,45 +177,36 @@ export function proxyUnknownOperations(objA, objB) {
 }
 
 /**
+ * @typedef {{
+ *   attributes: Set<string>;
+ *   events: Set<string>;
+ *   methods: Set<string>;
+ *   properties: Set<string>;
+ * }} ElementBridgeWhitelist
+ */
+
+/**
  * Creates a bridge from `elementA` to `elementB`.
  *
  * @param {HTMLElement} elementA
  * @param {HTMLElement} elementB
- * @returns {(() => void)} Cleanup function.
+ * @param {ElementBridgeWhitelist} whitelist
+ * @returns {(() => void)} Cleanup function to destroy bridge.
  */
-export function bridgeElements(elementA, elementB) {
+export function bridgeElements(elementA, elementB, whitelist) {
 	const disposal = new DisposalBin();
 
-	/** @type {Set<string>} */
-	const attributeNames = new Set();
+	// Proxy propeties/methods on `elementA` to `elementB`.
+	const disposeProxy = proxyProperties(
+		elementA,
+		elementB,
+		new Set([...whitelist.properties, ...whitelist.methods])
+	);
 
-	/** @type {Set<string>} */
-	const eventTypes = new Set();
-
-	// Proxy unknown operations on `elementA` to `elementB`.
-	const disposeProxy = proxyUnknownOperations(elementA, elementB);
 	disposal.add(disposeProxy);
 
-	// Walk proto chain and collect attributes + events.
-	let ctor = elementB.constructor;
-	while (ctor) {
-		const props = /** @type {any} */ (ctor).properties ?? {};
-		Object.keys(props)
-			.map((prop) => props[prop].attribute ?? prop.toLowerCase())
-			.forEach((attr) => {
-				attributeNames.add(attr);
-			});
-
-		const events = /** @type {any} */ (ctor).events ?? [];
-		events.forEach((eventType) => {
-			eventTypes.add(eventType);
-		});
-
-		ctor = Object.getPrototypeOf(ctor);
-	}
-
 	// Forward initial attributes on `elementA` to `elementB` attributes.
-	attributeNames.forEach((attrName) => {
+	whitelist.attributes.forEach((attrName) => {
 		if (elementA.hasAttribute(attrName)) {
 			const attrValue = /** @type {string} */ (elementA.getAttribute(attrName));
 			elementB.setAttribute(attrName, attrValue);
@@ -222,11 +226,14 @@ export function bridgeElements(elementA, elementB) {
 		}
 	});
 
-	observer.observe(elementA, { attributeFilter: Array.from(attributeNames) });
+	observer.observe(elementA, {
+		attributeFilter: Array.from(whitelist.attributes)
+	});
+
 	disposal.add(() => observer.disconnect());
 
 	// Listen to dispatched events on `elementB` and forward them.
-	Array.from(eventTypes)
+	Array.from(whitelist.events)
 		.map((eventType) =>
 			listen(elementB, eventType, (e) => {
 				redispatchNativeEvent(elementA, e);

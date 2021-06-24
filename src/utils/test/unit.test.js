@@ -16,7 +16,7 @@ import {
 } from '../unit.js';
 
 describe('utils/unit', function () {
-	describe('isArray', function () {
+	describe(isArray.name, function () {
 		it('should return true only if given an array', function () {
 			expect(isArray([])).to.be.true;
 			expect(isArray('')).to.be.false;
@@ -29,7 +29,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('isBoolean', function () {
+	describe(isBoolean.name, function () {
 		it('should return true only if given a boolean', function () {
 			expect(isBoolean(true)).to.be.true;
 			expect(isBoolean(false)).to.be.true;
@@ -43,7 +43,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('isObject', function () {
+	describe(isObject.name, function () {
 		it('should return true only if given an object', function () {
 			expect(isObject({})).to.be.true;
 			expect(isObject('')).to.be.false;
@@ -56,7 +56,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('isString', function () {
+	describe(isString.name, function () {
 		it('should return true only if given a string', function () {
 			expect(isString('')).to.be.true;
 			expect(isString({})).to.be.false;
@@ -69,7 +69,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('isNumber', function () {
+	describe(isNumber.name, function () {
 		it('should return true only if given a number', function () {
 			expect(isNumber(0)).to.be.true;
 			expect(isNumber('')).to.be.false;
@@ -82,7 +82,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('isFunction', function () {
+	describe(isFunction.name, function () {
 		it('should return true only if given a function', function () {
 			expect(isFunction(noop)).to.be.true;
 			expect(isFunction(0)).to.be.false;
@@ -95,7 +95,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('isNull', function () {
+	describe(isNull.name, function () {
 		it('should return true only if given null', function () {
 			expect(isNull(null)).to.be.true;
 			expect(isNull(noop)).to.be.false;
@@ -108,7 +108,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('isUndefined', function () {
+	describe(isUndefined.name, function () {
 		it('should return true only if given undefined', function () {
 			expect(isUndefined(undefined)).to.be.true;
 			expect(isUndefined(null)).to.be.false;
@@ -123,7 +123,7 @@ describe('utils/unit', function () {
 
 	class Mock {}
 
-	describe('getConstructor', function () {
+	describe(getConstructor.name, function () {
 		it('should return false given null or undefined', function () {
 			expect(getConstructor(null)).to.be.undefined;
 			expect(getConstructor(undefined)).to.be.undefined;
@@ -135,7 +135,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('isInstanceOf`', function () {
+	describe(isInstanceOf.name, function () {
 		it('should return true given value is a instance of class', function () {
 			expect(isInstanceOf(new Mock(), Mock)).to.be.true;
 		});
@@ -152,7 +152,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('isPrototypeOf', function () {
+	describe(isPrototypeOf.name, function () {
 		it('should return true given value is prototype of object', function () {
 			class MockTwo extends Mock {}
 			expect(isPrototypeOf(new MockTwo(), Mock)).to.be.true;
@@ -164,7 +164,7 @@ describe('utils/unit', function () {
 		});
 	});
 
-	describe('noop', function () {
+	describe(noop.name, function () {
 		it('should be defined', function () {
 			expect(noop).to.exist;
 			expect(isFunction(noop)).to.be.true;

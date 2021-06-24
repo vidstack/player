@@ -2,9 +2,8 @@ import { html } from 'lit';
 
 import { provideContextRecord } from '../../shared/context/index.js';
 import { VdsElement } from '../../shared/elements/index.js';
-import { bindEventListeners, DisposalBin } from '../../shared/events/index.js';
+import { bindEventListeners } from '../../shared/events/index.js';
 import { storybookAction } from '../../shared/storybook/index.js';
-import { bridgeElements } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
 import {
 	MediaContainerElement,
@@ -84,7 +83,6 @@ export class MediaControllerElement extends VdsElement {
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		this.destroyMediaProviderBridge();
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -198,47 +196,18 @@ export class MediaControllerElement extends VdsElement {
 	handleMediaProviderConnect(event) {
 		const { provider, onDisconnect } = event.detail;
 		this._mediaProvider = provider;
-		this.buildMediaProviderBridge();
 		/**
 		 * Using type `any` to bypass readonly `context`. We are injecting our context object into the
 		 * `MediaProviderElement` so it can be managed by it.
 		 */
 		/** @type {any} */ (provider).context = this.context;
 		onDisconnect(() => {
-			this.destroyMediaProviderBridge();
 			/**
 			 * Using type `any` to bypass readonly `context`. Detach the media context.
 			 */
 			/** @type {any} */ (provider).context = createMediaContextRecord();
 			this._mediaProvider = undefined;
 		});
-	}
-
-	/**
-	 * @protected
-	 * @readonly
-	 */
-	mediaProviderBridgeDisposal = new DisposalBin();
-
-	/**
-	 * Bridges attributes, events and operations across the media controller to the connected
-	 * media provider.
-	 *
-	 * @protected
-	 * @returns {void}
-	 */
-	buildMediaProviderBridge() {
-		if (isNil(this.mediaProvider)) return;
-		const destroyBridge = bridgeElements(this, this.mediaProvider);
-		this.mediaProviderBridgeDisposal.add(destroyBridge);
-	}
-
-	/**
-	 * @protected
-	 * @returns {void}
-	 */
-	destroyMediaProviderBridge() {
-		this.mediaProviderBridgeDisposal.empty();
 	}
 
 	// -------------------------------------------------------------------------------------------
