@@ -130,9 +130,11 @@ export const willElementsCollide = (
 /**
  * Proxy whitelisted properties on `objA` to `objB`.
  *
- * @param {object} objA
- * @param {object} objB
- * @param {Set<string | symbol>} whitelist
+ * @template T
+ * @template R
+ * @param {T & object} objA
+ * @param {R & object} objB
+ * @param {Set<keyof R>} whitelist
  * @returns {(() => void)} Cleanup function to remove proxy.
  */
 export function proxyProperties(objA, objB, whitelist) {
@@ -157,14 +159,14 @@ export function proxyProperties(objA, objB, whitelist) {
 		objA,
 		new Proxy(newProto, {
 			get(target, prop) {
-				if (whitelist.has(prop)) {
+				if (whitelist.has(/** @type {any} */ (prop))) {
 					return Reflect.get(objB, prop, objB);
 				}
 
 				return Reflect.get(target, prop, objA);
 			},
 			set(target, prop, value) {
-				if (whitelist.has(prop)) {
+				if (whitelist.has(/** @type {any} */ (prop))) {
 					return Reflect.set(objB, prop, value, objB);
 				}
 
@@ -179,19 +181,22 @@ export function proxyProperties(objA, objB, whitelist) {
 }
 
 /**
+ * @template Properties
  * @typedef {{
  *   attributes?: Set<string>;
+ *   properties?: Set<Properties>;
  *   events?: Set<string>;
- *   properties?: Set<string>;
  * }} ElementBridgeWhitelist
  */
 
 /**
  * Creates a bridge from `elementA` to `elementB`.
  *
- * @param {HTMLElement} elementA
- * @param {HTMLElement} elementB
- * @param {ElementBridgeWhitelist} whitelist
+ * @template {HTMLElement} T
+ * @template {HTMLElement} R
+ * @param {T} elementA
+ * @param {R} elementB
+ * @param {ElementBridgeWhitelist<keyof R>} whitelist
  * @returns {(() => void)} Cleanup function to destroy bridge.
  */
 export function bridgeElements(elementA, elementB, whitelist) {
