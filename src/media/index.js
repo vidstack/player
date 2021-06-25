@@ -6,6 +6,7 @@ export * from './media.events.js';
 export * from './media-request.events.js';
 export * from './MediaRemoteControl.js';
 export * from './MediaType.js';
+export * from './plugins/index.js';
 export * from './provider/index.js';
 export * from './time-ranges.js';
 export * from './ui/index.js';

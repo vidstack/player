@@ -2,7 +2,12 @@ import { VdsElement } from '../VdsElement.js';
 import { ManagedElementConnectEvent } from './events.js';
 
 export class ManagedElement extends VdsElement {
-	static ScopedManagedElementConnectEvent = ManagedElementConnectEvent;
+	/**
+	 * @protected
+	 */
+	static get ScopedManagedElementConnectEvent() {
+		return ManagedElementConnectEvent;
+	}
 
 	connectedCallback() {
 		super.connectedCallback();

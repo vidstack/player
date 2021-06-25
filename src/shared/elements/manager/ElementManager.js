@@ -15,24 +15,11 @@ import { ManagedElement } from './ManagedElement.js';
  * @implements {CanManageElements}
  */
 export class ElementManager {
-	static ScopedManagedElementConnectedEvent = ManagedElementConnectEvent;
-
-	static createScopedManager() {
-		// Privately declared to uniquely identify elements with a specific manager.
-		class ScopedManagerElementConnectEvent extends ManagedElementConnectEvent {}
-		class ScopedElementManager extends ElementManager {}
-		class ScopedManagedElement extends ManagedElement {}
-
-		ScopedElementManager.ScopedManagedElementConnectEvent =
-			ScopedManagerElementConnectEvent;
-
-		ScopedManagedElement.ScopedManagedElementConnectEvent =
-			ScopedManagerElementConnectEvent;
-
-		return {
-			ElementManager: ScopedElementManager,
-			ManagedElement: ScopedManagedElement
-		};
+	/**
+	 * @protected
+	 */
+	static get ScopedManagedElementConnectEvent() {
+		return ManagedElementConnectEvent;
 	}
 
 	/**
@@ -99,7 +86,7 @@ export class ElementManager {
 	 */
 	validateConnectedEvent(event) {
 		const ctor = /** @type {typeof ElementManager} */ (this.constructor);
-		const ScopedEvent = ctor.ScopedManagedElementConnectedEvent;
+		const ScopedEvent = ctor.ScopedManagedElementConnectEvent;
 		return event instanceof ScopedEvent;
 	}
 

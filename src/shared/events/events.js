@@ -57,11 +57,11 @@ export class VdsCustomEvent extends CustomEvent {
 }
 
 /**
- * @param {HTMLElement} el
+ * @param {EventTarget} target
  * @param {Event} originalEvent
  * @returns {void}
  */
-export function redispatchNativeEvent(el, originalEvent) {
+export function redispatchNativeEvent(target, originalEvent) {
 	const event = new VdsCustomEvent(originalEvent.type, {
 		originalEvent,
 		bubbles: originalEvent.bubbles,
@@ -72,7 +72,7 @@ export function redispatchNativeEvent(el, originalEvent) {
 	const constructor = event.constructor;
 	/** @type {any} */ (constructor).TYPE = originalEvent.type;
 
-	el.dispatchEvent(event);
+	target.dispatchEvent(event);
 }
 
 /**
