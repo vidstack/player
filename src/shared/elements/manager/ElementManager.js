@@ -1,42 +1,6 @@
-import { DisposalBin, listen, VdsCustomEvent } from '../../events/events.js';
-
-// -------------------------------------------------------------------------------------------
-// Events
-// -------------------------------------------------------------------------------------------
-
-/**
- * @template {Element} ManagedElement
- * @typedef {{
- *  element: ManagedElement;
- *  onDisconnect: (callback: () => void) => void;
- * }} ManagedElementConnectedEventDetail
- */
-
-/**
- * @typedef {{
- *  [ManagedElementConnectedEvent.TYPE]: ManagedElementConnectedEvent<any>
- * }} ElementManagerEvents
- */
-
-/**
- * @template {Element} ManagedElement
- * @extends VdsCustomEvent<ManagedElementConnectedEventDetail<ManagedElement>>
- */
-export class ManagedElementConnectedEvent extends VdsCustomEvent {
-	/** @readonly */
-	static TYPE = 'vds-managed-element-connected';
-
-	/**
-	 * @param {import('../../events').VdsEventInit<ManagedElementConnectedEventDetail<ManagedElement>>} eventInit
-	 */
-	constructor(eventInit) {
-		super(ManagedElementConnectedEvent.TYPE, eventInit);
-	}
-}
-
-// -------------------------------------------------------------------------------------------
-// ElementManager
-// -------------------------------------------------------------------------------------------
+import { DisposalBin, listen } from '../../events/index.js';
+import { ManagedElementConnectEvent } from './events.js';
+import { ManagedElement } from './ManagedElement.js';
 
 /**
  * @typedef {import('lit').ReactiveController} CanManageElements
@@ -47,14 +11,34 @@ export class ManagedElementConnectedEvent extends VdsCustomEvent {
  */
 
 /**
- * @template {Element} ManagedElement
+ * @template {ManagedElement} Element
  * @implements {CanManageElements}
  */
 export class ElementManager {
+	static ScopedManagedElementConnectedEvent = ManagedElementConnectEvent;
+
+	static createScopedManager() {
+		// Privately declared to uniquely identify elements with a specific manager.
+		class ScopedManagerElementConnectEvent extends ManagedElementConnectEvent {}
+		class ScopedElementManager extends ElementManager {}
+		class ScopedManagedElement extends ManagedElement {}
+
+		ScopedElementManager.ScopedManagedElementConnectEvent =
+			ScopedManagerElementConnectEvent;
+
+		ScopedManagedElement.ScopedManagedElementConnectEvent =
+			ScopedManagerElementConnectEvent;
+
+		return {
+			ElementManager: ScopedElementManager,
+			ManagedElement: ScopedManagedElement
+		};
+	}
+
 	/**
 	 * @protected
 	 * @readonly
-	 * @type {Omit<Set<ManagedElement>, 'clear'>}
+	 * @type {Omit<Set<Element>, 'clear'>}
 	 */
 	managedElements = new Set();
 
@@ -82,7 +66,7 @@ export class ElementManager {
 		this.disconnectDisposal.add(
 			listen(
 				this.host,
-				ManagedElementConnectedEvent.TYPE,
+				ManagedElementConnectEvent.TYPE,
 				this.handleElementConnected.bind(this)
 			)
 		);
@@ -94,7 +78,7 @@ export class ElementManager {
 	}
 
 	/**
-	 * @param {ManagedElementConnectedEvent<ManagedElement>} event
+	 * @param {ManagedElementConnectEvent<Element>} event
 	 * @returns {void}
 	 */
 	handleElementConnected(event) {
@@ -110,15 +94,17 @@ export class ElementManager {
 	}
 
 	/**
-	 * @param {ManagedElementConnectedEvent<ManagedElement>} event
+	 * @param {ManagedElementConnectEvent<Element>} event
 	 * @returns {boolean}
 	 */
 	validateConnectedEvent(event) {
-		return true;
+		const ctor = /** @type {typeof ElementManager} */ (this.constructor);
+		const ScopedEvent = ctor.ScopedManagedElementConnectedEvent;
+		return event instanceof ScopedEvent;
 	}
 
 	/**
-	 * @param {ManagedElement} element
+	 * @param {Element} element
 	 * @returns {void}
 	 */
 	addManagedElement(element) {
@@ -128,7 +114,7 @@ export class ElementManager {
 	}
 
 	/**
-	 * @param {ManagedElement} element
+	 * @param {Element} element
 	 * @returns {void}
 	 */
 	removeManagedElement(element) {
@@ -138,7 +124,7 @@ export class ElementManager {
 	}
 
 	/**
-	 * @param {ManagedElement} element
+	 * @param {Element} element
 	 * @returns {void}
 	 */
 	handleManagedElementAdded(element) {
@@ -146,7 +132,7 @@ export class ElementManager {
 	}
 
 	/**
-	 * @param {ManagedElement} element
+	 * @param {Element} element
 	 * @returns {void}
 	 */
 	handleManagedElementRemoved(element) {
