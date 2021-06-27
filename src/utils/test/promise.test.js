@@ -3,7 +3,7 @@ import { expect } from '@open-wc/testing';
 import { deferredPromise } from '../promise.js';
 
 describe('utils/promise', function () {
-	describe('deferredPromise', function () {
+	describe(deferredPromise.name, function () {
 		it('should resolve', function (done) {
 			const deferred = deferredPromise();
 

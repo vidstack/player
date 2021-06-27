@@ -118,6 +118,15 @@ export class SliderElement extends WithFocus(VdsElement) {
 		return ['root', 'thumb', 'track', 'track-fill'];
 	}
 
+	/** @type {string[]} */
+	static get events() {
+		return [
+			VdsSliderDragEndEvent.TYPE,
+			VdsSliderDragStartEvent.TYPE,
+			VdsSliderValueChangeEvent.TYPE
+		];
+	}
+
 	constructor() {
 		super();
 

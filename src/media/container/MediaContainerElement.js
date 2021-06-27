@@ -9,8 +9,10 @@ import { ScreenOrientationController } from '../../shared/screen-orientation/ind
 import { storybookAction } from '../../shared/storybook/helpers.js';
 import { StorybookControlType } from '../../shared/storybook/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
+import { getAllObjectPropertyNames } from '../../utils/object.js';
 import { isNil, isString, isUndefined } from '../../utils/unit.js';
 import { mediaContext } from '../media.context.js';
+import { MediaPlugin } from '../plugin/index.js';
 import { MediaProviderElement } from '../provider/index.js';
 import { mediaContainerElementStyles } from './css.js';
 import { VdsMediaContainerConnectEvent } from './events.js';
@@ -60,6 +62,11 @@ export class MediaContainerElement extends VdsElement {
 	/** @type {string[]} */
 	static get parts() {
 		return ['root', 'media'];
+	}
+
+	/** @type {string[]} */
+	static get events() {
+		return [VdsMediaContainerConnectEvent.TYPE];
 	}
 
 	constructor() {
@@ -132,6 +139,19 @@ export class MediaContainerElement extends VdsElement {
 			})
 		);
 	}
+
+	// -------------------------------------------------------------------------------------------
+	// Plugin
+	// -------------------------------------------------------------------------------------------
+
+	/**
+	 * @protected
+	 * @readonly
+	 */
+	mediaPlugin = new MediaPlugin(this, {
+		bridgedAttributes: /** @type {any} */ (this.constructor).observedAttributes,
+		bridgedProperties: Array.from(getAllObjectPropertyNames(this, VdsElement))
+	});
 
 	// -------------------------------------------------------------------------------------------
 	// Render - Root

@@ -14,7 +14,7 @@ import {
 } from '../network.js';
 
 describe('utils/network', function () {
-	describe('tryParseJSON', function () {
+	describe(tryParseJSON.name, function () {
 		it('should return obj given valid JSON', function () {
 			const expected = { a: 'apples', b: 'bees', c: 'chicken' };
 			const result = tryParseJSON(JSON.stringify(expected));
@@ -27,7 +27,7 @@ describe('utils/network', function () {
 		});
 	});
 
-	describe('isObjOrJSON', function () {
+	describe(isObjOrJSON.name, function () {
 		it('should return true given an object', function () {
 			expect(isObjOrJSON({})).to.be.true;
 		});
@@ -45,7 +45,7 @@ describe('utils/network', function () {
 		});
 	});
 
-	describe('objOrParseJSON', function () {
+	describe(objOrParseJSON.name, function () {
 		it('should return immediately given an object', function () {
 			const expected = { a: 'apples', b: 'bees' };
 			expect(objOrParseJSON(expected)).to.eql(expected);
@@ -65,7 +65,7 @@ describe('utils/network', function () {
 		});
 	});
 
-	describe('decodeJSON', function () {
+	describe(decodeJSON.name, function () {
 		it('should return object given valid JSON', function () {
 			const expected = { a: 'apples', b: 'bees' };
 			expect(decodeJSON(JSON.stringify(expected))).to.eql(expected);
@@ -76,7 +76,7 @@ describe('utils/network', function () {
 		});
 	});
 
-	describe('tryDecodeURIComponent', function () {
+	describe(tryDecodeURIComponent.name, function () {
 		it('should return decoded component given valid component', function () {
 			expect(tryDecodeURIComponent('apple%40bees.com')).to.equal(
 				'apple@bees.com'
@@ -93,7 +93,7 @@ describe('utils/network', function () {
 		});
 	});
 
-	describe('parseQueryString', function () {
+	describe(parseQueryString.name, function () {
 		it('should return valid key/value map given query string', function () {
 			expect(parseQueryString('apples=1&apples=2&bees=wombo')).to.eql({
 				apples: ['1', '2'],
@@ -110,7 +110,7 @@ describe('utils/network', function () {
 		});
 	});
 
-	describe('serializeQueryString', function () {
+	describe(serializeQueryString.name, function () {
 		it('should serialize object into query string', function () {
 			expect(
 				serializeQueryString({
@@ -123,7 +123,7 @@ describe('utils/network', function () {
 		});
 	});
 
-	describe('prefetch', function () {
+	describe(preconnect.name, function () {
 		it('should append link to document head', function () {
 			const url = 'https://example.com';
 
@@ -143,7 +143,7 @@ describe('utils/network', function () {
 		});
 	});
 
-	describe('appendParamsToURL', function () {
+	describe(appendParamsToURL.name, function () {
 		it('should append param string as query string to url', function () {
 			expect(appendParamsToURL('https://example.com', 'param=1')).to.equal(
 				'https://example.com?param=1'
@@ -175,7 +175,7 @@ describe('utils/network', function () {
 		});
 	});
 
-	describe('decodeQueryString', function () {
+	describe(decodeQueryString.name, function () {
 		it('should return undefined given non-string', function () {
 			expect(decodeQueryString(/** @type {any} */ (100))).to.eql(undefined);
 		});

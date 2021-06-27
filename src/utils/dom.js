@@ -1,3 +1,9 @@
+import {
+	DisposalBin,
+	listen,
+	redispatchEvent
+} from '../shared/events/index.js';
+import { proxyProperties } from './object.js';
 import { IS_CLIENT } from './support.js';
 import { isUndefined } from './unit.js';
 
@@ -119,3 +125,85 @@ export const willElementsCollide = (
 		aRect.bottom + translateAy > bRect.top + translateBy
 	);
 };
+
+/**
+ * @template Properties
+ * @typedef {{
+ *   attributes?: Set<string>;
+ *   properties?: Set<Properties>;
+ *   events?: Set<string>;
+ * }} ElementBridgeWhitelist
+ */
+
+/**
+ * Creates a bridge from `elementA` to `elementB`.
+ *
+ * @template {Element} T
+ * @template {Element} R
+ * @param {T} elementA
+ * @param {R} elementB
+ * @param {ElementBridgeWhitelist<keyof R>} whitelist
+ * @returns {(() => void)} Cleanup function to destroy bridge.
+ */
+export function bridgeElements(elementA, elementB, whitelist) {
+	const disposal = new DisposalBin();
+
+	// Proxy propeties/methods on `elementA` to `elementB`.
+	if (!isUndefined(whitelist.properties)) {
+		const disposeProxy = proxyProperties(
+			elementA,
+			elementB,
+			whitelist.properties
+		);
+
+		disposal.add(disposeProxy);
+	}
+
+	if (!isUndefined(whitelist.attributes)) {
+		// Forward initial attributes on `elementA` to `elementB`.
+		whitelist.attributes.forEach((attrName) => {
+			if (elementA.hasAttribute(attrName)) {
+				const attrValue = /** @type {string} */ (
+					elementA.getAttribute(attrName)
+				);
+				elementB.setAttribute(attrName, attrValue);
+			}
+		});
+
+		// Observe attribute changes and forward to `elementB`.
+		const observer = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (mutation.type === 'attributes') {
+					const attrName = /** @type {string} **/ (mutation.attributeName);
+					const attrValue = /** @type {string} */ (
+						elementA.getAttribute(attrName)
+					);
+					elementB.setAttribute(attrName, attrValue);
+				}
+			}
+		});
+
+		observer.observe(elementA, {
+			attributeFilter: Array.from(whitelist.attributes)
+		});
+
+		disposal.add(() => observer.disconnect());
+	}
+
+	// Listen to dispatched events on `elementB` and forward them.
+	if (!isUndefined(whitelist.events)) {
+		Array.from(whitelist.events)
+			.map((eventType) =>
+				listen(elementB, eventType, (event) => {
+					redispatchEvent(elementA, event);
+				})
+			)
+			.forEach((dispose) => {
+				disposal.add(dispose);
+			});
+	}
+
+	return () => {
+		disposal.empty();
+	};
+}

@@ -148,6 +148,15 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 		return ['root', 'slider', 'progress', ...sliderExportParts];
 	}
 
+	/** @type {string[]} */
+	static get events() {
+		return [
+			VdsScrubberPreviewHideEvent.TYPE,
+			VdsScrubberPreviewShowEvent.TYPE,
+			VdsScrubberPreviewTimeUpdateEvent.TYPE
+		];
+	}
+
 	constructor() {
 		super();
 

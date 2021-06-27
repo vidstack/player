@@ -57,22 +57,20 @@ export class VdsCustomEvent extends CustomEvent {
 }
 
 /**
- * @param {HTMLElement} el
- * @param {Event} originalEvent
+ * @param {EventTarget} target
+ * @param {Event | CustomEvent | VdsCustomEvent} event
  * @returns {void}
  */
-export function redispatchNativeEvent(el, originalEvent) {
-	const event = new VdsCustomEvent(originalEvent.type, {
-		originalEvent,
-		bubbles: originalEvent.bubbles,
-		cancelable: originalEvent.cancelable,
-		composed: originalEvent.composed
+export function redispatchEvent(target, event) {
+	const newEvent = new VdsCustomEvent(event.type, {
+		originalEvent: /** @type {VdsCustomEvent} */ (event).originalEvent ?? event,
+		detail: /** @type {CustomEvent} */ (event).detail,
+		bubbles: event.bubbles,
+		cancelable: event.cancelable,
+		composed: event.composed
 	});
 
-	const constructor = event.constructor;
-	/** @type {any} */ (constructor).TYPE = originalEvent.type;
-
-	el.dispatchEvent(event);
+	target.dispatchEvent(newEvent);
 }
 
 /**
@@ -105,24 +103,51 @@ export class DisposalBin {
 /**
  * Listens to an event on the given `target` and returns a cleanup function to stop listening.
  *
+ * @template {Event} ListenedEvent
  * @param {EventTarget} target - The target to listen for the events on.
  * @param {string} type - The name of the event to listen to.
- * @param {EventListenerOrEventListenerObject} listener - The function to be called when the event is fired.
+ * @param {(event: ListenedEvent) => void} listener - The function to be called when the event is fired.
  * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options] - Configures the event listener.
  * @returns {import('../types/utils').Unsubscribe}
  *
  * @example
- * ```tscript
- * const dispose = listen(window, 'resize', () => {});
+ * ```ts
+ * const disposeListener = listen(window, 'resize', () => {});
  *
  * // Stop listening.
- * dispose();
+ * disposeListener();
  * ```
  */
 export function listen(target, type, listener, options) {
-	target.addEventListener(type, listener, options);
+	target.addEventListener(
+		type,
+		/** @type {EventListener} */ (listener),
+		options
+	);
+
 	return () => {
-		target.removeEventListener(type, listener, options);
+		target.removeEventListener(
+			type,
+			/** @type {EventListener} */ (listener),
+			options
+		);
+	};
+}
+
+/**
+ * Listens to an event on the given `target` and returns a cleanup function to stop listening.
+ *
+ * @template {keyof GlobalEventHandlersEventMap} EventType
+ * @param {EventTarget} target - The target to listen for the events on.
+ * @param {EventType} type - The name of the event to listen to.
+ * @param {(event: GlobalEventHandlersEventMap[EventType]) => void} listener - The function to be called when the event is fired.
+ * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options] - Configures the event listener.
+ * @returns {import('../types/utils').Unsubscribe}
+ */
+export function listenGlobalEvent(target, type, listener, options) {
+	target.addEventListener(type, /** @type {any} */ (listener), options);
+	return () => {
+		target.removeEventListener(type, /** @type {any} */ (listener), options);
 	};
 }
 

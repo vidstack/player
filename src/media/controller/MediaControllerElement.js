@@ -21,6 +21,7 @@ import {
 	VdsUnmuteRequestEvent,
 	VdsVolumeChangeRequestEvent
 } from '../media-request.events.js';
+import { MediaPluginManager } from '../plugin/index.js';
 import {
 	MediaProviderElement,
 	VdsMediaProviderConnectEvent
@@ -31,13 +32,18 @@ export const VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
 
 /**
  * The media controller acts as a message bus between the media provider and all other
- * components, such as UI components. The two primary responsibilities are:
+ * components, such as UI components. The main responsibilities are:
  *
  * - Provide the media context that is used to pass media state down to components (this
  * context is injected into and managed by the media provider).
  *
  * - Listen for media request events and fulfill them by calling the appropriate props/methods on
  * the current media provider.
+ *
+ * - Be the host for the plugins manager so that other elements can become plugins to extend
+ * its functionality. Attributes, properties (including methods), and events can be forwarded
+ * or "bridged" between the plugin and this controller. In other words, the media controller
+ * behaves as a proxy for media plugins which are other elements nested inside it.
  *
  * @tagname vds-media-controller
  *
@@ -63,7 +69,7 @@ export const VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  * ```
  */
 export class MediaControllerElement extends VdsElement {
-	/** @type {import('@lit/reactive-element').CSSResultGroup} */
+	/** @type {import('lit').CSSResultGroup} */
 	static get styles() {
 		return [mediaControllerStyles];
 	}
@@ -76,6 +82,20 @@ export class MediaControllerElement extends VdsElement {
 		super.connectedCallback();
 		this.bindEventListeners();
 	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+	}
+
+	// -------------------------------------------------------------------------------------------
+	// Plugin
+	// -------------------------------------------------------------------------------------------
+
+	/**
+	 * @protected
+	 * @readonly
+	 */
+	mediaPluginManager = new MediaPluginManager(this);
 
 	// -------------------------------------------------------------------------------------------
 	// Event Bindings
@@ -130,7 +150,7 @@ export class MediaControllerElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
-	 * @private
+	 * @protected
 	 * @type {MediaContainerElement | undefined}
 	 */
 	_mediaContainer;
@@ -139,7 +159,8 @@ export class MediaControllerElement extends VdsElement {
 	 * The current media container that belongs to this controller. Defaults to `undefined` if
 	 * there is none.
 	 *
-	 * @returns {MediaContainerElement | undefined}
+	 * @readonly
+	 * @type {MediaContainerElement | undefined}
 	 */
 	get mediaContainer() {
 		return this._mediaContainer;
@@ -151,11 +172,18 @@ export class MediaControllerElement extends VdsElement {
 	 * @returns {void}
 	 */
 	handleMediaContainerConnect(event) {
+		this.handleMediaContainerDisconnect();
 		const { container, onDisconnect } = event.detail;
 		this._mediaContainer = container;
-		onDisconnect(() => {
-			this._mediaContainer = undefined;
-		});
+		onDisconnect(this.handleMediaContainerDisconnect.bind(this));
+	}
+
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	handleMediaContainerDisconnect() {
+		this._mediaContainer = undefined;
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -163,7 +191,7 @@ export class MediaControllerElement extends VdsElement {
 	// -------------------------------------------------------------------------------------------
 
 	/**
-	 * @private
+	 * @protected
 	 * @type {MediaProviderElement | undefined}
 	 */
 	_mediaProvider;
@@ -172,6 +200,7 @@ export class MediaControllerElement extends VdsElement {
 	 * The current media provider that belongs to this controller. Defaults to `undefined` if there
 	 * is none.
 	 *
+	 * @readonly
 	 * @type {MediaProviderElement | undefined}
 	 */
 	get mediaProvider() {
@@ -184,17 +213,35 @@ export class MediaControllerElement extends VdsElement {
 	 * @returns {void}
 	 */
 	handleMediaProviderConnect(event) {
+		this.handleMediaProviderDisconnect();
+
+		// Ignore re-dispatched events.
+		if (isNil(event.detail?.provider)) return;
+
 		const { provider, onDisconnect } = event.detail;
 		this._mediaProvider = provider;
-		// Bypass readonly `context`.
-		// We are injecting our context object into the `MediaProviderElement` so it can be managed by it.
-		/** @type {any} */ (this._mediaProvider).context = this.context;
-		onDisconnect(() => {
-			// Bypass readonly `context`.
-			/** @type {any} */ (this._mediaProvider).context =
+		/**
+		 * Using type `any` to bypass readonly `context`. We are injecting our context object into the
+		 * `MediaProviderElement` so it can be managed by it.
+		 */
+		/** @type {any} */ (provider).context = this.context;
+		onDisconnect(this.handleMediaProviderDisconnect.bind(this));
+	}
+
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	handleMediaProviderDisconnect() {
+		if (!isNil(this.mediaProvider)) {
+			/**
+			 * Using type `any` to bypass readonly `context`. Detach the media context.
+			 */
+			/** @type {any} */ (this.mediaProvider).context =
 				createMediaContextRecord();
-			this._mediaProvider = undefined;
-		});
+		}
+
+		this._mediaProvider = undefined;
 	}
 
 	// -------------------------------------------------------------------------------------------

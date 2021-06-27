@@ -27,7 +27,7 @@ import {
 	VdsVolumeChangeEvent,
 	VdsWaitingEvent
 } from '../../media/index.js';
-import { listen, redispatchNativeEvent } from '../../shared/events/index.js';
+import { listen, redispatchEvent } from '../../shared/events/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
 import { IS_SAFARI } from '../../utils/support.js';
 import { isNil, isNumber, isUndefined } from '../../utils/unit.js';
@@ -48,6 +48,35 @@ import { MediaReadyState } from './MediaReadyState.js';
  * @slot Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
 export class Html5MediaElement extends MediaProviderElement {
+	/** @type {string[]} */
+	static get events() {
+		return [
+			'abort',
+			'canplay',
+			'canplaythrough',
+			'durationchange',
+			'emptied',
+			'ended',
+			'error',
+			'loadeddata',
+			'loadedmetadata',
+			'loadstart',
+			'pause',
+			'play',
+			'playing',
+			'progress',
+			'ratechange',
+			'seeked',
+			'seeking',
+			'stalled',
+			'suspend',
+			'timeupdate',
+			'volumechange',
+			'waiting',
+			...super.events
+		];
+	}
+
 	constructor() {
 		super();
 
@@ -302,7 +331,7 @@ export class Html5MediaElement extends MediaProviderElement {
 				listen(this.mediaElement, type, (e) => {
 					handler(e);
 					// re-dispatch native event for spec-compliance.
-					redispatchNativeEvent(this, e);
+					redispatchEvent(this, e);
 				})
 			);
 		});
