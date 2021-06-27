@@ -1,4 +1,4 @@
 import { safelyDefineCustomElement } from '../../utils/dom.js';
-import { HlsElement, VDS_HLS_ELEMENT_TAG_NAME } from './HlsElement.js';
+import { HLS_ELEMENT_TAG_NAME, HlsElement } from './HlsElement.js';
 
-safelyDefineCustomElement(VDS_HLS_ELEMENT_TAG_NAME, HlsElement);
+safelyDefineCustomElement(HLS_ELEMENT_TAG_NAME, HlsElement);

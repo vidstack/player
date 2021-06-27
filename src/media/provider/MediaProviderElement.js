@@ -13,35 +13,35 @@ import { getAllObjectPropertyNames } from '../../utils/object.js';
 import { CanPlay } from '../CanPlay.js';
 import { createMediaContextRecord, mediaContext } from '../media.context.js';
 import {
-  VdsAbortEvent,
-  VdsCanPlayEvent,
-  VdsCanPlayThroughEvent,
-  VdsDurationChangeEvent,
-  VdsEmptiedEvent,
-  VdsEndedEvent,
-  VdsErrorEvent,
-  VdsFullscreenChangeEvent,
-  VdsLoadedDataEvent,
-  VdsLoadedMetadataEvent,
-  VdsLoadStartEvent,
-  VdsMediaTypeChangeEvent,
-  VdsPauseEvent,
-  VdsPlayEvent,
-  VdsPlayingEvent,
-  VdsProgressEvent,
-  VdsReplayEvent,
-  VdsSeekedEvent,
-  VdsSeekingEvent,
-  VdsStalledEvent,
-  VdsStartedEvent,
-  VdsSuspendEvent,
-  VdsTimeUpdateEvent,
-  VdsViewTypeChangeEvent,
-  VdsVolumeChangeEvent,
-  VdsWaitingEvent
+  AbortEvent,
+  CanPlayEvent,
+  CanPlayThroughEvent,
+  DurationChangeEvent,
+  EmptiedEvent,
+  EndedEvent,
+  ErrorEvent,
+  FullscreenChangeEvent,
+  LoadedDataEvent,
+  LoadedMetadataEvent,
+  LoadStartEvent,
+  MediaTypeChangeEvent,
+  PauseEvent,
+  PlayEvent,
+  PlayingEvent,
+  ProgressEvent,
+  ReplayEvent,
+  SeekedEvent,
+  SeekingEvent,
+  StalledEvent,
+  StartedEvent,
+  SuspendEvent,
+  TimeUpdateEvent,
+  ViewTypeChangeEvent,
+  VolumeChangeEvent,
+  WaitingEvent
 } from '../media.events.js';
 import { MediaPlugin } from '../plugin/index.js';
-import { VdsMediaProviderConnectEvent } from './events.js';
+import { MediaProviderConnectEvent } from './events.js';
 
 /** @typedef {import('./types').MediaProvider} IMediaProvider */
 
@@ -55,33 +55,33 @@ export class MediaProviderElement extends VdsElement {
   /** @type {string[]} */
   static get events() {
     return [
-      VdsAbortEvent.TYPE,
-      VdsCanPlayEvent.TYPE,
-      VdsCanPlayThroughEvent.TYPE,
-      VdsDurationChangeEvent.TYPE,
-      VdsEmptiedEvent.TYPE,
-      VdsEndedEvent.TYPE,
-      VdsErrorEvent.TYPE,
-      VdsFullscreenChangeEvent.TYPE,
-      VdsLoadedDataEvent.TYPE,
-      VdsLoadedMetadataEvent.TYPE,
-      VdsLoadStartEvent.TYPE,
-      VdsMediaTypeChangeEvent.TYPE,
-      VdsPauseEvent.TYPE,
-      VdsPlayEvent.TYPE,
-      VdsPlayingEvent.TYPE,
-      VdsProgressEvent.TYPE,
-      VdsReplayEvent.TYPE,
-      VdsSeekedEvent.TYPE,
-      VdsSeekingEvent.TYPE,
-      VdsStalledEvent.TYPE,
-      VdsStartedEvent.TYPE,
-      VdsSuspendEvent.TYPE,
-      VdsTimeUpdateEvent.TYPE,
-      VdsViewTypeChangeEvent.TYPE,
-      VdsVolumeChangeEvent.TYPE,
-      VdsWaitingEvent.TYPE,
-      VdsMediaProviderConnectEvent.TYPE
+      AbortEvent.TYPE,
+      CanPlayEvent.TYPE,
+      CanPlayThroughEvent.TYPE,
+      DurationChangeEvent.TYPE,
+      EmptiedEvent.TYPE,
+      EndedEvent.TYPE,
+      ErrorEvent.TYPE,
+      FullscreenChangeEvent.TYPE,
+      LoadedDataEvent.TYPE,
+      LoadedMetadataEvent.TYPE,
+      LoadStartEvent.TYPE,
+      MediaTypeChangeEvent.TYPE,
+      PauseEvent.TYPE,
+      PlayEvent.TYPE,
+      PlayingEvent.TYPE,
+      ProgressEvent.TYPE,
+      ReplayEvent.TYPE,
+      SeekedEvent.TYPE,
+      SeekingEvent.TYPE,
+      StalledEvent.TYPE,
+      StartedEvent.TYPE,
+      SuspendEvent.TYPE,
+      TimeUpdateEvent.TYPE,
+      ViewTypeChangeEvent.TYPE,
+      VolumeChangeEvent.TYPE,
+      WaitingEvent.TYPE,
+      MediaProviderConnectEvent.TYPE
     ];
   }
 
@@ -147,7 +147,7 @@ export class MediaProviderElement extends VdsElement {
    */
   dispatchDiscoveryEvent() {
     this.dispatchEvent(
-      new VdsMediaProviderConnectEvent({
+      new MediaProviderConnectEvent({
         detail: {
           provider: this,
           // Pipe callbacks into the disconnect disposal bin.
@@ -430,7 +430,7 @@ export class MediaProviderElement extends VdsElement {
   throwIfNotReadyForPlayback() {
     if (!this.canPlay) {
       throw Error(
-        `Media is not ready - wait for \`${VdsCanPlayEvent.TYPE}\` event.`
+        `Media is not ready - wait for \`${CanPlayEvent.TYPE}\` event.`
       );
     }
   }
@@ -459,9 +459,9 @@ export class MediaProviderElement extends VdsElement {
       this.context.ended = false;
     } else if (!this.context.ended && this.hasPlaybackRoughlyEnded()) {
       this.context.waiting = false;
-      this.dispatchEvent(new VdsSuspendEvent());
+      this.dispatchEvent(new SuspendEvent());
       this.context.ended = true;
-      this.dispatchEvent(new VdsEndedEvent());
+      this.dispatchEvent(new EndedEvent());
     }
   }
 
@@ -500,7 +500,7 @@ export class MediaProviderElement extends VdsElement {
    */
   handleMediaReady(event) {
     this.context.canPlay = true;
-    this.dispatchEvent(new VdsCanPlayEvent({ originalEvent: event }));
+    this.dispatchEvent(new CanPlayEvent({ originalEvent: event }));
     this.mediaRequestQueue.flush();
     this.mediaRequestQueue.serveImmediately = true;
   }
@@ -682,7 +682,7 @@ export class MediaProviderElement extends VdsElement {
       const isFullscreen = event.detail;
       this.context.fullscreen = isFullscreen;
       this.dispatchEvent(
-        new VdsFullscreenChangeEvent({
+        new FullscreenChangeEvent({
           detail: isFullscreen,
           originalEvent: event
         })
@@ -693,7 +693,7 @@ export class MediaProviderElement extends VdsElement {
       const error = event.detail;
       this.context.error = error;
       this.dispatchEvent(
-        new VdsErrorEvent({
+        new ErrorEvent({
           detail: error,
           originalEvent: event
         })
@@ -706,7 +706,7 @@ export class MediaProviderElement extends VdsElement {
  * @readonly
  * @type {import("./types").MediaProviderElementStorybookArgTypes}
  */
-export const VDS_MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
   autoplay: { control: false },
   controls: { control: StorybookControlType.Boolean, defaultValue: true },
@@ -717,32 +717,32 @@ export const VDS_MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   playsinline: { control: StorybookControlType.Boolean },
   volume: { control: StorybookControlType.Number, defaultValue: 0.5 },
   // Media Actions
-  onVdsAbort: storybookAction(VdsAbortEvent.TYPE),
-  onVdsCanPlay: storybookAction(VdsCanPlayEvent.TYPE),
-  onVdsCanPlayThrough: storybookAction(VdsCanPlayThroughEvent.TYPE),
-  onVdsDurationChange: storybookAction(VdsDurationChangeEvent.TYPE),
-  onVdsEmptied: storybookAction(VdsEmptiedEvent.TYPE),
-  onVdsEnded: storybookAction(VdsEndedEvent.TYPE),
-  onVdsError: storybookAction(VdsErrorEvent.TYPE),
-  onVdsFullscreenChange: storybookAction(VdsFullscreenChangeEvent.TYPE),
-  onVdsLoadedData: storybookAction(VdsLoadedDataEvent.TYPE),
-  onVdsLoadedMetadata: storybookAction(VdsLoadedMetadataEvent.TYPE),
-  onVdsLoadStart: storybookAction(VdsLoadStartEvent.TYPE),
-  onVdsMediaTypeChange: storybookAction(VdsMediaTypeChangeEvent.TYPE),
-  onVdsPause: storybookAction(VdsPauseEvent.TYPE),
-  onVdsPlay: storybookAction(VdsPlayEvent.TYPE),
-  onVdsPlaying: storybookAction(VdsPlayingEvent.TYPE),
-  onVdsProgress: storybookAction(VdsProgressEvent.TYPE),
-  onVdsReplay: storybookAction(VdsReplayEvent.TYPE),
-  onVdsSeeked: storybookAction(VdsSeekedEvent.TYPE),
-  onVdsSeeking: storybookAction(VdsSeekingEvent.TYPE),
-  onVdsStalled: storybookAction(VdsStalledEvent.TYPE),
-  onVdsStarted: storybookAction(VdsStartedEvent.TYPE),
-  onVdsSuspend: storybookAction(VdsSuspendEvent.TYPE),
-  onVdsTimeUpdate: storybookAction(VdsTimeUpdateEvent.TYPE),
-  onVdsViewTypeChange: storybookAction(VdsViewTypeChangeEvent.TYPE),
-  onVdsVolumeChange: storybookAction(VdsVolumeChangeEvent.TYPE),
-  onVdsWaiting: storybookAction(VdsWaitingEvent.TYPE),
+  onVdsAbort: storybookAction(AbortEvent.TYPE),
+  onVdsCanPlay: storybookAction(CanPlayEvent.TYPE),
+  onVdsCanPlayThrough: storybookAction(CanPlayThroughEvent.TYPE),
+  onVdsDurationChange: storybookAction(DurationChangeEvent.TYPE),
+  onVdsEmptied: storybookAction(EmptiedEvent.TYPE),
+  onVdsEnded: storybookAction(EndedEvent.TYPE),
+  onVdsError: storybookAction(ErrorEvent.TYPE),
+  onVdsFullscreenChange: storybookAction(FullscreenChangeEvent.TYPE),
+  onVdsLoadedData: storybookAction(LoadedDataEvent.TYPE),
+  onVdsLoadedMetadata: storybookAction(LoadedMetadataEvent.TYPE),
+  onVdsLoadStart: storybookAction(LoadStartEvent.TYPE),
+  onVdsMediaTypeChange: storybookAction(MediaTypeChangeEvent.TYPE),
+  onVdsPause: storybookAction(PauseEvent.TYPE),
+  onVdsPlay: storybookAction(PlayEvent.TYPE),
+  onVdsPlaying: storybookAction(PlayingEvent.TYPE),
+  onVdsProgress: storybookAction(ProgressEvent.TYPE),
+  onVdsReplay: storybookAction(ReplayEvent.TYPE),
+  onVdsSeeked: storybookAction(SeekedEvent.TYPE),
+  onVdsSeeking: storybookAction(SeekingEvent.TYPE),
+  onVdsStalled: storybookAction(StalledEvent.TYPE),
+  onVdsStarted: storybookAction(StartedEvent.TYPE),
+  onVdsSuspend: storybookAction(SuspendEvent.TYPE),
+  onVdsTimeUpdate: storybookAction(TimeUpdateEvent.TYPE),
+  onVdsViewTypeChange: storybookAction(ViewTypeChangeEvent.TYPE),
+  onVdsVolumeChange: storybookAction(VolumeChangeEvent.TYPE),
+  onVdsWaiting: storybookAction(WaitingEvent.TYPE),
   // Media Provider Actions
-  onVdsMediaProviderConnect: storybookAction(VdsMediaProviderConnectEvent.TYPE)
+  onVdsMediaProviderConnect: storybookAction(MediaProviderConnectEvent.TYPE)
 };

@@ -6,14 +6,13 @@ import { html } from 'lit';
 import { getSlottedChildren } from '../../../utils/dom.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 import {
-  MediaUiElement,
-  VDS_MEDIA_UI_ELEMENT_TAG_NAME
-} from '../MediaUiElement.js';
+  MEDIA_UI_ELEMENT_TAG_NAME,
+  MediaUiElement} from '../MediaUiElement.js';
 
 // Why do we need this? `../define ` import at the top of this file is being called correctly.
-window.customElements.define(VDS_MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);
+window.customElements.define(MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);
 
-describe(VDS_MEDIA_UI_ELEMENT_TAG_NAME, function () {
+describe(MEDIA_UI_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-media-ui>
@@ -22,7 +21,7 @@ describe(VDS_MEDIA_UI_ELEMENT_TAG_NAME, function () {
     `);
 
     const ui = /** @type {MediaUiElement} */ (
-      container.querySelector(VDS_MEDIA_UI_ELEMENT_TAG_NAME)
+      container.querySelector(MEDIA_UI_ELEMENT_TAG_NAME)
     );
 
     return { provider, ui };

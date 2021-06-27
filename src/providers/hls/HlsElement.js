@@ -2,10 +2,10 @@ import Hls from 'hls.js';
 
 import {
   CanPlay,
+  DurationChangeEvent,
+  ErrorEvent,
   MediaType,
-  VdsDurationChangeEvent,
-  VdsErrorEvent,
-  VdsMediaTypeChangeEvent
+  MediaTypeChangeEvent
 } from '../../media/index.js';
 import { VdsCustomEvent } from '../../shared/events/index.js';
 import {
@@ -14,17 +14,17 @@ import {
 } from '../../shared/storybook/index.js';
 import { isNil, isUndefined } from '../../utils/unit.js';
 import {
-  VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
+  VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
   VideoElement
 } from '../video/index.js';
 import {
-  VdsHlsEngineAttachEvent,
-  VdsHlsEngineBuiltEvent,
-  VdsHlsEngineDetachEvent,
-  VdsHlsEngineNoSupportEvent
+  HlsEngineAttachEvent,
+  HlsEngineBuiltEvent,
+  HlsEngineDetachEvent,
+  HlsEngineNoSupportEvent
 } from './events.js';
 
-export const VDS_HLS_ELEMENT_TAG_NAME = 'vds-hls';
+export const HLS_ELEMENT_TAG_NAME = 'vds-hls';
 
 export const HLS_EXTENSIONS = /\.(m3u8)($|\?)/i;
 
@@ -78,10 +78,10 @@ export class HlsElement extends VideoElement {
   static get events() {
     return [
       ...(super.events ?? []),
-      VdsHlsEngineAttachEvent.TYPE,
-      VdsHlsEngineBuiltEvent.TYPE,
-      VdsHlsEngineDetachEvent.TYPE,
-      VdsHlsEngineNoSupportEvent.TYPE
+      HlsEngineAttachEvent.TYPE,
+      HlsEngineBuiltEvent.TYPE,
+      HlsEngineDetachEvent.TYPE,
+      HlsEngineNoSupportEvent.TYPE
     ];
   }
 
@@ -230,12 +230,12 @@ export class HlsElement extends VideoElement {
     if (isNil(this.videoEngine) || !isUndefined(this.hlsEngine)) return;
 
     if (!Hls.isSupported()) {
-      this.dispatchEvent(new VdsHlsEngineNoSupportEvent());
+      this.dispatchEvent(new HlsEngineNoSupportEvent());
       return;
     }
 
     this._hlsEngine = new Hls(this.hlsConfig ?? {});
-    this.dispatchEvent(new VdsHlsEngineBuiltEvent({ detail: this.hlsEngine }));
+    this.dispatchEvent(new HlsEngineBuiltEvent({ detail: this.hlsEngine }));
     this.listenToHlsEngine();
   }
 
@@ -262,7 +262,7 @@ export class HlsElement extends VideoElement {
 
     this.hlsEngine.attachMedia(this.videoEngine);
     this._isHlsEngineAttached = true;
-    this.dispatchEvent(new VdsHlsEngineAttachEvent({ detail: this.hlsEngine }));
+    this.dispatchEvent(new HlsEngineAttachEvent({ detail: this.hlsEngine }));
   }
 
   /**
@@ -274,7 +274,7 @@ export class HlsElement extends VideoElement {
     this.hlsEngine?.detachMedia();
     this._isHlsEngineAttached = false;
     this._prevHlsSrc = '';
-    this.dispatchEvent(new VdsHlsEngineDetachEvent({ detail: this.hlsEngine }));
+    this.dispatchEvent(new HlsEngineDetachEvent({ detail: this.hlsEngine }));
   }
 
   /**
@@ -377,7 +377,7 @@ export class HlsElement extends VideoElement {
     }
 
     this.dispatchEvent(
-      new VdsErrorEvent({
+      new ErrorEvent({
         originalEvent: new VdsCustomEvent(eventType, { detail: data })
       })
     );
@@ -439,14 +439,14 @@ export class HlsElement extends VideoElement {
     if (this.context.mediaType !== mediaType) {
       this.context.mediaType = mediaType;
       this.dispatchEvent(
-        new VdsMediaTypeChangeEvent({ detail: mediaType, originalEvent: event })
+        new MediaTypeChangeEvent({ detail: mediaType, originalEvent: event })
       );
     }
 
     if (this.context.duration !== duration) {
       this.context.duration = duration;
       this.dispatchEvent(
-        new VdsDurationChangeEvent({ detail: duration, originalEvent: event })
+        new DurationChangeEvent({ detail: duration, originalEvent: event })
       );
     }
 
@@ -458,16 +458,16 @@ export class HlsElement extends VideoElement {
  * @readonly
  * @type {import('./types').HlsElementStorybookArgTypes}
  */
-export const VDS_HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
+export const HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
   hlsConfig: { control: StorybookControlType.Object },
   src: {
     control: StorybookControlType.Text,
     defaultValue:
       'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8'
   },
-  onVdsHlsEngineAttach: storybookAction(VdsHlsEngineAttachEvent.TYPE),
-  onVdsHlsEngineBuilt: storybookAction(VdsHlsEngineBuiltEvent.TYPE),
-  onVdsHlsEngineDetach: storybookAction(VdsHlsEngineDetachEvent.TYPE),
-  onVdsHlsEngineNoSupport: storybookAction(VdsHlsEngineNoSupportEvent.TYPE)
+  onVdsHlsEngineAttach: storybookAction(HlsEngineAttachEvent.TYPE),
+  onVdsHlsEngineBuilt: storybookAction(HlsEngineBuiltEvent.TYPE),
+  onVdsHlsEngineDetach: storybookAction(HlsEngineDetachEvent.TYPE),
+  onVdsHlsEngineNoSupport: storybookAction(HlsEngineNoSupportEvent.TYPE)
 };

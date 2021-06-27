@@ -1,11 +1,11 @@
 import { VdsCustomEvent } from '../shared/events/index.js';
 
-export class VdsMediaRequestEvent extends VdsCustomEvent {}
+export class MediaRequestEvent extends VdsCustomEvent {}
 
-export class VdsMuteRequestEvent extends VdsMediaRequestEvent {
+export class MuteRequestEvent extends MediaRequestEvent {
   static TYPE = 'vds-mute-request';
   constructor(eventInit) {
-    super(VdsMuteRequestEvent.TYPE, {
+    super(MuteRequestEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit
@@ -13,10 +13,10 @@ export class VdsMuteRequestEvent extends VdsMediaRequestEvent {
   }
 }
 
-export class VdsUnmuteRequestEvent extends VdsMediaRequestEvent {
+export class UnmuteRequestEvent extends MediaRequestEvent {
   static TYPE = 'vds-unmute-request';
   constructor(eventInit) {
-    super(VdsUnmuteRequestEvent.TYPE, {
+    super(UnmuteRequestEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit
@@ -24,10 +24,10 @@ export class VdsUnmuteRequestEvent extends VdsMediaRequestEvent {
   }
 }
 
-export class VdsEnterFullscreenRequestEvent extends VdsMediaRequestEvent {
+export class EnterFullscreenRequestEvent extends MediaRequestEvent {
   static TYPE = 'vds-enter-fullscreen-request';
   constructor(eventInit) {
-    super(VdsEnterFullscreenRequestEvent.TYPE, {
+    super(EnterFullscreenRequestEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit
@@ -35,10 +35,10 @@ export class VdsEnterFullscreenRequestEvent extends VdsMediaRequestEvent {
   }
 }
 
-export class VdsExitFullscreenRequestEvent extends VdsMediaRequestEvent {
+export class ExitFullscreenRequestEvent extends MediaRequestEvent {
   static TYPE = 'vds-exit-fullscreen-request';
   constructor(eventInit) {
-    super(VdsExitFullscreenRequestEvent.TYPE, {
+    super(ExitFullscreenRequestEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit
@@ -46,10 +46,10 @@ export class VdsExitFullscreenRequestEvent extends VdsMediaRequestEvent {
   }
 }
 
-export class VdsPlayRequestEvent extends VdsMediaRequestEvent {
+export class PlayRequestEvent extends MediaRequestEvent {
   static TYPE = 'vds-play-request';
   constructor(eventInit) {
-    super(VdsPlayRequestEvent.TYPE, {
+    super(PlayRequestEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit
@@ -57,10 +57,10 @@ export class VdsPlayRequestEvent extends VdsMediaRequestEvent {
   }
 }
 
-export class VdsPauseRequestEvent extends VdsMediaRequestEvent {
+export class PauseRequestEvent extends MediaRequestEvent {
   static TYPE = 'vds-pause-request';
   constructor(eventInit) {
-    super(VdsPauseRequestEvent.TYPE, {
+    super(PauseRequestEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit
@@ -68,10 +68,10 @@ export class VdsPauseRequestEvent extends VdsMediaRequestEvent {
   }
 }
 
-export class VdsSeekRequestEvent extends VdsMediaRequestEvent {
+export class SeekRequestEvent extends MediaRequestEvent {
   static TYPE = 'vds-seek-request';
   constructor(eventInit) {
-    super(VdsSeekRequestEvent.TYPE, {
+    super(SeekRequestEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit
@@ -79,10 +79,10 @@ export class VdsSeekRequestEvent extends VdsMediaRequestEvent {
   }
 }
 
-export class VdsSeekingRequestEvent extends VdsMediaRequestEvent {
+export class SeekingRequestEvent extends MediaRequestEvent {
   static TYPE = 'vds-seeking-request';
   constructor(eventInit) {
-    super(VdsSeekingRequestEvent.TYPE, {
+    super(SeekingRequestEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit
@@ -90,10 +90,10 @@ export class VdsSeekingRequestEvent extends VdsMediaRequestEvent {
   }
 }
 
-export class VdsVolumeChangeRequestEvent extends VdsMediaRequestEvent {
+export class VolumeChangeRequestEvent extends MediaRequestEvent {
   static TYPE = 'vds-volume-change-request';
   constructor(eventInit) {
-    super(VdsVolumeChangeRequestEvent.TYPE, {
+    super(VolumeChangeRequestEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit

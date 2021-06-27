@@ -2,7 +2,7 @@ import { VdsCustomEvent, VdsEventInit } from '../../shared/events/index.js';
 import { MediaProviderElement } from './MediaProviderElement.js';
 
 declare global {
-  interface GlobalEventHandlersEventMap extends VdsMediaProviderEvents {}
+  interface GlobalEventHandlersEventMap extends MediaProviderEvents {}
 }
 
 export interface MediaProviderConnectEventDetail {
@@ -10,14 +10,12 @@ export interface MediaProviderConnectEventDetail {
   onDisconnect: (callback: () => void) => void;
 }
 
-export interface VdsMediaProviderEvents {
+export interface MediaProviderEvents {
   'vds-media-provider-connect': VdsCustomEvent<MediaProviderConnectEventDetail>;
 }
 
-export class VdsMediaProviderEvent<
-  DetailType
-> extends VdsCustomEvent<DetailType> {
-  static readonly TYPE: keyof VdsMediaProviderEvents;
+export class MediaProviderEvent<DetailType> extends VdsCustomEvent<DetailType> {
+  static readonly TYPE: keyof MediaProviderEvents;
 }
 
 /**
@@ -26,7 +24,7 @@ export class VdsMediaProviderEvent<
  * @bubbles
  * @composed
  */
-export class VdsMediaProviderConnectEvent extends VdsMediaProviderEvent<MediaProviderConnectEventDetail> {
+export class MediaProviderConnectEvent extends MediaProviderEvent<MediaProviderConnectEventDetail> {
   static readonly TYPE = 'vds-media-provider-connect';
   constructor(eventInit: VdsEventInit<MediaProviderConnectEventDetail>);
 }

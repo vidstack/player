@@ -32,7 +32,7 @@ class ConsumerConnectEvent extends CustomEvent {
  * @returns {import('./types').Context<T>}
  */
 export function createContext(initialValue) {
-  const key = Symbol('VDS_CTX_PROVIDER');
+  const key = Symbol('CTX_PROVIDER');
 
   // Privately declared event to safely pair context providers and consumers.
   class ContextConsumerConnectEvent extends ConsumerConnectEvent {}

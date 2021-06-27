@@ -3,9 +3,9 @@ import '../define.js';
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { TimeElement, VDS_TIME_ELEMENT_TAG_NAME } from '../TimeElement.js';
+import { TIME_ELEMENT_TAG_NAME,TimeElement } from '../TimeElement.js';
 
-describe(`${VDS_TIME_ELEMENT_TAG_NAME}`, function () {
+describe(`${TIME_ELEMENT_TAG_NAME}`, function () {
   /**
    * @param {number} [seconds=0]
    * @returns {Promise<TimeElement>}

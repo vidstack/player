@@ -4,14 +4,14 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-  VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_TIME_ELEMENT_TAG_NAME
+  TIME_ELEMENT_STORYBOOK_ARG_TYPES,
+  TIME_ELEMENT_TAG_NAME
 } from './TimeElement.js';
 
 export default {
   title: 'UI/Foundation/Time/Time',
-  component: VDS_TIME_ELEMENT_TAG_NAME,
-  argTypes: VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES
+  component: TIME_ELEMENT_TAG_NAME,
+  argTypes: TIME_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

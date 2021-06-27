@@ -1,7 +1,7 @@
 import { safelyDefineCustomElement } from '../../../utils/dom.js';
 import {
-  PlayButtonElement,
-  VDS_PLAY_BUTTON_ELEMENT_TAG_NAME
+  PLAY_BUTTON_ELEMENT_TAG_NAME,
+  PlayButtonElement
 } from './PlayButtonElement.js';
 
-safelyDefineCustomElement(VDS_PLAY_BUTTON_ELEMENT_TAG_NAME, PlayButtonElement);
+safelyDefineCustomElement(PLAY_BUTTON_ELEMENT_TAG_NAME, PlayButtonElement);

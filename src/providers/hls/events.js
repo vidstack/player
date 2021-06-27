@@ -1,15 +1,15 @@
 import { VdsCustomEvent } from '../../shared/events/index.js';
 
-export class VdsHlsEvent extends VdsCustomEvent {}
+export class HlsEvent extends VdsCustomEvent {}
 
 /**
  * Fired when the `hls.js` instance is built. This will not fire if the browser natively
  * supports HLS.
  */
-export class VdsHlsEngineBuiltEvent extends VdsHlsEvent {
+export class HlsEngineBuiltEvent extends HlsEvent {
   static TYPE = 'vds-hls-engine-built';
   constructor(eventInit) {
-    super(VdsHlsEngineBuiltEvent.TYPE, eventInit);
+    super(HlsEngineBuiltEvent.TYPE, eventInit);
   }
 }
 
@@ -17,20 +17,20 @@ export class VdsHlsEngineBuiltEvent extends VdsHlsEvent {
  * Fired when the `hls.js` instance has attached itself to the media element. This will not
  * fire if the browser natively supports HLS.
  */
-export class VdsHlsEngineAttachEvent extends VdsHlsEvent {
+export class HlsEngineAttachEvent extends HlsEvent {
   static TYPE = 'vds-hls-engine-attach';
   constructor(eventInit) {
-    super(VdsHlsEngineAttachEvent.TYPE, eventInit);
+    super(HlsEngineAttachEvent.TYPE, eventInit);
   }
 }
 
 /**
  * Fired when the `hls.js` instance has detached itself from the media element.
  */
-export class VdsHlsEngineDetachEvent extends VdsHlsEvent {
+export class HlsEngineDetachEvent extends HlsEvent {
   static TYPE = 'vds-hls-engine-detach';
   constructor(eventInit) {
-    super(VdsHlsEngineDetachEvent.TYPE, eventInit);
+    super(HlsEngineDetachEvent.TYPE, eventInit);
   }
 }
 
@@ -38,9 +38,9 @@ export class VdsHlsEngineDetachEvent extends VdsHlsEvent {
  * Fired when the browser doesn't support HLS natively and `hls.js` doesn't support
  * this enviroment either, most likely due to missing Media Extensions.
  */
-export class VdsHlsEngineNoSupportEvent extends VdsHlsEvent {
+export class HlsEngineNoSupportEvent extends HlsEvent {
   static TYPE = 'vds-hls-engine-no-support';
   constructor(eventInit) {
-    super(VdsHlsEngineNoSupportEvent.TYPE, eventInit);
+    super(HlsEngineNoSupportEvent.TYPE, eventInit);
   }
 }

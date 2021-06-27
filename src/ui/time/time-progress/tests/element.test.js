@@ -3,23 +3,22 @@ import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-  TimeProgressElement,
-  VDS_TIME_PROGRESS_ELEMENT_TAG_NAME
-} from '../TimeProgressElement.js';
+  TIME_PROGRESS_ELEMENT_TAG_NAME,
+  TimeProgressElement} from '../TimeProgressElement.js';
 
 window.customElements.define(
-  VDS_TIME_PROGRESS_ELEMENT_TAG_NAME,
+  TIME_PROGRESS_ELEMENT_TAG_NAME,
   TimeProgressElement
 );
 
-describe(VDS_TIME_PROGRESS_ELEMENT_TAG_NAME, function () {
+describe(TIME_PROGRESS_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container } = await buildMediaFixture(html`
       <vds-time-progress></vds-time-progress>
     `);
 
     const timeProgress = /** @type {TimeProgressElement} */ (
-      container.querySelector(VDS_TIME_PROGRESS_ELEMENT_TAG_NAME)
+      container.querySelector(TIME_PROGRESS_ELEMENT_TAG_NAME)
     );
 
     return { timeProgress };

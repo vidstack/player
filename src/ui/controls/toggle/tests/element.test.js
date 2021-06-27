@@ -1,14 +1,11 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 
-import {
-  ToggleElement,
-  VDS_TOGGLE_ELEMENT_TAG_NAME
-} from '../ToggleElement.js';
+import { TOGGLE_ELEMENT_TAG_NAME,ToggleElement } from '../ToggleElement.js';
 
-window.customElements.define(VDS_TOGGLE_ELEMENT_TAG_NAME, ToggleElement);
+window.customElements.define(TOGGLE_ELEMENT_TAG_NAME, ToggleElement);
 
-describe(VDS_TOGGLE_ELEMENT_TAG_NAME, function () {
+describe(TOGGLE_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const toggle = await fixture(html`
       <vds-toggle>

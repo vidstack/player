@@ -7,7 +7,7 @@ import { IS_IOS } from '../../utils/support.js';
 import { mediaContext } from '../media.context.js';
 import { mediaUiElementStyles } from './css.js';
 
-export const VDS_MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
+export const MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
 
 /**
  * Simple container that holds a collection of user interface components.

@@ -1,7 +1,7 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
 
-import { VdsErrorEvent } from '../../media.events.js';
+import { ErrorEvent } from '../../media.events.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 
 describe('MediaProviderElement/queue', function () {
@@ -70,7 +70,7 @@ describe('MediaProviderElement/queue', function () {
       provider.paused = false;
     });
 
-    const { detail } = await oneEvent(provider, VdsErrorEvent.TYPE);
+    const { detail } = await oneEvent(provider, ErrorEvent.TYPE);
     expect(detail.message).to.equal('No play.');
   });
 });

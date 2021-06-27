@@ -3,21 +3,20 @@ import { html } from 'lit';
 import { stub } from 'sinon';
 
 import {
-  VdsEnterFullscreenRequestEvent,
-  VdsExitFullscreenRequestEvent
+  EnterFullscreenRequestEvent,
+  ExitFullscreenRequestEvent
 } from '../../../../media/index.js';
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-  FullscreenButtonElement,
-  VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME
-} from '../FullscreenButtonElement.js';
+  FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
+  FullscreenButtonElement} from '../FullscreenButtonElement.js';
 
 window.customElements.define(
-  VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
+  FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
   FullscreenButtonElement
 );
 
-describe(VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
+describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-fullscreen-button>
@@ -30,7 +29,7 @@ describe(VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
     stub(container, 'requestFullscreen').returns(Promise.resolve());
 
     const button = /** @type {FullscreenButtonElement} */ (
-      container.querySelector(VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME)
+      container.querySelector(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME)
     );
 
     provider.forceMediaReady();
@@ -87,20 +86,20 @@ describe(VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
     expect(button.exitSlotElement).to.not.have.attribute('hidden');
   });
 
-  it(`should emit ${VdsEnterFullscreenRequestEvent.TYPE} when clicked while not in fullscreen`, async function () {
+  it(`should emit ${EnterFullscreenRequestEvent.TYPE} when clicked while not in fullscreen`, async function () {
     const { provider, button } = await buildFixture();
     provider.context.fullscreen = false;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, VdsEnterFullscreenRequestEvent.TYPE);
+    await oneEvent(button, EnterFullscreenRequestEvent.TYPE);
   });
 
-  it(`should emit ${VdsExitFullscreenRequestEvent.TYPE} when clicked while in fullscreen`, async function () {
+  it(`should emit ${ExitFullscreenRequestEvent.TYPE} when clicked while in fullscreen`, async function () {
     const { provider, button } = await buildFixture();
     provider.context.fullscreen = true;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, VdsExitFullscreenRequestEvent.TYPE);
+    await oneEvent(button, ExitFullscreenRequestEvent.TYPE);
   });
 
   it('should receive fullscreen context updates', async function () {

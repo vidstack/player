@@ -3,23 +3,22 @@ import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-  TimeDurationElement,
-  VDS_TIME_DURATION_ELEMENT_TAG_NAME
-} from '../TimeDurationElement.js';
+  TIME_DURATION_ELEMENT_TAG_NAME,
+  TimeDurationElement} from '../TimeDurationElement.js';
 
 window.customElements.define(
-  VDS_TIME_DURATION_ELEMENT_TAG_NAME,
+  TIME_DURATION_ELEMENT_TAG_NAME,
   TimeDurationElement
 );
 
-describe(`${VDS_TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
+describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-time-duration></vds-time-duration>
     `);
 
     const timeDuration = /** @type {TimeDurationElement} */ (
-      container.querySelector(VDS_TIME_DURATION_ELEMENT_TAG_NAME)
+      container.querySelector(TIME_DURATION_ELEMENT_TAG_NAME)
     );
 
     return { provider, timeDuration };

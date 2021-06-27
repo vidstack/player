@@ -6,14 +6,14 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-  VDS_TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_TIME_DURATION_ELEMENT_TAG_NAME
+  TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES,
+  TIME_DURATION_ELEMENT_TAG_NAME
 } from './TimeDurationElement.js';
 
 export default {
   title: 'UI/Foundation/Time/Time Duration',
-  component: VDS_TIME_DURATION_ELEMENT_TAG_NAME,
-  argTypes: VDS_TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES
+  component: TIME_DURATION_ELEMENT_TAG_NAME,
+  argTypes: TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

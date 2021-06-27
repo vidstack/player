@@ -1,4 +1,4 @@
-import { VdsMediaRequestEvents } from '../../../media/index.js';
+import { MediaRequestEvents } from '../../../media/index.js';
 import {
   StorybookArgs,
   StorybookArgTypes
@@ -25,10 +25,10 @@ export interface MuteButtonElementMediaProps {
 
 export type MuteButtonElementStorybookArgTypes = StorybookArgTypes<
   MuteButtonElementProps & MuteButtonElementMediaProps,
-  Pick<VdsMediaRequestEvents, 'vds-mute-request' | 'vds-unmute-request'>
+  Pick<MediaRequestEvents, 'vds-mute-request' | 'vds-unmute-request'>
 >;
 
 export type MuteButtonElementStorybookArgs = StorybookArgs<
   MuteButtonElementProps & MuteButtonElementMediaProps,
-  Pick<VdsMediaRequestEvents, 'vds-mute-request' | 'vds-unmute-request'>
+  Pick<MediaRequestEvents, 'vds-mute-request' | 'vds-unmute-request'>
 >;

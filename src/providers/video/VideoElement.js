@@ -3,12 +3,11 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { ref } from 'lit/directives/ref.js';
 
 import {
+  MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
   MediaType,
-  VDS_MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  VdsMediaTypeChangeEvent,
-  VdsViewTypeChangeEvent,
-  ViewType
-} from '../../media/index.js';
+  MediaTypeChangeEvent,
+  ViewType,
+  ViewTypeChangeEvent} from '../../media/index.js';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty.js';
 import { ifNumber } from '../../shared/directives/if-number.js';
 import { StorybookControlType } from '../../shared/storybook/index.js';
@@ -17,7 +16,7 @@ import { videoElementStyles } from './css.js';
 import { VideoFullscreenController } from './fullscreen/index.js';
 import { VideoPresentationController } from './presentation/index.js';
 
-export const VDS_VIDEO_ELEMENT_TAG_NAME = 'vds-video';
+export const VIDEO_ELEMENT_TAG_NAME = 'vds-video';
 
 export const AUDIO_EXTENSIONS =
   /\.(m4a|mp4a|mpga|mp2|mp2a|mp3|m2a|m3a|wav|weba|aac|oga|spx)($|\?)/i;
@@ -124,7 +123,7 @@ export class VideoElement extends Html5MediaElement {
 
     this.context.viewType = ViewType.Video;
     this.dispatchEvent(
-      new VdsViewTypeChangeEvent({
+      new ViewTypeChangeEvent({
         detail: ViewType.Video
       })
     );
@@ -231,7 +230,7 @@ export class VideoElement extends Html5MediaElement {
   handleLoadedMetadata(event) {
     this.context.mediaType = this.getMediaType();
     this.dispatchEvent(
-      new VdsMediaTypeChangeEvent({
+      new MediaTypeChangeEvent({
         detail: this.context.mediaType,
         originalEvent: event
       })
@@ -277,8 +276,8 @@ export class VideoElement extends Html5MediaElement {
  * @readonly
  * @type {import('./types').VideoElementStorybookArgTypes}
  */
-export const VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...VDS_MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
+export const VIDEO_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
   autoPiP: { control: StorybookControlType.Boolean },
   controlsList: { control: StorybookControlType.Text },
   crossOrigin: { control: StorybookControlType.Text },

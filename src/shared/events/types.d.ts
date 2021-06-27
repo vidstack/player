@@ -12,7 +12,7 @@ export type EventHandlerRecord = {
   ) => void;
 };
 
-export type VdsEvents<EventRecordType> = {
+export type Events<EventRecordType> = {
   [EventType in Extract<
     keyof EventRecordType,
     string

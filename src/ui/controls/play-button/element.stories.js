@@ -6,14 +6,14 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-  VDS_PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_PLAY_BUTTON_ELEMENT_TAG_NAME
+  PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  PLAY_BUTTON_ELEMENT_TAG_NAME
 } from './PlayButtonElement.js';
 
 export default {
   title: 'UI/Foundation/Controls/Play Button',
-  component: VDS_PLAY_BUTTON_ELEMENT_TAG_NAME,
-  argTypes: VDS_PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  component: PLAY_BUTTON_ELEMENT_TAG_NAME,
+  argTypes: PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

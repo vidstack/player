@@ -4,7 +4,7 @@ import {
   StorybookArgs,
   StorybookArgTypes
 } from '../../shared/storybook/index.js';
-import { VdsMediaContainerEvents } from './events.js';
+import { MediaContainerEvents } from './events.js';
 
 export type MediaContainer = FullscreenHost &
   ScreenOrientationHost &
@@ -30,10 +30,10 @@ export interface MediaContainerElementProps {
 
 export type MediaContainerElementStorybookArgTypes = StorybookArgTypes<
   MediaContainerElementProps,
-  VdsMediaContainerEvents
+  MediaContainerEvents
 >;
 
 export type MediaContainerElementStorybookArgs = StorybookArgs<
   MediaContainerElementProps,
-  VdsMediaContainerEvents
+  MediaContainerEvents
 >;

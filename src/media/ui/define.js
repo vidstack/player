@@ -1,7 +1,4 @@
 import { safelyDefineCustomElement } from '../../utils/dom.js';
-import {
-  MediaUiElement,
-  VDS_MEDIA_UI_ELEMENT_TAG_NAME
-} from './MediaUiElement.js';
+import { MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement } from './MediaUiElement.js';
 
-safelyDefineCustomElement(VDS_MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);
+safelyDefineCustomElement(MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);

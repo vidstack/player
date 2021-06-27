@@ -1,10 +1,10 @@
 import {
-  TimeDurationElement,
-  VDS_TIME_DURATION_ELEMENT_TAG_NAME
+  TIME_DURATION_ELEMENT_TAG_NAME,
+  TimeDurationElement
 } from './TimeDurationElement.js';
 
 declare global {
   interface HTMLElementTagNameMap {
-    [VDS_TIME_DURATION_ELEMENT_TAG_NAME]: TimeDurationElement;
+    [TIME_DURATION_ELEMENT_TAG_NAME]: TimeDurationElement;
   }
 }

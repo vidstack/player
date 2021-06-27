@@ -9,10 +9,10 @@ import { styleMap } from 'lit/directives/style-map.js';
 import {
   mediaContext,
   MediaRemoteControl,
-  VdsPauseRequestEvent,
-  VdsPlayRequestEvent,
-  VdsSeekingRequestEvent,
-  VdsSeekRequestEvent
+  PauseRequestEvent,
+  PlayRequestEvent,
+  SeekingRequestEvent,
+  SeekRequestEvent
 } from '../../../media/index.js';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import { VdsElement, WithFocus } from '../../../shared/elements/index.js';
@@ -25,21 +25,21 @@ import { formatSpokenTime } from '../../../utils/time.js';
 import { throttle } from '../../../utils/timing.js';
 import { isNil, isUndefined } from '../../../utils/unit.js';
 import {
+  SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
+  SliderDragEndEvent,
+  SliderDragStartEvent,
   SliderElement,
-  VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  VdsSliderDragEndEvent,
-  VdsSliderDragStartEvent,
-  VdsSliderValueChangeEvent
+  SliderValueChangeEvent
 } from '../slider/index.js';
 import { scrubberContext } from './context.js';
 import { scrubberElementStyles } from './css.js';
 import {
-  VdsScrubberPreviewHideEvent,
-  VdsScrubberPreviewShowEvent,
-  VdsScrubberPreviewTimeUpdateEvent
+  ScrubberPreviewHideEvent,
+  ScrubberPreviewShowEvent,
+  ScrubberPreviewTimeUpdateEvent
 } from './events.js';
 
-export const VDS_SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
+export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
 
 /** @typedef {import('./types').Scrubber} Scrubber */
 
@@ -151,9 +151,9 @@ export class ScrubberElement extends WithFocus(VdsElement) {
   /** @type {string[]} */
   static get events() {
     return [
-      VdsScrubberPreviewHideEvent.TYPE,
-      VdsScrubberPreviewShowEvent.TYPE,
-      VdsScrubberPreviewTimeUpdateEvent.TYPE
+      ScrubberPreviewHideEvent.TYPE,
+      ScrubberPreviewShowEvent.TYPE,
+      ScrubberPreviewTimeUpdateEvent.TYPE
     ];
   }
 
@@ -604,7 +604,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @param {VdsSliderValueChangeEvent} event
+   * @param {SliderValueChangeEvent} event
    * @returns {Promise<void>}
    */
   async handleSliderValueChange(event) {
@@ -623,7 +623,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @param {VdsSliderDragStartEvent} event
+   * @param {SliderDragStartEvent} event
    * @returns {Promise<void>}
    */
   async handleSliderDragStart(event) {
@@ -635,7 +635,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @param {VdsSliderDragEndEvent} event
+   * @param {SliderDragEndEvent} event
    * @returns {Promise<void>}
    */
   async handleSliderDragEnd(event) {
@@ -805,7 +805,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
         await this.updatePreviewPosition(event);
         await this.updateComplete;
         this.dispatchEvent(
-          new VdsScrubberPreviewShowEvent({ originalEvent: event })
+          new ScrubberPreviewShowEvent({ originalEvent: event })
         );
       },
       this.isDraggingThumb ? 150 : 0
@@ -836,9 +836,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
     this.isPreviewShowing = false;
     this.currentPreviewSlotElement?.setAttribute('hidden', '');
-    this.dispatchEvent(
-      new VdsScrubberPreviewHideEvent({ originalEvent: event })
-    );
+    this.dispatchEvent(new ScrubberPreviewHideEvent({ originalEvent: event }));
     this.requestUpdate();
   }
 
@@ -852,7 +850,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     if (!this.isInteractive) return;
     this.mediaSeekingRequestThrottle?.(time, event);
     this.dispatchEvent(
-      new VdsScrubberPreviewTimeUpdateEvent({
+      new ScrubberPreviewTimeUpdateEvent({
         detail: time,
         originalEvent: event
       })
@@ -982,10 +980,10 @@ export class ScrubberElement extends WithFocus(VdsElement) {
  * @readonly
  * @type {import('./types').ScrubberElementStorybookArgTypes}
  */
-export const VDS_SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
-  disabled: VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,
-  hidden: VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
+  disabled: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,
+  hidden: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
   noPreviewClamp: {
     control: StorybookControlType.Boolean,
     defaultValue: false
@@ -994,7 +992,7 @@ export const VDS_SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControlType.Boolean,
     defaultValue: false
   },
-  orientation: VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
+  orientation: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
   pauseWhileDragging: {
     control: StorybookControlType.Boolean,
     defaultValue: false
@@ -1023,16 +1021,16 @@ export const VDS_SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
     defaultValue: 150
   },
   // Scrubber Actions
-  onVdsScrubberPreviewShow: storybookAction(VdsScrubberPreviewShowEvent.TYPE),
-  onVdsScrubberPreviewHide: storybookAction(VdsScrubberPreviewHideEvent.TYPE),
+  onVdsScrubberPreviewShow: storybookAction(ScrubberPreviewShowEvent.TYPE),
+  onVdsScrubberPreviewHide: storybookAction(ScrubberPreviewHideEvent.TYPE),
   onVdsScrubberPreviewTimeUpdate: storybookAction(
-    VdsScrubberPreviewTimeUpdateEvent.TYPE
+    ScrubberPreviewTimeUpdateEvent.TYPE
   ),
   // Media Request Actions
-  onVdsPlayRequest: storybookAction(VdsPlayRequestEvent.TYPE),
-  onVdsPauseRequest: storybookAction(VdsPauseRequestEvent.TYPE),
-  onVdsSeekRequest: storybookAction(VdsSeekRequestEvent.TYPE),
-  onVdsSeekingRequest: storybookAction(VdsSeekingRequestEvent.TYPE),
+  onVdsPlayRequest: storybookAction(PlayRequestEvent.TYPE),
+  onVdsPauseRequest: storybookAction(PauseRequestEvent.TYPE),
+  onVdsSeekRequest: storybookAction(SeekRequestEvent.TYPE),
+  onVdsSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
   // Media Properties
   mediaCurrentTime: {
     control: StorybookControlType.Number,

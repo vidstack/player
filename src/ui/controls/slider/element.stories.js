@@ -4,14 +4,14 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-  VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_SLIDER_ELEMENT_TAG_NAME
+  SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
+  SLIDER_ELEMENT_TAG_NAME
 } from './SliderElement.js';
 
 export default {
   title: 'UI/Foundation/Controls/Slider',
-  component: VDS_SLIDER_ELEMENT_TAG_NAME,
-  argTypes: VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES
+  component: SLIDER_ELEMENT_TAG_NAME,
+  argTypes: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

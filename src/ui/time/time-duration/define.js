@@ -1,10 +1,7 @@
 import { safelyDefineCustomElement } from '../../../utils/dom.js';
 import {
-  TimeDurationElement,
-  VDS_TIME_DURATION_ELEMENT_TAG_NAME
+  TIME_DURATION_ELEMENT_TAG_NAME,
+  TimeDurationElement
 } from './TimeDurationElement.js';
 
-safelyDefineCustomElement(
-  VDS_TIME_DURATION_ELEMENT_TAG_NAME,
-  TimeDurationElement
-);
+safelyDefineCustomElement(TIME_DURATION_ELEMENT_TAG_NAME, TimeDurationElement);

@@ -10,7 +10,7 @@ import {
   VideoElementStorybookArgs,
   VideoElementStorybookArgTypes
 } from '../video/index.js';
-import { VdsHlsEvents } from './events.js';
+import { HlsEvents } from './events.js';
 
 export type HlsProvider = HlsElementProps;
 
@@ -58,7 +58,7 @@ export interface HlsElementProps extends VideoElementProps {
 }
 
 export type HlsElementStorybookArgTypes = VideoElementStorybookArgTypes &
-  StorybookArgTypes<HlsElementProps, VdsHlsEvents>;
+  StorybookArgTypes<HlsElementProps, HlsEvents>;
 
 export type HlsElementStorybookArgs = VideoElementStorybookArgs &
-  StorybookArgs<HlsElementProps, VdsHlsEvents>;
+  StorybookArgs<HlsElementProps, HlsEvents>;

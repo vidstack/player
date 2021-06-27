@@ -1,19 +1,19 @@
 import {
+  EnterFullscreenRequestEvent,
+  ExitFullscreenRequestEvent,
   mediaContext,
-  MediaRemoteControl,
-  VdsEnterFullscreenRequestEvent,
-  VdsExitFullscreenRequestEvent
+  MediaRemoteControl
 } from '../../../media/index.js';
 import {
   storybookAction,
   StorybookControlType
 } from '../../../shared/storybook/index.js';
 import {
-  ToggleButtonElement,
-  VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  ToggleButtonElement
 } from '../toggle-button/index.js';
 
-export const VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
+export const FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
 
 /** @typedef {import('./types').FullscreenButton} FullscreenButton */
 
@@ -99,8 +99,8 @@ export class FullscreenButtonElement extends ToggleButtonElement {
  * @readonly
  * @type {import('./types').FullscreenButtonElementStorybookArgTypes}
  */
-export const VDS_FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+export const FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
   label: { control: StorybookControlType.Text, defaultValue: 'Fullscreen' },
   pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
   mediaFullscreen: {
@@ -108,9 +108,7 @@ export const VDS_FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
     defaultValue: false
   },
   onVdsEnterFullscreenRequest: storybookAction(
-    VdsEnterFullscreenRequestEvent.TYPE
+    EnterFullscreenRequestEvent.TYPE
   ),
-  onVdsExitFullscreenRequest: storybookAction(
-    VdsExitFullscreenRequestEvent.TYPE
-  )
+  onVdsExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE)
 };

@@ -1,10 +1,10 @@
 import {
-  ScrubberElement,
-  VDS_SCRUBBER_ELEMENT_TAG_NAME
+  SCRUBBER_ELEMENT_TAG_NAME,
+  ScrubberElement
 } from './ScrubberElement.js';
 
 declare global {
   interface HTMLElementTagNameMap {
-    [VDS_SCRUBBER_ELEMENT_TAG_NAME]: ScrubberElement;
+    [SCRUBBER_ELEMENT_TAG_NAME]: ScrubberElement;
   }
 }

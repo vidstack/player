@@ -3,15 +3,14 @@
 import {
   CanPlay,
   MediaProviderElement,
-  VdsPauseEvent,
-  VdsPlayEvent,
-  VdsTimeUpdateEvent,
-  VdsVolumeChangeEvent
+  PauseEvent,
+  PlayEvent,
+  TimeUpdateEvent,
+  VolumeChangeEvent
 } from '../../index.js';
 import { mediaContext } from '../../media.context.js';
 
-export const VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME =
-  'vds-fake-media-provider';
+export const FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME = 'vds-fake-media-provider';
 
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can
@@ -68,7 +67,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   setCurrentTime(time) {
     this.context.currentTime = time;
-    this.dispatchEvent(new VdsTimeUpdateEvent({ detail: time }));
+    this.dispatchEvent(new TimeUpdateEvent({ detail: time }));
   }
 
   getMuted() {
@@ -78,7 +77,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   setMuted(muted) {
     this.context.muted = muted;
     this.dispatchEvent(
-      new VdsVolumeChangeEvent({
+      new VolumeChangeEvent({
         detail: {
           volume: this.context.volume,
           muted
@@ -98,7 +97,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   setVolume(volume) {
     this.context.volume = volume;
     this.dispatchEvent(
-      new VdsVolumeChangeEvent({
+      new VolumeChangeEvent({
         detail: {
           volume,
           muted: this.context.muted
@@ -125,12 +124,12 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   async play() {
     this.context.paused = false;
-    this.dispatchEvent(new VdsPlayEvent());
+    this.dispatchEvent(new PlayEvent());
   }
 
   async pause() {
     this.context.paused = true;
-    this.dispatchEvent(new VdsPauseEvent());
+    this.dispatchEvent(new PauseEvent());
   }
 
   // -------------------------------------------------------------------------------------------

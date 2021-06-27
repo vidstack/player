@@ -1,11 +1,11 @@
 import { VdsCustomEvent } from '../../shared/events/index.js';
 
-export class VdsMediaContainerEvent extends VdsCustomEvent {}
+export class MediaContainerEvent extends VdsCustomEvent {}
 
-export class VdsMediaContainerConnectEvent extends VdsMediaContainerEvent {
+export class MediaContainerConnectEvent extends MediaContainerEvent {
   static TYPE = 'vds-media-container-connect';
   constructor(eventInit) {
-    super(VdsMediaContainerConnectEvent.TYPE, {
+    super(MediaContainerConnectEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit

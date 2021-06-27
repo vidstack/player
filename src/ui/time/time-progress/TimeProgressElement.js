@@ -13,7 +13,7 @@ import { TimeCurrentElement } from '../time-current/index.js';
 import { TimeDurationElement } from '../time-duration/index.js';
 import { timeProgressElementStyles } from './css.js';
 
-export const VDS_TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
+export const TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
 
 /** @typedef {import('./types').TimeProgressDisplay} TimeProgressDisplay */
 
@@ -263,7 +263,7 @@ export class TimeProgressElement extends VdsElement {
  * @readonly
  * @type {import('./types').TimeProgressElementStorybookArgTypes}
  */
-export const VDS_TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES = {
   alwaysShowHours: {
     control: StorybookControlType.Boolean,
     defaultValue: false

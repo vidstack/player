@@ -1,13 +1,13 @@
 import {
-  VdsEnterFullscreenRequestEvent,
-  VdsExitFullscreenRequestEvent,
-  VdsMuteRequestEvent,
-  VdsPauseRequestEvent,
-  VdsPlayRequestEvent,
-  VdsSeekingRequestEvent,
-  VdsSeekRequestEvent,
-  VdsUnmuteRequestEvent,
-  VdsVolumeChangeRequestEvent
+  EnterFullscreenRequestEvent,
+  ExitFullscreenRequestEvent,
+  MuteRequestEvent,
+  PauseRequestEvent,
+  PlayRequestEvent,
+  SeekingRequestEvent,
+  SeekRequestEvent,
+  UnmuteRequestEvent,
+  VolumeChangeRequestEvent
 } from './media-request.events.js';
 
 export class MediaRemoteControl {
@@ -31,7 +31,7 @@ export class MediaRemoteControl {
    */
   play(event) {
     this.host.dispatchEvent(
-      new VdsPlayRequestEvent({
+      new PlayRequestEvent({
         originalEvent: event
       })
     );
@@ -43,7 +43,7 @@ export class MediaRemoteControl {
    */
   pause(event) {
     this.host.dispatchEvent(
-      new VdsPauseRequestEvent({
+      new PauseRequestEvent({
         originalEvent: event
       })
     );
@@ -55,7 +55,7 @@ export class MediaRemoteControl {
    */
   mute(event) {
     this.host.dispatchEvent(
-      new VdsMuteRequestEvent({
+      new MuteRequestEvent({
         originalEvent: event
       })
     );
@@ -67,7 +67,7 @@ export class MediaRemoteControl {
    */
   unmute(event) {
     this.host.dispatchEvent(
-      new VdsUnmuteRequestEvent({
+      new UnmuteRequestEvent({
         originalEvent: event
       })
     );
@@ -79,7 +79,7 @@ export class MediaRemoteControl {
    */
   enterFullscreen(event) {
     this.host.dispatchEvent(
-      new VdsEnterFullscreenRequestEvent({
+      new EnterFullscreenRequestEvent({
         originalEvent: event
       })
     );
@@ -91,7 +91,7 @@ export class MediaRemoteControl {
    */
   exitFullscreen(event) {
     this.host.dispatchEvent(
-      new VdsExitFullscreenRequestEvent({
+      new ExitFullscreenRequestEvent({
         originalEvent: event
       })
     );
@@ -104,7 +104,7 @@ export class MediaRemoteControl {
    */
   seeking(time, event) {
     this.host.dispatchEvent(
-      new VdsSeekingRequestEvent({
+      new SeekingRequestEvent({
         detail: time,
         originalEvent: event
       })
@@ -118,7 +118,7 @@ export class MediaRemoteControl {
    */
   seek(time, event) {
     this.host.dispatchEvent(
-      new VdsSeekRequestEvent({
+      new SeekRequestEvent({
         detail: time,
         originalEvent: event
       })
@@ -132,7 +132,7 @@ export class MediaRemoteControl {
    */
   changeVolume(volume, event) {
     this.host.dispatchEvent(
-      new VdsVolumeChangeRequestEvent({
+      new VolumeChangeRequestEvent({
         detail: volume,
         originalEvent: event
       })

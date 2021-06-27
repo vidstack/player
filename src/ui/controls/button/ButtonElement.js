@@ -10,7 +10,7 @@ import { StorybookControlType } from '../../../shared/storybook/StorybookControl
 import { isUndefined } from '../../../utils/unit.js';
 import { buttonElementStyles } from './css.js';
 
-export const VDS_BUTTON_ELEMENT_TAG_NAME = 'vds-button';
+export const BUTTON_ELEMENT_TAG_NAME = 'vds-button';
 
 /** @typedef {import('./types').Button} Button */
 
@@ -268,7 +268,7 @@ export class ButtonElement extends WithFocus(VdsElement) {
  * @readonly
  * @type {import('./types').ButtonElementStorybookArgTypes}
  */
-export const VDS_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   controls: { control: StorybookControlType.Text },
   describedBy: { control: StorybookControlType.Text },
   disabled: { control: StorybookControlType.Boolean },

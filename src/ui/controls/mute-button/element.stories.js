@@ -6,14 +6,14 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-  VDS_MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_MUTE_BUTTON_ELEMENT_TAG_NAME
+  MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  MUTE_BUTTON_ELEMENT_TAG_NAME
 } from './MuteButtonElement.js';
 
 export default {
   title: 'UI/Foundation/Controls/Mute Button',
-  component: VDS_MUTE_BUTTON_ELEMENT_TAG_NAME,
-  argTypes: VDS_MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  component: MUTE_BUTTON_ELEMENT_TAG_NAME,
+  argTypes: MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

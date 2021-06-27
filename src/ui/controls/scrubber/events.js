@@ -1,24 +1,24 @@
 import { VdsCustomEvent } from '../../../shared/events/index.js';
 
-export class VdsScrubberEvent extends VdsCustomEvent {}
+export class ScrubberEvent extends VdsCustomEvent {}
 
-export class VdsScrubberPreviewShowEvent extends VdsScrubberEvent {
+export class ScrubberPreviewShowEvent extends ScrubberEvent {
   static TYPE = 'vds-scrubber-preview-show';
   constructor(eventInit) {
-    super(VdsScrubberPreviewShowEvent.TYPE, eventInit);
+    super(ScrubberPreviewShowEvent.TYPE, eventInit);
   }
 }
 
-export class VdsScrubberPreviewHideEvent extends VdsScrubberEvent {
+export class ScrubberPreviewHideEvent extends ScrubberEvent {
   static TYPE = 'vds-scrubber-preview-hide';
   constructor(eventInit) {
-    super(VdsScrubberPreviewHideEvent.TYPE, eventInit);
+    super(ScrubberPreviewHideEvent.TYPE, eventInit);
   }
 }
 
-export class VdsScrubberPreviewTimeUpdateEvent extends VdsScrubberEvent {
+export class ScrubberPreviewTimeUpdateEvent extends ScrubberEvent {
   static TYPE = 'vds-scrubber-preview-time-update';
   constructor(eventInit) {
-    super(VdsScrubberPreviewTimeUpdateEvent.TYPE, eventInit);
+    super(ScrubberPreviewTimeUpdateEvent.TYPE, eventInit);
   }
 }

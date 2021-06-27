@@ -3,23 +3,19 @@ import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-  TimeCurrentElement,
-  VDS_TIME_CURRENT_ELEMENT_TAG_NAME
-} from '../TimeCurrentElement.js';
+  TIME_CURRENT_ELEMENT_TAG_NAME,
+  TimeCurrentElement} from '../TimeCurrentElement.js';
 
-window.customElements.define(
-  VDS_TIME_CURRENT_ELEMENT_TAG_NAME,
-  TimeCurrentElement
-);
+window.customElements.define(TIME_CURRENT_ELEMENT_TAG_NAME, TimeCurrentElement);
 
-describe(`${VDS_TIME_CURRENT_ELEMENT_TAG_NAME}`, function () {
+describe(`${TIME_CURRENT_ELEMENT_TAG_NAME}`, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-time-current></vds-time-current>
     `);
 
     const timeCurrent = /** @type {TimeCurrentElement} */ (
-      container.querySelector(VDS_TIME_CURRENT_ELEMENT_TAG_NAME)
+      container.querySelector(TIME_CURRENT_ELEMENT_TAG_NAME)
     );
 
     return { provider, timeCurrent };

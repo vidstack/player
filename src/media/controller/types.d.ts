@@ -2,7 +2,7 @@ import {
   StorybookArgs,
   StorybookArgTypes
 } from '../../shared/storybook/index.js';
-import { VdsMediaRequestEvents } from '../media-request.events.js';
+import { MediaRequestEvents } from '../media-request.events.js';
 import { MediaProviderElement } from '../provider/index.js';
 import { MediaControllerElement } from './MediaControllerElement.js';
 
@@ -12,10 +12,10 @@ declare module './MediaControllerElement.js' {
 
 export type MediaControllerElementStorybookArgTypes = StorybookArgTypes<
   {},
-  VdsMediaRequestEvents
+  MediaRequestEvents
 >;
 
 export type MediaControllerElementStorybookArgs = StorybookArgs<
   {},
-  VdsMediaRequestEvents
+  MediaRequestEvents
 >;

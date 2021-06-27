@@ -2,15 +2,12 @@ import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
 import { IS_FIREFOX } from '../../../../utils/support.js';
-import { VdsSliderDragEndEvent, VdsSliderDragStartEvent } from '../events.js';
-import {
-  SliderElement,
-  VDS_SLIDER_ELEMENT_TAG_NAME
-} from '../SliderElement.js';
+import { SliderDragEndEvent, SliderDragStartEvent } from '../events.js';
+import { SLIDER_ELEMENT_TAG_NAME,SliderElement } from '../SliderElement.js';
 
-window.customElements.define(VDS_SLIDER_ELEMENT_TAG_NAME, SliderElement);
+window.customElements.define(SLIDER_ELEMENT_TAG_NAME, SliderElement);
 
-describe(VDS_SLIDER_ELEMENT_TAG_NAME, function () {
+describe(SLIDER_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const slider = await fixture(html`<vds-slider></vds-slider>`);
     return /** @type {SliderElement} */ (slider);
@@ -211,11 +208,11 @@ describe(VDS_SLIDER_ELEMENT_TAG_NAME, function () {
     setTimeout(() =>
       thumbContainer.dispatchEvent(new PointerEvent('pointerdown'))
     );
-    await oneEvent(slider, VdsSliderDragStartEvent.TYPE);
+    await oneEvent(slider, SliderDragStartEvent.TYPE);
     expect(slider.isDragging).to.be.true;
 
     setTimeout(() => document.dispatchEvent(new PointerEvent('pointerup')));
-    await oneEvent(slider, VdsSliderDragEndEvent.TYPE);
+    await oneEvent(slider, SliderDragEndEvent.TYPE);
     expect(slider.isDragging).to.be.false;
   });
 

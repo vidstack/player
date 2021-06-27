@@ -6,14 +6,14 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-  VDS_FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME
+  FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  FULLSCREEN_BUTTON_ELEMENT_TAG_NAME
 } from './FullscreenButtonElement.js';
 
 export default {
   title: 'UI/Foundation/Controls/Fullscreen Button',
-  component: VDS_FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
-  argTypes: VDS_FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  component: FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
+  argTypes: FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

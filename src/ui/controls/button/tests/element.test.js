@@ -4,14 +4,11 @@ import { spy } from 'sinon';
 
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import { getSlottedChildren } from '../../../../utils/dom.js';
-import {
-  ButtonElement,
-  VDS_BUTTON_ELEMENT_TAG_NAME
-} from '../ButtonElement.js';
+import { BUTTON_ELEMENT_TAG_NAME,ButtonElement } from '../ButtonElement.js';
 
-window.customElements.define(VDS_BUTTON_ELEMENT_TAG_NAME, ButtonElement);
+window.customElements.define(BUTTON_ELEMENT_TAG_NAME, ButtonElement);
 
-describe(VDS_BUTTON_ELEMENT_TAG_NAME, function () {
+describe(BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container } = await buildMediaFixture(html`
       <vds-button>
@@ -20,7 +17,7 @@ describe(VDS_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
 
     const button = /** @type {ButtonElement} */ (
-      container.querySelector(VDS_BUTTON_ELEMENT_TAG_NAME)
+      container.querySelector(BUTTON_ELEMENT_TAG_NAME)
     );
 
     return { button };

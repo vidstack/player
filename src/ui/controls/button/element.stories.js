@@ -4,14 +4,14 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-  VDS_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_BUTTON_ELEMENT_TAG_NAME
+  BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  BUTTON_ELEMENT_TAG_NAME
 } from './ButtonElement.js';
 
 export default {
   title: 'UI/Foundation/Controls/Button',
-  component: VDS_BUTTON_ELEMENT_TAG_NAME,
-  argTypes: VDS_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  component: BUTTON_ELEMENT_TAG_NAME,
+  argTypes: BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

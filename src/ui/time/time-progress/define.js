@@ -1,10 +1,7 @@
 import { safelyDefineCustomElement } from '../../../utils/dom.js';
 import {
-  TimeProgressElement,
-  VDS_TIME_PROGRESS_ELEMENT_TAG_NAME
+  TIME_PROGRESS_ELEMENT_TAG_NAME,
+  TimeProgressElement
 } from './TimeProgressElement.js';
 
-safelyDefineCustomElement(
-  VDS_TIME_PROGRESS_ELEMENT_TAG_NAME,
-  TimeProgressElement
-);
+safelyDefineCustomElement(TIME_PROGRESS_ELEMENT_TAG_NAME, TimeProgressElement);

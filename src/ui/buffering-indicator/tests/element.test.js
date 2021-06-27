@@ -4,20 +4,19 @@ import { html } from 'lit';
 import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import { getSlottedChildren } from '../../../utils/dom.js';
 import {
-  BufferingIndicatorElement,
-  VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME
-} from '../BufferingIndicatorElement.js';
+  BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
+  BufferingIndicatorElement} from '../BufferingIndicatorElement.js';
 import {
-  VdsBufferingIndicatorHideEvent,
-  VdsBufferingIndicatorShowEvent
+  BufferingIndicatorHideEvent,
+  BufferingIndicatorShowEvent
 } from '../events.js';
 
 window.customElements.define(
-  VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
+  BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
   BufferingIndicatorElement
 );
 
-describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
+describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-buffering-indicator>
@@ -26,7 +25,7 @@ describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
     `);
 
     const bufferingIndicator = /** @type {BufferingIndicatorElement} */ (
-      container.querySelector(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME)
+      container.querySelector(BUFFERING_INDICATOR_ELEMENT_TAG_NAME)
     );
 
     return { provider, bufferingIndicator };
@@ -102,17 +101,17 @@ describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
     expect(slot).to.not.have.attribute('hidden');
   });
 
-  it(`should emit ${VdsBufferingIndicatorShowEvent.TYPE} event when hidden attr changes`, async function () {
+  it(`should emit ${BufferingIndicatorShowEvent.TYPE} event when hidden attr changes`, async function () {
     const { provider, bufferingIndicator } = await buildFixture();
 
     setTimeout(() => {
       provider.context.waiting = true;
     });
 
-    await oneEvent(bufferingIndicator, VdsBufferingIndicatorShowEvent.TYPE);
+    await oneEvent(bufferingIndicator, BufferingIndicatorShowEvent.TYPE);
   });
 
-  it(`should emit ${VdsBufferingIndicatorHideEvent.TYPE} event when hidden attr changes`, async function () {
+  it(`should emit ${BufferingIndicatorHideEvent.TYPE} event when hidden attr changes`, async function () {
     const { provider, bufferingIndicator } = await buildFixture();
 
     provider.context.waiting = true;
@@ -122,6 +121,6 @@ describe(VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
       provider.context.waiting = false;
     });
 
-    await oneEvent(bufferingIndicator, VdsBufferingIndicatorHideEvent.TYPE);
+    await oneEvent(bufferingIndicator, BufferingIndicatorHideEvent.TYPE);
   });
 });

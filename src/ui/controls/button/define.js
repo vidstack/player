@@ -1,4 +1,4 @@
 import { safelyDefineCustomElement } from '../../../utils/dom.js';
-import { ButtonElement, VDS_BUTTON_ELEMENT_TAG_NAME } from './ButtonElement.js';
+import { BUTTON_ELEMENT_TAG_NAME, ButtonElement } from './ButtonElement.js';
 
-safelyDefineCustomElement(VDS_BUTTON_ELEMENT_TAG_NAME, ButtonElement);
+safelyDefineCustomElement(BUTTON_ELEMENT_TAG_NAME, ButtonElement);

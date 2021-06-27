@@ -1,10 +1,7 @@
 import { safelyDefineCustomElement } from '../../../utils/dom.js';
 import {
-  TimeCurrentElement,
-  VDS_TIME_CURRENT_ELEMENT_TAG_NAME
+  TIME_CURRENT_ELEMENT_TAG_NAME,
+  TimeCurrentElement
 } from './TimeCurrentElement.js';
 
-safelyDefineCustomElement(
-  VDS_TIME_CURRENT_ELEMENT_TAG_NAME,
-  TimeCurrentElement
-);
+safelyDefineCustomElement(TIME_CURRENT_ELEMENT_TAG_NAME, TimeCurrentElement);

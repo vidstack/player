@@ -3,7 +3,7 @@ import { mock } from 'sinon';
 
 import { isFunction } from '../../../utils/unit.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
-import { VdsMediaProviderConnectEvent } from '../events.js';
+import { MediaProviderConnectEvent } from '../events.js';
 import { MediaProviderElement } from '../MediaProviderElement.js';
 
 describe('MediaProviderElement', function () {
@@ -29,8 +29,8 @@ describe('MediaProviderElement', function () {
         window.document.body.append(provider);
       });
 
-      const { detail } = /** @type {VdsMediaProviderConnectEvent} */ (
-        await oneEvent(document, VdsMediaProviderConnectEvent.TYPE)
+      const { detail } = /** @type {MediaProviderConnectEvent} */ (
+        await oneEvent(document, MediaProviderConnectEvent.TYPE)
       );
 
       expect(detail.provider).to.be.instanceOf(MediaProviderElement);
@@ -44,8 +44,8 @@ describe('MediaProviderElement', function () {
         window.document.body.append(provider);
       });
 
-      const { detail } = /** @type {VdsMediaProviderConnectEvent} */ (
-        await oneEvent(document, VdsMediaProviderConnectEvent.TYPE)
+      const { detail } = /** @type {MediaProviderConnectEvent} */ (
+        await oneEvent(document, MediaProviderConnectEvent.TYPE)
       );
 
       const callback = mock();

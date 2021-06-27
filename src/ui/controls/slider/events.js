@@ -1,24 +1,24 @@
 import { VdsCustomEvent } from '../../../shared/events/index.js';
 
-export class VdsSliderEvent extends VdsCustomEvent {}
+export class SliderEvent extends VdsCustomEvent {}
 
-export class VdsSliderValueChangeEvent extends VdsSliderEvent {
+export class SliderValueChangeEvent extends SliderEvent {
   static TYPE = 'vds-slider-value-change';
   constructor(eventInit) {
-    super(VdsSliderValueChangeEvent.TYPE, eventInit);
+    super(SliderValueChangeEvent.TYPE, eventInit);
   }
 }
 
-export class VdsSliderDragStartEvent extends VdsSliderEvent {
+export class SliderDragStartEvent extends SliderEvent {
   static TYPE = 'vds-slider-drag-start';
   constructor(eventInit) {
-    super(VdsSliderDragStartEvent.TYPE, eventInit);
+    super(SliderDragStartEvent.TYPE, eventInit);
   }
 }
 
-export class VdsSliderDragEndEvent extends VdsSliderEvent {
+export class SliderDragEndEvent extends SliderEvent {
   static TYPE = 'vds-slider-drag-end';
   constructor(eventInit) {
-    super(VdsSliderDragEndEvent.TYPE, eventInit);
+    super(SliderDragEndEvent.TYPE, eventInit);
   }
 }

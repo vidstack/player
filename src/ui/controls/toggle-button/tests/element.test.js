@@ -3,16 +3,15 @@ import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-  ToggleButtonElement,
-  VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME
-} from '../ToggleButtonElement.js';
+  TOGGLE_BUTTON_ELEMENT_TAG_NAME,
+  ToggleButtonElement} from '../ToggleButtonElement.js';
 
 window.customElements.define(
-  VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME,
+  TOGGLE_BUTTON_ELEMENT_TAG_NAME,
   ToggleButtonElement
 );
 
-describe(VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
+describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container } = await buildMediaFixture(html`
       <vds-toggle-button>
@@ -22,7 +21,7 @@ describe(VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
 
     const toggle = /** @type {ToggleButtonElement} */ (
-      container.querySelector(VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME)
+      container.querySelector(TOGGLE_BUTTON_ELEMENT_TAG_NAME)
     );
 
     return { toggle };

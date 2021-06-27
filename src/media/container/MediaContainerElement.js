@@ -15,9 +15,9 @@ import { mediaContext } from '../media.context.js';
 import { MediaPlugin } from '../plugin/index.js';
 import { MediaProviderElement } from '../provider/index.js';
 import { mediaContainerElementStyles } from './css.js';
-import { VdsMediaContainerConnectEvent } from './events.js';
+import { MediaContainerConnectEvent } from './events.js';
 
-export const VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
+export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
 
 /** @typedef {import('./types').MediaContainer} IMediaContainer */
 
@@ -66,7 +66,7 @@ export class MediaContainerElement extends VdsElement {
 
   /** @type {string[]} */
   static get events() {
-    return [VdsMediaContainerConnectEvent.TYPE];
+    return [MediaContainerConnectEvent.TYPE];
   }
 
   constructor() {
@@ -129,7 +129,7 @@ export class MediaContainerElement extends VdsElement {
    */
   dispatchDiscoveryEvent() {
     this.dispatchEvent(
-      new VdsMediaContainerConnectEvent({
+      new MediaContainerConnectEvent({
         detail: {
           container: this,
           onDisconnect: (callback) => {
@@ -428,9 +428,7 @@ export class MediaContainerElement extends VdsElement {
  * @readonly
  * @type {import('./types').MediaContainerElementStorybookArgTypes}
  */
-export const VDS_MEDIA_CONTAINER_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const MEDIA_CONTAINER_ELEMENT_STORYBOOK_ARG_TYPES = {
   aspectRatio: { control: StorybookControlType.Text },
-  onVdsMediaContainerConnect: storybookAction(
-    VdsMediaContainerConnectEvent.TYPE
-  )
+  onVdsMediaContainerConnect: storybookAction(MediaContainerConnectEvent.TYPE)
 };

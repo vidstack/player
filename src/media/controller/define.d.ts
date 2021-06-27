@@ -1,10 +1,10 @@
 import {
-  MediaControllerElement,
-  VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME
+  MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
+  MediaControllerElement
 } from './MediaControllerElement.js';
 
 declare global {
   interface HTMLElementTagNameMap {
-    [VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME]: MediaControllerElement;
+    [MEDIA_CONTROLLER_ELEMENT_TAG_NAME]: MediaControllerElement;
   }
 }

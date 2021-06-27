@@ -15,7 +15,7 @@ import { ButtonElement } from '../button/index.js';
 import { ToggleElement } from '../toggle/index.js';
 import { toggleButtonElementStyles } from './css.js';
 
-export const VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
+export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
 
 /** @typedef {import('./types').ToggleButton} ToggleButton */
 
@@ -166,7 +166,7 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
  * @readonly
  * @type {import('./types').ToggleButtonElementStorybookArgTypes}
  */
-export const VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   label: { control: StorybookControlType.Text },
   describedBy: { control: StorybookControlType.Text },
   disabled: { control: StorybookControlType.Boolean },

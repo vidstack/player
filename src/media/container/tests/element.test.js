@@ -5,13 +5,13 @@ import { mock } from 'sinon';
 import { isFunction } from '../../../utils/unit.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 import { ViewType } from '../../ViewType.js';
-import { VdsMediaContainerConnectEvent } from '../events.js';
+import { MediaContainerConnectEvent } from '../events.js';
 import {
-  MediaContainerElement,
-  VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME
+  MEDIA_CONTAINER_ELEMENT_TAG_NAME,
+  MediaContainerElement
 } from '../MediaContainerElement.js';
 
-describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
+describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
   /**
    * @param {import('lit').TemplateResult} slot
    * @returns {Promise<MediaContainerElement>}
@@ -131,8 +131,8 @@ describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
         window.document.body.append(container);
       });
 
-      const { detail } = /** @type {VdsMediaContainerConnectEvent} */ (
-        await oneEvent(document, VdsMediaContainerConnectEvent.TYPE)
+      const { detail } = /** @type {MediaContainerConnectEvent} */ (
+        await oneEvent(document, MediaContainerConnectEvent.TYPE)
       );
 
       expect(detail.container).to.be.instanceOf(MediaContainerElement);
@@ -146,8 +146,8 @@ describe(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
         window.document.body.append(container);
       });
 
-      const { detail } = /** @type {VdsMediaContainerConnectEvent} */ (
-        await oneEvent(document, VdsMediaContainerConnectEvent.TYPE)
+      const { detail } = /** @type {MediaContainerConnectEvent} */ (
+        await oneEvent(document, MediaContainerConnectEvent.TYPE)
       );
 
       const callback = mock();

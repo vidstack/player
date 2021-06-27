@@ -7,14 +7,14 @@ import { html } from 'lit';
 import { createTimeRanges } from '../../../media/index.js';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-  VDS_SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_SCRUBBER_ELEMENT_TAG_NAME
+  SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES,
+  SCRUBBER_ELEMENT_TAG_NAME
 } from './ScrubberElement.js';
 
 export default {
   title: 'UI/Foundation/Controls/Scrubber',
-  component: VDS_SCRUBBER_ELEMENT_TAG_NAME,
-  argTypes: VDS_SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES
+  component: SCRUBBER_ELEMENT_TAG_NAME,
+  argTypes: SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

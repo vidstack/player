@@ -2,7 +2,7 @@ import {
   StorybookArgs,
   StorybookArgTypes
 } from '../../shared/storybook/index.js';
-import { VdsBufferingIndicatorEvents } from './events.js';
+import { BufferingIndicatorEvents } from './events.js';
 
 export type BufferingIndicator = BufferingIndicatorElementProps;
 
@@ -30,10 +30,10 @@ export interface BufferingIndicatorElementMediaProps {
 
 export type BufferingIndicatorElementStorybookArgTypes = StorybookArgTypes<
   BufferingIndicatorElementProps & BufferingIndicatorElementMediaProps,
-  VdsBufferingIndicatorEvents
+  BufferingIndicatorEvents
 >;
 
 export type BufferingIndicatorElementStorybookArgs = StorybookArgs<
   BufferingIndicatorElementProps & BufferingIndicatorElementMediaProps,
-  VdsBufferingIndicatorEvents
+  BufferingIndicatorEvents
 >;

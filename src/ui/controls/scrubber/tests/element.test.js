@@ -3,20 +3,19 @@ import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-  ScrubberElement,
-  VDS_SCRUBBER_ELEMENT_TAG_NAME
-} from '../ScrubberElement.js';
+  SCRUBBER_ELEMENT_TAG_NAME,
+  ScrubberElement} from '../ScrubberElement.js';
 
-window.customElements.define(VDS_SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
+window.customElements.define(SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
 
-describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, function () {
+describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container } = await buildMediaFixture(html`
       <vds-scrubber></vds-scrubber>
     `);
 
     const scrubber = /** @type {ScrubberElement} */ (
-      container.querySelector(VDS_SCRUBBER_ELEMENT_TAG_NAME)
+      container.querySelector(SCRUBBER_ELEMENT_TAG_NAME)
     );
 
     return { scrubber };

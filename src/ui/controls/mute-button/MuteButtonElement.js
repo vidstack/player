@@ -1,19 +1,19 @@
 import {
   mediaContext,
   MediaRemoteControl,
-  VdsMuteRequestEvent,
-  VdsUnmuteRequestEvent
+  MuteRequestEvent,
+  UnmuteRequestEvent
 } from '../../../media/index.js';
 import {
   storybookAction,
   StorybookControlType
 } from '../../../shared/storybook/index.js';
 import {
-  ToggleButtonElement,
-  VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  ToggleButtonElement
 } from '../toggle-button/index.js';
 
-export const VDS_MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
+export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
 
 /** @typedef {import('./types').MuteButton} MuteButton */
 
@@ -99,14 +99,14 @@ export class MuteButtonElement extends ToggleButtonElement {
  * @readonly
  * @type {import('./types').MuteButtonElementStorybookArgTypes}
  */
-export const VDS_MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+export const MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
   label: { control: StorybookControlType.Text, defaultValue: 'Mute' },
   pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
   mediaMuted: {
     control: StorybookControlType.Boolean,
     defaultValue: false
   },
-  onVdsMuteRequest: storybookAction(VdsMuteRequestEvent.TYPE),
-  onVdsUnmuteRequest: storybookAction(VdsUnmuteRequestEvent.TYPE)
+  onVdsMuteRequest: storybookAction(MuteRequestEvent.TYPE),
+  onVdsUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE)
 };

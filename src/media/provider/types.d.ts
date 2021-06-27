@@ -8,10 +8,10 @@ import {
   StorybookArgTypes
 } from '../../shared/storybook/types.js';
 import { CanPlay } from '../CanPlay.js';
-import { VdsMediaEvents } from '../media.events.js';
+import { MediaEvents } from '../media.events.js';
 import { MediaType } from '../MediaType.js';
 import { ViewType } from '../ViewType.js';
-import { VdsMediaProviderEvents } from './events.js';
+import { MediaProviderEvents } from './events.js';
 
 export type MediaProvider = MediaProviderElementProps &
   MediaProviderElementMethods &
@@ -317,10 +317,10 @@ export interface MediaProviderElementMethods {
 
 export type MediaProviderElementStorybookArgTypes = StorybookArgTypes<
   MediaProviderElementProps,
-  VdsMediaEvents & VdsMediaProviderEvents
+  MediaEvents & MediaProviderEvents
 >;
 
 export type MediaProviderElementStorybookArgs = StorybookArgs<
   MediaProviderElementProps,
-  VdsMediaEvents & VdsMediaProviderEvents
+  MediaEvents & MediaProviderEvents
 >;

@@ -1,10 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom.js';
 import {
-  MediaControllerElement,
-  VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME
+  MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
+  MediaControllerElement
 } from './MediaControllerElement.js';
 
 safelyDefineCustomElement(
-  VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
+  MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement
 );

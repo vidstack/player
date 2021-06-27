@@ -2,7 +2,7 @@ import {
   StorybookArgs,
   StorybookArgTypes
 } from '../../../shared/storybook/index.js';
-import { VdsSliderEvents } from './events.js';
+import { SliderEvents } from './events.js';
 
 export type Slider = SliderElementProps;
 
@@ -145,10 +145,10 @@ export interface SliderElementProps {
 
 export type SliderElementStorybookArgTypes = StorybookArgTypes<
   SliderElementProps,
-  VdsSliderEvents
+  SliderEvents
 >;
 
 export type SliderElementStorybookArgs = StorybookArgs<
   SliderElementProps,
-  VdsSliderEvents
+  SliderEvents
 >;

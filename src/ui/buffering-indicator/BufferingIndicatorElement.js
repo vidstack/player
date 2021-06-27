@@ -10,12 +10,11 @@ import { getSlottedChildren, setAttribute } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
 import { bufferingIndicatorElementStyles } from './css.js';
 import {
-  VdsBufferingIndicatorHideEvent,
-  VdsBufferingIndicatorShowEvent
+  BufferingIndicatorHideEvent,
+  BufferingIndicatorShowEvent
 } from './events.js';
 
-export const VDS_BUFFERING_INDICATOR_ELEMENT_TAG_NAME =
-  'vds-buffering-indicator';
+export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
 
 /** @typedef {import('./types').BufferingIndicator} BufferingIndicator */
 
@@ -50,10 +49,7 @@ export class BufferingIndicatorElement extends VdsElement {
 
   /** @type {string[]} */
   static get events() {
-    return [
-      VdsBufferingIndicatorHideEvent.TYPE,
-      VdsBufferingIndicatorShowEvent.TYPE
-    ];
+    return [BufferingIndicatorHideEvent.TYPE, BufferingIndicatorShowEvent.TYPE];
   }
 
   constructor() {
@@ -210,8 +206,8 @@ export class BufferingIndicatorElement extends VdsElement {
    */
   dispatchIndicatorChangeEvent() {
     const Event = !this.wasPrevHidden
-      ? VdsBufferingIndicatorHideEvent
-      : VdsBufferingIndicatorShowEvent;
+      ? BufferingIndicatorHideEvent
+      : BufferingIndicatorShowEvent;
 
     this.dispatchEvent(new Event());
   }
@@ -221,7 +217,7 @@ export class BufferingIndicatorElement extends VdsElement {
  * @readonly
  * @type {import('./types').BufferingIndicatorElementStorybookArgTypes}
  */
-export const VDS_BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
   delay: { control: StorybookControlType.Number, defaultValue: 0 },
   showWhileBooting: {
     control: StorybookControlType.Boolean,
@@ -236,9 +232,7 @@ export const VDS_BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
     defaultValue: true
   },
   onVdsBufferingIndicatorShow: storybookAction(
-    VdsBufferingIndicatorShowEvent.TYPE
+    BufferingIndicatorShowEvent.TYPE
   ),
-  onVdsBufferingIndicatorHide: storybookAction(
-    VdsBufferingIndicatorHideEvent.TYPE
-  )
+  onVdsBufferingIndicatorHide: storybookAction(BufferingIndicatorHideEvent.TYPE)
 };

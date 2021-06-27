@@ -2,30 +2,30 @@ import { html } from 'lit';
 import { createRef } from 'lit/directives/ref.js';
 
 import {
+  AbortEvent,
   CanPlay,
+  CanPlayThroughEvent,
+  DurationChangeEvent,
+  EmptiedEvent,
+  EndedEvent,
+  ErrorEvent,
+  LoadedDataEvent,
+  LoadedMetadataEvent,
+  LoadStartEvent,
   MediaProviderElement,
-  VdsAbortEvent,
-  VdsCanPlayThroughEvent,
-  VdsDurationChangeEvent,
-  VdsEmptiedEvent,
-  VdsEndedEvent,
-  VdsErrorEvent,
-  VdsLoadedDataEvent,
-  VdsLoadedMetadataEvent,
-  VdsLoadStartEvent,
-  VdsPauseEvent,
-  VdsPlayEvent,
-  VdsPlayingEvent,
-  VdsProgressEvent,
-  VdsReplayEvent,
-  VdsSeekedEvent,
-  VdsSeekingEvent,
-  VdsStalledEvent,
-  VdsStartedEvent,
-  VdsSuspendEvent,
-  VdsTimeUpdateEvent,
-  VdsVolumeChangeEvent,
-  VdsWaitingEvent
+  PauseEvent,
+  PlayEvent,
+  PlayingEvent,
+  ProgressEvent,
+  ReplayEvent,
+  SeekedEvent,
+  SeekingEvent,
+  StalledEvent,
+  StartedEvent,
+  SuspendEvent,
+  TimeUpdateEvent,
+  VolumeChangeEvent,
+  WaitingEvent
 } from '../../media/index.js';
 import { listen, redispatchEvent } from '../../shared/events/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
@@ -239,7 +239,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
     if (this.context.currentTime !== newTime) {
       this.context.currentTime = newTime;
-      this.dispatchEvent(new VdsTimeUpdateEvent({ detail: newTime }));
+      this.dispatchEvent(new TimeUpdateEvent({ detail: newTime }));
     }
 
     this.timeRAF = window.requestAnimationFrame(() => {
@@ -343,7 +343,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * @returns {void}
    */
   handleAbort(event) {
-    this.dispatchEvent(new VdsAbortEvent({ originalEvent: event }));
+    this.dispatchEvent(new AbortEvent({ originalEvent: event }));
   }
 
   /**
@@ -364,7 +364,7 @@ export class Html5MediaElement extends MediaProviderElement {
    */
   handleCanPlayThrough(event) {
     this.context.canPlayThrough = true;
-    this.dispatchEvent(new VdsCanPlayThroughEvent({ originalEvent: event }));
+    this.dispatchEvent(new CanPlayThroughEvent({ originalEvent: event }));
   }
 
   /**
@@ -374,7 +374,7 @@ export class Html5MediaElement extends MediaProviderElement {
    */
   handleLoadStart(event) {
     this.context.currentSrc = this.mediaElement.currentSrc;
-    this.dispatchEvent(new VdsLoadStartEvent({ originalEvent: event }));
+    this.dispatchEvent(new LoadStartEvent({ originalEvent: event }));
   }
 
   /**
@@ -383,7 +383,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * @returns {void}
    */
   handleEmptied(event) {
-    this.dispatchEvent(new VdsEmptiedEvent({ originalEvent: event }));
+    this.dispatchEvent(new EmptiedEvent({ originalEvent: event }));
   }
 
   /**
@@ -392,7 +392,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * @returns {void}
    */
   handleLoadedData(event) {
-    this.dispatchEvent(new VdsLoadedDataEvent({ originalEvent: event }));
+    this.dispatchEvent(new LoadedDataEvent({ originalEvent: event }));
   }
 
   /**
@@ -414,12 +414,12 @@ export class Html5MediaElement extends MediaProviderElement {
   handleLoadedMetadata(event) {
     this.context.duration = this.mediaElement.duration;
     this.dispatchEvent(
-      new VdsDurationChangeEvent({
+      new DurationChangeEvent({
         detail: this.context.duration,
         originalEvent: event
       })
     );
-    this.dispatchEvent(new VdsLoadedMetadataEvent({ originalEvent: event }));
+    this.dispatchEvent(new LoadedMetadataEvent({ originalEvent: event }));
   }
 
   /**
@@ -430,11 +430,11 @@ export class Html5MediaElement extends MediaProviderElement {
   handlePlay(event) {
     this.requestTimeUpdates();
     this.context.paused = false;
-    this.dispatchEvent(new VdsPlayEvent({ originalEvent: event }));
-    if (this.context.ended) this.dispatchEvent(new VdsReplayEvent());
+    this.dispatchEvent(new PlayEvent({ originalEvent: event }));
+    if (this.context.ended) this.dispatchEvent(new ReplayEvent());
     if (!this.context.started) {
       this.context.started = true;
-      this.dispatchEvent(new VdsStartedEvent({ originalEvent: event }));
+      this.dispatchEvent(new StartedEvent({ originalEvent: event }));
     }
     this.validatePlaybackEndedState();
   }
@@ -449,7 +449,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this.context.paused = true;
     this.context.playing = false;
     this.context.waiting = false;
-    this.dispatchEvent(new VdsPauseEvent({ originalEvent: event }));
+    this.dispatchEvent(new PauseEvent({ originalEvent: event }));
   }
 
   /**
@@ -460,7 +460,7 @@ export class Html5MediaElement extends MediaProviderElement {
   handlePlaying(event) {
     this.context.playing = true;
     this.context.waiting = false;
-    this.dispatchEvent(new VdsPlayingEvent({ originalEvent: event }));
+    this.dispatchEvent(new PlayingEvent({ originalEvent: event }));
   }
 
   /**
@@ -471,7 +471,7 @@ export class Html5MediaElement extends MediaProviderElement {
   handleDurationChange(event) {
     this.context.duration = this.mediaElement.duration;
     this.dispatchEvent(
-      new VdsDurationChangeEvent({
+      new DurationChangeEvent({
         detail: this.context.duration,
         originalEvent: event
       })
@@ -487,7 +487,7 @@ export class Html5MediaElement extends MediaProviderElement {
   handleProgress(event) {
     this.context.buffered = this.mediaElement.buffered;
     this.context.seekable = this.mediaElement.seekable;
-    this.dispatchEvent(new VdsProgressEvent({ originalEvent: event }));
+    this.dispatchEvent(new ProgressEvent({ originalEvent: event }));
   }
 
   /**
@@ -509,7 +509,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this.context.currentTime = this.mediaElement.currentTime;
     this.context.seeking = false;
     this.dispatchEvent(
-      new VdsSeekedEvent({
+      new SeekedEvent({
         detail: this.context.currentTime,
         originalEvent: event
       })
@@ -526,7 +526,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this.context.currentTime = this.mediaElement.currentTime;
     this.context.seeking = true;
     this.dispatchEvent(
-      new VdsSeekingEvent({
+      new SeekingEvent({
         detail: this.context.currentTime,
         originalEvent: event
       })
@@ -539,7 +539,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * @returns {void}
    */
   handleStalled(event) {
-    this.dispatchEvent(new VdsStalledEvent({ originalEvent: event }));
+    this.dispatchEvent(new StalledEvent({ originalEvent: event }));
   }
 
   /**
@@ -562,7 +562,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this.context.volume = this.mediaElement.volume;
     this.context.muted = this.mediaElement.muted;
     this.dispatchEvent(
-      new VdsVolumeChangeEvent({
+      new VolumeChangeEvent({
         detail: {
           volume: this.context.volume,
           muted: this.context.muted
@@ -579,7 +579,7 @@ export class Html5MediaElement extends MediaProviderElement {
    */
   handleWaiting(event) {
     this.context.waiting = true;
-    this.dispatchEvent(new VdsWaitingEvent({ originalEvent: event }));
+    this.dispatchEvent(new WaitingEvent({ originalEvent: event }));
   }
 
   /**
@@ -589,7 +589,7 @@ export class Html5MediaElement extends MediaProviderElement {
    */
   handleSuspend(event) {
     this.context.waiting = false;
-    this.dispatchEvent(new VdsSuspendEvent({ originalEvent: event }));
+    this.dispatchEvent(new SuspendEvent({ originalEvent: event }));
   }
 
   /**
@@ -602,10 +602,10 @@ export class Html5MediaElement extends MediaProviderElement {
     if (!this.context.ended && !this.loop) {
       this.context.ended = true;
       this.context.waiting = false;
-      this.dispatchEvent(new VdsEndedEvent({ originalEvent: event }));
+      this.dispatchEvent(new EndedEvent({ originalEvent: event }));
       this.cancelTimeUpdates();
     } else if (this.loop) {
-      this.dispatchEvent(new VdsReplayEvent({ originalEvent: event }));
+      this.dispatchEvent(new ReplayEvent({ originalEvent: event }));
     }
   }
 
@@ -617,7 +617,7 @@ export class Html5MediaElement extends MediaProviderElement {
   handleError(event) {
     this.context.error = this.mediaElement.error;
     this.dispatchEvent(
-      new VdsErrorEvent({
+      new ErrorEvent({
         detail: this.mediaElement.error,
         originalEvent: event
       })
@@ -726,7 +726,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
   async play() {
     this.throwIfNotReadyForPlayback();
-    if (this.context.ended) this.dispatchEvent(new VdsReplayEvent());
+    if (this.context.ended) this.dispatchEvent(new ReplayEvent());
     await this.resetPlaybackIfEnded();
     return this.mediaElement.play();
   }

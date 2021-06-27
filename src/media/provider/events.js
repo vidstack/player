@@ -1,6 +1,6 @@
 import { VdsCustomEvent } from '../../shared/events/index.js';
 
-export class VdsMediaProviderEvent extends VdsCustomEvent {}
+export class MediaProviderEvent extends VdsCustomEvent {}
 
 /**
  * Fired when the media provider connects to the DOM.
@@ -8,10 +8,10 @@ export class VdsMediaProviderEvent extends VdsCustomEvent {}
  * @bubbles
  * @composed
  */
-export class VdsMediaProviderConnectEvent extends VdsMediaProviderEvent {
+export class MediaProviderConnectEvent extends MediaProviderEvent {
   static TYPE = 'vds-media-provider-connect';
   constructor(eventInit) {
-    super(VdsMediaProviderConnectEvent.TYPE, {
+    super(MediaProviderConnectEvent.TYPE, {
       bubbles: true,
       composed: true,
       ...eventInit

@@ -1,10 +1,10 @@
 import {
-  TimeCurrentElement,
-  VDS_TIME_CURRENT_ELEMENT_TAG_NAME
+  TIME_CURRENT_ELEMENT_TAG_NAME,
+  TimeCurrentElement
 } from './TimeCurrentElement.js';
 
 declare global {
   interface HTMLElementTagNameMap {
-    [VDS_TIME_CURRENT_ELEMENT_TAG_NAME]: TimeCurrentElement;
+    [TIME_CURRENT_ELEMENT_TAG_NAME]: TimeCurrentElement;
   }
 }

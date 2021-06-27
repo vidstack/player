@@ -7,7 +7,7 @@ import { StorybookControlType } from '../../../shared/storybook/index.js';
 import { formatHtml5Duration, formatTime } from '../../../utils/time.js';
 import { timeElementStyles } from './css.js';
 
-export const VDS_TIME_ELEMENT_TAG_NAME = 'vds-time';
+export const TIME_ELEMENT_TAG_NAME = 'vds-time';
 
 /** @typedef {import('./types').TimeDisplay} TimeDisplay */
 
@@ -161,7 +161,7 @@ export class TimeElement extends VdsElement {
  * @readonly
  * @type {import('./types').TimeElementStorybookArgTypes}
  */
-export const VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const TIME_ELEMENT_STORYBOOK_ARG_TYPES = {
   alwaysShowHours: {
     control: StorybookControlType.Boolean,
     defaultValue: false

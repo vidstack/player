@@ -2,21 +2,17 @@ import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
 import {
-  VdsMuteRequestEvent,
-  VdsUnmuteRequestEvent
+  MuteRequestEvent,
+  UnmuteRequestEvent
 } from '../../../../media/index.js';
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-  MuteButtonElement,
-  VDS_MUTE_BUTTON_ELEMENT_TAG_NAME
-} from '../MuteButtonElement.js';
+  MUTE_BUTTON_ELEMENT_TAG_NAME,
+  MuteButtonElement} from '../MuteButtonElement.js';
 
-window.customElements.define(
-  VDS_MUTE_BUTTON_ELEMENT_TAG_NAME,
-  MuteButtonElement
-);
+window.customElements.define(MUTE_BUTTON_ELEMENT_TAG_NAME, MuteButtonElement);
 
-describe(VDS_MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
+describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-mute-button>
@@ -28,7 +24,7 @@ describe(VDS_MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     provider.forceMediaReady();
 
     const button = /** @type {MuteButtonElement} */ (
-      container.querySelector(VDS_MUTE_BUTTON_ELEMENT_TAG_NAME)
+      container.querySelector(MUTE_BUTTON_ELEMENT_TAG_NAME)
     );
 
     return { provider, button };
@@ -83,20 +79,20 @@ describe(VDS_MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     expect(button.unmuteSlotElement).to.not.have.attribute('hidden');
   });
 
-  it(`should emit ${VdsMuteRequestEvent.TYPE} with true detail clicked while unmuted`, async function () {
+  it(`should emit ${MuteRequestEvent.TYPE} with true detail clicked while unmuted`, async function () {
     const { provider, button } = await buildFixture();
     provider.muted = false;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, VdsMuteRequestEvent.TYPE);
+    await oneEvent(button, MuteRequestEvent.TYPE);
   });
 
-  it(`should emit ${VdsUnmuteRequestEvent.TYPE} with false detail when clicked while muted`, async function () {
+  it(`should emit ${UnmuteRequestEvent.TYPE} with false detail when clicked while muted`, async function () {
     const { provider, button } = await buildFixture();
     provider.muted = true;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, VdsUnmuteRequestEvent.TYPE);
+    await oneEvent(button, UnmuteRequestEvent.TYPE);
   });
 
   it('should receive muted context updates', async function () {

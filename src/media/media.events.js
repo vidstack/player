@@ -1,185 +1,185 @@
 import { VdsCustomEvent } from '../shared/events/index.js';
 
-export class VdsMediaEvent extends VdsCustomEvent {}
+export class MediaEvent extends VdsCustomEvent {}
 
-export class VdsAbortEvent extends VdsMediaEvent {
+export class AbortEvent extends MediaEvent {
   static TYPE = 'vds-abort';
   constructor(eventInit) {
-    super(VdsAbortEvent.TYPE, eventInit);
+    super(AbortEvent.TYPE, eventInit);
   }
 }
 
-export class VdsCanPlayEvent extends VdsMediaEvent {
+export class CanPlayEvent extends MediaEvent {
   static TYPE = 'vds-can-play';
   constructor(eventInit) {
-    super(VdsCanPlayEvent.TYPE, eventInit);
+    super(CanPlayEvent.TYPE, eventInit);
   }
 }
 
-export class VdsCanPlayThroughEvent extends VdsMediaEvent {
+export class CanPlayThroughEvent extends MediaEvent {
   static TYPE = 'vds-can-play-through';
   constructor(eventInit) {
-    super(VdsCanPlayThroughEvent.TYPE, eventInit);
+    super(CanPlayThroughEvent.TYPE, eventInit);
   }
 }
 
-export class VdsDurationChangeEvent extends VdsMediaEvent {
+export class DurationChangeEvent extends MediaEvent {
   static TYPE = 'vds-duration-change';
   constructor(eventInit) {
-    super(VdsDurationChangeEvent.TYPE, eventInit);
+    super(DurationChangeEvent.TYPE, eventInit);
   }
 }
 
-export class VdsEmptiedEvent extends VdsMediaEvent {
+export class EmptiedEvent extends MediaEvent {
   static TYPE = 'vds-emptied';
   constructor(eventInit) {
-    super(VdsEmptiedEvent.TYPE, eventInit);
+    super(EmptiedEvent.TYPE, eventInit);
   }
 }
 
-export class VdsEndedEvent extends VdsMediaEvent {
+export class EndedEvent extends MediaEvent {
   static TYPE = 'vds-ended';
   constructor(eventInit) {
-    super(VdsEndedEvent.TYPE, eventInit);
+    super(EndedEvent.TYPE, eventInit);
   }
 }
 
-export class VdsErrorEvent extends VdsMediaEvent {
+export class ErrorEvent extends MediaEvent {
   static TYPE = 'vds-error';
   constructor(eventInit) {
-    super(VdsErrorEvent.TYPE, eventInit);
+    super(ErrorEvent.TYPE, eventInit);
   }
 }
 
-export class VdsFullscreenChangeEvent extends VdsMediaEvent {
+export class FullscreenChangeEvent extends MediaEvent {
   static TYPE = 'vds-fullscreen-change';
   constructor(eventInit) {
-    super(VdsFullscreenChangeEvent.TYPE, eventInit);
+    super(FullscreenChangeEvent.TYPE, eventInit);
   }
 }
 
-export class VdsLoadedDataEvent extends VdsMediaEvent {
+export class LoadedDataEvent extends MediaEvent {
   static TYPE = 'vds-loaded-data';
   constructor(eventInit) {
-    super(VdsLoadedDataEvent.TYPE, eventInit);
+    super(LoadedDataEvent.TYPE, eventInit);
   }
 }
 
-export class VdsLoadedMetadataEvent extends VdsMediaEvent {
+export class LoadedMetadataEvent extends MediaEvent {
   static TYPE = 'vds-loaded-metadata';
   constructor(eventInit) {
-    super(VdsLoadedMetadataEvent.TYPE, eventInit);
+    super(LoadedMetadataEvent.TYPE, eventInit);
   }
 }
 
-export class VdsLoadStartEvent extends VdsMediaEvent {
+export class LoadStartEvent extends MediaEvent {
   static TYPE = 'vds-load-start';
   constructor(eventInit) {
-    super(VdsLoadStartEvent.TYPE, eventInit);
+    super(LoadStartEvent.TYPE, eventInit);
   }
 }
 
-export class VdsMediaTypeChangeEvent extends VdsMediaEvent {
+export class MediaTypeChangeEvent extends MediaEvent {
   static TYPE = 'vds-media-type-change';
   constructor(eventInit) {
-    super(VdsMediaTypeChangeEvent.TYPE, eventInit);
+    super(MediaTypeChangeEvent.TYPE, eventInit);
   }
 }
 
-export class VdsPauseEvent extends VdsMediaEvent {
+export class PauseEvent extends MediaEvent {
   static TYPE = 'vds-pause';
   constructor(eventInit) {
-    super(VdsPauseEvent.TYPE, eventInit);
+    super(PauseEvent.TYPE, eventInit);
   }
 }
 
-export class VdsPlayEvent extends VdsMediaEvent {
+export class PlayEvent extends MediaEvent {
   static TYPE = 'vds-play';
   constructor(eventInit) {
-    super(VdsPlayEvent.TYPE, eventInit);
+    super(PlayEvent.TYPE, eventInit);
   }
 }
 
-export class VdsPlayingEvent extends VdsMediaEvent {
+export class PlayingEvent extends MediaEvent {
   static TYPE = 'vds-playing';
   constructor(eventInit) {
-    super(VdsPlayingEvent.TYPE, eventInit);
+    super(PlayingEvent.TYPE, eventInit);
   }
 }
 
-export class VdsProgressEvent extends VdsMediaEvent {
+export class ProgressEvent extends MediaEvent {
   static TYPE = 'vds-progress';
   constructor(eventInit) {
-    super(VdsProgressEvent.TYPE, eventInit);
+    super(ProgressEvent.TYPE, eventInit);
   }
 }
 
-export class VdsSeekedEvent extends VdsMediaEvent {
+export class SeekedEvent extends MediaEvent {
   static TYPE = 'vds-seeked';
   constructor(eventInit) {
-    super(VdsSeekedEvent.TYPE, eventInit);
+    super(SeekedEvent.TYPE, eventInit);
   }
 }
 
-export class VdsSeekingEvent extends VdsMediaEvent {
+export class SeekingEvent extends MediaEvent {
   static TYPE = 'vds-seeking';
   constructor(eventInit) {
-    super(VdsSeekingEvent.TYPE, eventInit);
+    super(SeekingEvent.TYPE, eventInit);
   }
 }
 
-export class VdsStalledEvent extends VdsMediaEvent {
+export class StalledEvent extends MediaEvent {
   static TYPE = 'vds-stalled';
   constructor(eventInit) {
-    super(VdsStalledEvent.TYPE, eventInit);
+    super(StalledEvent.TYPE, eventInit);
   }
 }
 
-export class VdsStartedEvent extends VdsMediaEvent {
+export class StartedEvent extends MediaEvent {
   static TYPE = 'vds-started';
   constructor(eventInit) {
-    super(VdsStartedEvent.TYPE, eventInit);
+    super(StartedEvent.TYPE, eventInit);
   }
 }
 
-export class VdsSuspendEvent extends VdsMediaEvent {
+export class SuspendEvent extends MediaEvent {
   static TYPE = 'vds-suspend';
   constructor(eventInit) {
-    super(VdsSuspendEvent.TYPE, eventInit);
+    super(SuspendEvent.TYPE, eventInit);
   }
 }
 
-export class VdsReplayEvent extends VdsMediaEvent {
+export class ReplayEvent extends MediaEvent {
   static TYPE = 'vds-replay';
   constructor(eventInit) {
-    super(VdsReplayEvent.TYPE, eventInit);
+    super(ReplayEvent.TYPE, eventInit);
   }
 }
 
-export class VdsTimeUpdateEvent extends VdsMediaEvent {
+export class TimeUpdateEvent extends MediaEvent {
   static TYPE = 'vds-time-update';
   constructor(eventInit) {
-    super(VdsTimeUpdateEvent.TYPE, eventInit);
+    super(TimeUpdateEvent.TYPE, eventInit);
   }
 }
 
-export class VdsViewTypeChangeEvent extends VdsMediaEvent {
+export class ViewTypeChangeEvent extends MediaEvent {
   static TYPE = 'vds-view-type-change';
   constructor(eventInit) {
-    super(VdsViewTypeChangeEvent.TYPE, eventInit);
+    super(ViewTypeChangeEvent.TYPE, eventInit);
   }
 }
 
-export class VdsVolumeChangeEvent extends VdsMediaEvent {
+export class VolumeChangeEvent extends MediaEvent {
   static TYPE = 'vds-volume-change';
   constructor(eventInit) {
-    super(VdsVolumeChangeEvent.TYPE, eventInit);
+    super(VolumeChangeEvent.TYPE, eventInit);
   }
 }
 
-export class VdsWaitingEvent extends VdsMediaEvent {
+export class WaitingEvent extends MediaEvent {
   static TYPE = 'vds-waiting';
   constructor(eventInit) {
-    super(VdsWaitingEvent.TYPE, eventInit);
+    super(WaitingEvent.TYPE, eventInit);
   }
 }

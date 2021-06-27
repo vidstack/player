@@ -7,7 +7,7 @@ import { getSlottedChildren, setAttribute } from '../../../utils/dom.js';
 import { isNil } from '../../../utils/unit.js';
 import { toggleElementStyles } from './css.js';
 
-export const VDS_TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
+export const TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
 
 /** @typedef {import('./types').Toggle} Toggle */
 
@@ -213,6 +213,6 @@ export class ToggleElement extends VdsElement {
  * @readonly
  * @type {import('./types').ToggleElementStorybookArgTypes}
  */
-export const VDS_TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES = {
   pressed: { control: StorybookControlType.Boolean, defaultValue: false }
 };

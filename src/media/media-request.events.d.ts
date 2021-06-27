@@ -2,10 +2,10 @@ import { VdsCustomEvent } from '../shared/events/index.js';
 import { VdsEventInit } from '../shared/events/index.js';
 
 declare global {
-  interface GlobalEventHandlersEventMap extends VdsMediaRequestEvents {}
+  interface GlobalEventHandlersEventMap extends MediaRequestEvents {}
 }
 
-export interface VdsMediaRequestEvents {
+export interface MediaRequestEvents {
   'vds-mute-request': VdsCustomEvent<void>;
   'vds-unmute-request': VdsCustomEvent<void>;
   'vds-enter-fullscreen-request': VdsCustomEvent<void>;
@@ -17,10 +17,8 @@ export interface VdsMediaRequestEvents {
   'vds-volume-change-request': VdsCustomEvent<number>;
 }
 
-export class VdsMediaRequestEvent<
-  DetailType
-> extends VdsCustomEvent<DetailType> {
-  static readonly TYPE: keyof VdsMediaRequestEvents;
+export class MediaRequestEvent<DetailType> extends VdsCustomEvent<DetailType> {
+  static readonly TYPE: keyof MediaRequestEvents;
 }
 
 /**
@@ -29,7 +27,7 @@ export class VdsMediaRequestEvent<
  * @bubbles
  * @composed
  */
-export class VdsMuteRequestEvent extends VdsMediaRequestEvent<void> {
+export class MuteRequestEvent extends MediaRequestEvent<void> {
   static readonly TYPE = 'vds-mute-request';
   constructor(eventInit?: VdsEventInit<void>);
 }
@@ -40,7 +38,7 @@ export class VdsMuteRequestEvent extends VdsMediaRequestEvent<void> {
  * @bubbles
  * @composed
  */
-export class VdsUnmuteRequestEvent extends VdsMediaRequestEvent<void> {
+export class UnmuteRequestEvent extends MediaRequestEvent<void> {
   static readonly TYPE = 'vds-unmute-request';
   constructor(eventInit?: VdsEventInit<void>);
 }
@@ -51,7 +49,7 @@ export class VdsUnmuteRequestEvent extends VdsMediaRequestEvent<void> {
  * @bubbles
  * @composed
  */
-export class VdsEnterFullscreenRequestEvent extends VdsMediaRequestEvent<void> {
+export class EnterFullscreenRequestEvent extends MediaRequestEvent<void> {
   static readonly TYPE = 'vds-enter-fullscreen-request';
   constructor(eventInit?: VdsEventInit<void>);
 }
@@ -62,7 +60,7 @@ export class VdsEnterFullscreenRequestEvent extends VdsMediaRequestEvent<void> {
  * @bubbles
  * @composed
  */
-export class VdsExitFullscreenRequestEvent extends VdsMediaRequestEvent<void> {
+export class ExitFullscreenRequestEvent extends MediaRequestEvent<void> {
   static readonly TYPE = 'vds-exit-fullscreen-request';
   constructor(eventInit?: VdsEventInit<void>);
 }
@@ -73,7 +71,7 @@ export class VdsExitFullscreenRequestEvent extends VdsMediaRequestEvent<void> {
  * @bubbles
  * @composed
  */
-export class VdsPlayRequestEvent extends VdsMediaRequestEvent<void> {
+export class PlayRequestEvent extends MediaRequestEvent<void> {
   static readonly TYPE = 'vds-play-request';
   constructor(eventInit?: VdsEventInit<void>);
 }
@@ -84,7 +82,7 @@ export class VdsPlayRequestEvent extends VdsMediaRequestEvent<void> {
  * @bubbles
  * @composed
  */
-export class VdsPauseRequestEvent extends VdsMediaRequestEvent<void> {
+export class PauseRequestEvent extends MediaRequestEvent<void> {
   static readonly TYPE = 'vds-pause-request';
   constructor(eventInit?: VdsEventInit<void>);
 }
@@ -95,7 +93,7 @@ export class VdsPauseRequestEvent extends VdsMediaRequestEvent<void> {
  * @bubbles
  * @composed
  */
-export class VdsSeekRequestEvent extends VdsMediaRequestEvent<number> {
+export class SeekRequestEvent extends MediaRequestEvent<number> {
   static readonly TYPE = 'vds-seek-request';
   constructor(eventInit: VdsEventInit<number>);
 }
@@ -106,7 +104,7 @@ export class VdsSeekRequestEvent extends VdsMediaRequestEvent<number> {
  * @bubbles
  * @composed
  */
-export class VdsSeekingRequestEvent extends VdsMediaRequestEvent<number> {
+export class SeekingRequestEvent extends MediaRequestEvent<number> {
   static readonly TYPE = 'vds-seeking-request';
   constructor(eventInit: VdsEventInit<number>);
 }
@@ -117,7 +115,7 @@ export class VdsSeekingRequestEvent extends VdsMediaRequestEvent<number> {
  * @bubbles
  * @composed
  */
-export class VdsVolumeChangeRequestEvent extends VdsMediaRequestEvent<number> {
+export class VolumeChangeRequestEvent extends MediaRequestEvent<number> {
   static readonly TYPE = 'vds-volume-change-request';
   constructor(eventInit: VdsEventInit<number>);
 }

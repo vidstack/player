@@ -1,7 +1,7 @@
 import { safelyDefineCustomElement } from '../../../utils/dom.js';
 import {
-  MuteButtonElement,
-  VDS_MUTE_BUTTON_ELEMENT_TAG_NAME
+  MUTE_BUTTON_ELEMENT_TAG_NAME,
+  MuteButtonElement
 } from './MuteButtonElement.js';
 
-safelyDefineCustomElement(VDS_MUTE_BUTTON_ELEMENT_TAG_NAME, MuteButtonElement);
+safelyDefineCustomElement(MUTE_BUTTON_ELEMENT_TAG_NAME, MuteButtonElement);

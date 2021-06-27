@@ -1,11 +1,11 @@
-import { VdsMediaRequestEvents } from '../../../media/index.js';
+import { MediaRequestEvents } from '../../../media/index.js';
 import {
   StorybookArgs,
   StorybookArgTypes
 } from '../../../shared/storybook/index.js';
 import { ThrottledFunction } from '../../../utils/timing.types.js';
 import { SliderElement, SliderElementProps } from '../slider/index.js';
-import { VdsScrubberEvents } from './events.js';
+import { ScrubberEvents } from './events.js';
 
 export type Scrubber = ScrubberElementProps;
 
@@ -128,9 +128,9 @@ export interface ScrubberElementMediaProps {
 
 export type ScrubberElementStorybookArgTypes = StorybookArgTypes<
   ScrubberElementProps & ScrubberElementMediaProps,
-  VdsScrubberEvents &
+  ScrubberEvents &
     Pick<
-      VdsMediaRequestEvents,
+      MediaRequestEvents,
       | 'vds-seek-request'
       | 'vds-seeking-request'
       | 'vds-play-request'
@@ -140,9 +140,9 @@ export type ScrubberElementStorybookArgTypes = StorybookArgTypes<
 
 export type ScrubberElementStorybookArgs = StorybookArgs<
   ScrubberElementProps & ScrubberElementMediaProps,
-  VdsScrubberEvents &
+  ScrubberEvents &
     Pick<
-      VdsMediaRequestEvents,
+      MediaRequestEvents,
       | 'vds-seek-request'
       | 'vds-seeking-request'
       | 'vds-play-request'

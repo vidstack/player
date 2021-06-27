@@ -2,14 +2,14 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import {
-  VDS_HLS_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_HLS_ELEMENT_TAG_NAME
+  HLS_ELEMENT_STORYBOOK_ARG_TYPES,
+  HLS_ELEMENT_TAG_NAME
 } from './HlsElement.js';
 
 export default {
   title: 'UI/Providers/HLS',
-  component: VDS_HLS_ELEMENT_TAG_NAME,
-  argTypes: VDS_HLS_ELEMENT_STORYBOOK_ARG_TYPES
+  component: HLS_ELEMENT_TAG_NAME,
+  argTypes: HLS_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

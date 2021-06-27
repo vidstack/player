@@ -3,14 +3,14 @@ import './define.js';
 import { html } from 'lit';
 
 import {
-  VDS_TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_TOGGLE_ELEMENT_TAG_NAME
+  TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES,
+  TOGGLE_ELEMENT_TAG_NAME
 } from './ToggleElement.js';
 
 export default {
   title: 'UI/Foundation/Controls/Toggle',
-  component: VDS_TOGGLE_ELEMENT_TAG_NAME,
-  argTypes: VDS_TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES
+  component: TOGGLE_ELEMENT_TAG_NAME,
+  argTypes: TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

@@ -1,36 +1,36 @@
 import { VdsCustomEvent, VdsEventInit } from '../../shared/events/index.js';
 
 declare global {
-  interface GlobalEventHandlersEventMap extends VdsBufferingIndicatorEvents {}
+  interface GlobalEventHandlersEventMap extends BufferingIndicatorEvents {}
 }
 
-export interface VdsBufferingIndicatorEvents {
+export interface BufferingIndicatorEvents {
   'vds-buffering-indicator-show': VdsCustomEvent<void>;
   'vds-buffering-indicator-hide': VdsCustomEvent<void>;
 }
 
-export class VdsBufferingIndicatorEvent<
+export class BufferingIndicatorEvent<
   DetailType
 > extends VdsCustomEvent<DetailType> {
-  static readonly TYPE: keyof VdsBufferingIndicatorEvents;
+  static readonly TYPE: keyof BufferingIndicatorEvents;
 }
 
 /**
  * Emitted when the buffering indicator is shown.
  */
-export class VdsBufferingIndicatorShowEvent extends VdsBufferingIndicatorEvent<void> {
+export class BufferingIndicatorShowEvent extends BufferingIndicatorEvent<void> {
   static readonly TYPE = 'vds-buffering-indicator-show';
   constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsBufferingIndicatorShowEvent.TYPE, eventInit);
+    super(BufferingIndicatorShowEvent.TYPE, eventInit);
   }
 }
 
 /**
  * Emitted when the buffering indicator is hidden.
  */
-export class VdsBufferingIndicatorHideEvent extends VdsBufferingIndicatorEvent<void> {
+export class BufferingIndicatorHideEvent extends BufferingIndicatorEvent<void> {
   static readonly TYPE = 'vds-buffering-indicator-hide';
   constructor(eventInit?: VdsEventInit<void>) {
-    super(VdsBufferingIndicatorHideEvent.TYPE, eventInit);
+    super(BufferingIndicatorHideEvent.TYPE, eventInit);
   }
 }

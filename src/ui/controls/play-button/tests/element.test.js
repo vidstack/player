@@ -2,21 +2,17 @@ import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
 import {
-  VdsPauseRequestEvent,
-  VdsPlayRequestEvent
+  PauseRequestEvent,
+  PlayRequestEvent
 } from '../../../../media/index.js';
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-  PlayButtonElement,
-  VDS_PLAY_BUTTON_ELEMENT_TAG_NAME
-} from '../PlayButtonElement.js';
+  PLAY_BUTTON_ELEMENT_TAG_NAME,
+  PlayButtonElement} from '../PlayButtonElement.js';
 
-window.customElements.define(
-  VDS_PLAY_BUTTON_ELEMENT_TAG_NAME,
-  PlayButtonElement
-);
+window.customElements.define(PLAY_BUTTON_ELEMENT_TAG_NAME, PlayButtonElement);
 
-describe(VDS_PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
+describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-play-button>
@@ -28,7 +24,7 @@ describe(VDS_PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     provider.forceMediaReady();
 
     const button = /** @type {PlayButtonElement} */ (
-      container.querySelector(VDS_PLAY_BUTTON_ELEMENT_TAG_NAME)
+      container.querySelector(PLAY_BUTTON_ELEMENT_TAG_NAME)
     );
 
     return { provider, button };
@@ -83,20 +79,20 @@ describe(VDS_PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     expect(button.pauseSlotElement).to.not.have.attribute('hidden');
   });
 
-  it(`should emit ${VdsPlayRequestEvent.TYPE} when clicked while paused`, async function () {
+  it(`should emit ${PlayRequestEvent.TYPE} when clicked while paused`, async function () {
     const { provider, button } = await buildFixture();
     provider.paused = true;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, VdsPlayRequestEvent.TYPE);
+    await oneEvent(button, PlayRequestEvent.TYPE);
   });
 
-  it(`should emit ${VdsPauseRequestEvent.TYPE} when clicked while not paused`, async function () {
+  it(`should emit ${PauseRequestEvent.TYPE} when clicked while not paused`, async function () {
     const { provider, button } = await buildFixture();
     provider.paused = false;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, VdsPauseRequestEvent.TYPE);
+    await oneEvent(button, PauseRequestEvent.TYPE);
   });
 
   it('should receive transformed paused context updates', async function () {

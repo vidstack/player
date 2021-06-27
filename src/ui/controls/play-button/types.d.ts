@@ -1,4 +1,4 @@
-import { VdsMediaRequestEvents } from '../../../media/index.js';
+import { MediaRequestEvents } from '../../../media/index.js';
 import {
   StorybookArgs,
   StorybookArgTypes
@@ -25,10 +25,10 @@ export interface PlayButtonElementMediaProps {
 
 export type PlayButtonElementStorybookArgTypes = StorybookArgTypes<
   PlayButtonElementProps & PlayButtonElementMediaProps,
-  Pick<VdsMediaRequestEvents, 'vds-play-request' | 'vds-pause-request'>
+  Pick<MediaRequestEvents, 'vds-play-request' | 'vds-pause-request'>
 >;
 
 export type PlayButtonElementStorybookArgs = StorybookArgs<
   PlayButtonElementProps & PlayButtonElementMediaProps,
-  Pick<VdsMediaRequestEvents, 'vds-play-request' | 'vds-pause-request'>
+  Pick<MediaRequestEvents, 'vds-play-request' | 'vds-pause-request'>
 >;

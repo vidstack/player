@@ -1,7 +1,7 @@
 import { safelyDefineCustomElement } from '../../../utils/dom.js';
 import {
-  ScrubberElement,
-  VDS_SCRUBBER_ELEMENT_TAG_NAME
+  SCRUBBER_ELEMENT_TAG_NAME,
+  ScrubberElement
 } from './ScrubberElement.js';
 
-safelyDefineCustomElement(VDS_SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
+safelyDefineCustomElement(SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);

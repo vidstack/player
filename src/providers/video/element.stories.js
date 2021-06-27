@@ -2,14 +2,14 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import {
-  VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_VIDEO_ELEMENT_TAG_NAME
+  VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
+  VIDEO_ELEMENT_TAG_NAME
 } from './VideoElement.js';
 
 export default {
   title: 'UI/Providers/Video',
-  component: VDS_VIDEO_ELEMENT_TAG_NAME,
-  argTypes: VDS_VIDEO_ELEMENT_STORYBOOK_ARG_TYPES
+  component: VIDEO_ELEMENT_TAG_NAME,
+  argTypes: VIDEO_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

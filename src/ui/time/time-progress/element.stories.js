@@ -6,14 +6,14 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
-  VDS_TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES,
-  VDS_TIME_PROGRESS_ELEMENT_TAG_NAME
+  TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES,
+  TIME_PROGRESS_ELEMENT_TAG_NAME
 } from './TimeProgressElement.js';
 
 export default {
   title: 'UI/Foundation/Time/Time Progress',
-  component: VDS_TIME_PROGRESS_ELEMENT_TAG_NAME,
-  argTypes: VDS_TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES
+  component: TIME_PROGRESS_ELEMENT_TAG_NAME,
+  argTypes: TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
 /**

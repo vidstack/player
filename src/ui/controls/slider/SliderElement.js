@@ -13,12 +13,12 @@ import { setAttribute } from '../../../utils/dom.js';
 import { throttle } from '../../../utils/timing.js';
 import { sliderElementStyles } from './css.js';
 import {
-  VdsSliderDragEndEvent,
-  VdsSliderDragStartEvent,
-  VdsSliderValueChangeEvent
+  SliderDragEndEvent,
+  SliderDragStartEvent,
+  SliderValueChangeEvent
 } from './events.js';
 
-export const VDS_SLIDER_ELEMENT_TAG_NAME = 'vds-slider';
+export const SLIDER_ELEMENT_TAG_NAME = 'vds-slider';
 
 /**
  * The direction to move the thumb, associated with key symbols.
@@ -121,9 +121,9 @@ export class SliderElement extends WithFocus(VdsElement) {
   /** @type {string[]} */
   static get events() {
     return [
-      VdsSliderDragEndEvent.TYPE,
-      VdsSliderDragStartEvent.TYPE,
-      VdsSliderValueChangeEvent.TYPE
+      SliderDragEndEvent.TYPE,
+      SliderDragStartEvent.TYPE,
+      SliderValueChangeEvent.TYPE
     ];
   }
 
@@ -420,7 +420,7 @@ export class SliderElement extends WithFocus(VdsElement) {
     );
 
     this.dispatchEvent(
-      new VdsSliderValueChangeEvent({
+      new SliderValueChangeEvent({
         detail: this.value,
         originalEvent: event
       })
@@ -605,7 +605,7 @@ export class SliderElement extends WithFocus(VdsElement) {
     this._isDragging = true;
     this.updateValueBasedOnThumbPosition(event, false);
     this.dispatchEvent(
-      new VdsSliderDragStartEvent({
+      new SliderDragStartEvent({
         originalEvent: event,
         detail: this.value
       })
@@ -622,7 +622,7 @@ export class SliderElement extends WithFocus(VdsElement) {
     this._isDragging = false;
     this.updateValueBasedOnThumbPosition(event, false);
     this.dispatchEvent(
-      new VdsSliderDragEndEvent({
+      new SliderDragEndEvent({
         originalEvent: event,
         detail: this.value
       })
@@ -737,7 +737,7 @@ export class SliderElement extends WithFocus(VdsElement) {
 
     if (shouldFireValueChange) {
       this.dispatchEvent(
-        new VdsSliderValueChangeEvent({
+        new SliderValueChangeEvent({
           detail: this.value,
           originalEvent: event
         })
@@ -750,7 +750,7 @@ export class SliderElement extends WithFocus(VdsElement) {
  * @readonly
  * @type {import('./types').SliderElementStorybookArgTypes}
  */
-export const VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   disabled: { control: StorybookControlType.Boolean, defaultValue: false },
   hidden: { control: StorybookControlType.Boolean, defaultValue: false },
   label: { control: StorybookControlType.Text },
@@ -766,7 +766,7 @@ export const VDS_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   throttle: { control: StorybookControlType.Number, defaultValue: 10 },
   value: { control: StorybookControlType.Number, defaultValue: 50 },
   valueText: { control: StorybookControlType.Text },
-  onVdsSliderDragStart: storybookAction(VdsSliderDragStartEvent.TYPE),
-  onVdsSliderDragEnd: storybookAction(VdsSliderDragEndEvent.TYPE),
-  onVdsSliderValueChange: storybookAction(VdsSliderValueChangeEvent.TYPE)
+  onVdsSliderDragStart: storybookAction(SliderDragStartEvent.TYPE),
+  onVdsSliderDragEnd: storybookAction(SliderDragEndEvent.TYPE),
+  onVdsSliderValueChange: storybookAction(SliderValueChangeEvent.TYPE)
 };

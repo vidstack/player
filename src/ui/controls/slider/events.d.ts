@@ -1,45 +1,45 @@
 import { VdsCustomEvent, VdsEventInit } from '../../../shared/events/index.js';
 
 declare global {
-  interface GlobalEventHandlersEventMap extends VdsSliderEvents {}
+  interface GlobalEventHandlersEventMap extends SliderEvents {}
 }
 
-export interface VdsSliderEvents {
+export interface SliderEvents {
   'vds-slider-value-change': VdsCustomEvent<number>;
   'vds-slider-drag-start': VdsCustomEvent<number>;
   'vds-slider-drag-end': VdsCustomEvent<number>;
 }
 
-export class VdsSliderEvent<DetailType> extends VdsCustomEvent<DetailType> {
-  static readonly TYPE: keyof VdsSliderEvents;
+export class SliderEvent<DetailType> extends VdsCustomEvent<DetailType> {
+  static readonly TYPE: keyof SliderEvents;
 }
 
 /**
  * Fired when the slider value changes.
  */
-export class VdsSliderValueChangeEvent extends VdsSliderEvent<number> {
+export class SliderValueChangeEvent extends SliderEvent<number> {
   static readonly TYPE = 'vds-slider-value-change';
   constructor(eventInit: VdsEventInit<number>) {
-    super(VdsSliderValueChangeEvent.TYPE, eventInit);
+    super(SliderValueChangeEvent.TYPE, eventInit);
   }
 }
 
 /**
  * Fired when the user begins interacting with the slider and dragging the thumb.
  */
-export class VdsSliderDragStartEvent extends VdsSliderEvent<number> {
+export class SliderDragStartEvent extends SliderEvent<number> {
   static readonly TYPE = 'vds-slider-drag-start';
   constructor(eventInit: VdsEventInit<number>) {
-    super(VdsSliderDragStartEvent.TYPE, eventInit);
+    super(SliderDragStartEvent.TYPE, eventInit);
   }
 }
 
 /**
  * Fired when the user stops dragging the slider thumb.
  */
-export class VdsSliderDragEndEvent extends VdsSliderEvent<number> {
+export class SliderDragEndEvent extends SliderEvent<number> {
   static readonly TYPE = 'vds-slider-drag-end';
   constructor(eventInit: VdsEventInit<number>) {
-    super(VdsSliderDragEndEvent.TYPE, eventInit);
+    super(SliderDragEndEvent.TYPE, eventInit);
   }
 }

@@ -1,4 +1,4 @@
-import { VdsMediaRequestEvents } from '../../../media/index.js';
+import { MediaRequestEvents } from '../../../media/index.js';
 import {
   StorybookArgs,
   StorybookArgTypes
@@ -26,7 +26,7 @@ export interface FullscreenButtonElementMediaProps {
 export type FullscreenButtonElementStorybookArgTypes = StorybookArgTypes<
   FullscreenButtonElementProps & FullscreenButtonElementMediaProps,
   Pick<
-    VdsMediaRequestEvents,
+    MediaRequestEvents,
     'vds-enter-fullscreen-request' | 'vds-exit-fullscreen-request'
   >
 >;
@@ -34,7 +34,7 @@ export type FullscreenButtonElementStorybookArgTypes = StorybookArgTypes<
 export type FullscreenButtonElementStorybookArgs = StorybookArgs<
   FullscreenButtonElementProps & FullscreenButtonElementMediaProps,
   Pick<
-    VdsMediaRequestEvents,
+    MediaRequestEvents,
     'vds-enter-fullscreen-request' | 'vds-exit-fullscreen-request'
   >
 >;

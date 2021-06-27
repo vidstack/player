@@ -6,29 +6,29 @@ import { bindEventListeners } from '../../shared/events/index.js';
 import { storybookAction } from '../../shared/storybook/index.js';
 import { isNil } from '../../utils/unit.js';
 import {
-  MediaContainerElement,
-  VdsMediaContainerConnectEvent
+  MediaContainerConnectEvent,
+  MediaContainerElement
 } from '../container/index.js';
 import { createMediaContextRecord, mediaContext } from '../media.context.js';
 import {
-  VdsEnterFullscreenRequestEvent,
-  VdsExitFullscreenRequestEvent,
-  VdsMuteRequestEvent,
-  VdsPauseRequestEvent,
-  VdsPlayRequestEvent,
-  VdsSeekingRequestEvent,
-  VdsSeekRequestEvent,
-  VdsUnmuteRequestEvent,
-  VdsVolumeChangeRequestEvent
+  EnterFullscreenRequestEvent,
+  ExitFullscreenRequestEvent,
+  MuteRequestEvent,
+  PauseRequestEvent,
+  PlayRequestEvent,
+  SeekingRequestEvent,
+  SeekRequestEvent,
+  UnmuteRequestEvent,
+  VolumeChangeRequestEvent
 } from '../media-request.events.js';
 import { MediaPluginManager } from '../plugin/index.js';
 import {
-  MediaProviderElement,
-  VdsMediaProviderConnectEvent
+  MediaProviderConnectEvent,
+  MediaProviderElement
 } from '../provider/index.js';
 import { mediaControllerStyles } from './css.js';
 
-export const VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
+export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
 
 /**
  * The media controller acts as a message bus between the media provider and all other
@@ -107,16 +107,16 @@ export class MediaControllerElement extends VdsElement {
    */
   bindEventListeners() {
     const events = {
-      [VdsMediaContainerConnectEvent.TYPE]: this.handleMediaContainerConnect,
-      [VdsMediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect,
-      [VdsMuteRequestEvent.TYPE]: this.handleMuteRequest,
-      [VdsUnmuteRequestEvent.TYPE]: this.handleUnmuteRequest,
-      [VdsPlayRequestEvent.TYPE]: this.handlePlayRequest,
-      [VdsPauseRequestEvent.TYPE]: this.handlePauseRequest,
-      [VdsSeekRequestEvent.TYPE]: this.handleSeekRequest,
-      [VdsVolumeChangeRequestEvent.TYPE]: this.handleVolumeChangeRequest,
-      [VdsEnterFullscreenRequestEvent.TYPE]: this.handleEnterFullscreenRequest,
-      [VdsExitFullscreenRequestEvent.TYPE]: this.handleExitFullscreenRequest
+      [MediaContainerConnectEvent.TYPE]: this.handleMediaContainerConnect,
+      [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect,
+      [MuteRequestEvent.TYPE]: this.handleMuteRequest,
+      [UnmuteRequestEvent.TYPE]: this.handleUnmuteRequest,
+      [PlayRequestEvent.TYPE]: this.handlePlayRequest,
+      [PauseRequestEvent.TYPE]: this.handlePauseRequest,
+      [SeekRequestEvent.TYPE]: this.handleSeekRequest,
+      [VolumeChangeRequestEvent.TYPE]: this.handleVolumeChangeRequest,
+      [EnterFullscreenRequestEvent.TYPE]: this.handleEnterFullscreenRequest,
+      [ExitFullscreenRequestEvent.TYPE]: this.handleExitFullscreenRequest
     };
 
     bindEventListeners(this, events, this.disconnectDisposal);
@@ -168,7 +168,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsMediaContainerConnectEvent} event
+   * @param {MediaContainerConnectEvent} event
    * @returns {void}
    */
   handleMediaContainerConnect(event) {
@@ -209,7 +209,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsMediaProviderConnectEvent} event
+   * @param {MediaProviderConnectEvent} event
    * @returns {void}
    */
   handleMediaProviderConnect(event) {
@@ -261,7 +261,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsMuteRequestEvent} event
+   * @param {MuteRequestEvent} event
    * @returns {void}
    */
   handleMuteRequest(event) {
@@ -273,7 +273,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsUnmuteRequestEvent} event
+   * @param {UnmuteRequestEvent} event
    * @returns {void}
    */
   handleUnmuteRequest(event) {
@@ -285,7 +285,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsPlayRequestEvent} event
+   * @param {PlayRequestEvent} event
    * @returns {void}
    */
   handlePlayRequest(event) {
@@ -297,7 +297,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsPauseRequestEvent} event
+   * @param {PauseRequestEvent} event
    * @returns {void}
    */
   handlePauseRequest(event) {
@@ -309,7 +309,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsSeekRequestEvent} event
+   * @param {SeekRequestEvent} event
    * @returns {void}
    */
   handleSeekRequest(event) {
@@ -321,7 +321,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsVolumeChangeRequestEvent} event
+   * @param {VolumeChangeRequestEvent} event
    * @returns {void}
    */
   handleVolumeChangeRequest(event) {
@@ -333,7 +333,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsEnterFullscreenRequestEvent} event
+   * @param {EnterFullscreenRequestEvent} event
    * @returns {Promise<void>}
    */
   async handleEnterFullscreenRequest(event) {
@@ -347,7 +347,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @param {VdsExitFullscreenRequestEvent} event
+   * @param {ExitFullscreenRequestEvent} event
    * @returns {Promise<void>}
    */
   async handleExitFullscreenRequest(event) {
@@ -364,18 +364,16 @@ export class MediaControllerElement extends VdsElement {
  * @readonly
  * @type {import('./types').MediaControllerElementStorybookArgTypes}
  */
-export const VDS_MEDIA_CONTROLLER_ELEMENT_STORYBOOK_ARG_TYPES = {
+export const MEDIA_CONTROLLER_ELEMENT_STORYBOOK_ARG_TYPES = {
   onVdsEnterFullscreenRequest: storybookAction(
-    VdsEnterFullscreenRequestEvent.TYPE
+    EnterFullscreenRequestEvent.TYPE
   ),
-  onVdsExitFullscreenRequest: storybookAction(
-    VdsExitFullscreenRequestEvent.TYPE
-  ),
-  onVdsMuteRequest: storybookAction(VdsMuteRequestEvent.TYPE),
-  onVdsPauseRequest: storybookAction(VdsPauseRequestEvent.TYPE),
-  onVdsPlayRequest: storybookAction(VdsPlayRequestEvent.TYPE),
-  onVdsSeekingRequest: storybookAction(VdsSeekingRequestEvent.TYPE),
-  onVdsSeekRequest: storybookAction(VdsSeekRequestEvent.TYPE),
-  onVdsUnmuteRequest: storybookAction(VdsUnmuteRequestEvent.TYPE),
-  onVdsVolumeChangeRequest: storybookAction(VdsVolumeChangeRequestEvent.TYPE)
+  onVdsExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE),
+  onVdsMuteRequest: storybookAction(MuteRequestEvent.TYPE),
+  onVdsPauseRequest: storybookAction(PauseRequestEvent.TYPE),
+  onVdsPlayRequest: storybookAction(PlayRequestEvent.TYPE),
+  onVdsSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
+  onVdsSeekRequest: storybookAction(SeekRequestEvent.TYPE),
+  onVdsUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE),
+  onVdsVolumeChangeRequest: storybookAction(VolumeChangeRequestEvent.TYPE)
 };

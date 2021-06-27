@@ -7,14 +7,12 @@ import { fixture } from '@open-wc/testing';
 import { html } from 'lit';
 
 import {
-  MediaContainerElement,
-  VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME
-} from '../container/index.js';
+  MEDIA_CONTAINER_ELEMENT_TAG_NAME,
+  MediaContainerElement} from '../container/index.js';
 import { MediaControllerElement } from '../controller/index.js';
 import {
-  FakeMediaProviderElement,
-  VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
-} from './fake-media-provider/index.js';
+  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
+  FakeMediaProviderElement} from './fake-media-provider/index.js';
 
 /**
  * @param {import('lit').TemplateResult} [uiSlot]
@@ -37,11 +35,11 @@ export async function buildMediaFixture(uiSlot = html``, mediaSlot = html``) {
   );
 
   const container = /** @type {MediaContainerElement} */ (
-    controller.querySelector(VDS_MEDIA_CONTAINER_ELEMENT_TAG_NAME)
+    controller.querySelector(MEDIA_CONTAINER_ELEMENT_TAG_NAME)
   );
 
   const provider = /** @type {FakeMediaProviderElement} */ (
-    controller.querySelector(VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME)
+    controller.querySelector(FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME)
   );
 
   return {

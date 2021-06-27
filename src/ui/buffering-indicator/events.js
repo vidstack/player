@@ -1,17 +1,17 @@
 import { VdsCustomEvent } from '../../shared/events/index.js';
 
-export class VdsBufferingIndicatorEvent extends VdsCustomEvent {}
+export class BufferingIndicatorEvent extends VdsCustomEvent {}
 
-export class VdsBufferingIndicatorShowEvent extends VdsBufferingIndicatorEvent {
+export class BufferingIndicatorShowEvent extends BufferingIndicatorEvent {
   static TYPE = 'vds-buffering-indicator-show';
   constructor(eventInit) {
-    super(VdsBufferingIndicatorShowEvent.TYPE, eventInit);
+    super(BufferingIndicatorShowEvent.TYPE, eventInit);
   }
 }
 
-export class VdsBufferingIndicatorHideEvent extends VdsBufferingIndicatorEvent {
+export class BufferingIndicatorHideEvent extends BufferingIndicatorEvent {
   static TYPE = 'vds-buffering-indicator-hide';
   constructor(eventInit) {
-    super(VdsBufferingIndicatorHideEvent.TYPE, eventInit);
+    super(BufferingIndicatorHideEvent.TYPE, eventInit);
   }
 }
