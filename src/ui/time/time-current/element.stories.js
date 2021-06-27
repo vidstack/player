@@ -4,7 +4,7 @@ import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { ifNonEmpty } from '../../../foundation/directives/index.js';
 import {
   TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES,
   TIME_CURRENT_ELEMENT_TAG_NAME

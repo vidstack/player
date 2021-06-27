@@ -1,4 +1,4 @@
-import { VdsCustomEvent, VdsEventInit } from '../../shared/events/index.js';
+import { VdsCustomEvent, VdsEventInit } from '../../foundation/events/index.js';
 import { MediaProviderElement } from './MediaProviderElement.js';
 
 declare global {

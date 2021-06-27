@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { VdsElement } from '../../shared/elements/index.js';
+import { VdsElement } from '../../foundation/elements/index.js';
 import { IS_IOS } from '../../utils/support.js';
 import { mediaContext } from '../media.context.js';
 import { mediaUiElementStyles } from './styles.js';
@@ -37,7 +37,7 @@ export class MediaUiElement extends VdsElement {
     return ['root', 'root-hidden'];
   }
 
-  /** @type {import('../../shared/context').ContextConsumerDeclarations} */
+  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaCanPlay: mediaContext.canPlay,

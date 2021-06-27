@@ -5,7 +5,7 @@ import {
 import {
   StorybookArgs,
   StorybookArgTypes
-} from '../../shared/storybook/index.js';
+} from '../../foundation/storybook/index.js';
 import {
   Html5MediaElementEngine,
   Html5MediaElementMethods,

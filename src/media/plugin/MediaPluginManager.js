@@ -1,4 +1,4 @@
-import { PluginManager } from '../../shared/plugin/index.js';
+import { PluginManager } from '../../foundation/plugin/index.js';
 import { MediaPluginConnectEvent } from './events.js';
 
 /**

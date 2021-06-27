@@ -2,6 +2,8 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { ref } from 'lit/directives/ref.js';
 
+import { ifNonEmpty, ifNumber } from '../../foundation/directives/index.js';
+import { StorybookControlType } from '../../foundation/storybook/index.js';
 import {
   MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
   MediaType,
@@ -9,9 +11,6 @@ import {
   ViewType,
   ViewTypeChangeEvent
 } from '../../media/index.js';
-import { ifNonEmpty } from '../../shared/directives/if-non-empty.js';
-import { ifNumber } from '../../shared/directives/if-number.js';
-import { StorybookControlType } from '../../shared/storybook/index.js';
 import { Html5MediaElement } from '../html5/index.js';
 import { VideoFullscreenController } from './fullscreen/index.js';
 import { VideoPresentationController } from './presentation/index.js';

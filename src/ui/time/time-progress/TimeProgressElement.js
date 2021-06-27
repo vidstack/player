@@ -5,8 +5,8 @@ import '../time-duration/define.js';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { VdsElement } from '../../../shared/elements/index.js';
-import { StorybookControlType } from '../../../shared/storybook/index.js';
+import { VdsElement } from '../../../foundation/elements/index.js';
+import { StorybookControlType } from '../../../foundation/storybook/index.js';
 import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { TimeElement } from '../time/index.js';
 import { TimeCurrentElement } from '../time-current/index.js';

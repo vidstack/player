@@ -1,7 +1,7 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
 
-import { WithContext } from '../../../shared/context/index.js';
+import { WithContext } from '../../../foundation/context/index.js';
 import { safelyDefineCustomElement } from '../../../utils/dom.js';
 import { mediaContext } from '../../media.context.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
@@ -9,7 +9,7 @@ import { createTimeRanges } from '../../time-ranges.js';
 import { ViewType } from '../../ViewType.js';
 
 class FakeMediaConsumerElement extends WithContext(LitElement) {
-  /** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       paused: mediaContext.paused,

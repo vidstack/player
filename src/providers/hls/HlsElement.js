@@ -1,5 +1,10 @@
 import Hls from 'hls.js';
 
+import { VdsCustomEvent } from '../../foundation/events/index.js';
+import {
+  storybookAction,
+  StorybookControlType
+} from '../../foundation/storybook/index.js';
 import {
   CanPlay,
   DurationChangeEvent,
@@ -7,11 +12,6 @@ import {
   MediaType,
   MediaTypeChangeEvent
 } from '../../media/index.js';
-import { VdsCustomEvent } from '../../shared/events/index.js';
-import {
-  storybookAction,
-  StorybookControlType
-} from '../../shared/storybook/index.js';
 import { isNil, isUndefined } from '../../utils/unit.js';
 import {
   VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,

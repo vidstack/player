@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { createRef } from 'lit/directives/ref.js';
 
+import { listen, redispatchEvent } from '../../foundation/events/index.js';
 import {
   AbortEvent,
   CanPlay,
@@ -27,7 +28,6 @@ import {
   VolumeChangeEvent,
   WaitingEvent
 } from '../../media/index.js';
-import { listen, redispatchEvent } from '../../shared/events/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
 import { IS_SAFARI } from '../../utils/support.js';
 import { isNil, isNumber, isUndefined } from '../../utils/unit.js';

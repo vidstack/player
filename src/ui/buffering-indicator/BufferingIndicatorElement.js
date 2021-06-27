@@ -1,11 +1,11 @@
 import { html } from 'lit';
 
-import { mediaContext } from '../../media/index.js';
-import { VdsElement } from '../../shared/elements/index.js';
+import { VdsElement } from '../../foundation/elements/index.js';
 import {
   storybookAction,
   StorybookControlType
-} from '../../shared/storybook/index.js';
+} from '../../foundation/storybook/index.js';
+import { mediaContext } from '../../media/index.js';
 import { getSlottedChildren, setAttribute } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
 import {
@@ -86,7 +86,7 @@ export class BufferingIndicatorElement extends VdsElement {
     };
   }
 
-  /** @type {import('../../shared/context').ContextConsumerDeclarations} */
+  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaCanPlay: mediaContext.canPlay,

@@ -3,7 +3,7 @@ import type Hls from 'hls.js';
 import {
   StorybookArgs,
   StorybookArgTypes
-} from '../../shared/storybook/index.js';
+} from '../../foundation/storybook/index.js';
 import {
   VideoElementEngine,
   VideoElementProps,

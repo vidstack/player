@@ -1,8 +1,9 @@
+import { StorybookControlType } from '../../../foundation/storybook/index.js';
 import { mediaContext } from '../../../media/index.js';
-import { StorybookControlType } from '../../../shared/storybook/index.js';
 import {
   TIME_ELEMENT_STORYBOOK_ARG_TYPES,
-  TimeElement} from '../time/index.js';
+  TimeElement
+} from '../time/index.js';
 
 export const TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
 
@@ -46,7 +47,7 @@ export class TimeCurrentElement extends TimeElement {
     this.seconds = mediaContext.currentTime.initialValue;
   }
 
-  /** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       seconds: mediaContext.currentTime

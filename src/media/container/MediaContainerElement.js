@@ -3,11 +3,11 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { VdsElement } from '../../shared/elements/index.js';
-import { FullscreenController } from '../../shared/fullscreen/index.js';
-import { ScreenOrientationController } from '../../shared/screen-orientation/index.js';
-import { storybookAction } from '../../shared/storybook/helpers.js';
-import { StorybookControlType } from '../../shared/storybook/index.js';
+import { VdsElement } from '../../foundation/elements/index.js';
+import { FullscreenController } from '../../foundation/fullscreen/index.js';
+import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
+import { storybookAction } from '../../foundation/storybook/helpers.js';
+import { StorybookControlType } from '../../foundation/storybook/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
 import { getAllObjectPropertyNames } from '../../utils/object.js';
 import { isNil, isString, isUndefined } from '../../utils/unit.js';
@@ -101,7 +101,7 @@ export class MediaContainerElement extends VdsElement {
     };
   }
 
-  /** @type {import('../../shared/context').ContextConsumerDeclarations} */
+  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaCanPlay: mediaContext.canPlay,

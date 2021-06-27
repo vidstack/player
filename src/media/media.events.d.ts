@@ -1,5 +1,5 @@
-import { VdsCustomEvent } from '../shared/events/index.js';
-import { VdsEventInit } from '../shared/events/index.js';
+import { VdsCustomEvent } from '../foundation/events/index.js';
+import { VdsEventInit } from '../foundation/events/index.js';
 import { MediaType } from './MediaType.js';
 import { ViewType } from './ViewType.js';
 

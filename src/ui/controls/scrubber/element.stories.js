@@ -4,8 +4,8 @@ import './define.js';
 
 import { html } from 'lit';
 
+import { ifNonEmpty } from '../../../foundation/directives/index.js';
 import { createTimeRanges } from '../../../media/index.js';
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import {
   SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES,
   SCRUBBER_ELEMENT_TAG_NAME

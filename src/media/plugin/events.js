@@ -1,3 +1,3 @@
-import { PluginConnectEvent } from '../../shared/plugin/index.js';
+import { PluginConnectEvent } from '../../foundation/plugin/index.js';
 
 export class MediaPluginConnectEvent extends PluginConnectEvent {}

@@ -1,9 +1,9 @@
 import { html } from 'lit';
 
-import { provideContextRecord } from '../../shared/context/index.js';
-import { VdsElement } from '../../shared/elements/index.js';
-import { bindEventListeners } from '../../shared/events/index.js';
-import { storybookAction } from '../../shared/storybook/index.js';
+import { provideContextRecord } from '../../foundation/context/index.js';
+import { VdsElement } from '../../foundation/elements/index.js';
+import { bindEventListeners } from '../../foundation/events/index.js';
+import { storybookAction } from '../../foundation/storybook/index.js';
 import { isNil } from '../../utils/unit.js';
 import {
   MediaContainerConnectEvent,

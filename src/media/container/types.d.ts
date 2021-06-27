@@ -1,9 +1,9 @@
-import { FullscreenHost } from '../../shared/fullscreen/index.js';
-import { ScreenOrientationHost } from '../../shared/screen-orientation.js';
+import { FullscreenHost } from '../../foundation/fullscreen/index.js';
+import { ScreenOrientationHost } from '../../foundation/screen-orientation.js';
 import {
   StorybookArgs,
   StorybookArgTypes
-} from '../../shared/storybook/index.js';
+} from '../../foundation/storybook/index.js';
 import { MediaContainerEvents } from './events.js';
 
 export type MediaContainer = FullscreenHost &

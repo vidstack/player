@@ -2,7 +2,7 @@ import { MediaRequestEvents } from '../../../media/index.js';
 import {
   StorybookArgs,
   StorybookArgTypes
-} from '../../../shared/storybook/index.js';
+} from '../../../foundation/storybook/index.js';
 import { ThrottledFunction } from '../../../utils/timing.types.js';
 import { SliderElement, SliderElementProps } from '../slider/index.js';
 import { ScrubberEvents } from './events.js';

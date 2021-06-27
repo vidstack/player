@@ -1,13 +1,13 @@
 import {
+  storybookAction,
+  StorybookControlType
+} from '../../../foundation/storybook/index.js';
+import {
   mediaContext,
   MediaRemoteControl,
   MuteRequestEvent,
   UnmuteRequestEvent
 } from '../../../media/index.js';
-import {
-  storybookAction,
-  StorybookControlType
-} from '../../../shared/storybook/index.js';
 import {
   TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
   ToggleButtonElement
@@ -56,7 +56,7 @@ export class MuteButtonElement extends ToggleButtonElement {
     this.pressed = mediaContext.muted.initialValue;
   }
 
-  /** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       pressed: mediaContext.muted

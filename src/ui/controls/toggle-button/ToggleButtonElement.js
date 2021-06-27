@@ -4,12 +4,12 @@ import '../button/define.js';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
-import { WithFocus } from '../../../shared/elements/index.js';
+import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { WithFocus } from '../../../foundation/elements/index.js';
 import {
   storybookAction,
   StorybookControlType
-} from '../../../shared/storybook/index.js';
+} from '../../../foundation/storybook/index.js';
 import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { ButtonElement } from '../button/index.js';
 import { ToggleElement } from '../toggle/index.js';

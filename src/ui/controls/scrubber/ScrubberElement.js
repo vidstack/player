@@ -6,6 +6,12 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
+import {
+  storybookAction,
+  StorybookControlType
+} from '../../../foundation/storybook/index.js';
 import {
   mediaContext,
   MediaRemoteControl,
@@ -14,12 +20,6 @@ import {
   SeekingRequestEvent,
   SeekRequestEvent
 } from '../../../media/index.js';
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
-import { VdsElement, WithFocus } from '../../../shared/elements/index.js';
-import {
-  storybookAction,
-  StorybookControlType
-} from '../../../shared/storybook/index.js';
 import { getSlottedChildren, raf } from '../../../utils/dom.js';
 import { formatSpokenTime } from '../../../utils/time.js';
 import { throttle } from '../../../utils/timing.js';
@@ -247,7 +247,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     };
   }
 
-  /** @type {import('../../../shared/context').ContextProviderDeclarations} */
+  /** @type {import('../../../foundation/context').ContextProviderDeclarations} */
   static get contextProviders() {
     return {
       isPreviewShowing: scrubberContext.preview.showing,
@@ -255,7 +255,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     };
   }
 
-  /** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaCurrentTime: mediaContext.currentTime,

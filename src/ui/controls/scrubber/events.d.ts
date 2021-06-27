@@ -1,4 +1,7 @@
-import { VdsCustomEvent, VdsEventInit } from '../../../shared/events/index.js';
+import {
+  VdsCustomEvent,
+  VdsEventInit
+} from '../../../foundation/events/index.js';
 
 declare global {
   interface GlobalEventHandlersEventMap extends ScrubberEvents {}

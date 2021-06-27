@@ -1,14 +1,14 @@
-import { VdsElement } from '../../shared/elements/index.js';
-import { FullscreenController } from '../../shared/fullscreen/index.js';
-import { RequestQueue } from '../../shared/queue/index.js';
+import { VdsElement } from '../../foundation/elements/index.js';
+import { FullscreenController } from '../../foundation/fullscreen/index.js';
+import { RequestQueue } from '../../foundation/queue/index.js';
 import {
   ScreenOrientationController,
   ScreenOrientationLock
-} from '../../shared/screen-orientation/index.js';
+} from '../../foundation/screen-orientation/index.js';
 import {
   storybookAction,
   StorybookControlType
-} from '../../shared/storybook/index.js';
+} from '../../foundation/storybook/index.js';
 import { getAllObjectPropertyNames } from '../../utils/object.js';
 import { CanPlay } from '../CanPlay.js';
 import { createMediaContextRecord, mediaContext } from '../media.context.js';

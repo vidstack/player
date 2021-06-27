@@ -2,7 +2,7 @@ import { MediaRequestEvents } from '../../../media/index.js';
 import {
   StorybookArgs,
   StorybookArgTypes
-} from '../../../shared/storybook/index.js';
+} from '../../../foundation/storybook/index.js';
 import { ToggleButtonElementProps } from '../toggle-button/index.js';
 
 export type FullscreenButton = FullscreenButtonElementProps & {

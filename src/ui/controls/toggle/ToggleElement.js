@@ -1,8 +1,8 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { VdsElement } from '../../../shared/elements/index.js';
-import { StorybookControlType } from '../../../shared/storybook/index.js';
+import { VdsElement } from '../../../foundation/elements/index.js';
+import { StorybookControlType } from '../../../foundation/storybook/index.js';
 import { getSlottedChildren, setAttribute } from '../../../utils/dom.js';
 import { isNil } from '../../../utils/unit.js';
 import { toggleElementStyles } from './styles.js';

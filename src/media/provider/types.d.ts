@@ -1,12 +1,12 @@
-import { FullscreenHost } from '../../shared/fullscreen/index.js';
-import { ScreenOrientationHost } from '../../shared/screen-orientation.js';
+import { FullscreenHost } from '../../foundation/fullscreen/index.js';
+import { ScreenOrientationHost } from '../../foundation/screen-orientation.js';
 import {
   DOMEventToPascalCase,
   StorybookActionArgs,
   StorybookActionCallbacks,
   StorybookArgs,
   StorybookArgTypes
-} from '../../shared/storybook/types.js';
+} from '../../foundation/storybook/types.js';
 import { CanPlay } from '../CanPlay.js';
 import { MediaEvents } from '../media.events.js';
 import { MediaType } from '../MediaType.js';

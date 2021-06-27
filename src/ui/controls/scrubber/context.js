@@ -1,4 +1,4 @@
-import { createContext } from '../../../shared/context/index.js';
+import { createContext } from '../../../foundation/context/index.js';
 
 export const scrubberContext = {
   preview: {

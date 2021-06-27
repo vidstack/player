@@ -3,7 +3,7 @@ import {
   EventDispatcher,
   listen,
   redispatchEvent
-} from '../../../shared/events/index.js';
+} from '../../../foundation/events/index.js';
 import { IS_IOS } from '../../../utils/support.js';
 import { isFunction, isNil, noop } from '../../../utils/unit.js';
 
@@ -64,7 +64,7 @@ export class VideoPresentationController extends EventDispatcher {
    * The current presentation mode, possible values include `inline`, `picture-in-picture` and
    * `fullscreen`. Only available in Safari.
    *
-   * @type {import('../../../shared/types/media').WebKitPresentationMode | undefined}
+   * @type {import('../../../foundation/types/media').WebKitPresentationMode | undefined}
    * @default undefined
    * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
    */
@@ -113,7 +113,7 @@ export class VideoPresentationController extends EventDispatcher {
   }
 
   /**
-   * @param {import('../../../shared/types/media').WebKitPresentationMode} mode
+   * @param {import('../../../foundation/types/media').WebKitPresentationMode} mode
    * @returns {void}
    */
   setPresentationMode(mode) {
@@ -132,7 +132,7 @@ export class VideoPresentationController extends EventDispatcher {
 
   /**
    * @protected
-   * @returns {import('../../../shared/types/utils').Unsubscribe}
+   * @returns {import('../../../foundation/types/utils').Unsubscribe}
    */
   addPresentationModeChangeEventListener() {
     if (!this.isSupported || isNil(this.host.videoElement)) return noop;

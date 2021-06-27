@@ -1,4 +1,4 @@
-import { VdsCustomEvent } from '../shared/events/index.js';
+import { VdsCustomEvent } from '../foundation/events/index.js';
 
 export class MediaRequestEvent extends VdsCustomEvent {}
 

@@ -1,7 +1,7 @@
 import {
   StorybookArgs,
   StorybookArgTypes
-} from '../../../shared/storybook/index.js';
+} from '../../../foundation/storybook/index.js';
 import { ButtonElement } from '../button/index.js';
 import { NativeButtonElementStorybookEvents } from '../button/types.js';
 import { ToggleElementProps } from '../toggle/index.js';

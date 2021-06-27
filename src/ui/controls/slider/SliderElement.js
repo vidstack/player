@@ -2,13 +2,13 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
-import { VdsElement, WithFocus } from '../../../shared/elements/index.js';
-import { bindEventListeners } from '../../../shared/events/index.js';
+import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
+import { bindEventListeners } from '../../../foundation/events/index.js';
 import {
   storybookAction,
   StorybookControlType
-} from '../../../shared/storybook/index.js';
+} from '../../../foundation/storybook/index.js';
 import { setAttribute } from '../../../utils/dom.js';
 import { throttle } from '../../../utils/timing.js';
 import {

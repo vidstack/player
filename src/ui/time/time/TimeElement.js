@@ -1,9 +1,9 @@
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
-import { VdsElement } from '../../../shared/elements/index.js';
-import { StorybookControlType } from '../../../shared/storybook/index.js';
+import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { VdsElement } from '../../../foundation/elements/index.js';
+import { StorybookControlType } from '../../../foundation/storybook/index.js';
 import { formatHtml5Duration, formatTime } from '../../../utils/time.js';
 import { timeElementStyles } from './styles.js';
 

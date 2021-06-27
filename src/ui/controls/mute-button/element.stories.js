@@ -4,7 +4,7 @@ import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
+import { ifNonEmpty } from '../../../foundation/directives/index.js';
 import {
   MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
   MUTE_BUTTON_ELEMENT_TAG_NAME

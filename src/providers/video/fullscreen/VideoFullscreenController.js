@@ -1,6 +1,6 @@
-import { VdsCustomEvent } from '../../../shared/events/index.js';
-import { FullscreenController } from '../../../shared/fullscreen/index.js';
-import { ScreenOrientationController } from '../../../shared/screen-orientation/index.js';
+import { VdsCustomEvent } from '../../../foundation/events/index.js';
+import { FullscreenController } from '../../../foundation/fullscreen/index.js';
+import { ScreenOrientationController } from '../../../foundation/screen-orientation/index.js';
 import { noop } from '../../../utils/unit.js';
 import { VideoPresentationController } from '../presentation/VideoPresentationController.js';
 
@@ -45,7 +45,7 @@ import { VideoPresentationController } from '../presentation/VideoPresentationCo
  */
 export class VideoFullscreenController extends FullscreenController {
   /**
-   * @param {import('../../../shared/fullscreen').FullscreenHost} host
+   * @param {import('../../../foundation/fullscreen').FullscreenHost} host
    * @param {ScreenOrientationController} screenOrientationController
    * @param {VideoPresentationController} presentationController
    */
@@ -122,7 +122,7 @@ export class VideoFullscreenController extends FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../../../shared/types/utils').Unsubscribe}
+   * @returns {import('../../../foundation/types/utils').Unsubscribe}
    */
   addFullscreenChangeEventListener(handler) {
     if (this.isSupportedNatively) {
@@ -141,7 +141,7 @@ export class VideoFullscreenController extends FullscreenController {
 
   /**
    * @protected
-   * @param {VdsCustomEvent<import('../../../shared/types/media').WebKitPresentationMode>} event
+   * @param {VdsCustomEvent<import('../../../foundation/types/media').WebKitPresentationMode>} event
    * @returns {void}
    */
   handlePresentationModeChange(event) {
@@ -151,7 +151,7 @@ export class VideoFullscreenController extends FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../../../shared/types/utils').Unsubscribe}
+   * @returns {import('../../../foundation/types/utils').Unsubscribe}
    */
   addFullscreenErrorEventListener(handler) {
     if (!this.isSupportedNatively) return noop;

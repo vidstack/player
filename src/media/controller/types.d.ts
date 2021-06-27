@@ -1,7 +1,7 @@
 import {
   StorybookArgs,
   StorybookArgTypes
-} from '../../shared/storybook/index.js';
+} from '../../foundation/storybook/index.js';
 import { MediaRequestEvents } from '../media-request.events.js';
 import { MediaProviderElement } from '../provider/index.js';
 import { MediaControllerElement } from './MediaControllerElement.js';

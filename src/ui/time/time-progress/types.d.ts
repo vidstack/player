@@ -1,7 +1,7 @@
 import {
   StorybookArgs,
   StorybookArgTypes
-} from '../../../shared/storybook/index.js';
+} from '../../../foundation/storybook/index.js';
 import { TimeElementProps } from '../time/index.js';
 import { TimeCurrentElement } from '../time-current/index.js';
 import { TimeDurationElement } from '../time-duration/index.js';
