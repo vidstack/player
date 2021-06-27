@@ -58,21 +58,19 @@ export class VdsCustomEvent extends CustomEvent {
 
 /**
  * @param {EventTarget} target
- * @param {Event} originalEvent
+ * @param {Event | CustomEvent | VdsCustomEvent} event
  * @returns {void}
  */
-export function redispatchNativeEvent(target, originalEvent) {
-	const event = new VdsCustomEvent(originalEvent.type, {
-		originalEvent,
-		bubbles: originalEvent.bubbles,
-		cancelable: originalEvent.cancelable,
-		composed: originalEvent.composed
+export function redispatchEvent(target, event) {
+	const newEvent = new VdsCustomEvent(event.type, {
+		originalEvent: /** @type {VdsCustomEvent} */ (event).originalEvent ?? event,
+		detail: /** @type {CustomEvent} */ (event).detail,
+		bubbles: event.bubbles,
+		cancelable: event.cancelable,
+		composed: event.composed
 	});
 
-	const constructor = event.constructor;
-	/** @type {any} */ (constructor).TYPE = originalEvent.type;
-
-	target.dispatchEvent(event);
+	target.dispatchEvent(newEvent);
 }
 
 /**

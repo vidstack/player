@@ -2,7 +2,7 @@ import {
 	DisposalBin,
 	EventDispatcher,
 	listen,
-	redispatchNativeEvent
+	redispatchEvent
 } from '../../../shared/events/index.js';
 import { IS_IOS } from '../../../utils/support.js';
 import { isFunction, isNil, noop } from '../../../utils/unit.js';
@@ -149,7 +149,7 @@ export class VideoPresentationController extends EventDispatcher {
 	 * @returns {void}
 	 */
 	handlePresentationModeChange(event) {
-		redispatchNativeEvent(this.host, event);
+		redispatchEvent(this.host, event);
 		this.dispatchEvent('presentation-mode-change', {
 			detail: this.presentationMode,
 			originalEvent: event

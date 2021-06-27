@@ -9,6 +9,7 @@ import {
 	storybookAction,
 	StorybookControlType
 } from '../../shared/storybook/index.js';
+import { getAllObjectPropertyNames } from '../../utils/object.js';
 import { CanPlay } from '../CanPlay.js';
 import { createMediaContextRecord, mediaContext } from '../media.context.js';
 import {
@@ -39,6 +40,7 @@ import {
 	VdsVolumeChangeEvent,
 	VdsWaitingEvent
 } from '../media.events.js';
+import { MediaPlugin } from '../plugin/index.js';
 import { VdsMediaProviderConnectEvent } from './events.js';
 
 /** @typedef {import('./types').MediaProvider} IMediaProvider */
@@ -50,6 +52,39 @@ import { VdsMediaProviderConnectEvent } from './events.js';
  * @implements {IMediaProvider}
  */
 export class MediaProviderElement extends VdsElement {
+	/** @type {string[]} */
+	static get events() {
+		return [
+			VdsAbortEvent.TYPE,
+			VdsCanPlayEvent.TYPE,
+			VdsCanPlayThroughEvent.TYPE,
+			VdsDurationChangeEvent.TYPE,
+			VdsEmptiedEvent.TYPE,
+			VdsEndedEvent.TYPE,
+			VdsErrorEvent.TYPE,
+			VdsFullscreenChangeEvent.TYPE,
+			VdsLoadedDataEvent.TYPE,
+			VdsLoadedMetadataEvent.TYPE,
+			VdsLoadStartEvent.TYPE,
+			VdsMediaTypeChangeEvent.TYPE,
+			VdsPauseEvent.TYPE,
+			VdsPlayEvent.TYPE,
+			VdsPlayingEvent.TYPE,
+			VdsProgressEvent.TYPE,
+			VdsReplayEvent.TYPE,
+			VdsSeekedEvent.TYPE,
+			VdsSeekingEvent.TYPE,
+			VdsStalledEvent.TYPE,
+			VdsStartedEvent.TYPE,
+			VdsSuspendEvent.TYPE,
+			VdsTimeUpdateEvent.TYPE,
+			VdsViewTypeChangeEvent.TYPE,
+			VdsVolumeChangeEvent.TYPE,
+			VdsWaitingEvent.TYPE,
+			VdsMediaProviderConnectEvent.TYPE
+		];
+	}
+
 	constructor() {
 		super();
 
@@ -481,6 +516,20 @@ export class MediaProviderElement extends VdsElement {
 	}
 
 	// -------------------------------------------------------------------------------------------
+	// Plugin
+	// -------------------------------------------------------------------------------------------
+
+	/**
+	 * @protected
+	 * @readonly
+	 */
+	mediaPlugin = new MediaPlugin(this, {
+		bridgedAttributes: /** @type {any} */ (this.constructor).observedAttributes,
+		bridgedProperties: Array.from(getAllObjectPropertyNames(this, VdsElement)),
+		bridgedEvents: /** @type {any} */ (this.constructor).events
+	});
+
+	// -------------------------------------------------------------------------------------------
 	// Context
 	// -------------------------------------------------------------------------------------------
 
@@ -650,43 +699,6 @@ export class MediaProviderElement extends VdsElement {
 				})
 			);
 		});
-	}
-
-	// -------------------------------------------------------------------------------------------
-	// Metadata
-	// -------------------------------------------------------------------------------------------
-
-	/** @type {string[]} */
-	static get events() {
-		return [
-			VdsAbortEvent.TYPE,
-			VdsCanPlayEvent.TYPE,
-			VdsCanPlayThroughEvent.TYPE,
-			VdsDurationChangeEvent.TYPE,
-			VdsEmptiedEvent.TYPE,
-			VdsEndedEvent.TYPE,
-			VdsErrorEvent.TYPE,
-			VdsFullscreenChangeEvent.TYPE,
-			VdsLoadedDataEvent.TYPE,
-			VdsLoadedMetadataEvent.TYPE,
-			VdsLoadStartEvent.TYPE,
-			VdsMediaTypeChangeEvent.TYPE,
-			VdsPauseEvent.TYPE,
-			VdsPlayEvent.TYPE,
-			VdsPlayingEvent.TYPE,
-			VdsProgressEvent.TYPE,
-			VdsReplayEvent.TYPE,
-			VdsSeekedEvent.TYPE,
-			VdsSeekingEvent.TYPE,
-			VdsStalledEvent.TYPE,
-			VdsStartedEvent.TYPE,
-			VdsSuspendEvent.TYPE,
-			VdsTimeUpdateEvent.TYPE,
-			VdsViewTypeChangeEvent.TYPE,
-			VdsVolumeChangeEvent.TYPE,
-			VdsWaitingEvent.TYPE,
-			VdsMediaProviderConnectEvent.TYPE
-		];
 	}
 }
 

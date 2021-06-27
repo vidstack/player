@@ -77,6 +77,7 @@ export class HlsElement extends VideoElement {
 	/** @type {string[]} */
 	static get events() {
 		return [
+			...(super.events ?? []),
 			VdsHlsEngineAttachEvent.TYPE,
 			VdsHlsEngineBuiltEvent.TYPE,
 			VdsHlsEngineDetachEvent.TYPE,

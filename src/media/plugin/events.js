@@ -1,3 +1,3 @@
-import { ManagedElementConnectEvent } from '../../shared/elements/index.js';
+import { PluginConnectEvent } from '../../shared/plugin/index.js';
 
-export class PluginConnectEvent extends ManagedElementConnectEvent {}
+export class MediaPluginConnectEvent extends PluginConnectEvent {}

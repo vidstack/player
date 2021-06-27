@@ -1,7 +1,9 @@
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 import { mock, spy } from 'sinon';
 
+import { raf } from '../../../utils/dom.js';
+import { VdsVolumeChangeEvent } from '../../media.events.js';
 import {
 	VdsEnterFullscreenRequestEvent,
 	VdsExitFullscreenRequestEvent,
@@ -72,6 +74,50 @@ describe(VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
 			provider.remove();
 			expect(controller.mediaProvider).to.be.undefined;
+		});
+
+		it('should forward attributes to the media provider', async function () {
+			const { controller, provider } = await buildMediaFixture();
+
+			provider.forceMediaReady();
+
+			const setVolumeSpy = spy(provider, 'setVolume');
+
+			controller.setAttribute('volume', '30');
+
+			await raf();
+
+			expect(setVolumeSpy).to.have.been.calledOnceWith(30);
+		});
+
+		it('should forward events from the media provider', async function () {
+			const { controller, provider } = await buildMediaFixture();
+
+			const detail = { volume: 30, muted: false };
+			const originalEvent = new MouseEvent('click');
+
+			setTimeout(() => {
+				provider.dispatchEvent(
+					new VdsVolumeChangeEvent({ detail, originalEvent })
+				);
+			}, 0);
+
+			const event = /** @type {VdsVolumeChangeEvent} */ (
+				await oneEvent(controller, VdsVolumeChangeEvent.TYPE)
+			);
+
+			expect(event.detail).to.equal(detail);
+			expect(event.originalEvent).to.equal(originalEvent);
+		});
+
+		it('should forward properties to the media provider', async function () {
+			const { controller, provider } = await buildMediaFixture();
+
+			const playSpy = spy(provider, 'play');
+
+			controller.play();
+
+			expect(playSpy).to.have.been.calledOnce;
 		});
 	});
 

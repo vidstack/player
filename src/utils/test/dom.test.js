@@ -1,10 +1,9 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
-import { mock, spy } from 'sinon';
+import { spy } from 'sinon';
 
 import {
 	bridgeElements,
-	proxyProperties,
 	raf,
 	safelyDefineCustomElement,
 	willElementsCollide
@@ -88,97 +87,6 @@ describe('utils/dom', function () {
 				safelyDefineCustomElement('fake-el', FakeElement);
 				safelyDefineCustomElement('fake-el', FakeElement);
 			}).not.throws();
-		});
-	});
-
-	describe(proxyProperties.name, function () {
-		it('should forward whitelisted operations', function () {
-			const objA = {
-				knownOp: spy()
-			};
-
-			const objB = {
-				unknownOp: spy()
-			};
-
-			const destroy = proxyProperties(objA, objB, new Set(['unknownOp']));
-
-			objA.unknownOp();
-
-			expect(objA.knownOp).to.not.have.been.called;
-			expect(objB.unknownOp).to.have.been.calledOnce;
-
-			objA.knownOp();
-
-			expect(objA.knownOp).to.have.been.calledOnce;
-			expect(objB.unknownOp).to.have.been.calledOnce;
-
-			destroy();
-		});
-
-		it('should NOT forward operations that have not been whitelisted', function () {
-			const objA = {
-				knownOp: spy()
-			};
-
-			const objB = {
-				unknownOp: spy()
-			};
-
-			const destroy = proxyProperties(objA, objB, new Set([]));
-
-			expect(() => {
-				objA.unknownOp();
-			}).to.throw(/is not a function/);
-
-			destroy();
-		});
-
-		it('should log warning if property exists on target', function () {
-			class ObjA {
-				prop = spy();
-			}
-
-			class ObjB {
-				prop = spy();
-			}
-
-			const originalWarn = console.warn;
-			console.warn = mock();
-
-			const destroy = proxyProperties(
-				new ObjA(),
-				new ObjB(),
-				// @ts-ignore
-				new Set(['prop'])
-			);
-
-			expect(console.warn).to.have.been.calledOnceWith(
-				'[vds]: ObjA declared a property [`prop`] that is being proxied to ObjB.'
-			);
-
-			console.warn = originalWarn;
-		});
-
-		it('should destroy proxy', function () {
-			const objA = {
-				knownOp: spy()
-			};
-
-			const objB = {
-				unknownOp: spy()
-			};
-
-			const destroy = proxyProperties(objA, objB, new Set(['unknownOp']));
-			destroy();
-
-			objA.knownOp();
-			expect(objA.knownOp).to.have.been.calledOnce;
-			expect(objA.unknownOp).to.be.undefined;
-
-			expect(() => {
-				objA.unknownOp();
-			}).to.throw;
 		});
 	});
 

@@ -21,6 +21,7 @@ import {
 	VdsUnmuteRequestEvent,
 	VdsVolumeChangeRequestEvent
 } from '../media-request.events.js';
+import { MediaPluginManager } from '../plugin/index.js';
 import {
 	MediaProviderElement,
 	VdsMediaProviderConnectEvent
@@ -84,6 +85,16 @@ export class MediaControllerElement extends VdsElement {
 	disconnectedCallback() {
 		super.disconnectedCallback();
 	}
+
+	// -------------------------------------------------------------------------------------------
+	// Plugin
+	// -------------------------------------------------------------------------------------------
+
+	/**
+	 * @protected
+	 * @readonly
+	 */
+	mediaPluginManager = new MediaPluginManager(this);
 
 	// -------------------------------------------------------------------------------------------
 	// Event Bindings
@@ -160,11 +171,18 @@ export class MediaControllerElement extends VdsElement {
 	 * @returns {void}
 	 */
 	handleMediaContainerConnect(event) {
+		this.handleMediaContainerDisconnect();
 		const { container, onDisconnect } = event.detail;
 		this._mediaContainer = container;
-		onDisconnect(() => {
-			this._mediaContainer = undefined;
-		});
+		onDisconnect(this.handleMediaContainerDisconnect.bind(this));
+	}
+
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	handleMediaContainerDisconnect() {
+		this._mediaContainer = undefined;
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -194,6 +212,11 @@ export class MediaControllerElement extends VdsElement {
 	 * @returns {void}
 	 */
 	handleMediaProviderConnect(event) {
+		this.handleMediaProviderDisconnect();
+
+		// Ignore re-dispatched events.
+		if (isNil(event.detail?.provider)) return;
+
 		const { provider, onDisconnect } = event.detail;
 		this._mediaProvider = provider;
 		/**
@@ -201,13 +224,23 @@ export class MediaControllerElement extends VdsElement {
 		 * `MediaProviderElement` so it can be managed by it.
 		 */
 		/** @type {any} */ (provider).context = this.context;
-		onDisconnect(() => {
+		onDisconnect(this.handleMediaProviderDisconnect.bind(this));
+	}
+
+	/**
+	 * @protected
+	 * @returns {void}
+	 */
+	handleMediaProviderDisconnect() {
+		if (!isNil(this.mediaProvider)) {
 			/**
 			 * Using type `any` to bypass readonly `context`. Detach the media context.
 			 */
-			/** @type {any} */ (provider).context = createMediaContextRecord();
-			this._mediaProvider = undefined;
-		});
+			/** @type {any} */ (this.mediaProvider).context =
+				createMediaContextRecord();
+		}
+
+		this._mediaProvider = undefined;
 	}
 
 	// -------------------------------------------------------------------------------------------

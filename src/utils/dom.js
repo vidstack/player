@@ -1,10 +1,9 @@
-import { LitElement, ReactiveElement } from 'lit';
-
 import {
 	DisposalBin,
 	listen,
-	redispatchNativeEvent
+	redispatchEvent
 } from '../shared/events/index.js';
+import { proxyProperties } from './object.js';
 import { IS_CLIENT } from './support.js';
 import { isUndefined } from './unit.js';
 
@@ -128,71 +127,6 @@ export const willElementsCollide = (
 };
 
 /**
- * Proxy whitelisted properties on `objA` to `objB`.
- *
- * @template T
- * @template R
- * @param {T & object} objA
- * @param {R & object} objB
- * @param {Set<keyof R>} whitelist
- * @returns {(() => void)} Cleanup function to remove proxy.
- */
-export function proxyProperties(objA, objB, whitelist) {
-	const proto = Object.getPrototypeOf(objA);
-	const newProto = Object.create(proto);
-
-	function warnIfTargetDeclaredProp(target, prop) {
-		if (Reflect.has(target, prop)) {
-			const targetName = objA.constructor?.name ?? objA.name;
-			const proxyName = objB.constructor?.name ?? objB.name;
-			console.warn(
-				`[vds]: ${targetName} declared a property [\`${prop}\`] that is being proxied to ${proxyName}.`
-			);
-		}
-	}
-
-	whitelist.forEach((prop) => {
-		warnIfTargetDeclaredProp(objA, prop);
-	});
-
-	const proxy = new Proxy(newProto, {
-		get(target, prop) {
-			if (whitelist.has(/** @type {any} */ (prop))) {
-				return Reflect.get(objB, prop, objB);
-			}
-
-			return Reflect.get(target, prop, objA);
-		},
-		set(target, prop, value) {
-			if (whitelist.has(/** @type {any} */ (prop))) {
-				return Reflect.set(objB, prop, value, objB);
-			}
-
-			return Reflect.set(target, prop, value, objA);
-		}
-	});
-
-	Object.setPrototypeOf(objA, proxy);
-
-	return () => {
-		let currentProto = objA;
-
-		// Find the constructor in the proto chain for which the next prototype is the proxy we set.
-		while (currentProto && Object.getPrototypeOf(currentProto) !== proxy) {
-			currentProto = Object.getPrototypeOf(currentProto);
-		}
-
-		// If we find the proxy we set then remove it from the chain by skipping over it.
-		if (currentProto) {
-			Object.setPrototypeOf(
-				currentProto,
-				Object.getPrototypeOf(Object.getPrototypeOf(currentProto))
-			);
-		}
-	};
-}
-
-/**
  * @template Properties
  * @typedef {{
  *   attributes?: Set<string>;
@@ -219,14 +153,14 @@ export function bridgeElements(elementA, elementB, whitelist) {
 		const disposeProxy = proxyProperties(
 			elementA,
 			elementB,
-			new Set(whitelist.properties ?? [])
+			whitelist.properties
 		);
 
 		disposal.add(disposeProxy);
 	}
 
 	if (!isUndefined(whitelist.attributes)) {
-		// Forward initial attributes on `elementA` to `elementB` attributes.
+		// Forward initial attributes on `elementA` to `elementB`.
 		whitelist.attributes.forEach((attrName) => {
 			if (elementA.hasAttribute(attrName)) {
 				const attrValue = /** @type {string} */ (
@@ -260,8 +194,8 @@ export function bridgeElements(elementA, elementB, whitelist) {
 	if (!isUndefined(whitelist.events)) {
 		Array.from(whitelist.events)
 			.map((eventType) =>
-				listen(elementB, eventType, (e) => {
-					redispatchNativeEvent(elementA, e);
+				listen(elementB, eventType, (event) => {
+					redispatchEvent(elementA, event);
 				})
 			)
 			.forEach((dispose) => {
