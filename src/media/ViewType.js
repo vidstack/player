@@ -5,7 +5,7 @@
  * @enum {string}
  */
 export const ViewType = {
-	Unknown: 'unknown',
-	Audio: 'audio',
-	Video: 'video'
+  Unknown: 'unknown',
+  Audio: 'audio',
+  Video: 'video'
 };

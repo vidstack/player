@@ -27,8 +27,8 @@ $: npm install @vidstack/elements@next --save
 
 ```html
 <script
-	type="module"
-	src="https://cdn.jsdelivr.net/npm/@vidstack/elements@next"
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@vidstack/elements@next"
 ></script>
 ```
 

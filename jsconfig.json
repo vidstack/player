@@ -1,19 +1,19 @@
 {
-	"compilerOptions": {
-		"allowSyntheticDefaultImports": true,
-		"allowUnreachableCode": false,
-		"alwaysStrict": true,
-		"checkJs": true,
-		"declaration": false,
-		"experimentalDecorators": true,
-		"forceConsistentCasingInFileNames": true,
-		"lib": ["dom", "dom.iterable", "es7"],
-		"moduleResolution": "node",
-		"noEmit": true,
-		"noImplicitAny": false,
-		"noImplicitReturns": true,
-		"strict": true,
-		"target": "es2020"
-	},
-	"exclude": ["node_modules"]
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "alwaysStrict": true,
+    "checkJs": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["dom", "dom.iterable", "es7"],
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "strict": true,
+    "target": "es2020"
+  },
+  "exclude": ["node_modules"]
 }

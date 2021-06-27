@@ -1,150 +1,150 @@
 {
-	"name": "@vidstack/elements",
-	"version": "0.0.0-semantically-released",
-	"description": "Spec-compliant, customizable, extensible, accessible and universal media elements.",
-	"license": "MIT",
-	"engines": {
-		"node": ">=14.16.0"
-	},
-	"main": "src/bundle/index.js",
-	"module": "src/bundle/index.js",
-	"files": [
-		"src/",
-		"custom-elements.json"
-	],
-	"sideEffects": [
-		"src/**/define.js"
-	],
-	"exports": {
-		".": "./src",
-		"./custom-elements.json": "./custom-elements.json"
-	},
-	"contributors": [
-		"Dave Furfero <furf@furf.com>",
-		"Rahim Alwer <rahim.alwer@gmail.com>",
-		"Sam Potts <sam@potts.es>"
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/vidstack/vds-elements.git"
-	},
-	"bugs": {
-		"url": "https://github.com/vidstack/vds-elements/issues"
-	},
-	"scripts": {
-		"analyze": "cem analyze --litelement --globs \"src/**/*Element.js\"",
-		"check": "tsc",
-		"lint": "run-s lint:*",
-		"lint:eslint": "eslint --ext .js --ext .ts --quiet . --ignore-path .gitignore",
-		"lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
-		"format": "run-s format:*",
-		"format:eslint": "npm run lint:eslint -- --fix",
-		"format:prettier": "npm run lint:prettier -- --write",
-		"prepare": "husky install",
-		"start": "npm run storybook",
-		"storybook": "start-storybook -s .storybook/public",
-		"storybook:build": "build-storybook -s .storybook/public",
-		"test": "wtr \"src/**/*.test.{js,ts}\" --config wtr.config.mjs",
-		"test:coverage": "npm run test -- --coverage",
-		"test:watch": "npm run test -- --watch",
-		"test:ci": "wtr \"src/**/*.test.{js,ts}\" --config wtr-ci.config.mjs",
-		"test:ci:coverage": "npm run test:ci -- --coverage",
-		"release": "npx semantic-release"
-	},
-	"dependencies": {
-		"@types/fscreen": "^1.0.1",
-		"@types/hls.js": "^0.13.3",
-		"clsx": "^1.1.1",
-		"fscreen": "^1.2.0",
-		"lit": "^2.0.0-rc.2"
-	},
-	"devDependencies": {
-		"@custom-elements-manifest/analyzer": "^0.3.2",
-		"@open-wc/semantic-dom-diff": "^0.19.4",
-		"@open-wc/testing": "^3.0.0-next.1",
-		"@storybook/addon-essentials": "^6.3.0-rc.11",
-		"@storybook/addon-links": "^6.3.0-rc.11",
-		"@storybook/builder-webpack5": "^6.3.0-rc.11",
-		"@storybook/manager-webpack5": "^6.3.0-rc.11",
-		"@storybook/web-components": "^6.3.0-rc.11",
-		"@types/mocha": "^8.0.3",
-		"@types/sinon": "^10.0.2",
-		"@typescript-eslint/parser": "^4.24.0",
-		"@web/dev-server": "^0.1.8",
-		"@web/dev-server-esbuild": "^0.2.12",
-		"@web/test-runner": "^0.13.12",
-		"@web/test-runner-playwright": "^0.8.6",
-		"eslint": "^7.17.0",
-		"eslint-config-prettier": "^8.1.0",
-		"eslint-plugin-lit": "^1.3.0",
-		"eslint-plugin-mocha": "^9.0.0",
-		"eslint-plugin-simple-import-sort": "^7.0.0",
-		"eslint-plugin-wc": "^1.2.0",
-		"hls.js": "^0.14.17",
-		"husky": "^6.0.0",
-		"lint-staged": "^11.0.0",
-		"npm-run-all": "^4.1.5",
-		"prettier": "^2.2.1",
-		"rimraf": "^3.0.2",
-		"semantic-release": "^17.3.7",
-		"sinon": "^11.1.1",
-		"typescript": "^4.2.4",
-		"webpack": "^5.39.1"
-	},
-	"prettier": {
-		"singleQuote": true,
-		"trailingComma": "none",
-		"useTabs": true,
-		"tabWidth": 2
-	},
-	"lint-staged": {
-		"*.js": "eslint --cache --fix",
-		"*.{js,md,json}": "prettier --write"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"release": {
-		"branches": [
-			{
-				"name": "release",
-				"channel": false
-			},
-			{
-				"name": "next",
-				"prerelease": true
-			}
-		]
-	},
-	"keywords": [
-		"accessible",
-		"audio",
-		"customizable",
-		"dailymotion",
-		"dash",
-		"element",
-		"elements",
-		"extensible",
-		"file",
-		"framework-agnostic",
-		"hls",
-		"html5",
-		"lit-element",
-		"lit",
-		"media",
-		"plyr",
-		"player",
-		"react",
-		"spec-compliant",
-		"universal",
-		"vds",
-		"video",
-		"vidstack",
-		"vime",
-		"vimeo",
-		"web-component",
-		"universal",
-		"youtube"
-	],
-	"customElements": "custom-elements.json"
+  "name": "@vidstack/elements",
+  "version": "0.0.0-semantically-released",
+  "description": "Spec-compliant, customizable, extensible, accessible and universal media elements.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.16.0"
+  },
+  "main": "src/bundle/index.js",
+  "module": "src/bundle/index.js",
+  "files": [
+    "src/",
+    "custom-elements.json"
+  ],
+  "sideEffects": [
+    "src/**/define.js"
+  ],
+  "exports": {
+    ".": "./src",
+    "./custom-elements.json": "./custom-elements.json"
+  },
+  "contributors": [
+    "Dave Furfero <furf@furf.com>",
+    "Rahim Alwer <rahim.alwer@gmail.com>",
+    "Sam Potts <sam@potts.es>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vidstack/vds-elements.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vidstack/vds-elements/issues"
+  },
+  "scripts": {
+    "analyze": "cem analyze --litelement --globs \"src/**/*Element.js\"",
+    "check": "tsc",
+    "lint": "run-s lint:*",
+    "lint:eslint": "eslint --ext .js --ext .ts --quiet . --ignore-path .gitignore",
+    "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
+    "format": "run-s format:*",
+    "format:eslint": "npm run lint:eslint -- --fix",
+    "format:prettier": "npm run lint:prettier -- --write",
+    "prepare": "husky install",
+    "start": "npm run storybook",
+    "storybook": "start-storybook -s .storybook/public",
+    "storybook:build": "build-storybook -s .storybook/public",
+    "test": "wtr \"src/**/*.test.{js,ts}\" --config wtr.config.mjs",
+    "test:coverage": "npm run test -- --coverage",
+    "test:watch": "npm run test -- --watch",
+    "test:ci": "wtr \"src/**/*.test.{js,ts}\" --config wtr-ci.config.mjs",
+    "test:ci:coverage": "npm run test:ci -- --coverage",
+    "release": "npx semantic-release"
+  },
+  "dependencies": {
+    "@types/fscreen": "^1.0.1",
+    "@types/hls.js": "^0.13.3",
+    "clsx": "^1.1.1",
+    "fscreen": "^1.2.0",
+    "lit": "^2.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.3.2",
+    "@open-wc/semantic-dom-diff": "^0.19.4",
+    "@open-wc/testing": "^3.0.0-next.1",
+    "@storybook/addon-essentials": "^6.3.0-rc.11",
+    "@storybook/addon-links": "^6.3.0-rc.11",
+    "@storybook/builder-webpack5": "^6.3.0-rc.11",
+    "@storybook/manager-webpack5": "^6.3.0-rc.11",
+    "@storybook/web-components": "^6.3.0-rc.11",
+    "@types/mocha": "^8.0.3",
+    "@types/sinon": "^10.0.2",
+    "@typescript-eslint/parser": "^4.24.0",
+    "@web/dev-server": "^0.1.8",
+    "@web/dev-server-esbuild": "^0.2.12",
+    "@web/test-runner": "^0.13.12",
+    "@web/test-runner-playwright": "^0.8.6",
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-lit": "^1.3.0",
+    "eslint-plugin-mocha": "^9.0.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-wc": "^1.2.0",
+    "hls.js": "^0.14.17",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "semantic-release": "^17.3.7",
+    "sinon": "^11.1.1",
+    "typescript": "^4.2.4",
+    "webpack": "^5.39.1"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "none",
+    "useTabs": false,
+    "tabWidth": 2
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,md,json}": "prettier --write"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "branches": [
+      {
+        "name": "release",
+        "channel": false
+      },
+      {
+        "name": "next",
+        "prerelease": true
+      }
+    ]
+  },
+  "keywords": [
+    "accessible",
+    "audio",
+    "customizable",
+    "dailymotion",
+    "dash",
+    "element",
+    "elements",
+    "extensible",
+    "file",
+    "framework-agnostic",
+    "hls",
+    "html5",
+    "lit-element",
+    "lit",
+    "media",
+    "plyr",
+    "player",
+    "react",
+    "spec-compliant",
+    "universal",
+    "vds",
+    "video",
+    "vidstack",
+    "vime",
+    "vimeo",
+    "web-component",
+    "universal",
+    "youtube"
+  ],
+  "customElements": "custom-elements.json"
 }

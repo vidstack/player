@@ -27,128 +27,128 @@ export const VDS_MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
  * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
  */
 export class MediaUiElement extends VdsElement {
-	/** @type {import('lit').CSSResultGroup} */
-	static get styles() {
-		return [mediaUiElementStyles];
-	}
+  /** @type {import('lit').CSSResultGroup} */
+  static get styles() {
+    return [mediaUiElementStyles];
+  }
 
-	/** @type {string[]} */
-	static get parts() {
-		return ['root', 'root-hidden'];
-	}
+  /** @type {string[]} */
+  static get parts() {
+    return ['root', 'root-hidden'];
+  }
 
-	/** @type {import('../../shared/context').ContextConsumerDeclarations} */
-	static get contextConsumers() {
-		return {
-			mediaCanPlay: mediaContext.canPlay,
-			mediaFullscreen: mediaContext.fullscreen,
-			mediaIsVideoView: mediaContext.isVideoView,
-			mediaPlaysinline: mediaContext.playsinline
-		};
-	}
+  /** @type {import('../../shared/context').ContextConsumerDeclarations} */
+  static get contextConsumers() {
+    return {
+      mediaCanPlay: mediaContext.canPlay,
+      mediaFullscreen: mediaContext.fullscreen,
+      mediaIsVideoView: mediaContext.isVideoView,
+      mediaPlaysinline: mediaContext.playsinline
+    };
+  }
 
-	constructor() {
-		super();
-		/** @protected @readonly @type {boolean} */
-		this.mediaCanPlay = mediaContext.canPlay.initialValue;
-		/** @protected @readonly @type {boolean} */
-		this.mediaFullscreen = mediaContext.fullscreen.initialValue;
-		/** @protected @readonly @type {boolean} */
-		this.mediaIsVideoView = mediaContext.isVideoView.initialValue;
-		/** @protected @readonly @type {boolean} */
-		this.mediaPlaysinline = mediaContext.playsinline.initialValue;
-	}
+  constructor() {
+    super();
+    /** @protected @readonly @type {boolean} */
+    this.mediaCanPlay = mediaContext.canPlay.initialValue;
+    /** @protected @readonly @type {boolean} */
+    this.mediaFullscreen = mediaContext.fullscreen.initialValue;
+    /** @protected @readonly @type {boolean} */
+    this.mediaIsVideoView = mediaContext.isVideoView.initialValue;
+    /** @protected @readonly @type {boolean} */
+    this.mediaPlaysinline = mediaContext.playsinline.initialValue;
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Render
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------------------------
 
-	/**
-	 * @protected
-	 * @readonly
-	 * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
-	 */
-	rootRef = createRef();
+  /**
+   * @protected
+   * @readonly
+   * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
+   */
+  rootRef = createRef();
 
-	/**
-	 * The component's root element.
-	 *
-	 * @type {HTMLDivElement}
-	 */
-	get rootElement() {
-		return /** @type {HTMLDivElement} */ (this.rootRef.value);
-	}
+  /**
+   * The component's root element.
+   *
+   * @type {HTMLDivElement}
+   */
+  get rootElement() {
+    return /** @type {HTMLDivElement} */ (this.rootRef.value);
+  }
 
-	render() {
-		return html`
-			<div
-				id="root"
-				class=${this.getRootClassAttr()}
-				part=${this.getRootPartAttr()}
-				${ref(this.rootRef)}
-			>
-				${this.renderRootChildren()}
-			</div>
-		`;
-	}
+  render() {
+    return html`
+      <div
+        id="root"
+        class=${this.getRootClassAttr()}
+        part=${this.getRootPartAttr()}
+        ${ref(this.rootRef)}
+      >
+        ${this.renderRootChildren()}
+      </div>
+    `;
+  }
 
-	/**
-	 * Override this to modify the content rendered inside the root UI container.
-	 *
-	 * @protected
-	 */
-	renderRootChildren() {
-		return html`${this.renderDefaultSlot()}`;
-	}
+  /**
+   * Override this to modify the content rendered inside the root UI container.
+   *
+   * @protected
+   */
+  renderRootChildren() {
+    return html`${this.renderDefaultSlot()}`;
+  }
 
-	/**
-	 * Override this to modify rendering of default slot.
-	 *
-	 * @protected
-	 * @returns {import('lit').TemplateResult}
-	 */
-	renderDefaultSlot() {
-		return html`<slot></slot>`;
-	}
+  /**
+   * Override this to modify rendering of default slot.
+   *
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  renderDefaultSlot() {
+    return html`<slot></slot>`;
+  }
 
-	/**
-	 * Override this to modify root CSS Classes.
-	 *
-	 * @protected
-	 * @returns {string}
-	 */
-	getRootClassAttr() {
-		return '';
-	}
+  /**
+   * Override this to modify root CSS Classes.
+   *
+   * @protected
+   * @returns {string}
+   */
+  getRootClassAttr() {
+    return '';
+  }
 
-	/**
-	 * Override this to modify root CSS parts.
-	 *
-	 * @protected
-	 * @returns {string}
-	 */
-	getRootPartAttr() {
-		return clsx({
-			root: true,
-			'root-hidden': this.isUiHidden()
-		});
-	}
+  /**
+   * Override this to modify root CSS parts.
+   *
+   * @protected
+   * @returns {string}
+   */
+  getRootPartAttr() {
+    return clsx({
+      root: true,
+      'root-hidden': this.isUiHidden()
+    });
+  }
 
-	/**
-	 * Whether the UI should be hidden.
-	 *
-	 * @protected
-	 * @returns {boolean}
-	 */
-	isUiHidden() {
-		return (
-			!this.mediaCanPlay ||
-			// If iOS Safari and the view type is currently video then we hide the custom UI depending
-			// on whether playsinline is set and fullscreen is not active, or if fullscreen is active
-			// we should always hide.
-			(IS_IOS &&
-				this.mediaIsVideoView &&
-				(!this.mediaPlaysinline || this.mediaFullscreen))
-		);
-	}
+  /**
+   * Whether the UI should be hidden.
+   *
+   * @protected
+   * @returns {boolean}
+   */
+  isUiHidden() {
+    return (
+      !this.mediaCanPlay ||
+      // If iOS Safari and the view type is currently video then we hide the custom UI depending
+      // on whether playsinline is set and fullscreen is not active, or if fullscreen is active
+      // we should always hide.
+      (IS_IOS &&
+        this.mediaIsVideoView &&
+        (!this.mediaPlaysinline || this.mediaFullscreen))
+    );
+  }
 }

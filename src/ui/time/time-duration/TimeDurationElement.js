@@ -1,8 +1,8 @@
 import { mediaContext } from '../../../media/index.js';
 import { StorybookControlType } from '../../../shared/storybook/index.js';
 import {
-	TimeElement,
-	VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES
+  TimeElement,
+  VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES
 } from '../time/index.js';
 
 export const VDS_TIME_DURATION_ELEMENT_TAG_NAME = 'vds-time-duration';
@@ -32,27 +32,27 @@ export const VDS_TIME_DURATION_ELEMENT_TAG_NAME = 'vds-time-duration';
  * ```
  */
 export class TimeDurationElement extends TimeElement {
-	constructor() {
-		super();
+  constructor() {
+    super();
 
-		// Properties
-		this.label = 'Duration';
+    // Properties
+    this.label = 'Duration';
 
-		// Context
-		/** @internal @readonly @type {number} */
-		this.seconds = mediaContext.currentTime.initialValue;
-	}
+    // Context
+    /** @internal @readonly @type {number} */
+    this.seconds = mediaContext.currentTime.initialValue;
+  }
 
-	/** @type {import('../../../shared/context').ContextConsumerDeclarations} */
-	static get contextConsumers() {
-		return {
-			seconds: {
-				context: mediaContext.duration,
-				// Duration can be -1 when unknown but we want to display >=0.
-				transform: (d) => (d >= 0 ? d : 0)
-			}
-		};
-	}
+  /** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+  static get contextConsumers() {
+    return {
+      seconds: {
+        context: mediaContext.duration,
+        // Duration can be -1 when unknown but we want to display >=0.
+        transform: (d) => (d >= 0 ? d : 0)
+      }
+    };
+  }
 }
 
 /**
@@ -60,8 +60,8 @@ export class TimeDurationElement extends TimeElement {
  * @type {import('./types').TimeDurationElementStorybookArgTypes}
  */
 export const VDS_TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES = {
-	...VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES,
-	// @ts-ignore
-	seconds: { table: { disable: true } },
-	mediaDuration: { control: StorybookControlType.Number, defaultValue: 1800 }
+  ...VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES,
+  // @ts-ignore
+  seconds: { table: { disable: true } },
+  mediaDuration: { control: StorybookControlType.Number, defaultValue: 1800 }
 };

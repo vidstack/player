@@ -6,8 +6,8 @@ import { MediaPluginConnectEvent } from './events.js';
  * @extends {Plugin<HostElement>}
  */
 export class MediaPlugin extends Plugin {
-	/** @protected */
-	static get ScopedManagedControllerConnectEvent() {
-		return MediaPluginConnectEvent;
-	}
+  /** @protected */
+  static get ScopedManagedControllerConnectEvent() {
+    return MediaPluginConnectEvent;
+  }
 }

@@ -3,57 +3,57 @@
  * @extends CustomEvent<DetailType>
  */
 export class VdsCustomEvent extends CustomEvent {
-	/**
-	 * @type {string}
-	 * @readonly
-	 */
-	static TYPE;
+  /**
+   * @type {string}
+   * @readonly
+   */
+  static TYPE;
 
-	/**
-	 * @type {Event | undefined}
-	 * @readonly
-	 */
-	originalEvent;
+  /**
+   * @type {Event | undefined}
+   * @readonly
+   */
+  originalEvent;
 
-	/**
-	 * Walks up the event chain (following each `originalEvent`) and returns the origin event
-	 * that started the chain.
-	 *
-	 * @returns {Event | undefined}
-	 */
-	get originEvent() {
-		let originalEvent = /** @type {VdsCustomEvent<unknown>} */ (
-			this.originalEvent
-		);
+  /**
+   * Walks up the event chain (following each `originalEvent`) and returns the origin event
+   * that started the chain.
+   *
+   * @returns {Event | undefined}
+   */
+  get originEvent() {
+    let originalEvent = /** @type {VdsCustomEvent<unknown>} */ (
+      this.originalEvent
+    );
 
-		while (originalEvent && originalEvent.originalEvent) {
-			originalEvent = /** @type {VdsCustomEvent<unknown>} */ (
-				originalEvent.originalEvent
-			);
-		}
+    while (originalEvent && originalEvent.originalEvent) {
+      originalEvent = /** @type {VdsCustomEvent<unknown>} */ (
+        originalEvent.originalEvent
+      );
+    }
 
-		return originalEvent;
-	}
+    return originalEvent;
+  }
 
-	/**
-	 * Walks up the event chain (following each `originalEvent`) and determines whether the initial
-	 * event was triggered by the end user (ie: check whether `isTrusted` on the `originEvent` `true`).
-	 *
-	 * @returns {boolean}
-	 */
-	get isOriginTrusted() {
-		return this.originEvent?.isTrusted ?? false;
-	}
+  /**
+   * Walks up the event chain (following each `originalEvent`) and determines whether the initial
+   * event was triggered by the end user (ie: check whether `isTrusted` on the `originEvent` `true`).
+   *
+   * @returns {boolean}
+   */
+  get isOriginTrusted() {
+    return this.originEvent?.isTrusted ?? false;
+  }
 
-	/**
-	 * @param {string} typeArg
-	 * @param {import('./types').VdsEventInit<DetailType>} [eventInit]
-	 */
-	constructor(typeArg, eventInit) {
-		const { originalEvent, ...init } = eventInit ?? {};
-		super(typeArg, init);
-		this.originalEvent = originalEvent;
-	}
+  /**
+   * @param {string} typeArg
+   * @param {import('./types').VdsEventInit<DetailType>} [eventInit]
+   */
+  constructor(typeArg, eventInit) {
+    const { originalEvent, ...init } = eventInit ?? {};
+    super(typeArg, init);
+    this.originalEvent = originalEvent;
+  }
 }
 
 /**
@@ -62,42 +62,42 @@ export class VdsCustomEvent extends CustomEvent {
  * @returns {void}
  */
 export function redispatchEvent(target, event) {
-	const newEvent = new VdsCustomEvent(event.type, {
-		originalEvent: /** @type {VdsCustomEvent} */ (event).originalEvent ?? event,
-		detail: /** @type {CustomEvent} */ (event).detail,
-		bubbles: event.bubbles,
-		cancelable: event.cancelable,
-		composed: event.composed
-	});
+  const newEvent = new VdsCustomEvent(event.type, {
+    originalEvent: /** @type {VdsCustomEvent} */ (event).originalEvent ?? event,
+    detail: /** @type {CustomEvent} */ (event).detail,
+    bubbles: event.bubbles,
+    cancelable: event.cancelable,
+    composed: event.composed
+  });
 
-	target.dispatchEvent(newEvent);
+  target.dispatchEvent(newEvent);
 }
 
 /**
  * A disposal bin used to add cleanup callbacks that can be called when required.
  */
 export class DisposalBin {
-	/**
-	 * @protected
-	 * @type {import('../types/utils').Callback<void>[]}
-	 */
-	disposal = this.disposal ?? [];
+  /**
+   * @protected
+   * @type {import('../types/utils').Callback<void>[]}
+   */
+  disposal = this.disposal ?? [];
 
-	/**
-	 * @param {import('../types/utils').Callback<void>} callback
-	 * @returns {void}
-	 */
-	add(callback) {
-		this.disposal.push(callback);
-	}
+  /**
+   * @param {import('../types/utils').Callback<void>} callback
+   * @returns {void}
+   */
+  add(callback) {
+    this.disposal.push(callback);
+  }
 
-	/**
-	 * @returns {void}
-	 */
-	empty() {
-		this.disposal.forEach((fn) => fn());
-		this.disposal = [];
-	}
+  /**
+   * @returns {void}
+   */
+  empty() {
+    this.disposal.forEach((fn) => fn());
+    this.disposal = [];
+  }
 }
 
 /**
@@ -119,19 +119,19 @@ export class DisposalBin {
  * ```
  */
 export function listen(target, type, listener, options) {
-	target.addEventListener(
-		type,
-		/** @type {EventListener} */ (listener),
-		options
-	);
+  target.addEventListener(
+    type,
+    /** @type {EventListener} */ (listener),
+    options
+  );
 
-	return () => {
-		target.removeEventListener(
-			type,
-			/** @type {EventListener} */ (listener),
-			options
-		);
-	};
+  return () => {
+    target.removeEventListener(
+      type,
+      /** @type {EventListener} */ (listener),
+      options
+    );
+  };
 }
 
 /**
@@ -145,10 +145,10 @@ export function listen(target, type, listener, options) {
  * @returns {import('../types/utils').Unsubscribe}
  */
 export function listenGlobalEvent(target, type, listener, options) {
-	target.addEventListener(type, /** @type {any} */ (listener), options);
-	return () => {
-		target.removeEventListener(type, /** @type {any} */ (listener), options);
-	};
+  target.addEventListener(type, /** @type {any} */ (listener), options);
+  return () => {
+    target.removeEventListener(type, /** @type {any} */ (listener), options);
+  };
 }
 
 /**
@@ -158,12 +158,12 @@ export function listenGlobalEvent(target, type, listener, options) {
  * @param {{ target?: EventTarget }} [options]
  */
 export function bindEventListeners(host, record, disposal, options = {}) {
-	Object.keys(record).forEach((eventType) => {
-		const dispose = listen(
-			options.target ?? host,
-			eventType,
-			record[eventType].bind(host)
-		);
-		disposal.add(dispose);
-	});
+  Object.keys(record).forEach((eventType) => {
+    const dispose = listen(
+      options.target ?? host,
+      eventType,
+      record[eventType].bind(host)
+    );
+    disposal.add(dispose);
+  });
 }

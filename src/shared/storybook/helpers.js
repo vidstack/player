@@ -5,6 +5,6 @@
  * @returns {{ action: T, table: { disable: boolean } }}
  */
 export const storybookAction = (eventType, hideInTable = true) => ({
-	action: eventType,
-	table: { disable: hideInTable }
+  action: eventType,
+  table: { disable: hideInTable }
 });

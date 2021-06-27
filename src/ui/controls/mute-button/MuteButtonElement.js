@@ -1,16 +1,16 @@
 import {
-	mediaContext,
-	MediaRemoteControl,
-	VdsMuteRequestEvent,
-	VdsUnmuteRequestEvent
+  mediaContext,
+  MediaRemoteControl,
+  VdsMuteRequestEvent,
+  VdsUnmuteRequestEvent
 } from '../../../media/index.js';
 import {
-	storybookAction,
-	StorybookControlType
+  storybookAction,
+  StorybookControlType
 } from '../../../shared/storybook/index.js';
 import {
-	ToggleButtonElement,
-	VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  ToggleButtonElement,
+  VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 } from '../toggle-button/index.js';
 
 export const VDS_MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
@@ -41,58 +41,58 @@ export const VDS_MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
  * ```
  */
 export class MuteButtonElement extends ToggleButtonElement {
-	/**
-	 * @protected
-	 * @readonly
-	 */
-	remoteControl = new MediaRemoteControl(this);
+  /**
+   * @protected
+   * @readonly
+   */
+  remoteControl = new MediaRemoteControl(this);
 
-	constructor() {
-		super();
+  constructor() {
+    super();
 
-		// Properties
-		this.label = 'Mute';
-		/** @internal @readonly @type {boolean} */
-		this.pressed = mediaContext.muted.initialValue;
-	}
+    // Properties
+    this.label = 'Mute';
+    /** @internal @readonly @type {boolean} */
+    this.pressed = mediaContext.muted.initialValue;
+  }
 
-	/** @type {import('../../../shared/context').ContextConsumerDeclarations} */
-	static get contextConsumers() {
-		return {
-			pressed: mediaContext.muted
-		};
-	}
+  /** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+  static get contextConsumers() {
+    return {
+      pressed: mediaContext.muted
+    };
+  }
 
-	get muteSlotElement() {
-		return this.currentNotPressedSlotElement;
-	}
+  get muteSlotElement() {
+    return this.currentNotPressedSlotElement;
+  }
 
-	get unmuteSlotElement() {
-		return this.currentPressedSlotElement;
-	}
+  get unmuteSlotElement() {
+    return this.currentPressedSlotElement;
+  }
 
-	/** @protected */
-	getPressedSlotName() {
-		return 'unmute';
-	}
+  /** @protected */
+  getPressedSlotName() {
+    return 'unmute';
+  }
 
-	/** @protected */
-	getNotPressedSlotName() {
-		return 'mute';
-	}
+  /** @protected */
+  getNotPressedSlotName() {
+    return 'mute';
+  }
 
-	/**
-	 * @protected
-	 * @param {Event} event
-	 * @returns {void}
-	 */
-	handleButtonClick(event) {
-		if (this.pressed) {
-			this.remoteControl.unmute(event);
-		} else {
-			this.remoteControl.mute(event);
-		}
-	}
+  /**
+   * @protected
+   * @param {Event} event
+   * @returns {void}
+   */
+  handleButtonClick(event) {
+    if (this.pressed) {
+      this.remoteControl.unmute(event);
+    } else {
+      this.remoteControl.mute(event);
+    }
+  }
 }
 
 /**
@@ -100,13 +100,13 @@ export class MuteButtonElement extends ToggleButtonElement {
  * @type {import('./types').MuteButtonElementStorybookArgTypes}
  */
 export const VDS_MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-	...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-	label: { control: StorybookControlType.Text, defaultValue: 'Mute' },
-	pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
-	mediaMuted: {
-		control: StorybookControlType.Boolean,
-		defaultValue: false
-	},
-	onVdsMuteRequest: storybookAction(VdsMuteRequestEvent.TYPE),
-	onVdsUnmuteRequest: storybookAction(VdsUnmuteRequestEvent.TYPE)
+  ...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  label: { control: StorybookControlType.Text, defaultValue: 'Mute' },
+  pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
+  mediaMuted: {
+    control: StorybookControlType.Boolean,
+    defaultValue: false
+  },
+  onVdsMuteRequest: storybookAction(VdsMuteRequestEvent.TYPE),
+  onVdsUnmuteRequest: storybookAction(VdsUnmuteRequestEvent.TYPE)
 };

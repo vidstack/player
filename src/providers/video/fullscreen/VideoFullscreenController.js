@@ -44,117 +44,117 @@ import { VideoPresentationController } from '../presentation/VideoPresentationCo
  * ```
  */
 export class VideoFullscreenController extends FullscreenController {
-	/**
-	 * @param {import('../../../shared/fullscreen').FullscreenHost} host
-	 * @param {ScreenOrientationController} screenOrientationController
-	 * @param {VideoPresentationController} presentationController
-	 */
-	constructor(host, screenOrientationController, presentationController) {
-		super(host, screenOrientationController);
+  /**
+   * @param {import('../../../shared/fullscreen').FullscreenHost} host
+   * @param {ScreenOrientationController} screenOrientationController
+   * @param {VideoPresentationController} presentationController
+   */
+  constructor(host, screenOrientationController, presentationController) {
+    super(host, screenOrientationController);
 
-		/**
-		 * @protected
-		 * @readonly
-		 * @type {VideoPresentationController}
-		 */
-		this.presentationController = presentationController;
-	}
+    /**
+     * @protected
+     * @readonly
+     * @type {VideoPresentationController}
+     */
+    this.presentationController = presentationController;
+  }
 
-	/** @type {boolean} */
-	get isFullscreen() {
-		return this.isSupportedNatively
-			? this.isNativeFullscreen
-			: this.presentationController.isFullscreenMode;
-	}
+  /** @type {boolean} */
+  get isFullscreen() {
+    return this.isSupportedNatively
+      ? this.isNativeFullscreen
+      : this.presentationController.isFullscreenMode;
+  }
 
-	/** @type {boolean} */
-	get isSupported() {
-		return this.isSupportedNatively || this.isSupportedOnSafari;
-	}
+  /** @type {boolean} */
+  get isSupported() {
+    return this.isSupportedNatively || this.isSupportedOnSafari;
+  }
 
-	/**
-	 * Whether a fallback fullscreen API is available on Safari using presentation modes. This
-	 * is only used on iOS where the native fullscreen API is not available.
-	 *
-	 * @type {boolean}
-	 * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
-	 */
-	get isSupportedOnSafari() {
-		return this.presentationController.isSupported;
-	}
+  /**
+   * Whether a fallback fullscreen API is available on Safari using presentation modes. This
+   * is only used on iOS where the native fullscreen API is not available.
+   *
+   * @type {boolean}
+   * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
+   */
+  get isSupportedOnSafari() {
+    return this.presentationController.isSupported;
+  }
 
-	/**
-	 * @protected
-	 * @returns {Promise<void>}
-	 */
-	async makeEnterFullscreenRequest() {
-		return this.isSupportedNatively
-			? super.makeEnterFullscreenRequest()
-			: this.makeFullscreenRequestOnSafari();
-	}
+  /**
+   * @protected
+   * @returns {Promise<void>}
+   */
+  async makeEnterFullscreenRequest() {
+    return this.isSupportedNatively
+      ? super.makeEnterFullscreenRequest()
+      : this.makeFullscreenRequestOnSafari();
+  }
 
-	/**
-	 * @protected
-	 * @returns {Promise<void>}
-	 */
-	async makeFullscreenRequestOnSafari() {
-		return this.presentationController.setPresentationMode('fullscreen');
-	}
+  /**
+   * @protected
+   * @returns {Promise<void>}
+   */
+  async makeFullscreenRequestOnSafari() {
+    return this.presentationController.setPresentationMode('fullscreen');
+  }
 
-	/**
-	 * @protected
-	 * @returns {Promise<void>}
-	 */
-	async makeExitFullscreenRequest() {
-		return this.isSupportedNatively
-			? super.makeExitFullscreenRequest()
-			: this.makeExitFullscreenRequestOnSafari();
-	}
+  /**
+   * @protected
+   * @returns {Promise<void>}
+   */
+  async makeExitFullscreenRequest() {
+    return this.isSupportedNatively
+      ? super.makeExitFullscreenRequest()
+      : this.makeExitFullscreenRequestOnSafari();
+  }
 
-	/**
-	 * @protected
-	 * @returns {Promise<void>}
-	 */
-	async makeExitFullscreenRequestOnSafari() {
-		return this.presentationController.setPresentationMode('inline');
-	}
+  /**
+   * @protected
+   * @returns {Promise<void>}
+   */
+  async makeExitFullscreenRequestOnSafari() {
+    return this.presentationController.setPresentationMode('inline');
+  }
 
-	/**
-	 * @protected
-	 * @param {(this: HTMLElement, event: Event) => void} handler
-	 * @returns {import('../../../shared/types/utils').Unsubscribe}
-	 */
-	addFullscreenChangeEventListener(handler) {
-		if (this.isSupportedNatively) {
-			return super.addFullscreenChangeEventListener(handler);
-		}
+  /**
+   * @protected
+   * @param {(this: HTMLElement, event: Event) => void} handler
+   * @returns {import('../../../shared/types/utils').Unsubscribe}
+   */
+  addFullscreenChangeEventListener(handler) {
+    if (this.isSupportedNatively) {
+      return super.addFullscreenChangeEventListener(handler);
+    }
 
-		if (this.isSupportedOnSafari) {
-			return this.presentationController.addEventListener(
-				'presentation-mode-change',
-				this.handlePresentationModeChange.bind(this)
-			);
-		}
+    if (this.isSupportedOnSafari) {
+      return this.presentationController.addEventListener(
+        'presentation-mode-change',
+        this.handlePresentationModeChange.bind(this)
+      );
+    }
 
-		return noop;
-	}
+    return noop;
+  }
 
-	/**
-	 * @protected
-	 * @param {VdsCustomEvent<import('../../../shared/types/media').WebKitPresentationMode>} event
-	 * @returns {void}
-	 */
-	handlePresentationModeChange(event) {
-		this.handleFullscreenChange(event);
-	}
+  /**
+   * @protected
+   * @param {VdsCustomEvent<import('../../../shared/types/media').WebKitPresentationMode>} event
+   * @returns {void}
+   */
+  handlePresentationModeChange(event) {
+    this.handleFullscreenChange(event);
+  }
 
-	/**
-	 * @protected
-	 * @param {(this: HTMLElement, event: Event) => void} handler
-	 * @returns {import('../../../shared/types/utils').Unsubscribe}
-	 */
-	addFullscreenErrorEventListener(handler) {
-		if (!this.isSupportedNatively) return noop;
-		return super.addFullscreenErrorEventListener(handler);
-	}
+  /**
+   * @protected
+   * @param {(this: HTMLElement, event: Event) => void} handler
+   * @returns {import('../../../shared/types/utils').Unsubscribe}
+   */
+  addFullscreenErrorEventListener(handler) {
+    if (!this.isSupportedNatively) return noop;
+    return super.addFullscreenErrorEventListener(handler);
+  }
 }

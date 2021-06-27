@@ -10,57 +10,57 @@ import { ManagedControllerConnectEvent } from './events.js';
  * @implements {ManageableController}
  */
 export class ManagedController {
-	/**
-	 * @protected
-	 */
-	static get ScopedManagedControllerConnectEvent() {
-		return ManagedControllerConnectEvent;
-	}
+  /**
+   * @protected
+   */
+  static get ScopedManagedControllerConnectEvent() {
+    return ManagedControllerConnectEvent;
+  }
 
-	/**
-	 * @protected
-	 * @readonly
-	 */
-	disconnectDisposal = new DisposalBin();
+  /**
+   * @protected
+   * @readonly
+   */
+  disconnectDisposal = new DisposalBin();
 
-	/**
-	 * @param {HostElement} host
-	 */
-	constructor(host) {
-		host.addController(this);
+  /**
+   * @param {HostElement} host
+   */
+  constructor(host) {
+    host.addController(this);
 
-		/**
-		 * @readonly
-		 * @type {HostElement}
-		 */
-		this.host = host;
-	}
+    /**
+     * @readonly
+     * @type {HostElement}
+     */
+    this.host = host;
+  }
 
-	hostConnected() {
-		this.connectToManager();
-	}
+  hostConnected() {
+    this.connectToManager();
+  }
 
-	hostDisconnected() {
-		this.disconnectDisposal.empty();
-	}
+  hostDisconnected() {
+    this.disconnectDisposal.empty();
+  }
 
-	/**
-	 * @protected
-	 * @returns {void}
-	 */
-	connectToManager() {
-		const ctor = /** @type {typeof ManagedController} */ (this.constructor);
+  /**
+   * @protected
+   * @returns {void}
+   */
+  connectToManager() {
+    const ctor = /** @type {typeof ManagedController} */ (this.constructor);
 
-		this.host.dispatchEvent(
-			new ctor.ScopedManagedControllerConnectEvent({
-				detail: {
-					controller: this,
-					// Pipe callbacks into the disconnect disposal bin.
-					onDisconnect: (callback) => {
-						this.disconnectDisposal.add(callback);
-					}
-				}
-			})
-		);
-	}
+    this.host.dispatchEvent(
+      new ctor.ScopedManagedControllerConnectEvent({
+        detail: {
+          controller: this,
+          // Pipe callbacks into the disconnect disposal bin.
+          onDisconnect: (callback) => {
+            this.disconnectDisposal.add(callback);
+          }
+        }
+      })
+    );
+  }
 }

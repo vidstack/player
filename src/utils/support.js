@@ -8,18 +8,18 @@ export const IS_IOS = /iphone|ipad|ipod|ios|CriOS|FxiOS/.test(UA);
 export const IS_ANDROID = /android/.test(UA);
 export const IS_MOBILE = IS_CLIENT && (IS_IOS || IS_ANDROID);
 export const IS_IPHONE =
-	IS_CLIENT && /(iPhone|iPod)/gi.test(window.navigator?.platform);
+  IS_CLIENT && /(iPhone|iPod)/gi.test(window.navigator?.platform);
 export const IS_FIREFOX = /firefox/.test(UA);
 export const IS_CHROME = IS_CLIENT && !!window.chrome;
 export const IS_SAFARI =
-	IS_CLIENT &&
-	!IS_CHROME &&
-	(window.safari || IS_IOS || /(apple|safari)/.test(UA));
+  IS_CLIENT &&
+  !IS_CHROME &&
+  (window.safari || IS_IOS || /(apple|safari)/.test(UA));
 
 export const ORIGIN =
-	window.location.protocol !== 'file:'
-		? `${window.location.protocol}//${window.location.hostname}`
-		: undefined;
+  window.location.protocol !== 'file:'
+    ? `${window.location.protocol}//${window.location.hostname}`
+    : undefined;
 
 /**
  * Returns the current version of Safari. Defaults to `0` if unknown.
@@ -27,9 +27,9 @@ export const ORIGIN =
  * @returns {number}
  */
 export const currentSafariVersion = () =>
-	IS_CLIENT
-		? Number((/Safari\/(\d+)/.exec(navigator.userAgent) ?? ['', 0])[1])
-		: 0;
+  IS_CLIENT
+    ? Number((/Safari\/(\d+)/.exec(navigator.userAgent) ?? ['', 0])[1])
+    : 0;
 
 /**
  * Checks if a video player can enter fullscreen.
@@ -38,9 +38,9 @@ export const currentSafariVersion = () =>
  * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen
  */
 export const canFullscreenVideo = () => {
-	if (!IS_CLIENT) return false;
-	const video = document.createElement('video');
-	return isFunction(video.webkitEnterFullscreen);
+  if (!IS_CLIENT) return false;
+  const video = document.createElement('video');
+  return isFunction(video.webkitEnterFullscreen);
 };
 
 /**
@@ -49,7 +49,7 @@ export const canFullscreenVideo = () => {
  * @returns {boolean}
  */
 export const canObserveIntersection = () => {
-	return IS_CLIENT && !isUndefined(window.IntersectionObserver);
+  return IS_CLIENT && !isUndefined(window.IntersectionObserver);
 };
 
 /**
@@ -59,10 +59,10 @@ export const canObserveIntersection = () => {
  * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
  */
 export const canOrientScreen = () =>
-	IS_CLIENT &&
-	!isUndefined(screen.orientation) &&
-	isFunction(screen.orientation.lock) &&
-	isFunction(screen.orientation.unlock);
+  IS_CLIENT &&
+  !isUndefined(screen.orientation) &&
+  isFunction(screen.orientation.lock) &&
+  isFunction(screen.orientation.unlock);
 
 /**
  * Checks if the screen orientation can be changed.
@@ -71,9 +71,9 @@ export const canOrientScreen = () =>
  * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
  */
 export const canRotateScreen = () =>
-	IS_CLIENT &&
-	!isUndefined(window.screen.orientation) &&
-	!isUndefined(window.screen.orientation.lock);
+  IS_CLIENT &&
+  !isUndefined(window.screen.orientation) &&
+  !isUndefined(window.screen.orientation.lock);
 
 /**
  * Reduced motion iOS & MacOS setting.
@@ -82,9 +82,9 @@ export const canRotateScreen = () =>
  * @link https://webkit.org/blog/7551/responsive-design-for-motion/
  */
 export const isReducedMotionPreferred = () =>
-	IS_CLIENT &&
-	'matchMedia' in window &&
-	window.matchMedia('(prefers-reduced-motion)').matches;
+  IS_CLIENT &&
+  'matchMedia' in window &&
+  window.matchMedia('(prefers-reduced-motion)').matches;
 
 /**
  * Checks if the native HTML5 video player can play HLS.
@@ -92,9 +92,9 @@ export const isReducedMotionPreferred = () =>
  * @returns {boolean}
  */
 export const canPlayHLSNatively = () => {
-	if (!IS_CLIENT) return false;
-	const video = document.createElement('video');
-	return video.canPlayType('application/vnd.apple.mpegurl').length > 0;
+  if (!IS_CLIENT) return false;
+  const video = document.createElement('video');
+  return video.canPlayType('application/vnd.apple.mpegurl').length > 0;
 };
 
 /**
@@ -105,9 +105,9 @@ export const canPlayHLSNatively = () => {
  * @link  https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture
  */
 export const canUsePiPInChrome = () => {
-	if (!IS_CLIENT) return false;
-	const video = document.createElement('video');
-	return !!document.pictureInPictureEnabled && !video.disablePictureInPicture;
+  if (!IS_CLIENT) return false;
+  const video = document.createElement('video');
+  return !!document.pictureInPictureEnabled && !video.disablePictureInPicture;
 };
 
 /**
@@ -119,15 +119,15 @@ export const canUsePiPInChrome = () => {
  * @link https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls
  */
 export const canUsePiPInSafari = () => {
-	if (!IS_CLIENT) return false;
+  if (!IS_CLIENT) return false;
 
-	const video = document.createElement('video');
+  const video = document.createElement('video');
 
-	return (
-		isFunction(video.webkitSupportsPresentationMode) &&
-		isFunction(video.webkitSetPresentationMode) &&
-		!IS_IPHONE
-	);
+  return (
+    isFunction(video.webkitSupportsPresentationMode) &&
+    isFunction(video.webkitSetPresentationMode) &&
+    !IS_IPHONE
+  );
 };
 
 /**
@@ -150,32 +150,32 @@ export const canUsePiP = () => canUsePiPInChrome() || canUsePiPInSafari();
  * @link https://github.com/ampproject/amphtml/blob/9bc8756536956780e249d895f3e1001acdee0bc0/src/utils/video.js#L25
  */
 export const canAutoplay = (muted = true, playsinline = true) => {
-	if (!IS_CLIENT) return Promise.resolve(false);
+  if (!IS_CLIENT) return Promise.resolve(false);
 
-	const video = document.createElement('video');
+  const video = document.createElement('video');
 
-	if (muted) {
-		video.setAttribute('muted', '');
-		video.muted = true;
-	}
+  if (muted) {
+    video.setAttribute('muted', '');
+    video.muted = true;
+  }
 
-	if (playsinline) {
-		video.setAttribute('playsinline', '');
-		video.setAttribute('webkit-playsinline', '');
-	}
+  if (playsinline) {
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+  }
 
-	video.setAttribute('height', '0');
-	video.setAttribute('width', '0');
+  video.setAttribute('height', '0');
+  video.setAttribute('width', '0');
 
-	video.style.position = 'fixed';
-	video.style.top = '0';
-	video.style.width = '0';
-	video.style.height = '0';
-	video.style.opacity = '0';
+  video.style.position = 'fixed';
+  video.style.top = '0';
+  video.style.width = '0';
+  video.style.height = '0';
+  video.style.opacity = '0';
 
-	// Promise wrapped this way to catch both sync throws and async rejections.
-	// More info: https://github.com/tc39/proposal-promise-try
-	new Promise((resolve) => resolve(video.play())).catch(noop);
+  // Promise wrapped this way to catch both sync throws and async rejections.
+  // More info: https://github.com/tc39/proposal-promise-try
+  new Promise((resolve) => resolve(video.play())).catch(noop);
 
-	return Promise.resolve(!video.paused);
+  return Promise.resolve(!video.paused);
 };

@@ -1,8 +1,8 @@
 import { mediaContext } from '../../../media/index.js';
 import { StorybookControlType } from '../../../shared/storybook/index.js';
 import {
-	TimeElement,
-	VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES
+  TimeElement,
+  VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES
 } from '../time/index.js';
 
 export const VDS_TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
@@ -36,23 +36,23 @@ export const VDS_TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
  * ```
  */
 export class TimeCurrentElement extends TimeElement {
-	constructor() {
-		super();
+  constructor() {
+    super();
 
-		// Properties
-		this.label = 'Current time';
+    // Properties
+    this.label = 'Current time';
 
-		// Context
-		/** @internal @readonly @type {number} */
-		this.seconds = mediaContext.currentTime.initialValue;
-	}
+    // Context
+    /** @internal @readonly @type {number} */
+    this.seconds = mediaContext.currentTime.initialValue;
+  }
 
-	/** @type {import('../../../shared/context').ContextConsumerDeclarations} */
-	static get contextConsumers() {
-		return {
-			seconds: mediaContext.currentTime
-		};
-	}
+  /** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+  static get contextConsumers() {
+    return {
+      seconds: mediaContext.currentTime
+    };
+  }
 }
 
 /**
@@ -60,8 +60,8 @@ export class TimeCurrentElement extends TimeElement {
  * @type {import('./types').TimeCurrentElementStorybookArgTypes}
  */
 export const VDS_TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES = {
-	...VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES,
-	// @ts-ignore
-	seconds: { table: { disable: true } },
-	mediaCurrentTime: { control: StorybookControlType.Number, defaultValue: 1800 }
+  ...VDS_TIME_ELEMENT_STORYBOOK_ARG_TYPES,
+  // @ts-ignore
+  seconds: { table: { disable: true } },
+  mediaCurrentTime: { control: StorybookControlType.Number, defaultValue: 1800 }
 };

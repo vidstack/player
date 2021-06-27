@@ -1,7 +1,7 @@
 import {
-	DisposalBin,
-	listen,
-	redispatchEvent
+  DisposalBin,
+  listen,
+  redispatchEvent
 } from '../shared/events/index.js';
 import { proxyProperties } from './object.js';
 import { IS_CLIENT } from './support.js';
@@ -14,12 +14,12 @@ import { isUndefined } from './unit.js';
  * @returns {Promise<number>}
  */
 export function raf(callback) {
-	return new Promise((resolve) => {
-		const rafId = window.requestAnimationFrame(async () => {
-			await callback?.();
-			resolve(rafId);
-		});
-	});
+  return new Promise((resolve) => {
+    const rafId = window.requestAnimationFrame(async () => {
+      await callback?.();
+      resolve(rafId);
+    });
+  });
 }
 
 /**
@@ -30,9 +30,9 @@ export function raf(callback) {
  * @returns {string}
  */
 export function buildExportPartsAttr(parts, prefix) {
-	return parts
-		.map((part) => `${part}: ${prefix ? `${prefix}-` : ''}${part}`)
-		.join(', ');
+  return parts
+    .map((part) => `${part}: ${prefix ? `${prefix}-` : ''}${part}`)
+    .join(', ');
 }
 
 /**
@@ -47,14 +47,14 @@ export function buildExportPartsAttr(parts, prefix) {
  * @returns {void}
  */
 export const safelyDefineCustomElement = (
-	name,
-	constructor,
-	isClient = IS_CLIENT
+  name,
+  constructor,
+  isClient = IS_CLIENT
 ) => {
-	const isElementRegistered =
-		isClient && !isUndefined(window.customElements.get(name));
-	if (!isClient || isElementRegistered) return;
-	window.customElements.define(name, constructor);
+  const isElementRegistered =
+    isClient && !isUndefined(window.customElements.get(name));
+  if (!isClient || isElementRegistered) return;
+  window.customElements.define(name, constructor);
 };
 
 /**
@@ -67,11 +67,11 @@ export const safelyDefineCustomElement = (
  * @returns {void}
  */
 export function setAttribute(el, attrName, attrValue) {
-	if (isUndefined(attrValue)) {
-		el.removeAttribute(attrName);
-	} else {
-		el.setAttribute(attrName, attrValue);
-	}
+  if (isUndefined(attrValue)) {
+    el.removeAttribute(attrName);
+  } else {
+    el.setAttribute(attrName, attrValue);
+  }
 }
 
 /**
@@ -83,18 +83,18 @@ export function setAttribute(el, attrName, attrValue) {
  * @returns {Element[]}
  */
 export function getSlottedChildren(el, name) {
-	const selector = name ? `slot[name="${name}"]` : 'slot:not([name])';
+  const selector = name ? `slot[name="${name}"]` : 'slot:not([name])';
 
-	const slot = /** @type {HTMLSlotElement | null} */ (
-		el.shadowRoot?.querySelector(selector)
-	);
+  const slot = /** @type {HTMLSlotElement | null} */ (
+    el.shadowRoot?.querySelector(selector)
+  );
 
-	const childNodes = slot?.assignedNodes({ flatten: true }) ?? [];
+  const childNodes = slot?.assignedNodes({ flatten: true }) ?? [];
 
-	return Array.prototype.filter.call(
-		childNodes,
-		(node) => node.nodeType == Node.ELEMENT_NODE
-	);
+  return Array.prototype.filter.call(
+    childNodes,
+    (node) => node.nodeType == Node.ELEMENT_NODE
+  );
 }
 
 /**
@@ -109,21 +109,21 @@ export function getSlottedChildren(el, name) {
  * @returns {boolean}
  */
 export const willElementsCollide = (
-	a,
-	b,
-	translateAx = 0,
-	translateAy = 0,
-	translateBx = 0,
-	translateBy = 0
+  a,
+  b,
+  translateAx = 0,
+  translateAy = 0,
+  translateBx = 0,
+  translateBy = 0
 ) => {
-	const aRect = a.getBoundingClientRect();
-	const bRect = b.getBoundingClientRect();
-	return (
-		aRect.left + translateAx < bRect.right + translateBx &&
-		aRect.right + translateAx > bRect.left + translateBx &&
-		aRect.top + translateAy < bRect.bottom + translateBy &&
-		aRect.bottom + translateAy > bRect.top + translateBy
-	);
+  const aRect = a.getBoundingClientRect();
+  const bRect = b.getBoundingClientRect();
+  return (
+    aRect.left + translateAx < bRect.right + translateBx &&
+    aRect.right + translateAx > bRect.left + translateBx &&
+    aRect.top + translateAy < bRect.bottom + translateBy &&
+    aRect.bottom + translateAy > bRect.top + translateBy
+  );
 };
 
 /**
@@ -146,64 +146,64 @@ export const willElementsCollide = (
  * @returns {(() => void)} Cleanup function to destroy bridge.
  */
 export function bridgeElements(elementA, elementB, whitelist) {
-	const disposal = new DisposalBin();
+  const disposal = new DisposalBin();
 
-	// Proxy propeties/methods on `elementA` to `elementB`.
-	if (!isUndefined(whitelist.properties)) {
-		const disposeProxy = proxyProperties(
-			elementA,
-			elementB,
-			whitelist.properties
-		);
+  // Proxy propeties/methods on `elementA` to `elementB`.
+  if (!isUndefined(whitelist.properties)) {
+    const disposeProxy = proxyProperties(
+      elementA,
+      elementB,
+      whitelist.properties
+    );
 
-		disposal.add(disposeProxy);
-	}
+    disposal.add(disposeProxy);
+  }
 
-	if (!isUndefined(whitelist.attributes)) {
-		// Forward initial attributes on `elementA` to `elementB`.
-		whitelist.attributes.forEach((attrName) => {
-			if (elementA.hasAttribute(attrName)) {
-				const attrValue = /** @type {string} */ (
-					elementA.getAttribute(attrName)
-				);
-				elementB.setAttribute(attrName, attrValue);
-			}
-		});
+  if (!isUndefined(whitelist.attributes)) {
+    // Forward initial attributes on `elementA` to `elementB`.
+    whitelist.attributes.forEach((attrName) => {
+      if (elementA.hasAttribute(attrName)) {
+        const attrValue = /** @type {string} */ (
+          elementA.getAttribute(attrName)
+        );
+        elementB.setAttribute(attrName, attrValue);
+      }
+    });
 
-		// Observe attribute changes and forward to `elementB`.
-		const observer = new MutationObserver((mutations) => {
-			for (const mutation of mutations) {
-				if (mutation.type === 'attributes') {
-					const attrName = /** @type {string} **/ (mutation.attributeName);
-					const attrValue = /** @type {string} */ (
-						elementA.getAttribute(attrName)
-					);
-					elementB.setAttribute(attrName, attrValue);
-				}
-			}
-		});
+    // Observe attribute changes and forward to `elementB`.
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes') {
+          const attrName = /** @type {string} **/ (mutation.attributeName);
+          const attrValue = /** @type {string} */ (
+            elementA.getAttribute(attrName)
+          );
+          elementB.setAttribute(attrName, attrValue);
+        }
+      }
+    });
 
-		observer.observe(elementA, {
-			attributeFilter: Array.from(whitelist.attributes)
-		});
+    observer.observe(elementA, {
+      attributeFilter: Array.from(whitelist.attributes)
+    });
 
-		disposal.add(() => observer.disconnect());
-	}
+    disposal.add(() => observer.disconnect());
+  }
 
-	// Listen to dispatched events on `elementB` and forward them.
-	if (!isUndefined(whitelist.events)) {
-		Array.from(whitelist.events)
-			.map((eventType) =>
-				listen(elementB, eventType, (event) => {
-					redispatchEvent(elementA, event);
-				})
-			)
-			.forEach((dispose) => {
-				disposal.add(dispose);
-			});
-	}
+  // Listen to dispatched events on `elementB` and forward them.
+  if (!isUndefined(whitelist.events)) {
+    Array.from(whitelist.events)
+      .map((eventType) =>
+        listen(elementB, eventType, (event) => {
+          redispatchEvent(elementA, event);
+        })
+      )
+      .forEach((dispose) => {
+        disposal.add(dispose);
+      });
+  }
 
-	return () => {
-		disposal.empty();
-	};
+  return () => {
+    disposal.empty();
+  };
 }

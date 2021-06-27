@@ -11,19 +11,19 @@
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType
  */
 export const CanPlay = {
-	/**
-	 * Media of the given type definitely can't be played on the current device.
-	 */
-	No: '',
+  /**
+   * Media of the given type definitely can't be played on the current device.
+   */
+  No: '',
 
-	/**
-	 * Not enough information is available to determine for sure whether or not the media will play
-	 * until playback is actually attempted.
-	 */
-	Maybe: 'maybe',
+  /**
+   * Not enough information is available to determine for sure whether or not the media will play
+   * until playback is actually attempted.
+   */
+  Maybe: 'maybe',
 
-	/**
-	 * Media of the type indicated by the `mediaType` parameter is probably playable on this device.
-	 */
-	Probably: 'probably'
+  /**
+   * Media of the type indicated by the `mediaType` parameter is probably playable on this device.
+   */
+  Probably: 'probably'
 };

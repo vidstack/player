@@ -2,22 +2,22 @@ import { VdsCustomEvent, VdsEventInit } from '../../shared/events/index.js';
 import { MediaContainerElement } from './MediaContainerElement.js';
 
 declare global {
-	interface GlobalEventHandlersEventMap extends VdsMediaContainerEvents {}
+  interface GlobalEventHandlersEventMap extends VdsMediaContainerEvents {}
 }
 
 export interface MediaContainerConnectEventDetail {
-	container: MediaContainerElement;
-	onDisconnect: (callback: () => void) => void;
+  container: MediaContainerElement;
+  onDisconnect: (callback: () => void) => void;
 }
 
 export interface VdsMediaContainerEvents {
-	'vds-media-container-connect': VdsCustomEvent<MediaContainerConnectEventDetail>;
+  'vds-media-container-connect': VdsCustomEvent<MediaContainerConnectEventDetail>;
 }
 
 export class VdsMediaContainerEvent<
-	DetailType
+  DetailType
 > extends VdsCustomEvent<DetailType> {
-	static readonly TYPE: keyof VdsMediaContainerEvents;
+  static readonly TYPE: keyof VdsMediaContainerEvents;
 }
 
 /**
@@ -27,6 +27,6 @@ export class VdsMediaContainerEvent<
  * @composed
  */
 export class VdsMediaContainerConnectEvent extends VdsMediaContainerEvent<MediaContainerConnectEventDetail> {
-	static readonly TYPE = 'vds-media-container-connect';
-	constructor(eventInit: VdsEventInit<MediaContainerConnectEventDetail>);
+  static readonly TYPE = 'vds-media-container-connect';
+  constructor(eventInit: VdsEventInit<MediaContainerConnectEventDetail>);
 }

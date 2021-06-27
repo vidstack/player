@@ -20,22 +20,22 @@ import { PluginConnectEvent } from './events.js';
  * @extends {ManagedController<HostElement>}
  */
 export class Plugin extends ManagedController {
-	/** @protected */
-	static get ScopedManagedControllerConnectEvent() {
-		return PluginConnectEvent;
-	}
+  /** @protected */
+  static get ScopedManagedControllerConnectEvent() {
+    return PluginConnectEvent;
+  }
 
-	/**
-	 * @param {HostElement} host
-	 * @param {PluginOptions<HostElement>} options
-	 */
-	constructor(host, options) {
-		super(host);
+  /**
+   * @param {HostElement} host
+   * @param {PluginOptions<HostElement>} options
+   */
+  constructor(host, options) {
+    super(host);
 
-		/**
-		 * @readonly
-		 * @type {PluginOptions<HostElement>}
-		 */
-		this.options = options;
-	}
+    /**
+     * @readonly
+     * @type {PluginOptions<HostElement>}
+     */
+    this.options = options;
+  }
 }

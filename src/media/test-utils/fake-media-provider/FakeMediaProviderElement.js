@@ -1,147 +1,147 @@
 /* c8 ignore next 1000 */
 
 import {
-	CanPlay,
-	MediaProviderElement,
-	VdsPauseEvent,
-	VdsPlayEvent,
-	VdsTimeUpdateEvent,
-	VdsVolumeChangeEvent
+  CanPlay,
+  MediaProviderElement,
+  VdsPauseEvent,
+  VdsPlayEvent,
+  VdsTimeUpdateEvent,
+  VdsVolumeChangeEvent
 } from '../../index.js';
 import { mediaContext } from '../../media.context.js';
 
 export const VDS_FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME =
-	'vds-fake-media-provider';
+  'vds-fake-media-provider';
 
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
 export class FakeMediaProviderElement extends MediaProviderElement {
-	constructor() {
-		super();
-		this.defineContextAccessors();
-	}
+  constructor() {
+    super();
+    this.defineContextAccessors();
+  }
 
-	/**
-	 * Used to define accessors that are used during testing to update the context object.
-	 *
-	 * @protected
-	 */
-	defineContextAccessors() {
-		Object.keys(mediaContext).forEach((ctxProp) => {
-			Object.defineProperty(this, `${ctxProp}Context`, {
-				get: () => {
-					return this.context[ctxProp];
-				},
-				set: (newValue) => {
-					// Only run context updates after we've connected to the DOM so we update the inject
-					// media context object on the `MediaControllerElement`.
-					this.connectedQueue.queue(`contextUpdate[${ctxProp}]`, () => {
-						this.context[ctxProp] = newValue;
-					});
-				}
-			});
-		});
-	}
+  /**
+   * Used to define accessors that are used during testing to update the context object.
+   *
+   * @protected
+   */
+  defineContextAccessors() {
+    Object.keys(mediaContext).forEach((ctxProp) => {
+      Object.defineProperty(this, `${ctxProp}Context`, {
+        get: () => {
+          return this.context[ctxProp];
+        },
+        set: (newValue) => {
+          // Only run context updates after we've connected to the DOM so we update the inject
+          // media context object on the `MediaControllerElement`.
+          this.connectedQueue.queue(`contextUpdate[${ctxProp}]`, () => {
+            this.context[ctxProp] = newValue;
+          });
+        }
+      });
+    });
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Lifecycle
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Lifecycle
+  // -------------------------------------------------------------------------------------------
 
-	connectedCallback() {
-		super.connectedCallback();
-		if (this.canPlay) this.forceMediaReady();
-	}
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.canPlay) this.forceMediaReady();
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Provider Methods
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Provider Methods
+  // -------------------------------------------------------------------------------------------
 
-	forceMediaReady() {
-		this.handleMediaReady();
-	}
+  forceMediaReady() {
+    this.handleMediaReady();
+  }
 
-	getCurrentTime() {
-		return this.context.currentTime;
-	}
+  getCurrentTime() {
+    return this.context.currentTime;
+  }
 
-	setCurrentTime(time) {
-		this.context.currentTime = time;
-		this.dispatchEvent(new VdsTimeUpdateEvent({ detail: time }));
-	}
+  setCurrentTime(time) {
+    this.context.currentTime = time;
+    this.dispatchEvent(new VdsTimeUpdateEvent({ detail: time }));
+  }
 
-	getMuted() {
-		return this.context.muted;
-	}
+  getMuted() {
+    return this.context.muted;
+  }
 
-	setMuted(muted) {
-		this.context.muted = muted;
-		this.dispatchEvent(
-			new VdsVolumeChangeEvent({
-				detail: {
-					volume: this.context.volume,
-					muted
-				}
-			})
-		);
-	}
+  setMuted(muted) {
+    this.context.muted = muted;
+    this.dispatchEvent(
+      new VdsVolumeChangeEvent({
+        detail: {
+          volume: this.context.volume,
+          muted
+        }
+      })
+    );
+  }
 
-	getPaused() {
-		return this.context.paused;
-	}
+  getPaused() {
+    return this.context.paused;
+  }
 
-	getVolume() {
-		return this.context.volume;
-	}
+  getVolume() {
+    return this.context.volume;
+  }
 
-	setVolume(volume) {
-		this.context.volume = volume;
-		this.dispatchEvent(
-			new VdsVolumeChangeEvent({
-				detail: {
-					volume,
-					muted: this.context.muted
-				}
-			})
-		);
-	}
+  setVolume(volume) {
+    this.context.volume = volume;
+    this.dispatchEvent(
+      new VdsVolumeChangeEvent({
+        detail: {
+          volume,
+          muted: this.context.muted
+        }
+      })
+    );
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Readonly Properties
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Readonly Properties
+  // -------------------------------------------------------------------------------------------
 
-	get engine() {
-		return undefined;
-	}
+  get engine() {
+    return undefined;
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Playback
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Playback
+  // -------------------------------------------------------------------------------------------
 
-	canPlayType() {
-		return CanPlay.No;
-	}
+  canPlayType() {
+    return CanPlay.No;
+  }
 
-	async play() {
-		this.context.paused = false;
-		this.dispatchEvent(new VdsPlayEvent());
-	}
+  async play() {
+    this.context.paused = false;
+    this.dispatchEvent(new VdsPlayEvent());
+  }
 
-	async pause() {
-		this.context.paused = true;
-		this.dispatchEvent(new VdsPauseEvent());
-	}
+  async pause() {
+    this.context.paused = true;
+    this.dispatchEvent(new VdsPauseEvent());
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Fullscreen
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Fullscreen
+  // -------------------------------------------------------------------------------------------
 
-	async requestFullscreen() {
-		this.context.fullscreen = true;
-	}
+  async requestFullscreen() {
+    this.context.fullscreen = true;
+  }
 
-	async exitFullscreen() {
-		this.context.fullscreen = false;
-	}
+  async exitFullscreen() {
+    this.context.fullscreen = false;
+  }
 }

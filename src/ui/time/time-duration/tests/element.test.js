@@ -3,42 +3,42 @@ import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-	TimeDurationElement,
-	VDS_TIME_DURATION_ELEMENT_TAG_NAME
+  TimeDurationElement,
+  VDS_TIME_DURATION_ELEMENT_TAG_NAME
 } from '../TimeDurationElement.js';
 
 window.customElements.define(
-	VDS_TIME_DURATION_ELEMENT_TAG_NAME,
-	TimeDurationElement
+  VDS_TIME_DURATION_ELEMENT_TAG_NAME,
+  TimeDurationElement
 );
 
 describe(`${VDS_TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
-	async function buildFixture() {
-		const { container, provider } = await buildMediaFixture(html`
-			<vds-time-duration></vds-time-duration>
-		`);
-
-		const timeDuration = /** @type {TimeDurationElement} */ (
-			container.querySelector(VDS_TIME_DURATION_ELEMENT_TAG_NAME)
-		);
-
-		return { provider, timeDuration };
-	}
-
-	it('should render DOM correctly', async function () {
-		const { timeDuration } = await buildFixture();
-		expect(timeDuration).dom.to.equal(`
+  async function buildFixture() {
+    const { container, provider } = await buildMediaFixture(html`
       <vds-time-duration></vds-time-duration>
     `);
-	});
 
-	it('should render shadow DOM correctly', async function () {
-		const { provider, timeDuration } = await buildFixture();
+    const timeDuration = /** @type {TimeDurationElement} */ (
+      container.querySelector(VDS_TIME_DURATION_ELEMENT_TAG_NAME)
+    );
 
-		provider.context.duration = 3750;
-		await elementUpdated(timeDuration);
+    return { provider, timeDuration };
+  }
 
-		expect(timeDuration).shadowDom.to.equal(`
+  it('should render DOM correctly', async function () {
+    const { timeDuration } = await buildFixture();
+    expect(timeDuration).dom.to.equal(`
+      <vds-time-duration></vds-time-duration>
+    `);
+  });
+
+  it('should render shadow DOM correctly', async function () {
+    const { provider, timeDuration } = await buildFixture();
+
+    provider.context.duration = 3750;
+    await elementUpdated(timeDuration);
+
+    expect(timeDuration).shadowDom.to.equal(`
       <time
         id="root"
         aria-label="Duration"
@@ -49,16 +49,16 @@ describe(`${VDS_TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
         1:02:30
       </time>
     `);
-	});
+  });
 
-	it('should update duration time as context updates', async function () {
-		const { provider, timeDuration } = await buildFixture();
-		expect(timeDuration.seconds).to.equal(0);
-		provider.context.duration = 50;
-		await elementUpdated(timeDuration);
-		expect(timeDuration.seconds).to.equal(50);
-		provider.context.duration = -1;
-		await elementUpdated(timeDuration);
-		expect(timeDuration.seconds).to.equal(0);
-	});
+  it('should update duration time as context updates', async function () {
+    const { provider, timeDuration } = await buildFixture();
+    expect(timeDuration.seconds).to.equal(0);
+    provider.context.duration = 50;
+    await elementUpdated(timeDuration);
+    expect(timeDuration.seconds).to.equal(50);
+    provider.context.duration = -1;
+    await elementUpdated(timeDuration);
+    expect(timeDuration.seconds).to.equal(0);
+  });
 });

@@ -7,10 +7,10 @@ export class VdsHlsEvent extends VdsCustomEvent {}
  * supports HLS.
  */
 export class VdsHlsEngineBuiltEvent extends VdsHlsEvent {
-	static TYPE = 'vds-hls-engine-built';
-	constructor(eventInit) {
-		super(VdsHlsEngineBuiltEvent.TYPE, eventInit);
-	}
+  static TYPE = 'vds-hls-engine-built';
+  constructor(eventInit) {
+    super(VdsHlsEngineBuiltEvent.TYPE, eventInit);
+  }
 }
 
 /**
@@ -18,20 +18,20 @@ export class VdsHlsEngineBuiltEvent extends VdsHlsEvent {
  * fire if the browser natively supports HLS.
  */
 export class VdsHlsEngineAttachEvent extends VdsHlsEvent {
-	static TYPE = 'vds-hls-engine-attach';
-	constructor(eventInit) {
-		super(VdsHlsEngineAttachEvent.TYPE, eventInit);
-	}
+  static TYPE = 'vds-hls-engine-attach';
+  constructor(eventInit) {
+    super(VdsHlsEngineAttachEvent.TYPE, eventInit);
+  }
 }
 
 /**
  * Fired when the `hls.js` instance has detached itself from the media element.
  */
 export class VdsHlsEngineDetachEvent extends VdsHlsEvent {
-	static TYPE = 'vds-hls-engine-detach';
-	constructor(eventInit) {
-		super(VdsHlsEngineDetachEvent.TYPE, eventInit);
-	}
+  static TYPE = 'vds-hls-engine-detach';
+  constructor(eventInit) {
+    super(VdsHlsEngineDetachEvent.TYPE, eventInit);
+  }
 }
 
 /**
@@ -39,8 +39,8 @@ export class VdsHlsEngineDetachEvent extends VdsHlsEvent {
  * this enviroment either, most likely due to missing Media Extensions.
  */
 export class VdsHlsEngineNoSupportEvent extends VdsHlsEvent {
-	static TYPE = 'vds-hls-engine-no-support';
-	constructor(eventInit) {
-		super(VdsHlsEngineNoSupportEvent.TYPE, eventInit);
-	}
+  static TYPE = 'vds-hls-engine-no-support';
+  constructor(eventInit) {
+    super(VdsHlsEngineNoSupportEvent.TYPE, eventInit);
+  }
 }

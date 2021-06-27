@@ -59,204 +59,204 @@ export const VDS_TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
  * ```
  */
 export class TimeProgressElement extends VdsElement {
-	/** @type {import('lit').CSSResultGroup} */
-	static get styles() {
-		return [timeProgressElementStyles];
-	}
+  /** @type {import('lit').CSSResultGroup} */
+  static get styles() {
+    return [timeProgressElementStyles];
+  }
 
-	/** @type {string[]} */
-	static get parts() {
-		return [
-			'root',
-			'current-time',
-			'duration',
-			'separator',
-			...TimeElement.parts.map((part) => `current-time-${part}`),
-			...TimeElement.parts.map((part) => `duration-${part}`)
-		];
-	}
+  /** @type {string[]} */
+  static get parts() {
+    return [
+      'root',
+      'current-time',
+      'duration',
+      'separator',
+      ...TimeElement.parts.map((part) => `current-time-${part}`),
+      ...TimeElement.parts.map((part) => `duration-${part}`)
+    ];
+  }
 
-	constructor() {
-		super();
+  constructor() {
+    super();
 
-		// Properties
-		this.currentTimeLabel = 'Current time';
-		this.timeSeparator = '/';
-		this.durationLabel = 'Duration';
-		this.alwaysShowHours = false;
-		this.padHours = false;
-	}
+    // Properties
+    this.currentTimeLabel = 'Current time';
+    this.timeSeparator = '/';
+    this.durationLabel = 'Duration';
+    this.alwaysShowHours = false;
+    this.padHours = false;
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Properties
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
 
-	/** @type {import('lit').PropertyDeclarations} */
-	static get properties() {
-		return {
-			currentTimeLabel: { attribute: 'current-time-label' },
-			durationLabel: { attribute: 'duration-label' },
-			timeSeparator: { attribute: 'time-separator' },
-			alwaysShowHours: { type: Boolean, attribute: 'always-show-hours' },
-			padHours: { type: Boolean, attribute: 'pad-hours' }
-		};
-	}
+  /** @type {import('lit').PropertyDeclarations} */
+  static get properties() {
+    return {
+      currentTimeLabel: { attribute: 'current-time-label' },
+      durationLabel: { attribute: 'duration-label' },
+      timeSeparator: { attribute: 'time-separator' },
+      alwaysShowHours: { type: Boolean, attribute: 'always-show-hours' },
+      padHours: { type: Boolean, attribute: 'pad-hours' }
+    };
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Render
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------------------------
 
-	/**
-	 * @protected
-	 * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
-	 */
-	rootRef = createRef();
+  /**
+   * @protected
+   * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
+   */
+  rootRef = createRef();
 
-	get rootElement() {
-		return /** @type {HTMLDivElement} */ (this.rootRef.value);
-	}
+  get rootElement() {
+    return /** @type {HTMLDivElement} */ (this.rootRef.value);
+  }
 
-	render() {
-		return html`
-			<div id="root" part="root" ${ref(this.rootRef)}>
-				${this.renderTimeCurrent()}${this.renderTimeSeparator()}${this.renderTimeDuration()}
-			</div>
-		`;
-	}
+  render() {
+    return html`
+      <div id="root" part="root" ${ref(this.rootRef)}>
+        ${this.renderTimeCurrent()}${this.renderTimeSeparator()}${this.renderTimeDuration()}
+      </div>
+    `;
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Time Current
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Time Current
+  // -------------------------------------------------------------------------------------------
 
-	/**
-	 * @protected
-	 * @type {import('lit/directives/ref').Ref<TimeCurrentElement>}
-	 */
-	timeCurrentRef = createRef();
+  /**
+   * @protected
+   * @type {import('lit/directives/ref').Ref<TimeCurrentElement>}
+   */
+  timeCurrentRef = createRef();
 
-	get timeCurrentElement() {
-		return /** @type {TimeCurrentElement} */ (this.timeCurrentRef.value);
-	}
+  get timeCurrentElement() {
+    return /** @type {TimeCurrentElement} */ (this.timeCurrentRef.value);
+  }
 
-	/**
-	 * @protected
-	 * @returns {import('lit').TemplateResult}
-	 */
-	renderTimeCurrent() {
-		return html`
-			<vds-time-current
-				id="time-current"
-				label=${this.currentTimeLabel}
-				part=${this.getTimeCurrentPartAttr()}
-				?always-show-hours=${this.alwaysShowHours}
-				?pad-hours=${this.padHours}
-				exportparts=${this.getTimeCurrentExportPartsAttr()}
-				${ref(this.timeCurrentRef)}
-			></vds-time-current>
-		`;
-	}
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  renderTimeCurrent() {
+    return html`
+      <vds-time-current
+        id="time-current"
+        label=${this.currentTimeLabel}
+        part=${this.getTimeCurrentPartAttr()}
+        ?always-show-hours=${this.alwaysShowHours}
+        ?pad-hours=${this.padHours}
+        exportparts=${this.getTimeCurrentExportPartsAttr()}
+        ${ref(this.timeCurrentRef)}
+      ></vds-time-current>
+    `;
+  }
 
-	/**
-	 * @protected
-	 * @returns {string}
-	 */
-	getTimeCurrentPartAttr() {
-		return 'current-time';
-	}
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getTimeCurrentPartAttr() {
+    return 'current-time';
+  }
 
-	/**
-	 * @protected
-	 * @returns {string}
-	 */
-	getTimeCurrentExportPartsAttr() {
-		return buildExportPartsAttr(TimeElement.parts, 'current-time');
-	}
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getTimeCurrentExportPartsAttr() {
+    return buildExportPartsAttr(TimeElement.parts, 'current-time');
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Time Duration
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Time Duration
+  // -------------------------------------------------------------------------------------------
 
-	/**
-	 * @protected
-	 * @type {import('lit/directives/ref').Ref<TimeDurationElement>}
-	 */
-	timeDurationRef = createRef();
+  /**
+   * @protected
+   * @type {import('lit/directives/ref').Ref<TimeDurationElement>}
+   */
+  timeDurationRef = createRef();
 
-	get timeDurationElement() {
-		return /** @type {TimeDurationElement} */ (this.timeDurationRef.value);
-	}
+  get timeDurationElement() {
+    return /** @type {TimeDurationElement} */ (this.timeDurationRef.value);
+  }
 
-	/**
-	 * @protected
-	 * @returns {import('lit').TemplateResult}
-	 */
-	renderTimeDuration() {
-		return html`
-			<vds-time-duration
-				id="time-duration"
-				label=${this.durationLabel}
-				part=${this.getTimeDurationPartAttr()}
-				?always-show-hours=${this.alwaysShowHours}
-				?pad-hours=${this.padHours}
-				exportparts=${this.getTimeDurationExportPartsAttr()}
-				${ref(this.timeDurationRef)}
-			></vds-time-duration>
-		`;
-	}
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  renderTimeDuration() {
+    return html`
+      <vds-time-duration
+        id="time-duration"
+        label=${this.durationLabel}
+        part=${this.getTimeDurationPartAttr()}
+        ?always-show-hours=${this.alwaysShowHours}
+        ?pad-hours=${this.padHours}
+        exportparts=${this.getTimeDurationExportPartsAttr()}
+        ${ref(this.timeDurationRef)}
+      ></vds-time-duration>
+    `;
+  }
 
-	/**
-	 * @protected
-	 * @returns {string}
-	 */
-	getTimeDurationPartAttr() {
-		return 'duration';
-	}
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getTimeDurationPartAttr() {
+    return 'duration';
+  }
 
-	/**
-	 * @protected
-	 * @returns {string}
-	 */
-	getTimeDurationExportPartsAttr() {
-		return buildExportPartsAttr(TimeElement.parts, 'duration');
-	}
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getTimeDurationExportPartsAttr() {
+    return buildExportPartsAttr(TimeElement.parts, 'duration');
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Separator
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Separator
+  // -------------------------------------------------------------------------------------------
 
-	/**
-	 * @protected
-	 * @type {import('lit/directives/ref').Ref<HTMLSpanElement>}
-	 */
-	separatorRef = createRef();
+  /**
+   * @protected
+   * @type {import('lit/directives/ref').Ref<HTMLSpanElement>}
+   */
+  separatorRef = createRef();
 
-	get separatorElement() {
-		return /** @type {HTMLSpanElement} */ (this.separatorRef.value);
-	}
+  get separatorElement() {
+    return /** @type {HTMLSpanElement} */ (this.separatorRef.value);
+  }
 
-	/**
-	 * @protected
-	 * @returns {import('lit').TemplateResult}
-	 */
-	renderTimeSeparator() {
-		return html`
-			<span
-				id="separator"
-				part=${this.getTimeSeparatorPartAttr()}
-				${ref(this.separatorRef)}
-			>
-				${this.timeSeparator}
-			</span>
-		`;
-	}
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  renderTimeSeparator() {
+    return html`
+      <span
+        id="separator"
+        part=${this.getTimeSeparatorPartAttr()}
+        ${ref(this.separatorRef)}
+      >
+        ${this.timeSeparator}
+      </span>
+    `;
+  }
 
-	/**
-	 * @protected
-	 * @returns {string}
-	 */
-	getTimeSeparatorPartAttr() {
-		return 'separator';
-	}
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getTimeSeparatorPartAttr() {
+    return 'separator';
+  }
 }
 
 /**
@@ -264,23 +264,23 @@ export class TimeProgressElement extends VdsElement {
  * @type {import('./types').TimeProgressElementStorybookArgTypes}
  */
 export const VDS_TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES = {
-	alwaysShowHours: {
-		control: StorybookControlType.Boolean,
-		defaultValue: false
-	},
-	currentTimeLabel: {
-		control: StorybookControlType.Text,
-		defaultValue: 'Current time'
-	},
-	durationLabel: {
-		control: StorybookControlType.Text,
-		defaultValue: 'Duration'
-	},
-	padHours: { control: StorybookControlType.Boolean, defaultValue: false },
-	timeSeparator: { control: StorybookControlType.Text, defaultValue: '/' },
-	mediaCurrentTime: {
-		control: StorybookControlType.Number,
-		defaultValue: 1800
-	},
-	mediaDuration: { control: StorybookControlType.Number, defaultValue: 3600 }
+  alwaysShowHours: {
+    control: StorybookControlType.Boolean,
+    defaultValue: false
+  },
+  currentTimeLabel: {
+    control: StorybookControlType.Text,
+    defaultValue: 'Current time'
+  },
+  durationLabel: {
+    control: StorybookControlType.Text,
+    defaultValue: 'Duration'
+  },
+  padHours: { control: StorybookControlType.Boolean, defaultValue: false },
+  timeSeparator: { control: StorybookControlType.Text, defaultValue: '/' },
+  mediaCurrentTime: {
+    control: StorybookControlType.Number,
+    defaultValue: 1800
+  },
+  mediaDuration: { control: StorybookControlType.Number, defaultValue: 3600 }
 };

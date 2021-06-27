@@ -1,16 +1,16 @@
 import {
-	mediaContext,
-	MediaRemoteControl,
-	VdsPauseRequestEvent,
-	VdsPlayRequestEvent
+  mediaContext,
+  MediaRemoteControl,
+  VdsPauseRequestEvent,
+  VdsPlayRequestEvent
 } from '../../../media/index.js';
 import {
-	storybookAction,
-	StorybookControlType
+  storybookAction,
+  StorybookControlType
 } from '../../../shared/storybook/index.js';
 import {
-	ToggleButtonElement,
-	VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  ToggleButtonElement,
+  VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 } from '../toggle-button/index.js';
 
 export const VDS_PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
@@ -41,63 +41,63 @@ export const VDS_PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
  * ```
  */
 export class PlayButtonElement extends ToggleButtonElement {
-	/**
-	 * @protected
-	 * @readonly
-	 */
-	remoteControl = new MediaRemoteControl(this);
+  /**
+   * @protected
+   * @readonly
+   */
+  remoteControl = new MediaRemoteControl(this);
 
-	constructor() {
-		super();
+  constructor() {
+    super();
 
-		// Properties
-		this.label = 'Play';
-		/** @internal @readonly @type {boolean} */
-		this.pressed = false;
-	}
+    // Properties
+    this.label = 'Play';
+    /** @internal @readonly @type {boolean} */
+    this.pressed = false;
+  }
 
-	/** @type {import('../../../shared/context').ContextConsumerDeclarations} */
-	static get contextConsumers() {
-		return {
-			pressed: {
-				context: mediaContext.paused,
-				// Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
-				// use `playing` because there could be a buffering delay (we want immediate feedback).
-				transform: (p) => !p
-			}
-		};
-	}
+  /** @type {import('../../../shared/context').ContextConsumerDeclarations} */
+  static get contextConsumers() {
+    return {
+      pressed: {
+        context: mediaContext.paused,
+        // Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
+        // use `playing` because there could be a buffering delay (we want immediate feedback).
+        transform: (p) => !p
+      }
+    };
+  }
 
-	get playSlotElement() {
-		return this.currentNotPressedSlotElement;
-	}
+  get playSlotElement() {
+    return this.currentNotPressedSlotElement;
+  }
 
-	get pauseSlotElement() {
-		return this.currentPressedSlotElement;
-	}
+  get pauseSlotElement() {
+    return this.currentPressedSlotElement;
+  }
 
-	/** @protected */
-	getPressedSlotName() {
-		return 'pause';
-	}
+  /** @protected */
+  getPressedSlotName() {
+    return 'pause';
+  }
 
-	/** @protected */
-	getNotPressedSlotName() {
-		return 'play';
-	}
+  /** @protected */
+  getNotPressedSlotName() {
+    return 'play';
+  }
 
-	/**
-	 * @protected
-	 * @param {Event} event
-	 * @returns {void}
-	 */
-	handleButtonClick(event) {
-		if (this.pressed) {
-			this.remoteControl.pause(event);
-		} else {
-			this.remoteControl.play(event);
-		}
-	}
+  /**
+   * @protected
+   * @param {Event} event
+   * @returns {void}
+   */
+  handleButtonClick(event) {
+    if (this.pressed) {
+      this.remoteControl.pause(event);
+    } else {
+      this.remoteControl.play(event);
+    }
+  }
 }
 
 /**
@@ -105,13 +105,13 @@ export class PlayButtonElement extends ToggleButtonElement {
  * @type {import('./types').PlayButtonElementStorybookArgTypes}
  */
 export const VDS_PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-	...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-	label: { control: StorybookControlType.Text, defaultValue: 'Play' },
-	pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
-	mediaPaused: {
-		control: StorybookControlType.Boolean,
-		defaultValue: true
-	},
-	onVdsPlayRequest: storybookAction(VdsPlayRequestEvent.TYPE),
-	onVdsPauseRequest: storybookAction(VdsPauseRequestEvent.TYPE)
+  ...VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  label: { control: StorybookControlType.Text, defaultValue: 'Play' },
+  pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
+  mediaPaused: {
+    control: StorybookControlType.Boolean,
+    defaultValue: true
+  },
+  onVdsPlayRequest: storybookAction(VdsPlayRequestEvent.TYPE),
+  onVdsPauseRequest: storybookAction(VdsPauseRequestEvent.TYPE)
 };

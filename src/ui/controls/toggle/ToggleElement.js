@@ -35,178 +35,178 @@ export const VDS_TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
  * ```
  */
 export class ToggleElement extends VdsElement {
-	/** @type {import('lit').CSSResultGroup} */
-	static get styles() {
-		return [toggleElementStyles];
-	}
+  /** @type {import('lit').CSSResultGroup} */
+  static get styles() {
+    return [toggleElementStyles];
+  }
 
-	constructor() {
-		super();
+  constructor() {
+    super();
 
-		// Properties
-		/** @type {boolean} */
-		this.pressed = false;
-	}
+    // Properties
+    /** @type {boolean} */
+    this.pressed = false;
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Properties
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
 
-	/** @type {import('lit').PropertyDeclarations} */
-	static get properties() {
-		return {
-			pressed: { type: Boolean, reflect: true }
-		};
-	}
+  /** @type {import('lit').PropertyDeclarations} */
+  static get properties() {
+    return {
+      pressed: { type: Boolean, reflect: true }
+    };
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Lifecycle
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Lifecycle
+  // -------------------------------------------------------------------------------------------
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.currentPressedSlotElement = undefined;
-		this.currentNotPressedSlotElement = undefined;
-	}
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.currentPressedSlotElement = undefined;
+    this.currentNotPressedSlotElement = undefined;
+  }
 
-	update(changedProperties) {
-		super.update(changedProperties);
-		if (changedProperties.has('pressed')) {
-			this.toggle();
-		}
-	}
+  update(changedProperties) {
+    super.update(changedProperties);
+    if (changedProperties.has('pressed')) {
+      this.toggle();
+    }
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Render
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------------------------
 
-	render() {
-		return this.renderToggle();
-	}
+  render() {
+    return this.renderToggle();
+  }
 
-	/**
-	 * @protected
-	 * @returns {import('lit').TemplateResult}
-	 */
-	renderToggle() {
-		return html`${this.renderPressedSlot()} ${this.renderNotPressedSlot()}`;
-	}
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  renderToggle() {
+    return html`${this.renderPressedSlot()} ${this.renderNotPressedSlot()}`;
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Pressed
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Pressed
+  // -------------------------------------------------------------------------------------------
 
-	/**
-	 * @protected
-	 * @type {HTMLElement | undefined}
-	 */
-	currentPressedSlotElement;
+  /**
+   * @protected
+   * @type {HTMLElement | undefined}
+   */
+  currentPressedSlotElement;
 
-	get pressedSlotElement() {
-		return this.currentPressedSlotElement;
-	}
+  get pressedSlotElement() {
+    return this.currentPressedSlotElement;
+  }
 
-	/**
-	 * @protected
-	 * @returns {string}
-	 */
-	getPressedSlotName() {
-		return 'pressed';
-	}
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getPressedSlotName() {
+    return 'pressed';
+  }
 
-	/**
-	 * @protected
-	 * @returns {import('lit').TemplateResult}
-	 */
-	renderPressedSlot() {
-		return html`<slot
-			name=${this.getPressedSlotName()}
-			@slotchange=${this.handlePressedSlotChange}
-		></slot>`;
-	}
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  renderPressedSlot() {
+    return html`<slot
+      name=${this.getPressedSlotName()}
+      @slotchange=${this.handlePressedSlotChange}
+    ></slot>`;
+  }
 
-	/**
-	 * @protected
-	 * @returns {void}
-	 */
-	handlePressedSlotChange() {
-		this.currentPressedSlotElement = /** @type {HTMLElement} */ (
-			getSlottedChildren(this, this.getPressedSlotName())[0]
-		);
+  /**
+   * @protected
+   * @returns {void}
+   */
+  handlePressedSlotChange() {
+    this.currentPressedSlotElement = /** @type {HTMLElement} */ (
+      getSlottedChildren(this, this.getPressedSlotName())[0]
+    );
 
-		this.toggle();
-	}
+    this.toggle();
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Not Pressed
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Not Pressed
+  // -------------------------------------------------------------------------------------------
 
-	/**
-	 * @protected
-	 * @type {HTMLElement | undefined}
-	 */
-	currentNotPressedSlotElement;
+  /**
+   * @protected
+   * @type {HTMLElement | undefined}
+   */
+  currentNotPressedSlotElement;
 
-	get notPressedSlotElement() {
-		return this.currentNotPressedSlotElement;
-	}
+  get notPressedSlotElement() {
+    return this.currentNotPressedSlotElement;
+  }
 
-	/**
-	 * @protected
-	 * @returns {string | undefined}
-	 */
-	getNotPressedSlotName() {
-		// Undefined here means use the default slot.
-		return undefined;
-	}
+  /**
+   * @protected
+   * @returns {string | undefined}
+   */
+  getNotPressedSlotName() {
+    // Undefined here means use the default slot.
+    return undefined;
+  }
 
-	/**
-	 * @protected
-	 * @returns {import('lit').TemplateResult}
-	 */
-	renderNotPressedSlot() {
-		return html`<slot
-			name=${ifDefined(this.getNotPressedSlotName())}
-			@slotchange=${this.handleNotPressedSlotChange}
-		></slot>`;
-	}
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  renderNotPressedSlot() {
+    return html`<slot
+      name=${ifDefined(this.getNotPressedSlotName())}
+      @slotchange=${this.handleNotPressedSlotChange}
+    ></slot>`;
+  }
 
-	/**
-	 * @protected
-	 * @returns {void}
-	 */
-	handleNotPressedSlotChange() {
-		this.currentNotPressedSlotElement = /** @type {HTMLElement} */ (
-			getSlottedChildren(this, this.getNotPressedSlotName())[0]
-		);
+  /**
+   * @protected
+   * @returns {void}
+   */
+  handleNotPressedSlotChange() {
+    this.currentNotPressedSlotElement = /** @type {HTMLElement} */ (
+      getSlottedChildren(this, this.getNotPressedSlotName())[0]
+    );
 
-		this.toggle();
-	}
+    this.toggle();
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Toggle
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Toggle
+  // -------------------------------------------------------------------------------------------
 
-	/**
-	 * @protected
-	 * @returns {void}
-	 */
-	toggle() {
-		this.toggleHiddenAttr(this.currentPressedSlotElement, !this.pressed);
-		this.toggleHiddenAttr(this.currentNotPressedSlotElement, this.pressed);
-	}
+  /**
+   * @protected
+   * @returns {void}
+   */
+  toggle() {
+    this.toggleHiddenAttr(this.currentPressedSlotElement, !this.pressed);
+    this.toggleHiddenAttr(this.currentNotPressedSlotElement, this.pressed);
+  }
 
-	/**
-	 * @protected
-	 * @param {HTMLElement | undefined} [el=undefined]
-	 * @param {boolean | undefined} [isHidden=undefined]
-	 * @returns {void}
-	 */
-	toggleHiddenAttr(el, isHidden) {
-		if (!isNil(el)) {
-			setAttribute(el, 'hidden', isHidden ? '' : undefined);
-		}
-	}
+  /**
+   * @protected
+   * @param {HTMLElement | undefined} [el=undefined]
+   * @param {boolean | undefined} [isHidden=undefined]
+   * @returns {void}
+   */
+  toggleHiddenAttr(el, isHidden) {
+    if (!isNil(el)) {
+      setAttribute(el, 'hidden', isHidden ? '' : undefined);
+    }
+  }
 }
 
 /**
@@ -214,5 +214,5 @@ export class ToggleElement extends VdsElement {
  * @type {import('./types').ToggleElementStorybookArgTypes}
  */
 export const VDS_TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES = {
-	pressed: { control: StorybookControlType.Boolean, defaultValue: false }
+  pressed: { control: StorybookControlType.Boolean, defaultValue: false }
 };

@@ -4,21 +4,21 @@ import { html } from 'lit';
 import { IS_FIREFOX } from '../../../../utils/support.js';
 import { VdsSliderDragEndEvent, VdsSliderDragStartEvent } from '../events.js';
 import {
-	SliderElement,
-	VDS_SLIDER_ELEMENT_TAG_NAME
+  SliderElement,
+  VDS_SLIDER_ELEMENT_TAG_NAME
 } from '../SliderElement.js';
 
 window.customElements.define(VDS_SLIDER_ELEMENT_TAG_NAME, SliderElement);
 
 describe(VDS_SLIDER_ELEMENT_TAG_NAME, function () {
-	async function buildFixture() {
-		const slider = await fixture(html`<vds-slider></vds-slider>`);
-		return /** @type {SliderElement} */ (slider);
-	}
+  async function buildFixture() {
+    const slider = await fixture(html`<vds-slider></vds-slider>`);
+    return /** @type {SliderElement} */ (slider);
+  }
 
-	it('should render DOM correctly', async function () {
-		const slider = await buildFixture();
-		expect(slider).dom.to.equal(`
+  it('should render DOM correctly', async function () {
+    const slider = await buildFixture();
+    expect(slider).dom.to.equal(`
       <vds-slider
         min="0"
         max="100"
@@ -27,15 +27,15 @@ describe(VDS_SLIDER_ELEMENT_TAG_NAME, function () {
         value="50"
       ></vds-slider>
     `);
-	});
+  });
 
-	it('should render shadow DOM correctly', async function () {
-		const slider = await buildFixture();
+  it('should render shadow DOM correctly', async function () {
+    const slider = await buildFixture();
 
-		// Strange fix for the style spacing differing between browsers.
-		const rootStlye = slider.rootElement.getAttribute('style');
+    // Strange fix for the style spacing differing between browsers.
+    const rootStlye = slider.rootElement.getAttribute('style');
 
-		expect(slider).shadowDom.to.equal(`
+    expect(slider).shadowDom.to.equal(`
       <div
         id="root"
         part="root"
@@ -85,211 +85,211 @@ describe(VDS_SLIDER_ELEMENT_TAG_NAME, function () {
         <slot></slot>
       </div>
     `);
-	});
+  });
 
-	it('should bound value between min/max', async function () {
-		const slider = await buildFixture();
+  it('should bound value between min/max', async function () {
+    const slider = await buildFixture();
 
-		// Min.
-		slider.value = -1000;
-		await elementUpdated(slider);
-		expect(slider.value).to.equal(slider.min);
+    // Min.
+    slider.value = -1000;
+    await elementUpdated(slider);
+    expect(slider.value).to.equal(slider.min);
 
-		// Max.
-		slider.value = 1000;
-		await elementUpdated(slider);
-		expect(slider.value).to.equal(slider.max);
-	});
+    // Max.
+    slider.value = 1000;
+    await elementUpdated(slider);
+    expect(slider.value).to.equal(slider.max);
+  });
 
-	it('should set correct fill rate', async function () {
-		const slider = await buildFixture();
+  it('should set correct fill rate', async function () {
+    const slider = await buildFixture();
 
-		slider.value = -50;
-		await elementUpdated(slider);
-		expect(slider.fillRate).to.equal(0);
-		expect(slider.fillPercent).to.equal(0);
+    slider.value = -50;
+    await elementUpdated(slider);
+    expect(slider.fillRate).to.equal(0);
+    expect(slider.fillPercent).to.equal(0);
 
-		slider.value = 57.5;
-		await elementUpdated(slider);
-		expect(slider.fillRate).to.equal(0.575);
+    slider.value = 57.5;
+    await elementUpdated(slider);
+    expect(slider.fillRate).to.equal(0.575);
 
-		slider.value = 102;
-		await elementUpdated(slider);
-		expect(slider.fillRate).to.equal(1);
-		expect(slider.fillPercent).to.equal(100);
-	});
+    slider.value = 102;
+    await elementUpdated(slider);
+    expect(slider.fillRate).to.equal(1);
+    expect(slider.fillPercent).to.equal(100);
+  });
 
-	it('should delegate focus', async function () {
-		const slider = await buildFixture();
-		const thumbContainer = slider.thumbContainerElement;
+  it('should delegate focus', async function () {
+    const slider = await buildFixture();
+    const thumbContainer = slider.thumbContainerElement;
 
-		// Focus root.
-		slider.focus();
-		expect(document.activeElement?.tagName).to.equal('VDS-SLIDER');
-		// TODO: what to do about this in FF?
-		if (!IS_FIREFOX) expect(slider.matches(':focus')).to.be.true;
-		expect(thumbContainer.matches(':focus')).to.be.true;
+    // Focus root.
+    slider.focus();
+    expect(document.activeElement?.tagName).to.equal('VDS-SLIDER');
+    // TODO: what to do about this in FF?
+    if (!IS_FIREFOX) expect(slider.matches(':focus')).to.be.true;
+    expect(thumbContainer.matches(':focus')).to.be.true;
 
-		slider.blur();
+    slider.blur();
 
-		// Focus thumb;
-		thumbContainer.focus();
-		expect(document.activeElement?.tagName).to.equal('VDS-SLIDER');
-		if (!IS_FIREFOX) expect(slider.matches(':focus')).to.be.true;
-		expect(thumbContainer.matches(':focus')).to.be.true;
-	});
+    // Focus thumb;
+    thumbContainer.focus();
+    expect(document.activeElement?.tagName).to.equal('VDS-SLIDER');
+    if (!IS_FIREFOX) expect(slider.matches(':focus')).to.be.true;
+    expect(thumbContainer.matches(':focus')).to.be.true;
+  });
 
-	it('should step to the left when up/left arrow key is pressed', async function () {
-		const slider = await buildFixture();
-		const thumbContainer = slider.thumbContainerElement;
+  it('should step to the left when up/left arrow key is pressed', async function () {
+    const slider = await buildFixture();
+    const thumbContainer = slider.thumbContainerElement;
 
-		thumbContainer.dispatchEvent(
-			new KeyboardEvent('keydown', {
-				key: 'ArrowLeft'
-			})
-		);
+    thumbContainer.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'ArrowLeft'
+      })
+    );
 
-		thumbContainer.dispatchEvent(
-			new KeyboardEvent('keydown', {
-				key: 'ArrowUp'
-			})
-		);
+    thumbContainer.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'ArrowUp'
+      })
+    );
 
-		await elementUpdated(slider);
-		expect(slider.value).to.equal(48);
-	});
+    await elementUpdated(slider);
+    expect(slider.value).to.equal(48);
+  });
 
-	it('should step one to the right when down/right arrow key is pressed', async function () {
-		const slider = await buildFixture();
-		const thumbContainer = slider.thumbContainerElement;
+  it('should step one to the right when down/right arrow key is pressed', async function () {
+    const slider = await buildFixture();
+    const thumbContainer = slider.thumbContainerElement;
 
-		thumbContainer.dispatchEvent(
-			new KeyboardEvent('keydown', {
-				key: 'ArrowRight'
-			})
-		);
+    thumbContainer.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'ArrowRight'
+      })
+    );
 
-		thumbContainer.dispatchEvent(
-			new KeyboardEvent('keydown', {
-				key: 'ArrowDown'
-			})
-		);
+    thumbContainer.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'ArrowDown'
+      })
+    );
 
-		await elementUpdated(slider);
-		expect(slider.value).to.equal(52);
-	});
+    await elementUpdated(slider);
+    expect(slider.value).to.equal(52);
+  });
 
-	it('should multiply steps when shift key is held down', async function () {
-		const slider = await buildFixture();
-		const thumbContainer = slider.thumbContainerElement;
+  it('should multiply steps when shift key is held down', async function () {
+    const slider = await buildFixture();
+    const thumbContainer = slider.thumbContainerElement;
 
-		thumbContainer.dispatchEvent(
-			new KeyboardEvent('keydown', {
-				key: 'ArrowLeft',
-				shiftKey: true
-			})
-		);
+    thumbContainer.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'ArrowLeft',
+        shiftKey: true
+      })
+    );
 
-		await elementUpdated(slider);
-		expect(slider.value).to.equal(40);
+    await elementUpdated(slider);
+    expect(slider.value).to.equal(40);
 
-		thumbContainer.dispatchEvent(
-			new KeyboardEvent('keydown', {
-				key: 'ArrowRight',
-				shiftKey: true
-			})
-		);
+    thumbContainer.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'ArrowRight',
+        shiftKey: true
+      })
+    );
 
-		await elementUpdated(slider);
-		expect(slider.value).to.equal(50);
-	});
+    await elementUpdated(slider);
+    expect(slider.value).to.equal(50);
+  });
 
-	it('should start dragging on thumb pointerdown and stop on document pointerup', async function () {
-		const slider = await buildFixture();
-		const thumbContainer = slider.thumbContainerElement;
+  it('should start dragging on thumb pointerdown and stop on document pointerup', async function () {
+    const slider = await buildFixture();
+    const thumbContainer = slider.thumbContainerElement;
 
-		setTimeout(() =>
-			thumbContainer.dispatchEvent(new PointerEvent('pointerdown'))
-		);
-		await oneEvent(slider, VdsSliderDragStartEvent.TYPE);
-		expect(slider.isDragging).to.be.true;
+    setTimeout(() =>
+      thumbContainer.dispatchEvent(new PointerEvent('pointerdown'))
+    );
+    await oneEvent(slider, VdsSliderDragStartEvent.TYPE);
+    expect(slider.isDragging).to.be.true;
 
-		setTimeout(() => document.dispatchEvent(new PointerEvent('pointerup')));
-		await oneEvent(slider, VdsSliderDragEndEvent.TYPE);
-		expect(slider.isDragging).to.be.false;
-	});
+    setTimeout(() => document.dispatchEvent(new PointerEvent('pointerup')));
+    await oneEvent(slider, VdsSliderDragEndEvent.TYPE);
+    expect(slider.isDragging).to.be.false;
+  });
 
-	it('should update slider value to new thumb position when root is clicked', async function () {
-		const slider = await buildFixture();
-		const root = slider.rootElement;
-		root.dispatchEvent(
-			new PointerEvent('pointerdown', {
-				clientX: Math.floor(root.clientWidth / 4)
-			})
-		);
-		expect(slider.value).to.be.greaterThanOrEqual(23);
-		expect(slider.value).to.be.lessThanOrEqual(24);
-	});
+  it('should update slider value to new thumb position when root is clicked', async function () {
+    const slider = await buildFixture();
+    const root = slider.rootElement;
+    root.dispatchEvent(
+      new PointerEvent('pointerdown', {
+        clientX: Math.floor(root.clientWidth / 4)
+      })
+    );
+    expect(slider.value).to.be.greaterThanOrEqual(23);
+    expect(slider.value).to.be.lessThanOrEqual(24);
+  });
 
-	it('should not change value when move events are fired on document and slider is not being dragged', async function () {
-		const slider = await buildFixture();
+  it('should not change value when move events are fired on document and slider is not being dragged', async function () {
+    const slider = await buildFixture();
 
-		document.dispatchEvent(
-			new PointerEvent('pointermove', {
-				clientX: 25
-			})
-		);
+    document.dispatchEvent(
+      new PointerEvent('pointermove', {
+        clientX: 25
+      })
+    );
 
-		expect(slider.value).to.equal(50);
-	});
+    expect(slider.value).to.equal(50);
+  });
 
-	it('should not change value when move events are fired on document and slider is disabled', async function () {
-		const slider = await buildFixture();
-		const thumbContainer = slider.thumbContainerElement;
+  it('should not change value when move events are fired on document and slider is disabled', async function () {
+    const slider = await buildFixture();
+    const thumbContainer = slider.thumbContainerElement;
 
-		thumbContainer.dispatchEvent(
-			new PointerEvent('pointerdown', {
-				clientX: 400
-			})
-		);
-		expect(slider.isDragging).to.be.true;
+    thumbContainer.dispatchEvent(
+      new PointerEvent('pointerdown', {
+        clientX: 400
+      })
+    );
+    expect(slider.isDragging).to.be.true;
 
-		slider.disabled = true;
-		await elementUpdated(slider);
+    slider.disabled = true;
+    await elementUpdated(slider);
 
-		document.dispatchEvent(
-			new PointerEvent('pointermove', {
-				clientX: 25
-			})
-		);
+    document.dispatchEvent(
+      new PointerEvent('pointermove', {
+        clientX: 25
+      })
+    );
 
-		expect(slider.value).to.equal(50);
-		expect(slider.isDragging).to.be.false;
-	});
+    expect(slider.value).to.equal(50);
+    expect(slider.isDragging).to.be.false;
+  });
 
-	it('should not update value when track is clicked and slider is disabled', async function () {
-		const slider = await buildFixture();
-		const track = slider.trackElement;
+  it('should not update value when track is clicked and slider is disabled', async function () {
+    const slider = await buildFixture();
+    const track = slider.trackElement;
 
-		slider.disabled = true;
+    slider.disabled = true;
 
-		track.dispatchEvent(
-			new PointerEvent('pointerdown', {
-				clientX: Math.floor(track.clientWidth / 4)
-			})
-		);
+    track.dispatchEvent(
+      new PointerEvent('pointerdown', {
+        clientX: Math.floor(track.clientWidth / 4)
+      })
+    );
 
-		expect(slider.value).to.equal(50);
-	});
+    expect(slider.value).to.equal(50);
+  });
 
-	it('should not start dragging when thumb is pressed and slider is disabled', async function () {
-		const slider = await buildFixture();
-		const thumb = slider.thumbContainerElement;
+  it('should not start dragging when thumb is pressed and slider is disabled', async function () {
+    const slider = await buildFixture();
+    const thumb = slider.thumbContainerElement;
 
-		slider.disabled = true;
+    slider.disabled = true;
 
-		thumb.dispatchEvent(new PointerEvent('pointerdown'));
+    thumb.dispatchEvent(new PointerEvent('pointerdown'));
 
-		expect(slider.isDragging).to.be.false;
-	});
+    expect(slider.isDragging).to.be.false;
+  });
 });

@@ -7,7 +7,7 @@
  * @returns {boolean}
  */
 export function areNumbersRoughlyEqual(numA, numB, precision = 3) {
-	return numA.toFixed(precision) === numB.toFixed(precision);
+  return numA.toFixed(precision) === numB.toFixed(precision);
 }
 
 /**
@@ -18,5 +18,5 @@ export function areNumbersRoughlyEqual(numA, numB, precision = 3) {
  * @returns {number}
  */
 export function round(num, decimalPlaces = 2) {
-	return Number(num.toFixed(decimalPlaces));
+  return Number(num.toFixed(decimalPlaces));
 }

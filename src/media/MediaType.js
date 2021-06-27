@@ -5,8 +5,8 @@
  * @enum {string}
  */
 export const MediaType = {
-	Unknown: 'unknown',
-	Audio: 'audio',
-	Video: 'video',
-	LiveVideo: 'live-video'
+  Unknown: 'unknown',
+  Audio: 'audio',
+  Video: 'video',
+  LiveVideo: 'live-video'
 };

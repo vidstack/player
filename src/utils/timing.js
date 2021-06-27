@@ -12,64 +12,64 @@ import { isUndefined } from './unit.js';
  * @link https://github.com/jashkenas/underscore/blob/master/modules/debounce.js
  */
 export function debounce(func, delay, immediate = false) {
-	/** @type {number | undefined} */
-	let timerId;
+  /** @type {number | undefined} */
+  let timerId;
 
-	/** @type {unknown} */
-	let currentThis;
+  /** @type {unknown} */
+  let currentThis;
 
-	/** @type {Args | undefined} */
-	let currentArgs;
+  /** @type {Args | undefined} */
+  let currentArgs;
 
-	/** @type {number} */
-	let lastCallTime;
+  /** @type {number} */
+  let lastCallTime;
 
-	const pending = () => !isUndefined(timerId);
+  const pending = () => !isUndefined(timerId);
 
-	const cancel = () => {
-		window.clearTimeout(timerId);
-		timerId = undefined;
-		clearContext();
-	};
+  const cancel = () => {
+    window.clearTimeout(timerId);
+    timerId = undefined;
+    clearContext();
+  };
 
-	const clearContext = () => {
-		currentThis = undefined;
-		currentArgs = undefined;
-	};
+  const clearContext = () => {
+    currentThis = undefined;
+    currentArgs = undefined;
+  };
 
-	const handleTimeout = () => {
-		const elapsedTime = Date.now() - lastCallTime;
+  const handleTimeout = () => {
+    const elapsedTime = Date.now() - lastCallTime;
 
-		if (delay > elapsedTime) {
-			timerId = window.setTimeout(handleTimeout, delay - elapsedTime);
-		} else {
-			timerId = undefined;
-			if (!immediate)
-				func.apply(currentThis, /** @type {Args} */ (currentArgs));
-			// This check is needed because `func` can recursively invoke `debounced`.
-			if (!pending()) clearContext();
-		}
-	};
+    if (delay > elapsedTime) {
+      timerId = window.setTimeout(handleTimeout, delay - elapsedTime);
+    } else {
+      timerId = undefined;
+      if (!immediate)
+        func.apply(currentThis, /** @type {Args} */ (currentArgs));
+      // This check is needed because `func` can recursively invoke `debounced`.
+      if (!pending()) clearContext();
+    }
+  };
 
-	/**
-	 * @this {unknown}
-	 * @param  {Args} args
-	 */
-	function debounced(...args) {
-		currentThis = this;
-		currentArgs = args;
-		lastCallTime = Date.now();
+  /**
+   * @this {unknown}
+   * @param  {Args} args
+   */
+  function debounced(...args) {
+    currentThis = this;
+    currentArgs = args;
+    lastCallTime = Date.now();
 
-		if (!pending()) {
-			timerId = window.setTimeout(handleTimeout, delay);
-			if (immediate) func.apply(this, args);
-		}
-	}
+    if (!pending()) {
+      timerId = window.setTimeout(handleTimeout, delay);
+      if (immediate) func.apply(this, args);
+    }
+  }
 
-	debounced.cancel = cancel;
-	debounced.pending = pending;
+  debounced.cancel = cancel;
+  debounced.pending = pending;
 
-	return debounced;
+  return debounced;
 }
 
 /**
@@ -83,81 +83,81 @@ export function debounce(func, delay, immediate = false) {
  * @link https://github.com/jashkenas/underscore/blob/master/modules/throttle.js
  */
 export function throttle(
-	func,
-	delay,
-	options = { leading: false, trailing: false }
+  func,
+  delay,
+  options = { leading: false, trailing: false }
 ) {
-	/** @type {number | undefined} */
-	let timerId;
+  /** @type {number | undefined} */
+  let timerId;
 
-	/** @type {unknown} */
-	let currentThis;
+  /** @type {unknown} */
+  let currentThis;
 
-	/** @type {Args | undefined} */
-	let currentArgs;
+  /** @type {Args | undefined} */
+  let currentArgs;
 
-	/** @type {number} */
-	let lastCallTime = 0;
+  /** @type {number} */
+  let lastCallTime = 0;
 
-	const pending = () => !isUndefined(timerId);
+  const pending = () => !isUndefined(timerId);
 
-	const cancel = () => {
-		clearTimer();
-		clearContext();
-	};
+  const cancel = () => {
+    clearTimer();
+    clearContext();
+  };
 
-	const clearTimer = () => {
-		window.clearTimeout(timerId);
-		timerId = undefined;
-		lastCallTime = 0;
-	};
+  const clearTimer = () => {
+    window.clearTimeout(timerId);
+    timerId = undefined;
+    lastCallTime = 0;
+  };
 
-	const clearContext = () => {
-		currentThis = undefined;
-		currentArgs = undefined;
-	};
+  const clearContext = () => {
+    currentThis = undefined;
+    currentArgs = undefined;
+  };
 
-	const handleTimeout = () => {
-		lastCallTime = !options.leading ? 0 : Date.now();
-		timerId = undefined;
-		func.apply(currentThis, /** @type {Args} */ (currentArgs));
-		if (!pending()) clearContext();
-	};
+  const handleTimeout = () => {
+    lastCallTime = !options.leading ? 0 : Date.now();
+    timerId = undefined;
+    func.apply(currentThis, /** @type {Args} */ (currentArgs));
+    if (!pending()) clearContext();
+  };
 
-	/**
-	 * @param {number} time
-	 */
-	const ding = (time) => {
-		if (pending()) clearTimer();
-		lastCallTime = time;
-		func.apply(currentThis, /** @type {Args} */ (currentArgs));
-		if (!pending()) clearContext();
-	};
+  /**
+   * @param {number} time
+   */
+  const ding = (time) => {
+    if (pending()) clearTimer();
+    lastCallTime = time;
+    func.apply(currentThis, /** @type {Args} */ (currentArgs));
+    if (!pending()) clearContext();
+  };
 
-	/**
-	 * @this {unknown}
-	 * @param {Args} args
-	 */
-	function throttled(...args) {
-		const now = Date.now();
+  /**
+   * @this {unknown}
+   * @param {Args} args
+   */
+  function throttled(...args) {
+    const now = Date.now();
 
-		if (lastCallTime === 0 && !options.leading) lastCallTime = now;
+    if (lastCallTime === 0 && !options.leading) lastCallTime = now;
 
-		const remainingTime = delay - (now - lastCallTime);
-		const hasDinged = remainingTime <= 0 || remainingTime > delay;
+    const remainingTime = delay - (now - lastCallTime);
+    const hasDinged = remainingTime <= 0 || remainingTime > delay;
 
-		currentThis = this;
-		currentArgs = args;
+    currentThis = this;
+    currentArgs = args;
 
-		if (hasDinged) {
-			ding(now);
-		} else if (!pending() && options.trailing) {
-			timerId = window.setTimeout(handleTimeout, remainingTime);
-		}
-	}
+    if (hasDinged) {
+      ding(now);
+    } else if (!pending() && options.trailing) {
+      timerId = window.setTimeout(handleTimeout, remainingTime);
+    }
+  }
 
-	throttled.cancel = cancel;
-	throttled.pending = pending;
+  throttled.cancel = cancel;
+  throttled.pending = pending;
 
-	return throttled;
+  return throttled;
 }

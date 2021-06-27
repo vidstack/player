@@ -14,11 +14,11 @@ import { isArray, isNumber, isUndefined } from '../utils/unit.js';
  * @throws {Error} - Will throw if index is out of bounds or non-numeric.
  */
 function rangeCheck(fnName, index, maxIndex) {
-	if (!isNumber(index) || index < 0 || index > maxIndex) {
-		throw new Error(
-			`Failed to execute '${fnName}' on 'TimeRanges': The index provided (${index}) is non-numeric or out of bounds (0-${maxIndex}).`
-		);
-	}
+  if (!isNumber(index) || index < 0 || index > maxIndex) {
+    throw new Error(
+      `Failed to execute '${fnName}' on 'TimeRanges': The index provided (${index}) is non-numeric or out of bounds (0-${maxIndex}).`
+    );
+  }
 }
 
 /**
@@ -31,8 +31,8 @@ function rangeCheck(fnName, index, maxIndex) {
  * @returns {number}
  */
 function getRange(fnName, valueIndex, ranges, rangeIndex) {
-	rangeCheck(fnName, rangeIndex, ranges.length - 1);
-	return ranges[rangeIndex][valueIndex];
+  rangeCheck(fnName, rangeIndex, ranges.length - 1);
+  return ranges[rangeIndex][valueIndex];
 }
 
 /**
@@ -42,23 +42,23 @@ function getRange(fnName, valueIndex, ranges, rangeIndex) {
  * @returns {TimeRanges}
  */
 function createTimeRangesObj(ranges) {
-	if (isUndefined(ranges) || ranges.length === 0) {
-		return {
-			length: 0,
-			start() {
-				throw new Error('This TimeRanges object is empty');
-			},
-			end() {
-				throw new Error('This TimeRanges object is empty');
-			}
-		};
-	}
+  if (isUndefined(ranges) || ranges.length === 0) {
+    return {
+      length: 0,
+      start() {
+        throw new Error('This TimeRanges object is empty');
+      },
+      end() {
+        throw new Error('This TimeRanges object is empty');
+      }
+    };
+  }
 
-	return {
-		length: ranges.length,
-		start: getRange.bind(null, 'start', 0, ranges),
-		end: getRange.bind(null, 'end', 1, ranges)
-	};
+  return {
+    length: ranges.length,
+    start: getRange.bind(null, 'start', 0, ranges),
+    end: getRange.bind(null, 'end', 1, ranges)
+  };
 }
 
 /**
@@ -72,11 +72,11 @@ function createTimeRangesObj(ranges) {
  * @link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges
  */
 export function createTimeRanges(start, end) {
-	if (isArray(start)) {
-		return createTimeRangesObj(start);
-	} else if (isUndefined(start) || isUndefined(end)) {
-		return createTimeRangesObj();
-	}
+  if (isArray(start)) {
+    return createTimeRangesObj(start);
+  } else if (isUndefined(start) || isUndefined(end)) {
+    return createTimeRangesObj();
+  }
 
-	return createTimeRangesObj([[start, end]]);
+  return createTimeRangesObj([[start, end]]);
 }

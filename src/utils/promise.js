@@ -8,17 +8,17 @@ import { noop } from './unit.js';
  * @returns {import('./promise.types').DeferredPromise<ResolveType, RejectType>}
  */
 export const deferredPromise = () => {
-	/** @type {(value: ResolveType | undefined) => void} */
-	let resolve = noop;
+  /** @type {(value: ResolveType | undefined) => void} */
+  let resolve = noop;
 
-	/** @type {(reason: RejectType) => void} */
-	let reject = noop;
+  /** @type {(reason: RejectType) => void} */
+  let reject = noop;
 
-	/** @type {Promise<ResolveType | undefined>} */
-	const promise = new Promise((res, rej) => {
-		resolve = res;
-		reject = rej;
-	});
+  /** @type {Promise<ResolveType | undefined>} */
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
 
-	return { promise, resolve, reject };
+  return { promise, resolve, reject };
 };

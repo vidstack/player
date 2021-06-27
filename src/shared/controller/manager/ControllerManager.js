@@ -15,118 +15,118 @@ import { ManagedController } from './ManagedController.js';
  * @implements {CanManageControllers}
  */
 export class ControllerManager {
-	/**
-	 * @protected
-	 */
-	static get ScopedManagedControllerConnectEvent() {
-		return ManagedControllerConnectEvent;
-	}
+  /**
+   * @protected
+   */
+  static get ScopedManagedControllerConnectEvent() {
+    return ManagedControllerConnectEvent;
+  }
 
-	/**
-	 * @protected
-	 * @readonly
-	 * @type {Omit<Set<ManagedController<HostElement>>, 'clear'>}
-	 */
-	managedControllers = new Set();
+  /**
+   * @protected
+   * @readonly
+   * @type {Omit<Set<ManagedController<HostElement>>, 'clear'>}
+   */
+  managedControllers = new Set();
 
-	/**
-	 * @protected
-	 * @readonly
-	 */
-	disconnectDisposal = new DisposalBin();
+  /**
+   * @protected
+   * @readonly
+   */
+  disconnectDisposal = new DisposalBin();
 
-	/**
-	 * @param {ControllerManagerHost} host
-	 */
-	constructor(host) {
-		host.addController(this);
+  /**
+   * @param {ControllerManagerHost} host
+   */
+  constructor(host) {
+    host.addController(this);
 
-		/**
-		 * @protected
-		 * @readonly
-		 * @type {ControllerManagerHost}
-		 */
-		this.host = host;
-	}
+    /**
+     * @protected
+     * @readonly
+     * @type {ControllerManagerHost}
+     */
+    this.host = host;
+  }
 
-	hostConnected() {
-		this.disconnectDisposal.add(
-			listen(
-				this.host,
-				ManagedControllerConnectEvent.TYPE,
-				this.handleManagedControllerConnect.bind(this)
-			)
-		);
-	}
+  hostConnected() {
+    this.disconnectDisposal.add(
+      listen(
+        this.host,
+        ManagedControllerConnectEvent.TYPE,
+        this.handleManagedControllerConnect.bind(this)
+      )
+    );
+  }
 
-	hostDisconnected() {
-		this.disconnectDisposal.empty();
-		this.removeAllManagedControllers();
-	}
+  hostDisconnected() {
+    this.disconnectDisposal.empty();
+    this.removeAllManagedControllers();
+  }
 
-	/**
-	 * @param {ManagedControllerConnectEvent} event
-	 * @returns {void}
-	 */
-	handleManagedControllerConnect(event) {
-		if (!this.validateControllerConnectEvent(event)) return;
+  /**
+   * @param {ManagedControllerConnectEvent} event
+   * @returns {void}
+   */
+  handleManagedControllerConnect(event) {
+    if (!this.validateControllerConnectEvent(event)) return;
 
-		const { controller, onDisconnect } = event.detail;
+    const { controller, onDisconnect } = event.detail;
 
-		this.addManagedController(controller);
+    this.addManagedController(controller);
 
-		onDisconnect(() => {
-			this.removeManagedController(controller);
-		});
-	}
+    onDisconnect(() => {
+      this.removeManagedController(controller);
+    });
+  }
 
-	/**
-	 * @param {ManagedControllerConnectEvent} event
-	 * @returns {boolean}
-	 */
-	validateControllerConnectEvent(event) {
-		const ctor = /** @type {typeof ControllerManager} */ (this.constructor);
-		const ScopedEvent = ctor.ScopedManagedControllerConnectEvent;
-		return event instanceof ScopedEvent;
-	}
+  /**
+   * @param {ManagedControllerConnectEvent} event
+   * @returns {boolean}
+   */
+  validateControllerConnectEvent(event) {
+    const ctor = /** @type {typeof ControllerManager} */ (this.constructor);
+    const ScopedEvent = ctor.ScopedManagedControllerConnectEvent;
+    return event instanceof ScopedEvent;
+  }
 
-	/**
-	 * @param {ManagedController<HostElement>} controller
-	 * @returns {void}
-	 */
-	addManagedController(controller) {
-		if (this.managedControllers.has(controller)) return;
-		this.managedControllers.add(controller);
-		this.handleManagedControllerAdded(controller);
-	}
+  /**
+   * @param {ManagedController<HostElement>} controller
+   * @returns {void}
+   */
+  addManagedController(controller) {
+    if (this.managedControllers.has(controller)) return;
+    this.managedControllers.add(controller);
+    this.handleManagedControllerAdded(controller);
+  }
 
-	/**
-	 * @param {ManagedController<HostElement>} controller
-	 * @returns {void}
-	 */
-	removeManagedController(controller) {
-		if (!this.managedControllers.has(controller)) return;
-		this.managedControllers.delete(controller);
-		this.handleManagedControllerRemoved(controller);
-	}
+  /**
+   * @param {ManagedController<HostElement>} controller
+   * @returns {void}
+   */
+  removeManagedController(controller) {
+    if (!this.managedControllers.has(controller)) return;
+    this.managedControllers.delete(controller);
+    this.handleManagedControllerRemoved(controller);
+  }
 
-	/**
-	 * @param {ManagedController<HostElement>} controller
-	 * @returns {void}
-	 */
-	handleManagedControllerAdded(controller) {
-		// no-op
-	}
+  /**
+   * @param {ManagedController<HostElement>} controller
+   * @returns {void}
+   */
+  handleManagedControllerAdded(controller) {
+    // no-op
+  }
 
-	/**
-	 * @param {ManagedController<HostElement>} controller
-	 * @returns {void}
-	 */
-	handleManagedControllerRemoved(controller) {
-		// no-op
-	}
+  /**
+   * @param {ManagedController<HostElement>} controller
+   * @returns {void}
+   */
+  handleManagedControllerRemoved(controller) {
+    // no-op
+  }
 
-	removeAllManagedControllers() {
-		this.managedControllers.forEach(this.removeManagedController.bind(this));
-	}
+  removeAllManagedControllers() {
+    this.managedControllers.forEach(this.removeManagedController.bind(this));
+  }
 }

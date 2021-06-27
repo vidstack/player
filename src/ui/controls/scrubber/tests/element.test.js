@@ -3,33 +3,33 @@ import { html } from 'lit';
 
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
-	ScrubberElement,
-	VDS_SCRUBBER_ELEMENT_TAG_NAME
+  ScrubberElement,
+  VDS_SCRUBBER_ELEMENT_TAG_NAME
 } from '../ScrubberElement.js';
 
 window.customElements.define(VDS_SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
 
 describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, function () {
-	async function buildFixture() {
-		const { container } = await buildMediaFixture(html`
-			<vds-scrubber></vds-scrubber>
-		`);
+  async function buildFixture() {
+    const { container } = await buildMediaFixture(html`
+      <vds-scrubber></vds-scrubber>
+    `);
 
-		const scrubber = /** @type {ScrubberElement} */ (
-			container.querySelector(VDS_SCRUBBER_ELEMENT_TAG_NAME)
-		);
+    const scrubber = /** @type {ScrubberElement} */ (
+      container.querySelector(VDS_SCRUBBER_ELEMENT_TAG_NAME)
+    );
 
-		return { scrubber };
-	}
+    return { scrubber };
+  }
 
-	it('should render DOM correctly', async function () {
-		const { scrubber } = await buildFixture();
-		expect(scrubber).dom.to.equal(`<vds-scrubber></vds-scrubber>`);
-	});
+  it('should render DOM correctly', async function () {
+    const { scrubber } = await buildFixture();
+    expect(scrubber).dom.to.equal(`<vds-scrubber></vds-scrubber>`);
+  });
 
-	it('should render shadow DOM correctly', async function () {
-		const { scrubber } = await buildFixture();
-		expect(scrubber).shadowDom.to.equal(`
+  it('should render shadow DOM correctly', async function () {
+    const { scrubber } = await buildFixture();
+    expect(scrubber).shadowDom.to.equal(`
       <div
         id="root"
         part="root"
@@ -76,5 +76,5 @@ describe(VDS_SCRUBBER_ELEMENT_TAG_NAME, function () {
         <slot name="preview"></slot>
       </div>
     `);
-	});
+  });
 });

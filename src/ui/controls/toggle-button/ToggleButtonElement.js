@@ -7,8 +7,8 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import { WithFocus } from '../../../shared/elements/index.js';
 import {
-	storybookAction,
-	StorybookControlType
+  storybookAction,
+  StorybookControlType
 } from '../../../shared/storybook/index.js';
 import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { ButtonElement } from '../button/index.js';
@@ -43,123 +43,123 @@ export const VDS_TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
  * ```
  */
 export class ToggleButtonElement extends WithFocus(ToggleElement) {
-	/** @type {import('lit').CSSResultGroup} */
-	static get styles() {
-		return [super.styles, toggleButtonElementStyles];
-	}
+  /** @type {import('lit').CSSResultGroup} */
+  static get styles() {
+    return [super.styles, toggleButtonElementStyles];
+  }
 
-	/** @type {string[]} */
-	static get parts() {
-		return [
-			'root',
-			'button',
-			...ButtonElement.parts.map((part) => `button-${part}`)
-		];
-	}
+  /** @type {string[]} */
+  static get parts() {
+    return [
+      'root',
+      'button',
+      ...ButtonElement.parts.map((part) => `button-${part}`)
+    ];
+  }
 
-	constructor() {
-		super();
+  constructor() {
+    super();
 
-		// Properties
-		/** @type {string | undefined} */
-		this.label = undefined;
-		/** @type {boolean} */
-		this.disabled = false;
-		/** @type {string | undefined} */
-		this.describedBy = undefined;
-	}
+    // Properties
+    /** @type {string | undefined} */
+    this.label = undefined;
+    /** @type {boolean} */
+    this.disabled = false;
+    /** @type {string | undefined} */
+    this.describedBy = undefined;
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Properties
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
 
-	/** @type {import('lit').PropertyDeclarations} */
-	static get properties() {
-		return {
-			label: {},
-			disabled: { type: Boolean, reflect: true },
-			describedBy: { reflect: true, attribute: 'described-by' }
-		};
-	}
+  /** @type {import('lit').PropertyDeclarations} */
+  static get properties() {
+    return {
+      label: {},
+      disabled: { type: Boolean, reflect: true },
+      describedBy: { reflect: true, attribute: 'described-by' }
+    };
+  }
 
-	// -------------------------------------------------------------------------------------------
-	// Render
-	// -------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------------------------
 
-	/**
-	 * @protected
-	 * @type {import('lit/directives/ref').Ref<ButtonElement>}
-	 */
-	rootRef = createRef();
+  /**
+   * @protected
+   * @type {import('lit/directives/ref').Ref<ButtonElement>}
+   */
+  rootRef = createRef();
 
-	get rootElement() {
-		return /** @type {ButtonElement} */ (this.rootRef.value);
-	}
+  get rootElement() {
+    return /** @type {ButtonElement} */ (this.rootRef.value);
+  }
 
-	render() {
-		return html`
-			<vds-button
-				id="root"
-				class=${this.getRootClassAttr()}
-				part=${this.getRootPartAttr()}
-				label=${ifNonEmpty(this.label)}
-				?pressed=${this.pressed}
-				?disabled=${this.disabled}
-				described-by=${ifNonEmpty(this.describedBy)}
-				@click=${this.handleButtonClick}
-				exportparts=${this.getRootExportPartsAttr()}
-				${ref(this.rootRef)}
-			>
-				${this.renderToggle()}
-			</vds-button>
-		`;
-	}
+  render() {
+    return html`
+      <vds-button
+        id="root"
+        class=${this.getRootClassAttr()}
+        part=${this.getRootPartAttr()}
+        label=${ifNonEmpty(this.label)}
+        ?pressed=${this.pressed}
+        ?disabled=${this.disabled}
+        described-by=${ifNonEmpty(this.describedBy)}
+        @click=${this.handleButtonClick}
+        exportparts=${this.getRootExportPartsAttr()}
+        ${ref(this.rootRef)}
+      >
+        ${this.renderToggle()}
+      </vds-button>
+    `;
+  }
 
-	click() {
-		if (this.disabled) return;
-		this.rootElement.click();
-	}
+  click() {
+    if (this.disabled) return;
+    this.rootElement.click();
+  }
 
-	/**
-	 * Override this to modify root CSS Classes.
-	 *
-	 * @protected
-	 * @returns {string}
-	 */
-	getRootClassAttr() {
-		return 'root';
-	}
+  /**
+   * Override this to modify root CSS Classes.
+   *
+   * @protected
+   * @returns {string}
+   */
+  getRootClassAttr() {
+    return 'root';
+  }
 
-	/**
-	 * Override this to modify root CSS parts.
-	 *
-	 * @protected
-	 * @returns {string}
-	 */
-	getRootPartAttr() {
-		return 'root button';
-	}
+  /**
+   * Override this to modify root CSS parts.
+   *
+   * @protected
+   * @returns {string}
+   */
+  getRootPartAttr() {
+    return 'root button';
+  }
 
-	/**
-	 * Override this to modify root CSS export parts.
-	 *
-	 * @protected
-	 * @returns {string}
-	 */
-	getRootExportPartsAttr() {
-		return buildExportPartsAttr(ButtonElement.parts, 'button');
-	}
+  /**
+   * Override this to modify root CSS export parts.
+   *
+   * @protected
+   * @returns {string}
+   */
+  getRootExportPartsAttr() {
+    return buildExportPartsAttr(ButtonElement.parts, 'button');
+  }
 
-	/**
-	 * Override this to modify on button click behaviour.
-	 *
-	 * @protected
-	 * @param {Event} event
-	 * @returns {void}
-	 */
-	handleButtonClick(event) {
-		this.pressed = !this.pressed;
-	}
+  /**
+   * Override this to modify on button click behaviour.
+   *
+   * @protected
+   * @param {Event} event
+   * @returns {void}
+   */
+  handleButtonClick(event) {
+    this.pressed = !this.pressed;
+  }
 }
 
 /**
@@ -167,11 +167,11 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
  * @type {import('./types').ToggleButtonElementStorybookArgTypes}
  */
 export const VDS_TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-	label: { control: StorybookControlType.Text },
-	describedBy: { control: StorybookControlType.Text },
-	disabled: { control: StorybookControlType.Boolean },
-	pressed: { control: StorybookControlType.Boolean, defaultValue: false },
-	onClick: storybookAction('click'),
-	onFocus: storybookAction('focus'),
-	onBlur: storybookAction('blur')
+  label: { control: StorybookControlType.Text },
+  describedBy: { control: StorybookControlType.Text },
+  disabled: { control: StorybookControlType.Boolean },
+  pressed: { control: StorybookControlType.Boolean, defaultValue: false },
+  onClick: storybookAction('click'),
+  onFocus: storybookAction('focus'),
+  onBlur: storybookAction('blur')
 };

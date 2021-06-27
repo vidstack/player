@@ -52,14 +52,14 @@ import createContext, { Context } from '@wcom/context';
 import { PlayerProps } from './player.types.ts';
 
 export type PlayerContext = {
-	[P in keyof PlayerProps]: Context<PlayerProps<P>>;
+  [P in keyof PlayerProps]: Context<PlayerProps<P>>;
 };
 
 export const playerContext: PlayerContext = {
-	paused: createContext(false),
-	currentTime: createContext(0),
-	volume: createContext(30)
-	// ...
+  paused: createContext(false),
+  currentTime: createContext(0),
+  volume: createContext(30)
+  // ...
 };
 ```
 

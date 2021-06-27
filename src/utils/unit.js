@@ -14,8 +14,8 @@ export const noop = (args) => {};
  * @returns {boolean}
  */
 export const notEqual = (valueA, valueB) => {
-	// This ensures (valueB==NaN, valueA==NaN) always returns false.
-	return valueB !== valueA && (valueB === valueB || valueA === valueA);
+  // This ensures (valueB==NaN, valueA==NaN) always returns false.
+  return valueB !== valueA && (valueB === valueB || valueA === valueA);
 };
 
 /**
@@ -26,7 +26,7 @@ export const notEqual = (valueA, valueB) => {
  * @returns {boolean}
  */
 export const equal = (valueA, valueB) => {
-	return !notEqual(valueA, valueB);
+  return !notEqual(valueA, valueB);
 };
 
 /**
@@ -61,8 +61,8 @@ export const isNil = (value) => isNull(value) || isUndefined(value);
  * @returns {import("../shared/types/utils").Constructor<T>}
  */
 export const getConstructor = (value) =>
-	// @ts-ignore
-	!isNil(value) ? value.constructor : undefined;
+  // @ts-ignore
+  !isNil(value) ? value.constructor : undefined;
 
 /**
  * Checks if the given `value` is classified as a `Object`.
@@ -79,7 +79,7 @@ export const isObject = (value) => getConstructor(value) === Object;
  * @returns {value is number}
  */
 export const isNumber = (value) =>
-	getConstructor(value) === Number && !Number.isNaN(value);
+  getConstructor(value) === Number && !Number.isNaN(value);
 
 /**
  * Checks if the given `value` is classified as a `String` object.
@@ -121,7 +121,7 @@ export const isArray = (value) => Array.isArray(value);
  * @returns {boolean}
  */
 export const isInstanceOf = (value, constructor) =>
-	Boolean(value && constructor && value instanceof constructor);
+  Boolean(value && constructor && value instanceof constructor);
 
 /**
  * Checks if the given `value` prototype chain includes the given `object`.
@@ -131,6 +131,6 @@ export const isInstanceOf = (value, constructor) =>
  * @returns {boolean}
  */
 export const isPrototypeOf = (value, object) =>
-	Boolean(
-		value && object && Object.isPrototypeOf.call(object.prototype, value)
-	);
+  Boolean(
+    value && object && Object.isPrototypeOf.call(object.prototype, value)
+  );

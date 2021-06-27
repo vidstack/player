@@ -12,17 +12,17 @@
  * @returns {string}
  */
 export function padNumberWithZeroes(num, expectedLength) {
-	const str = String(num);
-	const actualLength = str.length;
-	const shouldPad = actualLength < expectedLength;
+  const str = String(num);
+  const actualLength = str.length;
+  const shouldPad = actualLength < expectedLength;
 
-	if (shouldPad) {
-		const padLength = expectedLength - actualLength;
-		const padding = `0`.repeat(padLength);
-		return `${padding}${num}`;
-	}
+  if (shouldPad) {
+    const padLength = expectedLength - actualLength;
+    const padding = `0`.repeat(padLength);
+    return `${padding}${num}`;
+  }
 
-	return str;
+  return str;
 }
 
 /**
@@ -30,13 +30,13 @@ export function padNumberWithZeroes(num, expectedLength) {
  * @enum {string}
  */
 export const TimeUnit = {
-	Hours: 'hours',
-	Minutes: 'minutes',
-	Seconds: 'seconds',
-	/**
-	 * Represents a fraction of a second in decimal form.
-	 */
-	Fraction: 'fraction'
+  Hours: 'hours',
+  Minutes: 'minutes',
+  Seconds: 'seconds',
+  /**
+   * Represents a fraction of a second in decimal form.
+   */
+  Fraction: 'fraction'
 };
 
 /**
@@ -51,17 +51,17 @@ export const TimeUnit = {
  * @returns {ParsedTime}
  */
 export function parseTime(duration) {
-	const hours = Math.trunc(duration / 3600);
-	const minutes = Math.trunc((duration % 3600) / 60);
-	const seconds = Math.trunc(duration % 60);
-	const fraction = Number((duration - Math.trunc(duration)).toPrecision(3));
+  const hours = Math.trunc(duration / 3600);
+  const minutes = Math.trunc((duration % 3600) / 60);
+  const seconds = Math.trunc(duration % 60);
+  const fraction = Number((duration - Math.trunc(duration)).toPrecision(3));
 
-	return {
-		[TimeUnit.Hours]: hours,
-		[TimeUnit.Minutes]: minutes,
-		[TimeUnit.Seconds]: seconds,
-		[TimeUnit.Fraction]: fraction
-	};
+  return {
+    [TimeUnit.Hours]: hours,
+    [TimeUnit.Minutes]: minutes,
+    [TimeUnit.Seconds]: seconds,
+    [TimeUnit.Fraction]: fraction
+  };
 }
 
 /**
@@ -78,20 +78,20 @@ export function parseTime(duration) {
  * @example `0:01:20` -> If `shouldAlwaysShowHours` is `true`
  */
 export const formatTime = (
-	duration,
-	shouldPadHours = false,
-	shouldAlwaysShowHours = false
+  duration,
+  shouldPadHours = false,
+  shouldAlwaysShowHours = false
 ) => {
-	const { hours, minutes, seconds } = parseTime(duration);
-	const paddedHours = shouldPadHours ? padNumberWithZeroes(hours, 2) : hours;
-	const paddedMinutes = padNumberWithZeroes(minutes, 2);
-	const paddedSeconds = padNumberWithZeroes(seconds, 2);
+  const { hours, minutes, seconds } = parseTime(duration);
+  const paddedHours = shouldPadHours ? padNumberWithZeroes(hours, 2) : hours;
+  const paddedMinutes = padNumberWithZeroes(minutes, 2);
+  const paddedSeconds = padNumberWithZeroes(seconds, 2);
 
-	if (hours > 0 || shouldAlwaysShowHours) {
-		return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
-	}
+  if (hours > 0 || shouldAlwaysShowHours) {
+    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+  }
 
-	return `${minutes}:${paddedSeconds}`;
+  return `${minutes}:${paddedSeconds}`;
 };
 
 /**
@@ -103,29 +103,29 @@ export const formatTime = (
  * @example `2 hours, 3 minutes, 4 seconds`
  */
 export const formatSpokenTime = (duration) => {
-	/** @type {string[]} */
-	const spokenParts = [];
-	const { hours, minutes, seconds } = parseTime(duration);
+  /** @type {string[]} */
+  const spokenParts = [];
+  const { hours, minutes, seconds } = parseTime(duration);
 
-	/**
-	 * @param {number} num
-	 * @param {string} word
-	 */
-	const pluralize = (num, word) => (num === 1 ? word : `${word}s`);
+  /**
+   * @param {number} num
+   * @param {string} word
+   */
+  const pluralize = (num, word) => (num === 1 ? word : `${word}s`);
 
-	if (hours > 0) {
-		spokenParts.push(`${hours} ${pluralize(hours, 'hour')}`);
-	}
+  if (hours > 0) {
+    spokenParts.push(`${hours} ${pluralize(hours, 'hour')}`);
+  }
 
-	if (minutes > 0) {
-		spokenParts.push(`${minutes} ${pluralize(minutes, 'minute')}`);
-	}
+  if (minutes > 0) {
+    spokenParts.push(`${minutes} ${pluralize(minutes, 'minute')}`);
+  }
 
-	if (seconds > 0 || spokenParts.length === 0) {
-		spokenParts.push(`${seconds} ${pluralize(seconds, 'second')}`);
-	}
+  if (seconds > 0 || spokenParts.length === 0) {
+    spokenParts.push(`${seconds} ${pluralize(seconds, 'second')}`);
+  }
 
-	return spokenParts.join(', ');
+  return spokenParts.join(', ');
 };
 
 /**
@@ -138,6 +138,6 @@ export const formatSpokenTime = (duration) => {
  * @spec https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
  */
 export const formatHtml5Duration = (duration) => {
-	const { hours, minutes, seconds, fraction } = parseTime(duration);
-	return `PT${hours}H${minutes}M${seconds + fraction}S`;
+  const { hours, minutes, seconds, fraction } = parseTime(duration);
+  return `PT${hours}H${minutes}M${seconds + fraction}S`;
 };

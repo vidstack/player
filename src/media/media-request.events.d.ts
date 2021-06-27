@@ -2,25 +2,25 @@ import { VdsCustomEvent } from '../shared/events/index.js';
 import { VdsEventInit } from '../shared/events/index.js';
 
 declare global {
-	interface GlobalEventHandlersEventMap extends VdsMediaRequestEvents {}
+  interface GlobalEventHandlersEventMap extends VdsMediaRequestEvents {}
 }
 
 export interface VdsMediaRequestEvents {
-	'vds-mute-request': VdsCustomEvent<void>;
-	'vds-unmute-request': VdsCustomEvent<void>;
-	'vds-enter-fullscreen-request': VdsCustomEvent<void>;
-	'vds-exit-fullscreen-request': VdsCustomEvent<void>;
-	'vds-play-request': VdsCustomEvent<void>;
-	'vds-pause-request': VdsCustomEvent<void>;
-	'vds-seek-request': VdsCustomEvent<number>;
-	'vds-seeking-request': VdsCustomEvent<number>;
-	'vds-volume-change-request': VdsCustomEvent<number>;
+  'vds-mute-request': VdsCustomEvent<void>;
+  'vds-unmute-request': VdsCustomEvent<void>;
+  'vds-enter-fullscreen-request': VdsCustomEvent<void>;
+  'vds-exit-fullscreen-request': VdsCustomEvent<void>;
+  'vds-play-request': VdsCustomEvent<void>;
+  'vds-pause-request': VdsCustomEvent<void>;
+  'vds-seek-request': VdsCustomEvent<number>;
+  'vds-seeking-request': VdsCustomEvent<number>;
+  'vds-volume-change-request': VdsCustomEvent<number>;
 }
 
 export class VdsMediaRequestEvent<
-	DetailType
+  DetailType
 > extends VdsCustomEvent<DetailType> {
-	static readonly TYPE: keyof VdsMediaRequestEvents;
+  static readonly TYPE: keyof VdsMediaRequestEvents;
 }
 
 /**
@@ -30,8 +30,8 @@ export class VdsMediaRequestEvent<
  * @composed
  */
 export class VdsMuteRequestEvent extends VdsMediaRequestEvent<void> {
-	static readonly TYPE = 'vds-mute-request';
-	constructor(eventInit?: VdsEventInit<void>);
+  static readonly TYPE = 'vds-mute-request';
+  constructor(eventInit?: VdsEventInit<void>);
 }
 
 /**
@@ -41,8 +41,8 @@ export class VdsMuteRequestEvent extends VdsMediaRequestEvent<void> {
  * @composed
  */
 export class VdsUnmuteRequestEvent extends VdsMediaRequestEvent<void> {
-	static readonly TYPE = 'vds-unmute-request';
-	constructor(eventInit?: VdsEventInit<void>);
+  static readonly TYPE = 'vds-unmute-request';
+  constructor(eventInit?: VdsEventInit<void>);
 }
 
 /**
@@ -52,8 +52,8 @@ export class VdsUnmuteRequestEvent extends VdsMediaRequestEvent<void> {
  * @composed
  */
 export class VdsEnterFullscreenRequestEvent extends VdsMediaRequestEvent<void> {
-	static readonly TYPE = 'vds-enter-fullscreen-request';
-	constructor(eventInit?: VdsEventInit<void>);
+  static readonly TYPE = 'vds-enter-fullscreen-request';
+  constructor(eventInit?: VdsEventInit<void>);
 }
 
 /**
@@ -63,8 +63,8 @@ export class VdsEnterFullscreenRequestEvent extends VdsMediaRequestEvent<void> {
  * @composed
  */
 export class VdsExitFullscreenRequestEvent extends VdsMediaRequestEvent<void> {
-	static readonly TYPE = 'vds-exit-fullscreen-request';
-	constructor(eventInit?: VdsEventInit<void>);
+  static readonly TYPE = 'vds-exit-fullscreen-request';
+  constructor(eventInit?: VdsEventInit<void>);
 }
 
 /**
@@ -74,8 +74,8 @@ export class VdsExitFullscreenRequestEvent extends VdsMediaRequestEvent<void> {
  * @composed
  */
 export class VdsPlayRequestEvent extends VdsMediaRequestEvent<void> {
-	static readonly TYPE = 'vds-play-request';
-	constructor(eventInit?: VdsEventInit<void>);
+  static readonly TYPE = 'vds-play-request';
+  constructor(eventInit?: VdsEventInit<void>);
 }
 
 /**
@@ -85,8 +85,8 @@ export class VdsPlayRequestEvent extends VdsMediaRequestEvent<void> {
  * @composed
  */
 export class VdsPauseRequestEvent extends VdsMediaRequestEvent<void> {
-	static readonly TYPE = 'vds-pause-request';
-	constructor(eventInit?: VdsEventInit<void>);
+  static readonly TYPE = 'vds-pause-request';
+  constructor(eventInit?: VdsEventInit<void>);
 }
 
 /**
@@ -96,8 +96,8 @@ export class VdsPauseRequestEvent extends VdsMediaRequestEvent<void> {
  * @composed
  */
 export class VdsSeekRequestEvent extends VdsMediaRequestEvent<number> {
-	static readonly TYPE = 'vds-seek-request';
-	constructor(eventInit: VdsEventInit<number>);
+  static readonly TYPE = 'vds-seek-request';
+  constructor(eventInit: VdsEventInit<number>);
 }
 
 /**
@@ -107,8 +107,8 @@ export class VdsSeekRequestEvent extends VdsMediaRequestEvent<number> {
  * @composed
  */
 export class VdsSeekingRequestEvent extends VdsMediaRequestEvent<number> {
-	static readonly TYPE = 'vds-seeking-request';
-	constructor(eventInit: VdsEventInit<number>);
+  static readonly TYPE = 'vds-seeking-request';
+  constructor(eventInit: VdsEventInit<number>);
 }
 
 /**
@@ -118,6 +118,6 @@ export class VdsSeekingRequestEvent extends VdsMediaRequestEvent<number> {
  * @composed
  */
 export class VdsVolumeChangeRequestEvent extends VdsMediaRequestEvent<number> {
-	static readonly TYPE = 'vds-volume-change-request';
-	constructor(eventInit: VdsEventInit<number>);
+  static readonly TYPE = 'vds-volume-change-request';
+  constructor(eventInit: VdsEventInit<number>);
 }

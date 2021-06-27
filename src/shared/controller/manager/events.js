@@ -20,17 +20,17 @@ import { ManagedController } from './ManagedController.js';
  * @composed
  */
 export class ManagedControllerConnectEvent extends VdsCustomEvent {
-	/** @readonly */
-	static TYPE = 'vds-managed-controller-connect';
+  /** @readonly */
+  static TYPE = 'vds-managed-controller-connect';
 
-	/**
-	 * @param {import('../../events').VdsEventInit<ManagedControllerConnectEventDetail>} eventInit
-	 */
-	constructor(eventInit) {
-		super(ManagedControllerConnectEvent.TYPE, {
-			bubbles: true,
-			composed: true,
-			...eventInit
-		});
-	}
+  /**
+   * @param {import('../../events').VdsEventInit<ManagedControllerConnectEventDetail>} eventInit
+   */
+  constructor(eventInit) {
+    super(ManagedControllerConnectEvent.TYPE, {
+      bubbles: true,
+      composed: true,
+      ...eventInit
+    });
+  }
 }

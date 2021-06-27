@@ -1,11 +1,11 @@
 import { IS_CLIENT } from './support.js';
 import {
-	isArray,
-	isNil,
-	isObject,
-	isString,
-	isUndefined,
-	noop
+  isArray,
+  isNil,
+  isObject,
+  isString,
+  isUndefined,
+  noop
 } from './unit.js';
 
 /**
@@ -16,13 +16,13 @@ import {
  * @returns {T | undefined}
  */
 export function tryParseJSON(json) {
-	if (!isString(json)) return undefined;
+  if (!isString(json)) return undefined;
 
-	try {
-		return JSON.parse(json);
-	} catch (error) {
-		return undefined;
-	}
+  try {
+    return JSON.parse(json);
+  } catch (error) {
+    return undefined;
+  }
 }
 
 /**
@@ -32,7 +32,7 @@ export function tryParseJSON(json) {
  * @returns {boolean}
  */
 export const isObjOrJSON = (value) =>
-	(isString(value) && value.startsWith('{')) || isObject(value);
+  (isString(value) && value.startsWith('{')) || isObject(value);
 
 /**
  * If an object return otherwise try to parse it as json.
@@ -42,7 +42,7 @@ export const isObjOrJSON = (value) =>
  * @returns {T | undefined}
  */
 export const objOrParseJSON = (value) =>
-	/** @type {any} */ (isObject(value) ? value : tryParseJSON(value));
+  /** @type {any} */ (isObject(value) ? value : tryParseJSON(value));
 
 /**
  * Load image avoiding xhr/fetch CORS issues. Server status can't be obtained this way
@@ -55,15 +55,15 @@ export const objOrParseJSON = (value) =>
  */
 /* c8 ignore next 10 */
 export const loadImage = (src, minWidth = 1) =>
-	new Promise((resolve, reject) => {
-		const image = new Image();
+  new Promise((resolve, reject) => {
+    const image = new Image();
 
-		const handler = () => {
-			image.naturalWidth >= minWidth ? resolve(image) : reject(image);
-		};
+    const handler = () => {
+      image.naturalWidth >= minWidth ? resolve(image) : reject(image);
+    };
 
-		Object.assign(image, { onload: handler, onerror: handler, src });
-	});
+    Object.assign(image, { onload: handler, onerror: handler, src });
+  });
 
 /**
  * Loads a script into the DOM.
@@ -75,15 +75,15 @@ export const loadImage = (src, minWidth = 1) =>
  */
 /* c8 ignore next 10 */
 export const loadScript = (src, onLoad = noop, onError = noop) => {
-	const script = document.createElement('script');
-	script.src = src;
-	script.onload = onLoad;
-	script.onerror = onError;
+  const script = document.createElement('script');
+  script.src = src;
+  script.onload = onLoad;
+  script.onerror = onError;
 
-	const firstScriptTag = document.getElementsByTagName('script')[0];
-	if (!isNil(firstScriptTag.parentNode)) {
-		firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-	}
+  const firstScriptTag = document.getElementsByTagName('script')[0];
+  if (!isNil(firstScriptTag.parentNode)) {
+    firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+  }
 };
 
 /**
@@ -94,8 +94,8 @@ export const loadScript = (src, onLoad = noop, onError = noop) => {
  * @returns {T | undefined}
  */
 export const decodeJSON = (data) => {
-	if (!isObjOrJSON(data)) return undefined;
-	return objOrParseJSON(data);
+  if (!isObjOrJSON(data)) return undefined;
+  return objOrParseJSON(data);
 };
 
 /**
@@ -107,17 +107,17 @@ export const decodeJSON = (data) => {
  * @returns {string}
  */
 export const tryDecodeURIComponent = (
-	component,
-	fallback = '',
-	isClient = IS_CLIENT
+  component,
+  fallback = '',
+  isClient = IS_CLIENT
 ) => {
-	if (!isClient) return fallback;
+  if (!isClient) return fallback;
 
-	try {
-		return window.decodeURIComponent(component);
-	} catch (error) {
-		return fallback;
-	}
+  try {
+    return window.decodeURIComponent(component);
+  } catch (error) {
+    return fallback;
+  }
 };
 
 /**
@@ -130,30 +130,30 @@ export const tryDecodeURIComponent = (
  */
 const QUERY_STRING_REGEX = /(?:^[#?]?|&)([^=&]+)(?:=([^&]*))?/g;
 export const parseQueryString = (qs) => {
-	const params = Object.create(null);
+  const params = Object.create(null);
 
-	if (isUndefined(qs)) return params;
+  if (isUndefined(qs)) return params;
 
-	/** @type {RegExpExecArray} */
-	let match;
+  /** @type {RegExpExecArray} */
+  let match;
 
-	while (
-		(match = /** @type {RegExpExecArray} */ (QUERY_STRING_REGEX.exec(qs)))
-	) {
-		const name = tryDecodeURIComponent(match[1], match[1]).replace('[]', '');
+  while (
+    (match = /** @type {RegExpExecArray} */ (QUERY_STRING_REGEX.exec(qs)))
+  ) {
+    const name = tryDecodeURIComponent(match[1], match[1]).replace('[]', '');
 
-		const value = isString(match[2])
-			? tryDecodeURIComponent(match[2].replace(/\+/g, ' '), match[2])
-			: '';
+    const value = isString(match[2])
+      ? tryDecodeURIComponent(match[2].replace(/\+/g, ' '), match[2])
+      : '';
 
-		const currValue = params[name];
+    const currValue = params[name];
 
-		if (currValue && !isArray(currValue)) params[name] = [currValue];
+    if (currValue && !isArray(currValue)) params[name] = [currValue];
 
-		currValue ? params[name].push(value) : (params[name] = value);
-	}
+    currValue ? params[name].push(value) : (params[name] = value);
+  }
 
-	return params;
+  return params;
 };
 
 /**
@@ -167,32 +167,32 @@ export const parseQueryString = (qs) => {
  * @returns {string}
  */
 export const serializeQueryString = (params) => {
-	/** @type {string[]} */
-	const qs = [];
+  /** @type {string[]} */
+  const qs = [];
 
-	/**
-	 * @param {string} param
-	 * @param {string} v
-	 */
-	const appendQueryParam = (param, v) => {
-		qs.push(`${encodeURIComponent(param)}=${encodeURIComponent(v)}`);
-	};
+  /**
+   * @param {string} param
+   * @param {string} v
+   */
+  const appendQueryParam = (param, v) => {
+    qs.push(`${encodeURIComponent(param)}=${encodeURIComponent(v)}`);
+  };
 
-	Object.keys(params).forEach((param) => {
-		const value = params[param];
+  Object.keys(params).forEach((param) => {
+    const value = params[param];
 
-		if (isNil(value)) return;
+    if (isNil(value)) return;
 
-		if (isArray(value)) {
-			/** @type {string[]} */ (value).forEach((v) =>
-				appendQueryParam(param, v)
-			);
-		} else {
-			appendQueryParam(param, /** @type {string} */ (value));
-		}
-	});
+    if (isArray(value)) {
+      /** @type {string[]} */ (value).forEach((v) =>
+        appendQueryParam(param, v)
+      );
+    } else {
+      appendQueryParam(param, /** @type {string} */ (value));
+    }
+  });
 
-	return qs.join('&');
+  return qs.join('&');
 };
 
 /**
@@ -204,16 +204,16 @@ export const serializeQueryString = (params) => {
  * @returns {boolean}
  */
 export const preconnect = (url, rel = 'preconnect', isClient = IS_CLIENT) => {
-	if (!isClient) return false;
+  if (!isClient) return false;
 
-	const link = document.createElement('link');
-	link.rel = rel;
-	link.href = url;
-	link.crossOrigin = 'true';
+  const link = document.createElement('link');
+  link.rel = rel;
+  link.href = url;
+  link.crossOrigin = 'true';
 
-	document.head.append(link);
+  document.head.append(link);
 
-	return true;
+  return true;
 };
 
 /**
@@ -224,12 +224,12 @@ export const preconnect = (url, rel = 'preconnect', isClient = IS_CLIENT) => {
  * @returns {string}
  */
 export const appendQueryStringToURL = (url, qs) => {
-	if (isUndefined(qs) || qs.length === 0) return url;
-	const mainAndQuery = url.split('?', 2);
-	return (
-		mainAndQuery[0] +
-		(!isUndefined(mainAndQuery[1]) ? `?${mainAndQuery[1]}&${qs}` : `?${qs}`)
-	);
+  if (isUndefined(qs) || qs.length === 0) return url;
+  const mainAndQuery = url.split('?', 2);
+  return (
+    mainAndQuery[0] +
+    (!isUndefined(mainAndQuery[1]) ? `?${mainAndQuery[1]}&${qs}` : `?${qs}`)
+  );
 };
 
 /**
@@ -240,12 +240,12 @@ export const appendQueryStringToURL = (url, qs) => {
  * @returns {string}
  */
 export const appendParamsToURL = (url, params) =>
-	appendQueryStringToURL(
-		url,
-		isObject(params)
-			? serializeQueryString(/** @type {Params} */ (params))
-			: /** @type {string} */ (params)
-	);
+  appendQueryStringToURL(
+    url,
+    isObject(params)
+      ? serializeQueryString(/** @type {Params} */ (params))
+      : /** @type {string} */ (params)
+  );
 
 /**
  * Tries to convert a query string into a object.
@@ -255,6 +255,6 @@ export const appendParamsToURL = (url, params) =>
  * @returns {T | undefined}
  */
 export const decodeQueryString = (qs) => {
-	if (!isString(qs)) return undefined;
-	return parseQueryString(qs);
+  if (!isString(qs)) return undefined;
+  return parseQueryString(qs);
 };

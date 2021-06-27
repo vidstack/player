@@ -8,15 +8,15 @@ const { configureActions } = require('@storybook/addon-actions');
 configureActions({ depth: 1 });
 
 module.exports = {
-	parameters: {
-		controls: {
-			expanded: false,
-			sort: 'alpha'
-		},
-		previewTabs: {
-			'storybook/docs/panel': {
-				hidden: true
-			}
-		}
-	}
+  parameters: {
+    controls: {
+      expanded: false,
+      sort: 'alpha'
+    },
+    previewTabs: {
+      'storybook/docs/panel': {
+        hidden: true
+      }
+    }
+  }
 };

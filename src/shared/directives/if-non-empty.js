@@ -10,4 +10,4 @@ import { ifDefined } from 'lit/directives/if-defined.js';
  * @param {T} value
  */
 export const ifNonEmpty = (value) =>
-	ifDefined(value === '' || value === 'undefined' ? undefined : value);
+  ifDefined(value === '' || value === 'undefined' ? undefined : value);

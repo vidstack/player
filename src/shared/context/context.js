@@ -4,26 +4,26 @@ import { isUndefined, noop, notEqual } from '../../utils/unit.js';
  * @extends CustomEvent<import('./types').ContextConsumerDetail>
  */
 class ConsumerConnectEvent extends CustomEvent {
-	static TYPE = 'vds-context-connect';
+  static TYPE = 'vds-context-connect';
 
-	/**
-	 * @param {Event} event
-	 * @returns {event is ConsumerConnectEvent}
-	 */
-	static validate(event) {
-		return event instanceof this;
-	}
+  /**
+   * @param {Event} event
+   * @returns {event is ConsumerConnectEvent}
+   */
+  static validate(event) {
+    return event instanceof this;
+  }
 
-	/**
-	 * @param {import('./types').ContextConsumerDetail} detail
-	 */
-	constructor(detail) {
-		super(ConsumerConnectEvent.TYPE, {
-			bubbles: true,
-			composed: true,
-			detail
-		});
-	}
+  /**
+   * @param {import('./types').ContextConsumerDetail} detail
+   */
+  constructor(detail) {
+    super(ConsumerConnectEvent.TYPE, {
+      bubbles: true,
+      composed: true,
+      detail
+    });
+  }
 }
 
 /**
@@ -32,141 +32,141 @@ class ConsumerConnectEvent extends CustomEvent {
  * @returns {import('./types').Context<T>}
  */
 export function createContext(initialValue) {
-	const key = Symbol('VDS_CTX_PROVIDER');
+  const key = Symbol('VDS_CTX_PROVIDER');
 
-	// Privately declared event to safely pair context providers and consumers.
-	class ContextConsumerConnectEvent extends ConsumerConnectEvent {}
+  // Privately declared event to safely pair context providers and consumers.
+  class ContextConsumerConnectEvent extends ConsumerConnectEvent {}
 
-	/** @type {import('./types').Context<T>['provide']} */
-	function provide(host, options = {}) {
-		// TODO: this means only the first `transform` option will apply but we need to re-use providers
-		// on the same host so derived context properties work.
-		if (host[key]) return host[key];
+  /** @type {import('./types').Context<T>['provide']} */
+  function provide(host, options = {}) {
+    // TODO: this means only the first `transform` option will apply but we need to re-use providers
+    // on the same host so derived context properties work.
+    if (host[key]) return host[key];
 
-		let currentValue = initialValue;
+    let currentValue = initialValue;
 
-		/** @type {Set<import('./types').ContextConsumerDetail>} */
-		let consumers = new Set();
+    /** @type {Set<import('./types').ContextConsumerDetail>} */
+    let consumers = new Set();
 
-		/**
-		 * @param {Event | ContextConsumerConnectEvent} event
-		 */
-		function onConsumerConnect(event) {
-			// Validate event was dispatched by a pairable consumer.
-			if (!ContextConsumerConnectEvent.validate(event)) return;
+    /**
+     * @param {Event | ContextConsumerConnectEvent} event
+     */
+    function onConsumerConnect(event) {
+      // Validate event was dispatched by a pairable consumer.
+      if (!ContextConsumerConnectEvent.validate(event)) return;
 
-			// Stop propagation of the event to prevent pairing with similar context providers.
-			event.stopImmediatePropagation();
+      // Stop propagation of the event to prevent pairing with similar context providers.
+      event.stopImmediatePropagation();
 
-			const consumer = event.detail;
+      const consumer = event.detail;
 
-			consumer.onConnect();
+      consumer.onConnect();
 
-			consumer.onUpdate(currentValue);
+      consumer.onUpdate(currentValue);
 
-			consumer.onDisconnect(() => {
-				consumers.delete(consumer);
-			});
+      consumer.onDisconnect(() => {
+        consumers.delete(consumer);
+      });
 
-			consumers.add(consumer);
-		}
+      consumers.add(consumer);
+    }
 
-		function onUpdate(newValue) {
-			currentValue = newValue;
-			consumers.forEach((consumer) => {
-				consumer.onUpdate(newValue);
-			});
-			options.onUpdate?.(newValue);
-		}
+    function onUpdate(newValue) {
+      currentValue = newValue;
+      consumers.forEach((consumer) => {
+        consumer.onUpdate(newValue);
+      });
+      options.onUpdate?.(newValue);
+    }
 
-		host.addController({
-			hostConnected() {
-				host.addEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
-				options.onConnect?.();
-			},
-			hostDisconnected() {
-				host.removeEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
-				onUpdate(initialValue);
-				consumers.clear();
-				options.onDisconnect?.();
-			}
-		});
+    host.addController({
+      hostConnected() {
+        host.addEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
+        options.onConnect?.();
+      },
+      hostDisconnected() {
+        host.removeEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
+        onUpdate(initialValue);
+        consumers.clear();
+        options.onDisconnect?.();
+      }
+    });
 
-		const context = {
-			get value() {
-				return currentValue;
-			},
-			set value(newValue) {
-				if (notEqual(newValue, currentValue)) {
-					onUpdate(newValue);
-				}
-			},
-			reset() {
-				onUpdate(initialValue);
-			}
-		};
+    const context = {
+      get value() {
+        return currentValue;
+      },
+      set value(newValue) {
+        if (notEqual(newValue, currentValue)) {
+          onUpdate(newValue);
+        }
+      },
+      reset() {
+        onUpdate(initialValue);
+      }
+    };
 
-		host[key] = context;
-		return context;
-	}
+    host[key] = context;
+    return context;
+  }
 
-	/** @type {import('./types').Context<T>['consume']} */
-	function consume(host, options = {}) {
-		const transformer = !isUndefined(options.transform)
-			? options.transform
-			: (v) => v;
+  /** @type {import('./types').Context<T>['consume']} */
+  function consume(host, options = {}) {
+    const transformer = !isUndefined(options.transform)
+      ? options.transform
+      : (v) => v;
 
-		let currentValue = transformer(initialValue);
-		let disconnectFromProviderCallback = noop;
+    let currentValue = transformer(initialValue);
+    let disconnectFromProviderCallback = noop;
 
-		function onConnect() {
-			options.onConnect?.();
-			options.onUpdate?.(currentValue);
-		}
+    function onConnect() {
+      options.onConnect?.();
+      options.onUpdate?.(currentValue);
+    }
 
-		function onUpdate(newValue) {
-			const transformedValue = transformer(newValue);
-			if (notEqual(transformedValue, currentValue)) {
-				currentValue = transformedValue;
-				options.onUpdate?.(transformedValue);
-			}
-		}
+    function onUpdate(newValue) {
+      const transformedValue = transformer(newValue);
+      if (notEqual(transformedValue, currentValue)) {
+        currentValue = transformedValue;
+        options.onUpdate?.(transformedValue);
+      }
+    }
 
-		function onDisconnect(callback) {
-			disconnectFromProviderCallback = callback;
-		}
+    function onDisconnect(callback) {
+      disconnectFromProviderCallback = callback;
+    }
 
-		host.addController({
-			hostConnected() {
-				host.dispatchEvent(
-					new ContextConsumerConnectEvent({
-						onConnect,
-						onUpdate,
-						onDisconnect
-					})
-				);
-			},
+    host.addController({
+      hostConnected() {
+        host.dispatchEvent(
+          new ContextConsumerConnectEvent({
+            onConnect,
+            onUpdate,
+            onDisconnect
+          })
+        );
+      },
 
-			hostDisconnected() {
-				disconnectFromProviderCallback();
-				disconnectFromProviderCallback = noop;
-				onUpdate(initialValue);
-				options.onDisconnect?.();
-			}
-		});
+      hostDisconnected() {
+        disconnectFromProviderCallback();
+        disconnectFromProviderCallback = noop;
+        onUpdate(initialValue);
+        options.onDisconnect?.();
+      }
+    });
 
-		return {
-			get value() {
-				return currentValue;
-			}
-		};
-	}
+    return {
+      get value() {
+        return currentValue;
+      }
+    };
+  }
 
-	return {
-		initialValue,
-		provide,
-		consume
-	};
+  return {
+    initialValue,
+    provide,
+    consume
+  };
 }
 
 /**
@@ -180,47 +180,47 @@ export function createContext(initialValue) {
  * @returns {import('./types').DerivedContext<R>}
  */
 export function derivedContext(contexts, derivation) {
-	const initialValue = derivation(
-		/** @type {any} */ (contexts.map((c) => c.initialValue))
-	);
+  const initialValue = derivation(
+    /** @type {any} */ (contexts.map((c) => c.initialValue))
+  );
 
-	const derivedContext = createContext(initialValue);
+  const derivedContext = createContext(initialValue);
 
-	return {
-		initialValue,
-		consume: derivedContext.consume,
-		isDerived: true,
-		provide(host) {
-			const values = [];
-			const derivedProvider = derivedContext.provide(host);
+  return {
+    initialValue,
+    consume: derivedContext.consume,
+    isDerived: true,
+    provide(host) {
+      const values = [];
+      const derivedProvider = derivedContext.provide(host);
 
-			contexts.forEach((context, i) => {
-				context.consume(host, {
-					onUpdate(newValue) {
-						values[i] = newValue;
+      contexts.forEach((context, i) => {
+        context.consume(host, {
+          onUpdate(newValue) {
+            values[i] = newValue;
 
-						if (values.length === contexts.length) {
-							derivedProvider.value = derivation(/** @type {any} */ (values));
-						}
-					},
+            if (values.length === contexts.length) {
+              derivedProvider.value = derivation(/** @type {any} */ (values));
+            }
+          },
 
-					onDisconnect() {
-						values.splice(i, 1);
-						if (values.length === 0) derivedProvider.value = initialValue;
-					}
-				});
-			});
+          onDisconnect() {
+            values.splice(i, 1);
+            if (values.length === 0) derivedProvider.value = initialValue;
+          }
+        });
+      });
 
-			return {
-				get value() {
-					return derivedProvider.value;
-				},
-				reset() {
-					derivedProvider.value = initialValue;
-				}
-			};
-		}
-	};
+      return {
+        get value() {
+          return derivedProvider.value;
+        },
+        reset() {
+          derivedProvider.value = initialValue;
+        }
+      };
+    }
+  };
 }
 
 /**
@@ -229,9 +229,9 @@ export function derivedContext(contexts, derivation) {
  * @returns {context is import('./types').DerivedContext<T>}
  */
 export function isDerviedContext(context) {
-	return !!(
-		/** @type {import('./types').DerivedContext<any>} */ (context).isDerived
-	);
+  return !!(
+    /** @type {import('./types').DerivedContext<any>} */ (context).isDerived
+  );
 }
 
 /**
@@ -244,25 +244,25 @@ export function isDerviedContext(context) {
  * @returns {import('./types').ContextProviderRecord<ContextRecordType>}
  */
 export function provideContextRecord(host, contextRecord) {
-	/** @type {any} */
-	const providers = {};
+  /** @type {any} */
+  const providers = {};
 
-	Object.keys(contextRecord).forEach((contextKey) => {
-		/** @type {import('./types').Context<unknown>} */
-		const context = contextRecord[contextKey];
-		const provider = context.provide(host);
+  Object.keys(contextRecord).forEach((contextKey) => {
+    /** @type {import('./types').Context<unknown>} */
+    const context = contextRecord[contextKey];
+    const provider = context.provide(host);
 
-		Object.defineProperty(providers, contextKey, {
-			get() {
-				return provider.value;
-			},
-			set: isDerviedContext(context)
-				? undefined
-				: (newValue) => {
-						provider.value = newValue;
-				  }
-		});
-	});
+    Object.defineProperty(providers, contextKey, {
+      get() {
+        return provider.value;
+      },
+      set: isDerviedContext(context)
+        ? undefined
+        : (newValue) => {
+            provider.value = newValue;
+          }
+    });
+  });
 
-	return providers;
+  return providers;
 }

@@ -15,4 +15,4 @@ import { isNumber } from '../../utils/unit.js';
  * @param {T} value
  */
 export const ifNumber = (value) =>
-	ifDefined(isNumber(value) ? value : undefined);
+  ifDefined(isNumber(value) ? value : undefined);
