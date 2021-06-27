@@ -40,9 +40,10 @@ export const VDS_MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  * - Listen for media request events and fulfill them by calling the appropriate props/methods on
  * the current media provider.
  *
- * - Create a bridge between itself and the connected media provider. The bridge enables
- * attributes, events and operations to be forwarded between the two seamlessly. In other words,
- * the media controller acts as a proxy to the connected media provider.
+ * - Be the host for the plugins manager so that other elements can become plugins to extend
+ * its functionality. Attributes, properties (including methods), and events can be forwarded
+ * or "bridged" between the plugin and this controller. In other words, the media controller
+ * behaves as a proxy for media plugins which are other elements nested inside it.
  *
  * @tagname vds-media-controller
  *
