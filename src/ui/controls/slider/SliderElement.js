@@ -11,12 +11,12 @@ import {
 } from '../../../shared/storybook/index.js';
 import { setAttribute } from '../../../utils/dom.js';
 import { throttle } from '../../../utils/timing.js';
-import { sliderElementStyles } from './css.js';
 import {
   SliderDragEndEvent,
   SliderDragStartEvent,
   SliderValueChangeEvent
 } from './events.js';
+import { sliderElementStyles } from './styles.js';
 
 export const SLIDER_ELEMENT_TAG_NAME = 'vds-slider';
 

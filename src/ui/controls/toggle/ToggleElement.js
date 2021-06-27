@@ -5,7 +5,7 @@ import { VdsElement } from '../../../shared/elements/index.js';
 import { StorybookControlType } from '../../../shared/storybook/index.js';
 import { getSlottedChildren, setAttribute } from '../../../utils/dom.js';
 import { isNil } from '../../../utils/unit.js';
-import { toggleElementStyles } from './css.js';
+import { toggleElementStyles } from './styles.js';
 
 export const TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
 

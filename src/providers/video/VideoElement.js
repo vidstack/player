@@ -7,14 +7,15 @@ import {
   MediaType,
   MediaTypeChangeEvent,
   ViewType,
-  ViewTypeChangeEvent} from '../../media/index.js';
+  ViewTypeChangeEvent
+} from '../../media/index.js';
 import { ifNonEmpty } from '../../shared/directives/if-non-empty.js';
 import { ifNumber } from '../../shared/directives/if-number.js';
 import { StorybookControlType } from '../../shared/storybook/index.js';
 import { Html5MediaElement } from '../html5/index.js';
-import { videoElementStyles } from './css.js';
 import { VideoFullscreenController } from './fullscreen/index.js';
 import { VideoPresentationController } from './presentation/index.js';
+import { videoElementStyles } from './styles.js';
 
 export const VIDEO_ELEMENT_TAG_NAME = 'vds-video';
 

@@ -32,12 +32,12 @@ import {
   SliderValueChangeEvent
 } from '../slider/index.js';
 import { scrubberContext } from './context.js';
-import { scrubberElementStyles } from './css.js';
 import {
   ScrubberPreviewHideEvent,
   ScrubberPreviewShowEvent,
   ScrubberPreviewTimeUpdateEvent
 } from './events.js';
+import { scrubberElementStyles } from './styles.js';
 
 export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
 

@@ -14,8 +14,8 @@ import { isNil, isString, isUndefined } from '../../utils/unit.js';
 import { mediaContext } from '../media.context.js';
 import { MediaPlugin } from '../plugin/index.js';
 import { MediaProviderElement } from '../provider/index.js';
-import { mediaContainerElementStyles } from './css.js';
 import { MediaContainerConnectEvent } from './events.js';
+import { mediaContainerElementStyles } from './styles.js';
 
 export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
 

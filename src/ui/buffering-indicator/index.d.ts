@@ -1,4 +1,4 @@
 export * from './BufferingIndicatorElement.js';
-export * from './css.js';
 export * from './events.js';
+export * from './styles.js';
 export * from './types.js';

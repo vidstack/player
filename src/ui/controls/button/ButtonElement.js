@@ -8,7 +8,7 @@ import { listen } from '../../../shared/events/index.js';
 import { storybookAction } from '../../../shared/storybook/helpers.js';
 import { StorybookControlType } from '../../../shared/storybook/StorybookControlType.js';
 import { isUndefined } from '../../../utils/unit.js';
-import { buttonElementStyles } from './css.js';
+import { buttonElementStyles } from './styles.js';
 
 export const BUTTON_ELEMENT_TAG_NAME = 'vds-button';
 

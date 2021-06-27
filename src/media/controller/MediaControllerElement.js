@@ -26,7 +26,7 @@ import {
   MediaProviderConnectEvent,
   MediaProviderElement
 } from '../provider/index.js';
-import { mediaControllerStyles } from './css.js';
+import { mediaControllerStyles } from './styles.js';
 
 export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
 

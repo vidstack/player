@@ -5,7 +5,7 @@ import { ifNonEmpty } from '../../../shared/directives/if-non-empty.js';
 import { VdsElement } from '../../../shared/elements/index.js';
 import { StorybookControlType } from '../../../shared/storybook/index.js';
 import { formatHtml5Duration, formatTime } from '../../../utils/time.js';
-import { timeElementStyles } from './css.js';
+import { timeElementStyles } from './styles.js';
 
 export const TIME_ELEMENT_TAG_NAME = 'vds-time';
 

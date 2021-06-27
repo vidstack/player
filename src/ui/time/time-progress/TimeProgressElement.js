@@ -11,7 +11,7 @@ import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { TimeElement } from '../time/index.js';
 import { TimeCurrentElement } from '../time-current/index.js';
 import { TimeDurationElement } from '../time-duration/index.js';
-import { timeProgressElementStyles } from './css.js';
+import { timeProgressElementStyles } from './styles.js';
 
 export const TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
 

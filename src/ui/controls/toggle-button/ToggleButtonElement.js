@@ -13,7 +13,7 @@ import {
 import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { ButtonElement } from '../button/index.js';
 import { ToggleElement } from '../toggle/index.js';
-import { toggleButtonElementStyles } from './css.js';
+import { toggleButtonElementStyles } from './styles.js';
 
 export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
 

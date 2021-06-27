@@ -8,11 +8,11 @@ import {
 } from '../../shared/storybook/index.js';
 import { getSlottedChildren, setAttribute } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
-import { bufferingIndicatorElementStyles } from './css.js';
 import {
   BufferingIndicatorHideEvent,
   BufferingIndicatorShowEvent
 } from './events.js';
+import { bufferingIndicatorElementStyles } from './styles.js';
 
 export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
 
