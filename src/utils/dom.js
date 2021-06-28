@@ -5,7 +5,7 @@ import {
 } from '../foundation/events/index.js';
 import { proxyProperties } from './object.js';
 import { IS_CLIENT } from './support.js';
-import { isUndefined } from './unit.js';
+import { isNull, isUndefined } from './unit.js';
 
 /**
  * Requests an animation frame and waits for it to be resolved.
@@ -178,7 +178,12 @@ export function bridgeElements(elementA, elementB, whitelist) {
           const attrValue = /** @type {string} */ (
             elementA.getAttribute(attrName)
           );
-          elementB.setAttribute(attrName, attrValue);
+
+          if (isNull(attrValue)) {
+            elementB.removeAttribute(attrName);
+          } else {
+            elementB.setAttribute(attrName, attrValue);
+          }
         }
       }
     });
