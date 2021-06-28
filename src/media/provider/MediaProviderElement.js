@@ -888,10 +888,10 @@ export class MediaProviderElement extends VdsElement {
    * appropriate contexts and dispatch events.
    *
    * @param {FullscreenController} controller
-   * @returns {void}
+   * @returns {() => void}
    */
   addFullscreenController(controller) {
-    controller.addDelegate({
+    return controller.addDelegate({
       handleFullscreenChange: this.handleFullscreenChange.bind(this),
       handleFullscreenError: this.handleFullscreenError.bind(this)
     });

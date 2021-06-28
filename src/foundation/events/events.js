@@ -127,11 +127,11 @@ export class DisposalBin {
   disposal = this.disposal ?? [];
 
   /**
-   * @param {import('../types/utils').Callback<void>} callback
+   * @param {import('../types/utils').Callback<void>} [callback]
    * @returns {void}
    */
   add(callback) {
-    this.disposal.push(callback);
+    if (callback) this.disposal.push(callback);
   }
 
   /**

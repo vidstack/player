@@ -2,7 +2,12 @@ import { html } from 'lit';
 
 import { provideContextRecord } from '../../foundation/context/index.js';
 import { VdsElement } from '../../foundation/elements/index.js';
-import { bindEventListeners } from '../../foundation/events/index.js';
+import {
+  bindEventListeners,
+  DisposalBin
+} from '../../foundation/events/index.js';
+import { FullscreenController } from '../../foundation/fullscreen/index.js';
+import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import { storybookAction } from '../../foundation/storybook/index.js';
 import { isNil } from '../../utils/unit.js';
 import {
@@ -209,22 +214,42 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
+   * @readonly
+   */
+  mediaProviderDisposal = new DisposalBin();
+
+  /**
+   * @protected
    * @param {MediaProviderConnectEvent} event
    * @returns {void}
    */
   handleMediaProviderConnect(event) {
-    this.handleMediaProviderDisconnect();
-
     // Ignore re-dispatched events.
     if (isNil(event.detail?.provider)) return;
 
+    this.handleMediaProviderDisconnect();
+
     const { provider, onDisconnect } = event.detail;
-    this._mediaProvider = provider;
+
     /**
      * Using type `any` to bypass readonly `context`. We are injecting our context object into the
      * `MediaProviderElement` so it can be managed by it.
      */
     /** @type {any} */ (provider).context = this.context;
+
+    this.mediaProviderDisposal.add(
+      provider.addFullscreenController(this.fullscreenController)
+    );
+
+    this.mediaProviderDisposal.add(() => {
+      /**
+       * Using type `any` to bypass readonly `context`. Detach the media context.
+       */
+      /** @type {any} */ (provider).context = createMediaContextRecord();
+    });
+
+    this._mediaProvider = provider;
+
     onDisconnect(this.handleMediaProviderDisconnect.bind(this));
   }
 
@@ -233,14 +258,7 @@ export class MediaControllerElement extends VdsElement {
    * @returns {void}
    */
   handleMediaProviderDisconnect() {
-    if (!isNil(this.mediaProvider)) {
-      /**
-       * Using type `any` to bypass readonly `context`. Detach the media context.
-       */
-      /** @type {any} */ (this.mediaProvider).context =
-        createMediaContextRecord();
-    }
-
+    this.mediaProviderDisposal.empty();
     this._mediaProvider = undefined;
   }
 
@@ -357,6 +375,36 @@ export class MediaControllerElement extends VdsElement {
     } else if (!isNil(this.mediaProvider)) {
       await this.mediaProvider.exitFullscreen();
     }
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Fullscreen
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * @readonly
+   */
+  fullscreenController = new FullscreenController(
+    this,
+    new ScreenOrientationController(this)
+  );
+
+  /**
+   * @returns {Promise<void>}
+   */
+  async requestFullscreen() {
+    if (this.fullscreenController.isRequestingNativeFullscreen) {
+      return super.requestFullscreen();
+    }
+
+    return this.fullscreenController.requestFullscreen();
+  }
+
+  /**
+   * @returns {Promise<void>}
+   */
+  async exitFullscreen() {
+    return this.fullscreenController.exitFullscreen();
   }
 }
 

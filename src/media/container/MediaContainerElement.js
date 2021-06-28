@@ -4,6 +4,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { VdsElement } from '../../foundation/elements/index.js';
+import { DisposalBin } from '../../foundation/events/index.js';
 import { FullscreenController } from '../../foundation/fullscreen/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import { storybookAction } from '../../foundation/storybook/helpers.js';
@@ -356,9 +357,17 @@ export class MediaContainerElement extends VdsElement {
 
   /**
    * @protected
+   * @readonly
+   */
+  mediaProviderDisposal = new DisposalBin();
+
+  /**
+   * @protected
    * @returns {void}
    */
   handleMediaSlotChange() {
+    this.mediaProviderDisposal.empty();
+
     const mediaProvider = /** @type {MediaProviderElement} */ (
       getSlottedChildren(this, this.getMediaSlotName())[0]
     );
@@ -369,8 +378,11 @@ export class MediaContainerElement extends VdsElement {
       throw Error('Invalid media element given to `media` slot.');
     }
 
+    this.mediaProviderDisposal.add(
+      mediaProvider?.addFullscreenController(this.fullscreenController)
+    );
+
     this._mediaProvider = mediaProvider;
-    this._mediaProvider?.addFullscreenController(this.fullscreenController);
   }
 
   // -------------------------------------------------------------------------------------------
