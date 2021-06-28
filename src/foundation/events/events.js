@@ -34,25 +34,6 @@ export class VdsCustomEvent extends CustomEvent {
    */
   originalEvent;
 
-  get type() {
-    if (this.type?.length) return this.type;
-    return /** @type {typeof VdsCustomEvent} */ (this.constructor).TYPE;
-  }
-
-  get bubbles() {
-    return (
-      this.bubbles ||
-      /** @type {typeof VdsCustomEvent} */ (this.constructor).DEFAULT_BUBBLES
-    );
-  }
-
-  get composed() {
-    return (
-      this.composed ||
-      /** @type {typeof VdsCustomEvent} */ (this.constructor).DEFAULT_COMPOSED
-    );
-  }
-
   /**
    * Walks up the event chain (following each `originalEvent`) and returns the origin event
    * that started the chain.
@@ -86,11 +67,31 @@ export class VdsCustomEvent extends CustomEvent {
   /**
    * @param {VdsEventInit<DetailType>} [eventInit]
    * @param {string} [type]
+   * @param {boolean} [final]
    */
-  constructor(eventInit, type = '') {
-    const { originalEvent, ...init } = eventInit ?? {};
-    super(type, init);
-    this.originalEvent = originalEvent;
+  constructor(eventInit = {}, type = '', final = false) {
+    super(type, eventInit);
+
+    this.originalEvent = eventInit.originalEvent;
+
+    type = type || /** @type {typeof VdsCustomEvent} */ (this.constructor).TYPE;
+
+    eventInit.bubbles =
+      eventInit.bubbles ||
+      /** @type {typeof VdsCustomEvent} */ (this.constructor).DEFAULT_BUBBLES;
+
+    eventInit.composed =
+      eventInit.composed ||
+      /** @type {typeof VdsCustomEvent} */ (this.constructor).DEFAULT_COMPOSED;
+
+    if (!final) {
+      // TODO: This might cause problems if an event has a constructor that differs.
+      return new /** @type {typeof VdsCustomEvent} */ (this.constructor)(
+        eventInit,
+        type,
+        true
+      );
+    }
   }
 }
 
@@ -100,11 +101,11 @@ export class VdsCustomEvent extends CustomEvent {
  * @returns {void}
  */
 export function redispatchEvent(target, event) {
-  class VdsRedispatchEvent extends VdsCustomEvent {
+  class VdsRedispatchedEvent extends VdsCustomEvent {
     static TYPE = event.type;
   }
 
-  const newEvent = new VdsRedispatchEvent({
+  const newEvent = new VdsRedispatchedEvent({
     originalEvent: /** @type {VdsCustomEvent} */ (event).originalEvent ?? event,
     detail: /** @type {CustomEvent} */ (event).detail,
     bubbles: event.bubbles,

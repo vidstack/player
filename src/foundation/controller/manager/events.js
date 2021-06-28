@@ -22,10 +22,6 @@ import { ManagedController } from './ManagedController.js';
 export class ManagedControllerConnectEvent extends VdsCustomEvent {
   /** @readonly */
   static TYPE = 'vds-managed-controller-connect';
-
-  /** @readonly */
-  static BUBBLES = true;
-
-  /** @readonly */
-  static COMPOSED = true;
+  static DEFAULT_BUBBLES = true;
+  static DEFAULT_COMPOSED = true;
 }

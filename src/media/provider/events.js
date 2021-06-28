@@ -1,5 +1,4 @@
 import { VdsCustomEvent } from '../../foundation/events/index.js';
-import { MediaProviderElement } from './MediaProviderElement.js';
 
 /**
  * @typedef {{
@@ -15,7 +14,7 @@ export class MediaProviderEvent extends VdsCustomEvent {}
 
 /**
  * @typedef {{
- *  provider: MediaProviderElement;
+ *  provider: any;
  *  onDisconnect: (callback: () => void) => void;
  * }} MediaProviderConnectEventDetail
  */
