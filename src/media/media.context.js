@@ -61,7 +61,7 @@ export const mediaContext = {
     ),
   fullscreen: createContext(false),
   loop: createContext(false),
-  live: derivedContext([isLiveVideo], (d) => d),
+  live: derivedContext([isLiveVideo], ([d]) => d),
   mediaType,
   isAudio: derivedContext([mediaType], ([m]) => m === MediaType.Audio),
   isVideo: derivedContext([mediaType], ([m]) => m === MediaType.Video),
