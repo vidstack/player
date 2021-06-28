@@ -23,8 +23,8 @@ function Template({
   delay,
   showWhileBooting,
   // Actions
-  onVdsBufferingIndicatorShow,
-  onVdsBufferingIndicatorHide,
+  onBufferingIndicatorShow,
+  onBufferingIndicatorHide,
   // Media Properties
   mediaCanPlay,
   mediaBuffering
@@ -40,8 +40,8 @@ function Template({
         <vds-buffering-indicator
           ?show-while-booting=${showWhileBooting}
           delay=${delay}
-          @vds-buffering-indicator-show=${onVdsBufferingIndicatorShow}
-          @vds-buffering-indicator-hide=${onVdsBufferingIndicatorHide}
+          @vds-buffering-indicator-show=${onBufferingIndicatorShow}
+          @vds-buffering-indicator-hide=${onBufferingIndicatorHide}
         >
           <div>BUFFERING!</div>
         </vds-buffering-indicator>

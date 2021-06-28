@@ -429,5 +429,5 @@ export class MediaContainerElement extends VdsElement {
 
 export const MEDIA_CONTAINER_ELEMENT_STORYBOOK_ARG_TYPES = {
   aspectRatio: { control: StorybookControlType.Text },
-  onVdsMediaContainerConnect: storybookAction(MediaContainerConnectEvent.TYPE)
+  onMediaContainerConnect: storybookAction(MediaContainerConnectEvent.TYPE)
 };

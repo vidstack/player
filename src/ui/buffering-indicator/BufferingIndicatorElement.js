@@ -237,8 +237,6 @@ export const BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControlType.Boolean,
     defaultValue: true
   },
-  onVdsBufferingIndicatorShow: storybookAction(
-    BufferingIndicatorShowEvent.TYPE
-  ),
-  onVdsBufferingIndicatorHide: storybookAction(BufferingIndicatorHideEvent.TYPE)
+  onBufferingIndicatorShow: storybookAction(BufferingIndicatorShowEvent.TYPE),
+  onBufferingIndicatorHide: storybookAction(BufferingIndicatorHideEvent.TYPE)
 };

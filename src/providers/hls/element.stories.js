@@ -33,41 +33,41 @@ function Template({
   disablePiP,
   disableRemotePlayback,
   // Media Provider Actions
-  onVdsMediaProviderConnect,
+  onMediaProviderConnect,
   // Media Actions
-  onVdsAbort,
-  onVdsCanPlay,
-  onVdsCanPlayThrough,
-  onVdsDurationChange,
-  onVdsEmptied,
-  onVdsEnded,
-  onVdsError,
-  onVdsFullscreenChange,
-  onVdsLoadedData,
-  onVdsLoadedMetadata,
-  onVdsLoadStart,
-  onVdsMediaTypeChange,
-  onVdsPause,
-  onVdsPlay,
-  onVdsPlaying,
-  onVdsProgress,
-  onVdsSeeked,
-  onVdsSeeking,
-  onVdsStalled,
-  onVdsStarted,
-  onVdsSuspend,
-  onVdsReplay,
-  onVdsTimeUpdate,
-  onVdsViewTypeChange,
-  onVdsVolumeChange,
-  onVdsWaiting,
+  onAbort,
+  onCanPlay,
+  onCanPlayThrough,
+  onDurationChange,
+  onEmptied,
+  onEnded,
+  onError,
+  onFullscreenChange,
+  onLoadedData,
+  onLoadedMetadata,
+  onLoadStart,
+  onMediaTypeChange,
+  onPause,
+  onPlay,
+  onPlaying,
+  onProgress,
+  onSeeked,
+  onSeeking,
+  onStalled,
+  onStarted,
+  onSuspend,
+  onReplay,
+  onTimeUpdate,
+  onViewTypeChange,
+  onVolumeChange,
+  onWaiting,
   /// HLS Properties,
   hlsConfig,
   // HLS Events
-  onVdsHlsEngineAttach,
-  onVdsHlsEngineBuilt,
-  onVdsHlsEngineDetach,
-  onVdsHlsEngineNoSupport
+  onHlsEngineAttach,
+  onHlsEngineBuilt,
+  onHlsEngineDetach,
+  onHlsEngineNoSupport
 }) {
   return html`
     <vds-hls
@@ -90,37 +90,37 @@ function Template({
       ?disable-pip=${disablePiP}
       ?controls=${controls}
       ?auto-pip=${autoPiP}
-      @vds-media-provider-connect=${onVdsMediaProviderConnect}
-      @vds-abort=${onVdsAbort}
-      @vds-can-play=${onVdsCanPlay}
-      @vds-can-play-through=${onVdsCanPlayThrough}
-      @vds-duration-change=${onVdsDurationChange}
-      @vds-emptied=${onVdsEmptied}
-      @vds-ended=${onVdsEnded}
-      @vds-error=${onVdsError}
-      @vds-fullscreen-change=${onVdsFullscreenChange}
-      @vds-loaded-data=${onVdsLoadedData}
-      @vds-load-start=${onVdsLoadStart}
-      @vds-loaded-metadata=${onVdsLoadedMetadata}
-      @vds-media-type-change=${onVdsMediaTypeChange}
-      @vds-pause=${onVdsPause}
-      @vds-play=${onVdsPlay}
-      @vds-playing=${onVdsPlaying}
-      @vds-progress=${onVdsProgress}
-      @vds-seeked=${onVdsSeeked}
-      @vds-seeking=${onVdsSeeking}
-      @vds-stalled=${onVdsStalled}
-      @vds-started=${onVdsStarted}
-      @vds-suspend=${onVdsSuspend}
-      @vds-replay=${onVdsReplay}
-      @vds-time-update=${onVdsTimeUpdate}
-      @vds-view-type-change=${onVdsViewTypeChange}
-      @vds-volume-change=${onVdsVolumeChange}
-      @vds-waiting=${onVdsWaiting}
-      @vds-hls-engine-built=${onVdsHlsEngineBuilt}
-      @vds-hls-engine-attach=${onVdsHlsEngineAttach}
-      @vds-hls-engine-detach=${onVdsHlsEngineDetach}
-      @vds-hls-engine-no-support=${onVdsHlsEngineNoSupport}
+      @vds-media-provider-connect=${onMediaProviderConnect}
+      @vds-abort=${onAbort}
+      @vds-can-play=${onCanPlay}
+      @vds-can-play-through=${onCanPlayThrough}
+      @vds-duration-change=${onDurationChange}
+      @vds-emptied=${onEmptied}
+      @vds-ended=${onEnded}
+      @vds-error=${onError}
+      @vds-fullscreen-change=${onFullscreenChange}
+      @vds-loaded-data=${onLoadedData}
+      @vds-load-start=${onLoadStart}
+      @vds-loaded-metadata=${onLoadedMetadata}
+      @vds-media-type-change=${onMediaTypeChange}
+      @vds-pause=${onPause}
+      @vds-play=${onPlay}
+      @vds-playing=${onPlaying}
+      @vds-progress=${onProgress}
+      @vds-seeked=${onSeeked}
+      @vds-seeking=${onSeeking}
+      @vds-stalled=${onStalled}
+      @vds-started=${onStarted}
+      @vds-suspend=${onSuspend}
+      @vds-replay=${onReplay}
+      @vds-time-update=${onTimeUpdate}
+      @vds-view-type-change=${onViewTypeChange}
+      @vds-volume-change=${onVolumeChange}
+      @vds-waiting=${onWaiting}
+      @vds-hls-engine-built=${onHlsEngineBuilt}
+      @vds-hls-engine-attach=${onHlsEngineAttach}
+      @vds-hls-engine-detach=${onHlsEngineDetach}
+      @vds-hls-engine-no-support=${onHlsEngineNoSupport}
     ></vds-hls>
   `;
 }

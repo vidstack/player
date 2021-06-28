@@ -22,15 +22,15 @@ function Template({
   describedBy,
   disabled,
   // Actions
-  onVdsMuteRequest,
-  onVdsUnmuteRequest,
+  onMuteRequest,
+  onUnmuteRequest,
   // Media Properties
   mediaMuted
 }) {
   return html`
     <vds-media-controller
-      @vds-mute-request=${onVdsMuteRequest}
-      @vds-unmute-request=${onVdsUnmuteRequest}
+      @vds-mute-request=${onMuteRequest}
+      @vds-unmute-request=${onUnmuteRequest}
     >
       <vds-media-container>
         <vds-fake-media-provider

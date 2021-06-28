@@ -22,15 +22,15 @@ function Template({
   describedBy,
   disabled,
   // Actions
-  onVdsEnterFullscreenRequest,
-  onVdsExitFullscreenRequest,
+  onEnterFullscreenRequest,
+  onExitFullscreenRequest,
   // Media Properties
   mediaFullscreen
 }) {
   return html`
     <vds-media-controller
-      @vds-enter-fullscreen-request="${onVdsEnterFullscreenRequest}"
-      @vds-exit-fullscreen-request="${onVdsExitFullscreenRequest}"
+      @vds-enter-fullscreen-request="${onEnterFullscreenRequest}"
+      @vds-exit-fullscreen-request="${onExitFullscreenRequest}"
     >
       <vds-media-container>
         <vds-fake-media-provider

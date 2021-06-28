@@ -361,15 +361,13 @@ export class MediaControllerElement extends VdsElement {
 }
 
 export const MEDIA_CONTROLLER_ELEMENT_STORYBOOK_ARG_TYPES = {
-  onVdsEnterFullscreenRequest: storybookAction(
-    EnterFullscreenRequestEvent.TYPE
-  ),
-  onVdsExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE),
-  onVdsMuteRequest: storybookAction(MuteRequestEvent.TYPE),
-  onVdsPauseRequest: storybookAction(PauseRequestEvent.TYPE),
-  onVdsPlayRequest: storybookAction(PlayRequestEvent.TYPE),
-  onVdsSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
-  onVdsSeekRequest: storybookAction(SeekRequestEvent.TYPE),
-  onVdsUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE),
-  onVdsVolumeChangeRequest: storybookAction(VolumeChangeRequestEvent.TYPE)
+  onEnterFullscreenRequest: storybookAction(EnterFullscreenRequestEvent.TYPE),
+  onExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE),
+  onMuteRequest: storybookAction(MuteRequestEvent.TYPE),
+  onPauseRequest: storybookAction(PauseRequestEvent.TYPE),
+  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
+  onSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
+  onSeekRequest: storybookAction(SeekRequestEvent.TYPE),
+  onUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE),
+  onVolumeChangeRequest: storybookAction(VolumeChangeRequestEvent.TYPE)
 };

@@ -1095,16 +1095,16 @@ export const SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
     defaultValue: 150
   },
   // Scrubber Actions
-  onVdsScrubberPreviewShow: storybookAction(ScrubberPreviewShowEvent.TYPE),
-  onVdsScrubberPreviewHide: storybookAction(ScrubberPreviewHideEvent.TYPE),
-  onVdsScrubberPreviewTimeUpdate: storybookAction(
+  onScrubberPreviewShow: storybookAction(ScrubberPreviewShowEvent.TYPE),
+  onScrubberPreviewHide: storybookAction(ScrubberPreviewHideEvent.TYPE),
+  onScrubberPreviewTimeUpdate: storybookAction(
     ScrubberPreviewTimeUpdateEvent.TYPE
   ),
   // Media Request Actions
-  onVdsPlayRequest: storybookAction(PlayRequestEvent.TYPE),
-  onVdsPauseRequest: storybookAction(PauseRequestEvent.TYPE),
-  onVdsSeekRequest: storybookAction(SeekRequestEvent.TYPE),
-  onVdsSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
+  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
+  onPauseRequest: storybookAction(PauseRequestEvent.TYPE),
+  onSeekRequest: storybookAction(SeekRequestEvent.TYPE),
+  onSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
   // Media Properties
   mediaCurrentTime: {
     control: StorybookControlType.Number,

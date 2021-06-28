@@ -111,6 +111,6 @@ export const PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControlType.Boolean,
     defaultValue: true
   },
-  onVdsPlayRequest: storybookAction(PlayRequestEvent.TYPE),
-  onVdsPauseRequest: storybookAction(PauseRequestEvent.TYPE)
+  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
+  onPauseRequest: storybookAction(PauseRequestEvent.TYPE)
 };

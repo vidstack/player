@@ -40,61 +40,61 @@ function Template({
   // Media Container Properties
   aspectRatio,
   // Media Container Actions
-  onVdsMediaContainerConnect,
+  onMediaContainerConnect,
   // Media Provider Actions
-  onVdsAbort,
-  onVdsCanPlay,
-  onVdsCanPlayThrough,
-  onVdsDurationChange,
-  onVdsEmptied,
-  onVdsEnded,
-  onVdsError,
-  onVdsFullscreenChange,
-  onVdsLoadedData,
-  onVdsLoadedMetadata,
-  onVdsLoadStart,
-  onVdsMediaTypeChange,
-  onVdsMediaProviderConnect,
-  onVdsPause,
-  onVdsPlay,
-  onVdsPlaying,
-  onVdsProgress,
-  onVdsSeeked,
-  onVdsSeeking,
-  onVdsStalled,
-  onVdsStarted,
-  onVdsSuspend,
-  onVdsReplay,
-  onVdsTimeUpdate,
-  onVdsViewTypeChange,
-  onVdsVolumeChange,
-  onVdsWaiting,
+  onAbort,
+  onCanPlay,
+  onCanPlayThrough,
+  onDurationChange,
+  onEmptied,
+  onEnded,
+  onError,
+  onFullscreenChange,
+  onLoadedData,
+  onLoadedMetadata,
+  onLoadStart,
+  onMediaTypeChange,
+  onMediaProviderConnect,
+  onPause,
+  onPlay,
+  onPlaying,
+  onProgress,
+  onSeeked,
+  onSeeking,
+  onStalled,
+  onStarted,
+  onSuspend,
+  onReplay,
+  onTimeUpdate,
+  onViewTypeChange,
+  onVolumeChange,
+  onWaiting,
   // Media Request Actions
-  onVdsMuteRequest,
-  onVdsUnmuteRequest,
-  onVdsEnterFullscreenRequest,
-  onVdsExitFullscreenRequest,
-  onVdsPlayRequest,
-  onVdsPauseRequest,
-  onVdsSeekRequest,
-  onVdsSeekingRequest,
-  onVdsVolumeChangeRequest
+  onMuteRequest,
+  onUnmuteRequest,
+  onEnterFullscreenRequest,
+  onExitFullscreenRequest,
+  onPlayRequest,
+  onPauseRequest,
+  onSeekRequest,
+  onSeekingRequest,
+  onVolumeChangeRequest
 }) {
   return html`
     <vds-media-controller
-      @vds-enter-fullscreen-request=${onVdsEnterFullscreenRequest}
-      @vds-exit-fullscreen-request=${onVdsExitFullscreenRequest}
-      @vds-mute-request=${onVdsMuteRequest}
-      @vds-pause-request=${onVdsPauseRequest}
-      @vds-play-request=${onVdsPlayRequest}
-      @vds-seek-request=${onVdsSeekRequest}
-      @vds-seeking-request=${onVdsSeekingRequest}
-      @vds-unmute-request=${onVdsUnmuteRequest}
-      @vds-volume-change-request=${onVdsVolumeChangeRequest}
+      @vds-enter-fullscreen-request=${onEnterFullscreenRequest}
+      @vds-exit-fullscreen-request=${onExitFullscreenRequest}
+      @vds-mute-request=${onMuteRequest}
+      @vds-pause-request=${onPauseRequest}
+      @vds-play-request=${onPlayRequest}
+      @vds-seek-request=${onSeekRequest}
+      @vds-seeking-request=${onSeekingRequest}
+      @vds-unmute-request=${onUnmuteRequest}
+      @vds-volume-change-request=${onVolumeChangeRequest}
     >
       <vds-media-container
         aspect-ratio=${ifDefined(aspectRatio)}
-        @vds-media-container-connect=${onVdsMediaContainerConnect}
+        @vds-media-container-connect=${onMediaContainerConnect}
       >
         <vds-video
           slot="media"
@@ -116,33 +116,33 @@ function Template({
           ?muted=${muted}
           ?paused=${paused}
           ?playsinline=${playsinline}
-          @vds-abort=${onVdsAbort}
-          @vds-can-play-through=${onVdsCanPlayThrough}
-          @vds-can-play=${onVdsCanPlay}
-          @vds-duration-change=${onVdsDurationChange}
-          @vds-emptied=${onVdsEmptied}
-          @vds-ended=${onVdsEnded}
-          @vds-error=${onVdsError}
-          @vds-fullscreen-change=${onVdsFullscreenChange}
-          @vds-load-start=${onVdsLoadStart}
-          @vds-loaded-data=${onVdsLoadedData}
-          @vds-loaded-metadata=${onVdsLoadedMetadata}
-          @vds-media-provider-connect=${onVdsMediaProviderConnect}
-          @vds-media-type-change=${onVdsMediaTypeChange}
-          @vds-pause=${onVdsPause}
-          @vds-play=${onVdsPlay}
-          @vds-playing=${onVdsPlaying}
-          @vds-progress=${onVdsProgress}
-          @vds-replay=${onVdsReplay}
-          @vds-seeked=${onVdsSeeked}
-          @vds-seeking=${onVdsSeeking}
-          @vds-stalled=${onVdsStalled}
-          @vds-started=${onVdsStarted}
-          @vds-suspend=${onVdsSuspend}
-          @vds-time-update=${onVdsTimeUpdate}
-          @vds-view-type-change=${onVdsViewTypeChange}
-          @vds-volume-change=${onVdsVolumeChange}
-          @vds-waiting=${onVdsWaiting}
+          @vds-abort=${onAbort}
+          @vds-can-play-through=${onCanPlayThrough}
+          @vds-can-play=${onCanPlay}
+          @vds-duration-change=${onDurationChange}
+          @vds-emptied=${onEmptied}
+          @vds-ended=${onEnded}
+          @vds-error=${onError}
+          @vds-fullscreen-change=${onFullscreenChange}
+          @vds-load-start=${onLoadStart}
+          @vds-loaded-data=${onLoadedData}
+          @vds-loaded-metadata=${onLoadedMetadata}
+          @vds-media-provider-connect=${onMediaProviderConnect}
+          @vds-media-type-change=${onMediaTypeChange}
+          @vds-pause=${onPause}
+          @vds-play=${onPlay}
+          @vds-playing=${onPlaying}
+          @vds-progress=${onProgress}
+          @vds-replay=${onReplay}
+          @vds-seeked=${onSeeked}
+          @vds-seeking=${onSeeking}
+          @vds-stalled=${onStalled}
+          @vds-started=${onStarted}
+          @vds-suspend=${onSuspend}
+          @vds-time-update=${onTimeUpdate}
+          @vds-view-type-change=${onViewTypeChange}
+          @vds-volume-change=${onVolumeChange}
+          @vds-waiting=${onWaiting}
         ></vds-video>
 
         <vds-media-ui>

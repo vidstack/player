@@ -22,15 +22,15 @@ function Template({
   describedBy,
   disabled,
   // Actions
-  onVdsPlayRequest,
-  onVdsPauseRequest,
+  onPlayRequest,
+  onPauseRequest,
   // Media Properties
   mediaPaused
 }) {
   return html`
     <vds-media-controller
-      @vds-pause-request=${onVdsPauseRequest}
-      @vds-play-request=${onVdsPlayRequest}
+      @vds-pause-request=${onPauseRequest}
+      @vds-play-request=${onPlayRequest}
     >
       <vds-media-container>
         <vds-fake-media-provider

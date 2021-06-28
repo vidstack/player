@@ -106,8 +106,6 @@ export const FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControlType.Boolean,
     defaultValue: false
   },
-  onVdsEnterFullscreenRequest: storybookAction(
-    EnterFullscreenRequestEvent.TYPE
-  ),
-  onVdsExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE)
+  onEnterFullscreenRequest: storybookAction(EnterFullscreenRequestEvent.TYPE),
+  onExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE)
 };

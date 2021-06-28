@@ -34,14 +34,14 @@ function Template({
   throttle,
   userSeekingThrottle,
   // Scrubber Actions
-  onVdsScrubberPreviewShow,
-  onVdsScrubberPreviewHide,
-  onVdsScrubberPreviewTimeUpdate,
+  onScrubberPreviewShow,
+  onScrubberPreviewHide,
+  onScrubberPreviewTimeUpdate,
   // Media Request Actions
-  onVdsPauseRequest,
-  onVdsPlayRequest,
-  onVdsSeekRequest,
-  onVdsSeekingRequest,
+  onPauseRequest,
+  onPlayRequest,
+  onSeekRequest,
+  onSeekingRequest,
   // Media Properties
   mediaCurrentTime,
   mediaDuration,
@@ -50,10 +50,10 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      @vds-pause-request=${onVdsPauseRequest}
-      @vds-play-request=${onVdsPlayRequest}
-      @vds-seek-request=${onVdsSeekRequest}
-      @vds-seeking-request=${onVdsSeekingRequest}
+      @vds-pause-request=${onPauseRequest}
+      @vds-play-request=${onPlayRequest}
+      @vds-seek-request=${onSeekRequest}
+      @vds-seeking-request=${onSeekingRequest}
     >
       <vds-media-container>
         <vds-fake-media-provider
@@ -80,9 +80,9 @@ function Template({
           ?no-preview-clamp=${noPreviewClamp}
           ?no-preview-track=${noPreviewTrack}
           ?pause-while-dragging=${pauseWhileDragging}
-          @vds-scrubber-preview-hide=${onVdsScrubberPreviewHide}
-          @vds-scrubber-preview-show=${onVdsScrubberPreviewShow}
-          @vds-scrubber-preview-time-update=${onVdsScrubberPreviewTimeUpdate}
+          @vds-scrubber-preview-hide=${onScrubberPreviewHide}
+          @vds-scrubber-preview-show=${onScrubberPreviewShow}
+          @vds-scrubber-preview-time-update=${onScrubberPreviewTimeUpdate}
         >
           <div class="preview" slot="preview">Preview</div>
         </vds-scrubber>

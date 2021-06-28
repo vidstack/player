@@ -862,7 +862,7 @@ export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   throttle: { control: StorybookControlType.Number, defaultValue: 10 },
   value: { control: StorybookControlType.Number, defaultValue: 50 },
   valueText: { control: StorybookControlType.Text },
-  onVdsSliderDragStart: storybookAction(SliderDragStartEvent.TYPE),
-  onVdsSliderDragEnd: storybookAction(SliderDragEndEvent.TYPE),
-  onVdsSliderValueChange: storybookAction(SliderValueChangeEvent.TYPE)
+  onSliderDragStart: storybookAction(SliderDragStartEvent.TYPE),
+  onSliderDragEnd: storybookAction(SliderDragEndEvent.TYPE),
+  onSliderValueChange: storybookAction(SliderValueChangeEvent.TYPE)
 };

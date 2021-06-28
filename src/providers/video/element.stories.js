@@ -33,34 +33,34 @@ function Template({
   disablePiP,
   disableRemotePlayback,
   // Media Provider Actions
-  onVdsMediaProviderConnect,
+  onMediaProviderConnect,
   // Media Actions
-  onVdsAbort,
-  onVdsCanPlay,
-  onVdsCanPlayThrough,
-  onVdsDurationChange,
-  onVdsEmptied,
-  onVdsEnded,
-  onVdsError,
-  onVdsFullscreenChange,
-  onVdsLoadedData,
-  onVdsLoadedMetadata,
-  onVdsLoadStart,
-  onVdsMediaTypeChange,
-  onVdsPause,
-  onVdsPlay,
-  onVdsPlaying,
-  onVdsProgress,
-  onVdsSeeked,
-  onVdsSeeking,
-  onVdsStalled,
-  onVdsStarted,
-  onVdsSuspend,
-  onVdsReplay,
-  onVdsTimeUpdate,
-  onVdsViewTypeChange,
-  onVdsVolumeChange,
-  onVdsWaiting
+  onAbort,
+  onCanPlay,
+  onCanPlayThrough,
+  onDurationChange,
+  onEmptied,
+  onEnded,
+  onError,
+  onFullscreenChange,
+  onLoadedData,
+  onLoadedMetadata,
+  onLoadStart,
+  onMediaTypeChange,
+  onPause,
+  onPlay,
+  onPlaying,
+  onProgress,
+  onSeeked,
+  onSeeking,
+  onStalled,
+  onStarted,
+  onSuspend,
+  onReplay,
+  onTimeUpdate,
+  onViewTypeChange,
+  onVolumeChange,
+  onWaiting
 }) {
   return html`
     <vds-video
@@ -82,33 +82,33 @@ function Template({
       ?controls=${controls}
       ?autoplay=${autoplay}
       ?autopictureinpicture=${autoPiP}
-      @vds-waiting=${onVdsWaiting}
-      @vds-volume-change=${onVdsVolumeChange}
-      @vds-view-type-change=${onVdsViewTypeChange}
-      @vds-time-update=${onVdsTimeUpdate}
-      @vds-suspend=${onVdsSuspend}
-      @vds-started=${onVdsStarted}
-      @vds-stalled=${onVdsStalled}
-      @vds-seeking=${onVdsSeeking}
-      @vds-seeked=${onVdsSeeked}
-      @vds-replay=${onVdsReplay}
-      @vds-progress=${onVdsProgress}
-      @vds-playing=${onVdsPlaying}
-      @vds-play=${onVdsPlay}
-      @vds-pause=${onVdsPause}
-      @vds-media-type-change=${onVdsMediaTypeChange}
-      @vds-media-provider-connect=${onVdsMediaProviderConnect}
-      @vds-loaded-metadata=${onVdsLoadedMetadata}
-      @vds-loaded-data=${onVdsLoadedData}
-      @vds-load-start=${onVdsLoadStart}
-      @vds-fullscreen-change=${onVdsFullscreenChange}
-      @vds-error=${onVdsError}
-      @vds-ended=${onVdsEnded}
-      @vds-emptied=${onVdsEmptied}
-      @vds-duration-change=${onVdsDurationChange}
-      @vds-can-play=${onVdsCanPlay}
-      @vds-can-play-through=${onVdsCanPlayThrough}
-      @vds-abort=${onVdsAbort}
+      @vds-waiting=${onWaiting}
+      @vds-volume-change=${onVolumeChange}
+      @vds-view-type-change=${onViewTypeChange}
+      @vds-time-update=${onTimeUpdate}
+      @vds-suspend=${onSuspend}
+      @vds-started=${onStarted}
+      @vds-stalled=${onStalled}
+      @vds-seeking=${onSeeking}
+      @vds-seeked=${onSeeked}
+      @vds-replay=${onReplay}
+      @vds-progress=${onProgress}
+      @vds-playing=${onPlaying}
+      @vds-play=${onPlay}
+      @vds-pause=${onPause}
+      @vds-media-type-change=${onMediaTypeChange}
+      @vds-media-provider-connect=${onMediaProviderConnect}
+      @vds-loaded-metadata=${onLoadedMetadata}
+      @vds-loaded-data=${onLoadedData}
+      @vds-load-start=${onLoadStart}
+      @vds-fullscreen-change=${onFullscreenChange}
+      @vds-error=${onError}
+      @vds-ended=${onEnded}
+      @vds-emptied=${onEmptied}
+      @vds-duration-change=${onDurationChange}
+      @vds-can-play=${onCanPlay}
+      @vds-can-play-through=${onCanPlayThrough}
+      @vds-abort=${onAbort}
     ></vds-video>
   `;
 }

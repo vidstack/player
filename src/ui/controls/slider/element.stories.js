@@ -28,9 +28,9 @@ function Template({
   orientation,
   throttle,
   // Actions
-  onVdsSliderDragStart,
-  onVdsSliderDragEnd,
-  onVdsSliderValueChange
+  onSliderDragStart,
+  onSliderDragEnd,
+  onSliderValueChange
 }) {
   return html`
     <vds-slider
@@ -45,9 +45,9 @@ function Template({
       value=${value}
       ?disabled=${disabled}
       ?hidden=${hidden}
-      @vds-slider-drag-end=${onVdsSliderDragEnd}
-      @vds-slider-drag-start=${onVdsSliderDragStart}
-      @vds-slider-value-change=${onVdsSliderValueChange}
+      @vds-slider-drag-end=${onSliderDragEnd}
+      @vds-slider-drag-start=${onSliderDragStart}
+      @vds-slider-value-change=${onSliderValueChange}
     ></vds-slider>
   `;
 }

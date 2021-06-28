@@ -485,8 +485,8 @@ export const HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
     defaultValue:
       'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8'
   },
-  onVdsHlsEngineAttach: storybookAction(HlsEngineAttachEvent.TYPE),
-  onVdsHlsEngineBuilt: storybookAction(HlsEngineBuiltEvent.TYPE),
-  onVdsHlsEngineDetach: storybookAction(HlsEngineDetachEvent.TYPE),
-  onVdsHlsEngineNoSupport: storybookAction(HlsEngineNoSupportEvent.TYPE)
+  onHlsEngineAttach: storybookAction(HlsEngineAttachEvent.TYPE),
+  onHlsEngineBuilt: storybookAction(HlsEngineBuiltEvent.TYPE),
+  onHlsEngineDetach: storybookAction(HlsEngineDetachEvent.TYPE),
+  onHlsEngineNoSupport: storybookAction(HlsEngineNoSupportEvent.TYPE)
 };

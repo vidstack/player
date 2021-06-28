@@ -105,6 +105,6 @@ export const MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControlType.Boolean,
     defaultValue: false
   },
-  onVdsMuteRequest: storybookAction(MuteRequestEvent.TYPE),
-  onVdsUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE)
+  onMuteRequest: storybookAction(MuteRequestEvent.TYPE),
+  onUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE)
 };
