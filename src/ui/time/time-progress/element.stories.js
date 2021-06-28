@@ -16,9 +16,6 @@ export default {
   argTypes: TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').TimeProgressElementStorybookArgs} args
- */
 function Template({
   // Properties
   alwaysShowHours,

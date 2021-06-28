@@ -15,12 +15,9 @@ import {
 
 export const FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
 
-/** @typedef {import('./types').FullscreenButton} FullscreenButton */
-
 /**
  * A button for toggling the fullscreen mode of the player.
  *
- * @implements {FullscreenButton}
  *
  * @tagname vds-fullscreen-button
  *
@@ -63,10 +60,16 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     };
   }
 
+  /**
+   * The `enter` slotted element.
+   */
   get enterSlotElement() {
     return this.currentNotPressedSlotElement;
   }
 
+  /**
+   * The `exit` slotted element.
+   */
   get exitSlotElement() {
     return this.currentPressedSlotElement;
   }
@@ -95,10 +98,6 @@ export class FullscreenButtonElement extends ToggleButtonElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').FullscreenButtonElementStorybookArgTypes}
- */
 export const FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
   label: { control: StorybookControlType.Text, defaultValue: 'Fullscreen' },

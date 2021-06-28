@@ -7,13 +7,10 @@ import {
 
 export const TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
 
-/** @typedef {import('./types').CurrentTimeDisplay} CurrentTimeDisplay */
-
 /**
  * Formats and displays the `currentTime` of media playback. Do not mess with the component's
  * `seconds` property as it's automatically managed.
  *
- * @implements {CurrentTimeDisplay}
  *
  * @tagname vds-time-current
  *
@@ -55,10 +52,6 @@ export class TimeCurrentElement extends TimeElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').TimeCurrentElementStorybookArgTypes}
- */
 export const TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...TIME_ELEMENT_STORYBOOK_ARG_TYPES,
   // @ts-ignore

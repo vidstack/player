@@ -37,14 +37,10 @@ export const SliderKeyDirection = {
   ArrowDown: 1
 };
 
-/** @typedef {import('./types').Slider} Slider */
-
 /**
  * A custom built `input[type="range"]` that is cross-browser friendly, ARIA friendly, mouse/touch
  * friendly and easily styleable. This component allows users to input numeric values between a
  * minimum and maxmimum value. Generally used in the player for volume or scrubber controls.
- *
- * @implements {Slider}
  *
  * @inspriation https://github.com/carbon-design-system/carbon-web-components
  *
@@ -131,27 +127,84 @@ export class SliderElement extends WithFocus(VdsElement) {
     super();
 
     // Properties
-    /** @type {string | undefined} */
+    /**
+     * ♿ **ARIA:** The `aria-label` property of the slider.
+     *
+     * @type {string | undefined}
+     */
     this.label = undefined;
-    /** @type {number} */
-    this.step = 1;
-    /** @type {number} */
-    this.stepMultiplier = 10;
-    /** @type {number} */
+
+    /**
+     * The lowest slider value in the range of permitted values.
+     *
+     * @type {number}
+     */
     this.min = 0;
-    /** @type {number} */
+
+    /**
+     * The greatest slider value in the range of permitted values.
+     *
+     * @type {number}
+     */
     this.max = 100;
-    /** @type {boolean} */
+
+    /**
+     * Whether the slider should be hidden.
+     *
+     * @type {boolean}
+     */
     this.hidden = false;
-    /** @type {boolean} */
+
+    /**
+     * Whether the slider should be disabled (not-interactable).
+     *
+     * @type {boolean}
+     */
     this.disabled = false;
-    /** @type {number} */
+
+    /**
+     * The current slider value.
+     *
+     * @type {number}
+     */
     this.value = 50;
-    /** @type {string | undefined} */
+
+    /**
+     * ♿ **ARIA:** Human-readable text alternative for the current value. Defaults to
+     * `value:max` ratio as a percentage.
+     *
+     * @type {string | undefined}
+     */
     this.valueText = undefined;
-    /** @type {'horizontal' | 'vertical'} */
+
+    /**
+     * ♿ **ARIA:** Indicates the orientation of the slider.
+     *
+     * @type {'horizontal' | 'vertical'}
+     */
     this.orientation = 'horizontal';
-    /** @type {number} */
+
+    /**
+     * A number that specifies the granularity that the slider value must adhere to.
+     *
+     * @type {number}
+     */
+    this.step = 1;
+
+    /**
+     * A number that will be used to multiply the `step` when the `Shift` key is held down and the
+     * slider value is changed by pressing `LeftArrow` or `RightArrow`.
+     *
+     * @type {number}
+     */
+    this.stepMultiplier = 10;
+
+    /**
+     * The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove`
+     * events.
+     *
+     * @type {number}
+     */
     this.throttle = 10;
 
     // State
@@ -185,24 +238,56 @@ export class SliderElement extends WithFocus(VdsElement) {
     };
   }
 
+  /**
+   * Whether the current orientation is horizontal.
+   *
+   * @default true
+   */
   get isOrientationHorizontal() {
     return this.orientation === 'horizontal';
   }
 
+  /**
+   * Whether the current orientation is vertical.
+   *
+   * @default false
+   */
   get isOrientationVertical() {
     return this.orientation === 'vertical';
   }
 
+  /**
+   * Whether the slider thumb is currently being dragged.
+   *
+   * @default false
+   */
   get isDragging() {
     return this._isDragging;
   }
 
+  /**
+   * The current value to range ratio.
+   *
+   * @default 0.5
+   *
+   * @example
+   * `min` = 0
+   * `max` = 10
+   * `value` = 5
+   * `range` = 10 (max - min)
+   * `fillRate` = 0.5 (result)
+   */
   get fillRate() {
     const boundValue = Math.min(this.max, Math.max(this.min, this.value));
     const range = this.max - this.min;
     return boundValue / range;
   }
 
+  /**
+   * The fill rate expressed as a percentage (`fillRate * 100`).
+   *
+   * @default 50
+   */
   get fillPercent() {
     return this.fillRate * 100;
   }
@@ -256,6 +341,9 @@ export class SliderElement extends WithFocus(VdsElement) {
    */
   rootRef = createRef();
 
+  /**
+   * The component's root element.
+   */
   get rootElement() {
     return /** @type {HTMLDivElement} */ (this.rootRef.value);
   }
@@ -335,6 +423,9 @@ export class SliderElement extends WithFocus(VdsElement) {
    */
   thumbContainerRef = createRef();
 
+  /**
+   * The thumb container element.
+   */
   get thumbContainerElement() {
     return /** @type {HTMLDivElement} */ (this.thumbContainerRef.value);
   }
@@ -448,6 +539,9 @@ export class SliderElement extends WithFocus(VdsElement) {
    */
   thumbRef = createRef();
 
+  /**
+   * The thumb element.
+   */
   get thumbElement() {
     return /** @type {HTMLDivElement} */ (this.thumbRef.value);
   }
@@ -491,6 +585,9 @@ export class SliderElement extends WithFocus(VdsElement) {
    */
   trackRef = createRef();
 
+  /**
+   * The track element.
+   */
   get trackElement() {
     return /** @type {HTMLDivElement} */ (this.trackRef.value);
   }
@@ -534,6 +631,9 @@ export class SliderElement extends WithFocus(VdsElement) {
    */
   trackFillRef = createRef();
 
+  /**
+   * The track fill element.
+   */
   get trackFillElement() {
     return /** @type {HTMLDivElement} */ (this.trackFillRef.value);
   }
@@ -746,10 +846,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').SliderElementStorybookArgTypes}
- */
 export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   disabled: { control: StorybookControlType.Boolean, defaultValue: false },
   hidden: { control: StorybookControlType.Boolean, defaultValue: false },

@@ -15,12 +15,8 @@ import {
 
 export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
 
-/** @typedef {import('./types').MuteButton} MuteButton */
-
 /**
  * A button for toggling the muted state of the player.
- *
- * @implements {MuteButton}
  *
  * @tagname vds-mute-button
  *
@@ -63,10 +59,16 @@ export class MuteButtonElement extends ToggleButtonElement {
     };
   }
 
+  /**
+   * The `mute` slotted element.
+   */
   get muteSlotElement() {
     return this.currentNotPressedSlotElement;
   }
 
+  /**
+   * The `unmute` slotted element.
+   */
   get unmuteSlotElement() {
     return this.currentPressedSlotElement;
   }
@@ -95,10 +97,6 @@ export class MuteButtonElement extends ToggleButtonElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').MuteButtonElementStorybookArgTypes}
- */
 export const MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
   label: { control: StorybookControlType.Text, defaultValue: 'Mute' },

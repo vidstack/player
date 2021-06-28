@@ -8,16 +8,26 @@ import { html } from 'lit';
 
 import {
   MEDIA_CONTAINER_ELEMENT_TAG_NAME,
-  MediaContainerElement} from '../container/index.js';
+  MediaContainerElement
+} from '../container/index.js';
 import { MediaControllerElement } from '../controller/index.js';
 import {
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
-  FakeMediaProviderElement} from './fake-media-provider/index.js';
+  FakeMediaProviderElement
+} from './fake-media-provider/index.js';
+
+/**
+ * @typedef {{
+ * controller: MediaControllerElement;
+ * container: MediaContainerElement;
+ * provider: FakeMediaProviderElement;
+ * }} MediaFixture
+ */
 
 /**
  * @param {import('lit').TemplateResult} [uiSlot]
  * @param {import('lit').TemplateResult} [mediaSlot]
- * @returns {Promise<import('./types').MediaFixture>}
+ * @returns {Promise<MediaFixture>}
  */
 export async function buildMediaFixture(uiSlot = html``, mediaSlot = html``) {
   /** @type {MediaControllerElement} */

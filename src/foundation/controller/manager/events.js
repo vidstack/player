@@ -23,14 +23,9 @@ export class ManagedControllerConnectEvent extends VdsCustomEvent {
   /** @readonly */
   static TYPE = 'vds-managed-controller-connect';
 
-  /**
-   * @param {import('../../events').VdsEventInit<ManagedControllerConnectEventDetail>} eventInit
-   */
-  constructor(eventInit) {
-    super(ManagedControllerConnectEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
+  /** @readonly */
+  static BUBBLES = true;
+
+  /** @readonly */
+  static COMPOSED = true;
 }

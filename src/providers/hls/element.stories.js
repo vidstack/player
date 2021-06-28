@@ -12,9 +12,6 @@ export default {
   argTypes: HLS_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types.js').HlsElementStorybookArgs} args
- */
 function Template({
   // Properties
   autoplay,

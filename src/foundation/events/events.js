@@ -10,10 +10,41 @@ export class VdsCustomEvent extends CustomEvent {
   static TYPE;
 
   /**
+   * @type {boolean}
+   * @readonly
+   */
+  static DEFAULT_BUBBLES = false;
+
+  /**
+   * @type {boolean}
+   * @readonly
+   */
+  static DEFAULT_COMPOSED = false;
+
+  /**
    * @type {Event | undefined}
    * @readonly
    */
   originalEvent;
+
+  get type() {
+    if (this.type?.length) return this.type;
+    return /** @type {typeof VdsCustomEvent} */ (this.constructor).TYPE;
+  }
+
+  get bubbles() {
+    return (
+      this.bubbles ||
+      /** @type {typeof VdsCustomEvent} */ (this.constructor).DEFAULT_BUBBLES
+    );
+  }
+
+  get composed() {
+    return (
+      this.composed ||
+      /** @type {typeof VdsCustomEvent} */ (this.constructor).DEFAULT_COMPOSED
+    );
+  }
 
   /**
    * Walks up the event chain (following each `originalEvent`) and returns the origin event
@@ -46,12 +77,12 @@ export class VdsCustomEvent extends CustomEvent {
   }
 
   /**
-   * @param {string} typeArg
    * @param {import('./types').VdsEventInit<DetailType>} [eventInit]
+   * @param {string} [type]
    */
-  constructor(typeArg, eventInit) {
+  constructor(eventInit, type = '') {
     const { originalEvent, ...init } = eventInit ?? {};
-    super(typeArg, init);
+    super(type, init);
     this.originalEvent = originalEvent;
   }
 }
@@ -62,7 +93,11 @@ export class VdsCustomEvent extends CustomEvent {
  * @returns {void}
  */
 export function redispatchEvent(target, event) {
-  const newEvent = new VdsCustomEvent(event.type, {
+  class VdsRedispatchEvent extends VdsCustomEvent {
+    static TYPE = event.type;
+  }
+
+  const newEvent = new VdsRedispatchEvent({
     originalEvent: /** @type {VdsCustomEvent} */ (event).originalEvent ?? event,
     detail: /** @type {CustomEvent} */ (event).detail,
     bubbles: event.bubbles,

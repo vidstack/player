@@ -41,8 +41,6 @@ import { scrubberElementStyles } from './styles.js';
 
 export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
 
-/** @typedef {import('./types').Scrubber} Scrubber */
-
 /**
  * A control that displays the progression of playback and the amount seekable on a slider. This
  * control can be used to update the current playback time by interacting with the slider.
@@ -71,8 +69,6 @@ export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
  *
  * For styling you have access to the `--vds-scrubber-preview-time` CSS property which contains
  * the current time in seconds the user is previewing.
- *
- * @implements {Scrubber}
  *
  * @tagname vds-scrubber
  *
@@ -161,33 +157,96 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     super();
 
     // Properties
-    /** @type {boolean} */
+    /**
+     * Whether the scubber is disabled.
+     *
+     * @type {boolean}
+     */
     this.disabled = false;
-    /** @type {boolean} */
+
+    /**
+     * Whether the scrubber is hidden.
+     *
+     * @type {boolean}
+     */
     this.hidden = false;
-    /** @type {boolean} */
+
+    /**
+     * Whether the preview passed in should NOT be clamped to the scrubber edges. In other words,
+     * setting this to `true` means the preview element can escape the scrubber bounds.
+     *
+     * @type {boolean}
+     */
     this.noPreviewClamp = false;
-    /** @type {boolean} */
+
+    /**
+     * Whether to remove the preview track.
+     *
+     * @type {boolean}
+     */
     this.noPreviewTrack = false;
+
     /** @type {'horizontal' | 'vertical'} */
     this.orientation = 'horizontal';
-    /** @type {boolean} */
+
+    /**
+     * Whether the scrubber should request playback to pause while the user is dragging the
+     * thumb. If the media was playing before the dragging starts, the state will be restored by
+     * dispatching a user play request once the dragging ends.
+     *
+     * @type {boolean}
+     */
     this.pauseWhileDragging = false;
-    /** @type {number} */
+
+    /**
+     * The amount of milliseconds to throttle preview time updates by.
+     *
+     * @type {number}
+     */
     this.previewTimeThrottle = 30;
-    /** @type {string} */
+
+    /**
+     * ♿ **ARIA:** The `aria-label` for the buffered progress bar.
+     *
+     * @type {string}
+     */
     this.progressLabel = 'Amount seekable';
-    /** @type {string} */
+
+    /**
+     * ♿ **ARIA:** Human-readable text alternative for the current scrubber progress. If you pass
+     * in a string containing `{currentTime}` or `{duration}` templates they'll be replaced with
+     * the spoken form such as `20 minutes out of 1 hour, 20 minutes. `
+     *
+     * @type {string}
+     */
     this.progressText = '{currentTime} out of {duration}';
-    /** @type {string} */
+
+    /**
+     * ♿ **ARIA:** The `aria-label` for the slider.
+     *
+     * @type {string}
+     */
     this.sliderLabel = 'Time scrubber';
+
     /** @type {number} */
     this.step = 5;
+
     /** @type {number} */
     this.stepMultiplier = 2;
-    /** @type {number} */
+
+    /**
+     * The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove`
+     * events.
+     *
+     * @type {number}
+     */
     this.throttle = 0;
-    /** @type {number} */
+
+    /**
+     * The amount of milliseconds to throttle user seeking events being dispatched.
+     *
+     * @type {number}
+     */
     this.userSeekingThrottle = 150;
 
     // State
@@ -362,6 +421,9 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    */
   rootRef = createRef();
 
+  /**
+   * The component's root element.
+   */
   get rootElement() {
     return /** @type {HTMLDivElement} */ (this.rootRef.value);
   }
@@ -458,6 +520,9 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    */
   progressRef = createRef();
 
+  /**
+   * Returns the underlying `<progress>` element.
+   */
   get progressElement() {
     return /** @type {HTMLProgressElement} */ (this.progressRef.value);
   }
@@ -517,10 +582,16 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    */
   sliderRef = createRef();
 
+  /**
+   * Returns the underlying `vds-slider` component.
+   */
   get sliderElement() {
     return /** @type {SliderElement} */ (this.sliderRef.value);
   }
 
+  /**
+   * Whether the user is seeking by either hovering over the scrubber or by dragging the thumb.
+   */
   get isInteractive() {
     return this.isPointerInsideScrubber || this.isDraggingThumb;
   }
@@ -684,6 +755,10 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    */
   previewTrackRef = createRef();
 
+  /**
+   * Returns the underlying preview track fill element (`<div>`). This will be `undefined` if
+   * you set the `noPreviewTrack` property to true.
+   */
   get previewTrackElement() {
     return this.previewTrackRef.value;
   }
@@ -723,6 +798,9 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    */
   currentPreviewSlotElement;
 
+  /**
+   * The element passed in to the `preview` slot.
+   */
   get previewSlotElement() {
     return this.currentPreviewSlotElement;
   }
@@ -936,13 +1014,13 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @type {import('./types').PreviewTimeChangeThrottle}
+   * @type {import('../../../utils/timing.types').ThrottledFunction<[time: number, event: Event]> | undefined}
    */
   previewTimeChangeThrottle;
 
   /**
    * @protected
-   * @type {import('./types').MediaSeekingRequestThrottle}
+   * @type {import('../../../utils/timing.types').ThrottledFunction<[time: number, event: Event]> | undefined}
    */
   mediaSeekingRequestThrottle;
 
@@ -976,10 +1054,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').ScrubberElementStorybookArgTypes}
- */
 export const SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
   disabled: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,

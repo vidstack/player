@@ -33,8 +33,6 @@ export const HLS_TYPES = new Set([
   'application/vnd.apple.mpegurl'
 ]);
 
-/** @typedef {import('./types').HlsProvider} HlsProvider */
-
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element. This provider
  * also introduces support for the [HTTP Live Streaming protocol](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
@@ -45,8 +43,6 @@ export const HLS_TYPES = new Set([
  * ```bash
  * $: npm install hls.js@^0.14.0
  * ```
- *
- * @implements {HlsProvider}
  *
  * @tagname vds-hls
  *
@@ -88,7 +84,11 @@ export class HlsElement extends VideoElement {
   constructor() {
     super();
 
-    /** @type {Hls.Config | undefined} */
+    /**
+     * The `hls.js` configuration object.
+     *
+     * @type {Hls.Config | undefined}
+     */
     this.hlsConfig = undefined;
   }
 
@@ -119,6 +119,11 @@ export class HlsElement extends VideoElement {
     return this._hlsEngine;
   }
 
+  /**
+   * Whether the `hls.js` instance has mounted the `HtmlMediaElement`.
+   *
+   * @default false
+   */
   get isHlsEngineAttached() {
     return this._isHlsEngineAttached;
   }
@@ -164,10 +169,19 @@ export class HlsElement extends VideoElement {
     return super.canPlayType(type);
   }
 
+  /**
+   * Whether the current src is using HLS.
+   *
+   * @default false
+   */
   get isHlsStream() {
     return HLS_EXTENSIONS.test(this.src);
   }
 
+  /**
+   * Whether the browser natively supports HLS, mostly only true in Safari. Only call this method
+   * after the provider has connected to the DOM (wait for `ConnectEvent`).
+   */
   get hasNativeHlsSupport() {
     /**
      * We need to call this directly on `HTMLMediaElement`, calling `this.shouldPlayType(...)`
@@ -178,6 +192,13 @@ export class HlsElement extends VideoElement {
     return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
   }
 
+  /**
+   * Whether native HLS support is available and whether it should be used. Generally defaults
+   * to `false` as long as `window.MediaSource` is defined to enforce consistency by
+   * using `hls.js` where ever possible.
+   *
+   * @default false
+   */
   get shouldUseNativeHlsSupport() {
     if (Hls.isSupported()) return false;
     return this.hasNativeHlsSupport;
@@ -345,6 +366,8 @@ export class HlsElement extends VideoElement {
   listenToHlsEngine() {
     if (isUndefined(this.hlsEngine)) return;
 
+    // TODO: Bind all events.
+
     this.hlsEngine.on(
       Hls.Events.LEVEL_LOADED,
       this.handleHlsLevelLoaded.bind(this)
@@ -378,7 +401,7 @@ export class HlsElement extends VideoElement {
 
     this.dispatchEvent(
       new ErrorEvent({
-        originalEvent: new VdsCustomEvent(eventType, { detail: data })
+        originalEvent: new VdsCustomEvent({ detail: data }, eventType)
       })
     );
   }
@@ -433,7 +456,7 @@ export class HlsElement extends VideoElement {
   handleHlsMediaReady(eventType, data) {
     const { live, totalduration: duration } = data.details;
 
-    const event = new VdsCustomEvent(eventType, { detail: data });
+    const event = new VdsCustomEvent({ detail: data }, eventType);
 
     const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
     if (this.context.mediaType !== mediaType) {
@@ -454,10 +477,6 @@ export class HlsElement extends VideoElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').HlsElementStorybookArgTypes}
- */
 export const HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
   hlsConfig: { control: StorybookControlType.Object },

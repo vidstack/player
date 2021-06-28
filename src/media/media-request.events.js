@@ -1,102 +1,132 @@
 import { VdsCustomEvent } from '../foundation/events/index.js';
 
-export class MediaRequestEvent extends VdsCustomEvent {}
+/**
+ * @typedef {{
+ *  [MuteRequestEvent.TYPE]: MuteRequestEvent;
+ *  [UnmuteRequestEvent.TYPE]: UnmuteRequestEvent;
+ *  [EnterFullscreenRequestEvent.TYPE]: EnterFullscreenRequestEvent;
+ *  [ExitFullscreenRequestEvent.TYPE]: ExitFullscreenRequestEvent;
+ *  [PlayRequestEvent.TYPE]: PlayRequestEvent;
+ *  [PauseRequestEvent.TYPE]: PauseRequestEvent;
+ *  [SeekRequestEvent.TYPE]: SeekRequestEvent;
+ *  [SeekingRequestEvent.TYPE]: SeekingRequestEvent;
+ *  [VolumeChangeRequestEvent.TYPE]: VolumeChangeRequestEvent;
+ * }} MediaRequestEvents
+ */
 
+/**
+ * @template DetailType
+ * @extends {VdsCustomEvent<DetailType>}
+ */
+export class MediaRequestEvent extends VdsCustomEvent {
+  static DEFAULT_BUBBLES = true;
+  static DEFAULT_COMPOSED = true;
+}
+
+/**
+ * Fired when requesting the media to be muted.
+ *
+ * @bubbles
+ * @composed
+ * @extends {MediaRequestEvent<void>}
+ */
 export class MuteRequestEvent extends MediaRequestEvent {
+  /** @readonly */
   static TYPE = 'vds-mute-request';
-  constructor(eventInit) {
-    super(MuteRequestEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
 }
 
+/**
+ * Fired when requesting the media to be unmuted.
+ *
+ * @bubbles
+ * @composed
+ * @extends {MediaRequestEvent<void>}
+ */
 export class UnmuteRequestEvent extends MediaRequestEvent {
+  /** @readonly */
   static TYPE = 'vds-unmute-request';
-  constructor(eventInit) {
-    super(UnmuteRequestEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
 }
 
+/**
+ * Fired when requesting media to enter fullscreen.
+ *
+ * @bubbles
+ * @composed
+ * @extends {MediaRequestEvent<void>}
+ */
 export class EnterFullscreenRequestEvent extends MediaRequestEvent {
+  /** @readonly */
   static TYPE = 'vds-enter-fullscreen-request';
-  constructor(eventInit) {
-    super(EnterFullscreenRequestEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
 }
 
+/**
+ * Fired when requesting media to exit fullscreen.
+ *
+ * @bubbles
+ * @composed
+ * @extends {MediaRequestEvent<void>}
+ */
 export class ExitFullscreenRequestEvent extends MediaRequestEvent {
+  /** @readonly */
   static TYPE = 'vds-exit-fullscreen-request';
-  constructor(eventInit) {
-    super(ExitFullscreenRequestEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
 }
 
+/**
+ * Fired when requesting media playback to begin/resume.
+ *
+ * @bubbles
+ * @composed
+ * @extends {MediaRequestEvent<void>}
+ */
 export class PlayRequestEvent extends MediaRequestEvent {
+  /** @readonly */
   static TYPE = 'vds-play-request';
-  constructor(eventInit) {
-    super(PlayRequestEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
 }
 
+/**
+ * Fired when requesting media playback to temporarily stop.
+ *
+ * @bubbles
+ * @composed
+ * @extends {MediaRequestEvent<void>}
+ */
 export class PauseRequestEvent extends MediaRequestEvent {
+  /** @readonly */
   static TYPE = 'vds-pause-request';
-  constructor(eventInit) {
-    super(PauseRequestEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
 }
 
+/**
+ * Fired when requesting a time change. In other words, moving the playhead to a new position.
+ *
+ * @bubbles
+ * @composed
+ * @extends {MediaRequestEvent<number>}
+ */
 export class SeekRequestEvent extends MediaRequestEvent {
+  /** @readonly */
   static TYPE = 'vds-seek-request';
-  constructor(eventInit) {
-    super(SeekRequestEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
 }
 
+/**
+ * Fired when seeking/scrubbing to a new playback position.
+ *
+ * @bubbles
+ * @composed
+ * @extends {MediaRequestEvent<number>}
+ */
 export class SeekingRequestEvent extends MediaRequestEvent {
+  /** @readonly */
   static TYPE = 'vds-seeking-request';
-  constructor(eventInit) {
-    super(SeekingRequestEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
 }
 
+/**
+ * Fired when requesting the media volume to be set to a new level.
+ *
+ * @bubbles
+ * @composed
+ * @extends {MediaRequestEvent<number>}
+ */
 export class VolumeChangeRequestEvent extends MediaRequestEvent {
+  /** @readonly */
   static TYPE = 'vds-volume-change-request';
-  constructor(eventInit) {
-    super(VolumeChangeRequestEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      ...eventInit
-    });
-  }
 }

@@ -9,12 +9,8 @@ import { timeElementStyles } from './styles.js';
 
 export const TIME_ELEMENT_TAG_NAME = 'vds-time';
 
-/** @typedef {import('./types').TimeDisplay} TimeDisplay */
-
 /**
  * Formats and displays a length of time given in `seconds`.
- *
- * @implements {TimeDisplay}
  *
  * @tagname vds-time
  *
@@ -56,13 +52,35 @@ export class TimeElement extends VdsElement {
   constructor() {
     super();
 
-    /** @type {string | undefined} */
+    /**
+     * ♿ **ARIA:** The `aria-label` property of the time.
+     *
+     * @type {string | undefined}
+     */
     this.label = undefined;
-    /** @type {number} */
+
+    /**
+     * The length of time in seconds.
+     *
+     * @type {number}
+     */
     this.seconds = 0;
-    /** @type {boolean} */
+
+    /**
+     * Whether the time should always show the hours unit, even if the time is less than
+     * 1 hour.
+     *
+     * @type {boolean}
+     * @example `20:30` -> `0:20:35`
+     */
     this.alwaysShowHours = false;
-    /** @type {boolean} */
+
+    /**
+     * Whether the hours unit should be padded with zeroes to a length of 2.
+     *
+     * @type {boolean}
+     * @example `1:20:03` -> `01:20:03`
+     */
     this.padHours = false;
   }
 
@@ -91,6 +109,11 @@ export class TimeElement extends VdsElement {
    */
   rootRef = createRef();
 
+  /**
+   * The component's root element.
+   *
+   * @default HTMLTimeElement
+   */
   get rootElement() {
     return /** @type {HTMLTimeElement} */ (this.rootRef.value);
   }
@@ -157,10 +180,6 @@ export class TimeElement extends VdsElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').TimeElementStorybookArgTypes}
- */
 export const TIME_ELEMENT_STORYBOOK_ARG_TYPES = {
   alwaysShowHours: {
     control: StorybookControlType.Boolean,

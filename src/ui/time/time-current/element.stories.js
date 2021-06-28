@@ -16,9 +16,6 @@ export default {
   argTypes: TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').TimeCurrentElementStorybookArgs} args
- */
 function Template({
   // Properties
   alwaysShowHours,

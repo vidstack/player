@@ -16,9 +16,6 @@ export default {
   argTypes: MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').MuteButtonElementStorybookArgs} args
- */
 function Template({
   // Properties
   label,

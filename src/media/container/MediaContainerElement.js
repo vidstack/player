@@ -19,12 +19,9 @@ import { mediaContainerElementStyles } from './styles.js';
 
 export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
 
-/** @typedef {import('./types').MediaContainer} IMediaContainer */
-
 /**
  * Simple container for a media provider and the media user interface (UI).
  *
- * @implements {IMediaContainer}
  *
  * @tagname vds-media-container
  *
@@ -164,6 +161,9 @@ export class MediaContainerElement extends VdsElement {
    */
   rootRef = createRef();
 
+  /**
+   * The component's root element.
+   */
   get rootElement() {
     return /** @type {HTMLDivElement} */ (this.rootRef.value);
   }
@@ -304,6 +304,9 @@ export class MediaContainerElement extends VdsElement {
    */
   mediaContainerRef = createRef();
 
+  /**
+   * The media container element.
+   */
   get mediaContainerElement() {
     return /** @type {HTMLDivElement} */ (this.mediaContainerRef.value);
   }
@@ -424,10 +427,6 @@ export class MediaContainerElement extends VdsElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').MediaContainerElementStorybookArgTypes}
- */
 export const MEDIA_CONTAINER_ELEMENT_STORYBOOK_ARG_TYPES = {
   aspectRatio: { control: StorybookControlType.Text },
   onVdsMediaContainerConnect: storybookAction(MediaContainerConnectEvent.TYPE)

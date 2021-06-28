@@ -15,12 +15,9 @@ import {
 
 export const PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
 
-/** @typedef {import('./types').PlayButton} PlayButton */
-
 /**
  * A button for toggling the playback state (play/pause) of the current media.
  *
- * @implements {PlayButton}
  *
  * @tagname vds-play-button
  *
@@ -68,10 +65,16 @@ export class PlayButtonElement extends ToggleButtonElement {
     };
   }
 
+  /**
+   * The `play` slotted element.
+   */
   get playSlotElement() {
     return this.currentNotPressedSlotElement;
   }
 
+  /**
+   * The `pause` slotted element.
+   */
   get pauseSlotElement() {
     return this.currentPressedSlotElement;
   }
@@ -100,10 +103,6 @@ export class PlayButtonElement extends ToggleButtonElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').PlayButtonElementStorybookArgTypes}
- */
 export const PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
   label: { control: StorybookControlType.Text, defaultValue: 'Play' },

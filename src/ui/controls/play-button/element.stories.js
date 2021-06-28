@@ -16,9 +16,6 @@ export default {
   argTypes: PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').PlayButtonElementStorybookArgs} args
- */
 function Template({
   // Properties
   label,

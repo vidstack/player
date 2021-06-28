@@ -17,12 +17,9 @@ import { toggleButtonElementStyles } from './styles.js';
 
 export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
 
-/** @typedef {import('./types').ToggleButton} ToggleButton */
-
 /**
  * The foundation for any toggle button such as a `play-button` or `mute-button`.
  *
- * @implements {ToggleButton}
  *
  * @tagname vds-toggle-button
  *
@@ -61,11 +58,26 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
     super();
 
     // Properties
-    /** @type {string | undefined} */
+    /**
+     * ♿ **ARIA:** The `aria-label` property of the underlying button.
+     *
+     * @required
+     * @type {string | undefined}
+     */
     this.label = undefined;
-    /** @type {boolean} */
+
+    /**
+     * Whether the underlying button should be disabled (not-interactable).
+     *
+     * @type {boolean}
+     */
     this.disabled = false;
-    /** @type {string | undefined} */
+
+    /**
+     * ♿ **ARIA:** Identifies the element (or elements) that describes the underlying button.
+     *
+     * @type {string | undefined}
+     */
     this.describedBy = undefined;
   }
 
@@ -92,6 +104,11 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
    */
   rootRef = createRef();
 
+  /**
+   * The component's root element.
+   *
+   * @type {ButtonElement}
+   */
   get rootElement() {
     return /** @type {ButtonElement} */ (this.rootRef.value);
   }
@@ -162,10 +179,6 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').ToggleButtonElementStorybookArgTypes}
- */
 export const TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   label: { control: StorybookControlType.Text },
   describedBy: { control: StorybookControlType.Text },

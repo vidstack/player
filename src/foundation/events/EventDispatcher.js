@@ -44,8 +44,8 @@ export class EventDispatcher {
    */
   dispatchEvent(typeArg, eventInit) {
     const event = new VdsCustomEvent(
-      /** @type {string} */ (typeArg),
-      eventInit
+      eventInit,
+      /** @type {string} */ (typeArg)
     );
 
     this.eventListeners.get(typeArg)?.forEach((callback) => callback(event));

@@ -9,15 +9,11 @@ import { toggleElementStyles } from './styles.js';
 
 export const TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
 
-/** @typedef {import('./types').Toggle} Toggle */
-
 /**
  * A toggle component to render different state depending on whether it's pressed or not. This
  * component will always render both the `pressed` and the default slots regardless of the current
  * state so you can perform CSS animations. A `hidden` attribute will be applied to the slot
  * that's currently not active.
- *
- * @implements {Toggle}
  *
  * @tagname vds-toggle
  *
@@ -44,7 +40,11 @@ export class ToggleElement extends VdsElement {
     super();
 
     // Properties
-    /** @type {boolean} */
+    /**
+     * Whether the toggle is in the `pressed` state.
+     *
+     * @type {boolean}
+     */
     this.pressed = false;
   }
 
@@ -102,6 +102,11 @@ export class ToggleElement extends VdsElement {
    */
   currentPressedSlotElement;
 
+  /**
+   * The slotted element to display when the toggle is in the `pressed` state.
+   *
+   * @type {HTMLElement | undefined}
+   */
   get pressedSlotElement() {
     return this.currentPressedSlotElement;
   }
@@ -147,6 +152,11 @@ export class ToggleElement extends VdsElement {
    */
   currentNotPressedSlotElement;
 
+  /**
+   * The slotted element to display when the toggle is in the `not-pressed` state.
+   *
+   * @type {HTMLElement | undefined}
+   */
   get notPressedSlotElement() {
     return this.currentNotPressedSlotElement;
   }
@@ -209,10 +219,6 @@ export class ToggleElement extends VdsElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').ToggleElementStorybookArgTypes}
- */
 export const TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES = {
   pressed: { control: StorybookControlType.Boolean, defaultValue: false }
 };

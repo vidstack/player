@@ -17,9 +17,6 @@ export default {
   argTypes: SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').ScrubberElementStorybookArgs} args
- */
 function Template({
   // Properties
   disabled,

@@ -15,13 +15,9 @@ import { timeProgressElementStyles } from './styles.js';
 
 export const TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
 
-/** @typedef {import('./types').TimeProgressDisplay} TimeProgressDisplay */
-
 /**
  * Formats and displays the progression of playback. The output is displayed as
  * `{currentTime}{timeSeparator}{duration}`.
- *
- * @implements {TimeProgressDisplay}
  *
  * @tagname vds-time-progress
  *
@@ -80,10 +76,29 @@ export class TimeProgressElement extends VdsElement {
     super();
 
     // Properties
+    /**
+     * ♿ **ARIA:** The `aria-label` property for the current time.
+     *
+     * @type {string}
+     */
     this.currentTimeLabel = 'Current time';
+
+    /**
+     * A string that is used to separate the current time and duration.
+     *
+     * @type {string}
+     */
     this.timeSeparator = '/';
+
+    /**
+     * ♿ **ARIA:** The `aria-label` property for the duration.
+     *
+     * @type {string}
+     */
     this.durationLabel = 'Duration';
+
     this.alwaysShowHours = false;
+
     this.padHours = false;
   }
 
@@ -112,6 +127,9 @@ export class TimeProgressElement extends VdsElement {
    */
   rootRef = createRef();
 
+  /**
+   * The component's root element.
+   */
   get rootElement() {
     return /** @type {HTMLDivElement} */ (this.rootRef.value);
   }
@@ -134,6 +152,9 @@ export class TimeProgressElement extends VdsElement {
    */
   timeCurrentRef = createRef();
 
+  /**
+   * The underlying `vds-time-current` component.
+   */
   get timeCurrentElement() {
     return /** @type {TimeCurrentElement} */ (this.timeCurrentRef.value);
   }
@@ -182,6 +203,9 @@ export class TimeProgressElement extends VdsElement {
    */
   timeDurationRef = createRef();
 
+  /**
+   * The underlying `vds-time-duration` component.
+   */
   get timeDurationElement() {
     return /** @type {TimeDurationElement} */ (this.timeDurationRef.value);
   }
@@ -230,6 +254,9 @@ export class TimeProgressElement extends VdsElement {
    */
   separatorRef = createRef();
 
+  /**
+   * The separator element.
+   */
   get separatorElement() {
     return /** @type {HTMLSpanElement} */ (this.separatorRef.value);
   }
@@ -259,10 +286,6 @@ export class TimeProgressElement extends VdsElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').TimeProgressElementStorybookArgTypes}
- */
 export const TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES = {
   alwaysShowHours: {
     control: StorybookControlType.Boolean,

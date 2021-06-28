@@ -14,9 +14,6 @@ export default {
   argTypes: TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').ToggleButtonElementStorybookArgs} args
- */
 function Template({
   // Properties
   label,

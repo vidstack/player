@@ -14,9 +14,6 @@ export default {
   argTypes: BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').ButtonElementStorybookArgs} args
- */
 function Template({
   // Properties
   controls,

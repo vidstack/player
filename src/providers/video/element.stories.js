@@ -12,9 +12,6 @@ export default {
   argTypes: VIDEO_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types.js').VideoElementStorybookArgs} args
- */
 function Template({
   // Properties
   autoplay,

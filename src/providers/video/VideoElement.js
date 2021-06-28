@@ -23,12 +23,8 @@ export const AUDIO_EXTENSIONS =
 
 export const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v)($|\?)/i;
 
-/** @typedef {import('./types').VideoProvider} VideoProvider */
-
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
- *
- * @implements {VideoProvider}
  *
  * @tagname vds-video
  *
@@ -66,9 +62,21 @@ export class VideoElement extends Html5MediaElement {
   constructor() {
     super();
 
-    /** @type {boolean | undefined} */
+    /**
+     * 🧑‍🔬 **EXPERIMENTAL:** Whether the browser should automatically toggle picture-in-picture mode as
+     * the user switches back and forth between this document and another document or application.
+     *
+     * @type {boolean | undefined}
+     */
     this.autoPiP;
-    /** @type {boolean | undefined} */
+
+    /**
+     * 🧑‍🔬 **EXPERIMENTAL:** Prevents the browser from suggesting a picture-in-picture context menu or
+     * to request picture-in-picture automatically in some cases.
+     *
+     * @type {boolean | undefined}
+     * @link https://w3c.github.io/picture-in-picture/#disable-pip
+     */
     this.disablePiP;
   }
 
@@ -85,7 +93,13 @@ export class VideoElement extends Html5MediaElement {
     };
   }
 
-  /** @type {string} */
+  /**
+   * A URL for an image to be shown while the video is downloading. If this attribute isn't
+   * specified, nothing is displayed until the first frame is available, then the first frame is
+   * shown as the poster frame.
+   *
+   * @type {string}
+   */
   get poster() {
     return this.context.currentPoster;
   }
@@ -272,10 +286,6 @@ export class VideoElement extends Html5MediaElement {
   );
 }
 
-/**
- * @readonly
- * @type {import('./types').VideoElementStorybookArgTypes}
- */
 export const VIDEO_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
   autoPiP: { control: StorybookControlType.Boolean },

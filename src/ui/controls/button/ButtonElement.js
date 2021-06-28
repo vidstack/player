@@ -12,13 +12,11 @@ import { buttonElementStyles } from './styles.js';
 
 export const BUTTON_ELEMENT_TAG_NAME = 'vds-button';
 
-/** @typedef {import('./types').Button} Button */
+/** @typedef {'button' | 'submit' | 'reset' | 'menu'} ButtonType */
 
 /**
  * Base control that is basically a naked (not styled) button that helps manage ARIA
  * attributes and normalizes any web-component or cross-browser related issues.
- *
- * @implements {Button}
  *
  * @tagname vds-button
  *
@@ -62,23 +60,72 @@ export class ButtonElement extends WithFocus(VdsElement) {
     super();
 
     // Properties
-    /** @type {string | undefined} */
+    /**
+     * ♿ **ARIA:** The `aria-label` property of the button.
+     *
+     * @type {string | undefined}
+     */
     this.label = undefined;
-    /** @type {string | undefined} */
+
+    /**
+     * ♿ **ARIA:** Identifies the element (or elements) whose contents or presence are controlled by
+     * the current button. See related `aria-owns`.
+     *
+     * @type {string | undefined}
+     */
     this.controls = undefined;
-    /** @type {boolean | undefined} */
+
+    /**
+     * Indicates the availability and type of interactive popup element, such as menu or dialog,
+     * that can be triggered by the button.
+     *
+     * @type {boolean | undefined}
+     */
     this.hasPopup = undefined;
-    /** @type {boolean} */
+
+    /**
+     * Whether the button should be hidden.
+     *
+     * @type {boolean}
+     */
     this.hidden = false;
-    /** @type {boolean} */
+
+    /**
+     * Whether the button should be disabled (not-interactable).
+     *
+     * @type {boolean}
+     */
     this.disabled = false;
-    /** @type {import('./types').ButtonType} */
+
+    /**
+     * Sets the default behaviour of the button.
+     *
+     * @type {ButtonType}
+     */
     this.type = 'button';
-    /** @type {boolean | undefined} */
+
+    /**
+     * ♿ **ARIA:** Indicates whether the button, or another grouping element it controls, is
+     * currently expanded or collapsed.
+     *
+     * @type {boolean | undefined}
+     */
     this.expanded = undefined;
-    /** @type {boolean | undefined} */
+
+    /**
+     * ♿ **ARIA:** Indicates the current "pressed" state of toggle buttons. See related `aria-checked`
+     * and `aria-selected`.
+     *
+     * @type {boolean | undefined}
+     */
     this.pressed = undefined;
-    /** @type {string | undefined} */
+
+    /**
+     * ♿ **ARIA:** Identifies the element (or elements) that describes the button. See related
+     * `aria-labelledby`.
+     *
+     * @type {string | undefined}
+     */
     this.describedBy = undefined;
   }
 
@@ -120,7 +167,11 @@ export class ButtonElement extends WithFocus(VdsElement) {
    */
   rootRef = createRef();
 
-  /** @type {HTMLButtonElement} */
+  /**
+   * The component's root element.
+   *
+   * @type {HTMLButtonElement}
+   */
   get rootElement() {
     return /** @type {HTMLButtonElement} */ (this.rootRef.value);
   }
@@ -264,10 +315,6 @@ export class ButtonElement extends WithFocus(VdsElement) {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').ButtonElementStorybookArgTypes}
- */
 export const BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   controls: { control: StorybookControlType.Text },
   describedBy: { control: StorybookControlType.Text },

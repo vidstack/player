@@ -14,9 +14,6 @@ export default {
   argTypes: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').SliderElementStorybookArgs} args
- */
 function Template({
   // Properties
   label,

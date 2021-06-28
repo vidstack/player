@@ -16,8 +16,6 @@ import { bufferingIndicatorElementStyles } from './styles.js';
 
 export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
 
-/** @typedef {import('./types').BufferingIndicator} BufferingIndicator */
-
 /**
  * Display an indicator when either the provider/media is booting or media playback has
  * stopped because of a lack of temporary data. This component will always render the default
@@ -25,7 +23,6 @@ export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
  *
  * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `hidden` attribute.
  *
- * @implements {BufferingIndicator}
  *
  * @tagname vds-buffering-indicator
  *
@@ -56,9 +53,22 @@ export class BufferingIndicatorElement extends VdsElement {
     super();
 
     // Properties
-    /** @type {number} */
+    /**
+     * Delays the showing of the buffering indicator in the hopes that it resolves itself within
+     * that delay. This can be helpful in avoiding unnecessary or fast flashing indicators that
+     * may stress the user out. The delay number is in milliseconds.
+     *
+     * @type {number}
+     * @example `300` => 300 milliseconds
+     */
     this.delay = 0;
-    /** @type {boolean} */
+
+    /**
+     * Whether the indicator should be shown while the provider/media is booting, in other words
+     * before it's ready for playback (`canPlay === false`).
+     *
+     * @type {boolean}
+     */
     this.showWhileBooting = false;
 
     // Context
@@ -213,10 +223,6 @@ export class BufferingIndicatorElement extends VdsElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').BufferingIndicatorElementStorybookArgTypes}
- */
 export const BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
   delay: { control: StorybookControlType.Number, defaultValue: 0 },
   showWhileBooting: {

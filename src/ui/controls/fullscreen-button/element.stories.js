@@ -16,9 +16,6 @@ export default {
   argTypes: FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').FullscreenButtonElementStorybookArgs} args
- */
 function Template({
   // Properties
   label,

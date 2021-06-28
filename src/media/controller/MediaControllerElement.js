@@ -360,10 +360,6 @@ export class MediaControllerElement extends VdsElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').MediaControllerElementStorybookArgTypes}
- */
 export const MEDIA_CONTROLLER_ELEMENT_STORYBOOK_ARG_TYPES = {
   onVdsEnterFullscreenRequest: storybookAction(
     EnterFullscreenRequestEvent.TYPE

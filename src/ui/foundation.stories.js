@@ -18,13 +18,6 @@ export default {
   }
 };
 
-/**
- * @typedef {import('../providers/video').VideoElementStorybookArgs & import('../media').MediaContainerElementStorybookArgs & import('../media').MediaControllerElementStorybookArgs} FoundationStorybookArgs
- */
-
-/**
- * @param {FoundationStorybookArgs} args
- */
 function Template({
   // Media Provider Properties
   width,

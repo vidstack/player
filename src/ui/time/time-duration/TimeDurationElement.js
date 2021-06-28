@@ -55,10 +55,6 @@ export class TimeDurationElement extends TimeElement {
   }
 }
 
-/**
- * @readonly
- * @type {import('./types').TimeDurationElementStorybookArgTypes}
- */
 export const TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...TIME_ELEMENT_STORYBOOK_ARG_TYPES,
   // @ts-ignore
