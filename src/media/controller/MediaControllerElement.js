@@ -224,9 +224,6 @@ export class MediaControllerElement extends VdsElement {
    * @returns {void}
    */
   handleMediaProviderConnect(event) {
-    // Ignore re-dispatched events.
-    if (isNil(event.detail?.provider)) return;
-
     this.handleMediaProviderDisconnect();
 
     const { provider, onDisconnect } = event.detail;

@@ -1,9 +1,8 @@
 import { VdsCustomEvent } from '../../events/index.js';
-import { ManagedController } from './ManagedController.js';
 
 /**
  * @typedef {{
- *  controller: ManagedController;
+ *  controller: any;
  *  onDisconnect: (callback: () => void) => void;
  * }} ManagedControllerConnectEventDetail
  */

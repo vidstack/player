@@ -34,17 +34,17 @@ export class ControllerManager {
    * @param {ControllerManagerHost} host
    */
   constructor(host) {
-    host.addController({
-      hostConnected: this.handleHostConnected.bind(this),
-      hostDisconnected: this.handleHostDisconnected.bind(this)
-    });
-
     /**
      * @protected
      * @readonly
      * @type {ControllerManagerHost}
      */
     this.host = host;
+
+    host.addController({
+      hostConnected: this.handleHostConnected.bind(this),
+      hostDisconnected: this.handleHostDisconnected.bind(this)
+    });
   }
 
   /** @protected */

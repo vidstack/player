@@ -1,4 +1,4 @@
-import { ManagedController } from '../../controller/index.js';
+import { ManagedController } from '../../controller/manager/ManagedController.js';
 import { PluginConnectEvent } from './events.js';
 
 /**

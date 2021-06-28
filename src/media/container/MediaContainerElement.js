@@ -148,7 +148,7 @@ export class MediaContainerElement extends VdsElement {
    */
   mediaPlugin = new MediaPlugin(this, {
     bridgedAttributes: /** @type {any} */ (this.constructor).observedAttributes,
-    bridgedProperties: Array.from(getAllObjectPropertyNames(this, VdsElement))
+    bridgedProperties: Array.from(getAllObjectPropertyNames(this))
   });
 
   // -------------------------------------------------------------------------------------------

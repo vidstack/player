@@ -1,6 +1,6 @@
 import { bridgeElements } from '../../../utils/dom.js';
 import { getAllObjectPropertyNames } from '../../../utils/object.js';
-import { ControllerManager } from '../../controller/index.js';
+import { ControllerManager } from '../../controller/manager/ControllerManager.js';
 import { PluginConnectEvent } from './events.js';
 import { Plugin } from './Plugin.js';
 

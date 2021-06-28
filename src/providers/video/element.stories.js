@@ -1,3 +1,5 @@
+import './define.js';
+
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
