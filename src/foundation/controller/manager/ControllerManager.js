@@ -39,7 +39,10 @@ export class ControllerManager {
    * @param {ControllerManagerHost} host
    */
   constructor(host) {
-    host.addController(this);
+    host.addController({
+      hostConnected: this.handleHostConnected.bind(this),
+      hostDisconnected: this.handleHostDisconnected.bind(this)
+    });
 
     /**
      * @protected
@@ -49,7 +52,8 @@ export class ControllerManager {
     this.host = host;
   }
 
-  hostConnected() {
+  /** @protected */
+  handleHostConnected() {
     this.disconnectDisposal.add(
       listen(
         this.host,
@@ -59,7 +63,8 @@ export class ControllerManager {
     );
   }
 
-  hostDisconnected() {
+  /** @protected */
+  handleHostDisconnected() {
     this.disconnectDisposal.empty();
     this.removeAllManagedControllers();
   }

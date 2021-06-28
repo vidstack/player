@@ -27,7 +27,10 @@ export class ManagedController {
    * @param {HostElement} host
    */
   constructor(host) {
-    host.addController(this);
+    host.addController({
+      hostConnected: this.handleHostConnected.bind(this),
+      hostDisconnected: this.handleHostDisconnected.bind(this)
+    });
 
     /**
      * @readonly
@@ -36,11 +39,13 @@ export class ManagedController {
     this.host = host;
   }
 
-  hostConnected() {
+  /** @protected */
+  handleHostConnected() {
     this.connectToManager();
   }
 
-  hostDisconnected() {
+  /** @protected */
+  handleHostDisconnected() {
     this.disconnectDisposal.empty();
   }
 
