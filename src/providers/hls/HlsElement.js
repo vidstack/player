@@ -87,7 +87,7 @@ export class HlsElement extends VideoElement {
     /**
      * The `hls.js` configuration object.
      *
-     * @type {Hls.Config | undefined}
+     * @type {Partial<Hls.Config> | undefined}
      */
     this.hlsConfig = undefined;
   }
