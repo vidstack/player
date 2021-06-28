@@ -1,5 +1,12 @@
 /**
  * @template DetailType
+ * @typedef {{
+ *   readonly originalEvent?: Event;
+ * } & CustomEventInit<DetailType>} VdsEventInit
+ */
+
+/**
+ * @template DetailType
  * @extends CustomEvent<DetailType>
  */
 export class VdsCustomEvent extends CustomEvent {
@@ -77,7 +84,7 @@ export class VdsCustomEvent extends CustomEvent {
   }
 
   /**
-   * @param {import('./types').VdsEventInit<DetailType>} [eventInit]
+   * @param {VdsEventInit<DetailType>} [eventInit]
    * @param {string} [type]
    */
   constructor(eventInit, type = '') {

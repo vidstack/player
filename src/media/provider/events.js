@@ -1,5 +1,6 @@
 import { VdsCustomEvent } from '../../foundation/events/index.js';
 import { MediaProviderElement } from './MediaProviderElement.js';
+
 /**
  * @typedef {{
  *  [MediaProviderConnectEvent.TYPE]: MediaProviderConnectEvent;

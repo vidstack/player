@@ -1,14 +1,23 @@
 import { canOrientScreen, IS_CLIENT } from '../../utils/support.js';
-import { DisposalBin, EventDispatcher, listen } from '../events/index.js';
+import { DisposalBin, listen } from '../events/index.js';
 import {
   ScreenOrientation,
   ScreenOrientationLock
 } from './ScreenOrientation.js';
 
 /**
+ * @typedef {import('lit').ReactiveElement} ScreenOrientationHost
+ */
+
+/**
+ * @typedef {{
+ *  handleOrientationChange?(): void;
+ *  handleOrientationLockChange?(): void;
+ * }} ScreenOrientationControllerDelegate
+ */
+
+/**
  * Contains the logic for managing the window's screen orientation.
- *
- * @extends EventDispatcher<import('./types').ScreenOrientationEvents>
  *
  * @example
  * ```js
@@ -19,12 +28,12 @@ import {
  * }
  * ```
  */
-export class ScreenOrientationController extends EventDispatcher {
+export class ScreenOrientationController {
   /**
    * @protected
    * @readonly
    */
-  disposal = new DisposalBin();
+  disconnectDisposal = new DisposalBin();
 
   /**
    * @protected
@@ -41,29 +50,67 @@ export class ScreenOrientationController extends EventDispatcher {
   /**
    * @protected
    * @readonly
-   * @type {import('.').ScreenOrientationHost}
+   * @type {Set<ScreenOrientationControllerDelegate>}
    */
-  host;
+  delegates = new Set();
 
   /**
-   * @param {import('.').ScreenOrientationHost} host
+   * @param {ScreenOrientationHost} host
+   * @param {ScreenOrientationControllerDelegate} [delegate]
    */
-  constructor(host) {
-    super();
-
+  constructor(host, delegate = {}) {
+    /**
+     * @protected
+     * @readonly
+     * @type {ScreenOrientationHost}
+     */
     this.host = host;
+
+    /**
+     * @protected
+     * @readonly
+     * @type {ScreenOrientationControllerDelegate}
+     */
+    this.delegates.add(delegate);
 
     this.updateScreenOrientation();
 
     host.addController({
-      hostConnected: () => {
-        this.updateScreenOrientation();
-        this.addScreenOrientationEventListeners();
-      },
-      hostDisconnected: () => {
-        this.destroy();
-      }
+      hostConnected: this.handleHostConnected.bind(this),
+      hostDisconnected: this.handleHostDisconnected.bind(this)
     });
+  }
+
+  /**
+   * @protected
+   * @returns {Promise<void>}
+   */
+  async handleHostConnected() {
+    this.updateScreenOrientation();
+    this.addScreenOrientationEventListeners();
+  }
+
+  /**
+   * Dispose of any event listeners and unlock screen orientation (if locked).
+   *
+   * @protected
+   * @returns {Promise<void>}
+   */
+  async handleHostDisconnected() {
+    if (this.canOrient && this.isScreenOrientationLocked) await this.unlock();
+    this.delegates.clear();
+    this.disconnectDisposal.empty();
+  }
+
+  /**
+   * @param {ScreenOrientationControllerDelegate} delegate
+   * @returns {(() => void)} Cleanup function to remove delegate.
+   */
+  addDelegate(delegate) {
+    this.delegates.add(delegate);
+    return () => {
+      this.delegates.delete(delegate);
+    };
   }
 
   /**
@@ -113,8 +160,8 @@ export class ScreenOrientationController extends EventDispatcher {
     );
 
     this.isScreenOrientationLocked = true;
-    this.dispatchEvent('orientation-lock-change', {
-      detail: true
+    this.delegates.forEach((delegate) => {
+      delegate.handleOrientationLockChange?.();
     });
   }
 
@@ -130,21 +177,9 @@ export class ScreenOrientationController extends EventDispatcher {
     this.throwIfScreenOrientationUnavailable();
     await screen.orientation.unlock();
     this.isScreenOrientationLocked = false;
-    this.dispatchEvent('orientation-lock-change', {
-      detail: false
+    this.delegates.forEach((delegate) => {
+      delegate.handleOrientationLockChange?.();
     });
-  }
-
-  /**
-   * Dispose of any event listeners and unlock screen orientation (if locked).
-   *
-   * @protected
-   * @returns {Promise<void>}
-   */
-  async destroy() {
-    if (this.canOrient && this.isScreenOrientationLocked) await this.unlock();
-    this.disposal.empty();
-    super.destroy();
   }
 
   /**
@@ -153,7 +188,7 @@ export class ScreenOrientationController extends EventDispatcher {
    */
   addScreenOrientationEventListeners() {
     if (!this.canOrient) return;
-    this.disposal.add(this.addScreenOrientationChangeEventListener());
+    this.disconnectDisposal.add(this.addScreenOrientationChangeEventListener());
   }
 
   /**
@@ -174,8 +209,8 @@ export class ScreenOrientationController extends EventDispatcher {
    */
   handleOrientationChange() {
     this.screenOrientation = window.screen.orientation.type;
-    this.dispatchEvent('orientation-change', {
-      detail: this.screenOrientation
+    this.delegates.forEach((delegate) => {
+      delegate.handleOrientationChange?.();
     });
   }
 

@@ -1,6 +1,5 @@
 import {
   DisposalBin,
-  EventDispatcher,
   listen,
   redispatchEvent
 } from '../../../foundation/events/index.js';
@@ -8,11 +7,21 @@ import { IS_IOS } from '../../../utils/support.js';
 import { isFunction, isNil, noop } from '../../../utils/unit.js';
 
 /**
+ * @typedef {{
+ *  readonly videoElement: HTMLVideoElement | undefined
+ * } & import('lit').ReactiveElement} VideoPresentationControllerHost
+ */
+
+/**
+ * @typedef {{
+ *  handlePresentationModeChange?(controller: VideoPresentationController);
+ * }} VideoPresentationControllerDelegate
+ */
+
+/**
  * Contains the logic for handling presentation modes on Safari. This class is used by
  * the `VideoFullscreenController` as a fallback when the native Fullscreen API is not
  * available (ie: iOS Safari).
- *
- * @extends EventDispatcher<import('./types').VideoPresentationControllerEvents>
  *
  * @example
  * ```ts
@@ -27,37 +36,65 @@ import { isFunction, isNil, noop } from '../../../utils/unit.js';
  * }
  * ```
  */
-export class VideoPresentationController extends EventDispatcher {
+export class VideoPresentationController {
   /**
    * @protected
    * @readonly
    */
-  disposal = new DisposalBin();
+  disconnectDisposal = new DisposalBin();
 
   /**
-   * @param {import('./types').VideoPresentationControllerHost} host
+   * @protected
+   * @readonly
+   * @type {Set<VideoPresentationControllerDelegate>}
    */
-  constructor(host) {
-    super();
+  delegates = new Set();
 
+  /**
+   * @param {VideoPresentationControllerHost} host
+   * @param {VideoPresentationControllerDelegate} [delegate]
+   */
+  constructor(host, delegate = {}) {
     /**
-     * @type {import('./types').VideoPresentationControllerHost}
+     * @type {VideoPresentationControllerHost}
      * @protected
      * @readonly
      */
     this.host = host;
 
+    this.delegates.add(delegate);
+
     const firstUpdated = /** @type {any} */ (host).firstUpdated;
     /** @type {any} */ (host).firstUpdated = (changedProperties) => {
       firstUpdated?.call(host, changedProperties);
-      this.disposal.add(this.addPresentationModeChangeEventListener());
+      this.disconnectDisposal.add(
+        this.addPresentationModeChangeEventListener()
+      );
     };
 
     host.addController({
-      hostDisconnected: async () => {
-        await this.destroy();
-      }
+      hostDisconnected: this.handleHostDisconnected.bind(this)
     });
+  }
+
+  /**
+   * @protected
+   * @returns {void}
+   */
+  handleHostDisconnected() {
+    this.setPresentationMode('inline');
+    this.disconnectDisposal.empty();
+  }
+
+  /**
+   * @param {VideoPresentationControllerDelegate} delegate
+   * @returns {(() => void)} Cleanup function to remove delegate.
+   */
+  addDelegate(delegate) {
+    this.delegates.add(delegate);
+    return () => {
+      this.delegates.delete(delegate);
+    };
   }
 
   /**
@@ -122,16 +159,6 @@ export class VideoPresentationController extends EventDispatcher {
 
   /**
    * @protected
-   * @returns {void}
-   */
-  destroy() {
-    this.setPresentationMode('inline');
-    this.disposal.empty();
-    super.destroy();
-  }
-
-  /**
-   * @protected
    * @returns {import('../../../foundation/types/utils').Unsubscribe}
    */
   addPresentationModeChangeEventListener() {
@@ -150,9 +177,8 @@ export class VideoPresentationController extends EventDispatcher {
    */
   handlePresentationModeChange(event) {
     redispatchEvent(this.host, event);
-    this.dispatchEvent('presentation-mode-change', {
-      detail: this.presentationMode,
-      originalEvent: event
+    this.delegates.forEach((delegate) => {
+      delegate.handlePresentationModeChange?.(this);
     });
   }
 }

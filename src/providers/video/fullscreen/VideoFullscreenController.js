@@ -1,4 +1,3 @@
-import { VdsCustomEvent } from '../../../foundation/events/index.js';
 import { FullscreenController } from '../../../foundation/fullscreen/index.js';
 import { ScreenOrientationController } from '../../../foundation/screen-orientation/index.js';
 import { noop } from '../../../utils/unit.js';
@@ -48,9 +47,15 @@ export class VideoFullscreenController extends FullscreenController {
    * @param {import('../../../foundation/fullscreen').FullscreenHost} host
    * @param {ScreenOrientationController} screenOrientationController
    * @param {VideoPresentationController} presentationController
+   * @param {import('../../../foundation/fullscreen').FullscreenControllerDelegate} [delegate]
    */
-  constructor(host, screenOrientationController, presentationController) {
-    super(host, screenOrientationController);
+  constructor(
+    host,
+    screenOrientationController,
+    presentationController,
+    delegate = {}
+  ) {
+    super(host, screenOrientationController, delegate);
 
     /**
      * @protected
@@ -130,10 +135,10 @@ export class VideoFullscreenController extends FullscreenController {
     }
 
     if (this.isSupportedOnSafari) {
-      return this.presentationController.addEventListener(
-        'presentation-mode-change',
-        this.handlePresentationModeChange.bind(this)
-      );
+      return this.presentationController.addDelegate({
+        handlePresentationModeChange:
+          this.handlePresentationModeChange.bind(this)
+      });
     }
 
     return noop;
@@ -141,11 +146,11 @@ export class VideoFullscreenController extends FullscreenController {
 
   /**
    * @protected
-   * @param {VdsCustomEvent<import('../../../foundation/types/media').WebKitPresentationMode>} event
+   * @param {VideoPresentationController} controller
    * @returns {void}
    */
-  handlePresentationModeChange(event) {
-    this.handleFullscreenChange(event);
+  handlePresentationModeChange(controller) {
+    this.handleFullscreenChange();
   }
 
   /**

@@ -1,17 +1,29 @@
 import fscreen from 'fscreen';
 
 import { isUndefined, noop } from '../../utils/unit.js';
-import { DisposalBin, EventDispatcher, listen } from '../events/index.js';
+import { DisposalBin, listen } from '../events/index.js';
 import {
   ScreenOrientationController,
   ScreenOrientationLock
 } from '../screen-orientation/index.js';
 
 /**
+ * @typedef {{
+ *  requestFullscreen(): Promise<void>;
+ *  exitFullscreen(): Promise<void>;
+ * } & import('lit').ReactiveElement} FullscreenHost
+ */
+
+/**
+ * @typedef {{
+ *  handleFullscreenChange?(controller: FullscreenController, event?: Event): void;
+ *  handleFullscreenError?(controller: FullscreenController, event?: Event): void;
+ * }} FullscreenControllerDelegate
+ */
+
+/**
  * Unfortunately fullscreen isn't straight forward due to cross-browser inconsistencies. This
  * class abstract the logic for handling fullscreen across browsers.
- *
- * @extends EventDispatcher<import('./types').FullscreenEvents>
  *
  * @example
  * ```js
@@ -37,9 +49,9 @@ import {
  * }
  * ```
  */
-export class FullscreenController extends EventDispatcher {
+export class FullscreenController {
   /** @protected @readonly */
-  disposal = new DisposalBin();
+  disconnectDisposal = new DisposalBin();
 
   /**
    * Used to avoid an inifinite loop by indicating when the native `requestFullscreen()` method
@@ -62,16 +74,22 @@ export class FullscreenController extends EventDispatcher {
   screenOrientationLock;
 
   /**
-   * @param {import('./types').FullscreenHost} host
-   * @param {ScreenOrientationController} screenOrientationController
+   * @protected
+   * @readonly
+   * @type {Set<FullscreenControllerDelegate>}
    */
-  constructor(host, screenOrientationController) {
-    super();
+  delegates = new Set();
 
+  /**
+   * @param {FullscreenHost} host
+   * @param {ScreenOrientationController} screenOrientationController
+   * @param {FullscreenControllerDelegate} [delegate]
+   */
+  constructor(host, screenOrientationController, delegate = {}) {
     /**
      * @protected
      * @readonly
-     * @type {import('.').FullscreenHost}
+     * @type {FullscreenHost}
      */
     this.host = host;
 
@@ -82,11 +100,39 @@ export class FullscreenController extends EventDispatcher {
      */
     this.screenOrientationController = screenOrientationController;
 
+    /**
+     * @protected
+     * @readonly
+     * @type {FullscreenControllerDelegate}
+     */
+    this.delegates.add(delegate);
+
     host.addController({
-      hostDisconnected: () => {
-        this.destroy();
-      }
+      hostDisconnected: this.handleHostDisconnected.bind(this)
     });
+  }
+
+  /**
+   * Dispose of any event listeners and exit fullscreen (if active).
+   *
+   * @protected
+   * @returns {Promise<void>}
+   */
+  async handleHostDisconnected() {
+    if (this.isFullscreen) await this.exitFullscreen();
+    this.delegates.clear();
+    this.disconnectDisposal.empty();
+  }
+
+  /**
+   * @param {FullscreenControllerDelegate} delegate
+   * @returns {(() => void)} Cleanup function to remove delegate.
+   */
+  addDelegate(delegate) {
+    this.delegates.add(delegate);
+    return () => {
+      this.delegates.delete(delegate);
+    };
   }
 
   /**
@@ -136,18 +182,6 @@ export class FullscreenController extends EventDispatcher {
   }
 
   /**
-   * Dispose of any event listeners and exit fullscreen (if active).
-   *
-   * @protected
-   * @returns {Promise<void>}
-   */
-  async destroy() {
-    if (this.isFullscreen) await this.exitFullscreen();
-    this.disposal.empty();
-    super.destroy();
-  }
-
-  /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
    * @returns {import('../types/utils').Unsubscribe}
@@ -177,13 +211,13 @@ export class FullscreenController extends EventDispatcher {
 
     // TODO: Check if PiP is active, if so make sure to exit - need PipController.
 
-    this.disposal.add(
+    this.disconnectDisposal.add(
       this.addFullscreenChangeEventListener(
         this.handleFullscreenChange.bind(this)
       )
     );
 
-    this.disposal.add(
+    this.disconnectDisposal.add(
       this.addFullscreenErrorEventListener(
         this.handleFullscreenError.bind(this)
       )
@@ -207,15 +241,14 @@ export class FullscreenController extends EventDispatcher {
 
   /**
    * @protected
-   * @param {Event} event
+   * @param {Event} [event]
    * @returns {void}
    */
   handleFullscreenChange(event) {
-    if (!this.isFullscreen) this.disposal.empty();
-    this.dispatchEvent('fullscreen-change', {
-      detail: this.isFullscreen,
-      originalEvent: event
-    });
+    if (!this.isFullscreen) this.disconnectDisposal.empty();
+    this.delegates.forEach((delegate) =>
+      delegate.handleFullscreenChange?.(this, event)
+    );
   }
 
   /**
@@ -224,7 +257,9 @@ export class FullscreenController extends EventDispatcher {
    * @returns {void}
    */
   handleFullscreenError(event) {
-    this.dispatchEvent('error', { originalEvent: event });
+    this.delegates.forEach((delegate) =>
+      delegate.handleFullscreenError?.(this, event)
+    );
   }
 
   /**

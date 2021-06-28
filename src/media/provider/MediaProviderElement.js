@@ -874,6 +874,7 @@ export class MediaProviderElement extends VdsElement {
     if (this.fullscreenController.isRequestingNativeFullscreen) {
       return super.requestFullscreen();
     }
+
     return this.fullscreenController.requestFullscreen();
   }
 
@@ -890,27 +891,40 @@ export class MediaProviderElement extends VdsElement {
    * @returns {void}
    */
   addFullscreenController(controller) {
-    controller.addEventListener('fullscreen-change', (event) => {
-      const isFullscreen = event.detail;
-      this.context.fullscreen = isFullscreen;
-      this.dispatchEvent(
-        new FullscreenChangeEvent({
-          detail: isFullscreen,
-          originalEvent: event
-        })
-      );
+    controller.addDelegate({
+      handleFullscreenChange: this.handleFullscreenChange.bind(this),
+      handleFullscreenError: this.handleFullscreenError.bind(this)
     });
+  }
 
-    controller.addEventListener('error', (event) => {
-      const error = event.detail;
-      this.context.error = error;
-      this.dispatchEvent(
-        new ErrorEvent({
-          detail: error,
-          originalEvent: event
-        })
-      );
-    });
+  /**
+   * @protected
+   * @param {FullscreenController} controller
+   * @param {Event} [event]
+   */
+  handleFullscreenChange(controller, event) {
+    this.context.fullscreen = controller.isFullscreen;
+    this.dispatchEvent(
+      new FullscreenChangeEvent({
+        detail: controller.isFullscreen,
+        originalEvent: event
+      })
+    );
+  }
+
+  /**
+   * @protected
+   * @param {FullscreenController} controller
+   * @param {Event} [event]
+   */
+  handleFullscreenError(controller, event) {
+    this.context.error = event;
+    this.dispatchEvent(
+      new ErrorEvent({
+        detail: event,
+        originalEvent: event
+      })
+    );
   }
 }
 
