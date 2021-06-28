@@ -1,4 +1,4 @@
-import { Lit, LitElement, PropertyDeclarations } from 'lit';
+import { LitElement } from 'lit';
 
 import { Constructor, ReadonlyIfType } from '../types/utils.js';
 

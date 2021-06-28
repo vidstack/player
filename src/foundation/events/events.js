@@ -194,8 +194,14 @@ export function listenGlobalEvent(target, type, listener, options) {
 }
 
 /**
+ * @typedef {{
+ *  [EventType in keyof GlobalEventHandlersEventMap]?: ( event: GlobalEventHandlersEventMap[EventType]) => void;
+ * }} EventHandlerRecord
+ */
+
+/**
  * @param {HTMLElement} host
- * @param {import('./types').EventHandlerRecord} record
+ * @param {EventHandlerRecord} record
  * @param {DisposalBin} disposal
  * @param {{ target?: EventTarget }} [options]
  */

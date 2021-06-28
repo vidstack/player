@@ -52,8 +52,8 @@ export class PluginManager extends ControllerManager {
     this.blacklistPropertyNames = getAllObjectPropertyNames(host);
   }
 
-  hostDisconnected() {
-    super.hostDisconnected();
+  handleHostDisconnected() {
+    super.handleHostDisconnected();
     this.pluginDisposal.forEach((destroyBridge) => destroyBridge());
   }
 

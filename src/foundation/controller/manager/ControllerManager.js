@@ -3,16 +3,11 @@ import { ManagedControllerConnectEvent } from './events.js';
 import { ManagedController } from './ManagedController.js';
 
 /**
- * @typedef {import('lit').ReactiveController} CanManageControllers
- */
-
-/**
  * @typedef {import('lit').ReactiveElement} ControllerManagerHost
  */
 
 /**
  * @template {import('lit').ReactiveElement} HostElement
- * @implements {CanManageControllers}
  */
 export class ControllerManager {
   /**

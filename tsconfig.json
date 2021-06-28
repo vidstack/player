@@ -2,5 +2,6 @@
   "extends": "./jsconfig.json",
   "compilerOptions": {
     "types": ["@types/mocha"]
-  }
+  },
+  "include": ["src/**/*.js", "src/**/*.ts"]
 }

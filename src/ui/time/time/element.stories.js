@@ -14,9 +14,6 @@ export default {
   argTypes: TIME_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
-/**
- * @param {import('./types').TimeElementStorybookArgs} args
- */
 function Template({
   // Properties
   label,

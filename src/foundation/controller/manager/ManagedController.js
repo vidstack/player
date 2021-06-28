@@ -2,12 +2,7 @@ import { DisposalBin } from '../../events/index.js';
 import { ManagedControllerConnectEvent } from './events.js';
 
 /**
- * @typedef {import('lit').ReactiveController} ManageableController
- */
-
-/**
  * @template {import('lit').ReactiveElement} HostElement
- * @implements {ManageableController}
  */
 export class ManagedController {
   /**
