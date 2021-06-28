@@ -891,10 +891,10 @@ export class MediaProviderElement extends VdsElement {
    * @returns {() => void}
    */
   addFullscreenController(controller) {
-    // return controller.addDelegate({
-    //   handleFullscreenChange: this.handleFullscreenChange.bind(this),
-    //   handleFullscreenError: this.handleFullscreenError.bind(this)
-    // });
+    return controller.addDelegate({
+      handleFullscreenChange: this.handleFullscreenChange.bind(this),
+      handleFullscreenError: this.handleFullscreenError.bind(this)
+    });
   }
 
   /**
