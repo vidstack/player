@@ -19,8 +19,8 @@ jobs:
         with:
           node-version: 14
 
-      - name: Setup Playwright
-        run: npx playwright install-deps
+      # - name: Setup Playwright
+      #   run: npx playwright install-deps
 
       - name: Cache Dependencies
         id: deps
@@ -37,7 +37,10 @@ jobs:
         run: npm run types
 
       - name: Test (UNIT)
-        run: npm run test:ci:coverage
+        run: npm run test:coverage
+
+      # - name: Test (UNIT)
+      #   run: npm run test:ci:coverage
 
       - name: Analyze (CEM)
         run: npm run analyze
