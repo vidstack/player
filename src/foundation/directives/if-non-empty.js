@@ -9,5 +9,6 @@ import { ifDefined } from 'lit/directives/if-defined.js';
  * @template {string | undefined} T
  * @param {T} value
  */
-export const ifNonEmpty = (value) =>
-  ifDefined(value === '' || value === 'undefined' ? undefined : value);
+export function ifNonEmpty(value) {
+  return ifDefined(value === '' || value === 'undefined' ? undefined : value);
+}

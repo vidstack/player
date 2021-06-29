@@ -46,16 +46,16 @@ export function buildExportPartsAttr(parts, prefix) {
  * @param {boolean} isClient
  * @returns {void}
  */
-export const safelyDefineCustomElement = (
+export function safelyDefineCustomElement(
   name,
   constructor,
   isClient = IS_CLIENT
-) => {
+) {
   const isElementRegistered =
     isClient && !isUndefined(window.customElements.get(name));
   if (!isClient || isElementRegistered) return;
   window.customElements.define(name, constructor);
-};
+}
 
 /**
  * Sets an attribute on the given `el`. If the `attrValue` is `undefined` the attribute will
@@ -108,14 +108,14 @@ export function getSlottedChildren(el, name) {
  * @param {number} translateBx - Transpose element `b` along the y-axis by +/- pixels.
  * @returns {boolean}
  */
-export const willElementsCollide = (
+export function willElementsCollide(
   a,
   b,
   translateAx = 0,
   translateAy = 0,
   translateBx = 0,
   translateBy = 0
-) => {
+) {
   const aRect = a.getBoundingClientRect();
   const bRect = b.getBoundingClientRect();
   return (
@@ -124,7 +124,7 @@ export const willElementsCollide = (
     aRect.top + translateAy < bRect.bottom + translateBy &&
     aRect.bottom + translateAy > bRect.top + translateBy
   );
-};
+}
 
 /**
  * @template Properties

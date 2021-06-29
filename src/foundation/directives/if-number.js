@@ -14,5 +14,6 @@ import { isNumber } from '../../utils/unit.js';
  * @template {number | undefined} T
  * @param {T} value
  */
-export const ifNumber = (value) =>
-  ifDefined(isNumber(value) ? value : undefined);
+export function ifNumber(value) {
+  return ifDefined(isNumber(value) ? value : undefined);
+}

@@ -17,7 +17,7 @@ import { noop } from './unit.js';
  * @template RejectType
  * @returns {DeferredPromise<ResolveType, RejectType>}
  */
-export const deferredPromise = () => {
+export function deferredPromise() {
   /** @type {(value: ResolveType | undefined) => void} */
   let resolve = noop;
 
@@ -31,4 +31,4 @@ export const deferredPromise = () => {
   });
 
   return { promise, resolve, reject };
-};
+}

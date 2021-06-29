@@ -77,11 +77,11 @@ export function parseTime(duration) {
  * @example `03:01:20` -> If `shouldPadHours` is `true`
  * @example `0:01:20` -> If `shouldAlwaysShowHours` is `true`
  */
-export const formatTime = (
+export function formatTime(
   duration,
   shouldPadHours = false,
   shouldAlwaysShowHours = false
-) => {
+) {
   const { hours, minutes, seconds } = parseTime(duration);
   const paddedHours = shouldPadHours ? padNumberWithZeroes(hours, 2) : hours;
   const paddedMinutes = padNumberWithZeroes(minutes, 2);
@@ -92,7 +92,7 @@ export const formatTime = (
   }
 
   return `${minutes}:${paddedSeconds}`;
-};
+}
 
 /**
  * Formats the given `duration` into human spoken form.
@@ -102,7 +102,7 @@ export const formatTime = (
  *
  * @example `2 hours, 3 minutes, 4 seconds`
  */
-export const formatSpokenTime = (duration) => {
+export function formatSpokenTime(duration) {
   /** @type {string[]} */
   const spokenParts = [];
   const { hours, minutes, seconds } = parseTime(duration);
@@ -126,7 +126,7 @@ export const formatSpokenTime = (duration) => {
   }
 
   return spokenParts.join(', ');
-};
+}
 
 /**
  * Formats the given `duration` into a valid HTML5 duration as specified in the linked
@@ -137,7 +137,7 @@ export const formatSpokenTime = (duration) => {
  *
  * @spec https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
  */
-export const formatHtml5Duration = (duration) => {
+export function formatHtml5Duration(duration) {
   const { hours, minutes, seconds, fraction } = parseTime(duration);
   return `PT${hours}H${minutes}M${seconds + fraction}S`;
-};
+}

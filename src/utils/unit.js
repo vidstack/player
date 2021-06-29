@@ -4,7 +4,7 @@
  * @param {...*} [args]
  * @returns {void}
  */
-export const noop = (args) => {};
+export function noop(args) {}
 
 /**
  * Whether two values are NOT equal.
@@ -13,10 +13,10 @@ export const noop = (args) => {};
  * @param {unknown} valueB
  * @returns {boolean}
  */
-export const notEqual = (valueA, valueB) => {
+export function notEqual(valueA, valueB) {
   // This ensures (valueB==NaN, valueA==NaN) always returns false.
   return valueB !== valueA && (valueB === valueB || valueA === valueA);
-};
+}
 
 /**
  * Whether two values are equal.
@@ -25,9 +25,9 @@ export const notEqual = (valueA, valueB) => {
  * @param {unknown} valueB
  * @returns {boolean}
  */
-export const equal = (valueA, valueB) => {
+export function equal(valueA, valueB) {
   return !notEqual(valueA, valueB);
-};
+}
 
 /**
  * Checks if the given `value` is `null`.
@@ -35,7 +35,9 @@ export const equal = (valueA, valueB) => {
  * @param {unknown} value - The value to check.
  * @returns {value is null}
  */
-export const isNull = (value) => value === null;
+export function isNull(value) {
+  return value === null;
+}
 
 /**
  * Checks if the given `value` is `undefined`.
@@ -43,7 +45,9 @@ export const isNull = (value) => value === null;
  * @param {unknown} value - The value to check.
  * @returns {value is undefined}
  */
-export const isUndefined = (value) => typeof value === 'undefined';
+export function isUndefined(value) {
+  return typeof value === 'undefined';
+}
 
 /**
  * Checks if given `value` is `null` or `undefined`.
@@ -51,7 +55,9 @@ export const isUndefined = (value) => typeof value === 'undefined';
  * @param {unknown} value - The value to check.
  * @returns {value is null | undefined}
  */
-export const isNil = (value) => isNull(value) || isUndefined(value);
+export function isNil(value) {
+  return isNull(value) || isUndefined(value);
+}
 
 /**
  * Returns the constructor of the given `value`.
@@ -60,9 +66,10 @@ export const isNil = (value) => isNull(value) || isUndefined(value);
  * @param {unknown} value - The value to return the constructor of.
  * @returns {import("../foundation/types/utils").Constructor<T>}
  */
-export const getConstructor = (value) =>
+export function getConstructor(value) {
   // @ts-ignore
-  !isNil(value) ? value.constructor : undefined;
+  return !isNil(value) ? value.constructor : undefined;
+}
 
 /**
  * Checks if the given `value` is classified as a `Object`.
@@ -70,7 +77,9 @@ export const getConstructor = (value) =>
  * @param {unknown} value - The value to check.
  * @returns {value is object}
  */
-export const isObject = (value) => getConstructor(value) === Object;
+export function isObject(value) {
+  return getConstructor(value) === Object;
+}
 
 /**
  * Checks if the given `value` is classified as a `Number` object.
@@ -78,8 +87,9 @@ export const isObject = (value) => getConstructor(value) === Object;
  * @param {unknown} value - The value to check.
  * @returns {value is number}
  */
-export const isNumber = (value) =>
-  getConstructor(value) === Number && !Number.isNaN(value);
+export function isNumber(value) {
+  return getConstructor(value) === Number && !Number.isNaN(value);
+}
 
 /**
  * Checks if the given `value` is classified as a `String` object.
@@ -87,7 +97,9 @@ export const isNumber = (value) =>
  * @param {unknown} value - The value to check.
  * @returns {value is string}
  */
-export const isString = (value) => getConstructor(value) === String;
+export function isString(value) {
+  return getConstructor(value) === String;
+}
 
 /**
  * Checks if `value` is classified as a `Boolean` object.
@@ -95,7 +107,9 @@ export const isString = (value) => getConstructor(value) === String;
  * @param {unknown} value - The value to check.
  * @returns {value is boolean}
  */
-export const isBoolean = (value) => getConstructor(value) === Boolean;
+export function isBoolean(value) {
+  return getConstructor(value) === Boolean;
+}
 
 /**
  * Checks if `value` is classified as a `Function` object.
@@ -103,7 +117,9 @@ export const isBoolean = (value) => getConstructor(value) === Boolean;
  * @param {unknown} value - The value to check.
  * @returns {value is Function}
  */
-export const isFunction = (value) => getConstructor(value) === Function;
+export function isFunction(value) {
+  return getConstructor(value) === Function;
+}
 
 /**
  * Checks if the given `value` is classified as an `Array` object.
@@ -111,7 +127,9 @@ export const isFunction = (value) => getConstructor(value) === Function;
  * @param {unknown} value - The value to check.
  * @returns {value is unknown[]}
  */
-export const isArray = (value) => Array.isArray(value);
+export function isArray(value) {
+  return Array.isArray(value);
+}
 
 /**
  * Checks if the given `value` is an instanceof the given `constructor`.
@@ -120,8 +138,9 @@ export const isArray = (value) => Array.isArray(value);
  * @param {import("../foundation/types/utils").Constructor<unknown>} constructor - The constructor to check against.
  * @returns {boolean}
  */
-export const isInstanceOf = (value, constructor) =>
-  Boolean(value && constructor && value instanceof constructor);
+export function isInstanceOf(value, constructor) {
+  return Boolean(value && constructor && value instanceof constructor);
+}
 
 /**
  * Checks if the given `value` prototype chain includes the given `object`.
@@ -130,7 +149,8 @@ export const isInstanceOf = (value, constructor) =>
  * @param {import("../foundation/types/utils").Constructor<unknown>} object - The object to search for in the prototype chain.
  * @returns {boolean}
  */
-export const isPrototypeOf = (value, object) =>
-  Boolean(
+export function isPrototypeOf(value, object) {
+  return Boolean(
     value && object && Object.isPrototypeOf.call(object.prototype, value)
   );
+}

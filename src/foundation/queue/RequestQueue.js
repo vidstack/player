@@ -24,7 +24,7 @@ export class RequestQueue {
   /**
    * The number of callbacks that are currently in queue.
    *
-   * @returns {number}
+   * @type {number}
    */
   get size() {
     return this.requestQueue.size;

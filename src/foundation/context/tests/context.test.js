@@ -15,7 +15,7 @@ const ctxC = derivedContext([ctxA, ctxB], ([a, b]) => `${a}-${b}`);
 const ctxRecord = { ctxA, ctxB, ctxC };
 
 class BaseProviderElement extends VdsElement {
-  /** @returns {import('../types').ContextProviderDeclarations} */
+  /** @type {import('../types').ContextProviderDeclarations} */
   static get contextProviders() {
     return {
       ctxA
@@ -31,7 +31,7 @@ class BaseProviderElement extends VdsElement {
 class FakeProviderElement extends BaseProviderElement {
   ctxD = provideContextRecord(this, ctxRecord);
 
-  /** @returns {import('../types').ContextProviderDeclarations} */
+  /** @type {import('../types').ContextProviderDeclarations} */
   static get contextProviders() {
     return {
       ctxB,
@@ -51,7 +51,7 @@ class FakeProviderElement extends BaseProviderElement {
 }
 
 class BaseConsumerElement extends VdsElement {
-  /** @returns {import('../types').ContextConsumerDeclarations} */
+  /** @type {import('../types').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       ctxA
@@ -65,7 +65,7 @@ class BaseConsumerElement extends VdsElement {
 }
 
 class FakeConsumerElement extends BaseConsumerElement {
-  /** @returns {import('../types').ContextConsumerDeclarations} */
+  /** @type {import('../types').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       ctxB,

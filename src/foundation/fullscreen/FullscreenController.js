@@ -138,7 +138,7 @@ export class FullscreenController {
   /**
    * Whether fullscreen mode can be requested, generally is an API available to do so.
    *
-   * @returns {boolean}
+   * @type {boolean}
    */
   get isSupported() {
     return this.isSupportedNatively;
@@ -147,7 +147,7 @@ export class FullscreenController {
   /**
    * Whether the native Fullscreen API is enabled/available.
    *
-   * @returns {boolean}
+   * @type {boolean}
    */
   get isSupportedNatively() {
     return fscreen.fullscreenEnabled;
@@ -156,7 +156,7 @@ export class FullscreenController {
   /**
    * Whether the host element is in fullscreen mode.
    *
-   * @returns {boolean}
+   * @type {boolean}
    */
   get isFullscreen() {
     return this.isNativeFullscreen;

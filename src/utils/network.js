@@ -31,8 +31,9 @@ export function tryParseJSON(json) {
  * @param {unknown} value - The value to check.
  * @returns {boolean}
  */
-export const isObjOrJSON = (value) =>
-  (isString(value) && value.startsWith('{')) || isObject(value);
+export function isObjOrJSON(value) {
+  return (isString(value) && value.startsWith('{')) || isObject(value);
+}
 
 /**
  * If an object return otherwise try to parse it as json.
@@ -41,8 +42,9 @@ export const isObjOrJSON = (value) =>
  * @param {unknown} value
  * @returns {T | undefined}
  */
-export const objOrParseJSON = (value) =>
-  /** @type {any} */ (isObject(value) ? value : tryParseJSON(value));
+export function objOrParseJSON(value) {
+  return /** @type {any} */ (isObject(value) ? value : tryParseJSON(value));
+}
 
 /**
  * Load image avoiding xhr/fetch CORS issues. Server status can't be obtained this way
@@ -54,8 +56,8 @@ export const objOrParseJSON = (value) =>
  * @returns {Promise<HTMLImageElement>}
  */
 /* c8 ignore next 10 */
-export const loadImage = (src, minWidth = 1) =>
-  new Promise((resolve, reject) => {
+export function loadImage(src, minWidth = 1) {
+  return new Promise((resolve, reject) => {
     const image = new Image();
 
     const handler = () => {
@@ -64,6 +66,7 @@ export const loadImage = (src, minWidth = 1) =>
 
     Object.assign(image, { onload: handler, onerror: handler, src });
   });
+}
 
 /**
  * Loads a script into the DOM.
@@ -74,7 +77,7 @@ export const loadImage = (src, minWidth = 1) =>
  * @returns {void}
  */
 /* c8 ignore next 10 */
-export const loadScript = (src, onLoad = noop, onError = noop) => {
+export function loadScript(src, onLoad = noop, onError = noop) {
   const script = document.createElement('script');
   script.src = src;
   script.onload = onLoad;
@@ -84,7 +87,7 @@ export const loadScript = (src, onLoad = noop, onError = noop) => {
   if (!isNil(firstScriptTag.parentNode)) {
     firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
   }
-};
+}
 
 /**
  * Tries to parse json and return a object.
@@ -93,10 +96,10 @@ export const loadScript = (src, onLoad = noop, onError = noop) => {
  * @param {unknown} data
  * @returns {T | undefined}
  */
-export const decodeJSON = (data) => {
+export function decodeJSON(data) {
   if (!isObjOrJSON(data)) return undefined;
   return objOrParseJSON(data);
-};
+}
 
 /**
  * Attempts to safely decode a URI component, on failure it returns the given fallback.
@@ -106,11 +109,11 @@ export const decodeJSON = (data) => {
  * @param {boolean} isClient
  * @returns {string}
  */
-export const tryDecodeURIComponent = (
+export function tryDecodeURIComponent(
   component,
   fallback = '',
   isClient = IS_CLIENT
-) => {
+) {
   if (!isClient) return fallback;
 
   try {
@@ -118,7 +121,7 @@ export const tryDecodeURIComponent = (
   } catch (error) {
     return fallback;
   }
-};
+}
 
 /**
  * Returns a simple key/value map and duplicate keys are merged into an array.
@@ -129,7 +132,7 @@ export const tryDecodeURIComponent = (
  * @link https://github.com/ampproject/amphtml/blob/c7c46cec71bac92f5c5da31dcc6366c18577f566/src/url-parse-query-string.js#L31
  */
 const QUERY_STRING_REGEX = /(?:^[#?]?|&)([^=&]+)(?:=([^&]*))?/g;
-export const parseQueryString = (qs) => {
+export function parseQueryString(qs) {
   const params = Object.create(null);
 
   if (isUndefined(qs)) return params;
@@ -154,7 +157,7 @@ export const parseQueryString = (qs) => {
   }
 
   return params;
-};
+}
 
 /**
  * @typedef {Record<string, unknown>} Params
@@ -166,7 +169,7 @@ export const parseQueryString = (qs) => {
  * @param {Params} params
  * @returns {string}
  */
-export const serializeQueryString = (params) => {
+export function serializeQueryString(params) {
   /** @type {string[]} */
   const qs = [];
 
@@ -193,7 +196,7 @@ export const serializeQueryString = (params) => {
   });
 
   return qs.join('&');
-};
+}
 
 /**
  * Notifies the browser to start establishing a connection with the given URL.
@@ -203,7 +206,7 @@ export const serializeQueryString = (params) => {
  * @param {boolean} isClient
  * @returns {boolean}
  */
-export const preconnect = (url, rel = 'preconnect', isClient = IS_CLIENT) => {
+export function preconnect(url, rel = 'preconnect', isClient = IS_CLIENT) {
   if (!isClient) return false;
 
   const link = document.createElement('link');
@@ -214,7 +217,7 @@ export const preconnect = (url, rel = 'preconnect', isClient = IS_CLIENT) => {
   document.head.append(link);
 
   return true;
-};
+}
 
 /**
  * Safely appends the given query string to the given URL.
@@ -223,14 +226,14 @@ export const preconnect = (url, rel = 'preconnect', isClient = IS_CLIENT) => {
  * @param {string} [qs]
  * @returns {string}
  */
-export const appendQueryStringToURL = (url, qs) => {
+export function appendQueryStringToURL(url, qs) {
   if (isUndefined(qs) || qs.length === 0) return url;
   const mainAndQuery = url.split('?', 2);
   return (
     mainAndQuery[0] +
     (!isUndefined(mainAndQuery[1]) ? `?${mainAndQuery[1]}&${qs}` : `?${qs}`)
   );
-};
+}
 
 /**
  * Serializes the given params into a query string and appends them to the given URL.
@@ -239,13 +242,14 @@ export const appendQueryStringToURL = (url, qs) => {
  * @param {string | Params} params
  * @returns {string}
  */
-export const appendParamsToURL = (url, params) =>
-  appendQueryStringToURL(
+export function appendParamsToURL(url, params) {
+  return appendQueryStringToURL(
     url,
     isObject(params)
       ? serializeQueryString(/** @type {Params} */ (params))
       : /** @type {string} */ (params)
   );
+}
 
 /**
  * Tries to convert a query string into a object.
@@ -254,7 +258,7 @@ export const appendParamsToURL = (url, params) =>
  * @param {string} qs
  * @returns {T | undefined}
  */
-export const decodeQueryString = (qs) => {
+export function decodeQueryString(qs) {
   if (!isString(qs)) return undefined;
   return parseQueryString(qs);
-};
+}

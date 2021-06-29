@@ -166,7 +166,6 @@ export class MediaControllerElement extends VdsElement {
    * The current media container that belongs to this controller. Defaults to `undefined` if
    * there is none.
    *
-   * @readonly
    * @type {MediaContainerElement | undefined}
    */
   get mediaContainer() {
@@ -207,7 +206,6 @@ export class MediaControllerElement extends VdsElement {
    * The current media provider that belongs to this controller. Defaults to `undefined` if there
    * is none.
    *
-   * @readonly
    * @type {MediaProvider | undefined}
    */
   get mediaProvider() {

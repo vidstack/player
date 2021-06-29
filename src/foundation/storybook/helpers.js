@@ -4,7 +4,9 @@
  * @param {boolean} [hideInTable=true]
  * @returns {{ action: T, table: { disable: boolean } }}
  */
-export const storybookAction = (eventType, hideInTable = true) => ({
-  action: eventType,
-  table: { disable: hideInTable }
-});
+export function storybookAction(eventType, hideInTable = true) {
+  return {
+    action: eventType,
+    table: { disable: hideInTable }
+  };
+}

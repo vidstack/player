@@ -26,10 +26,11 @@ export const ORIGIN =
  *
  * @returns {number}
  */
-export const currentSafariVersion = () =>
-  IS_CLIENT
+export function currentSafariVersion() {
+  return IS_CLIENT
     ? Number((/Safari\/(\d+)/.exec(navigator.userAgent) ?? ['', 0])[1])
     : 0;
+}
 
 /**
  * Checks if a video player can enter fullscreen.
@@ -37,20 +38,20 @@ export const currentSafariVersion = () =>
  * @returns {boolean}
  * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen
  */
-export const canFullscreenVideo = () => {
+export function canFullscreenVideo() {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
   return isFunction(video.webkitEnterFullscreen);
-};
+}
 
 /**
  * Checks whether the `IntersectionObserver` API is available.
  *
  * @returns {boolean}
  */
-export const canObserveIntersection = () => {
+export function canObserveIntersection() {
   return IS_CLIENT && !isUndefined(window.IntersectionObserver);
-};
+}
 
 /**
  * Checks if the ScreenOrientation API is available.
@@ -58,11 +59,14 @@ export const canObserveIntersection = () => {
  * @returns {boolean}
  * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
  */
-export const canOrientScreen = () =>
-  IS_CLIENT &&
-  !isUndefined(screen.orientation) &&
-  isFunction(screen.orientation.lock) &&
-  isFunction(screen.orientation.unlock);
+export function canOrientScreen() {
+  return (
+    IS_CLIENT &&
+    !isUndefined(screen.orientation) &&
+    isFunction(screen.orientation.lock) &&
+    isFunction(screen.orientation.unlock)
+  );
+}
 
 /**
  * Checks if the screen orientation can be changed.
@@ -70,10 +74,13 @@ export const canOrientScreen = () =>
  * @returns {boolean}
  * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
  */
-export const canRotateScreen = () =>
-  IS_CLIENT &&
-  !isUndefined(window.screen.orientation) &&
-  !isUndefined(window.screen.orientation.lock);
+export function canRotateScreen() {
+  return (
+    IS_CLIENT &&
+    !isUndefined(window.screen.orientation) &&
+    !isUndefined(window.screen.orientation.lock)
+  );
+}
 
 /**
  * Reduced motion iOS & MacOS setting.
@@ -81,21 +88,24 @@ export const canRotateScreen = () =>
  * @returns {boolean}
  * @link https://webkit.org/blog/7551/responsive-design-for-motion/
  */
-export const isReducedMotionPreferred = () =>
-  IS_CLIENT &&
-  'matchMedia' in window &&
-  window.matchMedia('(prefers-reduced-motion)').matches;
+export function isReducedMotionPreferred() {
+  return (
+    IS_CLIENT &&
+    'matchMedia' in window &&
+    window.matchMedia('(prefers-reduced-motion)').matches
+  );
+}
 
 /**
  * Checks if the native HTML5 video player can play HLS.
  *
  * @returns {boolean}
  */
-export const canPlayHLSNatively = () => {
+export function canPlayHLSNatively() {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
   return video.canPlayType('application/vnd.apple.mpegurl').length > 0;
-};
+}
 
 /**
  * Checks if the native HTML5 video player can enter picture-in-picture (PIP) mode when using
@@ -104,11 +114,11 @@ export const canPlayHLSNatively = () => {
  * @returns {boolean}
  * @link  https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture
  */
-export const canUsePiPInChrome = () => {
+export function canUsePiPInChrome() {
   if (!IS_CLIENT) return false;
   const video = document.createElement('video');
   return !!document.pictureInPictureEnabled && !video.disablePictureInPicture;
-};
+}
 
 /**
  * Checks if the native HTML5 video player can enter picture-in-picture (PIP) mode when using
@@ -118,7 +128,7 @@ export const canUsePiPInChrome = () => {
  * @returns {boolean}
  * @link https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls
  */
-export const canUsePiPInSafari = () => {
+export function canUsePiPInSafari() {
   if (!IS_CLIENT) return false;
 
   const video = document.createElement('video');
@@ -128,28 +138,28 @@ export const canUsePiPInSafari = () => {
     isFunction(video.webkitSetPresentationMode) &&
     !IS_IPHONE
   );
-};
+}
 
 /**
  * Checks if the native HTML5 video player can enter PIP.
  *
  * @returns {boolean}
  */
-export const canUsePiP = () => canUsePiPInChrome() || canUsePiPInSafari();
+export function canUsePiP() {
+  return canUsePiPInChrome() || canUsePiPInSafari();
+}
 
 /**
  * To detect autoplay, we create a video element and call play on it, if it is `paused` after
  * a `play()` call, autoplay is supported. Although this unintuitive, it works across browsers
  * and is currently the lightest way to detect autoplay without using a data source.
  *
- * @param muted
- * @param playsinline
- * @param muted
- * @param playsinline
+ * @param [muted=true]
+ * @param [playsinline=true]
  * @returns {Promise<boolean>}
  * @link https://github.com/ampproject/amphtml/blob/9bc8756536956780e249d895f3e1001acdee0bc0/src/utils/video.js#L25
  */
-export const canAutoplay = (muted = true, playsinline = true) => {
+export function canAutoplay(muted = true, playsinline = true) {
   if (!IS_CLIENT) return Promise.resolve(false);
 
   const video = document.createElement('video');
@@ -178,4 +188,4 @@ export const canAutoplay = (muted = true, playsinline = true) => {
   new Promise((resolve) => resolve(video.play())).catch(noop);
 
   return Promise.resolve(!video.paused);
-};
+}

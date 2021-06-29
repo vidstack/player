@@ -374,7 +374,6 @@ export class MediaProviderElement extends VdsElement {
    * Refer to the respective provider documentation to find out which engine is powering it.
    *
    * @abstract
-   * @readonly
    * @type {unknown}
    */
   get engine() {

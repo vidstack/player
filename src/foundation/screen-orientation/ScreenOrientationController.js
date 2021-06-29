@@ -117,7 +117,7 @@ export class ScreenOrientationController {
    * The current screen orientation. It will return `undefined` if the Screen Orientation API
    * is not available.
    *
-   * @returns {ScreenOrientation | undefined}
+   * @type {ScreenOrientation | undefined}
    * @default undefined
    */
   get currentOrientation() {
@@ -127,7 +127,7 @@ export class ScreenOrientationController {
   /**
    * Whether the native Screen Orientation API is available.
    *
-   * @returns {boolean}
+   * @type {boolean}
    */
   get canOrient() {
     return canOrientScreen();
@@ -136,7 +136,7 @@ export class ScreenOrientationController {
   /**
    * Whether the screen orientation is currently locked.
    *
-   * @returns {boolean}
+   * @type {boolean}
    * @default false
    */
   get isLocked() {

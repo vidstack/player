@@ -12,12 +12,12 @@ const CONSUMERS = Symbol('consumers');
  */
 export function WithContext(Base) {
   return class WithContextMixin extends Base {
-    /** @returns {import('./types').ContextConsumerDeclarations} */
+    /** @type {import('./types').ContextConsumerDeclarations} */
     static get contextConsumers() {
       return {};
     }
 
-    /** @returns {import('./types').ContextConsumerDeclarations} */
+    /** @type {import('./types').ContextConsumerDeclarations} */
     static get contextProviders() {
       return {};
     }

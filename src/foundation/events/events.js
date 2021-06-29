@@ -38,7 +38,7 @@ export class VdsCustomEvent extends CustomEvent {
    * Walks up the event chain (following each `originalEvent`) and returns the origin event
    * that started the chain.
    *
-   * @returns {Event | undefined}
+   * @type {Event | undefined}
    */
   get originEvent() {
     let originalEvent = /** @type {VdsCustomEvent<unknown>} */ (
@@ -58,7 +58,7 @@ export class VdsCustomEvent extends CustomEvent {
    * Walks up the event chain (following each `originalEvent`) and determines whether the initial
    * event was triggered by the end user (ie: check whether `isTrusted` on the `originEvent` `true`).
    *
-   * @returns {boolean}
+   * @type {boolean}
    */
   get isOriginTrusted() {
     return this.originEvent?.isTrusted ?? false;
