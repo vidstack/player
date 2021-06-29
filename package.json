@@ -18,8 +18,9 @@
     "src/**/define.js"
   ],
   "exports": {
-    ".": "./src",
-    "./types": "./types",
+    ".": "./src/bundle/index.js",
+    "./*": "./src/*",
+    "./types/*": "./types/*",
     "./custom-elements.json": "./custom-elements.json"
   },
   "contributors": [
