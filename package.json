@@ -36,8 +36,6 @@
   },
   "scripts": {
     "analyze": "cem analyze --litelement --globs \"src/**/*Element.js\"",
-    "types": "tsc",
-    "types:watch": "tsc -w",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .js --ext .ts --quiet . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
@@ -53,6 +51,8 @@
     "test:watch": "npm run test -- --watch",
     "test:ci": "wtr \"src/**/*.test.{js,ts}\" --config wtr-ci.config.mjs",
     "test:ci:coverage": "npm run test:ci -- --coverage",
+    "types": "tsc",
+    "types:watch": "tsc -w",
     "release": "npx semantic-release"
   },
   "dependencies": {
