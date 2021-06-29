@@ -50,6 +50,8 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  * or "bridged" between the plugin and this controller. In other words, the media controller
  * behaves as a proxy for media plugins which are other elements nested inside it.
  *
+ * @template {MediaProviderElement} MediaProvider
+ *
  * @tagname vds-media-controller
  *
  * @slot Used to pass in components that use/manage media state.
@@ -197,7 +199,7 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @type {MediaProviderElement | undefined}
+   * @type {MediaProvider | undefined}
    */
   _mediaProvider;
 
@@ -206,7 +208,7 @@ export class MediaControllerElement extends VdsElement {
    * is none.
    *
    * @readonly
-   * @type {MediaProviderElement | undefined}
+   * @type {MediaProvider | undefined}
    */
   get mediaProvider() {
     return this._mediaProvider;

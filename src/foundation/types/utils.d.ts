@@ -7,6 +7,8 @@ export type Writeable<T> = {
   -readonly [P in keyof T]: T[P];
 };
 
+export type PublicOnly<T> = Pick<T, keyof T>;
+
 export type Fallback<T, R> = T extends void | unknown | any ? R : T;
 
 export type MethodsOnly<T> = Omit<

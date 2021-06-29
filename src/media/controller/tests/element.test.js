@@ -20,7 +20,8 @@ import {
 } from '../../test-utils/index.js';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
-  MediaControllerElement} from '../MediaControllerElement.js';
+  MediaControllerElement
+} from '../MediaControllerElement.js';
 
 describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
   describe('render', function () {
@@ -114,7 +115,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
       const playSpy = spy(provider, 'play');
 
-      controller.play();
+      /** @type{any} **/ (controller).play();
 
       expect(playSpy).to.have.been.calledOnce;
     });

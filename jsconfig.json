@@ -12,6 +12,7 @@
     "noEmit": true,
     "noImplicitAny": false,
     "noImplicitReturns": true,
+    "noUnusedParameters": false,
     "strict": true,
     "target": "es2020"
   },

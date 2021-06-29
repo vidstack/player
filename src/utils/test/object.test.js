@@ -51,7 +51,7 @@ describe('utils/object', function () {
 
       const destroy = proxyProperties(objA, objB, new Set(['unknownOp']));
 
-      objA.unknownOp();
+      /** @type {any} */ (objA).unknownOp();
 
       expect(objA.knownOp).to.not.have.been.called;
       expect(objB.unknownOp).to.have.been.calledOnce;
@@ -76,7 +76,7 @@ describe('utils/object', function () {
       const destroy = proxyProperties(objA, objB, new Set([]));
 
       expect(() => {
-        objA.unknownOp();
+        /** @type {any} */ (objA).unknownOp();
       }).to.throw(/is not a function/);
 
       destroy();
@@ -122,10 +122,10 @@ describe('utils/object', function () {
 
       objA.knownOp();
       expect(objA.knownOp).to.have.been.calledOnce;
-      expect(objA.unknownOp).to.be.undefined;
+      expect(/** @type {any} */ (objA).unknownOp).to.be.undefined;
 
       expect(() => {
-        objA.unknownOp();
+        /** @type {any} */ (objA).unknownOp();
       }).to.throw;
     });
   });

@@ -196,7 +196,7 @@ export function listenGlobalEvent(target, type, listener, options) {
 
 /**
  * @typedef {{
- *  [EventType in keyof GlobalEventHandlersEventMap]?: ( event: GlobalEventHandlersEventMap[EventType]) => void;
+ *  [EventType in keyof GlobalEventHandlersEventMap]?: (event: GlobalEventHandlersEventMap[EventType]) => void;
  * }} EventHandlerRecord
  */
 

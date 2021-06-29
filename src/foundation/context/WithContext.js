@@ -1,5 +1,3 @@
-/** @typedef {import('./types').ContextHostConstructor} ContextHostConstructor */
-
 import { isFunction } from '../../utils/unit.js';
 import { isDerviedContext } from './context.js';
 
@@ -8,7 +6,7 @@ const PROVIDERS = Symbol('providers');
 const CONSUMERS = Symbol('consumers');
 
 /**
- * @template {ContextHostConstructor} T
+ * @template {import('./types').ContextHostConstructor} T
  * @param {T} Base
  * @returns {import('./types').ContextInitializer & T}
  */

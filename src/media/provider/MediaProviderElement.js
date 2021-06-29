@@ -721,6 +721,7 @@ export class MediaProviderElement extends VdsElement {
   /**
    * @protected
    * @readonly
+   * @type {MediaPlugin<any>}
    */
   mediaPlugin = new MediaPlugin(this, {
     bridgedAttributes: /** @type {any} */ (this.constructor).observedAttributes,
