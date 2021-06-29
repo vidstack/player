@@ -138,16 +138,6 @@ export class HlsElement extends VideoElement {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.handleMediaSrcChange();
-  }
-
-  firstUpdated(changedProps) {
-    super.firstUpdated(changedProps);
-    this.handleMediaSrcChange();
-  }
-
   disconnectedCallback() {
     this.destroyHlsEngine();
     super.disconnectedCallback();

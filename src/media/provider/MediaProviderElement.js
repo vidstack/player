@@ -168,6 +168,7 @@ export class MediaProviderElement extends VdsElement {
     super.disconnectedCallback();
     this.connectedQueue.destroy();
     this.mediaRequestQueue.destroy();
+    this.hasFlushedMediaRequestQueueOnce = false;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -705,9 +706,21 @@ export class MediaProviderElement extends VdsElement {
 
   /**
    * @protected
+   * @type {boolean}
+   */
+  hasFlushedMediaRequestQueueOnce = false;
+
+  /**
+   * @protected
    * @returns {void}
    */
   handleMediaSrcChange() {
+    // Skip first flush to ensure initial properties set make it to the provider.
+    if (!this.hasFlushedMediaRequestQueueOnce) {
+      this.hasFlushedMediaRequestQueueOnce = true;
+      return;
+    }
+
     this.mediaRequestQueue.serveImmediately = false;
     this.mediaRequestQueue.reset();
     this.softResetMediaContext();
