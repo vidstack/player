@@ -82,30 +82,20 @@ describe('utils/object', function () {
       destroy();
     });
 
-    it('should log warning if property exists on target', function () {
-      class ObjA {
-        prop = spy();
-      }
+    it('should prefer parent object return value', function () {
+      const objA = {
+        knownOp: 10
+      };
 
-      class ObjB {
-        prop = spy();
-      }
+      const objB = {
+        knownOp: 20
+      };
 
-      const originalWarn = console.warn;
-      console.warn = mock();
+      const destroy = proxyProperties(objA, objB, new Set(['knownOp']));
 
-      const destroy = proxyProperties(
-        new ObjA(),
-        new ObjB(),
-        // @ts-ignore
-        new Set(['prop'])
-      );
+      expect(objA.knownOp).to.equal(10);
 
-      expect(console.warn).to.have.been.calledOnceWith(
-        '[vds]: ObjA declared a property [`prop`] that is being proxied to ObjB.'
-      );
-
-      console.warn = originalWarn;
+      destroy();
     });
 
     it('should destroy proxy', function () {

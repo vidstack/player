@@ -36,34 +36,33 @@ export function proxyProperties(objA, objB, whitelist) {
   const proto = Object.getPrototypeOf(objA);
   const newProto = Object.create(proto);
 
-  function warnIfTargetDeclaredProp(target, prop) {
-    if (Reflect.has(target, prop)) {
-      const targetName = objA.constructor?.name ?? objA.name;
-      const proxyName = objB.constructor?.name ?? objB.name;
-      console.warn(
-        `[vds]: ${targetName} declared a property [\`${prop}\`] that is being proxied to ${proxyName}.`
-      );
-    }
-  }
-
-  whitelist.forEach((prop) => {
-    warnIfTargetDeclaredProp(objA, prop);
-  });
-
   const proxy = new Proxy(newProto, {
     get(target, prop) {
+      // Parent object has precedence.
+      if (Reflect.has(target, prop)) {
+        return Reflect.get(target, prop, objA);
+      }
+
       if (whitelist.has(/** @type {any} */ (prop))) {
         return Reflect.get(objB, prop, objB);
       }
 
-      return Reflect.get(target, prop, objA);
+      return undefined;
     },
     set(target, prop, value) {
-      if (whitelist.has(/** @type {any} */ (prop))) {
-        return Reflect.set(objB, prop, value, objB);
+      let success = false;
+
+      if (Reflect.has(target, prop)) {
+        Reflect.set(target, prop, value, objA);
+        success = true;
       }
 
-      return Reflect.set(target, prop, value, objA);
+      if (whitelist.has(/** @type {any} */ (prop))) {
+        Reflect.set(objB, prop, value, objB);
+        success = true;
+      }
+
+      return success;
     }
   });
 
