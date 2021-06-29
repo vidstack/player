@@ -96,6 +96,7 @@ export class MediaUiElement extends VdsElement {
    * Override this to modify the content rendered inside the root UI container.
    *
    * @protected
+   * @returns {import('lit').TemplateResult}
    */
   renderRootChildren() {
     return html`${this.renderDefaultSlot()}`;
