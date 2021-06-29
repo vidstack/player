@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: Static Analysis (TS)
-        run: npm run check
+        run: npm run types
 
       - name: Test Package
         run: npm run test

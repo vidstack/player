@@ -9,7 +9,7 @@ import { createTimeRanges } from '../../time-ranges.js';
 import { ViewType } from '../../ViewType.js';
 
 class FakeMediaConsumerElement extends WithContext(LitElement) {
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       paused: mediaContext.paused,

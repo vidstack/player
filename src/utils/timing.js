@@ -1,6 +1,31 @@
 import { isUndefined } from './unit.js';
 
 /**
+ * @template {unknown[]} Args
+ * @typedef {{
+ *  (this: unknown, ...args: Args): void;
+ *  cancel: () => void;
+ *  pending: () => boolean;
+ * }} DebouncedFunction
+ */
+
+/**
+ * @typedef {{
+ *  leading: boolean;
+ *  trailing: boolean;
+ * }} ThorttleOptions
+ */
+
+/**
+ * @template {unknown[]} Args
+ * @typedef {{
+ *  (this: unknown, ...args: Args): void;
+ *  cancel: () => void;
+ *  pending: () => boolean;
+ * }} ThrottledFunction
+ */
+
+/**
  * Creates a debounced function that delays invoking `func` until after `delay` milliseconds have
  * elapsed since the last time the debounced function was invoked.
  *
@@ -8,7 +33,7 @@ import { isUndefined } from './unit.js';
  * @param {(...args: Args) => void} func - The function to debounce.
  * @param {number} delay - The number of milliseconds to delay.
  * @param {boolean} immediate - Whether the function should be triggered at the start of a sequence of calls instead of end.
- * @returns {import('./timing.types').DebouncedFunction<Args>}
+ * @returns {DebouncedFunction<Args>}
  * @link https://github.com/jashkenas/underscore/blob/master/modules/debounce.js
  */
 export function debounce(func, delay, immediate = false) {
@@ -78,8 +103,8 @@ export function debounce(func, delay, immediate = false) {
  * @template {unknown[]} Args
  * @param {(...args: Args) => void} func - The function to throttle.
  * @param {number} delay - The number of milliseconds to throttle invocations by.
- * @param {import('./timing.types').ThorttleOptions} options - The throttle options.
- * @returns {import('./timing.types').ThrottledFunction<Args>}
+ * @param {ThorttleOptions} options - The throttle options.
+ * @returns {ThrottledFunction<Args>}
  * @link https://github.com/jashkenas/underscore/blob/master/modules/throttle.js
  */
 export function throttle(

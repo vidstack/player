@@ -1,11 +1,21 @@
 import { noop } from './unit.js';
 
 /**
+ * @template ResolveType
+ * @template RejectType
+ * @typedef {{
+ *  promise: Promise<ResolveType | undefined>;
+ *  resolve: (value?: ResolveType) => void;
+ *  reject: (reason: RejectType) => void;
+ * }} DeferredPromise
+ */
+
+/**
  * Creates an empty Promise and defers resolving/rejecting it.
  *
  * @template ResolveType
  * @template RejectType
- * @returns {import('./promise.types').DeferredPromise<ResolveType, RejectType>}
+ * @returns {DeferredPromise<ResolveType, RejectType>}
  */
 export const deferredPromise = () => {
   /** @type {(value: ResolveType | undefined) => void} */

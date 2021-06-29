@@ -89,7 +89,7 @@ export const mediaContext = {
 };
 
 /**
- * @returns {import('../foundation/context').ContextProviderRecord<typeof mediaContext>}
+ * @returns {import('../foundation/context/types').ContextProviderRecord<typeof mediaContext>}
  */
 export function createMediaContextRecord() {
   return Object.keys(mediaContext).reduce(

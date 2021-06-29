@@ -35,6 +35,51 @@ import { MediaNetworkState } from './MediaNetworkState.js';
 import { MediaReadyState } from './MediaReadyState.js';
 
 /**
+ * A DOMString` indicating the `CORS` setting for this media element.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
+ *
+ * @typedef {'anonymous' | 'use-credentials'} MediaCrossOriginOption
+ */
+
+/**
+ * Is a `DOMString` that reflects the `preload` HTML attribute, indicating what data should be
+ * preloaded, if any.
+ *
+ * @typedef {'none' | 'metadata' | 'auto'} MediaPreloadOption
+ */
+
+/**
+ * `DOMTokenList` that helps the user agent select what controls to show on the media element
+ * whenever the user agent shows its own set of controls. The `DOMTokenList` takes one or more of
+ * three possible values: `nodownload`, `nofullscreen`, and `noremoteplayback`.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList
+ *
+ * @typedef {'nodownload'
+ *  | 'nofullscreen'
+ *  | 'noremoteplayback'
+ *  | 'nodownload nofullscreen'
+ *  | 'nodownload noremoteplayback'
+ *  | 'nofullscreen noremoteplayback'
+ *  | 'nodownload nofullscreen noremoteplayback'
+ * } MediaControlsList
+ */
+
+/**
+ * The object which serves as the source of the media associated with the `HTMLMediaElement`. The
+ * object can be a `MediaStream`, `MediaSource`, `Blob`, or `File` (which inherits from `Blob`).
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/MediaSource
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/Blob
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/File
+ *
+ * @typedef {MediaStream | MediaSource | Blob | File} MediaSrcObject
+ */
+
+/**
  * Enables loading, playing and controlling media files via the HTML5 MediaElement API. This is
  * used internally by the `vds-audio` and `vds-video` components. This provider only contains
  * glue code so don't bother using it on it's own.
@@ -86,7 +131,7 @@ export class Html5MediaElement extends MediaProviderElement {
      * of controls (e.g. when the controls attribute is specified).
      *
      * @example 'nodownload nofullscreen noremoteplayback'
-     * @type {import('./types').MediaControlsList}
+     * @type {MediaControlsList}
      * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList
      */
     this.controlsList;
@@ -96,7 +141,7 @@ export class Html5MediaElement extends MediaProviderElement {
      * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin) for more
      * information.
      *
-     * @type {import('./types').MediaCrossOriginOption}
+     * @type {MediaCrossOriginOption}
      * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/crossOrigin
      */
     this.crossOrigin;
@@ -134,7 +179,7 @@ export class Html5MediaElement extends MediaProviderElement {
      * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload) for more
      * information.
      *
-     * @type {import('./types').MediaPreloadOption | undefined}
+     * @type {MediaPreloadOption | undefined}
      */
     this.preload;
 
@@ -206,7 +251,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * Sets or returns the object which serves as the source of the media associated with the
    * `HTMLMediaElement`.
    *
-   * @type {import('./types').MediaSrcObject | undefined}
+   * @type {MediaSrcObject | undefined}
    * @default undefined
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
    */

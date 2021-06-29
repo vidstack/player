@@ -53,7 +53,7 @@ export class PlayButtonElement extends ToggleButtonElement {
     this.pressed = false;
   }
 
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       pressed: {

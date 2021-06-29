@@ -735,7 +735,7 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @type {import('../../../utils/timing.types').ThrottledFunction<Parameters<SliderElement['handlePointerMove']>> | undefined}
+   * @type {import('../../../utils/timing').ThrottledFunction<Parameters<SliderElement['handlePointerMove']>> | undefined}
    */
   pointerMoveThrottle;
 

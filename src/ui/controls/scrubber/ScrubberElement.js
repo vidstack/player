@@ -306,7 +306,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     };
   }
 
-  /** @type {import('../../../foundation/context').ContextProviderDeclarations} */
+  /** @type {import('../../../foundation/context/types').ContextProviderDeclarations} */
   static get contextProviders() {
     return {
       isPreviewShowing: scrubberContext.preview.showing,
@@ -314,7 +314,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     };
   }
 
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaCurrentTime: mediaContext.currentTime,
@@ -1014,13 +1014,13 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @type {import('../../../utils/timing.types').ThrottledFunction<[time: number, event: Event]> | undefined}
+   * @type {import('../../../utils/timing').ThrottledFunction<[time: number, event: Event]> | undefined}
    */
   previewTimeChangeThrottle;
 
   /**
    * @protected
-   * @type {import('../../../utils/timing.types').ThrottledFunction<[time: number, event: Event]> | undefined}
+   * @type {import('../../../utils/timing').ThrottledFunction<[time: number, event: Event]> | undefined}
    */
   mediaSeekingRequestThrottle;
 

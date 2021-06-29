@@ -53,7 +53,7 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     this.pressed = mediaContext.fullscreen.initialValue;
   }
 
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       pressed: mediaContext.fullscreen

@@ -1,3 +1,4 @@
+import { MediaProviderElement } from '../provider/MediaProviderElement.js';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement
@@ -5,6 +6,6 @@ import {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [MEDIA_CONTROLLER_ELEMENT_TAG_NAME]: MediaControllerElement;
+    [MEDIA_CONTROLLER_ELEMENT_TAG_NAME]: MediaControllerElement<MediaProviderElement>;
   }
 }

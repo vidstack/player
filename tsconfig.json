@@ -1,6 +1,10 @@
 {
   "extends": "./jsconfig.json",
   "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "types",
+    "noEmit": false,
     "types": ["@types/mocha"]
   },
   "include": ["src/**/*.js", "src/**/*.ts"]

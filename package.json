@@ -8,8 +8,10 @@
   },
   "main": "src/bundle/index.js",
   "module": "src/bundle/index.js",
+  "types": "types/bundle/index.d.ts",
   "files": [
     "src/",
+    "types/",
     "custom-elements.json"
   ],
   "sideEffects": [
@@ -17,6 +19,7 @@
   ],
   "exports": {
     ".": "./src",
+    "./types": "./types",
     "./custom-elements.json": "./custom-elements.json"
   },
   "contributors": [
@@ -33,7 +36,8 @@
   },
   "scripts": {
     "analyze": "cem analyze --litelement --globs \"src/**/*Element.js\"",
-    "check": "tsc",
+    "types": "tsc",
+    "types:watch": "tsc -w",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .js --ext .ts --quiet . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",

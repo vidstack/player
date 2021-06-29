@@ -34,7 +34,7 @@ jobs:
         run: npm install
 
       - name: Static Analysis (TS)
-        run: npm run check
+        run: npm run types
 
       - name: Test (UNIT)
         run: npm run test:ci:coverage

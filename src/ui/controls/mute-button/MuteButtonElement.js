@@ -52,7 +52,7 @@ export class MuteButtonElement extends ToggleButtonElement {
     this.pressed = mediaContext.muted.initialValue;
   }
 
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       pressed: mediaContext.muted

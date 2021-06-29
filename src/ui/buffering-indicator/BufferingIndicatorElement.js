@@ -96,7 +96,7 @@ export class BufferingIndicatorElement extends VdsElement {
     };
   }
 
-  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
+  /** @type {import('../../foundation/context/types').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaCanPlay: mediaContext.canPlay,
