@@ -221,7 +221,7 @@ export class MediaControllerElement extends VdsElement {
   /**
    * @readonly
    */
-  mediaProviderDisposal = new DisposalBin();
+  mediaProviderDisconnectDisposal = new DisposalBin();
 
   /**
    * @protected
@@ -241,11 +241,11 @@ export class MediaControllerElement extends VdsElement {
      */
     /** @type {any} */ (provider).context = this.context;
 
-    this.mediaProviderDisposal.add(
+    this.mediaProviderDisconnectDisposal.add(
       provider.addFullscreenController(this.fullscreenController)
     );
 
-    this.mediaProviderDisposal.add(() => {
+    this.mediaProviderDisconnectDisposal.add(() => {
       /**
        * Using type `any` to bypass readonly `context`. Detach the media context.
        */
@@ -267,7 +267,7 @@ export class MediaControllerElement extends VdsElement {
    * @returns {void}
    */
   handleMediaProviderDisconnect() {
-    this.mediaProviderDisposal.empty();
+    this.mediaProviderDisconnectDisposal.empty();
     this._mediaProvider = undefined;
   }
 
