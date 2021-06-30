@@ -465,8 +465,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     return {
       '--vds-scrubber-current-time': String(this.mediaCurrentTime),
       '--vds-scrubber-seekable': String(this.mediaSeekableAmount),
-      '--vds-scrubber-duration': String(this.mediaDuration),
-      '--vds-scrubber-preview-time': String(this.previewTime)
+      '--vds-scrubber-duration': String(this.mediaDuration)
     };
   }
 
@@ -982,6 +981,10 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    */
   updatePreviewTime(time, event) {
     this.previewTime = time;
+    this.style.setProperty(
+      '--vds-scrubber-preview-time',
+      String(this.previewTime)
+    );
     this.previewTimeChangeThrottle?.(this.previewTime, event);
   }
 
