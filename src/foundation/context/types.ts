@@ -29,7 +29,9 @@ export type ContextConsumeOptions<T> = ContextOptions<T> & {
   debug?: boolean;
 };
 
-export type ContextProvideOptions<T> = ContextOptions<T>;
+export type ContextProvideOptions<T> = ContextOptions<T> & {
+  debug?: boolean;
+};
 
 export interface Context<T> {
   initialValue: T;
