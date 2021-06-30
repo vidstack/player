@@ -76,9 +76,6 @@ export function WithContext(Base) {
      * @param {import('./types').ContextProvideOptions<T>} [options]
      */
     static defineContextProvider(name, context, options = {}) {
-      // eslint-disable-next-line no-prototype-builtins
-      if (this.prototype.hasOwnProperty(name)) return;
-
       // Might be called by decorator.
       this.finalizeContext();
 
@@ -90,7 +87,7 @@ export function WithContext(Base) {
 
       Object.defineProperty(this.prototype, name, {
         enumerable: true,
-        configurable: false,
+        configurable: true,
         get() {
           return this[PROVIDERS].get(name).value;
         },
@@ -129,9 +126,6 @@ export function WithContext(Base) {
      * @param {import('./types').ContextConsumeOptions<T>} [options]
      */
     static defineContextConsumer(name, context, options = {}) {
-      // eslint-disable-next-line no-prototype-builtins
-      if (this.prototype.hasOwnProperty(name)) return;
-
       // Might be called by decorator.
       this.finalizeContext();
 
@@ -144,6 +138,9 @@ export function WithContext(Base) {
           ...options,
           onUpdate: (newValue) => {
             if (!initialized) return;
+
+            // Trigger setters.
+            element[name] = newValue;
 
             if (options.shouldRequestUpdate ?? true) {
               element.requestUpdate(name, oldValue);
@@ -167,7 +164,7 @@ export function WithContext(Base) {
 
       Object.defineProperty(this.prototype, name, {
         enumerable: true,
-        configurable: false,
+        configurable: true,
         get() {
           return this[CONSUMERS].get(name).value;
         },
