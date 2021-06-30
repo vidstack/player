@@ -52,8 +52,10 @@
     "test:watch": "npm run test -- --watch",
     "test:ci": "wtr \"src/**/*.test.{js,ts}\" --config wtr-ci.config.mjs",
     "test:ci:coverage": "npm run test:ci -- --coverage",
-    "types": "tsc",
-    "types:watch": "tsc -w",
+    "types": "run-s types:clean types:build",
+    "types:build": "tsc",
+    "types:clean": "rimraf types",
+    "types:watch": "run-s types:clean \"types:build -- -w\"",
     "release": "npx semantic-release"
   },
   "dependencies": {
