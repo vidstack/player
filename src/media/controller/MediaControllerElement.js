@@ -1,5 +1,6 @@
 import { html } from 'lit';
 
+import { RequestQueue } from '../../bundle/index.js';
 import { provideContextRecord } from '../../foundation/context/index.js';
 import { VdsElement } from '../../foundation/elements/index.js';
 import {
@@ -213,7 +214,11 @@ export class MediaControllerElement extends VdsElement {
   }
 
   /**
-   * @protected
+   * @readonly
+   */
+  mediaProviderConnectedQueue = new RequestQueue();
+
+  /**
    * @readonly
    */
   mediaProviderDisposal = new DisposalBin();
@@ -245,9 +250,14 @@ export class MediaControllerElement extends VdsElement {
        * Using type `any` to bypass readonly `context`. Detach the media context.
        */
       /** @type {any} */ (provider).context = createMediaContextRecord();
+      this.mediaProviderConnectedQueue.serveImmediately = false;
+      this.mediaProviderConnectedQueue.reset();
     });
 
     this._mediaProvider = provider;
+
+    this.mediaProviderConnectedQueue.flush();
+    this.mediaProviderConnectedQueue.serveImmediately = true;
 
     onDisconnect(this.handleMediaProviderDisconnect.bind(this));
   }
