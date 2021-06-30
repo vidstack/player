@@ -144,8 +144,12 @@ export function WithContext(Base) {
           ...options,
           onUpdate: (newValue) => {
             if (!initialized) return;
-            element.requestUpdate(name, oldValue);
-            oldValue = newValue;
+
+            if (options.shouldRequestUpdate ?? true) {
+              element.requestUpdate(name, oldValue);
+              oldValue = newValue;
+            }
+
             options.onUpdate?.(newValue);
           }
         });

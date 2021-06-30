@@ -25,6 +25,7 @@ export type ContextConsumerDetail<T = any> = {
 
 export type ContextConsumeOptions<T> = ContextOptions<T> & {
   transform?: (newValue: T) => T;
+  shouldRequestUpdate?: boolean;
 };
 
 export type ContextProvideOptions<T> = ContextOptions<T>;
