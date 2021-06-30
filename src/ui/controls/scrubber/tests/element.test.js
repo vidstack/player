@@ -4,7 +4,8 @@ import { html } from 'lit';
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
   SCRUBBER_ELEMENT_TAG_NAME,
-  ScrubberElement} from '../ScrubberElement.js';
+  ScrubberElement
+} from '../ScrubberElement.js';
 
 window.customElements.define(SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
 
@@ -32,7 +33,7 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
       <div
         id="root"
         part="root"
-        style="--vds-scrubber-current-time:0;--vds-scrubber-seekable:0;--vds-scrubber-duration:0;--vds-scrubber-preview-time:0;"
+        style="--vds-scrubber-current-time:0;--vds-scrubber-seekable:0;--vds-scrubber-duration:0;"
       >
         <vds-slider
           exportparts="root: slider-root, thumb: slider-thumb, track: slider-track, track-fill: slider-track-fill"

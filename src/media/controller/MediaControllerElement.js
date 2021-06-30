@@ -1,6 +1,5 @@
 import { html } from 'lit';
 
-import { RequestQueue } from '../../bundle/index.js';
 import { provideContextRecord } from '../../foundation/context/index.js';
 import { VdsElement } from '../../foundation/elements/index.js';
 import {
@@ -8,6 +7,7 @@ import {
   DisposalBin
 } from '../../foundation/events/index.js';
 import { FullscreenController } from '../../foundation/fullscreen/index.js';
+import { RequestQueue } from '../../foundation/queue/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import { storybookAction } from '../../foundation/storybook/index.js';
 import { isNil } from '../../utils/unit.js';
