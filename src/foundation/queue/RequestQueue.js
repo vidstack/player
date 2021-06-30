@@ -1,7 +1,7 @@
 import { deferredPromise } from '../../utils/promise.js';
 
 /**
- * @template {string} RequestKey
+ * @template {string|symbol} RequestKey
  * @template {() => void | Promise <void>} RequestCallback
  */
 export class RequestQueue {
