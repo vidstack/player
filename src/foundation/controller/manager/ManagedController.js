@@ -46,7 +46,6 @@ export class ManagedController {
 
   /**
    * @protected
-   * @returns {void}
    */
   connectToManager() {
     const ctor = /** @type {typeof ManagedController} */ (this.constructor);

@@ -130,7 +130,6 @@ export class BufferingIndicatorElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleDefaultSlotChange() {
     this.defaultSlotEl = /** @type {HTMLElement} */ (
@@ -157,7 +156,6 @@ export class BufferingIndicatorElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   clearDelay() {
     window.clearTimeout(/** @type {number} */ (this.delayTimeout));
@@ -166,7 +164,6 @@ export class BufferingIndicatorElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleTogglingHiddenAttr() {
     this.clearDelay();
@@ -191,7 +188,6 @@ export class BufferingIndicatorElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   toggleHiddenAttr() {
     if (isNil(this.defaultSlotEl)) return;
@@ -212,7 +208,6 @@ export class BufferingIndicatorElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   dispatchIndicatorChangeEvent() {
     const Event = !this.wasPrevHidden

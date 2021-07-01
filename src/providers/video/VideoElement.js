@@ -239,7 +239,6 @@ export class VideoElement extends Html5MediaElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleLoadedMetadata(event) {
     this.context.mediaType = this.getMediaType();

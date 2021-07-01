@@ -13,7 +13,6 @@ import { getSlottedChildren } from '../../utils/dom.js';
 import { getAllObjectPropertyNames } from '../../utils/object.js';
 import { isNil, isString, isUndefined } from '../../utils/unit.js';
 import { mediaContext } from '../media.context.js';
-import { MediaPlugin } from '../plugin/index.js';
 import { MediaProviderElement } from '../provider/index.js';
 import { MediaContainerConnectEvent } from './events.js';
 import { mediaContainerElementStyles } from './styles.js';
@@ -123,7 +122,6 @@ export class MediaContainerElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   dispatchDiscoveryEvent() {
     this.dispatchEvent(
@@ -137,19 +135,6 @@ export class MediaContainerElement extends VdsElement {
       })
     );
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Plugin
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   */
-  mediaPlugin = new MediaPlugin(this, {
-    bridgedAttributes: /** @type {any} */ (this.constructor).observedAttributes,
-    bridgedProperties: Array.from(getAllObjectPropertyNames(this))
-  });
 
   // -------------------------------------------------------------------------------------------
   // Render - Root
@@ -363,7 +348,6 @@ export class MediaContainerElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleMediaSlotChange() {
     this.mediaProviderDisposal.empty();

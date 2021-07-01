@@ -36,7 +36,7 @@ export function WithContext(Base) {
 
     /**
      * @protected
-     * @returns {void}
+     *
      */
     static finalizeContext() {
       // eslint-disable-next-line no-prototype-builtins
@@ -54,7 +54,7 @@ export function WithContext(Base) {
 
     /**
      * @protected
-     * @returns {void}
+     *
      */
     static defineContextProviders() {
       const contextProviders = this.contextProviders ?? {};
@@ -104,7 +104,7 @@ export function WithContext(Base) {
 
     /**
      * @protected
-     * @returns {void}
+     *
      */
     static defineContextConsumers() {
       const contextConsumers = this.contextConsumers ?? {};

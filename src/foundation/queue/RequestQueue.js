@@ -79,7 +79,6 @@ export class RequestQueue {
   }
 
   /**
-   * @returns {void}
    */
   reset() {
     this.requestQueue.clear();
@@ -89,7 +88,6 @@ export class RequestQueue {
   }
 
   /**
-   * @returns {void}
    */
   destroy() {
     this.serveImmediately = false;

@@ -9,7 +9,6 @@ import {
   storybookAction,
   StorybookControlType
 } from '../../foundation/storybook/index.js';
-import { getAllObjectPropertyNames } from '../../utils/object.js';
 import { CanPlay } from '../CanPlay.js';
 import { createMediaContextRecord, mediaContext } from '../media.context.js';
 import {
@@ -40,7 +39,6 @@ import {
   VolumeChangeEvent,
   WaitingEvent
 } from '../media.events.js';
-import { MediaPlugin } from '../plugin/index.js';
 import { MediaProviderConnectEvent } from './events.js';
 
 /**
@@ -177,7 +175,6 @@ export class MediaProviderElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   dispatchDiscoveryEvent() {
     this.dispatchEvent(
@@ -243,7 +240,6 @@ export class MediaProviderElement extends VdsElement {
    * @protected
    * @abstract
    * @param {number} newVolume
-   * @returns {void}
    */
   setVolume(newVolume) {
     throw Error('Not implemented.');
@@ -317,7 +313,6 @@ export class MediaProviderElement extends VdsElement {
    * @protected
    * @abstract
    * @param {number} newTime
-   * @returns {void}
    */
   setCurrentTime(newTime) {
     throw Error('Not implemented.');
@@ -354,7 +349,6 @@ export class MediaProviderElement extends VdsElement {
    * @protected
    * @abstract
    * @param {boolean} isMuted
-   * @returns {void}
    */
   setMuted(isMuted) {
     throw Error('Not implemented.');
@@ -469,6 +463,13 @@ export class MediaProviderElement extends VdsElement {
    */
   get error() {
     return this.context.error;
+  }
+
+  /**
+   * Whether the current media is a live stream.
+   */
+  get live() {
+    return this.context.live;
   }
 
   /**
@@ -623,7 +624,7 @@ export class MediaProviderElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
+   *
    * @throws {Error} - Will throw if media is not ready for playback.
    */
   throwIfNotReadyForPlayback() {
@@ -651,7 +652,6 @@ export class MediaProviderElement extends VdsElement {
    * Call if you suspect that playback might have resumed/ended again.
    *
    * @protected
-   * @returns {void}
    */
   validatePlaybackEndedState() {
     if (this.context.ended && !this.hasPlaybackRoughlyEnded()) {
@@ -683,7 +683,7 @@ export class MediaProviderElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
+   *
    * @throws {Error} - Will throw if player is not in a video view.
    */
   throwIfNotVideoView() {
@@ -695,7 +695,6 @@ export class MediaProviderElement extends VdsElement {
   /**
    * @protected
    * @param {Event} [event]
-   * @returns {void}
    */
   handleMediaReady(event) {
     this.context.canPlay = true;
@@ -712,7 +711,6 @@ export class MediaProviderElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleMediaSrcChange() {
     // Skip first flush to ensure initial properties set make it to the provider.
@@ -725,21 +723,6 @@ export class MediaProviderElement extends VdsElement {
     this.mediaRequestQueue.reset();
     this.softResetMediaContext();
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Plugin
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   * @type {MediaPlugin<any>}
-   */
-  mediaPlugin = new MediaPlugin(this, {
-    bridgedAttributes: /** @type {any} */ (this.constructor).observedAttributes,
-    bridgedProperties: Array.from(getAllObjectPropertyNames(this)),
-    bridgedEvents: /** @type {any} */ (this.constructor).events
-  });
 
   // -------------------------------------------------------------------------------------------
   // Context
@@ -793,7 +776,6 @@ export class MediaProviderElement extends VdsElement {
    * properties returned from `getSoftResettableMediaContextProps()`.
    *
    * @protected
-   * @returns {void}
    */
   softResetMediaContext() {
     const propsToReset = this.getMediaPropsToResetWhenSrcChanges();

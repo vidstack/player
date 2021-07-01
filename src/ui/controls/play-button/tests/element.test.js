@@ -8,7 +8,8 @@ import {
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
   PLAY_BUTTON_ELEMENT_TAG_NAME,
-  PlayButtonElement} from '../PlayButtonElement.js';
+  PlayButtonElement
+} from '../PlayButtonElement.js';
 
 window.customElements.define(PLAY_BUTTON_ELEMENT_TAG_NAME, PlayButtonElement);
 

@@ -5,7 +5,8 @@ import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import { getSlottedChildren } from '../../../utils/dom.js';
 import {
   BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
-  BufferingIndicatorElement} from '../BufferingIndicatorElement.js';
+  BufferingIndicatorElement
+} from '../BufferingIndicatorElement.js';
 import {
   BufferingIndicatorHideEvent,
   BufferingIndicatorShowEvent

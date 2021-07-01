@@ -4,7 +4,6 @@ export * from '../foundation/directives/index.js';
 export * from '../foundation/elements/index.js';
 export * from '../foundation/events/index.js';
 export * from '../foundation/fullscreen/index.js';
-export * from '../foundation/plugin/index.js';
 export * from '../foundation/queue/index.js';
 export * from '../foundation/screen-orientation/index.js';
 export * from '../media/index.js';

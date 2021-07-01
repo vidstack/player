@@ -27,7 +27,6 @@ export class MediaRemoteControl {
 
   /**
    * @param {Event} [event]
-   * @returns {void}
    */
   play(event) {
     this.host.dispatchEvent(
@@ -39,7 +38,6 @@ export class MediaRemoteControl {
 
   /**
    * @param {Event} [event]
-   * @returns {void}
    */
   pause(event) {
     this.host.dispatchEvent(
@@ -51,7 +49,6 @@ export class MediaRemoteControl {
 
   /**
    * @param {Event} [event]
-   * @returns {void}
    */
   mute(event) {
     this.host.dispatchEvent(
@@ -63,7 +60,6 @@ export class MediaRemoteControl {
 
   /**
    * @param {Event} [event]
-   * @returns {void}
    */
   unmute(event) {
     this.host.dispatchEvent(
@@ -75,7 +71,6 @@ export class MediaRemoteControl {
 
   /**
    * @param {Event} [event]
-   * @returns {void}
    */
   enterFullscreen(event) {
     this.host.dispatchEvent(
@@ -87,7 +82,6 @@ export class MediaRemoteControl {
 
   /**
    * @param {Event} [event]
-   * @returns {void}
    */
   exitFullscreen(event) {
     this.host.dispatchEvent(
@@ -100,7 +94,6 @@ export class MediaRemoteControl {
   /**
    * @param {number} time
    * @param {Event} event
-   * @returns {void}
    */
   seeking(time, event) {
     this.host.dispatchEvent(
@@ -114,7 +107,6 @@ export class MediaRemoteControl {
   /**
    * @param {number} time
    * @param {Event} [event]
-   * @returns {void}
    */
   seek(time, event) {
     this.host.dispatchEvent(
@@ -128,7 +120,6 @@ export class MediaRemoteControl {
   /**
    * @param {number} volume
    * @param {Event} [event]
-   * @returns {void}
    */
   changeVolume(volume, event) {
     this.host.dispatchEvent(

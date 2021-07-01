@@ -7,7 +7,8 @@ import { getSlottedChildren } from '../../../utils/dom.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 import {
   MEDIA_UI_ELEMENT_TAG_NAME,
-  MediaUiElement} from '../MediaUiElement.js';
+  MediaUiElement
+} from '../MediaUiElement.js';
 
 // Why do we need this? `../define ` import at the top of this file is being called correctly.
 window.customElements.define(MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);

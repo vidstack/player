@@ -79,7 +79,6 @@ export class VideoPresentationController {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleHostDisconnected() {
     this.setPresentationMode('inline');
@@ -151,7 +150,6 @@ export class VideoPresentationController {
 
   /**
    * @param {import('../../../foundation/types/media').WebKitPresentationMode} mode
-   * @returns {void}
    */
   setPresentationMode(mode) {
     this.host.videoElement?.webkitSetPresentationMode?.(mode);
@@ -173,7 +171,6 @@ export class VideoPresentationController {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handlePresentationModeChange(event) {
     redispatchEvent(this.host, event);

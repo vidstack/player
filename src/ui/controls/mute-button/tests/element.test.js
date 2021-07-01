@@ -8,7 +8,8 @@ import {
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
   MUTE_BUTTON_ELEMENT_TAG_NAME,
-  MuteButtonElement} from '../MuteButtonElement.js';
+  MuteButtonElement
+} from '../MuteButtonElement.js';
 
 window.customElements.define(MUTE_BUTTON_ELEMENT_TAG_NAME, MuteButtonElement);
 

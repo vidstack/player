@@ -132,7 +132,6 @@ export class ToggleElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   handlePressedSlotChange() {
     this.currentPressedSlotElement = /** @type {HTMLElement} */ (
@@ -183,7 +182,6 @@ export class ToggleElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleNotPressedSlotChange() {
     this.currentNotPressedSlotElement = /** @type {HTMLElement} */ (
@@ -199,7 +197,6 @@ export class ToggleElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   toggle() {
     this.toggleHiddenAttr(this.currentPressedSlotElement, !this.pressed);
@@ -210,7 +207,6 @@ export class ToggleElement extends VdsElement {
    * @protected
    * @param {HTMLElement | undefined} [el=undefined]
    * @param {boolean | undefined} [isHidden=undefined]
-   * @returns {void}
    */
   toggleHiddenAttr(el, isHidden) {
     if (!isNil(el)) {

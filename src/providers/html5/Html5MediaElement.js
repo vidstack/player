@@ -90,28 +90,10 @@ export class Html5MediaElement extends MediaProviderElement {
   /** @type {string[]} */
   static get events() {
     return [
-      'abort',
-      'canplay',
-      'canplaythrough',
-      'durationchange',
-      'emptied',
-      'ended',
-      'error',
-      'loadeddata',
-      'loadedmetadata',
-      'loadstart',
-      'pause',
-      'play',
-      'playing',
-      'progress',
-      'ratechange',
-      'seeked',
-      'seeking',
-      'stalled',
-      'suspend',
-      'timeupdate',
-      'volumechange',
-      'waiting',
+      ...MediaProviderElement.events.map((event) =>
+        // vds-can-play => canplay
+        event.slice(4).replace('-', '')
+      ),
       ...super.events
     ];
   }
@@ -367,7 +349,6 @@ export class Html5MediaElement extends MediaProviderElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleDefaultSlotChange() {
     if (isNil(this.mediaElement)) return;
@@ -378,7 +359,6 @@ export class Html5MediaElement extends MediaProviderElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   cleanupOldSourceNodes() {
     const nodes = this.mediaElement?.querySelectorAll('source,track');
@@ -387,7 +367,6 @@ export class Html5MediaElement extends MediaProviderElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   attachNewSourceNodes() {
     const validTags = new Set(['source', 'track']);
@@ -408,7 +387,6 @@ export class Html5MediaElement extends MediaProviderElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   bindMediaEventListeners() {
     if (isNil(this.mediaElement)) return;
@@ -453,7 +431,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleAbort(event) {
     this.dispatchEvent(new AbortEvent({ originalEvent: event }));
@@ -462,7 +439,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleCanPlay(event) {
     this.context.buffered = this.mediaElement.buffered;
@@ -473,7 +449,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleCanPlayThrough(event) {
     this.context.canPlayThrough = true;
@@ -483,7 +458,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleLoadStart(event) {
     this.context.currentSrc = this.mediaElement.currentSrc;
@@ -493,7 +467,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleEmptied(event) {
     this.dispatchEvent(new EmptiedEvent({ originalEvent: event }));
@@ -502,7 +475,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleLoadedData(event) {
     this.dispatchEvent(new LoadedDataEvent({ originalEvent: event }));
@@ -522,7 +494,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleLoadedMetadata(event) {
     this.context.duration = this.mediaElement.duration;
@@ -538,7 +509,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handlePlay(event) {
     this.requestTimeUpdates();
@@ -555,7 +525,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handlePause(event) {
     this.cancelTimeUpdates();
@@ -568,7 +537,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handlePlaying(event) {
     this.context.playing = true;
@@ -579,7 +547,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleDurationChange(event) {
     this.context.duration = this.mediaElement.duration;
@@ -595,7 +562,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleProgress(event) {
     this.context.buffered = this.mediaElement.buffered;
@@ -606,7 +572,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleRateChange(event) {
     // TODO: no-op for now but we'll add playback rate support later.
@@ -616,7 +581,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleSeeked(event) {
     this.context.currentTime = this.mediaElement.currentTime;
@@ -633,7 +597,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleSeeking(event) {
     this.context.currentTime = this.mediaElement.currentTime;
@@ -649,7 +612,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleStalled(event) {
     this.dispatchEvent(new StalledEvent({ originalEvent: event }));
@@ -658,7 +620,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleTimeUpdate(event) {
     // -- Time updates are performed in `requestTimeUpdates()`.
@@ -669,7 +630,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleVolumeChange(event) {
     this.context.volume = this.mediaElement.volume;
@@ -688,7 +648,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleWaiting(event) {
     this.context.waiting = true;
@@ -698,7 +657,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleSuspend(event) {
     this.context.waiting = false;
@@ -708,7 +666,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleEnded(event) {
     // Check becuase might've been handled in `validatePlaybackEnded()`.
@@ -725,7 +682,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleError(event) {
     this.context.error = this.mediaElement.error;
@@ -760,7 +716,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {number} newVolume
-   * @returns {void}
    */
   setVolume(newVolume) {
     this.mediaElement.volume = newVolume;
@@ -777,7 +732,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {number} newTime
-   * @returns {void}
    */
   setCurrentTime(newTime) {
     if (this.mediaElement.currentTime !== newTime) {
@@ -798,7 +752,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * @protected
    * @param {boolean} isMuted
-   * @returns {void}
    */
   setMuted(isMuted) {
     this.mediaElement.muted = isMuted;

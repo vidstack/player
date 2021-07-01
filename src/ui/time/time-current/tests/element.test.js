@@ -4,7 +4,8 @@ import { html } from 'lit';
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
   TIME_CURRENT_ELEMENT_TAG_NAME,
-  TimeCurrentElement} from '../TimeCurrentElement.js';
+  TimeCurrentElement
+} from '../TimeCurrentElement.js';
 
 window.customElements.define(TIME_CURRENT_ELEMENT_TAG_NAME, TimeCurrentElement);
 

@@ -242,7 +242,6 @@ export class FullscreenController {
   /**
    * @protected
    * @param {Event} [event]
-   * @returns {void}
    */
   handleFullscreenChange(event) {
     if (!this.isFullscreen) this.disconnectDisposal.empty();
@@ -254,7 +253,6 @@ export class FullscreenController {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleFullscreenError(event) {
     this.delegates.forEach((delegate) =>
@@ -315,7 +313,7 @@ export class FullscreenController {
 
   /**
    * @protected
-   * @returns {void}
+   *
    * @throws {Error} - Will throw if Fullscreen API is not enabled or supported.
    */
   throwIfNoFullscreenSupport() {

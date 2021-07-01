@@ -1,9 +1,10 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
-import { spy } from 'sinon';
 
 import {
-  bridgeElements,
+  getElementAttributes,
+  getElementOwnAttributes,
+  observeAndForwardAttributes,
   raf,
   safelyDefineCustomElement,
   willElementsCollide
@@ -90,151 +91,80 @@ describe('utils/dom', function () {
     });
   });
 
-  describe(bridgeElements.name, function () {
-    class ElementA extends HTMLElement {
-      knownProperty = true;
-      knownMethod() {
-        // ...
+  describe(getElementOwnAttributes.name, function () {
+    class A extends LitElement {
+      /** @type {import('lit').PropertyDeclarations} */
+      static get properties() {
+        return {
+          propA: {},
+          propB: {},
+          propC: { attribute: 'prop-c' }
+        };
       }
     }
 
-    class ElementB extends HTMLElement {
-      unknownProperty = true;
-      unknownMethod() {
-        // ...
+    class B extends A {
+      /** @type {import('lit').PropertyDeclarations} */
+      static get properties() {
+        return {
+          propD: {},
+          propE: { attribute: 'prop-e' }
+        };
       }
     }
 
-    beforeEach(function () {
-      safelyDefineCustomElement('el-a', ElementA);
-      safelyDefineCustomElement('el-b', ElementB);
+    it('it should return own attributes', function () {
+      const elementAAttrs = getElementOwnAttributes(A);
+      const elementBAttrs = getElementOwnAttributes(B);
+
+      expect(Array.from(elementAAttrs)).eql(['propa', 'propb', 'prop-c']);
+      expect(Array.from(elementBAttrs)).eql(['propd', 'prop-e']);
     });
 
-    it('should hydrate whitelisted attributes on bridge creation', function () {
-      const elementA = document.createElement('el-a');
-      const elementB = document.createElement('el-b');
-
-      elementA.setAttribute('attr-a', 'a');
-      elementA.setAttribute('attr-b', 'b');
-      elementA.setAttribute('attr-invalid', '');
-
-      const destroy = bridgeElements(elementA, elementB, {
-        attributes: new Set(['attr-a', 'attr-b'])
-      });
-
-      expect(elementB).to.have.attribute('attr-a', 'a');
-      expect(elementB).to.have.attribute('attr-b', 'b');
-      expect(elementB).to.not.have.attribute('attr-invalid');
-
-      destroy();
+    it('it should return all attributes', function () {
+      const attributes = getElementAttributes(B);
+      expect(Array.from(attributes)).eql([
+        'propd',
+        'prop-e',
+        'propa',
+        'propb',
+        'prop-c'
+      ]);
     });
+  });
 
-    it('should observe whitelisted attribute changes and forward them', async function () {
-      const elementA = document.createElement('el-a');
-      const elementB = document.createElement('el-b');
+  describe(observeAndForwardAttributes.name, function () {
+    it('should forward attributes', async function () {
+      const elementA = document.createElement('div');
+      const elementB = document.createElement('div');
 
-      const destroy = bridgeElements(elementA, elementB, {
-        attributes: new Set(['attr-a', 'attr-b'])
-      });
-
-      elementA.setAttribute('attr-a', 'a');
-      elementA.setAttribute('attr-b', 'b');
-      elementA.setAttribute('attr-invalid', '');
-
-      await raf();
-
-      expect(elementB).to.have.attribute('attr-a', 'a');
-      expect(elementB).to.have.attribute('attr-b', 'b');
-      expect(elementB).to.not.have.attribute('attr-invalid');
-
-      destroy();
-
-      elementA.setAttribute('attr-a', 'a1');
-      elementA.setAttribute('attr-b', 'b1');
-      elementA.setAttribute('attr-invalid', '');
-
-      await raf();
-
-      expect(elementB).to.not.have.attribute('attr-a', 'a1');
-      expect(elementB).to.not.have.attribute('attr-b', 'b1');
-      expect(elementB).to.not.have.attribute('attr-invalid');
-    });
-
-    it('should forward whitelisted events', function () {
-      const elementA = document.createElement('el-a');
-      const elementB = document.createElement('el-b');
-
-      const clickSpy = spy();
-      const focusSpy = spy();
-      const blurSpy = spy();
-
-      elementA.addEventListener('click', clickSpy);
-      elementA.addEventListener('focus', focusSpy);
-      elementA.addEventListener('blur', blurSpy);
-
-      const destroy = bridgeElements(elementA, elementB, {
-        events: new Set(['click', 'focus'])
-      });
-
-      elementB.dispatchEvent(new MouseEvent('click'));
-      elementB.dispatchEvent(new FocusEvent('focus'));
-      elementB.dispatchEvent(new FocusEvent('blur'));
-
-      expect(clickSpy).to.have.been.calledOnce;
-      expect(focusSpy).to.have.been.calledOnce;
-      expect(blurSpy).to.not.have.been.called;
-
-      destroy();
-
-      elementB.dispatchEvent(new MouseEvent('click'));
-      elementB.dispatchEvent(new FocusEvent('focus'));
-      elementB.dispatchEvent(new FocusEvent('blur'));
-
-      expect(clickSpy).to.have.been.calledOnce;
-      expect(focusSpy).to.have.been.calledOnce;
-      expect(blurSpy).to.not.have.been.called;
-    });
-
-    it('should proxy whitelisted properties', function () {
-      const elementA = /** @type {ElementA & ElementB} */ (
-        document.createElement('el-a')
+      const observer = observeAndForwardAttributes(
+        elementA,
+        elementB,
+        new Set(['a', 'b'])
       );
 
-      const elementB = /** @type {ElementB} */ (document.createElement('el-b'));
+      elementA.setAttribute('a', '10');
+      await raf();
+      expect(elementB).to.have.attribute('a', '10');
 
-      const destroy = bridgeElements(elementA, elementB, {
-        properties: new Set(['unknownProperty', 'unknownMethod'])
-      });
+      elementA.setAttribute('a', '20');
+      await raf();
+      expect(elementB).to.have.attribute('a', '20');
 
-      const knownMethodSpy = spy(elementA, 'knownMethod');
-      const unknownMethodSpy = spy(elementB, 'unknownMethod');
+      elementA.setAttribute('b', '');
+      await raf();
+      expect(elementB).to.have.attribute('b', '');
 
-      expect(elementA.knownProperty).to.be.true;
-      expect(elementA.unknownProperty).to.be.true;
+      elementA.setAttribute('c', '');
+      await raf();
+      expect(elementB).to.not.have.attribute('c');
 
-      elementA.knownProperty = false;
-      expect(elementA.knownProperty).to.be.false;
+      observer.disconnect();
 
-      elementA.unknownProperty = false;
-      expect(elementA.unknownProperty).to.be.false;
-      expect(elementB.unknownProperty).to.be.false;
-
-      elementA.knownMethod();
-      expect(knownMethodSpy).to.have.been.calledOnce;
-
-      elementA.unknownMethod();
-      expect(unknownMethodSpy).to.have.been.calledOnce;
-
-      destroy();
-
-      expect(elementA.knownProperty).to.be.false;
-      expect(elementA.unknownProperty).to.be.undefined;
-
-      elementA.knownMethod();
-      expect(knownMethodSpy).to.have.been.calledTwice;
-      expect(() => {
-        elementA.unknownMethod();
-      }).to.throw();
+      elementA.setAttribute('b', '10');
+      await raf();
+      expect(elementB).to.have.attribute('b', '');
     });
   });
 });

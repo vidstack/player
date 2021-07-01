@@ -4,13 +4,19 @@ import { provideContextRecord } from '../../foundation/context/index.js';
 import { VdsElement } from '../../foundation/elements/index.js';
 import {
   bindEventListeners,
-  DisposalBin
+  DisposalBin,
+  listen,
+  redispatchEvent
 } from '../../foundation/events/index.js';
 import { FullscreenController } from '../../foundation/fullscreen/index.js';
 import { RequestQueue } from '../../foundation/queue/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import { storybookAction } from '../../foundation/storybook/index.js';
-import { isNil } from '../../utils/unit.js';
+import {
+  getElementAttributes,
+  observeAndForwardAttributes
+} from '../../utils/dom.js';
+import { isFunction, isNil, isNull } from '../../utils/unit.js';
 import {
   MediaContainerConnectEvent,
   MediaContainerElement
@@ -27,11 +33,11 @@ import {
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
 } from '../media-request.events.js';
-import { MediaPluginManager } from '../plugin/index.js';
 import {
   MediaProviderConnectEvent,
   MediaProviderElement
 } from '../provider/index.js';
+import { FORWARDED_MEDIA_PROVDER_PROPS } from './forward.js';
 import { mediaControllerStyles } from './styles.js';
 
 export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
@@ -46,10 +52,8 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  * - Listen for media request events and fulfill them by calling the appropriate props/methods on
  * the current media provider.
  *
- * - Be the host for the plugins manager so that other elements can become plugins to extend
- * its functionality. Attributes, properties (including methods), and events can be forwarded
- * or "bridged" between the plugin and this controller. In other words, the media controller
- * behaves as a proxy for media plugins which are other elements nested inside it.
+ * - Act as a proxy for the connected media provider element. As a proxy it will forward
+ * attributes, properties, methods and events to/from the provider.
  *
  * @template {MediaProviderElement} MediaProvider
  *
@@ -82,6 +86,11 @@ export class MediaControllerElement extends VdsElement {
     return [mediaControllerStyles];
   }
 
+  constructor() {
+    super();
+    this.defineForwardedMediaProviderProperties();
+  }
+
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
@@ -96,22 +105,11 @@ export class MediaControllerElement extends VdsElement {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Plugin
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   */
-  mediaPluginManager = new MediaPluginManager(this);
-
-  // -------------------------------------------------------------------------------------------
   // Event Bindings
   // -------------------------------------------------------------------------------------------
 
   /**
    * @protected
-   * @returns {void}
    */
   bindEventListeners() {
     const events = {
@@ -176,7 +174,6 @@ export class MediaControllerElement extends VdsElement {
   /**
    * @protected
    * @param {MediaContainerConnectEvent} event
-   * @returns {void}
    */
   handleMediaContainerConnect(event) {
     this.handleMediaContainerDisconnect();
@@ -187,7 +184,6 @@ export class MediaControllerElement extends VdsElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleMediaContainerDisconnect() {
     this._mediaContainer = undefined;
@@ -226,7 +222,6 @@ export class MediaControllerElement extends VdsElement {
   /**
    * @protected
    * @param {MediaProviderConnectEvent} event
-   * @returns {void}
    */
   handleMediaProviderConnect(event) {
     if (this.mediaProvider === event.detail?.provider) return;
@@ -235,36 +230,141 @@ export class MediaControllerElement extends VdsElement {
 
     const { provider, onDisconnect } = event.detail;
 
-    /**
-     * Using type `any` to bypass readonly `context`. We are injecting our context object into the
-     * `MediaProviderElement` so it can be managed by it.
-     */
-    /** @type {any} */ (provider).context = this.context;
-
-    this.mediaProviderDisconnectDisposal.add(
-      provider.addFullscreenController(this.fullscreenController)
-    );
-
-    this.mediaProviderDisconnectDisposal.add(() => {
-      /**
-       * Using type `any` to bypass readonly `context`. Detach the media context.
-       */
-      /** @type {any} */ (provider).context = createMediaContextRecord();
-      this.mediaProviderConnectedQueue.serveImmediately = false;
-      this.mediaProviderConnectedQueue.reset();
-    });
-
     this._mediaProvider = provider;
 
-    this.mediaProviderConnectedQueue.flush();
-    this.mediaProviderConnectedQueue.serveImmediately = true;
+    this.attachMediaContextRecordToProvider();
+    this.forwardMediaProviderAttributes();
+    this.forwardMediaProviderEvents();
+    this.addFullscreenControllerToProvider();
+    this.flushMediaProviderConnectedQueue();
 
     onDisconnect(this.handleMediaProviderDisconnect.bind(this));
   }
 
   /**
    * @protected
-   * @returns {void}
+   */
+  flushMediaProviderConnectedQueue() {
+    this.mediaProviderConnectedQueue.flush();
+    this.mediaProviderConnectedQueue.serveImmediately = true;
+
+    this.mediaProviderDisconnectDisposal.add(() => {
+      this.mediaProviderConnectedQueue.serveImmediately = false;
+      this.mediaProviderConnectedQueue.reset();
+    });
+  }
+
+  /**
+   * @protected
+   */
+  attachMediaContextRecordToProvider() {
+    if (isNil(this.mediaProvider)) return;
+
+    /** @type {any} */ (this.mediaProvider).context = this.context;
+
+    this.mediaProviderDisconnectDisposal.add(() => {
+      /** @type {any} */ (this.mediaProvider).context =
+        createMediaContextRecord();
+    });
+  }
+
+  /**
+   * @protected
+   */
+  addFullscreenControllerToProvider() {
+    if (isNil(this.mediaProvider)) return;
+    const dispose = this.mediaProvider.addFullscreenController(
+      this.fullscreenController
+    );
+    this.mediaProviderDisconnectDisposal.add(dispose);
+  }
+
+  /**
+   * @protected
+   */
+  forwardMediaProviderAttributes() {
+    if (isNil(this.mediaProvider)) return;
+
+    const ctor = /** @type {typeof import('lit').LitElement} */ (
+      this.mediaProvider.constructor
+    );
+
+    const attributes = getElementAttributes(ctor);
+
+    // Forward initial attributes.
+    for (const attrName of attributes) {
+      const attrValue = this.getAttribute(attrName);
+      if (!isNull(attrValue)) {
+        this.mediaProvider.setAttribute(attrName, attrValue);
+      }
+    }
+
+    const observer = observeAndForwardAttributes(
+      this,
+      this.mediaProvider,
+      attributes
+    );
+
+    this.mediaProviderDisconnectDisposal.add(() => {
+      observer.disconnect();
+    });
+  }
+
+  /**
+   * @protected
+   */
+  forwardMediaProviderEvents() {
+    if (isNil(this.mediaProvider)) return;
+
+    const ctor = /** @type {typeof VdsElement} */ (
+      this.mediaProvider.constructor
+    );
+
+    const events = ctor.events ?? [];
+
+    for (const eventType of events) {
+      const dispose = listen(this.mediaProvider, eventType, (event) => {
+        redispatchEvent(this, event);
+      });
+
+      this.mediaProviderDisconnectDisposal.add(dispose);
+    }
+  }
+
+  /**
+   * @protected
+   */
+  defineForwardedMediaProviderProperties() {
+    FORWARDED_MEDIA_PROVDER_PROPS.forEach((prop) => {
+      const defaultVaue =
+        prop in mediaContext ? mediaContext[prop].initialValue : undefined;
+      this.defineMediaProviderProperty(prop, defaultVaue);
+    });
+  }
+
+  /**
+   * @protected
+   * @param {string} propName
+   * @param {any} [defaultValue]
+   */
+  defineMediaProviderProperty(propName, defaultValue = undefined) {
+    Object.defineProperty(this, propName, {
+      get: () => {
+        const value = this.mediaProvider?.[propName] ?? defaultValue;
+        return isFunction(value) ? value.bind(this.mediaProvider) : value;
+      },
+      set: (value) => {
+        this.mediaProviderConnectedQueue.queue(`controller${propName}`, () => {
+          if (!isNil(this.mediaProvider)) {
+            this.mediaProvider[propName] = value;
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * @protected
    */
   handleMediaProviderDisconnect() {
     this.mediaProviderDisconnectDisposal.empty();
@@ -280,7 +380,6 @@ export class MediaControllerElement extends VdsElement {
    *
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   mediaRequestEventGateway(event) {
     event.stopPropagation();
@@ -289,7 +388,6 @@ export class MediaControllerElement extends VdsElement {
   /**
    * @protected
    * @param {MuteRequestEvent} event
-   * @returns {void}
    */
   handleMuteRequest(event) {
     this.mediaRequestEventGateway(event);
@@ -301,7 +399,6 @@ export class MediaControllerElement extends VdsElement {
   /**
    * @protected
    * @param {UnmuteRequestEvent} event
-   * @returns {void}
    */
   handleUnmuteRequest(event) {
     this.mediaRequestEventGateway(event);
@@ -313,7 +410,6 @@ export class MediaControllerElement extends VdsElement {
   /**
    * @protected
    * @param {PlayRequestEvent} event
-   * @returns {void}
    */
   handlePlayRequest(event) {
     this.mediaRequestEventGateway(event);
@@ -325,7 +421,6 @@ export class MediaControllerElement extends VdsElement {
   /**
    * @protected
    * @param {PauseRequestEvent} event
-   * @returns {void}
    */
   handlePauseRequest(event) {
     this.mediaRequestEventGateway(event);
@@ -337,7 +432,6 @@ export class MediaControllerElement extends VdsElement {
   /**
    * @protected
    * @param {SeekRequestEvent} event
-   * @returns {void}
    */
   handleSeekRequest(event) {
     this.mediaRequestEventGateway(event);
@@ -349,7 +443,6 @@ export class MediaControllerElement extends VdsElement {
   /**
    * @protected
    * @param {VolumeChangeRequestEvent} event
-   * @returns {void}
    */
   handleVolumeChangeRequest(event) {
     this.mediaRequestEventGateway(event);

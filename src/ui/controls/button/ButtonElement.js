@@ -291,7 +291,6 @@ export class ButtonElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @returns {void}
    */
   addDefaultEventListeners() {
     this.disconnectDisposal.add(

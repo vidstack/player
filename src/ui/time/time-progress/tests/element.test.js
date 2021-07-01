@@ -4,7 +4,8 @@ import { html } from 'lit';
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
   TIME_PROGRESS_ELEMENT_TAG_NAME,
-  TimeProgressElement} from '../TimeProgressElement.js';
+  TimeProgressElement
+} from '../TimeProgressElement.js';
 
 window.customElements.define(
   TIME_PROGRESS_ELEMENT_TAG_NAME,

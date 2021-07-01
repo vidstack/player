@@ -404,7 +404,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {PointerEvent} event
-   * @returns {void}
    */
   handleSliderPointerMove(event) {
     if (this.disabled) return;
@@ -486,7 +485,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {KeyboardEvent} event
-   * @returns {void}
    */
   handleThumbContainerKeydown(event) {
     if (this.disabled) return;
@@ -521,7 +519,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {PointerEvent} event
-   * @returns {void}
    */
   handleThumbContainerPointerDown(event) {
     if (this.disabled) return;
@@ -698,7 +695,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {PointerEvent} event
-   * @returns {void}
    */
   startDragging(event) {
     if (this._isDragging) return;
@@ -715,7 +711,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {PointerEvent} event
-   * @returns {void}
    */
   stopDragging(event) {
     if (!this._isDragging) return;
@@ -741,7 +736,6 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @returns {void}
    */
   initPointerMoveThrottle() {
     this.pointerMoveThrottle?.cancel();
@@ -751,7 +745,6 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @returns {void}
    */
   addDocumentPointerEventListeners() {
     const documentEvents = {
@@ -766,7 +759,6 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @returns {void}
    */
   destroyPointerMoveThrottle() {
     this.pointerMoveThrottle?.cancel();
@@ -776,7 +768,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {PointerEvent} event
-   * @returns {void}
    */
   handleDocumentPointerUp(event) {
     if (this.disabled || !this._isDragging) return;
@@ -786,7 +777,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {PointerEvent} event
-   * @returns {void}
    */
   handleDocumentPointerMove(event) {
     if (this.disabled || !this._isDragging) {
@@ -800,7 +790,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {PointerEvent} event
-   * @returns {void}
    */
   handlePointerMove(event) {
     if (this.disabled || !this._isDragging) return;
@@ -810,7 +799,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {number} rate
-   * @returns {void}
    */
   updateValueByRate(rate) {
     const boundRate = Math.min(1, Math.max(0, rate));
@@ -824,7 +812,6 @@ export class SliderElement extends WithFocus(VdsElement) {
    * @protected
    * @param {PointerEvent} event
    * @param {boolean} [shouldFireValueChange=true]
-   * @returns {void}
    */
   updateValueBasedOnThumbPosition(event, shouldFireValueChange = true) {
     const thumbPosition = event.clientX;

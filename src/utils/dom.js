@@ -1,11 +1,8 @@
-import {
-  DisposalBin,
-  listen,
-  redispatchEvent
-} from '../foundation/events/index.js';
-import { proxyProperties } from './object.js';
+import { LitElement } from 'lit';
+
+import { keysOf } from './string.js';
 import { IS_CLIENT } from './support.js';
-import { isNull, isUndefined } from './unit.js';
+import { isNil, isUndefined } from './unit.js';
 
 /**
  * Requests an animation frame and waits for it to be resolved.
@@ -44,7 +41,7 @@ export function buildExportPartsAttr(parts, prefix) {
  * @param {string} name - A string representing the name you are giving the element.
  * @param {CustomElementConstructor} constructor - A class object that defines the behaviour of the element.
  * @param {boolean} isClient
- * @returns {void}
+ *
  */
 export function safelyDefineCustomElement(
   name,
@@ -58,19 +55,19 @@ export function safelyDefineCustomElement(
 }
 
 /**
- * Sets an attribute on the given `el`. If the `attrValue` is `undefined` the attribute will
- * be removed.
+ * Sets an attribute on the given `el`. If the `attrValue` is `undefined`or `null` the attribute
+ * will be removed.
  *
- * @param {HTMLElement} el - The element to set the attribute on.
+ * @param {Element} element - The element to set the attribute on.
  * @param {string} attrName - The name of the attribute.
- * @param {string} [attrValue] - The value of the attribute.
- * @returns {void}
+ * @param {string | null} [attrValue] - The value of the attribute.
+ *
  */
-export function setAttribute(el, attrName, attrValue) {
-  if (isUndefined(attrValue)) {
-    el.removeAttribute(attrName);
+export function setAttribute(element, attrName, attrValue) {
+  if (isNil(attrValue)) {
+    element.removeAttribute(attrName);
   } else {
-    el.setAttribute(attrName, attrValue);
+    element.setAttribute(attrName, attrValue);
   }
 }
 
@@ -127,88 +124,67 @@ export function willElementsCollide(
 }
 
 /**
- * @template Properties
- * @typedef {{
- *   attributes?: Set<string>;
- *   properties?: Set<Properties>;
- *   events?: Set<string>;
- * }} ElementBridgeWhitelist
+ * @protected
+ * @param {typeof import('lit').LitElement} elementCtor
+ * @returns {Set<string>}
  */
+export function getElementOwnAttributes(elementCtor) {
+  const attributes = new Set();
+
+  const properties =
+    /** @type {typeof import('lit').LitElement} */ (elementCtor).properties ??
+    [];
+
+  keysOf(properties).forEach((prop) => {
+    const attrName = properties[prop].attribute ?? String(prop).toLowerCase();
+    attributes.add(attrName);
+  });
+
+  return attributes;
+}
 
 /**
- * Creates a bridge from `elementA` to `elementB`.
- *
- * @template {Element} T
- * @template {Element} R
- * @param {T} elementA
- * @param {R} elementB
- * @param {ElementBridgeWhitelist<keyof R>} whitelist
- * @returns {(() => void)} Cleanup function to destroy bridge.
+ * @protected
+ * @param {typeof import('lit').LitElement} elementCtor
+ * @returns {Set<string>}
  */
-export function bridgeElements(elementA, elementB, whitelist) {
-  const disposal = new DisposalBin();
+export function getElementAttributes(elementCtor) {
+  const allAttributes = new Set();
 
-  // Proxy propeties/methods on `elementA` to `elementB`.
-  if (!isUndefined(whitelist.properties)) {
-    const disposeProxy = proxyProperties(
-      elementA,
-      elementB,
-      whitelist.properties
-    );
+  let proto = elementCtor;
 
-    disposal.add(disposeProxy);
+  while (proto !== LitElement) {
+    const ownAttributes = getElementOwnAttributes(proto);
+    ownAttributes.forEach((attr) => allAttributes.add(attr));
+    proto = Object.getPrototypeOf(proto);
   }
 
-  if (!isUndefined(whitelist.attributes)) {
-    // Forward initial attributes on `elementA` to `elementB`.
-    whitelist.attributes.forEach((attrName) => {
-      if (elementA.hasAttribute(attrName)) {
+  return allAttributes;
+}
+
+/**
+ * @param {Element} elementA
+ * @param {Element} elementB
+ * @param {Set<string>} attributes
+ * @returns {MutationObserver}
+ */
+export function observeAndForwardAttributes(elementA, elementB, attributes) {
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === 'attributes') {
+        const attrName = /** @type {string} **/ (mutation.attributeName);
         const attrValue = /** @type {string} */ (
           elementA.getAttribute(attrName)
         );
-        elementB.setAttribute(attrName, attrValue);
+
+        setAttribute(elementB, attrName, attrValue);
       }
-    });
+    }
+  });
 
-    // Observe attribute changes and forward to `elementB`.
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (mutation.type === 'attributes') {
-          const attrName = /** @type {string} **/ (mutation.attributeName);
-          const attrValue = /** @type {string} */ (
-            elementA.getAttribute(attrName)
-          );
+  observer.observe(elementA, {
+    attributeFilter: Array.from(attributes)
+  });
 
-          if (isNull(attrValue)) {
-            elementB.removeAttribute(attrName);
-          } else {
-            elementB.setAttribute(attrName, attrValue);
-          }
-        }
-      }
-    });
-
-    observer.observe(elementA, {
-      attributeFilter: Array.from(whitelist.attributes)
-    });
-
-    disposal.add(() => observer.disconnect());
-  }
-
-  // Listen to dispatched events on `elementB` and forward them.
-  if (!isUndefined(whitelist.events)) {
-    Array.from(whitelist.events)
-      .map((eventType) =>
-        listen(elementB, eventType, (event) => {
-          redispatchEvent(elementA, event);
-        })
-      )
-      .forEach((dispose) => {
-        disposal.add(dispose);
-      });
-  }
-
-  return () => {
-    disposal.empty();
-  };
+  return observer;
 }

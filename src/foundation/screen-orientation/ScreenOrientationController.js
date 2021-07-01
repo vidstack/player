@@ -184,7 +184,6 @@ export class ScreenOrientationController {
 
   /**
    * @protected
-   * @returns {void}
    */
   addScreenOrientationEventListeners() {
     if (!this.canOrient) return;
@@ -205,7 +204,6 @@ export class ScreenOrientationController {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleOrientationChange() {
     this.screenOrientation = window.screen.orientation.type;
@@ -216,7 +214,6 @@ export class ScreenOrientationController {
 
   /**
    * @protected
-   * @returns {void}
    */
   updateScreenOrientation() {
     this.screenOrientation = IS_CLIENT
@@ -226,7 +223,7 @@ export class ScreenOrientationController {
 
   /**
    * @protected
-   * @returns {void}
+   *
    * @throws {Error} - Will throw if Screen Orientation API is unavailable.
    */
   throwIfScreenOrientationUnavailable() {

@@ -147,7 +147,6 @@ export class VideoFullscreenController extends FullscreenController {
   /**
    * @protected
    * @param {VideoPresentationController} controller
-   * @returns {void}
    */
   handlePresentationModeChange(controller) {
     this.handleFullscreenChange();

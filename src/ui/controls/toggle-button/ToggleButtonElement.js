@@ -172,7 +172,6 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
    *
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleButtonClick(event) {
     this.pressed = !this.pressed;

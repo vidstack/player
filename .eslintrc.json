@@ -8,6 +8,7 @@
     "project": "./jsconfig.json"
   },
   "plugins": ["mocha", "simple-import-sort"],
+  "ignorePatterns": ["src/bundle/index.js", "src/media/controller/index.js"],
   "extends": [
     "plugin:wc/recommended",
     "plugin:lit/recommended",

@@ -74,7 +74,7 @@ export function loadImage(src, minWidth = 1) {
  * @param {string} src - The URL of where the script is located.
  * @param {() => void} onLoad - Callback invoked when the script is loaded.
  * @param {(error: unknown) => void} onError - Callback invoked when the script loading fails.
- * @returns {void}
+ *
  */
 /* c8 ignore next 10 */
 export function loadScript(src, onLoad = noop, onError = noop) {

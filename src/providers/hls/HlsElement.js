@@ -204,7 +204,6 @@ export class HlsElement extends VideoElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   destroyHlsEngine() {
     this.hlsEngine?.destroy();
@@ -218,7 +217,6 @@ export class HlsElement extends VideoElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   loadSrcOnHlsEngine() {
     if (
@@ -235,7 +233,6 @@ export class HlsElement extends VideoElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   buildHlsEngine() {
     if (isNil(this.videoEngine) || !isUndefined(this.hlsEngine)) return;
@@ -261,7 +258,6 @@ export class HlsElement extends VideoElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   attachHlsEngine() {
     if (
@@ -278,7 +274,6 @@ export class HlsElement extends VideoElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   detachHlsEngine() {
     if (!this.isHlsEngineAttached) return;
@@ -310,7 +305,6 @@ export class HlsElement extends VideoElement {
 
   /**
    * @param {Event} event
-   * @returns {void}
    */
   handleLoadedMetadata(event) {
     super.handleLoadedMetadata(event);
@@ -322,7 +316,6 @@ export class HlsElement extends VideoElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   handleMediaSrcChange() {
     super.handleMediaSrcChange();
@@ -351,7 +344,6 @@ export class HlsElement extends VideoElement {
 
   /**
    * @protected
-   * @returns {void}
    */
   listenToHlsEngine() {
     if (isUndefined(this.hlsEngine)) return;
@@ -370,7 +362,6 @@ export class HlsElement extends VideoElement {
    * @protected
    * @param {string} eventType
    * @param {Hls.errorData} data
-   * @returns {void}
    */
   handleHlsError(eventType, data) {
     this.context.error = data;
@@ -400,7 +391,6 @@ export class HlsElement extends VideoElement {
    * @protected
    * @param {string} eventType
    * @param {Hls.errorData} data
-   * @returns {void}
    */
   handleHlsNetworkError(eventType, data) {
     this.hlsEngine?.startLoad();
@@ -410,7 +400,6 @@ export class HlsElement extends VideoElement {
    * @protected
    * @param {string} eventType
    * @param {Hls.errorData} data
-   * @returns {void}
    */
   handleHlsMediaError(eventType, data) {
     this.hlsEngine?.recoverMediaError();
@@ -420,7 +409,6 @@ export class HlsElement extends VideoElement {
    * @protected
    * @param {string} eventType
    * @param {Hls.errorData} data
-   * @returns {void}
    */
   handleHlsIrrecoverableError(eventType, data) {
     this.destroyHlsEngine();
@@ -430,7 +418,6 @@ export class HlsElement extends VideoElement {
    * @protected
    * @param {string} eventType
    * @param {Hls.levelLoadedData} data
-   * @returns {void}
    */
   handleHlsLevelLoaded(eventType, data) {
     if (this.context.canPlay) return;
@@ -441,7 +428,6 @@ export class HlsElement extends VideoElement {
    * @protected
    * @param {string} eventType
    * @param {Hls.levelLoadedData} data
-   * @returns {void}
    */
   handleHlsMediaReady(eventType, data) {
     const { live, totalduration: duration } = data.details;

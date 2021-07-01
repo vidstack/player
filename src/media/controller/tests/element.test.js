@@ -14,6 +14,7 @@ import {
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
 } from '../../media-request.events.js';
+import { MediaProviderConnectEvent } from '../../provider/events.js';
 import {
   buildMediaFixture,
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
@@ -76,18 +77,29 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       expect(controller.mediaProvider).to.be.undefined;
     });
 
+    it('should forward properties to the media provider', async function () {
+      const { controller, provider } = await buildMediaFixture();
+      provider.forceMediaReady();
+      controller.paused = false;
+      expect(provider.paused).to.be.false;
+    });
+
+    it('should forward methods to the media provider', async function () {
+      const { controller, provider } = await buildMediaFixture();
+      const playSpy = spy(provider, 'play');
+      controller.play();
+      expect(playSpy).to.have.been.calledOnce;
+    });
+
     it('should forward attributes to the media provider', async function () {
       const { controller, provider } = await buildMediaFixture();
 
-      provider.forceMediaReady();
-
-      const setVolumeSpy = spy(provider, 'setVolume');
-
-      controller.setAttribute('volume', '30');
-
+      controller.setAttribute('muted', '');
       await raf();
-
-      expect(setVolumeSpy).to.have.been.calledOnceWith(30);
+      expect(provider).to.have.attribute('muted');
+      controller.removeAttribute('muted');
+      await raf();
+      expect(provider).to.not.have.attribute('muted');
     });
 
     it('should forward events from the media provider', async function () {
@@ -108,16 +120,6 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
       expect(event.detail).to.equal(detail);
       expect(event.originalEvent).to.equal(originalEvent);
-    });
-
-    it('should forward properties to the media provider', async function () {
-      const { controller, provider } = await buildMediaFixture();
-
-      const playSpy = spy(provider, 'play');
-
-      /** @type{any} **/ (controller).play();
-
-      expect(playSpy).to.have.been.calledOnce;
     });
   });
 

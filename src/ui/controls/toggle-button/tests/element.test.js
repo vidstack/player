@@ -4,7 +4,8 @@ import { html } from 'lit';
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
   TOGGLE_BUTTON_ELEMENT_TAG_NAME,
-  ToggleButtonElement} from '../ToggleButtonElement.js';
+  ToggleButtonElement
+} from '../ToggleButtonElement.js';
 
 window.customElements.define(
   TOGGLE_BUTTON_ELEMENT_TAG_NAME,

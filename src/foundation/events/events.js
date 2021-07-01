@@ -98,7 +98,7 @@ export class VdsCustomEvent extends CustomEvent {
 /**
  * @param {EventTarget} target
  * @param {Event | CustomEvent | VdsCustomEvent} event
- * @returns {void}
+ *
  */
 export function redispatchEvent(target, event) {
   class VdsRedispatchedEvent extends VdsCustomEvent {
@@ -128,14 +128,12 @@ export class DisposalBin {
 
   /**
    * @param {import('../types/utils').Callback<void>} [callback]
-   * @returns {void}
    */
   add(callback) {
     if (callback) this.disposal.push(callback);
   }
 
   /**
-   * @returns {void}
    */
   empty() {
     this.disposal.forEach((fn) => fn());

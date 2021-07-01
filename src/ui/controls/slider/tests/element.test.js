@@ -3,7 +3,7 @@ import { html } from 'lit';
 
 import { IS_FIREFOX } from '../../../../utils/support.js';
 import { SliderDragEndEvent, SliderDragStartEvent } from '../events.js';
-import { SLIDER_ELEMENT_TAG_NAME,SliderElement } from '../SliderElement.js';
+import { SLIDER_ELEMENT_TAG_NAME, SliderElement } from '../SliderElement.js';
 
 window.customElements.define(SLIDER_ELEMENT_TAG_NAME, SliderElement);
 

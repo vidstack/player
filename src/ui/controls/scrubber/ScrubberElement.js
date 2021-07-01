@@ -382,7 +382,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    * @protected
    * @param {number} time
    * @param {Event} event
-   * @returns {void}
    */
   dispatchUserSeekingEvent(time, event) {
     if (!this.isInteractive) return;
@@ -493,7 +492,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {PointerEvent} event
-   * @returns {void}
    */
   handleScrubberPointerMove(event) {
     if (this.disabled) return;
@@ -725,7 +723,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   togglePlaybackWhileDragging(event) {
     if (!this.pauseWhileDragging) return;
@@ -827,7 +824,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @returns {void}
    */
   handlePreviewSlotChange() {
     this.currentPreviewSlotElement = /** @type {HTMLElement} */ (
@@ -860,7 +856,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
   /**
    * @protected
    * @param {PointerEvent} event
-   * @returns {void}
    */
   showPreview(event) {
     window.clearTimeout(this.showPreviewTimeout);
@@ -921,7 +916,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    * @protected
    * @param {number} time
    * @param {Event} event
-   * @returns {void}
    */
   dispatchPreviewTimeChangeEvent(time, event) {
     if (!this.isInteractive) return;
@@ -977,7 +971,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    * @protected
    * @param {number} time
    * @param {Event} event
-   * @returns {void}
    */
   updatePreviewTime(time, event) {
     this.previewTime = time;
@@ -1029,7 +1022,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @returns {void}
    */
   initThrottles() {
     this.destroyThrottles();
@@ -1047,7 +1039,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @returns {void}
    */
   destroyThrottles() {
     this.previewTimeChangeThrottle?.cancel();

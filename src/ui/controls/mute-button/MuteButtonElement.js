@@ -86,7 +86,6 @@ export class MuteButtonElement extends ToggleButtonElement {
   /**
    * @protected
    * @param {Event} event
-   * @returns {void}
    */
   handleButtonClick(event) {
     if (this.pressed) {

@@ -66,7 +66,6 @@ export class ControllerManager {
 
   /**
    * @param {ManagedControllerConnectEvent} event
-   * @returns {void}
    */
   handleManagedControllerConnect(event) {
     if (!this.validateControllerConnectEvent(event)) return;
@@ -92,7 +91,6 @@ export class ControllerManager {
 
   /**
    * @param {ManagedController<HostElement>} controller
-   * @returns {void}
    */
   addManagedController(controller) {
     if (this.managedControllers.has(controller)) return;
@@ -102,7 +100,6 @@ export class ControllerManager {
 
   /**
    * @param {ManagedController<HostElement>} controller
-   * @returns {void}
    */
   removeManagedController(controller) {
     if (!this.managedControllers.has(controller)) return;
@@ -112,7 +109,6 @@ export class ControllerManager {
 
   /**
    * @param {ManagedController<HostElement>} controller
-   * @returns {void}
    */
   handleManagedControllerAdded(controller) {
     // no-op
@@ -120,7 +116,6 @@ export class ControllerManager {
 
   /**
    * @param {ManagedController<HostElement>} controller
-   * @returns {void}
    */
   handleManagedControllerRemoved(controller) {
     // no-op

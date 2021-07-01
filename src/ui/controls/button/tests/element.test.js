@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import { getSlottedChildren } from '../../../../utils/dom.js';
-import { BUTTON_ELEMENT_TAG_NAME,ButtonElement } from '../ButtonElement.js';
+import { BUTTON_ELEMENT_TAG_NAME, ButtonElement } from '../ButtonElement.js';
 
 window.customElements.define(BUTTON_ELEMENT_TAG_NAME, ButtonElement);
 

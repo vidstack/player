@@ -1,7 +1,7 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { TOGGLE_ELEMENT_TAG_NAME,ToggleElement } from '../ToggleElement.js';
+import { TOGGLE_ELEMENT_TAG_NAME, ToggleElement } from '../ToggleElement.js';
 
 window.customElements.define(TOGGLE_ELEMENT_TAG_NAME, ToggleElement);
 

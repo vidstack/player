@@ -2,7 +2,7 @@
  * No-operation (noop).
  *
  * @param {...*} [args]
- * @returns {void}
+ *
  */
 export function noop(args) {}
 

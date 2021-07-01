@@ -4,7 +4,8 @@ import { html } from 'lit';
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
 import {
   TIME_DURATION_ELEMENT_TAG_NAME,
-  TimeDurationElement} from '../TimeDurationElement.js';
+  TimeDurationElement
+} from '../TimeDurationElement.js';
 
 window.customElements.define(
   TIME_DURATION_ELEMENT_TAG_NAME,

@@ -3,7 +3,7 @@ import '../define.js';
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { TIME_ELEMENT_TAG_NAME,TimeElement } from '../TimeElement.js';
+import { TIME_ELEMENT_TAG_NAME, TimeElement } from '../TimeElement.js';
 
 describe(`${TIME_ELEMENT_TAG_NAME}`, function () {
   /**
