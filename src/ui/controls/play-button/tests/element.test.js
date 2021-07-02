@@ -14,6 +14,7 @@ import {
 window.customElements.define(PLAY_BUTTON_ELEMENT_TAG_NAME, PlayButtonElement);
 
 describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-play-button>

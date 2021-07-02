@@ -10,14 +10,14 @@ import { VdsCustomEvent } from '../../../foundation/events/index.js';
 
 /**
  * @template DetailType
- * @extends {VdsCustomEvent<DetailType>}
+ * @augments {VdsCustomEvent<DetailType>}
  */
 export class ScrubberEvent extends VdsCustomEvent {}
 
 /**
  * Emitted when the preview transitions from hidden to showing.
  *
- * @extends {ScrubberEvent<void>}
+ * @augments {ScrubberEvent<void>}
  */
 export class ScrubberPreviewShowEvent extends ScrubberEvent {
   /** @readonly */
@@ -27,7 +27,7 @@ export class ScrubberPreviewShowEvent extends ScrubberEvent {
 /**
  * Emitted when the preview transitions from showing to hidden.
  *
- * @extends {ScrubberEvent<void>}
+ * @augments {ScrubberEvent<void>}
  */
 export class ScrubberPreviewHideEvent extends ScrubberEvent {
   /** @readonly */
@@ -37,7 +37,7 @@ export class ScrubberPreviewHideEvent extends ScrubberEvent {
 /**
  * Emitted when the time being previewed changes.
  *
- * @extends {ScrubberEvent<number>}
+ * @augments {ScrubberEvent<number>}
  */
 export class ScrubberPreviewTimeUpdateEvent extends ScrubberEvent {
   /** @readonly */

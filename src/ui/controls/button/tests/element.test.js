@@ -9,6 +9,7 @@ import { BUTTON_ELEMENT_TAG_NAME, ButtonElement } from '../ButtonElement.js';
 window.customElements.define(BUTTON_ELEMENT_TAG_NAME, ButtonElement);
 
 describe(BUTTON_ELEMENT_TAG_NAME, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const { container } = await buildMediaFixture(html`
       <vds-button>

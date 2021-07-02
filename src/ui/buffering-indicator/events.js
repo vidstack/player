@@ -9,14 +9,14 @@ import { VdsCustomEvent } from '../../foundation/events/index.js';
 
 /**
  * @template DetailType
- * @extends {VdsCustomEvent<DetailType>}
+ * @augments {VdsCustomEvent<DetailType>}
  */
 export class BufferingIndicatorEvent extends VdsCustomEvent {}
 
 /**
  * Emitted when the buffering indicator is shown.
  *
- * @extends {BufferingIndicatorEvent<void>}
+ * @augments {BufferingIndicatorEvent<void>}
  */
 export class BufferingIndicatorShowEvent extends BufferingIndicatorEvent {
   /** @readonly */
@@ -26,7 +26,7 @@ export class BufferingIndicatorShowEvent extends BufferingIndicatorEvent {
 /**
  * Emitted when the buffering indicator is hidden.
  *
- * @extends {BufferingIndicatorEvent<void>}
+ * @augments {BufferingIndicatorEvent<void>}
  */
 export class BufferingIndicatorHideEvent extends BufferingIndicatorEvent {
   /** @readonly */

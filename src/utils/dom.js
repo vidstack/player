@@ -41,7 +41,6 @@ export function buildExportPartsAttr(parts, prefix) {
  * @param {string} name - A string representing the name you are giving the element.
  * @param {CustomElementConstructor} constructor - A class object that defines the behaviour of the element.
  * @param {boolean} isClient
- *
  */
 export function safelyDefineCustomElement(
   name,
@@ -61,7 +60,6 @@ export function safelyDefineCustomElement(
  * @param {Element} element - The element to set the attribute on.
  * @param {string} attrName - The name of the attribute.
  * @param {string | null} [attrValue] - The value of the attribute.
- *
  */
 export function setAttribute(element, attrName, attrValue) {
   if (isNil(attrValue)) {
@@ -102,7 +100,7 @@ export function getSlottedChildren(el, name) {
  * @param {number} translateAx - Transpose element `a` along the x-axis by +/- pixels.
  * @param {number} translateAy - Transpose element `a` along the y-axis by +/- pixels.
  * @param {number} translateBx - Transpose element `b` along the x-axis by +/- pixels.
- * @param {number} translateBx - Transpose element `b` along the y-axis by +/- pixels.
+ * @param {number} translateBy - Transpose element `b` along the y-axis by +/- pixels.
  * @returns {boolean}
  */
 export function willElementsCollide(

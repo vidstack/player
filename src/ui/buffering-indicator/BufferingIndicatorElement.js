@@ -25,9 +25,7 @@ export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
  *
  *
  * @tagname vds-buffering-indicator
- *
  * @slot Used to pass in the content to be displayed while buffering.
- *
  * @example
  * ```html
  * <vds-buffering-indicator show-while-booting delay="500">
@@ -72,10 +70,16 @@ export class BufferingIndicatorElement extends VdsElement {
     this.showWhileBooting = false;
 
     // Context
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaCanPlay = mediaContext.canPlay.initialValue;
-    /** @protected @readonly @type {boolean} */
-    this.mediaIsWaiting = mediaContext.waiting.initialValue;
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    this.mediaWaiting = mediaContext.waiting.initialValue;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -100,7 +104,7 @@ export class BufferingIndicatorElement extends VdsElement {
   static get contextConsumers() {
     return {
       mediaCanPlay: mediaContext.canPlay,
-      mediaIsWaiting: mediaContext.waiting
+      mediaWaiting: mediaContext.waiting
     };
   }
 
@@ -143,9 +147,7 @@ export class BufferingIndicatorElement extends VdsElement {
    * @returns {boolean}
    */
   isIndicatorHidden() {
-    return (
-      (!this.showWhileBooting || this.mediaCanPlay) && !this.mediaIsWaiting
-    );
+    return (!this.showWhileBooting || this.mediaCanPlay) && !this.mediaWaiting;
   }
 
   /**

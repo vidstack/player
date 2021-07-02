@@ -17,6 +17,10 @@ export default {
   argTypes: SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
+/**
+ * @param {any} args
+ * @returns {import('lit').TemplateResult}
+ */
 function Template({
   // Properties
   disabled,

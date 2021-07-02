@@ -8,7 +8,7 @@ import { VdsCustomEvent } from '../../foundation/events/index.js';
 
 /**
  * @template DetailType
- * @extends {VdsCustomEvent<DetailType>}
+ * @augments {VdsCustomEvent<DetailType>}
  */
 export class MediaContainerEvent extends VdsCustomEvent {}
 
@@ -20,7 +20,7 @@ export class MediaContainerEvent extends VdsCustomEvent {}
  */
 
 /**
- * @extends MediaContainerEvent<MediaContainerConnectEventDetail>
+ * @augments MediaContainerEvent<MediaContainerConnectEventDetail>
  */
 export class MediaContainerConnectEvent extends MediaContainerEvent {
   /** @readonly */

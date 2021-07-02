@@ -13,6 +13,7 @@ window.customElements.define(
 );
 
 describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const { container } = await buildMediaFixture(html`
       <vds-toggle-button>

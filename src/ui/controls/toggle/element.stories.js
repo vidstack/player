@@ -13,6 +13,10 @@ export default {
   argTypes: TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
+/**
+ * @param {any} args
+ * @returns {import('lit').TemplateResult}
+ */
 function Template({ pressed }) {
   return html`
     <vds-toggle ?pressed=${pressed}>

@@ -13,9 +13,7 @@ export const TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
  *
  *
  * @tagname vds-time-current
- *
  * @csspart root - The component's root element (`<time>`).
- *
  * @example
  * ```html
  * <vds-time-current
@@ -24,7 +22,6 @@ export const TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
  *   always-show-hours
  * ></vds-time-current>
  * ```
- *
  * @example
  * ```css
  * vds-time-current::part(root) {
@@ -40,7 +37,7 @@ export class TimeCurrentElement extends TimeElement {
     this.label = 'Current time';
 
     // Context
-    /** @internal @readonly @type {number} */
+    /** @internal */
     this.seconds = mediaContext.currentTime.initialValue;
   }
 

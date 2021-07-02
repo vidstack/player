@@ -45,20 +45,16 @@ export const HLS_TYPES = new Set([
  * ```
  *
  * @tagname vds-hls
- *
  * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
  * @slot ui - Used to pass in `<vds-ui>` to customize the player user interface.
- *
  * @csspart root - The component's root element that wraps the video (`<div>`).
  * @csspart video - The video element (`<video>`).
- *
  * @example
  * ```html
  * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
  *   <!-- ... -->
  * </vds-hls>
  * ```
- *
  * @example
  * ```html
  *  <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
@@ -122,6 +118,7 @@ export class HlsElement extends VideoElement {
   /**
    * Whether the `hls.js` instance has mounted the `HtmlMediaElement`.
    *
+   * @type {boolean}
    * @default false
    */
   get isHlsEngineAttached() {
@@ -162,6 +159,7 @@ export class HlsElement extends VideoElement {
   /**
    * Whether the current src is using HLS.
    *
+   * @type {boolean}
    * @default false
    */
   get isHlsStream() {
@@ -171,6 +169,8 @@ export class HlsElement extends VideoElement {
   /**
    * Whether the browser natively supports HLS, mostly only true in Safari. Only call this method
    * after the provider has connected to the DOM (wait for `ConnectEvent`).
+   *
+   * @type {boolean}
    */
   get hasNativeHlsSupport() {
     /**
@@ -187,6 +187,7 @@ export class HlsElement extends VideoElement {
    * to `false` as long as `window.MediaSource` is defined to enforce consistency by
    * using `hls.js` where ever possible.
    *
+   * @type {boolean}
    * @default false
    */
   get shouldUseNativeHlsSupport() {

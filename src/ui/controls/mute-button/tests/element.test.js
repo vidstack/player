@@ -14,6 +14,7 @@ import {
 window.customElements.define(MUTE_BUTTON_ELEMENT_TAG_NAME, MuteButtonElement);
 
 describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-mute-button>

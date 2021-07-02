@@ -1,7 +1,7 @@
 /**
  * 🤖 This section was generously ~stolen from~... err... donated by Furf. Cheers!
  *
- * @inspiration https://github.snooguts.net/david-furfero/reddit-media-player/blob/main/src/lib/formatTime/index.ts
+ * @see https://github.snooguts.net/david-furfero/reddit-media-player/blob/main/src/lib/formatTime/index.ts
  */
 
 /**
@@ -71,7 +71,6 @@ export function parseTime(duration) {
  * @param {boolean} [shouldPadHours=false] - Whether to pad the hours to be length of 2.
  * @param {boolean} [shouldAlwaysShowHours=false] - Whether to always show the hours unit.
  * @returns {string}
- *
  * @example `01:20` -> `minutes:seconds`
  * @example `3:01:20` -> `hours:minutes:seconds`
  * @example `03:01:20` -> If `shouldPadHours` is `true`
@@ -99,7 +98,6 @@ export function formatTime(
  *
  * @param {number} duration - The length of time to parse in seconds.
  * @returns {string}
- *
  * @example `2 hours, 3 minutes, 4 seconds`
  */
 export function formatSpokenTime(duration) {
@@ -110,6 +108,7 @@ export function formatSpokenTime(duration) {
   /**
    * @param {number} num
    * @param {string} word
+   * @returns {string}
    */
   const pluralize = (num, word) => (num === 1 ? word : `${word}s`);
 
@@ -134,8 +133,7 @@ export function formatSpokenTime(duration) {
  *
  * @param {number} duration - The length of time to parse in seconds.
  * @returns {string}
- *
- * @spec https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
+ * @see https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
  */
 export function formatHtml5Duration(duration) {
   const { hours, minutes, seconds, fraction } = parseTime(duration);

@@ -14,6 +14,10 @@ export default {
   argTypes: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
+/**
+ * @param {any} args
+ * @returns {import('lit').TemplateResult}
+ */
 function Template({
   // Properties
   label,

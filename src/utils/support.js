@@ -154,8 +154,8 @@ export function canUsePiP() {
  * a `play()` call, autoplay is supported. Although this unintuitive, it works across browsers
  * and is currently the lightest way to detect autoplay without using a data source.
  *
- * @param [muted=true]
- * @param [playsinline=true]
+ * @param {boolean} [muted=true]
+ * @param {boolean} [playsinline=true]
  * @returns {Promise<boolean>}
  * @link https://github.com/ampproject/amphtml/blob/9bc8756536956780e249d895f3e1001acdee0bc0/src/utils/video.js#L25
  */

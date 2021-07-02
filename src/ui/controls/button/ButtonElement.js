@@ -19,18 +19,14 @@ export const BUTTON_ELEMENT_TAG_NAME = 'vds-button';
  * attributes and normalizes any web-component or cross-browser related issues.
  *
  * @tagname vds-button
- *
  * @slot Used to pass content into the button.
- *
  * @csspart root - The component's root element (`<button>`).
- *
  * @example
  * ```html
  * <vds-button>
  *   <!-- ... -->
  * </vds-button>
  * ```
- *
  * @example
  * ```css
  * vds-button::part(root) {

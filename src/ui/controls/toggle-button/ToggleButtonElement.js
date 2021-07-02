@@ -22,13 +22,10 @@ export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
  *
  *
  * @tagname vds-toggle-button
- *
  * @csspart button - The root button component (`<vds-button>`).
  * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix such as `button-root`.
- *
  * @slot The content to show when the toggle is not pressed.
  * @slot pressed - The content to show when the toggle is pressed.
- *
  * @example
  * ```html
  * <vds-toggle-button label="Some action">
@@ -61,7 +58,6 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
     /**
      * ♿ **ARIA:** The `aria-label` property of the underlying button.
      *
-     * @required
      * @type {string | undefined}
      */
     this.label = undefined;

@@ -14,7 +14,7 @@ import { VdsCustomEvent } from '../../events/index.js';
  */
 
 /**
- * @extends VdsCustomEvent<ManagedControllerConnectEventDetail>
+ * @augments VdsCustomEvent<ManagedControllerConnectEventDetail>
  * @bubbles
  * @composed
  */

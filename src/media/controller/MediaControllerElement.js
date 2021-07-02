@@ -56,11 +56,8 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  * attributes, properties, methods and events to/from the provider.
  *
  * @template {MediaProviderElement} MediaProvider
- *
  * @tagname vds-media-controller
- *
  * @slot Used to pass in components that use/manage media state.
- *
  * @example
  * ```html
  * <vds-media-controller>
@@ -139,7 +136,7 @@ export class MediaControllerElement extends VdsElement {
    * it (ie: updating context properties).
    *
    * @readonly
-   * @internal Exposed for testing.
+   * @internal
    */
   context = provideContextRecord(this, mediaContext);
 

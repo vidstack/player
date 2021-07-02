@@ -10,6 +10,7 @@ import {
 window.customElements.define(SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
 
 describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const { container } = await buildMediaFixture(html`
       <vds-scrubber></vds-scrubber>

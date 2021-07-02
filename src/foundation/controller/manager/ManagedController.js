@@ -7,6 +7,7 @@ import { ManagedControllerConnectEvent } from './events.js';
 export class ManagedController {
   /**
    * @protected
+   * @type {typeof ManagedControllerConnectEvent}
    */
   static get ScopedManagedControllerConnectEvent() {
     return ManagedControllerConnectEvent;

@@ -4,7 +4,7 @@
  * @readonly
  * @enum {string}
  * @link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation
- * @spec https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
+ * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
  */
 export const ScreenOrientation = {
   /**
@@ -48,7 +48,7 @@ export const ScreenOrientation = {
  * @readonly
  * @enum {string}
  * @link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation
- * @spec https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
+ * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
  */
 export const ScreenOrientationLock = {
   /**

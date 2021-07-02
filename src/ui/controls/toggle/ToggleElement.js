@@ -16,10 +16,8 @@ export const TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
  * that's currently not active.
  *
  * @tagname vds-toggle
- *
  * @slot The content to show when the toggle is not pressed.
  * @slot pressed - The content to show when the toggle is pressed.
- *
  * @example
  * ```html
  * <vds-toggle pressed>

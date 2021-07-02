@@ -10,6 +10,7 @@ import {
 window.customElements.define(TIME_CURRENT_ELEMENT_TAG_NAME, TimeCurrentElement);
 
 describe(`${TIME_CURRENT_ELEMENT_TAG_NAME}`, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-time-current></vds-time-current>

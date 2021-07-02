@@ -13,14 +13,11 @@ export const TIME_ELEMENT_TAG_NAME = 'vds-time';
  * Formats and displays a length of time given in `seconds`.
  *
  * @tagname vds-time
- *
  * @csspart root - The component's root element (`<time>`).
- *
  * @example
  * ```html
  * <vds-time seconds="50"></vds-time>
  * ```
- *
  * @example
  * ```html
  * <vds-time
@@ -30,7 +27,6 @@ export const TIME_ELEMENT_TAG_NAME = 'vds-time';
  *   always-show-hours
  * ></vds-time>
  * ```
- *
  * @example
  * ```css
  * vds-time::part(root) {
@@ -112,7 +108,7 @@ export class TimeElement extends VdsElement {
   /**
    * The component's root element.
    *
-   * @default HTMLTimeElement
+   * @type {HTMLTimeElement}
    */
   get rootElement() {
     return /** @type {HTMLTimeElement} */ (this.rootRef.value);
@@ -152,8 +148,7 @@ export class TimeElement extends VdsElement {
   /**
    * @protected
    * @returns {string} A valid HTML5 duration.
-   *
-   * @spec https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
+   * @see https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
    */
   getFormattedDuration() {
     return formatHtml5Duration(this.seconds);

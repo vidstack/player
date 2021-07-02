@@ -8,7 +8,7 @@ import { VdsCustomEvent } from '../../foundation/events/index.js';
 
 /**
  * @template DetailType
- * @extends {VdsCustomEvent<DetailType>}
+ * @augments {VdsCustomEvent<DetailType>}
  */
 export class MediaProviderEvent extends VdsCustomEvent {}
 
@@ -24,7 +24,7 @@ export class MediaProviderEvent extends VdsCustomEvent {}
  *
  * @bubbles
  * @composed
- * @extends {MediaProviderEvent<MediaProviderConnectEventDetail>}
+ * @augments {MediaProviderEvent<MediaProviderConnectEventDetail>}
  */
 export class MediaProviderConnectEvent extends MediaProviderEvent {
   /** @readonly */

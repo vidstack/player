@@ -8,6 +8,7 @@ import { SLIDER_ELEMENT_TAG_NAME, SliderElement } from '../SliderElement.js';
 window.customElements.define(SLIDER_ELEMENT_TAG_NAME, SliderElement);
 
 describe(SLIDER_ELEMENT_TAG_NAME, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const slider = await fixture(html`<vds-slider></vds-slider>`);
     return /** @type {SliderElement} */ (slider);

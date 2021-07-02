@@ -20,14 +20,12 @@ export const TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
  * `{currentTime}{timeSeparator}{duration}`.
  *
  * @tagname vds-time-progress
- *
  * @csspart root - The component's root element (`<div>`).
  * @csspart current-time - The `vds-time-current` component.
  * @csspart current-time-* - All `vds-time` parts re-exported with the `current-time` prefix such as `current-time-root`.
  * @csspart duration - The `vds-time-duration` component.
  * @csspart duration-* - All `vds-time` parts re-exported with the `duration` prefix such as `duration-root`.
  * @csspart separator - The time separator element (`<span>`).
- *
  * @example
  * ```html
  * <vds-time-progress
@@ -37,7 +35,6 @@ export const TIME_PROGRESS_ELEMENT_TAG_NAME = 'vds-time-progress';
  *   always-show-hours
  * ></vds-time-progress>
  * ```
- *
  * @example
  * ```css
  * vds-time-progress::part(current-time) {
@@ -129,6 +126,8 @@ export class TimeProgressElement extends VdsElement {
 
   /**
    * The component's root element.
+   *
+   * @type {HTMLDivElement}
    */
   get rootElement() {
     return /** @type {HTMLDivElement} */ (this.rootRef.value);
@@ -154,6 +153,8 @@ export class TimeProgressElement extends VdsElement {
 
   /**
    * The underlying `vds-time-current` component.
+   *
+   * @type {TimeCurrentElement}
    */
   get timeCurrentElement() {
     return /** @type {TimeCurrentElement} */ (this.timeCurrentRef.value);
@@ -205,6 +206,8 @@ export class TimeProgressElement extends VdsElement {
 
   /**
    * The underlying `vds-time-duration` component.
+   *
+   * @type {TimeCurrentElement}
    */
   get timeDurationElement() {
     return /** @type {TimeDurationElement} */ (this.timeDurationRef.value);
@@ -256,6 +259,8 @@ export class TimeProgressElement extends VdsElement {
 
   /**
    * The separator element.
+   *
+   * @type {HTMLSpanElement}
    */
   get separatorElement() {
     return /** @type {HTMLSpanElement} */ (this.separatorRef.value);

@@ -10,14 +10,14 @@ import { VdsCustomEvent } from '../../../foundation/events/index.js';
 
 /**
  * @template DetailType
- * @extends {VdsCustomEvent<DetailType>}
+ * @augments {VdsCustomEvent<DetailType>}
  */
 export class SliderEvent extends VdsCustomEvent {}
 
 /**
  * Fired when the slider value changes.
  *
- * @extends {SliderEvent<number>}
+ * @augments {SliderEvent<number>}
  */
 export class SliderValueChangeEvent extends SliderEvent {
   /** @readonly */
@@ -27,7 +27,7 @@ export class SliderValueChangeEvent extends SliderEvent {
 /**
  * Fired when the user begins interacting with the slider and dragging the thumb.
  *
- * @extends {SliderEvent<number>}
+ * @augments {SliderEvent<number>}
  */
 export class SliderDragStartEvent extends SliderEvent {
   /** @readonly */
@@ -37,7 +37,7 @@ export class SliderDragStartEvent extends SliderEvent {
 /**
  * Fired when the user stops dragging the slider thumb.
  *
- * @extends {SliderEvent<number>}
+ * @augments {SliderEvent<number>}
  */
 export class SliderDragEndEvent extends SliderEvent {
   /** @readonly */

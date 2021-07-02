@@ -1,7 +1,7 @@
 import { isUndefined, noop, notEqual } from '../../utils/unit.js';
 
 /**
- * @extends CustomEvent<import('./types').ContextConsumerDetail>
+ * @augments CustomEvent<import('./types').ContextConsumerDetail>
  */
 class ConsumerConnectEvent extends CustomEvent {
   static TYPE = 'vds-context-connect';
@@ -69,6 +69,9 @@ export function createContext(initialValue) {
       consumers.add(consumer);
     }
 
+    /**
+     * @param {T} newValue
+     */
     function onUpdate(newValue) {
       currentValue = newValue;
       consumers.forEach((consumer) => {
@@ -117,11 +120,17 @@ export function createContext(initialValue) {
     let currentValue = transformer(initialValue);
     let disconnectFromProviderCallback = noop;
 
+    /**
+     *
+     */
     function onConnect() {
       options.onConnect?.();
       options.onUpdate?.(currentValue);
     }
 
+    /**
+     * @param {T} newValue
+     */
     function onUpdate(newValue) {
       const transformedValue = transformer(newValue);
       if (notEqual(transformedValue, currentValue)) {
@@ -130,6 +139,9 @@ export function createContext(initialValue) {
       }
     }
 
+    /**
+     * @param {() => void} callback
+     */
     function onDisconnect(callback) {
       disconnectFromProviderCallback = callback;
     }

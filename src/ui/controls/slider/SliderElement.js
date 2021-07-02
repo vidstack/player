@@ -42,41 +42,32 @@ export const SliderKeyDirection = {
  * friendly and easily styleable. This component allows users to input numeric values between a
  * minimum and maxmimum value. Generally used in the player for volume or scrubber controls.
  *
- * @inspriation https://github.com/carbon-design-system/carbon-web-components
- *
+ * @see https://github.com/carbon-design-system/carbon-web-components
  * @tagname vds-slider
- *
  * @slot Used to pass in additional content inside the slider.
  * @slot thumb-container - Used to pass content into the thumb container.
  * @slot thumb - Used to pass content inside the thumb.
  * @slot track - Used to pass content inside the track.
  * @slot track-fill - Used to pass content inside the track fill.
- *
  * @csspart root - The component's root element, in this case the slider container (`<div>`).
  * @csspart thumb-container - The container for the slider's handle.
  * @csspart thumb - The slider's handle the user drags left/right (`<div>`).
  * @csspart track - The background of the slider in which the thumb slides along (`<div>`).
  * @csspart track-fill - The part of the track that is currently filled which fills left-to-right (`<div>`).
- *
  * @cssprop --vds-slider-fill-rate - The ratio of the slider that is filled such as `0.3`.
  * @cssprop --vds-slider-fill-value - The current amount the slider is filled such as `30`.
  * @cssprop --vds-slider-fill-percentage - The fill rate expressed as a precetange such as `30%`.
- *
  * @cssprop --vds-slider-thumb-width - The slider handle width.
  * @cssprop --vds-slider-thumb-height - The slider handle height.
  * @cssprop --vds-slider-thumb-bg - The background color of the slider handle.
  * @cssprop --vds-slider-thumb-border-radius - The border radius of the slider handle.
  * @cssprop --vds-slider-thumb-scale - The base scale of thumb when it is inactive, it'll scale to 1 when active.
  * @cssprop --vds-slider-thumb-transition - The CSS transitions to use for the thumb, defaults to `transform 100ms ease-out 0s`.
- *
  * @cssprop --vds-slider-track-height - The height of the slider track.
  * @cssprop --vds-slider-track-bg - The background color of the slider track.
- *
  * @cssprop --vds-slider-track-fill-bg - The background color of the slider track fill.
- *
  * @cssprop --vds-slider-active-color - The slider thumb and track fill background color when focused, active or being dragged.
  * @cssprop --vds-slider-disabled-color - The slider thumb, track, and track fill background color when disabled.
- *
  * @example
  * ```html
  * <vds-slider
@@ -86,7 +77,6 @@ export const SliderKeyDirection = {
  *   throttle="10"
  * ></vds-slider>
  * ```
- *
  * @example
  * ```css
  * vds-slider {
@@ -208,7 +198,7 @@ export class SliderElement extends WithFocus(VdsElement) {
     this.throttle = 10;
 
     // State
-    /** @protected @type {boolean} */
+    /** @protected */
     this._isDragging = false;
   }
 
@@ -241,6 +231,7 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * Whether the current orientation is horizontal.
    *
+   * @type {boolean}
    * @default true
    */
   get isOrientationHorizontal() {
@@ -250,6 +241,7 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * Whether the current orientation is vertical.
    *
+   * @type {boolean}
    * @default false
    */
   get isOrientationVertical() {
@@ -259,6 +251,7 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * Whether the slider thumb is currently being dragged.
    *
+   * @type {boolean}
    * @default false
    */
   get isDragging() {
@@ -268,8 +261,8 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * The current value to range ratio.
    *
+   * @type {number}
    * @default 0.5
-   *
    * @example
    * `min` = 0
    * `max` = 10
@@ -286,6 +279,7 @@ export class SliderElement extends WithFocus(VdsElement) {
   /**
    * The fill rate expressed as a percentage (`fillRate * 100`).
    *
+   * @type {number}
    * @default 50
    */
   get fillPercent() {
@@ -343,6 +337,8 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * The component's root element.
+   *
+   * @type {HTMLDivElement}
    */
   get rootElement() {
     return /** @type {HTMLDivElement} */ (this.rootRef.value);
@@ -424,6 +420,8 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * The thumb container element.
+   *
+   * @type {HTMLDivElement}
    */
   get thumbContainerElement() {
     return /** @type {HTMLDivElement} */ (this.thumbContainerRef.value);
@@ -538,6 +536,8 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * The thumb element.
+   *
+   * @type {HTMLDivElement}
    */
   get thumbElement() {
     return /** @type {HTMLDivElement} */ (this.thumbRef.value);
@@ -584,6 +584,8 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * The track element.
+   *
+   * @type {HTMLDivElement}
    */
   get trackElement() {
     return /** @type {HTMLDivElement} */ (this.trackRef.value);
@@ -630,6 +632,8 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * The track fill element.
+   *
+   * @type {HTMLDivElement}
    */
   get trackFillElement() {
     return /** @type {HTMLDivElement} */ (this.trackFillRef.value);

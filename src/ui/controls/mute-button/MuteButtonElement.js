@@ -19,13 +19,10 @@ export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
  * A button for toggling the muted state of the player.
  *
  * @tagname vds-mute-button
- *
  * @slot mute - The content to show when the `muted` state is `false`.
  * @slot unmute - The content to show when the `muted` state is `true`.
- *
  * @csspart button - The root button (`<vds-button>`).
  * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix such as `button-root`.
- *
  * @example
  * ```html
  * <vds-mute-button>
@@ -48,7 +45,10 @@ export class MuteButtonElement extends ToggleButtonElement {
 
     // Properties
     this.label = 'Mute';
-    /** @internal @readonly @type {boolean} */
+    /**
+     * @internal
+     * @type {boolean}
+     */
     this.pressed = mediaContext.muted.initialValue;
   }
 
@@ -61,6 +61,8 @@ export class MuteButtonElement extends ToggleButtonElement {
 
   /**
    * The `mute` slotted element.
+   *
+   * @type {HTMLElement | undefined}
    */
   get muteSlotElement() {
     return this.currentNotPressedSlotElement;
@@ -68,25 +70,21 @@ export class MuteButtonElement extends ToggleButtonElement {
 
   /**
    * The `unmute` slotted element.
+   *
+   * @type {HTMLElement | undefined}
    */
   get unmuteSlotElement() {
     return this.currentPressedSlotElement;
   }
 
-  /** @protected */
   getPressedSlotName() {
     return 'unmute';
   }
 
-  /** @protected */
   getNotPressedSlotName() {
     return 'mute';
   }
 
-  /**
-   * @protected
-   * @param {Event} event
-   */
   handleButtonClick(event) {
     if (this.pressed) {
       this.remoteControl.unmute(event);

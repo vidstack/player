@@ -51,7 +51,10 @@
  * } ForwardedMediaProviderProps
  */
 
-/** @readonly @type {ForwardedMediaProviderProps[]} */
+/**
+ * @readonly
+ * @type {ForwardedMediaProviderProps[]}
+ */
 export const FORWARDED_MEDIA_PROVDER_PROPS = [
   'autoPiP',
   'autoplay',

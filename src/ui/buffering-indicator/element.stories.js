@@ -15,6 +15,10 @@ export default {
   argTypes: BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
+/**
+ * @param {any} args
+ * @returns {import('lit').TemplateResult}
+ */
 function Template({
   // Properties
   delay,

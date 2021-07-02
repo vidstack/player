@@ -20,9 +20,7 @@ export const MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
  * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `root-hidden` CSS part.
  *
  * @tagname vds-media-ui
- *
  * @slot Used to pass in UI components.
- *
  * @csspart root - The component's root element (`<div>`).
  * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
  */
@@ -49,13 +47,25 @@ export class MediaUiElement extends VdsElement {
 
   constructor() {
     super();
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaCanPlay = mediaContext.canPlay.initialValue;
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaFullscreen = mediaContext.fullscreen.initialValue;
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaIsVideoView = mediaContext.isVideoView.initialValue;
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaPlaysinline = mediaContext.playsinline.initialValue;
   }
 

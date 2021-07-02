@@ -118,7 +118,6 @@ export class ScreenOrientationController {
    * is not available.
    *
    * @type {ScreenOrientation | undefined}
-   * @default undefined
    */
   get currentOrientation() {
     return this.screenOrientation;
@@ -150,7 +149,7 @@ export class ScreenOrientationController {
    * @param {ScreenOrientationLock} lockType - The screen lock orientation type.
    * @returns {Promise<void>}
    * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
-   * @spec https://w3c.github.io/screen-orientation
+   * @see https://w3c.github.io/screen-orientation
    */
   async lock(lockType) {
     this.throwIfScreenOrientationUnavailable();
@@ -171,7 +170,7 @@ export class ScreenOrientationController {
    *
    * @returns {Promise<void>}
    * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
-   * @spec https://w3c.github.io/screen-orientation
+   * @see https://w3c.github.io/screen-orientation
    */
   async unlock() {
     this.throwIfScreenOrientationUnavailable();
@@ -223,7 +222,6 @@ export class ScreenOrientationController {
 
   /**
    * @protected
-   *
    * @throws {Error} - Will throw if Screen Orientation API is unavailable.
    */
   throwIfScreenOrientationUnavailable() {

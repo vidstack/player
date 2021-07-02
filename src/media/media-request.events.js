@@ -16,7 +16,7 @@ import { VdsCustomEvent } from '../foundation/events/index.js';
 
 /**
  * @template DetailType
- * @extends {VdsCustomEvent<DetailType>}
+ * @augments {VdsCustomEvent<DetailType>}
  */
 export class MediaRequestEvent extends VdsCustomEvent {
   static DEFAULT_BUBBLES = true;
@@ -28,7 +28,7 @@ export class MediaRequestEvent extends VdsCustomEvent {
  *
  * @bubbles
  * @composed
- * @extends {MediaRequestEvent<void>}
+ * @augments {MediaRequestEvent<void>}
  */
 export class MuteRequestEvent extends MediaRequestEvent {
   /** @readonly */
@@ -40,7 +40,7 @@ export class MuteRequestEvent extends MediaRequestEvent {
  *
  * @bubbles
  * @composed
- * @extends {MediaRequestEvent<void>}
+ * @augments {MediaRequestEvent<void>}
  */
 export class UnmuteRequestEvent extends MediaRequestEvent {
   /** @readonly */
@@ -52,7 +52,7 @@ export class UnmuteRequestEvent extends MediaRequestEvent {
  *
  * @bubbles
  * @composed
- * @extends {MediaRequestEvent<void>}
+ * @augments {MediaRequestEvent<void>}
  */
 export class EnterFullscreenRequestEvent extends MediaRequestEvent {
   /** @readonly */
@@ -64,7 +64,7 @@ export class EnterFullscreenRequestEvent extends MediaRequestEvent {
  *
  * @bubbles
  * @composed
- * @extends {MediaRequestEvent<void>}
+ * @augments {MediaRequestEvent<void>}
  */
 export class ExitFullscreenRequestEvent extends MediaRequestEvent {
   /** @readonly */
@@ -76,7 +76,7 @@ export class ExitFullscreenRequestEvent extends MediaRequestEvent {
  *
  * @bubbles
  * @composed
- * @extends {MediaRequestEvent<void>}
+ * @augments {MediaRequestEvent<void>}
  */
 export class PlayRequestEvent extends MediaRequestEvent {
   /** @readonly */
@@ -88,7 +88,7 @@ export class PlayRequestEvent extends MediaRequestEvent {
  *
  * @bubbles
  * @composed
- * @extends {MediaRequestEvent<void>}
+ * @augments {MediaRequestEvent<void>}
  */
 export class PauseRequestEvent extends MediaRequestEvent {
   /** @readonly */
@@ -100,7 +100,7 @@ export class PauseRequestEvent extends MediaRequestEvent {
  *
  * @bubbles
  * @composed
- * @extends {MediaRequestEvent<number>}
+ * @augments {MediaRequestEvent<number>}
  */
 export class SeekRequestEvent extends MediaRequestEvent {
   /** @readonly */
@@ -112,7 +112,7 @@ export class SeekRequestEvent extends MediaRequestEvent {
  *
  * @bubbles
  * @composed
- * @extends {MediaRequestEvent<number>}
+ * @augments {MediaRequestEvent<number>}
  */
 export class SeekingRequestEvent extends MediaRequestEvent {
   /** @readonly */
@@ -124,7 +124,7 @@ export class SeekingRequestEvent extends MediaRequestEvent {
  *
  * @bubbles
  * @composed
- * @extends {MediaRequestEvent<number>}
+ * @augments {MediaRequestEvent<number>}
  */
 export class VolumeChangeRequestEvent extends MediaRequestEvent {
   /** @readonly */

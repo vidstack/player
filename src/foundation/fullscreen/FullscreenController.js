@@ -50,7 +50,9 @@ import {
  * ```
  */
 export class FullscreenController {
-  /** @protected @readonly */
+  /**
+   * @protected
+   */
   disconnectDisposal = new DisposalBin();
 
   /**
@@ -313,7 +315,6 @@ export class FullscreenController {
 
   /**
    * @protected
-   *
    * @throws {Error} - Will throw if Fullscreen API is not enabled or supported.
    */
   throwIfNoFullscreenSupport() {

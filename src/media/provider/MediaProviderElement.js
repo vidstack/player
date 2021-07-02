@@ -39,6 +39,8 @@ import {
   VolumeChangeEvent,
   WaitingEvent
 } from '../media.events.js';
+import { MediaType } from '../MediaType.js';
+import { ViewType } from '../ViewType.js';
 import { MediaProviderConnectEvent } from './events.js';
 
 /**
@@ -214,6 +216,7 @@ export class MediaProviderElement extends VdsElement {
   /**
    * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
    *
+   * @type {number}
    * @default 1
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
    */
@@ -251,6 +254,7 @@ export class MediaProviderElement extends VdsElement {
    * Whether playback should be paused. Defaults to `true` if no media has loaded or playback has
    * not started. Setting this to `false` will begin/resume playback.
    *
+   * @type {boolean}
    * @default true
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused
    */
@@ -286,6 +290,7 @@ export class MediaProviderElement extends VdsElement {
    * time. The value can be set to a minimum of `0` and maximum of the total length of the
    * media (indicated by the duration prop).
    *
+   * @type {number}
    * @default 0
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime
    */
@@ -323,6 +328,7 @@ export class MediaProviderElement extends VdsElement {
   /**
    * Whether the audio is muted or not.
    *
+   * @type {boolean}
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted
    */
   get muted() {
@@ -380,9 +386,9 @@ export class MediaProviderElement extends VdsElement {
    * browser has buffered (if any) at the moment the buffered property is accessed. This is usually
    * contiguous but if the user jumps about while media is buffering, it may contain holes.
    *
+   * @type {TimeRanges}
    * @link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/buffered
-   *
    * @default TimeRanges
    */
   get buffered() {
@@ -394,6 +400,7 @@ export class MediaProviderElement extends VdsElement {
    * loaded to play the media up to its end without having to stop for further buffering of
    * content.
    *
+   * @type {boolean}
    * @default false
    */
   get canPlay() {
@@ -405,6 +412,7 @@ export class MediaProviderElement extends VdsElement {
    * loaded to play the media up to its end without having to stop for further buffering
    * of content.
    *
+   * @type {boolean}
    * @default false
    */
   get canPlayThrough() {
@@ -414,6 +422,8 @@ export class MediaProviderElement extends VdsElement {
   /**
    * The URL of the current poster. Defaults to `''` if no media/poster has been given or
    * loaded.
+   *
+   * @type {string}
    */
   get currentPoster() {
     return this.context.currentPoster;
@@ -423,6 +433,7 @@ export class MediaProviderElement extends VdsElement {
    * The absolute URL of the media resource that has been chosen. Defaults to `''` if no
    * media has been loaded.
    *
+   * @type {string}
    * @default ''
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc
    */
@@ -435,6 +446,7 @@ export class MediaProviderElement extends VdsElement {
    * available, the returned value is `NaN`. If the media is of indefinite length (such as
    * streamed live media, a WebRTC call's media, or similar), the value is `+Infinity`.
    *
+   * @type {number}
    * @default NaN
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration
    */
@@ -446,6 +458,7 @@ export class MediaProviderElement extends VdsElement {
    * Whether media playback has reached the end. In other words it'll be true
    * if `currentTime === duration`.
    *
+   * @type {boolean}
    * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended
    */
@@ -458,6 +471,7 @@ export class MediaProviderElement extends VdsElement {
    * `vds-error` event updates and examine this object to debug further. The error could be a
    * native `MediaError` object or something else.
    *
+   * @type {unknown}
    * @default undefined
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
    */
@@ -467,6 +481,8 @@ export class MediaProviderElement extends VdsElement {
 
   /**
    * Whether the current media is a live stream.
+   *
+   * @type {boolean}
    */
   get live() {
     return this.context.live;
@@ -476,6 +492,7 @@ export class MediaProviderElement extends VdsElement {
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
    *
+   * @type {MediaType}
    * @default MediaType.Unknown
    */
   get mediaType() {
@@ -485,6 +502,7 @@ export class MediaProviderElement extends VdsElement {
   /**
    * Contains the ranges of the media source that the browser has played, if any.
    *
+   * @type {TimeRanges}
    * @default TimeRanges
    */
   get played() {
@@ -495,6 +513,7 @@ export class MediaProviderElement extends VdsElement {
    * Whether media is actively playing back. Defaults to `false` if no media has
    * loaded or playback has not started.
    *
+   * @type {boolean}
    * @default false
    */
   get playing() {
@@ -511,6 +530,7 @@ export class MediaProviderElement extends VdsElement {
    * be delivered from the server and so can be ready to play almost immediately — thus they are
    * seekable.
    *
+   * @type {TimeRanges}
    * @default TimeRanges
    * @link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seekable
@@ -522,6 +542,7 @@ export class MediaProviderElement extends VdsElement {
   /**
    * Whether media is actively seeking to an new playback position.
    *
+   * @type {boolean}
    * @default false
    */
   get seeking() {
@@ -531,6 +552,7 @@ export class MediaProviderElement extends VdsElement {
   /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    *
+   * @type {boolean}
    * @default false
    */
   get started() {
@@ -544,6 +566,7 @@ export class MediaProviderElement extends VdsElement {
    * audio with a poster. This is subject to the provider allowing it. Defaults to `unknown`
    * when no media has been loaded.
    *
+   * @type {ViewType}
    * @default ViewType.Unknown
    */
   get viewType() {
@@ -553,6 +576,7 @@ export class MediaProviderElement extends VdsElement {
   /**
    * Whether playback has temporarily stopped because of a lack of temporary data.
    *
+   * @type {boolean}
    * @default false
    */
   get waiting() {
@@ -570,18 +594,15 @@ export class MediaProviderElement extends VdsElement {
    * @abstract
    * @param {string} type
    * @returns {CanPlay}
-   *
-   * @examples
-   * - `audio/mp3`
-   * - `video/mp4`
-   * - `video/webm; codecs="vp8, vorbis"`
-   * - `/my-audio-file.mp3`
-   * - `youtube/RO7VcUAsf-I`
-   * - `vimeo.com/411652396`
-   * - `https://www.youtube.com/watch?v=OQoz7FCWkfU`
-   * - `https://media.vidstack.io/hls/index.m3u8`
-   * - `https://media.vidstack.io/dash/index.mpd`
-   *
+   * @example `audio/mp3`
+   * @example `video/mp4`
+   * @example `video/webm; codecs="vp8, vorbis"`
+   * @example `/my-audio-file.mp3`
+   * @example `youtube/RO7VcUAsf-I`
+   * @example `vimeo.com/411652396`
+   * @example `https://www.youtube.com/watch?v=OQoz7FCWkfU`
+   * @example `https://media.vidstack.io/hls/index.m3u8`
+   * @example `https://media.vidstack.io/dash/index.mpd`
    * @link https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
    */
   canPlayType(type) {
@@ -624,7 +645,6 @@ export class MediaProviderElement extends VdsElement {
 
   /**
    * @protected
-   *
    * @throws {Error} - Will throw if media is not ready for playback.
    */
   throwIfNotReadyForPlayback() {
@@ -683,7 +703,6 @@ export class MediaProviderElement extends VdsElement {
 
   /**
    * @protected
-   *
    * @throws {Error} - Will throw if player is not in a video view.
    */
   throwIfNotVideoView() {
@@ -737,7 +756,7 @@ export class MediaProviderElement extends VdsElement {
    * track of media state.
    *
    * @readonly
-   * @internal Exposed for testing.
+   * @internal
    */
   context = createMediaContextRecord();
 
@@ -832,6 +851,7 @@ export class MediaProviderElement extends VdsElement {
    * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
    * only that it can be attempted.
    *
+   * @type {boolean}
    * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
    */
@@ -842,6 +862,7 @@ export class MediaProviderElement extends VdsElement {
   /**
    * Whether the player is currently in fullscreen mode.
    *
+   * @type {boolean}
    * @default false
    */
   get fullscreen() {

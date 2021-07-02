@@ -14,6 +14,7 @@ import {
 window.customElements.define(MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);
 
 describe(MEDIA_UI_ELEMENT_TAG_NAME, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-media-ui>

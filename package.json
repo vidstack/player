@@ -38,7 +38,7 @@
   "scripts": {
     "analyze": "cem analyze --litelement --globs \"src/**/*Element.js\"",
     "lint": "run-s lint:*",
-    "lint:eslint": "eslint --ext .js --ext .ts --quiet . --ignore-path .gitignore",
+    "lint:eslint": "eslint --ext .js --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
     "format": "run-s format:*",
     "format:eslint": "npm run lint:eslint -- --fix",
@@ -84,6 +84,7 @@
     "@web/test-runner-playwright": "^0.8.6",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-jsdoc": "^35.4.1",
     "eslint-plugin-lit": "^1.3.0",
     "eslint-plugin-mocha": "^9.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",

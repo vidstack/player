@@ -27,19 +27,15 @@ export const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v)($|\?)/i;
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
  *
  * @tagname vds-video
- *
  * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
- *
  * @csspart root - The component's root element that wraps the video (`<div>`).
  * @csspart video - The video element (`<video>`).
- *
  * @example
  * ```html
  * <vds-video src="/media/video.mp4" poster="/media/poster.png">
  *   <!-- ... -->
  * </vds-video>
  * ```
- *
  * @example
  * ```html
  * <vds-video poster="/media/poster.png">

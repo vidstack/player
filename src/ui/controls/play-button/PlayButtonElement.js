@@ -20,13 +20,10 @@ export const PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
  *
  *
  * @tagname vds-play-button
- *
  * @slot play - The content to show when the `paused` state is `true`.
  * @slot pause - The content to show when the `paused` state is `false`.
- *
  * @csspart button - The root button (`<vds-button>`).
  * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix such as `button-root`.
- *
  * @example
  * ```html
  * <vds-play-button>
@@ -49,7 +46,10 @@ export class PlayButtonElement extends ToggleButtonElement {
 
     // Properties
     this.label = 'Play';
-    /** @internal @readonly @type {boolean} */
+    /**
+     * @internal
+     * @type {boolean}
+     */
     this.pressed = false;
   }
 
@@ -67,6 +67,8 @@ export class PlayButtonElement extends ToggleButtonElement {
 
   /**
    * The `play` slotted element.
+   *
+   * @type {HTMLElement | undefined}
    */
   get playSlotElement() {
     return this.currentNotPressedSlotElement;
@@ -74,25 +76,21 @@ export class PlayButtonElement extends ToggleButtonElement {
 
   /**
    * The `pause` slotted element.
+   *
+   * @type {HTMLElement | undefined}
    */
   get pauseSlotElement() {
     return this.currentPressedSlotElement;
   }
 
-  /** @protected */
   getPressedSlotName() {
     return 'pause';
   }
 
-  /** @protected */
   getNotPressedSlotName() {
     return 'play';
   }
 
-  /**
-   * @protected
-   * @param {Event} event
-   */
   handleButtonClick(event) {
     if (this.pressed) {
       this.remoteControl.pause(event);

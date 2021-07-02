@@ -24,13 +24,10 @@ export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
  *
  *
  * @tagname vds-media-container
- *
  * @slot Used to pass in UI components.
  * @slot media - Used to pass in a media provider element.
- *
  * @csspart root - The component's root element (`<div>`).
  * @csspart media - The media container element (`<div>`).
- *
  * @example
  * ```html
  * <vds-media-controller>
@@ -79,11 +76,20 @@ export class MediaContainerElement extends VdsElement {
     this.aspectRatio = undefined;
 
     // Context
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaCanPlay = mediaContext.canPlay.initialValue;
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaFullscreen = mediaContext.fullscreen.initialValue;
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaIsVideoView = mediaContext.isVideoView.initialValue;
   }
 
@@ -149,6 +155,8 @@ export class MediaContainerElement extends VdsElement {
 
   /**
    * The component's root element.
+   *
+   * @type {HTMLDivElement}
    */
   get rootElement() {
     return /** @type {HTMLDivElement} */ (this.rootRef.value);
@@ -292,6 +300,8 @@ export class MediaContainerElement extends VdsElement {
 
   /**
    * The media container element.
+   *
+   * @type {HTMLDivElement}
    */
   get mediaContainerElement() {
     return /** @type {HTMLDivElement} */ (this.mediaContainerRef.value);

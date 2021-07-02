@@ -38,7 +38,6 @@ import { MediaReadyState } from './MediaReadyState.js';
  * A DOMString` indicating the `CORS` setting for this media element.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
- *
  * @typedef {'anonymous' | 'use-credentials'} MediaCrossOriginOption
  */
 
@@ -55,7 +54,6 @@ import { MediaReadyState } from './MediaReadyState.js';
  * three possible values: `nodownload`, `nofullscreen`, and `noremoteplayback`.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList
- *
  * @typedef {'nodownload'
  *  | 'nofullscreen'
  *  | 'noremoteplayback'
@@ -75,7 +73,6 @@ import { MediaReadyState } from './MediaReadyState.js';
  * @link https://developer.mozilla.org/en-US/docs/Web/API/MediaSource
  * @link https://developer.mozilla.org/en-US/docs/Web/API/Blob
  * @link https://developer.mozilla.org/en-US/docs/Web/API/File
- *
  * @typedef {MediaStream | MediaSource | Blob | File} MediaSrcObject
  */
 
@@ -140,6 +137,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
     /**
      * A `double` indicating the default playback rate for the media.
+     *
      * @type {number | undefined}
      * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/defaultPlaybackRate
      */
@@ -149,9 +147,10 @@ export class Html5MediaElement extends MediaProviderElement {
      *  Whether to disable the capability of remote playback in devices that are
      * attached using wired (HDMI, DVI, etc.) and wireless technologies (Miracast, Chromecast,
      * DLNA, AirPlay, etc).
+     *
      * @type {boolean | undefined}
      * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/disableRemotePlayback
-     * @spec https://www.w3.org/TR/remote-playback/#the-disableremoteplayback-attribute
+     * @see https://www.w3.org/TR/remote-playback/#the-disableremoteplayback-attribute
      */
     this.disableRemotePlayback;
 
@@ -173,7 +172,10 @@ export class Html5MediaElement extends MediaProviderElement {
     this.width;
 
     // State
-    /** @protected @type {string} */
+    /**
+     * @protected
+     * @type {string}
+     */
     this._src = '';
   }
 
@@ -214,6 +216,7 @@ export class Html5MediaElement extends MediaProviderElement {
   /**
    * The URL of a media resource to use.
    *
+   * @type {string}
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src
    */
   get src() {
@@ -774,6 +777,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * Returns a `MediaError` object for the most recent error, or `undefined` if there has not been
    * an error.
    *
+   * @type {unknown}
    * @default undefined
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
    */
@@ -815,6 +819,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * if this API is not available.
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/captureStream
+   * @returns {MediaStream | undefined}
    */
   captureStream() {
     this.throwIfNotReadyForPlayback();

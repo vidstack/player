@@ -12,9 +12,7 @@ export const TIME_DURATION_ELEMENT_TAG_NAME = 'vds-time-duration';
  * `seconds` property as it's automatically managed.
  *
  * @tagname vds-time-duration
- *
  * @csspart root - The component's root element (`<time>`).
- *
  * @example
  * ```html
  * <vds-time-duration
@@ -23,7 +21,6 @@ export const TIME_DURATION_ELEMENT_TAG_NAME = 'vds-time-duration';
  *   always-show-hours
  * ></vds-time-duration>
  * ```
- *
  * @example
  * ```css
  * vds-time-duration::part(root) {
@@ -39,7 +36,7 @@ export class TimeDurationElement extends TimeElement {
     this.label = 'Duration';
 
     // Context
-    /** @internal @readonly @type {number} */
+    /** @internal */
     this.seconds = mediaContext.currentTime.initialValue;
   }
 

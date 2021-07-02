@@ -13,7 +13,7 @@ import { VdsCustomEvent } from '../../foundation/events/index.js';
 
 /**
  * @template DetailType
- * @extends {VdsCustomEvent<DetailType>}
+ * @augments {VdsCustomEvent<DetailType>}
  */
 export class HlsEvent extends VdsCustomEvent {}
 
@@ -21,7 +21,7 @@ export class HlsEvent extends VdsCustomEvent {}
  * Fired when the `hls.js` instance is built. This will not fire if the browser natively
  * supports HLS.
  *
- * @extends {HlsEvent<Hls>}
+ * @augments {HlsEvent<Hls>}
  */
 export class HlsEngineBuiltEvent extends HlsEvent {
   /** @readonly */
@@ -32,7 +32,7 @@ export class HlsEngineBuiltEvent extends HlsEvent {
  * Fired when the `hls.js` instance has attached itself to the media element. This will not
  * fire if the browser natively supports HLS.
  *
- * @extends {HlsEvent<Hls>}
+ * @augments {HlsEvent<Hls>}
  */
 export class HlsEngineAttachEvent extends HlsEvent {
   /** @readonly */
@@ -42,7 +42,7 @@ export class HlsEngineAttachEvent extends HlsEvent {
 /**
  * Fired when the `hls.js` instance has detached itself from the media element.
  *
- * @extends {HlsEvent<Hls>}
+ * @augments {HlsEvent<Hls>}
  */
 export class HlsEngineDetachEvent extends HlsEvent {
   /** @readonly */
@@ -53,7 +53,7 @@ export class HlsEngineDetachEvent extends HlsEvent {
  * Fired when the browser doesn't support HLS natively and `hls.js` doesn't support
  * this enviroment either, most likely due to missing Media Extensions.
  *
- * @extends {HlsEvent<void>}
+ * @augments {HlsEvent<void>}
  */
 export class HlsEngineNoSupportEvent extends HlsEvent {
   /** @readonly */

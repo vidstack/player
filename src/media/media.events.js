@@ -35,7 +35,7 @@ import { ViewType } from './ViewType.js';
 
 /**
  * @template DetailType
- * @extends {VdsCustomEvent<DetailType>}
+ * @augments {VdsCustomEvent<DetailType>}
  */
 export class MediaEvent extends VdsCustomEvent {}
 
@@ -43,7 +43,7 @@ export class MediaEvent extends VdsCustomEvent {}
  * Fired when the resource was not fully loaded, but not as the result of an error.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/abort_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class AbortEvent extends MediaEvent {
   /** @readonly */
@@ -55,7 +55,7 @@ export class AbortEvent extends MediaEvent {
  * loaded to play the media up to its end without having to stop for further buffering of content.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class CanPlayEvent extends MediaEvent {
   /** @readonly */
@@ -67,7 +67,7 @@ export class CanPlayEvent extends MediaEvent {
  * loaded to play the media up to its end without having to stop for further buffering of content.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class CanPlayThroughEvent extends MediaEvent {
   /** @readonly */
@@ -78,7 +78,7 @@ export class CanPlayThroughEvent extends MediaEvent {
  * Fired when the `duration` property changes.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/durationchange_event
- * @extends {MediaEvent<number>}
+ * @augments {MediaEvent<number>}
  */
 export class DurationChangeEvent extends MediaEvent {
   /** @readonly */
@@ -89,7 +89,7 @@ export class DurationChangeEvent extends MediaEvent {
  * Fired when the media has become empty.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/emptied_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class EmptiedEvent extends MediaEvent {
   /** @readonly */
@@ -102,7 +102,7 @@ export class EmptiedEvent extends MediaEvent {
  * beginning again due to the `loop` property being `true` (see `MediaReplayEvent`).
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class EndedEvent extends MediaEvent {
   /** @readonly */
@@ -114,7 +114,7 @@ export class EndedEvent extends MediaEvent {
  * potentially a request that cannot be fulfilled such as calling `requestFullscreen()`.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
- * @extends {MediaEvent<unknown>}
+ * @augments {MediaEvent<unknown>}
  */
 export class ErrorEvent extends MediaEvent {
   /** @readonly */
@@ -124,7 +124,8 @@ export class ErrorEvent extends MediaEvent {
 /**
  * Fired when the player enters/exits fullscreen mode. When the detail is `true` it means
  * the player has entered fullscreen, `false` represents the opposite.
- * @extends {MediaEvent<boolean>}
+ *
+ * @augments {MediaEvent<boolean>}
  */
 export class FullscreenChangeEvent extends MediaEvent {
   /** @readonly */
@@ -136,7 +137,7 @@ export class FullscreenChangeEvent extends MediaEvent {
  * the first frame.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadeddata_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class LoadedDataEvent extends MediaEvent {
   /** @readonly */
@@ -147,7 +148,7 @@ export class LoadedDataEvent extends MediaEvent {
  * Fired when the metadata has been loaded.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class LoadedMetadataEvent extends MediaEvent {
   /** @readonly */
@@ -158,7 +159,7 @@ export class LoadedMetadataEvent extends MediaEvent {
  * Fired when the browser has started to load a resource.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class LoadStartEvent extends MediaEvent {
   /** @readonly */
@@ -167,7 +168,8 @@ export class LoadStartEvent extends MediaEvent {
 
 /**
  * Fired when the `mediaType` property changes value.
- * @extends {MediaEvent<MediaType>}
+ *
+ * @augments {MediaEvent<MediaType>}
  */
 export class MediaTypeChangeEvent extends MediaEvent {
   /** @readonly */
@@ -180,7 +182,7 @@ export class MediaTypeChangeEvent extends MediaEvent {
  * `pause()` method.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class PauseEvent extends MediaEvent {
   /** @readonly */
@@ -192,7 +194,7 @@ export class PauseEvent extends MediaEvent {
  * method, or the `autoplay` attribute.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class PlayEvent extends MediaEvent {
   /** @readonly */
@@ -203,7 +205,7 @@ export class PlayEvent extends MediaEvent {
  * Fired when playback is ready to start after having been paused or delayed due to lack of data.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class PlayingEvent extends MediaEvent {
   /** @readonly */
@@ -214,7 +216,7 @@ export class PlayingEvent extends MediaEvent {
  * Fired periodically as the browser loads a resource.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class ProgressEvent extends MediaEvent {
   /** @readonly */
@@ -226,7 +228,7 @@ export class ProgressEvent extends MediaEvent {
  * `seeking` property is changed to `false`.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event
- * @extends {MediaEvent<number>}
+ * @augments {MediaEvent<number>}
  */
 export class SeekedEvent extends MediaEvent {
   /** @readonly */
@@ -238,7 +240,7 @@ export class SeekedEvent extends MediaEvent {
  * media is seeking to a new position.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event
- * @extends {MediaEvent<number>}
+ * @augments {MediaEvent<number>}
  */
 export class SeekingEvent extends MediaEvent {
   /** @readonly */
@@ -250,7 +252,7 @@ export class SeekingEvent extends MediaEvent {
  * forthcoming.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/stalled_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class StalledEvent extends MediaEvent {
   /** @readonly */
@@ -261,7 +263,7 @@ export class StalledEvent extends MediaEvent {
  * Fired when media playback has just started, in other words the at the moment the following
  * happens: `currentTime > 0`.
  *
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class StartedEvent extends MediaEvent {
   /** @readonly */
@@ -272,7 +274,7 @@ export class StartedEvent extends MediaEvent {
  * Fired when media data loading has been suspended.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/suspend_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class SuspendEvent extends MediaEvent {
   /** @readonly */
@@ -283,7 +285,7 @@ export class SuspendEvent extends MediaEvent {
  * Fired when media playback starts from the beginning again due to the `loop` property being
  * set to `true`.
  *
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class ReplayEvent extends MediaEvent {
   /** @readonly */
@@ -295,7 +297,7 @@ export class ReplayEvent extends MediaEvent {
  * user seeking.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event
- * @extends {MediaEvent<number>}
+ * @augments {MediaEvent<number>}
  */
 export class TimeUpdateEvent extends MediaEvent {
   /** @readonly */
@@ -307,7 +309,7 @@ export class TimeUpdateEvent extends MediaEvent {
  * new provider has mounted and determined what type of player view is appropriate given
  * the type of media it can play.
  *
- * @extends {MediaEvent<ViewType>}
+ * @augments {MediaEvent<ViewType>}
  */
 export class ViewTypeChangeEvent extends MediaEvent {
   /** @readonly */
@@ -325,7 +327,7 @@ export class ViewTypeChangeEvent extends MediaEvent {
  * Fired when the `volume` or `muted` properties change value.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event
- * @extends {MediaEvent<VolumeChange>}
+ * @augments {MediaEvent<VolumeChange>}
  */
 export class VolumeChangeEvent extends MediaEvent {
   /** @readonly */
@@ -336,7 +338,7 @@ export class VolumeChangeEvent extends MediaEvent {
  * Fired when playback has stopped because of a temporary lack of data.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/waiting_event
- * @extends {MediaEvent<void>}
+ * @augments {MediaEvent<void>}
  */
 export class WaitingEvent extends MediaEvent {
   /** @readonly */

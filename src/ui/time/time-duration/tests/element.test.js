@@ -13,6 +13,7 @@ window.customElements.define(
 );
 
 describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-time-duration></vds-time-duration>

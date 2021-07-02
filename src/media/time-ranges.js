@@ -1,5 +1,5 @@
 /**
- * @inspiration https://github.com/videojs/video.js/blob/main/src/js/utils/time-ranges.js
+ * @see https://github.com/videojs/video.js/blob/main/src/js/utils/time-ranges.js
  */
 
 import { isArray, isNumber, isUndefined } from '../utils/unit.js';
@@ -10,7 +10,6 @@ import { isArray, isNumber, isUndefined } from '../utils/unit.js';
  * @param {'start' | 'end'} fnName - The function name to use for logging.
  * @param {number} index - The index to check.
  * @param {number} maxIndex - The maximum possible index.
- *
  * @throws {Error} - Will throw if index is out of bounds or non-numeric.
  */
 function rangeCheck(fnName, index, maxIndex) {

@@ -7,23 +7,55 @@
   "parserOptions": {
     "project": "./jsconfig.json"
   },
-  "plugins": ["mocha", "simple-import-sort"],
+  "plugins": ["jsdoc", "mocha", "simple-import-sort"],
   "ignorePatterns": ["src/bundle/index.js", "src/media/controller/index.js"],
   "extends": [
     "plugin:wc/recommended",
     "plugin:lit/recommended",
     "plugin:mocha/recommended",
+    "plugin:jsdoc/recommended",
     "eslint:recommended",
     "prettier"
   ],
   "rules": {
-    "no-console": "off",
-    "no-unused-vars": "off",
-    "no-underscore-dangle": "off",
-    "default-case": "off",
     "class-methods-use-this": "off",
+    "default-case": "off",
+    "jsdoc/check-tag-names": [
+      "warn",
+      {
+        "definedTags": [
+          "link",
+          "internal",
+          "bubbles",
+          "composed",
+          // @see https://github.com/open-wc/custom-elements-manifest/tree/master/packages/analyzer#supported-jsdoc
+          "attribute",
+          "csspart",
+          "cssprop",
+          "event",
+          "property",
+          "slot",
+          "sumarry",
+          "tagname"
+        ]
+      }
+    ],
+    // Buggy
+    "jsdoc/no-undefined-types": "off",
+    // Buggy
+    "jsdoc/valid-types": "off",
+    "jsdoc/require-param-description": "off",
+    "jsdoc/require-returns-description": "off",
     "max-classes-per-file": "off",
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error"
+    "no-console": "off",
+    "no-underscore-dangle": "off",
+    "no-unused-vars": "off",
+    "simple-import-sort/exports": "error",
+    "simple-import-sort/imports": "error"
+  },
+  "settings": {
+    "jsdoc": {
+      "mode": "typescript"
+    }
   }
 }

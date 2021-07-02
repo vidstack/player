@@ -5,7 +5,7 @@ import { currentSafariVersion } from '../../utils/support.js';
 /**
  * A selector selecting focusable nodes.
  *
- * @inspiration https://github.com/carbon-design-system/carbon-web-components
+ * @see https://github.com/carbon-design-system/carbon-web-components
  */
 export const focusableSelector = `
   ${[
@@ -37,8 +37,7 @@ export const focusableSelector = `
  * @template {import('../types/utils').Constructor<LitElement>} T
  * @param {T} Base - The constructor to mix into.
  * @returns {T}
- *
- * @inspiration https://github.com/carbon-design-system/carbon-web-components
+ * @see https://github.com/carbon-design-system/carbon-web-components
  */
 export function WithFocus(Base) {
   return class WithFocusMixin extends Base {
@@ -50,8 +49,8 @@ export function WithFocus(Base) {
          * This change disables delegatesFocus feature in shadow DOM in recent Safari, notably `14.x`.
          * Safari `14.x` introduced delegatesFocus, but using it causes the browser to crash.
          *
-         * @op https://github.com/carbon-design-system/carbon-web-components/pull/496
-         * @report https://bugs.webkit.org/show_bug.cgi?id=215622.
+         * @see https://github.com/carbon-design-system/carbon-web-components/pull/496
+         * @see https://bugs.webkit.org/show_bug.cgi?id=215622.
          */
         delegatesFocus: currentSafariVersion() <= 537
       };

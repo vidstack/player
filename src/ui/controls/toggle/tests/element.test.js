@@ -6,6 +6,7 @@ import { TOGGLE_ELEMENT_TAG_NAME, ToggleElement } from '../ToggleElement.js';
 window.customElements.define(TOGGLE_ELEMENT_TAG_NAME, ToggleElement);
 
 describe(TOGGLE_ELEMENT_TAG_NAME, function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const toggle = await fixture(html`
       <vds-toggle>

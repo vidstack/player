@@ -41,6 +41,7 @@ export function consumeContext(context, options = {}) {
   /**
    * @param {any} protoOrContext
    * @param {string | symbol} [propertyKey]
+   * @returns {ReturnType<typeof legacy | typeof standard>}
    */
   function decorator(protoOrContext, propertyKey) {
     return !isUndefined(propertyKey)
@@ -92,6 +93,7 @@ export function provideContext(context, options = {}) {
   /**
    * @param {any} protoOrContext
    * @param {string | symbol} [propertyKey]
+   * @returns {ReturnType<typeof legacy | typeof standard>}
    */
   function decorator(protoOrContext, propertyKey) {
     return !isUndefined(propertyKey)

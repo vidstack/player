@@ -88,6 +88,7 @@ window.customElements.define('fake-provider', FakeProviderElement);
 window.customElements.define('fake-consumer', FakeConsumerElement);
 
 describe('context', function () {
+  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     /** @type {FakeProviderElement}  */
     const provider = await fixture(html`

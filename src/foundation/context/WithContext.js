@@ -36,7 +36,6 @@ export function WithContext(Base) {
 
     /**
      * @protected
-     *
      */
     static finalizeContext() {
       // eslint-disable-next-line no-prototype-builtins
@@ -54,7 +53,6 @@ export function WithContext(Base) {
 
     /**
      * @protected
-     *
      */
     static defineContextProviders() {
       const contextProviders = this.contextProviders ?? {};
@@ -104,7 +102,6 @@ export function WithContext(Base) {
 
     /**
      * @protected
-     *
      */
     static defineContextConsumers() {
       const contextConsumers = this.contextConsumers ?? {};
@@ -129,6 +126,10 @@ export function WithContext(Base) {
       // Might be called by decorator.
       this.finalizeContext();
 
+      /**
+       * @param {import('lit').LitElement} element
+       * @returns {import('./types').ContextConsumer<any>}
+       */
       function initConsumer(element) {
         let initialized = false;
         let oldValue =

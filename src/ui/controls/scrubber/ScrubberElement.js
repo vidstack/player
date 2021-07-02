@@ -50,13 +50,13 @@ export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
  * You can pass in a preview to be shown while the user is interacting (hover/drag) with the
  * scrubber by passing an element into the `preview` slot, such as `<div slot="preview"></div>`.
  *
- * **You need to do the following on your root preview element:**
+ * You need to do the following on your root preview element:**
  *
  * - Expect that your root preview element will be positioned absolutely.
  * - Set the `bottom` CSS property on it to adjust it to the desired position above the slider.
  * - Create CSS styles for when it has a hidden attribute (`.preview[hidden] {}`).
  *
- * **The Scrubber will automatically do the following to the root preview element passed in:**
+ * The Scrubber will automatically do the following to the root preview element passed in:**
  *
  * - Set a `hidden` attribute when it should be hidden (it's left to you to hide it with CSS).
  * - Set a safe `z-index` value so the preview is above all other components and is visible.
@@ -71,35 +71,25 @@ export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
  * the current time in seconds the user is previewing.
  *
  * @tagname vds-scrubber
- *
  * @slot Used to pass content into the root.
  * @slot progress - Used to pass content into the progress element (`<div>`).
  * @slot preview - Used to pass in a preview to be shown while the user is interacting (hover/drag) with the scrubber.
  * @slot slider - Used to pass content into the slider component (`<vds-slider>`).
- *
  * @csspart root - The component's root element (`<div>`).
- *
  * @csspart slider - The slider component (`<vds-slider>`).
  * @csspart slider-* - All slider parts re-exported with the `slider` prefix such as `slider-root` and `slider-thumb`.
- *
  * @csspart progress - The progress element (`<div>`).
- *
  * @csspart preview-track - The part of the slider track that displays
  * @csspart preview-track-hidden - Targets the `preview-track` part when it's hidden.
- *
  * @cssprop --vds-slider-* - All slider CSS properties can be used to style the underlying `<vds-slider>` component.
- *
  * @cssprop --vds-scrubber-current-time - Current time of playback.
  * @cssprop --vds-scrubber-seekable - The amount of media that is seekable.
  * @cssprop --vds-scrubber-duration - The length of media playback.
- *
  * @cssprop --vds-scrubber-progress-bg - The background color of the amount that is seekable.
  * @cssprop --vds-scrubber-progress-height - The height of the progress bar (defaults to `--vds-slider-track-height`).
- *
  * @cssprop --vds-scrubber-preview-time - The current time in seconds that is being previewed (hover/drag).
  * @cssprop --vds-scrubber-preview-track-height - The height of the preview track (defaults to `--vds-slider-track-height`).
  * @cssprop --vds-preview-track-bg - The background color of the preview track.
- *
  * @example
  * ```html
  * <vds-scrubber
@@ -110,7 +100,6 @@ export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
  *  <div class="preview" slot="preview" hidden>Preview</div>
  * </vds-scrubber
  * ```
- *
  * @example
  * ```css
  * vds-scrubber {
@@ -250,29 +239,59 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     this.userSeekingThrottle = 150;
 
     // State
-    /** @protected @type {number} */
+    /**
+     * @protected
+     * @type {number}
+     */
     this.currentTime = 0;
-    /** @protected @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.isPointerInsideScrubber = false;
-    /** @protected @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.isDraggingThumb = false;
 
     // Context Consumers
-    /** @protected @readonly @type {number} */
+    /**
+     * @protected
+     * @type {number}
+     */
     this.mediaCurrentTime = mediaContext.currentTime.initialValue;
-    /** @protected @readonly @type {number} */
+    /**
+     * @protected
+     * @type {number}
+     */
     this.mediaDuration = 0;
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaPaused = mediaContext.paused.initialValue;
-    /** @protected @readonly @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.mediaSeeking = mediaContext.seeking.initialValue;
-    /** @protected @readonly @type {number} */
+    /**
+     * @protected
+     * @type {number}
+     */
     this.mediaSeekableAmount = mediaContext.seekableAmount.initialValue;
 
     // Context Providers
-    /** @protected @type {boolean} */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this.isPreviewShowing = false;
-    /** @protected @type {number} */
+    /**
+     * @protected
+     * @type {number}
+     */
     this.previewTime = 0;
   }
 
@@ -422,6 +441,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * The component's root element.
+   *
+   * @type {HTMLDivElement}
    */
   get rootElement() {
     return /** @type {HTMLDivElement} */ (this.rootRef.value);
@@ -519,6 +540,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * Returns the underlying `<progress>` element.
+   *
+   * @type {HTMLProgressElement}
    */
   get progressElement() {
     return /** @type {HTMLProgressElement} */ (this.progressRef.value);
@@ -581,6 +604,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * Returns the underlying `vds-slider` component.
+   *
+   * @type {SliderElement}
    */
   get sliderElement() {
     return /** @type {SliderElement} */ (this.sliderRef.value);
@@ -588,11 +613,18 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * Whether the user is seeking by either hovering over the scrubber or by dragging the thumb.
+   *
+   * @type {boolean}
    */
   get isInteractive() {
     return this.isPointerInsideScrubber || this.isDraggingThumb;
   }
 
+  /**
+   * Whether the slider value should be set to the preview time instead of the current time.
+   *
+   * @type {boolean}
+   */
   get shouldDisplayPreviewTime() {
     return this.isDraggingThumb;
   }
@@ -754,6 +786,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
   /**
    * Returns the underlying preview track fill element (`<div>`). This will be `undefined` if
    * you set the `noPreviewTrack` property to true.
+   *
+   * @type {HTMLDivElement | undefined}
    */
   get previewTrackElement() {
     return this.previewTrackRef.value;
@@ -796,6 +830,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * The element passed in to the `preview` slot.
+   *
+   * @type {HTMLElement | undefined}
    */
   get previewSlotElement() {
     return this.currentPreviewSlotElement;

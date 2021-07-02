@@ -16,6 +16,10 @@ export default {
   argTypes: MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
 
+/**
+ * @param {any} args
+ * @returns {import('lit').TemplateResult}
+ */
 function Template({
   // Properties
   label,

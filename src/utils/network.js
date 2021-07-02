@@ -56,6 +56,11 @@ export function objOrParseJSON(value) {
  * @returns {Promise<HTMLImageElement>}
  */
 /* c8 ignore next 10 */
+/**
+ * @param {string} src
+ * @param {number} minWidth
+ * @returns {Promise<HTMLImageElement>}
+ */
 export function loadImage(src, minWidth = 1) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -74,9 +79,14 @@ export function loadImage(src, minWidth = 1) {
  * @param {string} src - The URL of where the script is located.
  * @param {() => void} onLoad - Callback invoked when the script is loaded.
  * @param {(error: unknown) => void} onError - Callback invoked when the script loading fails.
- *
  */
+
 /* c8 ignore next 10 */
+/**
+ * @param {string} src
+ * @param {() => void} onLoad
+ * @param {() => void} onError
+ */
 export function loadScript(src, onLoad = noop, onError = noop) {
   const script = document.createElement('script');
   script.src = src;
@@ -132,6 +142,11 @@ export function tryDecodeURIComponent(
  * @link https://github.com/ampproject/amphtml/blob/c7c46cec71bac92f5c5da31dcc6366c18577f566/src/url-parse-query-string.js#L31
  */
 const QUERY_STRING_REGEX = /(?:^[#?]?|&)([^=&]+)(?:=([^&]*))?/g;
+
+/**
+ * @param {string} qs
+ * @returns {Params}
+ */
 export function parseQueryString(qs) {
   const params = Object.create(null);
 
@@ -260,5 +275,5 @@ export function appendParamsToURL(url, params) {
  */
 export function decodeQueryString(qs) {
   if (!isString(qs)) return undefined;
-  return parseQueryString(qs);
+  return /** @type {T} */ (parseQueryString(qs));
 }

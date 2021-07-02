@@ -18,6 +18,10 @@ export default {
   }
 };
 
+/**
+ * @param {any} args
+ * @returns {import('lit').TemplateResult}
+ */
 function Template({
   // Media Provider Properties
   width,

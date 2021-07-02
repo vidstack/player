@@ -7,7 +7,7 @@
 
 /**
  * @template DetailType
- * @extends CustomEvent<DetailType>
+ * @augments CustomEvent<DetailType>
  */
 export class VdsCustomEvent extends CustomEvent {
   /**
@@ -98,7 +98,6 @@ export class VdsCustomEvent extends CustomEvent {
 /**
  * @param {EventTarget} target
  * @param {Event | CustomEvent | VdsCustomEvent} event
- *
  */
 export function redispatchEvent(target, event) {
   class VdsRedispatchedEvent extends VdsCustomEvent {
@@ -150,7 +149,6 @@ export class DisposalBin {
  * @param {(event: ListenedEvent) => void} listener - The function to be called when the event is fired.
  * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options] - Configures the event listener.
  * @returns {import('../types/utils').Unsubscribe}
- *
  * @example
  * ```ts
  * const disposeListener = listen(window, 'resize', () => {});
