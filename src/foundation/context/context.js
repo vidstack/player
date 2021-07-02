@@ -39,8 +39,6 @@ export function createContext(initialValue) {
 
   /** @type {import('./types').Context<T>['provide']} */
   function provide(host, options = {}) {
-    // TODO: this means only the first `transform` option will apply but we need to re-use providers
-    // on the same host so derived context properties work.
     if (host[key]) return host[key];
 
     let currentValue = initialValue;

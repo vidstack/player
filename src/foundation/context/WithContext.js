@@ -17,7 +17,7 @@ export function WithContext(Base) {
       return {};
     }
 
-    /** @type {import('./types').ContextConsumerDeclarations} */
+    /** @type {import('./types').ContextProviderDeclarations} */
     static get contextProviders() {
       return {};
     }
