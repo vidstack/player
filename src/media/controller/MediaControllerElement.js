@@ -21,22 +21,25 @@ import {
   MediaContainerConnectEvent,
   MediaContainerElement
 } from '../container/index.js';
-import { createMediaContextRecord, mediaContext } from '../media.context.js';
+import { createMediaContextRecord, mediaContext } from '../context.js';
+import {
+  MediaProviderConnectEvent,
+  MediaProviderElement
+} from '../provider/index.js';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
+  HideControlsRequest,
   MuteRequestEvent,
   PauseRequestEvent,
   PlayRequestEvent,
   SeekingRequestEvent,
   SeekRequestEvent,
+  ShowControlsRequest,
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
-} from '../media-request.events.js';
-import {
-  MediaProviderConnectEvent,
-  MediaProviderElement
-} from '../provider/index.js';
+} from '../request.events.js';
+import { ControlsManagerConnectEvent } from './controls';
 import { FORWARDED_MEDIA_PROVDER_PROPS } from './forward.js';
 import { mediaControllerStyles } from './styles.js';
 
@@ -119,7 +122,10 @@ export class MediaControllerElement extends VdsElement {
       [SeekRequestEvent.TYPE]: this.handleSeekRequest,
       [VolumeChangeRequestEvent.TYPE]: this.handleVolumeChangeRequest,
       [EnterFullscreenRequestEvent.TYPE]: this.handleEnterFullscreenRequest,
-      [ExitFullscreenRequestEvent.TYPE]: this.handleExitFullscreenRequest
+      [ExitFullscreenRequestEvent.TYPE]: this.handleExitFullscreenRequest,
+      [ShowControlsRequest.TYPE]: this.handleShowControlsRequest,
+      [HideControlsRequest.TYPE]: this.handleHideControlsRequest,
+      [ControlsManagerConnectEvent.TYPE]: this.handleControlsManagerConnect
     };
 
     bindEventListeners(this, events, this.disconnectDisposal);
@@ -173,6 +179,7 @@ export class MediaControllerElement extends VdsElement {
    * @param {MediaContainerConnectEvent} event
    */
   handleMediaContainerConnect(event) {
+    event.stopPropagation();
     this.handleMediaContainerDisconnect();
     const { container, onDisconnect } = event.detail;
     this._mediaContainer = container;
@@ -221,6 +228,8 @@ export class MediaControllerElement extends VdsElement {
    * @param {MediaProviderConnectEvent} event
    */
   handleMediaProviderConnect(event) {
+    event.stopPropagation();
+
     if (this.mediaProvider === event.detail?.provider) return;
 
     this.handleMediaProviderDisconnect();
@@ -474,6 +483,79 @@ export class MediaControllerElement extends VdsElement {
     } else if (!isNil(this.mediaProvider)) {
       await this.mediaProvider.exitFullscreen();
     }
+  }
+
+  /**
+   * @protected
+   * @param {ShowControlsRequest} event
+   * @returns {void}
+   */
+  handleShowControlsRequest(event) {
+    this.mediaRequestEventGateway(event);
+    this.controls = true;
+  }
+
+  /**
+   * @protected
+   * @param {HideControlsRequest} event
+   * @returns {void}
+   */
+  handleHideControlsRequest(event) {
+    this.mediaRequestEventGateway(event);
+    this.controls = false;
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Controls Manager
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * @protected
+   * @type {import('./controls').ControlsManager | undefined}
+   */
+  _controlsManager;
+
+  /**
+   * Current component responsible for showing and hiding controls. This getter will fallback
+   * to the current media provider if no manager has connected.
+   *
+   * @type {import('./controls').ControlsManager | undefined}
+   */
+  get controlsManager() {
+    return this._controlsManager ?? this.mediaProvider;
+  }
+
+  /**
+   * Indicates whether a user interface should be shown for controlling the current media.
+   *
+   * @type {boolean}
+   */
+  get controls() {
+    return this.context.controls;
+  }
+
+  set controls(isShowing) {
+    this.context.controls = isShowing;
+    if (!isNil(this.controlsManager)) {
+      this.controlsManager.controls = isShowing;
+    }
+  }
+
+  /**
+   * @protected
+   * @param {ControlsManagerConnectEvent} event
+   * @returns {void}
+   */
+  handleControlsManagerConnect(event) {
+    event.stopPropagation();
+    // Hide previous manager controls.
+    if (!isNil(this.controlsManager)) this.controlsManager.controls = false;
+    const { manager, onDisconnect } = event.detail;
+    manager.controls = this.controls;
+    this._controlsManager = manager;
+    onDisconnect(() => {
+      this._controlsManager = undefined;
+    });
   }
 
   // -------------------------------------------------------------------------------------------

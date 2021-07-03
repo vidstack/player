@@ -10,7 +10,7 @@ import {
   StorybookControlType
 } from '../../foundation/storybook/index.js';
 import { CanPlay } from '../CanPlay.js';
-import { createMediaContextRecord, mediaContext } from '../media.context.js';
+import { createMediaContextRecord, mediaContext } from '../context.js';
 import {
   AbortEvent,
   CanPlayEvent,
@@ -38,7 +38,7 @@ import {
   ViewTypeChangeEvent,
   VolumeChangeEvent,
   WaitingEvent
-} from '../media.events.js';
+} from '../events.js';
 import { MediaType } from '../MediaType.js';
 import { ViewType } from '../ViewType.js';
 import { MediaProviderConnectEvent } from './events.js';

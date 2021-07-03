@@ -12,7 +12,7 @@ import { StorybookControlType } from '../../foundation/storybook/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
 import { getAllObjectPropertyNames } from '../../utils/object.js';
 import { isNil, isString, isUndefined } from '../../utils/unit.js';
-import { mediaContext } from '../media.context.js';
+import { mediaContext } from '../context.js';
 import { MediaProviderElement } from '../provider/index.js';
 import { MediaContainerConnectEvent } from './events.js';
 import { mediaContainerElementStyles } from './styles.js';
