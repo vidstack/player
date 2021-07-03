@@ -12,6 +12,7 @@
     "noImplicitReturns": true,
     "noUnusedParameters": false,
     "strict": true,
+    "skipLibCheck": true,
     "target": "es2020"
   },
   "exclude": ["node_modules"]

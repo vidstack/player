@@ -1,6 +1,7 @@
 {
   "extends": "./jsconfig.json",
   "compilerOptions": {
+    "incremental": true,
     "types": ["@types/mocha"]
   },
   "include": ["**/*.js", "**/*.ts"]

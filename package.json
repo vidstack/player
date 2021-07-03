@@ -55,7 +55,7 @@
     "types": "run-s types:clean types:build",
     "types:build": "tsc -p tsconfig-build.json",
     "types:clean": "rimraf types",
-    "types:watch": "run-s types:clean \"types:build -- -w\"",
+    "types:watch": "run-s types:clean \"types:build -- --watch --incremental\"",
     "release": "npx semantic-release"
   },
   "dependencies": {
@@ -97,7 +97,7 @@
     "rimraf": "^3.0.2",
     "semantic-release": "^17.3.7",
     "sinon": "^11.1.1",
-    "typescript": "^4.2.4",
+    "typescript": "^4.4.0-beta",
     "webpack": "^5.39.1"
   },
   "prettier": {

@@ -5,6 +5,7 @@ export type WebKitPresentationMode =
 
 declare global {
   interface Document {
+    // @ts-ignore
     pictureInPictureEnabled: boolean;
   }
 
