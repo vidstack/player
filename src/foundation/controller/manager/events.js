@@ -1,26 +1,28 @@
 import { VdsCustomEvent } from '../../events/index.js';
 
 /**
+ * @template {Element} ManagedElement
  * @typedef {{
- *  controller: any;
+ *  element: ManagedElement;
  *  onDisconnect: (callback: () => void) => void;
- * }} ManagedControllerConnectEventDetail
+ * }} ManagedElementConnectEventDetail
  */
 
 /**
  * @typedef {{
- *  [ManagedControllerConnectEvent.TYPE]: ManagedControllerConnectEvent;
- * }} ControllerManagerEvents
+ *  [ManagedElementConnectEvent.TYPE]: ManagedElementConnectEvent;
+ * }} ElementManagerEvents
  */
 
 /**
- * @augments VdsCustomEvent<ManagedControllerConnectEventDetail>
+ * @template {Element} ManagedElement
+ * @augments VdsCustomEvent<ManagedElementConnectEventDetail<ManagedElement>>
  * @bubbles
  * @composed
  */
-export class ManagedControllerConnectEvent extends VdsCustomEvent {
+export class ManagedElementConnectEvent extends VdsCustomEvent {
   /** @readonly */
-  static TYPE = 'vds-managed-controller-connect';
+  static TYPE = 'vds-managed-element-connect';
   static DEFAULT_BUBBLES = true;
   static DEFAULT_COMPOSED = true;
 }

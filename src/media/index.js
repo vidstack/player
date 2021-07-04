@@ -2,6 +2,7 @@ export * from './CanPlay.js';
 export * from './container/index.js';
 export * from './context.js';
 export * from './controller/index.js';
+export * from './controls/index.js';
 export * from './events.js';
 export * from './MediaRemoteControl.js';
 export * from './MediaType.js';

@@ -1,16 +1,16 @@
 import { DisposalBin } from '../../events/index.js';
-import { ManagedControllerConnectEvent } from './events.js';
+import { ManagedElementConnectEvent } from './events.js';
 
 /**
  * @template {import('lit').ReactiveElement} HostElement
  */
-export class ManagedController {
+export class ManagedElement {
   /**
    * @protected
-   * @type {typeof ManagedControllerConnectEvent}
+   * @type {typeof ManagedElementConnectEvent}
    */
   static get ScopedManagedControllerConnectEvent() {
-    return ManagedControllerConnectEvent;
+    return ManagedElementConnectEvent;
   }
 
   /**
@@ -35,12 +35,16 @@ export class ManagedController {
     });
   }
 
-  /** @protected */
+  /**
+   * @protected
+   */
   handleHostConnected() {
     this.connectToManager();
   }
 
-  /** @protected */
+  /**
+   * @protected
+   */
   handleHostDisconnected() {
     this.disconnectDisposal.empty();
   }
@@ -49,12 +53,12 @@ export class ManagedController {
    * @protected
    */
   connectToManager() {
-    const ctor = /** @type {typeof ManagedController} */ (this.constructor);
+    const ctor = /** @type {typeof ManagedElement} */ (this.constructor);
 
     this.host.dispatchEvent(
       new ctor.ScopedManagedControllerConnectEvent({
         detail: {
-          controller: this,
+          element: this.host,
           // Pipe callbacks into the disconnect disposal bin.
           onDisconnect: (callback) => {
             this.disconnectDisposal.add(callback);

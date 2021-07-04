@@ -13,6 +13,7 @@ import { VdsCustomEvent } from '../foundation/events/index.js';
  *  [VolumeChangeRequestEvent.TYPE]: VolumeChangeRequestEvent;
  *  [ShowControlsRequest.TYPE]: ShowControlsRequest;
  *  [HideControlsRequest.TYPE]: HideControlsRequest;
+ *  [LockControlsRequest.TYPE]: LockControlsRequest;
  * }} MediaRequestEvents
  */
 

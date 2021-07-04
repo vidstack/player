@@ -39,7 +39,6 @@ import {
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
 } from '../request.events.js';
-import { ControlsManagerConnectEvent } from './controls';
 import { FORWARDED_MEDIA_PROVDER_PROPS } from './forward.js';
 import { mediaControllerStyles } from './styles.js';
 
@@ -124,8 +123,7 @@ export class MediaControllerElement extends VdsElement {
       [EnterFullscreenRequestEvent.TYPE]: this.handleEnterFullscreenRequest,
       [ExitFullscreenRequestEvent.TYPE]: this.handleExitFullscreenRequest,
       [ShowControlsRequest.TYPE]: this.handleShowControlsRequest,
-      [HideControlsRequest.TYPE]: this.handleHideControlsRequest,
-      [ControlsManagerConnectEvent.TYPE]: this.handleControlsManagerConnect
+      [HideControlsRequest.TYPE]: this.handleHideControlsRequest
     };
 
     bindEventListeners(this, events, this.disconnectDisposal);
@@ -509,54 +507,7 @@ export class MediaControllerElement extends VdsElement {
   // Controls Manager
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * @protected
-   * @type {import('./controls').ControlsManager | undefined}
-   */
-  _controlsManager;
-
-  /**
-   * Current component responsible for showing and hiding controls. This getter will fallback
-   * to the current media provider if no manager has connected.
-   *
-   * @type {import('./controls').ControlsManager | undefined}
-   */
-  get controlsManager() {
-    return this._controlsManager ?? this.mediaProvider;
-  }
-
-  /**
-   * Indicates whether a user interface should be shown for controlling the current media.
-   *
-   * @type {boolean}
-   */
-  get controls() {
-    return this.context.controls;
-  }
-
-  set controls(isShowing) {
-    this.context.controls = isShowing;
-    if (!isNil(this.controlsManager)) {
-      this.controlsManager.controls = isShowing;
-    }
-  }
-
-  /**
-   * @protected
-   * @param {ControlsManagerConnectEvent} event
-   * @returns {void}
-   */
-  handleControlsManagerConnect(event) {
-    event.stopPropagation();
-    // Hide previous manager controls.
-    if (!isNil(this.controlsManager)) this.controlsManager.controls = false;
-    const { manager, onDisconnect } = event.detail;
-    manager.controls = this.controls;
-    this._controlsManager = manager;
-    onDisconnect(() => {
-      this._controlsManager = undefined;
-    });
-  }
+  // ...
 
   // -------------------------------------------------------------------------------------------
   // Fullscreen

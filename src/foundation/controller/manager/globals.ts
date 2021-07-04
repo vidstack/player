@@ -1,5 +1,5 @@
-import { ControllerManagerEvents } from './events.js';
+import { ElementManagerEvents } from './events.js';
 
 declare global {
-  interface GlobalEventHandlersEventMap extends ControllerManagerEvents {}
+  interface GlobalEventHandlersEventMap extends ElementManagerEvents {}
 }
