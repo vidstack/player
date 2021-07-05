@@ -1,5 +1,6 @@
-import { bindEventListeners } from '../../bundle/index.js';
 import { ElementManager } from '../../foundation/elements/index.js';
+import { bindEventListeners } from '../../foundation/events/index.js';
+import { controlsContext } from './context.js';
 import {
   ControlsChangeEvent,
   ControlsLock,
@@ -14,6 +15,13 @@ import { ManagedControlsConnectEvent } from './ManagedControls';
  */
 
 /**
+ * A registry for all media controls that:
+ *
+ * - Listens for new controls connecting in the DOM and adds them to the registry.
+ * - Manages showing and hiding all controls in-sync.
+ * - Listens for relevant requests such as `ShowControlsRequestEvent` and handles them.
+ * - Updates the `controlsContext` record.
+ *
  * @augments {ElementManager<import('./ManagedControls').ControlsHost>}
  */
 export class ControlsManager extends ElementManager {
@@ -24,12 +32,6 @@ export class ControlsManager extends ElementManager {
   static get ScopedManagedElementConnectEvent() {
     return ManagedControlsConnectEvent;
   }
-
-  /**
-   * @protected
-   * @type {boolean}
-   */
-  visible = false;
 
   /**
    * @protected
@@ -52,7 +54,7 @@ export class ControlsManager extends ElementManager {
    * @type {boolean}
    */
   get isVisible() {
-    return this.currentLock !== ControlsLock.Hidden && this.visible;
+    return this.currentLock !== ControlsLock.Hidden && this.visible.value;
   }
 
   /**
@@ -60,6 +62,13 @@ export class ControlsManager extends ElementManager {
    */
   constructor(host) {
     super(host);
+
+    /**
+     * @protected
+     * @readonly
+     * @type {import('../../foundation/context/types').ContextProvider<boolean>}
+     */
+    this.visible = controlsContext.visible.provide(host);
   }
 
   handleHostConnected() {
@@ -80,7 +89,7 @@ export class ControlsManager extends ElementManager {
    * @param {Event} [request]
    */
   async show(request) {
-    if (this.currentLock === ControlsLock.Hidden || this.visible) return;
+    if (this.currentLock === ControlsLock.Hidden || this.visible.value) return;
 
     await Promise.all(
       Array.from(this.managedElements).map((controls) =>
@@ -88,7 +97,7 @@ export class ControlsManager extends ElementManager {
       )
     );
 
-    this.visible = true;
+    this.visible.value = true;
     this.handleControlsChange(request);
   }
 
@@ -96,7 +105,8 @@ export class ControlsManager extends ElementManager {
    * @param {Event} [request]
    */
   async hide(request) {
-    if (this.currentLock === ControlsLock.Showing || !this.visible) return;
+    if (this.currentLock === ControlsLock.Showing || !this.visible.value)
+      return;
 
     await Promise.all(
       Array.from(this.managedElements).map((controls) =>
@@ -104,15 +114,19 @@ export class ControlsManager extends ElementManager {
       )
     );
 
-    this.visible = false;
+    this.visible.value = false;
     this.handleControlsChange(request);
   }
 
   /**
+   * Lock the controls to a given state to prevent changes until unlocked.
+   *
    * @param {ControlsLock} lock
    * @param {Event} [request]
    */
   async lock(lock, request) {
+    if (this.currentLock === lock) return;
+
     this.currentLock = lock;
 
     if (lock === ControlsLock.Hidden) {
@@ -120,6 +134,13 @@ export class ControlsManager extends ElementManager {
     } else if (lock === ControlsLock.Showing) {
       await this.show(request);
     }
+  }
+
+  /**
+   * Unlock the controls so they can be freely shown or hidden.
+   */
+  async unlock() {
+    this.currentLock = ControlsLock.None;
   }
 
   /**
@@ -150,6 +171,7 @@ export class ControlsManager extends ElementManager {
    * @param {Event} [request]
    */
   handleControlsChange(request) {
+    if (this.visible.value === this.isVisible) return;
     this.host.dispatchEvent(
       new ControlsChangeEvent({
         detail: this.isVisible,

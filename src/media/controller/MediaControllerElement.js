@@ -22,7 +22,12 @@ import {
   MediaContainerElement
 } from '../container/index.js';
 import { createMediaContextRecord, mediaContext } from '../context.js';
-import { ControlsChangeEvent, ControlsManager } from '../controls/index.js';
+import {
+  ControlsChangeEvent,
+  ControlsManager,
+  IdleChangeEvent,
+  IdleObserver
+} from '../controls/index.js';
 import {
   MediaProviderConnectEvent,
   MediaProviderElement
@@ -414,6 +419,7 @@ export class MediaControllerElement extends VdsElement {
    */
   handlePlayRequest(event) {
     this.mediaRequestEventGateway(event);
+    this.idleObserver.resume();
     if (!isNil(this.mediaProvider)) {
       this.mediaProvider.paused = false;
     }
@@ -425,6 +431,7 @@ export class MediaControllerElement extends VdsElement {
    */
   handlePauseRequest(event) {
     this.mediaRequestEventGateway(event);
+    this.idleObserver.pause();
     if (!isNil(this.mediaProvider)) {
       this.mediaProvider.paused = true;
     }
@@ -489,6 +496,11 @@ export class MediaControllerElement extends VdsElement {
    */
   controlsManager = new ControlsManager(this);
 
+  /**
+   * @readonly
+   */
+  idleObserver = new IdleObserver(this);
+
   // -------------------------------------------------------------------------------------------
   // Fullscreen
   // -------------------------------------------------------------------------------------------
@@ -524,6 +536,7 @@ export const MEDIA_CONTROLLER_ELEMENT_STORYBOOK_ARG_TYPES = {
   onControlsChange: storybookAction(ControlsChangeEvent.TYPE),
   onEnterFullscreenRequest: storybookAction(EnterFullscreenRequestEvent.TYPE),
   onExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE),
+  onIdleChange: storybookAction(IdleChangeEvent.TYPE),
   onMuteRequest: storybookAction(MuteRequestEvent.TYPE),
   onPauseRequest: storybookAction(PauseRequestEvent.TYPE),
   onPlayRequest: storybookAction(PlayRequestEvent.TYPE),

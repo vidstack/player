@@ -3,6 +3,7 @@ import { VdsCustomEvent } from '../../foundation/events/index.js';
 /**
  * @typedef {{
  *   [ControlsChangeEvent.TYPE]: ControlsChangeEvent;
+ *   [IdleChangeEvent.TYPE]: IdleChangeEvent;
  *   [HideControlsRequestEvent.TYPE]: HideControlsRequestEvent;
  *   [ShowControlsRequestEvent.TYPE]: ShowControlsRequestEvent;
  *   [LockControlsRequestEvent.TYPE]: LockControlsRequestEvent;
@@ -24,6 +25,17 @@ export class ControlsEvent extends VdsCustomEvent {}
 export class ControlsChangeEvent extends ControlsEvent {
   /** @readonly */
   static TYPE = 'vds-controls-change';
+}
+
+/**
+ * Fired when the idle state changes depending on user activity. The event detail contains a
+ * `boolean` that indicates if idle (`true`) or not (`false`).
+ *
+ * @augments {ControlsEvent<boolean>}
+ */
+export class IdleChangeEvent extends ControlsEvent {
+  /** @readonly */
+  static TYPE = 'vds-idle-change';
 }
 
 /**

@@ -12,6 +12,7 @@ import '../foundation/types/media';
 import '../foundation/types/ResizeObserver';
 import '../ui/buffering-indicator/globals';
 import '../ui/controls/button/globals';
+import '../ui/controls/controls/globals';
 import '../ui/controls/fullscreen-button/globals';
 import '../ui/controls/mute-button/globals';
 import '../ui/controls/play-button/globals';
