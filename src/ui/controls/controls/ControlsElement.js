@@ -60,11 +60,11 @@ export class ControlsElement extends VdsElement {
    */
   static get contextConsumers() {
     return {
-      canPlay: mediaContext.canPlay,
-      hidden: controlsContext.hidden,
-      idle: controlsContext.idle,
-      paused: mediaContext.paused,
-      viewType: mediaContext.viewType
+      mediaCanPlay: mediaContext.canPlay,
+      controlsHidden: controlsContext.hidden,
+      controlsIdle: controlsContext.idle,
+      mediaPaused: mediaContext.paused,
+      mediaViewType: mediaContext.viewType
     };
   }
 
@@ -82,29 +82,29 @@ export class ControlsElement extends VdsElement {
      * @readonly
      * @type {boolean}
      */
-    this.canPlay = mediaContext.canPlay.initialValue;
+    this.mediaCanPlay = mediaContext.canPlay.initialValue;
     /**
      * @type {boolean}
      */
-    this.hidden = controlsContext.hidden.initialValue;
-    /**
-     * @protected
-     * @readonly
-     * @type {boolean}
-     */
-    this.idle = controlsContext.idle.initialValue;
+    this.controlsHidden = controlsContext.hidden.initialValue;
     /**
      * @protected
      * @readonly
      * @type {boolean}
      */
-    this.paused = mediaContext.paused.initialValue;
+    this.controlsIdle = controlsContext.idle.initialValue;
+    /**
+     * @protected
+     * @readonly
+     * @type {boolean}
+     */
+    this.mediaPaused = mediaContext.paused.initialValue;
     /**
      * @protected
      * @readonly
      * @type {ViewType}
      */
-    this.viewType = mediaContext.viewType.initialValue;
+    this.mediaViewType = mediaContext.viewType.initialValue;
   }
 
   /**
@@ -114,24 +114,24 @@ export class ControlsElement extends VdsElement {
   update(changedProperties) {
     super.update(changedProperties);
 
-    if (changedProperties.has('canPlay')) {
-      setAttribute(this, 'media-can-play', this.canPlay);
+    if (changedProperties.has('mediaCanPlay')) {
+      setAttribute(this, 'media-can-play', this.mediaCanPlay);
     }
 
-    if (changedProperties.has('hidden')) {
-      setAttribute(this, 'hidden', this.hidden);
+    if (changedProperties.has('controlsHidden')) {
+      setAttribute(this, 'hidden', this.controlsHidden);
     }
 
-    if (changedProperties.has('idle')) {
-      setAttribute(this, 'idle', this.idle);
+    if (changedProperties.has('controlsIdle')) {
+      setAttribute(this, 'idle', this.controlsIdle);
     }
 
-    if (changedProperties.has('paused')) {
-      setAttribute(this, 'media-paused', this.paused);
+    if (changedProperties.has('mediaPaused')) {
+      setAttribute(this, 'media-paused', this.mediaPaused);
     }
 
-    if (changedProperties.has('viewType')) {
-      setAttribute(this, 'media-view-type', this.viewType);
+    if (changedProperties.has('mediaViewType')) {
+      setAttribute(this, 'media-view-type', this.mediaViewType);
     }
   }
 
