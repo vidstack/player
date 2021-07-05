@@ -21,7 +21,17 @@ import {
   MediaContainerConnectEvent,
   MediaContainerElement
 } from '../container/index.js';
-import { createMediaContextRecord, mediaContext } from '../media.context.js';
+import { createMediaContextRecord, mediaContext } from '../context.js';
+import {
+  ControlsChangeEvent,
+  ControlsManager,
+  IdleChangeEvent,
+  IdleObserver
+} from '../controls/index.js';
+import {
+  MediaProviderConnectEvent,
+  MediaProviderElement
+} from '../provider/index.js';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -32,11 +42,7 @@ import {
   SeekRequestEvent,
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
-} from '../media-request.events.js';
-import {
-  MediaProviderConnectEvent,
-  MediaProviderElement
-} from '../provider/index.js';
+} from '../request.events.js';
 import { FORWARDED_MEDIA_PROVDER_PROPS } from './forward.js';
 import { mediaControllerStyles } from './styles.js';
 
@@ -173,6 +179,7 @@ export class MediaControllerElement extends VdsElement {
    * @param {MediaContainerConnectEvent} event
    */
   handleMediaContainerConnect(event) {
+    event.stopPropagation();
     this.handleMediaContainerDisconnect();
     const { container, onDisconnect } = event.detail;
     this._mediaContainer = container;
@@ -221,6 +228,8 @@ export class MediaControllerElement extends VdsElement {
    * @param {MediaProviderConnectEvent} event
    */
   handleMediaProviderConnect(event) {
+    event.stopPropagation();
+
     if (this.mediaProvider === event.detail?.provider) return;
 
     this.handleMediaProviderDisconnect();
@@ -477,6 +486,20 @@ export class MediaControllerElement extends VdsElement {
   }
 
   // -------------------------------------------------------------------------------------------
+  // Controls Manager
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * @readonly
+   */
+  controlsManager = new ControlsManager(this);
+
+  /**
+   * @readonly
+   */
+  idleObserver = new IdleObserver(this);
+
+  // -------------------------------------------------------------------------------------------
   // Fullscreen
   // -------------------------------------------------------------------------------------------
 
@@ -508,8 +531,10 @@ export class MediaControllerElement extends VdsElement {
 }
 
 export const MEDIA_CONTROLLER_ELEMENT_STORYBOOK_ARG_TYPES = {
+  onControlsChange: storybookAction(ControlsChangeEvent.TYPE),
   onEnterFullscreenRequest: storybookAction(EnterFullscreenRequestEvent.TYPE),
   onExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE),
+  onIdleChange: storybookAction(IdleChangeEvent.TYPE),
   onMuteRequest: storybookAction(MuteRequestEvent.TYPE),
   onPauseRequest: storybookAction(PauseRequestEvent.TYPE),
   onPlayRequest: storybookAction(PlayRequestEvent.TYPE),

@@ -1,4 +1,4 @@
-import { LitElement } from 'lit';
+import { ReactiveElement } from 'lit';
 
 import { Constructor, ReadonlyIfType } from '../types/utils.js';
 
@@ -74,7 +74,7 @@ export type ContextProviderDeclarations<T = any> = {
   readonly [P in keyof T]: ContextProviderDeclaration<any>;
 };
 
-export type ContextHost = LitElement;
+export type ContextHost = ReactiveElement;
 
 export interface ContextHostConstructor {
   new (...args: any[]): ContextHost;

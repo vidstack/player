@@ -2,7 +2,7 @@ import { LitElement } from 'lit';
 
 import { keysOf } from './string.js';
 import { IS_CLIENT } from './support.js';
-import { isNil, isUndefined } from './unit.js';
+import { isNil, isString, isUndefined } from './unit.js';
 
 /**
  * Requests an animation frame and waits for it to be resolved.
@@ -59,13 +59,13 @@ export function safelyDefineCustomElement(
  *
  * @param {Element} element - The element to set the attribute on.
  * @param {string} attrName - The name of the attribute.
- * @param {string | null} [attrValue] - The value of the attribute.
+ * @param {string | boolean | undefined | null} [attrValue] - The value of the attribute.
  */
 export function setAttribute(element, attrName, attrValue) {
-  if (isNil(attrValue)) {
+  if (isNil(attrValue) || attrValue === false) {
     element.removeAttribute(attrName);
   } else {
-    element.setAttribute(attrName, attrValue);
+    element.setAttribute(attrName, isString(attrValue) ? attrValue : '');
   }
 }
 

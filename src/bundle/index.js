@@ -1,5 +1,4 @@
 export * from '../foundation/context/index.js';
-export * from '../foundation/controller/index.js';
 export * from '../foundation/directives/index.js';
 export * from '../foundation/elements/index.js';
 export * from '../foundation/events/index.js';

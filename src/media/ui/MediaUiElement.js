@@ -4,7 +4,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { VdsElement } from '../../foundation/elements/index.js';
 import { IS_IOS } from '../../utils/support.js';
-import { mediaContext } from '../media.context.js';
+import { mediaContext } from '../context.js';
 import { mediaUiElementStyles } from './styles.js';
 
 export const MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';

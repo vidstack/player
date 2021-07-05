@@ -2,7 +2,7 @@ import { elementUpdated, expect } from '@open-wc/testing';
 import sinon, { spy } from 'sinon';
 
 import { equal } from '../../../utils/unit.js';
-import { mediaContext } from '../../media.context.js';
+import { mediaContext } from '../../context.js';
 import { MediaType } from '../../MediaType.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 import { ViewType } from '../../ViewType.js';

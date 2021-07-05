@@ -1,7 +1,7 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
 
-import { ErrorEvent } from '../../media.events.js';
+import { ErrorEvent } from '../../events.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 
 describe('MediaProviderElement/queue', function () {

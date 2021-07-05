@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { mock, spy } from 'sinon';
 
 import { raf } from '../../../utils/dom.js';
-import { VolumeChangeEvent } from '../../media.events.js';
+import { VolumeChangeEvent } from '../../events.js';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -13,8 +13,7 @@ import {
   SeekRequestEvent,
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
-} from '../../media-request.events.js';
-import { MediaProviderConnectEvent } from '../../provider/events.js';
+} from '../../request.events.js';
 import {
   buildMediaFixture,
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME

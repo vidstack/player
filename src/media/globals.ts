@@ -1,5 +1,5 @@
-import { MediaEvents } from './media.events.js';
-import { MediaRequestEvents } from './media-request.events.js';
+import { MediaEvents } from './events.js';
+import { MediaRequestEvents } from './request.events.js';
 
 declare global {
   interface GlobalEventHandlersEventMap

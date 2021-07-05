@@ -1,5 +1,6 @@
 /* c8 ignore next 1000 */
 
+import { mediaContext } from '../../context.js';
 import {
   CanPlay,
   MediaProviderElement,
@@ -8,7 +9,6 @@ import {
   TimeUpdateEvent,
   VolumeChangeEvent
 } from '../../index.js';
-import { mediaContext } from '../../media.context.js';
 
 export const FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME = 'vds-fake-media-provider';
 
