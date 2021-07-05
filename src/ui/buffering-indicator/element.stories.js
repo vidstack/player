@@ -20,12 +20,6 @@ export default {
  * @returns {import('lit').TemplateResult}
  */
 function Template({
-  // Properties
-  delay,
-  showWhileBooting,
-  // Actions
-  onBufferingIndicatorShow,
-  onBufferingIndicatorHide,
   // Media Properties
   mediaCanPlay,
   mediaBuffering
@@ -38,16 +32,24 @@ function Template({
           .waitingContext=${mediaBuffering}
           slot="media"
         ></vds-fake-media-provider>
-        <vds-buffering-indicator
-          ?show-while-booting=${showWhileBooting}
-          delay=${delay}
-          @vds-buffering-indicator-show=${onBufferingIndicatorShow}
-          @vds-buffering-indicator-hide=${onBufferingIndicatorHide}
-        >
+        <vds-buffering-indicator>
           <div>BUFFERING!</div>
         </vds-buffering-indicator>
       </vds-media-container>
     </vds-media-controller>
+
+    <style>
+      vds-buffering-indicator {
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+        transition-delay: 500ms;
+      }
+
+      vds-buffering-indicator[media-waiting],
+      vds-buffering-indicator:not([media-can-play]) {
+        opacity: 1;
+      }
+    </style>
   `;
 }
 
