@@ -3,6 +3,7 @@ import '../providers/hls/define.js';
 import '../providers/video/define.js';
 import '../ui/buffering-indicator/define.js';
 import '../ui/controls/button/define.js';
+import '../ui/controls/controls/define.js';
 import '../ui/controls/fullscreen-button/define.js';
 import '../ui/controls/mute-button/define.js';
 import '../ui/controls/play-button/define.js';
