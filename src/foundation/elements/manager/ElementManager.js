@@ -1,6 +1,11 @@
 import { DisposalBin, listen } from '../../events/index.js';
-import { ManagedElementConnectEvent } from './events.js';
-import { ManagedElement } from './ManagedElement.js';
+import { ManagedElementConnectEvent } from './ManagedElement.js';
+
+/**
+ * @typedef {{
+ *  [ManagedElementConnectEvent.TYPE]: ManagedElementConnectEvent;
+ * }} ElementManagerEvents
+ */
 
 /**
  * @typedef {import('lit').ReactiveElement} ElementManagerHost
@@ -12,9 +17,9 @@ import { ManagedElement } from './ManagedElement.js';
 export class ElementManager {
   /**
    * @protected
-   * @type {typeof ManagedElementConnectEvent}
+   * @type {import('./ManagedElement').ScopedManagedElementConnectEvent}
    */
-  static get ScopedManagedControllerConnectEvent() {
+  static get ScopedManagedElementConnectEvent() {
     return ManagedElementConnectEvent;
   }
 
@@ -48,7 +53,9 @@ export class ElementManager {
     });
   }
 
-  /** @protected */
+  /**
+   * @protected
+   */
   handleHostConnected() {
     this.disconnectDisposal.add(
       listen(
@@ -59,13 +66,16 @@ export class ElementManager {
     );
   }
 
-  /** @protected */
+  /**
+   * @protected
+   */
   handleHostDisconnected() {
     this.disconnectDisposal.empty();
     this.removeAllElements();
   }
 
   /**
+   * @protected
    * @param {ManagedElementConnectEvent<Element>} event
    */
   handleElementConnect(event) {
@@ -81,16 +91,18 @@ export class ElementManager {
   }
 
   /**
+   * @protected
    * @param {ManagedElementConnectEvent} event
    * @returns {boolean}
    */
   validateConnectEvent(event) {
     const ctor = /** @type {typeof ElementManager} */ (this.constructor);
-    const ScopedEvent = ctor.ScopedManagedControllerConnectEvent;
+    const ScopedEvent = ctor.ScopedManagedElementConnectEvent;
     return event instanceof ScopedEvent;
   }
 
   /**
+   * @protected
    * @param {Element} element
    */
   addElement(element) {
@@ -100,6 +112,7 @@ export class ElementManager {
   }
 
   /**
+   * @protected
    * @param {Element} element
    */
   handleElementAdded(element) {
@@ -107,6 +120,7 @@ export class ElementManager {
   }
 
   /**
+   * @protected
    * @param {Element} element
    */
   removeElement(element) {
@@ -115,11 +129,15 @@ export class ElementManager {
     this.handleElementRemoved(element);
   }
 
+  /**
+   * @protected
+   */
   removeAllElements() {
     this.managedElements.forEach(this.removeElement.bind(this));
   }
 
   /**
+   * @protected
    * @param {Element} element
    */
   handleElementRemoved(element) {

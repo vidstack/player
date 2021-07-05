@@ -2,46 +2,78 @@ import { VdsCustomEvent } from '../../foundation/events/index.js';
 
 /**
  * @typedef {{
- *   display: boolean;
- *   show(): Promise<void>;
- *   hide(): Promise<void>;
- * }} Controls
- */
-
-/**
- * @typedef {{
  *   [ControlsChangeEvent.TYPE]: ControlsChangeEvent;
- *   [ControlsConnectEvent.TYPE]: ControlsConnectEvent;
- * }} MediaControlsEvents
+ *   [HideControlsRequestEvent.TYPE]: HideControlsRequestEvent;
+ *   [ShowControlsRequestEvent.TYPE]: ShowControlsRequestEvent;
+ *   [LockControlsRequestEvent.TYPE]: LockControlsRequestEvent;
+ * }} ControlsEvents
  */
 
 /**
  * @template DetailType
  * @augments {VdsCustomEvent<DetailType>}
  */
-export class MediaControlsEvent extends VdsCustomEvent {}
+export class ControlsEvent extends VdsCustomEvent {}
 
 /**
- * Fired when connecting a new controls manager with the `MediaControllerElement`.
+ * Fired when the controls visiblity changes. The event detail contains a `boolean` that indicates
+ * if the controls are visible (`true`) or not (`false`).
+ *
+ * @augments {ControlsEvent<boolean>}
+ */
+export class ControlsChangeEvent extends ControlsEvent {
+  /** @readonly */
+  static TYPE = 'vds-controls-change';
+}
+
+/**
+ * Fired when requesting the controls to be shown.
  *
  * @bubbles
  * @composed
- * @augments MediaControlsEvent<ControlsConnectEventDetail>
+ * @augments {ControlsEvent<void>}
  */
-export class ControlsConnectEvent extends MediaControlsEvent {
+export class ShowControlsRequestEvent extends ControlsEvent {
   /** @readonly */
-  static TYPE = 'vds-controls-manager-connect';
+  static TYPE = 'vds-show-controls-request';
   static DEFAULT_BUBBLES = true;
   static DEFAULT_COMPOSED = true;
 }
 
 /**
- * Fired by the `MediaControllerElement` when the controls visiblity changes. The event detail
- * contains a `boolean` that indicates if the controls are visible (`true`) or not (`false`).
+ * Fired when requesting the controls to be hidden.
  *
- * @augments MediaControlsEvent<boolean>
+ * @bubbles
+ * @composed
+ * @augments {ControlsEvent<void>}
  */
-export class ControlsChangeEvent extends MediaControlsEvent {
+export class HideControlsRequestEvent extends ControlsEvent {
   /** @readonly */
-  static TYPE = 'vds-controls-change';
+  static TYPE = 'vds-hide-controls-request';
+  static DEFAULT_BUBBLES = true;
+  static DEFAULT_COMPOSED = true;
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export const ControlsLock = {
+  None: 'none',
+  Showing: 'showing',
+  Hidden: 'hidden'
+};
+
+/**
+ * Fired when requesting the controls to be locked to `showing` or `hidden`.
+ *
+ * @bubbles
+ * @composed
+ * @augments {ControlsEvent<ControlsLock>}
+ */
+export class LockControlsRequestEvent extends ControlsEvent {
+  /** @readonly */
+  static TYPE = 'vds-lock-controls-request';
+  static DEFAULT_BUBBLES = true;
+  static DEFAULT_COMPOSED = true;
 }

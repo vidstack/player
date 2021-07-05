@@ -7,6 +7,7 @@
  *  | 'canPlayType'
  *  | 'canRequestFullscreen'
  *  | 'captureStream'
+ *  | 'controls'
  *  | 'controlsList'
  *  | 'crossOrigin'
  *  | 'currentPoster'
@@ -63,6 +64,7 @@ export const FORWARDED_MEDIA_PROVDER_PROPS = [
   'canPlayType',
   'canRequestFullscreen',
   'captureStream',
+  'controls',
   'controlsList',
   'crossOrigin',
   'currentPoster',

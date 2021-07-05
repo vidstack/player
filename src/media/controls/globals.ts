@@ -1,5 +1,5 @@
-import { MediaControlsEvents } from './events';
+import { ControlsEvents } from './events';
 
 declare global {
-  interface GlobalEventHandlersEventMap extends MediaControlsEvents {}
+  interface GlobalEventHandlersEventMap extends ControlsEvents {}
 }

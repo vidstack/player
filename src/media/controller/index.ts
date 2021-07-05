@@ -2,7 +2,6 @@ import type { VideoElement } from '../../providers/video';
 import { MediaProviderElement } from '../provider/MediaProviderElement.js';
 import type { ForwardedMediaProviderProps } from './forward';
 
-export * from './controls.js';
 export * from './forward.js';
 export * from './MediaControllerElement.js';
 export * from './styles.js';

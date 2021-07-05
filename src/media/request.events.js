@@ -11,9 +11,6 @@ import { VdsCustomEvent } from '../foundation/events/index.js';
  *  [SeekRequestEvent.TYPE]: SeekRequestEvent;
  *  [SeekingRequestEvent.TYPE]: SeekingRequestEvent;
  *  [VolumeChangeRequestEvent.TYPE]: VolumeChangeRequestEvent;
- *  [ShowControlsRequest.TYPE]: ShowControlsRequest;
- *  [HideControlsRequest.TYPE]: HideControlsRequest;
- *  [LockControlsRequest.TYPE]: LockControlsRequest;
  * }} MediaRequestEvents
  */
 
@@ -132,28 +129,4 @@ export class SeekingRequestEvent extends MediaRequestEvent {
 export class VolumeChangeRequestEvent extends MediaRequestEvent {
   /** @readonly */
   static TYPE = 'vds-volume-change-request';
-}
-
-/**
- * Fired when requesting the controls to be shown.
- *
- * @bubbles
- * @composed
- * @augments {MediaRequestEvent<void>}
- */
-export class ShowControlsRequest extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-show-controls-request';
-}
-
-/**
- * Fired when requesting the controls to be hidden.
- *
- * @bubbles
- * @composed
- * @augments {MediaRequestEvent<void>}
- */
-export class HideControlsRequest extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-hide-controls-request';
 }

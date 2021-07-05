@@ -7,7 +7,7 @@ import '../media/ui/globals';
 import '../media/provider/globals';
 import '../providers/video/globals';
 import '../providers/video/globals';
-import '../foundation/controller/manager/globals';
+import '../foundation/elements/manager/globals';
 import '../foundation/types/media';
 import '../foundation/types/ResizeObserver';
 import '../ui/buffering-indicator/globals';
@@ -26,7 +26,6 @@ import '../ui/time/time-progress/globals';
 
 export * from '../foundation/context/index.js';
 export * from '../foundation/context/types';
-export * from '../foundation/controller/index.js';
 export * from '../foundation/directives/index.js';
 export * from '../foundation/elements/index.js';
 export * from '../foundation/events/index.js';

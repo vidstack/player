@@ -1,5 +1,30 @@
 import { DisposalBin } from '../../events/index.js';
-import { ManagedElementConnectEvent } from './events.js';
+import { VdsCustomEvent } from '../../events/index.js';
+
+/**
+ * @template {Element} ManagedElement
+ * @typedef {{
+ *  element: ManagedElement;
+ *  onDisconnect: (callback: () => void) => void;
+ * }} ManagedElementConnectEventDetail
+ */
+
+/**
+ * @template {Element} ManagedElement
+ * @augments VdsCustomEvent<ManagedElementConnectEventDetail<ManagedElement>>
+ * @bubbles
+ * @composed
+ */
+export class ManagedElementConnectEvent extends VdsCustomEvent {
+  /** @readonly */
+  static TYPE = 'vds-managed-element-connect';
+  static DEFAULT_BUBBLES = true;
+  static DEFAULT_COMPOSED = true;
+}
+
+/**
+ * @typedef {{ new(...args: any[]): ManagedElementConnectEvent<any> }} ScopedManagedElementConnectEvent
+ */
 
 /**
  * @template {import('lit').ReactiveElement} HostElement
@@ -7,9 +32,9 @@ import { ManagedElementConnectEvent } from './events.js';
 export class ManagedElement {
   /**
    * @protected
-   * @type {typeof ManagedElementConnectEvent}
+   * @type {ScopedManagedElementConnectEvent}
    */
-  static get ScopedManagedControllerConnectEvent() {
+  static get ScopedManagedElementConnectEvent() {
     return ManagedElementConnectEvent;
   }
 
@@ -56,7 +81,7 @@ export class ManagedElement {
     const ctor = /** @type {typeof ManagedElement} */ (this.constructor);
 
     this.host.dispatchEvent(
-      new ctor.ScopedManagedControllerConnectEvent({
+      new ctor.ScopedManagedElementConnectEvent({
         detail: {
           element: this.host,
           // Pipe callbacks into the disconnect disposal bin.

@@ -197,17 +197,17 @@ export function listenGlobalEvent(target, type, listener, options) {
  */
 
 /**
- * @param {HTMLElement} host
+ * @param {EventTarget} target
  * @param {EventHandlerRecord} record
  * @param {DisposalBin} disposal
- * @param {{ target?: EventTarget }} [options]
+ * @param {{ receiver?: any }} [options]
  */
-export function bindEventListeners(host, record, disposal, options = {}) {
+export function bindEventListeners(target, record, disposal, options = {}) {
   Object.keys(record).forEach((eventType) => {
     const dispose = listen(
-      options.target ?? host,
+      target,
       eventType,
-      record[eventType].bind(host)
+      record[eventType].bind(options.receiver ?? target)
     );
     disposal.add(dispose);
   });
