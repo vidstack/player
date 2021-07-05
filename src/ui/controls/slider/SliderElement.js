@@ -756,7 +756,9 @@ export class SliderElement extends WithFocus(VdsElement) {
       pointermove: this.handleDocumentPointerMove
     };
 
-    bindEventListeners(document, documentEvents, this.disconnectDisposal);
+    bindEventListeners(document, documentEvents, this.disconnectDisposal, {
+      receiver: this
+    });
   }
 
   /**

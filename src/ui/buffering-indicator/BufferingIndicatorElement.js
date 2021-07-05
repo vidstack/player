@@ -23,7 +23,6 @@ export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
  *
  * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `hidden` attribute.
  *
- *
  * @tagname vds-buffering-indicator
  * @slot Used to pass in the content to be displayed while buffering.
  * @example

@@ -4,10 +4,7 @@ import {
 } from '../../foundation/elements/index.js';
 
 /**
- * @typedef {{
- *   showControls(): Promise<void>;
- *   hideControls(): Promise<void>;
- * } & import('lit').ReactiveElement} ControlsHost
+ * @typedef {import('lit').ReactiveElement} ControlsHost
  */
 
 /**

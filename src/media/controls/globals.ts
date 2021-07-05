@@ -1,5 +1,5 @@
-import { ControlsEvents } from './events';
+import { ControlsEvents, IdleEvents } from './events';
 
 declare global {
-  interface GlobalEventHandlersEventMap extends ControlsEvents {}
+  interface GlobalEventHandlersEventMap extends ControlsEvents, IdleEvents {}
 }

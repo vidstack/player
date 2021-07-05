@@ -3,10 +3,8 @@ import { VdsCustomEvent } from '../../foundation/events/index.js';
 /**
  * @typedef {{
  *   [ControlsChangeEvent.TYPE]: ControlsChangeEvent;
- *   [IdleChangeEvent.TYPE]: IdleChangeEvent;
  *   [HideControlsRequestEvent.TYPE]: HideControlsRequestEvent;
  *   [ShowControlsRequestEvent.TYPE]: ShowControlsRequestEvent;
- *   [LockControlsRequestEvent.TYPE]: LockControlsRequestEvent;
  * }} ControlsEvents
  */
 
@@ -17,25 +15,15 @@ import { VdsCustomEvent } from '../../foundation/events/index.js';
 export class ControlsEvent extends VdsCustomEvent {}
 
 /**
- * Fired when the controls visiblity changes. The event detail contains a `boolean` that indicates
- * if the controls are visible (`true`) or not (`false`).
+ * Fired when the controls are being shown/hidden. This does not mean they are visible, only that
+ * they are or are not available to the user. For visiblity refer to `IdleChangeEvent`. The event
+ * detail contains a `boolean` that indicates if the controls are shown (`true`) or not (`false`).
  *
  * @augments {ControlsEvent<boolean>}
  */
 export class ControlsChangeEvent extends ControlsEvent {
   /** @readonly */
   static TYPE = 'vds-controls-change';
-}
-
-/**
- * Fired when the idle state changes depending on user activity. The event detail contains a
- * `boolean` that indicates if idle (`true`) or not (`false`).
- *
- * @augments {ControlsEvent<boolean>}
- */
-export class IdleChangeEvent extends ControlsEvent {
-  /** @readonly */
-  static TYPE = 'vds-idle-change';
 }
 
 /**
@@ -67,25 +55,47 @@ export class HideControlsRequestEvent extends ControlsEvent {
 }
 
 /**
- * @readonly
- * @enum {string}
+ * @typedef {{
+ *   [IdleChangeEvent.TYPE]: IdleChangeEvent;
+ *   [PauseIdleTrackingRequestEvent.TYPE]: PauseIdleTrackingRequestEvent;
+ *   [ResumeIdleTrackingRequestEvent.TYPE]: ResumeIdleTrackingRequestEvent;
+ * }} IdleEvents
  */
-export const ControlsLock = {
-  None: 'none',
-  Showing: 'showing',
-  Hidden: 'hidden'
-};
 
 /**
- * Fired when requesting the controls to be locked to `showing` or `hidden`.
- *
- * @bubbles
- * @composed
- * @augments {ControlsEvent<ControlsLock>}
+ * @template DetailType
+ * @augments {VdsCustomEvent<DetailType>}
  */
-export class LockControlsRequestEvent extends ControlsEvent {
+export class IdleEvent extends VdsCustomEvent {}
+
+/**
+ * Fired when the idle state changes depending on user activity. The event detail contains a
+ * `boolean` that indicates if idle (`true`) or not (`false`).
+ *
+ * @augments {IdleEvent<boolean>}
+ */
+export class IdleChangeEvent extends IdleEvent {
   /** @readonly */
-  static TYPE = 'vds-lock-controls-request';
-  static DEFAULT_BUBBLES = true;
-  static DEFAULT_COMPOSED = true;
+  static TYPE = 'vds-idle-change';
+}
+
+/**
+ * Fired when requesting to pause tracking idle state. This will also set the idle state
+ * to `false`.
+ *
+ * @augments {IdleEvent<boolean>}
+ */
+export class PauseIdleTrackingRequestEvent extends IdleEvent {
+  /** @readonly */
+  static TYPE = 'vds-pause-idle-tracking';
+}
+
+/**
+ * Fired when requesting to resume tracking idle state.
+ *
+ * @augments {IdleEvent<boolean>}
+ */
+export class ResumeIdleTrackingRequestEvent extends IdleEvent {
+  /** @readonly */
+  static TYPE = 'vds-resume-idle-tracking';
 }

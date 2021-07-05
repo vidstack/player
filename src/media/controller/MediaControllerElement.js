@@ -419,7 +419,6 @@ export class MediaControllerElement extends VdsElement {
    */
   handlePlayRequest(event) {
     this.mediaRequestEventGateway(event);
-    this.idleObserver.resume();
     if (!isNil(this.mediaProvider)) {
       this.mediaProvider.paused = false;
     }
@@ -431,7 +430,6 @@ export class MediaControllerElement extends VdsElement {
    */
   handlePauseRequest(event) {
     this.mediaRequestEventGateway(event);
-    this.idleObserver.pause();
     if (!isNil(this.mediaProvider)) {
       this.mediaProvider.paused = true;
     }

@@ -2,20 +2,20 @@ import {
   bindEventListeners,
   DisposalBin
 } from '../../foundation/events/index.js';
-import {
-  HideControlsRequestEvent,
-  ShowControlsRequestEvent
-} from '../index.js';
 import { controlsContext } from './context.js';
-import { IdleChangeEvent } from './events.js';
+import {
+  IdleChangeEvent,
+  PauseIdleTrackingRequestEvent,
+  ResumeIdleTrackingRequestEvent
+} from './events.js';
 
 /**
  * @typedef {import('lit').ReactiveElement} IdleObserverHost
  */
 
 /**
- * Tracks user activity and determines when they are idle/inactive. This observer will also
- * dispatch show/hide controls request events for the `ControlsManager` to act accordingly.
+ * Tracks user activity and determines when they are idle/inactive. Elements can dispatch requests
+ * to pause/resume tracking idle state.
  */
 export class IdleObserver {
   /**
@@ -80,7 +80,9 @@ export class IdleObserver {
       blur: this.resume,
       keydown: this.handleUserInteraction,
       click: this.handleUserInteraction,
-      pointermove: this.handleUserInteraction
+      pointermove: this.handleUserInteraction,
+      [PauseIdleTrackingRequestEvent.TYPE]: this.handlePauseIdleTracking,
+      [ResumeIdleTrackingRequestEvent.TYPE]: this.handleResumeIdleTracking
     };
 
     bindEventListeners(this.host, events, this.disconnectDisposal, {
@@ -121,11 +123,6 @@ export class IdleObserver {
     this.timeoutId = window.setTimeout(() => {
       this.idle.value = true;
       this.handleIdleChange(request);
-      this.host.dispatchEvent(
-        new HideControlsRequestEvent({
-          originalEvent: request
-        })
-      );
     }, this.timeout);
   }
 
@@ -158,21 +155,20 @@ export class IdleObserver {
     window.clearTimeout(this.timeoutId);
     this.idle.value = false;
     this.handleIdleChange(request);
-    this.host.dispatchEvent(
-      new ShowControlsRequestEvent({
-        originalEvent: request
-      })
-    );
   }
+
+  /**
+   * @private
+   * @type {boolean}
+   */
+  prevIdleValue = controlsContext.idle.initialValue;
 
   /**
    * @protected
    * @param {Event} [request]
    */
   handleIdleChange(request) {
-    if (this.idle.value === this.isIdle) return;
-
-    this.idle.value = this.isIdle;
+    if (this.idle.value === this.prevIdleValue) return;
 
     this.host.dispatchEvent(
       new IdleChangeEvent({
@@ -180,5 +176,25 @@ export class IdleObserver {
         detail: this.isIdle
       })
     );
+
+    this.prevIdleValue = this.idle.value;
+  }
+
+  /**
+   * @protected
+   * @param {Event} request
+   */
+  handlePauseIdleTracking(request) {
+    request.stopPropagation();
+    this.pause();
+  }
+
+  /**
+   * @protected
+   * @param {Event} request
+   */
+  handleResumeIdleTracking(request) {
+    request.stopPropagation();
+    this.resume();
   }
 }
