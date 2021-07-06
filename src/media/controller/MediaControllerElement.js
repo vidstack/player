@@ -1,37 +1,20 @@
 import { html } from 'lit';
 
-import { provideContextRecord } from '../../foundation/context/index.js';
 import { VdsElement } from '../../foundation/elements/index.js';
-import {
-  bindEventListeners,
-  DisposalBin,
-  listen,
-  redispatchEvent
-} from '../../foundation/events/index.js';
-import { FullscreenController } from '../../foundation/fullscreen/index.js';
-import { RequestQueue } from '../../foundation/queue/index.js';
-import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
+import { bindEventListeners } from '../../foundation/events/index.js';
 import { storybookAction } from '../../foundation/storybook/index.js';
-import {
-  getElementAttributes,
-  observeAndForwardAttributes
-} from '../../utils/dom.js';
-import { isFunction, isNil, isNull } from '../../utils/unit.js';
+import { isNil } from '../../utils/unit.js';
 import {
   MediaContainerConnectEvent,
   MediaContainerElement
 } from '../container/index.js';
-import { createMediaContextRecord, mediaContext } from '../context.js';
 import {
   ControlsChangeEvent,
   ControlsManager,
   IdleChangeEvent,
   IdleObserver
 } from '../controls/index.js';
-import {
-  MediaProviderConnectEvent,
-  MediaProviderElement
-} from '../provider/index.js';
+import { MediaProviderElement } from '../provider/index.js';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -43,8 +26,8 @@ import {
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
 } from '../request.events.js';
-import { FORWARDED_MEDIA_PROVDER_PROPS } from './forward.js';
 import { mediaControllerStyles } from './styles.js';
+import { WithMediaProviderBridge } from './WithMediaProviderBridge.js';
 
 export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
 
@@ -83,15 +66,12 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  * </vds-media-controller>
  * ```
  */
-export class MediaControllerElement extends VdsElement {
+export class MediaControllerElement extends WithMediaProviderBridge(
+  VdsElement
+) {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
     return [mediaControllerStyles];
-  }
-
-  constructor() {
-    super();
-    this.defineForwardedMediaProviderProperties();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -101,10 +81,6 @@ export class MediaControllerElement extends VdsElement {
   connectedCallback() {
     super.connectedCallback();
     this.bindEventListeners();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -117,7 +93,6 @@ export class MediaControllerElement extends VdsElement {
   bindEventListeners() {
     const events = {
       [MediaContainerConnectEvent.TYPE]: this.handleMediaContainerConnect,
-      [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect,
       [MuteRequestEvent.TYPE]: this.handleMuteRequest,
       [UnmuteRequestEvent.TYPE]: this.handleUnmuteRequest,
       [PlayRequestEvent.TYPE]: this.handlePlayRequest,
@@ -132,26 +107,39 @@ export class MediaControllerElement extends VdsElement {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Context
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * The media context record. Any property updated inside this object will trigger a context
-   * update that will flow down to all consumer components. This record is injected into a
-   * a media provider element (see `handleMediaProviderConnect`) as it's responsible for managing
-   * it (ie: updating context properties).
-   *
-   * @readonly
-   * @internal
-   */
-  context = provideContextRecord(this, mediaContext);
-
-  // -------------------------------------------------------------------------------------------
   // Render
   // -------------------------------------------------------------------------------------------
 
   render() {
     return html`<slot></slot>`;
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Controls Manager
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * @readonly
+   */
+  controlsManager = new ControlsManager(this);
+
+  /**
+   * @readonly
+   */
+  idleObserver = new IdleObserver(this);
+
+  // -------------------------------------------------------------------------------------------
+  // Media Provider
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * The current media provider that belongs to this controller. Defaults to `undefined` if there
+   * is none.
+   *
+   * @type {MediaProvider | undefined}
+   */
+  get mediaProvider() {
+    return /** @type {MediaProvider} */ (this._mediaProvider);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -194,190 +182,6 @@ export class MediaControllerElement extends VdsElement {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Media Provider
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @type {MediaProvider | undefined}
-   */
-  _mediaProvider;
-
-  /**
-   * The current media provider that belongs to this controller. Defaults to `undefined` if there
-   * is none.
-   *
-   * @type {MediaProvider | undefined}
-   */
-  get mediaProvider() {
-    return this._mediaProvider;
-  }
-
-  /**
-   * @readonly
-   */
-  mediaProviderConnectedQueue = new RequestQueue();
-
-  /**
-   * @readonly
-   */
-  mediaProviderDisconnectDisposal = new DisposalBin();
-
-  /**
-   * @protected
-   * @param {MediaProviderConnectEvent} event
-   */
-  handleMediaProviderConnect(event) {
-    event.stopPropagation();
-
-    if (this.mediaProvider === event.detail?.provider) return;
-
-    this.handleMediaProviderDisconnect();
-
-    const { provider, onDisconnect } = event.detail;
-
-    this._mediaProvider = provider;
-
-    this.attachMediaContextRecordToProvider();
-    this.forwardMediaProviderAttributes();
-    this.forwardMediaProviderEvents();
-    this.addFullscreenControllerToProvider();
-    this.flushMediaProviderConnectedQueue();
-
-    onDisconnect(this.handleMediaProviderDisconnect.bind(this));
-  }
-
-  /**
-   * @protected
-   */
-  flushMediaProviderConnectedQueue() {
-    this.mediaProviderConnectedQueue.flush();
-    this.mediaProviderConnectedQueue.serveImmediately = true;
-
-    this.mediaProviderDisconnectDisposal.add(() => {
-      this.mediaProviderConnectedQueue.serveImmediately = false;
-      this.mediaProviderConnectedQueue.reset();
-    });
-  }
-
-  /**
-   * @protected
-   */
-  attachMediaContextRecordToProvider() {
-    if (isNil(this.mediaProvider)) return;
-
-    /** @type {any} */ (this.mediaProvider).context = this.context;
-
-    this.mediaProviderDisconnectDisposal.add(() => {
-      /** @type {any} */ (this.mediaProvider).context =
-        createMediaContextRecord();
-    });
-  }
-
-  /**
-   * @protected
-   */
-  addFullscreenControllerToProvider() {
-    if (isNil(this.mediaProvider)) return;
-    const dispose = this.mediaProvider.addFullscreenController(
-      this.fullscreenController
-    );
-    this.mediaProviderDisconnectDisposal.add(dispose);
-  }
-
-  /**
-   * @protected
-   */
-  forwardMediaProviderAttributes() {
-    if (isNil(this.mediaProvider)) return;
-
-    const ctor = /** @type {typeof import('lit').LitElement} */ (
-      this.mediaProvider.constructor
-    );
-
-    const attributes = getElementAttributes(ctor);
-
-    // Forward initial attributes.
-    for (const attrName of attributes) {
-      const attrValue = this.getAttribute(attrName);
-      if (!isNull(attrValue)) {
-        this.mediaProvider.setAttribute(attrName, attrValue);
-      }
-    }
-
-    const observer = observeAndForwardAttributes(
-      this,
-      this.mediaProvider,
-      attributes
-    );
-
-    this.mediaProviderDisconnectDisposal.add(() => {
-      observer.disconnect();
-    });
-  }
-
-  /**
-   * @protected
-   */
-  forwardMediaProviderEvents() {
-    if (isNil(this.mediaProvider)) return;
-
-    const ctor = /** @type {typeof VdsElement} */ (
-      this.mediaProvider.constructor
-    );
-
-    const events = ctor.events ?? [];
-
-    for (const eventType of events) {
-      const dispose = listen(this.mediaProvider, eventType, (event) => {
-        redispatchEvent(this, event);
-      });
-
-      this.mediaProviderDisconnectDisposal.add(dispose);
-    }
-  }
-
-  /**
-   * @protected
-   */
-  defineForwardedMediaProviderProperties() {
-    FORWARDED_MEDIA_PROVDER_PROPS.forEach((prop) => {
-      const defaultVaue =
-        prop in mediaContext ? mediaContext[prop].initialValue : undefined;
-      this.defineMediaProviderProperty(prop, defaultVaue);
-    });
-  }
-
-  /**
-   * @protected
-   * @param {string} propName
-   * @param {any} [defaultValue]
-   */
-  defineMediaProviderProperty(propName, defaultValue = undefined) {
-    Object.defineProperty(this, propName, {
-      get: () => {
-        const value = this.mediaProvider?.[propName] ?? defaultValue;
-        return isFunction(value) ? value.bind(this.mediaProvider) : value;
-      },
-      set: (value) => {
-        this.mediaProviderConnectedQueue.queue(`controller${propName}`, () => {
-          if (!isNil(this.mediaProvider)) {
-            this.mediaProvider[propName] = value;
-          }
-        });
-      }
-    });
-  }
-
-  /**
-   * @protected
-   */
-  handleMediaProviderDisconnect() {
-    this.mediaProviderDisconnectDisposal.empty();
-    this._mediaProvider = undefined;
-  }
-
-  // -------------------------------------------------------------------------------------------
   // Media Request Events
   // -------------------------------------------------------------------------------------------
 
@@ -397,9 +201,7 @@ export class MediaControllerElement extends VdsElement {
    */
   handleMuteRequest(event) {
     this.mediaRequestEventGateway(event);
-    if (!isNil(this.mediaProvider)) {
-      this.mediaProvider.muted = true;
-    }
+    this.muted = true;
   }
 
   /**
@@ -408,9 +210,7 @@ export class MediaControllerElement extends VdsElement {
    */
   handleUnmuteRequest(event) {
     this.mediaRequestEventGateway(event);
-    if (!isNil(this.mediaProvider)) {
-      this.mediaProvider.muted = false;
-    }
+    this.muted = false;
   }
 
   /**
@@ -419,9 +219,7 @@ export class MediaControllerElement extends VdsElement {
    */
   handlePlayRequest(event) {
     this.mediaRequestEventGateway(event);
-    if (!isNil(this.mediaProvider)) {
-      this.mediaProvider.paused = false;
-    }
+    this.paused = false;
   }
 
   /**
@@ -430,9 +228,7 @@ export class MediaControllerElement extends VdsElement {
    */
   handlePauseRequest(event) {
     this.mediaRequestEventGateway(event);
-    if (!isNil(this.mediaProvider)) {
-      this.mediaProvider.paused = true;
-    }
+    this.paused = true;
   }
 
   /**
@@ -441,9 +237,7 @@ export class MediaControllerElement extends VdsElement {
    */
   handleSeekRequest(event) {
     this.mediaRequestEventGateway(event);
-    if (!isNil(this.mediaProvider)) {
-      this.mediaProvider.currentTime = event.detail;
-    }
+    this.currentTime = event.detail;
   }
 
   /**
@@ -452,9 +246,7 @@ export class MediaControllerElement extends VdsElement {
    */
   handleVolumeChangeRequest(event) {
     this.mediaRequestEventGateway(event);
-    if (!isNil(this.mediaProvider)) {
-      this.mediaProvider.volume = event.detail;
-    }
+    this.volume = event.detail;
   }
 
   /**
@@ -483,50 +275,6 @@ export class MediaControllerElement extends VdsElement {
     } else if (!isNil(this.mediaProvider)) {
       await this.mediaProvider.exitFullscreen();
     }
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Controls Manager
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @readonly
-   */
-  controlsManager = new ControlsManager(this);
-
-  /**
-   * @readonly
-   */
-  idleObserver = new IdleObserver(this);
-
-  // -------------------------------------------------------------------------------------------
-  // Fullscreen
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @readonly
-   */
-  fullscreenController = new FullscreenController(
-    this,
-    new ScreenOrientationController(this)
-  );
-
-  /**
-   * @returns {Promise<void>}
-   */
-  async requestFullscreen() {
-    if (this.fullscreenController.isRequestingNativeFullscreen) {
-      return super.requestFullscreen();
-    }
-
-    return this.fullscreenController.requestFullscreen();
-  }
-
-  /**
-   * @returns {Promise<void>}
-   */
-  async exitFullscreen() {
-    return this.fullscreenController.exitFullscreen();
   }
 }
 

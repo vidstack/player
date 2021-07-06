@@ -3,7 +3,9 @@ import { html } from 'lit';
 import { mock, spy } from 'sinon';
 
 import { raf } from '../../../utils/dom.js';
+import { CanPlay } from '../../CanPlay.js';
 import { VolumeChangeEvent } from '../../events.js';
+import { MediaProviderConnectEvent } from '../../provider/events.js';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -83,16 +85,37 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       expect(provider.paused).to.be.false;
     });
 
+    it('should forward properties to the media provider once connected', async function () {
+      const { controller } = await buildMediaFixture();
+
+      controller.innerHTML = '';
+
+      const provider = document.createElement(
+        FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
+      );
+
+      setTimeout(() => {
+        controller.appendChild(provider);
+      }, 0);
+
+      controller.paused = false;
+
+      await oneEvent(controller, MediaProviderConnectEvent.TYPE);
+
+      provider.forceMediaReady();
+      expect(provider.paused).to.be.false;
+    });
+
     it('should forward methods to the media provider', async function () {
       const { controller, provider } = await buildMediaFixture();
-      const playSpy = spy(provider, 'play');
-      controller.play();
-      expect(playSpy).to.have.been.calledOnce;
+      const canPlayTypeSpy = spy(provider, 'canPlayType');
+      const result = controller.canPlayType('my-media.mp4');
+      expect(result).to.equal(CanPlay.No);
+      expect(canPlayTypeSpy).to.have.been.calledOnceWith('my-media.mp4');
     });
 
     it('should forward attributes to the media provider', async function () {
       const { controller, provider } = await buildMediaFixture();
-
       controller.setAttribute('muted', '');
       await raf();
       expect(provider).to.have.attribute('muted');

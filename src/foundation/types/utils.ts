@@ -18,6 +18,16 @@ export type MethodsOnly<T> = Omit<
   }[keyof T]
 >;
 
+export type PromiseThenArg<T> = T extends PromiseLike<infer U> ? U : T;
+
+export type PromisifyRecord<Record> = {
+  [P in keyof Record]: Record[P] extends (...args: any) => void
+    ? (
+        ...args: Parameters<Record[P]>
+      ) => Promise<PromiseThenArg<ReturnType<Record[P]>>>
+    : Record[P];
+};
+
 export type Callback<ValueType> = (value: ValueType) => void;
 
 export type UnknownFunction = (...args: unknown[]) => unknown;
