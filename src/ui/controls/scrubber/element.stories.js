@@ -66,7 +66,6 @@ function Template({
           .durationContext=${mediaDuration}
           .pausedContext=${mediaPaused}
           .seekableContext=${createTimeRanges(0, mediaSeekableAmount)}
-          slot="media"
         ></vds-fake-media-provider>
 
         <vds-scrubber

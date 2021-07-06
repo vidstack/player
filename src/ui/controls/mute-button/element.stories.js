@@ -40,7 +40,6 @@ function Template({
         <vds-fake-media-provider
           .canPlayContext=${true}
           .mutedContext=${mediaMuted}
-          slot="media"
         ></vds-fake-media-provider>
 
         <vds-mute-button

@@ -11,7 +11,7 @@ describe('MediaProviderElement', function () {
     it('should render DOM correctly', async function () {
       const { provider } = await buildMediaFixture();
       expect(provider).dom.to.equal(`
-        <vds-fake-media-provider slot="media"></vds-fake-media-provider>
+        <vds-fake-media-provider></vds-fake-media-provider>
       `);
     });
 

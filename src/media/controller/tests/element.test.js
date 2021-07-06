@@ -32,7 +32,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       expect(controller).dom.to.equal(`
         <vds-media-controller>
           <vds-media-container>
-            <vds-fake-media-provider slot="media"></vds-fake-media-provider>
+            <vds-fake-media-provider></vds-fake-media-provider>
           </vds-media-container>
         </vds-media-controller>
       `);

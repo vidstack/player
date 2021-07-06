@@ -38,7 +38,6 @@ function Template({
           .canPlayContext=${true}
           .currentTimeContext=${mediaCurrentTime}
           .durationContext=${mediaDuration}
-          slot="media"
         ></vds-fake-media-provider>
 
         <vds-time-progress

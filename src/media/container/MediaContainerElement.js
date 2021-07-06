@@ -4,10 +4,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { VdsElement } from '../../foundation/elements/index.js';
-import {
-  bindEventListeners,
-  DisposalBin
-} from '../../foundation/events/index.js';
+import { bindEventListeners } from '../../foundation/events/index.js';
 import {
   FullscreenChangeEvent,
   FullscreenController
@@ -16,10 +13,12 @@ import { ScreenOrientationController } from '../../foundation/screen-orientation
 import { storybookAction } from '../../foundation/storybook/helpers.js';
 import { StorybookControlType } from '../../foundation/storybook/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
-import { getAllObjectPropertyNames } from '../../utils/object.js';
 import { isNil, isString, isUndefined } from '../../utils/unit.js';
 import { mediaContext } from '../context.js';
-import { MediaProviderElement } from '../provider/index.js';
+import {
+  MediaProviderConnectEvent,
+  MediaProviderElement
+} from '../provider/index.js';
 import { MediaContainerConnectEvent } from './events.js';
 import { mediaContainerElementStyles } from './styles.js';
 
@@ -41,7 +40,6 @@ export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
  *     <vds-video
  *       src="/media/video.mp4"
  *       poster="/media/poster.png"
- *       slot="media"
  *     >
  *       <!-- ... -->
  *     </vds-video>
@@ -158,7 +156,8 @@ export class MediaContainerElement extends VdsElement {
    */
   bindEventListeners() {
     const events = {
-      [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange
+      [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange,
+      [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect
     };
 
     bindEventListeners(this, events, this.disconnectDisposal);
@@ -374,15 +373,15 @@ export class MediaContainerElement extends VdsElement {
 
   /**
    * @protected
-   * @readonly
+   * @type {boolean}
    */
-  mediaProviderDisposal = new DisposalBin();
+  hasMediaProviderConnectedViaEvent = false;
 
   /**
    * @protected
    */
   handleMediaSlotChange() {
-    this.mediaProviderDisposal.empty();
+    if (this.hasMediaProviderConnectedViaEvent) return;
 
     const mediaProvider = /** @type {MediaProviderElement} */ (
       getSlottedChildren(this, this.getMediaSlotName())[0]
@@ -395,6 +394,22 @@ export class MediaContainerElement extends VdsElement {
     }
 
     this._mediaProvider = mediaProvider;
+  }
+
+  /**
+   * @protected
+   * @param {MediaProviderConnectEvent} event
+   */
+  handleMediaProviderConnect(event) {
+    const { provider, onDisconnect } = event.detail;
+
+    this._mediaProvider = provider;
+    this.hasMediaProviderConnectedViaEvent = true;
+
+    onDisconnect(() => {
+      this._mediaProvider = undefined;
+      this.hasMediaProviderConnectedViaEvent = false;
+    });
   }
 
   // -------------------------------------------------------------------------------------------

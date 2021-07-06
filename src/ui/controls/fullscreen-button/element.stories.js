@@ -40,7 +40,6 @@ function Template({
         <vds-fake-media-provider
           .canPlayContext="${true}"
           .fullscreenContext="${mediaFullscreen}"
-          slot="media"
         ></vds-fake-media-provider>
 
         <vds-fullscreen-button

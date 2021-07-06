@@ -40,7 +40,6 @@ function Template({
         <vds-fake-media-provider
           .canPlayContext=${true}
           .pausedContext=${mediaPaused}
-          slot="media"
         ></vds-fake-media-provider>
 
         <vds-play-button

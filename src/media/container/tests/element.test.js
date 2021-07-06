@@ -3,6 +3,7 @@ import { html } from 'lit';
 import { mock } from 'sinon';
 
 import { isFunction } from '../../../utils/unit.js';
+import { MediaProviderConnectEvent } from '../../provider/events.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 import { ViewType } from '../../ViewType.js';
 import { MediaContainerConnectEvent } from '../events.js';
@@ -24,12 +25,12 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
     it('should render DOM correctly', async function () {
       const uiSlot = html`<div></div>`;
       const mediaSlot = html`
-        <vds-fake-media-provider slot="media"></vds-fake-media-provider>
+        <vds-fake-media-provider></vds-fake-media-provider>
       `;
       const container = await buildFixture(html`${mediaSlot}${uiSlot}`);
       expect(container).dom.to.equal(`
         <vds-media-container>
-          <vds-fake-media-provider slot="media"></vds-fake-media-provider>
+          <vds-fake-media-provider></vds-fake-media-provider>
           <div></div>
         </vds-media-container>
       `);
@@ -171,8 +172,25 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
   });
 
   describe('media provider', function () {
-    it('should handle media slot change', async function () {
+    it('should connect provider via event', async function () {
       const { container, provider } = await buildMediaFixture();
+      expect(container.mediaProvider).to.equal(provider);
+    });
+
+    it('should handle media slot change', async function () {
+      const { container } = await buildMediaFixture();
+
+      const provider = document.createElement('div');
+      provider.slot = 'media';
+
+      // @ts-ignore
+      provider.play = function () {};
+
+      container.innerHTML = '';
+      container.appendChild(provider);
+
+      await elementUpdated(container);
+
       expect(container.mediaProvider).to.equal(provider);
     });
 

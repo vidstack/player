@@ -30,7 +30,6 @@ function Template({
         <vds-fake-media-provider
           .canPlayContext=${mediaCanPlay}
           .waitingContext=${mediaBuffering}
-          slot="media"
         ></vds-fake-media-provider>
         <vds-buffering-indicator>
           <div>BUFFERING!</div>

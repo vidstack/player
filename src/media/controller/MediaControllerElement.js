@@ -54,7 +54,6 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  *     <vds-video
  *       src="/media/video.mp4"
  *       poster="/media/poster.png"
- *       slot="media"
  *     >
  *       <!-- ... -->
  *     </vds-video>

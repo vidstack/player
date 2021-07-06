@@ -35,9 +35,7 @@ export async function buildMediaFixture(uiSlot = html``, mediaSlot = html``) {
     html`
       <vds-media-controller>
         <vds-media-container>
-          <vds-fake-media-provider slot="media">
-            ${mediaSlot}
-          </vds-fake-media-provider>
+          <vds-fake-media-provider>${mediaSlot}</vds-fake-media-provider>
           ${uiSlot}
         </vds-media-container>
       </vds-media-controller>

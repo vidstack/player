@@ -34,7 +34,6 @@ function Template({
         <vds-fake-media-provider
           .canPlayContext=${true}
           .durationContext=${mediaDuration}
-          slot="media"
         ></vds-fake-media-provider>
 
         <vds-time-duration
