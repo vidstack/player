@@ -1,6 +1,10 @@
 import { html } from 'lit';
 
-import { VdsElement } from '../../foundation/elements/index.js';
+import {
+  DiscoveryEvent,
+  ElementDiscoveryController,
+  VdsElement
+} from '../../foundation/elements/index.js';
 import { bindEventListeners } from '../../foundation/events/index.js';
 import { storybookAction } from '../../foundation/storybook/index.js';
 import { isNil } from '../../utils/unit.js';
@@ -30,6 +34,18 @@ import { mediaControllerStyles } from './styles.js';
 import { WithMediaProviderBridge } from './WithMediaProviderBridge.js';
 
 export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
+
+/**
+ * Fired when the media controller connects to the DOM.
+ *
+ * @bubbles
+ * @composed
+ * @augments {DiscoveryEvent<MediaControllerElement>}
+ */
+export class MediaControllerConnectEvent extends DiscoveryEvent {
+  /** @readonly */
+  static TYPE = 'vds-media-controller-connect';
+}
 
 /**
  * The media controller acts as a message bus between the media provider and all other
@@ -76,6 +92,15 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
+
+  /**
+   * @protected
+   * @readonly
+   */
+  discoveryController = new ElementDiscoveryController(
+    this,
+    MediaControllerConnectEvent
+  );
 
   connectedCallback() {
     super.connectedCallback();
@@ -168,8 +193,8 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   handleMediaContainerConnect(event) {
     event.stopPropagation();
     this.handleMediaContainerDisconnect();
-    const { container, onDisconnect } = event.detail;
-    this._mediaContainer = container;
+    const { element, onDisconnect } = event.detail;
+    this._mediaContainer = element;
     onDisconnect(this.handleMediaContainerDisconnect.bind(this));
   }
 

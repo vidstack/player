@@ -14,23 +14,23 @@ import {
  *
  * @example
  * ```ts
+ * import { LitElement } from 'lit';
  * import {
- *   VdsElement,
  *   FullscreenController,
  *   ScreenOrientationController,
  *   VideoPresentationController
- * } from '@vidstack/elements';
+ * } from '@vidstack/jelements';
  *
- * class MyElement extends VdsElement {
+ * class MyElement extends LitElement {
+ *   get videoElement() {
+ *     return this.videoEl;
+ *   }
+ *
  *   fullscreenController = new VideoFullscreenController(
  *     this,
  *     new ScreenOrientationController(this),
  *     new VideoPresentationController(this),
  *   );
- *
- *   get videoElement() {
- *     return this.videoEl;
- *   }
  *
  *   async requestFullscreen() {
  *     if (this.fullscreenController.isRequestingNativeFullscreen) {
@@ -48,7 +48,7 @@ import {
  */
 export class VideoFullscreenController extends FullscreenController {
   /**
-   * @param {import('../../../foundation/fullscreen').FullscreenHost} host
+   * @param {import('../../../foundation/fullscreen').FullscreenControllerHost} host
    * @param {ScreenOrientationController} screenOrientationController
    * @param {VideoPresentationController} presentationController
    */
@@ -125,7 +125,7 @@ export class VideoFullscreenController extends FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../../../foundation/types/utils').Unsubscribe}
+   * @returns {import('../../../foundation/types').Unsubscribe}
    */
   addFullscreenChangeEventListener(handler) {
     if (this.isSupportedNatively) {
@@ -154,7 +154,7 @@ export class VideoFullscreenController extends FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../../../foundation/types/utils').Unsubscribe}
+   * @returns {import('../../../foundation/types').Unsubscribe}
    */
   addFullscreenErrorEventListener(handler) {
     if (!this.isSupportedNatively) return noop;

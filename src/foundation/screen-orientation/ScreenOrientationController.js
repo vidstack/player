@@ -10,17 +10,18 @@ import {
 } from './ScreenOrientation.js';
 
 /**
- * @typedef {import('lit').ReactiveElement} ScreenOrientationHost
+ * @typedef {import('lit').ReactiveElement} ScreenOrientationControllerHost
  */
 
 /**
  * Contains the logic for managing the window's screen orientation.
  *
  * @example
- * ```js
- * import { VdsElement, ScreenOrientationController } from '@vidstack/elements';
+ * ```ts
+ * import { LitElement } from 'lit';
+ * import { ScreenOrientationController } from '@vidstack/elements';
  *
- * class MyElement extends VdsElement {
+ * class MyElement extends LitElement {
  *   screenOrientationController = new ScreenOrientationController(this);
  * }
  * ```
@@ -45,13 +46,13 @@ export class ScreenOrientationController {
   isScreenOrientationLocked = false;
 
   /**
-   * @param {ScreenOrientationHost} host
+   * @param {ScreenOrientationControllerHost} host
    */
   constructor(host) {
     /**
      * @protected
      * @readonly
-     * @type {ScreenOrientationHost}
+     * @type {ScreenOrientationControllerHost}
      */
     this.host = host;
 
@@ -165,7 +166,7 @@ export class ScreenOrientationController {
 
   /**
    * @protected
-   * @returns {import('../types/utils').Unsubscribe}
+   * @returns {import('../types').Unsubscribe}
    */
   addScreenOrientationChangeEventListener() {
     return listen(

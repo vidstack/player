@@ -12,7 +12,7 @@ import { FullscreenChangeEvent, FullscreenErrorEvent } from './events.js';
  * @typedef {{
  *  requestFullscreen(): Promise<void>;
  *  exitFullscreen(): Promise<void>;
- * } & import('lit').ReactiveElement} FullscreenHost
+ * } & import('lit').ReactiveElement} FullscreenControllerHost
  */
 
 /**
@@ -20,10 +20,11 @@ import { FullscreenChangeEvent, FullscreenErrorEvent } from './events.js';
  * class abstract the logic for handling fullscreen across browsers.
  *
  * @example
- * ```js
- * import { VdsElement, FullscreenController, ScreenOrientationController } from '@vidstack/elements';
+ * ```ts
+ * import { LitElement } from 'lit';
+ * import { FullscreenController, ScreenOrientationController } from '@vidstack/elements';
  *
- * class MyElement extends VdsElement {
+ * class MyElement extends LitElement {
  *   fullscreenController = new FullscreenController(
  *     this,
  *     new ScreenOrientationController(this),
@@ -70,14 +71,14 @@ export class FullscreenController {
   screenOrientationLock;
 
   /**
-   * @param {FullscreenHost} host
+   * @param {FullscreenControllerHost} host
    * @param {ScreenOrientationController} screenOrientationController
    */
   constructor(host, screenOrientationController) {
     /**
      * @protected
      * @readonly
-     * @type {FullscreenHost}
+     * @type {FullscreenControllerHost}
      */
     this.host = host;
 
@@ -153,7 +154,7 @@ export class FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../types/utils').Unsubscribe}
+   * @returns {import('../types').Unsubscribe}
    */
   addFullscreenChangeEventListener(handler) {
     if (!this.isSupported) return noop;
@@ -163,7 +164,7 @@ export class FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../types/utils').Unsubscribe}
+   * @returns {import('../types').Unsubscribe}
    */
   addFullscreenErrorEventListener(handler) {
     if (!this.isSupported) return noop;

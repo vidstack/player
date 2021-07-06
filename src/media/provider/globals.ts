@@ -1,5 +1,7 @@
-import { MediaProviderEvents } from './events.js';
+import { MediaProviderConnectEvent } from './MediaProviderElement.js';
 
 declare global {
-  interface GlobalEventHandlersEventMap extends MediaProviderEvents {}
+  interface GlobalEventHandlersEventMap {
+    [MediaProviderConnectEvent.TYPE]: MediaProviderConnectEvent;
+  }
 }

@@ -20,14 +20,14 @@ import { ManagedControlsConnectEvent } from './ManagedControls';
  * - Listens for relevant requests such as `ShowControlsRequestEvent` and handles them.
  * - Updates `controlsContext.hidden`.
  *
- * @augments {ElementManager<import('./ManagedControls').ControlsHost>}
+ * @augments {ElementManager<import('./ManagedControls').ManagedControlsHost>}
  */
 export class ControlsManager extends ElementManager {
   /**
    * @protected
-   * @type {import('../../foundation/elements').ScopedManagedElementConnectEvent}
+   * @type {import('../../foundation/elements').ScopedDiscoveryEvent<any>}
    */
-  static get ScopedManagedElementConnectEvent() {
+  static get ScopedDiscoveryEvent() {
     return ManagedControlsConnectEvent;
   }
 

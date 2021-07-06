@@ -3,12 +3,11 @@ import { html } from 'lit';
 import { mock } from 'sinon';
 
 import { isFunction } from '../../../utils/unit.js';
-import { MediaProviderConnectEvent } from '../../provider/events.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 import { ViewType } from '../../ViewType.js';
-import { MediaContainerConnectEvent } from '../events.js';
 import {
   MEDIA_CONTAINER_ELEMENT_TAG_NAME,
+  MediaContainerConnectEvent,
   MediaContainerElement
 } from '../MediaContainerElement.js';
 
@@ -126,7 +125,9 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
 
   describe('discovery', function () {
     it('should dispatch connect event when connected to DOM', async function () {
-      const container = document.createElement('vds-media-container');
+      const container = document.createElement(
+        MEDIA_CONTAINER_ELEMENT_TAG_NAME
+      );
 
       setTimeout(() => {
         window.document.body.append(container);
@@ -136,26 +137,8 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
         await oneEvent(document, MediaContainerConnectEvent.TYPE)
       );
 
-      expect(detail.container).to.be.instanceOf(MediaContainerElement);
+      expect(detail.element).to.be.instanceOf(MediaContainerElement);
       expect(isFunction(detail.onDisconnect)).to.be.true;
-    });
-
-    it('should dispose of disconnect callbacks when disconnected from DOM', async function () {
-      const container = document.createElement('vds-media-container');
-
-      setTimeout(() => {
-        window.document.body.append(container);
-      });
-
-      const { detail } = /** @type {MediaContainerConnectEvent} */ (
-        await oneEvent(document, MediaContainerConnectEvent.TYPE)
-      );
-
-      const callback = mock();
-      detail.onDisconnect(callback);
-
-      container.remove();
-      expect(callback).to.have.been.calledOnce;
     });
   });
 

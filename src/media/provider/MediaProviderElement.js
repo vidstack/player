@@ -1,4 +1,8 @@
-import { VdsElement } from '../../foundation/elements/index.js';
+import {
+  DiscoveryEvent,
+  ElementDiscoveryController,
+  VdsElement
+} from '../../foundation/elements/index.js';
 import { bindEventListeners } from '../../foundation/events/index.js';
 import {
   FullscreenChangeEvent,
@@ -44,7 +48,18 @@ import {
 } from '../events.js';
 import { MediaType } from '../MediaType.js';
 import { ViewType } from '../ViewType.js';
-import { MediaProviderConnectEvent } from './events.js';
+
+/**
+ * Fired when the media provider connects to the DOM.
+ *
+ * @bubbles
+ * @composed
+ * @augments {DiscoveryEvent<MediaProviderElement>}
+ */
+export class MediaProviderConnectEvent extends DiscoveryEvent {
+  /** @readonly */
+  static TYPE = 'vds-media-provider-connect';
+}
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by
@@ -139,10 +154,18 @@ export class MediaProviderElement extends VdsElement {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
+  /**
+   * @protected
+   * @readonly
+   */
+  discoveryController = new ElementDiscoveryController(
+    this,
+    MediaProviderConnectEvent
+  );
+
   connectedCallback() {
     super.connectedCallback();
     this.bindEventListeners();
-    this.dispatchDiscoveryEvent();
     this.connectedQueue.flush();
     this.connectedQueue.serveImmediately = true;
   }
@@ -172,27 +195,6 @@ export class MediaProviderElement extends VdsElement {
     this.connectedQueue.destroy();
     this.mediaRequestQueue.destroy();
     this.hasFlushedMediaRequestQueueOnce = false;
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Discovery
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   */
-  dispatchDiscoveryEvent() {
-    this.dispatchEvent(
-      new MediaProviderConnectEvent({
-        detail: {
-          provider: this,
-          // Pipe callbacks into the disconnect disposal bin.
-          onDisconnect: (callback) => {
-            this.disconnectDisposal.add(callback);
-          }
-        }
-      })
-    );
   }
 
   // -------------------------------------------------------------------------------------------

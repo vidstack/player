@@ -39,9 +39,9 @@ import {
 
 /**
  * @mixin
- * @template {import('../../foundation/types/utils').Constructor<import('lit').ReactiveElement>} T
+ * @template {import('../../foundation/types').Constructor<import('lit').ReactiveElement>} T
  * @param {T} Base - The constructor to mix into.
- * @returns {T & import('../../foundation/types/utils').Constructor<MediaProviderBridge>}
+ * @returns {T & import('../../foundation/types').Constructor<MediaProviderBridge>}
  */
 export function WithMediaProviderBridge(Base) {
   class WithMediaProviderBridge extends Base {
@@ -109,13 +109,13 @@ export function WithMediaProviderBridge(Base) {
     handleMediaProviderConnect(event) {
       event.stopPropagation();
 
-      if (this.mediaProvider === event.detail?.provider) return;
+      const { element, onDisconnect } = event.detail;
+
+      if (this.mediaProvider === element) return;
 
       this.handleMediaProviderDisconnect();
 
-      const { provider, onDisconnect } = event.detail;
-
-      this._mediaProvider = provider;
+      this._mediaProvider = element;
 
       this.attachMediaContextRecordToProvider();
       this.forwardMediaProviderAttributes();

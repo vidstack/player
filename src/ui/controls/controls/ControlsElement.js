@@ -69,6 +69,7 @@ export class ControlsElement extends VdsElement {
   }
 
   /**
+   * @protected
    * @readonly
    */
   managedControls = new ManagedControls(this);

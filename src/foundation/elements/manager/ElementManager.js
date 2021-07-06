@@ -2,12 +2,6 @@ import { DisposalBin, listen } from '../../events/index.js';
 import { ManagedElementConnectEvent } from './ManagedElement.js';
 
 /**
- * @typedef {{
- *  [ManagedElementConnectEvent.TYPE]: ManagedElementConnectEvent;
- * }} ElementManagerEvents
- */
-
-/**
  * @typedef {import('lit').ReactiveElement} ElementManagerHost
  */
 
@@ -17,9 +11,9 @@ import { ManagedElementConnectEvent } from './ManagedElement.js';
 export class ElementManager {
   /**
    * @protected
-   * @type {import('./ManagedElement').ScopedManagedElementConnectEvent}
+   * @type {import('../discovery').ScopedDiscoveryEvent<any>}
    */
-  static get ScopedManagedElementConnectEvent() {
+  static get ScopedDiscoveryEvent() {
     return ManagedElementConnectEvent;
   }
 
@@ -57,10 +51,12 @@ export class ElementManager {
    * @protected
    */
   handleHostConnected() {
+    const ScopedDiscoveryEvent = this.getScopedDiscoveryEvent();
+
     this.disconnectDisposal.add(
       listen(
         this.host,
-        ManagedElementConnectEvent.TYPE,
+        ScopedDiscoveryEvent.TYPE,
         this.handleElementConnect.bind(this)
       )
     );
@@ -92,13 +88,22 @@ export class ElementManager {
 
   /**
    * @protected
+   * @returns {import('../discovery').ScopedDiscoveryEvent<Element>}
+   */
+  getScopedDiscoveryEvent() {
+    const ctor = /** @type {typeof ElementManager} */ (this.constructor);
+    const ScopedDiscoveryEvent = ctor.ScopedDiscoveryEvent;
+    return ScopedDiscoveryEvent;
+  }
+
+  /**
+   * @protected
    * @param {ManagedElementConnectEvent} event
    * @returns {boolean}
    */
   validateConnectEvent(event) {
-    const ctor = /** @type {typeof ElementManager} */ (this.constructor);
-    const ScopedEvent = ctor.ScopedManagedElementConnectEvent;
-    return event instanceof ScopedEvent;
+    const ScopedDiscoveryEvent = this.getScopedDiscoveryEvent();
+    return event instanceof ScopedDiscoveryEvent;
   }
 
   /**

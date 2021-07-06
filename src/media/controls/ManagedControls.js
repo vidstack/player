@@ -4,7 +4,7 @@ import {
 } from '../../foundation/elements/index.js';
 
 /**
- * @typedef {import('lit').ReactiveElement} ControlsHost
+ * @typedef {import('lit').ReactiveElement} ManagedControlsHost
  */
 
 /**
@@ -12,22 +12,22 @@ import {
  *
  * @bubbles
  * @composed
- * @augments ManagedElementConnectEvent<ControlsHost>
+ * @augments ManagedElementConnectEvent<ManagedControlsHost>
  */
 export class ManagedControlsConnectEvent extends ManagedElementConnectEvent {
-  static DEFAULT_BUBBLES = true;
-  static DEFAULT_COMPOSED = true;
+  /** @readonly */
+  static TYPE = 'vds-managed-controls-connect';
 }
 
 /**
- * @augments {ManagedElement<ControlsHost>}
+ * @augments {ManagedElement<ManagedControlsHost>}
  */
 export class ManagedControls extends ManagedElement {
   /**
    * @protected
-   * @type {import('../../foundation/elements').ScopedManagedElementConnectEvent}
+   * @type {import('../../foundation/elements').ScopedDiscoveryEvent<any>}
    */
-  static get ScopedManagedElementConnectEvent() {
+  static get ScopedDiscoveryEvent() {
     return ManagedControlsConnectEvent;
   }
 }

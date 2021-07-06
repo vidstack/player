@@ -10,18 +10,36 @@ import {
   VolumeChangeRequestEvent
 } from './request.events.js';
 
+/**
+ * @typedef {EventTarget} MediaRemoteControlHost
+ */
+
+/**
+ * A simple facade for dispatching media requests to the nearest media controller.
+ *
+ * @example
+ * ```ts
+ * import { MediaRemoteControl } from '@vidstack/elements';
+ *
+ * class MyElement extends HTMLElement {
+ *   mediaRemoteControl = new MediaRemoteControl(this);
+ *
+ *   sendPlayRequest() {
+ *     this.mediaRemoteControl.play();
+ *   }
+ * }
+ * ```
+ */
 export class MediaRemoteControl {
   /**
-   * @protected
-   * @readonly
-   * @type {Element}
-   */
-  host;
-
-  /**
-   * @param {Element} host
+   * @param {MediaRemoteControlHost} host
    */
   constructor(host) {
+    /**
+     * @protected
+     * @readonly
+     * @type {MediaRemoteControlHost}
+     */
     this.host = host;
   }
 

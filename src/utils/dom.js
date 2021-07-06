@@ -7,7 +7,7 @@ import { isNil, isString, isUndefined } from './unit.js';
 /**
  * Requests an animation frame and waits for it to be resolved.
  *
- * @param {import('../foundation/types/utils').Callback<void>} [callback] - Invoked on the next animation frame.
+ * @param {import('../foundation/types').Callback<void>} [callback] - Invoked on the next animation frame.
  * @returns {Promise<number>}
  */
 export function raf(callback) {

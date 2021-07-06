@@ -1,6 +1,6 @@
 import { ReactiveElement } from 'lit';
 
-import { Constructor, ReadonlyIfType } from '../types/utils.js';
+import { Constructor, ReadonlyIfType } from '../types';
 
 export interface ContextProvider<T> {
   value: T;

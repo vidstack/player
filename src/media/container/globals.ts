@@ -1,6 +1,6 @@
-import { MediaContainerEvents } from './events.js';
 import {
   MEDIA_CONTAINER_ELEMENT_TAG_NAME,
+  MediaContainerConnectEvent,
   MediaContainerElement
 } from './MediaContainerElement.js';
 
@@ -9,5 +9,7 @@ declare global {
     [MEDIA_CONTAINER_ELEMENT_TAG_NAME]: MediaContainerElement;
   }
 
-  interface GlobalEventHandlersEventMap extends MediaContainerEvents {}
+  interface GlobalEventHandlersEventMap {
+    [MediaContainerConnectEvent.TYPE]: MediaContainerConnectEvent;
+  }
 }

@@ -3,9 +3,10 @@ import { html } from 'lit';
 import { mock, spy } from 'sinon';
 
 import { raf } from '../../../utils/dom.js';
+import { isFunction } from '../../../utils/unit.js';
 import { CanPlay } from '../../CanPlay.js';
 import { VolumeChangeEvent } from '../../events.js';
-import { MediaProviderConnectEvent } from '../../provider/events.js';
+import { MediaProviderConnectEvent } from '../../provider/MediaProviderElement.js';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -22,6 +23,7 @@ import {
 } from '../../test-utils/index.js';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
+  MediaControllerConnectEvent,
   MediaControllerElement
 } from '../MediaControllerElement.js';
 
@@ -41,6 +43,25 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     it('should render shadow DOM correctly', async function () {
       const { controller } = await buildMediaFixture();
       expect(controller).shadowDom.to.equal('<slot></slot>');
+    });
+  });
+
+  describe('discovery', function () {
+    it('should dispatch connect event when connected to DOM', async function () {
+      const controller = document.createElement(
+        MEDIA_CONTROLLER_ELEMENT_TAG_NAME
+      );
+
+      setTimeout(() => {
+        window.document.body.append(controller);
+      });
+
+      const { detail } = /** @type {MediaControllerConnectEvent} */ (
+        await oneEvent(document, MediaControllerConnectEvent.TYPE)
+      );
+
+      expect(detail.element).to.be.instanceOf(MediaControllerElement);
+      expect(isFunction(detail.onDisconnect)).to.be.true;
     });
   });
 

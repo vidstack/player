@@ -15,7 +15,7 @@ export class VideoPresentationEvent extends VdsCustomEvent {}
 /**
  * Fired when the video presentation mode changes. Only available in Safari.
  *
- * @augments {VideoPresentationEvent<import('../../../foundation/types/media').WebKitPresentationMode>}
+ * @augments {VideoPresentationEvent<import('../../../foundation/types').WebKitPresentationMode>}
  */
 export class VideoPresentationChangeEvent extends VideoPresentationEvent {
   /** @readonly */

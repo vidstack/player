@@ -121,12 +121,12 @@ export function redispatchEvent(target, event) {
 export class DisposalBin {
   /**
    * @protected
-   * @type {import('../types/utils').Callback<void>[]}
+   * @type {import('../types').Callback<void>[]}
    */
   disposal = this.disposal ?? [];
 
   /**
-   * @param {import('../types/utils').Callback<void>} [callback]
+   * @param {import('../types').Callback<void>} [callback]
    */
   add(callback) {
     if (callback) this.disposal.push(callback);
@@ -148,7 +148,7 @@ export class DisposalBin {
  * @param {string} type - The name of the event to listen to.
  * @param {(event: ListenedEvent) => void} listener - The function to be called when the event is fired.
  * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options] - Configures the event listener.
- * @returns {import('../types/utils').Unsubscribe}
+ * @returns {import('../types').Unsubscribe}
  * @example
  * ```ts
  * const disposeListener = listen(window, 'resize', () => {});
@@ -181,7 +181,7 @@ export function listen(target, type, listener, options) {
  * @param {EventType} type - The name of the event to listen to.
  * @param {(event: GlobalEventHandlersEventMap[EventType]) => void} listener - The function to be called when the event is fired.
  * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options] - Configures the event listener.
- * @returns {import('../types/utils').Unsubscribe}
+ * @returns {import('../types').Unsubscribe}
  */
 export function listenGlobalEvent(target, type, listener, options) {
   target.addEventListener(type, /** @type {any} */ (listener), options);

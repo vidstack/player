@@ -7,7 +7,6 @@ import '../media/ui/globals';
 import '../media/provider/globals';
 import '../providers/video/globals';
 import '../providers/video/presentation/globals';
-import '../foundation/elements/manager/globals';
 import '../foundation/fullscreen/globals';
 import '../foundation/screen-orientation/globals';
 import '../foundation/types/media';

@@ -1,30 +1,16 @@
 import { DisposalBin } from '../../events/index.js';
-import { VdsCustomEvent } from '../../events/index.js';
+import {
+  DiscoveryEvent,
+  ElementDiscoveryController
+} from '../discovery/index.js';
 
 /**
- * @template {Element} ManagedElement
- * @typedef {{
- *  element: ManagedElement;
- *  onDisconnect: (callback: () => void) => void;
- * }} ManagedElementConnectEventDetail
- */
-
-/**
- * @template {Element} ManagedElement
- * @augments VdsCustomEvent<ManagedElementConnectEventDetail<ManagedElement>>
  * @bubbles
  * @composed
+ * @template {Element} ManagedElement
+ * @augments DiscoveryEvent<ManagedElement>
  */
-export class ManagedElementConnectEvent extends VdsCustomEvent {
-  /** @readonly */
-  static TYPE = 'vds-managed-element-connect';
-  static DEFAULT_BUBBLES = true;
-  static DEFAULT_COMPOSED = true;
-}
-
-/**
- * @typedef {{ new(...args: any[]): ManagedElementConnectEvent<any> }} ScopedManagedElementConnectEvent
- */
+export class ManagedElementConnectEvent extends DiscoveryEvent {}
 
 /**
  * @template {import('lit').ReactiveElement} HostElement
@@ -32,9 +18,9 @@ export class ManagedElementConnectEvent extends VdsCustomEvent {
 export class ManagedElement {
   /**
    * @protected
-   * @type {ScopedManagedElementConnectEvent}
+   * @type {import('../discovery').ScopedDiscoveryEvent<any>}
    */
-  static get ScopedManagedElementConnectEvent() {
+  static get ScopedDiscoveryEvent() {
     return ManagedElementConnectEvent;
   }
 
@@ -54,42 +40,24 @@ export class ManagedElement {
      */
     this.host = host;
 
-    host.addController({
-      hostConnected: this.handleHostConnected.bind(this),
-      hostDisconnected: this.handleHostDisconnected.bind(this)
-    });
+    /**
+     * @protected
+     * @readonly
+     * @type {ElementDiscoveryController<HostElement>}
+     */
+    this.discoveryController =
+      /** @type {ElementDiscoveryController<HostElement>} */ (
+        new ElementDiscoveryController(host, this.getScopedDiscoveryEvent())
+      );
   }
 
   /**
    * @protected
+   * @returns {import('../discovery').ScopedDiscoveryEvent<Element>}
    */
-  handleHostConnected() {
-    this.connectToManager();
-  }
-
-  /**
-   * @protected
-   */
-  handleHostDisconnected() {
-    this.disconnectDisposal.empty();
-  }
-
-  /**
-   * @protected
-   */
-  connectToManager() {
+  getScopedDiscoveryEvent() {
     const ctor = /** @type {typeof ManagedElement} */ (this.constructor);
-
-    this.host.dispatchEvent(
-      new ctor.ScopedManagedElementConnectEvent({
-        detail: {
-          element: this.host,
-          // Pipe callbacks into the disconnect disposal bin.
-          onDisconnect: (callback) => {
-            this.disconnectDisposal.add(callback);
-          }
-        }
-      })
-    );
+    const ScopedDiscoveryEvent = ctor.ScopedDiscoveryEvent;
+    return ScopedDiscoveryEvent;
   }
 }

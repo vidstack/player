@@ -34,7 +34,7 @@ export const focusableSelector = `
  * Technically a polyfill for `shadowRoot.delegatesFocus`.
  *
  * @mixin
- * @template {import('../types/utils').Constructor<LitElement>} T
+ * @template {import('../types').Constructor<LitElement>} T
  * @param {T} Base - The constructor to mix into.
  * @returns {T}
  * @see https://github.com/carbon-design-system/carbon-web-components

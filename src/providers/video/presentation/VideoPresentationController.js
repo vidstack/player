@@ -10,7 +10,7 @@ import { VideoPresentationChangeEvent } from './events.js';
 /**
  * @typedef {{
  *  readonly videoElement: HTMLVideoElement | undefined
- * } & import('lit').ReactiveElement} VideoPresentationHost
+ * } & import('lit').ReactiveElement} VideoPresentationControllerHost
  */
 
 /**
@@ -20,14 +20,15 @@ import { VideoPresentationChangeEvent } from './events.js';
  *
  * @example
  * ```ts
- * import { VdsElement } from '@vidstack/elements';
+ * import { LitElement } from 'lit';
+ * import { VideoPresentationController } from '@vidstack/elements';
  *
- * class MyElement extends VdsElement {
- *   presentationController = new PresentationController(this);
- *
+ * class MyElement extends LitElement {
  *   get videoElement(): HTMLVideoElement | undefined {
  *     return this.videoEl;
  *   }
+ *
+ *   presentationController = new VideoPresentationController(this);
  * }
  * ```
  */
@@ -39,11 +40,11 @@ export class VideoPresentationController {
   disconnectDisposal = new DisposalBin();
 
   /**
-   * @param {VideoPresentationHost} host
+   * @param {VideoPresentationControllerHost} host
    */
   constructor(host) {
     /**
-     * @type {VideoPresentationHost}
+     * @type {VideoPresentationControllerHost}
      * @protected
      * @readonly
      */
@@ -74,7 +75,7 @@ export class VideoPresentationController {
    * The current presentation mode, possible values include `inline`, `picture-in-picture` and
    * `fullscreen`. Only available in Safari.
    *
-   * @type {import('../../../foundation/types/media').WebKitPresentationMode | undefined}
+   * @type {import('../../../foundation/types').WebKitPresentationMode | undefined}
    * @default undefined
    * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
    */
@@ -123,7 +124,7 @@ export class VideoPresentationController {
   }
 
   /**
-   * @param {import('../../../foundation/types/media').WebKitPresentationMode} mode
+   * @param {import('../../../foundation/types').WebKitPresentationMode} mode
    */
   setPresentationMode(mode) {
     this.host.videoElement?.webkitSetPresentationMode?.(mode);
@@ -131,7 +132,7 @@ export class VideoPresentationController {
 
   /**
    * @protected
-   * @returns {import('../../../foundation/types/utils').Unsubscribe}
+   * @returns {import('../../../foundation/types').Unsubscribe}
    */
   addPresentationModeChangeEventListener() {
     if (!this.isSupported || isNil(this.host.videoElement)) return noop;
@@ -151,7 +152,7 @@ export class VideoPresentationController {
     this.host.dispatchEvent(
       new VideoPresentationChangeEvent({
         detail:
-          /** @type {import('../../../foundation/types/media').WebKitPresentationMode} */ (
+          /** @type {import('../../../foundation/types').WebKitPresentationMode} */ (
             this.presentationMode
           ),
         originalEvent: event

@@ -3,8 +3,10 @@ import { mock } from 'sinon';
 
 import { isFunction } from '../../../utils/unit.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
-import { MediaProviderConnectEvent } from '../events.js';
-import { MediaProviderElement } from '../MediaProviderElement.js';
+import {
+  MediaProviderConnectEvent,
+  MediaProviderElement
+} from '../MediaProviderElement.js';
 
 describe('MediaProviderElement', function () {
   describe('render', function () {
@@ -33,7 +35,7 @@ describe('MediaProviderElement', function () {
         await oneEvent(document, MediaProviderConnectEvent.TYPE)
       );
 
-      expect(detail.provider).to.be.instanceOf(MediaProviderElement);
+      expect(detail.element).to.be.instanceOf(MediaProviderElement);
       expect(isFunction(detail.onDisconnect)).to.be.true;
     });
 

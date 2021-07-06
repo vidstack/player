@@ -3,7 +3,11 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { VdsElement } from '../../foundation/elements/index.js';
+import {
+  DiscoveryEvent,
+  ElementDiscoveryController,
+  VdsElement
+} from '../../foundation/elements/index.js';
 import { bindEventListeners } from '../../foundation/events/index.js';
 import {
   FullscreenChangeEvent,
@@ -19,10 +23,21 @@ import {
   MediaProviderConnectEvent,
   MediaProviderElement
 } from '../provider/index.js';
-import { MediaContainerConnectEvent } from './events.js';
 import { mediaContainerElementStyles } from './styles.js';
 
 export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
+
+/**
+ * Fired when the media container connects to the DOM.
+ *
+ * @bubbles
+ * @composed
+ * @augments {DiscoveryEvent<MediaContainerElement>}
+ */
+export class MediaContainerConnectEvent extends DiscoveryEvent {
+  /** @readonly */
+  static TYPE = 'vds-media-container-connect';
+}
 
 /**
  * Simple container for a media provider and the media user interface (UI).
@@ -121,30 +136,18 @@ export class MediaContainerElement extends VdsElement {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
+  /**
+   * @protected
+   * @readonly
+   */
+  discoveryController = new ElementDiscoveryController(
+    this,
+    MediaContainerConnectEvent
+  );
+
   connectedCallback() {
     super.connectedCallback();
     this.bindEventListeners();
-    this.dispatchDiscoveryEvent();
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Discovery
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   */
-  dispatchDiscoveryEvent() {
-    this.dispatchEvent(
-      new MediaContainerConnectEvent({
-        detail: {
-          container: this,
-          onDisconnect: (callback) => {
-            this.disconnectDisposal.add(callback);
-          }
-        }
-      })
-    );
   }
 
   // -------------------------------------------------------------------------------------------
@@ -401,9 +404,9 @@ export class MediaContainerElement extends VdsElement {
    * @param {MediaProviderConnectEvent} event
    */
   handleMediaProviderConnect(event) {
-    const { provider, onDisconnect } = event.detail;
+    const { element, onDisconnect } = event.detail;
 
-    this._mediaProvider = provider;
+    this._mediaProvider = element;
     this.hasMediaProviderConnectedViaEvent = true;
 
     onDisconnect(() => {
