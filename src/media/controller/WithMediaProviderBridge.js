@@ -1,8 +1,8 @@
 import { provideContextRecord } from '../../foundation/context/index.js';
 import { VdsElement } from '../../foundation/elements/index.js';
 import {
-  bindEventListeners,
   DisposalBin,
+  EventListenerController,
   listen,
   redispatchEvent
 } from '../../foundation/events/index.js';
@@ -55,25 +55,13 @@ export function WithMediaProviderBridge(Base) {
     // -------------------------------------------------------------------------------------------
 
     /**
+     * @protected
      * @readonly
      */
-    disconnectDisposal = new DisposalBin();
-
-    connectedCallback() {
-      super.connectedCallback();
-
-      const events = {
-        [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect,
-        [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange
-      };
-
-      bindEventListeners(this, events, this.disconnectDisposal);
-    }
-
-    disconnectedCallback() {
-      super.disconnectedCallback();
-      this.disconnectDisposal.empty();
-    }
+    eventListenerController = new EventListenerController(this, {
+      [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect,
+      [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange
+    });
 
     // -------------------------------------------------------------------------------------------
     // Media Provider Connect

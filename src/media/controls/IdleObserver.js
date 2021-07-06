@@ -1,7 +1,4 @@
-import {
-  bindEventListeners,
-  DisposalBin
-} from '../../foundation/events/index.js';
+import { EventListenerController } from '../../foundation/events/index.js';
 import { controlsContext } from './context.js';
 import {
   IdleChangeEvent,
@@ -19,12 +16,6 @@ import {
  */
 export class IdleObserver {
   /**
-   * @protected
-   * @readonly
-   */
-  disconnectDisposal = new DisposalBin();
-
-  /**
    * @param {IdleObserverHost} host
    */
   constructor(host) {
@@ -41,10 +32,24 @@ export class IdleObserver {
      */
     this.idle = controlsContext.idle.provide(host);
 
-    host.addController({
-      hostConnected: this.handleHostConnected.bind(this),
-      hostDisconnected: this.handleHostDisconnected.bind(this)
-    });
+    /**
+     * @protected
+     * @readonly
+     * @type {EventListenerController}
+     */
+    this[Symbol(EventListenerController.name)] = new EventListenerController(
+      this.host,
+      {
+        focus: this.pause,
+        blur: this.resume,
+        keydown: this.handleUserInteraction,
+        click: this.handleUserInteraction,
+        pointermove: this.handleUserInteraction,
+        [PauseIdleTrackingRequestEvent.TYPE]: this.handlePauseIdleTracking,
+        [ResumeIdleTrackingRequestEvent.TYPE]: this.handleResumeIdleTracking
+      },
+      { receiver: this }
+    );
   }
 
   /**
@@ -69,32 +74,6 @@ export class IdleObserver {
    */
   get isIdle() {
     return this.idle.value;
-  }
-
-  /**
-   * @protected
-   */
-  handleHostConnected() {
-    const events = {
-      focus: this.pause,
-      blur: this.resume,
-      keydown: this.handleUserInteraction,
-      click: this.handleUserInteraction,
-      pointermove: this.handleUserInteraction,
-      [PauseIdleTrackingRequestEvent.TYPE]: this.handlePauseIdleTracking,
-      [ResumeIdleTrackingRequestEvent.TYPE]: this.handleResumeIdleTracking
-    };
-
-    bindEventListeners(this.host, events, this.disconnectDisposal, {
-      receiver: this
-    });
-  }
-
-  /**
-   * @protected
-   */
-  handleHostDisconnected() {
-    this.disconnectDisposal.empty();
   }
 
   /**

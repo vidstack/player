@@ -8,7 +8,7 @@ import {
   ElementDiscoveryController,
   VdsElement
 } from '../../foundation/elements/index.js';
-import { bindEventListeners } from '../../foundation/events/index.js';
+import { EventListenerController } from '../../foundation/events/index.js';
 import {
   FullscreenChangeEvent,
   FullscreenController
@@ -145,26 +145,14 @@ export class MediaContainerElement extends VdsElement {
     MediaContainerConnectEvent
   );
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.bindEventListeners();
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Event Listeners
-  // -------------------------------------------------------------------------------------------
-
   /**
    * @protected
+   * @readonly
    */
-  bindEventListeners() {
-    const events = {
-      [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange,
-      [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect
-    };
-
-    bindEventListeners(this, events, this.disconnectDisposal);
-  }
+  eventListenerController = new EventListenerController(this, {
+    [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange,
+    [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect
+  });
 
   // -------------------------------------------------------------------------------------------
   // Render - Root

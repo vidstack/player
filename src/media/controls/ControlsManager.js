@@ -1,5 +1,5 @@
 import { ElementManager } from '../../foundation/elements/index.js';
-import { bindEventListeners } from '../../foundation/events/index.js';
+import { EventListenerController } from '../../foundation/events/index.js';
 import { controlsContext } from './context.js';
 import {
   ControlsChangeEvent,
@@ -52,19 +52,20 @@ export class ControlsManager extends ElementManager {
      * @type {import('../../foundation/context/types').ContextProvider<boolean>}
      */
     this.hidden = controlsContext.hidden.provide(host);
-  }
 
-  handleHostConnected() {
-    super.handleHostConnected();
-
-    const events = {
-      [HideControlsRequestEvent.TYPE]: this.handleHideControlsRequest,
-      [ShowControlsRequestEvent.TYPE]: this.handleShowControlsRequest
-    };
-
-    bindEventListeners(this.host, events, this.disconnectDisposal, {
-      receiver: this
-    });
+    /**
+     * @protected
+     * @readonly
+     * @type {EventListenerController}
+     */
+    this.eventListenerController = new EventListenerController(
+      this.host,
+      {
+        [HideControlsRequestEvent.TYPE]: this.handleHideControlsRequest,
+        [ShowControlsRequestEvent.TYPE]: this.handleShowControlsRequest
+      },
+      { receiver: this }
+    );
   }
 
   /**

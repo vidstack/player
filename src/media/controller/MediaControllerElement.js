@@ -5,7 +5,7 @@ import {
   ElementDiscoveryController,
   VdsElement
 } from '../../foundation/elements/index.js';
-import { bindEventListeners } from '../../foundation/events/index.js';
+import { EventListenerController } from '../../foundation/events/index.js';
 import { storybookAction } from '../../foundation/storybook/index.js';
 import { isNil } from '../../utils/unit.js';
 import {
@@ -102,33 +102,21 @@ export class MediaControllerElement extends WithMediaProviderBridge(
     MediaControllerConnectEvent
   );
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.bindEventListeners();
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Event Bindings
-  // -------------------------------------------------------------------------------------------
-
   /**
    * @protected
+   * @readonly
    */
-  bindEventListeners() {
-    const events = {
-      [MediaContainerConnectEvent.TYPE]: this.handleMediaContainerConnect,
-      [MuteRequestEvent.TYPE]: this.handleMuteRequest,
-      [UnmuteRequestEvent.TYPE]: this.handleUnmuteRequest,
-      [PlayRequestEvent.TYPE]: this.handlePlayRequest,
-      [PauseRequestEvent.TYPE]: this.handlePauseRequest,
-      [SeekRequestEvent.TYPE]: this.handleSeekRequest,
-      [VolumeChangeRequestEvent.TYPE]: this.handleVolumeChangeRequest,
-      [EnterFullscreenRequestEvent.TYPE]: this.handleEnterFullscreenRequest,
-      [ExitFullscreenRequestEvent.TYPE]: this.handleExitFullscreenRequest
-    };
-
-    bindEventListeners(this, events, this.disconnectDisposal);
-  }
+  eventListenerController = new EventListenerController(this, {
+    [MediaContainerConnectEvent.TYPE]: this.handleMediaContainerConnect,
+    [MuteRequestEvent.TYPE]: this.handleMuteRequest,
+    [UnmuteRequestEvent.TYPE]: this.handleUnmuteRequest,
+    [PlayRequestEvent.TYPE]: this.handlePlayRequest,
+    [PauseRequestEvent.TYPE]: this.handlePauseRequest,
+    [SeekRequestEvent.TYPE]: this.handleSeekRequest,
+    [VolumeChangeRequestEvent.TYPE]: this.handleVolumeChangeRequest,
+    [EnterFullscreenRequestEvent.TYPE]: this.handleEnterFullscreenRequest,
+    [ExitFullscreenRequestEvent.TYPE]: this.handleExitFullscreenRequest
+  });
 
   // -------------------------------------------------------------------------------------------
   // Render

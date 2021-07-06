@@ -4,7 +4,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { ifNonEmpty } from '../../../foundation/directives/index.js';
 import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
-import { bindEventListeners } from '../../../foundation/events/index.js';
+import { EventListenerController } from '../../../foundation/events/index.js';
 import {
   storybookAction,
   StorybookControlType
@@ -740,25 +740,26 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
+   * @readonly
    */
-  initPointerMoveThrottle() {
-    this.pointerMoveThrottle?.cancel();
-    this.pointerMoveThrottle = throttle(this.handlePointerMove, this.throttle);
-    this.addDocumentPointerEventListeners();
-  }
+  documentEventListeners = new EventListenerController(
+    this,
+    {
+      pointerup: this.handleDocumentPointerUp,
+      pointermove: this.handleDocumentPointerMove
+    },
+    {
+      target: document,
+      receiver: this
+    }
+  );
 
   /**
    * @protected
    */
-  addDocumentPointerEventListeners() {
-    const documentEvents = {
-      pointerup: this.handleDocumentPointerUp,
-      pointermove: this.handleDocumentPointerMove
-    };
-
-    bindEventListeners(document, documentEvents, this.disconnectDisposal, {
-      receiver: this
-    });
+  initPointerMoveThrottle() {
+    this.pointerMoveThrottle?.cancel();
+    this.pointerMoveThrottle = throttle(this.handlePointerMove, this.throttle);
   }
 
   /**
