@@ -9,7 +9,6 @@ import {
 import { FullscreenController } from '../../foundation/fullscreen/index.js';
 import { RequestQueue } from '../../foundation/queue/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
-import { VideoElement } from '../../providers/video/VideoElement.js';
 import {
   getElementAttributes,
   observeAndForwardAttributes
@@ -22,7 +21,7 @@ import {
 } from '../provider/index.js';
 
 /**
- * @typedef {Pick<VideoElement, ForwardedMediaProviderProps>} MediaProviderBridgedProperties
+ * @typedef {Pick<import('../../providers/video').VideoElement, ForwardedMediaProviderProps>} MediaProviderBridgedProperties
  */
 
 /**
