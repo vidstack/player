@@ -46,23 +46,23 @@ describe('context/decorators', function () {
     expect(consumer.context).to.equal(200);
   });
 
-  it('should throw error if @consumeContext is used without WithContext mixin', async function () {
+  it('should throw error if @consumeContext is used without LitElement', async function () {
     expect(() => {
-      class BadConsumerElement extends LitElement {
+      class BadConsumerElement {
         @consumeContext(testContext) context;
       }
     }).to.throw(
-      `[BadConsumerElement] requires the [WithContext] mixin to use the [@consumeContext] decorator.`
+      `[vds]: \`BadConsumerElement\` must extend \`ReactiveElement\` to use the \`@consumeContext\` decorator.`
     );
   });
 
   it('should throw error if @provideContext is used without WithContext mixin', async function () {
     expect(() => {
-      class BadProviderElement extends LitElement {
+      class BadProviderElement {
         @provideContext(testContext) context;
       }
     }).to.throw(
-      `[BadProviderElement] requires the [WithContext] mixin to use the [@provideContext] decorator.`
+      `[vds]: \`BadProviderElement\` must extend \`ReactiveElement\` to use the \`@provideContext\` decorator.`
     );
   });
 });

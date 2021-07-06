@@ -1,4 +1,5 @@
 import { isUndefined } from '../../utils/unit.js';
+import { defineContextConsumer, defineContextProvider } from './define.js';
 
 /**
  * @template T
@@ -15,16 +16,16 @@ export function consumeContext(context, options = {}) {
    * @link https://www.typescriptlang.org/docs/handbook/decorators.html
    */
   function legacy(proto, name) {
-    /** @type {import('./types').ContextInitializer} */
+    /** @type {typeof import('lit').ReactiveElement} */
     const ctor = proto.constructor;
 
-    if (isUndefined(ctor.defineContextConsumer)) {
+    if (isUndefined(ctor.addInitializer)) {
       throw Error(
-        `[${ctor.name}] requires the [WithContext] mixin to use the [@consumeContext] decorator.`
+        `[vds]: \`${ctor.name}\` must extend \`ReactiveElement\` to use the \`@consumeContext\` decorator.`
       );
     }
 
-    ctor.defineContextConsumer(name, context, options);
+    defineContextConsumer(ctor, name, context, options);
   }
 
   /**
@@ -67,16 +68,16 @@ export function provideContext(context, options = {}) {
    * @link https://www.typescriptlang.org/docs/handbook/decorators.html
    */
   function legacy(proto, name) {
-    /** @type {import('./types').ContextInitializer} */
+    /** @type {typeof import('lit').ReactiveElement} */
     const ctor = proto.constructor;
 
-    if (isUndefined(ctor.defineContextProvider)) {
+    if (isUndefined(ctor.addInitializer)) {
       throw Error(
-        `[${ctor.name}] requires the [WithContext] mixin to use the [@provideContext] decorator.`
+        `[vds]: \`${ctor.name}\` must extend \`ReactiveElement\` to use the \`@provideContext\` decorator.`
       );
     }
 
-    ctor.defineContextProvider(name, context, options);
+    defineContextProvider(ctor, name, context, options);
   }
 
   /**
