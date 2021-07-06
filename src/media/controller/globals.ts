@@ -11,6 +11,6 @@ declare global {
   }
 
   interface GlobalEventHandlersEventMap {
-    [MediaControllerConnectEvent.TYPE]: MediaControllerConnectEvent;
+    [MediaControllerConnectEvent.TYPE]: MediaControllerConnectEvent<MediaProviderElement>;
   }
 }

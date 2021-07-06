@@ -40,7 +40,8 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  *
  * @bubbles
  * @composed
- * @augments {DiscoveryEvent<MediaControllerElement>}
+ * @template {MediaProviderElement} MediaProvider
+ * @augments {DiscoveryEvent<MediaControllerElement<MediaProvider>>}
  */
 export class MediaControllerConnectEvent extends DiscoveryEvent {
   /** @readonly */

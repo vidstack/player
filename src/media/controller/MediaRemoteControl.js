@@ -8,7 +8,7 @@ import {
   SeekRequestEvent,
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
-} from './request.events.js';
+} from '../request.events.js';
 
 /**
  * @typedef {EventTarget} MediaRemoteControlHost

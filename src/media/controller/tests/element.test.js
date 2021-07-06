@@ -56,7 +56,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
         window.document.body.append(controller);
       });
 
-      const { detail } = /** @type {MediaControllerConnectEvent} */ (
+      const { detail } = /** @type {MediaControllerConnectEvent<any>} */ (
         await oneEvent(document, MediaControllerConnectEvent.TYPE)
       );
 

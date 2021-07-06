@@ -1,6 +1,10 @@
 import { bindEventListeners, DisposalBin } from './events.js';
 
 /**
+ * @typedef {import('lit').ReactiveElement} EventListenerControllerHost
+ */
+
+/**
  * @typedef {{
  *   target?: any;
  *   receiver?: any
@@ -8,7 +12,7 @@ import { bindEventListeners, DisposalBin } from './events.js';
  */
 
 /**
- * @template {import('lit').ReactiveElement} HostElement
+ * @template {import('./events.js').EventHandlerRecord} EventHandlerRecord
  */
 export class EventListenerController {
   /**
@@ -18,22 +22,22 @@ export class EventListenerController {
   disconnectDisposal = new DisposalBin();
 
   /**
-   * @param {HostElement} host
-   * @param {import('./events.js').EventHandlerRecord} eventHandlers
+   * @param {EventListenerControllerHost} host
+   * @param {EventHandlerRecord} eventHandlers
    * @param {EventListenerControllerOptions} [options]
    */
   constructor(host, eventHandlers, options = {}) {
     /**
      * @protected
      * @readonly
-     * @type {HostElement}
+     * @type {EventListenerControllerHost}
      */
     this.host = host;
 
     /**
      * @protected
      * @readonly
-     * @type {import('./events.js').EventHandlerRecord}
+     * @type {EventHandlerRecord}
      */
     this.eventHandlers = eventHandlers;
 
@@ -66,6 +70,10 @@ export class EventListenerController {
    * @protected
    */
   handleHostDisconnected() {
+    this.disconnectDisposal.empty();
+  }
+
+  removeListeners() {
     this.disconnectDisposal.empty();
   }
 }
