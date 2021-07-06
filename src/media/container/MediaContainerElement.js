@@ -4,8 +4,14 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { VdsElement } from '../../foundation/elements/index.js';
-import { DisposalBin } from '../../foundation/events/index.js';
-import { FullscreenController } from '../../foundation/fullscreen/index.js';
+import {
+  bindEventListeners,
+  DisposalBin
+} from '../../foundation/events/index.js';
+import {
+  FullscreenChangeEvent,
+  FullscreenController
+} from '../../foundation/fullscreen/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import { storybookAction } from '../../foundation/storybook/helpers.js';
 import { StorybookControlType } from '../../foundation/storybook/index.js';
@@ -119,6 +125,7 @@ export class MediaContainerElement extends VdsElement {
 
   connectedCallback() {
     super.connectedCallback();
+    this.bindEventListeners();
     this.dispatchDiscoveryEvent();
   }
 
@@ -140,6 +147,21 @@ export class MediaContainerElement extends VdsElement {
         }
       })
     );
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Event Listeners
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * @protected
+   */
+  bindEventListeners() {
+    const events = {
+      [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange
+    };
+
+    bindEventListeners(this, events, this.disconnectDisposal);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -372,10 +394,6 @@ export class MediaContainerElement extends VdsElement {
       throw Error('Invalid media element given to `media` slot.');
     }
 
-    this.mediaProviderDisposal.add(
-      mediaProvider?.addFullscreenController(this.fullscreenController)
-    );
-
     this._mediaProvider = mediaProvider;
   }
 
@@ -430,6 +448,16 @@ export class MediaContainerElement extends VdsElement {
       !this.fullscreenController.isSupportedNatively &&
       !isNil(this.mediaProvider)
     );
+  }
+
+  /**
+   * @protected
+   * @param {FullscreenChangeEvent} event
+   */
+  handleFullscreenChange(event) {
+    if (!isNil(this.mediaProvider)) {
+      this.mediaProvider.context.fullscreen = event.detail;
+    }
   }
 }
 

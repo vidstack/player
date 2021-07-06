@@ -11,7 +11,6 @@ import { ViewType } from './ViewType.js';
  *  [EmptiedEvent.TYPE]: EmptiedEvent;
  *  [EndedEvent.TYPE]: EndedEvent;
  *  [ErrorEvent.TYPE]: ErrorEvent;
- *  [FullscreenChangeEvent.TYPE]: FullscreenChangeEvent;
  *  [LoadedDataEvent.TYPE]: LoadedDataEvent;
  *  [LoadedMetadataEvent.TYPE]: LoadedMetadataEvent;
  *  [LoadStartEvent.TYPE]: LoadStartEvent;
@@ -119,17 +118,6 @@ export class EndedEvent extends MediaEvent {
 export class ErrorEvent extends MediaEvent {
   /** @readonly */
   static TYPE = 'vds-error';
-}
-
-/**
- * Fired when the player enters/exits fullscreen mode. When the detail is `true` it means
- * the player has entered fullscreen, `false` represents the opposite.
- *
- * @augments {MediaEvent<boolean>}
- */
-export class FullscreenChangeEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-fullscreen-change';
 }
 
 /**

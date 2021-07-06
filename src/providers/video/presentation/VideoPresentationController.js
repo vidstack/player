@@ -5,17 +5,12 @@ import {
 } from '../../../foundation/events/index.js';
 import { IS_IOS } from '../../../utils/support.js';
 import { isFunction, isNil, noop } from '../../../utils/unit.js';
+import { VideoPresentationChangeEvent } from './events.js';
 
 /**
  * @typedef {{
  *  readonly videoElement: HTMLVideoElement | undefined
- * } & import('lit').ReactiveElement} VideoPresentationControllerHost
- */
-
-/**
- * @typedef {{
- *  handlePresentationModeChange?(controller: VideoPresentationController);
- * }} VideoPresentationControllerDelegate
+ * } & import('lit').ReactiveElement} VideoPresentationHost
  */
 
 /**
@@ -44,25 +39,15 @@ export class VideoPresentationController {
   disconnectDisposal = new DisposalBin();
 
   /**
-   * @protected
-   * @readonly
-   * @type {Set<VideoPresentationControllerDelegate>}
+   * @param {VideoPresentationHost} host
    */
-  delegates = new Set();
-
-  /**
-   * @param {VideoPresentationControllerHost} host
-   * @param {VideoPresentationControllerDelegate} [delegate]
-   */
-  constructor(host, delegate = {}) {
+  constructor(host) {
     /**
-     * @type {VideoPresentationControllerHost}
+     * @type {VideoPresentationHost}
      * @protected
      * @readonly
      */
     this.host = host;
-
-    this.delegates.add(delegate);
 
     const firstUpdated = /** @type {any} */ (host).firstUpdated;
     /** @type {any} */ (host).firstUpdated = (changedProperties) => {
@@ -83,17 +68,6 @@ export class VideoPresentationController {
   handleHostDisconnected() {
     this.setPresentationMode('inline');
     this.disconnectDisposal.empty();
-  }
-
-  /**
-   * @param {VideoPresentationControllerDelegate} delegate
-   * @returns {(() => void)} Cleanup function to remove delegate.
-   */
-  addDelegate(delegate) {
-    this.delegates.add(delegate);
-    return () => {
-      this.delegates.delete(delegate);
-    };
   }
 
   /**
@@ -174,8 +148,14 @@ export class VideoPresentationController {
    */
   handlePresentationModeChange(event) {
     redispatchEvent(this.host, event);
-    this.delegates.forEach((delegate) => {
-      delegate.handlePresentationModeChange?.(this);
-    });
+    this.host.dispatchEvent(
+      new VideoPresentationChangeEvent({
+        detail:
+          /** @type {import('../../../foundation/types/media').WebKitPresentationMode} */ (
+            this.presentationMode
+          ),
+        originalEvent: event
+      })
+    );
   }
 }

@@ -1,5 +1,9 @@
 import { VdsElement } from '../../foundation/elements/index.js';
-import { FullscreenController } from '../../foundation/fullscreen/index.js';
+import { bindEventListeners } from '../../foundation/events/index.js';
+import {
+  FullscreenChangeEvent,
+  FullscreenController
+} from '../../foundation/fullscreen/index.js';
 import { RequestQueue } from '../../foundation/queue/index.js';
 import {
   ScreenOrientationController,
@@ -19,7 +23,6 @@ import {
   EmptiedEvent,
   EndedEvent,
   ErrorEvent,
-  FullscreenChangeEvent,
   LoadedDataEvent,
   LoadedMetadataEvent,
   LoadStartEvent,
@@ -138,7 +141,7 @@ export class MediaProviderElement extends VdsElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.addFullscreenController(this.fullscreenController);
+    this.bindEventListeners();
     this.dispatchDiscoveryEvent();
     this.connectedQueue.flush();
     this.connectedQueue.serveImmediately = true;
@@ -190,6 +193,21 @@ export class MediaProviderElement extends VdsElement {
         }
       })
     );
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Event Listeners
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * @protected
+   */
+  bindEventListeners() {
+    const events = {
+      [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange
+    };
+
+    bindEventListeners(this, events, this.disconnectDisposal);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -900,47 +918,11 @@ export class MediaProviderElement extends VdsElement {
   }
 
   /**
-   * This can be used to add additional fullscreen controller event listeners to update the
-   * appropriate contexts and dispatch events.
-   *
-   * @param {FullscreenController} controller
-   * @returns {() => void}
-   */
-  addFullscreenController(controller) {
-    return controller.addDelegate({
-      handleFullscreenChange: this.handleFullscreenChange.bind(this),
-      handleFullscreenError: this.handleFullscreenError.bind(this)
-    });
-  }
-
-  /**
    * @protected
-   * @param {FullscreenController} controller
-   * @param {Event} [event]
+   * @param {FullscreenChangeEvent} event
    */
-  handleFullscreenChange(controller, event) {
-    this.context.fullscreen = controller.isFullscreen;
-    this.dispatchEvent(
-      new FullscreenChangeEvent({
-        detail: controller.isFullscreen,
-        originalEvent: event
-      })
-    );
-  }
-
-  /**
-   * @protected
-   * @param {FullscreenController} controller
-   * @param {Event} [event]
-   */
-  handleFullscreenError(controller, event) {
-    this.context.error = event;
-    this.dispatchEvent(
-      new ErrorEvent({
-        detail: event,
-        originalEvent: event
-      })
-    );
+  handleFullscreenChange(event) {
+    this.context.fullscreen = event.detail;
   }
 }
 

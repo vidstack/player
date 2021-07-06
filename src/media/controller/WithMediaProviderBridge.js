@@ -6,7 +6,10 @@ import {
   listen,
   redispatchEvent
 } from '../../foundation/events/index.js';
-import { FullscreenController } from '../../foundation/fullscreen/index.js';
+import {
+  FullscreenChangeEvent,
+  FullscreenController
+} from '../../foundation/fullscreen/index.js';
 import { RequestQueue } from '../../foundation/queue/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import {
@@ -60,7 +63,8 @@ export function WithMediaProviderBridge(Base) {
       super.connectedCallback();
 
       const events = {
-        [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect
+        [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect,
+        [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange
       };
 
       bindEventListeners(this, events, this.disconnectDisposal);
@@ -116,7 +120,6 @@ export function WithMediaProviderBridge(Base) {
       this.attachMediaContextRecordToProvider();
       this.forwardMediaProviderAttributes();
       this.forwardMediaProviderEvents();
-      this.addFullscreenControllerToProvider();
       this.flushMediaProviderConnectedQueue();
 
       onDisconnect(this.handleMediaProviderDisconnect.bind(this));
@@ -302,13 +305,10 @@ export function WithMediaProviderBridge(Base) {
 
     /**
      * @protected
+     * @param {FullscreenChangeEvent} event
      */
-    addFullscreenControllerToProvider() {
-      if (isNil(this.mediaProvider)) return;
-      const dispose = this.mediaProvider.addFullscreenController(
-        this.fullscreenController
-      );
-      this.mediaProviderDisconnectDisposal.add(dispose);
+    handleFullscreenChange(event) {
+      this.context.fullscreen = event.detail;
     }
   }
 

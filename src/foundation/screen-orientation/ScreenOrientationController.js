@@ -1,19 +1,16 @@
 import { canOrientScreen, IS_CLIENT } from '../../utils/support.js';
 import { DisposalBin, listen } from '../events/index.js';
 import {
+  ScreenOrientationChangeEvent,
+  ScreenOrientationLockChangeEvent
+} from './events.js';
+import {
   ScreenOrientation,
   ScreenOrientationLock
 } from './ScreenOrientation.js';
 
 /**
  * @typedef {import('lit').ReactiveElement} ScreenOrientationHost
- */
-
-/**
- * @typedef {{
- *  handleOrientationChange?(): void;
- *  handleOrientationLockChange?(): void;
- * }} ScreenOrientationControllerDelegate
  */
 
 /**
@@ -48,30 +45,15 @@ export class ScreenOrientationController {
   isScreenOrientationLocked = false;
 
   /**
-   * @protected
-   * @readonly
-   * @type {Set<ScreenOrientationControllerDelegate>}
-   */
-  delegates = new Set();
-
-  /**
    * @param {ScreenOrientationHost} host
-   * @param {ScreenOrientationControllerDelegate} [delegate]
    */
-  constructor(host, delegate = {}) {
+  constructor(host) {
     /**
      * @protected
      * @readonly
      * @type {ScreenOrientationHost}
      */
     this.host = host;
-
-    /**
-     * @protected
-     * @readonly
-     * @type {ScreenOrientationControllerDelegate}
-     */
-    this.delegates.add(delegate);
 
     this.updateScreenOrientation();
 
@@ -98,19 +80,7 @@ export class ScreenOrientationController {
    */
   async handleHostDisconnected() {
     if (this.canOrient && this.isScreenOrientationLocked) await this.unlock();
-    this.delegates.clear();
     this.disconnectDisposal.empty();
-  }
-
-  /**
-   * @param {ScreenOrientationControllerDelegate} delegate
-   * @returns {(() => void)} Cleanup function to remove delegate.
-   */
-  addDelegate(delegate) {
-    this.delegates.add(delegate);
-    return () => {
-      this.delegates.delete(delegate);
-    };
   }
 
   /**
@@ -159,9 +129,11 @@ export class ScreenOrientationController {
     );
 
     this.isScreenOrientationLocked = true;
-    this.delegates.forEach((delegate) => {
-      delegate.handleOrientationLockChange?.();
-    });
+    this.host.dispatchEvent(
+      new ScreenOrientationLockChangeEvent({
+        detail: lockType
+      })
+    );
   }
 
   /**
@@ -176,9 +148,11 @@ export class ScreenOrientationController {
     this.throwIfScreenOrientationUnavailable();
     await screen.orientation.unlock();
     this.isScreenOrientationLocked = false;
-    this.delegates.forEach((delegate) => {
-      delegate.handleOrientationLockChange?.();
-    });
+    this.host.dispatchEvent(
+      new ScreenOrientationLockChangeEvent({
+        detail: screen.orientation.type
+      })
+    );
   }
 
   /**
@@ -203,12 +177,16 @@ export class ScreenOrientationController {
 
   /**
    * @protected
+   * @param {Event} event
    */
-  handleOrientationChange() {
+  handleOrientationChange(event) {
     this.screenOrientation = window.screen.orientation.type;
-    this.delegates.forEach((delegate) => {
-      delegate.handleOrientationChange?.();
-    });
+    this.host.dispatchEvent(
+      new ScreenOrientationChangeEvent({
+        detail: this.screenOrientation,
+        originalEvent: event
+      })
+    );
   }
 
   /**

@@ -1,7 +1,11 @@
+import { listen } from '../../../foundation/events/index.js';
 import { FullscreenController } from '../../../foundation/fullscreen/index.js';
 import { ScreenOrientationController } from '../../../foundation/screen-orientation/index.js';
 import { noop } from '../../../utils/unit.js';
-import { VideoPresentationController } from '../presentation/VideoPresentationController.js';
+import {
+  VideoPresentationChangeEvent,
+  VideoPresentationController
+} from '../presentation/index.js';
 
 /**
  * Extends the base `FullscreenController` with additional logic for handling fullscreen
@@ -47,15 +51,9 @@ export class VideoFullscreenController extends FullscreenController {
    * @param {import('../../../foundation/fullscreen').FullscreenHost} host
    * @param {ScreenOrientationController} screenOrientationController
    * @param {VideoPresentationController} presentationController
-   * @param {import('../../../foundation/fullscreen').FullscreenControllerDelegate} [delegate]
    */
-  constructor(
-    host,
-    screenOrientationController,
-    presentationController,
-    delegate = {}
-  ) {
-    super(host, screenOrientationController, delegate);
+  constructor(host, screenOrientationController, presentationController) {
+    super(host, screenOrientationController);
 
     /**
      * @protected
@@ -135,10 +133,11 @@ export class VideoFullscreenController extends FullscreenController {
     }
 
     if (this.isSupportedOnSafari) {
-      return this.presentationController.addDelegate({
-        handlePresentationModeChange:
-          this.handlePresentationModeChange.bind(this)
-      });
+      return listen(
+        this.host,
+        VideoPresentationChangeEvent.TYPE,
+        this.handlePresentationModeChange.bind(this)
+      );
     }
 
     return noop;
@@ -146,10 +145,10 @@ export class VideoFullscreenController extends FullscreenController {
 
   /**
    * @protected
-   * @param {VideoPresentationController} controller
+   * @param {VideoPresentationChangeEvent} event
    */
-  handlePresentationModeChange(controller) {
-    this.handleFullscreenChange();
+  handlePresentationModeChange(event) {
+    this.handleFullscreenChange(event);
   }
 
   /**
