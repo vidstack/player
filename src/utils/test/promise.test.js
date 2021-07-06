@@ -1,6 +1,6 @@
-import { expect } from '@open-wc/testing';
+import { expect, waitUntil } from '@open-wc/testing';
 
-import { deferredPromise } from '../promise.js';
+import { deferredPromise, timedPromise } from '../promise.js';
 
 describe('utils/promise', function () {
   describe(deferredPromise.name, function () {
@@ -24,6 +24,26 @@ describe('utils/promise', function () {
       });
 
       deferred.reject(true);
+    });
+  });
+
+  describe(timedPromise.name, function () {
+    it('should resolve', async function () {
+      const result = await timedPromise(Promise.resolve(1), 0, '');
+      expect(result).to.equal(1);
+    });
+
+    it('should timeout', function () {
+      // @ts-ignore
+      const badPredicate = () => 1 === 2;
+
+      return timedPromise(waitUntil(badPredicate), 0, 'Timed out.')
+        .then(() => {
+          throw Error('It should not resolve.');
+        })
+        .catch((err) => {
+          expect(err).to.equal('Timed out.');
+        });
     });
   });
 });

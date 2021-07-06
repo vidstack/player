@@ -32,3 +32,21 @@ export function deferredPromise() {
 
   return { promise, resolve, reject };
 }
+
+/**
+ * @template T
+ * @param {Promise<T>} promise
+ * @param {number} timeout
+ * @param {string} timeoutMsg
+ * @returns {Promise<T>}
+ */
+export function timedPromise(promise, timeout, timeoutMsg) {
+  const timer = new Promise((_, reject) => {
+    let timerId = window.setTimeout(() => {
+      window.clearTimeout(timerId);
+      reject(timeoutMsg);
+    }, timeout);
+  });
+
+  return Promise.race([promise, timer]);
+}
