@@ -218,10 +218,10 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     this.sliderLabel = 'Time scrubber';
 
     /** @type {number} */
-    this.step = 5;
+    this.step = 0.5;
 
     /** @type {number} */
-    this.stepMultiplier = 2;
+    this.stepMultiplier = 20;
 
     /**
      * The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove`
