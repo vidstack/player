@@ -86,4 +86,48 @@ declare global {
      */
     webkitSetPresentationMode?(mode: WebKitPresentationMode): Promise<void>;
   }
+
+  interface FormDataEvent extends Event {
+    /**
+     * Returns a FormData object representing names and values of elements associated to the target
+     * form. Operations on the FormData object will affect form data to be submitted.
+     */
+    readonly formData: FormData;
+  }
+
+  interface PictureInPictureWindowEventMap {
+    resize: Event;
+  }
+
+  interface PictureInPictureWindow extends EventTarget {
+    readonly height: number;
+    onresize: ((this: PictureInPictureWindow, ev: Event) => any) | null;
+    readonly width: number;
+    addEventListener<K extends keyof PictureInPictureWindowEventMap>(
+      type: K,
+      listener: (
+        this: PictureInPictureWindow,
+        ev: PictureInPictureWindowEventMap[K]
+      ) => any,
+      options?: boolean | AddEventListenerOptions
+    ): void;
+    addEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions
+    ): void;
+    removeEventListener<K extends keyof PictureInPictureWindowEventMap>(
+      type: K,
+      listener: (
+        this: PictureInPictureWindow,
+        ev: PictureInPictureWindowEventMap[K]
+      ) => any,
+      options?: boolean | EventListenerOptions
+    ): void;
+    removeEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | EventListenerOptions
+    ): void;
+  }
 }

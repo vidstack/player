@@ -9,7 +9,7 @@ import '../providers/video/globals';
 import '../providers/video/presentation/globals';
 import '../foundation/fullscreen/globals';
 import '../foundation/screen-orientation/globals';
-import '../foundation/types/media';
+import '../foundation/types/patch';
 import '../foundation/types/ResizeObserver';
 import '../ui/buffering-indicator/globals';
 import '../ui/controls/button/globals';
