@@ -1,17 +1,16 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
 
-import { VdsElement } from '../../elements/index.js';
 import { createContext } from '../context.js';
 import { consumeContext, provideContext } from '../decorators.js';
 
 const testContext = createContext(10);
 
-class FakeProviderElement extends VdsElement {
+class FakeProviderElement extends LitElement {
   @provideContext(testContext) context = testContext.initialValue;
 }
 
-class FakeConsumerElement extends VdsElement {
+class FakeConsumerElement extends LitElement {
   @consumeContext(testContext) context = testContext.initialValue;
 }
 
