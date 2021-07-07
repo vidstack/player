@@ -1,8 +1,9 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
+import { spy } from 'sinon';
 
 import { createContext } from '../context.js';
-import { consumeContext, provideContext } from '../decorators.js';
+import { consumeContext, provideContext, watchContext } from '../decorators.js';
 
 const testContext = createContext(10);
 
@@ -12,6 +13,9 @@ class FakeProviderElement extends LitElement {
 
 class FakeConsumerElement extends LitElement {
   @consumeContext(testContext) context = testContext.initialValue;
+
+  @watchContext(testContext)
+  handleTestContextUpdate(n: number) {}
 }
 
 window.customElements.define('fake-provider', FakeProviderElement);
@@ -45,6 +49,20 @@ describe('context/decorators', function () {
     expect(consumer.context).to.equal(200);
   });
 
+  it('should watch context property in consumer', async function () {
+    const { provider, consumer } = await buildFixture();
+
+    const handleUpdateSpy = spy(consumer, 'handleTestContextUpdate');
+
+    provider.context = 100;
+    await elementUpdated(consumer);
+    expect(handleUpdateSpy).to.have.been.calledWith(100);
+
+    provider.context = 200;
+    await elementUpdated(consumer);
+    expect(handleUpdateSpy).to.have.been.calledWith(200);
+  });
+
   it('should throw error if @consumeContext is used without LitElement', async function () {
     expect(() => {
       class BadConsumerElement {
@@ -55,13 +73,24 @@ describe('context/decorators', function () {
     );
   });
 
-  it('should throw error if @provideContext is used without WithContext mixin', async function () {
+  it('should throw error if @provideContext is used without LitElement', async function () {
     expect(() => {
       class BadProviderElement {
         @provideContext(testContext) context;
       }
     }).to.throw(
       `[vds]: \`BadProviderElement\` must extend \`ReactiveElement\` to use the \`@provideContext\` decorator.`
+    );
+  });
+
+  it('should throw error if @watchContext is used without LitElement', async function () {
+    expect(() => {
+      class BadProviderElement {
+        @watchContext(testContext)
+        handleUpdate() {}
+      }
+    }).to.throw(
+      `[vds]: \`BadProviderElement\` must extend \`ReactiveElement\` to use the \`@watchContext\` decorator.`
     );
   });
 });

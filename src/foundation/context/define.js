@@ -70,7 +70,7 @@ export function defineContextConsumer(ctor, name, context, options = {}) {
           oldValue = newValue;
         }
 
-        options.onUpdate?.(newValue);
+        options.onUpdate?.call(element, newValue);
       }
     });
 
