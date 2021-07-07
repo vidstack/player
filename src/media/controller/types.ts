@@ -8,12 +8,19 @@ import type { MediaProviderElement } from '../provider';
 export interface MediaProviderBridge
   extends MediaProviderBridgedProperties,
     MediaProviderBridgedMethods {
-  readonly _mediaProvider: MediaProviderElement | undefined;
+  /**
+   * The current media provider that belongs to this controller. Defaults to `undefined` if there
+   * is none.
+   */
+  readonly mediaProvider: MediaProviderElement | undefined;
+
   readonly fullscreenController: FullscreenController;
+
   readonly mediaProviderConnectedQueue: RequestQueue<
     string | symbol,
     () => void | Promise<void>
   >;
+
   readonly mediaProviderDisconnectDisposal: DisposalBin;
 }
 

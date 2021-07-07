@@ -1,4 +1,3 @@
-import { MediaProviderElement } from '../provider/MediaProviderElement.js';
 import { MediaControllerConnectEvent } from './index.js';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
@@ -7,10 +6,10 @@ import {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [MEDIA_CONTROLLER_ELEMENT_TAG_NAME]: MediaControllerElement<MediaProviderElement>;
+    [MEDIA_CONTROLLER_ELEMENT_TAG_NAME]: MediaControllerElement;
   }
 
   interface GlobalEventHandlersEventMap {
-    [MediaControllerConnectEvent.TYPE]: MediaControllerConnectEvent<MediaProviderElement>;
+    [MediaControllerConnectEvent.TYPE]: MediaControllerConnectEvent;
   }
 }

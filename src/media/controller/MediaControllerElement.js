@@ -18,7 +18,6 @@ import {
   IdleChangeEvent,
   IdleObserver
 } from '../controls/index.js';
-import { MediaProviderElement } from '../provider/index.js';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -40,8 +39,7 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  *
  * @bubbles
  * @composed
- * @template {MediaProviderElement} MediaProvider
- * @augments {DiscoveryEvent<MediaControllerElement<MediaProvider>>}
+ * @augments {DiscoveryEvent<MediaControllerElement>}
  */
 export class MediaControllerConnectEvent extends DiscoveryEvent {
   /** @readonly */
@@ -61,7 +59,6 @@ export class MediaControllerConnectEvent extends DiscoveryEvent {
  * - Act as a proxy for the connected media provider element. As a proxy it will forward
  * attributes, properties, methods and events to/from the provider.
  *
- * @template {MediaProviderElement} MediaProvider
  * @tagname vds-media-controller
  * @slot Used to pass in components that use/manage media state.
  * @example
@@ -140,20 +137,6 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @readonly
    */
   idleObserver = new IdleObserver(this);
-
-  // -------------------------------------------------------------------------------------------
-  // Media Provider
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * The current media provider that belongs to this controller. Defaults to `undefined` if there
-   * is none.
-   *
-   * @type {MediaProvider | undefined}
-   */
-  get mediaProvider() {
-    return /** @type {MediaProvider} */ (this._mediaProvider);
-  }
 
   // -------------------------------------------------------------------------------------------
   // Media Container
