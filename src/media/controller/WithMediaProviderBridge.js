@@ -23,25 +23,13 @@ import {
   MediaProviderElement
 } from '../provider/index.js';
 
-/**
- * @typedef {Pick<import('../../providers/video').VideoElement, ForwardedMediaProviderProps>} MediaProviderBridgedProperties
- */
-
-/**
- * @typedef {MediaProviderBridgedProperties & {
- *   readonly _mediaProvider: MediaProviderElement | undefined;
- *   readonly fullscreenController: FullscreenController;
- *   readonly mediaProviderConnectedQueue: RequestQueue;
- *   readonly mediaProviderDisconnectDisposal: DisposalBin;
- *   exitFullscreen(): Promise<void>;
- * }} MediaProviderBridge
- */
+const BRIDGE_DEFINED = Symbol('bridge_defined');
 
 /**
  * @mixin
  * @template {import('../../foundation/types').Constructor<import('lit').ReactiveElement>} T
  * @param {T} Base - The constructor to mix into.
- * @returns {T & import('../../foundation/types').Constructor<MediaProviderBridge>}
+ * @returns {T & import('../../foundation/types').Constructor<import('./types').MediaProviderBridge>}
  */
 export function WithMediaProviderBridge(Base) {
   class WithMediaProviderBridge extends Base {
@@ -231,13 +219,19 @@ export function WithMediaProviderBridge(Base) {
      * @protected
      */
     defineForwardedMediaProviderProperties() {
-      FORWARDED_MEDIA_PROVIDER_PROPS.forEach((propName) => {
-        const defaultVaue =
+      // eslint-disable-next-line no-prototype-builtins
+      if (this.constructor.prototype.hasOwnProperty(BRIDGE_DEFINED)) return;
+
+      BRIDGED_MEDIA_PROVIDER_PROPERTIES.forEach((propName) => {
+        const defaultValue =
           propName in mediaContext
             ? mediaContext[propName].initialValue
             : undefined;
-        this.defineMediaProviderProperty(propName, defaultVaue);
+
+        this.defineMediaProviderProperty(propName, defaultValue);
       });
+
+      this.constructor.prototype[BRIDGE_DEFINED] = true;
     }
 
     /**
@@ -246,12 +240,12 @@ export function WithMediaProviderBridge(Base) {
      * @param {any} [defaultValue]
      */
     defineMediaProviderProperty(propName, defaultValue = undefined) {
-      Object.defineProperty(this, propName, {
-        get: () => {
+      Object.defineProperty(this.constructor.prototype, propName, {
+        get() {
           const value = this.mediaProvider?.[propName] ?? defaultValue;
           return isFunction(value) ? value.bind(this.mediaProvider) : value;
         },
-        set: (value) => {
+        set(value) {
           this.mediaProviderConnectedQueue.queue(`bridge${propName}`, () => {
             if (!isNil(this.mediaProvider)) {
               this.mediaProvider[propName] = value;
@@ -304,63 +298,10 @@ export function WithMediaProviderBridge(Base) {
 }
 
 /**
- * @typedef {'autoPiP'
- *  | 'autoplay'
- *  | 'buffered'
- *  | 'canPlay'
- *  | 'canPlayThrough'
- *  | 'canPlayType'
- *  | 'canRequestFullscreen'
- *  | 'captureStream'
- *  | 'controls'
- *  | 'controlsList'
- *  | 'crossOrigin'
- *  | 'currentPoster'
- *  | 'currentSrc'
- *  | 'currentTime'
- *  | 'defaultMuted'
- *  | 'defaultPlaybackRate'
- *  | 'disablePiP'
- *  | 'disableRemotePlayback'
- *  | 'duration'
- *  | 'ended'
- *  | 'error'
- *  | 'fullscreen'
- *  | 'fullscreenOrientation'
- *  | 'height'
- *  | 'live'
- *  | 'load'
- *  | 'loop'
- *  | 'mediaType'
- *  | 'muted'
- *  | 'networkState'
- *  | 'pause'
- *  | 'paused'
- *  | 'play'
- *  | 'played'
- *  | 'playing'
- *  | 'playsinline'
- *  | 'poster'
- *  | 'preload'
- *  | 'readyState'
- *  | 'seekable'
- *  | 'seeking'
- *  | 'shouldPlayType'
- *  | 'src'
- *  | 'srcObject'
- *  | 'started'
- *  | 'viewType'
- *  | 'volume'
- *  | 'waiting'
- *  | 'width'
- * } ForwardedMediaProviderProps
- */
-
-/**
  * @readonly
- * @type {ForwardedMediaProviderProps[]}
+ * @type {(keyof import('./types').MediaProviderBridgedProperties | keyof import('./types').MediaProviderBridgedMethods)[]}
  */
-export const FORWARDED_MEDIA_PROVIDER_PROPS = [
+export const BRIDGED_MEDIA_PROVIDER_PROPERTIES = [
   'autoPiP',
   'autoplay',
   'buffered',
@@ -400,6 +341,7 @@ export const FORWARDED_MEDIA_PROVIDER_PROPS = [
   'poster',
   'preload',
   'readyState',
+  'requestPictureInPicture',
   'seekable',
   'seeking',
   'shouldPlayType',

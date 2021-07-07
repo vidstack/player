@@ -268,6 +268,20 @@ export class VideoElement extends Html5MediaElement {
     return MediaType.Unknown;
   }
 
+  /**
+   * Issues an asynchronous request to display the video in picture-in-picture mode.
+   *
+   * It's not guaranteed that the video will be put into picture-in-picture. If permission to enter
+   * that mode is granted, the returned `Promise` will resolve and the video will receive a
+   * `enterpictureinpicture` event to let it know that it's now in picture-in-picture.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/requestPictureInPicture
+   * @returns {Promise<PictureInPictureWindow>}
+   */
+  async requestPictureInPicture() {
+    return this.videoElement.requestPictureInPicture();
+  }
+
   // -------------------------------------------------------------------------------------------
   // Fullscreen
   // -------------------------------------------------------------------------------------------
