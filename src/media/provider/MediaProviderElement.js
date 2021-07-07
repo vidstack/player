@@ -644,6 +644,7 @@ export class MediaProviderElement extends VdsElement {
    *
    * @abstract
    * @returns {Promise<void>}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
    */
   async play() {}
 
@@ -652,6 +653,7 @@ export class MediaProviderElement extends VdsElement {
    *
    * @abstract
    * @returns {Promise<void>}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
    */
   async pause() {}
 

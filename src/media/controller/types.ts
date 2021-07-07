@@ -69,11 +69,15 @@ export interface MediaProviderBridgedMethods {
    * Begins/resumes playback of the media. If this method is called programmatically before the
    * user has interacted with the player, the promise may be rejected subject to the browser's
    * autoplay policies.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
    */
   play(): Promise<void>;
 
   /**
    * Pauses playback of the media.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
    */
   pause(): Promise<void>;
 
