@@ -98,12 +98,12 @@ export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
  * @example
  * ```html
  * <vds-scrubber
- *  label="Time scrubber"
- *  progress-label="Amount seekable"
+ *   label="Time scrubber"
+ *   progress-label="Amount seekable"
  * >
- *  <!-- `hidden` attribute will automatically be applied/removed -->
+ *   <!-- `hidden` attribute will automatically be applied/removed -->
  *  <div class="preview" slot="preview" hidden>Preview</div>
- * </vds-scrubber
+ * </vds-scrubber>
  * ```
  * @example
  * ```css
