@@ -856,7 +856,7 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @param {Event} event
+   * @param {Event | undefined} [event]
    */
   dispatchValueChange(event) {
     if (this.value === this.lastDispatchedValue) return;

@@ -188,7 +188,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     );
 
     await elementUpdated(slider);
-    expect(slider.value).to.equal(40);
+    expect(slider.value).to.equal(45);
 
     thumbContainer.dispatchEvent(
       new KeyboardEvent('keydown', {

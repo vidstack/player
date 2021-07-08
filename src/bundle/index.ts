@@ -51,6 +51,7 @@ export * from '../ui/controls/scrubber/index.js';
 export * from '../ui/controls/slider/index.js';
 export * from '../ui/controls/toggle/index.js';
 export * from '../ui/controls/toggle-button/index.js';
+export * from '../ui/controls/volume-slider/index.js';
 export * from '../ui/time/time/index.js';
 export * from '../ui/time/time-current/index.js';
 export * from '../ui/time/time-duration/index.js';
