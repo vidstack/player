@@ -56,7 +56,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
         window.document.body.append(controller);
       });
 
-      const { detail } = /** @type {MediaControllerConnectEvent<any>} */ (
+      const { detail } = /** @type {MediaControllerConnectEvent} */ (
         await oneEvent(document, MediaControllerConnectEvent.TYPE)
       );
 
@@ -215,9 +215,9 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     it('should handle volume change request', async function () {
       const { container, provider } = await buildMediaFixture();
       const setVolumeSpy = spy(provider, 'setVolume');
-      container.dispatchEvent(new VolumeChangeRequestEvent({ detail: 100 }));
+      container.dispatchEvent(new VolumeChangeRequestEvent({ detail: 1 }));
       await provider.mediaRequestQueue.flush();
-      expect(setVolumeSpy).to.have.been.calledWith(100);
+      expect(setVolumeSpy).to.have.been.calledWith(1);
       setVolumeSpy.restore();
     });
 

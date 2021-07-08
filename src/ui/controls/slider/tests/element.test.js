@@ -21,7 +21,6 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
         min="0"
         max="100"
         step="1"
-        step-multiplier="10"
         value="50"
       ></vds-slider>
     `);
@@ -109,7 +108,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
 
     slider.value = 57.5;
     await elementUpdated(slider);
-    expect(slider.fillRate).to.equal(0.575);
+    expect(slider.fillRate).to.equal(0.58);
 
     slider.value = 102;
     await elementUpdated(slider);

@@ -212,3 +212,20 @@ export function bindEventListeners(target, record, disposal, options = {}) {
     disposal.add(dispose);
   });
 }
+
+/**
+ * @param {Event | undefined} [event]
+ * @returns {event is PointerEvent}
+ */
+export function isPointerEvent(event) {
+  return event?.type.includes('pointer') ?? false;
+}
+
+/**
+ * @param {Event | undefined} [event]
+ * @returns {event is VdsCustomEvent<unknown>}
+ */
+export function isVdsEvent(event) {
+  // eslint-disable-next-line no-prototype-builtins
+  return event?.hasOwnProperty('originalEvent') ?? false;
+}

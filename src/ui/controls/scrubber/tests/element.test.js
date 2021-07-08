@@ -25,7 +25,9 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
 
   it('should render DOM correctly', async function () {
     const { scrubber } = await buildFixture();
-    expect(scrubber).dom.to.equal(`<vds-scrubber></vds-scrubber>`);
+    expect(scrubber).dom.to.equal(
+      `<vds-scrubber label="Time scrubber" orientation="horizontal"></vds-scrubber>`
+    );
   });
 
   it('should render shadow DOM correctly', async function () {
@@ -40,12 +42,12 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
           exportparts="root: slider-root, thumb: slider-thumb, track: slider-track, track-fill: slider-track-fill"
           id="slider"
           label="Time scrubber"
-          max="0"
+          max="100"
           min="0"
           orientation="horizontal"
           part="slider"
           step="0.5"
-          step-multiplier="20"
+          shift-key-multiplier="20"
           throttle="0"
           value="0"
           value-text="0 seconds out of 0 seconds"
@@ -54,7 +56,7 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
 
           <div
             aria-label="Amount seekable"
-            aria-valuemax="0"
+            aria-valuemax="100"
             aria-valuemin="0"
             aria-valuenow="0"
             aria-valuetext="0%"

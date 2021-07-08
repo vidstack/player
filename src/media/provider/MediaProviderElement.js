@@ -17,6 +17,7 @@ import {
   storybookAction,
   StorybookControlType
 } from '../../foundation/storybook/index.js';
+import { clampNumber } from '../../utils/number.js';
 import { CanPlay } from '../CanPlay.js';
 import { createMediaContextRecord, mediaContext } from '../context.js';
 import {
@@ -238,7 +239,7 @@ export class MediaProviderElement extends VdsElement {
 
   set volume(requestedVolume) {
     this.mediaRequestQueue.queue('volume', () => {
-      this.setVolume(requestedVolume);
+      this.setVolume(clampNumber(0, requestedVolume, 1));
     });
   }
 
@@ -931,7 +932,13 @@ export const MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   muted: { control: StorybookControlType.Boolean },
   paused: { control: StorybookControlType.Boolean, defaultValue: true },
   playsinline: { control: StorybookControlType.Boolean },
-  volume: { control: StorybookControlType.Number, defaultValue: 0.5 },
+  volume: {
+    control: {
+      type: StorybookControlType.Number,
+      step: 0.05
+    },
+    defaultValue: 0.5
+  },
   // Media Actions
   onAbort: storybookAction(AbortEvent.TYPE),
   onCanPlay: storybookAction(CanPlayEvent.TYPE),

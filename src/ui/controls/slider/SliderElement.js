@@ -9,7 +9,11 @@ import {
   storybookAction,
   StorybookControlType
 } from '../../../foundation/storybook/index.js';
-import { setAttribute } from '../../../utils/dom.js';
+import {
+  clampNumber,
+  getNumberOfDecimalPlaces,
+  round
+} from '../../../utils/number.js';
 import { throttle } from '../../../utils/timing.js';
 import {
   SliderDragEndEvent,
@@ -187,7 +191,7 @@ export class SliderElement extends WithFocus(VdsElement) {
      *
      * @type {number}
      */
-    this.stepMultiplier = 10;
+    this.shiftKeyMultiplier = 10;
 
     /**
      * The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove`
@@ -198,7 +202,10 @@ export class SliderElement extends WithFocus(VdsElement) {
     this.throttle = 10;
 
     // State
-    /** @protected */
+    /**
+     * @protected
+     * @type {boolean}
+     */
     this._isDragging = false;
   }
 
@@ -209,12 +216,11 @@ export class SliderElement extends WithFocus(VdsElement) {
   /** @type {import('lit').PropertyDeclarations} */
   static get properties() {
     return {
-      label: {},
+      label: { reflect: true },
       step: { type: Number, reflect: true },
-      stepMultiplier: {
+      shiftKeyMultiplier: {
         type: Number,
-        reflect: true,
-        attribute: 'step-multiplier'
+        attribute: 'shift-key-multiplier'
       },
       min: { type: Number, reflect: true },
       max: { type: Number, reflect: true },
@@ -271,9 +277,8 @@ export class SliderElement extends WithFocus(VdsElement) {
    * `fillRate` = 0.5 (result)
    */
   get fillRate() {
-    const boundValue = Math.min(this.max, Math.max(this.min, this.value));
     const range = this.max - this.min;
-    return boundValue / range;
+    return this.value / range;
   }
 
   /**
@@ -296,15 +301,13 @@ export class SliderElement extends WithFocus(VdsElement) {
   }
 
   update(changedProperties) {
-    setAttribute(this, 'dragging', this.isDragging ? '' : undefined);
-
     if (changedProperties.has('value')) {
-      // Bound value between min/max.
-      this.value = Math.min(this.max, Math.max(this.min, this.value));
+      this.updateValue(this.value);
     }
 
     if (changedProperties.has('disabled') && this.disabled) {
       this._isDragging = false;
+      this.removeAttribute('dragging');
     }
 
     if (changedProperties.has('throttle')) {
@@ -461,7 +464,7 @@ export class SliderElement extends WithFocus(VdsElement) {
    * @returns {string}
    */
   getValueAsTextFallback() {
-    return `${(this.value / this.max) * 100}%`;
+    return `${round((this.value / this.max) * 100, 2)}%`;
   }
 
   /**
@@ -492,26 +495,16 @@ export class SliderElement extends WithFocus(VdsElement) {
 
     if (!isValidKey) return;
 
-    const modified = !shiftKey ? this.step : this.step * this.stepMultiplier;
+    const modified = !shiftKey
+      ? this.step
+      : this.step * this.shiftKeyMultiplier;
     const direction = SliderKeyDirection[key];
     const diff = modified * direction;
-    const stepCount = (this.value + diff) / this.step;
+    const steps = (this.value + diff) / this.step;
+    const value = this.step * steps;
 
-    // Snaps to next step.
-    this.value = Math.min(
-      this.max,
-      Math.max(
-        this.min,
-        (diff >= 0 ? Math.floor(stepCount) : Math.ceil(stepCount)) * this.step
-      )
-    );
-
-    this.dispatchEvent(
-      new SliderValueChangeEvent({
-        detail: this.value,
-        originalEvent: event
-      })
-    );
+    this.updateValue(value);
+    this.dispatchValueChange(event);
   }
 
   /**
@@ -703,7 +696,8 @@ export class SliderElement extends WithFocus(VdsElement) {
   startDragging(event) {
     if (this._isDragging) return;
     this._isDragging = true;
-    this.updateValueBasedOnThumbPosition(event, false);
+    this.setAttribute('dragging', '');
+    this.updateValueBasedOnThumbPosition(event);
     this.dispatchEvent(
       new SliderDragStartEvent({
         originalEvent: event,
@@ -719,7 +713,8 @@ export class SliderElement extends WithFocus(VdsElement) {
   stopDragging(event) {
     if (!this._isDragging) return;
     this._isDragging = false;
-    this.updateValueBasedOnThumbPosition(event, false);
+    this.removeAttribute('dragging');
+    this.updateValueBasedOnThumbPosition(event);
     this.dispatchEvent(
       new SliderDragEndEvent({
         originalEvent: event,
@@ -799,6 +794,19 @@ export class SliderElement extends WithFocus(VdsElement) {
   handlePointerMove(event) {
     if (this.disabled || !this._isDragging) return;
     this.updateValueBasedOnThumbPosition(event);
+    this.dispatchValueChange(event);
+  }
+
+  /**
+   * @protected
+   * @param {number} value
+   */
+  updateValue(value) {
+    this.value = clampNumber(
+      this.min,
+      round(value, getNumberOfDecimalPlaces(this.step)),
+      this.max
+    );
   }
 
   /**
@@ -806,35 +814,52 @@ export class SliderElement extends WithFocus(VdsElement) {
    * @param {number} rate
    */
   updateValueByRate(rate) {
-    const boundRate = Math.min(1, Math.max(0, rate));
+    const boundRate = clampNumber(0, rate, 1);
     const range = this.max - this.min;
     const fill = range * boundRate;
-    const fillToStepRatio = Math.round(fill / this.step);
-    this.value = this.min + fillToStepRatio * this.step;
+    const stepRatio = Math.round(fill / this.step);
+    const steps = this.step * stepRatio;
+    const value = this.min + steps;
+    this.updateValue(value);
   }
 
   /**
    * @protected
    * @param {PointerEvent} event
-   * @param {boolean} [shouldFireValueChange=true]
    */
-  updateValueBasedOnThumbPosition(event, shouldFireValueChange = true) {
+  updateValueBasedOnThumbPosition(event) {
     const thumbPosition = event.clientX;
 
     const { left: trackLeft, width: trackWidth } =
       this.trackElement.getBoundingClientRect();
 
-    // Calling this will update `this.value`.
-    this.updateValueByRate((thumbPosition - trackLeft) / trackWidth);
+    const thumbPositionRate = (thumbPosition - trackLeft) / trackWidth;
 
-    if (shouldFireValueChange) {
-      this.dispatchEvent(
-        new SliderValueChangeEvent({
-          detail: this.value,
-          originalEvent: event
-        })
-      );
-    }
+    // Calling this will update `this.value`.
+    this.updateValueByRate(thumbPositionRate);
+  }
+
+  /**
+   * @protected
+   * @type {number}
+   */
+  lastDispatchedValue = this.value;
+
+  /**
+   * @protected
+   * @param {Event} event
+   */
+  dispatchValueChange(event) {
+    if (this.value === this.lastDispatchedValue) return;
+
+    this.dispatchEvent(
+      new SliderValueChangeEvent({
+        detail: this.value,
+        originalEvent: event
+      })
+    );
+
+    this.lastDispatchedValue = this.value;
   }
 }
 
@@ -849,8 +874,14 @@ export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
     options: ['horizontal', 'vertical'],
     defaultValue: 'horizontal'
   },
-  step: { control: StorybookControlType.Number, defaultValue: 1 },
-  stepMultiplier: { control: StorybookControlType.Number, defaultValue: 10 },
+  step: {
+    control: StorybookControlType.Number,
+    defaultValue: 1
+  },
+  shiftKeyMultiplier: {
+    control: StorybookControlType.Number,
+    defaultValue: 10
+  },
   throttle: { control: StorybookControlType.Number, defaultValue: 10 },
   value: { control: StorybookControlType.Number, defaultValue: 50 },
   valueText: { control: StorybookControlType.Text },

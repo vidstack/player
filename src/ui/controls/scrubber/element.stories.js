@@ -32,9 +32,9 @@ function Template({
   previewTimeThrottle,
   progressLabel,
   progressText,
-  sliderLabel,
+  label,
   step,
-  stepMultiplier,
+  shiftKeyMultiplier,
   throttle,
   userSeekingThrottle,
   // Scrubber Actions
@@ -73,8 +73,8 @@ function Template({
           preview-time-throttle=${previewTimeThrottle}
           progress-label=${ifNonEmpty(progressLabel)}
           progress-text=${ifNonEmpty(progressText)}
-          slider-label=${ifNonEmpty(sliderLabel)}
-          step-multiplier=${stepMultiplier}
+          label=${ifNonEmpty(label)}
+          shift-key-multiplier=${shiftKeyMultiplier}
           step=${step}
           throttle=${throttle}
           user-seeking-throttle=${userSeekingThrottle}
