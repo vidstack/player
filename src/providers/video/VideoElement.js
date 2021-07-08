@@ -20,8 +20,8 @@ export const VIDEO_ELEMENT_TAG_NAME = 'vds-video';
  *
  * @tagname vds-video
  * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
- * @csspart root - The component's root element that wraps the video (`<div>`).
- * @csspart video - The video element (`<video>`).
+ * @csspart media - The video element (`<video>`).
+ * @csspart video - Alias for `media` part.
  * @example
  * ```html
  * <vds-video src="/media/video.mp4" poster="/media/poster.png">
@@ -137,56 +137,7 @@ export class VideoElement extends Html5MediaElement {
 
   /** @returns {import('lit').TemplateResult} */
   render() {
-    return html`
-      <div
-        id="root"
-        class="${this.getRootClassAttr()}"
-        part="${this.getRootPartAttr()}"
-      >
-        ${this.renderVideo()}
-      </div>
-    `;
-  }
-
-  /**
-   * Override this to modify root provider CSS Classes.
-   *
-   * @protected
-   * @returns {string}
-   */
-  getRootClassAttr() {
-    return '';
-  }
-
-  /**
-   * Override this to modify root provider CSS Parts.
-   *
-   * @protected
-   * @returns {string}
-   */
-  getRootPartAttr() {
-    return 'root';
-  }
-
-  /**
-   * Override this to modify video CSS Parts.
-   *
-   * @protected
-   * @returns {string}
-   */
-  getVideoPartAttr() {
-    return 'video';
-  }
-
-  /**
-   * Can be used by attaching engine such as `hls.js` to prevent src attr being set on
-   * `<video>` element.
-   *
-   * @protected
-   * @returns {boolean}
-   */
-  shouldSetVideoSrcAttr() {
-    return true;
+    return this.renderVideo();
   }
 
   /**
@@ -218,6 +169,27 @@ export class VideoElement extends Html5MediaElement {
         ${this.renderMediaChildren()}
       </video>
     `;
+  }
+
+  /**
+   * Override this to modify video CSS Parts.
+   *
+   * @protected
+   * @returns {string}
+   */
+  getVideoPartAttr() {
+    return 'media video';
+  }
+
+  /**
+   * Can be used by attaching engine such as `hls.js` to prevent src attr being set on
+   * `<video>` element.
+   *
+   * @protected
+   * @returns {boolean}
+   */
+  shouldSetVideoSrcAttr() {
+    return true;
   }
 
   // -------------------------------------------------------------------------------------------

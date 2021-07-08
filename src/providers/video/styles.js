@@ -6,12 +6,6 @@ export const videoElementStyles = css`
     contain: content;
   }
 
-  #root {
-    display: block;
-    position: relative;
-    width: 100%;
-  }
-
   video {
     display: inline-block;
     border-radius: inherit;

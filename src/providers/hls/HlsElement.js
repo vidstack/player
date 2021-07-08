@@ -47,8 +47,8 @@ export const HLS_TYPES = new Set([
  * @tagname vds-hls
  * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
  * @slot ui - Used to pass in `<vds-ui>` to customize the player user interface.
- * @csspart root - The component's root element that wraps the video (`<div>`).
- * @csspart video - The video element (`<video>`).
+ * @csspart media - The video element (`<video>`).
+ * @csspart video - Alias for `media` part.
  * @example
  * ```html
  * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
