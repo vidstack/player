@@ -12,7 +12,7 @@ import {
 } from './ScrubberElement.js';
 
 export default {
-  title: 'UI/Foundation/Controls/Scrubber',
+  title: 'UI/Controls/Scrubber',
   component: SCRUBBER_ELEMENT_TAG_NAME,
   argTypes: SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES
 };

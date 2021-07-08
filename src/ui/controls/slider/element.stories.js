@@ -9,7 +9,7 @@ import {
 } from './SliderElement.js';
 
 export default {
-  title: 'UI/Foundation/Controls/Slider',
+  title: 'UI/Controls/Slider',
   component: SLIDER_ELEMENT_TAG_NAME,
   argTypes: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES
 };

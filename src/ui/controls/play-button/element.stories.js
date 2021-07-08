@@ -11,7 +11,7 @@ import {
 } from './PlayButtonElement.js';
 
 export default {
-  title: 'UI/Foundation/Controls/Play Button',
+  title: 'UI/Controls/Play Button',
   component: PLAY_BUTTON_ELEMENT_TAG_NAME,
   argTypes: PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };

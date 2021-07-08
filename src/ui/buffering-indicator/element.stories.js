@@ -10,7 +10,7 @@ import {
 } from './BufferingIndicatorElement.js';
 
 export default {
-  title: 'UI/Foundation/Buffering Indicator',
+  title: 'UI/Buffering Indicator',
   component: BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
   argTypes: BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES
 };

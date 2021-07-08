@@ -9,7 +9,7 @@ import {
 } from './TimeElement.js';
 
 export default {
-  title: 'UI/Foundation/Time/Time',
+  title: 'UI/Time/Time',
   component: TIME_ELEMENT_TAG_NAME,
   argTypes: TIME_ELEMENT_STORYBOOK_ARG_TYPES
 };

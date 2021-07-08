@@ -9,7 +9,7 @@ import {
 } from './ButtonElement.js';
 
 export default {
-  title: 'UI/Foundation/Controls/Button',
+  title: 'UI/Controls/Button',
   component: BUTTON_ELEMENT_TAG_NAME,
   argTypes: BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };

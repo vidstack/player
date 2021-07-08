@@ -11,7 +11,7 @@ import {
 } from './TimeDurationElement.js';
 
 export default {
-  title: 'UI/Foundation/Time/Time Duration',
+  title: 'UI/Time/Time Duration',
   component: TIME_DURATION_ELEMENT_TAG_NAME,
   argTypes: TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES
 };

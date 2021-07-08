@@ -9,7 +9,7 @@ import {
 } from './ToggleButtonElement.js';
 
 export default {
-  title: 'UI/Foundation/Controls/Toggle Button',
+  title: 'UI/Controls/Toggle Button',
   component: TOGGLE_BUTTON_ELEMENT_TAG_NAME,
   argTypes: TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };

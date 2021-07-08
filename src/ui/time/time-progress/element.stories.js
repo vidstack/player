@@ -11,7 +11,7 @@ import {
 } from './TimeProgressElement.js';
 
 export default {
-  title: 'UI/Foundation/Time/Time Progress',
+  title: 'UI/Time/Time Progress',
   component: TIME_PROGRESS_ELEMENT_TAG_NAME,
   argTypes: TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES
 };

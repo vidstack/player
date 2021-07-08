@@ -11,7 +11,7 @@ import {
 } from './MuteButtonElement.js';
 
 export default {
-  title: 'UI/Foundation/Controls/Mute Button',
+  title: 'UI/Controls/Mute Button',
   component: MUTE_BUTTON_ELEMENT_TAG_NAME,
   argTypes: MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };

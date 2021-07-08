@@ -11,7 +11,7 @@ import {
 } from './TimeCurrentElement.js';
 
 export default {
-  title: 'UI/Foundation/Time/Time Current',
+  title: 'UI/Time/Time Current',
   component: TIME_CURRENT_ELEMENT_TAG_NAME,
   argTypes: TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES
 };

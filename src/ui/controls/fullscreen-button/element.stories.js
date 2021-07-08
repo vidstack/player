@@ -11,7 +11,7 @@ import {
 } from './FullscreenButtonElement.js';
 
 export default {
-  title: 'UI/Foundation/Controls/Fullscreen Button',
+  title: 'UI/Controls/Fullscreen Button',
   component: FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
   argTypes: FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
 };
