@@ -9,7 +9,7 @@ import {
 } from './AudioElement.js';
 
 export default {
-  title: 'UI/Providers/Audio',
+  title: 'Providers/Audio',
   component: AUDIO_ELEMENT_TAG_NAME,
   argTypes: AUDIO_ELEMENT_STORYBOOK_ARG_TYPES
 };

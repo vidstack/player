@@ -9,7 +9,7 @@ import {
 } from './VideoElement.js';
 
 export default {
-  title: 'UI/Providers/Video',
+  title: 'Providers/Video',
   component: VIDEO_ELEMENT_TAG_NAME,
   argTypes: VIDEO_ELEMENT_STORYBOOK_ARG_TYPES
 };

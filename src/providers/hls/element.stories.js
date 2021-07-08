@@ -9,7 +9,7 @@ import {
 } from './HlsElement.js';
 
 export default {
-  title: 'UI/Providers/HLS',
+  title: 'Providers/HLS',
   component: HLS_ELEMENT_TAG_NAME,
   argTypes: HLS_ELEMENT_STORYBOOK_ARG_TYPES
 };
