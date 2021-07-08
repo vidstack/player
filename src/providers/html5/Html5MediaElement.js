@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { createRef } from 'lit/directives/ref.js';
 
 import { listen, redispatchEvent } from '../../foundation/events/index.js';
+import { StorybookControlType } from '../../foundation/storybook/index.js';
 import {
   AbortEvent,
   CanPlay,
@@ -13,7 +14,10 @@ import {
   LoadedDataEvent,
   LoadedMetadataEvent,
   LoadStartEvent,
+  MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
   MediaProviderElement,
+  MediaType,
+  MediaTypeChangeEvent,
   PauseEvent,
   PlayEvent,
   PlayingEvent,
@@ -33,6 +37,11 @@ import { IS_SAFARI } from '../../utils/support.js';
 import { isNil, isNumber, isUndefined } from '../../utils/unit.js';
 import { MediaNetworkState } from './MediaNetworkState.js';
 import { MediaReadyState } from './MediaReadyState.js';
+
+export const AUDIO_EXTENSIONS =
+  /\.(m4a|mp4a|mpga|mp2|mp2a|mp3|m2a|m3a|wav|weba|aac|oga|spx)($|\?)/i;
+
+export const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v)($|\?)/i;
 
 /**
  * A DOMString` indicating the `CORS` setting for this media element.
@@ -507,6 +516,21 @@ export class Html5MediaElement extends MediaProviderElement {
       })
     );
     this.dispatchEvent(new LoadedMetadataEvent({ originalEvent: event }));
+    this.determineMediaType(event);
+  }
+
+  /**
+   * @protected
+   * @param {Event} event
+   */
+  determineMediaType(event) {
+    this.context.mediaType = this.getMediaType();
+    this.dispatchEvent(
+      new MediaTypeChangeEvent({
+        detail: this.context.mediaType,
+        originalEvent: event
+      })
+    );
   }
 
   /**
@@ -840,4 +864,33 @@ export class Html5MediaElement extends MediaProviderElement {
   load() {
     this.mediaElement?.load();
   }
+
+  /**
+   * @protected
+   * @returns {MediaType}
+   */
+  getMediaType() {
+    if (AUDIO_EXTENSIONS.test(this.currentSrc)) {
+      return MediaType.Audio;
+    }
+
+    if (VIDEO_EXTENSIONS.test(this.currentSrc)) {
+      return MediaType.Video;
+    }
+
+    return MediaType.Unknown;
+  }
 }
+
+export const HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
+  controlsList: { control: StorybookControlType.Text },
+  crossOrigin: { control: StorybookControlType.Text },
+  defaultMuted: { control: StorybookControlType.Boolean },
+  defaultPlaybackRate: { control: StorybookControlType.Number },
+  disableRemotePlayback: { control: StorybookControlType.Boolean },
+  height: { control: StorybookControlType.Number },
+  preload: { control: StorybookControlType.Text },
+  srcObject: { control: StorybookControlType.Text },
+  width: { control: StorybookControlType.Number }
+};

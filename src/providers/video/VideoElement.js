@@ -4,24 +4,16 @@ import { ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty, ifNumber } from '../../foundation/directives/index.js';
 import { StorybookControlType } from '../../foundation/storybook/index.js';
+import { ViewType, ViewTypeChangeEvent } from '../../media/index.js';
 import {
-  MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  MediaType,
-  MediaTypeChangeEvent,
-  ViewType,
-  ViewTypeChangeEvent
-} from '../../media/index.js';
-import { Html5MediaElement } from '../html5/index.js';
+  HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
+  Html5MediaElement
+} from '../html5/index.js';
 import { VideoFullscreenController } from './fullscreen/index.js';
 import { VideoPresentationController } from './presentation/index.js';
 import { videoElementStyles } from './styles.js';
 
 export const VIDEO_ELEMENT_TAG_NAME = 'vds-video';
-
-export const AUDIO_EXTENSIONS =
-  /\.(m4a|mp4a|mpga|mp2|mp2a|mp3|m2a|m3a|wav|weba|aac|oga|spx)($|\?)/i;
-
-export const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v)($|\?)/i;
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
@@ -229,44 +221,8 @@ export class VideoElement extends Html5MediaElement {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Events
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @param {Event} event
-   */
-  handleLoadedMetadata(event) {
-    this.context.mediaType = this.getMediaType();
-    this.dispatchEvent(
-      new MediaTypeChangeEvent({
-        detail: this.context.mediaType,
-        originalEvent: event
-      })
-    );
-
-    super.handleLoadedMetadata(event);
-  }
-
-  // -------------------------------------------------------------------------------------------
   // Methods
   // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @returns {MediaType}
-   */
-  getMediaType() {
-    if (AUDIO_EXTENSIONS.test(this.currentSrc)) {
-      return MediaType.Audio;
-    }
-
-    if (VIDEO_EXTENSIONS.test(this.currentSrc)) {
-      return MediaType.Video;
-    }
-
-    return MediaType.Unknown;
-  }
 
   /**
    * Issues an asynchronous request to display the video in picture-in-picture mode.
@@ -296,25 +252,16 @@ export class VideoElement extends Html5MediaElement {
 }
 
 export const VIDEO_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
+  ...HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
   autoPiP: { control: StorybookControlType.Boolean },
-  controlsList: { control: StorybookControlType.Text },
-  crossOrigin: { control: StorybookControlType.Text },
-  defaultMuted: { control: StorybookControlType.Boolean },
-  defaultPlaybackRate: { control: StorybookControlType.Number },
   disablePiP: { control: StorybookControlType.Boolean },
-  disableRemotePlayback: { control: StorybookControlType.Boolean },
-  height: { control: StorybookControlType.Number },
   poster: {
     control: StorybookControlType.Text,
     defaultValue: 'https://media-files.vidstack.io/poster.png'
   },
-  preload: { control: StorybookControlType.Text },
   src: {
     control: StorybookControlType.Text,
     defaultValue:
       'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4'
-  },
-  srcObject: { control: StorybookControlType.Text },
-  width: { control: StorybookControlType.Number }
+  }
 };
