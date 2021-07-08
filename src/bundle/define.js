@@ -1,4 +1,5 @@
 import '../media/define.js';
+import '../providers/audio/define.js';
 import '../providers/hls/define.js';
 import '../providers/video/define.js';
 import '../ui/buffering-indicator/define.js';

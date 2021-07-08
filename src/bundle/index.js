@@ -8,6 +8,7 @@ export * from '../foundation/screen-orientation/index.js';
 export * from '../media/index.js';
 export * from '../providers/hls/index.js';
 export * from '../providers/html5/index.js';
+export * from '../providers/audio/index.js';
 export * from '../providers/video/index.js';
 export * from '../ui/buffering-indicator/index.js';
 export * from '../ui/controls/button/index.js';
