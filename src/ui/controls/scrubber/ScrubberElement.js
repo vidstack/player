@@ -227,19 +227,28 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     this.label = 'Time scrubber';
 
     /**
-     * A number that specifies the granularity that the slider value must adhere to.
+     * A number that specifies the granularity that the slider value must adhere to in seconds.
+     * For example, a step with the value `1` indicates a granularity of 1 second increments.
      *
      * @type {number}
      */
     this.step = 0.5;
 
     /**
-     * A number that will be used to multiply the `step` when the `Shift` key is held down and the
-     * slider value is changed by pressing `LeftArrow` or `RightArrow`.
+     * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
+     * the slider via keyboard.
      *
      * @type {number}
      */
-    this.shiftKeyMultiplier = 20;
+    this.keyboardStep = 5;
+
+    /**
+     * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
+     * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`.
+     *
+     * @type {number}
+     */
+    this.shiftKeyMultiplier = 2;
 
     /**
      * The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove`
@@ -331,6 +340,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
       previewTimeThrottle: { type: Number, attribute: 'preview-time-throttle' },
       progressLabel: { attribute: 'progress-label' },
       progressText: { attribute: 'progress-text' },
+      keyboardStep: { type: Number, attribute: 'keyboard-step' },
       shiftKeyMultiplier: { type: Number, attribute: 'shift-key-multiplier' },
       throttle: { type: Number },
       userSeekingThrottle: { type: Number, attribute: 'user-seeking-throttle' },
@@ -424,10 +434,11 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
+   * @param {number} percent
    * @param {Event} event
    */
-  dispatchUserSeeked(event) {
-    const seekTo = this.mediaDuration * (this.currentTimePercentage / 100);
+  dispatchUserSeeked(percent, event) {
+    const seekTo = this.mediaDuration * (percent / 100);
     this.remoteControl.seek(seekTo, event);
   }
 
@@ -641,6 +652,16 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    * @returns {import('lit').TemplateResult}
    */
   renderSlider() {
+    const step =
+      this.mediaDuration > 0
+        ? (this.step / this.mediaDuration) * 100
+        : this.step;
+
+    const keyboardStep =
+      this.mediaDuration > 0
+        ? (this.keyboardStep / this.mediaDuration) * 100
+        : this.keyboardStep;
+
     return html`
       <vds-slider
         id="slider"
@@ -648,7 +669,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
         min="0"
         max="100"
         value=${this.currentTimePercentage}
-        step=${this.step}
+        step=${step}
+        keyboard-step=${keyboardStep}
         shift-key-multiplier=${this.shiftKeyMultiplier}
         part=${this.getSliderPartAttr()}
         orientation=${this.orientation}
@@ -719,7 +741,12 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    */
   async handleSliderValueChange(event) {
     this.currentTimePercentage = event.detail;
+
     await this.updatePreviewPosition(event);
+
+    if (!isPointerEvent(event.originalEvent)) {
+      this.dispatchUserSeeked(event.detail, event);
+    }
   }
 
   /**
@@ -743,7 +770,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     this.isDraggingThumb = false;
     this.removeAttribute('dragging');
     this.hidePreview(event);
-    this.dispatchUserSeeked(event);
+    this.dispatchUserSeeked(this.currentTimePercentage, event);
     this.togglePlaybackWhileDragging(event);
   }
 
@@ -1149,9 +1176,13 @@ export const SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControlType.Number,
     defaultValue: 0.5
   },
+  keyboardStep: {
+    control: StorybookControlType.Number,
+    defaultValue: 5
+  },
   shiftKeyMultiplier: {
     control: StorybookControlType.Number,
-    defaultValue: 20
+    defaultValue: 2
   },
   throttle: { control: StorybookControlType.Number, defaultValue: 0 },
   userSeekingThrottle: {

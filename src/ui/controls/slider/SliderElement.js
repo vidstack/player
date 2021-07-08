@@ -186,12 +186,20 @@ export class SliderElement extends WithFocus(VdsElement) {
     this.step = 1;
 
     /**
-     * A number that will be used to multiply the `step` when the `Shift` key is held down and the
-     * slider value is changed by pressing `LeftArrow` or `RightArrow`.
+     * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
+     * the slider via keyboard.
      *
      * @type {number}
      */
-    this.shiftKeyMultiplier = 10;
+    this.keyboardStep = 1;
+
+    /**
+     * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
+     * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`.
+     *
+     * @type {number}
+     */
+    this.shiftKeyMultiplier = 5;
 
     /**
      * The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove`
@@ -218,6 +226,7 @@ export class SliderElement extends WithFocus(VdsElement) {
     return {
       label: { reflect: true },
       step: { type: Number, reflect: true },
+      keyboardStep: { type: Number, attribute: 'keyboard-step' },
       shiftKeyMultiplier: {
         type: Number,
         attribute: 'shift-key-multiplier'
@@ -495,11 +504,11 @@ export class SliderElement extends WithFocus(VdsElement) {
 
     if (!isValidKey) return;
 
-    const modified = !shiftKey
-      ? this.step
-      : this.step * this.shiftKeyMultiplier;
+    const modifiedStep = !shiftKey
+      ? this.keyboardStep
+      : this.keyboardStep * this.shiftKeyMultiplier;
     const direction = SliderKeyDirection[key];
-    const diff = modified * direction;
+    const diff = modifiedStep * direction;
     const steps = (this.value + diff) / this.step;
     const value = this.step * steps;
 
@@ -878,9 +887,13 @@ export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControlType.Number,
     defaultValue: 1
   },
+  keyboardStep: {
+    control: StorybookControlType.Number,
+    defaultValue: 1
+  },
   shiftKeyMultiplier: {
     control: StorybookControlType.Number,
-    defaultValue: 10
+    defaultValue: 5
   },
   throttle: { control: StorybookControlType.Number, defaultValue: 10 },
   value: { control: StorybookControlType.Number, defaultValue: 50 },

@@ -24,6 +24,7 @@ function Template({
   min = 0,
   max,
   step,
+  keyboardStep,
   shiftKeyMultiplier,
   hidden,
   disabled,
@@ -42,6 +43,7 @@ function Template({
       max=${max}
       min=${min}
       orientation=${orientation}
+      keyboard-step=${keyboardStep}
       shift-key-multiplier=${shiftKeyMultiplier}
       step=${step}
       throttle=${throttle}

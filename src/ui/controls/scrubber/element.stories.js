@@ -34,6 +34,7 @@ function Template({
   progressText,
   label,
   step,
+  keyboardStep,
   shiftKeyMultiplier,
   throttle,
   userSeekingThrottle,
@@ -74,6 +75,7 @@ function Template({
           progress-label=${ifNonEmpty(progressLabel)}
           progress-text=${ifNonEmpty(progressText)}
           label=${ifNonEmpty(label)}
+          keyboard-step=${keyboardStep}
           shift-key-multiplier=${shiftKeyMultiplier}
           step=${step}
           throttle=${throttle}
