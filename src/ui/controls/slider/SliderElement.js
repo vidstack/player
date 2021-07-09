@@ -187,7 +187,7 @@ export class SliderElement extends WithFocus(VdsElement) {
 
     /**
      * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
-     * the slider via keyboard. Think of it as `this.step * this.keyboardStep`.
+     * the slider via keyboard.
      *
      * @type {number}
      */
