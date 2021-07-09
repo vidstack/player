@@ -4,11 +4,11 @@ import './define.js';
 
 import { html } from 'lit';
 
-import { PlayRequestEvent } from '../../../../types/media/index.js';
 import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
 import {
   createTimeRanges,
   PauseRequestEvent,
+  PlayRequestEvent,
   SeekingRequestEvent,
   SeekRequestEvent
 } from '../../../media/index.js';
