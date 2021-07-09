@@ -4,6 +4,8 @@ import './define.js';
 
 import { html } from 'lit';
 
+import { on } from '../../../foundation/directives/index.js';
+import { VolumeChangeRequestEvent } from '../../../media/index.js';
 import {
   VOLUME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
   VOLUME_SLIDER_ELEMENT_TAG_NAME
@@ -34,7 +36,9 @@ function Template({
   onVolumeChangeRequest
 }) {
   return html`
-    <vds-media-controller @vds-volume-change-request=${onVolumeChangeRequest}>
+    <vds-media-controller
+      ${on(VolumeChangeRequestEvent.TYPE, onVolumeChangeRequest)}
+    >
       <vds-media-container>
         <vds-fake-media-provider
           .canPlayContext=${true}

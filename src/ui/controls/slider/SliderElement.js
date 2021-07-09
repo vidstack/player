@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
 import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
 import { EventListenerController } from '../../../foundation/events/index.js';
 import {
@@ -372,7 +372,7 @@ export class SliderElement extends WithFocus(VdsElement) {
         class=${this.getSliderClassAttr()}
         part=${this.getSliderPartAttr()}
         style=${styleMap(this.getSliderStyleMap())}
-        @pointerdown=${this.handleSliderPointerMove}
+        ${on('pointerdown', this.handleSliderPointerMove)}
         ${ref(this.rootRef)}
       >
         ${this.renderThumbContainer()}${this.renderTrack()}${this.renderTrackFill()}${this.renderInput()}
@@ -459,8 +459,8 @@ export class SliderElement extends WithFocus(VdsElement) {
         aria-hidden=${this.hidden}
         autocomplete="off"
         part=${this.getThumbContainerPartAttr()}
-        @keydown=${this.handleThumbContainerKeydown}
-        @pointerdown=${this.handleThumbContainerPointerDown}
+        ${on('keydown', this.handleThumbContainerKeydown)}
+        ${on('pointerdown', this.handleThumbContainerPointerDown)}
         ${ref(this.thumbContainerRef)}
       >
         ${this.renderThumb()} ${this.renderThumbContainerSlot()}

@@ -4,7 +4,7 @@ import '../button/define.js';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
 import { WithFocus } from '../../../foundation/elements/index.js';
 import {
   storybookAction,
@@ -119,8 +119,8 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
         ?pressed=${this.pressed}
         ?disabled=${this.disabled}
         described-by=${ifNonEmpty(this.describedBy)}
-        @click=${this.handleButtonClick}
         exportparts=${this.getRootExportPartsAttr()}
+        ${on('click', this.handleButtonClick)}
         ${ref(this.rootRef)}
       >
         ${this.renderToggle()}

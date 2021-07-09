@@ -3,6 +3,42 @@ import './define.js';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
+import { on } from '../../foundation/directives/index.js';
+import { FullscreenChangeEvent } from '../../foundation/fullscreen/index.js';
+import {
+  AbortEvent,
+  CanPlayEvent,
+  CanPlayThroughEvent,
+  DurationChangeEvent,
+  EmptiedEvent,
+  EndedEvent,
+  ErrorEvent,
+  LoadedDataEvent,
+  LoadedMetadataEvent,
+  LoadStartEvent,
+  MediaProviderConnectEvent,
+  MediaTypeChangeEvent,
+  PauseEvent,
+  PlayEvent,
+  PlayingEvent,
+  ProgressEvent,
+  ReplayEvent,
+  SeekedEvent,
+  SeekingEvent,
+  StalledEvent,
+  StartedEvent,
+  SuspendEvent,
+  TimeUpdateEvent,
+  ViewTypeChangeEvent,
+  VolumeChangeEvent,
+  WaitingEvent
+} from '../../media/index.js';
+import {
+  HlsEngineAttachEvent,
+  HlsEngineBuiltEvent,
+  HlsEngineDetachEvent,
+  HlsEngineNoSupportEvent
+} from './events.js';
 import {
   HLS_ELEMENT_STORYBOOK_ARG_TYPES,
   HLS_ELEMENT_TAG_NAME
@@ -96,37 +132,37 @@ function Template({
       ?disable-pip=${disablePiP}
       ?controls=${controls}
       ?auto-pip=${autoPiP}
-      @vds-media-provider-connect=${onMediaProviderConnect}
-      @vds-abort=${onAbort}
-      @vds-can-play=${onCanPlay}
-      @vds-can-play-through=${onCanPlayThrough}
-      @vds-duration-change=${onDurationChange}
-      @vds-emptied=${onEmptied}
-      @vds-ended=${onEnded}
-      @vds-error=${onError}
-      @vds-fullscreen-change=${onFullscreenChange}
-      @vds-loaded-data=${onLoadedData}
-      @vds-load-start=${onLoadStart}
-      @vds-loaded-metadata=${onLoadedMetadata}
-      @vds-media-type-change=${onMediaTypeChange}
-      @vds-pause=${onPause}
-      @vds-play=${onPlay}
-      @vds-playing=${onPlaying}
-      @vds-progress=${onProgress}
-      @vds-seeked=${onSeeked}
-      @vds-seeking=${onSeeking}
-      @vds-stalled=${onStalled}
-      @vds-started=${onStarted}
-      @vds-suspend=${onSuspend}
-      @vds-replay=${onReplay}
-      @vds-time-update=${onTimeUpdate}
-      @vds-view-type-change=${onViewTypeChange}
-      @vds-volume-change=${onVolumeChange}
-      @vds-waiting=${onWaiting}
-      @vds-hls-engine-built=${onHlsEngineBuilt}
-      @vds-hls-engine-attach=${onHlsEngineAttach}
-      @vds-hls-engine-detach=${onHlsEngineDetach}
-      @vds-hls-engine-no-support=${onHlsEngineNoSupport}
+      ${on(AbortEvent.TYPE, onAbort)}
+      ${on(CanPlayEvent.TYPE, onCanPlay)}
+      ${on(CanPlayThroughEvent.TYPE, onCanPlayThrough)}
+      ${on(DurationChangeEvent.TYPE, onDurationChange)}
+      ${on(EmptiedEvent.TYPE, onEmptied)}
+      ${on(EndedEvent.TYPE, onEnded)}
+      ${on(ErrorEvent.TYPE, onError)}
+      ${on(FullscreenChangeEvent.TYPE, onFullscreenChange)}
+      ${on(LoadedDataEvent.TYPE, onLoadedData)}
+      ${on(LoadedMetadataEvent.TYPE, onLoadedMetadata)}
+      ${on(LoadStartEvent.TYPE, onLoadStart)}
+      ${on(MediaProviderConnectEvent.TYPE, onMediaProviderConnect)}
+      ${on(MediaTypeChangeEvent.TYPE, onMediaTypeChange)}
+      ${on(PauseEvent.TYPE, onPause)}
+      ${on(PlayEvent.TYPE, onPlay)}
+      ${on(PlayingEvent.TYPE, onPlaying)}
+      ${on(ProgressEvent.TYPE, onProgress)}
+      ${on(ReplayEvent.TYPE, onReplay)}
+      ${on(SeekedEvent.TYPE, onSeeked)}
+      ${on(SeekingEvent.TYPE, onSeeking)}
+      ${on(StalledEvent.TYPE, onStalled)}
+      ${on(StartedEvent.TYPE, onStarted)}
+      ${on(SuspendEvent.TYPE, onSuspend)}
+      ${on(TimeUpdateEvent.TYPE, onTimeUpdate)}
+      ${on(ViewTypeChangeEvent.TYPE, onViewTypeChange)}
+      ${on(VolumeChangeEvent.TYPE, onVolumeChange)}
+      ${on(WaitingEvent.TYPE, onWaiting)}
+      ${on(HlsEngineBuiltEvent.TYPE, onHlsEngineBuilt)}
+      ${on(HlsEngineAttachEvent.TYPE, onHlsEngineAttach)}
+      ${on(HlsEngineDetachEvent.TYPE, onHlsEngineDetach)}
+      ${on(HlsEngineNoSupportEvent.TYPE, onHlsEngineNoSupport)}
     ></vds-hls>
   `;
 }

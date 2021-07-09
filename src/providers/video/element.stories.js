@@ -3,6 +3,36 @@ import './define.js';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
+import { on } from '../../foundation/directives/index.js';
+import { FullscreenChangeEvent } from '../../foundation/fullscreen/index.js';
+import {
+  AbortEvent,
+  CanPlayEvent,
+  CanPlayThroughEvent,
+  DurationChangeEvent,
+  EmptiedEvent,
+  EndedEvent,
+  ErrorEvent,
+  LoadedDataEvent,
+  LoadedMetadataEvent,
+  LoadStartEvent,
+  MediaProviderConnectEvent,
+  MediaTypeChangeEvent,
+  PauseEvent,
+  PlayEvent,
+  PlayingEvent,
+  ProgressEvent,
+  ReplayEvent,
+  SeekedEvent,
+  SeekingEvent,
+  StalledEvent,
+  StartedEvent,
+  SuspendEvent,
+  TimeUpdateEvent,
+  ViewTypeChangeEvent,
+  VolumeChangeEvent,
+  WaitingEvent
+} from '../../media/index.js';
 import {
   VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
   VIDEO_ELEMENT_TAG_NAME
@@ -88,33 +118,33 @@ function Template({
       ?controls=${controls}
       ?autoplay=${autoplay}
       ?autopictureinpicture=${autoPiP}
-      @vds-waiting=${onWaiting}
-      @vds-volume-change=${onVolumeChange}
-      @vds-view-type-change=${onViewTypeChange}
-      @vds-time-update=${onTimeUpdate}
-      @vds-suspend=${onSuspend}
-      @vds-started=${onStarted}
-      @vds-stalled=${onStalled}
-      @vds-seeking=${onSeeking}
-      @vds-seeked=${onSeeked}
-      @vds-replay=${onReplay}
-      @vds-progress=${onProgress}
-      @vds-playing=${onPlaying}
-      @vds-play=${onPlay}
-      @vds-pause=${onPause}
-      @vds-media-type-change=${onMediaTypeChange}
-      @vds-media-provider-connect=${onMediaProviderConnect}
-      @vds-loaded-metadata=${onLoadedMetadata}
-      @vds-loaded-data=${onLoadedData}
-      @vds-load-start=${onLoadStart}
-      @vds-fullscreen-change=${onFullscreenChange}
-      @vds-error=${onError}
-      @vds-ended=${onEnded}
-      @vds-emptied=${onEmptied}
-      @vds-duration-change=${onDurationChange}
-      @vds-can-play=${onCanPlay}
-      @vds-can-play-through=${onCanPlayThrough}
-      @vds-abort=${onAbort}
+      ${on(AbortEvent.TYPE, onAbort)}
+      ${on(CanPlayEvent.TYPE, onCanPlay)}
+      ${on(CanPlayThroughEvent.TYPE, onCanPlayThrough)}
+      ${on(DurationChangeEvent.TYPE, onDurationChange)}
+      ${on(EmptiedEvent.TYPE, onEmptied)}
+      ${on(EndedEvent.TYPE, onEnded)}
+      ${on(ErrorEvent.TYPE, onError)}
+      ${on(FullscreenChangeEvent.TYPE, onFullscreenChange)}
+      ${on(LoadedDataEvent.TYPE, onLoadedData)}
+      ${on(LoadedMetadataEvent.TYPE, onLoadedMetadata)}
+      ${on(LoadStartEvent.TYPE, onLoadStart)}
+      ${on(MediaProviderConnectEvent.TYPE, onMediaProviderConnect)}
+      ${on(MediaTypeChangeEvent.TYPE, onMediaTypeChange)}
+      ${on(PauseEvent.TYPE, onPause)}
+      ${on(PlayEvent.TYPE, onPlay)}
+      ${on(PlayingEvent.TYPE, onPlaying)}
+      ${on(ProgressEvent.TYPE, onProgress)}
+      ${on(ReplayEvent.TYPE, onReplay)}
+      ${on(SeekedEvent.TYPE, onSeeked)}
+      ${on(SeekingEvent.TYPE, onSeeking)}
+      ${on(StalledEvent.TYPE, onStalled)}
+      ${on(StartedEvent.TYPE, onStarted)}
+      ${on(SuspendEvent.TYPE, onSuspend)}
+      ${on(TimeUpdateEvent.TYPE, onTimeUpdate)}
+      ${on(ViewTypeChangeEvent.TYPE, onViewTypeChange)}
+      ${on(VolumeChangeEvent.TYPE, onVolumeChange)}
+      ${on(WaitingEvent.TYPE, onWaiting)}
     ></vds-video>
   `;
 }

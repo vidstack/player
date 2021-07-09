@@ -4,8 +4,19 @@ import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../foundation/directives/index.js';
-import { createTimeRanges } from '../../../media/index.js';
+import { PlayRequestEvent } from '../../../../types/media/index.js';
+import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
+import {
+  createTimeRanges,
+  PauseRequestEvent,
+  SeekingRequestEvent,
+  SeekRequestEvent
+} from '../../../media/index.js';
+import {
+  ScrubberPreviewHideEvent,
+  ScrubberPreviewShowEvent,
+  ScrubberPreviewTimeUpdateEvent
+} from './events.js';
 import {
   SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES,
   SCRUBBER_ELEMENT_TAG_NAME
@@ -55,10 +66,10 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      @vds-pause-request=${onPauseRequest}
-      @vds-play-request=${onPlayRequest}
-      @vds-seek-request=${onSeekRequest}
-      @vds-seeking-request=${onSeekingRequest}
+      ${on(PlayRequestEvent.TYPE, onPlayRequest)}
+      ${on(PauseRequestEvent.TYPE, onPauseRequest)}
+      ${on(SeekRequestEvent.TYPE, onSeekRequest)}
+      ${on(SeekingRequestEvent.TYPE, onSeekingRequest)}
     >
       <vds-media-container>
         <vds-fake-media-provider
@@ -85,9 +96,12 @@ function Template({
           ?no-preview-clamp=${noPreviewClamp}
           ?no-preview-track=${noPreviewTrack}
           ?pause-while-dragging=${pauseWhileDragging}
-          @vds-scrubber-preview-hide=${onScrubberPreviewHide}
-          @vds-scrubber-preview-show=${onScrubberPreviewShow}
-          @vds-scrubber-preview-time-update=${onScrubberPreviewTimeUpdate}
+          ${on(ScrubberPreviewHideEvent.TYPE, onScrubberPreviewHide)}
+          ${on(ScrubberPreviewShowEvent.TYPE, onScrubberPreviewShow)}
+          ${on(
+            ScrubberPreviewTimeUpdateEvent.TYPE,
+            onScrubberPreviewTimeUpdate
+          )}
         >
           <div class="preview" slot="preview">Preview</div>
         </vds-scrubber>

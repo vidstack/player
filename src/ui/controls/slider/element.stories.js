@@ -2,7 +2,12 @@ import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
+import {
+  SliderDragEndEvent,
+  SliderDragStartEvent,
+  SliderValueChangeEvent
+} from './events.js';
 import {
   SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
   SLIDER_ELEMENT_TAG_NAME
@@ -51,9 +56,9 @@ function Template({
       value=${value}
       ?disabled=${disabled}
       ?hidden=${hidden}
-      @vds-slider-drag-end=${onSliderDragEnd}
-      @vds-slider-drag-start=${onSliderDragStart}
-      @vds-slider-value-change=${onSliderValueChange}
+      ${on(SliderDragStartEvent.TYPE, onSliderDragStart)}
+      ${on(SliderDragEndEvent.TYPE, onSliderDragEnd)}
+      ${on(SliderValueChangeEvent.TYPE, onSliderValueChange)}
     ></vds-slider>
   `;
 }

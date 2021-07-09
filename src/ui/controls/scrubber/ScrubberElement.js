@@ -6,7 +6,7 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
 import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
 import {
   isPointerEvent,
@@ -480,10 +480,10 @@ export class ScrubberElement extends WithFocus(VdsElement) {
         id="root"
         part=${this.getScrubberPartAttr()}
         style=${styleMap(this.getScrubberStyleMap())}
-        @pointerenter=${this.handleScrubberPointerEnter}
-        @pointerleave=${this.handleScrubberPointerLeave}
-        @pointermove=${this.handleScrubberPointerMove}
         ?hidden=${this.hidden}
+        ${on('pointerenter', this.handleScrubberPointerEnter)}
+        ${on('pointerleave', this.handleScrubberPointerLeave)}
+        ${on('pointermove', this.handleScrubberPointerMove)}
         ${ref(this.rootRef)}
       >
         ${this.renderSlider()}${this.renderDefaultSlot()}${this.renderPreviewSlot()}
@@ -676,12 +676,12 @@ export class ScrubberElement extends WithFocus(VdsElement) {
         orientation=${this.orientation}
         throttle=${this.throttle}
         value-text=${this.getSliderProgressText()}
-        @vds-slider-value-change=${this.handleSliderValueChange}
-        @vds-slider-drag-start=${this.handleSliderDragStart}
-        @vds-slider-drag-end=${this.handleSliderDragEnd}
         exportparts=${this.getSliderExportPartsAttr()}
         ?hidden=${this.hidden}
         ?disabled=${this.disabled}
+        ${on(SliderValueChangeEvent.TYPE, this.handleSliderValueChange)}
+        ${on(SliderDragStartEvent.TYPE, this.handleSliderDragStart)}
+        ${on(SliderDragEndEvent.TYPE, this.handleSliderDragEnd)}
         ${ref(this.sliderRef)}
       >
         ${this.renderSliderChildren()}

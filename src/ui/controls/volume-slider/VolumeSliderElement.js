@@ -4,7 +4,7 @@ import '../slider/define.js';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
 import { VdsElement } from '../../../foundation/elements/index.js';
 import {
   storybookAction,
@@ -273,9 +273,9 @@ export class VolumeSliderElement extends VdsElement {
         value=${this.currentVolume}
         ?disabled=${this.disabled}
         ?hidden=${this.hidden}
-        @vds-slider-drag-start=${this.handleSliderDragStart}
-        @vds-slider-drag-end=${this.handleSliderDragEnd}
-        @vds-slider-value-change=${this.handleSliderValueChange}
+        ${on(SliderDragStartEvent.TYPE, this.handleSliderDragStart)}
+        ${on(SliderDragEndEvent.TYPE, this.handleSliderDragEnd)}
+        ${on(SliderValueChangeEvent.TYPE, this.handleSliderValueChange)}
         ${ref(this.sliderRef)}
       >
         ${this.renderSliderChildren()}

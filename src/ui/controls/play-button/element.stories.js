@@ -4,7 +4,8 @@ import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
+import { PauseRequestEvent, PlayRequestEvent } from '../../../media/index.js';
 import {
   PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
   PLAY_BUTTON_ELEMENT_TAG_NAME
@@ -33,8 +34,8 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      @vds-pause-request=${onPauseRequest}
-      @vds-play-request=${onPlayRequest}
+      ${on(PlayRequestEvent.TYPE, onPlayRequest)}
+      ${on(PauseRequestEvent.TYPE, onPauseRequest)}
     >
       <vds-media-container>
         <vds-fake-media-provider

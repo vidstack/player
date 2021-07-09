@@ -4,7 +4,8 @@ import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../../foundation/directives/index.js';
+import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
+import { MuteRequestEvent, UnmuteRequestEvent } from '../../../media/index.js';
 import {
   MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
   MUTE_BUTTON_ELEMENT_TAG_NAME
@@ -33,8 +34,8 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      @vds-mute-request=${onMuteRequest}
-      @vds-unmute-request=${onUnmuteRequest}
+      ${on(MuteRequestEvent.TYPE, onMuteRequest)}
+      ${on(UnmuteRequestEvent.TYPE, onUnmuteRequest)}
     >
       <vds-media-container>
         <vds-fake-media-provider
