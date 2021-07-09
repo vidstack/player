@@ -46,7 +46,7 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
           min="0"
           orientation="horizontal"
           part="slider"
-          step="0.5"
+          step="0.25"
           keyboard-step="5"
           shift-key-multiplier="2"
           throttle="0"

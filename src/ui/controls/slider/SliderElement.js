@@ -187,7 +187,7 @@ export class SliderElement extends WithFocus(VdsElement) {
 
     /**
      * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
-     * the slider via keyboard.
+     * the slider via keyboard. Think of it as `this.step * this.keyboardStep`.
      *
      * @type {number}
      */
@@ -195,7 +195,8 @@ export class SliderElement extends WithFocus(VdsElement) {
 
     /**
      * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
-     * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`.
+     * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`. Think
+     * of it as `this.keyboardStep * this.shiftKeyMultiplier`.
      *
      * @type {number}
      */

@@ -232,19 +232,20 @@ export class ScrubberElement extends WithFocus(VdsElement) {
      *
      * @type {number}
      */
-    this.step = 0.5;
+    this.step = 0.25;
 
     /**
      * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
-     * the slider via keyboard.
+     * the slider via keyboard. Think of it as `this.step * this.keyboardStep`.
      *
      * @type {number}
      */
-    this.keyboardStep = 5;
+    this.keyboardStep = 20;
 
     /**
      * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
-     * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`.
+     * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`. Think
+     * of it as `this.keyboardStep * this.shiftKeyMultiplier`.
      *
      * @type {number}
      */
@@ -390,6 +391,14 @@ export class ScrubberElement extends WithFocus(VdsElement) {
       changedProperties.has('mediaDuration')
     ) {
       this.updateCurrentTime();
+    }
+
+    if (
+      changedProperties.has('mediaDuration') ||
+      changedProperties.has('step') ||
+      changedProperties.has('keyboardStep')
+    ) {
+      this.updateSteps();
     }
 
     if (
@@ -652,16 +661,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    * @returns {import('lit').TemplateResult}
    */
   renderSlider() {
-    const step =
-      this.mediaDuration > 0
-        ? (this.step / this.mediaDuration) * 100
-        : this.step;
-
-    const keyboardStep =
-      this.mediaDuration > 0
-        ? (this.keyboardStep / this.mediaDuration) * 100
-        : this.keyboardStep;
-
     return html`
       <vds-slider
         id="slider"
@@ -669,8 +668,8 @@ export class ScrubberElement extends WithFocus(VdsElement) {
         min="0"
         max="100"
         value=${this.currentTimePercentage}
-        step=${step}
-        keyboard-step=${keyboardStep}
+        step=${this.stepSeconds}
+        keyboard-step=${this.keyboardStepSeconds}
         shift-key-multiplier=${this.shiftKeyMultiplier}
         part=${this.getSliderPartAttr()}
         orientation=${this.orientation}
@@ -786,6 +785,30 @@ export class ScrubberElement extends WithFocus(VdsElement) {
         : 0;
 
     this.currentTimePercentage = clampNumber(0, round(percentage, 5), 100);
+  }
+
+  /**
+   * @protected
+   * @type {number}
+   */
+  stepSeconds = this.step;
+
+  /**
+   * @protected
+   * @type {number}
+   */
+  keyboardStepSeconds = this.step * this.keyboardStep;
+
+  /**
+   * @protected
+   */
+  updateSteps() {
+    this.stepSeconds =
+      this.mediaDuration > 0
+        ? round((this.step / this.mediaDuration) * 100, 2)
+        : this.step;
+
+    this.keyboardStepSeconds = this.stepSeconds * this.keyboardStep;
   }
 
   /**
@@ -1174,11 +1197,11 @@ export const SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
   },
   step: {
     control: StorybookControlType.Number,
-    defaultValue: 0.5
+    defaultValue: 0.25
   },
   keyboardStep: {
     control: StorybookControlType.Number,
-    defaultValue: 5
+    defaultValue: 20
   },
   shiftKeyMultiplier: {
     control: StorybookControlType.Number,
