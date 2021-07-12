@@ -1,6 +1,6 @@
 import {
   storybookAction,
-  StorybookControlType
+  StorybookControl
 } from '../../../foundation/storybook/index.js';
 import {
   mediaContext,
@@ -102,10 +102,10 @@ export class PlayButtonElement extends ToggleButtonElement {
 
 export const PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  label: { control: StorybookControlType.Text, defaultValue: 'Play' },
-  pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
+  label: { control: StorybookControl.Text, defaultValue: 'Play' },
+  pressed: { control: StorybookControl.Boolean, table: { disable: true } },
   mediaPaused: {
-    control: StorybookControlType.Boolean,
+    control: StorybookControl.Boolean,
     defaultValue: true
   },
   onPlayRequest: storybookAction(PlayRequestEvent.TYPE),

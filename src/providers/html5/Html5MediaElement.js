@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { createRef } from 'lit/directives/ref.js';
 
 import { listen, redispatchEvent } from '../../foundation/events/index.js';
-import { StorybookControlType } from '../../foundation/storybook/index.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
 import {
   AbortEvent,
   CanPlay,
@@ -883,13 +883,13 @@ export class Html5MediaElement extends MediaProviderElement {
 
 export const HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  controlsList: { control: StorybookControlType.Text },
-  crossOrigin: { control: StorybookControlType.Text },
-  defaultMuted: { control: StorybookControlType.Boolean },
-  defaultPlaybackRate: { control: StorybookControlType.Number },
-  disableRemotePlayback: { control: StorybookControlType.Boolean },
-  height: { control: StorybookControlType.Number },
-  preload: { control: StorybookControlType.Text },
-  srcObject: { control: StorybookControlType.Text },
-  width: { control: StorybookControlType.Number }
+  controlsList: { control: StorybookControl.Text },
+  crossOrigin: { control: StorybookControl.Text },
+  defaultMuted: { control: StorybookControl.Boolean },
+  defaultPlaybackRate: { control: StorybookControl.Number },
+  disableRemotePlayback: { control: StorybookControl.Boolean },
+  height: { control: StorybookControl.Number },
+  preload: { control: StorybookControl.Text },
+  srcObject: { control: StorybookControl.Text },
+  width: { control: StorybookControl.Number }
 };

@@ -3,7 +3,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty, ifNumber } from '../../foundation/directives/index.js';
-import { StorybookControlType } from '../../foundation/storybook/index.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
 import { ViewType, ViewTypeChangeEvent } from '../../media/index.js';
 import {
   HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
@@ -225,14 +225,14 @@ export class VideoElement extends Html5MediaElement {
 
 export const VIDEO_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
-  autoPiP: { control: StorybookControlType.Boolean },
-  disablePiP: { control: StorybookControlType.Boolean },
+  autoPiP: { control: StorybookControl.Boolean },
+  disablePiP: { control: StorybookControl.Boolean },
   poster: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue: 'https://media-files.vidstack.io/poster.png'
   },
   src: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue:
       'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4'
   }

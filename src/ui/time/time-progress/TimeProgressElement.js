@@ -6,7 +6,7 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { VdsElement } from '../../../foundation/elements/index.js';
-import { StorybookControlType } from '../../../foundation/storybook/index.js';
+import { StorybookControl } from '../../../foundation/storybook/index.js';
 import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { TimeElement } from '../time/index.js';
 import { TimeCurrentElement } from '../time-current/index.js';
@@ -301,22 +301,22 @@ export class TimeProgressElement extends VdsElement {
 
 export const TIME_PROGRESS_ELEMENT_STORYBOOK_ARG_TYPES = {
   alwaysShowHours: {
-    control: StorybookControlType.Boolean,
+    control: StorybookControl.Boolean,
     defaultValue: false
   },
   currentTimeLabel: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue: 'Current time'
   },
   durationLabel: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue: 'Duration'
   },
-  padHours: { control: StorybookControlType.Boolean, defaultValue: false },
-  timeSeparator: { control: StorybookControlType.Text, defaultValue: '/' },
+  padHours: { control: StorybookControl.Boolean, defaultValue: false },
+  timeSeparator: { control: StorybookControl.Text, defaultValue: '/' },
   mediaCurrentTime: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 1800
   },
-  mediaDuration: { control: StorybookControlType.Number, defaultValue: 3600 }
+  mediaDuration: { control: StorybookControl.Number, defaultValue: 3600 }
 };

@@ -1,7 +1,7 @@
 import { html } from 'lit';
 
 import { VdsElement } from '../../foundation/elements/index.js';
-import { StorybookControlType } from '../../foundation/storybook/index.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
 import { mediaContext } from '../../media/index.js';
 import { setAttribute } from '../../utils/dom.js';
 import { bufferingIndicatorElementStyles } from './styles.js';
@@ -93,11 +93,11 @@ export class BufferingIndicatorElement extends VdsElement {
 
 export const BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
   mediaCanPlay: {
-    control: StorybookControlType.Boolean,
+    control: StorybookControl.Boolean,
     defaultValue: true
   },
   mediaBuffering: {
-    control: StorybookControlType.Boolean,
+    control: StorybookControl.Boolean,
     defaultValue: true
   }
 };

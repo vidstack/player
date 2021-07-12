@@ -13,7 +13,7 @@ import { VdsElement } from '../../../foundation/elements/index.js';
 import { isPointerEvent } from '../../../foundation/events/index.js';
 import {
   storybookAction,
-  StorybookControlType
+  StorybookControl
 } from '../../../foundation/storybook/index.js';
 import {
   mediaContext,
@@ -526,34 +526,34 @@ export const TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
   disabled: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,
   hidden: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
-  keyboardStep: { control: StorybookControlType.Number, defaultValue: 20 },
+  keyboardStep: { control: StorybookControl.Number, defaultValue: 20 },
   label: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue: 'Media time slider'
   },
   orientation: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
-  pauseWhileDragging: { control: StorybookControlType.Boolean },
+  pauseWhileDragging: { control: StorybookControl.Boolean },
   seekingRequestThrottle: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 100
   },
-  shiftKeyMultiplier: { control: StorybookControlType.Number, defaultValue: 2 },
-  step: { control: StorybookControlType.Number, defaultValue: 0.25 },
+  shiftKeyMultiplier: { control: StorybookControl.Number, defaultValue: 2 },
+  step: { control: StorybookControl.Number, defaultValue: 0.25 },
   valueText: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue: '{currentTime} out of {duration}'
   },
   // Media Properties
   mediaCurrentTime: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 1800
   },
   mediaDuration: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 3600
   },
   mediaPaused: {
-    control: StorybookControlType.Boolean,
+    control: StorybookControl.Boolean,
     defaultValue: true
   },
   // Media Request Actions

@@ -15,7 +15,7 @@ import {
 } from '../../foundation/fullscreen/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import { storybookAction } from '../../foundation/storybook/helpers.js';
-import { StorybookControlType } from '../../foundation/storybook/index.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
 import { isNil, isString, isUndefined } from '../../utils/unit.js';
 import { mediaContext } from '../context.js';
@@ -468,6 +468,6 @@ export class MediaContainerElement extends VdsElement {
 }
 
 export const MEDIA_CONTAINER_ELEMENT_STORYBOOK_ARG_TYPES = {
-  aspectRatio: { control: StorybookControlType.Text },
+  aspectRatio: { control: StorybookControl.Text },
   onMediaContainerConnect: storybookAction(MediaContainerConnectEvent.TYPE)
 };

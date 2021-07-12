@@ -3,7 +3,7 @@ import Hls from 'hls.js';
 import { VdsCustomEvent } from '../../foundation/events/index.js';
 import {
   storybookAction,
-  StorybookControlType
+  StorybookControl
 } from '../../foundation/storybook/index.js';
 import {
   CanPlay,
@@ -456,9 +456,9 @@ export class HlsElement extends VideoElement {
 
 export const HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
-  hlsConfig: { control: StorybookControlType.Object },
+  hlsConfig: { control: StorybookControl.Object },
   src: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue:
       'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8'
   },

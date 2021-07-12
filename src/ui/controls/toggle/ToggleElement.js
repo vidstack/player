@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { VdsElement } from '../../../foundation/elements/index.js';
-import { StorybookControlType } from '../../../foundation/storybook/index.js';
+import { StorybookControl } from '../../../foundation/storybook/index.js';
 import { getSlottedChildren, setAttribute } from '../../../utils/dom.js';
 import { isNil } from '../../../utils/unit.js';
 import { toggleElementStyles } from './styles.js';
@@ -214,5 +214,5 @@ export class ToggleElement extends VdsElement {
 }
 
 export const TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES = {
-  pressed: { control: StorybookControlType.Boolean, defaultValue: false }
+  pressed: { control: StorybookControl.Boolean, defaultValue: false }
 };

@@ -3,7 +3,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../../foundation/directives/index.js';
 import { VdsElement } from '../../../foundation/elements/index.js';
-import { StorybookControlType } from '../../../foundation/storybook/index.js';
+import { StorybookControl } from '../../../foundation/storybook/index.js';
 import { formatHtml5Duration, formatTime } from '../../../utils/time.js';
 import { timeElementStyles } from './styles.js';
 
@@ -177,10 +177,10 @@ export class TimeElement extends VdsElement {
 
 export const TIME_ELEMENT_STORYBOOK_ARG_TYPES = {
   alwaysShowHours: {
-    control: StorybookControlType.Boolean,
+    control: StorybookControl.Boolean,
     defaultValue: false
   },
-  label: { control: StorybookControlType.Text },
-  padHours: { control: StorybookControlType.Boolean, defaultValue: false },
-  seconds: { control: StorybookControlType.Number, defaultValue: 0 }
+  label: { control: StorybookControl.Text },
+  padHours: { control: StorybookControl.Boolean, defaultValue: false },
+  seconds: { control: StorybookControl.Number, defaultValue: 0 }
 };

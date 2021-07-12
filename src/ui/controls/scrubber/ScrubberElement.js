@@ -14,7 +14,7 @@ import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
 import { EventListenerController } from '../../../foundation/events/index.js';
 import {
   storybookAction,
-  StorybookControlType
+  StorybookControl
 } from '../../../foundation/storybook/index.js';
 import {
   PauseRequestEvent,
@@ -613,13 +613,13 @@ export const SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
   onScrubberPreviewHide: storybookAction(ScrubberPreviewHideEvent.TYPE),
   // Media Properties
   mediaCurrentTime: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 1200
   },
-  mediaDuration: { control: StorybookControlType.Number, defaultValue: 3600 },
-  mediaPaused: { control: StorybookControlType.Boolean, defaultValue: true },
+  mediaDuration: { control: StorybookControl.Number, defaultValue: 3600 },
+  mediaPaused: { control: StorybookControl.Boolean, defaultValue: true },
   mediaSeekableAmount: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 1800
   },
   // Media Request Actions

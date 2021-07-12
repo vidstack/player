@@ -6,7 +6,7 @@ import { ifNonEmpty } from '../../../foundation/directives/index.js';
 import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
 import { listen } from '../../../foundation/events/index.js';
 import { storybookAction } from '../../../foundation/storybook/helpers.js';
-import { StorybookControlType } from '../../../foundation/storybook/StorybookControlType.js';
+import { StorybookControl } from '../../../foundation/storybook/StorybookControl.js';
 import { isUndefined } from '../../../utils/unit.js';
 import { buttonElementStyles } from './styles.js';
 
@@ -311,17 +311,17 @@ export class ButtonElement extends WithFocus(VdsElement) {
 }
 
 export const BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-  controls: { control: StorybookControlType.Text },
-  describedBy: { control: StorybookControlType.Text },
-  disabled: { control: StorybookControlType.Boolean },
-  expanded: { control: StorybookControlType.Boolean },
-  hasPopup: { control: StorybookControlType.Boolean },
-  hidden: { control: StorybookControlType.Boolean },
-  label: { control: StorybookControlType.Text },
-  pressed: { control: StorybookControlType.Boolean },
-  title: { control: StorybookControlType.Text, defaultValue: 'Title' },
+  controls: { control: StorybookControl.Text },
+  describedBy: { control: StorybookControl.Text },
+  disabled: { control: StorybookControl.Boolean },
+  expanded: { control: StorybookControl.Boolean },
+  hasPopup: { control: StorybookControl.Boolean },
+  hidden: { control: StorybookControl.Boolean },
+  label: { control: StorybookControl.Text },
+  pressed: { control: StorybookControl.Boolean },
+  title: { control: StorybookControl.Text, defaultValue: 'Title' },
   type: {
-    control: StorybookControlType.Select,
+    control: StorybookControl.Select,
     options: ['button', 'submit', 'reset', 'menu'],
     defaultValue: 'button'
   },

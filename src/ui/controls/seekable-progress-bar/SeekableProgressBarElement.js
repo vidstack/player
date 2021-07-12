@@ -4,7 +4,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { ifNonEmpty } from '../../../foundation/directives/index.js';
 import { VdsElement } from '../../../foundation/elements/index.js';
-import { StorybookControlType } from '../../../foundation/storybook/index.js';
+import { StorybookControl } from '../../../foundation/storybook/index.js';
 import { mediaContext } from '../../../media/index.js';
 import { round } from '../../../utils/number.js';
 import { formatSpokenTime } from '../../../utils/time.js';
@@ -214,20 +214,20 @@ export class SeekableProgressBarElement extends VdsElement {
 export const SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
   label: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue: 'Amount of seekable media'
   },
   valueText: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue: '{seekableAmount} out of {duration}'
   },
   // Media Properties
   mediaSeekableAmount: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 1800
   },
   mediaDuration: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 3600
   }
 };

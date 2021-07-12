@@ -1,4 +1,4 @@
-import { StorybookControlType } from '../../../foundation/storybook/index.js';
+import { StorybookControl } from '../../../foundation/storybook/index.js';
 import { mediaContext } from '../../../media/index.js';
 import {
   TIME_ELEMENT_STORYBOOK_ARG_TYPES,
@@ -53,5 +53,5 @@ export const TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...TIME_ELEMENT_STORYBOOK_ARG_TYPES,
   // @ts-ignore
   seconds: { table: { disable: true } },
-  mediaCurrentTime: { control: StorybookControlType.Number, defaultValue: 1800 }
+  mediaCurrentTime: { control: StorybookControl.Number, defaultValue: 1800 }
 };

@@ -15,7 +15,7 @@ import {
 } from '../../foundation/screen-orientation/index.js';
 import {
   storybookAction,
-  StorybookControlType
+  StorybookControl
 } from '../../foundation/storybook/index.js';
 import { clampNumber } from '../../utils/number.js';
 import { CanPlay } from '../CanPlay.js';
@@ -926,15 +926,15 @@ export class MediaProviderElement extends VdsElement {
 export const MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
   autoplay: { control: false },
-  controls: { control: StorybookControlType.Boolean, defaultValue: true },
-  currentTime: { control: StorybookControlType.Number, defaultValue: 0 },
-  loop: { control: StorybookControlType.Boolean },
-  muted: { control: StorybookControlType.Boolean },
-  paused: { control: StorybookControlType.Boolean, defaultValue: true },
-  playsinline: { control: StorybookControlType.Boolean },
+  controls: { control: StorybookControl.Boolean, defaultValue: true },
+  currentTime: { control: StorybookControl.Number, defaultValue: 0 },
+  loop: { control: StorybookControl.Boolean },
+  muted: { control: StorybookControl.Boolean },
+  paused: { control: StorybookControl.Boolean, defaultValue: true },
+  playsinline: { control: StorybookControl.Boolean },
   volume: {
     control: {
-      type: StorybookControlType.Number,
+      type: StorybookControl.Number,
       step: 0.05
     },
     defaultValue: 0.5

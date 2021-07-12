@@ -13,7 +13,7 @@ import {
   isVdsEvent,
   VdsCustomEvent
 } from '../../../foundation/events/index.js';
-import { StorybookControlType } from '../../../foundation/storybook/StorybookControlType.js';
+import { StorybookControl } from '../../../foundation/storybook/StorybookControl.js';
 import { mediaContext } from '../../../media/context.js';
 import { getSlottedChildren, raf } from '../../../utils/dom.js';
 import { clampNumber, round } from '../../../utils/number.js';
@@ -625,6 +625,6 @@ export class ScrubberPreviewElement extends VdsElement {
 }
 
 export const SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES = {
-  noClamp: { control: StorybookControlType.Boolean, defaultValue: false },
-  noTrackFill: { control: StorybookControlType.Boolean, defaultValue: false }
+  noClamp: { control: StorybookControl.Boolean, defaultValue: false },
+  noTrackFill: { control: StorybookControl.Boolean, defaultValue: false }
 };

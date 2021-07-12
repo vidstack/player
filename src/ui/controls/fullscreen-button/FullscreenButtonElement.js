@@ -1,6 +1,6 @@
 import {
   storybookAction,
-  StorybookControlType
+  StorybookControl
 } from '../../../foundation/storybook/index.js';
 import {
   EnterFullscreenRequestEvent,
@@ -97,10 +97,10 @@ export class FullscreenButtonElement extends ToggleButtonElement {
 
 export const FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  label: { control: StorybookControlType.Text, defaultValue: 'Fullscreen' },
-  pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
+  label: { control: StorybookControl.Text, defaultValue: 'Fullscreen' },
+  pressed: { control: StorybookControl.Boolean, table: { disable: true } },
   mediaFullscreen: {
-    control: StorybookControlType.Boolean,
+    control: StorybookControl.Boolean,
     defaultValue: false
   },
   onEnterFullscreenRequest: storybookAction(EnterFullscreenRequestEvent.TYPE),

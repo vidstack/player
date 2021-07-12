@@ -12,7 +12,7 @@ import {
 import { VdsElement } from '../../../foundation/elements/index.js';
 import {
   storybookAction,
-  StorybookControlType
+  StorybookControl
 } from '../../../foundation/storybook/index.js';
 import { mediaContext } from '../../../media/context.js';
 import {
@@ -331,25 +331,25 @@ export const VOLUME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   hidden: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
   orientation: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
   label: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue: 'Volume slider'
   },
   step: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 0.5
   },
   keyboardStep: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 0.5
   },
   shiftKeyMultiplier: {
-    control: StorybookControlType.Number,
+    control: StorybookControl.Number,
     defaultValue: 10
   },
   // Media Properties
   mediaVolume: {
     control: {
-      type: StorybookControlType.Number,
+      type: StorybookControl.Number,
       step: 0.05
     },
     defaultValue: 0.5

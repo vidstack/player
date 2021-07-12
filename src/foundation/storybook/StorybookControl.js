@@ -3,7 +3,7 @@
  * @enum {string}
  * @link https://storybook.js.org/docs/react/essentials/controls#annotation
  */
-export const StorybookControlType = {
+export const StorybookControl = {
   /**
    * Checkbox input.
    */

@@ -1,6 +1,6 @@
 import {
   storybookAction,
-  StorybookControlType
+  StorybookControl
 } from '../../../foundation/storybook/index.js';
 import {
   mediaContext,
@@ -96,10 +96,10 @@ export class MuteButtonElement extends ToggleButtonElement {
 
 export const MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  label: { control: StorybookControlType.Text, defaultValue: 'Mute' },
-  pressed: { control: StorybookControlType.Boolean, table: { disable: true } },
+  label: { control: StorybookControl.Text, defaultValue: 'Mute' },
+  pressed: { control: StorybookControl.Boolean, table: { disable: true } },
   mediaMuted: {
-    control: StorybookControlType.Boolean,
+    control: StorybookControl.Boolean,
     defaultValue: false
   },
   onMuteRequest: storybookAction(MuteRequestEvent.TYPE),

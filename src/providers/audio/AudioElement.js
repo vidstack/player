@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty, ifNumber } from '../../foundation/directives/index.js';
-import { StorybookControlType } from '../../foundation/storybook/index.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
 import {
   HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
   Html5MediaElement
@@ -94,7 +94,7 @@ export class AudioElement extends Html5MediaElement {
 export const AUDIO_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
   src: {
-    control: StorybookControlType.Text,
+    control: StorybookControl.Text,
     defaultValue: 'https://media-files.vidstack.io/audio.mp3'
   }
 };
