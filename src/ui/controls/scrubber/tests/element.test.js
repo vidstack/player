@@ -25,60 +25,40 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
 
   it('should render DOM correctly', async function () {
     const { scrubber } = await buildFixture();
-    expect(scrubber).dom.to.equal(
-      `<vds-scrubber label="Time scrubber" orientation="horizontal"></vds-scrubber>`
-    );
+    expect(scrubber).dom.to.equal(`
+      <vds-scrubber
+        label="Media time slider"
+        orientation="horizontal"
+        progress-label="Amount of seekable media"
+      ></vds-scrubber>
+    `);
   });
 
   it('should render shadow DOM correctly', async function () {
     const { scrubber } = await buildFixture();
     expect(scrubber).shadowDom.to.equal(`
-      <div
-        id="root"
-        part="root"
-        style="--vds-scrubber-current-time:0;--vds-scrubber-seekable:0;--vds-scrubber-duration:0;"
+      <vds-time-slider
+        exportparts="slider: time-slider, slider-root: time-slider-root, slider-thumb: time-slider-thumb, slider-track: time-slider-track, slider-track-fill: time-slider-track-fill"
+        id="time-slider"
+        keyboard-step="20"
+        label="Media time slider"
+        orientation="horizontal"
+        part="slider"
+        shift-key-multiplier="2"
+        step="0.25"
+        value-text="{currentTime} out of {duration}"
       >
-        <vds-slider
-          exportparts="root: slider-root, thumb: slider-thumb, track: slider-track, track-fill: slider-track-fill"
-          id="slider"
-          label="Time scrubber"
-          max="100"
-          min="0"
-          orientation="horizontal"
-          part="slider"
-          step="0.25"
-          keyboard-step="5"
-          shift-key-multiplier="2"
-          throttle="0"
-          value="0"
-          value-text="0 seconds out of 0 seconds"
-        >
-          <slot name="slider"></slot>
-
-          <div
-            aria-label="Amount seekable"
-            aria-valuemax="100"
-            aria-valuemin="0"
-            aria-valuenow="0"
-            aria-valuetext="0%"
-            id="progress"
-            part="progress"
-            role="progressbar"
-          >
-            <slot name="progress"></slot>
-          </div>
-
-          <div
-            hidden=""
-            id="preview-track"
-            part="preview-track"
-          ></div>
-        </vds-slider>
-
         <slot></slot>
-
-        <slot name="preview"></slot>
-      </div>
+        <vds-seekable-progress-bar
+          id="progress-bar"
+          exportparts="root: progress-bar-root"
+          label="Amount of seekable media"
+          part="progress-bar"
+          value-text="{seekableAmount} out of {duration}"
+        >
+          <slot name="progress-bar"></slot>
+        </vds-seekable-progress-bar>
+      </vds-time-slider>
     `);
   });
 });

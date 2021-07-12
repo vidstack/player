@@ -40,7 +40,7 @@ export class TimeDurationElement extends TimeElement {
     this.seconds = mediaContext.currentTime.initialValue;
   }
 
-  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       seconds: {

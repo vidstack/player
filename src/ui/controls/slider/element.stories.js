@@ -36,7 +36,6 @@ function Template({
   value,
   valueText,
   orientation,
-  throttle,
   // Actions
   onSliderDragStart,
   onSliderDragEnd,
@@ -44,14 +43,13 @@ function Template({
 }) {
   return html`
     <vds-slider
+      keyboard-step=${keyboardStep}
       label=${ifNonEmpty(label)}
       max=${max}
       min=${min}
       orientation=${orientation}
-      keyboard-step=${keyboardStep}
       shift-key-multiplier=${shiftKeyMultiplier}
       step=${step}
-      throttle=${throttle}
       value-text=${ifNonEmpty(valueText)}
       value=${value}
       ?disabled=${disabled}

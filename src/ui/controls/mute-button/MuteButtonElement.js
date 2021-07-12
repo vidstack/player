@@ -22,7 +22,7 @@ export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
  * @slot mute - The content to show when the `muted` state is `false`.
  * @slot unmute - The content to show when the `muted` state is `true`.
  * @csspart button - The root button (`<vds-button>`).
- * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix such as `button-root`.
+ * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix.
  * @example
  * ```html
  * <vds-mute-button>
@@ -52,7 +52,7 @@ export class MuteButtonElement extends ToggleButtonElement {
     this.pressed = mediaContext.muted.initialValue;
   }
 
-  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       pressed: mediaContext.muted

@@ -856,8 +856,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * amount of media data that is prefetched is determined by the value of the element's
    * `preload` attribute.
    *
-   * ⚠️ **IMPORTANT:** You should generally not need to call this method as it's handled by
-   * the library.
+   * 💡 You should generally not need to call this method as it's handled by the library.
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/load
    */

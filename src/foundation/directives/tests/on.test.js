@@ -44,7 +44,7 @@ class MyElement extends LitElement {
 
 window.customElements.define('my-element', MyElement);
 
-describe('directives/event', function () {
+describe('directives/on', function () {
   /**
    * @returns {Promise<MyElement>}
    */

@@ -1,5 +1,6 @@
 import '../../../media/define.js';
 import '../../../media/test-utils/define.js';
+import '../scrubber-preview/define';
 import './define.js';
 
 import { html } from 'lit';
@@ -13,10 +14,10 @@ import {
   SeekRequestEvent
 } from '../../../media/index.js';
 import {
+  ScrubberPreviewConnectEvent,
   ScrubberPreviewHideEvent,
-  ScrubberPreviewShowEvent,
-  ScrubberPreviewTimeUpdateEvent
-} from './events.js';
+  ScrubberPreviewShowEvent
+} from '../scrubber-preview/index.js';
 import {
   SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES,
   SCRUBBER_ELEMENT_TAG_NAME
@@ -36,23 +37,23 @@ function Template({
   // Properties
   disabled,
   hidden,
-  noPreviewClamp,
-  noPreviewTrack,
+  keyboardStep,
+  label,
   orientation,
   pauseWhileDragging,
-  previewTimeThrottle,
   progressLabel,
-  progressText,
-  label,
-  step,
-  keyboardStep,
+  progressValueText,
+  seekingRequestThrottle,
   shiftKeyMultiplier,
-  throttle,
-  userSeekingThrottle,
-  // Scrubber Actions
+  step,
+  valueText,
+  // Scrubber Preview Properties
+  noPreviewClamp,
+  noPreviewTrackFill,
+  // Scrubber Preview Actions
+  onScrubberPreviewConnect,
   onScrubberPreviewShow,
   onScrubberPreviewHide,
-  onScrubberPreviewTimeUpdate,
   // Media Request Actions
   onPauseRequest,
   onPlayRequest,
@@ -81,52 +82,50 @@ function Template({
         ></vds-fake-media-provider>
 
         <vds-scrubber
-          orientation=${orientation}
-          preview-time-throttle=${previewTimeThrottle}
-          progress-label=${ifNonEmpty(progressLabel)}
-          progress-text=${ifNonEmpty(progressText)}
           label=${ifNonEmpty(label)}
+          orientation=${orientation}
+          progress-label=${ifNonEmpty(progressLabel)}
+          progress-value-text=${progressValueText}
+          seeking-request-throttle=${seekingRequestThrottle}
+          step=${step}
           keyboard-step=${keyboardStep}
           shift-key-multiplier=${shiftKeyMultiplier}
-          step=${step}
-          throttle=${throttle}
-          user-seeking-throttle=${userSeekingThrottle}
+          value-text=${valueText}
           ?disabled=${disabled}
           ?hidden=${hidden}
-          ?no-preview-clamp=${noPreviewClamp}
-          ?no-preview-track=${noPreviewTrack}
           ?pause-while-dragging=${pauseWhileDragging}
-          ${on(ScrubberPreviewHideEvent.TYPE, onScrubberPreviewHide)}
+          ${on(ScrubberPreviewConnectEvent.TYPE, onScrubberPreviewConnect)}
           ${on(ScrubberPreviewShowEvent.TYPE, onScrubberPreviewShow)}
-          ${on(
-            ScrubberPreviewTimeUpdateEvent.TYPE,
-            onScrubberPreviewTimeUpdate
-          )}
+          ${on(ScrubberPreviewHideEvent.TYPE, onScrubberPreviewHide)}
         >
-          <div class="preview" slot="preview">Preview</div>
+          <vds-scrubber-preview
+            ?no-clamp=${noPreviewClamp}
+            ?no-track-fill=${noPreviewTrackFill}
+          >
+            <div class="preview">Preview</div>
+          </vds-scrubber-preview>
         </vds-scrubber>
+
+        <style>
+          vds-scrubber {
+            margin-top: 48px;
+          }
+
+          .preview {
+            background-color: #161616;
+            color: #ff2a5d;
+            opacity: 1;
+            bottom: 20px;
+            transition: opacity 0.2s ease-in;
+          }
+
+          .preview[hidden] {
+            display: block;
+            opacity: 0;
+          }
+        </style>
       </vds-media-container>
     </vds-media-controller>
-
-    <style>
-      vds-scrubber {
-        margin-top: 48px;
-      }
-
-      .preview {
-        background-color: #161616;
-        color: #ff2a5d;
-        opacity: 1;
-        position: absolute;
-        left: 0;
-        bottom: 40px;
-        transition: opacity 0.3s ease-in;
-      }
-
-      .preview[hidden] {
-        opacity: 0;
-      }
-    </style>
   `;
 }
 

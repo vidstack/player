@@ -21,11 +21,14 @@ export const focusableSelector = `
     `*[tabindex]:not([tabindex='-1'])`,
     '*[contenteditable=true]',
     'vds-button',
-    'vds-slider',
-    'vds-play-button',
-    'vds-mute-button',
     'vds-fullscreen-button',
-    'vds-scrubber'
+    'vds-mute-button',
+    'vds-play-button',
+    'vds-scrubber',
+    'vds-seekable-progress-bar',
+    'vds-slider',
+    'vds-time-slider',
+    'vds-volume-slider'
   ].join(', ')}
 `;
 

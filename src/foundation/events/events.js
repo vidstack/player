@@ -100,6 +100,8 @@ export class VdsCustomEvent extends CustomEvent {
  * @param {Event | CustomEvent | VdsCustomEvent} event
  */
 export function redispatchEvent(target, event) {
+  if (event.bubbles && event.composed) return;
+
   class VdsRedispatchedEvent extends VdsCustomEvent {
     static TYPE = event.type;
   }

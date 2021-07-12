@@ -5,21 +5,24 @@ import { VdsCustomEvent } from '../../../foundation/events/index.js';
  *  [ScrubberPreviewShowEvent.TYPE]: ScrubberPreviewShowEvent;
  *  [ScrubberPreviewHideEvent.TYPE]: ScrubberPreviewHideEvent;
  *  [ScrubberPreviewTimeUpdateEvent.TYPE]: ScrubberPreviewTimeUpdateEvent;
- * }} ScrubberEvents
+ * }} ScrubberPreviewEvents
  */
 
 /**
  * @template DetailType
  * @augments {VdsCustomEvent<DetailType>}
  */
-export class ScrubberEvent extends VdsCustomEvent {}
+export class ScrubberPreviewEvent extends VdsCustomEvent {
+  static DEFAULT_BUBBLES = true;
+  static DEFAULT_COMPOSED = true;
+}
 
 /**
  * Emitted when the preview transitions from hidden to showing.
  *
- * @augments {ScrubberEvent<void>}
+ * @augments {ScrubberPreviewEvent<void>}
  */
-export class ScrubberPreviewShowEvent extends ScrubberEvent {
+export class ScrubberPreviewShowEvent extends ScrubberPreviewEvent {
   /** @readonly */
   static TYPE = 'vds-scrubber-preview-show';
 }
@@ -27,9 +30,9 @@ export class ScrubberPreviewShowEvent extends ScrubberEvent {
 /**
  * Emitted when the preview transitions from showing to hidden.
  *
- * @augments {ScrubberEvent<void>}
+ * @augments {ScrubberPreviewEvent<void>}
  */
-export class ScrubberPreviewHideEvent extends ScrubberEvent {
+export class ScrubberPreviewHideEvent extends ScrubberPreviewEvent {
   /** @readonly */
   static TYPE = 'vds-scrubber-preview-hide';
 }
@@ -37,9 +40,9 @@ export class ScrubberPreviewHideEvent extends ScrubberEvent {
 /**
  * Emitted when the time being previewed changes.
  *
- * @augments {ScrubberEvent<number>}
+ * @augments {ScrubberPreviewEvent<number>}
  */
-export class ScrubberPreviewTimeUpdateEvent extends ScrubberEvent {
+export class ScrubberPreviewTimeUpdateEvent extends ScrubberPreviewEvent {
   /** @readonly */
   static TYPE = 'vds-scrubber-preview-time-update';
 }

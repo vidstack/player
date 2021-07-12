@@ -1,47 +1,51 @@
 // ** Dependencies **
-import '../slider/define.js';
+import '../time-slider/define.js';
 
-import clsx from 'clsx';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { styleMap } from 'lit/directives/style-map.js';
 
-import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
-import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
+import { provideContextRecord } from '../../../foundation/context/index.js';
 import {
-  isPointerEvent,
-  isVdsEvent
-} from '../../../foundation/events/index.js';
+  forwardEvent,
+  ifNonEmpty,
+  on
+} from '../../../foundation/directives/index.js';
+import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
+import { EventListenerController } from '../../../foundation/events/index.js';
 import {
   storybookAction,
   StorybookControlType
 } from '../../../foundation/storybook/index.js';
 import {
-  mediaContext,
-  MediaRemoteControl,
   PauseRequestEvent,
   PlayRequestEvent,
   SeekingRequestEvent,
   SeekRequestEvent
 } from '../../../media/index.js';
-import { getSlottedChildren, raf } from '../../../utils/dom.js';
-import { clampNumber, round } from '../../../utils/number.js';
-import { formatSpokenTime } from '../../../utils/time.js';
-import { throttle } from '../../../utils/timing.js';
-import { isNil, isUndefined } from '../../../utils/unit.js';
+import { buildExportPartsAttr } from '../../../utils/dom.js';
+import { isNil } from '../../../utils/unit.js';
 import {
-  SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  SliderDragEndEvent,
-  SliderDragStartEvent,
-  SliderElement,
-  SliderValueChangeEvent
-} from '../slider/index.js';
-import { scrubberContext } from './context.js';
-import {
+  SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES,
+  ScrubberPreviewConnectEvent,
+  ScrubberPreviewElement,
   ScrubberPreviewHideEvent,
   ScrubberPreviewShowEvent,
   ScrubberPreviewTimeUpdateEvent
-} from './events.js';
+} from '../scrubber-preview/index.js';
+import {
+  SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES,
+  SeekableProgressBarElement
+} from '../seekable-progress-bar/index.js';
+import {
+  SliderDragEndEvent,
+  SliderDragStartEvent,
+  SliderValueChangeEvent
+} from '../slider/index.js';
+import {
+  TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
+  TimeSliderElement
+} from '../time-slider/index.js';
+import { scrubberContext } from './context.js';
 import { scrubberElementStyles } from './styles.js';
 
 export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
@@ -50,100 +54,41 @@ export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
  * A control that displays the progression of playback and the amount seekable on a slider. This
  * control can be used to update the current playback time by interacting with the slider.
  *
- * ## Previews / Storyboards
- *
- * You can pass in a preview to be shown while the user is interacting (hover/drag) with the
- * scrubber by passing an element into the `preview` slot, such as `<div slot="preview"></div>`.
- *
- * You need to do the following on your root preview element:**
- *
- * - Expect that your root preview element will be positioned absolutely.
- * - Set the `bottom` CSS property on it to adjust it to the desired position above the slider.
- * - Create CSS styles for when it has a hidden attribute (`.preview[hidden] {}`).
- *
- * The Scrubber will automatically do the following to the root preview element passed in:**
- *
- * - Set a `hidden` attribute when it should be hidden (it's left to you to hide it with CSS).
- * - Set a safe `z-index` value so the preview is above all other components and is visible.
- * - Update the `translateX()` CSS property to position the preview accordingly.
- *
- * ### How do I get the current preview time?
- *
- * You can either listen to `vds-scrubber-preview-time-update` event on this component, or you can
- * use the `scrubberPreviewContext`.
- *
- * For styling you have access to the `--vds-scrubber-preview-time` CSS property which contains
- * the current time in seconds the user is previewing.
+ * 💡 See the `<vds-scrubber-preview>` element if you'd like to include previews.
  *
  * @tagname vds-scrubber
- * @slot Used to pass content into the root.
- * @slot progress - Used to pass content into the progress element (`<div>`).
- * @slot preview - Used to pass in a preview to be shown while the user is interacting (hover/drag) with the scrubber.
- * @slot slider - Used to pass content into the slider component (`<vds-slider>`).
- * @csspart root - The component's root element (`<div>`).
- * @csspart slider - The slider component (`<vds-slider>`).
- * @csspart slider-* - All slider parts re-exported with the `slider` prefix such as `slider-root` and `slider-thumb`.
- * @csspart progress - The progress element (`<div>`).
- * @csspart preview-track - The part of the slider track that displays
- * @csspart preview-track-hidden - Targets the `preview-track` part when it's hidden.
- * @cssprop --vds-slider-* - All slider CSS properties can be used to style the underlying `<vds-slider>` component.
- * @cssprop --vds-scrubber-current-time - Current time of playback.
- * @cssprop --vds-scrubber-seekable - The amount of media that is seekable.
- * @cssprop --vds-scrubber-duration - The length of media playback.
- * @cssprop --vds-scrubber-progress-bg - The background color of the amount that is seekable.
- * @cssprop --vds-scrubber-progress-height - The height of the progress bar (defaults to `--vds-slider-track-height`).
- * @cssprop --vds-scrubber-preview-time - The current time in seconds that is being previewed (hover/drag).
- * @cssprop --vds-scrubber-preview-track-height - The height of the preview track (defaults to `--vds-slider-track-height`).
- * @cssprop --vds-preview-track-bg - The background color of the preview track.
- * @example
- * ```html
- * <vds-scrubber
- *   label="Time scrubber"
- *   progress-label="Amount seekable"
- * >
- *   <!-- `hidden` attribute will automatically be applied/removed -->
- *  <div class="preview" slot="preview" hidden>Preview</div>
- * </vds-scrubber>
- * ```
- * @example
- * ```css
- * vds-scrubber {
- *   --vds-scrubber-progress-bg: pink;
- * }
- *
- * .preview {
- *   position: absolute;
- *   left: 0;
- *   bottom: 12px;
- *   opacity: 1;
- *   transition: opacity 0.3s ease-in;
- * }
- *
- * .preview[hidden] {
- *   opacity: 0;
- * }
- * ```
+ * @csspart slider - The time slider (`<vds-time-slider>`).
+ * @csspart time-* - All `vds-time-slider` parts re-exported with the `time` prefix.
+ * @csspart progress-bar - The progress bar (`<vds-seekable-progress-bar>`).
+ * @csspart progress-bar-* - All `vds-seekable-progress-bar` parts re-exported with the `progress-bar` prefix.
+ * @slot Used to pass content into the slider.
+ * @slot progress-bar - Used to pass content into the progress bar.
  */
 export class ScrubberElement extends WithFocus(VdsElement) {
-  /** @type {import('lit').CSSResultGroup} */
+  /**
+   * @type {import('lit').CSSResultGroup}
+   */
   static get styles() {
     return [scrubberElementStyles];
   }
 
-  /** @type {string[]} */
+  /**
+   * @type {string[]}
+   */
   static get parts() {
-    const sliderExportParts = SliderElement.parts.map(
-      (part) => `slider-${part}`
+    const timeSliderExports = TimeSliderElement.parts.map(
+      (part) => `time-${part}`
     );
-    return ['root', 'slider', 'progress', ...sliderExportParts];
-  }
 
-  /** @type {string[]} */
-  static get events() {
+    const seekableProgressBarExports = SeekableProgressBarElement.parts.map(
+      (part) => `progress-bar-${part}`
+    );
+
     return [
-      ScrubberPreviewHideEvent.TYPE,
-      ScrubberPreviewShowEvent.TYPE,
-      ScrubberPreviewTimeUpdateEvent.TYPE
+      'slider',
+      'progress-bar',
+      ...timeSliderExports,
+      ...seekableProgressBarExports
     ];
   }
 
@@ -152,40 +97,48 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
     // Properties
     /**
-     * Whether the scubber is disabled.
+     * Whether the scrubber should be disabled (not-interactable).
      *
      * @type {boolean}
      */
     this.disabled = false;
 
     /**
-     * Whether the scrubber is hidden.
+     * Whether the scrubber should be hidden.
      *
      * @type {boolean}
      */
     this.hidden = false;
 
     /**
-     * Whether the preview passed in should NOT be clamped to the scrubber edges. In other words,
-     * setting this to `true` means the preview element can escape the scrubber bounds.
+     * ♿ **ARIA:** The `aria-label` for the time slider.
      *
-     * @type {boolean}
+     * @type {string}
      */
-    this.noPreviewClamp = false;
+    this.label = 'Media time slider';
 
     /**
-     * Whether to remove the preview track.
-     *
-     * @type {boolean}
-     */
-    this.noPreviewTrack = false;
-
-    /**
-     * The slider orientation.
+     * The time slider orientation.
      *
      * @type {'horizontal' | 'vertical'}
      */
     this.orientation = 'horizontal';
+
+    /**
+     * ♿ **ARIA:** The `aria-label` for the progress bar.
+     *
+     * @type {string}
+     */
+    this.progressLabel = 'Amount of seekable media';
+
+    /**
+     * ♿ **ARIA:** Human-readable text alternative for the progress bar value. If you pass
+     * in a string containing `{seekableAmount}` or `{duration}` templates they'll be replaced with
+     * the spoken form such as `1 hour 30 minutes`.
+     *
+     * @type {string}
+     */
+    this.progressValueText = '{seekableAmount} out of {duration}';
 
     /**
      * Whether the scrubber should request playback to pause while the user is dragging the
@@ -197,37 +150,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     this.pauseWhileDragging = false;
 
     /**
-     * The amount of milliseconds to throttle preview time updates by.
-     *
-     * @type {number}
-     */
-    this.previewTimeThrottle = 30;
-
-    /**
-     * ♿ **ARIA:** The `aria-label` for the buffered progress bar.
-     *
-     * @type {string}
-     */
-    this.progressLabel = 'Amount seekable';
-
-    /**
-     * ♿ **ARIA:** Human-readable text alternative for the current scrubber progress. If you pass
-     * in a string containing `{currentTime}` or `{duration}` templates they'll be replaced with
-     * the spoken form such as `20 minutes out of 1 hour, 20 minutes. `
-     *
-     * @type {string}
-     */
-    this.progressText = '{currentTime} out of {duration}';
-
-    /**
-     * ♿ **ARIA:** The `aria-label` for the slider.
-     *
-     * @type {string}
-     */
-    this.label = 'Time scrubber';
-
-    /**
-     * A number that specifies the granularity that the slider value must adhere to in seconds.
+     * A number that specifies the granularity that the time slider value must adhere to in seconds.
      * For example, a step with the value `1` indicates a granularity of 1 second increments.
      *
      * @type {number}
@@ -236,7 +159,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
 
     /**
      * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
-     * the slider via keyboard. Think of it as `this.step * this.keyboardStep`.
+     * the time slider via keyboard. Think of it as `this.step * this.keyboardStep`.
      *
      * @type {number}
      */
@@ -252,126 +175,50 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     this.shiftKeyMultiplier = 2;
 
     /**
-     * The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove`
-     * events.
+     * The amount of milliseconds to throttle media seeking request events being dispatched.
      *
      * @type {number}
      */
-    this.throttle = 0;
+    this.seekingRequestThrottle = 100;
 
     /**
-     * The amount of milliseconds to throttle user seeking events being dispatched.
+     * ♿ **ARIA:** Human-readable text alternative for the time slider value. If you pass
+     * in a string containing `{currentTime}` or `{duration}` templates they'll be replaced with
+     * the spoken form such as `1 hour 30 minutes`.
      *
-     * @type {number}
+     * @type {string}
      */
-    this.userSeekingThrottle = 150;
-
-    // State
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.currentTimePercentage = 0;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.isPointerInsideScrubber = false;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.isDraggingThumb = false;
-
-    // Context Consumers
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.mediaCurrentTime = mediaContext.currentTime.initialValue;
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.mediaDuration = 0;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaPaused = mediaContext.paused.initialValue;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaSeeking = mediaContext.seeking.initialValue;
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.mediaSeekableAmount = mediaContext.seekableAmount.initialValue;
-
-    // Context Providers
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.isPreviewShowing = false;
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.previewTime = 0;
+    this.valueText = '{currentTime} out of {duration}';
   }
 
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
+  /**
+   * @protected
+   * @readonly
+   */
+  context = provideContextRecord(this, scrubberContext);
+
+  /**
+   * @type {import('lit').PropertyDeclarations}
+   */
   static get properties() {
     return {
-      // Properties
       disabled: { type: Boolean, reflect: true },
       hidden: { type: Boolean, reflect: true },
       label: { attribute: 'label', reflect: true },
-      noPreviewClamp: { type: Boolean, attribute: 'no-preview-clamp' },
-      noPreviewTrack: { type: Boolean, attribute: 'no-preview-track' },
+      valueText: { attribute: 'value-text' },
+      progressValueText: { attribute: 'progress-value-text' },
+      progressLabel: { attribute: 'progress-label', reflect: true },
       orientation: { reflect: true },
       pauseWhileDragging: { type: Boolean, attribute: 'pause-while-dragging' },
-      previewTimeThrottle: { type: Number, attribute: 'preview-time-throttle' },
-      progressLabel: { attribute: 'progress-label' },
-      progressText: { attribute: 'progress-text' },
-      keyboardStep: { type: Number, attribute: 'keyboard-step' },
       shiftKeyMultiplier: { type: Number, attribute: 'shift-key-multiplier' },
-      throttle: { type: Number },
-      userSeekingThrottle: { type: Number, attribute: 'user-seeking-throttle' },
-      // State
-      isPointerInsideScrubber: { state: true },
-      isDraggingThumb: { state: true },
-      previewTime: { state: true },
-      currentTimePercentage: { state: true }
-    };
-  }
-
-  /** @type {import('../../../foundation/context/types').ContextProviderDeclarations} */
-  static get contextProviders() {
-    return {
-      isPreviewShowing: scrubberContext.preview.showing,
-      previewTime: scrubberContext.preview.time
-    };
-  }
-
-  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      mediaCurrentTime: mediaContext.currentTime,
-      mediaDuration: {
-        context: mediaContext.duration,
-        transform: (d) => (d >= 0 ? d : 0)
-      },
-      mediaPaused: mediaContext.paused,
-      mediaSeeking: mediaContext.seeking,
-      mediaSeekableAmount: mediaContext.seekableAmount
+      seekingRequestThrottle: {
+        type: Number,
+        attribute: 'seeking-request-throttle'
+      }
     };
   }
 
@@ -379,124 +226,130 @@ export class ScrubberElement extends WithFocus(VdsElement) {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.initThrottles();
-  }
-
-  /** @param {import('lit').PropertyValues} changedProperties */
+  /**
+   * @param {import('lit').PropertyValues} changedProperties
+   */
   update(changedProperties) {
-    if (
-      changedProperties.has('mediaCurrentTime') ||
-      changedProperties.has('mediaDuration')
-    ) {
-      this.updateCurrentTime();
+    if (changedProperties.has('disabled')) {
+      if (this.disabled) {
+        this.scrubberPreviewElement?.hidePreview();
+      }
+
+      if (!isNil(this.scrubberPreviewElement)) {
+        this.scrubberPreviewElement.disabled = this.disabled;
+      }
     }
 
-    if (
-      changedProperties.has('mediaDuration') ||
-      changedProperties.has('step') ||
-      changedProperties.has('keyboardStep')
-    ) {
-      this.updateSteps();
-    }
-
-    if (
-      changedProperties.has('previewTimeThrottle') ||
-      changedProperties.has('userSeekingThrottle')
-    ) {
-      this.initThrottles();
-    }
-
-    if (changedProperties.has('disabled') && this.disabled) {
-      this.isPointerInsideScrubber = false;
-      this.isDraggingThumb = false;
-      this.hidePreview();
+    if (changedProperties.has('hidden')) {
+      if (!isNil(this.scrubberPreviewElement)) {
+        this.scrubberPreviewElement.hidden = this.hidden;
+      }
     }
 
     super.update(changedProperties);
   }
 
-  disconnectedCallback() {
-    this.destroyThrottles();
-    super.disconnectedCallback();
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Media Request Events
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   */
-  remoteControl = new MediaRemoteControl(this);
-
-  /**
-   * @protected
-   * @param {Event} event
-   */
-  dispatchUserSeekingEvent(event) {
-    if (!this.isInteractive) return;
-    this.remoteControl.seeking(this.previewTime, event);
-  }
-
-  /**
-   * @protected
-   * @param {number} percent
-   * @param {Event} event
-   */
-  dispatchUserSeeked(percent, event) {
-    const seekTo = this.mediaDuration * (percent / 100);
-    this.remoteControl.seek(seekTo, event);
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render (Root)
-  // -------------------------------------------------------------------------------------------
-
   render() {
-    return this.renderScrubber();
+    return html`${this.renderTimeSlider()}`;
   }
 
   // -------------------------------------------------------------------------------------------
-  // Scrubber
+  // Pointer Events
   // -------------------------------------------------------------------------------------------
 
   /**
    * @protected
    * @readonly
-   * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  rootRef = createRef();
+  pointerEventListenerController = new EventListenerController(this, {
+    pointerenter: this.handlePointerEnter,
+    pointermove: this.handlePointerMove,
+    pointerleave: this.handlePointerLeave
+  });
 
   /**
-   * The component's root element.
-   *
-   * @type {HTMLDivElement}
+   * @protected
+   * @param {PointerEvent} event
    */
-  get rootElement() {
-    return /** @type {HTMLDivElement} */ (this.rootRef.value);
+  handlePointerEnter(event) {
+    if (this.disabled) return;
+    this.context.pointing = true;
+    this.setAttribute('pointing', '');
+    this.scrubberPreviewElement?.showPreview(event);
+  }
+
+  /**
+   * @protected
+   * @param {PointerEvent} event
+   */
+  handlePointerMove(event) {
+    if (this.disabled || this.context.dragging) return;
+    this.scrubberPreviewElement?.updatePreviewPosition(event);
+  }
+
+  /**
+   * @protected
+   * @param {PointerEvent} event
+   */
+  handlePointerLeave(event) {
+    if (this.disabled) return;
+
+    this.context.pointing = false;
+    this.removeAttribute('pointing');
+
+    if (!this.context.dragging) {
+      this.scrubberPreviewElement?.hidePreview(event);
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Time Slider
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * @protected
+   * @readonly
+   * @type {import('lit/directives/ref').Ref<TimeSliderElement>}
+   */
+  timeSliderRef = createRef();
+
+  /**
+   * Returns the underlying `vds-time-slider` component.
+   *
+   * @type {TimeSliderElement}
+   */
+  get timeSliderElement() {
+    return /** @type {TimeSliderElement} */ (this.timeSliderRef.value);
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderScrubber() {
+  renderTimeSlider() {
     return html`
-      <div
-        id="root"
-        part=${this.getScrubberPartAttr()}
-        style=${styleMap(this.getScrubberStyleMap())}
+      <vds-time-slider
+        id="time-slider"
+        exportparts=${this.getTimeSliderExportPartsAttr()}
+        label=${ifNonEmpty(this.label)}
+        orientation=${this.orientation}
+        part=${this.getTimeSliderPartAttr()}
+        step=${this.step}
+        keyboard-step=${this.keyboardStep}
+        shift-key-multiplier=${this.shiftKeyMultiplier}
+        value-text=${this.valueText}
+        ?disabled=${this.disabled}
         ?hidden=${this.hidden}
-        ${on('pointerenter', this.handleScrubberPointerEnter)}
-        ${on('pointerleave', this.handleScrubberPointerLeave)}
-        ${on('pointermove', this.handleScrubberPointerMove)}
-        ${ref(this.rootRef)}
+        ${on(SliderDragStartEvent.TYPE, this.handleSliderDragStart)}
+        ${on(SliderValueChangeEvent.TYPE, this.handleSliderValueChange)}
+        ${on(SliderDragEndEvent.TYPE, this.handleSliderDragEnd)}
+        ${forwardEvent(SliderDragStartEvent.TYPE)}
+        ${forwardEvent(SliderValueChangeEvent.TYPE)}
+        ${forwardEvent(SliderDragEndEvent.TYPE)}
+        ${ref(this.timeSliderRef)}
       >
-        ${this.renderSlider()}${this.renderDefaultSlot()}${this.renderPreviewSlot()}
-      </div>
+        ${this.renderTimeSliderChildren()}
+      </vds-time-slider>
     `;
   }
 
@@ -504,52 +357,24 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    * @protected
    * @returns {string}
    */
-  getScrubberPartAttr() {
-    return 'root';
+  getTimeSliderPartAttr() {
+    return 'slider';
   }
 
   /**
    * @protected
-   * @returns {import('lit/directives/style-map').StyleInfo}
+   * @returns {string}
    */
-  getScrubberStyleMap() {
-    const currentTime = this.mediaDuration * (this.currentTimePercentage / 100);
-
-    return {
-      '--vds-scrubber-current-time': String(currentTime),
-      '--vds-scrubber-seekable': String(this.mediaSeekableAmount),
-      '--vds-scrubber-duration': String(this.mediaDuration)
-    };
+  getTimeSliderExportPartsAttr() {
+    return buildExportPartsAttr(TimeSliderElement.parts, 'time');
   }
 
   /**
    * @protected
-   * @param {PointerEvent} event
-   * @returns {Promise<void>}
+   * @returns {import('lit').TemplateResult}
    */
-  async handleScrubberPointerEnter(event) {
-    if (this.disabled) return;
-    this.isPointerInsideScrubber = true;
-    this.showPreview(event);
-  }
-
-  /**
-   * @protected
-   * @param {PointerEvent} event
-   * @returns {Promise<void>}
-   */
-  async handleScrubberPointerLeave(event) {
-    this.isPointerInsideScrubber = false;
-    this.hidePreview(event);
-  }
-
-  /**
-   * @protected
-   * @param {PointerEvent} event
-   */
-  handleScrubberPointerMove(event) {
-    if (this.disabled) return;
-    this.updatePreviewPosition(event);
+  renderTimeSliderChildren() {
+    return html`${this.renderDefaultSlot()}${this.renderProgressBar()}`;
   }
 
   /**
@@ -560,318 +385,83 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     return html`<slot></slot>`;
   }
 
-  // -------------------------------------------------------------------------------------------
-  // Progress
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   * @type {import('lit/directives/ref').Ref<HTMLProgressElement>}
-   */
-  progressRef = createRef();
-
-  /**
-   * Returns the underlying `<progress>` element.
-   *
-   * @type {HTMLProgressElement}
-   */
-  get progressElement() {
-    return /** @type {HTMLProgressElement} */ (this.progressRef.value);
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit').TemplateResult}
-   */
-  renderProgress() {
-    const seekablePercentage =
-      this.mediaDuration > 0
-        ? (this.mediaSeekableAmount / this.mediaDuration) * 100
-        : 0;
-
-    const value = round(seekablePercentage, 2);
-    const valueText = `${value}%`;
-
-    return html`
-      <div
-        id="progress"
-        role="progressbar"
-        part=${this.getProgressPartAttr()}
-        ?hidden=${this.hidden}
-        aria-label=${this.progressLabel}
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow=${value}
-        aria-valuetext=${valueText}
-        ${ref(this.progressRef)}
-      >
-        ${this.renderProgressSlot()}
-      </div>
-    `;
-  }
-
   /**
    * @protected
    * @returns {string}
    */
-  getProgressPartAttr() {
-    return 'progress';
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit').TemplateResult}
-   */
-  renderProgressSlot() {
-    return html`<slot name="progress"></slot>`;
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Slider
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   * @type {import('lit/directives/ref').Ref<SliderElement>}
-   */
-  sliderRef = createRef();
-
-  /**
-   * Returns the underlying `vds-slider` component.
-   *
-   * @type {SliderElement}
-   */
-  get sliderElement() {
-    return /** @type {SliderElement} */ (this.sliderRef.value);
-  }
-
-  /**
-   * Whether the user is seeking by either hovering over the scrubber or by dragging the thumb.
-   *
-   * @type {boolean}
-   */
-  get isInteractive() {
-    return this.isPointerInsideScrubber || this.isDraggingThumb;
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit').TemplateResult}
-   */
-  renderSlider() {
-    return html`
-      <vds-slider
-        id="slider"
-        label=${ifNonEmpty(this.label)}
-        min="0"
-        max="100"
-        value=${this.currentTimePercentage}
-        step=${this.stepSeconds}
-        keyboard-step=${this.keyboardStepSeconds}
-        shift-key-multiplier=${this.shiftKeyMultiplier}
-        part=${this.getSliderPartAttr()}
-        orientation=${this.orientation}
-        throttle=${this.throttle}
-        value-text=${this.getSliderProgressText()}
-        exportparts=${this.getSliderExportPartsAttr()}
-        ?hidden=${this.hidden}
-        ?disabled=${this.disabled}
-        ${on(SliderValueChangeEvent.TYPE, this.handleSliderValueChange)}
-        ${on(SliderDragStartEvent.TYPE, this.handleSliderDragStart)}
-        ${on(SliderDragEndEvent.TYPE, this.handleSliderDragEnd)}
-        ${ref(this.sliderRef)}
-      >
-        ${this.renderSliderChildren()}
-      </vds-slider>
-    `;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  getSliderPartAttr() {
+  getTimeSliderSlotName() {
     return 'slider';
   }
 
   /**
    * @protected
-   * @returns {string}
+   * @param {SliderDragStartEvent} event
    */
-  getSliderExportPartsAttr() {
-    // Take all slider parts and re-export with `slider` prefix (eg: `root` => `slider-root`).
-    return SliderElement.parts
-      .map((part) => `${part}: slider-${part}`)
-      .join(', ');
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  getSliderProgressText() {
-    const currentTime =
-      this.mediaDuration > 0
-        ? this.mediaDuration * (this.currentTimePercentage / 100)
-        : 0;
-
-    return this.progressText
-      .replace('{currentTime}', formatSpokenTime(currentTime))
-      .replace('{duration}', formatSpokenTime(this.mediaDuration));
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit').TemplateResult}
-   */
-  renderSliderChildren() {
-    return html`
-      <slot name="slider"></slot>
-      ${this.renderProgress()} ${this.renderPreviewTrack()}
-    `;
+  handleSliderDragStart(event) {
+    if (this.disabled) return;
+    this.context.dragging = true;
+    this.setAttribute('dragging', '');
+    this.scrubberPreviewElement?.showPreview(event);
   }
 
   /**
    * @protected
    * @param {SliderValueChangeEvent} event
-   * @returns {Promise<void>}
    */
-  async handleSliderValueChange(event) {
-    this.currentTimePercentage = event.detail;
-
-    await this.updatePreviewPosition(event);
-
-    if (!isPointerEvent(event.originalEvent)) {
-      this.dispatchUserSeeked(event.detail, event);
-    }
-  }
-
-  /**
-   * @protected
-   * @param {SliderDragStartEvent} event
-   * @returns {Promise<void>}
-   */
-  async handleSliderDragStart(event) {
-    this.isDraggingThumb = true;
-    this.setAttribute('dragging', '');
-    this.showPreview(event);
-    this.togglePlaybackWhileDragging(event);
+  handleSliderValueChange(event) {
+    if (this.disabled) return;
+    this.scrubberPreviewElement?.updatePreviewPosition(event);
   }
 
   /**
    * @protected
    * @param {SliderDragEndEvent} event
-   * @returns {Promise<void>}
    */
-  async handleSliderDragEnd(event) {
-    this.isDraggingThumb = false;
+  handleSliderDragEnd(event) {
+    if (this.disabled) return;
+    this.context.dragging = false;
     this.removeAttribute('dragging');
-    this.hidePreview(event);
-    this.dispatchUserSeeked(this.currentTimePercentage, event);
-    this.togglePlaybackWhileDragging(event);
-  }
-
-  /**
-   * @protected
-   */
-  updateCurrentTime() {
-    if (this.isDraggingThumb) return;
-
-    const percentage =
-      this.mediaDuration > 0
-        ? (this.mediaCurrentTime / this.mediaDuration) * 100
-        : 0;
-
-    this.currentTimePercentage = clampNumber(0, round(percentage, 5), 100);
-  }
-
-  /**
-   * @protected
-   * @type {number}
-   */
-  stepSeconds = this.step;
-
-  /**
-   * @protected
-   * @type {number}
-   */
-  keyboardStepSeconds = this.step * this.keyboardStep;
-
-  /**
-   * @protected
-   */
-  updateSteps() {
-    this.stepSeconds =
-      this.mediaDuration > 0
-        ? round((this.step / this.mediaDuration) * 100, 2)
-        : this.step;
-
-    this.keyboardStepSeconds = this.stepSeconds * this.keyboardStep;
-  }
-
-  /**
-   * @protected
-   * @type {boolean}
-   */
-  wasPlayingBeforeDragStart = false;
-
-  /**
-   * @protected
-   * @param {Event} event
-   */
-  togglePlaybackWhileDragging(event) {
-    if (!this.pauseWhileDragging) return;
-
-    if (this.isDraggingThumb && !this.mediaPaused) {
-      this.wasPlayingBeforeDragStart = true;
-      this.remoteControl.pause(event);
-    } else if (
-      this.wasPlayingBeforeDragStart &&
-      !this.isDraggingThumb &&
-      this.mediaPaused
-    ) {
-      this.wasPlayingBeforeDragStart = false;
-      this.remoteControl.play(event);
-    }
+    this.scrubberPreviewElement?.hidePreview(event);
   }
 
   // -------------------------------------------------------------------------------------------
-  // Preview Track Fill
+  // Seekable Progress Bar
   // -------------------------------------------------------------------------------------------
 
   /**
    * @protected
    * @readonly
-   * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
+   * @type {import('lit/directives/ref').Ref<SeekableProgressBarElement>}
    */
-  previewTrackRef = createRef();
+  progressBarRef = createRef();
 
   /**
-   * Returns the underlying preview track fill element (`<div>`). This will be `undefined` if
-   * you set the `noPreviewTrack` property to true.
+   * Returns the underlying `<vds-seekable-progress-bar>` component.
    *
-   * @type {HTMLDivElement | undefined}
+   * @type {SeekableProgressBarElement}
    */
-  get previewTrackElement() {
-    return this.previewTrackRef.value;
+  get progressBarElement() {
+    return /** @type {SeekableProgressBarElement} */ (
+      this.progressBarRef.value
+    );
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderPreviewTrack() {
-    if (this.noPreviewTrack) return html``;
-
+  renderProgressBar() {
     return html`
-      <div
-        id="preview-track"
-        part=${this.getPreviewTrackPartAttr()}
-        ?hidden=${!this.isInteractive}
-        ?disabled=${this.disabled}
-      ></div>
+      <vds-seekable-progress-bar
+        id="progress-bar"
+        part=${this.getProgressBarPartAttr()}
+        exportparts=${this.getProgressBarExportPartsAttr()}
+        label=${this.progressLabel}
+        value-text=${this.progressValueText}
+        ${ref(this.progressBarRef)}
+      >
+        ${this.renderProgressBarChildren()}
+      </vds-seekable-progress-bar>
     `;
   }
 
@@ -879,349 +469,152 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    * @protected
    * @returns {string}
    */
-  getPreviewTrackPartAttr() {
-    return clsx('preview-track', 'preview-track-hidden' && !this.isInteractive);
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Preview
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @type {HTMLElement | undefined}
-   */
-  currentPreviewSlotElement;
-
-  /**
-   * The element passed in to the `preview` slot.
-   *
-   * @type {HTMLElement | undefined}
-   */
-  get previewSlotElement() {
-    return this.currentPreviewSlotElement;
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit').TemplateResult}
-   */
-  renderPreviewSlot() {
-    return html`
-      <slot
-        name="${this.getPreviewSlotName()}"
-        @slotchange="${this.handlePreviewSlotChange}"
-      ></slot>
-    `;
+  getProgressBarPartAttr() {
+    return 'progress-bar';
   }
 
   /**
    * @protected
    * @returns {string}
    */
-  getPreviewSlotName() {
-    return 'preview';
-  }
-
-  /**
-   * @protected
-   */
-  handlePreviewSlotChange() {
-    this.currentPreviewSlotElement = /** @type {HTMLElement} */ (
-      getSlottedChildren(this, this.getPreviewSlotName())[0]
-    );
-
-    if (!isNil(this.currentPreviewSlotElement)) {
-      this.currentPreviewSlotElement.style.position = 'absolute';
-      this.currentPreviewSlotElement.style.left = '0';
-      this.currentPreviewSlotElement.style.zIndex = '90';
-      this.currentPreviewSlotElement.style.willChange = 'transform';
-      this.hidePreview();
-    }
-  }
-
-  /**
-   * @protected
-   * @returns {boolean}
-   */
-  isCurrentPreviewHidden() {
-    return this.currentPreviewSlotElement?.hasAttribute('hidden') ?? true;
-  }
-
-  /**
-   * @protected
-   * @type {number | undefined}
-   */
-  showPreviewTimeout;
-
-  /**
-   * @protected
-   * @param {Event} event
-   */
-  showPreview(event) {
-    window.clearTimeout(this.showPreviewTimeout);
-
-    if (
-      this.disabled ||
-      isNil(this.currentPreviewSlotElement) ||
-      !this.isInteractive ||
-      (this.isInteractive && !this.isCurrentPreviewHidden())
-    ) {
-      return;
-    }
-
-    this.showPreviewTimeout = window.setTimeout(
-      async () => {
-        this.isPreviewShowing = true;
-        this.currentPreviewSlotElement?.removeAttribute('hidden');
-        await raf();
-        await this.updatePreviewPosition(event);
-        await this.updateComplete;
-        this.setAttribute('previewing', '');
-        this.dispatchEvent(
-          new ScrubberPreviewShowEvent({ originalEvent: event })
-        );
-      },
-      this.isDraggingThumb ? 150 : 0
-    );
-
-    this.requestUpdate();
-  }
-
-  /**
-   * @protected
-   * @param {Event | undefined} [event]
-   * @returns {Promise<void>}
-   */
-  async hidePreview(event) {
-    window.clearTimeout(this.showPreviewTimeout);
-
-    if (
-      this.isInteractive ||
-      (!this.isInteractive && this.isCurrentPreviewHidden())
-    ) {
-      return;
-    }
-
-    if (!isUndefined(event)) {
-      this.updatePreviewPosition(event);
-      await this.updateComplete;
-    }
-
-    this.isPreviewShowing = false;
-    this.removeAttribute('previewing');
-    this.currentPreviewSlotElement?.setAttribute('hidden', '');
-    this.dispatchEvent(new ScrubberPreviewHideEvent({ originalEvent: event }));
-    this.requestUpdate();
-  }
-
-  /**
-   * @protected
-   * @param {Event} event
-   */
-  dispatchPreviewTimeChangeEvent(event) {
-    if (!this.isInteractive) return;
-    this.mediaSeekingRequestThrottle?.(event);
-    this.dispatchEvent(
-      new ScrubberPreviewTimeUpdateEvent({
-        detail: this.previewTime,
-        originalEvent: event
-      })
+  getProgressBarExportPartsAttr() {
+    return buildExportPartsAttr(
+      SeekableProgressBarElement.parts,
+      'progress-bar'
     );
   }
 
   /**
    * @protected
-   * @param {number} thumbPosition
-   * @returns {number}
+   * @returns {import('lit').TemplateResult}
    */
-  calcPercentageOfMediaDurationOnThumb(thumbPosition) {
-    const trackRect = this.sliderElement.trackElement.getBoundingClientRect();
-    const percentage =
-      (100 / trackRect.width) * (thumbPosition - trackRect.left);
-    return clampNumber(0, percentage, 100);
+  renderProgressBarChildren() {
+    return this.renderProgressBarSlot();
   }
 
   /**
    * @protected
-   * @param {number} durationPercentage
-   * @returns {number}
+   * @returns {import('lit').TemplateResult}
    */
-  calcPreviewXPosition(durationPercentage) {
-    const rootRect = this.rootElement.getBoundingClientRect();
-
-    const previewRectWidth =
-      this.currentPreviewSlotElement?.getBoundingClientRect().width ?? 0;
-
-    // Margin on slider usually represents (thumb width / 2) so thumb is contained when on edge.
-    const sliderXMargin = parseFloat(
-      window.getComputedStyle(this.sliderElement.rootElement).marginLeft
-    );
-
-    const left =
-      (durationPercentage / 100) * rootRect.width - previewRectWidth / 2;
-
-    const rightLimit = rootRect.width - previewRectWidth - sliderXMargin;
-
-    return this.noPreviewClamp
-      ? left
-      : clampNumber(sliderXMargin, left, rightLimit);
+  renderProgressBarSlot() {
+    return html`<slot name=${this.getProgressBarSlotName()}></slot>`;
   }
 
   /**
    * @protected
-   * @param {number} time
-   * @param {Event} event
+   * @returns {string}
    */
-  updatePreviewTime(time, event) {
-    this.previewTime = clampNumber(0, round(time, 5), this.mediaDuration);
+  getProgressBarSlotName() {
+    return 'progress-bar';
+  }
 
-    this.style.setProperty(
-      '--vds-scrubber-preview-time',
-      String(this.previewTime)
-    );
+  // -------------------------------------------------------------------------------------------
+  // Scrubber Preview
+  // -------------------------------------------------------------------------------------------
 
-    this.previewTimeChangeThrottle?.(event);
+  /**
+   * @protected
+   * @readonly
+   */
+  previewEventListenerController = new EventListenerController(this, {
+    [ScrubberPreviewConnectEvent.TYPE]: this.handlePreviewConnect,
+    [ScrubberPreviewShowEvent.TYPE]: this.handlePreviewShow,
+    [ScrubberPreviewTimeUpdateEvent.TYPE]: this.handlePreviewTimeUpdate,
+    [ScrubberPreviewHideEvent.TYPE]: this.handlePreviewHide
+  });
+
+  /**
+   * @protected
+   * @type {ScrubberPreviewElement | undefined}
+   */
+  _scrubberPreviewElement;
+
+  /**
+   * The scrubber preview element `<vds-scrubber-preview>` (if given).
+   *
+   * @type {ScrubberPreviewElement | undefined}
+   */
+  get scrubberPreviewElement() {
+    return this._scrubberPreviewElement;
   }
 
   /**
    * @protected
-   * @type {number}
+   * @param {ScrubberPreviewConnectEvent} event
    */
-  previewPositionRafId = 0;
+  handlePreviewConnect(event) {
+    event.stopPropagation();
 
-  /**
-   * @protected
-   * @param {Event} event
-   * @returns {Promise<void>}
-   */
-  async updatePreviewPosition(event) {
-    window.cancelAnimationFrame(this.previewPositionRafId);
+    const { element, onDisconnect } = event.detail;
 
-    this.previewPositionRafId = await raf(() => {
-      const originalEvent = isVdsEvent(event) ? event.originalEvent : event;
+    this._scrubberPreviewElement = element;
+    this.setAttribute('previewable', '');
 
-      if (isPointerEvent(originalEvent)) {
-        const percent = this.calcPercentageOfMediaDurationOnThumb(
-          originalEvent.clientX
-        );
-
-        const previewTime = (percent / 100) * this.mediaDuration;
-
-        this.updatePreviewTime(previewTime, event);
-
-        if (!isNil(this.currentPreviewSlotElement)) {
-          const xPos = this.calcPreviewXPosition(percent);
-          this.currentPreviewSlotElement.style.transform = `translateX(${xPos}px)`;
-        }
-      }
+    onDisconnect(() => {
+      this._scrubberPreviewElement = undefined;
+      this.removeAttribute('previewable');
     });
   }
 
-  // -------------------------------------------------------------------------------------------
-  // Throttles
-  // -------------------------------------------------------------------------------------------
-
   /**
    * @protected
-   * @type {import('../../../utils/timing').ThrottledFunction<[event: Event]> | undefined}
+   * @param {ScrubberPreviewShowEvent} event
    */
-  previewTimeChangeThrottle;
-
-  /**
-   * @protected
-   * @type {import('../../../utils/timing').ThrottledFunction<[event: Event]> | undefined}
-   */
-  mediaSeekingRequestThrottle;
-
-  /**
-   * @protected
-   */
-  initThrottles() {
-    this.destroyThrottles();
-
-    this.previewTimeChangeThrottle = throttle(
-      this.dispatchPreviewTimeChangeEvent.bind(this),
-      this.previewTimeThrottle
-    );
-
-    this.mediaSeekingRequestThrottle = throttle(
-      this.dispatchUserSeekingEvent.bind(this),
-      this.userSeekingThrottle
-    );
+  handlePreviewShow(event) {
+    event.stopPropagation();
+    this.setAttribute('previewing', '');
   }
 
   /**
    * @protected
+   * @param {ScrubberPreviewTimeUpdateEvent} event
    */
-  destroyThrottles() {
-    this.previewTimeChangeThrottle?.cancel();
-    this.previewTimeChangeThrottle = undefined;
-    this.mediaSeekingRequestThrottle?.cancel();
-    this.mediaSeekingRequestThrottle = undefined;
+  handlePreviewTimeUpdate(event) {
+    event.stopPropagation();
+  }
+
+  /**
+   * @protected
+   * @param {ScrubberPreviewHideEvent} event
+   */
+  handlePreviewHide(event) {
+    event.stopPropagation();
+    this.removeAttribute('previewing');
   }
 }
 
 export const SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
-  disabled: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,
-  hidden: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
-  noPreviewClamp: {
-    control: StorybookControlType.Boolean,
-    defaultValue: false
-  },
-  noPreviewTrack: {
-    control: StorybookControlType.Boolean,
-    defaultValue: false
-  },
-  orientation: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
-  pauseWhileDragging: {
-    control: StorybookControlType.Boolean,
-    defaultValue: false
-  },
-  previewTimeThrottle: {
-    control: StorybookControlType.Number,
-    defaultValue: 30
-  },
-  progressLabel: {
-    control: StorybookControlType.Text,
-    defaultValue: 'Amount seekable'
-  },
-  progressText: {
-    control: StorybookControlType.Text,
-    defaultValue: '{currentTime} out of {duration}'
-  },
-  label: {
-    control: StorybookControlType.Text,
-    defaultValue: 'Time scrubber'
-  },
-  step: {
-    control: StorybookControlType.Number,
-    defaultValue: 0.25
-  },
-  keyboardStep: {
-    control: StorybookControlType.Number,
-    defaultValue: 20
-  },
-  shiftKeyMultiplier: {
-    control: StorybookControlType.Number,
-    defaultValue: 2
-  },
-  throttle: { control: StorybookControlType.Number, defaultValue: 0 },
-  userSeekingThrottle: {
-    control: StorybookControlType.Number,
-    defaultValue: 150
-  },
-  // Scrubber Actions
+  disabled: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,
+  hidden: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
+  label: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.label,
+  progressLabel: SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES.label,
+  orientation: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
+  pauseWhileDragging:
+    TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.pauseWhileDragging,
+  step: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.step,
+  keyboardStep: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.keyboardStep,
+  shiftKeyMultiplier:
+    TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.shiftKeyMultiplier,
+  seekingRequestThrottle:
+    TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.seekingRequestThrottle,
+  valueText: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.valueText,
+  progressValueText:
+    SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES.valueText,
+  // Scrubber Preview Properties
+  noPreviewClamp: SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES.noClamp,
+  noPreviewTrackFill: SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES.noTrackFill,
+  // Scrubber Preview Actions
+  onScrubberPreviewConnect: storybookAction(ScrubberPreviewConnectEvent.TYPE),
   onScrubberPreviewShow: storybookAction(ScrubberPreviewShowEvent.TYPE),
-  onScrubberPreviewHide: storybookAction(ScrubberPreviewHideEvent.TYPE),
   onScrubberPreviewTimeUpdate: storybookAction(
     ScrubberPreviewTimeUpdateEvent.TYPE
   ),
+  onScrubberPreviewHide: storybookAction(ScrubberPreviewHideEvent.TYPE),
   // Media Properties
   mediaCurrentTime: {
     control: StorybookControlType.Number,
-    defaultValue: 1000
+    defaultValue: 1200
   },
   mediaDuration: { control: StorybookControlType.Number, defaultValue: 3600 },
   mediaPaused: { control: StorybookControlType.Boolean, defaultValue: true },

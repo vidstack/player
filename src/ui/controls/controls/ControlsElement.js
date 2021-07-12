@@ -15,7 +15,7 @@ export const CONTROLS_ELEMENT_TAG_NAME = 'vds-controls';
 /**
  * Container for holding individual media controls.
  *
- * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the following attributes:
+ * 💡 The styling is left to you, it will only apply the following attributes:
  *
  * - `hidden`: Applied when the controls should be hidden and not available to the user.
  * - `idle`: Applied when there is no user activity for a given period, `hidden` should have greater priority.
@@ -56,7 +56,7 @@ export class ControlsElement extends VdsElement {
   }
 
   /**
-   * @type {import('../../../foundation/context/types').ContextConsumerDeclarations}
+   * @type {import('../../../foundation/context').ContextConsumerDeclarations}
    */
   static get contextConsumers() {
     return {

@@ -23,7 +23,7 @@ export const FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
  * @slot enter - The content to show when the `fullscreen` state is `false`.
  * @slot exit - The content to show when the `fullscreen` state is `true`.
  * @csspart button - The root button (`<vds-button>`).
- * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix such as `button-root`.
+ * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix.
  * @example
  * ```html
  * <vds-fullscreen-button>
@@ -53,7 +53,7 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     this.pressed = mediaContext.fullscreen.initialValue;
   }
 
-  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       pressed: mediaContext.fullscreen

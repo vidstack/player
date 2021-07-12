@@ -12,7 +12,7 @@ export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
  * Display an indicator when either the provider/media is booting or media playback has
  * stopped because of a lack of temporary data.
  *
- * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the following attributes:
+ * 💡 The styling is left to you, it will only apply the following attributes:
  *
  * - `media-can-play`: Applied when media can begin playback.
  * - `media-waiting`: Applied when playback has stopped because of a lack of temporary data.
@@ -45,7 +45,7 @@ export class BufferingIndicatorElement extends VdsElement {
     return [bufferingIndicatorElementStyles];
   }
 
-  /** @type {import('../../foundation/context/types').ContextConsumerDeclarations} */
+  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaCanPlay: mediaContext.canPlay,

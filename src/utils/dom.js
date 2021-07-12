@@ -2,7 +2,7 @@ import { LitElement } from 'lit';
 
 import { keysOf } from './string.js';
 import { IS_CLIENT } from './support.js';
-import { isNil, isString, isUndefined } from './unit.js';
+import { isFunction, isNil, isString, isUndefined } from './unit.js';
 
 /**
  * Requests an animation frame and waits for it to be resolved.
@@ -23,12 +23,17 @@ export function raf(callback) {
  * Builds an `exportsparts` attribute value given an array of `parts` and an optional `prefix`.
  *
  * @param {string[]} parts
- * @param {string} [prefix]
+ * @param {string | ((part: string) => string)} [prefix]
  * @returns {string}
  */
 export function buildExportPartsAttr(parts, prefix) {
   return parts
-    .map((part) => `${part}: ${prefix ? `${prefix}-` : ''}${part}`)
+    .map(
+      (part) =>
+        `${part}: ${
+          !isFunction(prefix) ? (prefix ? `${prefix}-` : '') : prefix(part)
+        }${part}`
+    )
     .join(', ');
 }
 

@@ -33,7 +33,7 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
     expect(volumeSlider).dom.to.equal(
       `
       <vds-volume-slider
-        label="Volume slider"
+        label="Media volume slider"
         orientation="horizontal"
         step="0.5"
       ></vds-volume-slider>
@@ -45,28 +45,21 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
     const { volumeSlider } = await buildFixture();
     expect(volumeSlider).shadowDom.to.equal(
       `
-      <div
-        id="root"
-        part="root"
-       >
         <vds-slider
           exportparts="root: slider-root, thumb: slider-thumb, track: slider-track, track-fill: slider-track-fill"
           id="slider"
           keyboard-step="0.5"
-          label="Volume slider"
+          label="Media volume slider"
           max="100"
           min="0"
           orientation="horizontal"
           part="slider"
           shift-key-multiplier="10"
           step="0.5"
-          throttle="0"
           value="100"
         >
-          <slot name="slider"></slot>
+          <slot></slot>
         </vds-slider>
-        <slot></slot>
-      </div>
       `
     );
   });
@@ -104,13 +97,8 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
     expect(detail).to.equal(0.8);
   });
 
-  it('should have rootElement', async function () {
-    const { volumeSlider } = await buildFixture();
-    expect(volumeSlider.rootElement).to.be.instanceOf(HTMLDivElement);
-  });
-
-  it('should have sliderElement', async function () {
-    const { volumeSlider } = await buildFixture();
-    expect(volumeSlider.sliderElement).to.be.instanceOf(SliderElement);
-  });
+  // it('should have sliderElement', async function () {
+  //   const { volumeSlider } = await buildFixture();
+  //   expect(volumeSlider.sliderElement).to.be.instanceOf(SliderElement);
+  // });
 });

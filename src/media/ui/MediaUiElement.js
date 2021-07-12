@@ -17,7 +17,7 @@ export const MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
  * CSS parts. It also handles showing/hiding UI depending on whether native UI can't be
  * hidden (*cough* iOS).
  *
- * ⚠️ **IMPORTANT:** The styling is left to you, it will only apply the `root-hidden` CSS part.
+ * 💡 The styling is left to you, it will only apply the `root-hidden` CSS part.
  *
  * @tagname vds-media-ui
  * @slot Used to pass in UI components.
@@ -35,7 +35,7 @@ export class MediaUiElement extends VdsElement {
     return ['root', 'root-hidden'];
   }
 
-  /** @type {import('../../foundation/context/types').ContextConsumerDeclarations} */
+  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaCanPlay: mediaContext.canPlay,

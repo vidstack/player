@@ -49,7 +49,7 @@ export class ControlsManager extends ElementManager {
     /**
      * @protected
      * @readonly
-     * @type {import('../../foundation/context/types').ContextProvider<boolean>}
+     * @type {import('../../foundation/context').ContextProvider<boolean>}
      */
     this.hidden = controlsContext.hidden.provide(host);
 

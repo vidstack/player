@@ -1,8 +1,16 @@
-import { createContext } from '../../../foundation/context/index.js';
+import {
+  createContext,
+  derivedContext
+} from '../../../foundation/context/index.js';
+
+const dragging = createContext(false);
+const pointing = createContext(false);
 
 export const scrubberContext = {
-  preview: {
-    time: createContext(0),
-    showing: createContext(false)
-  }
+  dragging,
+  pointing,
+  interacting: derivedContext(
+    [dragging, pointing],
+    ([isDragging, isPointing]) => isDragging || isPointing
+  )
 };

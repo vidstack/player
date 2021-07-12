@@ -8,7 +8,12 @@
     "project": "./jsconfig.json"
   },
   "plugins": ["jsdoc", "mocha", "simple-import-sort"],
-  "ignorePatterns": ["src/bundle/index.js", "src/media/controller/index.js"],
+  "ignorePatterns": [
+    // Ignore files that contain both a `.js` and `.ts` file in same path (causes an error).
+    "src/bundle/index.js",
+    "src/media/controller/index.js",
+    "src/foundation/context/index.js"
+  ],
   "extends": [
     "plugin:wc/recommended",
     "plugin:lit/recommended",

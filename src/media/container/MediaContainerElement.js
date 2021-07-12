@@ -123,7 +123,7 @@ export class MediaContainerElement extends VdsElement {
     };
   }
 
-  /** @type {import('../../foundation/context/types').ContextConsumerDeclarations} */
+  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaCanPlay: mediaContext.canPlay,

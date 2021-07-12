@@ -14,7 +14,7 @@ import {
   getNumberOfDecimalPlaces,
   round
 } from '../../../utils/number.js';
-import { throttle } from '../../../utils/timing.js';
+import { rafThrottle } from '../../../utils/timing.js';
 import {
   SliderDragEndEvent,
   SliderDragStartEvent,
@@ -56,7 +56,7 @@ export const SliderKeyDirection = {
  * @csspart root - The component's root element, in this case the slider container (`<div>`).
  * @csspart thumb-container - The container for the slider's handle.
  * @csspart thumb - The slider's handle the user drags left/right (`<div>`).
- * @csspart track - The background of the slider in which the thumb slides along (`<div>`).
+ * @csspart track - The path in which the thumb slides along (`<div>`).
  * @csspart track-fill - The part of the track that is currently filled which fills left-to-right (`<div>`).
  * @cssprop --vds-slider-fill-rate - The ratio of the slider that is filled such as `0.3`.
  * @cssprop --vds-slider-fill-value - The current amount the slider is filled such as `30`.
@@ -78,13 +78,12 @@ export const SliderKeyDirection = {
  *   min="0"
  *   max="100"
  *   value="50"
- *   throttle="10"
  * ></vds-slider>
  * ```
  * @example
  * ```css
  * vds-slider {
- *   --vds-slider-active-color: pink;
+ *   --vds-slider-active-color: #ff2a5d;
  * }
  *
  * vds-slider::part(thumb) {
@@ -164,6 +163,33 @@ export class SliderElement extends WithFocus(VdsElement) {
     this.value = 50;
 
     /**
+     * ♿ **ARIA:** Alternative value for minimum value (defaults to `min`). This can
+     * be used when expressing slider as a percentage (0-100), and wishing to detail more
+     * information for better accessibility.
+     *
+     * @type {string | undefined}
+     */
+    this.valueMin = undefined;
+
+    /**
+     * ♿ **ARIA:** Alternative value for current value (defaults to `value`). This can
+     * be used when expressing slider as a percentage (0-100), and wishing to detail more
+     * information for better accessibility.
+     *
+     * @type {string | undefined}
+     */
+    this.valueNow = undefined;
+
+    /**
+     * ♿ **ARIA:** Alternative value for maximum value (defaults to `max`). This can
+     * be used when expressing slider as a percentage (0-100), and wishing to detail more
+     * information for better accessibility.
+     *
+     * @type {string | undefined}
+     */
+    this.valueMax = undefined;
+
+    /**
      * ♿ **ARIA:** Human-readable text alternative for the current value. Defaults to
      * `value:max` ratio as a percentage.
      *
@@ -202,14 +228,6 @@ export class SliderElement extends WithFocus(VdsElement) {
      */
     this.shiftKeyMultiplier = 5;
 
-    /**
-     * The amount of milliseconds to throttle the slider thumb during `mousemove` / `touchmove`
-     * events.
-     *
-     * @type {number}
-     */
-    this.throttle = 10;
-
     // State
     /**
      * @protected
@@ -237,9 +255,13 @@ export class SliderElement extends WithFocus(VdsElement) {
       hidden: { type: Boolean, reflect: true },
       disabled: { type: Boolean, reflect: true },
       value: { type: Number, reflect: true },
+      valueMin: { attribute: 'value-min' },
+      valueNow: { attribute: 'value-now' },
+      valueMax: { attribute: 'value-max' },
       valueText: { attribute: 'value-text' },
       orientation: {},
       thottle: { type: Number },
+      // State
       _isDragging: { state: true }
     };
   }
@@ -305,11 +327,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.initPointerMoveThrottle();
-  }
-
   update(changedProperties) {
     if (changedProperties.has('value')) {
       this.updateValue(this.value);
@@ -318,10 +335,6 @@ export class SliderElement extends WithFocus(VdsElement) {
     if (changedProperties.has('disabled') && this.disabled) {
       this._isDragging = false;
       this.removeAttribute('dragging');
-    }
-
-    if (changedProperties.has('throttle')) {
-      this.initPointerMoveThrottle();
     }
 
     super.update(changedProperties);
@@ -333,8 +346,8 @@ export class SliderElement extends WithFocus(VdsElement) {
   }
 
   disconnectedCallback() {
+    this.handlePointerMove.cancel();
     super.disconnectedCallback();
-    this.destroyPointerMoveThrottle();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -376,10 +389,25 @@ export class SliderElement extends WithFocus(VdsElement) {
         ${on('pointerdown', this.handleSliderPointerMove)}
         ${ref(this.rootRef)}
       >
-        ${this.renderThumbContainer()}${this.renderTrack()}${this.renderTrackFill()}${this.renderInput()}
-        <slot></slot>
+        ${this.renderSliderChildren()}
       </div>
     `;
+  }
+
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  renderSliderChildren() {
+    return html`${this.renderThumbContainer()}${this.renderTrack()}${this.renderTrackFill()}${this.renderInput()}${this.renderDefaultSlot()}`;
+  }
+
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  renderDefaultSlot() {
+    return html`<slot></slot>`;
   }
 
   /**
@@ -451,9 +479,9 @@ export class SliderElement extends WithFocus(VdsElement) {
         role="slider"
         tabindex="0"
         aria-label=${ifNonEmpty(this.label)}
-        aria-valuemax=${this.max}
-        aria-valuemin=${this.min}
-        aria-valuenow=${this.value}
+        aria-valuemin=${this.valueMin ?? this.min}
+        aria-valuenow=${this.valueNow ?? this.value}
+        aria-valuemax=${this.valueMax ?? this.max}
         aria-valuetext=${this.valueText ?? this.getValueAsTextFallback()}
         aria-orientation=${this.orientation}
         aria-disabled=${this.disabled}
@@ -723,6 +751,7 @@ export class SliderElement extends WithFocus(VdsElement) {
   stopDragging(event) {
     if (!this._isDragging) return;
     this._isDragging = false;
+    this.dispatchValueChange.cancel();
     this.removeAttribute('dragging');
     this.updateValueBasedOnThumbPosition(event);
     this.dispatchEvent(
@@ -736,12 +765,6 @@ export class SliderElement extends WithFocus(VdsElement) {
   // -------------------------------------------------------------------------------------------
   // Document (Pointer Events)
   // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @type {import('../../../utils/timing').ThrottledFunction<Parameters<SliderElement['handlePointerMove']>> | undefined}
-   */
-  pointerMoveThrottle;
 
   /**
    * @protected
@@ -761,22 +784,6 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   */
-  initPointerMoveThrottle() {
-    this.pointerMoveThrottle?.cancel();
-    this.pointerMoveThrottle = throttle(this.handlePointerMove, this.throttle);
-  }
-
-  /**
-   * @protected
-   */
-  destroyPointerMoveThrottle() {
-    this.pointerMoveThrottle?.cancel();
-    this.pointerMoveThrottle = undefined;
-  }
-
-  /**
-   * @protected
    * @param {PointerEvent} event
    */
   handleDocumentPointerUp(event) {
@@ -790,22 +797,23 @@ export class SliderElement extends WithFocus(VdsElement) {
    */
   handleDocumentPointerMove(event) {
     if (this.disabled || !this._isDragging) {
-      this.pointerMoveThrottle?.cancel();
+      this.handlePointerMove.cancel();
       return;
     }
 
-    this.pointerMoveThrottle?.(event);
+    this.handlePointerMove(event);
   }
 
   /**
    * @protected
-   * @param {PointerEvent} event
+   * @readonly
+   * @type {import('../../../utils/timing').RafThrottledFunction<(event: PointerEvent) => void>}
    */
-  handlePointerMove(event) {
+  handlePointerMove = rafThrottle((event) => {
     if (this.disabled || !this._isDragging) return;
     this.updateValueBasedOnThumbPosition(event);
     this.dispatchValueChange(event);
-  }
+  });
 
   /**
    * @protected
@@ -838,12 +846,12 @@ export class SliderElement extends WithFocus(VdsElement) {
    * @param {PointerEvent} event
    */
   updateValueBasedOnThumbPosition(event) {
-    const thumbPosition = event.clientX;
+    const thumbClientX = event.clientX;
 
     const { left: trackLeft, width: trackWidth } =
       this.trackElement.getBoundingClientRect();
 
-    const thumbPositionRate = (thumbPosition - trackLeft) / trackWidth;
+    const thumbPositionRate = (thumbClientX - trackLeft) / trackWidth;
 
     // Calling this will update `this.value`.
     this.updateValueByRate(thumbPositionRate);
@@ -857,9 +865,10 @@ export class SliderElement extends WithFocus(VdsElement) {
 
   /**
    * @protected
-   * @param {Event | undefined} [event]
+   * @readonly
+   * @type {import('../../../utils/timing').RafThrottledFunction<(event: Event | undefined) => void>}
    */
-  dispatchValueChange(event) {
+  dispatchValueChange = rafThrottle((event) => {
     if (this.value === this.lastDispatchedValue) return;
 
     this.dispatchEvent(
@@ -870,7 +879,7 @@ export class SliderElement extends WithFocus(VdsElement) {
     );
 
     this.lastDispatchedValue = this.value;
-  }
+  });
 }
 
 export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
@@ -896,7 +905,6 @@ export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControlType.Number,
     defaultValue: 5
   },
-  throttle: { control: StorybookControlType.Number, defaultValue: 10 },
   value: { control: StorybookControlType.Number, defaultValue: 50 },
   valueText: { control: StorybookControlType.Text },
   onSliderDragStart: storybookAction(SliderDragStartEvent.TYPE),

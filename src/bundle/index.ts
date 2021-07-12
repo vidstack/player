@@ -29,7 +29,6 @@ import '../ui/time/time-duration/globals';
 import '../ui/time/time-progress/globals';
 
 export * from '../foundation/context/index.js';
-export * from '../foundation/context/types';
 export * from '../foundation/directives/index.js';
 export * from '../foundation/elements/index.js';
 export * from '../foundation/events/index.js';

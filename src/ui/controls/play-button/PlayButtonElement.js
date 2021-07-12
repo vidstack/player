@@ -23,7 +23,7 @@ export const PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
  * @slot play - The content to show when the `paused` state is `true`.
  * @slot pause - The content to show when the `paused` state is `false`.
  * @csspart button - The root button (`<vds-button>`).
- * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix such as `button-root`.
+ * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix.
  * @example
  * ```html
  * <vds-play-button>
@@ -53,7 +53,7 @@ export class PlayButtonElement extends ToggleButtonElement {
     this.pressed = false;
   }
 
-  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       pressed: {

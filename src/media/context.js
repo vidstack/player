@@ -56,7 +56,7 @@ export const mediaContext = {
   currentTime: createContext(0),
   ended: createContext(false),
   error:
-    /** @type {import('../foundation/context/types').Context<unknown | undefined>} */ (
+    /** @type {import('../foundation/context').Context<unknown | undefined>} */ (
       createContext(undefined)
     ),
   fullscreen: createContext(false),
@@ -89,7 +89,7 @@ export const mediaContext = {
 };
 
 /**
- * @returns {import('../foundation/context/types').ContextProviderRecord<typeof mediaContext>}
+ * @returns {import('../foundation/context').ContextProviderRecord<typeof mediaContext>}
  */
 export function createMediaContextRecord() {
   return Object.keys(mediaContext).reduce(

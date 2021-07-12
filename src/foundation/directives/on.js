@@ -2,7 +2,7 @@ import { nothing } from 'lit';
 import { AsyncDirective } from 'lit/async-directive.js';
 import { directive, PartType } from 'lit/directive.js';
 
-import { isFunction, isNil, isString, noop } from '../../utils/unit.js';
+import { isFunction, isNil, isString } from '../../utils/unit.js';
 import { listen as listenToEvent } from '../events/index.js';
 
 export class EventListenerDirective extends AsyncDirective {
@@ -38,9 +38,9 @@ export class EventListenerDirective extends AsyncDirective {
 
   /**
    * @protected
-   * @type {() => void}
+   * @type {(() => void) | undefined}
    */
-  dispose = noop;
+  dispose;
 
   /**
    * @param {import('lit/directive').PartInfo} partInfo
@@ -82,6 +82,7 @@ export class EventListenerDirective extends AsyncDirective {
       this.handler = handler;
       this.options = options;
       this.host = part.options?.host;
+      this.removeEventListener();
       this.addEventListener();
     }
 
@@ -97,20 +98,23 @@ export class EventListenerDirective extends AsyncDirective {
       !isString(this.type) ||
       !isFunction(this.handler)
     ) {
-      this.dispose();
-      this.dispose = noop;
       return;
     }
 
-    const dispose = listenToEvent(
+    this.dispose = listenToEvent(
       this.element,
       this.type,
       this.handler.bind(this.host ?? this.element),
       this.options
     );
+  }
 
-    this.dispose();
-    this.dispose = dispose;
+  /**
+   * @protected
+   */
+  removeEventListener() {
+    this.dispose?.();
+    this.dispose = undefined;
   }
 
   /**
@@ -124,8 +128,7 @@ export class EventListenerDirective extends AsyncDirective {
    * @protected
    */
   disconnected() {
-    this.dispose();
-    this.dispose = noop;
+    this.removeEventListener();
   }
 }
 

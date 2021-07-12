@@ -4,7 +4,11 @@ import '../slider/define.js';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
+import {
+  forwardEvent,
+  ifNonEmpty,
+  on
+} from '../../../foundation/directives/index.js';
 import { VdsElement } from '../../../foundation/elements/index.js';
 import {
   storybookAction,
@@ -15,6 +19,7 @@ import {
   MediaRemoteControl,
   VolumeChangeRequestEvent
 } from '../../../media/index.js';
+import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { round } from '../../../utils/number.js';
 import {
   SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
@@ -31,14 +36,23 @@ export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
  * A slider control that lets the user specify their desired volume level.
  *
  * @tagname vds-volume-slider
- * @slot Used to pass content into the root.
- * @slot slider - Used to pass content into the slider component (`<vds-slider>`).
- * @csspart root - The component's root element (`<div>`).
+ * @slot Used to pass content into the slider component (`<vds-slider>`).
  * @csspart slider - The slider component (`<vds-slider>`).
- * @csspart slider-* - All slider parts re-exported with the `slider` prefix such as `slider-root` and `slider-thumb`.
+ * @csspart slider-* - All `vds-slider` parts re-exported with the `slider` prefix.
  *  @example
  * ```html
- * <vds-volume-slider label="Volume slider"></vds-volume-slider>
+ * <vds-volume-slider
+ *   label="Media volume slider"
+ * ></vds-volume-slider>
+ * ```
+ * @example
+ * ```css
+ * vds-volume-slider {
+ *   --vds-slider-track-height: 2.5px;
+ *   --vds-slider-thumb-width: 16px;
+ *   --vds-slider-thumb-height: 16px;
+ *   --vds-slider-active-color: #ff2a5d;
+ * }
  * ```
  */
 export class VolumeSliderElement extends VdsElement {
@@ -52,8 +66,15 @@ export class VolumeSliderElement extends VdsElement {
     const sliderExportParts = SliderElement.parts.map(
       (part) => `slider-${part}`
     );
-    return ['root', 'slider', ...sliderExportParts];
+
+    return ['slider', ...sliderExportParts];
   }
+
+  /**
+   * @protected
+   * @readonly
+   */
+  remoteControl = new MediaRemoteControl(this);
 
   constructor() {
     super();
@@ -85,7 +106,7 @@ export class VolumeSliderElement extends VdsElement {
      *
      * @type {string}
      */
-    this.label = 'Volume slider';
+    this.label = 'Media volume slider';
 
     /**
      * A number that specifies the granularity that the slider value must adhere to.
@@ -147,7 +168,7 @@ export class VolumeSliderElement extends VdsElement {
     };
   }
 
-  /** @type {import('../../../foundation/context/types').ContextConsumerDeclarations} */
+  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {
       mediaVolume: mediaContext.volume
@@ -180,56 +201,7 @@ export class VolumeSliderElement extends VdsElement {
   }
 
   render() {
-    return this.renderVolumeSlider();
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render (Volume Slider)
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
-   */
-  rootRef = createRef();
-
-  /**
-   * The component's root element.
-   *
-   * @type {HTMLDivElement}
-   */
-  get rootElement() {
-    return /** @type {HTMLDivElement} */ (this.rootRef.value);
-  }
-
-  renderVolumeSlider() {
-    return html`
-      <div
-        id="root"
-        part=${this.getVolumeSliderPartAttr()}
-        ?hidden=${this.hidden}
-        ${ref(this.rootRef)}
-      >
-        ${this.renderSlider()}${this.renderDefaultSlot()}
-      </div>
-    `;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  getVolumeSliderPartAttr() {
-    return 'root';
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit').TemplateResult}
-   */
-  renderDefaultSlot() {
-    return html`<slot></slot>`;
+    return html`${this.renderSlider()}`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -269,13 +241,15 @@ export class VolumeSliderElement extends VdsElement {
         step=${this.step}
         keyboard-step=${this.keyboardStep}
         shift-key-multiplier=${this.shiftKeyMultiplier}
-        throttle=${0}
         value=${this.currentVolume}
         ?disabled=${this.disabled}
         ?hidden=${this.hidden}
         ${on(SliderDragStartEvent.TYPE, this.handleSliderDragStart)}
-        ${on(SliderDragEndEvent.TYPE, this.handleSliderDragEnd)}
         ${on(SliderValueChangeEvent.TYPE, this.handleSliderValueChange)}
+        ${on(SliderDragEndEvent.TYPE, this.handleSliderDragEnd)}
+        ${forwardEvent(SliderDragStartEvent.TYPE)}
+        ${forwardEvent(SliderValueChangeEvent.TYPE)}
+        ${forwardEvent(SliderDragEndEvent.TYPE)}
         ${ref(this.sliderRef)}
       >
         ${this.renderSliderChildren()}
@@ -296,10 +270,7 @@ export class VolumeSliderElement extends VdsElement {
    * @returns {string}
    */
   getSliderExportPartsAttr() {
-    // Take all slider parts and re-export with `slider` prefix (eg: `root` => `slider-root`).
-    return SliderElement.parts
-      .map((part) => `${part}: slider-${part}`)
-      .join(', ');
+    return buildExportPartsAttr(SliderElement.parts, 'slider');
   }
 
   /**
@@ -307,14 +278,24 @@ export class VolumeSliderElement extends VdsElement {
    * @returns {import('lit').TemplateResult}
    */
   renderSliderChildren() {
-    return html`<slot name="slider"></slot>`;
+    return this.renderSliderSlot();
   }
 
   /**
    * @protected
-   * @readonly
+   * @returns {import('lit').TemplateResult}
    */
-  remoteControl = new MediaRemoteControl(this);
+  renderSliderSlot() {
+    return html`<slot name=${ifNonEmpty(this.getSliderSlotName())}></slot>`;
+  }
+
+  /**
+   * @protected
+   * @returns {string | undefined}
+   */
+  getSliderSlotName() {
+    return undefined;
+  }
 
   /**
    * @protected
@@ -326,14 +307,6 @@ export class VolumeSliderElement extends VdsElement {
 
   /**
    * @protected
-   * @param {SliderDragEndEvent} event
-   */
-  handleSliderDragEnd(event) {
-    this.removeAttribute('dragging');
-  }
-
-  /**
-   * @protected
    * @param {SliderValueChangeEvent} event
    */
   handleSliderValueChange(event) {
@@ -341,6 +314,14 @@ export class VolumeSliderElement extends VdsElement {
     this.currentVolume = newVolume;
     const mediaVolume = round(newVolume / 100, 3);
     this.remoteControl.changeVolume(mediaVolume, event);
+  }
+
+  /**
+   * @protected
+   * @param {SliderDragEndEvent} event
+   */
+  handleSliderDragEnd(event) {
+    this.removeAttribute('dragging');
   }
 }
 

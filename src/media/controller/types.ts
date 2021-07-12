@@ -110,7 +110,7 @@ export interface MediaProviderBridgedMethods {
    * of the content being rendered in the media element. This method will return `undefined`
    * if this API is not available.
    *
-   * 📝 Only available with `Html5MediaElement` or a descendant of it.
+   * 💡 Only available with `Html5MediaElement` or a descendant of it.
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/captureStream
    */
@@ -127,10 +127,9 @@ export interface MediaProviderBridgedMethods {
    * amount of media data that is prefetched is determined by the value of the element's
    * `preload` attribute.
    *
-   * ⚠️ **IMPORTANT:** You should generally not need to call this method as it's handled by
-   * the library.
+   * 💡 You should generally not need to call this method as it's handled by the library.
    *
-   * 📝 Only available with `Html5MediaElement` or a descendant of it.
+   * 💡 Only available with `Html5MediaElement` or a descendant of it.
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/load
    */
@@ -149,7 +148,7 @@ export interface MediaProviderBridgedMethods {
    * that mode is granted, the returned `Promise` will resolve and the video will receive a
    * `enterpictureinpicture` event to let it know that it's now in picture-in-picture.
    *
-   * 📝 Only available with `VideoElement` or a descendant of it.
+   * 💡 Only available with `VideoElement` or a descendant of it.
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/requestPictureInPicture
    */
