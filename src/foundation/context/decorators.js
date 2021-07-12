@@ -41,7 +41,7 @@ export function watchContext(context, options) {
     /** @type {typeof import('lit').ReactiveElement} */
     const ctor = proto.constructor;
 
-    defineContextConsumer(ctor, Symbol('@watchContext'), context, {
+    defineContextConsumer(ctor, Symbol('Vidstack.watchContext'), context, {
       ...options,
       onUpdate(value) {
         if (isFunction(this[name])) this[name](value);

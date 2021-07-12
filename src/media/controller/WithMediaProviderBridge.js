@@ -23,7 +23,7 @@ import {
   MediaProviderElement
 } from '../provider/index.js';
 
-const BRIDGE_DEFINED = Symbol('bridge_defined');
+const BRIDGE_DEFINED = Symbol('Vidstack.withMediaProviderBridge');
 
 /**
  * @mixin

@@ -1,7 +1,7 @@
 import { isDerviedContext } from './context.js';
 
-const PROVIDERS = Symbol('providers');
-const CONSUMERS = Symbol('consumers');
+const PROVIDERS = Symbol('Vidstack.providers');
+const CONSUMERS = Symbol('Vidstack.consumers');
 
 /**
  * @template {any} T

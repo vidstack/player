@@ -1,7 +1,7 @@
 import { isFunction } from '../../utils/unit.js';
 import { defineContextConsumer, defineContextProvider } from './define.js';
 
-const FINALIZED = Symbol('finalized');
+const FINALIZED = Symbol('Vidstack.withContextFinalized');
 
 /**
  * @template {import('./types').ContextHostConstructor} T

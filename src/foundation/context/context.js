@@ -32,7 +32,7 @@ class ConsumerConnectEvent extends CustomEvent {
  * @returns {import('./types').Context<T>}
  */
 export function createContext(initialValue) {
-  const key = Symbol('CTX_PROVIDER');
+  const key = Symbol('Vidstack.contextProvider');
 
   // Privately declared event to safely pair context providers and consumers.
   class ContextConsumerConnectEvent extends ConsumerConnectEvent {}
