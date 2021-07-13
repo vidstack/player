@@ -39,6 +39,39 @@ export function defineContextProvider(ctor, name, context, options = {}) {
 
 /**
  * @template {any} T
+ * @param {import('lit').ReactiveElement} element
+ * @param {string|symbol} name
+ * @param {import('./types').Context<T>} context
+ * @param {import('./types').ContextConsumeOptions<T>} [options]
+ */
+function initConsumer(element, name, context, options = {}) {
+  let initialized = false;
+  let oldValue =
+    options.transform?.(context.initialValue) ?? context.initialValue;
+
+  const consumer = context.consume(element, {
+    ...options,
+    onUpdate: (newValue) => {
+      if (!initialized) return;
+
+      // Trigger setters.
+      element[name] = newValue;
+
+      if (options.shouldRequestUpdate ?? true) {
+        element.requestUpdate(name, oldValue);
+        oldValue = newValue;
+      }
+
+      options.onUpdate?.call(element, newValue);
+    }
+  });
+
+  element[CONSUMERS].set(name, consumer);
+  initialized = true;
+}
+
+/**
+ * @template {any} T
  * @param {typeof import('lit').ReactiveElement} ctor
  * @param {string|symbol} name
  * @param {import('./types').Context<T>} context
@@ -48,41 +81,9 @@ export function defineContextConsumer(ctor, name, context, options = {}) {
   // Might be called by decorator.
   /** @type {any} */ (ctor).finalizeContext?.();
 
-  /**
-   * @param {import('lit').ReactiveElement} element
-   * @returns {import('./types').ContextConsumer<any>}
-   */
-  function initConsumer(element) {
-    let initialized = false;
-    let oldValue =
-      options.transform?.(context.initialValue) ?? context.initialValue;
-
-    const consumer = context.consume(element, {
-      ...options,
-      onUpdate: (newValue) => {
-        if (!initialized) return;
-
-        // Trigger setters.
-        element[name] = newValue;
-
-        if (options.shouldRequestUpdate ?? true) {
-          element.requestUpdate(name, oldValue);
-          oldValue = newValue;
-        }
-
-        options.onUpdate?.call(element, newValue);
-      }
-    });
-
-    element[CONSUMERS].set(name, consumer);
-    initialized = true;
-
-    return consumer;
-  }
-
   ctor.addInitializer((element) => {
     if (!element[CONSUMERS]) element[CONSUMERS] = new Map();
-    initConsumer(element);
+    initConsumer(element, name, context, options);
   });
 
   Object.defineProperty(ctor.prototype, name, {
