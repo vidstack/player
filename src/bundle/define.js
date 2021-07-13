@@ -16,6 +16,7 @@ import '../ui/controls/time-slider/define.js';
 import '../ui/controls/toggle-button/define.js';
 import '../ui/controls/toggle/define.js';
 import '../ui/controls/volume-slider/define.js';
+import '../ui/scrim/define.js';
 import '../ui/time/time-current/define.js';
 import '../ui/time/time-duration/define.js';
 import '../ui/time/time-progress/define.js';
