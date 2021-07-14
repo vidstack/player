@@ -38,12 +38,12 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
     const { scrubber } = await buildFixture();
     expect(scrubber).shadowDom.to.equal(`
       <vds-time-slider
-        exportparts="slider: time-slider, slider-root: time-slider-root, slider-thumb: time-slider-thumb, slider-track: time-slider-track, slider-track-fill: time-slider-track-fill"
+        exportparts="root: time-slider-root, thumb: time-slider-thumb, track: time-slider-track, track-fill: time-slider-track-fill"
         id="time-slider"
         keyboard-step="20"
         label="Media time slider"
         orientation="horizontal"
-        part="slider"
+        part="time-slider"
         shift-key-multiplier="2"
         step="0.25"
         value-text="{currentTime} out of {duration}"
@@ -61,4 +61,6 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
       </vds-time-slider>
     `);
   });
+
+  // TODO: more tests.
 });

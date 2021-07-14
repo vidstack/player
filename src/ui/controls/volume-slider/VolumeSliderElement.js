@@ -1,15 +1,10 @@
 // ** Dependencies **
 import '../slider/define.js';
 
-import { html } from 'lit';
-import { createRef, ref } from 'lit/directives/ref.js';
+import { property } from 'lit/decorators.js';
 
-import {
-  forwardEvent,
-  ifNonEmpty,
-  on
-} from '../../../foundation/directives/index.js';
-import { VdsElement } from '../../../foundation/elements/index.js';
+import { consumeContext } from '../../../foundation/context/index.js';
+import { EventListenerController } from '../../../foundation/events/index.js';
 import {
   storybookAction,
   StorybookControl
@@ -19,16 +14,12 @@ import {
   MediaRemoteControl,
   VolumeChangeRequestEvent
 } from '../../../media/index.js';
-import { buildExportPartsAttr } from '../../../utils/dom.js';
 import { round } from '../../../utils/number.js';
 import {
   SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  SliderDragEndEvent,
-  SliderDragStartEvent,
   SliderElement,
   SliderValueChangeEvent
 } from '../slider/index.js';
-import { volumeSliderElementStyles } from './styles.js';
 
 export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
 
@@ -36,9 +27,6 @@ export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
  * A slider control that lets the user specify their desired volume level.
  *
  * @tagname vds-volume-slider
- * @slot Used to pass content into the slider component (`<vds-slider>`).
- * @csspart slider - The slider component (`<vds-slider>`).
- * @csspart slider-* - All `vds-slider` parts re-exported with the `slider` prefix.
  *  @example
  * ```html
  * <vds-volume-slider
@@ -55,133 +43,45 @@ export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
  * }
  * ```
  */
-export class VolumeSliderElement extends VdsElement {
-  /** @type {import('lit').CSSResultGroup} */
-  static get styles() {
-    return [volumeSliderElementStyles];
-  }
-
-  /** @type {string[]} */
-  static get parts() {
-    const sliderExportParts = SliderElement.parts.map(
-      (part) => `slider-${part}`
-    );
-
-    return ['slider', ...sliderExportParts];
-  }
-
-  /**
-   * @protected
-   * @readonly
-   */
-  remoteControl = new MediaRemoteControl(this);
-
-  constructor() {
-    super();
-
-    // Properties
-    /**
-     * Whether the slider is disabled.
-     *
-     * @type {boolean}
-     */
-    this.disabled = false;
-
-    /**
-     * Whether the slider is hidden.
-     *
-     * @type {boolean}
-     */
-    this.hidden = false;
-
-    /**
-     * The slider orientation.
-     *
-     * @type {'horizontal' | 'vertical'}
-     */
-    this.orientation = 'horizontal';
-
-    /**
-     * ♿ **ARIA:** The `aria-label` for the slider.
-     *
-     * @type {string}
-     */
-    this.label = 'Media volume slider';
-
-    /**
-     * A number that specifies the granularity that the slider value must adhere to.
-     *
-     * @type {number}
-     */
-    this.step = 0.5;
-
-    /**
-     * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
-     * the slider via keyboard.
-     *
-     * @type {number}
-     */
-    this.keyboardStep = 0.5;
-
-    /**
-     * A number that will be used to multiply the `step` when the `Shift` key is held down and the
-     * slider value is changed by pressing `LeftArrow` or `RightArrow`.
-     *
-     * @type {number}
-     */
-    this.shiftKeyMultiplier = 10;
-
-    // Context
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.mediaVolume = mediaContext.volume.initialValue;
-
-    // State
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.currentVolume = this.mediaVolume * 100;
-  }
-
+export class VolumeSliderElement extends SliderElement {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      // Properties
-      disabled: { type: Boolean, reflect: true },
-      hidden: { type: Boolean, reflect: true },
-      orientation: { reflect: true },
-      label: { reflect: true },
-      step: { type: Number, reflect: true },
-      keyboardStep: { type: Number, attribute: 'keyboard-step' },
-      shiftKeyMultiplier: {
-        type: Number,
-        attribute: 'shift-key-multiplier'
-      },
-      currentVolume: { state: true }
-    };
-  }
+  label = 'Media volume slider';
+  step = 0.5;
+  keyboardStep = 0.5;
+  shiftKeyMultiplier = 10;
 
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      mediaVolume: mediaContext.volume
-    };
-  }
+  /** @internal */
+  @property({ attribute: false })
+  min = 0;
+  /** @internal */
+  @property({ attribute: false })
+  max = 100;
 
   /**
-   * The current volume level.
+   * @protected
+   * @type {number}
+   */
+  @consumeContext(mediaContext.volume)
+  mediaVolume = mediaContext.volume.initialValue;
+
+  /**
+   * Represents the current volume out of 100.
+   *
+   * @internal
+   */
+  @property({ attribute: false, state: true })
+  value = this.mediaVolume * 100;
+
+  /**
+   * The current media volume level (between 0 - 1).
    *
    * @type {number}
    */
   get volume() {
-    return round(this.currentVolume / 100, 3);
+    return round(this.value / 100, 3);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -193,117 +93,26 @@ export class VolumeSliderElement extends VdsElement {
    * @param {import('lit').PropertyValues} changedProperties
    */
   update(changedProperties) {
-    super.update(changedProperties);
-
     if (changedProperties.has('mediaVolume')) {
-      this.currentVolume = this.mediaVolume * 100;
+      this.value = this.mediaVolume * 100;
     }
-  }
 
-  render() {
-    return html`${this.renderSlider()}`;
+    super.update(changedProperties);
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Render (Slider)
-  // -------------------------------------------------------------------------------------------
 
   /**
    * @protected
    * @readonly
-   * @type {import('lit/directives/ref').Ref<SliderElement>}
    */
-  sliderRef = createRef();
-
-  /**
-   * Returns the underlying `vds-slider` component.
-   *
-   * @type {SliderElement}
-   */
-  get sliderElement() {
-    return /** @type {SliderElement} */ (this.sliderRef.value);
-  }
+  remoteControl = new MediaRemoteControl(this);
 
   /**
    * @protected
-   * @returns {import('lit').TemplateResult}
+   * @readonly
    */
-  renderSlider() {
-    return html`
-      <vds-slider
-        id="slider"
-        exportparts=${this.getSliderExportPartsAttr()}
-        label=${ifNonEmpty(this.label)}
-        min="0"
-        max="100"
-        orientation=${this.orientation}
-        part=${this.getSliderPartAttr()}
-        step=${this.step}
-        keyboard-step=${this.keyboardStep}
-        shift-key-multiplier=${this.shiftKeyMultiplier}
-        value=${this.currentVolume}
-        ?disabled=${this.disabled}
-        ?hidden=${this.hidden}
-        ${on(SliderDragStartEvent.TYPE, this.handleSliderDragStart)}
-        ${on(SliderValueChangeEvent.TYPE, this.handleSliderValueChange)}
-        ${on(SliderDragEndEvent.TYPE, this.handleSliderDragEnd)}
-        ${forwardEvent(SliderDragStartEvent.TYPE)}
-        ${forwardEvent(SliderValueChangeEvent.TYPE)}
-        ${forwardEvent(SliderDragEndEvent.TYPE)}
-        ${ref(this.sliderRef)}
-      >
-        ${this.renderSliderChildren()}
-      </vds-slider>
-    `;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  getSliderPartAttr() {
-    return 'slider';
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  getSliderExportPartsAttr() {
-    return buildExportPartsAttr(SliderElement.parts, 'slider');
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit').TemplateResult}
-   */
-  renderSliderChildren() {
-    return this.renderSliderSlot();
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit').TemplateResult}
-   */
-  renderSliderSlot() {
-    return html`<slot name=${ifNonEmpty(this.getSliderSlotName())}></slot>`;
-  }
-
-  /**
-   * @protected
-   * @returns {string | undefined}
-   */
-  getSliderSlotName() {
-    return undefined;
-  }
-
-  /**
-   * @protected
-   * @param {SliderDragStartEvent} event
-   */
-  handleSliderDragStart(event) {
-    this.setAttribute('dragging', '');
-  }
+  sliderEventListenerController = new EventListenerController(this, {
+    [SliderValueChangeEvent.TYPE]: this.handleSliderValueChange
+  });
 
   /**
    * @protected
@@ -314,14 +123,6 @@ export class VolumeSliderElement extends VdsElement {
     this.currentVolume = newVolume;
     const mediaVolume = round(newVolume / 100, 3);
     this.remoteControl.changeVolume(mediaVolume, event);
-  }
-
-  /**
-   * @protected
-   * @param {SliderDragEndEvent} event
-   */
-  handleSliderDragEnd(event) {
-    this.removeAttribute('dragging');
   }
 }
 

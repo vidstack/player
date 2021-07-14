@@ -1,12 +1,16 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../../foundation/directives/index.js';
-import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
+import { ElementDisposalController } from '../../../foundation/elements/index.js';
+import { WithFocus } from '../../../foundation/elements/index.js';
 import { listen } from '../../../foundation/events/index.js';
-import { storybookAction } from '../../../foundation/storybook/helpers.js';
-import { StorybookControl } from '../../../foundation/storybook/StorybookControl.js';
+import {
+  storybookAction,
+  StorybookControl
+} from '../../../foundation/storybook/index.js';
 import { isUndefined } from '../../../utils/unit.js';
 import { buttonElementStyles } from './styles.js';
 
@@ -41,7 +45,7 @@ export const BUTTON_ELEMENT_TAG_NAME = 'vds-button';
  * }
  * ```
  */
-export class ButtonElement extends WithFocus(VdsElement) {
+export class ButtonElement extends WithFocus(LitElement) {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
     return [buttonElementStyles];
@@ -52,101 +56,96 @@ export class ButtonElement extends WithFocus(VdsElement) {
     return ['root'];
   }
 
-  constructor() {
-    super();
-
-    // Properties
-    /**
-     * ♿ **ARIA:** The `aria-label` property of the button.
-     *
-     * @type {string | undefined}
-     */
-    this.label = undefined;
-
-    /**
-     * ♿ **ARIA:** Identifies the element (or elements) whose contents or presence are controlled by
-     * the current button. See related `aria-owns`.
-     *
-     * @type {string | undefined}
-     */
-    this.controls = undefined;
-
-    /**
-     * Indicates the availability and type of interactive popup element, such as menu or dialog,
-     * that can be triggered by the button.
-     *
-     * @type {boolean | undefined}
-     */
-    this.hasPopup = undefined;
-
-    /**
-     * Whether the button should be hidden.
-     *
-     * @type {boolean}
-     */
-    this.hidden = false;
-
-    /**
-     * Whether the button should be disabled (not-interactable).
-     *
-     * @type {boolean}
-     */
-    this.disabled = false;
-
-    /**
-     * Sets the default behaviour of the button.
-     *
-     * @type {ButtonType}
-     */
-    this.type = 'button';
-
-    /**
-     * ♿ **ARIA:** Indicates whether the button, or another grouping element it controls, is
-     * currently expanded or collapsed.
-     *
-     * @type {boolean | undefined}
-     */
-    this.expanded = undefined;
-
-    /**
-     * ♿ **ARIA:** Indicates the current "pressed" state of toggle buttons. See related `aria-checked`
-     * and `aria-selected`.
-     *
-     * @type {boolean | undefined}
-     */
-    this.pressed = undefined;
-
-    /**
-     * ♿ **ARIA:** Identifies the element (or elements) that describes the button. See related
-     * `aria-labelledby`.
-     *
-     * @type {string | undefined}
-     */
-    this.describedBy = undefined;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      label: {},
-      controls: {},
-      hasPopup: { type: Boolean, attribute: 'has-popup' },
-      hidden: { type: Boolean, reflect: true },
-      disabled: { type: Boolean, reflect: true },
-      type: { reflect: true },
-      expanded: { type: Boolean, reflect: true },
-      pressed: { type: Boolean, reflect: true },
-      describedBy: { reflect: true, attribute: 'described-by' }
-    };
-  }
+  /**
+   * ♿ **ARIA:** The `aria-label` property of the button.
+   *
+   * @type {string | undefined}
+   */
+  @property()
+  label;
+
+  /**
+   * ♿ **ARIA:** Identifies the element (or elements) whose contents or presence are controlled by
+   * the current button. See related `aria-owns`.
+   *
+   * @type {string | undefined}
+   */
+  @property()
+  controls;
+
+  /**
+   * Indicates the availability and type of interactive popup element, such as menu or dialog,
+   * that can be triggered by the button.
+   *
+   * @type {boolean | undefined}
+   */
+  @property({ type: Boolean, attribute: 'has-popup' })
+  hasPopup;
+
+  /**
+   * Whether the button should be hidden.
+   *
+   * @type {boolean}
+   */
+  @property({ type: Boolean, reflect: true })
+  hidden = false;
+
+  /**
+   * Whether the button should be disabled (not-interactable).
+   *
+   * @type {boolean}
+   */
+  @property({ type: Boolean, reflect: true })
+  disabled = false;
+
+  /**
+   * Sets the default behaviour of the button.
+   *
+   * @type {ButtonType}
+   */
+  @property({ reflect: true })
+  type = 'button';
+
+  /**
+   * ♿ **ARIA:** Indicates whether the button, or another grouping element it controls, is
+   * currently expanded or collapsed.
+   *
+   * @type {boolean | undefined}
+   */
+  @property({ type: Boolean, reflect: true })
+  expanded;
+
+  /**
+   * ♿ **ARIA:** Indicates the current "pressed" state of toggle buttons. See related `aria-checked`
+   * and `aria-selected`.
+   *
+   * @type {boolean | undefined}
+   */
+  @property({ type: Boolean, reflect: true })
+  pressed;
+
+  /**
+   * ♿ **ARIA:** Identifies the element (or elements) that describes the button. See related
+   * `aria-labelledby`.
+   *
+   * @type {string | undefined}
+   */
+  @property({ reflect: true, attribute: 'described-by' })
+  describedBy;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
+
+  /**
+   * @protected
+   * @readonly
+   */
+  disconnectDisposal = new ElementDisposalController(this);
 
   connectedCallback() {
     super.connectedCallback();
@@ -164,7 +163,7 @@ export class ButtonElement extends WithFocus(VdsElement) {
   rootRef = createRef();
 
   /**
-   * The component's root element.
+   * The underlying `<button>` element.
    *
    * @type {HTMLButtonElement}
    */
@@ -173,11 +172,15 @@ export class ButtonElement extends WithFocus(VdsElement) {
   }
 
   render() {
+    return this.renderButton();
+  }
+
+  renderButton() {
     return html`
       <button
         id="root"
-        class=${this.getRootClassAttr()}
-        part=${this.getRootPartAttr()}
+        class=${this.getButtonClassAttr()}
+        part=${this.getButtonPartAttr()}
         type=${ifNonEmpty(this.type)}
         aria-label=${ifNonEmpty(this.label)}
         aria-controls=${ifNonEmpty(this.controls)}
@@ -189,7 +192,7 @@ export class ButtonElement extends WithFocus(VdsElement) {
         ?disabled=${this.disabled}
         ${ref(this.rootRef)}
       >
-        ${this.renderRootChildren()}
+        ${this.renderButtonChildren()}
       </button>
     `;
   }
@@ -200,7 +203,7 @@ export class ButtonElement extends WithFocus(VdsElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderRootChildren() {
+  renderButtonChildren() {
     return html`${this.renderDefaultSlot()}`;
   }
 
@@ -220,7 +223,7 @@ export class ButtonElement extends WithFocus(VdsElement) {
    * @protected
    * @returns {string}
    */
-  getRootClassAttr() {
+  getButtonClassAttr() {
     return 'root';
   }
 
@@ -230,7 +233,7 @@ export class ButtonElement extends WithFocus(VdsElement) {
    * @protected
    * @returns {string}
    */
-  getRootPartAttr() {
+  getButtonPartAttr() {
     return 'root';
   }
 

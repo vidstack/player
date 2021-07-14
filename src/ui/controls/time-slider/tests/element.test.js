@@ -33,28 +33,5 @@ describe(TIME_SLIDER_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
-    const { timeSlider } = await buildFixture();
-    expect(timeSlider).shadowDom.to.equal(`
-      <vds-slider
-        exportparts="root: slider-root, thumb: slider-thumb, track: slider-track, track-fill: slider-track-fill"
-        id="slider"
-        keyboard-step="5"
-        label="Media time slider"
-        min="0"
-        max="100"
-        orientation="horizontal"
-        part="slider"
-        shift-key-multiplier="2"
-        step="0.25"
-        value="0"
-        value-max="0"
-        value-min="0"
-        value-now="0"
-        value-text="0 seconds out of 0 seconds"
-      >
-        <slot></slot>
-      </vds-slider>
-    `);
-  });
+  // TODO: more tests.
 });

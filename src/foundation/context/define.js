@@ -57,10 +57,9 @@ function initConsumer(element, name, context, options = {}) {
       // Trigger setters.
       element[name] = newValue;
 
-      if (options.shouldRequestUpdate ?? true) {
-        element.requestUpdate(name, oldValue);
-        oldValue = newValue;
-      }
+      // TODO: REMOVE
+      element.requestUpdate(name, oldValue);
+      oldValue = newValue;
 
       options.onUpdate?.call(element, newValue);
     }

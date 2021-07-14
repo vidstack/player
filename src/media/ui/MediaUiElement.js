@@ -1,8 +1,7 @@
 import clsx from 'clsx';
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { VdsElement } from '../../foundation/elements/index.js';
 import { IS_IOS } from '../../utils/support.js';
 import { mediaContext } from '../context.js';
 import { mediaUiElementStyles } from './styles.js';
@@ -24,7 +23,7 @@ export const MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
  * @csspart root - The component's root element (`<div>`).
  * @csspart root-hidden - Applied when the media is NOT ready for playback and the UI should be hidden.
  */
-export class MediaUiElement extends VdsElement {
+export class MediaUiElement extends LitElement {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
     return [mediaUiElementStyles];

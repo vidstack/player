@@ -1,6 +1,7 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { state } from 'lit/decorators.js';
 
-import { VdsElement } from '../../foundation/elements/index.js';
+import { consumeContext } from '../../foundation/context/index.js';
 import { StorybookControl } from '../../foundation/storybook/index.js';
 import { mediaContext } from '../../media/index.js';
 import { setAttribute } from '../../utils/dom.js';
@@ -39,35 +40,27 @@ export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
  * }
  * ```
  */
-export class BufferingIndicatorElement extends VdsElement {
+export class BufferingIndicatorElement extends LitElement {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
     return [bufferingIndicatorElementStyles];
   }
 
-  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      mediaCanPlay: mediaContext.canPlay,
-      mediaWaiting: mediaContext.waiting
-    };
-  }
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.canPlay)
+  mediaCanPlay = false;
 
-  constructor() {
-    super();
-
-    // Context
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaCanPlay = mediaContext.canPlay.initialValue;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaWaiting = mediaContext.waiting.initialValue;
-  }
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.waiting)
+  mediaWaiting = false;
 
   /**
    * @protected

@@ -1,20 +1,20 @@
 import { expect } from '@open-wc/testing';
 import { elementUpdated, fixture } from '@open-wc/testing-helpers';
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
 
-import { VdsElement } from '../../elements/index.js';
 import {
   createContext,
   derivedContext,
   provideContextRecord
 } from '../context.js';
+import { WithContext } from '../WithContext.js';
 
 const ctxA = createContext(10);
 const ctxB = createContext('B');
 const ctxC = derivedContext([ctxA, ctxB], ([a, b]) => `${a}-${b}`);
 const ctxRecord = { ctxA, ctxB, ctxC };
 
-class BaseProviderElement extends VdsElement {
+class BaseProviderElement extends WithContext(LitElement) {
   /** @type {import('../types').ContextProviderDeclarations} */
   static get contextProviders() {
     return {
@@ -50,7 +50,7 @@ class FakeProviderElement extends BaseProviderElement {
   }
 }
 
-class BaseConsumerElement extends VdsElement {
+class BaseConsumerElement extends WithContext(LitElement) {
   /** @type {import('../types').ContextConsumerDeclarations} */
   static get contextConsumers() {
     return {

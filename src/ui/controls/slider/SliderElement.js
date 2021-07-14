@@ -1,9 +1,10 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
-import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
+import { WithFocus } from '../../../foundation/elements/index.js';
 import { EventListenerController } from '../../../foundation/events/index.js';
 import {
   storybookAction,
@@ -96,7 +97,7 @@ export const SliderKeyDirection = {
  * }
  * ```
  */
-export class SliderElement extends WithFocus(VdsElement) {
+export class SliderElement extends WithFocus(LitElement) {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
     return [sliderElementStyles];
@@ -116,175 +117,137 @@ export class SliderElement extends WithFocus(VdsElement) {
     ];
   }
 
-  constructor() {
-    super();
-
-    // Properties
-    /**
-     * ♿ **ARIA:** The `aria-label` property of the slider.
-     *
-     * @type {string | undefined}
-     */
-    this.label = undefined;
-
-    /**
-     * The lowest slider value in the range of permitted values.
-     *
-     * @type {number}
-     */
-    this.min = 0;
-
-    /**
-     * The greatest slider value in the range of permitted values.
-     *
-     * @type {number}
-     */
-    this.max = 100;
-
-    /**
-     * Whether the slider should be hidden.
-     *
-     * @type {boolean}
-     */
-    this.hidden = false;
-
-    /**
-     * Whether the slider should be disabled (not-interactable).
-     *
-     * @type {boolean}
-     */
-    this.disabled = false;
-
-    /**
-     * The current slider value.
-     *
-     * @type {number}
-     */
-    this.value = 50;
-
-    /**
-     * ♿ **ARIA:** Alternative value for minimum value (defaults to `min`). This can
-     * be used when expressing slider as a percentage (0-100), and wishing to detail more
-     * information for better accessibility.
-     *
-     * @type {string | undefined}
-     */
-    this.valueMin = undefined;
-
-    /**
-     * ♿ **ARIA:** Alternative value for current value (defaults to `value`). This can
-     * be used when expressing slider as a percentage (0-100), and wishing to detail more
-     * information for better accessibility.
-     *
-     * @type {string | undefined}
-     */
-    this.valueNow = undefined;
-
-    /**
-     * ♿ **ARIA:** Alternative value for maximum value (defaults to `max`). This can
-     * be used when expressing slider as a percentage (0-100), and wishing to detail more
-     * information for better accessibility.
-     *
-     * @type {string | undefined}
-     */
-    this.valueMax = undefined;
-
-    /**
-     * ♿ **ARIA:** Human-readable text alternative for the current value. Defaults to
-     * `value:max` ratio as a percentage.
-     *
-     * @type {string | undefined}
-     */
-    this.valueText = undefined;
-
-    /**
-     * ♿ **ARIA:** Indicates the orientation of the slider.
-     *
-     * @type {'horizontal' | 'vertical'}
-     */
-    this.orientation = 'horizontal';
-
-    /**
-     * A number that specifies the granularity that the slider value must adhere to.
-     *
-     * @type {number}
-     */
-    this.step = 1;
-
-    /**
-     * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
-     * the slider via keyboard.
-     *
-     * @type {number}
-     */
-    this.keyboardStep = 1;
-
-    /**
-     * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
-     * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`. Think
-     * of it as `this.keyboardStep * this.shiftKeyMultiplier`.
-     *
-     * @type {number}
-     */
-    this.shiftKeyMultiplier = 5;
-
-    // State
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this._isDragging = false;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      label: { reflect: true },
-      step: { type: Number, reflect: true },
-      keyboardStep: { type: Number, attribute: 'keyboard-step' },
-      shiftKeyMultiplier: {
-        type: Number,
-        attribute: 'shift-key-multiplier'
-      },
-      min: { type: Number, reflect: true },
-      max: { type: Number, reflect: true },
-      hidden: { type: Boolean, reflect: true },
-      disabled: { type: Boolean, reflect: true },
-      value: { type: Number, reflect: true },
-      valueMin: { attribute: 'value-min' },
-      valueNow: { attribute: 'value-now' },
-      valueMax: { attribute: 'value-max' },
-      valueText: { attribute: 'value-text' },
-      orientation: {},
-      thottle: { type: Number },
-      // State
-      _isDragging: { state: true }
-    };
-  }
+  /**
+   * ♿ **ARIA:** The `aria-label` property of the slider.
+   *
+   * @type {string | undefined}
+   */
+  @property({ reflect: true })
+  label;
 
   /**
-   * Whether the current orientation is horizontal.
+   * The lowest slider value in the range of permitted values.
    *
-   * @type {boolean}
-   * @default true
+   * @type {number}
    */
-  get isOrientationHorizontal() {
-    return this.orientation === 'horizontal';
-  }
+  @property({ reflect: true, type: Number })
+  min = 0;
 
   /**
-   * Whether the current orientation is vertical.
+   * The greatest slider value in the range of permitted values.
+   *
+   * @type {number}
+   */
+  @property({ reflect: true, type: Number })
+  max = 100;
+
+  /**
+   * Whether the slider should be hidden.
    *
    * @type {boolean}
-   * @default false
    */
-  get isOrientationVertical() {
-    return this.orientation === 'vertical';
-  }
+  @property({ reflect: true, type: Boolean })
+  hidden = false;
+
+  /**
+   * Whether the slider should be disabled (not-interactable).
+   *
+   * @type {boolean}
+   */
+  @property({ reflect: true, type: Boolean })
+  disabled = false;
+
+  /**
+   * The current slider value.
+   *
+   * @type {number}
+   */
+  @property({ reflect: true, type: Number })
+  value = 50;
+
+  /**
+   * ♿ **ARIA:** Alternative value for minimum value (defaults to `min`). This can
+   * be used when expressing slider as a percentage (0-100), and wishing to detail more
+   * information for better accessibility.
+   *
+   * @type {string | undefined}
+   */
+  valueMin;
+
+  /**
+   * ♿ **ARIA:** Alternative value for current value (defaults to `value`). This can
+   * be used when expressing slider as a percentage (0-100), and wishing to detail more
+   * information for better accessibility.
+   *
+   * @type {string | undefined}
+   */
+  @property({ attribute: 'value-now' })
+  valueNow;
+
+  /**
+   * ♿ **ARIA:** Alternative value for maximum value (defaults to `max`). This can
+   * be used when expressing slider as a percentage (0-100), and wishing to detail more
+   * information for better accessibility.
+   *
+   * @type {string | undefined}
+   */
+  @property({ attribute: 'value-max' })
+  valueMax = undefined;
+
+  /**
+   * ♿ **ARIA:** Human-readable text alternative for the current value. Defaults to
+   * `value:max` ratio as a percentage.
+   *
+   * @type {string | undefined}
+   */
+  @property({ attribute: 'value-text' })
+  valueText = undefined;
+
+  /**
+   * ♿ **ARIA:** Indicates the orientation of the slider.
+   *
+   * @type {'horizontal' | 'vertical'}
+   */
+  @property({ reflect: true })
+  orientation = 'horizontal';
+
+  /**
+   * A number that specifies the granularity that the slider value must adhere to.
+   *
+   * @type {number}
+   */
+  @property({ type: Number, reflect: true })
+  step = 1;
+
+  /**
+   * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
+   * the slider via keyboard.
+   *
+   * @type {number}
+   */
+  @property({ attribute: 'keyboard-step', type: Number })
+  keyboardStep = 1;
+
+  /**
+   * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
+   * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`. Think
+   * of it as `keyboardStep * shiftKeyMultiplier`.
+   *
+   * @type {number}
+   */
+  @property({ attribute: 'shift-key-multiplier', type: Number })
+  shiftKeyMultiplier = 5;
+
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  _isDragging = false;
 
   /**
    * Whether the slider thumb is currently being dragged.
@@ -327,6 +290,10 @@ export class SliderElement extends WithFocus(VdsElement) {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
+  /**
+   * @protected
+   * @param {import('lit').PropertyValues} changedProperties
+   */
   update(changedProperties) {
     if (changedProperties.has('value')) {
       this.updateValue(this.value);
@@ -338,11 +305,6 @@ export class SliderElement extends WithFocus(VdsElement) {
     }
 
     super.update(changedProperties);
-  }
-
-  firstUpdated(changedProperties) {
-    super.firstUpdated(changedProperties);
-    this.requestUpdate();
   }
 
   disconnectedCallback() {
@@ -479,10 +441,10 @@ export class SliderElement extends WithFocus(VdsElement) {
         role="slider"
         tabindex="0"
         aria-label=${ifNonEmpty(this.label)}
-        aria-valuemin=${this.valueMin ?? this.min}
-        aria-valuenow=${this.valueNow ?? this.value}
-        aria-valuemax=${this.valueMax ?? this.max}
-        aria-valuetext=${this.valueText ?? this.getValueAsTextFallback()}
+        aria-valuemin=${this.getValueMin()}
+        aria-valuenow=${this.getValueNow()}
+        aria-valuemax=${this.getValueMax()}
+        aria-valuetext=${this.getValueText()}
         aria-orientation=${this.orientation}
         aria-disabled=${this.disabled}
         aria-hidden=${this.hidden}
@@ -501,7 +463,39 @@ export class SliderElement extends WithFocus(VdsElement) {
    * @protected
    * @returns {string}
    */
-  getValueAsTextFallback() {
+  getValueMin() {
+    return this.valueMin ?? String(this.min);
+  }
+
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getValueNow() {
+    return this.valueNow ?? String(this.value);
+  }
+
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getValueMax() {
+    return this.valueMax ?? String(this.max);
+  }
+
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getValueText() {
+    return this.valueText ?? this.getValueTextFallback();
+  }
+
+  /**
+   * @protected
+   * @returns {string}
+   */
+  getValueTextFallback() {
     return `${round((this.value / this.max) * 100, 2)}%`;
   }
 

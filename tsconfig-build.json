@@ -1,11 +1,15 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
     "incremental": false,
-    "outDir": "types",
-    "noEmit": false
+    "outDir": "dist",
+    "preserveWatchOutput": true,
+    "noEmit": false,
+    "importHelpers": true,
+    "sourceMap": true,
+    "useDefineForClassFields": false
   },
   "include": ["src/**/*.js", "src/**/*.ts"],
   "exclude": ["src/**/*.test.js", "src/**/*.test.ts", "src/**/*.stories.js"]

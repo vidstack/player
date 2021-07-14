@@ -1,5 +1,6 @@
+import { LitElement } from 'lit';
+
 import { provideContextRecord } from '../../foundation/context/index.js';
-import { VdsElement } from '../../foundation/elements/index.js';
 import {
   DisposalBin,
   EventListenerController,
@@ -196,7 +197,7 @@ export function WithMediaProviderBridge(Base) {
     forwardMediaProviderEvents() {
       if (isNil(this.mediaProvider)) return;
 
-      const ctor = /** @type {typeof VdsElement} */ (
+      const ctor = /** @type {{ events?: string[] }} */ (
         this.mediaProvider.constructor
       );
 

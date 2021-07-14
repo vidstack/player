@@ -1,3 +1,6 @@
+import { state } from 'lit/decorators.js';
+
+import { consumeContext } from '../../../foundation/context/index.js';
 import {
   storybookAction,
   StorybookControl
@@ -41,24 +44,15 @@ export class FullscreenButtonElement extends ToggleButtonElement {
    */
   remoteControl = new MediaRemoteControl(this);
 
-  constructor() {
-    super();
+  label = 'Fullscreen';
 
-    // Properties
-    this.label = 'Fullscreen';
-    /**
-     * @internal
-     * @type {boolean}
-     */
-    this.pressed = mediaContext.fullscreen.initialValue;
-  }
-
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      pressed: mediaContext.fullscreen
-    };
-  }
+  /**
+   * @internal
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.fullscreen)
+  pressed = mediaContext.fullscreen.initialValue;
 
   /**
    * The `enter` slotted element.

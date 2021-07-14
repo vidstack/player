@@ -1,6 +1,7 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { state } from 'lit/decorators.js';
 
-import { VdsElement } from '../../../foundation/elements/index.js';
+import { consumeContext } from '../../../foundation/context/index.js';
 import {
   controlsContext,
   ManagedControls,
@@ -49,23 +50,10 @@ export const CONTROLS_ELEMENT_TAG_NAME = 'vds-controls';
  * }
  * ```
  */
-export class ControlsElement extends VdsElement {
+export class ControlsElement extends LitElement {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
     return [controlsElementStyles];
-  }
-
-  /**
-   * @type {import('../../../foundation/context').ContextConsumerDeclarations}
-   */
-  static get contextConsumers() {
-    return {
-      mediaCanPlay: mediaContext.canPlay,
-      controlsHidden: controlsContext.hidden,
-      controlsIdle: controlsContext.idle,
-      mediaPaused: mediaContext.paused,
-      mediaViewType: mediaContext.viewType
-    };
   }
 
   /**
@@ -74,39 +62,48 @@ export class ControlsElement extends VdsElement {
    */
   managedControls = new ManagedControls(this);
 
-  constructor() {
-    super();
+  /**
+   * @protected
+   * @readonly
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.canPlay)
+  mediaCanPlay = false;
 
-    // Context Properties
-    /**
-     * @protected
-     * @readonly
-     * @type {boolean}
-     */
-    this.mediaCanPlay = mediaContext.canPlay.initialValue;
-    /**
-     * @type {boolean}
-     */
-    this.controlsHidden = controlsContext.hidden.initialValue;
-    /**
-     * @protected
-     * @readonly
-     * @type {boolean}
-     */
-    this.controlsIdle = controlsContext.idle.initialValue;
-    /**
-     * @protected
-     * @readonly
-     * @type {boolean}
-     */
-    this.mediaPaused = mediaContext.paused.initialValue;
-    /**
-     * @protected
-     * @readonly
-     * @type {ViewType}
-     */
-    this.mediaViewType = mediaContext.viewType.initialValue;
-  }
+  /**
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(controlsContext.hidden)
+  controlsHidden = false;
+
+  /**
+   * @protected
+   * @readonly
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(controlsContext.idle)
+  controlsIdle = false;
+
+  /**
+   * @protected
+   * @readonly
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.paused)
+  mediaPaused = true;
+
+  /**
+   * @protected
+   * @readonly
+   * @type {ViewType}
+   */
+  @state()
+  @consumeContext(mediaContext.viewType)
+  mediaViewType = mediaContext.viewType.initialValue;
 
   /**
    * @protected

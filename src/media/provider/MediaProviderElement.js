@@ -1,7 +1,10 @@
+import { LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
+
 import {
   DiscoveryEvent,
   ElementDiscoveryController,
-  VdsElement
+  ElementDisposalController
 } from '../../foundation/elements/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
 import {
@@ -67,7 +70,7 @@ export class MediaProviderConnectEvent extends DiscoveryEvent {
  * all concrete media providers. Extending this class enables provider-agnostic communication 💬
  *
  */
-export class MediaProviderElement extends VdsElement {
+export class MediaProviderElement extends LitElement {
   /** @type {string[]} */
   static get events() {
     return [
@@ -101,59 +104,15 @@ export class MediaProviderElement extends VdsElement {
     ];
   }
 
-  constructor() {
-    super();
-
-    /**
-     * Whether playback should automatically begin as soon as enough media is available to do so
-     * without interruption.
-     *
-     * Sites which automatically play audio (or videos with an audio track) can be an unpleasant
-     * experience for users, so it should be avoided when possible. If you must offer autoplay
-     * functionality, you should make it opt-in (requiring a user to specifically enable it).
-     *
-     * However, autoplay can be useful when creating media elements whose source will be set at a
-     * later time, under user control.
-     *
-     * @type {boolean}
-     * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay
-     */
-    this.autoplay = false;
-
-    /**
-     * Indicates whether a user interface should be shown for controlling the resource. Set this to
-     * `false` when you want to provide your own custom controls, and `true` if you want the current
-     * provider to supply its own default controls. Depending on the provider, changing this prop
-     * may cause the player to completely reset.
-     *
-     * @type {boolean}
-     * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls
-     */
-    this.controls = false;
-
-    /**
-     * Whether media should automatically start playing from the beginning (replay) every time
-     * it ends.
-     *
-     * @type {boolean}
-     * @default false
-     * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop
-     */
-    this.loop = false;
-
-    /**
-     * Whether the video is to be played "inline", that is within the element's playback area. Note
-     * that setting this to `false` does not imply that the video will always be played in fullscreen.
-     * Depending on the provider, changing this prop may cause the player to completely reset.
-     *
-     * @type {boolean}
-     */
-    this.playsinline = false;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
+
+  /**
+   * @protected
+   * @readonly
+   */
+  disconnectDisposal = new ElementDisposalController(this);
 
   /**
    * @protected
@@ -209,20 +168,55 @@ export class MediaProviderElement extends VdsElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      paused: { type: Boolean },
-      muted: { type: Boolean },
-      autoplay: { type: Boolean },
-      controls: { type: Boolean },
-      loop: { type: Boolean },
-      playsinline: { type: Boolean },
-      volume: { type: Number },
-      currentTime: { type: Number, attribute: 'current-time' },
-      fullscreenOrientation: { attribute: 'fullscreen-orientation' }
-    };
-  }
+  /**
+   * Whether playback should automatically begin as soon as enough media is available to do so
+   * without interruption.
+   *
+   * Sites which automatically play audio (or videos with an audio track) can be an unpleasant
+   * experience for users, so it should be avoided when possible. If you must offer autoplay
+   * functionality, you should make it opt-in (requiring a user to specifically enable it).
+   *
+   * However, autoplay can be useful when creating media elements whose source will be set at a
+   * later time, under user control.
+   *
+   * @type {boolean}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay
+   */
+  @property({ type: Boolean, reflect: true })
+  autoplay = false;
+
+  /**
+   * Indicates whether a user interface should be shown for controlling the resource. Set this to
+   * `false` when you want to provide your own custom controls, and `true` if you want the current
+   * provider to supply its own default controls. Depending on the provider, changing this prop
+   * may cause the player to completely reset.
+   *
+   * @type {boolean}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls
+   */
+  @property({ type: Boolean, reflect: true })
+  controls = false;
+
+  /**
+   * Whether media should automatically start playing from the beginning (replay) every time
+   * it ends.
+   *
+   * @type {boolean}
+   * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop
+   */
+  @property({ type: Boolean, reflect: true })
+  loop = false;
+
+  /**
+   * Whether the video is to be played "inline", that is within the element's playback area. Note
+   * that setting this to `false` does not imply that the video will always be played in fullscreen.
+   * Depending on the provider, changing this prop may cause the player to completely reset.
+   *
+   * @type {boolean}
+   */
+  @property({ type: Boolean, reflect: true })
+  playsinline = false;
 
   // --
 
@@ -233,6 +227,7 @@ export class MediaProviderElement extends VdsElement {
    * @default 1
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
    */
+  @property({ type: Number, reflect: true })
   get volume() {
     return this.canPlay ? this.getVolume() : 1;
   }
@@ -271,6 +266,7 @@ export class MediaProviderElement extends VdsElement {
    * @default true
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused
    */
+  @property({ type: Boolean, reflect: true })
   get paused() {
     return this.canPlay ? this.getPaused() : true;
   }
@@ -307,6 +303,7 @@ export class MediaProviderElement extends VdsElement {
    * @default 0
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime
    */
+  @property({ attribute: 'current-time', type: Number })
   get currentTime() {
     return this.canPlay ? this.getCurrentTime() : 0;
   }
@@ -344,6 +341,7 @@ export class MediaProviderElement extends VdsElement {
    * @type {boolean}
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted
    */
+  @property({ type: Boolean, reflect: true })
   get muted() {
     return this.canPlay ? this.getMuted() : false;
   }
@@ -892,6 +890,7 @@ export class MediaProviderElement extends VdsElement {
    * @attribute fullscreen-orientation
    * @type {ScreenOrientationLock | undefined}
    */
+  @property({ attribute: 'fullscreen-orientation' })
   get fullscreenOrientation() {
     return this.fullscreenController.screenOrientationLock;
   }

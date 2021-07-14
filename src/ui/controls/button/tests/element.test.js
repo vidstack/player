@@ -25,27 +25,27 @@ describe(BUTTON_ELEMENT_TAG_NAME, function () {
   }
 
   describe('render', function () {
-    it('should render DOM correctly', async function () {
+    it.only('should render DOM correctly', async function () {
       const { button } = await buildFixture();
       expect(button).dom.to.equal(`
-      <vds-button type="button">
-        <div class="slot"></div>
-      </vds-button>
-    `);
+        <vds-button type="button">
+          <div class="slot"></div>
+        </vds-button>
+      `);
     });
 
     it('should render shadow DOM correctly', async function () {
       const { button } = await buildFixture();
       expect(button).shadowDom.to.equal(`
-      <button
-        id="root"
-        class="root"
-        type="button"
-        part="root"
-      >
-        <slot />
-      </button>
-    `);
+        <button
+          id="root"
+          class="root"
+          type="button"
+          part="root"
+        >
+          <slot />
+        </button>
+      `);
     });
 
     it('should render <slot>', async function () {

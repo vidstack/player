@@ -1,3 +1,6 @@
+import { property } from 'lit/decorators.js';
+
+import { consumeContext } from '../../../foundation/context/index.js';
 import { StorybookControl } from '../../../foundation/storybook/index.js';
 import { mediaContext } from '../../../media/index.js';
 import {
@@ -30,23 +33,14 @@ export const TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
  * ```
  */
 export class TimeCurrentElement extends TimeElement {
-  constructor() {
-    super();
+  label = 'Current media time';
 
-    // Properties
-    this.label = 'Current time';
-
-    // Context
-    /** @internal */
-    this.seconds = mediaContext.currentTime.initialValue;
-  }
-
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      seconds: mediaContext.currentTime
-    };
-  }
+  /**
+   * @internal
+   */
+  @property({ attribute: false, state: true })
+  @consumeContext(mediaContext.currentTime)
+  seconds = mediaContext.currentTime.initialValue;
 }
 
 export const TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES = {

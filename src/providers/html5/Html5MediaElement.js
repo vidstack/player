@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { createRef } from 'lit/directives/ref.js';
 
 import { listen, redispatchEvent } from '../../foundation/events/index.js';
@@ -104,110 +105,116 @@ export class Html5MediaElement extends MediaProviderElement {
     ];
   }
 
-  constructor() {
-    super();
-
-    /**
-     * The height of the media player.
-     *
-     * @type {number | undefined}
-     */
-    this.height;
-
-    /**
-     * Determines what controls to show on the media element whenever the browser shows its own set
-     * of controls (e.g. when the controls attribute is specified).
-     *
-     * @example 'nodownload nofullscreen noremoteplayback'
-     * @type {MediaControlsList}
-     * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList
-     */
-    this.controlsList;
-
-    /**
-     * Whether to use CORS to fetch the related image. See
-     * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin) for more
-     * information.
-     *
-     * @type {MediaCrossOriginOption}
-     * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/crossOrigin
-     */
-    this.crossOrigin;
-
-    /**
-     * Reflects the muted attribute, which indicates whether the audio output should be muted by
-     * default.  This property has no dynamic effect. To mute and unmute the audio output, use
-     * the `muted` property.
-     *
-     * @type {boolean | undefined}
-     * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/defaultMuted
-     */
-    this.defaultMuted;
-
-    /**
-     * A `double` indicating the default playback rate for the media.
-     *
-     * @type {number | undefined}
-     * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/defaultPlaybackRate
-     */
-    this.defaultPlaybackRate;
-
-    /**
-     *  Whether to disable the capability of remote playback in devices that are
-     * attached using wired (HDMI, DVI, etc.) and wireless technologies (Miracast, Chromecast,
-     * DLNA, AirPlay, etc).
-     *
-     * @type {boolean | undefined}
-     * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/disableRemotePlayback
-     * @see https://www.w3.org/TR/remote-playback/#the-disableremoteplayback-attribute
-     */
-    this.disableRemotePlayback;
-
-    /**
-     * Provides a hint to the browser about what the author thinks will lead to the best user
-     * experience with regards to what content is loaded before the video is played. See
-     * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload) for more
-     * information.
-     *
-     * @type {MediaPreloadOption | undefined}
-     */
-    this.preload;
-
-    /**
-     * The width of the media player.
-     *
-     * @type {number | undefined}
-     */
-    this.width;
-
-    // State
-    /**
-     * @protected
-     * @type {string}
-     */
-    this._src = '';
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      // Properties
-      height: { type: Number },
-      controlsList: {},
-      crossOrigin: {},
-      defaultMuted: { type: Boolean },
-      defaultPlaybackRate: { type: Number },
-      disableRemotePlayback: { type: Boolean },
-      preload: {},
-      src: {},
-      width: { type: Number },
-      // State
-      _src: { state: true }
-    };
+  /**
+   * Determines what controls to show on the media element whenever the browser shows its own set
+   * of controls (e.g. when the controls attribute is specified).
+   *
+   * @example 'nodownload nofullscreen noremoteplayback'
+   * @type {MediaControlsList | undefined}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList
+   */
+  @property()
+  controlsList = undefined;
+
+  /**
+   * Whether to use CORS to fetch the related image. See
+   * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin) for more
+   * information.
+   *
+   * @type {MediaCrossOriginOption | undefined}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/crossOrigin
+   */
+  @property()
+  crossOrigin;
+
+  /**
+   * Reflects the muted attribute, which indicates whether the audio output should be muted by
+   * default.  This property has no dynamic effect. To mute and unmute the audio output, use
+   * the `muted` property.
+   *
+   * @type {boolean | undefined}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/defaultMuted
+   */
+  @property({ type: Boolean })
+  defaultMuted;
+
+  /**
+   * A `double` indicating the default playback rate for the media.
+   *
+   * @type {number | undefined}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/defaultPlaybackRate
+   */
+  @property({ type: Number })
+  defaultPlaybackRate;
+
+  /**
+   *  Whether to disable the capability of remote playback in devices that are
+   * attached using wired (HDMI, DVI, etc.) and wireless technologies (Miracast, Chromecast,
+   * DLNA, AirPlay, etc).
+   *
+   * @type {boolean | undefined}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/disableRemotePlayback
+   * @see https://www.w3.org/TR/remote-playback/#the-disableremoteplayback-attribute
+   */
+  @property({ type: Boolean })
+  disableRemotePlayback;
+
+  /**
+   * Provides a hint to the browser about what the author thinks will lead to the best user
+   * experience with regards to what content is loaded before the video is played. See
+   * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload) for more
+   * information.
+   *
+   * @type {MediaPreloadOption | undefined}
+   */
+  @property()
+  preload;
+
+  /**
+   * The width of the media player.
+   *
+   * @type {number | undefined}
+   */
+  @property({ type: Number })
+  width;
+
+  /**
+   * The height of the media player.
+   *
+   * @type {number | undefined}
+   */
+  @property({ type: Number })
+  height;
+
+  /**
+   * @protected
+   * @type {string}
+   */
+  @state()
+  _src = '';
+
+  /**
+   * The URL of a media resource to use.
+   *
+   * @type {string}
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src
+   */
+  @property()
+  get src() {
+    return this._src;
+  }
+
+  set src(newSrc) {
+    if (this._src !== newSrc) {
+      this._src = newSrc;
+      this.handleMediaSrcChange();
+      // No other action requried as the `src` attribute should be updated on the underlying
+      // `<audio>` or `<video>` element.
+    }
   }
 
   /**
@@ -220,25 +227,6 @@ export class Html5MediaElement extends MediaProviderElement {
   /** @type {HTMLMediaElement} */
   get mediaElement() {
     return /** @type {HTMLMediaElement} */ (this.mediaRef.value);
-  }
-
-  /**
-   * The URL of a media resource to use.
-   *
-   * @type {string}
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src
-   */
-  get src() {
-    return this._src;
-  }
-
-  set src(newSrc) {
-    if (this._src !== newSrc) {
-      this._src = newSrc;
-      this.handleMediaSrcChange();
-      // No other action requried as the `src` attribute should be updated on the underlying
-      // `<audio>` or `<video>` element.
-    }
   }
 
   /**

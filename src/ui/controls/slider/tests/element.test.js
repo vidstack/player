@@ -20,6 +20,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
       <vds-slider
         min="0"
         max="100"
+        orientation="horizontal"
         step="1"
         value="50"
       ></vds-slider>

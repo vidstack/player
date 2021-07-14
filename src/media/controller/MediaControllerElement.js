@@ -1,9 +1,8 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
 
 import {
   DiscoveryEvent,
-  ElementDiscoveryController,
-  VdsElement
+  ElementDiscoveryController
 } from '../../foundation/elements/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
 import { storybookAction } from '../../foundation/storybook/index.js';
@@ -80,7 +79,7 @@ export class MediaControllerConnectEvent extends DiscoveryEvent {
  * ```
  */
 export class MediaControllerElement extends WithMediaProviderBridge(
-  VdsElement
+  LitElement
 ) {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
@@ -115,10 +114,6 @@ export class MediaControllerElement extends WithMediaProviderBridge(
     [EnterFullscreenRequestEvent.TYPE]: this.handleEnterFullscreenRequest,
     [ExitFullscreenRequestEvent.TYPE]: this.handleExitFullscreenRequest
   });
-
-  // -------------------------------------------------------------------------------------------
-  // Render
-  // -------------------------------------------------------------------------------------------
 
   render() {
     return html`<slot></slot>`;

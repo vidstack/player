@@ -21,18 +21,12 @@ const isLiveVideo = derivedContext(
  * inside the media container you can use it like so...
  *
  * ```js
- * import { mediaContext, VdsElement } from "@vidstack/elements";
+ * import { LitElement } from 'lit';
+ * import { consumeContext, mediaContext } from "@vidstack/elements";
  *
- * class MyElement extends VdsElement {
- *  constructor() {
- *    this.mediaPaused = mediaContext.paused.initialValue;
- *  }
- *
- *  static get contextConsumers() {
- *    return {
- *      mediaPaused: mediaContext.paused
- *    }
- *  }
+ * class MyElement extends LitElement {
+ *   \@consumeConsumeContext(mediaContext.paused)
+ *   mediaPaused = mediaContext.paused.initialValue;
  * }
  * ```
  */

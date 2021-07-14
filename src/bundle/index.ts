@@ -29,7 +29,6 @@ import '../ui/controls/time-slider/globals';
 import '../ui/scrim/globals';
 import '../ui/time/time-current/globals';
 import '../ui/time/time-duration/globals';
-import '../ui/time/time-progress/globals';
 import '../ui/time/time/globals';
 
 export * from '../foundation/context/index.js';
@@ -62,7 +61,6 @@ export * from '../ui/scrim/index.js';
 export * from '../ui/time/time/index.js';
 export * from '../ui/time/time-current/index.js';
 export * from '../ui/time/time-duration/index.js';
-export * from '../ui/time/time-progress/index.js';
 export * from '../utils/dom.js';
 export * from '../utils/network.js';
 export * from '../utils/number.js';

@@ -27,7 +27,6 @@ export * from '../ui/controls/volume-slider/index.js';
 export * from '../ui/scrim/index.js';
 export * from '../ui/time/time-current/index.js';
 export * from '../ui/time/time-duration/index.js';
-export * from '../ui/time/time-progress/index.js';
 export * from '../ui/time/time/index.js';
 export * from '../utils/dom.js';
 export * from '../utils/network.js';

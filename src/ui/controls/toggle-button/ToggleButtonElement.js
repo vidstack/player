@@ -2,6 +2,7 @@
 import '../button/define.js';
 
 import { html } from 'lit';
+import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty, on } from '../../../foundation/directives/index.js';
@@ -51,44 +52,33 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
     return ['root', 'button', ...buttonExportParts];
   }
 
-  constructor() {
-    super();
-
-    // Properties
-    /**
-     * ♿ **ARIA:** The `aria-label` property of the underlying button.
-     *
-     * @type {string | undefined}
-     */
-    this.label = undefined;
-
-    /**
-     * Whether the underlying button should be disabled (not-interactable).
-     *
-     * @type {boolean}
-     */
-    this.disabled = false;
-
-    /**
-     * ♿ **ARIA:** Identifies the element (or elements) that describes the underlying button.
-     *
-     * @type {string | undefined}
-     */
-    this.describedBy = undefined;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      label: {},
-      disabled: { type: Boolean, reflect: true },
-      describedBy: { reflect: true, attribute: 'described-by' }
-    };
-  }
+  /**
+   * ♿ **ARIA:** The `aria-label` property of the underlying button.
+   *
+   * @type {string | undefined}
+   */
+  @property()
+  label;
+
+  /**
+   * Whether the underlying button should be disabled (not-interactable).
+   *
+   * @type {boolean}
+   */
+  @property({ type: Boolean, reflect: true })
+  disabled = false;
+
+  /**
+   * ♿ **ARIA:** Identifies the element (or elements) that describes the underlying button.
+   *
+   * @type {string | undefined}
+   */
+  @property({ attribute: 'described-by', reflect: true })
+  describedBy;
 
   // -------------------------------------------------------------------------------------------
   // Render

@@ -1,6 +1,6 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 
-import { VdsElement } from '../../foundation/elements/index.js';
 import { StorybookControl } from '../../foundation/storybook/StorybookControl.js';
 import { scrimElementStyles } from './styles.js';
 
@@ -16,7 +16,7 @@ export const SCRIM_ELEMENT_TAG_NAME = 'vds-scrim';
  * @csspart gradient - The gradient element.
  * @slot - Used to pass content inside the gradient.
  */
-export class ScrimElement extends VdsElement {
+export class ScrimElement extends LitElement {
   /**
    * @type {import('lit').CSSResultGroup}
    */
@@ -24,29 +24,17 @@ export class ScrimElement extends VdsElement {
     return [scrimElementStyles];
   }
 
-  constructor() {
-    super();
-
-    /**
-     * The direction of the gradient.
-     *
-     * @type {'up' | 'down'}
-     */
-    this.direction = 'up';
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
   /**
-   * @type {import("lit").PropertyDeclarations}
+   * The direction of the gradient.
+   *
+   * @type {'up' | 'down'}
    */
-  static get properties() {
-    return {
-      direction: { reflect: true }
-    };
-  }
+  @property({ reflect: true })
+  direction = 'up';
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle

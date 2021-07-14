@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { ref } from 'lit/directives/ref.js';
 
@@ -47,39 +48,28 @@ export class VideoElement extends Html5MediaElement {
     return ['root', 'video'];
   }
 
-  constructor() {
-    super();
-
-    /**
-     * 🧑‍🔬 **EXPERIMENTAL:** Whether the browser should automatically toggle picture-in-picture mode as
-     * the user switches back and forth between this document and another document or application.
-     *
-     * @type {boolean | undefined}
-     */
-    this.autoPiP;
-
-    /**
-     * 🧑‍🔬 **EXPERIMENTAL:** Prevents the browser from suggesting a picture-in-picture context menu or
-     * to request picture-in-picture automatically in some cases.
-     *
-     * @type {boolean | undefined}
-     * @link https://w3c.github.io/picture-in-picture/#disable-pip
-     */
-    this.disablePiP;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      poster: {},
-      autoPiP: { type: Boolean, attribute: 'autopictureinpicture' },
-      disablePiP: { type: Boolean, attribute: 'disablepictureinpicture' }
-    };
-  }
+  /**
+   * 🧑‍🔬 **EXPERIMENTAL:** Whether the browser should automatically toggle picture-in-picture mode as
+   * the user switches back and forth between this document and another document or application.
+   *
+   * @type {boolean | undefined}
+   */
+  @property({ type: Boolean, attribute: 'autopictureinpicture' })
+  autoPiP;
+
+  /**
+   * 🧑‍🔬 **EXPERIMENTAL:** Prevents the browser from suggesting a picture-in-picture context menu or
+   * to request picture-in-picture automatically in some cases.
+   *
+   * @type {boolean | undefined}
+   * @link https://w3c.github.io/picture-in-picture/#disable-pip
+   */
+  @property({ type: Boolean, attribute: 'disablepictureinpicture' })
+  disablePiP;
 
   /**
    * A URL for an image to be shown while the video is downloading. If this attribute isn't
@@ -88,6 +78,7 @@ export class VideoElement extends Html5MediaElement {
    *
    * @type {string}
    */
+  @property()
   get poster() {
     return this.context.currentPoster;
   }
@@ -151,7 +142,7 @@ export class VideoElement extends Html5MediaElement {
         src="${ifNonEmpty(this.shouldSetVideoSrcAttr() ? this.src : '')}"
         width="${ifNumber(this.width)}"
         height="${ifNumber(this.height)}"
-        poster="${ifDefined(this.poster)}"
+        poster="${ifNonEmpty(this.poster)}"
         preload="${ifNonEmpty(this.preload)}"
         crossorigin="${ifNonEmpty(this.crossOrigin)}"
         controlslist="${ifNonEmpty(this.controlsList)}"

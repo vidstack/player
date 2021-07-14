@@ -131,38 +131,8 @@ export function willElementsCollide(
  * @param {typeof import('lit').LitElement} elementCtor
  * @returns {Set<string>}
  */
-export function getElementOwnAttributes(elementCtor) {
-  const attributes = new Set();
-
-  const properties =
-    /** @type {typeof import('lit').LitElement} */ (elementCtor).properties ??
-    [];
-
-  keysOf(properties).forEach((prop) => {
-    const attrName = properties[prop].attribute ?? String(prop).toLowerCase();
-    attributes.add(attrName);
-  });
-
-  return attributes;
-}
-
-/**
- * @protected
- * @param {typeof import('lit').LitElement} elementCtor
- * @returns {Set<string>}
- */
 export function getElementAttributes(elementCtor) {
-  const allAttributes = new Set();
-
-  let proto = elementCtor;
-
-  while (proto !== LitElement) {
-    const ownAttributes = getElementOwnAttributes(proto);
-    ownAttributes.forEach((attr) => allAttributes.add(attr));
-    proto = Object.getPrototypeOf(proto);
-  }
-
-  return allAttributes;
+  return new Set(elementCtor.observedAttributes);
 }
 
 /**

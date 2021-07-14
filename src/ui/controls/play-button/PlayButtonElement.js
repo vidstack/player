@@ -1,3 +1,6 @@
+import { state } from 'lit/decorators.js';
+
+import { consumeContext } from '../../../foundation/context/index.js';
 import {
   storybookAction,
   StorybookControl
@@ -41,29 +44,17 @@ export class PlayButtonElement extends ToggleButtonElement {
    */
   remoteControl = new MediaRemoteControl(this);
 
-  constructor() {
-    super();
+  label = 'Play';
 
-    // Properties
-    this.label = 'Play';
-    /**
-     * @internal
-     * @type {boolean}
-     */
-    this.pressed = false;
-  }
-
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      pressed: {
-        context: mediaContext.paused,
-        // Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
-        // use `playing` because there could be a buffering delay (we want immediate feedback).
-        transform: (p) => !p
-      }
-    };
-  }
+  /**
+   * @internal
+   * @type {boolean}
+   */
+  // Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
+  // use `playing` because there could be a buffering delay (we want immediate feedback).
+  @state()
+  @consumeContext(mediaContext.paused, { transform: (p) => !p })
+  pressed = false;
 
   /**
    * The `play` slotted element.

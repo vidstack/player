@@ -1,4 +1,5 @@
 import Hls from 'hls.js';
+import { property } from 'lit/decorators.js';
 
 import { VdsCustomEvent } from '../../foundation/events/index.js';
 import {
@@ -77,27 +78,17 @@ export class HlsElement extends VideoElement {
     ];
   }
 
-  constructor() {
-    super();
-
-    /**
-     * The `hls.js` configuration object.
-     *
-     * @type {Partial<Hls.Config> | undefined}
-     */
-    this.hlsConfig = undefined;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      hlsConfig: { type: Object, attribute: 'hls-config' }
-    };
-  }
+  /**
+   * The `hls.js` configuration object.
+   *
+   * @type {Partial<Hls.Config> | undefined}
+   */
+  @property({ type: Object, attribute: 'hls-config' })
+  hlsConfig;
 
   /**
    * @protected

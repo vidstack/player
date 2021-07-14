@@ -1,12 +1,15 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { provideContextRecord } from '../../../foundation/context/index.js';
+import {
+  consumeContext,
+  provideContextRecord
+} from '../../../foundation/context/index.js';
 import { ifNonEmpty } from '../../../foundation/directives/index.js';
 import {
   DiscoveryEvent,
-  ElementDiscoveryController,
-  VdsElement
+  ElementDiscoveryController
 } from '../../../foundation/elements/index.js';
 import {
   isPointerEvent,
@@ -108,7 +111,7 @@ export class ScrubberPreviewConnectEvent extends DiscoveryEvent {
  * }
  * ```
  */
-export class ScrubberPreviewElement extends VdsElement {
+export class ScrubberPreviewElement extends LitElement {
   /**
    * @type {import('lit').CSSResultGroup}
    */
@@ -134,58 +137,6 @@ export class ScrubberPreviewElement extends VdsElement {
     ];
   }
 
-  constructor() {
-    super();
-
-    // Properties
-    /**
-     * Whether the preview is hidden.
-     *
-     * @type {boolean}
-     */
-    this.hidden = false;
-
-    /**
-     * Whether the preview is disabled.
-     *
-     * @type {boolean}
-     */
-    this.disabled = false;
-
-    /**
-     * Whether the preview track fill should be NOT be rendered.
-     *
-     * @type {boolean}
-     */
-    this.noTrackFill = false;
-
-    /**
-     * Whether the preview passed in should NOT be clamped to the host element edges.
-     *
-     * @type {boolean}
-     */
-    this.noClamp = false;
-
-    // Context Consumers
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.mediaDuration = 0;
-
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.isDragging = scrubberContext.dragging.initialValue;
-
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.isInteracting = scrubberContext.interacting.initialValue;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
@@ -196,28 +147,61 @@ export class ScrubberPreviewElement extends VdsElement {
    */
   context = provideContextRecord(this, scrubberPreviewContext);
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      // Properties
-      hidden: { type: Boolean, reflect: true },
-      disabled: { type: Boolean, reflect: true },
-      noClamp: { type: Boolean, attribute: 'no-clamp' },
-      noTrackFill: { type: Boolean, attribute: 'no-track-fill' }
-    };
-  }
+  /**
+   * Whether the preview is hidden.
+   *
+   * @type {boolean}
+   */
+  @property({ type: Boolean, reflect: true })
+  hidden = false;
 
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      isDragging: scrubberContext.dragging,
-      isInteracting: scrubberContext.interacting,
-      mediaDuration: {
-        context: mediaContext.duration,
-        transform: (d) => (d >= 0 ? d : 0)
-      }
-    };
-  }
+  /**
+   * Whether the preview is disabled.
+   *
+   * @type {boolean}
+   */
+  @property({ type: Boolean, reflect: true })
+  disabled = false;
+
+  /**
+   * Whether the preview track fill should be NOT be rendered.
+   *
+   * @type {boolean}
+   */
+  @property({ attribute: 'no-track-fill', type: Boolean })
+  noTrackFill = false;
+
+  /**
+   * Whether the preview passed in should NOT be clamped to the host element edges.
+   *
+   * @type {boolean}
+   */
+  @property({ attribute: 'no-clamp', type: Boolean })
+  noClamp = false;
+
+  /**
+   * @protected
+   * @type {number}
+   */
+  @state()
+  @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
+  mediaDuration = 0;
+
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(scrubberContext.dragging)
+  isDragging = scrubberContext.dragging.initialValue;
+
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(scrubberContext.interacting)
+  isInteracting = scrubberContext.interacting.initialValue;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle

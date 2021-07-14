@@ -1,3 +1,6 @@
+import { property } from 'lit/decorators.js';
+
+import { consumeContext } from '../../../foundation/context/index.js';
 import { StorybookControl } from '../../../foundation/storybook/index.js';
 import { mediaContext } from '../../../media/index.js';
 import {
@@ -29,27 +32,15 @@ export const TIME_DURATION_ELEMENT_TAG_NAME = 'vds-time-duration';
  * ```
  */
 export class TimeDurationElement extends TimeElement {
-  constructor() {
-    super();
+  label = 'Media duration';
 
-    // Properties
-    this.label = 'Duration';
-
-    // Context
-    /** @internal */
-    this.seconds = mediaContext.currentTime.initialValue;
-  }
-
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      seconds: {
-        context: mediaContext.duration,
-        // Duration can be -1 when unknown but we want to display >=0.
-        transform: (d) => (d >= 0 ? d : 0)
-      }
-    };
-  }
+  /**
+   * @internal
+   */
+  @property({ attribute: false, state: true })
+  // Duration can be -1 when unknown but we want to display >=0.
+  @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
+  seconds = mediaContext.duration.initialValue;
 }
 
 export const TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES = {

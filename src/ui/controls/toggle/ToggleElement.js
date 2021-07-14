@@ -1,7 +1,7 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { VdsElement } from '../../../foundation/elements/index.js';
 import { StorybookControl } from '../../../foundation/storybook/index.js';
 import { getSlottedChildren, setAttribute } from '../../../utils/dom.js';
 import { isNil } from '../../../utils/unit.js';
@@ -28,50 +28,44 @@ export const TOGGLE_ELEMENT_TAG_NAME = 'vds-toggle';
  * </vds-toggle>
  * ```
  */
-export class ToggleElement extends VdsElement {
+export class ToggleElement extends LitElement {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
     return [toggleElementStyles];
-  }
-
-  constructor() {
-    super();
-
-    // Properties
-    /**
-     * Whether the toggle is in the `pressed` state.
-     *
-     * @type {boolean}
-     */
-    this.pressed = false;
   }
 
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      pressed: { type: Boolean, reflect: true }
-    };
-  }
+  /**
+   * Whether the toggle is in the `pressed` state.
+   *
+   * @type {boolean}
+   */
+  @property({ type: Boolean, reflect: true })
+  pressed = false;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
+  /**
+   * @protected
+   * @param {import('lit').PropertyValues} changedProperties
+   */
+  update(changedProperties) {
+    if (changedProperties.has('pressed')) {
+      this.toggle();
+    }
+
+    super.update(changedProperties);
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     this.currentPressedSlotElement = undefined;
     this.currentNotPressedSlotElement = undefined;
-  }
-
-  update(changedProperties) {
-    super.update(changedProperties);
-    if (changedProperties.has('pressed')) {
-      this.toggle();
-    }
   }
 
   // -------------------------------------------------------------------------------------------

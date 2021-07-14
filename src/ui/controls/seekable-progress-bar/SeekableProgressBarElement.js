@@ -1,9 +1,10 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { consumeContext } from '../../../foundation/context/index.js';
 import { ifNonEmpty } from '../../../foundation/directives/index.js';
-import { VdsElement } from '../../../foundation/elements/index.js';
 import { StorybookControl } from '../../../foundation/storybook/index.js';
 import { mediaContext } from '../../../media/index.js';
 import { round } from '../../../utils/number.js';
@@ -30,7 +31,7 @@ export const SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME =
  * ></vds-seekable-progress-bar>
  * ```
  */
-export class SeekableProgressBarElement extends VdsElement {
+export class SeekableProgressBarElement extends LitElement {
   /**
    * @type {import('lit').CSSResultGroup}
    */
@@ -45,63 +46,43 @@ export class SeekableProgressBarElement extends VdsElement {
     return ['root'];
   }
 
-  constructor() {
-    super();
-
-    /**
-     * ♿ **ARIA:** The `aria-label` for the progress bar.
-     *
-     * @type {string}
-     */
-    this.label = 'Amount of seekable media';
-
-    /**
-     * ♿ **ARIA:** Human-readable text alternative for the seekable amount. If you pass
-     * in a string containing `{seekableAmount}` or `{duration}` templates they'll be replaced with
-     * the spoken form such as `1 hour 30 minutes`.
-     *
-     * @type {string}
-     */
-    this.valueText = '{seekableAmount} out of {duration}';
-
-    // Context Consumers
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.mediaSeekableAmount = mediaContext.seekableAmount.initialValue;
-
-    /**
-     * @protected
-     * @type {number}
-     */
-    this.mediaDuration = 0;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
   /**
-   * @type {import('lit').PropertyDeclarations}
+   * ♿ **ARIA:** The `aria-label` for the progress bar.
+   *
+   * @type {string}
    */
-  static get properties() {
-    return {
-      label: {},
-      valueText: { attribute: 'value-text' }
-    };
-  }
+  @property()
+  label = 'Amount of seekable media';
 
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      mediaSeekableAmount: mediaContext.seekableAmount,
-      mediaDuration: {
-        context: mediaContext.duration,
-        transform: (d) => (d >= 0 ? d : 0)
-      }
-    };
-  }
+  /**
+   * ♿ **ARIA:** Human-readable text alternative for the seekable amount. If you pass
+   * in a string containing `{seekableAmount}` or `{duration}` templates they'll be replaced with
+   * the spoken form such as `1 hour 30 minutes`.
+   *
+   * @type {string}
+   */
+  @property({ attribute: 'value-text' })
+  valueText = '{seekableAmount} out of {duration}';
+
+  /**
+   * @protected
+   * @type {number}
+   */
+  @state()
+  @consumeContext(mediaContext.seekableAmount)
+  mediaSeekableAmount = mediaContext.seekableAmount.initialValue;
+
+  /**
+   * @protected
+   * @type {number}
+   */
+  @state()
+  @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
+  mediaDuration = 0;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle

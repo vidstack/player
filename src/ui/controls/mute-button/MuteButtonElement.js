@@ -1,3 +1,6 @@
+import { state } from 'lit/decorators.js';
+
+import { consumeContext } from '../../../foundation/context/index.js';
 import {
   storybookAction,
   StorybookControl
@@ -40,24 +43,15 @@ export class MuteButtonElement extends ToggleButtonElement {
    */
   remoteControl = new MediaRemoteControl(this);
 
-  constructor() {
-    super();
+  label = 'Mute';
 
-    // Properties
-    this.label = 'Mute';
-    /**
-     * @internal
-     * @type {boolean}
-     */
-    this.pressed = mediaContext.muted.initialValue;
-  }
-
-  /** @type {import('../../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      pressed: mediaContext.muted
-    };
-  }
+  /**
+   * @internal
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.muted)
+  pressed = mediaContext.muted.initialValue;
 
   /**
    * The `mute` slotted element.

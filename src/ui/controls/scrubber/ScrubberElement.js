@@ -1,7 +1,8 @@
 // ** Dependencies **
 import '../time-slider/define.js';
 
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { provideContextRecord } from '../../../foundation/context/index.js';
@@ -10,7 +11,7 @@ import {
   ifNonEmpty,
   on
 } from '../../../foundation/directives/index.js';
-import { VdsElement, WithFocus } from '../../../foundation/elements/index.js';
+import { WithFocus } from '../../../foundation/elements/index.js';
 import { EventListenerController } from '../../../foundation/events/index.js';
 import {
   storybookAction,
@@ -57,14 +58,14 @@ export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
  * 💡 See the `<vds-scrubber-preview>` element if you'd like to include previews.
  *
  * @tagname vds-scrubber
- * @csspart slider - The time slider (`<vds-time-slider>`).
- * @csspart time-* - All `vds-time-slider` parts re-exported with the `time` prefix.
+ * @csspart time-slider - The time slider (`<vds-time-slider>`).
+ * @csspart time-slider-* - All `vds-time-slider` parts re-exported with the `time-slider` prefix.
  * @csspart progress-bar - The progress bar (`<vds-seekable-progress-bar>`).
  * @csspart progress-bar-* - All `vds-seekable-progress-bar` parts re-exported with the `progress-bar` prefix.
  * @slot Used to pass content into the slider.
  * @slot progress-bar - Used to pass content into the progress bar.
  */
-export class ScrubberElement extends WithFocus(VdsElement) {
+export class ScrubberElement extends WithFocus(LitElement) {
   /**
    * @type {import('lit').CSSResultGroup}
    */
@@ -77,7 +78,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    */
   static get parts() {
     const timeSliderExports = TimeSliderElement.parts.map(
-      (part) => `time-${part}`
+      (part) => `time-slider-${part}`
     );
 
     const seekableProgressBarExports = SeekableProgressBarElement.parts.map(
@@ -85,110 +86,11 @@ export class ScrubberElement extends WithFocus(VdsElement) {
     );
 
     return [
-      'slider',
+      'time-slider',
       'progress-bar',
       ...timeSliderExports,
       ...seekableProgressBarExports
     ];
-  }
-
-  constructor() {
-    super();
-
-    // Properties
-    /**
-     * Whether the scrubber should be disabled (not-interactable).
-     *
-     * @type {boolean}
-     */
-    this.disabled = false;
-
-    /**
-     * Whether the scrubber should be hidden.
-     *
-     * @type {boolean}
-     */
-    this.hidden = false;
-
-    /**
-     * ♿ **ARIA:** The `aria-label` for the time slider.
-     *
-     * @type {string}
-     */
-    this.label = 'Media time slider';
-
-    /**
-     * The time slider orientation.
-     *
-     * @type {'horizontal' | 'vertical'}
-     */
-    this.orientation = 'horizontal';
-
-    /**
-     * ♿ **ARIA:** The `aria-label` for the progress bar.
-     *
-     * @type {string}
-     */
-    this.progressLabel = 'Amount of seekable media';
-
-    /**
-     * ♿ **ARIA:** Human-readable text alternative for the progress bar value. If you pass
-     * in a string containing `{seekableAmount}` or `{duration}` templates they'll be replaced with
-     * the spoken form such as `1 hour 30 minutes`.
-     *
-     * @type {string}
-     */
-    this.progressValueText = '{seekableAmount} out of {duration}';
-
-    /**
-     * Whether the scrubber should request playback to pause while the user is dragging the
-     * thumb. If the media was playing before the dragging starts, the state will be restored by
-     * dispatching a user play request once the dragging ends.
-     *
-     * @type {boolean}
-     */
-    this.pauseWhileDragging = false;
-
-    /**
-     * A number that specifies the granularity that the time slider value must adhere to in seconds.
-     * For example, a step with the value `1` indicates a granularity of 1 second increments.
-     *
-     * @type {number}
-     */
-    this.step = 0.25;
-
-    /**
-     * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
-     * the time slider via keyboard. Think of it as `this.step * this.keyboardStep`.
-     *
-     * @type {number}
-     */
-    this.keyboardStep = 20;
-
-    /**
-     * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
-     * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`. Think
-     * of it as `this.keyboardStep * this.shiftKeyMultiplier`.
-     *
-     * @type {number}
-     */
-    this.shiftKeyMultiplier = 2;
-
-    /**
-     * The amount of milliseconds to throttle media seeking request events being dispatched.
-     *
-     * @type {number}
-     */
-    this.seekingRequestThrottle = 100;
-
-    /**
-     * ♿ **ARIA:** Human-readable text alternative for the time slider value. If you pass
-     * in a string containing `{currentTime}` or `{duration}` templates they'll be replaced with
-     * the spoken form such as `1 hour 30 minutes`.
-     *
-     * @type {string}
-     */
-    this.valueText = '{currentTime} out of {duration}';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -202,25 +104,110 @@ export class ScrubberElement extends WithFocus(VdsElement) {
   context = provideContextRecord(this, scrubberContext);
 
   /**
-   * @type {import('lit').PropertyDeclarations}
+   * Whether the scrubber should be disabled (not-interactable).
+   *
+   * @type {boolean}
    */
-  static get properties() {
-    return {
-      disabled: { type: Boolean, reflect: true },
-      hidden: { type: Boolean, reflect: true },
-      label: { attribute: 'label', reflect: true },
-      valueText: { attribute: 'value-text' },
-      progressValueText: { attribute: 'progress-value-text' },
-      progressLabel: { attribute: 'progress-label', reflect: true },
-      orientation: { reflect: true },
-      pauseWhileDragging: { type: Boolean, attribute: 'pause-while-dragging' },
-      shiftKeyMultiplier: { type: Number, attribute: 'shift-key-multiplier' },
-      seekingRequestThrottle: {
-        type: Number,
-        attribute: 'seeking-request-throttle'
-      }
-    };
-  }
+  @property({ type: Boolean, reflect: true })
+  disabled = false;
+
+  /**
+   * Whether the scrubber should be hidden.
+   *
+   * @type {boolean}
+   */
+  @property({ type: Boolean, reflect: true })
+  hidden = false;
+
+  /**
+   * ♿ **ARIA:** The `aria-label` for the time slider.
+   *
+   * @type {string}
+   */
+  @property({ reflect: true })
+  label = 'Media time slider';
+
+  /**
+   * The time slider orientation.
+   *
+   * @type {'horizontal' | 'vertical'}
+   */
+  @property({ reflect: true })
+  orientation = 'horizontal';
+
+  /**
+   * ♿ **ARIA:** The `aria-label` for the progress bar.
+   *
+   * @type {string}
+   */
+  @property({ attribute: 'progress-label', reflect: true })
+  progressLabel = 'Amount of seekable media';
+
+  /**
+   * ♿ **ARIA:** Human-readable text alternative for the progress bar value. If you pass
+   * in a string containing `{seekableAmount}` or `{duration}` templates they'll be replaced with
+   * the spoken form such as `1 hour 30 minutes`.
+   *
+   * @type {string}
+   */
+  @property({ attribute: 'progress-value-text' })
+  progressValueText = '{seekableAmount} out of {duration}';
+
+  /**
+   * Whether the scrubber should request playback to pause while the user is dragging the
+   * thumb. If the media was playing before the dragging starts, the state will be restored by
+   * dispatching a user play request once the dragging ends.
+   *
+   * @type {boolean}
+   */
+  @property({ attribute: 'pause-while-dragging', type: Boolean })
+  pauseWhileDragging = false;
+
+  /**
+   * A number that specifies the granularity that the time slider value must adhere to in seconds.
+   * For example, a step with the value `1` indicates a granularity of 1 second increments.
+   *
+   * @type {number}
+   */
+  @property({ type: Number })
+  step = 0.25;
+
+  /**
+   * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
+   * the time slider via keyboard. Think of it as `step * keyboardStep`.
+   *
+   * @type {number}
+   */
+  @property({ attribute: 'keyboard-step', type: Number })
+  keyboardStep = 20;
+
+  /**
+   * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
+   * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`. Think
+   * of it as `keyboardStep * shiftKeyMultiplier`.
+   *
+   * @type {number}
+   */
+  @property({ attribute: 'shift-key-multiplier', type: Number })
+  shiftKeyMultiplier = 2;
+
+  /**
+   * The amount of milliseconds to throttle media seeking request events being dispatched.
+   *
+   * @type {number}
+   */
+  @property({ attribute: 'seeking-request-throttle', type: Number })
+  seekingRequestThrottle = 100;
+
+  /**
+   * ♿ **ARIA:** Human-readable text alternative for the time slider value. If you pass
+   * in a string containing `{currentTime}` or `{duration}` templates they'll be replaced with
+   * the spoken form such as `1 hour 30 minutes`.
+   *
+   * @type {string}
+   */
+  @property({ attribute: 'value-tex' })
+  valueText = '{currentTime} out of {duration}';
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
@@ -358,7 +345,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    * @returns {string}
    */
   getTimeSliderPartAttr() {
-    return 'slider';
+    return 'time-slider';
   }
 
   /**
@@ -366,7 +353,7 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    * @returns {string}
    */
   getTimeSliderExportPartsAttr() {
-    return buildExportPartsAttr(TimeSliderElement.parts, 'time');
+    return buildExportPartsAttr(TimeSliderElement.parts, 'time-slider');
   }
 
   /**
@@ -383,14 +370,6 @@ export class ScrubberElement extends WithFocus(VdsElement) {
    */
   renderDefaultSlot() {
     return html`<slot></slot>`;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  getTimeSliderSlotName() {
-    return 'slider';
   }
 
   /**

@@ -3,7 +3,6 @@ import { html, LitElement } from 'lit';
 
 import {
   getElementAttributes,
-  getElementOwnAttributes,
   observeAndForwardAttributes,
   raf,
   safelyDefineCustomElement,
@@ -91,7 +90,7 @@ describe('utils/dom', function () {
     });
   });
 
-  describe(getElementOwnAttributes.name, function () {
+  describe(getElementAttributes.name, function () {
     class A extends LitElement {
       /** @type {import('lit').PropertyDeclarations} */
       static get properties() {
@@ -113,22 +112,14 @@ describe('utils/dom', function () {
       }
     }
 
-    it('it should return own attributes', function () {
-      const elementAAttrs = getElementOwnAttributes(A);
-      const elementBAttrs = getElementOwnAttributes(B);
-
-      expect(Array.from(elementAAttrs)).eql(['propa', 'propb', 'prop-c']);
-      expect(Array.from(elementBAttrs)).eql(['propd', 'prop-e']);
-    });
-
     it('it should return all attributes', function () {
       const attributes = getElementAttributes(B);
       expect(Array.from(attributes)).eql([
-        'propd',
-        'prop-e',
         'propa',
         'propb',
-        'prop-c'
+        'prop-c',
+        'propd',
+        'prop-e'
       ]);
     });
   });

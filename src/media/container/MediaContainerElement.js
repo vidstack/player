@@ -1,12 +1,13 @@
 import clsx from 'clsx';
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { consumeContext } from '../../foundation/context/index.js';
 import {
   DiscoveryEvent,
-  ElementDiscoveryController,
-  VdsElement
+  ElementDiscoveryController
 } from '../../foundation/elements/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
 import {
@@ -66,7 +67,7 @@ export class MediaContainerConnectEvent extends DiscoveryEvent {
  * </vds-media-controller>
  * ```
  */
-export class MediaContainerElement extends VdsElement {
+export class MediaContainerElement extends LitElement {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
     return [mediaContainerElementStyles];
@@ -82,55 +83,45 @@ export class MediaContainerElement extends VdsElement {
     return [MediaContainerConnectEvent.TYPE];
   }
 
-  constructor() {
-    super();
-
-    // Properties
-    /**
-     * The aspect ratio of the container expressed as `width:height` (`16:9`). This is only applied if
-     * the `viewType` is `video` and the media is not in fullscreen mode. Defaults to `undefined`.
-     *
-     * @type {string | undefined}
-     */
-    this.aspectRatio = undefined;
-
-    // Context
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaCanPlay = mediaContext.canPlay.initialValue;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaFullscreen = mediaContext.fullscreen.initialValue;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaIsVideoView = mediaContext.isVideoView.initialValue;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @type {import('lit').PropertyDeclarations} */
-  static get properties() {
-    return {
-      aspectRatio: { attribute: 'aspect-ratio' }
-    };
-  }
+  /**
+   * The aspect ratio of the container expressed as `width:height` (`16:9`). This is only applied if
+   * the `viewType` is `video` and the media is not in fullscreen mode. Defaults to `undefined`.
+   *
+   * @type {string | undefined}
+   */
+  @property({ attribute: 'aspect-ratio' }) aspectRatio;
 
-  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      mediaCanPlay: mediaContext.canPlay,
-      mediaFullscreen: mediaContext.fullscreen,
-      mediaIsVideoView: mediaContext.isVideoView
-    };
-  }
+  // -------------------------------------------------------------------------------------------
+  // Context
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.canPlay)
+  mediaCanPlay = false;
+
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.fullscreen)
+  mediaFullscreen = false;
+
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.isVideoView)
+  mediaIsVideoView = false;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle

@@ -13,7 +13,7 @@
     "noUnusedParameters": false,
     "strict": true,
     "skipLibCheck": true,
-    "target": "es2020"
+    "target": "esnext"
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

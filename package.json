@@ -6,21 +6,20 @@
   "engines": {
     "node": ">=14.16.0"
   },
-  "main": "src/bundle/index.js",
-  "module": "src/bundle/index.js",
-  "types": "types/bundle/index.d.ts",
+  "main": "dist/bundle/index.js",
+  "module": "dist/bundle/index.js",
+  "types": "dist/bundle/index.d.ts",
   "files": [
-    "src/",
-    "types/",
+    "dist/",
     "custom-elements.json"
   ],
   "sideEffects": [
-    "src/**/define.js"
+    "src/**/define.js",
+    "dist/**/define.js"
   ],
   "exports": {
-    ".": "./src/bundle/index.js",
-    "./*": "./src/*",
-    "./types/*": "./types/*",
+    ".": "./dist/bundle/index.js",
+    "./*": "./dist/*",
     "./custom-elements.json": "./custom-elements.json"
   },
   "contributors": [
@@ -37,6 +36,10 @@
   },
   "scripts": {
     "analyze": "cem analyze --litelement --globs \"src/**/*Element.js\"",
+    "build": "npm run build:clean && tsc -p tsconfig-build.json",
+    "build:clean": "rimraf dist",
+    "build:watch": "npm run build -- --incremental --watch",
+    "clean": "run-s build:clean types:clean",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .js --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
@@ -47,15 +50,9 @@
     "start": "npm run storybook",
     "storybook": "start-storybook -s .storybook/public",
     "storybook:build": "build-storybook -s .storybook/public",
-    "test": "wtr \"src/**/*.test.{js,ts}\" --config wtr.config.mjs",
+    "test": "wtr \"src/**/*.test.js\" --config wtr.config.mjs",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
-    "test:ci": "wtr \"src/**/*.test.{js,ts}\" --config wtr-ci.config.mjs",
-    "test:ci:coverage": "npm run test:ci -- --coverage",
-    "types": "run-s types:clean types:build",
-    "types:build": "tsc -p tsconfig-build.json",
-    "types:clean": "rimraf types",
-    "types:watch": "run-s types:clean \"types:build -- --watch --incremental\"",
     "release": "npx semantic-release"
   },
   "dependencies": {
@@ -65,10 +62,10 @@
     "fscreen": "^1.2.0"
   },
   "peerDependencies": {
-    "lit": "^2.0.0-rc.2"
+    "lit": "^2.0.0-rc.2",
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.6",
     "@custom-elements-manifest/analyzer": "^0.4.1",
     "@open-wc/semantic-dom-diff": "^0.19.4",
     "@open-wc/testing": "^3.0.0-next.1",
@@ -84,8 +81,8 @@
     "@web/dev-server": "^0.1.8",
     "@web/dev-server-esbuild": "^0.2.12",
     "@web/test-runner": "^0.13.12",
-    "@web/test-runner-playwright": "^0.8.6",
-    "babel-loader": "^8.2.2",
+    "esbuild": "^0.11.23",
+    "esbuild-loader": "^2.13.1",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-jsdoc": "^35.4.1",
@@ -102,6 +99,7 @@
     "rimraf": "^3.0.2",
     "semantic-release": "^17.3.7",
     "sinon": "^11.1.1",
+    "tslib": "^2.3.0",
     "typescript": "^4.4.0-beta",
     "webpack": "^5.39.1"
   },

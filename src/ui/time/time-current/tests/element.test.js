@@ -39,7 +39,7 @@ describe(`${TIME_CURRENT_ELEMENT_TAG_NAME}`, function () {
     expect(timeCurrent).shadowDom.to.equal(`
       <time
         id="root"
-        aria-label="Current time"
+        aria-label="Current media time"
         class="root"
         datetime="PT1H2M30S"
         part="root time"

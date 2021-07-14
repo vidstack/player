@@ -3,7 +3,7 @@ import { html } from 'lit';
 
 import { VolumeChangeRequestEvent } from '../../../../media/index.js';
 import { buildMediaFixture } from '../../../../media/test-utils/index.js';
-import { SliderElement, SliderValueChangeEvent } from '../../slider/index.js';
+import { SliderValueChangeEvent } from '../../slider/index.js';
 import {
   VOLUME_SLIDER_ELEMENT_TAG_NAME,
   VolumeSliderElement
@@ -41,29 +41,6 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
     );
   });
 
-  it('should render shadow DOM correctly', async function () {
-    const { volumeSlider } = await buildFixture();
-    expect(volumeSlider).shadowDom.to.equal(
-      `
-        <vds-slider
-          exportparts="root: slider-root, thumb: slider-thumb, track: slider-track, track-fill: slider-track-fill"
-          id="slider"
-          keyboard-step="0.5"
-          label="Media volume slider"
-          max="100"
-          min="0"
-          orientation="horizontal"
-          part="slider"
-          shift-key-multiplier="10"
-          step="0.5"
-          value="100"
-        >
-          <slot></slot>
-        </vds-slider>
-      `
-    );
-  });
-
   it('should update when media volume changes', async function () {
     const { provider, volumeSlider } = await buildFixture();
 
@@ -82,7 +59,7 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
     const { controller, volumeSlider } = await buildFixture();
 
     setTimeout(() => {
-      volumeSlider.sliderElement.dispatchEvent(
+      volumeSlider.dispatchEvent(
         new SliderValueChangeEvent({
           detail: 80
         })
@@ -96,9 +73,4 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
 
     expect(detail).to.equal(0.8);
   });
-
-  // it('should have sliderElement', async function () {
-  //   const { volumeSlider } = await buildFixture();
-  //   expect(volumeSlider.sliderElement).to.be.instanceOf(SliderElement);
-  // });
 });

@@ -19,9 +19,6 @@ jobs:
         with:
           node-version: 14
 
-      # - name: Setup Playwright
-      #   run: npx playwright install-deps
-
       - name: Cache Dependencies
         id: deps
         uses: actions/cache@v2
@@ -33,14 +30,11 @@ jobs:
         if: steps.deps.outputs.cache-hit != 'true'
         run: npm install
 
-      - name: Static Analysis (TS)
-        run: npm run types
+      - name: Build
+        run: npm run build
 
       - name: Test (UNIT)
         run: npm run test:coverage
-
-      # - name: Test (UNIT)
-      #   run: npm run test:ci:coverage
 
       - name: Analyze (CEM)
         run: npm run analyze

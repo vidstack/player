@@ -4,5 +4,6 @@
     "incremental": true,
     "types": ["@types/mocha"]
   },
-  "include": ["**/*.js", "**/*.ts"]
+  "include": ["**/*.js", "**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
