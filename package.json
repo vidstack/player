@@ -81,7 +81,7 @@
     "@web/dev-server": "^0.1.8",
     "@web/dev-server-esbuild": "^0.2.12",
     "@web/test-runner": "^0.13.12",
-    "esbuild": "^0.11.23",
+    "esbuild": "^0.12.15",
     "esbuild-loader": "^2.13.1",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
