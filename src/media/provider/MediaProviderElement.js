@@ -879,7 +879,7 @@ export class MediaProviderElement extends LitElement {
    * @default false
    */
   get fullscreen() {
-    return this.fullscreenController.isFullscreen;
+    return this.context.fullscreen;
   }
 
   /**
