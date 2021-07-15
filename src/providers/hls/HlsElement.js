@@ -1,4 +1,3 @@
-import Hls from 'hls.js';
 import { property } from 'lit/decorators.js';
 
 import { VdsCustomEvent } from '../../foundation/events/index.js';
@@ -13,7 +12,8 @@ import {
   MediaType,
   MediaTypeChangeEvent
 } from '../../media/index.js';
-import { isNil, isUndefined } from '../../utils/unit.js';
+import { preconnect } from '../../utils/network.js';
+import { isNil, isString, isUndefined } from '../../utils/unit.js';
 import {
   VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
   VideoElement
@@ -33,6 +33,10 @@ export const HLS_TYPES = new Set([
   'application/x-mpegURL',
   'application/vnd.apple.mpegurl'
 ]);
+
+/**
+ * @typedef {typeof import('hls.js')} Hls
+ */
 
 /**
  * Enables loading, playing and controlling videos via the HTML5 `<video>` element. This provider
@@ -85,14 +89,40 @@ export class HlsElement extends VideoElement {
   /**
    * The `hls.js` configuration object.
    *
-   * @type {Partial<Hls.Config> | undefined}
+   * @type {Partial<import('hls.js').Config> | undefined}
    */
   @property({ type: Object, attribute: 'hls-config' })
   hlsConfig;
 
   /**
+   * The `hls.js` constructor or a URL of where it can be found. Only version `^0.13.3`
+   * (note the `^`) is supported at the moment. Important to note that by default this
+   * points towards a development friendly version, swap to `hls.min.js` in production.
+   *
+   * @type {Hls | string}
+   */
+  @property({ attribute: 'hls-library' })
+  hlsLibrary = 'https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js';
+
+  /**
    * @protected
    * @type {Hls | undefined}
+   */
+  _Hls;
+
+  /**
+   * The `hls.js` constructor.
+   *
+   * @type {Hls | undefined}
+   */
+  get Hls() {
+    const Hls = /** @type {Hls} */ (this.hlsLibrary);
+    return !isUndefined(Hls.Events.MANIFEST_PARSED) ? Hls : this._Hls;
+  }
+
+  /**
+   * @protected
+   * @type {import('hls.js') | undefined}
    */
   _hlsEngine;
 
@@ -102,6 +132,9 @@ export class HlsElement extends VideoElement {
    */
   _isHlsEngineAttached = false;
 
+  /**
+   * The current `hls.js` instance.
+   */
   get hlsEngine() {
     return this._hlsEngine;
   }
@@ -126,6 +159,20 @@ export class HlsElement extends VideoElement {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.initiateHlsConnection();
+  }
+
+  /**
+   * @protected
+   * @param {import('lit').PropertyValues} changedProperties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    // TODO: setup HLS
+  }
+
   disconnectedCallback() {
     this.destroyHlsEngine();
     super.disconnectedCallback();
@@ -136,15 +183,36 @@ export class HlsElement extends VideoElement {
   // -------------------------------------------------------------------------------------------
 
   /**
+   * @protected
+   */
+  initiateHlsConnection() {
+    if (isString(this.hlsLibrary)) {
+      preconnect(this.hlsLibrary);
+    }
+  }
+
+  /**
    * @param {string} type
    * @returns {CanPlay}
    */
   canPlayType(type) {
     if (HLS_TYPES.has(type)) {
-      return Hls.isSupported() ? CanPlay.Probably : CanPlay.Maybe;
+      this.isHlsSupported ? CanPlay.Probably : CanPlay.No;
     }
 
     return super.canPlayType(type);
+  }
+
+  /**
+   * Whether HLS streaming is supported in this environment. If the `hls.js` library
+   * has not loaded it'll defer to a best guess by checking if `MediaSource` is available.
+   *
+   * @returns {boolean}
+   */
+  get isHlsSupported() {
+    // TODO: when we fallback to native support in stage-2 use this.
+    // return this.hasNativeHlsSupport
+    return this.Hls?.isSupported() ?? 'MediaSource' in window;
   }
 
   /**
@@ -182,11 +250,15 @@ export class HlsElement extends VideoElement {
    * @default false
    */
   get shouldUseNativeHlsSupport() {
-    if (Hls.isSupported()) return false;
+    // TODO: stage-2 we'll need to rework this line.
+    if (this.isHlsSupported) return false;
     return this.hasNativeHlsSupport;
   }
 
   /**
+   * Notifies the `VideoElement` whether the `src` attribute should be set on the rendered
+   * `<video>` element. If we're using `hls.js` we don't want to override the `blob`.
+   *
    * @protected
    * @returns {boolean}
    */
@@ -201,7 +273,7 @@ export class HlsElement extends VideoElement {
     this.hlsEngine?.destroy();
     this._prevHlsSrc = '';
     this._isHlsEngineAttached = false;
-    this.context.canPlay = false;
+    this.softResetMediaContext();
   }
 
   /** @type {string} */
@@ -225,9 +297,24 @@ export class HlsElement extends VideoElement {
 
   /**
    * @protected
+   * @type {boolean}
    */
-  buildHlsEngine() {
-    if (isNil(this.videoEngine) || !isUndefined(this.hlsEngine)) return;
+  isInitializingHlsEngine = false;
+
+  /**
+   * @protected
+   * @returns {Promise<void>}
+   */
+  async buildHlsEngine() {
+    if (
+      isNil(this.videoEngine) ||
+      !isUndefined(this.hlsEngine) ||
+      this.isInitializingHlsEngine
+    ) {
+      return;
+    }
+
+    // TODO: CONTINUE FROM HERE.
 
     if (!Hls.isSupported()) {
       this.dispatchEvent(new HlsEngineNoSupportEvent());
