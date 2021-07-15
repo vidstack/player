@@ -109,6 +109,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
     [UnmuteRequestEvent.TYPE]: this.handleUnmuteRequest,
     [PlayRequestEvent.TYPE]: this.handlePlayRequest,
     [PauseRequestEvent.TYPE]: this.handlePauseRequest,
+    [SeekingRequestEvent.TYPE]: this.handleSeekingRequest,
     [SeekRequestEvent.TYPE]: this.handleSeekRequest,
     [VolumeChangeRequestEvent.TYPE]: this.handleVolumeChangeRequest,
     [EnterFullscreenRequestEvent.TYPE]: this.handleEnterFullscreenRequest,
@@ -220,6 +221,15 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   handlePauseRequest(event) {
     this.mediaRequestEventGateway(event);
     this.paused = true;
+  }
+
+  /**
+   * @protected
+   * @param {SeekRequestEvent} event
+   */
+  handleSeekingRequest(event) {
+    this.mediaRequestEventGateway(event);
+    this.currentTime = event.detail;
   }
 
   /**
