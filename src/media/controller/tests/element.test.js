@@ -13,6 +13,7 @@ import {
   MuteRequestEvent,
   PauseRequestEvent,
   PlayRequestEvent,
+  SeekingRequestEvent,
   SeekRequestEvent,
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
@@ -207,6 +208,15 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       const { container, provider } = await buildMediaFixture();
       const setCurrentTimeSpy = spy(provider, 'setCurrentTime');
       container.dispatchEvent(new SeekRequestEvent({ detail: 100 }));
+      await provider.mediaRequestQueue.flush();
+      expect(setCurrentTimeSpy).to.have.been.calledWith(100);
+      setCurrentTimeSpy.restore();
+    });
+
+    it('should handle seeking request', async function () {
+      const { container, provider } = await buildMediaFixture();
+      const setCurrentTimeSpy = spy(provider, 'setCurrentTime');
+      container.dispatchEvent(new SeekingRequestEvent({ detail: 100 }));
       await provider.mediaRequestQueue.flush();
       expect(setCurrentTimeSpy).to.have.been.calledWith(100);
       setCurrentTimeSpy.restore();
