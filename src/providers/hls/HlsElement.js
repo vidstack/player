@@ -233,6 +233,17 @@ export class HlsElement extends VideoElement {
     }
   }
 
+  /**
+   * @protected
+   * @param {import('lit').PropertyValues} changedProperties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    window.requestAnimationFrame(() => {
+      this.handleMediaSrcChange();
+    });
+  }
+
   disconnectedCallback() {
     this.destroyHlsEngine();
     super.disconnectedCallback();
@@ -538,6 +549,8 @@ export class HlsElement extends VideoElement {
    */
   async handleMediaSrcChange() {
     super.handleMediaSrcChange();
+
+    if (!this.hasUpdated) return;
 
     this.context.canPlay = false;
 
