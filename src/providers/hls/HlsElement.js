@@ -55,10 +55,49 @@ const HLS_LIB_CACHE = new Map();
  * also introduces support for the [HTTP Live Streaming protocol](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
  * (also known as HLS) via the [`video-dev/hls.js`](https://github.com/video-dev/hls.js) library.
  *
- * You'll need to install `hls.js` to use this provider...
+ * You can decide whether you'd like to bundle `hls.js` into your application (not recommended), or
+ * load it dynamically from your own server or a CDN. We recommended dynamically loading it to
+ * prevent blocking the main thread when rendering this element, and to ensure `hls.js` is cached
+ * separately.
+ *
+ * ## Dynamically Loaded
+ *
+ * ### CDN
+ *
+ * Simply point the `hlsLibrary` property or `hls-library` attribute to a script on a CDN
+ * containing the library. For example, you could use the following URL
+ * `https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js`. Swap `hls.js` for `hls.min.js` in
+ * production.
+ *
+ * We recommended using either [JSDelivr](https://jsdelivr.com) or [UNPKG](https://unpkg.com).
+ *
+ * ### Dynamic Import
+ *
+ * If you'd like to serve your own copy and control when the library is downloaded, simply
+ * use [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#dynamic_imports)
+ * and update the `hlsLibrary` property when ready. You must pass in the `hls.js` class constructor.
+ *
+ * ## Locally Bundled (not recommended)
+ *
+ * You'll need to install `hls.js`...
  *
  * ```bash
- * $: npm install hls.js@^0.14.0
+ * $: npm install hls.js@^0.14.0 @types/hls.js@^0.13.3
+ * ```
+ *
+ * Finally, import it and pass it as a property to `<vds-hls>`...
+ *
+ * ```ts
+ * import '@vidstack/elements/providers/hls/define.js';
+ *
+ * import { html, LitElement } from 'lit';
+ * import Hls from 'hls.js';
+ *
+ * class MyElement extends LitElement {
+ *   render() {
+ *     return html`<vds-hls src="..."  .hlsLibrary=${Hls}></vds-hls>`;
+ *   }
+ * }
  * ```
  *
  * @tagname vds-hls
