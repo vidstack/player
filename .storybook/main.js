@@ -22,7 +22,8 @@ module.exports = {
       loader: 'esbuild-loader',
       options: {
         loader: 'tsx',
-        target: 'es2015'
+        target: 'es2015',
+        sourcemap: true
       }
     });
 
@@ -38,7 +39,8 @@ module.exports = {
           loader: 'esbuild-loader',
           options: {
             loader: 'css',
-            minify: true
+            minify: true,
+            sourcemap: true
           }
         }
       ]

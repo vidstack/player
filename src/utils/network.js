@@ -317,10 +317,11 @@ export class ScriptLoader {
       loadScript(src)
         .then(() => {
           this.pendingRequests[src].forEach((request) => request.resolve());
-          delete this.pendingRequests[src];
         })
         .catch((err) => {
           this.pendingRequests[src].forEach((request) => request.reject(err));
+        })
+        .finally(() => {
           delete this.pendingRequests[src];
         });
     });
