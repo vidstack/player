@@ -1,7 +1,9 @@
+import { deferredPromise } from './promise.js';
 import { IS_CLIENT } from './support.js';
 import {
   isArray,
   isNil,
+  isNull,
   isObject,
   isString,
   isUndefined,
@@ -81,22 +83,29 @@ export function loadImage(src, minWidth = 1) {
  * @param {(error: unknown) => void} onError - Callback invoked when the script loading fails.
  */
 
-/* c8 ignore next 10 */
+/* c8 ignore next 22 */
 /**
  * @param {string} src
- * @param {() => void} onLoad
- * @param {() => void} onError
+ * @returns {Promise<void>}
  */
-export function loadScript(src, onLoad = noop, onError = noop) {
+export async function loadScript(src) {
+  const hasLoaded = document.querySelector(`script[src="${src}"]`);
+
+  if (!isNull(hasLoaded)) return;
+
   const script = document.createElement('script');
+  const load = deferredPromise();
+
   script.src = src;
-  script.onload = onLoad;
-  script.onerror = onError;
+  script.onload = load.resolve;
+  script.onerror = load.reject;
 
   const firstScriptTag = document.getElementsByTagName('script')[0];
   if (!isNil(firstScriptTag.parentNode)) {
     firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
   }
+
+  return load.promise;
 }
 
 /**
@@ -224,6 +233,10 @@ export function serializeQueryString(params) {
 export function preconnect(url, rel = 'preconnect', isClient = IS_CLIENT) {
   if (!isClient) return false;
 
+  const hasLink = document.querySelector(`link[href="${url}"]`);
+
+  if (!isNull(hasLink)) return true;
+
   const link = document.createElement('link');
   link.rel = rel;
   link.href = url;
@@ -276,4 +289,40 @@ export function appendParamsToURL(url, params) {
 export function decodeQueryString(qs) {
   if (!isString(qs)) return undefined;
   return /** @type {T} */ (parseQueryString(qs));
+}
+
+export class ScriptLoader {
+  /**
+   * @private
+   * @type {Record<string, {
+   *  resolve: () => void;
+   *  reject: (error: unknown) => void;
+   * }[]>}
+   */
+  static pendingRequests = {};
+
+  /**
+   * @param {string} src
+   * @returns {Promise<void>}
+   */
+  static async load(src) {
+    return new Promise((resolve, reject) => {
+      if (this.pendingRequests[src]) {
+        this.pendingRequests[src].push({ resolve, reject });
+        return;
+      }
+
+      this.pendingRequests[src] = [{ resolve, reject }];
+
+      loadScript(src)
+        .then(() => {
+          this.pendingRequests[src].forEach((request) => request.resolve());
+          delete this.pendingRequests[src];
+        })
+        .catch((err) => {
+          this.pendingRequests[src].forEach((request) => request.reject(err));
+          delete this.pendingRequests[src];
+        });
+    });
+  }
 }

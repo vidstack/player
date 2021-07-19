@@ -12,6 +12,8 @@ declare global {
   interface Window {
     chrome: boolean;
     safari: boolean;
+    WebKitMediaSource: typeof MediaSource | undefined;
+    WebKitSourceBuffer: typeof SourceBuffer | undefined;
   }
 
   interface HTMLMediaElement {

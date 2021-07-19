@@ -189,3 +189,48 @@ export function canAutoplay(muted = true, playsinline = true) {
 
   return Promise.resolve(!video.paused);
 }
+
+/**
+ * @returns {typeof MediaSource | undefined }
+ * @link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts
+ */
+export function getMediaSource() {
+  return window?.MediaSource ?? window?.WebKitMediaSource;
+}
+
+/**
+ * @returns {typeof SourceBuffer | undefined }
+ * @link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts
+ */
+export function getSourceBuffer() {
+  return window?.SourceBuffer ?? window?.WebKitSourceBuffer;
+}
+
+/**
+ * @returns {boolean}
+ * @link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts
+ */
+export function isNonNativeHlsStreamingPossible() {
+  const mediaSource = getMediaSource();
+
+  if (isUndefined(mediaSource)) {
+    return false;
+  }
+
+  const isTypeSupported =
+    mediaSource &&
+    isFunction(mediaSource.isTypeSupported) &&
+    mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E,mp4a.40.2"');
+
+  const sourceBuffer = getSourceBuffer();
+
+  // If SourceBuffer is exposed ensure its API is valid because safari and old versions of Chrome
+  // do not expose SourceBuffer globally so checking SourceBuffer.prototype is impossible.
+  const isSourceBufferValid =
+    isUndefined(sourceBuffer) ||
+    (!isUndefined(sourceBuffer.prototype) &&
+      isFunction(sourceBuffer.prototype.appendBuffer) &&
+      isFunction(sourceBuffer.prototype.remove));
+
+  return isTypeSupported && isSourceBufferValid;
+}

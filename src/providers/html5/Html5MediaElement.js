@@ -275,6 +275,7 @@ export class Html5MediaElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
 
   /**
+   * @protected
    * @param {import('lit').PropertyValues} changedProps
    */
   firstUpdated(changedProps) {

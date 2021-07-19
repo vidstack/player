@@ -3,7 +3,7 @@ import './define.js';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { on } from '../../foundation/directives/index.js';
+import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import { FullscreenChangeEvent } from '../../foundation/fullscreen/index.js';
 import {
   AbortEvent,
@@ -34,10 +34,10 @@ import {
   WaitingEvent
 } from '../../media/index.js';
 import {
-  HlsEngineAttachEvent,
-  HlsEngineBuiltEvent,
-  HlsEngineDetachEvent,
-  HlsEngineNoSupportEvent
+  HlsAttachEvent,
+  HlsBuildEvent,
+  HlsDetachEvent,
+  HlsNoSupportEvent
 } from './events.js';
 import {
   HLS_ELEMENT_STORYBOOK_ARG_TYPES,
@@ -105,6 +105,7 @@ function Template({
   onWaiting,
   /// HLS Properties,
   hlsConfig,
+  hlsLibrary,
   // HLS Events
   onHlsEngineAttach,
   onHlsEngineBuilt,
@@ -122,6 +123,7 @@ function Template({
       current-time=${currentTime}
       cross-origin=${ifDefined(crossOrigin)}
       controls-list=${ifDefined(controlsList)}
+      hls-library=${ifNonEmpty(hlsLibrary)}
       .hls-config=${hlsConfig}
       ?autoplay=${autoplay}
       ?playsinline=${playsinline}
@@ -159,10 +161,10 @@ function Template({
       ${on(ViewTypeChangeEvent.TYPE, onViewTypeChange)}
       ${on(VolumeChangeEvent.TYPE, onVolumeChange)}
       ${on(WaitingEvent.TYPE, onWaiting)}
-      ${on(HlsEngineBuiltEvent.TYPE, onHlsEngineBuilt)}
-      ${on(HlsEngineAttachEvent.TYPE, onHlsEngineAttach)}
-      ${on(HlsEngineDetachEvent.TYPE, onHlsEngineDetach)}
-      ${on(HlsEngineNoSupportEvent.TYPE, onHlsEngineNoSupport)}
+      ${on(HlsBuildEvent.TYPE, onHlsEngineBuilt)}
+      ${on(HlsAttachEvent.TYPE, onHlsEngineAttach)}
+      ${on(HlsDetachEvent.TYPE, onHlsEngineDetach)}
+      ${on(HlsNoSupportEvent.TYPE, onHlsEngineNoSupport)}
     ></vds-hls>
   `;
 }
