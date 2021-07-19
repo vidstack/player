@@ -195,7 +195,7 @@ export function canAutoplay(muted = true, playsinline = true) {
  * @link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts
  */
 export function getMediaSource() {
-  return window?.MediaSource || window?.WebKitMediaSource;
+  return window?.MediaSource ?? window?.WebKitMediaSource;
 }
 
 /**
@@ -203,7 +203,7 @@ export function getMediaSource() {
  * @link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts
  */
 export function getSourceBuffer() {
-  return window?.SourceBuffer || window?.WebKitSourceBuffer;
+  return window?.SourceBuffer ?? window?.WebKitSourceBuffer;
 }
 
 /**
