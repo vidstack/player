@@ -5,16 +5,36 @@ import './define.js';
 import { html } from 'lit';
 
 import { ifNonEmpty } from '../../foundation/directives/index.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
 import { createTimeRanges } from '../../media/index.js';
-import {
-  SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES,
-  SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME
-} from './SeekableProgressBarElement.js';
+import { SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME } from './SeekableProgressBarElement.js';
+
+export const SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES = {
+  // Properties
+  label: {
+    control: StorybookControl.Text,
+    defaultValue: 'Amount of seekable media'
+  },
+  valueText: {
+    control: StorybookControl.Text,
+    defaultValue: '{seekableAmount} out of {duration}'
+  },
+  // Media Properties
+  mediaSeekableAmount: {
+    control: StorybookControl.Number,
+    defaultValue: 1800
+  },
+  mediaDuration: {
+    control: StorybookControl.Number,
+    defaultValue: 3600
+  }
+};
 
 export default {
   title: 'UI/Controls/Seekable Progress Bar',
   component: SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME,
-  argTypes: SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

@@ -4,14 +4,26 @@ import { html } from 'lit';
 
 import { ifNonEmpty } from '../../foundation/directives/index.js';
 import {
-  TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  TOGGLE_BUTTON_ELEMENT_TAG_NAME
-} from './ToggleButtonElement.js';
+  storybookAction,
+  StorybookControl
+} from '../../foundation/storybook/index.js';
+import { TOGGLE_BUTTON_ELEMENT_TAG_NAME } from './ToggleButtonElement.js';
+
+export const TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+  label: { control: StorybookControl.Text },
+  describedBy: { control: StorybookControl.Text },
+  disabled: { control: StorybookControl.Boolean },
+  pressed: { control: StorybookControl.Boolean, defaultValue: false },
+  onClick: storybookAction('click'),
+  onFocus: storybookAction('focus'),
+  onBlur: storybookAction('blur')
+};
 
 export default {
   title: 'UI/Controls/Toggle Button',
   component: TOGGLE_BUTTON_ELEMENT_TAG_NAME,
-  argTypes: TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

@@ -7,6 +7,8 @@ export type KeysOfType<T, O> = {
   [P in keyof O]: O[P] extends T ? P : never;
 };
 
+export type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
+
 export type Values<T> = T extends { [k: string]: infer V } ? V : never;
 
 export type ReadonlyIfType<T, O> = Readonly<

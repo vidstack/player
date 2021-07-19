@@ -2,19 +2,12 @@ import { state } from 'lit/decorators.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
 import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
-import {
   mediaContext,
   MediaRemoteControl,
   PauseRequestEvent,
   PlayRequestEvent
 } from '../../media/index.js';
-import {
-  TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  ToggleButtonElement
-} from '../toggle-button/index.js';
+import { ToggleButtonElement } from '../toggle-button/index.js';
 
 export const PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
 
@@ -90,15 +83,3 @@ export class PlayButtonElement extends ToggleButtonElement {
     }
   }
 }
-
-export const PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  label: { control: StorybookControl.Text, defaultValue: 'Play' },
-  pressed: { control: StorybookControl.Boolean, table: { disable: true } },
-  mediaPaused: {
-    control: StorybookControl.Boolean,
-    defaultValue: true
-  },
-  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
-  onPauseRequest: storybookAction(PauseRequestEvent.TYPE)
-};

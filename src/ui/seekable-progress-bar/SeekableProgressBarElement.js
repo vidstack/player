@@ -5,7 +5,6 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
 import { ifNonEmpty } from '../../foundation/directives/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import { mediaContext } from '../../media/index.js';
 import { formatSpokenTime } from '../../utils/time.js';
 import { seekableProgressBarElementStyles } from './styles.js';
@@ -190,24 +189,3 @@ export class SeekableProgressBarElement extends LitElement {
     return undefined;
   }
 }
-
-export const SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES = {
-  // Properties
-  label: {
-    control: StorybookControl.Text,
-    defaultValue: 'Amount of seekable media'
-  },
-  valueText: {
-    control: StorybookControl.Text,
-    defaultValue: '{seekableAmount} out of {duration}'
-  },
-  // Media Properties
-  mediaSeekableAmount: {
-    control: StorybookControl.Number,
-    defaultValue: 1800
-  },
-  mediaDuration: {
-    control: StorybookControl.Number,
-    defaultValue: 3600
-  }
-};

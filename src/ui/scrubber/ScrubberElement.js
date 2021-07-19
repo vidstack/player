@@ -13,39 +13,22 @@ import {
 } from '../../foundation/directives/index.js';
 import { WithFocus } from '../../foundation/elements/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
-import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
-import {
-  PauseRequestEvent,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent
-} from '../../media/index.js';
 import { buildExportPartsAttr } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
 import {
-  SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES,
   ScrubberPreviewConnectEvent,
   ScrubberPreviewElement,
   ScrubberPreviewHideEvent,
   ScrubberPreviewShowEvent,
   ScrubberPreviewTimeUpdateEvent
 } from '../scrubber-preview/index.js';
-import {
-  SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES,
-  SeekableProgressBarElement
-} from '../seekable-progress-bar/index.js';
+import { SeekableProgressBarElement } from '../seekable-progress-bar/index.js';
 import {
   SliderDragEndEvent,
   SliderDragStartEvent,
   SliderValueChangeEvent
 } from '../slider/index.js';
-import {
-  TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  TimeSliderElement
-} from '../time-slider/index.js';
+import { TimeSliderElement } from '../time-slider/index.js';
 import { scrubberContext } from './context.js';
 import { scrubberElementStyles } from './styles.js';
 
@@ -561,49 +544,3 @@ export class ScrubberElement extends WithFocus(LitElement) {
     this.removeAttribute('previewing');
   }
 }
-
-export const SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
-  // Properties
-  disabled: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,
-  hidden: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
-  label: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.label,
-  progressLabel: SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES.label,
-  orientation: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
-  pauseWhileDragging:
-    TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.pauseWhileDragging,
-  step: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.step,
-  keyboardStep: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.keyboardStep,
-  shiftKeyMultiplier:
-    TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.shiftKeyMultiplier,
-  seekingRequestThrottle:
-    TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.seekingRequestThrottle,
-  valueText: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.valueText,
-  progressValueText:
-    SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES.valueText,
-  // Scrubber Preview Properties
-  noPreviewClamp: SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES.noClamp,
-  noPreviewTrackFill: SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES.noTrackFill,
-  // Scrubber Preview Actions
-  onScrubberPreviewConnect: storybookAction(ScrubberPreviewConnectEvent.TYPE),
-  onScrubberPreviewShow: storybookAction(ScrubberPreviewShowEvent.TYPE),
-  onScrubberPreviewTimeUpdate: storybookAction(
-    ScrubberPreviewTimeUpdateEvent.TYPE
-  ),
-  onScrubberPreviewHide: storybookAction(ScrubberPreviewHideEvent.TYPE),
-  // Media Properties
-  mediaCurrentTime: {
-    control: StorybookControl.Number,
-    defaultValue: 1200
-  },
-  mediaDuration: { control: StorybookControl.Number, defaultValue: 3600 },
-  mediaPaused: { control: StorybookControl.Boolean, defaultValue: true },
-  mediaSeekableAmount: {
-    control: StorybookControl.Number,
-    defaultValue: 1800
-  },
-  // Media Request Actions
-  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
-  onPauseRequest: storybookAction(PauseRequestEvent.TYPE),
-  onSeekRequest: storybookAction(SeekRequestEvent.TYPE),
-  onSeekingRequest: storybookAction(SeekingRequestEvent.TYPE)
-};

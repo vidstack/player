@@ -7,10 +7,6 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import { WithFocus } from '../../foundation/elements/index.js';
-import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
 import { buildExportPartsAttr } from '../../utils/dom.js';
 import { ButtonElement } from '../button/index.js';
 import { ToggleElement } from '../toggle/index.js';
@@ -163,13 +159,3 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
     this.pressed = !this.pressed;
   }
 }
-
-export const TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-  label: { control: StorybookControl.Text },
-  describedBy: { control: StorybookControl.Text },
-  disabled: { control: StorybookControl.Boolean },
-  pressed: { control: StorybookControl.Boolean, defaultValue: false },
-  onClick: storybookAction('click'),
-  onFocus: storybookAction('focus'),
-  onBlur: storybookAction('blur')
-};

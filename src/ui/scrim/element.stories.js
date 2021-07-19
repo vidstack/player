@@ -2,15 +2,22 @@ import './define.js';
 
 import { html } from 'lit';
 
-import {
-  SCRIM_ELEMENT_TAG_NAME,
-  SCRIM_STORYBOOK_ARG_TYPES
-} from './ScrimElement.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
+import { SCRIM_ELEMENT_TAG_NAME } from './ScrimElement.js';
+
+export const SCRIM_STORYBOOK_ARG_TYPES = {
+  direction: {
+    control: StorybookControl.Select,
+    options: ['up', 'down'],
+    defaultValue: 'up'
+  }
+};
 
 export default {
   title: 'UI/Scrim',
   component: SCRIM_ELEMENT_TAG_NAME,
-  argTypes: SCRIM_STORYBOOK_ARG_TYPES
+  argTypes: SCRIM_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

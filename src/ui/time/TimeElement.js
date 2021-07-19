@@ -3,7 +3,6 @@ import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../foundation/directives/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import { formatHtml5Duration, formatTime } from '../../utils/time.js';
 import { timeElementStyles } from './styles.js';
 
@@ -164,13 +163,3 @@ export class TimeElement extends LitElement {
     return 'root time';
   }
 }
-
-export const TIME_ELEMENT_STORYBOOK_ARG_TYPES = {
-  alwaysShowHours: {
-    control: StorybookControl.Boolean,
-    defaultValue: false
-  },
-  label: { control: StorybookControl.Text },
-  padHours: { control: StorybookControl.Boolean, defaultValue: false },
-  seconds: { control: StorybookControl.Number, defaultValue: 0 }
-};

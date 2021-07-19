@@ -2,7 +2,6 @@ import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import { getSlottedChildren, setAttribute } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
 import { toggleElementStyles } from './styles.js';
@@ -206,7 +205,3 @@ export class ToggleElement extends LitElement {
     }
   }
 }
-
-export const TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES = {
-  pressed: { control: StorybookControl.Boolean, defaultValue: false }
-};

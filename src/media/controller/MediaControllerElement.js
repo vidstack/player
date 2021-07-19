@@ -5,18 +5,12 @@ import {
   ElementDiscoveryController
 } from '../../foundation/elements/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
-import { storybookAction } from '../../foundation/storybook/index.js';
 import { isNil } from '../../utils/unit.js';
 import {
   MediaContainerConnectEvent,
   MediaContainerElement
 } from '../container/index.js';
-import {
-  ControlsChangeEvent,
-  ControlsManager,
-  IdleChangeEvent,
-  IdleObserver
-} from '../controls/index.js';
+import { ControlsManager, IdleObserver } from '../controls/index.js';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -278,17 +272,3 @@ export class MediaControllerElement extends WithMediaProviderBridge(
     }
   }
 }
-
-export const MEDIA_CONTROLLER_ELEMENT_STORYBOOK_ARG_TYPES = {
-  onControlsChange: storybookAction(ControlsChangeEvent.TYPE),
-  onEnterFullscreenRequest: storybookAction(EnterFullscreenRequestEvent.TYPE),
-  onExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE),
-  onIdleChange: storybookAction(IdleChangeEvent.TYPE),
-  onMuteRequest: storybookAction(MuteRequestEvent.TYPE),
-  onPauseRequest: storybookAction(PauseRequestEvent.TYPE),
-  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
-  onSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
-  onSeekRequest: storybookAction(SeekRequestEvent.TYPE),
-  onUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE),
-  onVolumeChangeRequest: storybookAction(VolumeChangeRequestEvent.TYPE)
-};

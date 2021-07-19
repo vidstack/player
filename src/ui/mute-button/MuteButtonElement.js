@@ -1,20 +1,8 @@
 import { state } from 'lit/decorators.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
-import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
-import {
-  mediaContext,
-  MediaRemoteControl,
-  MuteRequestEvent,
-  UnmuteRequestEvent
-} from '../../media/index.js';
-import {
-  TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  ToggleButtonElement
-} from '../toggle-button/index.js';
+import { mediaContext, MediaRemoteControl } from '../../media/index.js';
+import { ToggleButtonElement } from '../toggle-button/index.js';
 
 export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
 
@@ -87,15 +75,3 @@ export class MuteButtonElement extends ToggleButtonElement {
     }
   }
 }
-
-export const MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  label: { control: StorybookControl.Text, defaultValue: 'Mute' },
-  pressed: { control: StorybookControl.Boolean, table: { disable: true } },
-  mediaMuted: {
-    control: StorybookControl.Boolean,
-    defaultValue: false
-  },
-  onMuteRequest: storybookAction(MuteRequestEvent.TYPE),
-  onUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE)
-};

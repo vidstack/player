@@ -3,7 +3,6 @@ import { property, state } from 'lit/decorators.js';
 import { createRef } from 'lit/directives/ref.js';
 
 import { listen, redispatchEvent } from '../../foundation/events/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import {
   AbortEvent,
   CanPlay,
@@ -15,7 +14,6 @@ import {
   LoadedDataEvent,
   LoadedMetadataEvent,
   LoadStartEvent,
-  MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
   MediaProviderElement,
   MediaType,
   MediaTypeChangeEvent,
@@ -869,16 +867,3 @@ export class Html5MediaElement extends MediaProviderElement {
     return MediaType.Unknown;
   }
 }
-
-export const HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  controlsList: { control: StorybookControl.Text },
-  crossOrigin: { control: StorybookControl.Text },
-  defaultMuted: { control: StorybookControl.Boolean },
-  defaultPlaybackRate: { control: StorybookControl.Number },
-  disableRemotePlayback: { control: StorybookControl.Boolean },
-  height: { control: StorybookControl.Number },
-  preload: { control: StorybookControl.Text },
-  srcObject: { control: StorybookControl.Text },
-  width: { control: StorybookControl.Number }
-};

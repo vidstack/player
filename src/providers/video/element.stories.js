@@ -5,6 +5,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { on } from '../../foundation/directives/index.js';
 import { FullscreenChangeEvent } from '../../foundation/fullscreen/index.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
 import {
   AbortEvent,
   CanPlayEvent,
@@ -33,15 +34,29 @@ import {
   VolumeChangeEvent,
   WaitingEvent
 } from '../../media/index.js';
-import {
-  VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
-  VIDEO_ELEMENT_TAG_NAME
-} from './VideoElement.js';
+import { HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES } from '../html5/storybook.js';
+import { VIDEO_ELEMENT_TAG_NAME } from './VideoElement.js';
+
+export const VIDEO_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
+  autoPiP: { control: StorybookControl.Boolean },
+  disablePiP: { control: StorybookControl.Boolean },
+  poster: {
+    control: StorybookControl.Text,
+    defaultValue: 'https://media-files.vidstack.io/poster.png'
+  },
+  src: {
+    control: StorybookControl.Text,
+    defaultValue:
+      'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4'
+  }
+};
 
 export default {
   title: 'Providers/Video',
   component: VIDEO_ELEMENT_TAG_NAME,
-  argTypes: VIDEO_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

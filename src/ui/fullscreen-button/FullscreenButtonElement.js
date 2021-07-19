@@ -1,20 +1,8 @@
 import { state } from 'lit/decorators.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
-import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
-import {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent,
-  mediaContext,
-  MediaRemoteControl
-} from '../../media/index.js';
-import {
-  TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  ToggleButtonElement
-} from '../toggle-button/index.js';
+import { mediaContext, MediaRemoteControl } from '../../media/index.js';
+import { ToggleButtonElement } from '../toggle-button/index.js';
 
 export const FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
 
@@ -88,15 +76,3 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     }
   }
 }
-
-export const FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  label: { control: StorybookControl.Text, defaultValue: 'Fullscreen' },
-  pressed: { control: StorybookControl.Boolean, table: { disable: true } },
-  mediaFullscreen: {
-    control: StorybookControl.Boolean,
-    defaultValue: false
-  },
-  onEnterFullscreenRequest: storybookAction(EnterFullscreenRequestEvent.TYPE),
-  onExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE)
-};

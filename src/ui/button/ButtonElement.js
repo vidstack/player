@@ -7,10 +7,6 @@ import { ifNonEmpty } from '../../foundation/directives/index.js';
 import { ElementDisposalController } from '../../foundation/elements/index.js';
 import { WithFocus } from '../../foundation/elements/index.js';
 import { listen } from '../../foundation/events/index.js';
-import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
 import { isUndefined } from '../../utils/unit.js';
 import { buttonElementStyles } from './styles.js';
 
@@ -312,23 +308,3 @@ export class ButtonElement extends WithFocus(LitElement) {
     return false;
   }
 }
-
-export const BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
-  controls: { control: StorybookControl.Text },
-  describedBy: { control: StorybookControl.Text },
-  disabled: { control: StorybookControl.Boolean },
-  expanded: { control: StorybookControl.Boolean },
-  hasPopup: { control: StorybookControl.Boolean },
-  hidden: { control: StorybookControl.Boolean },
-  label: { control: StorybookControl.Text },
-  pressed: { control: StorybookControl.Boolean },
-  title: { control: StorybookControl.Text, defaultValue: 'Title' },
-  type: {
-    control: StorybookControl.Select,
-    options: ['button', 'submit', 'reset', 'menu'],
-    defaultValue: 'button'
-  },
-  onClick: storybookAction('click'),
-  onFocus: storybookAction('focus'),
-  onBlur: storybookAction('blur')
-};

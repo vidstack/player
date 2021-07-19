@@ -6,6 +6,10 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import { FullscreenChangeEvent } from '../../foundation/fullscreen/index.js';
 import {
+  storybookAction,
+  StorybookControl
+} from '../../foundation/storybook/index.js';
+import {
   AbortEvent,
   CanPlayEvent,
   CanPlayThroughEvent,
@@ -33,21 +37,38 @@ import {
   VolumeChangeEvent,
   WaitingEvent
 } from '../../media/index.js';
+import { VIDEO_ELEMENT_STORYBOOK_ARG_TYPES } from '../video/element.stories.js';
 import {
   HlsAttachEvent,
   HlsBuildEvent,
   HlsDetachEvent,
   HlsNoSupportEvent
 } from './events.js';
-import {
-  HLS_ELEMENT_STORYBOOK_ARG_TYPES,
-  HLS_ELEMENT_TAG_NAME
-} from './HlsElement.js';
+import { HLS_ELEMENT_TAG_NAME } from './HlsElement.js';
+
+export const HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
+  hlsConfig: { control: StorybookControl.Object },
+  hlsLibrary: {
+    control: StorybookControl.Text,
+    defaultValue: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js'
+  },
+  src: {
+    control: StorybookControl.Text,
+    defaultValue:
+      'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8'
+  },
+  onHlsEngineAttach: storybookAction(HlsAttachEvent.TYPE),
+  onHlsEngineBuilt: storybookAction(HlsBuildEvent.TYPE),
+  onHlsEngineDetach: storybookAction(HlsDetachEvent.TYPE),
+  onHlsEngineNoSupport: storybookAction(HlsNoSupportEvent.TYPE)
+};
 
 export default {
   title: 'Providers/HLS',
   component: HLS_ELEMENT_TAG_NAME,
-  argTypes: HLS_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: HLS_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

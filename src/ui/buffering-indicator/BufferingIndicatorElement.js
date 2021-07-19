@@ -2,7 +2,6 @@ import { html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import { mediaContext } from '../../media/index.js';
 import { setAttribute } from '../../utils/dom.js';
 import { bufferingIndicatorElementStyles } from './styles.js';
@@ -83,14 +82,3 @@ export class BufferingIndicatorElement extends LitElement {
     return html`<slot></slot>`;
   }
 }
-
-export const BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
-  mediaCanPlay: {
-    control: StorybookControl.Boolean,
-    defaultValue: true
-  },
-  mediaBuffering: {
-    control: StorybookControl.Boolean,
-    defaultValue: true
-  }
-};

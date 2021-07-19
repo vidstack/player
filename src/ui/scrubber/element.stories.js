@@ -6,6 +6,7 @@ import './define.js';
 import { html } from 'lit';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
+import { StorybookControl } from '../../foundation/storybook/StorybookControl.js';
 import {
   createTimeRanges,
   PauseRequestEvent,
@@ -13,20 +14,41 @@ import {
   SeekingRequestEvent,
   SeekRequestEvent
 } from '../../media/index.js';
+import { omit } from '../../utils/object.js';
 import {
   ScrubberPreviewConnectEvent,
   ScrubberPreviewHideEvent,
   ScrubberPreviewShowEvent
 } from '../scrubber-preview/index.js';
-import {
-  SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES,
-  SCRUBBER_ELEMENT_TAG_NAME
-} from './ScrubberElement.js';
+import { SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES } from '../scrubber-preview/storybook.js';
+import { SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES } from '../seekable-progress-bar/element.stories.js';
+import { TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../time-slider/element.stories.js';
+import { SCRUBBER_ELEMENT_TAG_NAME } from './ScrubberElement.js';
+
+export const SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES = {
+  // Time Slider Properties
+  ...TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
+  progressValueText:
+    SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES.valueText,
+  // Scrubber Preview Properties
+  ...omit(SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES, [
+    'noClamp',
+    'noTrackFill'
+  ]),
+  noPreviewClamp: SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES.noClamp,
+  noPreviewTrackFill: SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES.noTrackFill,
+  // Media Properties
+  mediaSeekableAmount: {
+    control: StorybookControl.Number,
+    defaultValue: 1800
+  }
+};
 
 export default {
   title: 'UI/Controls/Scrubber',
   component: SCRUBBER_ELEMENT_TAG_NAME,
-  argTypes: SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: SCRUBBER_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

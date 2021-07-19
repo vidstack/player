@@ -1,7 +1,6 @@
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { StorybookControl } from '../../foundation/storybook/StorybookControl.js';
 import { scrimElementStyles } from './styles.js';
 
 export const SCRIM_ELEMENT_TAG_NAME = 'vds-scrim';
@@ -64,11 +63,3 @@ export class ScrimElement extends LitElement {
     return html`<slot></slot>`;
   }
 }
-
-export const SCRIM_STORYBOOK_ARG_TYPES = {
-  direction: {
-    control: StorybookControl.Select,
-    options: ['up', 'down'],
-    defaultValue: 'up'
-  }
-};

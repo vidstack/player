@@ -21,3 +21,44 @@ export function getAllObjectPropertyNames(obj, BaseConstructor = Object) {
 
   return properties;
 }
+
+/**
+ * Creates an object composed of the picked `object` properties.
+ *
+ * @template T
+ * @template {(keyof T)[]} R
+ * @param {T} obj
+ * @param {R} keys
+ * @returns {Pick<T, import("../utils").ArrayElement<R>>}
+ */
+export function pick(obj, keys) {
+  return keys.reduce(
+    (newObj, key) => ({
+      ...newObj,
+      [key]: obj[key]
+    }),
+    /** @type {any} */ ({})
+  );
+}
+
+/**
+ * The opposite of `pick`; this method creates an `object` composed of the own and inherited
+ * enumerable property paths of object that are not omitted.
+ *
+ * @template T
+ * @template {(keyof T)[]} R
+ * @param {T} obj
+ * @param {R} keys
+ * @returns {Omit<T, import("../utils").ArrayElement<R>>}
+ */
+export function omit(obj, keys) {
+  return /** @type {R} */ (Object.keys(obj))
+    .filter((key) => keys.indexOf(key) < 0)
+    .reduce(
+      (newObj, key) => ({
+        ...newObj,
+        [key]: obj[key]
+      }),
+      /** @type {any} */ ({})
+    );
+}

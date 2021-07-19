@@ -3,15 +3,24 @@ import './define.js';
 import { html } from 'lit';
 
 import { ifNonEmpty } from '../../foundation/directives/index.js';
-import {
-  TIME_ELEMENT_STORYBOOK_ARG_TYPES,
-  TIME_ELEMENT_TAG_NAME
-} from './TimeElement.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
+import { TIME_ELEMENT_TAG_NAME } from './TimeElement.js';
+
+export const TIME_ELEMENT_STORYBOOK_ARG_TYPES = {
+  alwaysShowHours: {
+    control: StorybookControl.Boolean,
+    defaultValue: false
+  },
+  label: { control: StorybookControl.Text },
+  padHours: { control: StorybookControl.Boolean, defaultValue: false },
+  seconds: { control: StorybookControl.Number, defaultValue: 0 }
+};
 
 export default {
   title: 'UI/Time/Time',
   component: TIME_ELEMENT_TAG_NAME,
-  argTypes: TIME_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: TIME_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

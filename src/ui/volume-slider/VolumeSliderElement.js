@@ -5,21 +5,10 @@ import { property } from 'lit/decorators.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
-import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
 import { mediaContext } from '../../media/context.js';
-import {
-  MediaRemoteControl,
-  VolumeChangeRequestEvent
-} from '../../media/index.js';
+import { MediaRemoteControl } from '../../media/index.js';
 import { round } from '../../utils/number.js';
-import {
-  SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  SliderElement,
-  SliderValueChangeEvent
-} from '../slider/index.js';
+import { SliderElement, SliderValueChangeEvent } from '../slider/index.js';
 
 export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
 
@@ -125,36 +114,3 @@ export class VolumeSliderElement extends SliderElement {
     this.remoteControl.changeVolume(mediaVolume, event);
   }
 }
-
-export const VOLUME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
-  // Properties
-  disabled: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,
-  hidden: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
-  orientation: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
-  label: {
-    control: StorybookControl.Text,
-    defaultValue: 'Volume slider'
-  },
-  step: {
-    control: StorybookControl.Number,
-    defaultValue: 0.5
-  },
-  keyboardStep: {
-    control: StorybookControl.Number,
-    defaultValue: 0.5
-  },
-  shiftKeyMultiplier: {
-    control: StorybookControl.Number,
-    defaultValue: 10
-  },
-  // Media Properties
-  mediaVolume: {
-    control: {
-      type: StorybookControl.Number,
-      step: 0.05
-    },
-    defaultValue: 0.5
-  },
-  // Media Request Actions
-  onVolumeChangeRequest: storybookAction(VolumeChangeRequestEvent.TYPE)
-};

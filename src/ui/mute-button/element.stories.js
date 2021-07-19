@@ -5,16 +5,31 @@ import './define.js';
 import { html } from 'lit';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
-import { MuteRequestEvent, UnmuteRequestEvent } from '../../media/index.js';
 import {
-  MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  MUTE_BUTTON_ELEMENT_TAG_NAME
-} from './MuteButtonElement.js';
+  storybookAction,
+  StorybookControl
+} from '../../foundation/storybook/index.js';
+import { MuteRequestEvent, UnmuteRequestEvent } from '../../media/index.js';
+import { omit } from '../../utils/object.js';
+import { TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES } from '../toggle-button/element.stories.js';
+import { MUTE_BUTTON_ELEMENT_TAG_NAME } from './MuteButtonElement.js';
+
+export const MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...omit(TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES, ['pressed']),
+  label: { control: StorybookControl.Text, defaultValue: 'Mute' },
+  mediaMuted: {
+    control: StorybookControl.Boolean,
+    defaultValue: false
+  },
+  onMuteRequest: storybookAction(MuteRequestEvent.TYPE),
+  onUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE)
+};
 
 export default {
   title: 'UI/Controls/Mute Button',
   component: MUTE_BUTTON_ELEMENT_TAG_NAME,
-  argTypes: MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

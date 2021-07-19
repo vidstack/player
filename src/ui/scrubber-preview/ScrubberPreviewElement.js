@@ -16,7 +16,6 @@ import {
   isVdsEvent,
   VdsCustomEvent
 } from '../../foundation/events/index.js';
-import { StorybookControl } from '../../foundation/storybook/StorybookControl.js';
 import { mediaContext } from '../../media/context.js';
 import { getSlottedChildren, raf } from '../../utils/dom.js';
 import { clampNumber, round } from '../../utils/number.js';
@@ -607,8 +606,3 @@ export class ScrubberPreviewElement extends LitElement {
     });
   }
 }
-
-export const SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES = {
-  noClamp: { control: StorybookControl.Boolean, defaultValue: false },
-  noTrackFill: { control: StorybookControl.Boolean, defaultValue: false }
-};

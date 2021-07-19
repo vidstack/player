@@ -5,23 +5,11 @@ import {
   EventListenerController,
   isPointerEvent
 } from '../../foundation/events/index.js';
-import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
-import {
-  mediaContext,
-  MediaRemoteControl,
-  PauseRequestEvent,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent
-} from '../../media/index.js';
+import { mediaContext, MediaRemoteControl } from '../../media/index.js';
 import { clampNumber, round } from '../../utils/number.js';
 import { formatSpokenTime } from '../../utils/time.js';
 import { throttle } from '../../utils/timing.js';
 import {
-  SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
   SliderDragEndEvent,
   SliderDragStartEvent,
   SliderElement,
@@ -359,44 +347,3 @@ export class TimeSliderElement extends SliderElement {
     }
   }
 }
-
-export const TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
-  // Properties
-  disabled: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.disabled,
-  hidden: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.hidden,
-  keyboardStep: { control: StorybookControl.Number, defaultValue: 5 },
-  label: {
-    control: StorybookControl.Text,
-    defaultValue: 'Media time slider'
-  },
-  orientation: SLIDER_ELEMENT_STORYBOOK_ARG_TYPES.orientation,
-  pauseWhileDragging: { control: StorybookControl.Boolean },
-  seekingRequestThrottle: {
-    control: StorybookControl.Number,
-    defaultValue: 100
-  },
-  shiftKeyMultiplier: { control: StorybookControl.Number, defaultValue: 2 },
-  step: { control: StorybookControl.Number, defaultValue: 0.25 },
-  valueText: {
-    control: StorybookControl.Text,
-    defaultValue: '{currentTime} out of {duration}'
-  },
-  // Media Properties
-  mediaCurrentTime: {
-    control: StorybookControl.Number,
-    defaultValue: 1800
-  },
-  mediaDuration: {
-    control: StorybookControl.Number,
-    defaultValue: 3600
-  },
-  mediaPaused: {
-    control: StorybookControl.Boolean,
-    defaultValue: true
-  },
-  // Media Request Actions
-  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
-  onPauseRequest: storybookAction(PauseRequestEvent.TYPE),
-  onSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
-  onSeekRequest: storybookAction(SeekRequestEvent.TYPE)
-};

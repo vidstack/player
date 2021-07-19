@@ -5,6 +5,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { on } from '../../foundation/directives/index.js';
 import { FullscreenChangeEvent } from '../../foundation/fullscreen/index.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
 import {
   AbortEvent,
   CanPlayEvent,
@@ -33,15 +34,22 @@ import {
   VolumeChangeEvent,
   WaitingEvent
 } from '../../media/index.js';
-import {
-  AUDIO_ELEMENT_STORYBOOK_ARG_TYPES,
-  AUDIO_ELEMENT_TAG_NAME
-} from './AudioElement.js';
+import { HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES } from '../html5/storybook.js';
+import { AUDIO_ELEMENT_TAG_NAME } from './AudioElement.js';
+
+export const AUDIO_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
+  src: {
+    control: StorybookControl.Text,
+    defaultValue: 'https://media-files.vidstack.io/audio.mp3'
+  }
+};
 
 export default {
   title: 'Providers/Audio',
   component: AUDIO_ELEMENT_TAG_NAME,
-  argTypes: AUDIO_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: AUDIO_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

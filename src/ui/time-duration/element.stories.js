@@ -5,15 +5,21 @@ import './define.js';
 import { html } from 'lit';
 
 import { ifNonEmpty } from '../../foundation/directives/index.js';
-import {
-  TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES,
-  TIME_DURATION_ELEMENT_TAG_NAME
-} from './TimeDurationElement.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
+import { omit } from '../../utils/object.js';
+import { TIME_ELEMENT_STORYBOOK_ARG_TYPES } from '../time/element.stories.js';
+import { TIME_DURATION_ELEMENT_TAG_NAME } from './TimeDurationElement.js';
+
+export const TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...omit(TIME_ELEMENT_STORYBOOK_ARG_TYPES, ['seconds']),
+  mediaDuration: { control: StorybookControl.Number, defaultValue: 1800 }
+};
 
 export default {
   title: 'UI/Time/Time Duration',
   component: TIME_DURATION_ELEMENT_TAG_NAME,
-  argTypes: TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: TIME_DURATION_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

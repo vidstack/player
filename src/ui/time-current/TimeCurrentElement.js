@@ -1,12 +1,8 @@
 import { property } from 'lit/decorators.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import { mediaContext } from '../../media/index.js';
-import {
-  TIME_ELEMENT_STORYBOOK_ARG_TYPES,
-  TimeElement
-} from '../time/index.js';
+import { TimeElement } from '../time/index.js';
 
 export const TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
 
@@ -42,10 +38,3 @@ export class TimeCurrentElement extends TimeElement {
   @consumeContext(mediaContext.currentTime)
   seconds = mediaContext.currentTime.initialValue;
 }
-
-export const TIME_CURRENT_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...TIME_ELEMENT_STORYBOOK_ARG_TYPES,
-  // @ts-ignore
-  seconds: { table: { disable: true } },
-  mediaCurrentTime: { control: StorybookControl.Number, defaultValue: 1800 }
-};

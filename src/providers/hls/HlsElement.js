@@ -2,10 +2,6 @@ import { property } from 'lit/decorators.js';
 
 import { VdsCustomEvent } from '../../foundation/events/index.js';
 import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
-import {
   CanPlay,
   DurationChangeEvent,
   ErrorEvent,
@@ -15,10 +11,7 @@ import {
 import { preconnect, ScriptLoader } from '../../utils/network.js';
 import { isNonNativeHlsStreamingPossible } from '../../utils/support.js';
 import { isFunction, isNil, isString, isUndefined } from '../../utils/unit.js';
-import {
-  VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
-  VideoElement
-} from '../video/index.js';
+import { VideoElement } from '../video/index.js';
 import {
   HlsAttachEvent,
   HlsBuildEvent,
@@ -695,21 +688,3 @@ export class HlsElement extends VideoElement {
     this.handleMediaReady(event);
   }
 }
-
-export const HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...VIDEO_ELEMENT_STORYBOOK_ARG_TYPES,
-  hlsConfig: { control: StorybookControl.Object },
-  hlsLibrary: {
-    control: StorybookControl.Text,
-    defaultValue: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js'
-  },
-  src: {
-    control: StorybookControl.Text,
-    defaultValue:
-      'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8'
-  },
-  onHlsEngineAttach: storybookAction(HlsAttachEvent.TYPE),
-  onHlsEngineBuilt: storybookAction(HlsBuildEvent.TYPE),
-  onHlsEngineDetach: storybookAction(HlsDetachEvent.TYPE),
-  onHlsEngineNoSupport: storybookAction(HlsNoSupportEvent.TYPE)
-};

@@ -2,11 +2,7 @@ import { html } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty, ifNumber } from '../../foundation/directives/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
-import {
-  HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
-  Html5MediaElement
-} from '../html5/index.js';
+import { Html5MediaElement } from '../html5/index.js';
 import { audioElementStyles } from './styles.js';
 
 export const AUDIO_ELEMENT_TAG_NAME = 'vds-audio';
@@ -90,11 +86,3 @@ export class AudioElement extends Html5MediaElement {
     return true;
   }
 }
-
-export const AUDIO_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
-  src: {
-    control: StorybookControl.Text,
-    defaultValue: 'https://media-files.vidstack.io/audio.mp3'
-  }
-};

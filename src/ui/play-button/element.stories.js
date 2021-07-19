@@ -5,16 +5,31 @@ import './define.js';
 import { html } from 'lit';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
-import { PauseRequestEvent, PlayRequestEvent } from '../../media/index.js';
 import {
-  PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
-  PLAY_BUTTON_ELEMENT_TAG_NAME
-} from './PlayButtonElement.js';
+  storybookAction,
+  StorybookControl
+} from '../../foundation/storybook/index.js';
+import { PauseRequestEvent, PlayRequestEvent } from '../../media/index.js';
+import { omit } from '../../utils/object.js';
+import { TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES } from '../toggle-button/element.stories.js';
+import { PLAY_BUTTON_ELEMENT_TAG_NAME } from './PlayButtonElement.js';
+
+export const PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...omit(TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES, ['pressed']),
+  label: { control: StorybookControl.Text, defaultValue: 'Play' },
+  mediaPaused: {
+    control: StorybookControl.Boolean,
+    defaultValue: true
+  },
+  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
+  onPauseRequest: storybookAction(PauseRequestEvent.TYPE)
+};
 
 export default {
   title: 'UI/Controls/Play Button',
   component: PLAY_BUTTON_ELEMENT_TAG_NAME,
-  argTypes: PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

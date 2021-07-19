@@ -4,15 +4,25 @@ import './define.js';
 
 import { html } from 'lit';
 
-import {
-  BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES,
-  BUFFERING_INDICATOR_ELEMENT_TAG_NAME
-} from './BufferingIndicatorElement.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
+import { BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from './BufferingIndicatorElement.js';
+
+export const BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
+  mediaCanPlay: {
+    control: StorybookControl.Boolean,
+    defaultValue: true
+  },
+  mediaBuffering: {
+    control: StorybookControl.Boolean,
+    defaultValue: true
+  }
+};
 
 export default {
   title: 'UI/Buffering Indicator',
   component: BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
-  argTypes: BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

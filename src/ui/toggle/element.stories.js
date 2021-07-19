@@ -2,15 +2,18 @@ import './define.js';
 
 import { html } from 'lit';
 
-import {
-  TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES,
-  TOGGLE_ELEMENT_TAG_NAME
-} from './ToggleElement.js';
+import { StorybookControl } from '../../foundation/storybook/index.js';
+import { TOGGLE_ELEMENT_TAG_NAME } from './ToggleElement.js';
+
+export const TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES = {
+  pressed: { control: StorybookControl.Boolean, defaultValue: false }
+};
 
 export default {
   title: 'UI/Controls/Toggle',
   component: TOGGLE_ELEMENT_TAG_NAME,
-  argTypes: TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: TOGGLE_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**

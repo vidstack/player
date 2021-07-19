@@ -7,10 +7,6 @@ import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import { WithFocus } from '../../foundation/elements/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
 import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
-import {
   clampNumber,
   getNumberOfDecimalPlaces,
   round
@@ -875,33 +871,3 @@ export class SliderElement extends WithFocus(LitElement) {
     this.lastDispatchedValue = this.value;
   });
 }
-
-export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
-  disabled: { control: StorybookControl.Boolean, defaultValue: false },
-  hidden: { control: StorybookControl.Boolean, defaultValue: false },
-  label: { control: StorybookControl.Text },
-  max: { control: StorybookControl.Number, defaultValue: 100 },
-  min: { control: StorybookControl.Number, defaultValue: 0 },
-  orientation: {
-    control: StorybookControl.Select,
-    options: ['horizontal', 'vertical'],
-    defaultValue: 'horizontal'
-  },
-  step: {
-    control: StorybookControl.Number,
-    defaultValue: 1
-  },
-  keyboardStep: {
-    control: StorybookControl.Number,
-    defaultValue: 1
-  },
-  shiftKeyMultiplier: {
-    control: StorybookControl.Number,
-    defaultValue: 5
-  },
-  value: { control: StorybookControl.Number, defaultValue: 50 },
-  valueText: { control: StorybookControl.Text },
-  onSliderDragStart: storybookAction(SliderDragStartEvent.TYPE),
-  onSliderDragEnd: storybookAction(SliderDragEndEvent.TYPE),
-  onSliderValueChange: storybookAction(SliderValueChangeEvent.TYPE)
-};

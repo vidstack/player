@@ -1,15 +1,10 @@
 import { html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 import { ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty, ifNumber } from '../../foundation/directives/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import { ViewType, ViewTypeChangeEvent } from '../../media/index.js';
-import {
-  HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
-  Html5MediaElement
-} from '../html5/index.js';
+import { Html5MediaElement } from '../html5/index.js';
 import { VideoFullscreenController } from './fullscreen/index.js';
 import { VideoPresentationController } from './presentation/index.js';
 import { videoElementStyles } from './styles.js';
@@ -213,18 +208,3 @@ export class VideoElement extends Html5MediaElement {
     this.presentationController
   );
 }
-
-export const VIDEO_ELEMENT_STORYBOOK_ARG_TYPES = {
-  ...HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES,
-  autoPiP: { control: StorybookControl.Boolean },
-  disablePiP: { control: StorybookControl.Boolean },
-  poster: {
-    control: StorybookControl.Text,
-    defaultValue: 'https://media-files.vidstack.io/poster.png'
-  },
-  src: {
-    control: StorybookControl.Text,
-    defaultValue:
-      'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8/medium.mp4'
-  }
-};

@@ -6,20 +6,67 @@ import { html } from 'lit';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import {
+  storybookAction,
+  StorybookControl
+} from '../../foundation/storybook/index.js';
+import {
   PauseRequestEvent,
   PlayRequestEvent,
   SeekingRequestEvent,
   SeekRequestEvent
 } from '../../media/index.js';
-import {
-  TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
-  TIME_SLIDER_ELEMENT_TAG_NAME
-} from './TimeSliderElement.js';
+import { pick } from '../../utils/object.js';
+import { SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../slider/element.stories.js';
+import { TIME_SLIDER_ELEMENT_TAG_NAME } from './TimeSliderElement.js';
+
+export const TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
+  // Properties
+  ...pick(SLIDER_ELEMENT_STORYBOOK_ARG_TYPES, [
+    'disabled',
+    'hidden',
+    'orientation'
+  ]),
+  keyboardStep: { control: StorybookControl.Number, defaultValue: 5 },
+  label: {
+    control: StorybookControl.Text,
+    defaultValue: 'Media time slider'
+  },
+  pauseWhileDragging: { control: StorybookControl.Boolean },
+  seekingRequestThrottle: {
+    control: StorybookControl.Number,
+    defaultValue: 100
+  },
+  shiftKeyMultiplier: { control: StorybookControl.Number, defaultValue: 2 },
+  step: { control: StorybookControl.Number, defaultValue: 0.25 },
+  valueText: {
+    control: StorybookControl.Text,
+    defaultValue: '{currentTime} out of {duration}'
+  },
+  // Media Properties
+  mediaCurrentTime: {
+    control: StorybookControl.Number,
+    defaultValue: 1800
+  },
+  mediaDuration: {
+    control: StorybookControl.Number,
+    defaultValue: 3600
+  },
+  mediaPaused: {
+    control: StorybookControl.Boolean,
+    defaultValue: true
+  },
+  // Media Request Actions
+  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
+  onPauseRequest: storybookAction(PauseRequestEvent.TYPE),
+  onSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
+  onSeekRequest: storybookAction(SeekRequestEvent.TYPE)
+};
 
 export default {
   title: 'UI/Controls/Time Slider',
   component: TIME_SLIDER_ELEMENT_TAG_NAME,
-  argTypes: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES
+  argTypes: TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES,
+  excludeStories: /.*STORYBOOK_ARG_TYPES$/
 };
 
 /**
