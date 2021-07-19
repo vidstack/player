@@ -10,8 +10,7 @@
   "plugins": ["jsdoc", "mocha", "simple-import-sort"],
   "ignorePatterns": [
     // Ignore files that contain both a `.js` and `.ts` file in same path (causes an error).
-    "src/bundle/index.js",
-    "src/media/controller/index.js",
+    "src/**/define.js",
     "src/foundation/context/index.js"
   ],
   "extends": [

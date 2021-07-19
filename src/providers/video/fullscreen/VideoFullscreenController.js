@@ -125,7 +125,7 @@ export class VideoFullscreenController extends FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../../../foundation/types').Unsubscribe}
+   * @returns {() => void} Stop listening function.
    */
   addFullscreenChangeEventListener(handler) {
     if (this.isSupportedNatively) {
@@ -154,7 +154,7 @@ export class VideoFullscreenController extends FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../../../foundation/types').Unsubscribe}
+   * @returns {() => void} Stop listening function.
    */
   addFullscreenErrorEventListener(handler) {
     if (!this.isSupportedNatively) return noop;

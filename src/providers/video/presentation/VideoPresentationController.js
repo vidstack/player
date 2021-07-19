@@ -75,7 +75,7 @@ export class VideoPresentationController {
    * The current presentation mode, possible values include `inline`, `picture-in-picture` and
    * `fullscreen`. Only available in Safari.
    *
-   * @type {import('../../../foundation/types').WebKitPresentationMode | undefined}
+   * @type {WebKitPresentationMode | undefined}
    * @default undefined
    * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
    */
@@ -124,7 +124,7 @@ export class VideoPresentationController {
   }
 
   /**
-   * @param {import('../../../foundation/types').WebKitPresentationMode} mode
+   * @param {WebKitPresentationMode} mode
    */
   setPresentationMode(mode) {
     this.host.videoElement?.webkitSetPresentationMode?.(mode);
@@ -132,7 +132,7 @@ export class VideoPresentationController {
 
   /**
    * @protected
-   * @returns {import('../../../foundation/types').Unsubscribe}
+   * @returns {() => void} Stop listening function.
    */
   addPresentationModeChangeEventListener() {
     if (!this.isSupported || isNil(this.host.videoElement)) return noop;
@@ -151,10 +151,7 @@ export class VideoPresentationController {
     redispatchEvent(this.host, event);
     this.host.dispatchEvent(
       new VideoPresentationChangeEvent({
-        detail:
-          /** @type {import('../../../foundation/types').WebKitPresentationMode} */ (
-            this.presentationMode
-          ),
+        detail: /** @type {WebKitPresentationMode} */ (this.presentationMode),
         originalEvent: event
       })
     );

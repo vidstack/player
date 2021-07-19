@@ -154,7 +154,7 @@ export class FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../types').Unsubscribe}
+   * @returns {() => void} Stop listening function.
    */
   addFullscreenChangeEventListener(handler) {
     if (!this.isSupported) return noop;
@@ -164,7 +164,7 @@ export class FullscreenController {
   /**
    * @protected
    * @param {(this: HTMLElement, event: Event) => void} handler
-   * @returns {import('../types').Unsubscribe}
+   * @returns {() => void} Stop listening function.
    */
   addFullscreenErrorEventListener(handler) {
     if (!this.isSupported) return noop;

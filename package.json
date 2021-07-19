@@ -8,9 +8,10 @@
   },
   "main": "dist/bundle/index.js",
   "module": "dist/bundle/index.js",
-  "types": "dist/bundle/index.d.ts",
   "files": [
     "dist/",
+    "index.d.ts",
+    "define.d.ts",
     "custom-elements.json"
   ],
   "sideEffects": [
@@ -20,6 +21,8 @@
   "exports": {
     ".": "./dist/bundle/index.js",
     "./*": "./dist/*",
+    "./define": "./dist/bundle/define.js",
+    "./define.js": "./dist/bundle/define.js",
     "./custom-elements.json": "./custom-elements.json"
   },
   "contributors": [

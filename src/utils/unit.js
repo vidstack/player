@@ -63,7 +63,7 @@ export function isNil(value) {
  *
  * @template T
  * @param {unknown} value - The value to return the constructor of.
- * @returns {import("../foundation/types").Constructor<T>}
+ * @returns {import("../utils").Constructor<T>}
  */
 export function getConstructor(value) {
   // @ts-ignore
@@ -134,7 +134,7 @@ export function isArray(value) {
  * Checks if the given `value` is an instanceof the given `constructor`.
  *
  * @param {unknown} value - The value to check.
- * @param {import("../foundation/types").Constructor<unknown>} constructor - The constructor to check against.
+ * @param {import("../utils").Constructor<unknown>} constructor - The constructor to check against.
  * @returns {boolean}
  */
 export function isInstanceOf(value, constructor) {
@@ -145,7 +145,7 @@ export function isInstanceOf(value, constructor) {
  * Checks if the given `value` prototype chain includes the given `object`.
  *
  * @param {object} value - The value whose prototype chain to check.
- * @param {import("../foundation/types").Constructor<unknown>} object - The object to search for in the prototype chain.
+ * @param {import("../utils").Constructor<unknown>} object - The object to search for in the prototype chain.
  * @returns {boolean}
  */
 export function isPrototypeOf(value, object) {

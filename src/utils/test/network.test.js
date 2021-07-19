@@ -102,6 +102,7 @@ describe('utils/network', function () {
     });
 
     it('should return empty object given undefined', function () {
+      // @ts-expect-error
       expect(parseQueryString(undefined)).to.eql({});
     });
 

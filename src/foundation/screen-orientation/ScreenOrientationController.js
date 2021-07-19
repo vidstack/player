@@ -166,7 +166,7 @@ export class ScreenOrientationController {
 
   /**
    * @protected
-   * @returns {import('../types').Unsubscribe}
+   * @returns {() => void} Stop listening function.
    */
   addScreenOrientationChangeEventListener() {
     return listen(

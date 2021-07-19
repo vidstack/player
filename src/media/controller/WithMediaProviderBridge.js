@@ -28,9 +28,9 @@ const BRIDGE_DEFINED = Symbol('Vidstack.withMediaProviderBridge');
 
 /**
  * @mixin
- * @template {import('../../foundation/types').Constructor<import('lit').ReactiveElement>} T
+ * @template {import('../../utils').Constructor<import('lit').ReactiveElement>} T
  * @param {T} Base - The constructor to mix into.
- * @returns {T & import('../../foundation/types').Constructor<import('./types').MediaProviderBridge>}
+ * @returns {T & import('../../utils').Constructor<import('./types').MediaProviderBridge>}
  */
 export function WithMediaProviderBridge(Base) {
   class WithMediaProviderBridge extends Base {

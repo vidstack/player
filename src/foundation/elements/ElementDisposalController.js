@@ -24,7 +24,7 @@ export class ElementDisposalController {
   /**
    * Add callback to be called when `host` element disconnects from DOM.
    *
-   * @param {import('../types').Callback<void>} [callback]
+   * @param {() => void} [callback]
    */
   add(callback) {
     this.disconnectDisposal.add(callback);
