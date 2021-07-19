@@ -94,3 +94,26 @@ export function createMediaContextRecord() {
     /** @type {any} */ ({})
   );
 }
+
+/**
+ * @template {import('../foundation/context').ContextProviderRecord<typeof mediaContext>} T
+ * @param {T} context
+ * @returns {T}
+ */
+export function cloneMediaContextRecord(context) {
+  const clone = /** @type {T} */ (JSON.parse(JSON.stringify(context)));
+
+  clone.buffered = /** @type {import('./time-ranges').CloneableTimeRanges} */ (
+    context.buffered
+  ).clone();
+
+  clone.seekable = /** @type {import('./time-ranges').CloneableTimeRanges} */ (
+    context.seekable
+  ).clone();
+
+  clone.played = /** @type {import('./time-ranges').CloneableTimeRanges} */ (
+    context.played
+  ).clone();
+
+  return clone;
+}

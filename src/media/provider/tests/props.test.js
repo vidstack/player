@@ -5,6 +5,7 @@ import { equal } from '../../../utils/unit.js';
 import { mediaContext } from '../../context.js';
 import { MediaType } from '../../MediaType.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
+import { createTimeRanges } from '../../time-ranges.js';
 import { ViewType } from '../../ViewType.js';
 
 describe('MediaProviderElement/props', function () {
@@ -20,6 +21,23 @@ describe('MediaProviderElement/props', function () {
         prop
       ).to.be.true;
     });
+  });
+
+  it('should provide immuateble media state', async function () {
+    const { provider } = await buildMediaFixture();
+    const state = provider.mediaState;
+
+    expect(state.muted).to.be.false;
+    expect(state.seekable.length).to.be.equal(0);
+
+    // @ts-expect-error
+    state.seekable.length = 10;
+    expect(provider.mediaState.seekable.length).to.be.equal(0);
+    provider.context.seekable = createTimeRanges(10, 20);
+
+    expect(provider.mediaState.seekable.start(0)).to.be.equal(10);
+    expect(provider.mediaState.seekable.end(0)).to.be.equal(20);
+    expect(provider.mediaState.seekable.length).to.be.equal(1);
   });
 
   it('should update provider when volume is set', async function () {

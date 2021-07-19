@@ -263,6 +263,8 @@ export function provideContextRecord(host, contextRecord) {
     const provider = context.provide(host);
 
     Object.defineProperty(providers, contextKey, {
+      enumerable: true,
+      configurable: false,
       get() {
         return provider.value;
       },

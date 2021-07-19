@@ -22,6 +22,7 @@ import {
   buildMediaFixture,
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
 } from '../../test-utils/index.js';
+import { createTimeRanges } from '../../time-ranges.js';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerConnectEvent,
@@ -45,6 +46,23 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       const { controller } = await buildMediaFixture();
       expect(controller).shadowDom.to.equal('<slot></slot>');
     });
+  });
+
+  it('should provide immuateble media state', async function () {
+    const { controller } = await buildMediaFixture();
+    const state = controller.mediaState;
+
+    expect(state.muted).to.be.false;
+    expect(state.seekable.length).to.be.equal(0);
+
+    // @ts-expect-error
+    state.seekable.length = 10;
+    expect(controller.mediaState.seekable.length).to.be.equal(0);
+    controller.context.seekable = createTimeRanges(10, 20);
+
+    expect(controller.mediaState.seekable.start(0)).to.be.equal(10);
+    expect(controller.mediaState.seekable.end(0)).to.be.equal(20);
+    expect(controller.mediaState.seekable.length).to.be.equal(1);
   });
 
   describe('discovery', function () {

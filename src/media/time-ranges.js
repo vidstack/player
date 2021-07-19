@@ -5,6 +5,10 @@
 import { isArray, isNumber, isUndefined } from '../utils/unit.js';
 
 /**
+ * @typedef {TimeRanges & { clone(): CloneableTimeRanges }} CloneableTimeRanges
+ */
+
+/**
  * Check if any of the time ranges are over the maximum index.
  *
  * @param {'start' | 'end'} fnName - The function name to use for logging.
@@ -41,22 +45,28 @@ function getRange(fnName, valueIndex, ranges, rangeIndex) {
  * @returns {TimeRanges}
  */
 function createTimeRangesObj(ranges) {
+  const clone = () => createTimeRangesObj(ranges);
+
   if (isUndefined(ranges) || ranges.length === 0) {
+    const throwEmptyError = () => {
+      throw new Error('This TimeRanges object is empty');
+    };
+
     return {
       length: 0,
-      start() {
-        throw new Error('This TimeRanges object is empty');
-      },
-      end() {
-        throw new Error('This TimeRanges object is empty');
-      }
+      start: throwEmptyError,
+      end: throwEmptyError,
+      // @ts-expect-error
+      clone
     };
   }
 
   return {
     length: ranges.length,
     start: getRange.bind(null, 'start', 0, ranges),
-    end: getRange.bind(null, 'end', 1, ranges)
+    end: getRange.bind(null, 'end', 1, ranges),
+    // @ts-expect-error
+    clone
   };
 }
 

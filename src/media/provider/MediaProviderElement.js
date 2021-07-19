@@ -18,7 +18,11 @@ import {
 } from '../../foundation/screen-orientation/index.js';
 import { clampNumber } from '../../utils/number.js';
 import { CanPlay } from '../CanPlay.js';
-import { createMediaContextRecord, mediaContext } from '../context.js';
+import {
+  cloneMediaContextRecord,
+  createMediaContextRecord,
+  mediaContext
+} from '../context.js';
 import {
   AbortEvent,
   CanPlayEvent,
@@ -386,6 +390,15 @@ export class MediaProviderElement extends LitElement {
    */
   get engine() {
     throw Error('Not implemented.');
+  }
+
+  /**
+   * An immutable snapshot of the current media state.
+   *
+   * @type {Readonly<import('../../foundation/context').ExtractContextRecordTypes<typeof mediaContext>>}
+   */
+  get mediaState() {
+    return cloneMediaContextRecord(this.context);
   }
 
   /**

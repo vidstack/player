@@ -10,6 +10,7 @@ import {
   MediaContainerConnectEvent,
   MediaContainerElement
 } from '../container/index.js';
+import { cloneMediaContextRecord, mediaContext } from '../context.js';
 import { ControlsManager, IdleObserver } from '../controls/index.js';
 import {
   EnterFullscreenRequestEvent,
@@ -115,7 +116,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   }
 
   // -------------------------------------------------------------------------------------------
-  // Controls Manager
+  // Properties
   // -------------------------------------------------------------------------------------------
 
   /**
@@ -127,6 +128,15 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @readonly
    */
   idleObserver = new IdleObserver(this);
+
+  /**
+   * An immutable snapshot of the current media state.
+   *
+   * @type {Readonly<import('../../foundation/context').ExtractContextRecordTypes<typeof mediaContext>>}
+   */
+  get mediaState() {
+    return cloneMediaContextRecord(this.context);
+  }
 
   // -------------------------------------------------------------------------------------------
   // Media Container

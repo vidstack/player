@@ -1,13 +1,25 @@
+import { ContextProviderRecord } from '../../foundation/context';
 import type { DisposalBin } from '../../foundation/events';
 import type { FullscreenController } from '../../foundation/fullscreen';
 import type { RequestQueue } from '../../foundation/queue';
 import type { VideoElement } from '../../providers/video';
 import type { CanPlay } from '../CanPlay';
+import { mediaContext } from '../context';
 import type { MediaProviderElement } from '../provider';
 
 export interface MediaProviderBridge
   extends MediaProviderBridgedProperties,
     MediaProviderBridgedMethods {
+  /**
+   * The media context record. Any property updated inside this object will trigger a context
+   * update that will flow down to all consumer components. This record is injected into a
+   * a media provider element (see `handleMediaProviderConnect`) as it's responsible for managing
+   * it (ie: updating context properties).
+   *
+   * @internal
+   */
+  readonly context: ContextProviderRecord<typeof mediaContext>;
+
   /**
    * The current media provider that belongs to this controller. Defaults to `undefined` if there
    * is none.
