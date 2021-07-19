@@ -20,7 +20,6 @@ import '../ui/controls/play-button/globals';
 import '../ui/controls/scrubber/globals';
 import '../ui/controls/slider/globals';
 import '../ui/controls/toggle-button/globals';
-import '../ui/controls/globals';
 import '../ui/time/time/globals';
 import '../ui/time/time-current/globals';
 import '../ui/time/time-duration/globals';
