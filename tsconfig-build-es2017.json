@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig-build.json",
+  "compilerOptions": {
+    "emitDeclarationOnly": false,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "outDir": "dist",
+    "target": "es2017"
+  },
+  "include": ["src/**/*.js", "src/**/*.ts"],
+  "exclude": ["src/**/*.test.js", "src/**/*.test.ts", "src/**/*.stories.js"]
+}
