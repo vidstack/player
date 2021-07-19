@@ -71,6 +71,13 @@ const HLS_LIB_CACHE = new Map();
  *
  * We recommended using either [JSDelivr](https://jsdelivr.com) or [UNPKG](https://unpkg.com).
  *
+ * ```html
+ * <vds-hls
+ *   src="https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8"
+ *   hls-library="https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js"
+ * ></vds-hls>
+ * ```
+ *
  * ### Dynamic Import
  *
  * If you'd like to serve your own copy and control when the library is downloaded, simply
@@ -149,8 +156,8 @@ export class HlsElement extends VideoElement {
 
   /**
    * The `hls.js` constructor or a URL of where it can be found. Only version `^0.13.3`
-   * (note the `^`) is supported at the moment. Important to note that by default this
-   * points towards a development friendly version, swap to `hls.min.js` in production.
+   * (note the `^`) is supported at the moment. Important to note that by default this is
+   * `undefined` so you can freely optimize when the best possible time is to load the library.
    *
    * @type {HlsConstructor | string | undefined}
    */
@@ -239,6 +246,9 @@ export class HlsElement extends VideoElement {
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
+
+    // TODO(mihar-22): Add a lazy load option to wait until in viewport.
+    // Wait a frame to ensure the browser has had a chance to reach first-contentful-paint.
     window.requestAnimationFrame(() => {
       this.handleMediaSrcChange();
     });
@@ -550,6 +560,7 @@ export class HlsElement extends VideoElement {
   async handleMediaSrcChange() {
     super.handleMediaSrcChange();
 
+    // We don't want to load `hls.js` until the browser has had a chance to paint.
     if (!this.hasUpdated) return;
 
     this.context.canPlay = false;
