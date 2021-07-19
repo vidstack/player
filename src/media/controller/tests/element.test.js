@@ -48,7 +48,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     });
   });
 
-  it('should provide immuateble media state', async function () {
+  it('should provide immuatable media state', async function () {
     const { controller } = await buildMediaFixture();
     const state = controller.mediaState;
 
