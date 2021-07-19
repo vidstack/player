@@ -23,7 +23,7 @@ describe('MediaProviderElement/props', function () {
     });
   });
 
-  it('should provide immuatable media state', async function () {
+  it('should provide immutable media state', async function () {
     const { provider } = await buildMediaFixture();
     const state = provider.mediaState;
 
