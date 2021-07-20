@@ -127,7 +127,6 @@ export function willElementsCollide(
 }
 
 /**
- * @protected
  * @param {typeof import('lit').LitElement} elementCtor
  * @returns {Set<string>}
  */
