@@ -38,7 +38,6 @@
   "scripts": {
     "analyze": "cem analyze --litelement --globs \"src/**/*Element.js\"",
     "build": "tsc -p tsconfig-build-es2017.json",
-    "postinstall": "npm run build",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .js --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
