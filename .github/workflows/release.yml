@@ -33,6 +33,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Bundle
+        run: npm run bundle
+
       - name: Test (UNIT)
         run: npm run test:coverage
 
