@@ -3,6 +3,7 @@
   "compilerOptions": {
     "allowJs": true,
     "declaration": true,
+    "declarationMap": true,
     "incremental": false,
     "outDir": "dist",
     "preserveWatchOutput": true,
