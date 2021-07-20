@@ -25,7 +25,7 @@ describe(BUTTON_ELEMENT_TAG_NAME, function () {
   }
 
   describe('render', function () {
-    it.only('should render DOM correctly', async function () {
+    it('should render DOM correctly', async function () {
       const { button } = await buildFixture();
       expect(button).dom.to.equal(`
         <vds-button type="button">
