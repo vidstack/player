@@ -18,7 +18,7 @@ describe(MEDIA_UI_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-media-ui>
-        <div class="slot"></div>
+        <div></div>
       </vds-media-ui>
     `);
 
@@ -32,47 +32,25 @@ describe(MEDIA_UI_ELEMENT_TAG_NAME, function () {
   it('should render DOM correctly', async function () {
     const { ui } = await buildFixture();
     expect(ui).dom.to.equal(`
-      <vds-media-ui>
-        <div class="slot"></div>
+      <vds-media-ui hidden>
+        <div></div>
       </vds-media-ui>
     `);
   });
 
   it('should render shadow DOM correctly', async function () {
     const { ui } = await buildFixture();
-    expect(ui).shadowDom.to.equal(`
-      <div
-        id="root"
-        part="root root-hidden"
-      >
-        <slot />
-      </div>
-    `);
+    expect(ui).shadowDom.to.equal(`<slot></slot>`);
   });
 
-  it('should render <slot>', async function () {
-    const { ui } = await buildFixture();
-    const slottedChildren = getSlottedChildren(ui);
-    expect(slottedChildren).to.have.length(1);
-    expect(slottedChildren[0]).to.have.class('slot');
-  });
-
-  // TODO: works but for some reason not updating in test env...?
-  // eslint-disable-next-line mocha/no-skipped-tests
-  it.skip('should toggle root-hidden css part as context updates', async function () {
-    // Not ready.
+  it('should toggle hidden attribute as context updates', async function () {
     const { provider, ui } = await buildFixture();
-    const root = ui.rootElement;
-    expect(root.getAttribute('part')).to.include('root-hidden');
 
-    // Ready.
+    expect(ui).to.have.attribute('hidden');
+
     provider.ctx.canPlay = true;
     await elementUpdated(ui);
-    expect(root.getAttribute('part')).to.equal('root');
-  });
 
-  it('should return element [rootElement]', async function () {
-    const { ui } = await buildFixture();
-    expect(ui.rootElement).to.be.instanceOf(HTMLDivElement);
+    expect(ui).to.not.have.attribute('hidden');
   });
 });

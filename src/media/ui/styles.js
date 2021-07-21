@@ -5,10 +5,4 @@ export const mediaUiElementStyles = css`
     display: block;
     contain: content;
   }
-
-  #root {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
 `;
