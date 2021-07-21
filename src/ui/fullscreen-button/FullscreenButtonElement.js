@@ -30,7 +30,7 @@ export class FullscreenButtonElement extends ToggleButtonElement {
    * @protected
    * @readonly
    */
-  remoteControl = new MediaRemoteControl(this);
+  _mediaRemote = new MediaRemoteControl(this);
 
   label = 'Fullscreen';
 
@@ -48,7 +48,7 @@ export class FullscreenButtonElement extends ToggleButtonElement {
    * @type {HTMLElement | undefined}
    */
   get enterSlotElement() {
-    return this.currentNotPressedSlotElement;
+    return this._currentNotPressedSlotElement;
   }
 
   /**
@@ -57,22 +57,22 @@ export class FullscreenButtonElement extends ToggleButtonElement {
    * @type {HTMLElement | undefined}
    */
   get exitSlotElement() {
-    return this.currentPressedSlotElement;
+    return this._currentPressedSlotElement;
   }
 
-  getPressedSlotName() {
+  _getPressedSlotName() {
     return 'exit';
   }
 
-  getNotPressedSlotName() {
+  _getNotPressedSlotName() {
     return 'enter';
   }
 
-  handleButtonClick(event) {
+  _handleButtonClick(event) {
     if (this.pressed) {
-      this.remoteControl.exitFullscreen(event);
+      this._mediaRemote.exitFullscreen(event);
     } else {
-      this.remoteControl.enterFullscreen(event);
+      this._mediaRemote.enterFullscreen(event);
     }
   }
 }

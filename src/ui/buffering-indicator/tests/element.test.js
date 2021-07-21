@@ -47,7 +47,7 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
     provider.forceMediaReady();
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.have.attribute('media-can-play');
-    provider.context.canPlay = false;
+    provider.ctx.canPlay = false;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.not.have.attribute('media-can-play');
   });
@@ -55,10 +55,10 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
   it('should toggle `media-waiting` attribute', async function () {
     const { provider, bufferingIndicator } = await buildFixture();
     provider.forceMediaReady();
-    provider.context.waiting = true;
+    provider.ctx.waiting = true;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.have.attribute('media-waiting');
-    provider.context.waiting = false;
+    provider.ctx.waiting = false;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.not.have.attribute('media-waiting');
   });

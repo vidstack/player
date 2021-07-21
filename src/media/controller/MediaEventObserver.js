@@ -47,21 +47,21 @@ export class MediaEventObserver {
      * @readonly
      * @type {MediaEventObserverHost}
      */
-    this.host = host;
+    this._host = host;
 
     /**
      * @protected
      * @readonly
      * @type {MediaEventHandlerRecord}
      */
-    this.eventHandlers = eventHandlers;
+    this._eventHandlers = eventHandlers;
 
     /**
      * @protected
      * @readonly
      * @type {EventListenerController}
      */
-    this.controllerEventListeners = new EventListenerController(host, {
+    this._controllerEventListeners = new EventListenerController(host, {
       [MediaControllerConnectEvent.TYPE]:
         this.handleMediaControllerConnectEvent.bind(this)
     });
@@ -70,7 +70,7 @@ export class MediaEventObserver {
      * @protected
      * @type {EventListenerController}
      */
-    this.mediaEventListeners = new EventListenerController(host, {});
+    this._mediaEventListeners = new EventListenerController(host, {});
   }
 
   /**
@@ -78,16 +78,16 @@ export class MediaEventObserver {
    * @param {MediaControllerConnectEvent} event
    */
   handleMediaControllerConnectEvent(event) {
-    this.mediaEventListeners.removeListeners();
+    this._mediaEventListeners.removeListeners();
 
     const { element: mediaController } = event.detail;
 
-    this.mediaEventListeners = new EventListenerController(
-      this.host,
-      this.eventHandlers,
+    this._mediaEventListeners = new EventListenerController(
+      this._host,
+      this._eventHandlers,
       {
         target: mediaController,
-        receiver: this.host
+        receiver: this._host
       }
     );
   }

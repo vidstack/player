@@ -20,7 +20,7 @@ export class ManagedElement {
    * @protected
    * @type {import('../discovery').ScopedDiscoveryEvent<any>}
    */
-  static get ScopedDiscoveryEvent() {
+  static get _ScopedDiscoveryEvent() {
     return ManagedElementConnectEvent;
   }
 
@@ -28,7 +28,7 @@ export class ManagedElement {
    * @protected
    * @readonly
    */
-  disconnectDisposal = new DisposalBin();
+  _disconnectDisposal = new DisposalBin();
 
   /**
    * @param {HostElement} host
@@ -38,16 +38,16 @@ export class ManagedElement {
      * @readonly
      * @type {HostElement}
      */
-    this.host = host;
+    this._host = host;
 
     /**
      * @protected
      * @readonly
      * @type {ElementDiscoveryController<HostElement>}
      */
-    this.discoveryController =
+    this._discoveryController =
       /** @type {ElementDiscoveryController<HostElement>} */ (
-        new ElementDiscoveryController(host, this.getScopedDiscoveryEvent())
+        new ElementDiscoveryController(host, this._getScopedDiscoveryEvent())
       );
   }
 
@@ -55,9 +55,9 @@ export class ManagedElement {
    * @protected
    * @returns {import('../discovery').ScopedDiscoveryEvent<Element>}
    */
-  getScopedDiscoveryEvent() {
+  _getScopedDiscoveryEvent() {
     const ctor = /** @type {typeof ManagedElement} */ (this.constructor);
-    const ScopedDiscoveryEvent = ctor.ScopedDiscoveryEvent;
+    const ScopedDiscoveryEvent = ctor._ScopedDiscoveryEvent;
     return ScopedDiscoveryEvent;
   }
 }

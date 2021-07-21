@@ -60,14 +60,14 @@ export class VideoFullscreenController extends FullscreenController {
      * @readonly
      * @type {VideoPresentationController}
      */
-    this.presentationController = presentationController;
+    this._presentationController = presentationController;
   }
 
   /** @type {boolean} */
   get isFullscreen() {
     return this.isSupportedNatively
       ? this.isNativeFullscreen
-      : this.presentationController.isFullscreenMode;
+      : this._presentationController.isFullscreenMode;
   }
 
   /** @type {boolean} */
@@ -83,43 +83,43 @@ export class VideoFullscreenController extends FullscreenController {
    * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
    */
   get isSupportedOnSafari() {
-    return this.presentationController.isSupported;
+    return this._presentationController.isSupported;
   }
 
   /**
    * @protected
    * @returns {Promise<void>}
    */
-  async makeEnterFullscreenRequest() {
+  async _makeEnterFullscreenRequest() {
     return this.isSupportedNatively
-      ? super.makeEnterFullscreenRequest()
-      : this.makeFullscreenRequestOnSafari();
+      ? super._makeEnterFullscreenRequest()
+      : this._makeFullscreenRequestOnSafari();
   }
 
   /**
    * @protected
    * @returns {Promise<void>}
    */
-  async makeFullscreenRequestOnSafari() {
-    return this.presentationController.setPresentationMode('fullscreen');
+  async _makeFullscreenRequestOnSafari() {
+    return this._presentationController.setPresentationMode('fullscreen');
   }
 
   /**
    * @protected
    * @returns {Promise<void>}
    */
-  async makeExitFullscreenRequest() {
+  async _makeExitFullscreenRequest() {
     return this.isSupportedNatively
-      ? super.makeExitFullscreenRequest()
-      : this.makeExitFullscreenRequestOnSafari();
+      ? super._makeExitFullscreenRequest()
+      : this._makeExitFullscreenRequestOnSafari();
   }
 
   /**
    * @protected
    * @returns {Promise<void>}
    */
-  async makeExitFullscreenRequestOnSafari() {
-    return this.presentationController.setPresentationMode('inline');
+  async _makeExitFullscreenRequestOnSafari() {
+    return this._presentationController.setPresentationMode('inline');
   }
 
   /**
@@ -127,16 +127,16 @@ export class VideoFullscreenController extends FullscreenController {
    * @param {(this: HTMLElement, event: Event) => void} handler
    * @returns {() => void} Stop listening function.
    */
-  addFullscreenChangeEventListener(handler) {
+  _addFullscreenChangeEventListener(handler) {
     if (this.isSupportedNatively) {
-      return super.addFullscreenChangeEventListener(handler);
+      return super._addFullscreenChangeEventListener(handler);
     }
 
     if (this.isSupportedOnSafari) {
       return listen(
-        this.host,
+        this._host,
         VideoPresentationChangeEvent.TYPE,
-        this.handlePresentationModeChange.bind(this)
+        this._handlePresentationModeChange.bind(this)
       );
     }
 
@@ -147,8 +147,8 @@ export class VideoFullscreenController extends FullscreenController {
    * @protected
    * @param {VideoPresentationChangeEvent} event
    */
-  handlePresentationModeChange(event) {
-    this.handleFullscreenChange(event);
+  _handlePresentationModeChange(event) {
+    this._handleFullscreenChange(event);
   }
 
   /**
@@ -156,8 +156,8 @@ export class VideoFullscreenController extends FullscreenController {
    * @param {(this: HTMLElement, event: Event) => void} handler
    * @returns {() => void} Stop listening function.
    */
-  addFullscreenErrorEventListener(handler) {
+  _addFullscreenErrorEventListener(handler) {
     if (!this.isSupportedNatively) return noop;
-    return super.addFullscreenErrorEventListener(handler);
+    return super._addFullscreenErrorEventListener(handler);
   }
 }

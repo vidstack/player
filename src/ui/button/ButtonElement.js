@@ -141,11 +141,11 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @protected
    * @readonly
    */
-  disconnectDisposal = new ElementDisposalController(this);
+  _disconnectDisposal = new ElementDisposalController(this);
 
   connectedCallback() {
     super.connectedCallback();
-    this.addDefaultEventListeners();
+    this._addDefaultEventListeners();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -156,7 +156,7 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @protected
    * @type {import('lit/directives/ref').Ref<HTMLButtonElement>}
    */
-  rootRef = createRef();
+  _rootRef = createRef();
 
   /**
    * The underlying `<button>` element.
@@ -164,7 +164,7 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @type {HTMLButtonElement}
    */
   get rootElement() {
-    return /** @type {HTMLButtonElement} */ (this.rootRef.value);
+    return /** @type {HTMLButtonElement} */ (this._rootRef.value);
   }
 
   render() {
@@ -175,20 +175,20 @@ export class ButtonElement extends WithFocus(LitElement) {
     return html`
       <button
         id="root"
-        class=${this.getButtonClassAttr()}
-        part=${this.getButtonPartAttr()}
+        class=${this._getButtonClassAttr()}
+        part=${this._getButtonPartAttr()}
         type=${ifNonEmpty(this.type)}
         aria-label=${ifNonEmpty(this.label)}
         aria-controls=${ifNonEmpty(this.controls)}
-        aria-haspopup=${ifDefined(this.hasAriaPopupMenu())}
-        aria-pressed=${ifDefined(this.isAriaPressed())}
-        aria-expanded=${ifDefined(this.isAriaExpanded())}
+        aria-haspopup=${ifDefined(this._hasAriaPopupMenu())}
+        aria-pressed=${ifDefined(this._isAriaPressed())}
+        aria-expanded=${ifDefined(this._isAriaExpanded())}
         aria-describedby=${ifNonEmpty(this.describedBy)}
         ?hidden=${this.hidden}
         ?disabled=${this.disabled}
-        ${ref(this.rootRef)}
+        ${ref(this._rootRef)}
       >
-        ${this.renderButtonChildren()}
+        ${this._renderButtonChildren()}
       </button>
     `;
   }
@@ -199,8 +199,8 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderButtonChildren() {
-    return html`${this.renderDefaultSlot()}`;
+  _renderButtonChildren() {
+    return html`${this._renderDefaultSlot()}`;
   }
 
   /**
@@ -209,7 +209,7 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderDefaultSlot() {
+  _renderDefaultSlot() {
     return html`<slot></slot>`;
   }
 
@@ -219,7 +219,7 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getButtonClassAttr() {
+  _getButtonClassAttr() {
     return 'root';
   }
 
@@ -229,7 +229,7 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getButtonPartAttr() {
+  _getButtonPartAttr() {
     return 'root';
   }
 
@@ -243,7 +243,7 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @protected
    * @returns {'true' | 'false' | undefined}
    */
-  isAriaPressed() {
+  _isAriaPressed() {
     if (isUndefined(this.pressed)) return undefined;
     return this.pressed ? 'true' : 'false';
   }
@@ -254,7 +254,7 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @protected
    * @returns {'true' | 'false' | undefined}
    */
-  isAriaExpanded() {
+  _isAriaExpanded() {
     if (isUndefined(this.controls)) return undefined;
     return this.expanded ? 'true' : 'false';
   }
@@ -265,7 +265,7 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @protected
    * @returns {'true' | undefined}
    */
-  hasAriaPopupMenu() {
+  _hasAriaPopupMenu() {
     if (isUndefined(this.hasPopup)) return undefined;
     return this.hasPopup ? 'true' : undefined;
   }
@@ -287,9 +287,9 @@ export class ButtonElement extends WithFocus(LitElement) {
   /**
    * @protected
    */
-  addDefaultEventListeners() {
-    this.disconnectDisposal.add(
-      listen(this, 'click', this.handleClickCapture.bind(this), {
+  _addDefaultEventListeners() {
+    this._disconnectDisposal.add(
+      listen(this, 'click', this._handleClickCapture.bind(this), {
         capture: true
       })
     );
@@ -300,7 +300,7 @@ export class ButtonElement extends WithFocus(LitElement) {
    * @param {Event} event
    * @returns {void | boolean}
    */
-  handleClickCapture(event) {
+  _handleClickCapture(event) {
     if (!this.disabled) return;
     event.preventDefault();
     event.stopImmediatePropagation();

@@ -36,7 +36,7 @@ export function WithMediaProviderBridge(Base) {
   class WithMediaProviderBridge extends Base {
     constructor(...args) {
       super(...args);
-      this.defineForwardedMediaProviderProperties();
+      this._defineForwardedMediaProviderProperties();
     }
 
     // -------------------------------------------------------------------------------------------
@@ -47,9 +47,9 @@ export function WithMediaProviderBridge(Base) {
      * @protected
      * @readonly
      */
-    eventListenerController = new EventListenerController(this, {
-      [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect,
-      [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange
+    _eventListenerController = new EventListenerController(this, {
+      [MediaProviderConnectEvent.TYPE]: this._handleMediaProviderConnect,
+      [FullscreenChangeEvent.TYPE]: this._handleFullscreenChange
     });
 
     // -------------------------------------------------------------------------------------------
@@ -83,29 +83,29 @@ export function WithMediaProviderBridge(Base) {
      * @protected
      * @param {MediaProviderConnectEvent} event
      */
-    handleMediaProviderConnect(event) {
+    _handleMediaProviderConnect(event) {
       event.stopPropagation();
 
       const { element, onDisconnect } = event.detail;
 
       if (this.mediaProvider === element) return;
 
-      this.handleMediaProviderDisconnect();
+      this._handleMediaProviderDisconnect();
 
       this._mediaProvider = element;
 
-      this.attachMediaContextRecordToProvider();
-      this.forwardMediaProviderAttributes();
-      this.forwardMediaProviderEvents();
-      this.flushMediaProviderConnectedQueue();
+      this._attachMediaContextRecordToProvider();
+      this._forwardMediaProviderAttributes();
+      this._forwardMediaProviderEvents();
+      this._flushMediaProviderConnectedQueue();
 
-      onDisconnect(this.handleMediaProviderDisconnect.bind(this));
+      onDisconnect(this._handleMediaProviderDisconnect.bind(this));
     }
 
     /**
      * @protected
      */
-    handleMediaProviderDisconnect() {
+    _handleMediaProviderDisconnect() {
       this.mediaProviderDisconnectDisposal.empty();
       this._mediaProvider = undefined;
     }
@@ -113,7 +113,7 @@ export function WithMediaProviderBridge(Base) {
     /**
      * @protected
      */
-    flushMediaProviderConnectedQueue() {
+    _flushMediaProviderConnectedQueue() {
       this.mediaProviderConnectedQueue.flush();
       this.mediaProviderConnectedQueue.serveImmediately = true;
 
@@ -131,19 +131,20 @@ export function WithMediaProviderBridge(Base) {
      * @readonly
      * @internal
      */
-    context = provideContextRecord(this, mediaContext);
+    ctx = provideContextRecord(this, mediaContext);
 
     /**
      * @protected
      */
-    attachMediaContextRecordToProvider() {
+    _attachMediaContextRecordToProvider() {
       if (isNil(this.mediaProvider)) return;
 
-      /** @type {any} */ (this.mediaProvider).context = this.context;
+      // @ts-expect-error - Override readonly
+      this.mediaProvider.ctx = this.ctx;
 
       this.mediaProviderDisconnectDisposal.add(() => {
-        /** @type {any} */ (this.mediaProvider).context =
-          createMediaContextRecord();
+        // @ts-expect-error - Override readonly
+        this.mediaProvider.ctx = createMediaContextRecord();
       });
     }
 
@@ -154,7 +155,7 @@ export function WithMediaProviderBridge(Base) {
     /**
      * @protected
      */
-    forwardMediaProviderAttributes() {
+    _forwardMediaProviderAttributes() {
       if (isNil(this.mediaProvider)) return;
 
       const ctor = /** @type {typeof import('lit').LitElement} */ (
@@ -189,7 +190,7 @@ export function WithMediaProviderBridge(Base) {
     /**
      * @protected
      */
-    forwardMediaProviderEvents() {
+    _forwardMediaProviderEvents() {
       if (isNil(this.mediaProvider)) return;
 
       const ctor = /** @type {{ events?: string[] }} */ (
@@ -214,7 +215,7 @@ export function WithMediaProviderBridge(Base) {
     /**
      * @protected
      */
-    defineForwardedMediaProviderProperties() {
+    _defineForwardedMediaProviderProperties() {
       // eslint-disable-next-line no-prototype-builtins
       if (this.constructor.prototype.hasOwnProperty(BRIDGE_DEFINED)) return;
 
@@ -224,7 +225,7 @@ export function WithMediaProviderBridge(Base) {
             ? mediaContext[propName].initialValue
             : undefined;
 
-        this.defineMediaProviderProperty(propName, defaultValue);
+        this._defineMediaProviderProperty(propName, defaultValue);
       });
 
       this.constructor.prototype[BRIDGE_DEFINED] = true;
@@ -235,7 +236,7 @@ export function WithMediaProviderBridge(Base) {
      * @param {string} propName
      * @param {any} [defaultValue]
      */
-    defineMediaProviderProperty(propName, defaultValue = undefined) {
+    _defineMediaProviderProperty(propName, defaultValue = undefined) {
       Object.defineProperty(this.constructor.prototype, propName, {
         get() {
           const value = this.mediaProvider?.[propName] ?? defaultValue;
@@ -285,8 +286,8 @@ export function WithMediaProviderBridge(Base) {
      * @protected
      * @param {FullscreenChangeEvent} event
      */
-    handleFullscreenChange(event) {
-      this.context.fullscreen = event.detail;
+    _handleFullscreenChange(event) {
+      this.ctx.fullscreen = event.detail;
     }
   }
 

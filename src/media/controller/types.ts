@@ -18,7 +18,7 @@ export interface MediaProviderBridge
    *
    * @internal
    */
-  readonly context: ContextProviderRecord<typeof mediaContext>;
+  readonly ctx: ContextProviderRecord<typeof mediaContext>;
 
   /**
    * The current media provider that belongs to this controller. Defaults to `undefined` if there

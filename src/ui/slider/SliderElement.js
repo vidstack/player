@@ -292,7 +292,7 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   update(changedProperties) {
     if (changedProperties.has('value')) {
-      this.updateValue(this.value);
+      this._updateValue(this.value);
     }
 
     if (changedProperties.has('disabled') && this.disabled) {
@@ -304,7 +304,7 @@ export class SliderElement extends WithFocus(LitElement) {
   }
 
   disconnectedCallback() {
-    this.handlePointerMove.cancel();
+    this._handlePointerMove.cancel();
     super.disconnectedCallback();
   }
 
@@ -317,7 +317,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  rootRef = createRef();
+  _rootRef = createRef();
 
   /**
    * The component's root element.
@@ -325,29 +325,29 @@ export class SliderElement extends WithFocus(LitElement) {
    * @type {HTMLDivElement}
    */
   get rootElement() {
-    return /** @type {HTMLDivElement} */ (this.rootRef.value);
+    return /** @type {HTMLDivElement} */ (this._rootRef.value);
   }
 
   render() {
-    return this.renderSlider();
+    return this._renderSlider();
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderSlider() {
+  _renderSlider() {
     return html`
       <div
         id="root"
         role="presentation"
-        class=${this.getSliderClassAttr()}
-        part=${this.getSliderPartAttr()}
-        style=${styleMap(this.getSliderStyleMap())}
-        ${on('pointerdown', this.handleSliderPointerMove)}
-        ${ref(this.rootRef)}
+        class=${this._getSliderClassAttr()}
+        part=${this._getSliderPartAttr()}
+        style=${styleMap(this._getSliderStyleMap())}
+        ${on('pointerdown', this._handleSliderPointerMove)}
+        ${ref(this._rootRef)}
       >
-        ${this.renderSliderChildren()}
+        ${this._renderSliderChildren()}
       </div>
     `;
   }
@@ -356,15 +356,15 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderSliderChildren() {
-    return html`${this.renderThumbContainer()}${this.renderTrack()}${this.renderTrackFill()}${this.renderInput()}${this.renderDefaultSlot()}`;
+  _renderSliderChildren() {
+    return html`${this._renderThumbContainer()}${this._renderTrack()}${this._renderTrackFill()}${this._renderInput()}${this._renderDefaultSlot()}`;
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderDefaultSlot() {
+  _renderDefaultSlot() {
     return html`<slot></slot>`;
   }
 
@@ -372,7 +372,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getSliderClassAttr() {
+  _getSliderClassAttr() {
     return '';
   }
 
@@ -380,7 +380,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getSliderPartAttr() {
+  _getSliderPartAttr() {
     return 'root';
   }
 
@@ -388,7 +388,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit/directives/style-map').StyleInfo}
    */
-  getSliderStyleMap() {
+  _getSliderStyleMap() {
     return {
       '--vds-slider-fill-value': String(this.value),
       '--vds-slider-fill-rate': String(this.fillRate),
@@ -400,10 +400,10 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @param {PointerEvent} event
    */
-  handleSliderPointerMove(event) {
+  _handleSliderPointerMove(event) {
     if (this.disabled) return;
-    this.startDragging(event);
-    this.handlePointerMove(event);
+    this._startDragging(event);
+    this._handlePointerMove(event);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -415,7 +415,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  thumbContainerRef = createRef();
+  _thumbContainerRef = createRef();
 
   /**
    * The thumb container element.
@@ -423,34 +423,34 @@ export class SliderElement extends WithFocus(LitElement) {
    * @type {HTMLDivElement}
    */
   get thumbContainerElement() {
-    return /** @type {HTMLDivElement} */ (this.thumbContainerRef.value);
+    return /** @type {HTMLDivElement} */ (this._thumbContainerRef.value);
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderThumbContainer() {
+  _renderThumbContainer() {
     return html`
       <div
         id="thumb-container"
         role="slider"
         tabindex="0"
         aria-label=${ifNonEmpty(this.label)}
-        aria-valuemin=${this.getValueMin()}
-        aria-valuenow=${this.getValueNow()}
-        aria-valuemax=${this.getValueMax()}
-        aria-valuetext=${this.getValueText()}
+        aria-valuemin=${this._getValueMin()}
+        aria-valuenow=${this._getValueNow()}
+        aria-valuemax=${this._getValueMax()}
+        aria-valuetext=${this._getValueText()}
         aria-orientation=${this.orientation}
         aria-disabled=${this.disabled}
         aria-hidden=${this.hidden}
         autocomplete="off"
-        part=${this.getThumbContainerPartAttr()}
-        ${on('keydown', this.handleThumbContainerKeydown)}
-        ${on('pointerdown', this.handleThumbContainerPointerDown)}
-        ${ref(this.thumbContainerRef)}
+        part=${this._getThumbContainerPartAttr()}
+        ${on('keydown', this._handleThumbContainerKeydown)}
+        ${on('pointerdown', this._handleThumbContainerPointerDown)}
+        ${ref(this._thumbContainerRef)}
       >
-        ${this.renderThumb()} ${this.renderThumbContainerSlot()}
+        ${this._renderThumb()} ${this._renderThumbContainerSlot()}
       </div>
     `;
   }
@@ -459,7 +459,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getValueMin() {
+  _getValueMin() {
     return this.valueMin ?? String(this.min);
   }
 
@@ -467,7 +467,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getValueNow() {
+  _getValueNow() {
     return this.valueNow ?? String(this.value);
   }
 
@@ -475,7 +475,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getValueMax() {
+  _getValueMax() {
     return this.valueMax ?? String(this.max);
   }
 
@@ -483,15 +483,15 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getValueText() {
-    return this.valueText ?? this.getValueTextFallback();
+  _getValueText() {
+    return this.valueText ?? this._getValueTextFallback();
   }
 
   /**
    * @protected
    * @returns {string}
    */
-  getValueTextFallback() {
+  _getValueTextFallback() {
     return `${round((this.value / this.max) * 100, 2)}%`;
   }
 
@@ -499,7 +499,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getThumbContainerPartAttr() {
+  _getThumbContainerPartAttr() {
     return 'thumb-container';
   }
 
@@ -507,7 +507,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderThumbContainerSlot() {
+  _renderThumbContainerSlot() {
     return html`<slot name="thumb-container"></slot> `;
   }
 
@@ -515,7 +515,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @param {KeyboardEvent} event
    */
-  handleThumbContainerKeydown(event) {
+  _handleThumbContainerKeydown(event) {
     if (this.disabled) return;
 
     const { key, shiftKey } = event;
@@ -531,17 +531,17 @@ export class SliderElement extends WithFocus(LitElement) {
     const steps = (this.value + diff) / this.step;
     const value = this.step * steps;
 
-    this.updateValue(value);
-    this.dispatchValueChange(event);
+    this._updateValue(value);
+    this._dispatchValueChange(event);
   }
 
   /**
    * @protected
    * @param {PointerEvent} event
    */
-  handleThumbContainerPointerDown(event) {
+  _handleThumbContainerPointerDown(event) {
     if (this.disabled) return;
-    this.startDragging(event);
+    this._startDragging(event);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -553,7 +553,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  thumbRef = createRef();
+  _thumbRef = createRef();
 
   /**
    * The thumb element.
@@ -561,17 +561,17 @@ export class SliderElement extends WithFocus(LitElement) {
    * @type {HTMLDivElement}
    */
   get thumbElement() {
-    return /** @type {HTMLDivElement} */ (this.thumbRef.value);
+    return /** @type {HTMLDivElement} */ (this._thumbRef.value);
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderThumb() {
+  _renderThumb() {
     return html`
-      <div id="thumb" part=${this.getThumbPartAttr()} ${ref(this.thumbRef)}>
-        ${this.renderThumbSlot()}
+      <div id="thumb" part=${this._getThumbPartAttr()} ${ref(this._thumbRef)}>
+        ${this._renderThumbSlot()}
       </div>
     `;
   }
@@ -580,7 +580,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getThumbPartAttr() {
+  _getThumbPartAttr() {
     return 'thumb';
   }
 
@@ -588,7 +588,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderThumbSlot() {
+  _renderThumbSlot() {
     return html`<slot name="thumb"></slot>`;
   }
 
@@ -601,7 +601,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  trackRef = createRef();
+  _trackRef = createRef();
 
   /**
    * The track element.
@@ -609,17 +609,17 @@ export class SliderElement extends WithFocus(LitElement) {
    * @type {HTMLDivElement}
    */
   get trackElement() {
-    return /** @type {HTMLDivElement} */ (this.trackRef.value);
+    return /** @type {HTMLDivElement} */ (this._trackRef.value);
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTrack() {
+  _renderTrack() {
     return html`
-      <div id="track" part=${this.getTrackPartAttr()} ${ref(this.trackRef)}>
-        ${this.renderTrackSlot()}
+      <div id="track" part=${this._getTrackPartAttr()} ${ref(this._trackRef)}>
+        ${this._renderTrackSlot()}
       </div>
     `;
   }
@@ -628,7 +628,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTrackSlot() {
+  _renderTrackSlot() {
     return html`<slot name="track"></slot>`;
   }
 
@@ -636,7 +636,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getTrackPartAttr() {
+  _getTrackPartAttr() {
     return 'track';
   }
 
@@ -649,7 +649,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  trackFillRef = createRef();
+  _trackFillRef = createRef();
 
   /**
    * The track fill element.
@@ -657,21 +657,21 @@ export class SliderElement extends WithFocus(LitElement) {
    * @type {HTMLDivElement}
    */
   get trackFillElement() {
-    return /** @type {HTMLDivElement} */ (this.trackFillRef.value);
+    return /** @type {HTMLDivElement} */ (this._trackFillRef.value);
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTrackFill() {
+  _renderTrackFill() {
     return html`
       <div
         id="track-fill"
-        part=${this.getTrackFillPartAttr()}
-        ${ref(this.trackFillRef)}
+        part=${this._getTrackFillPartAttr()}
+        ${ref(this._trackFillRef)}
       >
-        ${this.renderTrackFillSlot()}
+        ${this._renderTrackFillSlot()}
       </div>
     `;
   }
@@ -680,7 +680,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTrackFillSlot() {
+  _renderTrackFillSlot() {
     return html`<slot name="track-fill"></slot>`;
   }
 
@@ -688,7 +688,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getTrackFillPartAttr() {
+  _getTrackFillPartAttr() {
     return 'track-fill';
   }
 
@@ -702,7 +702,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderInput() {
+  _renderInput() {
     return html`
       <input
         type="hidden"
@@ -721,11 +721,11 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @param {PointerEvent} event
    */
-  startDragging(event) {
+  _startDragging(event) {
     if (this._isDragging) return;
     this._isDragging = true;
     this.setAttribute('dragging', '');
-    this.updateValueBasedOnThumbPosition(event);
+    this._updateValueBasedOnThumbPosition(event);
     this.dispatchEvent(
       new SliderDragStartEvent({
         originalEvent: event,
@@ -738,12 +738,12 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @param {PointerEvent} event
    */
-  stopDragging(event) {
+  _stopDragging(event) {
     if (!this._isDragging) return;
     this._isDragging = false;
-    this.dispatchValueChange.cancel();
+    this._dispatchValueChange.cancel();
     this.removeAttribute('dragging');
-    this.updateValueBasedOnThumbPosition(event);
+    this._updateValueBasedOnThumbPosition(event);
     this.dispatchEvent(
       new SliderDragEndEvent({
         originalEvent: event,
@@ -760,11 +760,11 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @readonly
    */
-  documentEventListeners = new EventListenerController(
+  _documentEventListeners = new EventListenerController(
     this,
     {
-      pointerup: this.handleDocumentPointerUp,
-      pointermove: this.handleDocumentPointerMove
+      pointerup: this._handleDocumentPointerUp,
+      pointermove: this._handleDocumentPointerMove
     },
     {
       target: document,
@@ -776,22 +776,22 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @param {PointerEvent} event
    */
-  handleDocumentPointerUp(event) {
+  _handleDocumentPointerUp(event) {
     if (this.disabled || !this._isDragging) return;
-    this.stopDragging(event);
+    this._stopDragging(event);
   }
 
   /**
    * @protected
    * @param {PointerEvent} event
    */
-  handleDocumentPointerMove(event) {
+  _handleDocumentPointerMove(event) {
     if (this.disabled || !this._isDragging) {
-      this.handlePointerMove.cancel();
+      this._handlePointerMove.cancel();
       return;
     }
 
-    this.handlePointerMove(event);
+    this._handlePointerMove(event);
   }
 
   /**
@@ -799,17 +799,17 @@ export class SliderElement extends WithFocus(LitElement) {
    * @readonly
    * @type {import('../../utils/timing').RafThrottledFunction<(event: PointerEvent) => void>}
    */
-  handlePointerMove = rafThrottle((event) => {
+  _handlePointerMove = rafThrottle((event) => {
     if (this.disabled || !this._isDragging) return;
-    this.updateValueBasedOnThumbPosition(event);
-    this.dispatchValueChange(event);
+    this._updateValueBasedOnThumbPosition(event);
+    this._dispatchValueChange(event);
   });
 
   /**
    * @protected
    * @param {number} value
    */
-  updateValue(value) {
+  _updateValue(value) {
     this.value = clampNumber(
       this.min,
       round(value, getNumberOfDecimalPlaces(this.step)),
@@ -821,21 +821,21 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @param {number} rate
    */
-  updateValueByRate(rate) {
+  _updateValueByRate(rate) {
     const boundRate = clampNumber(0, rate, 1);
     const range = this.max - this.min;
     const fill = range * boundRate;
     const stepRatio = Math.round(fill / this.step);
     const steps = this.step * stepRatio;
     const value = this.min + steps;
-    this.updateValue(value);
+    this._updateValue(value);
   }
 
   /**
    * @protected
    * @param {PointerEvent} event
    */
-  updateValueBasedOnThumbPosition(event) {
+  _updateValueBasedOnThumbPosition(event) {
     const thumbClientX = event.clientX;
 
     const { left: trackLeft, width: trackWidth } =
@@ -844,22 +844,22 @@ export class SliderElement extends WithFocus(LitElement) {
     const thumbPositionRate = (thumbClientX - trackLeft) / trackWidth;
 
     // Calling this will update `this.value`.
-    this.updateValueByRate(thumbPositionRate);
+    this._updateValueByRate(thumbPositionRate);
   }
 
   /**
    * @protected
    * @type {number}
    */
-  lastDispatchedValue = this.value;
+  _lastDispatchedValue = this.value;
 
   /**
    * @protected
    * @readonly
    * @type {import('../../utils/timing').RafThrottledFunction<(event: Event | undefined) => void>}
    */
-  dispatchValueChange = rafThrottle((event) => {
-    if (this.value === this.lastDispatchedValue) return;
+  _dispatchValueChange = rafThrottle((event) => {
+    if (this.value === this._lastDispatchedValue) return;
 
     this.dispatchEvent(
       new SliderValueChangeEvent({
@@ -868,6 +868,6 @@ export class SliderElement extends WithFocus(LitElement) {
       })
     );
 
-    this.lastDispatchedValue = this.value;
+    this._lastDispatchedValue = this.value;
   });
 }

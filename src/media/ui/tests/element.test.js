@@ -66,7 +66,7 @@ describe(MEDIA_UI_ELEMENT_TAG_NAME, function () {
     expect(root.getAttribute('part')).to.include('root-hidden');
 
     // Ready.
-    provider.context.canPlay = true;
+    provider.ctx.canPlay = true;
     await elementUpdated(ui);
     expect(root.getAttribute('part')).to.equal('root');
   });

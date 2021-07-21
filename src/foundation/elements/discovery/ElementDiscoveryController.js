@@ -8,7 +8,7 @@ export class ElementDiscoveryController {
    * @protected
    * @readonly
    */
-  disconnectDisposal = new DisposalBin();
+  _disconnectDisposal = new DisposalBin();
 
   /**
    * @param {HostElement} host
@@ -20,33 +20,33 @@ export class ElementDiscoveryController {
      * @readonly
      * @type {HostElement}
      */
-    this.host = host;
+    this._host = host;
 
     /**
      * @protected
      * @readonly
      * @type {import('./events.js').ScopedDiscoveryEvent<HostElement>}
      */
-    this.ScopedDiscoveryEvent = ScopedDiscoveryEvent;
+    this._ScopedDiscoveryEvent = ScopedDiscoveryEvent;
 
     host.addController({
-      hostConnected: this.handleHostConnected.bind(this),
-      hostDisconnected: this.handleHostDisconnected.bind(this)
+      hostConnected: this._handleHostConnected.bind(this),
+      hostDisconnected: this._handleHostDisconnected.bind(this)
     });
   }
 
   /**
    * @protected
    */
-  handleHostConnected() {
-    const ScopedDiscoveryEvent = this.ScopedDiscoveryEvent;
+  _handleHostConnected() {
+    const ScopedDiscoveryEvent = this._ScopedDiscoveryEvent;
 
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new ScopedDiscoveryEvent({
         detail: {
-          element: this.host,
+          element: this._host,
           onDisconnect: (callback) => {
-            this.disconnectDisposal.add(callback);
+            this._disconnectDisposal.add(callback);
           }
         }
       })
@@ -56,7 +56,7 @@ export class ElementDiscoveryController {
   /**
    * @protected
    */
-  handleHostDisconnected() {
-    this.disconnectDisposal.empty();
+  _handleHostDisconnected() {
+    this._disconnectDisposal.empty();
   }
 }

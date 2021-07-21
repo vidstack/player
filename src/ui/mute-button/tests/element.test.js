@@ -96,10 +96,10 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
 
   it('should receive muted context updates', async function () {
     const { provider, button } = await buildFixture();
-    provider.context.muted = true;
+    provider.ctx.muted = true;
     await elementUpdated(button);
     expect(button.pressed).to.be.true;
-    provider.context.muted = false;
+    provider.ctx.muted = false;
     await elementUpdated(button);
     expect(button.pressed).to.be.false;
   });

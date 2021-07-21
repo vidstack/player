@@ -13,7 +13,7 @@ export class ElementManager {
    * @protected
    * @type {import('../discovery').ScopedDiscoveryEvent<any>}
    */
-  static get ScopedDiscoveryEvent() {
+  static get _ScopedDiscoveryEvent() {
     return ManagedElementConnectEvent;
   }
 
@@ -22,13 +22,13 @@ export class ElementManager {
    * @readonly
    * @type {Omit<Set<Element>, 'clear'>}
    */
-  managedElements = new Set();
+  _managedElements = new Set();
 
   /**
    * @protected
    * @readonly
    */
-  disconnectDisposal = new DisposalBin();
+  _disconnectDisposal = new DisposalBin();
 
   /**
    * @param {ElementManagerHost} host
@@ -39,25 +39,25 @@ export class ElementManager {
      * @readonly
      * @type {ElementManagerHost}
      */
-    this.host = host;
+    this._host = host;
 
     host.addController({
-      hostConnected: this.handleHostConnected.bind(this),
-      hostDisconnected: this.handleHostDisconnected.bind(this)
+      hostConnected: this._handleHostConnected.bind(this),
+      hostDisconnected: this._handleHostDisconnected.bind(this)
     });
   }
 
   /**
    * @protected
    */
-  handleHostConnected() {
-    const ScopedDiscoveryEvent = this.getScopedDiscoveryEvent();
+  _handleHostConnected() {
+    const ScopedDiscoveryEvent = this._getScopedDiscoveryEvent();
 
-    this.disconnectDisposal.add(
+    this._disconnectDisposal.add(
       listen(
-        this.host,
+        this._host,
         ScopedDiscoveryEvent.TYPE,
-        this.handleElementConnect.bind(this)
+        this._handleElementConnect.bind(this)
       )
     );
   }
@@ -65,24 +65,24 @@ export class ElementManager {
   /**
    * @protected
    */
-  handleHostDisconnected() {
-    this.disconnectDisposal.empty();
-    this.removeAllElements();
+  _handleHostDisconnected() {
+    this._disconnectDisposal.empty();
+    this._removeAllElements();
   }
 
   /**
    * @protected
    * @param {ManagedElementConnectEvent<Element>} event
    */
-  handleElementConnect(event) {
-    if (!this.validateConnectEvent(event)) return;
+  _handleElementConnect(event) {
+    if (!this._validateConnectEvent(event)) return;
 
     const { element, onDisconnect } = event.detail;
 
-    this.addElement(element);
+    this._addElement(element);
 
     onDisconnect(() => {
-      this.removeElement(element);
+      this._removeElement(element);
     });
   }
 
@@ -90,9 +90,9 @@ export class ElementManager {
    * @protected
    * @returns {import('../discovery').ScopedDiscoveryEvent<Element>}
    */
-  getScopedDiscoveryEvent() {
+  _getScopedDiscoveryEvent() {
     const ctor = /** @type {typeof ElementManager} */ (this.constructor);
-    const ScopedDiscoveryEvent = ctor.ScopedDiscoveryEvent;
+    const ScopedDiscoveryEvent = ctor._ScopedDiscoveryEvent;
     return ScopedDiscoveryEvent;
   }
 
@@ -101,8 +101,8 @@ export class ElementManager {
    * @param {ManagedElementConnectEvent} event
    * @returns {boolean}
    */
-  validateConnectEvent(event) {
-    const ScopedDiscoveryEvent = this.getScopedDiscoveryEvent();
+  _validateConnectEvent(event) {
+    const ScopedDiscoveryEvent = this._getScopedDiscoveryEvent();
     return event instanceof ScopedDiscoveryEvent;
   }
 
@@ -110,17 +110,17 @@ export class ElementManager {
    * @protected
    * @param {Element} element
    */
-  addElement(element) {
-    if (this.managedElements.has(element)) return;
-    this.managedElements.add(element);
-    this.handleElementAdded(element);
+  _addElement(element) {
+    if (this._managedElements.has(element)) return;
+    this._managedElements.add(element);
+    this._handleElementAdded(element);
   }
 
   /**
    * @protected
    * @param {Element} element
    */
-  handleElementAdded(element) {
+  _handleElementAdded(element) {
     // no-op
   }
 
@@ -128,24 +128,24 @@ export class ElementManager {
    * @protected
    * @param {Element} element
    */
-  removeElement(element) {
-    if (!this.managedElements.has(element)) return;
-    this.managedElements.delete(element);
-    this.handleElementRemoved(element);
+  _removeElement(element) {
+    if (!this._managedElements.has(element)) return;
+    this._managedElements.delete(element);
+    this._handleElementRemoved(element);
   }
 
   /**
    * @protected
    */
-  removeAllElements() {
-    this.managedElements.forEach(this.removeElement.bind(this));
+  _removeAllElements() {
+    this._managedElements.forEach(this._removeElement.bind(this));
   }
 
   /**
    * @protected
    * @param {Element} element
    */
-  handleElementRemoved(element) {
+  _handleElementRemoved(element) {
     // no-op
   }
 }

@@ -35,7 +35,7 @@ export class PlayButtonElement extends ToggleButtonElement {
    * @protected
    * @readonly
    */
-  remoteControl = new MediaRemoteControl(this);
+  _mediaRemote = new MediaRemoteControl(this);
 
   label = 'Play';
 
@@ -55,7 +55,7 @@ export class PlayButtonElement extends ToggleButtonElement {
    * @type {HTMLElement | undefined}
    */
   get playSlotElement() {
-    return this.currentNotPressedSlotElement;
+    return this._currentNotPressedSlotElement;
   }
 
   /**
@@ -64,22 +64,22 @@ export class PlayButtonElement extends ToggleButtonElement {
    * @type {HTMLElement | undefined}
    */
   get pauseSlotElement() {
-    return this.currentPressedSlotElement;
+    return this._currentPressedSlotElement;
   }
 
-  getPressedSlotName() {
+  _getPressedSlotName() {
     return 'pause';
   }
 
-  getNotPressedSlotName() {
+  _getNotPressedSlotName() {
     return 'play';
   }
 
-  handleButtonClick(event) {
+  _handleButtonClick(event) {
     if (this.pressed) {
-      this.remoteControl.pause(event);
+      this._mediaRemote.pause(event);
     } else {
-      this.remoteControl.play(event);
+      this._mediaRemote.play(event);
     }
   }
 }

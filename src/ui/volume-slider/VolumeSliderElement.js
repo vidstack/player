@@ -54,7 +54,7 @@ export class VolumeSliderElement extends SliderElement {
    * @type {number}
    */
   @consumeContext(mediaContext.volume)
-  mediaVolume = mediaContext.volume.initialValue;
+  _mediaVolume = mediaContext.volume.initialValue;
 
   /**
    * Represents the current volume out of 100.
@@ -62,7 +62,7 @@ export class VolumeSliderElement extends SliderElement {
    * @internal
    */
   @property({ attribute: false, state: true })
-  value = this.mediaVolume * 100;
+  value = this._mediaVolume * 100;
 
   /**
    * The current media volume level (between 0 - 1).
@@ -82,8 +82,8 @@ export class VolumeSliderElement extends SliderElement {
    * @param {import('lit').PropertyValues} changedProperties
    */
   update(changedProperties) {
-    if (changedProperties.has('mediaVolume')) {
-      this.value = this.mediaVolume * 100;
+    if (changedProperties.has('_mediaVolume')) {
+      this.value = this._mediaVolume * 100;
     }
 
     super.update(changedProperties);
@@ -93,24 +93,24 @@ export class VolumeSliderElement extends SliderElement {
    * @protected
    * @readonly
    */
-  remoteControl = new MediaRemoteControl(this);
+  _mediaRemote = new MediaRemoteControl(this);
 
   /**
    * @protected
    * @readonly
    */
-  sliderEventListenerController = new EventListenerController(this, {
-    [SliderValueChangeEvent.TYPE]: this.handleSliderValueChange
+  _sliderEventListenerController = new EventListenerController(this, {
+    [SliderValueChangeEvent.TYPE]: this._handleSliderValueChange
   });
 
   /**
    * @protected
    * @param {SliderValueChangeEvent} event
    */
-  handleSliderValueChange(event) {
+  _handleSliderValueChange(event) {
     const newVolume = event.detail;
     this.currentVolume = newVolume;
     const mediaVolume = round(newVolume / 100, 3);
-    this.remoteControl.changeVolume(mediaVolume, event);
+    this._mediaRemote.changeVolume(mediaVolume, event);
   }
 }

@@ -31,7 +31,12 @@ export default {
         terser({
           ecma: 2019,
           module: true,
-          output: { comments: false }
+          output: { comments: false },
+          mangle: {
+            properties: {
+              regex: /^_/
+            }
+          }
         }),
         summary({})
       ]

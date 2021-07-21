@@ -10,25 +10,25 @@ export class ForwardEventDirective extends AsyncDirective {
    * @protected
    * @type {Element | undefined}
    */
-  element;
+  _element;
 
   /**
    * @protected
    * @type {object | undefined}
    */
-  host;
+  _host;
 
   /**
    * @protected
    * @type {string | undefined}
    */
-  type;
+  _type;
 
   /**
    * @protected
    * @type {(() => void) | undefined}
    */
-  dispose;
+  _dispose;
 
   /**
    * @param {import('lit/directive').PartInfo} partInfo
@@ -58,15 +58,15 @@ export class ForwardEventDirective extends AsyncDirective {
    */
   update(part, [type]) {
     if (
-      this.element !== part.element ||
-      this.type !== type ||
-      this.host !== part.options?.host
+      this._element !== part.element ||
+      this._type !== type ||
+      this._host !== part.options?.host
     ) {
-      this.element = part.element;
-      this.type = type;
-      this.host = part.options?.host;
-      this.removeEventListener();
-      this.addEventListener();
+      this._element = part.element;
+      this._type = type;
+      this._host = part.options?.host;
+      this._removeEventListener();
+      this._addEventListener();
     }
 
     return nothing;
@@ -75,36 +75,36 @@ export class ForwardEventDirective extends AsyncDirective {
   /**
    * @protected
    */
-  addEventListener() {
-    if (isNil(this.element) || isNil(this.host) || !isString(this.type)) {
+  _addEventListener() {
+    if (isNil(this._element) || isNil(this._host) || !isString(this._type)) {
       return;
     }
 
-    this.dispose = listen(this.element, this.type, (e) => {
-      redispatchEvent(this.host, e);
+    this._dispose = listen(this._element, this._type, (e) => {
+      redispatchEvent(this._host, e);
     });
   }
 
   /**
    * @protected
    */
-  removeEventListener() {
-    this.dispose?.();
-    this.dispose = undefined;
+  _removeEventListener() {
+    this._dispose?.();
+    this._dispose = undefined;
   }
 
   /**
    * @protected
    */
   reconnected() {
-    this.addEventListener();
+    this._addEventListener();
   }
 
   /**
    * @protected
    */
   disconnected() {
-    this.removeEventListener();
+    this._removeEventListener();
   }
 }
 

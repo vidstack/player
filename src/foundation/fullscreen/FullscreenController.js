@@ -48,7 +48,7 @@ export class FullscreenController {
   /**
    * @protected
    */
-  disconnectDisposal = new DisposalBin();
+  _disconnectDisposal = new DisposalBin();
 
   /**
    * Used to avoid an inifinite loop by indicating when the native `requestFullscreen()` method
@@ -80,17 +80,17 @@ export class FullscreenController {
      * @readonly
      * @type {FullscreenControllerHost}
      */
-    this.host = host;
+    this._host = host;
 
     /**
      * @protected
      * @readonly
      * @type {ScreenOrientationController}
      */
-    this.screenOrientationController = screenOrientationController;
+    this._screenOrientationController = screenOrientationController;
 
     host.addController({
-      hostDisconnected: this.handleHostDisconnected.bind(this)
+      hostDisconnected: this._handleHostDisconnected.bind(this)
     });
   }
 
@@ -100,9 +100,9 @@ export class FullscreenController {
    * @protected
    * @returns {Promise<void>}
    */
-  async handleHostDisconnected() {
+  async _handleHostDisconnected() {
     if (this.isFullscreen) await this.exitFullscreen();
-    this.disconnectDisposal.empty();
+    this._disconnectDisposal.empty();
   }
 
   /**
@@ -138,11 +138,11 @@ export class FullscreenController {
    * @returns {boolean}
    */
   get isNativeFullscreen() {
-    if (fscreen.fullscreenElement === this.host) return true;
+    if (fscreen.fullscreenElement === this._host) return true;
 
     try {
       // Throws in iOS Safari...
-      return this.host.matches(
+      return this._host.matches(
         // TODO: `fullscreenPseudoClass` is missing from `@types/fscreen`.
         /** @type {any} */ (fscreen).fullscreenPseudoClass
       );
@@ -156,7 +156,7 @@ export class FullscreenController {
    * @param {(this: HTMLElement, event: Event) => void} handler
    * @returns {() => void} Stop listening function.
    */
-  addFullscreenChangeEventListener(handler) {
+  _addFullscreenChangeEventListener(handler) {
     if (!this.isSupported) return noop;
     return listen(/** @type {any} */ (fscreen), 'fullscreenchange', handler);
   }
@@ -166,7 +166,7 @@ export class FullscreenController {
    * @param {(this: HTMLElement, event: Event) => void} handler
    * @returns {() => void} Stop listening function.
    */
-  addFullscreenErrorEventListener(handler) {
+  _addFullscreenErrorEventListener(handler) {
     if (!this.isSupported) return noop;
     return listen(/** @type {any} */ (fscreen), 'fullscreenerror', handler);
   }
@@ -177,24 +177,24 @@ export class FullscreenController {
   async requestFullscreen() {
     if (this.isFullscreen) return;
 
-    this.throwIfNoFullscreenSupport();
+    this._throwIfNoFullscreenSupport();
 
     // TODO: Check if PiP is active, if so make sure to exit - need PiPController.
 
-    this.disconnectDisposal.add(
-      this.addFullscreenChangeEventListener(
-        this.handleFullscreenChange.bind(this)
+    this._disconnectDisposal.add(
+      this._addFullscreenChangeEventListener(
+        this._handleFullscreenChange.bind(this)
       )
     );
 
-    this.disconnectDisposal.add(
-      this.addFullscreenErrorEventListener(
-        this.handleFullscreenError.bind(this)
+    this._disconnectDisposal.add(
+      this._addFullscreenErrorEventListener(
+        this._handleFullscreenError.bind(this)
       )
     );
 
-    const response = await this.makeEnterFullscreenRequest();
-    await this.lockScreenOrientation();
+    const response = await this._makeEnterFullscreenRequest();
+    await this._lockScreenOrientation();
     return response;
   }
 
@@ -202,9 +202,9 @@ export class FullscreenController {
    * @protected
    * @returns {Promise<void>}
    */
-  async makeEnterFullscreenRequest() {
+  async _makeEnterFullscreenRequest() {
     this.isRequestingNativeFullscreen = true;
-    const response = await fscreen.requestFullscreen(this.host);
+    const response = await fscreen.requestFullscreen(this._host);
     this.isRequestingNativeFullscreen = false;
     return response;
   }
@@ -213,9 +213,9 @@ export class FullscreenController {
    * @protected
    * @param {Event} [event]
    */
-  handleFullscreenChange(event) {
-    if (!this.isFullscreen) this.disconnectDisposal.empty();
-    this.host.dispatchEvent(
+  _handleFullscreenChange(event) {
+    if (!this.isFullscreen) this._disconnectDisposal.empty();
+    this._host.dispatchEvent(
       new FullscreenChangeEvent({
         detail: this.isFullscreen,
         originalEvent: event
@@ -227,8 +227,8 @@ export class FullscreenController {
    * @protected
    * @param {Event} event
    */
-  handleFullscreenError(event) {
-    this.host.dispatchEvent(
+  _handleFullscreenError(event) {
+    this._host.dispatchEvent(
       new FullscreenErrorEvent({
         originalEvent: event
       })
@@ -240,9 +240,9 @@ export class FullscreenController {
    */
   async exitFullscreen() {
     if (!this.isFullscreen) return;
-    this.throwIfNoFullscreenSupport();
-    const response = await this.makeExitFullscreenRequest();
-    await this.unlockScreenOrientation();
+    this._throwIfNoFullscreenSupport();
+    const response = await this._makeExitFullscreenRequest();
+    await this._unlockScreenOrientation();
     return response;
   }
 
@@ -250,7 +250,7 @@ export class FullscreenController {
    * @protected
    * @returns {Promise<void>}
    */
-  async makeExitFullscreenRequest() {
+  async _makeExitFullscreenRequest() {
     return fscreen.exitFullscreen();
   }
 
@@ -258,9 +258,9 @@ export class FullscreenController {
    * @protected
    * @returns {boolean}
    */
-  shouldOrientScreen() {
+  _shouldOrientScreen() {
     return (
-      this.screenOrientationController.canOrient &&
+      this._screenOrientationController.canOrient &&
       !isUndefined(this.screenOrientationLock)
     );
   }
@@ -269,28 +269,31 @@ export class FullscreenController {
    * @protected
    * @returns {Promise<void>}
    */
-  async lockScreenOrientation() {
-    if (isUndefined(this.screenOrientationLock) || !this.shouldOrientScreen()) {
+  async _lockScreenOrientation() {
+    if (
+      isUndefined(this.screenOrientationLock) ||
+      !this._shouldOrientScreen()
+    ) {
       return;
     }
 
-    await this.screenOrientationController.lock(this.screenOrientationLock);
+    await this._screenOrientationController.lock(this.screenOrientationLock);
   }
 
   /**
    * @protected
    * @returns {Promise<void>}
    */
-  async unlockScreenOrientation() {
-    if (!this.shouldOrientScreen()) return;
-    await this.screenOrientationController.unlock();
+  async _unlockScreenOrientation() {
+    if (!this._shouldOrientScreen()) return;
+    await this._screenOrientationController.unlock();
   }
 
   /**
    * @protected
    * @throws {Error} - Will throw if Fullscreen API is not enabled or supported.
    */
-  throwIfNoFullscreenSupport() {
+  _throwIfNoFullscreenSupport() {
     if (this.isSupported) return;
     throw Error(
       'Fullscreen API is not enabled or supported in this environment.'

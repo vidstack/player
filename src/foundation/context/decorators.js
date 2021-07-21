@@ -11,7 +11,6 @@ export function consumeContext(context, options = {}) {
   return reactiveElementDecorator(consumeContext.name, (proto, name) => {
     /** @type {typeof import('lit').ReactiveElement} */
     const ctor = proto.constructor;
-
     defineContextConsumer(ctor, name, context, options);
   });
 }

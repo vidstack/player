@@ -84,7 +84,7 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
    * @protected
    * @type {import('lit/directives/ref').Ref<ButtonElement>}
    */
-  rootRef = createRef();
+  _rootRef = createRef();
 
   /**
    * The component's root element.
@@ -92,24 +92,24 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
    * @type {ButtonElement}
    */
   get rootElement() {
-    return /** @type {ButtonElement} */ (this.rootRef.value);
+    return /** @type {ButtonElement} */ (this._rootRef.value);
   }
 
   render() {
     return html`
       <vds-button
         id="root"
-        class=${this.getRootClassAttr()}
-        part=${this.getRootPartAttr()}
+        class=${this._getRootClassAttr()}
+        part=${this._getRootPartAttr()}
         label=${ifNonEmpty(this.label)}
         ?pressed=${this.pressed}
         ?disabled=${this.disabled}
         described-by=${ifNonEmpty(this.describedBy)}
-        exportparts=${this.getRootExportPartsAttr()}
-        ${on('click', this.handleButtonClick)}
-        ${ref(this.rootRef)}
+        exportparts=${this._getRootExportPartsAttr()}
+        ${on('click', this._handleButtonClick)}
+        ${ref(this._rootRef)}
       >
-        ${this.renderToggle()}
+        ${this._renderToggle()}
       </vds-button>
     `;
   }
@@ -125,7 +125,7 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
    * @protected
    * @returns {string}
    */
-  getRootClassAttr() {
+  _getRootClassAttr() {
     return 'root';
   }
 
@@ -135,7 +135,7 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
    * @protected
    * @returns {string}
    */
-  getRootPartAttr() {
+  _getRootPartAttr() {
     return 'root button';
   }
 
@@ -145,7 +145,7 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
    * @protected
    * @returns {string}
    */
-  getRootExportPartsAttr() {
+  _getRootExportPartsAttr() {
     return buildExportPartsAttr(ButtonElement.parts, 'button');
   }
 
@@ -155,7 +155,7 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
    * @protected
    * @param {Event} event
    */
-  handleButtonClick(event) {
+  _handleButtonClick(event) {
     this.pressed = !this.pressed;
   }
 }

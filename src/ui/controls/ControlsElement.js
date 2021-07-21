@@ -60,7 +60,7 @@ export class ControlsElement extends LitElement {
    * @protected
    * @readonly
    */
-  managedControls = new ManagedControls(this);
+  _managedControls = new ManagedControls(this);
 
   /**
    * @protected
@@ -69,14 +69,15 @@ export class ControlsElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.canPlay)
-  mediaCanPlay = false;
+  _mediaCanPlay = false;
 
   /**
+   * @protected
    * @type {boolean}
    */
   @state()
   @consumeContext(controlsContext.hidden)
-  controlsHidden = false;
+  _controlsHidden = false;
 
   /**
    * @protected
@@ -85,7 +86,7 @@ export class ControlsElement extends LitElement {
    */
   @state()
   @consumeContext(controlsContext.idle)
-  controlsIdle = false;
+  _controlsIdle = false;
 
   /**
    * @protected
@@ -94,7 +95,7 @@ export class ControlsElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.paused)
-  mediaPaused = true;
+  _mediaPaused = true;
 
   /**
    * @protected
@@ -103,7 +104,7 @@ export class ControlsElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.viewType)
-  mediaViewType = mediaContext.viewType.initialValue;
+  _mediaViewType = mediaContext.viewType.initialValue;
 
   /**
    * @protected
@@ -112,24 +113,24 @@ export class ControlsElement extends LitElement {
   update(changedProperties) {
     super.update(changedProperties);
 
-    if (changedProperties.has('mediaCanPlay')) {
-      setAttribute(this, 'media-can-play', this.mediaCanPlay);
+    if (changedProperties.has('_mediaCanPlay')) {
+      setAttribute(this, 'media-can-play', this._mediaCanPlay);
     }
 
-    if (changedProperties.has('controlsHidden')) {
-      setAttribute(this, 'hidden', this.controlsHidden);
+    if (changedProperties.has('_controlsHidden')) {
+      setAttribute(this, 'hidden', this._controlsHidden);
     }
 
-    if (changedProperties.has('controlsIdle')) {
-      setAttribute(this, 'idle', this.controlsIdle);
+    if (changedProperties.has('_controlsIdle')) {
+      setAttribute(this, 'idle', this._controlsIdle);
     }
 
-    if (changedProperties.has('mediaPaused')) {
-      setAttribute(this, 'media-paused', this.mediaPaused);
+    if (changedProperties.has('_mediaPaused')) {
+      setAttribute(this, 'media-paused', this._mediaPaused);
     }
 
-    if (changedProperties.has('mediaViewType')) {
-      setAttribute(this, 'media-view-type', this.mediaViewType);
+    if (changedProperties.has('_mediaViewType')) {
+      setAttribute(this, 'media-view-type', this._mediaViewType);
     }
   }
 

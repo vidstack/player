@@ -19,7 +19,7 @@ export class EventListenerController {
    * @protected
    * @readonly
    */
-  disconnectDisposal = new DisposalBin();
+  _disconnectDisposal = new DisposalBin();
 
   /**
    * @param {EventListenerControllerHost} host
@@ -32,21 +32,21 @@ export class EventListenerController {
      * @readonly
      * @type {EventListenerControllerHost}
      */
-    this.host = host;
+    this._host = host;
 
     /**
      * @protected
      * @readonly
      * @type {EventHandlerRecord}
      */
-    this.eventHandlers = eventHandlers;
+    this._eventHandlers = eventHandlers;
 
     /**
      * @protected
      * @readonly
      * @type {EventListenerControllerOptions}
      */
-    this.options = options;
+    this._options = options;
 
     host.addController({
       hostConnected: this.handleHostConnected.bind(this),
@@ -59,10 +59,10 @@ export class EventListenerController {
    */
   handleHostConnected() {
     bindEventListeners(
-      this.options.target ?? this.host,
-      this.eventHandlers,
-      this.disconnectDisposal,
-      this.options
+      this._options.target ?? this._host,
+      this._eventHandlers,
+      this._disconnectDisposal,
+      this._options
     );
   }
 
@@ -70,10 +70,10 @@ export class EventListenerController {
    * @protected
    */
   handleHostDisconnected() {
-    this.disconnectDisposal.empty();
+    this._disconnectDisposal.empty();
   }
 
   removeListeners() {
-    this.disconnectDisposal.empty();
+    this._disconnectDisposal.empty();
   }
 }

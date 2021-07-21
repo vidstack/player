@@ -58,7 +58,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     // @ts-expect-error
     state.seekable.length = 10;
     expect(controller.mediaState.seekable.length).to.be.equal(0);
-    controller.context.seekable = createTimeRanges(10, 20);
+    controller.ctx.seekable = createTimeRanges(10, 20);
 
     expect(controller.mediaState.seekable.start(0)).to.be.equal(10);
     expect(controller.mediaState.seekable.end(0)).to.be.equal(20);
@@ -188,7 +188,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
   describe('media requests', function () {
     it('should handle mute request', async function () {
       const { container, provider } = await buildMediaFixture();
-      const setMutedSpy = spy(provider, 'setMuted');
+      const setMutedSpy = spy(provider, '_setMuted');
       container.dispatchEvent(new MuteRequestEvent());
       await provider.mediaRequestQueue.flush();
       expect(setMutedSpy).to.have.been.calledWith(true);
@@ -197,7 +197,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
     it('should handle unmute request', async function () {
       const { container, provider } = await buildMediaFixture();
-      const setMutedSpy = spy(provider, 'setMuted');
+      const setMutedSpy = spy(provider, '_setMuted');
       container.dispatchEvent(new UnmuteRequestEvent());
       await provider.mediaRequestQueue.flush();
       expect(setMutedSpy).to.have.been.calledWith(false);
@@ -224,7 +224,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
     it('should handle seek request', async function () {
       const { container, provider } = await buildMediaFixture();
-      const setCurrentTimeSpy = spy(provider, 'setCurrentTime');
+      const setCurrentTimeSpy = spy(provider, '_setCurrentTime');
       container.dispatchEvent(new SeekRequestEvent({ detail: 100 }));
       await provider.mediaRequestQueue.flush();
       expect(setCurrentTimeSpy).to.have.been.calledWith(100);
@@ -233,7 +233,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
     it('should handle seeking request', async function () {
       const { container, provider } = await buildMediaFixture();
-      const setCurrentTimeSpy = spy(provider, 'setCurrentTime');
+      const setCurrentTimeSpy = spy(provider, '_setCurrentTime');
       container.dispatchEvent(new SeekingRequestEvent({ detail: 100 }));
       await provider.mediaRequestQueue.flush();
       expect(setCurrentTimeSpy).to.have.been.calledWith(100);
@@ -242,7 +242,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
     it('should handle volume change request', async function () {
       const { container, provider } = await buildMediaFixture();
-      const setVolumeSpy = spy(provider, 'setVolume');
+      const setVolumeSpy = spy(provider, '_setVolume');
       container.dispatchEvent(new VolumeChangeRequestEvent({ detail: 1 }));
       await provider.mediaRequestQueue.flush();
       expect(setVolumeSpy).to.have.been.calledWith(1);

@@ -112,13 +112,13 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @readonly
    */
-  disconnectDisposal = new ElementDisposalController(this);
+  _disconnectDisposal = new ElementDisposalController(this);
 
   /**
    * @protected
    * @readonly
    */
-  discoveryController = new ElementDiscoveryController(
+  _discoveryController = new ElementDiscoveryController(
     this,
     MediaProviderConnectEvent
   );
@@ -127,41 +127,41 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @readonly
    */
-  eventListenerController = new EventListenerController(this, {
-    [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange
+  _eventListenerController = new EventListenerController(this, {
+    [FullscreenChangeEvent.TYPE]: this._handleFullscreenChange
   });
 
   connectedCallback() {
     super.connectedCallback();
-    this.connectedQueue.flush();
-    this.connectedQueue.serveImmediately = true;
+    this._connectedQueue.flush();
+    this._connectedQueue.serveImmediately = true;
   }
 
   updated(changedProperties) {
     super.updated(changedProperties);
 
     if (changedProperties.has('autoplay')) {
-      this.context.autoplay = this.autoplay;
+      this.ctx.autoplay = this.autoplay;
     }
 
     if (changedProperties.has('controls')) {
-      this.context.controls = this.controls;
+      this.ctx.controls = this.controls;
     }
 
     if (changedProperties.has('loop')) {
-      this.context.loop = this.loop;
+      this.ctx.loop = this.loop;
     }
 
     if (changedProperties.has('playsinline')) {
-      this.context.playsinline = this.playsinline;
+      this.ctx.playsinline = this.playsinline;
     }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.connectedQueue.destroy();
+    this._connectedQueue.destroy();
     this.mediaRequestQueue.destroy();
-    this.hasFlushedMediaRequestQueueOnce = false;
+    this._hasFlushedMediaRequestQueueOnce = false;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -229,12 +229,12 @@ export class MediaProviderElement extends LitElement {
    */
   @property({ type: Number, reflect: true })
   get volume() {
-    return this.canPlay ? this.getVolume() : 1;
+    return this.canPlay ? this._getVolume() : 1;
   }
 
   set volume(requestedVolume) {
     this.mediaRequestQueue.queue('volume', () => {
-      this.setVolume(clampNumber(0, requestedVolume, 1));
+      this._setVolume(clampNumber(0, requestedVolume, 1));
     });
   }
 
@@ -243,7 +243,7 @@ export class MediaProviderElement extends LitElement {
    * @abstract
    * @returns {number}
    */
-  getVolume() {
+  _getVolume() {
     throw Error('Not implemented.');
   }
 
@@ -252,7 +252,7 @@ export class MediaProviderElement extends LitElement {
    * @abstract
    * @param {number} newVolume
    */
-  setVolume(newVolume) {
+  _setVolume(newVolume) {
     throw Error('Not implemented.');
   }
 
@@ -268,7 +268,7 @@ export class MediaProviderElement extends LitElement {
    */
   @property({ type: Boolean, reflect: true })
   get paused() {
-    return this.canPlay ? this.getPaused() : true;
+    return this.canPlay ? this._getPaused() : true;
   }
 
   /** @param {boolean} shouldPause */
@@ -287,7 +287,7 @@ export class MediaProviderElement extends LitElement {
    * @abstract
    * @returns {boolean}
    */
-  getPaused() {
+  _getPaused() {
     throw Error('Not implemented.');
   }
 
@@ -305,13 +305,13 @@ export class MediaProviderElement extends LitElement {
    */
   @property({ attribute: 'current-time', type: Number })
   get currentTime() {
-    return this.canPlay ? this.getCurrentTime() : 0;
+    return this.canPlay ? this._getCurrentTime() : 0;
   }
 
   /** @param {number} requestedTime */
   set currentTime(requestedTime) {
     this.mediaRequestQueue.queue('time', () => {
-      this.setCurrentTime(requestedTime);
+      this._setCurrentTime(requestedTime);
     });
   }
 
@@ -320,7 +320,7 @@ export class MediaProviderElement extends LitElement {
    * @abstract
    * @returns {number}
    */
-  getCurrentTime() {
+  _getCurrentTime() {
     throw Error('Not implemented.');
   }
 
@@ -329,7 +329,7 @@ export class MediaProviderElement extends LitElement {
    * @abstract
    * @param {number} newTime
    */
-  setCurrentTime(newTime) {
+  _setCurrentTime(newTime) {
     throw Error('Not implemented.');
   }
 
@@ -343,13 +343,13 @@ export class MediaProviderElement extends LitElement {
    */
   @property({ type: Boolean, reflect: true })
   get muted() {
-    return this.canPlay ? this.getMuted() : false;
+    return this.canPlay ? this._getMuted() : false;
   }
 
   /** @param {boolean} shouldMute */
   set muted(shouldMute) {
     this.mediaRequestQueue.queue('muted', () => {
-      this.setMuted(shouldMute);
+      this._setMuted(shouldMute);
     });
   }
 
@@ -358,7 +358,7 @@ export class MediaProviderElement extends LitElement {
    * @abstract
    * @returns {boolean}
    */
-  getMuted() {
+  _getMuted() {
     throw Error('Not implemented.');
   }
 
@@ -367,7 +367,7 @@ export class MediaProviderElement extends LitElement {
    * @abstract
    * @param {boolean} isMuted
    */
-  setMuted(isMuted) {
+  _setMuted(isMuted) {
     throw Error('Not implemented.');
   }
 
@@ -398,7 +398,7 @@ export class MediaProviderElement extends LitElement {
    * @type {Readonly<import('../../foundation/context').ExtractContextRecordTypes<typeof mediaContext>>}
    */
   get mediaState() {
-    return cloneMediaContextRecord(this.context);
+    return cloneMediaContextRecord(this.ctx);
   }
 
   /**
@@ -412,7 +412,7 @@ export class MediaProviderElement extends LitElement {
    * @default TimeRanges
    */
   get buffered() {
-    return this.context.buffered;
+    return this.ctx.buffered;
   }
 
   /**
@@ -424,7 +424,7 @@ export class MediaProviderElement extends LitElement {
    * @default false
    */
   get canPlay() {
-    return this.context.canPlay;
+    return this.ctx.canPlay;
   }
 
   /**
@@ -436,7 +436,7 @@ export class MediaProviderElement extends LitElement {
    * @default false
    */
   get canPlayThrough() {
-    return this.context.canPlayThrough;
+    return this.ctx.canPlayThrough;
   }
 
   /**
@@ -446,7 +446,7 @@ export class MediaProviderElement extends LitElement {
    * @type {string}
    */
   get currentPoster() {
-    return this.context.currentPoster;
+    return this.ctx.currentPoster;
   }
 
   /**
@@ -458,7 +458,7 @@ export class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc
    */
   get currentSrc() {
-    return this.context.currentSrc;
+    return this.ctx.currentSrc;
   }
 
   /**
@@ -471,7 +471,7 @@ export class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration
    */
   get duration() {
-    return this.context.duration;
+    return this.ctx.duration;
   }
 
   /**
@@ -483,7 +483,7 @@ export class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended
    */
   get ended() {
-    return this.context.ended;
+    return this.ctx.ended;
   }
 
   /**
@@ -496,7 +496,7 @@ export class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
    */
   get error() {
-    return this.context.error;
+    return this.ctx.error;
   }
 
   /**
@@ -505,7 +505,7 @@ export class MediaProviderElement extends LitElement {
    * @type {boolean}
    */
   get live() {
-    return this.context.live;
+    return this.ctx.live;
   }
 
   /**
@@ -516,7 +516,7 @@ export class MediaProviderElement extends LitElement {
    * @default MediaType.Unknown
    */
   get mediaType() {
-    return this.context.mediaType;
+    return this.ctx.mediaType;
   }
 
   /**
@@ -526,7 +526,7 @@ export class MediaProviderElement extends LitElement {
    * @default TimeRanges
    */
   get played() {
-    return this.context.played;
+    return this.ctx.played;
   }
 
   /**
@@ -537,7 +537,7 @@ export class MediaProviderElement extends LitElement {
    * @default false
    */
   get playing() {
-    return this.context.playing;
+    return this.ctx.playing;
   }
 
   /**
@@ -556,7 +556,7 @@ export class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seekable
    */
   get seekable() {
-    return this.context.seekable;
+    return this.ctx.seekable;
   }
 
   /**
@@ -566,7 +566,7 @@ export class MediaProviderElement extends LitElement {
    * @default false
    */
   get seeking() {
-    return this.context.seeking;
+    return this.ctx.seeking;
   }
 
   /**
@@ -576,7 +576,7 @@ export class MediaProviderElement extends LitElement {
    * @default false
    */
   get started() {
-    return this.context.started;
+    return this.ctx.started;
   }
 
   /**
@@ -590,7 +590,7 @@ export class MediaProviderElement extends LitElement {
    * @default ViewType.Unknown
    */
   get viewType() {
-    return this.context.viewType;
+    return this.ctx.viewType;
   }
 
   /**
@@ -600,7 +600,7 @@ export class MediaProviderElement extends LitElement {
    * @default false
    */
   get waiting() {
-    return this.context.waiting;
+    return this.ctx.waiting;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -669,7 +669,7 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @throws {Error} - Will throw if media is not ready for playback.
    */
-  throwIfNotReadyForPlayback() {
+  _throwIfNotReadyForPlayback() {
     if (!this.canPlay) {
       throw Error(
         `Media is not ready - wait for \`${CanPlayEvent.TYPE}\` event.`
@@ -681,7 +681,7 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @returns {boolean}
    */
-  hasPlaybackRoughlyEnded() {
+  _hasPlaybackRoughlyEnded() {
     if (isNaN(this.duration) || this.duration === 0) return false;
     return (
       Math.abs(
@@ -695,13 +695,13 @@ export class MediaProviderElement extends LitElement {
    *
    * @protected
    */
-  validatePlaybackEndedState() {
-    if (this.context.ended && !this.hasPlaybackRoughlyEnded()) {
-      this.context.ended = false;
-    } else if (!this.context.ended && this.hasPlaybackRoughlyEnded()) {
-      this.context.waiting = false;
+  _validatePlaybackEndedState() {
+    if (this.ctx.ended && !this._hasPlaybackRoughlyEnded()) {
+      this.ctx.ended = false;
+    } else if (!this.ctx.ended && this._hasPlaybackRoughlyEnded()) {
+      this.ctx.waiting = false;
       this.dispatchEvent(new SuspendEvent());
-      this.context.ended = true;
+      this.ctx.ended = true;
       this.dispatchEvent(new EndedEvent());
     }
   }
@@ -710,25 +710,25 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @returns {Promise<void>}
    */
-  async resetPlayback() {
-    this.setCurrentTime(0);
+  async _resetPlayback() {
+    this._setCurrentTime(0);
   }
 
   /**
    * @protected
    * @returns {Promise<void>}
    */
-  async resetPlaybackIfEnded() {
-    if (!this.hasPlaybackRoughlyEnded()) return;
-    return this.resetPlayback();
+  async _resetPlaybackIfEnded() {
+    if (!this._hasPlaybackRoughlyEnded()) return;
+    return this._resetPlayback();
   }
 
   /**
    * @protected
    * @throws {Error} - Will throw if player is not in a video view.
    */
-  throwIfNotVideoView() {
-    if (!this.context.isVideoView) {
+  _throwIfNotVideoView() {
+    if (!this.ctx.isVideoView) {
       throw Error('Player is currently not in a video view.');
     }
   }
@@ -737,8 +737,8 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @param {Event} [event]
    */
-  handleMediaReady(event) {
-    this.context.canPlay = true;
+  _handleMediaReady(event) {
+    this.ctx.canPlay = true;
     this.dispatchEvent(new CanPlayEvent({ originalEvent: event }));
     this.mediaRequestQueue.flush();
     this.mediaRequestQueue.serveImmediately = true;
@@ -748,21 +748,21 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @type {boolean}
    */
-  hasFlushedMediaRequestQueueOnce = false;
+  _hasFlushedMediaRequestQueueOnce = false;
 
   /**
    * @protected
    */
-  handleMediaSrcChange() {
+  _handleMediaSrcChange() {
     // Skip first flush to ensure initial properties set make it to the provider.
-    if (!this.hasFlushedMediaRequestQueueOnce) {
-      this.hasFlushedMediaRequestQueueOnce = true;
+    if (!this._hasFlushedMediaRequestQueueOnce) {
+      this._hasFlushedMediaRequestQueueOnce = true;
       return;
     }
 
     this.mediaRequestQueue.serveImmediately = false;
     this.mediaRequestQueue.reset();
-    this.softResetMediaContext();
+    this._softResetMediaContext();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -780,7 +780,7 @@ export class MediaProviderElement extends LitElement {
    * @readonly
    * @internal
    */
-  context = createMediaContextRecord();
+  ctx = createMediaContextRecord();
 
   /**
    * Media context properties that should be reset when media is changed. Override this
@@ -789,7 +789,7 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @returns {Set<string>}
    */
-  getMediaPropsToResetWhenSrcChanges() {
+  _getMediaPropsToResetWhenSrcChanges() {
     return new Set([
       'buffered',
       'buffering',
@@ -818,11 +818,11 @@ export class MediaProviderElement extends LitElement {
    *
    * @protected
    */
-  softResetMediaContext() {
-    const propsToReset = this.getMediaPropsToResetWhenSrcChanges();
+  _softResetMediaContext() {
+    const propsToReset = this._getMediaPropsToResetWhenSrcChanges();
     Object.keys(mediaContext).forEach((prop) => {
       if (propsToReset.has(prop)) {
-        this.context[prop] = mediaContext[prop].initialValue;
+        this.ctx[prop] = mediaContext[prop].initialValue;
       }
     });
   }
@@ -837,7 +837,7 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @readonly
    */
-  connectedQueue = new RequestQueue();
+  _connectedQueue = new RequestQueue();
 
   /**
    * Queue actions to be taken on the current media provider when it's ready for playback, marked
@@ -888,7 +888,7 @@ export class MediaProviderElement extends LitElement {
    * @default false
    */
   get fullscreen() {
-    return this.context.fullscreen;
+    return this.ctx.fullscreen;
   }
 
   /**
@@ -926,7 +926,7 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @param {FullscreenChangeEvent} event
    */
-  handleFullscreenChange(event) {
-    this.context.fullscreen = event.detail;
+  _handleFullscreenChange(event) {
+    this.ctx.fullscreen = event.detail;
   }
 }

@@ -27,7 +27,7 @@ export class ManagedControls extends ManagedElement {
    * @protected
    * @type {import('../../foundation/elements').ScopedDiscoveryEvent<any>}
    */
-  static get ScopedDiscoveryEvent() {
+  static get _ScopedDiscoveryEvent() {
     return ManagedControlsConnectEvent;
   }
 }

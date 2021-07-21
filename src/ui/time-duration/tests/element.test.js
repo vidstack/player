@@ -36,7 +36,7 @@ describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
   it('should render shadow DOM correctly', async function () {
     const { provider, timeDuration } = await buildFixture();
 
-    provider.context.duration = 3750;
+    provider.ctx.duration = 3750;
     await elementUpdated(timeDuration);
 
     expect(timeDuration).shadowDom.to.equal(`
@@ -55,10 +55,10 @@ describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
   it('should update duration time as context updates', async function () {
     const { provider, timeDuration } = await buildFixture();
     expect(timeDuration.seconds).to.equal(0);
-    provider.context.duration = 50;
+    provider.ctx.duration = 50;
     await elementUpdated(timeDuration);
     expect(timeDuration.seconds).to.equal(50);
-    provider.context.duration = -1;
+    provider.ctx.duration = -1;
     await elementUpdated(timeDuration);
     expect(timeDuration.seconds).to.equal(0);
   });

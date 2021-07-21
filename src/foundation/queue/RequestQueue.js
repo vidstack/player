@@ -9,12 +9,12 @@ export class RequestQueue {
    * @protected
    * @type {Map<RequestKey, RequestCallback>}
    */
-  requestQueue = new Map();
+  _requestQueue = new Map();
 
   /**
    * @protected
    */
-  pendingFlush = deferredPromise();
+  _pendingFlush = deferredPromise();
 
   /**
    * Whether callbacks should be called immediately or queued and flushed at a later time.
@@ -27,7 +27,7 @@ export class RequestQueue {
    * @type {number}
    */
   get size() {
-    return this.requestQueue.size;
+    return this._requestQueue.size;
   }
 
   /**
@@ -36,7 +36,7 @@ export class RequestQueue {
    * @returns {Map<RequestKey, RequestCallback>}
    */
   cloneQueue() {
-    return new Map(this.requestQueue);
+    return new Map(this._requestQueue);
   }
 
   /**
@@ -46,7 +46,7 @@ export class RequestQueue {
    */
   async waitForFlush() {
     if (this.serveImmediately) return;
-    await this.pendingFlush.promise;
+    await this._pendingFlush.promise;
   }
 
   /**
@@ -55,7 +55,7 @@ export class RequestQueue {
    * @returns {Promise<void>}
    */
   async queue(key, callback) {
-    this.requestQueue.set(key, callback);
+    this._requestQueue.set(key, callback);
     if (!this.serveImmediately) return;
     this.serve(key);
   }
@@ -65,29 +65,31 @@ export class RequestQueue {
    * @returns {Promise<void>}
    */
   async serve(key) {
-    await this.requestQueue.get(key)?.();
-    this.requestQueue.delete(key);
+    await this._requestQueue.get(key)?.();
+    this._requestQueue.delete(key);
   }
 
   /**
    * @returns {Promise<void>}
    */
   async flush() {
-    const requests = Array.from(this.requestQueue.keys());
+    const requests = Array.from(this._requestQueue.keys());
     await Promise.all(requests.map((reqKey) => this.serve(reqKey)));
     this.reset();
   }
 
   /**
+   * @returns {void}
    */
   reset() {
-    this.requestQueue.clear();
+    this._requestQueue.clear();
     // Release anyone waiting.
-    this.pendingFlush.resolve();
-    this.pendingFlush = deferredPromise();
+    this._pendingFlush.resolve();
+    this._pendingFlush = deferredPromise();
   }
 
   /**
+   * @returns {void}
    */
   destroy() {
     this.serveImmediately = false;

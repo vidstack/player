@@ -31,19 +31,19 @@ export class ScreenOrientationController {
    * @protected
    * @readonly
    */
-  disconnectDisposal = new DisposalBin();
+  _disconnectDisposal = new DisposalBin();
 
   /**
    * @protected
    * @type {ScreenOrientation | undefined}
    */
-  screenOrientation;
+  _screenOrientation;
 
   /**
    * @protected
    * @type {boolean}
    */
-  isScreenOrientationLocked = false;
+  _isScreenOrientationLocked = false;
 
   /**
    * @param {ScreenOrientationControllerHost} host
@@ -54,13 +54,13 @@ export class ScreenOrientationController {
      * @readonly
      * @type {ScreenOrientationControllerHost}
      */
-    this.host = host;
+    this._host = host;
 
-    this.updateScreenOrientation();
+    this._updateScreenOrientation();
 
     host.addController({
-      hostConnected: this.handleHostConnected.bind(this),
-      hostDisconnected: this.handleHostDisconnected.bind(this)
+      hostConnected: this._handleHostConnected.bind(this),
+      hostDisconnected: this._handleHostDisconnected.bind(this)
     });
   }
 
@@ -68,9 +68,9 @@ export class ScreenOrientationController {
    * @protected
    * @returns {Promise<void>}
    */
-  async handleHostConnected() {
-    this.updateScreenOrientation();
-    this.addScreenOrientationEventListeners();
+  async _handleHostConnected() {
+    this._updateScreenOrientation();
+    this._addScreenOrientationEventListeners();
   }
 
   /**
@@ -79,9 +79,9 @@ export class ScreenOrientationController {
    * @protected
    * @returns {Promise<void>}
    */
-  async handleHostDisconnected() {
-    if (this.canOrient && this.isScreenOrientationLocked) await this.unlock();
-    this.disconnectDisposal.empty();
+  async _handleHostDisconnected() {
+    if (this.canOrient && this._isScreenOrientationLocked) await this.unlock();
+    this._disconnectDisposal.empty();
   }
 
   /**
@@ -91,7 +91,7 @@ export class ScreenOrientationController {
    * @type {ScreenOrientation | undefined}
    */
   get currentOrientation() {
-    return this.screenOrientation;
+    return this._screenOrientation;
   }
 
   /**
@@ -110,7 +110,7 @@ export class ScreenOrientationController {
    * @default false
    */
   get isLocked() {
-    return this.isScreenOrientationLocked;
+    return this._isScreenOrientationLocked;
   }
 
   /**
@@ -123,14 +123,14 @@ export class ScreenOrientationController {
    * @see https://w3c.github.io/screen-orientation
    */
   async lock(lockType) {
-    this.throwIfScreenOrientationUnavailable();
+    this._throwIfScreenOrientationUnavailable();
 
     await screen.orientation.lock(
       /** @type {OrientationLockType} */ (lockType)
     );
 
-    this.isScreenOrientationLocked = true;
-    this.host.dispatchEvent(
+    this._isScreenOrientationLocked = true;
+    this._host.dispatchEvent(
       new ScreenOrientationLockChangeEvent({
         detail: lockType
       })
@@ -146,10 +146,10 @@ export class ScreenOrientationController {
    * @see https://w3c.github.io/screen-orientation
    */
   async unlock() {
-    this.throwIfScreenOrientationUnavailable();
+    this._throwIfScreenOrientationUnavailable();
     await screen.orientation.unlock();
-    this.isScreenOrientationLocked = false;
-    this.host.dispatchEvent(
+    this._isScreenOrientationLocked = false;
+    this._host.dispatchEvent(
       new ScreenOrientationLockChangeEvent({
         detail: screen.orientation.type
       })
@@ -159,20 +159,22 @@ export class ScreenOrientationController {
   /**
    * @protected
    */
-  addScreenOrientationEventListeners() {
+  _addScreenOrientationEventListeners() {
     if (!this.canOrient) return;
-    this.disconnectDisposal.add(this.addScreenOrientationChangeEventListener());
+    this._disconnectDisposal.add(
+      this._addScreenOrientationChangeEventListener()
+    );
   }
 
   /**
    * @protected
    * @returns {() => void} Stop listening function.
    */
-  addScreenOrientationChangeEventListener() {
+  _addScreenOrientationChangeEventListener() {
     return listen(
       screen.orientation,
       'change',
-      this.handleOrientationChange.bind(this)
+      this._handleOrientationChange.bind(this)
     );
   }
 
@@ -180,11 +182,11 @@ export class ScreenOrientationController {
    * @protected
    * @param {Event} event
    */
-  handleOrientationChange(event) {
-    this.screenOrientation = window.screen.orientation.type;
-    this.host.dispatchEvent(
+  _handleOrientationChange(event) {
+    this._screenOrientation = window.screen.orientation.type;
+    this._host.dispatchEvent(
       new ScreenOrientationChangeEvent({
-        detail: this.screenOrientation,
+        detail: this._screenOrientation,
         originalEvent: event
       })
     );
@@ -193,8 +195,8 @@ export class ScreenOrientationController {
   /**
    * @protected
    */
-  updateScreenOrientation() {
-    this.screenOrientation = IS_CLIENT
+  _updateScreenOrientation() {
+    this._screenOrientation = IS_CLIENT
       ? window.screen?.orientation?.type
       : undefined;
   }
@@ -203,7 +205,7 @@ export class ScreenOrientationController {
    * @protected
    * @throws {Error} - Will throw if Screen Orientation API is unavailable.
    */
-  throwIfScreenOrientationUnavailable() {
+  _throwIfScreenOrientationUnavailable() {
     if (this.canOrient) return;
     throw Error('Screen orientation API is not available.');
   }

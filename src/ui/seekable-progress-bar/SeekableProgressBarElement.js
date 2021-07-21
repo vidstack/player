@@ -72,7 +72,7 @@ export class SeekableProgressBarElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.seekableAmount)
-  mediaSeekableAmount = mediaContext.seekableAmount.initialValue;
+  _mediaSeekableAmount = mediaContext.seekableAmount.initialValue;
 
   /**
    * @protected
@@ -80,14 +80,14 @@ export class SeekableProgressBarElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
-  mediaDuration = 0;
+  _mediaDuration = 0;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
   render() {
-    return this.renderProgressBar();
+    return this._renderProgressBar();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ export class SeekableProgressBarElement extends LitElement {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLProgressElement>}
    */
-  progressBarRef = createRef();
+  _progressBarRef = createRef();
 
   /**
    * Returns the underlying `<progress>` element.
@@ -107,29 +107,29 @@ export class SeekableProgressBarElement extends LitElement {
    * @type {HTMLProgressElement}
    */
   get progressBarElement() {
-    return /** @type {HTMLProgressElement} */ (this.progressBarRef.value);
+    return /** @type {HTMLProgressElement} */ (this._progressBarRef.value);
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderProgressBar() {
+  _renderProgressBar() {
     return html`
       <div
         id="progressbar"
         role="progressbar"
-        part=${this.getProgressBarPartAttr()}
-        style=${styleMap(this.getProgressBarStyleMap())}
+        part=${this._getProgressBarPartAttr()}
+        style=${styleMap(this._getProgressBarStyleMap())}
         ?hidden=${this.hidden}
         aria-label=${this.label}
         aria-valuemin="0"
-        aria-valuenow=${Math.round(this.mediaSeekableAmount)}
-        aria-valuemax=${Math.round(this.mediaDuration)}
-        aria-valuetext=${this.getProgressBarValueText()}
-        ${ref(this.progressBarRef)}
+        aria-valuenow=${Math.round(this._mediaSeekableAmount)}
+        aria-valuemax=${Math.round(this._mediaDuration)}
+        aria-valuetext=${this._getProgressBarValueText()}
+        ${ref(this._progressBarRef)}
       >
-        ${this.renderProgressBarChildren()}
+        ${this._renderProgressBarChildren()}
       </div>
     `;
   }
@@ -138,7 +138,7 @@ export class SeekableProgressBarElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getProgressBarPartAttr() {
+  _getProgressBarPartAttr() {
     return 'root';
   }
 
@@ -146,10 +146,10 @@ export class SeekableProgressBarElement extends LitElement {
    * @protected
    * @returns {import('lit/directives/style-map').StyleInfo}
    */
-  getProgressBarStyleMap() {
+  _getProgressBarStyleMap() {
     return {
-      '--vds-media-seekable': String(this.mediaSeekableAmount),
-      '--vds-media-duration': String(this.mediaDuration)
+      '--vds-media-seekable': String(this._mediaSeekableAmount),
+      '--vds-media-duration': String(this._mediaDuration)
     };
   }
 
@@ -157,27 +157,27 @@ export class SeekableProgressBarElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getProgressBarValueText() {
+  _getProgressBarValueText() {
     return this.valueText
-      .replace('{seekableAmount}', formatSpokenTime(this.mediaSeekableAmount))
-      .replace('{duration}', formatSpokenTime(this.mediaDuration));
+      .replace('{seekableAmount}', formatSpokenTime(this._mediaSeekableAmount))
+      .replace('{duration}', formatSpokenTime(this._mediaDuration));
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderProgressBarChildren() {
-    return this.renderProgressBarSlot();
+  _renderProgressBarChildren() {
+    return this._renderProgressBarSlot();
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderProgressBarSlot() {
+  _renderProgressBarSlot() {
     return html`
-      <slot name=${ifNonEmpty(this.getProgressBarSlotName())}></slot>
+      <slot name=${ifNonEmpty(this._getProgressBarSlotName())}></slot>
     `;
   }
 
@@ -185,7 +185,7 @@ export class SeekableProgressBarElement extends LitElement {
    * @protected
    * @returns {string | undefined}
    */
-  getProgressBarSlotName() {
+  _getProgressBarSlotName() {
     return undefined;
   }
 }

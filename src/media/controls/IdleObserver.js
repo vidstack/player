@@ -24,13 +24,13 @@ export class IdleObserver {
      * @readonly
      * @type {IdleObserverHost}
      */
-    this.host = host;
+    this._host = host;
 
     /**
      * @protected
      * @readonly
      */
-    this.idle = controlsContext.idle.provide(host);
+    this._idle = controlsContext.idle.provide(host);
 
     /**
      * @protected
@@ -38,15 +38,15 @@ export class IdleObserver {
      * @type {EventListenerController}
      */
     this[Symbol(EventListenerController.name)] = new EventListenerController(
-      this.host,
+      this._host,
       {
         focus: this.pause,
         blur: this.resume,
-        keydown: this.handleUserInteraction,
-        click: this.handleUserInteraction,
-        pointermove: this.handleUserInteraction,
-        [PauseIdleTrackingRequestEvent.TYPE]: this.handlePauseIdleTracking,
-        [ResumeIdleTrackingRequestEvent.TYPE]: this.handleResumeIdleTracking
+        keydown: this._handleUserInteraction,
+        click: this._handleUserInteraction,
+        pointermove: this._handleUserInteraction,
+        [PauseIdleTrackingRequestEvent.TYPE]: this._handlePauseIdleTracking,
+        [ResumeIdleTrackingRequestEvent.TYPE]: this._handleResumeIdleTracking
       },
       { receiver: this }
     );
@@ -58,7 +58,7 @@ export class IdleObserver {
    * @protected
    * @type {boolean}
    */
-  preventIdling = false;
+  _preventIdling = false;
 
   /**
    * The amount of time in `ms` to pass before considering the user to be idle.
@@ -73,14 +73,14 @@ export class IdleObserver {
    * @type {boolean}
    */
   get isIdle() {
-    return this.idle.value;
+    return this._idle.value;
   }
 
   /**
    * @protected
    * @param {Event} [request]
    */
-  handleUserInteraction(request) {
+  _handleUserInteraction(request) {
     this.start(request);
   }
 
@@ -88,7 +88,7 @@ export class IdleObserver {
    * @protected
    * @type {number}
    */
-  timeoutId = -1;
+  _timeoutId = -1;
 
   /**
    * Start tracking idle state. If `pause` is called this method will do nothing until `resume`
@@ -98,10 +98,10 @@ export class IdleObserver {
    */
   start(request) {
     this.stop(request);
-    if (this.preventIdling) return;
-    this.timeoutId = window.setTimeout(() => {
-      this.idle.value = true;
-      this.handleIdleChange(request);
+    if (this._preventIdling) return;
+    this._timeoutId = window.setTimeout(() => {
+      this._idle.value = true;
+      this._handleIdleChange(request);
     }, this.timeout);
   }
 
@@ -111,7 +111,7 @@ export class IdleObserver {
    * @param {Event} [request]
    */
   resume(request) {
-    this.preventIdling = false;
+    this._preventIdling = false;
     this.start(request);
   }
 
@@ -121,7 +121,7 @@ export class IdleObserver {
    * @param {Event} [request]
    */
   pause(request) {
-    this.preventIdling = true;
+    this._preventIdling = true;
     this.stop(request);
   }
 
@@ -131,39 +131,39 @@ export class IdleObserver {
    * @param {Event} [request]
    */
   stop(request) {
-    window.clearTimeout(this.timeoutId);
-    this.idle.value = false;
-    this.handleIdleChange(request);
+    window.clearTimeout(this._timeoutId);
+    this._idle.value = false;
+    this._handleIdleChange(request);
   }
 
   /**
    * @private
    * @type {boolean}
    */
-  prevIdleValue = controlsContext.idle.initialValue;
+  _prevIdleValue = controlsContext.idle.initialValue;
 
   /**
    * @protected
    * @param {Event} [request]
    */
-  handleIdleChange(request) {
-    if (this.idle.value === this.prevIdleValue) return;
+  _handleIdleChange(request) {
+    if (this._idle.value === this._prevIdleValue) return;
 
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new IdleChangeEvent({
         originalEvent: request,
         detail: this.isIdle
       })
     );
 
-    this.prevIdleValue = this.idle.value;
+    this._prevIdleValue = this._idle.value;
   }
 
   /**
    * @protected
    * @param {Event} request
    */
-  handlePauseIdleTracking(request) {
+  _handlePauseIdleTracking(request) {
     request.stopPropagation();
     this.pause();
   }
@@ -172,7 +172,7 @@ export class IdleObserver {
    * @protected
    * @param {Event} request
    */
-  handleResumeIdleTracking(request) {
+  _handleResumeIdleTracking(request) {
     request.stopPropagation();
     this.resume();
   }

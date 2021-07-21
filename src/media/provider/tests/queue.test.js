@@ -8,7 +8,7 @@ describe('MediaProviderElement/queue', function () {
   it('should queue request given provider is not ready and flush once ready', async function () {
     const { provider } = await buildMediaFixture();
 
-    const volumeSpy = spy(provider, 'setVolume');
+    const volumeSpy = spy(provider, '_setVolume');
 
     // Queue.
     provider.volume = 0.53;
@@ -25,7 +25,7 @@ describe('MediaProviderElement/queue', function () {
   it('should make request immediately if provider is ready', async function () {
     const { provider } = await buildMediaFixture();
 
-    const volumeSpy = spy(provider, 'setVolume');
+    const volumeSpy = spy(provider, '_setVolume');
 
     provider.mediaRequestQueue.serveImmediately = true;
 

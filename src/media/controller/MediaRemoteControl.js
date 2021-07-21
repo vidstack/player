@@ -40,14 +40,14 @@ export class MediaRemoteControl {
      * @readonly
      * @type {MediaRemoteControlHost}
      */
-    this.host = host;
+    this._host = host;
   }
 
   /**
    * @param {Event} [event]
    */
   play(event) {
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new PlayRequestEvent({
         originalEvent: event
       })
@@ -58,7 +58,7 @@ export class MediaRemoteControl {
    * @param {Event} [event]
    */
   pause(event) {
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new PauseRequestEvent({
         originalEvent: event
       })
@@ -69,7 +69,7 @@ export class MediaRemoteControl {
    * @param {Event} [event]
    */
   mute(event) {
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new MuteRequestEvent({
         originalEvent: event
       })
@@ -80,7 +80,7 @@ export class MediaRemoteControl {
    * @param {Event} [event]
    */
   unmute(event) {
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new UnmuteRequestEvent({
         originalEvent: event
       })
@@ -91,7 +91,7 @@ export class MediaRemoteControl {
    * @param {Event} [event]
    */
   enterFullscreen(event) {
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new EnterFullscreenRequestEvent({
         originalEvent: event
       })
@@ -102,7 +102,7 @@ export class MediaRemoteControl {
    * @param {Event} [event]
    */
   exitFullscreen(event) {
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new ExitFullscreenRequestEvent({
         originalEvent: event
       })
@@ -114,7 +114,7 @@ export class MediaRemoteControl {
    * @param {Event} event
    */
   seeking(time, event) {
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new SeekingRequestEvent({
         detail: time,
         originalEvent: event
@@ -127,7 +127,7 @@ export class MediaRemoteControl {
    * @param {Event} [event]
    */
   seek(time, event) {
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new SeekRequestEvent({
         detail: time,
         originalEvent: event
@@ -140,7 +140,7 @@ export class MediaRemoteControl {
    * @param {Event} [event]
    */
   changeVolume(volume, event) {
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new VolumeChangeRequestEvent({
         detail: volume,
         originalEvent: event

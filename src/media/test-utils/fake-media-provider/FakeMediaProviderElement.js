@@ -19,7 +19,7 @@ export const FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME = 'vds-fake-media-provider';
 export class FakeMediaProviderElement extends MediaProviderElement {
   constructor() {
     super();
-    this.defineContextAccessors();
+    this._defineContextAccessors();
   }
 
   /**
@@ -27,17 +27,17 @@ export class FakeMediaProviderElement extends MediaProviderElement {
    *
    * @protected
    */
-  defineContextAccessors() {
+  _defineContextAccessors() {
     Object.keys(mediaContext).forEach((ctxProp) => {
       Object.defineProperty(this, `${ctxProp}Context`, {
         get: () => {
-          return this.context[ctxProp];
+          return this.ctx[ctxProp];
         },
         set: (newValue) => {
           // Only run context updates after we've connected to the DOM so we update the inject
           // media context object on the `MediaControllerElement`.
-          this.connectedQueue.queue(`contextUpdate[${ctxProp}]`, () => {
-            this.context[ctxProp] = newValue;
+          this._connectedQueue.queue(`contextUpdate[${ctxProp}]`, () => {
+            this.ctx[ctxProp] = newValue;
           });
         }
       });
@@ -58,49 +58,49 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
 
   forceMediaReady() {
-    this.handleMediaReady();
+    this._handleMediaReady();
   }
 
-  getCurrentTime() {
-    return this.context.currentTime;
+  _getCurrentTime() {
+    return this.ctx.currentTime;
   }
 
-  setCurrentTime(time) {
-    this.context.currentTime = time;
+  _setCurrentTime(time) {
+    this.ctx.currentTime = time;
     this.dispatchEvent(new TimeUpdateEvent({ detail: time }));
   }
 
-  getMuted() {
-    return this.context.muted;
+  _getMuted() {
+    return this.ctx.muted;
   }
 
-  setMuted(muted) {
-    this.context.muted = muted;
+  _setMuted(muted) {
+    this.ctx.muted = muted;
     this.dispatchEvent(
       new VolumeChangeEvent({
         detail: {
-          volume: this.context.volume,
+          volume: this.ctx.volume,
           muted
         }
       })
     );
   }
 
-  getPaused() {
-    return this.context.paused;
+  _getPaused() {
+    return this.ctx.paused;
   }
 
-  getVolume() {
-    return this.context.volume;
+  _getVolume() {
+    return this.ctx.volume;
   }
 
-  setVolume(volume) {
-    this.context.volume = volume;
+  _setVolume(volume) {
+    this.ctx.volume = volume;
     this.dispatchEvent(
       new VolumeChangeEvent({
         detail: {
           volume,
-          muted: this.context.muted
+          muted: this.ctx.muted
         }
       })
     );
@@ -123,12 +123,12 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   }
 
   async play() {
-    this.context.paused = false;
+    this.ctx.paused = false;
     this.dispatchEvent(new PlayEvent());
   }
 
   async pause() {
-    this.context.paused = true;
+    this.ctx.paused = true;
     this.dispatchEvent(new PauseEvent());
   }
 
@@ -137,10 +137,10 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
 
   async requestFullscreen() {
-    this.context.fullscreen = true;
+    this.ctx.fullscreen = true;
   }
 
   async exitFullscreen() {
-    this.context.fullscreen = false;
+    this.ctx.fullscreen = false;
   }
 }

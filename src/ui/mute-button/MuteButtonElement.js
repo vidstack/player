@@ -29,7 +29,7 @@ export class MuteButtonElement extends ToggleButtonElement {
    * @protected
    * @readonly
    */
-  remoteControl = new MediaRemoteControl(this);
+  _mediaRemote = new MediaRemoteControl(this);
 
   label = 'Mute';
 
@@ -47,7 +47,7 @@ export class MuteButtonElement extends ToggleButtonElement {
    * @type {HTMLElement | undefined}
    */
   get muteSlotElement() {
-    return this.currentNotPressedSlotElement;
+    return this._currentNotPressedSlotElement;
   }
 
   /**
@@ -56,22 +56,22 @@ export class MuteButtonElement extends ToggleButtonElement {
    * @type {HTMLElement | undefined}
    */
   get unmuteSlotElement() {
-    return this.currentPressedSlotElement;
+    return this._currentPressedSlotElement;
   }
 
-  getPressedSlotName() {
+  _getPressedSlotName() {
     return 'unmute';
   }
 
-  getNotPressedSlotName() {
+  _getNotPressedSlotName() {
     return 'mute';
   }
 
-  handleButtonClick(event) {
+  _handleButtonClick(event) {
     if (this.pressed) {
-      this.remoteControl.unmute(event);
+      this._mediaRemote.unmute(event);
     } else {
-      this.remoteControl.mute(event);
+      this._mediaRemote.mute(event);
     }
   }
 }

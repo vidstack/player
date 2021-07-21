@@ -125,20 +125,20 @@ export class DisposalBin {
    * @protected
    * @type {(() => void)[]}
    */
-  disposal = this.disposal ?? [];
+  _disposal = this._disposal ?? [];
 
   /**
    * @param {() => void} [callback]
    */
   add(callback) {
-    if (callback) this.disposal.push(callback);
+    if (callback) this._disposal.push(callback);
   }
 
   /**
    */
   empty() {
-    this.disposal.forEach((fn) => fn());
-    this.disposal = [];
+    this._disposal.forEach((fn) => fn());
+    this._disposal = [];
   }
 }
 

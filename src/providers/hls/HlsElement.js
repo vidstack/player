@@ -215,7 +215,7 @@ export class HlsElement extends VideoElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.initiateHlsLibraryDownloadConnection();
+    this._initiateHlsLibraryDownloadConnection();
   }
 
   /**
@@ -226,10 +226,10 @@ export class HlsElement extends VideoElement {
     super.update(changedProperties);
 
     if (this.hasUpdated && changedProperties.has('hlsLibrary')) {
-      this.initiateHlsLibraryDownloadConnection();
-      await this.buildHlsEngine(true);
-      this.attachHlsEngine();
-      this.loadSrcOnHlsEngine();
+      this._initiateHlsLibraryDownloadConnection();
+      await this._buildHlsEngine(true);
+      this._attachHlsEngine();
+      this._loadSrcOnHlsEngine();
     }
   }
 
@@ -243,12 +243,12 @@ export class HlsElement extends VideoElement {
     // TODO(mihar-22): Add a lazy load option to wait until in viewport.
     // Wait a frame to ensure the browser has had a chance to reach first-contentful-paint.
     window.requestAnimationFrame(() => {
-      this.handleMediaSrcChange();
+      this._handleMediaSrcChange();
     });
   }
 
   disconnectedCallback() {
-    this.destroyHlsEngine();
+    this._destroyHlsEngine();
     super.disconnectedCallback();
   }
 
@@ -263,7 +263,7 @@ export class HlsElement extends VideoElement {
    *
    * @protected
    */
-  initiateHlsLibraryDownloadConnection() {
+  _initiateHlsLibraryDownloadConnection() {
     if (!isString(this.hlsLibrary) || HLS_LIB_CACHE.has(this.hlsLibrary)) {
       return;
     }
@@ -346,7 +346,7 @@ export class HlsElement extends VideoElement {
    * @protected
    * @returns {boolean}
    */
-  shouldSetVideoSrcAttr() {
+  _shouldSetVideoSrcAttr() {
     return this.shouldUseNativeHlsSupport || !this.isHlsStream;
   }
 
@@ -356,12 +356,12 @@ export class HlsElement extends VideoElement {
    * @protected
    * @returns {Promise<void>}
    */
-  async loadHlsLibrary() {
+  async _loadHlsLibrary() {
     if (!isString(this.hlsLibrary) || HLS_LIB_CACHE.has(this.hlsLibrary)) {
       return;
     }
 
-    const HlsConstructor = await this.loadHlsScript();
+    const HlsConstructor = await this._loadHlsScript();
 
     // Loading failed.
     if (isUndefined(HlsConstructor)) return;
@@ -384,7 +384,7 @@ export class HlsElement extends VideoElement {
    * @protected
    * @returns {Promise<HlsConstructor | undefined>}
    */
-  async loadHlsScript() {
+  async _loadHlsScript() {
     if (!isString(this.hlsLibrary)) return undefined;
 
     try {
@@ -413,7 +413,7 @@ export class HlsElement extends VideoElement {
    * @param {boolean} [forceRebuild=false]
    * @returns {Promise<void>}
    */
-  async buildHlsEngine(forceRebuild = false) {
+  async _buildHlsEngine(forceRebuild = false) {
     // Need to mount on `<video>`.
     if (
       isNil(this.videoEngine) &&
@@ -425,11 +425,11 @@ export class HlsElement extends VideoElement {
 
     // Destroy old engine.
     if (!isUndefined(this.hlsEngine)) {
-      this.destroyHlsEngine();
+      this._destroyHlsEngine();
     }
 
     if (isString(this.hlsLibrary)) {
-      await this.loadHlsLibrary();
+      await this._loadHlsLibrary();
     }
 
     // Either a remote source and we cached the `hls.js` constructor, or it was bundled directly.
@@ -445,18 +445,18 @@ export class HlsElement extends VideoElement {
 
     this._hlsEngine = new this.Hls(this.hlsConfig ?? {});
     this.dispatchEvent(new HlsBuildEvent({ detail: this.hlsEngine }));
-    this.listenToHlsEngine();
+    this._listenToHlsEngine();
   }
 
   /**
    * @protected
    */
-  destroyHlsEngine() {
+  _destroyHlsEngine() {
     this.hlsEngine?.destroy();
     this._prevHlsEngineSrc = '';
     this._hlsEngine = undefined;
     this._isHlsEngineAttached = false;
-    this.softResetMediaContext();
+    this._softResetMediaContext();
   }
 
   /** @type {string} */
@@ -467,14 +467,14 @@ export class HlsElement extends VideoElement {
    * @returns {boolean}
    */
   // Let `Html5MediaElement` know we're taking over ready events.
-  willAnotherEngineAttach() {
+  _willAnotherEngineAttach() {
     return this.isHlsStream && !this.shouldUseNativeHlsSupport;
   }
 
   /**
    * @protected
    */
-  attachHlsEngine() {
+  _attachHlsEngine() {
     if (
       this.isHlsEngineAttached ||
       isUndefined(this.hlsEngine) ||
@@ -491,7 +491,7 @@ export class HlsElement extends VideoElement {
   /**
    * @protected
    */
-  detachHlsEngine() {
+  _detachHlsEngine() {
     if (!this.isHlsEngineAttached) return;
     this.hlsEngine?.detachMedia();
     this._isHlsEngineAttached = false;
@@ -502,7 +502,7 @@ export class HlsElement extends VideoElement {
   /**
    * @protected
    */
-  loadSrcOnHlsEngine() {
+  _loadSrcOnHlsEngine() {
     if (
       isNil(this.hlsEngine) ||
       !this.isHlsStream ||
@@ -520,8 +520,8 @@ export class HlsElement extends VideoElement {
    * @protected
    * @returns {MediaType}
    */
-  getMediaType() {
-    if (this.context.isLiveVideo) {
+  _getMediaType() {
+    if (this.ctx.isLiveVideo) {
       return MediaType.LiveVideo;
     }
 
@@ -529,7 +529,7 @@ export class HlsElement extends VideoElement {
       return MediaType.Video;
     }
 
-    return super.getMediaType();
+    return super._getMediaType();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -539,27 +539,27 @@ export class HlsElement extends VideoElement {
   /**
    * @param {Event} event
    */
-  handleLoadedMetadata(event) {
-    super.handleLoadedMetadata(event);
+  _handleLoadedMetadata(event) {
+    super._handleLoadedMetadata(event);
     // iOS doesn't fire `canplay` event when loading HLS videos natively.
     if (this.shouldUseNativeHlsSupport && this.isHlsStream) {
-      this.handleCanPlay(event);
+      this._handleCanPlay(event);
     }
   }
 
   /**
    * @protected
    */
-  async handleMediaSrcChange() {
-    super.handleMediaSrcChange();
+  async _handleMediaSrcChange() {
+    super._handleMediaSrcChange();
 
     // We don't want to load `hls.js` until the browser has had a chance to paint.
     if (!this.hasUpdated) return;
 
-    this.context.canPlay = false;
+    this.ctx.canPlay = false;
 
     if (!this.isHlsStream) {
-      this.detachHlsEngine();
+      this._detachHlsEngine();
       return;
     }
 
@@ -569,27 +569,27 @@ export class HlsElement extends VideoElement {
     if (isNil(this.hlsLibrary)) return;
 
     if (isUndefined(this.hlsEngine)) {
-      await this.buildHlsEngine();
+      await this._buildHlsEngine();
     }
 
-    this.attachHlsEngine();
-    this.loadSrcOnHlsEngine();
+    this._attachHlsEngine();
+    this._loadSrcOnHlsEngine();
   }
 
   /**
    * @protected
    */
-  listenToHlsEngine() {
+  _listenToHlsEngine() {
     if (isUndefined(this.hlsEngine) || isUndefined(this.Hls)) return;
 
     // TODO: Bind all events.
 
     this.hlsEngine.on(
       this.Hls.Events.LEVEL_LOADED,
-      this.handleHlsLevelLoaded.bind(this)
+      this._handleHlsLevelLoaded.bind(this)
     );
 
-    this.hlsEngine.on(this.Hls.Events.ERROR, this.handleHlsError.bind(this));
+    this.hlsEngine.on(this.Hls.Events.ERROR, this._handleHlsError.bind(this));
   }
 
   /**
@@ -597,21 +597,21 @@ export class HlsElement extends VideoElement {
    * @param {string} eventType
    * @param {Hls.errorData} data
    */
-  handleHlsError(eventType, data) {
+  _handleHlsError(eventType, data) {
     if (isUndefined(this.Hls)) return;
 
-    this.context.error = data;
+    this.ctx.error = data;
 
     if (data.fatal) {
       switch (data.type) {
         case this.Hls.ErrorTypes.NETWORK_ERROR:
-          this.handleHlsNetworkError(eventType, data);
+          this._handleHlsNetworkError(eventType, data);
           break;
         case this.Hls.ErrorTypes.MEDIA_ERROR:
-          this.handleHlsMediaError(eventType, data);
+          this._handleHlsMediaError(eventType, data);
           break;
         default:
-          this.handleHlsIrrecoverableError(eventType, data);
+          this._handleHlsIrrecoverableError(eventType, data);
           break;
       }
     }
@@ -628,7 +628,7 @@ export class HlsElement extends VideoElement {
    * @param {string} eventType
    * @param {Hls.errorData} data
    */
-  handleHlsNetworkError(eventType, data) {
+  _handleHlsNetworkError(eventType, data) {
     this.hlsEngine?.startLoad();
   }
 
@@ -637,7 +637,7 @@ export class HlsElement extends VideoElement {
    * @param {string} eventType
    * @param {Hls.errorData} data
    */
-  handleHlsMediaError(eventType, data) {
+  _handleHlsMediaError(eventType, data) {
     this.hlsEngine?.recoverMediaError();
   }
 
@@ -646,8 +646,8 @@ export class HlsElement extends VideoElement {
    * @param {string} eventType
    * @param {Hls.errorData} data
    */
-  handleHlsIrrecoverableError(eventType, data) {
-    this.destroyHlsEngine();
+  _handleHlsIrrecoverableError(eventType, data) {
+    this._destroyHlsEngine();
   }
 
   /**
@@ -655,9 +655,9 @@ export class HlsElement extends VideoElement {
    * @param {string} eventType
    * @param {Hls.levelLoadedData} data
    */
-  handleHlsLevelLoaded(eventType, data) {
-    if (this.context.canPlay) return;
-    this.handleHlsMediaReady(eventType, data);
+  _handleHlsLevelLoaded(eventType, data) {
+    if (this.ctx.canPlay) return;
+    this._handleHlsMediaReady(eventType, data);
   }
 
   /**
@@ -665,26 +665,26 @@ export class HlsElement extends VideoElement {
    * @param {string} eventType
    * @param {Hls.levelLoadedData} data
    */
-  handleHlsMediaReady(eventType, data) {
+  _handleHlsMediaReady(eventType, data) {
     const { live, totalduration: duration } = data.details;
 
     const event = new VdsCustomEvent({ detail: data }, eventType);
 
     const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
-    if (this.context.mediaType !== mediaType) {
-      this.context.mediaType = mediaType;
+    if (this.ctx.mediaType !== mediaType) {
+      this.ctx.mediaType = mediaType;
       this.dispatchEvent(
         new MediaTypeChangeEvent({ detail: mediaType, originalEvent: event })
       );
     }
 
-    if (this.context.duration !== duration) {
-      this.context.duration = duration;
+    if (this.ctx.duration !== duration) {
+      this.ctx.duration = duration;
       this.dispatchEvent(
         new DurationChangeEvent({ detail: duration, originalEvent: event })
       );
     }
 
-    this.handleMediaReady(event);
+    this._handleMediaReady(event);
   }
 }

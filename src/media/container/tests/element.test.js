@@ -63,7 +63,7 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
       const root = container.rootElement;
       expect(root).to.have.attribute('aria-busy', 'true');
 
-      provider.context.canPlay = true;
+      provider.ctx.canPlay = true;
       await elementUpdated(container);
       expect(root).to.have.attribute('aria-busy', 'false');
     });
@@ -71,7 +71,7 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
     it('should apply aspect ratio given it is valid', async function () {
       const { container, provider } = await buildMediaFixture();
 
-      provider.context.viewType = ViewType.Video;
+      provider.ctx.viewType = ViewType.Video;
 
       container.aspectRatio = '16:9';
       await elementUpdated(container);
@@ -84,7 +84,7 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
     it('should not apply aspect ratio given it is invalid', async function () {
       const { container, provider } = await buildMediaFixture();
 
-      provider.context.viewType = ViewType.Video;
+      provider.ctx.viewType = ViewType.Video;
 
       container.aspectRatio = '16-9';
       await elementUpdated(container);
@@ -97,7 +97,7 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
     it('should not apply aspect ratio given view type is not video', async function () {
       const { container, provider } = await buildMediaFixture();
 
-      provider.context.viewType = ViewType.Audio;
+      provider.ctx.viewType = ViewType.Audio;
 
       container.aspectRatio = '16:9';
       await elementUpdated(container);
@@ -110,8 +110,8 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
     it('should not apply aspect ratio given media is fullscreen', async function () {
       const { container, provider } = await buildMediaFixture();
 
-      provider.context.viewType = ViewType.Video;
-      provider.context.fullscreen = true;
+      provider.ctx.viewType = ViewType.Video;
+      provider.ctx.fullscreen = true;
 
       container.aspectRatio = '16:9';
       await elementUpdated(container);

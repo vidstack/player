@@ -96,10 +96,10 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
 
   it('should receive transformed paused context updates', async function () {
     const { provider, button } = await buildFixture();
-    provider.context.paused = false;
+    provider.ctx.paused = false;
     await elementUpdated(button);
     expect(button.pressed).to.be.true;
-    provider.context.paused = true;
+    provider.ctx.paused = true;
     await elementUpdated(button);
     expect(button.pressed).to.be.false;
   });

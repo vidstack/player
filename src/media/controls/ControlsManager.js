@@ -27,7 +27,7 @@ export class ControlsManager extends ElementManager {
    * @protected
    * @type {import('../../foundation/elements').ScopedDiscoveryEvent<any>}
    */
-  static get ScopedDiscoveryEvent() {
+  static get _ScopedDiscoveryEvent() {
     return ManagedControlsConnectEvent;
   }
 
@@ -37,7 +37,7 @@ export class ControlsManager extends ElementManager {
    * @type {boolean}
    */
   get isHidden() {
-    return this.hidden.value;
+    return this._hidden.value;
   }
 
   /**
@@ -51,18 +51,18 @@ export class ControlsManager extends ElementManager {
      * @readonly
      * @type {import('../../foundation/context').ContextProvider<boolean>}
      */
-    this.hidden = controlsContext.hidden.provide(host);
+    this._hidden = controlsContext.hidden.provide(host);
 
     /**
      * @protected
      * @readonly
      * @type {EventListenerController}
      */
-    this.eventListenerController = new EventListenerController(
-      this.host,
+    this._eventListenerController = new EventListenerController(
+      this._host,
       {
-        [HideControlsRequestEvent.TYPE]: this.handleHideControlsRequest,
-        [ShowControlsRequestEvent.TYPE]: this.handleShowControlsRequest
+        [HideControlsRequestEvent.TYPE]: this._handleHideControlsRequest,
+        [ShowControlsRequestEvent.TYPE]: this._handleShowControlsRequest
       },
       { receiver: this }
     );
@@ -74,10 +74,10 @@ export class ControlsManager extends ElementManager {
    * @param {Event} [request]
    */
   async show(request) {
-    if (!this.hidden.value) return;
-    this.hidden.value = false;
+    if (!this._hidden.value) return;
+    this._hidden.value = false;
     await this.waitForUpdateComplete();
-    this.handleControlsChange(request);
+    this._handleControlsChange(request);
   }
 
   /**
@@ -86,10 +86,10 @@ export class ControlsManager extends ElementManager {
    * @param {Event} [request]
    */
   async hide(request) {
-    if (this.hidden.value) return;
-    this.hidden.value = true;
+    if (this._hidden.value) return;
+    this._hidden.value = true;
     await this.waitForUpdateComplete();
-    this.handleControlsChange(request);
+    this._handleControlsChange(request);
   }
 
   /**
@@ -97,7 +97,7 @@ export class ControlsManager extends ElementManager {
    */
   async waitForUpdateComplete() {
     await Promise.all(
-      Array.from(this.managedElements).map(
+      Array.from(this._managedElements).map(
         (controls) => controls.updateComplete
       )
     );
@@ -107,23 +107,23 @@ export class ControlsManager extends ElementManager {
    * @private
    * @type {boolean}
    */
-  prevHiddenValue = controlsContext.hidden.initialValue;
+  _prevHiddenValue = controlsContext.hidden.initialValue;
 
   /**
    * @protected
    * @param {Event} [request]
    */
-  handleControlsChange(request) {
-    if (this.hidden.value === this.prevHiddenValue) return;
+  _handleControlsChange(request) {
+    if (this._hidden.value === this._prevHiddenValue) return;
 
-    this.host.dispatchEvent(
+    this._host.dispatchEvent(
       new ControlsChangeEvent({
         detail: !this.isHidden,
         originalEvent: request
       })
     );
 
-    this.prevHiddenValue = this.hidden.value;
+    this._prevHiddenValue = this._hidden.value;
   }
 
   /**
@@ -131,7 +131,7 @@ export class ControlsManager extends ElementManager {
    * @param {ShowControlsRequestEvent} request
    * @returns {Promise<void>}
    */
-  async handleShowControlsRequest(request) {
+  async _handleShowControlsRequest(request) {
     request.stopPropagation();
     await this.show(request);
   }
@@ -141,7 +141,7 @@ export class ControlsManager extends ElementManager {
    * @param {HideControlsRequestEvent} request
    * @returns {Promise<void>}
    */
-  async handleHideControlsRequest(request) {
+  async _handleHideControlsRequest(request) {
     request.stopPropagation();
     await this.hide(request);
   }

@@ -51,7 +51,7 @@ export class BufferingIndicatorElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.canPlay)
-  mediaCanPlay = false;
+  _mediaCanPlay = false;
 
   /**
    * @protected
@@ -59,7 +59,7 @@ export class BufferingIndicatorElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.waiting)
-  mediaWaiting = false;
+  _mediaWaiting = false;
 
   /**
    * @protected
@@ -68,12 +68,12 @@ export class BufferingIndicatorElement extends LitElement {
   update(changedProperties) {
     super.update(changedProperties);
 
-    if (changedProperties.has('mediaCanPlay')) {
-      setAttribute(this, 'media-can-play', this.mediaCanPlay);
+    if (changedProperties.has('_mediaCanPlay')) {
+      setAttribute(this, 'media-can-play', this._mediaCanPlay);
     }
 
-    if (changedProperties.has('mediaWaiting')) {
-      setAttribute(this, 'media-waiting', this.mediaWaiting);
+    if (changedProperties.has('_mediaWaiting')) {
+      setAttribute(this, 'media-waiting', this._mediaWaiting);
     }
   }
 

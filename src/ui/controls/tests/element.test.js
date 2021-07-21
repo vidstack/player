@@ -45,7 +45,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     provider.forceMediaReady();
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-can-play');
-    provider.context.canPlay = false;
+    provider.ctx.canPlay = false;
     await elementUpdated(controls);
     expect(controls).to.not.have.attribute('media-can-play');
   });
@@ -85,13 +85,13 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
 
   it('should toggle `media-view-type` attribute', async function () {
     const { provider, controls } = await buildFixture();
-    provider.context.viewType = ViewType.Audio;
+    provider.ctx.viewType = ViewType.Audio;
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-view-type', ViewType.Audio);
-    provider.context.viewType = ViewType.Video;
+    provider.ctx.viewType = ViewType.Video;
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-view-type', ViewType.Video);
-    provider.context.viewType = ViewType.Unknown;
+    provider.ctx.viewType = ViewType.Unknown;
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-view-type', ViewType.Unknown);
   });

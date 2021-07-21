@@ -103,7 +103,7 @@ export class MediaContainerElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.canPlay)
-  mediaCanPlay = false;
+  _mediaCanPlay = false;
 
   /**
    * @protected
@@ -111,7 +111,7 @@ export class MediaContainerElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.fullscreen)
-  mediaFullscreen = false;
+  _mediaFullscreen = false;
 
   /**
    * @protected
@@ -119,7 +119,7 @@ export class MediaContainerElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.isVideoView)
-  mediaIsVideoView = false;
+  _mediaIsVideoView = false;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
@@ -129,7 +129,7 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @readonly
    */
-  discoveryController = new ElementDiscoveryController(
+  _discoveryController = new ElementDiscoveryController(
     this,
     MediaContainerConnectEvent
   );
@@ -138,9 +138,9 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @readonly
    */
-  eventListenerController = new EventListenerController(this, {
-    [FullscreenChangeEvent.TYPE]: this.handleFullscreenChange,
-    [MediaProviderConnectEvent.TYPE]: this.handleMediaProviderConnect
+  _eventListenerController = new EventListenerController(this, {
+    [FullscreenChangeEvent.TYPE]: this._handleFullscreenChange,
+    [MediaProviderConnectEvent.TYPE]: this._handleMediaProviderConnect
   });
 
   // -------------------------------------------------------------------------------------------
@@ -152,7 +152,7 @@ export class MediaContainerElement extends LitElement {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  rootRef = createRef();
+  _rootRef = createRef();
 
   /**
    * The component's root element.
@@ -160,20 +160,20 @@ export class MediaContainerElement extends LitElement {
    * @type {HTMLDivElement}
    */
   get rootElement() {
-    return /** @type {HTMLDivElement} */ (this.rootRef.value);
+    return /** @type {HTMLDivElement} */ (this._rootRef.value);
   }
 
   render() {
     return html`
       <div
         id="root"
-        aria-busy=${this.getAriaBusy()}
-        class=${this.getRootClassAttr()}
-        part=${this.getRootPartAttr()}
-        style=${styleMap(this.getRootStyleMap())}
-        ${ref(this.rootRef)}
+        aria-busy=${this._getAriaBusy()}
+        class=${this._getRootClassAttr()}
+        part=${this._getRootPartAttr()}
+        style=${styleMap(this._getRootStyleMap())}
+        ${ref(this._rootRef)}
       >
-        ${this.renderRootChildren()}
+        ${this._renderRootChildren()}
       </div>
     `;
   }
@@ -184,8 +184,8 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderRootChildren() {
-    return html`${this.renderMedia()}${this.renderDefaultSlot()}`;
+  _renderRootChildren() {
+    return html`${this._renderMedia()}${this._renderDefaultSlot()}`;
   }
 
   /**
@@ -194,7 +194,7 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderDefaultSlot() {
+  _renderDefaultSlot() {
     return html`<slot></slot>`;
   }
 
@@ -204,9 +204,9 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getRootClassAttr() {
+  _getRootClassAttr() {
     return clsx({
-      'with-aspect-ratio': this.shouldApplyAspectRatio()
+      'with-aspect-ratio': this._shouldApplyAspectRatio()
     });
   }
 
@@ -216,7 +216,7 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getRootPartAttr() {
+  _getRootPartAttr() {
     return 'root';
   }
 
@@ -226,9 +226,9 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {import('lit/directives/style-map').StyleInfo}
    */
-  getRootStyleMap() {
+  _getRootStyleMap() {
     return {
-      'padding-bottom': this.getAspectRatioPadding()
+      'padding-bottom': this._getAspectRatioPadding()
     };
   }
 
@@ -236,8 +236,8 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {'true' | 'false'}
    */
-  getAriaBusy() {
-    return this.mediaCanPlay ? 'false' : 'true';
+  _getAriaBusy() {
+    return this._mediaCanPlay ? 'false' : 'true';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -248,10 +248,10 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {boolean}
    */
-  shouldApplyAspectRatio() {
+  _shouldApplyAspectRatio() {
     return (
-      this.mediaIsVideoView &&
-      !this.mediaFullscreen &&
+      this._mediaIsVideoView &&
+      !this._mediaFullscreen &&
       isString(this.aspectRatio) &&
       /\d{1,2}:\d{1,2}/.test(this.aspectRatio)
     );
@@ -261,8 +261,8 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {number}
    */
-  calcAspectRatio() {
-    if (!this.shouldApplyAspectRatio()) return NaN;
+  _calcAspectRatio() {
+    if (!this._shouldApplyAspectRatio()) return NaN;
     const [width, height] = (this.aspectRatio ?? '16:9').split(':');
     return (100 / Number(width)) * Number(height);
   }
@@ -272,10 +272,10 @@ export class MediaContainerElement extends LitElement {
    * @param {string} maxPadding
    * @returns {string | undefined}
    */
-  getAspectRatioPadding(maxPadding = '100vh') {
-    const ratio = this.calcAspectRatio();
+  _getAspectRatioPadding(maxPadding = '100vh') {
+    const ratio = this._calcAspectRatio();
     if (isNaN(ratio)) return undefined;
-    return `min(${maxPadding}, ${this.calcAspectRatio()}%)`;
+    return `min(${maxPadding}, ${this._calcAspectRatio()}%)`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -297,7 +297,7 @@ export class MediaContainerElement extends LitElement {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  mediaContainerRef = createRef();
+  _mediaContainerRef = createRef();
 
   /**
    * The media container element.
@@ -305,21 +305,21 @@ export class MediaContainerElement extends LitElement {
    * @type {HTMLDivElement}
    */
   get mediaContainerElement() {
-    return /** @type {HTMLDivElement} */ (this.mediaContainerRef.value);
+    return /** @type {HTMLDivElement} */ (this._mediaContainerRef.value);
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderMedia() {
+  _renderMedia() {
     return html`
       <div
         id="media-container"
-        part="${this.getMediaPartAttr()}"
-        ${ref(this.mediaContainerRef)}
+        part="${this._getMediaPartAttr()}"
+        ${ref(this._mediaContainerRef)}
       >
-        ${this.renderMediaSlot()}
+        ${this._renderMediaSlot()}
       </div>
     `;
   }
@@ -328,7 +328,7 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getMediaPartAttr() {
+  _getMediaPartAttr() {
     return 'media';
   }
 
@@ -336,10 +336,10 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderMediaSlot() {
+  _renderMediaSlot() {
     return html` <slot
-      name="${this.getMediaSlotName()}"
-      @slotchange="${this.handleMediaSlotChange}"
+      name="${this._getMediaSlotName()}"
+      @slotchange="${this._handleMediaSlotChange}"
     ></slot>`;
   }
 
@@ -347,7 +347,7 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getMediaSlotName() {
+  _getMediaSlotName() {
     return 'media';
   }
 
@@ -355,16 +355,16 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @type {boolean}
    */
-  hasMediaProviderConnectedViaEvent = false;
+  _hasMediaProviderConnectedViaEvent = false;
 
   /**
    * @protected
    */
-  handleMediaSlotChange() {
-    if (this.hasMediaProviderConnectedViaEvent) return;
+  _handleMediaSlotChange() {
+    if (this._hasMediaProviderConnectedViaEvent) return;
 
     const mediaProvider = /** @type {MediaProviderElement} */ (
-      getSlottedChildren(this, this.getMediaSlotName())[0]
+      getSlottedChildren(this, this._getMediaSlotName())[0]
     );
 
     // Not a bulletproof check, but it's a good enough safety-check to warn devs if they pass the
@@ -380,15 +380,15 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @param {MediaProviderConnectEvent} event
    */
-  handleMediaProviderConnect(event) {
+  _handleMediaProviderConnect(event) {
     const { element, onDisconnect } = event.detail;
 
     this._mediaProvider = element;
-    this.hasMediaProviderConnectedViaEvent = true;
+    this._hasMediaProviderConnectedViaEvent = true;
 
     onDisconnect(() => {
       this._mediaProvider = undefined;
-      this.hasMediaProviderConnectedViaEvent = false;
+      this._hasMediaProviderConnectedViaEvent = false;
     });
   }
 
@@ -408,7 +408,7 @@ export class MediaContainerElement extends LitElement {
    * @returns {Promise<void>}
    */
   async requestFullscreen() {
-    if (this.shouldFullscreenMediaProvider()) {
+    if (this._shouldFullscreenMediaProvider()) {
       return this.mediaProvider?.requestFullscreen();
     }
 
@@ -423,7 +423,7 @@ export class MediaContainerElement extends LitElement {
    * @returns {Promise<void>}
    */
   async exitFullscreen() {
-    if (this.shouldFullscreenMediaProvider()) {
+    if (this._shouldFullscreenMediaProvider()) {
       return this.mediaProvider?.exitFullscreen();
     }
 
@@ -438,7 +438,7 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @returns {boolean}
    */
-  shouldFullscreenMediaProvider() {
+  _shouldFullscreenMediaProvider() {
     return (
       !this.fullscreenController.isSupportedNatively &&
       !isNil(this.mediaProvider)
@@ -449,9 +449,9 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @param {FullscreenChangeEvent} event
    */
-  handleFullscreenChange(event) {
+  _handleFullscreenChange(event) {
     if (!isNil(this.mediaProvider)) {
-      this.mediaProvider.context.fullscreen = event.detail;
+      this.mediaProvider.ctx.fullscreen = event.detail;
     }
   }
 }

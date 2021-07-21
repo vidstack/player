@@ -85,8 +85,8 @@ export class TimeSliderElement extends SliderElement {
   @property({ type: Number })
   // @ts-ignore - Defined as accessor here but property in parent class.
   get step() {
-    return this.mediaDuration > 0
-      ? round((this._step / this.mediaDuration) * 100, 2)
+    return this._mediaDuration > 0
+      ? round((this._step / this._mediaDuration) * 100, 2)
       : this._step;
   }
 
@@ -110,8 +110,8 @@ export class TimeSliderElement extends SliderElement {
   @property({ attribute: 'keyboard-step', type: Number })
   // @ts-ignore - Defined as accessor here but property in parent class.
   get keyboardStep() {
-    return this.mediaDuration > 0
-      ? round((this._keyboardStep / this.mediaDuration) * 100, 2)
+    return this._mediaDuration > 0
+      ? round((this._keyboardStep / this._mediaDuration) * 100, 2)
       : this._keyboardStep;
   }
 
@@ -152,7 +152,7 @@ export class TimeSliderElement extends SliderElement {
    */
   @state()
   @consumeContext(mediaContext.currentTime)
-  mediaCurrentTime = 0;
+  _mediaCurrentTime = 0;
 
   /**
    * @protected
@@ -160,7 +160,7 @@ export class TimeSliderElement extends SliderElement {
    */
   @state()
   @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
-  mediaDuration = 0;
+  _mediaDuration = 0;
 
   /**
    * @protected
@@ -168,7 +168,7 @@ export class TimeSliderElement extends SliderElement {
    */
   @state()
   @consumeContext(mediaContext.paused)
-  mediaPaused = mediaContext.paused.initialValue;
+  _mediaPaused = mediaContext.paused.initialValue;
 
   /**
    * The current media time.
@@ -176,7 +176,7 @@ export class TimeSliderElement extends SliderElement {
    * @type {number}
    */
   get currentTime() {
-    return this.mediaDuration * (this.value / 100);
+    return this._mediaDuration * (this.value / 100);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -189,25 +189,25 @@ export class TimeSliderElement extends SliderElement {
    */
   update(changedProperties) {
     if (
-      changedProperties.has('mediaCurrentTime') ||
-      changedProperties.has('mediaDuration')
+      changedProperties.has('_mediaCurrentTime') ||
+      changedProperties.has('_mediaDuration')
     ) {
-      this.updateValueToCurrentTime();
+      this._updateValueToCurrentTime();
     }
 
     if (changedProperties.has('seekingRequestThrottle')) {
-      this.dispatchSeekingRequest.updateDelay(this.seekingRequestThrottle);
+      this._dispatchSeekingRequest.updateDelay(this.seekingRequestThrottle);
     }
 
     if (changedProperties.has('disabled') && this.disabled) {
-      this.dispatchSeekingRequest.cancel();
+      this._dispatchSeekingRequest.cancel();
     }
 
     super.update(changedProperties);
   }
 
   disconnectedCallback() {
-    this.dispatchSeekingRequest.cancel();
+    this._dispatchSeekingRequest.cancel();
     super.disconnectedCallback();
   }
 
@@ -219,8 +219,8 @@ export class TimeSliderElement extends SliderElement {
    * @protected
    * @returns {string}
    */
-  getValueNow() {
-    const valueNow = this.mediaDuration * (this.value / 100);
+  _getValueNow() {
+    const valueNow = this._mediaDuration * (this.value / 100);
     return String(Math.round(valueNow));
   }
 
@@ -228,30 +228,30 @@ export class TimeSliderElement extends SliderElement {
    * @protected
    * @returns {string}
    */
-  getValueMax() {
-    return String(Math.round(this.mediaDuration));
+  _getValueMax() {
+    return String(Math.round(this._mediaDuration));
   }
 
   /**
    * @protected
    * @returns {string}
    */
-  getValueText() {
-    const currentTime = this.mediaDuration * (this.value / 100);
+  _getValueText() {
+    const currentTime = this._mediaDuration * (this.value / 100);
 
     return this.valueText
       .replace('{currentTime}', formatSpokenTime(currentTime))
-      .replace('{duration}', formatSpokenTime(this.mediaDuration));
+      .replace('{duration}', formatSpokenTime(this._mediaDuration));
   }
 
   /**
    * @protected
    * @readonly
    */
-  sliderEventListenerController = new EventListenerController(this, {
+  _sliderEventListenerController = new EventListenerController(this, {
     [SliderDragStartEvent.TYPE]: this.handleSliderDragStart,
-    [SliderValueChangeEvent.TYPE]: this.handleSliderValueChange,
-    [SliderDragEndEvent.TYPE]: this.handleSliderDragEnd
+    [SliderValueChangeEvent.TYPE]: this._handleSliderValueChange,
+    [SliderDragEndEvent.TYPE]: this._handleSliderDragEnd
   });
 
   /**
@@ -260,30 +260,30 @@ export class TimeSliderElement extends SliderElement {
    * @returns {Promise<void>}
    */
   async handleSliderDragStart(event) {
-    this.togglePlaybackWhileDragging(event);
+    this._togglePlaybackWhileDragging(event);
   }
 
   /**
    * @protected
    * @readonly
    */
-  remoteControl = new MediaRemoteControl(this);
+  _mediaRemote = new MediaRemoteControl(this);
 
   /**
    * @protected
    * @param {SliderValueChangeEvent} event
    * @returns {Promise<void>}
    */
-  async handleSliderValueChange(event) {
+  async _handleSliderValueChange(event) {
     this.value = event.detail;
 
     if (this.isDragging) {
-      this.dispatchSeekingRequest(event);
+      this._dispatchSeekingRequest(event);
     }
 
     if (!isPointerEvent(event.originalEvent)) {
-      this.dispatchSeekingRequest.cancel();
-      this.remoteControl.seek(this.currentTime, event);
+      this._dispatchSeekingRequest.cancel();
+      this._mediaRemote.seek(this.currentTime, event);
     }
   }
 
@@ -292,10 +292,10 @@ export class TimeSliderElement extends SliderElement {
    * @param {SliderDragEndEvent} event
    * @returns {Promise<void>}
    */
-  async handleSliderDragEnd(event) {
-    this.dispatchSeekingRequest.cancel();
-    this.remoteControl.seek(this.currentTime, event);
-    this.togglePlaybackWhileDragging(event);
+  async _handleSliderDragEnd(event) {
+    this._dispatchSeekingRequest.cancel();
+    this._mediaRemote.seek(this.currentTime, event);
+    this._togglePlaybackWhileDragging(event);
   }
 
   /**
@@ -303,19 +303,19 @@ export class TimeSliderElement extends SliderElement {
    * @readonly
    * @type {import('../../utils/timing').ThrottledFunction<(event: Event) => void>}
    */
-  dispatchSeekingRequest = throttle((event) => {
-    this.remoteControl.seeking(this.currentTime, event);
+  _dispatchSeekingRequest = throttle((event) => {
+    this._mediaRemote.seeking(this.currentTime, event);
   }, this.seekingRequestThrottle);
 
   /**
    * @protected
    */
-  updateValueToCurrentTime() {
+  _updateValueToCurrentTime() {
     if (this.isDragging) return;
 
     const percentage =
-      this.mediaDuration > 0
-        ? (this.mediaCurrentTime / this.mediaDuration) * 100
+      this._mediaDuration > 0
+        ? (this._mediaCurrentTime / this._mediaDuration) * 100
         : 0;
 
     this.value = clampNumber(0, round(percentage, 5), 100);
@@ -325,25 +325,25 @@ export class TimeSliderElement extends SliderElement {
    * @protected
    * @type {boolean}
    */
-  wasPlayingBeforeDragStart = false;
+  _wasPlayingBeforeDragStart = false;
 
   /**
    * @protected
    * @param {Event} event
    */
-  togglePlaybackWhileDragging(event) {
+  _togglePlaybackWhileDragging(event) {
     if (!this.pauseWhileDragging) return;
 
-    if (this.isDragging && !this.mediaPaused) {
-      this.wasPlayingBeforeDragStart = true;
-      this.remoteControl.pause(event);
+    if (this.isDragging && !this._mediaPaused) {
+      this._wasPlayingBeforeDragStart = true;
+      this._mediaRemote.pause(event);
     } else if (
-      this.wasPlayingBeforeDragStart &&
+      this._wasPlayingBeforeDragStart &&
       !this.isDragging &&
-      this.mediaPaused
+      this._mediaPaused
     ) {
-      this.wasPlayingBeforeDragStart = false;
-      this.remoteControl.play(event);
+      this._wasPlayingBeforeDragStart = false;
+      this._mediaRemote.play(event);
     }
   }
 }

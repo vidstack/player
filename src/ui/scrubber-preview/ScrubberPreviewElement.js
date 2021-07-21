@@ -144,7 +144,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @readonly
    */
-  context = provideContextRecord(this, scrubberPreviewContext);
+  ctx = provideContextRecord(this, scrubberPreviewContext);
 
   /**
    * Whether the preview is hidden.
@@ -184,7 +184,7 @@ export class ScrubberPreviewElement extends LitElement {
    */
   @state()
   @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
-  mediaDuration = 0;
+  _mediaDuration = 0;
 
   /**
    * @protected
@@ -192,7 +192,7 @@ export class ScrubberPreviewElement extends LitElement {
    */
   @state()
   @consumeContext(scrubberContext.dragging)
-  isDragging = scrubberContext.dragging.initialValue;
+  _isDragging = scrubberContext.dragging.initialValue;
 
   /**
    * @protected
@@ -200,7 +200,7 @@ export class ScrubberPreviewElement extends LitElement {
    */
   @state()
   @consumeContext(scrubberContext.interacting)
-  isInteracting = scrubberContext.interacting.initialValue;
+  _isInteracting = scrubberContext.interacting.initialValue;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
@@ -210,7 +210,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @readonly
    */
-  discoveryController = new ElementDiscoveryController(
+  _discoveryController = new ElementDiscoveryController(
     this,
     ScrubberPreviewConnectEvent
   );
@@ -220,10 +220,10 @@ export class ScrubberPreviewElement extends LitElement {
    * @param {import('lit').PropertyValues} changedProperties
    */
   update(changedProperties) {
-    if (changedProperties.has('mediaDuration')) {
+    if (changedProperties.has('_mediaDuration')) {
       this.style.setProperty(
         '--vds-media-duration',
-        String(this.mediaDuration)
+        String(this._mediaDuration)
       );
     }
 
@@ -239,7 +239,7 @@ export class ScrubberPreviewElement extends LitElement {
   }
 
   render() {
-    return html`${this.renderTrack()}`;
+    return html`${this._renderTrack()}`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -251,7 +251,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  trackRef = createRef();
+  _trackRef = createRef();
 
   /**
    * Returns the underlying track element (`<div>`).
@@ -259,22 +259,22 @@ export class ScrubberPreviewElement extends LitElement {
    * @type {HTMLDivElement}
    */
   get trackElement() {
-    return /** @type {HTMLDivElement} */ (this.trackRef.value);
+    return /** @type {HTMLDivElement} */ (this._trackRef.value);
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTrack() {
+  _renderTrack() {
     return html`
       <div
         id="track"
-        part=${this.getTrackPartAttr()}
+        part=${this._getTrackPartAttr()}
         ?hidden=${this.hidden || this.disabled}
-        ${ref(this.trackRef)}
+        ${ref(this._trackRef)}
       >
-        ${this.renderPreviewSlot()}${this.renderTrackFill()}${this.renderTrackSlot()}
+        ${this._renderPreviewSlot()}${this._renderTrackFill()}${this._renderTrackSlot()}
       </div>
     `;
   }
@@ -283,7 +283,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getTrackPartAttr() {
+  _getTrackPartAttr() {
     return 'track';
   }
 
@@ -291,15 +291,15 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTrackSlot() {
-    return html`<slot name=${this.getTrackSlotName()}></slot>`;
+  _renderTrackSlot() {
+    return html`<slot name=${this._getTrackSlotName()}></slot>`;
   }
 
   /**
    * @protected
    * @returns {string}
    */
-  getTrackSlotName() {
+  _getTrackSlotName() {
     return 'track';
   }
 
@@ -312,7 +312,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  trackFillRef = createRef();
+  _trackFillRef = createRef();
 
   /**
    * Returns the underlying track fill element (`<div>`). This will be `undefined` if the
@@ -321,24 +321,24 @@ export class ScrubberPreviewElement extends LitElement {
    * @type {HTMLDivElement | undefined}
    */
   get trackFillElement() {
-    return this.trackFillRef.value;
+    return this._trackFillRef.value;
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTrackFill() {
+  _renderTrackFill() {
     if (this.noTrackFill) return html``;
 
     return html`
       <div
         id="track-fill"
-        part=${this.getTrackFillPartAttr()}
-        ?hidden=${!this.isInteracting}
-        ${ref(this.trackFillRef)}
+        part=${this._getTrackFillPartAttr()}
+        ?hidden=${!this._isInteracting}
+        ${ref(this._trackFillRef)}
       >
-        ${this.renderTrackFillSlot()}
+        ${this._renderTrackFillSlot()}
       </div>
     `;
   }
@@ -347,7 +347,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getTrackFillPartAttr() {
+  _getTrackFillPartAttr() {
     return 'track-fill';
   }
 
@@ -355,15 +355,15 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTrackFillSlot() {
-    return html`<slot name=${this.getTrackFillSlotName()}></slot>`;
+  _renderTrackFillSlot() {
+    return html`<slot name=${this._getTrackFillSlotName()}></slot>`;
   }
 
   /**
    * @protected
    * @returns {string}
    */
-  getTrackFillSlotName() {
+  _getTrackFillSlotName() {
     return 'track-fill';
   }
 
@@ -399,11 +399,11 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderPreviewSlot() {
+  _renderPreviewSlot() {
     return html`
       <slot
-        name="${ifNonEmpty(this.getPreviewSlotName())}"
-        @slotchange="${this.handlePreviewSlotChange}"
+        name="${ifNonEmpty(this._getPreviewSlotName())}"
+        @slotchange="${this._handlePreviewSlotChange}"
       ></slot>
     `;
   }
@@ -412,16 +412,16 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @returns {string | undefined}
    */
-  getPreviewSlotName() {
+  _getPreviewSlotName() {
     return undefined;
   }
 
   /**
    * @protected
    */
-  handlePreviewSlotChange() {
+  _handlePreviewSlotChange() {
     this._previewSlotElement = /** @type {HTMLElement} */ (
-      getSlottedChildren(this, this.getPreviewSlotName())[0]
+      getSlottedChildren(this, this._getPreviewSlotName())[0]
     );
 
     if (!isNil(this.previewSlotElement)) {
@@ -440,7 +440,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @type {number | undefined}
    */
-  showPreviewTimeout;
+  _showPreviewTimeout;
 
   /**
    * Show the slotted preview element.
@@ -448,20 +448,20 @@ export class ScrubberPreviewElement extends LitElement {
    * @param {Event | undefined} [event] - Original event that triggered this action (if any).
    */
   showPreview(event) {
-    window.clearTimeout(this.showPreviewTimeout);
+    window.clearTimeout(this._showPreviewTimeout);
 
     if (
       isNil(this.previewSlotElement) ||
       this.disabled ||
-      !this.isInteracting ||
-      (this.isInteracting && !this.isPreviewHidden)
+      !this._isInteracting ||
+      (this._isInteracting && !this.isPreviewHidden)
     ) {
       return;
     }
 
-    this.showPreviewTimeout = window.setTimeout(
+    this._showPreviewTimeout = window.setTimeout(
       async () => {
-        this.context.showing = true;
+        this.ctx.showing = true;
         this.previewSlotElement?.removeAttribute('hidden');
 
         await raf();
@@ -477,7 +477,7 @@ export class ScrubberPreviewElement extends LitElement {
           new ScrubberPreviewShowEvent({ originalEvent: event })
         );
       },
-      this.isDragging ? 150 : 0
+      this._isDragging ? 150 : 0
     );
 
     this.requestUpdate();
@@ -490,7 +490,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @returns {Promise<void>}
    */
   async hidePreview(event) {
-    window.clearTimeout(this.showPreviewTimeout);
+    window.clearTimeout(this._showPreviewTimeout);
 
     if (this.isPreviewHidden) {
       return;
@@ -501,9 +501,9 @@ export class ScrubberPreviewElement extends LitElement {
       await this.updateComplete;
     }
 
-    this.dispatchPreviewTimeUpdate.cancel();
+    this._dispatchPreviewTimeUpdate.cancel();
 
-    this.context.showing = false;
+    this.ctx.showing = false;
     this.removeAttribute('previewing');
     this.previewSlotElement?.setAttribute('hidden', '');
     this.dispatchEvent(new ScrubberPreviewHideEvent({ originalEvent: event }));
@@ -514,12 +514,12 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @type {import('../../utils/timing').RafThrottledFunction<(originalEvent: Event) => void>}
    */
-  dispatchPreviewTimeUpdate = rafThrottle((originalEvent) => {
-    if (!this.isInteracting) return;
+  _dispatchPreviewTimeUpdate = rafThrottle((originalEvent) => {
+    if (!this._isInteracting) return;
 
     this.dispatchEvent(
       new ScrubberPreviewTimeUpdateEvent({
-        detail: this.context.time,
+        detail: this.ctx.time,
         originalEvent
       })
     );
@@ -530,13 +530,13 @@ export class ScrubberPreviewElement extends LitElement {
    * @param {number} time
    * @param {Event} event
    */
-  updatePreviewTime(time, event) {
-    this.context.time = clampNumber(0, round(time, 5), this.mediaDuration);
+  _updatePreviewTime(time, event) {
+    this.ctx.time = clampNumber(0, round(time, 5), this._mediaDuration);
     this.style.setProperty(
       '--vds-scrubber-preview-time',
-      String(this.context.time)
+      String(this.ctx.time)
     );
-    this.dispatchPreviewTimeUpdate(event);
+    this._dispatchPreviewTimeUpdate(event);
   }
 
   /**
@@ -544,7 +544,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @param {number} thumbPosition - `pointerEvent.clientX`
    * @returns {number}
    */
-  calcPercentageOfTrackAtThumbPosition(thumbPosition) {
+  _calcPercentageOfTrackAtThumbPosition(thumbPosition) {
     if (isNil(this.trackElement)) return 0;
     const trackRect = this.trackElement.getBoundingClientRect();
     const percentage =
@@ -557,7 +557,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @param {number} percentage - the percentage of the track to position the preview at.
    * @returns {number}
    */
-  calcPreviewXPosition(percentage) {
+  _calcPreviewXPosition(percentage) {
     if (isNil(this.previewSlotElement) || isNil(this.trackElement)) return 0;
 
     const { width: trackWidth } = this.trackElement.getBoundingClientRect();
@@ -574,7 +574,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @type {number}
    */
-  previewPositionRafId = 0;
+  _previewPositionRafId = 0;
 
   /**
    * Updates the slotted preview element position given a `PointerEvent`, or `VdsCustomEvent` with
@@ -584,23 +584,23 @@ export class ScrubberPreviewElement extends LitElement {
    * @returns {Promise<void>}
    */
   async updatePreviewPosition(event) {
-    window.cancelAnimationFrame(this.previewPositionRafId);
+    window.cancelAnimationFrame(this._previewPositionRafId);
 
-    this.previewPositionRafId = await raf(() => {
+    this._previewPositionRafId = await raf(() => {
       const pointerEvent = isVdsEvent(event) ? event.originalEvent : event;
 
       if (!isPointerEvent(pointerEvent)) return;
 
-      const percent = this.calcPercentageOfTrackAtThumbPosition(
+      const percent = this._calcPercentageOfTrackAtThumbPosition(
         pointerEvent.clientX
       );
 
-      const time = (percent / 100) * this.mediaDuration;
+      const time = (percent / 100) * this._mediaDuration;
 
-      this.updatePreviewTime(time, event);
+      this._updatePreviewTime(time, event);
 
       if (!isNil(this.previewSlotElement)) {
-        const xPos = this.calcPreviewXPosition(percent);
+        const xPos = this._calcPreviewXPosition(percent);
         this.previewSlotElement.style.transform = `translateX(${xPos}px)`;
       }
     });

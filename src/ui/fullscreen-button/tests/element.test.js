@@ -74,7 +74,7 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
 
   it('should set exit slot to hidden when not in fullscreen', async function () {
     const { provider, button } = await buildFixture();
-    provider.context.fullscreen = false;
+    provider.ctx.fullscreen = false;
     await elementUpdated(button);
     expect(button.enterSlotElement).to.not.have.attribute('hidden');
     expect(button.exitSlotElement).to.have.attribute('hidden', '');
@@ -82,7 +82,7 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
 
   it('should set enter slot to hidden when in fullscreen', async function () {
     const { provider, button } = await buildFixture();
-    provider.context.fullscreen = true;
+    provider.ctx.fullscreen = true;
     await elementUpdated(button);
     expect(button.enterSlotElement).to.have.attribute('hidden', '');
     expect(button.exitSlotElement).to.not.have.attribute('hidden');
@@ -90,7 +90,7 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
 
   it(`should emit ${EnterFullscreenRequestEvent.TYPE} when clicked while not in fullscreen`, async function () {
     const { provider, button } = await buildFixture();
-    provider.context.fullscreen = false;
+    provider.ctx.fullscreen = false;
     await elementUpdated(button);
     setTimeout(() => button.click());
     await oneEvent(button, EnterFullscreenRequestEvent.TYPE);
@@ -98,7 +98,7 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
 
   it(`should emit ${ExitFullscreenRequestEvent.TYPE} when clicked while in fullscreen`, async function () {
     const { provider, button } = await buildFixture();
-    provider.context.fullscreen = true;
+    provider.ctx.fullscreen = true;
     await elementUpdated(button);
     setTimeout(() => button.click());
     await oneEvent(button, ExitFullscreenRequestEvent.TYPE);
@@ -106,10 +106,10 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
 
   it('should receive fullscreen context updates', async function () {
     const { provider, button } = await buildFixture();
-    provider.context.fullscreen = true;
+    provider.ctx.fullscreen = true;
     await elementUpdated(button);
     expect(button.pressed).to.be.true;
-    provider.context.fullscreen = false;
+    provider.ctx.fullscreen = false;
     await elementUpdated(button);
     expect(button.pressed).to.be.false;
   });

@@ -84,7 +84,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @readonly
    */
-  context = provideContextRecord(this, scrubberContext);
+  ctx = provideContextRecord(this, scrubberContext);
 
   /**
    * Whether the scrubber should be disabled (not-interactable).
@@ -220,7 +220,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
   }
 
   render() {
-    return html`${this.renderTimeSlider()}`;
+    return html`${this._renderTimeSlider()}`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -231,19 +231,19 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @readonly
    */
-  pointerEventListenerController = new EventListenerController(this, {
-    pointerenter: this.handlePointerEnter,
-    pointermove: this.handlePointerMove,
-    pointerleave: this.handlePointerLeave
+  _pointerEventListenerController = new EventListenerController(this, {
+    pointerenter: this._handlePointerEnter,
+    pointermove: this._handlePointerMove,
+    pointerleave: this._handlePointerLeave
   });
 
   /**
    * @protected
    * @param {PointerEvent} event
    */
-  handlePointerEnter(event) {
+  _handlePointerEnter(event) {
     if (this.disabled) return;
-    this.context.pointing = true;
+    this.ctx.pointing = true;
     this.setAttribute('pointing', '');
     this.scrubberPreviewElement?.showPreview(event);
   }
@@ -252,8 +252,8 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {PointerEvent} event
    */
-  handlePointerMove(event) {
-    if (this.disabled || this.context.dragging) return;
+  _handlePointerMove(event) {
+    if (this.disabled || this.ctx.dragging) return;
     this.scrubberPreviewElement?.updatePreviewPosition(event);
   }
 
@@ -261,13 +261,13 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {PointerEvent} event
    */
-  handlePointerLeave(event) {
+  _handlePointerLeave(event) {
     if (this.disabled) return;
 
-    this.context.pointing = false;
+    this.ctx.pointing = false;
     this.removeAttribute('pointing');
 
-    if (!this.context.dragging) {
+    if (!this.ctx.dragging) {
       this.scrubberPreviewElement?.hidePreview(event);
     }
   }
@@ -281,7 +281,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @readonly
    * @type {import('lit/directives/ref').Ref<TimeSliderElement>}
    */
-  timeSliderRef = createRef();
+  _timeSliderRef = createRef();
 
   /**
    * Returns the underlying `vds-time-slider` component.
@@ -289,36 +289,36 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @type {TimeSliderElement}
    */
   get timeSliderElement() {
-    return /** @type {TimeSliderElement} */ (this.timeSliderRef.value);
+    return /** @type {TimeSliderElement} */ (this._timeSliderRef.value);
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTimeSlider() {
+  _renderTimeSlider() {
     return html`
       <vds-time-slider
         id="time-slider"
-        exportparts=${this.getTimeSliderExportPartsAttr()}
+        exportparts=${this._getTimeSliderExportPartsAttr()}
         label=${ifNonEmpty(this.label)}
         orientation=${this.orientation}
-        part=${this.getTimeSliderPartAttr()}
+        part=${this._getTimeSliderPartAttr()}
         step=${this.step}
         keyboard-step=${this.keyboardStep}
         shift-key-multiplier=${this.shiftKeyMultiplier}
         value-text=${this.valueText}
         ?disabled=${this.disabled}
         ?hidden=${this.hidden}
-        ${on(SliderDragStartEvent.TYPE, this.handleSliderDragStart)}
-        ${on(SliderValueChangeEvent.TYPE, this.handleSliderValueChange)}
-        ${on(SliderDragEndEvent.TYPE, this.handleSliderDragEnd)}
+        ${on(SliderDragStartEvent.TYPE, this._handleSliderDragStart)}
+        ${on(SliderValueChangeEvent.TYPE, this._handleSliderValueChange)}
+        ${on(SliderDragEndEvent.TYPE, this._handleSliderDragEnd)}
         ${forwardEvent(SliderDragStartEvent.TYPE)}
         ${forwardEvent(SliderValueChangeEvent.TYPE)}
         ${forwardEvent(SliderDragEndEvent.TYPE)}
-        ${ref(this.timeSliderRef)}
+        ${ref(this._timeSliderRef)}
       >
-        ${this.renderTimeSliderChildren()}
+        ${this._renderTimeSliderChildren()}
       </vds-time-slider>
     `;
   }
@@ -327,7 +327,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getTimeSliderPartAttr() {
+  _getTimeSliderPartAttr() {
     return 'time-slider';
   }
 
@@ -335,7 +335,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getTimeSliderExportPartsAttr() {
+  _getTimeSliderExportPartsAttr() {
     return buildExportPartsAttr(TimeSliderElement.parts, 'time-slider');
   }
 
@@ -343,15 +343,15 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderTimeSliderChildren() {
-    return html`${this.renderDefaultSlot()}${this.renderProgressBar()}`;
+  _renderTimeSliderChildren() {
+    return html`${this._renderDefaultSlot()}${this._renderProgressBar()}`;
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderDefaultSlot() {
+  _renderDefaultSlot() {
     return html`<slot></slot>`;
   }
 
@@ -359,9 +359,9 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {SliderDragStartEvent} event
    */
-  handleSliderDragStart(event) {
+  _handleSliderDragStart(event) {
     if (this.disabled) return;
-    this.context.dragging = true;
+    this.ctx.dragging = true;
     this.setAttribute('dragging', '');
     this.scrubberPreviewElement?.showPreview(event);
   }
@@ -370,7 +370,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {SliderValueChangeEvent} event
    */
-  handleSliderValueChange(event) {
+  _handleSliderValueChange(event) {
     if (this.disabled) return;
     this.scrubberPreviewElement?.updatePreviewPosition(event);
   }
@@ -379,9 +379,9 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {SliderDragEndEvent} event
    */
-  handleSliderDragEnd(event) {
+  _handleSliderDragEnd(event) {
     if (this.disabled) return;
-    this.context.dragging = false;
+    this.ctx.dragging = false;
     this.removeAttribute('dragging');
     this.scrubberPreviewElement?.hidePreview(event);
   }
@@ -395,7 +395,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @readonly
    * @type {import('lit/directives/ref').Ref<SeekableProgressBarElement>}
    */
-  progressBarRef = createRef();
+  _progressBarRef = createRef();
 
   /**
    * Returns the underlying `<vds-seekable-progress-bar>` component.
@@ -404,7 +404,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    */
   get progressBarElement() {
     return /** @type {SeekableProgressBarElement} */ (
-      this.progressBarRef.value
+      this._progressBarRef.value
     );
   }
 
@@ -412,17 +412,17 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderProgressBar() {
+  _renderProgressBar() {
     return html`
       <vds-seekable-progress-bar
         id="progress-bar"
-        part=${this.getProgressBarPartAttr()}
-        exportparts=${this.getProgressBarExportPartsAttr()}
+        part=${this._getProgressBarPartAttr()}
+        exportparts=${this._getProgressBarExportPartsAttr()}
         label=${this.progressLabel}
         value-text=${this.progressValueText}
-        ${ref(this.progressBarRef)}
+        ${ref(this._progressBarRef)}
       >
-        ${this.renderProgressBarChildren()}
+        ${this._renderProgressBarChildren()}
       </vds-seekable-progress-bar>
     `;
   }
@@ -431,7 +431,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getProgressBarPartAttr() {
+  _getProgressBarPartAttr() {
     return 'progress-bar';
   }
 
@@ -439,7 +439,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @returns {string}
    */
-  getProgressBarExportPartsAttr() {
+  _getProgressBarExportPartsAttr() {
     return buildExportPartsAttr(
       SeekableProgressBarElement.parts,
       'progress-bar'
@@ -450,23 +450,23 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderProgressBarChildren() {
-    return this.renderProgressBarSlot();
+  _renderProgressBarChildren() {
+    return this._renderProgressBarSlot();
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderProgressBarSlot() {
-    return html`<slot name=${this.getProgressBarSlotName()}></slot>`;
+  _renderProgressBarSlot() {
+    return html`<slot name=${this._getProgressBarSlotName()}></slot>`;
   }
 
   /**
    * @protected
    * @returns {string}
    */
-  getProgressBarSlotName() {
+  _getProgressBarSlotName() {
     return 'progress-bar';
   }
 
@@ -478,11 +478,11 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @readonly
    */
-  previewEventListenerController = new EventListenerController(this, {
-    [ScrubberPreviewConnectEvent.TYPE]: this.handlePreviewConnect,
-    [ScrubberPreviewShowEvent.TYPE]: this.handlePreviewShow,
-    [ScrubberPreviewTimeUpdateEvent.TYPE]: this.handlePreviewTimeUpdate,
-    [ScrubberPreviewHideEvent.TYPE]: this.handlePreviewHide
+  _previewEventListenerController = new EventListenerController(this, {
+    [ScrubberPreviewConnectEvent.TYPE]: this._handlePreviewConnect,
+    [ScrubberPreviewShowEvent.TYPE]: this._handlePreviewShow,
+    [ScrubberPreviewTimeUpdateEvent.TYPE]: this._handlePreviewTimeUpdate,
+    [ScrubberPreviewHideEvent.TYPE]: this._handlePreviewHide
   });
 
   /**
@@ -504,7 +504,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {ScrubberPreviewConnectEvent} event
    */
-  handlePreviewConnect(event) {
+  _handlePreviewConnect(event) {
     event.stopPropagation();
 
     const { element, onDisconnect } = event.detail;
@@ -522,7 +522,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {ScrubberPreviewShowEvent} event
    */
-  handlePreviewShow(event) {
+  _handlePreviewShow(event) {
     event.stopPropagation();
     this.setAttribute('previewing', '');
   }
@@ -531,7 +531,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {ScrubberPreviewTimeUpdateEvent} event
    */
-  handlePreviewTimeUpdate(event) {
+  _handlePreviewTimeUpdate(event) {
     event.stopPropagation();
   }
 
@@ -539,7 +539,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {ScrubberPreviewHideEvent} event
    */
-  handlePreviewHide(event) {
+  _handlePreviewHide(event) {
     event.stopPropagation();
     this.removeAttribute('previewing');
   }

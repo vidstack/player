@@ -41,8 +41,8 @@ export class ScrimElement extends LitElement {
 
   render() {
     return html`
-      <div id="gradient" part=${this.getGradientPartAttr()}>
-        ${this.renderGradientSlot()}
+      <div id="gradient" part=${this._getGradientPartAttr()}>
+        ${this._renderGradientSlot()}
       </div>
     `;
   }
@@ -51,7 +51,7 @@ export class ScrimElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getGradientPartAttr() {
+  _getGradientPartAttr() {
     return 'gradient';
   }
 
@@ -59,7 +59,7 @@ export class ScrimElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderGradientSlot() {
+  _renderGradientSlot() {
     return html`<slot></slot>`;
   }
 }

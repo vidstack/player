@@ -55,7 +55,7 @@ export class ToggleElement extends LitElement {
    */
   update(changedProperties) {
     if (changedProperties.has('pressed')) {
-      this.toggle();
+      this._toggle();
     }
 
     super.update(changedProperties);
@@ -63,8 +63,8 @@ export class ToggleElement extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.currentPressedSlotElement = undefined;
-    this.currentNotPressedSlotElement = undefined;
+    this._currentPressedSlotElement = undefined;
+    this._currentNotPressedSlotElement = undefined;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -72,15 +72,15 @@ export class ToggleElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   render() {
-    return this.renderToggle();
+    return this._renderToggle();
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderToggle() {
-    return html`${this.renderPressedSlot()} ${this.renderNotPressedSlot()}`;
+  _renderToggle() {
+    return html`${this._renderPressedSlot()} ${this._renderNotPressedSlot()}`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ export class ToggleElement extends LitElement {
    * @protected
    * @type {HTMLElement | undefined}
    */
-  currentPressedSlotElement;
+  _currentPressedSlotElement;
 
   /**
    * The slotted element to display when the toggle is in the `pressed` state.
@@ -99,14 +99,14 @@ export class ToggleElement extends LitElement {
    * @type {HTMLElement | undefined}
    */
   get pressedSlotElement() {
-    return this.currentPressedSlotElement;
+    return this._currentPressedSlotElement;
   }
 
   /**
    * @protected
    * @returns {string}
    */
-  getPressedSlotName() {
+  _getPressedSlotName() {
     return 'pressed';
   }
 
@@ -114,22 +114,22 @@ export class ToggleElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderPressedSlot() {
+  _renderPressedSlot() {
     return html`<slot
-      name=${this.getPressedSlotName()}
-      @slotchange=${this.handlePressedSlotChange}
+      name=${this._getPressedSlotName()}
+      @slotchange=${this._handlePressedSlotChange}
     ></slot>`;
   }
 
   /**
    * @protected
    */
-  handlePressedSlotChange() {
-    this.currentPressedSlotElement = /** @type {HTMLElement} */ (
-      getSlottedChildren(this, this.getPressedSlotName())[0]
+  _handlePressedSlotChange() {
+    this._currentPressedSlotElement = /** @type {HTMLElement} */ (
+      getSlottedChildren(this, this._getPressedSlotName())[0]
     );
 
-    this.toggle();
+    this._toggle();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ export class ToggleElement extends LitElement {
    * @protected
    * @type {HTMLElement | undefined}
    */
-  currentNotPressedSlotElement;
+  _currentNotPressedSlotElement;
 
   /**
    * The slotted element to display when the toggle is in the `not-pressed` state.
@@ -148,14 +148,14 @@ export class ToggleElement extends LitElement {
    * @type {HTMLElement | undefined}
    */
   get notPressedSlotElement() {
-    return this.currentNotPressedSlotElement;
+    return this._currentNotPressedSlotElement;
   }
 
   /**
    * @protected
    * @returns {string | undefined}
    */
-  getNotPressedSlotName() {
+  _getNotPressedSlotName() {
     // Undefined here means use the default slot.
     return undefined;
   }
@@ -164,22 +164,22 @@ export class ToggleElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderNotPressedSlot() {
+  _renderNotPressedSlot() {
     return html`<slot
-      name=${ifDefined(this.getNotPressedSlotName())}
-      @slotchange=${this.handleNotPressedSlotChange}
+      name=${ifDefined(this._getNotPressedSlotName())}
+      @slotchange=${this._handleNotPressedSlotChange}
     ></slot>`;
   }
 
   /**
    * @protected
    */
-  handleNotPressedSlotChange() {
-    this.currentNotPressedSlotElement = /** @type {HTMLElement} */ (
-      getSlottedChildren(this, this.getNotPressedSlotName())[0]
+  _handleNotPressedSlotChange() {
+    this._currentNotPressedSlotElement = /** @type {HTMLElement} */ (
+      getSlottedChildren(this, this._getNotPressedSlotName())[0]
     );
 
-    this.toggle();
+    this._toggle();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -189,9 +189,9 @@ export class ToggleElement extends LitElement {
   /**
    * @protected
    */
-  toggle() {
-    this.toggleHiddenAttr(this.currentPressedSlotElement, !this.pressed);
-    this.toggleHiddenAttr(this.currentNotPressedSlotElement, this.pressed);
+  _toggle() {
+    this._toggleHiddenAttr(this._currentPressedSlotElement, !this.pressed);
+    this._toggleHiddenAttr(this._currentNotPressedSlotElement, this.pressed);
   }
 
   /**
@@ -199,7 +199,7 @@ export class ToggleElement extends LitElement {
    * @param {HTMLElement | undefined} [el=undefined]
    * @param {boolean | undefined} [isHidden=undefined]
    */
-  toggleHiddenAttr(el, isHidden) {
+  _toggleHiddenAttr(el, isHidden) {
     if (!isNil(el)) {
       setAttribute(el, 'hidden', isHidden ? '' : undefined);
     }

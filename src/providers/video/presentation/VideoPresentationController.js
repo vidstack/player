@@ -37,7 +37,7 @@ export class VideoPresentationController {
    * @protected
    * @readonly
    */
-  disconnectDisposal = new DisposalBin();
+  _disconnectDisposal = new DisposalBin();
 
   /**
    * @param {VideoPresentationControllerHost} host
@@ -48,27 +48,27 @@ export class VideoPresentationController {
      * @protected
      * @readonly
      */
-    this.host = host;
+    this._host = host;
 
     const firstUpdated = /** @type {any} */ (host).firstUpdated;
     /** @type {any} */ (host).firstUpdated = (changedProperties) => {
       firstUpdated?.call(host, changedProperties);
-      this.disconnectDisposal.add(
-        this.addPresentationModeChangeEventListener()
+      this._disconnectDisposal.add(
+        this._addPresentationModeChangeEventListener()
       );
     };
 
     host.addController({
-      hostDisconnected: this.handleHostDisconnected.bind(this)
+      hostDisconnected: this._handleHostDisconnected.bind(this)
     });
   }
 
   /**
    * @protected
    */
-  handleHostDisconnected() {
+  _handleHostDisconnected() {
     this.setPresentationMode('inline');
-    this.disconnectDisposal.empty();
+    this._disconnectDisposal.empty();
   }
 
   /**
@@ -80,7 +80,7 @@ export class VideoPresentationController {
    * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
    */
   get presentationMode() {
-    return this.host.videoElement?.webkitPresentationMode;
+    return this._host.videoElement?.webkitPresentationMode;
   }
 
   /**
@@ -118,8 +118,8 @@ export class VideoPresentationController {
   get isSupported() {
     return (
       IS_IOS &&
-      isFunction(this.host.videoElement?.webkitSetPresentationMode) &&
-      (this.host.videoElement?.webkitSupportsFullscreen ?? false)
+      isFunction(this._host.videoElement?.webkitSetPresentationMode) &&
+      (this._host.videoElement?.webkitSupportsFullscreen ?? false)
     );
   }
 
@@ -127,19 +127,19 @@ export class VideoPresentationController {
    * @param {WebKitPresentationMode} mode
    */
   setPresentationMode(mode) {
-    this.host.videoElement?.webkitSetPresentationMode?.(mode);
+    this._host.videoElement?.webkitSetPresentationMode?.(mode);
   }
 
   /**
    * @protected
    * @returns {() => void} Stop listening function.
    */
-  addPresentationModeChangeEventListener() {
-    if (!this.isSupported || isNil(this.host.videoElement)) return noop;
+  _addPresentationModeChangeEventListener() {
+    if (!this.isSupported || isNil(this._host.videoElement)) return noop;
     return listen(
-      this.host.videoElement,
+      this._host.videoElement,
       'webkitpresentationmodechanged',
-      this.handlePresentationModeChange.bind(this)
+      this._handlePresentationModeChange.bind(this)
     );
   }
 
@@ -147,9 +147,9 @@ export class VideoPresentationController {
    * @protected
    * @param {Event} event
    */
-  handlePresentationModeChange(event) {
-    redispatchEvent(this.host, event);
-    this.host.dispatchEvent(
+  _handlePresentationModeChange(event) {
+    redispatchEvent(this._host, event);
+    this._host.dispatchEvent(
       new VideoPresentationChangeEvent({
         detail: /** @type {WebKitPresentationMode} */ (this.presentationMode),
         originalEvent: event

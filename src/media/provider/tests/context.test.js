@@ -55,40 +55,41 @@ describe('MediaProviderElement/context', function () {
 
   it('should update any context', async function () {
     const { provider, consumer } = await buildFixture();
-    provider.context.currentSrc = 'apples';
+    provider.ctx.currentSrc = 'apples';
     expect(consumer.currentSrc).to.equal('apples');
   });
 
   it('should update derived context', async function () {
     const { provider, consumer } = await buildFixture();
-    provider.context.viewType = ViewType.Video;
+    provider.ctx.viewType = ViewType.Video;
     expect(consumer.isAudioView).to.equal(false);
     expect(consumer.isVideoView).to.equal(true);
-    provider.context.viewType = ViewType.Audio;
+    provider.ctx.viewType = ViewType.Audio;
     expect(consumer.isAudioView).to.equal(true);
     expect(consumer.isVideoView).to.equal(false);
   });
 
   it('should update multi-part derived context', async function () {
     const { provider, consumer } = await buildFixture();
-    provider.context.buffered = createTimeRanges([
+    provider.ctx.buffered = createTimeRanges([
       [0, 0],
       [15, 20]
     ]);
-    provider.context.duration = 15;
+    provider.ctx.duration = 15;
     expect(consumer.bufferedAmount).to.equal(15);
-    provider.context.duration = 25;
+    provider.ctx.duration = 25;
     expect(consumer.bufferedAmount).to.equal(20);
   });
 
   it('should soft reset context', async function () {
     const { provider, consumer } = await buildFixture();
 
-    provider.context.paused = false;
-    provider.context.duration = 200;
+    provider.ctx.paused = false;
+    provider.ctx.duration = 200;
     await elementUpdated(consumer);
 
-    /** @type {any} */ (provider).softResetMediaContext();
+    // @ts-expect-error - Access protected property
+    provider._softResetMediaContext();
     await elementUpdated(consumer);
 
     expect(consumer.paused, 'paused').to.equal(true);
@@ -99,7 +100,7 @@ describe('MediaProviderElement/context', function () {
   it.skip('should hard reset context when provider disconnects', async function () {
     const { provider, consumer } = await buildFixture();
 
-    provider.context.viewType = ViewType.Video;
+    provider.ctx.viewType = ViewType.Video;
     await elementUpdated(consumer);
 
     provider.disconnectedCallback();

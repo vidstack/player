@@ -92,7 +92,7 @@ export class TimeElement extends LitElement {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLTimeElement>}
    */
-  rootRef = createRef();
+  _rootRef = createRef();
 
   /**
    * The component's root element.
@@ -100,20 +100,20 @@ export class TimeElement extends LitElement {
    * @type {HTMLTimeElement}
    */
   get rootElement() {
-    return /** @type {HTMLTimeElement} */ (this.rootRef.value);
+    return /** @type {HTMLTimeElement} */ (this._rootRef.value);
   }
 
   render() {
     return html`
       <time
         id="root"
-        class=${this.getRootClassAttr()}
-        part=${this.getRootPartAttr()}
+        class=${this._getRootClassAttr()}
+        part=${this._getRootPartAttr()}
         aria-label=${ifNonEmpty(this.label)}
-        datetime=${this.getFormattedDuration()}
-        ${ref(this.rootRef)}
+        datetime=${this._getFormattedDuration()}
+        ${ref(this._rootRef)}
       >
-        ${this.renderRootChildren()}
+        ${this._renderRootChildren()}
       </time>
     `;
   }
@@ -122,15 +122,15 @@ export class TimeElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderRootChildren() {
-    return html`${this.getFormattedTime()}`;
+  _renderRootChildren() {
+    return html`${this._getFormattedTime()}`;
   }
 
   /**
    * @protected
    * @returns {string} The seconds formatted into human readable form.
    */
-  getFormattedTime() {
+  _getFormattedTime() {
     return formatTime(this.seconds, this.padHours, this.alwaysShowHours);
   }
 
@@ -139,7 +139,7 @@ export class TimeElement extends LitElement {
    * @returns {string} A valid HTML5 duration.
    * @see https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
    */
-  getFormattedDuration() {
+  _getFormattedDuration() {
     return formatHtml5Duration(this.seconds);
   }
 
@@ -149,7 +149,7 @@ export class TimeElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getRootClassAttr() {
+  _getRootClassAttr() {
     return 'root';
   }
 
@@ -159,7 +159,7 @@ export class TimeElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getRootPartAttr() {
+  _getRootPartAttr() {
     return 'root time';
   }
 }

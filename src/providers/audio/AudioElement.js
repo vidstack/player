@@ -34,18 +34,18 @@ export class AudioElement extends Html5MediaElement {
   }
 
   render() {
-    return this.renderAudio();
+    return this._renderAudio();
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderAudio() {
+  _renderAudio() {
     return html`
       <audio
-        part=${this.getAudioPartAttr()}
-        src="${ifNonEmpty(this.shouldSetAudioSrcAttr() ? this.src : '')}"
+        part=${this._getAudioPartAttr()}
+        src="${ifNonEmpty(this._shouldSetAudioSrcAttr() ? this.src : '')}"
         width="${ifNumber(this.width)}"
         height="${ifNumber(this.height)}"
         preload="${ifNonEmpty(this.preload)}"
@@ -58,9 +58,9 @@ export class AudioElement extends Html5MediaElement {
         ?disableremoteplayback="${this.disableRemotePlayback}"
         .defaultMuted="${this.defaultMuted ?? this.muted}"
         .defaultPlaybackRate="${this.defaultPlaybackRate ?? 1}"
-        ${ref(this.mediaRef)}
+        ${ref(this._mediaRef)}
       >
-        ${this.renderMediaChildren()}
+        ${this._renderMediaChildren()}
       </audio>
     `;
   }
@@ -71,7 +71,7 @@ export class AudioElement extends Html5MediaElement {
    * @protected
    * @returns {string}
    */
-  getAudioPartAttr() {
+  _getAudioPartAttr() {
     return 'media audio';
   }
 
@@ -82,7 +82,7 @@ export class AudioElement extends Html5MediaElement {
    * @protected
    * @returns {boolean}
    */
-  shouldSetAudioSrcAttr() {
+  _shouldSetAudioSrcAttr() {
     return true;
   }
 }

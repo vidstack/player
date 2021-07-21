@@ -10,37 +10,37 @@ export class EventListenerDirective extends AsyncDirective {
    * @protected
    * @type {Element | undefined}
    */
-  element;
+  _element;
 
   /**
    * @protected
    * @type {object | undefined}
    */
-  host;
+  _host;
 
   /**
    * @protected
    * @type {string | undefined}
    */
-  type;
+  _type;
 
   /**
    * @protected
    * @type {((...args: any) => void) | undefined}
    */
-  handler;
+  _handler;
 
   /**
    * @protected
    * @type {boolean | AddEventListenerOptions | EventListenerOptions | undefined}
    */
-  options;
+  _options;
 
   /**
    * @protected
    * @type {(() => void) | undefined}
    */
-  dispose;
+  _dispose;
 
   /**
    * @param {import('lit/directive').PartInfo} partInfo
@@ -71,19 +71,19 @@ export class EventListenerDirective extends AsyncDirective {
    */
   update(part, [type, handler, options]) {
     if (
-      this.element !== part.element ||
-      this.type !== type ||
-      this.handler !== handler ||
-      this.options !== options ||
-      this.host !== part.options?.host
+      this._element !== part.element ||
+      this._type !== type ||
+      this._handler !== handler ||
+      this._options !== options ||
+      this._host !== part.options?.host
     ) {
-      this.element = part.element;
-      this.type = type;
-      this.handler = handler;
-      this.options = options;
-      this.host = part.options?.host;
-      this.removeEventListener();
-      this.addEventListener();
+      this._element = part.element;
+      this._type = type;
+      this._handler = handler;
+      this._options = options;
+      this._host = part.options?.host;
+      this._removeEventListener();
+      this._addEventListener();
     }
 
     return nothing;
@@ -92,43 +92,43 @@ export class EventListenerDirective extends AsyncDirective {
   /**
    * @protected
    */
-  addEventListener() {
+  _addEventListener() {
     if (
-      isNil(this.element) ||
-      !isString(this.type) ||
-      !isFunction(this.handler)
+      isNil(this._element) ||
+      !isString(this._type) ||
+      !isFunction(this._handler)
     ) {
       return;
     }
 
-    this.dispose = listenToEvent(
-      this.element,
-      this.type,
-      this.handler.bind(this.host ?? this.element),
-      this.options
+    this._dispose = listenToEvent(
+      this._element,
+      this._type,
+      this._handler.bind(this._host ?? this._element),
+      this._options
     );
   }
 
   /**
    * @protected
    */
-  removeEventListener() {
-    this.dispose?.();
-    this.dispose = undefined;
+  _removeEventListener() {
+    this._dispose?.();
+    this._dispose = undefined;
   }
 
   /**
    * @protected
    */
   reconnected() {
-    this.addEventListener();
+    this._addEventListener();
   }
 
   /**
    * @protected
    */
   disconnected() {
-    this.removeEventListener();
+    this._removeEventListener();
   }
 }
 

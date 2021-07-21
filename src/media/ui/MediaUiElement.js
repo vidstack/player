@@ -1,7 +1,9 @@
 import clsx from 'clsx';
 import { html, LitElement } from 'lit';
+import { state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
+import { consumeContext } from '../../foundation/context/index.js';
 import { IS_IOS } from '../../utils/support.js';
 import { mediaContext } from '../context.js';
 import { mediaUiElementStyles } from './styles.js';
@@ -34,39 +36,34 @@ export class MediaUiElement extends LitElement {
     return ['root', 'root-hidden'];
   }
 
-  /** @type {import('../../foundation/context').ContextConsumerDeclarations} */
-  static get contextConsumers() {
-    return {
-      mediaCanPlay: mediaContext.canPlay,
-      mediaFullscreen: mediaContext.fullscreen,
-      mediaIsVideoView: mediaContext.isVideoView,
-      mediaPlaysinline: mediaContext.playsinline
-    };
-  }
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  @consumeContext(mediaContext.canPlay)
+  _mediaCanPlay = mediaContext.canPlay.initialValue;
 
-  constructor() {
-    super();
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaCanPlay = mediaContext.canPlay.initialValue;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaFullscreen = mediaContext.fullscreen.initialValue;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaIsVideoView = mediaContext.isVideoView.initialValue;
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    this.mediaPlaysinline = mediaContext.playsinline.initialValue;
-  }
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  _mediaFullscreen = mediaContext.fullscreen.initialValue;
+
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  _mediaIsVideoView = mediaContext.isVideoView.initialValue;
+
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @state()
+  _mediaPlaysinline = mediaContext.playsinline.initialValue;
 
   // -------------------------------------------------------------------------------------------
   // Render
@@ -77,7 +74,7 @@ export class MediaUiElement extends LitElement {
    * @readonly
    * @type {import('lit/directives/ref').Ref<HTMLDivElement>}
    */
-  rootRef = createRef();
+  _rootRef = createRef();
 
   /**
    * The component's root element.
@@ -85,18 +82,18 @@ export class MediaUiElement extends LitElement {
    * @type {HTMLDivElement}
    */
   get rootElement() {
-    return /** @type {HTMLDivElement} */ (this.rootRef.value);
+    return /** @type {HTMLDivElement} */ (this._rootRef.value);
   }
 
   render() {
     return html`
       <div
         id="root"
-        class=${this.getRootClassAttr()}
-        part=${this.getRootPartAttr()}
-        ${ref(this.rootRef)}
+        class=${this._getRootClassAttr()}
+        part=${this._getRootPartAttr()}
+        ${ref(this._rootRef)}
       >
-        ${this.renderRootChildren()}
+        ${this._renderRootChildren()}
       </div>
     `;
   }
@@ -107,8 +104,8 @@ export class MediaUiElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderRootChildren() {
-    return html`${this.renderDefaultSlot()}`;
+  _renderRootChildren() {
+    return html`${this._renderDefaultSlot()}`;
   }
 
   /**
@@ -117,7 +114,7 @@ export class MediaUiElement extends LitElement {
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderDefaultSlot() {
+  _renderDefaultSlot() {
     return html`<slot></slot>`;
   }
 
@@ -127,7 +124,7 @@ export class MediaUiElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getRootClassAttr() {
+  _getRootClassAttr() {
     return '';
   }
 
@@ -137,10 +134,10 @@ export class MediaUiElement extends LitElement {
    * @protected
    * @returns {string}
    */
-  getRootPartAttr() {
+  _getRootPartAttr() {
     return clsx({
       root: true,
-      'root-hidden': this.isUiHidden()
+      'root-hidden': this._isUiHidden()
     });
   }
 
@@ -150,15 +147,15 @@ export class MediaUiElement extends LitElement {
    * @protected
    * @returns {boolean}
    */
-  isUiHidden() {
+  _isUiHidden() {
     return (
-      !this.mediaCanPlay ||
+      !this._mediaCanPlay ||
       // If iOS Safari and the view type is currently video then we hide the custom UI depending
       // on whether playsinline is set and fullscreen is not active, or if fullscreen is active
       // we should always hide.
       (IS_IOS &&
-        this.mediaIsVideoView &&
-        (!this.mediaPlaysinline || this.mediaFullscreen))
+        this._mediaIsVideoView &&
+        (!this._mediaPlaysinline || this._mediaFullscreen))
     );
   }
 }

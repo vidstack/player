@@ -75,23 +75,23 @@ export class VideoElement extends Html5MediaElement {
    */
   @property()
   get poster() {
-    return this.context.currentPoster;
+    return this.ctx.currentPoster;
   }
 
   set poster(newPoster) {
-    this.connectedQueue.queue('currentPoster', () => {
-      this.context.currentPoster = newPoster;
+    this._connectedQueue.queue('currentPoster', () => {
+      this.ctx.currentPoster = newPoster;
       this.requestUpdate();
     });
   }
 
   /** @type {HTMLVideoElement} */
   get mediaElement() {
-    return /** @type {HTMLVideoElement} */ (this.mediaRef.value);
+    return /** @type {HTMLVideoElement} */ (this._mediaRef.value);
   }
 
   get videoElement() {
-    return /** @type {HTMLVideoElement} */ (this.mediaRef.value);
+    return /** @type {HTMLVideoElement} */ (this._mediaRef.value);
   }
 
   get engine() {
@@ -109,7 +109,7 @@ export class VideoElement extends Html5MediaElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.context.viewType = ViewType.Video;
+    this.ctx.viewType = ViewType.Video;
     this.dispatchEvent(
       new ViewTypeChangeEvent({
         detail: ViewType.Video
@@ -123,18 +123,18 @@ export class VideoElement extends Html5MediaElement {
 
   /** @returns {import('lit').TemplateResult} */
   render() {
-    return this.renderVideo();
+    return this._renderVideo();
   }
 
   /**
    * @protected
    * @returns {import('lit').TemplateResult}
    */
-  renderVideo() {
+  _renderVideo() {
     return html`
       <video
-        part="${this.getVideoPartAttr()}"
-        src="${ifNonEmpty(this.shouldSetVideoSrcAttr() ? this.src : '')}"
+        part="${this._getVideoPartAttr()}"
+        src="${ifNonEmpty(this._shouldSetVideoSrcAttr() ? this.src : '')}"
         width="${ifNumber(this.width)}"
         height="${ifNumber(this.height)}"
         poster="${ifNonEmpty(this.poster)}"
@@ -150,9 +150,9 @@ export class VideoElement extends Html5MediaElement {
         ?disableremoteplayback="${this.disableRemotePlayback}"
         .defaultMuted="${this.defaultMuted ?? this.muted}"
         .defaultPlaybackRate="${this.defaultPlaybackRate ?? 1}"
-        ${ref(this.mediaRef)}
+        ${ref(this._mediaRef)}
       >
-        ${this.renderMediaChildren()}
+        ${this._renderMediaChildren()}
       </video>
     `;
   }
@@ -163,7 +163,7 @@ export class VideoElement extends Html5MediaElement {
    * @protected
    * @returns {string}
    */
-  getVideoPartAttr() {
+  _getVideoPartAttr() {
     return 'media video';
   }
 
@@ -174,7 +174,7 @@ export class VideoElement extends Html5MediaElement {
    * @protected
    * @returns {boolean}
    */
-  shouldSetVideoSrcAttr() {
+  _shouldSetVideoSrcAttr() {
     return true;
   }
 

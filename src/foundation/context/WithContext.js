@@ -32,9 +32,6 @@ export function WithContext(Base) {
       return attributes;
     }
 
-    /**
-     * @protected
-     */
     static finalizeContext() {
       // eslint-disable-next-line no-prototype-builtins
       if (this.hasOwnProperty(FINALIZED)) return;
