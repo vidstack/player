@@ -341,9 +341,12 @@ export class SliderElement extends WithFocus(LitElement) {
       <div
         id="root"
         role="presentation"
-        class=${this._getSliderClassAttr()}
-        part=${this._getSliderPartAttr()}
-        style=${styleMap(this._getSliderStyleMap())}
+        part="root"
+        style=${styleMap({
+          '--vds-slider-fill-value': String(this.value),
+          '--vds-slider-fill-rate': String(this.fillRate),
+          '--vds-slider-fill-percent': `${this.fillPercent}%`
+        })}
         ${on('pointerdown', this._handleSliderPointerMove)}
         ${ref(this._rootRef)}
       >
@@ -366,34 +369,6 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   _renderDefaultSlot() {
     return html`<slot></slot>`;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getSliderClassAttr() {
-    return '';
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getSliderPartAttr() {
-    return 'root';
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit/directives/style-map').StyleInfo}
-   */
-  _getSliderStyleMap() {
-    return {
-      '--vds-slider-fill-value': String(this.value),
-      '--vds-slider-fill-rate': String(this.fillRate),
-      '--vds-slider-fill-percent': `${this.fillPercent}%`
-    };
   }
 
   /**
@@ -445,7 +420,7 @@ export class SliderElement extends WithFocus(LitElement) {
         aria-disabled=${this.disabled}
         aria-hidden=${this.hidden}
         autocomplete="off"
-        part=${this._getThumbContainerPartAttr()}
+        part="thumb-container"
         ${on('keydown', this._handleThumbContainerKeydown)}
         ${on('pointerdown', this._handleThumbContainerPointerDown)}
         ${ref(this._thumbContainerRef)}
@@ -493,14 +468,6 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   _getValueTextFallback() {
     return `${round((this.value / this.max) * 100, 2)}%`;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getThumbContainerPartAttr() {
-    return 'thumb-container';
   }
 
   /**
@@ -570,18 +537,10 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   _renderThumb() {
     return html`
-      <div id="thumb" part=${this._getThumbPartAttr()} ${ref(this._thumbRef)}>
+      <div id="thumb" part="thumb" ${ref(this._thumbRef)}>
         ${this._renderThumbSlot()}
       </div>
     `;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getThumbPartAttr() {
-    return 'thumb';
   }
 
   /**
@@ -618,7 +577,7 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   _renderTrack() {
     return html`
-      <div id="track" part=${this._getTrackPartAttr()} ${ref(this._trackRef)}>
+      <div id="track" part="track" ${ref(this._trackRef)}>
         ${this._renderTrackSlot()}
       </div>
     `;
@@ -630,14 +589,6 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   _renderTrackSlot() {
     return html`<slot name="track"></slot>`;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getTrackPartAttr() {
-    return 'track';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -666,11 +617,7 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   _renderTrackFill() {
     return html`
-      <div
-        id="track-fill"
-        part=${this._getTrackFillPartAttr()}
-        ${ref(this._trackFillRef)}
-      >
+      <div id="track-fill" part="track-fill" ${ref(this._trackFillRef)}>
         ${this._renderTrackFillSlot()}
       </div>
     `;
@@ -682,14 +629,6 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   _renderTrackFillSlot() {
     return html`<slot name="track-fill"></slot>`;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getTrackFillPartAttr() {
-    return 'track-fill';
   }
 
   // -------------------------------------------------------------------------------------------

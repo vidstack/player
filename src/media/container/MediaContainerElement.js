@@ -46,7 +46,7 @@ export class MediaContainerConnectEvent extends DiscoveryEvent {
  * @slot Used to pass in UI components.
  * @slot media - Used to pass in a media provider element.
  * @csspart root - The component's root element (`<div>`).
- * @csspart media - The media container element (`<div>`).
+ * @csspart media-container - The media container element (`<div>`).
  * @example
  * ```html
  * <vds-media-controller>
@@ -167,10 +167,14 @@ export class MediaContainerElement extends LitElement {
     return html`
       <div
         id="root"
-        aria-busy=${this._getAriaBusy()}
-        class=${this._getRootClassAttr()}
-        part=${this._getRootPartAttr()}
-        style=${styleMap(this._getRootStyleMap())}
+        aria-busy=${this._mediaCanPlay ? 'false' : 'true'}
+        class=${clsx({
+          'with-aspect-ratio': this._shouldApplyAspectRatio()
+        })}
+        part="root"
+        style=${styleMap({
+          'padding-bottom': this._getAspectRatioPadding()
+        })}
         ${ref(this._rootRef)}
       >
         ${this._renderRootChildren()}
@@ -196,48 +200,6 @@ export class MediaContainerElement extends LitElement {
    */
   _renderDefaultSlot() {
     return html`<slot></slot>`;
-  }
-
-  /**
-   * Override this to modify root container CSS Classes.
-   *
-   * @protected
-   * @returns {string}
-   */
-  _getRootClassAttr() {
-    return clsx({
-      'with-aspect-ratio': this._shouldApplyAspectRatio()
-    });
-  }
-
-  /**
-   * Override this to modify root container CSS parts.
-   *
-   * @protected
-   * @returns {string}
-   */
-  _getRootPartAttr() {
-    return 'root';
-  }
-
-  /**
-   * Override this to modify root container styles.
-   *
-   * @protected
-   * @returns {import('lit/directives/style-map').StyleInfo}
-   */
-  _getRootStyleMap() {
-    return {
-      'padding-bottom': this._getAspectRatioPadding()
-    };
-  }
-
-  /**
-   * @protected
-   * @returns {'true' | 'false'}
-   */
-  _getAriaBusy() {
-    return this._mediaCanPlay ? 'false' : 'true';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -316,7 +278,7 @@ export class MediaContainerElement extends LitElement {
     return html`
       <div
         id="media-container"
-        part="${this._getMediaPartAttr()}"
+        part="media-container"
         ${ref(this._mediaContainerRef)}
       >
         ${this._renderMediaSlot()}
@@ -326,29 +288,12 @@ export class MediaContainerElement extends LitElement {
 
   /**
    * @protected
-   * @returns {string}
-   */
-  _getMediaPartAttr() {
-    return 'media';
-  }
-
-  /**
-   * @protected
    * @returns {import('lit').TemplateResult}
    */
   _renderMediaSlot() {
-    return html` <slot
-      name="${this._getMediaSlotName()}"
-      @slotchange="${this._handleMediaSlotChange}"
-    ></slot>`;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getMediaSlotName() {
-    return 'media';
+    return html`
+      <slot name="media" @slotchange="${this._handleMediaSlotChange}"></slot>
+    `;
   }
 
   /**
@@ -364,7 +309,7 @@ export class MediaContainerElement extends LitElement {
     if (this._hasMediaProviderConnectedViaEvent) return;
 
     const mediaProvider = /** @type {MediaProviderElement} */ (
-      getSlottedChildren(this, this._getMediaSlotName())[0]
+      getSlottedChildren(this, 'media')[0]
     );
 
     // Not a bulletproof check, but it's a good enough safety-check to warn devs if they pass the

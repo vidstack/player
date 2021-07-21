@@ -4,7 +4,6 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
-import { ifNonEmpty } from '../../foundation/directives/index.js';
 import { mediaContext } from '../../media/index.js';
 import { formatSpokenTime } from '../../utils/time.js';
 import { seekableProgressBarElementStyles } from './styles.js';
@@ -119,8 +118,11 @@ export class SeekableProgressBarElement extends LitElement {
       <div
         id="progressbar"
         role="progressbar"
-        part=${this._getProgressBarPartAttr()}
-        style=${styleMap(this._getProgressBarStyleMap())}
+        part="root"
+        style=${styleMap({
+          '--vds-media-seekable': String(this._mediaSeekableAmount),
+          '--vds-media-duration': String(this._mediaDuration)
+        })}
         ?hidden=${this.hidden}
         aria-label=${this.label}
         aria-valuemin="0"
@@ -132,25 +134,6 @@ export class SeekableProgressBarElement extends LitElement {
         ${this._renderProgressBarChildren()}
       </div>
     `;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getProgressBarPartAttr() {
-    return 'root';
-  }
-
-  /**
-   * @protected
-   * @returns {import('lit/directives/style-map').StyleInfo}
-   */
-  _getProgressBarStyleMap() {
-    return {
-      '--vds-media-seekable': String(this._mediaSeekableAmount),
-      '--vds-media-duration': String(this._mediaDuration)
-    };
   }
 
   /**
@@ -176,16 +159,6 @@ export class SeekableProgressBarElement extends LitElement {
    * @returns {import('lit').TemplateResult}
    */
   _renderProgressBarSlot() {
-    return html`
-      <slot name=${ifNonEmpty(this._getProgressBarSlotName())}></slot>
-    `;
-  }
-
-  /**
-   * @protected
-   * @returns {string | undefined}
-   */
-  _getProgressBarSlotName() {
-    return undefined;
+    return html`<slot></slot>`;
   }
 }

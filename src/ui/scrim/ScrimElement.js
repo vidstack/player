@@ -41,18 +41,8 @@ export class ScrimElement extends LitElement {
 
   render() {
     return html`
-      <div id="gradient" part=${this._getGradientPartAttr()}>
-        ${this._renderGradientSlot()}
-      </div>
+      <div id="gradient" part="gradient">${this._renderGradientSlot()}</div>
     `;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getGradientPartAttr() {
-    return 'gradient';
   }
 
   /**

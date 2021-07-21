@@ -123,7 +123,7 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
     return html`
       <button
         id="button"
-        part=${this._getButtonPartAttr()}
+        part="button"
         aria-label=${ifNonEmpty(this.label)}
         aria-pressed=${this._pressed ? 'true' : 'false'}
         aria-described-by=${ifNonEmpty(this.describedBy)}
@@ -151,16 +151,6 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
    */
   _renderDefaultSlot() {
     return html`<slot></slot>`;
-  }
-
-  /**
-   * Override this to modify root CSS parts.
-   *
-   * @protected
-   * @returns {string}
-   */
-  _getButtonPartAttr() {
-    return 'button';
   }
 
   click() {

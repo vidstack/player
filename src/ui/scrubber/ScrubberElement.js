@@ -300,10 +300,13 @@ export class ScrubberElement extends WithFocus(LitElement) {
     return html`
       <vds-time-slider
         id="time-slider"
-        exportparts=${this._getTimeSliderExportPartsAttr()}
+        exportparts=${buildExportPartsAttr(
+          TimeSliderElement.parts,
+          'time-slider'
+        )}
         label=${ifNonEmpty(this.label)}
         orientation=${this.orientation}
-        part=${this._getTimeSliderPartAttr()}
+        part="time-slider"
         step=${this.step}
         keyboard-step=${this.keyboardStep}
         shift-key-multiplier=${this.shiftKeyMultiplier}
@@ -321,22 +324,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
         ${this._renderTimeSliderChildren()}
       </vds-time-slider>
     `;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getTimeSliderPartAttr() {
-    return 'time-slider';
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getTimeSliderExportPartsAttr() {
-    return buildExportPartsAttr(TimeSliderElement.parts, 'time-slider');
   }
 
   /**
@@ -416,8 +403,11 @@ export class ScrubberElement extends WithFocus(LitElement) {
     return html`
       <vds-seekable-progress-bar
         id="progress-bar"
-        part=${this._getProgressBarPartAttr()}
-        exportparts=${this._getProgressBarExportPartsAttr()}
+        part="progress-bar"
+        exportparts=${buildExportPartsAttr(
+          SeekableProgressBarElement.parts,
+          'progress-bar'
+        )}
         label=${this.progressLabel}
         value-text=${this.progressValueText}
         ${ref(this._progressBarRef)}
@@ -425,25 +415,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
         ${this._renderProgressBarChildren()}
       </vds-seekable-progress-bar>
     `;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getProgressBarPartAttr() {
-    return 'progress-bar';
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getProgressBarExportPartsAttr() {
-    return buildExportPartsAttr(
-      SeekableProgressBarElement.parts,
-      'progress-bar'
-    );
   }
 
   /**
@@ -459,15 +430,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @returns {import('lit').TemplateResult}
    */
   _renderProgressBarSlot() {
-    return html`<slot name=${this._getProgressBarSlotName()}></slot>`;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getProgressBarSlotName() {
-    return 'progress-bar';
+    return html`<slot name="progress-bar"></slot>`;
   }
 
   // -------------------------------------------------------------------------------------------

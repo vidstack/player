@@ -107,8 +107,7 @@ export class TimeElement extends LitElement {
     return html`
       <time
         id="root"
-        class=${this._getRootClassAttr()}
-        part=${this._getRootPartAttr()}
+        part="root time"
         aria-label=${ifNonEmpty(this.label)}
         datetime=${this._getFormattedDuration()}
         ${ref(this._rootRef)}
@@ -141,25 +140,5 @@ export class TimeElement extends LitElement {
    */
   _getFormattedDuration() {
     return formatHtml5Duration(this.seconds);
-  }
-
-  /**
-   * Override this to modify root CSS Classes.
-   *
-   * @protected
-   * @returns {string}
-   */
-  _getRootClassAttr() {
-    return 'root';
-  }
-
-  /**
-   * Override this to modify root CSS parts.
-   *
-   * @protected
-   * @returns {string}
-   */
-  _getRootPartAttr() {
-    return 'root time';
   }
 }

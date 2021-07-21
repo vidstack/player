@@ -270,7 +270,7 @@ export class ScrubberPreviewElement extends LitElement {
     return html`
       <div
         id="track"
-        part=${this._getTrackPartAttr()}
+        part="track"
         ?hidden=${this.hidden || this.disabled}
         ${ref(this._trackRef)}
       >
@@ -281,26 +281,10 @@ export class ScrubberPreviewElement extends LitElement {
 
   /**
    * @protected
-   * @returns {string}
-   */
-  _getTrackPartAttr() {
-    return 'track';
-  }
-
-  /**
-   * @protected
    * @returns {import('lit').TemplateResult}
    */
   _renderTrackSlot() {
-    return html`<slot name=${this._getTrackSlotName()}></slot>`;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getTrackSlotName() {
-    return 'track';
+    return html`<slot name="track"></slot>`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -334,7 +318,7 @@ export class ScrubberPreviewElement extends LitElement {
     return html`
       <div
         id="track-fill"
-        part=${this._getTrackFillPartAttr()}
+        part="track-fill"
         ?hidden=${!this._isInteracting}
         ${ref(this._trackFillRef)}
       >
@@ -345,26 +329,10 @@ export class ScrubberPreviewElement extends LitElement {
 
   /**
    * @protected
-   * @returns {string}
-   */
-  _getTrackFillPartAttr() {
-    return 'track-fill';
-  }
-
-  /**
-   * @protected
    * @returns {import('lit').TemplateResult}
    */
   _renderTrackFillSlot() {
-    return html`<slot name=${this._getTrackFillSlotName()}></slot>`;
-  }
-
-  /**
-   * @protected
-   * @returns {string}
-   */
-  _getTrackFillSlotName() {
-    return 'track-fill';
+    return html`<slot name="track-fill"></slot>`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -400,20 +368,7 @@ export class ScrubberPreviewElement extends LitElement {
    * @returns {import('lit').TemplateResult}
    */
   _renderPreviewSlot() {
-    return html`
-      <slot
-        name="${ifNonEmpty(this._getPreviewSlotName())}"
-        @slotchange="${this._handlePreviewSlotChange}"
-      ></slot>
-    `;
-  }
-
-  /**
-   * @protected
-   * @returns {string | undefined}
-   */
-  _getPreviewSlotName() {
-    return undefined;
+    return html` <slot @slotchange="${this._handlePreviewSlotChange}"></slot> `;
   }
 
   /**
@@ -421,7 +376,7 @@ export class ScrubberPreviewElement extends LitElement {
    */
   _handlePreviewSlotChange() {
     this._previewSlotElement = /** @type {HTMLElement} */ (
-      getSlottedChildren(this, this._getPreviewSlotName())[0]
+      getSlottedChildren(this)[0]
     );
 
     if (!isNil(this.previewSlotElement)) {

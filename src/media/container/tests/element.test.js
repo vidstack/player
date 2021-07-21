@@ -45,7 +45,7 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
         >
           <div
             id="media-container"
-            part="media"
+            part="media-container"
           >
             <slot name="media"></slot>
           </div>

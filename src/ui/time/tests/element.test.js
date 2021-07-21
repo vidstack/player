@@ -28,7 +28,6 @@ describe(`${TIME_ELEMENT_TAG_NAME}`, function () {
     expect(time).shadowDom.to.equal(`
       <time
         id="root"
-        class="root"
         part="root time"
         datetime="PT1H2M30S"
         aria-label="current-time"
