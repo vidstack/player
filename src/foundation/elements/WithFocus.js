@@ -20,7 +20,6 @@ export const focusableSelector = `
     'embed',
     `*[tabindex]:not([tabindex='-1'])`,
     '*[contenteditable=true]',
-    'vds-button',
     'vds-fullscreen-button',
     'vds-mute-button',
     'vds-play-button',

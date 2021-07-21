@@ -22,8 +22,8 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-fullscreen-button>
-        <div class="enter" slot="enter"></div>
-        <div class="exit" slot="exit"></div>
+        <div class="enter"></div>
+        <div class="exit"></div>
       </vds-fullscreen-button>
     `);
 
@@ -43,8 +43,8 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
     const { button } = await buildFixture();
     expect(button).dom.to.equal(`
       <vds-fullscreen-button>
-        <div class="enter" slot="enter"></div>
-        <div class="exit" slot="exit" hidden></div>
+        <div class="enter"></div>
+        <div class="exit"></div>
       </vds-fullscreen-button>
     `);
   });
@@ -52,40 +52,15 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
   it('should render shadow DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).shadowDom.to.equal(`
-      <vds-button
-        id="root"
-        class="root"
-        label="Fullscreen"
-        part="root button"
-				type="button"
-        exportparts="root: button-root"
+      <button
+        id="button"
+        aria-label="Fullscreen"
+        aria-pressed="false"
+        part="button"
       >
-        <slot name="exit"></slot>
-        <slot name="enter"></slot>
+        <slot></slot>
       </button>
     `);
-  });
-
-  it('should render enter/exit slots', async function () {
-    const { button } = await buildFixture();
-    expect(button.enterSlotElement).to.have.class('enter');
-    expect(button.exitSlotElement).to.have.class('exit');
-  });
-
-  it('should set exit slot to hidden when not in fullscreen', async function () {
-    const { provider, button } = await buildFixture();
-    provider.ctx.fullscreen = false;
-    await elementUpdated(button);
-    expect(button.enterSlotElement).to.not.have.attribute('hidden');
-    expect(button.exitSlotElement).to.have.attribute('hidden', '');
-  });
-
-  it('should set enter slot to hidden when in fullscreen', async function () {
-    const { provider, button } = await buildFixture();
-    provider.ctx.fullscreen = true;
-    await elementUpdated(button);
-    expect(button.enterSlotElement).to.have.attribute('hidden', '');
-    expect(button.exitSlotElement).to.not.have.attribute('hidden');
   });
 
   it(`should emit ${EnterFullscreenRequestEvent.TYPE} when clicked while not in fullscreen`, async function () {
@@ -108,9 +83,11 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
     const { provider, button } = await buildFixture();
     provider.ctx.fullscreen = true;
     await elementUpdated(button);
-    expect(button.pressed).to.be.true;
+    expect(button.isPressed).to.be.true;
+    expect(button).to.have.attribute('pressed');
     provider.ctx.fullscreen = false;
     await elementUpdated(button);
-    expect(button.pressed).to.be.false;
+    expect(button.isPressed).to.be.false;
+    expect(button).to.not.have.attribute('pressed');
   });
 });

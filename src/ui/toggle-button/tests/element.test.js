@@ -17,7 +17,7 @@ describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container } = await buildMediaFixture(html`
       <vds-toggle-button>
-        <div class="pressed" slot="pressed"></div>
+        <div class="pressed"></div>
         <div class="not-pressed"></div>
       </vds-toggle-button>
     `);
@@ -33,7 +33,7 @@ describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
     const { toggle } = await buildFixture();
     expect(toggle).dom.to.equal(`
       <vds-toggle-button>
-        <div class="pressed" slot="pressed" hidden></div>
+        <div class="pressed"></div>
         <div class="not-pressed"></div>
       </vds-toggle-button>
     `);
@@ -42,41 +42,39 @@ describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
   it('should render shadow DOM correctly', async function () {
     const { toggle } = await buildFixture();
     expect(toggle).shadowDom.to.equal(`
-      <vds-button
-        id="root"
-        class="root"
-        part="root button"
-				type="button"
-        exportparts="root: button-root"
+      <button
+        id="button"
+        part="button"
+        aria-pressed="false"
       >
-        <slot name="pressed"></slot>
         <slot></slot>
       </button>
     `);
   });
 
-  it('should toggle pressed state correctly', async function () {
+  it('should toggle pressed state on click', async function () {
     const { toggle } = await buildFixture();
-    const button = toggle.rootElement;
 
-    toggle.pressed = false;
+    toggle.click();
     await elementUpdated(toggle);
 
-    expect(button).to.not.have.attribute('pressed');
+    expect(toggle).to.have.attribute('pressed');
 
-    toggle.pressed = true;
+    toggle.click();
     await elementUpdated(toggle);
 
-    expect(button).to.have.attribute('pressed');
+    expect(toggle).to.not.have.attribute('pressed');
   });
 
-  it('should set disabled attribute', async function () {
+  it('should prevent clicking when disabled', async function () {
     const { toggle } = await buildFixture();
-    const button = toggle.rootElement;
 
     toggle.disabled = true;
+    toggle.click();
+
     await elementUpdated(toggle);
 
-    expect(button).to.have.attribute('disabled');
+    expect(toggle).to.have.attribute('disabled');
+    expect(toggle).to.not.have.attribute('pressed');
   });
 });

@@ -63,11 +63,21 @@ function Template({
           described-by=${ifNonEmpty(describedBy)}
           ?disabled=${disabled}
         >
-          <div slot="mute">Mute</div>
-          <div slot="unmute">Unmute</div>
+          <div class="mute">Mute</div>
+          <div class="unmute">Unmute</div>
         </vds-mute-button>
       </vds-media-container>
     </vds-media-controller>
+
+    <style>
+      vds-mute-button[pressed] .mute {
+        display: none;
+      }
+
+      vds-mute-button:not([pressed]) .unmute {
+        display: none;
+      }
+    </style>
   `;
 }
 

@@ -105,7 +105,7 @@ export class MediaUiElement extends LitElement {
    * @returns {import('lit').TemplateResult}
    */
   _renderRootChildren() {
-    return html`${this._renderDefaultSlot()}`;
+    return this._renderDefaultSlot();
   }
 
   /**

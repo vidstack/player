@@ -6,7 +6,6 @@ import './dist/providers/audio/define';
 import './dist/providers/hls/define';
 import './dist/providers/video/define';
 import './dist/ui/buffering-indicator/define';
-import './dist/ui/button/define';
 import './dist/ui/controls/define';
 import './dist/ui/fullscreen-button/define';
 import './dist/ui/mute-button/define';

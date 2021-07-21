@@ -1,5 +1,3 @@
-import { state } from 'lit/decorators.js';
-
 import { consumeContext } from '../../foundation/context/index.js';
 import { mediaContext, MediaRemoteControl } from '../../media/index.js';
 import { ToggleButtonElement } from '../toggle-button/index.js';
@@ -7,21 +5,28 @@ import { ToggleButtonElement } from '../toggle-button/index.js';
 export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
 
 /**
- * A button for toggling the muted state of the player.
+ * A button for toggling the muted state of the player. The `pressed` attribute will be updated
+ * on this element as the media `muted` state changes.
  *
  * @tagname vds-mute-button
- * @slot mute - The content to show when the `muted` state is `false`.
- * @slot unmute - The content to show when the `muted` state is `true`.
- * @csspart button - The root button (`<vds-button>`).
- * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix.
+ * @slot - Used to pass content into the mute toggle for showing mute/unmute states.
+ * @csspart button - The button element (`<button>`).
  * @example
  * ```html
  * <vds-mute-button>
- *   <!-- Showing -->
- *   <div slot="mute"></div>
- *   <!-- Hidden - `hidden` attribute will automatically be applied/removed -->
- *   <div slot="unmute" hidden></div>
+ *   <div class="mute">Mute</div>
+ *   <div class="unmute">Unmute</div>
  * </vds-mute-button>
+ * ```
+ * @example
+ * ```css
+ * vds-mute-button[pressed] .mute {
+ *   display: none;
+ * }
+ *
+ * vds-mute-button:not([pressed]) .unmute {
+ *   display: none;
+ * }
  * ```
  */
 export class MuteButtonElement extends ToggleButtonElement {
@@ -34,41 +39,14 @@ export class MuteButtonElement extends ToggleButtonElement {
   label = 'Mute';
 
   /**
-   * @internal
+   * @protected
    * @type {boolean}
    */
-  @state()
   @consumeContext(mediaContext.muted)
-  pressed = mediaContext.muted.initialValue;
-
-  /**
-   * The `mute` slotted element.
-   *
-   * @type {HTMLElement | undefined}
-   */
-  get muteSlotElement() {
-    return this._currentNotPressedSlotElement;
-  }
-
-  /**
-   * The `unmute` slotted element.
-   *
-   * @type {HTMLElement | undefined}
-   */
-  get unmuteSlotElement() {
-    return this._currentPressedSlotElement;
-  }
-
-  _getPressedSlotName() {
-    return 'unmute';
-  }
-
-  _getNotPressedSlotName() {
-    return 'mute';
-  }
+  _pressed = mediaContext.muted.initialValue;
 
   _handleButtonClick(event) {
-    if (this.pressed) {
+    if (this._pressed) {
       this._mediaRemote.unmute(event);
     } else {
       this._mediaRemote.mute(event);

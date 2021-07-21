@@ -51,9 +51,19 @@ function Template({
       @focus=${onFocus}
       @blur=${onBlur}
     >
-      <div slot="pressed">Pressed</div>
-      <div>Not Pressed</div>
+      <div class="pressed">Pressed</div>
+      <div class="not-pressed">Not Pressed</div>
     </vds-toggle-button>
+
+    <style>
+      vds-toggle-button[pressed] .pressed {
+        display: none;
+      }
+
+      vds-toggle-button:not([pressed]) .not-pressed {
+        display: none;
+      }
+    </style>
   `;
 }
 

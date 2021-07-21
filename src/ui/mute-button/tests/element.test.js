@@ -15,8 +15,8 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-mute-button>
-        <div class="mute" slot="mute"></div>
-        <div class="unmute" slot="unmute"></div>
+        <div class="mute"></div>
+        <div class="unmute"></div>
       </vds-mute-button>
     `);
 
@@ -33,8 +33,8 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     const { button } = await buildFixture();
     expect(button).dom.to.equal(`
       <vds-mute-button>
-        <div class="mute" slot="mute"></div>
-        <div class="unmute" slot="unmute" hidden></div>
+        <div class="mute"></div>
+        <div class="unmute"></div>
       </vds-mute-button>
     `);
   });
@@ -42,40 +42,15 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
   it('should render shadow DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).shadowDom.to.equal(`
-      <vds-button
-        id="root"
-        class="root"
-        label="Mute"
-        part="root button"
-				type="button"
-        exportparts="root: button-root"
+      <button
+        id="button"
+        aria-label="Mute"
+        aria-pressed="false"
+        part="button"
       >
-        <slot name="unmute"></slot>
-        <slot name="mute"></slot>
+        <slot></slot>
       </button>
     `);
-  });
-
-  it('should render mute/unmute slots', async function () {
-    const { button } = await buildFixture();
-    expect(button.muteSlotElement).to.have.class('mute');
-    expect(button.unmuteSlotElement).to.have.class('unmute');
-  });
-
-  it('should set unmute slot to hidden when unmuted', async function () {
-    const { provider, button } = await buildFixture();
-    provider.muted = false;
-    await elementUpdated(button);
-    expect(button.muteSlotElement).to.not.have.attribute('hidden');
-    expect(button.unmuteSlotElement).to.have.attribute('hidden', '');
-  });
-
-  it('should set mute slot to hidden when muted', async function () {
-    const { provider, button } = await buildFixture();
-    provider.muted = true;
-    await elementUpdated(button);
-    expect(button.muteSlotElement).to.have.attribute('hidden', '');
-    expect(button.unmuteSlotElement).to.not.have.attribute('hidden');
   });
 
   it(`should emit ${MuteRequestEvent.TYPE} with true detail clicked while unmuted`, async function () {
@@ -98,9 +73,11 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     const { provider, button } = await buildFixture();
     provider.ctx.muted = true;
     await elementUpdated(button);
-    expect(button.pressed).to.be.true;
+    expect(button.isPressed).to.be.true;
+    expect(button).to.have.attribute('pressed');
     provider.ctx.muted = false;
     await elementUpdated(button);
-    expect(button.pressed).to.be.false;
+    expect(button.isPressed).to.be.false;
+    expect(button).to.not.have.attribute('pressed');
   });
 });

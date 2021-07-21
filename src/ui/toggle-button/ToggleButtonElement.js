@@ -1,15 +1,9 @@
-// ** Dependencies **
-import '../button/define.js';
-
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import { WithFocus } from '../../foundation/elements/index.js';
-import { buildExportPartsAttr } from '../../utils/dom.js';
-import { ButtonElement } from '../button/index.js';
-import { ToggleElement } from '../toggle/index.js';
 import { toggleButtonElementStyles } from './styles.js';
 
 export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
@@ -19,33 +13,35 @@ export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
  *
  *
  * @tagname vds-toggle-button
- * @csspart button - The root button component (`<vds-button>`).
- * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix.
- * @slot The content to show when the toggle is not pressed.
- * @slot pressed - The content to show when the toggle is pressed.
+ * @csspart button - The button element (`<button>`).
+ * @slot - Used to pass content into the toggle for showing pressed and not pressed states.
  * @example
  * ```html
  * <vds-toggle-button label="Some action">
- *   <!-- Showing -->
- *   <div slot="pressed"></div>
- *   <!-- Hidden - `hidden` attribute will automatically be applied/removed -->
- *   <div hidden></div>
+ *   <div class="pressed">Pressed</div>
+ *   <div class="not-pressed">Not Pressed</div>
  * </vds-toggle-button>
  * ```
+ * @example
+ * ```css
+ * vds-toggle-button[pressed] .pressed {
+ *   display: none;
+ * }
+ *
+ * vds-toggle-button:not([pressed]) .not-pressed {
+ *  display: none;
+ * }
+ * ```
  */
-export class ToggleButtonElement extends WithFocus(ToggleElement) {
+export class ToggleButtonElement extends WithFocus(LitElement) {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
-    return [super.styles, toggleButtonElementStyles];
+    return [toggleButtonElementStyles];
   }
 
   /** @type {string[]} */
   static get parts() {
-    const buttonExportParts = ButtonElement.parts.map(
-      (part) => `button-${part}`
-    );
-
-    return ['root', 'button', ...buttonExportParts];
+    return ['button'];
   }
 
   // -------------------------------------------------------------------------------------------
@@ -76,57 +72,85 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
   @property({ attribute: 'described-by', reflect: true })
   describedBy;
 
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  @property({ attribute: 'pressed', type: Boolean, reflect: true })
+  _pressed = false;
+
+  /**
+   * Whether the toggle is in the `pressed` state.
+   *
+   * @returns {boolean}
+   */
+  get isPressed() {
+    return this._pressed;
+  }
+
   // -------------------------------------------------------------------------------------------
-  // Render
+  // Lifecycle
+  // -------------------------------------------------------------------------------------------
+
+  render() {
+    return this._renderButton();
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Button
   // -------------------------------------------------------------------------------------------
 
   /**
    * @protected
-   * @type {import('lit/directives/ref').Ref<ButtonElement>}
+   * @type {import('lit/directives/ref').Ref<HTMLButtonElement>}
    */
-  _rootRef = createRef();
+  _buttonRef = createRef();
 
   /**
-   * The component's root element.
+   * The component's `<button>` element.
    *
-   * @type {ButtonElement}
+   * @type {HTMLButtonElement}
    */
-  get rootElement() {
-    return /** @type {ButtonElement} */ (this._rootRef.value);
+  get buttonElement() {
+    return /** @type {HTMLButtonElement} */ (this._buttonRef.value);
   }
 
-  render() {
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  _renderButton() {
     return html`
-      <vds-button
-        id="root"
-        class=${this._getRootClassAttr()}
-        part=${this._getRootPartAttr()}
-        label=${ifNonEmpty(this.label)}
-        ?pressed=${this.pressed}
+      <button
+        id="button"
+        part=${this._getButtonPartAttr()}
+        aria-label=${ifNonEmpty(this.label)}
+        aria-pressed=${this._pressed ? 'true' : 'false'}
+        aria-described-by=${ifNonEmpty(this.describedBy)}
         ?disabled=${this.disabled}
-        described-by=${ifNonEmpty(this.describedBy)}
-        exportparts=${this._getRootExportPartsAttr()}
         ${on('click', this._handleButtonClick)}
-        ${ref(this._rootRef)}
+        ${on('click', this._handleButtonClickCapture, { capture: true })}
+        ${ref(this._buttonRef)}
       >
-        ${this._renderToggle()}
-      </vds-button>
+        ${this._renderButtonChildren()}
+      </button>
     `;
   }
 
-  click() {
-    if (this.disabled) return;
-    this.rootElement.click();
+  /**
+   * @protected
+   * @returns {import('lit').TemplateResult}
+   */
+  _renderButtonChildren() {
+    return this._renderDefaultSlot();
   }
 
   /**
-   * Override this to modify root CSS Classes.
-   *
    * @protected
-   * @returns {string}
+   * @returns {import('lit').TemplateResult}
    */
-  _getRootClassAttr() {
-    return 'root';
+  _renderDefaultSlot() {
+    return html`<slot></slot>`;
   }
 
   /**
@@ -135,27 +159,35 @@ export class ToggleButtonElement extends WithFocus(ToggleElement) {
    * @protected
    * @returns {string}
    */
-  _getRootPartAttr() {
-    return 'root button';
+  _getButtonPartAttr() {
+    return 'button';
+  }
+
+  click() {
+    if (this.disabled) return;
+    this.buttonElement.click();
   }
 
   /**
-   * Override this to modify root CSS export parts.
-   *
-   * @protected
-   * @returns {string}
-   */
-  _getRootExportPartsAttr() {
-    return buildExportPartsAttr(ButtonElement.parts, 'button');
-  }
-
-  /**
-   * Override this to modify on button click behaviour.
-   *
    * @protected
    * @param {Event} event
    */
   _handleButtonClick(event) {
-    this.pressed = !this.pressed;
+    this._pressed = !this._pressed;
+  }
+
+  /**
+   * @protected
+   * @param {Event} event
+   * @returns {boolean}
+   */
+  _handleButtonClickCapture(event) {
+    if (this.disabled) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      return false;
+    }
+
+    return true;
   }
 }

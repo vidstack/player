@@ -15,8 +15,8 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
     const { container, provider } = await buildMediaFixture(html`
       <vds-play-button>
-        <div class="play" slot="play"></div>
-        <div class="pause" slot="pause"></div>
+        <div class="play"></div>
+        <div class="pause"></div>
       </vds-play-button>
     `);
 
@@ -33,8 +33,8 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     const { button } = await buildFixture();
     expect(button).dom.to.equal(`
       <vds-play-button>
-        <div class="play" slot="play"></div>
-        <div class="pause" slot="pause" hidden></div>
+        <div class="play"></div>
+        <div class="pause"></div>
       </vds-play-button>
     `);
   });
@@ -42,40 +42,15 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
   it('should render shadow DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).shadowDom.to.equal(`
-      <vds-button
-        id="root"
-        class="root"
-        label="Play"
-        part="root button"
-				type="button"
-        exportparts="root: button-root"
+      <button
+        id="button"
+        aria-label="Play"
+        aria-pressed="false"
+        part="button"
       >
-        <slot name="pause"></slot>
-        <slot name="play"></slot>
+        <slot></slot>
       </button>
     `);
-  });
-
-  it('should render play/pause slots', async function () {
-    const { button } = await buildFixture();
-    expect(button.playSlotElement).to.have.class('play');
-    expect(button.pauseSlotElement).to.have.class('pause');
-  });
-
-  it('should set pause slot to hidden when paused is true', async function () {
-    const { provider, button } = await buildFixture();
-    provider.paused = true;
-    await elementUpdated(button);
-    expect(button.pauseSlotElement).to.have.attribute('hidden', '');
-    expect(button.playSlotElement).to.not.have.attribute('hidden');
-  });
-
-  it('should set play slot to hidden when paused is false', async function () {
-    const { provider, button } = await buildFixture();
-    provider.paused = false;
-    await elementUpdated(button);
-    expect(button.playSlotElement).to.have.attribute('hidden', '');
-    expect(button.pauseSlotElement).to.not.have.attribute('hidden');
   });
 
   it(`should emit ${PlayRequestEvent.TYPE} when clicked while paused`, async function () {
@@ -98,9 +73,11 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     const { provider, button } = await buildFixture();
     provider.ctx.paused = false;
     await elementUpdated(button);
-    expect(button.pressed).to.be.true;
+    expect(button.isPressed).to.be.true;
+    expect(button).to.have.attribute('pressed');
     provider.ctx.paused = true;
     await elementUpdated(button);
-    expect(button.pressed).to.be.false;
+    expect(button.isPressed).to.be.false;
+    expect(button).to.not.have.attribute('pressed');
   });
 });

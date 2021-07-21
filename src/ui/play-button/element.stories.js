@@ -63,11 +63,21 @@ function Template({
           described-by=${ifNonEmpty(describedBy)}
           ?disabled=${disabled}
         >
-          <div slot="play">Play</div>
-          <div slot="pause">Pause</div>
+          <div class="play">Play</div>
+          <div class="pause">Pause</div>
         </vds-play-button>
       </vds-media-container>
     </vds-media-controller>
+
+    <style>
+      vds-play-button[pressed] .play {
+        display: none;
+      }
+
+      vds-play-button:not([pressed]) .pause {
+        display: none;
+      }
+    </style>
   `;
 }
 

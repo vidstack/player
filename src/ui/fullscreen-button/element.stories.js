@@ -66,11 +66,21 @@ function Template({
           described-by="${ifNonEmpty(describedBy)}"
           ?disabled="${disabled}"
         >
-          <div slot="enter">Enter</div>
-          <div slot="exit">Exit</div>
+          <div class="enter">Enter</div>
+          <div class="exit">Exit</div>
         </vds-fullscreen-button>
       </vds-media-container>
     </vds-media-controller>
+
+    <style>
+      vds-fullscreen-button[pressed] .enter {
+        display: none;
+      }
+
+      vds-fullscreen-button:not([pressed]) .exit {
+        display: none;
+      }
+    </style>
   `;
 }
 

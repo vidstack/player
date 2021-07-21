@@ -1,33 +1,33 @@
-import { state } from 'lit/decorators.js';
-
 import { consumeContext } from '../../foundation/context/index.js';
-import {
-  mediaContext,
-  MediaRemoteControl,
-  PauseRequestEvent,
-  PlayRequestEvent
-} from '../../media/index.js';
+import { mediaContext, MediaRemoteControl } from '../../media/index.js';
 import { ToggleButtonElement } from '../toggle-button/index.js';
 
 export const PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
 
 /**
- * A button for toggling the playback state (play/pause) of the current media.
+ * A button for toggling the playback state (play/pause) of the current media. The `pressed`
+ * attribute will be updated on this element as the media `paused` state changes.
  *
  *
  * @tagname vds-play-button
- * @slot play - The content to show when the `paused` state is `true`.
- * @slot pause - The content to show when the `paused` state is `false`.
- * @csspart button - The root button (`<vds-button>`).
- * @csspart button-* - All `vds-button` parts re-exported with the `button` prefix.
+ * @slot - Used to pass content into the play toggle for showing play/pause states.
+ * @csspart button - The button element (`<button>`).
  * @example
  * ```html
  * <vds-play-button>
- *   <!-- Showing -->
- *   <div slot="play"></div>
- *   <!-- Hidden - `hidden` attribute will automatically be applied/removed -->
- *   <div slot="pause" hidden></div>
+ *   <div class="play">Play</div>
+ *   <div class="pause">Pause</div>
  * </vds-play-button>
+ * ```
+ * @example
+ * ```css
+ * vds-play-button[pressed] .play {
+ *   display: none;
+ * }
+ *
+ * vds-play-button:not([pressed]) .pause {
+ *   display: none;
+ * }
  * ```
  */
 export class PlayButtonElement extends ToggleButtonElement {
@@ -40,43 +40,16 @@ export class PlayButtonElement extends ToggleButtonElement {
   label = 'Play';
 
   /**
-   * @internal
+   * @protected
    * @type {boolean}
    */
   // Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
   // use `playing` because there could be a buffering delay (we want immediate feedback).
-  @state()
   @consumeContext(mediaContext.paused, { transform: (p) => !p })
-  pressed = false;
-
-  /**
-   * The `play` slotted element.
-   *
-   * @type {HTMLElement | undefined}
-   */
-  get playSlotElement() {
-    return this._currentNotPressedSlotElement;
-  }
-
-  /**
-   * The `pause` slotted element.
-   *
-   * @type {HTMLElement | undefined}
-   */
-  get pauseSlotElement() {
-    return this._currentPressedSlotElement;
-  }
-
-  _getPressedSlotName() {
-    return 'pause';
-  }
-
-  _getNotPressedSlotName() {
-    return 'play';
-  }
+  _pressed = false;
 
   _handleButtonClick(event) {
-    if (this.pressed) {
+    if (this._pressed) {
       this._mediaRemote.pause(event);
     } else {
       this._mediaRemote.play(event);
