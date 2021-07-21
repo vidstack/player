@@ -64,6 +64,7 @@ export class MediaUiElement extends LitElement {
    * @type {boolean}
    */
   @state()
+  @consumeContext(mediaContext.fullscreen)
   _mediaFullscreen = mediaContext.fullscreen.initialValue;
 
   /**
@@ -71,6 +72,7 @@ export class MediaUiElement extends LitElement {
    * @type {boolean}
    */
   @state()
+  @consumeContext(mediaContext.isVideoView)
   _mediaIsVideoView = mediaContext.isVideoView.initialValue;
 
   /**
@@ -78,6 +80,7 @@ export class MediaUiElement extends LitElement {
    * @type {boolean}
    */
   @state()
+  @consumeContext(mediaContext.playsinline)
   _mediaPlaysinline = mediaContext.playsinline.initialValue;
 
   // -------------------------------------------------------------------------------------------
