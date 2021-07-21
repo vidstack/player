@@ -73,6 +73,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.8",
     "@custom-elements-manifest/analyzer": "^0.4.1",
     "@open-wc/semantic-dom-diff": "^0.19.4",
     "@open-wc/testing": "^3.0.0-next.1",
@@ -90,6 +91,7 @@
     "@web/dev-server": "^0.1.8",
     "@web/dev-server-esbuild": "^0.2.12",
     "@web/test-runner": "^0.13.12",
+    "babel-loader": "^8.2.2",
     "esbuild": "^0.12.15",
     "esbuild-loader": "^2.13.1",
     "eslint": "^7.17.0",
