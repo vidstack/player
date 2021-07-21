@@ -6,7 +6,7 @@
     "checkJs": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["dom", "dom.iterable", "es2019"],
+    "lib": ["dom", "dom.iterable", "es2017"],
     "module": "es2015",
     "moduleResolution": "node",
     "noImplicitAny": false,
@@ -14,7 +14,7 @@
     "noUnusedParameters": false,
     "strict": true,
     "skipLibCheck": true,
-    "target": "es2019"
+    "target": "es2017"
   },
   "exclude": ["node_modules", "dist"]
 }

@@ -21,7 +21,7 @@ module.exports = {
       test: /\.(js|mjs|ts|tsx)$/,
       loader: 'esbuild-loader',
       options: {
-        loader: 'tsx',
+        loader: 'ts',
         target: 'es2015',
         sourcemap: true
       }
