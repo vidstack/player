@@ -23,7 +23,8 @@ module.exports = {
       options: {
         loader: 'ts',
         target: 'es2015',
-        sourcemap: true
+        sourcemap: true,
+        tsconfigRaw: require('../tsconfig-build.json')
       }
     });
 

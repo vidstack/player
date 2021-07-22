@@ -1,5 +1,4 @@
 import { EventListenerController } from '../../foundation/events/index.js';
-import { MediaControllerConnectEvent } from './MediaControllerElement.js';
 
 /**
  * @typedef {import('lit').ReactiveElement} MediaEventObserverHost
@@ -22,8 +21,8 @@ import { MediaControllerConnectEvent } from './MediaControllerElement.js';
  *
  * class MyElement extends HTMLElement {
  *   mediaEventObserver = new MediaEventObserver(this, {
- *     [PlayEvent.TYPE]: this.handlePlay,
- *     [CanPlayEvent.TYPE]: this.handleCanPlay
+ *     'vds-play': this.handlePlay,
+ *     'vds-can-play': this.handleCanPlay
  *   });
  *
  *   handlePlay(event: PlayEvent) {
@@ -62,7 +61,7 @@ export class MediaEventObserver {
      * @type {EventListenerController}
      */
     this._controllerEventListeners = new EventListenerController(host, {
-      [MediaControllerConnectEvent.TYPE]:
+      'vds-media-controller-connect':
         this.handleMediaControllerConnectEvent.bind(this)
     });
 
@@ -75,7 +74,7 @@ export class MediaEventObserver {
 
   /**
    * @protected
-   * @param {MediaControllerConnectEvent} event
+   * @param {import('./MediaControllerElement').MediaControllerConnectEvent} event
    */
   handleMediaControllerConnectEvent(event) {
     this._mediaEventListeners.removeListeners();

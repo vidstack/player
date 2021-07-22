@@ -1,4 +1,4 @@
-import { VdsCustomEvent } from '../../events/index.js';
+import { VdsEvent } from '../../events/index.js';
 
 /**
  * @template {Element} T
@@ -9,18 +9,17 @@ import { VdsCustomEvent } from '../../events/index.js';
  */
 
 /**
+ * @event
+ * @bubbles
+ * @composed
  * @template {Element} T
- * @typedef {{
- *   TYPE: string;
- *   new(...args: any): DiscoveryEvent<any>;
- * }} ScopedDiscoveryEvent<T>
+ * @typedef {VdsEvent<DiscoveryEventDetail<T>>} DiscoveryEvent
  */
 
 /**
  * @template {Element} T
- * @augments {VdsCustomEvent<DiscoveryEventDetail<T>>}
+ * @typedef {{
+ *   TYPE: keyof GlobalEventHandlersEventMap;
+ *   new(...args: any): DiscoveryEvent<any>;
+ * }} ScopedDiscoveryEvent<T>
  */
-export class DiscoveryEvent extends VdsCustomEvent {
-  static DEFAULT_BUBBLES = true;
-  static DEFAULT_COMPOSED = true;
-}

@@ -9,7 +9,6 @@ import {
   storybookAction,
   StorybookControl
 } from '../../foundation/storybook/index.js';
-import { VolumeChangeRequestEvent } from '../../media/index.js';
 import { pick } from '../../utils/object.js';
 import { SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../slider/element.stories.js';
 import { VOLUME_SLIDER_ELEMENT_TAG_NAME } from './VolumeSliderElement.js';
@@ -46,7 +45,7 @@ export const VOLUME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
     defaultValue: 0.5
   },
   // Media Request Actions
-  onVolumeChangeRequest: storybookAction(VolumeChangeRequestEvent.TYPE)
+  onVolumeChangeRequest: storybookAction('vds-volume-change-request')
 };
 
 export default {
@@ -76,7 +75,7 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      ${on(VolumeChangeRequestEvent.TYPE, onVolumeChangeRequest)}
+      ${on('vds-volume-change-request', onVolumeChangeRequest)}
     >
       <vds-media-container>
         <vds-fake-media-provider

@@ -6,7 +6,6 @@ import { buildMediaFixture } from '../../test-utils/index.js';
 import { ViewType } from '../../ViewType.js';
 import {
   MEDIA_CONTAINER_ELEMENT_TAG_NAME,
-  MediaContainerConnectEvent,
   MediaContainerElement
 } from '../MediaContainerElement.js';
 
@@ -133,7 +132,7 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
       });
 
       const { detail } = /** @type {MediaContainerConnectEvent} */ (
-        await oneEvent(document, MediaContainerConnectEvent.TYPE)
+        await oneEvent(document, 'vds-media-container-connect')
       );
 
       expect(detail.element).to.be.instanceOf(MediaContainerElement);

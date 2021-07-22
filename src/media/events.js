@@ -1,308 +1,233 @@
-import { VdsCustomEvent } from '../foundation/events/index.js';
+import { VdsEvent } from '../foundation/events/index.js';
 import { MediaType } from './MediaType.js';
 import { ViewType } from './ViewType.js';
 
 /**
  * @typedef {{
- *  [AbortEvent.TYPE]: AbortEvent;
- *  [CanPlayEvent.TYPE]: CanPlayEvent;
- *  [CanPlayThroughEvent.TYPE]: CanPlayThroughEvent;
- *  [DurationChangeEvent.TYPE]: DurationChangeEvent;
- *  [EmptiedEvent.TYPE]: EmptiedEvent;
- *  [EndedEvent.TYPE]: EndedEvent;
- *  [ErrorEvent.TYPE]: ErrorEvent;
- *  [LoadedDataEvent.TYPE]: LoadedDataEvent;
- *  [LoadedMetadataEvent.TYPE]: LoadedMetadataEvent;
- *  [LoadStartEvent.TYPE]: LoadStartEvent;
- *  [MediaTypeChangeEvent.TYPE]: MediaTypeChangeEvent;
- *  [PauseEvent.TYPE]: PauseEvent;
- *  [PlayEvent.TYPE]: PlayEvent;
- *  [PlayingEvent.TYPE]: PlayingEvent;
- *  [ProgressEvent.TYPE]: ProgressEvent;
- *  [SeekedEvent.TYPE]: SeekedEvent;
- *  [SeekingEvent.TYPE]: SeekingEvent;
- *  [StalledEvent.TYPE]: StalledEvent;
- *  [StartedEvent.TYPE]: StartedEvent;
- *  [SuspendEvent.TYPE]: SuspendEvent;
- *  [ReplayEvent.TYPE]: ReplayEvent;
- *  [TimeUpdateEvent.TYPE]: TimeUpdateEvent;
- *  [ViewTypeChangeEvent.TYPE]: ViewTypeChangeEvent;
- *  [VolumeChangeEvent.TYPE]: VolumeChangeEvent;
- *  [WaitingEvent.TYPE]: WaitingEvent;
+ *  'vds-abort': AbortEvent;
+ *  'vds-can-play': CanPlayEvent;
+ *  'vds-can-play-through': CanPlayThroughEvent;
+ *  'vds-duration-change': DurationChangeEvent;
+ *  'vds-emptied': EmptiedEvent;
+ *  'vds-ended': EndedEvent;
+ *  'vds-error': ErrorEvent;
+ *  'vds-loaded-data': LoadedDataEvent;
+ *  'vds-loaded-metadata': LoadedMetadataEvent;
+ *  'vds-load-start': LoadStartEvent;
+ *  'vds-media-type-change': MediaTypeChangeEvent;
+ *  'vds-pause': PauseEvent;
+ *  'vds-play': PlayEvent;
+ *  'vds-playing': PlayingEvent;
+ *  'vds-progress': ProgressEvent;
+ *  'vds-seeked': SeekedEvent;
+ *  'vds-seeking': SeekingEvent;
+ *  'vds-stalled': StalledEvent;
+ *  'vds-started': StartedEvent;
+ *  'vds-suspend': SuspendEvent;
+ *  'vds-replay': ReplayEvent;
+ *  'vds-time-update': TimeUpdateEvent;
+ *  'vds-view-type-change': ViewTypeChangeEvent;
+ *  'vds-volume-change': VolumeChangeEvent;
+ *  'vds-waiting': WaitingEvent;
  * }} MediaEvents
  */
 
 /**
- * @template DetailType
- * @augments {VdsCustomEvent<DetailType>}
- */
-export class MediaEvent extends VdsCustomEvent {}
-
-/**
  * Fired when the resource was not fully loaded, but not as the result of an error.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/abort_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} AbortEvent
  */
-export class AbortEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-abort';
-}
 
 /**
  * Fired when the user agent can play the media, but estimates that **not enough** data has been
  * loaded to play the media up to its end without having to stop for further buffering of content.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} CanPlayEvent
  */
-export class CanPlayEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-can-play';
-}
 
 /**
  * Fired when the user agent can play the media, and estimates that **enough** data has been
  * loaded to play the media up to its end without having to stop for further buffering of content.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} CanPlayThroughEvent
  */
-export class CanPlayThroughEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-can-play-through';
-}
 
 /**
  * Fired when the `duration` property changes.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/durationchange_event
- * @augments {MediaEvent<number>}
+ * @typedef {VdsEvent<number>} DurationChangeEvent
  */
-export class DurationChangeEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-duration-change';
-}
 
 /**
  * Fired when the media has become empty.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/emptied_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} EmptiedEvent
  */
-export class EmptiedEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-emptied';
-}
 
 /**
  * Fired when playback or streaming has stopped because the end of the media was reached or
  * because no further data is available. This is not fired if playback will start from the
  * beginning again due to the `loop` property being `true` (see `MediaReplayEvent`).
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} EndedEvent
  */
-export class EndedEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-ended';
-}
 
 /**
  * Fired when any error has occurred within the player such as a media error, or
  * potentially a request that cannot be fulfilled such as calling `requestFullscreen()`.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
- * @augments {MediaEvent<unknown>}
+ * @typedef {VdsEvent<unknown>} ErrorEvent
  */
-export class ErrorEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-error';
-}
 
 /**
  * Fired when the frame at the current playback position of the media has finished loading; often
  * the first frame.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadeddata_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} LoadedDataEvent
  */
-export class LoadedDataEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-loaded-data';
-}
 
 /**
  * Fired when the metadata has been loaded.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} LoadedMetadataEvent
  */
-export class LoadedMetadataEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-loaded-metadata';
-}
 
 /**
  * Fired when the browser has started to load a resource.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} LoadStartEvent
  */
-export class LoadStartEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-load-start';
-}
 
 /**
  * Fired when the `mediaType` property changes value.
  *
- * @augments {MediaEvent<MediaType>}
+ * @event
+ * @typedef {VdsEvent<MediaType>} MediaTypeChangeEvent
  */
-export class MediaTypeChangeEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-media-type-change';
-}
 
 /**
  * Fired when a request to `pause` an activity is handled and the activity has entered its
  * `paused` state, most commonly after the media has been paused through a call to the
  * `pause()` method.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} PauseEvent
  */
-export class PauseEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-pause';
-}
 
 /**
  * Fired when the `paused` property is changed from `true` to `false`, as a result of the `play()`
  * method, or the `autoplay` attribute.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} PlayEvent
  */
-export class PlayEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-play';
-}
 
 /**
  * Fired when playback is ready to start after having been paused or delayed due to lack of data.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} PlayingEvent
  */
-export class PlayingEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-playing';
-}
 
 /**
  * Fired periodically as the browser loads a resource.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} ProgressEvent
  */
-export class ProgressEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-progress';
-}
 
 /**
  * Fired when a seek operation completed, the current playback position has changed, and the
  * `seeking` property is changed to `false`.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event
- * @augments {MediaEvent<number>}
+ * @typedef {VdsEvent<number>} SeekedEvent
  */
-export class SeekedEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-seeked';
-}
 
 /**
  * Fired when a seek operation starts, meaning the seeking property has changed to `true` and the
  * media is seeking to a new position.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event
- * @augments {MediaEvent<number>}
+ * @typedef {VdsEvent<number>} SeekingEvent
  */
-export class SeekingEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-seeking';
-}
 
 /**
  * Fired when the user agent is trying to fetch media data, but data is unexpectedly not
  * forthcoming.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/stalled_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} StalledEvent
  */
-export class StalledEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-stalled';
-}
 
 /**
  * Fired when media playback has just started, in other words the at the moment the following
  * happens: `currentTime > 0`.
  *
- * @augments {MediaEvent<void>}
+ * @event
+ * @typedef {VdsEvent<void>} StartedEvent
  */
-export class StartedEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-started';
-}
 
 /**
  * Fired when media data loading has been suspended.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/suspend_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} SuspendEvent
  */
-export class SuspendEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-suspend';
-}
 
 /**
  * Fired when media playback starts from the beginning again due to the `loop` property being
  * set to `true`.
  *
- * @augments {MediaEvent<void>}
+ * @event
+ * @typedef {VdsEvent<void>} ReplayEvent
  */
-export class ReplayEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-replay';
-}
 
 /**
  * Fired when the `currentTime` property value changes due to media playback or the
  * user seeking.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event
- * @augments {MediaEvent<number>}
+ * @typedef {VdsEvent<number>} TimeUpdateEvent
  */
-export class TimeUpdateEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-time-update';
-}
 
 /**
  * Fired when the `viewType` property changes `value`. This will generally fire when the
  * new provider has mounted and determined what type of player view is appropriate given
  * the type of media it can play.
  *
- * @augments {MediaEvent<ViewType>}
+ * @event
+ * @typedef {VdsEvent<ViewType>} ViewTypeChangeEvent
  */
-export class ViewTypeChangeEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-view-type-change';
-}
 
 /**
  * @typedef {{
@@ -314,21 +239,15 @@ export class ViewTypeChangeEvent extends MediaEvent {
 /**
  * Fired when the `volume` or `muted` properties change value.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event
- * @augments {MediaEvent<VolumeChange>}
+ * @typedef {VdsEvent<VolumeChange>} VolumeChangeEvent
  */
-export class VolumeChangeEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-volume-change';
-}
 
 /**
  * Fired when playback has stopped because of a temporary lack of data.
  *
+ * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/waiting_event
- * @augments {MediaEvent<void>}
+ * @typedef {VdsEvent<void>} WaitingEvent
  */
-export class WaitingEvent extends MediaEvent {
-  /** @readonly */
-  static TYPE = 'vds-waiting';
-}

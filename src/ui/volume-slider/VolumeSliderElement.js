@@ -8,7 +8,7 @@ import { EventListenerController } from '../../foundation/events/index.js';
 import { mediaContext } from '../../media/context.js';
 import { MediaRemoteControl } from '../../media/index.js';
 import { round } from '../../utils/number.js';
-import { SliderElement, SliderValueChangeEvent } from '../slider/index.js';
+import { SliderElement } from '../slider/index.js';
 
 export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
 
@@ -100,12 +100,12 @@ export class VolumeSliderElement extends SliderElement {
    * @readonly
    */
   _sliderEventListenerController = new EventListenerController(this, {
-    [SliderValueChangeEvent.TYPE]: this._handleSliderValueChange
+    'vds-slider-value-change': this._handleSliderValueChange
   });
 
   /**
    * @protected
-   * @param {SliderValueChangeEvent} event
+   * @param {import('../slider').SliderValueChangeEvent} event
    */
   _handleSliderValueChange(event) {
     const newVolume = event.detail;

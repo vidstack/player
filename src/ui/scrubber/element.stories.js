@@ -7,19 +7,8 @@ import { html } from 'lit';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import { StorybookControl } from '../../foundation/storybook/StorybookControl.js';
-import {
-  createTimeRanges,
-  PauseRequestEvent,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent
-} from '../../media/index.js';
+import { createTimeRanges } from '../../media/index.js';
 import { omit } from '../../utils/object.js';
-import {
-  ScrubberPreviewConnectEvent,
-  ScrubberPreviewHideEvent,
-  ScrubberPreviewShowEvent
-} from '../scrubber-preview/index.js';
 import { SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES } from '../scrubber-preview/storybook.js';
 import { SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES } from '../seekable-progress-bar/element.stories.js';
 import { TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../time-slider/element.stories.js';
@@ -89,10 +78,10 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      ${on(PlayRequestEvent.TYPE, onPlayRequest)}
-      ${on(PauseRequestEvent.TYPE, onPauseRequest)}
-      ${on(SeekRequestEvent.TYPE, onSeekRequest)}
-      ${on(SeekingRequestEvent.TYPE, onSeekingRequest)}
+      ${on('vds-play-request', onPlayRequest)}
+      ${on('vds-pause-request', onPauseRequest)}
+      ${on('vds-seek-request', onSeekRequest)}
+      ${on('vds-seeking-request', onSeekingRequest)}
     >
       <vds-media-container>
         <vds-fake-media-provider
@@ -116,9 +105,9 @@ function Template({
           ?disabled=${disabled}
           ?hidden=${hidden}
           ?pause-while-dragging=${pauseWhileDragging}
-          ${on(ScrubberPreviewConnectEvent.TYPE, onScrubberPreviewConnect)}
-          ${on(ScrubberPreviewShowEvent.TYPE, onScrubberPreviewShow)}
-          ${on(ScrubberPreviewHideEvent.TYPE, onScrubberPreviewHide)}
+          ${on('vds-scrubber-preview-connect', onScrubberPreviewConnect)}
+          ${on('vds-scrubber-preview-show', onScrubberPreviewShow)}
+          ${on('vds-scrubber-preview-hide', onScrubberPreviewHide)}
         >
           <vds-scrubber-preview
             ?no-clamp=${noPreviewClamp}

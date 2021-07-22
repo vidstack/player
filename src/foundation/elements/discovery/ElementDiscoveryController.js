@@ -1,4 +1,4 @@
-import { DisposalBin } from '../../events/index.js';
+import { DisposalBin, VdsEvent } from '../../events/index.js';
 
 /**
  * @template {import('lit').ReactiveElement} HostElement
@@ -12,9 +12,9 @@ export class ElementDiscoveryController {
 
   /**
    * @param {HostElement} host
-   * @param {import('./events.js').ScopedDiscoveryEvent<HostElement>} ScopedDiscoveryEvent
+   * @param {{ eventType: (keyof GlobalEventHandlersEventMap) }} options
    */
-  constructor(host, ScopedDiscoveryEvent) {
+  constructor(host, options) {
     /**
      * @protected
      * @readonly
@@ -25,9 +25,9 @@ export class ElementDiscoveryController {
     /**
      * @protected
      * @readonly
-     * @type {import('./events.js').ScopedDiscoveryEvent<HostElement>}
+     * @type {string}
      */
-    this._ScopedDiscoveryEvent = ScopedDiscoveryEvent;
+    this._eventType = options.eventType;
 
     host.addController({
       hostConnected: this._handleHostConnected.bind(this),
@@ -39,10 +39,10 @@ export class ElementDiscoveryController {
    * @protected
    */
   _handleHostConnected() {
-    const ScopedDiscoveryEvent = this._ScopedDiscoveryEvent;
-
     this._host.dispatchEvent(
-      new ScopedDiscoveryEvent({
+      new VdsEvent(this._eventType, {
+        bubbles: true,
+        composed: true,
         detail: {
           element: this._host,
           onDisconnect: (callback) => {

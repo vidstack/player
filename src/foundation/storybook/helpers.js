@@ -1,5 +1,5 @@
 /**
- * @template {string} T
+ * @template {keyof GlobalEventHandlersEventMap} T
  * @param {T} eventType
  * @param {boolean} [hideInTable=true]
  * @returns {{ action: T, table: { disable: boolean } }}

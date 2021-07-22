@@ -7,6 +7,7 @@ import { ScreenOrientationEvents } from './foundation/screen-orientation';
 import {
   ControlsEvents,
   IdleEvents,
+  ManagedControlsConnectEvent,
   MediaContainerConnectEvent,
   MediaControllerConnectEvent,
   MediaEvents,
@@ -33,10 +34,12 @@ declare global {
       ScrubberPreviewEvents,
       SliderEvents,
       VideoPresentationEvents {
-    [MediaContainerConnectEvent.TYPE]: MediaContainerConnectEvent;
-    [MediaControllerConnectEvent.TYPE]: MediaControllerConnectEvent;
-    [MediaProviderConnectEvent.TYPE]: MediaProviderConnectEvent;
-    [ScrubberPreviewConnectEvent.TYPE]: ScrubberPreviewConnectEvent;
+    'vds-noop': void;
+    'vds-media-container-connect': MediaContainerConnectEvent;
+    'vds-media-controller-connect': MediaControllerConnectEvent;
+    'vds-media-provider-connect': MediaProviderConnectEvent;
+    'vds-scrubber-preview-connect': ScrubberPreviewConnectEvent;
+    'vds-managed-controls-connect': ManagedControlsConnectEvent;
   }
 }
 

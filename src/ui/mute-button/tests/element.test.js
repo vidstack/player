@@ -1,7 +1,6 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { MuteRequestEvent, UnmuteRequestEvent } from '../../../media/index.js';
 import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import {
   MUTE_BUTTON_ELEMENT_TAG_NAME,
@@ -53,20 +52,20 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it(`should emit ${MuteRequestEvent.TYPE} with true detail clicked while unmuted`, async function () {
+  it(`should emit mute request when clicked while unmuted`, async function () {
     const { provider, button } = await buildFixture();
     provider.muted = false;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, MuteRequestEvent.TYPE);
+    await oneEvent(button, 'vds-mute-request');
   });
 
-  it(`should emit ${UnmuteRequestEvent.TYPE} with false detail when clicked while muted`, async function () {
+  it(`should emit unmute request when clicked while muted`, async function () {
     const { provider, button } = await buildFixture();
     provider.muted = true;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, UnmuteRequestEvent.TYPE);
+    await oneEvent(button, 'vds-unmute-request');
   });
 
   it('should receive muted context updates', async function () {

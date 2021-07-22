@@ -1,5 +1,3 @@
-import { LitElement } from 'lit';
-
 import { provideContextRecord } from '../../foundation/context/index.js';
 import {
   DisposalBin,
@@ -7,10 +5,7 @@ import {
   listen,
   redispatchEvent
 } from '../../foundation/events/index.js';
-import {
-  FullscreenChangeEvent,
-  FullscreenController
-} from '../../foundation/fullscreen/index.js';
+import { FullscreenController } from '../../foundation/fullscreen/index.js';
 import { RequestQueue } from '../../foundation/queue/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import {
@@ -19,10 +14,7 @@ import {
 } from '../../utils/dom.js';
 import { isFunction, isNil, isNull } from '../../utils/unit.js';
 import { createMediaContextRecord, mediaContext } from '../context.js';
-import {
-  MediaProviderConnectEvent,
-  MediaProviderElement
-} from '../provider/index.js';
+import { MediaProviderElement } from '../provider/MediaProviderElement';
 
 const BRIDGE_DEFINED = Symbol('Vidstack.withMediaProviderBridge');
 
@@ -48,8 +40,8 @@ export function WithMediaProviderBridge(Base) {
      * @readonly
      */
     _eventListenerController = new EventListenerController(this, {
-      [MediaProviderConnectEvent.TYPE]: this._handleMediaProviderConnect,
-      [FullscreenChangeEvent.TYPE]: this._handleFullscreenChange
+      'vds-media-provider-connect': this._handleMediaProviderConnect,
+      'vds-fullscreen-change': this._handleFullscreenChange
     });
 
     // -------------------------------------------------------------------------------------------
@@ -81,7 +73,7 @@ export function WithMediaProviderBridge(Base) {
 
     /**
      * @protected
-     * @param {MediaProviderConnectEvent} event
+     * @param {import('../provider/MediaProviderElement').MediaProviderConnectEvent} event
      */
     _handleMediaProviderConnect(event) {
       event.stopPropagation();
@@ -284,7 +276,7 @@ export function WithMediaProviderBridge(Base) {
 
     /**
      * @protected
-     * @param {FullscreenChangeEvent} event
+     * @param {import('../../foundation/fullscreen').FullscreenChangeEvent} event
      */
     _handleFullscreenChange(event) {
       this.ctx.fullscreen = event.detail;

@@ -9,12 +9,7 @@ import { mediaContext, MediaRemoteControl } from '../../media/index.js';
 import { clampNumber, round } from '../../utils/number.js';
 import { formatSpokenTime } from '../../utils/time.js';
 import { throttle } from '../../utils/timing.js';
-import {
-  SliderDragEndEvent,
-  SliderDragStartEvent,
-  SliderElement,
-  SliderValueChangeEvent
-} from '../slider/index.js';
+import { SliderElement } from '../slider/index.js';
 
 export const TIME_SLIDER_ELEMENT_TAG_NAME = 'vds-time-slider';
 
@@ -249,14 +244,14 @@ export class TimeSliderElement extends SliderElement {
    * @readonly
    */
   _sliderEventListenerController = new EventListenerController(this, {
-    [SliderDragStartEvent.TYPE]: this.handleSliderDragStart,
-    [SliderValueChangeEvent.TYPE]: this._handleSliderValueChange,
-    [SliderDragEndEvent.TYPE]: this._handleSliderDragEnd
+    'vds-slider-drag-start': this.handleSliderDragStart,
+    'vds-slider-value-change': this._handleSliderValueChange,
+    'vds-slider-drag-end': this._handleSliderDragEnd
   });
 
   /**
    * @protected
-   * @param {SliderDragStartEvent} event
+   * @param {import('../slider').SliderDragStartEvent} event
    * @returns {Promise<void>}
    */
   async handleSliderDragStart(event) {
@@ -271,7 +266,7 @@ export class TimeSliderElement extends SliderElement {
 
   /**
    * @protected
-   * @param {SliderValueChangeEvent} event
+   * @param {import('../slider').SliderValueChangeEvent} event
    * @returns {Promise<void>}
    */
   async _handleSliderValueChange(event) {
@@ -289,7 +284,7 @@ export class TimeSliderElement extends SliderElement {
 
   /**
    * @protected
-   * @param {SliderDragEndEvent} event
+   * @param {import('../slider').SliderDragEndEvent} event
    * @returns {Promise<void>}
    */
   async _handleSliderDragEnd(event) {

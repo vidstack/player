@@ -9,7 +9,6 @@ import {
   storybookAction,
   StorybookControl
 } from '../../foundation/storybook/index.js';
-import { PauseRequestEvent, PlayRequestEvent } from '../../media/index.js';
 import { omit } from '../../utils/object.js';
 import { TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES } from '../toggle-button/element.stories.js';
 import { PLAY_BUTTON_ELEMENT_TAG_NAME } from './PlayButtonElement.js';
@@ -21,8 +20,8 @@ export const PLAY_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControl.Boolean,
     defaultValue: true
   },
-  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
-  onPauseRequest: storybookAction(PauseRequestEvent.TYPE)
+  onPlayRequest: storybookAction('vds-play-request'),
+  onPauseRequest: storybookAction('vds-pause-request')
 };
 
 export default {
@@ -49,8 +48,8 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      ${on(PlayRequestEvent.TYPE, onPlayRequest)}
-      ${on(PauseRequestEvent.TYPE, onPauseRequest)}
+      ${on('vds-play-request', onPlayRequest)}
+      ${on('vds-pause-request', onPauseRequest)}
     >
       <vds-media-container>
         <vds-fake-media-provider

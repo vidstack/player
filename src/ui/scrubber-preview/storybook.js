@@ -2,22 +2,16 @@ import {
   storybookAction,
   StorybookControl
 } from '../../foundation/storybook/index.js';
-import {
-  ScrubberPreviewHideEvent,
-  ScrubberPreviewShowEvent,
-  ScrubberPreviewTimeUpdateEvent
-} from './events.js';
-import { ScrubberPreviewConnectEvent } from './ScrubberPreviewElement.js';
 
 export const SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
   noClamp: { control: StorybookControl.Boolean, defaultValue: false },
   noTrackFill: { control: StorybookControl.Boolean, defaultValue: false },
   // Actions
-  onScrubberPreviewConnect: storybookAction(ScrubberPreviewConnectEvent.TYPE),
-  onScrubberPreviewShow: storybookAction(ScrubberPreviewShowEvent.TYPE),
+  onScrubberPreviewConnect: storybookAction('vds-scrubber-preview-connect'),
+  onScrubberPreviewShow: storybookAction('vds-scrubber-preview-show'),
   onScrubberPreviewTimeUpdate: storybookAction(
-    ScrubberPreviewTimeUpdateEvent.TYPE
+    'vds-scrubber-preview-time-update'
   ),
-  onScrubberPreviewHide: storybookAction(ScrubberPreviewHideEvent.TYPE)
+  onScrubberPreviewHide: storybookAction('vds-scrubber-preview-hide')
 };

@@ -1,9 +1,5 @@
 import { canOrientScreen, IS_CLIENT } from '../../utils/support.js';
-import { DisposalBin, listen } from '../events/index.js';
-import {
-  ScreenOrientationChangeEvent,
-  ScreenOrientationLockChangeEvent
-} from './events.js';
+import { DisposalBin, listen, vdsEvent } from '../events/index.js';
 import {
   ScreenOrientation,
   ScreenOrientationLock
@@ -131,7 +127,7 @@ export class ScreenOrientationController {
 
     this._isScreenOrientationLocked = true;
     this._host.dispatchEvent(
-      new ScreenOrientationLockChangeEvent({
+      vdsEvent('vds-screen-orientation-lock-change', {
         detail: lockType
       })
     );
@@ -150,7 +146,7 @@ export class ScreenOrientationController {
     await screen.orientation.unlock();
     this._isScreenOrientationLocked = false;
     this._host.dispatchEvent(
-      new ScreenOrientationLockChangeEvent({
+      vdsEvent('vds-screen-orientation-lock-change', {
         detail: screen.orientation.type
       })
     );
@@ -185,7 +181,7 @@ export class ScreenOrientationController {
   _handleOrientationChange(event) {
     this._screenOrientation = window.screen.orientation.type;
     this._host.dispatchEvent(
-      new ScreenOrientationChangeEvent({
+      vdsEvent('vds-screen-orientation-change', {
         detail: this._screenOrientation,
         originalEvent: event
       })

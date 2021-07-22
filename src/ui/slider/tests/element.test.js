@@ -2,7 +2,6 @@ import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
 import { IS_FIREFOX } from '../../../utils/support.js';
-import { SliderDragEndEvent, SliderDragStartEvent } from '../events.js';
 import { SLIDER_ELEMENT_TAG_NAME, SliderElement } from '../SliderElement.js';
 
 window.customElements.define(SLIDER_ELEMENT_TAG_NAME, SliderElement);
@@ -209,11 +208,11 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     setTimeout(() =>
       thumbContainer.dispatchEvent(new PointerEvent('pointerdown'))
     );
-    await oneEvent(slider, SliderDragStartEvent.TYPE);
+    await oneEvent(slider, 'vds-slider-drag-start');
     expect(slider.isDragging).to.be.true;
 
     setTimeout(() => document.dispatchEvent(new PointerEvent('pointerup')));
-    await oneEvent(slider, SliderDragEndEvent.TYPE);
+    await oneEvent(slider, 'vds-slider-drag-end');
     expect(slider.isDragging).to.be.false;
   });
 

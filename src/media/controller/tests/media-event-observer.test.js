@@ -1,8 +1,7 @@
 import { expect, oneEvent } from '@open-wc/testing';
 import { LitElement } from 'lit';
 
-import { PlayEvent, TimeUpdateEvent } from '../../events.js';
-import { MediaControllerConnectEvent } from '../index.js';
+import { VdsEvent } from '../../../foundation/events/index.js';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement
@@ -18,8 +17,8 @@ describe(MediaEventObserver.name, function () {
   it('should observe events', async function () {
     class ObserverElement extends LitElement {
       mediaEventObserver = new MediaEventObserver(this, {
-        [PlayEvent.TYPE]: this.handlePlay,
-        [TimeUpdateEvent.TYPE]: this.handleTimeUpdate
+        'vds-play': this.handlePlay,
+        'vds-time-update': this.handleTimeUpdate
       });
 
       /**
@@ -28,14 +27,14 @@ describe(MediaEventObserver.name, function () {
       events = [];
 
       /**
-       * @param {PlayEvent} event
+       * @param {import('../../events').PlayEvent} event
        */
       handlePlay(event) {
         this.events.push([this, event]);
       }
 
       /**
-       * @param {TimeUpdateEvent} event
+       * @param {import('../../events').TimeUpdateEvent} event
        */
       handleTimeUpdate(event) {
         this.events.push([this, event]);
@@ -58,10 +57,10 @@ describe(MediaEventObserver.name, function () {
       observer.append(controller);
     }, 0);
 
-    await oneEvent(observer, MediaControllerConnectEvent.TYPE);
+    await oneEvent(observer, 'vds-media-controller-connect');
 
-    const playEvent = new PlayEvent();
-    const timeUpdateEvent = new TimeUpdateEvent({ detail: 10 });
+    const playEvent = new VdsEvent('vds-play');
+    const timeUpdateEvent = new VdsEvent('vds-time-update', { detail: 10 });
 
     controller.dispatchEvent(playEvent);
     controller.dispatchEvent(timeUpdateEvent);

@@ -3,7 +3,8 @@ import { property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty, ifNumber } from '../../foundation/directives/index.js';
-import { ViewType, ViewTypeChangeEvent } from '../../media/index.js';
+import { vdsEvent } from '../../foundation/events/index.js';
+import { ViewType } from '../../media/index.js';
 import { Html5MediaElement } from '../html5/index.js';
 import { VideoFullscreenController } from './fullscreen/index.js';
 import { VideoPresentationController } from './presentation/index.js';
@@ -111,7 +112,7 @@ export class VideoElement extends Html5MediaElement {
 
     this.ctx.viewType = ViewType.Video;
     this.dispatchEvent(
-      new ViewTypeChangeEvent({
+      vdsEvent('vds-view-type-change', {
         detail: ViewType.Video
       })
     );

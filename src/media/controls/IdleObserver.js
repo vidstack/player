@@ -1,10 +1,8 @@
-import { EventListenerController } from '../../foundation/events/index.js';
-import { controlsContext } from './context.js';
 import {
-  IdleChangeEvent,
-  PauseIdleTrackingRequestEvent,
-  ResumeIdleTrackingRequestEvent
-} from './events.js';
+  EventListenerController,
+  vdsEvent
+} from '../../foundation/events/index.js';
+import { controlsContext } from './context.js';
 
 /**
  * @typedef {import('lit').ReactiveElement} IdleObserverHost
@@ -45,8 +43,8 @@ export class IdleObserver {
         keydown: this._handleUserInteraction,
         click: this._handleUserInteraction,
         pointermove: this._handleUserInteraction,
-        [PauseIdleTrackingRequestEvent.TYPE]: this._handlePauseIdleTracking,
-        [ResumeIdleTrackingRequestEvent.TYPE]: this._handleResumeIdleTracking
+        'vds-pause-idle-tracking': this._handlePauseIdleTracking,
+        'vds-resume-idle-tracking': this._handleResumeIdleTracking
       },
       { receiver: this }
     );
@@ -150,7 +148,7 @@ export class IdleObserver {
     if (this._idle.value === this._prevIdleValue) return;
 
     this._host.dispatchEvent(
-      new IdleChangeEvent({
+      vdsEvent('vds-idle-change', {
         originalEvent: request,
         detail: this.isIdle
       })

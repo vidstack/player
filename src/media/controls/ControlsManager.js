@@ -1,11 +1,9 @@
 import { ElementManager } from '../../foundation/elements/index.js';
-import { EventListenerController } from '../../foundation/events/index.js';
-import { controlsContext } from './context.js';
 import {
-  ControlsChangeEvent,
-  HideControlsRequestEvent,
-  ShowControlsRequestEvent
-} from './events.js';
+  EventListenerController,
+  vdsEvent
+} from '../../foundation/events/index.js';
+import { controlsContext } from './context.js';
 import { ManagedControlsConnectEvent } from './ManagedControls';
 
 /**
@@ -61,8 +59,8 @@ export class ControlsManager extends ElementManager {
     this._eventListenerController = new EventListenerController(
       this._host,
       {
-        [HideControlsRequestEvent.TYPE]: this._handleHideControlsRequest,
-        [ShowControlsRequestEvent.TYPE]: this._handleShowControlsRequest
+        'vds-hide-controls-request': this._handleHideControlsRequest,
+        'vds-show-controls-request': this._handleShowControlsRequest
       },
       { receiver: this }
     );
@@ -117,7 +115,7 @@ export class ControlsManager extends ElementManager {
     if (this._hidden.value === this._prevHiddenValue) return;
 
     this._host.dispatchEvent(
-      new ControlsChangeEvent({
+      vdsEvent('vds-controls-change', {
         detail: !this.isHidden,
         originalEvent: request
       })
@@ -128,7 +126,7 @@ export class ControlsManager extends ElementManager {
 
   /**
    * @protected
-   * @param {ShowControlsRequestEvent} request
+   * @param {import('./events').ShowControlsRequestEvent} request
    * @returns {Promise<void>}
    */
   async _handleShowControlsRequest(request) {
@@ -138,7 +136,7 @@ export class ControlsManager extends ElementManager {
 
   /**
    * @protected
-   * @param {HideControlsRequestEvent} request
+   * @param {import('./events').HideControlsRequestEvent} request
    * @returns {Promise<void>}
    */
   async _handleHideControlsRequest(request) {

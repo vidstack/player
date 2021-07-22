@@ -12,7 +12,7 @@ import { bindEventListeners, DisposalBin } from './events.js';
  */
 
 /**
- * @template {import('./events.js').EventHandlerRecord} EventHandlerRecord
+ * @template {import('./events.js').GlobalEventHandlerRecord} EventHandlerRecord
  */
 export class EventListenerController {
   /**

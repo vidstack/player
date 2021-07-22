@@ -1,28 +1,11 @@
 import { html, LitElement } from 'lit';
 
-import {
-  DiscoveryEvent,
-  ElementDiscoveryController
-} from '../../foundation/elements/index.js';
+import { ElementDiscoveryController } from '../../foundation/elements/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
 import { isNil } from '../../utils/unit.js';
-import {
-  MediaContainerConnectEvent,
-  MediaContainerElement
-} from '../container/index.js';
+import { MediaContainerElement } from '../container/index.js';
 import { cloneMediaContextRecord, mediaContext } from '../context.js';
 import { ControlsManager, IdleObserver } from '../controls/index.js';
-import {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent,
-  MuteRequestEvent,
-  PauseRequestEvent,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent,
-  UnmuteRequestEvent,
-  VolumeChangeRequestEvent
-} from '../request.events.js';
 import { mediaControllerStyles } from './styles.js';
 import { WithMediaProviderBridge } from './WithMediaProviderBridge.js';
 
@@ -31,14 +14,11 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
 /**
  * Fired when the media controller connects to the DOM.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {DiscoveryEvent<MediaControllerElement>}
+ * @typedef {import('../../foundation/elements').DiscoveryEvent<MediaControllerElement>} MediaControllerConnectEvent
  */
-export class MediaControllerConnectEvent extends DiscoveryEvent {
-  /** @readonly */
-  static TYPE = 'vds-media-controller-connect';
-}
 
 /**
  * The media controller acts as a message bus between the media provider and all other
@@ -89,26 +69,25 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @protected
    * @readonly
    */
-  _discoveryController = new ElementDiscoveryController(
-    this,
-    MediaControllerConnectEvent
-  );
+  _discoveryController = new ElementDiscoveryController(this, {
+    eventType: 'vds-media-controller-connect'
+  });
 
   /**
    * @protected
    * @readonly
    */
   _eventListenerController = new EventListenerController(this, {
-    [MediaContainerConnectEvent.TYPE]: this._handleMediaContainerConnect,
-    [MuteRequestEvent.TYPE]: this._handleMuteRequest,
-    [UnmuteRequestEvent.TYPE]: this._handleUnmuteRequest,
-    [PlayRequestEvent.TYPE]: this._handlePlayRequest,
-    [PauseRequestEvent.TYPE]: this._handlePauseRequest,
-    [SeekingRequestEvent.TYPE]: this._handleSeekingRequest,
-    [SeekRequestEvent.TYPE]: this._handleSeekRequest,
-    [VolumeChangeRequestEvent.TYPE]: this._handleVolumeChangeRequest,
-    [EnterFullscreenRequestEvent.TYPE]: this._handleEnterFullscreenRequest,
-    [ExitFullscreenRequestEvent.TYPE]: this._handleExitFullscreenRequest
+    'vds-media-container-connect': this._handleMediaContainerConnect,
+    'vds-mute-request': this._handleMuteRequest,
+    'vds-unmute-request': this._handleUnmuteRequest,
+    'vds-play-request': this._handlePlayRequest,
+    'vds-pause-request': this._handlePauseRequest,
+    'vds-seeking-request': this._handleSeekingRequest,
+    'vds-seek-request': this._handleSeekRequest,
+    'vds-volume-change-request': this._handleVolumeChangeRequest,
+    'vds-enter-fullscreen-request': this._handleEnterFullscreenRequest,
+    'vds-exit-fullscreen-request': this._handleExitFullscreenRequest
   });
 
   render() {
@@ -160,7 +139,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {MediaContainerConnectEvent} event
+   * @param {import('../container/MediaContainerElement').MediaContainerConnectEvent} event
    */
   _handleMediaContainerConnect(event) {
     event.stopPropagation();
@@ -193,7 +172,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {MuteRequestEvent} event
+   * @param {import('../request.events').MuteRequestEvent} event
    */
   _handleMuteRequest(event) {
     this._mediaRequestEventGateway(event);
@@ -202,7 +181,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {UnmuteRequestEvent} event
+   * @param {import('../request.events').UnmuteRequestEvent} event
    */
   _handleUnmuteRequest(event) {
     this._mediaRequestEventGateway(event);
@@ -211,7 +190,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {PlayRequestEvent} event
+   * @param {import('../request.events').PlayRequestEvent} event
    */
   _handlePlayRequest(event) {
     this._mediaRequestEventGateway(event);
@@ -220,7 +199,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {PauseRequestEvent} event
+   * @param {import('../request.events').PauseRequestEvent} event
    */
   _handlePauseRequest(event) {
     this._mediaRequestEventGateway(event);
@@ -229,7 +208,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {SeekRequestEvent} event
+   * @param {import('../request.events').SeekRequestEvent} event
    */
   _handleSeekingRequest(event) {
     this._mediaRequestEventGateway(event);
@@ -238,7 +217,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {SeekRequestEvent} event
+   * @param {import('../request.events').SeekRequestEvent} event
    */
   _handleSeekRequest(event) {
     this._mediaRequestEventGateway(event);
@@ -247,7 +226,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {VolumeChangeRequestEvent} event
+   * @param {import('../request.events').VolumeChangeRequestEvent} event
    */
   _handleVolumeChangeRequest(event) {
     this._mediaRequestEventGateway(event);
@@ -256,7 +235,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {EnterFullscreenRequestEvent} event
+   * @param {import('../request.events').EnterFullscreenRequestEvent} event
    * @returns {Promise<void>}
    */
   async _handleEnterFullscreenRequest(event) {
@@ -270,7 +249,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * @protected
-   * @param {ExitFullscreenRequestEvent} event
+   * @param {import('../request.events').ExitFullscreenRequestEvent} event
    * @returns {Promise<void>}
    */
   async _handleExitFullscreenRequest(event) {

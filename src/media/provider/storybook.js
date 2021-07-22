@@ -1,36 +1,7 @@
-import { FullscreenChangeEvent } from '../../foundation/fullscreen/events.js';
 import {
   storybookAction,
   StorybookControl
 } from '../../foundation/storybook/index.js';
-import {
-  AbortEvent,
-  CanPlayEvent,
-  CanPlayThroughEvent,
-  DurationChangeEvent,
-  EmptiedEvent,
-  EndedEvent,
-  ErrorEvent,
-  LoadedDataEvent,
-  LoadedMetadataEvent,
-  LoadStartEvent,
-  MediaTypeChangeEvent,
-  PauseEvent,
-  PlayEvent,
-  PlayingEvent,
-  ProgressEvent,
-  ReplayEvent,
-  SeekedEvent,
-  SeekingEvent,
-  StalledEvent,
-  StartedEvent,
-  SuspendEvent,
-  TimeUpdateEvent,
-  ViewTypeChangeEvent,
-  VolumeChangeEvent,
-  WaitingEvent
-} from '../events.js';
-import { MediaProviderConnectEvent } from './MediaProviderElement.js';
 
 export const MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
@@ -49,32 +20,32 @@ export const MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
     defaultValue: 0.5
   },
   // Media Actions
-  onAbort: storybookAction(AbortEvent.TYPE),
-  onCanPlay: storybookAction(CanPlayEvent.TYPE),
-  onCanPlayThrough: storybookAction(CanPlayThroughEvent.TYPE),
-  onDurationChange: storybookAction(DurationChangeEvent.TYPE),
-  onEmptied: storybookAction(EmptiedEvent.TYPE),
-  onEnded: storybookAction(EndedEvent.TYPE),
-  onError: storybookAction(ErrorEvent.TYPE),
-  onFullscreenChange: storybookAction(FullscreenChangeEvent.TYPE),
-  onLoadedData: storybookAction(LoadedDataEvent.TYPE),
-  onLoadedMetadata: storybookAction(LoadedMetadataEvent.TYPE),
-  onLoadStart: storybookAction(LoadStartEvent.TYPE),
-  onMediaTypeChange: storybookAction(MediaTypeChangeEvent.TYPE),
-  onPause: storybookAction(PauseEvent.TYPE),
-  onPlay: storybookAction(PlayEvent.TYPE),
-  onPlaying: storybookAction(PlayingEvent.TYPE),
-  onProgress: storybookAction(ProgressEvent.TYPE),
-  onReplay: storybookAction(ReplayEvent.TYPE),
-  onSeeked: storybookAction(SeekedEvent.TYPE),
-  onSeeking: storybookAction(SeekingEvent.TYPE),
-  onStalled: storybookAction(StalledEvent.TYPE),
-  onStarted: storybookAction(StartedEvent.TYPE),
-  onSuspend: storybookAction(SuspendEvent.TYPE),
-  onTimeUpdate: storybookAction(TimeUpdateEvent.TYPE),
-  onViewTypeChange: storybookAction(ViewTypeChangeEvent.TYPE),
-  onVolumeChange: storybookAction(VolumeChangeEvent.TYPE),
-  onWaiting: storybookAction(WaitingEvent.TYPE),
+  onAbort: storybookAction('vds-abort'),
+  onCanPlay: storybookAction('vds-can-play'),
+  onCanPlayThrough: storybookAction('vds-can-play-through'),
+  onDurationChange: storybookAction('vds-duration-change'),
+  onEmptied: storybookAction('vds-emptied'),
+  onEnded: storybookAction('vds-ended'),
+  onError: storybookAction('vds-error'),
+  onFullscreenChange: storybookAction('vds-fullscreen-change'),
+  onLoadedData: storybookAction('vds-loaded-data'),
+  onLoadedMetadata: storybookAction('vds-loaded-metadata'),
+  onLoadStart: storybookAction('vds-load-start'),
+  onMediaTypeChange: storybookAction('vds-media-type-change'),
+  onPause: storybookAction('vds-pause'),
+  onPlay: storybookAction('vds-play'),
+  onPlaying: storybookAction('vds-playing'),
+  onProgress: storybookAction('vds-progress'),
+  onReplay: storybookAction('vds-replay'),
+  onSeeked: storybookAction('vds-seeked'),
+  onSeeking: storybookAction('vds-seeking'),
+  onStalled: storybookAction('vds-stalled'),
+  onStarted: storybookAction('vds-started'),
+  onSuspend: storybookAction('vds-suspend'),
+  onTimeUpdate: storybookAction('vds-time-update'),
+  onViewTypeChange: storybookAction('vds-view-type-change'),
+  onVolumeChange: storybookAction('vds-volume-change'),
+  onWaiting: storybookAction('vds-waiting'),
   // Media Provider Actions
-  onMediaProviderConnect: storybookAction(MediaProviderConnectEvent.TYPE)
+  onMediaProviderConnect: storybookAction('vds-media-provider-connect')
 };

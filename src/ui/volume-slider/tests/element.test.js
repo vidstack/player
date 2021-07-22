@@ -1,9 +1,8 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { VolumeChangeRequestEvent } from '../../../media/index.js';
+import { vdsEvent } from '../../../foundation/events/index.js';
 import { buildMediaFixture } from '../../../media/test-utils/index.js';
-import { SliderValueChangeEvent } from '../../slider/index.js';
 import {
   VOLUME_SLIDER_ELEMENT_TAG_NAME,
   VolumeSliderElement
@@ -60,16 +59,11 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
 
     setTimeout(() => {
       volumeSlider.dispatchEvent(
-        new SliderValueChangeEvent({
-          detail: 80
-        })
+        vdsEvent('vds-slider-value-change', { detail: 80 })
       );
     }, 0);
 
-    const { detail } = await oneEvent(
-      controller,
-      VolumeChangeRequestEvent.TYPE
-    );
+    const { detail } = await oneEvent(controller, 'vds-volume-change-request');
 
     expect(detail).to.equal(0.8);
   });

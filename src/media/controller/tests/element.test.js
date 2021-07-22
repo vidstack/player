@@ -2,22 +2,10 @@ import { expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 import { mock, spy } from 'sinon';
 
+import { vdsEvent } from '../../../foundation/events/index.js';
 import { raf } from '../../../utils/dom.js';
 import { isFunction } from '../../../utils/unit.js';
 import { CanPlay } from '../../CanPlay.js';
-import { VolumeChangeEvent } from '../../events.js';
-import { MediaProviderConnectEvent } from '../../provider/MediaProviderElement.js';
-import {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent,
-  MuteRequestEvent,
-  PauseRequestEvent,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent,
-  UnmuteRequestEvent,
-  VolumeChangeRequestEvent
-} from '../../request.events.js';
 import {
   buildMediaFixture,
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
@@ -25,9 +13,9 @@ import {
 import { createTimeRanges } from '../../time-ranges.js';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
-  MediaControllerConnectEvent,
   MediaControllerElement
 } from '../MediaControllerElement.js';
+import { MediaRemoteControl } from '../MediaRemoteControl.js';
 
 describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
   describe('render', function () {
@@ -76,7 +64,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       });
 
       const { detail } = /** @type {MediaControllerConnectEvent} */ (
-        await oneEvent(document, MediaControllerConnectEvent.TYPE)
+        await oneEvent(document, 'vds-media-controller-connect')
       );
 
       expect(detail.element).to.be.instanceOf(MediaControllerElement);
@@ -140,7 +128,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
       controller.paused = false;
 
-      await oneEvent(controller, MediaProviderConnectEvent.TYPE);
+      await oneEvent(controller, 'vds-media-provider-connect');
 
       provider.forceMediaReady();
       expect(provider.paused).to.be.false;
@@ -172,12 +160,15 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
       setTimeout(() => {
         provider.dispatchEvent(
-          new VolumeChangeEvent({ detail, originalEvent })
+          vdsEvent('vds-volume-change', {
+            detail,
+            originalEvent
+          })
         );
       }, 0);
 
       const event = /** @type {VolumeChangeEvent} */ (
-        await oneEvent(controller, VolumeChangeEvent.TYPE)
+        await oneEvent(controller, 'vds-volume-change')
       );
 
       expect(event.detail).to.equal(detail);
@@ -189,7 +180,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     it('should handle mute request', async function () {
       const { container, provider } = await buildMediaFixture();
       const setMutedSpy = spy(provider, '_setMuted');
-      container.dispatchEvent(new MuteRequestEvent());
+      const remote = new MediaRemoteControl(container);
+      remote.mute();
       await provider.mediaRequestQueue.flush();
       expect(setMutedSpy).to.have.been.calledWith(true);
       setMutedSpy.restore();
@@ -198,7 +190,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     it('should handle unmute request', async function () {
       const { container, provider } = await buildMediaFixture();
       const setMutedSpy = spy(provider, '_setMuted');
-      container.dispatchEvent(new UnmuteRequestEvent());
+      const remote = new MediaRemoteControl(container);
+      remote.unmute();
       await provider.mediaRequestQueue.flush();
       expect(setMutedSpy).to.have.been.calledWith(false);
       setMutedSpy.restore();
@@ -207,7 +200,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     it('should handle play request', async function () {
       const { container, provider } = await buildMediaFixture();
       const playSpy = spy(provider, 'play');
-      container.dispatchEvent(new PlayRequestEvent());
+      const remote = new MediaRemoteControl(container);
+      remote.play();
       await provider.mediaRequestQueue.flush();
       expect(playSpy).to.have.been.calledOnce;
       playSpy.restore();
@@ -216,7 +210,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     it('should handle pause request', async function () {
       const { container, provider } = await buildMediaFixture();
       const pauseSpy = spy(provider, 'pause');
-      container.dispatchEvent(new PauseRequestEvent());
+      const remote = new MediaRemoteControl(container);
+      remote.pause();
       await provider.mediaRequestQueue.flush();
       expect(pauseSpy).to.have.been.calledOnce;
       pauseSpy.restore();
@@ -225,7 +220,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     it('should handle seek request', async function () {
       const { container, provider } = await buildMediaFixture();
       const setCurrentTimeSpy = spy(provider, '_setCurrentTime');
-      container.dispatchEvent(new SeekRequestEvent({ detail: 100 }));
+      const remote = new MediaRemoteControl(container);
+      remote.seek(100);
       await provider.mediaRequestQueue.flush();
       expect(setCurrentTimeSpy).to.have.been.calledWith(100);
       setCurrentTimeSpy.restore();
@@ -234,7 +230,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     it('should handle seeking request', async function () {
       const { container, provider } = await buildMediaFixture();
       const setCurrentTimeSpy = spy(provider, '_setCurrentTime');
-      container.dispatchEvent(new SeekingRequestEvent({ detail: 100 }));
+      const remote = new MediaRemoteControl(container);
+      remote.seeking(100);
       await provider.mediaRequestQueue.flush();
       expect(setCurrentTimeSpy).to.have.been.calledWith(100);
       setCurrentTimeSpy.restore();
@@ -243,7 +240,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     it('should handle volume change request', async function () {
       const { container, provider } = await buildMediaFixture();
       const setVolumeSpy = spy(provider, '_setVolume');
-      container.dispatchEvent(new VolumeChangeRequestEvent({ detail: 1 }));
+      const remote = new MediaRemoteControl(container);
+      remote.changeVolume(100);
       await provider.mediaRequestQueue.flush();
       expect(setVolumeSpy).to.have.been.calledWith(1);
       setVolumeSpy.restore();
@@ -253,7 +251,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       const { container } = await buildMediaFixture();
       const requestFullscreenMock = mock();
       container.requestFullscreen = requestFullscreenMock;
-      container.dispatchEvent(new EnterFullscreenRequestEvent());
+      const remote = new MediaRemoteControl(container);
+      remote.enterFullscreen();
       expect(requestFullscreenMock).to.have.been.called;
     });
 
@@ -261,7 +260,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       const { container } = await buildMediaFixture();
       const exitFullscreenMock = mock();
       container.exitFullscreen = exitFullscreenMock;
-      container.dispatchEvent(new ExitFullscreenRequestEvent());
+      const remote = new MediaRemoteControl(container);
+      remote.exitFullscreen();
       expect(exitFullscreenMock).to.have.been.called;
     });
   });

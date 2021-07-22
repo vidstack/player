@@ -2,10 +2,6 @@ import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 import { stub } from 'sinon';
 
-import {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent
-} from '../../../media/index.js';
 import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import {
   FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
@@ -63,20 +59,20 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it(`should emit ${EnterFullscreenRequestEvent.TYPE} when clicked while not in fullscreen`, async function () {
+  it(`should emit enter fullscreen request when clicked while not in fullscreen`, async function () {
     const { provider, button } = await buildFixture();
     provider.ctx.fullscreen = false;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, EnterFullscreenRequestEvent.TYPE);
+    await oneEvent(button, 'vds-enter-fullscreen-request');
   });
 
-  it(`should emit ${ExitFullscreenRequestEvent.TYPE} when clicked while in fullscreen`, async function () {
+  it(`should emit exit fullscreenr request when clicked while in fullscreen`, async function () {
     const { provider, button } = await buildFixture();
     provider.ctx.fullscreen = true;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, ExitFullscreenRequestEvent.TYPE);
+    await oneEvent(button, 'vds-exit-fullscreen-request');
   });
 
   it('should receive fullscreen context updates', async function () {

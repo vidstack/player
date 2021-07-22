@@ -1,7 +1,6 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { PauseRequestEvent, PlayRequestEvent } from '../../../media/index.js';
 import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import {
   PLAY_BUTTON_ELEMENT_TAG_NAME,
@@ -53,20 +52,20 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it(`should emit ${PlayRequestEvent.TYPE} when clicked while paused`, async function () {
+  it(`should emit play request when clicked while paused`, async function () {
     const { provider, button } = await buildFixture();
     provider.paused = true;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, PlayRequestEvent.TYPE);
+    await oneEvent(button, 'vds-play-request');
   });
 
-  it(`should emit ${PauseRequestEvent.TYPE} when clicked while not paused`, async function () {
+  it(`should emit pause request when clicked while playing`, async function () {
     const { provider, button } = await buildFixture();
     provider.paused = false;
     await elementUpdated(button);
     setTimeout(() => button.click());
-    await oneEvent(button, PauseRequestEvent.TYPE);
+    await oneEvent(button, 'vds-pause-request');
   });
 
   it('should receive transformed paused context updates', async function () {

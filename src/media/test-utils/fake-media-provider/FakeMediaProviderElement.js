@@ -1,14 +1,9 @@
 /* c8 ignore next 1000 */
 
+import { vdsEvent } from '../../../foundation/events/index.js';
+import { CanPlay } from '../../CanPlay.js';
 import { mediaContext } from '../../context.js';
-import {
-  CanPlay,
-  MediaProviderElement,
-  PauseEvent,
-  PlayEvent,
-  TimeUpdateEvent,
-  VolumeChangeEvent
-} from '../../index.js';
+import { MediaProviderElement } from '../../provider/MediaProviderElement.js';
 
 export const FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME = 'vds-fake-media-provider';
 
@@ -67,7 +62,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   _setCurrentTime(time) {
     this.ctx.currentTime = time;
-    this.dispatchEvent(new TimeUpdateEvent({ detail: time }));
+    this.dispatchEvent(vdsEvent('vds-time-update', { detail: time }));
   }
 
   _getMuted() {
@@ -77,7 +72,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   _setMuted(muted) {
     this.ctx.muted = muted;
     this.dispatchEvent(
-      new VolumeChangeEvent({
+      vdsEvent('vds-volume-change', {
         detail: {
           volume: this.ctx.volume,
           muted
@@ -97,7 +92,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   _setVolume(volume) {
     this.ctx.volume = volume;
     this.dispatchEvent(
-      new VolumeChangeEvent({
+      vdsEvent('vds-volume-change', {
         detail: {
           volume,
           muted: this.ctx.muted
@@ -124,12 +119,12 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   async play() {
     this.ctx.paused = false;
-    this.dispatchEvent(new PlayEvent());
+    this.dispatchEvent(vdsEvent('vds-play'));
   }
 
   async pause() {
     this.ctx.paused = true;
-    this.dispatchEvent(new PauseEvent());
+    this.dispatchEvent(vdsEvent('vds-pause'));
   }
 
   // -------------------------------------------------------------------------------------------

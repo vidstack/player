@@ -2,10 +2,7 @@ import { listen } from '../../../foundation/events/index.js';
 import { FullscreenController } from '../../../foundation/fullscreen/index.js';
 import { ScreenOrientationController } from '../../../foundation/screen-orientation/index.js';
 import { noop } from '../../../utils/unit.js';
-import {
-  VideoPresentationChangeEvent,
-  VideoPresentationController
-} from '../presentation/index.js';
+import { VideoPresentationController } from '../presentation/index.js';
 
 /**
  * Extends the base `FullscreenController` with additional logic for handling fullscreen
@@ -135,7 +132,7 @@ export class VideoFullscreenController extends FullscreenController {
     if (this.isSupportedOnSafari) {
       return listen(
         this._host,
-        VideoPresentationChangeEvent.TYPE,
+        'vds-video-presentation-change',
         this._handlePresentationModeChange.bind(this)
       );
     }
@@ -145,7 +142,7 @@ export class VideoFullscreenController extends FullscreenController {
 
   /**
    * @protected
-   * @param {VideoPresentationChangeEvent} event
+   * @param {import('../presentation/events').VideoPresentationChangeEvent} event
    */
   _handlePresentationModeChange(event) {
     this._handleFullscreenChange(event);

@@ -9,7 +9,6 @@ import {
   storybookAction,
   StorybookControl
 } from '../../foundation/storybook/index.js';
-import { MuteRequestEvent, UnmuteRequestEvent } from '../../media/index.js';
 import { omit } from '../../utils/object.js';
 import { TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES } from '../toggle-button/element.stories.js';
 import { MUTE_BUTTON_ELEMENT_TAG_NAME } from './MuteButtonElement.js';
@@ -21,8 +20,8 @@ export const MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControl.Boolean,
     defaultValue: false
   },
-  onMuteRequest: storybookAction(MuteRequestEvent.TYPE),
-  onUnmuteRequest: storybookAction(UnmuteRequestEvent.TYPE)
+  onMuteRequest: storybookAction('vds-mute-request'),
+  onUnmuteRequest: storybookAction('vds-unmute-request')
 };
 
 export default {
@@ -49,8 +48,8 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      ${on(MuteRequestEvent.TYPE, onMuteRequest)}
-      ${on(UnmuteRequestEvent.TYPE, onUnmuteRequest)}
+      ${on('vds-mute-request', onMuteRequest)}
+      ${on('vds-unmute-request', onUnmuteRequest)}
     >
       <vds-media-container>
         <vds-fake-media-provider

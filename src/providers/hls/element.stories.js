@@ -4,46 +4,11 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
-import { FullscreenChangeEvent } from '../../foundation/fullscreen/index.js';
 import {
   storybookAction,
   StorybookControl
 } from '../../foundation/storybook/index.js';
-import {
-  AbortEvent,
-  CanPlayEvent,
-  CanPlayThroughEvent,
-  DurationChangeEvent,
-  EmptiedEvent,
-  EndedEvent,
-  ErrorEvent,
-  LoadedDataEvent,
-  LoadedMetadataEvent,
-  LoadStartEvent,
-  MediaProviderConnectEvent,
-  MediaTypeChangeEvent,
-  PauseEvent,
-  PlayEvent,
-  PlayingEvent,
-  ProgressEvent,
-  ReplayEvent,
-  SeekedEvent,
-  SeekingEvent,
-  StalledEvent,
-  StartedEvent,
-  SuspendEvent,
-  TimeUpdateEvent,
-  ViewTypeChangeEvent,
-  VolumeChangeEvent,
-  WaitingEvent
-} from '../../media/index.js';
 import { VIDEO_ELEMENT_STORYBOOK_ARG_TYPES } from '../video/element.stories.js';
-import {
-  HlsAttachEvent,
-  HlsBuildEvent,
-  HlsDetachEvent,
-  HlsNoSupportEvent
-} from './events.js';
 import { HLS_ELEMENT_TAG_NAME } from './HlsElement.js';
 
 export const HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
@@ -58,10 +23,12 @@ export const HLS_ELEMENT_STORYBOOK_ARG_TYPES = {
     defaultValue:
       'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8'
   },
-  onHlsEngineAttach: storybookAction(HlsAttachEvent.TYPE),
-  onHlsEngineBuilt: storybookAction(HlsBuildEvent.TYPE),
-  onHlsEngineDetach: storybookAction(HlsDetachEvent.TYPE),
-  onHlsEngineNoSupport: storybookAction(HlsNoSupportEvent.TYPE)
+  onHlsAttach: storybookAction('vds-hls-attach'),
+  onHlsBuild: storybookAction('vds-hls-build'),
+  onHlsDetach: storybookAction('vds-hls-detach'),
+  onHlsLoad: storybookAction('vds-hls-load'),
+  onHlsLoadError: storybookAction('vds-hls-load-error'),
+  onHlsNoSupport: storybookAction('vds-hls-no-support')
 };
 
 export default {
@@ -128,10 +95,12 @@ function Template({
   hlsConfig,
   hlsLibrary,
   // HLS Events
-  onHlsEngineAttach,
-  onHlsEngineBuilt,
-  onHlsEngineDetach,
-  onHlsEngineNoSupport
+  onHlsAttach,
+  onHlsBuild,
+  onHlsDetach,
+  onHlsLoad,
+  onHlsLoadError,
+  onHlsNoSupport
 }) {
   return html`
     <vds-hls
@@ -155,37 +124,39 @@ function Template({
       ?disable-pip=${disablePiP}
       ?controls=${controls}
       ?auto-pip=${autoPiP}
-      ${on(AbortEvent.TYPE, onAbort)}
-      ${on(CanPlayEvent.TYPE, onCanPlay)}
-      ${on(CanPlayThroughEvent.TYPE, onCanPlayThrough)}
-      ${on(DurationChangeEvent.TYPE, onDurationChange)}
-      ${on(EmptiedEvent.TYPE, onEmptied)}
-      ${on(EndedEvent.TYPE, onEnded)}
-      ${on(ErrorEvent.TYPE, onError)}
-      ${on(FullscreenChangeEvent.TYPE, onFullscreenChange)}
-      ${on(LoadedDataEvent.TYPE, onLoadedData)}
-      ${on(LoadedMetadataEvent.TYPE, onLoadedMetadata)}
-      ${on(LoadStartEvent.TYPE, onLoadStart)}
-      ${on(MediaProviderConnectEvent.TYPE, onMediaProviderConnect)}
-      ${on(MediaTypeChangeEvent.TYPE, onMediaTypeChange)}
-      ${on(PauseEvent.TYPE, onPause)}
-      ${on(PlayEvent.TYPE, onPlay)}
-      ${on(PlayingEvent.TYPE, onPlaying)}
-      ${on(ProgressEvent.TYPE, onProgress)}
-      ${on(ReplayEvent.TYPE, onReplay)}
-      ${on(SeekedEvent.TYPE, onSeeked)}
-      ${on(SeekingEvent.TYPE, onSeeking)}
-      ${on(StalledEvent.TYPE, onStalled)}
-      ${on(StartedEvent.TYPE, onStarted)}
-      ${on(SuspendEvent.TYPE, onSuspend)}
-      ${on(TimeUpdateEvent.TYPE, onTimeUpdate)}
-      ${on(ViewTypeChangeEvent.TYPE, onViewTypeChange)}
-      ${on(VolumeChangeEvent.TYPE, onVolumeChange)}
-      ${on(WaitingEvent.TYPE, onWaiting)}
-      ${on(HlsBuildEvent.TYPE, onHlsEngineBuilt)}
-      ${on(HlsAttachEvent.TYPE, onHlsEngineAttach)}
-      ${on(HlsDetachEvent.TYPE, onHlsEngineDetach)}
-      ${on(HlsNoSupportEvent.TYPE, onHlsEngineNoSupport)}
+      ${on('vds-abort', onAbort)}
+      ${on('vds-can-play', onCanPlay)}
+      ${on('vds-can-play-through', onCanPlayThrough)}
+      ${on('vds-duration-change', onDurationChange)}
+      ${on('vds-emptied', onEmptied)}
+      ${on('vds-ended', onEnded)}
+      ${on('vds-error', onError)}
+      ${on('vds-fullscreen-change', onFullscreenChange)}
+      ${on('vds-loaded-data', onLoadedData)}
+      ${on('vds-loaded-metadata', onLoadedMetadata)}
+      ${on('vds-load-start', onLoadStart)}
+      ${on('vds-media-provider-connect', onMediaProviderConnect)}
+      ${on('vds-media-type-change', onMediaTypeChange)}
+      ${on('vds-pause', onPause)}
+      ${on('vds-play', onPlay)}
+      ${on('vds-playing', onPlaying)}
+      ${on('vds-progress', onProgress)}
+      ${on('vds-replay', onReplay)}
+      ${on('vds-seeked', onSeeked)}
+      ${on('vds-seeking', onSeeking)}
+      ${on('vds-stalled', onStalled)}
+      ${on('vds-started', onStarted)}
+      ${on('vds-suspend', onSuspend)}
+      ${on('vds-time-update', onTimeUpdate)}
+      ${on('vds-view-type-change', onViewTypeChange)}
+      ${on('vds-volume-change', onVolumeChange)}
+      ${on('vds-waiting', onWaiting)}
+      ${on('vds-hls-build', onHlsBuild)}
+      ${on('vds-hls-attach', onHlsAttach)}
+      ${on('vds-hls-detach', onHlsDetach)}
+      ${on('vds-hls-load', onHlsLoad)}
+      ${on('vds-hls-load-error', onHlsLoadError)}
+      ${on('vds-hls-no-support', onHlsNoSupport)}
     ></vds-hls>
   `;
 }

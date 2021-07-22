@@ -62,7 +62,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     const { controller, controls } = await buildFixture();
     controller.idleObserver.timeout = 0;
     controller.idleObserver.start();
-    await oneEvent(controller, IdleChangeEvent.TYPE);
+    await oneEvent(controller, 'vds-idle-change');
     expect(controls).to.have.attribute('idle');
     await controller.idleObserver.stop();
     await elementUpdated(controls);

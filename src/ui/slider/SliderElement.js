@@ -5,18 +5,16 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import { WithFocus } from '../../foundation/elements/index.js';
-import { EventListenerController } from '../../foundation/events/index.js';
+import {
+  EventListenerController,
+  vdsEvent
+} from '../../foundation/events/index.js';
 import {
   clampNumber,
   getNumberOfDecimalPlaces,
   round
 } from '../../utils/number.js';
 import { rafThrottle } from '../../utils/timing.js';
-import {
-  SliderDragEndEvent,
-  SliderDragStartEvent,
-  SliderValueChangeEvent
-} from './events.js';
 import { sliderElementStyles } from './styles.js';
 
 export const SLIDER_ELEMENT_TAG_NAME = 'vds-slider';
@@ -102,15 +100,6 @@ export class SliderElement extends WithFocus(LitElement) {
   /** @type {string[]} */
   static get parts() {
     return ['root', 'thumb', 'track', 'track-fill'];
-  }
-
-  /** @type {string[]} */
-  static get events() {
-    return [
-      SliderDragEndEvent.TYPE,
-      SliderDragStartEvent.TYPE,
-      SliderValueChangeEvent.TYPE
-    ];
   }
 
   // -------------------------------------------------------------------------------------------
@@ -666,7 +655,7 @@ export class SliderElement extends WithFocus(LitElement) {
     this.setAttribute('dragging', '');
     this._updateValueBasedOnThumbPosition(event);
     this.dispatchEvent(
-      new SliderDragStartEvent({
+      vdsEvent('vds-slider-drag-start', {
         originalEvent: event,
         detail: this.value
       })
@@ -684,7 +673,7 @@ export class SliderElement extends WithFocus(LitElement) {
     this.removeAttribute('dragging');
     this._updateValueBasedOnThumbPosition(event);
     this.dispatchEvent(
-      new SliderDragEndEvent({
+      vdsEvent('vds-slider-drag-end', {
         originalEvent: event,
         detail: this.value
       })
@@ -801,7 +790,7 @@ export class SliderElement extends WithFocus(LitElement) {
     if (this.value === this._lastDispatchedValue) return;
 
     this.dispatchEvent(
-      new SliderValueChangeEvent({
+      vdsEvent('vds-slider-value-change', {
         detail: this.value,
         originalEvent: event
       })

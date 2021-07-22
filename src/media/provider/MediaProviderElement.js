@@ -2,15 +2,14 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import {
-  DiscoveryEvent,
   ElementDiscoveryController,
   ElementDisposalController
 } from '../../foundation/elements/index.js';
-import { EventListenerController } from '../../foundation/events/index.js';
 import {
-  FullscreenChangeEvent,
-  FullscreenController
-} from '../../foundation/fullscreen/index.js';
+  EventListenerController,
+  vdsEvent
+} from '../../foundation/events/index.js';
+import { FullscreenController } from '../../foundation/fullscreen/index.js';
 import { RequestQueue } from '../../foundation/queue/index.js';
 import {
   ScreenOrientationController,
@@ -23,47 +22,17 @@ import {
   createMediaContextRecord,
   mediaContext
 } from '../context.js';
-import {
-  AbortEvent,
-  CanPlayEvent,
-  CanPlayThroughEvent,
-  DurationChangeEvent,
-  EmptiedEvent,
-  EndedEvent,
-  ErrorEvent,
-  LoadedDataEvent,
-  LoadedMetadataEvent,
-  LoadStartEvent,
-  MediaTypeChangeEvent,
-  PauseEvent,
-  PlayEvent,
-  PlayingEvent,
-  ProgressEvent,
-  ReplayEvent,
-  SeekedEvent,
-  SeekingEvent,
-  StalledEvent,
-  StartedEvent,
-  SuspendEvent,
-  TimeUpdateEvent,
-  ViewTypeChangeEvent,
-  VolumeChangeEvent,
-  WaitingEvent
-} from '../events.js';
 import { MediaType } from '../MediaType.js';
 import { ViewType } from '../ViewType.js';
 
 /**
  * Fired when the media provider connects to the DOM.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {DiscoveryEvent<MediaProviderElement>}
+ * @typedef {import('../../foundation/elements').DiscoveryEvent<MediaProviderElement>} MediaProviderConnectEvent
  */
-export class MediaProviderConnectEvent extends DiscoveryEvent {
-  /** @readonly */
-  static TYPE = 'vds-media-provider-connect';
-}
 
 /**
  * Base abstract media provider class that defines the interface to be implemented by
@@ -71,36 +40,36 @@ export class MediaProviderConnectEvent extends DiscoveryEvent {
  *
  */
 export class MediaProviderElement extends LitElement {
-  /** @type {string[]} */
+  /** @type {(keyof GlobalEventHandlersEventMap)[]} */
   static get events() {
     return [
-      AbortEvent.TYPE,
-      CanPlayEvent.TYPE,
-      CanPlayThroughEvent.TYPE,
-      DurationChangeEvent.TYPE,
-      EmptiedEvent.TYPE,
-      EndedEvent.TYPE,
-      ErrorEvent.TYPE,
-      FullscreenChangeEvent.TYPE,
-      LoadedDataEvent.TYPE,
-      LoadedMetadataEvent.TYPE,
-      LoadStartEvent.TYPE,
-      MediaTypeChangeEvent.TYPE,
-      PauseEvent.TYPE,
-      PlayEvent.TYPE,
-      PlayingEvent.TYPE,
-      ProgressEvent.TYPE,
-      ReplayEvent.TYPE,
-      SeekedEvent.TYPE,
-      SeekingEvent.TYPE,
-      StalledEvent.TYPE,
-      StartedEvent.TYPE,
-      SuspendEvent.TYPE,
-      TimeUpdateEvent.TYPE,
-      ViewTypeChangeEvent.TYPE,
-      VolumeChangeEvent.TYPE,
-      WaitingEvent.TYPE,
-      MediaProviderConnectEvent.TYPE
+      'vds-abort',
+      'vds-can-play',
+      'vds-can-play-through',
+      'vds-duration-change',
+      'vds-emptied',
+      'vds-ended',
+      'vds-error',
+      'vds-fullscreen-change',
+      'vds-loaded-data',
+      'vds-load-start',
+      'vds-loaded-metadata',
+      'vds-media-type-change',
+      'vds-pause',
+      'vds-play',
+      'vds-playing',
+      'vds-progress',
+      'vds-replay',
+      'vds-seeked',
+      'vds-seeking',
+      'vds-stalled',
+      'vds-started',
+      'vds-suspend',
+      'vds-time-update',
+      'vds-view-type-change',
+      'vds-volume-change',
+      'vds-waiting',
+      'vds-media-provider-connect'
     ];
   }
 
@@ -118,17 +87,16 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @readonly
    */
-  _discoveryController = new ElementDiscoveryController(
-    this,
-    MediaProviderConnectEvent
-  );
+  _discoveryController = new ElementDiscoveryController(this, {
+    eventType: 'vds-media-provider-connect'
+  });
 
   /**
    * @protected
    * @readonly
    */
   _eventListenerController = new EventListenerController(this, {
-    [FullscreenChangeEvent.TYPE]: this._handleFullscreenChange
+    'vds-fullscreen-change': this._handleFullscreenChange
   });
 
   connectedCallback() {
@@ -671,9 +639,7 @@ export class MediaProviderElement extends LitElement {
    */
   _throwIfNotReadyForPlayback() {
     if (!this.canPlay) {
-      throw Error(
-        `Media is not ready - wait for \`${CanPlayEvent.TYPE}\` event.`
-      );
+      throw Error(`Media is not ready - wait for \`vds-can-play\` event.`);
     }
   }
 
@@ -700,9 +666,9 @@ export class MediaProviderElement extends LitElement {
       this.ctx.ended = false;
     } else if (!this.ctx.ended && this._hasPlaybackRoughlyEnded()) {
       this.ctx.waiting = false;
-      this.dispatchEvent(new SuspendEvent());
+      this.dispatchEvent(vdsEvent('vds-suspend'));
       this.ctx.ended = true;
-      this.dispatchEvent(new EndedEvent());
+      this.dispatchEvent(vdsEvent('vds-error'));
     }
   }
 
@@ -739,7 +705,7 @@ export class MediaProviderElement extends LitElement {
    */
   _handleMediaReady(event) {
     this.ctx.canPlay = true;
-    this.dispatchEvent(new CanPlayEvent({ originalEvent: event }));
+    this.dispatchEvent(vdsEvent('vds-can-play', { originalEvent: event }));
     this.mediaRequestQueue.flush();
     this.mediaRequestQueue.serveImmediately = true;
   }
@@ -924,7 +890,7 @@ export class MediaProviderElement extends LitElement {
 
   /**
    * @protected
-   * @param {FullscreenChangeEvent} event
+   * @param {import('../../foundation/fullscreen').FullscreenChangeEvent} event
    */
   _handleFullscreenChange(event) {
     this.ctx.fullscreen = event.detail;

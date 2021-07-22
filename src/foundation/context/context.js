@@ -1,9 +1,10 @@
 import { isUndefined, noop, notEqual } from '../../utils/unit.js';
 
 /**
- * @augments CustomEvent<import('./types').ContextConsumerDetail>
+ * @augments CustomEvent<import('./types').ContextConsumerConnectEventDetail>
  */
 class ConsumerConnectEvent extends CustomEvent {
+  /** @readonly */
   static TYPE = 'vds-context-connect';
 
   /**
@@ -15,7 +16,7 @@ class ConsumerConnectEvent extends CustomEvent {
   }
 
   /**
-   * @param {import('./types').ContextConsumerDetail} detail
+   * @param {import('./types').ContextConsumerConnectEventDetail} detail
    */
   constructor(detail) {
     super(ConsumerConnectEvent.TYPE, {
@@ -43,7 +44,7 @@ export function createContext(initialValue) {
 
     let currentValue = initialValue;
 
-    /** @type {Set<import('./types').ContextConsumerDetail>} */
+    /** @type {Set<import('./types').ContextConsumerConnectEventDetail>} */
     let consumers = new Set();
 
     /**

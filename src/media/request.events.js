@@ -1,132 +1,96 @@
-import { VdsCustomEvent } from '../foundation/events/index.js';
+import { VdsEvent } from '../foundation/events/index.js';
 
 /**
  * @typedef {{
- *  [MuteRequestEvent.TYPE]: MuteRequestEvent;
- *  [UnmuteRequestEvent.TYPE]: UnmuteRequestEvent;
- *  [EnterFullscreenRequestEvent.TYPE]: EnterFullscreenRequestEvent;
- *  [ExitFullscreenRequestEvent.TYPE]: ExitFullscreenRequestEvent;
- *  [PlayRequestEvent.TYPE]: PlayRequestEvent;
- *  [PauseRequestEvent.TYPE]: PauseRequestEvent;
- *  [SeekRequestEvent.TYPE]: SeekRequestEvent;
- *  [SeekingRequestEvent.TYPE]: SeekingRequestEvent;
- *  [VolumeChangeRequestEvent.TYPE]: VolumeChangeRequestEvent;
+ *  'vds-mute-request': MuteRequestEvent;
+ *  'vds-unmute-request': UnmuteRequestEvent;
+ *  'vds-enter-fullscreen-request': EnterFullscreenRequestEvent;
+ *  'vds-exit-fullscreen-request': ExitFullscreenRequestEvent;
+ *  'vds-play-request': PlayRequestEvent;
+ *  'vds-pause-request': PauseRequestEvent;
+ *  'vds-seek-request': SeekRequestEvent;
+ *  'vds-seeking-request': SeekingRequestEvent;
+ *  'vds-volume-change-request': VolumeChangeRequestEvent;
  * }} MediaRequestEvents
  */
 
 /**
- * @template DetailType
- * @augments {VdsCustomEvent<DetailType>}
- */
-export class MediaRequestEvent extends VdsCustomEvent {
-  static DEFAULT_BUBBLES = true;
-  static DEFAULT_COMPOSED = true;
-}
-
-/**
  * Fired when requesting the media to be muted.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {MediaRequestEvent<void>}
+ * @typedef {VdsEvent<void>} MuteRequestEvent
  */
-export class MuteRequestEvent extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-mute-request';
-}
 
 /**
  * Fired when requesting the media to be unmuted.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {MediaRequestEvent<void>}
+ * @typedef {VdsEvent<void>} UnmuteRequestEvent
  */
-export class UnmuteRequestEvent extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-unmute-request';
-}
 
 /**
  * Fired when requesting media to enter fullscreen.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {MediaRequestEvent<void>}
+ * @typedef {VdsEvent<void>} EnterFullscreenRequestEvent
  */
-export class EnterFullscreenRequestEvent extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-enter-fullscreen-request';
-}
 
 /**
  * Fired when requesting media to exit fullscreen.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {MediaRequestEvent<void>}
+ * @typedef {VdsEvent<void>} ExitFullscreenRequestEvent
  */
-export class ExitFullscreenRequestEvent extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-exit-fullscreen-request';
-}
 
 /**
  * Fired when requesting media playback to begin/resume.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {MediaRequestEvent<void>}
+ * @typedef {VdsEvent<void>} PlayRequestEvent
  */
-export class PlayRequestEvent extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-play-request';
-}
 
 /**
  * Fired when requesting media playback to temporarily stop.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {MediaRequestEvent<void>}
+ * @typedef {VdsEvent<void>} PauseRequestEvent
  */
-export class PauseRequestEvent extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-pause-request';
-}
 
 /**
  * Fired when requesting a time change. In other words, moving the playhead to a new position.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {MediaRequestEvent<number>}
+ * @typedef {VdsEvent<number>} SeekRequestEvent
  */
-export class SeekRequestEvent extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-seek-request';
-}
 
 /**
  * Fired when seeking/scrubbing to a new playback position.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {MediaRequestEvent<number>}
+ * @typedef {VdsEvent<number>} SeekingRequestEvent
  */
-export class SeekingRequestEvent extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-seeking-request';
-}
 
 /**
  * Fired when requesting the media volume to be set to a new level.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {MediaRequestEvent<number>}
+ * @typedef {VdsEvent<number>} VolumeChangeRequestEvent
  */
-export class VolumeChangeRequestEvent extends MediaRequestEvent {
-  /** @readonly */
-  static TYPE = 'vds-volume-change-request';
-}

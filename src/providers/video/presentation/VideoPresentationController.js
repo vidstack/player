@@ -1,11 +1,11 @@
 import {
   DisposalBin,
   listen,
-  redispatchEvent
+  redispatchEvent,
+  vdsEvent
 } from '../../../foundation/events/index.js';
 import { IS_IOS } from '../../../utils/support.js';
 import { isFunction, isNil, noop } from '../../../utils/unit.js';
-import { VideoPresentationChangeEvent } from './events.js';
 
 /**
  * @typedef {{
@@ -150,7 +150,7 @@ export class VideoPresentationController {
   _handlePresentationModeChange(event) {
     redispatchEvent(this._host, event);
     this._host.dispatchEvent(
-      new VideoPresentationChangeEvent({
+      vdsEvent('vds-video-presentation-change', {
         detail: /** @type {WebKitPresentationMode} */ (this.presentationMode),
         originalEvent: event
       })

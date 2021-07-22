@@ -1,12 +1,11 @@
 import fscreen from 'fscreen';
 
 import { isUndefined, noop } from '../../utils/unit.js';
-import { DisposalBin, listen } from '../events/index.js';
+import { DisposalBin, listen, vdsEvent } from '../events/index.js';
 import {
   ScreenOrientationController,
   ScreenOrientationLock
 } from '../screen-orientation/index.js';
-import { FullscreenChangeEvent, FullscreenErrorEvent } from './events.js';
 
 /**
  * @typedef {{
@@ -216,7 +215,7 @@ export class FullscreenController {
   _handleFullscreenChange(event) {
     if (!this.isFullscreen) this._disconnectDisposal.empty();
     this._host.dispatchEvent(
-      new FullscreenChangeEvent({
+      vdsEvent('vds-fullscreen-change', {
         detail: this.isFullscreen,
         originalEvent: event
       })
@@ -229,7 +228,7 @@ export class FullscreenController {
    */
   _handleFullscreenError(event) {
     this._host.dispatchEvent(
-      new FullscreenErrorEvent({
+      vdsEvent('vds-fullscreen-error', {
         originalEvent: event
       })
     );

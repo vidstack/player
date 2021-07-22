@@ -7,11 +7,6 @@ import {
   storybookAction,
   StorybookControl
 } from '../../foundation/storybook/index.js';
-import {
-  SliderDragEndEvent,
-  SliderDragStartEvent,
-  SliderValueChangeEvent
-} from './events.js';
 import { SLIDER_ELEMENT_TAG_NAME } from './SliderElement.js';
 
 export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
@@ -39,9 +34,9 @@ export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   },
   value: { control: StorybookControl.Number, defaultValue: 50 },
   valueText: { control: StorybookControl.Text },
-  onSliderDragStart: storybookAction(SliderDragStartEvent.TYPE),
-  onSliderDragEnd: storybookAction(SliderDragEndEvent.TYPE),
-  onSliderValueChange: storybookAction(SliderValueChangeEvent.TYPE)
+  onSliderDragStart: storybookAction('vds-slider-drag-start'),
+  onSliderDragEnd: storybookAction('vds-slider-drag-end'),
+  onSliderValueChange: storybookAction('vds-slider-value-change')
 };
 
 export default {
@@ -86,9 +81,9 @@ function Template({
       value=${value}
       ?disabled=${disabled}
       ?hidden=${hidden}
-      ${on(SliderDragStartEvent.TYPE, onSliderDragStart)}
-      ${on(SliderDragEndEvent.TYPE, onSliderDragEnd)}
-      ${on(SliderValueChangeEvent.TYPE, onSliderValueChange)}
+      ${on('vds-slider-drag-start', onSliderDragStart)}
+      ${on('vds-slider-drag-end', onSliderDragEnd)}
+      ${on('vds-slider-value-change', onSliderValueChange)}
     ></vds-slider>
   `;
 }

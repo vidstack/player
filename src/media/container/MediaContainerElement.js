@@ -5,23 +5,14 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
-import {
-  DiscoveryEvent,
-  ElementDiscoveryController
-} from '../../foundation/elements/index.js';
+import { ElementDiscoveryController } from '../../foundation/elements/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
-import {
-  FullscreenChangeEvent,
-  FullscreenController
-} from '../../foundation/fullscreen/index.js';
+import { FullscreenController } from '../../foundation/fullscreen/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
 import { isNil, isString, isUndefined } from '../../utils/unit.js';
 import { mediaContext } from '../context.js';
-import {
-  MediaProviderConnectEvent,
-  MediaProviderElement
-} from '../provider/index.js';
+import { MediaProviderElement } from '../provider/MediaProviderElement.js';
 import { mediaContainerElementStyles } from './styles.js';
 
 export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
@@ -29,14 +20,11 @@ export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
 /**
  * Fired when the media container connects to the DOM.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {DiscoveryEvent<MediaContainerElement>}
+ * @typedef {import('../../foundation/elements').DiscoveryEvent<MediaContainerElement>} MediaContainerConnectEvent
  */
-export class MediaContainerConnectEvent extends DiscoveryEvent {
-  /** @readonly */
-  static TYPE = 'vds-media-container-connect';
-}
 
 /**
  * Simple container for a media provider and the media user interface (UI).
@@ -74,11 +62,6 @@ export class MediaContainerElement extends LitElement {
   /** @type {string[]} */
   static get parts() {
     return ['root', 'media'];
-  }
-
-  /** @type {string[]} */
-  static get events() {
-    return [MediaContainerConnectEvent.TYPE];
   }
 
   // -------------------------------------------------------------------------------------------
@@ -129,18 +112,17 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @readonly
    */
-  _discoveryController = new ElementDiscoveryController(
-    this,
-    MediaContainerConnectEvent
-  );
+  _discoveryController = new ElementDiscoveryController(this, {
+    eventType: 'vds-media-container-connect'
+  });
 
   /**
    * @protected
    * @readonly
    */
   _eventListenerController = new EventListenerController(this, {
-    [FullscreenChangeEvent.TYPE]: this._handleFullscreenChange,
-    [MediaProviderConnectEvent.TYPE]: this._handleMediaProviderConnect
+    'vds-fullscreen-change': this._handleFullscreenChange,
+    'vds-media-provider-connect': this._handleMediaProviderConnect
   });
 
   // -------------------------------------------------------------------------------------------
@@ -323,7 +305,7 @@ export class MediaContainerElement extends LitElement {
 
   /**
    * @protected
-   * @param {MediaProviderConnectEvent} event
+   * @param {import('../provider/MediaProviderElement').MediaProviderConnectEvent} event
    */
   _handleMediaProviderConnect(event) {
     const { element, onDisconnect } = event.detail;
@@ -392,7 +374,7 @@ export class MediaContainerElement extends LitElement {
 
   /**
    * @protected
-   * @param {FullscreenChangeEvent} event
+   * @param {import('../../foundation/fullscreen').FullscreenChangeEvent} event
    */
   _handleFullscreenChange(event) {
     if (!isNil(this.mediaProvider)) {

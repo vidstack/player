@@ -1,23 +1,14 @@
-import { VdsCustomEvent } from '../../../foundation/events/index.js';
+import { VdsEvent } from '../../../foundation/events/index.js';
 
 /**
  * @typedef {{
- *   [VideoPresentationChangeEvent.TYPE]: VideoPresentationChangeEvent;
+ *   'vds-video-presentation-change': VideoPresentationChangeEvent;
  * }} VideoPresentationEvents
  */
 
 /**
- * @template DetailType
- * @augments {VdsCustomEvent<DetailType>}
- */
-export class VideoPresentationEvent extends VdsCustomEvent {}
-
-/**
  * Fired when the video presentation mode changes. Only available in Safari.
  *
- * @augments {VideoPresentationEvent<WebKitPresentationMode>}
+ * @event
+ * @typedef {VdsEvent<WebKitPresentationMode>} VideoPresentationChangeEvent
  */
-export class VideoPresentationChangeEvent extends VideoPresentationEvent {
-  /** @readonly */
-  static TYPE = 'vds-video-presentation-change';
-}

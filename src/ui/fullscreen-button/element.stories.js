@@ -4,15 +4,11 @@ import './define.js';
 
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../foundation/directives/index.js';
+import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import {
   storybookAction,
   StorybookControl
 } from '../../foundation/storybook/index.js';
-import {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent
-} from '../../media/index.js';
 import { omit } from '../../utils/object.js';
 import { TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES } from '../toggle-button/element.stories.js';
 import { FULLSCREEN_BUTTON_ELEMENT_TAG_NAME } from './FullscreenButtonElement.js';
@@ -24,8 +20,8 @@ export const FULLSCREEN_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControl.Boolean,
     defaultValue: false
   },
-  onEnterFullscreenRequest: storybookAction(EnterFullscreenRequestEvent.TYPE),
-  onExitFullscreenRequest: storybookAction(ExitFullscreenRequestEvent.TYPE)
+  onEnterFullscreenRequest: storybookAction('vds-enter-fullscreen-request'),
+  onExitFullscreenRequest: storybookAction('vds-exit-fullscreen-request')
 };
 
 export default {
@@ -52,8 +48,8 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      @vds-enter-fullscreen-request="${onEnterFullscreenRequest}"
-      @vds-exit-fullscreen-request="${onExitFullscreenRequest}"
+      ${on('vds-enter-fullscreen-request', onEnterFullscreenRequest)}
+      ${on('vds-exit-fullscreen-request', onExitFullscreenRequest)}
     >
       <vds-media-container>
         <vds-fake-media-provider

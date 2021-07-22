@@ -4,36 +4,7 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { on } from '../../foundation/directives/index.js';
-import { FullscreenChangeEvent } from '../../foundation/fullscreen/index.js';
 import { StorybookControl } from '../../foundation/storybook/index.js';
-import {
-  AbortEvent,
-  CanPlayEvent,
-  CanPlayThroughEvent,
-  DurationChangeEvent,
-  EmptiedEvent,
-  EndedEvent,
-  ErrorEvent,
-  LoadedDataEvent,
-  LoadedMetadataEvent,
-  LoadStartEvent,
-  MediaProviderConnectEvent,
-  MediaTypeChangeEvent,
-  PauseEvent,
-  PlayEvent,
-  PlayingEvent,
-  ProgressEvent,
-  ReplayEvent,
-  SeekedEvent,
-  SeekingEvent,
-  StalledEvent,
-  StartedEvent,
-  SuspendEvent,
-  TimeUpdateEvent,
-  ViewTypeChangeEvent,
-  VolumeChangeEvent,
-  WaitingEvent
-} from '../../media/index.js';
 import { HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES } from '../html5/storybook.js';
 import { AUDIO_ELEMENT_TAG_NAME } from './AudioElement.js';
 
@@ -120,33 +91,33 @@ function Template({
       ?disableremoteplayback=${disableRemotePlayback}
       ?controls=${controls}
       ?autoplay=${autoplay}
-      ${on(AbortEvent.TYPE, onAbort)}
-      ${on(CanPlayEvent.TYPE, onCanPlay)}
-      ${on(CanPlayThroughEvent.TYPE, onCanPlayThrough)}
-      ${on(DurationChangeEvent.TYPE, onDurationChange)}
-      ${on(EmptiedEvent.TYPE, onEmptied)}
-      ${on(EndedEvent.TYPE, onEnded)}
-      ${on(ErrorEvent.TYPE, onError)}
-      ${on(FullscreenChangeEvent.TYPE, onFullscreenChange)}
-      ${on(LoadedDataEvent.TYPE, onLoadedData)}
-      ${on(LoadedMetadataEvent.TYPE, onLoadedMetadata)}
-      ${on(LoadStartEvent.TYPE, onLoadStart)}
-      ${on(MediaProviderConnectEvent.TYPE, onMediaProviderConnect)}
-      ${on(MediaTypeChangeEvent.TYPE, onMediaTypeChange)}
-      ${on(PauseEvent.TYPE, onPause)}
-      ${on(PlayEvent.TYPE, onPlay)}
-      ${on(PlayingEvent.TYPE, onPlaying)}
-      ${on(ProgressEvent.TYPE, onProgress)}
-      ${on(ReplayEvent.TYPE, onReplay)}
-      ${on(SeekedEvent.TYPE, onSeeked)}
-      ${on(SeekingEvent.TYPE, onSeeking)}
-      ${on(StalledEvent.TYPE, onStalled)}
-      ${on(StartedEvent.TYPE, onStarted)}
-      ${on(SuspendEvent.TYPE, onSuspend)}
-      ${on(TimeUpdateEvent.TYPE, onTimeUpdate)}
-      ${on(ViewTypeChangeEvent.TYPE, onViewTypeChange)}
-      ${on(VolumeChangeEvent.TYPE, onVolumeChange)}
-      ${on(WaitingEvent.TYPE, onWaiting)}
+      ${on('vds-abort', onAbort)}
+      ${on('vds-can-play', onCanPlay)}
+      ${on('vds-can-play-through', onCanPlayThrough)}
+      ${on('vds-duration-change', onDurationChange)}
+      ${on('vds-emptied', onEmptied)}
+      ${on('vds-ended', onEnded)}
+      ${on('vds-error', onError)}
+      ${on('vds-fullscreen-change', onFullscreenChange)}
+      ${on('vds-loaded-data', onLoadedData)}
+      ${on('vds-loaded-metadata', onLoadedMetadata)}
+      ${on('vds-load-start', onLoadStart)}
+      ${on('vds-media-provider-connect', onMediaProviderConnect)}
+      ${on('vds-media-type-change', onMediaTypeChange)}
+      ${on('vds-pause', onPause)}
+      ${on('vds-play', onPlay)}
+      ${on('vds-playing', onPlaying)}
+      ${on('vds-progress', onProgress)}
+      ${on('vds-replay', onReplay)}
+      ${on('vds-seeked', onSeeked)}
+      ${on('vds-seeking', onSeeking)}
+      ${on('vds-stalled', onStalled)}
+      ${on('vds-started', onStarted)}
+      ${on('vds-suspend', onSuspend)}
+      ${on('vds-time-update', onTimeUpdate)}
+      ${on('vds-view-type-change', onViewTypeChange)}
+      ${on('vds-volume-change', onVolumeChange)}
+      ${on('vds-waiting', onWaiting)}
     ></vds-audio>
   `;
 }

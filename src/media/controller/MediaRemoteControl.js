@@ -1,14 +1,4 @@
-import {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent,
-  MuteRequestEvent,
-  PauseRequestEvent,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent,
-  UnmuteRequestEvent,
-  VolumeChangeRequestEvent
-} from '../request.events.js';
+import { vdsEvent } from '../../foundation/events/index.js';
 
 /**
  * @typedef {EventTarget} MediaRemoteControlHost
@@ -48,7 +38,9 @@ export class MediaRemoteControl {
    */
   play(event) {
     this._host.dispatchEvent(
-      new PlayRequestEvent({
+      vdsEvent('vds-play-request', {
+        bubbles: true,
+        composed: true,
         originalEvent: event
       })
     );
@@ -59,7 +51,9 @@ export class MediaRemoteControl {
    */
   pause(event) {
     this._host.dispatchEvent(
-      new PauseRequestEvent({
+      vdsEvent('vds-pause-request', {
+        bubbles: true,
+        composed: true,
         originalEvent: event
       })
     );
@@ -70,7 +64,9 @@ export class MediaRemoteControl {
    */
   mute(event) {
     this._host.dispatchEvent(
-      new MuteRequestEvent({
+      vdsEvent('vds-mute-request', {
+        bubbles: true,
+        composed: true,
         originalEvent: event
       })
     );
@@ -81,7 +77,9 @@ export class MediaRemoteControl {
    */
   unmute(event) {
     this._host.dispatchEvent(
-      new UnmuteRequestEvent({
+      vdsEvent('vds-unmute-request', {
+        bubbles: true,
+        composed: true,
         originalEvent: event
       })
     );
@@ -92,7 +90,9 @@ export class MediaRemoteControl {
    */
   enterFullscreen(event) {
     this._host.dispatchEvent(
-      new EnterFullscreenRequestEvent({
+      vdsEvent('vds-enter-fullscreen-request', {
+        bubbles: true,
+        composed: true,
         originalEvent: event
       })
     );
@@ -103,7 +103,9 @@ export class MediaRemoteControl {
    */
   exitFullscreen(event) {
     this._host.dispatchEvent(
-      new ExitFullscreenRequestEvent({
+      vdsEvent('vds-exit-fullscreen-request', {
+        bubbles: true,
+        composed: true,
         originalEvent: event
       })
     );
@@ -111,11 +113,13 @@ export class MediaRemoteControl {
 
   /**
    * @param {number} time
-   * @param {Event} event
+   * @param {Event} [event]
    */
   seeking(time, event) {
     this._host.dispatchEvent(
-      new SeekingRequestEvent({
+      vdsEvent('vds-seeking-request', {
+        bubbles: true,
+        composed: true,
         detail: time,
         originalEvent: event
       })
@@ -128,7 +132,9 @@ export class MediaRemoteControl {
    */
   seek(time, event) {
     this._host.dispatchEvent(
-      new SeekRequestEvent({
+      vdsEvent('vds-seek-request', {
+        bubbles: true,
+        composed: true,
         detail: time,
         originalEvent: event
       })
@@ -141,7 +147,9 @@ export class MediaRemoteControl {
    */
   changeVolume(volume, event) {
     this._host.dispatchEvent(
-      new VolumeChangeRequestEvent({
+      vdsEvent('vds-volume-change-request', {
+        bubbles: true,
+        composed: true,
         detail: volume,
         originalEvent: event
       })

@@ -1,7 +1,6 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
 
-import { ErrorEvent } from '../../events.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 
 describe('MediaProviderElement/queue', function () {
@@ -70,7 +69,7 @@ describe('MediaProviderElement/queue', function () {
       provider.paused = false;
     });
 
-    const { detail } = await oneEvent(provider, ErrorEvent.TYPE);
+    const { detail } = await oneEvent(provider, 'vds-error');
     expect(detail.message).to.equal('No play.');
   });
 });

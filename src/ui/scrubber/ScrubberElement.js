@@ -15,19 +15,8 @@ import { WithFocus } from '../../foundation/elements/index.js';
 import { EventListenerController } from '../../foundation/events/index.js';
 import { buildExportPartsAttr } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
-import {
-  ScrubberPreviewConnectEvent,
-  ScrubberPreviewElement,
-  ScrubberPreviewHideEvent,
-  ScrubberPreviewShowEvent,
-  ScrubberPreviewTimeUpdateEvent
-} from '../scrubber-preview/index.js';
+import { ScrubberPreviewElement } from '../scrubber-preview/index.js';
 import { SeekableProgressBarElement } from '../seekable-progress-bar/index.js';
-import {
-  SliderDragEndEvent,
-  SliderDragStartEvent,
-  SliderValueChangeEvent
-} from '../slider/index.js';
 import { TimeSliderElement } from '../time-slider/index.js';
 import { scrubberContext } from './context.js';
 import { scrubberElementStyles } from './styles.js';
@@ -313,12 +302,12 @@ export class ScrubberElement extends WithFocus(LitElement) {
         value-text=${this.valueText}
         ?disabled=${this.disabled}
         ?hidden=${this.hidden}
-        ${on(SliderDragStartEvent.TYPE, this._handleSliderDragStart)}
-        ${on(SliderValueChangeEvent.TYPE, this._handleSliderValueChange)}
-        ${on(SliderDragEndEvent.TYPE, this._handleSliderDragEnd)}
-        ${forwardEvent(SliderDragStartEvent.TYPE)}
-        ${forwardEvent(SliderValueChangeEvent.TYPE)}
-        ${forwardEvent(SliderDragEndEvent.TYPE)}
+        ${on('vds-slider-drag-start', this._handleSliderDragStart)}
+        ${on('vds-slider-value-change', this._handleSliderValueChange)}
+        ${on('vds-slider-drag-end', this._handleSliderDragEnd)}
+        ${forwardEvent('vds-slider-drag-start')}
+        ${forwardEvent('vds-slider-value-change')}
+        ${forwardEvent('vds-slider-drag-end')}
         ${ref(this._timeSliderRef)}
       >
         ${this._renderTimeSliderChildren()}
@@ -344,7 +333,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @param {SliderDragStartEvent} event
+   * @param {import('../slider').SliderDragStartEvent} event
    */
   _handleSliderDragStart(event) {
     if (this.disabled) return;
@@ -355,7 +344,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @param {SliderValueChangeEvent} event
+   * @param {import('../slider').SliderValueChangeEvent} event
    */
   _handleSliderValueChange(event) {
     if (this.disabled) return;
@@ -364,7 +353,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @param {SliderDragEndEvent} event
+   * @param {import('../slider').SliderDragEndEvent} event
    */
   _handleSliderDragEnd(event) {
     if (this.disabled) return;
@@ -442,10 +431,10 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @readonly
    */
   _previewEventListenerController = new EventListenerController(this, {
-    [ScrubberPreviewConnectEvent.TYPE]: this._handlePreviewConnect,
-    [ScrubberPreviewShowEvent.TYPE]: this._handlePreviewShow,
-    [ScrubberPreviewTimeUpdateEvent.TYPE]: this._handlePreviewTimeUpdate,
-    [ScrubberPreviewHideEvent.TYPE]: this._handlePreviewHide
+    'vds-scrubber-preview-connect': this._handlePreviewConnect,
+    'vds-scrubber-preview-show': this._handlePreviewShow,
+    'vds-scrubber-preview-time-update': this._handlePreviewTimeUpdate,
+    'vds-scrubber-preview-hide': this._handlePreviewHide
   });
 
   /**
@@ -465,7 +454,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @param {ScrubberPreviewConnectEvent} event
+   * @param {import('../scrubber-preview').ScrubberPreviewConnectEvent} event
    */
   _handlePreviewConnect(event) {
     event.stopPropagation();
@@ -483,7 +472,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @param {ScrubberPreviewShowEvent} event
+   * @param {import('../scrubber-preview').ScrubberPreviewShowEvent} event
    */
   _handlePreviewShow(event) {
     event.stopPropagation();
@@ -492,7 +481,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @param {ScrubberPreviewTimeUpdateEvent} event
+   * @param {import('../scrubber-preview').ScrubberPreviewTimeUpdateEvent} event
    */
   _handlePreviewTimeUpdate(event) {
     event.stopPropagation();
@@ -500,7 +489,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @param {ScrubberPreviewHideEvent} event
+   * @param {import('../scrubber-preview').ScrubberPreviewHideEvent} event
    */
   _handlePreviewHide(event) {
     event.stopPropagation();

@@ -1,16 +1,19 @@
-import { DisposalBin } from '../../events/index.js';
-import {
-  DiscoveryEvent,
-  ElementDiscoveryController
-} from '../discovery/index.js';
+import { DisposalBin, VdsEvent } from '../../events/index.js';
+import { ElementDiscoveryController } from '../discovery/index.js';
 
 /**
  * @bubbles
  * @composed
  * @template {Element} ManagedElement
- * @augments DiscoveryEvent<ManagedElement>
+ * @augments {VdsEvent<import('../discovery').DiscoveryEventDetail<ManagedElement>>}
  */
-export class ManagedElementConnectEvent extends DiscoveryEvent {}
+export class ManagedElementConnectEvent extends VdsEvent {
+  /**
+   * @readonly
+   * @type {keyof GlobalEventHandlersEventMap}
+   */
+  static TYPE = 'vds-noop';
+}
 
 /**
  * @template {import('lit').ReactiveElement} HostElement
@@ -47,7 +50,9 @@ export class ManagedElement {
      */
     this._discoveryController =
       /** @type {ElementDiscoveryController<HostElement>} */ (
-        new ElementDiscoveryController(host, this._getScopedDiscoveryEvent())
+        new ElementDiscoveryController(host, {
+          eventType: this._getScopedDiscoveryEvent().TYPE
+        })
       );
   }
 

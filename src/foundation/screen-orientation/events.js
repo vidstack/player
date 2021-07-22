@@ -1,4 +1,4 @@
-import { VdsCustomEvent } from '../events/index.js';
+import { VdsEvent } from '../events/index.js';
 import {
   ScreenOrientation,
   ScreenOrientationLock
@@ -6,33 +6,21 @@ import {
 
 /**
  * @typedef {{
- *   [ScreenOrientationChangeEvent.TYPE]: ScreenOrientationChangeEvent;
- *   [ScreenOrientationLockChangeEvent.TYPE]: ScreenOrientationLockChangeEvent;
+ *   'vds-screen-orientation-change': ScreenOrientationChangeEvent;
+ *   'vds-screen-orientation-lock-change': ScreenOrientationLockChangeEvent;
  * }} ScreenOrientationEvents
  */
 
 /**
- * @template DetailType
- * @augments {VdsCustomEvent<DetailType>}
- */
-export class ScreenOrientationEvent extends VdsCustomEvent {}
-
-/**
  * Fired when the current screen orientation changes.
  *
- * @augments {ScreenOrientationEvent<ScreenOrientation>}
+ * @event
+ * @typedef {VdsEvent<ScreenOrientation>} ScreenOrientationChangeEvent
  */
-export class ScreenOrientationChangeEvent extends ScreenOrientationEvent {
-  /** @readonly */
-  static TYPE = 'vds-screen-orientation-change';
-}
 
 /**
  * Fired when the current screen orientation lock changes.
  *
- * @augments {ScreenOrientationEvent<ScreenOrientationLock>}
+ * @event
+ * @typedef {VdsEvent<ScreenOrientationLock>} ScreenOrientationLockChangeEvent
  */
-export class ScreenOrientationLockChangeEvent extends ScreenOrientationEvent {
-  /** @readonly */
-  static TYPE = 'vds-screen-orientation-lock-change';
-}

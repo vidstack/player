@@ -9,12 +9,6 @@ import {
   storybookAction,
   StorybookControl
 } from '../../foundation/storybook/index.js';
-import {
-  PauseRequestEvent,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent
-} from '../../media/index.js';
 import { pick } from '../../utils/object.js';
 import { SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../slider/element.stories.js';
 import { TIME_SLIDER_ELEMENT_TAG_NAME } from './TimeSliderElement.js';
@@ -56,10 +50,10 @@ export const TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
     defaultValue: true
   },
   // Media Request Actions
-  onPlayRequest: storybookAction(PlayRequestEvent.TYPE),
-  onPauseRequest: storybookAction(PauseRequestEvent.TYPE),
-  onSeekingRequest: storybookAction(SeekingRequestEvent.TYPE),
-  onSeekRequest: storybookAction(SeekRequestEvent.TYPE)
+  onPlayRequest: storybookAction('vds-play-request'),
+  onPauseRequest: storybookAction('vds-pause-request'),
+  onSeekingRequest: storybookAction('vds-seeking-request'),
+  onSeekRequest: storybookAction('vds-seek-request')
 };
 
 export default {
@@ -97,10 +91,10 @@ function Template({
 }) {
   return html`
     <vds-media-controller
-      ${on(PlayRequestEvent.TYPE, onPlayRequest)}
-      ${on(PauseRequestEvent.TYPE, onPauseRequest)}
-      ${on(SeekingRequestEvent.TYPE, onSeekingRequest)}
-      ${on(SeekRequestEvent.TYPE, onSeekRequest)}
+      ${on('vds-play-request', onPlayRequest)}
+      ${on('vds-pause-request', onPauseRequest)}
+      ${on('vds-seeking-request', onSeekingRequest)}
+      ${on('vds-seek-request', onSeekRequest)}
     >
       <vds-media-container>
         <vds-fake-media-provider

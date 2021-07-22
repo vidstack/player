@@ -9,25 +9,7 @@
  * @template DetailType
  * @augments CustomEvent<DetailType>
  */
-export class VdsCustomEvent extends CustomEvent {
-  /**
-   * @type {string}
-   * @readonly
-   */
-  static TYPE;
-
-  /**
-   * @type {boolean}
-   * @readonly
-   */
-  static DEFAULT_BUBBLES = false;
-
-  /**
-   * @type {boolean}
-   * @readonly
-   */
-  static DEFAULT_COMPOSED = false;
-
+export class VdsEvent extends CustomEvent {
   /**
    * @type {Event | undefined}
    * @readonly
@@ -41,12 +23,10 @@ export class VdsCustomEvent extends CustomEvent {
    * @type {Event | undefined}
    */
   get originEvent() {
-    let originalEvent = /** @type {VdsCustomEvent<unknown>} */ (
-      this.originalEvent
-    );
+    let originalEvent = /** @type {VdsEvent<unknown>} */ (this.originalEvent);
 
     while (originalEvent && originalEvent.originalEvent) {
-      originalEvent = /** @type {VdsCustomEvent<unknown>} */ (
+      originalEvent = /** @type {VdsEvent<unknown>} */ (
         originalEvent.originalEvent
       );
     }
@@ -65,49 +45,24 @@ export class VdsCustomEvent extends CustomEvent {
   }
 
   /**
+   * @param {string} type
    * @param {VdsEventInit<DetailType>} [eventInit]
-   * @param {string} [type]
-   * @param {boolean} [final]
    */
-  constructor(eventInit = {}, type = '', final = false) {
+  constructor(type, eventInit = {}) {
     super(type, eventInit);
-
     this.originalEvent = eventInit.originalEvent;
-
-    type = type || /** @type {typeof VdsCustomEvent} */ (this.constructor).TYPE;
-
-    eventInit.bubbles =
-      eventInit.bubbles ||
-      /** @type {typeof VdsCustomEvent} */ (this.constructor).DEFAULT_BUBBLES;
-
-    eventInit.composed =
-      eventInit.composed ||
-      /** @type {typeof VdsCustomEvent} */ (this.constructor).DEFAULT_COMPOSED;
-
-    if (!final) {
-      // TODO: This might cause problems if an event has a constructor that differs.
-      return new /** @type {typeof VdsCustomEvent} */ (this.constructor)(
-        eventInit,
-        type,
-        true
-      );
-    }
   }
 }
 
 /**
  * @param {EventTarget} target
- * @param {Event | CustomEvent | VdsCustomEvent} event
+ * @param {Event | CustomEvent | VdsEvent} event
  */
 export function redispatchEvent(target, event) {
   if (event.bubbles && event.composed) return;
 
-  class VdsRedispatchedEvent extends VdsCustomEvent {
-    static TYPE = event.type;
-  }
-
-  const newEvent = new VdsRedispatchedEvent({
-    originalEvent: /** @type {VdsCustomEvent} */ (event).originalEvent ?? event,
+  const newEvent = new VdsEvent(event.type, {
+    originalEvent: /** @type {VdsEvent} */ (event).originalEvent ?? event,
     detail: /** @type {CustomEvent} */ (event).detail,
     bubbles: event.bubbles,
     cancelable: event.cancelable,
@@ -115,6 +70,28 @@ export function redispatchEvent(target, event) {
   });
 
   target.dispatchEvent(newEvent);
+}
+
+/**
+ * @template Event
+ * @typedef {Event extends VdsEvent<infer I> ? I : never} ExtractEventDetail
+ */
+
+/**
+ * @template Event
+ * @typedef {VdsEventInit<ExtractEventDetail<Event>>} ExtractEventInit
+ */
+
+/**
+ * Helps build a `VdsEvent` with type safety.
+ *
+ * @template {keyof GlobalEventHandlersEventMap} EventType
+ * @param {EventType} type
+ * @param {ExtractEventInit<GlobalEventHandlersEventMap[EventType]>} [eventInit]
+ * @returns {VdsEvent<ExtractEventDetail<GlobalEventHandlersEventMap[EventType]>>}
+ */
+export function vdsEvent(type, eventInit) {
+  return new VdsEvent(type, eventInit);
 }
 
 /**
@@ -186,21 +163,23 @@ export function listen(target, type, listener, options) {
  * @returns {() => void} Stop listening function.
  */
 export function listenGlobalEvent(target, type, listener, options) {
-  target.addEventListener(type, /** @type {any} */ (listener), options);
+  // @ts-expect-error
+  target.addEventListener(type, listener, options);
   return () => {
-    target.removeEventListener(type, /** @type {any} */ (listener), options);
+    // @ts-expect-error
+    target.removeEventListener(type, listener, options);
   };
 }
 
 /**
  * @typedef {{
  *  [EventType in keyof GlobalEventHandlersEventMap]?: (event: GlobalEventHandlersEventMap[EventType]) => void;
- * }} EventHandlerRecord
+ * }} GlobalEventHandlerRecord
  */
 
 /**
  * @param {EventTarget} target
- * @param {EventHandlerRecord} record
+ * @param {GlobalEventHandlerRecord} record
  * @param {DisposalBin} disposal
  * @param {{ receiver?: any }} [options]
  */
@@ -225,7 +204,7 @@ export function isPointerEvent(event) {
 
 /**
  * @param {Event | undefined} [event]
- * @returns {event is VdsCustomEvent<unknown>}
+ * @returns {event is VdsEvent<unknown>}
  */
 export function isVdsEvent(event) {
   // eslint-disable-next-line no-prototype-builtins

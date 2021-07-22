@@ -1,25 +1,11 @@
 import { property } from 'lit/decorators.js';
 
-import { VdsCustomEvent } from '../../foundation/events/index.js';
-import {
-  CanPlay,
-  DurationChangeEvent,
-  ErrorEvent,
-  MediaType,
-  MediaTypeChangeEvent
-} from '../../media/index.js';
+import { VdsEvent, vdsEvent } from '../../foundation/events/index.js';
+import { CanPlay, MediaType } from '../../media/index.js';
 import { preconnect, ScriptLoader } from '../../utils/network.js';
 import { isNonNativeHlsStreamingPossible } from '../../utils/support.js';
 import { isFunction, isNil, isString, isUndefined } from '../../utils/unit.js';
 import { VideoElement } from '../video/index.js';
-import {
-  HlsAttachEvent,
-  HlsBuildEvent,
-  HlsDetachEvent,
-  HlsLoadErrorEvent,
-  HlsLoadEvent,
-  HlsNoSupportEvent
-} from './events.js';
 
 export const HLS_ELEMENT_TAG_NAME = 'vds-hls';
 
@@ -122,16 +108,16 @@ const HLS_LIB_CACHE = new Map();
  * ```
  */
 export class HlsElement extends VideoElement {
-  /** @type {string[]} */
+  /** @type {(keyof GlobalEventHandlersEventMap)[]} */
   static get events() {
     return [
-      ...(super.events ?? []),
-      HlsLoadEvent.TYPE,
-      HlsLoadErrorEvent.TYPE,
-      HlsAttachEvent.TYPE,
-      HlsBuildEvent.TYPE,
-      HlsDetachEvent.TYPE,
-      HlsNoSupportEvent.TYPE
+      ...super.events,
+      'vds-hls-attach',
+      'vds-hls-build',
+      'vds-hls-detach',
+      'vds-hls-load',
+      'vds-hls-load-error',
+      'vds-hls-no-support'
     ];
   }
 
@@ -369,7 +355,7 @@ export class HlsElement extends VideoElement {
     HLS_LIB_CACHE.set(this.hlsLibrary, HlsConstructor);
 
     this.dispatchEvent(
-      new HlsLoadEvent({
+      vdsEvent('vds-hls-load', {
         detail: HlsConstructor
       })
     );
@@ -399,7 +385,7 @@ export class HlsElement extends VideoElement {
       return window.Hls;
     } catch (err) {
       this.dispatchEvent(
-        new HlsLoadErrorEvent({
+        vdsEvent('vds-hls-load-error', {
           detail: /** @type {Error} */ (err)
         })
       );
@@ -439,12 +425,12 @@ export class HlsElement extends VideoElement {
       : this.hlsLibrary;
 
     if (!this.Hls?.isSupported()) {
-      this.dispatchEvent(new HlsNoSupportEvent());
+      this.dispatchEvent(vdsEvent('vds-hls-no-support'));
       return;
     }
 
     this._hlsEngine = new this.Hls(this.hlsConfig ?? {});
-    this.dispatchEvent(new HlsBuildEvent({ detail: this.hlsEngine }));
+    this.dispatchEvent(vdsEvent('vds-hls-build', { detail: this.hlsEngine }));
     this._listenToHlsEngine();
   }
 
@@ -485,7 +471,7 @@ export class HlsElement extends VideoElement {
 
     this.hlsEngine.attachMedia(this.videoEngine);
     this._isHlsEngineAttached = true;
-    this.dispatchEvent(new HlsAttachEvent({ detail: this.hlsEngine }));
+    this.dispatchEvent(vdsEvent('vds-hls-attach', { detail: this.hlsEngine }));
   }
 
   /**
@@ -496,7 +482,7 @@ export class HlsElement extends VideoElement {
     this.hlsEngine?.detachMedia();
     this._isHlsEngineAttached = false;
     this._prevHlsEngineSrc = '';
-    this.dispatchEvent(new HlsDetachEvent({ detail: this.hlsEngine }));
+    this.dispatchEvent(vdsEvent('vds-hls-detach', { detail: this.hlsEngine }));
   }
 
   /**
@@ -617,8 +603,8 @@ export class HlsElement extends VideoElement {
     }
 
     this.dispatchEvent(
-      new ErrorEvent({
-        originalEvent: new VdsCustomEvent({ detail: data }, eventType)
+      vdsEvent('vds-error', {
+        originalEvent: new VdsEvent(eventType, { detail: data })
       })
     );
   }
@@ -668,20 +654,26 @@ export class HlsElement extends VideoElement {
   _handleHlsMediaReady(eventType, data) {
     const { live, totalduration: duration } = data.details;
 
-    const event = new VdsCustomEvent({ detail: data }, eventType);
+    const event = new VdsEvent(eventType, { detail: data });
 
     const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
     if (this.ctx.mediaType !== mediaType) {
       this.ctx.mediaType = mediaType;
       this.dispatchEvent(
-        new MediaTypeChangeEvent({ detail: mediaType, originalEvent: event })
+        vdsEvent('vds-media-type-change', {
+          detail: mediaType,
+          originalEvent: event
+        })
       );
     }
 
     if (this.ctx.duration !== duration) {
       this.ctx.duration = duration;
       this.dispatchEvent(
-        new DurationChangeEvent({ detail: duration, originalEvent: event })
+        vdsEvent('vds-duration-change', {
+          detail: duration,
+          originalEvent: event
+        })
       );
     }
 

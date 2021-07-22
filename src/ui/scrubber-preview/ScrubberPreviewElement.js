@@ -6,15 +6,12 @@ import {
   consumeContext,
   provideContextRecord
 } from '../../foundation/context/index.js';
-import { ifNonEmpty } from '../../foundation/directives/index.js';
-import {
-  DiscoveryEvent,
-  ElementDiscoveryController
-} from '../../foundation/elements/index.js';
+import { ElementDiscoveryController } from '../../foundation/elements/index.js';
 import {
   isPointerEvent,
   isVdsEvent,
-  VdsCustomEvent
+  VdsEvent,
+  vdsEvent
 } from '../../foundation/events/index.js';
 import { mediaContext } from '../../media/context.js';
 import { getSlottedChildren, raf } from '../../utils/dom.js';
@@ -23,11 +20,6 @@ import { rafThrottle } from '../../utils/timing.js';
 import { isNil } from '../../utils/unit.js';
 import { scrubberContext } from '../scrubber/context.js';
 import { scrubberPreviewContext } from './context.js';
-import {
-  ScrubberPreviewHideEvent,
-  ScrubberPreviewShowEvent,
-  ScrubberPreviewTimeUpdateEvent
-} from './events.js';
 import { scrubberPreviewElementStyles } from './styles.js';
 
 export const SCRUBBER_PREVIEW_ELEMENT_TAG_NAME = 'vds-scrubber-preview';
@@ -35,14 +27,11 @@ export const SCRUBBER_PREVIEW_ELEMENT_TAG_NAME = 'vds-scrubber-preview';
 /**
  * Fired when the scrubber preview element connects to the DOM.
  *
+ * @event
  * @bubbles
  * @composed
- * @augments {DiscoveryEvent<ScrubberPreviewElement>}
+ * @typedef {import('../../foundation/elements').DiscoveryEvent<ScrubberPreviewElement>} ScrubberPreviewConnectEvent
  */
-export class ScrubberPreviewConnectEvent extends DiscoveryEvent {
-  /** @readonly */
-  static TYPE = 'vds-scrubber-preview-connect';
-}
 
 /**
  * Plugs in to the `<vds-scrubber>` component to enable media previews. A preview is essentially
@@ -125,17 +114,6 @@ export class ScrubberPreviewElement extends LitElement {
     return ['track', 'track-fill'];
   }
 
-  /**
-   * @type {string[]}
-   */
-  static get events() {
-    return [
-      ScrubberPreviewShowEvent.TYPE,
-      ScrubberPreviewHideEvent.TYPE,
-      ScrubberPreviewTimeUpdateEvent.TYPE
-    ];
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
@@ -210,10 +188,9 @@ export class ScrubberPreviewElement extends LitElement {
    * @protected
    * @readonly
    */
-  _discoveryController = new ElementDiscoveryController(
-    this,
-    ScrubberPreviewConnectEvent
-  );
+  _discoveryController = new ElementDiscoveryController(this, {
+    eventType: 'vds-scrubber-preview-connect'
+  });
 
   /**
    * @protected
@@ -429,7 +406,7 @@ export class ScrubberPreviewElement extends LitElement {
 
         this.setAttribute('previewing', '');
         this.dispatchEvent(
-          new ScrubberPreviewShowEvent({ originalEvent: event })
+          vdsEvent('vds-scrubber-preview-show', { originalEvent: event })
         );
       },
       this._isDragging ? 150 : 0
@@ -461,7 +438,9 @@ export class ScrubberPreviewElement extends LitElement {
     this.ctx.showing = false;
     this.removeAttribute('previewing');
     this.previewSlotElement?.setAttribute('hidden', '');
-    this.dispatchEvent(new ScrubberPreviewHideEvent({ originalEvent: event }));
+    this.dispatchEvent(
+      vdsEvent('vds-scrubber-preview-hide', { originalEvent: event })
+    );
     this.requestUpdate();
   }
 
@@ -473,7 +452,7 @@ export class ScrubberPreviewElement extends LitElement {
     if (!this._isInteracting) return;
 
     this.dispatchEvent(
-      new ScrubberPreviewTimeUpdateEvent({
+      vdsEvent('vds-scrubber-preview-time-update', {
         detail: this.ctx.time,
         originalEvent
       })
@@ -535,7 +514,7 @@ export class ScrubberPreviewElement extends LitElement {
    * Updates the slotted preview element position given a `PointerEvent`, or `VdsCustomEvent` with
    * an `originalEvent` property referencing a `PointerEvent`.
    *
-   * @param {PointerEvent | VdsCustomEvent} event
+   * @param {PointerEvent | VdsEvent} event
    * @returns {Promise<void>}
    */
   async updatePreviewPosition(event) {
