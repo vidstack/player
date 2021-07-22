@@ -8,14 +8,6 @@ class ConsumerConnectEvent extends CustomEvent {
   static TYPE = 'vds-context-connect';
 
   /**
-   * @param {Event} event
-   * @returns {event is ConsumerConnectEvent}
-   */
-  static validate(event) {
-    return event instanceof this;
-  }
-
-  /**
    * @param {import('./types').ContextConsumerConnectEventDetail} detail
    */
   constructor(detail) {
@@ -33,14 +25,11 @@ class ConsumerConnectEvent extends CustomEvent {
  * @returns {import('./types').Context<T>}
  */
 export function createContext(initialValue) {
-  const key = Symbol('Vidstack.contextProvider');
-
-  // Privately declared event to safely pair context providers and consumers.
-  class ContextConsumerConnectEvent extends ConsumerConnectEvent {}
+  const id = Symbol('Vidstack.contextId');
 
   /** @type {import('./types').Context<T>['provide']} */
   function provide(host, options = {}) {
-    if (host[key]) return host[key];
+    if (host[id]) return host[id];
 
     let currentValue = initialValue;
 
@@ -48,16 +37,16 @@ export function createContext(initialValue) {
     let consumers = new Set();
 
     /**
-     * @param {Event | ContextConsumerConnectEvent} event
+     * @param {Event} event
      */
     function onConsumerConnect(event) {
+      const consumer = /** @type {ConsumerConnectEvent} */ (event).detail;
+
       // Validate event was dispatched by a pairable consumer.
-      if (!ContextConsumerConnectEvent.validate(event)) return;
+      if (consumer.id !== id) return;
 
       // Stop propagation of the event to prevent pairing with similar context providers.
       event.stopImmediatePropagation();
-
-      const consumer = event.detail;
 
       consumer.onConnect();
 
@@ -108,7 +97,7 @@ export function createContext(initialValue) {
       }
     };
 
-    host[key] = context;
+    host[id] = context;
     return context;
   }
 
@@ -122,7 +111,7 @@ export function createContext(initialValue) {
     let disconnectFromProviderCallback = noop;
 
     /**
-     *
+     * @returns {void}
      */
     function onConnect() {
       options.onConnect?.();
@@ -150,7 +139,8 @@ export function createContext(initialValue) {
     host.addController({
       hostConnected() {
         host.dispatchEvent(
-          new ContextConsumerConnectEvent({
+          new ConsumerConnectEvent({
+            id,
             onConnect,
             onUpdate,
             onDisconnect

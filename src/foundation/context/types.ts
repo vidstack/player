@@ -18,6 +18,7 @@ export interface ContextOptions<T = unknown> {
 }
 
 export type ContextConsumerConnectEventDetail<T = any> = {
+  id: symbol;
   onConnect(): void;
   onUpdate(newValue: T): void;
   onDisconnect(callback: () => void): void;

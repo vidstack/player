@@ -102,8 +102,7 @@ export class ElementManager {
    * @returns {boolean}
    */
   _validateConnectEvent(event) {
-    const ScopedDiscoveryEvent = this._getScopedDiscoveryEvent();
-    return event instanceof ScopedDiscoveryEvent;
+    return true;
   }
 
   /**
