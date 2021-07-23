@@ -235,6 +235,16 @@ export class HlsElement extends VideoElement {
     window.requestAnimationFrame(() => {
       this._handleMediaSrcChange();
     });
+
+    /**
+     * We can't actually determine whether there is native HLS support until the undlerying
+     * `<video>` element has rendered, since we rely on calling `canPlayType` on it. Thus we retry
+     * this getter here, and if it returns `true` we request an update so the `src` is set
+     * on the `<video>` element (determined by `_shouldSetVideoSrcAttr()` method).
+     */
+    if (this.shouldUseNativeHlsSupport) {
+      this.requestUpdate();
+    }
   }
 
   disconnectedCallback() {
