@@ -192,8 +192,6 @@ export class Html5MediaElement extends MediaProviderElement {
     if (this._src !== newSrc) {
       this._src = newSrc;
       this._handleMediaSrcChange();
-      // No other action requried as the `src` attribute should be updated on the underlying
-      // `<audio>` or `<video>` element.
     }
   }
 
@@ -224,7 +222,6 @@ export class Html5MediaElement extends MediaProviderElement {
   set srcObject(newSrcObject) {
     if (this.mediaElement.srcObject !== newSrcObject) {
       this.mediaElement.srcObject = newSrcObject ?? null;
-      if (!this._willAnotherEngineAttach()) this.mediaElement.load();
       this._handleMediaSrcChange();
     }
   }
@@ -358,7 +355,6 @@ export class Html5MediaElement extends MediaProviderElement {
 
     window.requestAnimationFrame(() => {
       this._handleMediaSrcChange();
-      if (!this._willAnotherEngineAttach()) this.mediaElement?.load();
     });
   }
 
@@ -755,6 +751,19 @@ export class Html5MediaElement extends MediaProviderElement {
    */
   _setMuted(isMuted) {
     this.mediaElement.muted = isMuted;
+  }
+
+  /**
+   * @protected
+   */
+  async _handleMediaSrcChange() {
+    super._handleMediaSrcChange();
+
+    if (!this._willAnotherEngineAttach()) {
+      // Wait for `src` attribute to be updated on underlying `<audio>` or `<video>` element.
+      await this.updateComplete;
+      this.mediaElement?.load();
+    }
   }
 
   // -------------------------------------------------------------------------------------------

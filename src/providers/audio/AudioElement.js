@@ -18,7 +18,7 @@ export const AUDIO_ELEMENT_TAG_NAME = 'vds-audio';
  * ```html
  * <vds-audio src="/media/audio.mp3">
  *   <!-- ... -->
- * </vds-video>
+ * </vds-audio>
  * ```
  * @example
  * ```html
