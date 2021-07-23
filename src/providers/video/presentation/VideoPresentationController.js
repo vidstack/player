@@ -4,7 +4,6 @@ import {
   redispatchEvent,
   vdsEvent
 } from '../../../foundation/events/index.js';
-import { IS_IOS } from '../../../utils/support.js';
 import { isFunction, isNil, noop } from '../../../utils/unit.js';
 
 /**
@@ -116,11 +115,7 @@ export class VideoPresentationController {
    * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1628805-webkitsupportsfullscreen
    */
   get isSupported() {
-    return (
-      IS_IOS &&
-      isFunction(this._host.videoElement?.webkitSetPresentationMode) &&
-      (this._host.videoElement?.webkitSupportsFullscreen ?? false)
-    );
+    return isFunction(this._host.videoElement?.webkitSetPresentationMode);
   }
 
   /**
