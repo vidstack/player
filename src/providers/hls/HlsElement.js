@@ -211,7 +211,11 @@ export class HlsElement extends VideoElement {
   async update(changedProperties) {
     super.update(changedProperties);
 
-    if (this.hasUpdated && changedProperties.has('hlsLibrary')) {
+    if (
+      changedProperties.has('hlsLibrary') &&
+      this.hasUpdated &&
+      !this.shouldUseNativeHlsSupport
+    ) {
       this._initiateHlsLibraryDownloadConnection();
       await this._buildHlsEngine(true);
       this._attachHlsEngine();
@@ -552,7 +556,7 @@ export class HlsElement extends VideoElement {
     // Need to wait for `src` attribute on `<video>` to clear if last `src` was not using HLS engine.
     await this.updateComplete;
 
-    if (isNil(this.hlsLibrary)) return;
+    if (isNil(this.hlsLibrary) || this.shouldUseNativeHlsSupport) return;
 
     if (isUndefined(this.hlsEngine)) {
       await this._buildHlsEngine();
