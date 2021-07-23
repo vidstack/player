@@ -5,10 +5,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { ifNonEmpty, on } from '../../foundation/directives/index.js';
 import { WithFocus } from '../../foundation/elements/index.js';
-import {
-  EventListenerController,
-  vdsEvent
-} from '../../foundation/events/index.js';
+import { eventListener, vdsEvent } from '../../foundation/events/index.js';
 import {
   clampNumber,
   getNumberOfDecimalPlaces,
@@ -686,24 +683,9 @@ export class SliderElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @readonly
-   */
-  _documentEventListeners = new EventListenerController(
-    this,
-    {
-      pointerup: this._handleDocumentPointerUp,
-      pointermove: this._handleDocumentPointerMove
-    },
-    {
-      target: document,
-      receiver: this
-    }
-  );
-
-  /**
-   * @protected
    * @param {PointerEvent} event
    */
+  @eventListener('pointerup', { target: document })
   _handleDocumentPointerUp(event) {
     if (this.disabled || !this._isDragging) return;
     this._stopDragging(event);
@@ -713,6 +695,7 @@ export class SliderElement extends WithFocus(LitElement) {
    * @protected
    * @param {PointerEvent} event
    */
+  @eventListener('pointermove', { target: document })
   _handleDocumentPointerMove(event) {
     if (this.disabled || !this._isDragging) {
       this._handlePointerMove.cancel();

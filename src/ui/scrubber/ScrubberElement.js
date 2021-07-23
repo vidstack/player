@@ -12,7 +12,7 @@ import {
   on
 } from '../../foundation/directives/index.js';
 import { WithFocus } from '../../foundation/elements/index.js';
-import { EventListenerController } from '../../foundation/events/index.js';
+import { eventListener } from '../../foundation/events/index.js';
 import { buildExportPartsAttr } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
 import { ScrubberPreviewElement } from '../scrubber-preview/index.js';
@@ -218,18 +218,9 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @readonly
-   */
-  _pointerEventListenerController = new EventListenerController(this, {
-    pointerenter: this._handlePointerEnter,
-    pointermove: this._handlePointerMove,
-    pointerleave: this._handlePointerLeave
-  });
-
-  /**
-   * @protected
    * @param {PointerEvent} event
    */
+  @eventListener('pointerenter')
   _handlePointerEnter(event) {
     if (this.disabled) return;
     this.ctx.pointing = true;
@@ -241,6 +232,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {PointerEvent} event
    */
+  @eventListener('pointermove')
   _handlePointerMove(event) {
     if (this.disabled || this.ctx.dragging) return;
     this.scrubberPreviewElement?.updatePreviewPosition(event);
@@ -250,6 +242,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {PointerEvent} event
    */
+  @eventListener('pointerleave')
   _handlePointerLeave(event) {
     if (this.disabled) return;
 
@@ -428,17 +421,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   /**
    * @protected
-   * @readonly
-   */
-  _previewEventListenerController = new EventListenerController(this, {
-    'vds-scrubber-preview-connect': this._handlePreviewConnect,
-    'vds-scrubber-preview-show': this._handlePreviewShow,
-    'vds-scrubber-preview-time-update': this._handlePreviewTimeUpdate,
-    'vds-scrubber-preview-hide': this._handlePreviewHide
-  });
-
-  /**
-   * @protected
    * @type {ScrubberPreviewElement | undefined}
    */
   _scrubberPreviewElement;
@@ -456,6 +438,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {import('../scrubber-preview').ScrubberPreviewConnectEvent} event
    */
+  @eventListener('vds-scrubber-preview-connect')
   _handlePreviewConnect(event) {
     event.stopPropagation();
 
@@ -474,6 +457,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {import('../scrubber-preview').ScrubberPreviewShowEvent} event
    */
+  @eventListener('vds-scrubber-preview-show')
   _handlePreviewShow(event) {
     event.stopPropagation();
     this.setAttribute('previewing', '');
@@ -483,6 +467,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {import('../scrubber-preview').ScrubberPreviewTimeUpdateEvent} event
    */
+  @eventListener('vds-scrubber-preview-time-update')
   _handlePreviewTimeUpdate(event) {
     event.stopPropagation();
   }
@@ -491,6 +476,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * @protected
    * @param {import('../scrubber-preview').ScrubberPreviewHideEvent} event
    */
+  @eventListener('vds-scrubber-preview-hide')
   _handlePreviewHide(event) {
     event.stopPropagation();
     this.removeAttribute('previewing');

@@ -2,13 +2,10 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import {
-  ElementDiscoveryController,
+  discover,
   ElementDisposalController
 } from '../../foundation/elements/index.js';
-import {
-  EventListenerController,
-  vdsEvent
-} from '../../foundation/events/index.js';
+import { eventListener, vdsEvent } from '../../foundation/events/index.js';
 import { FullscreenController } from '../../foundation/fullscreen/index.js';
 import { RequestQueue } from '../../foundation/queue/index.js';
 import {
@@ -39,6 +36,7 @@ import { ViewType } from '../ViewType.js';
  * all concrete media providers. Extending this class enables provider-agnostic communication 💬
  *
  */
+@discover('vds-media-provider-connect')
 export class MediaProviderElement extends LitElement {
   /** @type {(keyof GlobalEventHandlersEventMap)[]} */
   static get events() {
@@ -82,22 +80,6 @@ export class MediaProviderElement extends LitElement {
    * @readonly
    */
   _disconnectDisposal = new ElementDisposalController(this);
-
-  /**
-   * @protected
-   * @readonly
-   */
-  _discoveryController = new ElementDiscoveryController(this, {
-    eventType: 'vds-media-provider-connect'
-  });
-
-  /**
-   * @protected
-   * @readonly
-   */
-  _eventListenerController = new EventListenerController(this, {
-    'vds-fullscreen-change': this._handleFullscreenChange
-  });
 
   connectedCallback() {
     super.connectedCallback();
@@ -892,6 +874,7 @@ export class MediaProviderElement extends LitElement {
    * @protected
    * @param {import('../../foundation/fullscreen').FullscreenChangeEvent} event
    */
+  @eventListener('vds-fullscreen-change')
   _handleFullscreenChange(event) {
     this.ctx.fullscreen = event.detail;
   }

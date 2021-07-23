@@ -1,6 +1,5 @@
 import { LitElement } from 'lit';
 
-import { keysOf } from './string.js';
 import { IS_CLIENT } from './support.js';
 import { isFunction, isNil, isString, isUndefined } from './unit.js';
 

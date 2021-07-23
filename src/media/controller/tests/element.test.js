@@ -63,9 +63,10 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
         window.document.body.append(controller);
       });
 
-      const { detail } = /** @type {MediaControllerConnectEvent} */ (
-        await oneEvent(document, 'vds-media-controller-connect')
-      );
+      const { detail } =
+        /** @type {import('../MediaControllerElement').MediaControllerConnectEvent} */ (
+          await oneEvent(document, 'vds-media-controller-connect')
+        );
 
       expect(detail.element).to.be.instanceOf(MediaControllerElement);
       expect(isFunction(detail.onDisconnect)).to.be.true;
@@ -167,7 +168,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
         );
       }, 0);
 
-      const event = /** @type {VolumeChangeEvent} */ (
+      const event = /** @type {import('../../events').VolumeChangeEvent} */ (
         await oneEvent(controller, 'vds-volume-change')
       );
 

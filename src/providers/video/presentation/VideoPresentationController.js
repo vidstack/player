@@ -138,6 +138,7 @@ export class VideoPresentationController {
     if (!this.isSupported || isNil(this._host.videoElement)) return noop;
     return listen(
       this._host.videoElement,
+      // @ts-expect-error
       'webkitpresentationmodechanged',
       this._handlePresentationModeChange.bind(this)
     );

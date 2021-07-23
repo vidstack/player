@@ -1,4 +1,8 @@
-import { isFunction, isUndefined } from '../../utils/unit.js';
+import { isFunction } from '../../utils/unit.js';
+import {
+  isReactiveElementProto,
+  throwIfTC39Decorator
+} from '../elements/decorators.js';
 import { defineContextConsumer, defineContextProvider } from './define.js';
 
 /**
@@ -8,11 +12,17 @@ import { defineContextConsumer, defineContextProvider } from './define.js';
  * @returns {PropertyDecorator}
  */
 export function consumeContext(context, options = {}) {
-  return reactiveElementDecorator(consumeContext.name, (proto, name) => {
-    /** @type {typeof import('lit').ReactiveElement} */
-    const ctor = proto.constructor;
-    defineContextConsumer(ctor, name, context, options);
-  });
+  return function (proto, propertyKey) {
+    const decoratorName = consumeContext.name;
+
+    // TODO: implement when spec formalized.
+    throwIfTC39Decorator(decoratorName, proto);
+
+    if (isReactiveElementProto(decoratorName, proto)) {
+      const ctor = proto.constructor;
+      defineContextConsumer(ctor, propertyKey, context, options);
+    }
+  };
 }
 
 /**
@@ -22,11 +32,17 @@ export function consumeContext(context, options = {}) {
  * @returns {PropertyDecorator}
  */
 export function provideContext(context, options = {}) {
-  return reactiveElementDecorator(provideContext.name, (proto, name) => {
-    /** @type {typeof import('lit').ReactiveElement} */
-    const ctor = proto.constructor;
-    defineContextProvider(ctor, name, context, options);
-  });
+  return function (proto, propertyKey) {
+    const decoratorName = provideContext.name;
+
+    // TODO: implement when spec formalized.
+    throwIfTC39Decorator(decoratorName, proto);
+
+    if (isReactiveElementProto(decoratorName, proto)) {
+      const ctor = proto.constructor;
+      defineContextProvider(ctor, propertyKey, context, options);
+    }
+  };
 }
 
 /**
@@ -36,67 +52,21 @@ export function provideContext(context, options = {}) {
  * @returns {MethodDecorator}
  */
 export function watchContext(context, options) {
-  return reactiveElementDecorator(watchContext.name, (proto, name) => {
-    /** @type {typeof import('lit').ReactiveElement} */
-    const ctor = proto.constructor;
+  return function (proto, methodName) {
+    const decoratorName = watchContext.name;
 
-    defineContextConsumer(ctor, Symbol('Vidstack.watchContext'), context, {
-      ...options,
-      onUpdate(value) {
-        if (isFunction(this[name])) this[name](value);
-        options?.onUpdate?.call(this, value);
-      }
-    });
-  });
-}
-
-/**
- * @param {string} decoratorName
- * @param {(proto: any, name: string | symbol) => void} legacyDecorator
- * @returns {PropertyDecorator}
- */
-export function reactiveElementDecorator(decoratorName, legacyDecorator) {
-  /**
-   * Legacy Decorator
-   *
-   * @param {any} proto
-   * @param {string | symbol} name
-   * @link https://www.typescriptlang.org/docs/handbook/decorators.html
-   */
-  function legacy(proto, name) {
-    /** @type {typeof import('lit').ReactiveElement} */
-    const ctor = proto.constructor;
-
-    if (isUndefined(ctor.addInitializer)) {
-      throw Error(
-        `[vds]: \`${ctor.name}\` must extend \`ReactiveElement\` to use the \`@${decoratorName}\` decorator.`
-      );
-    }
-
-    legacyDecorator(proto, name);
-  }
-
-  /**
-   * TC39 Decorator
-   *
-   * @param {any} context
-   * @link https://github.com/tc39/proposal-decorators
-   */
-  function standard(context) {
     // TODO: implement when spec formalized.
-    throw Error(`[@${decoratorName}] TC39 decorators are not supported yet.`);
-  }
+    throwIfTC39Decorator(decoratorName, proto);
 
-  /**
-   * @param {any} protoOrContext
-   * @param {string | symbol} [propertyKey]
-   * @returns {ReturnType<typeof legacy | typeof standard>}
-   */
-  function decorator(protoOrContext, propertyKey) {
-    return !isUndefined(propertyKey)
-      ? legacy(protoOrContext, propertyKey)
-      : standard(protoOrContext);
-  }
-
-  return decorator;
+    if (isReactiveElementProto(decoratorName, proto)) {
+      const ctor = proto.constructor;
+      defineContextConsumer(ctor, Symbol('Vidstack.watchContext'), context, {
+        ...options,
+        onUpdate(value) {
+          if (isFunction(this[methodName])) this[methodName](value);
+          options?.onUpdate?.call(this, value);
+        }
+      });
+    }
+  };
 }

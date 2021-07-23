@@ -9,6 +9,7 @@ import {
 } from '../../foundation/events/index.js';
 import { CanPlay, MediaProviderElement, MediaType } from '../../media/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
+import { keysOf } from '../../utils/object.js';
 import { IS_SAFARI } from '../../utils/support.js';
 import { isNil, isNumber, isUndefined } from '../../utils/unit.js';
 import { MediaNetworkState } from './MediaNetworkState.js';
@@ -371,7 +372,7 @@ export class Html5MediaElement extends MediaProviderElement {
   _bindMediaEventListeners() {
     if (isNil(this.mediaElement)) return;
 
-    const events = {
+    const eventHandlers = {
       abort: this._handleAbort,
       canplay: this._handleCanPlay,
       canplaythrough: this._handleCanPlayThrough,
@@ -396,8 +397,8 @@ export class Html5MediaElement extends MediaProviderElement {
       waiting: this._handleWaiting
     };
 
-    Object.keys(events).forEach((type) => {
-      const handler = events[type].bind(this);
+    keysOf(eventHandlers).forEach((type) => {
+      const handler = eventHandlers[type].bind(this);
       this._disconnectDisposal.add(
         listen(this.mediaElement, type, (e) => {
           handler(e);

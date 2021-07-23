@@ -50,9 +50,10 @@ export class ManagedElement {
      */
     this._discoveryController =
       /** @type {ElementDiscoveryController<HostElement>} */ (
-        new ElementDiscoveryController(host, {
-          eventType: this._getScopedDiscoveryEvent().TYPE
-        })
+        new ElementDiscoveryController(
+          host,
+          this._getScopedDiscoveryEvent().TYPE
+        )
       );
   }
 

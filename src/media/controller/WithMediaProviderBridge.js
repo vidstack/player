@@ -1,7 +1,7 @@
 import { provideContextRecord } from '../../foundation/context/index.js';
 import {
   DisposalBin,
-  EventListenerController,
+  eventListener,
   listen,
   redispatchEvent
 } from '../../foundation/events/index.js';
@@ -30,19 +30,6 @@ export function WithMediaProviderBridge(Base) {
       super(...args);
       this._defineForwardedMediaProviderProperties();
     }
-
-    // -------------------------------------------------------------------------------------------
-    // Lifecycle
-    // -------------------------------------------------------------------------------------------
-
-    /**
-     * @protected
-     * @readonly
-     */
-    _eventListenerController = new EventListenerController(this, {
-      'vds-media-provider-connect': this._handleMediaProviderConnect,
-      'vds-fullscreen-change': this._handleFullscreenChange
-    });
 
     // -------------------------------------------------------------------------------------------
     // Media Provider Connect
@@ -75,6 +62,7 @@ export function WithMediaProviderBridge(Base) {
      * @protected
      * @param {import('../provider/MediaProviderElement').MediaProviderConnectEvent} event
      */
+    @eventListener('vds-media-provider-connect')
     _handleMediaProviderConnect(event) {
       event.stopPropagation();
 
@@ -185,9 +173,10 @@ export function WithMediaProviderBridge(Base) {
     _forwardMediaProviderEvents() {
       if (isNil(this.mediaProvider)) return;
 
-      const ctor = /** @type {{ events?: string[] }} */ (
-        this.mediaProvider.constructor
-      );
+      const ctor =
+        /** @type {{ events?: (keyof GlobalEventHandlersEventMap)[] }} */ (
+          this.mediaProvider.constructor
+        );
 
       const events = ctor.events ?? [];
 
@@ -278,6 +267,7 @@ export function WithMediaProviderBridge(Base) {
      * @protected
      * @param {import('../../foundation/fullscreen').FullscreenChangeEvent} event
      */
+    @eventListener('vds-fullscreen-change')
     _handleFullscreenChange(event) {
       this.ctx.fullscreen = event.detail;
     }

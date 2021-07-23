@@ -1,4 +1,6 @@
-import { EventListenerController } from '../../foundation/events/index.js';
+import { ElementDisposalController } from '../../foundation/elements/index.js';
+import { listen } from '../../foundation/events/index.js';
+import { keysOf } from '../../utils/object.js';
 
 /**
  * @typedef {import('lit').ReactiveElement} MediaEventObserverHost
@@ -58,18 +60,15 @@ export class MediaEventObserver {
     /**
      * @protected
      * @readonly
-     * @type {EventListenerController}
+     * @type {ElementDisposalController}
      */
-    this._controllerEventListeners = new EventListenerController(host, {
-      'vds-media-controller-connect':
-        this.handleMediaControllerConnectEvent.bind(this)
-    });
+    this._disposal = new ElementDisposalController(host);
 
-    /**
-     * @protected
-     * @type {EventListenerController}
-     */
-    this._mediaEventListeners = new EventListenerController(host, {});
+    listen(
+      host,
+      'vds-media-controller-connect',
+      this.handleMediaControllerConnectEvent.bind(this)
+    );
   }
 
   /**
@@ -77,17 +76,14 @@ export class MediaEventObserver {
    * @param {import('./MediaControllerElement').MediaControllerConnectEvent} event
    */
   handleMediaControllerConnectEvent(event) {
-    this._mediaEventListeners.removeListeners();
+    this._disposal.empty();
 
     const { element: mediaController } = event.detail;
 
-    this._mediaEventListeners = new EventListenerController(
-      this._host,
-      this._eventHandlers,
-      {
-        target: mediaController,
-        receiver: this._host
-      }
-    );
+    keysOf(this._eventHandlers).forEach((eventType) => {
+      const handler = this._eventHandlers[eventType]?.bind(this._host);
+      const dispose = listen(mediaController, eventType, handler);
+      this._disposal.add(dispose);
+    });
   }
 }

@@ -6,7 +6,7 @@ import {
   consumeContext,
   provideContextRecord
 } from '../../foundation/context/index.js';
-import { ElementDiscoveryController } from '../../foundation/elements/index.js';
+import { discover } from '../../foundation/elements/index.js';
 import {
   isPointerEvent,
   isVdsEvent,
@@ -99,6 +99,7 @@ export const SCRUBBER_PREVIEW_ELEMENT_TAG_NAME = 'vds-scrubber-preview';
  * }
  * ```
  */
+@discover('vds-scrubber-preview-connect')
 export class ScrubberPreviewElement extends LitElement {
   /**
    * @type {import('lit').CSSResultGroup}
@@ -183,14 +184,6 @@ export class ScrubberPreviewElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   */
-  _discoveryController = new ElementDiscoveryController(this, {
-    eventType: 'vds-scrubber-preview-connect'
-  });
 
   /**
    * @protected

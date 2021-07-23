@@ -8,7 +8,7 @@ export class ElementDisposalController {
    * @protected
    * @readonly
    */
-  _disconnectDisposal = new DisposalBin();
+  _disposal = new DisposalBin();
 
   /**
    * @param {import('lit').ReactiveElement} host
@@ -16,7 +16,7 @@ export class ElementDisposalController {
   constructor(host) {
     host.addController({
       hostDisconnected: () => {
-        this._disconnectDisposal.empty();
+        this._disposal.empty();
       }
     });
   }
@@ -27,6 +27,13 @@ export class ElementDisposalController {
    * @param {() => void} [callback]
    */
   add(callback) {
-    this._disconnectDisposal.add(callback);
+    this._disposal.add(callback);
+  }
+
+  /**
+   * Pre-dispose of callbacks.
+   */
+  empty() {
+    this._disposal.empty();
   }
 }

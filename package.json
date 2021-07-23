@@ -42,7 +42,7 @@
     "build": "npm run build:clean && tsc -p tsconfig-build.json",
     "build:clean": "rimraf dist",
     "build:watch": "npm run build -- --incremental --watch",
-    "clean": "run-s build:clean types:clean",
+    "clean": "run-s build:clean",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .js --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",

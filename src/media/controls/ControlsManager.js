@@ -1,8 +1,5 @@
 import { ElementManager } from '../../foundation/elements/index.js';
-import {
-  EventListenerController,
-  vdsEvent
-} from '../../foundation/events/index.js';
+import { listen, vdsEvent } from '../../foundation/events/index.js';
 import { controlsContext } from './context.js';
 import { ManagedControlsConnectEvent } from './ManagedControls';
 
@@ -51,18 +48,16 @@ export class ControlsManager extends ElementManager {
      */
     this._hidden = controlsContext.hidden.provide(host);
 
-    /**
-     * @protected
-     * @readonly
-     * @type {EventListenerController}
-     */
-    this._eventListenerController = new EventListenerController(
+    listen(
       this._host,
-      {
-        'vds-hide-controls-request': this._handleHideControlsRequest,
-        'vds-show-controls-request': this._handleShowControlsRequest
-      },
-      { receiver: this }
+      'vds-show-controls-request',
+      this._handleShowControlsRequest.bind(this)
+    );
+
+    listen(
+      this._host,
+      'vds-hide-controls-request',
+      this._handleHideControlsRequest.bind(this)
     );
   }
 

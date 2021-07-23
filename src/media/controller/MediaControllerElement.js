@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 
-import { ElementDiscoveryController } from '../../foundation/elements/index.js';
-import { EventListenerController } from '../../foundation/events/index.js';
+import { discover } from '../../foundation/elements/index.js';
+import { eventListener } from '../../foundation/events/index.js';
 import { isNil } from '../../utils/unit.js';
 import { MediaContainerElement } from '../container/index.js';
 import { cloneMediaContextRecord, mediaContext } from '../context.js';
@@ -53,6 +53,7 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  * </vds-media-controller>
  * ```
  */
+@discover('vds-media-controller-connect')
 export class MediaControllerElement extends WithMediaProviderBridge(
   LitElement
 ) {
@@ -60,35 +61,6 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   static get styles() {
     return [mediaControllerStyles];
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Lifecycle
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   */
-  _discoveryController = new ElementDiscoveryController(this, {
-    eventType: 'vds-media-controller-connect'
-  });
-
-  /**
-   * @protected
-   * @readonly
-   */
-  _eventListenerController = new EventListenerController(this, {
-    'vds-media-container-connect': this._handleMediaContainerConnect,
-    'vds-mute-request': this._handleMuteRequest,
-    'vds-unmute-request': this._handleUnmuteRequest,
-    'vds-play-request': this._handlePlayRequest,
-    'vds-pause-request': this._handlePauseRequest,
-    'vds-seeking-request': this._handleSeekingRequest,
-    'vds-seek-request': this._handleSeekRequest,
-    'vds-volume-change-request': this._handleVolumeChangeRequest,
-    'vds-enter-fullscreen-request': this._handleEnterFullscreenRequest,
-    'vds-exit-fullscreen-request': this._handleExitFullscreenRequest
-  });
 
   render() {
     return html`<slot></slot>`;
@@ -141,6 +113,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @protected
    * @param {import('../container/MediaContainerElement').MediaContainerConnectEvent} event
    */
+  @eventListener('vds-media-container-connect')
   _handleMediaContainerConnect(event) {
     event.stopPropagation();
     this._handleMediaContainerDisconnect();
@@ -174,6 +147,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @protected
    * @param {import('../request.events').MuteRequestEvent} event
    */
+  @eventListener('vds-mute-request')
   _handleMuteRequest(event) {
     this._mediaRequestEventGateway(event);
     this.muted = true;
@@ -183,6 +157,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @protected
    * @param {import('../request.events').UnmuteRequestEvent} event
    */
+  @eventListener('vds-unmute-request')
   _handleUnmuteRequest(event) {
     this._mediaRequestEventGateway(event);
     this.muted = false;
@@ -192,6 +167,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @protected
    * @param {import('../request.events').PlayRequestEvent} event
    */
+  @eventListener('vds-play-request')
   _handlePlayRequest(event) {
     this._mediaRequestEventGateway(event);
     this.paused = false;
@@ -201,6 +177,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @protected
    * @param {import('../request.events').PauseRequestEvent} event
    */
+  @eventListener('vds-pause-request')
   _handlePauseRequest(event) {
     this._mediaRequestEventGateway(event);
     this.paused = true;
@@ -210,6 +187,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @protected
    * @param {import('../request.events').SeekRequestEvent} event
    */
+  @eventListener('vds-seeking-request')
   _handleSeekingRequest(event) {
     this._mediaRequestEventGateway(event);
     this.currentTime = event.detail;
@@ -219,6 +197,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @protected
    * @param {import('../request.events').SeekRequestEvent} event
    */
+  @eventListener('vds-seek-request')
   _handleSeekRequest(event) {
     this._mediaRequestEventGateway(event);
     this.currentTime = event.detail;
@@ -228,6 +207,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @protected
    * @param {import('../request.events').VolumeChangeRequestEvent} event
    */
+  @eventListener('vds-volume-change-request')
   _handleVolumeChangeRequest(event) {
     this._mediaRequestEventGateway(event);
     this.volume = event.detail;
@@ -238,6 +218,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @param {import('../request.events').EnterFullscreenRequestEvent} event
    * @returns {Promise<void>}
    */
+  @eventListener('vds-enter-fullscreen-request')
   async _handleEnterFullscreenRequest(event) {
     this._mediaRequestEventGateway(event);
     if (!isNil(this.mediaContainer)) {
@@ -252,6 +233,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * @param {import('../request.events').ExitFullscreenRequestEvent} event
    * @returns {Promise<void>}
    */
+  @eventListener('vds-exit-fullscreen-request')
   async _handleExitFullscreenRequest(event) {
     this._mediaRequestEventGateway(event);
     if (!isNil(this.mediaContainer)) {

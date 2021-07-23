@@ -20,7 +20,7 @@ export class ForwardEventDirective extends AsyncDirective {
 
   /**
    * @protected
-   * @type {string | undefined}
+   * @type {(keyof GlobalEventHandlersEventMap) | undefined}
    */
   _type;
 

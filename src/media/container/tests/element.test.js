@@ -131,9 +131,10 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
         window.document.body.append(container);
       });
 
-      const { detail } = /** @type {MediaContainerConnectEvent} */ (
-        await oneEvent(document, 'vds-media-container-connect')
-      );
+      const { detail } =
+        /** @type {import('../MediaContainerElement').MediaContainerConnectEvent} */ (
+          await oneEvent(document, 'vds-media-container-connect')
+        );
 
       expect(detail.element).to.be.instanceOf(MediaContainerElement);
       expect(isFunction(detail.onDisconnect)).to.be.true;

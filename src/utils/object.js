@@ -1,4 +1,13 @@
 /**
+ * @template T
+ * @param {T} obj
+ * @returns {(keyof T)[]}
+ */
+export function keysOf(obj) {
+  return /** @type {(keyof T)[]} */ (Object.keys(obj));
+}
+
+/**
  * Walk object prototype chain and collect all property names of the given `object`.
  *
  * @template T

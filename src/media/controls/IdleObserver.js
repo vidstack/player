@@ -1,7 +1,9 @@
 import {
-  EventListenerController,
+  DisposalBin,
+  listen,
   vdsEvent
 } from '../../foundation/events/index.js';
+import { keysOf } from '../../utils/object.js';
 import { controlsContext } from './context.js';
 
 /**
@@ -33,21 +35,33 @@ export class IdleObserver {
     /**
      * @protected
      * @readonly
-     * @type {EventListenerController}
+     * @type {DisposalBin}
      */
-    this[Symbol(EventListenerController.name)] = new EventListenerController(
-      this._host,
-      {
-        focus: this.pause,
-        blur: this.resume,
-        keydown: this._handleUserInteraction,
-        click: this._handleUserInteraction,
-        pointermove: this._handleUserInteraction,
-        'vds-pause-idle-tracking': this._handlePauseIdleTracking,
-        'vds-resume-idle-tracking': this._handleResumeIdleTracking
+    this._disposal = new DisposalBin();
+
+    this._host.addController({
+      hostConnected: () => {
+        const eventHandlers = {
+          focus: this.pause,
+          blur: this.resume,
+          keydown: this._handleUserInteraction,
+          click: this._handleUserInteraction,
+          pointermove: this._handleUserInteraction,
+          'vds-pause-idle-tracking': this._handlePauseIdleTracking,
+          'vds-resume-idle-tracking': this._handleResumeIdleTracking
+        };
+
+        keysOf(eventHandlers).forEach((eventType) => {
+          const handler = eventHandlers[eventType].bind(this);
+          const dispose = listen(this._host, eventType, handler);
+          this._disposal.add(dispose);
+        });
       },
-      { receiver: this }
-    );
+
+      hostDisconnected: () => {
+        this._disposal.empty();
+      }
+    });
   }
 
   /**

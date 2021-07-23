@@ -2,7 +2,7 @@ import { property, state } from 'lit/decorators.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
 import {
-  EventListenerController,
+  eventListener,
   isPointerEvent
 } from '../../foundation/events/index.js';
 import { mediaContext, MediaRemoteControl } from '../../media/index.js';
@@ -241,19 +241,10 @@ export class TimeSliderElement extends SliderElement {
 
   /**
    * @protected
-   * @readonly
-   */
-  _sliderEventListenerController = new EventListenerController(this, {
-    'vds-slider-drag-start': this.handleSliderDragStart,
-    'vds-slider-value-change': this._handleSliderValueChange,
-    'vds-slider-drag-end': this._handleSliderDragEnd
-  });
-
-  /**
-   * @protected
    * @param {import('../slider').SliderDragStartEvent} event
    * @returns {Promise<void>}
    */
+  @eventListener('vds-slider-drag-start')
   async handleSliderDragStart(event) {
     this._togglePlaybackWhileDragging(event);
   }
@@ -269,6 +260,7 @@ export class TimeSliderElement extends SliderElement {
    * @param {import('../slider').SliderValueChangeEvent} event
    * @returns {Promise<void>}
    */
+  @eventListener('vds-slider-value-change')
   async _handleSliderValueChange(event) {
     this.value = event.detail;
 
@@ -287,6 +279,7 @@ export class TimeSliderElement extends SliderElement {
    * @param {import('../slider').SliderDragEndEvent} event
    * @returns {Promise<void>}
    */
+  @eventListener('vds-slider-drag-end')
   async _handleSliderDragEnd(event) {
     this._dispatchSeekingRequest.cancel();
     this._mediaRemote.seek(this.currentTime, event);

@@ -34,7 +34,7 @@ declare global {
       ScrubberPreviewEvents,
       SliderEvents,
       VideoPresentationEvents {
-    'vds-noop': void;
+    'vds-noop': any;
     'vds-media-container-connect': MediaContainerConnectEvent;
     'vds-media-controller-connect': MediaControllerConnectEvent;
     'vds-media-provider-connect': MediaProviderConnectEvent;

@@ -5,8 +5,8 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { consumeContext } from '../../foundation/context/index.js';
-import { ElementDiscoveryController } from '../../foundation/elements/index.js';
-import { EventListenerController } from '../../foundation/events/index.js';
+import { discover } from '../../foundation/elements/index.js';
+import { eventListener } from '../../foundation/events/index.js';
 import { FullscreenController } from '../../foundation/fullscreen/index.js';
 import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
 import { getSlottedChildren } from '../../utils/dom.js';
@@ -53,6 +53,7 @@ export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
  * </vds-media-controller>
  * ```
  */
+@discover('vds-media-container-connect')
 export class MediaContainerElement extends LitElement {
   /** @type {import('lit').CSSResultGroup} */
   static get styles() {
@@ -103,27 +104,6 @@ export class MediaContainerElement extends LitElement {
   @state()
   @consumeContext(mediaContext.isVideoView)
   _mediaIsVideoView = false;
-
-  // -------------------------------------------------------------------------------------------
-  // Lifecycle
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * @protected
-   * @readonly
-   */
-  _discoveryController = new ElementDiscoveryController(this, {
-    eventType: 'vds-media-container-connect'
-  });
-
-  /**
-   * @protected
-   * @readonly
-   */
-  _eventListenerController = new EventListenerController(this, {
-    'vds-fullscreen-change': this._handleFullscreenChange,
-    'vds-media-provider-connect': this._handleMediaProviderConnect
-  });
 
   // -------------------------------------------------------------------------------------------
   // Render - Root
@@ -307,6 +287,7 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @param {import('../provider/MediaProviderElement').MediaProviderConnectEvent} event
    */
+  @eventListener('vds-media-provider-connect')
   _handleMediaProviderConnect(event) {
     const { element, onDisconnect } = event.detail;
 
@@ -376,6 +357,7 @@ export class MediaContainerElement extends LitElement {
    * @protected
    * @param {import('../../foundation/fullscreen').FullscreenChangeEvent} event
    */
+  @eventListener('vds-fullscreen-change')
   _handleFullscreenChange(event) {
     if (!isNil(this.mediaProvider)) {
       this.mediaProvider.ctx.fullscreen = event.detail;

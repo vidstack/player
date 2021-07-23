@@ -112,6 +112,7 @@ export class DisposalBin {
   }
 
   /**
+   * Dispose of callbacks.
    */
   empty() {
     this._disposal.forEach((fn) => fn());
@@ -120,14 +121,20 @@ export class DisposalBin {
 }
 
 /**
+ * @typedef {{
+ *  [EventType in keyof GlobalEventHandlersEventMap]?: (event: GlobalEventHandlersEventMap[EventType]) => void | Promise<void>;
+ * }} GlobalEventHandlerMap
+ */
+
+/**
  * Listens to an event on the given `target` and returns a cleanup function to stop listening.
  *
- * @template {Event} ListenedEvent
+ * @template {keyof GlobalEventHandlerMap} EventType
  * @param {EventTarget} target - The target to listen for the events on.
- * @param {string} type - The name of the event to listen to.
- * @param {(event: ListenedEvent) => void} listener - The function to be called when the event is fired.
- * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options] - Configures the event listener.
- * @returns {() => void} Stop listening.
+ * @param {EventType} type - The name of the event to listen to.
+ * @param {GlobalEventHandlerMap[EventType]} listener - The function to be called when the event is fired.
+ * @param {boolean | EventListenerOptions | AddEventListenerOptions} [options] - Configures the event listener.
+ * @returns {() => void} Stop listening cleanup function.
  * @example
  * ```ts
  * const disposeListener = listen(window, 'resize', () => {});
@@ -150,48 +157,6 @@ export function listen(target, type, listener, options) {
       options
     );
   };
-}
-
-/**
- * Listens to an event on the given `target` and returns a cleanup function to stop listening.
- *
- * @template {keyof GlobalEventHandlersEventMap} EventType
- * @param {EventTarget} target - The target to listen for the events on.
- * @param {EventType} type - The name of the event to listen to.
- * @param {(event: GlobalEventHandlersEventMap[EventType]) => void} listener - The function to be called when the event is fired.
- * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options] - Configures the event listener.
- * @returns {() => void} Stop listening function.
- */
-export function listenGlobalEvent(target, type, listener, options) {
-  // @ts-expect-error
-  target.addEventListener(type, listener, options);
-  return () => {
-    // @ts-expect-error
-    target.removeEventListener(type, listener, options);
-  };
-}
-
-/**
- * @typedef {{
- *  [EventType in keyof GlobalEventHandlersEventMap]?: (event: GlobalEventHandlersEventMap[EventType]) => void;
- * }} GlobalEventHandlerRecord
- */
-
-/**
- * @param {EventTarget} target
- * @param {GlobalEventHandlerRecord} record
- * @param {DisposalBin} disposal
- * @param {{ receiver?: any }} [options]
- */
-export function bindEventListeners(target, record, disposal, options = {}) {
-  Object.keys(record).forEach((eventType) => {
-    const dispose = listen(
-      target,
-      eventType,
-      record[eventType].bind(options.receiver ?? target)
-    );
-    disposal.add(dispose);
-  });
 }
 
 /**

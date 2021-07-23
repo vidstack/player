@@ -20,7 +20,7 @@ export class EventListenerDirective extends AsyncDirective {
 
   /**
    * @protected
-   * @type {string | undefined}
+   * @type {(keyof GlobalEventHandlersEventMap) | undefined}
    */
   _type;
 

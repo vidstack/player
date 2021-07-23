@@ -157,7 +157,8 @@ export class FullscreenController {
    */
   _addFullscreenChangeEventListener(handler) {
     if (!this.isSupported) return noop;
-    return listen(/** @type {any} */ (fscreen), 'fullscreenchange', handler);
+    // @ts-expect-error
+    return listen(fscreen, 'fullscreenchange', handler);
   }
 
   /**
@@ -167,7 +168,8 @@ export class FullscreenController {
    */
   _addFullscreenErrorEventListener(handler) {
     if (!this.isSupported) return noop;
-    return listen(/** @type {any} */ (fscreen), 'fullscreenerror', handler);
+    // @ts-expect-error
+    return listen(fscreen, 'fullscreenerror', handler);
   }
 
   /**
