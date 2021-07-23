@@ -87,9 +87,11 @@ export class MediaProviderElement extends LitElement {
     this._connectedQueue.serveImmediately = true;
   }
 
+  /**
+   * @protected
+   * @param {import('lit').PropertyValues} changedProperties
+   */
   updated(changedProperties) {
-    super.updated(changedProperties);
-
     if (changedProperties.has('autoplay')) {
       this.ctx.autoplay = this.autoplay;
     }
@@ -105,6 +107,17 @@ export class MediaProviderElement extends LitElement {
     if (changedProperties.has('playsinline')) {
       this.ctx.playsinline = this.playsinline;
     }
+
+    super.updated(changedProperties);
+  }
+
+  /**
+   * @protected
+   * @param {import('lit').PropertyValues} changedProperties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    this.ctx.canRequestFullscreen = this.canRequestFullscreen;
   }
 
   disconnectedCallback() {
