@@ -10,4 +10,8 @@ export const toggleButtonElementStyles = css`
   :host(:focus) {
     outline: 0;
   }
+
+  :host([hidden]) {
+    display: none;
+  }
 `;
