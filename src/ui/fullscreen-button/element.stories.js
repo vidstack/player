@@ -69,11 +69,11 @@ function Template({
     </vds-media-controller>
 
     <style>
-      vds-fullscreen-button[pressed] .enter {
+      vds-fullscreen-button[media-fullscreen] .enter {
         display: none;
       }
 
-      vds-fullscreen-button:not([pressed]) .exit {
+      vds-fullscreen-button:not([media-fullscreen]) .exit {
         display: none;
       }
     </style>

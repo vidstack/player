@@ -69,11 +69,11 @@ function Template({
     </vds-media-controller>
 
     <style>
-      vds-mute-button[pressed] .mute {
+      vds-mute-button[media-muted] .mute {
         display: none;
       }
 
-      vds-mute-button:not([pressed]) .unmute {
+      vds-mute-button:not([media-muted]) .unmute {
         display: none;
       }
     </style>

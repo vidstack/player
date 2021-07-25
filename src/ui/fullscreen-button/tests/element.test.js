@@ -38,7 +38,7 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
   it('should render DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).dom.to.equal(`
-      <vds-fullscreen-button>
+      <vds-fullscreen-button media-can-play>
         <div class="enter"></div>
         <div class="exit"></div>
       </vds-fullscreen-button>

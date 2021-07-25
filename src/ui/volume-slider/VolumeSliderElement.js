@@ -3,10 +3,13 @@ import '../slider/define.js';
 
 import { property } from 'lit/decorators.js';
 
-import { consumeContext } from '../../foundation/context/index.js';
+import {
+  consumeContext,
+  watchContext
+} from '../../foundation/context/index.js';
 import { eventListener } from '../../foundation/events/index.js';
-import { mediaContext } from '../../media/context.js';
-import { MediaRemoteControl } from '../../media/index.js';
+import { mediaContext, MediaRemoteControl } from '../../media/index.js';
+import { setAttribute } from '../../utils/dom.js';
 import { round } from '../../utils/number.js';
 import { SliderElement } from '../slider/index.js';
 
@@ -14,6 +17,10 @@ export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
 
 /**
  * A slider control that lets the user specify their desired volume level.
+ *
+ * 💡 The following attributes are updated for your styling needs:
+ *
+ * - `media-can-play`: Applied when media can begin playback.
  *
  * @tagname vds-volume-slider
  *  @example
@@ -87,6 +94,19 @@ export class VolumeSliderElement extends SliderElement {
     }
 
     super.update(changedProperties);
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Methods
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * @protected
+   * @param {boolean} canPlay
+   */
+  @watchContext(mediaContext.canPlay)
+  _handleCanPlayContextUpdate(canPlay) {
+    setAttribute(this, 'media-can-play', canPlay);
   }
 
   /**

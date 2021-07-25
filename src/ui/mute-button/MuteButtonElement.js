@@ -1,12 +1,20 @@
-import { consumeContext } from '../../foundation/context/index.js';
+import {
+  consumeContext,
+  watchContext
+} from '../../foundation/context/index.js';
 import { mediaContext, MediaRemoteControl } from '../../media/index.js';
+import { setAttribute } from '../../utils/dom.js';
 import { ToggleButtonElement } from '../toggle-button/index.js';
 
 export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
 
 /**
- * A button for toggling the muted state of the player. The `pressed` attribute will be updated
- * on this element as the media `muted` state changes.
+ * A button for toggling the muted state of the player.
+ *
+ * 💡 The following attributes are updated for your styling needs:
+ *
+ * - `media-can-play`: Applied when media can begin playback.
+ * - `media-muted`: Applied when media audio has been muted.
  *
  * @tagname vds-mute-button
  * @slot - Used to pass content into the mute toggle for showing mute/unmute states.
@@ -20,11 +28,11 @@ export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
  * ```
  * @example
  * ```css
- * vds-mute-button[pressed] .mute {
+ * vds-mute-button[media-muted] .mute {
  *   display: none;
  * }
  *
- * vds-mute-button:not([pressed]) .unmute {
+ * vds-mute-button:not([media-muted]) .unmute {
  *   display: none;
  * }
  * ```
@@ -51,5 +59,23 @@ export class MuteButtonElement extends ToggleButtonElement {
     } else {
       this._mediaRemote.mute(event);
     }
+  }
+
+  /**
+   * @protected
+   * @param {boolean} canPlay
+   */
+  @watchContext(mediaContext.canPlay)
+  _handleCanPlayContextUpdate(canPlay) {
+    setAttribute(this, 'media-can-play', canPlay);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} muted
+   */
+  @watchContext(mediaContext.muted)
+  _handleMutedContextUpdate(muted) {
+    setAttribute(this, 'media-muted', muted);
   }
 }

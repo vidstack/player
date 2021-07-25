@@ -5,7 +5,10 @@ import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { provideContextRecord } from '../../foundation/context/index.js';
+import {
+  provideContextRecord,
+  watchContext
+} from '../../foundation/context/index.js';
 import {
   forwardEvent,
   ifNonEmpty,
@@ -13,7 +16,8 @@ import {
 } from '../../foundation/directives/index.js';
 import { WithFocus } from '../../foundation/elements/index.js';
 import { eventListener } from '../../foundation/events/index.js';
-import { buildExportPartsAttr } from '../../utils/dom.js';
+import { mediaContext } from '../../media/index.js';
+import { buildExportPartsAttr, setAttribute } from '../../utils/dom.js';
 import { isNil } from '../../utils/unit.js';
 import { ScrubberPreviewElement } from '../scrubber-preview/index.js';
 import { SeekableProgressBarElement } from '../seekable-progress-bar/index.js';
@@ -26,6 +30,11 @@ export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
 /**
  * A control that displays the progression of playback and the amount seekable on a slider. This
  * control can be used to update the current playback time by interacting with the slider.
+ *
+ * 💡 The following attributes are updated for your styling needs:
+ *
+ * - `media-can-play`: Applied when media can begin playback.
+ * - `media-waiting`: Applied when playback has stopped because of a lack of temporary data.
  *
  * 💡 See the `<vds-scrubber-preview>` element if you'd like to include previews.
  *
@@ -180,6 +189,24 @@ export class ScrubberElement extends WithFocus(LitElement) {
    */
   @property({ attribute: 'value-tex' })
   valueText = '{currentTime} out of {duration}';
+
+  /**
+   * @protected
+   * @param {boolean} canPlay
+   */
+  @watchContext(mediaContext.canPlay)
+  _handleCanPlayContextUpdate(canPlay) {
+    setAttribute(this, 'media-can-play', canPlay);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} waiting
+   */
+  @watchContext(mediaContext.waiting)
+  _handleWaitingContextUpdate(waiting) {
+    setAttribute(this, 'media-waiting', waiting);
+  }
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle

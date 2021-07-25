@@ -1,6 +1,7 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import sinon, { spy } from 'sinon';
 
+import { keysOf } from '../../../utils/object.js';
 import { equal } from '../../../utils/unit.js';
 import { mediaContext } from '../../context.js';
 import { MediaType } from '../../MediaType.js';
@@ -15,7 +16,9 @@ describe('MediaProviderElement/props', function () {
 
   it('should have defined all provider state props', async function () {
     const { provider } = await buildMediaFixture();
-    Object.keys(mediaContext).forEach((prop) => {
+    keysOf(mediaContext).forEach((prop) => {
+      // IGNORE
+      if (prop === 'canRequestFullscreen') return;
       expect(equal(provider.ctx[prop], mediaContext[prop].initialValue), prop)
         .to.be.true;
     });

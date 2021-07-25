@@ -1,4 +1,4 @@
-import { noop } from '../../utils/unit.js';
+import { isFunction, noop } from '../../utils/unit.js';
 import {
   isReactiveElementProto,
   throwIfTC39Decorator
@@ -33,6 +33,7 @@ export function eventListener(type, options = {}) {
 
         host.addController({
           hostConnected() {
+            if (!isFunction(host[methodName])) return;
             const target =
               /** @type {{ target?: EventTarget }} */ (options).target ?? host;
             const listener = host[methodName].bind(host);

@@ -1,13 +1,21 @@
-import { consumeContext } from '../../foundation/context/index.js';
+import {
+  consumeContext,
+  watchContext
+} from '../../foundation/context/index.js';
 import { mediaContext, MediaRemoteControl } from '../../media/index.js';
+import { setAttribute } from '../../utils/dom.js';
 import { ToggleButtonElement } from '../toggle-button/index.js';
 
 export const PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
 
 /**
- * A button for toggling the playback state (play/pause) of the current media. The `pressed`
- * attribute will be updated on this element as the media `paused` state changes.
+ * A button for toggling the playback state (play/pause) of the current media.
  *
+ * 💡 The following attributes are updated for your styling needs:
+ *
+ * - `media-can-play`: Applied when media can begin playback.
+ * - `media-paused`: Applied when media playback has paused.
+ * - `media-waiting`: Applied when playback has stopped because of a lack of temporary data.
  *
  * @tagname vds-play-button
  * @slot - Used to pass content into the play toggle for showing play/pause states.
@@ -21,11 +29,11 @@ export const PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
  * ```
  * @example
  * ```css
- * vds-play-button[pressed] .play {
+ * vds-play-button:not([media-paused]) .play {
  *   display: none;
  * }
  *
- * vds-play-button:not([pressed]) .pause {
+ * vds-play-button[media-paused] .pause {
  *   display: none;
  * }
  * ```
@@ -54,5 +62,32 @@ export class PlayButtonElement extends ToggleButtonElement {
     } else {
       this._mediaRemote.play(event);
     }
+  }
+
+  /**
+   * @protected
+   * @param {boolean} canPlay
+   */
+  @watchContext(mediaContext.canPlay)
+  _handleCanPlayContextUpdate(canPlay) {
+    setAttribute(this, 'media-can-play', canPlay);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} waiting
+   */
+  @watchContext(mediaContext.waiting)
+  _handleWaitingContextUpdate(waiting) {
+    setAttribute(this, 'media-waiting', waiting);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} paused
+   */
+  @watchContext(mediaContext.paused)
+  _handlePausedContextUpdate(paused) {
+    setAttribute(this, 'media-paused', paused);
   }
 }

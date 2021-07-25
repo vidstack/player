@@ -1,12 +1,10 @@
 import { html, LitElement } from 'lit';
-import { state } from 'lit/decorators.js';
 
-import { consumeContext } from '../../foundation/context/index.js';
+import { watchContext } from '../../foundation/context/index.js';
 import {
   controlsContext,
   ManagedControls,
-  mediaContext,
-  ViewType
+  mediaContext
 } from '../../media/index.js';
 import { setAttribute } from '../../utils/dom.js';
 import { controlsElementStyles } from './styles.js';
@@ -16,7 +14,7 @@ export const CONTROLS_ELEMENT_TAG_NAME = 'vds-controls';
 /**
  * Container for holding individual media controls.
  *
- * 💡 The styling is left to you, it will only apply the following attributes:
+ * 💡 The following attributes are updated for your styling needs:
  *
  * - `hidden`: Applied when the controls should be hidden and not available to the user.
  * - `idle`: Applied when there is no user activity for a given period, `hidden` should have greater priority.
@@ -62,79 +60,52 @@ export class ControlsElement extends LitElement {
    */
   _managedControls = new ManagedControls(this);
 
-  /**
-   * @protected
-   * @readonly
-   * @type {boolean}
-   */
-  @state()
-  @consumeContext(mediaContext.canPlay)
-  _mediaCanPlay = false;
-
-  /**
-   * @protected
-   * @type {boolean}
-   */
-  @state()
-  @consumeContext(controlsContext.hidden)
-  _controlsHidden = false;
-
-  /**
-   * @protected
-   * @readonly
-   * @type {boolean}
-   */
-  @state()
-  @consumeContext(controlsContext.idle)
-  _controlsIdle = false;
-
-  /**
-   * @protected
-   * @readonly
-   * @type {boolean}
-   */
-  @state()
-  @consumeContext(mediaContext.paused)
-  _mediaPaused = true;
-
-  /**
-   * @protected
-   * @readonly
-   * @type {ViewType}
-   */
-  @state()
-  @consumeContext(mediaContext.viewType)
-  _mediaViewType = mediaContext.viewType.initialValue;
-
-  /**
-   * @protected
-   * @param {import('lit').PropertyValues} changedProperties
-   */
-  update(changedProperties) {
-    super.update(changedProperties);
-
-    if (changedProperties.has('_mediaCanPlay')) {
-      setAttribute(this, 'media-can-play', this._mediaCanPlay);
-    }
-
-    if (changedProperties.has('_controlsHidden')) {
-      setAttribute(this, 'hidden', this._controlsHidden);
-    }
-
-    if (changedProperties.has('_controlsIdle')) {
-      setAttribute(this, 'idle', this._controlsIdle);
-    }
-
-    if (changedProperties.has('_mediaPaused')) {
-      setAttribute(this, 'media-paused', this._mediaPaused);
-    }
-
-    if (changedProperties.has('_mediaViewType')) {
-      setAttribute(this, 'media-view-type', this._mediaViewType);
-    }
-  }
-
   render() {
     return html`<slot></slot>`;
+  }
+
+  /**
+   * @protected
+   * @param {boolean} hidden
+   */
+  @watchContext(controlsContext.hidden)
+  _handleControlsHiddenContextUpdate(hidden) {
+    setAttribute(this, 'hidden', hidden);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} idle
+   */
+  @watchContext(controlsContext.idle)
+  _handleControlsIdleContextUpdate(idle) {
+    setAttribute(this, 'idle', idle);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} canPlay
+   */
+  @watchContext(mediaContext.canPlay)
+  _handleCanPlayContextUpdate(canPlay) {
+    setAttribute(this, 'media-can-play', canPlay);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} paused
+   */
+  @watchContext(mediaContext.paused)
+  _handlePausedContextUpdate(paused) {
+    setAttribute(this, 'media-paused', paused);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} viewType
+   */
+  @watchContext(mediaContext.viewType)
+  _handleViewTypeContextUpdate(viewType) {
+    setAttribute(this, 'media-view-type', viewType);
   }
 }

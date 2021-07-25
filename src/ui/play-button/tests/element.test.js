@@ -31,7 +31,7 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
   it('should render DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).dom.to.equal(`
-      <vds-play-button>
+      <vds-play-button media-can-play media-paused>
         <div class="play"></div>
         <div class="pause"></div>
       </vds-play-button>

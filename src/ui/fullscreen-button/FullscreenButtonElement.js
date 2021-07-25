@@ -9,8 +9,12 @@ import { ToggleButtonElement } from '../toggle-button/index.js';
 export const FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
 
 /**
- * A button for toggling the fullscreen mode of the player. The `pressed` attribute will be updated
- * on this element as the media `fullscreen` state changes.
+ * A button for toggling the fullscreen mode of the player.
+ *
+ * 💡 The following attributes are updated for your styling needs:
+ *
+ * - `media-can-play`: Applied when media can begin playback.
+ * - `media-fullscreen`: Applied when the media has entered fullscreen.
  *
  * 🚨 The `hidden` attribute will be present on this element in the event fullscreen cannot be
  * requested (no support). There are default styles for this by setting the `display` property to
@@ -28,11 +32,11 @@ export const FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
  * ```
  * @example
  * ```css
- * vds-fullscreen-button[pressed] .enter {
+ * vds-fullscreen-button[media-fullscreen] .enter {
  *   display: none;
  * }
  *
- * vds-fullscreen-button:not([pressed]) .exit {
+ * vds-fullscreen-button:not([media-fullscreen]) .exit {
  *   display: none;
  * }
  * ```
@@ -70,11 +74,29 @@ export class FullscreenButtonElement extends ToggleButtonElement {
 
   /**
    * @protected
+   * @param {boolean} canPlay
+   */
+  @watchContext(mediaContext.canPlay)
+  _handleCanPlayContextUpdate(canPlay) {
+    setAttribute(this, 'media-can-play', canPlay);
+  }
+
+  /**
+   * @protected
    * @param {boolean} canRequestFullscreen
    */
   @watchContext(mediaContext.canRequestFullscreen)
   _handleCanRequestFullscreenContextUpdate(canRequestFullscreen) {
     if (!this._mediaCanPlay) return;
     setAttribute(this, 'hidden', !canRequestFullscreen);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} fullscreen
+   */
+  @watchContext(mediaContext.fullscreen)
+  _handleFullscreenContextUpdate(fullscreen) {
+    setAttribute(this, 'media-fullscreen', fullscreen);
   }
 }

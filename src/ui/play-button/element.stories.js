@@ -69,11 +69,11 @@ function Template({
     </vds-media-controller>
 
     <style>
-      vds-play-button[pressed] .play {
+      vds-play-button:not([media-paused]) .play {
         display: none;
       }
 
-      vds-play-button:not([pressed]) .pause {
+      vds-play-button[media-paused] .pause {
         display: none;
       }
     </style>

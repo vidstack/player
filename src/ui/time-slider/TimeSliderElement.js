@@ -1,11 +1,15 @@
 import { property, state } from 'lit/decorators.js';
 
-import { consumeContext } from '../../foundation/context/index.js';
+import {
+  consumeContext,
+  watchContext
+} from '../../foundation/context/index.js';
 import {
   eventListener,
   isPointerEvent
 } from '../../foundation/events/index.js';
 import { mediaContext, MediaRemoteControl } from '../../media/index.js';
+import { setAttribute } from '../../utils/dom.js';
 import { clampNumber, round } from '../../utils/number.js';
 import { formatSpokenTime } from '../../utils/time.js';
 import { throttle } from '../../utils/timing.js';
@@ -15,6 +19,10 @@ export const TIME_SLIDER_ELEMENT_TAG_NAME = 'vds-time-slider';
 
 /**
  * A slider that lets the user control the current media playback time.
+ *
+ * 💡 The following attributes are updated for your styling needs:
+ *
+ * - `media-can-play`: Applied when media can begin playback.
  *
  * @tagname vds-time-slider
  * @example
@@ -183,13 +191,6 @@ export class TimeSliderElement extends SliderElement {
    * @param {import('lit').PropertyValues} changedProperties
    */
   update(changedProperties) {
-    if (
-      changedProperties.has('_mediaCurrentTime') ||
-      changedProperties.has('_mediaDuration')
-    ) {
-      this._updateValueToCurrentTime();
-    }
-
     if (changedProperties.has('seekingRequestThrottle')) {
       this._dispatchSeekingRequest.updateDelay(this.seekingRequestThrottle);
     }
@@ -242,10 +243,10 @@ export class TimeSliderElement extends SliderElement {
   /**
    * @protected
    * @param {import('../slider').SliderDragStartEvent} event
-   * @returns {Promise<void>}
+   * @returns {void}
    */
   @eventListener('vds-slider-drag-start')
-  async handleSliderDragStart(event) {
+  _handleSliderDragStart(event) {
     this._togglePlaybackWhileDragging(event);
   }
 
@@ -258,10 +259,10 @@ export class TimeSliderElement extends SliderElement {
   /**
    * @protected
    * @param {import('../slider').SliderValueChangeEvent} event
-   * @returns {Promise<void>}
+   * @returns {void}
    */
   @eventListener('vds-slider-value-change')
-  async _handleSliderValueChange(event) {
+  _handleSliderValueChange(event) {
     this.value = event.detail;
 
     if (this.isDragging) {
@@ -277,10 +278,10 @@ export class TimeSliderElement extends SliderElement {
   /**
    * @protected
    * @param {import('../slider').SliderDragEndEvent} event
-   * @returns {Promise<void>}
+   * @returns {void}
    */
   @eventListener('vds-slider-drag-end')
-  async _handleSliderDragEnd(event) {
+  _handleSliderDragEnd(event) {
     this._dispatchSeekingRequest.cancel();
     this._mediaRemote.seek(this.currentTime, event);
     this._togglePlaybackWhileDragging(event);
@@ -298,6 +299,8 @@ export class TimeSliderElement extends SliderElement {
   /**
    * @protected
    */
+  @watchContext(mediaContext.currentTime)
+  @watchContext(mediaContext.duration)
   _updateValueToCurrentTime() {
     if (this.isDragging) return;
 
@@ -307,6 +310,15 @@ export class TimeSliderElement extends SliderElement {
         : 0;
 
     this.value = clampNumber(0, round(percentage, 5), 100);
+  }
+
+  /**
+   * @protected
+   * @param {boolean} canPlay
+   */
+  @watchContext(mediaContext.canPlay)
+  _handleCanPlayContextUpdate(canPlay) {
+    setAttribute(this, 'media-can-play', canPlay);
   }
 
   /**

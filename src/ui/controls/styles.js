@@ -5,4 +5,8 @@ export const controlsElementStyles = css`
     display: block;
     contain: content;
   }
+
+  :host([hidden]) {
+    display: none;
+  }
 `;

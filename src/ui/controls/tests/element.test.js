@@ -29,7 +29,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
   it('should render DOM correctly', async function () {
     const { controls } = await buildFixture();
     expect(controls).dom.to.equal(`
-      <vds-controls>
+      <vds-controls media-paused media-view-type="unknown">
         <div class="slot"></div>
       </vds-controls>
     `);

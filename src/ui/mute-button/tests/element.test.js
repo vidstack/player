@@ -31,7 +31,7 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
   it('should render DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).dom.to.equal(`
-      <vds-mute-button>
+      <vds-mute-button media-can-play>
         <div class="mute"></div>
         <div class="unmute"></div>
       </vds-mute-button>
