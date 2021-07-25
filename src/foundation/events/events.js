@@ -23,15 +23,7 @@ export class VdsEvent extends CustomEvent {
    * @type {Event | undefined}
    */
   get originEvent() {
-    let originalEvent = /** @type {VdsEvent<unknown>} */ (this.originalEvent);
-
-    while (originalEvent && originalEvent.originalEvent) {
-      originalEvent = /** @type {VdsEvent<unknown>} */ (
-        originalEvent.originalEvent
-      );
-    }
-
-    return originalEvent;
+    return getOriginEvent(this);
   }
 
   /**
@@ -50,8 +42,45 @@ export class VdsEvent extends CustomEvent {
    */
   constructor(type, eventInit = {}) {
     super(type, eventInit);
+
     this.originalEvent = eventInit.originalEvent;
+
+    // 🚨 The following is for iOS <14 since events are constructed with `Event.initEvent()`.
+    // eslint-disable-next-line no-prototype-builtins
+    if (!this.hasOwnProperty('originEvent')) {
+      Object.defineProperties(this, {
+        originEvent: {
+          get() {
+            return getOriginEvent(this);
+          }
+        },
+        isOriginTrusted: {
+          get() {
+            return getOriginEvent(this)?.isTrusted ?? false;
+          }
+        }
+      });
+    }
   }
+}
+
+/**
+ * Walks up the event chain (following each `originalEvent`) and returns the origin event
+ * that started the chain.
+ *
+ * @param {VdsEvent} event
+ * @returns {Event | undefined}
+ */
+export function getOriginEvent(event) {
+  let originalEvent = /** @type {VdsEvent<unknown>} */ (event.originalEvent);
+
+  while (originalEvent && originalEvent.originalEvent) {
+    originalEvent = /** @type {VdsEvent<unknown>} */ (
+      originalEvent.originalEvent
+    );
+  }
+
+  return originalEvent;
 }
 
 /**
