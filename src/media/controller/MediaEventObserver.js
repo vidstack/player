@@ -78,12 +78,16 @@ export class MediaEventObserver {
   handleMediaControllerConnectEvent(event) {
     this._disposal.empty();
 
-    const { element: mediaController } = event.detail;
+    const { element: mediaController, onDisconnect } = event.detail;
 
     keysOf(this._eventHandlers).forEach((eventType) => {
       const handler = this._eventHandlers[eventType]?.bind(this._host);
       const dispose = listen(mediaController, eventType, handler);
       this._disposal.add(dispose);
+    });
+
+    onDisconnect(() => {
+      this._disposal.empty();
     });
   }
 }
