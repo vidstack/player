@@ -8,6 +8,7 @@
   },
   "main": "dist/bundle/index.js",
   "module": "dist/bundle/index.js",
+  "types": "./index.d.ts",
   "files": [
     "dist/",
     "index.d.ts",
