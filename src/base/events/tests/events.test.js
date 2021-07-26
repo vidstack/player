@@ -3,7 +3,7 @@ import { html } from 'lit';
 
 import { DisposalBin, listen } from '../events.js';
 
-describe('foundation/events', function () {
+describe('base/events', function () {
   describe('DisposalBin', function () {
     it('should empty bin', function () {
       const disposal = new DisposalBin();

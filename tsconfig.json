@@ -2,6 +2,19 @@
   "extends": "./jsconfig.json",
   "compilerOptions": {
     "incremental": true,
+    "paths": {
+      "@base/*": ["./src/base/*"],
+      "@media/*": ["./src/media/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@skins/*": ["./src/skins/*"],
+      "@ui/*": ["./src/ui/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@types": ["./src/utils.ts"]
+    },
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ],
     "types": ["mocha"],
     "typeRoots": ["node_modules/@types", "./src"]
   },

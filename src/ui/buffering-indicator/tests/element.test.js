@@ -1,7 +1,7 @@
+import { buildMediaFixture } from '@media/test-utils/index.js';
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import {
   BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
   BufferingIndicatorElement

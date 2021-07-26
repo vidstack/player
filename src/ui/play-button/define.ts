@@ -1,4 +1,5 @@
-import { safelyDefineCustomElement } from '../../utils/dom';
+import { safelyDefineCustomElement } from '@utils/dom';
+
 import {
   PLAY_BUTTON_ELEMENT_TAG_NAME,
   PlayButtonElement

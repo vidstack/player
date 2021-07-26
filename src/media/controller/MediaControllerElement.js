@@ -1,8 +1,8 @@
+import { discover } from '@base/elements/index.js';
+import { eventListener } from '@base/events/index.js';
+import { isNil } from '@utils/unit.js';
 import { html, LitElement } from 'lit';
 
-import { discover } from '../../foundation/elements/index.js';
-import { eventListener } from '../../foundation/events/index.js';
-import { isNil } from '../../utils/unit.js';
 import { MediaContainerElement } from '../container/index.js';
 import { cloneMediaContextRecord, mediaContext } from '../context.js';
 import { ControlsManager, IdleObserver } from '../controls/index.js';
@@ -17,7 +17,7 @@ export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
  * @event
  * @bubbles
  * @composed
- * @typedef {import('../../foundation/elements').DiscoveryEvent<MediaControllerElement>} MediaControllerConnectEvent
+ * @typedef {import('@base/elements').DiscoveryEvent<MediaControllerElement>} MediaControllerConnectEvent
  */
 
 /**
@@ -83,7 +83,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   /**
    * An immutable snapshot of the current media state.
    *
-   * @type {Readonly<import('../../foundation/context').ExtractContextRecordTypes<typeof mediaContext>>}
+   * @type {Readonly<import('@base/context').ExtractContextRecordTypes<typeof mediaContext>>}
    */
   get mediaState() {
     return cloneMediaContextRecord(this.ctx);

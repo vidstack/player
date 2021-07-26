@@ -1,7 +1,7 @@
+import { buildMediaFixture } from '@media/test-utils/index.js';
 import { expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import {
   SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME,
   SeekableProgressBarElement

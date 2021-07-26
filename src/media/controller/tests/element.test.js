@@ -1,10 +1,10 @@
+import { vdsEvent } from '@base/events/index.js';
 import { expect, fixture, oneEvent } from '@open-wc/testing';
+import { raf } from '@utils/dom.js';
+import { isFunction } from '@utils/unit.js';
 import { html } from 'lit';
 import { mock, spy } from 'sinon';
 
-import { vdsEvent } from '../../../foundation/events/index.js';
-import { raf } from '../../../utils/dom.js';
-import { isFunction } from '../../../utils/unit.js';
 import { CanPlay } from '../../CanPlay.js';
 import {
   buildMediaFixture,

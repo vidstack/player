@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
+import { noop } from '@utils/unit.js';
 import { mock } from 'sinon';
 
-import { noop } from '../../../utils/unit.js';
 import { RequestQueue } from '../RequestQueue.js';
 
 describe('RequestQueue', function () {

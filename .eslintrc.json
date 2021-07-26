@@ -11,7 +11,7 @@
   "ignorePatterns": [
     // Ignore files that contain both a `.js` and `.ts` file in same path (causes an error).
     "src/**/define.js",
-    "src/foundation/context/index.js"
+    "src/base/context/index.js"
   ],
   "extends": [
     "plugin:wc/recommended",

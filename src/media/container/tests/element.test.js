@@ -1,7 +1,7 @@
 import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
+import { isFunction } from '@utils/unit.js';
 import { html } from 'lit';
 
-import { isFunction } from '../../../utils/unit.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 import { ViewType } from '../../ViewType.js';
 import {

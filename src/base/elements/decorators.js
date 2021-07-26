@@ -1,4 +1,4 @@
-import { isUndefined } from '../../utils/unit.js';
+import { isUndefined } from '@utils/unit.js';
 
 /**
  * @param {string} decoratorName

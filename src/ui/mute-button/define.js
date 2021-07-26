@@ -1,4 +1,4 @@
-import { safelyDefineCustomElement } from '../../utils/dom.js';
+import { safelyDefineCustomElement } from '@utils/dom.js';
 import {
   MUTE_BUTTON_ELEMENT_TAG_NAME,
   MuteButtonElement

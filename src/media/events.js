@@ -1,4 +1,5 @@
-import { VdsEvent } from '../foundation/events/index.js';
+import { VdsEvent } from '@base/events/index.js';
+
 import { MediaType } from './MediaType.js';
 import { ViewType } from './ViewType.js';
 
@@ -11,7 +12,7 @@ import { ViewType } from './ViewType.js';
  *  'vds-emptied': EmptiedEvent;
  *  'vds-ended': EndedEvent;
  *  'vds-error': ErrorEvent;
- *  'vds-fullscreen-change': import('../foundation/fullscreen').FullscreenChangeEvent;
+ *  'vds-fullscreen-change': import('@base/fullscreen').FullscreenChangeEvent;
  *  'vds-loaded-data': LoadedDataEvent;
  *  'vds-loaded-metadata': LoadedMetadataEvent;
  *  'vds-load-start': LoadStartEvent;

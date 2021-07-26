@@ -1,12 +1,12 @@
-import { html, LitElement } from 'lit';
-
-import { watchContext } from '../../foundation/context/index.js';
+import { watchContext } from '@base/context/index.js';
 import {
   controlsContext,
   ManagedControls,
   mediaContext
-} from '../../media/index.js';
-import { setAttribute } from '../../utils/dom.js';
+} from '@media/index.js';
+import { setAttribute } from '@utils/dom.js';
+import { html, LitElement } from 'lit';
+
 import { controlsElementStyles } from './styles.js';
 
 export const CONTROLS_ELEMENT_TAG_NAME = 'vds-controls';

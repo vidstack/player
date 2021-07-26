@@ -1,18 +1,19 @@
-import { provideContextRecord } from '../../foundation/context/index.js';
+import { provideContextRecord } from '@base/context/index.js';
 import {
   DisposalBin,
   eventListener,
   listen,
   redispatchEvent
-} from '../../foundation/events/index.js';
-import { FullscreenController } from '../../foundation/fullscreen/index.js';
-import { RequestQueue } from '../../foundation/queue/index.js';
-import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
+} from '@base/events/index.js';
+import { FullscreenController } from '@base/fullscreen/index.js';
+import { RequestQueue } from '@base/queue/index.js';
+import { ScreenOrientationController } from '@base/screen-orientation/index.js';
 import {
   getElementAttributes,
   observeAndForwardAttributes
-} from '../../utils/dom.js';
-import { isFunction, isNil, isNull } from '../../utils/unit.js';
+} from '@utils/dom.js';
+import { isFunction, isNil, isNull } from '@utils/unit.js';
+
 import { createMediaContextRecord, mediaContext } from '../context.js';
 import { MediaProviderElement } from '../provider/MediaProviderElement';
 
@@ -20,9 +21,9 @@ const BRIDGE_DEFINED = Symbol('Vidstack.withMediaProviderBridge');
 
 /**
  * @mixin
- * @template {import('../../utils').Constructor<import('lit').ReactiveElement>} T
+ * @template {import('@types').Constructor<import('lit').ReactiveElement>} T
  * @param {T} Base - The constructor to mix into.
- * @returns {T & import('../../utils').Constructor<import('./types').MediaProviderBridge>}
+ * @returns {T & import('@types').Constructor<import('./types').MediaProviderBridge>}
  */
 export function WithMediaProviderBridge(Base) {
   class WithMediaProviderBridge extends Base {
@@ -265,7 +266,7 @@ export function WithMediaProviderBridge(Base) {
 
     /**
      * @protected
-     * @param {import('../../foundation/fullscreen').FullscreenChangeEvent} event
+     * @param {import('@base/fullscreen').FullscreenChangeEvent} event
      */
     @eventListener('vds-fullscreen-change')
     _handleFullscreenChange(event) {

@@ -1,18 +1,15 @@
-import { LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
-
-import {
-  discover,
-  ElementDisposalController
-} from '../../foundation/elements/index.js';
-import { eventListener, vdsEvent } from '../../foundation/events/index.js';
-import { FullscreenController } from '../../foundation/fullscreen/index.js';
-import { RequestQueue } from '../../foundation/queue/index.js';
+import { discover, ElementDisposalController } from '@base/elements/index.js';
+import { eventListener, vdsEvent } from '@base/events/index.js';
+import { FullscreenController } from '@base/fullscreen/index.js';
+import { RequestQueue } from '@base/queue/index.js';
 import {
   ScreenOrientationController,
   ScreenOrientationLock
-} from '../../foundation/screen-orientation/index.js';
-import { clampNumber } from '../../utils/number.js';
+} from '@base/screen-orientation/index.js';
+import { clampNumber } from '@utils/number.js';
+import { LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
+
 import { CanPlay } from '../CanPlay.js';
 import {
   cloneMediaContextRecord,
@@ -28,7 +25,7 @@ import { ViewType } from '../ViewType.js';
  * @event
  * @bubbles
  * @composed
- * @typedef {import('../../foundation/elements').DiscoveryEvent<MediaProviderElement>} MediaProviderConnectEvent
+ * @typedef {import('@base/elements').DiscoveryEvent<MediaProviderElement>} MediaProviderConnectEvent
  */
 
 /**
@@ -358,7 +355,7 @@ export class MediaProviderElement extends LitElement {
   /**
    * An immutable snapshot of the current media state.
    *
-   * @type {Readonly<import('../../foundation/context').ExtractContextRecordTypes<typeof mediaContext>>}
+   * @type {Readonly<import('@base/context').ExtractContextRecordTypes<typeof mediaContext>>}
    */
   get mediaState() {
     return cloneMediaContextRecord(this.ctx);
@@ -885,7 +882,7 @@ export class MediaProviderElement extends LitElement {
 
   /**
    * @protected
-   * @param {import('../../foundation/fullscreen').FullscreenChangeEvent} event
+   * @param {import('@base/fullscreen').FullscreenChangeEvent} event
    */
   @eventListener('vds-fullscreen-change')
   _handleFullscreenChange(event) {

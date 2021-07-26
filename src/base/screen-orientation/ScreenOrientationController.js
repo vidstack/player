@@ -1,4 +1,5 @@
-import { canOrientScreen, IS_CLIENT } from '../../utils/support.js';
+import { canOrientScreen, IS_CLIENT } from '@utils/support.js';
+
 import { DisposalBin, listen, vdsEvent } from '../events/index.js';
 import {
   ScreenOrientation,

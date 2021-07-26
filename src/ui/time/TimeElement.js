@@ -1,9 +1,9 @@
+import { ifNonEmpty } from '@base/directives/index.js';
+import { formatHtml5Duration, formatTime } from '@utils/time.js';
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty } from '../../foundation/directives/index.js';
-import { formatHtml5Duration, formatTime } from '../../utils/time.js';
 import { timeElementStyles } from './styles.js';
 
 export const TIME_ELEMENT_TAG_NAME = 'vds-time';

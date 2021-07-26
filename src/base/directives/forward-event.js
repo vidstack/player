@@ -1,8 +1,8 @@
+import { isNil, isString } from '@utils/unit.js';
 import { nothing } from 'lit';
 import { AsyncDirective } from 'lit/async-directive.js';
 import { directive, PartType } from 'lit/directive.js';
 
-import { isNil, isString } from '../../utils/unit.js';
 import { listen, redispatchEvent } from '../events/index.js';
 
 export class ForwardEventDirective extends AsyncDirective {

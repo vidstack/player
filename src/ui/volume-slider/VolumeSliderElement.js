@@ -1,16 +1,13 @@
 // ** Dependencies **
 import '../slider/define.js';
 
+import { consumeContext, watchContext } from '@base/context/index.js';
+import { eventListener } from '@base/events/index.js';
+import { mediaContext, MediaRemoteControl } from '@media/index.js';
+import { setAttribute } from '@utils/dom.js';
+import { round } from '@utils/number.js';
 import { property } from 'lit/decorators.js';
 
-import {
-  consumeContext,
-  watchContext
-} from '../../foundation/context/index.js';
-import { eventListener } from '../../foundation/events/index.js';
-import { mediaContext, MediaRemoteControl } from '../../media/index.js';
-import { setAttribute } from '../../utils/dom.js';
-import { round } from '../../utils/number.js';
 import { SliderElement } from '../slider/index.js';
 
 export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';

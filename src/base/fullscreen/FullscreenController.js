@@ -1,6 +1,6 @@
+import { isUndefined, noop } from '@utils/unit.js';
 import fscreen from 'fscreen';
 
-import { isUndefined, noop } from '../../utils/unit.js';
 import { DisposalBin, listen, vdsEvent } from '../events/index.js';
 import {
   ScreenOrientationController,

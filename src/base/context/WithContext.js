@@ -1,4 +1,5 @@
-import { isFunction } from '../../utils/unit.js';
+import { isFunction } from '@utils/unit.js';
+
 import { defineContextConsumer, defineContextProvider } from './define.js';
 
 const FINALIZED = Symbol('Vidstack.withContextFinalized');

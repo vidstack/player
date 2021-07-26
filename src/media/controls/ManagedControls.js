@@ -1,7 +1,7 @@
 import {
   ManagedElement,
   ManagedElementConnectEvent
-} from '../../foundation/elements/index.js';
+} from '@base/elements/index.js';
 
 /**
  * @typedef {import('lit').ReactiveElement} ManagedControlsHost
@@ -25,7 +25,7 @@ export class ManagedControlsConnectEvent extends ManagedElementConnectEvent {
 export class ManagedControls extends ManagedElement {
   /**
    * @protected
-   * @type {import('../../foundation/elements').ScopedDiscoveryEvent<any>}
+   * @type {import('@base/elements').ScopedDiscoveryEvent<any>}
    */
   static get _ScopedDiscoveryEvent() {
     return ManagedControlsConnectEvent;

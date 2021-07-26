@@ -1,8 +1,8 @@
 import { elementUpdated, expect } from '@open-wc/testing';
+import { keysOf } from '@utils/object.js';
+import { equal } from '@utils/unit.js';
 import sinon, { spy } from 'sinon';
 
-import { keysOf } from '../../../utils/object.js';
-import { equal } from '../../../utils/unit.js';
 import { mediaContext } from '../../context.js';
 import { MediaType } from '../../MediaType.js';
 import { buildMediaFixture } from '../../test-utils/index.js';

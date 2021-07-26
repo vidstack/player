@@ -1,10 +1,10 @@
-import '../../media/define.js';
-import '../../media/test-utils/define.js';
+import '@media/define.js';
+import '@media/test-utils/define.js';
 import './define.js';
 
+import { StorybookControl } from '@base/storybook/index.js';
 import { html } from 'lit';
 
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import { BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from './BufferingIndicatorElement.js';
 
 export const BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {

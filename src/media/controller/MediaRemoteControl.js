@@ -1,4 +1,4 @@
-import { vdsEvent } from '../../foundation/events/index.js';
+import { vdsEvent } from '@base/events/index.js';
 
 /**
  * @typedef {EventTarget} MediaRemoteControlHost

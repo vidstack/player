@@ -1,11 +1,11 @@
+import { consumeContext } from '@base/context/index.js';
+import { mediaContext } from '@media/index.js';
+import { formatSpokenTime } from '@utils/time.js';
 import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { consumeContext } from '../../foundation/context/index.js';
-import { mediaContext } from '../../media/index.js';
-import { formatSpokenTime } from '../../utils/time.js';
 import { seekableProgressBarElementStyles } from './styles.js';
 
 export const SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME =

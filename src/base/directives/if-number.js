@@ -1,6 +1,5 @@
+import { isNumber } from '@utils/unit.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-
-import { isNumber } from '../../utils/unit.js';
 
 // eslint-disable-next-line jsdoc/require-returns
 /**

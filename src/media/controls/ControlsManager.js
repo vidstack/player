@@ -1,10 +1,11 @@
-import { ElementManager } from '../../foundation/elements/index.js';
-import { listen, vdsEvent } from '../../foundation/events/index.js';
+import { ElementManager } from '@base/elements/index.js';
+import { listen, vdsEvent } from '@base/events/index.js';
+
 import { controlsContext } from './context.js';
 import { ManagedControlsConnectEvent } from './ManagedControls';
 
 /**
- *  @typedef {import('../../foundation/elements').ElementManagerHost} ControlsManagerHost
+ *  @typedef {import('@base/elements').ElementManagerHost} ControlsManagerHost
  */
 
 /**
@@ -20,7 +21,7 @@ import { ManagedControlsConnectEvent } from './ManagedControls';
 export class ControlsManager extends ElementManager {
   /**
    * @protected
-   * @type {import('../../foundation/elements').ScopedDiscoveryEvent<any>}
+   * @type {import('@base/elements').ScopedDiscoveryEvent<any>}
    */
   static get _ScopedDiscoveryEvent() {
     return ManagedControlsConnectEvent;
@@ -44,7 +45,7 @@ export class ControlsManager extends ElementManager {
     /**
      * @protected
      * @readonly
-     * @type {import('../../foundation/context').ContextProvider<boolean>}
+     * @type {import('@base/context').ContextProvider<boolean>}
      */
     this._hidden = controlsContext.hidden.provide(host);
 

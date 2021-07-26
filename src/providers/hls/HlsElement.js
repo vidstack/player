@@ -1,10 +1,10 @@
+import { VdsEvent, vdsEvent } from '@base/events/index.js';
+import { CanPlay, MediaType } from '@media/index.js';
+import { preconnect, ScriptLoader } from '@utils/network.js';
+import { isNonNativeHlsStreamingPossible } from '@utils/support.js';
+import { isFunction, isNil, isString, isUndefined } from '@utils/unit.js';
 import { property } from 'lit/decorators.js';
 
-import { VdsEvent, vdsEvent } from '../../foundation/events/index.js';
-import { CanPlay, MediaType } from '../../media/index.js';
-import { preconnect, ScriptLoader } from '../../utils/network.js';
-import { isNonNativeHlsStreamingPossible } from '../../utils/support.js';
-import { isFunction, isNil, isString, isUndefined } from '../../utils/unit.js';
 import { VideoElement } from '../video/index.js';
 
 export const HLS_ELEMENT_TAG_NAME = 'vds-hls';

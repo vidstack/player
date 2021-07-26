@@ -1,4 +1,4 @@
-import { VdsEvent } from '../foundation/events/index.js';
+import { VdsEvent } from '@base/events/index.js';
 
 /**
  * @typedef {{

@@ -1,4 +1,5 @@
-import { safelyDefineCustomElement } from '../../utils/dom';
+import { safelyDefineCustomElement } from '@utils/dom';
+
 import {
   TIME_CURRENT_ELEMENT_TAG_NAME,
   TimeCurrentElement

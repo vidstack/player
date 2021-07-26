@@ -1,4 +1,4 @@
-import { createContext } from '../../foundation/context/index.js';
+import { createContext } from '@base/context/index.js';
 
 export const controlsContext = {
   idle: createContext(false),

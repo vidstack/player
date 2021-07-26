@@ -1,8 +1,8 @@
+import { watchContext } from '@base/context/index.js';
+import { mediaContext } from '@media/index.js';
+import { setAttribute } from '@utils/dom.js';
 import { html, LitElement } from 'lit';
 
-import { watchContext } from '../../foundation/context/index.js';
-import { mediaContext } from '../../media/index.js';
-import { setAttribute } from '../../utils/dom.js';
 import { bufferingIndicatorElementStyles } from './styles.js';
 
 export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';

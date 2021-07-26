@@ -1,8 +1,8 @@
+import { vdsEvent } from '@base/events/index.js';
+import { buildMediaFixture } from '@media/test-utils/index.js';
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { vdsEvent } from '../../../foundation/events/index.js';
-import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import {
   VOLUME_SLIDER_ELEMENT_TAG_NAME,
   VolumeSliderElement

@@ -3,6 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "alwaysStrict": true,
+    "baseUrl": ".",
     "checkJs": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,

@@ -1,4 +1,4 @@
-import { safelyDefineCustomElement } from '../../utils/dom.js';
+import { safelyDefineCustomElement } from '@utils/dom.js';
 import {
   SCRUBBER_PREVIEW_ELEMENT_TAG_NAME,
   ScrubberPreviewElement

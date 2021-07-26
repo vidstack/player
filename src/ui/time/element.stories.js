@@ -1,9 +1,9 @@
 import './define.js';
 
+import { ifNonEmpty } from '@base/directives/index.js';
+import { StorybookControl } from '@base/storybook/index.js';
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../foundation/directives/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import { TIME_ELEMENT_TAG_NAME } from './TimeElement.js';
 
 export const TIME_ELEMENT_STORYBOOK_ARG_TYPES = {

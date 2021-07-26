@@ -1,16 +1,16 @@
+import { consumeContext } from '@base/context/index.js';
+import { discover } from '@base/elements/index.js';
+import { eventListener } from '@base/events/index.js';
+import { FullscreenController } from '@base/fullscreen/index.js';
+import { ScreenOrientationController } from '@base/screen-orientation/index.js';
+import { getSlottedChildren } from '@utils/dom.js';
+import { isNil, isString, isUndefined } from '@utils/unit.js';
 import clsx from 'clsx';
 import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { consumeContext } from '../../foundation/context/index.js';
-import { discover } from '../../foundation/elements/index.js';
-import { eventListener } from '../../foundation/events/index.js';
-import { FullscreenController } from '../../foundation/fullscreen/index.js';
-import { ScreenOrientationController } from '../../foundation/screen-orientation/index.js';
-import { getSlottedChildren } from '../../utils/dom.js';
-import { isNil, isString, isUndefined } from '../../utils/unit.js';
 import { mediaContext } from '../context.js';
 import { MediaProviderElement } from '../provider/MediaProviderElement.js';
 import { mediaContainerElementStyles } from './styles.js';
@@ -23,7 +23,7 @@ export const MEDIA_CONTAINER_ELEMENT_TAG_NAME = `vds-media-container`;
  * @event
  * @bubbles
  * @composed
- * @typedef {import('../../foundation/elements').DiscoveryEvent<MediaContainerElement>} MediaContainerConnectEvent
+ * @typedef {import('@base/elements').DiscoveryEvent<MediaContainerElement>} MediaContainerConnectEvent
  */
 
 /**
@@ -355,7 +355,7 @@ export class MediaContainerElement extends LitElement {
 
   /**
    * @protected
-   * @param {import('../../foundation/fullscreen').FullscreenChangeEvent} event
+   * @param {import('@base/fullscreen').FullscreenChangeEvent} event
    */
   @eventListener('vds-fullscreen-change')
   _handleFullscreenChange(event) {

@@ -38,7 +38,7 @@ export function getAllObjectPropertyNames(obj, BaseConstructor = Object) {
  * @template {(keyof T)[]} R
  * @param {T} obj
  * @param {R} keys
- * @returns {Pick<T, import("../utils").ArrayElement<R>>}
+ * @returns {Pick<T, import("@types").ArrayElement<R>>}
  */
 export function pick(obj, keys) {
   return keys.reduce(
@@ -58,7 +58,7 @@ export function pick(obj, keys) {
  * @template {(keyof T)[]} R
  * @param {T} obj
  * @param {R} keys
- * @returns {Omit<T, import("../utils").ArrayElement<R>>}
+ * @returns {Omit<T, import("@types").ArrayElement<R>>}
  */
 export function omit(obj, keys) {
   return /** @type {R} */ (Object.keys(obj))

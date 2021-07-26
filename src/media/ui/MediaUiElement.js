@@ -1,9 +1,9 @@
+import { consumeContext } from '@base/context/index.js';
+import { setAttribute } from '@utils/dom.js';
+import { IS_IOS } from '@utils/support.js';
 import { html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { consumeContext } from '../../foundation/context/index.js';
-import { setAttribute } from '../../utils/dom.js';
-import { IS_IOS } from '../../utils/support.js';
 import { mediaContext } from '../context.js';
 import { mediaUiElementStyles } from './styles.js';
 

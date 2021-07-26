@@ -1,9 +1,6 @@
-import {
-  DisposalBin,
-  listen,
-  vdsEvent
-} from '../../foundation/events/index.js';
-import { keysOf } from '../../utils/object.js';
+import { DisposalBin, listen, vdsEvent } from '@base/events/index.js';
+import { keysOf } from '@utils/object.js';
+
 import { controlsContext } from './context.js';
 
 /**

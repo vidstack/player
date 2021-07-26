@@ -1,4 +1,5 @@
-import { isFunction } from '../../utils/unit.js';
+import { isFunction } from '@utils/unit.js';
+
 import {
   isReactiveElementProto,
   throwIfTC39Decorator

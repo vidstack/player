@@ -1,7 +1,7 @@
 import { expect, oneEvent } from '@open-wc/testing';
+import { isFunction } from '@utils/unit.js';
 import { mock } from 'sinon';
 
-import { isFunction } from '../../../utils/unit.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 import { MediaProviderElement } from '../MediaProviderElement.js';
 

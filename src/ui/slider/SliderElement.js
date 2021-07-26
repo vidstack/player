@@ -1,17 +1,13 @@
+import { ifNonEmpty, on } from '@base/directives/index.js';
+import { WithFocus } from '@base/elements/index.js';
+import { eventListener, vdsEvent } from '@base/events/index.js';
+import { clampNumber, getNumberOfDecimalPlaces, round } from '@utils/number.js';
+import { rafThrottle } from '@utils/timing.js';
 import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { ifNonEmpty, on } from '../../foundation/directives/index.js';
-import { WithFocus } from '../../foundation/elements/index.js';
-import { eventListener, vdsEvent } from '../../foundation/events/index.js';
-import {
-  clampNumber,
-  getNumberOfDecimalPlaces,
-  round
-} from '../../utils/number.js';
-import { rafThrottle } from '../../utils/timing.js';
 import { sliderElementStyles } from './styles.js';
 
 export const SLIDER_ELEMENT_TAG_NAME = 'vds-slider';
@@ -708,7 +704,7 @@ export class SliderElement extends WithFocus(LitElement) {
   /**
    * @protected
    * @readonly
-   * @type {import('../../utils/timing').RafThrottledFunction<(event: PointerEvent) => void>}
+   * @type {import('@utils/timing').RafThrottledFunction<(event: PointerEvent) => void>}
    */
   _handlePointerMove = rafThrottle((event) => {
     if (this.disabled || !this._isDragging) return;
@@ -767,7 +763,7 @@ export class SliderElement extends WithFocus(LitElement) {
   /**
    * @protected
    * @readonly
-   * @type {import('../../utils/timing').RafThrottledFunction<(event: Event | undefined) => void>}
+   * @type {import('@utils/timing').RafThrottledFunction<(event: Event | undefined) => void>}
    */
   _dispatchValueChange = rafThrottle((event) => {
     if (this.value === this._lastDispatchedValue) return;

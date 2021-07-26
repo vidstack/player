@@ -1,20 +1,32 @@
-/** Dependencies  */
-import './fake-media-provider/define.js';
-import '../container/define.js';
-import '../controller/define.js';
-
 import { fixture } from '@open-wc/testing';
+import { safelyDefineCustomElement } from '@utils/dom.js';
 import { html } from 'lit';
 
 import {
   MEDIA_CONTAINER_ELEMENT_TAG_NAME,
   MediaContainerElement
 } from '../container/index.js';
-import { MediaControllerElement } from '../controller/index.js';
+import {
+  MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
+  MediaControllerElement
+} from '../controller/index.js';
 import {
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
   FakeMediaProviderElement
 } from './fake-media-provider/index.js';
+
+safelyDefineCustomElement(
+  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
+  FakeMediaProviderElement
+);
+safelyDefineCustomElement(
+  MEDIA_CONTAINER_ELEMENT_TAG_NAME,
+  MediaContainerElement
+);
+safelyDefineCustomElement(
+  MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
+  MediaControllerElement
+);
 
 /**
  * @typedef {{

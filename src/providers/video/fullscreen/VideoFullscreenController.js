@@ -1,7 +1,8 @@
-import { listen } from '../../../foundation/events/index.js';
-import { FullscreenController } from '../../../foundation/fullscreen/index.js';
-import { ScreenOrientationController } from '../../../foundation/screen-orientation/index.js';
-import { noop } from '../../../utils/unit.js';
+import { listen } from '@base/events/index.js';
+import { FullscreenController } from '@base/fullscreen/index.js';
+import { ScreenOrientationController } from '@base/screen-orientation/index.js';
+import { noop } from '@utils/unit.js';
+
 import { VideoPresentationController } from '../presentation/index.js';
 
 /**
@@ -45,7 +46,7 @@ import { VideoPresentationController } from '../presentation/index.js';
  */
 export class VideoFullscreenController extends FullscreenController {
   /**
-   * @param {import('../../../foundation/fullscreen').FullscreenControllerHost} host
+   * @param {import('@base/fullscreen').FullscreenControllerHost} host
    * @param {ScreenOrientationController} screenOrientationController
    * @param {VideoPresentationController} presentationController
    */

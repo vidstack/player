@@ -1,17 +1,13 @@
+import { listen, redispatchEvent, vdsEvent } from '@base/events/index.js';
+import { CanPlay, MediaProviderElement, MediaType } from '@media/index.js';
+import { getSlottedChildren } from '@utils/dom.js';
+import { keysOf } from '@utils/object.js';
+import { IS_SAFARI } from '@utils/support.js';
+import { isNil, isNumber, isUndefined } from '@utils/unit.js';
 import { html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef } from 'lit/directives/ref.js';
 
-import {
-  listen,
-  redispatchEvent,
-  vdsEvent
-} from '../../foundation/events/index.js';
-import { CanPlay, MediaProviderElement, MediaType } from '../../media/index.js';
-import { getSlottedChildren } from '../../utils/dom.js';
-import { keysOf } from '../../utils/object.js';
-import { IS_SAFARI } from '../../utils/support.js';
-import { isNil, isNumber, isUndefined } from '../../utils/unit.js';
 import { MediaNetworkState } from './MediaNetworkState.js';
 import { MediaReadyState } from './MediaReadyState.js';
 

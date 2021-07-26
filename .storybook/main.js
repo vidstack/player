@@ -1,4 +1,6 @@
+const { resolve } = require('path');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   core: {
@@ -12,6 +14,13 @@ module.exports = {
   ],
   webpackFinal: async (config) => {
     config.resolve.fallback.crypto = false;
+
+    config.resolve.plugins = config.resolve.plugins || [];
+    config.resolve.plugins.push(
+      new TsconfigPathsPlugin({
+        configFile: resolve(__dirname, '../tsconfig-build.json')
+      })
+    );
 
     config.module.rules = config.module.rules.filter(
       (rule) => !/(js|ts|css)/.test(String(rule.test))

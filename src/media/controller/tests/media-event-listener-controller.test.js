@@ -1,7 +1,7 @@
+import { VdsEvent } from '@base/events/index.js';
 import { expect, oneEvent } from '@open-wc/testing';
 import { LitElement } from 'lit';
 
-import { VdsEvent } from '../../../foundation/events/index.js';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement

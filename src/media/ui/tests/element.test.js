@@ -1,9 +1,9 @@
 import '../define.js';
 
 import { elementUpdated, expect } from '@open-wc/testing';
+import { getSlottedChildren } from '@utils/dom.js';
 import { html } from 'lit';
 
-import { getSlottedChildren } from '../../../utils/dom.js';
 import { buildMediaFixture } from '../../test-utils/index.js';
 import {
   MEDIA_UI_ELEMENT_TAG_NAME,

@@ -1,18 +1,18 @@
 import {
   isReactiveElementProto,
   throwIfTC39Decorator
-} from '../../foundation/elements/decorators.js';
-import { ElementDisposalController } from '../../foundation/elements/index.js';
-import { listen } from '../../foundation/events/index.js';
-import { keysOf } from '../../utils/object.js';
-import { isFunction } from '../../utils/unit.js';
+} from '@base/elements/decorators.js';
+import { ElementDisposalController } from '@base/elements/index.js';
+import { listen } from '@base/events/index.js';
+import { keysOf } from '@utils/object.js';
+import { isFunction } from '@utils/unit.js';
 
 /**
  * @typedef {import('lit').ReactiveElement} MediaEventListenerControllerHost
  */
 
 /**
- * @typedef {import('../../utils').Values<{
+ * @typedef {import('@types').Values<{
  *   [P in keyof import('../events').MediaEvents]: [P, (event: import('../events').MediaEvents[P]) => void]
  * }>} MediaEventListenerTuple
  */

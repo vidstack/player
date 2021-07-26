@@ -1,4 +1,4 @@
-import { safelyDefineCustomElement } from '../../utils/dom.js';
+import { safelyDefineCustomElement } from '@utils/dom.js';
 import {
   TIME_DURATION_ELEMENT_TAG_NAME,
   TimeDurationElement

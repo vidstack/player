@@ -1,4 +1,4 @@
-import { storybookAction } from '../../foundation/storybook/index.js';
+import { storybookAction } from '@base/storybook/index.js';
 
 export const MEDIA_CONTROLLER_ELEMENT_STORYBOOK_ARG_TYPES = {
   onControlsChange: storybookAction('vds-controls-change'),

@@ -1,24 +1,17 @@
 // ** Dependencies **
 import '../time-slider/define.js';
 
+import { provideContextRecord, watchContext } from '@base/context/index.js';
+import { forwardEvent, ifNonEmpty, on } from '@base/directives/index.js';
+import { WithFocus } from '@base/elements/index.js';
+import { eventListener } from '@base/events/index.js';
+import { mediaContext } from '@media/index.js';
+import { buildExportPartsAttr, setAttribute } from '@utils/dom.js';
+import { isNil } from '@utils/unit.js';
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import {
-  provideContextRecord,
-  watchContext
-} from '../../foundation/context/index.js';
-import {
-  forwardEvent,
-  ifNonEmpty,
-  on
-} from '../../foundation/directives/index.js';
-import { WithFocus } from '../../foundation/elements/index.js';
-import { eventListener } from '../../foundation/events/index.js';
-import { mediaContext } from '../../media/index.js';
-import { buildExportPartsAttr, setAttribute } from '../../utils/dom.js';
-import { isNil } from '../../utils/unit.js';
 import { ScrubberPreviewElement } from '../scrubber-preview/index.js';
 import { SeekableProgressBarElement } from '../seekable-progress-bar/index.js';
 import { TimeSliderElement } from '../time-slider/index.js';

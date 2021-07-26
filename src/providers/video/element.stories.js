@@ -1,10 +1,10 @@
 import './define.js';
 
+import { on } from '@base/directives/index.js';
+import { StorybookControl } from '@base/storybook/index.js';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { on } from '../../foundation/directives/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
 import { HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES } from '../html5/storybook.js';
 import { VIDEO_ELEMENT_TAG_NAME } from './VideoElement.js';
 

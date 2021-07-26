@@ -1,8 +1,8 @@
+import { isFunction, isNil, isString } from '@utils/unit.js';
 import { nothing } from 'lit';
 import { AsyncDirective } from 'lit/async-directive.js';
 import { directive, PartType } from 'lit/directive.js';
 
-import { isFunction, isNil, isString } from '../../utils/unit.js';
 import { listen as listenToEvent } from '../events/index.js';
 
 export class EventListenerDirective extends AsyncDirective {

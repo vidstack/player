@@ -1,7 +1,7 @@
+import { buildMediaFixture } from '@media/test-utils/index.js';
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import {
   TOGGLE_BUTTON_ELEMENT_TAG_NAME,
   ToggleButtonElement

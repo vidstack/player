@@ -1,7 +1,4 @@
-import {
-  createContext,
-  derivedContext
-} from '../../foundation/context/index.js';
+import { createContext, derivedContext } from '@base/context/index.js';
 
 const dragging = createContext(false);
 const pointing = createContext(false);

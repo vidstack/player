@@ -2,8 +2,8 @@
 // Global Events
 // -------------------------------------------------------------------------------------------
 
-import { FullscreenEvents } from './foundation/fullscreen';
-import { ScreenOrientationEvents } from './foundation/screen-orientation';
+import { FullscreenEvents } from './base/fullscreen';
+import { ScreenOrientationEvents } from './base/screen-orientation';
 import {
   ControlsEvents,
   IdleEvents,

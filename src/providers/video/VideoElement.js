@@ -1,10 +1,10 @@
+import { ifNonEmpty, ifNumber } from '@base/directives/index.js';
+import { vdsEvent } from '@base/events/index.js';
+import { ViewType } from '@media/index.js';
 import { html } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty, ifNumber } from '../../foundation/directives/index.js';
-import { vdsEvent } from '../../foundation/events/index.js';
-import { ViewType } from '../../media/index.js';
 import { Html5MediaElement } from '../html5/index.js';
 import { VideoFullscreenController } from './fullscreen/index.js';
 import { VideoPresentationController } from './presentation/index.js';

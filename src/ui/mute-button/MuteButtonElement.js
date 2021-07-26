@@ -1,9 +1,7 @@
-import {
-  consumeContext,
-  watchContext
-} from '../../foundation/context/index.js';
-import { mediaContext, MediaRemoteControl } from '../../media/index.js';
-import { setAttribute } from '../../utils/dom.js';
+import { consumeContext, watchContext } from '@base/context/index.js';
+import { mediaContext, MediaRemoteControl } from '@media/index.js';
+import { setAttribute } from '@utils/dom.js';
+
 import { ToggleButtonElement } from '../toggle-button/index.js';
 
 export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';

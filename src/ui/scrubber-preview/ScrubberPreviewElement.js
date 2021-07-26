@@ -1,23 +1,20 @@
-import { html, LitElement } from 'lit';
-import { property, state } from 'lit/decorators.js';
-import { createRef, ref } from 'lit/directives/ref.js';
-
-import {
-  consumeContext,
-  provideContextRecord
-} from '../../foundation/context/index.js';
-import { discover } from '../../foundation/elements/index.js';
+import { consumeContext, provideContextRecord } from '@base/context/index.js';
+import { discover } from '@base/elements/index.js';
 import {
   isPointerEvent,
   isVdsEvent,
   VdsEvent,
   vdsEvent
-} from '../../foundation/events/index.js';
-import { mediaContext } from '../../media/context.js';
-import { getSlottedChildren, raf } from '../../utils/dom.js';
-import { clampNumber, round } from '../../utils/number.js';
-import { rafThrottle } from '../../utils/timing.js';
-import { isNil } from '../../utils/unit.js';
+} from '@base/events/index.js';
+import { mediaContext } from '@media/context.js';
+import { getSlottedChildren, raf } from '@utils/dom.js';
+import { clampNumber, round } from '@utils/number.js';
+import { rafThrottle } from '@utils/timing.js';
+import { isNil } from '@utils/unit.js';
+import { html, LitElement } from 'lit';
+import { property, state } from 'lit/decorators.js';
+import { createRef, ref } from 'lit/directives/ref.js';
+
 import { scrubberContext } from '../scrubber/context.js';
 import { scrubberPreviewContext } from './context.js';
 import { scrubberPreviewElementStyles } from './styles.js';
@@ -30,7 +27,7 @@ export const SCRUBBER_PREVIEW_ELEMENT_TAG_NAME = 'vds-scrubber-preview';
  * @event
  * @bubbles
  * @composed
- * @typedef {import('../../foundation/elements').DiscoveryEvent<ScrubberPreviewElement>} ScrubberPreviewConnectEvent
+ * @typedef {import('@base/elements').DiscoveryEvent<ScrubberPreviewElement>} ScrubberPreviewConnectEvent
  */
 
 /**
@@ -439,7 +436,7 @@ export class ScrubberPreviewElement extends LitElement {
 
   /**
    * @protected
-   * @type {import('../../utils/timing').RafThrottledFunction<(originalEvent: Event) => void>}
+   * @type {import('@utils/timing').RafThrottledFunction<(originalEvent: Event) => void>}
    */
   _dispatchPreviewTimeUpdate = rafThrottle((originalEvent) => {
     if (!this._isInteracting) return;

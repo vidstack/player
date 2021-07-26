@@ -1,12 +1,12 @@
-import '../../media/define.js';
-import '../../media/test-utils/define.js';
+import '@media/define.js';
+import '@media/test-utils/define.js';
 import './define.js';
 
+import { ifNonEmpty } from '@base/directives/index.js';
+import { StorybookControl } from '@base/storybook/index.js';
+import { omit } from '@utils/object.js';
 import { html } from 'lit';
 
-import { ifNonEmpty } from '../../foundation/directives/index.js';
-import { StorybookControl } from '../../foundation/storybook/index.js';
-import { omit } from '../../utils/object.js';
 import { TIME_ELEMENT_STORYBOOK_ARG_TYPES } from '../time/element.stories.js';
 import { TIME_DURATION_ELEMENT_TAG_NAME } from './TimeDurationElement.js';
 

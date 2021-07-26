@@ -1,6 +1,7 @@
 /* c8 ignore next 1000 */
 
-import { vdsEvent } from '../../../foundation/events/index.js';
+import { vdsEvent } from '@base/events/index.js';
+
 import { CanPlay } from '../../CanPlay.js';
 import { mediaContext } from '../../context.js';
 import { MediaProviderElement } from '../../provider/MediaProviderElement.js';

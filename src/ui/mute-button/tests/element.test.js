@@ -1,7 +1,7 @@
+import { buildMediaFixture } from '@media/test-utils/index.js';
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import {
   MUTE_BUTTON_ELEMENT_TAG_NAME,
   MuteButtonElement

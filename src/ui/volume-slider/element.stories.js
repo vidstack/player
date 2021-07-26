@@ -1,15 +1,12 @@
-import '../../media/define.js';
-import '../../media/test-utils/define.js';
+import '@media/define.js';
+import '@media/test-utils/define.js';
 import './define.js';
 
+import { on } from '@base/directives/index.js';
+import { storybookAction, StorybookControl } from '@base/storybook/index.js';
+import { pick } from '@utils/object.js';
 import { html } from 'lit';
 
-import { on } from '../../foundation/directives/index.js';
-import {
-  storybookAction,
-  StorybookControl
-} from '../../foundation/storybook/index.js';
-import { pick } from '../../utils/object.js';
 import { SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../slider/element.stories.js';
 import { VOLUME_SLIDER_ELEMENT_TAG_NAME } from './VolumeSliderElement.js';
 

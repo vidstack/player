@@ -1,8 +1,8 @@
+import { IdleChangeEvent, ViewType } from '@media/index.js';
+import { buildMediaFixture } from '@media/test-utils/index.js';
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { IdleChangeEvent, ViewType } from '../../../media/index.js';
-import { buildMediaFixture } from '../../../media/test-utils/index.js';
 import {
   CONTROLS_ELEMENT_TAG_NAME,
   ControlsElement

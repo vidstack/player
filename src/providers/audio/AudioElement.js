@@ -1,7 +1,7 @@
+import { ifNonEmpty, ifNumber } from '@base/directives/index.js';
 import { html } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty, ifNumber } from '../../foundation/directives/index.js';
 import { Html5MediaElement } from '../html5/index.js';
 import { audioElementStyles } from './styles.js';
 

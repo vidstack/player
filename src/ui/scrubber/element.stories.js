@@ -1,14 +1,14 @@
-import '../../media/define.js';
-import '../../media/test-utils/define.js';
+import '@media/define.js';
+import '@media/test-utils/define.js';
 import '../scrubber-preview/define.js';
 import './define.js';
 
+import { ifNonEmpty, on } from '@base/directives/index.js';
+import { StorybookControl } from '@base/storybook/StorybookControl.js';
+import { createTimeRanges } from '@media/index.js';
+import { omit } from '@utils/object.js';
 import { html } from 'lit';
 
-import { ifNonEmpty, on } from '../../foundation/directives/index.js';
-import { StorybookControl } from '../../foundation/storybook/StorybookControl.js';
-import { createTimeRanges } from '../../media/index.js';
-import { omit } from '../../utils/object.js';
 import { SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES } from '../scrubber-preview/storybook.js';
 import { SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES } from '../seekable-progress-bar/element.stories.js';
 import { TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../time-slider/element.stories.js';

@@ -1,18 +1,12 @@
+import { consumeContext, watchContext } from '@base/context/index.js';
+import { eventListener, isPointerEvent } from '@base/events/index.js';
+import { mediaContext, MediaRemoteControl } from '@media/index.js';
+import { setAttribute } from '@utils/dom.js';
+import { clampNumber, round } from '@utils/number.js';
+import { formatSpokenTime } from '@utils/time.js';
+import { throttle } from '@utils/timing.js';
 import { property, state } from 'lit/decorators.js';
 
-import {
-  consumeContext,
-  watchContext
-} from '../../foundation/context/index.js';
-import {
-  eventListener,
-  isPointerEvent
-} from '../../foundation/events/index.js';
-import { mediaContext, MediaRemoteControl } from '../../media/index.js';
-import { setAttribute } from '../../utils/dom.js';
-import { clampNumber, round } from '../../utils/number.js';
-import { formatSpokenTime } from '../../utils/time.js';
-import { throttle } from '../../utils/timing.js';
 import { SliderElement } from '../slider/index.js';
 
 export const TIME_SLIDER_ELEMENT_TAG_NAME = 'vds-time-slider';
@@ -290,7 +284,7 @@ export class TimeSliderElement extends SliderElement {
   /**
    * @protected
    * @readonly
-   * @type {import('../../utils/timing').ThrottledFunction<(event: Event) => void>}
+   * @type {import('@utils/timing').ThrottledFunction<(event: Event) => void>}
    */
   _dispatchSeekingRequest = throttle((event) => {
     this._mediaRemote.seeking(this.currentTime, event);

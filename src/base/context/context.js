@@ -1,4 +1,4 @@
-import { isUndefined, noop, notEqual } from '../../utils/unit.js';
+import { isUndefined, noop, notEqual } from '@utils/unit.js';
 
 /**
  * @augments CustomEvent<import('./types').ContextConsumerConnectEventDetail>

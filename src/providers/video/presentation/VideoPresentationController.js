@@ -3,8 +3,8 @@ import {
   listen,
   redispatchEvent,
   vdsEvent
-} from '../../../foundation/events/index.js';
-import { isFunction, isNil, noop } from '../../../utils/unit.js';
+} from '@base/events/index.js';
+import { isFunction, isNil, noop } from '@utils/unit.js';
 
 /**
  * @typedef {{

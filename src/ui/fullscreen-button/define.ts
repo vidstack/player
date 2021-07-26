@@ -1,4 +1,5 @@
-import { safelyDefineCustomElement } from '../../utils/dom';
+import { safelyDefineCustomElement } from '@utils/dom';
+
 import {
   FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
   FullscreenButtonElement

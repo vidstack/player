@@ -1,4 +1,5 @@
-import { createContext, derivedContext } from '../foundation/context/index.js';
+import { createContext, derivedContext } from '@base/context/index.js';
+
 import { MediaType } from './MediaType.js';
 import { createTimeRanges } from './time-ranges.js';
 import { ViewType } from './ViewType.js';
@@ -49,10 +50,9 @@ export const mediaContext = {
   currentSrc: createContext(''),
   currentTime: createContext(0),
   ended: createContext(false),
-  error:
-    /** @type {import('../foundation/context').Context<unknown | undefined>} */ (
-      createContext(undefined)
-    ),
+  error: /** @type {import('@base/context').Context<unknown | undefined>} */ (
+    createContext(undefined)
+  ),
   fullscreen: createContext(false),
   loop: createContext(false),
   live: derivedContext([isLiveVideo], ([d]) => d),
@@ -83,7 +83,7 @@ export const mediaContext = {
 };
 
 /**
- * @returns {import('../foundation/context').ContextProviderRecord<typeof mediaContext>}
+ * @returns {import('@base/context').ContextProviderRecord<typeof mediaContext>}
  */
 export function createMediaContextRecord() {
   return Object.keys(mediaContext).reduce(
@@ -96,7 +96,7 @@ export function createMediaContextRecord() {
 }
 
 /**
- * @template {import('../foundation/context').ContextProviderRecord<typeof mediaContext>} T
+ * @template {import('@base/context').ContextProviderRecord<typeof mediaContext>} T
  * @param {T} context
  * @returns {T}
  */
