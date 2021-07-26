@@ -1,10 +1,9 @@
-import { safelyDefineCustomElement } from '@utils/dom.js';
 import {
   BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
   BufferingIndicatorElement
 } from './BufferingIndicatorElement.js';
 
-safelyDefineCustomElement(
+window.customElements.define(
   BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
   BufferingIndicatorElement
 );

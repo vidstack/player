@@ -1,6 +1,5 @@
 import { WithContext } from '@base/context/index.js';
 import { elementUpdated, expect } from '@open-wc/testing';
-import { safelyDefineCustomElement } from '@utils/dom.js';
 import { html, LitElement } from 'lit';
 
 import { mediaContext } from '../../context.js';
@@ -34,7 +33,10 @@ class FakeMediaConsumerElement extends WithContext(LitElement) {
   }
 }
 
-safelyDefineCustomElement('vds-fake-media-consumer', FakeMediaConsumerElement);
+window.customElements.define(
+  'vds-fake-media-consumer',
+  FakeMediaConsumerElement
+);
 
 describe('MediaProviderElement/context', function () {
   /**

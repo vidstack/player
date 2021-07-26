@@ -1,11 +1,9 @@
-import { safelyDefineCustomElement } from '@utils/dom';
-
 import {
   FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
   FullscreenButtonElement
 } from './FullscreenButtonElement';
 
-safelyDefineCustomElement(
+window.customElements.define(
   FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
   FullscreenButtonElement
 );

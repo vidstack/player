@@ -1,11 +1,9 @@
-import { safelyDefineCustomElement } from '@utils/dom';
-
 import {
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
   FakeMediaProviderElement
 } from './FakeMediaProviderElement';
 
-safelyDefineCustomElement(
+window.customElements.define(
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
   FakeMediaProviderElement
 );

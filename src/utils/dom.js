@@ -1,7 +1,4 @@
-import { LitElement } from 'lit';
-
-import { IS_CLIENT } from './support.js';
-import { isFunction, isNil, isString, isUndefined } from './unit.js';
+import { isFunction, isNil, isString } from './unit.js';
 
 /**
  * Requests an animation frame and waits for it to be resolved.
@@ -34,27 +31,6 @@ export function buildExportPartsAttr(parts, prefix) {
         }${part}`
     )
     .join(', ');
-}
-
-/**
- * Registers a custom element in the CustomElementRegistry. By "safely" we mean:
- *
- * - Called only client-side (`window` is defined).
- * - The element is only registered if it hasn't been registered before under the given `name`.
- *
- * @param {string} name - A string representing the name you are giving the element.
- * @param {CustomElementConstructor} constructor - A class object that defines the behaviour of the element.
- * @param {boolean} isClient
- */
-export function safelyDefineCustomElement(
-  name,
-  constructor,
-  isClient = IS_CLIENT
-) {
-  const isElementRegistered =
-    isClient && !isUndefined(window.customElements.get(name));
-  if (!isClient || isElementRegistered) return;
-  window.customElements.define(name, constructor);
 }
 
 /**

@@ -1,5 +1,4 @@
 import { fixture } from '@open-wc/testing';
-import { safelyDefineCustomElement } from '@utils/dom.js';
 import { html } from 'lit';
 
 import {
@@ -15,15 +14,15 @@ import {
   FakeMediaProviderElement
 } from './fake-media-provider/index.js';
 
-safelyDefineCustomElement(
+window.customElements.define(
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
   FakeMediaProviderElement
 );
-safelyDefineCustomElement(
+window.customElements.define(
   MEDIA_CONTAINER_ELEMENT_TAG_NAME,
   MediaContainerElement
 );
-safelyDefineCustomElement(
+window.customElements.define(
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement
 );

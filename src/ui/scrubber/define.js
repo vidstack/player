@@ -1,7 +1,6 @@
-import { safelyDefineCustomElement } from '@utils/dom.js';
 import {
   SCRUBBER_ELEMENT_TAG_NAME,
   ScrubberElement
 } from './ScrubberElement.js';
 
-safelyDefineCustomElement(SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
+window.customElements.define(SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);

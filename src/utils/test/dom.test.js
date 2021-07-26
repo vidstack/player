@@ -5,7 +5,6 @@ import {
   getElementAttributes,
   observeAndForwardAttributes,
   raf,
-  safelyDefineCustomElement,
   willElementsCollide
 } from '../dom.js';
 
@@ -60,33 +59,6 @@ describe('utils/dom', function () {
       position(elA, 0, -49);
       position(elB, 0, 0);
       expect(willElementsCollide(elA, elB)).to.be.true;
-    });
-  });
-
-  describe(safelyDefineCustomElement.name, function () {
-    class FakeElement extends LitElement {
-      render() {
-        return html`<h1>penguins</h1>`;
-      }
-    }
-
-    it('should not register custom element if server-side', async function () {
-      safelyDefineCustomElement('fake-el', FakeElement, false);
-      const el = await fixture(html`<fake-el></fake-el>`);
-      expect(el.shadowRoot?.innerHTML ?? '').not.contains('<h1>penguins</h1>');
-    });
-
-    it('should register custom element', async function () {
-      safelyDefineCustomElement('fake-el', FakeElement);
-      const el = await fixture(html`<fake-el></fake-el>`);
-      expect(el.shadowRoot?.innerHTML).contains('<h1>penguins</h1>');
-    });
-
-    it('should not register custom element if registered before', function () {
-      expect(() => {
-        safelyDefineCustomElement('fake-el', FakeElement);
-        safelyDefineCustomElement('fake-el', FakeElement);
-      }).not.throws();
     });
   });
 
