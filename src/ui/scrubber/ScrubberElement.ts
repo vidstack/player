@@ -302,7 +302,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
     if (this.disabled) return;
     this.ctx.dragging = false;
     this.removeAttribute('dragging');
-    this.scrubberPreviewElement?.hidePreview(event);
+    if (!this.ctx.pointing) this.scrubberPreviewElement?.hidePreview(event);
   }
 
   // -------------------------------------------------------------------------------------------
