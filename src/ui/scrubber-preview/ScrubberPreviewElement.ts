@@ -117,7 +117,8 @@ export class ScrubberPreviewElement extends LitElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  protected readonly ctx = provideContextRecord(this, scrubberPreviewContext);
+  /** @internal */
+  readonly ctx = provideContextRecord(this, scrubberPreviewContext);
 
   /**
    * Whether the preview is hidden.
