@@ -11,6 +11,7 @@ import { ViewType } from './ViewType.js';
  *  'vds-emptied': EmptiedEvent;
  *  'vds-ended': EndedEvent;
  *  'vds-error': ErrorEvent;
+ *  'vds-fullscreen-change': import('../foundation/fullscreen').FullscreenChangeEvent;
  *  'vds-loaded-data': LoadedDataEvent;
  *  'vds-loaded-metadata': LoadedMetadataEvent;
  *  'vds-load-start': LoadStartEvent;
