@@ -166,5 +166,5 @@ export interface MediaProviderBridgedMethods {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/requestPictureInPicture
    */
   // eslint-disable-next-line
-  requestPictureInPicture?(): Promise<PictureInPictureWindow>;
+  requestPictureInPicture?(): Promise<PictureInPictureWindow | undefined>;
 }

@@ -1,7 +1,19 @@
 {
-  "extends": "./jsconfig.json",
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
     "incremental": true,
+    "lib": ["dom", "dom.iterable", "es2017"],
+    "module": "es2015",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noUnusedParameters": false,
+    "noImplicitOverride": true,
     "paths": {
       "@base/*": ["./src/base/*"],
       "@media/*": ["./src/media/*"],
@@ -9,15 +21,18 @@
       "@skins/*": ["./src/skins/*"],
       "@ui/*": ["./src/ui/*"],
       "@utils/*": ["./src/utils/*"],
-      "@types": ["./src/utils.ts"]
+      "@helpers": ["src/helpers.ts"]
     },
     "plugins": [
       { "transform": "typescript-transform-paths" },
       { "transform": "typescript-transform-paths", "afterDeclarations": true }
     ],
-    "types": ["mocha"],
-    "typeRoots": ["node_modules/@types", "./src"]
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2017",
+    "typeRoots": ["node_modules/@types", "./src"],
+    "types": ["mocha"]
   },
-  "include": ["**/*.js", "**/*.ts"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "./index.d.ts", "./define.d.ts"]
 }

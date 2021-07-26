@@ -16,7 +16,7 @@
     "custom-elements.json"
   ],
   "sideEffects": [
-    "src/**/define.js",
+    "src/**/define.ts",
     "dist/**/define.js"
   ],
   "exports": {
@@ -39,14 +39,14 @@
     "url": "https://github.com/vidstack/vds-elements/issues"
   },
   "scripts": {
-    "analyze": "cem analyze --litelement --globs \"src/**/*Element.js\"",
+    "analyze": "cem analyze --litelement --globs \"src/**/*Element.ts\"",
     "build": "npm run build:clean && ttsc -p tsconfig-build.json",
     "build:clean": "rimraf dist",
     "build:watch": "npm run build -- --incremental --watch",
     "build:release": "npm run build -- --sourceMap false --declarationMap false",
     "clean": "run-s build:clean",
     "lint": "run-s lint:*",
-    "lint:eslint": "eslint --ext .js --ext .ts . --ignore-path .gitignore",
+    "lint:eslint": "eslint --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
     "format": "run-s format:*",
     "format:eslint": "npm run lint:eslint -- --fix",
@@ -55,7 +55,7 @@
     "start": "npm run storybook",
     "storybook": "start-storybook -s .storybook/public",
     "storybook:build": "build-storybook -s .storybook/public",
-    "test": "wtr \"src/**/*.test.js\" --config wtr.config.mjs",
+    "test": "wtr \"src/**/*.test.ts\" --config wtr.config.mjs",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
     "release": "npx semantic-release"
@@ -84,6 +84,7 @@
     "@types/mocha": "^8.0.3",
     "@types/node": "^16.0.1",
     "@types/sinon": "^10.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
     "@web/dev-server": "^0.1.8",
     "@web/dev-server-esbuild": "^0.2.12",
@@ -94,7 +95,6 @@
     "esbuild-loader": "^2.13.1",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-jsdoc": "^35.4.1",
     "eslint-plugin-lit": "^1.3.0",
     "eslint-plugin-mocha": "^9.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
@@ -122,8 +122,8 @@
     "tabWidth": 2
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "*.{js,md,json}": "prettier --write"
+    "*.ts": "eslint --cache --fix",
+    "*.{ts,md,json}": "prettier --write"
   },
   "publishConfig": {
     "access": "public"

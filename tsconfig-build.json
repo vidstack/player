@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
     "declaration": true,
     "declarationMap": true,
     "incremental": false,
@@ -12,6 +11,6 @@
     "sourceMap": true,
     "useDefineForClassFields": false
   },
-  "include": ["src/**/*.js", "src/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.js", "src/**/*.test.ts", "src/**/*.stories.js"]
 }
