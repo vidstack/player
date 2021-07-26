@@ -2,8 +2,8 @@ import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
 import { spy } from 'sinon';
 
-import { createContext } from '../context.js';
-import { consumeContext, provideContext, watchContext } from '../decorators.js';
+import { createContext } from '../context';
+import { consumeContext, provideContext, watchContext } from '../decorators';
 
 const testContext = createContext(10);
 
@@ -22,7 +22,6 @@ window.customElements.define('fake-provider', FakeProviderElement);
 window.customElements.define('fake-consumer', FakeConsumerElement);
 
 describe('context/decorators', function () {
-  // eslint-disable-next-line jsdoc/require-jsdoc
   async function buildFixture() {
     const provider = await fixture<FakeProviderElement>(html`
       <fake-provider>
@@ -66,7 +65,7 @@ describe('context/decorators', function () {
   it('should throw error if @consumeContext is used without LitElement', async function () {
     expect(() => {
       class BadConsumerElement {
-        @consumeContext(testContext) context;
+        @consumeContext(testContext) context: any;
       }
     }).to.throw(
       `[vds]: \`BadConsumerElement\` must extend \`ReactiveElement\` to use the \`@consumeContext\` decorator.`
@@ -76,7 +75,7 @@ describe('context/decorators', function () {
   it('should throw error if @provideContext is used without LitElement', async function () {
     expect(() => {
       class BadProviderElement {
-        @provideContext(testContext) context;
+        @provideContext(testContext) context: any;
       }
     }).to.throw(
       `[vds]: \`BadProviderElement\` must extend \`ReactiveElement\` to use the \`@provideContext\` decorator.`

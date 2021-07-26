@@ -5,61 +5,32 @@
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./jsconfig.json"
+    "project": "./tsconfig.json"
   },
-  "plugins": ["jsdoc", "mocha", "simple-import-sort"],
-  "ignorePatterns": [
-    // Ignore files that contain both a `.js` and `.ts` file in same path (causes an error).
-    "src/**/define.js",
-    "src/base/context/index.js"
-  ],
+  "ignorePatterns": ["index.d.ts", "define.d.ts"],
+  "plugins": ["mocha", "simple-import-sort"],
   "extends": [
     "plugin:wc/recommended",
     "plugin:lit/recommended",
     "plugin:mocha/recommended",
-    "plugin:jsdoc/recommended",
     "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
   "rules": {
     "class-methods-use-this": "off",
     "default-case": "off",
-    "jsdoc/check-tag-names": [
-      "warn",
-      {
-        "definedTags": [
-          "link",
-          "internal",
-          "bubbles",
-          "composed",
-          // @see https://github.com/open-wc/custom-elements-manifest/tree/master/packages/analyzer#supported-jsdoc
-          "attribute",
-          "csspart",
-          "cssprop",
-          "event",
-          "property",
-          "slot",
-          "summary",
-          "tagname"
-        ]
-      }
-    ],
-    // Buggy
-    "jsdoc/no-undefined-types": "off",
-    // Buggy
-    "jsdoc/valid-types": "off",
-    "jsdoc/require-param-description": "off",
-    "jsdoc/require-returns-description": "off",
     "max-classes-per-file": "off",
     "no-console": "off",
     "no-underscore-dangle": "off",
-    "no-unused-vars": "off",
     "simple-import-sort/exports": "error",
-    "simple-import-sort/imports": "error"
-  },
-  "settings": {
-    "jsdoc": {
-      "mode": "typescript"
-    }
+    "simple-import-sort/imports": "error",
+    // TODO: resolve all these warnings later.
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-unused-vars": "off"
   }
 }

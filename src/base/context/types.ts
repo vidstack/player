@@ -1,4 +1,4 @@
-import { Constructor, ReadonlyIfType } from '@types';
+import { Constructor, ReadonlyIfType } from '@helpers';
 import { ReactiveElement } from 'lit';
 
 export interface ContextProvider<T> {
