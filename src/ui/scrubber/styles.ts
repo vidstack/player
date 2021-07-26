@@ -35,8 +35,16 @@ export const scrubberElementStyles = css`
     top: 50%;
     left: 0;
     width: 100%;
+    transform: translateY(-50%);
+  }
+
+  vds-seekable-progress-bar {
     /* Needs to be above slider track but below track-fill/thumb. */
     z-index: 150;
-    transform: translateY(-50%);
+  }
+
+  ::slotted(vds-scrubber-preview) {
+    /* Needs to be above slider track-fill but below thumb. */
+    z-index: 250;
   }
 `;

@@ -47,6 +47,9 @@ export type ScrubberPreviewConnectEvent =
  * element that will fill the track up to the part of the track being interacted with. You can
  * turn this off by setting the `noTrackFill` property or `no-track-fill` attribute.
  *
+ * 💡 See the `<vds-scrubber-preview-time>` element if you'd like to include preview timestamps.
+ * 💡 See the `<vds-scrubber-preview-video>` element if you'd like to include low-res video previews.
+ *
  * ## Previews
  *
  * You can pass in a preview to be shown while the user is interacting (hover/drag) with the

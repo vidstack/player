@@ -9,6 +9,7 @@ import '@ui/mute-button/define';
 import '@ui/play-button/define';
 import '@ui/scrim/define';
 import '@ui/scrubber-preview-time/define';
+import '@ui/scrubber-preview-video/define';
 import '@ui/scrubber-preview/define';
 import '@ui/scrubber/define';
 import '@ui/seekable-progress-bar/define';

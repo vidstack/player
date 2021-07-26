@@ -19,6 +19,7 @@ export * from '@ui/scrim/index';
 export * from '@ui/scrubber/index';
 export * from '@ui/scrubber-preview/index';
 export * from '@ui/scrubber-preview-time/index';
+export * from '@ui/scrubber-preview-video/index';
 export * from '@ui/seekable-progress-bar/index';
 export * from '@ui/slider/index';
 export * from '@ui/time/index';
