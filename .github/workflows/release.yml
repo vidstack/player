@@ -31,7 +31,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build:release
 
       - name: Test (UNIT)
         run: npm run test:coverage
