@@ -101,9 +101,6 @@ const HLS_LIB_CACHE = new Map();
  * ```html
  *  <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
  *    <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
- *    <vds-ui slot="ui">
- *      <!-- ... -->
- *    </vds-ui>
  *  </vds-hls>
  * ```
  */

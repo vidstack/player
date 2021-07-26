@@ -43,7 +43,7 @@ export const SCRUBBER_PREVIEW_ELEMENT_TAG_NAME = 'vds-scrubber-preview';
  * ## Previews
  *
  * You can pass in a preview to be shown while the user is interacting (hover/drag) with the
- * scrubber by passing an element into the `preview` slot, such as `<div slot="preview"></div>`.
+ * scrubber by passing an element into the default `slot`.
  *
  * You need to do the following on your root preview element:
  *
