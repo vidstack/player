@@ -68,4 +68,9 @@ export class PlayButtonElement extends ToggleButtonElement {
   protected _handlePausedContextUpdate(paused: boolean) {
     setAttribute(this, 'media-paused', paused);
   }
+
+  @watchContext(mediaContext.ended)
+  protected _handleEndedContextUpdate(ended: boolean) {
+    setAttribute(this, 'media-ended', ended);
+  }
 }
