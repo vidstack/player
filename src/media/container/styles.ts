@@ -6,6 +6,10 @@ export const mediaContainerElementStyles = css`
     contain: content;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   #root {
     width: 100%;
     height: 100%;

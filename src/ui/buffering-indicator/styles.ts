@@ -5,4 +5,8 @@ export const bufferingIndicatorElementStyles = css`
     display: block;
     contain: content;
   }
+
+  :host([hidden]) {
+    display: none;
+  }
 `;

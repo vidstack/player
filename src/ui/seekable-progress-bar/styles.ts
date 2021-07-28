@@ -8,6 +8,10 @@ export const seekableProgressBarElementStyles = css`
     contain: content;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   #progressbar {
     display: inline-block;
     width: 100%;

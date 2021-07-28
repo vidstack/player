@@ -6,6 +6,10 @@ export const audioElementStyles = css`
     contain: content;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   audio {
     display: inline-block;
     border-radius: inherit;

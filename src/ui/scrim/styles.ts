@@ -7,6 +7,10 @@ export const scrimElementStyles = css`
     pointer-events: none;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   #gradient {
     width: 100%;
     height: 258px;

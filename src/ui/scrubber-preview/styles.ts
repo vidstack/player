@@ -6,6 +6,10 @@ export const scrubberPreviewElementStyles = css`
     display: block;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   #track {
     width: 100%;
     height: var(

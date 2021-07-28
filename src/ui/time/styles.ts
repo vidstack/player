@@ -6,4 +6,8 @@ export const timeElementStyles = css`
     contain: content;
     font-variant-numeric: tabular-nums;
   }
+
+  :host([hidden]) {
+    display: none;
+  }
 `;

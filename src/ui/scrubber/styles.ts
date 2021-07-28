@@ -14,6 +14,10 @@ export const scrubberElementStyles = css`
     -webkit-user-select: none;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   :host(:focus) {
     outline: 0;
   }

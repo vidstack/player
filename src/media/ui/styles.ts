@@ -5,4 +5,8 @@ export const mediaUiElementStyles = css`
     display: block;
     contain: content;
   }
+
+  :host([hidden]) {
+    display: none;
+  }
 `;

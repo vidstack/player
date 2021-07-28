@@ -6,6 +6,10 @@ export const scrubberPreviewVideoElementStyles = css`
     contain: content;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   video {
     display: block;
   }

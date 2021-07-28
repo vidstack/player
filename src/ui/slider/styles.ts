@@ -11,6 +11,10 @@ export const sliderElementStyles = css`
     contain: content;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   :host(:focus),
   :host(:active) {
     outline: 0;
