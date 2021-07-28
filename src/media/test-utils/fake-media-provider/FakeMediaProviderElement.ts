@@ -20,10 +20,8 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   /**
    * Used to define accessors that are used during testing to update the context object.
-   *
-   * @protected
    */
-  _defineContextAccessors() {
+  protected _defineContextAccessors() {
     Object.keys(mediaContext).forEach((ctxProp) => {
       Object.defineProperty(this, `${ctxProp}Context`, {
         get: () => {

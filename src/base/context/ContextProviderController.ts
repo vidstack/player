@@ -76,11 +76,11 @@ export class ContextProviderController<T> implements ReactiveController {
     this._options.onDisconnect?.();
   }
 
-  setTarget(target?: EventTarget) {
-    if (this._target !== target) {
+  setTarget(newTarget?: EventTarget) {
+    if (this._target !== newTarget) {
       const consumers = new Set(this._consumers);
       this.stop(false);
-      this._target = target;
+      this._target = newTarget;
       this.start();
       consumers.forEach((consumer) => consumer.reconnect());
     }

@@ -2,17 +2,14 @@ import {
   isReactiveElementProto,
   throwIfTC39Decorator
 } from '@base/elements/decorators';
-import { ElementDisposalController } from '@base/elements/index';
-import { listen } from '@base/events/index';
+import { DisposalBin, listen } from '@base/events/index';
 import { Values } from '@helpers';
 import { MediaEvents } from '@media/events';
 import { keysOf } from '@utils/object';
-import { isFunction } from '@utils/unit';
-import { ReactiveElement } from 'lit';
+import { isFunction, isNil, noop } from '@utils/unit';
+import { ReactiveController, ReactiveControllerHost } from 'lit';
 
 import { MediaControllerConnectEvent } from './MediaControllerElement';
-
-export type MediaEventListenerControllerHost = ReactiveElement;
 
 export type MediaEventListenerTuple = Values<
   {
@@ -52,14 +49,16 @@ export type MediaEventListenerRecord = {
  * }
  * ```
  */
-export class MediaEventListenerController {
+export class MediaEventListenerController implements ReactiveController {
   protected readonly _eventListeners: MediaEventListenerTupleArray;
 
-  protected readonly _disposal: ElementDisposalController;
+  protected readonly _disposal = new DisposalBin();
+
+  protected _target?: EventTarget;
 
   constructor(
-    protected readonly _host: MediaEventListenerControllerHost,
-    eventListeners: MediaEventListenerRecord
+    protected readonly _host: ReactiveControllerHost,
+    eventListeners: MediaEventListenerRecord = {}
   ) {
     this._eventListeners = keysOf(eventListeners).reduce(
       (listeners, eventType) => [
@@ -69,17 +68,37 @@ export class MediaEventListenerController {
       [] as any
     );
 
-    this._disposal = new ElementDisposalController(_host);
-
-    listen(
-      _host,
-      'vds-media-controller-connect',
-      this._handleMediaControllerConnectEvent.bind(this)
-    );
+    if (_host instanceof EventTarget) {
+      this.setTarget(_host);
+    }
   }
 
-  addListener(listener: MediaEventListenerTuple) {
-    this._eventListeners.push(listener);
+  hostDisconnected() {
+    this._disposal.empty();
+  }
+
+  addListener<EventType extends keyof MediaEvents>(
+    type: EventType,
+    listener: (event: MediaEvents[EventType]) => void | Promise<void>
+  ) {
+    // @ts-expect-error
+    this._eventListeners.push([type, listener]);
+  }
+
+  protected _disposeConnectEventListener = noop;
+  setTarget(newTarget?: EventTarget) {
+    if (this._target !== newTarget) {
+      if (!isNil(newTarget)) {
+        this._disposeConnectEventListener();
+        this._disposeConnectEventListener = listen(
+          newTarget,
+          'vds-media-controller-connect',
+          this._handleMediaControllerConnectEvent.bind(this)
+        );
+      }
+
+      this._target = newTarget;
+    }
   }
 
   protected _handleMediaControllerConnectEvent(
@@ -141,10 +160,10 @@ export function mediaEventListener(type: keyof MediaEvents): MethodDecorator {
 
         const controller =
           host[CONTROLLER] ??
-          (host[CONTROLLER] = new MediaEventListenerController(host, {}));
+          (host[CONTROLLER] = new MediaEventListenerController(host));
 
         const listener = host[methodName].bind(host);
-        controller.addListener([type, listener]);
+        controller.addListener(type, listener);
       });
     }
   };

@@ -68,8 +68,8 @@ export class ContextConsumerController<T> implements ReactiveController {
     this.stop();
   }
 
-  setTarget(target: EventTarget) {
-    this._target = target;
+  setTarget(newTarget?: EventTarget) {
+    this._target = newTarget;
   }
 
   /**

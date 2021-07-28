@@ -1,10 +1,6 @@
 import { ExtractContextRecordTypes } from '@base/context/index';
-import {
-  discover,
-  DiscoveryEvent,
-  ElementDisposalController
-} from '@base/elements/index';
-import { eventListener, vdsEvent } from '@base/events/index';
+import { discover, DiscoveryEvent } from '@base/elements/index';
+import { DisposalBin, eventListener, vdsEvent } from '@base/events/index';
 import {
   FullscreenChangeEvent,
   FullscreenController
@@ -77,11 +73,7 @@ export abstract class MediaProviderElement extends LitElement {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * @protected
-   * @readonly
-   */
-  _disconnectDisposal = new ElementDisposalController(this);
+  protected readonly _disconnectDisposal = new DisposalBin();
 
   override connectedCallback() {
     super.connectedCallback();
@@ -119,6 +111,7 @@ export abstract class MediaProviderElement extends LitElement {
     this._connectedQueue.destroy();
     this.mediaRequestQueue.destroy();
     this._hasFlushedMediaRequestQueueOnce = false;
+    this._disconnectDisposal.empty();
   }
 
   // -------------------------------------------------------------------------------------------

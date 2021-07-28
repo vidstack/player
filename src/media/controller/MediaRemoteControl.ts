@@ -1,7 +1,5 @@
 import { vdsEvent } from '@base/events/index';
 
-export type MediaRemoteControlHost = EventTarget;
-
 /**
  * A simple facade for dispatching media requests to the nearest media controller.
  *
@@ -19,10 +17,14 @@ export type MediaRemoteControlHost = EventTarget;
  * ```
  */
 export class MediaRemoteControl {
-  constructor(protected readonly _host: MediaRemoteControlHost) {}
+  constructor(protected _target?: EventTarget) {}
+
+  setTarget(newTarget?: EventTarget) {
+    this._target = newTarget;
+  }
 
   play(event?: Event) {
-    this._host.dispatchEvent(
+    this._target?.dispatchEvent(
       vdsEvent('vds-play-request', {
         bubbles: true,
         composed: true,
@@ -32,7 +34,7 @@ export class MediaRemoteControl {
   }
 
   pause(event?: Event) {
-    this._host.dispatchEvent(
+    this._target?.dispatchEvent(
       vdsEvent('vds-pause-request', {
         bubbles: true,
         composed: true,
@@ -42,7 +44,7 @@ export class MediaRemoteControl {
   }
 
   mute(event?: Event) {
-    this._host.dispatchEvent(
+    this._target?.dispatchEvent(
       vdsEvent('vds-mute-request', {
         bubbles: true,
         composed: true,
@@ -52,7 +54,7 @@ export class MediaRemoteControl {
   }
 
   unmute(event?: Event) {
-    this._host.dispatchEvent(
+    this._target?.dispatchEvent(
       vdsEvent('vds-unmute-request', {
         bubbles: true,
         composed: true,
@@ -62,7 +64,7 @@ export class MediaRemoteControl {
   }
 
   enterFullscreen(event?: Event) {
-    this._host.dispatchEvent(
+    this._target?.dispatchEvent(
       vdsEvent('vds-enter-fullscreen-request', {
         bubbles: true,
         composed: true,
@@ -72,7 +74,7 @@ export class MediaRemoteControl {
   }
 
   exitFullscreen(event?: Event) {
-    this._host.dispatchEvent(
+    this._target?.dispatchEvent(
       vdsEvent('vds-exit-fullscreen-request', {
         bubbles: true,
         composed: true,
@@ -82,7 +84,7 @@ export class MediaRemoteControl {
   }
 
   seeking(time: number, event?: Event) {
-    this._host.dispatchEvent(
+    this._target?.dispatchEvent(
       vdsEvent('vds-seeking-request', {
         bubbles: true,
         composed: true,
@@ -93,7 +95,7 @@ export class MediaRemoteControl {
   }
 
   seek(time: number, event?: Event) {
-    this._host.dispatchEvent(
+    this._target?.dispatchEvent(
       vdsEvent('vds-seek-request', {
         bubbles: true,
         composed: true,
@@ -104,7 +106,7 @@ export class MediaRemoteControl {
   }
 
   changeVolume(volume: number, event?: Event) {
-    this._host.dispatchEvent(
+    this._target?.dispatchEvent(
       vdsEvent('vds-volume-change-request', {
         bubbles: true,
         composed: true,
