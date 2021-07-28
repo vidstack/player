@@ -1,4 +1,4 @@
-import { ExtractContextRecordTypes } from '@base/context/types';
+import { ExtractContextRecordTypes } from '@base/context';
 import { discover, DiscoveryEvent } from '@base/elements/index';
 import { eventListener } from '@base/events/index';
 import {

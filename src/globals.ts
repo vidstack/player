@@ -2,8 +2,9 @@
 // Global Events
 // -------------------------------------------------------------------------------------------
 
-import { FullscreenEvents } from './base/fullscreen';
-import { ScreenOrientationEvents } from './base/screen-orientation';
+import { ContextEvents } from '@base/context/events';
+import { FullscreenEvents } from '@base/fullscreen';
+import { ScreenOrientationEvents } from '@base/screen-orientation';
 import {
   ControlsEvents,
   IdleEvents,
@@ -13,18 +14,19 @@ import {
   MediaEvents,
   MediaProviderConnectEvent,
   MediaRequestEvents
-} from './media';
-import { HlsEvents } from './providers/hls';
-import { VideoPresentationEvents } from './providers/video';
+} from '@media/index';
+import { HlsEvents } from '@providers/hls';
+import { VideoPresentationEvents } from '@providers/video';
 import {
   ScrubberPreviewConnectEvent,
   ScrubberPreviewEvents
-} from './ui/scrubber-preview';
-import { SliderEvents } from './ui/slider';
+} from '@ui/scrubber-preview';
+import { SliderEvents } from '@ui/slider';
 
 declare global {
   interface GlobalEventHandlersEventMap
     extends ControlsEvents,
+      ContextEvents,
       FullscreenEvents,
       HlsEvents,
       IdleEvents,

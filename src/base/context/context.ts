@@ -1,155 +1,35 @@
-import { isUndefined, noop, notEqual } from '@utils/unit';
+import { ReadonlyIfType } from '@helpers';
+import { ReactiveControllerHost } from 'lit';
 
 import {
-  Context,
-  ContextConsumeOptions,
-  ContextConsumerConnectEventDetail,
-  ContextHost,
-  ContextProvideOptions,
-  ContextProviderRecord,
-  ContextRecord,
-  ContextTuple,
-  ContextTupleValues,
-  DerivedContext
-} from './types';
+  ConsumeContextOptions,
+  ContextConsumerController
+} from './ContextConsumerController';
+import {
+  ContextProviderController,
+  ProvideContextOptions
+} from './ContextProviderController';
 
-class ConsumerConnectEvent extends CustomEvent<ContextConsumerConnectEventDetail> {
-  static readonly TYPE = 'vds-context-connect';
-
-  constructor(detail: ContextConsumerConnectEventDetail) {
-    super(ConsumerConnectEvent.TYPE, {
-      bubbles: true,
-      composed: true,
-      detail
-    });
-  }
-}
-
+/**
+ * Creates and returns a pairable context consumer and provider.
+ */
 export function createContext<T>(initialValue: T): Context<T> {
-  const id = Symbol('Vidstack.contextId');
-
-  function provide(host: ContextHost, options: ContextProvideOptions<T> = {}) {
-    if (host[id]) return host[id];
-
-    let currentValue = initialValue;
-
-    const consumers = new Set<ContextConsumerConnectEventDetail>();
-
-    function onConsumerConnect(event: Event) {
-      const consumer = (event as ConsumerConnectEvent).detail;
-
-      // Validate event was dispatched by a pairable consumer.
-      if (consumer.id !== id) return;
-
-      // Stop propagation of the event to prevent pairing with similar context providers.
-      event.stopImmediatePropagation();
-
-      consumer.onConnect();
-
-      consumer.onUpdate(currentValue);
-
-      consumer.onDisconnect(() => {
-        consumers.delete(consumer);
-      });
-
-      consumers.add(consumer);
-    }
-
-    function onUpdate(newValue: T) {
-      currentValue = newValue;
-      consumers.forEach((consumer) => {
-        consumer.onUpdate(newValue);
-      });
-      options.onUpdate?.(newValue);
-    }
-
-    host.addController({
-      hostConnected() {
-        host.addEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
-        options.onConnect?.();
-      },
-      hostDisconnected() {
-        host.removeEventListener(ConsumerConnectEvent.TYPE, onConsumerConnect);
-        onUpdate(initialValue);
-        consumers.clear();
-        options.onDisconnect?.();
-      }
-    });
-
-    const context = {
-      get value() {
-        return currentValue;
-      },
-      set value(newValue) {
-        if (notEqual(newValue, currentValue)) {
-          onUpdate(newValue);
-        }
-      },
-      reset() {
-        onUpdate(initialValue);
-      }
-    };
-
-    host[id] = context;
-    return context;
-  }
-
-  function consume(host: ContextHost, options: ContextConsumeOptions<T> = {}) {
-    const transformer = !isUndefined(options.transform)
-      ? options.transform
-      : (v: T) => v;
-
-    let currentValue = transformer(initialValue);
-    let disconnectFromProviderCallback = noop;
-
-    function onConnect() {
-      options.onConnect?.();
-      options.onUpdate?.(currentValue);
-    }
-
-    function onUpdate(newValue: T) {
-      const transformedValue = transformer(newValue);
-      if (notEqual(transformedValue, currentValue)) {
-        currentValue = transformedValue;
-        options.onUpdate?.(transformedValue);
-      }
-    }
-
-    function onDisconnect(callback: () => void) {
-      disconnectFromProviderCallback = callback;
-    }
-
-    host.addController({
-      hostConnected() {
-        host.dispatchEvent(
-          new ConsumerConnectEvent({
-            id,
-            onConnect,
-            onUpdate,
-            onDisconnect
-          })
-        );
-      },
-
-      hostDisconnected() {
-        disconnectFromProviderCallback();
-        disconnectFromProviderCallback = noop;
-        onUpdate(initialValue);
-        options.onDisconnect?.();
-      }
-    });
-
-    return {
-      get value() {
-        return currentValue;
-      }
-    };
-  }
-
+  const id = Symbol('Vidstack.context');
   return {
+    id: id,
     initialValue,
-    provide,
-    consume
+    consume(host, options) {
+      return new ContextConsumerController(host, initialValue, {
+        ...options,
+        id
+      });
+    },
+    provide(host, options) {
+      return new ContextProviderController(host, initialValue, {
+        ...options,
+        id
+      });
+    }
   };
 }
 
@@ -158,7 +38,7 @@ export function createContext<T>(initialValue: T): Context<T> {
  * given `contexts` are ALL provided by the same host element.
  *
  * @param contexts - The contexts to derive values from as it updates.
- * @param derivation - Takes the original context values and outputypes the derived value.
+ * @param derivation - Takes the original context values and outputs the derived value.
  */
 export function derivedContext<T extends ContextTuple, R>(
   contexts: T,
@@ -169,38 +49,34 @@ export function derivedContext<T extends ContextTuple, R>(
   const derivedContext = createContext(initialValue);
 
   return {
+    id: derivedContext.id,
     initialValue,
-    consume: derivedContext.consume,
     isDerived: true,
+    consume: derivedContext.consume,
     provide(host) {
+      let connections = 0;
       const values: unknown[] = [];
       const derivedProvider = derivedContext.provide(host);
 
       contexts.forEach((context, i) => {
         context.consume(host, {
+          onConnect() {
+            connections += 1;
+          },
           onUpdate(newValue) {
             values[i] = newValue;
-
-            if (values.length === contexts.length) {
+            if (connections === contexts.length) {
               derivedProvider.value = derivation(values as any);
             }
           },
-
           onDisconnect() {
-            values.splice(i, 1);
-            if (values.length === 0) derivedProvider.value = initialValue;
+            connections -= 1;
+            if (connections === 0) derivedProvider.value = initialValue;
           }
         });
       });
 
-      return {
-        get value() {
-          return derivedProvider.value;
-        },
-        reset() {
-          derivedProvider.value = initialValue;
-        }
-      };
+      return derivedProvider;
     }
   };
 }
@@ -219,7 +95,7 @@ export function isDerviedContext<T>(
  * @param contextRecord
  */
 export function provideContextRecord<T extends ContextRecord<unknown>>(
-  host: ContextHost,
+  host: ReactiveControllerHost,
   contextRecord: T
 ): ContextProviderRecord<T> {
   const providers = {} as Partial<ContextProviderRecord<T>>;
@@ -244,3 +120,46 @@ export function provideContextRecord<T extends ContextRecord<unknown>>(
 
   return providers as ContextProviderRecord<T>;
 }
+
+export interface Context<T> {
+  readonly id: symbol;
+  readonly initialValue: T;
+  provide(
+    host: ReactiveControllerHost,
+    options?: Omit<ProvideContextOptions<T>, 'id'>
+  ): ContextProviderController<T>;
+  consume(
+    host: ReactiveControllerHost,
+    options?: Omit<ConsumeContextOptions<T>, 'id'>
+  ): ContextConsumerController<T>;
+}
+
+export type DerivedContext<T> = Context<T> & {
+  isDerived: true;
+};
+
+export type ExtractContextType<C> = C extends Context<infer X> ? X : never;
+
+export type ContextTuple = readonly [Context<any>, ...Array<Context<any>>];
+
+export type ContextTupleValues<Tuple> = {
+  readonly [K in keyof Tuple]: ExtractContextType<Tuple[K]>;
+};
+
+export type ContextRecord<RecordType> = {
+  readonly [P in keyof RecordType]:
+    | Context<RecordType[P]>
+    | DerivedContext<RecordType[P]>;
+};
+
+export type ExtractContextRecordTypes<
+  ContextRecordType extends ContextRecord<any>
+> = {
+  [P in keyof ContextRecordType]: ExtractContextType<ContextRecordType[P]>;
+};
+
+export type ContextProviderRecord<
+  ContextRecordType extends ContextRecord<any>
+> = ExtractContextRecordTypes<
+  ReadonlyIfType<DerivedContext<any>, ContextRecordType>
+>;

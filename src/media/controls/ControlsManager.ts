@@ -1,4 +1,4 @@
-import { ContextProvider } from '@base/context/types';
+import { ContextProviderController } from '@base/context';
 import { ElementManager, ElementManagerHost } from '@base/elements/index';
 import { listen, vdsEvent } from '@base/events/index';
 
@@ -24,7 +24,7 @@ export class ControlsManager extends ElementManager<ManagedControlsHost> {
     return ManagedControlsConnectEvent;
   }
 
-  protected readonly _hidden: ContextProvider<boolean>;
+  protected readonly _hidden: ContextProviderController<boolean>;
 
   /**
    * Whether controls are currently hidden.

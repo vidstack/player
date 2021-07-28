@@ -1,5 +1,6 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
+import { state } from 'lit/decorators.js';
 import { spy } from 'sinon';
 
 import { createContext } from '../context';
@@ -8,11 +9,14 @@ import { consumeContext, provideContext, watchContext } from '../decorators';
 const testContext = createContext(10);
 
 class FakeProviderElement extends LitElement {
-  @provideContext(testContext) context = testContext.initialValue;
+  @provideContext(testContext)
+  context = testContext.initialValue;
 }
 
 class FakeConsumerElement extends LitElement {
-  @consumeContext(testContext) context = testContext.initialValue;
+  @state()
+  @consumeContext(testContext)
+  context = testContext.initialValue;
 
   @watchContext(testContext)
   handleTestContextUpdate(n: number) {}
