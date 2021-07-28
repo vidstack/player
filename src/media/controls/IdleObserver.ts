@@ -4,15 +4,13 @@ import { ReactiveElement } from 'lit';
 
 import { controlsContext } from './context';
 
-export type IdleObserverHost = ReactiveElement;
-
 /**
  * Tracks user activity and determines when they are idle/inactive. Elements can dispatch requests
  * to pause/resume tracking idle state.
  */
 export class IdleObserver {
   constructor(
-    protected readonly _host: IdleObserverHost,
+    protected readonly _host: ReactiveElement,
     protected readonly _idle = controlsContext.idle.provide(_host),
     protected readonly _disposal = new DisposalBin()
   ) {

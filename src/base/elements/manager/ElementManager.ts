@@ -4,8 +4,6 @@ import { DisposalBin, listen } from '../../events/index';
 import { ScopedDiscoveryEvent } from '../discovery/events';
 import { ManagedElementConnectEvent } from './ManagedElement';
 
-export type ElementManagerHost = ReactiveElement;
-
 export class ElementManager<ManagedElement extends ReactiveElement> {
   protected static get _ScopedDiscoveryEvent(): ScopedDiscoveryEvent {
     return ManagedElementConnectEvent;
@@ -16,7 +14,7 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
 
   protected readonly _disconnectDisposal = new DisposalBin();
 
-  constructor(protected readonly _host: ElementManagerHost) {
+  constructor(protected readonly _host: ReactiveElement) {
     _host.addController({
       hostConnected: this._handleHostConnected.bind(this),
       hostDisconnected: this._handleHostDisconnected.bind(this)

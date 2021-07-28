@@ -4,8 +4,6 @@ import { ReactiveElement } from 'lit';
 import { DisposalBin, listen, vdsEvent } from '../events/index';
 import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 
-export type ScreenOrientationControllerHost = ReactiveElement;
-
 /**
  * Contains the logic for managing the window's screen orientation.
  *
@@ -26,7 +24,7 @@ export class ScreenOrientationController {
 
   protected _isScreenOrientationLocked = false;
 
-  constructor(protected readonly _host: ScreenOrientationControllerHost) {
+  constructor(protected readonly _host: ReactiveElement) {
     this._updateScreenOrientation();
 
     _host.addController({

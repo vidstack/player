@@ -1,15 +1,11 @@
 import { ContextProviderController } from '@base/context';
-import { ElementManager, ElementManagerHost } from '@base/elements/index';
+import { ElementManager } from '@base/elements/index';
 import { listen, vdsEvent } from '@base/events/index';
+import { ReactiveElement } from 'lit';
 
 import { controlsContext } from './context';
 import { HideControlsRequestEvent, ShowControlsRequestEvent } from './events';
-import {
-  ManagedControlsConnectEvent,
-  ManagedControlsHost
-} from './ManagedControls';
-
-export type ControlsManagerHost = ElementManagerHost;
+import { ManagedControlsConnectEvent } from './ManagedControls';
 
 /**
  * A registry for all media controls that:
@@ -19,7 +15,7 @@ export type ControlsManagerHost = ElementManagerHost;
  * - Listens for relevant requests such as `ShowControlsRequestEvent` and handles them.
  * - Updates `controlsContext.hidden`.
  */
-export class ControlsManager extends ElementManager<ManagedControlsHost> {
+export class ControlsManager extends ElementManager<ReactiveElement> {
   protected static override get _ScopedDiscoveryEvent() {
     return ManagedControlsConnectEvent;
   }
@@ -33,21 +29,28 @@ export class ControlsManager extends ElementManager<ManagedControlsHost> {
     return this._hidden.value;
   }
 
-  constructor(host: ControlsManagerHost) {
+  constructor(host: ReactiveElement) {
     super(host);
-
     this._hidden = controlsContext.hidden.provide(host);
+  }
 
-    listen(
-      this._host,
-      'vds-show-controls-request',
-      this._handleShowControlsRequest.bind(this)
+  protected override _handleHostConnected() {
+    super._handleHostConnected();
+
+    this._disconnectDisposal.add(
+      listen(
+        this._host,
+        'vds-show-controls-request',
+        this._handleShowControlsRequest.bind(this)
+      )
     );
 
-    listen(
-      this._host,
-      'vds-hide-controls-request',
-      this._handleHideControlsRequest.bind(this)
+    this._disconnectDisposal.add(
+      listen(
+        this._host,
+        'vds-hide-controls-request',
+        this._handleHideControlsRequest.bind(this)
+      )
     );
   }
 
