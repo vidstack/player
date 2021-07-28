@@ -45,6 +45,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     expect(state.muted).to.be.false;
     expect(state.seekable.length).to.be.equal(0);
 
+    // @ts-expect-error
     state.seekable.length = 10;
     expect(controller.mediaState.seekable.length).to.be.equal(0);
     controller.ctx.seekable = createTimeRanges(10, 20);

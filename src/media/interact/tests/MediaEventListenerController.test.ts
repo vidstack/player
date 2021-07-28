@@ -12,38 +12,38 @@ import {
   MediaEventListenerController
 } from '../MediaEventListenerController';
 
+class MediaListenerElement extends LitElement {
+  mediaEventlistener = new MediaEventListenerController(this, {
+    'vds-play': this.handlePlay,
+    'vds-time-update': this.handleTimeUpdate
+  });
+
+  events: [any, Event][] = [];
+
+  handlePlay(event: PlayEvent) {
+    this.events.push([this, event]);
+  }
+
+  handleTimeUpdate(event: TimeUpdateEvent) {
+    this.events.push([this, event]);
+  }
+
+  // WITH DECORATOR
+  @mediaEventListener('vds-duration-change')
+  handleDurationUpdate(event: DurationChangeEvent) {
+    this.events.push([this, event]);
+  }
+}
+
 window.customElements.define(
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement
 );
 
+window.customElements.define('vds-media-listener', MediaListenerElement);
+
 describe(MediaEventListenerController.name, function () {
   it('should listen to media events', async function () {
-    class MediaListenerElement extends LitElement {
-      mediaEventlistener = new MediaEventListenerController(this, {
-        'vds-play': this.handlePlay,
-        'vds-time-update': this.handleTimeUpdate
-      });
-
-      events: [any, Event][] = [];
-
-      handlePlay(event: PlayEvent) {
-        this.events.push([this, event]);
-      }
-
-      handleTimeUpdate(event: TimeUpdateEvent) {
-        this.events.push([this, event]);
-      }
-
-      // WITH DECORATOR
-      @mediaEventListener('vds-duration-change')
-      handleDurationUpdate(event: DurationChangeEvent) {
-        this.events.push([this, event]);
-      }
-    }
-
-    window.customElements.define('vds-media-listener', MediaListenerElement);
-
     const controller = document.createElement(
       MEDIA_CONTROLLER_ELEMENT_TAG_NAME
     );
