@@ -4,6 +4,7 @@ export * from './context';
 export * from './controller/index';
 export * from './controls/index';
 export * from './events';
+export * from './interact/index';
 export * from './MediaType';
 export * from './provider/index';
 export * from './request.events';

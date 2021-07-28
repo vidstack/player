@@ -1,5 +1,6 @@
 import { vdsEvent } from '@base/events/index';
 import { VolumeChangeEvent } from '@media/events';
+import { MediaRemoteControl } from '@media/interact/index';
 import {
   buildMediaFixture,
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
@@ -17,7 +18,6 @@ import {
   MediaControllerConnectEvent,
   MediaControllerElement
 } from '../MediaControllerElement';
-import { MediaRemoteControl } from '../MediaRemoteControl';
 
 describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
   describe('render', function () {

@@ -6,7 +6,7 @@ import { LitElement } from 'lit';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement
-} from '../MediaControllerElement';
+} from '../../controller/MediaControllerElement';
 import {
   mediaEventListener,
   MediaEventListenerController

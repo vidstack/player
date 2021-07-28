@@ -9,7 +9,7 @@ import { keysOf } from '@utils/object';
 import { isFunction, isNil, noop } from '@utils/unit';
 import { ReactiveController, ReactiveControllerHost } from 'lit';
 
-import { MediaControllerConnectEvent } from './MediaControllerElement';
+import { MediaControllerConnectEvent } from '../controller/MediaControllerElement';
 
 export type MediaEventListenerTuple = Values<
   {
@@ -54,7 +54,9 @@ export class MediaEventListenerController implements ReactiveController {
 
   protected readonly _disposal = new DisposalBin();
 
-  protected _target?: EventTarget;
+  protected _ref?: Element;
+
+  protected _disposeConnectEventListener = noop;
 
   constructor(
     protected readonly _host: ReactiveControllerHost,
@@ -68,9 +70,8 @@ export class MediaEventListenerController implements ReactiveController {
       [] as any
     );
 
-    if (_host instanceof EventTarget) {
-      this.setTarget(_host);
-    }
+    if (_host instanceof Element) this.setRef(_host);
+    _host.addController(this);
   }
 
   hostDisconnected() {
@@ -85,19 +86,22 @@ export class MediaEventListenerController implements ReactiveController {
     this._eventListeners.push([type, listener]);
   }
 
-  protected _disposeConnectEventListener = noop;
-  setTarget(newTarget?: EventTarget) {
-    if (this._target !== newTarget) {
-      if (!isNil(newTarget)) {
+  /**
+   * Set a reference to a DOM element that this controller will use to listen to a connect
+   * event from a `MediaControllerElement`.
+   */
+  setRef(newRef?: Element) {
+    if (this._ref !== newRef) {
+      if (!isNil(newRef)) {
         this._disposeConnectEventListener();
         this._disposeConnectEventListener = listen(
-          newTarget,
+          newRef,
           'vds-media-controller-connect',
           this._handleMediaControllerConnectEvent.bind(this)
         );
       }
 
-      this._target = newTarget;
+      this._ref = newRef;
     }
   }
 

@@ -29,7 +29,7 @@ export type ProvideContextOptions<T> = {
 export class ContextProviderController<T> implements ReactiveController {
   protected _value: T;
 
-  protected _target?: EventTarget;
+  protected _ref?: Element;
 
   protected _isProviding = false;
 
@@ -60,7 +60,7 @@ export class ContextProviderController<T> implements ReactiveController {
     protected readonly _options: ProvideContextOptions<T>
   ) {
     this._value = initialValue;
-    if (_host instanceof EventTarget) this.setTarget(_host);
+    if (_host instanceof Element) this.setRef(_host);
     _host.addController(this);
   }
 
@@ -76,11 +76,15 @@ export class ContextProviderController<T> implements ReactiveController {
     this._options.onDisconnect?.();
   }
 
-  setTarget(newTarget?: EventTarget) {
-    if (this._target !== newTarget) {
+  /**
+   * Set a reference to a DOM element that this controller will use to provide the context from
+   * by listening to consumer connect events at the given reference.
+   */
+  setRef(newRef?: Element) {
+    if (this._ref !== newRef) {
       const consumers = new Set(this._consumers);
       this.stop(false);
-      this._target = newTarget;
+      this._ref = newRef;
       this.start();
       consumers.forEach((consumer) => consumer.reconnect());
     }
@@ -90,12 +94,12 @@ export class ContextProviderController<T> implements ReactiveController {
    * Start providing context to consumers.
    */
   start() {
-    if (this._isProviding || isNil(this._target)) {
+    if (this._isProviding || isNil(this._ref)) {
       return;
     }
 
     const dispose = listen(
-      this._target,
+      this._ref,
       'vds-context-consumer-connect',
       this._handleConsumerConnect.bind(this)
     );

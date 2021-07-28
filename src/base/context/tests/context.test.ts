@@ -119,7 +119,7 @@ describe('context', function () {
   it('should reconnect if current provider target changes', async function () {
     const { parentProvider, provider, consumer } = await buildFixture();
 
-    provider.ctxA.setTarget(undefined);
+    provider.ctxA.setRef(undefined);
 
     parentProvider.ctxA.value = 50;
     await elementUpdated(consumer);
@@ -129,7 +129,7 @@ describe('context', function () {
   it('should update derived context on reconnection', async function () {
     const { parentProvider, provider, consumer } = await buildFixture();
 
-    provider.ctxA.setTarget(undefined);
+    provider.ctxA.setRef(undefined);
 
     parentProvider.ctxA.value = 50;
     await elementUpdated(consumer);

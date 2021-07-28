@@ -33,7 +33,7 @@ export type ConsumeContextOptions<T> = {
 export class ContextConsumerController<T> implements ReactiveController {
   protected _value: T;
 
-  protected _target?: EventTarget;
+  protected _ref?: Element;
 
   protected _hasConnectedToProvider = false;
 
@@ -55,7 +55,7 @@ export class ContextConsumerController<T> implements ReactiveController {
     protected readonly _options: ConsumeContextOptions<T>
   ) {
     this._value = this._transformValue(initialValue);
-    if (_host instanceof EventTarget) this.setTarget(_host);
+    if (_host instanceof Element) this.setRef(_host);
     _host.addController(this);
   }
 
@@ -68,17 +68,23 @@ export class ContextConsumerController<T> implements ReactiveController {
     this.stop();
   }
 
-  setTarget(newTarget?: EventTarget) {
-    this._target = newTarget;
+  /**
+   * Set a reference to a DOM element that this controller will use to connect to a provider
+   * by dispatching a connect event from it. The reference element's position in the DOM will
+   * dictate which provider it connects to, since it'll connect to the first parent provider
+   * that provides the current context.
+   */
+  setRef(newRef?: Element) {
+    this._ref = newRef;
   }
 
   /**
    * Start consuming context.
    */
   start() {
-    if (this._hasConnectedToProvider || isNil(this._target)) return;
+    if (this._hasConnectedToProvider || isNil(this._ref)) return;
 
-    this._target.dispatchEvent(
+    this._ref.dispatchEvent(
       vdsEvent('vds-context-consumer-connect', {
         bubbles: true,
         composed: true,
