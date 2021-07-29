@@ -9,6 +9,10 @@ export type ConsumeContextOptions<T> = {
    */
   id: symbol;
   /**
+   * For backwards compatiblity - currently does nothing.
+   */
+  debug?: boolean;
+  /**
    * Whether context updates should also request an update on the controller host to trigger
    * a re-render.
    */

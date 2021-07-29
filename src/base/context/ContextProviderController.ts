@@ -13,6 +13,10 @@ export type ProvideContextOptions<T> = {
    */
   id: symbol;
   /**
+   * For backwards compatiblity - currently does nothing.
+   */
+  debug?: boolean;
+  /**
    * Called when the host controller has connected to the DOM.
    */
   onConnect?(): void;
