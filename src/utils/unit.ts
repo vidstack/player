@@ -56,25 +56,13 @@ export function isNil(value: unknown): value is null | undefined {
 }
 
 /**
- * Returns the constructor of the given `value`.
- *
- * @param value - The value to return the constructor of.
- */
-export function getConstructor<T>(
-  value: T
-): T extends Constructor<infer C> ? C : unknown {
-  // @ts-expect-error
-  return !isNil(value) ? value.constructor : undefined;
-}
-
-/**
  * Checks if the given `value` is classified as a `Object`.
  *
  * @param value - The value to check.
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function isObject(value: unknown): value is object {
-  return getConstructor(value) === Object;
+export function isObject(value: any): value is object {
+  return value?.constructor === Object;
 }
 
 /**
@@ -82,8 +70,8 @@ export function isObject(value: unknown): value is object {
  *
  * @param value - The value to check.
  */
-export function isNumber(value: unknown): value is number {
-  return getConstructor(value) === Number && !Number.isNaN(value);
+export function isNumber(value: any): value is number {
+  return value?.constructor === Number && !Number.isNaN(value);
 }
 
 /**
@@ -91,8 +79,8 @@ export function isNumber(value: unknown): value is number {
  *
  * @param value - The value to check.
  */
-export function isString(value: unknown): value is string {
-  return getConstructor(value) === String;
+export function isString(value: any): value is string {
+  return value?.constructor === String;
 }
 
 /**
@@ -100,8 +88,8 @@ export function isString(value: unknown): value is string {
  *
  * @param value - The value to check.
  */
-export function isBoolean(value: unknown): value is boolean {
-  return getConstructor(value) === Boolean;
+export function isBoolean(value: any): value is boolean {
+  return value?.constructor === Boolean;
 }
 
 /**
@@ -110,8 +98,8 @@ export function isBoolean(value: unknown): value is boolean {
  * @param value - The value to check.
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function isFunction(value: unknown): value is Function {
-  return getConstructor(value) === Function;
+export function isFunction(value: any): value is Function {
+  return value?.constructor === Function || value instanceof Function;
 }
 
 /**
@@ -121,33 +109,4 @@ export function isFunction(value: unknown): value is Function {
  */
 export function isArray(value: unknown): value is unknown[] {
   return Array.isArray(value);
-}
-
-/**
- * Checks if the given `value` is an instanceof the given `constructor`.
- *
- * @param value - The value to check.
- * @param constructor - The constructor to check against.
- */
-export function isInstanceOf(
-  value: unknown,
-  constructor: Constructor<unknown>
-): boolean {
-  return Boolean(value && constructor && value instanceof constructor);
-}
-
-/**
- * Checks if the given `value` prototype chain includes the given `object`.
- *
- * @param value - The value whose prototype chain to check.
- * @param object - The object to search for in the prototype chain.
- */
-export function isPrototypeOf(
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  value: object,
-  object: Constructor<unknown>
-): boolean {
-  return Boolean(
-    value && object && Object.isPrototypeOf.call(object.prototype, value)
-  );
 }
