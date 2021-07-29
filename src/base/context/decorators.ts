@@ -1,10 +1,10 @@
+import { ReactiveElement } from 'lit';
+
+import { isFunction } from '../../utils/unit';
 import {
   isReactiveElementProto,
   throwIfTC39Decorator
-} from '@base/elements/decorators';
-import { isFunction } from '@utils/unit';
-import { ReactiveElement } from 'lit';
-
+} from '../elements/decorators';
 import { Context, isDerviedContext } from './context';
 import { ConsumeContextOptions } from './ContextConsumerController';
 import { ProvideContextOptions } from './ContextProviderController';

@@ -1,12 +1,12 @@
-import { VdsEvent } from '@base/events/index';
-import { DurationChangeEvent, PlayEvent, TimeUpdateEvent } from '@media/events';
 import { expect, oneEvent } from '@open-wc/testing';
 import { LitElement } from 'lit';
 
+import { VdsEvent } from '../../../base/events';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement
 } from '../../controller/MediaControllerElement';
+import { DurationChangeEvent, PlayEvent, TimeUpdateEvent } from '../../events';
 import {
   mediaEventListener,
   MediaEventListenerController

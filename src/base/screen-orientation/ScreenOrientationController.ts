@@ -1,7 +1,7 @@
-import { canOrientScreen, IS_CLIENT } from '@utils/support';
 import { ReactiveElement } from 'lit';
 
-import { DisposalBin, listen, vdsEvent } from '../events/index';
+import { canOrientScreen, IS_CLIENT } from '../../utils/support';
+import { DisposalBin, listen, vdsEvent } from '../events';
 import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 
 /**

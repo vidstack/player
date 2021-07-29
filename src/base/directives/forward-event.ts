@@ -1,9 +1,9 @@
-import { isNil, isString } from '@utils/unit';
 import { ElementPart, nothing } from 'lit';
 import { AsyncDirective } from 'lit/async-directive.js';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
 
-import { listen, redispatchEvent } from '../events/index';
+import { isNil, isString } from '../../utils/unit';
+import { listen, redispatchEvent } from '../events';
 
 export class ForwardEventDirective extends AsyncDirective {
   protected _element?: Element;

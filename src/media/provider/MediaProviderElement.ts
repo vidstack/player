@@ -1,19 +1,19 @@
-import { ExtractContextRecordTypes } from '@base/context/index';
-import { discover, DiscoveryEvent } from '@base/elements/index';
-import { DisposalBin, eventListener, vdsEvent } from '@base/events/index';
-import {
-  FullscreenChangeEvent,
-  FullscreenController
-} from '@base/fullscreen/index';
-import { RequestQueue } from '@base/queue/index';
-import {
-  ScreenOrientationController,
-  ScreenOrientationLock
-} from '@base/screen-orientation/index';
-import { clampNumber } from '@utils/number';
 import { LitElement, PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
+import { ExtractContextRecordTypes } from '../../base/context';
+import { discover, DiscoveryEvent } from '../../base/elements';
+import { DisposalBin, eventListener, vdsEvent } from '../../base/events';
+import {
+  FullscreenChangeEvent,
+  FullscreenController
+} from '../../base/fullscreen';
+import { RequestQueue } from '../../base/queue';
+import {
+  ScreenOrientationController,
+  ScreenOrientationLock
+} from '../../base/screen-orientation';
+import { clampNumber } from '../../utils/number';
 import { CanPlay } from '../CanPlay';
 import {
   cloneMediaContextRecord,

@@ -1,4 +1,4 @@
-import { VdsEvent } from '../events/index';
+import { VdsEvent } from '../events';
 import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 
 export type ScreenOrientationEvents = {

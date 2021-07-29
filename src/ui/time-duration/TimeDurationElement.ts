@@ -1,8 +1,8 @@
-import { consumeContext } from '@base/context/index';
-import { mediaContext } from '@media/index';
 import { property } from 'lit/decorators.js';
 
-import { TimeElement } from '../time/index';
+import { consumeContext } from '../../base/context';
+import { mediaContext } from '../../media';
+import { TimeElement } from '../time';
 
 export const TIME_DURATION_ELEMENT_TAG_NAME = 'vds-time-duration';
 

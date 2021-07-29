@@ -1,9 +1,8 @@
-import { ContextProviderRecord } from '@base/context';
-import type { DisposalBin } from '@base/events';
-import type { FullscreenController } from '@base/fullscreen';
-import type { RequestQueue } from '@base/queue';
-import type { VideoElement } from '@providers/video';
-
+import { ContextProviderRecord } from '../../base/context';
+import type { DisposalBin } from '../../base/events';
+import type { FullscreenController } from '../../base/fullscreen';
+import type { RequestQueue } from '../../base/queue';
+import type { VideoElement } from '../../providers/video';
 import type { CanPlay } from '../CanPlay';
 import { mediaContext } from '../context';
 import type { MediaProviderElement } from '../provider';

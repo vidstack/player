@@ -1,12 +1,12 @@
-import {
-  ScreenOrientationController,
-  ScreenOrientationLock
-} from '@base/screen-orientation/index';
-import { isUndefined, noop } from '@utils/unit';
 import fscreen from 'fscreen';
 import { ReactiveElement } from 'lit';
 
-import { DisposalBin, listen, vdsEvent } from '../events/index';
+import { isUndefined, noop } from '../../utils/unit';
+import { DisposalBin, listen, vdsEvent } from '../events';
+import {
+  ScreenOrientationController,
+  ScreenOrientationLock
+} from '../screen-orientation';
 
 export type FullscreenControllerHost = ReactiveElement & {
   requestFullscreen(): Promise<void>;

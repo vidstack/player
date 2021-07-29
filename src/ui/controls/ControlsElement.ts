@@ -1,13 +1,13 @@
-import { watchContext } from '@base/context/index';
+import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+
+import { watchContext } from '../../base/context';
 import {
   controlsContext,
   ManagedControls,
   mediaContext,
   ViewType
-} from '@media/index';
-import { setAttribute } from '@utils/dom';
-import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-
+} from '../../media';
+import { setAttribute } from '../../utils/dom';
 import { controlsElementStyles } from './styles';
 
 export const CONTROLS_ELEMENT_TAG_NAME = 'vds-controls';

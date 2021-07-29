@@ -1,5 +1,6 @@
-import { VdsEvent } from '@base/events/index';
 import type Hls from 'hls.js';
+
+import { VdsEvent } from '../../base/events';
 
 export type HlsEvents = {
   'vds-hls-load': HlsLoadEvent;

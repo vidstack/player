@@ -1,10 +1,10 @@
 import '../define';
 
-import { buildMediaFixture } from '@media/test-utils/index';
 import { elementUpdated, expect } from '@open-wc/testing';
-import { getSlottedChildren } from '@utils/dom';
 import { html } from 'lit';
 
+import { getSlottedChildren } from '../../../utils/dom';
+import { buildMediaFixture } from '../../test-utils';
 import { MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement } from '../MediaUiElement';
 
 window.customElements.define(MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);

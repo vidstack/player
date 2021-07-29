@@ -40,7 +40,7 @@
   },
   "scripts": {
     "analyze": "cem analyze --litelement --globs \"src/**/*Element.ts\"",
-    "build": "npm run build:clean && ttsc -p tsconfig-build.json",
+    "build": "npm run build:clean && tsc -p tsconfig-build.json",
     "build:clean": "rimraf dist",
     "build:watch": "npm run build -- --incremental --watch",
     "build:release": "npm run build -- --sourceMap false --declarationMap false",
@@ -75,7 +75,6 @@
     "@custom-elements-manifest/analyzer": "^0.4.1",
     "@open-wc/semantic-dom-diff": "^0.19.4",
     "@open-wc/testing": "^3.0.0-next.1",
-    "@rollup/plugin-alias": "^3.1.4",
     "@storybook/addon-essentials": "^6.3.6",
     "@storybook/addon-links": "^6.3.6",
     "@storybook/builder-webpack5": "^6.3.6",
@@ -88,7 +87,6 @@
     "@typescript-eslint/parser": "^4.24.0",
     "@web/dev-server": "^0.1.8",
     "@web/dev-server-esbuild": "^0.2.12",
-    "@web/dev-server-rollup": "^0.3.6",
     "@web/test-runner": "^0.13.12",
     "babel-loader": "^8.2.2",
     "esbuild": "^0.12.15",
@@ -108,11 +106,8 @@
     "rimraf": "^3.0.2",
     "semantic-release": "^17.3.7",
     "sinon": "^11.1.1",
-    "tsconfig-paths-webpack-plugin": "^3.5.1",
     "tslib": "^2.3.0",
-    "ttypescript": "^1.5.12",
     "typescript": "^4.4.0-beta",
-    "typescript-transform-paths": "^3.1.0",
     "webpack": "5.47.0"
   },
   "prettier": {

@@ -1,8 +1,8 @@
-import { watchContext } from '@base/context/index';
-import { mediaContext } from '@media/index';
-import { setAttribute } from '@utils/dom';
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
+import { watchContext } from '../../base/context';
+import { mediaContext } from '../../media';
+import { setAttribute } from '../../utils/dom';
 import { bufferingIndicatorElementStyles } from './styles';
 
 export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';

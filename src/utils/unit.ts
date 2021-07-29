@@ -1,4 +1,4 @@
-import { Constructor } from '@helpers';
+import { Constructor } from '../helpers';
 
 /**
  * No-operation (noop).

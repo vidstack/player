@@ -1,7 +1,3 @@
-import { watchContext } from '@base/context';
-import { ifNonEmpty } from '@base/directives';
-import { redispatchEvent } from '@base/events';
-import { scrubberPreviewContext } from '@ui/scrubber-preview';
 import {
   CSSResultGroup,
   html,
@@ -12,6 +8,10 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
+import { watchContext } from '../../base/context';
+import { ifNonEmpty } from '../../base/directives';
+import { redispatchEvent } from '../../base/events';
+import { scrubberPreviewContext } from '../scrubber-preview';
 import { scrubberPreviewVideoElementStyles } from './styles';
 
 export const SCRUBBER_PREVIEW_VIDEO_ELEMENT_TAG_NAME =

@@ -1,4 +1,4 @@
-import { VdsEvent } from '../events/index';
+import { VdsEvent } from '../events';
 
 export type FullscreenEvents = {
   'vds-fullscreen-change': FullscreenChangeEvent;

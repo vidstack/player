@@ -1,10 +1,10 @@
 import './define';
 
-import { ifNonEmpty, on } from '@base/directives/index';
-import { storybookAction, StorybookControl } from '@base/storybook/index';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
+import { ifNonEmpty, on } from '../../base/directives';
+import { storybookAction, StorybookControl } from '../../base/storybook';
 import { VIDEO_ELEMENT_STORYBOOK_ARG_TYPES } from '../video/element.stories';
 import { HLS_ELEMENT_TAG_NAME } from './HlsElement';
 

@@ -1,5 +1,5 @@
-import { StorybookControl } from '@base/storybook/index';
-import { MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '@media/provider/storybook';
+import { StorybookControl } from '../../base/storybook';
+import { MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../../media/provider/storybook';
 
 export const HTML5_MEDIA_ELEMENT_STORYBOOK_ARG_TYPES = {
   ...MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES,

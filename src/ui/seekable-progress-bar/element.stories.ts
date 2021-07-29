@@ -1,12 +1,12 @@
-import '@media/define';
-import '@media/test-utils/define';
+import '../../media/define';
+import '../../media/test-utils/define';
 import './define';
 
-import { ifNonEmpty } from '@base/directives/index';
-import { StorybookControl } from '@base/storybook/index';
-import { createTimeRanges } from '@media/index';
 import { html } from 'lit';
 
+import { ifNonEmpty } from '../../base/directives';
+import { StorybookControl } from '../../base/storybook';
+import { createTimeRanges } from '../../media';
 import { SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME } from './SeekableProgressBarElement';
 
 export const SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES = {

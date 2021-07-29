@@ -1,4 +1,3 @@
-import { isFunction, isNil, isString } from '@utils/unit';
 import { ElementPart, nothing } from 'lit';
 import { AsyncDirective } from 'lit/async-directive.js';
 import {
@@ -8,7 +7,8 @@ import {
   PartType
 } from 'lit/directive.js';
 
-import { listen as listenToEvent } from '../events/index';
+import { isFunction, isNil, isString } from '../../utils/unit';
+import { listen as listenToEvent } from '../events';
 
 export class EventListenerDirective extends AsyncDirective {
   protected _element?: Element;

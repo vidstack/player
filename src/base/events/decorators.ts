@@ -1,5 +1,4 @@
-import { isFunction, noop } from '@utils/unit';
-
+import { isFunction, noop } from '../../utils/unit';
 import {
   isReactiveElementProto,
   throwIfTC39Decorator

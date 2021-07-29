@@ -1,7 +1,7 @@
-import { buildMediaFixture } from '@media/test-utils/index';
 import { expect } from '@open-wc/testing';
 import { html } from 'lit';
 
+import { buildMediaFixture } from '../../../media/test-utils';
 import {
   TIME_SLIDER_ELEMENT_TAG_NAME,
   TimeSliderElement

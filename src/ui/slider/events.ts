@@ -1,4 +1,4 @@
-import { VdsEvent } from '@base/events/index';
+import { VdsEvent } from '../../base/events';
 
 export type SliderEvents = {
   'vds-slider-drag-start': SliderDragStartEvent;

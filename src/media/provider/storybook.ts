@@ -1,4 +1,4 @@
-import { storybookAction, StorybookControl } from '@base/storybook/index';
+import { storybookAction, StorybookControl } from '../../base/storybook';
 
 export const MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties

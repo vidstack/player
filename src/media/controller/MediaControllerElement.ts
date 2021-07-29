@@ -1,6 +1,15 @@
-import { ExtractContextRecordTypes } from '@base/context';
-import { discover, DiscoveryEvent } from '@base/elements/index';
-import { eventListener } from '@base/events/index';
+import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+
+import { ExtractContextRecordTypes } from '../../base/context';
+import { discover, DiscoveryEvent } from '../../base/elements';
+import { eventListener } from '../../base/events';
+import { isNil } from '../../utils/unit';
+import {
+  MediaContainerConnectEvent,
+  MediaContainerElement
+} from '../container';
+import { cloneMediaContextRecord, mediaContext } from '../context';
+import { ControlsManager, IdleObserver } from '../controls';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -11,16 +20,7 @@ import {
   SeekRequestEvent,
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
-} from '@media/request.events';
-import { isNil } from '@utils/unit';
-import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-
-import {
-  MediaContainerConnectEvent,
-  MediaContainerElement
-} from '../container/index';
-import { cloneMediaContextRecord, mediaContext } from '../context';
-import { ControlsManager, IdleObserver } from '../controls/index';
+} from '../request.events';
 import { mediaControllerStyles } from './styles';
 import { WithMediaProviderBridge } from './WithMediaProviderBridge';
 

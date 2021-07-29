@@ -1,6 +1,6 @@
 import { ReactiveElement } from 'lit';
 
-import { DisposalBin, listen } from '../../events/index';
+import { DisposalBin, listen } from '../../events';
 import { ScopedDiscoveryEvent } from '../discovery/events';
 import { ManagedElementConnectEvent } from './ManagedElement';
 

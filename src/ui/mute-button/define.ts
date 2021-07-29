@@ -1,5 +1,4 @@
-import { safelyDefineCustomElement } from '@utils/dom';
-
+import { safelyDefineCustomElement } from '../../utils/dom';
 import {
   MUTE_BUTTON_ELEMENT_TAG_NAME,
   MuteButtonElement

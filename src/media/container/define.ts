@@ -1,5 +1,4 @@
-import { safelyDefineCustomElement } from '@utils/dom';
-
+import { safelyDefineCustomElement } from '../../utils/dom';
 import {
   MEDIA_CONTAINER_ELEMENT_TAG_NAME,
   MediaContainerElement

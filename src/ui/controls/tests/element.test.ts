@@ -1,8 +1,8 @@
-import { ViewType } from '@media/index';
-import { buildMediaFixture } from '@media/test-utils/index';
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
+import { ViewType } from '../../../media';
+import { buildMediaFixture } from '../../../media/test-utils';
 import { CONTROLS_ELEMENT_TAG_NAME, ControlsElement } from '../ControlsElement';
 
 window.customElements.define(CONTROLS_ELEMENT_TAG_NAME, ControlsElement);

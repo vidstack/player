@@ -14,19 +14,6 @@
     "noImplicitReturns": true,
     "noUnusedParameters": false,
     "noImplicitOverride": true,
-    "paths": {
-      "@base/*": ["./src/base/*"],
-      "@media/*": ["./src/media/*"],
-      "@providers/*": ["./src/providers/*"],
-      "@skins/*": ["./src/skins/*"],
-      "@ui/*": ["./src/ui/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@helpers": ["src/helpers.ts"]
-    },
-    "plugins": [
-      { "transform": "typescript-transform-paths" },
-      { "transform": "typescript-transform-paths", "afterDeclarations": true }
-    ],
     "skipLibCheck": true,
     "strict": true,
     "target": "es2017",

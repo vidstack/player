@@ -1,4 +1,4 @@
-import { VdsEvent } from '@base/events';
+import { VdsEvent } from '../events';
 
 export type ContextEvents = {
   'vds-context-consumer-connect': ContextConsumerConnectEvent;

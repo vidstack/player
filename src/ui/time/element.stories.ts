@@ -1,9 +1,9 @@
 import './define';
 
-import { ifNonEmpty } from '@base/directives/index';
-import { StorybookControl } from '@base/storybook/index';
 import { html } from 'lit';
 
+import { ifNonEmpty } from '../../base/directives';
+import { StorybookControl } from '../../base/storybook';
 import { TIME_ELEMENT_TAG_NAME } from './TimeElement';
 
 export const TIME_ELEMENT_STORYBOOK_ARG_TYPES = {

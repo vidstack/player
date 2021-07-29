@@ -1,12 +1,12 @@
-import { consumeContext, watchContext } from '@base/context/index';
-import { eventListener } from '@base/events/index';
-import { mediaContext, MediaRemoteControl } from '@media/index';
-import { setAttribute } from '@utils/dom';
-import { round } from '@utils/number';
 import { PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { SliderElement, SliderValueChangeEvent } from '../slider/index';
+import { consumeContext, watchContext } from '../../base/context';
+import { eventListener } from '../../base/events';
+import { mediaContext, MediaRemoteControl } from '../../media';
+import { setAttribute } from '../../utils/dom';
+import { round } from '../../utils/number';
+import { SliderElement, SliderValueChangeEvent } from '../slider';
 
 export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
 

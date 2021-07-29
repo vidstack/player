@@ -1,5 +1,6 @@
-import { isUndefined } from '@utils/unit';
 import { ReactiveElement } from 'lit';
+
+import { isUndefined } from '../../utils/unit';
 
 export function isReactiveElementProto(
   decoratorName: string,

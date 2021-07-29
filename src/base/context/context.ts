@@ -1,6 +1,6 @@
-import { ReadonlyIfType } from '@helpers';
 import { ReactiveControllerHost } from 'lit';
 
+import { ReadonlyIfType } from '../../helpers';
 import {
   ConsumeContextOptions,
   ContextConsumerController

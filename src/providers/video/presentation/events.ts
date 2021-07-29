@@ -1,4 +1,4 @@
-import { VdsEvent } from '@base/events/index';
+import { VdsEvent } from '../../../base/events';
 
 export type VideoPresentationEvents = {
   'vds-video-presentation-change': VideoPresentationChangeEvent;

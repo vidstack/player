@@ -1,7 +1,8 @@
-import { ExtractEventInit, vdsEvent } from '@base/events/index';
-import { RequestQueue } from '@base/queue';
-import { MediaRequestEvents } from '@media/request.events';
 import { ReactiveController, ReactiveControllerHost } from 'lit';
+
+import { ExtractEventInit, vdsEvent } from '../../base/events';
+import { RequestQueue } from '../../base/queue';
+import { MediaRequestEvents } from '../request.events';
 
 /**
  * A simple facade for dispatching media requests to the nearest media controller.

@@ -1,14 +1,14 @@
-import '@media/define';
-import '@media/test-utils/define';
+import '../../media/define';
+import '../../media/test-utils/define';
 import '../scrubber-preview/define';
 import './define';
 
-import { ifNonEmpty, on } from '@base/directives/index';
-import { StorybookControl } from '@base/storybook/StorybookControl';
-import { createTimeRanges } from '@media/index';
-import { omit } from '@utils/object';
 import { html } from 'lit';
 
+import { ifNonEmpty, on } from '../../base/directives';
+import { StorybookControl } from '../../base/storybook/StorybookControl';
+import { createTimeRanges } from '../../media';
+import { omit } from '../../utils/object';
 import { SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES } from '../scrubber-preview/storybook';
 import { SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES } from '../seekable-progress-bar/element.stories';
 import { TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../time-slider/element.stories';

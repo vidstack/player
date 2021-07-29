@@ -1,21 +1,24 @@
-import { provideContextRecord } from '@base/context/index';
+import { LitElement, ReactiveElement } from 'lit';
+
+import { provideContextRecord } from '../../base/context';
 import {
   DisposalBin,
   eventListener,
   listen,
   redispatchEvent
-} from '@base/events/index';
+} from '../../base/events';
 import {
   FullscreenChangeEvent,
   FullscreenController
-} from '@base/fullscreen/index';
-import { RequestQueue } from '@base/queue/index';
-import { ScreenOrientationController } from '@base/screen-orientation/index';
-import { Constructor } from '@helpers';
-import { getElementAttributes, observeAndForwardAttributes } from '@utils/dom';
-import { isFunction, isNil, isNull } from '@utils/unit';
-import { LitElement, ReactiveElement } from 'lit';
-
+} from '../../base/fullscreen';
+import { RequestQueue } from '../../base/queue';
+import { ScreenOrientationController } from '../../base/screen-orientation';
+import { Constructor } from '../../helpers';
+import {
+  getElementAttributes,
+  observeAndForwardAttributes
+} from '../../utils/dom';
+import { isFunction, isNil, isNull } from '../../utils/unit';
 import { createMediaContextRecord, mediaContext } from '../context';
 import {
   MediaProviderConnectEvent,

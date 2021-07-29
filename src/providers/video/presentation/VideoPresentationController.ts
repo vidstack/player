@@ -1,11 +1,12 @@
+import { PropertyValues, ReactiveElement } from 'lit';
+
 import {
   DisposalBin,
   listen,
   redispatchEvent,
   vdsEvent
-} from '@base/events/index';
-import { isFunction, isNil, noop } from '@utils/unit';
-import { PropertyValues, ReactiveElement } from 'lit';
+} from '../../../base/events';
+import { isFunction, isNil, noop } from '../../../utils/unit';
 
 export type VideoPresentationControllerHost = ReactiveElement & {
   readonly videoElement: HTMLVideoElement | undefined;

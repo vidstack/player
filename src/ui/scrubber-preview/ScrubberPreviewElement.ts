@@ -1,16 +1,3 @@
-import { consumeContext, provideContextRecord } from '@base/context/index';
-import { discover, DiscoveryEvent } from '@base/elements/index';
-import {
-  isPointerEvent,
-  isVdsEvent,
-  VdsEvent,
-  vdsEvent
-} from '@base/events/index';
-import { mediaContext } from '@media/context';
-import { getSlottedChildren, raf } from '@utils/dom';
-import { clampNumber, round } from '@utils/number';
-import { rafThrottle } from '@utils/timing';
-import { isNil } from '@utils/unit';
 import {
   CSSResultGroup,
   html,
@@ -21,6 +8,19 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
+import { consumeContext, provideContextRecord } from '../../base/context';
+import { discover, DiscoveryEvent } from '../../base/elements';
+import {
+  isPointerEvent,
+  isVdsEvent,
+  VdsEvent,
+  vdsEvent
+} from '../../base/events';
+import { mediaContext } from '../../media/context';
+import { getSlottedChildren, raf } from '../../utils/dom';
+import { clampNumber, round } from '../../utils/number';
+import { rafThrottle } from '../../utils/timing';
+import { isNil } from '../../utils/unit';
 import { scrubberContext } from '../scrubber/context';
 import { scrubberPreviewContext } from './context';
 import { scrubberPreviewElementStyles } from './styles';

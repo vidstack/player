@@ -1,10 +1,10 @@
-import { consumeContext } from '@base/context/index';
-import { buildMediaFixture } from '@media/test-utils/index';
 import { elementUpdated, expect } from '@open-wc/testing';
-import { safelyDefineCustomElement } from '@utils/dom';
 import { html, LitElement } from 'lit';
 
+import { consumeContext } from '../../../base/context';
+import { safelyDefineCustomElement } from '../../../utils/dom';
 import { mediaContext } from '../../context';
+import { buildMediaFixture } from '../../test-utils';
 import { createTimeRanges } from '../../time-ranges';
 import { ViewType } from '../../ViewType';
 

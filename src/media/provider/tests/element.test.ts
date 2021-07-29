@@ -1,8 +1,8 @@
 import { expect, oneEvent } from '@open-wc/testing';
-import { isFunction } from '@utils/unit';
 import { mock } from 'sinon';
 
-import { buildMediaFixture } from '../../test-utils/index';
+import { isFunction } from '../../../utils/unit';
+import { buildMediaFixture } from '../../test-utils';
 import {
   MediaProviderConnectEvent,
   MediaProviderElement

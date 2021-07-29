@@ -1,12 +1,12 @@
-import '@media/define';
-import '@media/test-utils/define';
+import '../../media/define';
+import '../../media/test-utils/define';
 import './define';
 
-import { ifNonEmpty, on } from '@base/directives/index';
-import { storybookAction, StorybookControl } from '@base/storybook/index';
-import { pick } from '@utils/object';
 import { html } from 'lit';
 
+import { ifNonEmpty, on } from '../../base/directives';
+import { storybookAction, StorybookControl } from '../../base/storybook';
+import { pick } from '../../utils/object';
 import { SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../slider/element.stories';
 import { TIME_SLIDER_ELEMENT_TAG_NAME } from './TimeSliderElement';
 

@@ -1,6 +1,7 @@
-import { DisposalBin, vdsEvent } from '@base/events';
-import { isNil, isUndefined, notEqual } from '@utils/unit';
 import { ReactiveController, ReactiveControllerHost } from 'lit';
+
+import { isNil, isUndefined, notEqual } from '../../utils/unit';
+import { DisposalBin, vdsEvent } from '../events';
 
 export type ConsumeContextOptions<T> = {
   /**

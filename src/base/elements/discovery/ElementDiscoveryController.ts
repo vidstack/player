@@ -1,5 +1,6 @@
-import { DisposalBin, vdsEvent } from '@base/events/index';
 import { ReactiveElement } from 'lit';
+
+import { DisposalBin, vdsEvent } from '../../events';
 
 export class ElementDiscoveryController<HostElement extends ReactiveElement> {
   protected readonly _disconnectDisposal = new DisposalBin();

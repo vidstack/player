@@ -1,11 +1,11 @@
+import { ReactiveElement } from 'lit';
+
 import {
   DiscoveryEventDetail,
   ElementDiscoveryController,
   ScopedDiscoveryEvent
-} from '@base/elements/discovery/index';
-import { ReactiveElement } from 'lit';
-
-import { DisposalBin, VdsEvent } from '../../events/index';
+} from '../../elements/discovery';
+import { DisposalBin, VdsEvent } from '../../events';
 
 export class ManagedElementConnectEvent<
   ManagedElement extends Element

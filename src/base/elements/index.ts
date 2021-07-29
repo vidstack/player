@@ -1,3 +1,3 @@
-export * from './discovery/index';
-export * from './manager/index';
+export * from './discovery';
+export * from './manager';
 export * from './WithFocus';

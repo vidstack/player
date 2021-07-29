@@ -1,19 +1,19 @@
-import { consumeContext, watchContext } from '@base/context/index';
-import { eventListener, isPointerEvent } from '@base/events/index';
-import { mediaContext, MediaRemoteControl } from '@media/index';
-import { setAttribute } from '@utils/dom';
-import { clampNumber, round } from '@utils/number';
-import { formatSpokenTime } from '@utils/time';
-import { throttle } from '@utils/timing';
 import { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
+import { consumeContext, watchContext } from '../../base/context';
+import { eventListener, isPointerEvent } from '../../base/events';
+import { mediaContext, MediaRemoteControl } from '../../media';
+import { setAttribute } from '../../utils/dom';
+import { clampNumber, round } from '../../utils/number';
+import { formatSpokenTime } from '../../utils/time';
+import { throttle } from '../../utils/timing';
 import {
   SliderDragEndEvent,
   SliderDragStartEvent,
   SliderElement,
   SliderValueChangeEvent
-} from '../slider/index';
+} from '../slider';
 
 export const TIME_SLIDER_ELEMENT_TAG_NAME = 'vds-time-slider';
 

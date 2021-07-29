@@ -1,19 +1,19 @@
-import { consumeContext } from '@base/context/index';
-import { discover, DiscoveryEvent } from '@base/elements/index';
-import { eventListener } from '@base/events/index';
-import {
-  FullscreenChangeEvent,
-  FullscreenController
-} from '@base/fullscreen/index';
-import { ScreenOrientationController } from '@base/screen-orientation/index';
-import { getSlottedChildren } from '@utils/dom';
-import { isNil, isString, isUndefined } from '@utils/unit';
 import clsx from 'clsx';
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { consumeContext } from '../../base/context';
+import { discover, DiscoveryEvent } from '../../base/elements';
+import { eventListener } from '../../base/events';
+import {
+  FullscreenChangeEvent,
+  FullscreenController
+} from '../../base/fullscreen';
+import { ScreenOrientationController } from '../../base/screen-orientation';
+import { getSlottedChildren } from '../../utils/dom';
+import { isNil, isString, isUndefined } from '../../utils/unit';
 import { mediaContext } from '../context';
 import {
   MediaProviderConnectEvent,

@@ -1,12 +1,12 @@
-import '@media/define';
-import '@media/test-utils/define';
+import '../../media/define';
+import '../../media/test-utils/define';
 import './define';
 
-import { ifNonEmpty } from '@base/directives/index';
-import { StorybookControl } from '@base/storybook/index';
-import { omit } from '@utils/object';
 import { html } from 'lit';
 
+import { ifNonEmpty } from '../../base/directives';
+import { StorybookControl } from '../../base/storybook';
+import { omit } from '../../utils/object';
 import { TIME_ELEMENT_STORYBOOK_ARG_TYPES } from '../time/element.stories';
 import { TIME_CURRENT_ELEMENT_TAG_NAME } from './TimeCurrentElement';
 

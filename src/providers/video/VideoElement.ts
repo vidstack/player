@@ -1,13 +1,13 @@
-import { ifNonEmpty, ifNumber } from '@base/directives/index';
-import { vdsEvent } from '@base/events/index';
-import { ViewType } from '@media/index';
 import { CSSResultGroup, html, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';
 
-import { Html5MediaElement } from '../html5/index';
-import { VideoFullscreenController } from './fullscreen/index';
-import { VideoPresentationController } from './presentation/index';
+import { ifNonEmpty, ifNumber } from '../../base/directives';
+import { vdsEvent } from '../../base/events';
+import { ViewType } from '../../media';
+import { Html5MediaElement } from '../html5';
+import { VideoFullscreenController } from './fullscreen';
+import { VideoPresentationController } from './presentation';
 import { videoElementStyles } from './styles';
 
 export const VIDEO_ELEMENT_TAG_NAME = 'vds-video';

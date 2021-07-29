@@ -1,9 +1,9 @@
 import './define';
 
-import { ifNonEmpty, on } from '@base/directives/index';
-import { storybookAction, StorybookControl } from '@base/storybook/index';
 import { html } from 'lit';
 
+import { ifNonEmpty, on } from '../../base/directives';
+import { storybookAction, StorybookControl } from '../../base/storybook';
 import { SLIDER_ELEMENT_TAG_NAME } from './SliderElement';
 
 export const SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {

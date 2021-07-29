@@ -1,7 +1,7 @@
-import { DisposalBin, listen, vdsEvent } from '@base/events/index';
-import { keysOf } from '@utils/object';
 import { ReactiveElement } from 'lit';
 
+import { DisposalBin, listen, vdsEvent } from '../../base/events';
+import { keysOf } from '../../utils/object';
 import { controlsContext } from './context';
 
 /**

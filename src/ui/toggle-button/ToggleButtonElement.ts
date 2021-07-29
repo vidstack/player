@@ -1,9 +1,9 @@
-import { ifNonEmpty, on } from '@base/directives/index';
-import { WithFocus } from '@base/elements/index';
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
+import { ifNonEmpty, on } from '../../base/directives';
+import { WithFocus } from '../../base/elements';
 import { toggleButtonElementStyles } from './styles';
 
 export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';

@@ -1,7 +1,6 @@
 /* c8 ignore next 1000 */
 
-import { vdsEvent } from '@base/events/index';
-
+import { vdsEvent } from '../../../base/events';
 import { CanPlay } from '../../CanPlay';
 import { mediaContext } from '../../context';
 import { MediaProviderElement } from '../../provider/MediaProviderElement';

@@ -1,15 +1,15 @@
+import { ReactiveController, ReactiveControllerHost } from 'lit';
+
 import {
   isReactiveElementProto,
   throwIfTC39Decorator
-} from '@base/elements/decorators';
-import { DisposalBin, listen } from '@base/events/index';
-import { Values } from '@helpers';
-import { MediaEvents } from '@media/events';
-import { keysOf } from '@utils/object';
-import { isFunction, isNil, noop } from '@utils/unit';
-import { ReactiveController, ReactiveControllerHost } from 'lit';
-
+} from '../../base/elements/decorators';
+import { DisposalBin, listen } from '../../base/events';
+import { Values } from '../../helpers';
+import { keysOf } from '../../utils/object';
+import { isFunction, isNil, noop } from '../../utils/unit';
 import { MediaControllerConnectEvent } from '../controller/MediaControllerElement';
+import { MediaEvents } from '../events';
 
 export type MediaEventListenerTuple = Values<
   {

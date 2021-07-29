@@ -1,17 +1,17 @@
-import { vdsEvent } from '@base/events/index';
-import { VolumeChangeEvent } from '@media/events';
-import { MediaRemoteControl } from '@media/interact/index';
-import {
-  buildMediaFixture,
-  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
-} from '@media/test-utils/index';
 import { expect, fixture, oneEvent } from '@open-wc/testing';
-import { raf } from '@utils/dom';
-import { isFunction } from '@utils/unit';
 import { html } from 'lit';
 import { mock, spy } from 'sinon';
 
+import { vdsEvent } from '../../../base/events';
+import { raf } from '../../../utils/dom';
+import { isFunction } from '../../../utils/unit';
 import { CanPlay } from '../../CanPlay';
+import { VolumeChangeEvent } from '../../events';
+import { MediaRemoteControl } from '../../interact';
+import {
+  buildMediaFixture,
+  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
+} from '../../test-utils';
 import { createTimeRanges } from '../../time-ranges';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,

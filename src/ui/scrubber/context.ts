@@ -1,4 +1,4 @@
-import { createContext, derivedContext } from '@base/context/index';
+import { createContext, derivedContext } from '../../base/context';
 
 const dragging = createContext(false);
 const pointing = createContext(false);

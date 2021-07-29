@@ -1,8 +1,7 @@
-import { consumeContext, watchContext } from '@base/context/index';
-import { CanPlay, mediaContext, MediaRemoteControl } from '@media/index';
-import { setAttribute } from '@utils/dom';
-
-import { ToggleButtonElement } from '../toggle-button/index';
+import { consumeContext, watchContext } from '../../base/context';
+import { CanPlay, mediaContext, MediaRemoteControl } from '../../media';
+import { setAttribute } from '../../utils/dom';
+import { ToggleButtonElement } from '../toggle-button';
 
 export const FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
 

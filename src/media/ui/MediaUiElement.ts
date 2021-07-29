@@ -1,6 +1,3 @@
-import { consumeContext } from '@base/context/index';
-import { setAttribute } from '@utils/dom';
-import { IS_IOS } from '@utils/support';
 import {
   CSSResultGroup,
   html,
@@ -10,6 +7,9 @@ import {
 } from 'lit';
 import { state } from 'lit/decorators.js';
 
+import { consumeContext } from '../../base/context';
+import { setAttribute } from '../../utils/dom';
+import { IS_IOS } from '../../utils/support';
 import { mediaContext } from '../context';
 import { mediaUiElementStyles } from './styles';
 

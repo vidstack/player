@@ -1,11 +1,11 @@
 import { elementUpdated, expect } from '@open-wc/testing';
-import { keysOf } from '@utils/object';
-import { equal } from '@utils/unit';
 import sinon, { spy } from 'sinon';
 
+import { keysOf } from '../../../utils/object';
+import { equal } from '../../../utils/unit';
 import { mediaContext } from '../../context';
 import { MediaType } from '../../MediaType';
-import { buildMediaFixture } from '../../test-utils/index';
+import { buildMediaFixture } from '../../test-utils';
 import { createTimeRanges } from '../../time-ranges';
 import { ViewType } from '../../ViewType';
 

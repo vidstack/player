@@ -1,10 +1,10 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
+import { html } from 'lit';
+
 import {
   SCRUBBER_PREVIEW_ELEMENT_TAG_NAME,
   ScrubberPreviewElement
-} from '@ui/scrubber-preview';
-import { html } from 'lit';
-
+} from '../../scrubber-preview';
 import {
   SCRUBBER_PREVIEW_TIME_ELEMENT_TAG_NAME,
   ScrubberPreviewTimeElement

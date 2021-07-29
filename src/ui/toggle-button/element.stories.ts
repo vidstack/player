@@ -1,9 +1,9 @@
 import './define';
 
-import { ifNonEmpty } from '@base/directives/index';
-import { storybookAction, StorybookControl } from '@base/storybook/index';
 import { html } from 'lit';
 
+import { ifNonEmpty } from '../../base/directives';
+import { storybookAction, StorybookControl } from '../../base/storybook';
 import { TOGGLE_BUTTON_ELEMENT_TAG_NAME } from './ToggleButtonElement';
 
 export const TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {

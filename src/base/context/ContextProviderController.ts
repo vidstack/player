@@ -1,7 +1,7 @@
-import { DisposalBin, listen } from '@base/events';
-import { isNil, notEqual } from '@utils/unit';
 import { ReactiveController, ReactiveControllerHost } from 'lit';
 
+import { isNil, notEqual } from '../../utils/unit';
+import { DisposalBin, listen } from '../events';
 import {
   ContextConsumerConnectEvent,
   ContextConsumerConnectEventDetail

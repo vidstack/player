@@ -1,4 +1,4 @@
-import { VdsEvent } from '../../events/index';
+import { VdsEvent } from '../../events';
 
 export type DiscoveryEventDetail<Discoverable extends Element> = {
   element: Discoverable;

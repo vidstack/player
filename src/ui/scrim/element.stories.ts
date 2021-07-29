@@ -1,8 +1,8 @@
 import './define';
 
-import { StorybookControl } from '@base/storybook/index';
 import { html } from 'lit';
 
+import { StorybookControl } from '../../base/storybook';
 import { SCRIM_ELEMENT_TAG_NAME } from './ScrimElement';
 
 export const SCRIM_STORYBOOK_ARG_TYPES = {

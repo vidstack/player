@@ -3,9 +3,8 @@ import {
   ContextProviderRecord,
   createContext,
   derivedContext
-} from '@base/context/index';
-import { keysOf } from '@utils/object';
-
+} from '../base/context';
+import { keysOf } from '../utils/object';
 import { MediaType } from './MediaType';
 import { CloneableTimeRanges, createTimeRanges } from './time-ranges';
 import { ViewType } from './ViewType';

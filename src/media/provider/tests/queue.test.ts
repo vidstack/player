@@ -1,7 +1,7 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { spy, stub } from 'sinon';
 
-import { buildMediaFixture } from '../../test-utils/index';
+import { buildMediaFixture } from '../../test-utils';
 
 describe('MediaProviderElement/queue', function () {
   it('should queue request given provider is not ready and flush once ready', async function () {

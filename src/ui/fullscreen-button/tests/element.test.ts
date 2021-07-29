@@ -1,8 +1,8 @@
-import { buildMediaFixture } from '@media/test-utils/index';
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 import { stub } from 'sinon';
 
+import { buildMediaFixture } from '../../../media/test-utils';
 import {
   FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
   FullscreenButtonElement

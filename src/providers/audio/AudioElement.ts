@@ -1,8 +1,8 @@
-import { ifNonEmpty, ifNumber } from '@base/directives/index';
 import { CSSResultGroup, html, TemplateResult } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 
-import { Html5MediaElement } from '../html5/index';
+import { ifNonEmpty, ifNumber } from '../../base/directives';
+import { Html5MediaElement } from '../html5';
 import { audioElementStyles } from './styles';
 
 export const AUDIO_ELEMENT_TAG_NAME = 'vds-audio';

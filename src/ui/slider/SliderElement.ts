@@ -1,8 +1,3 @@
-import { ifNonEmpty, on } from '@base/directives/index';
-import { WithFocus } from '@base/elements/index';
-import { eventListener, vdsEvent } from '@base/events/index';
-import { clampNumber, getNumberOfDecimalPlaces, round } from '@utils/number';
-import { rafThrottle } from '@utils/timing';
 import {
   CSSResultGroup,
   html,
@@ -14,6 +9,15 @@ import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { ifNonEmpty, on } from '../../base/directives';
+import { WithFocus } from '../../base/elements';
+import { eventListener, vdsEvent } from '../../base/events';
+import {
+  clampNumber,
+  getNumberOfDecimalPlaces,
+  round
+} from '../../utils/number';
+import { rafThrottle } from '../../utils/timing';
 import { sliderElementStyles } from './styles';
 
 export const SLIDER_ELEMENT_TAG_NAME = 'vds-slider';

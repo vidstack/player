@@ -1,8 +1,8 @@
-import { ContextProviderController } from '@base/context';
-import { ElementManager } from '@base/elements/index';
-import { listen, vdsEvent } from '@base/events/index';
 import { ReactiveElement } from 'lit';
 
+import { ContextProviderController } from '../../base/context';
+import { ElementManager } from '../../base/elements';
+import { listen, vdsEvent } from '../../base/events';
 import { controlsContext } from './context';
 import { HideControlsRequestEvent, ShowControlsRequestEvent } from './events';
 import { ManagedControlsConnectEvent } from './ManagedControls';

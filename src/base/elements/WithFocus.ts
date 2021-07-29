@@ -1,6 +1,7 @@
-import { Constructor } from '@helpers';
-import { currentSafariVersion } from '@utils/support';
 import { LitElement } from 'lit';
+
+import { Constructor } from '../../helpers';
+import { currentSafariVersion } from '../../utils/support';
 
 /**
  * A selector selecting focusable nodes.

@@ -1,28 +1,7 @@
 // ** Dependencies **
-import '@ui/time-slider/define';
-import '@ui/seekable-progress-bar/define';
+import '../time-slider/define';
+import '../seekable-progress-bar/define';
 
-import { provideContextRecord, watchContext } from '@base/context/index';
-import { forwardEvent, ifNonEmpty, on } from '@base/directives/index';
-import { WithFocus } from '@base/elements/index';
-import { eventListener } from '@base/events/index';
-import { mediaContext } from '@media/index';
-import {
-  ScrubberPreviewConnectEvent,
-  ScrubberPreviewElement,
-  ScrubberPreviewHideEvent,
-  ScrubberPreviewShowEvent,
-  ScrubberPreviewTimeUpdateEvent
-} from '@ui/scrubber-preview/index';
-import { SeekableProgressBarElement } from '@ui/seekable-progress-bar/index';
-import {
-  SliderDragEndEvent,
-  SliderDragStartEvent,
-  SliderValueChangeEvent
-} from '@ui/slider/events';
-import { TimeSliderElement } from '@ui/time-slider/index';
-import { buildExportPartsAttr, setAttribute } from '@utils/dom';
-import { isNil } from '@utils/unit';
 import {
   CSSResultGroup,
   html,
@@ -33,6 +12,27 @@ import {
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
+import { provideContextRecord, watchContext } from '../../base/context';
+import { forwardEvent, ifNonEmpty, on } from '../../base/directives';
+import { WithFocus } from '../../base/elements';
+import { eventListener } from '../../base/events';
+import { mediaContext } from '../../media';
+import { buildExportPartsAttr, setAttribute } from '../../utils/dom';
+import { isNil } from '../../utils/unit';
+import {
+  ScrubberPreviewConnectEvent,
+  ScrubberPreviewElement,
+  ScrubberPreviewHideEvent,
+  ScrubberPreviewShowEvent,
+  ScrubberPreviewTimeUpdateEvent
+} from '../scrubber-preview';
+import { SeekableProgressBarElement } from '../seekable-progress-bar';
+import {
+  SliderDragEndEvent,
+  SliderDragStartEvent,
+  SliderValueChangeEvent
+} from '../slider/events';
+import { TimeSliderElement } from '../time-slider';
 import { scrubberContext } from './context';
 import { scrubberElementStyles } from './styles';
 

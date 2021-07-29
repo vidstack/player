@@ -1,8 +1,8 @@
-import { buildMediaFixture } from '@media/test-utils/index';
 import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
-import { isFunction } from '@utils/unit';
 import { html } from 'lit';
 
+import { isFunction } from '../../../utils/unit';
+import { buildMediaFixture } from '../../test-utils';
 import { ViewType } from '../../ViewType';
 import {
   MEDIA_CONTAINER_ELEMENT_TAG_NAME,

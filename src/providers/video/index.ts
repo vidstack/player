@@ -1,4 +1,4 @@
-export * from './fullscreen/index';
-export * from './presentation/index';
+export * from './fullscreen';
+export * from './presentation';
 export * from './styles';
 export * from './VideoElement';

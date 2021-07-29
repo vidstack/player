@@ -1,7 +1,8 @@
-import { consumeContext } from '@base/context';
-import { scrubberPreviewContext } from '@ui/scrubber-preview';
-import { TimeElement } from '@ui/time';
 import { property } from 'lit/decorators.js';
+
+import { consumeContext } from '../../base/context';
+import { scrubberPreviewContext } from '../scrubber-preview';
+import { TimeElement } from '../time';
 
 export const SCRUBBER_PREVIEW_TIME_ELEMENT_TAG_NAME =
   'vds-scrubber-preview-time';

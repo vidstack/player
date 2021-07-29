@@ -1,15 +1,14 @@
-import { listen } from '@base/events/index';
+import { listen } from '../../../base/events';
 import {
   FullscreenController,
   FullscreenControllerHost
-} from '@base/fullscreen/index';
-import { ScreenOrientationController } from '@base/screen-orientation/index';
-import { noop } from '@utils/unit';
-
+} from '../../../base/fullscreen';
+import { ScreenOrientationController } from '../../../base/screen-orientation';
+import { noop } from '../../../utils/unit';
 import {
   VideoPresentationChangeEvent,
   VideoPresentationController
-} from '../presentation/index';
+} from '../presentation';
 
 /**
  * Extends the base `FullscreenController` with additional logic for handling fullscreen

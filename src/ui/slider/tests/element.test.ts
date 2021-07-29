@@ -1,7 +1,7 @@
 import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
-import { IS_FIREFOX } from '@utils/support';
 import { html } from 'lit';
 
+import { IS_FIREFOX } from '../../../utils/support';
 import { SLIDER_ELEMENT_TAG_NAME, SliderElement } from '../SliderElement';
 
 window.customElements.define(SLIDER_ELEMENT_TAG_NAME, SliderElement);

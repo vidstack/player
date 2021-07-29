@@ -1,5 +1,4 @@
-import { VdsEvent } from '@base/events/index';
-
+import { VdsEvent } from '../base/events';
 import { MediaType } from './MediaType';
 import { ViewType } from './ViewType';
 
@@ -11,7 +10,7 @@ export type MediaEvents = {
   'vds-emptied': EmptiedEvent;
   'vds-ended': EndedEvent;
   'vds-error': ErrorEvent;
-  'vds-fullscreen-change': import('@base/fullscreen').FullscreenChangeEvent;
+  'vds-fullscreen-change': import('../base/fullscreen').FullscreenChangeEvent;
   'vds-loaded-data': LoadedDataEvent;
   'vds-loaded-metadata': LoadedMetadataEvent;
   'vds-load-start': LoadStartEvent;

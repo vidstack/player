@@ -1,4 +1,4 @@
-import { deferredPromise } from '@utils/promise';
+import { deferredPromise } from '../../utils/promise';
 
 /**
  * @template {string|symbol} RequestKey

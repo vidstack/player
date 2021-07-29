@@ -1,3 +1,6 @@
+import { expect, fixture, oneEvent } from '@open-wc/testing';
+import { html, LitElement } from 'lit';
+
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -8,10 +11,7 @@ import {
   SeekRequestEvent,
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
-} from '@media/request.events';
-import { expect, fixture, oneEvent } from '@open-wc/testing';
-import { html, LitElement } from 'lit';
-
+} from '../../request.events';
 import { MediaRemoteControl } from '../MediaRemoteControl';
 
 class ReferenceElement extends LitElement {

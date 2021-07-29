@@ -1,4 +1,4 @@
-import { storybookAction, StorybookControl } from '@base/storybook/index';
+import { storybookAction, StorybookControl } from '../../base/storybook';
 
 export const SCRUBBER_PREVIEW_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
