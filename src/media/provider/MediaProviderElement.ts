@@ -110,7 +110,7 @@ export abstract class MediaProviderElement extends LitElement {
     super.disconnectedCallback();
     this._connectedQueue.destroy();
     this.mediaRequestQueue.destroy();
-    this._hasFlushedMediaRequestQueueOnce = false;
+    this._shouldSkipNextSrcChangeReset = false;
     this._disconnectDisposal.empty();
   }
 
@@ -576,12 +576,14 @@ export abstract class MediaProviderElement extends LitElement {
     this.mediaRequestQueue.serveImmediately = true;
   }
 
-  protected _hasFlushedMediaRequestQueueOnce = false;
+  protected _shouldSkipNextSrcChangeReset = true;
 
   protected _handleMediaSrcChange() {
+    if (!this.hasUpdated) return;
+
     // Skip first flush to ensure initial properties set make it to the provider.
-    if (!this._hasFlushedMediaRequestQueueOnce) {
-      this._hasFlushedMediaRequestQueueOnce = true;
+    if (this._shouldSkipNextSrcChangeReset) {
+      this._shouldSkipNextSrcChangeReset = false;
       return;
     }
 
