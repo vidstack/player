@@ -58,6 +58,13 @@ export class ContextProviderController<T> implements ReactiveController {
     }
   }
 
+  /**
+   * Whether the provider has attached to an element and is providing the context.
+   */
+  get isConnected() {
+    return this._isProviding;
+  }
+
   constructor(
     protected readonly _host: ReactiveControllerHost,
     public readonly initialValue: T,
@@ -86,12 +93,16 @@ export class ContextProviderController<T> implements ReactiveController {
    */
   setRef(newRef?: Element) {
     if (this._ref !== newRef) {
-      const consumers = new Set(this._consumers);
-      this.stop(false);
-      this._ref = newRef;
-      this.start();
-      consumers.forEach((consumer) => consumer.reconnect());
+      this._handleRefChange(newRef);
     }
+  }
+
+  protected _handleRefChange(newRef?: Element) {
+    const consumers = new Set(this._consumers);
+    this.stop(false);
+    this._ref = newRef;
+    this.start();
+    consumers.forEach((consumer) => consumer.reconnect());
   }
 
   /**

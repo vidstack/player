@@ -4,16 +4,16 @@ import { Context } from './context';
 import { ContextConsumerController } from './ContextConsumerController';
 
 /**
- * Handles managing multiple contexts on a given DOM element (`ref`).
+ * Handles managing multiple context consumers on a given DOM element (`ref`).
  */
-export class ContextConsumerManager implements ReactiveController {
+export abstract class ContextConsumerManager implements ReactiveController {
   protected _ref?: Element;
 
   protected _hasHostConnected = false;
 
   protected readonly _consumers = new Map<
-    string,
-    ContextConsumerController<unknown>
+    Context<any>,
+    ContextConsumerController<any>
   >();
 
   constructor(protected readonly _host: ReactiveControllerHost) {
@@ -21,16 +21,20 @@ export class ContextConsumerManager implements ReactiveController {
     _host.addController(this);
   }
 
-  setRef(newRef: Element) {
+  setRef(newRef?: Element) {
     if (this._ref !== newRef) {
-      this._consumers.forEach((consumer) => {
-        consumer.stop();
-        consumer.setRef(newRef);
-        if (this._hasHostConnected) consumer.start();
-      });
-
-      this._ref = newRef;
+      this._handleRefChange(newRef);
     }
+  }
+
+  protected _handleRefChange(newRef?: Element) {
+    this._consumers.forEach((consumer) => {
+      consumer.stop();
+      consumer.setRef(newRef);
+      if (this._hasHostConnected) consumer.start();
+    });
+
+    this._ref = newRef;
   }
 
   hostConnected() {
@@ -43,27 +47,53 @@ export class ContextConsumerManager implements ReactiveController {
     this._consumers.forEach((consumer) => consumer.stop());
   }
 
-  addContext(key: string, context: Context<unknown>) {
+  addContext(context: Context<any>) {
+    if (this._consumers.has(context)) return this._consumers.get(context)!;
+
+    let init = false;
+
     const consumer = context.consume(this._host, {
-      onConnect: () => this._handleContextConnect(key),
-      onUpdate: (value) => this._handleContextUpdate(key, value),
-      onDisconnect: () => this._handleContextDisconnect(key)
+      onConnect: () => {
+        if (init) this._handleContextConnect(consumer);
+      },
+      onUpdate: () => {
+        if (init) this._handleContextUpdate(consumer);
+      },
+      onDisconnect: () => {
+        if (init) this._handleContextDisconnect(consumer);
+      }
     });
+
+    init = true;
+
+    // First pass won't be called since `init` would be false.
+    if (consumer.isConnected) {
+      this._handleContextConnect(consumer);
+      this._handleContextUpdate(consumer);
+    }
 
     consumer.setRef(this._ref);
     if (this._hasHostConnected) consumer.start();
 
-    this._consumers.set(key, consumer);
+    this._consumers.set(context, consumer);
+
+    return consumer;
   }
 
-  removeContext(key: string) {
-    this._consumers.get(key)?.stop();
-    this._consumers.delete(key);
+  removeContext(context: Context<any>) {
+    this._consumers.get(context)?.stop();
+    this._consumers.delete(context);
   }
 
-  protected _handleContextConnect(key: string) {}
+  protected abstract _handleContextConnect(
+    consumer: ContextConsumerController<any>
+  );
 
-  protected _handleContextUpdate(key: string, value: unknown) {}
+  protected abstract _handleContextUpdate(
+    consumer: ContextConsumerController<any>
+  );
 
-  protected _handleContextDisconnect(key: string) {}
+  protected abstract _handleContextDisconnect(
+    consumer: ContextConsumerController<any>
+  );
 }

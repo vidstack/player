@@ -26,13 +26,13 @@ export type ConsumeContextOptions<T> = {
    */
   onUpdate?(newValue: T): void;
   /**
-   * Used to transform the consumed value as it's updated.
-   */
-  transform?: (newValue: T) => T;
-  /**
    * Called when the host controller has disconnected from the DOM or from a connected provider.
    */
   onDisconnect?(): void;
+  /**
+   * Used to transform the consumed value as it's updated.
+   */
+  transform?: (newValue: T) => T;
 };
 
 export class ContextConsumerController<T> implements ReactiveController {
@@ -52,6 +52,13 @@ export class ContextConsumerController<T> implements ReactiveController {
 
   get value() {
     return this._value;
+  }
+
+  /**
+   * Whether the consumer is currently connected to a provider.
+   */
+  get isConnected() {
+    return this._hasConnectedToProvider;
   }
 
   constructor(
@@ -109,9 +116,10 @@ export class ContextConsumerController<T> implements ReactiveController {
    * Stop consuming context.
    */
   stop() {
+    if (!this._hasConnectedToProvider) return;
     this._disposal.empty();
-    this._hasConnectedToProvider = false;
     this._options.onDisconnect?.();
+    this._hasConnectedToProvider = false;
   }
 
   /**
