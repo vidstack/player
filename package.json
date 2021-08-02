@@ -12,6 +12,7 @@
   "files": [
     "dist/",
     "dist-prod/",
+    "bundle/",
     "index.d.ts",
     "define.d.ts",
     "custom-elements.json"
@@ -29,6 +30,13 @@
     "./*": {
       "default": "./dist-prod/*",
       "development": "./dist/*"
+    },
+    "./bundle": {
+      "default": "./bundle/prod.js",
+      "development": "./bundle/dev.js"
+    },
+    "./bundle/*": {
+      "default": "./bundle/*"
     },
     "./define": {
       "default": "./dist-prod/bundle/define.js",

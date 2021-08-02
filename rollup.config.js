@@ -7,11 +7,15 @@ import { sync as globSync } from 'fast-glob';
 import { terser } from 'rollup-plugin-terser';
 
 const ENTRY_POINTS = globSync('dist/**/*.js');
-
 const OUTPUT_DIR = 'dist-prod';
 
 const EXTERNAL_LIBS = ['lit', 'tslib'];
 const RESOLVE_ONLY = ['fscreen'];
+
+const GLOBALS = {
+  lit: 'lit',
+  tslib: 'tslib'
+};
 
 // In CHECKSIZE mode we:
 // 1) Don't emit any files.
@@ -49,33 +53,70 @@ const terserOptions = {
   module: true
 };
 
-export default {
-  input: ENTRY_POINTS,
-  output: {
-    format: 'esm',
-    dir: OUTPUT_DIR,
-    preserveModules: true,
-    preserveModulesRoot: 'dist',
-    sourcemap: !CHECK_SIZE
-  },
-  external: EXTERNAL_LIBS,
-  plugins: [
-    minifyHTML(),
-    resolve({
-      exportConditions: ['production'],
-      resolveOnly: RESOLVE_ONLY
+const PLUGINS = ({ minify = true, nodeResolve = {} }) => [
+  minify && minifyHTML(),
+  resolve({
+    exportConditions: minify ? ['production'] : [],
+    ...nodeResolve
+  }),
+  commonjs(),
+  /**
+   * This plugin automatically composes the existing TypeScript -> raw JS sourcemap with the
+   * raw JS -> minified JS one that we're generating here.
+   */
+  sourcemaps(),
+  minify && terser(terserOptions),
+  CHECK_SIZE && summary({}),
+  CHECK_SIZE && skipBundleOutput()
+];
+
+export default [
+  {
+    input: ENTRY_POINTS,
+    output: {
+      format: 'esm',
+      dir: OUTPUT_DIR,
+      preserveModules: true,
+      preserveModulesRoot: 'dist',
+      sourcemap: !CHECK_SIZE
+    },
+    external: EXTERNAL_LIBS,
+    plugins: PLUGINS({
+      minify: true,
+      nodeResolve: {
+        resolveOnly: RESOLVE_ONLY
+      }
     }),
-    commonjs(),
-    /**
-     * This plugin automatically composes the existing TypeScript -> raw JS sourcemap with the
-     * raw JS -> minified JS one that we're generating here.
-     */
-    sourcemaps(),
-    terser(terserOptions),
-    CHECK_SIZE && summary({}),
-    CHECK_SIZE && skipBundleOutput()
-  ],
-  watch: {
-    clearScreen: false
+    watch: {
+      clearScreen: false
+    }
+  },
+  {
+    input: 'dist/bundle/define.js',
+    output: {
+      name: 'Vidstack',
+      format: 'iife',
+      file: 'bundle/dev.js',
+      globals: GLOBALS,
+      sourcemap: !CHECK_SIZE
+    },
+    external: EXTERNAL_LIBS,
+    plugins: PLUGINS({
+      minify: false
+    })
+  },
+  {
+    input: 'dist/bundle/define.js',
+    output: {
+      name: 'Vidstack',
+      format: 'iife',
+      file: 'bundle/prod.js',
+      globals: GLOBALS,
+      sourcemap: !CHECK_SIZE
+    },
+    external: EXTERNAL_LIBS,
+    plugins: PLUGINS({
+      minify: true
+    })
   }
-};
+];
