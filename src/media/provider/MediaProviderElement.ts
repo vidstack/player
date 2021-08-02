@@ -598,7 +598,6 @@ export abstract class MediaProviderElement extends LitElement {
     }
 
     this.mediaRequestQueue.serveImmediately = false;
-    this.mediaRequestQueue.reset();
     this._softResetMediaContext();
   }
 
