@@ -12,5 +12,12 @@
     "useDefineForClassFields": false
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.js", "src/**/*.test.ts", "src/**/*.stories.js"]
+  "exclude": [
+    "src/**/*.test.js",
+    "src/**/*.test.ts",
+    "src/base/storybook",
+    "src/**/*.stories.ts",
+    "src/**/storybook.ts",
+    "src/media/test-utils"
+  ]
 }
