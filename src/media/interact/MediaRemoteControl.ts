@@ -104,6 +104,30 @@ export class MediaRemoteControl implements ReactiveController {
     });
   }
 
+  showControls(event?: Event) {
+    this._dispatchRequest('vds-show-controls-request', {
+      originalEvent: event
+    });
+  }
+
+  hideControls(event?: Event) {
+    this._dispatchRequest('vds-hide-controls-request', {
+      originalEvent: event
+    });
+  }
+
+  resumeIdleTracking(event?: Event) {
+    this._dispatchRequest('vds-resume-idle-tracking-request', {
+      originalEvent: event
+    });
+  }
+
+  pauseIdleTracking(event?: Event) {
+    this._dispatchRequest('vds-pause-idle-tracking-request', {
+      originalEvent: event
+    });
+  }
+
   protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(
     type: EventType,
     eventInit: ExtractEventInit<MediaRequestEvents[EventType]>

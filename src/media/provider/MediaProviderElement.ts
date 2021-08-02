@@ -129,6 +129,7 @@ export abstract class MediaProviderElement extends LitElement {
    * However, autoplay can be useful when creating media elements whose source will be set at a
    * later time, under user control.
    *
+   * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay
    */
   @property({ type: Boolean, reflect: true })
@@ -140,6 +141,7 @@ export abstract class MediaProviderElement extends LitElement {
    * provider to supply its own default controls. Depending on the provider, changing this prop
    * may cause the player to completely reset.
    *
+   * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls
    */
   @property({ type: Boolean, reflect: true })
@@ -160,6 +162,8 @@ export abstract class MediaProviderElement extends LitElement {
    * that setting this to `false` does not imply that the video will always be played in fullscreen.
    * Depending on the provider, changing this prop may cause the player to completely reset.
    *
+   * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-playsinline
    */
   @property({ type: Boolean, reflect: true })
   playsinline = false;
@@ -242,6 +246,7 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * Whether the audio is muted or not.
    *
+   * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted
    */
   @property({ type: Boolean, reflect: true })
@@ -302,6 +307,7 @@ export abstract class MediaProviderElement extends LitElement {
    * content.
    *
    * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
    */
   get canPlay() {
     return this.ctx.canPlay;
@@ -313,6 +319,7 @@ export abstract class MediaProviderElement extends LitElement {
    * of content.
    *
    * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
    */
   get canPlayThrough() {
     return this.ctx.canPlayThrough;
@@ -321,6 +328,8 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * The URL of the current poster. Defaults to `''` if no media/poster has been given or
    * loaded.
+   *
+   * @default ''
    */
   get currentPoster() {
     return this.ctx.currentPoster;
@@ -375,6 +384,7 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * Whether the current media is a live stream.
    *
+   * @default false
    */
   get live() {
     return this.ctx.live;

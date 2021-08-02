@@ -1,4 +1,7 @@
 import { VdsEvent } from '../base/events';
+import { FullscreenChangeEvent } from '../base/fullscreen';
+import { ControlsChangeEvent } from './controller/controls';
+import { IdleChangeEvent } from './controller/idle';
 import { MediaType } from './MediaType';
 import { ViewType } from './ViewType';
 
@@ -6,11 +9,13 @@ export type MediaEvents = {
   'vds-abort': AbortEvent;
   'vds-can-play': CanPlayEvent;
   'vds-can-play-through': CanPlayThroughEvent;
+  'vds-controls-change': ControlsChangeEvent;
   'vds-duration-change': DurationChangeEvent;
   'vds-emptied': EmptiedEvent;
   'vds-ended': EndedEvent;
   'vds-error': ErrorEvent;
-  'vds-fullscreen-change': import('../base/fullscreen').FullscreenChangeEvent;
+  'vds-fullscreen-change': FullscreenChangeEvent;
+  'vds-idle-change': IdleChangeEvent;
   'vds-loaded-data': LoadedDataEvent;
   'vds-loaded-metadata': LoadedMetadataEvent;
   'vds-load-start': LoadStartEvent;

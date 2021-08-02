@@ -2,7 +2,6 @@ export * from './CanPlay';
 export * from './container';
 export * from './context';
 export * from './controller';
-export * from './controls';
 export * from './events';
 export * from './interact';
 export * from './MediaType';

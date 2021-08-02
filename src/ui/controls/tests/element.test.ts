@@ -25,7 +25,11 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
   it('should render DOM correctly', async function () {
     const { controls } = await buildFixture();
     expect(controls).dom.to.equal(`
-      <vds-controls media-paused media-view-type="unknown">
+      <vds-controls
+        hidden
+        media-paused
+        media-view-type="unknown"
+      >
         <div class="slot"></div>
       </vds-controls>
     `);
@@ -56,11 +60,11 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
 
   it('should toggle `idle` attribute', async function () {
     const { controller, controls } = await buildFixture();
-    controller.idleObserver.timeout = 0;
-    controller.idleObserver.start();
+    controller.idleManager.timeout = 0;
+    controller.idleManager.start();
     await oneEvent(controller, 'vds-idle-change');
     expect(controls).to.have.attribute('idle');
-    await controller.idleObserver.stop();
+    await controller.idleManager.stop();
     await elementUpdated(controls);
     expect(controls).to.not.have.attribute('idle');
   });

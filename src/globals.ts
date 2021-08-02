@@ -6,8 +6,6 @@ import { ContextEvents } from './base/context';
 import { FullscreenEvents } from './base/fullscreen';
 import { ScreenOrientationEvents } from './base/screen-orientation';
 import {
-  ControlsEvents,
-  IdleEvents,
   ManagedControlsConnectEvent,
   MediaContainerConnectEvent,
   MediaControllerConnectEvent,
@@ -25,11 +23,9 @@ import { SliderEvents } from './ui/slider';
 
 declare global {
   interface GlobalEventHandlersEventMap
-    extends ControlsEvents,
-      ContextEvents,
+    extends ContextEvents,
       FullscreenEvents,
       HlsEvents,
-      IdleEvents,
       MediaEvents,
       MediaRequestEvents,
       ScreenOrientationEvents,

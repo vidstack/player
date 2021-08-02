@@ -1,11 +1,16 @@
 import { ReactiveElement } from 'lit';
 
-import { ContextProviderController } from '../../base/context';
-import { ElementManager } from '../../base/elements';
-import { listen, vdsEvent } from '../../base/events';
-import { controlsContext } from './context';
+import { ElementManager } from '../../../base/elements';
+import { listen, vdsEvent } from '../../../base/events';
+import { mediaContext } from '../../context';
 import { HideControlsRequestEvent, ShowControlsRequestEvent } from './events';
 import { ManagedControlsConnectEvent } from './ManagedControls';
+
+export type ControlsManagerHost = ReactiveElement & {
+  readonly ctx: {
+    customControls: boolean;
+  };
+};
 
 /**
  * A registry for all media controls that:
@@ -13,25 +18,22 @@ import { ManagedControlsConnectEvent } from './ManagedControls';
  * - Listens for new controls connecting in the DOM and adds them to the registry.
  * - Manages showing and hiding all controls in-sync.
  * - Listens for relevant requests such as `ShowControlsRequestEvent` and handles them.
- * - Updates `controlsContext.hidden`.
+ * - Updates `mediaContext.customControls`.
  */
 export class ControlsManager extends ElementManager<ReactiveElement> {
   protected static override get _ScopedDiscoveryEvent() {
     return ManagedControlsConnectEvent;
   }
 
-  protected readonly _hidden: ContextProviderController<boolean>;
-
   /**
    * Whether controls are currently hidden.
    */
   get isHidden(): boolean {
-    return this._hidden.value;
+    return !this._host.ctx.customControls;
   }
 
-  constructor(host: ReactiveElement) {
-    super(host);
-    this._hidden = controlsContext.hidden.provide(host);
+  constructor(protected override readonly _host: ControlsManagerHost) {
+    super(_host);
   }
 
   protected override _handleHostConnected() {
@@ -54,14 +56,18 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
     );
   }
 
+  protected _setHiddenContext(isHidden) {
+    this._host.ctx.customControls = !isHidden;
+  }
+
   /**
    * Show all controls.
    *
    * @param request
    */
   async show(request?: Event): Promise<void> {
-    if (!this._hidden.value) return;
-    this._hidden.value = false;
+    if (!this.isHidden) return;
+    this._setHiddenContext(false);
     await this.waitForUpdateComplete();
     this._handleControlsChange(request);
   }
@@ -72,8 +78,8 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
    * @param request
    */
   async hide(request?: Event): Promise<void> {
-    if (this._hidden.value) return;
-    this._hidden.value = true;
+    if (this.isHidden) return;
+    this._setHiddenContext(true);
     await this.waitForUpdateComplete();
     this._handleControlsChange(request);
   }
@@ -89,10 +95,10 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
     );
   }
 
-  private _prevHiddenValue = controlsContext.hidden.initialValue;
+  private _prevHiddenValue = mediaContext.customControls.initialValue;
 
   protected _handleControlsChange(request?: Event): void {
-    if (this._hidden.value === this._prevHiddenValue) return;
+    if (this.isHidden === this._prevHiddenValue) return;
 
     this._host.dispatchEvent(
       vdsEvent('vds-controls-change', {
@@ -101,7 +107,7 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
       })
     );
 
-    this._prevHiddenValue = this._hidden.value;
+    this._prevHiddenValue = this.isHidden;
   }
 
   protected async _handleShowControlsRequest(

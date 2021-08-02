@@ -1,12 +1,7 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
 import { watchContext } from '../../base/context';
-import {
-  controlsContext,
-  ManagedControls,
-  mediaContext,
-  ViewType
-} from '../../media';
+import { ManagedControls, mediaContext, ViewType } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { controlsElementStyles } from './styles';
 
@@ -18,7 +13,7 @@ export const CONTROLS_ELEMENT_TAG_NAME = 'vds-controls';
  * 💡 The following attributes are updated for your styling needs:
  *
  * - `hidden`: Applied when the controls should be hidden and not available to the user.
- * - `idle`: Applied when there is no user activity for a given period, `hidden` should have greater priority.
+ * - `idle`: Applied when there is no user activity for a set period, `hidden` should have greater priority.
  * - `media-can-play`: Applied when media can begin playback.
  * - `media-paused`: Applied when media is paused.
  * - `media-view-type`: Applied with the media view type such as `audio` or `video`.
@@ -40,10 +35,6 @@ export const CONTROLS_ELEMENT_TAG_NAME = 'vds-controls';
  *   transition: opacity 0.3s ease-out;
  * }
  *
- * vds-controls[hidden] {
- *   display: none;
- * }
- *
  * vds-controls[idle] {
  *   opacity: 0;
  * }
@@ -60,13 +51,13 @@ export class ControlsElement extends LitElement {
     return html`<slot></slot>`;
   }
 
-  @watchContext(controlsContext.hidden)
-  protected _handleControlsHiddenContextUpdate(hidden: boolean) {
-    setAttribute(this, 'hidden', hidden);
+  @watchContext(mediaContext.customControls)
+  protected _handleCustomControlsContextUpdate(showing: boolean) {
+    setAttribute(this, 'hidden', !showing);
   }
 
-  @watchContext(controlsContext.idle)
-  protected _handleControlsIdleContextUpdate(idle: boolean) {
+  @watchContext(mediaContext.idle)
+  protected _handleIdleContextUpdate(idle: boolean) {
     setAttribute(this, 'idle', idle);
   }
 

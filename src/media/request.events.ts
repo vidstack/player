@@ -1,4 +1,12 @@
 import { VdsEvent } from '../base/events';
+import {
+  HideControlsRequestEvent,
+  ShowControlsRequestEvent
+} from './controller/controls';
+import {
+  PauseIdleTrackingRequestEvent,
+  ResumeIdleTrackingRequestEvent
+} from './controller/idle';
 
 export type MediaRequestEvents = {
   'vds-mute-request': MuteRequestEvent;
@@ -10,6 +18,10 @@ export type MediaRequestEvents = {
   'vds-seek-request': SeekRequestEvent;
   'vds-seeking-request': SeekingRequestEvent;
   'vds-volume-change-request': VolumeChangeRequestEvent;
+  'vds-show-controls-request': ShowControlsRequestEvent;
+  'vds-hide-controls-request': HideControlsRequestEvent;
+  'vds-resume-idle-tracking-request': ResumeIdleTrackingRequestEvent;
+  'vds-pause-idle-tracking-request': PauseIdleTrackingRequestEvent;
 };
 
 /**

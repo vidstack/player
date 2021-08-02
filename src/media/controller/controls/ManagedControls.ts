@@ -3,7 +3,7 @@ import { ReactiveElement } from 'lit';
 import {
   ManagedElement,
   ManagedElementConnectEvent
-} from '../../base/elements';
+} from '../../../base/elements';
 
 /**
  * Fired when connecting a new controls manager with the `MediaControllerElement`.

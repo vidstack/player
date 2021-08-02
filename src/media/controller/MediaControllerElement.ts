@@ -1,4 +1,5 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import { property } from 'lit/decorators.js';
 
 import { ExtractContextRecordTypes } from '../../base/context';
 import { discover, DiscoveryEvent } from '../../base/elements';
@@ -9,7 +10,6 @@ import {
   MediaContainerElement
 } from '../container';
 import { cloneMediaContextRecord, mediaContext } from '../context';
-import { ControlsManager, IdleObserver } from '../controls';
 import {
   EnterFullscreenRequestEvent,
   ExitFullscreenRequestEvent,
@@ -21,6 +21,8 @@ import {
   UnmuteRequestEvent,
   VolumeChangeRequestEvent
 } from '../request.events';
+import { ControlsManager } from './controls';
+import { IdleManager } from './idle';
 import { mediaControllerStyles } from './styles';
 import { WithMediaProviderBridge } from './WithMediaProviderBridge';
 
@@ -87,7 +89,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   readonly controlsManager = new ControlsManager(this);
 
-  readonly idleObserver = new IdleObserver(this);
+  readonly idleManager = new IdleManager(this);
 
   /**
    * An immutable snapshot of the current media state.
@@ -96,10 +98,43 @@ export class MediaControllerElement extends WithMediaProviderBridge(
     return cloneMediaContextRecord(this.ctx);
   }
 
+  /**
+   * Indicates whether a custom user interface should be shown for controlling the resource. If
+   * `true`, it is expected that `controls` is set to `false` (the default) to avoid double
+   * controls. The `controls` property refers to native controls.
+   *
+   * @default false
+   */
+  @property({ attribute: 'custom-controls', type: Boolean, reflect: true })
+  get customControls() {
+    return !this.controlsManager.isHidden;
+  }
+
+  set customControls(isShowing) {
+    if (isShowing) {
+      this.controlsManager.show();
+    } else {
+      this.controlsManager.hide();
+    }
+  }
+
+  /**
+   * The amount of time in `ms` to pass before considering the user to be idle (not active).
+   *
+   * @default 3000
+   */
+  @property({ attribute: 'idle-timeout', type: Number })
+  get idleTimeout() {
+    return this.idleManager.timeout;
+  }
+
+  set idleTimeout(timeout) {
+    this.idleManager.timeout = timeout;
+  }
+
   // -------------------------------------------------------------------------------------------
   // Media Container
   // -------------------------------------------------------------------------------------------
-
   protected _mediaContainer: MediaContainerElement | undefined;
 
   /**

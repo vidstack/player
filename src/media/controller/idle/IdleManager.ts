@@ -1,19 +1,23 @@
 import { ReactiveElement } from 'lit';
 
-import { DisposalBin, listen, vdsEvent } from '../../base/events';
-import { keysOf } from '../../utils/object';
-import { controlsContext } from './context';
+import { DisposalBin, listen, vdsEvent } from '../../../base/events';
+import { keysOf } from '../../../utils/object';
+import { mediaContext } from '../../context';
+
+export type IdleManagerHost = ReactiveElement & {
+  readonly ctx: {
+    idle: boolean;
+  };
+};
 
 /**
  * Tracks user activity and determines when they are idle/inactive. Elements can dispatch requests
  * to pause/resume tracking idle state.
  */
-export class IdleObserver {
-  constructor(
-    protected readonly _host: ReactiveElement,
-    protected readonly _idle = controlsContext.idle.provide(_host),
-    protected readonly _disposal = new DisposalBin()
-  ) {
+export class IdleManager {
+  protected readonly _disposal = new DisposalBin();
+
+  constructor(protected readonly _host: IdleManagerHost) {
     _host.addController({
       hostConnected: () => {
         const eventHandlers = {
@@ -22,8 +26,8 @@ export class IdleObserver {
           keydown: this._handleUserInteraction,
           click: this._handleUserInteraction,
           pointermove: this._handleUserInteraction,
-          'vds-pause-idle-tracking': this._handlePauseIdleTracking,
-          'vds-resume-idle-tracking': this._handleResumeIdleTracking
+          'vds-resume-idle-tracking-request': this._handleResumeIdleTracking,
+          'vds-pause-idle-tracking-request': this._handlePauseIdleTracking
         };
 
         keysOf(eventHandlers).forEach((eventType) => {
@@ -53,7 +57,7 @@ export class IdleObserver {
    * Whether there has been no user activity for the given `timeout` period or greater.
    */
   get isIdle(): boolean {
-    return this._idle.value;
+    return this._host.ctx.idle;
   }
 
   protected _handleUserInteraction(request?: Event) {
@@ -61,6 +65,10 @@ export class IdleObserver {
   }
 
   protected _timeoutId = -1;
+
+  protected _setIdleContext(isIdle: boolean) {
+    this._host.ctx.idle = isIdle;
+  }
 
   /**
    * Start tracking idle state. If `pause` is called this method will do nothing until `resume`
@@ -72,7 +80,7 @@ export class IdleObserver {
     this.stop(request);
     if (this._preventIdling) return;
     this._timeoutId = window.setTimeout(() => {
-      this._idle.value = true;
+      this._setIdleContext(true);
       this._handleIdleChange(request);
     }, this.timeout);
   }
@@ -104,14 +112,14 @@ export class IdleObserver {
    */
   stop(request?: Event) {
     window.clearTimeout(this._timeoutId);
-    this._idle.value = false;
+    this._setIdleContext(false);
     this._handleIdleChange(request);
   }
 
-  private _prevIdleValue = controlsContext.idle.initialValue;
+  private _prevIdleValue = mediaContext.idle.initialValue;
 
   protected _handleIdleChange(request?: Event) {
-    if (this._idle.value === this._prevIdleValue) return;
+    if (this.isIdle === this._prevIdleValue) return;
 
     this._host.dispatchEvent(
       vdsEvent('vds-idle-change', {
@@ -120,16 +128,16 @@ export class IdleObserver {
       })
     );
 
-    this._prevIdleValue = this._idle.value;
-  }
-
-  protected _handlePauseIdleTracking(request?: Event) {
-    request?.stopPropagation();
-    this.pause();
+    this._prevIdleValue = this.isIdle;
   }
 
   protected _handleResumeIdleTracking(request?: Event) {
     request?.stopPropagation();
     this.resume();
+  }
+
+  protected _handlePauseIdleTracking(request?: Event) {
+    request?.stopPropagation();
+    this.pause();
   }
 }
