@@ -24,6 +24,12 @@
     "default-case": "off",
     "max-classes-per-file": "off",
     "no-console": "off",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["bundle"]
+      }
+    ],
     "no-underscore-dangle": "off",
     "simple-import-sort/exports": "error",
     "simple-import-sort/imports": "error",
