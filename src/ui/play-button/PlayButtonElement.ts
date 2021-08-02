@@ -13,6 +13,7 @@ export const PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
  * - `media-can-play`: Applied when media can begin playback.
  * - `media-paused`: Applied when media playback has paused.
  * - `media-waiting`: Applied when playback has stopped because of a lack of temporary data.
+ * - `media-ended`: Applied when playback has reached the end.
  *
  * @tagname vds-play-button
  * @slot - Used to pass content into the play toggle for showing play/pause states.
