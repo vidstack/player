@@ -15,7 +15,7 @@ class MyElement extends LitElement {
     return this.shadowRoot?.querySelector('div');
   }
 
-  render() {
+  override render() {
     return html`
       <div
         ${on('click', (e) => this.handleClick(e), this.clickOptions)}

@@ -9,7 +9,7 @@ import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { ifNonEmpty, on } from '../../base/directives';
+import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { eventListener, vdsEvent } from '../../base/events';
 import {
@@ -284,7 +284,7 @@ export class SliderElement extends WithFocus(LitElement) {
           '--vds-slider-fill-rate': String(this.fillRate),
           '--vds-slider-fill-percent': `${this.fillPercent}%`
         })}
-        ${on('pointerdown', this._handleSliderPointerMove)}
+        @pointerdown=${this._handleSliderPointerMove}
         ${ref(this._rootRef)}
       >
         ${this._renderSliderChildren()}
@@ -335,8 +335,8 @@ export class SliderElement extends WithFocus(LitElement) {
         aria-hidden=${this.hidden}
         autocomplete="off"
         part="thumb-container"
-        ${on('keydown', this._handleThumbContainerKeydown)}
-        ${on('pointerdown', this._handleThumbContainerPointerDown)}
+        @keydown=${this._handleThumbContainerKeydown}
+        @pointerdown=${this._handleThumbContainerPointerDown}
         ${ref(this._thumbContainerRef)}
       >
         ${this._renderThumb()} ${this._renderThumbContainerSlot()}

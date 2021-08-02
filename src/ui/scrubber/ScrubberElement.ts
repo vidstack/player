@@ -13,9 +13,9 @@ import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { provideContextRecord, watchContext } from '../../base/context';
-import { forwardEvent, ifNonEmpty, on } from '../../base/directives';
+import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
-import { eventListener } from '../../base/events';
+import { eventListener, redispatchEvent } from '../../base/events';
 import { mediaContext } from '../../media';
 import { buildExportPartsAttr, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
@@ -265,12 +265,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
         value-text=${this.valueText}
         ?disabled=${this.disabled}
         ?hidden=${this.hidden}
-        ${on('vds-slider-drag-start', this._handleSliderDragStart)}
-        ${on('vds-slider-value-change', this._handleSliderValueChange)}
-        ${on('vds-slider-drag-end', this._handleSliderDragEnd)}
-        ${forwardEvent('vds-slider-drag-start')}
-        ${forwardEvent('vds-slider-value-change')}
-        ${forwardEvent('vds-slider-drag-end')}
         ${ref(this._timeSliderRef)}
       >
         ${this._renderTimeSliderChildren()}
@@ -286,23 +280,29 @@ export class ScrubberElement extends WithFocus(LitElement) {
     return html`<slot></slot>`;
   }
 
+  @eventListener('vds-slider-drag-start')
   protected _handleSliderDragStart(event: SliderDragStartEvent) {
     if (this.disabled) return;
     this.ctx.dragging = true;
     this.setAttribute('dragging', '');
     this.scrubberPreviewElement?.showPreview(event);
+    redispatchEvent(this, event);
   }
 
+  @eventListener('vds-slider-value-change')
   protected _handleSliderValueChange(event: SliderValueChangeEvent) {
     if (this.disabled) return;
     this.scrubberPreviewElement?.updatePreviewPosition(event);
+    redispatchEvent(this, event);
   }
 
+  @eventListener('vds-slider-drag-end')
   protected _handleSliderDragEnd(event: SliderDragEndEvent) {
     if (this.disabled) return;
     this.ctx.dragging = false;
     this.removeAttribute('dragging');
     if (!this.ctx.pointing) this.scrubberPreviewElement?.hidePreview(event);
+    redispatchEvent(this, event);
   }
 
   // -------------------------------------------------------------------------------------------

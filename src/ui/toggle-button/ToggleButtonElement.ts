@@ -2,8 +2,9 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty, on } from '../../base/directives';
+import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
+import { eventListener } from '../../base/events';
 import { toggleButtonElementStyles } from './styles';
 
 export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
@@ -104,8 +105,7 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
         aria-pressed=${this._pressed ? 'true' : 'false'}
         aria-described-by=${ifNonEmpty(this.describedBy)}
         ?disabled=${this.disabled}
-        ${on('click', this._handleButtonClick)}
-        ${on('click', this._handleButtonClickCapture, { capture: true })}
+        @click=${this._handleButtonClick}
         ${ref(this._buttonRef)}
       >
         ${this._renderButtonChildren()}
@@ -130,6 +130,7 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
     this._pressed = !this._pressed;
   }
 
+  @eventListener('click', { capture: true })
   protected _handleButtonClickCapture(event: Event) {
     if (this.disabled) {
       event.preventDefault();
