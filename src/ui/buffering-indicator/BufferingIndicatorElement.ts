@@ -15,6 +15,7 @@ export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
  *
  * - `media-can-play`: Applied when media can begin playback.
  * - `media-waiting`: Applied when playback has stopped because of a lack of temporary data.
+ * - `media-ended`: Applied when playback has reached the end.
  *
  * @tagname vds-buffering-indicator
  * @slot Used to pass in the content to be displayed while buffering.
@@ -55,5 +56,10 @@ export class BufferingIndicatorElement extends LitElement {
   @watchContext(mediaContext.waiting)
   protected _handleWaitingContextUpdate(waiting: boolean) {
     setAttribute(this, 'media-waiting', waiting);
+  }
+
+  @watchContext(mediaContext.ended)
+  protected _handleEndedContextUpdate(ended: boolean) {
+    setAttribute(this, 'media-ended', ended);
   }
 }

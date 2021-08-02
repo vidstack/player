@@ -61,4 +61,15 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.not.have.attribute('media-waiting');
   });
+
+  it('should toggle `media-ended` attribute', async function () {
+    const { provider, bufferingIndicator } = await buildFixture();
+    provider.forceMediaReady();
+    provider.ctx.ended = true;
+    await elementUpdated(bufferingIndicator);
+    expect(bufferingIndicator).to.have.attribute('media-ended');
+    provider.ctx.ended = false;
+    await elementUpdated(bufferingIndicator);
+    expect(bufferingIndicator).to.not.have.attribute('media-ended');
+  });
 });
