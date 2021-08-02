@@ -164,7 +164,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
    * in a string containing `{currentTime}` or `{duration}` templates they'll be replaced with
    * the spoken form such as `1 hour 30 minutes`.
    */
-  @property({ attribute: 'value-tex' })
+  @property({ attribute: 'value-text' })
   valueText = '{currentTime} out of {duration}';
 
   @watchContext(mediaContext.canPlay)
