@@ -1,6 +1,6 @@
-import clsx from 'clsx';
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
@@ -113,7 +113,7 @@ export class MediaContainerElement extends LitElement {
       <div
         id="root"
         aria-busy=${this._mediaCanPlay ? 'false' : 'true'}
-        class=${clsx({
+        class=${classMap({
           'with-aspect-ratio': this._shouldApplyAspectRatio()
         })}
         part="root"

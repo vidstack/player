@@ -63,7 +63,6 @@
   "dependencies": {
     "@types/fscreen": "^1.0.1",
     "@types/hls.js": "^0.13.3",
-    "clsx": "^1.1.1",
     "fscreen": "^1.2.0"
   },
   "peerDependencies": {
