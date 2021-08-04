@@ -28,7 +28,7 @@ describe(SCRUBBER_PREVIEW_ELEMENT_TAG_NAME, function () {
   it('should render DOM correctly', async function () {
     const { scrubberPreview } = await buildFixture();
     expect(scrubberPreview).dom.to.equal(
-      `<vds-scrubber-preview></vds-scrubber-preview>`
+      `<vds-scrubber-preview style="--vds-media-duration:0;"></vds-scrubber-preview>`
     );
   });
 

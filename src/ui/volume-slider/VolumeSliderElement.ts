@@ -1,5 +1,5 @@
 import { PropertyValues } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { consumeContext, watchContext } from '../../base/context';
 import { eventListener } from '../../base/events';
@@ -51,6 +51,7 @@ export class VolumeSliderElement extends SliderElement {
   @property({ attribute: false })
   override max = 100;
 
+  @state()
   @consumeContext(mediaContext.volume)
   protected _mediaVolume = mediaContext.volume.initialValue;
 

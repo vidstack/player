@@ -44,9 +44,9 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
 
     expect(volumeSlider.volume).to.equal(1);
 
-    provider.ctx.volume = 0.5;
+    provider.ctx.volume = 0.25;
     await elementUpdated(volumeSlider);
-    expect(volumeSlider.volume).to.equal(0.5);
+    expect(volumeSlider.volume).to.equal(0.25);
 
     provider.ctx.volume = 0.85;
     await elementUpdated(volumeSlider);

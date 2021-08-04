@@ -44,8 +44,6 @@ export function provideContext<T>(
   };
 }
 
-const WATCH_SYMBOL_DESC = 'Vidstack.watchContext';
-
 export function watchContext<T>(
   context: Context<T>,
   options: Omit<ConsumeContextOptions<T>, 'id'> = {}
@@ -124,17 +122,16 @@ export function defineContextConsumer<T = any>(
   ctor.finalizeContext?.();
 
   ctor.addInitializer((element) => {
-    if (!element[CONSUMERS]) element[CONSUMERS] = new Map();
-
     let oldValue =
       options.transform?.(context.initialValue) ?? context.initialValue;
 
-    const consumer = context.consume(element, {
+    context.consume(element, {
       debug: DEV_MODE && name,
       ...options,
       onUpdate: (newValue) => {
         options.onUpdate?.call(element, newValue);
 
+        // Ignore watchers.
         if (
           typeof name === 'symbol' &&
           name.toString().startsWith('Vidstack.')
@@ -142,26 +139,14 @@ export function defineContextConsumer<T = any>(
           return;
         }
 
-        if (options.shouldRequestUpdate ?? true) {
-          // Trigger any setters.
-          element[name] = newValue;
+        // Trigger setters.
+        element[name] = newValue;
+
+        if (options.shouldRequestUpdate) {
           element.requestUpdate(name, oldValue);
           oldValue = newValue;
         }
       }
     });
-
-    element[CONSUMERS].set(name, consumer);
-  });
-
-  Object.defineProperty(ctor.prototype, name, {
-    enumerable: true,
-    configurable: true,
-    get() {
-      return this[CONSUMERS].get(name).value;
-    },
-    set() {
-      // no-op
-    }
   });
 }
