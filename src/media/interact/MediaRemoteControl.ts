@@ -160,7 +160,7 @@ export class MediaRemoteControl implements ReactiveController {
 
       if (DEV_MODE) {
         this._logger
-          .infoGroup(`✉️ dispatching \`${type}\``)
+          .infoGroup(`📨 dispatching \`${type}\``)
           .appendWithLabel('Event', request)
           .appendWithLabel('Original event', eventInit.originalEvent)
           .end();

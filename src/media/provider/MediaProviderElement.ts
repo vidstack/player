@@ -187,7 +187,13 @@ export abstract class MediaProviderElement extends LitElement {
 
   set volume(requestedVolume) {
     this.mediaRequestQueue.queue('volume', () => {
-      this._setVolume(clampNumber(0, requestedVolume, 1));
+      const volume = clampNumber(0, requestedVolume, 1);
+
+      if (DEV_MODE) {
+        this._logger.info('setting `volume` to', volume);
+      }
+
+      this._setVolume(volume);
     });
   }
 
@@ -238,6 +244,10 @@ export abstract class MediaProviderElement extends LitElement {
 
   set currentTime(requestedTime) {
     this.mediaRequestQueue.queue('time', () => {
+      if (DEV_MODE) {
+        this._logger.info('setting `currentTime` to', requestedTime);
+      }
+
       this._setCurrentTime(requestedTime);
     });
   }
@@ -260,6 +270,10 @@ export abstract class MediaProviderElement extends LitElement {
 
   set muted(shouldMute) {
     this.mediaRequestQueue.queue('muted', () => {
+      if (DEV_MODE) {
+        this._logger.info('setting `muted` to', shouldMute);
+      }
+
       this._setMuted(shouldMute);
     });
   }
@@ -556,8 +570,22 @@ export abstract class MediaProviderElement extends LitElement {
    */
   protected _validatePlaybackEndedState(): void {
     if (this.ctx.ended && !this._hasPlaybackRoughlyEnded()) {
+      if (DEV_MODE) {
+        this._logger
+          .infoGroup('invalid ended state')
+          .appendWithLabel('Duration', this.duration)
+          .end();
+      }
+
       this.ctx.ended = false;
     } else if (!this.ctx.ended && this._hasPlaybackRoughlyEnded()) {
+      if (DEV_MODE) {
+        this._logger
+          .infoGroup('playback has roughly ended')
+          .appendWithLabel('Duration', this.duration)
+          .end();
+      }
+
       this.ctx.waiting = false;
       this.dispatchEvent(vdsEvent('vds-suspend'));
       this.ctx.ended = true;

@@ -55,7 +55,7 @@ export class RequestQueue<
     this._requestQueue.set(key, callback);
 
     if (DEV_MODE && !this.serveImmediately) {
-      this._logger?.info(`queued \`${key}\``);
+      this._logger?.debug(`queued \`${key}\``);
     }
 
     if (!this.serveImmediately) return;
@@ -64,7 +64,7 @@ export class RequestQueue<
 
   async serve(key: RequestKey): Promise<void> {
     if (DEV_MODE) {
-      this._logger?.info(`serving \`${key}\``);
+      this._logger?.debug(`serving \`${key}\``);
     }
 
     await this._requestQueue.get(key)?.();
