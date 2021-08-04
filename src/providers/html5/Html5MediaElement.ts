@@ -346,8 +346,6 @@ export class Html5MediaElement extends MediaProviderElement {
       const handler = eventHandlers[type].bind(this);
       this._disconnectDisposal.add(
         listen(this.mediaElement!, type, async (event: Event) => {
-          await handler(event);
-
           if (DEV_MODE) {
             this._logger
               .infoGroup(`📺 fired \`${event.type}\``)
@@ -356,6 +354,8 @@ export class Html5MediaElement extends MediaProviderElement {
               .appendWithLabel('Context', this.mediaState)
               .end();
           }
+
+          await handler(event);
 
           // re-dispatch native event for spec-compliance.
           redispatchEvent(this, event);

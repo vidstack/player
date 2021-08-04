@@ -3,7 +3,12 @@ import { property } from 'lit/decorators.js';
 
 import { ExtractContextRecordTypes } from '../../base/context';
 import { discover, DiscoveryEvent } from '../../base/elements';
-import { DisposalBin, eventListener, vdsEvent } from '../../base/events';
+import {
+  DisposalBin,
+  eventListener,
+  listen,
+  vdsEvent
+} from '../../base/events';
 import {
   FullscreenChangeEvent,
   FullscreenController
@@ -22,6 +27,7 @@ import {
   createMediaContextRecord,
   mediaContext
 } from '../context';
+import { MediaEvents } from '../events';
 
 /**
  * Fired when the media provider connects to the DOM.
@@ -80,6 +86,7 @@ export abstract class MediaProviderElement extends LitElement {
   protected readonly _disconnectDisposal = new DisposalBin();
 
   override connectedCallback() {
+    if (DEV_MODE) this._logMediaEvents();
     super.connectedCallback();
     this._connectedQueue.flush();
     this._connectedQueue.serveImmediately = true;
@@ -116,6 +123,53 @@ export abstract class MediaProviderElement extends LitElement {
     this.mediaRequestQueue.destroy();
     this._shouldSkipNextSrcChangeReset = false;
     this._disconnectDisposal.empty();
+  }
+
+  protected _logMediaEvents() {
+    if (DEV_MODE) {
+      const mediaEvents: (keyof MediaEvents)[] = [
+        'vds-abort',
+        'vds-can-play',
+        'vds-can-play-through',
+        'vds-controls-change',
+        'vds-duration-change',
+        'vds-emptied',
+        'vds-ended',
+        'vds-error',
+        'vds-fullscreen-change',
+        'vds-idle-change',
+        'vds-loaded-data',
+        'vds-loaded-metadata',
+        'vds-load-start',
+        'vds-media-type-change',
+        'vds-pause',
+        'vds-play',
+        'vds-playing',
+        'vds-progress',
+        'vds-seeked',
+        'vds-seeking',
+        'vds-stalled',
+        'vds-started',
+        'vds-suspend',
+        'vds-replay',
+        'vds-time-update',
+        'vds-view-type-change',
+        'vds-volume-change',
+        'vds-waiting'
+      ];
+
+      mediaEvents.forEach((eventType) => {
+        const dispose = listen(this, eventType, (event) => {
+          this._logger
+            .infoGroup(`📡 dispatching \`${eventType}\``)
+            .appendWithLabel('Event', event)
+            .appendWithLabel('Engine', this.engine)
+            .end();
+        });
+
+        this._disconnectDisposal.add(dispose);
+      });
+    }
   }
 
   // -------------------------------------------------------------------------------------------
