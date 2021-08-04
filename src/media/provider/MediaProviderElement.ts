@@ -8,11 +8,13 @@ import {
   FullscreenChangeEvent,
   FullscreenController
 } from '../../base/fullscreen';
+import { ElementLogger } from '../../base/logger';
 import { RequestQueue } from '../../base/queue';
 import {
   ScreenOrientationController,
   ScreenOrientationLock
 } from '../../base/screen-orientation';
+import { DEV_MODE } from '../../env';
 import { clampNumber } from '../../utils/number';
 import { CanPlay } from '../CanPlay';
 import {
@@ -72,6 +74,8 @@ export abstract class MediaProviderElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   protected readonly _disconnectDisposal = new DisposalBin();
 
@@ -579,11 +583,27 @@ export abstract class MediaProviderElement extends LitElement {
     }
   }
 
-  protected _handleMediaReady(event?: Event) {
+  protected async _handleMediaReady(event?: Event) {
     this.ctx.canPlay = true;
+
     this.dispatchEvent(vdsEvent('vds-can-play', { originalEvent: event }));
-    this.mediaRequestQueue.flush();
+
+    await this.mediaRequestQueue.flush();
     this.mediaRequestQueue.serveImmediately = true;
+
+    if (DEV_MODE) {
+      this._logger
+        .infoGroup('✅ media ready')
+        .appendWithLabel('Context', this.mediaState)
+        .appendWithLabel('Event', event)
+        .appendWithLabel('Engine', this.engine)
+        .end();
+
+      console.log(
+        '%c------ MEDIA READY ------',
+        'font-size: 16px; padding: 4px; background: hsla(127, 67%, 34%, 1); color: white; border-radius: 2px;'
+      );
+    }
   }
 
   protected _shouldSkipNextSrcChangeReset = true;
@@ -595,6 +615,14 @@ export abstract class MediaProviderElement extends LitElement {
     if (this._shouldSkipNextSrcChangeReset) {
       this._shouldSkipNextSrcChangeReset = false;
       return;
+    }
+
+    if (DEV_MODE) {
+      this._logger
+        .infoGroup('📼 media src change')
+        .appendWithLabel('Current src', this.currentSrc)
+        .appendWithLabel('Engine', this.engine)
+        .end();
     }
 
     this.mediaRequestQueue.serveImmediately = false;
@@ -650,6 +678,16 @@ export abstract class MediaProviderElement extends LitElement {
    */
   protected _softResetMediaContext() {
     const propsToReset = this._getMediaPropsToResetWhenSrcChanges();
+
+    if (DEV_MODE) {
+      this._logger
+        .infoGroup('soft context reset')
+        .appendWithLabel('Engine', this.engine)
+        .appendWithLabel('Context', this.mediaState)
+        .appendWithLabel('Reset props', propsToReset)
+        .end();
+    }
+
     Object.keys(mediaContext).forEach((prop) => {
       if (propsToReset.has(prop)) {
         this.ctx[prop] = mediaContext[prop].initialValue;
@@ -664,13 +702,19 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * Queue actions to be applied safely after the element has connected to the DOM.
    */
-  readonly _connectedQueue = new RequestQueue();
+  readonly _connectedQueue = new RequestQueue(
+    this,
+    DEV_MODE && 'connectedQueue'
+  );
 
   /**
    * Queue actions to be taken on the current media provider when it's ready for playback, marked
    * by the `canPlay` property. If the media provider is ready, actions will be invoked immediately.
    */
-  readonly mediaRequestQueue = new RequestQueue();
+  readonly mediaRequestQueue = new RequestQueue(
+    this,
+    DEV_MODE && 'mediaRequestQueue'
+  );
 
   // -------------------------------------------------------------------------------------------
   // Orientation
@@ -736,6 +780,14 @@ export abstract class MediaProviderElement extends LitElement {
 
   @eventListener('vds-fullscreen-change')
   protected _handleFullscreenChange(event: FullscreenChangeEvent) {
+    if (DEV_MODE) {
+      this._logger
+        .infoGroup('fullscreen change')
+        .appendWithLabel('Event', event)
+        .appendWithLabel('Engine', this.engine)
+        .end();
+    }
+
     this.ctx.fullscreen = event.detail;
   }
 }

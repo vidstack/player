@@ -11,7 +11,9 @@ import {
   FullscreenChangeEvent,
   FullscreenController
 } from '../../base/fullscreen';
+import { ElementLogger } from '../../base/logger';
 import { ScreenOrientationController } from '../../base/screen-orientation';
+import { DEV_MODE } from '../../env';
 import { getSlottedChildren } from '../../utils/dom';
 import { isNil, isString, isUndefined } from '../../utils/unit';
 import { mediaContext } from '../context';
@@ -68,6 +70,8 @@ export class MediaContainerElement extends LitElement {
   static get parts(): string[] {
     return ['root', 'media'];
   }
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   // -------------------------------------------------------------------------------------------
   // Properties
@@ -226,12 +230,26 @@ export class MediaContainerElement extends LitElement {
   protected _handleMediaProviderConnect(event: MediaProviderConnectEvent) {
     const { element, onDisconnect } = event.detail;
 
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('media provider connected')
+        .appendWithLabel('Provider', element)
+        .end();
+    }
+
     this._mediaProvider = element;
     this._hasMediaProviderConnectedViaEvent = true;
 
     onDisconnect(() => {
       this._mediaProvider = undefined;
       this._hasMediaProviderConnectedViaEvent = false;
+
+      if (DEV_MODE) {
+        this._logger
+          .debugGroup('media provider disconnected')
+          .appendWithLabel('Provider', element)
+          .end();
+      }
     });
   }
 
@@ -279,6 +297,14 @@ export class MediaContainerElement extends LitElement {
   @eventListener('vds-fullscreen-change')
   protected _handleFullscreenChange(event: FullscreenChangeEvent): void {
     if (!isNil(this.mediaProvider)) {
+      if (DEV_MODE) {
+        this._logger
+          .infoGroup('fullscreen change')
+          .appendWithLabel('Event', event)
+          .appendWithLabel('Provider', this.mediaProvider)
+          .end();
+      }
+
       this.mediaProvider.ctx.fullscreen = event.detail;
     }
   }

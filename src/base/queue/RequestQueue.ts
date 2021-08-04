@@ -1,16 +1,28 @@
+import { ReactiveControllerHost } from 'lit';
+
+import { DEV_MODE } from '../../env';
 import { deferredPromise } from '../../utils/promise';
+import { Logger } from '../logger';
 
 /**
  * @template {string|symbol} RequestKey
  * @template {() => void | Promise <void>} RequestCallback
  */
 export class RequestQueue<
-  RequestKey extends string | symbol,
-  RequestCallback extends () => void | Promise<void>
+  RequestKey extends string | symbol = string | symbol,
+  RequestCallback extends () => void | Promise<void> = () => void | Promise<void>
 > {
+  protected _logger?: Logger;
+
   protected _requestQueue = new Map<RequestKey, RequestCallback>();
 
   protected _pendingFlush = deferredPromise();
+
+  constructor(_host?: ReactiveControllerHost, _name?: string) {
+    if (DEV_MODE && _host) {
+      this._logger = new Logger(_host, { owner: this, name: `⌛ ${_name}` });
+    }
+  }
 
   /**
    * Whether callbacks should be called immediately or queued and flushed at a later time.
@@ -41,11 +53,20 @@ export class RequestQueue<
 
   async queue(key: RequestKey, callback: RequestCallback): Promise<void> {
     this._requestQueue.set(key, callback);
+
+    if (DEV_MODE && !this.serveImmediately) {
+      this._logger?.info(`queued \`${key}\``);
+    }
+
     if (!this.serveImmediately) return;
     this.serve(key);
   }
 
   async serve(key: RequestKey): Promise<void> {
+    if (DEV_MODE) {
+      this._logger?.info(`serving \`${key}\``);
+    }
+
     await this._requestQueue.get(key)?.();
     this._requestQueue.delete(key);
   }
@@ -53,18 +74,34 @@ export class RequestQueue<
   async flush(): Promise<void> {
     const requests = Array.from(this._requestQueue.keys());
     await Promise.all(requests.map((reqKey) => this.serve(reqKey)));
-    this.reset();
+    this._flush();
+
+    if (DEV_MODE) {
+      this._logger?.info('flush');
+    }
   }
 
-  reset(): void {
+  protected _flush() {
     this._requestQueue.clear();
     // Release anyone waiting.
     this._pendingFlush.resolve();
     this._pendingFlush = deferredPromise();
   }
 
+  reset(): void {
+    this._flush();
+
+    if (DEV_MODE) {
+      this._logger?.info('reset');
+    }
+  }
+
   destroy(): void {
     this.serveImmediately = false;
     this.reset();
+
+    if (DEV_MODE) {
+      this._logger?.info('destroy');
+    }
   }
 }

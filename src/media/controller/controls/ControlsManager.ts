@@ -2,6 +2,7 @@ import { ReactiveElement } from 'lit';
 
 import { ElementManager } from '../../../base/elements';
 import { listen, vdsEvent } from '../../../base/events';
+import { DEV_MODE } from '../../../env';
 import { mediaContext } from '../../context';
 import { HideControlsRequestEvent, ShowControlsRequestEvent } from './events';
 import { ManagedControlsConnectEvent } from './ManagedControls';
@@ -100,6 +101,10 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
   protected _handleControlsChange(request?: Event): void {
     if (this.isHidden === this._prevHiddenValue) return;
 
+    if (DEV_MODE) {
+      this._logger.debugGroup('controls change', !this.isHidden);
+    }
+
     this._host.dispatchEvent(
       vdsEvent('vds-controls-change', {
         detail: !this.isHidden,
@@ -114,6 +119,14 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
     request: ShowControlsRequestEvent
   ): Promise<void> {
     request.stopPropagation();
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup(`📬 received \`${request.type}\``)
+        .appendWithLabel('Request', request)
+        .end();
+    }
+
     await this.show(request);
   }
 
@@ -121,6 +134,14 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
     request: HideControlsRequestEvent
   ): Promise<void> {
     request.stopPropagation();
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup(`📬 received \`${request.type}\``)
+        .appendWithLabel('Request', request)
+        .end();
+    }
+
     await this.hide(request);
   }
 }

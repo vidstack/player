@@ -1,5 +1,6 @@
 import { ReactiveControllerHost } from 'lit';
 
+import { DEV_MODE } from '../../env';
 import { ReadonlyIfType } from '../../helpers';
 import {
   ConsumeContextOptions,
@@ -96,13 +97,22 @@ export function isDerviedContext<T>(
  */
 export function provideContextRecord<T extends ContextRecord<unknown>>(
   host: ReactiveControllerHost,
-  contextRecord: T
+  contextRecord: T,
+  options?: { [P in keyof T]?: Omit<ProvideContextOptions<T[P]>, 'id'> }
 ): ContextProviderRecord<T> {
   const providers = {} as Partial<ContextProviderRecord<T>>;
 
   Object.keys(contextRecord).forEach((contextKey) => {
     const context = contextRecord[contextKey] as Context<unknown>;
-    const provider = context.provide(host);
+
+    const providerOptions = options?.[
+      contextKey
+    ] as ProvideContextOptions<unknown>;
+
+    const provider = context.provide(host, {
+      debug: DEV_MODE && contextKey,
+      ...providerOptions
+    });
 
     Object.defineProperty(providers, contextKey, {
       enumerable: true,

@@ -4,6 +4,8 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { consumeContext } from '../../base/context';
+import { ElementLogger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { mediaContext } from '../../media';
 import { formatSpokenTime } from '../../utils/time';
 import { seekableProgressBarElementStyles } from './styles';
@@ -40,6 +42,8 @@ export class SeekableProgressBarElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` for the progress bar.

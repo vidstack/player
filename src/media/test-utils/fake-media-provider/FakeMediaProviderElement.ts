@@ -29,7 +29,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
         set: (newValue) => {
           // Only run context updates after we've connected to the DOM so we update the inject
           // media context object on the `MediaControllerElement`.
-          this._connectedQueue.queue(`contextUpdate[${ctxProp}]`, () => {
+          this._connectedQueue.queue(`contextUpdate::${ctxProp}`, () => {
             this.ctx[ctxProp] = newValue;
           });
         }
@@ -50,8 +50,8 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   // Provider Methods
   // -------------------------------------------------------------------------------------------
 
-  forceMediaReady() {
-    this._handleMediaReady();
+  async forceMediaReady() {
+    return this._handleMediaReady();
   }
 
   _getCurrentTime() {

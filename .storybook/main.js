@@ -24,7 +24,7 @@ module.exports = {
         loader: 'ts',
         target: 'es2015',
         sourcemap: true,
-        tsconfigRaw: require('../tsconfig-build.json')
+        tsconfigRaw: require('./tsconfig.json')
       }
     });
 

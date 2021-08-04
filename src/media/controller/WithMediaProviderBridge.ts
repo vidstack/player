@@ -11,14 +11,16 @@ import {
   FullscreenChangeEvent,
   FullscreenController
 } from '../../base/fullscreen';
+import { Logger } from '../../base/logger';
 import { RequestQueue } from '../../base/queue';
 import { ScreenOrientationController } from '../../base/screen-orientation';
+import { DEV_MODE } from '../../env';
 import { Constructor } from '../../helpers';
 import {
   getElementAttributes,
   observeAndForwardAttributes
 } from '../../utils/dom';
-import { isFunction, isNil, isNull } from '../../utils/unit';
+import { isFunction, isNil, isNull, isUndefined, noop } from '../../utils/unit';
 import { createMediaContextRecord, mediaContext } from '../context';
 import {
   MediaProviderConnectEvent,
@@ -39,6 +41,8 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
   Base: T
 ): T & Constructor<MediaProviderBridge> {
   class WithMediaProviderBridge extends Base {
+    protected readonly _logger = DEV_MODE && new Logger(this);
+
     constructor(...args: any[]) {
       super(...args);
       this._defineForwardedMediaProviderProperties();
@@ -48,7 +52,10 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
     // Media Provider Connect
     // -------------------------------------------------------------------------------------------
 
-    readonly mediaProviderConnectedQueue = new RequestQueue();
+    readonly mediaProviderConnectedQueue = new RequestQueue(
+      this,
+      DEV_MODE && 'mediaProviderConnectedQueue'
+    );
 
     readonly mediaProviderDisconnectDisposal = new DisposalBin();
 
@@ -66,6 +73,13 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
 
       if (this.mediaProvider === element) return;
 
+      if (DEV_MODE) {
+        this._logger
+          .infoGroup('media provider connected')
+          .appendWithLabel('Provider', element)
+          .end();
+      }
+
       this._handleMediaProviderDisconnect();
 
       this._mediaProvider = element;
@@ -79,6 +93,15 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
     }
 
     protected _handleMediaProviderDisconnect() {
+      if (isNil(this.mediaProvider)) return;
+
+      if (DEV_MODE) {
+        this._logger
+          .infoGroup('media provider disconnected')
+          .appendWithLabel('Provider', this.mediaProvider)
+          .end();
+      }
+
       this.mediaProviderDisconnectDisposal.empty();
       this._mediaProvider = undefined;
     }
@@ -93,6 +116,18 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
       });
     }
 
+    @eventListener('vds-error')
+    protected _logErrors(event: Event) {
+      if (DEV_MODE) {
+        this._logger
+          .errorGroup(event.type)
+          .appendWithLabel('Context', this.ctx)
+          .appendWithLabel('Event', event)
+          .appendWithLabel('Provider', this.mediaProvider)
+          .end();
+      }
+    }
+
     // -------------------------------------------------------------------------------------------
     // Forward Context
     // -------------------------------------------------------------------------------------------
@@ -105,6 +140,14 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
 
       // @ts-expect-error - Override readonly
       this.mediaProvider.ctx = this.ctx;
+
+      if (DEV_MODE) {
+        this._logger
+          .infoGroup('attached context record')
+          .appendWithLabel('Provider', this.mediaProvider)
+          .appendWithLabel('Context', this.ctx)
+          .end();
+      }
 
       this.mediaProviderDisconnectDisposal.add(() => {
         // @ts-expect-error - Override readonly
@@ -133,7 +176,19 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
       const observer = observeAndForwardAttributes(
         this,
         this.mediaProvider,
-        attributes
+        attributes,
+        !DEV_MODE
+          ? noop
+          : (attrName, attrValue) => {
+              if (DEV_MODE) {
+                this._logger
+                  .debugGroup(`🔗 forwarding attr \`${attrName}\` to provider`)
+                  .appendWithLabel('Attribute name', attrName)
+                  .appendWithLabel('Attribute value', attrValue)
+                  .appendWithLabel('Provider', this.mediaProvider)
+                  .end();
+              }
+            }
       );
 
       this.mediaProviderDisconnectDisposal.add(() => {
@@ -159,6 +214,16 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
           this.mediaProvider,
           eventType,
           (event: Event) => {
+            if (DEV_MODE) {
+              this._logger
+                .debugGroup(
+                  `🔗 forwarding event \`${eventType}\` from provider`
+                )
+                .appendWithLabel('Event', event)
+                .appendWithLabel('Provider', this.mediaProvider)
+                .end();
+            }
+
             redispatchEvent(this, event);
           }
         );
@@ -197,11 +262,14 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
           return isFunction(value) ? value.bind(this.mediaProvider) : value;
         },
         set(value) {
-          this.mediaProviderConnectedQueue.queue(`bridge${propName}`, () => {
-            if (!isNil(this.mediaProvider)) {
-              this.mediaProvider[propName] = value;
+          this.mediaProviderConnectedQueue.queue(
+            `bridgedProp::${propName}`,
+            () => {
+              if (!isNil(this.mediaProvider)) {
+                this.mediaProvider[propName] = value;
+              }
             }
-          });
+          );
         }
       });
     }

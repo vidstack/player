@@ -18,7 +18,7 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
       </vds-play-button>
     `);
 
-    provider.forceMediaReady();
+    await provider.forceMediaReady();
 
     const button = container.querySelector(
       PLAY_BUTTON_ELEMENT_TAG_NAME

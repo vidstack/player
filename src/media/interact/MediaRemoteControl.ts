@@ -1,7 +1,9 @@
 import { ReactiveController, ReactiveControllerHost } from 'lit';
 
 import { ExtractEventInit, vdsEvent } from '../../base/events';
+import { Logger } from '../../base/logger';
 import { RequestQueue } from '../../base/queue';
+import { DEV_MODE } from '../../env';
 import { MediaRequestEvents } from '../request.events';
 
 /**
@@ -23,9 +25,20 @@ import { MediaRequestEvents } from '../request.events';
 export class MediaRemoteControl implements ReactiveController {
   protected _ref?: Element;
 
-  protected readonly _connectedQueue = new RequestQueue();
+  protected readonly _connectedQueue: RequestQueue;
+
+  protected readonly _logger!: Logger;
 
   constructor(protected readonly _host: ReactiveControllerHost) {
+    if (DEV_MODE) {
+      this._logger = new Logger(_host, { owner: this });
+    }
+
+    this._connectedQueue = new RequestQueue(
+      _host,
+      DEV_MODE && 'remoteControlConnectedQueue'
+    );
+
     if (_host instanceof Element) this.setRef(_host);
     _host.addController(this);
   }
@@ -44,6 +57,12 @@ export class MediaRemoteControl implements ReactiveController {
    * media requests from.
    */
   setRef(newRef?: Element) {
+    if (this._ref !== newRef) {
+      if (DEV_MODE) {
+        this._logger.debug('ref change', newRef);
+      }
+    }
+
     this._ref = newRef;
   }
 
@@ -133,13 +152,21 @@ export class MediaRemoteControl implements ReactiveController {
     eventInit: ExtractEventInit<MediaRequestEvents[EventType]>
   ) {
     this._connectedQueue.queue(type, () => {
-      this._ref?.dispatchEvent(
-        vdsEvent(type, {
-          ...eventInit,
-          bubbles: true,
-          composed: true
-        })
-      );
+      const request = vdsEvent(type, {
+        ...eventInit,
+        bubbles: true,
+        composed: true
+      });
+
+      if (DEV_MODE) {
+        this._logger
+          .infoGroup(`✉️ dispatching \`${type}\``)
+          .appendWithLabel('Event', request)
+          .appendWithLabel('Original event', eventInit.originalEvent)
+          .end();
+      }
+
+      this._ref?.dispatchEvent(request);
     });
   }
 }

@@ -5,6 +5,8 @@ import {
   throwIfTC39Decorator
 } from '../../base/elements/decorators';
 import { DisposalBin, listen } from '../../base/events';
+import { Logger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { Values } from '../../helpers';
 import { keysOf } from '../../utils/object';
 import { isFunction, isNil, noop } from '../../utils/unit';
@@ -52,6 +54,8 @@ export type MediaEventListenerRecord = {
 export class MediaEventListenerController implements ReactiveController {
   protected readonly _eventListeners: MediaEventListenerTupleArray;
 
+  protected readonly _logger!: Logger;
+
   protected readonly _disposal = new DisposalBin();
 
   protected _ref?: Element;
@@ -62,6 +66,10 @@ export class MediaEventListenerController implements ReactiveController {
     protected readonly _host: ReactiveControllerHost,
     eventListeners: MediaEventListenerRecord = {}
   ) {
+    if (DEV_MODE) {
+      this._logger = new Logger(_host, { owner: this });
+    }
+
     this._eventListeners = keysOf(eventListeners).reduce(
       (listeners, eventType) => [
         ...listeners,
@@ -93,6 +101,10 @@ export class MediaEventListenerController implements ReactiveController {
   setRef(newRef?: Element) {
     if (this._ref !== newRef) {
       if (!isNil(newRef)) {
+        if (DEV_MODE) {
+          this._logger.debug('ref change', newRef);
+        }
+
         this._disposeConnectEventListener();
         this._disposeConnectEventListener = listen(
           newRef,

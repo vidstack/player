@@ -1,6 +1,8 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
 import { watchContext } from '../../base/context';
+import { ElementLogger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { ManagedControls, mediaContext, ViewType } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { controlsElementStyles } from './styles';
@@ -44,6 +46,8 @@ export class ControlsElement extends LitElement {
   static override get styles(): CSSResultGroup {
     return [controlsElementStyles];
   }
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   protected readonly _managedControls = new ManagedControls(this);
 

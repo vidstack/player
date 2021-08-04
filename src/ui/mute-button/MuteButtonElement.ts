@@ -40,10 +40,10 @@ export class MuteButtonElement extends ToggleButtonElement {
   override label = 'Mute';
 
   @consumeContext(mediaContext.muted)
-  protected override _pressed = mediaContext.muted.initialValue;
+  override pressed = mediaContext.muted.initialValue;
 
   protected override _handleButtonClick(event: Event) {
-    if (this._pressed) {
+    if (this.pressed) {
       this._mediaRemote.unmute(event);
     } else {
       this._mediaRemote.mute(event);

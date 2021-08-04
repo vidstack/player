@@ -44,10 +44,10 @@ export class PlayButtonElement extends ToggleButtonElement {
   // Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
   // use `playing` because there could be a buffering delay (we want immediate feedback).
   @consumeContext(mediaContext.paused, { transform: (p) => !p })
-  protected override _pressed = false;
+  override pressed = false;
 
   protected override _handleButtonClick(event: Event) {
-    if (this._pressed) {
+    if (this.pressed) {
       this._mediaRemote.pause(event);
     } else {
       this._mediaRemote.play(event);

@@ -43,7 +43,7 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
 
   it('should toggle `media-can-play` attribute', async function () {
     const { provider, bufferingIndicator } = await buildFixture();
-    provider.forceMediaReady();
+    await provider.forceMediaReady();
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.have.attribute('media-can-play');
     provider.ctx.canPlay = false;
@@ -53,7 +53,7 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
 
   it('should toggle `media-waiting` attribute', async function () {
     const { provider, bufferingIndicator } = await buildFixture();
-    provider.forceMediaReady();
+    await provider.forceMediaReady();
     provider.ctx.waiting = true;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.have.attribute('media-waiting');
@@ -64,7 +64,7 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
 
   it('should toggle `media-ended` attribute', async function () {
     const { provider, bufferingIndicator } = await buildFixture();
-    provider.forceMediaReady();
+    await provider.forceMediaReady();
     provider.ctx.ended = true;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.have.attribute('media-ended');

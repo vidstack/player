@@ -1,5 +1,7 @@
 import { ReactiveController, ReactiveControllerHost } from 'lit';
 
+import { DEV_MODE } from '../../env';
+import { Logger } from '../logger';
 import { Context } from './context';
 import { ContextConsumerController } from './ContextConsumerController';
 
@@ -9,6 +11,8 @@ import { ContextConsumerController } from './ContextConsumerController';
 export abstract class ContextConsumerManager implements ReactiveController {
   protected _ref?: Element;
 
+  protected _logger!: Logger;
+
   protected _hasHostConnected = false;
 
   protected readonly _consumers = new Map<
@@ -17,6 +21,10 @@ export abstract class ContextConsumerManager implements ReactiveController {
   >();
 
   constructor(protected readonly _host: ReactiveControllerHost) {
+    if (DEV_MODE) {
+      this._logger = new Logger(_host, { owner: this });
+    }
+
     if (_host instanceof Element) this.setRef(_host);
     _host.addController(this);
   }
@@ -35,6 +43,10 @@ export abstract class ContextConsumerManager implements ReactiveController {
     });
 
     this._ref = newRef;
+
+    if (DEV_MODE) {
+      this._logger.debug('ref change', newRef);
+    }
   }
 
   hostConnected() {
@@ -77,12 +89,29 @@ export abstract class ContextConsumerManager implements ReactiveController {
 
     this._consumers.set(context, consumer);
 
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('added context')
+        .appendWithLabel('Context', context)
+        .appendWithLabel('Consumer', consumer)
+        .end();
+    }
+
     return consumer;
   }
 
   removeContext(context: Context<any>) {
-    this._consumers.get(context)?.stop();
+    const consumer = this._consumers.get(context);
+    consumer?.stop();
     this._consumers.delete(context);
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('removed context')
+        .appendWithLabel('Context', context)
+        .appendWithLabel('Consumer', consumer)
+        .end();
+    }
   }
 
   protected abstract _handleContextConnect(

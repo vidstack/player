@@ -1,8 +1,10 @@
 import fscreen from 'fscreen';
 import { ReactiveElement } from 'lit';
 
+import { DEV_MODE } from '../../env';
 import { isUndefined, noop } from '../../utils/unit';
 import { DisposalBin, listen, vdsEvent } from '../events';
+import { Logger } from '../logger';
 import {
   ScreenOrientationController,
   ScreenOrientationLock
@@ -43,7 +45,9 @@ export type FullscreenControllerHost = ReactiveElement & {
  * ```
  */
 export class FullscreenController {
-  protected _disconnectDisposal = new DisposalBin();
+  protected readonly _logger!: Logger;
+
+  protected readonly _disconnectDisposal = new DisposalBin();
 
   /**
    * Used to avoid an inifinite loop by indicating when the native `requestFullscreen()` method
@@ -67,6 +71,10 @@ export class FullscreenController {
     protected readonly _host: FullscreenControllerHost,
     protected readonly _screenOrientationController: ScreenOrientationController
   ) {
+    if (DEV_MODE) {
+      this._logger = new Logger(_host, { owner: this });
+    }
+
     _host.addController({
       hostDisconnected: this._handleHostDisconnected.bind(this)
     });
@@ -127,6 +135,11 @@ export class FullscreenController {
     listener: (this: HTMLElement, event: Event) => void
   ): () => void {
     if (!this.isSupported) return noop;
+
+    if (DEV_MODE) {
+      this._logger.debug('adding `fullscreenchange` listener');
+    }
+
     // @ts-expect-error
     return listen(fscreen, 'fullscreenchange', listener);
   }
@@ -139,6 +152,11 @@ export class FullscreenController {
     listener: (this: HTMLElement, event: Event) => void
   ): () => void {
     if (!this.isSupported) return noop;
+
+    if (DEV_MODE) {
+      this._logger.debug('adding `fullscreenerror` listener');
+    }
+
     // @ts-expect-error
     return listen(fscreen, 'fullscreenerror', listener);
   }
@@ -148,19 +166,35 @@ export class FullscreenController {
 
     this._throwIfNoFullscreenSupport();
 
+    if (DEV_MODE) {
+      this._logger.info('requesting fullscreen');
+    }
+
     // TODO: Check if PiP is active, if so make sure to exit - need PiPController.
 
-    this._disconnectDisposal.add(
-      this._addFullscreenChangeEventListener(
+    this._disconnectDisposal.add(() => {
+      const dispose = this._addFullscreenChangeEventListener(
         this._handleFullscreenChange.bind(this)
-      )
-    );
+      );
 
-    this._disconnectDisposal.add(
-      this._addFullscreenErrorEventListener(
+      if (DEV_MODE) {
+        this._logger.debug('removing `fullscreenchange` listener');
+      }
+
+      dispose();
+    });
+
+    this._disconnectDisposal.add(() => {
+      const dispose = this._addFullscreenErrorEventListener(
         this._handleFullscreenError.bind(this)
-      )
-    );
+      );
+
+      if (DEV_MODE) {
+        this._logger.debug('removing `fullscreenerror` listener');
+      }
+
+      dispose();
+    });
 
     const response = await this._makeEnterFullscreenRequest();
     await this._lockScreenOrientation();
@@ -176,6 +210,14 @@ export class FullscreenController {
 
   protected _handleFullscreenChange(event: Event) {
     if (!this.isFullscreen) this._disconnectDisposal.empty();
+
+    if (DEV_MODE) {
+      this._logger
+        .infoGroup('fullscreen change')
+        .appendWithLabel('Event', event)
+        .end();
+    }
+
     this._host.dispatchEvent(
       vdsEvent('vds-fullscreen-change', {
         detail: this.isFullscreen,
@@ -185,6 +227,13 @@ export class FullscreenController {
   }
 
   protected _handleFullscreenError(event: Event) {
+    if (DEV_MODE) {
+      this._logger
+        .errorGroup('fullscreen error')
+        .appendWithLabel('Event', event)
+        .end();
+    }
+
     this._host.dispatchEvent(
       vdsEvent('vds-fullscreen-error', {
         originalEvent: event
@@ -194,7 +243,13 @@ export class FullscreenController {
 
   async exitFullscreen(): Promise<void> {
     if (!this.isFullscreen) return;
+
     this._throwIfNoFullscreenSupport();
+
+    if (DEV_MODE) {
+      this._logger.info('exiting fullscreen');
+    }
+
     const response = await this._makeExitFullscreenRequest();
     await this._unlockScreenOrientation();
     return response;
@@ -218,7 +273,6 @@ export class FullscreenController {
     ) {
       return;
     }
-
     await this._screenOrientationController.lock(this.screenOrientationLock);
   }
 

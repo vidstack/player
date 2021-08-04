@@ -29,7 +29,7 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
       FULLSCREEN_BUTTON_ELEMENT_TAG_NAME
     ) as FullscreenButtonElement;
 
-    provider.forceMediaReady();
+    await provider.forceMediaReady();
 
     return { provider, button };
   }

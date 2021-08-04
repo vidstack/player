@@ -24,23 +24,6 @@ describe('MediaProviderElement/props', function () {
     });
   });
 
-  it('should provide immutable media state', async function () {
-    const { provider } = await buildMediaFixture();
-    const state = provider.mediaState;
-
-    expect(state.muted).to.be.false;
-    expect(state.seekable.length).to.be.equal(0);
-
-    // @ts-expect-error
-    state.seekable.length = 10;
-    expect(provider.mediaState.seekable.length).to.be.equal(0);
-    provider.ctx.seekable = createTimeRanges(10, 20);
-
-    expect(provider.mediaState.seekable.start(0)).to.be.equal(10);
-    expect(provider.mediaState.seekable.end(0)).to.be.equal(20);
-    expect(provider.mediaState.seekable.length).to.be.equal(1);
-  });
-
   it('should update provider when volume is set', async function () {
     const { provider } = await buildMediaFixture();
     const volume = 0.75;

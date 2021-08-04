@@ -42,7 +42,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
 
   it('should toggle `media-can-play` attribute', async function () {
     const { provider, controls } = await buildFixture();
-    provider.forceMediaReady();
+    await provider.forceMediaReady();
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-can-play');
     provider.ctx.canPlay = false;
@@ -71,7 +71,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
 
   it('should toggle `media-paused` attribute', async function () {
     const { provider, controls } = await buildFixture();
-    provider.forceMediaReady();
+    await provider.forceMediaReady();
     provider.play();
     await elementUpdated(controls);
     expect(controls).to.not.have.attribute('media-paused');

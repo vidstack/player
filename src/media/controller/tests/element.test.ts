@@ -38,23 +38,6 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
     });
   });
 
-  it('should provide immutable media state', async function () {
-    const { controller } = await buildMediaFixture();
-    const state = controller.mediaState;
-
-    expect(state.muted).to.be.false;
-    expect(state.seekable.length).to.be.equal(0);
-
-    // @ts-expect-error
-    state.seekable.length = 10;
-    expect(controller.mediaState.seekable.length).to.be.equal(0);
-    controller.ctx.seekable = createTimeRanges(10, 20);
-
-    expect(controller.mediaState.seekable.start(0)).to.be.equal(10);
-    expect(controller.mediaState.seekable.end(0)).to.be.equal(20);
-    expect(controller.mediaState.seekable.length).to.be.equal(1);
-  });
-
   describe('discovery', function () {
     it('should dispatch connect event when connected to DOM', async function () {
       const controller = document.createElement(
@@ -109,7 +92,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
     it('should forward properties to the media provider', async function () {
       const { controller, provider } = await buildMediaFixture();
-      provider.forceMediaReady();
+      await provider.forceMediaReady();
       controller.paused = false;
       expect(provider.paused).to.be.false;
     });
@@ -131,7 +114,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
       await oneEvent(controller, 'vds-media-provider-connect');
 
-      provider.forceMediaReady();
+      await provider.forceMediaReady();
       expect(provider.paused).to.be.false;
     });
 

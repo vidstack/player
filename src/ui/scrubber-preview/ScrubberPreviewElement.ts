@@ -16,6 +16,8 @@ import {
   VdsEvent,
   vdsEvent
 } from '../../base/events';
+import { ElementLogger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { mediaContext } from '../../media/context';
 import { getSlottedChildren, raf } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
@@ -119,6 +121,8 @@ export class ScrubberPreviewElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /** @internal */
   readonly ctx = provideContextRecord(this, scrubberPreviewContext);
@@ -277,6 +281,13 @@ export class ScrubberPreviewElement extends LitElement {
     this._previewSlotElement = getSlottedChildren(this)[0] as HTMLElement;
 
     if (!isNil(this.previewSlotElement)) {
+      if (DEV_MODE) {
+        this._logger
+          .debugGroup('preview slot change')
+          .appendWithLabel('Preview element', this._previewSlotElement)
+          .end();
+      }
+
       this.previewSlotElement.style.position = 'absolute';
       this.previewSlotElement.style.left = '0';
       this.previewSlotElement.style.willChange = 'transform';
@@ -321,6 +332,15 @@ export class ScrubberPreviewElement extends LitElement {
         await this.updateComplete;
 
         this.setAttribute('previewing', '');
+
+        if (DEV_MODE) {
+          this._logger
+            .debugGroup('show preview')
+            .appendWithLabel('Preview element', this._previewSlotElement)
+            .appendWithLabel('Trigger event', event)
+            .end();
+        }
+
         this.dispatchEvent(
           vdsEvent('vds-scrubber-preview-show', { originalEvent: event })
         );
@@ -353,9 +373,19 @@ export class ScrubberPreviewElement extends LitElement {
     this.ctx.showing = false;
     this.removeAttribute('previewing');
     this.previewSlotElement?.setAttribute('hidden', '');
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('hide preview')
+        .appendWithLabel('Preview element', this._previewSlotElement)
+        .appendWithLabel('Trigger event', event)
+        .end();
+    }
+
     this.dispatchEvent(
       vdsEvent('vds-scrubber-preview-hide', { originalEvent: event })
     );
+
     this.requestUpdate();
   }
 

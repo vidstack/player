@@ -18,7 +18,7 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
       </vds-mute-button>
     `);
 
-    provider.forceMediaReady();
+    await provider.forceMediaReady();
 
     const button = container.querySelector(
       MUTE_BUTTON_ELEMENT_TAG_NAME

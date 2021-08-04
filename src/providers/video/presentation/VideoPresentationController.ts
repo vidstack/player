@@ -6,6 +6,8 @@ import {
   redispatchEvent,
   vdsEvent
 } from '../../../base/events';
+import { Logger } from '../../../base/logger';
+import { DEV_MODE } from '../../../env';
 import { isFunction, isNil, noop } from '../../../utils/unit';
 
 export type VideoPresentationControllerHost = ReactiveElement & {
@@ -32,9 +34,15 @@ export type VideoPresentationControllerHost = ReactiveElement & {
  * ```
  */
 export class VideoPresentationController {
+  protected readonly _logger!: Logger;
+
   protected readonly _disconnectDisposal = new DisposalBin();
 
   constructor(protected readonly _host: VideoPresentationControllerHost) {
+    if (DEV_MODE) {
+      this._logger = new Logger(_host, { owner: this });
+    }
+
     const firstUpdated = (_host as any).firstUpdated;
     (_host as any).firstUpdated = (changedProperties: PropertyValues) => {
       firstUpdated?.call(_host, changedProperties);
@@ -103,6 +111,11 @@ export class VideoPresentationController {
    */
   protected _addPresentationModeChangeEventListener(): () => void {
     if (!this.isSupported || isNil(this._host.videoElement)) return noop;
+
+    if (DEV_MODE) {
+      this._logger.info('adding `webkitpresentationmodechanged` listener');
+    }
+
     return listen(
       this._host.videoElement,
       // @ts-expect-error
@@ -112,6 +125,13 @@ export class VideoPresentationController {
   }
 
   protected _handlePresentationModeChange(event: Event) {
+    if (DEV_MODE) {
+      this._logger
+        .infoGroup('presentation mode change')
+        .appendWithLabel('Event', event)
+        .end();
+    }
+
     redispatchEvent(this._host, event);
     this._host.dispatchEvent(
       vdsEvent('vds-video-presentation-change', {

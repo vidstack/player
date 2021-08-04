@@ -4,6 +4,7 @@ import {
   FullscreenControllerHost
 } from '../../../base/fullscreen';
 import { ScreenOrientationController } from '../../../base/screen-orientation';
+import { DEV_MODE } from '../../../env';
 import { noop } from '../../../utils/unit';
 import {
   VideoPresentationChangeEvent,
@@ -106,6 +107,10 @@ export class VideoFullscreenController extends FullscreenController {
     }
 
     if (this.isSupportedOnSafari) {
+      if (DEV_MODE) {
+        this._logger.info('adding `vds-video-presentation-change` listener');
+      }
+
       return listen(
         this._host,
         'vds-video-presentation-change',

@@ -16,6 +16,8 @@ import { provideContextRecord, watchContext } from '../../base/context';
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { eventListener, redispatchEvent } from '../../base/events';
+import { ElementLogger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { mediaContext } from '../../media';
 import { buildExportPartsAttr, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
@@ -82,6 +84,8 @@ export class ScrubberElement extends WithFocus(LitElement) {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   protected readonly ctx = provideContextRecord(this, scrubberContext);
 
@@ -214,6 +218,14 @@ export class ScrubberElement extends WithFocus(LitElement) {
     if (this.disabled) return;
     this.ctx.pointing = true;
     this.setAttribute('pointing', '');
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('pointer enter')
+        .appendWithLabel('Event', event)
+        .end();
+    }
+
     this.scrubberPreviewElement?.showPreview(event);
   }
 
@@ -229,6 +241,13 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
     this.ctx.pointing = false;
     this.removeAttribute('pointing');
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('pointer leave')
+        .appendWithLabel('Event', event)
+        .end();
+    }
 
     if (!this.ctx.dragging) {
       this.scrubberPreviewElement?.hidePreview(event);

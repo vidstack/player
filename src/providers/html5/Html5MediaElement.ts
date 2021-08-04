@@ -3,6 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { createRef } from 'lit/directives/ref.js';
 
 import { listen, redispatchEvent, vdsEvent } from '../../base/events';
+import { DEV_MODE } from '../../env';
 import { CanPlay, MediaProviderElement, MediaType } from '../../media';
 import { getSlottedChildren } from '../../utils/dom';
 import { keysOf } from '../../utils/object';
@@ -291,9 +292,18 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _attachNewSourceNodes() {
     const validTags = new Set(['source', 'track']);
 
-    getSlottedChildren(this)
-      .filter((node) => validTags.has(node.tagName.toLowerCase()))
-      .forEach((node) => this.mediaElement?.appendChild(node.cloneNode()));
+    const nodes = getSlottedChildren(this).filter((node) =>
+      validTags.has(node.tagName.toLowerCase())
+    );
+
+    if (DEV_MODE && nodes.length > 0) {
+      this._logger
+        .logGroup('Found `<source>` and `<track>` elements')
+        .appendWithLabel('Nodes', nodes)
+        .end();
+    }
+
+    nodes.forEach((node) => this.mediaElement?.appendChild(node.cloneNode()));
 
     window.requestAnimationFrame(() => {
       this._handleMediaSrcChange();
@@ -335,13 +345,27 @@ export class Html5MediaElement extends MediaProviderElement {
     keysOf(eventHandlers).forEach((type) => {
       const handler = eventHandlers[type].bind(this);
       this._disconnectDisposal.add(
-        listen(this.mediaElement!, type, (e: Event) => {
-          handler(e);
+        listen(this.mediaElement!, type, async (event: Event) => {
+          await handler(event);
+
+          if (DEV_MODE) {
+            this._logger
+              .infoGroup(`📺 fired \`${event.type}\``)
+              .appendWithLabel('Event', event)
+              .appendWithLabel('Engine', this.engine)
+              .appendWithLabel('Context', this.mediaState)
+              .end();
+          }
+
           // re-dispatch native event for spec-compliance.
-          redispatchEvent(this, e);
+          redispatchEvent(this, event);
         })
       );
     });
+
+    if (DEV_MODE) {
+      this._logger.debug('attached event listeners');
+    }
   }
 
   protected _handleAbort(event: Event) {
@@ -575,6 +599,9 @@ export class Html5MediaElement extends MediaProviderElement {
     if (!this._willAnotherEngineAttach()) {
       // Wait for `src` attribute to be updated on underlying `<audio>` or `<video>` element.
       await this.updateComplete;
+
+      this._logger.debug('Calling `load()` on media element');
+
       this.mediaElement?.load();
     }
   }
@@ -616,6 +643,10 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   async play() {
+    if (DEV_MODE) {
+      this._logger.info('attempting to play...');
+    }
+
     this._throwIfNotReadyForPlayback();
     if (this.ctx.ended) this.dispatchEvent(vdsEvent('vds-replay'));
     await this._resetPlaybackIfEnded();
@@ -623,6 +654,10 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   async pause() {
+    if (DEV_MODE) {
+      this._logger.info('attempting to pause...');
+    }
+
     this._throwIfNotReadyForPlayback();
     return this.mediaElement?.pause();
   }

@@ -1,6 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
 import resolve from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import summary from 'rollup-plugin-summary';
 import { sync as globSync } from 'fast-glob';
@@ -43,29 +44,36 @@ const skipBundleOutput = () => ({
   }
 });
 
-const terserOptions = {
-  compress: {
-    unsafe: true,
-    // An extra pass can squeeze out an extra byte or two.
-    passes: 2
-  },
-  ecma: 2017,
-  module: true
-};
-
-const PLUGINS = ({ minify = true, nodeResolve = {} }) => [
+const PLUGINS = ({ minify = true, devMode = false, nodeResolve = {} }) => [
   minify && minifyHTML(),
   resolve({
     exportConditions: minify ? ['production'] : [],
     ...nodeResolve
   }),
   commonjs(),
+  replace({
+    include: /env.js$/,
+    preventAssignment: false,
+    values: {
+      'const DEV_MODE = true': `const DEV_MODE = ${String(devMode)}`
+    }
+  }),
   /**
    * This plugin automatically composes the existing TypeScript -> raw JS sourcemap with the
    * raw JS -> minified JS one that we're generating here.
    */
   sourcemaps(),
-  minify && terser(terserOptions),
+  minify &&
+    terser({
+      compress: {
+        drop_console: !devMode,
+        passes: 3,
+        pure_funcs: !devMode && ['_logger', '_logger.*'],
+        unsafe: true
+      },
+      ecma: 2017,
+      module: true
+    }),
   CHECK_SIZE && summary({}),
   CHECK_SIZE && skipBundleOutput()
 ];
@@ -82,6 +90,7 @@ export default [
     },
     external: EXTERNAL_LIBS,
     plugins: PLUGINS({
+      devMode: false,
       minify: true,
       nodeResolve: {
         resolveOnly: RESOLVE_ONLY
@@ -102,6 +111,7 @@ export default [
     },
     external: EXTERNAL_LIBS,
     plugins: PLUGINS({
+      devMode: true,
       minify: false
     })
   },
@@ -116,6 +126,7 @@ export default [
     },
     external: EXTERNAL_LIBS,
     plugins: PLUGINS({
+      devMode: false,
       minify: true
     })
   }

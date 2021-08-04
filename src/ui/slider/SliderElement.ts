@@ -12,6 +12,8 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { eventListener, vdsEvent } from '../../base/events';
+import { ElementLogger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import {
   clampNumber,
   getNumberOfDecimalPlaces,
@@ -103,6 +105,8 @@ export class SliderElement extends WithFocus(LitElement) {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` property of the slider.
@@ -492,9 +496,18 @@ export class SliderElement extends WithFocus(LitElement) {
 
   protected _startDragging(event: PointerEvent) {
     if (this._isDragging) return;
+
     this._isDragging = true;
     this.setAttribute('dragging', '');
     this._updateValueBasedOnThumbPosition(event);
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('started dragging')
+        .appendWithLabel('Event', event)
+        .end();
+    }
+
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-start', {
         originalEvent: event,
@@ -505,10 +518,19 @@ export class SliderElement extends WithFocus(LitElement) {
 
   protected _stopDragging(event: PointerEvent) {
     if (!this._isDragging) return;
+
     this._isDragging = false;
     this._dispatchValueChange.cancel();
     this.removeAttribute('dragging');
     this._updateValueBasedOnThumbPosition(event);
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('stopped dragging')
+        .appendWithLabel('Event', event)
+        .end();
+    }
+
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-end', {
         originalEvent: event,

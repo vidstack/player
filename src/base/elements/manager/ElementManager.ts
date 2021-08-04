@@ -1,6 +1,8 @@
 import { ReactiveElement } from 'lit';
 
+import { DEV_MODE } from '../../../env';
 import { DisposalBin, listen } from '../../events';
+import { Logger } from '../../logger';
 import { ScopedDiscoveryEvent } from '../discovery/events';
 import { ManagedElementConnectEvent } from './ManagedElement';
 
@@ -14,7 +16,13 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
 
   protected readonly _disconnectDisposal = new DisposalBin();
 
+  protected readonly _logger!: Logger;
+
   constructor(protected readonly _host: ReactiveElement) {
+    if (DEV_MODE) {
+      this._logger = new Logger(_host, { owner: this });
+    }
+
     _host.addController({
       hostConnected: this._handleHostConnected.bind(this),
       hostDisconnected: this._handleHostDisconnected.bind(this)
@@ -31,11 +39,19 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
         this._handleElementConnect.bind(this)
       )
     );
+
+    if (DEV_MODE) {
+      this._logger.debug('started listening');
+    }
   }
 
   protected _handleHostDisconnected() {
     this._disconnectDisposal.empty();
     this._removeAllElements();
+
+    if (DEV_MODE) {
+      this._logger.debug('disconnected');
+    }
   }
 
   protected _handleElementConnect(
@@ -60,6 +76,13 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
     if (this._managedElements.has(element)) return;
     this._managedElements.add(element);
     this._handleElementAdded(element);
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('added element')
+        .appendWithLabel('Element', element)
+        .end();
+    }
   }
 
   protected _handleElementAdded(element: ManagedElement) {
@@ -70,6 +93,13 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
     if (!this._managedElements.has(element)) return;
     this._managedElements.delete(element);
     this._handleElementRemoved(element);
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('removed element')
+        .appendWithLabel('Element', element)
+        .end();
+    }
   }
 
   protected _removeAllElements() {

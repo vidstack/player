@@ -5,6 +5,8 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { eventListener } from '../../base/events';
+import { ElementLogger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { toggleButtonElementStyles } from './styles';
 
 export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
@@ -47,6 +49,14 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
   // Properties
   // -------------------------------------------------------------------------------------------
 
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+
+  /**
+   * Whether the toggle is currently in a `pressed` state.
+   */
+  @property({ type: Boolean, reflect: true })
+  pressed = false;
+
   /**
    * ♿ **ARIA:** The `aria-label` property of the underlying button.
    */
@@ -65,14 +75,11 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
   @property({ attribute: 'described-by', reflect: true })
   describedBy: string | undefined;
 
-  @property({ attribute: 'pressed', type: Boolean, reflect: true })
-  protected _pressed = false;
-
   /**
    * Whether the toggle is in the `pressed` state.
    */
   get isPressed() {
-    return this._pressed;
+    return this.pressed;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -102,7 +109,7 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
         id="button"
         part="button"
         aria-label=${ifNonEmpty(this.label)}
-        aria-pressed=${this._pressed ? 'true' : 'false'}
+        aria-pressed=${this.pressed ? 'true' : 'false'}
         aria-described-by=${ifNonEmpty(this.describedBy)}
         ?disabled=${this.disabled}
         @click=${this._handleButtonClick}
@@ -127,7 +134,7 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
   }
 
   protected _handleButtonClick(event: Event) {
-    this._pressed = !this._pressed;
+    this.pressed = !this.pressed;
   }
 
   @eventListener('click', { capture: true })

@@ -6,7 +6,7 @@ import {
 } from '../base/context';
 import { keysOf } from '../utils/object';
 import { MediaType } from './MediaType';
-import { CloneableTimeRanges, createTimeRanges } from './time-ranges';
+import { createTimeRanges } from './time-ranges';
 import { ViewType } from './ViewType';
 
 // Decalred here as they are used within derived contexts below.
@@ -357,8 +357,10 @@ export function cloneMediaContextRecord<
   T extends ContextProviderRecord<typeof mediaContext>
 >(context: T): T {
   const clone = JSON.parse(JSON.stringify(context)) as T;
-  clone.buffered = (context.buffered as CloneableTimeRanges).clone();
-  clone.seekable = (context.seekable as CloneableTimeRanges).clone();
-  clone.played = (context.played as CloneableTimeRanges).clone();
+
+  clone.buffered = context.buffered;
+  clone.seekable = context.seekable;
+  clone.played = context.played;
+
   return clone;
 }

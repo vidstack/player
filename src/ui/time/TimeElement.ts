@@ -3,6 +3,8 @@ import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../base/directives';
+import { ElementLogger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { formatHtml5Duration, formatTime } from '../../utils/time';
 import { timeElementStyles } from './styles';
 
@@ -45,6 +47,8 @@ export class TimeElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` property of the time.

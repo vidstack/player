@@ -1,6 +1,8 @@
 import { ReactiveElement } from 'lit';
 
 import { DisposalBin, listen, vdsEvent } from '../../../base/events';
+import { Logger } from '../../../base/logger';
+import { DEV_MODE } from '../../../env';
 import { keysOf } from '../../../utils/object';
 import { mediaContext } from '../../context';
 
@@ -17,7 +19,13 @@ export type IdleManagerHost = ReactiveElement & {
 export class IdleManager {
   protected readonly _disposal = new DisposalBin();
 
+  protected readonly _logger!: Logger;
+
   constructor(protected readonly _host: IdleManagerHost) {
+    if (DEV_MODE) {
+      this._logger = new Logger(_host, { owner: this });
+    }
+
     _host.addController({
       hostConnected: () => {
         const eventHandlers = {
@@ -79,6 +87,7 @@ export class IdleManager {
   start(request?: Event) {
     this.stop(request);
     if (this._preventIdling) return;
+
     this._timeoutId = window.setTimeout(() => {
       this._setIdleContext(true);
       this._handleIdleChange(request);
@@ -133,11 +142,27 @@ export class IdleManager {
 
   protected _handleResumeIdleTracking(request?: Event) {
     request?.stopPropagation();
+
+    if (DEV_MODE && request) {
+      this._logger
+        .debugGroup(`📬 received \`${request.type}\``)
+        .appendWithLabel('Request', request)
+        .end();
+    }
+
     this.resume();
   }
 
   protected _handlePauseIdleTracking(request?: Event) {
     request?.stopPropagation();
+
+    if (DEV_MODE && request) {
+      this._logger
+        .debugGroup(`📬 received \`${request.type}\``)
+        .appendWithLabel('Request', request)
+        .end();
+    }
+
     this.pause();
   }
 }

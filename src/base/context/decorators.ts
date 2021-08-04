@@ -1,5 +1,6 @@
 import { ReactiveElement } from 'lit';
 
+import { DEV_MODE } from '../../env';
 import { isFunction } from '../../utils/unit';
 import {
   isReactiveElementProto,
@@ -43,6 +44,8 @@ export function provideContext<T>(
   };
 }
 
+const WATCH_SYMBOL_DESC = 'Vidstack.watchContext';
+
 export function watchContext<T>(
   context: Context<T>,
   options: Omit<ConsumeContextOptions<T>, 'id'> = {}
@@ -55,13 +58,18 @@ export function watchContext<T>(
 
     if (isReactiveElementProto(decoratorName, proto)) {
       const ctor = proto.constructor;
-      defineContextConsumer(ctor, Symbol('Vidstack.watchContext'), context, {
-        ...options,
-        onUpdate(newValue) {
-          if (isFunction(this[methodName])) this[methodName](newValue);
-          options?.onUpdate?.(newValue);
+      defineContextConsumer(
+        ctor,
+        Symbol(`Vidstack.${String(methodName)}`),
+        context,
+        {
+          ...options,
+          onUpdate(newValue) {
+            if (isFunction(this[methodName])) this[methodName](newValue);
+            options?.onUpdate?.(newValue);
+          }
         }
-      });
+      );
     }
   };
 }
@@ -81,7 +89,12 @@ export function defineContextProvider<T = any>(
 
   ctor.addInitializer((element) => {
     if (!element[PROVIDERS]) element[PROVIDERS] = new Map();
-    const provider = context.provide(element, options);
+
+    const provider = context.provide(element, {
+      debug: DEV_MODE && name,
+      ...options
+    });
+
     element[PROVIDERS].set(name, provider);
   });
 
@@ -117,14 +130,24 @@ export function defineContextConsumer<T = any>(
       options.transform?.(context.initialValue) ?? context.initialValue;
 
     const consumer = context.consume(element, {
+      debug: DEV_MODE && name,
       ...options,
       onUpdate: (newValue) => {
+        options.onUpdate?.call(element, newValue);
+
+        if (
+          typeof name === 'symbol' &&
+          name.toString().startsWith('Vidstack.')
+        ) {
+          return;
+        }
+
         if (options.shouldRequestUpdate ?? true) {
+          // Trigger any setters.
+          element[name] = newValue;
           element.requestUpdate(name, oldValue);
           oldValue = newValue;
         }
-
-        options.onUpdate?.call(element, newValue);
       }
     });
 

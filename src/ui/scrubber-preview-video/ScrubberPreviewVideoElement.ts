@@ -11,6 +11,8 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { watchContext } from '../../base/context';
 import { ifNonEmpty } from '../../base/directives';
 import { redispatchEvent } from '../../base/events';
+import { ElementLogger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { scrubberPreviewContext } from '../scrubber-preview';
 import { scrubberPreviewVideoElementStyles } from './styles';
 
@@ -62,6 +64,8 @@ export class ScrubberPreviewVideoElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /**
    * The URL of a media resource to use.
@@ -127,6 +131,15 @@ export class ScrubberPreviewVideoElement extends LitElement {
   protected _handleCanPlay(event: Event) {
     this._canPlay = true;
     this.setAttribute('video-can-play', '');
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('preview video can play')
+        .appendWithLabel('Video', this.videoElement)
+        .appendWithLabel('Event', event)
+        .end();
+    }
+
     redispatchEvent(this, event);
   }
 
@@ -136,6 +149,15 @@ export class ScrubberPreviewVideoElement extends LitElement {
   protected _handleError(event: Event) {
     this._hasError = true;
     this.setAttribute('video-error', '');
+
+    if (DEV_MODE) {
+      this._logger
+        .errorGroup('preview video error')
+        .appendWithLabel('Video', this.videoElement)
+        .appendWithLabel('Event', event)
+        .end();
+    }
+
     redispatchEvent(this, event);
   }
 

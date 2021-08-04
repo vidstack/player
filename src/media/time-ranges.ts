@@ -4,8 +4,6 @@
 
 import { isArray, isNumber, isUndefined } from '../utils/unit';
 
-export type CloneableTimeRanges = TimeRanges & { clone(): CloneableTimeRanges };
-
 /**
  * Check if any of the time ranges are over the maximum index.
  *
@@ -46,8 +44,6 @@ function getRange(
  * @param ranges - An array of time ranges.
  */
 function createTimeRangesObj(ranges?: [number, number][]): TimeRanges {
-  const clone = () => createTimeRangesObj(ranges);
-
   if (isUndefined(ranges) || ranges.length === 0) {
     const throwEmptyError = () => {
       throw new Error('This TimeRanges object is empty');
@@ -56,18 +52,14 @@ function createTimeRangesObj(ranges?: [number, number][]): TimeRanges {
     return {
       length: 0,
       start: throwEmptyError,
-      end: throwEmptyError,
-      // @ts-expect-error
-      clone
+      end: throwEmptyError
     };
   }
 
   return {
     length: ranges.length,
     start: getRange.bind(null, 'start', 0, ranges),
-    end: getRange.bind(null, 'end', 1, ranges),
-    // @ts-expect-error
-    clone
+    end: getRange.bind(null, 'end', 1, ranges)
   };
 }
 

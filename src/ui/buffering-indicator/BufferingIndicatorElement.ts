@@ -1,6 +1,8 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
 import { watchContext } from '../../base/context';
+import { ElementLogger } from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { mediaContext } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { bufferingIndicatorElementStyles } from './styles';
@@ -47,6 +49,8 @@ export class BufferingIndicatorElement extends LitElement {
   protected override render(): TemplateResult {
     return html`<slot></slot>`;
   }
+
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   @watchContext(mediaContext.canPlay)
   protected _handleCanPlayContextUpdate(canPlay: boolean) {

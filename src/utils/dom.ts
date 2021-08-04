@@ -107,13 +107,15 @@ export function getElementAttributes(
 export function observeAndForwardAttributes(
   elementA: Element,
   elementB: Element,
-  attributes: Set<string>
+  attributes: Set<string>,
+  onChange?: (attrName: string, attrValue: string) => void
 ): MutationObserver {
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       if (mutation.type === 'attributes') {
         const attrName = mutation.attributeName as string;
         const attrValue = elementA.getAttribute(attrName) as string;
+        onChange?.(attrName, attrValue);
         setAttribute(elementB, attrName, attrValue);
       }
     }

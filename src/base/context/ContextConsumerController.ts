@@ -1,7 +1,9 @@
 import { ReactiveController, ReactiveControllerHost } from 'lit';
 
+import { DEV_MODE } from '../../env';
 import { isNil, isUndefined, notEqual } from '../../utils/unit';
 import { DisposalBin, vdsEvent } from '../events';
+import { Logger } from '../logger';
 
 export type ConsumeContextOptions<T> = {
   /**
@@ -9,9 +11,9 @@ export type ConsumeContextOptions<T> = {
    */
   id: symbol;
   /**
-   * For backwards compatiblity - currently does nothing.
+   * Provide a name for debugging.
    */
-  debug?: boolean;
+  debug?: string | symbol;
   /**
    * Whether context updates should also request an update on the controller host to trigger
    * a re-render.
@@ -42,12 +44,18 @@ export class ContextConsumerController<T> implements ReactiveController {
 
   protected _hasConnectedToProvider = false;
 
+  protected readonly _logger!: Logger;
+
   protected readonly _disposal = new DisposalBin();
 
   protected readonly consumerId = Symbol('Vidstack.consumerId');
 
   get id() {
     return this._options.id;
+  }
+
+  get debug() {
+    return this._options.debug;
   }
 
   get value() {
@@ -66,6 +74,13 @@ export class ContextConsumerController<T> implements ReactiveController {
     public readonly initialValue: T,
     protected readonly _options: ConsumeContextOptions<T>
   ) {
+    if (DEV_MODE && _options.debug) {
+      this._logger = new Logger(_host, {
+        name: `🧵 ${String(this.debug)}`,
+        owner: this
+      });
+    }
+
     this._value = this._transformValue(initialValue);
     if (_host instanceof Element) this.setRef(_host);
     _host.addController(this);
@@ -96,12 +111,17 @@ export class ContextConsumerController<T> implements ReactiveController {
   start() {
     if (this._hasConnectedToProvider || isNil(this._ref)) return;
 
+    if (DEV_MODE && this.debug) {
+      this._logger.debug('attempting to connect...');
+    }
+
     this._ref.dispatchEvent(
       vdsEvent('vds-context-consumer-connect', {
         bubbles: true,
         composed: true,
         detail: {
           id: this.id,
+          debug: this.debug,
           consumerId: this.consumerId,
           onConnect: this._handleContextConnect.bind(this),
           onUpdate: this._handleContextUpdate.bind(this),
@@ -117,15 +137,24 @@ export class ContextConsumerController<T> implements ReactiveController {
    */
   stop() {
     if (!this._hasConnectedToProvider) return;
+
     this._disposal.empty();
     this._options.onDisconnect?.();
     this._hasConnectedToProvider = false;
+
+    if (DEV_MODE && this.debug) {
+      this._logger.debug('stopped');
+    }
   }
 
   /**
    * Stop current connection to provider and attempts to reconnect.
    */
   reconnect() {
+    if (DEV_MODE && this.debug) {
+      this._logger.debug('reconnecting');
+    }
+
     this.stop();
     this.start();
   }
@@ -134,6 +163,10 @@ export class ContextConsumerController<T> implements ReactiveController {
     this._hasConnectedToProvider = true;
     this._options.onConnect?.();
     this._options.onUpdate?.(this._value);
+
+    if (DEV_MODE && this.debug) {
+      this._logger.debug('connected');
+    }
   }
 
   protected _handleContextUpdate(newValue: T) {
@@ -145,6 +178,10 @@ export class ContextConsumerController<T> implements ReactiveController {
 
       if (this._options.shouldRequestUpdate) {
         this._host.requestUpdate();
+      }
+
+      if (DEV_MODE && this.debug) {
+        this._logger.debug('updated to', newValue);
       }
     }
   }

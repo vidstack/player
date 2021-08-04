@@ -14,6 +14,10 @@ export type ContextConsumerConnectEventDetail<T> = {
    */
   consumerId: symbol;
   /**
+   * A name for debugging purposes.
+   */
+  debug?: string | symbol;
+  /**
    * Called when the consumer has successfully connected to a pairable provider.
    */
   onConnect(): void;
@@ -28,7 +32,7 @@ export type ContextConsumerConnectEventDetail<T> = {
   onDisconnect(callback: () => void): void;
   /**
    * The provider can request the consumer to reconnect if needed. Generally called when the
-   * current provider target changes.
+   * current provider ref changes.
    */
   reconnect(): void;
 };

@@ -1,3 +1,4 @@
+import { DEV_MODE } from '../../env';
 import { Context } from './context';
 import { ContextConsumerController } from './ContextConsumerController';
 import { ContextConsumerManager } from './ContextConsumerManager';
@@ -21,6 +22,15 @@ export abstract class ContextBindingController<
       this._handleContextUpdate(consumer);
     }
 
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('add binding')
+        .appendWithLabel('Context', context)
+        .appendWithLabel('Consumer', consumer)
+        .appendWithLabel('Binding', binding)
+        .end();
+    }
+
     return this;
   }
 
@@ -30,7 +40,19 @@ export abstract class ContextBindingController<
   unbind(context: Context<any>) {
     const consumer = this._consumers.get(context);
     this.removeContext(context);
+
+    const binding = consumer ? this._bindings.get(consumer) : undefined;
     if (consumer) this._bindings.delete(consumer);
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('remove binding')
+        .appendWithLabel('Context', context)
+        .appendWithLabel('Consumer', consumer)
+        .appendWithLabel('Binding', binding)
+        .end();
+    }
+
     return this;
   }
 
@@ -38,6 +60,14 @@ export abstract class ContextBindingController<
     if (!this._bindings.has(consumer)) return;
     const binding = this._bindings.get(consumer)!;
     this._handleBindToContext(consumer, binding);
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('binding connected')
+        .appendWithLabel('Consumer', consumer)
+        .appendWithLabel('Binding', binding)
+        .end();
+    }
   }
 
   protected abstract _handleBindToContext(
@@ -49,6 +79,14 @@ export abstract class ContextBindingController<
     if (!this._bindings.has(consumer)) return;
     const binding = this._bindings.get(consumer)!;
     this._handleBindingUpdate(consumer, binding);
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('binding update')
+        .appendWithLabel('Consumer', consumer)
+        .appendWithLabel('Binding', binding)
+        .end();
+    }
   }
 
   protected abstract _handleBindingUpdate(
@@ -60,6 +98,14 @@ export abstract class ContextBindingController<
     if (!this._bindings.has(consumer)) return;
     const binding = this._bindings.get(consumer)!;
     this._handleUnbindFromContext(consumer, binding);
+
+    if (DEV_MODE) {
+      this._logger
+        .debugGroup('binding disconnected')
+        .appendWithLabel('Consumer', consumer)
+        .appendWithLabel('Binding', binding)
+        .end();
+    }
   }
 
   protected abstract _handleUnbindFromContext(

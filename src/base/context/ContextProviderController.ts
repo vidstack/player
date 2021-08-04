@@ -1,7 +1,9 @@
 import { ReactiveController, ReactiveControllerHost } from 'lit';
 
+import { DEV_MODE } from '../../env';
 import { isNil, notEqual } from '../../utils/unit';
 import { DisposalBin, listen } from '../events';
+import { Logger } from '../logger';
 import {
   ContextConsumerConnectEvent,
   ContextConsumerConnectEventDetail
@@ -13,9 +15,9 @@ export type ProvideContextOptions<T> = {
    */
   id: symbol;
   /**
-   * For backwards compatiblity - currently does nothing.
+   * Provide a name for debugging.
    */
-  debug?: boolean;
+  debug?: string | symbol;
   /**
    * Called when the host controller has connected to the DOM.
    */
@@ -37,6 +39,8 @@ export class ContextProviderController<T> implements ReactiveController {
 
   protected _isProviding = false;
 
+  protected readonly _logger!: Logger;
+
   protected readonly _disposal = new DisposalBin();
 
   protected readonly _consumers = new Set<
@@ -45,6 +49,10 @@ export class ContextProviderController<T> implements ReactiveController {
 
   get id() {
     return this._options.id;
+  }
+
+  get debug() {
+    return this._options.debug;
   }
 
   get value() {
@@ -70,6 +78,13 @@ export class ContextProviderController<T> implements ReactiveController {
     public readonly initialValue: T,
     protected readonly _options: ProvideContextOptions<T>
   ) {
+    if (DEV_MODE && _options.debug) {
+      this._logger = new Logger(_host, {
+        name: `🧵 ${String(this.debug)}`,
+        owner: this
+      });
+    }
+
     this._value = initialValue;
     if (_host instanceof Element) this.setRef(_host);
     _host.addController(this);
@@ -122,18 +137,30 @@ export class ContextProviderController<T> implements ReactiveController {
     this._disposal.add(dispose);
 
     this._isProviding = true;
+
+    if (DEV_MODE && this.debug) {
+      this._logger.debug('started');
+    }
   }
 
   /**
    * Stop providing context to consumers.
    */
   stop(shouldConsumersReconnect = true) {
+    if (!this._isProviding && this._consumers.size === 0) return;
+
     const consumers = new Set(this._consumers);
+
     this._disposal.empty();
     this._consumers.clear();
     this._isProviding = false;
+
     if (shouldConsumersReconnect) {
       consumers.forEach((consumer) => consumer.reconnect());
+    }
+
+    if (DEV_MODE && this.debug) {
+      this._logger.debug('stopped');
     }
   }
 
@@ -159,6 +186,10 @@ export class ContextProviderController<T> implements ReactiveController {
 
   protected _updateConsumers() {
     if (!this._isProviding) return;
+
+    if (DEV_MODE && this.debug) {
+      this._logger.debug('updating to', this._value);
+    }
 
     this._consumers.forEach((consumer) => {
       consumer.onUpdate(this._value);

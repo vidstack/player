@@ -44,13 +44,13 @@ export class FullscreenButtonElement extends ToggleButtonElement {
   override label = 'Fullscreen';
 
   @consumeContext(mediaContext.fullscreen)
-  protected override _pressed = mediaContext.fullscreen.initialValue;
+  override pressed = mediaContext.fullscreen.initialValue;
 
   @consumeContext(mediaContext.canPlay)
   protected _mediaCanPlay = mediaContext.canPlay.initialValue;
 
   protected override _handleButtonClick(event: Event) {
-    if (this._pressed) {
+    if (this.pressed) {
       this._mediaRemote.exitFullscreen(event);
     } else {
       this._mediaRemote.enterFullscreen(event);

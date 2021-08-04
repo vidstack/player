@@ -4,6 +4,13 @@ import { property } from 'lit/decorators.js';
 import { ExtractContextRecordTypes } from '../../base/context';
 import { discover, DiscoveryEvent } from '../../base/elements';
 import { eventListener } from '../../base/events';
+import {
+  ElementLogger,
+  logLevel,
+  LogLevelName,
+  LogLevelNameMap
+} from '../../base/logger';
+import { DEV_MODE } from '../../env';
 import { isNil } from '../../utils/unit';
 import {
   MediaContainerConnectEvent,
@@ -91,11 +98,37 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   readonly idleManager = new IdleManager(this);
 
+  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+
   /**
    * An immutable snapshot of the current media state.
    */
   get mediaState(): Readonly<ExtractContextRecordTypes<typeof mediaContext>> {
     return cloneMediaContextRecord(this.ctx);
+  }
+
+  protected _logLevelCtx = logLevel.provide(this);
+
+  /**
+   * Sets the default log level throughout the player. Valid values in order of
+   * level include `silent`, `error`, `warn`, `info` and `debug`. This level is persisted
+   * to local storage so it shouldn't change during page reloads.
+   *
+   * @default `info`
+   */
+  @property({ attribute: 'log-level' })
+  get logLevel(): LogLevelName {
+    return DEV_MODE
+      ? (LogLevelNameMap[this._logLevelCtx.value] as LogLevelName)
+      : 'silent';
+  }
+
+  set logLevel(newLevel: LogLevelName) {
+    const numericLevel = DEV_MODE
+      ? Object.values(LogLevelNameMap).findIndex((l) => l === newLevel)
+      : 0;
+
+    this._logLevelCtx.value = numericLevel;
   }
 
   /**
@@ -135,6 +168,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   // -------------------------------------------------------------------------------------------
   // Media Container
   // -------------------------------------------------------------------------------------------
+
   protected _mediaContainer: MediaContainerElement | undefined;
 
   /**
@@ -152,11 +186,28 @@ export class MediaControllerElement extends WithMediaProviderBridge(
     event.stopPropagation();
     this._handleMediaContainerDisconnect();
     const { element, onDisconnect } = event.detail;
+
+    if (DEV_MODE) {
+      this._logger
+        .infoGroup('media container connected')
+        .appendWithLabel('Container', element)
+        .end();
+    }
+
     this._mediaContainer = element;
     onDisconnect(this._handleMediaContainerDisconnect.bind(this));
   }
 
   protected _handleMediaContainerDisconnect(): void {
+    if (isNil(this.mediaContainer)) return;
+
+    if (DEV_MODE) {
+      this._logger
+        .infoGroup('media container disconnected')
+        .appendWithLabel('Container', this._mediaContainer)
+        .end();
+    }
+
     this._mediaContainer = undefined;
   }
 
@@ -171,6 +222,13 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    */
   protected _mediaRequestEventGateway(event: Event) {
     event.stopPropagation();
+
+    if (DEV_MODE) {
+      this._logger
+        .infoGroup(`📬 received \`${event.type}\``)
+        .appendWithLabel('Request', event)
+        .end();
+    }
   }
 
   @eventListener('vds-mute-request')

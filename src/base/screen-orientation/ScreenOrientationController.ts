@@ -1,7 +1,9 @@
 import { ReactiveElement } from 'lit';
 
+import { DEV_MODE } from '../../env';
 import { canOrientScreen, IS_CLIENT } from '../../utils/support';
 import { DisposalBin, listen, vdsEvent } from '../events';
+import { Logger } from '../logger';
 import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 
 /**
@@ -20,12 +22,18 @@ import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 export class ScreenOrientationController {
   protected readonly _disconnectDisposal = new DisposalBin();
 
+  protected readonly _logger!: Logger;
+
   protected _screenOrientation?: ScreenOrientation;
 
   protected _isScreenOrientationLocked = false;
 
   constructor(protected readonly _host: ReactiveElement) {
     this._updateScreenOrientation();
+
+    if (DEV_MODE) {
+      this._logger = new Logger(_host, { owner: this });
+    }
 
     _host.addController({
       hostConnected: this._handleHostConnected.bind(this),
@@ -81,6 +89,10 @@ export class ScreenOrientationController {
   async lock(lockType: ScreenOrientationLock): Promise<void> {
     this._throwIfScreenOrientationUnavailable();
 
+    if (DEV_MODE) {
+      this._logger.info('locking screen orientation', lockType);
+    }
+
     await screen.orientation.lock(lockType);
 
     this._isScreenOrientationLocked = true;
@@ -100,6 +112,11 @@ export class ScreenOrientationController {
    */
   async unlock(): Promise<void> {
     this._throwIfScreenOrientationUnavailable();
+
+    if (DEV_MODE) {
+      this._logger.info('unlocking screen orientation');
+    }
+
     await screen.orientation.unlock();
     this._isScreenOrientationLocked = false;
     this._host.dispatchEvent(
@@ -130,6 +147,11 @@ export class ScreenOrientationController {
   protected _handleOrientationChange(event: Event) {
     this._screenOrientation = window.screen.orientation
       .type as ScreenOrientation;
+
+    if (DEV_MODE) {
+      this._logger.info('screen orientation changed', this._screenOrientation);
+    }
+
     this._host.dispatchEvent(
       vdsEvent('vds-screen-orientation-change', {
         detail: this._screenOrientation,
