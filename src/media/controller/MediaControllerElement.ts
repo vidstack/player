@@ -111,8 +111,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   /**
    * Sets the default log level throughout the player. Valid values in order of
-   * level include `silent`, `error`, `warn`, `info` and `debug`. This level is persisted
-   * to local storage so it shouldn't change during page reloads.
+   * level include `silent`, `error`, `warn`, `info` and `debug`.
    *
    * @default `info`
    */
