@@ -621,16 +621,13 @@ export abstract class MediaProviderElement extends LitElement {
 
     if (DEV_MODE) {
       this._logger
-        .infoGroup('✅ media ready')
+        .infoGroup(
+          '-------------------------- ✅ MEDIA READY -----------------------------------'
+        )
         .appendWithLabel('Context', this.mediaState)
         .appendWithLabel('Event', event)
         .appendWithLabel('Engine', this.engine)
         .end();
-
-      console.log(
-        '%c------ MEDIA READY ------',
-        'font-size: 16px; padding: 4px; background: hsla(127, 67%, 34%, 1); color: white; border-radius: 2px;'
-      );
     }
   }
 
