@@ -101,6 +101,7 @@ export abstract class MediaProviderElement extends LitElement {
   protected override updated(changedProperties: PropertyValues) {
     if (changedProperties.has('autoplay')) {
       this.ctx.autoplay = this.autoplay;
+      if (this.autoplay) this._queueAutoplay();
     }
 
     if (changedProperties.has('controls')) {
@@ -692,6 +693,69 @@ export abstract class MediaProviderElement extends LitElement {
         .appendWithLabel('Event', event)
         .appendWithLabel('Engine', this.engine)
         .end();
+    }
+  }
+
+  protected _autoplayRetryCount = 0;
+  protected _maxAutoplayRetries = 3;
+  protected _shouldMuteLastAutoplayAttempt = true;
+
+  protected _queueAutoplay() {
+    if (this.ctx.started || !this.autoplay) return;
+    this.mediaRequestQueue.queue('autoplay', this._attemptAutoplay.bind(this));
+  }
+
+  protected async _attemptAutoplay() {
+    if (!this.autoplay || !this.paused || !this.canPlay) return;
+
+    // On last attempt try muted.
+    const shouldTryMuted =
+      !this.muted &&
+      this._shouldMuteLastAutoplayAttempt &&
+      this._autoplayRetryCount === this._maxAutoplayRetries - 1;
+
+    if (DEV_MODE && this._autoplayRetryCount > 0) {
+      this._logger
+        .warnGroup(
+          `Seems like autoplay has failed, retrying [attempt ${
+            this._autoplayRetryCount
+          }]${shouldTryMuted ? ' muted' : ''}...`
+        )
+        .appendWithLabel('Engine', this.engine)
+        .end();
+    }
+
+    let didAttemptSucceed = false;
+
+    try {
+      if (shouldTryMuted) this.muted = true;
+      await this.play();
+      didAttemptSucceed = true;
+
+      if (DEV_MODE) {
+        this._logger.info('✅ Autoplay was successful.');
+      }
+    } catch (e) {
+      if (DEV_MODE) {
+        this._logger
+          .errorGroup(
+            `Autoplay retry [attempt ${this._autoplayRetryCount}] failed.`
+          )
+          .appendWithLabel('Engine', this.engine)
+          .appendWithLabel('Error', e)
+          .end();
+      }
+    }
+
+    const shouldTryAgain =
+      !didAttemptSucceed && this._autoplayRetryCount < this._maxAutoplayRetries;
+
+    if (shouldTryAgain) {
+      this._autoplayRetryCount += 1;
+      return this._attemptAutoplay();
+    } else {
+      // Give up.
+      this._autoplayRetryCount = 0;
     }
   }
 
