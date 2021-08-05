@@ -141,7 +141,15 @@ export class FullscreenController {
     }
 
     // @ts-expect-error
-    return listen(fscreen, 'fullscreenchange', listener);
+    const dispose = listen(fscreen, 'fullscreenchange', listener);
+
+    return () => {
+      if (DEV_MODE) {
+        this._logger.debug('removing `fullscreenchange` listener');
+      }
+
+      dispose();
+    };
   }
 
   /**
@@ -158,7 +166,15 @@ export class FullscreenController {
     }
 
     // @ts-expect-error
-    return listen(fscreen, 'fullscreenerror', listener);
+    const dispose = listen(fscreen, 'fullscreenerror', listener);
+
+    return () => {
+      if (DEV_MODE) {
+        this._logger.debug('removing `fullscreenerror` listener');
+      }
+
+      dispose();
+    };
   }
 
   async requestFullscreen(): Promise<void> {
@@ -172,29 +188,17 @@ export class FullscreenController {
 
     // TODO: Check if PiP is active, if so make sure to exit - need PiPController.
 
-    this._disconnectDisposal.add(() => {
-      const dispose = this._addFullscreenChangeEventListener(
+    this._disconnectDisposal.add(
+      this._addFullscreenChangeEventListener(
         this._handleFullscreenChange.bind(this)
-      );
+      )
+    );
 
-      if (DEV_MODE) {
-        this._logger.debug('removing `fullscreenchange` listener');
-      }
-
-      dispose();
-    });
-
-    this._disconnectDisposal.add(() => {
-      const dispose = this._addFullscreenErrorEventListener(
+    this._disconnectDisposal.add(
+      this._addFullscreenErrorEventListener(
         this._handleFullscreenError.bind(this)
-      );
-
-      if (DEV_MODE) {
-        this._logger.debug('removing `fullscreenerror` listener');
-      }
-
-      dispose();
-    });
+      )
+    );
 
     const response = await this._makeEnterFullscreenRequest();
     await this._lockScreenOrientation();
