@@ -54,10 +54,16 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
 
     readonly mediaProviderConnectedQueue = new RequestQueue(
       this,
-      DEV_MODE && 'mediaProviderConnectedQueue'
+      DEV_MODE && {
+        name: 'mediaProviderConnectedQueue',
+        owner: this
+      }
     );
 
-    readonly mediaProviderDisconnectDisposal = new DisposalBin();
+    readonly mediaProviderDisconnectDisposal = new DisposalBin(
+      this,
+      DEV_MODE && { name: 'mediaProviderDisconnectDisposal', owner: this }
+    );
 
     protected _mediaProvider: MediaProviderElement | undefined;
 

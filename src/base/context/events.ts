@@ -16,7 +16,7 @@ export type ContextConsumerConnectEventDetail<T> = {
   /**
    * A name for debugging purposes.
    */
-  debug?: string | symbol;
+  name?: string | symbol;
   /**
    * Called when the consumer has successfully connected to a pairable provider.
    */

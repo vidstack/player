@@ -56,7 +56,7 @@ export class MediaEventListenerController implements ReactiveController {
 
   protected readonly _logger!: Logger;
 
-  protected readonly _disposal = new DisposalBin();
+  protected readonly _listenerDisposal: DisposalBin;
 
   protected _ref?: Element;
 
@@ -69,6 +69,11 @@ export class MediaEventListenerController implements ReactiveController {
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+
+    this._listenerDisposal = new DisposalBin(
+      _host,
+      DEV_MODE && { name: 'listenerDisposal', owner: this }
+    );
 
     this._eventListeners = keysOf(eventListeners).reduce(
       (listeners, eventType) => [
@@ -83,7 +88,7 @@ export class MediaEventListenerController implements ReactiveController {
   }
 
   hostDisconnected() {
-    this._disposal.empty();
+    this._listenerDisposal.empty();
   }
 
   addListener<EventType extends keyof MediaEvents>(
@@ -120,17 +125,17 @@ export class MediaEventListenerController implements ReactiveController {
   protected _handleMediaControllerConnectEvent(
     event: MediaControllerConnectEvent
   ) {
-    this._disposal.empty();
+    this._listenerDisposal.empty();
 
     const { element: mediaController, onDisconnect } = event.detail;
 
     this._eventListeners.forEach(([type, listener]) => {
       const dispose = listen(mediaController, type, listener.bind(this._host));
-      this._disposal.add(dispose);
+      this._listenerDisposal.add(dispose);
     });
 
     onDisconnect(() => {
-      this._disposal.empty();
+      this._listenerDisposal.empty();
     });
   }
 }

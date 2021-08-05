@@ -110,7 +110,7 @@ export function provideContextRecord<T extends ContextRecord<unknown>>(
     ] as ProvideContextOptions<unknown>;
 
     const provider = context.provide(host, {
-      debug: DEV_MODE && contextKey,
+      name: DEV_MODE && contextKey,
       ...providerOptions
     });
 

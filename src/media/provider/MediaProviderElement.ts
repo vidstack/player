@@ -83,7 +83,10 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
-  protected readonly _disconnectDisposal = new DisposalBin();
+  protected readonly _disconnectDisposal = new DisposalBin(
+    this,
+    DEV_MODE && { name: 'disconnectDisposal', owner: this }
+  );
 
   override connectedCallback() {
     if (DEV_MODE) {
@@ -790,7 +793,7 @@ export abstract class MediaProviderElement extends LitElement {
    */
   readonly _connectedQueue = new RequestQueue(
     this,
-    DEV_MODE && 'connectedQueue'
+    DEV_MODE && { name: 'connectedQueue', owner: this }
   );
 
   /**
@@ -799,7 +802,7 @@ export abstract class MediaProviderElement extends LitElement {
    */
   readonly mediaRequestQueue = new RequestQueue(
     this,
-    DEV_MODE && 'mediaRequestQueue'
+    DEV_MODE && { name: 'mediaRequestQueue', owner: this }
   );
 
   // -------------------------------------------------------------------------------------------

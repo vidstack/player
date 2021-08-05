@@ -5,7 +5,7 @@ import {
   ElementDiscoveryController,
   ScopedDiscoveryEvent
 } from '../../elements/discovery';
-import { DisposalBin, VdsEvent } from '../../events';
+import { VdsEvent } from '../../events';
 
 export class ManagedElementConnectEvent<
   ManagedElement extends Element
@@ -17,8 +17,6 @@ export class ManagedElement<HostElement extends ReactiveElement> {
   protected static get _ScopedDiscoveryEvent(): ScopedDiscoveryEvent {
     return ManagedElementConnectEvent;
   }
-
-  protected readonly _disconnectDisposal = new DisposalBin();
 
   protected readonly _discoveryController: ElementDiscoveryController<HostElement>;
 

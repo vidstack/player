@@ -36,7 +36,7 @@ export class MediaRemoteControl implements ReactiveController {
 
     this._connectedQueue = new RequestQueue(
       _host,
-      DEV_MODE && 'remoteControlConnectedQueue'
+      DEV_MODE && { name: 'remoteControlConnectedQueue', owner: this }
     );
 
     if (_host instanceof Element) this.setRef(_host);

@@ -97,26 +97,6 @@ export function vdsEvent<EventType extends keyof GlobalEventHandlersEventMap>(
   return new VdsEvent(type, eventInit);
 }
 
-/**
- * A disposal bin used to add cleanup callbacks that can be called when required.
- */
-export class DisposalBin {
-  // @ts-expect-error
-  protected _disposal: (() => void)[] = this._disposal ?? [];
-
-  add(callback?: () => void) {
-    if (callback) this._disposal.push(callback);
-  }
-
-  /**
-   * Dispose of callbacks.
-   */
-  empty() {
-    this._disposal.forEach((fn) => fn());
-    this._disposal = [];
-  }
-}
-
 export type GlobalEventHandlerMap = {
   [EventType in keyof GlobalEventHandlersEventMap]?: (
     event: GlobalEventHandlersEventMap[EventType]

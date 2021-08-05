@@ -36,17 +36,22 @@ export type VideoPresentationControllerHost = ReactiveElement & {
 export class VideoPresentationController {
   protected readonly _logger!: Logger;
 
-  protected readonly _disconnectDisposal = new DisposalBin();
+  protected readonly _listenerDisposal: DisposalBin;
 
   constructor(protected readonly _host: VideoPresentationControllerHost) {
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
 
+    this._listenerDisposal = new DisposalBin(
+      _host,
+      DEV_MODE && { name: 'listenerDisposal', owner: this }
+    );
+
     const firstUpdated = (_host as any).firstUpdated;
     (_host as any).firstUpdated = (changedProperties: PropertyValues) => {
       firstUpdated?.call(_host, changedProperties);
-      this._disconnectDisposal.add(
+      this._listenerDisposal.add(
         this._addPresentationModeChangeEventListener()
       );
     };
@@ -58,7 +63,7 @@ export class VideoPresentationController {
 
   protected _handleHostDisconnected() {
     this.setPresentationMode('inline');
-    this._disconnectDisposal.empty();
+    this._listenerDisposal.empty();
   }
 
   /**

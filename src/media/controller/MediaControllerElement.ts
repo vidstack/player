@@ -94,7 +94,10 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
-  protected readonly _disconnectDisposal = new DisposalBin();
+  protected readonly _disconnectDisposal = new DisposalBin(
+    this,
+    DEV_MODE && { name: 'disconnectDisposal', owner: this }
+  );
 
   override connectedCallback() {
     if (DEV_MODE) {

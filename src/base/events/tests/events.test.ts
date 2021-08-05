@@ -1,7 +1,8 @@
 import { expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { DisposalBin, listen } from '../events';
+import { DisposalBin } from '../DisposalBin';
+import { listen } from '../events';
 
 describe('base/events', function () {
   describe('DisposalBin', function () {

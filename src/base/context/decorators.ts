@@ -89,7 +89,7 @@ export function defineContextProvider<T = any>(
     if (!element[PROVIDERS]) element[PROVIDERS] = new Map();
 
     const provider = context.provide(element, {
-      debug: DEV_MODE && name,
+      name: DEV_MODE && name,
       ...options
     });
 
@@ -126,7 +126,7 @@ export function defineContextConsumer<T = any>(
       options.transform?.(context.initialValue) ?? context.initialValue;
 
     context.consume(element, {
-      debug: DEV_MODE && name,
+      name: DEV_MODE && name,
       ...options,
       onUpdate: (newValue) => {
         options.onUpdate?.call(element, newValue);

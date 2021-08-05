@@ -17,7 +17,7 @@ export type ProvideContextOptions<T> = {
   /**
    * Provide a name for debugging.
    */
-  debug?: string | symbol;
+  name?: string | symbol;
   /**
    * Called when the host controller has connected to the DOM.
    */
@@ -41,7 +41,7 @@ export class ContextProviderController<T> implements ReactiveController {
 
   protected readonly _logger!: Logger;
 
-  protected readonly _disposal = new DisposalBin();
+  protected readonly _stopDisposal: DisposalBin;
 
   protected readonly _consumers = new Set<
     ContextConsumerConnectEventDetail<any>
@@ -51,8 +51,8 @@ export class ContextProviderController<T> implements ReactiveController {
     return this._options.id;
   }
 
-  get debug() {
-    return this._options.debug;
+  get name() {
+    return this._options.name;
   }
 
   get value() {
@@ -78,12 +78,17 @@ export class ContextProviderController<T> implements ReactiveController {
     public readonly initialValue: T,
     protected readonly _options: ProvideContextOptions<T>
   ) {
-    if (DEV_MODE && _options.debug) {
+    if (DEV_MODE && _options.name) {
       this._logger = new Logger(_host, {
-        name: `🧵 ${String(this.debug)}`,
+        name: `🧵 ${String(this.name)}`,
         owner: this
       });
     }
+
+    this._stopDisposal = new DisposalBin(
+      _host,
+      DEV_MODE && { name: 'contextProviderStopDisposal', owner: this }
+    );
 
     this._value = initialValue;
     if (_host instanceof Element) this.setRef(_host);
@@ -134,11 +139,11 @@ export class ContextProviderController<T> implements ReactiveController {
       this._handleConsumerConnect.bind(this)
     );
 
-    this._disposal.add(dispose);
+    this._stopDisposal.add(dispose);
 
     this._isProviding = true;
 
-    if (DEV_MODE && this.debug) {
+    if (DEV_MODE && this.name) {
       this._logger.debug('started');
     }
   }
@@ -151,7 +156,7 @@ export class ContextProviderController<T> implements ReactiveController {
 
     const consumers = new Set(this._consumers);
 
-    this._disposal.empty();
+    this._stopDisposal.empty();
     this._consumers.clear();
     this._isProviding = false;
 
@@ -159,7 +164,7 @@ export class ContextProviderController<T> implements ReactiveController {
       consumers.forEach((consumer) => consumer.reconnect());
     }
 
-    if (DEV_MODE && this.debug) {
+    if (DEV_MODE && this.name) {
       this._logger.debug('stopped');
     }
   }
@@ -187,7 +192,7 @@ export class ContextProviderController<T> implements ReactiveController {
   protected _updateConsumers() {
     if (!this._isProviding) return;
 
-    if (DEV_MODE && this.debug) {
+    if (DEV_MODE && this.name) {
       this._logger.debug('updating to', this._value);
     }
 

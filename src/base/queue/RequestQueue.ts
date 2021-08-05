@@ -4,23 +4,41 @@ import { DEV_MODE } from '../../env';
 import { deferredPromise } from '../../utils/promise';
 import { Logger } from '../logger';
 
-/**
- * @template {string|symbol} RequestKey
- * @template {() => void | Promise <void>} RequestCallback
- */
-export class RequestQueue<
-  RequestKey extends string | symbol = string | symbol,
-  RequestCallback extends () => void | Promise<void> = () => void | Promise<void>
-> {
-  protected _logger?: Logger;
+export interface RequestQueueOptions {
+  /**
+   * Provide a name for debugging purposes.
+   */
+  name?: string;
+  /**
+   * Provide the owner of this queue for debugging purposes.
+   */
+  owner?: any;
+}
 
-  protected _requestQueue = new Map<RequestKey, RequestCallback>();
+export class RequestQueue {
+  protected readonly _logger?: Logger;
+
+  protected readonly _requestQueue = new Map<
+    string | symbol,
+    () => void | Promise<void>
+  >();
 
   protected _pendingFlush = deferredPromise();
 
-  constructor(_host?: ReactiveControllerHost, _name?: string) {
-    if (DEV_MODE && _host) {
-      this._logger = new Logger(_host, { owner: this, name: `⌛ ${_name}` });
+  get name() {
+    return this._options.name;
+  }
+
+  constructor(
+    _host?: ReactiveControllerHost,
+    protected readonly _options: RequestQueueOptions = {}
+  ) {
+    if (DEV_MODE && _host && _options.name) {
+      const className = _options.owner ? ` [${this.constructor.name}]` : '';
+      this._logger = new Logger(_host, {
+        owner: _options.owner ?? this,
+        name: `️⌛ ${this.name}${className}`
+      });
     }
   }
 
@@ -39,7 +57,7 @@ export class RequestQueue<
   /**
    * Returns a clone of the current request queue.
    */
-  cloneQueue(): Map<RequestKey, RequestCallback> {
+  cloneQueue(): Map<string | symbol, () => void | Promise<void>> {
     return new Map(this._requestQueue);
   }
 
@@ -51,20 +69,23 @@ export class RequestQueue<
     await this._pendingFlush.promise;
   }
 
-  async queue(key: RequestKey, callback: RequestCallback): Promise<void> {
+  async queue(
+    key: string | symbol,
+    callback: () => void | Promise<void>
+  ): Promise<void> {
     this._requestQueue.set(key, callback);
 
-    if (DEV_MODE && !this.serveImmediately) {
-      this._logger?.debug(`queued \`${key}\``);
+    if (DEV_MODE && this.name && !this.serveImmediately) {
+      this._logger?.debug(`queued \`${String(key)}\``);
     }
 
     if (!this.serveImmediately) return;
     this.serve(key);
   }
 
-  async serve(key: RequestKey): Promise<void> {
-    if (DEV_MODE) {
-      this._logger?.debug(`serving \`${key}\``);
+  async serve(key: string | symbol): Promise<void> {
+    if (DEV_MODE && this.name) {
+      this._logger?.debug(`serving \`${String(key)}\``);
     }
 
     await this._requestQueue.get(key)?.();
@@ -76,7 +97,7 @@ export class RequestQueue<
     await Promise.all(requests.map((reqKey) => this.serve(reqKey)));
     this._flush();
 
-    if (DEV_MODE) {
+    if (DEV_MODE && this.name) {
       this._logger?.info('flush');
     }
   }
@@ -91,7 +112,7 @@ export class RequestQueue<
   reset(): void {
     this._flush();
 
-    if (DEV_MODE) {
+    if (DEV_MODE && this.name) {
       this._logger?.info('reset');
     }
   }
@@ -100,7 +121,7 @@ export class RequestQueue<
     this.serveImmediately = false;
     this.reset();
 
-    if (DEV_MODE) {
+    if (DEV_MODE && this.name) {
       this._logger?.info('destroy');
     }
   }

@@ -2,7 +2,7 @@ import { ReactiveController, ReactiveControllerHost } from 'lit';
 
 import { DEV_MODE } from '../../env';
 import { isNil, isUndefined, notEqual } from '../../utils/unit';
-import { DisposalBin, vdsEvent } from '../events';
+import { vdsEvent } from '../events';
 import { Logger } from '../logger';
 
 export type ConsumeContextOptions<T> = {
@@ -13,7 +13,7 @@ export type ConsumeContextOptions<T> = {
   /**
    * Provide a name for debugging.
    */
-  debug?: string | symbol;
+  name?: string | symbol;
   /**
    * Whether context updates should also request an update on the controller host to trigger
    * a re-render.
@@ -46,7 +46,21 @@ export class ContextConsumerController<T> implements ReactiveController {
 
   protected readonly _logger!: Logger;
 
-  protected readonly _disposal = new DisposalBin();
+  /**
+   * Custom `DisposalBin` so there's no infinite dep cycle:
+   *
+   * Logger -> ContextConsumer -> DisposalBin -> Logger -> ...
+   */
+  protected readonly _stopDisposal = {
+    _bin: [] as (() => void)[],
+    add(cb: () => void) {
+      if (cb) this._bin.push(cb);
+    },
+    empty() {
+      this._bin.forEach((fn) => fn());
+      this._bin = [];
+    }
+  };
 
   protected readonly consumerId = Symbol('Vidstack.consumerId');
 
@@ -54,8 +68,8 @@ export class ContextConsumerController<T> implements ReactiveController {
     return this._options.id;
   }
 
-  get debug() {
-    return this._options.debug;
+  get name() {
+    return this._options.name;
   }
 
   get value() {
@@ -74,9 +88,9 @@ export class ContextConsumerController<T> implements ReactiveController {
     public readonly initialValue: T,
     protected readonly _options: ConsumeContextOptions<T>
   ) {
-    if (DEV_MODE && _options.debug) {
+    if (DEV_MODE && _options.name) {
       this._logger = new Logger(_host, {
-        name: `🧵 ${String(this.debug)}`,
+        name: `🧵 ${String(this.name)}`,
         owner: this
       });
     }
@@ -111,7 +125,7 @@ export class ContextConsumerController<T> implements ReactiveController {
   start() {
     if (this._hasConnectedToProvider || isNil(this._ref)) return;
 
-    if (DEV_MODE && this.debug) {
+    if (DEV_MODE && this.name) {
       this._logger.debug('attempting to connect...');
     }
 
@@ -121,7 +135,7 @@ export class ContextConsumerController<T> implements ReactiveController {
         composed: true,
         detail: {
           id: this.id,
-          debug: this.debug,
+          name: this.name,
           consumerId: this.consumerId,
           onConnect: this._handleContextConnect.bind(this),
           onUpdate: this._handleContextUpdate.bind(this),
@@ -138,11 +152,11 @@ export class ContextConsumerController<T> implements ReactiveController {
   stop() {
     if (!this._hasConnectedToProvider) return;
 
-    this._disposal.empty();
+    this._stopDisposal.empty();
     this._options.onDisconnect?.();
     this._hasConnectedToProvider = false;
 
-    if (DEV_MODE && this.debug) {
+    if (DEV_MODE && this.name) {
       this._logger.debug('stopped');
     }
   }
@@ -151,7 +165,7 @@ export class ContextConsumerController<T> implements ReactiveController {
    * Stop current connection to provider and attempts to reconnect.
    */
   reconnect() {
-    if (DEV_MODE && this.debug) {
+    if (DEV_MODE && this.name) {
       this._logger.debug('reconnecting');
     }
 
@@ -164,7 +178,7 @@ export class ContextConsumerController<T> implements ReactiveController {
     this._options.onConnect?.();
     this._options.onUpdate?.(this._value);
 
-    if (DEV_MODE && this.debug) {
+    if (DEV_MODE && this.name) {
       this._logger.debug('connected');
     }
   }
@@ -180,14 +194,14 @@ export class ContextConsumerController<T> implements ReactiveController {
         this._host.requestUpdate();
       }
 
-      if (DEV_MODE && this.debug) {
+      if (DEV_MODE && this.name) {
         this._logger.debug('updated to', newValue);
       }
     }
   }
 
   protected _handleContextDisconnect(callback: () => void) {
-    this._disposal.add(callback);
+    this._stopDisposal.add(callback);
   }
 
   protected _transformValue(value: T): T {

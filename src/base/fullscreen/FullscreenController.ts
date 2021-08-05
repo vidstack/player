@@ -47,7 +47,7 @@ export type FullscreenControllerHost = ReactiveElement & {
 export class FullscreenController {
   protected readonly _logger!: Logger;
 
-  protected readonly _disconnectDisposal = new DisposalBin();
+  protected readonly _listenerDisposal: DisposalBin;
 
   /**
    * Used to avoid an inifinite loop by indicating when the native `requestFullscreen()` method
@@ -75,6 +75,11 @@ export class FullscreenController {
       this._logger = new Logger(_host, { owner: this });
     }
 
+    this._listenerDisposal = new DisposalBin(
+      _host,
+      DEV_MODE && { name: 'listenerDisposal', owner: this }
+    );
+
     _host.addController({
       hostDisconnected: this._handleHostDisconnected.bind(this)
     });
@@ -85,7 +90,7 @@ export class FullscreenController {
    */
   protected async _handleHostDisconnected(): Promise<void> {
     if (this.isFullscreen) await this.exitFullscreen();
-    this._disconnectDisposal.empty();
+    this._listenerDisposal.empty();
   }
 
   /**
@@ -188,13 +193,13 @@ export class FullscreenController {
 
     // TODO: Check if PiP is active, if so make sure to exit - need PiPController.
 
-    this._disconnectDisposal.add(
+    this._listenerDisposal.add(
       this._addFullscreenChangeEventListener(
         this._handleFullscreenChange.bind(this)
       )
     );
 
-    this._disconnectDisposal.add(
+    this._listenerDisposal.add(
       this._addFullscreenErrorEventListener(
         this._handleFullscreenError.bind(this)
       )
@@ -213,7 +218,7 @@ export class FullscreenController {
   }
 
   protected _handleFullscreenChange(event: Event) {
-    if (!this.isFullscreen) this._disconnectDisposal.empty();
+    if (!this.isFullscreen) this._listenerDisposal.empty();
 
     if (DEV_MODE) {
       this._logger

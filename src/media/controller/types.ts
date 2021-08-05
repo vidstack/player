@@ -28,10 +28,7 @@ export interface MediaProviderBridge
 
   readonly fullscreenController: FullscreenController;
 
-  readonly mediaProviderConnectedQueue: RequestQueue<
-    string | symbol,
-    () => void | Promise<void>
-  >;
+  readonly mediaProviderConnectedQueue: RequestQueue;
 
   readonly mediaProviderDisconnectDisposal: DisposalBin;
 }

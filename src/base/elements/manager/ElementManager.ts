@@ -14,7 +14,7 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
   protected readonly _managedElements: Omit<Set<ManagedElement>, 'clear'> =
     new Set();
 
-  protected readonly _disconnectDisposal = new DisposalBin();
+  protected readonly _disconnectDisposal: DisposalBin;
 
   protected readonly _logger!: Logger;
 
@@ -22,6 +22,11 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+
+    this._disconnectDisposal = new DisposalBin(
+      _host,
+      DEV_MODE && { name: 'elementManagerDisconnectDisposal', owner: this }
+    );
 
     _host.addController({
       hostConnected: this._handleHostConnected.bind(this),

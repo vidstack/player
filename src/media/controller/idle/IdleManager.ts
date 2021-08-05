@@ -17,7 +17,7 @@ export type IdleManagerHost = ReactiveElement & {
  * to pause/resume tracking idle state.
  */
 export class IdleManager {
-  protected readonly _disposal = new DisposalBin();
+  protected readonly _disconnectDisposal: DisposalBin;
 
   protected readonly _logger!: Logger;
 
@@ -25,6 +25,11 @@ export class IdleManager {
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+
+    this._disconnectDisposal = new DisposalBin(
+      _host,
+      DEV_MODE && { name: 'disconnectDisposal', owner: this }
+    );
 
     _host.addController({
       hostConnected: () => {
@@ -41,12 +46,12 @@ export class IdleManager {
         keysOf(eventHandlers).forEach((eventType) => {
           const handler = eventHandlers[eventType].bind(this);
           const dispose = listen(_host, eventType, handler);
-          this._disposal.add(dispose);
+          this._disconnectDisposal.add(dispose);
         });
       },
 
       hostDisconnected: () => {
-        this._disposal.empty();
+        this._disconnectDisposal.empty();
       }
     });
   }

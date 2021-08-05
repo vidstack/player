@@ -7,7 +7,7 @@ import { Logger } from '../../logger';
 export class ElementDiscoveryController<HostElement extends ReactiveElement> {
   protected readonly _logger!: Logger;
 
-  protected readonly _disconnectDisposal = new DisposalBin();
+  protected readonly _disconnectDisposal: DisposalBin;
 
   constructor(
     protected readonly _host: HostElement,
@@ -16,6 +16,11 @@ export class ElementDiscoveryController<HostElement extends ReactiveElement> {
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+
+    this._disconnectDisposal = new DisposalBin(
+      _host,
+      DEV_MODE && { name: 'elementDiscoveryDisconnectDisposal', owner: this }
+    );
 
     _host.addController({
       hostConnected: this._handleHostConnected.bind(this),

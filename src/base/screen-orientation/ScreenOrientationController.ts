@@ -20,7 +20,7 @@ import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
  * ```
  */
 export class ScreenOrientationController {
-  protected readonly _disconnectDisposal = new DisposalBin();
+  protected readonly _listenerDisposal: DisposalBin;
 
   protected readonly _logger!: Logger;
 
@@ -34,6 +34,11 @@ export class ScreenOrientationController {
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+
+    this._listenerDisposal = new DisposalBin(
+      _host,
+      DEV_MODE && { name: 'listenerDisposal', owner: this }
+    );
 
     _host.addController({
       hostConnected: this._handleHostConnected.bind(this),
@@ -51,7 +56,7 @@ export class ScreenOrientationController {
    */
   protected async _handleHostDisconnected(): Promise<void> {
     if (this.canOrient && this._isScreenOrientationLocked) await this.unlock();
-    this._disconnectDisposal.empty();
+    this._listenerDisposal.empty();
   }
 
   /**
@@ -132,9 +137,7 @@ export class ScreenOrientationController {
 
   protected _addScreenOrientationEventListeners() {
     if (!this.canOrient) return;
-    this._disconnectDisposal.add(
-      this._addScreenOrientationChangeEventListener()
-    );
+    this._listenerDisposal.add(this._addScreenOrientationChangeEventListener());
   }
 
   /**
@@ -152,7 +155,7 @@ export class ScreenOrientationController {
     this._screenOrientation = window.screen.orientation
       .type as ScreenOrientation;
 
-    if (DEV_MODE) {
+    if (DEV_MODE && this._isScreenOrientationLocked) {
       this._logger.info('screen orientation changed', this._screenOrientation);
     }
 
