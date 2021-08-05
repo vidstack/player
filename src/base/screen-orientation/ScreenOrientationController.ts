@@ -98,6 +98,8 @@ export class ScreenOrientationController {
     this._isScreenOrientationLocked = true;
     this._host.dispatchEvent(
       vdsEvent('vds-screen-orientation-lock-change', {
+        bubbles: true,
+        composed: true,
         detail: lockType
       })
     );
@@ -121,6 +123,8 @@ export class ScreenOrientationController {
     this._isScreenOrientationLocked = false;
     this._host.dispatchEvent(
       vdsEvent('vds-screen-orientation-lock-change', {
+        bubbles: true,
+        composed: true,
         detail: screen.orientation.type as ScreenOrientationLock
       })
     );
@@ -154,6 +158,8 @@ export class ScreenOrientationController {
 
     this._host.dispatchEvent(
       vdsEvent('vds-screen-orientation-change', {
+        bubbles: true,
+        composed: true,
         detail: this._screenOrientation,
         originalEvent: event
       })

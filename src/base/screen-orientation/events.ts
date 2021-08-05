@@ -10,6 +10,8 @@ export type ScreenOrientationEvents = {
  * Fired when the current screen orientation changes.
  *
  * @event
+ * @bubbles
+ * @composed
  */
 export type ScreenOrientationChangeEvent = VdsEvent<ScreenOrientation>;
 
@@ -17,5 +19,7 @@ export type ScreenOrientationChangeEvent = VdsEvent<ScreenOrientation>;
  * Fired when the current screen orientation lock changes.
  *
  * @event
+ * @bubbles
+ * @composed
  */
 export type ScreenOrientationLockChangeEvent = VdsEvent<ScreenOrientationLock>;
