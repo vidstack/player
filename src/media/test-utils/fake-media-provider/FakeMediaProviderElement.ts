@@ -60,7 +60,9 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   _setCurrentTime(time: number) {
     this.ctx.currentTime = time;
+    this.dispatchEvent(vdsEvent('vds-seeking', { detail: time }));
     this.dispatchEvent(vdsEvent('vds-time-update', { detail: time }));
+    this.dispatchEvent(vdsEvent('vds-seeked', { detail: time }));
   }
 
   _getMuted() {

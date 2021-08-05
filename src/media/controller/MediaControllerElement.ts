@@ -302,15 +302,26 @@ export class MediaControllerElement extends WithMediaProviderBridge(
     this.paused = true;
   }
 
+  protected _isSeeking = false;
+
   @eventListener('vds-seeking-request')
   protected _handleSeekingRequest(event: SeekingRequestEvent): void {
     this._mediaRequestEventGateway(event);
+    this._isSeeking = true;
     this.currentTime = event.detail;
+  }
+
+  @eventListener('seeked', { capture: true })
+  @eventListener('vds-seeked', { capture: true })
+  protected _handleMediaSeeked(event: Event): void {
+    // We don't want `seeked` events firing while seeking is updating media playback position.
+    if (this._isSeeking) event.stopImmediatePropagation();
   }
 
   @eventListener('vds-seek-request')
   protected _handleSeekRequest(event: SeekRequestEvent): void {
     this._mediaRequestEventGateway(event);
+    this._isSeeking = false;
     this.currentTime = event.detail;
   }
 
