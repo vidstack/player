@@ -24,27 +24,27 @@
   ],
   "exports": {
     ".": {
-      "default": "./dist-prod/bundle/index.js",
-      "development": "./dist/bundle/index.js"
+      "development": "./dist/bundle/index.js",
+      "default": "./dist-prod/bundle/index.js"
     },
     "./*": {
-      "default": "./dist-prod/*",
-      "development": "./dist/*"
+      "development": "./dist/*",
+      "default": "./dist-prod/*"
     },
     "./bundle": {
-      "default": "./bundle/prod.js",
-      "development": "./bundle/dev.js"
+      "development": "./bundle/dev.js",
+      "default": "./bundle/prod.js"
     },
     "./bundle/*": {
       "default": "./bundle/*"
     },
     "./define": {
-      "default": "./dist-prod/bundle/define.js",
-      "development": "./dist/bundle/define.js"
+      "development": "./dist/bundle/define.js",
+      "default": "./dist-prod/bundle/define.js"
     },
     "./define.js": {
-      "default": "./dist-prod/bundle/define.js",
-      "development": "./dist/bundle/define.js"
+      "development": "./dist/bundle/define.js",
+      "default": "./dist-prod/bundle/define.js"
     },
     "./custom-elements.json": "./custom-elements.json"
   },
