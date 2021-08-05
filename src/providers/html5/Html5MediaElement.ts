@@ -346,7 +346,7 @@ export class Html5MediaElement extends MediaProviderElement {
       const handler = eventHandlers[type].bind(this);
       this._disconnectDisposal.add(
         listen(this.mediaElement!, type, async (event: Event) => {
-          if (DEV_MODE) {
+          if (DEV_MODE && type !== 'timeupdate') {
             this._logger
               .infoGroup(`📺 fired \`${event.type}\``)
               .appendWithLabel('Event', event)

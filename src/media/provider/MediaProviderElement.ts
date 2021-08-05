@@ -162,7 +162,7 @@ export abstract class MediaProviderElement extends LitElement {
         'vds-started',
         'vds-suspend',
         'vds-replay',
-        'vds-time-update',
+        // 'vds-time-update',
         'vds-view-type-change',
         'vds-volume-change',
         'vds-waiting'
