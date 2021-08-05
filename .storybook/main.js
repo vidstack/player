@@ -1,4 +1,4 @@
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
+// const { ESBuildMinifyPlugin } = require('esbuild-loader');
 
 module.exports = {
   core: {
@@ -47,11 +47,9 @@ module.exports = {
       ]
     });
 
-    config.optimization.minimizer = [
-      new ESBuildMinifyPlugin({
-        target: 'es2015'
-      })
-    ];
+    config.optimization = {
+      minimizer: []
+    };
 
     return config;
   }
