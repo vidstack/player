@@ -86,7 +86,10 @@ export abstract class MediaProviderElement extends LitElement {
   protected readonly _disconnectDisposal = new DisposalBin();
 
   override connectedCallback() {
-    if (DEV_MODE) this._logMediaEvents();
+    if (DEV_MODE) {
+      this._logMediaEvents();
+    }
+
     super.connectedCallback();
     this._connectedQueue.flush();
     this._connectedQueue.serveImmediately = true;
@@ -124,6 +127,10 @@ export abstract class MediaProviderElement extends LitElement {
     this._shouldSkipNextSrcChangeReset = false;
     this._disconnectDisposal.empty();
   }
+
+  // -------------------------------------------------------------------------------------------
+  // Logging
+  // -------------------------------------------------------------------------------------------
 
   protected _logMediaEvents() {
     if (DEV_MODE) {

@@ -3,7 +3,7 @@ import { property } from 'lit/decorators.js';
 
 import { ExtractContextRecordTypes } from '../../base/context';
 import { discover, DiscoveryEvent } from '../../base/elements';
-import { eventListener } from '../../base/events';
+import { DisposalBin, eventListener, listen } from '../../base/events';
 import {
   ElementLogger,
   logLevel,
@@ -88,6 +88,51 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   protected override render(): TemplateResult {
     return html`<slot></slot>`;
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Lifecycle
+  // -------------------------------------------------------------------------------------------
+
+  protected readonly _disconnectDisposal = new DisposalBin();
+
+  override connectedCallback() {
+    if (DEV_MODE) {
+      this._logEvents();
+    }
+
+    super.connectedCallback();
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    this._disconnectDisposal.empty();
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Logging
+  // -------------------------------------------------------------------------------------------
+
+  protected _logEvents() {
+    if (DEV_MODE) {
+      const loggedEvents: (keyof GlobalEventHandlersEventMap)[] = [
+        'vds-controls-change',
+        'vds-fullscreen-change'
+      ];
+
+      loggedEvents.forEach((eventType) => {
+        const dispose = listen(this, eventType, (event) => {
+          this._logger
+            .infoGroup(`📡 dispatching \`${eventType}\``)
+            .appendWithLabel('Event', event)
+            .appendWithLabel('Container', this.mediaContainer)
+            .appendWithLabel('Provider', this.mediaProvider)
+            .end();
+        });
+
+        this._disconnectDisposal.add(dispose);
+      });
+    }
   }
 
   // -------------------------------------------------------------------------------------------
