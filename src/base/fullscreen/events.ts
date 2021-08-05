@@ -10,6 +10,8 @@ export type FullscreenEvents = {
  * if fullscreen was entered (`true`) or exited (`false`).
  *
  * @event
+ * @bubbles
+ * @composed
  */
 export type FullscreenChangeEvent = VdsEvent<boolean>;
 
@@ -18,5 +20,7 @@ export type FullscreenChangeEvent = VdsEvent<boolean>;
  * if the user has not interacted with the page yet.
  *
  * @event
+ * @bubbles
+ * @composed
  */
 export type FullscreenErrorEvent = VdsEvent<unknown>;

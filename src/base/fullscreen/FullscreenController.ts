@@ -242,6 +242,8 @@ export class FullscreenController {
 
     this._host.dispatchEvent(
       vdsEvent('vds-fullscreen-error', {
+        bubbles: true,
+        composed: true,
         originalEvent: event
       })
     );
