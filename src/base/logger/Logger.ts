@@ -156,11 +156,11 @@ export class Logger implements ReactiveController {
   }
 
   errorGroup(snippetMessage: string, ...data: any[]) {
-    return this._startGroup(LogLevel.Error, `☠️ ${snippetMessage}`);
+    return this._startGroup(LogLevel.Error, `🔥️ ${snippetMessage}`);
   }
 
   warnGroup(snippetMessage: string, ...data: any[]) {
-    return this._startGroup(LogLevel.Warn, `⚠️ ${snippetMessage}`);
+    return this._startGroup(LogLevel.Warn, `🚨 ${snippetMessage}`);
   }
 
   logGroup(snippetMessage: string, ...data: any[]) {
