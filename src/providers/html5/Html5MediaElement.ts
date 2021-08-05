@@ -373,12 +373,14 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleCanPlay(event: Event) {
+    if (this.ctx.canPlay) return;
     this.ctx.buffered = this.mediaElement!.buffered;
     this.ctx.seekable = this.mediaElement!.seekable;
     if (!this._willAnotherEngineAttach()) this._handleMediaReady(event);
   }
 
   protected _handleCanPlayThrough(event: Event) {
+    if (this.ctx.canPlayThrough) return;
     this.ctx.canPlayThrough = true;
     this.dispatchEvent(
       vdsEvent('vds-can-play-through', { originalEvent: event })
