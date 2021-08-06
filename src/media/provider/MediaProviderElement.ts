@@ -291,15 +291,13 @@ export abstract class MediaProviderElement extends LitElement {
 
   set paused(shouldPause) {
     this.mediaRequestQueue.queue('paused', () => {
-      if (notEqual(this.paused, shouldPause)) {
-        if (!shouldPause) {
-          this.play();
-        } else {
-          this.pause();
-        }
-
-        this.requestUpdate('paused');
+      if (!shouldPause) {
+        this.play();
+      } else {
+        this.pause();
       }
+
+      this.requestUpdate('paused');
     });
   }
 
@@ -707,7 +705,7 @@ export abstract class MediaProviderElement extends LitElement {
         .end();
     }
 
-    this._attemptAutoplay();
+    await this._attemptAutoplay();
   }
 
   protected _autoplayRetryCount = 0;

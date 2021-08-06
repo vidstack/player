@@ -12,7 +12,6 @@ import {
   buildMediaFixture,
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
 } from '../../test-utils';
-import { createTimeRanges } from '../../time-ranges';
 import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerConnectEvent,
@@ -20,7 +19,7 @@ import {
 } from '../MediaControllerElement';
 
 describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
-  describe('render', function () {
+  describe('lifcycle', function () {
     it('should render DOM correctly', async function () {
       const { controller } = await buildMediaFixture();
       expect(controller).dom.to.equal(`
@@ -174,10 +173,11 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
     it('should handle unmute request', async function () {
       const { container, provider } = await buildMediaFixture();
+      provider.muted = true;
+      await provider.forceMediaReady();
       const setMutedSpy = spy(provider, '_setMuted');
       const remote = new MediaRemoteControl(container);
       remote.unmute();
-      await provider.mediaRequestQueue.flush();
       expect(setMutedSpy).to.have.been.calledWith(false);
       setMutedSpy.restore();
     });
@@ -194,10 +194,11 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
     it('should handle pause request', async function () {
       const { container, provider } = await buildMediaFixture();
+      provider.paused = false;
+      await provider.forceMediaReady();
       const pauseSpy = spy(provider, 'pause');
       const remote = new MediaRemoteControl(container);
       remote.pause();
-      await provider.mediaRequestQueue.flush();
       expect(pauseSpy).to.have.been.calledOnce;
       pauseSpy.restore();
     });
@@ -224,10 +225,11 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
     it('should handle volume change request', async function () {
       const { container, provider } = await buildMediaFixture();
+      provider.volume = 0.5;
+      await provider.forceMediaReady();
       const setVolumeSpy = spy(provider, '_setVolume');
       const remote = new MediaRemoteControl(container);
       remote.changeVolume(100);
-      await provider.mediaRequestQueue.flush();
       expect(setVolumeSpy).to.have.been.calledWith(1);
       setVolumeSpy.restore();
     });

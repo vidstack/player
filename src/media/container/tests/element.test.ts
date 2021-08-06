@@ -17,7 +17,7 @@ describe(MEDIA_CONTAINER_ELEMENT_TAG_NAME, function () {
     );
   }
 
-  describe('render', function () {
+  describe('lifecycle', function () {
     it('should render DOM correctly', async function () {
       const uiSlot = html`<div></div>`;
       const mediaSlot = html`

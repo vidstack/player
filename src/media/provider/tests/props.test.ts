@@ -6,7 +6,6 @@ import { equal } from '../../../utils/unit';
 import { mediaContext } from '../../context';
 import { MediaType } from '../../MediaType';
 import { buildMediaFixture } from '../../test-utils';
-import { createTimeRanges } from '../../time-ranges';
 import { ViewType } from '../../ViewType';
 
 describe('MediaProviderElement/props', function () {
@@ -44,11 +43,10 @@ describe('MediaProviderElement/props', function () {
 
   it('should update provider when paused is set', async function () {
     const { provider } = await buildMediaFixture();
-    const paused = false;
     const playSpy = spy(provider, 'play');
     const pauseSpy = spy(provider, 'pause');
     provider.mediaRequestQueue.serveImmediately = true;
-    provider.paused = paused;
+    provider.paused = false;
     expect(playSpy).to.have.been.calledOnce;
     provider.paused = true;
     expect(pauseSpy).to.have.been.calledOnce;
@@ -56,11 +54,10 @@ describe('MediaProviderElement/props', function () {
 
   it('should update provider when muted is set', async function () {
     const { provider } = await buildMediaFixture();
-    const muted = true;
     const mutedSpy = spy(provider, '_setMuted');
     provider.mediaRequestQueue.serveImmediately = true;
-    provider.muted = muted;
-    expect(mutedSpy).to.have.been.calledWith(muted);
+    provider.muted = true;
+    expect(mutedSpy).to.have.been.calledWith(true);
   });
 
   describe('view type', function () {
