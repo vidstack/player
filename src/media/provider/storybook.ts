@@ -2,7 +2,7 @@ import { storybookAction, StorybookControl } from '../../base/storybook';
 
 export const MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
   // Properties
-  autoplay: { control: false },
+  autoplay: { control: StorybookControl.Boolean, defaultValue: false },
   controls: { control: StorybookControl.Boolean, defaultValue: true },
   currentTime: { control: StorybookControl.Number, defaultValue: 0 },
   loop: { control: StorybookControl.Boolean },

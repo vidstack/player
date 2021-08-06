@@ -101,7 +101,7 @@ export abstract class MediaProviderElement extends LitElement {
   protected override updated(changedProperties: PropertyValues) {
     if (changedProperties.has('autoplay')) {
       this.ctx.autoplay = this.autoplay;
-      if (this.autoplay) this._queueAutoplay();
+      this._attemptAutoplay();
     }
 
     if (changedProperties.has('controls')) {
@@ -694,19 +694,16 @@ export abstract class MediaProviderElement extends LitElement {
         .appendWithLabel('Engine', this.engine)
         .end();
     }
+
+    this._attemptAutoplay();
   }
 
   protected _autoplayRetryCount = 0;
   protected _maxAutoplayRetries = 3;
   protected _shouldMuteLastAutoplayAttempt = true;
 
-  protected _queueAutoplay() {
-    if (this.ctx.started || !this.autoplay) return;
-    this.mediaRequestQueue.queue('autoplay', this._attemptAutoplay.bind(this));
-  }
-
   protected async _attemptAutoplay() {
-    if (!this.autoplay || !this.paused || !this.canPlay) return;
+    if (!this.canPlay || !this.autoplay || this.started) return;
 
     // On last attempt try muted.
     const shouldTryMuted =
