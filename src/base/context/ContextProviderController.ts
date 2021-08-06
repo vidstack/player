@@ -78,15 +78,18 @@ export class ContextProviderController<T> implements ReactiveController {
     public readonly initialValue: T,
     protected readonly _options: ProvideContextOptions<T>
   ) {
+    /* c8 ignore start */
     if (DEV_MODE && _options.name) {
       this._logger = new Logger(_host, {
         name: `🧵 ${String(this.name)}`,
         owner: this
       });
     }
+    /* c8 ignore stop */
 
     this._stopDisposal = new DisposalBin(
       _host,
+      /* c8 ignore next */
       DEV_MODE && { name: 'contextProviderStopDisposal', owner: this }
     );
 
@@ -143,9 +146,11 @@ export class ContextProviderController<T> implements ReactiveController {
 
     this._isProviding = true;
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger.debug('started');
     }
+    /* c8 ignore stop */
   }
 
   /**
@@ -164,9 +169,11 @@ export class ContextProviderController<T> implements ReactiveController {
       consumers.forEach((consumer) => consumer.reconnect());
     }
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger.debug('stopped');
     }
+    /* c8 ignore stop */
   }
 
   protected _handleConsumerConnect(event: ContextConsumerConnectEvent) {
@@ -192,9 +199,11 @@ export class ContextProviderController<T> implements ReactiveController {
   protected _updateConsumers() {
     if (!this._isProviding) return;
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger.debug('updating to', this._value);
     }
+    /* c8 ignore stop */
 
     this._consumers.forEach((consumer) => {
       consumer.onUpdate(this._value);

@@ -96,13 +96,16 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   protected readonly _disconnectDisposal = new DisposalBin(
     this,
+    /* c8 ignore next */
     DEV_MODE && { name: 'disconnectDisposal', owner: this }
   );
 
   override connectedCallback() {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logEvents();
     }
+    /* c8 ignore stop */
 
     super.connectedCallback();
   }
@@ -117,6 +120,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   // -------------------------------------------------------------------------------------------
 
   protected _logEvents() {
+    /* c8 ignore start */
     if (DEV_MODE) {
       const loggedEvents: (keyof GlobalEventHandlersEventMap)[] = [
         'vds-controls-change',
@@ -136,6 +140,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
         this._disconnectDisposal.add(dispose);
       });
     }
+    /* c8 ignore stop */
   }
 
   // -------------------------------------------------------------------------------------------
@@ -146,6 +151,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
 
   readonly idleManager = new IdleManager(this);
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /**
@@ -165,12 +171,14 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    */
   @property({ attribute: 'log-level' })
   get logLevel(): LogLevelName {
+    /* c8 ignore next */
     return DEV_MODE
       ? (LogLevelNameMap[this._logLevelCtx.value] as LogLevelName)
       : 'silent';
   }
 
   set logLevel(newLevel: LogLevelName) {
+    /* c8 ignore next */
     const numericLevel = DEV_MODE
       ? Object.values(LogLevelNameMap).findIndex((l) => l === newLevel)
       : 0;
@@ -234,12 +242,14 @@ export class MediaControllerElement extends WithMediaProviderBridge(
     this._handleMediaContainerDisconnect();
     const { element, onDisconnect } = event.detail;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('media container connected')
         .appendWithLabel('Container', element)
         .end();
     }
+    /* c8 ignore stop */
 
     this._mediaContainer = element;
     onDisconnect(this._handleMediaContainerDisconnect.bind(this));
@@ -248,12 +258,14 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   protected _handleMediaContainerDisconnect(): void {
     if (isNil(this.mediaContainer)) return;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('media container disconnected')
         .appendWithLabel('Container', this._mediaContainer)
         .end();
     }
+    /* c8 ignore stop */
 
     this._mediaContainer = undefined;
   }
@@ -270,12 +282,14 @@ export class MediaControllerElement extends WithMediaProviderBridge(
   protected _mediaRequestEventGateway(event: Event) {
     event.stopPropagation();
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup(`📬 received \`${event.type}\``)
         .appendWithLabel('Request', event)
         .end();
     }
+    /* c8 ignore stop */
   }
 
   @eventListener('vds-mute-request')

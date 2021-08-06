@@ -85,6 +85,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
   // Properties
   // -------------------------------------------------------------------------------------------
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   protected readonly ctx = provideContextRecord(this, scrubberContext);
@@ -219,12 +220,14 @@ export class ScrubberElement extends WithFocus(LitElement) {
     this.ctx.pointing = true;
     this.setAttribute('pointing', '');
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('pointer enter')
         .appendWithLabel('Event', event)
         .end();
     }
+    /* c8 ignore stop */
 
     this.scrubberPreviewElement?.showPreview(event);
   }
@@ -242,12 +245,14 @@ export class ScrubberElement extends WithFocus(LitElement) {
     this.ctx.pointing = false;
     this.removeAttribute('pointing');
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('pointer leave')
         .appendWithLabel('Event', event)
         .end();
     }
+    /* c8 ignore stop */
 
     if (!this.ctx.dragging) {
       this.scrubberPreviewElement?.hidePreview(event);

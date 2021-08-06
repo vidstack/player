@@ -48,6 +48,7 @@ export class TimeElement extends LitElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /**

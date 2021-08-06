@@ -234,9 +234,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       setVolumeSpy.restore();
     });
 
-    // TODO: works in actual browser environment but not here?
     // eslint-disable-next-line mocha/no-skipped-tests
-    it.skip('should handle enter fullscreen request', async function () {
+    it('should handle enter fullscreen request', async function () {
       const { container } = await buildMediaFixture();
       const requestFullscreenMock = mock();
       container.requestFullscreen = requestFullscreenMock;
@@ -245,9 +244,8 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       expect(requestFullscreenMock).to.have.been.called;
     });
 
-    // TODO: works in actual browser environment but not here?
     // eslint-disable-next-line mocha/no-skipped-tests
-    it.skip('should handle exit fullscreen request', async function () {
+    it('should handle exit fullscreen request', async function () {
       const { container } = await buildMediaFixture();
       const exitFullscreenMock = mock();
       container.exitFullscreen = exitFullscreenMock;

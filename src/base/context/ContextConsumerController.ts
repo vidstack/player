@@ -88,12 +88,14 @@ export class ContextConsumerController<T> implements ReactiveController {
     public readonly initialValue: T,
     protected readonly _options: ConsumeContextOptions<T>
   ) {
+    /* c8 ignore start */
     if (DEV_MODE && _options.name) {
       this._logger = new Logger(_host, {
         name: `🧵 ${String(this.name)}`,
         owner: this
       });
     }
+    /* c8 ignore stop */
 
     this._value = this._transformValue(initialValue);
     if (_host instanceof Element) this.setRef(_host);
@@ -125,9 +127,11 @@ export class ContextConsumerController<T> implements ReactiveController {
   start() {
     if (this._hasConnectedToProvider || isNil(this._ref)) return;
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger.debug('attempting to connect...');
     }
+    /* c8 ignore stop */
 
     this._ref.dispatchEvent(
       vdsEvent('vds-context-consumer-connect', {
@@ -156,18 +160,22 @@ export class ContextConsumerController<T> implements ReactiveController {
     this._options.onDisconnect?.();
     this._hasConnectedToProvider = false;
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger.debug('stopped');
     }
+    /* c8 ignore stop */
   }
 
   /**
    * Stop current connection to provider and attempts to reconnect.
    */
   reconnect() {
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger.debug('reconnecting');
     }
+    /* c8 ignore stop */
 
     this.stop();
     this.start();
@@ -178,9 +186,11 @@ export class ContextConsumerController<T> implements ReactiveController {
     this._options.onConnect?.();
     this._options.onUpdate?.(this._value);
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger.debug('connected');
     }
+    /* c8 ignore stop */
   }
 
   protected _handleContextUpdate(newValue: T) {
@@ -194,9 +204,11 @@ export class ContextConsumerController<T> implements ReactiveController {
         this._host.requestUpdate();
       }
 
+      /* c8 ignore start */
       if (DEV_MODE && this.name) {
         this._logger.debug('updated to', newValue);
       }
+      /* c8 ignore stop */
     }
   }
 

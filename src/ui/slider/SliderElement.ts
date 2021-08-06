@@ -106,6 +106,7 @@ export class SliderElement extends WithFocus(LitElement) {
   // Properties
   // -------------------------------------------------------------------------------------------
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /**
@@ -501,12 +502,14 @@ export class SliderElement extends WithFocus(LitElement) {
     this.setAttribute('dragging', '');
     this._updateValueBasedOnThumbPosition(event);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('started dragging')
         .appendWithLabel('Event', event)
         .end();
     }
+    /* c8 ignore stop */
 
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-start', {
@@ -524,12 +527,14 @@ export class SliderElement extends WithFocus(LitElement) {
     this.removeAttribute('dragging');
     this._updateValueBasedOnThumbPosition(event);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('stopped dragging')
         .appendWithLabel('Event', event)
         .end();
     }
+    /* c8 ignore stop */
 
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-end', {

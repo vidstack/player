@@ -19,12 +19,15 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
   protected readonly _logger!: Logger;
 
   constructor(protected readonly _host: ReactiveElement) {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+    /* c8 ignore stop */
 
     this._disconnectDisposal = new DisposalBin(
       _host,
+      /* c8 ignore next */
       DEV_MODE && { name: 'elementManagerDisconnectDisposal', owner: this }
     );
 
@@ -45,18 +48,22 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
       )
     );
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.debug('started listening');
     }
+    /* c8 ignore stop */
   }
 
   protected _handleHostDisconnected() {
     this._disconnectDisposal.empty();
     this._removeAllElements();
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.debug('disconnected');
     }
+    /* c8 ignore stop */
   }
 
   protected _handleElementConnect(
@@ -82,12 +89,14 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
     this._managedElements.add(element);
     this._handleElementAdded(element);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('added element')
         .appendWithLabel('Element', element)
         .end();
     }
+    /* c8 ignore stop */
   }
 
   protected _handleElementAdded(element: ManagedElement) {
@@ -99,12 +108,14 @@ export class ElementManager<ManagedElement extends ReactiveElement> {
     this._managedElements.delete(element);
     this._handleElementRemoved(element);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('removed element')
         .appendWithLabel('Element', element)
         .end();
     }
+    /* c8 ignore stop */
   }
 
   protected _removeAllElements() {

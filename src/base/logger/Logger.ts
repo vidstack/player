@@ -1,3 +1,5 @@
+/* c8 ignore next 1000 */
+
 import { ReactiveController, ReactiveControllerHost } from 'lit';
 
 import { IS_CLIENT } from '../../utils/support';

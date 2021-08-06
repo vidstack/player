@@ -30,12 +30,15 @@ export class MediaRemoteControl implements ReactiveController {
   protected readonly _logger!: Logger;
 
   constructor(protected readonly _host: ReactiveControllerHost) {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+    /* c8 ignore stop */
 
     this._connectedQueue = new RequestQueue(
       _host,
+      /* c8 ignore next */
       DEV_MODE && { name: 'remoteControlConnectedQueue', owner: this }
     );
 
@@ -58,9 +61,11 @@ export class MediaRemoteControl implements ReactiveController {
    */
   setRef(newRef?: Element) {
     if (this._ref !== newRef) {
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger.debug('ref change', newRef);
       }
+      /* c8 ignore stop */
     }
 
     this._ref = newRef;
@@ -158,6 +163,7 @@ export class MediaRemoteControl implements ReactiveController {
         composed: true
       });
 
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .infoGroup(`📨 dispatching \`${type}\``)
@@ -165,6 +171,7 @@ export class MediaRemoteControl implements ReactiveController {
           .appendWithLabel('Original event', eventInit.originalEvent)
           .end();
       }
+      /* c8 ignore stop */
 
       this._ref?.dispatchEvent(request);
     });

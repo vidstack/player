@@ -50,6 +50,7 @@ export class BufferingIndicatorElement extends LitElement {
     return html`<slot></slot>`;
   }
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   @watchContext(mediaContext.canPlay)

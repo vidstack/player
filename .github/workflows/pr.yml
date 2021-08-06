@@ -29,5 +29,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test Package
-        run: npm run test
+      - name: Test Coverage
+        run: npm run test:coverage
+
+      - name: Submit Coverage Report
+        run: bash <(curl -s https://codecov.io/bash)
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

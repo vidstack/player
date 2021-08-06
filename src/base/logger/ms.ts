@@ -1,3 +1,5 @@
+/* c8 ignore next 1000 */
+
 import { round } from '../../utils/number';
 
 const s = 1000;

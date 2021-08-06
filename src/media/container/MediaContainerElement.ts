@@ -71,6 +71,7 @@ export class MediaContainerElement extends LitElement {
     return ['root', 'media'];
   }
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   // -------------------------------------------------------------------------------------------
@@ -230,12 +231,14 @@ export class MediaContainerElement extends LitElement {
   protected _handleMediaProviderConnect(event: MediaProviderConnectEvent) {
     const { element, onDisconnect } = event.detail;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('media provider connected')
         .appendWithLabel('Provider', element)
         .end();
     }
+    /* c8 ignore stop */
 
     this._mediaProvider = element;
     this._hasMediaProviderConnectedViaEvent = true;
@@ -244,12 +247,14 @@ export class MediaContainerElement extends LitElement {
       this._mediaProvider = undefined;
       this._hasMediaProviderConnectedViaEvent = false;
 
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .debugGroup('media provider disconnected')
           .appendWithLabel('Provider', element)
           .end();
       }
+      /* c8 ignore stop */
     });
   }
 
@@ -297,6 +302,7 @@ export class MediaContainerElement extends LitElement {
   @eventListener('vds-fullscreen-change')
   protected _handleFullscreenChange(event: FullscreenChangeEvent): void {
     if (!isNil(this.mediaProvider)) {
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .infoGroup('fullscreen change')
@@ -304,6 +310,7 @@ export class MediaContainerElement extends LitElement {
           .appendWithLabel('Provider', this.mediaProvider)
           .end();
       }
+      /* c8 ignore stop */
 
       this.mediaProvider.ctx.fullscreen = event.detail;
     }

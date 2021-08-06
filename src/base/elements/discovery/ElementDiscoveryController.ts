@@ -13,12 +13,15 @@ export class ElementDiscoveryController<HostElement extends ReactiveElement> {
     protected readonly _host: HostElement,
     protected readonly _eventType: keyof GlobalEventHandlersEventMap
   ) {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+    /* c8 ignore stop */
 
     this._disconnectDisposal = new DisposalBin(
       _host,
+      /* c8 ignore next */
       DEV_MODE && { name: 'elementDiscoveryDisconnectDisposal', owner: this }
     );
 
@@ -40,6 +43,7 @@ export class ElementDiscoveryController<HostElement extends ReactiveElement> {
       }
     });
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('dispatched discovery event')
@@ -47,6 +51,7 @@ export class ElementDiscoveryController<HostElement extends ReactiveElement> {
         .appendWithLabel('Event', event)
         .end();
     }
+    /* c8 ignore stop */
 
     this._host.dispatchEvent(event);
   }

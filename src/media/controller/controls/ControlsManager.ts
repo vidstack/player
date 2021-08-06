@@ -101,9 +101,11 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
   protected _handleControlsChange(request?: Event): void {
     if (this.isHidden === this._prevHiddenValue) return;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.debugGroup('controls change', !this.isHidden);
     }
+    /* c8 ignore stop */
 
     this._host.dispatchEvent(
       vdsEvent('vds-controls-change', {
@@ -120,12 +122,14 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
   ): Promise<void> {
     request.stopPropagation();
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup(`📬 received \`${request.type}\``)
         .appendWithLabel('Request', request)
         .end();
     }
+    /* c8 ignore stop */
 
     await this.show(request);
   }
@@ -135,12 +139,14 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
   ): Promise<void> {
     request.stopPropagation();
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup(`📬 received \`${request.type}\``)
         .appendWithLabel('Request', request)
         .end();
     }
+    /* c8 ignore stop */
 
     await this.hide(request);
   }

@@ -1,8 +1,9 @@
 import { expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
+import { stub } from 'sinon';
 
 import { DisposalBin } from '../DisposalBin';
-import { listen } from '../events';
+import { isVdsEvent, listen, VdsEvent } from '../events';
 
 describe('base/events', function () {
   describe('DisposalBin', function () {
@@ -45,6 +46,35 @@ describe('base/events', function () {
       setTimeout(() => target.dispatchEvent(new MouseEvent('click')));
       await oneEvent(target, 'click');
       expect(calls).to.equal(1);
+    });
+  });
+
+  describe(VdsEvent.name, function () {
+    it('should return undefined given no origin event', async function () {
+      const event = new VdsEvent('vds-event');
+      expect(event.originEvent).to.equal(undefined);
+      expect(event.isOriginTrusted).to.equal(false);
+    });
+
+    it('should return origin event', async function () {
+      const originEvent = new MouseEvent('click');
+
+      const event = new VdsEvent('vds-event', {
+        originalEvent: new VdsEvent('vds-event', { originalEvent: originEvent })
+      });
+
+      expect(event.originEvent).to.equal(originEvent);
+      expect(event.isOriginTrusted).to.equal(false);
+    });
+  });
+
+  describe(isVdsEvent.name, function () {
+    it('should return true given a VdsEvent', function () {
+      expect(isVdsEvent(new VdsEvent('vds-event'))).to.be.true;
+    });
+
+    it('should return false given an event not an instance of VdsEvent', function () {
+      expect(isVdsEvent(new MouseEvent('click'))).to.be.false;
     });
   });
 });

@@ -32,6 +32,7 @@ export class DisposalBin {
     _host?: ReactiveControllerHost,
     protected readonly _options: DisposalBinOptions = {}
   ) {
+    /* c8 ignore start */
     if (DEV_MODE && _host && _options.name) {
       const className = _options.owner ? ` [${this.constructor.name}]` : '';
       this._logger = new Logger(_host, {
@@ -39,6 +40,7 @@ export class DisposalBin {
         name: `🗑️ ${this.name}${className}`
       });
     }
+    /* c8 ignore stop */
   }
 
   add(callback?: () => void) {
@@ -49,9 +51,11 @@ export class DisposalBin {
    * Dispose of callbacks.
    */
   empty() {
+    /* c8 ignore start */
     if (DEV_MODE && this.name && this._disposal.length > 0) {
       this._logger?.info('empty', this._disposal.length, 'items');
     }
+    /* c8 ignore stop */
 
     this._disposal.forEach((fn) => fn());
     this._disposal = [];

@@ -122,6 +122,7 @@ export class ScrubberPreviewElement extends LitElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /** @internal */
@@ -281,12 +282,14 @@ export class ScrubberPreviewElement extends LitElement {
     this._previewSlotElement = getSlottedChildren(this)[0] as HTMLElement;
 
     if (!isNil(this.previewSlotElement)) {
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .debugGroup('preview slot change')
           .appendWithLabel('Preview element', this._previewSlotElement)
           .end();
       }
+      /* c8 ignore stop */
 
       this.previewSlotElement.style.position = 'absolute';
       this.previewSlotElement.style.left = '0';
@@ -333,6 +336,7 @@ export class ScrubberPreviewElement extends LitElement {
 
         this.setAttribute('previewing', '');
 
+        /* c8 ignore start */
         if (DEV_MODE) {
           this._logger
             .debugGroup('show preview')
@@ -340,6 +344,7 @@ export class ScrubberPreviewElement extends LitElement {
             .appendWithLabel('Trigger event', event)
             .end();
         }
+        /* c8 ignore stop */
 
         this.dispatchEvent(
           vdsEvent('vds-scrubber-preview-show', { originalEvent: event })
@@ -374,6 +379,7 @@ export class ScrubberPreviewElement extends LitElement {
     this.removeAttribute('previewing');
     this.previewSlotElement?.setAttribute('hidden', '');
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('hide preview')
@@ -381,6 +387,7 @@ export class ScrubberPreviewElement extends LitElement {
         .appendWithLabel('Trigger event', event)
         .end();
     }
+    /* c8 ignore stop */
 
     this.dispatchEvent(
       vdsEvent('vds-scrubber-preview-hide', { originalEvent: event })

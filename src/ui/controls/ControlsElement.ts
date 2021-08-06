@@ -47,6 +47,7 @@ export class ControlsElement extends LitElement {
     return [controlsElementStyles];
   }
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   protected readonly _managedControls = new ManagedControls(this);

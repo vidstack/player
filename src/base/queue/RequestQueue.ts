@@ -33,6 +33,7 @@ export class RequestQueue {
     _host?: ReactiveControllerHost,
     protected readonly _options: RequestQueueOptions = {}
   ) {
+    /* c8 ignore start */
     if (DEV_MODE && _host && _options.name) {
       const className = _options.owner ? ` [${this.constructor.name}]` : '';
       this._logger = new Logger(_host, {
@@ -40,6 +41,7 @@ export class RequestQueue {
         name: `️⌛ ${this.name}${className}`
       });
     }
+    /* c8 ignore stop */
   }
 
   /**
@@ -75,18 +77,22 @@ export class RequestQueue {
   ): Promise<void> {
     this._requestQueue.set(key, callback);
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name && !this.serveImmediately) {
       this._logger?.debug(`queued \`${String(key)}\``);
     }
+    /* c8 ignore stop */
 
     if (!this.serveImmediately) return;
     this.serve(key);
   }
 
   async serve(key: string | symbol): Promise<void> {
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger?.debug(`serving \`${String(key)}\``);
     }
+    /* c8 ignore stop */
 
     await this._requestQueue.get(key)?.();
     this._requestQueue.delete(key);
@@ -97,9 +103,11 @@ export class RequestQueue {
     await Promise.all(requests.map((reqKey) => this.serve(reqKey)));
     this._flush();
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger?.info('flush');
     }
+    /* c8 ignore stop */
   }
 
   protected _flush() {
@@ -112,17 +120,21 @@ export class RequestQueue {
   reset(): void {
     this._flush();
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger?.info('reset');
     }
+    /* c8 ignore stop */
   }
 
   destroy(): void {
     this.serveImmediately = false;
     this.reset();
 
+    /* c8 ignore start */
     if (DEV_MODE && this.name) {
       this._logger?.info('destroy');
     }
+    /* c8 ignore stop */
   }
 }

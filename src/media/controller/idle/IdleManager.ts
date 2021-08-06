@@ -22,12 +22,15 @@ export class IdleManager {
   protected readonly _logger!: Logger;
 
   constructor(protected readonly _host: IdleManagerHost) {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+    /* c8 ignore stop */
 
     this._disconnectDisposal = new DisposalBin(
       _host,
+      /* c8 ignore next */
       DEV_MODE && { name: 'disconnectDisposal', owner: this }
     );
 
@@ -148,12 +151,14 @@ export class IdleManager {
   protected _handleResumeIdleTracking(request?: Event) {
     request?.stopPropagation();
 
+    /* c8 ignore start */
     if (DEV_MODE && request) {
       this._logger
         .debugGroup(`📬 received \`${request.type}\``)
         .appendWithLabel('Request', request)
         .end();
     }
+    /* c8 ignore stop */
 
     this.resume();
   }
@@ -161,12 +166,14 @@ export class IdleManager {
   protected _handlePauseIdleTracking(request?: Event) {
     request?.stopPropagation();
 
+    /* c8 ignore start */
     if (DEV_MODE && request) {
       this._logger
         .debugGroup(`📬 received \`${request.type}\``)
         .appendWithLabel('Request', request)
         .end();
     }
+    /* c8 ignore stop */
 
     this.pause();
   }

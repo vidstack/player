@@ -21,9 +21,11 @@ export abstract class ContextConsumerManager implements ReactiveController {
   >();
 
   constructor(protected readonly _host: ReactiveControllerHost) {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+    /* c8 ignore stop */
 
     if (_host instanceof Element) this.setRef(_host);
     _host.addController(this);
@@ -44,9 +46,11 @@ export abstract class ContextConsumerManager implements ReactiveController {
 
     this._ref = newRef;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.debug('ref change', newRef);
     }
+    /* c8 ignore stop */
   }
 
   hostConnected() {
@@ -89,6 +93,7 @@ export abstract class ContextConsumerManager implements ReactiveController {
 
     this._consumers.set(context, consumer);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('added context')
@@ -96,6 +101,7 @@ export abstract class ContextConsumerManager implements ReactiveController {
         .appendWithLabel('Consumer', consumer)
         .end();
     }
+    /* c8 ignore stop */
 
     return consumer;
   }
@@ -105,6 +111,7 @@ export abstract class ContextConsumerManager implements ReactiveController {
     consumer?.stop();
     this._consumers.delete(context);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('removed context')
@@ -112,6 +119,7 @@ export abstract class ContextConsumerManager implements ReactiveController {
         .appendWithLabel('Consumer', consumer)
         .end();
     }
+    /* c8 ignore stop */
   }
 
   protected abstract _handleContextConnect(

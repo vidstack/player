@@ -66,12 +66,15 @@ export class MediaEventListenerController implements ReactiveController {
     protected readonly _host: ReactiveControllerHost,
     eventListeners: MediaEventListenerRecord = {}
   ) {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
+    /* c8 ignore stop */
 
     this._listenerDisposal = new DisposalBin(
       _host,
+      /* c8 ignore next */
       DEV_MODE && { name: 'listenerDisposal', owner: this }
     );
 
@@ -106,9 +109,11 @@ export class MediaEventListenerController implements ReactiveController {
   setRef(newRef?: Element) {
     if (this._ref !== newRef) {
       if (!isNil(newRef)) {
+        /* c8 ignore start */
         if (DEV_MODE) {
           this._logger.debug('ref change', newRef);
         }
+        /* c8 ignore stop */
 
         this._disposeConnectEventListener();
         this._disposeConnectEventListener = listen(

@@ -22,6 +22,7 @@ export abstract class ContextBindingController<
       this._handleContextUpdate(consumer);
     }
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('add binding')
@@ -30,6 +31,7 @@ export abstract class ContextBindingController<
         .appendWithLabel('Binding', binding)
         .end();
     }
+    /* c8 ignore stop */
 
     return this;
   }
@@ -44,6 +46,7 @@ export abstract class ContextBindingController<
     const binding = consumer ? this._bindings.get(consumer) : undefined;
     if (consumer) this._bindings.delete(consumer);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('remove binding')
@@ -52,6 +55,7 @@ export abstract class ContextBindingController<
         .appendWithLabel('Binding', binding)
         .end();
     }
+    /* c8 ignore stop */
 
     return this;
   }
@@ -61,6 +65,7 @@ export abstract class ContextBindingController<
     const binding = this._bindings.get(consumer)!;
     this._handleBindToContext(consumer, binding);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('binding connected')
@@ -68,6 +73,7 @@ export abstract class ContextBindingController<
         .appendWithLabel('Binding', binding)
         .end();
     }
+    /* c8 ignore stop */
   }
 
   protected abstract _handleBindToContext(
@@ -80,6 +86,7 @@ export abstract class ContextBindingController<
     const binding = this._bindings.get(consumer)!;
     this._handleBindingUpdate(consumer, binding);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('binding update')
@@ -87,6 +94,7 @@ export abstract class ContextBindingController<
         .appendWithLabel('Binding', binding)
         .end();
     }
+    /* c8 ignore stop */
   }
 
   protected abstract _handleBindingUpdate(
@@ -99,6 +107,7 @@ export abstract class ContextBindingController<
     const binding = this._bindings.get(consumer)!;
     this._handleUnbindFromContext(consumer, binding);
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('binding disconnected')
@@ -106,6 +115,7 @@ export abstract class ContextBindingController<
         .appendWithLabel('Binding', binding)
         .end();
     }
+    /* c8 ignore stop */
   }
 
   protected abstract _handleUnbindFromContext(

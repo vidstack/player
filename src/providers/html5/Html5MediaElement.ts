@@ -296,12 +296,14 @@ export class Html5MediaElement extends MediaProviderElement {
       validTags.has(node.tagName.toLowerCase())
     );
 
+    /* c8 ignore start */
     if (DEV_MODE && nodes.length > 0) {
       this._logger
         .logGroup('Found `<source>` and `<track>` elements')
         .appendWithLabel('Nodes', nodes)
         .end();
     }
+    /* c8 ignore stop */
 
     nodes.forEach((node) => this.mediaElement?.appendChild(node.cloneNode()));
 
@@ -346,6 +348,7 @@ export class Html5MediaElement extends MediaProviderElement {
       const handler = eventHandlers[type].bind(this);
       this._disconnectDisposal.add(
         listen(this.mediaElement!, type, async (event: Event) => {
+          /* c8 ignore start */
           if (DEV_MODE && type !== 'timeupdate') {
             this._logger
               .infoGroup(`📺 fired \`${event.type}\``)
@@ -354,6 +357,7 @@ export class Html5MediaElement extends MediaProviderElement {
               .appendWithLabel('Context', this.mediaState)
               .end();
           }
+          /* c8 ignore stop */
 
           await handler(event);
 
@@ -363,9 +367,11 @@ export class Html5MediaElement extends MediaProviderElement {
       );
     });
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.debug('attached event listeners');
     }
+    /* c8 ignore stop */
   }
 
   protected _handleAbort(event: Event) {
@@ -645,9 +651,11 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   async play() {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.info('attempting to play...');
     }
+    /* c8 ignore stop */
 
     this._throwIfNotReadyForPlayback();
     if (this.ctx.ended) this.dispatchEvent(vdsEvent('vds-replay'));
@@ -656,9 +664,11 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   async pause() {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.info('attempting to pause...');
     }
+    /* c8 ignore stop */
 
     this._throwIfNotReadyForPlayback();
     return this.mediaElement?.pause();

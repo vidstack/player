@@ -33,10 +33,10 @@ jobs:
       - name: Build
         run: npm run build:release
 
-      - name: Test (UNIT)
+      - name: Test Coverage
         run: npm run test:coverage
 
-      - name: Analyze (CEM)
+      - name: CEM Analyze
         run: npm run analyze
 
       - name: Submit Coverage Report

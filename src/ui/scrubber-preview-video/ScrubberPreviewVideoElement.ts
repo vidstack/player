@@ -65,6 +65,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   /**
@@ -132,6 +133,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
     this._canPlay = true;
     this.setAttribute('video-can-play', '');
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('preview video can play')
@@ -139,6 +141,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
         .appendWithLabel('Event', event)
         .end();
     }
+    /* c8 ignore stop */
 
     redispatchEvent(this, event);
   }
@@ -150,6 +153,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
     this._hasError = true;
     this.setAttribute('video-error', '');
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .errorGroup('preview video error')
@@ -157,6 +161,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
         .appendWithLabel('Event', event)
         .end();
     }
+    /* c8 ignore stop */
 
     redispatchEvent(this, event);
   }

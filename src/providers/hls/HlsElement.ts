@@ -227,12 +227,14 @@ export class HlsElement extends VideoElement {
       return;
     }
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('preconnect to `hls.js` download')
         .appendWithLabel('URL', this.hlsLibrary)
         .end();
     }
+    /* c8 ignore stop */
 
     preconnect(this.hlsLibrary);
   }
@@ -276,12 +278,14 @@ export class HlsElement extends VideoElement {
      */
     const canPlayType = super.canPlayType('application/vnd.apple.mpegurl');
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .debugGroup('checking for native HLS support')
         .appendWithLabel('Can play type', canPlayType)
         .end();
     }
+    /* c8 ignore stop */
 
     return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
   }
@@ -310,6 +314,7 @@ export class HlsElement extends VideoElement {
   protected override _shouldSetVideoSrcAttr(): boolean {
     const shouldSet = this.shouldUseNativeHlsSupport || !this.isHlsStream;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup(
@@ -323,6 +328,7 @@ export class HlsElement extends VideoElement {
         )
         .end();
     }
+    /* c8 ignore stop */
 
     return shouldSet;
   }
@@ -358,9 +364,11 @@ export class HlsElement extends VideoElement {
   protected async _loadHlsScript(): Promise<HlsConstructor | undefined> {
     if (!isString(this.hlsLibrary)) return undefined;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.infoGroup('Starting to load `hls.js`');
     }
+    /* c8 ignore stop */
 
     try {
       await ScriptLoader.load(this.hlsLibrary);
@@ -371,6 +379,7 @@ export class HlsElement extends VideoElement {
         );
       }
 
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .infoGroup('Loaded `hls.js`')
@@ -378,15 +387,18 @@ export class HlsElement extends VideoElement {
           .appendWithLabel('Library', window.Hls)
           .end();
       }
+      /* c8 ignore stop */
 
       return window.Hls;
     } catch (err) {
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .warnGroup('Failed to load `hls.js`')
           .appendWithLabel('URL', this.hlsLibrary)
           .end();
       }
+      /* c8 ignore stop */
 
       this.dispatchEvent(
         vdsEvent('vds-hls-load-error', {
@@ -408,9 +420,11 @@ export class HlsElement extends VideoElement {
       return;
     }
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.info('🏗️ Building HLS engine');
     }
+    /* c8 ignore stop */
 
     // Destroy old engine.
     if (!isUndefined(this.hlsEngine)) {
@@ -428,9 +442,11 @@ export class HlsElement extends VideoElement {
       : this.hlsLibrary;
 
     if (!this.Hls?.isSupported()) {
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger.warn('`hls.js` is not supported in this environment');
       }
+      /* c8 ignore stop */
 
       this.dispatchEvent(vdsEvent('vds-hls-no-support'));
       return;
@@ -438,6 +454,7 @@ export class HlsElement extends VideoElement {
 
     this._hlsEngine = new this.Hls(this.hlsConfig ?? {});
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('🏗️ HLS engine built')
@@ -445,6 +462,7 @@ export class HlsElement extends VideoElement {
         .appendWithLabel('Video Engine', this.videoEngine)
         .end();
     }
+    /* c8 ignore stop */
 
     this.dispatchEvent(vdsEvent('vds-hls-build', { detail: this.hlsEngine }));
     this._listenToHlsEngine();
@@ -457,9 +475,11 @@ export class HlsElement extends VideoElement {
     this._isHlsEngineAttached = false;
     this._softResetMediaContext();
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.info('🏗️ Destroyed HLS engine');
     }
+    /* c8 ignore stop */
   }
 
   protected _prevHlsEngineSrc = '';
@@ -481,6 +501,7 @@ export class HlsElement extends VideoElement {
     this.hlsEngine.attachMedia(this.videoEngine);
     this._isHlsEngineAttached = true;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('🏗️ attached HLS engine')
@@ -488,6 +509,7 @@ export class HlsElement extends VideoElement {
         .appendWithLabel('Video Engine', this.videoEngine)
         .end();
     }
+    /* c8 ignore stop */
 
     this.dispatchEvent(vdsEvent('vds-hls-attach', { detail: this.hlsEngine }));
   }
@@ -498,12 +520,14 @@ export class HlsElement extends VideoElement {
     this._isHlsEngineAttached = false;
     this._prevHlsEngineSrc = '';
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('🏗️ detached HLS engine')
         .appendWithLabel('Video Engine', this.videoEngine)
         .end();
     }
+    /* c8 ignore stop */
 
     this.dispatchEvent(vdsEvent('vds-hls-detach', { detail: this.hlsEngine }));
   }
@@ -518,6 +542,7 @@ export class HlsElement extends VideoElement {
       return;
     }
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup(`📼 loading src \`${this.src}\``)
@@ -526,6 +551,7 @@ export class HlsElement extends VideoElement {
         .appendWithLabel('Video Engine', this.videoEngine)
         .end();
     }
+    /* c8 ignore stop */
 
     this.hlsEngine.loadSource(this.src);
     this._prevHlsEngineSrc = this.src;
@@ -577,9 +603,11 @@ export class HlsElement extends VideoElement {
       await this._buildHlsEngine();
     }
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.debug(`📼 detected src change \`${this.src}\``);
     }
+    /* c8 ignore stop */
 
     this._attachHlsEngine();
     this._loadSrcOnHlsEngine();
@@ -603,6 +631,7 @@ export class HlsElement extends VideoElement {
 
     this.ctx.error = data;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .errorGroup(`HLS error \`${eventType}\``)
@@ -614,6 +643,7 @@ export class HlsElement extends VideoElement {
         .appendWithLabel('Video Engine', this.videoEngine)
         .end();
     }
+    /* c8 ignore stop */
 
     if (data.fatal) {
       switch (data.type) {

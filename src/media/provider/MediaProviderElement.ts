@@ -82,17 +82,21 @@ export abstract class MediaProviderElement extends LitElement {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
+  /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
   protected readonly _disconnectDisposal = new DisposalBin(
     this,
+    /* c8 ignore next */
     DEV_MODE && { name: 'disconnectDisposal', owner: this }
   );
 
   override connectedCallback() {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logMediaEvents();
     }
+    /* c8 ignore stop */
 
     super.connectedCallback();
     this._connectedQueue.flush();
@@ -100,6 +104,7 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   protected override updated(changedProperties: PropertyValues) {
+    /* c8 ignore start */
     if (DEV_MODE) {
       changedProperties.forEach((_, prop) => {
         this._logger
@@ -109,6 +114,7 @@ export abstract class MediaProviderElement extends LitElement {
           .end();
       });
     }
+    /* c8 ignore stop */
 
     if (changedProperties.has('autoplay')) {
       this.ctx.autoplay = this.autoplay;
@@ -147,7 +153,9 @@ export abstract class MediaProviderElement extends LitElement {
   // Logging
   // -------------------------------------------------------------------------------------------
 
+  /* c8 ignore next */
   protected _logMediaEvents() {
+    /* c8 ignore start */
     if (DEV_MODE) {
       const mediaEvents: (keyof MediaEvents)[] = [
         'vds-abort',
@@ -192,6 +200,7 @@ export abstract class MediaProviderElement extends LitElement {
         this._disconnectDisposal.add(dispose);
       });
     }
+    /* c8 ignore stop */
   }
 
   // -------------------------------------------------------------------------------------------
@@ -645,21 +654,25 @@ export abstract class MediaProviderElement extends LitElement {
    */
   protected _validatePlaybackEndedState(): void {
     if (this.ctx.ended && !this._hasPlaybackRoughlyEnded()) {
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .infoGroup('invalid ended state')
           .appendWithLabel('Duration', this.duration)
           .end();
       }
+      /* c8 ignore stop */
 
       this.ctx.ended = false;
     } else if (!this.ctx.ended && this._hasPlaybackRoughlyEnded()) {
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .infoGroup('playback has roughly ended')
           .appendWithLabel('Duration', this.duration)
           .end();
       }
+      /* c8 ignore stop */
 
       this.ctx.waiting = false;
       this.dispatchEvent(vdsEvent('vds-suspend'));
@@ -694,6 +707,7 @@ export abstract class MediaProviderElement extends LitElement {
     await this.mediaRequestQueue.flush();
     this.mediaRequestQueue.serveImmediately = true;
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup(
@@ -704,6 +718,7 @@ export abstract class MediaProviderElement extends LitElement {
         .appendWithLabel('Engine', this.engine)
         .end();
     }
+    /* c8 ignore stop */
 
     await this._attemptAutoplay();
   }
@@ -721,6 +736,7 @@ export abstract class MediaProviderElement extends LitElement {
       this._shouldMuteLastAutoplayAttempt &&
       this._autoplayRetryCount === this._maxAutoplayRetries - 1;
 
+    /* c8 ignore start */
     if (DEV_MODE && this._autoplayRetryCount > 0) {
       this._logger
         .warnGroup(
@@ -731,6 +747,7 @@ export abstract class MediaProviderElement extends LitElement {
         .appendWithLabel('Engine', this.engine)
         .end();
     }
+    /* c8 ignore stop */
 
     let didAttemptSucceed = false;
 
@@ -739,10 +756,13 @@ export abstract class MediaProviderElement extends LitElement {
       await this.play();
       didAttemptSucceed = true;
 
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger.info('✅ Autoplay was successful.');
       }
+      /* c8 ignore stop */
     } catch (e) {
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .errorGroup(
@@ -752,6 +772,7 @@ export abstract class MediaProviderElement extends LitElement {
           .appendWithLabel('Error', e)
           .end();
       }
+      /* c8 ignore stop */
     }
 
     const shouldTryAgain =
@@ -777,6 +798,7 @@ export abstract class MediaProviderElement extends LitElement {
       return;
     }
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('📼 media src change')
@@ -784,6 +806,7 @@ export abstract class MediaProviderElement extends LitElement {
         .appendWithLabel('Engine', this.engine)
         .end();
     }
+    /* c8 ignore stop */
 
     this.mediaRequestQueue.serveImmediately = false;
     this._softResetMediaContext();
@@ -839,6 +862,7 @@ export abstract class MediaProviderElement extends LitElement {
   protected _softResetMediaContext() {
     const propsToReset = this._getMediaPropsToResetWhenSrcChanges();
 
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('soft context reset')
@@ -847,6 +871,7 @@ export abstract class MediaProviderElement extends LitElement {
         .appendWithLabel('Reset props', propsToReset)
         .end();
     }
+    /* c8 ignore stop */
 
     Object.keys(mediaContext).forEach((prop) => {
       if (propsToReset.has(prop)) {
@@ -864,6 +889,7 @@ export abstract class MediaProviderElement extends LitElement {
    */
   readonly _connectedQueue = new RequestQueue(
     this,
+    /* c8 ignore next */
     DEV_MODE && { name: 'connectedQueue', owner: this }
   );
 
@@ -873,6 +899,7 @@ export abstract class MediaProviderElement extends LitElement {
    */
   readonly mediaRequestQueue = new RequestQueue(
     this,
+    /* c8 ignore next */
     DEV_MODE && { name: 'mediaRequestQueue', owner: this }
   );
 
@@ -940,6 +967,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   @eventListener('vds-fullscreen-change')
   protected _handleFullscreenChange(event: FullscreenChangeEvent) {
+    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('fullscreen change')
@@ -947,6 +975,7 @@ export abstract class MediaProviderElement extends LitElement {
         .appendWithLabel('Engine', this.engine)
         .end();
     }
+    /* c8 ignore stop */
 
     this.ctx.fullscreen = event.detail;
   }

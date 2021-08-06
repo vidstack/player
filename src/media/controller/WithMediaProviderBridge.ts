@@ -41,6 +41,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
   Base: T
 ): T & Constructor<MediaProviderBridge> {
   class WithMediaProviderBridge extends Base {
+    /* c8 ignore next */
     protected readonly _logger = DEV_MODE && new Logger(this);
 
     constructor(...args: any[]) {
@@ -54,6 +55,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
 
     readonly mediaProviderConnectedQueue = new RequestQueue(
       this,
+      /* c8 ignore next */
       DEV_MODE && {
         name: 'mediaProviderConnectedQueue',
         owner: this
@@ -62,6 +64,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
 
     readonly mediaProviderDisconnectDisposal = new DisposalBin(
       this,
+      /* c8 ignore next */
       DEV_MODE && { name: 'mediaProviderDisconnectDisposal', owner: this }
     );
 
@@ -79,12 +82,14 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
 
       if (this.mediaProvider === element) return;
 
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .infoGroup('media provider connected')
           .appendWithLabel('Provider', element)
           .end();
       }
+      /* c8 ignore stop */
 
       this._handleMediaProviderDisconnect();
 
@@ -101,12 +106,14 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
     protected _handleMediaProviderDisconnect() {
       if (isNil(this.mediaProvider)) return;
 
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .infoGroup('media provider disconnected')
           .appendWithLabel('Provider', this.mediaProvider)
           .end();
       }
+      /* c8 ignore stop */
 
       this.mediaProviderDisconnectDisposal.empty();
       this._mediaProvider = undefined;
@@ -124,6 +131,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
 
     @eventListener('vds-error')
     protected _logErrors(event: Event) {
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .errorGroup(event.type)
@@ -132,6 +140,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
           .appendWithLabel('Provider', this.mediaProvider)
           .end();
       }
+      /* c8 ignore stop */
     }
 
     // -------------------------------------------------------------------------------------------
@@ -147,6 +156,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
       // @ts-expect-error - Override readonly
       this.mediaProvider.ctx = this.ctx;
 
+      /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .infoGroup('attached context record')
@@ -154,6 +164,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
           .appendWithLabel('Context', this.ctx)
           .end();
       }
+      /* c8 ignore stop */
 
       this.mediaProviderDisconnectDisposal.add(() => {
         // @ts-expect-error - Override readonly
@@ -183,9 +194,11 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
         this,
         this.mediaProvider,
         attributes,
+        /* c8 ignore next */
         !DEV_MODE
           ? noop
           : (attrName, attrValue) => {
+              /* c8 ignore start */
               if (DEV_MODE) {
                 this._logger
                   .debugGroup(`🔗 forwarding attr \`${attrName}\` to provider`)
@@ -194,6 +207,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
                   .appendWithLabel('Provider', this.mediaProvider)
                   .end();
               }
+              /* c8 ignore stop */
             }
       );
 
@@ -220,6 +234,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
           this.mediaProvider,
           eventType,
           (event: Event) => {
+            /* c8 ignore start */
             if (DEV_MODE) {
               this._logger
                 .debugGroup(
@@ -229,6 +244,7 @@ export function WithMediaProviderBridge<T extends Constructor<ReactiveElement>>(
                 .appendWithLabel('Provider', this.mediaProvider)
                 .end();
             }
+            /* c8 ignore stop */
 
             redispatchEvent(this, event);
           }

@@ -86,14 +86,13 @@ describe('MediaProviderElement/context', function () {
     expect(isNaN(consumer.duration), 'duration').to.be.true;
   });
 
-  // eslint-disable-next-line mocha/no-skipped-tests
-  it.skip('should hard reset context when provider disconnects', async function () {
+  it('should hard reset context when provider disconnects', async function () {
     const { provider, consumer } = await buildFixture();
 
     provider.ctx.viewType = ViewType.Video;
     await elementUpdated(consumer);
 
-    provider.disconnectedCallback();
+    consumer.remove();
     await elementUpdated(consumer);
 
     expect(consumer.viewType, 'viewType').to.equal(ViewType.Unknown);
