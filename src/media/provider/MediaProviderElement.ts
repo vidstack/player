@@ -21,6 +21,7 @@ import {
 } from '../../base/screen-orientation';
 import { DEV_MODE } from '../../env';
 import { clampNumber } from '../../utils/number';
+import { notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
 import {
   cloneMediaContextRecord,
@@ -99,6 +100,16 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   protected override updated(changedProperties: PropertyValues) {
+    if (DEV_MODE) {
+      changedProperties.forEach((_, prop) => {
+        this._logger
+          .infoGroup(`🧬 changed prop \`${String(prop)}\` to \`${this[prop]}\``)
+          .appendWithLabel('Property', prop)
+          .appendWithLabel('Value', this[prop])
+          .end();
+      });
+    }
+
     if (changedProperties.has('autoplay')) {
       this.ctx.autoplay = this.autoplay;
       this._attemptAutoplay();
@@ -254,11 +265,10 @@ export abstract class MediaProviderElement extends LitElement {
     this.mediaRequestQueue.queue('volume', () => {
       const volume = clampNumber(0, requestedVolume, 1);
 
-      if (DEV_MODE) {
-        this._logger.info('setting `volume` to', volume);
+      if (notEqual(this.volume, volume)) {
+        this._setVolume(volume);
+        this.requestUpdate('volume');
       }
-
-      this._setVolume(volume);
     });
   }
 
@@ -281,10 +291,14 @@ export abstract class MediaProviderElement extends LitElement {
 
   set paused(shouldPause) {
     this.mediaRequestQueue.queue('paused', () => {
-      if (!shouldPause) {
-        this.play();
-      } else {
-        this.pause();
+      if (notEqual(this.paused, shouldPause)) {
+        if (!shouldPause) {
+          this.play();
+        } else {
+          this.pause();
+        }
+
+        this.requestUpdate('paused');
       }
     });
   }
@@ -309,11 +323,10 @@ export abstract class MediaProviderElement extends LitElement {
 
   set currentTime(requestedTime) {
     this.mediaRequestQueue.queue('time', () => {
-      if (DEV_MODE) {
-        this._logger.info('setting `currentTime` to', requestedTime);
+      if (notEqual(this.currentTime, requestedTime)) {
+        this._setCurrentTime(requestedTime);
+        this.requestUpdate('currentTime');
       }
-
-      this._setCurrentTime(requestedTime);
     });
   }
 
@@ -335,11 +348,10 @@ export abstract class MediaProviderElement extends LitElement {
 
   set muted(shouldMute) {
     this.mediaRequestQueue.queue('muted', () => {
-      if (DEV_MODE) {
-        this._logger.info('setting `muted` to', shouldMute);
+      if (notEqual(this.muted, shouldMute)) {
+        this._setMuted(shouldMute);
+        this.requestUpdate('muted');
       }
-
-      this._setMuted(shouldMute);
     });
   }
 
