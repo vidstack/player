@@ -334,6 +334,127 @@ describe('MediaProviderElement', function () {
         }).to.not.throw();
       });
     });
+
+    describe('attemptAutoplay', function () {
+      it('should not call play if autoplay is false', async function () {
+        const { provider } = await buildMediaFixture();
+
+        provider.autoplay = false;
+        provider.ctx.canPlay = true;
+
+        const playSpy = spy(provider, 'play');
+
+        // @ts-expect-error Accessing protected property
+        await provider._attemptAutoplay();
+
+        expect(playSpy).to.not.have.been.called;
+      });
+
+      it('should not call play if not ready for playback', async function () {
+        const { provider } = await buildMediaFixture();
+
+        provider.autoplay = true;
+        provider.ctx.canPlay = false;
+
+        const playSpy = spy(provider, 'play');
+
+        // @ts-expect-error Accessing protected property
+        await provider._attemptAutoplay();
+
+        expect(playSpy).to.not.have.been.called;
+      });
+
+      it('should not call play if playback has started', async function () {
+        const { provider } = await buildMediaFixture();
+
+        provider.autoplay = true;
+        provider.ctx.canPlay = true;
+        provider.ctx.started = true;
+
+        const playSpy = spy(provider, 'play');
+
+        // @ts-expect-error Accessing protected property
+        await provider._attemptAutoplay();
+
+        expect(playSpy).to.not.have.been.called;
+      });
+
+      it('should not call play if reached max attempts', async function () {
+        const { provider } = await buildMediaFixture();
+
+        provider.autoplay = true;
+        provider.ctx.canPlay = true;
+
+        // @ts-expect-error Accessing protected properties
+        provider._autoplayRetryCount = provider._maxAutoplayRetries;
+
+        const playSpy = spy(provider, 'play');
+
+        // @ts-expect-error Accessing protected property
+        await provider._attemptAutoplay();
+
+        expect(playSpy).to.not.have.been.called;
+      });
+
+      it('should not retry if successful', async function () {
+        const { provider } = await buildMediaFixture();
+
+        provider.autoplay = true;
+        provider.ctx.canPlay = true;
+
+        const playSpy = spy(provider, 'play');
+
+        // @ts-expect-error Accessing protected property
+        await provider._attemptAutoplay();
+
+        expect(playSpy).to.have.been.calledOnce;
+
+        // @ts-expect-error Accessing protected property
+        expect(provider._autoplayRetryCount).to.equal(0);
+      });
+
+      it('should give up after 3 attempts', async function () {
+        const { provider } = await buildMediaFixture();
+
+        provider.autoplay = true;
+        provider.ctx.canPlay = true;
+
+        const playSpy = stub(provider, 'play');
+
+        playSpy.callsFake(() => {
+          throw Error('');
+        });
+
+        // @ts-expect-error Accessing protected property
+        await provider._attemptAutoplay();
+
+        expect(playSpy.getCalls()).to.have.length(3);
+      });
+
+      it('should try muted on last attempt', async function () {
+        const { provider } = await buildMediaFixture();
+
+        provider.autoplay = true;
+        provider.ctx.canPlay = true;
+        provider.mediaRequestQueue.serveImmediately = true;
+
+        // @ts-expect-error Accessing protected properties
+        provider._autoplayRetryCount = provider._maxAutoplayRetries - 1;
+
+        const playSpy = stub(provider, 'play');
+        playSpy.callsFake(() => {
+          throw Error('');
+        });
+
+        const mutedSpy = spy(provider, '_setMuted');
+
+        // @ts-expect-error Accessing protected property
+        await provider._attemptAutoplay();
+
+        expect(playSpy.getCalls()).to.have.length(1);
+        expect(mutedSpy).to.have.been.calledOnceWith(true);
+      });
+    });
   });
 
   describe('queue', function () {

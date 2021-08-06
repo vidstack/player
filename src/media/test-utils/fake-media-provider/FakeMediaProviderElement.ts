@@ -119,11 +119,14 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   async play() {
     this.ctx.paused = false;
+    this.ctx.started = true;
+    this.ctx.playing = true;
     this.dispatchEvent(vdsEvent('vds-play'));
   }
 
   async pause() {
     this.ctx.paused = true;
+    this.ctx.playing = false;
     this.dispatchEvent(vdsEvent('vds-pause'));
   }
 

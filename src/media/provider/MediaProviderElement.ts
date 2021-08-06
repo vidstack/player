@@ -700,6 +700,8 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   protected async _handleMediaReady(event?: Event) {
+    if (this.canPlay) return;
+
     this.ctx.canPlay = true;
 
     this.dispatchEvent(vdsEvent('vds-can-play', { originalEvent: event }));
@@ -720,6 +722,7 @@ export abstract class MediaProviderElement extends LitElement {
     }
     /* c8 ignore stop */
 
+    this._autoplayRetryCount = 0;
     await this._attemptAutoplay();
   }
 
@@ -728,7 +731,14 @@ export abstract class MediaProviderElement extends LitElement {
   protected _shouldMuteLastAutoplayAttempt = true;
 
   protected async _attemptAutoplay() {
-    if (!this.canPlay || !this.autoplay || this.started) return;
+    if (
+      !this.canPlay ||
+      !this.autoplay ||
+      this.started ||
+      this._autoplayRetryCount >= this._maxAutoplayRetries
+    ) {
+      return;
+    }
 
     // On last attempt try muted.
     const shouldTryMuted =
@@ -775,15 +785,9 @@ export abstract class MediaProviderElement extends LitElement {
       /* c8 ignore stop */
     }
 
-    const shouldTryAgain =
-      !didAttemptSucceed && this._autoplayRetryCount < this._maxAutoplayRetries;
-
-    if (shouldTryAgain) {
+    if (!didAttemptSucceed) {
       this._autoplayRetryCount += 1;
       return this._attemptAutoplay();
-    } else {
-      // Give up.
-      this._autoplayRetryCount = 0;
     }
   }
 
