@@ -60,7 +60,7 @@ export interface GroupLogStream {
   end(): GroupLogStream;
 }
 
-export const logLevel = createContext(LogLevel.Info);
+export const logLevel = createContext(LogLevel.Silent);
 
 const HOST_COLORS_LOCAL_STORAGE_KEY = 'vds-debug-host-colors';
 
