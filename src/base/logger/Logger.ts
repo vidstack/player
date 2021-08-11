@@ -5,6 +5,7 @@ import { ReactiveController, ReactiveControllerHost } from 'lit';
 import { IS_CLIENT } from '../../utils/support';
 import { isUndefined } from '../../utils/unit';
 import { ContextConsumerController, createContext } from '../context';
+import { StorybookControl } from '../storybook';
 import { ms } from './ms';
 
 export enum LogLevel {
@@ -15,7 +16,7 @@ export enum LogLevel {
   Debug = 4
 }
 
-export const LogLevelNameMap = Object.freeze({
+export const LogLevelNameMap: Record<LogLevel, LogLevelName> = Object.freeze({
   [LogLevel.Silent]: 'silent',
   [LogLevel.Error]: 'error',
   [LogLevel.Warn]: 'warn',
@@ -62,6 +63,14 @@ export interface GroupLogStream {
 
 export const logLevel = createContext(LogLevel.Silent);
 
+export const LOGGER_STORYBOOK_ARG_TYPES = {
+  logLevel: {
+    control: StorybookControl.Select,
+    options: ['silent', 'error', 'warn', 'info', 'debug', 'auto'],
+    defaultValue: 'silent'
+  }
+};
+
 const HOST_COLORS_LOCAL_STORAGE_KEY = 'vds-debug-host-colors';
 
 const colors = getSavedColors();
@@ -95,7 +104,6 @@ function saveColors() {
     localStorage.setItem(HOST_COLORS_LOCAL_STORAGE_KEY, JSON.stringify(map));
   }
 }
-
 export class Logger implements ReactiveController {
   protected readonly _logLevelCtx: ContextConsumerController<LogLevel>;
 
@@ -104,13 +112,13 @@ export class Logger implements ReactiveController {
     return owner.constructor?.name ?? owner.name ?? 'unknown';
   }
 
-  get level() {
+  get level(): LogLevel {
     return isUndefined(this._options.logLevel)
       ? this._logLevelCtx.value
       : this._options.logLevel;
   }
 
-  set level(newLevel: LogLevel) {
+  set level(newLevel: LogLevel | undefined) {
     this._options.logLevel = newLevel;
   }
 

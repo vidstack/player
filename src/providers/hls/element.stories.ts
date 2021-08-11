@@ -48,6 +48,7 @@ function Template({
   muted,
   playsinline,
   loop,
+  logLevel,
   controls = true,
   crossOrigin,
   preload,
@@ -107,6 +108,7 @@ function Template({
       cross-origin=${ifDefined(crossOrigin)}
       controls-list=${ifDefined(controlsList)}
       hls-library=${ifNonEmpty(hlsLibrary)}
+      log-level=${logLevel}
       .hls-config=${hlsConfig}
       ?autoplay=${autoplay}
       ?playsinline=${playsinline}

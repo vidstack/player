@@ -43,6 +43,7 @@ function Template({
   muted,
   playsinline,
   loop,
+  logLevel,
   controls = true,
   crossOrigin,
   preload,
@@ -91,6 +92,7 @@ function Template({
       current-time=${currentTime}
       crossorigin=${ifDefined(crossOrigin)}
       controlslist=${ifDefined(controlsList)}
+      log-level=${logLevel}
       ?playsinline=${playsinline}
       ?paused=${paused}
       ?muted=${muted}

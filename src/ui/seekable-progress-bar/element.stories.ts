@@ -5,11 +5,13 @@ import './define';
 import { html } from 'lit';
 
 import { ifNonEmpty } from '../../base/directives';
+import { LOGGER_STORYBOOK_ARG_TYPES } from '../../base/logger';
 import { StorybookControl } from '../../base/storybook';
 import { createTimeRanges } from '../../media';
 import { SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME } from './SeekableProgressBarElement';
 
 export const SEEKABLE_PROGRESS_BAR_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...LOGGER_STORYBOOK_ARG_TYPES,
   // Properties
   label: {
     control: StorybookControl.Text,
@@ -40,13 +42,14 @@ export default {
 function Template({
   // Properties
   label,
+  logLevel,
   valueText,
   // Media Properties
   mediaSeekableAmount,
   mediaDuration
 }: any) {
   return html`
-    <vds-media-controller>
+    <vds-media-controller log-level=${logLevel}>
       <vds-media-container>
         <vds-fake-media-provider
           .canPlayContext=${true}

@@ -13,7 +13,11 @@ import {
   FullscreenChangeEvent,
   FullscreenController
 } from '../../base/fullscreen';
-import { ElementLogger } from '../../base/logger';
+import {
+  ElementLogger,
+  LogLevelName,
+  LogLevelNameMap
+} from '../../base/logger';
 import { RequestQueue } from '../../base/queue';
 import {
   ScreenOrientationController,
@@ -21,7 +25,7 @@ import {
 } from '../../base/screen-orientation';
 import { DEV_MODE } from '../../env';
 import { clampNumber } from '../../utils/number';
-import { notEqual } from '../../utils/unit';
+import { isUndefined, notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
 import {
   cloneMediaContextRecord,
@@ -152,6 +156,28 @@ export abstract class MediaProviderElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Logging
   // -------------------------------------------------------------------------------------------
+
+  /**
+   * Sets the providers log level. By default it'll follow the media controller's log level. Valid
+   * values in order of level include `silent`, `error`, `warn`, `info` and `debug`. Set to special
+   * value `auto` for it to continue following controller.
+   *
+   * @default `auto`
+   */
+  @property({ attribute: 'log-level' })
+  get logLevel(): LogLevelName {
+    /* c8 ignore next */
+    return DEV_MODE ? LogLevelNameMap[this._logger.level] : 'silent';
+  }
+
+  set logLevel(newLevel: LogLevelName | 'auto') {
+    /* c8 ignore next */
+    const numericLevel = DEV_MODE
+      ? Object.values(LogLevelNameMap).findIndex((l) => l === newLevel)
+      : 0;
+
+    this._logger.level = numericLevel >= 0 ? numericLevel : undefined;
+  }
 
   /* c8 ignore next */
   protected _logMediaEvents() {

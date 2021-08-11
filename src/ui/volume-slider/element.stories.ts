@@ -5,12 +5,14 @@ import './define';
 import { html } from 'lit';
 
 import { on } from '../../base/directives';
+import { LOGGER_STORYBOOK_ARG_TYPES } from '../../base/logger';
 import { storybookAction, StorybookControl } from '../../base/storybook';
 import { pick } from '../../utils/object';
 import { SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../slider/element.stories';
 import { VOLUME_SLIDER_ELEMENT_TAG_NAME } from './VolumeSliderElement';
 
 export const VOLUME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...LOGGER_STORYBOOK_ARG_TYPES,
   // Properties
   ...pick(SLIDER_ELEMENT_STORYBOOK_ARG_TYPES, [
     'disabled',
@@ -58,6 +60,7 @@ function Template({
   hidden,
   orientation,
   label,
+  logLevel,
   step,
   keyboardStep,
   shiftKeyMultiplier,
@@ -68,6 +71,7 @@ function Template({
 }: any) {
   return html`
     <vds-media-controller
+      log-level=${logLevel}
       ${on('vds-volume-change-request', onVolumeChangeRequest)}
     >
       <vds-media-container>

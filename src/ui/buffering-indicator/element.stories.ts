@@ -4,10 +4,12 @@ import './define';
 
 import { html } from 'lit';
 
+import { LOGGER_STORYBOOK_ARG_TYPES } from '../../base/logger';
 import { StorybookControl } from '../../base/storybook';
 import { BUFFERING_INDICATOR_ELEMENT_TAG_NAME } from './BufferingIndicatorElement';
 
 export const BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...LOGGER_STORYBOOK_ARG_TYPES,
   mediaCanPlay: {
     control: StorybookControl.Boolean,
     defaultValue: true
@@ -26,12 +28,13 @@ export default {
 };
 
 function Template({
+  logLevel,
   // Media Properties
   mediaCanPlay,
   mediaBuffering
 }: any) {
   return html`
-    <vds-media-controller>
+    <vds-media-controller log-level=${logLevel}>
       <vds-media-container>
         <vds-fake-media-provider
           .canPlayContext=${mediaCanPlay}

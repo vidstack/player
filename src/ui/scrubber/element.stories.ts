@@ -46,6 +46,7 @@ function Template({
   hidden,
   keyboardStep,
   label,
+  logLevel,
   orientation,
   pauseWhileDragging,
   progressLabel,
@@ -74,6 +75,7 @@ function Template({
 }: any) {
   return html`
     <vds-media-controller
+      log-level=${logLevel}
       ${on('vds-play-request', onPlayRequest)}
       ${on('vds-pause-request', onPauseRequest)}
       ${on('vds-seek-request', onSeekRequest)}

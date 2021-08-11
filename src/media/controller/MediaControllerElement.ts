@@ -167,14 +167,12 @@ export class MediaControllerElement extends WithMediaProviderBridge(
    * Sets the default log level throughout the player. Valid values in order of
    * level include `silent`, `error`, `warn`, `info` and `debug`.
    *
-   * @default `info`
+   * @default `silent`
    */
   @property({ attribute: 'log-level' })
   get logLevel(): LogLevelName {
     /* c8 ignore next */
-    return DEV_MODE
-      ? (LogLevelNameMap[this._logLevelCtx.value] as LogLevelName)
-      : 'silent';
+    return DEV_MODE ? LogLevelNameMap[this._logLevelCtx.value] : 'silent';
   }
 
   set logLevel(newLevel: LogLevelName) {
@@ -183,7 +181,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
       ? Object.values(LogLevelNameMap).findIndex((l) => l === newLevel)
       : 0;
 
-    this._logLevelCtx.value = numericLevel;
+    this._logger.level = numericLevel >= 0 ? numericLevel : 0;
   }
 
   /**

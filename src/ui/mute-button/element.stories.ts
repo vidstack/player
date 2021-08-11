@@ -5,12 +5,14 @@ import './define';
 import { html } from 'lit';
 
 import { ifNonEmpty, on } from '../../base/directives';
+import { LOGGER_STORYBOOK_ARG_TYPES } from '../../base/logger';
 import { storybookAction, StorybookControl } from '../../base/storybook';
 import { omit } from '../../utils/object';
 import { TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES } from '../toggle-button/element.stories';
 import { MUTE_BUTTON_ELEMENT_TAG_NAME } from './MuteButtonElement';
 
 export const MUTE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...LOGGER_STORYBOOK_ARG_TYPES,
   ...omit(TOGGLE_BUTTON_ELEMENT_STORYBOOK_ARG_TYPES, ['pressed']),
   label: { control: StorybookControl.Text, defaultValue: 'Mute' },
   mediaMuted: {
@@ -31,6 +33,7 @@ export default {
 function Template({
   // Properties
   label,
+  logLevel,
   describedBy,
   disabled,
   // Actions
@@ -41,6 +44,7 @@ function Template({
 }: any) {
   return html`
     <vds-media-controller
+      log-level=${logLevel}
       ${on('vds-mute-request', onMuteRequest)}
       ${on('vds-unmute-request', onUnmuteRequest)}
     >

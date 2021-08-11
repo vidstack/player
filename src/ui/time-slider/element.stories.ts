@@ -5,12 +5,14 @@ import './define';
 import { html } from 'lit';
 
 import { ifNonEmpty, on } from '../../base/directives';
+import { LOGGER_STORYBOOK_ARG_TYPES } from '../../base/logger';
 import { storybookAction, StorybookControl } from '../../base/storybook';
 import { pick } from '../../utils/object';
 import { SLIDER_ELEMENT_STORYBOOK_ARG_TYPES } from '../slider/element.stories';
 import { TIME_SLIDER_ELEMENT_TAG_NAME } from './TimeSliderElement';
 
 export const TIME_SLIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...LOGGER_STORYBOOK_ARG_TYPES,
   // Properties
   ...pick(SLIDER_ELEMENT_STORYBOOK_ARG_TYPES, [
     'disabled',
@@ -63,6 +65,7 @@ export default {
 function Template({
   // Properties
   label,
+  logLevel,
   step,
   keyboardStep,
   shiftKeyMultiplier,
@@ -84,6 +87,7 @@ function Template({
 }: any) {
   return html`
     <vds-media-controller
+      log-level=${logLevel}
       ${on('vds-play-request', onPlayRequest)}
       ${on('vds-pause-request', onPauseRequest)}
       ${on('vds-seeking-request', onSeekingRequest)}

@@ -1,6 +1,8 @@
+import { LOGGER_STORYBOOK_ARG_TYPES } from '../../base/logger';
 import { storybookAction, StorybookControl } from '../../base/storybook';
 
 export const MEDIA_PROVIDER_ELEMENT_STORYBOOK_ARG_TYPES = {
+  ...LOGGER_STORYBOOK_ARG_TYPES,
   // Properties
   autoplay: { control: StorybookControl.Boolean, defaultValue: false },
   controls: { control: StorybookControl.Boolean, defaultValue: true },
