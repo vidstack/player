@@ -181,7 +181,7 @@ export class MediaControllerElement extends WithMediaProviderBridge(
       ? Object.values(LogLevelNameMap).findIndex((l) => l === newLevel)
       : 0;
 
-    this._logger.level = numericLevel >= 0 ? numericLevel : 0;
+    this._logLevelCtx.value = numericLevel >= 0 ? numericLevel : 0;
   }
 
   /**
