@@ -312,25 +312,7 @@ export class HlsElement extends VideoElement {
    * `<video>` element. If we're using `hls.js` we don't want to override the `blob`.
    */
   protected override _shouldSetVideoSrcAttr(): boolean {
-    const shouldSet = this.shouldUseNativeHlsSupport || !this.isHlsStream;
-
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      this._logger
-        .infoGroup(
-          `should set video \`src\` attr? ${shouldSet ? 'Yes.' : 'No.'}`
-        )
-        .appendWithLabel('Src', this.src)
-        .appendWithLabel('Is HLS Stream?', this.isHlsStream)
-        .appendWithLabel(
-          'Should use native HLS support?',
-          this.shouldUseNativeHlsSupport
-        )
-        .end();
-    }
-    /* c8 ignore stop */
-
-    return shouldSet;
+    return this.shouldUseNativeHlsSupport || !this.isHlsStream;
   }
 
   /**
