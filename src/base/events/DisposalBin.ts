@@ -53,7 +53,7 @@ export class DisposalBin {
   empty() {
     /* c8 ignore start */
     if (DEV_MODE && this.name && this._disposal.length > 0) {
-      this._logger?.info('empty', this._disposal.length, 'items');
+      this._logger?.debug('empty', this._disposal.length, 'items');
     }
     /* c8 ignore stop */
 

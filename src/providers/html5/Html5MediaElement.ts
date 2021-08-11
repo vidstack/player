@@ -351,7 +351,7 @@ export class Html5MediaElement extends MediaProviderElement {
           /* c8 ignore start */
           if (DEV_MODE && type !== 'timeupdate') {
             this._logger
-              .infoGroup(`📺 fired \`${event.type}\``)
+              .debugGroup(`📺 fired \`${event.type}\``)
               .appendWithLabel('Event', event)
               .appendWithLabel('Engine', this.engine)
               .appendWithLabel('Context', this.mediaState)
