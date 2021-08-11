@@ -1,4 +1,4 @@
-/* c8 ignore next 1000 */
+/* c8 ignore start */
 
 import { round } from '../../utils/number';
 
@@ -33,3 +33,5 @@ export function ms(val: number): string {
 
   return round(val, 2) + 'ms';
 }
+
+/* c8 ignore stop */

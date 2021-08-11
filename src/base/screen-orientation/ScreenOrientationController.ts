@@ -1,4 +1,4 @@
-/* c8 ignore next 1000 */
+/* c8 ignore start */
 
 import { ReactiveElement } from 'lit';
 
@@ -33,15 +33,12 @@ export class ScreenOrientationController {
   constructor(protected readonly _host: ReactiveElement) {
     this._updateScreenOrientation();
 
-    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
-    /* c8 ignore stop */
 
     this._listenerDisposal = new DisposalBin(
       _host,
-      /* c8 ignore next */
       DEV_MODE && { name: 'listenerDisposal', owner: this }
     );
 
@@ -99,11 +96,9 @@ export class ScreenOrientationController {
   async lock(lockType: ScreenOrientationLock): Promise<void> {
     this._throwIfScreenOrientationUnavailable();
 
-    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.info('locking screen orientation', lockType);
     }
-    /* c8 ignore stop */
 
     await screen.orientation.lock(lockType);
 
@@ -127,11 +122,9 @@ export class ScreenOrientationController {
   async unlock(): Promise<void> {
     this._throwIfScreenOrientationUnavailable();
 
-    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.info('unlocking screen orientation');
     }
-    /* c8 ignore stop */
 
     await screen.orientation.unlock();
     this._isScreenOrientationLocked = false;
@@ -164,11 +157,9 @@ export class ScreenOrientationController {
     this._screenOrientation = window.screen.orientation
       .type as ScreenOrientation;
 
-    /* c8 ignore start */
     if (DEV_MODE && this._isScreenOrientationLocked) {
       this._logger.info('screen orientation changed', this._screenOrientation);
     }
-    /* c8 ignore stop */
 
     this._host.dispatchEvent(
       vdsEvent('vds-screen-orientation-change', {
@@ -194,3 +185,5 @@ export class ScreenOrientationController {
     throw Error('Screen orientation API is not available.');
   }
 }
+
+/* c8 ignore stop*/

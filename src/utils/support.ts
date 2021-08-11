@@ -1,4 +1,4 @@
-/* c8 ignore next 1000 */
+/* c8 ignore start */
 
 import { isFunction, isUndefined, noop } from './unit';
 
@@ -221,3 +221,5 @@ export function isNonNativeHlsStreamingPossible(): boolean {
 
   return isTypeSupported && isSourceBufferValid;
 }
+
+/* c8 ignore stop */

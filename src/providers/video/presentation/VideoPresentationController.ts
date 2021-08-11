@@ -1,4 +1,4 @@
-/* c8 ignore next 1000 */
+/* c8 ignore start */
 
 import { PropertyValues, ReactiveElement } from 'lit';
 
@@ -41,15 +41,12 @@ export class VideoPresentationController {
   protected readonly _listenerDisposal: DisposalBin;
 
   constructor(protected readonly _host: VideoPresentationControllerHost) {
-    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger = new Logger(_host, { owner: this });
     }
-    /* c8 ignore stop */
 
     this._listenerDisposal = new DisposalBin(
       _host,
-      /* c8 ignore next */
       DEV_MODE && { name: 'listenerDisposal', owner: this }
     );
 
@@ -122,11 +119,9 @@ export class VideoPresentationController {
   protected _addPresentationModeChangeEventListener(): () => void {
     if (!this.isSupported || isNil(this._host.videoElement)) return noop;
 
-    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger.info('adding `webkitpresentationmodechanged` listener');
     }
-    /* c8 ignore stop */
 
     return listen(
       this._host.videoElement,
@@ -137,14 +132,12 @@ export class VideoPresentationController {
   }
 
   protected _handlePresentationModeChange(event: Event) {
-    /* c8 ignore start */
     if (DEV_MODE) {
       this._logger
         .infoGroup('presentation mode change')
         .appendWithLabel('Event', event)
         .end();
     }
-    /* c8 ignore stop */
 
     redispatchEvent(this._host, event);
     this._host.dispatchEvent(
@@ -155,3 +148,5 @@ export class VideoPresentationController {
     );
   }
 }
+
+/* c8 ignore stop */

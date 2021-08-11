@@ -31,6 +31,8 @@ files.forEach((file) => {
   const content = readFileSync(absPath).toString();
   const lines = content.split('\n');
 
+  if (/\/\* c8 ignore start \*\//.test(lines[0])) return;
+
   let errors = 0;
 
   lines.forEach((line, lineNo) => {

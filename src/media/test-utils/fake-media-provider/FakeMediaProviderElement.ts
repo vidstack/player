@@ -1,4 +1,4 @@
-/* c8 ignore next 1000 */
+/* c8 ignore start */
 
 import { vdsEvent } from '../../../base/events';
 import { CanPlay } from '../../CanPlay';
@@ -142,3 +142,5 @@ export class FakeMediaProviderElement extends MediaProviderElement {
     this.ctx.fullscreen = false;
   }
 }
+
+/* c8 ignore stop */

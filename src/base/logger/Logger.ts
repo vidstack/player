@@ -1,4 +1,4 @@
-/* c8 ignore next 1000 */
+/* c8 ignore start */
 
 import { ReactiveController, ReactiveControllerHost } from 'lit';
 
@@ -342,3 +342,5 @@ export class ElementLogger extends Logger {
     this.debug('🧬 disconnected');
   }
 }
+
+/* c8 ignore stop*/
