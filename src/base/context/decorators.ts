@@ -86,6 +86,8 @@ export function defineContextProvider<T = any>(
   ctor.finalizeContext?.();
 
   ctor.addInitializer((element) => {
+    if (!(element instanceof ctor)) return;
+
     if (!element[PROVIDERS]) element[PROVIDERS] = new Map();
 
     const provider = context.provide(element, {
@@ -123,6 +125,8 @@ export function defineContextConsumer<T = any>(
   ctor.finalizeContext?.();
 
   ctor.addInitializer((element) => {
+    if (!(element instanceof ctor)) return;
+
     let oldValue =
       options.transform?.(context.initialValue) ?? context.initialValue;
 
