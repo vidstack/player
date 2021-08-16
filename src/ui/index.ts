@@ -1,3 +1,4 @@
+export * from './aspect-ratio';
 export * from './buffering-indicator';
 export * from './controls';
 export * from './fullscreen-button';

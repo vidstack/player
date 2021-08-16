@@ -4,6 +4,7 @@ export const basePlayerStyles = css`
   :host {
     display: block;
     contain: content;
+    background: #000;
   }
 
   :host([hidden]) {

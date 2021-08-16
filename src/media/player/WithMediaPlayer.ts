@@ -42,6 +42,9 @@ export function WithMediaPlayer<T extends Constructor<LitElement>>(
 ): T & Constructor<BaseMediaPlayer> {
   class MediaPlayer extends Provider {
     static get styles(): CSSResultGroup {
+      // Provider styles should override base media styles.
+      // @ts-expect-error
+      if (super.styles) return [basePlayerStyles, super.styles];
       return [basePlayerStyles];
     }
 

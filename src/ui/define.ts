@@ -1,3 +1,4 @@
+import './aspect-ratio/define';
 import './buffering-indicator/define';
 import './controls/define';
 import './fullscreen-button/define';
