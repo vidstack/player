@@ -20,12 +20,5 @@
     "types": ["mocha"]
   },
   "include": ["**/*.ts"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "dist-prod",
-    "bundle",
-    "./index.d.ts",
-    "./define.d.ts"
-  ]
+  "exclude": ["node_modules", "dist", "dist-prod", "bundle", "./index.d.ts"]
 }

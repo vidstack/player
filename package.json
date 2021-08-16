@@ -6,15 +6,13 @@
   "engines": {
     "node": ">=14.16.0"
   },
-  "main": "dist-prod/bundle/index.js",
-  "module": "dist-prod/bundle/index.js",
+  "main": "dist-prod/index.js",
+  "module": "dist-prod/index.js",
   "types": "./index.d.ts",
   "files": [
     "dist/",
     "dist-prod/",
-    "bundle/",
     "index.d.ts",
-    "define.d.ts",
     "custom-elements.json"
   ],
   "sideEffects": [
@@ -24,27 +22,12 @@
   ],
   "exports": {
     ".": {
-      "development": "./dist/bundle/index.js",
-      "default": "./dist-prod/bundle/index.js"
+      "development": "./dist/index.js",
+      "default": "./dist-prod/index.js"
     },
     "./*": {
       "development": "./dist/*",
       "default": "./dist-prod/*"
-    },
-    "./bundle": {
-      "development": "./bundle/dev.js",
-      "default": "./bundle/prod.js"
-    },
-    "./bundle/*": {
-      "default": "./bundle/*"
-    },
-    "./define": {
-      "development": "./dist/bundle/define.js",
-      "default": "./dist-prod/bundle/define.js"
-    },
-    "./define.js": {
-      "development": "./dist/bundle/define.js",
-      "default": "./dist-prod/bundle/define.js"
     },
     "./custom-elements.json": "./custom-elements.json"
   },

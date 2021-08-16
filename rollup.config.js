@@ -99,35 +99,5 @@ export default [
     watch: {
       clearScreen: false
     }
-  },
-  {
-    input: 'dist/bundle/define.js',
-    output: {
-      name: 'Vidstack',
-      format: 'iife',
-      file: 'bundle/dev.js',
-      globals: GLOBALS,
-      sourcemap: !CHECK_SIZE
-    },
-    external: EXTERNAL_LIBS,
-    plugins: PLUGINS({
-      devMode: true,
-      minify: false
-    })
-  },
-  {
-    input: 'dist/bundle/define.js',
-    output: {
-      name: 'Vidstack',
-      format: 'iife',
-      file: 'bundle/prod.js',
-      globals: GLOBALS,
-      sourcemap: !CHECK_SIZE
-    },
-    external: EXTERNAL_LIBS,
-    plugins: PLUGINS({
-      devMode: false,
-      minify: true
-    })
   }
 ];

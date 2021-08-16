@@ -9,20 +9,15 @@ const elements = globSync('src/**/*Element.ts')
   .map((element) => ({
     name: `import { ${element} } from '@vidstack/elements'`,
     limit: '15 kB',
-    path: 'dist-prod/bundle/index.js',
+    path: 'dist-prod/index.js',
     import: `{ ${element} }`
   }));
 
 module.exports = [
+  ...elements,
   {
     name: "import '@vidstack/elements'",
     limit: '35 kB',
-    path: 'dist-prod/bundle/index.js'
-  },
-  {
-    name: "import '@vidstack/elements/define'",
-    limit: '35 kB',
-    path: 'dist-prod/bundle/define.js'
-  },
-  ...elements
+    path: 'dist-prod/index.js'
+  }
 ];
