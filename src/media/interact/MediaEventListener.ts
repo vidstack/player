@@ -6,8 +6,8 @@ import {
 } from '../../base/elements/decorators';
 import { DisposalBin, listen } from '../../base/events';
 import { Logger } from '../../base/logger';
-import { DEV_MODE } from '../../env';
-import { Values } from '../../helpers';
+import { DEV_MODE } from '../../global/env';
+import { Values } from '../../global/helpers';
 import { keysOf } from '../../utils/object';
 import { isFunction, isNil, noop } from '../../utils/unit';
 import { MediaControllerConnectEvent } from '../controller/MediaControllerElement';
@@ -33,10 +33,10 @@ export type MediaEventListenerRecord = {
  * @example
  * ```ts
  * import { LitElement } from 'lit';
- * import { MediaEventListenerController, PlayEvent, CanPlayEvent } from '@vidstack/elements';
+ * import { MediaEventListener, PlayEvent, CanPlayEvent } from '@vidstack/elements';
  *
  * class MyElement extends LitElement {
- *   mediaEventListeners = new MediaEventListenerController(this, {
+ *   mediaEventListeners = new MediaEventListener(this, {
  *     'vds-play': this.handlePlay,
  *     'vds-can-play': this.handleCanPlay
  *   });
@@ -51,7 +51,7 @@ export type MediaEventListenerRecord = {
  * }
  * ```
  */
-export class MediaEventListenerController implements ReactiveController {
+export class MediaEventListener implements ReactiveController {
   protected readonly _eventListeners: MediaEventListenerTupleArray;
 
   protected readonly _logger!: Logger;
@@ -185,8 +185,7 @@ export function mediaEventListener(type: keyof MediaEvents): MethodDecorator {
         if (!isFunction(host[methodName])) return;
 
         const controller =
-          host[CONTROLLER] ??
-          (host[CONTROLLER] = new MediaEventListenerController(host));
+          host[CONTROLLER] ?? (host[CONTROLLER] = new MediaEventListener(host));
 
         const listener = host[methodName].bind(host);
         controller.addListener(type, listener);

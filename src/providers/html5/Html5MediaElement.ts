@@ -3,7 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { createRef } from 'lit/directives/ref.js';
 
 import { listen, redispatchEvent, vdsEvent } from '../../base/events';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { CanPlay, MediaProviderElement, MediaType } from '../../media';
 import { getSlottedChildren } from '../../utils/dom';
 import { keysOf } from '../../utils/object';
@@ -66,15 +66,6 @@ export type MediaSrcObject = MediaStream | MediaSource | Blob | File;
  * @slot Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
 export class Html5MediaElement extends MediaProviderElement {
-  static override get events(): (keyof GlobalEventHandlersEventMap)[] {
-    const nativeMediaEvents = MediaProviderElement.events.map((event) =>
-      // vds-can-play => canplay
-      event.slice(4).replace('-', '')
-    ) as (keyof GlobalEventHandlersEventMap)[];
-
-    return [...nativeMediaEvents, ...super.events];
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
@@ -319,7 +310,7 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _bindMediaEventListeners() {
     if (isNil(this.mediaElement)) return;
 
-    const eventHandlers = {
+    const eventListeners = {
       abort: this._handleAbort,
       canplay: this._handleCanPlay,
       canplaythrough: this._handleCanPlayThrough,
@@ -344,8 +335,8 @@ export class Html5MediaElement extends MediaProviderElement {
       waiting: this._handleWaiting
     };
 
-    keysOf(eventHandlers).forEach((type) => {
-      const handler = eventHandlers[type].bind(this);
+    keysOf(eventListeners).forEach((type) => {
+      const handler = eventListeners[type].bind(this);
       this._disconnectDisposal.add(
         listen(this.mediaElement!, type, async (event: Event) => {
           /* c8 ignore start */

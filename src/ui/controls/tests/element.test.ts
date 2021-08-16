@@ -2,24 +2,22 @@ import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
 import { ViewType } from '../../../media';
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import { CONTROLS_ELEMENT_TAG_NAME, ControlsElement } from '../ControlsElement';
 
 window.customElements.define(CONTROLS_ELEMENT_TAG_NAME, ControlsElement);
 
 describe(CONTROLS_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { controller, container, provider } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-controls>
         <div class="slot"></div>
       </vds-controls>
     `);
 
-    const controls = container.querySelector(
-      CONTROLS_ELEMENT_TAG_NAME
-    ) as ControlsElement;
+    const controls = player.querySelector(CONTROLS_ELEMENT_TAG_NAME)!;
 
-    return { controller, provider, controls };
+    return { player, controls };
   }
 
   it('should render DOM correctly', async function () {
@@ -41,57 +39,57 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
   });
 
   it('should toggle `media-can-play` attribute', async function () {
-    const { provider, controls } = await buildFixture();
-    await provider.forceMediaReady();
+    const { player, controls } = await buildFixture();
+    await player.forceMediaReady();
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-can-play');
-    provider.ctx.canPlay = false;
+    player.ctx.canPlay = false;
     await elementUpdated(controls);
     expect(controls).to.not.have.attribute('media-can-play');
   });
 
   it('should toggle `hidden` attribute', async function () {
-    const { controller, controls } = await buildFixture();
-    await controller.controlsManager.hide();
+    const { player, controls } = await buildFixture();
+    await player.controlsManager.hide();
     expect(controls).to.have.attribute('hidden');
-    await controller.controlsManager.show();
+    await player.controlsManager.show();
     expect(controls).to.not.have.attribute('hidden');
   });
 
   it('should toggle `idle` attribute', async function () {
-    const { controller, controls } = await buildFixture();
-    controller.idleManager.timeout = 0;
-    controller.idleManager.start();
-    await oneEvent(controller, 'vds-idle-change');
+    const { player, controls } = await buildFixture();
+    player.idleManager.timeout = 0;
+    player.idleManager.start();
+    await oneEvent(player, 'vds-idle-change');
     expect(controls).to.have.attribute('idle');
-    await controller.idleManager.stop();
+    await player.idleManager.stop();
     await elementUpdated(controls);
     expect(controls).to.not.have.attribute('idle');
   });
 
   it('should toggle `media-paused` attribute', async function () {
-    const { provider, controls } = await buildFixture();
-    await provider.forceMediaReady();
-    provider.play();
+    const { player, controls } = await buildFixture();
+    await player.forceMediaReady();
+    player.play();
     await elementUpdated(controls);
     expect(controls).to.not.have.attribute('media-paused');
-    provider.pause();
+    player.pause();
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-paused');
-    provider.play();
+    player.play();
     await elementUpdated(controls);
     expect(controls).to.not.have.attribute('media-paused');
   });
 
   it('should toggle `media-view-type` attribute', async function () {
-    const { provider, controls } = await buildFixture();
-    provider.ctx.viewType = ViewType.Audio;
+    const { player, controls } = await buildFixture();
+    player.ctx.viewType = ViewType.Audio;
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-view-type', ViewType.Audio);
-    provider.ctx.viewType = ViewType.Video;
+    player.ctx.viewType = ViewType.Video;
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-view-type', ViewType.Video);
-    provider.ctx.viewType = ViewType.Unknown;
+    player.ctx.viewType = ViewType.Unknown;
     await elementUpdated(controls);
     expect(controls).to.have.attribute('media-view-type', ViewType.Unknown);
   });

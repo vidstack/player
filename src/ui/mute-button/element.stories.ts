@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import './define';
 
@@ -43,27 +42,23 @@ function Template({
   mediaMuted
 }: any) {
   return html`
-    <vds-media-controller
+    <vds-fake-media-player
       log-level=${logLevel}
+      .mediaCanPlay=${true}
+      .mediaMuted=${mediaMuted}
       ${on('vds-mute-request', onMuteRequest)}
       ${on('vds-unmute-request', onUnmuteRequest)}
     >
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext=${true}
-          .mutedContext=${mediaMuted}
-        ></vds-fake-media-provider>
-
-        <vds-mute-button
-          label=${ifNonEmpty(label)}
-          described-by=${ifNonEmpty(describedBy)}
-          ?disabled=${disabled}
-        >
-          <div class="mute">Mute</div>
-          <div class="unmute">Unmute</div>
-        </vds-mute-button>
-      </vds-media-container>
-    </vds-media-controller>
+      <vds-mute-button
+        label=${ifNonEmpty(label)}
+        described-by=${ifNonEmpty(describedBy)}
+        ?disabled=${disabled}
+        slot="ui"
+      >
+        <div class="mute">Mute</div>
+        <div class="unmute">Unmute</div>
+      </vds-mute-button>
+    </vds-fake-media-player>
 
     <style>
       vds-mute-button[media-muted] .mute {

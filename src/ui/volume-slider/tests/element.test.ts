@@ -2,7 +2,7 @@ import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 
 import { vdsEvent } from '../../../base/events';
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import {
   VOLUME_SLIDER_ELEMENT_TAG_NAME,
   VolumeSliderElement
@@ -15,15 +15,13 @@ window.customElements.define(
 
 describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { container, controller, provider } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-volume-slider></vds-volume-slider>
     `);
 
-    const volumeSlider = container.querySelector(
-      VOLUME_SLIDER_ELEMENT_TAG_NAME
-    ) as VolumeSliderElement;
+    const volumeSlider = player.querySelector(VOLUME_SLIDER_ELEMENT_TAG_NAME)!;
 
-    return { controller, provider, volumeSlider };
+    return { player, volumeSlider };
   }
 
   it('should render DOM correctly', async function () {
@@ -40,21 +38,21 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
   });
 
   it('should update when media volume changes', async function () {
-    const { provider, volumeSlider } = await buildFixture();
+    const { player, volumeSlider } = await buildFixture();
 
     expect(volumeSlider.volume).to.equal(1);
 
-    provider.ctx.volume = 0.25;
+    player.ctx.volume = 0.25;
     await elementUpdated(volumeSlider);
     expect(volumeSlider.volume).to.equal(0.25);
 
-    provider.ctx.volume = 0.85;
+    player.ctx.volume = 0.85;
     await elementUpdated(volumeSlider);
     expect(volumeSlider.volume).to.equal(0.85);
   });
 
   it('should dispatch volume change request', async function () {
-    const { controller, volumeSlider } = await buildFixture();
+    const { player, volumeSlider } = await buildFixture();
 
     setTimeout(() => {
       volumeSlider.dispatchEvent(
@@ -62,7 +60,7 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
       );
     }, 0);
 
-    const { detail } = await oneEvent(controller, 'vds-volume-change-request');
+    const { detail } = await oneEvent(player, 'vds-volume-change-request');
 
     expect(detail).to.equal(0.8);
   });

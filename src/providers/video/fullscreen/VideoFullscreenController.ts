@@ -6,7 +6,7 @@ import {
   FullscreenControllerHost
 } from '../../../base/fullscreen';
 import { ScreenOrientationController } from '../../../base/screen-orientation';
-import { DEV_MODE } from '../../../env';
+import { DEV_MODE } from '../../../global/env';
 import { noop } from '../../../utils/unit';
 import {
   VideoPresentationChangeEvent,

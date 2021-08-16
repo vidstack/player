@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import './define';
 
@@ -86,35 +85,31 @@ function Template({
   onSeekRequest
 }: any) {
   return html`
-    <vds-media-controller
+    <vds-fake-media-player
       log-level=${logLevel}
+      .mediaCanPlay=${true}
+      .mediaCurrentTime=${mediaCurrentTime}
+      .mediaDuration=${mediaDuration}
+      .mediaPaused=${mediaPaused}
       ${on('vds-play-request', onPlayRequest)}
       ${on('vds-pause-request', onPauseRequest)}
       ${on('vds-seeking-request', onSeekingRequest)}
       ${on('vds-seek-request', onSeekRequest)}
     >
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext=${true}
-          .currentTimeContext=${mediaCurrentTime}
-          .durationContext=${mediaDuration}
-          .pausedContext=${mediaPaused}
-        ></vds-fake-media-provider>
-
-        <vds-time-slider
-          keyboard-step=${keyboardStep}
-          label=${ifNonEmpty(label)}
-          orientation=${orientation}
-          shift-key-multiplier=${shiftKeyMultiplier}
-          step=${step}
-          value-text=${ifNonEmpty(valueText)}
-          seeking-request-throttle=${seekingRequestThrottle}
-          ?disabled=${disabled}
-          ?hidden=${hidden}
-          ?pause-while-dragging=${pauseWhileDragging}
-        ></vds-time-slider>
-      </vds-media-container>
-    </vds-media-controller>
+      <vds-time-slider
+        keyboard-step=${keyboardStep}
+        label=${ifNonEmpty(label)}
+        orientation=${orientation}
+        shift-key-multiplier=${shiftKeyMultiplier}
+        step=${step}
+        value-text=${ifNonEmpty(valueText)}
+        seeking-request-throttle=${seekingRequestThrottle}
+        ?disabled=${disabled}
+        ?hidden=${hidden}
+        ?pause-while-dragging=${pauseWhileDragging}
+        slot="ui"
+      ></vds-time-slider>
+    </vds-fake-media-player>
   `;
 }
 

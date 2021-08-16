@@ -9,7 +9,10 @@ import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { consumeContext, provideContextRecord } from '../../base/context';
-import { discover, DiscoveryEvent } from '../../base/elements';
+import {
+  DiscoveryEvent,
+  ElementDiscoveryController
+} from '../../base/elements';
 import {
   isPointerEvent,
   isVdsEvent,
@@ -17,7 +20,7 @@ import {
   vdsEvent
 } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { mediaContext } from '../../media/context';
 import { getSlottedChildren, raf } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
@@ -108,7 +111,6 @@ export type ScrubberPreviewConnectEvent =
  * }
  * ```
  */
-@discover('vds-scrubber-preview-connect')
 export class ScrubberPreviewElement extends LitElement {
   static override get styles(): CSSResultGroup {
     return [scrubberPreviewElementStyles];
@@ -167,6 +169,11 @@ export class ScrubberPreviewElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
+
+  override connectedCallback() {
+    super.connectedCallback();
+    new ElementDiscoveryController(this, 'vds-scrubber-preview-connect');
+  }
 
   protected override update(changedProperties: PropertyValues) {
     if (changedProperties.has('_mediaDuration')) {

@@ -3,7 +3,7 @@
 import fscreen from 'fscreen';
 import { ReactiveElement } from 'lit';
 
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { isUndefined, noop } from '../../utils/unit';
 import { DisposalBin, listen, vdsEvent } from '../events';
 import { Logger } from '../logger';

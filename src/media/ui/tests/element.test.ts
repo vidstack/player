@@ -3,25 +3,22 @@ import '../define';
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { getSlottedChildren } from '../../../utils/dom';
-import { buildMediaFixture } from '../../test-utils';
+import { buildMediaPlayerFixture } from '../../test-utils';
 import { MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement } from '../MediaUiElement';
 
 window.customElements.define(MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);
 
 describe(MEDIA_UI_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { container, provider } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-media-ui>
         <div></div>
       </vds-media-ui>
     `);
 
-    const ui = container.querySelector(
-      MEDIA_UI_ELEMENT_TAG_NAME
-    ) as MediaUiElement;
+    const ui = player.querySelector(MEDIA_UI_ELEMENT_TAG_NAME)!;
 
-    return { provider, ui };
+    return { player, ui };
   }
 
   it('should render DOM correctly', async function () {
@@ -39,11 +36,11 @@ describe(MEDIA_UI_ELEMENT_TAG_NAME, function () {
   });
 
   it('should toggle hidden attribute as context updates', async function () {
-    const { provider, ui } = await buildFixture();
+    const { player, ui } = await buildFixture();
 
     expect(ui).to.have.attribute('hidden');
 
-    provider.ctx.canPlay = true;
+    player.ctx.canPlay = true;
     await elementUpdated(ui);
 
     expect(ui).to.not.have.attribute('hidden');

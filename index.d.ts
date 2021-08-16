@@ -1,5 +1,5 @@
 // Import global definitions.
-import './dist/globals';
+import './dist/global/types';
 
 // Import `HTMLElementTagNameMap` definitions.
 import './dist/bundle/define';

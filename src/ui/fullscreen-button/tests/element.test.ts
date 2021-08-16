@@ -2,7 +2,7 @@ import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
 import { stub } from 'sinon';
 
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import {
   FULLSCREEN_BUTTON_ELEMENT_TAG_NAME,
   FullscreenButtonElement
@@ -15,7 +15,7 @@ window.customElements.define(
 
 describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { container, provider } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-fullscreen-button>
         <div class="enter"></div>
         <div class="exit"></div>
@@ -23,15 +23,13 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
 
     // Stub this to avoid fullscreen error in test environment.
-    stub(container, 'requestFullscreen').returns(Promise.resolve());
+    stub(player, 'requestFullscreen').returns(Promise.resolve());
 
-    const button = container.querySelector(
-      FULLSCREEN_BUTTON_ELEMENT_TAG_NAME
-    ) as FullscreenButtonElement;
+    const button = player.querySelector(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME)!;
 
-    await provider.forceMediaReady();
+    await player.forceMediaReady();
 
-    return { provider, button };
+    return { player, button };
   }
 
   it('should render DOM correctly', async function () {
@@ -59,28 +57,28 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
   });
 
   it(`should emit enter fullscreen request when clicked while not in fullscreen`, async function () {
-    const { provider, button } = await buildFixture();
-    provider.ctx.fullscreen = false;
+    const { player, button } = await buildFixture();
+    player.ctx.fullscreen = false;
     await elementUpdated(button);
     setTimeout(() => button.click());
     await oneEvent(button, 'vds-enter-fullscreen-request');
   });
 
   it(`should emit exit fullscreenr request when clicked while in fullscreen`, async function () {
-    const { provider, button } = await buildFixture();
-    provider.ctx.fullscreen = true;
+    const { player, button } = await buildFixture();
+    player.ctx.fullscreen = true;
     await elementUpdated(button);
     setTimeout(() => button.click());
     await oneEvent(button, 'vds-exit-fullscreen-request');
   });
 
   it('should receive fullscreen context updates', async function () {
-    const { provider, button } = await buildFixture();
-    provider.ctx.fullscreen = true;
+    const { player, button } = await buildFixture();
+    player.ctx.fullscreen = true;
     await elementUpdated(button);
     expect(button.isPressed).to.be.true;
     expect(button).to.have.attribute('pressed');
-    provider.ctx.fullscreen = false;
+    player.ctx.fullscreen = false;
     await elementUpdated(button);
     expect(button.isPressed).to.be.false;
     expect(button).to.not.have.attribute('pressed');

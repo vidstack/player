@@ -13,16 +13,27 @@ import { videoElementStyles } from './styles';
 export const VIDEO_ELEMENT_TAG_NAME = 'vds-video';
 
 /**
- * Enables loading, playing and controlling videos via the HTML5 `<video>` element.
+ * Embeds video content into documents via the native `<video>` element. It may contain
+ * one or more video sources, represented using the `src` attribute or the `<source>` element: the
+ * browser will choose the most suitable one.
+ *
+ * The list of [supported media formats](https://developer.mozilla.org/en-US/docs/Web/Media/Formats)
+ * varies from one browser to the other. You should either provide your video in a single format
+ * that all the relevant browsers support, or provide multiple video sources in enough different
+ * formats that all the browsers you need to support are covered.
+ *
+ * 💡 This element contains the exact same interface as the `<video>` element. It redispatches
+ * all the native events if needed, but prefer the `vds-*` variants (eg: `vds-play`) as they
+ * iron out any browser issues.
  *
  * @tagname vds-video
- * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
+ * @slot Used to pass in `<source>` and `<track>` elements to the underlying HTML5 media player.
  * @csspart media - The video element (`<video>`).
  * @csspart video - Alias for `media` part.
  * @example
  * ```html
  * <vds-video src="/media/video.mp4" poster="/media/poster.png">
- *   <!-- ... -->
+ *   <!-- Additional media resources here. -->
  * </vds-video>
  * ```
  * @example

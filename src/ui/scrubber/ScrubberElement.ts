@@ -17,7 +17,7 @@ import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { eventListener, redispatchEvent } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { mediaContext } from '../../media';
 import { buildExportPartsAttr, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';

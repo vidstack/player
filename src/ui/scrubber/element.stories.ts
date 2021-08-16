@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import '../scrubber-preview/define';
 import './define';
@@ -74,67 +73,63 @@ function Template({
   mediaSeekableAmount
 }: any) {
   return html`
-    <vds-media-controller
+    <vds-fake-media-player
       log-level=${logLevel}
+      .mediaCanPlay=${true}
+      .mediaCurrentTime=${mediaCurrentTime}
+      .mediaDuration=${mediaDuration}
+      .mediaPaused=${mediaPaused}
+      .mediaSeekable=${createTimeRanges(0, mediaSeekableAmount)}
       ${on('vds-play-request', onPlayRequest)}
       ${on('vds-pause-request', onPauseRequest)}
       ${on('vds-seek-request', onSeekRequest)}
       ${on('vds-seeking-request', onSeekingRequest)}
     >
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext=${true}
-          .currentTimeContext=${mediaCurrentTime}
-          .durationContext=${mediaDuration}
-          .pausedContext=${mediaPaused}
-          .seekableContext=${createTimeRanges(0, mediaSeekableAmount)}
-        ></vds-fake-media-provider>
-
-        <vds-scrubber
-          label=${ifNonEmpty(label)}
-          orientation=${orientation}
-          progress-label=${ifNonEmpty(progressLabel)}
-          progress-value-text=${progressValueText}
-          seeking-request-throttle=${seekingRequestThrottle}
-          step=${step}
-          keyboard-step=${keyboardStep}
-          shift-key-multiplier=${shiftKeyMultiplier}
-          value-text=${valueText}
-          ?disabled=${disabled}
-          ?hidden=${hidden}
-          ?pause-while-dragging=${pauseWhileDragging}
-          ${on('vds-scrubber-preview-connect', onScrubberPreviewConnect)}
-          ${on('vds-scrubber-preview-show', onScrubberPreviewShow)}
-          ${on('vds-scrubber-preview-hide', onScrubberPreviewHide)}
+      <vds-scrubber
+        label=${ifNonEmpty(label)}
+        orientation=${orientation}
+        progress-label=${ifNonEmpty(progressLabel)}
+        progress-value-text=${progressValueText}
+        seeking-request-throttle=${seekingRequestThrottle}
+        step=${step}
+        keyboard-step=${keyboardStep}
+        shift-key-multiplier=${shiftKeyMultiplier}
+        value-text=${valueText}
+        ?disabled=${disabled}
+        ?hidden=${hidden}
+        ?pause-while-dragging=${pauseWhileDragging}
+        ${on('vds-scrubber-preview-connect', onScrubberPreviewConnect)}
+        ${on('vds-scrubber-preview-show', onScrubberPreviewShow)}
+        ${on('vds-scrubber-preview-hide', onScrubberPreviewHide)}
+        slot="ui"
+      >
+        <vds-scrubber-preview
+          ?no-clamp=${noPreviewClamp}
+          ?no-track-fill=${noPreviewTrackFill}
         >
-          <vds-scrubber-preview
-            ?no-clamp=${noPreviewClamp}
-            ?no-track-fill=${noPreviewTrackFill}
-          >
-            <div class="preview">Preview</div>
-          </vds-scrubber-preview>
-        </vds-scrubber>
+          <div class="preview">Preview</div>
+        </vds-scrubber-preview>
+      </vds-scrubber>
 
-        <style>
-          vds-scrubber {
-            margin-top: 48px;
-          }
+      <style>
+        vds-scrubber {
+          margin-top: 48px;
+        }
 
-          .preview {
-            background-color: #161616;
-            color: #ff2a5d;
-            opacity: 1;
-            bottom: 20px;
-            transition: opacity 0.2s ease-in;
-          }
+        .preview {
+          background-color: #161616;
+          color: #ff2a5d;
+          opacity: 1;
+          bottom: 20px;
+          transition: opacity 0.2s ease-in;
+        }
 
-          .preview[hidden] {
-            display: block;
-            opacity: 0;
-          }
-        </style>
-      </vds-media-container>
-    </vds-media-controller>
+        .preview[hidden] {
+          display: block;
+          opacity: 0;
+        }
+      </style>
+    </vds-fake-media-player>
   `;
 }
 

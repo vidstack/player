@@ -104,24 +104,22 @@ export function getElementAttributes(
   return new Set(elementCtor.observedAttributes);
 }
 
-export function observeAndForwardAttributes(
-  elementA: Element,
-  elementB: Element,
+export function observeAttributes(
+  element: Element,
   attributes: Set<string>,
-  onChange?: (attrName: string, attrValue: string) => void
+  onChange: (attrName: string, attrValue: string | null) => void
 ): MutationObserver {
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       if (mutation.type === 'attributes') {
         const attrName = mutation.attributeName as string;
-        const attrValue = elementA.getAttribute(attrName) as string;
+        const attrValue = element.getAttribute(attrName);
         onChange?.(attrName, attrValue);
-        setAttribute(elementB, attrName, attrValue);
       }
     }
   });
 
-  observer.observe(elementA, {
+  observer.observe(element, {
     attributeFilter: Array.from(attributes)
   });
 

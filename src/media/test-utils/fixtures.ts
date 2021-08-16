@@ -3,63 +3,47 @@ import { html } from 'lit';
 
 import { safelyDefineCustomElement } from '../../utils/dom';
 import {
-  MEDIA_CONTAINER_ELEMENT_TAG_NAME,
-  MediaContainerElement
-} from '../container';
-import {
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement
 } from '../controller';
+import {
+  FAKE_MEDIA_PLAYER_ELEMENT_TAG_NAME,
+  FakeMediaPlayerElement
+} from './fake-media-player';
 import {
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
   FakeMediaProviderElement
 } from './fake-media-provider';
 
 safelyDefineCustomElement(
-  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
-  FakeMediaProviderElement
+  FAKE_MEDIA_PLAYER_ELEMENT_TAG_NAME,
+  FakeMediaPlayerElement
 );
-safelyDefineCustomElement(
-  MEDIA_CONTAINER_ELEMENT_TAG_NAME,
-  MediaContainerElement
-);
-safelyDefineCustomElement(
+
+window.customElements.define(
   MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
   MediaControllerElement
 );
 
+window.customElements.define(
+  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
+  FakeMediaProviderElement
+);
+
 export type MediaFixture = {
-  controller: MediaControllerElement;
-  container: MediaContainerElement;
-  provider: FakeMediaProviderElement;
+  player: FakeMediaPlayerElement;
 };
 
-export async function buildMediaFixture(
-  uiSlot = html``,
-  mediaSlot = html``
+export async function buildMediaPlayerFixture(
+  uiSlot = html``
 ): Promise<MediaFixture> {
-  const controller = await fixture<MediaControllerElement>(
+  const player = await fixture<FakeMediaPlayerElement>(
     html`
-      <vds-media-controller>
-        <vds-media-container>
-          <vds-fake-media-provider>${mediaSlot}</vds-fake-media-provider>
-          ${uiSlot}
-        </vds-media-container>
-      </vds-media-controller>
+      <vds-fake-media-player>
+        <div slot="ui">${uiSlot}</div>
+      </vds-fake-media-player>
     `
   );
 
-  const container = controller.querySelector(
-    MEDIA_CONTAINER_ELEMENT_TAG_NAME
-  ) as MediaContainerElement;
-
-  const provider = controller.querySelector(
-    FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME
-  ) as FakeMediaProviderElement;
-
-  return {
-    controller,
-    container,
-    provider
-  };
+  return { player };
 }

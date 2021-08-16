@@ -1,7 +1,7 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import {
   TOGGLE_BUTTON_ELEMENT_TAG_NAME,
   ToggleButtonElement
@@ -14,16 +14,14 @@ window.customElements.define(
 
 describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { container } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-toggle-button>
         <div class="pressed"></div>
         <div class="not-pressed"></div>
       </vds-toggle-button>
     `);
 
-    const toggle = container.querySelector(
-      TOGGLE_BUTTON_ELEMENT_TAG_NAME
-    ) as ToggleButtonElement;
+    const toggle = player.querySelector(TOGGLE_BUTTON_ELEMENT_TAG_NAME)!;
 
     return { toggle };
   }

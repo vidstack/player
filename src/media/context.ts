@@ -2,7 +2,10 @@ import {
   Context,
   ContextProviderRecord,
   createContext,
-  derivedContext
+  derivedContext,
+  ExtractContextRecordTypes,
+  isDerviedContext,
+  OmitDerivedContextFromRecord
 } from '../base/context';
 import { keysOf } from '../utils/object';
 import { MediaType } from './MediaType';
@@ -341,20 +344,38 @@ export const mediaContext = {
   waiting: createContext(false)
 };
 
-export function createMediaContextRecord(): ContextProviderRecord<
-  typeof mediaContext
-> {
-  return keysOf(mediaContext).reduce(
-    (state, contextProp) => ({
-      ...state,
-      [contextProp]: mediaContext[contextProp].initialValue
-    }),
-    {} as any
-  );
+export type MediaContextRecord = typeof mediaContext;
+
+export type MediaContextProviderRecord =
+  ContextProviderRecord<MediaContextRecord>;
+
+export type MediaContextRecordValues =
+  ExtractContextRecordTypes<MediaContextRecord>;
+
+/**
+ * Excludes derived contexts.
+ */
+export type SimpleMediaContextRecord = ContextProviderRecord<
+  OmitDerivedContextFromRecord<MediaContextRecord>
+>;
+
+export function createMediaContextRecord(): SimpleMediaContextRecord {
+  return keysOf(mediaContext)
+    .filter(
+      (contextProp) =>
+        !isDerviedContext(mediaContext[contextProp] as Context<unknown>)
+    )
+    .reduce(
+      (state, contextProp) => ({
+        ...state,
+        [contextProp]: mediaContext[contextProp].initialValue
+      }),
+      {} as any
+    );
 }
 
 export function cloneMediaContextRecord<
-  T extends ContextProviderRecord<typeof mediaContext>
+  T extends SimpleMediaContextRecord | MediaContextProviderRecord
 >(context: T): T {
   const clone = JSON.parse(JSON.stringify(context)) as T;
 

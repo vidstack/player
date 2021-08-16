@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { scrimElementStyles } from './styles';
 
 export const SCRIM_ELEMENT_TAG_NAME = 'vds-scrim';

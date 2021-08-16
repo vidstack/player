@@ -2,11 +2,11 @@ import { VdsEvent } from '../base/events';
 import {
   HideControlsRequestEvent,
   ShowControlsRequestEvent
-} from './controller/controls';
+} from './player/controls';
 import {
   PauseIdleTrackingRequestEvent,
   ResumeIdleTrackingRequestEvent
-} from './controller/idle';
+} from './player/idle';
 
 export type MediaRequestEvents = {
   'vds-mute-request': MuteRequestEvent;

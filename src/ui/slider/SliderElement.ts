@@ -13,7 +13,7 @@ import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { eventListener, vdsEvent } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import {
   clampNumber,
   getNumberOfDecimalPlaces,

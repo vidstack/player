@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import {
   SCRUBBER_PREVIEW_ELEMENT_TAG_NAME,
   ScrubberPreviewElement
@@ -14,13 +14,13 @@ window.customElements.define(
 
 describe(SCRUBBER_PREVIEW_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { container } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-scrubber-preview></vds-scrubber-preview>
     `);
 
-    const scrubberPreview = container.querySelector(
+    const scrubberPreview = player.querySelector(
       SCRUBBER_PREVIEW_ELEMENT_TAG_NAME
-    ) as ScrubberPreviewElement;
+    )!;
 
     return { scrubberPreview };
   }

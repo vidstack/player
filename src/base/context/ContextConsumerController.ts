@@ -1,6 +1,6 @@
 import { ReactiveController, ReactiveControllerHost } from 'lit';
 
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { isNil, isUndefined, notEqual } from '../../utils/unit';
 import { vdsEvent } from '../events';
 import { Logger } from '../logger';

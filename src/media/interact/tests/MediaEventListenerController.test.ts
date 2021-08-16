@@ -7,13 +7,10 @@ import {
   MediaControllerElement
 } from '../../controller/MediaControllerElement';
 import { DurationChangeEvent, PlayEvent, TimeUpdateEvent } from '../../events';
-import {
-  mediaEventListener,
-  MediaEventListenerController
-} from '../MediaEventListenerController';
+import { MediaEventListener, mediaEventListener } from '../MediaEventListener';
 
 class MediaListenerElement extends LitElement {
-  mediaEventlistener = new MediaEventListenerController(this, {
+  mediaEventlistener = new MediaEventListener(this, {
     'vds-play': this.handlePlay,
     'vds-time-update': this.handleTimeUpdate
   });
@@ -42,7 +39,7 @@ window.customElements.define(
 
 window.customElements.define('vds-media-listener', MediaListenerElement);
 
-describe(MediaEventListenerController.name, function () {
+describe(MediaEventListener.name, function () {
   it('should listen to media events', async function () {
     const controller = document.createElement(
       MEDIA_CONTROLLER_ELEMENT_TAG_NAME

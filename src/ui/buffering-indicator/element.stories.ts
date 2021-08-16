@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import './define';
 
@@ -14,7 +13,7 @@ export const BUFFERING_INDICATOR_ELEMENT_STORYBOOK_ARG_TYPES = {
     control: StorybookControl.Boolean,
     defaultValue: true
   },
-  mediaBuffering: {
+  mediaWaiting: {
     control: StorybookControl.Boolean,
     defaultValue: true
   }
@@ -31,20 +30,18 @@ function Template({
   logLevel,
   // Media Properties
   mediaCanPlay,
-  mediaBuffering
+  mediaWaiting
 }: any) {
   return html`
-    <vds-media-controller log-level=${logLevel}>
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext=${mediaCanPlay}
-          .waitingContext=${mediaBuffering}
-        ></vds-fake-media-provider>
-        <vds-buffering-indicator>
-          <div>BUFFERING!</div>
-        </vds-buffering-indicator>
-      </vds-media-container>
-    </vds-media-controller>
+    <vds-fake-media-player
+      log-level=${logLevel}
+      .mediaCanPlay=${mediaCanPlay}
+      .mediaWaiting=${mediaWaiting}
+    >
+      <vds-buffering-indicator slot="ui">
+        <div>BUFFERING!</div>
+      </vds-buffering-indicator>
+    </vds-fake-media-player>
 
     <style>
       vds-buffering-indicator {

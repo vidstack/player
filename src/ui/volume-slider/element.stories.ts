@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import './define';
 
@@ -70,27 +69,23 @@ function Template({
   onVolumeChangeRequest
 }: any) {
   return html`
-    <vds-media-controller
+    <vds-fake-media-player
       log-level=${logLevel}
+      .mediaCanPlay=${true}
+      .mediaVolume=${mediaVolume}
       ${on('vds-volume-change-request', onVolumeChangeRequest)}
     >
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext=${true}
-          .volumeContext=${mediaVolume}
-        ></vds-fake-media-provider>
-
-        <vds-volume-slider
-          label=${label}
-          orientation=${orientation}
-          step=${step}
-          keyboard-step=${keyboardStep}
-          shift-key-multiplier=${shiftKeyMultiplier}
-          ?disabled=${disabled}
-          ?hidden=${hidden}
-        ></vds-volume-slider>
-      </vds-media-container>
-    </vds-media-controller>
+      <vds-volume-slider
+        label=${label}
+        orientation=${orientation}
+        step=${step}
+        keyboard-step=${keyboardStep}
+        shift-key-multiplier=${shiftKeyMultiplier}
+        ?disabled=${disabled}
+        ?hidden=${hidden}
+        slot="ui"
+      ></vds-volume-slider>
+    </vds-fake-media-player>
   `;
 }
 

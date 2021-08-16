@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import './define';
 
@@ -34,23 +33,18 @@ function Template({
   mediaCurrentTime
 }: any) {
   return html`
-    <vds-media-controller
+    <vds-fake-media-player
       log-level=${logLevel}
-      .currentTime=${mediaCurrentTime}
+      .mediaCanPlay=${true}
+      .mediaCurrentTime=${mediaCurrentTime}
     >
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext=${true}
-          .currentTimeContext=${mediaCurrentTime}
-        ></vds-fake-media-provider>
-
-        <vds-time-current
-          label=${ifNonEmpty(label)}
-          ?always-show-hours=${alwaysShowHours}
-          ?pad-hours=${padHours}
-        ></vds-time-current>
-      </vds-media-container>
-    </vds-media-controller>
+      <vds-time-current
+        label=${ifNonEmpty(label)}
+        ?always-show-hours=${alwaysShowHours}
+        ?pad-hours=${padHours}
+        slot="ui"
+      ></vds-time-current>
+    </vds-fake-media-player>
   `;
 }
 

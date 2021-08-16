@@ -16,7 +16,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2017",
-    "typeRoots": ["node_modules/@types", "./src"],
+    "typeRoots": ["node_modules/@types", "./src/global"],
     "types": ["mocha"]
   },
   "include": ["**/*.ts"],

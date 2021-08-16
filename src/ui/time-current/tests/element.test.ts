@@ -1,7 +1,7 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import {
   TIME_CURRENT_ELEMENT_TAG_NAME,
   TimeCurrentElement
@@ -11,15 +11,13 @@ window.customElements.define(TIME_CURRENT_ELEMENT_TAG_NAME, TimeCurrentElement);
 
 describe(`${TIME_CURRENT_ELEMENT_TAG_NAME}`, function () {
   async function buildFixture() {
-    const { container, provider } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-time-current></vds-time-current>
     `);
 
-    const timeCurrent = container.querySelector(
-      TIME_CURRENT_ELEMENT_TAG_NAME
-    ) as TimeCurrentElement;
+    const timeCurrent = player.querySelector(TIME_CURRENT_ELEMENT_TAG_NAME)!;
 
-    return { provider, timeCurrent };
+    return { player, timeCurrent };
   }
 
   it('should render DOM correctly', async function () {
@@ -30,9 +28,9 @@ describe(`${TIME_CURRENT_ELEMENT_TAG_NAME}`, function () {
   });
 
   it('should render shadow DOM correctly', async function () {
-    const { provider, timeCurrent } = await buildFixture();
+    const { player, timeCurrent } = await buildFixture();
 
-    provider.ctx.currentTime = 3750;
+    player.ctx.currentTime = 3750;
     await elementUpdated(timeCurrent);
 
     expect(timeCurrent).shadowDom.to.equal(`
@@ -48,9 +46,9 @@ describe(`${TIME_CURRENT_ELEMENT_TAG_NAME}`, function () {
   });
 
   it('should update current time as context updates', async function () {
-    const { provider, timeCurrent } = await buildFixture();
+    const { player, timeCurrent } = await buildFixture();
     expect(timeCurrent.seconds).to.equal(0);
-    provider.ctx.currentTime = 50;
+    player.ctx.currentTime = 50;
     await elementUpdated(timeCurrent);
     expect(timeCurrent.seconds).to.equal(50);
   });

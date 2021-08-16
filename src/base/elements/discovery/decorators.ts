@@ -4,8 +4,6 @@ import {
 } from '../decorators';
 import { ElementDiscoveryController } from './ElementDiscoveryController';
 
-const CONTROLLER = Symbol('Vidstack.discoveryController');
-
 export function discover(
   eventType: keyof GlobalEventHandlersEventMap
 ): ClassDecorator {
@@ -17,7 +15,8 @@ export function discover(
 
     if (isReactiveElementConstructor(decoratorName, ctor)) {
       ctor.addInitializer((host) => {
-        host[CONTROLLER] = new ElementDiscoveryController(host, eventType);
+        host[Symbol('Vidstack.discoveryController')] =
+          new ElementDiscoveryController(host, eventType);
       });
     }
   };

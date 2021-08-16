@@ -1,7 +1,7 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import {
   BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
   BufferingIndicatorElement
@@ -14,17 +14,17 @@ window.customElements.define(
 
 describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { container, provider } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-buffering-indicator>
         <div class="slot"></div>
       </vds-buffering-indicator>
     `);
 
-    const bufferingIndicator = container.querySelector(
+    const bufferingIndicator = player.querySelector(
       BUFFERING_INDICATOR_ELEMENT_TAG_NAME
-    ) as BufferingIndicatorElement;
+    )!;
 
-    return { provider, bufferingIndicator };
+    return { player, bufferingIndicator };
   }
 
   it('should render DOM correctly', async function () {
@@ -42,33 +42,33 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
   });
 
   it('should toggle `media-can-play` attribute', async function () {
-    const { provider, bufferingIndicator } = await buildFixture();
-    await provider.forceMediaReady();
+    const { player, bufferingIndicator } = await buildFixture();
+    await player.forceMediaReady();
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.have.attribute('media-can-play');
-    provider.ctx.canPlay = false;
+    player.ctx.canPlay = false;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.not.have.attribute('media-can-play');
   });
 
   it('should toggle `media-waiting` attribute', async function () {
-    const { provider, bufferingIndicator } = await buildFixture();
-    await provider.forceMediaReady();
-    provider.ctx.waiting = true;
+    const { player, bufferingIndicator } = await buildFixture();
+    await player.forceMediaReady();
+    player.ctx.waiting = true;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.have.attribute('media-waiting');
-    provider.ctx.waiting = false;
+    player.ctx.waiting = false;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.not.have.attribute('media-waiting');
   });
 
   it('should toggle `media-ended` attribute', async function () {
-    const { provider, bufferingIndicator } = await buildFixture();
-    await provider.forceMediaReady();
-    provider.ctx.ended = true;
+    const { player, bufferingIndicator } = await buildFixture();
+    await player.forceMediaReady();
+    player.ctx.ended = true;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.have.attribute('media-ended');
-    provider.ctx.ended = false;
+    player.ctx.ended = false;
     await elementUpdated(bufferingIndicator);
     expect(bufferingIndicator).to.not.have.attribute('media-ended');
   });

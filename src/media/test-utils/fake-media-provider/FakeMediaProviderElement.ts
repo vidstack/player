@@ -22,14 +22,17 @@ export class FakeMediaProviderElement extends MediaProviderElement {
    */
   protected _defineContextAccessors() {
     Object.keys(mediaContext).forEach((ctxProp) => {
-      Object.defineProperty(this, `${ctxProp}Context`, {
+      // canPlay -> mediaCanPlay
+      const propName = `media${ctxProp[0].toUpperCase() + ctxProp.slice(1)}`;
+
+      Object.defineProperty(this, propName, {
         get: () => {
           return this.ctx[ctxProp];
         },
         set: (newValue) => {
           // Only run context updates after we've connected to the DOM so we update the inject
           // media context object on the `MediaControllerElement`.
-          this._connectedQueue.queue(`contextUpdate::${ctxProp}`, () => {
+          this._connectedQueue.queue(propName, () => {
             this.ctx[ctxProp] = newValue;
           });
         }
@@ -43,7 +46,12 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    if (this.canPlay) this.forceMediaReady();
+
+    if (this.canPlay) {
+      // Set false so `_handleMediaReady` return early.
+      this.ctx.canPlay = false;
+      this.forceMediaReady();
+    }
   }
 
   // -------------------------------------------------------------------------------------------
@@ -135,6 +143,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
 
   override async requestFullscreen() {
+    await super.requestFullscreen();
     this.ctx.fullscreen = true;
   }
 

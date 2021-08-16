@@ -1,9 +1,10 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html, LitElement, PropertyDeclarations } from 'lit';
+import { spy } from 'sinon';
 
 import {
   getElementAttributes,
-  observeAndForwardAttributes,
+  observeAttributes,
   raf,
   safelyDefineCustomElement
 } from '../dom';
@@ -11,7 +12,7 @@ import {
 describe('utils/dom', function () {
   describe(safelyDefineCustomElement.name, function () {
     class FakeElement extends LitElement {
-      render() {
+      override render() {
         return html`<h1>penguins</h1>`;
       }
     }
@@ -68,38 +69,39 @@ describe('utils/dom', function () {
     });
   });
 
-  describe(observeAndForwardAttributes.name, function () {
-    it('should forward attributes', async function () {
+  describe(observeAttributes.name, function () {
+    it('should observe attributes', async function () {
       const elementA = document.createElement('div');
-      const elementB = document.createElement('div');
 
-      const observer = observeAndForwardAttributes(
+      const callbackSpy = spy();
+
+      const observer = observeAttributes(
         elementA,
-        elementB,
-        new Set(['a', 'b'])
+        new Set(['a', 'b']),
+        callbackSpy
       );
 
       elementA.setAttribute('a', '10');
       await raf();
-      expect(elementB).to.have.attribute('a', '10');
+      expect(callbackSpy).to.have.been.calledWith('a', '10');
 
       elementA.setAttribute('a', '20');
       await raf();
-      expect(elementB).to.have.attribute('a', '20');
+      expect(callbackSpy).to.have.been.calledWith('a', '20');
 
       elementA.setAttribute('b', '');
       await raf();
-      expect(elementB).to.have.attribute('b', '');
+      expect(callbackSpy).to.have.been.calledWith('b', '');
 
       elementA.setAttribute('c', '');
       await raf();
-      expect(elementB).to.not.have.attribute('c');
+      expect(callbackSpy).to.not.have.been.calledWith('c', '');
 
       observer.disconnect();
 
       elementA.setAttribute('b', '10');
       await raf();
-      expect(elementB).to.have.attribute('b', '');
+      expect(callbackSpy).to.not.have.been.calledWith('b', '10');
     });
   });
 });

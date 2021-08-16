@@ -1,20 +1,18 @@
 import { expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import { SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement } from '../ScrubberElement';
 
 window.customElements.define(SCRUBBER_ELEMENT_TAG_NAME, ScrubberElement);
 
 describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { container } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-scrubber></vds-scrubber>
     `);
 
-    const scrubber = container.querySelector(
-      SCRUBBER_ELEMENT_TAG_NAME
-    ) as ScrubberElement;
+    const scrubber = player.querySelector(SCRUBBER_ELEMENT_TAG_NAME)!;
 
     return { scrubber };
   }

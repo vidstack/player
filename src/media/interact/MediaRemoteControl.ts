@@ -3,7 +3,7 @@ import { ReactiveController, ReactiveControllerHost } from 'lit';
 import { ExtractEventInit, vdsEvent } from '../../base/events';
 import { Logger } from '../../base/logger';
 import { RequestQueue } from '../../base/queue';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { MediaRequestEvents } from '../request.events';
 
 /**

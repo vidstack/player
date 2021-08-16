@@ -1,8 +1,10 @@
 import { LitElement, PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { ExtractContextRecordTypes } from '../../base/context';
-import { discover, DiscoveryEvent } from '../../base/elements';
+import {
+  DiscoveryEvent,
+  ElementDiscoveryController
+} from '../../base/elements';
 import {
   DisposalBin,
   eventListener,
@@ -23,16 +25,19 @@ import {
   ScreenOrientationController,
   ScreenOrientationLock
 } from '../../base/screen-orientation';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { clampNumber } from '../../utils/number';
-import { isUndefined, notEqual } from '../../utils/unit';
+import { notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
 import {
   cloneMediaContextRecord,
   createMediaContextRecord,
-  mediaContext
+  mediaContext,
+  SimpleMediaContextRecord
 } from '../context';
 import { MediaEvents } from '../events';
+import { MediaType } from '../MediaType';
+import { ViewType } from '../ViewType';
 
 /**
  * Fired when the media provider connects to the DOM.
@@ -48,40 +53,7 @@ export type MediaProviderConnectEvent = DiscoveryEvent<MediaProviderElement>;
  * all concrete media providers. Extending this class enables provider-agnostic communication 💬
  *
  */
-@discover('vds-media-provider-connect')
 export abstract class MediaProviderElement extends LitElement {
-  static get events(): (keyof GlobalEventHandlersEventMap)[] {
-    return [
-      'vds-abort',
-      'vds-can-play',
-      'vds-can-play-through',
-      'vds-duration-change',
-      'vds-emptied',
-      'vds-ended',
-      'vds-error',
-      'vds-fullscreen-change',
-      'vds-loaded-data',
-      'vds-load-start',
-      'vds-loaded-metadata',
-      'vds-media-type-change',
-      'vds-pause',
-      'vds-play',
-      'vds-playing',
-      'vds-progress',
-      'vds-replay',
-      'vds-seeked',
-      'vds-seeking',
-      'vds-stalled',
-      'vds-started',
-      'vds-suspend',
-      'vds-time-update',
-      'vds-view-type-change',
-      'vds-volume-change',
-      'vds-waiting',
-      'vds-media-provider-connect'
-    ];
-  }
-
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
@@ -103,6 +75,9 @@ export abstract class MediaProviderElement extends LitElement {
     /* c8 ignore stop */
 
     super.connectedCallback();
+
+    new ElementDiscoveryController(this, 'vds-media-provider-connect');
+
     this._connectedQueue.flush();
     this._connectedQueue.serveImmediately = true;
   }
@@ -218,6 +193,7 @@ export abstract class MediaProviderElement extends LitElement {
         const dispose = listen(this, eventType, (event) => {
           this._logger
             .infoGroup(`📡 dispatching \`${eventType}\``)
+            .appendWithLabel('Context', this.ctx)
             .appendWithLabel('Event', event)
             .appendWithLabel('Engine', this.engine)
             .end();
@@ -412,7 +388,7 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * An immutable snapshot of the current media state.
    */
-  get mediaState(): Readonly<ExtractContextRecordTypes<typeof mediaContext>> {
+  get mediaState(): Readonly<SimpleMediaContextRecord> {
     return cloneMediaContextRecord(this.ctx);
   }
 
@@ -515,7 +491,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default false
    */
   get live() {
-    return this.ctx.live;
+    return this.ctx.mediaType === MediaType.LiveVideo;
   }
 
   /**
@@ -720,7 +696,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @throws {Error} - Will throw if player is not in a video view.
    */
   protected _throwIfNotVideoView() {
-    if (!this.ctx.isVideoView) {
+    if (this.viewType !== ViewType.Video) {
       throw Error('Player is currently not in a video view.');
     }
   }

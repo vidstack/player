@@ -12,7 +12,7 @@ import { watchContext } from '../../base/context';
 import { ifNonEmpty } from '../../base/directives';
 import { redispatchEvent } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { scrubberPreviewContext } from '../scrubber-preview';
 import { scrubberPreviewVideoElementStyles } from './styles';
 

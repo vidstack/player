@@ -1,6 +1,6 @@
 import { ReactiveElement } from 'lit';
 
-import { DEV_MODE } from '../../../env';
+import { DEV_MODE } from '../../../global/env';
 import { DisposalBin, vdsEvent } from '../../events';
 import { Logger } from '../../logger';
 
@@ -22,7 +22,7 @@ export class ElementDiscoveryController<HostElement extends ReactiveElement> {
     this._disconnectDisposal = new DisposalBin(
       _host,
       /* c8 ignore next */
-      DEV_MODE && { name: 'elementDiscoveryDisconnectDisposal', owner: this }
+      DEV_MODE && { name: 'disconnectDisposal', owner: this }
     );
 
     _host.addController({

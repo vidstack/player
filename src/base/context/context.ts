@@ -1,7 +1,7 @@
 import { ReactiveControllerHost } from 'lit';
 
-import { DEV_MODE } from '../../env';
-import { ReadonlyIfType } from '../../helpers';
+import { DEV_MODE } from '../../global/env';
+import { OmitTypesFromRecord, ReadonlyIfType } from '../../global/helpers';
 import {
   ConsumeContextOptions,
   ContextConsumerController
@@ -173,4 +173,9 @@ export type ContextProviderRecord<
   ContextRecordType extends ContextRecord<any>
 > = ExtractContextRecordTypes<
   ReadonlyIfType<DerivedContext<any>, ContextRecordType>
+>;
+
+export type OmitDerivedContextFromRecord<RecordType> = OmitTypesFromRecord<
+  RecordType,
+  DerivedContext<any>
 >;

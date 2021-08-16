@@ -2,14 +2,13 @@ import { ReactiveElement } from 'lit';
 
 import { DisposalBin, listen, vdsEvent } from '../../../base/events';
 import { Logger } from '../../../base/logger';
-import { DEV_MODE } from '../../../env';
+import { DEV_MODE } from '../../../global/env';
 import { keysOf } from '../../../utils/object';
 import { mediaContext } from '../../context';
+import { MediaController } from '../../controller';
 
 export type IdleManagerHost = ReactiveElement & {
-  readonly ctx: {
-    idle: boolean;
-  };
+  readonly controller: MediaController;
 };
 
 /**
@@ -73,7 +72,7 @@ export class IdleManager {
    * Whether there has been no user activity for the given `timeout` period or greater.
    */
   get isIdle(): boolean {
-    return this._host.ctx.idle;
+    return this._host.controller.mediaCtx.idle;
   }
 
   protected _handleUserInteraction(request?: Event) {
@@ -83,7 +82,7 @@ export class IdleManager {
   protected _timeoutId = -1;
 
   protected _setIdleContext(isIdle: boolean) {
-    this._host.ctx.idle = isIdle;
+    this._host.controller.mediaCtx.idle = isIdle;
   }
 
   /**

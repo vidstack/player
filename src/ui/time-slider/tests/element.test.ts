@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import {
   TIME_SLIDER_ELEMENT_TAG_NAME,
   TimeSliderElement
@@ -11,13 +11,11 @@ window.customElements.define(TIME_SLIDER_ELEMENT_TAG_NAME, TimeSliderElement);
 
 describe(TIME_SLIDER_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { container } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-time-slider></vds-time-slider>
     `);
 
-    const timeSlider = container.querySelector(
-      TIME_SLIDER_ELEMENT_TAG_NAME
-    ) as TimeSliderElement;
+    const timeSlider = player.querySelector(TIME_SLIDER_ELEMENT_TAG_NAME)!;
 
     return { timeSlider };
   }

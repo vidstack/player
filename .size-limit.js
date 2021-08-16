@@ -8,7 +8,7 @@ const elements = globSync('src/**/*Element.ts')
   .map((filePath) => path.basename(filePath, path.extname(filePath)))
   .map((element) => ({
     name: `import { ${element} } from '@vidstack/elements'`,
-    limit: '12 kB',
+    limit: '15 kB',
     path: 'dist-prod/bundle/index.js',
     import: `{ ${element} }`
   }));

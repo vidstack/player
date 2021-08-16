@@ -1,4 +1,3 @@
-export * from './controls';
-export * from './idle';
+export * from './MediaController';
 export * from './MediaControllerElement';
 export * from './styles';

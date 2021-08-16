@@ -1,8 +1,8 @@
 import { VdsEvent } from '../base/events';
 import { FullscreenChangeEvent } from '../base/fullscreen';
-import { ControlsChangeEvent } from './controller/controls';
-import { IdleChangeEvent } from './controller/idle';
 import { MediaType } from './MediaType';
+import { ControlsChangeEvent } from './player/controls';
+import { IdleChangeEvent } from './player/idle';
 import { ViewType } from './ViewType';
 
 export type MediaEvents = {

@@ -4,7 +4,7 @@ export type Constructor<T = object> = {
   prototype: T;
 };
 
-export type KeysOfType<T, O> = {
+export type KeysOfType<O, T> = {
   [P in keyof O]: O[P] extends T ? P : never;
 };
 
@@ -13,9 +13,14 @@ export type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 export type Values<T> = T extends { [k: string]: infer V } ? V : never;
 
 export type ReadonlyIfType<T, O> = Readonly<
-  Omit<O, Exclude<keyof O, Values<KeysOfType<T, O>>>>
+  Omit<O, Exclude<keyof O, Values<KeysOfType<O, T>>>>
 > &
-  Omit<O, keyof Omit<O, Exclude<keyof O, Values<KeysOfType<T, O>>>>>;
+  Omit<O, keyof Omit<O, Exclude<keyof O, Values<KeysOfType<O, T>>>>>;
+
+export type OmitTypesFromRecord<RecordType, OmitType> = Omit<
+  RecordType,
+  KeysOfType<RecordType, OmitType>[keyof RecordType]
+>;
 
 // -------------------------------------------------------------------------------------------
 // The following is from this StackOverflow link: https://stackoverflow.com/a/49579497

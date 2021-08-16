@@ -4,7 +4,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../base/directives';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { formatHtml5Duration, formatTime } from '../../utils/time';
 import { timeElementStyles } from './styles';
 

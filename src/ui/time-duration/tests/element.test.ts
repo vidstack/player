@@ -1,7 +1,7 @@
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import {
   TIME_DURATION_ELEMENT_TAG_NAME,
   TimeDurationElement
@@ -14,15 +14,13 @@ window.customElements.define(
 
 describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
   async function buildFixture() {
-    const { container, provider } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-time-duration></vds-time-duration>
     `);
 
-    const timeDuration = container.querySelector(
-      TIME_DURATION_ELEMENT_TAG_NAME
-    ) as TimeDurationElement;
+    const timeDuration = player.querySelector(TIME_DURATION_ELEMENT_TAG_NAME)!;
 
-    return { provider, timeDuration };
+    return { player, timeDuration };
   }
 
   it('should render DOM correctly', async function () {
@@ -33,9 +31,9 @@ describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
   });
 
   it('should render shadow DOM correctly', async function () {
-    const { provider, timeDuration } = await buildFixture();
+    const { player, timeDuration } = await buildFixture();
 
-    provider.ctx.duration = 3750;
+    player.ctx.duration = 3750;
     await elementUpdated(timeDuration);
 
     expect(timeDuration).shadowDom.to.equal(`
@@ -51,12 +49,12 @@ describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
   });
 
   it('should update duration time as context updates', async function () {
-    const { provider, timeDuration } = await buildFixture();
+    const { player, timeDuration } = await buildFixture();
     expect(timeDuration.seconds).to.equal(0);
-    provider.ctx.duration = 50;
+    player.ctx.duration = 50;
     await elementUpdated(timeDuration);
     expect(timeDuration.seconds).to.equal(50);
-    provider.ctx.duration = -1;
+    player.ctx.duration = -1;
     await elementUpdated(timeDuration);
     expect(timeDuration.seconds).to.equal(0);
   });

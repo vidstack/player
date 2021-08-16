@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { buildMediaFixture } from '../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../media/test-utils';
 import {
   SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME,
   SeekableProgressBarElement
@@ -14,13 +14,13 @@ window.customElements.define(
 
 describe(SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {
-    const { container } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <vds-seekable-progress-bar></vds-seekable-progress-bar>
     `);
 
-    const seekableProgressBar = container.querySelector(
+    const seekableProgressBar = player.querySelector(
       SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME
-    ) as SeekableProgressBarElement;
+    )!;
 
     return { seekableProgressBar };
   }

@@ -2,24 +2,24 @@
 // Global Events
 // -------------------------------------------------------------------------------------------
 
-import { ContextEvents } from './base/context';
-import { FullscreenEvents } from './base/fullscreen';
-import { ScreenOrientationEvents } from './base/screen-orientation';
+import { ContextEvents } from '../base/context';
+import { FullscreenEvents } from '../base/fullscreen';
+import { ScreenOrientationEvents } from '../base/screen-orientation';
 import {
   ManagedControlsConnectEvent,
-  MediaContainerConnectEvent,
   MediaControllerConnectEvent,
   MediaEvents,
+  MediaPlayerConnectEvent,
   MediaProviderConnectEvent,
   MediaRequestEvents
-} from './media';
-import { HlsEvents } from './providers/hls';
-import { VideoPresentationEvents } from './providers/video';
+} from '../media';
+import { HlsEvents } from '../providers/hls';
+import { VideoPresentationEvents } from '../providers/video';
 import {
   ScrubberPreviewConnectEvent,
   ScrubberPreviewEvents
-} from './ui/scrubber-preview';
-import { SliderEvents } from './ui/slider';
+} from '../ui/scrubber-preview';
+import { SliderEvents } from '../ui/slider';
 
 declare global {
   interface GlobalEventHandlersEventMap
@@ -33,7 +33,7 @@ declare global {
       SliderEvents,
       VideoPresentationEvents {
     'vds-noop': any;
-    'vds-media-container-connect': MediaContainerConnectEvent;
+    'vds-media-player-connect': MediaPlayerConnectEvent;
     'vds-media-controller-connect': MediaControllerConnectEvent;
     'vds-media-provider-connect': MediaProviderConnectEvent;
     'vds-scrubber-preview-connect': ScrubberPreviewConnectEvent;

@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import './define';
 
@@ -43,27 +42,23 @@ function Template({
   mediaFullscreen
 }: any) {
   return html`
-    <vds-media-controller
+    <vds-fake-media-player
       log-level=${logLevel}
+      .mediaCanPlay="${true}"
+      .mediaFullscreen="${mediaFullscreen}"
       ${on('vds-enter-fullscreen-request', onEnterFullscreenRequest)}
       ${on('vds-exit-fullscreen-request', onExitFullscreenRequest)}
     >
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext="${true}"
-          .fullscreenContext="${mediaFullscreen}"
-        ></vds-fake-media-provider>
-
-        <vds-fullscreen-button
-          label="${ifNonEmpty(label)}"
-          described-by="${ifNonEmpty(describedBy)}"
-          ?disabled="${disabled}"
-        >
-          <div class="enter">Enter</div>
-          <div class="exit">Exit</div>
-        </vds-fullscreen-button>
-      </vds-media-container>
-    </vds-media-controller>
+      <vds-fullscreen-button
+        label="${ifNonEmpty(label)}"
+        described-by="${ifNonEmpty(describedBy)}"
+        ?disabled="${disabled}"
+        slot="ui"
+      >
+        <div class="enter">Enter</div>
+        <div class="exit">Exit</div>
+      </vds-fullscreen-button>
+    </vds-fake-media-player>
 
     <style>
       vds-fullscreen-button[media-fullscreen] .enter {

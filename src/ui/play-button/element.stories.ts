@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import './define';
 
@@ -43,27 +42,23 @@ function Template({
   mediaPaused
 }: any) {
   return html`
-    <vds-media-controller
+    <vds-fake-media-player
       log-level=${logLevel}
+      .mediaCanPlay=${true}
+      .mediaPaused=${mediaPaused}
       ${on('vds-play-request', onPlayRequest)}
       ${on('vds-pause-request', onPauseRequest)}
     >
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext=${true}
-          .pausedContext=${mediaPaused}
-        ></vds-fake-media-provider>
-
-        <vds-play-button
-          label=${ifNonEmpty(label)}
-          described-by=${ifNonEmpty(describedBy)}
-          ?disabled=${disabled}
-        >
-          <div class="play">Play</div>
-          <div class="pause">Pause</div>
-        </vds-play-button>
-      </vds-media-container>
-    </vds-media-controller>
+      <vds-play-button
+        label=${ifNonEmpty(label)}
+        described-by=${ifNonEmpty(describedBy)}
+        ?disabled=${disabled}
+        slot="ui"
+      >
+        <div class="play">Play</div>
+        <div class="pause">Pause</div>
+      </vds-play-button>
+    </vds-fake-media-player>
 
     <style>
       vds-play-button:not([media-paused]) .play {

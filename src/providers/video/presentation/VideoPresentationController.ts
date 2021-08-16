@@ -9,7 +9,7 @@ import {
   vdsEvent
 } from '../../../base/events';
 import { Logger } from '../../../base/logger';
-import { DEV_MODE } from '../../../env';
+import { DEV_MODE } from '../../../global/env';
 import { isFunction, isNil, noop } from '../../../utils/unit';
 
 export type VideoPresentationControllerHost = ReactiveElement & {

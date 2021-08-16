@@ -1,6 +1,6 @@
 import { ReactiveControllerHost } from 'lit';
 
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { Logger } from '../logger';
 
 export interface DisposalBinOptions {

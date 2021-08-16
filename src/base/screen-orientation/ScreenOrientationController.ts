@@ -2,7 +2,7 @@
 
 import { ReactiveElement } from 'lit';
 
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { canOrientScreen, IS_CLIENT } from '../../utils/support';
 import { DisposalBin, listen, vdsEvent } from '../events';
 import { Logger } from '../logger';

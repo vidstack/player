@@ -1,4 +1,4 @@
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { Context } from './context';
 import { ContextConsumerController } from './ContextConsumerController';
 import { ContextConsumerManager } from './ContextConsumerManager';

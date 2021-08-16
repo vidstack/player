@@ -4,7 +4,7 @@ import { html, LitElement } from 'lit';
 import { consumeContext } from '../../../base/context';
 import { safelyDefineCustomElement } from '../../../utils/dom';
 import { mediaContext } from '../../context';
-import { buildMediaFixture } from '../../test-utils';
+import { buildMediaPlayerFixture } from '../../test-utils';
 import { createTimeRanges } from '../../time-ranges';
 import { ViewType } from '../../ViewType';
 
@@ -29,67 +29,67 @@ safelyDefineCustomElement('vds-fake-media-consumer', FakeMediaConsumerElement);
 
 describe('MediaProviderElement/context', function () {
   async function buildFixture() {
-    const fixture = await buildMediaFixture(
+    const { player } = await buildMediaPlayerFixture(
       html`<vds-fake-media-consumer></vds-fake-media-consumer>`
     );
 
-    const consumer = fixture.container.querySelector(
+    const consumer = player.querySelector(
       'vds-fake-media-consumer'
     ) as FakeMediaConsumerElement;
 
     return {
-      ...fixture,
+      player,
       consumer
     };
   }
 
   it('should update any context', async function () {
-    const { provider, consumer } = await buildFixture();
-    provider.ctx.currentSrc = 'apples';
+    const { player, consumer } = await buildFixture();
+    player.ctx.currentSrc = 'apples';
     expect(consumer.currentSrc).to.equal('apples');
   });
 
   it('should update derived context', async function () {
-    const { provider, consumer } = await buildFixture();
-    provider.ctx.viewType = ViewType.Video;
+    const { player, consumer } = await buildFixture();
+    player.ctx.viewType = ViewType.Video;
     expect(consumer.isAudioView).to.equal(false);
     expect(consumer.isVideoView).to.equal(true);
-    provider.ctx.viewType = ViewType.Audio;
+    player.ctx.viewType = ViewType.Audio;
     expect(consumer.isAudioView).to.equal(true);
     expect(consumer.isVideoView).to.equal(false);
   });
 
   it('should update multi-part derived context', async function () {
-    const { provider, consumer } = await buildFixture();
-    provider.ctx.buffered = createTimeRanges([
+    const { player, consumer } = await buildFixture();
+    player.ctx.buffered = createTimeRanges([
       [0, 0],
       [15, 20]
     ]);
-    provider.ctx.duration = 15;
+    player.ctx.duration = 15;
     expect(consumer.bufferedAmount).to.equal(15);
-    provider.ctx.duration = 25;
+    player.ctx.duration = 25;
     expect(consumer.bufferedAmount).to.equal(20);
   });
 
   it('should soft reset context', async function () {
-    const { provider, consumer } = await buildFixture();
+    const { player, consumer } = await buildFixture();
 
-    provider.ctx.paused = false;
-    provider.ctx.duration = 200;
+    player.ctx.paused = false;
+    player.ctx.duration = 200;
     await elementUpdated(consumer);
 
     // @ts-expect-error - Access protected property
-    provider._softResetMediaContext();
+    player._softResetMediaContext();
     await elementUpdated(consumer);
 
     expect(consumer.paused, 'paused').to.equal(true);
     expect(isNaN(consumer.duration), 'duration').to.be.true;
   });
 
-  it('should hard reset context when provider disconnects', async function () {
-    const { provider, consumer } = await buildFixture();
+  it('should hard reset context when player disconnects', async function () {
+    const { player, consumer } = await buildFixture();
 
-    provider.ctx.viewType = ViewType.Video;
+    player.ctx.viewType = ViewType.Video;
     await elementUpdated(consumer);
 
     consumer.remove();

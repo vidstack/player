@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import './define';
 
@@ -34,20 +33,18 @@ function Template({
   mediaDuration
 }: any) {
   return html`
-    <vds-media-controller log-level=${logLevel}>
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext=${true}
-          .durationContext=${mediaDuration}
-        ></vds-fake-media-provider>
-
-        <vds-time-duration
-          label=${ifNonEmpty(label)}
-          ?always-show-hours=${alwaysShowHours}
-          ?pad-hours=${padHours}
-        ></vds-time-duration>
-      </vds-media-container>
-    </vds-media-controller>
+    <vds-fake-media-player
+      log-level=${logLevel}
+      .mediaCanPlay=${true}
+      .mediaDuration=${mediaDuration}
+    >
+      <vds-time-duration
+        label=${ifNonEmpty(label)}
+        ?always-show-hours=${alwaysShowHours}
+        ?pad-hours=${padHours}
+        slot="ui"
+      ></vds-time-duration>
+    </vds-fake-media-player>
   `;
 }
 

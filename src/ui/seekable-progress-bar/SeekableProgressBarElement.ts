@@ -5,7 +5,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { consumeContext } from '../../base/context';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { mediaContext } from '../../media';
 import { formatSpokenTime } from '../../utils/time';
 import { seekableProgressBarElementStyles } from './styles';

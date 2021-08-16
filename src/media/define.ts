@@ -1,3 +1,3 @@
-import './container/define';
 import './controller/define';
+import './player/define';
 import './ui/define';

@@ -1,4 +1,4 @@
-import { ArrayElement } from '../helpers';
+import { ArrayElement } from '../global/helpers';
 
 export function keysOf<T>(obj: T): (keyof T)[] {
   return Object.keys(obj) as (keyof T)[];

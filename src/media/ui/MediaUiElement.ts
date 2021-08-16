@@ -16,8 +16,6 @@ import { mediaUiElementStyles } from './styles';
 export const MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
 
 /**
- * Simple container that holds a collection of user interface components.
- *
  * This is a general container to hold your UI components but it also enables you to show/hide
  * the player UI when media is not ready for playback by applying styles when the `hidden`
  * attribute is present. It also handles showing/hiding UI depending on whether native UI can't be
@@ -29,18 +27,18 @@ export const MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
  * @slot Used to pass in UI components.
  * @example
  * ```html
- * <vds-ui>
+ * <vds-media-ui>
  *   <!-- ... -->
- * </vds-ui>
+ * </vds-media-ui>
  * ```
  * @example
  * ```css
- * vds-ui {
+ * vds-media-ui {
  *   opacity: 1;
  *   transition: opacity 0.3s ease-out;
  * }
  *
- * vds-ui[hidden] {
+ * vds-media-ui[hidden] {
  *   display: block;
  *   opacity: 0;
  * }

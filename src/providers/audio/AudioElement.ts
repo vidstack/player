@@ -8,7 +8,13 @@ import { audioElementStyles } from './styles';
 export const AUDIO_ELEMENT_TAG_NAME = 'vds-audio';
 
 /**
- * Enables loading, playing and controlling audio media via the HTML5 `<audio>` element.
+ * Used to embed sound content into documents via the native `<audio>` element. It may contain
+ * one or more audio sources, represented using the `src` attribute or the `<source>` element: the
+ * browser will choose the most suitable one.
+ *
+ * 💡 This element contains the exact same interface as the `<audio>` element. It redispatches
+ * all the native events if needed, but prefer the `vds-*` variants (eg: `vds-play`) as they
+ * iron out any browser issues.
  *
  * @tagname vds-audio
  * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
@@ -17,7 +23,7 @@ export const AUDIO_ELEMENT_TAG_NAME = 'vds-audio';
  * @example
  * ```html
  * <vds-audio src="/media/audio.mp3">
- *   <!-- ... -->
+ *   <!-- Additional media resources here. -->
  * </vds-audio>
  * ```
  * @example

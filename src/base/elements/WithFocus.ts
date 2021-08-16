@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 
-import { Constructor } from '../../helpers';
+import { Constructor } from '../../global/helpers';
 import { currentSafariVersion } from '../../utils/support';
 
 /**

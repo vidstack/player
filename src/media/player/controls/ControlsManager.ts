@@ -2,15 +2,14 @@ import { ReactiveElement } from 'lit';
 
 import { ElementManager } from '../../../base/elements';
 import { listen, vdsEvent } from '../../../base/events';
-import { DEV_MODE } from '../../../env';
+import { DEV_MODE } from '../../../global/env';
 import { mediaContext } from '../../context';
+import { MediaController } from '../../controller';
 import { HideControlsRequestEvent, ShowControlsRequestEvent } from './events';
 import { ManagedControlsConnectEvent } from './ManagedControls';
 
 export type ControlsManagerHost = ReactiveElement & {
-  readonly ctx: {
-    customControls: boolean;
-  };
+  readonly controller: MediaController;
 };
 
 /**
@@ -30,7 +29,7 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
    * Whether controls are currently hidden.
    */
   get isHidden(): boolean {
-    return !this._host.ctx.customControls;
+    return !this._host.controller.mediaCtx.customControls;
   }
 
   constructor(protected override readonly _host: ControlsManagerHost) {
@@ -58,7 +57,7 @@ export class ControlsManager extends ElementManager<ReactiveElement> {
   }
 
   protected _setHiddenContext(isHidden) {
-    this._host.ctx.customControls = !isHidden;
+    this._host.controller.mediaCtx.customControls = !isHidden;
   }
 
   /**

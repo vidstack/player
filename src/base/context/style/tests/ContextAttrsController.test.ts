@@ -2,7 +2,7 @@ import { expect } from '@open-wc/testing';
 import { html, LitElement } from 'lit';
 
 import { mediaContext } from '../../../../media';
-import { buildMediaFixture } from '../../../../media/test-utils';
+import { buildMediaPlayerFixture } from '../../../../media/test-utils';
 import { ContextAttrsController } from '../ContextAttrsController';
 
 class ReferenceElement extends LitElement {
@@ -13,22 +13,22 @@ window.customElements.define('ref-element', ReferenceElement);
 
 describe(ContextAttrsController.name, function () {
   async function buildFixture() {
-    const { controller } = await buildMediaFixture(html`
+    const { player } = await buildMediaPlayerFixture(html`
       <ref-element></ref-element>
     `);
 
-    const ref = controller.querySelector('ref-element') as ReferenceElement;
+    const ref = player.querySelector('ref-element') as ReferenceElement;
 
-    return { controller, ref };
+    return { player, ref };
   }
 
   it('should update attribute given boolean context', async function () {
-    const { controller, ref } = await buildFixture();
+    const { player, ref } = await buildFixture();
 
     ref.controller.bind(mediaContext.paused, 'paused');
     expect(ref).to.have.attribute('paused');
 
-    controller.ctx.paused = false;
+    player.ctx.paused = false;
     expect(ref).to.not.have.attribute('paused');
 
     ref.remove();
@@ -36,15 +36,15 @@ describe(ContextAttrsController.name, function () {
   });
 
   it('should update attribute given number context', async function () {
-    const { controller, ref } = await buildFixture();
+    const { player, ref } = await buildFixture();
 
     ref.controller.bind(mediaContext.currentTime, 'current-time');
     expect(ref).to.have.attribute('current-time', '0');
 
-    controller.ctx.currentTime = NaN;
+    player.ctx.currentTime = NaN;
     expect(ref).to.have.attribute('current-time', '0');
 
-    controller.ctx.currentTime = 50;
+    player.ctx.currentTime = 50;
     expect(ref).to.have.attribute('current-time', '50');
 
     ref.remove();
@@ -52,12 +52,12 @@ describe(ContextAttrsController.name, function () {
   });
 
   it('shoud update attribute given string context', async function () {
-    const { controller, ref } = await buildFixture();
+    const { player, ref } = await buildFixture();
 
     ref.controller.bind(mediaContext.currentSrc, 'current-src');
     expect(ref).to.have.attribute('current-src', '');
 
-    controller.ctx.currentSrc = 'apples';
+    player.ctx.currentSrc = 'apples';
     expect(ref).to.have.attribute('current-src', 'apples');
 
     ref.remove();
@@ -65,7 +65,7 @@ describe(ContextAttrsController.name, function () {
   });
 
   it('should update attribute given object context', async function () {
-    const { controller, ref } = await buildFixture();
+    const { ref } = await buildFixture();
     ref.controller.bind(mediaContext.buffered, 'buffered');
     expect(ref).to.have.attribute('buffered', '[object Object]');
     ref.remove();
@@ -73,7 +73,7 @@ describe(ContextAttrsController.name, function () {
   });
 
   it('should bind multiple contexts to attributes', async function () {
-    const { controller, ref } = await buildFixture();
+    const { player, ref } = await buildFixture();
 
     ref.controller
       .bind(mediaContext.paused, 'paused')
@@ -82,24 +82,24 @@ describe(ContextAttrsController.name, function () {
     expect(ref).to.have.attribute('paused', '');
     expect(ref).to.not.have.attribute('can-play', '');
 
-    controller.ctx.canPlay = true;
+    player.ctx.canPlay = true;
 
     expect(ref).to.have.attribute('paused', '');
     expect(ref).to.have.attribute('can-play', '');
 
-    controller.ctx.paused = false;
+    player.ctx.paused = false;
 
     expect(ref).to.not.have.attribute('paused', '');
     expect(ref).to.have.attribute('can-play', '');
   });
 
   it('should use custom transformer', async function () {
-    const { controller, ref } = await buildFixture();
+    const { player, ref } = await buildFixture();
 
     ref.controller.bind(mediaContext.paused, 'paused', (p) => !p);
     expect(ref).to.not.have.attribute('paused');
 
-    controller.ctx.paused = false;
+    player.ctx.paused = false;
     expect(ref).to.have.attribute('paused', 'true');
 
     ref.remove();
@@ -107,7 +107,7 @@ describe(ContextAttrsController.name, function () {
   });
 
   it('should unbind context', async function () {
-    const { controller, ref } = await buildFixture();
+    const { player, ref } = await buildFixture();
 
     ref.controller.bind(mediaContext.paused, 'paused');
     expect(ref).to.have.attribute('paused', '');
@@ -115,8 +115,8 @@ describe(ContextAttrsController.name, function () {
     ref.controller.unbind(mediaContext.paused);
     expect(ref).to.not.have.attribute('paused');
 
-    controller.ctx.paused = false;
-    controller.ctx.paused = true;
+    player.ctx.paused = false;
+    player.ctx.paused = true;
     expect(ref).to.not.have.attribute('paused');
   });
 });

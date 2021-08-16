@@ -1,6 +1,6 @@
 import { ReactiveElement } from 'lit';
 
-import { DEV_MODE } from '../../../env';
+import { DEV_MODE } from '../../../global/env';
 import { DisposalBin, listen } from '../../events';
 import { Logger } from '../../logger';
 import { ScopedDiscoveryEvent } from '../discovery/events';

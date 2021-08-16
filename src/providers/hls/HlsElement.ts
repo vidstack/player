@@ -3,7 +3,7 @@ import { PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { VdsEvent, vdsEvent } from '../../base/events';
-import { DEV_MODE } from '../../env';
+import { DEV_MODE } from '../../global/env';
 import { CanPlay, MediaType } from '../../media';
 import { preconnect, ScriptLoader } from '../../utils/network';
 import { isNonNativeHlsStreamingPossible } from '../../utils/support';
@@ -24,14 +24,17 @@ export type HlsConstructor = typeof Hls;
 const HLS_LIB_CACHE = new Map<string, HlsConstructor>();
 
 /**
- * Enables loading, playing and controlling videos via the HTML5 `<video>` element. This provider
- * also introduces support for the [HTTP Live Streaming protocol](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
- * (also known as HLS) via the [`video-dev/hls.js`](https://github.com/video-dev/hls.js) library.
+ * Embeds video content into documents via the native `<video>` element. It may contain
+ * one or more video sources, represented using the `src` attribute or the `<source>` element: the
+ * browser will choose the most suitable one.
  *
- * You can decide whether you'd like to bundle `hls.js` into your application (not recommended), or
- * load it dynamically from your own server or a CDN. We recommended dynamically loading it to
- * prevent blocking the main thread when rendering this element, and to ensure `hls.js` is cached
- * separately.
+ * In addition, this element introduces support for HLS streaming via the popular `hls.js` library.
+ * HLS streaming is either [supported natively](https://caniuse.com/?search=hls) (generally
+ * on iOS), or in environments that [support the Media Stream API](https://caniuse.com/?search=mediastream).
+ *
+ * 💡 This element contains the exact same interface as the `<video>` element. It redispatches
+ * all the native events if needed, but prefer the `vds-*` variants (eg: `vds-play`) as they
+ * iron out any browser issues. It also dispatches all the `hls.js` events.
  *
  * ## Dynamically Loaded
  *
@@ -81,36 +84,24 @@ const HLS_LIB_CACHE = new Map<string, HlsConstructor>();
  * ```
  *
  * @tagname vds-hls
- * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
+ * @slot Used to pass in `<source>` and `<track>` elements to the underlying HTML5 media player.
  * @slot ui - Used to pass in `<vds-ui>` to customize the player user interface.
  * @csspart media - The video element (`<video>`).
  * @csspart video - Alias for `media` part.
  * @example
  * ```html
  * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
- *   <!-- ... -->
+ *   <!-- Additional media resources here. -->
  * </vds-hls>
  * ```
  * @example
  * ```html
- *  <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
- *    <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
- *  </vds-hls>
+ * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
+ *   <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
+ * </vds-hls>
  * ```
  */
 export class HlsElement extends VideoElement {
-  static override get events(): (keyof GlobalEventHandlersEventMap)[] {
-    return [
-      ...super.events,
-      'vds-hls-attach',
-      'vds-hls-build',
-      'vds-hls-detach',
-      'vds-hls-load',
-      'vds-hls-load-error',
-      'vds-hls-no-support'
-    ];
-  }
-
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
@@ -540,7 +531,7 @@ export class HlsElement extends VideoElement {
   }
 
   protected override _getMediaType(): MediaType {
-    if (this.ctx.isLiveVideo) {
+    if (this.ctx.mediaType === MediaType.LiveVideo) {
       return MediaType.LiveVideo;
     }
 

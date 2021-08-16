@@ -1,4 +1,3 @@
-import '../../media/define';
 import '../../media/test-utils/define';
 import './define';
 
@@ -49,20 +48,18 @@ function Template({
   mediaDuration
 }: any) {
   return html`
-    <vds-media-controller log-level=${logLevel}>
-      <vds-media-container>
-        <vds-fake-media-provider
-          .canPlayContext=${true}
-          .seekableContext=${createTimeRanges(0, mediaSeekableAmount)}
-          .durationContext=${mediaDuration}
-        ></vds-fake-media-provider>
-
-        <vds-seekable-progress-bar
-          label=${ifNonEmpty(label)}
-          value-text=${ifNonEmpty(valueText)}
-        ></vds-seekable-progress-bar>
-      </vds-media-container>
-    </vds-media-controller>
+    <vds-fake-media-player
+      log-level=${logLevel}
+      .mediaCanPlay=${true}
+      .mediaSeekable=${createTimeRanges(0, mediaSeekableAmount)}
+      .mediaDuration=${mediaDuration}
+    >
+      <vds-seekable-progress-bar
+        label=${ifNonEmpty(label)}
+        value-text=${ifNonEmpty(valueText)}
+        slot="ui"
+      ></vds-seekable-progress-bar>
+    </vds-fake-media-player>
 
     <style>
       vds-seekable-progress-bar {
