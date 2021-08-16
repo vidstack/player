@@ -50,9 +50,9 @@ describe('base/events', function () {
   });
 
   describe(VdsEvent.name, function () {
-    it('should return undefined given no origin event', async function () {
+    it('should return self given no original event', async function () {
       const event = new VdsEvent('vds-event');
-      expect(event.originEvent).to.equal(undefined);
+      expect(event.originEvent).to.equal(event);
       expect(event.isOriginTrusted).to.equal(false);
     });
 

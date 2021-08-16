@@ -9,8 +9,8 @@ export class VdsEvent<DetailType = unknown> extends CustomEvent<DetailType> {
    * Walks up the event chain (following each `originalEvent`) and returns the origin event
    * that started the chain.
    */
-  get originEvent(): Event | undefined {
-    return getOriginEvent(this);
+  get originEvent(): Event {
+    return getOriginEvent(this) ?? this;
   }
 
   /**
@@ -32,7 +32,7 @@ export class VdsEvent<DetailType = unknown> extends CustomEvent<DetailType> {
       Object.defineProperties(this, {
         originEvent: {
           get() {
-            return getOriginEvent(this);
+            return getOriginEvent(this) ?? this;
           }
         },
         isOriginTrusted: {
