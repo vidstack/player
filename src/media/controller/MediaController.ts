@@ -297,6 +297,11 @@ export class MediaController implements ReactiveController {
   protected _attachMediaContextRecordToProvider() {
     if (isNil(this.mediaProvider)) return;
 
+    // Copy over context values before setting on provider.
+    Object.keys(this.mediaProvider.ctx).forEach((prop) => {
+      this.mediaCtx[prop] = this.mediaProvider!.ctx[prop];
+    });
+
     // @ts-expect-error - Override readonly
     this.mediaProvider.ctx = this.mediaCtx;
 
@@ -310,8 +315,15 @@ export class MediaController implements ReactiveController {
     /* c8 ignore stop */
 
     this._mediaProviderDisconnectedDisposal.add(() => {
+      const ctx = createMediaContextRecord();
+
+      // Copy over context values before setting on provider.
+      Object.keys(ctx).forEach((prop) => {
+        ctx[prop] = this.mediaCtx[prop];
+      });
+
       // @ts-expect-error - Override readonly
-      this.mediaProvider.ctx = createMediaContextRecord();
+      this.mediaProvider.ctx = ctx;
     });
   }
 
