@@ -8,4 +8,5 @@ export * from './player';
 export * from './provider';
 export * from './request.events';
 export * from './time-ranges';
+export * from './ui';
 export * from './ViewType';
