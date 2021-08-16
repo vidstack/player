@@ -43,8 +43,12 @@ export class DisposalBin {
     /* c8 ignore stop */
   }
 
-  add(callback?: () => void) {
-    if (callback) this._disposal.push(callback);
+  add(...callbacks: (() => void)[]) {
+    if (callbacks) {
+      callbacks.forEach((cb) => {
+        this._disposal.push(cb);
+      });
+    }
   }
 
   /**
