@@ -354,6 +354,8 @@ export class Html5MediaElement extends MediaProviderElement {
 
           // re-dispatch native event for spec-compliance.
           redispatchEvent(this, event);
+
+          this.requestUpdate();
         })
       );
     });
