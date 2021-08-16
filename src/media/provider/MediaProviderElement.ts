@@ -813,6 +813,7 @@ export abstract class MediaProviderElement extends LitElement {
 
       if (this._autoplayRetryCount === this._maxAutoplayRetries - 1) {
         this.ctx.autoplayError = error as Error;
+        this.requestUpdate();
       }
     }
 
