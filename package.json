@@ -31,6 +31,13 @@
     },
     "./custom-elements.json": "./custom-elements.json"
   },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/*"
+      ]
+    }
+  },
   "contributors": [
     "Dave Furfero <furf@furf.com>",
     "Rahim Alwer <rahim.alwer@gmail.com>",
