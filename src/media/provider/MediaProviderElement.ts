@@ -870,6 +870,7 @@ export abstract class MediaProviderElement extends LitElement {
    */
   protected _getMediaPropsToResetWhenSrcChanges(): Set<string> {
     return new Set([
+      'autoplayError',
       'buffered',
       'buffering',
       'canPlay',
