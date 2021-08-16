@@ -60,7 +60,6 @@ export function WithFocus<T extends Constructor<LitElement>>(Base: T): T {
      * Focuses on the first focusable element in the shadow DOM.
      */
     override focus() {
-      // @ts-expect-error - Until `delegatesFocus` is added to `ShadowRoot` definition.
       if (this.shadowRoot?.delegatesFocus) {
         super.focus();
       } else {
