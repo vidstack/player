@@ -16,6 +16,8 @@ export const CONTROLS_ELEMENT_TAG_NAME = 'vds-controls';
  *
  * - `hidden`: Applied when the controls should be hidden and not available to the user.
  * - `idle`: Applied when there is no user activity for a set period, `hidden` should have greater priority.
+ * - `media-autoplay-error`: Applied when media autoplay fails. It can be used to show recovery UI
+ * if controls are hidden.
  * - `media-can-play`: Applied when media can begin playback.
  * - `media-paused`: Applied when media is paused.
  * - `media-view-type`: Applied with the media view type such as `audio` or `video`.
@@ -64,6 +66,11 @@ export class ControlsElement extends LitElement {
   @watchContext(mediaContext.idle)
   protected _handleIdleContextUpdate(idle: boolean) {
     setAttribute(this, 'idle', idle);
+  }
+
+  @watchContext(mediaContext.autoplayError)
+  protected _handleMediaAutoplayErrorContextUpdate(error?: Error) {
+    setAttribute(this, 'media-autoplay-error', !!error);
   }
 
   @watchContext(mediaContext.canPlay)

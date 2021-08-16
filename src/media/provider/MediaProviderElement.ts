@@ -83,6 +83,8 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   protected override updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+
     /* c8 ignore start */
     if (DEV_MODE) {
       changedProperties.forEach((_, prop) => {
@@ -95,24 +97,17 @@ export abstract class MediaProviderElement extends LitElement {
     }
     /* c8 ignore stop */
 
-    if (changedProperties.has('autoplay')) {
-      this.ctx.autoplay = this.autoplay;
-      this._attemptAutoplay();
-    }
-
     if (changedProperties.has('controls')) {
-      this.ctx.controls = this.controls;
+      this.ctx.controls = this.controls ?? false;
     }
 
     if (changedProperties.has('loop')) {
-      this.ctx.loop = this.loop;
+      this.ctx.loop = this.loop ?? false;
     }
 
     if (changedProperties.has('playsinline')) {
-      this.ctx.playsinline = this.playsinline;
+      this.ctx.playsinline = this.playsinline ?? false;
     }
-
-    super.updated(changedProperties);
   }
 
   protected override firstUpdated(changedProperties: PropertyValues) {
@@ -224,7 +219,23 @@ export abstract class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay
    */
   @property({ type: Boolean, reflect: true })
-  autoplay = false;
+  get autoplay() {
+    return this.ctx.autoplay;
+  }
+
+  set autoplay(shouldAutoplay: boolean) {
+    this.ctx.autoplay = shouldAutoplay;
+
+    if (this.canPlay && !this._autoplayAttemptPending && shouldAutoplay) {
+      this._autoplayAttemptPending = true;
+
+      const onAttemptEnd = () => {
+        this._autoplayAttemptPending = false;
+      };
+
+      this._attemptAutoplay().then(onAttemptEnd).catch(onAttemptEnd);
+    }
+  }
 
   /**
    * Indicates whether a user interface should be shown for controlling the resource. Set this to
@@ -390,6 +401,16 @@ export abstract class MediaProviderElement extends LitElement {
    */
   get mediaState(): Readonly<SimpleMediaContextRecord> {
     return cloneMediaContextRecord(this.ctx);
+  }
+
+  /**
+   * Returns an `Error` object when autoplay has failed to begin playback. This
+   * can be used to determine when to show a recovery UI in the event autoplay fails.
+   *
+   * @default undefined
+   */
+  get autoplayError(): Error | undefined {
+    return this.ctx.autoplayError;
   }
 
   /**
@@ -725,14 +746,18 @@ export abstract class MediaProviderElement extends LitElement {
     /* c8 ignore stop */
 
     this._autoplayRetryCount = 0;
+    this.ctx.autoplayError = undefined;
+    this._autoplayAttemptPending = true;
     await this._attemptAutoplay();
+    this._autoplayAttemptPending = false;
   }
 
   protected _autoplayRetryCount = 0;
   protected _maxAutoplayRetries = 3;
   protected _shouldMuteLastAutoplayAttempt = true;
+  protected _autoplayAttemptPending = false;
 
-  protected async _attemptAutoplay() {
+  protected async _attemptAutoplay(): Promise<void> {
     if (
       !this.canPlay ||
       !this.autoplay ||
@@ -773,18 +798,22 @@ export abstract class MediaProviderElement extends LitElement {
         this._logger.info('✅ Autoplay was successful.');
       }
       /* c8 ignore stop */
-    } catch (e) {
+    } catch (error) {
       /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
           .errorGroup(
-            `Autoplay retry [attempt ${this._autoplayRetryCount}] failed.`
+            `Autoplay retry [attempt ${this._autoplayRetryCount} out of ${this._maxAutoplayRetries}] failed.`
           )
           .appendWithLabel('Engine', this.engine)
-          .appendWithLabel('Error', e)
+          .appendWithLabel('Error', error)
           .end();
       }
       /* c8 ignore stop */
+
+      if (this._autoplayRetryCount === this._maxAutoplayRetries - 1) {
+        this.ctx.autoplayError = error as Error;
+      }
     }
 
     if (!didAttemptSucceed) {

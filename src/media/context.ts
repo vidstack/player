@@ -56,6 +56,13 @@ export const mediaContext = {
    */
   autoplay: createContext(false),
   /**
+   * Set to an `Error` object when autoplay has failed to begin playback. This
+   * can be used to determine when to show a recovery UI in the event autoplay fails.
+   *
+   * @default undefined
+   */
+  autoplayError: createContext<Error | undefined>(undefined),
+  /**
    * Returns a `TimeRanges` object that indicates the ranges of the media source that the
    * browser has buffered (if any) at the moment the buffered property is accessed. This is usually
    * contiguous but if the user jumps about while media is buffering, it may contain holes.

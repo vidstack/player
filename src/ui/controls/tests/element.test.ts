@@ -1,5 +1,6 @@
 import { elementUpdated, expect, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
+import { stub } from 'sinon';
 
 import { ViewType } from '../../../media';
 import { buildMediaPlayerFixture } from '../../../media/test-utils';
@@ -38,16 +39,6 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     expect(controls).shadowDom.to.equal(`<slot></slot>`);
   });
 
-  it('should toggle `media-can-play` attribute', async function () {
-    const { player, controls } = await buildFixture();
-    await player.forceMediaReady();
-    await elementUpdated(controls);
-    expect(controls).to.have.attribute('media-can-play');
-    player.ctx.canPlay = false;
-    await elementUpdated(controls);
-    expect(controls).to.not.have.attribute('media-can-play');
-  });
-
   it('should toggle `hidden` attribute', async function () {
     const { player, controls } = await buildFixture();
     await player.controlsManager.hide();
@@ -65,6 +56,33 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     await player.idleManager.stop();
     await elementUpdated(controls);
     expect(controls).to.not.have.attribute('idle');
+  });
+
+  it('should set `media-autoplay-error` attribute', async function () {
+    const { player, controls } = await buildFixture();
+
+    player.autoplay = true;
+
+    stub(player, 'play').throws(() => {
+      throw Error('Play failed.');
+    });
+
+    await player.forceMediaReady();
+    await elementUpdated(controls);
+
+    expect(player.autoplayError?.message).to.equal('Play failed.');
+
+    expect(controls).to.have.attribute('media-autoplay-error');
+  });
+
+  it('should toggle `media-can-play` attribute', async function () {
+    const { player, controls } = await buildFixture();
+    await player.forceMediaReady();
+    await elementUpdated(controls);
+    expect(controls).to.have.attribute('media-can-play');
+    player.ctx.canPlay = false;
+    await elementUpdated(controls);
+    expect(controls).to.not.have.attribute('media-can-play');
   });
 
   it('should toggle `media-paused` attribute', async function () {
