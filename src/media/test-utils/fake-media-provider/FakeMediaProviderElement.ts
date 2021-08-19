@@ -1,5 +1,7 @@
 /* c8 ignore start */
 
+import { css, CSSResultGroup } from 'lit';
+
 import { vdsEvent } from '../../../base/events';
 import { CanPlay } from '../../CanPlay';
 import { mediaContext } from '../../context';
@@ -12,6 +14,16 @@ export const FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME = 'vds-fake-media-provider';
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
 export class FakeMediaProviderElement extends MediaProviderElement {
+  static override get styles(): CSSResultGroup {
+    return [
+      css`
+        :host {
+          background: none;
+        }
+      `
+    ];
+  }
+
   constructor() {
     super();
     this._defineContextAccessors();

@@ -37,6 +37,12 @@ function Template({
     >
       <vds-fake-media-player></vds-fake-media-player>
     </vds-aspect-ratio>
+
+    <style>
+      vds-fake-media-player {
+        background: #000;
+      }
+    </style>
   `;
 }
 
