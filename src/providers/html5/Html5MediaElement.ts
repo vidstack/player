@@ -601,7 +601,11 @@ export class Html5MediaElement extends MediaProviderElement {
       // Wait for `src` attribute to be updated on underlying `<audio>` or `<video>` element.
       await this.updateComplete;
 
-      this._logger.debug('Calling `load()` on media element');
+      /* c8 ignore start */
+      if (DEV_MODE) {
+        this._logger.debug('Calling `load()` on media element');
+      }
+      /* c8 ignore stop */
 
       this.mediaElement?.load();
     }
