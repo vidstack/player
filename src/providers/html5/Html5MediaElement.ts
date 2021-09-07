@@ -542,9 +542,12 @@ export class Html5MediaElement extends MediaProviderElement {
       this.ctx.ended = true;
       this.ctx.waiting = false;
       this.dispatchEvent(vdsEvent('vds-ended', { originalEvent: event }));
-      this._cancelTimeUpdates();
     } else if (this.loop) {
       this.dispatchEvent(vdsEvent('vds-replay', { originalEvent: event }));
+    }
+
+    if (!this.loop) {
+      this._cancelTimeUpdates();
     }
   }
 

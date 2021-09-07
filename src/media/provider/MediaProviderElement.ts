@@ -687,7 +687,11 @@ export abstract class MediaProviderElement extends LitElement {
       /* c8 ignore stop */
 
       this.ctx.ended = false;
-    } else if (!this.ctx.ended && this._hasPlaybackRoughlyEnded()) {
+    } else if (
+      !this.ctx.ended &&
+      this._hasPlaybackRoughlyEnded() &&
+      this.loop
+    ) {
       /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
@@ -700,7 +704,7 @@ export abstract class MediaProviderElement extends LitElement {
       this.ctx.waiting = false;
       this.dispatchEvent(vdsEvent('vds-suspend'));
       this.ctx.ended = true;
-      this.dispatchEvent(vdsEvent('vds-error'));
+      this.dispatchEvent(vdsEvent('vds-ended'));
     }
   }
 
