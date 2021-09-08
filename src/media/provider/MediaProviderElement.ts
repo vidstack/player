@@ -665,12 +665,16 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected _hasPlaybackRoughlyEnded(): boolean {
     if (isNaN(this.duration) || this.duration === 0) return false;
-    return (
-      Math.abs(
-        Math.round(this.duration * 10) - Math.round(this.currentTime * 10)
-      ) <= 1
+    return this._roughlyCalcTimeUntilEnded() <= 1;
+  }
+
+  protected _roughlyCalcTimeUntilEnded(): number {
+    return Math.abs(
+      Math.round(this.duration * 10) - Math.round(this.currentTime * 10)
     );
   }
+
+  protected _validateEndedTimeoutId = 0;
 
   /**
    * Call if you suspect that playback might have resumed/ended again.
@@ -680,31 +684,39 @@ export abstract class MediaProviderElement extends LitElement {
       /* c8 ignore start */
       if (DEV_MODE) {
         this._logger
-          .infoGroup('invalid ended state')
+          .warnGroup('invalid ended state')
           .appendWithLabel('Duration', this.duration)
           .end();
       }
       /* c8 ignore stop */
 
       this.ctx.ended = false;
-    } else if (
-      !this.ctx.ended &&
-      this._hasPlaybackRoughlyEnded() &&
-      this.loop
-    ) {
-      /* c8 ignore start */
-      if (DEV_MODE) {
-        this._logger
-          .infoGroup('playback has roughly ended')
-          .appendWithLabel('Duration', this.duration)
-          .end();
-      }
-      /* c8 ignore stop */
+    } else if (!this.ctx.ended && this._hasPlaybackRoughlyEnded()) {
+      const timeLeft = this._roughlyCalcTimeUntilEnded();
 
-      this.ctx.waiting = false;
-      this.dispatchEvent(vdsEvent('vds-suspend'));
-      this.ctx.ended = true;
-      this.dispatchEvent(vdsEvent('vds-ended'));
+      // Convert seconds to milliseconds and add 300ms so we can check if the original ended event
+      // fired or not at that point.
+      const validationTimeout = timeLeft * 100 + 300;
+
+      window.clearTimeout(this._validateEndedTimeoutId);
+      this._validateEndedTimeoutId = setTimeout(() => {
+        if (this.ctx.ended) return;
+
+        /* c8 ignore start */
+        if (DEV_MODE) {
+          this._logger
+            .infoGroup('playback has roughly ended')
+            .appendWithLabel('Duration', this.duration)
+            .appendWithLabel('Time Left', timeLeft)
+            .end();
+        }
+        /* c8 ignore stop */
+
+        this.ctx.waiting = false;
+        this.dispatchEvent(vdsEvent('vds-suspend'));
+        this.ctx.ended = true;
+        this.dispatchEvent(vdsEvent('vds-ended'));
+      }, validationTimeout);
     }
   }
 

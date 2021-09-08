@@ -1,5 +1,5 @@
 import { elementUpdated, expect, fixture, oneEvent } from '@open-wc/testing';
-import { mock, spy, stub } from 'sinon';
+import { mock, spy, stub, useFakeTimers } from 'sinon';
 
 import { safelyDefineCustomElement } from '../../../utils/dom';
 import { keysOf } from '../../../utils/object';
@@ -284,10 +284,17 @@ describe('MediaProviderElement', function () {
         stub(provider, '_hasPlaybackRoughlyEnded').callsFake(() => true);
 
         // @ts-expect-error Accessing protected property
+        stub(provider, '_roughlyCalcTimeUntilEnded').callsFake(() => 0);
+
+        const clock = useFakeTimers();
+        // @ts-expect-error Accessing protected property
         provider._validatePlaybackEndedState();
+        clock.tick(300);
 
         expect(provider.ended).to.be.true;
         expect(provider.waiting).to.be.false;
+
+        clock.restore();
       });
     });
 
