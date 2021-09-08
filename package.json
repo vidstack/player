@@ -33,6 +33,27 @@
   },
   "typesVersions": {
     "*": {
+      "base/*": [
+        "dist/base/*"
+      ],
+      "media/*": [
+        "dist/media/*"
+      ],
+      "players/*": [
+        "dist/players/*"
+      ],
+      "providers/*": [
+        "dist/providers/*"
+      ],
+      "skins/*": [
+        "dist/skins/*"
+      ],
+      "ui/*": [
+        "dist/ui/*"
+      ],
+      "utils/*": [
+        "dist/utils/*"
+      ],
       "*": [
         "dist/*"
       ]
