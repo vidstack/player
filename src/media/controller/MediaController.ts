@@ -1,11 +1,15 @@
 import { ReactiveController, ReactiveElement } from 'lit';
 
-import { provideContextRecord } from '../../base/context';
+import {
+  ContextProviderController,
+  createContext,
+  provideContextRecord
+} from '../../base/context';
 import { DisposalBin, listen } from '../../base/events';
 import { FullscreenChangeEvent } from '../../base/fullscreen';
 import {
   Logger,
-  logLevel,
+  LogLevel,
   LogLevelName,
   LogLevelNameMap
 } from '../../base/logger';
@@ -40,6 +44,9 @@ export type MediaControllerHost = ReactiveElement & {
   exitFullscreen(): Promise<void>;
 };
 
+/* c8 ignore next */
+const _logLevel = createContext(LogLevel.Silent);
+
 /**
  * The media controller acts as a message bus between the media provider and all other
  * components, such as UI components and plugins. The main responsibilities are:
@@ -55,16 +62,25 @@ export type MediaControllerHost = ReactiveElement & {
 export class MediaController implements ReactiveController {
   protected readonly _disconnectDisposal: DisposalBin;
 
+  /* c8 ignore start */
   protected readonly _logger?: Logger;
-
-  protected readonly _logLevel: ReturnType<typeof logLevel['provide']>;
+  protected readonly _logLevelProvider: ContextProviderController<LogLevel>;
+  /* c8 ignore stop */
 
   protected readonly _mediaProviderConnectedQueue: RequestQueue;
 
   protected readonly _mediaProviderDisconnectedDisposal: DisposalBin;
 
   constructor(protected readonly _host: MediaControllerHost) {
-    this._logLevel = logLevel.provide(_host);
+    /* c8 ignore next */
+    this._logLevelProvider = _logLevel.provide(_host);
+
+    /* c8 ignore start */
+    if (DEV_MODE && !Logger._consumeLogLevel) {
+      // Inject log level context into `Logger` to avoid dep cycle.
+      Logger._consumeLogLevel = _logLevel.consume;
+    }
+    /* c8 ignore stop */
 
     this.mediaCtx = provideContextRecord(_host, mediaContext);
 
@@ -159,7 +175,7 @@ export class MediaController implements ReactiveController {
 
   get logLevel(): LogLevelName {
     /* c8 ignore next */
-    return DEV_MODE ? LogLevelNameMap[this._logLevel.value] : 'silent';
+    return DEV_MODE ? LogLevelNameMap[this._logLevelProvider.value] : 'silent';
   }
 
   set logLevel(newLevel: LogLevelName) {
@@ -168,7 +184,7 @@ export class MediaController implements ReactiveController {
       ? Object.values(LogLevelNameMap).findIndex((l) => l === newLevel)
       : 0;
 
-    this._logLevel.value = numericLevel >= 0 ? numericLevel : 0;
+    this._logLevelProvider.value = numericLevel >= 0 ? numericLevel : 0;
   }
 
   protected _logEvents() {

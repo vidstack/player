@@ -4,7 +4,7 @@ import { ReactiveController, ReactiveControllerHost } from 'lit';
 
 import { IS_CLIENT } from '../../utils/support';
 import { isUndefined } from '../../utils/unit';
-import { ContextConsumerController, createContext } from '../context';
+import type { Context, ContextConsumerController } from '../context';
 import { StorybookControl } from '../storybook';
 import { ms } from './ms';
 
@@ -61,8 +61,6 @@ export interface GroupLogStream {
   end(): GroupLogStream;
 }
 
-export const logLevel = createContext(LogLevel.Silent);
-
 export const LOGGER_STORYBOOK_ARG_TYPES = {
   logLevel: {
     control: StorybookControl.Select,
@@ -105,7 +103,10 @@ function saveColors() {
   }
 }
 export class Logger implements ReactiveController {
-  protected readonly _logLevelCtx: ContextConsumerController<LogLevel>;
+  // Controller will inject this to avoid circular dep.
+  static _consumeLogLevel?: Context<LogLevel>['consume'];
+
+  protected readonly _logLevelConsumer?: ContextConsumerController<LogLevel>;
 
   get name() {
     const owner = this._options.owner ?? this._host;
@@ -114,7 +115,7 @@ export class Logger implements ReactiveController {
 
   get level(): LogLevel {
     return isUndefined(this._options.logLevel)
-      ? this._logLevelCtx.value
+      ? this._logLevelConsumer?.value ?? LogLevel.Silent
       : this._options.logLevel;
   }
 
@@ -136,7 +137,7 @@ export class Logger implements ReactiveController {
       saveColors();
     }
 
-    this._logLevelCtx = logLevel.consume(_host);
+    this._logLevelConsumer = Logger._consumeLogLevel?.(_host);
 
     _host.addController(this);
   }
