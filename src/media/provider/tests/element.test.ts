@@ -210,94 +210,6 @@ describe('MediaProviderElement', function () {
       });
     });
 
-    describe('hasPlaybackRoughlyEnded', function () {
-      it('should return false if duration is NaN or 0', async function () {
-        const { provider } = await buildFixture();
-
-        provider.ctx.duration = NaN;
-        // @ts-expect-error Accessing protected property
-        expect(provider._hasPlaybackRoughlyEnded()).to.be.false;
-
-        provider.ctx.duration = 0;
-        // @ts-expect-error Accessing protected property
-        expect(provider._hasPlaybackRoughlyEnded()).to.be.false;
-      });
-
-      it('should return true if currentTime is <= .1s near duration', async function () {
-        const { provider } = await buildFixture();
-
-        provider.forceMediaReady();
-
-        provider.ctx.currentTime = 8.99;
-        provider.ctx.duration = 10;
-        // @ts-expect-error Accessing protected property
-        expect(provider._hasPlaybackRoughlyEnded()).to.be.false;
-
-        provider.ctx.currentTime = 9.5;
-        provider.ctx.duration = 10;
-        // @ts-expect-error Accessing protected property
-        expect(provider._hasPlaybackRoughlyEnded()).to.be.false;
-
-        provider.ctx.currentTime = 9.89;
-        provider.ctx.duration = 9.9;
-        // @ts-expect-error Accessing protected property
-        expect(provider._hasPlaybackRoughlyEnded()).to.be.true;
-
-        provider.ctx.currentTime = 9.9;
-        provider.ctx.duration = 10;
-        // @ts-expect-error Accessing protected property
-        expect(provider._hasPlaybackRoughlyEnded()).to.be.true;
-
-        provider.ctx.currentTime = 9.95;
-        provider.ctx.duration = 9.9;
-        // @ts-expect-error Accessing protected property
-        expect(provider._hasPlaybackRoughlyEnded()).to.be.true;
-      });
-    });
-
-    describe('validatePlaybackEndedState', function () {
-      it('should set ended to true if playback has roughly ended', async function () {
-        const { provider } = await buildFixture();
-
-        provider.ctx.ended = true;
-        expect(provider.ended).to.be.true;
-
-        // @ts-expect-error Accessing protected property
-        stub(provider, '_hasPlaybackRoughlyEnded').callsFake(() => false);
-
-        // @ts-expect-error Accessing protected property
-        provider._validatePlaybackEndedState();
-
-        expect(provider.ended).to.be.false;
-      });
-
-      it('should set ended to false if playback has NOT roughly ended', async function () {
-        const { provider } = await buildFixture();
-
-        provider.ctx.ended = false;
-        provider.ctx.waiting = true;
-
-        expect(provider.ended).to.be.false;
-        expect(provider.waiting).to.be.true;
-
-        // @ts-expect-error Accessing protected property
-        stub(provider, '_hasPlaybackRoughlyEnded').callsFake(() => true);
-
-        // @ts-expect-error Accessing protected property
-        stub(provider, '_roughlyCalcTimeUntilEnded').callsFake(() => 0);
-
-        const clock = useFakeTimers();
-        // @ts-expect-error Accessing protected property
-        provider._validatePlaybackEndedState();
-        clock.tick(300);
-
-        expect(provider.ended).to.be.true;
-        expect(provider.waiting).to.be.false;
-
-        clock.restore();
-      });
-    });
-
     describe('resetPlayback', function () {
       it('should set currentTime to 0', async function () {
         const { provider } = await buildFixture();
@@ -308,36 +220,6 @@ describe('MediaProviderElement', function () {
         provider._resetPlayback();
 
         expect(setTimeSpy).to.have.been.calledOnceWith(0);
-      });
-    });
-
-    describe('resetPlaybackIfEnded', function () {
-      it('should set currentTime to 0 if playback has roughly ended', async function () {
-        const { provider } = await buildFixture();
-
-        const setTimeSpy = spy(provider, '_setCurrentTime');
-
-        // @ts-expect-error Accessing protected property
-        stub(provider, '_hasPlaybackRoughlyEnded').callsFake(() => true);
-
-        // @ts-expect-error Accessing protected property
-        provider._resetPlaybackIfEnded();
-
-        expect(setTimeSpy).to.have.been.calledOnceWith(0);
-      });
-
-      it('should NOT set currentTime to 0 if playback has NOT roughly ended', async function () {
-        const { provider } = await buildFixture();
-
-        const setTimeSpy = spy(provider, '_setCurrentTime');
-
-        // @ts-expect-error Accessing protected property
-        stub(provider, '_hasPlaybackRoughlyEnded').callsFake(() => false);
-
-        // @ts-expect-error Accessing protected property
-        provider._resetPlaybackIfEnded();
-
-        expect(setTimeSpy).to.not.have.been.called;
       });
     });
 
@@ -447,7 +329,7 @@ describe('MediaProviderElement', function () {
         expect(provider._autoplayRetryCount).to.equal(0);
       });
 
-      it('should give up after 3 attempts', async function () {
+      it('should give up after 2 attempts', async function () {
         const { provider } = await buildFixture();
 
         provider.autoplay = true;
@@ -462,7 +344,7 @@ describe('MediaProviderElement', function () {
         // @ts-expect-error Accessing protected property
         await provider._attemptAutoplay();
 
-        expect(playSpy.getCalls()).to.have.length(3);
+        expect(playSpy.getCalls()).to.have.length(2);
       });
 
       it('should try muted on last attempt', async function () {

@@ -24,6 +24,15 @@ export type MediaRequestEvents = {
   'vds-pause-idle-tracking-request': PauseIdleTrackingRequestEvent;
 };
 
+export type PendingMediaRequests = {
+  play: PlayRequestEvent[];
+  pause: PauseRequestEvent[];
+  volume: (MuteRequestEvent | UnmuteRequestEvent | VolumeChangeRequestEvent)[];
+  fullscreen: (EnterFullscreenRequestEvent | ExitFullscreenRequestEvent)[];
+  seeked: SeekRequestEvent[];
+  seeking: SeekingRequestEvent[];
+};
+
 /**
  * Fired when requesting the media to be muted.
  *

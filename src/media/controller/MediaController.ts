@@ -6,7 +6,10 @@ import {
   provideContextRecord
 } from '../../base/context';
 import { DisposalBin, listen } from '../../base/events';
-import { FullscreenChangeEvent } from '../../base/fullscreen';
+import {
+  FullscreenChangeEvent,
+  FullscreenErrorEvent
+} from '../../base/fullscreen';
 import {
   Logger,
   LogLevel,
@@ -25,6 +28,13 @@ import {
   MediaContextRecordValues
 } from '../context';
 import {
+  PlayErrorEvent,
+  PlayEvent,
+  SeekedEvent,
+  SeekingEvent,
+  VolumeChangeEvent
+} from '../events';
+import {
   MediaProviderConnectEvent,
   MediaProviderElement
 } from '../provider/MediaProviderElement';
@@ -33,6 +43,7 @@ import {
   ExitFullscreenRequestEvent,
   MuteRequestEvent,
   PauseRequestEvent,
+  PendingMediaRequests,
   PlayRequestEvent,
   SeekingRequestEvent,
   SeekRequestEvent,
@@ -134,6 +145,7 @@ export class MediaController implements ReactiveController {
 
   protected _addEventListeners() {
     const eventListeners = {
+      //
       'vds-media-provider-connect': this._handleMediaProviderConnect,
       'vds-mute-request': this._handleMuteRequest,
       'vds-unmute-request': this._handleUnmuteRequest,
@@ -145,8 +157,16 @@ export class MediaController implements ReactiveController {
       'vds-enter-fullscreen-request': this._handleEnterFullscreenRequest,
       'vds-exit-fullscreen-request': this._handleExitFullscreenRequest,
       'vds-fullscreen-change': this._handleFullscreenChange,
-      seeked: [this._handleMediaSeeked, { capture: true }],
-      'vds-seeked': [this._handleMediaSeeked, { capture: true }]
+      'vds-fullscreen-error': this._handleFullscreenError,
+      //
+      'vds-play': [this._handlePlay, { capture: true }],
+      'vds-play-error': [this._handlePlayError, { capture: true }],
+      'vds-pause': [this._handlePause, { capture: true }],
+      'vds-volume-change': [this._handleVolumeChange, { capture: true }],
+      'vds-seeking': [this._handleSeeking, { capture: true }],
+      'vds-seeked': [this._handleSeeked, { capture: true }],
+      //
+      seeked: [this._handleSeeked, { capture: true }]
     };
 
     keysOf(eventListeners).forEach((eventType) => {
@@ -348,6 +368,26 @@ export class MediaController implements ReactiveController {
   // -------------------------------------------------------------------------------------------
 
   /**
+   * Media requests that have been made but are waiting to be satisfied. Key represents the media
+   * event type the request is waiting for to be considered "satisfied".
+   */
+  protected _pendingMediaRequests: PendingMediaRequests = {
+    play: [],
+    pause: [],
+    volume: [],
+    fullscreen: [],
+    seeked: [],
+    seeking: []
+  };
+
+  protected satisfyMediaRequest<T extends keyof PendingMediaRequests>(
+    type: T,
+    event: Event & { requestEvent?: Event }
+  ): void {
+    event.requestEvent = this._pendingMediaRequests[type].shift();
+  }
+
+  /**
    * Override this to allow media events to bubble up the DOM.
    *
    * @param event
@@ -369,6 +409,7 @@ export class MediaController implements ReactiveController {
   protected _handleMuteRequest(event: MuteRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('muted', () => {
+      this._pendingMediaRequests.volume.push(event);
       this.mediaProvider!.muted = true;
     });
   }
@@ -376,6 +417,7 @@ export class MediaController implements ReactiveController {
   protected _handleUnmuteRequest(event: UnmuteRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('muted', () => {
+      this._pendingMediaRequests.volume.push(event);
       this.mediaProvider!.muted = false;
     });
   }
@@ -383,6 +425,7 @@ export class MediaController implements ReactiveController {
   protected _handlePlayRequest(event: PlayRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('paused', () => {
+      this._pendingMediaRequests.play.push(event);
       this.mediaProvider!.paused = false;
     });
   }
@@ -390,6 +433,7 @@ export class MediaController implements ReactiveController {
   protected _handlePauseRequest(event: PauseRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('paused', () => {
+      this._pendingMediaRequests.pause.push(event);
       this.mediaProvider!.paused = true;
     });
   }
@@ -399,27 +443,33 @@ export class MediaController implements ReactiveController {
   protected _handleSeekingRequest(event: SeekingRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('seeking', () => {
+      this._pendingMediaRequests.seeking.push(event);
       this._isSeeking = true;
       this.mediaProvider!.currentTime = event.detail;
     });
   }
 
-  protected _handleMediaSeeked(event: Event): void {
-    // We don't want `seeked` events firing while seeking is updating media playback position.
-    if (this._isSeeking) event.stopImmediatePropagation();
-  }
-
   protected _handleSeekRequest(event: SeekRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('seeking', () => {
+      this._pendingMediaRequests.seeked.push(event);
       this._isSeeking = false;
-      this.mediaProvider!.currentTime = event.detail;
+
+      let time = event.detail;
+
+      // Snap to end if close enough.
+      if (this.mediaProvider!.duration - event.detail < 1) {
+        time = this.mediaProvider!.duration;
+      }
+
+      this.mediaProvider!.currentTime = time;
     });
   }
 
   protected _handleVolumeChangeRequest(event: VolumeChangeRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('volume', () => {
+      this._pendingMediaRequests.volume.push(event);
       this.mediaProvider!.volume = event.detail;
     });
   }
@@ -428,6 +478,7 @@ export class MediaController implements ReactiveController {
     event: EnterFullscreenRequestEvent
   ): Promise<void> {
     if (!this._mediaRequestEventGateway(event)) return;
+    this._pendingMediaRequests.fullscreen.push(event);
     await this._host.requestFullscreen();
   }
 
@@ -435,10 +486,49 @@ export class MediaController implements ReactiveController {
     event: ExitFullscreenRequestEvent
   ): Promise<void> {
     if (!this._mediaRequestEventGateway(event)) return;
+    this._pendingMediaRequests.fullscreen.push(event);
     await this._host.exitFullscreen();
   }
 
   protected _handleFullscreenChange(event: FullscreenChangeEvent): void {
     this.mediaCtx.fullscreen = event.detail;
+    this.satisfyMediaRequest('fullscreen', event);
+  }
+
+  protected _handleFullscreenError(event: FullscreenErrorEvent): void {
+    this.satisfyMediaRequest('fullscreen', event);
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Media Events
+  // -------------------------------------------------------------------------------------------
+
+  protected _handlePlay(event: PlayEvent): void {
+    this.satisfyMediaRequest('play', event);
+  }
+
+  protected _handlePlayError(event: PlayErrorEvent): void {
+    this.satisfyMediaRequest('play', event);
+  }
+
+  protected _handlePause(event: PlayErrorEvent): void {
+    this.satisfyMediaRequest('pause', event);
+  }
+
+  protected _handleVolumeChange(event: VolumeChangeEvent): void {
+    this.satisfyMediaRequest('volume', event);
+  }
+
+  protected _handleSeeking(event: SeekingEvent): void {
+    this.satisfyMediaRequest('seeking', event);
+  }
+
+  protected _handleSeeked(event: SeekedEvent): void {
+    // We don't want `seeked` events firing while seeking is updating media playback position.
+    if (this._isSeeking) {
+      event.stopImmediatePropagation();
+    } else if (event.type === 'vds-seeked') {
+      this.satisfyMediaRequest('seeked', event);
+    }
   }
 }

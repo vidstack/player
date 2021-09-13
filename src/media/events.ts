@@ -1,8 +1,20 @@
 import { VdsEvent } from '../base/events';
-import { FullscreenChangeEvent } from '../base/fullscreen';
+import {
+  FullscreenChangeEvent,
+  FullscreenErrorEvent
+} from '../base/fullscreen';
 import { MediaType } from './MediaType';
 import { ControlsChangeEvent } from './player/controls';
 import { IdleChangeEvent } from './player/idle';
+import {
+  MuteRequestEvent,
+  PauseRequestEvent,
+  PlayRequestEvent,
+  SeekingRequestEvent,
+  SeekRequestEvent,
+  UnmuteRequestEvent,
+  VolumeChangeRequestEvent
+} from './request.events';
 import { ViewType } from './ViewType';
 
 export type MediaEvents = {
@@ -15,6 +27,7 @@ export type MediaEvents = {
   'vds-ended': EndedEvent;
   'vds-error': ErrorEvent;
   'vds-fullscreen-change': FullscreenChangeEvent;
+  'vds-fullscreen-error': FullscreenErrorEvent;
   'vds-idle-change': IdleChangeEvent;
   'vds-loaded-data': LoadedDataEvent;
   'vds-loaded-metadata': LoadedMetadataEvent;
@@ -22,6 +35,7 @@ export type MediaEvents = {
   'vds-media-type-change': MediaTypeChangeEvent;
   'vds-pause': PauseEvent;
   'vds-play': PlayEvent;
+  'vds-play-error': PlayErrorEvent;
   'vds-playing': PlayingEvent;
   'vds-progress': ProgressEvent;
   'vds-seeked': SeekedEvent;
@@ -137,7 +151,9 @@ export type MediaTypeChangeEvent = VdsEvent<MediaType>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event
  */
-export type PauseEvent = VdsEvent<void>;
+export type PauseEvent = VdsEvent<void> & {
+  requestEvent?: PauseRequestEvent;
+};
 
 /**
  * Fired when the `paused` property is changed from `true` to `false`, as a result of the `play()`
@@ -146,7 +162,19 @@ export type PauseEvent = VdsEvent<void>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play_event
  */
-export type PlayEvent = VdsEvent<void>;
+export type PlayEvent = VdsEvent<void> & {
+  autoplay?: boolean;
+  requestEvent?: PlayRequestEvent;
+};
+
+/**
+ * Fired when an attempt to start media playback results in an error.
+ */
+export type PlayErrorEvent = VdsEvent<void> & {
+  autoplay?: boolean;
+  error?: Error;
+  requestEvent?: PlayRequestEvent;
+};
 
 /**
  * Fired when playback is ready to start after having been paused or delayed due to lack of data.
@@ -154,7 +182,9 @@ export type PlayEvent = VdsEvent<void>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event
  */
-export type PlayingEvent = VdsEvent<void>;
+export type PlayingEvent = VdsEvent<void> & {
+  requestEvent?: PlayRequestEvent;
+};
 
 /**
  * Fired periodically as the browser loads a resource.
@@ -171,7 +201,9 @@ export type ProgressEvent = VdsEvent<void>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event
  */
-export type SeekedEvent = VdsEvent<number>;
+export type SeekedEvent = VdsEvent<number> & {
+  requestEvent?: SeekRequestEvent;
+};
 
 /**
  * Fired when a seek operation starts, meaning the seeking property has changed to `true` and the
@@ -180,7 +212,9 @@ export type SeekedEvent = VdsEvent<number>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event
  */
-export type SeekingEvent = VdsEvent<number>;
+export type SeekingEvent = VdsEvent<number> & {
+  requestEvent?: SeekingRequestEvent;
+};
 
 /**
  * Fired when the user agent is trying to fetch media data, but data is unexpectedly not
@@ -244,7 +278,12 @@ export type VolumeChange = {
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event
  */
-export type VolumeChangeEvent = VdsEvent<VolumeChange>;
+export type VolumeChangeEvent = VdsEvent<VolumeChange> & {
+  requestEvent?:
+    | MuteRequestEvent
+    | UnmuteRequestEvent
+    | VolumeChangeRequestEvent;
+};
 
 /**
  * Fired when playback has stopped because of a temporary lack of data.

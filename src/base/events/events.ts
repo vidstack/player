@@ -93,7 +93,7 @@ export type ExtractEventInit<Event> = VdsEventInit<ExtractEventDetail<Event>>;
 export function vdsEvent<EventType extends keyof GlobalEventHandlersEventMap>(
   type: EventType,
   eventInit: ExtractEventInit<GlobalEventHandlersEventMap[EventType]> = {}
-): VdsEvent<ExtractEventDetail<GlobalEventHandlersEventMap[EventType]>> {
+): GlobalEventHandlersEventMap[EventType] {
   return new VdsEvent(type, eventInit);
 }
 

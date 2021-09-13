@@ -54,6 +54,10 @@ export type MediaProviderConnectEvent = DiscoveryEvent<MediaProviderElement>;
  *
  */
 export abstract class MediaProviderElement extends LitElement {
+  constructor() {
+    super();
+  }
+
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
@@ -70,6 +74,12 @@ export abstract class MediaProviderElement extends LitElement {
   override connectedCallback() {
     /* c8 ignore start */
     if (DEV_MODE) {
+      if ('controller' in this) {
+        // @ts-expect-error - re-init to consume log level because provider is a media controller
+        // and log level context is created after this class has initialized.
+        this._logger = new ElementLogger(this);
+      }
+
       this._logMediaEvents();
     }
     /* c8 ignore stop */
@@ -663,69 +673,12 @@ export abstract class MediaProviderElement extends LitElement {
     }
   }
 
-  protected _hasPlaybackRoughlyEnded(): boolean {
-    if (isNaN(this.duration) || this.duration === 0) return false;
-    return this._roughlyCalcTimeUntilEnded() <= 1;
-  }
-
-  protected _roughlyCalcTimeUntilEnded(): number {
-    return Math.abs(
-      Math.round(this.duration * 10) - Math.round(this.currentTime * 10)
-    );
-  }
-
-  protected _validateEndedTimeoutId = 0;
-
-  /**
-   * Call if you suspect that playback might have resumed/ended again.
-   */
-  protected _validatePlaybackEndedState(): void {
-    if (this.ctx.ended && !this._hasPlaybackRoughlyEnded()) {
-      /* c8 ignore start */
-      if (DEV_MODE) {
-        this._logger
-          .warnGroup('invalid ended state')
-          .appendWithLabel('Duration', this.duration)
-          .end();
-      }
-      /* c8 ignore stop */
-
-      this.ctx.ended = false;
-    } else if (!this.ctx.ended && this._hasPlaybackRoughlyEnded()) {
-      const timeLeft = this._roughlyCalcTimeUntilEnded();
-
-      // Convert seconds to milliseconds and add 300ms so we can check if the original ended event
-      // fired or not at that point.
-      const validationTimeout = timeLeft * 100 + 300;
-
-      window.clearTimeout(this._validateEndedTimeoutId);
-      this._validateEndedTimeoutId = setTimeout(() => {
-        if (this.ctx.ended) return;
-
-        /* c8 ignore start */
-        if (DEV_MODE) {
-          this._logger
-            .infoGroup('playback has roughly ended')
-            .appendWithLabel('Duration', this.duration)
-            .appendWithLabel('Time Left', timeLeft)
-            .end();
-        }
-        /* c8 ignore stop */
-
-        this.ctx.waiting = false;
-        this.dispatchEvent(vdsEvent('vds-suspend'));
-        this.ctx.ended = true;
-        this.dispatchEvent(vdsEvent('vds-ended'));
-      }, validationTimeout);
-    }
-  }
-
   protected async _resetPlayback(): Promise<void> {
     this._setCurrentTime(0);
   }
 
   protected async _resetPlaybackIfEnded(): Promise<void> {
-    if (!this._hasPlaybackRoughlyEnded()) return;
+    if (!this.ended || this.currentTime === 0) return;
     return this._resetPlayback();
   }
 
@@ -769,7 +722,7 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   protected _autoplayRetryCount = 0;
-  protected _maxAutoplayRetries = 3;
+  protected _maxAutoplayRetries = 2;
   protected _shouldMuteLastAutoplayAttempt = true;
   protected _autoplayAttemptPending = false;
 

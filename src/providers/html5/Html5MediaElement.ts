@@ -6,8 +6,8 @@ import { listen, redispatchEvent, vdsEvent } from '../../base/events';
 import { DEV_MODE } from '../../global/env';
 import { CanPlay, MediaProviderElement, MediaType } from '../../media';
 import { getSlottedChildren } from '../../utils/dom';
+import { getNumberOfDecimalPlaces } from '../../utils/number';
 import { keysOf } from '../../utils/object';
-import { IS_SAFARI } from '../../utils/support';
 import { isNil, isNumber, isUndefined } from '../../utils/unit';
 import { MediaNetworkState } from './MediaNetworkState';
 import { MediaReadyState } from './MediaReadyState';
@@ -432,15 +432,23 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handlePlay(event: Event) {
-    this._requestTimeUpdates();
     this.ctx.paused = false;
-    this.dispatchEvent(vdsEvent('vds-play', { originalEvent: event }));
-    if (this.ctx.ended) this.dispatchEvent(vdsEvent('vds-replay'));
+
+    if (this.ended) {
+      this.ctx.ended = false;
+      this.dispatchEvent(vdsEvent('vds-replay', { originalEvent: event }));
+    }
+
+    const playEvent = vdsEvent('vds-play', { originalEvent: event });
+    playEvent.autoplay = this._autoplayAttemptPending;
+    this.dispatchEvent(playEvent);
+
     if (!this.ctx.started) {
       this.ctx.started = true;
       this.dispatchEvent(vdsEvent('vds-started', { originalEvent: event }));
     }
-    this._validatePlaybackEndedState();
+
+    this._requestTimeUpdates();
   }
 
   protected _handlePause(event: Event) {
@@ -454,6 +462,8 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handlePlaying(event: Event) {
     this.ctx.playing = true;
     this.ctx.waiting = false;
+    this.ctx.ended = false;
+
     this.dispatchEvent(vdsEvent('vds-playing', { originalEvent: event }));
   }
 
@@ -465,7 +475,6 @@ export class Html5MediaElement extends MediaProviderElement {
         originalEvent: event
       })
     );
-    this._validatePlaybackEndedState();
   }
 
   protected _handleProgress(event: Event) {
@@ -479,27 +488,56 @@ export class Html5MediaElement extends MediaProviderElement {
     throw Error('Not implemented');
   }
 
-  protected _handleSeeked(event: Event) {
-    this.ctx.currentTime = this.mediaElement!.currentTime;
-    this.ctx.seeking = false;
-    this.dispatchEvent(
-      vdsEvent('vds-seeked', {
-        detail: this.ctx.currentTime,
-        originalEvent: event
-      })
-    );
-    this._validatePlaybackEndedState();
-  }
-
   protected _handleSeeking(event: Event) {
     this.ctx.currentTime = this.mediaElement!.currentTime;
     this.ctx.seeking = true;
+
+    if (this.ended) {
+      this.ctx.ended = false;
+      this.dispatchEvent(vdsEvent('vds-replay', { originalEvent: event }));
+    }
+
     this.dispatchEvent(
       vdsEvent('vds-seeking', {
         detail: this.ctx.currentTime,
         originalEvent: event
       })
     );
+  }
+
+  protected _handleSeeked(event: Event) {
+    this.ctx.currentTime = this.mediaElement!.currentTime;
+    this.ctx.seeking = false;
+    this.ctx.waiting = false;
+    this.dispatchEvent(
+      vdsEvent('vds-seeked', {
+        detail: this.ctx.currentTime,
+        originalEvent: event
+      })
+    );
+
+    // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
+    if (
+      Math.trunc(this.currentTime) === Math.trunc(this.duration) &&
+      getNumberOfDecimalPlaces(this.duration) >
+        getNumberOfDecimalPlaces(this.currentTime)
+    ) {
+      this.ctx.currentTime = this.duration;
+      this.dispatchEvent(
+        vdsEvent('vds-time-update', {
+          detail: this.currentTime,
+          originalEvent: event
+        })
+      );
+
+      if (!this.ended) {
+        try {
+          this.play();
+        } catch (e) {
+          // no-op
+        }
+      }
+    }
   }
 
   protected _handleStalled(event: Event) {
@@ -509,7 +547,6 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handleTimeUpdate(event: Event) {
     // -- Time updates are performed in `requestTimeUpdates()`.
     this.ctx.waiting = false;
-    this._validatePlaybackEndedState();
   }
 
   protected _handleVolumeChange(event: Event) {
@@ -537,18 +574,41 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleEnded(event: Event) {
-    this._cancelTimeUpdates();
-
-    // Check because it might've been handled in `validatePlaybackEnded()`.
-    if (!this.ctx.ended) {
+    if (this.loop) {
+      this._handleLoop();
+    } else {
+      this._cancelTimeUpdates();
       this.ctx.ended = true;
       this.ctx.waiting = false;
       this.dispatchEvent(vdsEvent('vds-ended', { originalEvent: event }));
     }
+  }
 
-    if (this.loop) {
-      this.dispatchEvent(vdsEvent('vds-replay', { originalEvent: event }));
-    }
+  protected _handleLoop() {
+    window.requestAnimationFrame(async () => {
+      try {
+        this.mediaElement!.controls = false;
+        await this.play();
+        // We temporarily hide controls while looping to prevent flashing. Any of these events
+        // will put the controls back in their previous state.
+        const dispose: (() => void)[] = [];
+        (['pointerdown', 'pointermove', 'keydown'] as const).forEach((type) => {
+          dispose.push(
+            listen(
+              window,
+              type,
+              () => {
+                dispose.forEach((fn) => fn());
+                this.mediaElement!.controls = this.controls;
+              },
+              { once: true }
+            )
+          );
+        });
+      } catch (e) {
+        this.mediaElement!.controls = this.controls;
+      }
+    });
   }
 
   protected _handleError(event: Event) {
@@ -584,8 +644,6 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _setCurrentTime(newTime: number) {
     if (this.mediaElement!.currentTime !== newTime) {
       this.mediaElement!.currentTime = newTime;
-      // Doesn't fire `seeked` near end.
-      if (IS_SAFARI) this._validatePlaybackEndedState();
     }
   }
 
@@ -657,10 +715,16 @@ export class Html5MediaElement extends MediaProviderElement {
     }
     /* c8 ignore stop */
 
-    this._throwIfNotReadyForPlayback();
-    if (this.ctx.ended) this.dispatchEvent(vdsEvent('vds-replay'));
-    await this._resetPlaybackIfEnded();
-    return this.mediaElement?.play();
+    try {
+      this._throwIfNotReadyForPlayback();
+      await this._resetPlaybackIfEnded();
+      return this.mediaElement?.play();
+    } catch (error) {
+      const playErrorEvent = vdsEvent('vds-play-error');
+      playErrorEvent.autoplay = this._autoplayAttemptPending;
+      playErrorEvent.error = error as Error;
+      throw error;
+    }
   }
 
   async pause() {

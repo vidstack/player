@@ -52,7 +52,6 @@ export class AudioElement extends Html5MediaElement {
         preload="${ifNonEmpty(this.preload)}"
         crossorigin="${ifNonEmpty(this.crossOrigin)}"
         controlslist="${ifNonEmpty(this.controlsList)}"
-        ?loop="${this.loop}"
         ?playsinline="${this.playsinline}"
         ?controls="${this.controls}"
         ?disableremoteplayback="${this.disableRemotePlayback}"

@@ -1,3 +1,7 @@
+import {
+  EnterFullscreenRequestEvent,
+  ExitFullscreenRequestEvent
+} from '../../media/request.events';
 import { VdsEvent } from '../events';
 
 export type FullscreenEvents = {
@@ -13,7 +17,9 @@ export type FullscreenEvents = {
  * @bubbles
  * @composed
  */
-export type FullscreenChangeEvent = VdsEvent<boolean>;
+export type FullscreenChangeEvent = VdsEvent<boolean> & {
+  requestEvent?: EnterFullscreenRequestEvent | ExitFullscreenRequestEvent;
+};
 
 /**
  * Fired when an error occurs either entering or exiting fullscreen. This will generally occur
@@ -23,4 +29,6 @@ export type FullscreenChangeEvent = VdsEvent<boolean>;
  * @bubbles
  * @composed
  */
-export type FullscreenErrorEvent = VdsEvent<unknown>;
+export type FullscreenErrorEvent = VdsEvent<unknown> & {
+  requestEvent?: EnterFullscreenRequestEvent | ExitFullscreenRequestEvent;
+};
