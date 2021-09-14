@@ -4,7 +4,12 @@ import { createRef } from 'lit/directives/ref.js';
 
 import { listen, redispatchEvent, vdsEvent } from '../../base/events';
 import { DEV_MODE } from '../../global/env';
-import { CanPlay, MediaProviderElement, MediaType } from '../../media';
+import {
+  CanPlay,
+  MediaProviderElement,
+  MediaType,
+  PlayingEvent
+} from '../../media';
 import { getSlottedChildren } from '../../utils/dom';
 import { getNumberOfDecimalPlaces } from '../../utils/number';
 import { keysOf } from '../../utils/object';
@@ -443,6 +448,8 @@ export class Html5MediaElement extends MediaProviderElement {
     playEvent.autoplay = this._autoplayAttemptPending;
     this.dispatchEvent(playEvent);
 
+    this._playingTriggerEvent = playEvent;
+
     this._requestTimeUpdates();
   }
 
@@ -454,12 +461,16 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(vdsEvent('vds-pause', { originalEvent: event }));
   }
 
+  protected _playingTriggerEvent: PlayingEvent['triggerEvent'];
   protected _handlePlaying(event: Event) {
     this.ctx.playing = true;
     this.ctx.waiting = false;
     this.ctx.ended = false;
 
-    this.dispatchEvent(vdsEvent('vds-playing', { originalEvent: event }));
+    const playingEvent = vdsEvent('vds-playing', { originalEvent: event });
+    playingEvent.triggerEvent = this._playingTriggerEvent;
+    this.dispatchEvent(playingEvent);
+    this._playingTriggerEvent = undefined;
 
     if (!this.ctx.started) {
       this.ctx.started = true;
@@ -509,12 +520,15 @@ export class Html5MediaElement extends MediaProviderElement {
     this.ctx.currentTime = this.mediaElement!.currentTime;
     this.ctx.seeking = false;
     this.ctx.waiting = false;
-    this.dispatchEvent(
-      vdsEvent('vds-seeked', {
-        detail: this.ctx.currentTime,
-        originalEvent: event
-      })
-    );
+
+    const seekedEvent = vdsEvent('vds-seeked', {
+      detail: this.ctx.currentTime,
+      originalEvent: event
+    });
+
+    this.dispatchEvent(seekedEvent);
+
+    this._playingTriggerEvent = seekedEvent;
 
     // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
     if (
@@ -570,7 +584,9 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _handleSuspend(event: Event) {
     this.ctx.waiting = false;
-    this.dispatchEvent(vdsEvent('vds-suspend', { originalEvent: event }));
+    const suspendEvent = vdsEvent('vds-suspend', { originalEvent: event });
+    this.dispatchEvent(suspendEvent);
+    this._playingTriggerEvent = suspendEvent;
   }
 
   protected _handleEnded(event: Event) {

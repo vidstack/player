@@ -30,6 +30,7 @@ import {
 import {
   PlayErrorEvent,
   PlayEvent,
+  PlayingEvent,
   SeekedEvent,
   SeekingEvent,
   VolumeChangeEvent
@@ -161,6 +162,7 @@ export class MediaController implements ReactiveController {
       //
       'vds-play': [this._handlePlay, { capture: true }],
       'vds-play-error': [this._handlePlayError, { capture: true }],
+      'vds-playing': [this._handlePlaying, { capture: true }],
       'vds-pause': [this._handlePause, { capture: true }],
       'vds-volume-change': [this._handleVolumeChange, { capture: true }],
       'vds-seeking': [this._handleSeeking, { capture: true }],
@@ -438,13 +440,13 @@ export class MediaController implements ReactiveController {
     });
   }
 
-  protected _isSeeking = false;
+  protected _isSeekingRequestPending = false;
 
   protected _handleSeekingRequest(event: SeekingRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('seeking', () => {
       this._pendingMediaRequests.seeking.push(event);
-      this._isSeeking = true;
+      this._isSeekingRequestPending = true;
       this.mediaProvider!.currentTime = event.detail;
     });
   }
@@ -453,7 +455,7 @@ export class MediaController implements ReactiveController {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('seeking', () => {
       this._pendingMediaRequests.seeked.push(event);
-      this._isSeeking = false;
+      this._isSeekingRequestPending = false;
 
       let time = event.detail;
 
@@ -511,6 +513,15 @@ export class MediaController implements ReactiveController {
     this.satisfyMediaRequest('play', event);
   }
 
+  protected _playingTriggerEvent?: PlayingEvent['triggerEvent'];
+
+  protected _handlePlaying(event: PlayingEvent): void {
+    if (this._isSeekingRequestPending) {
+      event.stopImmediatePropagation();
+      this.mediaCtx.seeking = true;
+    }
+  }
+
   protected _handlePause(event: PlayErrorEvent): void {
     this.satisfyMediaRequest('pause', event);
   }
@@ -525,8 +536,9 @@ export class MediaController implements ReactiveController {
 
   protected _handleSeeked(event: SeekedEvent): void {
     // We don't want `seeked` events firing while seeking is updating media playback position.
-    if (this._isSeeking) {
+    if (this._isSeekingRequestPending) {
       event.stopImmediatePropagation();
+      this.mediaCtx.seeking = true;
     } else if (event.type === 'vds-seeked') {
       this.satisfyMediaRequest('seeked', event);
     }
