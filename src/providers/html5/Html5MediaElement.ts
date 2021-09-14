@@ -443,11 +443,6 @@ export class Html5MediaElement extends MediaProviderElement {
     playEvent.autoplay = this._autoplayAttemptPending;
     this.dispatchEvent(playEvent);
 
-    if (!this.ctx.started) {
-      this.ctx.started = true;
-      this.dispatchEvent(vdsEvent('vds-started', { originalEvent: event }));
-    }
-
     this._requestTimeUpdates();
   }
 
@@ -465,6 +460,11 @@ export class Html5MediaElement extends MediaProviderElement {
     this.ctx.ended = false;
 
     this.dispatchEvent(vdsEvent('vds-playing', { originalEvent: event }));
+
+    if (!this.ctx.started) {
+      this.ctx.started = true;
+      this.dispatchEvent(vdsEvent('vds-started', { originalEvent: event }));
+    }
   }
 
   protected _handleDurationChange(event: Event) {
