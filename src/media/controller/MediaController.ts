@@ -140,6 +140,7 @@ export class MediaController implements ReactiveController {
   }
 
   hostDisconnected() {
+    this._clearPendingMediaRequests();
     this._mediaProviderConnectedQueue.destroy();
     this._mediaProviderDisconnectedDisposal.empty();
     this._disconnectDisposal.empty();
@@ -383,6 +384,12 @@ export class MediaController implements ReactiveController {
     seeked: [],
     seeking: []
   };
+
+  protected _clearPendingMediaRequests(): void {
+    keysOf(this._pendingMediaRequests).forEach((key) => {
+      this._pendingMediaRequests[key] = [];
+    });
+  }
 
   protected satisfyMediaRequest<T extends keyof PendingMediaRequests>(
     type: T,

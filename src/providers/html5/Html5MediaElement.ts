@@ -223,6 +223,8 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   override disconnectedCallback() {
+    this._isLoopedReplay = false;
+    this._lastLoopedEvent = undefined;
     super.disconnectedCallback();
     this._cancelTimeUpdates();
   }
