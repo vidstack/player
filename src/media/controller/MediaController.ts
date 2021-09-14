@@ -522,8 +522,6 @@ export class MediaController implements ReactiveController {
     this.satisfyMediaRequest('play', event);
   }
 
-  protected _playingTriggerEvent?: PlayingEvent['triggerEvent'];
-
   protected _handlePlaying(event: PlayingEvent): void {
     if (this._isSeekingRequestPending) {
       event.stopImmediatePropagation();

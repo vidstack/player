@@ -484,6 +484,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _playingTriggerEvent: PlayingEvent['triggerEvent'];
+
   protected _handlePlaying(event: Event) {
     this.ctx.playing = true;
     this.ctx.waiting = false;
@@ -557,7 +558,9 @@ export class Html5MediaElement extends MediaProviderElement {
 
     this.dispatchEvent(seekedEvent);
 
-    this._playingTriggerEvent = seekedEvent;
+    if (this.playing) {
+      this._playingTriggerEvent = seekedEvent;
+    }
 
     // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
     if (
