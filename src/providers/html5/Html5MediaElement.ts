@@ -436,13 +436,17 @@ export class Html5MediaElement extends MediaProviderElement {
     );
   }
 
+  protected _isLoopedReplay = false;
+
   protected _handlePlay(event: Event) {
     this.ctx.paused = false;
 
-    if (this.ended) {
+    if (this.ended || this._isLoopedReplay) {
       this.ctx.ended = false;
       this.dispatchEvent(vdsEvent('vds-replay', { originalEvent: event }));
     }
+
+    if (this._isLoopedReplay) return;
 
     const playEvent = vdsEvent('vds-play', { originalEvent: event });
     playEvent.autoplay = this._autoplayAttemptPending;
@@ -454,6 +458,11 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handlePause(event: Event) {
+    // Don't fire if resuming from loop.
+    if (this.loop && this.currentTime === this.duration) {
+      return;
+    }
+
     this._cancelTimeUpdates();
     this.ctx.paused = true;
     this.ctx.playing = false;
@@ -466,6 +475,11 @@ export class Html5MediaElement extends MediaProviderElement {
     this.ctx.playing = true;
     this.ctx.waiting = false;
     this.ctx.ended = false;
+
+    if (this._isLoopedReplay) {
+      this._isLoopedReplay = false;
+      return;
+    }
 
     const playingEvent = vdsEvent('vds-playing', { originalEvent: event });
     playingEvent.triggerEvent = this._playingTriggerEvent;
@@ -590,6 +604,8 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleEnded(event: Event) {
+    this.ctx.currentTime = this.duration;
+
     if (this.loop) {
       this.dispatchEvent(vdsEvent('vds-looped', { originalEvent: event }));
       this._handleLoop();
@@ -605,6 +621,7 @@ export class Html5MediaElement extends MediaProviderElement {
     window.requestAnimationFrame(async () => {
       try {
         this.mediaElement!.controls = false;
+        this._isLoopedReplay = true;
         await this.play();
         // We temporarily hide controls while looping to prevent flashing. Any of these events
         // will put the controls back in their previous state.
@@ -623,6 +640,7 @@ export class Html5MediaElement extends MediaProviderElement {
           );
         });
       } catch (e) {
+        this._isLoopedReplay = false;
         this.mediaElement!.controls = this.controls;
       }
     });
