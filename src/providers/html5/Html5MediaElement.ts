@@ -6,6 +6,7 @@ import { listen, redispatchEvent, vdsEvent } from '../../base/events';
 import { DEV_MODE } from '../../global/env';
 import {
   CanPlay,
+  LoopedEvent,
   MediaProviderElement,
   MediaType,
   PlayingEvent
@@ -437,13 +438,17 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _isLoopedReplay = false;
+  protected _lastLoopedEvent?: LoopedEvent;
 
   protected _handlePlay(event: Event) {
     this.ctx.paused = false;
 
     if (this.ended || this._isLoopedReplay) {
       this.ctx.ended = false;
-      this.dispatchEvent(vdsEvent('vds-replay', { originalEvent: event }));
+      const replayEvent = vdsEvent('vds-replay', { originalEvent: event });
+      replayEvent.triggerEvent = this._lastLoopedEvent;
+      this._lastLoopedEvent = undefined;
+      this.dispatchEvent(replayEvent);
     }
 
     if (this._isLoopedReplay) return;
@@ -607,7 +612,9 @@ export class Html5MediaElement extends MediaProviderElement {
     this.ctx.currentTime = this.duration;
 
     if (this.loop) {
-      this.dispatchEvent(vdsEvent('vds-looped', { originalEvent: event }));
+      const loopedEvent = vdsEvent('vds-looped', { originalEvent: event });
+      this._lastLoopedEvent = loopedEvent;
+      this.dispatchEvent(loopedEvent);
       this._handleLoop();
     } else {
       this._cancelTimeUpdates();

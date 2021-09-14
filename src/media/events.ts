@@ -249,13 +249,13 @@ export type StartedEvent = VdsEvent<void>;
 export type SuspendEvent = VdsEvent<void>;
 
 /**
- * Fired when media playback starts from the beginning again due to the `loop` property being
- * set to `true`.
+ * Fired when media playback starts again after being in an `ended` state.
  *
  * @event
  */
 export type ReplayEvent = VdsEvent<void> & {
   requestEvent?: PlayRequestEvent | SeekRequestEvent;
+  triggerEvent?: LoopedEvent;
 };
 
 /**
