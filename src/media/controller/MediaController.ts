@@ -540,9 +540,7 @@ export class MediaController implements ReactiveController {
   }
 
   protected _handleReplay(event: ReplayEvent): void {
-    event.requestEvent =
-      this._pendingMediaRequests.play[0] ??
-      this._pendingMediaRequests.seeked[0];
+    event.requestEvent = this._pendingMediaRequests.play[0];
   }
 
   protected _handleSeeking(event: SeekingEvent): void {

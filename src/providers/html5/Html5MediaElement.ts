@@ -439,17 +439,22 @@ export class Html5MediaElement extends MediaProviderElement {
     );
   }
 
+  protected _isReplay = false;
   protected _isLoopedReplay = false;
   protected _lastLoopedEvent?: LoopedEvent;
 
   protected _handlePlay(event: Event) {
     this.ctx.paused = false;
 
-    if (this.ended || this._isLoopedReplay) {
+    if (this.ended || this._isReplay || this._isLoopedReplay) {
       this.ctx.ended = false;
+      this._isReplay = false;
+
       const replayEvent = vdsEvent('vds-replay', { originalEvent: event });
+
       replayEvent.triggerEvent = this._lastLoopedEvent;
       this._lastLoopedEvent = undefined;
+
       this.dispatchEvent(replayEvent);
     }
 
@@ -489,9 +494,11 @@ export class Html5MediaElement extends MediaProviderElement {
     }
 
     const playingEvent = vdsEvent('vds-playing', { originalEvent: event });
+
     playingEvent.triggerEvent = this._playingTriggerEvent;
-    this.dispatchEvent(playingEvent);
     this._playingTriggerEvent = undefined;
+
+    this.dispatchEvent(playingEvent);
 
     if (!this.ctx.started) {
       this.ctx.started = true;
@@ -526,7 +533,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
     if (this.ended) {
       this.ctx.ended = false;
-      this.dispatchEvent(vdsEvent('vds-replay', { originalEvent: event }));
+      this._isReplay = true;
     }
 
     this.dispatchEvent(

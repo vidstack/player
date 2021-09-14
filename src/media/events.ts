@@ -254,7 +254,7 @@ export type SuspendEvent = VdsEvent<void>;
  * @event
  */
 export type ReplayEvent = VdsEvent<void> & {
-  requestEvent?: PlayRequestEvent | SeekRequestEvent;
+  requestEvent?: PlayRequestEvent;
   triggerEvent?: LoopedEvent;
 };
 
