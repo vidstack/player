@@ -6,10 +6,10 @@ import { listen, redispatchEvent, vdsEvent } from '../../base/events';
 import { DEV_MODE } from '../../global/env';
 import {
   CanPlay,
-  LoopedEvent,
   MediaProviderElement,
   MediaType,
-  PlayingEvent
+  PlayingEvent,
+  ReplayEvent
 } from '../../media';
 import { getSlottedChildren } from '../../utils/dom';
 import { getNumberOfDecimalPlaces } from '../../utils/number';
@@ -223,8 +223,9 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   override disconnectedCallback() {
+    this._isReplay = false;
     this._isLoopedReplay = false;
-    this._lastLoopedEvent = undefined;
+    this._replayTriggerEvent = undefined;
     super.disconnectedCallback();
     this._cancelTimeUpdates();
   }
@@ -441,7 +442,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _isReplay = false;
   protected _isLoopedReplay = false;
-  protected _lastLoopedEvent?: LoopedEvent;
+  protected _replayTriggerEvent?: ReplayEvent['triggerEvent'];
 
   protected _handlePlay(event: Event) {
     this.ctx.paused = false;
@@ -452,8 +453,8 @@ export class Html5MediaElement extends MediaProviderElement {
 
       const replayEvent = vdsEvent('vds-replay', { originalEvent: event });
 
-      replayEvent.triggerEvent = this._lastLoopedEvent;
-      this._lastLoopedEvent = undefined;
+      replayEvent.triggerEvent = this._replayTriggerEvent;
+      this._replayTriggerEvent = undefined;
 
       this.dispatchEvent(replayEvent);
     }
@@ -622,7 +623,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
     if (this.loop) {
       const loopedEvent = vdsEvent('vds-looped', { originalEvent: event });
-      this._lastLoopedEvent = loopedEvent;
+      this._replayTriggerEvent = loopedEvent;
       this.dispatchEvent(loopedEvent);
       this._handleLoop();
     } else {
