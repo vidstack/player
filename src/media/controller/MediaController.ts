@@ -31,6 +31,7 @@ import {
   PlayErrorEvent,
   PlayEvent,
   PlayingEvent,
+  ReplayEvent,
   SeekedEvent,
   SeekingEvent,
   VolumeChangeEvent
@@ -165,6 +166,7 @@ export class MediaController implements ReactiveController {
       'vds-playing': [this._handlePlaying, { capture: true }],
       'vds-pause': [this._handlePause, { capture: true }],
       'vds-volume-change': [this._handleVolumeChange, { capture: true }],
+      'vds-replay': [this._handleReplay, { capture: true }],
       'vds-seeking': [this._handleSeeking, { capture: true }],
       'vds-seeked': [this._handleSeeked, { capture: true }],
       //
@@ -528,6 +530,12 @@ export class MediaController implements ReactiveController {
 
   protected _handleVolumeChange(event: VolumeChangeEvent): void {
     this.satisfyMediaRequest('volume', event);
+  }
+
+  protected _handleReplay(event: ReplayEvent): void {
+    event.requestEvent =
+      this._pendingMediaRequests.play[0] ??
+      this._pendingMediaRequests.seeked[0];
   }
 
   protected _handleSeeking(event: SeekingEvent): void {

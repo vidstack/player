@@ -254,7 +254,9 @@ export type SuspendEvent = VdsEvent<void>;
  *
  * @event
  */
-export type ReplayEvent = VdsEvent<void>;
+export type ReplayEvent = VdsEvent<void> & {
+  requestEvent?: PlayRequestEvent | SeekRequestEvent;
+};
 
 /**
  * Fired when the `currentTime` property value changes due to media playback or the
