@@ -591,6 +591,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _handleEnded(event: Event) {
     if (this.loop) {
+      this.dispatchEvent(vdsEvent('vds-looped', { originalEvent: event }));
       this._handleLoop();
     } else {
       this._cancelTimeUpdates();

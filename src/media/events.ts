@@ -32,6 +32,7 @@ export type MediaEvents = {
   'vds-loaded-data': LoadedDataEvent;
   'vds-loaded-metadata': LoadedMetadataEvent;
   'vds-load-start': LoadStartEvent;
+  'vds-looped': LoopedEvent;
   'vds-media-type-change': MediaTypeChangeEvent;
   'vds-pause': PauseEvent;
   'vds-play': PlayEvent;
@@ -95,7 +96,7 @@ export type EmptiedEvent = VdsEvent<void>;
 /**
  * Fired when playback or streaming has stopped because the end of the media was reached or
  * because no further data is available. This is not fired if playback will start from the
- * beginning again due to the `loop` property being `true` (see `MediaReplayEvent`).
+ * beginning again due to the `loop` property being `true` (see `MediaReplayEvent` and `LoopedEvent`).
  *
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended_event
@@ -135,6 +136,12 @@ export type LoadedMetadataEvent = VdsEvent<void>;
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event
  */
 export type LoadStartEvent = VdsEvent<void>;
+
+/**
+ * Fired when the media is set to loop and playback reaches the end of media (right before it
+ * starts again).
+ */
+export type LoopedEvent = VdsEvent<void>;
 
 /**
  * Fired when the `mediaType` property changes value.
