@@ -291,6 +291,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
         value-text=${this.valueText}
         ?disabled=${this.disabled}
         ?hidden=${this.hidden}
+        ?pause-while-dragging=${this.pauseWhileDragging}
         @pointerenter=${this._handlePointerEnter}
         @pointermove=${this._handlePointerMove}
         @pointerleave=${this._handlePointerLeave}
