@@ -1,3 +1,4 @@
+import debounce from 'just-debounce-it';
 import { ReactiveController, ReactiveElement } from 'lit';
 
 import {
@@ -5,7 +6,7 @@ import {
   createContext,
   provideContextRecord
 } from '../../base/context';
-import { DisposalBin, listen } from '../../base/events';
+import { DisposalBin, listen, vdsEvent } from '../../base/events';
 import {
   FullscreenChangeEvent,
   FullscreenErrorEvent
@@ -35,7 +36,8 @@ import {
   ReplayEvent,
   SeekedEvent,
   SeekingEvent,
-  VolumeChangeEvent
+  VolumeChangeEvent,
+  WaitingEvent
 } from '../events';
 import {
   MediaProviderConnectEvent,
@@ -171,6 +173,7 @@ export class MediaController implements ReactiveController {
       'vds-replay': [this._handleReplay, { capture: true }],
       'vds-seeking': [this._handleSeeking, { capture: true }],
       'vds-seeked': [this._handleSeeked, { capture: true }],
+      'vds-waiting': [this._handleWaiting],
       //
       seeked: [this._handleSeeked, { capture: true }]
     };
@@ -462,6 +465,7 @@ export class MediaController implements ReactiveController {
       this._pendingMediaRequests.seeking.push(event);
       this._isSeekingRequestPending = true;
       this.mediaProvider!.currentTime = event.detail;
+      this._fireWaiting.cancel();
     });
   }
 
@@ -541,6 +545,8 @@ export class MediaController implements ReactiveController {
   }
 
   protected _handlePlaying(event: PlayingEvent): void {
+    this._fireWaiting.cancel();
+
     if (this._isSeekingRequestPending) {
       event.stopImmediatePropagation();
       this.mediaCtx.seeking = true;
@@ -549,6 +555,7 @@ export class MediaController implements ReactiveController {
 
   protected _handlePause(event: PauseEvent): void {
     this.satisfyMediaRequest('pause', event);
+    this._fireWaiting.cancel();
   }
 
   protected _handleVolumeChange(event: VolumeChangeEvent): void {
@@ -561,6 +568,7 @@ export class MediaController implements ReactiveController {
 
   protected _handleSeeking(event: SeekingEvent): void {
     this.satisfyMediaRequest('seeking', event);
+    if (this._lastWaitingEvent) this._fireWaiting();
   }
 
   protected _handleSeeked(event: SeekedEvent): void {
@@ -571,5 +579,36 @@ export class MediaController implements ReactiveController {
     } else if (event.type === 'vds-seeked') {
       this.satisfyMediaRequest('seeked', event);
     }
+  }
+
+  protected _firingWaiting = false;
+  protected _lastWaitingEvent?: WaitingEvent;
+  protected _fireWaiting = debounce(() => {
+    if (
+      this.mediaCtx.playing ||
+      this._isSeekingRequestPending ||
+      !this._lastWaitingEvent
+    ) {
+      return;
+    }
+
+    this.mediaCtx.waiting = true;
+    this._firingWaiting = true;
+
+    const event = vdsEvent('vds-waiting', {
+      originalEvent: this._lastWaitingEvent
+    });
+
+    this._host.dispatchEvent(event);
+    this._firingWaiting = false;
+    this._lastWaitingEvent = undefined;
+  }, 300);
+
+  protected _handleWaiting(event: WaitingEvent): void {
+    if (this._firingWaiting) return;
+    event.stopImmediatePropagation();
+    this.mediaCtx.waiting = false;
+    this._lastWaitingEvent = event;
+    this._fireWaiting();
   }
 }

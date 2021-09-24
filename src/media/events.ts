@@ -190,7 +190,7 @@ export type PlayErrorEvent = VdsEvent<void> & {
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event
  */
 export type PlayingEvent = VdsEvent<void> & {
-  triggerEvent?: PlayEvent | SeekedEvent | SuspendEvent;
+  triggerEvent?: PlayEvent | SeekedEvent;
 };
 
 /**

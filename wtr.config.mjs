@@ -4,14 +4,18 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
 import rollupReplace from '@rollup/plugin-replace';
+import rollupCommonjs from '@rollup/plugin-commonjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const commonjs = fromRollup(rollupCommonjs);
 const replace = fromRollup(rollupReplace);
 
 // Web Test Runner Config (https://modern-web.dev/docs/test-runner/cli-and-configuration)
 export default /** @type {import('@web/test-runner').TestRunnerConfig} */ ({
   nodeResolve: true,
   plugins: [
+    commonjs(),
     replace({
       include: /env.ts$/,
       preventAssignment: false,

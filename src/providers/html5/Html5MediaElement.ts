@@ -558,9 +558,10 @@ export class Html5MediaElement extends MediaProviderElement {
 
     this.dispatchEvent(seekedEvent);
 
-    if (this.playing) {
-      this._playingTriggerEvent = seekedEvent;
-    }
+    this._playingTriggerEvent = seekedEvent;
+    setTimeout(() => {
+      this._playingTriggerEvent = undefined;
+    }, 150);
 
     // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
     if (
@@ -592,7 +593,6 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _handleTimeUpdate(event: Event) {
     // -- Time updates are performed in `requestTimeUpdates()`.
-    this.ctx.waiting = false;
   }
 
   protected _handleVolumeChange(event: Event) {
@@ -610,15 +610,14 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleWaiting(event: Event) {
+    this.ctx.playing = false;
     this.ctx.waiting = true;
     this.dispatchEvent(vdsEvent('vds-waiting', { originalEvent: event }));
   }
 
   protected _handleSuspend(event: Event) {
-    this.ctx.waiting = false;
     const suspendEvent = vdsEvent('vds-suspend', { originalEvent: event });
     this.dispatchEvent(suspendEvent);
-    this._playingTriggerEvent = suspendEvent;
   }
 
   protected _handleEnded(event: Event) {

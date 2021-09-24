@@ -1,3 +1,4 @@
+import throttle from 'just-throttle';
 import { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
@@ -7,7 +8,6 @@ import { mediaContext, MediaRemoteControl } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
 import { formatSpokenTime } from '../../utils/time';
-import { throttle } from '../../utils/timing';
 import {
   SliderDragEndEvent,
   SliderDragStartEvent,
@@ -157,10 +157,6 @@ export class TimeSliderElement extends SliderElement {
   // -------------------------------------------------------------------------------------------
 
   protected override update(changedProperties: PropertyValues) {
-    if (changedProperties.has('seekingRequestThrottle')) {
-      this._dispatchSeekingRequest.updateDelay(this.seekingRequestThrottle);
-    }
-
     if (changedProperties.has('disabled') && this.disabled) {
       this._dispatchSeekingRequest.cancel();
     }
