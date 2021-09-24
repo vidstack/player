@@ -28,6 +28,7 @@ import {
   MediaContextRecordValues
 } from '../context';
 import {
+  PauseEvent,
   PlayErrorEvent,
   PlayEvent,
   PlayingEvent,
@@ -420,6 +421,7 @@ export class MediaController implements ReactiveController {
   protected _handleMuteRequest(event: MuteRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('muted', () => {
+      if (this._mediaProvider?.muted === true) return;
       this._pendingMediaRequests.volume.push(event);
       this.mediaProvider!.muted = true;
     });
@@ -428,6 +430,7 @@ export class MediaController implements ReactiveController {
   protected _handleUnmuteRequest(event: UnmuteRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('muted', () => {
+      if (this._mediaProvider?.muted === false) return;
       this._pendingMediaRequests.volume.push(event);
       this.mediaProvider!.muted = false;
     });
@@ -436,6 +439,7 @@ export class MediaController implements ReactiveController {
   protected _handlePlayRequest(event: PlayRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('paused', () => {
+      if (this._mediaProvider?.paused === false) return;
       this._pendingMediaRequests.play.push(event);
       this.mediaProvider!.paused = false;
     });
@@ -444,6 +448,7 @@ export class MediaController implements ReactiveController {
   protected _handlePauseRequest(event: PauseRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('paused', () => {
+      if (this._mediaProvider?.paused === true) return;
       this._pendingMediaRequests.pause.push(event);
       this.mediaProvider!.paused = true;
     });
@@ -480,6 +485,7 @@ export class MediaController implements ReactiveController {
   protected _handleVolumeChangeRequest(event: VolumeChangeRequestEvent): void {
     if (!this._mediaRequestEventGateway(event)) return;
     this._mediaProviderConnectedQueue.queue('volume', () => {
+      if (this._mediaProvider?.volume === event.detail) return;
       this._pendingMediaRequests.volume.push(event);
       this.mediaProvider!.volume = event.detail;
     });
@@ -488,7 +494,13 @@ export class MediaController implements ReactiveController {
   protected async _handleEnterFullscreenRequest(
     event: EnterFullscreenRequestEvent
   ): Promise<void> {
-    if (!this._mediaRequestEventGateway(event)) return;
+    if (
+      !this._mediaRequestEventGateway(event) ||
+      this._mediaProvider?.fullscreen
+    ) {
+      return;
+    }
+
     this._pendingMediaRequests.fullscreen.push(event);
     await this._host.requestFullscreen();
   }
@@ -496,7 +508,13 @@ export class MediaController implements ReactiveController {
   protected async _handleExitFullscreenRequest(
     event: ExitFullscreenRequestEvent
   ): Promise<void> {
-    if (!this._mediaRequestEventGateway(event)) return;
+    if (
+      !this._mediaRequestEventGateway(event) ||
+      !this._mediaProvider?.fullscreen
+    ) {
+      return;
+    }
+
     this._pendingMediaRequests.fullscreen.push(event);
     await this._host.exitFullscreen();
   }
@@ -529,7 +547,7 @@ export class MediaController implements ReactiveController {
     }
   }
 
-  protected _handlePause(event: PlayErrorEvent): void {
+  protected _handlePause(event: PauseEvent): void {
     this.satisfyMediaRequest('pause', event);
   }
 

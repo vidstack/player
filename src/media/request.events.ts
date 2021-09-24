@@ -40,7 +40,7 @@ export type PendingMediaRequests = {
  * @bubbles
  * @composed
  */
-export type MuteRequestEvent = VdsEvent<number>;
+export type MuteRequestEvent = VdsEvent<void>;
 
 /**
  * Fired when requesting the media to be unmuted.

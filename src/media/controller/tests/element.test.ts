@@ -1,6 +1,6 @@
 import { expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
-import { mock, spy } from 'sinon';
+import { mock, spy, stub } from 'sinon';
 
 import { isFunction } from '../../../utils/unit';
 import { MediaRemoteControl } from '../../interact';
@@ -165,6 +165,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
 
     it('should handle exit fullscreen request', async function () {
       const { controller, provider } = await buildFixture();
+      stub(provider, 'fullscreen').get(() => true);
       const exitFullscreenMock = mock();
       controller.exitFullscreen = exitFullscreenMock;
       const remote = new MediaRemoteControl(provider);
