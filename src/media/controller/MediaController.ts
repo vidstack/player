@@ -577,6 +577,7 @@ export class MediaController implements ReactiveController {
       event.stopImmediatePropagation();
       this.mediaCtx.seeking = true;
     } else if (event.type === 'vds-seeked') {
+      this._fireWaiting.cancel();
       this.satisfyMediaRequest('seeked', event);
     }
   }
