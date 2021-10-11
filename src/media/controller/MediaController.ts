@@ -22,7 +22,6 @@ import { DEV_MODE } from '../../global/env';
 import { keysOf } from '../../utils/object';
 import { isArray, isNil } from '../../utils/unit';
 import {
-  cloneMediaContextRecord,
   createMediaContextRecord,
   mediaContext,
   MediaContextProviderRecord,
@@ -333,10 +332,10 @@ export class MediaController implements ReactiveController {
   readonly mediaCtx: MediaContextProviderRecord;
 
   /**
-   * An immutable snapshot of the current media state.
+   * A snapshot of the current media state.
    */
   get mediaState(): Readonly<MediaContextRecordValues> {
-    return cloneMediaContextRecord(this.mediaCtx);
+    return Object.assign({}, this.mediaCtx);
   }
 
   protected _attachMediaContextRecordToProvider() {

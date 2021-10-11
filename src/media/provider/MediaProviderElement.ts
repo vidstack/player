@@ -30,7 +30,6 @@ import { clampNumber } from '../../utils/number';
 import { notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
 import {
-  cloneMediaContextRecord,
   createMediaContextRecord,
   mediaContext,
   SimpleMediaContextRecord
@@ -407,10 +406,10 @@ export abstract class MediaProviderElement extends LitElement {
   abstract get engine(): unknown;
 
   /**
-   * An immutable snapshot of the current media state.
+   * A snapshot of the current media state.
    */
   get mediaState(): Readonly<SimpleMediaContextRecord> {
-    return cloneMediaContextRecord(this.ctx);
+    return Object.assign({}, this.ctx);
   }
 
   /**

@@ -380,15 +380,3 @@ export function createMediaContextRecord(): SimpleMediaContextRecord {
       {} as any
     );
 }
-
-export function cloneMediaContextRecord<
-  T extends SimpleMediaContextRecord | MediaContextProviderRecord
->(context: T): T {
-  const clone = JSON.parse(JSON.stringify(context)) as T;
-
-  clone.buffered = context.buffered;
-  clone.seekable = context.seekable;
-  clone.played = context.played;
-
-  return clone;
-}
