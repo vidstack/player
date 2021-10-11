@@ -4,6 +4,7 @@ import { ReactiveController, ReactiveElement } from 'lit';
 import {
   ContextProviderController,
   createContext,
+  isDerviedContext,
   provideContextRecord
 } from '../../base/context';
 import { DisposalBin, listen, vdsEvent } from '../../base/events';
@@ -22,7 +23,6 @@ import { DEV_MODE } from '../../global/env';
 import { keysOf } from '../../utils/object';
 import { isArray, isNil } from '../../utils/unit';
 import {
-  createMediaContextRecord,
   mediaContext,
   MediaContextProviderRecord,
   MediaContextRecordValues
@@ -359,15 +359,15 @@ export class MediaController implements ReactiveController {
     /* c8 ignore stop */
 
     this._mediaProviderDisconnectedDisposal.add(() => {
-      const ctx = createMediaContextRecord();
+      const ctx = provideContextRecord(this.mediaProvider!, mediaContext);
 
       // Copy over context values before setting on provider.
-      Object.keys(ctx).forEach((prop) => {
+      Object.keys(this.mediaCtx).forEach((prop) => {
         ctx[prop] = this.mediaCtx[prop];
       });
 
       // @ts-expect-error - Override readonly
-      this.mediaProvider.ctx = ctx;
+      this.mediaProvider!.ctx = ctx;
     });
   }
 

@@ -122,7 +122,9 @@ export function provideContextRecord<T extends ContextRecord<unknown>>(
         return provider.value;
       },
       set: isDerviedContext(context)
-        ? undefined
+        ? () => {
+            // no-op
+          }
         : (newValue) => {
             provider.value = newValue;
           }

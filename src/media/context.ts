@@ -358,25 +358,3 @@ export type MediaContextProviderRecord =
 
 export type MediaContextRecordValues =
   ExtractContextRecordTypes<MediaContextRecord>;
-
-/**
- * Excludes derived contexts.
- */
-export type SimpleMediaContextRecord = ContextProviderRecord<
-  OmitDerivedContextFromRecord<MediaContextRecord>
->;
-
-export function createMediaContextRecord(): SimpleMediaContextRecord {
-  return keysOf(mediaContext)
-    .filter(
-      (contextProp) =>
-        !isDerviedContext(mediaContext[contextProp] as Context<unknown>)
-    )
-    .reduce(
-      (state, contextProp) => ({
-        ...state,
-        [contextProp]: mediaContext[contextProp].initialValue
-      }),
-      {} as any
-    );
-}

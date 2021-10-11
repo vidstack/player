@@ -1,6 +1,7 @@
 import { LitElement, PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
+import { provideContextRecord } from '../../base/context';
 import {
   DiscoveryEvent,
   ElementDiscoveryController
@@ -29,11 +30,7 @@ import { DEV_MODE } from '../../global/env';
 import { clampNumber } from '../../utils/number';
 import { notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
-import {
-  createMediaContextRecord,
-  mediaContext,
-  SimpleMediaContextRecord
-} from '../context';
+import { mediaContext, MediaContextRecordValues } from '../context';
 import { MediaEvents } from '../events';
 import { MediaType } from '../MediaType';
 import { ViewType } from '../ViewType';
@@ -408,7 +405,7 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * A snapshot of the current media state.
    */
-  get mediaState(): Readonly<SimpleMediaContextRecord> {
+  get mediaState(): Readonly<MediaContextRecordValues> {
     return Object.assign({}, this.ctx);
   }
 
@@ -825,12 +822,9 @@ export abstract class MediaProviderElement extends LitElement {
    * will provide (inject) the context record to be managed by this media provider. Any updates here
    * will flow down from the media controller to all components.
    *
-   * If there's no media controller then this will be a plain JS object that's used to keep
-   * track of media state.
-   *
    * @internal
    */
-  readonly ctx = createMediaContextRecord();
+  readonly ctx = provideContextRecord(this, mediaContext);
 
   /**
    * Media context properties that should be reset when media is changed. Override this
