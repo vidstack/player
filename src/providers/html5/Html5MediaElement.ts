@@ -455,6 +455,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
       replayEvent.triggerEvent = this._replayTriggerEvent;
       this._replayTriggerEvent = undefined;
+      this._playingTriggerEvent = replayEvent;
 
       this.dispatchEvent(replayEvent);
     }
@@ -558,10 +559,13 @@ export class Html5MediaElement extends MediaProviderElement {
 
     this.dispatchEvent(seekedEvent);
 
-    this._playingTriggerEvent = seekedEvent;
-    setTimeout(() => {
-      this._playingTriggerEvent = undefined;
-    }, 150);
+    // Play or replay has greater priority.
+    if (!this._playingTriggerEvent) {
+      this._playingTriggerEvent = seekedEvent;
+      setTimeout(() => {
+        this._playingTriggerEvent = undefined;
+      }, 150);
+    }
 
     // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
     if (
