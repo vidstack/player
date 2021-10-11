@@ -2,6 +2,7 @@ import debounce from 'just-debounce-it';
 import { ReactiveController, ReactiveElement } from 'lit';
 
 import {
+  ContextConsumerController,
   ContextProviderController,
   createContext,
   isDerviedContext,
@@ -345,6 +346,8 @@ export class MediaController implements ReactiveController {
     Object.keys(this.mediaProvider.ctx).forEach((prop) => {
       this.mediaCtx[prop] = this.mediaProvider!.ctx[prop];
     });
+
+    this.mediaProvider.ctx.__destroy();
 
     // @ts-expect-error - Override readonly
     this.mediaProvider.ctx = this.mediaCtx;

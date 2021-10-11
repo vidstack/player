@@ -100,7 +100,14 @@ export function provideContextRecord<T extends ContextRecord<unknown>>(
   contextRecord: T,
   options?: { [P in keyof T]?: Omit<ProvideContextOptions<T[P]>, 'id'> }
 ): ContextProviderRecord<T> {
-  const providers = {} as Partial<ContextProviderRecord<T>>;
+  const providerControllers = new Set<ContextProviderController<unknown>>();
+
+  const providers = {
+    __destroy: () => {
+      providerControllers.forEach((controller) => controller.stop());
+      providerControllers.clear();
+    }
+  } as Partial<ContextProviderRecord<T>>;
 
   Object.keys(contextRecord).forEach((contextKey) => {
     const context = contextRecord[contextKey] as Context<unknown>;
@@ -114,6 +121,8 @@ export function provideContextRecord<T extends ContextRecord<unknown>>(
       name: DEV_MODE && contextKey,
       ...providerOptions
     });
+
+    providerControllers.add(provider);
 
     Object.defineProperty(providers, contextKey, {
       enumerable: true,
@@ -175,7 +184,9 @@ export type ContextProviderRecord<
   ContextRecordType extends ContextRecord<any>
 > = ExtractContextRecordTypes<
   ReadonlyIfType<DerivedContext<any>, ContextRecordType>
->;
+> & {
+  __destroy: () => void;
+};
 
 export type OmitDerivedContextFromRecord<RecordType> = OmitTypesFromRecord<
   RecordType,
