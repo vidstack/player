@@ -627,6 +627,13 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handleEnded(event: Event) {
     this.ctx.currentTime = this.duration;
 
+    this.dispatchEvent(
+      vdsEvent('vds-time-update', {
+        detail: this.currentTime,
+        originalEvent: event
+      })
+    );
+
     if (this.loop) {
       const loopedEvent = vdsEvent('vds-looped', { originalEvent: event });
       this._replayTriggerEvent = loopedEvent;
