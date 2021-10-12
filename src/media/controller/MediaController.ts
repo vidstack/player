@@ -480,7 +480,7 @@ export class MediaController implements ReactiveController {
       let time = event.detail;
 
       // Snap to end if close enough.
-      if (this.mediaProvider!.duration - event.detail < 1) {
+      if (this.mediaProvider!.duration - event.detail < 0.25) {
         time = this.mediaProvider!.duration;
       }
 
