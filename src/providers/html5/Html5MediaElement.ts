@@ -263,14 +263,24 @@ export class Html5MediaElement extends MediaProviderElement {
     const newTime = this.mediaElement?.currentTime ?? 0;
 
     if (this.ctx.currentTime !== newTime) {
-      this.ctx.currentTime = newTime;
-      this.dispatchEvent(vdsEvent('vds-time-update', { detail: newTime }));
+      this._updateCurrentTime(newTime);
     }
 
     this._timeRAF = window.requestAnimationFrame(() => {
       if (isUndefined(this._timeRAF)) return;
       this._requestTimeUpdates();
     });
+  }
+
+  protected _updateCurrentTime(newTime: number, originalEvent?: Event) {
+    // Avoid errors where `currentTime` can have higher precision than duration.
+    this.ctx.currentTime = Math.min(newTime, this.duration);
+    this.dispatchEvent(
+      vdsEvent('vds-time-update', {
+        detail: this.ctx.currentTime,
+        originalEvent
+      })
+    );
   }
 
   // -------------------------------------------------------------------------------------------
@@ -460,7 +470,10 @@ export class Html5MediaElement extends MediaProviderElement {
       this.dispatchEvent(replayEvent);
     }
 
-    if (this._isLoopedReplay) return;
+    if (this._isLoopedReplay) {
+      this._requestTimeUpdates();
+      return;
+    }
 
     const playEvent = vdsEvent('vds-play', { originalEvent: event });
     playEvent.autoplay = this._autoplayAttemptPending;
@@ -473,7 +486,11 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _handlePause(event: Event) {
     // Don't fire if resuming from loop.
-    if (this.loop && this.currentTime === this.duration) {
+    if (
+      this.loop &&
+      // Avoid errors where `currentTime` can have higher precision than duration.
+      Math.min(this.currentTime, this.duration) === this.duration
+    ) {
       return;
     }
 
@@ -510,6 +527,10 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleDurationChange(event: Event) {
+    if (this.ended) {
+      this._updateCurrentTime(this.mediaElement!.duration, event);
+    }
+
     this.ctx.duration = this.mediaElement!.duration;
     this.dispatchEvent(
       vdsEvent('vds-duration-change', {
@@ -573,13 +594,7 @@ export class Html5MediaElement extends MediaProviderElement {
       getNumberOfDecimalPlaces(this.duration) >
         getNumberOfDecimalPlaces(this.currentTime)
     ) {
-      this.ctx.currentTime = this.duration;
-      this.dispatchEvent(
-        vdsEvent('vds-time-update', {
-          detail: this.currentTime,
-          originalEvent: event
-        })
-      );
+      this._updateCurrentTime(this.duration, event);
 
       if (!this.ended) {
         try {
@@ -625,14 +640,10 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleEnded(event: Event) {
-    this.ctx.currentTime = this.duration;
+    this._cancelTimeUpdates();
 
-    this.dispatchEvent(
-      vdsEvent('vds-time-update', {
-        detail: this.currentTime,
-        originalEvent: event
-      })
-    );
+    this.ctx.duration = this.mediaElement!.duration;
+    this._updateCurrentTime(this.ctx.duration, event);
 
     if (this.loop) {
       const loopedEvent = vdsEvent('vds-looped', { originalEvent: event });
@@ -640,7 +651,6 @@ export class Html5MediaElement extends MediaProviderElement {
       this.dispatchEvent(loopedEvent);
       this._handleLoop();
     } else {
-      this._cancelTimeUpdates();
       this.ctx.ended = true;
       this.ctx.waiting = false;
       this.dispatchEvent(vdsEvent('vds-ended', { originalEvent: event }));
@@ -703,7 +713,8 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _getCurrentTime() {
-    return this.mediaElement!.currentTime;
+    // Avoid errors where `currentTime` can have higher precision than duration.
+    return Math.min(this.mediaElement!.currentTime, this.duration);
   }
 
   protected _setCurrentTime(newTime: number) {
