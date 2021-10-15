@@ -471,7 +471,6 @@ export class Html5MediaElement extends MediaProviderElement {
     }
 
     if (this._isLoopedReplay) {
-      this._requestTimeUpdates();
       return;
     }
 
@@ -480,8 +479,6 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(playEvent);
 
     this._playingTriggerEvent = playEvent;
-
-    this._requestTimeUpdates();
   }
 
   protected _handlePause(event: Event) {
@@ -489,7 +486,7 @@ export class Html5MediaElement extends MediaProviderElement {
     if (
       this.loop &&
       // Avoid errors where `currentTime` can have higher precision than duration.
-      Math.min(this.currentTime, this.duration) === this.duration
+      Math.min(this.mediaElement!.currentTime, this.duration) === this.duration
     ) {
       return;
     }
@@ -510,6 +507,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
     if (this._isLoopedReplay) {
       this._isLoopedReplay = false;
+      this._requestTimeUpdates();
       return;
     }
 
@@ -521,9 +519,12 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(playingEvent);
 
     if (!this.ctx.started) {
+      this.ctx.currentTime = 0;
       this.ctx.started = true;
       this.dispatchEvent(vdsEvent('vds-started', { originalEvent: event }));
     }
+
+    this._requestTimeUpdates();
   }
 
   protected _handleDurationChange(event: Event) {
@@ -588,11 +589,13 @@ export class Html5MediaElement extends MediaProviderElement {
       }, 150);
     }
 
+    const currentTime = this.mediaElement!.currentTime;
+
     // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
     if (
-      Math.trunc(this.currentTime) === Math.trunc(this.duration) &&
+      Math.trunc(currentTime) === Math.trunc(this.duration) &&
       getNumberOfDecimalPlaces(this.duration) >
-        getNumberOfDecimalPlaces(this.currentTime)
+        getNumberOfDecimalPlaces(currentTime)
     ) {
       this._updateCurrentTime(this.duration, event);
 
@@ -710,11 +713,6 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _setVolume(newVolume: number) {
     this.mediaElement!.volume = newVolume;
-  }
-
-  protected _getCurrentTime() {
-    // Avoid errors where `currentTime` can have higher precision than duration.
-    return Math.min(this.mediaElement!.currentTime, this.duration);
   }
 
   protected _setCurrentTime(newTime: number) {

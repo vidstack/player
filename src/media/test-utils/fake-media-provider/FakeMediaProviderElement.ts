@@ -74,10 +74,6 @@ export class FakeMediaProviderElement extends MediaProviderElement {
     return this._handleMediaReady();
   }
 
-  _getCurrentTime() {
-    return this.ctx.currentTime;
-  }
-
   _setCurrentTime(time: number) {
     this.ctx.currentTime = time;
     this.dispatchEvent(vdsEvent('vds-seeking', { detail: time }));

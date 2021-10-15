@@ -356,7 +356,11 @@ export abstract class MediaProviderElement extends LitElement {
     });
   }
 
-  protected abstract _getCurrentTime(): number;
+  protected _getCurrentTime() {
+    // Avoid errors where `currentTime` can have higher precision than duration.
+    return Math.min(this.ctx.currentTime, this.duration);
+  }
+
   protected abstract _setCurrentTime(newTime: number): void;
 
   // ---
