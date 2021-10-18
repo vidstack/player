@@ -252,14 +252,20 @@ export class Html5MediaElement extends MediaProviderElement {
   // resolve that :)
   // -------------------------------------------------------------------------------------------
 
-  protected _timeRAF = -1;
+  protected _timeRAF?: number = undefined;
 
   protected _cancelTimeUpdates() {
     if (isNumber(this._timeRAF)) window.cancelAnimationFrame(this._timeRAF);
-    this._timeRAF = -1;
+    this._timeRAF = undefined;
   }
 
   protected _requestTimeUpdates() {
+    // Time updates are already in progress.
+    if (!isUndefined(this._timeRAF)) return;
+    this._requestTimeUpdate();
+  }
+
+  protected _requestTimeUpdate() {
     const newTime = this.mediaElement?.currentTime ?? 0;
 
     if (this.ctx.currentTime !== newTime) {
@@ -268,7 +274,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
     this._timeRAF = window.requestAnimationFrame(() => {
       if (isUndefined(this._timeRAF)) return;
-      this._requestTimeUpdates();
+      this._requestTimeUpdate();
     });
   }
 
