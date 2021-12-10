@@ -1,3 +1,9 @@
+## [0.1.1](https://github.com/vidstack/elements/compare/v0.1.0...v0.1.1) (2021-12-10)
+
+### Bug Fixes
+
+- temp remove package `"type": "module"` ([45f6689](https://github.com/vidstack/elements/commit/45f6689cbec346d02f4df09915185e2be2df379f))
+
 # [0.1.0](https://github.com/vidstack/elements/compare/v1.1.0-next.7...v0.1.0) (2021-12-10)
 
 ### Bug Fixes
