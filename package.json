@@ -6,7 +6,6 @@
   "engines": {
     "node": ">=14.16.0"
   },
-  "type": "module",
   "main": "dist-prod/index.js",
   "module": "dist-prod/index.js",
   "types": "./index.d.ts",
@@ -94,7 +93,7 @@
     "test": "wtr \"src/**/*.test.ts\" --config wtr.config.mjs",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
-    "release": "node .scripts/release.js"
+    "release": "node .scripts/release.mjs"
   },
   "dependencies": {
     "@types/fscreen": "^1.0.1",
