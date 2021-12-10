@@ -1,3 +1,9 @@
+## [0.1.2](https://github.com/vidstack/elements/compare/v0.1.1...v0.1.2) (2021-12-10)
+
+### Bug Fixes
+
+- replace `node_modules` in `dist-prod` to avoid consumer bundling issues ([ae8c670](https://github.com/vidstack/elements/commit/ae8c670635cddb79d3d2cf6d5db12a101499daee))
+
 ## [0.1.1](https://github.com/vidstack/elements/compare/v0.1.0...v0.1.1) (2021-12-10)
 
 ### Bug Fixes
