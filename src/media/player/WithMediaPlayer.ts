@@ -149,51 +149,6 @@ export function WithMediaPlayer<T extends Constructor<LitElement>>(
 
       this.controller.setMediaProvider(mediaProvider);
     }
-
-    // -------------------------------------------------------------------------------------------
-    // Fullscreen
-    // -------------------------------------------------------------------------------------------
-
-    readonly fullscreenController = new FullscreenController(
-      this,
-      new ScreenOrientationController(this)
-    );
-
-    override async requestFullscreen(): Promise<void> {
-      if (this._shouldFullscreenMediaProvider()) {
-        return this.controller.mediaProvider?.requestFullscreen();
-      }
-
-      if (this.fullscreenController.isRequestingNativeFullscreen) {
-        return super.requestFullscreen();
-      }
-
-      return this.fullscreenController.requestFullscreen();
-    }
-
-    async exitFullscreen(): Promise<void> {
-      if (this._shouldFullscreenMediaProvider()) {
-        // Fallback to document exiting fullscreen incase unknown media provider is used.
-        return (
-          this.controller.mediaProvider?.exitFullscreen?.() ??
-          document.exitFullscreen?.()
-        );
-      }
-
-      return this.fullscreenController.exitFullscreen();
-    }
-
-    /**
-     * Whether to fallback to attempting fullscreen directly on the media provider if the native
-     * Fullscreen API is not available. For example, on iOS Safari this will handle managing
-     * fullscreen via the Safari presentation API (see `VideoPresentationController.ts`).
-     */
-    protected _shouldFullscreenMediaProvider(): boolean {
-      return (
-        !this.fullscreenController.isSupportedNatively &&
-        !isNil(this.controller.mediaProvider)
-      );
-    }
   }
 
   return MediaPlayer;
@@ -227,11 +182,6 @@ export interface BaseMediaPlayer {
    * @default 3000
    */
   idleTimeout: number;
-
-  // Fullscreen
-  readonly fullscreenController: FullscreenController;
-  requestFullscreen(): Promise<void>;
-  exitFullscreen(): Promise<void>;
 
   // Render
   renderPlayer(): TemplateResult;

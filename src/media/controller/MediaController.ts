@@ -57,7 +57,7 @@ import {
 } from '../request.events';
 
 export type MediaControllerHost = ReactiveElement & {
-  exitFullscreen(): Promise<void>;
+  exitFullscreen?(): Promise<void>;
 };
 
 /* c8 ignore next */
@@ -522,7 +522,7 @@ export class MediaController implements ReactiveController {
     }
 
     this._pendingMediaRequests.fullscreen.push(event);
-    await this._host.exitFullscreen();
+    await this._host.exitFullscreen?.();
   }
 
   protected _handleFullscreenChange(event: FullscreenChangeEvent): void {
