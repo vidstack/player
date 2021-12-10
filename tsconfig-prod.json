@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig-build.json",
+  "compilerOptions": {
+    "sourceMap": false,
+    "declarationMap": false
+  }
+}

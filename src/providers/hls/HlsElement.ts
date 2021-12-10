@@ -292,7 +292,7 @@ export class HlsElement extends VideoElement {
     /**
      * // TODO: stage-2 we'll need to rework this line and determine when to "upgrade" to `hls.js`.
      *
-     * @see https://github.com/vidstack/vds-elements/issues/376
+     * @see https://github.com/vidstack/elements/issues/376
      */
     if (isNonNativeHlsStreamingPossible()) return false;
     return this.hasNativeHlsSupport;

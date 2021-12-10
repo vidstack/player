@@ -41,7 +41,7 @@ right corner. After the project has been forked, run the following commands in y
 
 ```bash
 # Replace {github-username} with your GitHub username.
-$: git clone https://github.com/{github-username}/vds-elements --depth=1
+$: git clone https://github.com/{github-username}/elements vds-elements --depth=1
 
 $: cd vds-elements
 
@@ -54,7 +54,7 @@ pull requests from the forked branch.
 
 ```bash
 # Add the original repository as a "remote" called "upstream".
-$: git remote add upstream git@github.com:vidstack/vds-elements.git
+$: git remote add upstream git@github.com:vidstack/elements.git
 
 # Fetch the git information from the remote.
 $: git fetch upstream
@@ -108,6 +108,6 @@ contribution is appreciated more then you can imagine, and even a failed PR can 
 [lit-element]: https://lit-element.polymer-project.org/guide
 [web-components]: https://developer.mozilla.org/en-US/docs/Web/Web_Components
 [web-test-runner]: https://modern-web.dev/docs/test-runner/overview
-[vds-elements]: https://github.com/vidstack/vds-elements
+[vds-elements]: https://github.com/vidstack/elements
 [semantic-commit-style]: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
 [pr-beginner-series]: https://app.egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github

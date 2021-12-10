@@ -1,11 +1,6 @@
 # Vidstack Elements
 
 [![package-badge]][package]
-[![license-badge]][license]
-[![semantic-release-badge]][semantic-release]
-![release][release-badge]
-[![codecov-badge]][codecov]
-[![jsdelivr-badge]][jsdelivr]
 
 Spec-compliant customizable, extensible, accessible and universal media elements. The successor to
 [Vime][vime] `5.x` and [Plyr][plyr] `3.x`.
@@ -20,16 +15,7 @@ stable release is available. Issues are welcome for unexpected changes.
 ### NPM
 
 ```bash
-$: npm install @vidstack/elements@next --save
-```
-
-### CDN
-
-```html
-<script
-  type="module"
-  src="https://cdn.jsdelivr.net/npm/@vidstack/elements@next"
-></script>
+$: npm install @vidstack/elements
 ```
 
 ## 📖 Documentation
@@ -94,13 +80,4 @@ A huge thanks to our sponsors who support open-source projects like Vidstack Ele
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr
 [package]: https://www.npmjs.com/package/@vidstack/elements
-[package-badge]: https://img.shields.io/npm/v/@vidstack/elements/next
-[codecov]: https://codecov.io/gh/vidstack/vds-elements
-[codecov-badge]: https://codecov.io/gh/vidstack/vds-elements/branch/main/graph/badge.svg?token=0TCCG1EU8I
-[license]: https://github.com/vidstack/vds-elements/blob/main/LICENSE
-[license-badge]: https://img.shields.io/github/license/vidstack/vds-elements?color=blue
-[semantic-release]: https://github.com/semantic-release/semantic-release
-[semantic-release-badge]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
-[jsdelivr]: https://www.jsdelivr.com/package/npm/@vidstack/elements
-[jsdelivr-badge]: https://data.jsdelivr.com/v1/package/npm/@vidstack/elements/badge?style=rounded
-[release-badge]: https://github.com/vidstack/vds-elements/workflows/Release/badge.svg?branch=main
+[package-badge]: https://img.shields.io/npm/v/@vidstack/elements/latest
