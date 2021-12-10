@@ -196,5 +196,8 @@
     "universal",
     "youtube"
   ],
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "volta": {
+    "node": "14.18.2"
+  }
 }
