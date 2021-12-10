@@ -4,9 +4,7 @@ import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';
 
 import { buildMediaPlayerFixture } from '../../test-utils';
-import { MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement } from '../MediaUiElement';
-
-window.customElements.define(MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);
+import { MEDIA_UI_ELEMENT_TAG_NAME } from '../MediaUiElement';
 
 describe(MEDIA_UI_ELEMENT_TAG_NAME, function () {
   async function buildFixture() {

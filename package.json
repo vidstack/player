@@ -125,6 +125,7 @@
     "conventional-changelog-cli": "^2.1.1",
     "cross-env": "^7.0.3",
     "enquirer": "^2.3.6",
+    "esbuild": "^0.14.2",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.23.4",
