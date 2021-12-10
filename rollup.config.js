@@ -1,5 +1,6 @@
 import commonjs from '@rollup/plugin-commonjs';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
+import renameNodeModules from 'rollup-plugin-rename-node-modules';
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import sourcemaps from 'rollup-plugin-sourcemaps';
@@ -74,6 +75,7 @@ const PLUGINS = ({ minify = true, devMode = false, nodeResolve = {} }) => [
       ecma: 2017,
       module: true
     }),
+  renameNodeModules('external'),
   CHECK_SIZE && summary({}),
   CHECK_SIZE && skipBundleOutput()
 ];
