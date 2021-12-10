@@ -5,7 +5,6 @@ import { ReactiveController, ReactiveControllerHost } from 'lit';
 import { IS_CLIENT } from '../../utils/support';
 import { isUndefined } from '../../utils/unit';
 import type { Context, ContextConsumerController } from '../context';
-import { StorybookControl } from '../storybook';
 import { ms } from './ms';
 
 export enum LogLevel {
@@ -60,14 +59,6 @@ export interface GroupLogStream {
   group(snippetMessage: string): GroupLogStream;
   end(): GroupLogStream;
 }
-
-export const LOGGER_STORYBOOK_ARG_TYPES = {
-  logLevel: {
-    control: StorybookControl.Select,
-    options: ['silent', 'error', 'warn', 'info', 'debug', 'auto'],
-    defaultValue: 'silent'
-  }
-};
 
 const HOST_COLORS_LOCAL_STORAGE_KEY = 'vds-debug-host-colors';
 

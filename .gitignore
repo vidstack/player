@@ -4,9 +4,6 @@ dist-*/
 /types/
 /scratchpad/
 
-/storybook-static/
-
-storybook.json
 custom-elements.json
 vscode.html-data.json
 

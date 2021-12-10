@@ -77,10 +77,7 @@ writing unit tests follow the link to the Web Test Runner site, and see other te
 
 ### Visual
 
-This project uses [Storybook][storybook] to render components and view them in the browser. Simply
-create a `*.stories.ts` file next to the component you're testing and run `npm run start` in
-your terminal. To learn more about writing stories follow the link to the Storybook site, and see
-other stories in the project.
+WIP
 
 ## ✍️ Commit
 
@@ -108,7 +105,6 @@ vet it and see if it should be merged. Please don't be disheartened if it's not 
 contribution is appreciated more then you can imagine, and even a failed PR can teach us a lot ❤️
 
 [typescript]: https://www.typescriptlang.org
-[storybook]: https://storybook.js.org
 [lit-element]: https://lit-element.polymer-project.org/guide
 [web-components]: https://developer.mozilla.org/en-US/docs/Web/Web_Components
 [web-test-runner]: https://modern-web.dev/docs/test-runner/overview
