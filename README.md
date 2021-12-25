@@ -1,6 +1,7 @@
 # Vidstack Elements
 
 [![package-badge]][package]
+[![discord-badge]][discord]
 
 Spec-compliant customizable, extensible, accessible and universal media elements. The successor to
 [Vime][vime] `5.x` and [Plyr][plyr] `3.x`.
@@ -81,3 +82,5 @@ A huge thanks to our sponsors who support open-source projects like Vidstack Ele
 [plyr]: https://github.com/sampotts/plyr
 [package]: https://www.npmjs.com/package/@vidstack/elements
 [package-badge]: https://img.shields.io/npm/v/@vidstack/elements/latest
+[discord]: https://discord.com/invite/7RGU7wvsu9
+[discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white
