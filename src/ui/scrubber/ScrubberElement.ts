@@ -12,22 +12,19 @@ import {
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { provideContextRecord, watchContext } from '../../base/context';
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import {
   DisposalBin,
-  eventListener,
+  hostedEventListener,
   listen,
   redispatchEvent
 } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
 import { DEV_MODE } from '../../global/env';
-import { mediaContext } from '../../media';
 import { buildExportPartsAttr, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
 import {
-  ScrubberPreviewConnectEvent,
   ScrubberPreviewElement,
   ScrubberPreviewHideEvent,
   ScrubberPreviewShowEvent,
@@ -42,8 +39,6 @@ import {
 import { TimeSliderElement } from '../time-slider';
 import { scrubberContext } from './context';
 import { scrubberElementStyles } from './styles';
-
-export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
 
 /**
  * A control that displays the progression of playback and the amount seekable on a slider. This
@@ -389,39 +384,42 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected readonly _scrubberPreviewDisconnectDisposal = new DisposalBin();
 
-  @eventListener('vds-scrubber-preview-connect')
-  protected _handlePreviewConnect(event: ScrubberPreviewConnectEvent) {
-    event.stopPropagation();
+  protected readonly _handlePreviewConnect = hostedEventListener(
+    this,
+    'vds-scrubber-preview-connect',
+    (event) => {
+      event.stopPropagation();
 
-    const { element, onDisconnect } = event.detail;
+      const { element, onDisconnect } = event.detail;
 
-    this._scrubberPreviewElement = element;
-    this.setAttribute('previewable', '');
+      this._scrubberPreviewElement = element;
+      this.setAttribute('previewable', '');
 
-    this._scrubberPreviewDisconnectDisposal.add(
-      listen(
-        element,
-        'vds-scrubber-preview-show',
-        this._handlePreviewShow.bind(this)
-      ),
-      listen(
-        element,
-        'vds-scrubber-preview-time-update',
-        this._handlePreviewTimeUpdate.bind(this)
-      ),
-      listen(
-        element,
-        'vds-scrubber-preview-hide',
-        this._handlePreviewHide.bind(this)
-      )
-    );
+      this._scrubberPreviewDisconnectDisposal.add(
+        listen(
+          element,
+          'vds-scrubber-preview-show',
+          this._handlePreviewShow.bind(this)
+        ),
+        listen(
+          element,
+          'vds-scrubber-preview-time-update',
+          this._handlePreviewTimeUpdate.bind(this)
+        ),
+        listen(
+          element,
+          'vds-scrubber-preview-hide',
+          this._handlePreviewHide.bind(this)
+        )
+      );
 
-    onDisconnect(() => {
-      this._scrubberPreviewDisconnectDisposal.empty();
-      this._scrubberPreviewElement = undefined;
-      this.removeAttribute('previewable');
-    });
-  }
+      onDisconnect(() => {
+        this._scrubberPreviewDisconnectDisposal.empty();
+        this._scrubberPreviewElement = undefined;
+        this.removeAttribute('previewable');
+      });
+    }
+  );
 
   protected _handlePreviewShow(event: ScrubberPreviewShowEvent) {
     event.stopPropagation();

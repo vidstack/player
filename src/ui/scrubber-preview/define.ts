@@ -1,16 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  SCRUBBER_PREVIEW_ELEMENT_TAG_NAME,
-  ScrubberPreviewElement
-} from './ScrubberPreviewElement';
+import { ScrubberPreviewElement } from './ScrubberPreviewElement';
 
-safelyDefineCustomElement(
-  SCRUBBER_PREVIEW_ELEMENT_TAG_NAME,
-  ScrubberPreviewElement
-);
+safelyDefineCustomElement('vds-scrubber-preview', ScrubberPreviewElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [SCRUBBER_PREVIEW_ELEMENT_TAG_NAME]: ScrubberPreviewElement;
+    'vds-scrubber-preview': ScrubberPreviewElement;
   }
 }

@@ -1,224 +1,51 @@
-import { ReactiveController, ReactiveControllerHost } from 'lit';
+import type { ReactiveControllerHost } from 'lit';
 
-import { DEV_MODE } from '../../global/env';
-import { isNil, isUndefined, notEqual } from '../../utils/unit';
 import { vdsEvent } from '../events';
-import { Logger } from '../logger';
 
 export type ConsumeContextOptions<T> = {
   /**
    * A unique identifier used to pair a context provider and consumer.
    */
   id: symbol;
-  /**
-   * Provide a name for debugging.
-   */
-  name?: string | symbol;
-  /**
-   * Whether context updates should also request an update on the controller host to trigger
-   * a re-render.
-   */
-  shouldRequestUpdate?: boolean;
-  /**
-   * Called when the consumer has connected to a provider.
-   */
-  onConnect?(): void;
-  /**
-   * Called when the consumed value is updated.
-   */
-  onUpdate?(newValue: T): void;
-  /**
-   * Called when the host controller has disconnected from the DOM or from a connected provider.
-   */
-  onDisconnect?(): void;
-  /**
-   * Used to transform the consumed value as it's updated.
-   */
-  transform?: (newValue: T) => T;
 };
 
-export class ContextConsumerController<T> implements ReactiveController {
+export class ContextConsumerController<T> {
   protected _value: T;
-
-  protected _ref?: Element;
-
-  protected _hasConnectedToProvider = false;
-
-  protected readonly _logger!: Logger;
-
-  /**
-   * Custom `DisposalBin` so there's no infinite dep cycle:
-   *
-   * Logger -> ContextConsumer -> DisposalBin -> Logger -> ...
-   */
-  protected readonly _stopDisposal = {
-    _bin: [] as (() => void)[],
-    add(cb: () => void) {
-      if (cb) this._bin.push(cb);
-    },
-    empty() {
-      this._bin.forEach((fn) => fn());
-      this._bin = [];
-    }
-  };
-
-  protected readonly consumerId = Symbol('Vidstack.consumerId');
 
   get id() {
     return this._options.id;
-  }
-
-  get name() {
-    return this._options.name;
   }
 
   get value() {
     return this._value;
   }
 
-  /**
-   * Whether the consumer is currently connected to a provider.
-   */
-  get isConnected() {
-    return this._hasConnectedToProvider;
-  }
-
   constructor(
-    protected readonly _host: ReactiveControllerHost,
+    protected readonly _host: ReactiveControllerHost & EventTarget,
     public readonly initialValue: T,
     protected readonly _options: ConsumeContextOptions<T>
   ) {
-    /* c8 ignore start */
-    if (DEV_MODE && _options.name) {
-      this._logger = new Logger(_host, {
-        name: `🧵 ${String(this.name)}`,
-        owner: this
-      });
-    }
-    /* c8 ignore stop */
-
-    this._value = this._transformValue(initialValue);
-    if (_host instanceof Element) this.setRef(_host);
-    _host.addController(this);
-  }
-
-  hostConnected() {
-    this.start();
-  }
-
-  hostDisconnected() {
-    this._handleContextUpdate(this.initialValue);
-    this.stop();
+    this._value = initialValue;
+    _host.addController({
+      hostConnected: this.connect.bind(this)
+    });
   }
 
   /**
-   * Set a reference to a DOM element that this controller will use to connect to a provider
-   * by dispatching a connect event from it. The reference element's position in the DOM will
-   * dictate which provider it connects to, since it'll connect to the first parent provider
-   * that provides the current context.
+   * Attempt connecting to a context provider.
    */
-  setRef(newRef?: Element) {
-    this._ref = newRef;
-  }
-
-  /**
-   * Start consuming context.
-   */
-  start() {
-    if (this._hasConnectedToProvider || isNil(this._ref)) return;
-
-    /* c8 ignore start */
-    if (DEV_MODE && this.name) {
-      this._logger.debug('attempting to connect...');
-    }
-    /* c8 ignore stop */
-
-    this._ref.dispatchEvent(
+  connect() {
+    this._host.dispatchEvent(
       vdsEvent('vds-context-consumer-connect', {
         bubbles: true,
         composed: true,
         detail: {
           id: this.id,
-          name: this.name,
-          consumerId: this.consumerId,
-          onConnect: this._handleContextConnect.bind(this),
-          onUpdate: this._handleContextUpdate.bind(this),
-          onDisconnect: this._handleContextDisconnect.bind(this),
-          reconnect: this.reconnect.bind(this)
+          setValue: (value) => {
+            this._value = value;
+          }
         }
       })
     );
-  }
-
-  /**
-   * Stop consuming context.
-   */
-  stop() {
-    if (!this._hasConnectedToProvider) return;
-
-    this._stopDisposal.empty();
-    this._options.onDisconnect?.();
-    this._hasConnectedToProvider = false;
-
-    /* c8 ignore start */
-    if (DEV_MODE && this.name) {
-      this._logger.debug('stopped');
-    }
-    /* c8 ignore stop */
-  }
-
-  /**
-   * Stop current connection to provider and attempts to reconnect.
-   */
-  reconnect() {
-    /* c8 ignore start */
-    if (DEV_MODE && this.name) {
-      this._logger.debug('reconnecting');
-    }
-    /* c8 ignore stop */
-
-    this.stop();
-    this.start();
-  }
-
-  protected _handleContextConnect() {
-    this._hasConnectedToProvider = true;
-    this._options.onConnect?.();
-    this._options.onUpdate?.(this._value);
-
-    /* c8 ignore start */
-    if (DEV_MODE && this.name) {
-      this._logger.debug('connected');
-    }
-    /* c8 ignore stop */
-  }
-
-  protected _handleContextUpdate(newValue: T) {
-    const transformedValue = this._transformValue(newValue);
-
-    if (notEqual(transformedValue, this._value)) {
-      this._value = transformedValue;
-      this._options.onUpdate?.(transformedValue);
-
-      if (this._options.shouldRequestUpdate) {
-        this._host.requestUpdate();
-      }
-
-      /* c8 ignore start */
-      if (DEV_MODE && this.name) {
-        this._logger.debug('updated to', newValue);
-      }
-      /* c8 ignore stop */
-    }
-  }
-
-  protected _handleContextDisconnect(callback: () => void) {
-    this._stopDisposal.add(callback);
-  }
-
-  protected _transformValue(value: T): T {
-    return !isUndefined(this._options.transform)
-      ? this._options.transform(value)
-      : value;
   }
 }

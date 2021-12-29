@@ -1,13 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  VIDEO_PLAYER_ELEMENT_TAG_NAME,
-  VideoPlayerElement
-} from './VideoPlayerElement';
+import { VideoPlayerElement } from './VideoPlayerElement';
 
-safelyDefineCustomElement(VIDEO_PLAYER_ELEMENT_TAG_NAME, VideoPlayerElement);
+safelyDefineCustomElement('vds-video-player', VideoPlayerElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [VIDEO_PLAYER_ELEMENT_TAG_NAME]: VideoPlayerElement;
+    'vds-video-player': VideoPlayerElement;
   }
 }

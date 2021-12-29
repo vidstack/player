@@ -1,11 +1,8 @@
 import { property } from 'lit/decorators.js';
 
-import { consumeContext } from '../../base/context';
+import { subscribeToService } from '../../base/fsm';
 import { scrubberPreviewContext } from '../scrubber-preview';
 import { TimeElement } from '../time';
-
-export const SCRUBBER_PREVIEW_TIME_ELEMENT_TAG_NAME =
-  'vds-scrubber-preview-time';
 
 /**
  * Formats and displays the current scrubber preview time. The preview time is the point at which
@@ -38,8 +35,13 @@ export const SCRUBBER_PREVIEW_TIME_ELEMENT_TAG_NAME =
 export class ScrubberPreviewTimeElement extends TimeElement {
   override label = 'Media scrubber preview time';
 
-  /** @internal */
-  @property({ attribute: false, state: true })
-  @consumeContext(scrubberPreviewContext.time)
-  override seconds = scrubberPreviewContext.time.initialValue;
+  @property({ attribute: false, state: true }) override seconds = 0;
+
+  constructor() {
+    super();
+    // @consumeContext - use preview time
+    subscribeToService(this, mediaServiceContext, ({ context }) => {
+      this.seconds = context.currentTime;
+    });
+  }
 }

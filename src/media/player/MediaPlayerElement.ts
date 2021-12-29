@@ -2,8 +2,6 @@ import { LitElement } from 'lit';
 
 import { WithMediaPlayer } from './WithMediaPlayer';
 
-export const MEDIA_PLAYER_ELEMENT_TAG_NAME = 'vds-media-player';
-
 /**
  * Media player element responsible for wiring together a media provider and player user interface.
  * Generally more specific players are used, such as `AudioPlayerElement`, `VideoPlayerElement`,

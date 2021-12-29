@@ -1,13 +1,8 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
-import { watchContext } from '../../base/context';
 import { ElementLogger } from '../../base/logger';
 import { DEV_MODE } from '../../global/env';
-import { ManagedControls, mediaContext, ViewType } from '../../media';
-import { setAttribute } from '../../utils/dom';
 import { controlsElementStyles } from './styles';
-
-export const CONTROLS_ELEMENT_TAG_NAME = 'vds-controls';
 
 /**
  * Container for holding individual media controls.
@@ -52,39 +47,7 @@ export class ControlsElement extends LitElement {
   /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
-  protected readonly _managedControls = new ManagedControls(this);
-
   protected override render(): TemplateResult {
     return html`<slot></slot>`;
-  }
-
-  @watchContext(mediaContext.customControls)
-  protected _handleCustomControlsContextUpdate(showing: boolean) {
-    setAttribute(this, 'hidden', !showing);
-  }
-
-  @watchContext(mediaContext.idle)
-  protected _handleIdleContextUpdate(idle: boolean) {
-    setAttribute(this, 'idle', idle);
-  }
-
-  @watchContext(mediaContext.autoplayError)
-  protected _handleMediaAutoplayErrorContextUpdate(error?: Error) {
-    setAttribute(this, 'media-autoplay-error', !!error);
-  }
-
-  @watchContext(mediaContext.canPlay)
-  protected _handleCanPlayContextUpdate(canPlay: boolean) {
-    setAttribute(this, 'media-can-play', canPlay);
-  }
-
-  @watchContext(mediaContext.paused)
-  protected _handlePausedContextUpdate(paused: boolean) {
-    setAttribute(this, 'media-paused', paused);
-  }
-
-  @watchContext(mediaContext.viewType)
-  protected _handleViewTypeContextUpdate(viewType: ViewType) {
-    setAttribute(this, 'media-view-type', viewType);
   }
 }

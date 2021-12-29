@@ -1,16 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
-  BufferingIndicatorElement
-} from './BufferingIndicatorElement';
+import { BufferingIndicatorElement } from './BufferingIndicatorElement';
 
-safelyDefineCustomElement(
-  BUFFERING_INDICATOR_ELEMENT_TAG_NAME,
-  BufferingIndicatorElement
-);
+safelyDefineCustomElement('vds-buffering-indicator', BufferingIndicatorElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [BUFFERING_INDICATOR_ELEMENT_TAG_NAME]: BufferingIndicatorElement;
+    'vds-buffering-indicator': BufferingIndicatorElement;
   }
 }

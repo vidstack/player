@@ -4,8 +4,6 @@ import {
   FullscreenErrorEvent
 } from '../base/fullscreen';
 import { MediaType } from './MediaType';
-import { ControlsChangeEvent } from './player/controls';
-import { IdleChangeEvent } from './player/idle';
 import {
   MuteRequestEvent,
   PauseRequestEvent,
@@ -21,14 +19,12 @@ export type MediaEvents = {
   'vds-abort': AbortEvent;
   'vds-can-play': CanPlayEvent;
   'vds-can-play-through': CanPlayThroughEvent;
-  'vds-controls-change': ControlsChangeEvent;
   'vds-duration-change': DurationChangeEvent;
   'vds-emptied': EmptiedEvent;
   'vds-ended': EndedEvent;
   'vds-error': ErrorEvent;
   'vds-fullscreen-change': FullscreenChangeEvent;
   'vds-fullscreen-error': FullscreenErrorEvent;
-  'vds-idle-change': IdleChangeEvent;
   'vds-loaded-data': LoadedDataEvent;
   'vds-loaded-metadata': LoadedMetadataEvent;
   'vds-load-start': LoadStartEvent;
@@ -66,7 +62,7 @@ export type AbortEvent = VdsEvent<void>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
  */
-export type CanPlayEvent = VdsEvent<void>;
+export type CanPlayEvent = VdsEvent<{ duration: number }>;
 
 /**
  * Fired when the user agent can play the media, and estimates that **enough** data has been
@@ -199,7 +195,10 @@ export type PlayingEvent = VdsEvent<void> & {
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event
  */
-export type ProgressEvent = VdsEvent<void>;
+export type ProgressEvent = VdsEvent<{
+  buffered: TimeRanges;
+  seekable: TimeRanges;
+}>;
 
 /**
  * Fired when a seek operation completed, the current playback position has changed, and the

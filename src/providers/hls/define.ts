@@ -1,10 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { HLS_ELEMENT_TAG_NAME, HlsElement } from './HlsElement';
+import { HlsElement } from './HlsElement';
 
-safelyDefineCustomElement(HLS_ELEMENT_TAG_NAME, HlsElement);
+safelyDefineCustomElement('vds-hls', HlsElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [HLS_ELEMENT_TAG_NAME]: HlsElement;
+    'vds-hls': HlsElement;
   }
 }

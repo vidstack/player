@@ -11,8 +11,6 @@ import { round } from '../../utils/number';
 import { isString } from '../../utils/unit';
 import { aspectRatioElementStyles } from './styles';
 
-export const ASPECT_RATIO_ELEMENT_TAG_NAME = 'vds-aspect-ratio';
-
 /**
  * This element creates a container that will hold the dimensions of the desired aspect ratio. This
  * container is useful for reserving space for media (img, video, etc.) as it loads over the

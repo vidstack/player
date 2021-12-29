@@ -1,16 +1,13 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME,
-  SeekableProgressBarElement
-} from './SeekableProgressBarElement';
+import { SeekableProgressBarElement } from './SeekableProgressBarElement';
 
 safelyDefineCustomElement(
-  SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME,
+  'vds-seekable-progress-bar',
   SeekableProgressBarElement
 );
 
 declare global {
   interface HTMLElementTagNameMap {
-    [SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME]: SeekableProgressBarElement;
+    'vds-seekable-progress-bar': SeekableProgressBarElement;
   }
 }

@@ -98,6 +98,8 @@
   "dependencies": {
     "@types/fscreen": "^1.0.1",
     "@types/hls.js": "^0.13.3",
+    "@xstate/fsm": "^1.6.2",
+    "@xstate/inspect": "^0.5.2",
     "fscreen": "^1.2.0",
     "just-debounce-it": "^1.5.0",
     "just-throttle": "^2.3.1"
@@ -122,6 +124,7 @@
     "@web/dev-server-esbuild": "^0.2.12",
     "@web/dev-server-rollup": "^0.3.8",
     "@web/test-runner": "^0.13.12",
+    "@xstate/test": "^0.5.0",
     "conventional-changelog-cli": "^2.1.1",
     "cross-env": "^7.0.3",
     "enquirer": "^2.3.6",

@@ -4,7 +4,6 @@ import { ReactiveController, ReactiveControllerHost } from 'lit';
 
 import { IS_CLIENT } from '../../utils/support';
 import { isUndefined } from '../../utils/unit';
-import type { Context, ContextConsumerController } from '../context';
 import { ms } from './ms';
 
 export enum LogLevel {
@@ -94,11 +93,6 @@ function saveColors() {
   }
 }
 export class Logger implements ReactiveController {
-  // Controller will inject this to avoid circular dep.
-  static _consumeLogLevel?: Context<LogLevel>['consume'];
-
-  protected readonly _logLevelConsumer?: ContextConsumerController<LogLevel>;
-
   get name() {
     const owner = this._options.owner ?? this._host;
     return owner.constructor?.name ?? owner.name ?? 'unknown';
@@ -106,7 +100,7 @@ export class Logger implements ReactiveController {
 
   get level(): LogLevel {
     return isUndefined(this._options.logLevel)
-      ? this._logLevelConsumer?.value ?? LogLevel.Silent
+      ? LogLevel.Silent
       : this._options.logLevel;
   }
 
@@ -127,8 +121,6 @@ export class Logger implements ReactiveController {
       colors.set(this.name, color);
       saveColors();
     }
-
-    this._logLevelConsumer = Logger._consumeLogLevel?.(_host);
 
     _host.addController(this);
   }

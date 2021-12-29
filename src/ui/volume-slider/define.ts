@@ -1,13 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  VOLUME_SLIDER_ELEMENT_TAG_NAME,
-  VolumeSliderElement
-} from './VolumeSliderElement';
+import { VolumeSliderElement } from './VolumeSliderElement';
 
-safelyDefineCustomElement(VOLUME_SLIDER_ELEMENT_TAG_NAME, VolumeSliderElement);
+safelyDefineCustomElement('vds-volume-slider', VolumeSliderElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [VOLUME_SLIDER_ELEMENT_TAG_NAME]: VolumeSliderElement;
+    'vds-volume-slider': VolumeSliderElement;
   }
 }

@@ -3,8 +3,6 @@ import { TemplateResult } from 'lit';
 import { WithMediaPlayer } from '../../media';
 import { AudioElement } from '../../providers/audio';
 
-export const AUDIO_PLAYER_ELEMENT_TAG_NAME = 'vds-audio-player';
-
 /**
  * Used to embed sound content into documents via the native `<audio>` element. It may contain
  * one or more audio sources, represented using the `src` attribute or the `<source>` element: the

@@ -11,7 +11,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
-import { eventListener, vdsEvent } from '../../base/events';
+import { hostedEventListener, vdsEvent } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
 import { DEV_MODE } from '../../global/env';
 import {
@@ -21,8 +21,6 @@ import {
 } from '../../utils/number';
 import { rafThrottle } from '../../utils/timing';
 import { sliderElementStyles } from './styles';
-
-export const SLIDER_ELEMENT_TAG_NAME = 'vds-slider';
 
 /**
  * The direction to move the thumb, associated with key symbols.
@@ -548,21 +546,29 @@ export class SliderElement extends WithFocus(LitElement) {
   // Document (Pointer Events)
   // -------------------------------------------------------------------------------------------
 
-  @eventListener('pointerup', { target: document })
-  protected _handleDocumentPointerUp(event: PointerEvent) {
-    if (this.disabled || !this._isDragging) return;
-    this._stopDragging(event);
-  }
+  protected readonly _handleDocumentPointerUp = hostedEventListener(
+    this,
+    'pointerup',
+    (event) => {
+      if (this.disabled || !this._isDragging) return;
+      this._stopDragging(event);
+    },
+    { target: document }
+  );
 
-  @eventListener('pointermove', { target: document })
-  protected _handleDocumentPointerMove(event: PointerEvent) {
-    if (this.disabled || !this._isDragging) {
-      this._handlePointerMove.cancel();
-      return;
-    }
+  protected readonly _handleDocumentPointerMove = hostedEventListener(
+    this,
+    'pointermove',
+    (event) => {
+      if (this.disabled || !this._isDragging) {
+        this._handlePointerMove.cancel();
+        return;
+      }
 
-    this._handlePointerMove(event);
-  }
+      this._handlePointerMove(event);
+    },
+    { target: document }
+  );
 
   protected readonly _handlePointerMove = rafThrottle((event: PointerEvent) => {
     if (this.disabled || !this._isDragging) return;

@@ -1,10 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { SLIDER_ELEMENT_TAG_NAME, SliderElement } from './SliderElement';
+import { SliderElement } from './SliderElement';
 
-safelyDefineCustomElement(SLIDER_ELEMENT_TAG_NAME, SliderElement);
+safelyDefineCustomElement('vds-slider', SliderElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [SLIDER_ELEMENT_TAG_NAME]: SliderElement;
+    'vds-slider': SliderElement;
   }
 }

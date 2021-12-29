@@ -1,16 +1,10 @@
 import { safelyDefineCustomElement } from '../../../utils/dom';
-import {
-  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
-  FakeMediaProviderElement
-} from './FakeMediaProviderElement';
+import { FakeMediaProviderElement } from './FakeMediaProviderElement';
 
-safelyDefineCustomElement(
-  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
-  FakeMediaProviderElement
-);
+safelyDefineCustomElement('vds-fake-media-provider', FakeMediaProviderElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME]: FakeMediaProviderElement;
+    'vds-fake-media-provider': FakeMediaProviderElement;
   }
 }

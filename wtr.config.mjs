@@ -1,10 +1,10 @@
+import rollupCommonjs from '@rollup/plugin-commonjs';
+import rollupReplace from '@rollup/plugin-replace';
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
+import { readFileSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { readFileSync } from 'fs';
-import rollupReplace from '@rollup/plugin-replace';
-import rollupCommonjs from '@rollup/plugin-commonjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -38,6 +38,8 @@ export default /** @type {import('@web/test-runner').TestRunnerConfig} */ ({
           const body = readFileSync(path);
           return { body, type: 'js' };
         }
+
+        return null;
       }
     },
     esbuildPlugin({ ts: true, target: 'auto' })

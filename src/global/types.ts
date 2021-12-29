@@ -2,11 +2,10 @@
 // Global Events
 // -------------------------------------------------------------------------------------------
 
-import { ContextEvents } from '../base/context';
+import type { ContextConsumerConnectEvent } from '../base/context';
 import { FullscreenEvents } from '../base/fullscreen';
 import { ScreenOrientationEvents } from '../base/screen-orientation';
 import {
-  ManagedControlsConnectEvent,
   MediaControllerConnectEvent,
   MediaEvents,
   MediaPlayerConnectEvent,
@@ -23,8 +22,7 @@ import { SliderEvents } from '../ui/slider';
 
 declare global {
   interface GlobalEventHandlersEventMap
-    extends ContextEvents,
-      FullscreenEvents,
+    extends FullscreenEvents,
       HlsEvents,
       MediaEvents,
       MediaRequestEvents,
@@ -33,11 +31,11 @@ declare global {
       SliderEvents,
       VideoPresentationEvents {
     'vds-noop': any;
+    'vds-context-consumer-connect': ContextConsumerConnectEvent;
     'vds-media-player-connect': MediaPlayerConnectEvent;
     'vds-media-controller-connect': MediaControllerConnectEvent;
     'vds-media-provider-connect': MediaProviderConnectEvent;
     'vds-scrubber-preview-connect': ScrubberPreviewConnectEvent;
-    'vds-managed-controls-connect': ManagedControlsConnectEvent;
   }
 }
 

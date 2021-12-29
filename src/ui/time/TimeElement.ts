@@ -8,8 +8,6 @@ import { DEV_MODE } from '../../global/env';
 import { formatHtml5Duration, formatTime } from '../../utils/time';
 import { timeElementStyles } from './styles';
 
-export const TIME_ELEMENT_TAG_NAME = 'vds-time';
-
 /**
  * Formats and displays a length of time given in `seconds`.
  *

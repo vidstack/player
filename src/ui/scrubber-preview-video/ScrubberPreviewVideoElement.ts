@@ -8,16 +8,12 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { watchContext } from '../../base/context';
 import { ifNonEmpty } from '../../base/directives';
 import { redispatchEvent } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
 import { DEV_MODE } from '../../global/env';
 import { scrubberPreviewContext } from '../scrubber-preview';
 import { scrubberPreviewVideoElementStyles } from './styles';
-
-export const SCRUBBER_PREVIEW_VIDEO_ELEMENT_TAG_NAME =
-  'vds-scrubber-preview-video';
 
 /**
  * Used to load a low-resolution video to be displayed when the user is hovering or dragging

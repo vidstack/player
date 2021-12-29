@@ -5,6 +5,10 @@ export type RafThrottledFunction<Fn extends (...args: any) => void> = Fn & {
   pending: () => boolean;
 };
 
+export function wait(delay: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, delay));
+}
+
 /**
  * Creates a throttled function that only invokes `func` at most once per animation frame.
  *

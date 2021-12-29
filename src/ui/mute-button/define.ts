@@ -1,13 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  MUTE_BUTTON_ELEMENT_TAG_NAME,
-  MuteButtonElement
-} from './MuteButtonElement';
+import { MuteButtonElement } from './MuteButtonElement';
 
-safelyDefineCustomElement(MUTE_BUTTON_ELEMENT_TAG_NAME, MuteButtonElement);
+safelyDefineCustomElement('vds-mute-button', MuteButtonElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [MUTE_BUTTON_ELEMENT_TAG_NAME]: MuteButtonElement;
+    'vds-mute-button': MuteButtonElement;
   }
 }

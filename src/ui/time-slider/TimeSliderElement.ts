@@ -2,20 +2,12 @@ import throttle from 'just-throttle';
 import { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { consumeContext, watchContext } from '../../base/context';
-import { eventListener, isPointerEvent } from '../../base/events';
-import { mediaContext, MediaRemoteControl } from '../../media';
+import { hostedEventListener, isPointerEvent } from '../../base/events';
+import { MediaRemoteControl, subscribeToMediaService } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
 import { formatSpokenTime } from '../../utils/time';
-import {
-  SliderDragEndEvent,
-  SliderDragStartEvent,
-  SliderElement,
-  SliderValueChangeEvent
-} from '../slider';
-
-export const TIME_SLIDER_ELEMENT_TAG_NAME = 'vds-time-slider';
+import { SliderElement } from '../slider';
 
 /**
  * A slider that lets the user control the current media playback time.
@@ -40,6 +32,17 @@ export const TIME_SLIDER_ELEMENT_TAG_NAME = 'vds-time-slider';
  * ```
  */
 export class TimeSliderElement extends SliderElement {
+  constructor() {
+    super();
+    subscribeToMediaService(this, ({ context }) => {
+      this._mediaCurrentTime = context.currentTime;
+      this._mediaDuration = context.duration >= 0 ? context.duration : 0;
+      this._mediaPaused = context.paused;
+      this._updateValueToCurrentTime();
+      setAttribute(this, 'media-can-play', context.canPlay);
+    });
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
@@ -133,17 +136,9 @@ export class TimeSliderElement extends SliderElement {
   @property({ attribute: 'seeking-request-throttle', type: Number })
   seekingRequestThrottle = 100;
 
-  @state()
-  @consumeContext(mediaContext.currentTime)
-  protected _mediaCurrentTime = 0;
-
-  @state()
-  @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
-  protected _mediaDuration = 0;
-
-  @state()
-  @consumeContext(mediaContext.paused)
-  protected _mediaPaused = mediaContext.paused.initialValue;
+  @state() protected _mediaCurrentTime = 0;
+  @state() protected _mediaDuration = 0;
+  @state() protected _mediaPaused = true;
 
   /**
    * The current media time.
@@ -190,40 +185,45 @@ export class TimeSliderElement extends SliderElement {
       .replace('{duration}', formatSpokenTime(this._mediaDuration));
   }
 
-  @eventListener('vds-slider-drag-start')
-  protected _handleSliderDragStart(event: SliderDragStartEvent) {
-    this._togglePlaybackWhileDragging(event);
-  }
+  protected readonly _handleSliderDragStart = hostedEventListener(
+    this,
+    'vds-slider-drag-start',
+    (event) => {
+      this._togglePlaybackWhileDragging(event);
+    }
+  );
 
   protected readonly _mediaRemote = new MediaRemoteControl(this);
 
-  @eventListener('vds-slider-value-change')
-  protected _handleSliderValueChange(event: SliderValueChangeEvent) {
-    this.value = event.detail;
+  protected readonly _handleSliderValueChange =
+    (this,
+    'vds-slider-value-change',
+    (event) => {
+      this.value = event.detail;
 
-    if (this.isDragging) {
-      this._dispatchSeekingRequest(event);
-    }
+      if (this.isDragging) {
+        this._dispatchSeekingRequest(event);
+      }
 
-    if (!isPointerEvent(event.originalEvent)) {
+      if (!isPointerEvent(event.originalEvent)) {
+        this._dispatchSeekingRequest.cancel();
+        this._mediaRemote.seek(this.currentTime, event);
+      }
+    });
+
+  protected readonly _handleSliderDragEnd =
+    (this,
+    'vds-slider-drag-end',
+    (event) => {
       this._dispatchSeekingRequest.cancel();
       this._mediaRemote.seek(this.currentTime, event);
-    }
-  }
-
-  @eventListener('vds-slider-drag-end')
-  protected _handleSliderDragEnd(event: SliderDragEndEvent) {
-    this._dispatchSeekingRequest.cancel();
-    this._mediaRemote.seek(this.currentTime, event);
-    this._togglePlaybackWhileDragging(event);
-  }
+      this._togglePlaybackWhileDragging(event);
+    });
 
   protected readonly _dispatchSeekingRequest = throttle((event: Event) => {
     this._mediaRemote.seeking(this.currentTime, event);
   }, this.seekingRequestThrottle);
 
-  @watchContext(mediaContext.currentTime)
-  @watchContext(mediaContext.duration)
   protected _updateValueToCurrentTime() {
     if (this.isDragging) return;
 
@@ -233,11 +233,6 @@ export class TimeSliderElement extends SliderElement {
         : 0;
 
     this.value = clampNumber(0, round(percentage, 5), 100);
-  }
-
-  @watchContext(mediaContext.canPlay)
-  protected _handleCanPlayContextUpdate(canPlay: boolean) {
-    setAttribute(this, 'media-can-play', canPlay);
   }
 
   protected _wasPlayingBeforeDragStart = false;

@@ -1,13 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  MEDIA_PLAYER_ELEMENT_TAG_NAME,
-  MediaPlayerElement
-} from './MediaPlayerElement';
+import { MediaPlayerElement } from './MediaPlayerElement';
 
-safelyDefineCustomElement(MEDIA_PLAYER_ELEMENT_TAG_NAME, MediaPlayerElement);
+safelyDefineCustomElement('vds-media-player', MediaPlayerElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [MEDIA_PLAYER_ELEMENT_TAG_NAME]: MediaPlayerElement;
+    'vds-media-player': MediaPlayerElement;
   }
 }

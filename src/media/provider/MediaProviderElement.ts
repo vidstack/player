@@ -1,27 +1,16 @@
 import { LitElement, PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { provideContextRecord } from '../../base/context';
-import {
-  DiscoveryEvent,
-  ElementDiscoveryController
-} from '../../base/elements';
+import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
 import {
   DisposalBin,
-  eventListener,
+  hostedEventListener,
   listen,
   vdsEvent
 } from '../../base/events';
-import {
-  FullscreenChangeEvent,
-  FullscreenController
-} from '../../base/fullscreen';
-import {
-  ElementLogger,
-  LogLevelName,
-  LogLevelNameMap
-} from '../../base/logger';
-import { RequestQueue } from '../../base/queue';
+import { FullscreenController } from '../../base/fullscreen';
+import { ElementLogger } from '../../base/logger';
+import { createHostedRequestQueue, RequestQueue } from '../../base/queue';
 import {
   ScreenOrientationController,
   ScreenOrientationLock
@@ -30,8 +19,8 @@ import { DEV_MODE } from '../../global/env';
 import { clampNumber } from '../../utils/number';
 import { notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
-import { mediaContext, MediaContextRecordValues } from '../context';
 import { MediaEvents } from '../events';
+import { mediaServiceContext } from '../machine';
 import { MediaType } from '../MediaType';
 import { ViewType } from '../ViewType';
 
@@ -52,6 +41,7 @@ export type MediaProviderConnectEvent = DiscoveryEvent<MediaProviderElement>;
 export abstract class MediaProviderElement extends LitElement {
   constructor() {
     super();
+    dispatchDiscoveryEvents(this, 'vds-media-provider-connect');
   }
 
   // -------------------------------------------------------------------------------------------
@@ -61,69 +51,43 @@ export abstract class MediaProviderElement extends LitElement {
   /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
-  protected readonly _disconnectDisposal = new DisposalBin(
-    this,
-    /* c8 ignore next */
-    DEV_MODE && { name: 'disconnectDisposal', owner: this }
-  );
-
-  override connectedCallback() {
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      if ('controller' in this) {
-        // @ts-expect-error - re-init to consume log level because provider is a media controller
-        // and log level context is created after this class has initialized.
-        this._logger = new ElementLogger(this);
-      }
-
-      this._logMediaEvents();
-    }
-    /* c8 ignore stop */
-
-    super.connectedCallback();
-
-    new ElementDiscoveryController(this, 'vds-media-provider-connect');
-
-    this._connectedQueue.flush();
-    this._connectedQueue.serveImmediately = true;
-  }
+  protected readonly _disconnectDisposal = new DisposalBin();
 
   protected override updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
 
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      changedProperties.forEach((_, prop) => {
-        this._logger
-          .infoGroup(`🧬 changed prop \`${String(prop)}\` to \`${this[prop]}\``)
-          .appendWithLabel('Property', prop)
-          .appendWithLabel('Value', this[prop])
-          .end();
-      });
-    }
-    /* c8 ignore stop */
-
     if (changedProperties.has('controls')) {
-      this.ctx.controls = this.controls ?? false;
+      this.mediaService.send({
+        type: 'controls-change',
+        controls: this.controls ?? false
+      });
     }
 
     if (changedProperties.has('loop')) {
-      this.ctx.loop = this.loop ?? false;
+      this.mediaService.send({
+        type: 'loop-change',
+        loop: this.loop ?? false
+      });
     }
 
     if (changedProperties.has('playsinline')) {
-      this.ctx.playsinline = this.playsinline ?? false;
+      this.mediaService.send({
+        type: 'playsinline-change',
+        playsinline: this.playsinline ?? false
+      });
     }
   }
 
   protected override firstUpdated(changedProperties: PropertyValues) {
     super.firstUpdated(changedProperties);
-    this.ctx.canRequestFullscreen = this.canRequestFullscreen;
+    this.mediaService.send({
+      type: 'can-fullscreen',
+      supported: this.canRequestFullscreen
+    });
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this._connectedQueue.destroy();
     this.mediaRequestQueue.destroy();
     this._shouldSkipNextSrcChangeReset = false;
     this._disconnectDisposal.empty();
@@ -133,28 +97,6 @@ export abstract class MediaProviderElement extends LitElement {
   // Logging
   // -------------------------------------------------------------------------------------------
 
-  /**
-   * Sets the providers log level. By default it'll follow the media controller's log level. Valid
-   * values in order of level include `silent`, `error`, `warn`, `info` and `debug`. Set to special
-   * value `auto` for it to continue following controller.
-   *
-   * @default `auto`
-   */
-  @property({ attribute: 'log-level' })
-  get logLevel(): LogLevelName {
-    /* c8 ignore next */
-    return DEV_MODE ? LogLevelNameMap[this._logger.level] : 'silent';
-  }
-
-  set logLevel(newLevel: LogLevelName | 'auto') {
-    /* c8 ignore next */
-    const numericLevel = DEV_MODE
-      ? Object.values(LogLevelNameMap).findIndex((l) => l === newLevel)
-      : 0;
-
-    this._logger.level = numericLevel >= 0 ? numericLevel : undefined;
-  }
-
   /* c8 ignore next */
   protected _logMediaEvents() {
     /* c8 ignore start */
@@ -163,13 +105,11 @@ export abstract class MediaProviderElement extends LitElement {
         'vds-abort',
         'vds-can-play',
         'vds-can-play-through',
-        'vds-controls-change',
         'vds-duration-change',
         'vds-emptied',
         'vds-ended',
         'vds-error',
         'vds-fullscreen-change',
-        'vds-idle-change',
         'vds-loaded-data',
         'vds-loaded-metadata',
         'vds-load-start',
@@ -194,7 +134,7 @@ export abstract class MediaProviderElement extends LitElement {
         const dispose = listen(this, eventType, (event) => {
           this._logger
             .infoGroup(`📡 dispatching \`${eventType}\``)
-            .appendWithLabel('Context', this.ctx)
+            .appendWithLabel('Context', this.mediaState)
             .appendWithLabel('Event', event)
             .appendWithLabel('Engine', this.engine)
             .end();
@@ -226,11 +166,14 @@ export abstract class MediaProviderElement extends LitElement {
    */
   @property({ type: Boolean, reflect: true })
   get autoplay() {
-    return this.ctx.autoplay;
+    return this.mediaState.autoplay;
   }
 
   set autoplay(shouldAutoplay: boolean) {
-    this.ctx.autoplay = shouldAutoplay;
+    this.mediaService.send({
+      type: 'autoplay-change',
+      autoplay: shouldAutoplay
+    });
 
     if (this.canPlay && !this._autoplayAttemptPending && shouldAutoplay) {
       this._autoplayAttemptPending = true;
@@ -286,7 +229,7 @@ export abstract class MediaProviderElement extends LitElement {
    */
   @property({ type: Number, reflect: true })
   get volume() {
-    return this.canPlay ? this._getVolume() : 1;
+    return this.mediaState.volume;
   }
 
   set volume(requestedVolume) {
@@ -300,7 +243,6 @@ export abstract class MediaProviderElement extends LitElement {
     });
   }
 
-  protected abstract _getVolume(): number;
   protected abstract _setVolume(newVolume: number): void;
 
   // ---
@@ -314,7 +256,7 @@ export abstract class MediaProviderElement extends LitElement {
    */
   @property({ type: Boolean, reflect: true })
   get paused() {
-    return this.canPlay ? this._getPaused() : true;
+    return this.mediaState.paused;
   }
 
   set paused(shouldPause) {
@@ -329,8 +271,6 @@ export abstract class MediaProviderElement extends LitElement {
     });
   }
 
-  protected abstract _getPaused(): boolean;
-
   // ---
 
   /**
@@ -344,7 +284,7 @@ export abstract class MediaProviderElement extends LitElement {
    */
   @property({ attribute: 'current-time', type: Number })
   get currentTime() {
-    return this.canPlay ? this._getCurrentTime() : 0;
+    return this._getCurrentTime();
   }
 
   set currentTime(requestedTime) {
@@ -358,7 +298,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected _getCurrentTime() {
     // Avoid errors where `currentTime` can have higher precision than duration.
-    return Math.min(this.ctx.currentTime, this.duration);
+    return Math.min(this.currentTime, this.duration);
   }
 
   protected abstract _setCurrentTime(newTime: number): void;
@@ -373,7 +313,7 @@ export abstract class MediaProviderElement extends LitElement {
    */
   @property({ type: Boolean, reflect: true })
   get muted() {
-    return this.canPlay ? this._getMuted() : false;
+    return this.mediaState.muted;
   }
 
   set muted(shouldMute) {
@@ -385,7 +325,6 @@ export abstract class MediaProviderElement extends LitElement {
     });
   }
 
-  protected abstract _getMuted(): boolean;
   protected abstract _setMuted(isMuted: boolean): void;
 
   // -------------------------------------------------------------------------------------------
@@ -407,20 +346,13 @@ export abstract class MediaProviderElement extends LitElement {
   abstract get engine(): unknown;
 
   /**
-   * A snapshot of the current media state.
-   */
-  get mediaState(): Readonly<MediaContextRecordValues> {
-    return Object.assign({}, this.ctx);
-  }
-
-  /**
    * Returns an `Error` object when autoplay has failed to begin playback. This
    * can be used to determine when to show a recovery UI in the event autoplay fails.
    *
    * @default undefined
    */
-  get autoplayError(): Error | undefined {
-    return this.ctx.autoplayError;
+  get autoplayError(): unknown {
+    return this.mediaState.autoplayError;
   }
 
   /**
@@ -433,7 +365,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default TimeRanges
    */
   get buffered() {
-    return this.ctx.buffered;
+    return this.mediaState.buffered;
   }
 
   /**
@@ -445,7 +377,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
    */
   get canPlay() {
-    return this.ctx.canPlay;
+    return this.mediaState.canPlay;
   }
 
   /**
@@ -457,7 +389,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
    */
   get canPlayThrough() {
-    return this.ctx.canPlayThrough;
+    return this.mediaState.canPlayThrough;
   }
 
   /**
@@ -467,7 +399,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default ''
    */
   get currentPoster() {
-    return this.ctx.currentPoster;
+    return this.mediaState.currentPoster;
   }
 
   /**
@@ -478,7 +410,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc
    */
   get currentSrc() {
-    return this.ctx.currentSrc;
+    return this.mediaState.currentSrc;
   }
 
   /**
@@ -490,7 +422,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration
    */
   get duration() {
-    return this.ctx.duration;
+    return this.mediaState.duration;
   }
 
   /**
@@ -501,7 +433,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended
    */
   get ended() {
-    return this.ctx.ended;
+    return this.mediaState.ended;
   }
 
   /**
@@ -513,7 +445,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
    */
   get error() {
-    return this.ctx.error;
+    return this.mediaState.error;
   }
 
   /**
@@ -522,7 +454,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default false
    */
   get live() {
-    return this.ctx.mediaType === MediaType.LiveVideo;
+    return this.mediaState.mediaType === MediaType.LiveVideo;
   }
 
   /**
@@ -532,7 +464,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default MediaType.Unknown
    */
   get mediaType() {
-    return this.ctx.mediaType;
+    return this.mediaState.mediaType;
   }
 
   /**
@@ -541,7 +473,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default TimeRanges
    */
   get played() {
-    return this.ctx.played;
+    return this.mediaState.played;
   }
 
   /**
@@ -551,7 +483,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default false
    */
   get playing() {
-    return this.ctx.playing;
+    return this.mediaState.playing;
   }
 
   /**
@@ -569,7 +501,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seekable
    */
   get seekable() {
-    return this.ctx.seekable;
+    return this.mediaState.seekable;
   }
 
   /**
@@ -578,7 +510,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default false
    */
   get seeking() {
-    return this.ctx.seeking;
+    return this.mediaState.seeking;
   }
 
   /**
@@ -587,7 +519,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default false
    */
   get started() {
-    return this.ctx.started;
+    return this.mediaState.started;
   }
 
   /**
@@ -600,7 +532,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default ViewType.Unknown
    */
   get viewType() {
-    return this.ctx.viewType;
+    return this.mediaState.viewType;
   }
 
   /**
@@ -609,7 +541,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default false
    */
   get waiting() {
-    return this.ctx.waiting;
+    return this.mediaState.waiting;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -691,15 +623,23 @@ export abstract class MediaProviderElement extends LitElement {
     }
   }
 
-  protected async _handleMediaReady(event?: Event) {
+  protected async _handleMediaReady({
+    event,
+    duration
+  }: {
+    event?: Event;
+    duration: number;
+  }) {
     if (this.canPlay) return;
 
-    this.ctx.canPlay = true;
+    this.dispatchEvent(
+      vdsEvent('vds-can-play', {
+        originalEvent: event,
+        detail: { duration }
+      })
+    );
 
-    this.dispatchEvent(vdsEvent('vds-can-play', { originalEvent: event }));
-
-    await this.mediaRequestQueue.flush();
-    this.mediaRequestQueue.serveImmediately = true;
+    await this.mediaRequestQueue.start();
 
     /* c8 ignore start */
     if (DEV_MODE) {
@@ -715,9 +655,13 @@ export abstract class MediaProviderElement extends LitElement {
     /* c8 ignore stop */
 
     this._autoplayRetryCount = 0;
-    this.ctx.autoplayError = undefined;
     this._autoplayAttemptPending = true;
-    await this._attemptAutoplay();
+
+    if (this.willAttemptAutoplay) {
+      this.mediaService.send('autoplay');
+      await this._attemptAutoplay();
+    }
+
     this._autoplayAttemptPending = false;
   }
 
@@ -726,13 +670,16 @@ export abstract class MediaProviderElement extends LitElement {
   protected _shouldMuteLastAutoplayAttempt = true;
   protected _autoplayAttemptPending = false;
 
+  get willAttemptAutoplay() {
+    return (
+      this.autoplay &&
+      !this.started &&
+      this._autoplayRetryCount < this._maxAutoplayRetries
+    );
+  }
+
   protected async _attemptAutoplay(): Promise<void> {
-    if (
-      !this.canPlay ||
-      !this.autoplay ||
-      this.started ||
-      this._autoplayRetryCount >= this._maxAutoplayRetries
-    ) {
+    if (!this.canPlay || !this.willAttemptAutoplay) {
       return;
     }
 
@@ -742,46 +689,15 @@ export abstract class MediaProviderElement extends LitElement {
       this._shouldMuteLastAutoplayAttempt &&
       this._autoplayRetryCount === this._maxAutoplayRetries - 1;
 
-    /* c8 ignore start */
-    if (DEV_MODE && this._autoplayRetryCount > 0) {
-      this._logger
-        .warnGroup(
-          `Seems like autoplay has failed, retrying [attempt ${
-            this._autoplayRetryCount
-          }]${shouldTryMuted ? ' muted' : ''}...`
-        )
-        .appendWithLabel('Engine', this.engine)
-        .end();
-    }
-    /* c8 ignore stop */
-
     let didAttemptSucceed = false;
 
     try {
       if (shouldTryMuted) this.muted = true;
       await this.play();
       didAttemptSucceed = true;
-
-      /* c8 ignore start */
-      if (DEV_MODE) {
-        this._logger.info('✅ Autoplay was successful.');
-      }
-      /* c8 ignore stop */
     } catch (error) {
-      /* c8 ignore start */
-      if (DEV_MODE) {
-        this._logger
-          .errorGroup(
-            `Autoplay retry [attempt ${this._autoplayRetryCount} out of ${this._maxAutoplayRetries}] failed.`
-          )
-          .appendWithLabel('Engine', this.engine)
-          .appendWithLabel('Error', error)
-          .end();
-      }
-      /* c8 ignore stop */
-
       if (this._autoplayRetryCount === this._maxAutoplayRetries - 1) {
-        this.ctx.autoplayError = error as Error;
+        this.mediaService.send({ type: 'autoplay-fail', error });
         this.requestUpdate();
       }
     }
@@ -794,7 +710,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected _shouldSkipNextSrcChangeReset = true;
 
-  protected _handleMediaSrcChange() {
+  protected _handleMediaSrcChange(src: string) {
     if (!this.hasUpdated) return;
 
     // Skip first flush to ensure initial properties set make it to the provider.
@@ -813,74 +729,29 @@ export abstract class MediaProviderElement extends LitElement {
     }
     /* c8 ignore stop */
 
-    this.mediaRequestQueue.serveImmediately = false;
-    this._softResetMediaContext();
+    this.mediaRequestQueue.stop();
+    this.mediaService.send({ type: 'src-change', src });
   }
 
   // -------------------------------------------------------------------------------------------
-  // Context
+  // Services
   // -------------------------------------------------------------------------------------------
 
+  readonly mediaServiceConsumer = mediaServiceContext.consume(this);
+
   /**
-   * Any property updated inside this object will trigger a context update. The media controller
-   * will provide (inject) the context record to be managed by this media provider. Any updates here
-   * will flow down from the media controller to all components.
-   *
+   * Media service used to keep track of current media state and context.
    * @internal
    */
-  readonly ctx = provideContextRecord(this, mediaContext);
-
-  /**
-   * Media context properties that should be reset when media is changed. Override this
-   * to include additional properties.
-   */
-  protected _getMediaPropsToResetWhenSrcChanges(): Set<string> {
-    return new Set([
-      'autoplayError',
-      'buffered',
-      'buffering',
-      'canPlay',
-      'canPlayThrough',
-      'currentSrc',
-      'currentTime',
-      'duration',
-      'ended',
-      'mediaType',
-      'paused',
-      'canPlay',
-      'played',
-      'playing',
-      'seekable',
-      'seeking',
-      'started',
-      'waiting'
-    ]);
+  get mediaService() {
+    return this.mediaServiceConsumer.value;
   }
 
   /**
-   * When the `currentSrc` is changed this method is called to update any context properties
-   * that need to be reset. Important to note that not all properties are reset, only the
-   * properties returned from `getSoftResettableMediaContextProps()`.
+   * A snapshot of the current media state.
    */
-  protected _softResetMediaContext() {
-    const propsToReset = this._getMediaPropsToResetWhenSrcChanges();
-
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      this._logger
-        .infoGroup('soft context reset')
-        .appendWithLabel('Engine', this.engine)
-        .appendWithLabel('Context', this.mediaState)
-        .appendWithLabel('Reset props', propsToReset)
-        .end();
-    }
-    /* c8 ignore stop */
-
-    Object.keys(mediaContext).forEach((prop) => {
-      if (propsToReset.has(prop)) {
-        this.ctx[prop] = mediaContext[prop].initialValue;
-      }
-    });
+  get mediaState() {
+    return Object.assign({}, this.mediaService.state.context);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -890,21 +761,13 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * Queue actions to be applied safely after the element has connected to the DOM.
    */
-  readonly _connectedQueue = new RequestQueue(
-    this,
-    /* c8 ignore next */
-    DEV_MODE && { name: 'connectedQueue', owner: this }
-  );
+  readonly _connectedQueue = createHostedRequestQueue(this);
 
   /**
    * Queue actions to be taken on the current media provider when it's ready for playback, marked
    * by the `canPlay` property. If the media provider is ready, actions will be invoked immediately.
    */
-  readonly mediaRequestQueue = new RequestQueue(
-    this,
-    /* c8 ignore next */
-    DEV_MODE && { name: 'mediaRequestQueue', owner: this }
-  );
+  readonly mediaRequestQueue = new RequestQueue();
 
   // -------------------------------------------------------------------------------------------
   // Orientation
@@ -939,7 +802,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default false
    */
   get fullscreen(): boolean {
-    return this.ctx.fullscreen;
+    return this.mediaState.fullscreen;
   }
 
   /**
@@ -968,18 +831,14 @@ export abstract class MediaProviderElement extends LitElement {
     return this.fullscreenController.exitFullscreen();
   }
 
-  @eventListener('vds-fullscreen-change')
-  protected _handleFullscreenChange(event: FullscreenChangeEvent) {
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      this._logger
-        .infoGroup('fullscreen change')
-        .appendWithLabel('Event', event)
-        .appendWithLabel('Engine', this.engine)
-        .end();
+  protected _handleFullscreenChange = hostedEventListener(
+    this,
+    'vds-fullscreen-change',
+    (event) => {
+      this.mediaService.send({
+        type: 'fullscreen-change',
+        fullscreen: event.detail
+      });
     }
-    /* c8 ignore stop */
-
-    this.ctx.fullscreen = event.detail;
-  }
+  );
 }

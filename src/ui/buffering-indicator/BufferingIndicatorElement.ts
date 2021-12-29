@@ -1,13 +1,10 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
-import { watchContext } from '../../base/context';
 import { ElementLogger } from '../../base/logger';
 import { DEV_MODE } from '../../global/env';
-import { mediaContext } from '../../media';
+import { subscribeToMediaService } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { bufferingIndicatorElementStyles } from './styles';
-
-export const BUFFERING_INDICATOR_ELEMENT_TAG_NAME = 'vds-buffering-indicator';
 
 /**
  * Display an indicator when either the provider/media is booting or media playback has
@@ -46,25 +43,19 @@ export class BufferingIndicatorElement extends LitElement {
     return [bufferingIndicatorElementStyles];
   }
 
-  protected override render(): TemplateResult {
-    return html`<slot></slot>`;
-  }
-
   /* c8 ignore next */
   protected readonly _logger = DEV_MODE && new ElementLogger(this);
 
-  @watchContext(mediaContext.canPlay)
-  protected _handleCanPlayContextUpdate(canPlay: boolean) {
-    setAttribute(this, 'media-can-play', canPlay);
+  constructor() {
+    super();
+    subscribeToMediaService(this, ({ context }) => {
+      setAttribute(this, 'media-can-play', context.canPlay);
+      setAttribute(this, 'media-waiting', context.waiting);
+      setAttribute(this, 'media-ended', context.ended);
+    });
   }
 
-  @watchContext(mediaContext.waiting)
-  protected _handleWaitingContextUpdate(waiting: boolean) {
-    setAttribute(this, 'media-waiting', waiting);
-  }
-
-  @watchContext(mediaContext.ended)
-  protected _handleEndedContextUpdate(ended: boolean) {
-    setAttribute(this, 'media-ended', ended);
+  protected override render(): TemplateResult {
+    return html`<slot></slot>`;
   }
 }

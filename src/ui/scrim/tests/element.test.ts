@@ -1,11 +1,11 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { SCRIM_ELEMENT_TAG_NAME, ScrimElement } from '../ScrimElement';
+import { ScrimElement } from '../ScrimElement';
 
-window.customElements.define(SCRIM_ELEMENT_TAG_NAME, ScrimElement);
+window.customElements.define('vds-scrim', ScrimElement);
 
-describe(SCRIM_ELEMENT_TAG_NAME, function () {
+describe('vds-scrim', function () {
   async function buildFixture() {
     const scrim = (await fixture(
       html`<vds-scrim></vds-scrim>`

@@ -8,11 +8,7 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { consumeContext, provideContextRecord } from '../../base/context';
-import {
-  DiscoveryEvent,
-  ElementDiscoveryController
-} from '../../base/elements';
+import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
 import {
   isPointerEvent,
   isVdsEvent,
@@ -21,7 +17,6 @@ import {
 } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
 import { DEV_MODE } from '../../global/env';
-import { mediaContext } from '../../media/context';
 import { getSlottedChildren, raf } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
 import { rafThrottle } from '../../utils/timing';
@@ -29,8 +24,6 @@ import { isNil } from '../../utils/unit';
 import { scrubberContext } from '../scrubber/context';
 import { scrubberPreviewContext } from './context';
 import { scrubberPreviewElementStyles } from './styles';
-
-export const SCRUBBER_PREVIEW_ELEMENT_TAG_NAME = 'vds-scrubber-preview';
 
 /**
  * Fired when the scrubber preview element connects to the DOM.
@@ -120,6 +113,11 @@ export class ScrubberPreviewElement extends LitElement {
     return ['track', 'track-fill'];
   }
 
+  constructor() {
+    super();
+    dispatchDiscoveryEvents(this, 'vds-scrubber-preview-connect');
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
@@ -169,11 +167,6 @@ export class ScrubberPreviewElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
-
-  override connectedCallback() {
-    super.connectedCallback();
-    new ElementDiscoveryController(this, 'vds-scrubber-preview-connect');
-  }
 
   protected override update(changedProperties: PropertyValues) {
     if (changedProperties.has('_mediaDuration')) {

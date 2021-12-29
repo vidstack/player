@@ -1,10 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { TIME_ELEMENT_TAG_NAME, TimeElement } from './TimeElement';
+import { TimeElement } from './TimeElement';
 
-safelyDefineCustomElement(TIME_ELEMENT_TAG_NAME, TimeElement);
+safelyDefineCustomElement('vds-time', TimeElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [TIME_ELEMENT_TAG_NAME]: TimeElement;
+    'vds-time': TimeElement;
   }
 }

@@ -1,13 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  TOGGLE_BUTTON_ELEMENT_TAG_NAME,
-  ToggleButtonElement
-} from './ToggleButtonElement';
+import { ToggleButtonElement } from './ToggleButtonElement';
 
-safelyDefineCustomElement(TOGGLE_BUTTON_ELEMENT_TAG_NAME, ToggleButtonElement);
+safelyDefineCustomElement('vds-toggle-button', ToggleButtonElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [TOGGLE_BUTTON_ELEMENT_TAG_NAME]: ToggleButtonElement;
+    'vds-toggle-button': ToggleButtonElement;
   }
 }

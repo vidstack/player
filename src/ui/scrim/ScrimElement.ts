@@ -5,8 +5,6 @@ import { ElementLogger } from '../../base/logger';
 import { DEV_MODE } from '../../global/env';
 import { scrimElementStyles } from './styles';
 
-export const SCRIM_ELEMENT_TAG_NAME = 'vds-scrim';
-
 /**
  * A darkened overlay (gradient) that covers the video to enable controls placed on it to be more
  * visible. The gradient is a base64 pre-defined image for the best possible gradient transition.

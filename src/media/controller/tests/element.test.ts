@@ -86,7 +86,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       const setMutedSpy = spy(provider, '_setMuted');
       const remote = new MediaRemoteControl(provider);
       remote.mute();
-      await provider.mediaRequestQueue.flush();
+      await provider.mediaRequestQueue.start();
       expect(setMutedSpy).to.have.been.calledWith(true);
       setMutedSpy.restore();
     });
@@ -107,7 +107,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       const playSpy = spy(provider, 'play');
       const remote = new MediaRemoteControl(provider);
       remote.play();
-      await provider.mediaRequestQueue.flush();
+      await provider.mediaRequestQueue.start();
       expect(playSpy).to.have.been.calledOnce;
       playSpy.restore();
     });
@@ -128,7 +128,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       const setCurrentTimeSpy = spy(provider, '_setCurrentTime');
       const remote = new MediaRemoteControl(provider);
       remote.seek(100);
-      await provider.mediaRequestQueue.flush();
+      await provider.mediaRequestQueue.start();
       expect(setCurrentTimeSpy).to.have.been.calledWith(100);
       setCurrentTimeSpy.restore();
     });
@@ -138,7 +138,7 @@ describe(MEDIA_CONTROLLER_ELEMENT_TAG_NAME, function () {
       const setCurrentTimeSpy = spy(provider, '_setCurrentTime');
       const remote = new MediaRemoteControl(provider);
       remote.seeking(100);
-      await provider.mediaRequestQueue.flush();
+      await provider.mediaRequestQueue.start();
       expect(setCurrentTimeSpy).to.have.been.calledWith(100);
       setCurrentTimeSpy.restore();
     });

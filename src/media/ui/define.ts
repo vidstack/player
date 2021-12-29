@@ -1,10 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement } from './MediaUiElement';
+import { MediaUiElement } from './MediaUiElement';
 
-safelyDefineCustomElement(MEDIA_UI_ELEMENT_TAG_NAME, MediaUiElement);
+safelyDefineCustomElement('vds-media-ui', MediaUiElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [MEDIA_UI_ELEMENT_TAG_NAME]: MediaUiElement;
+    'vds-media-ui': MediaUiElement;
   }
 }

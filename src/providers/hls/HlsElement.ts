@@ -10,8 +10,6 @@ import { isNonNativeHlsStreamingPossible } from '../../utils/support';
 import { isFunction, isNil, isString, isUndefined } from '../../utils/unit';
 import { VideoElement } from '../video';
 
-export const HLS_ELEMENT_TAG_NAME = 'vds-hls';
-
 export const HLS_EXTENSIONS = /\.(m3u8)($|\?)/i;
 
 export const HLS_TYPES = new Set([
@@ -446,7 +444,6 @@ export class HlsElement extends VideoElement {
     this._prevHlsEngineSrc = '';
     this._hlsEngine = undefined;
     this._isHlsEngineAttached = false;
-    this._softResetMediaContext();
 
     /* c8 ignore start */
     if (DEV_MODE) {
@@ -531,7 +528,7 @@ export class HlsElement extends VideoElement {
   }
 
   protected override _getMediaType(): MediaType {
-    if (this.ctx.mediaType === MediaType.LiveVideo) {
+    if (this.mediaType === MediaType.LiveVideo) {
       return MediaType.LiveVideo;
     }
 
@@ -559,8 +556,6 @@ export class HlsElement extends VideoElement {
 
     // We don't want to load `hls.js` until the browser has had a chance to paint.
     if (!this.hasUpdated) return;
-
-    this.ctx.canPlay = false;
 
     if (!this.isHlsStream) {
       this._detachHlsEngine();
@@ -602,7 +597,7 @@ export class HlsElement extends VideoElement {
   protected _handleHlsError(eventType: string, data: Hls.errorData): void {
     if (isUndefined(this.Hls)) return;
 
-    this.ctx.error = data;
+    this.mediaService.send({ type: 'error', error: data });
 
     /* c8 ignore start */
     if (DEV_MODE) {
@@ -661,7 +656,7 @@ export class HlsElement extends VideoElement {
     eventType: string,
     data: Hls.levelLoadedData
   ): void {
-    if (this.ctx.canPlay) return;
+    if (this.canPlay) return;
     this._handleHlsMediaReady(eventType, data);
   }
 
@@ -674,8 +669,7 @@ export class HlsElement extends VideoElement {
     const event = new VdsEvent(eventType, { detail: data });
 
     const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
-    if (this.ctx.mediaType !== mediaType) {
-      this.ctx.mediaType = mediaType;
+    if (this.mediaState.mediaType !== mediaType) {
       this.dispatchEvent(
         vdsEvent('vds-media-type-change', {
           detail: mediaType,
@@ -684,8 +678,7 @@ export class HlsElement extends VideoElement {
       );
     }
 
-    if (this.ctx.duration !== duration) {
-      this.ctx.duration = duration;
+    if (this.duration !== duration) {
       this.dispatchEvent(
         vdsEvent('vds-duration-change', {
           detail: duration,
@@ -694,6 +687,6 @@ export class HlsElement extends VideoElement {
       );
     }
 
-    this._handleMediaReady(event);
+    this._handleMediaReady({ event, duration });
   }
 }

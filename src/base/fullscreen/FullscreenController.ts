@@ -77,10 +77,7 @@ export class FullscreenController {
       this._logger = new Logger(_host, { owner: this });
     }
 
-    this._listenerDisposal = new DisposalBin(
-      _host,
-      DEV_MODE && { name: 'listenerDisposal', owner: this }
-    );
+    this._listenerDisposal = new DisposalBin();
 
     _host.addController({
       hostDisconnected: this._handleHostDisconnected.bind(this)

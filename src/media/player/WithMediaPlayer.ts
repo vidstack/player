@@ -1,20 +1,11 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
 
-import {
-  DiscoveryEvent,
-  ElementDiscoveryController
-} from '../../base/elements';
-import { FullscreenController } from '../../base/fullscreen';
-import { LogLevelName } from '../../base/logger';
-import { ScreenOrientationController } from '../../base/screen-orientation';
+import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
 import { Constructor } from '../../global/helpers';
 import { getSlottedChildren } from '../../utils/dom';
 import { isNil, isUndefined } from '../../utils/unit';
 import { MediaController } from '../controller';
 import { MediaProviderElement } from '../provider';
-import { ControlsManager } from './controls';
-import { IdleManager } from './idle';
 import { basePlayerStyles } from './styles';
 
 /**
@@ -50,52 +41,9 @@ export function WithMediaPlayer<T extends Constructor<LitElement>>(
 
     readonly controller = new MediaController(this);
 
-    override connectedCallback() {
-      super.connectedCallback();
-      new ElementDiscoveryController(this, 'vds-media-player-connect');
-    }
-
-    // -------------------------------------------------------------------------------------------
-    // Properties
-    // -------------------------------------------------------------------------------------------
-
-    @property({ attribute: 'log-level' })
-    get logLevel(): LogLevelName {
-      return this.controller.logLevel;
-    }
-
-    set logLevel(newLevel: LogLevelName) {
-      this.controller.logLevel = newLevel;
-    }
-
-    // -------------------------------------------------------------------------------------------
-    // Controls
-    // -------------------------------------------------------------------------------------------
-
-    readonly controlsManager = new ControlsManager(this);
-
-    readonly idleManager = new IdleManager(this);
-
-    @property({ attribute: 'custom-controls', type: Boolean, reflect: true })
-    get customControls() {
-      return !this.controlsManager.isHidden;
-    }
-
-    set customControls(isShowing) {
-      if (isShowing) {
-        this.controlsManager.show();
-      } else {
-        this.controlsManager.hide();
-      }
-    }
-
-    @property({ attribute: 'idle-timeout', type: Number })
-    get idleTimeout() {
-      return this.idleManager.timeout;
-    }
-
-    set idleTimeout(timeout) {
-      this.idleManager.timeout = timeout;
+    constructor(...args: any[]) {
+      super(...args);
+      dispatchDiscoveryEvents(this, 'vds-media-player-connect');
     }
 
     // -------------------------------------------------------------------------------------------
@@ -156,34 +104,7 @@ export function WithMediaPlayer<T extends Constructor<LitElement>>(
 
 export interface BaseMediaPlayer {
   readonly controller: MediaController;
-  readonly controlsManager: ControlsManager;
-  readonly idleManager: IdleManager;
 
-  /**
-   * Indicates whether a custom user interface should be shown for controlling the resource. If
-   * `true`, it is expected that `controls` is set to `false` (the default) to avoid double
-   * controls. The `controls` property refers to native controls.
-   *
-   * @default false
-   */
-  customControls: boolean;
-
-  /**
-   * Sets the default log level throughout the player. Valid values in order of
-   * level include `silent`, `error`, `warn`, `info` and `debug`.
-   *
-   * @default `silent`
-   */
-  logLevel: LogLevelName;
-
-  /**
-   * The amount of time in `ms` to pass before considering the user to be idle (not active).
-   *
-   * @default 3000
-   */
-  idleTimeout: number;
-
-  // Render
   renderPlayer(): TemplateResult;
   renderProvider(): TemplateResult;
   renderUi(): TemplateResult;

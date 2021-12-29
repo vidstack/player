@@ -1,67 +1,18 @@
 import debounce from 'just-debounce-it';
 import { ReactiveController, ReactiveElement } from 'lit';
 
-import {
-  ContextConsumerController,
-  ContextProviderController,
-  createContext,
-  isDerviedContext,
-  provideContextRecord
-} from '../../base/context';
-import { DisposalBin, listen, vdsEvent } from '../../base/events';
-import {
-  FullscreenChangeEvent,
-  FullscreenErrorEvent
-} from '../../base/fullscreen';
-import {
-  Logger,
-  LogLevel,
-  LogLevelName,
-  LogLevelNameMap
-} from '../../base/logger';
+import { DisposalBin, hostedEventListener, vdsEvent } from '../../base/events';
 import { RequestQueue } from '../../base/queue';
 import { DEV_MODE } from '../../global/env';
 import { keysOf } from '../../utils/object';
-import { isArray, isNil } from '../../utils/unit';
-import {
-  mediaContext,
-  MediaContextProviderRecord,
-  MediaContextRecordValues
-} from '../context';
-import {
-  PauseEvent,
-  PlayErrorEvent,
-  PlayEvent,
-  PlayingEvent,
-  ReplayEvent,
-  SeekedEvent,
-  SeekingEvent,
-  VolumeChangeEvent,
-  WaitingEvent
-} from '../events';
-import {
-  MediaProviderConnectEvent,
-  MediaProviderElement
-} from '../provider/MediaProviderElement';
-import {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent,
-  MuteRequestEvent,
-  PauseRequestEvent,
-  PendingMediaRequests,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent,
-  UnmuteRequestEvent,
-  VolumeChangeRequestEvent
-} from '../request.events';
+import { isNil } from '../../utils/unit';
+import { mediaServiceContext } from '../machine';
+import { MediaProviderElement } from '../provider/MediaProviderElement';
+import { PendingMediaRequests } from '../request.events';
 
 export type MediaControllerHost = ReactiveElement & {
   exitFullscreen?(): Promise<void>;
 };
-
-/* c8 ignore next */
-const _logLevel = createContext(LogLevel.Silent);
 
 /**
  * The media controller acts as a message bus between the media provider and all other
@@ -76,54 +27,12 @@ const _logLevel = createContext(LogLevel.Silent);
  * 💡 The base `MediaPlayer` acts as both a media controller and provider.
  */
 export class MediaController implements ReactiveController {
-  protected readonly _disconnectDisposal: DisposalBin;
-
-  /* c8 ignore start */
-  protected readonly _logger?: Logger;
-  protected readonly _logLevelProvider: ContextProviderController<LogLevel>;
-  /* c8 ignore stop */
-
-  protected readonly _mediaProviderConnectedQueue: RequestQueue;
-
-  protected readonly _mediaProviderDisconnectedDisposal: DisposalBin;
+  protected readonly _disconnectDisposal = new DisposalBin();
+  protected readonly _mediaProviderConnectedQueue = new RequestQueue();
+  protected readonly _mediaProviderDisconnectedDisposal = new DisposalBin();
 
   constructor(protected readonly _host: MediaControllerHost) {
-    /* c8 ignore next */
-    this._logLevelProvider = _logLevel.provide(_host);
-
-    /* c8 ignore start */
-    if (DEV_MODE && !Logger._consumeLogLevel) {
-      // Inject log level context into `Logger` to avoid dep cycle.
-      Logger._consumeLogLevel = _logLevel.consume;
-    }
-    /* c8 ignore stop */
-
-    this.mediaCtx = provideContextRecord(_host, mediaContext);
-
-    /* c8 ignore next */
-    this._logger = DEV_MODE && new Logger(_host, { owner: this });
-
-    this._disconnectDisposal = new DisposalBin(
-      _host,
-      /* c8 ignore next */
-      DEV_MODE && { name: 'disconnectDisposal', owner: this }
-    );
-
-    this._mediaProviderConnectedQueue = new RequestQueue(
-      _host,
-      /* c8 ignore next */
-      DEV_MODE && {
-        name: 'mediaProviderConnectedQueue',
-        owner: this
-      }
-    );
-
-    this._mediaProviderDisconnectedDisposal = new DisposalBin(
-      _host,
-      /* c8 ignore next */
-      DEV_MODE && { name: 'mediaProviderDisconnectDisposal', owner: this }
-    );
-
+    this.mediaServiceContext = mediaServiceContext.provide(_host);
     _host.addController(this);
   }
 
@@ -131,127 +40,11 @@ export class MediaController implements ReactiveController {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
-  hostConnected() {
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      this._logEvents();
-      this._logErrors();
-    }
-    /* c8 ignore stop */
-
-    this._addEventListeners();
-  }
-
   hostDisconnected() {
     this._clearPendingMediaRequests();
     this._mediaProviderConnectedQueue.destroy();
     this._mediaProviderDisconnectedDisposal.empty();
     this._disconnectDisposal.empty();
-  }
-
-  protected _addEventListeners() {
-    const eventListeners = {
-      //
-      'vds-media-provider-connect': this._handleMediaProviderConnect,
-      'vds-mute-request': this._handleMuteRequest,
-      'vds-unmute-request': this._handleUnmuteRequest,
-      'vds-play-request': this._handlePlayRequest,
-      'vds-pause-request': this._handlePauseRequest,
-      'vds-seeking-request': this._handleSeekingRequest,
-      'vds-seek-request': this._handleSeekRequest,
-      'vds-volume-change-request': this._handleVolumeChangeRequest,
-      'vds-enter-fullscreen-request': this._handleEnterFullscreenRequest,
-      'vds-exit-fullscreen-request': this._handleExitFullscreenRequest,
-      'vds-fullscreen-change': this._handleFullscreenChange,
-      'vds-fullscreen-error': this._handleFullscreenError,
-      //
-      'vds-play': [this._handlePlay, { capture: true }],
-      'vds-play-error': [this._handlePlayError, { capture: true }],
-      'vds-playing': [this._handlePlaying, { capture: true }],
-      'vds-pause': [this._handlePause, { capture: true }],
-      'vds-volume-change': [this._handleVolumeChange, { capture: true }],
-      'vds-replay': [this._handleReplay, { capture: true }],
-      'vds-seeking': [this._handleSeeking, { capture: true }],
-      'vds-seeked': [this._handleSeeked, { capture: true }],
-      'vds-waiting': [this._handleWaiting],
-      //
-      seeked: [this._handleSeeked, { capture: true }]
-    };
-
-    keysOf(eventListeners).forEach((eventType) => {
-      const eventListener = eventListeners[eventType];
-
-      const listener = isArray(eventListener)
-        ? eventListener[0]
-        : eventListener;
-
-      const options = isArray(eventListener) ? eventListener[1] : undefined;
-
-      const dispose = listen(
-        this._host,
-        eventType,
-        (listener as () => void).bind(this),
-        options as EventListenerOptions
-      );
-
-      this._disconnectDisposal.add(dispose);
-    });
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Logging
-  // -------------------------------------------------------------------------------------------
-
-  get logLevel(): LogLevelName {
-    /* c8 ignore next */
-    return DEV_MODE ? LogLevelNameMap[this._logLevelProvider.value] : 'silent';
-  }
-
-  set logLevel(newLevel: LogLevelName) {
-    /* c8 ignore next */
-    const numericLevel = DEV_MODE
-      ? Object.values(LogLevelNameMap).findIndex((l) => l === newLevel)
-      : 0;
-
-    this._logLevelProvider.value = numericLevel >= 0 ? numericLevel : 0;
-  }
-
-  protected _logEvents() {
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      const loggedEvents: (keyof GlobalEventHandlersEventMap)[] = [
-        'vds-controls-change',
-        'vds-fullscreen-change'
-      ];
-
-      loggedEvents.forEach((eventType) => {
-        const dispose = listen(this._host, eventType, (event) => {
-          this._logger!.infoGroup(`📡 dispatching \`${eventType}\``)
-            .appendWithLabel('Event', event)
-            .appendWithLabel('Provider', this.mediaProvider)
-            .end();
-        });
-
-        this._disconnectDisposal.add(dispose);
-      });
-    }
-    /* c8 ignore stop */
-  }
-
-  protected _logErrors() {
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      const dispose = listen(this._host, 'vds-error', (event) => {
-        this._logger!.errorGroup(event.type)
-          .appendWithLabel('Context', this.mediaCtx)
-          .appendWithLabel('Event', event)
-          .appendWithLabel('Provider', this.mediaProvider)
-          .end();
-      });
-
-      this._disconnectDisposal.add(dispose);
-    }
-    /* c8 ignore stop */
   }
 
   // -------------------------------------------------------------------------------------------
@@ -269,54 +62,34 @@ export class MediaController implements ReactiveController {
     this._mediaProvider = mediaProvider;
   }
 
-  protected _handleMediaProviderConnect(event: MediaProviderConnectEvent) {
-    event.stopPropagation();
+  protected _handleMediaProviderConnect = hostedEventListener(
+    this._host,
+    'vds-media-provider-connect',
+    (event) => {
+      event.stopPropagation();
 
-    const { element, onDisconnect } = event.detail;
+      const { element, onDisconnect } = event.detail;
 
-    if (this.mediaProvider === element) return;
+      if (this.mediaProvider === element) return;
 
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      this._logger!.infoGroup('media provider connected')
-        .appendWithLabel('Provider', element)
-        .end();
+      this._handleMediaProviderDisconnect();
+      this._mediaProvider = element;
+      this._flushMediaProviderConnectedQueue();
+      onDisconnect(this._handleMediaProviderDisconnect.bind(this));
     }
-    /* c8 ignore stop */
-
-    this._handleMediaProviderDisconnect();
-
-    this._mediaProvider = element;
-
-    this._attachMediaContextRecordToProvider();
-    this._flushMediaProviderConnectedQueue();
-
-    onDisconnect(this._handleMediaProviderDisconnect.bind(this));
-  }
+  );
 
   protected _handleMediaProviderDisconnect() {
     if (isNil(this.mediaProvider)) return;
-
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      this._logger!.infoGroup('media provider disconnected')
-        .appendWithLabel('Provider', this.mediaProvider)
-        .end();
-    }
-    /* c8 ignore stop */
-
     this._mediaProviderConnectedQueue.destroy();
     this._mediaProviderDisconnectedDisposal.empty();
     this._mediaProvider = undefined;
   }
 
   protected _flushMediaProviderConnectedQueue() {
-    this._mediaProviderConnectedQueue.flush();
-    this._mediaProviderConnectedQueue.serveImmediately = true;
-
+    this._mediaProviderConnectedQueue.start();
     this._mediaProviderDisconnectedDisposal.add(() => {
-      this._mediaProviderConnectedQueue.serveImmediately = false;
-      this._mediaProviderConnectedQueue.reset();
+      this._mediaProviderConnectedQueue.stop();
     });
   }
 
@@ -324,54 +97,25 @@ export class MediaController implements ReactiveController {
   // Media Context
   // -------------------------------------------------------------------------------------------
 
+  private readonly mediaServiceContext: ReturnType<
+    typeof mediaServiceContext['provide']
+  >;
+
   /**
-   * Media context provider record which is injected by the media controller into the media
-   * provider, so it can be managed and updated by it.
+   * Media service used to keep track of current media state and context. This is consumed
+   * by a provider, and UI components, so they can subscribe to media state changes.
    *
    * @internal
    */
-  readonly mediaCtx: MediaContextProviderRecord;
+  get mediaService() {
+    return this.mediaServiceContext.value;
+  }
 
   /**
    * A snapshot of the current media state.
    */
-  get mediaState(): Readonly<MediaContextRecordValues> {
-    return Object.assign({}, this.mediaCtx);
-  }
-
-  protected _attachMediaContextRecordToProvider() {
-    if (isNil(this.mediaProvider)) return;
-
-    // Copy over context values before setting on provider.
-    Object.keys(this.mediaProvider.ctx).forEach((prop) => {
-      this.mediaCtx[prop] = this.mediaProvider!.ctx[prop];
-    });
-
-    this.mediaProvider.ctx.__destroy();
-
-    // @ts-expect-error - Override readonly
-    this.mediaProvider.ctx = this.mediaCtx;
-
-    /* c8 ignore start */
-    if (DEV_MODE) {
-      this._logger!.infoGroup('attached context record')
-        .appendWithLabel('Provider', this.mediaProvider)
-        .appendWithLabel('Context', this.mediaCtx)
-        .end();
-    }
-    /* c8 ignore stop */
-
-    this._mediaProviderDisconnectedDisposal.add(() => {
-      const ctx = provideContextRecord(this.mediaProvider!, mediaContext);
-
-      // Copy over context values before setting on provider.
-      Object.keys(this.mediaCtx).forEach((prop) => {
-        ctx[prop] = this.mediaCtx[prop];
-      });
-
-      // @ts-expect-error - Override readonly
-      this.mediaProvider!.ctx = ctx;
-    });
+  get mediaState() {
+    return Object.assign({}, this.mediaServiceContext.value.state.context);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -414,204 +158,282 @@ export class MediaController implements ReactiveController {
 
     /* c8 ignore start */
     if (DEV_MODE) {
-      this._logger!.infoGroup(`📬 received \`${event.type}\``)
-        .appendWithLabel('Request', event)
-        .end();
+      // TODO: Dispatch
+      // this._logger!.infoGroup(`📬 received \`${event.type}\``)
+      //   .appendWithLabel('Request', event)
+      //   .end();
     }
     /* c8 ignore stop */
 
     return true;
   }
 
-  protected _handleMuteRequest(event: MuteRequestEvent): void {
-    if (!this._mediaRequestEventGateway(event)) return;
-    this._mediaProviderConnectedQueue.queue('muted', () => {
-      if (this._mediaProvider?.muted === true) return;
-      this._pendingMediaRequests.volume.push(event);
-      this.mediaProvider!.muted = true;
-    });
-  }
+  protected _handleMuteRequest = hostedEventListener(
+    this._host,
+    'vds-mute-request',
+    (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
+      this._mediaProviderConnectedQueue.queue('muted', () => {
+        if (this._mediaProvider?.muted === true) return;
+        this._pendingMediaRequests.volume.push(event);
+        this.mediaProvider!.muted = true;
+      });
+    }
+  );
 
-  protected _handleUnmuteRequest(event: UnmuteRequestEvent): void {
-    if (!this._mediaRequestEventGateway(event)) return;
-    this._mediaProviderConnectedQueue.queue('muted', () => {
-      if (this._mediaProvider?.muted === false) return;
-      this._pendingMediaRequests.volume.push(event);
-      this.mediaProvider!.muted = false;
-    });
-  }
+  protected readonly _handleUnmuteRequest = hostedEventListener(
+    this._host,
+    'vds-unmute-request',
+    (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
+      this._mediaProviderConnectedQueue.queue('muted', () => {
+        if (this._mediaProvider?.muted === false) return;
+        this._pendingMediaRequests.volume.push(event);
+        this.mediaProvider!.muted = false;
+      });
+    }
+  );
 
-  protected _handlePlayRequest(event: PlayRequestEvent): void {
-    if (!this._mediaRequestEventGateway(event)) return;
-    this._mediaProviderConnectedQueue.queue('paused', () => {
-      if (this._mediaProvider?.paused === false) return;
-      this._pendingMediaRequests.play.push(event);
-      this.mediaProvider!.paused = false;
-    });
-  }
+  protected readonly _handlePlayRequest = hostedEventListener(
+    this._host,
+    'vds-play-request',
+    (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
+      this._mediaProviderConnectedQueue.queue('paused', () => {
+        if (this._mediaProvider?.paused === false) return;
+        this._pendingMediaRequests.play.push(event);
+        this.mediaProvider!.paused = false;
+      });
+    }
+  );
 
-  protected _handlePauseRequest(event: PauseRequestEvent): void {
-    if (!this._mediaRequestEventGateway(event)) return;
-    this._mediaProviderConnectedQueue.queue('paused', () => {
-      if (this._mediaProvider?.paused === true) return;
-      this._pendingMediaRequests.pause.push(event);
-      this.mediaProvider!.paused = true;
-    });
-  }
+  protected readonly _handlePauseRequest = hostedEventListener(
+    this._host,
+    'vds-pause-request',
+    (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
+      this._mediaProviderConnectedQueue.queue('paused', () => {
+        if (this._mediaProvider?.paused === true) return;
+        this._pendingMediaRequests.pause.push(event);
+        this.mediaProvider!.paused = true;
+      });
+    }
+  );
 
   protected _isSeekingRequestPending = false;
 
-  protected _handleSeekingRequest(event: SeekingRequestEvent): void {
-    if (!this._mediaRequestEventGateway(event)) return;
-    this._mediaProviderConnectedQueue.queue('seeking', () => {
-      this._pendingMediaRequests.seeking.push(event);
-      this._isSeekingRequestPending = true;
-      this.mediaProvider!.currentTime = event.detail;
-      this._fireWaiting.cancel();
-    });
-  }
+  protected readonly _handleSeekingRequest = hostedEventListener(
+    this._host,
+    'vds-seeking-request',
+    (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
+      this._mediaProviderConnectedQueue.queue('seeking', () => {
+        this._pendingMediaRequests.seeking.push(event);
+        this._isSeekingRequestPending = true;
+        this.mediaProvider!.currentTime = event.detail;
+        this._fireWaiting.cancel();
+      });
+    }
+  );
 
-  protected _handleSeekRequest(event: SeekRequestEvent): void {
-    if (!this._mediaRequestEventGateway(event)) return;
-    this._mediaProviderConnectedQueue.queue('seeking', () => {
-      this._pendingMediaRequests.seeked.push(event);
-      this._isSeekingRequestPending = false;
+  protected readonly _handleSeekRequest = hostedEventListener(
+    this._host,
+    'vds-seek-request',
+    (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
+      this._mediaProviderConnectedQueue.queue('seeking', () => {
+        this._pendingMediaRequests.seeked.push(event);
+        this._isSeekingRequestPending = false;
 
-      let time = event.detail;
+        let time = event.detail;
 
-      // Snap to end if close enough.
-      if (this.mediaProvider!.duration - event.detail < 0.25) {
-        time = this.mediaProvider!.duration;
+        // Snap to end if close enough.
+        if (this.mediaProvider!.duration - event.detail < 0.25) {
+          time = this.mediaProvider!.duration;
+        }
+
+        this.mediaProvider!.currentTime = time;
+      });
+    }
+  );
+
+  protected readonly _handleVolumeChangeRequest = hostedEventListener(
+    this._host,
+    'vds-volume-change-request',
+    (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
+      this._mediaProviderConnectedQueue.queue('volume', () => {
+        if (this._mediaProvider?.volume === event.detail) return;
+        this._pendingMediaRequests.volume.push(event);
+        this.mediaProvider!.volume = event.detail;
+      });
+    }
+  );
+
+  protected readonly _handleEnterFullscreenRequest = hostedEventListener(
+    this._host,
+    'vds-enter-fullscreen-request',
+    async (event) => {
+      if (
+        !this._mediaRequestEventGateway(event) ||
+        this._mediaProvider?.fullscreen
+      ) {
+        return;
       }
 
-      this.mediaProvider!.currentTime = time;
-    });
-  }
-
-  protected _handleVolumeChangeRequest(event: VolumeChangeRequestEvent): void {
-    if (!this._mediaRequestEventGateway(event)) return;
-    this._mediaProviderConnectedQueue.queue('volume', () => {
-      if (this._mediaProvider?.volume === event.detail) return;
-      this._pendingMediaRequests.volume.push(event);
-      this.mediaProvider!.volume = event.detail;
-    });
-  }
-
-  protected async _handleEnterFullscreenRequest(
-    event: EnterFullscreenRequestEvent
-  ): Promise<void> {
-    if (
-      !this._mediaRequestEventGateway(event) ||
-      this._mediaProvider?.fullscreen
-    ) {
-      return;
+      this._pendingMediaRequests.fullscreen.push(event);
+      await this._host.requestFullscreen();
     }
+  );
 
-    this._pendingMediaRequests.fullscreen.push(event);
-    await this._host.requestFullscreen();
-  }
+  protected readonly _handleExitFullscreenRequest = hostedEventListener(
+    this._host,
+    'vds-exit-fullscreen-request',
+    async (event) => {
+      if (
+        !this._mediaRequestEventGateway(event) ||
+        !this._mediaProvider?.fullscreen
+      ) {
+        return;
+      }
 
-  protected async _handleExitFullscreenRequest(
-    event: ExitFullscreenRequestEvent
-  ): Promise<void> {
-    if (
-      !this._mediaRequestEventGateway(event) ||
-      !this._mediaProvider?.fullscreen
-    ) {
-      return;
+      this._pendingMediaRequests.fullscreen.push(event);
+      await this._host.exitFullscreen?.();
     }
+  );
 
-    this._pendingMediaRequests.fullscreen.push(event);
-    await this._host.exitFullscreen?.();
-  }
+  protected readonly _handleFullscreenChange = hostedEventListener(
+    this._host,
+    'vds-fullscreen-change',
+    (event) => {
+      this.mediaService.send({
+        type: 'fullscreen-change',
+        fullscreen: event.detail
+      });
 
-  protected _handleFullscreenChange(event: FullscreenChangeEvent): void {
-    this.mediaCtx.fullscreen = event.detail;
-    this.satisfyMediaRequest('fullscreen', event);
-  }
+      this.satisfyMediaRequest('fullscreen', event);
+    }
+  );
 
-  protected _handleFullscreenError(event: FullscreenErrorEvent): void {
-    this.satisfyMediaRequest('fullscreen', event);
-  }
+  protected readonly _handleFullscreenError = hostedEventListener(
+    this._host,
+    'vds-fullscreen-error',
+    (event) => {
+      this.satisfyMediaRequest('fullscreen', event);
+    }
+  );
 
   // -------------------------------------------------------------------------------------------
   // Media Events
   // -------------------------------------------------------------------------------------------
 
-  protected _handlePlay(event: PlayEvent): void {
-    this.satisfyMediaRequest('play', event);
-  }
-
-  protected _handlePlayError(event: PlayErrorEvent): void {
-    this.satisfyMediaRequest('play', event);
-  }
-
-  protected _handlePlaying(event: PlayingEvent): void {
-    this._fireWaiting.cancel();
-
-    if (this._isSeekingRequestPending) {
-      event.stopImmediatePropagation();
-      this.mediaCtx.seeking = true;
+  protected readonly _handlePlay = hostedEventListener(
+    this._host,
+    'vds-play',
+    (event) => {
+      this.satisfyMediaRequest('play', event);
     }
-  }
+  );
 
-  protected _handlePause(event: PauseEvent): void {
-    this.satisfyMediaRequest('pause', event);
-    this._fireWaiting.cancel();
-  }
+  protected readonly _handlePlayError = hostedEventListener(
+    this._host,
+    'vds-play-error',
+    (event) => {
+      this.satisfyMediaRequest('play', event);
+    }
+  );
 
-  protected _handleVolumeChange(event: VolumeChangeEvent): void {
-    this.satisfyMediaRequest('volume', event);
-  }
-
-  protected _handleReplay(event: ReplayEvent): void {
-    event.requestEvent = this._pendingMediaRequests.play[0];
-  }
-
-  protected _handleSeeking(event: SeekingEvent): void {
-    this.satisfyMediaRequest('seeking', event);
-    if (this._lastWaitingEvent) this._fireWaiting();
-  }
-
-  protected _handleSeeked(event: SeekedEvent): void {
-    // We don't want `seeked` events firing while seeking is updating media playback position.
-    if (this._isSeekingRequestPending) {
-      event.stopImmediatePropagation();
-      this.mediaCtx.seeking = true;
-    } else if (event.type === 'vds-seeked') {
+  protected readonly _handlePlaying = hostedEventListener(
+    this._host,
+    'vds-playing',
+    (event) => {
       this._fireWaiting.cancel();
-      this.satisfyMediaRequest('seeked', event);
+
+      if (this._isSeekingRequestPending) {
+        event.stopImmediatePropagation();
+      }
     }
-  }
+  );
+
+  protected readonly _handlePause = hostedEventListener(
+    this._host,
+    'vds-pause',
+    (event) => {
+      this.satisfyMediaRequest('pause', event);
+      this._fireWaiting.cancel();
+    }
+  );
+
+  protected readonly _handleVolumeChange = hostedEventListener(
+    this._host,
+    'vds-volume-change',
+    (event) => {
+      this.satisfyMediaRequest('volume', event);
+    }
+  );
+
+  protected readonly _handleReplay = hostedEventListener(
+    this._host,
+    'vds-replay',
+    (event) => {
+      event.requestEvent = this._pendingMediaRequests.play[0];
+    }
+  );
+
+  protected readonly _handleSeeking = hostedEventListener(
+    this._host,
+    'vds-seeking',
+    (event) => {
+      this.satisfyMediaRequest('seeking', event);
+      if (this._lastWaitingEvent) this._fireWaiting();
+    }
+  );
+
+  protected readonly _handleSeeked = hostedEventListener(
+    this._host,
+    'vds-seeked',
+    (event) => {
+      // We don't want `seeked` events firing while seeking is updating media playback position.
+      if (this._isSeekingRequestPending) {
+        event.stopImmediatePropagation();
+      } else if (event.type === 'vds-seeked') {
+        this._fireWaiting.cancel();
+        this.satisfyMediaRequest('seeked', event);
+      }
+    }
+  );
 
   protected _firingWaiting = false;
-  protected _lastWaitingEvent?: WaitingEvent;
-  protected _fireWaiting = debounce(() => {
+  protected _lastWaitingEvent?: Event;
+  protected readonly _fireWaiting = debounce(() => {
     if (
-      this.mediaCtx.playing ||
+      this.mediaState.playing ||
       this._isSeekingRequestPending ||
       !this._lastWaitingEvent
     ) {
       return;
     }
 
-    this.mediaCtx.waiting = true;
     this._firingWaiting = true;
 
     const event = vdsEvent('vds-waiting', {
       originalEvent: this._lastWaitingEvent
     });
 
+    this.mediaService.send({ type: 'waiting', trigger: event });
     this._host.dispatchEvent(event);
     this._firingWaiting = false;
     this._lastWaitingEvent = undefined;
   }, 300);
 
-  protected _handleWaiting(event: WaitingEvent): void {
-    if (this._firingWaiting) return;
-    event.stopImmediatePropagation();
-    this.mediaCtx.waiting = false;
-    this._lastWaitingEvent = event;
-    this._fireWaiting();
-  }
+  protected readonly _handleWaiting = hostedEventListener(
+    this._host,
+    'vds-waiting',
+    (event) => {
+      if (this._firingWaiting) return;
+      event.preventDefault();
+      this._lastWaitingEvent = event;
+      this._fireWaiting();
+    }
+  );
 }

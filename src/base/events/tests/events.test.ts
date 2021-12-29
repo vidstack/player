@@ -1,6 +1,5 @@
 import { expect, fixture, oneEvent } from '@open-wc/testing';
 import { html } from 'lit';
-import { stub } from 'sinon';
 
 import { DisposalBin } from '../DisposalBin';
 import { isVdsEvent, listen, VdsEvent } from '../events';

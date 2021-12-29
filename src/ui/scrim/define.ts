@@ -1,10 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import { SCRIM_ELEMENT_TAG_NAME, ScrimElement } from './ScrimElement';
+import { ScrimElement } from './ScrimElement';
 
-safelyDefineCustomElement(SCRIM_ELEMENT_TAG_NAME, ScrimElement);
+safelyDefineCustomElement('vds-scrim', ScrimElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [SCRIM_ELEMENT_TAG_NAME]: ScrimElement;
+    'vds-scrim': ScrimElement;
   }
 }

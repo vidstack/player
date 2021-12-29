@@ -1,13 +1,10 @@
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  TIME_DURATION_ELEMENT_TAG_NAME,
-  TimeDurationElement
-} from './TimeDurationElement';
+import { TimeDurationElement } from './TimeDurationElement';
 
-safelyDefineCustomElement(TIME_DURATION_ELEMENT_TAG_NAME, TimeDurationElement);
+safelyDefineCustomElement('vds-time-duration', TimeDurationElement);
 
 declare global {
   interface HTMLElementTagNameMap {
-    [TIME_DURATION_ELEMENT_TAG_NAME]: TimeDurationElement;
+    'vds-time-duration': TimeDurationElement;
   }
 }
