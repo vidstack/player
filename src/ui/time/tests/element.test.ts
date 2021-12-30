@@ -1,4 +1,4 @@
-import '../define';
+import '../../../define/vds-time';
 
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';

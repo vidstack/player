@@ -3,7 +3,10 @@ import { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener, isPointerEvent } from '../../base/events';
-import { MediaRemoteControl, subscribeToMediaService } from '../../media';
+import {
+  hostedMediaServiceSubscription,
+  MediaRemoteControl
+} from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
 import { formatSpokenTime } from '../../utils/time';
@@ -34,7 +37,7 @@ import { SliderElement } from '../slider';
 export class TimeSliderElement extends SliderElement {
   constructor() {
     super();
-    subscribeToMediaService(this, ({ context }) => {
+    hostedMediaServiceSubscription(this, ({ context }) => {
       this._mediaCurrentTime = context.currentTime;
       this._mediaDuration = context.duration >= 0 ? context.duration : 0;
       this._mediaPaused = context.paused;

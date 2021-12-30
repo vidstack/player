@@ -2,7 +2,7 @@ import { assign, createMachine, interpret, StateMachine } from '@xstate/fsm';
 import { ReactiveControllerHost } from 'lit';
 
 import { createContext } from '../../base/context';
-import { subscribeToService } from '../../base/fsm';
+import { hostedServiceSubscription } from '../../base/machine';
 import {
   MediaMachineContext,
   mediaMachineContext
@@ -428,18 +428,15 @@ function mediaReadyTransitions(currentState: MediaMachineState) {
   ];
 }
 
-/**
- * Creates a fresh media service.
- */
 export function createMediaService() {
   return interpret(mediaMachine);
 }
 
 export const mediaServiceContext = createContext(() => createMediaService());
 
-export function subscribeToMediaService(
+export function hostedMediaServiceSubscription(
   host: ReactiveControllerHost & EventTarget,
   onChange: (state: ReturnType<typeof createMediaService>['state']) => void
 ) {
-  subscribeToService(host, mediaServiceContext, onChange);
+  hostedServiceSubscription(host, mediaServiceContext, onChange);
 }

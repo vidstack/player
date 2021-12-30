@@ -1,6 +1,6 @@
 // ** Dependencies **
-import '../time-slider/define';
-import '../seekable-progress-bar/define';
+import '../../define/vds-time-slider';
+import '../../define/vds-seekable-progress-bar';
 
 import {
   CSSResultGroup,
@@ -21,7 +21,7 @@ import {
   redispatchEvent
 } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
+import { hostedMediaServiceSubscription } from '../../media';
 import { buildExportPartsAttr, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
 import {
@@ -37,7 +37,7 @@ import {
   SliderValueChangeEvent
 } from '../slider/events';
 import { TimeSliderElement } from '../time-slider';
-import { scrubberContext } from './context';
+import { scrubberServiceContext } from './machine';
 import { scrubberElementStyles } from './styles';
 
 /**
@@ -81,14 +81,31 @@ export class ScrubberElement extends WithFocus(LitElement) {
     ];
   }
 
+  constructor() {
+    super();
+    hostedMediaServiceSubscription(this, ({ context }) => {
+      setAttribute(this, 'media-can-play', context.canPlay);
+      setAttribute(this, 'media-waiting', context.waiting);
+    });
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
-  protected readonly ctx = provideContextRecord(this, scrubberContext);
+  protected readonly scrubberServiceProvider =
+    scrubberServiceContext.provide(this);
+
+  get scrubberService() {
+    return this.scrubberServiceProvider.value;
+  }
+
+  get scrubberContext() {
+    return this.scrubberService.state.context;
+  }
 
   /**
    * Whether the scrubber should be disabled (not-interactable).
@@ -172,16 +189,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
   @property({ attribute: 'value-text' })
   valueText = '{currentTime} out of {duration}';
 
-  @watchContext(mediaContext.canPlay)
-  protected _handleCanPlayContextUpdate(canPlay: boolean) {
-    setAttribute(this, 'media-can-play', canPlay);
-  }
-
-  @watchContext(mediaContext.waiting)
-  protected _handleWaitingContextUpdate(waiting: boolean) {
-    setAttribute(this, 'media-waiting', waiting);
-  }
-
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
@@ -216,11 +223,12 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected _handlePointerEnter(event: PointerEvent) {
     if (this.disabled) return;
-    this.ctx.pointing = true;
+    this.scrubberService.send('start-pointing');
+    this.scrubberServiceProvider;
     this.setAttribute('pointing', '');
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('pointer enter')
         .appendWithLabel('Event', event)
@@ -232,18 +240,18 @@ export class ScrubberElement extends WithFocus(LitElement) {
   }
 
   protected _handlePointerMove(event: PointerEvent) {
-    if (this.disabled || this.ctx.dragging) return;
+    if (this.disabled || this.scrubberContext.dragging) return;
     this.scrubberPreviewElement?.updatePreviewPosition(event);
   }
 
   protected _handlePointerLeave(event: PointerEvent) {
     if (this.disabled) return;
 
-    this.ctx.pointing = false;
+    this.scrubberService.send('stop-pointing');
     this.removeAttribute('pointing');
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('pointer leave')
         .appendWithLabel('Event', event)
@@ -251,7 +259,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
     }
     /* c8 ignore stop */
 
-    if (!this.ctx.dragging) {
+    if (!this.scrubberContext.dragging) {
       this.scrubberPreviewElement?.hidePreview(event);
     }
   }
@@ -310,7 +318,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected _handleSliderDragStart(event: SliderDragStartEvent) {
     if (this.disabled) return;
-    this.ctx.dragging = true;
+    this.scrubberService.send('start-dragging');
     this.setAttribute('dragging', '');
     this.scrubberPreviewElement?.showPreview(event);
     redispatchEvent(this, event);
@@ -324,9 +332,10 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected _handleSliderDragEnd(event: SliderDragEndEvent) {
     if (this.disabled) return;
-    this.ctx.dragging = false;
+    this.scrubberService.send('stop-dragging');
     this.removeAttribute('dragging');
-    if (!this.ctx.pointing) this.scrubberPreviewElement?.hidePreview(event);
+    if (!this.scrubberContext.pointing)
+      this.scrubberPreviewElement?.hidePreview(event);
     redispatchEvent(this, event);
   }
 

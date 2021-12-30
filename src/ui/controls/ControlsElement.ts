@@ -1,7 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
 import { controlsElementStyles } from './styles';
 
 /**
@@ -45,7 +44,7 @@ export class ControlsElement extends LitElement {
   }
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   protected override render(): TemplateResult {
     return html`<slot></slot>`;

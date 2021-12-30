@@ -2,7 +2,6 @@
 
 import { ReactiveElement } from 'lit';
 
-import { DEV_MODE } from '../../global/env';
 import { canOrientScreen, IS_CLIENT } from '../../utils/support';
 import { DisposalBin, listen, vdsEvent } from '../events';
 import { Logger } from '../logger';
@@ -33,7 +32,7 @@ export class ScreenOrientationController {
   constructor(protected readonly _host: ReactiveElement) {
     this._updateScreenOrientation();
 
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger = new Logger(_host, { owner: this });
     }
 
@@ -93,7 +92,7 @@ export class ScreenOrientationController {
   async lock(lockType: ScreenOrientationLock): Promise<void> {
     this._throwIfScreenOrientationUnavailable();
 
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.info('locking screen orientation', lockType);
     }
 
@@ -119,7 +118,7 @@ export class ScreenOrientationController {
   async unlock(): Promise<void> {
     this._throwIfScreenOrientationUnavailable();
 
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.info('unlocking screen orientation');
     }
 
@@ -154,7 +153,7 @@ export class ScreenOrientationController {
     this._screenOrientation = window.screen.orientation
       .type as ScreenOrientation;
 
-    if (DEV_MODE && this._isScreenOrientationLocked) {
+    if (__DEV__ && this._isScreenOrientationLocked) {
       this._logger.info('screen orientation changed', this._screenOrientation);
     }
 

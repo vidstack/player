@@ -1,4 +1,7 @@
-import { MediaRemoteControl, subscribeToMediaService } from '../../media';
+import {
+  hostedMediaServiceSubscription,
+  MediaRemoteControl
+} from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
 
@@ -40,7 +43,7 @@ export class PlayButtonElement extends ToggleButtonElement {
 
   constructor() {
     super();
-    subscribeToMediaService(this, ({ context }) => {
+    hostedMediaServiceSubscription(this, ({ context }) => {
       this.pressed = !context.paused;
       setAttribute(this, 'media-can-play', context.canPlay);
       setAttribute(this, 'media-waiting', context.waiting);

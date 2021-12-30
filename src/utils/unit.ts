@@ -1,5 +1,3 @@
-import { Constructor } from '../global/helpers';
-
 /**
  * No-operation (noop).
  *
@@ -16,6 +14,18 @@ export function noop(...args: any[]) {}
 export function notEqual(valueA: unknown, valueB: unknown): boolean {
   // This ensures (valueB==NaN, valueA==NaN) always returns false.
   return valueB !== valueA && (valueB === valueB || valueA === valueA);
+}
+
+/**
+ * Whether two values are NOT equal excluding objects and functions.
+ *
+ * @param valueA
+ * @param valueB
+ */
+export function safeNotEqual(a, b) {
+  return a != a
+    ? b == b
+    : a !== b || (a && typeof a === 'object') || typeof a === 'function';
 }
 
 /**
@@ -71,7 +81,7 @@ export function isObject(value: any): value is object {
  * @param value - The value to check.
  */
 export function isNumber(value: any): value is number {
-  return value?.constructor === Number && !Number.isNaN(value);
+  return typeof value === 'number' && !Number.isNaN(value);
 }
 
 /**
@@ -80,7 +90,7 @@ export function isNumber(value: any): value is number {
  * @param value - The value to check.
  */
 export function isString(value: any): value is string {
-  return value?.constructor === String;
+  return typeof value === 'string';
 }
 
 /**
@@ -89,7 +99,7 @@ export function isString(value: any): value is string {
  * @param value - The value to check.
  */
 export function isBoolean(value: any): value is boolean {
-  return value?.constructor === Boolean;
+  return typeof value === 'boolean';
 }
 
 /**
@@ -99,7 +109,7 @@ export function isBoolean(value: any): value is boolean {
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function isFunction(value: any): value is Function {
-  return value?.constructor === Function || value instanceof Function;
+  return typeof value === 'function';
 }
 
 /**

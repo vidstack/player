@@ -15,7 +15,6 @@ import {
   ScreenOrientationController,
   ScreenOrientationLock
 } from '../../base/screen-orientation';
-import { DEV_MODE } from '../../global/env';
 import { clampNumber } from '../../utils/number';
 import { notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
@@ -49,7 +48,7 @@ export abstract class MediaProviderElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   protected readonly _disconnectDisposal = new DisposalBin();
 
@@ -100,7 +99,7 @@ export abstract class MediaProviderElement extends LitElement {
   /* c8 ignore next */
   protected _logMediaEvents() {
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       const mediaEvents: (keyof MediaEvents)[] = [
         'vds-abort',
         'vds-can-play',
@@ -642,7 +641,7 @@ export abstract class MediaProviderElement extends LitElement {
     await this.mediaRequestQueue.start();
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .infoGroup(
           '-------------------------- ✅ MEDIA READY -----------------------------------'
@@ -720,7 +719,7 @@ export abstract class MediaProviderElement extends LitElement {
     }
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .infoGroup('📼 media src change')
         .appendWithLabel('Current src', this.currentSrc)

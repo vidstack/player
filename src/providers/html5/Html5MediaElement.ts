@@ -3,7 +3,6 @@ import { property, state } from 'lit/decorators.js';
 import { createRef } from 'lit/directives/ref.js';
 
 import { listen, redispatchEvent, vdsEvent } from '../../base/events';
-import { DEV_MODE } from '../../global/env';
 import {
   CanPlay,
   MediaProviderElement,
@@ -312,7 +311,7 @@ export class Html5MediaElement extends MediaProviderElement {
     );
 
     /* c8 ignore start */
-    if (DEV_MODE && nodes.length > 0) {
+    if (__DEV__ && nodes.length > 0) {
       this._logger
         .logGroup('Found `<source>` and `<track>` elements')
         .appendWithLabel('Nodes', nodes)
@@ -364,7 +363,7 @@ export class Html5MediaElement extends MediaProviderElement {
       this._disconnectDisposal.add(
         listen(this.mediaElement!, type, async (event: Event) => {
           /* c8 ignore start */
-          if (DEV_MODE && type !== 'timeupdate') {
+          if (__DEV__ && type !== 'timeupdate') {
             this._logger
               .debugGroup(`📺 fired \`${event.type}\``)
               .appendWithLabel('Event', event)
@@ -385,7 +384,7 @@ export class Html5MediaElement extends MediaProviderElement {
     });
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.debug('attached event listeners');
     }
     /* c8 ignore stop */
@@ -714,7 +713,7 @@ export class Html5MediaElement extends MediaProviderElement {
       await this.updateComplete;
 
       /* c8 ignore start */
-      if (DEV_MODE) {
+      if (__DEV__) {
         this._logger.debug('Calling `load()` on media element');
       }
       /* c8 ignore stop */
@@ -761,7 +760,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
   async play() {
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.info('attempting to play...');
     }
     /* c8 ignore stop */
@@ -780,7 +779,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
   async pause() {
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.info('attempting to pause...');
     }
     /* c8 ignore stop */

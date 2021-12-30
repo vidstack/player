@@ -13,7 +13,6 @@ import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { hostedEventListener, vdsEvent } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
 import {
   clampNumber,
   getNumberOfDecimalPlaces,
@@ -105,7 +104,7 @@ export class SliderElement extends WithFocus(LitElement) {
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` property of the slider.
@@ -501,7 +500,7 @@ export class SliderElement extends WithFocus(LitElement) {
     this._updateValueBasedOnThumbPosition(event);
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('started dragging')
         .appendWithLabel('Event', event)
@@ -526,7 +525,7 @@ export class SliderElement extends WithFocus(LitElement) {
     this._updateValueBasedOnThumbPosition(event);
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('stopped dragging')
         .appendWithLabel('Event', event)

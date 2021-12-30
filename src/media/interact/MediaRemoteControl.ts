@@ -3,7 +3,6 @@ import type { ReactiveControllerHost } from 'lit';
 import { ExtractEventInit, vdsEvent } from '../../base/events';
 import { Logger } from '../../base/logger';
 import { createHostedRequestQueue } from '../../base/queue';
-import { DEV_MODE } from '../../global/env';
 import { MediaRequestEvents } from '../request.events';
 
 /**
@@ -31,7 +30,7 @@ export class MediaRemoteControl {
 
   constructor(protected readonly _host: ReactiveControllerHost & EventTarget) {
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger = new Logger(_host, { owner: this });
     }
     /* c8 ignore stop */
@@ -106,7 +105,7 @@ export class MediaRemoteControl {
       });
 
       /* c8 ignore start */
-      if (DEV_MODE) {
+      if (__DEV__) {
         this._logger
           .infoGroup(`📨 dispatching \`${type}\``)
           .appendWithLabel('Event', request)

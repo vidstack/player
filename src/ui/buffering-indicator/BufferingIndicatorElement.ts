@@ -1,8 +1,7 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
-import { subscribeToMediaService } from '../../media';
+import { hostedMediaServiceSubscription } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { bufferingIndicatorElementStyles } from './styles';
 
@@ -44,11 +43,11 @@ export class BufferingIndicatorElement extends LitElement {
   }
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   constructor() {
     super();
-    subscribeToMediaService(this, ({ context }) => {
+    hostedMediaServiceSubscription(this, ({ context }) => {
       setAttribute(this, 'media-can-play', context.canPlay);
       setAttribute(this, 'media-waiting', context.waiting);
       setAttribute(this, 'media-ended', context.ended);

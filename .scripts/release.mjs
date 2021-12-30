@@ -97,15 +97,12 @@ async function main() {
     return;
   }
 
-  // update package version
   step('Updating version...');
   updatePackageVersion(targetVersion);
 
-  // update lockfile
   step('Updating lockfile...');
   await run(`npm`, ['install']);
 
-  // run tests
   step('Running tests...');
   if (!skipTests && !isDryRun) {
     await run('npm', ['run', 'test:coverage']);
@@ -113,15 +110,13 @@ async function main() {
     console.log(`(skipped)`);
   }
 
-  // build package
-  step('Building production package...');
+  step('Building package...');
   if (!skipBuild && !isDryRun) {
-    await run('npm', ['run', 'build:prod']);
+    await run('npm', ['run', 'build:all']);
   } else {
     console.log(`(skipped)`);
   }
 
-  // generate changelog
   step('Generating changelog...');
   await run(`npm`, ['run', 'changelog']);
 
@@ -140,7 +135,6 @@ async function main() {
 
   publishPackage(targetVersion);
 
-  // push to GitHub
   step('Pushing to GitHub...');
   await runIfNotDry('git', ['tag', `v${targetVersion}`]);
   await runIfNotDry('git', [
@@ -157,7 +151,6 @@ async function main() {
     );
   }
 
-  // empty line
   console.log();
 }
 

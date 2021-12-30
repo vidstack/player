@@ -3,7 +3,6 @@ import { ReactiveController, ReactiveElement } from 'lit';
 
 import { DisposalBin, hostedEventListener, vdsEvent } from '../../base/events';
 import { RequestQueue } from '../../base/queue';
-import { DEV_MODE } from '../../global/env';
 import { keysOf } from '../../utils/object';
 import { isNil } from '../../utils/unit';
 import { mediaServiceContext } from '../machine';
@@ -32,7 +31,7 @@ export class MediaController implements ReactiveController {
   protected readonly _mediaProviderDisconnectedDisposal = new DisposalBin();
 
   constructor(protected readonly _host: MediaControllerHost) {
-    this.mediaServiceContext = mediaServiceContext.provide(_host);
+    this.mediaServiceProvider = mediaServiceContext.provide(_host);
     _host.addController(this);
   }
 
@@ -97,7 +96,7 @@ export class MediaController implements ReactiveController {
   // Media Context
   // -------------------------------------------------------------------------------------------
 
-  private readonly mediaServiceContext: ReturnType<
+  private readonly mediaServiceProvider: ReturnType<
     typeof mediaServiceContext['provide']
   >;
 
@@ -108,14 +107,14 @@ export class MediaController implements ReactiveController {
    * @internal
    */
   get mediaService() {
-    return this.mediaServiceContext.value;
+    return this.mediaServiceProvider.value;
   }
 
   /**
    * A snapshot of the current media state.
    */
   get mediaState() {
-    return Object.assign({}, this.mediaServiceContext.value.state.context);
+    return Object.assign({}, this.mediaServiceProvider.value.state.context);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -157,7 +156,7 @@ export class MediaController implements ReactiveController {
     event.stopPropagation();
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       // TODO: Dispatch
       // this._logger!.infoGroup(`📬 received \`${event.type}\``)
       //   .appendWithLabel('Request', event)

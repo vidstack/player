@@ -1,4 +1,7 @@
-import { MediaRemoteControl, subscribeToMediaService } from '../../media';
+import {
+  hostedMediaServiceSubscription,
+  MediaRemoteControl
+} from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
 
@@ -42,7 +45,7 @@ export class FullscreenButtonElement extends ToggleButtonElement {
 
   constructor() {
     super();
-    subscribeToMediaService(this, ({ context }) => {
+    hostedMediaServiceSubscription(this, ({ context }) => {
       this.pressed = context.fullscreen;
       setAttribute(this, 'media-can-play', context.canPlay);
       setAttribute(this, 'hidden', !context.canRequestFullscreen);

@@ -6,7 +6,6 @@ import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { hostedEventListener } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
 import { toggleButtonElementStyles } from './styles';
 
 /**
@@ -48,7 +47,7 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * Whether the toggle is currently in a `pressed` state.

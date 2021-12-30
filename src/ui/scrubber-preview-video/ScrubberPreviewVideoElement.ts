@@ -11,7 +11,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { ifNonEmpty } from '../../base/directives';
 import { redispatchEvent } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
+import { hostedServiceSubscription } from '../../base/machine';
 import { scrubberPreviewContext } from '../scrubber-preview';
 import { scrubberPreviewVideoElementStyles } from './styles';
 
@@ -57,12 +57,19 @@ export class ScrubberPreviewVideoElement extends LitElement {
     return [scrubberPreviewVideoElementStyles];
   }
 
+  constructor() {
+    super();
+    hostedServiceSubscription(this, scrubberPreviewContext, ({ context }) => {
+      this._handlePreviewTimeUpdate(context.time);
+    });
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * The URL of a media resource to use.
@@ -84,10 +91,6 @@ export class ScrubberPreviewVideoElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
-
-  override connectedCallback() {
-    super.connectedCallback();
-  }
 
   override willUpdate(changedProperties: PropertyValues) {
     if (changedProperties.has('src')) {
@@ -130,7 +133,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
     this.setAttribute('video-can-play', '');
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('preview video can play')
         .appendWithLabel('Video', this.videoElement)
@@ -150,7 +153,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
     this.setAttribute('video-error', '');
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .errorGroup('preview video error')
         .appendWithLabel('Video', this.videoElement)
@@ -162,8 +165,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
     redispatchEvent(this, event);
   }
 
-  @watchContext(scrubberPreviewContext.time)
-  protected _handlePreviewTimeContextUpdate(previewTime: number) {
+  protected _handlePreviewTimeUpdate(previewTime: number) {
     if (
       !this._hasError &&
       this._canPlay &&

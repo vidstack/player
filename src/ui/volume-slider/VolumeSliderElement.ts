@@ -2,7 +2,10 @@ import { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener } from '../../base/events';
-import { MediaRemoteControl, subscribeToMediaService } from '../../media';
+import {
+  hostedMediaServiceSubscription,
+  MediaRemoteControl
+} from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { round } from '../../utils/number';
 import { SliderElement } from '../slider';
@@ -34,7 +37,7 @@ import { SliderElement } from '../slider';
 export class VolumeSliderElement extends SliderElement {
   constructor() {
     super();
-    subscribeToMediaService(this, ({ context }) => {
+    hostedMediaServiceSubscription(this, ({ context }) => {
       this._mediaVolume = context.volume;
       setAttribute(this, 'media-can-play', context.canPlay);
     });

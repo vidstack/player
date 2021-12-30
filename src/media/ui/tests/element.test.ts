@@ -1,4 +1,4 @@
-import '../define';
+import '../../../define/vds-media-ui';
 
 import { elementUpdated, expect } from '@open-wc/testing';
 import { html } from 'lit';

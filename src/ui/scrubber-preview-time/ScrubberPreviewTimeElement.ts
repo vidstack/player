@@ -1,6 +1,6 @@
 import { property } from 'lit/decorators.js';
 
-import { subscribeToService } from '../../base/fsm';
+import { hostedServiceSubscription } from '../../base/machine';
 import { scrubberPreviewContext } from '../scrubber-preview';
 import { TimeElement } from '../time';
 
@@ -39,9 +39,8 @@ export class ScrubberPreviewTimeElement extends TimeElement {
 
   constructor() {
     super();
-    // @consumeContext - use preview time
-    subscribeToService(this, mediaServiceContext, ({ context }) => {
-      this.seconds = context.currentTime;
+    hostedServiceSubscription(this, scrubberPreviewContext, ({ context }) => {
+      this.seconds = context.time;
     });
   }
 }

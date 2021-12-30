@@ -9,7 +9,7 @@ import { state } from 'lit/decorators.js';
 
 import { setAttribute } from '../../utils/dom';
 import { IS_IOS } from '../../utils/support';
-import { subscribeToMediaService } from '../machine';
+import { hostedMediaServiceSubscription } from '../machine';
 import { ViewType } from '../ViewType';
 import { mediaUiElementStyles } from './styles';
 
@@ -58,7 +58,7 @@ export class MediaUiElement extends LitElement {
 
   constructor() {
     super();
-    subscribeToMediaService(this, ({ context }) => {
+    hostedMediaServiceSubscription(this, ({ context }) => {
       this._mediaCanPlay = context.canPlay;
       this._mediaFullscreen = context.fullscreen;
       this._mediaIsVideoView = context.viewType === ViewType.Video;
