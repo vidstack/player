@@ -10,8 +10,8 @@ export function createHostedRequestQueue(host: ReactiveControllerHost) {
   const q = new RequestQueue();
 
   host.addController({
-    hostConnected: q.start,
-    hostDisconnected: q.destroy
+    hostConnected: q.start.bind(q),
+    hostDisconnected: q.destroy.bind(q)
   });
 
   return q;

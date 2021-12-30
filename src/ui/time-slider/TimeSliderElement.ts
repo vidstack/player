@@ -78,7 +78,7 @@ export class TimeSliderElement extends SliderElement {
   @property({ attribute: false })
   override valueMax = '0';
 
-  protected _step = 0.25;
+  protected override _step = 0.25;
 
   /**
    *  A number that specifies the granularity that the slider value must adhere to in seconds.
@@ -87,8 +87,7 @@ export class TimeSliderElement extends SliderElement {
    * @default 0.25
    */
   @property({ type: Number })
-  // @ts-ignore - Defined as accessor here but property in parent class.
-  get step() {
+  override get step() {
     return this._mediaDuration > 0
       ? round((this._step / this._mediaDuration) * 100, 2)
       : this._step;
@@ -98,7 +97,7 @@ export class TimeSliderElement extends SliderElement {
     this._step = newStep;
   }
 
-  protected _keyboardStep = 5;
+  protected override _keyboardStep = 5;
 
   /**
    * ♿ **ARIA:** A number that specifies the number of seconds to step when interacting

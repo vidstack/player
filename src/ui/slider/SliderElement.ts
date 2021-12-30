@@ -182,14 +182,30 @@ export class SliderElement extends WithFocus(LitElement) {
    * A number that specifies the granularity that the slider value must adhere to.
    */
   @property({ type: Number, reflect: true })
-  step = 1;
+  get step() {
+    return this._step;
+  }
+
+  set step(newStep: number) {
+    this._step = newStep;
+  }
+
+  protected _step = 1;
 
   /**
    * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
    * the slider via keyboard.
    */
   @property({ attribute: 'keyboard-step', type: Number })
-  keyboardStep = 1;
+  get keyboardStep() {
+    return this._keyboardStep;
+  }
+
+  set keyboardStep(newStep: number) {
+    this._keyboardStep = newStep;
+  }
+
+  protected _keyboardStep = 1;
 
   /**
    * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key

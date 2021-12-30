@@ -9,12 +9,10 @@
   },
   "main": "dist-prod/index.js",
   "module": "dist-prod/index.js",
-  "jsdelivr": "dist-cdn/index.js",
   "files": [
     "src/",
     "dist/",
     "dist-prod/",
-    "dist-cdn/",
     "define/",
     "index.d.ts",
     "global.d.ts"
@@ -23,8 +21,7 @@
     "define/**",
     "src/define/**",
     "dist/define/**",
-    "dist-prod/define/**",
-    "dist-cdn/define/**"
+    "dist-prod/define/**"
   ],
   "exports": {
     ".": {
@@ -34,9 +31,6 @@
     "./define/*": {
       "development": "./dist/define/*",
       "default": "./dist-prod/define/*"
-    },
-    "./cdn/define/*": {
-      "default": "./dist-cdn/define/*"
     }
   },
   "contributors": [
@@ -52,15 +46,15 @@
     "url": "https://github.com/vidstack/elements/issues"
   },
   "scripts": {
-    "build": "rimraf dist && npm run build:base -- --outdir dist --external lit,tslib",
-    "build:prod": "rimraf dist-prod && npm run build:base -- --outdir dist-prod --minify --prod --external lit,tslib",
-    "build:cdn": "rimraf dist-cdn && npm run build:base -- --outdir dist-cdn --minify --prod",
+    "build": "rimraf dist && npm run build:base -- --outdir dist",
+    "build:prod": "rimraf dist-prod && npm run build:base -- --outdir dist-prod --minify --prod",
     "build:base": "node .scripts/build.mjs --entry src/index.ts,src/define/**",
     "build:watch": "run-p \"build -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
     "build:types": "rimraf types && tsc -p tsconfig-build.json",
     "build:definitions": "rimraf define && node .scripts/definitions.mjs",
-    "build:all": "run-p build build:prod build:cdn && run-s build:types build:definitions",
+    "build:all": "run-p build build:prod && run-s build:types build:definitions",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "clean": "rimraf define dist dist-prod types",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
@@ -77,19 +71,16 @@
     "@types/fscreen": "^1.0.1",
     "@types/hls.js": "^0.13.3",
     "@xstate/fsm": "^1.6.2",
-    "@xstate/inspect": "^0.5.2",
     "fscreen": "^1.2.0",
     "just-debounce-it": "^1.5.0",
-    "just-throttle": "^2.3.1"
-  },
-  "peerDependencies": {
-    "lit": "^2.0.2",
-    "tslib": "^2.3.0"
+    "just-throttle": "^2.3.1",
+    "lit": "^2.0.2"
   },
   "devDependencies": {
     "@types/node": "^16.0.1",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
+    "@xstate/inspect": "^0.5.2",
     "@xstate/test": "^0.5.0",
     "chokidar": "^3.5.2",
     "conventional-changelog-cli": "^2.1.1",
@@ -109,7 +100,6 @@
     "husky": "^7.0.0",
     "kleur": "^4.1.4",
     "lint-staged": "^11.0.0",
-    "lit": "^2.0.2",
     "minimist": "^1.2.5",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
@@ -144,7 +134,6 @@
     "framework-agnostic",
     "hls",
     "html5",
-    "lit-element",
     "lit",
     "media",
     "plyr",

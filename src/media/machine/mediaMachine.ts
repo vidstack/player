@@ -3,6 +3,7 @@ import { ReactiveControllerHost } from 'lit';
 
 import { createContext } from '../../base/context';
 import { hostedServiceSubscription } from '../../base/machine';
+import { isArray } from '../../utils/unit';
 import {
   MediaMachineContext,
   mediaMachineContext
@@ -160,12 +161,19 @@ function mediaTransition<Event extends MediaMachineEventType>(
 function transitions(
   ...transitions: (MediaTransitionTuple<any> | MediaTransitionTuple<any>[])[]
 ): MediaTransitions {
-  return transitions
-    .flat()
-    .reduce(
-      (previous, [event, transition]) => ({ ...previous, [event]: transition }),
-      {}
-    );
+  return (
+    transitions
+      // @ts-expect-error - .
+      .reduce((p, c) => [...p, ...(isArray(c[0]) ? c : [c])], [])
+      // @ts-expect-error - .
+      .reduce(
+        (previous, [event, transition]) => ({
+          ...previous,
+          [event]: transition
+        }),
+        {}
+      )
+  );
 }
 
 function loadingTransition() {

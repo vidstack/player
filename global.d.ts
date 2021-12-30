@@ -1,4 +1,6 @@
 declare global {
+  type WebKitPresentationMode = 'picture-in-picture' | 'inline' | 'fullscreen';
+
   type FullscreenEvents = import('./types').FullscreenEvents;
   type HlsEvents = import('./types').HlsEvents;
   type MediaEvents = import('./types').MediaEvents;

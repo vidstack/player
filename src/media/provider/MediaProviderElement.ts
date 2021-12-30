@@ -297,7 +297,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected _getCurrentTime() {
     // Avoid errors where `currentTime` can have higher precision than duration.
-    return Math.min(this.currentTime, this.duration);
+    return Math.min(this.mediaState.currentTime, this.duration);
   }
 
   protected abstract _setCurrentTime(newTime: number): void;

@@ -48,8 +48,8 @@ export class VolumeSliderElement extends SliderElement {
   // -------------------------------------------------------------------------------------------
 
   override label = 'Media volume slider';
-  override step = 0.5;
-  override keyboardStep = 0.5;
+  override _step = 0.5;
+  override _keyboardStep = 0.5;
   override shiftKeyMultiplier = 10;
 
   /** @internal */
