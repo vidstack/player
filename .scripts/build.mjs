@@ -39,7 +39,7 @@ async function main() {
     legalComments: 'none',
     sourcemap: true,
     treeShaking: true,
-    incremental: args.incremental,
+    incremental: args.watch || args.w,
     logLevel: 'info',
     define: { __DEV__: args.prod ? 'false' : 'true' },
     external: [...(args.external?.split(',') ?? [])]

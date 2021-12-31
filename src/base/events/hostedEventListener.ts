@@ -16,6 +16,23 @@ export function hostedEventListener<
     target?: EventTarget;
   }
 ) {
-  const off = listen(options?.target ?? host, type, listener, options);
-  host.addController({ hostDisconnected: off });
+  let off: (() => void) | undefined;
+
+  function attach() {
+    if (!off) {
+      off = listen(options?.target ?? host, type, listener, options);
+    }
+  }
+
+  attach();
+
+  host.addController({
+    hostConnected() {
+      attach();
+    },
+    hostDisconnected() {
+      off?.();
+      off = undefined;
+    }
+  });
 }

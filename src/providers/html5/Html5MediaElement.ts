@@ -403,12 +403,25 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handleCanPlayThrough(event: Event) {
     if (this.canPlayThrough) return;
     this.dispatchEvent(
-      vdsEvent('vds-can-play-through', { originalEvent: event })
+      vdsEvent('vds-can-play-through', {
+        originalEvent: event,
+        detail: { duration: this.mediaElement!.duration }
+      })
     );
   }
 
   protected _handleLoadStart(event: Event) {
-    this.dispatchEvent(vdsEvent('vds-load-start', { originalEvent: event }));
+    this.dispatchEvent(
+      vdsEvent('vds-load-start', {
+        originalEvent: event,
+        detail: {
+          src: this.mediaElement!.currentSrc,
+          poster: this.currentPoster,
+          mediaType: this._getMediaType(),
+          viewType: this.viewType
+        }
+      })
+    );
   }
 
   protected _handleEmptied(event: Event) {
@@ -435,7 +448,13 @@ export class Html5MediaElement extends MediaProviderElement {
       })
     );
     this.dispatchEvent(
-      vdsEvent('vds-loaded-metadata', { originalEvent: event })
+      vdsEvent('vds-loaded-metadata', {
+        originalEvent: event,
+        detail: {
+          src: this.mediaElement!.currentSrc,
+          duration: this.mediaElement!.duration
+        }
+      })
     );
     this._determineMediaType(event);
   }
@@ -638,30 +657,20 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleLoop() {
+    const hasCustomControls = isUndefined(this.controls);
+
+    // Forcefully hide controls to prevent flashing when looping. Calling `play()` at end
+    // of media may show a flash of native controls on iOS, even if `controls` property is not set.
+    if (hasCustomControls) {
+      this.mediaElement!.controls = false;
+    }
+
     window.requestAnimationFrame(async () => {
       try {
-        this.mediaElement!.controls = false;
         this._isLoopedReplay = true;
         await this.play();
-        // We temporarily hide controls while looping to prevent flashing. Any of these events
-        // will put the controls back in their previous state.
-        const dispose: (() => void)[] = [];
-        (['pointerdown', 'pointermove', 'keydown'] as const).forEach((type) => {
-          dispose.push(
-            listen(
-              window,
-              type,
-              () => {
-                dispose.forEach((fn) => fn());
-                this.mediaElement!.controls = this.controls;
-              },
-              { once: true }
-            )
-          );
-        });
       } catch (e) {
         this._isLoopedReplay = false;
-        this.mediaElement!.controls = this.controls;
       }
     });
   }
@@ -770,7 +779,7 @@ export class Html5MediaElement extends MediaProviderElement {
       await this._resetPlaybackIfEnded();
       return this.mediaElement?.play();
     } catch (error) {
-      const playErrorEvent = vdsEvent('vds-play-error');
+      const playErrorEvent = vdsEvent('vds-play-fail');
       playErrorEvent.autoplay = this._autoplayAttemptPending;
       playErrorEvent.error = error as Error;
       throw error;

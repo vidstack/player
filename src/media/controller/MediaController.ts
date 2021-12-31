@@ -1,11 +1,12 @@
 import debounce from 'just-debounce-it';
-import { ReactiveController, ReactiveElement } from 'lit';
+import type { ReactiveController, ReactiveElement } from 'lit';
 
+import type { ContextProviderController } from '../../base/context';
 import { DisposalBin, hostedEventListener, vdsEvent } from '../../base/events';
 import { RequestQueue } from '../../base/queue';
 import { keysOf } from '../../utils/object';
 import { isNil } from '../../utils/unit';
-import { mediaServiceContext } from '../machine';
+import { MediaService, mediaServiceContext } from '../machine';
 import { MediaProviderElement } from '../provider/MediaProviderElement';
 import { PendingMediaRequests } from '../request.events';
 
@@ -69,9 +70,11 @@ export class MediaController implements ReactiveController {
 
       const { element, onDisconnect } = event.detail;
 
+      // If red squiggle ignore, only showing in IDE but builds are fine.
       if (this.mediaProvider === element) return;
 
       this._handleMediaProviderDisconnect();
+      // If red squiggle ignore, only showing in IDE but builds are fine.
       this._mediaProvider = element;
       this._flushMediaProviderConnectedQueue();
       onDisconnect(this._handleMediaProviderDisconnect.bind(this));
@@ -96,15 +99,11 @@ export class MediaController implements ReactiveController {
   // Media Context
   // -------------------------------------------------------------------------------------------
 
-  private readonly mediaServiceProvider: ReturnType<
-    typeof mediaServiceContext['provide']
-  >;
+  private readonly mediaServiceProvider: ContextProviderController<MediaService>;
 
   /**
    * Media service used to keep track of current media state and context. This is consumed
    * by a provider, and UI components, so they can subscribe to media state changes.
-   *
-   * @internal
    */
   get mediaService() {
     return this.mediaServiceProvider.value;
@@ -305,11 +304,6 @@ export class MediaController implements ReactiveController {
     this._host,
     'vds-fullscreen-change',
     (event) => {
-      this.mediaService.send({
-        type: 'fullscreen-change',
-        fullscreen: event.detail
-      });
-
       this.satisfyMediaRequest('fullscreen', event);
     }
   );
@@ -334,9 +328,9 @@ export class MediaController implements ReactiveController {
     }
   );
 
-  protected readonly _handlePlayError = hostedEventListener(
+  protected readonly _handlePlayFail = hostedEventListener(
     this._host,
-    'vds-play-error',
+    'vds-play-fail',
     (event) => {
       this.satisfyMediaRequest('play', event);
     }
@@ -419,7 +413,6 @@ export class MediaController implements ReactiveController {
       originalEvent: this._lastWaitingEvent
     });
 
-    this.mediaService.send({ type: 'waiting', trigger: event });
     this._host.dispatchEvent(event);
     this._firingWaiting = false;
     this._lastWaitingEvent = undefined;

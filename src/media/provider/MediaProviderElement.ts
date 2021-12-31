@@ -2,12 +2,7 @@ import { LitElement, PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
-import {
-  DisposalBin,
-  hostedEventListener,
-  listen,
-  vdsEvent
-} from '../../base/events';
+import { DisposalBin, listen, vdsEvent } from '../../base/events';
 import { FullscreenController } from '../../base/fullscreen';
 import { ElementLogger } from '../../base/logger';
 import { createHostedRequestQueue, RequestQueue } from '../../base/queue';
@@ -18,8 +13,8 @@ import {
 import { clampNumber } from '../../utils/number';
 import { notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
-import { MediaEvents } from '../events';
-import { mediaServiceContext } from '../machine';
+import type { MediaEvents } from '../events';
+import { mediaServiceContext, MediaServiceController } from '../machine';
 import { MediaType } from '../MediaType';
 import { ViewType } from '../ViewType';
 
@@ -56,33 +51,33 @@ export abstract class MediaProviderElement extends LitElement {
     super.updated(changedProperties);
 
     if (changedProperties.has('controls')) {
-      this.mediaService.send({
-        type: 'controls-change',
-        controls: this.controls ?? false
-      });
+      this.dispatchEvent(
+        vdsEvent('vds-controls-change', { detail: this.controls ?? false })
+      );
     }
 
     if (changedProperties.has('loop')) {
-      this.mediaService.send({
-        type: 'loop-change',
-        loop: this.loop ?? false
-      });
+      this.dispatchEvent(
+        vdsEvent('vds-loop-change', { detail: this.loop ?? false })
+      );
     }
 
     if (changedProperties.has('playsinline')) {
-      this.mediaService.send({
-        type: 'playsinline-change',
-        playsinline: this.playsinline ?? false
-      });
+      this.dispatchEvent(
+        vdsEvent('vds-playsinline-change', {
+          detail: this.playsinline ?? false
+        })
+      );
     }
   }
 
   protected override firstUpdated(changedProperties: PropertyValues) {
     super.firstUpdated(changedProperties);
-    this.mediaService.send({
-      type: 'can-fullscreen',
-      supported: this.canRequestFullscreen
-    });
+    this.dispatchEvent(
+      vdsEvent('vds-fullscreen-support-change', {
+        detail: this.canRequestFullscreen
+      })
+    );
   }
 
   override disconnectedCallback() {
@@ -169,10 +164,11 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   set autoplay(shouldAutoplay: boolean) {
-    this.mediaService.send({
-      type: 'autoplay-change',
-      autoplay: shouldAutoplay
-    });
+    if (this.autoplay !== shouldAutoplay) {
+      this.dispatchEvent(
+        vdsEvent('vds-autoplay-change', { detail: shouldAutoplay })
+      );
+    }
 
     if (this.canPlay && !this._autoplayAttemptPending && shouldAutoplay) {
       this._autoplayAttemptPending = true;
@@ -657,7 +653,10 @@ export abstract class MediaProviderElement extends LitElement {
     this._autoplayAttemptPending = true;
 
     if (this.willAttemptAutoplay) {
-      this.mediaService.send('autoplay');
+      this.dispatchEvent(
+        vdsEvent('vds-autoplay', { detail: { muted: this.muted } })
+      );
+
       await this._attemptAutoplay();
     }
 
@@ -692,11 +691,18 @@ export abstract class MediaProviderElement extends LitElement {
 
     try {
       if (shouldTryMuted) this.muted = true;
+
+      this.dispatchEvent(
+        vdsEvent('vds-autoplay-attempt', {
+          detail: { attempt: this._autoplayRetryCount, muted: shouldTryMuted }
+        })
+      );
+
       await this.play();
       didAttemptSucceed = true;
     } catch (error) {
       if (this._autoplayRetryCount === this._maxAutoplayRetries - 1) {
-        this.mediaService.send({ type: 'autoplay-fail', error });
+        this.dispatchEvent(vdsEvent('vds-autoplay-fail', { detail: error }));
         this.requestUpdate();
       }
     }
@@ -729,7 +735,11 @@ export abstract class MediaProviderElement extends LitElement {
     /* c8 ignore stop */
 
     this.mediaRequestQueue.stop();
-    this.mediaService.send({ type: 'src-change', src });
+    this.dispatchEvent(
+      vdsEvent('vds-src-change', {
+        detail: src
+      })
+    );
   }
 
   // -------------------------------------------------------------------------------------------
@@ -738,9 +748,10 @@ export abstract class MediaProviderElement extends LitElement {
 
   readonly mediaServiceConsumer = mediaServiceContext.consume(this);
 
+  protected readonly _mediaServiceController = new MediaServiceController(this);
+
   /**
    * Media service used to keep track of current media state and context.
-   * @internal
    */
   get mediaService() {
     return this.mediaServiceConsumer.value;
@@ -829,15 +840,4 @@ export abstract class MediaProviderElement extends LitElement {
   exitFullscreen(): Promise<void> {
     return this.fullscreenController.exitFullscreen();
   }
-
-  protected _handleFullscreenChange = hostedEventListener(
-    this,
-    'vds-fullscreen-change',
-    (event) => {
-      this.mediaService.send({
-        type: 'fullscreen-change',
-        fullscreen: event.detail
-      });
-    }
-  );
 }

@@ -1,52 +1,33 @@
+import * as FullscreenEvents from '../../base/fullscreen/events';
 import type { Values } from '../../global/helpers';
 import * as MediaEvents from '../events';
-import { MediaType } from '../MediaType';
-import { ViewType } from '../ViewType';
 
 export type MediaMachineEventPayload = {
-  'autoplay-change': { autoplay: boolean };
-  'autoplay-fail': { error: unknown };
-  'can-fullscreen': { supported: boolean };
-  'can-play': {
-    duration: number;
-    trigger: MediaEvents.CanPlayEvent | MediaEvents.CanPlayThroughEvent;
-  };
-  'controls-change': { controls: boolean };
-  'fullscreen-change': { fullscreen: boolean };
-  'loop-change': { loop: boolean };
-  'play-fail': { error: unknown };
-  'playsinline-change': { playsinline: boolean };
-  'poster-change': { poster: string };
-  'src-change': { src: string };
-  'time-update': { trigger: MediaEvents.TimeUpdateEvent };
-  'volume-change': { trigger: MediaEvents.VolumeChangeEvent };
+  'autoplay-change': MediaEvents.AutoplayChangeEvent;
+  'autoplay-fail': MediaEvents.AutoplayFailEvent;
+  'can-play': MediaEvents.CanPlayEvent | MediaEvents.CanPlayThroughEvent;
+  'controls-change': MediaEvents.ControlsChangeEvent;
+  'fullscreen-change': FullscreenEvents.FullscreenChangeEvent;
+  'fullscreen-support-change': FullscreenEvents.FullscreenSupportChange;
+  'loop-change': MediaEvents.LoopChangeEvent;
+  'play-fail': MediaEvents.PlayFailEvent;
+  'playsinline-change': MediaEvents.PlaysinlineChangeEvent;
+  'poster-change': MediaEvents.PosterChangeEvent;
+  'src-change': MediaEvents.SrcChangeEvent;
+  'time-update': MediaEvents.TimeUpdateEvent;
+  'volume-change': MediaEvents.VolumeChangeEvent;
   abort: { error: unknown };
-  autoplay: void;
-  ended: { trigger: MediaEvents.EndedEvent };
-  error: { error: unknown };
-  loaded: {
-    src: string;
-    duration: number;
-    trigger: MediaEvents.LoadedMetadataEvent;
-  };
-  loading: {
-    src: string;
-    poster: string;
-    mediaType: MediaType;
-    viewType: ViewType;
-    trigger: MediaEvents.LoadStartEvent;
-  };
-  pause: { trigger: MediaEvents.PauseEvent };
-  play: { trigger: MediaEvents.PlayEvent };
-  playing: { trigger: MediaEvents.PlayingEvent };
-  progress: {
-    buffered: TimeRanges;
-    seekable: TimeRanges;
-    trigger: MediaEvents.ProgressEvent;
-  };
-  seeked: { trigger: MediaEvents.SeekedEvent };
-  seeking: { trigger: MediaEvents.SeekingEvent };
-  waiting: { trigger: MediaEvents.WaitingEvent };
+  autoplay: MediaEvents.AutoplayEvent;
+  ended: MediaEvents.EndedEvent;
+  error: MediaEvents.ErrorEvent;
+  loaded: MediaEvents.LoadedMetadataEvent;
+  loading: MediaEvents.LoadStartEvent;
+  pause: MediaEvents.PauseEvent | MediaEvents.SeekedEvent;
+  play: MediaEvents.PlayEvent;
+  playing: MediaEvents.PlayingEvent;
+  progress: MediaEvents.ProgressEvent;
+  seeking: MediaEvents.SeekingEvent;
+  waiting: MediaEvents.WaitingEvent;
 };
 
 export type MediaMachineEventType = keyof MediaMachineEventPayload;
@@ -54,5 +35,6 @@ export type MediaMachineEventType = keyof MediaMachineEventPayload;
 export type MediaMachineEvents = Values<{
   [EventType in MediaMachineEventType]: {
     type: EventType;
-  } & MediaMachineEventPayload[EventType];
+    trigger: MediaMachineEventPayload[EventType];
+  };
 }>;

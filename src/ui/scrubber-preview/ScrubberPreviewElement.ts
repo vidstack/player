@@ -180,6 +180,16 @@ export class ScrubberPreviewElement extends LitElement {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.scrubberPreviewService.start();
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.scrubberPreviewService.stop();
+  }
+
   protected override update(changedProperties: PropertyValues) {
     if (changedProperties.has('_mediaDuration')) {
       this.style.setProperty(

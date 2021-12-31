@@ -83,10 +83,7 @@ export class VideoElement extends Html5MediaElement {
 
   set poster(newPoster) {
     this._connectedQueue.queue('current-poster', () => {
-      this.mediaService.send({
-        type: 'poster-change',
-        poster: newPoster
-      });
+      this.dispatchEvent(vdsEvent('vds-poster-change', { detail: newPoster }));
       this.requestUpdate();
     });
   }

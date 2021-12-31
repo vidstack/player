@@ -596,8 +596,6 @@ export class HlsElement extends VideoElement {
   protected _handleHlsError(eventType: string, data: Hls.errorData): void {
     if (isUndefined(this.Hls)) return;
 
-    this.mediaService.send({ type: 'error', error: data });
-
     /* c8 ignore start */
     if (__DEV__) {
       this._logger

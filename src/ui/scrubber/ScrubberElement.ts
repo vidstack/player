@@ -193,6 +193,16 @@ export class ScrubberElement extends WithFocus(LitElement) {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.scrubberService.start();
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.scrubberService.stop();
+  }
+
   protected override update(changedProperties: PropertyValues) {
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
