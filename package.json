@@ -63,7 +63,7 @@
     "format:prettier": "npm run lint:prettier -- --write",
     "minify:prod": "node .scripts/minify.mjs",
     "prepare": "husky install",
-    "test": "wtr \"src/**/*.test.ts\" --config wtr.config.mjs",
+    "test": "",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
     "release": "node .scripts/release.mjs"

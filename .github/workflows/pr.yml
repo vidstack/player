@@ -29,5 +29,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test
+      - name: Build Types
+        run: npm run build:types
+
+      - name: Run Tests
         run: npm run test
