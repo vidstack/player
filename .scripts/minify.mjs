@@ -65,6 +65,9 @@ async function main() {
           unsafe: true,
           passes: 2
         },
+        format: {
+          comments: false
+        },
         ecma: 2019,
         nameCache
       });
@@ -74,7 +77,13 @@ async function main() {
   );
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => {
+    if (fs.existsSync(seederFile)) {
+      fs.unlinkSync(seederFile);
+    }
+  });

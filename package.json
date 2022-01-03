@@ -14,6 +14,7 @@
     "dist/",
     "dist-prod/",
     "define/",
+    "types/",
     "index.d.ts",
     "global.d.ts"
   ],
@@ -46,9 +47,8 @@
     "url": "https://github.com/vidstack/elements/issues"
   },
   "scripts": {
-    "build": "rimraf dist && npm run build:base -- --outdir dist",
-    "build:prod": "rimraf dist-prod && npm run build:base -- --outdir dist-prod --minify --prod",
-    "build:base": "node .scripts/build.mjs --entry src/index.ts,src/define/**",
+    "build": "rimraf dist && rollup -c rollup.config.js",
+    "build:prod": "rimraf dist-prod && cross-env NODE_ENV=production rollup -c rollup.config.js",
     "build:watch": "run-p \"build -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
     "build:types": "rimraf types && tsc -p tsconfig-build.json",
     "build:definitions": "rimraf define && node .scripts/definitions.mjs",
@@ -77,11 +77,14 @@
     "lit": "^2.0.2"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.1.2",
     "@types/node": "^16.0.1",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
     "chokidar": "^3.5.2",
     "conventional-changelog-cli": "^2.1.1",
+    "cross-env": "^7.0.3",
     "enquirer": "^2.3.6",
     "esbuild": "^0.14.9",
     "eslint": "^7.17.0",
@@ -102,6 +105,9 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
+    "rollup": "^2.62.0",
+    "rollup-plugin-esbuild": "^4.8.2",
+    "rollup-plugin-minify-html-literals": "^1.2.6",
     "semver": "^7.3.5",
     "terser": "^5.10.0",
     "tslib": "^2.3.0",
