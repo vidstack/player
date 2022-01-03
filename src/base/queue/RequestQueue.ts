@@ -47,7 +47,7 @@ export class RequestQueue {
    * Start serving requests.
    */
   async start() {
-    this._flush();
+    await this._flush();
     this._empty();
     this._isServing = true;
   }

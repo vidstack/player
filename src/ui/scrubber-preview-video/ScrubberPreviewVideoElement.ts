@@ -11,8 +11,8 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { ifNonEmpty } from '../../base/directives';
 import { redispatchEvent } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { hostedServiceSubscription } from '../../base/machine';
-import { scrubberPreviewContext } from '../scrubber-preview';
+import { hostedStoreRecordSubscription } from '../../base/stores';
+import { scrubberPreviewStore } from '../scrubber-preview';
 import { scrubberPreviewVideoElementStyles } from './styles';
 
 /**
@@ -59,9 +59,14 @@ export class ScrubberPreviewVideoElement extends LitElement {
 
   constructor() {
     super();
-    hostedServiceSubscription(this, scrubberPreviewContext, ({ context }) => {
-      this._handlePreviewTimeUpdate(context.time);
-    });
+    hostedStoreRecordSubscription(
+      this,
+      scrubberPreviewStore,
+      'time',
+      ($time) => {
+        this._handlePreviewTimeUpdate($time);
+      }
+    );
   }
 
   // -------------------------------------------------------------------------------------------

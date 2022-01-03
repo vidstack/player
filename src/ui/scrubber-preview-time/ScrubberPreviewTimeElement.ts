@@ -1,7 +1,7 @@
 import { property } from 'lit/decorators.js';
 
-import { hostedServiceSubscription } from '../../base/machine';
-import { scrubberPreviewContext } from '../scrubber-preview';
+import { hostedStoreRecordSubscription } from '../../base/stores';
+import { scrubberPreviewStore } from '../scrubber-preview';
 import { TimeElement } from '../time';
 
 /**
@@ -39,8 +39,13 @@ export class ScrubberPreviewTimeElement extends TimeElement {
 
   constructor() {
     super();
-    hostedServiceSubscription(this, scrubberPreviewContext, ({ context }) => {
-      this.seconds = context.time;
-    });
+    hostedStoreRecordSubscription(
+      this,
+      scrubberPreviewStore,
+      'time',
+      ($time) => {
+        this.seconds = $time;
+      }
+    );
   }
 }

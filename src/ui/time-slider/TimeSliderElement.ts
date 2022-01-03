@@ -3,10 +3,7 @@ import { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener, isPointerEvent } from '../../base/events';
-import {
-  hostedMediaServiceSubscription,
-  MediaRemoteControl
-} from '../../media';
+import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
 import { formatSpokenTime } from '../../utils/time';
@@ -37,12 +34,18 @@ import { SliderElement } from '../slider';
 export class TimeSliderElement extends SliderElement {
   constructor() {
     super();
-    hostedMediaServiceSubscription(this, ({ context }) => {
-      this._mediaCurrentTime = context.currentTime;
-      this._mediaDuration = context.duration >= 0 ? context.duration : 0;
-      this._mediaPaused = context.paused;
+    hostedMediaStoreSubscription(this, 'currentTime', ($currentTime) => {
+      this._mediaCurrentTime = $currentTime;
       this._updateValueToCurrentTime();
-      setAttribute(this, 'media-can-play', context.canPlay);
+    });
+    hostedMediaStoreSubscription(this, 'duration', ($duration) => {
+      this._mediaDuration = $duration;
+    });
+    hostedMediaStoreSubscription(this, 'paused', ($paused) => {
+      this._mediaPaused = $paused;
+    });
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
     });
   }
 
@@ -197,8 +200,8 @@ export class TimeSliderElement extends SliderElement {
 
   protected readonly _mediaRemote = new MediaRemoteControl(this);
 
-  protected readonly _handleSliderValueChange =
-    (this,
+  protected readonly _handleSliderValueChange = hostedEventListener(
+    this,
     'vds-slider-value-change',
     (event) => {
       this.value = event.detail;
@@ -211,16 +214,18 @@ export class TimeSliderElement extends SliderElement {
         this._dispatchSeekingRequest.cancel();
         this._mediaRemote.seek(this.currentTime, event);
       }
-    });
+    }
+  );
 
-  protected readonly _handleSliderDragEnd =
-    (this,
+  protected readonly _handleSliderDragEnd = hostedEventListener(
+    this,
     'vds-slider-drag-end',
     (event) => {
       this._dispatchSeekingRequest.cancel();
       this._mediaRemote.seek(this.currentTime, event);
       this._togglePlaybackWhileDragging(event);
-    });
+    }
+  );
 
   protected readonly _dispatchSeekingRequest = throttle((event: Event) => {
     this._mediaRemote.seeking(this.currentTime, event);

@@ -657,6 +657,7 @@ export class HlsElement extends VideoElement {
     this._handleHlsMediaReady(eventType, data);
   }
 
+  protected override _mediaReadyOnMetadataLoad = true;
   protected _handleHlsMediaReady(
     eventType: string,
     data: Hls.levelLoadedData
@@ -683,7 +684,5 @@ export class HlsElement extends VideoElement {
         })
       );
     }
-
-    this._handleMediaReady({ event, duration });
   }
 }

@@ -10,14 +10,12 @@ export type ConsumeContextOptions<T> = {
 };
 
 export class ContextConsumerController<T> {
-  protected _value: T;
-
   get id() {
     return this._options.id;
   }
 
-  get value() {
-    return this._value;
+  get value(): T {
+    return this._host[this.id] ?? this.initialValue;
   }
 
   constructor(
@@ -25,16 +23,22 @@ export class ContextConsumerController<T> {
     public readonly initialValue: T,
     protected readonly _options: ConsumeContextOptions<T>
   ) {
-    this._value = initialValue;
     _host.addController({
-      hostConnected: this.connect.bind(this)
+      hostConnected: this._connect.bind(this),
+      hostDisconnected: () => {
+        delete this._host[this.id];
+      }
     });
   }
 
   /**
    * Attempt connecting to a context provider.
    */
-  connect() {
+  protected _connect() {
+    if (this.id in this._host) {
+      return;
+    }
+
     this._host.dispatchEvent(
       vdsEvent('vds-context-consumer-connect', {
         bubbles: true,
@@ -42,7 +46,7 @@ export class ContextConsumerController<T> {
         detail: {
           id: this.id,
           setValue: (value) => {
-            this._value = value;
+            this._host[this.id] = value;
           }
         }
       })

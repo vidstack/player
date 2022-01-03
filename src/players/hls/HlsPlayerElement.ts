@@ -38,12 +38,12 @@ import { HlsElement } from '../../providers/hls';
  * ```
  * @example
  * ```html
- * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
+ * <vds-hls-player src="/media/index.m3u8" poster="/media/poster.png">
  *   <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
  *   <vds-media-ui slot="ui">
  *     <!-- UI components here. -->
  *   </vds-media-ui>
- * </vds-hls>
+ * </vds-hls-player>
  * ```
  */
 export class HlsPlayerElement extends WithMediaPlayer(HlsElement) {

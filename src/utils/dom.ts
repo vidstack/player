@@ -71,16 +71,11 @@ export function setAttribute(
   attrName: string,
   attrValue?: string | boolean | undefined | null
 ) {
-  if (
-    (isNil(attrValue) || attrValue === false) &&
-    element.hasAttribute(attrName)
-  ) {
+  if (isNil(attrValue) || attrValue === false) {
     element.removeAttribute(attrName);
   } else {
     const value = isString(attrValue) ? attrValue : '';
-    if (element.getAttribute(attrName) !== value) {
-      element.setAttribute(attrName, value);
-    }
+    element.setAttribute(attrName, value);
   }
 }
 

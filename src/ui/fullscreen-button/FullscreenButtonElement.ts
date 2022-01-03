@@ -1,7 +1,4 @@
-import {
-  hostedMediaServiceSubscription,
-  MediaRemoteControl
-} from '../../media';
+import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
 
@@ -45,11 +42,21 @@ export class FullscreenButtonElement extends ToggleButtonElement {
 
   constructor() {
     super();
-    hostedMediaServiceSubscription(this, ({ context }) => {
-      this.pressed = context.fullscreen;
-      setAttribute(this, 'media-can-play', context.canPlay);
-      setAttribute(this, 'hidden', !context.canRequestFullscreen);
-      setAttribute(this, 'media-fullscreen', context.fullscreen);
+    hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
+      this.pressed = $fullscreen;
+    });
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
+    });
+    hostedMediaStoreSubscription(
+      this,
+      'canRequestFullscreen',
+      ($canRequestFullscreen) => {
+        setAttribute(this, 'hidden', !$canRequestFullscreen);
+      }
+    );
+    hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
+      setAttribute(this, 'media-fullscreen', $fullscreen);
     });
   }
 

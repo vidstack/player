@@ -353,7 +353,7 @@ export class Html5MediaElement extends MediaProviderElement {
       seeking: this._handleSeeking,
       stalled: this._handleStalled,
       suspend: this._handleSuspend,
-      timeupdate: this._handleTimeUpdate,
+      // timeupdate: this._handleTimeUpdate,
       volumechange: this._handleVolumeChange,
       waiting: this._handleWaiting
     };
@@ -363,7 +363,7 @@ export class Html5MediaElement extends MediaProviderElement {
       this._disconnectDisposal.add(
         listen(this.mediaElement!, type, async (event: Event) => {
           /* c8 ignore start */
-          if (__DEV__ && type !== 'timeupdate') {
+          if (__DEV__) {
             this._logger
               .debugGroup(`📺 fired \`${event.type}\``)
               .appendWithLabel('Event', event)
@@ -401,7 +401,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleCanPlayThrough(event: Event) {
-    if (this.canPlayThrough) return;
+    if (this.started) return;
     this.dispatchEvent(
       vdsEvent('vds-can-play-through', {
         originalEvent: event,
@@ -440,6 +440,8 @@ export class Html5MediaElement extends MediaProviderElement {
     return false;
   }
 
+  // For `hls.js` or any engine to mark ready state when metadata has loaded.
+  protected _mediaReadyOnMetadataLoad = false;
   protected _handleLoadedMetadata(event: Event) {
     this.dispatchEvent(
       vdsEvent('vds-duration-change', {
@@ -447,6 +449,7 @@ export class Html5MediaElement extends MediaProviderElement {
         originalEvent: event
       })
     );
+
     this.dispatchEvent(
       vdsEvent('vds-loaded-metadata', {
         originalEvent: event,
@@ -456,7 +459,15 @@ export class Html5MediaElement extends MediaProviderElement {
         }
       })
     );
+
     this._determineMediaType(event);
+
+    if (this._mediaReadyOnMetadataLoad) {
+      this._handleMediaReady({
+        event,
+        duration: this.mediaElement!.duration
+      });
+    }
   }
 
   protected _determineMediaType(event: Event) {
@@ -614,10 +625,6 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _handleStalled(event: Event) {
     this.dispatchEvent(vdsEvent('vds-stalled', { originalEvent: event }));
-  }
-
-  protected _handleTimeUpdate(event: Event) {
-    // -- Time updates are performed in `requestTimeUpdates()`.
   }
 
   protected _handleVolumeChange(event: Event) {

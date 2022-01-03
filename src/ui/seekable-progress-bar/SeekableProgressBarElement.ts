@@ -4,7 +4,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { ElementLogger } from '../../base/logger';
-import { hostedMediaServiceSubscription } from '../../media';
+import { hostedMediaStoreSubscription } from '../../media';
 import { formatSpokenTime } from '../../utils/time';
 import { seekableProgressBarElementStyles } from './styles';
 
@@ -36,9 +36,11 @@ export class SeekableProgressBarElement extends LitElement {
 
   constructor() {
     super();
-    hostedMediaServiceSubscription(this, ({ context }) => {
-      this._mediaSeekableAmount = context.seekableAmount;
-      this._mediaDuration = context.duration >= 0 ? context.duration : 0;
+    hostedMediaStoreSubscription(this, 'seekableAmount', ($seekableAmount) => {
+      this._mediaSeekableAmount = $seekableAmount;
+    });
+    hostedMediaStoreSubscription(this, 'duration', ($duration) => {
+      this._mediaDuration = $duration;
     });
   }
 

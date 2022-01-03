@@ -1,7 +1,7 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
 import { ElementLogger } from '../../base/logger';
-import { hostedMediaServiceSubscription } from '../../media';
+import { hostedMediaStoreSubscription } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { bufferingIndicatorElementStyles } from './styles';
 
@@ -47,10 +47,14 @@ export class BufferingIndicatorElement extends LitElement {
 
   constructor() {
     super();
-    hostedMediaServiceSubscription(this, ({ context }) => {
-      setAttribute(this, 'media-can-play', context.canPlay);
-      setAttribute(this, 'media-waiting', context.waiting);
-      setAttribute(this, 'media-ended', context.ended);
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
+    });
+    hostedMediaStoreSubscription(this, 'waiting', ($waiting) => {
+      setAttribute(this, 'media-waiting', $waiting);
+    });
+    hostedMediaStoreSubscription(this, 'ended', ($ended) => {
+      setAttribute(this, 'media-ended', $ended);
     });
   }
 

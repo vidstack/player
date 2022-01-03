@@ -1,7 +1,4 @@
-import {
-  hostedMediaServiceSubscription,
-  MediaRemoteControl
-} from '../../media';
+import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
 
@@ -43,12 +40,18 @@ export class PlayButtonElement extends ToggleButtonElement {
 
   constructor() {
     super();
-    hostedMediaServiceSubscription(this, ({ context }) => {
-      this.pressed = !context.paused;
-      setAttribute(this, 'media-can-play', context.canPlay);
-      setAttribute(this, 'media-waiting', context.waiting);
-      setAttribute(this, 'media-paused', context.paused);
-      setAttribute(this, 'media-ended', context.ended);
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
+    });
+    hostedMediaStoreSubscription(this, 'waiting', ($waiting) => {
+      setAttribute(this, 'media-waiting', $waiting);
+    });
+    hostedMediaStoreSubscription(this, 'paused', ($paused) => {
+      this.pressed = !$paused;
+      setAttribute(this, 'media-paused', $paused);
+    });
+    hostedMediaStoreSubscription(this, 'ended', ($ended) => {
+      setAttribute(this, 'media-ended', $ended);
     });
   }
 

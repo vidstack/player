@@ -21,7 +21,8 @@ import {
   redispatchEvent
 } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { hostedMediaServiceSubscription } from '../../media';
+import { get } from '../../base/stores';
+import { hostedMediaStoreSubscription } from '../../media';
 import { buildExportPartsAttr, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
 import {
@@ -37,7 +38,7 @@ import {
   SliderValueChangeEvent
 } from '../slider/events';
 import { TimeSliderElement } from '../time-slider';
-import { scrubberServiceContext } from './machine';
+import { scrubberStoreContext } from './scrubberStore';
 import { scrubberElementStyles } from './styles';
 
 /**
@@ -83,9 +84,11 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   constructor() {
     super();
-    hostedMediaServiceSubscription(this, ({ context }) => {
-      setAttribute(this, 'media-can-play', context.canPlay);
-      setAttribute(this, 'media-waiting', context.waiting);
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
+    });
+    hostedMediaStoreSubscription(this, 'waiting', ($waiting) => {
+      setAttribute(this, 'media-waiting', $waiting);
     });
   }
 
@@ -96,15 +99,11 @@ export class ScrubberElement extends WithFocus(LitElement) {
   /* c8 ignore next */
   protected readonly _logger = __DEV__ && new ElementLogger(this);
 
-  protected readonly scrubberServiceProvider =
-    scrubberServiceContext.provide(this);
+  protected readonly _scrubberStoreProvider =
+    scrubberStoreContext.provide(this);
 
-  get scrubberService() {
-    return this.scrubberServiceProvider.value;
-  }
-
-  get scrubberContext() {
-    return this.scrubberService.state.context;
+  get scrubberStore() {
+    return this._scrubberStoreProvider.value;
   }
 
   /**
@@ -193,16 +192,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
-  override connectedCallback(): void {
-    super.connectedCallback();
-    this.scrubberService.start();
-  }
-
-  override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    this.scrubberService.stop();
-  }
-
   protected override update(changedProperties: PropertyValues) {
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
@@ -233,8 +222,8 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected _handlePointerEnter(event: PointerEvent) {
     if (this.disabled) return;
-    this.scrubberService.send('start-pointing');
-    this.scrubberServiceProvider;
+    this.scrubberStore.pointing.set(true);
+    this._scrubberStoreProvider;
     this.setAttribute('pointing', '');
 
     /* c8 ignore start */
@@ -250,14 +239,14 @@ export class ScrubberElement extends WithFocus(LitElement) {
   }
 
   protected _handlePointerMove(event: PointerEvent) {
-    if (this.disabled || this.scrubberContext.dragging) return;
+    if (this.disabled || get(this.scrubberStore.dragging)) return;
     this.scrubberPreviewElement?.updatePreviewPosition(event);
   }
 
   protected _handlePointerLeave(event: PointerEvent) {
     if (this.disabled) return;
 
-    this.scrubberService.send('stop-pointing');
+    this.scrubberStore.pointing.set(false);
     this.removeAttribute('pointing');
 
     /* c8 ignore start */
@@ -269,7 +258,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
     }
     /* c8 ignore stop */
 
-    if (!this.scrubberContext.dragging) {
+    if (!get(this.scrubberStore.dragging)) {
       this.scrubberPreviewElement?.hidePreview(event);
     }
   }
@@ -328,7 +317,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected _handleSliderDragStart(event: SliderDragStartEvent) {
     if (this.disabled) return;
-    this.scrubberService.send('start-dragging');
+    this.scrubberStore.dragging.set(true);
     this.setAttribute('dragging', '');
     this.scrubberPreviewElement?.showPreview(event);
     redispatchEvent(this, event);
@@ -342,9 +331,9 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected _handleSliderDragEnd(event: SliderDragEndEvent) {
     if (this.disabled) return;
-    this.scrubberService.send('stop-dragging');
+    this.scrubberStore.dragging.set(false);
     this.removeAttribute('dragging');
-    if (!this.scrubberContext.pointing)
+    if (!get(this.scrubberStore.pointing))
       this.scrubberPreviewElement?.hidePreview(event);
     redispatchEvent(this, event);
   }

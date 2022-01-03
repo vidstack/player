@@ -36,10 +36,10 @@ export type MediaContext = {
   buffered: TimeRanges;
   /**
    * A `double` indicating the total playback length of the media in seconds. If no media data is
-   * available, the returned value is `NaN`. If the media is of indefinite length (such as
+   * available, the returned value is `0`. If the media is of indefinite length (such as
    * streamed live media, a WebRTC call's media, or similar), the value is `+Infinity`.
    *
-   * @default NaN
+   * @default 0
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration
    */
   duration: number;
@@ -68,15 +68,6 @@ export type MediaContext = {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
    */
   canPlay: boolean;
-  /**
-   * Whether the user agent can play the media, and estimates that enough data has been
-   * loaded to play the media up to its end without having to stop for further buffering
-   * of content.
-   *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
-   */
-  canPlayThrough: boolean;
   /**
    * Indicates whether a user interface should be shown for controlling the resource. Set this to
    * `false` when you want to provide your own custom controls, and `true` if you want the current

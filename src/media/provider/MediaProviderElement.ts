@@ -10,11 +10,14 @@ import {
   ScreenOrientationController,
   ScreenOrientationLock
 } from '../../base/screen-orientation';
+import { get } from '../../base/stores';
 import { clampNumber } from '../../utils/number';
 import { notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
+import { MediaController } from '../controller';
 import type { MediaEvents } from '../events';
-import { mediaServiceContext, MediaServiceController } from '../machine';
+import { MediaContext } from '../MediaContext';
+import { mediaStoreContext, ReadableMediaStoreRecord } from '../mediaStore';
 import { MediaType } from '../MediaType';
 import { ViewType } from '../ViewType';
 
@@ -164,21 +167,23 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   set autoplay(shouldAutoplay: boolean) {
-    if (this.autoplay !== shouldAutoplay) {
-      this.dispatchEvent(
-        vdsEvent('vds-autoplay-change', { detail: shouldAutoplay })
-      );
-    }
+    this._connectedQueue.queue('autoplay-change', () => {
+      if (this.autoplay !== shouldAutoplay) {
+        this.dispatchEvent(
+          vdsEvent('vds-autoplay-change', { detail: shouldAutoplay })
+        );
+      }
 
-    if (this.canPlay && !this._autoplayAttemptPending && shouldAutoplay) {
-      this._autoplayAttemptPending = true;
+      if (this.canPlay && !this._autoplayAttemptPending && shouldAutoplay) {
+        this._autoplayAttemptPending = true;
 
-      const onAttemptEnd = () => {
-        this._autoplayAttemptPending = false;
-      };
+        const onAttemptEnd = () => {
+          this._autoplayAttemptPending = false;
+        };
 
-      this._attemptAutoplay().then(onAttemptEnd).catch(onAttemptEnd);
-    }
+        this._attemptAutoplay().then(onAttemptEnd).catch(onAttemptEnd);
+      }
+    });
   }
 
   /**
@@ -376,18 +381,6 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   /**
-   * Whether the user agent can play the media, and estimates that enough data has been
-   * loaded to play the media up to its end without having to stop for further buffering
-   * of content.
-   *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
-   */
-  get canPlayThrough() {
-    return this.mediaState.canPlayThrough;
-  }
-
-  /**
    * The URL of the current poster. Defaults to `''` if no media/poster has been given or
    * loaded.
    *
@@ -410,10 +403,10 @@ export abstract class MediaProviderElement extends LitElement {
 
   /**
    * A `double` indicating the total playback length of the media in seconds. If no media data is
-   * available, the returned value is `NaN`. If the media is of indefinite length (such as
+   * available, the returned value is `0`. If the media is of indefinite length (such as
    * streamed live media, a WebRTC call's media, or similar), the value is `+Infinity`.
    *
-   * @default NaN
+   * @default 0
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration
    */
   get duration() {
@@ -746,23 +739,22 @@ export abstract class MediaProviderElement extends LitElement {
   // Services
   // -------------------------------------------------------------------------------------------
 
-  readonly mediaServiceConsumer = mediaServiceContext.consume(this);
+  protected readonly _mediaController = new MediaController(this);
+  protected readonly _mediaStoreConsumer = mediaStoreContext.consume(this);
 
-  protected readonly _mediaServiceController = new MediaServiceController(this);
-
-  /**
-   * Media service used to keep track of current media state and context.
-   */
-  get mediaService() {
-    return this.mediaServiceConsumer.value;
+  get mediaStore(): ReadableMediaStoreRecord {
+    return this._mediaStoreConsumer.value;
   }
 
-  /**
-   * A snapshot of the current media state.
-   */
-  get mediaState() {
-    return Object.assign({}, this.mediaService.state.context);
-  }
+  // Fix this later.
+  protected readonly mediaState = new Proxy(
+    () => this._mediaStoreConsumer.value,
+    {
+      get(target, key) {
+        return get(target()[key]);
+      }
+    }
+  ) as unknown as MediaContext;
 
   // -------------------------------------------------------------------------------------------
   // Request Queue

@@ -18,10 +18,10 @@
     "global.d.ts"
   ],
   "sideEffects": [
-    "define/**",
-    "src/define/**",
-    "dist/define/**",
-    "dist-prod/define/**"
+    "define/*",
+    "src/define/*",
+    "dist/define/*",
+    "dist-prod/define/*"
   ],
   "exports": {
     ".": {
@@ -61,6 +61,7 @@
     "format": "run-s format:*",
     "format:eslint": "npm run lint:eslint -- --fix",
     "format:prettier": "npm run lint:prettier -- --write",
+    "minify:prod": "node .scripts/minify.mjs",
     "prepare": "husky install",
     "test": "wtr \"src/**/*.test.ts\" --config wtr.config.mjs",
     "test:coverage": "npm run test -- --coverage",
@@ -70,7 +71,6 @@
   "dependencies": {
     "@types/fscreen": "^1.0.1",
     "@types/hls.js": "^0.13.3",
-    "@xstate/fsm": "^1.6.2",
     "fscreen": "^1.2.0",
     "just-debounce-it": "^1.5.0",
     "just-throttle": "^2.3.1",
@@ -80,7 +80,6 @@
     "@types/node": "^16.0.1",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
-    "@xstate/test": "^0.5.0",
     "chokidar": "^3.5.2",
     "conventional-changelog-cli": "^2.1.1",
     "enquirer": "^2.3.6",
@@ -104,6 +103,7 @@
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "semver": "^7.3.5",
+    "terser": "^5.10.0",
     "tslib": "^2.3.0",
     "typescript": "^4.5.4"
   },
