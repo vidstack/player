@@ -42,6 +42,7 @@ export default {
     }),
     commonjs()
   ],
+  treeshake: true,
   preserveEntrySignatures: 'allow-extension',
   watch: {
     clearScreen: false
