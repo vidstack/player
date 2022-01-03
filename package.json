@@ -9,10 +9,12 @@
   },
   "main": "dist-prod/index.js",
   "module": "dist-prod/index.js",
+  "jsdelivr": "dist-cdn/index.js",
   "files": [
     "src/",
     "dist/",
     "dist-prod/",
+    "dist-cdn/",
     "define/",
     "types/",
     "index.d.ts",
@@ -22,7 +24,8 @@
     "define/*",
     "src/define/*",
     "dist/define/*",
-    "dist-prod/define/*"
+    "dist-prod/define/*",
+    "dist-cdn/define/*"
   ],
   "exports": {
     ".": {
@@ -32,6 +35,12 @@
     "./define/*": {
       "development": "./dist/define/*",
       "default": "./dist-prod/define/*"
+    },
+    "./cdn": {
+      "default": "./dist-cdn/index.js"
+    },
+    "./cdn/define/*": {
+      "default": "./dist-cdn/define/*"
     }
   },
   "contributors": [
@@ -49,10 +58,11 @@
   "scripts": {
     "build": "rimraf dist && rollup -c rollup.config.js",
     "build:prod": "rimraf dist-prod && cross-env NODE_ENV=production rollup -c rollup.config.js",
+    "build:cdn": "rimraf dist-cdn && cross-env NODE_ENV=production CDN=true rollup -c rollup.config.js",
     "build:watch": "run-p \"build -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
     "build:types": "rimraf types && tsc -p tsconfig-build.json",
     "build:definitions": "rimraf define && node .scripts/definitions.mjs",
-    "build:all": "run-p build build:prod && run-s build:types build:definitions",
+    "build:all": "run-p build build:prod build:cdn && run-s build:types build:definitions",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "clean": "rimraf define dist dist-prod types",
     "lint": "run-s lint:*",
@@ -73,7 +83,9 @@
     "@types/hls.js": "^0.13.3",
     "fscreen": "^1.2.0",
     "just-debounce-it": "^1.5.0",
-    "just-throttle": "^2.3.1",
+    "just-throttle": "^2.3.1"
+  },
+  "peerDependencies": {
     "lit": "^2.0.2"
   },
   "devDependencies": {
@@ -101,6 +113,7 @@
     "husky": "^7.0.0",
     "kleur": "^4.1.4",
     "lint-staged": "^11.0.0",
+    "lit": "^2.0.2",
     "minimist": "^1.2.5",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",

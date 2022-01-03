@@ -4,18 +4,16 @@ import fs from 'fs-extra';
 import path from 'path';
 import { minify } from 'terser';
 
-const outdir = path.resolve(process.cwd(), 'dist-prod');
-const seederFile = path.resolve(outdir, 'seeder.js');
-
 /**
  * This script is responsible for minifying protected and private properties in the production
- * build, which are identified by starting with an underscore `_`. We first bundle all the code
+ * builds, which are identified by starting with an underscore `_`. We first bundle all the code
  * into a single file using ESBuild, next we populate the Terser name cache so all private
  * properties have the same identifier when bundled, and then we minify each production chunk one
  * at a time with the new seeded name cache.
  */
-async function main() {
-  const entryPoints = globby.sync('dist-prod/**/*.js', { absolute: true });
+async function runMinification(entryPoints, outDir) {
+  const outdir = path.resolve(process.cwd(), outDir);
+  const seederFile = path.resolve(outdir, 'seeder.js');
 
   fs.writeFileSync(
     seederFile,
@@ -26,7 +24,7 @@ async function main() {
   );
 
   const code = await build({
-    entryPoints: ['dist-prod/seeder.js'],
+    entryPoints: [seederFile],
     logLevel: 'silent',
     platform: 'browser',
     format: 'esm',
@@ -75,15 +73,21 @@ async function main() {
       await fs.writeFile(file, output.code);
     })
   );
+
+  fs.unlinkSync(seederFile);
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(() => {
-    if (fs.existsSync(seederFile)) {
-      fs.unlinkSync(seederFile);
-    }
-  });
+async function main() {
+  const prodEntryPoints = globby.sync('dist-prod/**/*.js', { absolute: true });
+  const cdnEntryPoints = globby.sync('dist-cdn/**/*.js', { absolute: true });
+
+  await Promise.all([
+    runMinification(prodEntryPoints, 'dist-prod'),
+    runMinification(cdnEntryPoints, 'dist-cdn')
+  ]);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

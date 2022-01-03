@@ -5,6 +5,7 @@ import minifyHTML from 'rollup-plugin-minify-html-literals';
 import resolve from '@rollup/plugin-node-resolve';
 
 const PROD = process.env.NODE_ENV === 'production';
+const CDN = !!process.env.CDN;
 
 const entries = ['src/index.ts'];
 const definitions = fs.readdirSync('src/define');
@@ -14,9 +15,10 @@ definitions.forEach((file) => {
 
 export default {
   input: entries,
+  external: CDN ? [] : (id) => /^lit/.test(id),
   output: {
     format: 'esm',
-    dir: PROD ? 'dist-prod' : 'dist',
+    dir: CDN ? 'dist-cdn' : PROD ? 'dist-prod' : 'dist',
     sourcemap: true,
     entryFileNames(file) {
       return file.facadeModuleId.includes('src/define')
