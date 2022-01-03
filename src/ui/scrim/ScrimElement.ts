@@ -2,10 +2,7 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
 import { scrimElementStyles } from './styles';
-
-export const SCRIM_ELEMENT_TAG_NAME = 'vds-scrim';
 
 /**
  * A darkened overlay (gradient) that covers the video to enable controls placed on it to be more
@@ -27,7 +24,7 @@ export class ScrimElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * The direction of the gradient.

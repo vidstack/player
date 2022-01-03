@@ -1,9 +1,6 @@
-import { consumeContext, watchContext } from '../../base/context';
-import { mediaContext, MediaRemoteControl } from '../../media';
+import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
-
-export const MUTE_BUTTON_ELEMENT_TAG_NAME = 'vds-mute-button';
 
 /**
  * A button for toggling the muted state of the player.
@@ -39,8 +36,16 @@ export class MuteButtonElement extends ToggleButtonElement {
 
   override label = 'Mute';
 
-  @consumeContext(mediaContext.muted)
-  override pressed = mediaContext.muted.initialValue;
+  constructor() {
+    super();
+    hostedMediaStoreSubscription(this, 'muted', ($muted) => {
+      this.pressed = $muted;
+      setAttribute(this, 'media-muted', $muted);
+    });
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
+    });
+  }
 
   protected override _handleButtonClick(event: Event) {
     if (this.pressed) {
@@ -48,15 +53,5 @@ export class MuteButtonElement extends ToggleButtonElement {
     } else {
       this._mediaRemote.mute(event);
     }
-  }
-
-  @watchContext(mediaContext.canPlay)
-  protected _handleCanPlayContextUpdate(canPlay: boolean) {
-    setAttribute(this, 'media-can-play', canPlay);
-  }
-
-  @watchContext(mediaContext.muted)
-  protected _handleMutedContextUpdate(muted: boolean) {
-    setAttribute(this, 'media-muted', muted);
   }
 }

@@ -1,6 +1,6 @@
 // ** Dependencies **
-import '../time-slider/define';
-import '../seekable-progress-bar/define';
+import '../../define/vds-time-slider';
+import '../../define/vds-seekable-progress-bar';
 
 import {
   CSSResultGroup,
@@ -12,22 +12,20 @@ import {
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { provideContextRecord, watchContext } from '../../base/context';
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import {
   DisposalBin,
-  eventListener,
+  hostedEventListener,
   listen,
   redispatchEvent
 } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
-import { mediaContext } from '../../media';
+import { get } from '../../base/stores';
+import { hostedMediaStoreSubscription } from '../../media';
 import { buildExportPartsAttr, setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
 import {
-  ScrubberPreviewConnectEvent,
   ScrubberPreviewElement,
   ScrubberPreviewHideEvent,
   ScrubberPreviewShowEvent,
@@ -40,10 +38,8 @@ import {
   SliderValueChangeEvent
 } from '../slider/events';
 import { TimeSliderElement } from '../time-slider';
-import { scrubberContext } from './context';
+import { scrubberStoreContext } from './scrubberStore';
 import { scrubberElementStyles } from './styles';
-
-export const SCRUBBER_ELEMENT_TAG_NAME = 'vds-scrubber';
 
 /**
  * A control that displays the progression of playback and the amount seekable on a slider. This
@@ -86,14 +82,29 @@ export class ScrubberElement extends WithFocus(LitElement) {
     ];
   }
 
+  constructor() {
+    super();
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
+    });
+    hostedMediaStoreSubscription(this, 'waiting', ($waiting) => {
+      setAttribute(this, 'media-waiting', $waiting);
+    });
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
-  protected readonly ctx = provideContextRecord(this, scrubberContext);
+  protected readonly _scrubberStoreProvider =
+    scrubberStoreContext.provide(this);
+
+  get scrubberStore() {
+    return this._scrubberStoreProvider.value;
+  }
 
   /**
    * Whether the scrubber should be disabled (not-interactable).
@@ -177,16 +188,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
   @property({ attribute: 'value-text' })
   valueText = '{currentTime} out of {duration}';
 
-  @watchContext(mediaContext.canPlay)
-  protected _handleCanPlayContextUpdate(canPlay: boolean) {
-    setAttribute(this, 'media-can-play', canPlay);
-  }
-
-  @watchContext(mediaContext.waiting)
-  protected _handleWaitingContextUpdate(waiting: boolean) {
-    setAttribute(this, 'media-waiting', waiting);
-  }
-
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
@@ -221,11 +222,12 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected _handlePointerEnter(event: PointerEvent) {
     if (this.disabled) return;
-    this.ctx.pointing = true;
+    this.scrubberStore.pointing.set(true);
+    this._scrubberStoreProvider;
     this.setAttribute('pointing', '');
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('pointer enter')
         .appendWithLabel('Event', event)
@@ -237,18 +239,18 @@ export class ScrubberElement extends WithFocus(LitElement) {
   }
 
   protected _handlePointerMove(event: PointerEvent) {
-    if (this.disabled || this.ctx.dragging) return;
+    if (this.disabled || get(this.scrubberStore.dragging)) return;
     this.scrubberPreviewElement?.updatePreviewPosition(event);
   }
 
   protected _handlePointerLeave(event: PointerEvent) {
     if (this.disabled) return;
 
-    this.ctx.pointing = false;
+    this.scrubberStore.pointing.set(false);
     this.removeAttribute('pointing');
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('pointer leave')
         .appendWithLabel('Event', event)
@@ -256,7 +258,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
     }
     /* c8 ignore stop */
 
-    if (!this.ctx.dragging) {
+    if (!get(this.scrubberStore.dragging)) {
       this.scrubberPreviewElement?.hidePreview(event);
     }
   }
@@ -315,7 +317,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected _handleSliderDragStart(event: SliderDragStartEvent) {
     if (this.disabled) return;
-    this.ctx.dragging = true;
+    this.scrubberStore.dragging.set(true);
     this.setAttribute('dragging', '');
     this.scrubberPreviewElement?.showPreview(event);
     redispatchEvent(this, event);
@@ -329,9 +331,10 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected _handleSliderDragEnd(event: SliderDragEndEvent) {
     if (this.disabled) return;
-    this.ctx.dragging = false;
+    this.scrubberStore.dragging.set(false);
     this.removeAttribute('dragging');
-    if (!this.ctx.pointing) this.scrubberPreviewElement?.hidePreview(event);
+    if (!get(this.scrubberStore.pointing))
+      this.scrubberPreviewElement?.hidePreview(event);
     redispatchEvent(this, event);
   }
 
@@ -389,39 +392,42 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   protected readonly _scrubberPreviewDisconnectDisposal = new DisposalBin();
 
-  @eventListener('vds-scrubber-preview-connect')
-  protected _handlePreviewConnect(event: ScrubberPreviewConnectEvent) {
-    event.stopPropagation();
+  protected readonly _handlePreviewConnect = hostedEventListener(
+    this,
+    'vds-scrubber-preview-connect',
+    (event) => {
+      event.stopPropagation();
 
-    const { element, onDisconnect } = event.detail;
+      const { element, onDisconnect } = event.detail;
 
-    this._scrubberPreviewElement = element;
-    this.setAttribute('previewable', '');
+      this._scrubberPreviewElement = element;
+      this.setAttribute('previewable', '');
 
-    this._scrubberPreviewDisconnectDisposal.add(
-      listen(
-        element,
-        'vds-scrubber-preview-show',
-        this._handlePreviewShow.bind(this)
-      ),
-      listen(
-        element,
-        'vds-scrubber-preview-time-update',
-        this._handlePreviewTimeUpdate.bind(this)
-      ),
-      listen(
-        element,
-        'vds-scrubber-preview-hide',
-        this._handlePreviewHide.bind(this)
-      )
-    );
+      this._scrubberPreviewDisconnectDisposal.add(
+        listen(
+          element,
+          'vds-scrubber-preview-show',
+          this._handlePreviewShow.bind(this)
+        ),
+        listen(
+          element,
+          'vds-scrubber-preview-time-update',
+          this._handlePreviewTimeUpdate.bind(this)
+        ),
+        listen(
+          element,
+          'vds-scrubber-preview-hide',
+          this._handlePreviewHide.bind(this)
+        )
+      );
 
-    onDisconnect(() => {
-      this._scrubberPreviewDisconnectDisposal.empty();
-      this._scrubberPreviewElement = undefined;
-      this.removeAttribute('previewable');
-    });
-  }
+      onDisconnect(() => {
+        this._scrubberPreviewDisconnectDisposal.empty();
+        this._scrubberPreviewElement = undefined;
+        this.removeAttribute('previewable');
+      });
+    }
+  );
 
   protected _handlePreviewShow(event: ScrubberPreviewShowEvent) {
     event.stopPropagation();

@@ -3,8 +3,6 @@ import { TemplateResult } from 'lit';
 import { WithMediaPlayer } from '../../media';
 import { VideoElement } from '../../providers/video';
 
-export const VIDEO_PLAYER_ELEMENT_TAG_NAME = 'vds-video-player';
-
 /**
  * Embeds video content into documents via the native `<video>` element. It may contain
  * one or more video sources, represented using the `src` attribute or the `<source>` element: the

@@ -74,7 +74,8 @@ export function setAttribute(
   if (isNil(attrValue) || attrValue === false) {
     element.removeAttribute(attrName);
   } else {
-    element.setAttribute(attrName, isString(attrValue) ? attrValue : '');
+    const value = isString(attrValue) ? attrValue : '';
+    element.setAttribute(attrName, value);
   }
 }
 

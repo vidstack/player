@@ -7,69 +7,55 @@ import { RequestQueue } from '../RequestQueue';
 describe('RequestQueue', function () {
   describe('size', function () {
     it('should return correct size', async function () {
-      const queue = new RequestQueue();
-      expect(queue.size).to.equal(0);
+      const q = new RequestQueue();
+      expect(q.size).to.equal(0);
 
-      queue.queue('a', noop);
-      expect(queue.size).to.equal(1);
+      q.queue('a', noop);
+      expect(q.size).to.equal(1);
 
-      queue.queue('b', noop);
-      expect(queue.size).to.equal(2);
+      q.queue('b', noop);
+      expect(q.size).to.equal(2);
 
-      await queue.serve('a');
-      await queue.serve('b');
+      await q.serve('a');
+      await q.serve('b');
 
-      expect(queue.size).to.equal(0);
-    });
-  });
-
-  describe('clone', function () {
-    it('should return clone', function () {
-      const queue = new RequestQueue();
-      const cloneA = queue.cloneQueue();
-      const cloneB = queue.cloneQueue();
-
-      cloneA.set('a', noop);
-
-      expect(cloneA.size).to.equal(1);
-      expect(cloneB.size).to.equal(0);
+      expect(q.size).to.equal(0);
     });
   });
 
   describe('waitForFlush', function () {
     it('should resolve promise given queue is flushed', async function () {
-      const queue = new RequestQueue();
+      const q = new RequestQueue();
 
       const callback = mock();
-      queue.queue('a', callback);
+      q.queue('a', callback);
 
       setTimeout(() => {
-        queue.flush();
+        q.start();
       });
 
-      await queue.waitForFlush();
+      await q.waitForFlush();
 
       expect(callback).to.have.been.calledOnce;
     });
   });
 
   describe('queue', function () {
-    it('should queue element given serveImmediately is set to false', function () {
-      const queue = new RequestQueue();
-      queue.serveImmediately = false;
+    it('should queue element given it has NOT started', function () {
+      const q = new RequestQueue();
 
       const callback = mock();
-      queue.queue('a', callback);
+      q.queue('a', callback);
 
       expect(callback).to.not.have.been.called;
     });
 
-    it('should NOT queue element given serveImmediately is set to true', function () {
-      const queue = new RequestQueue();
-      queue.serveImmediately = true;
+    it('should NOT queue element given it has started', function () {
+      const q = new RequestQueue();
+      q.start();
 
       const callback = mock();
-      queue.queue('a', callback);
+      q.queue('a', callback);
 
       expect(callback).to.have.been.called;
     });
@@ -77,17 +63,17 @@ describe('RequestQueue', function () {
 
   describe('serve', function () {
     it('should serve request with matching key', async function () {
-      const queue = new RequestQueue();
+      const q = new RequestQueue();
 
       const callbackA = mock();
-      queue.queue('a', callbackA);
+      q.queue('a', callbackA);
 
       const callbackB = mock();
-      queue.queue('b', callbackB);
+      q.queue('b', callbackB);
 
-      await queue.serve('a');
+      await q.serve('a');
 
-      expect(queue.size).to.equal(1);
+      expect(q.size).to.equal(1);
       expect(callbackA).to.have.been.calledOnce;
       expect(callbackB).to.not.have.been.called;
     });
@@ -95,37 +81,37 @@ describe('RequestQueue', function () {
 
   describe('flush', function () {
     it('should flush all requests', async function () {
-      const queue = new RequestQueue();
+      const q = new RequestQueue();
 
       const callbackA = mock();
-      queue.queue('a', callbackA);
+      q.queue('a', callbackA);
 
       const callbackB = mock();
-      queue.queue('b', callbackB);
+      q.queue('b', callbackB);
 
-      await queue.flush();
+      await q.start();
 
-      expect(queue.size).to.equal(0);
+      expect(q.size).to.equal(0);
       expect(callbackA).to.have.been.calledOnce;
       expect(callbackB).to.have.been.calledOnce;
     });
   });
 
-  describe('reset', function () {
-    it('should clear request queue', async function () {
-      const queue = new RequestQueue();
+  describe('stop', function () {
+    it('should stop serving requests', async function () {
+      const q = new RequestQueue();
+
+      await q.start();
+
+      q.stop();
 
       const callbackA = mock();
-      queue.queue('a', callbackA);
+      q.queue('a', callbackA);
 
       const callbackB = mock();
-      queue.queue('b', callbackB);
+      q.queue('b', callbackB);
 
-      queue.reset();
-
-      await queue.flush();
-
-      expect(queue.size).to.equal(0);
+      expect(q.size).to.equal(2);
       expect(callbackA).to.not.have.been.called;
       expect(callbackB).to.not.have.been.called;
     });

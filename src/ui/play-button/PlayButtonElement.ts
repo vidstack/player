@@ -1,9 +1,6 @@
-import { consumeContext, watchContext } from '../../base/context';
-import { mediaContext, MediaRemoteControl } from '../../media';
+import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
-
-export const PLAY_BUTTON_ELEMENT_TAG_NAME = 'vds-play-button';
 
 /**
  * A button for toggling the playback state (play/pause) of the current media.
@@ -41,10 +38,22 @@ export class PlayButtonElement extends ToggleButtonElement {
 
   override label = 'Play';
 
-  // Transforming `paused` to `!paused` to indicate whether playback has initiated/resumed. Can't
-  // use `playing` because there could be a buffering delay (we want immediate feedback).
-  @consumeContext(mediaContext.paused, { transform: (p) => !p })
-  override pressed = false;
+  constructor() {
+    super();
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
+    });
+    hostedMediaStoreSubscription(this, 'waiting', ($waiting) => {
+      setAttribute(this, 'media-waiting', $waiting);
+    });
+    hostedMediaStoreSubscription(this, 'paused', ($paused) => {
+      this.pressed = !$paused;
+      setAttribute(this, 'media-paused', $paused);
+    });
+    hostedMediaStoreSubscription(this, 'ended', ($ended) => {
+      setAttribute(this, 'media-ended', $ended);
+    });
+  }
 
   protected override _handleButtonClick(event: Event) {
     if (this.pressed) {
@@ -52,25 +61,5 @@ export class PlayButtonElement extends ToggleButtonElement {
     } else {
       this._mediaRemote.play(event);
     }
-  }
-
-  @watchContext(mediaContext.canPlay)
-  protected _handleCanPlayContextUpdate(canPlay: boolean) {
-    setAttribute(this, 'media-can-play', canPlay);
-  }
-
-  @watchContext(mediaContext.waiting)
-  protected _handleWaitingContextUpdate(waiting: boolean) {
-    setAttribute(this, 'media-waiting', waiting);
-  }
-
-  @watchContext(mediaContext.paused)
-  protected _handlePausedContextUpdate(paused: boolean) {
-    setAttribute(this, 'media-paused', paused);
-  }
-
-  @watchContext(mediaContext.ended)
-  protected _handleEndedContextUpdate(ended: boolean) {
-    setAttribute(this, 'media-ended', ended);
   }
 }

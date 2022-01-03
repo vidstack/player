@@ -1,14 +1,11 @@
 import { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { consumeContext, watchContext } from '../../base/context';
-import { eventListener } from '../../base/events';
-import { mediaContext, MediaRemoteControl } from '../../media';
+import { hostedEventListener } from '../../base/events';
+import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { round } from '../../utils/number';
-import { SliderElement, SliderValueChangeEvent } from '../slider';
-
-export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
+import { SliderElement } from '../slider';
 
 /**
  * A slider control that lets the user specify their desired volume level.
@@ -35,13 +32,23 @@ export const VOLUME_SLIDER_ELEMENT_TAG_NAME = 'vds-volume-slider';
  * ```
  */
 export class VolumeSliderElement extends SliderElement {
+  constructor() {
+    super();
+    hostedMediaStoreSubscription(this, 'volume', ($volume) => {
+      this._mediaVolume = $volume;
+    });
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
+    });
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
   override label = 'Media volume slider';
-  override step = 0.5;
-  override keyboardStep = 0.5;
+  override _step = 0.5;
+  override _keyboardStep = 0.5;
   override shiftKeyMultiplier = 10;
 
   /** @internal */
@@ -51,9 +58,7 @@ export class VolumeSliderElement extends SliderElement {
   @property({ attribute: false })
   override max = 100;
 
-  @state()
-  @consumeContext(mediaContext.volume)
-  protected _mediaVolume = mediaContext.volume.initialValue;
+  @state() protected _mediaVolume = 1;
 
   /**
    * Represents the current volume out of 100.
@@ -86,17 +91,15 @@ export class VolumeSliderElement extends SliderElement {
   // Methods
   // -------------------------------------------------------------------------------------------
 
-  @watchContext(mediaContext.canPlay)
-  protected _handleCanPlayContextUpdate(canPlay: boolean) {
-    setAttribute(this, 'media-can-play', canPlay);
-  }
-
   protected readonly _mediaRemote = new MediaRemoteControl(this);
 
-  @eventListener('vds-slider-value-change')
-  protected _handleSliderValueChange(event: SliderValueChangeEvent) {
-    const newVolume = event.detail;
-    const mediaVolume = round(newVolume / 100, 3);
-    this._mediaRemote.changeVolume(mediaVolume, event);
-  }
+  protected readonly _handleSliderValueChange = hostedEventListener(
+    this,
+    'vds-slider-value-change',
+    (event) => {
+      const newVolume = event.detail;
+      const mediaVolume = round(newVolume / 100, 3);
+      this._mediaRemote.changeVolume(mediaVolume, event);
+    }
+  );
 }

@@ -1,2 +1,2 @@
-export * from './MediaEventListener';
+export * from './hostedMediaEventListener';
 export * from './MediaRemoteControl';

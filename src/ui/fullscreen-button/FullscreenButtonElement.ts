@@ -1,9 +1,6 @@
-import { consumeContext, watchContext } from '../../base/context';
-import { CanPlay, mediaContext, MediaRemoteControl } from '../../media';
+import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
-
-export const FULLSCREEN_BUTTON_ELEMENT_TAG_NAME = 'vds-fullscreen-button';
 
 /**
  * A button for toggling the fullscreen mode of the player.
@@ -43,11 +40,25 @@ export class FullscreenButtonElement extends ToggleButtonElement {
 
   override label = 'Fullscreen';
 
-  @consumeContext(mediaContext.fullscreen)
-  override pressed = mediaContext.fullscreen.initialValue;
-
-  @consumeContext(mediaContext.canPlay)
-  protected _mediaCanPlay = mediaContext.canPlay.initialValue;
+  constructor() {
+    super();
+    hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
+      this.pressed = $fullscreen;
+    });
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      setAttribute(this, 'media-can-play', $canPlay);
+    });
+    hostedMediaStoreSubscription(
+      this,
+      'canRequestFullscreen',
+      ($canRequestFullscreen) => {
+        setAttribute(this, 'hidden', !$canRequestFullscreen);
+      }
+    );
+    hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
+      setAttribute(this, 'media-fullscreen', $fullscreen);
+    });
+  }
 
   protected override _handleButtonClick(event: Event) {
     if (this.pressed) {
@@ -55,23 +66,5 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     } else {
       this._mediaRemote.enterFullscreen(event);
     }
-  }
-
-  @watchContext(mediaContext.canPlay)
-  protected _handleCanPlayContextUpdate(canPlay: CanPlay) {
-    setAttribute(this, 'media-can-play', canPlay);
-  }
-
-  @watchContext(mediaContext.canRequestFullscreen)
-  protected _handleCanRequestFullscreenContextUpdate(
-    canRequestFullscreen: boolean
-  ) {
-    if (!this._mediaCanPlay) return;
-    setAttribute(this, 'hidden', !canRequestFullscreen);
-  }
-
-  @watchContext(mediaContext.fullscreen)
-  protected _handleFullscreenContextUpdate(fullscreen: boolean) {
-    setAttribute(this, 'media-fullscreen', fullscreen);
   }
 }

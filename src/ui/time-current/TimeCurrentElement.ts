@@ -1,10 +1,7 @@
 import { property } from 'lit/decorators.js';
 
-import { consumeContext } from '../../base/context';
-import { mediaContext } from '../../media';
+import { hostedMediaStoreSubscription } from '../../media';
 import { TimeElement } from '../time';
-
-export const TIME_CURRENT_ELEMENT_TAG_NAME = 'vds-time-current';
 
 /**
  * Formats and displays the `currentTime` of media playback. Do not mess with the component's
@@ -33,6 +30,12 @@ export class TimeCurrentElement extends TimeElement {
 
   /** @internal */
   @property({ attribute: false, state: true })
-  @consumeContext(mediaContext.currentTime)
-  override seconds = mediaContext.currentTime.initialValue;
+  override seconds = 0;
+
+  constructor() {
+    super();
+    hostedMediaStoreSubscription(this, 'currentTime', ($currentTime) => {
+      this.seconds = $currentTime;
+    });
+  }
 }

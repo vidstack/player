@@ -4,12 +4,9 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
-import { eventListener } from '../../base/events';
+import { hostedEventListener } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
 import { toggleButtonElementStyles } from './styles';
-
-export const TOGGLE_BUTTON_ELEMENT_TAG_NAME = 'vds-toggle-button';
 
 /**
  * The foundation for any toggle button such as a `play-button` or `mute-button`.
@@ -50,7 +47,7 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * Whether the toggle is currently in a `pressed` state.
@@ -138,14 +135,15 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
     this.pressed = !this.pressed;
   }
 
-  @eventListener('click', { capture: true })
-  protected _handleButtonClickCapture(event: Event) {
-    if (this.disabled) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      return false;
-    }
-
-    return true;
-  }
+  protected readonly _handleButtonClickCapture = hostedEventListener(
+    this,
+    'click',
+    (event) => {
+      if (this.disabled) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    },
+    { capture: true }
+  );
 }

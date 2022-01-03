@@ -5,7 +5,7 @@ import { safelyDefineCustomElement } from '../../../utils/dom';
 import { keysOf } from '../../../utils/object';
 import { equal, isFunction } from '../../../utils/unit';
 import { CanPlay } from '../../CanPlay';
-import { mediaContext, MediaContextRecord } from '../../context';
+import { mediaContext, MediaContextRecord } from '../../MediaContext';
 import {
   FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
   FakeMediaProviderElement
@@ -82,60 +82,11 @@ describe('MediaProviderElement', function () {
   });
 
   describe('props', function () {
-    it('should have defined all ctx props', async function () {
-      const { provider } = await buildFixture();
-
-      const ignore = new Set<keyof MediaContextRecord>([
-        'canRequestFullscreen',
-        'bufferedAmount',
-        'seekableAmount',
-        'customControls',
-        'live',
-        'idle',
-        'isAudio',
-        'isVideo',
-        'isLiveVideo',
-        'isAudioView',
-        'isVideoView'
-      ]);
-
-      keysOf(mediaContext).forEach((prop) => {
-        if (ignore.has(prop)) return;
-
-        expect(equal(provider.ctx[prop], mediaContext[prop].initialValue), prop)
-          .to.be.true;
-      });
-    });
-
-    it('should have defined ctx props as provider props', async function () {
-      const { provider } = await buildFixture();
-
-      const ignore = new Set<keyof MediaContextRecord>([
-        'canRequestFullscreen',
-        'bufferedAmount',
-        'seekableAmount',
-        'customControls',
-        'idle',
-        'isAudio',
-        'isVideo',
-        'isLiveVideo',
-        'isAudioView',
-        'isVideoView'
-      ]);
-
-      keysOf(mediaContext).forEach((prop) => {
-        if (ignore.has(prop)) return;
-
-        expect(equal(provider[prop], mediaContext[prop].initialValue), prop).to
-          .be.true;
-      });
-    });
-
     it('should update provider when volume is set', async function () {
       const { provider } = await buildFixture();
       const volume = 0.75;
       const volumeSpy = spy(provider, '_setVolume');
-      provider.mediaRequestQueue.serveImmediately = true;
+      provider.mediaRequestQueue.start();
       provider.volume = volume;
       expect(volumeSpy).to.have.been.calledWith(volume);
     });
@@ -144,7 +95,7 @@ describe('MediaProviderElement', function () {
       const { provider } = await buildFixture();
       const currentTime = 420;
       const currentTimeSpy = spy(provider, '_setCurrentTime');
-      provider.mediaRequestQueue.serveImmediately = true;
+      provider.mediaRequestQueue.start();
       provider.currentTime = currentTime;
       expect(currentTimeSpy).to.have.been.calledWith(currentTime);
     });
@@ -153,7 +104,7 @@ describe('MediaProviderElement', function () {
       const { provider } = await buildFixture();
       const playSpy = spy(provider, 'play');
       const pauseSpy = spy(provider, 'pause');
-      provider.mediaRequestQueue.serveImmediately = true;
+      provider.mediaRequestQueue.start();
       provider.paused = false;
       expect(playSpy).to.have.been.calledOnce;
       provider.paused = true;
@@ -163,7 +114,7 @@ describe('MediaProviderElement', function () {
     it('should update provider when muted is set', async function () {
       const { provider } = await buildFixture();
       const mutedSpy = spy(provider, '_setMuted');
-      provider.mediaRequestQueue.serveImmediately = true;
+      provider.mediaRequestQueue.start();
       provider.muted = true;
       expect(mutedSpy).to.have.been.calledWith(true);
     });
@@ -352,7 +303,6 @@ describe('MediaProviderElement', function () {
 
         provider.autoplay = true;
         provider.ctx.canPlay = true;
-        provider.mediaRequestQueue.serveImmediately = true;
 
         // @ts-expect-error Accessing protected properties
         provider._autoplayRetryCount = provider._maxAutoplayRetries - 1;
@@ -384,7 +334,7 @@ describe('MediaProviderElement', function () {
       expect(provider.mediaRequestQueue.size, 'queue size').to.equal(1);
 
       // Flush.
-      await provider.mediaRequestQueue.flush();
+      await provider.mediaRequestQueue.start();
 
       // Check.
       expect(provider.mediaRequestQueue.size, 'new queue size').to.equal(0);
@@ -396,7 +346,7 @@ describe('MediaProviderElement', function () {
 
       const volumeSpy = spy(provider, '_setVolume');
 
-      provider.mediaRequestQueue.serveImmediately = true;
+      provider.mediaRequestQueue.start();
 
       provider.volume = 0.53;
 
@@ -417,7 +367,7 @@ describe('MediaProviderElement', function () {
       setTimeout(() => {
         provider.paused = true;
         expect(provider.mediaRequestQueue.size, 'queue size').to.equal(1);
-        provider.mediaRequestQueue.flush();
+        provider.mediaRequestQueue.start();
       });
 
       await provider.mediaRequestQueue.waitForFlush();

@@ -3,14 +3,11 @@ import { PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { VdsEvent, vdsEvent } from '../../base/events';
-import { DEV_MODE } from '../../global/env';
 import { CanPlay, MediaType } from '../../media';
 import { preconnect, ScriptLoader } from '../../utils/network';
 import { isNonNativeHlsStreamingPossible } from '../../utils/support';
 import { isFunction, isNil, isString, isUndefined } from '../../utils/unit';
 import { VideoElement } from '../video';
-
-export const HLS_ELEMENT_TAG_NAME = 'vds-hls';
 
 export const HLS_EXTENSIONS = /\.(m3u8)($|\?)/i;
 
@@ -219,7 +216,7 @@ export class HlsElement extends VideoElement {
     }
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .infoGroup('preconnect to `hls.js` download')
         .appendWithLabel('URL', this.hlsLibrary)
@@ -270,7 +267,7 @@ export class HlsElement extends VideoElement {
     const canPlayType = super.canPlayType('application/vnd.apple.mpegurl');
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('checking for native HLS support')
         .appendWithLabel('Can play type', canPlayType)
@@ -338,7 +335,7 @@ export class HlsElement extends VideoElement {
     if (!isString(this.hlsLibrary)) return undefined;
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.infoGroup('Starting to load `hls.js`');
     }
     /* c8 ignore stop */
@@ -353,7 +350,7 @@ export class HlsElement extends VideoElement {
       }
 
       /* c8 ignore start */
-      if (DEV_MODE) {
+      if (__DEV__) {
         this._logger
           .infoGroup('Loaded `hls.js`')
           .appendWithLabel('URL', this.hlsLibrary)
@@ -365,7 +362,7 @@ export class HlsElement extends VideoElement {
       return window.Hls;
     } catch (err) {
       /* c8 ignore start */
-      if (DEV_MODE) {
+      if (__DEV__) {
         this._logger
           .warnGroup('Failed to load `hls.js`')
           .appendWithLabel('URL', this.hlsLibrary)
@@ -394,7 +391,7 @@ export class HlsElement extends VideoElement {
     }
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.info('🏗️ Building HLS engine');
     }
     /* c8 ignore stop */
@@ -416,7 +413,7 @@ export class HlsElement extends VideoElement {
 
     if (!this.Hls?.isSupported()) {
       /* c8 ignore start */
-      if (DEV_MODE) {
+      if (__DEV__) {
         this._logger.warn('`hls.js` is not supported in this environment');
       }
       /* c8 ignore stop */
@@ -428,7 +425,7 @@ export class HlsElement extends VideoElement {
     this._hlsEngine = new this.Hls(this.hlsConfig ?? {});
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .infoGroup('🏗️ HLS engine built')
         .appendWithLabel('HLS Engine', this._hlsEngine)
@@ -446,10 +443,9 @@ export class HlsElement extends VideoElement {
     this._prevHlsEngineSrc = '';
     this._hlsEngine = undefined;
     this._isHlsEngineAttached = false;
-    this._softResetMediaContext();
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.info('🏗️ Destroyed HLS engine');
     }
     /* c8 ignore stop */
@@ -475,7 +471,7 @@ export class HlsElement extends VideoElement {
     this._isHlsEngineAttached = true;
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .infoGroup('🏗️ attached HLS engine')
         .appendWithLabel('HLS Engine', this._hlsEngine)
@@ -494,7 +490,7 @@ export class HlsElement extends VideoElement {
     this._prevHlsEngineSrc = '';
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .infoGroup('🏗️ detached HLS engine')
         .appendWithLabel('Video Engine', this.videoEngine)
@@ -516,7 +512,7 @@ export class HlsElement extends VideoElement {
     }
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .infoGroup(`📼 loading src \`${this.src}\``)
         .appendWithLabel('Src', this.src)
@@ -531,7 +527,7 @@ export class HlsElement extends VideoElement {
   }
 
   protected override _getMediaType(): MediaType {
-    if (this.ctx.mediaType === MediaType.LiveVideo) {
+    if (this.mediaType === MediaType.LiveVideo) {
       return MediaType.LiveVideo;
     }
 
@@ -560,8 +556,6 @@ export class HlsElement extends VideoElement {
     // We don't want to load `hls.js` until the browser has had a chance to paint.
     if (!this.hasUpdated) return;
 
-    this.ctx.canPlay = false;
-
     if (!this.isHlsStream) {
       this._detachHlsEngine();
       return;
@@ -577,7 +571,7 @@ export class HlsElement extends VideoElement {
     }
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.debug(`📼 detected src change \`${this.src}\``);
     }
     /* c8 ignore stop */
@@ -602,10 +596,8 @@ export class HlsElement extends VideoElement {
   protected _handleHlsError(eventType: string, data: Hls.errorData): void {
     if (isUndefined(this.Hls)) return;
 
-    this.ctx.error = data;
-
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .errorGroup(`HLS error \`${eventType}\``)
         .appendWithLabel('Event type', eventType)
@@ -661,10 +653,11 @@ export class HlsElement extends VideoElement {
     eventType: string,
     data: Hls.levelLoadedData
   ): void {
-    if (this.ctx.canPlay) return;
+    if (this.canPlay) return;
     this._handleHlsMediaReady(eventType, data);
   }
 
+  protected override _mediaReadyOnMetadataLoad = true;
   protected _handleHlsMediaReady(
     eventType: string,
     data: Hls.levelLoadedData
@@ -674,8 +667,7 @@ export class HlsElement extends VideoElement {
     const event = new VdsEvent(eventType, { detail: data });
 
     const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
-    if (this.ctx.mediaType !== mediaType) {
-      this.ctx.mediaType = mediaType;
+    if (this.mediaState.mediaType !== mediaType) {
       this.dispatchEvent(
         vdsEvent('vds-media-type-change', {
           detail: mediaType,
@@ -684,8 +676,7 @@ export class HlsElement extends VideoElement {
       );
     }
 
-    if (this.ctx.duration !== duration) {
-      this.ctx.duration = duration;
+    if (this.duration !== duration) {
       this.dispatchEvent(
         vdsEvent('vds-duration-change', {
           detail: duration,
@@ -693,7 +684,5 @@ export class HlsElement extends VideoElement {
         })
       );
     }
-
-    this._handleMediaReady(event);
   }
 }

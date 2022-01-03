@@ -7,13 +7,11 @@ import {
 } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { consumeContext } from '../../base/context';
 import { setAttribute } from '../../utils/dom';
 import { IS_IOS } from '../../utils/support';
-import { mediaContext } from '../context';
+import { hostedMediaStoreSubscription } from '../mediaStore';
+import { ViewType } from '../ViewType';
 import { mediaUiElementStyles } from './styles';
-
-export const MEDIA_UI_ELEMENT_TAG_NAME = 'vds-media-ui';
 
 /**
  * This is a general container to hold your UI components but it also enables you to show/hide
@@ -53,21 +51,26 @@ export class MediaUiElement extends LitElement {
     return [];
   }
 
-  @state()
-  @consumeContext(mediaContext.canPlay)
-  protected _mediaCanPlay = mediaContext.canPlay.initialValue;
+  @state() protected _mediaCanPlay = false;
+  @state() protected _mediaFullscreen = false;
+  @state() protected _mediaIsVideoView = false;
+  @state() protected _mediaPlaysinline = false;
 
-  @state()
-  @consumeContext(mediaContext.fullscreen)
-  protected _mediaFullscreen = mediaContext.fullscreen.initialValue;
-
-  @state()
-  @consumeContext(mediaContext.isVideoView)
-  protected _mediaIsVideoView = mediaContext.isVideoView.initialValue;
-
-  @state()
-  @consumeContext(mediaContext.playsinline)
-  protected _mediaPlaysinline = mediaContext.playsinline.initialValue;
+  constructor() {
+    super();
+    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
+      this._mediaCanPlay = $canPlay;
+    });
+    hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
+      this._mediaFullscreen = $fullscreen;
+    });
+    hostedMediaStoreSubscription(this, 'viewType', ($viewType) => {
+      this._mediaIsVideoView = $viewType === ViewType.Video;
+    });
+    hostedMediaStoreSubscription(this, 'playsinline', ($playsinline) => {
+      this._mediaPlaysinline = $playsinline;
+    });
+  }
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle

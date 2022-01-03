@@ -7,6 +7,7 @@ import { VdsEvent } from '../events';
 export type FullscreenEvents = {
   'vds-fullscreen-change': FullscreenChangeEvent;
   'vds-fullscreen-error': FullscreenErrorEvent;
+  'vds-fullscreen-support-change': FullscreenSupportChange;
 };
 
 /**
@@ -32,3 +33,13 @@ export type FullscreenChangeEvent = VdsEvent<boolean> & {
 export type FullscreenErrorEvent = VdsEvent<unknown> & {
   requestEvent?: EnterFullscreenRequestEvent | ExitFullscreenRequestEvent;
 };
+
+/**
+ * Fired when fullscreen support has changed. To be clear, support does not guarantee the
+ * fullscreen request happening, as the browser might still reject the request if it's attempted
+ * without user interaction. The event detail is a `boolean` that indicates whether it's
+ * supported (`true`), or not (`false`).
+ *
+ * @event
+ */
+export type FullscreenSupportChange = VdsEvent<boolean>;

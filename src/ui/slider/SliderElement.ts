@@ -11,9 +11,8 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
-import { eventListener, vdsEvent } from '../../base/events';
+import { hostedEventListener, vdsEvent } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
 import {
   clampNumber,
   getNumberOfDecimalPlaces,
@@ -21,8 +20,6 @@ import {
 } from '../../utils/number';
 import { rafThrottle } from '../../utils/timing';
 import { sliderElementStyles } from './styles';
-
-export const SLIDER_ELEMENT_TAG_NAME = 'vds-slider';
 
 /**
  * The direction to move the thumb, associated with key symbols.
@@ -107,7 +104,7 @@ export class SliderElement extends WithFocus(LitElement) {
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` property of the slider.
@@ -185,14 +182,30 @@ export class SliderElement extends WithFocus(LitElement) {
    * A number that specifies the granularity that the slider value must adhere to.
    */
   @property({ type: Number, reflect: true })
-  step = 1;
+  get step() {
+    return this._step;
+  }
+
+  set step(newStep: number) {
+    this._step = newStep;
+  }
+
+  protected _step = 1;
 
   /**
    * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
    * the slider via keyboard.
    */
   @property({ attribute: 'keyboard-step', type: Number })
-  keyboardStep = 1;
+  get keyboardStep() {
+    return this._keyboardStep;
+  }
+
+  set keyboardStep(newStep: number) {
+    this._keyboardStep = newStep;
+  }
+
+  protected _keyboardStep = 1;
 
   /**
    * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
@@ -503,7 +516,7 @@ export class SliderElement extends WithFocus(LitElement) {
     this._updateValueBasedOnThumbPosition(event);
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('started dragging')
         .appendWithLabel('Event', event)
@@ -528,7 +541,7 @@ export class SliderElement extends WithFocus(LitElement) {
     this._updateValueBasedOnThumbPosition(event);
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('stopped dragging')
         .appendWithLabel('Event', event)
@@ -548,21 +561,29 @@ export class SliderElement extends WithFocus(LitElement) {
   // Document (Pointer Events)
   // -------------------------------------------------------------------------------------------
 
-  @eventListener('pointerup', { target: document })
-  protected _handleDocumentPointerUp(event: PointerEvent) {
-    if (this.disabled || !this._isDragging) return;
-    this._stopDragging(event);
-  }
+  protected readonly _handleDocumentPointerUp = hostedEventListener(
+    this,
+    'pointerup',
+    (event) => {
+      if (this.disabled || !this._isDragging) return;
+      this._stopDragging(event);
+    },
+    { target: document }
+  );
 
-  @eventListener('pointermove', { target: document })
-  protected _handleDocumentPointerMove(event: PointerEvent) {
-    if (this.disabled || !this._isDragging) {
-      this._handlePointerMove.cancel();
-      return;
-    }
+  protected readonly _handleDocumentPointerMove = hostedEventListener(
+    this,
+    'pointermove',
+    (event) => {
+      if (this.disabled || !this._isDragging) {
+        this._handlePointerMove.cancel();
+        return;
+      }
 
-    this._handlePointerMove(event);
-  }
+      this._handlePointerMove(event);
+    },
+    { target: document }
+  );
 
   protected readonly _handlePointerMove = rafThrottle((event: PointerEvent) => {
     if (this.disabled || !this._isDragging) return;

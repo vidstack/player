@@ -1,17 +1,10 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
 
-import {
-  DiscoveryEvent,
-  ElementDiscoveryController
-} from '../../base/elements';
+import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
 import { FullscreenController } from '../../base/fullscreen';
-import { LogLevelName } from '../../base/logger';
 import { ScreenOrientationController } from '../../base/screen-orientation';
 import { MediaController } from './MediaController';
 import { mediaControllerStyles } from './styles';
-
-export const MEDIA_CONTROLLER_ELEMENT_TAG_NAME = 'vds-media-controller';
 
 /**
  * Fired when the media controller connects to the DOM.
@@ -53,35 +46,20 @@ export class MediaControllerElement extends LitElement {
     return [mediaControllerStyles];
   }
 
+  constructor() {
+    super();
+    dispatchDiscoveryEvents(this, 'vds-media-controller-connect');
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
   readonly controller = new MediaController(this);
 
-  /**
-   * Sets the default log level throughout the player. Valid values in order of
-   * level include `silent`, `error`, `warn`, `info` and `debug`.
-   *
-   * @default `silent`
-   */
-  @property({ attribute: 'log-level' })
-  get logLevel(): LogLevelName {
-    return this.controller.logLevel;
-  }
-
-  set logLevel(newLevel: LogLevelName) {
-    this.controller.logLevel = newLevel;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
-
-  override connectedCallback() {
-    super.connectedCallback();
-    new ElementDiscoveryController(this, 'vds-media-controller-connect');
-  }
 
   protected override render(): TemplateResult {
     return html`<slot></slot>`;

@@ -8,11 +8,7 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { consumeContext, provideContextRecord } from '../../base/context';
-import {
-  DiscoveryEvent,
-  ElementDiscoveryController
-} from '../../base/elements';
+import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
 import {
   isPointerEvent,
   isVdsEvent,
@@ -20,17 +16,15 @@ import {
   vdsEvent
 } from '../../base/events';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
-import { mediaContext } from '../../media/context';
+import { get, hostedStoreRecordSubscription } from '../../base/stores';
+import { hostedMediaStoreSubscription } from '../../media';
 import { getSlottedChildren, raf } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
 import { rafThrottle } from '../../utils/timing';
 import { isNil } from '../../utils/unit';
-import { scrubberContext } from '../scrubber/context';
-import { scrubberPreviewContext } from './context';
+import { scrubberStoreContext } from '../scrubber';
+import { scrubberPreviewStore } from './scrubberPreviewStore';
 import { scrubberPreviewElementStyles } from './styles';
-
-export const SCRUBBER_PREVIEW_ELEMENT_TAG_NAME = 'vds-scrubber-preview';
 
 /**
  * Fired when the scrubber preview element connects to the DOM.
@@ -120,15 +114,43 @@ export class ScrubberPreviewElement extends LitElement {
     return ['track', 'track-fill'];
   }
 
+  constructor() {
+    super();
+    dispatchDiscoveryEvents(this, 'vds-scrubber-preview-connect');
+    hostedMediaStoreSubscription(this, 'duration', ($duration) => {
+      this._mediaDuration = $duration;
+    });
+    hostedStoreRecordSubscription(
+      this,
+      scrubberStoreContext,
+      'dragging',
+      ($dragging) => {
+        this._isDragging = $dragging;
+      }
+    );
+    hostedStoreRecordSubscription(
+      this,
+      scrubberStoreContext,
+      'interactive',
+      ($interactive) => {
+        this._isInteracting = $interactive;
+      }
+    );
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
-  /** @internal */
-  readonly ctx = provideContextRecord(this, scrubberPreviewContext);
+  protected readonly scrubberPreviewStoreProvider =
+    scrubberPreviewStore.provide(this);
+
+  get scrubberPreviewStore() {
+    return this.scrubberPreviewStoreProvider.value;
+  }
 
   /**
    * Whether the preview is hidden.
@@ -154,26 +176,13 @@ export class ScrubberPreviewElement extends LitElement {
   @property({ attribute: 'no-clamp', type: Boolean })
   noClamp = false;
 
-  @state()
-  @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
-  protected _mediaDuration = 0;
-
-  @state()
-  @consumeContext(scrubberContext.dragging)
-  protected _isDragging = scrubberContext.dragging.initialValue;
-
-  @state()
-  @consumeContext(scrubberContext.interacting)
-  protected _isInteracting = scrubberContext.interacting.initialValue;
+  @state() protected _mediaDuration = 0;
+  @state() protected _isDragging = false;
+  @state() protected _isInteracting = false;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
-
-  override connectedCallback() {
-    super.connectedCallback();
-    new ElementDiscoveryController(this, 'vds-scrubber-preview-connect');
-  }
 
   protected override update(changedProperties: PropertyValues) {
     if (changedProperties.has('_mediaDuration')) {
@@ -290,7 +299,7 @@ export class ScrubberPreviewElement extends LitElement {
 
     if (!isNil(this.previewSlotElement)) {
       /* c8 ignore start */
-      if (DEV_MODE) {
+      if (__DEV__) {
         this._logger
           .debugGroup('preview slot change')
           .appendWithLabel('Preview element', this._previewSlotElement)
@@ -330,7 +339,7 @@ export class ScrubberPreviewElement extends LitElement {
 
     this._showPreviewTimeout = window.setTimeout(
       async () => {
-        this.ctx.showing = true;
+        this.scrubberPreviewStore.showing.set(true);
         this.previewSlotElement?.removeAttribute('hidden');
 
         await raf();
@@ -344,7 +353,7 @@ export class ScrubberPreviewElement extends LitElement {
         this.setAttribute('previewing', '');
 
         /* c8 ignore start */
-        if (DEV_MODE) {
+        if (__DEV__) {
           this._logger
             .debugGroup('show preview')
             .appendWithLabel('Preview element', this._previewSlotElement)
@@ -382,12 +391,12 @@ export class ScrubberPreviewElement extends LitElement {
 
     this._dispatchPreviewTimeUpdate.cancel();
 
-    this.ctx.showing = false;
+    this.scrubberPreviewStore.showing.set(false);
     this.removeAttribute('previewing');
     this.previewSlotElement?.setAttribute('hidden', '');
 
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .debugGroup('hide preview')
         .appendWithLabel('Preview element', this._previewSlotElement)
@@ -409,7 +418,7 @@ export class ScrubberPreviewElement extends LitElement {
 
       this.dispatchEvent(
         vdsEvent('vds-scrubber-preview-time-update', {
-          detail: this.ctx.time,
+          detail: get(this.scrubberPreviewStore.time),
           originalEvent
         })
       );
@@ -417,11 +426,15 @@ export class ScrubberPreviewElement extends LitElement {
   );
 
   protected _updatePreviewTime(time: number, event: Event) {
-    this.ctx.time = clampNumber(0, round(time, 5), this._mediaDuration);
+    this.scrubberPreviewStore.time.set(
+      clampNumber(0, round(time, 5), this._mediaDuration)
+    );
+
     this.style.setProperty(
       '--vds-scrubber-preview-time',
-      String(this.ctx.time)
+      String(get(this.scrubberPreviewStore.time))
     );
+
     this._dispatchPreviewTimeUpdate(event);
   }
 

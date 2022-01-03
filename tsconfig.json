@@ -7,7 +7,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
-    "lib": ["dom", "dom.iterable", "es2017"],
+    "lib": ["dom", "dom.iterable", "es2019"],
     "module": "es2015",
     "moduleResolution": "node",
     "noImplicitAny": false,
@@ -16,10 +16,10 @@
     "noImplicitOverride": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2017",
+    "target": "es2019",
     "typeRoots": ["node_modules/@types", "./src/global"],
-    "types": ["mocha"]
+    "types": []
   },
   "include": ["**/*.ts", "**/*.mjs"],
-  "exclude": ["node_modules", "dist", "dist-prod", "bundle", "./index.d.ts"]
+  "exclude": ["node_modules", "dist", "dist-prod", "./index.d.ts"]
 }

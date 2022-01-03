@@ -3,19 +3,15 @@
   "compilerOptions": {
     "declaration": true,
     "declarationMap": true,
-    "incremental": false,
-    "outDir": "dist",
+    "declarationDir": "types",
+    "emitDeclarationOnly": true,
     "preserveWatchOutput": true,
     "noEmit": false,
     "importHelpers": true,
+    "incremental": false,
     "sourceMap": true,
     "useDefineForClassFields": false
   },
   "include": ["src/**/*.ts"],
-  "exclude": [
-    "src/**/*.test.js",
-    "src/**/*.test.ts",
-    "src/**/*.stories.ts",
-    "src/media/test-utils"
-  ]
+  "exclude": ["src/**/*.test.js", "src/**/*.test.ts", "src/media/test-utils"]
 }

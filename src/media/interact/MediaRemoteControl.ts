@@ -1,9 +1,8 @@
-import { ReactiveController, ReactiveControllerHost } from 'lit';
+import type { ReactiveControllerHost } from 'lit';
 
 import { ExtractEventInit, vdsEvent } from '../../base/events';
 import { Logger } from '../../base/logger';
-import { RequestQueue } from '../../base/queue';
-import { DEV_MODE } from '../../global/env';
+import { createHostedRequestQueue } from '../../base/queue';
 import { MediaRequestEvents } from '../request.events';
 
 /**
@@ -22,53 +21,19 @@ import { MediaRequestEvents } from '../request.events';
  * }
  * ```
  */
-export class MediaRemoteControl implements ReactiveController {
+export class MediaRemoteControl {
   protected _ref?: Element;
 
-  protected readonly _connectedQueue: RequestQueue;
+  protected readonly _connectedQueue = createHostedRequestQueue(this._host);
 
   protected readonly _logger!: Logger;
 
-  constructor(protected readonly _host: ReactiveControllerHost) {
+  constructor(protected readonly _host: ReactiveControllerHost & EventTarget) {
     /* c8 ignore start */
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger = new Logger(_host, { owner: this });
     }
     /* c8 ignore stop */
-
-    this._connectedQueue = new RequestQueue(
-      _host,
-      /* c8 ignore next */
-      DEV_MODE && { name: 'remoteControlConnectedQueue', owner: this }
-    );
-
-    if (_host instanceof Element) this.setRef(_host);
-    _host.addController(this);
-  }
-
-  hostConnected() {
-    this._connectedQueue.flush();
-    this._connectedQueue.serveImmediately = true;
-  }
-
-  hostDisconnected() {
-    this._connectedQueue.destroy();
-  }
-
-  /**
-   * Set a reference to a DOM element that this controller will use as the target for dispatching
-   * media requests from.
-   */
-  setRef(newRef?: Element) {
-    if (this._ref !== newRef) {
-      /* c8 ignore start */
-      if (DEV_MODE) {
-        this._logger.debug('ref change', newRef);
-      }
-      /* c8 ignore stop */
-    }
-
-    this._ref = newRef;
   }
 
   play(event?: Event) {
@@ -128,30 +93,6 @@ export class MediaRemoteControl implements ReactiveController {
     });
   }
 
-  showControls(event?: Event) {
-    this._dispatchRequest('vds-show-controls-request', {
-      originalEvent: event
-    });
-  }
-
-  hideControls(event?: Event) {
-    this._dispatchRequest('vds-hide-controls-request', {
-      originalEvent: event
-    });
-  }
-
-  resumeIdleTracking(event?: Event) {
-    this._dispatchRequest('vds-resume-idle-tracking-request', {
-      originalEvent: event
-    });
-  }
-
-  pauseIdleTracking(event?: Event) {
-    this._dispatchRequest('vds-pause-idle-tracking-request', {
-      originalEvent: event
-    });
-  }
-
   protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(
     type: EventType,
     eventInit: ExtractEventInit<MediaRequestEvents[EventType]>
@@ -164,7 +105,7 @@ export class MediaRemoteControl implements ReactiveController {
       });
 
       /* c8 ignore start */
-      if (DEV_MODE) {
+      if (__DEV__) {
         this._logger
           .infoGroup(`📨 dispatching \`${type}\``)
           .appendWithLabel('Event', request)
@@ -173,7 +114,7 @@ export class MediaRemoteControl implements ReactiveController {
       }
       /* c8 ignore stop */
 
-      this._ref?.dispatchEvent(request);
+      this._host.dispatchEvent(request);
     });
   }
 }

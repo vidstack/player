@@ -1,23 +1,6 @@
-import { ReactiveControllerHost } from 'lit';
-
-import { DEV_MODE } from '../../global/env';
 import { deferredPromise } from '../../utils/promise';
-import { Logger } from '../logger';
-
-export interface RequestQueueOptions {
-  /**
-   * Provide a name for debugging purposes.
-   */
-  name?: string;
-  /**
-   * Provide the owner of this queue for debugging purposes.
-   */
-  owner?: any;
-}
 
 export class RequestQueue {
-  protected readonly _logger?: Logger;
-
   protected readonly _requestQueue = new Map<
     string | symbol,
     () => void | Promise<void>
@@ -25,29 +8,15 @@ export class RequestQueue {
 
   protected _pendingFlush = deferredPromise();
 
-  get name() {
-    return this._options.name;
-  }
-
-  constructor(
-    _host?: ReactiveControllerHost,
-    protected readonly _options: RequestQueueOptions = {}
-  ) {
-    /* c8 ignore start */
-    if (DEV_MODE && _host && _options.name) {
-      const className = _options.owner ? ` [${this.constructor.name}]` : '';
-      this._logger = new Logger(_host, {
-        owner: _options.owner ?? this,
-        name: `️⌛ ${this.name}${className}`
-      });
-    }
-    /* c8 ignore stop */
-  }
+  protected _isServing = false;
 
   /**
-   * Whether callbacks should be called immediately or queued and flushed at a later time.
+   * Whether items in the queue are being served immediately, otherwise they're queued to
+   * be processed later.
    */
-  serveImmediately = false;
+  get isServing() {
+    return this._isServing;
+  }
 
   /**
    * The number of callbacks that are currently in queue.
@@ -57,84 +26,59 @@ export class RequestQueue {
   }
 
   /**
-   * Returns a clone of the current request queue.
+   * Waits for the queue to be flushed (ie: start serving).
    */
-  cloneQueue(): Map<string | symbol, () => void | Promise<void>> {
-    return new Map(this._requestQueue);
-  }
-
-  /**
-   * Waits for the queue to be flushed.
-   */
-  async waitForFlush(): Promise<void> {
-    if (this.serveImmediately) return;
+  async waitForFlush() {
+    if (this._isServing) return;
     await this._pendingFlush.promise;
   }
 
-  async queue(
-    key: string | symbol,
-    callback: () => void | Promise<void>
-  ): Promise<void> {
+  async queue(key: string | symbol, callback: () => void | Promise<void>) {
     this._requestQueue.set(key, callback);
-
-    /* c8 ignore start */
-    if (DEV_MODE && this.name && !this.serveImmediately) {
-      this._logger?.debug(`queued \`${String(key)}\``);
-    }
-    /* c8 ignore stop */
-
-    if (!this.serveImmediately) return;
-    this.serve(key);
+    if (this._isServing) this.serve(key);
   }
 
-  async serve(key: string | symbol): Promise<void> {
-    /* c8 ignore start */
-    if (DEV_MODE && this.name) {
-      this._logger?.debug(`serving \`${String(key)}\``);
-    }
-    /* c8 ignore stop */
-
+  async serve(key: string | symbol) {
     await this._requestQueue.get(key)?.();
     this._requestQueue.delete(key);
   }
 
-  async flush(): Promise<void> {
-    const requests = Array.from(this._requestQueue.keys());
-    await Promise.all(requests.map((reqKey) => this.serve(reqKey)));
-    this._flush();
-
-    /* c8 ignore start */
-    if (DEV_MODE && this.name) {
-      this._logger?.info('flush');
-    }
-    /* c8 ignore stop */
+  /**
+   * Start serving requests.
+   */
+  async start() {
+    await this._flush();
+    this._empty();
+    this._isServing = true;
   }
 
-  protected _flush() {
+  protected async _flush() {
+    const requests = Array.from(this._requestQueue.keys());
+    await Promise.all(requests.map((reqKey) => this.serve(reqKey)));
+    this._release();
+  }
+
+  protected _empty() {
     this._requestQueue.clear();
+  }
+
+  protected _release() {
     // Release anyone waiting.
     this._pendingFlush.resolve();
     this._pendingFlush = deferredPromise();
   }
 
-  reset(): void {
-    this._flush();
-
-    /* c8 ignore start */
-    if (DEV_MODE && this.name) {
-      this._logger?.info('reset');
-    }
-    /* c8 ignore stop */
+  /**
+   * Stop serving requests, they'll be queued until you begin processing again by calling
+   * `start()`.
+   */
+  stop() {
+    this._isServing = false;
   }
 
-  destroy(): void {
-    this.serveImmediately = false;
-    this.reset();
-
-    /* c8 ignore start */
-    if (DEV_MODE && this.name) {
-      this._logger?.info('destroy');
-    }
-    /* c8 ignore stop */
+  destroy() {
+    this.stop();
+    this._empty();
+    this._release();
   }
 }

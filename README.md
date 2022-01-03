@@ -11,14 +11,6 @@ Spec-compliant customizable, extensible, accessible and universal media elements
 This pre-release is not yet feature complete or API stable. Please use at your own risk until the
 stable release is available. Issues are welcome for unexpected changes.
 
-## 💿 Installation
-
-### NPM
-
-```bash
-$: npm install @vidstack/elements
-```
-
 ## 📖 Documentation
 
 Documentation is currently not available.

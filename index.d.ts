@@ -1,4 +1,4 @@
 // Import global definitions.
-import './dist/global/types';
+import './global.d.ts';
 
-export * from './dist';
+export * from './types';

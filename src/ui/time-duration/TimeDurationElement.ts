@@ -1,10 +1,7 @@
 import { property } from 'lit/decorators.js';
 
-import { consumeContext } from '../../base/context';
-import { mediaContext } from '../../media';
+import { hostedMediaStoreSubscription } from '../../media';
 import { TimeElement } from '../time';
-
-export const TIME_DURATION_ELEMENT_TAG_NAME = 'vds-time-duration';
 
 /**
  * Formats and displays the `duration` of the current media. Do not mess with the component's
@@ -31,8 +28,12 @@ export class TimeDurationElement extends TimeElement {
   override label = 'Media duration';
 
   /** @internal */
-  @property({ attribute: false, state: true })
-  // Duration can be -1 when unknown but we want to display >=0.
-  @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
-  override seconds = mediaContext.duration.initialValue;
+  @property({ attribute: false, state: true }) override seconds = 0;
+
+  constructor() {
+    super();
+    hostedMediaStoreSubscription(this, 'duration', ($duration) => {
+      this.seconds = $duration;
+    });
+  }
 }

@@ -10,8 +10,6 @@ import { VideoFullscreenController } from './fullscreen';
 import { VideoPresentationController } from './presentation';
 import { videoElementStyles } from './styles';
 
-export const VIDEO_ELEMENT_TAG_NAME = 'vds-video';
-
 /**
  * Embeds video content into documents via the native `<video>` element. It may contain
  * one or more video sources, represented using the `src` attribute or the `<source>` element: the
@@ -80,12 +78,12 @@ export class VideoElement extends Html5MediaElement {
    */
   @property()
   get poster() {
-    return this.ctx.currentPoster;
+    return this.mediaState.currentPoster;
   }
 
   set poster(newPoster) {
-    this._connectedQueue.queue('currentPoster', () => {
-      this.ctx.currentPoster = newPoster;
+    this._connectedQueue.queue('current-poster', () => {
+      this.dispatchEvent(vdsEvent('vds-poster-change', { detail: newPoster }));
       this.requestUpdate();
     });
   }
@@ -112,8 +110,6 @@ export class VideoElement extends Html5MediaElement {
 
   override connectedCallback() {
     super.connectedCallback();
-
-    this.ctx.viewType = ViewType.Video;
     this.dispatchEvent(
       vdsEvent('vds-view-type-change', {
         detail: ViewType.Video

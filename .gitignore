@@ -2,6 +2,7 @@ dist/
 dist-*/
 /bundle/
 /types/
+/define/
 /scratchpad/
 
 custom-elements.json

@@ -9,7 +9,6 @@ import {
   vdsEvent
 } from '../../../base/events';
 import { Logger } from '../../../base/logger';
-import { DEV_MODE } from '../../../global/env';
 import { isFunction, isNil, noop } from '../../../utils/unit';
 
 export type VideoPresentationControllerHost = ReactiveElement & {
@@ -41,14 +40,11 @@ export class VideoPresentationController {
   protected readonly _listenerDisposal: DisposalBin;
 
   constructor(protected readonly _host: VideoPresentationControllerHost) {
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger = new Logger(_host, { owner: this });
     }
 
-    this._listenerDisposal = new DisposalBin(
-      _host,
-      DEV_MODE && { name: 'listenerDisposal', owner: this }
-    );
+    this._listenerDisposal = new DisposalBin();
 
     const firstUpdated = (_host as any).firstUpdated;
     (_host as any).firstUpdated = (changedProperties: PropertyValues) => {
@@ -119,7 +115,7 @@ export class VideoPresentationController {
   protected _addPresentationModeChangeEventListener(): () => void {
     if (!this.isSupported || isNil(this._host.videoElement)) return noop;
 
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.info('adding `webkitpresentationmodechanged` listener');
     }
 
@@ -132,7 +128,7 @@ export class VideoPresentationController {
   }
 
   protected _handlePresentationModeChange(event: Event) {
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .infoGroup('presentation mode change')
         .appendWithLabel('Event', event)

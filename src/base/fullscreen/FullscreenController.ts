@@ -3,7 +3,6 @@
 import fscreen from 'fscreen';
 import { ReactiveElement } from 'lit';
 
-import { DEV_MODE } from '../../global/env';
 import { isUndefined, noop } from '../../utils/unit';
 import { DisposalBin, listen, vdsEvent } from '../events';
 import { Logger } from '../logger';
@@ -73,14 +72,11 @@ export class FullscreenController {
     protected readonly _host: FullscreenControllerHost,
     protected readonly _screenOrientationController: ScreenOrientationController
   ) {
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger = new Logger(_host, { owner: this });
     }
 
-    this._listenerDisposal = new DisposalBin(
-      _host,
-      DEV_MODE && { name: 'listenerDisposal', owner: this }
-    );
+    this._listenerDisposal = new DisposalBin();
 
     _host.addController({
       hostDisconnected: this._handleHostDisconnected.bind(this)
@@ -143,7 +139,7 @@ export class FullscreenController {
   ): () => void {
     if (!this.isSupported) return noop;
 
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.debug('adding `fullscreenchange` listener');
     }
 
@@ -151,7 +147,7 @@ export class FullscreenController {
     const dispose = listen(fscreen, 'fullscreenchange', listener);
 
     return () => {
-      if (DEV_MODE) {
+      if (__DEV__) {
         this._logger.debug('removing `fullscreenchange` listener');
       }
 
@@ -168,7 +164,7 @@ export class FullscreenController {
   ): () => void {
     if (!this.isSupported) return noop;
 
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.debug('adding `fullscreenerror` listener');
     }
 
@@ -176,7 +172,7 @@ export class FullscreenController {
     const dispose = listen(fscreen, 'fullscreenerror', listener);
 
     return () => {
-      if (DEV_MODE) {
+      if (__DEV__) {
         this._logger.debug('removing `fullscreenerror` listener');
       }
 
@@ -189,7 +185,7 @@ export class FullscreenController {
 
     this._throwIfNoFullscreenSupport();
 
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.info('requesting fullscreen');
     }
 
@@ -222,7 +218,7 @@ export class FullscreenController {
   protected _handleFullscreenChange(event: Event) {
     if (!this.isFullscreen) this._listenerDisposal.empty();
 
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .infoGroup('fullscreen change')
         .appendWithLabel('Event', event)
@@ -240,7 +236,7 @@ export class FullscreenController {
   }
 
   protected _handleFullscreenError(event: Event) {
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger
         .errorGroup('fullscreen error')
         .appendWithLabel('Event', event)
@@ -261,7 +257,7 @@ export class FullscreenController {
 
     this._throwIfNoFullscreenSupport();
 
-    if (DEV_MODE) {
+    if (__DEV__) {
       this._logger.info('exiting fullscreen');
     }
 

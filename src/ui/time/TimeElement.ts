@@ -4,11 +4,8 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../base/directives';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
 import { formatHtml5Duration, formatTime } from '../../utils/time';
 import { timeElementStyles } from './styles';
-
-export const TIME_ELEMENT_TAG_NAME = 'vds-time';
 
 /**
  * Formats and displays a length of time given in `seconds`.
@@ -49,7 +46,7 @@ export class TimeElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` property of the time.

@@ -3,8 +3,6 @@ import { TemplateResult } from 'lit';
 import { WithMediaPlayer } from '../../media';
 import { HlsElement } from '../../providers/hls';
 
-export const HLS_PLAYER_ELEMENT_TAG_NAME = 'vds-hls-player';
-
 /**
  * Embeds video content into documents via the native `<video>` element. It may contain
  * one or more video sources, represented using the `src` attribute or the `<source>` element: the
@@ -40,12 +38,12 @@ export const HLS_PLAYER_ELEMENT_TAG_NAME = 'vds-hls-player';
  * ```
  * @example
  * ```html
- * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
+ * <vds-hls-player src="/media/index.m3u8" poster="/media/poster.png">
  *   <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
  *   <vds-media-ui slot="ui">
  *     <!-- UI components here. -->
  *   </vds-media-ui>
- * </vds-hls>
+ * </vds-hls-player>
  * ```
  */
 export class HlsPlayerElement extends WithMediaPlayer(HlsElement) {

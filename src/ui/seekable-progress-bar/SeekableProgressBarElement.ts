@@ -3,15 +3,10 @@ import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { consumeContext } from '../../base/context';
 import { ElementLogger } from '../../base/logger';
-import { DEV_MODE } from '../../global/env';
-import { mediaContext } from '../../media';
+import { hostedMediaStoreSubscription } from '../../media';
 import { formatSpokenTime } from '../../utils/time';
 import { seekableProgressBarElementStyles } from './styles';
-
-export const SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME =
-  'vds-seekable-progress-bar';
 
 /**
  * Displays a progress bar from 0 to media duration with the amount of media that is seekable.
@@ -39,18 +34,27 @@ export class SeekableProgressBarElement extends LitElement {
     return ['root'];
   }
 
+  constructor() {
+    super();
+    hostedMediaStoreSubscription(this, 'seekableAmount', ($seekableAmount) => {
+      this._mediaSeekableAmount = $seekableAmount;
+    });
+    hostedMediaStoreSubscription(this, 'duration', ($duration) => {
+      this._mediaDuration = $duration;
+    });
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
   /* c8 ignore next */
-  protected readonly _logger = DEV_MODE && new ElementLogger(this);
+  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` for the progress bar.
    */
-  @property()
-  label = 'Amount of seekable media';
+  @property() label = 'Amount of seekable media';
 
   /**
    * ♿ **ARIA:** Human-readable text alternative for the seekable amount. If you pass
@@ -60,13 +64,8 @@ export class SeekableProgressBarElement extends LitElement {
   @property({ attribute: 'value-text' })
   valueText = '{seekableAmount} out of {duration}';
 
-  @state()
-  @consumeContext(mediaContext.seekableAmount)
-  protected _mediaSeekableAmount = mediaContext.seekableAmount.initialValue;
-
-  @state()
-  @consumeContext(mediaContext.duration, { transform: (d) => (d >= 0 ? d : 0) })
-  protected _mediaDuration = 0;
+  @state() protected _mediaSeekableAmount = 0;
+  @state() protected _mediaDuration = 0;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle

@@ -5,8 +5,6 @@ import { ifNonEmpty, ifNumber } from '../../base/directives';
 import { Html5MediaElement } from '../html5';
 import { audioElementStyles } from './styles';
 
-export const AUDIO_ELEMENT_TAG_NAME = 'vds-audio';
-
 /**
  * Used to embed sound content into documents via the native `<audio>` element. It may contain
  * one or more audio sources, represented using the `src` attribute or the `<source>` element: the

@@ -1,11 +1,10 @@
 import { VdsEvent } from '../base/events';
 import {
   FullscreenChangeEvent,
-  FullscreenErrorEvent
+  FullscreenErrorEvent,
+  FullscreenSupportChange
 } from '../base/fullscreen';
 import { MediaType } from './MediaType';
-import { ControlsChangeEvent } from './player/controls';
-import { IdleChangeEvent } from './player/idle';
 import {
   MuteRequestEvent,
   PauseRequestEvent,
@@ -19,8 +18,12 @@ import { ViewType } from './ViewType';
 
 export type MediaEvents = {
   'vds-abort': AbortEvent;
-  'vds-can-play': CanPlayEvent;
+  'vds-autoplay-attempt': AutoplayAttemptEvent;
+  'vds-autoplay-change': AutoplayChangeEvent;
+  'vds-autoplay-fail': AutoplayFailEvent;
+  'vds-autoplay': AutoplayEvent;
   'vds-can-play-through': CanPlayThroughEvent;
+  'vds-can-play': CanPlayEvent;
   'vds-controls-change': ControlsChangeEvent;
   'vds-duration-change': DurationChangeEvent;
   'vds-emptied': EmptiedEvent;
@@ -28,23 +31,27 @@ export type MediaEvents = {
   'vds-error': ErrorEvent;
   'vds-fullscreen-change': FullscreenChangeEvent;
   'vds-fullscreen-error': FullscreenErrorEvent;
-  'vds-idle-change': IdleChangeEvent;
+  'vds-fullscreen-support-change': FullscreenSupportChange;
+  'vds-load-start': LoadStartEvent;
   'vds-loaded-data': LoadedDataEvent;
   'vds-loaded-metadata': LoadedMetadataEvent;
-  'vds-load-start': LoadStartEvent;
+  'vds-loop-change': LoopChangeEvent;
   'vds-looped': LoopedEvent;
   'vds-media-type-change': MediaTypeChangeEvent;
   'vds-pause': PauseEvent;
+  'vds-play-fail': PlayFailEvent;
   'vds-play': PlayEvent;
-  'vds-play-error': PlayErrorEvent;
   'vds-playing': PlayingEvent;
+  'vds-playsinline-change': PlaysinlineChangeEvent;
+  'vds-poster-change': PosterChangeEvent;
   'vds-progress': ProgressEvent;
+  'vds-replay': ReplayEvent;
   'vds-seeked': SeekedEvent;
   'vds-seeking': SeekingEvent;
+  'vds-src-change': SrcChangeEvent;
   'vds-stalled': StalledEvent;
   'vds-started': StartedEvent;
   'vds-suspend': SuspendEvent;
-  'vds-replay': ReplayEvent;
   'vds-time-update': TimeUpdateEvent;
   'vds-view-type-change': ViewTypeChangeEvent;
   'vds-volume-change': VolumeChangeEvent;
@@ -60,13 +67,36 @@ export type MediaEvents = {
 export type AbortEvent = VdsEvent<void>;
 
 /**
- * Fired when the user agent can play the media, but estimates that **not enough** data has been
- * loaded to play the media up to its end without having to stop for further buffering of content.
+ * Fired when an autoplay attempt is about to be made. The event detail contains the
+ * attempt count, and whether media is `muted` for this attempt.
+ */
+export type AutoplayAttemptEvent = VdsEvent<{
+  attempt: number;
+  muted: boolean;
+}>;
+
+/**
+ * Fired when the `autoplay` property has changed value.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
  */
-export type CanPlayEvent = VdsEvent<void>;
+export type AutoplayChangeEvent = VdsEvent<boolean>;
+
+/**
+ * Fired when an autoplay attempt has failed. The event detail contains the error that
+ * had occurred on the last autoplay attempt which caused it to fail.
+ *
+ * @event
+ */
+export type AutoplayFailEvent = VdsEvent<unknown>;
+
+/**
+ * Fired when autoplay attempts are about to start. The event detail whether media is `muted`
+ * before any attempts are made.
+ *
+ * @event
+ */
+export type AutoplayEvent = VdsEvent<{ muted: boolean }>;
 
 /**
  * Fired when the user agent can play the media, and estimates that **enough** data has been
@@ -75,7 +105,23 @@ export type CanPlayEvent = VdsEvent<void>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
  */
-export type CanPlayThroughEvent = VdsEvent<void>;
+export type CanPlayThroughEvent = VdsEvent<{ duration: number }>;
+
+/**
+ * Fired when the user agent can play the media, but estimates that **not enough** data has been
+ * loaded to play the media up to its end without having to stop for further buffering of content.
+ *
+ * @event
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
+ */
+export type CanPlayEvent = VdsEvent<{ duration: number }>;
+
+/**
+ * Fired when the `controls` property has changed value.
+ *
+ * @event
+ */
+export type ControlsChangeEvent = VdsEvent<boolean>;
 
 /**
  * Fired when the `duration` property changes.
@@ -127,7 +173,14 @@ export type LoadedDataEvent = VdsEvent<void>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event
  */
-export type LoadedMetadataEvent = VdsEvent<void>;
+export type LoadedMetadataEvent = VdsEvent<{ src: string; duration: number }>;
+
+/**
+ * Fired when the `loop` property has changed value.
+ *
+ * @event
+ */
+export type LoopChangeEvent = VdsEvent<boolean>;
 
 /**
  * Fired when the browser has started to load a resource.
@@ -135,7 +188,12 @@ export type LoadedMetadataEvent = VdsEvent<void>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event
  */
-export type LoadStartEvent = VdsEvent<void>;
+export type LoadStartEvent = VdsEvent<{
+  src: string;
+  poster: string;
+  mediaType: MediaType;
+  viewType: ViewType;
+}>;
 
 /**
  * Fired when the media is set to loop and playback reaches the end of media (right before it
@@ -177,7 +235,7 @@ export type PlayEvent = VdsEvent<void> & {
 /**
  * Fired when an attempt to start media playback results in an error.
  */
-export type PlayErrorEvent = VdsEvent<void> & {
+export type PlayFailEvent = VdsEvent<void> & {
   autoplay?: boolean;
   error?: Error;
   requestEvent?: PlayRequestEvent;
@@ -194,12 +252,29 @@ export type PlayingEvent = VdsEvent<void> & {
 };
 
 /**
+ * Fired when the `playsinline` property has changed value.
+ *
+ * @event
+ */
+export type PlaysinlineChangeEvent = VdsEvent<boolean>;
+
+/**
+ * Fired when the `currentPoster` property has changed value.
+ *
+ * @event
+ */
+export type PosterChangeEvent = VdsEvent<string>;
+
+/**
  * Fired periodically as the browser loads a resource.
  *
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event
  */
-export type ProgressEvent = VdsEvent<void>;
+export type ProgressEvent = VdsEvent<{
+  buffered: TimeRanges;
+  seekable: TimeRanges;
+}>;
 
 /**
  * Fired when a seek operation completed, the current playback position has changed, and the
@@ -209,6 +284,7 @@ export type ProgressEvent = VdsEvent<void>;
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event
  */
 export type SeekedEvent = VdsEvent<number> & {
+  triggerEvent?: ReplayEvent;
   requestEvent?: SeekRequestEvent;
 };
 
@@ -222,6 +298,13 @@ export type SeekedEvent = VdsEvent<number> & {
 export type SeekingEvent = VdsEvent<number> & {
   requestEvent?: SeekingRequestEvent;
 };
+
+/**
+ * Fired when the `currentSrc` property has changed value.
+ *
+ * @event
+ */
+export type SrcChangeEvent = VdsEvent<string>;
 
 /**
  * Fired when the user agent is trying to fetch media data, but data is unexpectedly not

@@ -2,31 +2,16 @@ import { fixture } from '@open-wc/testing';
 import { html } from 'lit';
 
 import { safelyDefineCustomElement } from '../../utils/dom';
-import {
-  MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
-  MediaControllerElement
-} from '../controller';
-import {
-  FAKE_MEDIA_PLAYER_ELEMENT_TAG_NAME,
-  FakeMediaPlayerElement
-} from './fake-media-player';
-import {
-  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
-  FakeMediaProviderElement
-} from './fake-media-provider';
+import { MediaControllerElement } from '../controller';
+import { FakeMediaPlayerElement } from './fake-media-player';
+import { FakeMediaProviderElement } from './fake-media-provider';
 
-safelyDefineCustomElement(
-  FAKE_MEDIA_PLAYER_ELEMENT_TAG_NAME,
-  FakeMediaPlayerElement
-);
+safelyDefineCustomElement('vds-fake-media-player', FakeMediaPlayerElement);
+
+window.customElements.define('vds-media-controller', MediaControllerElement);
 
 window.customElements.define(
-  MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
-  MediaControllerElement
-);
-
-window.customElements.define(
-  FAKE_MEDIA_PROVIDER_ELEMENT_TAG_NAME,
+  'vds-fake-media-provider',
   FakeMediaProviderElement
 );
 
