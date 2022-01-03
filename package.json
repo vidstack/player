@@ -1,63 +1,46 @@
 {
   "name": "@vidstack/elements",
   "version": "0.1.2",
-  "description": "Spec-compliant, customizable, extensible, accessible and universal media elements.",
+  "description": "Collection of headless web components that make integrating media on the a web a breeze.",
   "license": "MIT",
+  "type": "module",
   "engines": {
     "node": ">=14.16.0"
   },
   "main": "dist-prod/index.js",
   "module": "dist-prod/index.js",
-  "types": "./index.d.ts",
+  "jsdelivr": "dist-cdn/index.js",
   "files": [
     "src/",
     "dist/",
     "dist-prod/",
+    "dist-cdn/",
+    "define/",
+    "types/",
     "index.d.ts",
-    "custom-elements.json"
+    "global.d.ts"
   ],
   "sideEffects": [
-    "src/**/define.ts",
-    "dist/**/define.js",
-    "dist-prod/**/define.js"
+    "define/*",
+    "src/define/*",
+    "dist/define/*",
+    "dist-prod/define/*",
+    "dist-cdn/define/*"
   ],
   "exports": {
     ".": {
       "development": "./dist/index.js",
       "default": "./dist-prod/index.js"
     },
-    "./*": {
-      "development": "./dist/*",
-      "default": "./dist-prod/*"
+    "./define/*": {
+      "development": "./dist/define/*",
+      "default": "./dist-prod/define/*"
     },
-    "./custom-elements.json": "./custom-elements.json"
-  },
-  "typesVersions": {
-    "*": {
-      "base/*": [
-        "dist/base/*"
-      ],
-      "media/*": [
-        "dist/media/*"
-      ],
-      "players/*": [
-        "dist/players/*"
-      ],
-      "providers/*": [
-        "dist/providers/*"
-      ],
-      "skins/*": [
-        "dist/skins/*"
-      ],
-      "ui/*": [
-        "dist/ui/*"
-      ],
-      "utils/*": [
-        "dist/utils/*"
-      ],
-      "*": [
-        "dist/*"
-      ]
+    "./cdn": {
+      "default": "./dist-cdn/index.js"
+    },
+    "./cdn/define/*": {
+      "default": "./dist-cdn/define/*"
     }
   },
   "contributors": [
@@ -73,24 +56,24 @@
     "url": "https://github.com/vidstack/elements/issues"
   },
   "scripts": {
-    "analyze": "cem analyze --litelement --globs \"src/**/*Element.ts\"",
-    "build": "npm run build:clean && tsc -p tsconfig-build.json",
-    "build:clean": "rimraf dist dist-prod",
-    "build:watch": "npm run build -- --incremental --watch",
-    "build:prod": "run-s clean build:prod:ts build:prod:bundle",
-    "build:prod:ts": "tsc -p tsconfig-prod.json",
-    "build:prod:bundle": "cross-env NODE_ENV=production rollup -c",
-    "build:prod:size": "cross-env CHECK_SIZE=true npm run build:prod",
+    "build": "rimraf dist && rollup -c rollup.config.js",
+    "build:prod": "rimraf dist-prod && cross-env NODE_ENV=production rollup -c rollup.config.js",
+    "build:cdn": "rimraf dist-cdn && cross-env NODE_ENV=production CDN=true rollup -c rollup.config.js",
+    "build:watch": "run-p \"build -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
+    "build:types": "rimraf types && tsc -p tsconfig-build.json",
+    "build:definitions": "rimraf define && node .scripts/definitions.mjs",
+    "build:all": "run-p build build:prod build:cdn && run-s build:types build:definitions",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "clean": "run-s build:clean",
+    "clean": "rimraf define dist dist-prod types",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
     "format": "run-s format:*",
     "format:eslint": "npm run lint:eslint -- --fix",
     "format:prettier": "npm run lint:prettier -- --write",
+    "minify:prod": "node .scripts/minify.mjs",
     "prepare": "husky install",
-    "test": "wtr \"src/**/*.test.ts\" --config wtr.config.mjs",
+    "test": "",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
     "release": "node .scripts/release.mjs"
@@ -103,57 +86,45 @@
     "just-throttle": "^2.3.1"
   },
   "peerDependencies": {
-    "lit": "^2.0.0-rc.2",
-    "tslib": "^2.3.0"
+    "lit": "^2.0.2"
   },
   "devDependencies": {
-    "@custom-elements-manifest/analyzer": "^0.4.1",
-    "@open-wc/semantic-dom-diff": "^0.19.4",
-    "@open-wc/testing": "^3.0.0-next.1",
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.4",
-    "@rollup/plugin-replace": "^3.0.0",
-    "@types/mocha": "^9.0.0",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.1.2",
     "@types/node": "^16.0.1",
-    "@types/sinon": "^10.0.2",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
-    "@web/dev-server": "^0.1.8",
-    "@web/dev-server-esbuild": "^0.2.12",
-    "@web/dev-server-rollup": "^0.3.8",
-    "@web/test-runner": "^0.13.12",
+    "chokidar": "^3.5.2",
     "conventional-changelog-cli": "^2.1.1",
     "cross-env": "^7.0.3",
     "enquirer": "^2.3.6",
-    "esbuild": "^0.14.2",
+    "esbuild": "^0.14.9",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-lit": "^1.3.0",
-    "eslint-plugin-mocha": "^9.0.0",
+    "eslint-plugin-mocha": "^10.0.3",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-wc": "^1.2.0",
     "execa": "^6.0.0",
     "fast-glob": "^3.2.7",
+    "fs-extra": "^10.0.0",
     "hls.js": "^0.14.17",
     "husky": "^7.0.0",
     "kleur": "^4.1.4",
     "lint-staged": "^11.0.0",
-    "lit": "^2.0.0-rc.2",
+    "lit": "^2.0.2",
     "minimist": "^1.2.5",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.55.1",
+    "rollup": "^2.62.0",
+    "rollup-plugin-esbuild": "^4.8.2",
     "rollup-plugin-minify-html-literals": "^1.2.6",
-    "rollup-plugin-rename-node-modules": "^1.2.0",
-    "rollup-plugin-sourcemaps": "^0.6.3",
-    "rollup-plugin-summary": "^1.3.0",
-    "rollup-plugin-terser": "^7.0.2",
     "semver": "^7.3.5",
-    "sinon": "^11.1.1",
+    "terser": "^5.10.0",
     "tslib": "^2.3.0",
-    "typescript": "^4.4.1-rc"
+    "typescript": "^4.5.4"
   },
   "prettier": {
     "singleQuote": true,
@@ -181,7 +152,6 @@
     "framework-agnostic",
     "hls",
     "html5",
-    "lit-element",
     "lit",
     "media",
     "plyr",
@@ -198,7 +168,6 @@
     "universal",
     "youtube"
   ],
-  "customElements": "custom-elements.json",
   "volta": {
     "node": "14.18.2"
   }
