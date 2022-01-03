@@ -14,12 +14,6 @@ roadblock. However, there's never a truly perfect time to start learning it, so 
 
 This project uses [lit-element][lit-element] to build [Web Components][web-components].
 
-### Architecture
-
-An understanding of the library architecture and design will help if you're looking to
-contribute long-term, or you are working on a big PR. See the [architecture](../docs/architecture)
-documentation.
-
 ## 🎒 Getting Started
 
 ### Install
@@ -74,10 +68,6 @@ For unit tests you can simply create a `*.test.ts` file next to the file you are
 run `npm run test` or `npm run test:watch` in the terminal. This project uses
 [Web Test Runner][web-test-runner] for writing/running unit tests. To learn more about
 writing unit tests follow the link to the Web Test Runner site, and see other tests in the project.
-
-### Visual
-
-WIP
 
 ## ✍️ Commit
 
