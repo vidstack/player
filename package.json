@@ -1,7 +1,7 @@
 {
   "name": "@vidstack/elements",
   "version": "0.1.2",
-  "description": "Spec-compliant, customizable, extensible, accessible and universal media elements.",
+  "description": "Collection of headless web components that make integrating media on the a web a breeze.",
   "license": "MIT",
   "type": "module",
   "engines": {
