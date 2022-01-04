@@ -1,10 +1,8 @@
-/* c8 ignore start */
-
 import { ReactiveElement } from 'lit';
 
 import { canOrientScreen, IS_CLIENT } from '../../utils/support';
 import { DisposalBin, listen, vdsEvent } from '../events';
-import { Logger } from '../logger';
+import { LogDispatcher } from '../logger';
 import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 
 /**
@@ -22,20 +20,15 @@ import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
  */
 export class ScreenOrientationController {
   protected readonly _listenerDisposal: DisposalBin;
-
-  protected readonly _logger!: Logger;
-
   protected _screenOrientation?: ScreenOrientation;
-
   protected _isScreenOrientationLocked = false;
+
+  protected readonly _logger = __DEV__
+    ? new LogDispatcher(this._host)
+    : undefined;
 
   constructor(protected readonly _host: ReactiveElement) {
     this._updateScreenOrientation();
-
-    if (__DEV__) {
-      this._logger = new Logger(_host, { owner: this });
-    }
-
     this._listenerDisposal = new DisposalBin();
 
     _host.addController({
@@ -93,7 +86,7 @@ export class ScreenOrientationController {
     this._throwIfScreenOrientationUnavailable();
 
     if (__DEV__) {
-      this._logger.info('locking screen orientation', lockType);
+      this._logger?.debug('locking screen orientation to', lockType);
     }
 
     await screen.orientation.lock(lockType);
@@ -119,7 +112,7 @@ export class ScreenOrientationController {
     this._throwIfScreenOrientationUnavailable();
 
     if (__DEV__) {
-      this._logger.info('unlocking screen orientation');
+      this._logger?.debug('unlocking screen orientation');
     }
 
     await screen.orientation.unlock();
@@ -154,7 +147,10 @@ export class ScreenOrientationController {
       .type as ScreenOrientation;
 
     if (__DEV__ && this._isScreenOrientationLocked) {
-      this._logger.info('screen orientation changed', this._screenOrientation);
+      this._logger?.debug(
+        'screen orientation changed to',
+        this._screenOrientation
+      );
     }
 
     this._host.dispatchEvent(
@@ -181,5 +177,3 @@ export class ScreenOrientationController {
     throw Error('Screen orientation API is not available.');
   }
 }
-
-/* c8 ignore stop*/

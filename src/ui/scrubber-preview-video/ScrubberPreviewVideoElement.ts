@@ -10,7 +10,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../base/directives';
 import { redispatchEvent } from '../../base/events';
-import { ElementLogger } from '../../base/logger';
+import { logElementLifecycle } from '../../base/logger';
 import { hostedStoreRecordSubscription } from '../../base/stores';
 import { scrubberPreviewStore } from '../scrubber-preview';
 import { scrubberPreviewVideoElementStyles } from './styles';
@@ -59,6 +59,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
 
   constructor() {
     super();
+    if (__DEV__) logElementLifecycle(this);
     hostedStoreRecordSubscription(
       this,
       scrubberPreviewStore,
@@ -72,9 +73,6 @@ export class ScrubberPreviewVideoElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
-
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * The URL of a media resource to use.
@@ -136,17 +134,6 @@ export class ScrubberPreviewVideoElement extends LitElement {
   protected _handleCanPlay(event: Event) {
     this._canPlay = true;
     this.setAttribute('video-can-play', '');
-
-    /* c8 ignore start */
-    if (__DEV__) {
-      this._logger
-        .debugGroup('preview video can play')
-        .appendWithLabel('Video', this.videoElement)
-        .appendWithLabel('Event', event)
-        .end();
-    }
-    /* c8 ignore stop */
-
     redispatchEvent(this, event);
   }
 
@@ -156,17 +143,6 @@ export class ScrubberPreviewVideoElement extends LitElement {
   protected _handleError(event: Event) {
     this._hasError = true;
     this.setAttribute('video-error', '');
-
-    /* c8 ignore start */
-    if (__DEV__) {
-      this._logger
-        .errorGroup('preview video error')
-        .appendWithLabel('Video', this.videoElement)
-        .appendWithLabel('Event', event)
-        .end();
-    }
-    /* c8 ignore stop */
-
     redispatchEvent(this, event);
   }
 

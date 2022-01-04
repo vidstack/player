@@ -1,16 +1,15 @@
-/* c8 ignore start */
 if (__DEV__) {
   console.warn(
     '`@vidstack/elements` is in dev mode. Not recommended for production!'
   );
 }
-/* c8 ignore stop */
 
 export * from './base/context';
 export * from './base/directives';
 export * from './base/elements';
 export * from './base/events';
 export * from './base/fullscreen';
+export * from './base/logger';
 export * from './base/queue';
 export * from './base/screen-orientation';
 export * from './base/stores';

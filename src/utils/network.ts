@@ -50,7 +50,6 @@ export function objOrParseJSON<T>(value: unknown): T | undefined {
  * @param src - The URL of where the image resource is located.
  * @param minWidth - The minimum width for a valid image to be loaded.
  */
-/* c8 ignore next 10 */
 export function loadImage(
   src: string,
   minWidth = 1
@@ -71,7 +70,6 @@ export function loadImage(
  *
  * @param src The URL of where the script is located.
  */
-/* c8 ignore next 22 */
 export async function loadScript(src: string): Promise<unknown> {
   const hasLoaded = document.querySelector(`script[src="${src}"]`);
 

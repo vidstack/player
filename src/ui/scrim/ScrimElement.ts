@@ -1,7 +1,7 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { ElementLogger } from '../../base/logger';
+import { logElementLifecycle } from '../../base/logger';
 import { scrimElementStyles } from './styles';
 
 /**
@@ -19,12 +19,16 @@ export class ScrimElement extends LitElement {
     return [scrimElementStyles];
   }
 
+  constructor() {
+    super();
+    if (__DEV__) {
+      logElementLifecycle(this);
+    }
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
-
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * The direction of the gradient.

@@ -1,5 +1,3 @@
-/* c8 ignore start */
-
 import { css, CSSResultGroup } from 'lit';
 
 import { vdsEvent } from '../../../base/events';
@@ -107,5 +105,3 @@ export class FakeMediaProviderElement extends MediaProviderElement {
     this.dispatchEvent(vdsEvent('vds-fullscreen-change', { detail: false }));
   }
 }
-
-/* c8 ignore stop */

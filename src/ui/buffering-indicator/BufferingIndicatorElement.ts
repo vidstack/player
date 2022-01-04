@@ -1,6 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
-import { ElementLogger } from '../../base/logger';
+import { logElementLifecycle } from '../../base/logger';
 import { hostedMediaStoreSubscription } from '../../media';
 import { setAttribute } from '../../utils/dom';
 import { bufferingIndicatorElementStyles } from './styles';
@@ -42,11 +42,13 @@ export class BufferingIndicatorElement extends LitElement {
     return [bufferingIndicatorElementStyles];
   }
 
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
-
   constructor() {
     super();
+
+    if (__DEV__) {
+      logElementLifecycle(this);
+    }
+
     hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
       setAttribute(this, 'media-can-play', $canPlay);
     });

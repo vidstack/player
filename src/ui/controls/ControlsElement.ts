@@ -1,6 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
-import { ElementLogger } from '../../base/logger';
+import { logElementLifecycle } from '../../base/logger';
 import { controlsElementStyles } from './styles';
 
 /**
@@ -43,8 +43,12 @@ export class ControlsElement extends LitElement {
     return [controlsElementStyles];
   }
 
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
+  constructor() {
+    super();
+    if (__DEV__) {
+      logElementLifecycle(this);
+    }
+  }
 
   protected override render(): TemplateResult {
     return html`<slot></slot>`;

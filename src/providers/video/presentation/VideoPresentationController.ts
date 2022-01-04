@@ -1,5 +1,3 @@
-/* c8 ignore start */
-
 import { PropertyValues, ReactiveElement } from 'lit';
 
 import {
@@ -8,7 +6,7 @@ import {
   redispatchEvent,
   vdsEvent
 } from '../../../base/events';
-import { Logger } from '../../../base/logger';
+import { LogDispatcher } from '../../../base/logger';
 import { isFunction, isNil, noop } from '../../../utils/unit';
 
 export type VideoPresentationControllerHost = ReactiveElement & {
@@ -35,15 +33,13 @@ export type VideoPresentationControllerHost = ReactiveElement & {
  * ```
  */
 export class VideoPresentationController {
-  protected readonly _logger!: Logger;
-
   protected readonly _listenerDisposal: DisposalBin;
 
-  constructor(protected readonly _host: VideoPresentationControllerHost) {
-    if (__DEV__) {
-      this._logger = new Logger(_host, { owner: this });
-    }
+  protected readonly _logger = __DEV__
+    ? new LogDispatcher(this._host)
+    : undefined;
 
+  constructor(protected readonly _host: VideoPresentationControllerHost) {
     this._listenerDisposal = new DisposalBin();
 
     const firstUpdated = (_host as any).firstUpdated;
@@ -116,7 +112,7 @@ export class VideoPresentationController {
     if (!this.isSupported || isNil(this._host.videoElement)) return noop;
 
     if (__DEV__) {
-      this._logger.info('adding `webkitpresentationmodechanged` listener');
+      this._logger?.debug('adding `webkitpresentationmodechanged` listener');
     }
 
     return listen(
@@ -130,9 +126,9 @@ export class VideoPresentationController {
   protected _handlePresentationModeChange(event: Event) {
     if (__DEV__) {
       this._logger
-        .infoGroup('presentation mode change')
-        .appendWithLabel('Event', event)
-        .end();
+        ?.infoGroup('presentation mode change')
+        .labelledLog('Event', event)
+        .dispatch();
     }
 
     redispatchEvent(this._host, event);
@@ -144,5 +140,3 @@ export class VideoPresentationController {
     );
   }
 }
-
-/* c8 ignore stop */

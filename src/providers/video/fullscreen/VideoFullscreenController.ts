@@ -1,5 +1,3 @@
-/* c8 ignore start */
-
 import { listen } from '../../../base/events';
 import {
   FullscreenController,
@@ -109,7 +107,7 @@ export class VideoFullscreenController extends FullscreenController {
 
     if (this.isSupportedOnSafari) {
       if (__DEV__) {
-        this._logger.info('adding `vds-video-presentation-change` listener');
+        this._logger?.debug('adding `vds-video-presentation-change` listener');
       }
 
       return listen(
@@ -135,5 +133,3 @@ export class VideoFullscreenController extends FullscreenController {
     return super._addFullscreenErrorEventListener(handler);
   }
 }
-
-/* c8 ignore stop */

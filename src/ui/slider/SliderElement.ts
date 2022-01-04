@@ -12,7 +12,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { hostedEventListener, vdsEvent } from '../../base/events';
-import { ElementLogger } from '../../base/logger';
+import { logElementLifecycle } from '../../base/logger';
 import {
   clampNumber,
   getNumberOfDecimalPlaces,
@@ -99,12 +99,14 @@ export class SliderElement extends WithFocus(LitElement) {
     return ['root', 'thumb', 'track', 'track-fill'];
   }
 
+  constructor() {
+    super();
+    if (__DEV__) logElementLifecycle(this);
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
-
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` property of the slider.
@@ -515,15 +517,6 @@ export class SliderElement extends WithFocus(LitElement) {
     this.setAttribute('dragging', '');
     this._updateValueBasedOnThumbPosition(event);
 
-    /* c8 ignore start */
-    if (__DEV__) {
-      this._logger
-        .debugGroup('started dragging')
-        .appendWithLabel('Event', event)
-        .end();
-    }
-    /* c8 ignore stop */
-
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-start', {
         originalEvent: event,
@@ -539,15 +532,6 @@ export class SliderElement extends WithFocus(LitElement) {
     this._dispatchValueChange.cancel();
     this.removeAttribute('dragging');
     this._updateValueBasedOnThumbPosition(event);
-
-    /* c8 ignore start */
-    if (__DEV__) {
-      this._logger
-        .debugGroup('stopped dragging')
-        .appendWithLabel('Event', event)
-        .end();
-    }
-    /* c8 ignore stop */
 
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-end', {
