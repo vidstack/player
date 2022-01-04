@@ -8,7 +8,7 @@ import { LogLevel, LogLevelColor, LogLevelValue } from './LogLevel';
 import { ms } from './ms';
 
 export class LogController {
-  logLevel: LogLevel = __DEV__ ? 'debug' : 'silent';
+  logLevel: LogLevel = __DEV__ ? 'warn' : 'silent';
 
   protected _disposal = new DisposalBin();
 
