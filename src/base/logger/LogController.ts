@@ -24,8 +24,8 @@ export class LogController {
       listen(this._host, 'vds-log', (event) => {
         event.stopPropagation();
 
-        const eventTargetName = ( // @ts-expect-error - ?
-          event.path?.[0] ?? (event.target as Element)
+        const eventTargetName = (
+          (event as { path?: Element[] }).path?.[0] ?? (event.target as Element)
         ).tagName.toLowerCase();
 
         const { level = 'warn', data } = event.detail;
