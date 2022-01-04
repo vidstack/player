@@ -3,22 +3,23 @@
 // -------------------------------------------------------------------------------------------
 
 import type { ContextConsumerConnectEvent } from '../base/context';
-import { FullscreenEvents } from '../base/fullscreen';
-import { ScreenOrientationEvents } from '../base/screen-orientation';
-import {
+import type { FullscreenEvents } from '../base/fullscreen';
+import type { LoggerEvents } from '../base/logger/events';
+import type { ScreenOrientationEvents } from '../base/screen-orientation';
+import type {
   MediaControllerConnectEvent,
   MediaEvents,
   MediaPlayerConnectEvent,
   MediaProviderConnectEvent,
   MediaRequestEvents
 } from '../media';
-import { HlsEvents } from '../providers/hls';
-import { VideoPresentationEvents } from '../providers/video';
-import {
+import type { HlsEvents } from '../providers/hls';
+import type { VideoPresentationEvents } from '../providers/video';
+import type {
   ScrubberPreviewConnectEvent,
   ScrubberPreviewEvents
 } from '../ui/scrubber-preview';
-import { SliderEvents } from '../ui/slider';
+import type { SliderEvents } from '../ui/slider';
 
 declare global {
   interface GlobalEventHandlersEventMap
@@ -29,7 +30,8 @@ declare global {
       ScreenOrientationEvents,
       ScrubberPreviewEvents,
       SliderEvents,
-      VideoPresentationEvents {
+      VideoPresentationEvents,
+      LoggerEvents {
     'vds-noop': any;
     'vds-context-consumer-connect': ContextConsumerConnectEvent;
     'vds-media-player-connect': MediaPlayerConnectEvent;

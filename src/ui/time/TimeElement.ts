@@ -3,7 +3,7 @@ import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { ifNonEmpty } from '../../base/directives';
-import { ElementLogger } from '../../base/logger';
+import { logElementLifecycle } from '../../base/logger';
 import { formatHtml5Duration, formatTime } from '../../utils/time';
 import { timeElementStyles } from './styles';
 
@@ -41,12 +41,14 @@ export class TimeElement extends LitElement {
     return ['root', 'time'];
   }
 
+  constructor() {
+    super();
+    if (__DEV__) logElementLifecycle(this);
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
-
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` property of the time.

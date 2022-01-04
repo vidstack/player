@@ -8,7 +8,8 @@ import {
   MediaProviderElement,
   MediaType,
   PlayingEvent,
-  ReplayEvent
+  ReplayEvent,
+  ViewType
 } from '../../media';
 import { getSlottedChildren } from '../../utils/dom';
 import { getNumberOfDecimalPlaces } from '../../utils/number';
@@ -310,14 +311,12 @@ export class Html5MediaElement extends MediaProviderElement {
       validTags.has(node.tagName.toLowerCase())
     );
 
-    /* c8 ignore start */
     if (__DEV__ && nodes.length > 0) {
       this._logger
-        .logGroup('Found `<source>` and `<track>` elements')
-        .appendWithLabel('Nodes', nodes)
-        .end();
+        ?.infoGroup('Found `<source>` and `<track>` elements')
+        .labelledLog('Nodes', nodes)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     nodes.forEach((node) => this.mediaElement?.appendChild(node.cloneNode()));
 
@@ -362,16 +361,14 @@ export class Html5MediaElement extends MediaProviderElement {
       const handler = eventListeners[type].bind(this);
       this._disconnectDisposal.add(
         listen(this.mediaElement!, type, async (event: Event) => {
-          /* c8 ignore start */
           if (__DEV__) {
             this._logger
-              .debugGroup(`📺 fired \`${event.type}\``)
-              .appendWithLabel('Event', event)
-              .appendWithLabel('Engine', this.engine)
-              .appendWithLabel('Context', this.mediaState)
-              .end();
+              ?.debugGroup(`📺 fired \`${event.type}\``)
+              .labelledLog('Event', event)
+              .labelledLog('Engine', this.engine)
+              .labelledLog('State', this._loggableMediaState?.())
+              .dispatch();
           }
-          /* c8 ignore stop */
 
           await handler(event);
 
@@ -383,11 +380,9 @@ export class Html5MediaElement extends MediaProviderElement {
       );
     });
 
-    /* c8 ignore start */
     if (__DEV__) {
-      this._logger.debug('attached event listeners');
+      this._logger?.debug('attached event listeners');
     }
-    /* c8 ignore stop */
   }
 
   protected _handleAbort(event: Event) {
@@ -418,7 +413,7 @@ export class Html5MediaElement extends MediaProviderElement {
           src: this.mediaElement!.currentSrc,
           poster: this.currentPoster,
           mediaType: this._getMediaType(),
-          viewType: this.viewType
+          viewType: this._getViewType()
         }
       })
     );
@@ -728,11 +723,9 @@ export class Html5MediaElement extends MediaProviderElement {
       // Wait for `src` attribute to be updated on underlying `<audio>` or `<video>` element.
       await this.updateComplete;
 
-      /* c8 ignore start */
       if (__DEV__) {
-        this._logger.debug('Calling `load()` on media element');
+        this._logger?.debug('Calling `load()` on media element');
       }
-      /* c8 ignore stop */
 
       this.mediaElement?.load();
     }
@@ -775,11 +768,9 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   async play() {
-    /* c8 ignore start */
     if (__DEV__) {
-      this._logger.info('attempting to play...');
+      this._logger?.info('attempting to play...');
     }
-    /* c8 ignore stop */
 
     try {
       this._throwIfNotReadyForPlayback();
@@ -794,11 +785,9 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   async pause() {
-    /* c8 ignore start */
     if (__DEV__) {
-      this._logger.info('attempting to pause...');
+      this._logger?.info('attempting to pause...');
     }
-    /* c8 ignore stop */
 
     this._throwIfNotReadyForPlayback();
     return this.mediaElement?.pause();
@@ -840,5 +829,19 @@ export class Html5MediaElement extends MediaProviderElement {
     }
 
     return MediaType.Unknown;
+  }
+
+  protected _getViewType(): ViewType {
+    const mediaType = this._getMediaType();
+
+    if (mediaType === MediaType.Video || mediaType === MediaType.LiveVideo) {
+      return ViewType.Video;
+    }
+
+    if (mediaType === MediaType.Audio) {
+      return ViewType.Audio;
+    }
+
+    return ViewType.Unknown;
   }
 }

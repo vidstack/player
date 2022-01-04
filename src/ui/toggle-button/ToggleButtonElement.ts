@@ -5,7 +5,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { hostedEventListener } from '../../base/events';
-import { ElementLogger } from '../../base/logger';
+import { logElementLifecycle } from '../../base/logger';
 import { toggleButtonElementStyles } from './styles';
 
 /**
@@ -42,12 +42,14 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
     return ['button'];
   }
 
+  constructor() {
+    super();
+    if (__DEV__) logElementLifecycle(this);
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
-
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * Whether the toggle is currently in a `pressed` state.

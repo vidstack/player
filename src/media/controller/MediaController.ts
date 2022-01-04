@@ -2,6 +2,7 @@ import debounce from 'just-debounce-it';
 import type { ReactiveElement } from 'lit';
 
 import { DisposalBin, hostedEventListener, vdsEvent } from '../../base/events';
+import { LogController, LogDispatcher } from '../../base/logger';
 import { RequestQueue } from '../../base/queue';
 import { get, WritableStore } from '../../base/stores';
 import { keysOf } from '../../utils/object';
@@ -43,6 +44,28 @@ export class MediaController {
         this._disconnectDisposal.empty();
       }
     });
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Logger
+  // -------------------------------------------------------------------------------------------
+
+  protected readonly _logController = __DEV__
+    ? new LogController(this._host)
+    : undefined;
+
+  protected readonly _logger = __DEV__
+    ? new LogDispatcher(this._host)
+    : undefined;
+
+  get logLevel() {
+    return this._logController?.logLevel ?? 'silent';
+  }
+
+  set logLevel(level) {
+    if (__DEV__) {
+      this._logController!.logLevel = level;
+    }
   }
 
   // -------------------------------------------------------------------------------------------
@@ -141,14 +164,12 @@ export class MediaController {
   protected _mediaRequestEventGateway(event: Event) {
     event.stopPropagation();
 
-    /* c8 ignore start */
     if (__DEV__) {
-      // TODO: Dispatch
-      // this._logger!.infoGroup(`📬 received \`${event.type}\``)
-      //   .appendWithLabel('Request', event)
-      //   .end();
+      this._logger
+        ?.infoGroup(`📬 received \`${event.type}\``)
+        .labelledLog('Request', event)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     return true;
   }

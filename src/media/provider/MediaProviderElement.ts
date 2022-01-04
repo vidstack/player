@@ -4,7 +4,7 @@ import { property } from 'lit/decorators.js';
 import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
 import { DisposalBin, listen, vdsEvent } from '../../base/events';
 import { FullscreenController } from '../../base/fullscreen';
-import { ElementLogger } from '../../base/logger';
+import { LogDispatcher } from '../../base/logger';
 import { createHostedRequestQueue, RequestQueue } from '../../base/queue';
 import {
   ScreenOrientationController,
@@ -45,10 +45,12 @@ export abstract class MediaProviderElement extends LitElement {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
-
   protected readonly _disconnectDisposal = new DisposalBin();
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._logMediaEvents();
+  }
 
   protected override updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
@@ -94,9 +96,9 @@ export abstract class MediaProviderElement extends LitElement {
   // Logging
   // -------------------------------------------------------------------------------------------
 
-  /* c8 ignore next */
+  protected readonly _logger = __DEV__ ? new LogDispatcher(this) : undefined;
+
   protected _logMediaEvents() {
-    /* c8 ignore start */
     if (__DEV__) {
       const mediaEvents: (keyof MediaEvents)[] = [
         'vds-abort',
@@ -130,17 +132,16 @@ export abstract class MediaProviderElement extends LitElement {
       mediaEvents.forEach((eventType) => {
         const dispose = listen(this, eventType, (event) => {
           this._logger
-            .infoGroup(`📡 dispatching \`${eventType}\``)
-            .appendWithLabel('Context', this.mediaState)
-            .appendWithLabel('Event', event)
-            .appendWithLabel('Engine', this.engine)
-            .end();
+            ?.infoGroup(`📡 dispatching \`${eventType}\``)
+            .labelledLog('State', this._loggableMediaState?.())
+            .labelledLog('Event', event)
+            .labelledLog('Engine', this.engine)
+            .dispatch();
         });
 
         this._disconnectDisposal.add(dispose);
       });
     }
-    /* c8 ignore stop */
   }
 
   // -------------------------------------------------------------------------------------------
@@ -629,18 +630,14 @@ export abstract class MediaProviderElement extends LitElement {
 
     await this.mediaRequestQueue.start();
 
-    /* c8 ignore start */
     if (__DEV__) {
       this._logger
-        .infoGroup(
-          '-------------------------- ✅ MEDIA READY -----------------------------------'
-        )
-        .appendWithLabel('Context', this.mediaState)
-        .appendWithLabel('Event', event)
-        .appendWithLabel('Engine', this.engine)
-        .end();
+        ?.infoGroup('-~-~-~-~-~-~-~-~- ✅ MEDIA READY -~-~-~-~-~-~-~-~-')
+        .labelledLog('State', this._loggableMediaState?.())
+        .labelledLog('Event', event)
+        .labelledLog('Engine', this.engine)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     this._autoplayRetryCount = 0;
     this._autoplayAttemptPending = true;
@@ -717,15 +714,13 @@ export abstract class MediaProviderElement extends LitElement {
       return;
     }
 
-    /* c8 ignore start */
     if (__DEV__) {
       this._logger
-        .infoGroup('📼 media src change')
-        .appendWithLabel('Current src', this.currentSrc)
-        .appendWithLabel('Engine', this.engine)
-        .end();
+        ?.infoGroup('📼 media src change')
+        .labelledLog('Current src', this.currentSrc)
+        .labelledLog('Engine', this.engine)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     this.mediaRequestQueue.stop();
     this.dispatchEvent(
@@ -736,10 +731,26 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Services
+  // Media Controller
   // -------------------------------------------------------------------------------------------
 
   protected readonly _mediaController = new MediaController(this);
+
+  @property({ attribute: 'log-level' })
+  get logLevel() {
+    return this._mediaController.logLevel;
+  }
+
+  set logLevel(level) {
+    if (__DEV__) {
+      this._mediaController.logLevel = level;
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Store
+  // -------------------------------------------------------------------------------------------
+
   protected readonly _mediaStoreConsumer = mediaStoreContext.consume(this);
 
   get mediaStore(): ReadableMediaStoreRecord {
@@ -755,6 +766,14 @@ export abstract class MediaProviderElement extends LitElement {
       }
     }
   ) as unknown as MediaContext;
+
+  protected readonly _loggableMediaState = __DEV__
+    ? () =>
+        Object.keys(this._mediaStoreConsumer.value).reduce(
+          (p, k) => ({ ...p, [k]: this.mediaState[k] }),
+          {}
+        )
+    : undefined;
 
   // -------------------------------------------------------------------------------------------
   // Request Queue

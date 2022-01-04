@@ -9,6 +9,7 @@ declare global {
   type ScrubberPreviewEvents = import('./types').ScrubberPreviewEvents;
   type SliderEvents = import('./types').SliderEvents;
   type VideoPresentationEvents = import('./types').VideoPresentationEvents;
+  type LoggerEvents = import('./types').LoggerEvents;
 
   interface GlobalEventHandlersEventMap
     extends FullscreenEvents,
@@ -18,7 +19,8 @@ declare global {
       ScreenOrientationEvents,
       ScrubberPreviewEvents,
       SliderEvents,
-      VideoPresentationEvents {
+      VideoPresentationEvents,
+      LoggerEvents {
     'vds-media-player-connect': import('./types').MediaPlayerConnectEvent;
     'vds-media-controller-connect': import('./types').MediaControllerConnectEvent;
     'vds-media-provider-connect': import('./types').MediaProviderConnectEvent;

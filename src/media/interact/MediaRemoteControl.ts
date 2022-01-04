@@ -1,7 +1,7 @@
 import type { ReactiveControllerHost } from 'lit';
 
 import { ExtractEventInit, vdsEvent } from '../../base/events';
-import { Logger } from '../../base/logger';
+import { LogDispatcher } from '../../base/logger';
 import { createHostedRequestQueue } from '../../base/queue';
 import { MediaRequestEvents } from '../request.events';
 
@@ -26,15 +26,11 @@ export class MediaRemoteControl {
 
   protected readonly _connectedQueue = createHostedRequestQueue(this._host);
 
-  protected readonly _logger!: Logger;
+  protected readonly _logger = __DEV__
+    ? new LogDispatcher(this._host)
+    : undefined;
 
-  constructor(protected readonly _host: ReactiveControllerHost & EventTarget) {
-    /* c8 ignore start */
-    if (__DEV__) {
-      this._logger = new Logger(_host, { owner: this });
-    }
-    /* c8 ignore stop */
-  }
+  constructor(protected readonly _host: ReactiveControllerHost & EventTarget) {}
 
   play(event?: Event) {
     this._dispatchRequest('vds-play-request', {
@@ -104,15 +100,13 @@ export class MediaRemoteControl {
         composed: true
       });
 
-      /* c8 ignore start */
       if (__DEV__) {
         this._logger
-          .infoGroup(`📨 dispatching \`${type}\``)
-          .appendWithLabel('Event', request)
-          .appendWithLabel('Original event', eventInit.originalEvent)
-          .end();
+          ?.infoGroup(`📨 dispatching \`${type}\``)
+          .labelledLog('Request Event', request)
+          .labelledLog('Trigger Event', eventInit.originalEvent)
+          .dispatch();
       }
-      /* c8 ignore stop */
 
       this._host.dispatchEvent(request);
     });

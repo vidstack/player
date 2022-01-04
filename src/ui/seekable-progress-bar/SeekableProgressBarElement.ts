@@ -3,7 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { ElementLogger } from '../../base/logger';
+import { logElementLifecycle } from '../../base/logger';
 import { hostedMediaStoreSubscription } from '../../media';
 import { formatSpokenTime } from '../../utils/time';
 import { seekableProgressBarElementStyles } from './styles';
@@ -36,6 +36,7 @@ export class SeekableProgressBarElement extends LitElement {
 
   constructor() {
     super();
+    if (__DEV__) logElementLifecycle(this);
     hostedMediaStoreSubscription(this, 'seekableAmount', ($seekableAmount) => {
       this._mediaSeekableAmount = $seekableAmount;
     });
@@ -47,9 +48,6 @@ export class SeekableProgressBarElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
-
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   /**
    * ♿ **ARIA:** The `aria-label` for the progress bar.

@@ -20,7 +20,7 @@ import {
   listen,
   redispatchEvent
 } from '../../base/events';
-import { ElementLogger } from '../../base/logger';
+import { logElementLifecycle } from '../../base/logger';
 import { get } from '../../base/stores';
 import { hostedMediaStoreSubscription } from '../../media';
 import { buildExportPartsAttr, setAttribute } from '../../utils/dom';
@@ -84,6 +84,11 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
   constructor() {
     super();
+
+    if (__DEV__) {
+      logElementLifecycle(this);
+    }
+
     hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
       setAttribute(this, 'media-can-play', $canPlay);
     });
@@ -95,9 +100,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
-
-  /* c8 ignore next */
-  protected readonly _logger = __DEV__ && new ElementLogger(this);
 
   protected readonly _scrubberStoreProvider =
     scrubberStoreContext.provide(this);
@@ -225,16 +227,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
     this.scrubberStore.pointing.set(true);
     this._scrubberStoreProvider;
     this.setAttribute('pointing', '');
-
-    /* c8 ignore start */
-    if (__DEV__) {
-      this._logger
-        .debugGroup('pointer enter')
-        .appendWithLabel('Event', event)
-        .end();
-    }
-    /* c8 ignore stop */
-
     this.scrubberPreviewElement?.showPreview(event);
   }
 
@@ -248,15 +240,6 @@ export class ScrubberElement extends WithFocus(LitElement) {
 
     this.scrubberStore.pointing.set(false);
     this.removeAttribute('pointing');
-
-    /* c8 ignore start */
-    if (__DEV__) {
-      this._logger
-        .debugGroup('pointer leave')
-        .appendWithLabel('Event', event)
-        .end();
-    }
-    /* c8 ignore stop */
 
     if (!get(this.scrubberStore.dragging)) {
       this.scrubberPreviewElement?.hidePreview(event);

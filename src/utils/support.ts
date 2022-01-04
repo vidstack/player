@@ -1,5 +1,3 @@
-/* c8 ignore start */
-
 import { isFunction, isUndefined, noop } from './unit';
 
 export const IS_CLIENT = typeof window !== 'undefined';
@@ -221,5 +219,3 @@ export function isNonNativeHlsStreamingPossible(): boolean {
 
   return isTypeSupported && isSourceBufferValid;
 }
-
-/* c8 ignore stop */

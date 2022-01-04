@@ -4,6 +4,7 @@ dist-*/
 /types/
 /define/
 /scratchpad/
+/sandbox/
 
 custom-elements.json
 vscode.html-data.json

@@ -215,14 +215,12 @@ export class HlsElement extends VideoElement {
       return;
     }
 
-    /* c8 ignore start */
     if (__DEV__) {
       this._logger
-        .infoGroup('preconnect to `hls.js` download')
-        .appendWithLabel('URL', this.hlsLibrary)
-        .end();
+        ?.infoGroup('preconnect to `hls.js` download')
+        .labelledLog('URL', this.hlsLibrary)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     preconnect(this.hlsLibrary);
   }
@@ -266,14 +264,12 @@ export class HlsElement extends VideoElement {
      */
     const canPlayType = super.canPlayType('application/vnd.apple.mpegurl');
 
-    /* c8 ignore start */
     if (__DEV__) {
       this._logger
-        .debugGroup('checking for native HLS support')
-        .appendWithLabel('Can play type', canPlayType)
-        .end();
+        ?.debugGroup('checking for native HLS support')
+        .labelledLog('Can play type', canPlayType)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
   }
@@ -334,11 +330,9 @@ export class HlsElement extends VideoElement {
   protected async _loadHlsScript(): Promise<HlsConstructor | undefined> {
     if (!isString(this.hlsLibrary)) return undefined;
 
-    /* c8 ignore start */
     if (__DEV__) {
-      this._logger.infoGroup('Starting to load `hls.js`');
+      this._logger?.debug('Starting to load `hls.js`');
     }
-    /* c8 ignore stop */
 
     try {
       await ScriptLoader.load(this.hlsLibrary);
@@ -349,26 +343,22 @@ export class HlsElement extends VideoElement {
         );
       }
 
-      /* c8 ignore start */
       if (__DEV__) {
         this._logger
-          .infoGroup('Loaded `hls.js`')
-          .appendWithLabel('URL', this.hlsLibrary)
-          .appendWithLabel('Library', window.Hls)
-          .end();
+          ?.debugGroup('Loaded `hls.js`')
+          .labelledLog('URL', this.hlsLibrary)
+          .labelledLog('Library', window.Hls)
+          .dispatch();
       }
-      /* c8 ignore stop */
 
       return window.Hls;
     } catch (err) {
-      /* c8 ignore start */
       if (__DEV__) {
         this._logger
-          .warnGroup('Failed to load `hls.js`')
-          .appendWithLabel('URL', this.hlsLibrary)
-          .end();
+          ?.errorGroup('Failed to load `hls.js`')
+          .labelledLog('URL', this.hlsLibrary)
+          .dispatch();
       }
-      /* c8 ignore stop */
 
       this.dispatchEvent(
         vdsEvent('vds-hls-load-error', {
@@ -390,11 +380,9 @@ export class HlsElement extends VideoElement {
       return;
     }
 
-    /* c8 ignore start */
     if (__DEV__) {
-      this._logger.info('🏗️ Building HLS engine');
+      this._logger?.info('🏗️ Building HLS engine');
     }
-    /* c8 ignore stop */
 
     // Destroy old engine.
     if (!isUndefined(this.hlsEngine)) {
@@ -412,11 +400,9 @@ export class HlsElement extends VideoElement {
       : this.hlsLibrary;
 
     if (!this.Hls?.isSupported()) {
-      /* c8 ignore start */
       if (__DEV__) {
-        this._logger.warn('`hls.js` is not supported in this environment');
+        this._logger?.warn('`hls.js` is not supported in this environment');
       }
-      /* c8 ignore stop */
 
       this.dispatchEvent(vdsEvent('vds-hls-no-support'));
       return;
@@ -424,15 +410,13 @@ export class HlsElement extends VideoElement {
 
     this._hlsEngine = new this.Hls(this.hlsConfig ?? {});
 
-    /* c8 ignore start */
     if (__DEV__) {
       this._logger
-        .infoGroup('🏗️ HLS engine built')
-        .appendWithLabel('HLS Engine', this._hlsEngine)
-        .appendWithLabel('Video Engine', this.videoEngine)
-        .end();
+        ?.infoGroup('🏗️ HLS engine built')
+        .labelledLog('HLS Engine', this._hlsEngine)
+        .labelledLog('Video Engine', this.videoEngine)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     this.dispatchEvent(vdsEvent('vds-hls-build', { detail: this.hlsEngine }));
     this._listenToHlsEngine();
@@ -444,11 +428,9 @@ export class HlsElement extends VideoElement {
     this._hlsEngine = undefined;
     this._isHlsEngineAttached = false;
 
-    /* c8 ignore start */
     if (__DEV__) {
-      this._logger.info('🏗️ Destroyed HLS engine');
+      this._logger?.info('🏗️ Destroyed HLS engine');
     }
-    /* c8 ignore stop */
   }
 
   protected _prevHlsEngineSrc = '';
@@ -470,15 +452,13 @@ export class HlsElement extends VideoElement {
     this.hlsEngine.attachMedia(this.videoEngine);
     this._isHlsEngineAttached = true;
 
-    /* c8 ignore start */
     if (__DEV__) {
       this._logger
-        .infoGroup('🏗️ attached HLS engine')
-        .appendWithLabel('HLS Engine', this._hlsEngine)
-        .appendWithLabel('Video Engine', this.videoEngine)
-        .end();
+        ?.infoGroup('🏗️ attached HLS engine')
+        .labelledLog('HLS Engine', this._hlsEngine)
+        .labelledLog('Video Engine', this.videoEngine)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     this.dispatchEvent(vdsEvent('vds-hls-attach', { detail: this.hlsEngine }));
   }
@@ -489,14 +469,12 @@ export class HlsElement extends VideoElement {
     this._isHlsEngineAttached = false;
     this._prevHlsEngineSrc = '';
 
-    /* c8 ignore start */
     if (__DEV__) {
       this._logger
-        .infoGroup('🏗️ detached HLS engine')
-        .appendWithLabel('Video Engine', this.videoEngine)
-        .end();
+        ?.infoGroup('🏗️ detached HLS engine')
+        .labelledLog('Video Engine', this.videoEngine)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     this.dispatchEvent(vdsEvent('vds-hls-detach', { detail: this.hlsEngine }));
   }
@@ -511,16 +489,14 @@ export class HlsElement extends VideoElement {
       return;
     }
 
-    /* c8 ignore start */
     if (__DEV__) {
       this._logger
-        .infoGroup(`📼 loading src \`${this.src}\``)
-        .appendWithLabel('Src', this.src)
-        .appendWithLabel('HLS Engine', this._hlsEngine)
-        .appendWithLabel('Video Engine', this.videoEngine)
-        .end();
+        ?.infoGroup(`📼 loading src`)
+        .labelledLog('Src', this.src)
+        .labelledLog('HLS Engine', this._hlsEngine)
+        .labelledLog('Video Engine', this.videoEngine)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     this.hlsEngine.loadSource(this.src);
     this._prevHlsEngineSrc = this.src;
@@ -570,11 +546,9 @@ export class HlsElement extends VideoElement {
       await this._buildHlsEngine();
     }
 
-    /* c8 ignore start */
     if (__DEV__) {
-      this._logger.debug(`📼 detected src change \`${this.src}\``);
+      this._logger?.debug(`📼 detected src change \`${this.src}\``);
     }
-    /* c8 ignore stop */
 
     this._attachHlsEngine();
     this._loadSrcOnHlsEngine();
@@ -596,19 +570,17 @@ export class HlsElement extends VideoElement {
   protected _handleHlsError(eventType: string, data: Hls.errorData): void {
     if (isUndefined(this.Hls)) return;
 
-    /* c8 ignore start */
     if (__DEV__) {
       this._logger
-        .errorGroup(`HLS error \`${eventType}\``)
-        .appendWithLabel('Event type', eventType)
-        .appendWithLabel('Data', data)
-        .appendWithLabel('Src', this.src)
-        .appendWithLabel('Context', this.mediaState)
-        .appendWithLabel('HLS Engine', this._hlsEngine)
-        .appendWithLabel('Video Engine', this.videoEngine)
-        .end();
+        ?.errorGroup(`HLS error \`${eventType}\``)
+        .labelledLog('Event type', eventType)
+        .labelledLog('Data', data)
+        .labelledLog('Src', this.src)
+        .labelledLog('State', this._loggableMediaState?.())
+        .labelledLog('HLS Engine', this._hlsEngine)
+        .labelledLog('Video Engine', this.videoEngine)
+        .dispatch();
     }
-    /* c8 ignore stop */
 
     if (data.fatal) {
       switch (data.type) {
