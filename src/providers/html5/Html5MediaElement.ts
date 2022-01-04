@@ -8,7 +8,8 @@ import {
   MediaProviderElement,
   MediaType,
   PlayingEvent,
-  ReplayEvent
+  ReplayEvent,
+  ViewType
 } from '../../media';
 import { getSlottedChildren } from '../../utils/dom';
 import { getNumberOfDecimalPlaces } from '../../utils/number';
@@ -365,7 +366,7 @@ export class Html5MediaElement extends MediaProviderElement {
               ?.debugGroup(`📺 fired \`${event.type}\``)
               .labelledLog('Event', event)
               .labelledLog('Engine', this.engine)
-              .labelledLog('Context', this.mediaState)
+              .labelledLog('State', this._loggableMediaState?.())
               .dispatch();
           }
 
@@ -412,7 +413,7 @@ export class Html5MediaElement extends MediaProviderElement {
           src: this.mediaElement!.currentSrc,
           poster: this.currentPoster,
           mediaType: this._getMediaType(),
-          viewType: this.viewType
+          viewType: this._getViewType()
         }
       })
     );
@@ -828,5 +829,19 @@ export class Html5MediaElement extends MediaProviderElement {
     }
 
     return MediaType.Unknown;
+  }
+
+  protected _getViewType(): ViewType {
+    const mediaType = this._getMediaType();
+
+    if (mediaType === MediaType.Video || mediaType === MediaType.LiveVideo) {
+      return ViewType.Video;
+    }
+
+    if (mediaType === MediaType.Audio) {
+      return ViewType.Audio;
+    }
+
+    return ViewType.Unknown;
   }
 }

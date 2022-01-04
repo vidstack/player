@@ -1,6 +1,6 @@
 import type { ReactiveControllerHost } from 'lit';
 
-import { isUndefined } from '../../utils/unit';
+import { isString, isUndefined } from '../../utils/unit';
 import { DisposalBin, listen } from '../events';
 import { getColor, saveColor } from './colors';
 import { GroupedLog, isGroupedLog } from './groupedLog';
@@ -8,7 +8,7 @@ import { LogLevel, LogLevelColor, LogLevelValue } from './LogLevel';
 import { ms } from './ms';
 
 export class LogController {
-  logLevel: LogLevel = __DEV__ ? 'warn' : 'silent';
+  logLevel: LogLevel = __DEV__ ? 'debug' : 'silent';
 
   protected _disposal = new DisposalBin();
 
@@ -24,7 +24,9 @@ export class LogController {
       listen(this._host, 'vds-log', (event) => {
         event.stopPropagation();
 
-        const eventTargetName = (event.target as Element).tagName.toLowerCase();
+        const eventTargetName = ( // @ts-expect-error - ?
+          event.path?.[0] ?? (event.target as Element)
+        ).tagName.toLowerCase();
 
         const { level = 'warn', data } = event.detail;
 
@@ -34,16 +36,29 @@ export class LogController {
 
         saveColor(eventTargetName);
 
+        const hint =
+          data?.length === 1 && isGroupedLog(data[0])
+            ? data[0].title
+            : isString(data?.[0])
+            ? data![0]
+            : '';
+
         console.groupCollapsed(
-          `%c[${level.toUpperCase()}]: %c${eventTargetName}`,
-          `background: ${LogLevelColor[level]}; color: white; padding: 1.2px 2.2px; border-radius: 2px; font-size: 10px;`,
-          `color: ${getColor(eventTargetName)}; padding: 4px 0px;`
+          `%c${level.toUpperCase()}%c ${eventTargetName}%c ${hint.slice(
+            0,
+            50
+          )}${hint.length > 50 ? '...' : ''}`,
+          `background: ${LogLevelColor[level]}; color: white; padding: 1.5px 2.2px; border-radius: 2px; font-size: 11px;`,
+          `color: ${getColor(
+            eventTargetName
+          )}; padding: 4px 0px; font-size: 11px;`,
+          'color: gray; font-size: 11px; padding-left: 4px;'
         );
 
         if (data?.length === 1 && isGroupedLog(data[0])) {
           this._logGroup(level, data![0]);
-        } else {
-          this._log(level, data);
+        } else if (data) {
+          this._log(level, ...data);
         }
 
         this._logTimeDiff();

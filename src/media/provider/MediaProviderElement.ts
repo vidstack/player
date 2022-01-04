@@ -47,6 +47,11 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected readonly _disconnectDisposal = new DisposalBin();
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._logMediaEvents();
+  }
+
   protected override updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
 
@@ -128,7 +133,7 @@ export abstract class MediaProviderElement extends LitElement {
         const dispose = listen(this, eventType, (event) => {
           this._logger
             ?.infoGroup(`📡 dispatching \`${eventType}\``)
-            .labelledLog('Context', this.mediaState)
+            .labelledLog('State', this._loggableMediaState?.())
             .labelledLog('Event', event)
             .labelledLog('Engine', this.engine)
             .dispatch();
@@ -627,10 +632,8 @@ export abstract class MediaProviderElement extends LitElement {
 
     if (__DEV__) {
       this._logger
-        ?.infoGroup(
-          '-~-~-~-~-~-~-~-~-~-~-~- ✅ MEDIA READY -~-~-~-~-~-~-~-~-~-~-~-'
-        )
-        .labelledLog('Context', this.mediaState)
+        ?.infoGroup('-~-~-~-~-~-~-~-~- ✅ MEDIA READY -~-~-~-~-~-~-~-~-')
+        .labelledLog('State', this._loggableMediaState?.())
         .labelledLog('Event', event)
         .labelledLog('Engine', this.engine)
         .dispatch();
@@ -763,6 +766,14 @@ export abstract class MediaProviderElement extends LitElement {
       }
     }
   ) as unknown as MediaContext;
+
+  protected readonly _loggableMediaState = __DEV__
+    ? () =>
+        Object.keys(this._mediaStoreConsumer.value).reduce(
+          (p, k) => ({ ...p, [k]: this.mediaState[k] }),
+          {}
+        )
+    : undefined;
 
   // -------------------------------------------------------------------------------------------
   // Request Queue

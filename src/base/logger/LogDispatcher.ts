@@ -55,13 +55,15 @@ export class LogDispatcher {
     parentGroup?: GroupedLog
   ): GroupedLogDispatch {
     const group = groupedLog(title, parentGroup);
+
+    (group as GroupedLogDispatch).dispatch = () => {
+      this._dispatch(level, rootGroup ?? group);
+    };
+
     return {
       ...group,
       groupStart: (title) => {
         return this._groupDispatcher(level, title, rootGroup ?? group, group);
-      },
-      dispatch: () => {
-        this._dispatch(level, rootGroup);
       }
     } as GroupedLogDispatch;
   }

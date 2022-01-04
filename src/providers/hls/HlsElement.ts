@@ -491,7 +491,7 @@ export class HlsElement extends VideoElement {
 
     if (__DEV__) {
       this._logger
-        ?.infoGroup(`📼 loading src \`${this.src}\``)
+        ?.infoGroup(`📼 loading src`)
         .labelledLog('Src', this.src)
         .labelledLog('HLS Engine', this._hlsEngine)
         .labelledLog('Video Engine', this.videoEngine)
@@ -576,7 +576,7 @@ export class HlsElement extends VideoElement {
         .labelledLog('Event type', eventType)
         .labelledLog('Data', data)
         .labelledLog('Src', this.src)
-        .labelledLog('Context', this.mediaState)
+        .labelledLog('State', this._loggableMediaState?.())
         .labelledLog('HLS Engine', this._hlsEngine)
         .labelledLog('Video Engine', this.videoEngine)
         .dispatch();

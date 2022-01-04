@@ -12,7 +12,7 @@ export function logElementLifecycle(
       logger.debug('🔗 connected');
     },
     hostUpdated() {
-      logger.debug('♻️ updated');
+      logger.debug('🔄 updated');
     },
     hostDisconnected() {
       logger.debug('🗑️ disconnected');
