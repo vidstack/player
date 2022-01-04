@@ -22,6 +22,8 @@ export class LogController {
   protected _start() {
     this._disposal.add(
       listen(this._host, 'vds-log', (event) => {
+        event.stopPropagation();
+
         const eventTargetName = (event.target as Element).tagName.toLowerCase();
 
         const { level = 'warn', data } = event.detail;
