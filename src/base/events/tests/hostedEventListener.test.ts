@@ -15,7 +15,7 @@ class FakeElement extends LitElement {
 
 window.customElements.define('fake-el', FakeElement);
 
-test('it should attach event listener', async () => {
+test('it should attach event listener once connected', async () => {
   const el = await fixture<FakeElement>(html`<fake-el></fake-el>`);
   const child = document.createElement('div');
 
