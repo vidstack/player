@@ -1,3 +1,5 @@
+/** c8 ignore start */
+
 import fscreen from 'fscreen';
 import { ReactiveElement } from 'lit';
 
@@ -284,3 +286,5 @@ export class FullscreenController {
     );
   }
 }
+
+/** c8 ignore end */
