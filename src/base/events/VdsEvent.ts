@@ -61,23 +61,6 @@ export function getOriginEvent(event: VdsEvent): Event | undefined {
   return originalEvent;
 }
 
-export function redispatchEvent(
-  target: EventTarget,
-  event: Event | CustomEvent | VdsEvent
-) {
-  if (event.bubbles && event.composed) return;
-
-  const newEvent = new VdsEvent(event.type, {
-    originalEvent: (event as VdsEvent).originalEvent ?? event,
-    detail: (event as CustomEvent).detail,
-    bubbles: event.bubbles,
-    cancelable: event.cancelable,
-    composed: event.composed
-  });
-
-  target.dispatchEvent(newEvent);
-}
-
 export type ExtractEventDetail<Event> = Event extends VdsEvent<infer I>
   ? I
   : never;
@@ -95,47 +78,6 @@ export function vdsEvent<EventType extends keyof GlobalEventHandlersEventMap>(
   eventInit: ExtractEventInit<GlobalEventHandlersEventMap[EventType]> = {}
 ): GlobalEventHandlersEventMap[EventType] {
   return new VdsEvent(type, eventInit);
-}
-
-export type GlobalEventHandlerMap = {
-  [EventType in keyof GlobalEventHandlersEventMap]?: (
-    event: GlobalEventHandlersEventMap[EventType]
-  ) => void | Promise<void>;
-};
-
-/**
- * Listens to an event on the given `target` and returns a cleanup function to stop listening.
- *
- * @param target - The target to listen for the events on.
- * @param type - The name of the event to listen to.
- * @param listener - The function to be called when the event is fired.
- * @param options - Configures the event listener.
- * @returns Stop listening cleanup function.
- * @example
- * ```ts
- * const disposeListener = listen(window, 'resize', () => {});
- *
- * // Stop listening.
- * disposeListener();
- * ```
- */
-export function listen<EventType extends keyof GlobalEventHandlerMap>(
-  target: EventTarget,
-  type: EventType,
-  listener: GlobalEventHandlerMap[EventType],
-  options?: boolean | EventListenerOptions | AddEventListenerOptions
-): () => void {
-  target.addEventListener(type, listener as EventListener, options);
-
-  return () => {
-    target.removeEventListener(type, listener as EventListener, options);
-  };
-}
-
-export function isPointerEvent(
-  event: Event | undefined
-): event is PointerEvent {
-  return event?.type.includes('pointer') ?? false;
 }
 
 export function isVdsEvent(

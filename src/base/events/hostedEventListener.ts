@@ -1,6 +1,6 @@
 import type { ReactiveControllerHost } from 'lit';
 
-import { GlobalEventHandlerMap, listen } from './events';
+import { type GlobalEventHandlerMap, listen } from './listen';
 
 /**
  * Add an event listener to the given `host` element until it's disconnected from the DOM, at which
