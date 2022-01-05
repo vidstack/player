@@ -9,6 +9,7 @@ export default defineConfig({
   // https://vitest.dev/config
   test: {
     include: ['src/**/*.test.ts'],
+    global: true,
     environment: 'jsdom'
   }
 });

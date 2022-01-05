@@ -18,7 +18,7 @@
     "strict": true,
     "target": "es2019",
     "typeRoots": ["node_modules/@types", "./src/global"],
-    "types": []
+    "types": ["vitest/global"]
   },
   "include": ["**/*.ts", "**/*.mjs"],
   "exclude": ["node_modules", "dist", "dist-prod", "./index.d.ts"]

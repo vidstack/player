@@ -5,8 +5,6 @@ import { ifDefined } from 'lit/directives/if-defined.js';
  * the attribute if the value is undefined or empty (`''`).
  *
  * For other part types, this directive is a no-op.
- *
- * @param value
  */
 export function ifNonEmpty(value: string | undefined) {
   return ifDefined(value === '' || value === 'undefined' ? undefined : value);

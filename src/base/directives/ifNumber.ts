@@ -10,9 +10,7 @@ import { isNumber } from '../../utils/unit';
  * the attribute if the value is undefined not a number.
  *
  * For other part types, this directive is a no-op.
- *
- * @param value
  */
-export function ifNumber(value: number | undefined) {
+export function ifNumber(value: number | null | undefined) {
   return ifDefined(isNumber(value) ? value : undefined);
 }

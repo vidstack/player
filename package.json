@@ -73,9 +73,9 @@
     "format:prettier": "npm run lint:prettier -- --write",
     "minify:prod": "node .scripts/minify.mjs",
     "prepare": "husky install",
-    "test": "vitest -- --run",
-    "test:coverage": "vitest -- --run --coverage",
-    "test:watch": "vitest -- --watch",
+    "test": "vitest --run",
+    "test:coverage": "vitest --run --coverage",
+    "test:watch": "vitest --watch",
     "release": "node .scripts/release.mjs"
   },
   "dependencies": {
@@ -89,6 +89,7 @@
     "lit": "^2.0.2"
   },
   "devDependencies": {
+    "@open-wc/testing-helpers": "^2.0.2",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.1.2",
     "@types/node": "^16.0.1",
@@ -103,7 +104,6 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-lit": "^1.3.0",
-    "eslint-plugin-mocha": "^9.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-wc": "^1.2.0",
     "execa": "^6.0.0",

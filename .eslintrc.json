@@ -8,11 +8,10 @@
     "project": "./tsconfig.json"
   },
   "ignorePatterns": ["index.d.ts"],
-  "plugins": ["mocha", "simple-import-sort"],
+  "plugins": ["simple-import-sort"],
   "extends": [
     "plugin:wc/recommended",
     "plugin:lit/recommended",
-    "plugin:mocha/recommended",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
