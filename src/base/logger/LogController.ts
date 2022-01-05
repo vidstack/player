@@ -113,7 +113,9 @@ export class LogController {
   protected _lastLogTimestamp?: number;
   protected _getLastLogTimeDiff() {
     const time = performance.now();
-    const diff = time - (this._lastLogTimestamp ??= performance.now());
+    const diff =
+      time -
+      (this._lastLogTimestamp || (this._lastLogTimestamp = performance.now()));
     this._lastLogTimestamp = time;
     return ms(diff);
   }
