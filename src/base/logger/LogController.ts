@@ -1,3 +1,5 @@
+/** c8 ignore start */
+
 import type { ReactiveControllerHost } from 'lit';
 
 import { isString, isUndefined } from '../../utils/unit';
@@ -116,3 +118,5 @@ export class LogController {
     return ms(diff);
   }
 }
+
+/** c8 ignore stop */

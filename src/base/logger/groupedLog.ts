@@ -10,11 +10,10 @@ export type GroupedLog = {
   labelledLog(label: string, ...data: any[]): GroupedLog;
   groupStart(title: string): GroupedLog;
   groupEnd(): GroupedLog;
-  append(...groupedLogs: GroupedLog[]): GroupedLog;
 };
 
 export function isGroupedLog(data: unknown): data is GroupedLog {
-  return isObject(data) && data[GROUPED_LOG_ID];
+  return isObject(data) && data[GROUPED_LOG_ID] === true;
 }
 
 export function groupedLog(title: string, parent?: GroupedLog): GroupedLog {
@@ -36,11 +35,8 @@ export function groupedLog(title: string, parent?: GroupedLog): GroupedLog {
       return groupedLog(title, group);
     },
     groupEnd() {
+      parent?.logs.push(group);
       return parent ?? group;
-    },
-    append(...groupedLogs) {
-      logs.concat(groupedLogs);
-      return group;
     }
   };
 

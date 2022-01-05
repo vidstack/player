@@ -1,3 +1,5 @@
+/** c8 ignore start */
+
 /**
  * The screen orientation type.
  *
@@ -108,3 +110,5 @@ export enum ScreenOrientationLock {
    */
   PortraitSecondary = 'portrait-secondary'
 }
+
+/** c8 ignore stop */
