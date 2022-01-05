@@ -21,5 +21,13 @@
     "types": ["vitest/global"]
   },
   "include": ["**/*.ts", "**/*.mjs"],
-  "exclude": ["node_modules", "dist", "dist-prod", "./index.d.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dist-*",
+    "types",
+    "define",
+    "./global.d.ts",
+    "./index.d.ts"
+  ]
 }
