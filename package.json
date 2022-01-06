@@ -73,9 +73,9 @@
     "format:prettier": "npm run lint:prettier -- --write",
     "minify:prod": "node .scripts/minify.mjs",
     "prepare": "husky install",
-    "test": "",
-    "test:coverage": "npm run test -- --coverage",
-    "test:watch": "npm run test -- --watch",
+    "test": "vitest --run",
+    "test:coverage": "vitest --run --coverage",
+    "test:watch": "vitest --watch",
     "release": "node .scripts/release.mjs"
   },
   "dependencies": {
@@ -89,13 +89,15 @@
     "lit": "^2.0.2"
   },
   "devDependencies": {
+    "@open-wc/semantic-dom-diff": "^0.19.5",
+    "@open-wc/testing-helpers": "^2.0.2",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.1.2",
     "@types/node": "^16.0.1",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
     "chokidar": "^3.5.2",
-    "conventional-changelog-cli": "^2.1.1",
+    "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
     "enquirer": "^2.3.6",
     "esbuild": "^0.14.9",
@@ -103,7 +105,6 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-lit": "^1.3.0",
-    "eslint-plugin-mocha": "^9.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-wc": "^1.2.0",
     "execa": "^6.0.0",
@@ -111,6 +112,7 @@
     "fs-extra": "^10.0.0",
     "hls.js": "^0.14.17",
     "husky": "^7.0.0",
+    "jsdom": "^19.0.0",
     "kleur": "^4.1.4",
     "lint-staged": "^11.0.0",
     "lit": "^2.0.2",
@@ -124,7 +126,9 @@
     "semver": "^7.3.5",
     "terser": "^5.10.0",
     "tslib": "^2.3.0",
-    "typescript": "^4.5.4"
+    "typescript": "^4.5.4",
+    "vite": "2.7.10",
+    "vitest": "0.0.132"
   },
   "prettier": {
     "singleQuote": true,
