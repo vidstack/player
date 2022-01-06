@@ -143,11 +143,10 @@ export class ScrubberPreviewElement extends LitElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  protected readonly scrubberPreviewStoreProvider =
-    scrubberPreviewStore.provide(this);
+  protected readonly previewStoreProvider = scrubberPreviewStore.provide(this);
 
-  get scrubberPreviewStore() {
-    return this.scrubberPreviewStoreProvider.value;
+  get previewStore() {
+    return this.previewStoreProvider.value;
   }
 
   /**
@@ -328,7 +327,7 @@ export class ScrubberPreviewElement extends LitElement {
 
     this._showPreviewTimeout = window.setTimeout(
       async () => {
-        this.scrubberPreviewStore.showing.set(true);
+        this.previewStore.showing.set(true);
         this.previewSlotElement?.removeAttribute('hidden');
 
         await raf();
@@ -370,7 +369,7 @@ export class ScrubberPreviewElement extends LitElement {
 
     this._dispatchPreviewTimeUpdate.cancel();
 
-    this.scrubberPreviewStore.showing.set(false);
+    this.previewStore.showing.set(false);
     this.removeAttribute('previewing');
     this.previewSlotElement?.setAttribute('hidden', '');
 
@@ -387,7 +386,7 @@ export class ScrubberPreviewElement extends LitElement {
 
       this.dispatchEvent(
         vdsEvent('vds-scrubber-preview-time-update', {
-          detail: get(this.scrubberPreviewStore.time),
+          detail: get(this.previewStore.time),
           originalEvent
         })
       );
@@ -395,13 +394,13 @@ export class ScrubberPreviewElement extends LitElement {
   );
 
   protected _updatePreviewTime(time: number, event: Event) {
-    this.scrubberPreviewStore.time.set(
+    this.previewStore.time.set(
       clampNumber(0, round(time, 5), this._mediaDuration)
     );
 
     this.style.setProperty(
       '--vds-scrubber-preview-time',
-      String(get(this.scrubberPreviewStore.time))
+      String(get(this.previewStore.time))
     );
 
     this._dispatchPreviewTimeUpdate(event);
