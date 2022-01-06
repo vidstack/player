@@ -15,19 +15,19 @@ describe(safelyDefineCustomElement.name, function () {
     }
   }
 
-  it('should not register custom element if server-side', async function () {
+  test('it should not register custom element if server-side', async function () {
     safelyDefineCustomElement('fake-el', FakeElement, false);
     const el = await fixture(html`<fake-el></fake-el>`);
     expect(el.shadowRoot?.innerHTML ?? '').not.contains('<h1>Test Header</h1>');
   });
 
-  it('should register custom element', async function () {
+  test('it should register custom element', async function () {
     safelyDefineCustomElement('fake-el', FakeElement);
     const el = await fixture(html`<fake-el></fake-el>`);
     expect(el.shadowRoot?.innerHTML).contains('<h1>Test Header</h1>');
   });
 
-  it('should not register custom element if registered before', function () {
+  test('it should not register custom element if registered before', function () {
     expect(() => {
       safelyDefineCustomElement('fake-el', FakeElement);
       safelyDefineCustomElement('fake-el', FakeElement);
@@ -68,7 +68,7 @@ describe(getElementAttributes.name, function () {
 });
 
 describe(observeAttributes.name, function () {
-  it('should observe attributes', async function () {
+  test('it should observe attributes', async function () {
     const elementA = document.createElement('div');
 
     const callbackSpy = vi.fn();

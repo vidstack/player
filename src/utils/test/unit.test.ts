@@ -11,7 +11,7 @@ import {
 } from '../unit';
 
 describe(isArray.name, function () {
-  it('should return true only if given an array', function () {
+  test('it should return true only if given an array', function () {
     expect(isArray([])).to.be.true;
     expect(isArray(Array(1))).to.be.true;
     expect(isArray('')).to.be.false;
@@ -27,7 +27,7 @@ describe(isArray.name, function () {
 });
 
 describe(isBoolean.name, function () {
-  it('should return true only if given a boolean', function () {
+  test('it should return true only if given a boolean', function () {
     expect(isBoolean(true)).to.be.true;
     expect(isBoolean(false)).to.be.true;
     expect(isBoolean(Boolean())).to.be.true;
@@ -44,7 +44,7 @@ describe(isBoolean.name, function () {
 });
 
 describe(isObject.name, function () {
-  it('should return true only if given an object', function () {
+  test('it should return true only if given an object', function () {
     expect(isObject({})).to.be.true;
     expect(isObject(Object.create({}))).to.be.true;
     expect(isObject('')).to.be.false;
@@ -61,7 +61,7 @@ describe(isObject.name, function () {
 });
 
 describe(isString.name, function () {
-  it('should return true only if given a string', function () {
+  test('it should return true only if given a string', function () {
     expect(isString('')).to.be.true;
     expect(isString(String(''))).to.be.true;
     expect(isString({})).to.be.false;
@@ -77,7 +77,7 @@ describe(isString.name, function () {
 });
 
 describe(isNumber.name, function () {
-  it('should return true only if given a number', function () {
+  test('it should return true only if given a number', function () {
     expect(isNumber(0)).to.be.true;
     expect(isNumber(Number())).to.be.true;
     expect(isNumber('')).to.be.false;
@@ -93,7 +93,7 @@ describe(isNumber.name, function () {
 });
 
 describe(isFunction.name, function () {
-  it('should return true only if given a function', function () {
+  test('it should return true only if given a function', function () {
     expect(isFunction(() => {})).to.be.true;
     expect(isFunction(function () {})).to.be.true;
     expect(isFunction(async function () {})).to.be.true;
@@ -109,7 +109,7 @@ describe(isFunction.name, function () {
 });
 
 describe(isNull.name, function () {
-  it('should return true only if given null', function () {
+  test('it should return true only if given null', function () {
     expect(isNull(null)).to.be.true;
     expect(isNull(() => {})).to.be.false;
     expect(isNull(0)).to.be.false;
@@ -125,7 +125,7 @@ describe(isNull.name, function () {
 });
 
 describe(isUndefined.name, function () {
-  it('should return true only if given undefined', function () {
+  test('it should return true only if given undefined', function () {
     expect(isUndefined(undefined)).to.be.true;
     expect(isUndefined(null)).to.be.false;
     expect(isUndefined(() => {})).to.be.false;
@@ -141,7 +141,7 @@ describe(isUndefined.name, function () {
 });
 
 describe(noop.name, function () {
-  it('should be defined', function () {
+  test('it should be defined', function () {
     expect(noop).to.exist;
     expect(isFunction(noop)).to.be.true;
     noop();

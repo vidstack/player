@@ -14,14 +14,14 @@ describe('vds-scrim', function () {
     return { scrim };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { scrim } = await buildFixture();
     expect(scrim).dom.to.equal(`
       <vds-scrim direction="up"></vds-scrim>
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { scrim } = await buildFixture();
     expect(scrim).shadowDom.to.equal(`
       <div id="gradient" part="gradient">

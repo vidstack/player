@@ -23,14 +23,14 @@ describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
     return { player, timeDuration };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { timeDuration } = await buildFixture();
     expect(timeDuration).dom.to.equal(`
       <vds-time-duration></vds-time-duration>
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { player, timeDuration } = await buildFixture();
 
     player.ctx.duration = 3750;
@@ -48,7 +48,7 @@ describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
     `);
   });
 
-  it('should update duration time as context updates', async function () {
+  test('it should update duration time as context updates', async function () {
     const { player, timeDuration } = await buildFixture();
     expect(timeDuration.seconds).to.equal(0);
     player.ctx.duration = 50;

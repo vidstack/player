@@ -21,7 +21,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     return { player, controls };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { controls } = await buildFixture();
     expect(controls).dom.to.equal(`
       <vds-controls
@@ -34,12 +34,12 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { controls } = await buildFixture();
     expect(controls).shadowDom.to.equal(`<slot></slot>`);
   });
 
-  it('should toggle `hidden` attribute', async function () {
+  test('it should toggle `hidden` attribute', async function () {
     const { player, controls } = await buildFixture();
     await player.controlsManager.hide();
     expect(controls).to.have.attribute('hidden');
@@ -47,7 +47,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     expect(controls).to.not.have.attribute('hidden');
   });
 
-  it('should toggle `idle` attribute', async function () {
+  test('it should toggle `idle` attribute', async function () {
     const { player, controls } = await buildFixture();
     player.idleManager.timeout = 0;
     player.idleManager.start();
@@ -58,7 +58,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     expect(controls).to.not.have.attribute('idle');
   });
 
-  it('should set `media-autoplay-error` attribute', async function () {
+  test('it should set `media-autoplay-error` attribute', async function () {
     const { player, controls } = await buildFixture();
 
     player.autoplay = true;
@@ -75,7 +75,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     expect(controls).to.have.attribute('media-autoplay-error');
   });
 
-  it('should toggle `media-can-play` attribute', async function () {
+  test('it should toggle `media-can-play` attribute', async function () {
     const { player, controls } = await buildFixture();
     await player.forceMediaReady();
     await elementUpdated(controls);
@@ -85,7 +85,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     expect(controls).to.not.have.attribute('media-can-play');
   });
 
-  it('should toggle `media-paused` attribute', async function () {
+  test('it should toggle `media-paused` attribute', async function () {
     const { player, controls } = await buildFixture();
     await player.forceMediaReady();
     player.play();
@@ -99,7 +99,7 @@ describe(CONTROLS_ELEMENT_TAG_NAME, function () {
     expect(controls).to.not.have.attribute('media-paused');
   });
 
-  it('should toggle `media-view-type` attribute', async function () {
+  test('it should toggle `media-view-type` attribute', async function () {
     const { player, controls } = await buildFixture();
     player.ctx.viewType = ViewType.Audio;
     await elementUpdated(controls);

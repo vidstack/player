@@ -25,14 +25,14 @@ describe(SCRUBBER_PREVIEW_ELEMENT_TAG_NAME, function () {
     return { scrubberPreview };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { scrubberPreview } = await buildFixture();
     expect(scrubberPreview).dom.to.equal(
       `<vds-scrubber-preview style="--vds-media-duration:0;"></vds-scrubber-preview>`
     );
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { scrubberPreview } = await buildFixture();
     expect(scrubberPreview).shadowDom.to.equal(`
       <div

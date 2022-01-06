@@ -3,7 +3,7 @@ import { waitUntil } from '@open-wc/testing-helpers';
 import { deferredPromise, timedPromise } from '../promise';
 
 describe(deferredPromise.name, function () {
-  it('should resolve', function (done) {
+  test('it should resolve', function (done) {
     const deferred = deferredPromise();
 
     deferred.promise.then((res) => {
@@ -14,7 +14,7 @@ describe(deferredPromise.name, function () {
     deferred.resolve(true);
   });
 
-  it('should reject', function (done) {
+  test('it should reject', function (done) {
     const deferred = deferredPromise();
 
     deferred.promise.catch((res) => {
@@ -27,12 +27,12 @@ describe(deferredPromise.name, function () {
 });
 
 describe(timedPromise.name, function () {
-  it('should resolve', async function () {
+  test('it should resolve', async function () {
     const result = await timedPromise(Promise.resolve(1), 0, '');
     expect(result).to.equal(1);
   });
 
-  it('should timeout', function () {
+  test('it should timeout', function () {
     // @ts-ignore
     const badPredicate = () => 1 === 2;
 

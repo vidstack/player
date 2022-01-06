@@ -17,7 +17,7 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
     return { scrubber };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { scrubber } = await buildFixture();
     expect(scrubber).dom.to.equal(`
       <vds-scrubber
@@ -28,7 +28,7 @@ describe(SCRUBBER_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { scrubber } = await buildFixture();
     expect(scrubber).shadowDom.to.equal(`
       <vds-time-slider

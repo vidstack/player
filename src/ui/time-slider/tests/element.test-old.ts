@@ -20,7 +20,7 @@ describe(TIME_SLIDER_ELEMENT_TAG_NAME, function () {
     return { timeSlider };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { timeSlider } = await buildFixture();
     expect(timeSlider).dom.to.equal(`
       <vds-time-slider

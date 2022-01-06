@@ -24,7 +24,7 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
     return { player, volumeSlider };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { volumeSlider } = await buildFixture();
     expect(volumeSlider).dom.to.equal(
       `
@@ -37,7 +37,7 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
     );
   });
 
-  it('should update when media volume changes', async function () {
+  test('it should update when media volume changes', async function () {
     const { player, volumeSlider } = await buildFixture();
 
     expect(volumeSlider.volume).to.equal(1);
@@ -51,7 +51,7 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
     expect(volumeSlider.volume).to.equal(0.85);
   });
 
-  it('should dispatch volume change request', async function () {
+  test('it should dispatch volume change request', async function () {
     const { player, volumeSlider } = await buildFixture();
 
     setTimeout(() => {

@@ -20,14 +20,14 @@ describe(`${TIME_CURRENT_ELEMENT_TAG_NAME}`, function () {
     return { player, timeCurrent };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { timeCurrent } = await buildFixture();
     expect(timeCurrent).dom.to.equal(`
       <vds-time-current></vds-time-current>
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { player, timeCurrent } = await buildFixture();
 
     player.ctx.currentTime = 3750;
@@ -45,7 +45,7 @@ describe(`${TIME_CURRENT_ELEMENT_TAG_NAME}`, function () {
     `);
   });
 
-  it('should update current time as context updates', async function () {
+  test('it should update current time as context updates', async function () {
     const { player, timeCurrent } = await buildFixture();
     expect(timeCurrent.seconds).to.equal(0);
     player.ctx.currentTime = 50;

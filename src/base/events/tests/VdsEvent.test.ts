@@ -29,11 +29,11 @@ describe(VdsEvent.name, () => {
 });
 
 describe(isVdsEvent.name, () => {
-  it('should return true given a VdsEvent', function () {
+  test('it should return true given a VdsEvent', function () {
     expect(isVdsEvent(new VdsEvent('vds-event'))).to.be.true;
   });
 
-  it('should return false given an event not an instance of VdsEvent', function () {
+  test('it should return false given an event not an instance of VdsEvent', function () {
     expect(isVdsEvent(new MouseEvent('click'))).to.be.false;
   });
 });

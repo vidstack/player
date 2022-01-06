@@ -35,7 +35,7 @@ describe(SCRUBBER_PREVIEW_TIME_ELEMENT_TAG_NAME, function () {
     return { scrubberPreview, scrubberPreviewTime };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { scrubberPreviewTime } = await buildFixture();
     expect(scrubberPreviewTime).dom.to.equal(`
       <vds-scrubber-preview-time
@@ -45,7 +45,7 @@ describe(SCRUBBER_PREVIEW_TIME_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { scrubberPreview, scrubberPreviewTime } = await buildFixture();
 
     scrubberPreview.ctx.time = 3750;
@@ -63,7 +63,7 @@ describe(SCRUBBER_PREVIEW_TIME_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should update preview time as context updates', async function () {
+  test('it should update preview time as context updates', async function () {
     const { scrubberPreview, scrubberPreviewTime } = await buildFixture();
     expect(scrubberPreviewTime.seconds).to.equal(0);
     scrubberPreview.ctx.time = 50;

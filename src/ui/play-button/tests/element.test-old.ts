@@ -25,7 +25,7 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     return { player, button };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).dom.to.equal(`
       <vds-play-button media-can-play media-paused>
@@ -35,7 +35,7 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).shadowDom.to.equal(`
       <button
@@ -65,7 +65,7 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     await oneEvent(button, 'vds-pause-request');
   });
 
-  it('should receive transformed paused context updates', async function () {
+  test('it should receive transformed paused context updates', async function () {
     const { player, button } = await buildFixture();
     player.ctx.paused = false;
     await elementUpdated(button);

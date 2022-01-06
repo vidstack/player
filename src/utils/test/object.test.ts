@@ -1,7 +1,7 @@
 import { omit, pick } from '../object';
 
 describe(pick.name, function () {
-  it('should return picked keys', function () {
+  test('it should return picked keys', function () {
     const obj = {
       a: 1,
       b: 2,
@@ -19,7 +19,7 @@ describe(pick.name, function () {
 });
 
 describe(omit.name, function () {
-  it('should return non-omitted keys', function () {
+  test('it should return non-omitted keys', function () {
     const obj = {
       a: 1,
       b: 2,

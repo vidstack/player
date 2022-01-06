@@ -25,14 +25,14 @@ describe(SEEKABLE_PROGRESS_BAR_ELEMENT_TAG_NAME, function () {
     return { seekableProgressBar };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { seekableProgressBar } = await buildFixture();
     expect(seekableProgressBar).dom.to.equal(`
       <vds-seekable-progress-bar></vds-seekable-progress-bar>
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { seekableProgressBar } = await buildFixture();
     expect(seekableProgressBar).shadowDom.to.equal(`
       <div

@@ -14,7 +14,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     return slider;
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const slider = await buildFixture();
     expect(slider).dom.to.equal(`
       <vds-slider
@@ -27,7 +27,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const slider = await buildFixture();
 
     // Strange fix for the style spacing differing between browsers.
@@ -85,7 +85,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should bound value between min/max', async function () {
+  test('it should bound value between min/max', async function () {
     const slider = await buildFixture();
 
     // Min.
@@ -99,7 +99,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.value).to.equal(slider.max);
   });
 
-  it('should set correct fill rate', async function () {
+  test('it should set correct fill rate', async function () {
     const slider = await buildFixture();
 
     slider.value = -50;
@@ -117,7 +117,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.fillPercent).to.equal(100);
   });
 
-  it('should delegate focus', async function () {
+  test('it should delegate focus', async function () {
     const slider = await buildFixture();
     const thumbContainer = slider.thumbContainerElement;
 
@@ -137,7 +137,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(thumbContainer?.matches(':focus')).to.be.true;
   });
 
-  it('should step to the left when up/left arrow key is pressed', async function () {
+  test('it should step to the left when up/left arrow key is pressed', async function () {
     const slider = await buildFixture();
     const thumbContainer = slider.thumbContainerElement;
 
@@ -157,7 +157,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.value).to.equal(48);
   });
 
-  it('should step one to the right when down/right arrow key is pressed', async function () {
+  test('it should step one to the right when down/right arrow key is pressed', async function () {
     const slider = await buildFixture();
     const thumbContainer = slider.thumbContainerElement;
 
@@ -177,7 +177,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.value).to.equal(52);
   });
 
-  it('should multiply steps when shift key is held down', async function () {
+  test('it should multiply steps when shift key is held down', async function () {
     const slider = await buildFixture();
     const thumbContainer = slider.thumbContainerElement;
 
@@ -202,7 +202,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.value).to.equal(50);
   });
 
-  it('should start dragging on thumb pointerdown and stop on document pointerup', async function () {
+  test('it should start dragging on thumb pointerdown and stop on document pointerup', async function () {
     const slider = await buildFixture();
     const thumbContainer = slider.thumbContainerElement;
 
@@ -217,7 +217,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.isDragging).to.be.false;
   });
 
-  it('should update slider value to new thumb position when root is clicked', async function () {
+  test('it should update slider value to new thumb position when root is clicked', async function () {
     const slider = await buildFixture();
     const root = slider.rootElement;
     root?.dispatchEvent(
@@ -229,7 +229,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.value).to.be.lessThanOrEqual(24);
   });
 
-  it('should not change value when move events are fired on document and slider is not being dragged', async function () {
+  test('it should not change value when move events are fired on document and slider is not being dragged', async function () {
     const slider = await buildFixture();
 
     document.dispatchEvent(
@@ -241,7 +241,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.value).to.equal(50);
   });
 
-  it('should not change value when move events are fired on document and slider is disabled', async function () {
+  test('it should not change value when move events are fired on document and slider is disabled', async function () {
     const slider = await buildFixture();
     const thumbContainer = slider.thumbContainerElement;
 
@@ -265,7 +265,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.isDragging).to.be.false;
   });
 
-  it('should not update value when track is clicked and slider is disabled', async function () {
+  test('it should not update value when track is clicked and slider is disabled', async function () {
     const slider = await buildFixture();
     const track = slider.trackElement;
 
@@ -280,7 +280,7 @@ describe(SLIDER_ELEMENT_TAG_NAME, function () {
     expect(slider.value).to.equal(50);
   });
 
-  it('should not start dragging when thumb is pressed and slider is disabled', async function () {
+  test('it should not start dragging when thumb is pressed and slider is disabled', async function () {
     const slider = await buildFixture();
     const thumb = slider.thumbContainerElement;
 

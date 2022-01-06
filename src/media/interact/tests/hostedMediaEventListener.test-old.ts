@@ -37,7 +37,7 @@ window.customElements.define(
 window.customElements.define('vds-media-listener', MediaListenerElement);
 
 describe(hostedMediaEventListener.name, function () {
-  it('should listen to media events', async function () {
+  test('it should listen to media events', async function () {
     const controller = document.createElement(
       MEDIA_CONTROLLER_ELEMENT_TAG_NAME
     );

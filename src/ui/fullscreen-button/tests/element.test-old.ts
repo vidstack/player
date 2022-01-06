@@ -32,7 +32,7 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
     return { player, button };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).dom.to.equal(`
       <vds-fullscreen-button media-can-play>
@@ -42,7 +42,7 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).shadowDom.to.equal(`
       <button
@@ -72,7 +72,7 @@ describe(FULLSCREEN_BUTTON_ELEMENT_TAG_NAME, function () {
     await oneEvent(button, 'vds-exit-fullscreen-request');
   });
 
-  it('should receive fullscreen context updates', async function () {
+  test('it should receive fullscreen context updates', async function () {
     const { player, button } = await buildFixture();
     player.ctx.fullscreen = true;
     await elementUpdated(button);

@@ -27,7 +27,7 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
     return { player, bufferingIndicator };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { bufferingIndicator } = await buildFixture();
     expect(bufferingIndicator).dom.to.equal(`
       <vds-buffering-indicator>
@@ -36,12 +36,12 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { bufferingIndicator } = await buildFixture();
     expect(bufferingIndicator).shadowDom.to.equal(`<slot></slot>`);
   });
 
-  it('should toggle `media-can-play` attribute', async function () {
+  test('it should toggle `media-can-play` attribute', async function () {
     const { player, bufferingIndicator } = await buildFixture();
     await player.forceMediaReady();
     await elementUpdated(bufferingIndicator);
@@ -51,7 +51,7 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
     expect(bufferingIndicator).to.not.have.attribute('media-can-play');
   });
 
-  it('should toggle `media-waiting` attribute', async function () {
+  test('it should toggle `media-waiting` attribute', async function () {
     const { player, bufferingIndicator } = await buildFixture();
     await player.forceMediaReady();
     player.ctx.waiting = true;
@@ -62,7 +62,7 @@ describe(BUFFERING_INDICATOR_ELEMENT_TAG_NAME, function () {
     expect(bufferingIndicator).to.not.have.attribute('media-waiting');
   });
 
-  it('should toggle `media-ended` attribute', async function () {
+  test('it should toggle `media-ended` attribute', async function () {
     const { player, bufferingIndicator } = await buildFixture();
     await player.forceMediaReady();
     player.ctx.ended = true;

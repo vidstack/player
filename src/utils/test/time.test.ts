@@ -7,7 +7,7 @@ import {
 } from '../time';
 
 describe(padNumberWithZeroes.name, function () {
-  it('should pad correctly', function () {
+  test('it should pad correctly', function () {
     expect(padNumberWithZeroes(1, 0)).to.equal('1');
     expect(padNumberWithZeroes(1, 1)).to.equal('1');
     expect(padNumberWithZeroes(1, 2)).to.equal('01');
@@ -78,18 +78,18 @@ describe(formatTime.name, function () {
     expect(formatTime(45296)).to.equal('12:34:56');
   });
 
-  it('should pad hours if `shouldPadHours` is true', function () {
+  test('it should pad hours if `shouldPadHours` is true', function () {
     expect(formatTime(3600, true)).to.equal('01:00:00');
   });
 
-  it('should display hours if `shouldAlwaysShowHours` is true', function () {
+  test('it should display hours if `shouldAlwaysShowHours` is true', function () {
     expect(formatTime(3500, false, true)).to.equal('0:58:20');
     expect(formatTime(3500, true, true)).to.equal('00:58:20');
   });
 });
 
 describe(formatSpokenTime.name, function () {
-  it('should format spoken time correctly', function () {
+  test('it should format spoken time correctly', function () {
     expect(formatSpokenTime(0)).to.equal('0 seconds');
     expect(formatSpokenTime(59)).to.equal('59 seconds');
     expect(formatSpokenTime(60)).to.equal('1 minute');

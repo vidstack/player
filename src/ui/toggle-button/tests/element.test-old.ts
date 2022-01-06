@@ -26,7 +26,7 @@ describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
     return { toggle };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { toggle } = await buildFixture();
     expect(toggle).dom.to.equal(`
       <vds-toggle-button>
@@ -36,7 +36,7 @@ describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { toggle } = await buildFixture();
     expect(toggle).shadowDom.to.equal(`
       <button
@@ -49,7 +49,7 @@ describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should toggle pressed state on click', async function () {
+  test('it should toggle pressed state on click', async function () {
     const { toggle } = await buildFixture();
 
     toggle.click();
@@ -63,7 +63,7 @@ describe(TOGGLE_BUTTON_ELEMENT_TAG_NAME, function () {
     expect(toggle).to.not.have.attribute('pressed');
   });
 
-  it('should prevent clicking when disabled', async function () {
+  test('it should prevent clicking when disabled', async function () {
     const { toggle } = await buildFixture();
 
     toggle.disabled = true;

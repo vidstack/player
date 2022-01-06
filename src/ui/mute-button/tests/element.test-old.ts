@@ -25,7 +25,7 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     return { player, button };
   }
 
-  it('should render DOM correctly', async function () {
+  test('it should render DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).dom.to.equal(`
       <vds-mute-button media-can-play>
@@ -35,7 +35,7 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it('should render shadow DOM correctly', async function () {
+  test('it should render shadow DOM correctly', async function () {
     const { button } = await buildFixture();
     expect(button).shadowDom.to.equal(`
       <button
@@ -65,7 +65,7 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     await oneEvent(button, 'vds-unmute-request');
   });
 
-  it('should receive muted context updates', async function () {
+  test('it should receive muted context updates', async function () {
     const { player, button } = await buildFixture();
     player.ctx.muted = true;
     await elementUpdated(button);

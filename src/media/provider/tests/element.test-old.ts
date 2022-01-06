@@ -31,21 +31,21 @@ describe('MediaProviderElement', function () {
   }
 
   describe('render', function () {
-    it('should render DOM correctly', async function () {
+    test('it should render DOM correctly', async function () {
       const { provider } = await buildFixture();
       expect(provider).dom.to.equal(`
         <vds-fake-media-provider></vds-fake-media-provider>
       `);
     });
 
-    it('should render shadow DOM correctly', async function () {
+    test('it should render shadow DOM correctly', async function () {
       const { provider } = await buildFixture();
       expect(provider).shadowDom.to.equal('');
     });
   });
 
   describe('lifecycle', function () {
-    it('should dispatch connect event when connected to DOM', async function () {
+    test('it should dispatch connect event when connected to DOM', async function () {
       const provider = document.createElement('vds-fake-media-provider');
 
       setTimeout(() => {
@@ -61,7 +61,7 @@ describe('MediaProviderElement', function () {
       expect(isFunction(detail.onDisconnect)).to.be.true;
     });
 
-    it('should dispose of disconnect callbacks when disconnected from DOM', async function () {
+    test('it should dispose of disconnect callbacks when disconnected from DOM', async function () {
       const provider = document.createElement('vds-fake-media-provider');
 
       setTimeout(() => {
@@ -82,7 +82,7 @@ describe('MediaProviderElement', function () {
   });
 
   describe('props', function () {
-    it('should update provider when volume is set', async function () {
+    test('it should update provider when volume is set', async function () {
       const { provider } = await buildFixture();
       const volume = 0.75;
       const volumeSpy = spy(provider, '_setVolume');
@@ -91,7 +91,7 @@ describe('MediaProviderElement', function () {
       expect(volumeSpy).to.have.been.calledWith(volume);
     });
 
-    it('should update provider when currentTime is set', async function () {
+    test('it should update provider when currentTime is set', async function () {
       const { provider } = await buildFixture();
       const currentTime = 420;
       const currentTimeSpy = spy(provider, '_setCurrentTime');
@@ -100,7 +100,7 @@ describe('MediaProviderElement', function () {
       expect(currentTimeSpy).to.have.been.calledWith(currentTime);
     });
 
-    it('should update provider when paused is set', async function () {
+    test('it should update provider when paused is set', async function () {
       const { provider } = await buildFixture();
       const playSpy = spy(provider, 'play');
       const pauseSpy = spy(provider, 'pause');
@@ -111,7 +111,7 @@ describe('MediaProviderElement', function () {
       expect(pauseSpy).to.have.been.calledOnce;
     });
 
-    it('should update provider when muted is set', async function () {
+    test('it should update provider when muted is set', async function () {
       const { provider } = await buildFixture();
       const mutedSpy = spy(provider, '_setMuted');
       provider.mediaRequestQueue.start();
@@ -142,7 +142,7 @@ describe('MediaProviderElement', function () {
     });
 
     describe('throwIfNotReadyForPlayback', function () {
-      it('should throw if not ready', async function () {
+      test('it should throw if not ready', async function () {
         const { provider } = await buildFixture();
         provider.ctx.canPlay = false;
         expect(() => {
@@ -151,7 +151,7 @@ describe('MediaProviderElement', function () {
         }).to.throw();
       });
 
-      it('should not throw if ready', async function () {
+      test('it should not throw if ready', async function () {
         const { provider } = await buildFixture();
         provider.ctx.canPlay = true;
         expect(() => {
@@ -162,7 +162,7 @@ describe('MediaProviderElement', function () {
     });
 
     describe('resetPlayback', function () {
-      it('should set currentTime to 0', async function () {
+      test('it should set currentTime to 0', async function () {
         const { provider } = await buildFixture();
 
         const setTimeSpy = spy(provider, '_setCurrentTime');
@@ -175,7 +175,7 @@ describe('MediaProviderElement', function () {
     });
 
     describe('throwIfNotVideoView', function () {
-      it('should throw if view type is not video', async function () {
+      test('it should throw if view type is not video', async function () {
         const { provider } = await buildFixture();
 
         provider.ctx.viewType = ViewType.Unknown;
@@ -191,7 +191,7 @@ describe('MediaProviderElement', function () {
         }).to.throw();
       });
 
-      it('should NOT throw if view type is of type video', async function () {
+      test('it should NOT throw if view type is of type video', async function () {
         const { provider } = await buildFixture();
 
         provider.ctx.viewType = ViewType.Video;
@@ -203,7 +203,7 @@ describe('MediaProviderElement', function () {
     });
 
     describe('attemptAutoplay', function () {
-      it('should not call play if autoplay is false', async function () {
+      test('it should not call play if autoplay is false', async function () {
         const { provider } = await buildFixture();
 
         provider.autoplay = false;
@@ -217,7 +217,7 @@ describe('MediaProviderElement', function () {
         expect(playSpy).to.not.have.been.called;
       });
 
-      it('should not call play if not ready for playback', async function () {
+      test('it should not call play if not ready for playback', async function () {
         const { provider } = await buildFixture();
 
         provider.autoplay = true;
@@ -231,7 +231,7 @@ describe('MediaProviderElement', function () {
         expect(playSpy).to.not.have.been.called;
       });
 
-      it('should not call play if playback has started', async function () {
+      test('it should not call play if playback has started', async function () {
         const { provider } = await buildFixture();
 
         provider.autoplay = true;
@@ -246,7 +246,7 @@ describe('MediaProviderElement', function () {
         expect(playSpy).to.not.have.been.called;
       });
 
-      it('should not call play if reached max attempts', async function () {
+      test('it should not call play if reached max attempts', async function () {
         const { provider } = await buildFixture();
 
         provider.autoplay = true;
@@ -263,7 +263,7 @@ describe('MediaProviderElement', function () {
         expect(playSpy).to.not.have.been.called;
       });
 
-      it('should not retry if successful', async function () {
+      test('it should not retry if successful', async function () {
         const { provider } = await buildFixture();
 
         provider.autoplay = true;
@@ -280,7 +280,7 @@ describe('MediaProviderElement', function () {
         expect(provider._autoplayRetryCount).to.equal(0);
       });
 
-      it('should give up after 2 attempts', async function () {
+      test('it should give up after 2 attempts', async function () {
         const { provider } = await buildFixture();
 
         provider.autoplay = true;
@@ -298,7 +298,7 @@ describe('MediaProviderElement', function () {
         expect(playSpy.getCalls()).to.have.length(2);
       });
 
-      it('should try muted on last attempt', async function () {
+      test('it should try muted on last attempt', async function () {
         const { provider } = await buildFixture();
 
         provider.autoplay = true;
@@ -324,7 +324,7 @@ describe('MediaProviderElement', function () {
   });
 
   describe('queue', function () {
-    it('should queue request given provider is not ready and flush once ready', async function () {
+    test('it should queue request given provider is not ready and flush once ready', async function () {
       const { provider } = await buildFixture();
 
       const volumeSpy = spy(provider, '_setVolume');
@@ -341,7 +341,7 @@ describe('MediaProviderElement', function () {
       expect(volumeSpy).to.have.been.calledWith(0.53);
     });
 
-    it('should make request immediately if provider is ready', async function () {
+    test('it should make request immediately if provider is ready', async function () {
       const { provider } = await buildFixture();
 
       const volumeSpy = spy(provider, '_setVolume');
@@ -356,7 +356,7 @@ describe('MediaProviderElement', function () {
       expect(volumeSpy).to.have.been.calledWith(0.53);
     });
 
-    it('should overwrite request keys and only call once per "type"', async function () {
+    test('it should overwrite request keys and only call once per "type"', async function () {
       const { provider } = await buildFixture();
 
       const playSpy = spy(provider, 'play');

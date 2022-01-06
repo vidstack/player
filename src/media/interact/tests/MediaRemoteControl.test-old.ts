@@ -37,7 +37,7 @@ describe(MediaRemoteControl.name, function () {
     return { controller, ref };
   }
 
-  it('should dispatch play request', async function () {
+  test('it should dispatch play request', async function () {
     const { controller, ref } = await buildFixture();
 
     const originalEvent = new MouseEvent('click');
@@ -54,7 +54,7 @@ describe(MediaRemoteControl.name, function () {
     expect(event.originalEvent).to.equal(originalEvent);
   });
 
-  it('should dispatch pause request', async function () {
+  test('it should dispatch pause request', async function () {
     const { controller, ref } = await buildFixture();
 
     const originalEvent = new MouseEvent('click');
@@ -71,7 +71,7 @@ describe(MediaRemoteControl.name, function () {
     expect(event.originalEvent).to.equal(originalEvent);
   });
 
-  it('should dispatch mute request', async function () {
+  test('it should dispatch mute request', async function () {
     const { controller, ref } = await buildFixture();
 
     const originalEvent = new MouseEvent('click');
@@ -88,7 +88,7 @@ describe(MediaRemoteControl.name, function () {
     expect(event.originalEvent).to.equal(originalEvent);
   });
 
-  it('should dispatch unmute request', async function () {
+  test('it should dispatch unmute request', async function () {
     const { controller, ref } = await buildFixture();
 
     const originalEvent = new MouseEvent('click');
@@ -105,7 +105,7 @@ describe(MediaRemoteControl.name, function () {
     expect(event.originalEvent).to.equal(originalEvent);
   });
 
-  it('should dispatch enter fullscreen request', async function () {
+  test('it should dispatch enter fullscreen request', async function () {
     const { controller, ref } = await buildFixture();
 
     const originalEvent = new MouseEvent('click');
@@ -122,7 +122,7 @@ describe(MediaRemoteControl.name, function () {
     expect(event.originalEvent).to.equal(originalEvent);
   });
 
-  it('should dispatch exit fullscreen request', async function () {
+  test('it should dispatch exit fullscreen request', async function () {
     const { controller, ref } = await buildFixture();
 
     const originalEvent = new MouseEvent('click');
@@ -139,7 +139,7 @@ describe(MediaRemoteControl.name, function () {
     expect(event.originalEvent).to.equal(originalEvent);
   });
 
-  it('should dispatch seeking request', async function () {
+  test('it should dispatch seeking request', async function () {
     const { controller, ref } = await buildFixture();
 
     const originalEvent = new MouseEvent('click');
@@ -157,7 +157,7 @@ describe(MediaRemoteControl.name, function () {
     expect(event.originalEvent).to.equal(originalEvent);
   });
 
-  it('should dispatch seek request', async function () {
+  test('it should dispatch seek request', async function () {
     const { controller, ref } = await buildFixture();
 
     const originalEvent = new MouseEvent('click');
@@ -175,7 +175,7 @@ describe(MediaRemoteControl.name, function () {
     expect(event.originalEvent).to.equal(originalEvent);
   });
 
-  it('should dispatch volume change request', async function () {
+  test('it should dispatch volume change request', async function () {
     const { controller, ref } = await buildFixture();
 
     const originalEvent = new MouseEvent('click');
