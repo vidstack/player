@@ -14,8 +14,6 @@ async function buildFixture() {
     </vds-mute-button>
   `);
 
-  await player.forceMediaReady();
-
   const button = player.querySelector('vds-mute-button')!;
 
   return { player, button };
@@ -24,25 +22,25 @@ async function buildFixture() {
 test('light DOM snapshot', async function () {
   const { button } = await buildFixture();
   expect(button).dom.to.equal(`
-      <vds-mute-button media-can-play>
-        <div class="mute"></div>
-        <div class="unmute"></div>
-      </vds-mute-button>
-    `);
+    <vds-mute-button>
+      <div class="mute"></div>
+      <div class="unmute"></div>
+    </vds-mute-button>
+  `);
 });
 
 test('shadow DOM snapshot', async function () {
   const { button } = await buildFixture();
   expect(button).shadowDom.to.equal(`
-      <button
-        id="button"
-        aria-label="Mute"
-        aria-pressed="false"
-        part="button"
-      >
-        <slot></slot>
-      </button>
-    `);
+    <button
+      id="button"
+      aria-label="Mute"
+      aria-pressed="false"
+      part="button"
+    >
+      <slot></slot>
+    </button>
+  `);
 });
 
 test('it should update muted state', async function () {
@@ -63,7 +61,7 @@ test('it should update muted state', async function () {
   expect(button.hasAttribute('media-muted')).to.be.false;
 });
 
-test('it should mute player`', async function () {
+test('it should mute player', async function () {
   const { player, button } = await buildFixture();
 
   const mutedSpy = vi.spyOn(player, 'muted', 'set');
@@ -77,7 +75,7 @@ test('it should mute player`', async function () {
   expect(mutedSpy).to.toHaveBeenCalledWith(true);
 });
 
-test('it should unmute player`', async function () {
+test('it should unmute player', async function () {
   const { player, button } = await buildFixture();
 
   const mutedSpy = vi.spyOn(player, 'muted', 'set');

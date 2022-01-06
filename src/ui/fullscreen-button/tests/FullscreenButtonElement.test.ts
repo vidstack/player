@@ -16,15 +16,13 @@ async function buildFixture() {
 
   const button = player.querySelector('vds-fullscreen-button')!;
 
-  await player.forceMediaReady();
-
   return { player, button };
 }
 
 test('light DOM snapshot', async function () {
   const { button } = await buildFixture();
   expect(button).dom.to.equal(`
-    <vds-fullscreen-button hidden media-can-play>
+    <vds-fullscreen-button hidden>
       <div class="enter"></div>
       <div class="exit"></div>
     </vds-fullscreen-button>
