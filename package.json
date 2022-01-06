@@ -89,6 +89,7 @@
     "lit": "^2.0.2"
   },
   "devDependencies": {
+    "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.0.2",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.1.2",

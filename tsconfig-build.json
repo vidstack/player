@@ -13,5 +13,10 @@
     "useDefineForClassFields": false
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test*.js", "src/**/*.test*.ts", "src/media/test-utils"]
+  "exclude": [
+    "src/**/*.test*.js",
+    "src/**/*.test*.ts",
+    "src/global/vitest-setup.ts",
+    "src/media/test-utils"
+  ]
 }
