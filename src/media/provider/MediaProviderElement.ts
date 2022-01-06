@@ -17,7 +17,11 @@ import { CanPlay } from '../CanPlay';
 import { MediaController } from '../controller';
 import type { MediaEvents } from '../events';
 import { MediaContext } from '../MediaContext';
-import { mediaStoreContext, ReadableMediaStoreRecord } from '../mediaStore';
+import {
+  mediaStoreContext,
+  ReadableMediaStoreRecord,
+  WritableMediaStoreRecord
+} from '../mediaStore';
 import { MediaType } from '../MediaType';
 import { ViewType } from '../ViewType';
 
@@ -754,6 +758,11 @@ export abstract class MediaProviderElement extends LitElement {
   protected readonly _mediaStoreConsumer = mediaStoreContext.consume(this);
 
   get mediaStore(): ReadableMediaStoreRecord {
+    return this._mediaStoreConsumer.value;
+  }
+
+  /** @internal */
+  get _writableMediaStore(): WritableMediaStoreRecord {
     return this._mediaStoreConsumer.value;
   }
 
