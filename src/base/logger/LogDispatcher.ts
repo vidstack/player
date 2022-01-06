@@ -1,5 +1,3 @@
-import type { ReactiveControllerHost } from 'lit';
-
 import { logEvent } from './events';
 import { type GROUPED_LOG_ID, type GroupedLog, groupedLog } from './groupedLog';
 import type { LogLevel } from './LogLevel';
@@ -8,7 +6,7 @@ import type { LogLevel } from './LogLevel';
  * Simple facade that simplifies dispatching log events from a given `host` element.
  */
 export class LogDispatcher {
-  constructor(protected readonly _host: ReactiveControllerHost & EventTarget) {}
+  constructor(protected readonly _host: EventTarget) {}
 
   error(...data: any[]) {
     this._dispatch('error', ...data);
@@ -43,9 +41,7 @@ export class LogDispatcher {
   }
 
   protected _dispatch(level: LogLevel, ...data: any[]) {
-    if (__DEV__) {
-      this._host.dispatchEvent(logEvent(level, ...data));
-    }
+    this._host.dispatchEvent(logEvent(level, ...data));
   }
 
   protected _groupDispatcher(
@@ -77,6 +73,5 @@ export type GroupedLogDispatch = {
   labelledLog(label: string, ...data: any[]): GroupedLogDispatch;
   groupStart(title: string): GroupedLogDispatch;
   groupEnd(): GroupedLogDispatch;
-  append(...groupedLogs: GroupedLog[]): GroupedLogDispatch;
   dispatch(): void;
 };

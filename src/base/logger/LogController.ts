@@ -1,3 +1,5 @@
+/** c8 ignore start */
+
 import type { ReactiveControllerHost } from 'lit';
 
 import { isString, isUndefined } from '../../utils/unit';
@@ -111,8 +113,12 @@ export class LogController {
   protected _lastLogTimestamp?: number;
   protected _getLastLogTimeDiff() {
     const time = performance.now();
-    const diff = time - (this._lastLogTimestamp ??= performance.now());
+    const diff =
+      time -
+      (this._lastLogTimestamp || (this._lastLogTimestamp = performance.now()));
     this._lastLogTimestamp = time;
     return ms(diff);
   }
 }
+
+/** c8 ignore stop */

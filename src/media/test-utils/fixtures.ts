@@ -1,4 +1,4 @@
-import { fixture } from '@open-wc/testing';
+import { fixture } from '@open-wc/testing-helpers';
 import { html } from 'lit';
 
 import { safelyDefineCustomElement } from '../../utils/dom';

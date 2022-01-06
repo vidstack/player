@@ -1,3 +1,5 @@
+/** c8 ignore start */
+
 import { IS_CLIENT } from '../../utils/support';
 import { isUndefined } from '../../utils/unit';
 
@@ -50,3 +52,5 @@ function saveColors() {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(map));
   }
 }
+
+/** c8 ignore stop */

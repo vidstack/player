@@ -1,195 +1,158 @@
-import { expect, fixture, oneEvent } from '@open-wc/testing';
+import { fixture } from '@open-wc/testing-helpers';
 import { html, LitElement } from 'lit';
 
-import {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent,
-  MuteRequestEvent,
-  PauseRequestEvent,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent,
-  UnmuteRequestEvent,
-  VolumeChangeRequestEvent
-} from '../../request.events';
+import { waitForEvent } from '../../../global/tests/utils';
 import { MediaRemoteControl } from '../MediaRemoteControl';
 
-class ReferenceElement extends LitElement {
-  remoteControl = new MediaRemoteControl(this);
+class RemoteControlElement extends LitElement {
+  control = new MediaRemoteControl(this);
 }
 
-window.customElements.define('ref-element', ReferenceElement);
+window.customElements.define('remote-control', RemoteControlElement);
 
-describe(MediaRemoteControl.name, function () {
-  async function buildFixture() {
-    const controller = await fixture(html`
-      <!-- Dummy media controller. -->
-      <div class="fake-media-controller">
-        <!-- Filler to ensure requests bubble. -->
-        <div>
-          <ref-element></ref-element>
-        </div>
+async function buildFixture() {
+  const controller = await fixture(html`
+    <!-- Dummy media controller. -->
+    <div class="fake-media-controller">
+      <!-- Filler to ensure requests are bubbling. -->
+      <div>
+        <remote-control></remote-control>
       </div>
-    `);
+    </div>
+  `);
 
-    const ref = controller.querySelector('ref-element') as ReferenceElement;
+  const remoteControl = controller.querySelector(
+    'remote-control'
+  ) as RemoteControlElement;
 
-    return { controller, ref };
-  }
+  return { controller, remoteControl };
+}
 
-  it('should dispatch play request', async function () {
-    const { controller, ref } = await buildFixture();
+test('it should dispatch play request', async function () {
+  const { controller, remoteControl } = await buildFixture();
 
-    const originalEvent = new MouseEvent('click');
+  const originalEvent = new MouseEvent('click');
 
-    setTimeout(() => {
-      ref.remoteControl.play(originalEvent);
-    });
-
-    const event = (await oneEvent(
-      controller,
-      'vds-play-request'
-    )) as PlayRequestEvent;
-
-    expect(event.originalEvent).to.equal(originalEvent);
+  setTimeout(() => {
+    remoteControl.control.play(originalEvent);
   });
 
-  it('should dispatch pause request', async function () {
-    const { controller, ref } = await buildFixture();
+  const event = await waitForEvent(controller, 'vds-play-request');
 
-    const originalEvent = new MouseEvent('click');
+  expect(event.originalEvent).to.equal(originalEvent);
+});
 
-    setTimeout(() => {
-      ref.remoteControl.pause(originalEvent);
-    });
+test('it should dispatch pause request', async function () {
+  const { controller, remoteControl } = await buildFixture();
 
-    const event = (await oneEvent(
-      controller,
-      'vds-pause-request'
-    )) as PauseRequestEvent;
+  const originalEvent = new MouseEvent('click');
 
-    expect(event.originalEvent).to.equal(originalEvent);
+  setTimeout(() => {
+    remoteControl.control.pause(originalEvent);
   });
 
-  it('should dispatch mute request', async function () {
-    const { controller, ref } = await buildFixture();
+  const event = await waitForEvent(controller, 'vds-pause-request');
 
-    const originalEvent = new MouseEvent('click');
+  expect(event.originalEvent).to.equal(originalEvent);
+});
 
-    setTimeout(() => {
-      ref.remoteControl.mute(originalEvent);
-    });
+test('it should dispatch mute request', async function () {
+  const { controller, remoteControl } = await buildFixture();
 
-    const event = (await oneEvent(
-      controller,
-      'vds-mute-request'
-    )) as MuteRequestEvent;
+  const originalEvent = new MouseEvent('click');
 
-    expect(event.originalEvent).to.equal(originalEvent);
+  setTimeout(() => {
+    remoteControl.control.mute(originalEvent);
   });
 
-  it('should dispatch unmute request', async function () {
-    const { controller, ref } = await buildFixture();
+  const event = await waitForEvent(controller, 'vds-mute-request');
 
-    const originalEvent = new MouseEvent('click');
+  expect(event.originalEvent).to.equal(originalEvent);
+});
 
-    setTimeout(() => {
-      ref.remoteControl.unmute(originalEvent);
-    });
+test('it should dispatch unmute request', async function () {
+  const { controller, remoteControl } = await buildFixture();
 
-    const event = (await oneEvent(
-      controller,
-      'vds-unmute-request'
-    )) as UnmuteRequestEvent;
+  const originalEvent = new MouseEvent('click');
 
-    expect(event.originalEvent).to.equal(originalEvent);
+  setTimeout(() => {
+    remoteControl.control.unmute(originalEvent);
   });
 
-  it('should dispatch enter fullscreen request', async function () {
-    const { controller, ref } = await buildFixture();
+  const event = await waitForEvent(controller, 'vds-unmute-request');
 
-    const originalEvent = new MouseEvent('click');
+  expect(event.originalEvent).to.equal(originalEvent);
+});
 
-    setTimeout(() => {
-      ref.remoteControl.enterFullscreen(originalEvent);
-    });
+test('it should dispatch enter fullscreen request', async function () {
+  const { controller, remoteControl } = await buildFixture();
 
-    const event = (await oneEvent(
-      controller,
-      'vds-enter-fullscreen-request'
-    )) as EnterFullscreenRequestEvent;
+  const originalEvent = new MouseEvent('click');
 
-    expect(event.originalEvent).to.equal(originalEvent);
+  setTimeout(() => {
+    remoteControl.control.enterFullscreen(originalEvent);
   });
 
-  it('should dispatch exit fullscreen request', async function () {
-    const { controller, ref } = await buildFixture();
+  const event = await waitForEvent(controller, 'vds-enter-fullscreen-request');
 
-    const originalEvent = new MouseEvent('click');
+  expect(event.originalEvent).to.equal(originalEvent);
+});
 
-    setTimeout(() => {
-      ref.remoteControl.exitFullscreen(originalEvent);
-    });
+test('it should dispatch exit fullscreen request', async function () {
+  const { controller, remoteControl } = await buildFixture();
 
-    const event = (await oneEvent(
-      controller,
-      'vds-exit-fullscreen-request'
-    )) as ExitFullscreenRequestEvent;
+  const originalEvent = new MouseEvent('click');
 
-    expect(event.originalEvent).to.equal(originalEvent);
+  setTimeout(() => {
+    remoteControl.control.exitFullscreen(originalEvent);
   });
 
-  it('should dispatch seeking request', async function () {
-    const { controller, ref } = await buildFixture();
+  const event = await waitForEvent(controller, 'vds-exit-fullscreen-request');
 
-    const originalEvent = new MouseEvent('click');
+  expect(event.originalEvent).to.equal(originalEvent);
+});
 
-    setTimeout(() => {
-      ref.remoteControl.seeking(50, originalEvent);
-    });
+test('it should dispatch seeking request', async function () {
+  const { controller, remoteControl } = await buildFixture();
 
-    const event = (await oneEvent(
-      controller,
-      'vds-seeking-request'
-    )) as SeekingRequestEvent;
+  const originalEvent = new MouseEvent('click');
 
-    expect(event.detail).to.equal(50);
-    expect(event.originalEvent).to.equal(originalEvent);
+  setTimeout(() => {
+    remoteControl.control.seeking(50, originalEvent);
   });
 
-  it('should dispatch seek request', async function () {
-    const { controller, ref } = await buildFixture();
+  const event = await waitForEvent(controller, 'vds-seeking-request');
 
-    const originalEvent = new MouseEvent('click');
+  expect(event.detail).to.equal(50);
+  expect(event.originalEvent).to.equal(originalEvent);
+});
 
-    setTimeout(() => {
-      ref.remoteControl.seek(50, originalEvent);
-    });
+test('it should dispatch seek request', async function () {
+  const { controller, remoteControl } = await buildFixture();
 
-    const event = (await oneEvent(
-      controller,
-      'vds-seek-request'
-    )) as SeekRequestEvent;
+  const originalEvent = new MouseEvent('click');
 
-    expect(event.detail).to.equal(50);
-    expect(event.originalEvent).to.equal(originalEvent);
+  setTimeout(() => {
+    remoteControl.control.seek(50, originalEvent);
   });
 
-  it('should dispatch volume change request', async function () {
-    const { controller, ref } = await buildFixture();
+  const event = await waitForEvent(controller, 'vds-seek-request');
 
-    const originalEvent = new MouseEvent('click');
+  expect(event.detail).to.equal(50);
+  expect(event.originalEvent).to.equal(originalEvent);
+});
 
-    setTimeout(() => {
-      ref.remoteControl.changeVolume(50, originalEvent);
-    });
+test('it should dispatch volume change request', async function () {
+  const { controller, remoteControl } = await buildFixture();
 
-    const event = (await oneEvent(
-      controller,
-      'vds-volume-change-request'
-    )) as VolumeChangeRequestEvent;
+  const originalEvent = new MouseEvent('click');
 
-    expect(event.detail).to.equal(50);
-    expect(event.originalEvent).to.equal(originalEvent);
+  setTimeout(() => {
+    remoteControl.control.changeVolume(50, originalEvent);
   });
+
+  const event = await waitForEvent(controller, 'vds-volume-change-request');
+
+  expect(event.detail).to.equal(50);
+  expect(event.originalEvent).to.equal(originalEvent);
 });

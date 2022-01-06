@@ -1,4 +1,4 @@
-import './ui';
+import './dangerously-all-ui';
 import './vds-aspect-ratio';
 import './vds-audio-player';
 import './vds-audio';

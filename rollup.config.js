@@ -10,7 +10,9 @@ const CDN = !!process.env.CDN;
 const entries = ['src/index.ts'];
 const definitions = fs.readdirSync('src/define');
 definitions.forEach((file) => {
-  entries.push(`src/define/${file}`);
+  if (!file.startsWith('test')) {
+    entries.push(`src/define/${file}`);
+  }
 });
 
 export default {

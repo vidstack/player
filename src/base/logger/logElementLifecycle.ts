@@ -1,3 +1,5 @@
+/** c8 ignore start */
+
 import type { ReactiveControllerHost } from 'lit';
 
 import { LogDispatcher } from './LogDispatcher';
@@ -19,3 +21,5 @@ export function logElementLifecycle(
     }
   });
 }
+
+/** c8 ignore stop */

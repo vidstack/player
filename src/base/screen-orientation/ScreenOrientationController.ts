@@ -1,3 +1,5 @@
+/** c8 ignore start */
+
 import { ReactiveElement } from 'lit';
 
 import { canOrientScreen, IS_CLIENT } from '../../utils/support';
@@ -177,3 +179,5 @@ export class ScreenOrientationController {
     throw Error('Screen orientation API is not available.');
   }
 }
+
+/** c8 ignore stop */

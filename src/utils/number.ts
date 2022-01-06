@@ -1,19 +1,4 @@
 /**
- * Whether two numbers are roughly equal up to a certain precision.
- *
- * @param numA
- * @param numB
- * @param precision
- */
-export function areNumbersRoughlyEqual(
-  numA: number,
-  numB: number,
-  precision = 3
-): boolean {
-  return numA.toFixed(precision) === numB.toFixed(precision);
-}
-
-/**
  * Round a number to the given number of `decimalPlaces`.
  *
  * @param num

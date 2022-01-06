@@ -17,7 +17,11 @@ import { CanPlay } from '../CanPlay';
 import { MediaController } from '../controller';
 import type { MediaEvents } from '../events';
 import { MediaContext } from '../MediaContext';
-import { mediaStoreContext, ReadableMediaStoreRecord } from '../mediaStore';
+import {
+  mediaStoreContext,
+  ReadableMediaStoreRecord,
+  WritableMediaStoreRecord
+} from '../mediaStore';
 import { MediaType } from '../MediaType';
 import { ViewType } from '../ViewType';
 
@@ -182,7 +186,7 @@ export abstract class MediaProviderElement extends LitElement {
           this._autoplayAttemptPending = false;
         };
 
-        this._attemptAutoplay().then(onAttemptEnd).catch(onAttemptEnd);
+        this.attemptAutoplay().then(onAttemptEnd).catch(onAttemptEnd);
       }
     });
   }
@@ -647,7 +651,7 @@ export abstract class MediaProviderElement extends LitElement {
         vdsEvent('vds-autoplay', { detail: { muted: this.muted } })
       );
 
-      await this._attemptAutoplay();
+      await this.attemptAutoplay();
     }
 
     this._autoplayAttemptPending = false;
@@ -666,7 +670,7 @@ export abstract class MediaProviderElement extends LitElement {
     );
   }
 
-  protected async _attemptAutoplay(): Promise<void> {
+  async attemptAutoplay(): Promise<void> {
     if (!this.canPlay || !this.willAttemptAutoplay) {
       return;
     }
@@ -699,7 +703,7 @@ export abstract class MediaProviderElement extends LitElement {
 
     if (!didAttemptSucceed) {
       this._autoplayRetryCount += 1;
-      return this._attemptAutoplay();
+      return this.attemptAutoplay();
     }
   }
 
@@ -754,6 +758,11 @@ export abstract class MediaProviderElement extends LitElement {
   protected readonly _mediaStoreConsumer = mediaStoreContext.consume(this);
 
   get mediaStore(): ReadableMediaStoreRecord {
+    return this._mediaStoreConsumer.value;
+  }
+
+  /** @internal */
+  get _mediaStore(): WritableMediaStoreRecord {
     return this._mediaStoreConsumer.value;
   }
 

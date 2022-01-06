@@ -86,11 +86,9 @@ export class MediaController {
 
       const { element, onDisconnect } = event.detail;
 
-      // @ts-ignore - random error that doesn't occur during build.
       if (this.mediaProvider === element) return;
 
       this._handleMediaProviderDisconnect();
-      // @ts-ignore - random error that doesn't occur during build.
       this._mediaProvider = element;
       this._flushMediaProviderConnectedQueue();
       onDisconnect(this._handleMediaProviderDisconnect.bind(this));

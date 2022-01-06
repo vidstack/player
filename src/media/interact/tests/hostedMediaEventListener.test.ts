@@ -1,67 +1,80 @@
-import { expect, oneEvent } from '@open-wc/testing';
+import '../../../define/vds-media-controller';
+
 import { LitElement } from 'lit';
 
 import { VdsEvent } from '../../../base/events';
-import {
-  MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
-  MediaControllerElement
-} from '../../controller/MediaControllerElement';
-import { PlayEvent, TimeUpdateEvent } from '../../events';
+import { waitForEvent } from '../../../global/tests/utils';
 import { hostedMediaEventListener } from '../hostedMediaEventListener';
 
 class MediaListenerElement extends LitElement {
-  events: [any, Event][] = [];
+  playListener = vi.fn();
+  pauseListener = vi.fn();
 
-  handlePlay = hostedMediaEventListener(
-    this,
-    'vds-play',
-    (event: PlayEvent) => {
-      this.events.push([this, event]);
-    }
-  );
-
-  handleTimeUpdate = hostedMediaEventListener(
-    this,
-    'vds-time-update',
-    (event: TimeUpdateEvent) => {
-      this.events.push([this, event]);
-    }
-  );
+  handlePlay = hostedMediaEventListener(this, 'vds-play', this.playListener);
+  handlePause = hostedMediaEventListener(this, 'vds-pause', this.pauseListener);
 }
 
-window.customElements.define(
-  MEDIA_CONTROLLER_ELEMENT_TAG_NAME,
-  MediaControllerElement
-);
+window.customElements.define('media-listener', MediaListenerElement);
 
-window.customElements.define('vds-media-listener', MediaListenerElement);
+test('it should listen to media events', async function () {
+  const listener = document.createElement(
+    'media-listener'
+  ) as MediaListenerElement;
 
-describe(hostedMediaEventListener.name, function () {
-  it('should listen to media events', async function () {
-    const controller = document.createElement(
-      MEDIA_CONTROLLER_ELEMENT_TAG_NAME
-    );
+  window.document.body.append(listener);
 
-    const listener = document.createElement(
-      'vds-media-listener'
-    ) as MediaListenerElement;
+  const controller = document.createElement('vds-media-controller');
+  setTimeout(() => {
+    listener.append(controller);
+  }, 0);
 
-    window.document.body.append(listener);
+  await waitForEvent(listener, 'vds-media-controller-connect');
 
-    setTimeout(() => {
-      listener.append(controller);
-    }, 0);
+  const playEvent = new VdsEvent('vds-play');
+  const pauseEvent = new VdsEvent('vds-pause');
 
-    await oneEvent(listener, 'vds-media-controller-connect');
+  controller.dispatchEvent(playEvent);
+  controller.dispatchEvent(pauseEvent);
+  controller.dispatchEvent(playEvent);
 
-    const playEvent = new VdsEvent('vds-play');
-    const timeUpdateEvent = new VdsEvent('vds-time-update', { detail: 10 });
+  expect(listener.playListener).toHaveBeenCalledTimes(2);
+  expect(listener.pauseListener).toHaveBeenCalledOnce();
+  expect(listener.playListener).toHaveBeenCalledWith(playEvent);
+  expect(listener.pauseListener).toHaveBeenCalledWith(pauseEvent);
+});
 
-    controller.dispatchEvent(playEvent);
-    controller.dispatchEvent(timeUpdateEvent);
+test('it should stop listening to media events when listener disconnects', async function () {
+  const listener = document.createElement(
+    'media-listener'
+  ) as MediaListenerElement;
 
-    expect(listener.events).to.have.length(3);
-    expect(listener.events[0]).to.eql([listener, playEvent]);
-    expect(listener.events[1]).to.eql([listener, timeUpdateEvent]);
-  });
+  window.document.body.append(listener);
+
+  const playEvent = new VdsEvent('vds-play');
+  listener.dispatchEvent(playEvent);
+
+  expect(listener.playListener).toHaveBeenCalledTimes(0);
+});
+
+test('it should stop listening to media events when controller disconnects', async function () {
+  const listener = document.createElement(
+    'media-listener'
+  ) as MediaListenerElement;
+
+  window.document.body.append(listener);
+
+  const controller = document.createElement('vds-media-controller');
+  setTimeout(() => {
+    listener.append(controller);
+  }, 0);
+
+  await waitForEvent(listener, 'vds-media-controller-connect');
+
+  controller.remove();
+
+  const playEvent = new VdsEvent('vds-play');
+
+  controller.dispatchEvent(playEvent);
+
+  expect(listener.playListener).toHaveBeenCalledTimes(0);
 });

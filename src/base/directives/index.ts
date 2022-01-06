@@ -1,2 +1,2 @@
-export * from './if-non-empty';
-export * from './if-number';
+export * from './ifNonEmpty';
+export * from './ifNumber';
