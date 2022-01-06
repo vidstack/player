@@ -7,7 +7,7 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": ["index.d.ts"],
+  "ignorePatterns": ["index.d.ts", "global.d.ts"],
   "plugins": ["simple-import-sort"],
   "extends": [
     "plugin:wc/recommended",

@@ -26,6 +26,9 @@ jobs:
         if: steps.deps.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
       - name: Build
         run: npm run build
 
