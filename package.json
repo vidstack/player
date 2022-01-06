@@ -97,7 +97,7 @@
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
     "chokidar": "^3.5.2",
-    "conventional-changelog-cli": "^2.1.1",
+    "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
     "enquirer": "^2.3.6",
     "esbuild": "^0.14.9",
