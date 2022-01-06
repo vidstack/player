@@ -1,4 +1,3 @@
-import commonjs from '@rollup/plugin-commonjs';
 import esbuild from 'rollup-plugin-esbuild';
 import fs from 'fs-extra';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
@@ -43,8 +42,7 @@ export default {
     PROD && minifyHTML(),
     resolve({
       exportConditions: [PROD ? 'production' : 'development']
-    }),
-    commonjs()
+    })
   ],
   treeshake: true,
   preserveEntrySignatures: 'allow-extension',
