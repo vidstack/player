@@ -83,7 +83,6 @@ test('it should enter fullscreen', async function () {
     .mockImplementation(() => Promise.resolve());
 
   player._mediaStore.fullscreen.set(false);
-
   await elementUpdated(button);
 
   setTimeout(() => button.click());
@@ -100,7 +99,6 @@ test('it should exit fullscreen', async function () {
     .mockImplementation(() => Promise.resolve());
 
   player._mediaStore.fullscreen.set(true);
-
   await elementUpdated(button);
 
   setTimeout(() => button.click());
