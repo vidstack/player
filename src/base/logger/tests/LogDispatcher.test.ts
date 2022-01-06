@@ -1,5 +1,4 @@
-import { oneEvent } from '@open-wc/testing-helpers';
-
+import { waitForEvent } from '../../../global/tests/utils';
 import { isGroupedLog } from '../groupedLog';
 import { LogDispatcher } from '../LogDispatcher';
 import { LogLevel } from '../LogLevel';
@@ -10,7 +9,7 @@ async function expectLogEvent(level: LogLevel) {
   setTimeout(() => {
     dispatcher[level]('test');
   }, 0);
-  const { detail } = await oneEvent(target, 'vds-log');
+  const { detail } = await waitForEvent(target, 'vds-log');
   expect(detail.level).to.equal(level);
   expect(detail.data).to.eql(['test']);
 }
@@ -21,7 +20,7 @@ async function expectGroupedLogEvent(level: LogLevel) {
   setTimeout(() => {
     dispatcher[`${level}Group`]('test').log('Test Message').dispatch();
   }, 0);
-  const { detail } = await oneEvent(target, 'vds-log');
+  const { detail } = await waitForEvent(target, 'vds-log');
   expect(detail.level).to.equal(level);
   expect(isGroupedLog(detail.data[0])).to.be.true;
   expect(detail.data[0].logs).to.eql([{ data: ['Test Message'] }]);

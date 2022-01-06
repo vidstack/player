@@ -36,7 +36,7 @@ test('it should toggle `hidden` attribute as `canPlay` changes', async function 
 
   expect(ui.hasAttribute('hidden')).to.be.true;
 
-  player._writableMediaStore.canPlay.set(true);
+  player._mediaStore.canPlay.set(true);
 
   await elementUpdated(ui);
 

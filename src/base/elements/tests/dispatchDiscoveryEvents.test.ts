@@ -1,6 +1,6 @@
-import { oneEvent } from '@open-wc/testing-helpers';
 import { LitElement } from 'lit';
 
+import { waitForEvent } from '../../../global/tests/utils';
 import { isFunction } from '../../../utils/unit';
 import { dispatchDiscoveryEvents } from '../discovery';
 
@@ -21,7 +21,7 @@ test('it should dispatch discovery event', async () => {
     document.body.append(el);
   }, 0);
 
-  const { detail } = await oneEvent(window, 'vds-media-controller-connect');
+  const { detail } = await waitForEvent(window, 'vds-media-controller-connect');
 
   expect(detail.element).to.equal(el);
   expect(isFunction(detail.onDisconnect)).to.be.true;

@@ -1,17 +1,7 @@
-import { fixture, oneEvent } from '@open-wc/testing-helpers';
+import { fixture } from '@open-wc/testing-helpers';
 import { html, LitElement } from 'lit';
 
-import type {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent,
-  MuteRequestEvent,
-  PauseRequestEvent,
-  PlayRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent,
-  UnmuteRequestEvent,
-  VolumeChangeRequestEvent
-} from '../../request.events';
+import { waitForEvent } from '../../../global/tests/utils';
 import { MediaRemoteControl } from '../MediaRemoteControl';
 
 class RemoteControlElement extends LitElement {
@@ -47,10 +37,7 @@ test('it should dispatch play request', async function () {
     remoteControl.control.play(originalEvent);
   });
 
-  const event = (await oneEvent(
-    controller,
-    'vds-play-request'
-  )) as PlayRequestEvent;
+  const event = await waitForEvent(controller, 'vds-play-request');
 
   expect(event.originalEvent).to.equal(originalEvent);
 });
@@ -64,10 +51,7 @@ test('it should dispatch pause request', async function () {
     remoteControl.control.pause(originalEvent);
   });
 
-  const event = (await oneEvent(
-    controller,
-    'vds-pause-request'
-  )) as PauseRequestEvent;
+  const event = await waitForEvent(controller, 'vds-pause-request');
 
   expect(event.originalEvent).to.equal(originalEvent);
 });
@@ -81,10 +65,7 @@ test('it should dispatch mute request', async function () {
     remoteControl.control.mute(originalEvent);
   });
 
-  const event = (await oneEvent(
-    controller,
-    'vds-mute-request'
-  )) as MuteRequestEvent;
+  const event = await waitForEvent(controller, 'vds-mute-request');
 
   expect(event.originalEvent).to.equal(originalEvent);
 });
@@ -98,10 +79,7 @@ test('it should dispatch unmute request', async function () {
     remoteControl.control.unmute(originalEvent);
   });
 
-  const event = (await oneEvent(
-    controller,
-    'vds-unmute-request'
-  )) as UnmuteRequestEvent;
+  const event = await waitForEvent(controller, 'vds-unmute-request');
 
   expect(event.originalEvent).to.equal(originalEvent);
 });
@@ -115,10 +93,7 @@ test('it should dispatch enter fullscreen request', async function () {
     remoteControl.control.enterFullscreen(originalEvent);
   });
 
-  const event = (await oneEvent(
-    controller,
-    'vds-enter-fullscreen-request'
-  )) as EnterFullscreenRequestEvent;
+  const event = await waitForEvent(controller, 'vds-enter-fullscreen-request');
 
   expect(event.originalEvent).to.equal(originalEvent);
 });
@@ -132,10 +107,7 @@ test('it should dispatch exit fullscreen request', async function () {
     remoteControl.control.exitFullscreen(originalEvent);
   });
 
-  const event = (await oneEvent(
-    controller,
-    'vds-exit-fullscreen-request'
-  )) as ExitFullscreenRequestEvent;
+  const event = await waitForEvent(controller, 'vds-exit-fullscreen-request');
 
   expect(event.originalEvent).to.equal(originalEvent);
 });
@@ -149,10 +121,7 @@ test('it should dispatch seeking request', async function () {
     remoteControl.control.seeking(50, originalEvent);
   });
 
-  const event = (await oneEvent(
-    controller,
-    'vds-seeking-request'
-  )) as SeekingRequestEvent;
+  const event = await waitForEvent(controller, 'vds-seeking-request');
 
   expect(event.detail).to.equal(50);
   expect(event.originalEvent).to.equal(originalEvent);
@@ -167,10 +136,7 @@ test('it should dispatch seek request', async function () {
     remoteControl.control.seek(50, originalEvent);
   });
 
-  const event = (await oneEvent(
-    controller,
-    'vds-seek-request'
-  )) as SeekRequestEvent;
+  const event = await waitForEvent(controller, 'vds-seek-request');
 
   expect(event.detail).to.equal(50);
   expect(event.originalEvent).to.equal(originalEvent);
@@ -185,10 +151,7 @@ test('it should dispatch volume change request', async function () {
     remoteControl.control.changeVolume(50, originalEvent);
   });
 
-  const event = (await oneEvent(
-    controller,
-    'vds-volume-change-request'
-  )) as VolumeChangeRequestEvent;
+  const event = await waitForEvent(controller, 'vds-volume-change-request');
 
   expect(event.detail).to.equal(50);
   expect(event.originalEvent).to.equal(originalEvent);

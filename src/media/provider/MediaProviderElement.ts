@@ -186,7 +186,7 @@ export abstract class MediaProviderElement extends LitElement {
           this._autoplayAttemptPending = false;
         };
 
-        this._attemptAutoplay().then(onAttemptEnd).catch(onAttemptEnd);
+        this.attemptAutoplay().then(onAttemptEnd).catch(onAttemptEnd);
       }
     });
   }
@@ -651,7 +651,7 @@ export abstract class MediaProviderElement extends LitElement {
         vdsEvent('vds-autoplay', { detail: { muted: this.muted } })
       );
 
-      await this._attemptAutoplay();
+      await this.attemptAutoplay();
     }
 
     this._autoplayAttemptPending = false;
@@ -670,7 +670,7 @@ export abstract class MediaProviderElement extends LitElement {
     );
   }
 
-  protected async _attemptAutoplay(): Promise<void> {
+  async attemptAutoplay(): Promise<void> {
     if (!this.canPlay || !this.willAttemptAutoplay) {
       return;
     }
@@ -703,7 +703,7 @@ export abstract class MediaProviderElement extends LitElement {
 
     if (!didAttemptSucceed) {
       this._autoplayRetryCount += 1;
-      return this._attemptAutoplay();
+      return this.attemptAutoplay();
     }
   }
 
@@ -762,7 +762,7 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   /** @internal */
-  get _writableMediaStore(): WritableMediaStoreRecord {
+  get _mediaStore(): WritableMediaStoreRecord {
     return this._mediaStoreConsumer.value;
   }
 

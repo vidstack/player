@@ -1,9 +1,9 @@
 import '../../../define/vds-media-controller';
 
-import { oneEvent } from '@open-wc/testing-helpers';
 import { LitElement } from 'lit';
 
 import { VdsEvent } from '../../../base/events';
+import { waitForEvent } from '../../../global/tests/utils';
 import { hostedMediaEventListener } from '../hostedMediaEventListener';
 
 class MediaListenerElement extends LitElement {
@@ -28,7 +28,7 @@ test('it should listen to media events', async function () {
     listener.append(controller);
   }, 0);
 
-  await oneEvent(listener, 'vds-media-controller-connect');
+  await waitForEvent(listener, 'vds-media-controller-connect');
 
   const playEvent = new VdsEvent('vds-play');
   const pauseEvent = new VdsEvent('vds-pause');
@@ -68,7 +68,7 @@ test('it should stop listening to media events when controller disconnects', asy
     listener.append(controller);
   }, 0);
 
-  await oneEvent(listener, 'vds-media-controller-connect');
+  await waitForEvent(listener, 'vds-media-controller-connect');
 
   controller.remove();
 

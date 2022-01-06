@@ -1,8 +1,9 @@
 import '../../../define/vds-media-controller';
 import '../../../define/vds-fake-media-provider';
 
-import { fixture, html, oneEvent } from '@open-wc/testing-helpers';
+import { fixture, html } from '@open-wc/testing-helpers';
 
+import { waitForEvent } from '../../../global/tests/utils';
 import { isFunction } from '../../../utils/unit';
 import { MediaRemoteControl } from '../../interact';
 import {
@@ -12,10 +13,10 @@ import {
 
 async function buildFixture() {
   const controller = await fixture<MediaControllerElement>(`
-        <vds-media-controller>
-          <vds-fake-media-provider></vds-fake-media-provider>
-        </vds-media-controller>
-      `);
+    <vds-media-controller>
+      <vds-fake-media-provider></vds-fake-media-provider>
+    </vds-media-controller>
+  `);
 
   const provider = controller.querySelector('vds-fake-media-provider')!;
 
@@ -25,10 +26,10 @@ async function buildFixture() {
 test('light DOM snapshot', async () => {
   const { controller } = await buildFixture();
   expect(controller).dom.to.equal(`
-        <vds-media-controller>
-          <vds-fake-media-provider></vds-fake-media-provider>
-        </vds-media-controller>
-      `);
+    <vds-media-controller>
+      <vds-fake-media-provider></vds-fake-media-provider>
+    </vds-media-controller>
+  `);
 });
 
 test('shadow DOM snapshot', async () => {
@@ -43,7 +44,7 @@ test('it should dispatch discovery event', async () => {
     window.document.body.append(controller);
   });
 
-  const { detail } = (await oneEvent(
+  const { detail } = (await waitForEvent(
     document,
     'vds-media-controller-connect'
   )) as MediaControllerConnectEvent;

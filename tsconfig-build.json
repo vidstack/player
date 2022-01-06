@@ -16,7 +16,7 @@
   "exclude": [
     "src/**/*.test*.js",
     "src/**/*.test*.ts",
-    "src/global/vitest-setup.ts",
+    "src/global/tests",
     "src/media/test-utils"
   ]
 }

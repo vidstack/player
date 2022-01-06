@@ -1,5 +1,4 @@
-import { oneEvent } from '@open-wc/testing-helpers';
-
+import { waitForEvent } from '../../../global/tests/utils';
 import { redispatchEvent } from '../redispatchEvent';
 import { VdsEvent } from '../VdsEvent';
 
@@ -10,7 +9,7 @@ test('should redispatch event', async () => {
     redispatchEvent(el, new MouseEvent('click'));
   });
 
-  const event = await oneEvent(el, 'click');
+  const event = await waitForEvent(el, 'click');
   expect(event).to.toBeInstanceOf(VdsEvent);
   expect(event.type).to.equal('click');
 });
@@ -28,6 +27,6 @@ test('should not redispatch event if it bubbles and is composed', async () => {
     el.dispatchEvent(new MouseEvent('click'));
   });
 
-  const event = await oneEvent(el, 'click');
+  const event = await waitForEvent(el, 'click');
   expect(event).to.not.toBeInstanceOf(VdsEvent);
 });
