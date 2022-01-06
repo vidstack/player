@@ -33,7 +33,7 @@ describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
   test('it should render shadow DOM correctly', async function () {
     const { player, timeDuration } = await buildFixture();
 
-    player.ctx.duration = 3750;
+    player._mediaStore.duration.set(3750);
     await elementUpdated(timeDuration);
 
     expect(timeDuration).shadowDom.to.equal(`
@@ -51,10 +51,10 @@ describe(`${TIME_DURATION_ELEMENT_TAG_NAME}`, function () {
   test('it should update duration time as context updates', async function () {
     const { player, timeDuration } = await buildFixture();
     expect(timeDuration.seconds).to.equal(0);
-    player.ctx.duration = 50;
+    player._mediaStore.duration.set(50);
     await elementUpdated(timeDuration);
     expect(timeDuration.seconds).to.equal(50);
-    player.ctx.duration = -1;
+    player._mediaStore.duration.set(-1);
     await elementUpdated(timeDuration);
     expect(timeDuration.seconds).to.equal(0);
   });

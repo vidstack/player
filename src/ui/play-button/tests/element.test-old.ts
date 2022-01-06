@@ -49,7 +49,7 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it(`should emit play request when clicked while paused`, async function () {
+  test('it should emit play request when clicked while paused`, async function () {
     const { player, button } = await buildFixture();
     player.paused = true;
     await elementUpdated(button);
@@ -57,7 +57,7 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
     await oneEvent(button, 'vds-play-request');
   });
 
-  it(`should emit pause request when clicked while playing`, async function () {
+  test('it should emit pause request when clicked while playing`, async function () {
     const { player, button } = await buildFixture();
     player.paused = false;
     await elementUpdated(button);
@@ -67,11 +67,11 @@ describe(PLAY_BUTTON_ELEMENT_TAG_NAME, function () {
 
   test('it should receive transformed paused context updates', async function () {
     const { player, button } = await buildFixture();
-    player.ctx.paused = false;
+    player._mediaStore.paused.set(false)
     await elementUpdated(button);
     expect(button.isPressed).to.be.true;
     expect(button).to.have.attribute('pressed');
-    player.ctx.paused = true;
+    player._mediaStore.paused.set(true)
     await elementUpdated(button);
     expect(button.isPressed).to.be.false;
     expect(button).to.not.have.attribute('pressed');

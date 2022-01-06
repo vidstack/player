@@ -42,11 +42,11 @@ describe(VOLUME_SLIDER_ELEMENT_TAG_NAME, function () {
 
     expect(volumeSlider.volume).to.equal(1);
 
-    player.ctx.volume = 0.25;
+    player._mediaStore.volume.set(0.25);
     await elementUpdated(volumeSlider);
     expect(volumeSlider.volume).to.equal(0.25);
 
-    player.ctx.volume = 0.85;
+    player._mediaStore.volume.set(0.85);
     await elementUpdated(volumeSlider);
     expect(volumeSlider.volume).to.equal(0.85);
   });

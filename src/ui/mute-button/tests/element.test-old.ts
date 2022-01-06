@@ -49,7 +49,7 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     `);
   });
 
-  it(`should emit mute request when clicked while unmuted`, async function () {
+  test('it should emit mute request when clicked while unmuted`, async function () {
     const { player, button } = await buildFixture();
     player.muted = false;
     await elementUpdated(button);
@@ -57,7 +57,7 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
     await oneEvent(button, 'vds-mute-request');
   });
 
-  it(`should emit unmute request when clicked while muted`, async function () {
+  test('it should emit unmute request when clicked while muted`, async function () {
     const { player, button } = await buildFixture();
     player.muted = true;
     await elementUpdated(button);
@@ -67,11 +67,11 @@ describe(MUTE_BUTTON_ELEMENT_TAG_NAME, function () {
 
   test('it should receive muted context updates', async function () {
     const { player, button } = await buildFixture();
-    player.ctx.muted = true;
+    player._mediaStore.muted.set(true)
     await elementUpdated(button);
     expect(button.isPressed).to.be.true;
     expect(button).to.have.attribute('pressed');
-    player.ctx.muted = false;
+    player._mediaStore.muted.set(false)
     await elementUpdated(button);
     expect(button.isPressed).to.be.false;
     expect(button).to.not.have.attribute('pressed');
