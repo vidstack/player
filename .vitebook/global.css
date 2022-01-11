@@ -1,0 +1,21 @@
+.navbar__logo {
+  display: none;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+}
+
+.control > span {
+  display: block;
+}
+
+.control > input {
+  margin-top: 8px;
+}
+
+.control > input[type='text'] {
+  width: 100%;
+}

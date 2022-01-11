@@ -1,8 +1,3 @@
-import {
-  eventCallback as vbkEventCallback,
-  type EventEntryRef
-} from '@vitebook/client/addons';
-
 /**
  * When properties are spread `<vds-* {...props}>` on a custom element in Svelte, the values
  * are set on attributes instead of properties, this can cause issues with `boolean` types. This
@@ -24,8 +19,4 @@ export function spreadPropsAction<T extends HTMLElement>(
   return {
     update
   };
-}
-
-export function eventCallback(event: EventEntryRef) {
-  return vbkEventCallback();
 }

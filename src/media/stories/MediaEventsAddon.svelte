@@ -1,9 +1,13 @@
 <script lang="ts">
-  import { EventsAddon, eventCallback } from '@vitebook/client/addons';
+  import {
+    EventsAddon,
+    eventCallback,
+    throttledEventCallback
+  } from '@vitebook/client/addons';
   import { onDestroy } from 'svelte';
   import { DisposalBin, listen } from '../../base/events';
-  import type { MediaEvents } from '../events';
-  import type { MediaProviderElement } from '../provider';
+  import { type MediaEvents } from '../events';
+  import { type MediaProviderElement } from '../provider';
 
   export let mediaProvider: MediaProviderElement | null = null;
 
@@ -53,7 +57,13 @@
 
   $: if (mediaProvider) {
     events.forEach((event) => {
-      disposal.add(listen(mediaProvider!, event, eventCallback));
+      disposal.add(
+        listen(
+          mediaProvider!,
+          event,
+          event === 'vds-time-update' ? throttledEventCallback(500) : eventCallback
+        )
+      );
     });
   } else {
     disposal.empty();
