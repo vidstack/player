@@ -1,3 +1,9 @@
+<script context="module">
+  export const __pageMeta = {
+    title: 'Audio Provider'
+  };
+</script>
+
 <script>
   import '../../define/vds-audio';
   import {

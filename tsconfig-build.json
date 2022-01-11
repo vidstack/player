@@ -16,6 +16,7 @@
   "exclude": [
     "src/**/*.test*.js",
     "src/**/*.test*.ts",
+    "src/**/stories/**",
     "src/global/tests",
     "src/media/test-utils"
   ]

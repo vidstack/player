@@ -55,13 +55,20 @@
     'vds-waiting'
   ];
 
+  const throttle = {
+    'vds-time-update': 300,
+    'vds-volume-change': 300
+  };
+
   $: if (mediaProvider) {
     events.forEach((event) => {
       disposal.add(
         listen(
           mediaProvider!,
           event,
-          event === 'vds-time-update' ? throttledEventCallback(500) : eventCallback
+          throttle[event]
+            ? throttledEventCallback(throttle[event])
+            : eventCallback
         )
       );
     });
