@@ -576,7 +576,7 @@ export class HlsElement extends VideoElement {
         .labelledLog('Event type', eventType)
         .labelledLog('Data', data)
         .labelledLog('Src', this.src)
-        .labelledLog('State', this._loggableMediaState?.())
+        .labelledLog('State', { ...this.mediaState })
         .labelledLog('HLS Engine', this._hlsEngine)
         .labelledLog('Video Engine', this.videoEngine)
         .dispatch();

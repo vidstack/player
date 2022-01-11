@@ -8,7 +8,24 @@
 
 <style>
   :global(.navbar__logo) {
+    display: none;
+  }
+
+  :global(.control) {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    margin-top: 16px;
+  }
+
+  :global(.control > span) {
+    display: block;
+  }
+
+  :global(.control > input) {
+    margin-top: 8px;
+  }
+
+  :global(.control > input[type='text']) {
+    width: 100%;
   }
 </style>

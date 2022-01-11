@@ -366,7 +366,7 @@ export class Html5MediaElement extends MediaProviderElement {
               ?.debugGroup(`📺 fired \`${event.type}\``)
               .labelledLog('Event', event)
               .labelledLog('Engine', this.engine)
-              .labelledLog('State', this._loggableMediaState?.())
+              .labelledLog('State', { ...this.mediaState })
               .dispatch();
           }
 

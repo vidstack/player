@@ -6,11 +6,16 @@ import {
 
 export default defineConfig<DefaultThemeConfig>({
   include: ['src/**/*.story.html', 'src/**/*.story.svelte'],
+  vite: {
+    optimizeDeps: {
+      include: ['lit', 'lit/decorators.js']
+    }
+  },
   plugins: [
     clientPlugin({
       appFile: 'App.svelte',
       svelte: {
-        extensions: ['html', 'svelte']
+        extensions: ['.html', '.svelte']
       }
     }),
     defaultThemePlugin()

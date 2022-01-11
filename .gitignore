@@ -6,6 +6,10 @@ dist-*/
 /scratchpad/
 /sandbox/
 
+.vitebook/.cache
+.vitebook/.temp
+.vitebook/dist
+
 custom-elements.json
 vscode.html-data.json
 
