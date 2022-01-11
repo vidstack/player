@@ -1,14 +1,7 @@
-<script lang="ts">
-  import type { SvelteComponent } from 'svelte';
+<script>
+  import './global.css';
 
-  export let component: typeof SvelteComponent;
+  export let component;
 </script>
 
 <svelte:component this={component} />
-
-<style>
-  :global(.navbar__logo) {
-    display: flex;
-    align-items: center;
-  }
-</style>
