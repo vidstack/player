@@ -73,9 +73,11 @@
     "format:prettier": "npm run lint:prettier -- --write",
     "minify:prod": "node .scripts/minify.mjs",
     "prepare": "husky install",
+    "start": "npm run vitebook:dev",
     "test": "vitest --run",
     "test:coverage": "vitest --run --coverage",
     "test:watch": "vitest --watch",
+    "vitebook:dev": "vitebook dev",
     "release": "node .scripts/release.mjs"
   },
   "dependencies": {
@@ -96,6 +98,9 @@
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
     "c8": "^7.11.0",
+    "@vitebook/client": "^0.15.1",
+    "@vitebook/core": "^0.15.1",
+    "@vitebook/theme-default": "^0.15.1",
     "chokidar": "^3.5.2",
     "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
