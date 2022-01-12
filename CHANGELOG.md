@@ -1,3 +1,11 @@
+# [0.2.0](https://github.com/vidstack/player/compare/v0.1.2...v0.2.0) (2022-01-12)
+
+### Features
+
+- `@vidstack/elements` -> `@vidstack/player` ([da6b197](https://github.com/vidstack/player/commit/da6b19757f0d485db193ebec3c1f02b01e459d0e))
+- logger rework ([#533](https://github.com/vidstack/player/issues/533)) ([d2a0e27](https://github.com/vidstack/player/commit/d2a0e27c3261294db7a5f2b1073a5289dd0fbde6))
+- major internals cleanup ([#529](https://github.com/vidstack/player/issues/529)) ([3c47a4e](https://github.com/vidstack/player/commit/3c47a4ec20bbacfa0e56dd49486617c67823a98a))
+
 ## [0.1.2](https://github.com/vidstack/player/compare/v0.1.1...v0.1.2) (2021-12-10)
 
 ### Bug Fixes
