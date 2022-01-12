@@ -11,7 +11,7 @@ import type { ReadableStoreRecord, StoreValue } from './types';
  * @example
  * ```ts
  * import { LitElement } from 'lit';
- * import { hostedStoreRecordSubscription, mediaStoreContext } from '@vidstack/elements';
+ * import { hostedStoreRecordSubscription, mediaStoreContext } from '@vidstack/player';
  *
  * class MyElement extends LitElement {
  *   constructor() {

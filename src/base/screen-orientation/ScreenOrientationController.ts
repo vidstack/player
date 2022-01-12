@@ -13,7 +13,7 @@ import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
  * @example
  * ```ts
  * import { LitElement } from 'lit';
- * import { ScreenOrientationController } from '@vidstack/elements';
+ * import { ScreenOrientationController } from '@vidstack/player';
  *
  * class MyElement extends LitElement {
  *   screenOrientationController = new ScreenOrientationController(this);

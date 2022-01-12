@@ -68,7 +68,7 @@ const HLS_LIB_CACHE = new Map<string, HlsConstructor>();
  * Finally, import it and pass it as a property to `<vds-hls>`...
  *
  * ```ts
- * import '@vidstack/elements/providers/hls/define';
+ * import '@vidstack/player/providers/hls/define';
  *
  * import { html, LitElement } from 'lit';
  * import Hls from 'hls.js';
@@ -285,7 +285,7 @@ export class HlsElement extends VideoElement {
     /**
      * // TODO: stage-2 we'll need to rework this line and determine when to "upgrade" to `hls.js`.
      *
-     * @see https://github.com/vidstack/elements/issues/376
+     * @see https://github.com/vidstack/player/issues/376
      */
     if (isNonNativeHlsStreamingPossible()) return false;
     return this.hasNativeHlsSupport;

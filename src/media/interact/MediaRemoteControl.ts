@@ -10,7 +10,7 @@ import { MediaRequestEvents } from '../request.events';
  *
  * @example
  * ```ts
- * import { MediaRemoteControl } from '@vidstack/elements';
+ * import { MediaRemoteControl } from '@vidstack/player';
  *
  * class MyElement extends HTMLElement {
  *   mediaRemoteControl = new MediaRemoteControl(this);

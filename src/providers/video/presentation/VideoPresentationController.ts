@@ -21,7 +21,7 @@ export type VideoPresentationControllerHost = ReactiveElement & {
  * @example
  * ```ts
  * import { LitElement } from 'lit';
- * import { VideoPresentationController } from '@vidstack/elements';
+ * import { VideoPresentationController } from '@vidstack/player';
  *
  * class MyElement extends LitElement {
  *   get videoElement(): HTMLVideoElement | undefined {

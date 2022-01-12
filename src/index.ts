@@ -1,6 +1,6 @@
 if (__DEV__) {
   console.warn(
-    '`@vidstack/elements` is in dev mode. Not recommended for production!'
+    '`@vidstack/player` is in dev mode. Not recommended for production!'
   );
 }
 

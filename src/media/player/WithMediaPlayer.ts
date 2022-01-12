@@ -10,7 +10,7 @@ import { basePlayerStyles } from './styles';
  *
  * @example
  * ```ts
- * import { AudioElement, MediaPlayerConnectEvent } from '@vidstack/elements';
+ * import { AudioElement, MediaPlayerConnectEvent } from '@vidstack/player';
  *
  * function eventHandler(event: MediaPlayerConnectEvent<AudioElement>) {
  *   const { element, onDisconnect } = event.detail;

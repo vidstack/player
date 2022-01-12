@@ -30,14 +30,14 @@ They're very easy to install, just follow the links and you should be up and run
 **Working on your first Pull Request?** You can learn how from this free series
 [How to Contribute to an Open Source Project on GitHub][pr-beginner-series].
 
-Head over to the [repository][vds-elements] on GitHub and click the Fork button in the top
+Head over to the [repository][vds-player] on GitHub and click the Fork button in the top
 right corner. After the project has been forked, run the following commands in your terminal:
 
 ```bash
 # Replace {github-username} with your GitHub username.
-$: git clone https://github.com/{github-username}/elements vds-elements --depth=1
+$: git clone https://github.com/{github-username}/player vds-player --depth=1
 
-$: cd vds-elements
+$: cd vds-player
 
 # Create a branch for your PR, replace {issue-no} with the GitHub issue number.
 $: git checkout -b issue-{issue-no}
@@ -48,7 +48,7 @@ pull requests from the forked branch.
 
 ```bash
 # Add the original repository as a "remote" called "upstream".
-$: git remote add upstream git@github.com:vidstack/elements.git
+$: git remote add upstream git@github.com:vidstack/player.git
 
 # Fetch the git information from the remote.
 $: git fetch upstream
@@ -87,7 +87,7 @@ $: git push
 
 ## 🎉 Pull Request
 
-When you're all done head over to the [repository][vds-elements], and click the big green
+When you're all done head over to the [repository][vds-player], and click the big green
 `Compare & Pull Request` button that should appear after you've pushed changes to your fork.
 
 Don't expect your PR to be accepted immediately or even accepted at all. Give the community time to
@@ -98,6 +98,6 @@ contribution is appreciated more then you can imagine, and even a failed PR can 
 [lit-element]: https://lit-element.polymer-project.org/guide
 [web-components]: https://developer.mozilla.org/en-US/docs/Web/Web_Components
 [web-test-runner]: https://modern-web.dev/docs/test-runner/overview
-[vds-elements]: https://github.com/vidstack/elements
+[vds-player]: https://github.com/vidstack/player
 [semantic-commit-style]: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
 [pr-beginner-series]: https://app.egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github

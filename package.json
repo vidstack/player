@@ -1,5 +1,5 @@
 {
-  "name": "@vidstack/elements",
+  "name": "@vidstack/player",
   "version": "0.1.2",
   "description": "Collection of headless web components that make integrating media on the a web a breeze.",
   "license": "MIT",
@@ -50,10 +50,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/vidstack/elements.git"
+    "url": "https://github.com/vidstack/player.git"
   },
   "bugs": {
-    "url": "https://github.com/vidstack/elements/issues"
+    "url": "https://github.com/vidstack/player/issues"
   },
   "scripts": {
     "build": "rimraf dist && rollup -c rollup.config.js",

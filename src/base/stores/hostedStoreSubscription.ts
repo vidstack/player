@@ -14,7 +14,7 @@ import type { ReadableStore } from './types';
  * @example
  * ```ts
  * import { LitElement } from 'lit';
- * import { hostedStoreSubscription } from '@vidstack/elements';
+ * import { hostedStoreSubscription } from '@vidstack/player';
  *
  * class MyElement extends LitElement {
  *   constructor() {

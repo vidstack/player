@@ -11,7 +11,7 @@ import { MediaEvents } from '../events';
  * @example
  * ```ts
  * import { LitElement } from 'lit';
- * import { hostMediaEventListener } from '@vidstack/elements';
+ * import { hostMediaEventListener } from '@vidstack/player';
  *
  * class MyElement extends LitElement {
  *   _handlePlay = hostMediaEventListener(this, (event) => {

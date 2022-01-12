@@ -23,7 +23,7 @@ export type FullscreenControllerHost = ReactiveElement & {
  * @example
  * ```ts
  * import { LitElement } from 'lit';
- * import { FullscreenController, ScreenOrientationController } from '@vidstack/elements';
+ * import { FullscreenController, ScreenOrientationController } from '@vidstack/player';
  *
  * class MyElement extends LitElement {
  *   fullscreenController = new FullscreenController(
