@@ -27,12 +27,12 @@ export default defineConfig<DefaultThemeConfig>({
     defaultThemePlugin()
   ],
   site: {
-    title: 'Vidstack',
+    title: 'Vidstack Player',
     description:
       'Collection of headless web components that make integrating media on the a web a breeze.',
     theme: {
       remoteGitRepo: {
-        url: 'vidstack/elements'
+        url: 'vidstack/player'
       }
     }
   }
