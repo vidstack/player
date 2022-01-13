@@ -1,7 +1,7 @@
 {
   "name": "@vidstack/player",
   "version": "0.2.0",
-  "description": "Collection of headless web components that make integrating media on the a web a breeze.",
+  "description": "Headless web components that make integrating media on the a web a breeze.",
   "license": "MIT",
   "type": "module",
   "engines": {

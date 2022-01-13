@@ -613,7 +613,9 @@ export class MediaController {
   protected readonly _handleSrcChange = hostedEventListener(
     this._host,
     'vds-src-change',
-    () => {
+    (event) => {
+      this._writableMediaStore.currentSrc.set(event.detail);
+
       const dontReset = new Set<keyof WritableMediaStoreRecord>([
         'currentSrc',
         'autoplay',

@@ -10,6 +10,9 @@ export default defineConfig<DefaultThemeConfig>({
     define: {
       __DEV__: 'true'
     },
+    server: {
+      // hmr: false
+    },
     optimizeDeps: {
       include: ['lit', 'lit/decorators.js']
     }
@@ -29,7 +32,7 @@ export default defineConfig<DefaultThemeConfig>({
   site: {
     title: 'Vidstack Player',
     description:
-      'Collection of headless web components that make integrating media on the a web a breeze.',
+      'Headless web components that make integrating media on the a web a breeze.',
     theme: {
       remoteGitRepo: {
         url: 'vidstack/player'

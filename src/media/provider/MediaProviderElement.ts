@@ -710,7 +710,11 @@ export abstract class MediaProviderElement extends LitElement {
   protected _shouldSkipNextSrcChangeReset = true;
 
   protected _handleMediaSrcChange(src: string) {
-    if (!this.hasUpdated) return;
+    this._mediaStore.currentSrc.set(src);
+
+    if (!this.hasUpdated) {
+      return;
+    }
 
     // Skip first flush to ensure initial properties set make it to the provider.
     if (this._shouldSkipNextSrcChangeReset) {

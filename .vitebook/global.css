@@ -2,20 +2,18 @@
   display: none;
 }
 
-.control {
+label {
   display: flex;
   flex-direction: column;
   margin-top: 16px;
+  font-weight: bold;
 }
 
-.control > span {
-  display: block;
-}
-
-.control > input {
+label > input,
+label > select {
   margin-top: 8px;
 }
 
-.control > input[type='text'] {
+label > input[type='text'] {
   width: 100%;
 }

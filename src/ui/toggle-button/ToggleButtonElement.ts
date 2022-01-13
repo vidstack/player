@@ -113,6 +113,8 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
         aria-described-by=${ifNonEmpty(this.describedBy)}
         ?disabled=${this.disabled}
         @click=${this._handleButtonClick}
+        @focus=${this._handleFocus}
+        @blur=${this._handleBlur}
         ${ref(this._buttonRef)}
       >
         ${this._renderButtonChildren()}
@@ -135,6 +137,14 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
 
   protected _handleButtonClick(event: Event) {
     this.pressed = !this.pressed;
+  }
+
+  protected _handleFocus() {
+    this.focus();
+  }
+
+  protected _handleBlur(event: FocusEvent) {
+    this.blur();
   }
 
   protected readonly _handleButtonClickCapture = hostedEventListener(

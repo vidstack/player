@@ -4,6 +4,7 @@
 
   const dispatch = createEventDispatcher();
 
+  export let logLevel = 'warn';
   export let autoplay = false;
   export let controls = false;
   export let src = '';
@@ -22,6 +23,7 @@
 
   $: if (mounted)
     dispatch('change', {
+      logLevel,
       autoplay,
       controls,
       src,
@@ -36,45 +38,56 @@
 </script>
 
 <ControlsAddon>
-  <div class="control">
-    <span>Autoplay</span>
+  <label>
+    Log Level
+    <select bind:value={logLevel}>
+      <option value="silent">Silent</option>
+      <option value="error">Error</option>
+      <option value="warn">Warn</option>
+      <option value="info">Info</option>
+      <option value="debug">Debug</option>
+    </select>
+  </label>
+  <label>
+    Autoplay
     <input type="checkbox" bind:checked={autoplay} />
-  </div>
-  <div class="control">
-    <span>Controls</span>
+  </label>
+  <label>
+    Controls
     <input type="checkbox" bind:checked={controls} />
-  </div>
-  <div class="control">
-    <span>Src</span>
+  </label>
+  <label>
+    Src
     <input type="text" bind:value={src} />
-  </div>
-  <div class="control">
-    <span>Poster</span>
+  </label>
+  <label>
+    Poster
     <input type="text" bind:value={poster} />
-  </div>
-  <div class="control">
-    <span>Current Time</span>
+  </label>
+  <label>
+    Current Time
     <input type="number" bind:value={currentTime} min="0" step="1" />
-  </div>
-  <div class="control">
-    <span>Loop</span>
+  </label>
+  <label>
+    Loop
     <input type="checkbox" bind:checked={loop} />
-  </div>
-  <div class="control">
-    <span>Muted</span>
+  </label>
+  <label>
+    Muted
     <input type="checkbox" bind:checked={muted} />
-  </div>
-  <div class="control">
-    <span>Paused</span>
+  </label>
+  <label>
+    Paused
     <input type="checkbox" bind:checked={paused} />
-  </div>
-  <div class="control">
-    <span>Playsinline</span>
+  </label>
+  <label>
+    Playsinline
     <input type="checkbox" bind:checked={playsinline} />
-  </div>
-  <div class="control">
-    <span>Volume</span>
+  </label>
+  <label>
+    Volume
     <input type="number" step="0.1" min="0" max="1" bind:value={volume} />
-  </div>
+  </label>
+
   <slot />
 </ControlsAddon>

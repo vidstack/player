@@ -56,8 +56,8 @@
   ];
 
   const throttle = {
-    'vds-time-update': 300,
-    'vds-volume-change': 300
+    'vds-time-update': 500,
+    'vds-volume-change': 500
   };
 
   $: if (mediaProvider) {

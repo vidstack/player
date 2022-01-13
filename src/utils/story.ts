@@ -1,3 +1,5 @@
+import { notEqual } from 'lit';
+
 /**
  * When properties are spread `<vds-* {...props}>` on a custom element in Svelte, the values
  * are set on attributes instead of properties, this can cause issues with `boolean` types. This
@@ -10,7 +12,9 @@ export function spreadPropsAction<T extends HTMLElement>(
 ) {
   function update(props: Partial<Record<keyof T, unknown>>) {
     for (const prop of Object.keys(props)) {
-      node[prop] = props[prop];
+      if (notEqual(node[prop], props[prop])) {
+        node[prop] = props[prop];
+      }
     }
   }
 
