@@ -48,7 +48,7 @@ import { scrubberPreviewVideoElementStyles } from './styles';
  * }
  *
  * vds-scrubber-preview-video::part(video) {
- *   max-width: 168px;
+ *   max-width: 250px;
  * }
  * ```
  */
@@ -115,7 +115,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
       <video
         part="video"
         muted
-        preload="metadata"
+        preload="auto"
         src=${ifNonEmpty(this.src)}
         @canplay=${this._handleCanPlay}
         @error=${this._handleError}
@@ -131,7 +131,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
   @state()
   protected _canPlay = false;
 
-  protected _handleCanPlay(event: Event) {
+  protected async _handleCanPlay(event: Event) {
     this._canPlay = true;
     this.setAttribute('video-can-play', '');
     redispatchEvent(this, event);

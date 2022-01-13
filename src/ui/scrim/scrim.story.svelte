@@ -6,9 +6,10 @@
 
 <script>
   import { ControlsAddon } from '@vitebook/client/addons';
+  import { safelyDefineCustomElement } from '../../utils/dom';
   import { ScrimElement } from './ScrimElement';
 
-  window.customElements.define('vds-scrim', ScrimElement);
+  safelyDefineCustomElement('vds-scrim', ScrimElement);
 
   let direction = 'up';
 </script>
