@@ -75,6 +75,7 @@
       <option value="nodownload">No Download</option>
     </select>
   </label>
+
   <label>
     Cross Origin
     <select bind:value={crossOrigin}>
@@ -83,18 +84,22 @@
       <option value="use-credentials">Use Credentials</option>
     </select>
   </label>
+
   <label>
     Default Muted
     <input type="checkbox" bind:checked={defaultMuted} />
   </label>
+
   <label>
     Default Playback Rate
     <input type="number" bind:value={defaultPlaybackRate} />
   </label>
+
   <label>
     Disable Remote Playback
     <input type="checkbox" bind:checked={disableRemotePlayback} />
   </label>
+
   <label>
     Preload
     <select bind:value={preload}>
@@ -103,10 +108,12 @@
       <option value="auto">Auto</option>
     </select>
   </label>
+
   <label>
     Width
     <input type="number" bind:value={width} />
   </label>
+
   <label>
     Height
     <input type="number" bind:value={height} />

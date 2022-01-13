@@ -37,6 +37,7 @@
     Emulate Can Play
     <input type="checkbox" bind:checked={canPlay} />
   </label>
+
   <label>
     Emulate Muted
     <input type="checkbox" bind:checked={muted} />

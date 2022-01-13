@@ -40,6 +40,7 @@
     Emulate Can Play
     <input type="checkbox" bind:checked={canPlay} />
   </label>
+
   <label>
     Emulate Paused
     <input type="checkbox" bind:checked={paused} />

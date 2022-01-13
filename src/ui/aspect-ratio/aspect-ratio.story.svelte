@@ -25,10 +25,12 @@
     Min Height
     <input type="text" bind:value={minHeight} />
   </label>
+
   <label>
     Max Height
     <input type="text" bind:value={maxHeight} />
   </label>
+
   <label>
     Aspect Ratio
     <input type="text" bind:value={ratio} />

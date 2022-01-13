@@ -39,10 +39,12 @@
     Emulate Can Play
     <input type="checkbox" bind:checked={canPlay} />
   </label>
+
   <label>
     Emulate Fullscreen
     <input type="checkbox" bind:checked={fullscreen} />
   </label>
+
   <label>
     Emulate Can Request Fullscreen
     <input type="checkbox" bind:checked={canRequestFullscreen} />
