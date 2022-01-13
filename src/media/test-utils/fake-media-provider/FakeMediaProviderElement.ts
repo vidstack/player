@@ -1,4 +1,4 @@
-import { css, CSSResultGroup } from 'lit';
+import { html } from 'lit';
 
 import { vdsEvent } from '../../../base/events';
 import { CanPlay } from '../../CanPlay';
@@ -9,19 +9,31 @@ import { MediaProviderElement } from '../../provider/MediaProviderElement';
  * be combined with Sinon spies/stubs/mocks to set the provider in the desired state.
  */
 export class FakeMediaProviderElement extends MediaProviderElement {
-  static override get styles(): CSSResultGroup {
-    return [
-      css`
-        :host {
-          background: none;
-        }
-      `
-    ];
-  }
-
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
+
+  constructor() {
+    super();
+
+    Object.keys(this._mediaStore).forEach((key) => {
+      Object.defineProperty(this, `emulate-${key.toLowerCase()}`, {
+        set(value) {
+          this._connectedQueue.queue(`emulate-${key}`, () => {
+            this._mediaStore[key].set(value);
+
+            if (key === 'canPlay') {
+              if (value) {
+                this.mediaRequestQueue.start();
+              } else {
+                this.mediaRequestQueue.stop();
+              }
+            }
+          });
+        }
+      });
+    });
+  }
 
   override connectedCallback() {
     super.connectedCallback();
@@ -30,6 +42,10 @@ export class FakeMediaProviderElement extends MediaProviderElement {
       // Set false so `_handleMediaReady` return early.
       this.forceMediaReady();
     }
+  }
+
+  override render() {
+    return html`<slot></slot>`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -102,6 +118,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   }
 
   override async exitFullscreen() {
+    await super.exitFullscreen();
     this.dispatchEvent(vdsEvent('vds-fullscreen-change', { detail: false }));
   }
 }

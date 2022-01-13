@@ -44,6 +44,7 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     super();
     hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
       this.pressed = $fullscreen;
+      setAttribute(this, 'media-fullscreen', $fullscreen);
     });
     hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
       setAttribute(this, 'media-can-play', $canPlay);
@@ -55,9 +56,6 @@ export class FullscreenButtonElement extends ToggleButtonElement {
         setAttribute(this, 'hidden', !$canRequestFullscreen);
       }
     );
-    hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
-      setAttribute(this, 'media-fullscreen', $fullscreen);
-    });
   }
 
   protected override _handleButtonClick(event: Event) {

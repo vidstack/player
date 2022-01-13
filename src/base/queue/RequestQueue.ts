@@ -48,8 +48,8 @@ export class RequestQueue {
    */
   async start() {
     await this._flush();
-    this._empty();
     this._isServing = true;
+    if (this._requestQueue.size > 0) await this._flush();
   }
 
   protected async _flush() {

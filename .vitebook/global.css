@@ -1,0 +1,19 @@
+.navbar__logo {
+  display: none;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+  font-weight: bold;
+}
+
+label > input,
+label > select {
+  margin-top: 8px;
+}
+
+label > input[type='text'] {
+  width: 100%;
+}

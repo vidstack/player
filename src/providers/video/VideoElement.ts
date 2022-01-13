@@ -76,7 +76,7 @@ export class VideoElement extends Html5MediaElement {
    * specified, nothing is displayed until the first frame is available, then the first frame is
    * shown as the poster frame.
    */
-  @property()
+  @property({ reflect: true })
   get poster() {
     return this.mediaState.currentPoster;
   }

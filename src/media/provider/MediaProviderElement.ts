@@ -137,7 +137,7 @@ export abstract class MediaProviderElement extends LitElement {
         const dispose = listen(this, eventType, (event) => {
           this._logger
             ?.infoGroup(`📡 dispatching \`${eventType}\``)
-            .labelledLog('State', this._loggableMediaState?.())
+            .labelledLog('State', { ...this.mediaState })
             .labelledLog('Event', event)
             .labelledLog('Engine', this.engine)
             .dispatch();
@@ -637,7 +637,7 @@ export abstract class MediaProviderElement extends LitElement {
     if (__DEV__) {
       this._logger
         ?.infoGroup('-~-~-~-~-~-~-~-~- ✅ MEDIA READY -~-~-~-~-~-~-~-~-')
-        .labelledLog('State', this._loggableMediaState?.())
+        .labelledLog('State', { ...this.mediaState })
         .labelledLog('Event', event)
         .labelledLog('Engine', this.engine)
         .dispatch();
@@ -710,7 +710,11 @@ export abstract class MediaProviderElement extends LitElement {
   protected _shouldSkipNextSrcChangeReset = true;
 
   protected _handleMediaSrcChange(src: string) {
-    if (!this.hasUpdated) return;
+    this._mediaStore.currentSrc.set(src);
+
+    if (!this.hasUpdated) {
+      return;
+    }
 
     // Skip first flush to ensure initial properties set make it to the provider.
     if (this._shouldSkipNextSrcChangeReset) {
@@ -766,23 +770,20 @@ export abstract class MediaProviderElement extends LitElement {
     return this._mediaStoreConsumer.value;
   }
 
-  // Fix this later.
-  protected readonly mediaState = new Proxy(
-    () => this._mediaStoreConsumer.value,
-    {
-      get(target, key) {
-        return get(target()[key]);
-      }
+  readonly mediaState = new Proxy(() => this._mediaStoreConsumer.value, {
+    get(target, key) {
+      return get(target()[key]);
+    },
+    has(target, key) {
+      return Reflect.has(target(), key);
+    },
+    ownKeys(target) {
+      return Reflect.ownKeys(target());
+    },
+    getOwnPropertyDescriptor(target, key) {
+      return Reflect.getOwnPropertyDescriptor(target(), key);
     }
-  ) as unknown as MediaContext;
-
-  protected readonly _loggableMediaState = __DEV__
-    ? () =>
-        Object.keys(this._mediaStoreConsumer.value).reduce(
-          (p, k) => ({ ...p, [k]: this.mediaState[k] }),
-          {}
-        )
-    : undefined;
+  }) as unknown as MediaContext;
 
   // -------------------------------------------------------------------------------------------
   // Request Queue

@@ -28,7 +28,7 @@ import { TimeElement } from '../time';
  * @example
  * ```css
  * vds-scrubber-preview-time {
- *   bottom: 56px;
+ *   bottom: 24px;
  * }
  * ```
  */
