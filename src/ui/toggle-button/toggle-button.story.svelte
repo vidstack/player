@@ -54,6 +54,11 @@
 </ControlsAddon>
 
 <style>
+  .pressed,
+  .not-pressed {
+    font-size: 28px;
+  }
+
   vds-toggle-button[pressed] .pressed {
     display: none;
   }

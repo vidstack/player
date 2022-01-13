@@ -35,8 +35,8 @@
       on:vds-enter-fullscreen-request={eventCallback}
       on:vds-exit-fullscreen-request={eventCallback}
     >
-      <span class="enter">ENTER FULLSCREEN</span>
-      <span class="exit">EXIT FULLSCREEN</span>
+      <span class="enter">Enter Fullscreen</span>
+      <span class="exit">Exit Fullscreen</span>
     </vds-fullscreen-button>
   </div>
 </vds-fake-media-player>

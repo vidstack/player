@@ -33,8 +33,8 @@
       on:vds-mute-request={eventCallback}
       on:vds-unmute-request={eventCallback}
     >
-      <span class="muted">MUTED</span>
-      <span class="unmuted">UNMUTED</span>
+      <span class="muted">Mute</span>
+      <span class="unmuted">Unmute</span>
     </vds-mute-button>
   </div>
 </vds-fake-media-player>

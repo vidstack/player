@@ -22,7 +22,7 @@
 
 <vds-fake-media-player emulate-waiting={waiting}>
   <vds-buffering-indicator slot="ui">
-    <div>WAITING</div>
+    <div>Waiting</div>
   </vds-buffering-indicator>
 </vds-fake-media-player>
 
@@ -60,8 +60,7 @@
   vds-buffering-indicator > div {
     font-size: 24px;
     font-weight: bold;
-    color: black;
+    color: white;
     padding: 0 8px;
-    background-color: orange;
   }
 </style>
