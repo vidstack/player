@@ -5,7 +5,11 @@
 </script>
 
 <script>
-  import { ControlsAddon } from '@vitebook/client/addons';
+  import {
+    ControlsAddon,
+    EventsAddon,
+    eventCallback
+  } from '@vitebook/client/addons';
   import { PlayButtonElement } from './PlayButtonElement';
   import { FakeMediaPlayerElement } from '../../media/test-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
@@ -28,7 +32,10 @@
   }}
 >
   <div class="media-ui" slot="ui">
-    <vds-play-button>
+    <vds-play-button
+      on:vds-play-request={eventCallback}
+      on:vds-pause-request={eventCallback}
+    >
       <span class="play">Play</span>
       <span class="pause">Pause</span>
     </vds-play-button>
@@ -46,6 +53,8 @@
     <input type="checkbox" bind:checked={paused} />
   </label>
 </ControlsAddon>
+
+<EventsAddon />
 
 <style global>
   vds-fake-media-player {

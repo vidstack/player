@@ -5,7 +5,11 @@
 </script>
 
 <script>
-  import { ControlsAddon } from '@vitebook/client/addons';
+  import {
+    ControlsAddon,
+    EventsAddon,
+    eventCallback
+  } from '@vitebook/client/addons';
   import { FullscreenButtonElement } from './FullscreenButtonElement';
   import { FakeMediaPlayerElement } from '../../media/test-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
@@ -27,7 +31,10 @@
   }}
 >
   <div class="media-ui" slot="ui">
-    <vds-fullscreen-button>
+    <vds-fullscreen-button
+      on:vds-enter-fullscreen-request={eventCallback}
+      on:vds-exit-fullscreen-request={eventCallback}
+    >
       <span class="enter">ENTER FULLSCREEN</span>
       <span class="exit">EXIT FULLSCREEN</span>
     </vds-fullscreen-button>
@@ -50,6 +57,8 @@
     <input type="checkbox" bind:checked={canRequestFullscreen} />
   </label>
 </ControlsAddon>
+
+<EventsAddon />
 
 <style global>
   vds-fake-media-player {

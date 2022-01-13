@@ -1,3 +1,5 @@
+import { html } from 'lit';
+
 import { vdsEvent } from '../../../base/events';
 import { CanPlay } from '../../CanPlay';
 import { MediaProviderElement } from '../../provider/MediaProviderElement';
@@ -40,6 +42,10 @@ export class FakeMediaProviderElement extends MediaProviderElement {
       // Set false so `_handleMediaReady` return early.
       this.forceMediaReady();
     }
+  }
+
+  override render() {
+    return html`<slot></slot>`;
   }
 
   // -------------------------------------------------------------------------------------------

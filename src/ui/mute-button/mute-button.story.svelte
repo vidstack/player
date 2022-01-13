@@ -5,7 +5,11 @@
 </script>
 
 <script>
-  import { ControlsAddon } from '@vitebook/client/addons';
+  import {
+    ControlsAddon,
+    eventCallback,
+    EventsAddon
+  } from '@vitebook/client/addons';
   import { MuteButtonElement } from './MuteButtonElement';
   import { FakeMediaPlayerElement } from '../../media/test-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
@@ -25,7 +29,10 @@
   }}
 >
   <div class="media-ui" slot="ui">
-    <vds-mute-button>
+    <vds-mute-button
+      on:vds-mute-request={eventCallback}
+      on:vds-unmute-request={eventCallback}
+    >
       <span class="muted">MUTED</span>
       <span class="unmuted">UNMUTED</span>
     </vds-mute-button>
@@ -43,6 +50,8 @@
     <input type="checkbox" bind:checked={muted} />
   </label>
 </ControlsAddon>
+
+<EventsAddon />
 
 <style global>
   vds-fake-media-player {
