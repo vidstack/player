@@ -114,7 +114,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-wc": "^1.2.0",
     "execa": "^6.0.0",
-    "fast-glob": "^3.2.7",
+    "fast-glob": "^3.2.10",
     "fs-extra": "^10.0.0",
     "hls.js": "^0.14.17",
     "husky": "^7.0.0",
