@@ -7,7 +7,7 @@
 <script lang="ts">
   import { eventCallback, EventsAddon } from '@vitebook/client/addons';
 
-  import { LitElement } from 'lit';
+  import { html, LitElement } from 'lit';
   import { safelyDefineCustomElement } from '../../utils/dom';
   import { IntersectionController } from './IntersectionController';
 
@@ -23,6 +23,10 @@
         eventCallback({ type: 'intersection', ...entries });
       }
     );
+
+    override render() {
+      return html`<slot></slot>`;
+    }
   }
 
   safelyDefineCustomElement(
@@ -56,7 +60,9 @@
 <vds-intersection-observer
   on:mousedown={onMouseDown}
   style="left: {left}px; top: {top}px;"
-/>
+>
+  <span class="drag-text">DRAG ME</span>
+</vds-intersection-observer>
 
 <EventsAddon />
 
@@ -67,6 +73,17 @@
     cursor: move;
     width: 300px;
     height: 300px;
-    background-color: red;
+    background-color: orange;
+  }
+
+  .drag-text {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
   }
 </style>

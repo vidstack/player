@@ -7,14 +7,14 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { LogDispatcher } from '../logger';
 
 /**
- * The callback function for a IntersectionController.
+ * The callback function for a `IntersectionController`.
  */
 export type IntersectionValueCallback = (
   ...args: Parameters<IntersectionObserverCallback>
 ) => unknown;
 
 /**
- * The config options for a IntersectionController.
+ * The config options for a `IntersectionController`.
  */
 export type IntersectionControllerConfig = IntersectionObserverInit & {
   /**
@@ -33,8 +33,8 @@ export type IntersectionControllerConfig = IntersectionObserverInit & {
 };
 
 /**
- * `IntersectionController` is a `ReactiveController` that integrates an `IntersectionObserver`
- * with a `ReactiveControllerHost`'s reactive update lifecycle.
+ * `IntersectionController` integrates an `IntersectionObserver` with a host element's reactive
+ * update lifecycle.
  *
  * This is can be used to detect when a target element "intersects" is visible inside of) another
  * element or the viewport by default, where intersect means "visible inside of."
@@ -67,8 +67,8 @@ export class IntersectionController implements ReactiveController {
 
   constructor(
     protected readonly _host: ReactiveControllerHost & EventTarget,
-    config: IntersectionControllerConfig,
-    protected readonly callback: IntersectionValueCallback = () => true,
+    config: IntersectionControllerConfig = {},
+    protected readonly _callback: IntersectionValueCallback = () => true,
     protected readonly _logger = __DEV__ ? new LogDispatcher(_host) : undefined
   ) {
     const { target, skipInitial, ...intersectionObserverInit } = config;
@@ -104,7 +104,7 @@ export class IntersectionController implements ReactiveController {
    * result stored in the `value` property.
    */
   protected handleChanges(entries: IntersectionObserverEntry[]) {
-    this.value = this.callback(entries, this._observer);
+    this.value = this._callback(entries, this._observer);
   }
 
   hostConnected() {
