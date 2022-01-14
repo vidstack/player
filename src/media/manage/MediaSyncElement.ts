@@ -27,7 +27,7 @@ let syncingMediaVolume = false;
  * - Shared media volume (eg: user sets desired volume to 50% on one player, and they expect it to
  * be consistent across all players).
  *
- * - Saving media volume to local storage (eg: user sets derived to volume 50%, they leave
+ * - Saving media volume to local storage (eg: user sets desired to volume 50%, they leave
  * the site, and when they come back they expect it to be 50% without any interaction).
  *
  * @tagname vds-media-sync
