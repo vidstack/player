@@ -105,7 +105,7 @@
     "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
     "enquirer": "^2.3.6",
-    "esbuild": "^0.14.10",
+    "esbuild": "^0.14.11",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-import-resolver-typescript": "^2.5.0",
