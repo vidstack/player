@@ -20,7 +20,17 @@
         // skipInitial: false,
       },
       (entries) => {
-        eventCallback({ type: 'intersection', ...entries });
+        const logKeys = ['intersectionRatio', 'isIntersecting', 'isVisible'];
+
+        const values = logKeys.reduce(
+          (p, k) => ({ ...p, [k]: entries[0][k] }),
+          {}
+        );
+
+        eventCallback(
+          { type: 'intersection', timeStamp: Date.now(), ...values },
+          logKeys
+        );
       }
     );
 
@@ -34,31 +44,31 @@
     IntersectionObserverElement
   );
 
-  let left = 100;
-  let top = 100;
+  let left = 20;
+  let top = 20;
 
   let moving = false;
 
-  function onMouseDown() {
+  function onPointerDown() {
     moving = true;
   }
 
-  function onMouseMove(e) {
+  function onPointerMove(e) {
     if (moving) {
       left += e.movementX;
       top += e.movementY;
     }
   }
 
-  function onMouseUp() {
+  function onPointerUp() {
     moving = false;
   }
 </script>
 
-<svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
+<svelte:window on:pointerup={onPointerUp} on:pointermove={onPointerMove} />
 
 <vds-intersection-observer
-  on:mousedown={onMouseDown}
+  on:pointerdown={onPointerDown}
   style="left: {left}px; top: {top}px;"
 >
   <span class="drag-text">DRAG ME</span>
@@ -69,11 +79,12 @@
 <style>
   vds-intersection-observer {
     position: absolute;
-    user-select: none;
     cursor: move;
     width: 300px;
     height: 300px;
     background-color: orange;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .drag-text {
@@ -85,5 +96,7 @@
     font-size: 24px;
     font-weight: bold;
     color: black;
+    user-select: none;
+    -webkit-user-select: none;
   }
 </style>

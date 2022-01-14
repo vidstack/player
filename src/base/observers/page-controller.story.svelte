@@ -5,38 +5,66 @@
 </script>
 
 <script lang="ts">
-  import { events, EventsAddon } from '@vitebook/client/addons';
+  import { eventCallback, EventsAddon } from '@vitebook/client/addons';
 
-  import { LitElement } from 'lit';
-  import { get } from 'svelte/store';
+  import { html, LitElement } from 'lit';
+  import { state } from 'lit/decorators.js';
   import { safelyDefineCustomElement } from '../../utils/dom';
   import { PageController } from './PageController';
 
   class PageObserverElement extends LitElement {
     protected _timeout;
+    protected _interval;
 
-    override connectedCallback() {
-      super.connectedCallback();
-      this.style.backgroundColor = 'green';
-    }
+    @state() protected _count = 0;
 
     controller = new PageController(this, ({ state, visibility }) => {
-      // TODO: work around below to show event details in events addon - fix in Vitebook later.
-      const event = { type: 'change', state, visibility };
-
-      get(events).unshift({
-        id: Symbol(),
-        ref: event as any,
-        stringify: () => JSON.stringify(event, null, 2)
-      });
-
-      events.set(get(events));
+      eventCallback(
+        { type: 'change', state, visibility, timeStamp: Date.now() },
+        ['state', 'visibility']
+      );
 
       window.clearTimeout(this._timeout);
       this._timeout = setTimeout(() => {
-        this.style.backgroundColor = state === 'hidden' ? 'red' : 'green';
-      }, 300);
+        if (state === 'hidden') {
+          this._stopCount();
+        } else {
+          this._startCount();
+        }
+      }, 500);
     });
+
+    override connectedCallback() {
+      super.connectedCallback();
+      this._startCount();
+    }
+
+    override disconnectedCallback() {
+      super.disconnectedCallback();
+      this._stopCount();
+    }
+
+    protected _startCount() {
+      this.style.backgroundColor = 'green';
+      this._interval = window.setInterval(() => {
+        this._count += 1;
+      }, 1000);
+    }
+
+    protected _stopCount() {
+      this.style.backgroundColor = 'red';
+      window.clearInterval(this._interval);
+    }
+
+    override render() {
+      return html`
+        <div
+          style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;"
+        >
+          <span style="font-size: 24px;">${this._count}</span>
+        </div>
+      `;
+    }
   }
 
   safelyDefineCustomElement('vds-page-observer', PageObserverElement);
