@@ -1,3 +1,9 @@
+# [0.3.0](https://github.com/vidstack/player/compare/v0.2.0...v0.3.0) (2022-01-14)
+
+### Features
+
+- media management ([#558](https://github.com/vidstack/player/issues/558)) ([7d0e2d7](https://github.com/vidstack/player/commit/7d0e2d77c7bb18dc7373d1ce6beb04fbed5407aa))
+
 # [0.2.0](https://github.com/vidstack/player/compare/v0.1.2...v0.2.0) (2022-01-12)
 
 ### Features
