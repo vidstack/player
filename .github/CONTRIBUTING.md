@@ -6,9 +6,9 @@ First off, thank you for taking the time to contribute to Vidstack ❤️
 
 ### TypeScript
 
-It's important to note early on that this project is written with [TypeScript][typescript]. If
-you're unfamiliar with it or any strongly typed languages such as Java then this may be a slight
-roadblock. However, there's never a truly perfect time to start learning it, so ... why not today!
+This project is written with [TypeScript](https://www.typescriptlang.org/).
+
+If you're unfamiliar with Typescript or languages such as Java, then this might be a slight roadblock for you. Having said that, if you're keen to start learning, then why not start today!
 
 ### LitElement
 
@@ -23,11 +23,11 @@ Let's setup our machine. The only software you'll need to install is:
 - [node](https://nodejs.org/en/download)
 - [git](https://git-scm.com/downloads)
 
-They're very easy to install, just follow the links and you should be up and running in no time.
+They're very easy to install. Simply follow the links, and you should be up and running in no time.
 
 ### Project Setup
 
-**Working on your first Pull Request?** You can learn how from this free series
+**Working on your first Pull Request?** Check out
 [How to Contribute to an Open Source Project on GitHub][pr-beginner-series].
 
 Head over to the [repository][vds-player] on GitHub and click the Fork button in the top
@@ -43,7 +43,7 @@ $: cd vds-player
 $: git checkout -b issue-{issue-no}
 ```
 
-Now it'll help if we keep our `main` branch pointing at the original repository and make
+It'll help if we keep our `main` branch pointing at the original repository and make
 pull requests from the forked branch.
 
 ```bash
@@ -64,15 +64,15 @@ $: git pull
 
 ### Unit
 
-For unit tests you can simply create a `*.test.ts` file next to the file you are testing and
+For unit tests, you can simply create a `*.test.ts` file next to the file you are testing, and
 run `npm run test` or `npm run test:watch` in the terminal. This project uses
 [Web Test Runner][web-test-runner] for writing/running unit tests. To learn more about
-writing unit tests follow the link to the Web Test Runner site, and see other tests in the project.
+writing unit tests, follow the link to the Web Test Runner site, and see other tests in the project.
 
 ## ✍️ Commit
 
 This project uses [semantic commit messages][semantic-commit-style] to automate package releases.
-Simply refer to the link, and also see existing commits to get an idea of how to write your message.
+Simply refer to the link, and check out existing commits to get an idea of how to write your message.
 
 ```bash
 # Add all changes to staging to be committed.
@@ -87,10 +87,10 @@ $: git push
 
 ## 🎉 Pull Request
 
-When you're all done head over to the [repository][vds-player], and click the big green
-`Compare & Pull Request` button that should appear after you've pushed changes to your fork.
+When you're all done, head over to the [repository][vds-player] and click the big green
+`Compare & Pull Request` button. This will appear after you've pushed changes to your fork.
 
-Don't expect your PR to be accepted immediately or even accepted at all. Give the community time to
+Don't expect your PR to be accepted immediately, or accepted at all. Give the community time to
 vet it and see if it should be merged. Please don't be disheartened if it's not accepted. Your
 contribution is appreciated more then you can imagine, and even a failed PR can teach us a lot ❤️
 
