@@ -2,6 +2,7 @@ export * from './CanPlay';
 export * from './controller';
 export * from './events';
 export * from './interact';
+export * from './manage';
 export * from './MediaContext';
 export * from './mediaStore';
 export * from './MediaType';

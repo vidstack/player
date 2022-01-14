@@ -266,10 +266,14 @@ export abstract class MediaProviderElement extends LitElement {
 
   set paused(shouldPause) {
     this.mediaRequestQueue.queue('paused', () => {
-      if (!shouldPause) {
-        this.play();
-      } else {
-        this.pause();
+      try {
+        if (!shouldPause) {
+          this.play();
+        } else {
+          this.pause();
+        }
+      } catch (e) {
+        this._logger?.error('paused-change-fail', e);
       }
 
       this.requestUpdate('paused');

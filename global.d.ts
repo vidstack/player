@@ -4,6 +4,8 @@ declare global {
   type FullscreenEvents = import('./types').FullscreenEvents;
   type HlsEvents = import('./types').HlsEvents;
   type MediaEvents = import('./types').MediaEvents;
+  type MediaVisibilityEvents = import('./types').MediaVisibilityEvents;
+  type MediaSyncEvents = import('./types').MediaSyncEvents;
   type MediaRequestEvents = import('./types').MediaRequestEvents;
   type ScreenOrientationEvents = import('./types').ScreenOrientationEvents;
   type ScrubberPreviewEvents = import('./types').ScrubberPreviewEvents;
@@ -16,6 +18,8 @@ declare global {
       HlsEvents,
       MediaEvents,
       MediaRequestEvents,
+      MediaVisibilityEvents,
+      MediaSyncEvents,
       ScreenOrientationEvents,
       ScrubberPreviewEvents,
       SliderEvents,

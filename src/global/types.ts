@@ -11,7 +11,9 @@ import type {
   MediaEvents,
   MediaPlayerConnectEvent,
   MediaProviderConnectEvent,
-  MediaRequestEvents
+  MediaRequestEvents,
+  MediaSyncEvents,
+  MediaVisibilityEvents
 } from '../media';
 import type { HlsEvents } from '../providers/hls';
 import type { VideoPresentationEvents } from '../providers/video';
@@ -27,6 +29,8 @@ declare global {
       HlsEvents,
       MediaEvents,
       MediaRequestEvents,
+      MediaVisibilityEvents,
+      MediaSyncEvents,
       ScreenOrientationEvents,
       ScrubberPreviewEvents,
       SliderEvents,
