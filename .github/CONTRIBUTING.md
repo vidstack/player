@@ -8,8 +8,9 @@ First off, thank you for taking the time to contribute to Vidstack ❤️
 
 This project is written with [TypeScript](https://www.typescriptlang.org/).
 
-If you're unfamiliar with Typescript or languages such as Java, then this might be a slight roadblock for you.
-Having said that, if you're keen to start learning, then why not start today!
+If you're unfamiliar with Typescript or languages such as Java, then this might be a slight
+roadblock for you. Having said that, if you're keen to start learning, then why not start
+today!
 
 ### LitElement
 
@@ -24,7 +25,8 @@ Let's setup our machine. The only software you'll need to install is:
 - [node](https://nodejs.org/en/download)
 - [git](https://git-scm.com/downloads)
 
-They're very easy to install. Simply follow the links, and you should be up and running in no time.
+They're very easy to install. Simply follow the links, and you should be up and running in
+no time.
 
 ### Project Setup
 
