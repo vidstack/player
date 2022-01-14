@@ -13,6 +13,13 @@
   import { PageController } from './PageController';
 
   class PageObserverElement extends LitElement {
+    protected _timeout;
+
+    override connectedCallback() {
+      super.connectedCallback();
+      this.style.backgroundColor = 'green';
+    }
+
     controller = new PageController(this, ({ state, visibility }) => {
       // TODO: work around below to show event details in events addon - fix in Vitebook later.
       const event = { type: 'change', state, visibility };
@@ -24,6 +31,11 @@
       });
 
       events.set(get(events));
+
+      window.clearTimeout(this._timeout);
+      this._timeout = setTimeout(() => {
+        this.style.backgroundColor = state === 'hidden' ? 'red' : 'green';
+      }, 300);
     });
   }
 
@@ -38,6 +50,5 @@
   vds-page-observer {
     width: 300px;
     height: 300px;
-    background-color: orange;
   }
 </style>
