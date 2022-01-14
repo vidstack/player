@@ -10,6 +10,7 @@ export * from './base/elements';
 export * from './base/events';
 export * from './base/fullscreen';
 export * from './base/logger';
+export * from './base/observers';
 export * from './base/queue';
 export * from './base/screen-orientation';
 export * from './base/stores';
