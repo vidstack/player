@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=14.16.0"
+    "node": ">=16.0.0"
   },
   "main": "dist-prod/index.js",
   "module": "dist-prod/index.js",
@@ -180,6 +180,6 @@
     "youtube"
   ],
   "volta": {
-    "node": "14.18.2"
+    "node": "16.13.2"
   }
 }
