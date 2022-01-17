@@ -14,6 +14,7 @@ test('it should define all vds elements', () => {
     'vds-hls',
     'vds-media-controller',
     'vds-media-ui',
+    'vds-media-sync',
     'vds-mute-button',
     'vds-play-button',
     'vds-scrim',

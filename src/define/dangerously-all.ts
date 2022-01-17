@@ -11,6 +11,7 @@ import './vds-hls-player';
 import './vds-hls';
 import './vds-media-controller';
 import './vds-media-ui';
+import './vds-media-sync';
 import './vds-mute-button';
 import './vds-play-button';
 import './vds-scrim';
