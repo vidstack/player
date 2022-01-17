@@ -27,6 +27,8 @@ export const toggleButtonElementStyles = css`
    */
 
   button {
+    width: 100%;
+    height: 100%;
     font-family: inherit;
     font-size: 100%;
     line-height: 1.15;
