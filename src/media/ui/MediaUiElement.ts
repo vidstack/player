@@ -21,7 +21,17 @@ import { mediaUiElementStyles } from './styles';
  * (*cough* iOS). This is simply to avoid double controls (native + custom). The `hidden` attribute
  * will be applied to prevent it from happenning.
  *
- * 💡 The styling is left to you, it will only apply the `media-can-play` attribute.
+ * 💡 The following attributes are updated for your styling needs:
+ *
+ * - `media-idle`: Applied when there is no user activity for a set period of time.
+ * - `media-can-play`: Applied when media can begin playback.
+ * - `media-paused`: Applied when media is paused.
+ * - `media-view-type`: Applied with the media view type such as `audio` or `video`.
+ * - `media-autoplay-error`: Applied when media autoplay fails. It can be used to show recovery UI
+ * if controls are hidden.
+ * - `media-fullscreen`: Applied when media has entered fullscreen mode.
+ * - `media-playsinline`: Applied when media is to be played "inline", that is within the element's
+ * playback area
  *
  * @tagname vds-media-ui
  * @slot Used to pass in UI components.
@@ -34,12 +44,13 @@ import { mediaUiElementStyles } from './styles';
  * @example
  * ```css
  * vds-media-ui {
- *   opacity: 0;
+ *   opacity: 1;
  *   transition: opacity 0.15s ease-out;
  * }
  *
- * vds-media-ui[media-can-play] {
- *   opacity: 1;
+ * vds-media-ui[idle],
+ * vds-media-ui:not([media-can-play]) {
+ *   opacity: 0;
  * }
  * ```
  */
@@ -63,12 +74,24 @@ export class MediaUiElement extends LitElement {
     });
     hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
       this._mediaFullscreen = $fullscreen;
+      setAttribute(this, 'media-fullscreen', $fullscreen);
     });
     hostedMediaStoreSubscription(this, 'viewType', ($viewType) => {
       this._mediaIsVideoView = $viewType === ViewType.Video;
+      setAttribute(this, 'media-view-type', $viewType);
+    });
+    hostedMediaStoreSubscription(this, 'idle', ($idle) => {
+      setAttribute(this, 'media-idle', $idle);
+    });
+    hostedMediaStoreSubscription(this, 'paused', ($paused) => {
+      setAttribute(this, 'media-paused', $paused);
     });
     hostedMediaStoreSubscription(this, 'playsinline', ($playsinline) => {
       this._mediaPlaysinline = $playsinline;
+      setAttribute(this, 'media-playsinline', $playsinline);
+    });
+    hostedMediaStoreSubscription(this, 'autoplayError', ($autoplayError) => {
+      setAttribute(this, 'media-autoplay-error', !!$autoplayError);
     });
   }
 
@@ -89,9 +112,6 @@ export class MediaUiElement extends LitElement {
     return html`<slot></slot>`;
   }
 
-  /**
-   * Whether the UI should be hidden.
-   */
   protected _isUiHidden(): boolean {
     return (
       IS_IOS &&

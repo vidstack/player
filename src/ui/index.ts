@@ -1,6 +1,5 @@
 export * from './aspect-ratio';
 export * from './buffering-indicator';
-export * from './controls';
 export * from './fullscreen-button';
 export * from './mute-button';
 export * from './play-button';

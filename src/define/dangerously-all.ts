@@ -3,7 +3,6 @@ import './vds-aspect-ratio';
 import './vds-audio-player';
 import './vds-audio';
 import './vds-buffering-indicator';
-import './vds-controls';
 import './vds-fake-media-player';
 import './vds-fake-media-provider';
 import './vds-fullscreen-button';

@@ -20,10 +20,10 @@ async function buildFixture() {
 test('light DOM snapshot', async function () {
   const { ui } = await buildFixture();
   expect(ui).dom.to.equal(`
-      <vds-media-ui>
-        <div></div>
-      </vds-media-ui>
-    `);
+    <vds-media-ui media-paused media-view-type="unknown">
+      <div></div>
+    </vds-media-ui>
+  `);
 });
 
 test('shadow DOM snapshot', async function () {

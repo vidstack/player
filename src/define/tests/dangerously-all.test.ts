@@ -6,7 +6,6 @@ test('it should define all vds elements', () => {
     'vds-audio-player',
     'vds-audio',
     'vds-buffering-indicator',
-    'vds-controls',
     'vds-fake-media-player',
     'vds-fake-media-provider',
     'vds-fullscreen-button',
