@@ -748,6 +748,10 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected readonly _mediaController = new MediaController(this);
 
+  /**
+   * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
+   * and `debug`.
+   */
   @property({ attribute: 'log-level' })
   get logLevel() {
     return this._mediaController.logLevel;
@@ -757,6 +761,21 @@ export abstract class MediaProviderElement extends LitElement {
     if (__DEV__) {
       this._mediaController.logLevel = level;
     }
+  }
+
+  /**
+   * The amount of delay in milliseconds while media playback is progressing without user
+   * activity to indicate an idle state.
+   *
+   * @default 2500
+   */
+  @property({ attribute: 'idle-delay', type: Number })
+  get idleDelay() {
+    return this._mediaController.idleDelay;
+  }
+
+  set idleDelay(delay) {
+    this._mediaController.idleDelay = delay;
   }
 
   // -------------------------------------------------------------------------------------------

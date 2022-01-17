@@ -14,6 +14,7 @@ import {
 } from '../mediaStore';
 import { MediaProviderElement } from '../provider/MediaProviderElement';
 import { PendingMediaRequests } from '../request.events';
+import { MediaIdleController } from './MediaIdleController';
 
 export type MediaControllerHost = ReactiveElement & {
   exitFullscreen?(): Promise<void>;
@@ -124,9 +125,34 @@ export class MediaController {
   }
 
   /** @internal */
-  protected get _writableMediaStore(): WritableMediaStoreRecord {
+  get _mediaStore(): WritableMediaStoreRecord {
     return this._mediaStoreProvider.value;
   }
+
+  // -------------------------------------------------------------------------------------------
+  // Media Idle Controller
+  // -------------------------------------------------------------------------------------------
+
+  protected _mediaIdleController = new MediaIdleController(
+    this._host,
+    this._mediaStore
+  );
+
+  get idleDelay() {
+    return this._mediaIdleController.delay;
+  }
+
+  set idleDelay(delay) {
+    this._mediaIdleController.delay = delay;
+  }
+
+  protected _handleIdleChange = hostedEventListener(
+    this._host,
+    'vds-idle-change',
+    (event) => {
+      this._mediaStore.idle.set(event.detail);
+    }
+  );
 
   // -------------------------------------------------------------------------------------------
   // Media Request Events
@@ -314,7 +340,7 @@ export class MediaController {
     this._host,
     'vds-fullscreen-change',
     (event) => {
-      this._writableMediaStore.fullscreen.set(event.detail);
+      this._mediaStore.fullscreen.set(event.detail);
       this.satisfyMediaRequest('fullscreen', event);
     }
   );
@@ -323,7 +349,7 @@ export class MediaController {
     this._host,
     'vds-fullscreen-error',
     (event) => {
-      this._writableMediaStore.error.set(event.detail);
+      this._mediaStore.error.set(event.detail);
       this.satisfyMediaRequest('fullscreen', event);
     }
   );
@@ -336,10 +362,10 @@ export class MediaController {
     this._host,
     'vds-load-start',
     (event) => {
-      this._writableMediaStore.currentSrc.set(event.detail.src);
-      this._writableMediaStore.currentPoster.set(event.detail.poster);
-      this._writableMediaStore.mediaType.set(event.detail.mediaType);
-      this._writableMediaStore.viewType.set(event.detail.viewType);
+      this._mediaStore.currentSrc.set(event.detail.src);
+      this._mediaStore.currentPoster.set(event.detail.poster);
+      this._mediaStore.mediaType.set(event.detail.mediaType);
+      this._mediaStore.viewType.set(event.detail.viewType);
     }
   );
 
@@ -347,7 +373,7 @@ export class MediaController {
     this._host,
     'vds-autoplay',
     () => {
-      this._writableMediaStore.autoplayError.set(undefined);
+      this._mediaStore.autoplayError.set(undefined);
     }
   );
 
@@ -355,7 +381,7 @@ export class MediaController {
     this._host,
     'vds-autoplay-fail',
     (event) => {
-      this._writableMediaStore.autoplayError.set(event.detail);
+      this._mediaStore.autoplayError.set(event.detail);
     }
   );
 
@@ -363,8 +389,8 @@ export class MediaController {
     this._host,
     'vds-can-play',
     (event) => {
-      this._writableMediaStore.canPlay.set(true);
-      this._writableMediaStore.duration.set(event.detail.duration);
+      this._mediaStore.canPlay.set(true);
+      this._mediaStore.duration.set(event.detail.duration);
     }
   );
 
@@ -372,7 +398,7 @@ export class MediaController {
     this._host,
     'vds-play',
     (event) => {
-      this._writableMediaStore.paused.set(false);
+      this._mediaStore.paused.set(false);
       this.satisfyMediaRequest('play', event);
     }
   );
@@ -381,10 +407,10 @@ export class MediaController {
     this._host,
     'vds-play-fail',
     (event) => {
-      this._writableMediaStore.paused.set(true);
-      this._writableMediaStore.playing.set(false);
-      this._writableMediaStore.waiting.set(false);
-      this._writableMediaStore.error.set(event.error);
+      this._mediaStore.paused.set(true);
+      this._mediaStore.playing.set(false);
+      this._mediaStore.waiting.set(false);
+      this._mediaStore.error.set(event.error);
       this.satisfyMediaRequest('play', event);
     }
   );
@@ -395,18 +421,18 @@ export class MediaController {
     (event) => {
       this._fireWaiting.cancel();
 
-      this._writableMediaStore.paused.set(false);
-      this._writableMediaStore.playing.set(true);
-      this._writableMediaStore.waiting.set(false);
-      this._writableMediaStore.seeking.set(false);
+      this._mediaStore.paused.set(false);
+      this._mediaStore.playing.set(true);
+      this._mediaStore.waiting.set(false);
+      this._mediaStore.seeking.set(false);
 
-      if (!get(this._writableMediaStore.started)) {
-        this._writableMediaStore.started.set(true);
+      if (!get(this._mediaStore.started)) {
+        this._mediaStore.started.set(true);
       }
 
       if (this._isSeekingRequestPending) {
         event.stopImmediatePropagation();
-        this._writableMediaStore.seeking.set(true);
+        this._mediaStore.seeking.set(true);
       }
     }
   );
@@ -415,10 +441,10 @@ export class MediaController {
     this._host,
     'vds-pause',
     (event) => {
-      this._writableMediaStore.paused.set(true);
-      this._writableMediaStore.playing.set(false);
-      this._writableMediaStore.seeking.set(false);
-      this._writableMediaStore.waiting.set(false);
+      this._mediaStore.paused.set(true);
+      this._mediaStore.playing.set(false);
+      this._mediaStore.seeking.set(false);
+      this._mediaStore.waiting.set(false);
       this.satisfyMediaRequest('pause', event);
       this._fireWaiting.cancel();
     }
@@ -428,8 +454,8 @@ export class MediaController {
     this._host,
     'vds-time-update',
     (event) => {
-      this._writableMediaStore.currentTime.set(event.detail);
-      this._writableMediaStore.waiting.set(false);
+      this._mediaStore.currentTime.set(event.detail);
+      this._mediaStore.waiting.set(false);
     }
   );
 
@@ -437,8 +463,8 @@ export class MediaController {
     this._host,
     'vds-volume-change',
     (event) => {
-      this._writableMediaStore.volume.set(event.detail.volume);
-      this._writableMediaStore.muted.set(event.detail.muted);
+      this._mediaStore.volume.set(event.detail.volume);
+      this._mediaStore.muted.set(event.detail.muted);
       this.satisfyMediaRequest('volume', event);
     }
   );
@@ -455,8 +481,8 @@ export class MediaController {
     this._host,
     'vds-seeking',
     (event) => {
-      this._writableMediaStore.seeking.set(true);
-      this._writableMediaStore.currentTime.set(event.detail);
+      this._mediaStore.seeking.set(true);
+      this._mediaStore.currentTime.set(event.detail);
       this.satisfyMediaRequest('seeking', event);
       if (this._lastWaitingEvent) this._fireWaiting();
     }
@@ -468,12 +494,12 @@ export class MediaController {
     (event) => {
       // We don't want `seeked` events firing while seeking is updating media playback position.
       if (this._isSeekingRequestPending) {
-        this._writableMediaStore.seeking.set(true);
+        this._mediaStore.seeking.set(true);
         event.stopImmediatePropagation();
       } else if (event.type === 'vds-seeked') {
         this._fireWaiting.cancel();
-        this._writableMediaStore.seeking.set(false);
-        this._writableMediaStore.currentTime.set(event.detail);
+        this._mediaStore.seeking.set(false);
+        this._mediaStore.currentTime.set(event.detail);
         this.satisfyMediaRequest('seeked', event);
       }
     }
@@ -496,7 +522,7 @@ export class MediaController {
       originalEvent: this._lastWaitingEvent
     });
 
-    this._writableMediaStore.waiting.set(true);
+    this._mediaStore.waiting.set(true);
     this._host.dispatchEvent(event);
     this._firingWaiting = false;
     this._lastWaitingEvent = undefined;
@@ -508,7 +534,7 @@ export class MediaController {
     (event) => {
       if (this._firingWaiting) return;
       event.preventDefault();
-      this._writableMediaStore.waiting.set(false);
+      this._mediaStore.waiting.set(false);
       this._lastWaitingEvent = event;
       this._fireWaiting();
     }
@@ -518,11 +544,11 @@ export class MediaController {
     this._host,
     'vds-ended',
     (event) => {
-      this._writableMediaStore.paused.set(true);
-      this._writableMediaStore.playing.set(false);
-      this._writableMediaStore.seeking.set(false);
-      this._writableMediaStore.waiting.set(false);
-      this._writableMediaStore.ended.set(true);
+      this._mediaStore.paused.set(true);
+      this._mediaStore.playing.set(false);
+      this._mediaStore.seeking.set(false);
+      this._mediaStore.waiting.set(false);
+      this._mediaStore.ended.set(true);
     }
   );
 
@@ -530,7 +556,7 @@ export class MediaController {
     this._host,
     'vds-autoplay-change',
     (event) => {
-      this._writableMediaStore.autoplay.set(event.detail);
+      this._mediaStore.autoplay.set(event.detail);
     }
   );
 
@@ -538,7 +564,7 @@ export class MediaController {
     this._host,
     'vds-error',
     (event) => {
-      this._writableMediaStore.error.set(event.detail);
+      this._mediaStore.error.set(event.detail);
     }
   );
 
@@ -546,7 +572,7 @@ export class MediaController {
     this._host,
     'vds-fullscreen-support-change',
     (event) => {
-      this._writableMediaStore.canRequestFullscreen.set(event.detail);
+      this._mediaStore.canRequestFullscreen.set(event.detail);
     }
   );
 
@@ -554,7 +580,7 @@ export class MediaController {
     this._host,
     'vds-poster-change',
     (event) => {
-      this._writableMediaStore.currentPoster.set(event.detail);
+      this._mediaStore.currentPoster.set(event.detail);
     }
   );
 
@@ -562,7 +588,7 @@ export class MediaController {
     this._host,
     'vds-loop-change',
     (event) => {
-      this._writableMediaStore.loop.set(event.detail);
+      this._mediaStore.loop.set(event.detail);
     }
   );
 
@@ -570,7 +596,7 @@ export class MediaController {
     this._host,
     'vds-playsinline-change',
     (event) => {
-      this._writableMediaStore.playsinline.set(event.detail);
+      this._mediaStore.playsinline.set(event.detail);
     }
   );
 
@@ -578,7 +604,7 @@ export class MediaController {
     this._host,
     'vds-controls-change',
     (event) => {
-      this._writableMediaStore.controls.set(event.detail);
+      this._mediaStore.controls.set(event.detail);
     }
   );
 
@@ -586,7 +612,7 @@ export class MediaController {
     this._host,
     'vds-media-type-change',
     (event) => {
-      this._writableMediaStore.mediaType.set(event.detail);
+      this._mediaStore.mediaType.set(event.detail);
     }
   );
 
@@ -594,7 +620,7 @@ export class MediaController {
     this._host,
     'vds-duration-change',
     (event) => {
-      this._writableMediaStore.duration.set(event.detail);
+      this._mediaStore.duration.set(event.detail);
     }
   );
 
@@ -607,10 +633,10 @@ export class MediaController {
         buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
       const seekableAmount =
         seekable.length === 0 ? 0 : seekable.end(seekable.length - 1);
-      this._writableMediaStore.buffered.set(buffered);
-      this._writableMediaStore.bufferedAmount.set(bufferedAmount);
-      this._writableMediaStore.seekable.set(seekable);
-      this._writableMediaStore.seekableAmount.set(seekableAmount);
+      this._mediaStore.buffered.set(buffered);
+      this._mediaStore.bufferedAmount.set(bufferedAmount);
+      this._mediaStore.seekable.set(seekable);
+      this._mediaStore.seekableAmount.set(seekableAmount);
     }
   );
 
@@ -618,7 +644,7 @@ export class MediaController {
     this._host,
     'vds-src-change',
     (event) => {
-      this._writableMediaStore.currentSrc.set(event.detail);
+      this._mediaStore.currentSrc.set(event.detail);
 
       const dontReset = new Set<keyof WritableMediaStoreRecord>([
         'currentSrc',
@@ -632,7 +658,7 @@ export class MediaController {
         'volume'
       ]);
 
-      const store = this._writableMediaStore;
+      const store = this._mediaStore;
       keysOf(store).forEach((prop) => {
         if (!dontReset.has(prop)) {
           (store[prop] as WritableStore<unknown>).set(store[prop].initialValue);

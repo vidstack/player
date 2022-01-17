@@ -32,6 +32,7 @@ export type MediaEvents = {
   'vds-fullscreen-change': FullscreenChangeEvent;
   'vds-fullscreen-error': FullscreenErrorEvent;
   'vds-fullscreen-support-change': FullscreenSupportChange;
+  'vds-idle-change': IdleChangeEvent;
   'vds-load-start': LoadStartEvent;
   'vds-loaded-data': LoadedDataEvent;
   'vds-loaded-metadata': LoadedMetadataEvent;
@@ -157,6 +158,15 @@ export type EndedEvent = VdsEvent<void>;
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
  */
 export type ErrorEvent = VdsEvent<unknown>;
+
+/**
+ * Fired when the media idle state changes. Media is idle when playback is progressing (playing),
+ * and there is no user activity for a set period of time (default is 2.5s). The event
+ * detail contains whether media is idle (`true`), or not (`false`).
+ *
+ * @event
+ */
+export type IdleChangeEvent = VdsEvent<boolean>;
 
 /**
  * Fired when the frame at the current playback position of the media has finished loading; often

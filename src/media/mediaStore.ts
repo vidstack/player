@@ -36,6 +36,7 @@ export function createMediaStore(): WritableMediaStoreRecord {
     ended: writable(false),
     error: writable(undefined),
     fullscreen: writable(false),
+    idle: writable(false),
     loop: writable(false),
     mediaType: writable(MediaType.Unknown),
     muted: writable(false),
