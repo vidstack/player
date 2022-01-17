@@ -1,7 +1,7 @@
 import type { ReactiveControllerHost } from 'lit';
 
 import { DisposalBin, listen } from '../../base/events';
-import { MediaEvents } from '../events';
+import type { MediaControllerEvents } from '../controller';
 
 /**
  * Simplifies attaching event listeners to a media controller below in the DOM.
@@ -20,10 +20,12 @@ import { MediaEvents } from '../events';
  * }
  * ```
  */
-export function hostedMediaEventListener<MediaEvent extends keyof MediaEvents>(
+export function hostedMediaEventListener<
+  MediaEvent extends keyof MediaControllerEvents
+>(
   host: ReactiveControllerHost & EventTarget,
   eventType: MediaEvent,
-  listener: (event: MediaEvents[MediaEvent]) => void
+  listener: (event: MediaControllerEvents[MediaEvent]) => void
 ) {
   const disposal = new DisposalBin();
 
