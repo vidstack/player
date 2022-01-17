@@ -44,31 +44,15 @@ Vidstack Player is [MIT licensed](./LICENSE).
 
 ## ❤️ Sponsors
 
-A huge thanks to our sponsors who support open-source projects like Vidstack Player.
+- [Cypress](https://www.cypress.io)
+- [Mux](https://mux.com)
+- [Vercel](https://vercel.com)
 
-<a href="https://mux.com">
-  <img
-    width="100%"
-    alt="mux"
-    src="./assets/images/sponsors/mux.png"
-  />
-</a>
-
-<a href="https://vercel.com">
-  <img
-    width="100%"
-    alt="vercel"
-    src="./assets/images/sponsors/vercel.png"
-  />
-</a>
-
-<a href="https://www.cypress.io">
-  <img
-    width="100%"
-    alt="cypress"
-    src="./assets/images/sponsors/cypress.png"
-  />
-</a>
+![Cypress](./assets/cypress-light.png#gh-dark-mode-only)
+![Cypress](./assets/cypress-dark.png#gh-light-mode-only)
+![Mux](./assets/mux.png)
+![Vercel](./assets/vercel-light.png#gh-dark-mode-only)
+![Vercel](./assets/vercel-dark.png#gh-light-mode-only)
 
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr
