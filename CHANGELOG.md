@@ -1,3 +1,19 @@
+# [0.4.0](https://github.com/vidstack/player/compare/v0.3.0...v0.4.0) (2022-01-17)
+
+### Bug Fixes
+
+- `button` should match dimensions of host `vds-toggle-button` element ([9e2610f](https://github.com/vidstack/player/commit/9e2610fc9a8208604cd127a0e0d5208da627e984))
+- reduce bundle size by not re-exporting unnecessary styles ([f26163c](https://github.com/vidstack/player/commit/f26163c8c5411d9f2a8fd1b3478542407a1c4422))
+- simplify styling `vds-media-ui` when media is ready ([9f42cf7](https://github.com/vidstack/player/commit/9f42cf7dc8d03a9ebf71dd6bf9d022926e5e749a))
+
+### Features
+
+- `MediaIdleController` ([090ab2a](https://github.com/vidstack/player/commit/090ab2a6e7b04b9b8b65de9c46396acb1cbb0272))
+- add `vds-media-sync` to all definitions ([095afa2](https://github.com/vidstack/player/commit/095afa227470d990e7b7f1d5f9f5c6ed9db2abef))
+- add `vds-media-visibility` to all definitions ([5d2e009](https://github.com/vidstack/player/commit/5d2e00954291430ebf433b7303ce7bb07f271760))
+- add media styling attrs to `ControlsElement` ([baa2dc4](https://github.com/vidstack/player/commit/baa2dc4b59ddd21e6bc0c6b9997b794cbc461681))
+- allow media request events to be listened on `hostedMediaEventListener` ([c9430d0](https://github.com/vidstack/player/commit/c9430d0c4984d1806b98ec6cc802087533374336))
+
 # [0.3.0](https://github.com/vidstack/player/compare/v0.2.0...v0.3.0) (2022-01-14)
 
 ### Features
