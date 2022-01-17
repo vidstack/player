@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/player",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Headless web components that make integrating media on the a web a breeze.",
   "license": "MIT",
   "type": "module",
@@ -135,7 +135,7 @@
     "tslib": "^2.3.0",
     "typescript": "^4.5.4",
     "vite": "2.7.10",
-    "vitest": "0.0.135"
+    "vitest": "0.1.18"
   },
   "prettier": {
     "singleQuote": true,
