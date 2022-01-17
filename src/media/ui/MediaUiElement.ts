@@ -14,12 +14,14 @@ import { ViewType } from '../ViewType';
 import { mediaUiElementStyles } from './styles';
 
 /**
- * This is a general container to hold your UI components but it also enables you to show/hide
- * the player UI when media is not ready for playback by applying styles when the `hidden`
- * attribute is present. It also handles showing/hiding UI depending on whether native UI can't be
- * hidden (*cough* iOS).
+ * This is a general container to hold your UI components, and enables you to show/hide
+ * the player UI when media is ready for playback by applying the `media-can-play` attribute.
  *
- * 💡 The styling is left to you, it will only apply the `hidden` attribute.
+ * This element also handles hiding the UI depending on whether native UI can't be hidden
+ * (*cough* iOS). This is simply to avoid double controls (native + custom). The `hidden` attribute
+ * will be applied to prevent it from happenning.
+ *
+ * 💡 The styling is left to you, it will only apply the `media-can-play` attribute.
  *
  * @tagname vds-media-ui
  * @slot Used to pass in UI components.
@@ -32,13 +34,12 @@ import { mediaUiElementStyles } from './styles';
  * @example
  * ```css
  * vds-media-ui {
- *   opacity: 1;
- *   transition: opacity 0.3s ease-out;
+ *   opacity: 0;
+ *   transition: opacity 0.15s ease-out;
  * }
  *
- * vds-media-ui[hidden] {
- *   display: block;
- *   opacity: 0;
+ * vds-media-ui[media-can-play] {
+ *   opacity: 1;
  * }
  * ```
  */
@@ -51,7 +52,6 @@ export class MediaUiElement extends LitElement {
     return [];
   }
 
-  @state() protected _mediaCanPlay = false;
   @state() protected _mediaFullscreen = false;
   @state() protected _mediaIsVideoView = false;
   @state() protected _mediaPlaysinline = false;
@@ -59,7 +59,7 @@ export class MediaUiElement extends LitElement {
   constructor() {
     super();
     hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
-      this._mediaCanPlay = $canPlay;
+      setAttribute(this, 'media-can-play', $canPlay);
     });
     hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
       this._mediaFullscreen = $fullscreen;
@@ -94,13 +94,9 @@ export class MediaUiElement extends LitElement {
    */
   protected _isUiHidden(): boolean {
     return (
-      !this._mediaCanPlay ||
-      // If iOS Safari and the view type is currently video then we hide the custom UI depending
-      // on whether playsinline is set and fullscreen is not active, or if fullscreen is active
-      // we should always hide.
-      (IS_IOS &&
-        this._mediaIsVideoView &&
-        (!this._mediaPlaysinline || this._mediaFullscreen))
+      IS_IOS &&
+      this._mediaIsVideoView &&
+      (!this._mediaPlaysinline || this._mediaFullscreen)
     );
   }
 }
