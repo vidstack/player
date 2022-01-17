@@ -1,3 +1,9 @@
+## [0.4.1](https://github.com/vidstack/player/compare/v0.4.0...v0.4.1) (2022-01-17)
+
+### Bug Fixes
+
+- simplify ui container by merging `ControlsElement` into `MediaUiElement` ([7fad866](https://github.com/vidstack/player/commit/7fad866fa734d299dd0b4bda8c8d5bbda36cd533))
+
 # [0.4.0](https://github.com/vidstack/player/compare/v0.3.0...v0.4.0) (2022-01-17)
 
 ### Bug Fixes
