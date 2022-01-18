@@ -267,8 +267,8 @@ export class ScrubberElement extends WithFocus(LitElement) {
           TimeSliderElement.parts,
           'time-slider'
         )}
-        label=${ifNonEmpty(this.label)}
-        orientation=${this.orientation}
+        aria-label=${ifNonEmpty(this.label)}
+        aria-orientation=${this.orientation}
         part="time-slider"
         step=${this.step}
         keyboard-step=${this.keyboardStep}
@@ -343,7 +343,7 @@ export class ScrubberElement extends WithFocus(LitElement) {
           SeekableProgressBarElement.parts,
           'progress-bar'
         )}
-        label=${this.progressLabel}
+        aria-label=${this.progressLabel}
         value-text=${this.progressValueText}
         ${ref(this._progressBarRef)}
       >

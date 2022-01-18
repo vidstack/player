@@ -1,10 +1,17 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import {
+  CSSResultGroup,
+  html,
+  LitElement,
+  PropertyValues,
+  TemplateResult
+} from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { logElementLifecycle } from '../../base/logger';
 import { hostedMediaStoreSubscription } from '../../media';
+import { setAttributeIfEmpty } from '../../utils/dom';
 import { formatSpokenTime } from '../../utils/time';
 import { seekableProgressBarElementStyles } from './styles';
 
@@ -50,9 +57,11 @@ export class SeekableProgressBarElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   /**
-   * ♿ **ARIA:** The `aria-label` for the progress bar.
+   * ♿ **ARIA:** Whether custom `aria-valuemin`, `aria-valuenow`, `aria-valuemax`, and
+   * `aria-valuetext` values will be provided.
    */
-  @property() label = 'Amount of seekable media';
+  @property({ type: Boolean, attribute: 'custom-value-text' })
+  customValueText = false;
 
   /**
    * ♿ **ARIA:** Human-readable text alternative for the seekable amount. If you pass
@@ -68,6 +77,26 @@ export class SeekableProgressBarElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    setAttributeIfEmpty(this, 'role', 'progressbar');
+    setAttributeIfEmpty(this, 'aria-label', 'Seekable media');
+  }
+
+  protected override updated(changedProperties: PropertyValues): void {
+    if (!this.customValueText) {
+      this.setAttribute('aria-valuemin', '0');
+      this.setAttribute(
+        'aria-valuenow',
+        `${Math.round(this._mediaSeekableAmount)}`
+      );
+      this.setAttribute('aria-valuemax', `${Math.round(this._mediaDuration)}`);
+      this.setAttribute('aria-valuetext', this._getProgressBarValueText());
+    }
+
+    super.updated(changedProperties);
+  }
 
   protected override render(): TemplateResult {
     return this._renderProgressBar();
@@ -90,18 +119,11 @@ export class SeekableProgressBarElement extends LitElement {
     return html`
       <div
         id="progressbar"
-        role="progressbar"
         part="root"
         style=${styleMap({
           '--vds-media-seekable': String(this._mediaSeekableAmount),
           '--vds-media-duration': String(this._mediaDuration)
         })}
-        ?hidden=${this.hidden}
-        aria-label=${this.label}
-        aria-valuemin="0"
-        aria-valuenow=${Math.round(this._mediaSeekableAmount)}
-        aria-valuemax=${Math.round(this._mediaDuration)}
-        aria-valuetext=${this._getProgressBarValueText()}
         ${ref(this._progressBarRef)}
       >
         ${this._renderProgressBarChildren()}

@@ -62,7 +62,7 @@
     width: 90%;
     margin: 0 auto;
     height: 2.5px;
-    background-color: orange;
+    background-color: white;
   }
 
   vds-seekable-progress-bar {

@@ -169,8 +169,8 @@ export class SliderElement extends LitElement {
   shiftKeyMultiplier = 5;
 
   /**
-   * ♿ **ARIA:** Whether custom ARIA `valuemin`, `valuenow`, `valuemax`, and `valuetext` values will
-   * be provided.
+   * ♿ **ARIA:** Whether custom `aria-valuemin`, `aria-valuenow`, `aria-valuemax`, and
+   * `aria-valuetext` values will be provided.
    */
   @property({ type: Boolean, attribute: 'custom-value-text' })
   customValueText = false;

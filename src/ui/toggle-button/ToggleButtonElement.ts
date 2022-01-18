@@ -42,7 +42,7 @@ export class ToggleButtonElement extends LitElement {
   }
 
   static get parts(): string[] {
-    return ['button'];
+    return [];
   }
 
   constructor() {
