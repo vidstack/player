@@ -21,26 +21,12 @@ async function buildFixture() {
 
 test('light DOM snapshot', async function () {
   const { button } = await buildFixture();
-  expect(button).dom.to.equal(`
-    <vds-play-button media-paused>
-      <div class="play"></div>
-      <div class="pause"></div>
-    </vds-play-button>
-  `);
+  expect(button).dom.toMatchSnapshot();
 });
 
 test('shadow DOM snapshot', async function () {
   const { button } = await buildFixture();
-  expect(button).shadowDom.to.equal(`
-    <button
-      id="button"
-      aria-label="Play"
-      aria-pressed="false"
-      part="button"
-    >
-      <slot></slot>
-    </button>
-  `);
+  expect(button).shadowDom.to.equal(`<slot></slot>`);
 });
 
 test('it should update paused state', async function () {
@@ -50,14 +36,14 @@ test('it should update paused state', async function () {
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.false;
-  expect(button.hasAttribute('pressed')).to.be.false;
+  expect(button.getAttribute('aria-pressed')).to.equal('false');
   expect(button.hasAttribute('media-paused')).to.be.true;
 
   player._mediaStore.paused.set(false);
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.true;
-  expect(button.hasAttribute('pressed')).to.be.true;
+  expect(button.getAttribute('aria-pressed')).to.equal('true');
   expect(button.hasAttribute('media-paused')).to.be.false;
 });
 

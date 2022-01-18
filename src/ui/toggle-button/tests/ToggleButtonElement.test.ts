@@ -21,7 +21,11 @@ async function buildFixture() {
 test('light DOM snapshot', async function () {
   const { toggle } = await buildFixture();
   expect(toggle).dom.to.equal(`
-    <vds-toggle-button>
+    <vds-toggle-button
+      aria-pressed="false"
+      role="button"
+      tabindex="0"
+    >
       <div class="pressed"></div>
       <div class="not-pressed"></div>
     </vds-toggle-button>
@@ -30,15 +34,7 @@ test('light DOM snapshot', async function () {
 
 test('shadow DOM snapshot', async function () {
   const { toggle } = await buildFixture();
-  expect(toggle).shadowDom.to.equal(`
-    <button
-      id="button"
-      part="button"
-      aria-pressed="false"
-    >
-      <slot></slot>
-    </button>
-  `);
+  expect(toggle).shadowDom.to.equal(`<slot></slot>`);
 });
 
 test('it should toggle pressed state on click', async function () {
@@ -47,12 +43,12 @@ test('it should toggle pressed state on click', async function () {
   toggle.click();
   await elementUpdated(toggle);
 
-  expect(toggle.hasAttribute('pressed')).to.be.true;
+  expect(toggle.getAttribute('aria-pressed')).to.equal('true');
 
   toggle.click();
   await elementUpdated(toggle);
 
-  expect(toggle.hasAttribute('pressed')).to.be.false;
+  expect(toggle.getAttribute('aria-pressed')).to.equal('false');
 });
 
 test('it should prevent clicking when disabled', async function () {
@@ -64,5 +60,5 @@ test('it should prevent clicking when disabled', async function () {
   await elementUpdated(toggle);
 
   expect(toggle.hasAttribute('disabled')).to.be.true;
-  expect(toggle.hasAttribute('pressed')).to.be.false;
+  expect(toggle.getAttribute('aria-pressed')).to.equal('false');
 });

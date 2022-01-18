@@ -17,9 +17,18 @@ test('light DOM snapshot', async function () {
     <vds-slider
       min="0"
       max="100"
-      orientation="horizontal"
       value="50"
-    ></vds-slider>
+      aria-orientation="horizontal"
+      aria-valuemax="100"
+      aria-valuemin="0"
+      aria-valuenow="50"
+      aria-valuetext="50%"
+      autocomplete="off"
+      max="100"
+      min="0"
+      role="slider"
+      tabindex="0"
+   ></vds-slider>
   `);
 });
 
@@ -37,18 +46,8 @@ test('shadow DOM snapshot', async function () {
       style="${rootStyle}"
     >
       <div
-        aria-disabled="false"
-        aria-hidden="false"
-        aria-orientation="horizontal"
-        aria-valuemax="100"
-        aria-valuemin="0"
-        aria-valuenow="50"
-        aria-valuetext="50%"
-        autocomplete="off"
         id="thumb-container"
         part="thumb-container"
-        role="slider"
-        tabindex="0"
       >
         <div
           id="thumb"
@@ -115,15 +114,14 @@ test('it should set correct fill rate', async function () {
 
 test('it should step to the left when up/left arrow key is pressed', async function () {
   const slider = await buildFixture();
-  const thumbContainer = slider.thumbContainerElement;
 
-  thumbContainer?.dispatchEvent(
+  slider.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowLeft'
     })
   );
 
-  thumbContainer?.dispatchEvent(
+  slider.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowUp'
     })
@@ -135,15 +133,14 @@ test('it should step to the left when up/left arrow key is pressed', async funct
 
 test('it should step one to the right when down/right arrow key is pressed', async function () {
   const slider = await buildFixture();
-  const thumbContainer = slider.thumbContainerElement;
 
-  thumbContainer?.dispatchEvent(
+  slider.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowRight'
     })
   );
 
-  thumbContainer?.dispatchEvent(
+  slider.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowDown'
     })
@@ -155,9 +152,8 @@ test('it should step one to the right when down/right arrow key is pressed', asy
 
 test('it should multiply steps when shift key is held down', async function () {
   const slider = await buildFixture();
-  const thumbContainer = slider.thumbContainerElement;
 
-  thumbContainer?.dispatchEvent(
+  slider?.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowLeft',
       shiftKey: true
@@ -167,7 +163,7 @@ test('it should multiply steps when shift key is held down', async function () {
   await elementUpdated(slider);
   expect(slider.value).to.equal(45);
 
-  thumbContainer?.dispatchEvent(
+  slider?.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowRight',
       shiftKey: true
@@ -249,11 +245,9 @@ test('it should not update value when track is clicked and slider is disabled', 
 
 test('it should not start dragging when thumb is pressed and slider is disabled', async function () {
   const slider = await buildFixture();
-  const thumb = slider.thumbContainerElement;
 
   slider.disabled = true;
-
-  thumb?.dispatchEvent(new MouseEvent('pointerdown'));
+  slider.dispatchEvent(new MouseEvent('pointerdown'));
 
   expect(slider.isDragging).to.be.false;
 });

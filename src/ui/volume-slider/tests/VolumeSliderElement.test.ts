@@ -22,8 +22,15 @@ test('it should render DOM correctly', async function () {
   const { volumeSlider } = await buildFixture();
   expect(volumeSlider).dom.to.equal(`
     <vds-volume-slider
-      label="Media volume slider"
-      orientation="horizontal"
+      aria-label="Media volume"
+      aria-orientation="horizontal"
+      aria-valuemax="100"
+      aria-valuemin="0"
+      aria-valuenow="100"
+      aria-valuetext="100%"
+      autocomplete="off"
+      role="slider"
+      tabindex="0"
     ></vds-volume-slider>
   `);
 });

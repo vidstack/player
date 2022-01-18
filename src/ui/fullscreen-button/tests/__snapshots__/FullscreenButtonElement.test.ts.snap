@@ -1,0 +1,24 @@
+// Vitest Snapshot v1
+
+exports[`light DOM snapshot 1`] = `
+<vds-fullscreen-button
+  aria-label="Fullscreen"
+  aria-pressed="false"
+  hidden=""
+  role="button"
+  tabindex="0"
+>
+  
+      
+  <div
+    class="enter"
+  />
+  
+      
+  <div
+    class="exit"
+  />
+  
+    
+</vds-fullscreen-button>
+`;

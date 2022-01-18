@@ -21,26 +21,12 @@ async function buildFixture() {
 
 test('light DOM snapshot', async function () {
   const { button } = await buildFixture();
-  expect(button).dom.to.equal(`
-    <vds-fullscreen-button hidden>
-      <div class="enter"></div>
-      <div class="exit"></div>
-    </vds-fullscreen-button>
-  `);
+  expect(button).dom.toMatchSnapshot();
 });
 
 test('shadow DOM snapshot', async function () {
   const { button } = await buildFixture();
-  expect(button).shadowDom.to.equal(`
-    <button
-      id="button"
-      aria-label="Fullscreen"
-      aria-pressed="false"
-      part="button"
-    >
-      <slot></slot>
-    </button>
-  `);
+  expect(button).shadowDom.to.equal(`<slot></slot>`);
 });
 
 test('it should update `hidden` attribute based on fullscreen support', async () => {
@@ -62,14 +48,14 @@ test('it should update fullscreen state', async () => {
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.true;
-  expect(button.hasAttribute('pressed')).to.be.true;
+  expect(button.getAttribute('aria-pressed')).to.equal('true');
   expect(button.hasAttribute('media-fullscreen')).to.be.true;
 
   player._mediaStore.fullscreen.set(false);
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.false;
-  expect(button.hasAttribute('pressed')).to.be.false;
+  expect(button.getAttribute('aria-pressed')).to.equal('false');
   expect(button.hasAttribute('media-fullscreen')).to.be.false;
 });
 
