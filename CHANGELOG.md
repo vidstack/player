@@ -1,3 +1,9 @@
+# [0.6.0](https://github.com/vidstack/player/compare/v0.5.0...v0.6.0) (2022-01-18)
+
+### Features
+
+- split page/viewport media visibility actions ([8aba33b](https://github.com/vidstack/player/commit/8aba33b9551623b90657b2f501cdc1e08b76e082))
+
 # [0.5.0](https://github.com/vidstack/player/compare/v0.4.1...v0.5.0) (2022-01-18)
 
 ### Bug Fixes

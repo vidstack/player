@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/player",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Headless web components that make integrating media on the a web a breeze.",
   "license": "MIT",
   "type": "module",
