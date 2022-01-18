@@ -16,7 +16,6 @@ import { ToggleButtonElement } from '../toggle-button';
  *
  * @tagname vds-fullscreen-button
  * @slot - Used to pass content into the fullscreen toggle for showing enter/exit states.
- * @csspart button - The button element (`<button>`).
  * @example
  * ```html
  * <vds-fullscreen-button>
@@ -38,8 +37,6 @@ import { ToggleButtonElement } from '../toggle-button';
 export class FullscreenButtonElement extends ToggleButtonElement {
   protected readonly _mediaRemote = new MediaRemoteControl(this);
 
-  override label = 'Fullscreen';
-
   constructor() {
     super();
     hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
@@ -58,7 +55,16 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     );
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    if (!this.hasAttribute('aria-label')) {
+      this.setAttribute('aria-label', 'Fullscreen');
+    }
+  }
+
   protected override _handleButtonClick(event: Event) {
+    if (this.disabled) return;
+
     if (this.pressed) {
       this._mediaRemote.exitFullscreen(event);
     } else {

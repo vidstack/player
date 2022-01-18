@@ -14,7 +14,6 @@ import { ToggleButtonElement } from '../toggle-button';
  *
  * @tagname vds-play-button
  * @slot - Used to pass content into the play toggle for showing play/pause states.
- * @csspart button - The button element (`<button>`).
  * @example
  * ```html
  * <vds-play-button>
@@ -36,8 +35,6 @@ import { ToggleButtonElement } from '../toggle-button';
 export class PlayButtonElement extends ToggleButtonElement {
   protected readonly _mediaRemote = new MediaRemoteControl(this);
 
-  override label = 'Play';
-
   constructor() {
     super();
     hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
@@ -55,7 +52,16 @@ export class PlayButtonElement extends ToggleButtonElement {
     });
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    if (!this.hasAttribute('aria-label')) {
+      this.setAttribute('aria-label', 'Play');
+    }
+  }
+
   protected override _handleButtonClick(event: Event) {
+    if (this.disabled) return;
+
     if (this.pressed) {
       this._mediaRemote.pause(event);
     } else {

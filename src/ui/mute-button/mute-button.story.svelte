@@ -11,33 +11,34 @@
     EventsAddon
   } from '@vitebook/client/addons';
   import { MuteButtonElement } from './MuteButtonElement';
-  import { FakeMediaPlayerElement } from '../../media/test-utils';
+  import { FakeMediaProviderElement } from '../../media/test-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
 
   safelyDefineCustomElement('vds-mute-button', MuteButtonElement);
-  safelyDefineCustomElement('vds-fake-media-player', FakeMediaPlayerElement);
+  safelyDefineCustomElement(
+    'vds-fake-media-provider',
+    FakeMediaProviderElement
+  );
 
   let canPlay = true;
   let muted = false;
 </script>
 
-<vds-fake-media-player
+<vds-fake-media-provider
   emulate-canplay={canPlay}
   emulate-muted={muted}
   on:vds-volume-change={(e) => {
     muted = e.detail.muted;
   }}
 >
-  <div class="media-ui" slot="ui">
-    <vds-mute-button
-      on:vds-mute-request={eventCallback}
-      on:vds-unmute-request={eventCallback}
-    >
-      <span class="muted">Mute</span>
-      <span class="unmuted">Unmute</span>
-    </vds-mute-button>
-  </div>
-</vds-fake-media-player>
+  <vds-mute-button
+    on:vds-mute-request={eventCallback}
+    on:vds-unmute-request={eventCallback}
+  >
+    <span class="muted">Mute</span>
+    <span class="unmuted">Unmute</span>
+  </vds-mute-button>
+</vds-fake-media-provider>
 
 <ControlsAddon>
   <label>
@@ -54,50 +55,22 @@
 <EventsAddon />
 
 <style global>
-  vds-fake-media-player {
-    height: 300px;
-    aspect-ratio: 16 / 9;
-  }
-
-  .media-ui {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  vds-mute-button {
     display: flex;
     justify-content: center;
-    align-items: center;
-  }
-
-  vds-mute-button {
+    min-width: 108px;
     background-color: orange;
   }
 
   .muted,
   .unmuted {
     color: black;
-    position: absolute;
-    display: inline-block;
-    width: 132px;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    z-index: 0;
+    display: none;
     font-size: 24px;
-    font-weight: bold;
-    transition: opacity 0.1s ease-out;
   }
 
-  :global(vds-mute-button:not([media-muted]) .muted) {
-    position: relative;
-    opacity: 1;
-    z-index: 1;
-  }
-
+  :global(vds-mute-button:not([media-muted]) .muted),
   :global(vds-mute-button[media-muted] .unmuted) {
-    position: relative;
-    opacity: 1;
-    z-index: 1;
+    display: block;
   }
 </style>

@@ -11,18 +11,21 @@
     eventCallback
   } from '@vitebook/client/addons';
   import { FullscreenButtonElement } from './FullscreenButtonElement';
-  import { FakeMediaPlayerElement } from '../../media/test-utils';
+  import { FakeMediaProviderElement } from '../../media/test-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
 
   safelyDefineCustomElement('vds-fullscreen-button', FullscreenButtonElement);
-  safelyDefineCustomElement('vds-fake-media-player', FakeMediaPlayerElement);
+  safelyDefineCustomElement(
+    'vds-fake-media-provider',
+    FakeMediaProviderElement
+  );
 
   let canPlay = true;
   let fullscreen = false;
   let canRequestFullscreen = true;
 </script>
 
-<vds-fake-media-player
+<vds-fake-media-provider
   emulate-canplay={canPlay}
   emulate-fullscreen={fullscreen}
   emulate-canrequestfullscreen={canRequestFullscreen}
@@ -30,16 +33,14 @@
     fullscreen = e.detail;
   }}
 >
-  <div class="media-ui" slot="ui">
-    <vds-fullscreen-button
-      on:vds-enter-fullscreen-request={eventCallback}
-      on:vds-exit-fullscreen-request={eventCallback}
-    >
-      <span class="enter">Enter Fullscreen</span>
-      <span class="exit">Exit Fullscreen</span>
-    </vds-fullscreen-button>
-  </div>
-</vds-fake-media-player>
+  <vds-fullscreen-button
+    on:vds-enter-fullscreen-request={eventCallback}
+    on:vds-exit-fullscreen-request={eventCallback}
+  >
+    <span class="enter">Enter Fullscreen</span>
+    <span class="exit">Exit Fullscreen</span>
+  </vds-fullscreen-button>
+</vds-fake-media-provider>
 
 <ControlsAddon>
   <label>
@@ -61,15 +62,7 @@
 <EventsAddon />
 
 <style global>
-  vds-fake-media-player {
-    height: 300px;
-    aspect-ratio: 16 / 9;
-  }
-
-  .media-ui {
-    position: absolute;
-    top: 0;
-    left: 0;
+  vds-fake-media-provider {
     width: 100%;
     height: 100%;
     display: flex;
@@ -78,33 +71,21 @@
   }
 
   vds-fullscreen-button {
+    display: flex;
+    justify-content: center;
+    min-width: 208px;
     background-color: orange;
   }
 
   .enter,
   .exit {
     color: black;
-    position: absolute;
-    display: inline-block;
-    width: 250px;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    z-index: 0;
+    display: none;
     font-size: 24px;
-    font-weight: bold;
-    transition: opacity 0.1s ease-out;
   }
 
-  :global(vds-fullscreen-button:not([media-fullscreen]) .enter) {
-    position: relative;
-    opacity: 1;
-    z-index: 1;
-  }
-
+  :global(vds-fullscreen-button:not([media-fullscreen]) .enter),
   :global(vds-fullscreen-button[media-fullscreen] .exit) {
-    position: relative;
-    opacity: 1;
-    z-index: 1;
+    display: block;
   }
 </style>

@@ -1,19 +1,22 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import {
+  CSSResultGroup,
+  html,
+  LitElement,
+  PropertyValues,
+  TemplateResult
+} from 'lit';
 import { property } from 'lit/decorators.js';
-import { createRef, ref } from 'lit/directives/ref.js';
 
-import { ifNonEmpty } from '../../base/directives';
 import { WithFocus } from '../../base/elements';
 import { hostedEventListener } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
+import { setAttribute } from '../../utils/dom';
 import { toggleButtonElementStyles } from './styles';
 
 /**
  * The foundation for any toggle button such as a `play-button` or `mute-button`.
  *
- *
  * @tagname vds-toggle-button
- * @csspart button - The button element (`<button>`).
  * @slot - Used to pass content into the toggle for showing pressed and not pressed states.
  * @example
  * ```html
@@ -33,7 +36,7 @@ import { toggleButtonElementStyles } from './styles';
  * }
  * ```
  */
-export class ToggleButtonElement extends WithFocus(LitElement) {
+export class ToggleButtonElement extends LitElement {
   static override get styles(): CSSResultGroup {
     return [toggleButtonElementStyles];
   }
@@ -45,6 +48,30 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
   constructor() {
     super();
     if (__DEV__) logElementLifecycle(this);
+    hostedEventListener(this, 'click', this._handleButtonClick.bind(this));
+  }
+
+  override connectedCallback(): void {
+    if (!this.hasAttribute('tabindex')) {
+      this.setAttribute('tabindex', '0');
+    }
+
+    if (!this.hasAttribute('role')) {
+      this.setAttribute('role', 'button');
+    }
+
+    this._updateAriaPressedAttr();
+    super.connectedCallback();
+  }
+
+  protected override updated(changedProperties: PropertyValues): void {
+    if (changedProperties.has('pressed')) {
+      this._updateAriaPressedAttr();
+    }
+  }
+
+  protected _updateAriaPressedAttr() {
+    setAttribute(this, 'aria-pressed', this.pressed ? 'true' : 'false');
   }
 
   // -------------------------------------------------------------------------------------------
@@ -54,26 +81,14 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
   /**
    * Whether the toggle is currently in a `pressed` state.
    */
-  @property({ type: Boolean, reflect: true })
+  @property({ type: Boolean })
   pressed = false;
-
-  /**
-   * ♿ **ARIA:** The `aria-label` property of the underlying button.
-   */
-  @property()
-  label: string | undefined;
 
   /**
    * Whether the underlying button should be disabled (not-interactable).
    */
   @property({ type: Boolean, reflect: true })
   disabled = false;
-
-  /**
-   * ♿ **ARIA:** Identifies the element (or elements) that describes the underlying button.
-   */
-  @property({ attribute: 'described-by', reflect: true })
-  describedBy: string | undefined;
 
   /**
    * Whether the toggle is in the `pressed` state.
@@ -87,42 +102,6 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
   // -------------------------------------------------------------------------------------------
 
   protected override render(): TemplateResult {
-    return this._renderButton();
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Button
-  // -------------------------------------------------------------------------------------------
-
-  protected _buttonRef = createRef<HTMLButtonElement>();
-
-  /**
-   * The component's `<button>` element.
-   */
-  get buttonElement() {
-    return this._buttonRef.value;
-  }
-
-  protected _renderButton(): TemplateResult {
-    return html`
-      <button
-        id="button"
-        part="button"
-        aria-label=${ifNonEmpty(this.label)}
-        aria-pressed=${this.pressed ? 'true' : 'false'}
-        aria-described-by=${ifNonEmpty(this.describedBy)}
-        ?disabled=${this.disabled}
-        @click=${this._handleButtonClick}
-        @focus=${this._handleFocus}
-        @blur=${this._handleBlur}
-        ${ref(this._buttonRef)}
-      >
-        ${this._renderButtonChildren()}
-      </button>
-    `;
-  }
-
-  protected _renderButtonChildren(): TemplateResult {
     return this._renderDefaultSlot();
   }
 
@@ -130,21 +109,9 @@ export class ToggleButtonElement extends WithFocus(LitElement) {
     return html`<slot></slot>`;
   }
 
-  override click() {
-    if (this.disabled) return;
-    this.buttonElement?.click();
-  }
-
   protected _handleButtonClick(event: Event) {
+    if (this.disabled) return;
     this.pressed = !this.pressed;
-  }
-
-  protected _handleFocus() {
-    this.focus();
-  }
-
-  protected _handleBlur(event: FocusEvent) {
-    this.blur();
   }
 
   protected readonly _handleButtonClickCapture = hostedEventListener(
