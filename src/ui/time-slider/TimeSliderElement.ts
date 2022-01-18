@@ -4,7 +4,7 @@ import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener, isPointerEvent } from '../../base/events';
 import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
-import { setAttribute } from '../../utils/dom';
+import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
 import { formatSpokenTime } from '../../utils/time';
 import { SliderElement } from '../slider';
@@ -49,11 +49,15 @@ export class TimeSliderElement extends SliderElement {
     });
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    setAttributeIfEmpty(this, 'aria-label', 'Media time');
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  override label = 'Media time slider';
   override shiftKeyMultiplier = 2;
 
   /**
@@ -71,15 +75,6 @@ export class TimeSliderElement extends SliderElement {
   /** @internal */
   @property({ attribute: false })
   override max = 100;
-  /** @internal */
-  @property({ attribute: false })
-  override valueMin = '0';
-  /** @internal */
-  @property({ attribute: false })
-  override valueNow = '0';
-  /** @internal */
-  @property({ attribute: false })
-  override valueMax = '0';
 
   protected override _step = 0.25;
 
@@ -125,7 +120,8 @@ export class TimeSliderElement extends SliderElement {
    * in a string containing `{currentTime}` or `{duration}` templates they'll be replaced with
    * the spoken form such as `1 hour 30 minutes`.
    */
-  override valueText = '{currentTime} out of {duration}';
+  @property({ attribute: 'value-text' })
+  valueText = '{currentTime} out of {duration}';
 
   /**
    * Whether the scrubber should request playback to pause while the user is dragging the

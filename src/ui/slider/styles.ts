@@ -15,11 +15,6 @@ export const sliderElementStyles = css`
     display: none;
   }
 
-  :host(:focus),
-  :host(:active) {
-    outline: 0;
-  }
-
   #root {
     display: flex;
     align-items: center;

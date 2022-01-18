@@ -1,5 +1,5 @@
 import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
-import { setAttribute } from '../../utils/dom';
+import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
 
 /**
@@ -46,9 +46,7 @@ export class MuteButtonElement extends ToggleButtonElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    if (!this.hasAttribute('aria-label')) {
-      this.setAttribute('aria-label', 'Mute');
-    }
+    setAttributeIfEmpty(this, 'aria-label', 'Mute');
   }
 
   protected override _handleButtonClick(event: Event) {

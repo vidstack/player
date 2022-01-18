@@ -9,10 +9,9 @@ import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { ifNonEmpty } from '../../base/directives';
-import { WithFocus } from '../../base/elements';
 import { hostedEventListener, vdsEvent } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
+import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import {
   clampNumber,
   getNumberOfDecimalPlaces,
@@ -90,7 +89,7 @@ export enum SliderKeyDirection {
  * }
  * ```
  */
-export class SliderElement extends WithFocus(LitElement) {
+export class SliderElement extends LitElement {
   static override get styles(): CSSResultGroup {
     return [sliderElementStyles];
   }
@@ -109,12 +108,6 @@ export class SliderElement extends WithFocus(LitElement) {
   // -------------------------------------------------------------------------------------------
 
   /**
-   * ♿ **ARIA:** The `aria-label` property of the slider.
-   */
-  @property({ reflect: true })
-  label: string | undefined;
-
-  /**
    * The lowest slider value in the range of permitted values.
    */
   @property({ reflect: true, type: Number })
@@ -127,12 +120,6 @@ export class SliderElement extends WithFocus(LitElement) {
   max = 100;
 
   /**
-   * Whether the slider should be hidden.
-   */
-  @property({ reflect: true, type: Boolean })
-  override hidden = false;
-
-  /**
    * Whether the slider should be disabled (not-interactable).
    */
   @property({ reflect: true, type: Boolean })
@@ -143,42 +130,6 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   @property({ reflect: true, type: Number })
   value = 50;
-
-  /**
-   * ♿ **ARIA:** Alternative value for minimum value (defaults to `min`). This can
-   * be used when expressing slider as a percentage (0-100), and wishing to detail more
-   * information for better accessibility.
-   */
-  valueMin: string | undefined;
-
-  /**
-   * ♿ **ARIA:** Alternative value for current value (defaults to `value`). This can
-   * be used when expressing slider as a percentage (0-100), and wishing to detail more
-   * information for better accessibility.
-   */
-  @property({ attribute: 'value-now' })
-  valueNow: string | undefined;
-
-  /**
-   * ♿ **ARIA:** Alternative value for maximum value (defaults to `max`). This can
-   * be used when expressing slider as a percentage (0-100), and wishing to detail more
-   * information for better accessibility.
-   */
-  @property({ attribute: 'value-max' })
-  valueMax: string | undefined;
-
-  /**
-   * ♿ **ARIA:** Human-readable text alternative for the current value. Defaults to
-   * `value:max` ratio as a percentage.
-   */
-  @property({ attribute: 'value-text' })
-  valueText: string | undefined;
-
-  /**
-   * ♿ **ARIA:** Indicates the orientation of the slider.
-   */
-  @property({ reflect: true })
-  orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   /**
    * A number that specifies the granularity that the slider value must adhere to.
@@ -216,6 +167,13 @@ export class SliderElement extends WithFocus(LitElement) {
    */
   @property({ attribute: 'shift-key-multiplier', type: Number })
   shiftKeyMultiplier = 5;
+
+  /**
+   * ♿ **ARIA:** Whether custom ARIA `valuemin`, `valuenow`, `valuemax`, and `valuetext` values will
+   * be provided.
+   */
+  @property({ type: Boolean, attribute: 'custom-value-text' })
+  customValueText = false;
 
   @state()
   protected _isDragging = false;
@@ -258,7 +216,12 @@ export class SliderElement extends WithFocus(LitElement) {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
-  protected override update(changedProperties: PropertyValues) {
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._setupHostAttrs();
+  }
+
+  protected override updated(changedProperties: PropertyValues) {
     if (changedProperties.has('value')) {
       this._updateValue(this.value);
     }
@@ -266,6 +229,14 @@ export class SliderElement extends WithFocus(LitElement) {
     if (changedProperties.has('disabled') && this.disabled) {
       this._isDragging = false;
       this.removeAttribute('dragging');
+      setAttribute(this, 'aria-disabled', this.disabled);
+    }
+
+    if (!this.customValueText) {
+      this.setAttribute('aria-valuemin', this._getValueMin());
+      this.setAttribute('aria-valuenow', this._getValueNow());
+      this.setAttribute('aria-valuemax', this._getValueMax());
+      this.setAttribute('aria-valuetext', this._getValueText());
     }
 
     super.update(changedProperties);
@@ -275,6 +246,41 @@ export class SliderElement extends WithFocus(LitElement) {
     this._handlePointerMove.cancel();
     super.disconnectedCallback();
   }
+
+  // -------------------------------------------------------------------------------------------
+  // Host
+  // -------------------------------------------------------------------------------------------
+
+  protected _setupHostAttrs() {
+    setAttributeIfEmpty(this, 'role', 'slider');
+    setAttributeIfEmpty(this, 'tabindex', '0');
+    setAttributeIfEmpty(this, 'aria-orientation', 'horizontal');
+    setAttributeIfEmpty(this, 'autocomplete', 'off');
+  }
+
+  protected _handleHostKeydown = hostedEventListener(
+    this,
+    'keydown',
+    (event: KeyboardEvent) => {
+      if (this.disabled) return;
+
+      const { key, shiftKey } = event;
+      const isValidKey = Object.keys(SliderKeyDirection).includes(key);
+
+      if (!isValidKey) return;
+
+      const modifiedStep = !shiftKey
+        ? this.keyboardStep
+        : this.keyboardStep * this.shiftKeyMultiplier;
+      const direction = Number(SliderKeyDirection[key]);
+      const diff = modifiedStep * direction;
+      const steps = (this.value + diff) / this.step;
+      const value = this.step * steps;
+
+      this._updateValue(value);
+      this._dispatchValueChange(event);
+    }
+  );
 
   // -------------------------------------------------------------------------------------------
   // Render (Root/Slider)
@@ -343,19 +349,7 @@ export class SliderElement extends WithFocus(LitElement) {
     return html`
       <div
         id="thumb-container"
-        role="slider"
-        tabindex="0"
-        aria-label=${ifNonEmpty(this.label)}
-        aria-valuemin=${this._getValueMin()}
-        aria-valuenow=${this._getValueNow()}
-        aria-valuemax=${this._getValueMax()}
-        aria-valuetext=${this._getValueText()}
-        aria-orientation=${this.orientation}
-        aria-disabled=${this.disabled}
-        aria-hidden=${this.hidden}
-        autocomplete="off"
         part="thumb-container"
-        @keydown=${this._handleThumbContainerKeydown}
         @pointerdown=${this._handleThumbContainerPointerDown}
         ${ref(this._thumbContainerRef)}
       >
@@ -365,47 +359,23 @@ export class SliderElement extends WithFocus(LitElement) {
   }
 
   protected _getValueMin(): string {
-    return this.valueMin ?? String(this.min);
+    return String(this.min);
   }
 
   protected _getValueNow(): string {
-    return this.valueNow ?? String(this.value);
+    return String(this.value);
   }
 
   protected _getValueMax(): string {
-    return this.valueMax ?? String(this.max);
+    return String(this.max);
   }
 
   protected _getValueText(): string {
-    return this.valueText ?? this._getValueTextFallback();
-  }
-
-  protected _getValueTextFallback(): string {
     return `${round((this.value / this.max) * 100, 2)}%`;
   }
 
   protected _renderThumbContainerSlot(): TemplateResult {
     return html`<slot name="thumb-container"></slot> `;
-  }
-
-  protected _handleThumbContainerKeydown(event: KeyboardEvent) {
-    if (this.disabled) return;
-
-    const { key, shiftKey } = event;
-    const isValidKey = Object.keys(SliderKeyDirection).includes(key);
-
-    if (!isValidKey) return;
-
-    const modifiedStep = !shiftKey
-      ? this.keyboardStep
-      : this.keyboardStep * this.shiftKeyMultiplier;
-    const direction = Number(SliderKeyDirection[key]);
-    const diff = modifiedStep * direction;
-    const steps = (this.value + diff) / this.step;
-    const value = this.step * steps;
-
-    this._updateValue(value);
-    this._dispatchValueChange(event);
   }
 
   protected _handleThumbContainerPointerDown(event: PointerEvent) {

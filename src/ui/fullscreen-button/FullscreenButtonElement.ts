@@ -1,5 +1,5 @@
 import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
-import { setAttribute } from '../../utils/dom';
+import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
 
 /**
@@ -57,9 +57,7 @@ export class FullscreenButtonElement extends ToggleButtonElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    if (!this.hasAttribute('aria-label')) {
-      this.setAttribute('aria-label', 'Fullscreen');
-    }
+    setAttributeIfEmpty(this, 'aria-label', 'Fullscreen');
   }
 
   protected override _handleButtonClick(event: Event) {

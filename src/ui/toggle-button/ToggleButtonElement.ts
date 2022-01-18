@@ -10,7 +10,7 @@ import { property } from 'lit/decorators.js';
 import { WithFocus } from '../../base/elements';
 import { hostedEventListener } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
-import { setAttribute } from '../../utils/dom';
+import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { toggleButtonElementStyles } from './styles';
 
 /**
@@ -52,16 +52,10 @@ export class ToggleButtonElement extends LitElement {
   }
 
   override connectedCallback(): void {
-    if (!this.hasAttribute('tabindex')) {
-      this.setAttribute('tabindex', '0');
-    }
-
-    if (!this.hasAttribute('role')) {
-      this.setAttribute('role', 'button');
-    }
-
-    this._updateAriaPressedAttr();
     super.connectedCallback();
+    setAttributeIfEmpty(this, 'tabindex', '0');
+    setAttributeIfEmpty(this, 'role', 'button');
+    this._updateAriaPressedAttr();
   }
 
   protected override updated(changedProperties: PropertyValues): void {

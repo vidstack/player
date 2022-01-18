@@ -80,6 +80,23 @@ export function setAttribute(
 }
 
 /**
+ * Sets an attribute on the given `el` if it does not have the attribute set.
+ *
+ * @param element - The element to set the attribute on.
+ * @param attrName - The name of the attribute.
+ * @param attrValue - The value of the attribute.
+ */
+export function setAttributeIfEmpty(
+  element: Element,
+  attrName: string,
+  attrValue: string
+) {
+  if (!element.hasAttribute(attrName)) {
+    element.setAttribute(attrName, attrValue);
+  }
+}
+
+/**
  * Returns elements assigned to the given slot in the shadow root. Filters out all nodes
  * which are not of type `Node.ELEMENT_NODE`.
  *

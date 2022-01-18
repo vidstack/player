@@ -3,7 +3,7 @@ import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener } from '../../base/events';
 import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
-import { setAttribute } from '../../utils/dom';
+import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { round } from '../../utils/number';
 import { SliderElement } from '../slider';
 
@@ -42,11 +42,15 @@ export class VolumeSliderElement extends SliderElement {
     });
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    setAttributeIfEmpty(this, 'aria-label', 'Media volume');
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  override label = 'Media volume slider';
   override _step = 0.5;
   override _keyboardStep = 0.5;
   override shiftKeyMultiplier = 10;
