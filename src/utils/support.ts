@@ -191,11 +191,11 @@ export function getSourceBuffer(): typeof SourceBuffer | undefined {
 }
 
 /**
- * Whether libraries such as `hls.js` are supported in this environment.
+ * Whether `hls.js` is supported in this environment.
  *
  * @link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts
  */
-export function isNonNativeHlsStreamingPossible(): boolean {
+export function isHlsjsSupported(): boolean {
   const mediaSource = getMediaSource();
 
   if (isUndefined(mediaSource)) {

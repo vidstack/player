@@ -5,7 +5,7 @@ import { property } from 'lit/decorators.js';
 import { VdsEvent, vdsEvent } from '../../base/events';
 import { CanPlay, MediaType } from '../../media';
 import { preconnect, ScriptLoader } from '../../utils/network';
-import { isNonNativeHlsStreamingPossible } from '../../utils/support';
+import { isHlsjsSupported } from '../../utils/support';
 import { isFunction, isNil, isString, isUndefined } from '../../utils/unit';
 import { VideoElement } from '../video';
 
@@ -238,7 +238,7 @@ export class HlsElement extends VideoElement {
    */
   get isHlsSupported(): boolean {
     return (
-      (this.Hls?.isSupported() ?? isNonNativeHlsStreamingPossible()) ||
+      (this.Hls?.isSupported() ?? isHlsjsSupported()) ||
       this.hasNativeHlsSupport
     );
   }
@@ -287,7 +287,7 @@ export class HlsElement extends VideoElement {
      *
      * @see https://github.com/vidstack/player/issues/376
      */
-    if (isNonNativeHlsStreamingPossible()) return false;
+    if (isHlsjsSupported()) return false;
     return this.hasNativeHlsSupport;
   }
 
