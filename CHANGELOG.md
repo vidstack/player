@@ -1,3 +1,9 @@
+## [0.7.1](https://github.com/vidstack/player/compare/v0.7.0...v0.7.1) (2022-01-18)
+
+### Bug Fixes
+
+- reduce bundle size by not re-exporting all utils ([a0169d9](https://github.com/vidstack/player/commit/a0169d9aef928257f3f298dbe61550703fb418c5))
+
 # [0.7.0](https://github.com/vidstack/player/compare/v0.6.0...v0.7.0) (2022-01-18)
 
 ### Bug Fixes
