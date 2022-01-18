@@ -19,8 +19,10 @@
   <div class="container">
     {#each Array.from(Array(5)) as _}
       <vds-media-visibility
-        on-enter="play"
-        on-exit="pause"
+        enter-viewport="play"
+        exit-viewport="pause"
+        enter-page="play"
+        exit-page="pause"
         on:vds-media-visibility-change={eventCallback}
       >
         <vds-audio src="https://media-files.vidstack.io/audio.mp3" controls />
@@ -33,8 +35,10 @@
   <div class="container">
     {#each Array.from(Array(5)) as _}
       <vds-media-visibility
-        on-enter="unmute"
-        on-exit="mute"
+        enter-viewport="unmute"
+        exit-viewport="mute"
+        enter-page="unmute"
+        exit-page="mute"
         on:vds-media-visibility-change={eventCallback}
       >
         <vds-audio src="https://media-files.vidstack.io/audio.mp3" controls />

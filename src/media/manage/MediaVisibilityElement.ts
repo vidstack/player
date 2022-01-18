@@ -5,6 +5,9 @@ import { DisposalBin, hostedEventListener, vdsEvent } from '../../base/events';
 import { IntersectionController, PageController } from '../../base/observers';
 import type { MediaProviderElement } from '../provider';
 
+export type EnterVisibilityMediaAction = 'play' | 'unmute';
+export type ExitVisibilityMediaAction = 'pause' | 'mute';
+
 /**
  * This element is responsible for managing a `MediaProviderElement` as viewport or page
  * visibility changes occur.
@@ -22,8 +25,10 @@ import type { MediaProviderElement } from '../provider';
  * @example
  * ```html
  * <vds-media-visibility
- *   on-enter="play"
- *   on-exit="pause"
+ *   enter-viewport="play"
+ *   exit-viewport="pause"
+ *   enter-page="unmute"
+ *   exit-page="mute"
  * >
  *   <!-- ... -->
  * </vds-media-visibility>
@@ -31,22 +36,36 @@ import type { MediaProviderElement } from '../provider';
  */
 export class MediaVisibilityElement extends LitElement {
   /**
-   * The action to perform on the media provider when it becomes active by either entering
-   * the viewport, or the page becomes visible.
+   * The action to perform on the media provider when it enters the viewport.
    *
    * @default undefined
    */
-  @property({ attribute: 'on-enter' })
-  onEnter?: 'play' | 'unmute';
+  @property({ attribute: 'enter-viewport' })
+  enterViewport?: EnterVisibilityMediaAction;
 
   /**
-   * The action to perform on the media provider when it becomes inactive by either exiting
-   * the viewport, or the page becomes hidden.
+   * The action to perform on the media provider when it exits the viewport.
    *
    * @default undefined
    */
-  @property({ attribute: 'on-exit' })
-  onExit?: 'pause' | 'mute';
+  @property({ attribute: 'exit-viewport' })
+  exitViewport?: ExitVisibilityMediaAction;
+
+  /**
+   * The action to perform on the media provider when the page becomes visible.
+   *
+   * @default undefined
+   */
+  @property({ attribute: 'enter-page' })
+  enterPage?: EnterVisibilityMediaAction;
+
+  /**
+   * The action to perform on the media provider when the page becomes hidden.
+   *
+   * @default undefined
+   */
+  @property({ attribute: 'exit-page' })
+  exitPage?: ExitVisibilityMediaAction;
 
   /**
    * The type of page state to use when determining visibility.
@@ -159,10 +178,10 @@ export class MediaVisibilityElement extends LitElement {
       // Skip first, we only want as we enter/exit viewport (not initial load).
       if (this._hasIntersected) {
         if (entry.isIntersecting) {
-          this._triggerOnEnter();
-        } else if (this.onExit) {
+          this._triggerOnEnter(this.enterViewport);
+        } else if (this.exitViewport) {
           this._isIntersecting = false;
-          this._triggerOnExit();
+          this._triggerOnExit(this.exitViewport);
         }
       }
 
@@ -178,9 +197,9 @@ export class MediaVisibilityElement extends LitElement {
         const newState = this.pageChangeType === 'state' ? state : visibility;
 
         if (newState === 'hidden') {
-          this._triggerOnExit();
-        } else if (this.onEnter) {
-          this._triggerOnEnter();
+          this._triggerOnExit(this.exitPage);
+        } else if (this.enterViewport) {
+          this._triggerOnEnter(this.enterPage);
         }
       }
 
@@ -192,22 +211,22 @@ export class MediaVisibilityElement extends LitElement {
   // Triggers
   // -------------------------------------------------------------------------------------------
 
-  protected _triggerOnEnter() {
+  protected _triggerOnEnter(mediaAction?: EnterVisibilityMediaAction) {
     if (!this._mediaProvider) return;
 
-    if (this.onEnter === 'play') {
+    if (mediaAction === 'play') {
       this._mediaProvider.paused = false;
-    } else if (this.onEnter === 'unmute') {
+    } else if (mediaAction === 'unmute') {
       this._mediaProvider.muted = false;
     }
   }
 
-  protected _triggerOnExit() {
+  protected _triggerOnExit(mediaAction?: ExitVisibilityMediaAction) {
     if (!this._mediaProvider) return;
 
-    if (this.onExit === 'pause') {
+    if (mediaAction === 'pause') {
       this._mediaProvider.paused = true;
-    } else if (this.onExit === 'mute') {
+    } else if (mediaAction === 'mute') {
       this._mediaProvider.muted = true;
     }
   }
