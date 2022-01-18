@@ -5,6 +5,7 @@ export const toggleButtonElementStyles = css`
     display: table;
     contain: content;
     user-select: none;
+    -webkit-user-select: none;
   }
 
   :host([hidden]) {

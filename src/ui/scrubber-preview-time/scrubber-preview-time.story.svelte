@@ -26,13 +26,11 @@
 
   let currentTime = 0;
   let duration = 3600;
-  let seekableAmount = 1800;
 </script>
 
 <vds-fake-media-provider
   emulate-currenttime={currentTime}
   emulate-duration={duration}
-  emulate-seekableAmount={seekableAmount}
 >
   <vds-scrubber>
     <vds-scrubber-preview>
@@ -45,17 +43,6 @@
   <label>
     Emulate Current Time
     <input type="number" min="0" max={duration} bind:value={currentTime} />
-  </label>
-
-  <label>
-    Emulate Seekable Amount
-    <input
-      type="number"
-      min="0"
-      step="1"
-      max={duration}
-      bind:value={seekableAmount}
-    />
   </label>
 
   <label>

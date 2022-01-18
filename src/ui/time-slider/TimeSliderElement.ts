@@ -1,5 +1,5 @@
 import throttle from 'just-throttle';
-import { PropertyValues } from 'lit';
+import { CSSResultGroup, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener, isPointerEvent } from '../../base/events';
@@ -8,6 +8,7 @@ import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
 import { formatSpokenTime } from '../../utils/time';
 import { SliderElement } from '../slider';
+import { timeSliderElementStyles } from './styles';
 
 /**
  * A slider that lets the user control the current media playback time.
@@ -32,6 +33,10 @@ import { SliderElement } from '../slider';
  * ```
  */
 export class TimeSliderElement extends SliderElement {
+  static override get styles(): CSSResultGroup {
+    return [super.styles, timeSliderElementStyles];
+  }
+
   constructor() {
     super();
     hostedMediaStoreSubscription(this, 'currentTime', ($currentTime) => {

@@ -30,7 +30,6 @@
   vds-scrim {
     width: 100%;
     max-width: 80%;
-    padding: 1px;
     background-color: white;
   }
 </style>

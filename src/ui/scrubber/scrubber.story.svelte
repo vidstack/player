@@ -9,9 +9,14 @@
 
   import { FakeMediaProviderElement } from '../../media/test-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
+  import { SeekableProgressBarElement } from '../seekable-progress-bar';
   import { ScrubberElement } from './ScrubberElement';
 
   safelyDefineCustomElement('vds-scrubber', ScrubberElement);
+  safelyDefineCustomElement(
+    'vds-seekable-progress-bar',
+    SeekableProgressBarElement
+  );
   safelyDefineCustomElement(
     'vds-fake-media-provider',
     FakeMediaProviderElement
@@ -23,11 +28,17 @@
 </script>
 
 <vds-fake-media-provider
+  emulate-canplay={true}
   emulate-currenttime={currentTime}
   emulate-duration={duration}
   emulate-seekableAmount={seekableAmount}
+  on:vds-time-update={({ detail }) => {
+    currentTime = detail;
+  }}
 >
-  <vds-scrubber />
+  <vds-scrubber>
+    <vds-seekable-progress-bar />
+  </vds-scrubber>
 </vds-fake-media-provider>
 
 <ControlsAddon>
