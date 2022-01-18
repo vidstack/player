@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/vidstack/player/compare/v0.6.0...v0.7.0) (2022-01-18)
+
+### Bug Fixes
+
+- simplify styling of toggle buttons ([68d623e](https://github.com/vidstack/player/commit/68d623ead09a25794525b9881427e93b4bf4d77d))
+- simplify styling scrubber element ([bec5094](https://github.com/vidstack/player/commit/bec5094c15570c5a065a031821aa729bc51a92b1))
+- simplify styling seekable progress bar ([3697a4a](https://github.com/vidstack/player/commit/3697a4a164aba3d8a753efa99294fe053bb3b081))
+- simplify styling slider elements ([0784f97](https://github.com/vidstack/player/commit/0784f9756811fc634eede3fb085b25b493a4c071))
+
 # [0.6.0](https://github.com/vidstack/player/compare/v0.5.0...v0.6.0) (2022-01-18)
 
 ### Features
