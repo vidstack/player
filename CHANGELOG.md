@@ -1,3 +1,13 @@
+# [0.5.0](https://github.com/vidstack/player/compare/v0.4.1...v0.5.0) (2022-01-18)
+
+### Bug Fixes
+
+- rename `isNonNativeHlsStreamingPossible` -> `isHlsjsSupported` ([f547f05](https://github.com/vidstack/player/commit/f547f05c6a1ed08199f36de7738bece271a7d0c4))
+
+### Features
+
+- allow `hls.js` to be dynamically imported ([8fc3df1](https://github.com/vidstack/player/commit/8fc3df1b2691ff4c6bb96363edfd23c5629ae169))
+
 ## [0.4.1](https://github.com/vidstack/player/compare/v0.4.0...v0.4.1) (2022-01-17)
 
 ### Bug Fixes
