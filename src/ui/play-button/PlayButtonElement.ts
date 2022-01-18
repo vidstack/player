@@ -9,6 +9,7 @@ import { ToggleButtonElement } from '../toggle-button';
  *
  * - `media-can-play`: Applied when media can begin playback.
  * - `media-paused`: Applied when media playback has paused.
+ * - `media-seeking`: Applied when a media seek operation starts.
  * - `media-waiting`: Applied when playback has stopped because of a lack of temporary data.
  * - `media-ended`: Applied when playback has reached the end.
  *
@@ -46,6 +47,9 @@ export class PlayButtonElement extends ToggleButtonElement {
     hostedMediaStoreSubscription(this, 'paused', ($paused) => {
       this.pressed = !$paused;
       setAttribute(this, 'media-paused', $paused);
+    });
+    hostedMediaStoreSubscription(this, 'seeking', ($seeking) => {
+      setAttribute(this, 'media-seeking', $seeking);
     });
     hostedMediaStoreSubscription(this, 'ended', ($ended) => {
       setAttribute(this, 'media-ended', $ended);
