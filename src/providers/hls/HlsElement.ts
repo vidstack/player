@@ -18,6 +18,10 @@ export const HLS_TYPES = new Set([
 
 export type HlsConstructor = typeof Hls;
 
+export type DynamicHlsConstructorImport = () => Promise<
+  { default: HlsConstructor } | undefined
+>;
+
 const HLS_LIB_CACHE = new Map<string, HlsConstructor>();
 
 /**
@@ -33,16 +37,13 @@ const HLS_LIB_CACHE = new Map<string, HlsConstructor>();
  * all the native events if needed, but prefer the `vds-*` variants (eg: `vds-play`) as they
  * iron out any browser issues. It also dispatches all the `hls.js` events.
  *
- * ## Dynamically Loaded
+ * ## Loading hls.js (CDN)
  *
- * ### CDN
+ * Simply point the `hls-library` attribute to a script on a CDN containing the library. For
+ * example, you could use the following URL `https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js`.
+ * Swap `hls.js` for `hls.min.js` in production.
  *
- * Simply point the `hlsLibrary` property or `hls-library` attribute to a script on a CDN
- * containing the library. For example, you could use the following URL
- * `https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js`. Swap `hls.js` for `hls.min.js` in
- * production.
- *
- * We recommended using either [JSDelivr](https://jsdelivr.com) or [UNPKG](https://unpkg.com).
+ * We recommended using [JSDelivr](https://jsdelivr.com).
  *
  * ```html
  * <vds-hls
@@ -51,13 +52,7 @@ const HLS_LIB_CACHE = new Map<string, HlsConstructor>();
  * ></vds-hls>
  * ```
  *
- * ### Dynamic Import
- *
- * If you'd like to serve your own copy and control when the library is downloaded, simply
- * use [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#dynamic_imports)
- * and update the `hlsLibrary` property when ready. You must pass in the `hls.js` class constructor.
- *
- * ## Locally Bundled (not recommended)
+ * ## Loading hls.js (import)
  *
  * You'll need to install `hls.js`...
  *
@@ -65,17 +60,16 @@ const HLS_LIB_CACHE = new Map<string, HlsConstructor>();
  * $: npm install hls.js@^0.14.0 @types/hls.js@^0.13.3
  * ```
  *
- * Finally, import it and pass it as a property to `<vds-hls>`...
+ * Next, dynamically import it as follows...
  *
  * ```ts
- * import '@vidstack/player/providers/hls/define';
+ * import '@vidstack/player/define/vds-hls';
  *
  * import { html, LitElement } from 'lit';
- * import Hls from 'hls.js';
  *
  * class MyElement extends LitElement {
  *   render() {
- *     return html`<vds-hls src="..."  .hlsLibrary=${Hls}></vds-hls>`;
+ *     return html`<vds-hls src="..." .hlsLibrary=${() => import('hls.js')}></vds-hls>`;
  *   }
  * }
  * ```
@@ -110,12 +104,13 @@ export class HlsElement extends VideoElement {
   hlsConfig: Partial<Hls.Config | undefined> = {};
 
   /**
-   * The `hls.js` constructor or a URL of where it can be found. Only version `^0.13.3`
-   * (note the `^`) is supported at the moment. Important to note that by default this is
-   * `undefined` so you can freely optimize when the best possible time is to load the library.
+   * The `hls.js` constructor (supports dynamic imports) or a URL of where it can be found. Only
+   * version `^0.13.3` (note `^`) is supported at the moment. Important to note that by default
+   * this is `undefined` so you can freely optimize when the best possible time is to load the
+   * library.
    */
   @property({ attribute: 'hls-library' })
-  hlsLibrary: HlsConstructor | string | undefined;
+  hlsLibrary: HlsConstructor | DynamicHlsConstructorImport | string | undefined;
 
   protected _Hls: HlsConstructor | undefined;
 
@@ -302,7 +297,7 @@ export class HlsElement extends VideoElement {
   /**
    * Loads `hls.js` from a remote source found at the `hlsLibrary` URL (if a string).
    */
-  protected async _loadHlsLibrary(): Promise<void> {
+  protected async _loadHlsLibraryFromRemoteSource(): Promise<void> {
     if (!isString(this.hlsLibrary) || HLS_LIB_CACHE.has(this.hlsLibrary)) {
       return;
     }
@@ -390,14 +385,21 @@ export class HlsElement extends VideoElement {
     }
 
     if (isString(this.hlsLibrary)) {
-      await this._loadHlsLibrary();
+      await this._loadHlsLibraryFromRemoteSource();
     }
 
-    // Either a remote source and we cached the `hls.js` constructor, or it was bundled directly.
-    // The previous `loadHlsLibrary()` called would've populated the cache if it was remote.
+    // First we check if it's a string which would have been loaded from a remote source right
+    // above this line.
     this._Hls = isString(this.hlsLibrary)
       ? HLS_LIB_CACHE.get(this.hlsLibrary)
-      : this.hlsLibrary;
+      : undefined;
+
+    // If it's not a remote source, it must of been passed in directly as a static/dyanmic import.
+    if (!isString(this.hlsLibrary) && isUndefined(this._Hls)) {
+      this._Hls = isFunction(this.hlsLibrary)
+        ? (await (this.hlsLibrary as DynamicHlsConstructorImport)())?.default
+        : this.hlsLibrary;
+    }
 
     if (!this.Hls?.isSupported()) {
       if (__DEV__) {

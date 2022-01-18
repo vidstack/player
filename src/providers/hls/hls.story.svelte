@@ -5,6 +5,8 @@
 </script>
 
 <script>
+  import { Variant } from '@vitebook/client';
+
   import '../../define/vds-hls';
   import { MediaEventsAddon, mediaStoreAction } from '../../media/story';
   import { safelyDefineCustomElement } from '../../utils/dom';
@@ -23,14 +25,27 @@
   };
 </script>
 
-<vds-hls
-  bind:this={mediaProvider}
-  hls-library="https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js"
-  use:spreadPropsAction={mediaProps}
-  use:mediaStoreAction={(newProps) => {
-    mediaProps = { ...mediaProps, ...newProps };
-  }}
-/>
+<Variant name="CDN">
+  <vds-hls
+    hls-library="https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js"
+    bind:this={mediaProvider}
+    use:spreadPropsAction={mediaProps}
+    use:mediaStoreAction={(newProps) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+</Variant>
+
+<Variant name="Dynamic Import">
+  <vds-hls
+    bind:this={mediaProvider}
+    use:spreadPropsAction={mediaProps}
+    use:spreadPropsAction={{ hlsLibrary: () => import('hls.js') }}
+    use:mediaStoreAction={(newProps) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+</Variant>
 
 <VideoControlsAddon
   {...mediaProps}
