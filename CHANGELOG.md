@@ -1,3 +1,23 @@
+# [0.8.0](https://github.com/vidstack/player/compare/v0.7.1...v0.8.0) (2022-01-19)
+
+### Bug Fixes
+
+- do not actively update `currentTime` while seeking ([e56009c](https://github.com/vidstack/player/commit/e56009c9c70446eaf8c853eb3a95c06d40e6b34e))
+- improve focus styling of toggle button and slider ([3b6fc51](https://github.com/vidstack/player/commit/3b6fc5105a04545839a82af66c89c2dc2fc366fe))
+- improve keyboard support on toggle buttons ([97368cd](https://github.com/vidstack/player/commit/97368cd9c995297ea44439a34d36be63cda7d04d))
+- mark `lit` as external in dev/prod builds correctly ([27f45ab](https://github.com/vidstack/player/commit/27f45ab924b6c232992128ea8914f882d9be0ece))
+- prevent media idling while slider is active ([044a649](https://github.com/vidstack/player/commit/044a649a39f856c880f832031180a10137765422))
+- reduce media idle delay default down to `2000ms` ([f6a815c](https://github.com/vidstack/player/commit/f6a815c8941d283b8c72624902a8a1dde752dc27))
+- scrubber preview video should playinline on ios ([cb836d1](https://github.com/vidstack/player/commit/cb836d17923cc226670f682291e5fb7ed208bacc))
+
+### Features
+
+- add `media-seeking` attr to `vds-media-ui` ([60dea3c](https://github.com/vidstack/player/commit/60dea3c29e9a1759c879b276ae353fbf4c450fdb))
+- add `media-seeking` attr to `vds-play-button` ([3c24d8a](https://github.com/vidstack/player/commit/3c24d8a333dfc32f591cb7b9464d00942f4bf57b))
+- add intersection/page enter action delays ([a9ba6c6](https://github.com/vidstack/player/commit/a9ba6c69c24e6b8fdf6ed571fc84e605894f6d3e))
+- enable media idle state to paused/resumed ([ecc5b88](https://github.com/vidstack/player/commit/ecc5b88479ed1159d9dd14f1e8b13e92666708c2))
+- separate slider drag value from current value ([c801da1](https://github.com/vidstack/player/commit/c801da109a9e6c3cd331e687db90972d943c89bb))
+
 ## [0.7.1](https://github.com/vidstack/player/compare/v0.7.0...v0.7.1) (2022-01-18)
 
 ### Bug Fixes
