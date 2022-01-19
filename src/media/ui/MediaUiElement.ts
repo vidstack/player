@@ -83,6 +83,9 @@ export class MediaUiElement extends LitElement {
     hostedMediaStoreSubscription(this, 'idle', ($idle) => {
       setAttribute(this, 'media-idle', $idle);
     });
+    hostedMediaStoreSubscription(this, 'seeking', ($seeking) => {
+      setAttribute(this, 'media-seeking', $seeking);
+    });
     hostedMediaStoreSubscription(this, 'paused', ($paused) => {
       setAttribute(this, 'media-paused', $paused);
     });
