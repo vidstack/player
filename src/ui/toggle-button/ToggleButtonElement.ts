@@ -13,6 +13,7 @@ import {
   isKeyboardEvent
 } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
+import { focusVisiblePolyfill } from '../../base/observers';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { toggleButtonElementStyles } from './styles';
 
@@ -51,6 +52,8 @@ export class ToggleButtonElement extends LitElement {
   constructor() {
     super();
     if (__DEV__) logElementLifecycle(this);
+
+    focusVisiblePolyfill(this);
 
     (['pointerdown', 'keydown'] as const).forEach((eventType) => {
       hostedEventListener(this, eventType, (event) => {

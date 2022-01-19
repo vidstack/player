@@ -15,6 +15,18 @@ export const sliderElementStyles = css`
     display: none;
   }
 
+  :host(:focus) {
+    outline: none;
+  }
+  :host(:focus-visible) {
+    outline: 1px auto Highlight;
+    outline: 1px auto -webkit-focus-ring-color;
+  }
+  :host(.focus-visible) {
+    outline: 1px auto Highlight;
+    outline: 1px auto -webkit-focus-ring-color;
+  }
+
   #root {
     display: flex;
     align-items: center;
@@ -108,10 +120,12 @@ export const sliderElementStyles = css`
     will-change: transform;
   }
 
-  :host(:focus) #thumb,
+  :host(:focus-visible) #thumb,
+  :host(.focus-visible) #thumb,
   :host(:active) #thumb,
   :host([dragging]) #thumb,
-  :host(:focus) #track-fill,
+  :host(:focus-visible) #track-fill,
+  :host(.focus-visible) #track-fill,
   :host(:active) #track-fill,
   :host([dragging]) #track-fill {
     border: 0;

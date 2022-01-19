@@ -11,6 +11,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { hostedEventListener, vdsEvent } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
+import { focusVisiblePolyfill } from '../../base/observers';
 import { MediaRemoteControl } from '../../media';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import {
@@ -102,6 +103,7 @@ export class SliderElement extends LitElement {
   constructor() {
     super();
     if (__DEV__) logElementLifecycle(this);
+    focusVisiblePolyfill(this);
   }
 
   // -------------------------------------------------------------------------------------------
