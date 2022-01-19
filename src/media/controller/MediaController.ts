@@ -264,8 +264,8 @@ export class MediaController {
       this._mediaProviderConnectedQueue.queue('seeking', () => {
         this._pendingMediaRequests.seeking.push(event);
         this._isSeekingRequestPending = true;
-        this.mediaProvider!.currentTime = event.detail;
         this._fireWaiting.cancel();
+        this._mediaStore.seeking.set(true);
       });
     }
   );
