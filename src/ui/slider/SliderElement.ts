@@ -11,6 +11,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { hostedEventListener, vdsEvent } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
+import { MediaRemoteControl } from '../../media';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import {
   clampNumber,
@@ -229,6 +230,8 @@ export class SliderElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
+
+  protected _mediaRemote = new MediaRemoteControl(this);
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -512,6 +515,8 @@ export class SliderElement extends LitElement {
         detail: this.value
       })
     );
+
+    this._mediaRemote.pauseIdling(event);
   }
 
   protected _stopDragging(event: PointerEvent) {
@@ -533,6 +538,8 @@ export class SliderElement extends LitElement {
         detail: this.value
       })
     );
+
+    this._mediaRemote.resumeIdling(event);
   }
 
   // -------------------------------------------------------------------------------------------

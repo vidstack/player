@@ -2,7 +2,7 @@ import { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener } from '../../base/events';
-import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
+import { hostedMediaStoreSubscription } from '../../media';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { round } from '../../utils/number';
 import { SliderElement } from '../slider';
@@ -94,8 +94,6 @@ export class VolumeSliderElement extends SliderElement {
   // -------------------------------------------------------------------------------------------
   // Methods
   // -------------------------------------------------------------------------------------------
-
-  protected readonly _mediaRemote = new MediaRemoteControl(this);
 
   protected readonly _handleSliderValueChange = hostedEventListener(
     this,

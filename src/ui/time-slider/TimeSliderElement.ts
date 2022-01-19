@@ -3,7 +3,7 @@ import { CSSResultGroup, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener, isPointerEvent } from '../../base/events';
-import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
+import { hostedMediaStoreSubscription } from '../../media';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { clampNumber, round } from '../../utils/number';
 import { formatSpokenTime } from '../../utils/time';
@@ -198,8 +198,6 @@ export class TimeSliderElement extends SliderElement {
       this._togglePlaybackWhileDragging(event);
     }
   );
-
-  protected readonly _mediaRemote = new MediaRemoteControl(this);
 
   protected readonly _handleSliderDragValueChange = hostedEventListener(
     this,
