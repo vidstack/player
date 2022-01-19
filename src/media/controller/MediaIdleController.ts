@@ -14,9 +14,9 @@ export class MediaIdleController implements ReactiveController {
    * The amount of delay in milliseconds while media playback is progressing without user
    * activity to indicate an idle state.
    *
-   * @default 2500
+   * @default 2000
    */
-  delay = 2500;
+  delay = 2000;
 
   constructor(
     protected readonly _host: ReactiveControllerHost & EventTarget,

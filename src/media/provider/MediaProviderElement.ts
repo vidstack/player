@@ -767,7 +767,7 @@ export abstract class MediaProviderElement extends LitElement {
    * The amount of delay in milliseconds while media playback is progressing without user
    * activity to indicate an idle state.
    *
-   * @default 2500
+   * @default 2000
    */
   @property({ attribute: 'idle-delay', type: Number })
   get idleDelay() {
