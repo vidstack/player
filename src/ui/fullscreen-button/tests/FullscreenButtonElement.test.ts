@@ -69,7 +69,7 @@ test('it should enter fullscreen', async function () {
   player._mediaStore.fullscreen.set(false);
   await elementUpdated(button);
 
-  setTimeout(() => button.click());
+  setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
 
   await waitForEvent(button, 'vds-enter-fullscreen-request');
   expect(requestFullscreenSpy).to.toHaveBeenCalledOnce();
@@ -85,7 +85,7 @@ test('it should exit fullscreen', async function () {
   player._mediaStore.fullscreen.set(true);
   await elementUpdated(button);
 
-  setTimeout(() => button.click());
+  setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
 
   await waitForEvent(button, 'vds-exit-fullscreen-request');
   expect(exitFullscreenSpy).to.toHaveBeenCalledOnce();

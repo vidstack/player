@@ -224,7 +224,7 @@ test('it should not change value when move events are fired on document and slid
     })
   );
 
-  expect(slider.value).to.equal(100);
+  expect(slider.value).to.equal(50);
   expect(slider.isDragging).to.be.false;
 });
 

@@ -3,6 +3,7 @@ import '../../../define/vds-toggle-button';
 import { elementUpdated } from '@open-wc/testing-helpers';
 import { html } from 'lit';
 
+import { waitForEvent } from '../../../global/tests/utils';
 import { buildMediaPlayerFixture } from '../../../media/test-utils';
 
 async function buildFixture() {
@@ -40,12 +41,20 @@ test('shadow DOM snapshot', async function () {
 test('it should toggle pressed state on click', async function () {
   const { toggle } = await buildFixture();
 
-  toggle.click();
+  setTimeout(() => {
+    toggle.dispatchEvent(new MouseEvent('pointerdown'));
+  });
+
+  await waitForEvent(toggle, 'pointerdown');
   await elementUpdated(toggle);
 
   expect(toggle.getAttribute('aria-pressed')).to.equal('true');
 
-  toggle.click();
+  setTimeout(() => {
+    toggle.dispatchEvent(new MouseEvent('pointerdown'));
+  });
+
+  await waitForEvent(toggle, 'pointerdown');
   await elementUpdated(toggle);
 
   expect(toggle.getAttribute('aria-pressed')).to.equal('false');

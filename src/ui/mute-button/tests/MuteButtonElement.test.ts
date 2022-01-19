@@ -55,7 +55,7 @@ test('it should mute player', async function () {
   player._mediaStore.muted.set(false);
   await elementUpdated(button);
 
-  setTimeout(() => button.click());
+  setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
 
   await waitForEvent(button, 'vds-mute-request');
   expect(mutedSpy).to.toHaveBeenCalledWith(true);
@@ -69,7 +69,7 @@ test('it should unmute player', async function () {
   player._mediaStore.muted.set(true);
   await elementUpdated(button);
 
-  setTimeout(() => button.click());
+  setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
 
   await waitForEvent(button, 'vds-unmute-request');
   expect(mutedSpy).to.toHaveBeenCalledWith(false);

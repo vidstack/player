@@ -56,7 +56,7 @@ test('it should dispatch volume change request', async function () {
 
   setTimeout(() => {
     volumeSlider.dispatchEvent(
-      vdsEvent('vds-slider-value-change', { detail: 80 })
+      vdsEvent('vds-slider-drag-value-change', { detail: 80 })
     );
   }, 0);
 

@@ -19,7 +19,7 @@ exports[`shadow DOM snapshot 1`] = `
   id=\\"root\\"
   part=\\"root\\"
   role=\\"presentation\\"
-  style=\\"--vds-slider-fill-value: 0; --vds-slider-fill-rate: 0; --vds-slider-fill-percent: 0%;\\"
+  style=\\"--vds-slider-fill-value: 0; --vds-slider-fill-rate: 0; --vds-slider-fill-percent: 0%; --vds-slider-drag-rate: 0; --vds-slider-drag-percent: 0%;\\"
 >
   <div
     id=\\"thumb-container\\"
