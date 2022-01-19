@@ -10,6 +10,8 @@ export type MediaRequestEvents = {
   'vds-seek-request': SeekRequestEvent;
   'vds-seeking-request': SeekingRequestEvent;
   'vds-volume-change-request': VolumeChangeRequestEvent;
+  'vds-resume-idling-request': ResumeIdlingRequestEvent;
+  'vds-pause-idling-request': PauseIdlingRequestEvent;
 };
 
 export type PendingMediaRequests = {
@@ -19,6 +21,7 @@ export type PendingMediaRequests = {
   fullscreen: (EnterFullscreenRequestEvent | ExitFullscreenRequestEvent)[];
   seeked: SeekRequestEvent[];
   seeking: SeekingRequestEvent[];
+  idle: (ResumeIdlingRequestEvent | PauseIdlingRequestEvent)[];
 };
 
 /**
@@ -101,3 +104,23 @@ export type SeekingRequestEvent = VdsEvent<number>;
  * @composed
  */
 export type VolumeChangeRequestEvent = VdsEvent<number>;
+
+/**
+ * Fired when media idle state tracking may resume.
+ *
+ * @event
+ * @bubbles
+ * @composed
+ */
+export type ResumeIdlingRequestEvent = VdsEvent<void>;
+
+/**
+ * Fired when media idle state tracking should pause. This is typically used when a control
+ * is being actively interacted with, and we don't want the media `idle` state changing until
+ * the interaction is complete (eg: scrubbing, or settings is open).
+ *
+ * @event
+ * @bubbles
+ * @composed
+ */
+export type PauseIdlingRequestEvent = VdsEvent<void>;

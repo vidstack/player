@@ -151,6 +151,7 @@ export class MediaController {
     'vds-idle-change',
     (event) => {
       this._mediaStore.idle.set(event.detail);
+      this.satisfyMediaRequest('idle', event);
     }
   );
 
@@ -168,7 +169,8 @@ export class MediaController {
     volume: [],
     fullscreen: [],
     seeked: [],
-    seeking: []
+    seeking: [],
+    idle: []
   };
 
   protected _clearPendingMediaRequests(): void {
@@ -351,6 +353,24 @@ export class MediaController {
     (event) => {
       this._mediaStore.error.set(event.detail);
       this.satisfyMediaRequest('fullscreen', event);
+    }
+  );
+
+  protected readonly _handleResumeIdlingRequest = hostedEventListener(
+    this._host,
+    'vds-resume-idling-request',
+    (event) => {
+      this._pendingMediaRequests.idle.push(event);
+      this._mediaIdleController.paused = false;
+    }
+  );
+
+  protected readonly _handlePauseIdlingRequest = hostedEventListener(
+    this._host,
+    'vds-pause-idling-request',
+    (event) => {
+      this._pendingMediaRequests.idle.push(event);
+      this._mediaIdleController.paused = true;
     }
   );
 

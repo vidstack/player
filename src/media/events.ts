@@ -7,8 +7,10 @@ import {
 import { MediaType } from './MediaType';
 import {
   MuteRequestEvent,
+  PauseIdlingRequestEvent,
   PauseRequestEvent,
   PlayRequestEvent,
+  ResumeIdlingRequestEvent,
   SeekingRequestEvent,
   SeekRequestEvent,
   UnmuteRequestEvent,
@@ -166,7 +168,9 @@ export type ErrorEvent = VdsEvent<unknown>;
  *
  * @event
  */
-export type IdleChangeEvent = VdsEvent<boolean>;
+export type IdleChangeEvent = VdsEvent<boolean> & {
+  requestEvent?: ResumeIdlingRequestEvent | PauseIdlingRequestEvent;
+};
 
 /**
  * Fired when the frame at the current playback position of the media has finished loading; often

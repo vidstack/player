@@ -8,6 +8,7 @@ export class MediaIdleController implements ReactiveController {
   protected _idle = false;
   protected _idleTimeout?: any;
   protected _mediaPaused = false;
+  protected _idlingPaused = false;
   protected _disposal = new DisposalBin();
 
   /**
@@ -17,6 +18,18 @@ export class MediaIdleController implements ReactiveController {
    * @default 2000
    */
   delay = 2000;
+
+  /**
+   * Whether media idle state tracking has been paused.
+   */
+  get paused() {
+    return this._idlingPaused || this._mediaPaused;
+  }
+
+  set paused(paused) {
+    this._idlingPaused = paused;
+    this._handleIdleChange();
+  }
 
   constructor(
     protected readonly _host: ReactiveControllerHost & EventTarget,
@@ -57,7 +70,7 @@ export class MediaIdleController implements ReactiveController {
   }
 
   protected _handleIdleChange() {
-    if (this._mediaPaused) {
+    if (this.paused) {
       this._stopIdleTimer();
     } else {
       this._startIdleTimer();
@@ -67,7 +80,7 @@ export class MediaIdleController implements ReactiveController {
   protected _startIdleTimer() {
     this._stopIdleTimer();
     this._idleTimeout = window.setTimeout(() => {
-      this._dispatchIdleChange(!this._mediaPaused);
+      this._dispatchIdleChange(!this.paused);
     }, this.delay);
   }
 

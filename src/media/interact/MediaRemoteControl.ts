@@ -89,6 +89,18 @@ export class MediaRemoteControl {
     });
   }
 
+  resumeIdling(event?: Event) {
+    this._dispatchRequest('vds-resume-idling-request', {
+      originalEvent: event
+    });
+  }
+
+  pauseIdling(event?: Event) {
+    this._dispatchRequest('vds-pause-idling-request', {
+      originalEvent: event
+    });
+  }
+
   protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(
     type: EventType,
     eventInit: ExtractEventInit<MediaRequestEvents[EventType]>
