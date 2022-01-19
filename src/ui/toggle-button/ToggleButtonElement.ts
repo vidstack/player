@@ -7,8 +7,11 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { WithFocus } from '../../base/elements';
-import { hostedEventListener } from '../../base/events';
+import {
+  hostedEventListener,
+  isKeyboardClick,
+  isKeyboardEvent
+} from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { toggleButtonElementStyles } from './styles';
@@ -48,7 +51,19 @@ export class ToggleButtonElement extends LitElement {
   constructor() {
     super();
     if (__DEV__) logElementLifecycle(this);
-    hostedEventListener(this, 'click', this._handleButtonClick.bind(this));
+
+    (['pointerdown', 'keydown'] as const).forEach((eventType) => {
+      hostedEventListener(this, eventType, (event) => {
+        if (
+          this.disabled ||
+          (isKeyboardEvent(event) && !isKeyboardClick(event))
+        ) {
+          return;
+        }
+
+        this._handleButtonClick(event);
+      });
+    });
   }
 
   override connectedCallback(): void {
@@ -104,7 +119,6 @@ export class ToggleButtonElement extends LitElement {
   }
 
   protected _handleButtonClick(event: Event) {
-    if (this.disabled) return;
     this.pressed = !this.pressed;
   }
 
