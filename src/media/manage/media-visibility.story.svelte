@@ -10,6 +10,7 @@
   import { MediaVisibilityElement } from './MediaVisibilityElement';
   import { Variant } from '@vitebook/client';
   import { eventCallback, EventsAddon } from '@vitebook/client/addons';
+  import { spreadPropsAction } from '../../utils/story';
 
   safelyDefineCustomElement('vds-media-visibility', MediaVisibilityElement);
   safelyDefineCustomElement('vds-audio', AudioElement);
@@ -39,6 +40,26 @@
         exit-viewport="mute"
         enter-page="unmute"
         exit-page="mute"
+        on:vds-media-visibility-change={eventCallback}
+      >
+        <vds-audio src="https://media-files.vidstack.io/audio.mp3" controls />
+      </vds-media-visibility>
+    {/each}
+  </div>
+</Variant>
+
+<Variant name="Delayed">
+  <div class="container">
+    {#each Array.from(Array(5)) as _}
+      <vds-media-visibility
+        enter-viewport="play"
+        exit-viewport="pause"
+        enter-page="play"
+        exit-page="pause"
+        use:spreadPropsAction={{
+          intersectionEnterDelay: 1000,
+          pageEnterDelay: 1000
+        }}
         on:vds-media-visibility-change={eventCallback}
       >
         <vds-audio src="https://media-files.vidstack.io/audio.mp3" controls />

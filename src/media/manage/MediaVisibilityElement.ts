@@ -85,6 +85,14 @@ export class MediaVisibilityElement extends LitElement {
   pageChangeType: 'state' | 'visibility' = 'state';
 
   /**
+   * The amount of time in milliseconds to delay page enter actions.
+   *
+   * @default 0
+   */
+  @property({ type: Number, attribute: 'page-enter-delay' })
+  pageEnterDelay = 0;
+
+  /**
    * A DOM query selector for the element that is used as the viewport for checking visibility
    * of the media player. Must be a ancestor of the media player. Defaults to the browser viewport
    * if not specified.
@@ -102,6 +110,14 @@ export class MediaVisibilityElement extends LitElement {
    */
   @property({ type: Number, attribute: 'intersection-threshold' })
   intersectionThreshold = 1;
+
+  /**
+   * The amount of time in milliseconds to delay intersection enter actions.
+   *
+   * @default 0
+   */
+  @property({ type: Number, attribute: 'intersection-enter-delay' })
+  intersectionEnterDelay = 0;
 
   // -------------------------------------------------------------------------------------------
   // State
@@ -161,7 +177,7 @@ export class MediaVisibilityElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   protected _hasIntersected = false;
-
+  protected _intersectionTimeout?: any;
   protected intersectionController = new IntersectionController(
     this,
     {
@@ -171,6 +187,8 @@ export class MediaVisibilityElement extends LitElement {
       threshold: this.intersectionThreshold
     },
     (entries) => {
+      window.clearTimeout(this._intersectionTimeout);
+
       const entry = entries[0];
 
       this._isIntersecting = entry.isIntersecting;
@@ -178,7 +196,10 @@ export class MediaVisibilityElement extends LitElement {
       // Skip first, we only want as we enter/exit viewport (not initial load).
       if (this._hasIntersected) {
         if (entry.isIntersecting) {
-          this._triggerOnEnter(this.enterViewport);
+          this._intersectionTimeout = window.setTimeout(() => {
+            this._triggerOnEnter(this.enterViewport);
+            this._intersectionTimeout = undefined;
+          }, this.intersectionEnterDelay);
         } else if (this.exitViewport) {
           this._isIntersecting = false;
           this._triggerOnExit(this.exitViewport);
@@ -190,17 +211,23 @@ export class MediaVisibilityElement extends LitElement {
     }
   );
 
+  protected _pageTimeout?: any;
   protected pageController = new PageController(
     this,
     ({ state, visibility }) => {
-      if (this.isIntersecting) {
-        const newState = this.pageChangeType === 'state' ? state : visibility;
+      window.clearTimeout(this._pageTimeout);
 
-        if (newState === 'hidden') {
-          this._triggerOnExit(this.exitPage);
-        } else if (this.enterViewport) {
+      if (!this.isIntersecting) return;
+
+      const newState = this.pageChangeType === 'state' ? state : visibility;
+
+      if (newState === 'hidden') {
+        this._triggerOnExit(this.exitPage);
+      } else if (this.enterViewport) {
+        this._pageTimeout = window.setTimeout(() => {
           this._triggerOnEnter(this.enterPage);
-        }
+          this._pageTimeout = undefined;
+        }, this.pageEnterDelay);
       }
 
       this._dispatchVisibilityChange();
