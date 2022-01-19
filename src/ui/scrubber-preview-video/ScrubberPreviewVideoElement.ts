@@ -115,6 +115,7 @@ export class ScrubberPreviewVideoElement extends LitElement {
       <video
         part="video"
         muted
+        playsinline
         preload="auto"
         src=${ifNonEmpty(this.src)}
         @canplay=${this._handleCanPlay}
