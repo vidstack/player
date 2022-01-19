@@ -16,7 +16,7 @@ definitions.forEach((file) => {
 
 export default {
   input: entries,
-  external: CDN ? [] : (id) => /^lit/.test(id),
+  external: CDN ? [] : (id) => /node_modules\/lit/.test(id),
   output: {
     format: 'esm',
     dir: CDN ? 'dist-cdn' : PROD ? 'dist-prod' : 'dist',
