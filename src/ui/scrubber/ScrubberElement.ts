@@ -136,9 +136,9 @@ export class ScrubberElement extends TimeSliderElement {
     }
   );
 
-  protected _handleScrubberValueChange = hostedEventListener(
+  protected _handleScrubberDragValueChange = hostedEventListener(
     this,
-    'vds-slider-value-change',
+    'vds-slider-drag-value-change',
     (event) => {
       if (this.disabled) return;
       this.scrubberPreviewElement?.updatePreviewPosition(event);

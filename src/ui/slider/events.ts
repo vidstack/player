@@ -4,6 +4,7 @@ export type SliderEvents = {
   'vds-slider-drag-start': SliderDragStartEvent;
   'vds-slider-drag-end': SliderDragEndEvent;
   'vds-slider-value-change': SliderValueChangeEvent;
+  'vds-slider-drag-value-change': SliderDragValueChangeEvent;
 };
 
 /**
@@ -28,3 +29,11 @@ export type SliderDragEndEvent = VdsEvent<number>;
  * @event
  */
 export type SliderValueChangeEvent = VdsEvent<number>;
+
+/**
+ * Fired when the slider drag value changes. The drag value indicates the last slider value that
+ * the user has dragged to. The event detail contains the value.
+ *
+ * @event
+ */
+export type SliderDragValueChangeEvent = VdsEvent<number>;

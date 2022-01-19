@@ -201,12 +201,10 @@ export class TimeSliderElement extends SliderElement {
 
   protected readonly _mediaRemote = new MediaRemoteControl(this);
 
-  protected readonly _handleSliderValueChange = hostedEventListener(
+  protected readonly _handleSliderDragValueChange = hostedEventListener(
     this,
-    'vds-slider-value-change',
+    'vds-slider-drag-value-change',
     (event) => {
-      this.value = event.detail;
-
       if (this.isDragging) {
         this._dispatchSeekingRequest(event);
       }
@@ -233,8 +231,6 @@ export class TimeSliderElement extends SliderElement {
   }, this.seekingRequestThrottle);
 
   protected _updateValueToCurrentTime() {
-    if (this.isDragging) return;
-
     const percentage =
       this._mediaDuration > 0
         ? (this._mediaCurrentTime / this._mediaDuration) * 100

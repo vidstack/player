@@ -99,7 +99,7 @@ export class VolumeSliderElement extends SliderElement {
 
   protected readonly _handleSliderValueChange = hostedEventListener(
     this,
-    'vds-slider-value-change',
+    'vds-slider-drag-value-change',
     (event) => {
       const newVolume = event.detail;
       const mediaVolume = round(newVolume / 100, 3);

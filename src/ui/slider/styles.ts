@@ -39,7 +39,6 @@ export const sliderElementStyles = css`
      * It'd be nice to use translateX() for performance/animation reasons but had issues with
      * track's bounding box not being correct for random number of RAF cycles.
      */
-    left: var(--vds-slider-fill-percent);
     width: var(--vds-slider-thumb-width, 16px);
     height: 100%;
     user-select: none;
@@ -48,6 +47,14 @@ export const sliderElementStyles = css`
     z-index: 300;
     transform: translateX(-50%);
     outline: 0;
+  }
+
+  #thumb-container {
+    left: var(--vds-slider-fill-percent);
+  }
+
+  #thumb-container.dragging {
+    left: var(--vds-slider-drag-percent);
   }
 
   #thumb {

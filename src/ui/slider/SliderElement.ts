@@ -175,8 +175,7 @@ export class SliderElement extends LitElement {
   @property({ type: Boolean, attribute: 'custom-value-text' })
   customValueText = false;
 
-  @state()
-  protected _isDragging = false;
+  @state() protected _isDragging = false;
 
   /**
    * Whether the slider thumb is currently being dragged.
@@ -212,6 +211,21 @@ export class SliderElement extends LitElement {
     return this.fillRate * 100;
   }
 
+  @state() protected _dragValue = 0;
+
+  get dragValue() {
+    return this._dragValue;
+  }
+
+  get dragRate() {
+    const range = this.max - this.min;
+    return this._dragValue / range;
+  }
+
+  get dragPercent() {
+    return this.dragRate * 100;
+  }
+
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
@@ -223,7 +237,7 @@ export class SliderElement extends LitElement {
 
   protected override updated(changedProperties: PropertyValues) {
     if (changedProperties.has('value')) {
-      this._updateValue(this.value);
+      this.value = this._getClampedValue(this.value);
     }
 
     if (changedProperties.has('disabled') && this.disabled) {
@@ -277,7 +291,7 @@ export class SliderElement extends LitElement {
       const steps = (this.value + diff) / this.step;
       const value = this.step * steps;
 
-      this._updateValue(value);
+      this.value = this._getClampedValue(value);
       this._dispatchValueChange(event);
     }
   );
@@ -308,7 +322,9 @@ export class SliderElement extends LitElement {
         style=${styleMap({
           '--vds-slider-fill-value': String(this.value),
           '--vds-slider-fill-rate': String(this.fillRate),
-          '--vds-slider-fill-percent': `${this.fillPercent}%`
+          '--vds-slider-fill-percent': `${this.fillPercent}%`,
+          '--vds-slider-drag-rate': String(this.dragRate),
+          '--vds-slider-drag-percent': `${this.dragPercent}%`
         })}
         @pointerdown=${this._handleSliderPointerMove}
         ${ref(this._rootRef)}
@@ -350,6 +366,7 @@ export class SliderElement extends LitElement {
       <div
         id="thumb-container"
         part="thumb-container"
+        class=${this.isDragging ? 'dragging' : ''}
         @pointerdown=${this._handleThumbContainerPointerDown}
         ${ref(this._thumbContainerRef)}
       >
@@ -485,7 +502,9 @@ export class SliderElement extends LitElement {
 
     this._isDragging = true;
     this.setAttribute('dragging', '');
-    this._updateValueBasedOnThumbPosition(event);
+
+    this._dragValue = this._getValueBasedOnThumbPosition(event);
+    this._dispatchDragValueChange(event);
 
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-start', {
@@ -501,7 +520,12 @@ export class SliderElement extends LitElement {
     this._isDragging = false;
     this._dispatchValueChange.cancel();
     this.removeAttribute('dragging');
-    this._updateValueBasedOnThumbPosition(event);
+
+    const newValue = this._getValueBasedOnThumbPosition(event);
+    this.value = newValue;
+    this._dragValue = newValue;
+    this._dispatchValueChange(event);
+    this._dispatchDragValueChange(event);
 
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-end', {
@@ -541,29 +565,28 @@ export class SliderElement extends LitElement {
 
   protected readonly _handlePointerMove = rafThrottle((event: PointerEvent) => {
     if (this.disabled || !this._isDragging) return;
-    this._updateValueBasedOnThumbPosition(event);
-    this._dispatchValueChange(event);
+    this._dragValue = this._getValueBasedOnThumbPosition(event);
+    this._dispatchDragValueChange(event);
   });
 
-  protected _updateValue(value: number) {
-    this.value = clampNumber(
+  protected _getClampedValue(value: number) {
+    return clampNumber(
       this.min,
       round(value, getNumberOfDecimalPlaces(this.step)),
       this.max
     );
   }
 
-  protected _updateValueByRate(rate: number) {
+  protected _getValueFromRate(rate: number) {
     const boundRate = clampNumber(0, rate, 1);
     const range = this.max - this.min;
     const fill = range * boundRate;
     const stepRatio = Math.round(fill / this.step);
     const steps = this.step * stepRatio;
-    const value = this.min + steps;
-    this._updateValue(value);
+    return this.min + steps;
   }
 
-  protected _updateValueBasedOnThumbPosition(event: PointerEvent) {
+  protected _getValueBasedOnThumbPosition(event: PointerEvent) {
     const thumbClientX = event.clientX;
 
     const { left: trackLeft, width: trackWidth } =
@@ -571,18 +594,30 @@ export class SliderElement extends LitElement {
 
     const thumbPositionRate = (thumbClientX - trackLeft) / trackWidth;
 
-    // Calling this will update `this.value`.
-    this._updateValueByRate(thumbPositionRate);
+    return this._getValueFromRate(thumbPositionRate);
   }
 
   protected _lastDispatchedValue = this.value;
-
   protected readonly _dispatchValueChange = rafThrottle((event: Event) => {
     if (this.value === this._lastDispatchedValue) return;
 
     this.dispatchEvent(
       vdsEvent('vds-slider-value-change', {
         detail: this.value,
+        originalEvent: event
+      })
+    );
+
+    this._lastDispatchedValue = this.value;
+  });
+
+  protected _lastDragDispatchedValue = this.dragValue;
+  protected readonly _dispatchDragValueChange = rafThrottle((event: Event) => {
+    if (this.dragValue === this._lastDragDispatchedValue) return;
+
+    this.dispatchEvent(
+      vdsEvent('vds-slider-drag-value-change', {
+        detail: this.dragValue,
         originalEvent: event
       })
     );
