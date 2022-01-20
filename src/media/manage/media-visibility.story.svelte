@@ -57,7 +57,7 @@
         enter-page="play"
         exit-page="pause"
         use:spreadPropsAction={{
-          intersectionEnterDelay: 1000,
+          viewportEnterDelay: 1000,
           pageEnterDelay: 1000
         }}
         on:vds-media-visibility-change={eventCallback}

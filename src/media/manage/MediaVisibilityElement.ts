@@ -52,6 +52,14 @@ export class MediaVisibilityElement extends LitElement {
   exitViewport?: ExitVisibilityMediaAction;
 
   /**
+   * The amount of time in milliseconds to delay viewport enter actions.
+   *
+   * @default 0
+   */
+  @property({ type: Number, attribute: 'viewport-enter-delay' })
+  viewportEnterDelay = 0;
+
+  /**
    * The action to perform on the media provider when the page becomes visible.
    *
    * @default undefined
@@ -110,14 +118,6 @@ export class MediaVisibilityElement extends LitElement {
    */
   @property({ type: Number, attribute: 'intersection-threshold' })
   intersectionThreshold = 1;
-
-  /**
-   * The amount of time in milliseconds to delay intersection enter actions.
-   *
-   * @default 0
-   */
-  @property({ type: Number, attribute: 'intersection-enter-delay' })
-  intersectionEnterDelay = 0;
 
   // -------------------------------------------------------------------------------------------
   // State
@@ -199,7 +199,7 @@ export class MediaVisibilityElement extends LitElement {
           this._intersectionTimeout = window.setTimeout(() => {
             this._triggerOnEnter(this.enterViewport);
             this._intersectionTimeout = undefined;
-          }, this.intersectionEnterDelay);
+          }, this.viewportEnterDelay);
         } else if (this.exitViewport) {
           this._isIntersecting = false;
           this._triggerOnExit(this.exitViewport);
