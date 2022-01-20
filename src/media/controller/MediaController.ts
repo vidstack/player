@@ -521,6 +521,7 @@ export class MediaController {
       } else if (event.type === 'vds-seeked') {
         this._fireWaiting.cancel();
         this._mediaStore.seeking.set(false);
+        this._mediaStore.waiting.set(false);
         this._mediaStore.currentTime.set(event.detail);
         this.satisfyMediaRequest('seeked', event);
       }
