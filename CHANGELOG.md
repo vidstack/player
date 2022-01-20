@@ -1,3 +1,9 @@
+## [0.8.1](https://github.com/vidstack/player/compare/v0.8.0...v0.8.1) (2022-01-20)
+
+### Bug Fixes
+
+- minification is breaking decorators ([d90af7b](https://github.com/vidstack/player/commit/d90af7bb2fae83a030acc0413e988abd4c52aece))
+
 # [0.8.0](https://github.com/vidstack/player/compare/v0.7.1...v0.8.0) (2022-01-19)
 
 ### Bug Fixes
