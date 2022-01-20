@@ -445,6 +445,7 @@ export class MediaController {
       this._mediaStore.playing.set(true);
       this._mediaStore.waiting.set(false);
       this._mediaStore.seeking.set(false);
+      this._mediaStore.ended.set(false);
 
       if (!get(this._mediaStore.started)) {
         this._mediaStore.started.set(true);
@@ -493,6 +494,7 @@ export class MediaController {
     this._host,
     'vds-replay',
     (event) => {
+      this._mediaStore.ended.set(false);
       event.requestEvent = this._pendingMediaRequests.play[0];
     }
   );
