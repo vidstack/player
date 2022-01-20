@@ -1,3 +1,10 @@
+## [0.8.2](https://github.com/vidstack/player/compare/v0.8.1...v0.8.2) (2022-01-20)
+
+### Bug Fixes
+
+- media ended store is not updated ([10ef1c3](https://github.com/vidstack/player/commit/10ef1c382e3b15529ce0890954b7ee35c106e71a))
+- rename globals file from `global.d.ts` to `globals.d.ts` ([04b0813](https://github.com/vidstack/player/commit/04b08134752e36510480abd2234719def366cc9a))
+
 ## [0.8.1](https://github.com/vidstack/player/compare/v0.8.0...v0.8.1) (2022-01-20)
 
 ### Bug Fixes
