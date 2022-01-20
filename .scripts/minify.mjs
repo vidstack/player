@@ -53,6 +53,8 @@ async function runMinification(entryPoints, outDir) {
     ecma: 2019
   });
 
+  const nameCacheTable = Object.values(nameCache)[1].props;
+
   await Promise.all(
     entryPoints.map(async (file) => {
       const contents = (await fs.readFile(file)).toString();
@@ -69,6 +71,14 @@ async function runMinification(entryPoints, outDir) {
         ecma: 2019,
         nameCache
       });
+
+      // Make sure we update typescript decorators as well.
+      for (const key in nameCacheTable) {
+        output.code = output.code.replace(
+          new RegExp(`"${key.slice(1)}"`, 'g'),
+          `"${nameCacheTable[key]}"`
+        );
+      }
 
       await fs.writeFile(file, output.code);
     })
