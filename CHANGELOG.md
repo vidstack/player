@@ -1,3 +1,9 @@
+## [0.8.3](https://github.com/vidstack/player/compare/v0.8.2...v0.8.3) (2022-01-20)
+
+### Bug Fixes
+
+- update `waiting` to false once media has seeked ([998b2f5](https://github.com/vidstack/player/commit/998b2f5183f041cdc162d11e527f70683eb0ba37))
+
 ## [0.8.2](https://github.com/vidstack/player/compare/v0.8.1...v0.8.2) (2022-01-20)
 
 ### Bug Fixes
