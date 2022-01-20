@@ -18,7 +18,7 @@
     "define/",
     "types/",
     "index.d.ts",
-    "global.d.ts"
+    "globals.d.ts"
   ],
   "sideEffects": [
     "define/*",
