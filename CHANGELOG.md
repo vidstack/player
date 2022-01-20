@@ -1,3 +1,9 @@
+## [0.8.4](https://github.com/vidstack/player/compare/v0.8.3...v0.8.4) (2022-01-20)
+
+### Bug Fixes
+
+- rename `intersection-enter-delay` to `viewport-enter-delay` ([2c9a9e8](https://github.com/vidstack/player/commit/2c9a9e8cc03b09a9d689898afc9d422b604c2574))
+
 ## [0.8.3](https://github.com/vidstack/player/compare/v0.8.2...v0.8.3) (2022-01-20)
 
 ### Bug Fixes
