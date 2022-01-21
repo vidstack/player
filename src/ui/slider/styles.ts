@@ -9,6 +9,9 @@ export const sliderElementStyles = css`
   :host {
     display: block;
     contain: content;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   :host([hidden]) {

@@ -5,6 +5,8 @@ export const timeElementStyles = css`
     display: table;
     contain: content;
     font-variant-numeric: tabular-nums;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   :host([hidden]) {
