@@ -1,4 +1,4 @@
-import { isPointerEvent } from '../validate';
+import { isPointerEvent } from '../events';
 
 test('it should return true given pointer event', () => {
   expect(isPointerEvent(new MouseEvent('pointer-'))).to.be.true;

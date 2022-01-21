@@ -7,14 +7,11 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import {
-  hostedEventListener,
-  isKeyboardClick,
-  isKeyboardEvent
-} from '../../base/events';
+import { hostedEventListener } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { focusVisiblePolyfill } from '../../base/observers';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
+import { isKeyboardClick, isKeyboardEvent } from '../../utils/events';
 import { toggleButtonElementStyles } from './styles';
 
 /**

@@ -9,16 +9,12 @@ import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
-import {
-  isPointerEvent,
-  isVdsEvent,
-  VdsEvent,
-  vdsEvent
-} from '../../base/events';
+import { isVdsEvent, VdsEvent, vdsEvent } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { get, hostedStoreRecordSubscription } from '../../base/stores';
 import { hostedMediaStoreSubscription } from '../../media';
 import { getSlottedChildren, raf } from '../../utils/dom';
+import { isPointerEvent } from '../../utils/events';
 import { clampNumber, round } from '../../utils/number';
 import { rafThrottle } from '../../utils/timing';
 import { isNil } from '../../utils/unit';
