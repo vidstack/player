@@ -24,6 +24,7 @@ export type MediaEvents = {
   'vds-autoplay-change': AutoplayChangeEvent;
   'vds-autoplay-fail': AutoplayFailEvent;
   'vds-autoplay': AutoplayEvent;
+  'vds-can-load': CanLoadEvent;
   'vds-can-play-through': CanPlayThroughEvent;
   'vds-can-play': CanPlayEvent;
   'vds-controls-change': ControlsChangeEvent;
@@ -102,13 +103,11 @@ export type AutoplayFailEvent = VdsEvent<unknown>;
 export type AutoplayEvent = VdsEvent<{ muted: boolean }>;
 
 /**
- * Fired when the user agent can play the media, and estimates that **enough** data has been
- * loaded to play the media up to its end without having to stop for further buffering of content.
- *
- * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
+ * Fired when the provider can begin loading media. This depends on the type of `loadingStrategy`
+ * that has been configured. The `eager` strategy will be immediate, and `lazy` once the provider
+ * has entered the viewport.
  */
-export type CanPlayThroughEvent = VdsEvent<{ duration: number }>;
+export type CanLoadEvent = VdsEvent<void>;
 
 /**
  * Fired when the user agent can play the media, but estimates that **not enough** data has been
@@ -118,6 +117,15 @@ export type CanPlayThroughEvent = VdsEvent<{ duration: number }>;
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
  */
 export type CanPlayEvent = VdsEvent<{ duration: number }>;
+
+/**
+ * Fired when the user agent can play the media, and estimates that **enough** data has been
+ * loaded to play the media up to its end without having to stop for further buffering of content.
+ *
+ * @event
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
+ */
+export type CanPlayThroughEvent = VdsEvent<{ duration: number }>;
 
 /**
  * Fired when the `controls` property has changed value.

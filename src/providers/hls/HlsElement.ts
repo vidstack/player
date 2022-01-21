@@ -162,6 +162,7 @@ export class HlsElement extends VideoElement {
     if (
       changedProperties.has('hlsLibrary') &&
       this.hasUpdated &&
+      this.canLoad &&
       !this.shouldUseNativeHlsSupport
     ) {
       this._initiateHlsLibraryDownloadConnection();
@@ -171,11 +172,14 @@ export class HlsElement extends VideoElement {
     }
   }
 
-  protected override firstUpdated(changedProperties: PropertyValues) {
-    super.firstUpdated(changedProperties);
+  override disconnectedCallback() {
+    this._destroyHlsEngine();
+    super.disconnectedCallback();
+  }
 
-    // TODO(mihar-22): Add a lazy load option to wait until in viewport.
-    // Wait a frame to ensure the browser has had a chance to reach first-contentful-paint.
+  override async handleMediaCanLoad() {
+    await super.handleMediaCanLoad();
+
     window.requestAnimationFrame(() => {
       this._handleMediaSrcChange();
     });
@@ -189,11 +193,6 @@ export class HlsElement extends VideoElement {
     if (this.shouldUseNativeHlsSupport) {
       this.requestUpdate();
     }
-  }
-
-  override disconnectedCallback() {
-    this._destroyHlsEngine();
-    super.disconnectedCallback();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -291,7 +290,9 @@ export class HlsElement extends VideoElement {
    * `<video>` element. If we're using `hls.js` we don't want to override the `blob`.
    */
   protected override _shouldSetVideoSrcAttr(): boolean {
-    return this.shouldUseNativeHlsSupport || !this.isHlsStream;
+    return (
+      this.canLoad && (this.shouldUseNativeHlsSupport || !this.isHlsStream)
+    );
   }
 
   /**
@@ -396,12 +397,22 @@ export class HlsElement extends VideoElement {
 
     // If it's not a remote source, it must of been passed in directly as a static/dyanmic import.
     if (!isString(this.hlsLibrary) && isUndefined(this._Hls)) {
-      this._Hls = isFunction(this.hlsLibrary)
-        ? (await (this.hlsLibrary as DynamicHlsConstructorImport)())?.default
-        : this.hlsLibrary;
+      // Dynamic import.
+      if (isFunction(this.hlsLibrary)) {
+        const cacheKey = String(this.hlsLibrary);
+
+        this._Hls = HLS_LIB_CACHE.has(cacheKey)
+          ? HLS_LIB_CACHE.get(cacheKey)
+          : (await (this.hlsLibrary as DynamicHlsConstructorImport)())?.default;
+
+        if (this._Hls) HLS_LIB_CACHE.set(cacheKey, this._Hls);
+      } else {
+        // Static.
+        this._Hls = this.hlsLibrary;
+      }
     }
 
-    if (!this.Hls?.isSupported()) {
+    if (!this.Hls?.isSupported?.()) {
       if (__DEV__) {
         this._logger?.warn('`hls.js` is not supported in this environment');
       }
@@ -532,7 +543,7 @@ export class HlsElement extends VideoElement {
     super._handleMediaSrcChange();
 
     // We don't want to load `hls.js` until the browser has had a chance to paint.
-    if (!this.hasUpdated) return;
+    if (!this.hasUpdated || !this.canLoad) return;
 
     if (!this.isHlsStream) {
       this._detachHlsEngine();

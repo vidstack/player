@@ -5,6 +5,8 @@
 </script>
 
 <script>
+  import { Variant } from '@vitebook/client';
+
   import '../../define/vds-video';
   import { MediaEventsAddon, mediaStoreAction } from '../../media/story-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
@@ -23,13 +25,27 @@
   };
 </script>
 
-<vds-video
-  bind:this={mediaProvider}
-  use:spreadPropsAction={mediaProps}
-  use:mediaStoreAction={(newProps) => {
-    mediaProps = { ...mediaProps, ...newProps };
-  }}
-/>
+<Variant name="Default">
+  <vds-video
+    bind:this={mediaProvider}
+    use:spreadPropsAction={mediaProps}
+    use:mediaStoreAction={(newProps) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+</Variant>
+
+<Variant name="Lazy">
+  <vds-video
+    loading-strategy="lazy"
+    style="margin: 100vh 0;"
+    bind:this={mediaProvider}
+    use:spreadPropsAction={mediaProps}
+    use:mediaStoreAction={(newProps) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+</Variant>
 
 <VideoControlsAddon
   {...mediaProps}

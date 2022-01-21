@@ -1,10 +1,14 @@
 import { LitElement, PropertyValues } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
 import { DisposalBin, listen, vdsEvent } from '../../base/events';
 import { FullscreenController } from '../../base/fullscreen';
 import { LogDispatcher } from '../../base/logger';
+import {
+  createIntersectionController,
+  IntersectionController
+} from '../../base/observers';
 import { createHostedRequestQueue, RequestQueue } from '../../base/queue';
 import {
   ScreenOrientationController,
@@ -42,7 +46,24 @@ export type MediaProviderConnectEvent = DiscoveryEvent<MediaProviderElement>;
 export abstract class MediaProviderElement extends LitElement {
   constructor() {
     super();
+
     dispatchDiscoveryEvents(this, 'vds-media-provider-connect');
+
+    const controller = createIntersectionController(
+      this,
+      { threshold: 0 },
+      (entries) => {
+        if (this.loadingStrategy !== 'lazy') {
+          controller.hostDisconnected();
+          return;
+        }
+
+        if (entries[0]?.isIntersecting) {
+          this.handleMediaCanLoad();
+          controller.hostDisconnected();
+        }
+      }
+    );
   }
 
   // -------------------------------------------------------------------------------------------
@@ -82,11 +103,16 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected override firstUpdated(changedProperties: PropertyValues) {
     super.firstUpdated(changedProperties);
+
     this.dispatchEvent(
       vdsEvent('vds-fullscreen-support-change', {
         detail: this.canRequestFullscreen
       })
     );
+
+    if (this.loadingStrategy === 'eager') {
+      this.handleMediaCanLoad();
+    }
   }
 
   override disconnectedCallback() {
@@ -336,6 +362,8 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected abstract _setMuted(isMuted: boolean): void;
 
+  // ---
+
   // -------------------------------------------------------------------------------------------
   // Readonly Properties
   // -------------------------------------------------------------------------------------------
@@ -574,6 +602,34 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   // -------------------------------------------------------------------------------------------
+  // Loading Strategy
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Whether media is allowed to begin loading. This depends on the `loadingStrategy`
+   * configuration. If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will
+   * become `true` once the media has entered the viewport.
+   */
+  get canLoad() {
+    return this.mediaState.canLoad;
+  }
+
+  /**
+   * The type of loading strategy indicates when the provider can begin loading media. If `eager`,
+   * media will be loaded immediately, and `lazy` will delay loading until the provider has
+   * entered the viewport.
+   */
+  @property({ attribute: 'loading-strategy' })
+  loadingStrategy: 'eager' | 'lazy' = 'eager';
+
+  /**
+   * Called when media can begin loading.
+   */
+  async handleMediaCanLoad(): Promise<void> {
+    this.dispatchEvent(vdsEvent('vds-can-load'));
+  }
+
+  // -------------------------------------------------------------------------------------------
   // Playback
   // -------------------------------------------------------------------------------------------
 
@@ -735,11 +791,7 @@ export abstract class MediaProviderElement extends LitElement {
     }
 
     this.mediaRequestQueue.stop();
-    this.dispatchEvent(
-      vdsEvent('vds-src-change', {
-        detail: src
-      })
-    );
+    this.dispatchEvent(vdsEvent('vds-src-change', { detail: src }));
   }
 
   // -------------------------------------------------------------------------------------------

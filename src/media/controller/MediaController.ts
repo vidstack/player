@@ -105,6 +105,7 @@ export class MediaController {
     this._mediaProviderConnectedQueue.destroy();
     this._mediaProviderDisconnectedDisposal.empty();
     this._mediaProvider = undefined;
+    this._mediaStore.canLoad.set(false);
   }
 
   protected _flushMediaProviderConnectedQueue() {
@@ -203,6 +204,14 @@ export class MediaController {
 
     return true;
   }
+
+  protected _handleCanLoad = hostedEventListener(
+    this._host,
+    'vds-can-load',
+    () => {
+      this._mediaStore.canLoad.set(true);
+    }
+  );
 
   protected _handleMuteRequest = hostedEventListener(
     this._host,
@@ -674,6 +683,7 @@ export class MediaController {
         'autoplay',
         'canRequestFullscreen',
         'controls',
+        'canLoad',
         'loop',
         'muted',
         'playsinline',

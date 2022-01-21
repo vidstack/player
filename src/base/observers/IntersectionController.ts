@@ -171,3 +171,9 @@ export class IntersectionController implements ReactiveController {
     this._observer.disconnect();
   }
 }
+
+export function createIntersectionController(
+  ...params: ConstructorParameters<typeof IntersectionController>
+) {
+  return new IntersectionController(...params);
+}

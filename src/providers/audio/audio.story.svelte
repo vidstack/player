@@ -5,6 +5,8 @@
 </script>
 
 <script>
+  import { Variant } from '@vitebook/client';
+
   import {
     MediaControlsAddon,
     MediaEventsAddon,
@@ -24,13 +26,27 @@
   };
 </script>
 
-<vds-audio
-  bind:this={mediaProvider}
-  use:spreadPropsAction={mediaProps}
-  use:mediaStoreAction={(newProps) => {
-    mediaProps = { ...mediaProps, ...newProps };
-  }}
-/>
+<Variant name="Default">
+  <vds-audio
+    bind:this={mediaProvider}
+    use:spreadPropsAction={mediaProps}
+    use:mediaStoreAction={(newProps) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+</Variant>
+
+<Variant name="Lazy">
+  <vds-audio
+    loading-strategy="lazy"
+    style="margin: 100vh 0;"
+    bind:this={mediaProvider}
+    use:spreadPropsAction={mediaProps}
+    use:mediaStoreAction={(newProps) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+</Variant>
 
 <MediaControlsAddon
   {...mediaProps}

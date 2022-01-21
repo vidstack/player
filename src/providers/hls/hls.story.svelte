@@ -47,6 +47,19 @@
   />
 </Variant>
 
+<Variant name="Lazy">
+  <vds-hls
+    loading-strategy="lazy"
+    style="margin: 100vh 0;"
+    bind:this={mediaProvider}
+    use:spreadPropsAction={mediaProps}
+    use:spreadPropsAction={{ hlsLibrary: () => import('hls.js') }}
+    use:mediaStoreAction={(newProps) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+</Variant>
+
 <VideoControlsAddon
   {...mediaProps}
   on:change={({ detail: newProps }) => {

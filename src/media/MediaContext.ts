@@ -51,14 +51,11 @@ export type MediaContext = {
    */
   bufferedAmount: number;
   /**
-   * Whether the native browser fullscreen API is available, or the current provider can
-   * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
-   * only that it can be attempted.
-   *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   * Whether media is allowed to begin loading. This depends on the `loadingStrategy`
+   * configuration. If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will
+   * become `true` once the media has entered the viewport.
    */
-  canRequestFullscreen: boolean;
+  canLoad: boolean;
   /**
    * Whether the user agent can play the media, but estimates that **not enough** data has been
    * loaded to play the media up to its end without having to stop for further buffering of
@@ -68,6 +65,15 @@ export type MediaContext = {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
    */
   canPlay: boolean;
+  /**
+   * Whether the native browser fullscreen API is available, or the current provider can
+   * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
+   * only that it can be attempted.
+   *
+   * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   */
+  canRequestFullscreen: boolean;
   /**
    * Indicates whether a user interface should be shown for controlling the resource. Set this to
    * `false` when you want to provide your own custom controls, and `true` if you want the current

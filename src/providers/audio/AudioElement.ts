@@ -74,6 +74,6 @@ export class AudioElement extends Html5MediaElement {
    * `<audio>` element.
    */
   protected _shouldSetAudioSrcAttr(): boolean {
-    return true;
+    return this.canLoad;
   }
 }

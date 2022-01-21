@@ -219,7 +219,9 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected override firstUpdated(changedProps: PropertyValues): void {
     super.firstUpdated(changedProps);
-    this._bindMediaEventListeners();
+    if (this.canLoad) {
+      this._bindMediaEventListeners();
+    }
   }
 
   override disconnectedCallback() {
@@ -293,7 +295,7 @@ export class Html5MediaElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
 
   protected _handleDefaultSlotChange() {
-    if (isNil(this.mediaElement)) return;
+    if (isNil(this.mediaElement) || !this.canLoad) return;
     this._cancelTimeUpdates();
     this._cleanupOldSourceNodes();
     this._attachNewSourceNodes();
@@ -328,6 +330,20 @@ export class Html5MediaElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
   // Events
   // -------------------------------------------------------------------------------------------
+
+  override async handleMediaCanLoad() {
+    super.handleMediaCanLoad();
+
+    this._bindMediaEventListeners();
+
+    if (getSlottedChildren(this).length > 0) {
+      this._attachNewSourceNodes();
+    }
+
+    this.requestUpdate();
+    await this.updateComplete;
+    this.load();
+  }
 
   protected _bindMediaEventListeners() {
     if (isNil(this.mediaElement)) return;
@@ -727,7 +743,9 @@ export class Html5MediaElement extends MediaProviderElement {
         this._logger?.debug('Calling `load()` on media element');
       }
 
-      this.mediaElement?.load();
+      if (this.canLoad) {
+        this.mediaElement?.load();
+      }
     }
   }
 

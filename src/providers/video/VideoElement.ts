@@ -162,7 +162,7 @@ export class VideoElement extends Html5MediaElement {
    * `<video>` element.
    */
   protected _shouldSetVideoSrcAttr(): boolean {
-    return true;
+    return this.canLoad;
   }
 
   // -------------------------------------------------------------------------------------------
