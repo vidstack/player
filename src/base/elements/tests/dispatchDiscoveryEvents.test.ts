@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 
-import { waitForEvent } from '../../../global/tests/utils';
+import { waitForEvent } from '../../../utils/events';
 import { isFunction } from '../../../utils/unit';
 import { dispatchDiscoveryEvents } from '../discovery';
 

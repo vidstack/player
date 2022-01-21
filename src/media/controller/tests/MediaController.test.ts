@@ -3,7 +3,7 @@ import '../../../define/vds-fake-media-provider';
 
 import { fixture, html } from '@open-wc/testing-helpers';
 
-import { waitForEvent } from '../../../global/tests/utils';
+import { waitForEvent } from '../../../utils/events';
 import { isFunction } from '../../../utils/unit';
 import { MediaRemoteControl } from '../../interact';
 import {

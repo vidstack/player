@@ -2,7 +2,7 @@ import '../../../define/vds-fake-media-provider';
 
 import { elementUpdated, fixture } from '@open-wc/testing-helpers';
 
-import { waitForEvent } from '../../../global/tests/utils';
+import { waitForEvent } from '../../../utils/events';
 import { isFunction } from '../../../utils/unit';
 import { FakeMediaProviderElement } from '../../test-utils';
 import { MediaProviderElement } from '../MediaProviderElement';

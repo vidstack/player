@@ -1,4 +1,4 @@
-import { waitForEvent } from '../../../global/tests/utils';
+import { waitForEvent } from '../../../utils/events';
 import { isGroupedLog } from '../groupedLog';
 import { LogDispatcher } from '../LogDispatcher';
 import { LogLevel } from '../LogLevel';

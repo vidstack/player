@@ -5,8 +5,8 @@ import { elementUpdated } from '@open-wc/testing-helpers';
 import { html } from 'lit';
 
 import { vdsEvent } from '../../../base/events';
-import { waitForEvent } from '../../../global/tests/utils';
 import { buildMediaPlayerFixture } from '../../../media/test-utils';
+import { waitForEvent } from '../../../utils/events';
 
 async function buildFixture() {
   const { player } = await buildMediaPlayerFixture(html`

@@ -3,8 +3,8 @@ import '../../../define/vds-play-button';
 import { elementUpdated } from '@open-wc/testing-helpers';
 import { html } from 'lit';
 
-import { waitForEvent } from '../../../global/tests/utils';
 import { buildMediaPlayerFixture } from '../../../media/test-utils';
+import { waitForEvent } from '../../../utils/events';
 
 async function buildFixture() {
   const { player } = await buildMediaPlayerFixture(html`

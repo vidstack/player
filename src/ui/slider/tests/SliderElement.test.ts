@@ -3,7 +3,7 @@ import '../../../define/vds-slider';
 import { elementUpdated, fixture } from '@open-wc/testing-helpers';
 import { html } from 'lit';
 
-import { waitForEvent } from '../../../global/tests/utils';
+import { waitForEvent } from '../../../utils/events';
 import { SliderElement } from '../SliderElement';
 
 async function buildFixture() {

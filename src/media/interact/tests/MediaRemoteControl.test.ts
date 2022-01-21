@@ -1,7 +1,7 @@
 import { fixture } from '@open-wc/testing-helpers';
 import { html, LitElement } from 'lit';
 
-import { waitForEvent } from '../../../global/tests/utils';
+import { waitForEvent } from '../../../utils/events';
 import { MediaRemoteControl } from '../MediaRemoteControl';
 
 class RemoteControlElement extends LitElement {

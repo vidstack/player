@@ -3,7 +3,7 @@ import '../../../define/vds-media-controller';
 import { LitElement } from 'lit';
 
 import { VdsEvent } from '../../../base/events';
-import { waitForEvent } from '../../../global/tests/utils';
+import { waitForEvent } from '../../../utils/events';
 import { hostedMediaEventListener } from '../hostedMediaEventListener';
 
 class MediaListenerElement extends LitElement {
