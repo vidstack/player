@@ -12,10 +12,10 @@
   } from '@vitebook/client/addons';
   import { safelyDefineCustomElement } from '../../utils/dom';
 
-  import { spreadPropsAction } from '../../utils/story';
+  import { spreadPropsAction } from '../../utils/svelte/actions';
 
   import { SliderElement } from './SliderElement';
-  import SliderControlsAddon from './story/SliderControlsAddon.svelte';
+  import SliderControlsAddon from './story-utils/SliderControlsAddon.svelte';
 
   safelyDefineCustomElement('vds-slider', SliderElement);
 

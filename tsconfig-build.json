@@ -19,6 +19,7 @@
     "src/**/story/**",
     "src/**/stories/**",
     "src/global/tests",
+    "src/**/story-utils/**",
     "src/media/test-utils"
   ]
 }

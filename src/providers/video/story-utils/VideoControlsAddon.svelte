@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
 
-  import { MediaControlsAddon } from '../../../media/story';
+  import { MediaControlsAddon } from '../../../media/story-utils';
   import type {
     MediaControlsList,
     MediaCrossOriginOption,

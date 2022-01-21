@@ -7,7 +7,7 @@
 <script>
   import { ControlsAddon } from '@vitebook/client/addons';
   import { safelyDefineCustomElement } from '../../utils/dom';
-  import { spreadPropsAction } from '../../utils/story';
+  import { spreadPropsAction } from '../../utils/svelte/actions';
   import { TimeElement } from './TimeElement';
 
   safelyDefineCustomElement('vds-time', TimeElement);

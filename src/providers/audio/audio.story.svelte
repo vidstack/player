@@ -9,9 +9,9 @@
     MediaControlsAddon,
     MediaEventsAddon,
     mediaStoreAction
-  } from '../../media/story';
+  } from '../../media/story-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
-  import { spreadPropsAction } from '../../utils/story';
+  import { spreadPropsAction } from '../../utils/svelte/actions';
   import { AudioElement } from './AudioElement';
 
   safelyDefineCustomElement('vds-audio', AudioElement);

@@ -10,7 +10,7 @@
   import { MediaVisibilityElement } from './MediaVisibilityElement';
   import { Variant } from '@vitebook/client';
   import { eventCallback, EventsAddon } from '@vitebook/client/addons';
-  import { spreadPropsAction } from '../../utils/story';
+  import { spreadPropsAction } from '../../utils/svelte/actions';
 
   safelyDefineCustomElement('vds-media-visibility', MediaVisibilityElement);
   safelyDefineCustomElement('vds-audio', AudioElement);

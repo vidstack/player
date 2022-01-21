@@ -6,10 +6,10 @@
 
 <script>
   import '../../define/vds-video';
-  import { MediaEventsAddon, mediaStoreAction } from '../../media/story';
+  import { MediaEventsAddon, mediaStoreAction } from '../../media/story-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
-  import { spreadPropsAction } from '../../utils/story';
-  import VideoControlsAddon from './story/VideoControlsAddon.svelte';
+  import { spreadPropsAction } from '../../utils/svelte/actions';
+  import VideoControlsAddon from './story-utils/VideoControlsAddon.svelte';
   import { VideoElement } from './VideoElement';
 
   safelyDefineCustomElement('vds-video', VideoElement);

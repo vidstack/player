@@ -9,7 +9,7 @@
 
   import { FakeMediaProviderElement } from '../../media/test-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
-  import { spreadPropsAction } from '../../utils/story';
+  import { spreadPropsAction } from '../../utils/svelte/actions';
   import { ScrubberElement } from '../scrubber';
   import { ScrubberPreviewElement } from './ScrubberPreviewElement';
 

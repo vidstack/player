@@ -8,10 +8,10 @@
   import { Variant } from '@vitebook/client';
 
   import '../../define/vds-hls';
-  import { MediaEventsAddon, mediaStoreAction } from '../../media/story';
+  import { MediaEventsAddon, mediaStoreAction } from '../../media/story-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
-  import { spreadPropsAction } from '../../utils/story';
-  import { VideoControlsAddon } from '../video/story';
+  import { spreadPropsAction } from '../../utils/svelte/actions';
+  import { VideoControlsAddon } from '../video/story-utils';
   import { HlsElement } from './HlsElement';
 
   safelyDefineCustomElement('vds-hls', HlsElement);
