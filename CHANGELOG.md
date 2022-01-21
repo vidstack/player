@@ -1,3 +1,14 @@
+# [0.9.0](https://github.com/vidstack/player/compare/v0.8.4...v0.9.0) (2022-01-21)
+
+### Bug Fixes
+
+- move events utils to `utils` folder ([ff45b75](https://github.com/vidstack/player/commit/ff45b75f6fd841e2f197b23716fecddb3572ab68))
+- remove blue tap highlight on chrome mobile ([676f809](https://github.com/vidstack/player/commit/676f80981440bf2c6c306e26d86fdd02f7e96f88))
+
+### Features
+
+- new `canLoad` and `loadingStrategy` properties ([8f50658](https://github.com/vidstack/player/commit/8f506581f90f995651c2bab4f2e2f0c25309c38c))
+
 ## [0.8.4](https://github.com/vidstack/player/compare/v0.8.3...v0.8.4) (2022-01-20)
 
 ### Bug Fixes
