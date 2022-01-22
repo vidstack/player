@@ -165,6 +165,16 @@ export class VideoElement extends Html5MediaElement {
     return this.canLoad;
   }
 
+  override async handleMediaCanLoad(): Promise<void> {
+    await super.handleMediaCanLoad();
+
+    if (this._shouldSetVideoSrcAttr()) {
+      this.requestUpdate();
+      await this.updateComplete;
+      this.load();
+    }
+  }
+
   // -------------------------------------------------------------------------------------------
   // Methods
   // -------------------------------------------------------------------------------------------

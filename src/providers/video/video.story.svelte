@@ -17,44 +17,71 @@
   safelyDefineCustomElement('vds-video', VideoElement);
 
   let mediaProvider;
+  let hasAddons = true;
+
+  const src = 'https://media-files.vidstack.io/720p.mp4';
+  const poster = 'https://media-files.vidstack.io/poster.png';
 
   let mediaProps = {
-    src: 'https://media-files.vidstack.io/720p.mp4',
-    poster: 'https://media-files.vidstack.io/poster.png',
+    src,
+    poster,
     controls: true
   };
 </script>
 
-<Variant name="Default">
-  <vds-video
-    bind:this={mediaProvider}
-    use:spreadPropsAction={mediaProps}
-    use:mediaStoreAction={(newProps) => {
-      mediaProps = { ...mediaProps, ...newProps };
-    }}
-  />
-</Variant>
-
-<Variant name="Lazy">
-  <vds-video
-    loading-strategy="lazy"
-    style="margin: 100vh 0;"
-    bind:this={mediaProvider}
-    use:spreadPropsAction={mediaProps}
-    use:mediaStoreAction={(newProps) => {
-      mediaProps = { ...mediaProps, ...newProps };
-    }}
-  />
-</Variant>
-
-<VideoControlsAddon
-  {...mediaProps}
-  on:change={({ detail: newProps }) => {
-    mediaProps = { ...mediaProps, ...newProps };
+<Variant
+  name="Default"
+  on:enter={() => {
+    hasAddons = true;
   }}
-/>
+>
+  <vds-video
+    bind:this={mediaProvider}
+    use:spreadPropsAction={mediaProps}
+    use:mediaStoreAction={(newProps) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+</Variant>
 
-<MediaEventsAddon {mediaProvider} />
+<Variant
+  name="Lazy"
+  on:enter={() => {
+    hasAddons = false;
+  }}
+>
+  <div
+    style="display: flex; flex-direction: column; align-items: center; width: 100%;"
+  >
+    <vds-video
+      {src}
+      {poster}
+      controls
+      loading-strategy="lazy"
+      style="margin: 100vh 0;"
+    />
+
+    <vds-video
+      {poster}
+      controls
+      loading-strategy="lazy"
+      style="margin: 100vh 0;"
+    >
+      <source {src} type="video/mp4" />
+    </vds-video>
+  </div>
+</Variant>
+
+{#if hasAddons}
+  <VideoControlsAddon
+    {...mediaProps}
+    on:change={({ detail: newProps }) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+
+  <MediaEventsAddon {mediaProvider} />
+{/if}
 
 <style>
   vds-video {

@@ -307,11 +307,18 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _attachNewSourceNodes() {
+    if (!this.canLoad) return;
+
     const validTags = new Set(['source', 'track']);
 
     const nodes = getSlottedChildren(this).filter((node) =>
       validTags.has(node.tagName.toLowerCase())
     );
+
+    const initialSrc = (nodes[0] as HTMLSourceElement)?.src;
+    if (initialSrc) {
+      this._src = initialSrc;
+    }
 
     if (__DEV__ && nodes.length > 0) {
       this._logger
@@ -339,10 +346,6 @@ export class Html5MediaElement extends MediaProviderElement {
     if (getSlottedChildren(this).length > 0) {
       this._attachNewSourceNodes();
     }
-
-    this.requestUpdate();
-    await this.updateComplete;
-    this.load();
   }
 
   protected _bindMediaEventListeners() {

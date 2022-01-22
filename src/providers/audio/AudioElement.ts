@@ -76,4 +76,14 @@ export class AudioElement extends Html5MediaElement {
   protected _shouldSetAudioSrcAttr(): boolean {
     return this.canLoad;
   }
+
+  override async handleMediaCanLoad(): Promise<void> {
+    await super.handleMediaCanLoad();
+
+    if (this._shouldSetAudioSrcAttr()) {
+      this.requestUpdate();
+      await this.updateComplete;
+      this.load();
+    }
+  }
 }
