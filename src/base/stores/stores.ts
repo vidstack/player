@@ -142,7 +142,7 @@ export function derived<T>(
   const auto = fn.length < 2;
 
   return readable(initialValue, (set) => {
-    let inited = false;
+    let initialized = false;
     const values: T[] = [];
 
     let pending = 0;
@@ -166,7 +166,7 @@ export function derived<T>(
         (value) => {
           values[i] = value;
           pending &= ~(1 << i);
-          if (inited) {
+          if (initialized) {
             sync();
           }
         },
@@ -176,7 +176,7 @@ export function derived<T>(
       )
     );
 
-    inited = true;
+    initialized = true;
     sync();
 
     return function stop() {

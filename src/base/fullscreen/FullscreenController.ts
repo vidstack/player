@@ -53,7 +53,7 @@ export class FullscreenController {
     : undefined;
 
   /**
-   * Used to avoid an inifinite loop by indicating when the native `requestFullscreen()` method
+   * Used to avoid an infinite loop by indicating when the native `requestFullscreen()` method
    * is being called.
    *
    * Bad Call Stack: host.requestFullscreen() -> controller.requestFullscreen() ->

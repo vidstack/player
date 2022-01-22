@@ -74,7 +74,7 @@ export class TimeSliderElement extends SliderElement {
   @property({ attribute: false, state: true })
   override value = -1;
 
-  // These properties are overriden in final render by methods below.
+  // These properties are overridden in final render by methods below.
   /** @internal */
   @property({ attribute: false })
   override min = 0;

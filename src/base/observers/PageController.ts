@@ -5,7 +5,7 @@ import { LogDispatcher } from '../logger/LogDispatcher';
 
 // Detect Safari to work around Safari-specific bugs.
 const IS_SAFARI =
-  // @ts-expect-error - `pushNotificaiton` type missing.
+  // @ts-expect-error - `pushNotification` type missing.
   typeof window?.safari === 'object' && window?.safari.pushNotification;
 
 /**

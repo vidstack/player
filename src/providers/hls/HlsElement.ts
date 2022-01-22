@@ -33,7 +33,7 @@ const HLS_LIB_CACHE = new Map<string, HlsConstructor>();
  * HLS streaming is either [supported natively](https://caniuse.com/?search=hls) (generally
  * on iOS), or in environments that [support the Media Stream API](https://caniuse.com/?search=mediastream).
  *
- * 💡 This element contains the exact same interface as the `<video>` element. It redispatches
+ * 💡 This element contains the exact same interface as the `<video>` element. It re-dispatches
  * all the native events if needed, but prefer the `vds-*` variants (eg: `vds-play`) as they
  * iron out any browser issues. It also dispatches all the `hls.js` events.
  *
@@ -185,7 +185,7 @@ export class HlsElement extends VideoElement {
     });
 
     /**
-     * We can't actually determine whether there is native HLS support until the undlerying
+     * We can't actually determine whether there is native HLS support until the underlying
      * `<video>` element has rendered, since we rely on calling `canPlayType` on it. Thus we retry
      * this getter here, and if it returns `true` we request an update so the `src` is set
      * on the `<video>` element (determined by `_shouldSetVideoSrcAttr()` method).
@@ -395,7 +395,7 @@ export class HlsElement extends VideoElement {
       ? HLS_LIB_CACHE.get(this.hlsLibrary)
       : undefined;
 
-    // If it's not a remote source, it must of been passed in directly as a static/dyanmic import.
+    // If it's not a remote source, it must of been passed in directly as a static/dynamic import.
     if (!isString(this.hlsLibrary) && isUndefined(this._Hls)) {
       // Dynamic import.
       if (isFunction(this.hlsLibrary)) {

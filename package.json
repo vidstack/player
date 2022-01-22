@@ -71,6 +71,7 @@
     "format": "run-s format:*",
     "format:eslint": "npm run lint:eslint -- --fix",
     "format:prettier": "npm run lint:prettier -- --write",
+    "spellcheck": "cspell 'src/**' '*.md'",
     "minify:prod": "node .scripts/minify.mjs",
     "prepare": "husky install",
     "start": "npm run vitebook:dev",
@@ -104,6 +105,7 @@
     "chokidar": "^3.5.2",
     "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
+    "cspell": "^5.15.2",
     "enquirer": "^2.3.6",
     "esbuild": "^0.14.11",
     "eslint": "^7.17.0",
@@ -145,7 +147,8 @@
   },
   "lint-staged": {
     "*.{js,ts}": "eslint --cache --fix",
-    "*.{js,ts,md,json}": "prettier --write"
+    "*.{js,ts,md,json}": "prettier --write",
+    "*.md,src/**": "cspell --no-must-find-files"
   },
   "publishConfig": {
     "access": "public"

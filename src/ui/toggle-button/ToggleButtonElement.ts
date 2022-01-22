@@ -94,7 +94,7 @@ export class ToggleButtonElement extends LitElement {
   pressed = false;
 
   /**
-   * Whether the underlying button should be disabled (not-interactable).
+   * Whether the underlying button should be disabled (non-interactive).
    */
   @property({ type: Boolean, reflect: true })
   disabled = false;

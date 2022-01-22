@@ -58,11 +58,13 @@ describe(getElementAttributes.name, function () {
   it('it should return all attributes', function () {
     const attributes = getElementAttributes(ElementB);
     expect(Array.from(attributes)).eql([
+      // cspell:disable
       'propa',
       'propb',
       'prop-c',
       'propd',
       'prop-e'
+      // cspell:enable
     ]);
   });
 });

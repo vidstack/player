@@ -51,7 +51,7 @@ export type HlsDetachEvent = VdsEvent<Hls>;
 
 /**
  * Fired when the browser doesn't support HLS natively and `hls.js` doesn't support
- * this enviroment either, most likely due to missing Media Extensions.
+ * this environment either, most likely due to missing Media Extensions.
  *
  * @event
  */
