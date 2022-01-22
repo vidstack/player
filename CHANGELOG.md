@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/vidstack/player/compare/v0.9.0...v0.9.1) (2022-01-22)
+
+### Bug Fixes
+
+- handle lazy media src change correctly when passed as `<source>` ([0a55ff8](https://github.com/vidstack/player/commit/0a55ff811929f7d1ac52097dfc975d2b6d69dce9))
+- update media `ended` state when seeking back playback ended ([7c58497](https://github.com/vidstack/player/commit/7c58497f28841e6fb866cea1e06756edd100fb42))
+
 # [0.9.0](https://github.com/vidstack/player/compare/v0.8.4...v0.9.0) (2022-01-21)
 
 ### Bug Fixes
