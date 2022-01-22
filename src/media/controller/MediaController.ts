@@ -529,8 +529,14 @@ export class MediaController {
         event.stopImmediatePropagation();
       } else if (event.type === 'vds-seeked') {
         this._fireWaiting.cancel();
+
         this._mediaStore.seeking.set(false);
         this._mediaStore.waiting.set(false);
+
+        if (event.detail !== get(this.mediaStore.duration)) {
+          this._mediaStore.ended.set(false);
+        }
+
         this._mediaStore.currentTime.set(event.detail);
         this.satisfyMediaRequest('seeked', event);
       }
