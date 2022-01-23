@@ -44,7 +44,7 @@ export function buildExportPartsAttr(
  * - The element is only registered if it hasn't been registered before under the given `name`.
  *
  * @param name - A string representing the name you are giving the element.
- * @param constructor - A class object that defines the behaviour of the element.
+ * @param constructor - A class object that defines the behavior of the element.
  * @param isClient
  */
 export function safelyDefineCustomElement(
@@ -59,7 +59,7 @@ export function safelyDefineCustomElement(
 }
 
 /**
- * Sets an attribute on the given `el`. If the `attrValue` is `undefined`or `null` the attribute
+ * Sets an attribute on the given `element`. If the `attrValue` is `undefined`or `null` the attribute
  * will be removed.
  *
  * @param element - The element to set the attribute on.
@@ -80,7 +80,7 @@ export function setAttribute(
 }
 
 /**
- * Sets an attribute on the given `el` if it does not have the attribute set.
+ * Sets an attribute on the given `element` if it does not have the attribute set.
  *
  * @param element - The element to set the attribute on.
  * @param attrName - The name of the attribute.

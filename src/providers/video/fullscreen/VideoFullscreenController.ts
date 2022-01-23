@@ -12,7 +12,7 @@ import {
 
 /**
  * Extends the base `FullscreenController` with additional logic for handling fullscreen
- * on iOS Safari where the native Fullscreen API is not available (in this case it fallsback to
+ * on iOS Safari where the native Fullscreen API is not available (in this case it falls back to
  * using the `VideoPresentationController`).
  *
  * @example
@@ -22,7 +22,7 @@ import {
  *   FullscreenController,
  *   ScreenOrientationController,
  *   VideoPresentationController
- * } from '@vidstack/jelements';
+ * } from '@vidstack/elements';
  *
  * class MyElement extends LitElement {
  *   get videoElement() {

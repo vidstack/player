@@ -1,6 +1,6 @@
 <script context="module">
   export const __pageMeta = {
-    title: 'SeekableProgessBarElement'
+    title: 'SeekableProgressBarElement'
   };
 </script>
 

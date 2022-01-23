@@ -38,8 +38,8 @@ export enum SliderKeyDirection {
 
 /**
  * A custom built `input[type="range"]` that is cross-browser friendly, ARIA friendly, mouse/touch
- * friendly and easily styleable. This component allows users to input numeric values between a
- * minimum and maxmimum value. Generally used in the player for volume or scrubber controls.
+ * friendly and easily stylable. This component allows users to input numeric values between a
+ * minimum and maximum value. Generally used in the player for volume or scrubber controls.
  *
  * @see https://github.com/carbon-design-system/carbon-web-components
  * @tagname vds-slider
@@ -55,7 +55,7 @@ export enum SliderKeyDirection {
  * @csspart track-fill - The part of the track that is currently filled which fills left-to-right (`<div>`).
  * @cssprop --vds-slider-fill-rate - The ratio of the slider that is filled such as `0.3`.
  * @cssprop --vds-slider-fill-value - The current amount the slider is filled such as `30`.
- * @cssprop --vds-slider-fill-percentage - The fill rate expressed as a precetange such as `30%`.
+ * @cssprop --vds-slider-fill-percentage - The fill rate expressed as a percentage such as `30%`.
  * @cssprop --vds-slider-thumb-width - The slider handle width.
  * @cssprop --vds-slider-thumb-height - The slider handle height.
  * @cssprop --vds-slider-thumb-bg - The background color of the slider handle.
@@ -123,7 +123,7 @@ export class SliderElement extends LitElement {
   max = 100;
 
   /**
-   * Whether the slider should be disabled (not-interactable).
+   * Whether the slider should be disabled (non-interactive).
    */
   @property({ reflect: true, type: Boolean })
   disabled = false;

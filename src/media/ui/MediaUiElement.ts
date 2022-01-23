@@ -19,7 +19,7 @@ import { mediaUiElementStyles } from './styles';
  *
  * This element also handles hiding the UI depending on whether native UI can't be hidden
  * (*cough* iOS). This is simply to avoid double controls (native + custom). The `hidden` attribute
- * will be applied to prevent it from happenning.
+ * will be applied to prevent it from happening.
  *
  * 💡 The following attributes are updated for your styling needs:
  *
