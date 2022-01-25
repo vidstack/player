@@ -1,3 +1,9 @@
+## [0.9.2](https://github.com/vidstack/player/compare/v0.9.1...v0.9.2) (2022-01-25)
+
+### Bug Fixes
+
+- drop inline `type` usage to support TS>=4.3.5 ([5df29ed](https://github.com/vidstack/player/commit/5df29ed38d4fb34f4c41659040d178779ec8bf3a))
+
 ## [0.9.1](https://github.com/vidstack/player/compare/v0.9.0...v0.9.1) (2022-01-22)
 
 ### Bug Fixes
