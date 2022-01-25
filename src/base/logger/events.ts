@@ -1,4 +1,4 @@
-import { type VdsEvent, vdsEvent } from '../events';
+import { VdsEvent, vdsEvent } from '../events';
 import type { LogLevel } from './LogLevel';
 
 export type LoggerEvents = {

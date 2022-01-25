@@ -1,4 +1,4 @@
-import { type GlobalEventHandlerMap, listen } from '../base/events';
+import { GlobalEventHandlerMap, listen } from '../base/events';
 
 export function isPointerEvent(
   event: Event | undefined

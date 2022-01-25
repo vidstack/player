@@ -1,10 +1,6 @@
 import type { ReactiveControllerHost } from 'lit';
 
-import {
-  type Context,
-  type ContextConsumerController,
-  isContext
-} from '../context';
+import { Context, ContextConsumerController, isContext } from '../context';
 import type { ReadableStore } from './types';
 
 /**
