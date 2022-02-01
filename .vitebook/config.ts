@@ -1,3 +1,4 @@
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig, clientPlugin } from '@vitebook/client/node';
 import {
   DefaultThemeConfig,
@@ -11,23 +12,21 @@ export default defineConfig<DefaultThemeConfig>({
       __DEV__: 'true'
     },
     server: {
-      // hmr: false
+      hmr: false
     },
     optimizeDeps: {
       include: ['lit', 'lit/decorators.js']
     }
   },
   plugins: [
-    clientPlugin({
-      appFile: 'App.svelte',
-      svelte: {
-        extensions: ['.html', '.svelte'],
-        experimental: {
-          useVitePreprocess: true
-        }
+    clientPlugin({ appFile: 'App.svelte' }),
+    defaultThemePlugin(),
+    svelte({
+      extensions: ['.html', '.svelte'],
+      experimental: {
+        useVitePreprocess: true
       }
-    }),
-    defaultThemePlugin()
+    })
   ],
   site: {
     title: 'Vidstack Player',
