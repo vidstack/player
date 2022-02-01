@@ -77,7 +77,7 @@
       {poster}
       controls
       hls-library={hlsLibCDN}
-      loading-strategy="lazy"
+      loading="lazy"
       style="margin: 100vh 0;"
     />
 
@@ -85,7 +85,7 @@
       {poster}
       controls
       hls-library={hlsLibCDN}
-      loading-strategy="lazy"
+      loading="lazy"
       style="margin: 100vh 0;"
     >
       <source {src} type="application/vnd.apple.mpegURL" />

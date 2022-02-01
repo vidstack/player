@@ -53,7 +53,7 @@ export abstract class MediaProviderElement extends LitElement {
       this,
       { threshold: 0 },
       (entries) => {
-        if (this.loadingStrategy !== 'lazy') {
+        if (this.loading !== 'lazy') {
           controller.hostDisconnected();
           return;
         }
@@ -110,7 +110,7 @@ export abstract class MediaProviderElement extends LitElement {
       })
     );
 
-    if (this.loadingStrategy === 'eager') {
+    if (this.loading === 'eager') {
       this.handleMediaCanLoad();
     }
   }
@@ -602,25 +602,24 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Loading Strategy
+  // Loading
   // -------------------------------------------------------------------------------------------
 
   /**
-   * Whether media is allowed to begin loading. This depends on the `loadingStrategy`
-   * configuration. If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will
-   * become `true` once the media has entered the viewport.
+   * Whether media is allowed to begin loading. This depends on the `loading` configuration. If
+   * `eager`, `canLoad` will be `true` immediately, and if `lazy` this will become `true` once
+   * the media has entered the viewport.
    */
   get canLoad() {
     return this.mediaState.canLoad;
   }
 
   /**
-   * The type of loading strategy indicates when the provider can begin loading media. If `eager`,
-   * media will be loaded immediately, and `lazy` will delay loading until the provider has
-   * entered the viewport.
+   * Indicates when the provider can begin loading media. If `eager`, media will be loaded
+   * immediately, and `lazy` will delay loading until the provider has entered the viewport.
    */
-  @property({ attribute: 'loading-strategy' })
-  loadingStrategy: 'eager' | 'lazy' = 'eager';
+  @property({ attribute: 'loading' })
+  loading: 'eager' | 'lazy' = 'eager';
 
   /**
    * Called when media can begin loading.

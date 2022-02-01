@@ -51,9 +51,9 @@ export type MediaContext = {
    */
   bufferedAmount: number;
   /**
-   * Whether media is allowed to begin loading. This depends on the `loadingStrategy`
-   * configuration. If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will
-   * become `true` once the media has entered the viewport.
+   * Whether media is allowed to begin loading. This depends on the `loading` configuration.
+   * If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will become `true`
+   * once the media has entered the viewport.
    */
   canLoad: boolean;
   /**

@@ -38,7 +38,7 @@
 
 <Variant name="Lazy">
   <vds-audio
-    loading-strategy="lazy"
+    loading="lazy"
     style="margin: 100vh 0;"
     bind:this={mediaProvider}
     use:spreadPropsAction={mediaProps}

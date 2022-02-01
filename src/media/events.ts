@@ -103,7 +103,7 @@ export type AutoplayFailEvent = VdsEvent<unknown>;
 export type AutoplayEvent = VdsEvent<{ muted: boolean }>;
 
 /**
- * Fired when the provider can begin loading media. This depends on the type of `loadingStrategy`
+ * Fired when the provider can begin loading media. This depends on the type of `loading`
  * that has been configured. The `eager` strategy will be immediate, and `lazy` once the provider
  * has entered the viewport.
  */

@@ -57,16 +57,11 @@
       {src}
       {poster}
       controls
-      loading-strategy="lazy"
+      loading="lazy"
       style="margin: 100vh 0;"
     />
 
-    <vds-video
-      {poster}
-      controls
-      loading-strategy="lazy"
-      style="margin: 100vh 0;"
-    >
+    <vds-video {poster} controls loading="lazy" style="margin: 100vh 0;">
       <source {src} type="video/mp4" />
     </vds-video>
   </div>
