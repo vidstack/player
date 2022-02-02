@@ -14,7 +14,6 @@ import './vds-media-sync';
 import './vds-media-visibility';
 import './vds-mute-button';
 import './vds-play-button';
-import './vds-scrim';
 import './vds-scrubber-preview-time';
 import './vds-scrubber-preview-video';
 import './vds-scrubber-preview';

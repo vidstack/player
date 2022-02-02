@@ -3,7 +3,6 @@ import './vds-buffering-indicator';
 import './vds-fullscreen-button';
 import './vds-mute-button';
 import './vds-play-button';
-import './vds-scrim';
 import './vds-scrubber';
 import './vds-scrubber-preview';
 import './vds-scrubber-preview-time';
