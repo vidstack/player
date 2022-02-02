@@ -1,5 +1,4 @@
 import './vds-aspect-ratio';
-import './vds-buffering-indicator';
 import './vds-fullscreen-button';
 import './vds-mute-button';
 import './vds-play-button';
