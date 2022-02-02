@@ -108,7 +108,7 @@
     "cspell": "^5.15.2",
     "enquirer": "^2.3.6",
     "esbuild": "^0.14.11",
-    "eslint": "^7.17.0",
+    "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.4",
