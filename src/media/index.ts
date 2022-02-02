@@ -4,7 +4,6 @@ export * from './events';
 export * from './interact';
 export * from './manage';
 export * from './MediaContext';
-export * from './MediaElement';
 export * from './mediaStore';
 export * from './MediaType';
 export * from './player';
