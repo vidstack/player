@@ -3,16 +3,12 @@ import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener } from '../../base/events';
 import { hostedMediaStoreSubscription } from '../../media';
-import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
+import { setAttributeIfEmpty } from '../../utils/dom';
 import { round } from '../../utils/number';
 import { SliderElement } from '../slider';
 
 /**
  * A slider control that lets the user specify their desired volume level.
- *
- * 💡 The following attributes are updated for your styling needs:
- *
- * - `media-can-play`: Applied when media can begin playback.
  *
  * @tagname vds-volume-slider
  *  @example
@@ -36,9 +32,6 @@ export class VolumeSliderElement extends SliderElement {
     super();
     hostedMediaStoreSubscription(this, 'volume', ($volume) => {
       this._mediaVolume = $volume;
-    });
-    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
-      setAttribute(this, 'media-can-play', $canPlay);
     });
   }
 

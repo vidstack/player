@@ -5,9 +5,8 @@ import { ToggleButtonElement } from '../toggle-button';
 /**
  * A button for toggling the fullscreen mode of the player.
  *
- * 💡 The following attributes are updated for your styling needs:
+ * 💡 The following media attributes are applied:
  *
- * - `media-can-play`: Applied when media can begin playback.
  * - `media-fullscreen`: Applied when the media has entered fullscreen.
  *
  * 🚨 The `hidden` attribute will be present on this element in the event fullscreen cannot be
@@ -42,9 +41,6 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
       this.pressed = $fullscreen;
       setAttribute(this, 'media-fullscreen', $fullscreen);
-    });
-    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
-      setAttribute(this, 'media-can-play', $canPlay);
     });
     hostedMediaStoreSubscription(
       this,

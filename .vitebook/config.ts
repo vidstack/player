@@ -12,7 +12,7 @@ export default defineConfig<DefaultThemeConfig>({
       __DEV__: 'true'
     },
     server: {
-      hmr: false
+      // hmr: false
     },
     optimizeDeps: {
       include: ['lit', 'lit/decorators.js']

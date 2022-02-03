@@ -4,7 +4,7 @@ import { property, state } from 'lit/decorators.js';
 
 import { hostedEventListener } from '../../base/events';
 import { hostedMediaStoreSubscription } from '../../media';
-import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
+import { setAttributeIfEmpty } from '../../utils/dom';
 import { isPointerEvent } from '../../utils/events';
 import { clampNumber, round } from '../../utils/number';
 import { formatSpokenTime } from '../../utils/time';
@@ -13,10 +13,6 @@ import { timeSliderElementStyles } from './styles';
 
 /**
  * A slider that lets the user control the current media playback time.
- *
- * 💡 The following attributes are updated for your styling needs:
- *
- * - `media-can-play`: Applied when media can begin playback.
  *
  * @tagname vds-time-slider
  * @example
@@ -49,9 +45,6 @@ export class TimeSliderElement extends SliderElement {
     });
     hostedMediaStoreSubscription(this, 'paused', ($paused) => {
       this._mediaPaused = $paused;
-    });
-    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
-      setAttribute(this, 'media-can-play', $canPlay);
     });
   }
 

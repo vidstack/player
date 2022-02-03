@@ -59,8 +59,8 @@ export function safelyDefineCustomElement(
 }
 
 /**
- * Sets an attribute on the given `element`. If the `attrValue` is `undefined`or `null` the attribute
- * will be removed.
+ * Sets an attribute on the given `element`. If the `attrValue` is `undefined`or `null` the
+ * attribute will be removed.
  *
  * @param element - The element to set the attribute on.
  * @param attrName - The name of the attribute.

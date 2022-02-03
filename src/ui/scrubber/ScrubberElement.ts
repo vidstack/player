@@ -3,8 +3,6 @@ import { CSSResultGroup, PropertyValues } from 'lit';
 import { DisposalBin, hostedEventListener, listen } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { get } from '../../base/stores';
-import { hostedMediaStoreSubscription } from '../../media';
-import { setAttribute } from '../../utils/dom';
 import { isNil } from '../../utils/unit';
 import {
   ScrubberPreviewElement,
@@ -19,11 +17,6 @@ import { scrubberElementStyles } from './styles';
 /**
  * Extends `TimeSliderElement` and adds support for "previews". A preview is essentially
  * a sneak peek of a certain time the user is interacting with on the time slider.
- *
- * 💡 The following attributes are updated for your styling needs:
- *
- * - `media-can-play`: Applied when media can begin playback.
- * - `media-waiting`: Applied when playback has stopped because of a lack of temporary data.
  *
  * 💡 See the `<vds-scrubber-preview>` element if you'd like to include previews.
  *
@@ -41,13 +34,6 @@ export class ScrubberElement extends TimeSliderElement {
     if (__DEV__) {
       logElementLifecycle(this);
     }
-
-    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
-      setAttribute(this, 'media-can-play', $canPlay);
-    });
-    hostedMediaStoreSubscription(this, 'waiting', ($waiting) => {
-      setAttribute(this, 'media-waiting', $waiting);
-    });
   }
 
   // -------------------------------------------------------------------------------------------

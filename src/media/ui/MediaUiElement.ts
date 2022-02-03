@@ -10,28 +10,22 @@ import { state } from 'lit/decorators.js';
 import { setAttribute } from '../../utils/dom';
 import { IS_IOS } from '../../utils/support';
 import { hostedMediaStoreSubscription } from '../mediaStore';
+import { bindMediaPropsToAttrs, bindMediaPropsToCssProps } from '../style';
 import { ViewType } from '../ViewType';
 import { mediaUiElementStyles } from './styles';
 
 /**
- * This is a general container to hold your UI components, and enables you to show/hide
- * the player UI when media is ready for playback by applying the `media-can-play` attribute.
+ * This is a general styling container which holds your UI elements. Media attributes and
+ * CSS properties are exposed on this element to help you style your UI elements.
+ *
+ * Example media attributes include: `media-paused`, `media-can-play`, and `media-waiting`.
+ *
+ * Example media CSS properties include: `--media-seekable-amount`, `--media-buffered-amount`,
+ * and `--media-duration`.
  *
  * This element also handles hiding the UI depending on whether native UI can't be hidden
  * (*cough* iOS). This is simply to avoid double controls (native + custom). The `hidden` attribute
  * will be applied to prevent it from happening.
- *
- * 💡 The following attributes are updated for your styling needs:
- *
- * - `media-idle`: Applied when there is no user activity for a set period of time.
- * - `media-can-play`: Applied when media can begin playback.
- * - `media-paused`: Applied when media is paused.
- * - `media-view-type`: Applied with the media view type such as `audio` or `video`.
- * - `media-autoplay-error`: Applied when media autoplay fails. It can be used to show recovery UI
- * if controls are hidden.
- * - `media-fullscreen`: Applied when media has entered fullscreen mode.
- * - `media-playsinline`: Applied when media is to be played "inline", that is within the element's
- * playback area
  *
  * @tagname vds-media-ui
  * @slot Used to pass in UI components.
@@ -48,7 +42,7 @@ import { mediaUiElementStyles } from './styles';
  *   transition: opacity 0.15s ease-out;
  * }
  *
- * vds-media-ui[idle],
+ * vds-media-ui[media-idle],
  * vds-media-ui:not([media-can-play]) {
  *   opacity: 0;
  * }
@@ -69,33 +63,44 @@ export class MediaUiElement extends LitElement {
 
   constructor() {
     super();
-    hostedMediaStoreSubscription(this, 'canPlay', ($canPlay) => {
-      setAttribute(this, 'media-can-play', $canPlay);
-    });
+
     hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
       this._mediaFullscreen = $fullscreen;
-      setAttribute(this, 'media-fullscreen', $fullscreen);
     });
     hostedMediaStoreSubscription(this, 'viewType', ($viewType) => {
       this._mediaIsVideoView = $viewType === ViewType.Video;
-      setAttribute(this, 'media-view-type', $viewType);
-    });
-    hostedMediaStoreSubscription(this, 'idle', ($idle) => {
-      setAttribute(this, 'media-idle', $idle);
-    });
-    hostedMediaStoreSubscription(this, 'seeking', ($seeking) => {
-      setAttribute(this, 'media-seeking', $seeking);
-    });
-    hostedMediaStoreSubscription(this, 'paused', ($paused) => {
-      setAttribute(this, 'media-paused', $paused);
     });
     hostedMediaStoreSubscription(this, 'playsinline', ($playsinline) => {
       this._mediaPlaysinline = $playsinline;
-      setAttribute(this, 'media-playsinline', $playsinline);
     });
-    hostedMediaStoreSubscription(this, 'autoplayError', ($autoplayError) => {
-      setAttribute(this, 'media-autoplay-error', !!$autoplayError);
-    });
+
+    bindMediaPropsToAttrs(this, [
+      'autoplay',
+      'autoplayError',
+      'canLoad',
+      'canPlay',
+      'ended',
+      'error',
+      'fullscreen',
+      'idle',
+      'loop',
+      'mediaType',
+      'muted',
+      'paused',
+      'playing',
+      'playsinline',
+      'seeking',
+      'started',
+      'viewType',
+      'waiting'
+    ]);
+
+    bindMediaPropsToCssProps(this, [
+      'bufferedAmount',
+      'currentTime',
+      'duration',
+      'seekableAmount'
+    ]);
   }
 
   // -------------------------------------------------------------------------------------------

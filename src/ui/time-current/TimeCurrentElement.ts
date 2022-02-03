@@ -7,7 +7,6 @@ import { TimeElement } from '../time';
  * Formats and displays the `currentTime` of media playback. Do not mess with the component's
  * `seconds` property as it's automatically managed.
  *
- *
  * @tagname vds-time-current
  * @csspart root - The component's root element (`<time>`).
  * @example
