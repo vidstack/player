@@ -6,7 +6,7 @@ import { DisposalBin, listen, vdsEvent } from '../../base/events';
 import { FullscreenController } from '../../base/fullscreen';
 import { LogDispatcher } from '../../base/logger';
 import { createIntersectionController } from '../../base/observers';
-import { createHostedRequestQueue, RequestQueue } from '../../base/queue';
+import { hostRequestQueue, RequestQueue } from '../../base/queue';
 import {
   ScreenOrientationController,
   ScreenOrientationLock
@@ -863,7 +863,7 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * Queue actions to be applied safely after the element has connected to the DOM.
    */
-  readonly _connectedQueue = createHostedRequestQueue(this);
+  readonly _connectedQueue = hostRequestQueue(this);
 
   /**
    * Queue actions to be taken on the current media provider when it's ready for playback, marked

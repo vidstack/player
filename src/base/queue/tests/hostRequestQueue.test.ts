@@ -1,9 +1,9 @@
 import { LitElement } from 'lit';
 
-import { createHostedRequestQueue } from '../hostedRequestQueue';
+import { hostRequestQueue } from '../hostRequestQueue';
 
 class FakeElement extends LitElement {
-  q = createHostedRequestQueue(this);
+  q = hostRequestQueue(this);
 }
 
 window.customElements.define('fake-el', FakeElement);

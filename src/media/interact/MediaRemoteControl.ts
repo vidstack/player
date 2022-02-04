@@ -2,7 +2,7 @@ import type { ReactiveControllerHost } from 'lit';
 
 import { ExtractEventInit, vdsEvent } from '../../base/events';
 import { LogDispatcher } from '../../base/logger';
-import { createHostedRequestQueue } from '../../base/queue';
+import { hostRequestQueue } from '../../base/queue';
 import { MediaRequestEvents } from '../request.events';
 
 /**
@@ -24,7 +24,7 @@ import { MediaRequestEvents } from '../request.events';
 export class MediaRemoteControl {
   protected _ref?: Element;
 
-  protected readonly _connectedQueue = createHostedRequestQueue(this._host);
+  protected readonly _connectedQueue = hostRequestQueue(this._host);
 
   protected readonly _logger = __DEV__
     ? new LogDispatcher(this._host)
