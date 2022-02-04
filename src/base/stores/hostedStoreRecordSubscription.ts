@@ -1,7 +1,7 @@
 import type { ReactiveControllerHost } from 'lit';
 
 import { Context, isContext } from '../context';
-import { hostedStoreSubscription } from './hostedStoreSubscription';
+import { storeSubscription } from './storeSubscription';
 import type { ReadableStoreRecord, StoreValue } from './types';
 
 /**
@@ -46,6 +46,6 @@ export function hostedStoreRecordSubscription<
       }
     });
   } else {
-    return hostedStoreSubscription(host, store[key], onChange);
+    return storeSubscription(host, store[key], onChange);
   }
 }

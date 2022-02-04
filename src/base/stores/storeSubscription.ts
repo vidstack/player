@@ -10,19 +10,19 @@ import type { ReadableStore } from './types';
  * @example
  * ```ts
  * import { LitElement } from 'lit';
- * import { hostedStoreSubscription } from '@vidstack/player';
+ * import { storeSubscription } from '@vidstack/player';
  *
  * class MyElement extends LitElement {
  *   constructor() {
  *     super();
- *     hostedStoreSubscription(this, <<store>>, (value) => {
+ *     storeSubscription(this, <<store>>, (value) => {
  *       // ...
  *     });
  *   }
  * }
  * ```
  */
-export function hostedStoreSubscription<T>(
+export function storeSubscription<T>(
   host: ReactiveControllerHost & EventTarget,
   store: ReadableStore<T> | Context<ReadableStore<T>>,
   onChange: (value: T) => void
