@@ -8,7 +8,7 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
+import { discover, DiscoveryEvent } from '../../base/elements';
 import { isVdsEvent, VdsEvent, vdsEvent } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { get, hostedStoreRecordSubscription } from '../../base/stores';
@@ -112,8 +112,11 @@ export class ScrubberPreviewElement extends LitElement {
 
   constructor() {
     super();
+
     if (__DEV__) logElementLifecycle(this);
-    dispatchDiscoveryEvents(this, 'vds-scrubber-preview-connect');
+
+    discover(this, 'vds-scrubber-preview-connect');
+
     hostedMediaStoreSubscription(this, 'duration', ($duration) => {
       this._mediaDuration = $duration;
     });

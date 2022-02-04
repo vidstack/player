@@ -1,6 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
-import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
+import { discover, DiscoveryEvent } from '../../base/elements';
 import { FullscreenController } from '../../base/fullscreen';
 import { ScreenOrientationController } from '../../base/screen-orientation';
 import { MediaController } from './MediaController';
@@ -48,7 +48,7 @@ export class MediaControllerElement extends LitElement {
 
   constructor() {
     super();
-    dispatchDiscoveryEvents(this, 'vds-media-controller-connect');
+    discover(this, 'vds-media-controller-connect');
   }
 
   // -------------------------------------------------------------------------------------------

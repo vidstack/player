@@ -1,14 +1,11 @@
 import { LitElement, PropertyValues } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
-import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
+import { discover, DiscoveryEvent } from '../../base/elements';
 import { DisposalBin, listen, vdsEvent } from '../../base/events';
 import { FullscreenController } from '../../base/fullscreen';
 import { LogDispatcher } from '../../base/logger';
-import {
-  createIntersectionController,
-  IntersectionController
-} from '../../base/observers';
+import { createIntersectionController } from '../../base/observers';
 import { createHostedRequestQueue, RequestQueue } from '../../base/queue';
 import {
   ScreenOrientationController,
@@ -47,7 +44,7 @@ export abstract class MediaProviderElement extends LitElement {
   constructor() {
     super();
 
-    dispatchDiscoveryEvents(this, 'vds-media-provider-connect');
+    discover(this, 'vds-media-provider-connect');
 
     const controller = createIntersectionController(
       this,

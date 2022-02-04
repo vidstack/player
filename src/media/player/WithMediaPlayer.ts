@@ -1,6 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
-import { DiscoveryEvent, dispatchDiscoveryEvents } from '../../base/elements';
+import { discover, DiscoveryEvent } from '../../base/elements';
 import { Constructor } from '../../global/helpers';
 import { MediaProviderElement } from '../provider';
 import { basePlayerStyles } from './styles';
@@ -38,7 +38,7 @@ export function WithMediaPlayer<T extends Constructor<LitElement>>(
 
     constructor(...args: any[]) {
       super(...args);
-      dispatchDiscoveryEvents(this, 'vds-media-player-connect');
+      discover(this, 'vds-media-player-connect');
     }
 
     // -------------------------------------------------------------------------------------------

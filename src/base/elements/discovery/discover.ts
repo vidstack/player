@@ -6,7 +6,7 @@ import { DisposalBin, vdsEvent } from '../../events';
  * Fires the given `eventType` when the given `host` connects to the DOM. A discovery event
  * also contains an event detail of the form `{ element: host; onDisconnect: () => void; }`.
  */
-export function dispatchDiscoveryEvents(
+export function discover(
   host: ReactiveControllerHost & EventTarget,
   eventType: keyof GlobalEventHandlersEventMap
 ) {

@@ -1,2 +1,2 @@
-export * from './dispatchDiscoveryEvents';
+export * from './discover';
 export * from './events';

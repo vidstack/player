@@ -2,13 +2,13 @@ import { LitElement } from 'lit';
 
 import { waitForEvent } from '../../../utils/events';
 import { isFunction } from '../../../utils/unit';
-import { dispatchDiscoveryEvents } from '../discovery';
+import { discover } from '../discovery';
 
 class FakeElement extends LitElement {
   constructor() {
     super();
     // Test event type `vds-media-controller-connect` randomly chosen for testing.
-    dispatchDiscoveryEvents(this, 'vds-media-controller-connect');
+    discover(this, 'vds-media-controller-connect');
   }
 }
 
