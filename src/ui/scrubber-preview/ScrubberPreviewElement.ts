@@ -11,7 +11,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { discover, DiscoveryEvent } from '../../base/elements';
 import { isVdsEvent, VdsEvent, vdsEvent } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
-import { get, hostedStoreRecordSubscription } from '../../base/stores';
+import { get, storeRecordSubscription } from '../../base/stores';
 import { hostedMediaStoreSubscription } from '../../media';
 import { getSlottedChildren, raf } from '../../utils/dom';
 import { isPointerEvent } from '../../utils/events';
@@ -120,7 +120,8 @@ export class ScrubberPreviewElement extends LitElement {
     hostedMediaStoreSubscription(this, 'duration', ($duration) => {
       this._mediaDuration = $duration;
     });
-    hostedStoreRecordSubscription(
+
+    storeRecordSubscription(
       this,
       scrubberStoreContext,
       'dragging',
@@ -128,7 +129,7 @@ export class ScrubberPreviewElement extends LitElement {
         this._isDragging = $dragging;
       }
     );
-    hostedStoreRecordSubscription(
+    storeRecordSubscription(
       this,
       scrubberStoreContext,
       'interactive',

@@ -2,8 +2,8 @@ import type { ReactiveControllerHost } from 'lit';
 
 import { createContext } from '../base/context';
 import {
-  hostedStoreRecordSubscription,
   ReadableStore,
+  storeRecordSubscription,
   writable,
   WritableStore
 } from '../base/stores';
@@ -64,7 +64,7 @@ export function hostedMediaStoreSubscription<
   property: T,
   onChange: (value: MediaContext[T]) => void
 ) {
-  return hostedStoreRecordSubscription(
+  return storeRecordSubscription(
     host,
     mediaStoreContext,
     property,

@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 
-import { hostedStoreRecordSubscription } from '../hostedStoreRecordSubscription';
+import { storeRecordSubscription } from '../storeRecordSubscription';
 import { writable } from '../stores';
 
 class FakeElement extends LitElement {
@@ -9,7 +9,7 @@ class FakeElement extends LitElement {
 
   constructor() {
     super();
-    hostedStoreRecordSubscription(this, this.store, 'a', this.subscription);
+    storeRecordSubscription(this, this.store, 'a', this.subscription);
   }
 }
 
