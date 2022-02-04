@@ -12,7 +12,7 @@ import { discover, DiscoveryEvent } from '../../base/elements';
 import { isVdsEvent, VdsEvent, vdsEvent } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { get, storeRecordSubscription } from '../../base/stores';
-import { hostedMediaStoreSubscription } from '../../media';
+import { mediaStoreSubscription } from '../../media';
 import { getSlottedChildren, raf } from '../../utils/dom';
 import { isPointerEvent } from '../../utils/events';
 import { clampNumber, round } from '../../utils/number';
@@ -117,7 +117,7 @@ export class ScrubberPreviewElement extends LitElement {
 
     discover(this, 'vds-scrubber-preview-connect');
 
-    hostedMediaStoreSubscription(this, 'duration', ($duration) => {
+    mediaStoreSubscription(this, 'duration', ($duration) => {
       this._mediaDuration = $duration;
     });
 

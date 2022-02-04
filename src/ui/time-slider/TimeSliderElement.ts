@@ -3,7 +3,7 @@ import { CSSResultGroup, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { eventListener } from '../../base/events';
-import { hostedMediaStoreSubscription } from '../../media';
+import { mediaStoreSubscription } from '../../media';
 import { setAttributeIfEmpty } from '../../utils/dom';
 import { isPointerEvent } from '../../utils/events';
 import { clampNumber, round } from '../../utils/number';
@@ -36,14 +36,15 @@ export class TimeSliderElement extends SliderElement {
 
   constructor() {
     super();
-    hostedMediaStoreSubscription(this, 'currentTime', ($currentTime) => {
+
+    mediaStoreSubscription(this, 'currentTime', ($currentTime) => {
       this._mediaCurrentTime = $currentTime;
       this._updateValueToCurrentTime();
     });
-    hostedMediaStoreSubscription(this, 'duration', ($duration) => {
+    mediaStoreSubscription(this, 'duration', ($duration) => {
       this._mediaDuration = $duration;
     });
-    hostedMediaStoreSubscription(this, 'paused', ($paused) => {
+    mediaStoreSubscription(this, 'paused', ($paused) => {
       this._mediaPaused = $paused;
     });
   }

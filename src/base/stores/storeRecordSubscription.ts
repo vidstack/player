@@ -16,7 +16,7 @@ import type { ReadableStoreRecord, StoreValue } from './types';
  * class MyElement extends LitElement {
  *   constructor() {
  *     super();
- *     storeRecordSubscription(this, mediaStoreContext, 'paused', (value) => {
+ *     storeRecordSubscription(this, mediaStoreContext, 'paused', ($value) => {
  *       // ...
  *     });
  *   }

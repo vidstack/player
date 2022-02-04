@@ -15,7 +15,7 @@ import type { ReadableStore } from './types';
  * class MyElement extends LitElement {
  *   constructor() {
  *     super();
- *     storeSubscription(this, <<store>>, (value) => {
+ *     storeSubscription(this, <<store>>, ($value) => {
  *       // ...
  *     });
  *   }

@@ -9,7 +9,7 @@ import { state } from 'lit/decorators.js';
 
 import { setAttribute } from '../../utils/dom';
 import { IS_IOS } from '../../utils/support';
-import { hostedMediaStoreSubscription } from '../mediaStore';
+import { mediaStoreSubscription } from '../mediaStore';
 import { bindMediaPropsToAttrs, bindMediaPropsToCssProps } from '../style';
 import { ViewType } from '../ViewType';
 import { mediaUiElementStyles } from './styles';
@@ -64,13 +64,13 @@ export class MediaUiElement extends LitElement {
   constructor() {
     super();
 
-    hostedMediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
+    mediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
       this._mediaFullscreen = $fullscreen;
     });
-    hostedMediaStoreSubscription(this, 'viewType', ($viewType) => {
+    mediaStoreSubscription(this, 'viewType', ($viewType) => {
       this._mediaIsVideoView = $viewType === ViewType.Video;
     });
-    hostedMediaStoreSubscription(this, 'playsinline', ($playsinline) => {
+    mediaStoreSubscription(this, 'playsinline', ($playsinline) => {
       this._mediaPlaysinline = $playsinline;
     });
 

@@ -1,8 +1,8 @@
 import { PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { hostedEventListener } from '../../base/events';
-import { hostedMediaStoreSubscription } from '../../media';
+import { eventListener } from '../../base/events';
+import { mediaStoreSubscription } from '../../media';
 import { setAttributeIfEmpty } from '../../utils/dom';
 import { round } from '../../utils/number';
 import { SliderElement } from '../slider';
@@ -30,7 +30,7 @@ import { SliderElement } from '../slider';
 export class VolumeSliderElement extends SliderElement {
   constructor() {
     super();
-    hostedMediaStoreSubscription(this, 'volume', ($volume) => {
+    mediaStoreSubscription(this, 'volume', ($volume) => {
       this._mediaVolume = $volume;
     });
   }
@@ -88,7 +88,7 @@ export class VolumeSliderElement extends SliderElement {
   // Methods
   // -------------------------------------------------------------------------------------------
 
-  protected readonly _handleSliderValueChange = hostedEventListener(
+  protected readonly _handleSliderValueChange = eventListener(
     this,
     'vds-slider-drag-value-change',
     (event) => {

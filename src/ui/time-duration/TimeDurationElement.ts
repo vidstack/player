@@ -1,6 +1,6 @@
 import { property } from 'lit/decorators.js';
 
-import { hostedMediaStoreSubscription } from '../../media';
+import { mediaStoreSubscription } from '../../media';
 import { TimeElement } from '../time';
 
 /**
@@ -32,7 +32,8 @@ export class TimeDurationElement extends TimeElement {
 
   constructor() {
     super();
-    hostedMediaStoreSubscription(this, 'duration', ($duration) => {
+
+    mediaStoreSubscription(this, 'duration', ($duration) => {
       this.seconds = $duration;
     });
   }

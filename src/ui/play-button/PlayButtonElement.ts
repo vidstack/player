@@ -1,4 +1,4 @@
-import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
+import { MediaRemoteControl, mediaStoreSubscription } from '../../media';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
 
@@ -34,7 +34,8 @@ export class PlayButtonElement extends ToggleButtonElement {
 
   constructor() {
     super();
-    hostedMediaStoreSubscription(this, 'paused', ($paused) => {
+
+    mediaStoreSubscription(this, 'paused', ($paused) => {
       this.pressed = !$paused;
       setAttribute(this, 'media-paused', $paused);
     });

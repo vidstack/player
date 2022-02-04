@@ -4,7 +4,7 @@ import { property } from 'lit/decorators.js';
 
 import {
   DisposalBin,
-  hostedEventListener,
+  eventListener,
   listen,
   vdsEvent
 } from '../../base/events';
@@ -96,7 +96,7 @@ export class MediaSyncElement extends LitElement {
     return this._mediaProvider;
   }
 
-  protected _handleMediaProviderConnect = hostedEventListener(
+  protected _handleMediaProviderConnect = eventListener(
     this,
     'vds-media-provider-connect',
     (event) => {

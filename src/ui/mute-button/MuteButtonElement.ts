@@ -1,4 +1,4 @@
-import { hostedMediaStoreSubscription, MediaRemoteControl } from '../../media';
+import { MediaRemoteControl, mediaStoreSubscription } from '../../media';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
 import { ToggleButtonElement } from '../toggle-button';
 
@@ -34,7 +34,8 @@ export class MuteButtonElement extends ToggleButtonElement {
 
   constructor() {
     super();
-    hostedMediaStoreSubscription(this, 'muted', ($muted) => {
+
+    mediaStoreSubscription(this, 'muted', ($muted) => {
       this.pressed = $muted;
       setAttribute(this, 'media-muted', $muted);
     });

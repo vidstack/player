@@ -1,6 +1,6 @@
 import { CSSResultGroup, PropertyValues } from 'lit';
 
-import { DisposalBin, hostedEventListener, listen } from '../../base/events';
+import { DisposalBin, eventListener, listen } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { get } from '../../base/stores';
 import { isNil } from '../../utils/unit';
@@ -75,7 +75,7 @@ export class ScrubberElement extends TimeSliderElement {
   // Scrubber Events
   // -------------------------------------------------------------------------------------------
 
-  protected _handleScrubberPointerEnter = hostedEventListener(
+  protected _handleScrubberPointerEnter = eventListener(
     this,
     'pointerenter',
     (event) => {
@@ -87,7 +87,7 @@ export class ScrubberElement extends TimeSliderElement {
     }
   );
 
-  protected _handleScrubberPointerMove = hostedEventListener(
+  protected _handleScrubberPointerMove = eventListener(
     this,
     'pointermove',
     (event) => {
@@ -96,7 +96,7 @@ export class ScrubberElement extends TimeSliderElement {
     }
   );
 
-  protected _handleScrubberPointerLeave = hostedEventListener(
+  protected _handleScrubberPointerLeave = eventListener(
     this,
     'pointerleave',
     (event) => {
@@ -111,7 +111,7 @@ export class ScrubberElement extends TimeSliderElement {
     }
   );
 
-  protected _handleScrubberDragStart = hostedEventListener(
+  protected _handleScrubberDragStart = eventListener(
     this,
     'vds-slider-drag-start',
     (event) => {
@@ -122,7 +122,7 @@ export class ScrubberElement extends TimeSliderElement {
     }
   );
 
-  protected _handleScrubberDragValueChange = hostedEventListener(
+  protected _handleScrubberDragValueChange = eventListener(
     this,
     'vds-slider-drag-value-change',
     (event) => {
@@ -131,7 +131,7 @@ export class ScrubberElement extends TimeSliderElement {
     }
   );
 
-  protected _handleScrubberDragEnd = hostedEventListener(
+  protected _handleScrubberDragEnd = eventListener(
     this,
     'vds-slider-drag-end',
     (event) => {
@@ -158,7 +158,7 @@ export class ScrubberElement extends TimeSliderElement {
 
   protected readonly _scrubberPreviewDisconnectDisposal = new DisposalBin();
 
-  protected readonly _handlePreviewConnect = hostedEventListener(
+  protected readonly _handlePreviewConnect = eventListener(
     this,
     'vds-scrubber-preview-connect',
     (event) => {

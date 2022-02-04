@@ -10,7 +10,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { logElementLifecycle } from '../../base/logger';
-import { hostedMediaStoreSubscription } from '../../media';
+import { mediaStoreSubscription } from '../../media';
 import { setAttributeIfEmpty } from '../../utils/dom';
 import { formatSpokenTime } from '../../utils/time';
 import { seekableProgressBarElementStyles } from './styles';
@@ -43,11 +43,13 @@ export class SeekableProgressBarElement extends LitElement {
 
   constructor() {
     super();
+
     if (__DEV__) logElementLifecycle(this);
-    hostedMediaStoreSubscription(this, 'seekableAmount', ($seekableAmount) => {
+
+    mediaStoreSubscription(this, 'seekableAmount', ($seekableAmount) => {
       this._mediaSeekableAmount = $seekableAmount;
     });
-    hostedMediaStoreSubscription(this, 'duration', ($duration) => {
+    mediaStoreSubscription(this, 'duration', ($duration) => {
       this._mediaDuration = $duration;
     });
   }

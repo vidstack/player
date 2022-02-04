@@ -57,7 +57,26 @@ export function createMediaStore(): WritableMediaStoreRecord {
 
 export const mediaStoreContext = createContext(createMediaStore);
 
-export function hostedMediaStoreSubscription<
+/**
+ * Helper function to simplify subscribing to a media store for the life of the given `host`
+ * element, meaning when it's disconnected from the DOM, the subscription is destroyed.
+ *
+ * @example
+ * ```ts
+ * import { LitElement } from 'lit';
+ * import { mediaStoreSubscription } from '@vidstack/player';
+ *
+ * class MyElement extends LitElement {
+ *   constructor() {
+ *     super();
+ *     mediaStoreSubscription(this, 'paused', ($paused) => {
+ *       // ...
+ *     });
+ *   }
+ * }
+ * ```
+ */
+export function mediaStoreSubscription<
   T extends keyof ReadableMediaStoreRecord
 >(
   host: ReactiveControllerHost & EventTarget,
