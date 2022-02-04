@@ -1,5 +1,5 @@
 export * from './DisposalBin';
-export * from './hostedEventListener';
+export * from './eventListener';
 export * from './listen';
 export * from './redispatchEvent';
 export * from './VdsEvent';

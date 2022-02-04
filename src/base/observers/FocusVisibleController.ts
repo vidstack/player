@@ -1,6 +1,6 @@
 import type { ReactiveElement } from 'lit';
 
-import { DisposalBin, hostedEventListener, listen } from '../events';
+import { DisposalBin, eventListener, listen } from '../events';
 
 /**
  * `:focus-visible` polyfill which adds the `focus-visible` class to the given `host` element
@@ -18,7 +18,7 @@ export class FocusVisibleController {
       })
     );
 
-    hostedEventListener(_host, 'keydown', (e) => {
+    eventListener(_host, 'keydown', (e) => {
       if (e.metaKey || e.altKey || e.ctrlKey) {
         return;
       }
@@ -26,13 +26,13 @@ export class FocusVisibleController {
       hadKeyboardEvent = true;
     });
 
-    hostedEventListener(_host, 'focus', (e) => {
+    eventListener(_host, 'focus', (e) => {
       if (hadKeyboardEvent) {
         _host.classList.add('focus-visible');
       }
     });
 
-    hostedEventListener(_host, 'blur', (e) => {
+    eventListener(_host, 'blur', (e) => {
       _host.classList.remove('focus-visible');
     });
 

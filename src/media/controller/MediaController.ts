@@ -1,7 +1,7 @@
 import debounce from 'just-debounce-it';
 import type { ReactiveElement } from 'lit';
 
-import { DisposalBin, hostedEventListener, vdsEvent } from '../../base/events';
+import { DisposalBin, eventListener, vdsEvent } from '../../base/events';
 import { LogController, LogDispatcher } from '../../base/logger';
 import { RequestQueue } from '../../base/queue';
 import { get, WritableStore } from '../../base/stores';
@@ -79,7 +79,7 @@ export class MediaController {
     return this._mediaProvider;
   }
 
-  protected _handleMediaProviderConnect = hostedEventListener(
+  protected _handleMediaProviderConnect = eventListener(
     this._host,
     'vds-media-provider-connect',
     (event) => {
@@ -147,7 +147,7 @@ export class MediaController {
     this._mediaIdleController.delay = delay;
   }
 
-  protected _handleIdleChange = hostedEventListener(
+  protected _handleIdleChange = eventListener(
     this._host,
     'vds-idle-change',
     (event) => {
@@ -205,15 +205,11 @@ export class MediaController {
     return true;
   }
 
-  protected _handleCanLoad = hostedEventListener(
-    this._host,
-    'vds-can-load',
-    () => {
-      this._mediaStore.canLoad.set(true);
-    }
-  );
+  protected _handleCanLoad = eventListener(this._host, 'vds-can-load', () => {
+    this._mediaStore.canLoad.set(true);
+  });
 
-  protected _handleMuteRequest = hostedEventListener(
+  protected _handleMuteRequest = eventListener(
     this._host,
     'vds-mute-request',
     (event) => {
@@ -226,7 +222,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleUnmuteRequest = hostedEventListener(
+  protected readonly _handleUnmuteRequest = eventListener(
     this._host,
     'vds-unmute-request',
     (event) => {
@@ -239,7 +235,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handlePlayRequest = hostedEventListener(
+  protected readonly _handlePlayRequest = eventListener(
     this._host,
     'vds-play-request',
     (event) => {
@@ -252,7 +248,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handlePauseRequest = hostedEventListener(
+  protected readonly _handlePauseRequest = eventListener(
     this._host,
     'vds-pause-request',
     (event) => {
@@ -267,7 +263,7 @@ export class MediaController {
 
   protected _isSeekingRequestPending = false;
 
-  protected readonly _handleSeekingRequest = hostedEventListener(
+  protected readonly _handleSeekingRequest = eventListener(
     this._host,
     'vds-seeking-request',
     (event) => {
@@ -281,7 +277,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleSeekRequest = hostedEventListener(
+  protected readonly _handleSeekRequest = eventListener(
     this._host,
     'vds-seek-request',
     (event) => {
@@ -302,7 +298,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleVolumeChangeRequest = hostedEventListener(
+  protected readonly _handleVolumeChangeRequest = eventListener(
     this._host,
     'vds-volume-change-request',
     (event) => {
@@ -315,7 +311,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleEnterFullscreenRequest = hostedEventListener(
+  protected readonly _handleEnterFullscreenRequest = eventListener(
     this._host,
     'vds-enter-fullscreen-request',
     async (event) => {
@@ -331,7 +327,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleExitFullscreenRequest = hostedEventListener(
+  protected readonly _handleExitFullscreenRequest = eventListener(
     this._host,
     'vds-exit-fullscreen-request',
     async (event) => {
@@ -347,7 +343,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleFullscreenChange = hostedEventListener(
+  protected readonly _handleFullscreenChange = eventListener(
     this._host,
     'vds-fullscreen-change',
     (event) => {
@@ -356,7 +352,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleFullscreenError = hostedEventListener(
+  protected readonly _handleFullscreenError = eventListener(
     this._host,
     'vds-fullscreen-error',
     (event) => {
@@ -365,7 +361,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleResumeIdlingRequest = hostedEventListener(
+  protected readonly _handleResumeIdlingRequest = eventListener(
     this._host,
     'vds-resume-idling-request',
     (event) => {
@@ -374,7 +370,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handlePauseIdlingRequest = hostedEventListener(
+  protected readonly _handlePauseIdlingRequest = eventListener(
     this._host,
     'vds-pause-idling-request',
     (event) => {
@@ -387,7 +383,7 @@ export class MediaController {
   // Media Events
   // -------------------------------------------------------------------------------------------
 
-  protected readonly _handleLoadStart = hostedEventListener(
+  protected readonly _handleLoadStart = eventListener(
     this._host,
     'vds-load-start',
     (event) => {
@@ -398,7 +394,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleAutoplay = hostedEventListener(
+  protected readonly _handleAutoplay = eventListener(
     this._host,
     'vds-autoplay',
     () => {
@@ -406,7 +402,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleAutoplayError = hostedEventListener(
+  protected readonly _handleAutoplayError = eventListener(
     this._host,
     'vds-autoplay-fail',
     (event) => {
@@ -414,7 +410,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleCanPlay = hostedEventListener(
+  protected readonly _handleCanPlay = eventListener(
     this._host,
     'vds-can-play',
     (event) => {
@@ -423,7 +419,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handlePlay = hostedEventListener(
+  protected readonly _handlePlay = eventListener(
     this._host,
     'vds-play',
     (event) => {
@@ -432,7 +428,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handlePlayFail = hostedEventListener(
+  protected readonly _handlePlayFail = eventListener(
     this._host,
     'vds-play-fail',
     (event) => {
@@ -444,7 +440,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handlePlaying = hostedEventListener(
+  protected readonly _handlePlaying = eventListener(
     this._host,
     'vds-playing',
     (event) => {
@@ -467,7 +463,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handlePause = hostedEventListener(
+  protected readonly _handlePause = eventListener(
     this._host,
     'vds-pause',
     (event) => {
@@ -480,7 +476,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleTimeUpdate = hostedEventListener(
+  protected readonly _handleTimeUpdate = eventListener(
     this._host,
     'vds-time-update',
     (event) => {
@@ -489,7 +485,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleVolumeChange = hostedEventListener(
+  protected readonly _handleVolumeChange = eventListener(
     this._host,
     'vds-volume-change',
     (event) => {
@@ -499,7 +495,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleReplay = hostedEventListener(
+  protected readonly _handleReplay = eventListener(
     this._host,
     'vds-replay',
     (event) => {
@@ -508,7 +504,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleSeeking = hostedEventListener(
+  protected readonly _handleSeeking = eventListener(
     this._host,
     'vds-seeking',
     (event) => {
@@ -519,7 +515,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleSeeked = hostedEventListener(
+  protected readonly _handleSeeked = eventListener(
     this._host,
     'vds-seeked',
     (event) => {
@@ -566,7 +562,7 @@ export class MediaController {
     this._lastWaitingEvent = undefined;
   }, 300);
 
-  protected readonly _handleWaiting = hostedEventListener(
+  protected readonly _handleWaiting = eventListener(
     this._host,
     'vds-waiting',
     (event) => {
@@ -578,7 +574,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleEnded = hostedEventListener(
+  protected readonly _handleEnded = eventListener(
     this._host,
     'vds-ended',
     (event) => {
@@ -590,7 +586,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleAutoplayChange = hostedEventListener(
+  protected readonly _handleAutoplayChange = eventListener(
     this._host,
     'vds-autoplay-change',
     (event) => {
@@ -598,7 +594,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleError = hostedEventListener(
+  protected readonly _handleError = eventListener(
     this._host,
     'vds-error',
     (event) => {
@@ -606,7 +602,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleFullscreenSupportChange = hostedEventListener(
+  protected readonly _handleFullscreenSupportChange = eventListener(
     this._host,
     'vds-fullscreen-support-change',
     (event) => {
@@ -614,7 +610,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handlePosterChange = hostedEventListener(
+  protected readonly _handlePosterChange = eventListener(
     this._host,
     'vds-poster-change',
     (event) => {
@@ -622,7 +618,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleLoopChange = hostedEventListener(
+  protected readonly _handleLoopChange = eventListener(
     this._host,
     'vds-loop-change',
     (event) => {
@@ -630,7 +626,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handlePlaysinlineChange = hostedEventListener(
+  protected readonly _handlePlaysinlineChange = eventListener(
     this._host,
     'vds-playsinline-change',
     (event) => {
@@ -638,7 +634,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleControlsChange = hostedEventListener(
+  protected readonly _handleControlsChange = eventListener(
     this._host,
     'vds-controls-change',
     (event) => {
@@ -646,7 +642,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleMediaTypeChange = hostedEventListener(
+  protected readonly _handleMediaTypeChange = eventListener(
     this._host,
     'vds-media-type-change',
     (event) => {
@@ -654,7 +650,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleDurationChange = hostedEventListener(
+  protected readonly _handleDurationChange = eventListener(
     this._host,
     'vds-duration-change',
     (event) => {
@@ -662,7 +658,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleProgress = hostedEventListener(
+  protected readonly _handleProgress = eventListener(
     this._host,
     'vds-progress',
     (event) => {
@@ -678,7 +674,7 @@ export class MediaController {
     }
   );
 
-  protected readonly _handleSrcChange = hostedEventListener(
+  protected readonly _handleSrcChange = eventListener(
     this._host,
     'vds-src-change',
     (event) => {

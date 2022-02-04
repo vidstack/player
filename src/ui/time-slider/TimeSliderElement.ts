@@ -2,7 +2,7 @@ import throttle from 'just-throttle';
 import { CSSResultGroup, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { hostedEventListener } from '../../base/events';
+import { eventListener } from '../../base/events';
 import { hostedMediaStoreSubscription } from '../../media';
 import { setAttributeIfEmpty } from '../../utils/dom';
 import { isPointerEvent } from '../../utils/events';
@@ -185,7 +185,7 @@ export class TimeSliderElement extends SliderElement {
       .replace('{duration}', formatSpokenTime(this._mediaDuration));
   }
 
-  protected readonly _handleSliderDragStart = hostedEventListener(
+  protected readonly _handleSliderDragStart = eventListener(
     this,
     'vds-slider-drag-start',
     (event) => {
@@ -193,7 +193,7 @@ export class TimeSliderElement extends SliderElement {
     }
   );
 
-  protected readonly _handleSliderDragValueChange = hostedEventListener(
+  protected readonly _handleSliderDragValueChange = eventListener(
     this,
     'vds-slider-drag-value-change',
     (event) => {
@@ -208,7 +208,7 @@ export class TimeSliderElement extends SliderElement {
     }
   );
 
-  protected readonly _handleSliderDragEnd = hostedEventListener(
+  protected readonly _handleSliderDragEnd = eventListener(
     this,
     'vds-slider-drag-end',
     (event) => {

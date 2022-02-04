@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { DisposalBin, hostedEventListener, vdsEvent } from '../../base/events';
+import { DisposalBin, eventListener, vdsEvent } from '../../base/events';
 import { IntersectionController, PageController } from '../../base/observers';
 import type { MediaProviderElement } from '../provider';
 
@@ -154,7 +154,7 @@ export class MediaVisibilityElement extends LitElement {
     return this._mediaProvider;
   }
 
-  protected _handleMediaProviderConnect = hostedEventListener(
+  protected _handleMediaProviderConnect = eventListener(
     this,
     'vds-media-provider-connect',
     (event) => {

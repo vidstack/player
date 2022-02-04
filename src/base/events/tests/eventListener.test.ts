@@ -1,12 +1,12 @@
 import { fixture, nextFrame } from '@open-wc/testing-helpers';
 import { html, LitElement } from 'lit';
 
-import { hostedEventListener } from '../hostedEventListener';
+import { eventListener } from '../eventListener';
 
 class FakeElement extends LitElement {
   listener = vi.fn();
 
-  handleClick = hostedEventListener(this, 'click', this.listener);
+  handleClick = eventListener(this, 'click', this.listener);
 
   override render() {
     return html`<slot></slot>`;

@@ -9,7 +9,7 @@ import { property, state } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { hostedEventListener, vdsEvent } from '../../base/events';
+import { eventListener, vdsEvent } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { focusVisiblePolyfill } from '../../base/observers';
 import { MediaRemoteControl } from '../../media';
@@ -277,7 +277,7 @@ export class SliderElement extends LitElement {
     setAttributeIfEmpty(this, 'autocomplete', 'off');
   }
 
-  protected _handleHostKeydown = hostedEventListener(
+  protected _handleHostKeydown = eventListener(
     this,
     'keydown',
     (event: KeyboardEvent) => {
@@ -548,7 +548,7 @@ export class SliderElement extends LitElement {
   // Document (Pointer Events)
   // -------------------------------------------------------------------------------------------
 
-  protected readonly _handleDocumentPointerUp = hostedEventListener(
+  protected readonly _handleDocumentPointerUp = eventListener(
     this,
     'pointerup',
     (event) => {
@@ -558,7 +558,7 @@ export class SliderElement extends LitElement {
     { target: document }
   );
 
-  protected readonly _handleDocumentPointerMove = hostedEventListener(
+  protected readonly _handleDocumentPointerMove = eventListener(
     this,
     'pointermove',
     (event) => {

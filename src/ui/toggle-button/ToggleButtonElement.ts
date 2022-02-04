@@ -7,7 +7,7 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { hostedEventListener } from '../../base/events';
+import { eventListener } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { focusVisiblePolyfill } from '../../base/observers';
 import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
@@ -53,7 +53,7 @@ export class ToggleButtonElement extends LitElement {
     focusVisiblePolyfill(this);
 
     (['pointerdown', 'keydown'] as const).forEach((eventType) => {
-      hostedEventListener(this, eventType, (event) => {
+      eventListener(this, eventType, (event) => {
         if (
           this.disabled ||
           (isKeyboardEvent(event) && !isKeyboardClick(event))
@@ -122,7 +122,7 @@ export class ToggleButtonElement extends LitElement {
     this.pressed = !this.pressed;
   }
 
-  protected readonly _handleButtonClickCapture = hostedEventListener(
+  protected readonly _handleButtonClickCapture = eventListener(
     this,
     'click',
     (event) => {
