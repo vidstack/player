@@ -11,16 +11,16 @@ import type { MediaControllerEvents } from '../controller';
  * @example
  * ```ts
  * import { LitElement } from 'lit';
- * import { hostMediaEventListener } from '@vidstack/player';
+ * import { mediaEventListener } from '@vidstack/player';
  *
  * class MyElement extends LitElement {
- *   _handlePlay = hostMediaEventListener(this, (event) => {
+ *   _handlePlay = mediaEventListener(this, (event) => {
  *     // ...
  *   })
  * }
  * ```
  */
-export function hostedMediaEventListener<
+export function mediaEventListener<
   MediaEvent extends keyof MediaControllerEvents
 >(
   host: ReactiveControllerHost & EventTarget,

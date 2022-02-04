@@ -4,14 +4,14 @@ import { LitElement } from 'lit';
 
 import { VdsEvent } from '../../../base/events';
 import { waitForEvent } from '../../../utils/events';
-import { hostedMediaEventListener } from '../hostedMediaEventListener';
+import { mediaEventListener } from '../mediaEventListener';
 
 class MediaListenerElement extends LitElement {
   playListener = vi.fn();
   pauseListener = vi.fn();
 
-  handlePlay = hostedMediaEventListener(this, 'vds-play', this.playListener);
-  handlePause = hostedMediaEventListener(this, 'vds-pause', this.pauseListener);
+  handlePlay = mediaEventListener(this, 'vds-play', this.playListener);
+  handlePause = mediaEventListener(this, 'vds-pause', this.pauseListener);
 }
 
 window.customElements.define('media-listener', MediaListenerElement);
