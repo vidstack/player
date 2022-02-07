@@ -1,3 +1,9 @@
+<script context="module">
+  export const __pageMeta = {
+    title: 'MediaUiElement'
+  };
+</script>
+
 <script lang="ts">
   import { ControlsAddon } from '@vitebook/client/addons';
 

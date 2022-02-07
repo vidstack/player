@@ -1,4 +1,3 @@
-import './dangerously-all-ui';
 import './vds-audio-player';
 import './vds-audio';
 import './vds-hls-player';
@@ -9,3 +8,4 @@ import './vds-media-sync';
 import './vds-media-visibility';
 import './vds-video-player';
 import './vds-video';
+import './dangerously-all-ui';
