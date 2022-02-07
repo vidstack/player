@@ -3,8 +3,8 @@ import type { ReactiveControllerHost } from 'lit';
 import { DisposalBin } from '../../base/events';
 import { LogDispatcher } from '../../base/logger';
 import { derived, ReadableStore } from '../../base/stores';
+import { mediaStoreContext } from '../../media';
 import { isNumber, isString } from '../../utils/unit';
-import { mediaStoreContext } from '../mediaStore';
 
 export class MediaTextController {
   protected _template?: string;

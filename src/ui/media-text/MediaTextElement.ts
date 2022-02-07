@@ -1,8 +1,8 @@
 import { css, CSSResultGroup, html, LitElement, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { MediaTextController } from '../../media/style';
 import { isString } from '../../utils/unit';
+import { MediaTextController } from './MediaTextController';
 
 /**
  * Subscribes to some media state declared by the `value` attribute, and outputs its value
