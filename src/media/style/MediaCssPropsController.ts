@@ -10,7 +10,7 @@ class MediaCssPropsController extends MediaStyleController {
   }
 
   protected _getCssPropName(attrName: string) {
-    return `--${attrName}`;
+    return `--vds-${attrName}`;
   }
 
   protected _handleDisconnect(_, attrName: string) {
