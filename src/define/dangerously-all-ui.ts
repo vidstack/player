@@ -6,7 +6,6 @@ import './vds-scrubber';
 import './vds-scrubber-preview';
 import './vds-scrubber-preview-time';
 import './vds-scrubber-preview-video';
-import './vds-seekable-progress-bar';
 import './vds-slider';
 import './vds-time';
 import './vds-time-current';

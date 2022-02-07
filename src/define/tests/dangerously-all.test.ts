@@ -20,7 +20,6 @@ test('it should define all vds elements', () => {
     'vds-scrubber-preview-video',
     'vds-scrubber-preview',
     'vds-scrubber',
-    'vds-seekable-progress-bar',
     'vds-slider',
     'vds-time-current',
     'vds-time-duration',

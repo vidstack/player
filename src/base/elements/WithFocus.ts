@@ -25,7 +25,6 @@ export const focusableSelector = `
     'vds-mute-button',
     'vds-play-button',
     'vds-scrubber',
-    'vds-seekable-progress-bar',
     'vds-slider',
     'vds-time-slider',
     'vds-volume-slider'

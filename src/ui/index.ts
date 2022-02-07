@@ -6,7 +6,6 @@ export * from './scrubber';
 export * from './scrubber-preview';
 export * from './scrubber-preview-time';
 export * from './scrubber-preview-video';
-export * from './seekable-progress-bar';
 export * from './slider';
 export * from './time';
 export * from './time-current';

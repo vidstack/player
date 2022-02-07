@@ -9,14 +9,9 @@
 
   import { FakeMediaProviderElement } from '../../media/test-utils';
   import { safelyDefineCustomElement } from '../../utils/dom';
-  import { SeekableProgressBarElement } from '../seekable-progress-bar';
   import { ScrubberElement } from './ScrubberElement';
 
   safelyDefineCustomElement('vds-scrubber', ScrubberElement);
-  safelyDefineCustomElement(
-    'vds-seekable-progress-bar',
-    SeekableProgressBarElement
-  );
   safelyDefineCustomElement(
     'vds-fake-media-provider',
     FakeMediaProviderElement
@@ -36,9 +31,7 @@
     currentTime = detail;
   }}
 >
-  <vds-scrubber>
-    <vds-seekable-progress-bar />
-  </vds-scrubber>
+  <vds-scrubber />
 </vds-fake-media-provider>
 
 <ControlsAddon>
