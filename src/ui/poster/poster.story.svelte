@@ -1,3 +1,9 @@
+<script context="module">
+  export const __pageMeta = {
+    title: 'PosterElement'
+  };
+</script>
+
 <script>
   import { Variant } from '@vitebook/client';
 
