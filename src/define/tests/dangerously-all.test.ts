@@ -16,6 +16,7 @@ test('it should define all vds elements', () => {
     'vds-media-visibility',
     'vds-mute-button',
     'vds-play-button',
+    'vds-poster',
     'vds-slider',
     'vds-slider-value-text',
     'vds-slider-video',

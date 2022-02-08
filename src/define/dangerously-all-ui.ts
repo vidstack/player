@@ -2,6 +2,7 @@ import './vds-aspect-ratio';
 import './vds-fullscreen-button';
 import './vds-mute-button';
 import './vds-play-button';
+import './vds-poster';
 import './vds-slider';
 import './vds-slider-value-text';
 import './vds-slider-video';
