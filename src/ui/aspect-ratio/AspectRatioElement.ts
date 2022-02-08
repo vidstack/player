@@ -7,6 +7,7 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 
+import { setCSSProperty } from '../../utils/dom';
 import { round } from '../../utils/number';
 import { isString } from '../../utils/unit';
 import { aspectRatioElementStyles } from './styles';
@@ -75,11 +76,11 @@ export class AspectRatioElement extends LitElement {
     }
 
     if (changedProperties.has('minHeight')) {
-      this.style.setProperty('--vds-min-height', this.minHeight);
+      setCSSProperty(this, 'min-height', this.minHeight);
     }
 
     if (changedProperties.has('maxHeight')) {
-      this.style.setProperty('--vds-max-height', this.maxHeight);
+      setCSSProperty(this, 'max-height', this.maxHeight);
     }
   }
 
@@ -91,9 +92,9 @@ export class AspectRatioElement extends LitElement {
     if (this.isValidRatio) {
       const [width, height] = this._parseAspectRatio();
       const roundedRatio = round(height / width, 4);
-      this.style.setProperty('--vds-aspect-ratio', String(roundedRatio));
+      setCSSProperty(this, 'aspect-ratio', String(roundedRatio));
     } else {
-      this.style.setProperty('--vds-aspect-ratio', '0.5');
+      setCSSProperty(this, 'aspect-ratio', '0.5');
     }
   }
 
