@@ -8,12 +8,7 @@ import {
 export default defineConfig<DefaultThemeConfig>({
   include: ['src/**/*.story.html', 'src/**/*.story.svelte'],
   vite: {
-    define: {
-      __DEV__: 'true'
-    },
-    server: {
-      // hmr: false
-    },
+    define: { __DEV__: 'true' },
     optimizeDeps: {
       include: ['lit', 'lit/decorators.js']
     }
@@ -22,16 +17,14 @@ export default defineConfig<DefaultThemeConfig>({
     clientPlugin({ appFile: 'App.svelte' }),
     defaultThemePlugin(),
     svelte({
+      compilerOptions: { hydratable: true },
       extensions: ['.html', '.svelte'],
-      experimental: {
-        useVitePreprocess: true
-      }
+      experimental: { useVitePreprocess: true }
     })
   ],
   site: {
     title: 'Vidstack Player',
-    description:
-      'Headless web components that make integrating media on the a web a breeze.',
+    description: 'Video player built with headless web components.',
     theme: {
       remoteGitRepo: {
         url: 'vidstack/player'
