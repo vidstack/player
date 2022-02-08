@@ -22,7 +22,7 @@ test('light DOM snapshot', async function () {
   expect(ui).dom.to.equal(`
     <vds-media-ui
       media-can-load media-type="unknown" media-paused media-view-type="unknown"
-      style="--media-buffered-amount: 0; --media-current-time: 0; --media-duration: 0; --media-seekable-amount: 0;"
+      style="--vds-media-buffered-amount: 0; --vds-media-current-time: 0; --vds-media-duration: 0; --vds-media-seekable-amount: 0;"
     >
       <div></div>
     </vds-media-ui>
