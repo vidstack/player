@@ -17,10 +17,6 @@ import type {
 } from '../media';
 import type { HlsEvents } from '../providers/hls';
 import type { VideoPresentationEvents } from '../providers/video';
-import type {
-  ScrubberPreviewConnectEvent,
-  ScrubberPreviewEvents
-} from '../ui/scrubber-preview';
 import type { SliderEvents } from '../ui/slider';
 
 declare global {
@@ -32,7 +28,6 @@ declare global {
       MediaVisibilityEvents,
       MediaSyncEvents,
       ScreenOrientationEvents,
-      ScrubberPreviewEvents,
       SliderEvents,
       VideoPresentationEvents,
       LoggerEvents {
@@ -41,7 +36,6 @@ declare global {
     'vds-media-player-connect': MediaPlayerConnectEvent;
     'vds-media-controller-connect': MediaControllerConnectEvent;
     'vds-media-provider-connect': MediaProviderConnectEvent;
-    'vds-scrubber-preview-connect': ScrubberPreviewConnectEvent;
   }
 }
 

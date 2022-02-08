@@ -28,6 +28,6 @@
     "types",
     "define",
     "globals.d.ts",
-    "./index.d.ts"
+    "index.d.ts"
   ]
 }

@@ -8,7 +8,6 @@ declare global {
   type MediaSyncEvents = import('./types').MediaSyncEvents;
   type MediaRequestEvents = import('./types').MediaRequestEvents;
   type ScreenOrientationEvents = import('./types').ScreenOrientationEvents;
-  type ScrubberPreviewEvents = import('./types').ScrubberPreviewEvents;
   type SliderEvents = import('./types').SliderEvents;
   type VideoPresentationEvents = import('./types').VideoPresentationEvents;
   type LoggerEvents = import('./types').LoggerEvents;
@@ -21,14 +20,12 @@ declare global {
       MediaVisibilityEvents,
       MediaSyncEvents,
       ScreenOrientationEvents,
-      ScrubberPreviewEvents,
       SliderEvents,
       VideoPresentationEvents,
       LoggerEvents {
     'vds-media-player-connect': import('./types').MediaPlayerConnectEvent;
     'vds-media-controller-connect': import('./types').MediaControllerConnectEvent;
     'vds-media-provider-connect': import('./types').MediaProviderConnectEvent;
-    'vds-scrubber-preview-connect': import('./types').ScrubberPreviewConnectEvent;
   }
 }
 

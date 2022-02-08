@@ -31,7 +31,7 @@ export function createSliderStore() {
      */
     pointing,
     /**
-     * Whether the scrubber is being interacted with.
+     * Whether the slider is being interacted with.
      */
     interactive: derived(
       [dragging, pointing],
