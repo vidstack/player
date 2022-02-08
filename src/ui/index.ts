@@ -1,6 +1,5 @@
 export * from './aspect-ratio';
 export * from './fullscreen-button';
-export * from './media-text';
 export * from './mute-button';
 export * from './play-button';
 export * from './scrubber';
@@ -8,5 +7,6 @@ export * from './scrubber-preview';
 export * from './scrubber-preview-time';
 export * from './scrubber-preview-video';
 export * from './slider';
+export * from './time';
 export * from './toggle-button';
 export * from './volume-slider';

@@ -1,6 +1,6 @@
 <script context="module">
   export const __pageMeta = {
-    title: 'MediaTextElement'
+    title: 'TimeElement'
   };
 </script>
 
@@ -8,20 +8,23 @@
   import { ControlsAddon } from '@vitebook/client/addons';
 
   import { FakeMediaProviderElement } from '../../media/test-utils';
-  import { MediaTextElement } from './MediaTextElement';
+  import { TimeElement } from './TimeElement';
   import { safelyDefineCustomElement } from '../../utils/dom';
 
-  safelyDefineCustomElement('vds-media-text', MediaTextElement);
+  safelyDefineCustomElement('vds-time', TimeElement);
   safelyDefineCustomElement(
     'vds-fake-media-provider',
     FakeMediaProviderElement
   );
 
-  let value = 'currentTime';
+  let type = 'current';
   let currentTime = 0;
   let duration = 0;
   let bufferedAmount = 0;
   let seekableAmount = 0;
+  let showHours = false;
+  let padHours = false;
+  let remainder = false;
 </script>
 
 <vds-fake-media-provider
@@ -30,13 +33,35 @@
   emulate-bufferedamount={bufferedAmount}
   emulate-seekableamount={seekableAmount}
 >
-  <vds-media-text {value} />
+  <vds-time
+    {type}
+    show-hours={showHours ? showHours : null}
+    pad-hours={padHours ? padHours : null}
+    {remainder}
+  />
 </vds-fake-media-provider>
 
 <ControlsAddon>
   <label>
-    Media Text Value
-    <input type="text" bind:value />
+    Type
+    <select bind:value={type}>
+      <option value="current">Current</option>
+      <option value="buffered">Buffered</option>
+      <option value="duration">Duration</option>
+      <option value="seekable">Seekable</option>
+    </select>
+  </label>
+  <label>
+    Show Hours
+    <input type="checkbox" bind:checked={showHours} />
+  </label>
+  <label>
+    Pad Hours
+    <input type="checkbox" bind:checked={padHours} />
+  </label>
+  <label>
+    Remainder
+    <input type="checkbox" bind:checked={remainder} />
   </label>
   <label>
     Emulate Current Time
