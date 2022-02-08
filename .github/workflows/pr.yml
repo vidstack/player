@@ -1,10 +1,9 @@
-name: PR
+name: 'PR'
 
 on: pull_request
 
 jobs:
   validate:
-    name: Validate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -14,16 +13,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16
-
-      - name: Cache Dependencies
-        id: deps
-        uses: actions/cache@v2
-        with:
-          path: './node_modules'
-          key: deps-${{ hashFiles('package-lock.json') }}
+          cache: 'npm'
 
       - name: Install Dependencies
-        if: steps.deps.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Lint
