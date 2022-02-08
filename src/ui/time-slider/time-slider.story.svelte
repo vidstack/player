@@ -20,9 +20,9 @@
     FakeMediaProviderElement
   );
 
-  let step = 0.25;
-  let keyboardStep = 5;
-  let shiftKeyMultiplier = 2;
+  let step = 1;
+  let keyboardStep = 1;
+  let shiftKeyMultiplier = 5;
   let pauseWhileDragging = false;
   let seekingRequestThrottle = 100;
 
@@ -40,10 +40,10 @@
 >
   <vds-time-slider
     {step}
-    {keyboardStep}
-    {shiftKeyMultiplier}
-    {pauseWhileDragging}
-    {seekingRequestThrottle}
+    keyboard-step={keyboardStep}
+    shift-key-multiplier={shiftKeyMultiplier}
+    pause-while-dragging={pauseWhileDragging ? pauseWhileDragging : null}
+    seeking-request-throttle={seekingRequestThrottle}
     on:vds-play-request={eventCallback}
     on:vds-pause-request={eventCallback}
     on:vds-seeking-request={eventCallback}
@@ -85,7 +85,13 @@
 
   <label>
     Emulate Current Time
-    <input type="number" min="0" max={duration} bind:value={currentTime} />
+    <input
+      type="number"
+      min="0"
+      max={duration}
+      step="1"
+      bind:value={currentTime}
+    />
   </label>
 
   <label>

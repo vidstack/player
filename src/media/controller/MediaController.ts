@@ -83,12 +83,10 @@ export class MediaController {
     this._host,
     'vds-media-provider-connect',
     (event) => {
-      // @ts-expect-error - not typed.
       if (event.detail.connected) return;
 
       const { element, onDisconnect } = event.detail;
 
-      // @ts-expect-error - not typed.
       event.detail.connected = true;
 
       if (this.mediaProvider === element) return;

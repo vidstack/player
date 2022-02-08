@@ -6,7 +6,6 @@ import { eventListener } from '../../base/events';
 import { mediaStoreSubscription } from '../../media';
 import { setAttributeIfEmpty } from '../../utils/dom';
 import { isPointerEvent } from '../../utils/events';
-import { clampNumber, round } from '../../utils/number';
 import { formatSpokenTime } from '../../utils/time';
 import { SliderElement } from '../slider';
 import { timeSliderElementStyles } from './styles';
@@ -31,11 +30,11 @@ export class TimeSliderElement extends SliderElement {
     super();
 
     mediaStoreSubscription(this, 'currentTime', ($currentTime) => {
-      this._mediaCurrentTime = $currentTime;
-      this._updateValueToCurrentTime();
+      this.value = $currentTime;
     });
     mediaStoreSubscription(this, 'duration', ($duration) => {
       this._mediaDuration = $duration;
+      this.requestUpdate('max');
     });
     mediaStoreSubscription(this, 'paused', ($paused) => {
       this._mediaPaused = $paused;
@@ -51,61 +50,32 @@ export class TimeSliderElement extends SliderElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  override shiftKeyMultiplier = 2;
-
   /**
-   * Represents the current % of media playback.
+   * Represents the current media playback time.
    *
    * @internal
    */
   @property({ attribute: false, state: true })
-  override value = -1;
+  override value = 0;
 
-  // These properties are overridden in final render by methods below.
   /** @internal */
   @property({ attribute: false })
-  override min = 0;
+  override get min() {
+    return 0;
+  }
+
+  override set min(_) {
+    // no-op
+  }
+
   /** @internal */
   @property({ attribute: false })
-  override max = 100;
-
-  protected override _step = 0.25;
-
-  /**
-   *  A number that specifies the granularity that the slider value must adhere to in seconds.
-   * For example, a step with the value `1` indicates a granularity of 1 second increments.
-   *
-   * @default 0.25
-   */
-  @property({ type: Number })
-  override get step() {
-    return this._mediaDuration > 0
-      ? round((this._step / this._mediaDuration) * 100, 2)
-      : this._step;
+  override get max() {
+    return this._mediaDuration;
   }
 
-  override set step(newStep: number) {
-    this._step = newStep;
-  }
-
-  protected override _keyboardStep = 5;
-
-  /**
-   * ♿ **ARIA:** A number that specifies the number of seconds to step when interacting
-   * with the slider via keyboard.
-   *
-   * @default 5
-   */
-  @property({ attribute: 'keyboard-step', type: Number })
-  // @ts-ignore - Defined as accessor here but property in parent class.
-  get keyboardStep() {
-    return this._mediaDuration > 0
-      ? round((this._keyboardStep / this._mediaDuration) * 100, 2)
-      : this._keyboardStep;
-  }
-
-  override set keyboardStep(newStep: number) {
-    this._keyboardStep = newStep;
+  override set max(_) {
+    // no-op
   }
 
   /**
@@ -130,16 +100,8 @@ export class TimeSliderElement extends SliderElement {
   @property({ attribute: 'seeking-request-throttle', type: Number })
   seekingRequestThrottle = 100;
 
-  @state() protected _mediaCurrentTime = 0;
   @state() protected _mediaDuration = 0;
   @state() protected _mediaPaused = true;
-
-  /**
-   * The current media time.
-   */
-  get currentTime() {
-    return this._mediaDuration * (this.value / 100);
-  }
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
@@ -162,21 +124,22 @@ export class TimeSliderElement extends SliderElement {
   // ARIA
   // -------------------------------------------------------------------------------------------
 
-  protected override _getValueNow(): string {
-    const valueNow = this._mediaDuration * (this.value / 100);
-    return String(Math.round(valueNow));
+  protected override _getValueMin(): string {
+    return '0%';
   }
 
-  protected override _getValueMax(): string {
-    return String(Math.round(this._mediaDuration));
+  protected override _getValueNow(): string {
+    return `${Math.round(this.fillPercent)}%`;
   }
 
   protected override _getValueText(): string {
-    const currentTime = this._mediaDuration * (this.value / 100);
-
     return this.valueText
-      .replace('{currentTime}', formatSpokenTime(currentTime))
+      .replace('{currentTime}', formatSpokenTime(this.value))
       .replace('{duration}', formatSpokenTime(this._mediaDuration));
+  }
+
+  protected override _getValueMax(): string {
+    return '100%';
   }
 
   // -------------------------------------------------------------------------------------------
@@ -201,7 +164,7 @@ export class TimeSliderElement extends SliderElement {
 
       if (!isPointerEvent(event.originalEvent)) {
         this._dispatchSeekingRequest.cancel();
-        this._mediaRemote.seek(this.currentTime, event);
+        this._mediaRemote.seek(this.value, event);
       }
     }
   );
@@ -211,23 +174,14 @@ export class TimeSliderElement extends SliderElement {
     'vds-slider-drag-end',
     (event) => {
       this._dispatchSeekingRequest.cancel();
-      this._mediaRemote.seek(this.currentTime, event);
+      this._mediaRemote.seek(this.value, event);
       this._togglePlaybackWhileDragging(event);
     }
   );
 
   protected readonly _dispatchSeekingRequest = throttle((event: Event) => {
-    this._mediaRemote.seeking(this.currentTime, event);
+    this._mediaRemote.seeking(this.value, event);
   }, this.seekingRequestThrottle);
-
-  protected _updateValueToCurrentTime() {
-    const percentage =
-      this._mediaDuration > 0
-        ? (this._mediaCurrentTime / this._mediaDuration) * 100
-        : 0;
-
-    this.value = clampNumber(0, round(percentage, 5), 100);
-  }
 
   protected _wasPlayingBeforeDragStart = false;
   protected _togglePlaybackWhileDragging(event: Event) {

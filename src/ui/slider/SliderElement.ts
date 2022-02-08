@@ -262,8 +262,12 @@ export class SliderElement extends LitElement {
     );
   }
 
-  protected override updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('value')) {
+  protected override willUpdate(changedProperties: PropertyValues) {
+    if (
+      changedProperties.has('value') ||
+      changedProperties.has('min') ||
+      changedProperties.has('max')
+    ) {
       this.value = this._getClampedValue(this.value);
       this.sliderStore.value.set(this.value);
       this._updateFillCSSProps();
@@ -283,7 +287,7 @@ export class SliderElement extends LitElement {
       this._updateAriaValueAttrs();
     }
 
-    super.update(changedProperties);
+    super.willUpdate(changedProperties);
   }
 
   override disconnectedCallback() {
