@@ -3,6 +3,7 @@ import './vds-fullscreen-button';
 import './vds-mute-button';
 import './vds-play-button';
 import './vds-slider';
+import './vds-slider-value-text';
 import './vds-time-slider';
 import './vds-time';
 import './vds-toggle-button';

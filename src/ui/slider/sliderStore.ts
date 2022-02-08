@@ -15,6 +15,14 @@ export function createSliderStore() {
      */
     pointerValue: writable(0),
     /**
+     * The minimum slider value.
+     */
+    min: writable(0),
+    /**
+     * The maximum slider value.
+     */
+    max: writable(100),
+    /**
      * Whether the slider thumb is currently being dragged.
      */
     dragging,

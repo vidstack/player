@@ -103,13 +103,25 @@ export class SliderElement extends LitElement {
    * The lowest slider value in the range of permitted values.
    */
   @property({ reflect: true, type: Number })
-  min = 0;
+  get min() {
+    return get(this.sliderStore.min);
+  }
+
+  set min(newMin) {
+    this.sliderStore.min.set(newMin);
+  }
 
   /**
    * The greatest slider value in the range of permitted values.
    */
   @property({ reflect: true, type: Number })
-  max = 100;
+  get max() {
+    return get(this.sliderStore.max);
+  }
+
+  set max(newMax) {
+    this.sliderStore.max.set(newMax);
+  }
 
   /**
    * Whether the slider should be disabled (non-interactive).
@@ -255,6 +267,7 @@ export class SliderElement extends LitElement {
       this.value = this._getClampedValue(this.value);
       this.sliderStore.value.set(this.value);
       this._updateFillCSSProps();
+      this._dispatchValueChange();
     }
 
     if (changedProperties.has('disabled') && this.disabled) {
@@ -530,25 +543,17 @@ export class SliderElement extends LitElement {
     return this._getValueFromRate(thumbPositionRate);
   }
 
-  protected _lastDispatchedValue = this.value;
-  protected readonly _dispatchValueChange = rafThrottle((event: Event) => {
-    if (this.value === this._lastDispatchedValue) return;
-
+  protected readonly _dispatchValueChange = rafThrottle((event?: Event) => {
     this.dispatchEvent(
       vdsEvent('vds-slider-value-change', {
         detail: this.value,
         originalEvent: event
       })
     );
-
-    this._lastDispatchedValue = this.value;
   });
 
-  protected _lastPointerValue = this.pointerValue;
   protected readonly _dispatchPointerValueChange = rafThrottle(
     (event: Event) => {
-      if (this.pointerValue === this._lastPointerValue) return;
-
       const events = [
         'vds-slider-pointer-value-change',
         this.isDragging && 'vds-slider-drag-value-change'
@@ -564,8 +569,6 @@ export class SliderElement extends LitElement {
           );
         }
       });
-
-      this._lastDispatchedValue = this.value;
     }
   );
 }

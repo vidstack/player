@@ -43,6 +43,11 @@ export class TimeElement extends LitElement {
 
   @state() protected _seconds = 0;
 
+  /**
+   * The type of media time to track.
+   *
+   * @default 'current'
+   */
   @property() type: 'current' | 'buffered' | 'duration' | 'seekable' =
     'current';
 
@@ -50,6 +55,7 @@ export class TimeElement extends LitElement {
    * Whether the time should always show the hours unit, even if the time is less than
    * 1 hour.
    *
+   * @default false
    * @example `20:30` -> `0:20:35`
    */
   @property({ attribute: 'show-hours', type: Boolean })
@@ -58,6 +64,7 @@ export class TimeElement extends LitElement {
   /**
    * Whether the hours unit should be padded with zeroes to a length of 2.
    *
+   * @default false
    * @example `1:20:03` -> `01:20:03`
    */
   @property({ attribute: 'pad-hours', type: Boolean })
@@ -66,6 +73,7 @@ export class TimeElement extends LitElement {
   /**
    * Whether to display the remaining time from the current type, until the duration is reached.
    *
+   * @default false
    * @example 'duration-currentTime'
    */
   @property({ type: Boolean })
