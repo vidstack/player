@@ -2,10 +2,10 @@ import throttle from 'just-throttle';
 import { CSSResultGroup, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { eventListener, VdsEvent } from '../../base/events';
+import { eventListener } from '../../base/events';
 import { mediaStoreSubscription } from '../../media';
 import { setAttributeIfEmpty } from '../../utils/dom';
-import { isKeyboardEvent, isPointerEvent } from '../../utils/events';
+import { isKeyboardEvent } from '../../utils/events';
 import { formatSpokenTime } from '../../utils/time';
 import { SliderElement } from '../slider';
 import { timeSliderElementStyles } from './styles';
