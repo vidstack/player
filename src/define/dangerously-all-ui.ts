@@ -4,6 +4,7 @@ import './vds-mute-button';
 import './vds-play-button';
 import './vds-slider';
 import './vds-slider-value-text';
+import './vds-slider-video';
 import './vds-time-slider';
 import './vds-time';
 import './vds-toggle-button';
