@@ -547,17 +547,25 @@ export class SliderElement extends LitElement {
     return this._getValueFromRate(thumbPositionRate);
   }
 
+  protected _lastDispatchedValue = this.value;
   protected readonly _dispatchValueChange = rafThrottle((event?: Event) => {
+    if (this.value === this._lastDispatchedValue) return;
+
     this.dispatchEvent(
       vdsEvent('vds-slider-value-change', {
         detail: this.value,
         originalEvent: event
       })
     );
+
+    this._lastDispatchedValue = this.value;
   });
 
+  protected _lastDispatchedPointerValue = this.pointerValue;
   protected readonly _dispatchPointerValueChange = rafThrottle(
     (event: Event) => {
+      if (this.pointerValue === this._lastDispatchedPointerValue) return;
+
       const events = [
         'vds-slider-pointer-value-change',
         this.isDragging && 'vds-slider-drag-value-change'
@@ -573,6 +581,8 @@ export class SliderElement extends LitElement {
           );
         }
       });
+
+      this._lastDispatchedPointerValue = this.pointerValue;
     }
   );
 }

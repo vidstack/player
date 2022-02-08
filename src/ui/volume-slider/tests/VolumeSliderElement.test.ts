@@ -39,17 +39,17 @@ test('it should render DOM correctly', async function () {
 test('it should update when media volume changes', async function () {
   const { player, volumeSlider } = await buildFixture();
 
-  expect(volumeSlider.volume).to.equal(1);
+  expect(volumeSlider.value).to.equal(100);
 
   player._mediaStore.volume.set(0.25);
   await elementUpdated(volumeSlider);
 
-  expect(volumeSlider.volume).to.equal(0.25);
+  expect(volumeSlider.value).to.equal(25);
 
   player._mediaStore.volume.set(0.85);
   await elementUpdated(volumeSlider);
 
-  expect(volumeSlider.volume).to.equal(0.85);
+  expect(volumeSlider.value).to.equal(85);
 });
 
 test('it should dispatch volume change request', async function () {

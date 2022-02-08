@@ -63,20 +63,14 @@ export class TimeSliderElement extends SliderElement {
   override get min() {
     return 0;
   }
-
-  override set min(_) {
-    // no-op
-  }
+  override set min(_) {}
 
   /** @internal */
   @property({ attribute: false })
   override get max() {
     return this._mediaDuration;
   }
-
-  override set max(_) {
-    // no-op
-  }
+  override set max(_) {}
 
   /**
    * ♿ **ARIA:** Human-readable text alternative for the current slider value. If you pass

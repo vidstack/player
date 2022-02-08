@@ -1,7 +1,6 @@
-import { PropertyValues } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
-import { eventListener } from '../../base/events';
+import { eventListener, VdsEvent } from '../../base/events';
 import { mediaStoreSubscription } from '../../media';
 import { setAttributeIfEmpty } from '../../utils/dom';
 import { round } from '../../utils/number';
@@ -23,7 +22,7 @@ export class VolumeSliderElement extends SliderElement {
     super();
 
     mediaStoreSubscription(this, 'volume', ($volume) => {
-      this._mediaVolume = $volume;
+      this.value = $volume * 100;
     });
   }
 
@@ -36,18 +35,19 @@ export class VolumeSliderElement extends SliderElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  override _step = 0.5;
-  override _keyboardStep = 0.5;
-  override shiftKeyMultiplier = 10;
+  /** @internal */
+  @property({ attribute: false })
+  override get min() {
+    return 0;
+  }
+  override set min(_) {}
 
   /** @internal */
   @property({ attribute: false })
-  override min = 0;
-  /** @internal */
-  @property({ attribute: false })
-  override max = 100;
-
-  @state() protected _mediaVolume = 1;
+  override get max() {
+    return 100;
+  }
+  override set max(_) {}
 
   /**
    * Represents the current volume out of 100.
@@ -55,38 +55,28 @@ export class VolumeSliderElement extends SliderElement {
    * @internal
    */
   @property({ attribute: false, state: true })
-  override value = this._mediaVolume * 100;
-
-  /**
-   * The current media volume level (between 0 - 1).
-   */
-  get volume() {
-    return round(this.value / 100, 3);
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Lifecycle
-  // -------------------------------------------------------------------------------------------
-
-  protected override update(changedProperties: PropertyValues) {
-    if (changedProperties.has('_mediaVolume')) {
-      this.value = this._mediaVolume * 100;
-    }
-
-    super.update(changedProperties);
-  }
+  override value = 100;
 
   // -------------------------------------------------------------------------------------------
   // Events
   // -------------------------------------------------------------------------------------------
 
+  // Need this event for keyboard support.
   protected readonly _handleSliderValueChange = eventListener(
     this,
-    'vds-slider-drag-value-change',
-    (event) => {
-      const newVolume = event.detail;
-      const mediaVolume = round(newVolume / 100, 3);
-      this._mediaRemote.changeVolume(mediaVolume, event);
-    }
+    'vds-slider-value-change',
+    this._changeVolume.bind(this)
   );
+
+  protected readonly _handleSliderDragValueChange = eventListener(
+    this,
+    'vds-slider-drag-value-change',
+    this._changeVolume.bind(this)
+  );
+
+  protected _changeVolume(event: VdsEvent<number>) {
+    const newVolume = event.detail;
+    const mediaVolume = round(newVolume / 100, 3);
+    this._mediaRemote.changeVolume(mediaVolume, event);
+  }
 }
