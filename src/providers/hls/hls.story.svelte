@@ -54,9 +54,9 @@
   }}
 >
   <vds-hls
+    hls-library={() => import('hls.js')}
     bind:this={mediaProvider}
     use:spreadPropsAction={mediaProps}
-    use:spreadPropsAction={{ hlsLibrary: () => import('hls.js') }}
     use:mediaStoreAction={(newProps) => {
       mediaProps = { ...mediaProps, ...newProps };
     }}

@@ -103,6 +103,12 @@ export class HlsElement extends VideoElement {
   @property({ type: Object, attribute: 'hls-config' })
   hlsConfig: Partial<Hls.Config | undefined> = {};
 
+  // @see https://github.com/vidstack/player/issues/583
+  @property()
+  set ['hls-config'](config) {
+    this.hlsConfig = config;
+  }
+
   /**
    * The `hls.js` constructor (supports dynamic imports) or a URL of where it can be found. Only
    * version `^0.13.3` (note `^`) is supported at the moment. Important to note that by default
@@ -111,6 +117,12 @@ export class HlsElement extends VideoElement {
    */
   @property({ attribute: 'hls-library' })
   hlsLibrary: HlsConstructor | DynamicHlsConstructorImport | string | undefined;
+
+  // @see https://github.com/vidstack/player/issues/583
+  @property()
+  set ['hls-library'](lib) {
+    this.hlsLibrary = lib;
+  }
 
   protected _Hls: HlsConstructor | undefined;
 
