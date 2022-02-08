@@ -2,10 +2,10 @@ import throttle from 'just-throttle';
 import { CSSResultGroup, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { eventListener } from '../../base/events';
+import { eventListener, VdsEvent } from '../../base/events';
 import { mediaStoreSubscription } from '../../media';
 import { setAttributeIfEmpty } from '../../utils/dom';
-import { isPointerEvent } from '../../utils/events';
+import { isKeyboardEvent, isPointerEvent } from '../../utils/events';
 import { formatSpokenTime } from '../../utils/time';
 import { SliderElement } from '../slider';
 import { timeSliderElementStyles } from './styles';
@@ -148,18 +148,22 @@ export class TimeSliderElement extends SliderElement {
     }
   );
 
+  protected readonly _handleSliderValueChange = eventListener(
+    this,
+    'vds-slider-value-change',
+    (event) => {
+      if (isKeyboardEvent(event.originEvent)) {
+        this._dispatchSeekingRequest.cancel();
+        this._mediaRemote.seek(this.value, event);
+      }
+    }
+  );
+
   protected readonly _handleSliderDragValueChange = eventListener(
     this,
     'vds-slider-drag-value-change',
     (event) => {
-      if (this.isDragging) {
-        this._dispatchSeekingRequest(event);
-      }
-
-      if (!isPointerEvent(event.originalEvent)) {
-        this._dispatchSeekingRequest.cancel();
-        this._mediaRemote.seek(this.value, event);
-      }
+      this._dispatchSeekingRequest(event);
     }
   );
 
