@@ -28,56 +28,14 @@ test('light DOM snapshot', async function () {
       min="0"
       role="slider"
       tabindex="0"
+      style="--vds-slider-fill-value: 50; --vds-slider-fill-rate: 0.5; --vds-slider-fill-percent: 50%; --vds-slider-pointer-value: 0; --vds-slider-pointer-rate: 0; --vds-slider-pointer-percent: 0%;"
    ></vds-slider>
   `);
 });
 
 test('shadow DOM snapshot', async function () {
   const slider = await buildFixture();
-
-  // Strange fix for the style spacing differing between browsers.
-  const rootStyle = slider.rootElement?.getAttribute('style');
-
-  expect(slider).shadowDom.to.equal(`
-    <div
-      id="root"
-      part="root"
-      role="presentation"
-      style="${rootStyle}"
-    >
-      <div
-        id="thumb-container"
-        part="thumb-container"
-      >
-        <div
-          id="thumb"
-          part="thumb"
-        >
-          <slot name="thumb"></slot>
-        </div>
-        <slot name="thumb-container"></slot>
-      </div>
-      <div
-        id="track"
-        part="track"
-      >
-        <slot name="track"></slot>
-      </div>
-      <div
-        id="track-fill"
-        part="track-fill"
-      >
-        <slot name="track-fill"></slot>
-      </div>
-      <input
-        type="hidden"
-        max="100"
-        min="0"
-        value="50"
-      />
-      <slot></slot>
-    </div>
-  `);
+  expect(slider).shadowDom.to.equal(`<slot></slot>`);
 });
 
 test('it should bound value between min/max', async function () {
@@ -153,7 +111,7 @@ test('it should step one to the right when down/right arrow key is pressed', asy
 test('it should multiply steps when shift key is held down', async function () {
   const slider = await buildFixture();
 
-  slider?.dispatchEvent(
+  slider.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowLeft',
       shiftKey: true
@@ -163,7 +121,7 @@ test('it should multiply steps when shift key is held down', async function () {
   await elementUpdated(slider);
   expect(slider.value).to.equal(45);
 
-  slider?.dispatchEvent(
+  slider.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowRight',
       shiftKey: true
@@ -176,11 +134,8 @@ test('it should multiply steps when shift key is held down', async function () {
 
 test('it should start dragging on thumb pointerdown and stop on document pointerup', async function () {
   const slider = await buildFixture();
-  const thumbContainer = slider.thumbContainerElement;
 
-  setTimeout(() =>
-    thumbContainer?.dispatchEvent(new MouseEvent('pointerdown'))
-  );
+  setTimeout(() => slider.dispatchEvent(new MouseEvent('pointerdown')));
 
   await waitForEvent(slider, 'vds-slider-drag-start');
   expect(slider.isDragging).to.be.true;
@@ -205,9 +160,8 @@ test('it should not change value when move events are fired on document and slid
 
 test('it should not change value when move events are fired on document and slider is disabled', async function () {
   const slider = await buildFixture();
-  const thumbContainer = slider.thumbContainerElement;
 
-  thumbContainer?.dispatchEvent(
+  slider.dispatchEvent(
     new MouseEvent('pointerdown', {
       clientX: 400
     })
@@ -226,21 +180,6 @@ test('it should not change value when move events are fired on document and slid
 
   expect(slider.value).to.equal(50);
   expect(slider.isDragging).to.be.false;
-});
-
-test('it should not update value when track is clicked and slider is disabled', async function () {
-  const slider = await buildFixture();
-  const track = slider.trackElement;
-
-  slider.disabled = true;
-
-  track?.dispatchEvent(
-    new MouseEvent('pointerdown', {
-      clientX: Math.floor(track.clientWidth / 4)
-    })
-  );
-
-  expect(slider.value).to.equal(50);
 });
 
 test('it should not start dragging when thumb is pressed and slider is disabled', async function () {

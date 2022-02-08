@@ -31,6 +31,7 @@ test('it should render DOM correctly', async function () {
       autocomplete="off"
       role="slider"
       tabindex="0"
+      style="--vds-slider-fill-value: 100; --vds-slider-fill-rate: 1; --vds-slider-fill-percent: 100%; --vds-slider-pointer-value: 0; --vds-slider-pointer-rate: 0; --vds-slider-pointer-percent: 0%;"
     ></vds-volume-slider>
   `);
 });
