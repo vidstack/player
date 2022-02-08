@@ -13,23 +13,15 @@ import { SliderElement } from '../slider';
  * @tagname vds-volume-slider
  *  @example
  * ```html
- * <vds-volume-slider
- *   label="Media volume slider"
- * ></vds-volume-slider>
- * ```
- * @example
- * ```css
- * vds-volume-slider {
- *   --vds-slider-track-height: 2.5px;
- *   --vds-slider-thumb-width: 16px;
- *   --vds-slider-thumb-height: 16px;
- *   --vds-slider-active-color: #ff2a5d;
- * }
+ * <vds-volume-slider>
+ *   <div class="thumb"></div>
+ * </vds-volume-slider>
  * ```
  */
 export class VolumeSliderElement extends SliderElement {
   constructor() {
     super();
+
     mediaStoreSubscription(this, 'volume', ($volume) => {
       this._mediaVolume = $volume;
     });
@@ -85,7 +77,7 @@ export class VolumeSliderElement extends SliderElement {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Methods
+  // Events
   // -------------------------------------------------------------------------------------------
 
   protected readonly _handleSliderValueChange = eventListener(

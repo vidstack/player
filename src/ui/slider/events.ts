@@ -5,6 +5,7 @@ export type SliderEvents = {
   'vds-slider-drag-end': SliderDragEndEvent;
   'vds-slider-value-change': SliderValueChangeEvent;
   'vds-slider-drag-value-change': SliderDragValueChangeEvent;
+  'vds-slider-pointer-value-change': SliderPointerValueChangeEvent;
 };
 
 /**
@@ -37,3 +38,11 @@ export type SliderValueChangeEvent = VdsEvent<number>;
  * @event
  */
 export type SliderDragValueChangeEvent = VdsEvent<number>;
+
+/**
+ * Fired when the device pointer is inside the slider region and it's position changes. The
+ * event detail contains the value.
+ *
+ * @event
+ */
+export type SliderPointerValueChangeEvent = VdsEvent<number>;

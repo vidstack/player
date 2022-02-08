@@ -17,16 +17,9 @@ import { timeSliderElementStyles } from './styles';
  * @tagname vds-time-slider
  * @example
  * ```html
- * <vds-time-slider label="Media time slider"></vds-time-slider>
- * ```
- * @example
- * ```css
- * vds-time-slider {
- *   --vds-slider-track-height: 2.5px;
- *   --vds-slider-thumb-width: 16px;
- *   --vds-slider-thumb-height: 16px;
- *   --vds-slider-active-color: #ff2a5d;
- * }
+ * <vds-time-slider>
+ *   <div class="thumb"></div>
+ * </vds-time-slider>
  * ```
  */
 export class TimeSliderElement extends SliderElement {
@@ -124,7 +117,7 @@ export class TimeSliderElement extends SliderElement {
   valueText = '{currentTime} out of {duration}';
 
   /**
-   * Whether the scrubber should request playback to pause while the user is dragging the
+   * Whether it should request playback to pause while the user is dragging the
    * thumb. If the media was playing before the dragging starts, the state will be restored by
    * dispatching a user play request once the dragging ends.
    */
@@ -166,7 +159,7 @@ export class TimeSliderElement extends SliderElement {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Methods
+  // ARIA
   // -------------------------------------------------------------------------------------------
 
   protected override _getValueNow(): string {
@@ -185,6 +178,10 @@ export class TimeSliderElement extends SliderElement {
       .replace('{currentTime}', formatSpokenTime(currentTime))
       .replace('{duration}', formatSpokenTime(this._mediaDuration));
   }
+
+  // -------------------------------------------------------------------------------------------
+  // Events
+  // -------------------------------------------------------------------------------------------
 
   protected readonly _handleSliderDragStart = eventListener(
     this,
@@ -233,7 +230,6 @@ export class TimeSliderElement extends SliderElement {
   }
 
   protected _wasPlayingBeforeDragStart = false;
-
   protected _togglePlaybackWhileDragging(event: Event) {
     if (!this.pauseWhileDragging) return;
 

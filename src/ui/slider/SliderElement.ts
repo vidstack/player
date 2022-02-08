@@ -5,21 +5,25 @@ import {
   PropertyValues,
   TemplateResult
 } from 'lit';
-import { property, state } from 'lit/decorators.js';
-import { createRef, ref } from 'lit/directives/ref.js';
-import { styleMap } from 'lit/directives/style-map.js';
+import { property } from 'lit/decorators.js';
 
-import { eventListener, vdsEvent } from '../../base/events';
+import { DisposalBin, eventListener, vdsEvent } from '../../base/events';
 import { logElementLifecycle } from '../../base/logger';
 import { focusVisiblePolyfill } from '../../base/observers';
+import { get } from '../../base/stores';
 import { MediaRemoteControl } from '../../media';
-import { setAttribute, setAttributeIfEmpty } from '../../utils/dom';
+import {
+  setAttribute,
+  setAttributeIfEmpty,
+  setCSSProperty
+} from '../../utils/dom';
 import {
   clampNumber,
   getNumberOfDecimalPlaces,
   round
 } from '../../utils/number';
 import { rafThrottle } from '../../utils/timing';
+import { sliderStoreContext } from './sliderStore';
 import { sliderElementStyles } from './styles';
 
 /**
@@ -39,56 +43,31 @@ export enum SliderKeyDirection {
 /**
  * A custom built `input[type="range"]` that is cross-browser friendly, ARIA friendly, mouse/touch
  * friendly and easily stylable. This component allows users to input numeric values between a
- * minimum and maximum value. Generally used in the player for volume or scrubber controls.
+ * minimum and maximum value.
  *
- * @see https://github.com/carbon-design-system/carbon-web-components
+ * 💡 The following attributes are also available on the host element:
+ *
+ * - `pointing`: Whether a device pointer is within the slider bounds.
+ * - `dragging`: Whether the slider thumb is currently being dragged.
+ * - `interactive`: When either `pointing` or `dragging` is true.
+ *
  * @tagname vds-slider
  * @slot Used to pass in additional content inside the slider.
- * @slot thumb-container - Used to pass content into the thumb container.
- * @slot thumb - Used to pass content inside the thumb.
- * @slot track - Used to pass content inside the track.
- * @slot track-fill - Used to pass content inside the track fill.
- * @csspart root - The component's root element, in this case the slider container (`<div>`).
- * @csspart thumb-container - The container for the slider's handle.
- * @csspart thumb - The slider's handle the user drags left/right (`<div>`).
- * @csspart track - The path in which the thumb slides along (`<div>`).
- * @csspart track-fill - The part of the track that is currently filled which fills left-to-right (`<div>`).
- * @cssprop --vds-slider-fill-rate - The ratio of the slider that is filled such as `0.3`.
- * @cssprop --vds-slider-fill-value - The current amount the slider is filled such as `30`.
- * @cssprop --vds-slider-fill-percentage - The fill rate expressed as a percentage such as `30%`.
- * @cssprop --vds-slider-thumb-width - The slider handle width.
- * @cssprop --vds-slider-thumb-height - The slider handle height.
- * @cssprop --vds-slider-thumb-bg - The background color of the slider handle.
- * @cssprop --vds-slider-thumb-border-radius - The border radius of the slider handle.
- * @cssprop --vds-slider-thumb-scale - The base scale of thumb when it is inactive, it'll scale to 1 when active.
- * @cssprop --vds-slider-thumb-transition - The CSS transitions to use for the thumb, defaults to `transform 100ms ease-out 0s`.
- * @cssprop --vds-slider-track-height - The height of the slider track.
- * @cssprop --vds-slider-track-bg - The background color of the slider track.
- * @cssprop --vds-slider-track-fill-bg - The background color of the slider track fill.
- * @cssprop --vds-slider-active-color - The slider thumb and track fill background color when focused, active or being dragged.
- * @cssprop --vds-slider-disabled-color - The slider thumb, track, and track fill background color when disabled.
+ * @cssprop --vds-slider-fill-rate - The ratio of the slider that is filled such as (eg: `0.3`).
+ * @cssprop --vds-slider-fill-value - The current amount of the slider that is filled (eg: `30`).
+ * @cssprop --vds-slider-fill-percent - The fill rate expressed as a percentage such as (eg: `30%`).
+ * @cssprop --vds-slider-pointer-rate - The ratio of the slider that is filled up to the device pointer.
+ * @cssprop --vds-slider-pointer-value - The amount of the slider that is filled up to the device pointer.
+ * @cssprop --vds-slider-pointer-percent - The pointer rate expressed as a percentage.
  * @example
  * ```html
  * <vds-slider
  *   min="0"
  *   max="100"
  *   value="50"
- * ></vds-slider>
- * ```
- * @example
- * ```css
- * vds-slider {
- *   --vds-slider-active-color: #ff2a5d;
- * }
- *
- * vds-slider::part(thumb) {
- *   box-shadow: transparent 0px 0px 0px 1px inset;
- * }
- *
- * vds-slider::part(track),
- * vds-slider::part(track-fill) {
- *   border-radius: 3px;
- * }
+ * >
+ *  <div class="thumb"></div>
+ * </vds-slider>
  * ```
  */
 export class SliderElement extends LitElement {
@@ -97,13 +76,23 @@ export class SliderElement extends LitElement {
   }
 
   static get parts(): string[] {
-    return ['root', 'thumb', 'track', 'track-fill'];
+    return [];
   }
 
   constructor() {
     super();
     if (__DEV__) logElementLifecycle(this);
     focusVisiblePolyfill(this);
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Context
+  // -------------------------------------------------------------------------------------------
+
+  protected readonly _sliderStoreProvider = sliderStoreContext.provide(this);
+
+  get sliderStore() {
+    return this._sliderStoreProvider.value;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -178,15 +167,13 @@ export class SliderElement extends LitElement {
   @property({ type: Boolean, attribute: 'custom-value-text' })
   customValueText = false;
 
-  @state() protected _isDragging = false;
-
   /**
    * Whether the slider thumb is currently being dragged.
    *
    * @default false
    */
   get isDragging(): boolean {
-    return this._isDragging;
+    return get(this.sliderStore.dragging);
   }
 
   /**
@@ -214,19 +201,32 @@ export class SliderElement extends LitElement {
     return this.fillRate * 100;
   }
 
-  @state() protected _dragValue = 0;
-
-  get dragValue() {
-    return this._dragValue;
+  /**
+   * The value at which the device pointer is pointing to inside the slider.
+   *
+   * @default 0
+   */
+  get pointerValue() {
+    return get(this.sliderStore.pointerValue);
   }
 
-  get dragRate() {
+  /**
+   * The pointer value to range ratio.
+   *
+   * @default 0
+   */
+  get pointerRate() {
     const range = this.max - this.min;
-    return this._dragValue / range;
+    return this.pointerValue / range;
   }
 
-  get dragPercent() {
-    return this.dragRate * 100;
+  /**
+   * The pointer rate expressed as a percentage (`pointerRate * 100`).
+   *
+   * @default 0
+   */
+  get pointerPercent() {
+    return this.pointerRate * 100;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -234,50 +234,97 @@ export class SliderElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   protected _mediaRemote = new MediaRemoteControl(this);
+  protected _disconnectDisposal = new DisposalBin();
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this._setupHostAttrs();
+
+    this._setupAriaAttrs();
+    this._updateFillCSSProps();
+    this._updatePointerCSSProps();
+
+    this._disconnectDisposal.add(
+      this.sliderStore.interactive.subscribe(($interactive) => {
+        setAttribute(this, 'interactive', $interactive);
+      })
+    );
   }
 
   protected override updated(changedProperties: PropertyValues) {
     if (changedProperties.has('value')) {
       this.value = this._getClampedValue(this.value);
+      this.sliderStore.value.set(this.value);
+      this._updateFillCSSProps();
     }
 
     if (changedProperties.has('disabled') && this.disabled) {
-      this._isDragging = false;
+      this.sliderStore.dragging.set(false);
+      this.sliderStore.pointing.set(false);
       this.removeAttribute('dragging');
+      this.removeAttribute('pointing');
+      this.removeAttribute('interactive');
       setAttribute(this, 'aria-disabled', this.disabled);
     }
 
     if (!this.customValueText) {
-      this.setAttribute('aria-valuemin', this._getValueMin());
-      this.setAttribute('aria-valuenow', this._getValueNow());
-      this.setAttribute('aria-valuemax', this._getValueMax());
-      this.setAttribute('aria-valuetext', this._getValueText());
+      this._updateAriaValueAttrs();
     }
 
     super.update(changedProperties);
   }
 
   override disconnectedCallback() {
-    this._handlePointerMove.cancel();
+    this._onDrag.cancel();
+    this._disconnectDisposal.empty();
     super.disconnectedCallback();
   }
 
   // -------------------------------------------------------------------------------------------
-  // Host
+  // Events
   // -------------------------------------------------------------------------------------------
 
-  protected _setupHostAttrs() {
-    setAttributeIfEmpty(this, 'role', 'slider');
-    setAttributeIfEmpty(this, 'tabindex', '0');
-    setAttributeIfEmpty(this, 'aria-orientation', 'horizontal');
-    setAttributeIfEmpty(this, 'autocomplete', 'off');
-  }
+  protected readonly _handlePointerEnter = eventListener(
+    this,
+    'pointerenter',
+    () => {
+      if (this.disabled) return;
+      this.setAttribute('pointing', '');
+      this.sliderStore.pointing.set(true);
+    }
+  );
 
-  protected _handleHostKeydown = eventListener(
+  protected readonly _handlePointerMove = eventListener(
+    this,
+    'pointermove',
+    (event) => {
+      if (this.disabled || this.isDragging) return;
+      const value = this._getValueBasedOnThumbPosition(event);
+      this.sliderStore.pointerValue.set(value);
+      this._dispatchPointerValueChange(event);
+    }
+  );
+
+  protected readonly _handlePointerLeave = eventListener(
+    this,
+    'pointerleave',
+    () => {
+      if (this.disabled) return;
+      this.removeAttribute('pointing');
+      this.sliderStore.pointing.set(false);
+    }
+  );
+
+  protected readonly _handlePointerDown = eventListener(
+    this,
+    'pointerdown',
+    (event) => {
+      if (this.disabled) return;
+      this._startDragging(event);
+      this._onDrag(event);
+    }
+  );
+
+  protected readonly _handleKeydown = eventListener(
     this,
     'keydown',
     (event: KeyboardEvent) => {
@@ -302,82 +349,65 @@ export class SliderElement extends LitElement {
   );
 
   // -------------------------------------------------------------------------------------------
-  // Render (Root/Slider)
+  // CSS Properties
   // -------------------------------------------------------------------------------------------
 
-  protected readonly _rootRef = createRef<HTMLDivElement>();
+  protected readonly _handleFillValueChange = eventListener(
+    this,
+    'vds-slider-value-change',
+    this._updateFillCSSProps.bind(this)
+  );
 
-  /**
-   * The component's root element.
-   */
-  get rootElement() {
-    return this._rootRef.value;
+  protected _updateFillCSSProps() {
+    setCSSProperty(this, 'slider-fill-value', `${this.value}`);
+    setCSSProperty(this, 'slider-fill-rate', `${this.fillRate}`);
+    setCSSProperty(this, 'slider-fill-percent', `${this.fillPercent}%`);
   }
+
+  protected readonly _handlePointerValueChange = eventListener(
+    this,
+    'vds-slider-pointer-value-change',
+    this._updatePointerCSSProps.bind(this)
+  );
+
+  protected _updatePointerCSSProps() {
+    setCSSProperty(this, 'slider-pointer-value', `${this.pointerValue}`);
+    setCSSProperty(this, 'slider-pointer-rate', `${this.pointerRate}`);
+    setCSSProperty(this, 'slider-pointer-percent', `${this.pointerPercent}%`);
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------------------------
 
   protected override render(): TemplateResult {
     return this._renderSlider();
   }
 
   protected _renderSlider(): TemplateResult {
-    return html`
-      <div
-        id="root"
-        role="presentation"
-        part="root"
-        style=${styleMap({
-          '--vds-slider-fill-value': String(this.value),
-          '--vds-slider-fill-rate': String(this.fillRate),
-          '--vds-slider-fill-percent': `${this.fillPercent}%`,
-          '--vds-slider-drag-rate': String(this.dragRate),
-          '--vds-slider-drag-percent': `${this.dragPercent}%`
-        })}
-        @pointerdown=${this._handleSliderPointerMove}
-        ${ref(this._rootRef)}
-      >
-        ${this._renderSliderChildren()}
-      </div>
-    `;
-  }
-
-  protected _renderSliderChildren(): TemplateResult {
-    return html`${this._renderThumbContainer()}${this._renderTrack()}${this._renderTrackFill()}${this._renderInput()}${this._renderDefaultSlot()}`;
+    return html`${this._renderDefaultSlot()}`;
   }
 
   protected _renderDefaultSlot(): TemplateResult {
     return html`<slot></slot>`;
   }
 
-  protected _handleSliderPointerMove(event: PointerEvent) {
-    if (this.disabled) return;
-    this._startDragging(event);
-    this._handlePointerMove(event);
-  }
-
   // -------------------------------------------------------------------------------------------
-  // Render (Thumb Container)
+  // ARIA
   // -------------------------------------------------------------------------------------------
 
-  protected readonly _thumbContainerRef = createRef<HTMLDivElement>();
-
-  /**
-   * The thumb container element.
-   */
-  get thumbContainerElement() {
-    return this._thumbContainerRef.value;
+  protected _setupAriaAttrs() {
+    setAttributeIfEmpty(this, 'role', 'slider');
+    setAttributeIfEmpty(this, 'tabindex', '0');
+    setAttributeIfEmpty(this, 'aria-orientation', 'horizontal');
+    setAttributeIfEmpty(this, 'autocomplete', 'off');
   }
 
-  protected _renderThumbContainer(): TemplateResult {
-    return html`
-      <div
-        id="thumb-container"
-        part="thumb-container"
-        class=${this.isDragging ? 'dragging' : ''}
-        @pointerdown=${this._handleThumbContainerPointerDown}
-        ${ref(this._thumbContainerRef)}
-      >
-        ${this._renderThumb()} ${this._renderThumbContainerSlot()}
-      </div>
-    `;
+  protected _updateAriaValueAttrs() {
+    this.setAttribute('aria-valuemin', this._getValueMin());
+    this.setAttribute('aria-valuenow', this._getValueNow());
+    this.setAttribute('aria-valuemax', this._getValueMax());
+    this.setAttribute('aria-valuetext', this._getValueText());
   }
 
   protected _getValueMin(): string {
@@ -396,120 +426,20 @@ export class SliderElement extends LitElement {
     return `${round((this.value / this.max) * 100, 2)}%`;
   }
 
-  protected _renderThumbContainerSlot(): TemplateResult {
-    return html`<slot name="thumb-container"></slot> `;
-  }
-
-  protected _handleThumbContainerPointerDown(event: PointerEvent) {
-    if (this.disabled) return;
-    this._startDragging(event);
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render (Thumb)
-  // -------------------------------------------------------------------------------------------
-
-  protected readonly _thumbRef = createRef<HTMLDivElement>();
-
-  /**
-   * The thumb element.
-   */
-  get thumbElement() {
-    return this._thumbRef.value;
-  }
-
-  protected _renderThumb(): TemplateResult {
-    return html`
-      <div id="thumb" part="thumb" ${ref(this._thumbRef)}>
-        ${this._renderThumbSlot()}
-      </div>
-    `;
-  }
-
-  protected _renderThumbSlot(): TemplateResult {
-    return html`<slot name="thumb"></slot>`;
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render (Track)
-  // -------------------------------------------------------------------------------------------
-
-  protected readonly _trackRef = createRef<HTMLDivElement>();
-
-  /**
-   * The track element.
-   */
-  get trackElement() {
-    return this._trackRef.value;
-  }
-
-  protected _renderTrack(): TemplateResult {
-    return html`
-      <div id="track" part="track" ${ref(this._trackRef)}>
-        ${this._renderTrackSlot()}
-      </div>
-    `;
-  }
-
-  protected _renderTrackSlot(): TemplateResult {
-    return html`<slot name="track"></slot>`;
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render (Track Fill)
-  // -------------------------------------------------------------------------------------------
-
-  protected readonly _trackFillRef = createRef<HTMLDivElement>();
-
-  /**
-   * The track fill element.
-   */
-  get trackFillElement() {
-    return this._trackFillRef.value;
-  }
-
-  protected _renderTrackFill(): TemplateResult {
-    return html`
-      <div id="track-fill" part="track-fill" ${ref(this._trackFillRef)}>
-        ${this._renderTrackFillSlot()}
-      </div>
-    `;
-  }
-
-  protected _renderTrackFillSlot(): TemplateResult {
-    return html`<slot name="track-fill"></slot>`;
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render (Input)
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * Why? Used to emit native `input` events.
-   */
-  protected _renderInput(): TemplateResult {
-    return html`
-      <input
-        type="hidden"
-        min="${this.min}"
-        max="${this.max}"
-        value="${this.value}"
-      />
-    `;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Drag
   // -------------------------------------------------------------------------------------------
 
   protected _startDragging(event: PointerEvent) {
-    if (this._isDragging) return;
+    if (this.isDragging) return;
 
-    this._isDragging = true;
+    this.sliderStore.dragging.set(true);
     this.setAttribute('dragging', '');
 
-    this._dragValue = this._getValueBasedOnThumbPosition(event);
-    this._dispatchDragValueChange(event);
+    const value = this._getValueBasedOnThumbPosition(event);
+    this.sliderStore.pointerValue.set(value);
+
+    this._dispatchPointerValueChange(event);
 
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-start', {
@@ -521,18 +451,26 @@ export class SliderElement extends LitElement {
     this._mediaRemote.pauseIdling(event);
   }
 
-  protected _stopDragging(event: PointerEvent) {
-    if (!this._isDragging) return;
+  protected readonly _onDrag = rafThrottle((event: PointerEvent) => {
+    if (this.disabled || !this.isDragging) return;
+    const value = this._getValueBasedOnThumbPosition(event);
+    this.sliderStore.pointerValue.set(value);
+    this._dispatchPointerValueChange(event);
+  });
 
-    this._isDragging = false;
+  protected _stopDragging(event: PointerEvent) {
+    if (!this.isDragging) return;
+
+    this.sliderStore.dragging.set(false);
     this._dispatchValueChange.cancel();
     this.removeAttribute('dragging');
 
-    const newValue = this._getValueBasedOnThumbPosition(event);
-    this.value = newValue;
-    this._dragValue = newValue;
+    const value = this._getValueBasedOnThumbPosition(event);
+    this.value = value;
+    this.sliderStore.pointerValue.set(value);
+
     this._dispatchValueChange(event);
-    this._dispatchDragValueChange(event);
+    this._dispatchPointerValueChange(event);
 
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-end', {
@@ -552,7 +490,7 @@ export class SliderElement extends LitElement {
     this,
     'pointerup',
     (event) => {
-      if (this.disabled || !this._isDragging) return;
+      if (this.disabled || !this.isDragging) return;
       this._stopDragging(event);
     },
     { target: document }
@@ -562,21 +500,11 @@ export class SliderElement extends LitElement {
     this,
     'pointermove',
     (event) => {
-      if (this.disabled || !this._isDragging) {
-        this._handlePointerMove.cancel();
-        return;
-      }
-
-      this._handlePointerMove(event);
+      if (this.disabled || !this.isDragging) return;
+      this._onDrag(event);
     },
     { target: document }
   );
-
-  protected readonly _handlePointerMove = rafThrottle((event: PointerEvent) => {
-    if (this.disabled || !this._isDragging) return;
-    this._dragValue = this._getValueBasedOnThumbPosition(event);
-    this._dispatchDragValueChange(event);
-  });
 
   protected _getClampedValue(value: number) {
     return clampNumber(
@@ -597,12 +525,8 @@ export class SliderElement extends LitElement {
 
   protected _getValueBasedOnThumbPosition(event: PointerEvent) {
     const thumbClientX = event.clientX;
-
-    const { left: trackLeft, width: trackWidth } =
-      this.trackElement!.getBoundingClientRect();
-
+    const { left: trackLeft, width: trackWidth } = this.getBoundingClientRect();
     const thumbPositionRate = (thumbClientX - trackLeft) / trackWidth;
-
     return this._getValueFromRate(thumbPositionRate);
   }
 
@@ -620,17 +544,28 @@ export class SliderElement extends LitElement {
     this._lastDispatchedValue = this.value;
   });
 
-  protected _lastDragDispatchedValue = this.dragValue;
-  protected readonly _dispatchDragValueChange = rafThrottle((event: Event) => {
-    if (this.dragValue === this._lastDragDispatchedValue) return;
+  protected _lastPointerValue = this.pointerValue;
+  protected readonly _dispatchPointerValueChange = rafThrottle(
+    (event: Event) => {
+      if (this.pointerValue === this._lastPointerValue) return;
 
-    this.dispatchEvent(
-      vdsEvent('vds-slider-drag-value-change', {
-        detail: this.dragValue,
-        originalEvent: event
-      })
-    );
+      const events = [
+        'vds-slider-pointer-value-change',
+        this.isDragging && 'vds-slider-drag-value-change'
+      ] as const;
 
-    this._lastDispatchedValue = this.value;
-  });
+      events.forEach((eventType) => {
+        if (eventType) {
+          this.dispatchEvent(
+            vdsEvent(eventType, {
+              detail: this.pointerValue,
+              originalEvent: event
+            })
+          );
+        }
+      });
+
+      this._lastDispatchedValue = this.value;
+    }
+  );
 }

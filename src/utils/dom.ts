@@ -97,6 +97,23 @@ export function setAttributeIfEmpty(
 }
 
 /**
+ * Sets a CSS property on the given `element`.
+ *
+ * @param element - The element to set the CSS property on.
+ * @param name - The name of the CSS property.
+ * @param value - The value of the CSS property.
+ * @param prefix - The library CSS property prefix (default: 'vds').
+ */
+export function setCSSProperty(
+  element: HTMLElement,
+  name: string,
+  value?: string | null,
+  prefix = 'vds'
+) {
+  element.style.setProperty(`--${prefix}-${name}`, value ? value : null);
+}
+
+/**
  * Returns elements assigned to the given slot in the shadow root. Filters out all nodes
  * which are not of type `Node.ELEMENT_NODE`.
  *
