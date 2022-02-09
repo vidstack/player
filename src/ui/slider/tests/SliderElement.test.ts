@@ -15,8 +15,6 @@ test('light DOM snapshot', async function () {
   const slider = await buildFixture();
   expect(slider).dom.to.equal(`
     <vds-slider
-      min="0"
-      max="100"
       value="50"
       aria-orientation="horizontal"
       aria-valuemax="100"
@@ -24,8 +22,6 @@ test('light DOM snapshot', async function () {
       aria-valuenow="50"
       aria-valuetext="50%"
       autocomplete="off"
-      max="100"
-      min="0"
       role="slider"
       tabindex="0"
       style="--vds-slider-fill-value: 50; --vds-slider-fill-rate: 0.5; --vds-slider-fill-percent: 50%; --vds-slider-pointer-value: 0; --vds-slider-pointer-rate: 0; --vds-slider-pointer-percent: 0%;"

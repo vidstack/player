@@ -20,9 +20,9 @@ test('light DOM snapshot', async function () {
     <vds-time-slider
       aria-label="Media time"
       aria-orientation="horizontal"
-      aria-valuemax="0"
-      aria-valuemin="0"
-      aria-valuenow="0"
+      aria-valuemax="100%"
+      aria-valuemin="0%"
+      aria-valuenow="0%"
       aria-valuetext="0 seconds out of 0 seconds"
       autocomplete="off"
       role="slider"
