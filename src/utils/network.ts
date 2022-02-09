@@ -79,7 +79,9 @@ export async function loadScript(src: string): Promise<unknown> {
   const load = deferredPromise();
 
   script.src = src;
+  // @ts-expect-error - ?
   script.onload = load.resolve;
+  // @ts-expect-error - ?
   script.onerror = load.reject;
 
   const firstScriptTag = document.getElementsByTagName('script')[0];

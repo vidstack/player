@@ -17,7 +17,15 @@ export const basePlayerStyles = css`
     left: 0;
     width: 100%;
     height: 100%;
+    pointer-events: none;
     /* Position above media container. */
     z-index: 1;
+  }
+
+  .provider {
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
+    touch-action: manipulation;
   }
 `;

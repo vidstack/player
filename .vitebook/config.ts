@@ -14,7 +14,7 @@ export default defineConfig<DefaultThemeConfig>({
     }
   },
   plugins: [
-    clientPlugin({ appFile: 'App.svelte' }),
+    clientPlugin({ appFile: 'App.svelte', include: /\.(html|svelte)($|\?)/ }),
     defaultThemePlugin(),
     svelte({
       compilerOptions: { hydratable: true },

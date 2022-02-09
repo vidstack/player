@@ -1,6 +1,6 @@
 import { noop } from './unit';
 
-export type DeferredPromise<ResolveType, RejectType> = {
+export type DeferredPromise<ResolveType = void, RejectType = void> = {
   promise: Promise<ResolveType | undefined>;
   resolve: (value?: ResolveType) => void;
   reject: (reason: RejectType) => void;
@@ -9,10 +9,10 @@ export type DeferredPromise<ResolveType, RejectType> = {
 /**
  * Creates an empty Promise and defers resolving/rejecting it.
  */
-export function deferredPromise<ResolveType, RejectType>(): DeferredPromise<
-  ResolveType,
-  RejectType
-> {
+export function deferredPromise<
+  ResolveType = void,
+  RejectType = void
+>(): DeferredPromise<ResolveType, RejectType> {
   let resolve: (value: ResolveType | undefined) => void = noop;
 
   let reject: (reason: RejectType) => void = noop;
