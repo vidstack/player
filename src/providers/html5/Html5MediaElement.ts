@@ -353,8 +353,9 @@ export class Html5MediaElement extends MediaProviderElement {
     }
   }
 
+  protected _isListeningToMediaElement = false;
   protected _bindMediaEventListeners() {
-    if (isNil(this.mediaElement)) return;
+    if (isNil(this.mediaElement) || this._isListeningToMediaElement) return;
 
     const eventListeners = {
       abort: this._handleAbort,
@@ -407,6 +408,11 @@ export class Html5MediaElement extends MediaProviderElement {
     if (__DEV__) {
       this._logger?.debug('attached event listeners');
     }
+
+    this._isListeningToMediaElement = true;
+    this._disconnectDisposal.add(() => {
+      this._isListeningToMediaElement = false;
+    });
   }
 
   protected _handleAbort(event: Event) {
