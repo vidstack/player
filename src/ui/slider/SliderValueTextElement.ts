@@ -8,6 +8,8 @@ import { formatTime } from '../../utils/time';
 import { sliderStoreContext } from './sliderStore';
 
 /**
+ * Outputs the current slider value as text.
+ *
  * @tagname vds-slider-value-text
  * @example
  * ```html
@@ -56,6 +58,10 @@ export class SliderValueTextElement extends LitElement {
 
   @state() protected _value = 0;
 
+  // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
+
   /**
    * Whether to use the slider's current value, or pointer value.
    */
@@ -97,6 +103,10 @@ export class SliderValueTextElement extends LitElement {
   @property({ attribute: 'decimal-places', type: Number })
   decimalPlaces = 2;
 
+  // -------------------------------------------------------------------------------------------
+  // Lifecycle
+  // -------------------------------------------------------------------------------------------
+
   override connectedCallback(): void {
     super.connectedCallback();
     this._handleTypeChange();
@@ -118,6 +128,10 @@ export class SliderValueTextElement extends LitElement {
   protected override render() {
     return html`${this._getValueText()}`;
   }
+
+  // -------------------------------------------------------------------------------------------
+  // Methods
+  // -------------------------------------------------------------------------------------------
 
   protected _handleTypeChange() {
     this._disposal.empty();

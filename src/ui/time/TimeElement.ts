@@ -7,6 +7,9 @@ import { mediaStoreContext } from '../../media';
 import { formatTime } from '../../utils/time';
 
 /**
+ * Outputs a media duration (eg: `currentTime`, `duration`, `bufferedAmount`, etc.) value as time
+ * formatted text.
+ *
  * @tagname vds-time
  * @example
  * ```html
@@ -42,6 +45,10 @@ export class TimeElement extends LitElement {
   }
 
   @state() protected _seconds = 0;
+
+  // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
 
   /**
    * The type of media time to track.
@@ -79,6 +86,10 @@ export class TimeElement extends LitElement {
   @property({ type: Boolean })
   remainder = false;
 
+  // -------------------------------------------------------------------------------------------
+  // Lifecycle
+  // -------------------------------------------------------------------------------------------
+
   override connectedCallback(): void {
     super.connectedCallback();
     this._handleTypeChange();
@@ -100,6 +111,10 @@ export class TimeElement extends LitElement {
   protected override render() {
     return html`${this._getFormattedTime()}`;
   }
+
+  // -------------------------------------------------------------------------------------------
+  // Methods
+  // -------------------------------------------------------------------------------------------
 
   protected _handleTypeChange() {
     this._disposal.empty();
