@@ -5,10 +5,6 @@ import { VdsEvent } from '../../base/events';
 import type { CamelToKebabCase } from '../../global/helpers';
 import type { HlsElement } from './HlsElement';
 
-export type HlsEvent<Detail> = VdsEvent<Detail> & {
-  target: HlsElement;
-};
-
 export type HlsEvents = {
   'vds-hls-lib-load-start': HlsLibLoadStartEvent;
   'vds-hls-lib-loaded': HlsLibLoadedEvent;
@@ -16,9 +12,13 @@ export type HlsEvents = {
   'vds-hls-instance': HlsInstanceEvent;
   'vds-hls-unsupported': HlsUnsupportedEvent;
 } & {
-  [EventType in Events as `vds-${CamelToKebabCase<EventType>}`]: HlsEvent<
+  [EventType in Events as `vds-${CamelToKebabCase<EventType>}`]: VdsHlsEvent<
     Parameters<HlsListeners[EventType]>[1]
   >;
+};
+
+export type VdsHlsEvent<Detail> = VdsEvent<Detail> & {
+  target: HlsElement;
 };
 
 /**
@@ -26,21 +26,21 @@ export type HlsEvents = {
  *
  * @event
  */
-export type HlsLibLoadStartEvent = HlsEvent<void>;
+export type HlsLibLoadStartEvent = VdsHlsEvent<void>;
 
 /**
  * Fired when the `hls.js` library has been loaded.
  *
  * @event
  */
-export type HlsLibLoadedEvent = HlsEvent<typeof Hls>;
+export type HlsLibLoadedEvent = VdsHlsEvent<typeof Hls>;
 
 /**
  * Fired when the `hls.js` library fails during the download process.
  *
  * @event
  */
-export type HlsLibLoadErrorEvent = HlsEvent<Error>;
+export type HlsLibLoadErrorEvent = VdsHlsEvent<Error>;
 
 /**
  * Fired when the `hls.js` instance is built. This will not fire if the browser does not
@@ -48,7 +48,7 @@ export type HlsLibLoadErrorEvent = HlsEvent<Error>;
  *
  * @event
  */
-export type HlsInstanceEvent = HlsEvent<Hls>;
+export type HlsInstanceEvent = VdsHlsEvent<Hls>;
 
 /**
  * Fired when the browser doesn't support HLS natively, _and_ `hls.js` doesn't support
@@ -56,4 +56,4 @@ export type HlsInstanceEvent = HlsEvent<Hls>;
  *
  * @event
  */
-export type HlsUnsupportedEvent = HlsEvent<void>;
+export type HlsUnsupportedEvent = VdsHlsEvent<void>;
