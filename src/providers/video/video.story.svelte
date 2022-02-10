@@ -17,7 +17,6 @@
   safelyDefineCustomElement('vds-video', VideoElement);
 
   let mediaProvider;
-  let hasAddons = true;
 
   const src = 'https://media-files.vidstack.io/720p.mp4';
   const poster = 'https://media-files.vidstack.io/poster.png';
@@ -29,12 +28,7 @@
   };
 </script>
 
-<Variant
-  name="Default"
-  on:enter={() => {
-    hasAddons = true;
-  }}
->
+<Variant name="With Controls">
   <vds-video
     bind:this={mediaProvider}
     use:spreadPropsAction={mediaProps}
@@ -42,14 +36,18 @@
       mediaProps = { ...mediaProps, ...newProps };
     }}
   />
+
+  <VideoControlsAddon
+    {...mediaProps}
+    on:change={({ detail: newProps }) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+
+  <MediaEventsAddon {mediaProvider} />
 </Variant>
 
-<Variant
-  name="Lazy"
-  on:enter={() => {
-    hasAddons = false;
-  }}
->
+<Variant name="Lazy">
   <div
     style="display: flex; flex-direction: column; align-items: center; width: 100%;"
   >
@@ -66,17 +64,6 @@
     </vds-video>
   </div>
 </Variant>
-
-{#if hasAddons}
-  <VideoControlsAddon
-    {...mediaProps}
-    on:change={({ detail: newProps }) => {
-      mediaProps = { ...mediaProps, ...newProps };
-    }}
-  />
-
-  <MediaEventsAddon {mediaProvider} />
-{/if}
 
 <style>
   vds-video {

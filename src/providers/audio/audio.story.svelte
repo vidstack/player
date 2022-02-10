@@ -26,7 +26,7 @@
   };
 </script>
 
-<Variant name="Default">
+<Variant name="With Controls">
   <vds-audio
     bind:this={mediaProvider}
     use:spreadPropsAction={mediaProps}
@@ -34,28 +34,20 @@
       mediaProps = { ...mediaProps, ...newProps };
     }}
   />
+
+  <MediaControlsAddon
+    {...mediaProps}
+    on:change={({ detail: newProps }) => {
+      mediaProps = { ...mediaProps, ...newProps };
+    }}
+  />
+
+  <MediaEventsAddon {mediaProvider} />
 </Variant>
 
 <Variant name="Lazy">
-  <vds-audio
-    loading="lazy"
-    style="margin: 100vh 0;"
-    bind:this={mediaProvider}
-    use:spreadPropsAction={mediaProps}
-    use:mediaStoreAction={(newProps) => {
-      mediaProps = { ...mediaProps, ...newProps };
-    }}
-  />
+  <vds-audio {...mediaProps} loading="lazy" style="margin: 100vh 0;" />
 </Variant>
-
-<MediaControlsAddon
-  {...mediaProps}
-  on:change={({ detail: newProps }) => {
-    mediaProps = { ...mediaProps, ...newProps };
-  }}
-/>
-
-<MediaEventsAddon {mediaProvider} />
 
 <style>
   vds-audio {
