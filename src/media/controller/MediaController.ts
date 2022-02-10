@@ -347,6 +347,7 @@ export class MediaController {
     this._host,
     'vds-fullscreen-change',
     (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
       this._mediaStore.fullscreen.set(event.detail);
       this.satisfyMediaRequest('fullscreen', event);
     }
@@ -356,6 +357,7 @@ export class MediaController {
     this._host,
     'vds-fullscreen-error',
     (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
       this._mediaStore.error.set(event.detail);
       this.satisfyMediaRequest('fullscreen', event);
     }
@@ -365,6 +367,7 @@ export class MediaController {
     this._host,
     'vds-resume-idling-request',
     (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
       this._pendingMediaRequests.idle.push(event);
       this._mediaIdleController.paused = false;
     }
@@ -374,8 +377,31 @@ export class MediaController {
     this._host,
     'vds-pause-idling-request',
     (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
       this._pendingMediaRequests.idle.push(event);
       this._mediaIdleController.paused = true;
+    }
+  );
+
+  protected readonly _handleShowPosterRequest = eventListener(
+    this._host,
+    'vds-show-poster-request',
+    (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
+      this._mediaProviderConnectedQueue.queue('poster', () => {
+        this._mediaProvider!._canLoadPoster = true;
+      });
+    }
+  );
+
+  protected readonly _handleHidePosterRequest = eventListener(
+    this._host,
+    'vds-hide-poster-request',
+    (event) => {
+      if (!this._mediaRequestEventGateway(event)) return;
+      this._mediaProviderConnectedQueue.queue('poster', () => {
+        this._mediaProvider!._canLoadPoster = false;
+      });
     }
   );
 

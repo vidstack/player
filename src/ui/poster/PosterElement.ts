@@ -3,7 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { createIntersectionController } from '../../base/observers';
-import { mediaStoreSubscription } from '../../media';
+import { MediaRemoteControl, mediaStoreSubscription } from '../../media';
 import { preconnect } from '../../utils/network';
 import { isUndefined } from '../../utils/unit';
 
@@ -149,15 +149,20 @@ export class PosterElement extends LitElement {
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
+  protected _mediaRemoteControl = new MediaRemoteControl(this);
+
   override connectedCallback(): void {
     super.connectedCallback();
 
     if (this.loading === 'eager') {
       this._handleCanLoadChange(true);
     }
+
+    this._mediaRemoteControl.hidePoster();
   }
 
   override disconnectedCallback(): void {
+    this._mediaRemoteControl.showPoster();
     super.disconnectedCallback();
     this._src = undefined;
     this._handleCanLoadChange(false);

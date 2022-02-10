@@ -1,5 +1,5 @@
 import { LitElement, PropertyValues } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { discover, DiscoveryEvent } from '../../base/elements';
 import { DisposalBin, listen, vdsEvent } from '../../base/events';
@@ -13,7 +13,7 @@ import {
 } from '../../base/screen-orientation';
 import { get } from '../../base/stores';
 import { clampNumber } from '../../utils/number';
-import { notEqual } from '../../utils/unit';
+import { isUndefined, notEqual } from '../../utils/unit';
 import { CanPlay } from '../CanPlay';
 import { MediaController } from '../controller';
 import type { MediaEvents } from '../events';
@@ -72,6 +72,13 @@ export abstract class MediaProviderElement extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this._logMediaEvents();
+
+    // Give the initial hide poster event a chance to reach the controller.
+    window.requestAnimationFrame(() => {
+      if (isUndefined(this._canLoadPoster)) {
+        this._canLoadPoster = true;
+      }
+    });
   }
 
   protected override updated(changedProperties: PropertyValues) {
@@ -601,6 +608,15 @@ export abstract class MediaProviderElement extends LitElement {
   // -------------------------------------------------------------------------------------------
   // Loading
   // -------------------------------------------------------------------------------------------
+
+  /**
+   * Determines whether the poster can be set. Used to avoid loading posters twice when a custom
+   * poster element is being used (eg: `<vds-poster>`). This is set internally by the media
+   * controller element.
+   *
+   * @internal
+   */
+  @state() _canLoadPoster?: boolean;
 
   /**
    * Whether media is allowed to begin loading. This depends on the `loading` configuration. If

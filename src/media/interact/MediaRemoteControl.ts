@@ -101,6 +101,18 @@ export class MediaRemoteControl {
     });
   }
 
+  showPoster(event?: Event) {
+    this._dispatchRequest('vds-show-poster-request', {
+      originalEvent: event
+    });
+  }
+
+  hidePoster(event?: Event) {
+    this._dispatchRequest('vds-hide-poster-request', {
+      originalEvent: event
+    });
+  }
+
   protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(
     type: EventType,
     eventInit: ExtractEventInit<MediaRequestEvents[EventType]>

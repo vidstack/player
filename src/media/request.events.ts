@@ -12,6 +12,8 @@ export type MediaRequestEvents = {
   'vds-volume-change-request': VolumeChangeRequestEvent;
   'vds-resume-idling-request': ResumeIdlingRequestEvent;
   'vds-pause-idling-request': PauseIdlingRequestEvent;
+  'vds-show-poster-request': ShowPosterRequestEvent;
+  'vds-hide-poster-request': HidePosterRequestEvent;
 };
 
 export type PendingMediaRequests = {
@@ -124,3 +126,23 @@ export type ResumeIdlingRequestEvent = VdsEvent<void>;
  * @composed
  */
 export type PauseIdlingRequestEvent = VdsEvent<void>;
+
+/**
+ * Fired when requesting the poster _should_ be rendered by the media provider element. This
+ * should be fired if a custom poster element is _not_ being used.
+ *
+ * @event
+ * @bubbles
+ * @composed
+ */
+export type ShowPosterRequestEvent = VdsEvent<void>;
+
+/**
+ * Fired when requesting the poster should _not_ be rendered by the media provider element. This
+ * should be fired if a custom poster element is being used (eg: `vds-poster`).
+ *
+ * @event
+ * @bubbles
+ * @composed
+ */
+export type HidePosterRequestEvent = VdsEvent<void>;

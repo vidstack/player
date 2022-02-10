@@ -132,7 +132,7 @@ export class VideoElement extends Html5MediaElement {
         src="${ifNonEmpty(this._shouldSetVideoSrcAttr() ? this.src : '')}"
         width="${ifNumber(this.width)}"
         height="${ifNumber(this.height)}"
-        poster="${ifNonEmpty(this.poster)}"
+        poster="${ifNonEmpty(this._canLoadPoster ? this.poster : '')}"
         preload="${ifNonEmpty(this.preload)}"
         crossorigin="${ifNonEmpty(this.crossOrigin)}"
         controlslist="${ifNonEmpty(this.controlsList)}"
