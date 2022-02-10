@@ -21,14 +21,8 @@ export default {
     format: 'esm',
     dir: CDN ? 'dist-cdn' : PROD ? 'dist-prod' : 'dist',
     sourcemap: true,
-    entryFileNames(file) {
-      return file.facadeModuleId.includes('src/define')
-        ? `define/${file.name}.js`
-        : `${file.name}.js`;
-    },
-    chunkFileNames(chunk) {
-      return `shared/${chunk.name}.js`;
-    }
+    preserveModules: true,
+    preserveModulesRoot: 'src'
   },
   plugins: [
     esbuild({
