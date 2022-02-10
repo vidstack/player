@@ -1,4 +1,5 @@
 import { VdsEvent } from '../../base/events';
+import type { SliderElement } from './SliderElement';
 
 export type SliderEvents = {
   'vds-slider-drag-start': SliderDragStartEvent;
@@ -8,13 +9,17 @@ export type SliderEvents = {
   'vds-slider-pointer-value-change': SliderPointerValueChangeEvent;
 };
 
+export type VdsSliderEvent<DetailType> = VdsEvent<DetailType> & {
+  target: SliderElement;
+};
+
 /**
  * Fired when the user begins interacting with the slider and dragging the thumb. The event
  * detail contains the current value the drag is starting at.
  *
  * @event
  */
-export type SliderDragStartEvent = VdsEvent<number>;
+export type SliderDragStartEvent = VdsSliderEvent<number>;
 
 /**
  * Fired when the user stops dragging the slider thumb. The event detail contains the value
@@ -22,14 +27,14 @@ export type SliderDragStartEvent = VdsEvent<number>;
  *
  * @event
  */
-export type SliderDragEndEvent = VdsEvent<number>;
+export type SliderDragEndEvent = VdsSliderEvent<number>;
 
 /**
  * Fired when the slider value changes. The event detail contains the current value.
  *
  * @event
  */
-export type SliderValueChangeEvent = VdsEvent<number>;
+export type SliderValueChangeEvent = VdsSliderEvent<number>;
 
 /**
  * Fired when the slider drag value changes. The drag value indicates the last slider value that
@@ -37,7 +42,7 @@ export type SliderValueChangeEvent = VdsEvent<number>;
  *
  * @event
  */
-export type SliderDragValueChangeEvent = VdsEvent<number>;
+export type SliderDragValueChangeEvent = VdsSliderEvent<number>;
 
 /**
  * Fired when the device pointer is inside the slider region and it's position changes. The
@@ -45,4 +50,4 @@ export type SliderDragValueChangeEvent = VdsEvent<number>;
  *
  * @event
  */
-export type SliderPointerValueChangeEvent = VdsEvent<number>;
+export type SliderPointerValueChangeEvent = VdsSliderEvent<number>;
