@@ -217,5 +217,5 @@ export function isHlsjsSupported(): boolean {
       isFunction(sourceBuffer.prototype.appendBuffer) &&
       isFunction(sourceBuffer.prototype.remove));
 
-  return isTypeSupported && isSourceBufferValid;
+  return !!isTypeSupported && !!isSourceBufferValid;
 }

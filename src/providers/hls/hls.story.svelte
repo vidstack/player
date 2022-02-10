@@ -17,12 +17,10 @@
   safelyDefineCustomElement('vds-hls', HlsElement);
 
   let mediaProvider;
-  let hasAddons = true;
 
   const src =
     'https://stream.mux.com/dGTf2M5TBA5ZhXvwEIOziAHBhF2Rn00jk79SZ4gAFPn8.m3u8';
   const poster = 'https://media-files.vidstack.io/poster.png';
-  const hlsLibCDN = 'https://cdn.jsdelivr.net/npm/hls.js@0.14.7/dist/hls.js';
 
   let mediaProps = {
     src,
@@ -31,69 +29,15 @@
   };
 </script>
 
-<Variant
-  name="CDN"
-  on:enter={() => {
-    hasAddons = true;
-  }}
->
+<Variant name="With Controls">
   <vds-hls
-    hls-library={hlsLibCDN}
     bind:this={mediaProvider}
     use:spreadPropsAction={mediaProps}
     use:mediaStoreAction={(newProps) => {
       mediaProps = { ...mediaProps, ...newProps };
     }}
   />
-</Variant>
 
-<Variant
-  name="Dynamic Import"
-  on:enter={() => {
-    hasAddons = true;
-  }}
->
-  <vds-hls
-    hls-library={() => import('hls.js')}
-    bind:this={mediaProvider}
-    use:spreadPropsAction={mediaProps}
-    use:mediaStoreAction={(newProps) => {
-      mediaProps = { ...mediaProps, ...newProps };
-    }}
-  />
-</Variant>
-
-<Variant
-  name="Lazy"
-  on:enter={() => {
-    hasAddons = false;
-  }}
->
-  <div
-    style="display: flex; flex-direction: column; align-items: center; width: 100%;"
-  >
-    <vds-hls
-      {src}
-      {poster}
-      controls
-      hls-library={hlsLibCDN}
-      loading="lazy"
-      style="margin: 100vh 0;"
-    />
-
-    <vds-hls
-      {poster}
-      controls
-      hls-library={hlsLibCDN}
-      loading="lazy"
-      style="margin: 100vh 0;"
-    >
-      <source {src} type="application/vnd.apple.mpegURL" />
-    </vds-hls>
-  </div>
-</Variant>
-
-{#if hasAddons}
   <VideoControlsAddon
     {...mediaProps}
     on:change={({ detail: newProps }) => {
@@ -102,7 +46,62 @@
   />
 
   <MediaEventsAddon {mediaProvider} />
-{/if}
+</Variant>
+
+<Variant name="Dynamic Import">
+  <vds-hls {...mediaProps} hls-library={() => import('hls.js')} />
+</Variant>
+
+<Variant name="Source Element">
+  <vds-hls {poster} controls loading="lazy">
+    <source {src} type="application/vnd.apple.mpegURL" />
+  </vds-hls>
+</Variant>
+
+<Variant name="Lazy CDN">
+  <div
+    style="display: flex; flex-direction: column; align-items: center; width: 100%;"
+  >
+    <vds-hls {poster} controls loading="lazy" style="margin: 100vh 0;">
+      <source {src} type="application/vnd.apple.mpegURL" />
+    </vds-hls>
+    {#each Array(10).fill(0) as _}
+      <vds-hls
+        {src}
+        {poster}
+        controls
+        loading="lazy"
+        style="margin: 100vh 0;"
+      />
+    {/each}
+  </div>
+</Variant>
+
+<Variant name="Lazy Imports">
+  <div
+    style="display: flex; flex-direction: column; align-items: center; width: 100%;"
+  >
+    <vds-hls
+      {poster}
+      controls
+      loading="lazy"
+      hls-library={() => import('hls.js')}
+      style="margin: 100vh 0;"
+    >
+      <source {src} type="application/vnd.apple.mpegURL" />
+    </vds-hls>
+    {#each Array(10).fill(0) as _}
+      <vds-hls
+        {src}
+        {poster}
+        controls
+        loading="lazy"
+        hls-library={() => import('hls.js')}
+        style="margin: 100vh 0;"
+      />
+    {/each}
+  </div>
+</Variant>
 
 <style>
   vds-hls {

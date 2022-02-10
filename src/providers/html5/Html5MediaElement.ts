@@ -228,6 +228,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this._isReplay = false;
     this._isLoopedReplay = false;
     this._replayTriggerEvent = undefined;
+    this._hasAttachedSourceNodes = false;
     super.disconnectedCallback();
     this._cancelTimeUpdates();
   }
@@ -304,10 +305,12 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _cleanupOldSourceNodes() {
     const nodes = this.mediaElement?.querySelectorAll('source,track');
     nodes?.forEach((node) => node.remove());
+    this._hasAttachedSourceNodes = false;
   }
 
+  protected _hasAttachedSourceNodes = false;
   protected _attachNewSourceNodes() {
-    if (!this.canLoad) return;
+    if (!this.canLoad || this._hasAttachedSourceNodes) return;
 
     const validTags = new Set(['source', 'track']);
 
@@ -329,9 +332,11 @@ export class Html5MediaElement extends MediaProviderElement {
 
     nodes.forEach((node) => this.mediaElement?.appendChild(node.cloneNode()));
 
-    window.requestAnimationFrame(() => {
-      this._handleMediaSrcChange();
+    window.requestAnimationFrame(async () => {
+      await this._handleMediaSrcChange();
     });
+
+    this._hasAttachedSourceNodes = true;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -339,7 +344,7 @@ export class Html5MediaElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
 
   override async handleMediaCanLoad() {
-    super.handleMediaCanLoad();
+    await super.handleMediaCanLoad();
 
     this._bindMediaEventListeners();
 
@@ -736,7 +741,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected override async _handleMediaSrcChange(): Promise<void> {
-    super._handleMediaSrcChange(this.src);
+    await super._handleMediaSrcChange(this.src);
 
     if (!this._willAnotherEngineAttach()) {
       // Wait for `src` attribute to be updated on underlying `<audio>` or `<video>` element.

@@ -23,6 +23,22 @@ export type OmitTypesFromRecord<RecordType, OmitType> = Omit<
 >;
 
 // -------------------------------------------------------------------------------------------
+// String
+// -------------------------------------------------------------------------------------------
+
+export type CamelToKebabCase<T extends string> = string extends T
+  ? string
+  : T extends `${infer C0}${infer R}`
+  ? `${C0 extends Lowercase<C0>
+      ? ''
+      : '-'}${Lowercase<C0>}${CamelToKebabCase<R>}`
+  : '';
+
+export type CamelToKebabKeys<T> = {
+  [K in keyof T as CamelToKebabCase<Extract<K, string>>]: T[K];
+};
+
+// -------------------------------------------------------------------------------------------
 // The following is from this StackOverflow link: https://stackoverflow.com/a/49579497
 //
 // Essentially a "hack" to pick `readonly` keys from a `Record` type.
