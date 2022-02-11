@@ -72,7 +72,6 @@
     "format:eslint": "npm run lint:eslint -- --fix",
     "format:prettier": "npm run lint:prettier -- --write",
     "spellcheck": "cspell 'src/**.ts' '*.md'",
-    "minify": "node .scripts/minify.mjs",
     "prepare": "husky install",
     "start": "npm run vitebook:dev",
     "test": "vitest --run",
