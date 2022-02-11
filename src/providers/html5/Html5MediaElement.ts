@@ -280,12 +280,12 @@ export class Html5MediaElement extends MediaProviderElement {
     });
   }
 
-  protected _updateCurrentTime(newTime: number, originalEvent?: Event) {
+  protected _updateCurrentTime(newTime: number, triggerEvent?: Event) {
     this.dispatchEvent(
       vdsEvent('vds-time-update', {
         // Avoid errors where `currentTime` can have higher precision than duration.
         detail: Math.min(newTime, this.duration),
-        originalEvent
+        triggerEvent
       })
     );
   }
@@ -415,7 +415,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleAbort(event: Event) {
-    this.dispatchEvent(vdsEvent('vds-abort', { originalEvent: event }));
+    this.dispatchEvent(vdsEvent('vds-abort', { triggerEvent: event }));
   }
 
   protected _handleCanPlay(event: Event) {
@@ -428,7 +428,7 @@ export class Html5MediaElement extends MediaProviderElement {
     if (this.started) return;
     this.dispatchEvent(
       vdsEvent('vds-can-play-through', {
-        originalEvent: event,
+        triggerEvent: event,
         detail: { duration: this.mediaElement!.duration }
       })
     );
@@ -437,7 +437,7 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handleLoadStart(event: Event) {
     this.dispatchEvent(
       vdsEvent('vds-load-start', {
-        originalEvent: event,
+        triggerEvent: event,
         detail: {
           src: this.mediaElement!.currentSrc,
           poster: this.currentPoster,
@@ -449,11 +449,11 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleEmptied(event: Event) {
-    this.dispatchEvent(vdsEvent('vds-emptied', { originalEvent: event }));
+    this.dispatchEvent(vdsEvent('vds-emptied', { triggerEvent: event }));
   }
 
   protected _handleLoadedData(event: Event) {
-    this.dispatchEvent(vdsEvent('vds-loaded-data', { originalEvent: event }));
+    this.dispatchEvent(vdsEvent('vds-loaded-data', { triggerEvent: event }));
   }
 
   /**
@@ -470,13 +470,13 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-duration-change', {
         detail: this.mediaElement!.duration,
-        originalEvent: event
+        triggerEvent: event
       })
     );
 
     this.dispatchEvent(
       vdsEvent('vds-loaded-metadata', {
-        originalEvent: event,
+        triggerEvent: event,
         detail: {
           src: this.mediaElement!.currentSrc,
           duration: this.mediaElement!.duration
@@ -498,7 +498,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-media-type-change', {
         detail: this._getMediaType(),
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }
@@ -511,7 +511,7 @@ export class Html5MediaElement extends MediaProviderElement {
     if (this.ended || this._isReplay || this._isLoopedReplay) {
       this._isReplay = false;
 
-      const replayEvent = vdsEvent('vds-replay', { originalEvent: event });
+      const replayEvent = vdsEvent('vds-replay', { triggerEvent: event });
 
       replayEvent.triggerEvent = this._replayTriggerEvent;
       this._replayTriggerEvent = undefined;
@@ -524,7 +524,7 @@ export class Html5MediaElement extends MediaProviderElement {
       return;
     }
 
-    const playEvent = vdsEvent('vds-play', { originalEvent: event });
+    const playEvent = vdsEvent('vds-play', { triggerEvent: event });
     playEvent.autoplay = this._autoplayAttemptPending;
     this.dispatchEvent(playEvent);
 
@@ -542,7 +542,7 @@ export class Html5MediaElement extends MediaProviderElement {
     }
 
     this._cancelTimeUpdates();
-    this.dispatchEvent(vdsEvent('vds-pause', { originalEvent: event }));
+    this.dispatchEvent(vdsEvent('vds-pause', { triggerEvent: event }));
   }
 
   protected _playingTriggerEvent: PlayingEvent['triggerEvent'];
@@ -554,7 +554,7 @@ export class Html5MediaElement extends MediaProviderElement {
       return;
     }
 
-    const playingEvent = vdsEvent('vds-playing', { originalEvent: event });
+    const playingEvent = vdsEvent('vds-playing', { triggerEvent: event });
 
     playingEvent.triggerEvent = this._playingTriggerEvent;
     this._playingTriggerEvent = undefined;
@@ -562,7 +562,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(playingEvent);
 
     if (!this.mediaState.started) {
-      this.dispatchEvent(vdsEvent('vds-started', { originalEvent: event }));
+      this.dispatchEvent(vdsEvent('vds-started', { triggerEvent: event }));
     }
 
     this._requestTimeUpdates();
@@ -576,7 +576,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-duration-change', {
         detail: this.mediaElement!.duration,
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }
@@ -584,7 +584,7 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handleProgress(event: Event) {
     this.dispatchEvent(
       vdsEvent('vds-progress', {
-        originalEvent: event,
+        triggerEvent: event,
         detail: {
           buffered: this.mediaElement!.buffered,
           seekable: this.mediaElement!.seekable
@@ -606,7 +606,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-seeking', {
         detail: this.mediaElement!.currentTime,
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }
@@ -614,7 +614,7 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handleSeeked(event: Event) {
     const seekedEvent = vdsEvent('vds-seeked', {
       detail: this.mediaElement!.currentTime,
-      originalEvent: event
+      triggerEvent: event
     });
 
     this.dispatchEvent(seekedEvent);
@@ -648,7 +648,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleStalled(event: Event) {
-    this.dispatchEvent(vdsEvent('vds-stalled', { originalEvent: event }));
+    this.dispatchEvent(vdsEvent('vds-stalled', { triggerEvent: event }));
   }
 
   protected _handleVolumeChange(event: Event) {
@@ -658,17 +658,17 @@ export class Html5MediaElement extends MediaProviderElement {
           volume: this.mediaElement!.volume,
           muted: this.mediaElement!.muted
         },
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }
 
   protected _handleWaiting(event: Event) {
-    this.dispatchEvent(vdsEvent('vds-waiting', { originalEvent: event }));
+    this.dispatchEvent(vdsEvent('vds-waiting', { triggerEvent: event }));
   }
 
   protected _handleSuspend(event: Event) {
-    const suspendEvent = vdsEvent('vds-suspend', { originalEvent: event });
+    const suspendEvent = vdsEvent('vds-suspend', { triggerEvent: event });
     this.dispatchEvent(suspendEvent);
   }
 
@@ -678,12 +678,12 @@ export class Html5MediaElement extends MediaProviderElement {
     this._updateCurrentTime(this.duration, event);
 
     if (this.loop) {
-      const loopedEvent = vdsEvent('vds-looped', { originalEvent: event });
+      const loopedEvent = vdsEvent('vds-looped', { triggerEvent: event });
       this._replayTriggerEvent = loopedEvent;
       this.dispatchEvent(loopedEvent);
       this._handleLoop();
     } else {
-      this.dispatchEvent(vdsEvent('vds-ended', { originalEvent: event }));
+      this.dispatchEvent(vdsEvent('vds-ended', { triggerEvent: event }));
     }
   }
 
@@ -710,7 +710,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-error', {
         detail: this.mediaElement!.error,
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }

@@ -160,7 +160,7 @@ export class ScreenOrientationController {
         bubbles: true,
         composed: true,
         detail: this._screenOrientation,
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }

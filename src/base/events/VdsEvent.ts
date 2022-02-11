@@ -1,12 +1,12 @@
 export type VdsEventInit<DetailType> = CustomEventInit<DetailType> & {
-  readonly originalEvent?: Event;
+  readonly triggerEvent?: Event;
 };
 
 export class VdsEvent<DetailType = unknown> extends CustomEvent<DetailType> {
-  readonly originalEvent?: Event;
+  readonly triggerEvent?: Event;
 
   /**
-   * Walks up the event chain (following each `originalEvent`) and returns the origin event
+   * Walks up the event chain (following each `triggerEvent`) and returns the origin event
    * that started the chain.
    */
   get originEvent(): Event {
@@ -14,7 +14,7 @@ export class VdsEvent<DetailType = unknown> extends CustomEvent<DetailType> {
   }
 
   /**
-   * Walks up the event chain (following each `originalEvent`) and determines whether the initial
+   * Walks up the event chain (following each `triggerEvent`) and determines whether the initial
    * event was triggered by the end user (ie: check whether `isTrusted` on the `originEvent` `true`).
    */
   get isOriginTrusted(): boolean {
@@ -24,7 +24,7 @@ export class VdsEvent<DetailType = unknown> extends CustomEvent<DetailType> {
   constructor(type: string, eventInit: VdsEventInit<DetailType> = {}) {
     super(type, eventInit);
 
-    this.originalEvent = eventInit.originalEvent;
+    this.triggerEvent = eventInit.triggerEvent;
 
     // 🚨 The following is for iOS <14 since events are constructed with `Event.initEvent()`.
     // eslint-disable-next-line no-prototype-builtins
@@ -46,19 +46,19 @@ export class VdsEvent<DetailType = unknown> extends CustomEvent<DetailType> {
 }
 
 /**
- * Walks up the event chain (following each `originalEvent`) and returns the origin event
+ * Walks up the event chain (following each `triggerEvent`) and returns the origin event
  * that started the chain.
  *
  * @param event
  */
 export function getOriginEvent(event: VdsEvent): Event | undefined {
-  let originalEvent = event.originalEvent as VdsEvent;
+  let triggerEvent = event.triggerEvent as VdsEvent;
 
-  while (originalEvent && originalEvent.originalEvent) {
-    originalEvent = originalEvent.originalEvent as VdsEvent;
+  while (triggerEvent && triggerEvent.triggerEvent) {
+    triggerEvent = triggerEvent.triggerEvent as VdsEvent;
   }
 
-  return originalEvent;
+  return triggerEvent;
 }
 
 export type ExtractEventDetail<Event> = Event extends VdsEvent<infer I>
@@ -84,5 +84,5 @@ export function isVdsEvent(
   event: Event | undefined
 ): event is VdsEvent<unknown> {
   // eslint-disable-next-line no-prototype-builtins
-  return event?.hasOwnProperty('originalEvent') ?? false;
+  return event?.hasOwnProperty('triggerEvent') ?? false;
 }

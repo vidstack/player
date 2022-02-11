@@ -7,7 +7,7 @@ export function redispatchEvent(
   if (event.bubbles && event.composed) return;
 
   const newEvent = new VdsEvent(event.type, {
-    originalEvent: (event as VdsEvent).originalEvent ?? event,
+    triggerEvent: (event as VdsEvent).triggerEvent ?? event,
     detail: (event as CustomEvent).detail,
     bubbles: event.bubbles,
     cancelable: event.cancelable,

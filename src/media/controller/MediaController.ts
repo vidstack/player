@@ -579,7 +579,7 @@ export class MediaController {
     this._firingWaiting = true;
 
     const event = vdsEvent('vds-waiting', {
-      originalEvent: this._lastWaitingEvent
+      triggerEvent: this._lastWaitingEvent
     });
 
     this._mediaStore.waiting.set(true);

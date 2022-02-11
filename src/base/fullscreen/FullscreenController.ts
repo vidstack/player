@@ -221,7 +221,7 @@ export class FullscreenController {
         bubbles: true,
         composed: true,
         detail: this.isFullscreen,
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }
@@ -231,7 +231,7 @@ export class FullscreenController {
       vdsEvent('vds-fullscreen-error', {
         bubbles: true,
         composed: true,
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }

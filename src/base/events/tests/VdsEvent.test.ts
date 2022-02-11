@@ -20,7 +20,7 @@ describe(VdsEvent.name, () => {
     const originEvent = new MouseEvent('click');
 
     const event = new VdsEvent('vds-event', {
-      originalEvent: new VdsEvent('vds-event', { originalEvent: originEvent })
+      triggerEvent: new VdsEvent('vds-event', { triggerEvent: originEvent })
     });
 
     expect(event.originEvent).to.equal(originEvent);

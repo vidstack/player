@@ -584,7 +584,7 @@ export class HlsElement extends VideoElement {
 
     this.dispatchEvent(
       vdsEvent('vds-error', {
-        originalEvent: new VdsEvent(eventType, { detail: data })
+        triggerEvent: new VdsEvent(eventType, { detail: data })
       })
     );
   }
@@ -623,7 +623,7 @@ export class HlsElement extends VideoElement {
       this.dispatchEvent(
         vdsEvent('vds-media-type-change', {
           detail: mediaType,
-          originalEvent: event
+          triggerEvent: event
         })
       );
     }
@@ -632,7 +632,7 @@ export class HlsElement extends VideoElement {
       this.dispatchEvent(
         vdsEvent('vds-duration-change', {
           detail: duration,
-          originalEvent: event
+          triggerEvent: event
         })
       );
     }

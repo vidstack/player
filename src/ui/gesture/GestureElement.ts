@@ -195,7 +195,7 @@ export class GestureElement extends LitElement {
         bubbles: true,
         composed: true,
         detail,
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }

@@ -135,7 +135,7 @@ export class VideoPresentationController {
     this._host.dispatchEvent(
       vdsEvent('vds-video-presentation-change', {
         detail: this.presentationMode!,
-        originalEvent: event
+        triggerEvent: event
       })
     );
   }

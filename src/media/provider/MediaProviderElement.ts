@@ -699,7 +699,7 @@ export abstract class MediaProviderElement extends LitElement {
 
     this.dispatchEvent(
       vdsEvent('vds-can-play', {
-        originalEvent: event,
+        triggerEvent: event,
         detail: { duration }
       })
     );

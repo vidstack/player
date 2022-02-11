@@ -34,82 +34,82 @@ export class MediaRemoteControl {
 
   play(event?: Event) {
     this._dispatchRequest('vds-play-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   pause(event?: Event) {
     this._dispatchRequest('vds-pause-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   mute(event?: Event) {
     this._dispatchRequest('vds-mute-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   unmute(event?: Event) {
     this._dispatchRequest('vds-unmute-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   enterFullscreen(event?: Event) {
     this._dispatchRequest('vds-enter-fullscreen-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   exitFullscreen(event?: Event) {
     this._dispatchRequest('vds-exit-fullscreen-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   seeking(time: number, event?: Event) {
     this._dispatchRequest('vds-seeking-request', {
       detail: time,
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   seek(time: number, event?: Event) {
     this._dispatchRequest('vds-seek-request', {
       detail: time,
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   changeVolume(volume: number, event?: Event) {
     this._dispatchRequest('vds-volume-change-request', {
       detail: volume,
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   resumeIdling(event?: Event) {
     this._dispatchRequest('vds-resume-idling-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   pauseIdling(event?: Event) {
     this._dispatchRequest('vds-pause-idling-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   showPoster(event?: Event) {
     this._dispatchRequest('vds-show-poster-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
   hidePoster(event?: Event) {
     this._dispatchRequest('vds-hide-poster-request', {
-      originalEvent: event
+      triggerEvent: event
     });
   }
 
@@ -128,7 +128,7 @@ export class MediaRemoteControl {
         this._logger
           ?.infoGroup(`📨 dispatching \`${type}\``)
           .labelledLog('Request Event', request)
-          .labelledLog('Trigger Event', eventInit.originalEvent)
+          .labelledLog('Trigger Event', eventInit.triggerEvent)
           .dispatch();
       }
 

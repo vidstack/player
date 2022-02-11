@@ -460,7 +460,7 @@ export class SliderElement extends LitElement {
 
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-start', {
-        originalEvent: event,
+        triggerEvent: event,
         detail: this.value
       })
     );
@@ -491,7 +491,7 @@ export class SliderElement extends LitElement {
 
     this.dispatchEvent(
       vdsEvent('vds-slider-drag-end', {
-        originalEvent: event,
+        triggerEvent: event,
         detail: this.value
       })
     );
@@ -554,7 +554,7 @@ export class SliderElement extends LitElement {
     this.dispatchEvent(
       vdsEvent('vds-slider-value-change', {
         detail: this.value,
-        originalEvent: event
+        triggerEvent: event
       })
     );
 
@@ -576,7 +576,7 @@ export class SliderElement extends LitElement {
           this.dispatchEvent(
             vdsEvent(eventType, {
               detail: this.pointerValue,
-              originalEvent: event
+              triggerEvent: event
             })
           );
         }
