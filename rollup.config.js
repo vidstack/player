@@ -2,6 +2,7 @@ import esbuild from 'rollup-plugin-esbuild';
 import fs from 'fs-extra';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
 import resolve from '@rollup/plugin-node-resolve';
+import renameNodeModules from 'rollup-plugin-rename-node-modules';
 
 const PROD = process.env.NODE_ENV === 'production';
 const CDN = !!process.env.CDN;
@@ -36,7 +37,8 @@ export default {
     PROD && minifyHTML(),
     resolve({
       exportConditions: [PROD ? 'production' : 'development']
-    })
+    }),
+    renameNodeModules('lib')
   ],
   treeshake: true,
   preserveEntrySignatures: 'allow-extension',
