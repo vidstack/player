@@ -33,11 +33,11 @@ export class TimeSliderElement extends SliderElement {
       this.value = $currentTime;
     });
     mediaStoreSubscription(this, 'duration', ($duration) => {
-      this._mediaDuration = $duration;
+      this.__mediaDuration = $duration;
       this.requestUpdate('max');
     });
     mediaStoreSubscription(this, 'paused', ($paused) => {
-      this._mediaPaused = $paused;
+      this.__mediaPaused = $paused;
     });
   }
 
@@ -68,7 +68,7 @@ export class TimeSliderElement extends SliderElement {
   /** @internal */
   @property({ attribute: false })
   override get max() {
-    return this._mediaDuration;
+    return this.__mediaDuration;
   }
   override set max(_) {}
 
@@ -94,8 +94,8 @@ export class TimeSliderElement extends SliderElement {
   @property({ attribute: 'seeking-request-throttle', type: Number })
   seekingRequestThrottle = 100;
 
-  @state() protected _mediaDuration = 0;
-  @state() protected _mediaPaused = true;
+  @state() protected __mediaDuration = 0;
+  @state() protected __mediaPaused = true;
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
@@ -129,7 +129,7 @@ export class TimeSliderElement extends SliderElement {
   protected override _getValueText(): string {
     return this.valueText
       .replace('{currentTime}', formatSpokenTime(this.value))
-      .replace('{duration}', formatSpokenTime(this._mediaDuration));
+      .replace('{duration}', formatSpokenTime(this.__mediaDuration));
   }
 
   protected override _getValueMax(): string {
@@ -185,13 +185,13 @@ export class TimeSliderElement extends SliderElement {
   protected _togglePlaybackWhileDragging(event: Event) {
     if (!this.pauseWhileDragging) return;
 
-    if (this.isDragging && !this._mediaPaused) {
+    if (this.isDragging && !this.__mediaPaused) {
       this._wasPlayingBeforeDragStart = true;
       this._mediaRemote.pause(event);
     } else if (
       this._wasPlayingBeforeDragStart &&
       !this.isDragging &&
-      this._mediaPaused
+      this.__mediaPaused
     ) {
       this._wasPlayingBeforeDragStart = false;
       this._mediaRemote.play(event);

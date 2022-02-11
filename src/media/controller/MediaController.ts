@@ -389,7 +389,7 @@ export class MediaController {
     (event) => {
       if (!this._mediaRequestEventGateway(event)) return;
       this._mediaProviderConnectedQueue.queue('poster', () => {
-        this._mediaProvider!._canLoadPoster = true;
+        this._mediaProvider!.__canLoadPoster = true;
       });
     }
   );
@@ -400,7 +400,7 @@ export class MediaController {
     (event) => {
       if (!this._mediaRequestEventGateway(event)) return;
       this._mediaProviderConnectedQueue.queue('poster', () => {
-        this._mediaProvider!._canLoadPoster = false;
+        this._mediaProvider!.__canLoadPoster = false;
       });
     }
   );

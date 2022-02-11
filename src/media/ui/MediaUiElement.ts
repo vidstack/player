@@ -57,21 +57,21 @@ export class MediaUiElement extends LitElement {
     return [];
   }
 
-  @state() protected _mediaFullscreen = false;
-  @state() protected _mediaIsVideoView = false;
-  @state() protected _mediaPlaysinline = false;
+  @state() protected __mediaFullscreen = false;
+  @state() protected __mediaIsVideoView = false;
+  @state() protected __mediaPlaysinline = false;
 
   constructor() {
     super();
 
     mediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
-      this._mediaFullscreen = $fullscreen;
+      this.__mediaFullscreen = $fullscreen;
     });
     mediaStoreSubscription(this, 'viewType', ($viewType) => {
-      this._mediaIsVideoView = $viewType === ViewType.Video;
+      this.__mediaIsVideoView = $viewType === ViewType.Video;
     });
     mediaStoreSubscription(this, 'playsinline', ($playsinline) => {
-      this._mediaPlaysinline = $playsinline;
+      this.__mediaPlaysinline = $playsinline;
     });
 
     bindMediaPropsToAttrs(this, [
@@ -123,8 +123,8 @@ export class MediaUiElement extends LitElement {
   protected _isUiHidden(): boolean {
     return (
       IS_IOS &&
-      this._mediaIsVideoView &&
-      (!this._mediaPlaysinline || this._mediaFullscreen)
+      this.__mediaIsVideoView &&
+      (!this.__mediaPlaysinline || this.__mediaFullscreen)
     );
   }
 }

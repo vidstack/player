@@ -117,13 +117,6 @@ async function main() {
     console.log(`(skipped)`);
   }
 
-  step('Minifying production build...');
-  if (!skipBuild && !isDryRun) {
-    await run('npm', ['run', 'minify:prod']);
-  } else {
-    console.log(`(skipped)`);
-  }
-
   step('Generating changelog...');
   await run(`npm`, ['run', 'changelog']);
 

@@ -75,8 +75,8 @@ export abstract class MediaProviderElement extends LitElement {
 
     // Give the initial hide poster event a chance to reach the controller.
     window.requestAnimationFrame(() => {
-      if (isUndefined(this._canLoadPoster)) {
-        this._canLoadPoster = true;
+      if (isUndefined(this.__canLoadPoster)) {
+        this.__canLoadPoster = true;
       }
     });
   }
@@ -616,7 +616,7 @@ export abstract class MediaProviderElement extends LitElement {
    *
    * @internal
    */
-  @state() _canLoadPoster?: boolean;
+  @state() __canLoadPoster?: boolean;
 
   /**
    * Whether media is allowed to begin loading. This depends on the `loading` configuration. If

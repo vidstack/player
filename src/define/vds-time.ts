@@ -1,4 +1,4 @@
-import { TimeElement } from '../ui/time';
+import { TimeElement } from '../ui/time/TimeElement';
 import { safelyDefineCustomElement } from '../utils/dom';
 
 safelyDefineCustomElement('vds-time', TimeElement);

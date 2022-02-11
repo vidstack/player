@@ -1,4 +1,4 @@
-import { LitElement } from 'lit';
+import type { LitElement } from 'lit';
 
 import { IS_CLIENT } from './support';
 import { isFunction, isNil, isString, isUndefined } from './unit';

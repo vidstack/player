@@ -1,4 +1,4 @@
-import { MediaVisibilityElement } from '../media/manage';
+import { MediaVisibilityElement } from '../media/manage/MediaVisibilityElement';
 import { safelyDefineCustomElement } from '../utils/dom';
 
 safelyDefineCustomElement('vds-media-visibility', MediaVisibilityElement);

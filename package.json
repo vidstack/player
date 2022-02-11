@@ -9,7 +9,6 @@
   },
   "main": "dist-prod/index.js",
   "module": "dist-prod/index.js",
-  "jsdelivr": "dist-cdn/index.js",
   "files": [
     "src/",
     "dist/",
@@ -21,11 +20,11 @@
     "globals.d.ts"
   ],
   "sideEffects": [
-    "define/*",
-    "src/define/*",
-    "dist/define/*",
-    "dist-prod/define/*",
-    "dist-cdn/define/*"
+    "./define/*",
+    "./src/define/*.ts",
+    "./dist/define/*.js",
+    "./dist-prod/define/*.js",
+    "./dist-cdn/define/*.js"
   ],
   "exports": {
     ".": {
@@ -56,13 +55,14 @@
     "url": "https://github.com/vidstack/player/issues"
   },
   "scripts": {
-    "build": "rimraf dist && rollup -c rollup.config.js",
-    "build:prod": "rimraf dist-prod && cross-env NODE_ENV=production rollup -c rollup.config.js",
-    "build:cdn": "rimraf dist-cdn && cross-env NODE_ENV=production CDN=true rollup -c rollup.config.js",
-    "build:watch": "run-p \"build -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
+    "build:base": "node .scripts/build.mjs --entry=\"src/**/!(story-utils|test-utils|tests)/*.ts\"",
+    "build:dev": "rimraf dist && npm run build:base -- --outdir=dist",
+    "build:prod": "rimraf dist-prod && npm run build:base -- --outdir=dist-prod --prod",
+    "build:cdn": "rimraf dist-cdn && node .scripts/build.mjs --entry=\"src/define/*.ts\" --outdir=dist-cdn --external=hls.js --bundle --prod",
+    "build:watch": "run-p \"build:dev -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
     "build:types": "rimraf types && tsc -p tsconfig-build.json",
     "build:definitions": "rimraf define && node .scripts/definitions.mjs",
-    "build:all": "run-p build build:prod build:cdn && run-s build:types build:definitions",
+    "build:all": "run-p build:dev build:prod build:cdn && run-s build:types build:definitions",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "clean": "rimraf define dist dist-prod types",
     "lint": "run-s lint:*",
@@ -71,8 +71,8 @@
     "format": "run-s format:*",
     "format:eslint": "npm run lint:eslint -- --fix",
     "format:prettier": "npm run lint:prettier -- --write",
-    "spellcheck": "cspell 'src/**' '*.md'",
-    "minify:prod": "node .scripts/minify.mjs",
+    "spellcheck": "cspell 'src/**.ts' '*.md'",
+    "minify": "node .scripts/minify.mjs",
     "prepare": "husky install",
     "start": "npm run vitebook:dev",
     "test": "vitest --run",
@@ -92,8 +92,7 @@
   },
   "devDependencies": {
     "@open-wc/semantic-dom-diff": "^0.19.5",
-    "@open-wc/testing-helpers": "^2.0.2",
-    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@open-wc/testing-helpers": "^2.0.4",
     "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
@@ -106,10 +105,9 @@
     "cross-env": "^7.0.3",
     "cspell": "^5.15.2",
     "enquirer": "^2.3.6",
-    "esbuild": "^0.14.11",
+    "esbuild": "^0.14.21",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-lit": "^1.3.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
@@ -117,26 +115,22 @@
     "execa": "^6.0.0",
     "fast-glob": "^3.2.7",
     "fs-extra": "^10.0.0",
+    "gzip-size": "^7.0.0",
     "hls.js": "^1.1.3",
     "husky": "^7.0.0",
     "jsdom": "^19.0.0",
     "kleur": "^4.1.4",
     "lint-staged": "^12.1.5",
-    "lit": "^2.1.1",
+    "lit": "^2.1.3",
     "minimist": "^1.2.5",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.63.0",
-    "rollup-plugin-esbuild": "^4.8.2",
-    "rollup-plugin-minify-html-literals": "^1.2.6",
-    "rollup-plugin-rename-node-modules": "^1.3.1",
     "semver": "^7.3.5",
     "svelte": "^3.45.0",
-    "terser": "^5.10.0",
     "tslib": "^2.3.0",
     "typescript": "^4.5.4",
-    "vite": "2.7.13",
+    "vite": "^2.7.13",
     "vitest": "0.1.24"
   },
   "prettier": {
@@ -148,7 +142,7 @@
   "lint-staged": {
     "*.{js,ts}": "eslint --cache --fix",
     "*.{js,ts,md,json}": "prettier --write",
-    "*.md,src/**": "cspell --no-must-find-files"
+    "*.md,src/**/*.ts": "cspell --no-must-find-files"
   },
   "publishConfig": {
     "access": "public"

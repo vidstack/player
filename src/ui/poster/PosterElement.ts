@@ -76,15 +76,15 @@ export class PosterElement extends LitElement {
 
     mediaStoreSubscription(this, 'currentPoster', ($poster) => {
       window.requestAnimationFrame(() => {
-        if (!this._canLoad && !preconnected.has($poster)) {
+        if (!this.__canLoad && !preconnected.has($poster)) {
           preconnect($poster, 'prefetch');
           preconnected.add($poster);
         }
       });
 
-      this._src = $poster;
+      this.__src = $poster;
 
-      if (this._canLoad) {
+      if (this.__canLoad) {
         this._setImgLoadingAttr();
       }
     });
@@ -116,8 +116,8 @@ export class PosterElement extends LitElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  @state() protected _src?: string;
-  @state() protected _canLoad = false;
+  @state() protected __src?: string;
+  @state() protected __canLoad = false;
 
   /**
    * The URL of the current poster resource.
@@ -125,7 +125,7 @@ export class PosterElement extends LitElement {
    * @default undefined
    */
   get src() {
-    return this._src;
+    return this.__src;
   }
 
   /**
@@ -164,7 +164,7 @@ export class PosterElement extends LitElement {
   override disconnectedCallback(): void {
     this._mediaRemoteControl.showPoster();
     super.disconnectedCallback();
-    this._src = undefined;
+    this.__src = undefined;
     this._handleCanLoadChange(false);
   }
 
@@ -172,7 +172,7 @@ export class PosterElement extends LitElement {
     return html`
       <img
         part="img"
-        src=${ifDefined(this._canLoad ? this.src : null)}
+        src=${ifDefined(this.__canLoad ? this.src : null)}
         alt=${ifDefined(this.alt)}
         @load=${this._handleImgLoad}
         @error=${this._handleImgError}
@@ -187,7 +187,7 @@ export class PosterElement extends LitElement {
   protected _setImgLoadingAttr() {
     this.removeAttribute('img-error');
     this.removeAttribute('img-loaded');
-    if (this._canLoad && this.src) {
+    if (this.__canLoad && this.src) {
       this.setAttribute('img-loading', '');
     }
   }
@@ -211,6 +211,6 @@ export class PosterElement extends LitElement {
       this.removeAttribute('img-loading');
     }
 
-    this._canLoad = canLoad;
+    this.__canLoad = canLoad;
   }
 }

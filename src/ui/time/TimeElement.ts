@@ -44,7 +44,7 @@ export class TimeElement extends LitElement {
     return this._mediaStoreConsumer.value;
   }
 
-  @state() protected _seconds = 0;
+  @state() protected __seconds = 0;
 
   // -------------------------------------------------------------------------------------------
   // Properties
@@ -124,7 +124,7 @@ export class TimeElement extends LitElement {
     const unsub = (
       this.remainder ? this._createRemainderStore(store) : store
     ).subscribe(($seconds) => {
-      this._seconds = $seconds;
+      this.__seconds = $seconds;
     });
 
     this._disposal.add(unsub);
@@ -151,6 +151,6 @@ export class TimeElement extends LitElement {
   }
 
   protected _getFormattedTime(): string {
-    return formatTime(this._seconds, this.padHours, this.showHours);
+    return formatTime(this.__seconds, this.padHours, this.showHours);
   }
 }

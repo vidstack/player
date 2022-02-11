@@ -22,7 +22,7 @@ jobs:
         run: npm run lint
 
       - name: Build
-        run: npm run build
+        run: npm run build:dev
 
       - name: Build Types
         run: npm run build:types

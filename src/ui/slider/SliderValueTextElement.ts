@@ -56,7 +56,7 @@ export class SliderValueTextElement extends LitElement {
     return this._sliderStoreConsumer.value;
   }
 
-  @state() protected _value = 0;
+  @state() protected __value = 0;
 
   // -------------------------------------------------------------------------------------------
   // Properties
@@ -145,7 +145,7 @@ export class SliderValueTextElement extends LitElement {
         : valueStore;
 
     const unsub = store.subscribe(($value) => {
-      this._value = $value;
+      this.__value = $value;
     });
 
     this._disposal.add(unsub);
@@ -168,15 +168,15 @@ export class SliderValueTextElement extends LitElement {
       case 'time':
         return this._getTimeFormat();
       default:
-        return `${this._value}`;
+        return `${this.__value}`;
     }
   }
 
   protected _getPercentFormat(): string {
-    return `${round(this._value, this.decimalPlaces)}%`;
+    return `${round(this.__value, this.decimalPlaces)}%`;
   }
 
   protected _getTimeFormat(): string {
-    return formatTime(this._value, this.padHours, this.showHours);
+    return formatTime(this.__value, this.padHours, this.showHours);
   }
 }

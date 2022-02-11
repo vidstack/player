@@ -146,8 +146,7 @@ export class Html5MediaElement extends MediaProviderElement {
   @property({ type: Number })
   height: number | undefined;
 
-  @state()
-  protected _src = '';
+  @state() protected __src = '';
 
   /**
    * The URL of a media resource to use.
@@ -156,12 +155,12 @@ export class Html5MediaElement extends MediaProviderElement {
    */
   @property()
   get src(): string {
-    return this._src;
+    return this.__src;
   }
 
   set src(newSrc) {
-    if (this._src !== newSrc) {
-      this._src = newSrc;
+    if (this.__src !== newSrc) {
+      this.__src = newSrc;
       this._handleMediaSrcChange();
     }
   }
@@ -320,7 +319,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
     const initialSrc = (nodes[0] as HTMLSourceElement)?.src;
     if (initialSrc) {
-      this._src = initialSrc;
+      this.__src = initialSrc;
     }
 
     if (__DEV__ && nodes.length > 0) {

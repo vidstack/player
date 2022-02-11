@@ -94,8 +94,8 @@ export class SliderVideoElement extends LitElement {
 
   protected _updateCurrentTime(seconds: number) {
     if (
-      !this._hasError &&
-      this._canPlay &&
+      !this.__hasError &&
+      this.__canPlay &&
       this.videoElement!.currentTime !== seconds
     ) {
       this.videoElement!.currentTime = seconds;
@@ -108,8 +108,8 @@ export class SliderVideoElement extends LitElement {
 
   override willUpdate(changedProperties: PropertyValues) {
     if (changedProperties.has('src')) {
-      this._canPlay = false;
-      this._hasError = false;
+      this.__canPlay = false;
+      this.__hasError = false;
       this.removeAttribute('video-can-play');
       this.removeAttribute('video-error');
     }
@@ -140,18 +140,18 @@ export class SliderVideoElement extends LitElement {
   // Events
   // -------------------------------------------------------------------------------------------
 
-  @state() protected _canPlay = false;
+  @state() protected __canPlay = false;
 
   protected async _handleCanPlay(event: Event) {
-    this._canPlay = true;
+    this.__canPlay = true;
     this.setAttribute('video-can-play', '');
     redispatchEvent(this, event);
   }
 
-  @state() protected _hasError = false;
+  @state() protected __hasError = false;
 
   protected _handleError(event: Event) {
-    this._hasError = true;
+    this.__hasError = true;
     this.setAttribute('video-error', '');
     redispatchEvent(this, event);
   }
