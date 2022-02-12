@@ -9,7 +9,7 @@ export type SliderEvents = {
   'vds-slider-pointer-value-change': SliderPointerValueChangeEvent;
 };
 
-export type VdsSliderEvent<DetailType> = VdsEvent<DetailType> & {
+export type VdsSliderEvent<DetailType = unknown> = VdsEvent<DetailType> & {
   target: SliderElement;
 };
 

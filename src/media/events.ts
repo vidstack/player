@@ -63,8 +63,9 @@ export type MediaEvents = {
   'vds-waiting': WaitingEvent;
 };
 
-export type VdsMediaEvent<DetailType> = VdsEvent<DetailType> & {
+export type VdsMediaEvent<DetailType = unknown> = VdsEvent<DetailType> & {
   target: MediaProviderElement;
+  requestEvent?: VdsEvent<unknown>;
 };
 
 /**

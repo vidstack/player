@@ -27,11 +27,13 @@
 <vds-fake-media-provider
   emulate-canplay={canPlay}
   emulate-paused={paused}
-  on:vds-play={() => {
+  on:vds-play={(event) => {
     paused = false;
+    eventCallback(event);
   }}
-  on:vds-pause={() => {
+  on:vds-pause={(event) => {
     paused = true;
+    eventCallback(event);
   }}
 >
   <vds-play-button

@@ -17,7 +17,7 @@ export type HlsEvents = {
   >;
 };
 
-export type VdsHlsEvent<Detail> = VdsEvent<Detail> & {
+export type VdsHlsEvent<DetailType = unknown> = VdsEvent<DetailType> & {
   target: HlsElement;
 };
 

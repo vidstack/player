@@ -7,6 +7,7 @@ import { RequestQueue } from '../../base/queue';
 import { get, WritableStore } from '../../base/stores';
 import { keysOf } from '../../utils/object';
 import { isNil } from '../../utils/unit';
+import { VdsMediaEvent } from '../events';
 import {
   mediaStoreContext,
   ReadableMediaStoreRecord,
@@ -182,9 +183,12 @@ export class MediaController {
 
   protected satisfyMediaRequest<T extends keyof PendingMediaRequests>(
     type: T,
-    event: Event & { requestEvent?: Event }
+    event: VdsMediaEvent<unknown>
   ): void {
-    event.requestEvent = this._pendingMediaRequests[type].shift();
+    const requestEvent = this._pendingMediaRequests[type].shift();
+    event.requestEvent = requestEvent;
+    // @ts-expect-error - override readonly
+    event.originEvent.triggerEvent = requestEvent;
   }
 
   /**
@@ -349,6 +353,7 @@ export class MediaController {
     (event) => {
       if (!this._mediaRequestEventGateway(event)) return;
       this._mediaStore.fullscreen.set(event.detail);
+      // @ts-expect-error - not media event but should be fine.
       this.satisfyMediaRequest('fullscreen', event);
     }
   );
@@ -359,6 +364,7 @@ export class MediaController {
     (event) => {
       if (!this._mediaRequestEventGateway(event)) return;
       this._mediaStore.error.set(event.detail);
+      // @ts-expect-error - not media event but should be fine.
       this.satisfyMediaRequest('fullscreen', event);
     }
   );

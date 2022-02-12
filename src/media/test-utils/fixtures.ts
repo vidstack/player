@@ -7,13 +7,8 @@ import { FakeMediaPlayerElement } from './fake-media-player';
 import { FakeMediaProviderElement } from './fake-media-provider';
 
 safelyDefineCustomElement('vds-fake-media-player', FakeMediaPlayerElement);
-
-window.customElements.define('vds-media-controller', MediaControllerElement);
-
-window.customElements.define(
-  'vds-fake-media-provider',
-  FakeMediaProviderElement
-);
+safelyDefineCustomElement('vds-media-controller', MediaControllerElement);
+safelyDefineCustomElement('vds-fake-media-provider', FakeMediaProviderElement);
 
 export type MediaFixture = {
   player: FakeMediaPlayerElement;

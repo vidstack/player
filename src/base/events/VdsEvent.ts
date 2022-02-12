@@ -3,6 +3,9 @@ export type VdsEventInit<DetailType> = CustomEventInit<DetailType> & {
 };
 
 export class VdsEvent<DetailType = unknown> extends CustomEvent<DetailType> {
+  /**
+   * The preceding event that was responsible for this event being fired.
+   */
   readonly triggerEvent?: Event;
 
   /**
