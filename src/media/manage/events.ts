@@ -1,6 +1,6 @@
 import type { VdsEvent } from '../../base/events';
 import type { PageState, PageVisibility } from '../../base/observers';
-import type { VolumeChange } from '../events';
+import type { MediaVolumeChange } from '../events';
 import type { MediaProviderElement } from '../provider';
 
 export type MediaVisibilityEvents = {
@@ -40,4 +40,4 @@ export type MediaSyncEvents = {
  * @bubbles
  * @composed
  */
-export type MediaVolumeSyncEvent = VdsEvent<VolumeChange>;
+export type MediaVolumeSyncEvent = VdsEvent<MediaVolumeChange>;

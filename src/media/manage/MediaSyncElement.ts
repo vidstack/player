@@ -8,7 +8,7 @@ import {
   listen,
   vdsEvent
 } from '../../base/events';
-import type { VolumeChange, VolumeChangeEvent } from '../events';
+import type { MediaVolumeChange, MediaVolumeChangeEvent } from '../events';
 import type { MediaProviderElement } from '../provider';
 
 const mediaProviders = new Set<MediaProviderElement>();
@@ -173,7 +173,7 @@ export class MediaSyncElement extends LitElement {
   // Volume
   // -------------------------------------------------------------------------------------------
 
-  protected _handleMediaVolumeChange(event: VolumeChangeEvent) {
+  protected _handleMediaVolumeChange(event: MediaVolumeChangeEvent) {
     if (syncingMediaVolume) return;
     syncingMediaVolume = true;
 
@@ -197,7 +197,7 @@ export class MediaSyncElement extends LitElement {
     syncingMediaVolume = false;
   }
 
-  protected _getSavedMediaVolume(): VolumeChange | undefined {
+  protected _getSavedMediaVolume(): MediaVolumeChange | undefined {
     if (!this.volumeStorageKey) return;
 
     try {
@@ -207,7 +207,7 @@ export class MediaSyncElement extends LitElement {
     }
   }
 
-  protected _saveMediaVolume(event: VolumeChangeEvent) {
+  protected _saveMediaVolume(event: MediaVolumeChangeEvent) {
     if (!this.volumeStorageKey) return;
     localStorage.setItem(this.volumeStorageKey, JSON.stringify(event.detail));
   }
