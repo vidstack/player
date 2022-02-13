@@ -1,3 +1,4 @@
+import type { MediaErrorDetail } from './MediaError';
 import { MediaType } from './MediaType';
 import { ViewType } from './ViewType';
 
@@ -118,14 +119,13 @@ export type MediaContext = {
    */
   ended: boolean;
   /**
-   * Contains the most recent error or undefined if there's been none. You can listen for
-   * `vds-error` event updates and examine this object to debug further. The error could be a
-   * native `MediaError` object or something else.
+   * Contains the most recent media error or undefined if there's been none. You can listen for
+   * `vds-error` event updates and examine this object to debug further.
    *
    * @default undefined
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
    */
-  error: unknown;
+  error: MediaErrorDetail | undefined;
   /**
    * Whether the player is currently in fullscreen mode.
    *

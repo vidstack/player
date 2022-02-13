@@ -49,7 +49,7 @@ async function main() {
   });
 
   if (args.bundle) {
-    console.log(kleur.bold(kleur.red('*** SRC ***\n')));
+    console.log(kleur.bold(kleur.green('*** SRC ***\n')));
 
     for (const fileName of Object.keys(result.metafile.outputs)) {
       if (fileName.includes('define/') && !fileName.endsWith('.js.map')) {
@@ -58,7 +58,7 @@ async function main() {
       }
     }
 
-    console.log(kleur.bold(kleur.red('\n*** NODE_MODULES ***\n')));
+    console.log(kleur.bold(kleur.green('\n*** NODE_MODULES ***\n')));
 
     const nodeModuleSize = {};
 

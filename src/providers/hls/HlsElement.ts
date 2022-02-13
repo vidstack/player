@@ -9,7 +9,7 @@ import { PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { VdsEvent, vdsEvent } from '../../base/events';
-import { CanPlay, MediaType } from '../../media';
+import { CanPlay, MediaErrorCode, MediaType } from '../../media';
 import { preconnect } from '../../utils/network';
 import { isHlsjsSupported } from '../../utils/support';
 import { isNil, isString, isUndefined } from '../../utils/unit';
@@ -350,13 +350,23 @@ export class HlsElement extends VideoElement {
       onLoadError: (err) => {
         if (__DEV__) {
           this._logger
-            ?.infoGroup('Failed to load `hls.js`')
-            .labelledLog('URL', this.hlsLibrary)
+            ?.errorGroup('Failed to load `hls.js`')
+            .labelledLog('Lib Loader', this.hlsLibrary)
+            .labelledLog('Error', err)
             .dispatch();
         }
 
         this.dispatchEvent(
           vdsEvent('vds-hls-lib-load-error', { detail: err as Error })
+        );
+
+        this.dispatchEvent(
+          vdsEvent('vds-error', {
+            detail: {
+              message: err.message,
+              code: MediaErrorCode.SrcNotSupported
+            }
+          })
         );
       }
     };
@@ -370,17 +380,26 @@ export class HlsElement extends VideoElement {
     }
 
     if (!this.Hls) {
-      callbacks.onLoadError!(
-        Error('[vds]: Failed to load `hls.js` (check `hlsLibrary`).')
-      );
-
       return;
-    } else if (!this.Hls.isSupported?.()) {
+    }
+
+    if (!this.Hls?.isSupported?.()) {
+      const message = '[vds]: `hls.js` is not supported in this environment';
+
       if (__DEV__) {
-        this._logger?.warn('`hls.js` is not supported in this environment');
+        this._logger?.error(message);
       }
 
       this.dispatchEvent(vdsEvent('vds-hls-unsupported'));
+
+      this.dispatchEvent(
+        vdsEvent('vds-error', {
+          detail: {
+            message,
+            code: MediaErrorCode.SrcNotSupported
+          }
+        })
+      );
 
       return;
     }
@@ -576,12 +595,6 @@ export class HlsElement extends VideoElement {
           break;
       }
     }
-
-    this.dispatchEvent(
-      vdsEvent('vds-error', {
-        triggerEvent: new VdsEvent(eventType, { detail: data })
-      })
-    );
   }
 
   protected _handleHlsNetworkError(): void {

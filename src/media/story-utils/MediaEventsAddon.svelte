@@ -33,7 +33,6 @@
     'vds-loaded-data',
     'vds-loaded-metadata',
     'vds-loop-change',
-    'vds-looped',
     'vds-media-type-change',
     'vds-pause',
     'vds-play-fail',

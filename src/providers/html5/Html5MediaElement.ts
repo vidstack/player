@@ -657,9 +657,16 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleError(event: Event) {
+    const mediaError = this.mediaElement!.error;
+    if (!mediaError) return;
+
     this.dispatchEvent(
       vdsEvent('vds-error', {
-        detail: this.mediaElement!.error,
+        detail: {
+          message: mediaError.message,
+          code: mediaError.code,
+          mediaError: mediaError
+        },
         triggerEvent: event
       })
     );

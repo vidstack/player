@@ -466,9 +466,8 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   /**
-   * Contains the most recent error or undefined if there's been none. You can listen for
-   * `vds-error` event updates and examine this object to debug further. The error could be a
-   * native `MediaError` object or something else.
+   * Contains the most recent media error or undefined if there's been none. You can listen for
+   * `vds-error` event updates and examine this object to debug further.
    *
    * @default undefined
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error

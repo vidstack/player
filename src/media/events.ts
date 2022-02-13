@@ -4,6 +4,7 @@ import {
   FullscreenErrorEvent,
   FullscreenSupportChange
 } from '../base/fullscreen';
+import type { MediaErrorDetail } from './MediaError';
 import { MediaType } from './MediaType';
 import type { MediaProviderElement } from './provider';
 import {
@@ -176,13 +177,16 @@ export type EndEvent = VdsMediaEvent<void>;
 export type EndedEvent = VdsMediaEvent<void>;
 
 /**
- * Fired when any error has occurred within the player such as a media error, or
- * potentially a request that cannot be fulfilled such as calling `requestFullscreen()`.
+ * Fired when media loading or playback has encountered any issues (for example, a network
+ * connectivity problem). The event detail contains a potential message containing more
+ * information about the error (empty string if nothing available), and a code that identifies
+ * the general type of error that occurred.
  *
  * @event
+ * @link https://html.spec.whatwg.org/multipage/media.html#error-codes
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
  */
-export type ErrorEvent = VdsMediaEvent<unknown>;
+export type ErrorEvent = VdsMediaEvent<MediaErrorDetail>;
 
 /**
  * Fired when the media idle state changes. Media is idle when playback is progressing (playing),

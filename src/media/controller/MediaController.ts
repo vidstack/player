@@ -411,7 +411,6 @@ export class MediaController {
     this._host,
     'vds-fullscreen-error',
     (event) => {
-      this._mediaStore.error.set(event.detail);
       // @ts-expect-error - not a media event.
       this._satisfyMediaRequest('fullscreen', event);
     }
@@ -582,7 +581,6 @@ export class MediaController {
 
       this._mediaStore.paused.set(true);
       this._mediaStore.playing.set(false);
-      this._mediaStore.error.set(event.error);
 
       this._satisfyMediaRequest('play', event);
 
