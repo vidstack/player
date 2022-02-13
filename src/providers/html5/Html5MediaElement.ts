@@ -7,8 +7,6 @@ import {
   CanPlay,
   MediaProviderElement,
   MediaType,
-  PlayingEvent,
-  ReplayEvent,
   ViewType
 } from '../../media';
 import { getSlottedChildren } from '../../utils/dom';
@@ -224,9 +222,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   override disconnectedCallback() {
-    this._isReplay = false;
-    this._isLoopedReplay = false;
-    this._replayTriggerEvent = undefined;
+    this._isMediaWaiting = false;
     this._hasAttachedSourceNodes = false;
     super.disconnectedCallback();
     this._cancelTimeUpdates();
@@ -324,7 +320,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
     if (__DEV__ && nodes.length > 0) {
       this._logger
-        ?.infoGroup('Found `<source>` and `<track>` elements')
+        ?.infoGroup('Found `<source>` and/or `<track>` elements')
         .labelledLog('Nodes', nodes)
         .dispatch();
     }
@@ -341,6 +337,9 @@ export class Html5MediaElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
   // Events
   // -------------------------------------------------------------------------------------------
+
+  // An un-debounced waiting tracker (this.waiting is debounced inside the media controller).
+  protected _isMediaWaiting = false;
 
   override async handleMediaCanLoad() {
     await super.handleMediaCanLoad();
@@ -465,7 +464,10 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   // For `hls.js` or any engine to mark ready state when metadata has loaded.
-  protected _mediaReadyOnMetadataLoad = false;
+  protected get _mediaReadyOnMetadataLoad() {
+    return false;
+  }
+
   protected _handleLoadedMetadata(event: Event) {
     this.dispatchEvent(
       vdsEvent('vds-duration-change', {
@@ -503,68 +505,27 @@ export class Html5MediaElement extends MediaProviderElement {
     );
   }
 
-  protected _isReplay = false;
-  protected _isLoopedReplay = false;
-  protected _replayTriggerEvent?: ReplayEvent['triggerEvent'];
-
   protected _handlePlay(event: Event) {
-    if (this.ended || this._isReplay || this._isLoopedReplay) {
-      this._isReplay = false;
-
-      const replayEvent = vdsEvent('vds-replay', { triggerEvent: event });
-
-      replayEvent.triggerEvent = this._replayTriggerEvent;
-      this._replayTriggerEvent = undefined;
-      this._playingTriggerEvent = replayEvent;
-
-      this.dispatchEvent(replayEvent);
-    }
-
-    if (this._isLoopedReplay) {
-      return;
-    }
-
     const playEvent = vdsEvent('vds-play', { triggerEvent: event });
     playEvent.autoplay = this._autoplayAttemptPending;
     this.dispatchEvent(playEvent);
-
-    this._playingTriggerEvent = playEvent;
   }
 
   protected _handlePause(event: Event) {
-    // Don't fire if resuming from loop.
-    if (
-      this.loop &&
-      // Avoid errors where `currentTime` can have higher precision than duration.
-      Math.min(this.mediaElement!.currentTime, this.duration) === this.duration
-    ) {
+    // Avoid seeking events triggering pause.
+    if (this.readyState === 1 && !this._isMediaWaiting) {
       return;
     }
 
+    this._isMediaWaiting = false;
     this._cancelTimeUpdates();
     this.dispatchEvent(vdsEvent('vds-pause', { triggerEvent: event }));
   }
 
-  protected _playingTriggerEvent: PlayingEvent['triggerEvent'];
-
   protected _handlePlaying(event: Event) {
-    if (this._isLoopedReplay) {
-      this._isLoopedReplay = false;
-      this._requestTimeUpdates();
-      return;
-    }
-
+    this._isMediaWaiting = false;
     const playingEvent = vdsEvent('vds-playing', { triggerEvent: event });
-
-    playingEvent.triggerEvent = this._playingTriggerEvent;
-    this._playingTriggerEvent = undefined;
-
     this.dispatchEvent(playingEvent);
-
-    if (!this.mediaState.started) {
-      this.dispatchEvent(vdsEvent('vds-started', { triggerEvent: event }));
-    }
-
     this._requestTimeUpdates();
   }
 
@@ -599,10 +560,6 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleSeeking(event: Event) {
-    if (this.ended) {
-      this._isReplay = true;
-    }
-
     this.dispatchEvent(
       vdsEvent('vds-seeking', {
         detail: this.mediaElement!.currentTime,
@@ -618,14 +575,6 @@ export class Html5MediaElement extends MediaProviderElement {
     });
 
     this.dispatchEvent(seekedEvent);
-
-    // Play or replay has greater priority.
-    if (!this._playingTriggerEvent) {
-      this._playingTriggerEvent = seekedEvent;
-      setTimeout(() => {
-        this._playingTriggerEvent = undefined;
-      }, 150);
-    }
 
     const currentTime = this.mediaElement!.currentTime;
 
@@ -649,6 +598,11 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _handleStalled(event: Event) {
     this.dispatchEvent(vdsEvent('vds-stalled', { triggerEvent: event }));
+
+    if (this.readyState < 3) {
+      this._isMediaWaiting = true;
+      this.dispatchEvent(vdsEvent('vds-waiting', { triggerEvent: event }));
+    }
   }
 
   protected _handleVolumeChange(event: Event) {
@@ -664,7 +618,10 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleWaiting(event: Event) {
-    this.dispatchEvent(vdsEvent('vds-waiting', { triggerEvent: event }));
+    if (this.readyState < 3) {
+      this._isMediaWaiting = true;
+      this.dispatchEvent(vdsEvent('vds-waiting', { triggerEvent: event }));
+    }
   }
 
   protected _handleSuspend(event: Event) {
@@ -677,10 +634,10 @@ export class Html5MediaElement extends MediaProviderElement {
 
     this._updateCurrentTime(this.duration, event);
 
+    const endEvent = vdsEvent('vds-end', { triggerEvent: event });
+    this.dispatchEvent(endEvent);
+
     if (this.loop) {
-      const loopedEvent = vdsEvent('vds-looped', { triggerEvent: event });
-      this._replayTriggerEvent = loopedEvent;
-      this.dispatchEvent(loopedEvent);
       this._handleLoop();
     } else {
       this.dispatchEvent(vdsEvent('vds-ended', { triggerEvent: event }));
@@ -696,14 +653,7 @@ export class Html5MediaElement extends MediaProviderElement {
       this.mediaElement!.controls = false;
     }
 
-    window.requestAnimationFrame(async () => {
-      try {
-        this._isLoopedReplay = true;
-        await this.play();
-      } catch (e) {
-        this._isLoopedReplay = false;
-      }
-    });
+    this.dispatchEvent(vdsEvent('vds-loop-request'));
   }
 
   protected _handleError(event: Event) {
@@ -746,6 +696,8 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected override async _handleMediaSrcChange(): Promise<void> {
+    this._isMediaWaiting = false;
+
     await super._handleMediaSrcChange(this.src);
 
     if (!this._willAnotherEngineAttach()) {

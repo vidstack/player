@@ -14,6 +14,7 @@ export type MediaRequestEvents = {
   'vds-pause-idling-request': PauseIdlingRequestEvent;
   'vds-show-poster-request': ShowPosterRequestEvent;
   'vds-hide-poster-request': HidePosterRequestEvent;
+  'vds-loop-request': LoopRequestEvent;
 };
 
 export type PendingMediaRequests = {
@@ -146,3 +147,14 @@ export type ShowPosterRequestEvent = VdsEvent<void>;
  * @composed
  */
 export type HidePosterRequestEvent = VdsEvent<void>;
+
+/**
+ * Internal event that is fired by a media provider when requesting media playback to restart after
+ * reaching the end. This event also helps notify the media controller that media will be looping.
+ *
+ * @internal
+ * @event
+ * @bubbles
+ * @composed
+ */
+export type LoopRequestEvent = VdsEvent<void>;

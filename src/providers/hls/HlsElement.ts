@@ -1,7 +1,6 @@
 import type Hls from 'hls.js';
 import type {
   ErrorData,
-  ErrorTypes,
   Events as HlsEvent,
   HlsConfig,
   LevelLoadedData
@@ -496,12 +495,8 @@ export class HlsElement extends VideoElement {
   // Events
   // -------------------------------------------------------------------------------------------
 
-  protected override _handleLoadedMetadata(event: Event) {
-    super._handleLoadedMetadata(event);
-    // iOS doesn't fire `canplay` event when loading HLS videos natively.
-    if (this.shouldUseNativeHlsSupport && this.isHlsStream) {
-      this._handleCanPlay(event);
-    }
+  protected override get _mediaReadyOnMetadataLoad() {
+    return true;
   }
 
   protected override async _handleMediaSrcChange() {
@@ -609,7 +604,6 @@ export class HlsElement extends VideoElement {
     this._handleHlsMediaReady(eventType, data);
   }
 
-  protected override _mediaReadyOnMetadataLoad = true;
   protected _handleHlsMediaReady(
     eventType: string,
     data: LevelLoadedData

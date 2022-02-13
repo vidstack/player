@@ -31,6 +31,7 @@ export type MediaEvents = {
   'vds-controls-change': ControlsChangeEvent;
   'vds-duration-change': DurationChangeEvent;
   'vds-emptied': EmptiedEvent;
+  'vds-end': EndEvent;
   'vds-ended': EndedEvent;
   'vds-error': ErrorEvent;
   'vds-fullscreen-change': FullscreenChangeEvent;
@@ -41,7 +42,6 @@ export type MediaEvents = {
   'vds-loaded-data': LoadedDataEvent;
   'vds-loaded-metadata': LoadedMetadataEvent;
   'vds-loop-change': LoopChangeEvent;
-  'vds-looped': LoopedEvent;
   'vds-media-type-change': MediaTypeChangeEvent;
   'vds-pause': PauseEvent;
   'vds-play-fail': PlayFailEvent;
@@ -157,9 +157,18 @@ export type DurationChangeEvent = VdsMediaEvent<number>;
 export type EmptiedEvent = VdsMediaEvent<void>;
 
 /**
+ * Fired each time media playback has reached the end. This is fired even if the
+ * `loop` property is `true`, which is generally when you'd reach for this event over the
+ * `EndedEvent` if you want to be notified of media looping.
+ *
+ * @event
+ */
+export type EndEvent = VdsMediaEvent<void>;
+
+/**
  * Fired when playback or streaming has stopped because the end of the media was reached or
  * because no further data is available. This is not fired if playback will start from the
- * beginning again due to the `loop` property being `true` (see `MediaReplayEvent` and `LoopedEvent`).
+ * beginning again due to the `loop` property being `true` (see `MediaReplayEvent` and `EndEvent`).
  *
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended_event
@@ -227,12 +236,6 @@ export type LoadStartEvent = VdsMediaEvent<{
 }>;
 
 /**
- * Fired when the media is set to loop and playback reaches the end of media (right before it
- * starts again).
- */
-export type LoopedEvent = VdsMediaEvent<void>;
-
-/**
  * Fired when the `mediaType` property changes value.
  *
  * @event
@@ -278,9 +281,7 @@ export type PlayFailEvent = VdsMediaEvent<void> & {
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event
  */
-export type PlayingEvent = VdsMediaEvent<void> & {
-  triggerEvent?: PlayEvent | ReplayEvent | SeekedEvent;
-};
+export type PlayingEvent = VdsMediaEvent<void>;
 
 /**
  * Fired when the `playsinline` property has changed value.
@@ -315,7 +316,6 @@ export type ProgressEvent = VdsMediaEvent<{
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event
  */
 export type SeekedEvent = VdsMediaEvent<number> & {
-  triggerEvent?: ReplayEvent;
   requestEvent?: SeekRequestEvent;
 };
 
@@ -363,13 +363,13 @@ export type StartedEvent = VdsMediaEvent<void>;
 export type SuspendEvent = VdsMediaEvent<void>;
 
 /**
- * Fired when media playback starts again after being in an `ended` state.
+ * Fired when media playback starts again after being in an `ended` state. This is fired
+ * when the `loop` property is `true` and media loops, whereas the `vds-play` event is not.
  *
  * @event
  */
 export type ReplayEvent = VdsMediaEvent<void> & {
   requestEvent?: PlayRequestEvent;
-  triggerEvent?: LoopedEvent;
 };
 
 /**

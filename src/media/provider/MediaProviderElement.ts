@@ -670,13 +670,9 @@ export abstract class MediaProviderElement extends LitElement {
     }
   }
 
-  protected async _resetPlayback(): Promise<void> {
-    this._setCurrentTime(0);
-  }
-
   protected async _resetPlaybackIfEnded(): Promise<void> {
     if (!this.ended || this.currentTime === 0) return;
-    return this._resetPlayback();
+    return this._setCurrentTime(0);
   }
 
   /**

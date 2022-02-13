@@ -57,7 +57,8 @@
 
   const throttle = {
     'vds-time-update': 500,
-    'vds-volume-change': 500
+    'vds-volume-change': 500,
+    'vds-progress': 500
   };
 
   $: if (mediaProvider) {

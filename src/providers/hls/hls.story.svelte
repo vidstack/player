@@ -58,6 +58,10 @@
   </vds-hls>
 </Variant>
 
+<Variant name="Lazy Autoplay">
+  <vds-hls {src} {poster} autoplay controls loading="lazy" />
+</Variant>
+
 <Variant name="Lazy CDN">
   <div
     style="display: flex; flex-direction: column; align-items: center; width: 100%;"
