@@ -2,15 +2,12 @@ import '../../../define/vds-media-controller';
 
 import { LitElement } from 'lit';
 
-import { VdsEvent } from '../../../base/events';
+import { vdsEvent } from '../../../base/events';
 import { waitForEvent } from '../../../utils/events';
 import { mediaEventListener } from '../mediaEventListener';
 
 class MediaListenerElement extends LitElement {
-  playListener = vi.fn();
   pauseListener = vi.fn();
-
-  handlePlay = mediaEventListener(this, 'vds-play', this.playListener);
   handlePause = mediaEventListener(this, 'vds-pause', this.pauseListener);
 }
 
@@ -30,16 +27,11 @@ test('it should listen to media events', async function () {
 
   await waitForEvent(listener, 'vds-media-controller-connect');
 
-  const playEvent = new VdsEvent('vds-play');
-  const pauseEvent = new VdsEvent('vds-pause');
+  const pauseEvent = vdsEvent('vds-pause');
 
-  controller.dispatchEvent(playEvent);
   controller.dispatchEvent(pauseEvent);
-  controller.dispatchEvent(playEvent);
 
-  expect(listener.playListener).toHaveBeenCalledTimes(2);
   expect(listener.pauseListener).toHaveBeenCalledOnce();
-  expect(listener.playListener).toHaveBeenCalledWith(playEvent);
   expect(listener.pauseListener).toHaveBeenCalledWith(pauseEvent);
 });
 
@@ -50,10 +42,10 @@ test('it should stop listening to media events when listener disconnects', async
 
   window.document.body.append(listener);
 
-  const playEvent = new VdsEvent('vds-play');
-  listener.dispatchEvent(playEvent);
+  const pauseEvent = vdsEvent('vds-pause');
+  listener.dispatchEvent(pauseEvent);
 
-  expect(listener.playListener).toHaveBeenCalledTimes(0);
+  expect(listener.pauseListener).toHaveBeenCalledTimes(0);
 });
 
 test('it should stop listening to media events when controller disconnects', async function () {
@@ -72,9 +64,9 @@ test('it should stop listening to media events when controller disconnects', asy
 
   controller.remove();
 
-  const playEvent = new VdsEvent('vds-play');
+  const pauseEvent = vdsEvent('vds-pause');
 
-  controller.dispatchEvent(playEvent);
+  controller.dispatchEvent(pauseEvent);
 
-  expect(listener.playListener).toHaveBeenCalledTimes(0);
+  expect(listener.pauseListener).toHaveBeenCalledTimes(0);
 });

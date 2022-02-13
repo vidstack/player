@@ -61,7 +61,7 @@
     "build:definitions": "rimraf define && node .scripts/definitions.mjs",
     "build:all": "run-p build:dev build:prod build:cdn && run-s build:types build:definitions",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "clean": "rimraf define dist dist-prod types",
+    "clean": "rimraf define dist dist-* types",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",

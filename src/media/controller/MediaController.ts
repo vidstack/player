@@ -564,7 +564,7 @@ export class MediaController {
         const replayEvent = vdsEvent('vds-replay', {
           triggerEvent: event
         });
-        this._host.dispatchEvent(replayEvent);
+        this._mediaProvider?.dispatchEvent(replayEvent);
       }
     }
   );
@@ -619,7 +619,7 @@ export class MediaController {
 
       if (!this._mediaProvider?.started) {
         this._mediaStore.started.set(true);
-        this._host.dispatchEvent(
+        this._mediaProvider?.dispatchEvent(
           vdsEvent('vds-started', { triggerEvent: event })
         );
       }
@@ -725,7 +725,7 @@ export class MediaController {
     this._mediaEvents.push(event);
     this._mediaStore.waiting.set(true);
     this._mediaStore.playing.set(false);
-    this._host.dispatchEvent(event);
+    this._mediaProvider?.dispatchEvent(event);
     this._originalWaitingEvent = undefined;
 
     this._firingWaiting = false;
