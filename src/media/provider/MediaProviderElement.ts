@@ -39,6 +39,10 @@ export type MediaProviderConnectEvent = DiscoveryEvent<MediaProviderElement>;
  * Base abstract media provider class that defines the interface to be implemented by
  * all concrete media providers. Extending this class enables provider-agnostic communication 💬
  *
+ * @events '../events.ts'
+ * @events '../request.events.ts'
+ * @events '../../base/fullscreen/events.ts'
+ * @events '../../base/screen-orientation/events.ts'
  */
 export abstract class MediaProviderElement extends LitElement {
   constructor() {

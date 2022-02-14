@@ -24,7 +24,7 @@ import { HlsElement } from '../../providers/hls';
  * @tagname vds-hls-player
  * @provider HlsElement
  * @engine [hls.js](https://github.com/video-dev/hls.js)
- * @slot Used to pass in media resources such as `<source>` and `<track>` elements.
+ * @slot - Used to pass in media resources such as `<source>` and `<track>` elements.
  * @slot ui - Used to pass in the player user interface.
  * @csspart media - The video element (`<video>`).
  * @csspart video - Alias for `media` part.

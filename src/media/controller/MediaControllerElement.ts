@@ -29,7 +29,7 @@ export type MediaControllerConnectEvent =
  * 💡 The base `MediaPlayer` acts as both a media controller and provider.
  *
  * @tagname vds-media-controller
- * @slot Used to pass in components that use/manage media state.
+ * @slot - Used to pass in components that use/manage media state.
  * @example
  * ```html
  * <vds-media-controller>

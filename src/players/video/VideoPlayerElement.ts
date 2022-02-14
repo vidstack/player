@@ -20,7 +20,7 @@ import { VideoElement } from '../../providers/video';
  * @tagname vds-video-player
  * @provider VideoElement
  * @engine [HTMLVideoElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement)
- * @slot Used to pass in media resources such as `<source>` and `<track>` elements.
+ * @slot - Used to pass in media resources such as `<source>` and `<track>` elements.
  * @slot ui - Used to pass in the player user interface.
  * @csspart media - The video element (`<video>`).
  * @csspart video - Alias for `media` part.

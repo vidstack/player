@@ -15,7 +15,7 @@ import { audioElementStyles } from './styles';
  * iron out any browser issues.
  *
  * @tagname vds-audio
- * @slot Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
+ * @slot - Used to pass in `<source>`/`<track>` elements to the underlying HTML5 media player.
  * @csspart media - The audio element (`<audio>`).
  * @csspart audio - Alias for `media` part.
  * @example

@@ -28,7 +28,7 @@ import { mediaUiElementStyles } from './styles';
  * will be applied to prevent it from happening.
  *
  * @tagname vds-media-ui
- * @slot Used to pass in UI components.
+ * @slot - Used to pass in UI components.
  * @example
  * ```html
  * <vds-media-ui>

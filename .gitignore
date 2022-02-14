@@ -10,6 +10,9 @@ dist-*/
 .vitebook/.temp
 .vitebook/dist
 
+elements.json
+elements.html-data.json
+elements.css-data.json
 custom-elements.json
 vscode.html-data.json
 
@@ -46,7 +49,6 @@ speed-measure-plugin*.json
 .eslintcache
 .nyc_output/
 .idea/
-.vscode/
 .versions/
 node_modules/
 web_modules/

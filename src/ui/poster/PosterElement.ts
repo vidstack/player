@@ -20,7 +20,7 @@ const preconnected = new Set();
  * - `img-error`: When the poster image has failed to load.
  *
  * @tagname vds-poster
- * @csspart img
+ * @csspart img - The img element.
  * @example
  * ```html
  * <vds-media-ui>

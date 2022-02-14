@@ -22,6 +22,7 @@ export type ExitVisibilityMediaAction = 'pause' | 'mute';
  *
  * @tagname vds-media-visibility
  * @slot - Used to pass in content, typically a media player/provider.
+ * @events './media-visibility.events.ts'
  * @example
  * ```html
  * <vds-media-visibility

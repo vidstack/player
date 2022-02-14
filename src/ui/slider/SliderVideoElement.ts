@@ -29,7 +29,7 @@ import { sliderStoreContext } from './sliderStore';
  * needed.
  *
  * @tagname vds-slider-video
- * @csspart video
+ * @csspart video - The video element.
  * @example
  * ```html
  * <vds-time-slider>

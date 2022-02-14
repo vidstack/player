@@ -1,0 +1,14 @@
+import { VdsEvent } from '../../base/events';
+import { MediaVolumeChange } from '../events';
+
+export type MediaSyncEvents = {
+  'vds-media-volume-sync': MediaVolumeSyncEvent;
+};
+
+/**
+ * Fired when media volume has been synchronized.
+ *
+ * @bubbles
+ * @composed
+ */
+export type MediaVolumeSyncEvent = VdsEvent<MediaVolumeChange>;

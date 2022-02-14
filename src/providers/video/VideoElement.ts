@@ -25,9 +25,10 @@ import { videoElementStyles } from './styles';
  * iron out any browser issues.
  *
  * @tagname vds-video
- * @slot Used to pass in `<source>` and `<track>` elements to the underlying HTML5 media player.
+ * @slot - Used to pass in `<source>` and `<track>` elements to the underlying HTML5 media player.
  * @csspart media - The video element (`<video>`).
  * @csspart video - Alias for `media` part.
+ * @events './presentation/events.ts'
  * @example
  * ```html
  * <vds-video src="/media/video.mp4" poster="/media/poster.png">

@@ -67,7 +67,7 @@ export type MediaSrcObject = MediaStream | MediaSource | Blob | File;
  * used internally by the `vds-audio` and `vds-video` components. This provider only contains
  * glue code so don't bother using it on it's own.
  *
- * @slot Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
+ * @slot - Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
 export class Html5MediaElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------

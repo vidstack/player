@@ -52,9 +52,10 @@ const HLS_CDN_SRC_PROD = `${HLS_CDN_SRC_BASE}.min.js` as const;
  * native DOM interface (eg: `addEventListener('vds-hls-media-attaching', ...)`).
  *
  * @tagname vds-hls
- * @slot Used to pass in `<source>` and `<track>` elements to the underlying HTML5 media player.
+ * @slot - Used to pass in `<source>` and `<track>` elements to the underlying HTML5 media player.
  * @csspart media - The video element (`<video>`).
  * @csspart video - Alias for `media` part.
+ * @events './events.ts'
  * @example
  * ```html
  * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
@@ -78,6 +79,8 @@ export class HlsElement extends VideoElement {
 
   /**
    * The `hls.js` configuration object.
+   *
+   * @link https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning
    */
   @property({ type: Object, attribute: 'hls-config' })
   hlsConfig: Partial<HlsConfig | undefined> = {};

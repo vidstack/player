@@ -15,7 +15,7 @@ import { AudioElement } from '../../providers/audio';
  * @tagname vds-audio-player
  * @provider AudioElement
  * @engine [HTMLAudioElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement)
- * @slot Used to pass in media resources such as `<source>` and `<track>` elements.
+ * @slot - Used to pass in media resources such as `<source>` and `<track>` elements.
  * @slot ui - Used to pass in the player user interface.
  * @csspart media - The audio element (`<audio>`).
  * @csspart audio - Alias for `media` part.
