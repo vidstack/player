@@ -467,7 +467,7 @@ export class MediaController {
     'vds-loaded-metadata',
     (event) => {
       this._mediaEvents.push(event);
-      appendTriggerEvent(event, this._findLastMediaEvent('vds-loaded-data'));
+      appendTriggerEvent(event, this._findLastMediaEvent('vds-load-start'));
     }
   );
 
@@ -478,14 +478,12 @@ export class MediaController {
       this._mediaEvents.push(event);
 
       // Avoid infinite chain - `hls.js` will not fire `canplay` event.
-      appendTriggerEvent(
-        event,
-        this._findLastMediaEvent(
-          hasTriggerEvent(event, 'vds-loaded-metadata')
-            ? 'vds-loaded-metadata'
-            : 'vds-load-start'
-        )
-      );
+      if (event.triggerEvent?.type !== 'loadedmetadata') {
+        appendTriggerEvent(
+          event,
+          this._findLastMediaEvent('vds-loaded-metadata')
+        );
+      }
 
       this._mediaStore.canPlay.set(true);
       this._mediaStore.duration.set(event.detail.duration);
@@ -736,7 +734,6 @@ export class MediaController {
     'vds-waiting',
     (event) => {
       if (this._firingWaiting) return;
-      event.preventDefault();
       event.stopImmediatePropagation();
       this._originalWaitingEvent = event;
       this._fireWaiting();
