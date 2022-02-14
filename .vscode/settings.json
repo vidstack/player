@@ -1,4 +1,4 @@
 {
-  "html.customData": ["./elements.html-data.json"],
+  "html.customData": ["./vscode.html-data.json"],
   "css.customData": []
 }

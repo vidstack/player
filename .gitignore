@@ -11,10 +11,9 @@ dist-*/
 .vitebook/dist
 
 elements.json
-elements.html-data.json
-elements.css-data.json
-custom-elements.json
 vscode.html-data.json
+vscode.css-data.json
+custom-elements.json
 
 *~
 *.sw[mnpcod]

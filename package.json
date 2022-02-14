@@ -16,7 +16,7 @@
     "dist-cdn/",
     "define/",
     "types/",
-    "elements.html-data.json",
+    "vscode.html-data.json",
     "index.d.ts",
     "globals.d.ts"
   ],
@@ -40,7 +40,7 @@
       "default": "./dist-cdn/define/*"
     },
     "./package.json": "./package.json",
-    "./elements.html-data.json": "./elements.html-data.json"
+    "./vscode.html-data.json": "./vscode.html-data.json"
   },
   "contributors": [
     "Dave Furfero <furf@furf.com>",
@@ -65,7 +65,7 @@
     "build:definitions": "rimraf define && node .scripts/definitions.mjs",
     "build:all": "run-p analyze build:dev build:prod build:cdn && run-s build:types build:definitions",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "clean": "rimraf define dist dist-* types elements*.json",
+    "clean": "rimraf define dist dist-* types elements.json vscode.html-data.json",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
@@ -91,7 +91,7 @@
     "lit": "^2.1.1"
   },
   "devDependencies": {
-    "@celement/cli": "^0.0.4",
+    "@celement/cli": "^0.0.5",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.0.4",
     "@types/node": "^17.0.8",
