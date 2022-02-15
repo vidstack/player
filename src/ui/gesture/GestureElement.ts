@@ -62,7 +62,7 @@ export class GestureElement extends LitElement {
           z-index: 0;
           opacity: 0;
           visibility: hidden;
-          pointer-events: none;
+          pointer-events: none !important;
         }
 
         :host([hidden]) {
