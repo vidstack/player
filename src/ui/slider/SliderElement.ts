@@ -514,6 +514,16 @@ export class SliderElement extends LitElement {
     { target: document }
   );
 
+  protected readonly _handleDocumentTouchMove = eventListener(
+    this,
+    'touchmove',
+    (event) => {
+      if (this.disabled || !this.isDragging) return;
+      event.preventDefault();
+    },
+    { target: document, passive: false }
+  );
+
   protected readonly _handleDocumentPointerMove = eventListener(
     this,
     'pointermove',
