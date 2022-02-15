@@ -1,3 +1,16 @@
+## [0.10.2](https://github.com/vidstack/player/compare/v0.10.1...v0.10.2) (2022-02-15)
+
+### Bug Fixes
+
+- default to light version of `hls.js` ([33e5bd1](https://github.com/vidstack/player/commit/33e5bd1a875f94e00703c96ad17a2e6ea3b6476b))
+- process media requests earlier if possible ([5766a86](https://github.com/vidstack/player/commit/5766a861e1da41ab19d3a129ebd8a11e3838d732))
+- **ui/slider:** dragging on mobile not working - drags page ([3fc1258](https://github.com/vidstack/player/commit/3fc12584bae96a05daa6ee56727181bb598c04b4))
+- **ui/time-slider:** set better default steps that handles short media ([efc836f](https://github.com/vidstack/player/commit/efc836f6da21a5d4ece383c55ecf33c9046af0c9))
+
+### Features
+
+- tailwind plugin for media/slider attrs ([3e9b9de](https://github.com/vidstack/player/commit/3e9b9de07d440f0c7208c45b1488dab0eedff66d)), closes [#598](https://github.com/vidstack/player/issues/598)
+
 ## [0.10.1](https://github.com/vidstack/player/compare/v0.10.0...v0.10.1) (2022-02-15)
 
 ### Bug Fixes
