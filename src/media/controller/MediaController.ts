@@ -228,6 +228,7 @@ export class MediaController {
 
       if (this._mediaProvider) {
         await callback(event);
+        return;
       }
 
       this._mediaProviderConnectedQueue.queue(queueKey, async () => {
