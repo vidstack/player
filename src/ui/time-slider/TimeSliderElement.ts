@@ -50,6 +50,8 @@ export class TimeSliderElement extends SliderElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
+  protected override _step = 0.1;
+
   /**
    * Represents the current media playback time.
    *
