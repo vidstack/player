@@ -14,7 +14,7 @@ import type { MediaControllerEvents } from '../controller';
  * import { mediaEventListener } from '@vidstack/player';
  *
  * class MyElement extends LitElement {
- *   _handlePlay = mediaEventListener(this, (event) => {
+ *   _handlePlay = mediaEventListener(this, 'vds-play', (event) => {
  *     // ...
  *   })
  * }
