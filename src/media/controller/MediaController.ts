@@ -546,7 +546,7 @@ export class MediaController {
 
       this._mediaEvents.push(event);
 
-      appendTriggerEvent(event, this._findLastMediaEvent('waiting'));
+      appendTriggerEvent(event, this._findLastMediaEvent('vds-waiting'));
       appendTriggerEvent(
         event,
         this._findLastMediaEvent('vds-autoplay-attempt')
