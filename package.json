@@ -56,7 +56,7 @@
   },
   "scripts": {
     "analyze": "celement analyze \"src/**/*{events,Element}.ts\"",
-    "build:base": "node .scripts/build.mjs --entry=\"src/**/!(story-utils|test-utils|tests)/*.ts\"",
+    "build:base": "node .scripts/build.mjs --entry=\"src/index.ts,src/**/!(story-utils|test-utils|tests)/*.ts\"",
     "build:dev": "rimraf dist && npm run build:base -- --outdir=dist",
     "build:prod": "rimraf dist-prod && npm run build:base -- --outdir=dist-prod --prod",
     "build:cdn": "rimraf dist-cdn && node .scripts/build.mjs --entry=\"src/define/*.ts\" --outdir=dist-cdn --external=hls.js --bundle --prod",
