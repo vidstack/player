@@ -1,3 +1,10 @@
+## [0.10.1](https://github.com/vidstack/player/compare/v0.10.0...v0.10.1) (2022-02-15)
+
+### Bug Fixes
+
+- `vds-waiting` trigger event not added to `vds-play` event ([04c4c38](https://github.com/vidstack/player/commit/04c4c389cd6bdc3f2dd7b8e9cd23a3ba3aa276a0))
+- include `index.js` in `dist` ([fc370b6](https://github.com/vidstack/player/commit/fc370b61637066d9a7d0253f198579185c09bcde))
+
 # [0.10.0](https://github.com/vidstack/player/compare/v0.9.2...v0.10.0) (2022-02-14)
 
 ### Bug Fixes
