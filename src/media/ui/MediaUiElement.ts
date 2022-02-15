@@ -79,6 +79,7 @@ export class MediaUiElement extends LitElement {
       'autoplayError',
       'canLoad',
       'canPlay',
+      'canRequestFullscreen',
       'ended',
       'error',
       'fullscreen',
