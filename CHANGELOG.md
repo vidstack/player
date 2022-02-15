@@ -1,3 +1,9 @@
+## [0.10.3](https://github.com/vidstack/player/compare/v0.10.2...v0.10.3) (2022-02-15)
+
+### Bug Fixes
+
+- `<vds-media-ui>` blocks gestures ([a68fb19](https://github.com/vidstack/player/commit/a68fb1904274d9c9362d2cfe5b4223940d671179))
+
 ## [0.10.2](https://github.com/vidstack/player/compare/v0.10.1...v0.10.2) (2022-02-15)
 
 ### Bug Fixes
