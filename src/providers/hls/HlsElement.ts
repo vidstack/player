@@ -31,7 +31,8 @@ export const HLS_TYPES = new Set([
   'application/vnd.apple.mpegurl'
 ]);
 
-const HLS_CDN_SRC_BASE = 'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls';
+const HLS_CDN_SRC_BASE =
+  'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.light';
 const HLS_CDN_SRC_DEV = `${HLS_CDN_SRC_BASE}.js` as const;
 const HLS_CDN_SRC_PROD = `${HLS_CDN_SRC_BASE}.min.js` as const;
 
