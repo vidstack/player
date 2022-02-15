@@ -1,3 +1,9 @@
+## [0.10.4](https://github.com/vidstack/player/compare/v0.10.3...v0.10.4) (2022-02-15)
+
+### Bug Fixes
+
+- requests are executed twice on media controller handler ([976cbfa](https://github.com/vidstack/player/commit/976cbfa2e243e9f83e952e4af0b62c10a6fb7dee))
+
 ## [0.10.3](https://github.com/vidstack/player/compare/v0.10.2...v0.10.3) (2022-02-15)
 
 ### Bug Fixes
