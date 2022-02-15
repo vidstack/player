@@ -223,8 +223,13 @@ export class MediaController {
     queueKey: string,
     callback: (event: E) => void | Promise<void>
   ) {
-    return (event: E) => {
+    return async (event: E) => {
       if (!this._mediaRequestEventGateway(event)) return;
+
+      if (this._mediaProvider) {
+        await callback(event);
+      }
+
       this._mediaProviderConnectedQueue.queue(queueKey, async () => {
         await callback(event);
       });

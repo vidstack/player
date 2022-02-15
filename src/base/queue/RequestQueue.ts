@@ -34,8 +34,12 @@ export class RequestQueue {
   }
 
   async queue(key: string | symbol, callback: () => void | Promise<void>) {
+    if (this._isServing) {
+      await callback();
+      return;
+    }
+
     this._requestQueue.set(key, callback);
-    if (this._isServing) this.serve(key);
   }
 
   async serve(key: string | symbol) {
