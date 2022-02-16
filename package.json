@@ -192,6 +192,5 @@
   ],
   "volta": {
     "node": "16.13.2"
-  },
-  "customElements": "custom-elements.json"
+  }
 }
