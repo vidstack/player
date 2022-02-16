@@ -15,6 +15,7 @@
     "dist-prod/",
     "dist-cdn/",
     "define/",
+    "react/",
     "types/",
     "tailwind.cjs",
     "vscode.html-data.json",
@@ -40,6 +41,10 @@
     "./cdn/define/*": {
       "default": "./dist-cdn/define/*"
     },
+    "./react": {
+      "development": "./dist/react/index.js",
+      "default": "./dist-prod/react/index.js"
+    },
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
     "./vscode.html-data.json": "./vscode.html-data.json"
@@ -62,12 +67,12 @@
     "build:dev": "rimraf dist && npm run build:base -- --outdir=dist",
     "build:prod": "rimraf dist-prod && npm run build:base -- --outdir=dist-prod --prod",
     "build:cdn": "rimraf dist-cdn && node .scripts/build.mjs --entry=\"src/define/*.ts\" --outdir=dist-cdn --external=hls.js --bundle --prod",
-    "build:watch": "run-p \"build:dev -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
+    "build:watch": "run-s analyze && run-p \"build:dev -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
     "build:types": "rimraf types && tsc -p tsconfig-build.json",
     "build:definitions": "rimraf define && node .scripts/definitions.mjs",
-    "build:all": "run-p analyze build:dev build:prod build:cdn && run-s build:types build:definitions",
+    "build:all": "run-s analyze && run-p build:dev build:prod build:cdn && run-s build:types build:definitions",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "clean": "rimraf define dist dist-* types elements.json vscode.html-data.json coverage",
+    "clean": "rimraf define dist dist-* types elements.json vscode.html-data.json coverage react",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .ts . --ignore-path .gitignore",
     "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
@@ -93,10 +98,12 @@
     "lit": "^2.1.1"
   },
   "devDependencies": {
-    "@celement/cli": "^0.0.5",
+    "@celement/cli": "^0.0.6",
+    "@lit-labs/react": "^1.0.2",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.0.4",
     "@types/node": "^17.0.8",
+    "@types/react": "^17.0.39",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
     "@vitebook/client": "0.22.0",
@@ -130,6 +137,7 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.6",
     "prettier": "^2.2.1",
+    "react": "^17.0.2",
     "rimraf": "^3.0.2",
     "semver": "^7.3.5",
     "svelte": "^3.45.0",
@@ -184,5 +192,6 @@
   ],
   "volta": {
     "node": "16.13.2"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

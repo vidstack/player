@@ -7,7 +7,7 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.json'
   },
-  ignorePatterns: ['index.d.ts', 'globals.d.ts'],
+  ignorePatterns: ['index.d.ts', 'globals.d.ts', 'src/react/components/**'],
   plugins: ['simple-import-sort'],
   extends: [
     'plugin:wc/recommended',

@@ -3,26 +3,32 @@
 import {
   ComponentMeta,
   EventMeta,
-  jsonPlugin,
   litPlugin,
   type Plugin,
   vscodeHtmlDataPlugin
 } from '@celement/cli';
 import {
-  buildSourceMetaFromNode,
   getDocTags,
   getDocumentation,
   getPropTypeInfo,
   hasDocTag
 } from '@celement/cli/dist/utils/meta.js';
 import { escapeQuotes } from '@celement/cli/dist/utils/string.js';
+import { readFileSync } from 'fs';
+import prettier from 'prettier';
 import type { Identifier, TypeChecker } from 'typescript';
 import ts from 'typescript';
 import path from 'upath';
 
+const AUTO_GEN_COMMENT = '// [@celement/cli] AUTO GENERATED BELOW';
+
+const pkgContent = readFileSync(
+  path.resolve(process.cwd(), './package.json')
+).toString();
+const pkg: Record<string, any> = JSON.parse(pkgContent);
+
 export default [
   litPlugin(),
-  jsonPlugin(),
   vscodeHtmlDataPlugin({
     transformAttributeData(prop, data) {
       const refs = (data.references ??= []);
@@ -44,7 +50,8 @@ export default [
       return data;
     }
   }),
-  vdsEventsPlugin()
+  vdsEventsPlugin(),
+  vdsReactPlugin()
 ];
 
 /**
@@ -90,7 +97,10 @@ function vdsEventsPlugin(): Plugin {
       for (const component of components) {
         const events = component.docTags
           .filter((tag) => tag.name === 'events' && tag.text)
-          .map((tag) => [tag.source.filePath, escapeQuotes(tag.text!)]);
+          .map((tag) => [
+            path.resolve(tag.node.getSourceFile().fileName),
+            escapeQuotes(tag.text!)
+          ]);
 
         for (const [filePath, eventsPath] of events) {
           const eventsFilePath = path.resolve(
@@ -117,16 +127,28 @@ function vdsEventsPlugin(): Plugin {
           sourceFile?.forEachChild((node) => {
             if (
               ts.isTypeAliasDeclaration(node) &&
-              ts.isTypeLiteralNode(node.type)
+              (ts.isTypeLiteralNode(node.type) ||
+                ts.isIntersectionTypeNode(node.type))
             ) {
-              node.type.members.forEach((member) => {
+              const members = ts.isTypeLiteralNode(node.type)
+                ? node.type.members
+                : node.type.types.flatMap((t) => {
+                    if (ts.isTypeLiteralNode(t)) {
+                      return t.members ?? [];
+                    } else if (ts.isMappedTypeNode(t)) {
+                      return t.members ?? [];
+                    }
+
+                    return [];
+                  });
+
+              members.forEach((member) => {
                 if (ts.isPropertySignature(member)) {
                   const identifier = member.name as Identifier;
                   const symbol = checker.getSymbolAtLocation(identifier)!;
                   const type = checker.getTypeAtLocation(member);
                   const name = symbol.escapedName as string;
                   const isVdsEvent = name.startsWith('vds');
-                  const source = buildSourceMetaFromNode(member);
 
                   if (
                     !isVdsEvent ||
@@ -178,4 +200,109 @@ function vdsEventsPlugin(): Plugin {
       return components;
     }
   };
+}
+
+function vdsReactPlugin(): Plugin {
+  return {
+    name: '@vidstack/react',
+    async transform(components, utils) {
+      const INDEX_FILE = path.resolve(process.cwd(), 'src/react/index.ts');
+      const OUTPUT_DIR = path.resolve(process.cwd(), 'src/react/components');
+
+      const index: string[] = [];
+
+      for (const component of components) {
+        const { className, source } = component;
+
+        const displayName = className.replace('Element', '');
+        const relativePath = path.relative(OUTPUT_DIR, source.dirPath);
+
+        const events: string[] = [];
+        for (const event of component.events) {
+          const linkTags = event.docTags
+            .filter((tag) => tag.name === 'link')
+            .map((tag) => `@link ${tag.text}`)
+            .join('\n');
+
+          const docs = event.documentation
+            ? `/**\n${event.documentation}${
+                linkTags ? '\n\n' : ''
+              }${linkTags}\n*/\n`
+            : '';
+
+          const reactEventName = `on${kebabToPascalCase(
+            event.name.replace(/^vds-/, '')
+          )}`;
+
+          events.push(`${docs}${reactEventName}: '${event.name}',`);
+        }
+
+        const fileContent = `
+          // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE \`celement.config.ts\`
+
+          import '../../define/${component.tagName}.ts';
+          import * as React from 'react';
+          import { createComponent } from '@lit-labs/react';
+          import { ${component.className} } from '${relativePath}';
+
+          const EVENTS = {${events.join('\n')}} as const
+
+          export default createComponent(
+            React,
+            '${component.tagName}',
+            ${component.className},
+            EVENTS,
+            '${displayName}'
+          );
+        `;
+
+        const outputFileName = displayName;
+        const outputPath = path.resolve(OUTPUT_DIR, `${outputFileName}.ts`);
+
+        utils.writeFileSync(
+          outputPath,
+          prettier.format(fileContent, {
+            filepath: outputPath,
+            ...pkg.prettier
+          })
+        );
+
+        index.push(
+          `export { default as ${displayName} } from './components/${outputFileName}';`
+        );
+      }
+
+      const indexFileContent = utils.readFileSync(INDEX_FILE).toString();
+
+      utils.writeFileSync(
+        INDEX_FILE,
+        [getUserContent(indexFileContent), AUTO_GEN_COMMENT, '', ...index].join(
+          '\n'
+        )
+      );
+
+      const rootReactDir = path.resolve(process.cwd(), 'react');
+
+      if (!utils.existsSync(rootReactDir)) {
+        utils.mkdirSync(rootReactDir);
+      }
+
+      utils.writeFileSync(
+        path.resolve(rootReactDir, 'index.js'),
+        "// This file only exists so it's easier for you to autocomplete the file path in your IDE."
+      );
+      utils.writeFileSync(
+        path.resolve(rootReactDir, 'index.d.ts'),
+        "export * from '../types/react';"
+      );
+    }
+  };
+}
+
+function kebabToPascalCase(str: string) {
+  return str.replace(/(^\w|-\w)/g, (t) => t.replace(/-/, '').toUpperCase());
+}
+
+function getUserContent(content: string) {
+  return content.substring(0, content.indexOf(`\n${AUTO_GEN_COMMENT}`));
 }

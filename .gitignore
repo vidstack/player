@@ -2,6 +2,7 @@ dist/
 dist-*/
 /bundle/
 /types/
+/react/
 /define/
 /scratchpad/
 /sandbox/

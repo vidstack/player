@@ -26,6 +26,7 @@
     "dist",
     "dist-*",
     "types",
+    "react",
     "define",
     "globals.d.ts",
     "index.d.ts"
