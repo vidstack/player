@@ -4,8 +4,8 @@ import { DisposalBin, listen } from '../../base/events';
 import type { MediaControllerEvents } from '../controller';
 
 /**
- * Simplifies attaching event listeners to a media controller below in the DOM.
- * Listens for a connect event from the media controller and then attaches event listeners
+ * Simplifies attaching event listeners to a media provider below in the DOM.
+ * Listens for a connect event from the media provider and then attaches event listeners
  * directly on it. This is required because media events don't bubble by default.
  *
  * @example
@@ -32,11 +32,11 @@ export function mediaEventListener<
   host.addController({
     hostConnected: () => {
       disposal.add(
-        listen(host, 'vds-media-controller-connect', (event) => {
-          const { element: mediaController, onDisconnect } = event.detail;
+        listen(host, 'vds-media-provider-connect', (event) => {
+          const { element: mediaProvider, onDisconnect } = event.detail;
 
           // @ts-expect-error - ?
-          const off = listen(mediaController, eventType, listener);
+          const off = listen(mediaProvider, eventType, listener);
           disposal.add(off);
           onDisconnect(() => {
             off?.();

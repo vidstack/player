@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/player",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "Headless web components that make integrating media on the a web a breeze.",
   "license": "MIT",
   "type": "module",
@@ -99,7 +99,6 @@
   },
   "devDependencies": {
     "@celement/cli": "^0.0.6",
-    "@lit-labs/react": "^1.0.2",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.0.4",
     "@types/node": "^17.0.8",

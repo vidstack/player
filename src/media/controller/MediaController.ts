@@ -6,7 +6,6 @@ import {
   appendTriggerEvent,
   DisposalBin,
   eventListener,
-  hasTriggerEvent,
   vdsEvent
 } from '../../base/events';
 import { LogController, LogDispatcher } from '../../base/logger';

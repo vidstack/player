@@ -1,4 +1,4 @@
-import '../../../define/vds-media-controller';
+import '../../../define/vds-fake-media-provider';
 
 import { LitElement } from 'lit';
 
@@ -20,16 +20,16 @@ test('it should listen to media events', async function () {
 
   window.document.body.append(listener);
 
-  const controller = document.createElement('vds-media-controller');
+  const provider = document.createElement('vds-fake-media-provider');
   setTimeout(() => {
-    listener.append(controller);
+    listener.append(provider);
   }, 0);
 
-  await waitForEvent(listener, 'vds-media-controller-connect');
+  await waitForEvent(listener, 'vds-media-provider-connect');
 
   const pauseEvent = vdsEvent('vds-pause');
 
-  controller.dispatchEvent(pauseEvent);
+  provider.dispatchEvent(pauseEvent);
 
   expect(listener.pauseListener).toHaveBeenCalledOnce();
   expect(listener.pauseListener).toHaveBeenCalledWith(pauseEvent);
@@ -48,25 +48,25 @@ test('it should stop listening to media events when listener disconnects', async
   expect(listener.pauseListener).toHaveBeenCalledTimes(0);
 });
 
-test('it should stop listening to media events when controller disconnects', async function () {
+test('it should stop listening to media events when provider disconnects', async function () {
   const listener = document.createElement(
     'media-listener'
   ) as MediaListenerElement;
 
   window.document.body.append(listener);
 
-  const controller = document.createElement('vds-media-controller');
+  const provider = document.createElement('vds-fake-media-provider');
   setTimeout(() => {
-    listener.append(controller);
+    listener.append(provider);
   }, 0);
 
-  await waitForEvent(listener, 'vds-media-controller-connect');
+  await waitForEvent(listener, 'vds-media-provider-connect');
 
-  controller.remove();
+  provider.remove();
 
   const pauseEvent = vdsEvent('vds-pause');
 
-  controller.dispatchEvent(pauseEvent);
+  provider.dispatchEvent(pauseEvent);
 
   expect(listener.pauseListener).toHaveBeenCalledTimes(0);
 });
