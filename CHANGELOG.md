@@ -1,3 +1,14 @@
+## [0.10.6](https://github.com/vidstack/player/compare/v0.10.4...v0.10.6) (2022-02-17)
+
+### Bug Fixes
+
+- `mediaEventListener` waiting for wrong connect event ([9c4b3d3](https://github.com/vidstack/player/commit/9c4b3d38e2458921493dae6070becc0315b1b61c))
+- **react:** better event types inference + component docs ([08d24b9](https://github.com/vidstack/player/commit/08d24b99915525c6da08cd48dc96dfff1e74abaa))
+
+### Features
+
+- react support 🎉 ([6dec35a](https://github.com/vidstack/player/commit/6dec35ac13cac220bf84bcb78a24f2feb1214da9)), closes [#585](https://github.com/vidstack/player/issues/585)
+
 ## [0.10.4](https://github.com/vidstack/player/compare/v0.10.3...v0.10.4) (2022-02-15)
 
 ### Bug Fixes
