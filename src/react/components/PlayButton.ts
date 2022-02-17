@@ -2,15 +2,22 @@
 
 import '../../define/vds-play-button.ts';
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from './createComponent';
 import { PlayButtonElement } from '../../ui/play-button';
 
 const EVENTS = {} as const;
 
-export default createComponent(
+/** A button for toggling the playback state (play/pause) of the current media.
+
+💡 The following media attributes are applied:
+
+- `media-paused`: Applied when media playback has paused. */
+const PlayButton = createComponent(
   React,
   'vds-play-button',
   PlayButtonElement,
   EVENTS,
   'PlayButton'
 );
+
+export default PlayButton;

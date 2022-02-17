@@ -2,7 +2,7 @@
 
 import '../../define/vds-video.ts';
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from './createComponent';
 import { VideoElement } from '../../providers/video';
 
 const EVENTS = {
@@ -322,10 +322,24 @@ Fired when playback has stopped because of a temporary lack of data.
   onWaiting: 'vds-waiting'
 } as const;
 
-export default createComponent(
+/** Embeds video content into documents via the native `<video>` element. It may contain
+one or more video sources, represented using the `src` attribute or the `<source>` element: the
+browser will choose the most suitable one.
+
+The list of [supported media formats](https://developer.mozilla.org/en-US/docs/Web/Media/Formats)
+varies from one browser to the other. You should either provide your video in a single format
+that all the relevant browsers support, or provide multiple video sources in enough different
+formats that all the browsers you need to support are covered.
+
+💡 This element contains the exact same interface as the `<video>` element. It redispatches
+all the native events if needed, but prefer the `vds-*` variants (eg: `vds-play`) as they
+iron out any browser issues. */
+const Video = createComponent(
   React,
   'vds-video',
   VideoElement,
   EVENTS,
   'Video'
 );
+
+export default Video;

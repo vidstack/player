@@ -2,7 +2,7 @@
 
 import '../../define/vds-audio-player.ts';
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from './createComponent';
 import { AudioPlayerElement } from '../../players/audio';
 
 const EVENTS = {
@@ -318,10 +318,19 @@ Fired when playback has stopped because of a temporary lack of data.
   onWaiting: 'vds-waiting'
 } as const;
 
-export default createComponent(
+/** Used to embed sound content into documents via the native `<audio>` element. It may contain
+one or more audio sources, represented using the `src` attribute or the `<source>` element: the
+browser will choose the most suitable one.
+
+💡 This element contains the exact same interface as the `<audio>` element. It redispatches
+all the native events if needed, but prefer the `vds-*` variants (eg: `vds-play`) as they
+iron out any browser issues. */
+const AudioPlayer = createComponent(
   React,
   'vds-audio-player',
   AudioPlayerElement,
   EVENTS,
   'AudioPlayer'
 );
+
+export default AudioPlayer;

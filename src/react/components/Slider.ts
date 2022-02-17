@@ -2,7 +2,7 @@
 
 import '../../define/vds-slider.ts';
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from './createComponent';
 import { SliderElement } from '../../ui/slider';
 
 const EVENTS = {
@@ -32,10 +32,21 @@ Fired when the slider value changes. The event detail contains the current value
   onSliderValueChange: 'vds-slider-value-change'
 } as const;
 
-export default createComponent(
+/** A custom built `input[type="range"]` that is cross-browser friendly, ARIA friendly, mouse/touch
+friendly and easily stylable. This component allows users to input numeric values between a
+minimum and maximum value.
+
+💡 The following attributes are also available on the host element:
+
+- `pointing`: Whether a device pointer is within the slider bounds.
+- `dragging`: Whether the slider thumb is currently being dragged.
+- `interactive`: When either `pointing` or `dragging` is true. */
+const Slider = createComponent(
   React,
   'vds-slider',
   SliderElement,
   EVENTS,
   'Slider'
 );
+
+export default Slider;

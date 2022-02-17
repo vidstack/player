@@ -242,18 +242,21 @@ function vdsReactPlugin(): Plugin {
 
           import '../../define/${component.tagName}.ts';
           import * as React from 'react';
-          import { createComponent } from '@lit-labs/react';
+          import { createComponent } from './createComponent';
           import { ${component.className} } from '${relativePath}';
 
           const EVENTS = {${events.join('\n')}} as const
 
-          export default createComponent(
+          /** ${component.documentation} */
+          const ${displayName} = createComponent(
             React,
             '${component.tagName}',
             ${component.className},
             EVENTS,
             '${displayName}'
           );
+
+          export default ${displayName};
         `;
 
         const outputFileName = displayName;

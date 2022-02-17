@@ -2,15 +2,18 @@
 
 import '../../define/vds-slider-value-text.ts';
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from './createComponent';
 import { SliderValueTextElement } from '../../ui/slider';
 
 const EVENTS = {} as const;
 
-export default createComponent(
+/** Outputs the current slider value as text. */
+const SliderValueText = createComponent(
   React,
   'vds-slider-value-text',
   SliderValueTextElement,
   EVENTS,
   'SliderValueText'
 );
+
+export default SliderValueText;

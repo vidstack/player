@@ -2,7 +2,7 @@
 
 import '../../define/vds-time-slider.ts';
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from './createComponent';
 import { TimeSliderElement } from '../../ui/time-slider';
 
 const EVENTS = {
@@ -32,10 +32,13 @@ Fired when the slider value changes. The event detail contains the current value
   onSliderValueChange: 'vds-slider-value-change'
 } as const;
 
-export default createComponent(
+/** A slider that lets the user control the current media playback time. */
+const TimeSlider = createComponent(
   React,
   'vds-time-slider',
   TimeSliderElement,
   EVENTS,
   'TimeSlider'
 );
+
+export default TimeSlider;

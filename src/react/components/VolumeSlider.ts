@@ -2,7 +2,7 @@
 
 import '../../define/vds-volume-slider.ts';
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from './createComponent';
 import { VolumeSliderElement } from '../../ui/volume-slider';
 
 const EVENTS = {
@@ -32,10 +32,13 @@ Fired when the slider value changes. The event detail contains the current value
   onSliderValueChange: 'vds-slider-value-change'
 } as const;
 
-export default createComponent(
+/** A slider control that lets the user specify their desired volume level. */
+const VolumeSlider = createComponent(
   React,
   'vds-volume-slider',
   VolumeSliderElement,
   EVENTS,
   'VolumeSlider'
 );
+
+export default VolumeSlider;

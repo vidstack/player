@@ -2,15 +2,22 @@
 
 import '../../define/vds-mute-button.ts';
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from './createComponent';
 import { MuteButtonElement } from '../../ui/mute-button';
 
 const EVENTS = {} as const;
 
-export default createComponent(
+/** A button for toggling the muted state of the player.
+
+💡 The following media attributes are applied:
+
+- `media-muted`: Applied when media audio has been muted. */
+const MuteButton = createComponent(
   React,
   'vds-mute-button',
   MuteButtonElement,
   EVENTS,
   'MuteButton'
 );
+
+export default MuteButton;

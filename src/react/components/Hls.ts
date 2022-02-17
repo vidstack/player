@@ -2,7 +2,7 @@
 
 import '../../define/vds-hls.ts';
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from './createComponent';
 import { HlsElement } from '../../providers/hls';
 
 const EVENTS = {
@@ -559,4 +559,20 @@ Fired when playback has stopped because of a temporary lack of data.
   onWaiting: 'vds-waiting'
 } as const;
 
-export default createComponent(React, 'vds-hls', HlsElement, EVENTS, 'Hls');
+/** Embeds video content into documents via the native `<video>` element. It may contain
+one or more video sources, represented using the `src` attribute or the `<source>` element: the
+browser will choose the most suitable one.
+
+In addition, this element introduces support for HLS streaming via the popular `hls.js` library.
+HLS streaming is either [supported natively](https://caniuse.com/?search=hls) (generally
+on iOS), or in environments that [support the Media Stream API](https://caniuse.com/?search=mediastream).
+
+💡 This element contains the exact same interface as the `<video>` element. It re-dispatches
+all the native events if needed, but prefer the `vds-*` variants (eg: `vds-play`) as they
+iron out any browser issues. It also dispatches all the `hls.js` events.
+
+💡 This element re-dispatches all `hls.js` events so you can listen for them through the
+native DOM interface (eg: `addEventListener('vds-hls-media-attaching', ...)`). */
+const Hls = createComponent(React, 'vds-hls', HlsElement, EVENTS, 'Hls');
+
+export default Hls;
