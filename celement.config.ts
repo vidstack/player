@@ -279,9 +279,13 @@ function vdsReactPlugin(): Plugin {
 
       utils.writeFileSync(
         INDEX_FILE,
-        [getUserContent(indexFileContent), AUTO_GEN_COMMENT, '', ...index].join(
-          '\n'
-        )
+        [
+          getUserContent(indexFileContent),
+          AUTO_GEN_COMMENT,
+          '',
+          ...index,
+          ''
+        ].join('\n')
       );
 
       const rootReactDir = path.resolve(process.cwd(), 'react');

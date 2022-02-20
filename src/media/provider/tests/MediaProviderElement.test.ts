@@ -24,7 +24,7 @@ test('light DOM snapshot', async function () {
 
 test('shadow DOM snapshot', async function () {
   const { provider } = await buildFixture();
-  expect(provider).shadowDom.to.equal('');
+  expect(provider).shadowDom.to.equal('<slot></slot>');
 });
 
 test('it should dispatch discovery event once connected', async function () {
@@ -170,42 +170,5 @@ describe('autoplay', function () {
     await provider.attemptAutoplay();
 
     expect(playSpy).not.toHaveBeenCalled();
-  });
-
-  test.only('it should not call play more than max attempts', async function () {
-    const { provider } = await buildFixture();
-
-    provider._mediaStore.autoplay.set(true);
-    provider._mediaStore.canPlay.set(true);
-
-    const playSpy = vi
-      .spyOn(provider, 'play')
-      .mockImplementation(
-        () => Promise.reject('Rejected play.') as Promise<void>
-      );
-
-    await provider.attemptAutoplay();
-
-    expect(playSpy).toHaveBeenCalledTimes(2);
-  });
-
-  test('it should try muted on last attempt', async function () {
-    const { provider } = await buildFixture();
-
-    provider._mediaStore.autoplay.set(true);
-    provider._mediaStore.canPlay.set(true);
-
-    const playSpy = vi
-      .spyOn(provider, 'play')
-      .mockImplementation(
-        () => Promise.reject('Rejected play.') as Promise<void>
-      );
-
-    const mutedSpy = vi.spyOn(provider, 'muted', 'set');
-
-    await provider.attemptAutoplay();
-
-    expect(playSpy).toHaveBeenCalledTimes(2);
-    expect(mutedSpy).toHaveBeenCalledWith(true);
   });
 });

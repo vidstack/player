@@ -22,7 +22,6 @@ import { ViewType } from './ViewType';
 
 export type MediaEvents = {
   'vds-abort': MediaAbortEvent;
-  'vds-autoplay-attempt': MediaAutoplayAttemptEvent;
   'vds-autoplay-change': MediaAutoplayChangeEvent;
   'vds-autoplay-fail': MediaAutoplayFailEvent;
   'vds-autoplay': MediaAutoplayEvent;
@@ -78,15 +77,6 @@ export type VdsMediaEvent<DetailType = unknown> = VdsEvent<DetailType> & {
 export type MediaAbortEvent = VdsMediaEvent<void>;
 
 /**
- * Fired when an autoplay attempt is about to be made. The event detail contains the
- * attempt count, and whether media is `muted` for this attempt.
- */
-export type MediaAutoplayAttemptEvent = VdsMediaEvent<{
-  attempt: number;
-  muted: boolean;
-}>;
-
-/**
  * Fired when the `autoplay` property has changed value.
  *
  * @event
@@ -99,11 +89,14 @@ export type MediaAutoplayChangeEvent = VdsMediaEvent<boolean>;
  *
  * @event
  */
-export type MediaAutoplayFailEvent = VdsMediaEvent<unknown>;
+export type MediaAutoplayFailEvent = VdsMediaEvent<{
+  muted: boolean;
+  error: Error;
+}>;
 
 /**
- * Fired when autoplay attempts are about to start. The event detail whether media is `muted`
- * before any attempts are made.
+ * Fired when an autoplay attempt has successfully been made (ie: media playback has automatically
+ * started). The event detail whether media is `muted` before any attempts are made.
  *
  * @event
  */

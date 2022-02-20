@@ -13,15 +13,10 @@ Fired when the resource was not fully loaded, but not as the result of an error.
 */
   onAbort: 'vds-abort',
   /**
-Fired when autoplay attempts are about to start. The event detail whether media is `muted`
-before any attempts are made.
+Fired when an autoplay attempt has successfully been made (ie: media playback has automatically
+started). The event detail whether media is `muted` before any attempts are made.
 */
   onAutoplay: 'vds-autoplay',
-  /**
-Fired when an autoplay attempt is about to be made. The event detail contains the
-attempt count, and whether media is `muted` for this attempt.
-*/
-  onAutoplayAttempt: 'vds-autoplay-attempt',
   /**
 Fired when the `autoplay` property has changed value.
 */

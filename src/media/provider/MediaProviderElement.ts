@@ -714,68 +714,38 @@ export abstract class MediaProviderElement extends LitElement {
         .dispatch();
     }
 
-    this._autoplayRetryCount = 0;
-    this._autoplayAttemptPending = true;
-
-    if (this.willAttemptAutoplay) {
-      this.dispatchEvent(
-        vdsEvent('vds-autoplay', { detail: { muted: this.muted } })
-      );
-
-      await this.attemptAutoplay();
-    }
-
-    this._autoplayAttemptPending = false;
+    await this.attemptAutoplay();
   }
 
-  protected _autoplayRetryCount = 0;
-  protected _maxAutoplayRetries = 2;
-  protected _shouldMuteLastAutoplayAttempt = true;
   protected _autoplayAttemptPending = false;
 
-  get willAttemptAutoplay() {
-    return (
-      this.autoplay &&
-      !this.started &&
-      this._autoplayRetryCount < this._maxAutoplayRetries
-    );
+  get canAttemptAutoplay() {
+    return this.autoplay && !this.started;
   }
 
   async attemptAutoplay(): Promise<void> {
-    if (!this.canPlay || !this.willAttemptAutoplay) {
-      return;
-    }
+    if (!this.canPlay || !this.canAttemptAutoplay) return;
 
-    // On last attempt try muted.
-    const shouldTryMuted =
-      !this.muted &&
-      this._shouldMuteLastAutoplayAttempt &&
-      this._autoplayRetryCount === this._maxAutoplayRetries - 1;
-
-    let didAttemptSucceed = false;
+    this._autoplayAttemptPending = true;
 
     try {
-      if (shouldTryMuted) this.muted = true;
-
+      await this.play();
       this.dispatchEvent(
-        vdsEvent('vds-autoplay-attempt', {
-          detail: { attempt: this._autoplayRetryCount, muted: shouldTryMuted }
+        vdsEvent('vds-autoplay', { detail: { muted: this.muted } })
+      );
+    } catch (error) {
+      this.dispatchEvent(
+        vdsEvent('vds-autoplay-fail', {
+          detail: {
+            muted: this.muted,
+            error: error as Error
+          }
         })
       );
-
-      await this.play();
-      didAttemptSucceed = true;
-    } catch (error) {
-      if (this._autoplayRetryCount === this._maxAutoplayRetries - 1) {
-        this.dispatchEvent(vdsEvent('vds-autoplay-fail', { detail: error }));
-        this.requestUpdate();
-      }
+      this.requestUpdate();
     }
 
-    if (!didAttemptSucceed) {
-      this._autoplayRetryCount += 1;
-      return this.attemptAutoplay();
-    }
+    this._autoplayAttemptPending = false;
   }
 
   protected _shouldSkipNextSrcChangeReset = true;

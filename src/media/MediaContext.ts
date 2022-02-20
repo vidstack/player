@@ -24,7 +24,7 @@ export type MediaContext = {
    *
    * @default undefined
    */
-  autoplayError: unknown;
+  autoplayError: { muted: boolean; error: Error } | undefined;
   /**
    * Returns a `TimeRanges` object that indicates the ranges of the media source that the
    * browser has buffered (if any) at the moment the buffered property is accessed. This is usually

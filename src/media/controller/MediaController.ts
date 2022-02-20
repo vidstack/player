@@ -508,21 +508,8 @@ export class MediaController {
     'vds-autoplay',
     (event) => {
       this._mediaEvents.push(event);
+      appendTriggerEvent(event, this._findLastMediaEvent('vds-play'));
       appendTriggerEvent(event, this._findLastMediaEvent('vds-can-play'));
-      this._mediaStore.autoplayError.set(undefined);
-    }
-  );
-
-  protected readonly _handleAutoplayAttempt = eventListener(
-    this._host,
-    'vds-autoplay-attempt',
-    (event) => {
-      this._mediaEvents.push(event);
-      const prevAttempt = this._findLastMediaEvent('vds-autoplay-attempt');
-      appendTriggerEvent(
-        event,
-        prevAttempt ?? this._findLastMediaEvent('vds-autoplay')
-      );
       this._mediaStore.autoplayError.set(undefined);
     }
   );
@@ -531,10 +518,8 @@ export class MediaController {
     this._host,
     'vds-autoplay-fail',
     (event) => {
-      appendTriggerEvent(
-        event,
-        this._findLastMediaEvent('vds-autoplay-attempt')
-      );
+      appendTriggerEvent(event, this._findLastMediaEvent('vds-play-fail'));
+      appendTriggerEvent(event, this._findLastMediaEvent('vds-can-play'));
       this._mediaStore.autoplayError.set(event.detail);
       this._clearMediaStateTracking();
     }
@@ -552,14 +537,11 @@ export class MediaController {
       this._mediaEvents.push(event);
 
       appendTriggerEvent(event, this._findLastMediaEvent('vds-waiting'));
-      appendTriggerEvent(
-        event,
-        this._findLastMediaEvent('vds-autoplay-attempt')
-      );
 
       this._satisfyMediaRequest('play', event);
 
       this._mediaStore.paused.set(false);
+      this._mediaStore.autoplayError.set(undefined);
 
       if (this._mediaProvider?.ended || this._isReplay) {
         this._isReplay = false;
