@@ -29,7 +29,7 @@ export function createMediaStore(): WritableMediaStoreRecord {
     bufferedAmount: writable(0),
     canLoad: writable(false),
     canPlay: writable(false),
-    canRequestFullscreen: writable(false),
+    canFullscreen: writable(false),
     controls: writable(false),
     currentPoster: writable(''),
     currentSrc: writable(''),

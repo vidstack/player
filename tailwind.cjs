@@ -7,7 +7,7 @@ const mediaAttrs = [
   'duration',
   'can-load',
   'can-play',
-  'can-request-fullscreen',
+  'can-fullscreen',
   'ended',
   'error',
   'fullscreen',

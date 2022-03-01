@@ -74,7 +74,7 @@ export type MediaContext = {
    * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
    */
-  canRequestFullscreen: boolean;
+  canFullscreen: boolean;
   /**
    * Indicates whether a user interface should be shown for controlling the resource. Set this to
    * `false` when you want to provide your own custom controls, and `true` if you want the current

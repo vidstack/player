@@ -39,7 +39,7 @@ it('should create media variants', async () => {
     *[media-can-play] .media-can-play\\\\:opacity-100 {
         opacity: 1
     }
-    *[media-can-request-fullscreen] .media-can-request-fullscreen\\\\:opacity-100 {
+    *[media-can-fullscreen] .media-can-fullscreen\\\\:opacity-100 {
         opacity: 1
     }
     *[media-ended] .media-ended\\\\:opacity-100 {

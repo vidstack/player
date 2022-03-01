@@ -114,7 +114,7 @@ export abstract class MediaProviderElement extends LitElement {
 
     this.dispatchEvent(
       vdsEvent('vds-fullscreen-support-change', {
-        detail: this.canRequestFullscreen
+        detail: this.canFullscreen
       })
     );
 
@@ -879,7 +879,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
    */
-  get canRequestFullscreen(): boolean {
+  get canFullscreen(): boolean {
     return this.fullscreenController.isSupported;
   }
 

@@ -32,11 +32,11 @@ test('shadow DOM snapshot', async function () {
 test('it should update `hidden` attribute based on fullscreen support', async () => {
   const { player, button } = await buildFixture();
 
-  player._mediaStore.canRequestFullscreen.set(true);
+  player._mediaStore.canFullscreen.set(true);
   await elementUpdated(button);
   expect(button.hasAttribute('hidden')).to.be.false;
 
-  player._mediaStore.canRequestFullscreen.set(false);
+  player._mediaStore.canFullscreen.set(false);
   await elementUpdated(button);
   expect(button.hasAttribute('hidden')).to.be.true;
 });

@@ -43,13 +43,9 @@ export class FullscreenButtonElement extends ToggleButtonElement {
       this.pressed = $fullscreen;
       setAttribute(this, 'media-fullscreen', $fullscreen);
     });
-    mediaStoreSubscription(
-      this,
-      'canRequestFullscreen',
-      ($canRequestFullscreen) => {
-        setAttribute(this, 'hidden', !$canRequestFullscreen);
-      }
-    );
+    mediaStoreSubscription(this, 'canFullscreen', ($canFullscreen) => {
+      setAttribute(this, 'hidden', !$canFullscreen);
+    });
   }
 
   override connectedCallback(): void {

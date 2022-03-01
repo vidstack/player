@@ -22,13 +22,13 @@
 
   let canPlay = true;
   let fullscreen = false;
-  let canRequestFullscreen = true;
+  let canFullscreen = true;
 </script>
 
 <vds-fake-media-provider
   emulate-canplay={canPlay}
   emulate-fullscreen={fullscreen}
-  emulate-canrequestfullscreen={canRequestFullscreen}
+  emulate-canfullscreen={canFullscreen}
   on:vds-fullscreen-change={(e) => {
     fullscreen = e.detail;
   }}
@@ -55,7 +55,7 @@
 
   <label>
     Emulate Can Request Fullscreen
-    <input type="checkbox" bind:checked={canRequestFullscreen} />
+    <input type="checkbox" bind:checked={canFullscreen} />
   </label>
 </ControlsAddon>
 

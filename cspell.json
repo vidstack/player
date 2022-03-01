@@ -15,7 +15,7 @@
     "builtins",
     "canplay",
     "canplaythrough",
-    "canrequestfullscreen",
+    "canfullscreen",
     "chromecast",
     "contenteditable",
     "controlslist",

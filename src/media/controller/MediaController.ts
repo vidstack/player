@@ -765,7 +765,7 @@ export class MediaController {
     this._host,
     'vds-fullscreen-support-change',
     (event) => {
-      this._mediaStore.canRequestFullscreen.set(event.detail);
+      this._mediaStore.canFullscreen.set(event.detail);
     }
   );
 
@@ -845,7 +845,7 @@ export class MediaController {
       const dontReset = new Set<keyof WritableMediaStoreRecord>([
         'currentSrc',
         'autoplay',
-        'canRequestFullscreen',
+        'canFullscreen',
         'controls',
         'canLoad',
         'loop',
