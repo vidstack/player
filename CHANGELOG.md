@@ -1,3 +1,15 @@
+# [0.11.0](https://github.com/vidstack/player/compare/v0.10.6...v0.11.0) (2022-03-01)
+
+### Bug Fixes
+
+- refactor autoplay logic and remove unintended side-effects ([d7065f1](https://github.com/vidstack/player/commit/d7065f1dcfa8b0c62308d4045cd4decef340cc64))
+- remove `.ts` extension when importing custom elements into react wrapper ([18e6eb0](https://github.com/vidstack/player/commit/18e6eb0a2aa14d27f1fa06a58e39859e92def0fd))
+- rename `canRequestFullscreen` -> `canFullscreen` ([253f472](https://github.com/vidstack/player/commit/253f472d9728ad90a66c6fce0b2c0f44920ea825))
+
+### Features
+
+- register `<vds-media-ui>` when registering player elements ([0380357](https://github.com/vidstack/player/commit/0380357ad04890b625064511872d03d635e09cba))
+
 ## [0.10.6](https://github.com/vidstack/player/compare/v0.10.4...v0.10.6) (2022-02-17)
 
 ### Bug Fixes
