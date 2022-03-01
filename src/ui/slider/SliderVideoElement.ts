@@ -12,7 +12,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { ifNonEmpty } from '../../base/directives';
 import { redispatchEvent } from '../../base/events';
 import { storeRecordSubscription } from '../../base/stores';
-import { sliderStoreContext } from './sliderStore';
+import { sliderStoreContext } from './store';
 
 /**
  * Used to load a low-resolution video to be displayed when the user is hovering or dragging

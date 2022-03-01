@@ -23,7 +23,7 @@ import {
   round
 } from '../../utils/number';
 import { rafThrottle } from '../../utils/timing';
-import { sliderStoreContext } from './sliderStore';
+import { sliderStoreContext } from './store';
 import { sliderElementStyles } from './styles';
 
 /**

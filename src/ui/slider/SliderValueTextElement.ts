@@ -5,7 +5,7 @@ import { DisposalBin } from '../../base/events';
 import { derived, ReadableStore } from '../../base/stores';
 import { round } from '../../utils/number';
 import { formatTime } from '../../utils/time';
-import { sliderStoreContext } from './sliderStore';
+import { sliderStoreContext } from './store';
 
 /**
  * Outputs the current slider value as text.
