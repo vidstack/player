@@ -1,3 +1,5 @@
+import './vds-media-ui';
+
 import { VideoPlayerElement } from '../players/video/VideoPlayerElement';
 import { safelyDefineCustomElement } from '../utils/dom';
 

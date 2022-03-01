@@ -1,3 +1,5 @@
+import './vds-media-ui';
+
 import { HlsPlayerElement } from '../players/hls/HlsPlayerElement';
 import { safelyDefineCustomElement } from '../utils/dom';
 

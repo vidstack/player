@@ -1,3 +1,5 @@
+import './vds-media-ui';
+
 import { FakeMediaPlayerElement } from '../media/test-utils/fake-media-player/FakeMediaPlayerElement';
 import { safelyDefineCustomElement } from '../utils/dom';
 

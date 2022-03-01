@@ -1,3 +1,5 @@
+import './vds-media-ui';
+
 import { AudioPlayerElement } from '../players/audio/AudioPlayerElement';
 import { safelyDefineCustomElement } from '../utils/dom';
 
