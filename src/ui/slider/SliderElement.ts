@@ -53,7 +53,7 @@ export enum SliderKeyDirection {
  *
  * @tagname vds-slider
  * @slot - Used to pass in additional content inside the slider.
- * @cssprop --vds-slider-fill-rate - The ratio of the slider that is filled such as (eg: `0.3`).
+ * @cssprop --vds-slider-fill-rate - The ratio of the slider that is filled (eg: `0.3`).
  * @cssprop --vds-slider-fill-value - The current amount of the slider that is filled (eg: `30`).
  * @cssprop --vds-slider-fill-percent - The fill rate expressed as a percentage such as (eg: `30%`).
  * @cssprop --vds-slider-pointer-rate - The ratio of the slider that is filled up to the device pointer.
