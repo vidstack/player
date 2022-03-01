@@ -9,7 +9,7 @@ import { state } from 'lit/decorators.js';
 
 import { setAttribute } from '../../utils/dom';
 import { IS_IOS } from '../../utils/support';
-import { mediaStoreSubscription } from '../mediaStore';
+import { mediaStoreSubscription } from '../store';
 import { bindMediaPropsToAttrs, bindMediaPropsToCssProps } from '../style';
 import { ViewType } from '../ViewType';
 import { mediaUiElementStyles } from './styles';

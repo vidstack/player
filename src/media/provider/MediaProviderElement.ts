@@ -18,12 +18,12 @@ import { CanPlay } from '../CanPlay';
 import { MediaController } from '../controller';
 import type { MediaEvents } from '../events';
 import { MediaContext } from '../MediaContext';
+import { MediaType } from '../MediaType';
 import {
   mediaStoreContext,
   ReadableMediaStoreRecord,
   WritableMediaStoreRecord
-} from '../mediaStore';
-import { MediaType } from '../MediaType';
+} from '../store';
 import { ViewType } from '../ViewType';
 
 /**

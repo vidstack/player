@@ -12,16 +12,15 @@ import { LogController, LogDispatcher } from '../../base/logger';
 import { RequestQueue } from '../../base/queue';
 import { WritableStore } from '../../base/stores';
 import { keysOf } from '../../utils/object';
-import { wait } from '../../utils/timing';
 import { isNil } from '../../utils/unit';
 import { VdsMediaEvent } from '../events';
+import { MediaProviderElement } from '../provider/MediaProviderElement';
+import { PendingMediaRequests } from '../request.events';
 import {
   mediaStoreContext,
   ReadableMediaStoreRecord,
   WritableMediaStoreRecord
-} from '../mediaStore';
-import { MediaProviderElement } from '../provider/MediaProviderElement';
-import { PendingMediaRequests } from '../request.events';
+} from '../store';
 import { MediaIdleController } from './MediaIdleController';
 
 export type MediaControllerHost = ReactiveElement & {

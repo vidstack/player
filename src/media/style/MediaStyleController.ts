@@ -3,7 +3,7 @@ import type { ReactiveControllerHost } from 'lit';
 import { DisposalBin } from '../../base/events';
 import { camelToKebabCase } from '../../utils/string';
 import type { MediaContext } from '../MediaContext';
-import { mediaStoreContext } from '../mediaStore';
+import { mediaStoreContext } from '../store';
 
 export abstract class MediaStyleController {
   protected _disposal = new DisposalBin();
