@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-fullscreen-button.ts';
+import '../../define/vds-fullscreen-button';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { FullscreenButtonElement } from '../../ui/fullscreen-button';

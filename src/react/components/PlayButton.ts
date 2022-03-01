@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-play-button.ts';
+import '../../define/vds-play-button';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { PlayButtonElement } from '../../ui/play-button';

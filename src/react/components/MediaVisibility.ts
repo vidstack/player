@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-media-visibility.ts';
+import '../../define/vds-media-visibility';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { MediaVisibilityElement } from '../../media/manage';

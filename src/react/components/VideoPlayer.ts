@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-video-player.ts';
+import '../../define/vds-video-player';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { VideoPlayerElement } from '../../players/video';

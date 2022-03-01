@@ -240,7 +240,7 @@ function vdsReactPlugin(): Plugin {
         const fileContent = `
           // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE \`celement.config.ts\`
 
-          import '../../define/${component.tagName}.ts';
+          import '../../define/${component.tagName}';
           import * as React from 'react';
           import { createComponent } from './createComponent';
           import { ${component.className} } from '${relativePath}';

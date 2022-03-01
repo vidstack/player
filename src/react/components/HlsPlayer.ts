@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-hls-player.ts';
+import '../../define/vds-hls-player';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { HlsPlayerElement } from '../../players/hls';

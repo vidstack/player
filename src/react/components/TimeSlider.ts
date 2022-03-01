@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-time-slider.ts';
+import '../../define/vds-time-slider';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { TimeSliderElement } from '../../ui/time-slider';

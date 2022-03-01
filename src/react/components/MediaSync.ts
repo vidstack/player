@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-media-sync.ts';
+import '../../define/vds-media-sync';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { MediaSyncElement } from '../../media/manage';

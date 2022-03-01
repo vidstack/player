@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-gesture.ts';
+import '../../define/vds-gesture';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { GestureElement } from '../../ui/gesture';

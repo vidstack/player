@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-aspect-ratio.ts';
+import '../../define/vds-aspect-ratio';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { AspectRatioElement } from '../../ui/aspect-ratio';

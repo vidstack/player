@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-toggle-button.ts';
+import '../../define/vds-toggle-button';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { ToggleButtonElement } from '../../ui/toggle-button';

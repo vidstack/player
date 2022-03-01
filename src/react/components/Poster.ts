@@ -1,6 +1,6 @@
 // [@celement/cli] THIS FILE IS AUTO GENERATED - SEE `celement.config.ts`
 
-import '../../define/vds-poster.ts';
+import '../../define/vds-poster';
 import * as React from 'react';
 import { createComponent } from './createComponent';
 import { PosterElement } from '../../ui/poster';
