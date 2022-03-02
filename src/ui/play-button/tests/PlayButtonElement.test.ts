@@ -32,14 +32,14 @@ test('shadow DOM snapshot', async function () {
 test('it should update paused state', async function () {
   const { player, button } = await buildFixture();
 
-  player._mediaStore.paused.set(true);
+  player._store.paused.set(true);
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.false;
   expect(button.getAttribute('aria-pressed')).to.equal('false');
   expect(button.hasAttribute('media-paused')).to.be.true;
 
-  player._mediaStore.paused.set(false);
+  player._store.paused.set(false);
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.true;
@@ -52,7 +52,7 @@ test('it should play', async function () {
 
   const pausedSpy = vi.spyOn(player, 'paused', 'set');
 
-  player._mediaStore.paused.set(true);
+  player._store.paused.set(true);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
@@ -66,7 +66,7 @@ test('it should pause', async function () {
 
   const pausedSpy = vi.spyOn(player, 'paused', 'set');
 
-  player._mediaStore.paused.set(false);
+  player._store.paused.set(false);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));

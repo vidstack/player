@@ -135,8 +135,8 @@ describe('autoplay', function () {
   test('it should not call play if autoplay is false', async function () {
     const { provider } = await buildFixture();
 
-    provider._mediaStore.autoplay.set(false);
-    provider._mediaStore.canPlay.set(false);
+    provider._store.autoplay.set(false);
+    provider._store.canPlay.set(false);
 
     const playSpy = vi.spyOn(provider, 'play');
 
@@ -148,8 +148,8 @@ describe('autoplay', function () {
   test('it should not call play if not ready for playback', async function () {
     const { provider } = await buildFixture();
 
-    provider._mediaStore.autoplay.set(true);
-    provider._mediaStore.canPlay.set(false);
+    provider._store.autoplay.set(true);
+    provider._store.canPlay.set(false);
 
     const playSpy = vi.spyOn(provider, 'play');
 
@@ -161,9 +161,9 @@ describe('autoplay', function () {
   test('it should not call play if playback has started', async function () {
     const { provider } = await buildFixture();
 
-    provider._mediaStore.autoplay.set(true);
-    provider._mediaStore.canPlay.set(true);
-    provider._mediaStore.started.set(true);
+    provider._store.autoplay.set(true);
+    provider._store.canPlay.set(true);
+    provider._store.started.set(true);
 
     const playSpy = vi.spyOn(provider, 'play');
 

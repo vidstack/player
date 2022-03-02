@@ -41,12 +41,12 @@ test('it should update when media volume changes', async function () {
 
   expect(volumeSlider.value).to.equal(100);
 
-  player._mediaStore.volume.set(0.25);
+  player._store.volume.set(0.25);
   await elementUpdated(volumeSlider);
 
   expect(volumeSlider.value).to.equal(25);
 
-  player._mediaStore.volume.set(0.85);
+  player._store.volume.set(0.85);
   await elementUpdated(volumeSlider);
 
   expect(volumeSlider.value).to.equal(85);

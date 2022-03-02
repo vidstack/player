@@ -32,11 +32,11 @@ test('shadow DOM snapshot', async function () {
 test('it should update `hidden` attribute based on fullscreen support', async () => {
   const { player, button } = await buildFixture();
 
-  player._mediaStore.canFullscreen.set(true);
+  player._store.canFullscreen.set(true);
   await elementUpdated(button);
   expect(button.hasAttribute('hidden')).to.be.false;
 
-  player._mediaStore.canFullscreen.set(false);
+  player._store.canFullscreen.set(false);
   await elementUpdated(button);
   expect(button.hasAttribute('hidden')).to.be.true;
 });
@@ -44,14 +44,14 @@ test('it should update `hidden` attribute based on fullscreen support', async ()
 test('it should update fullscreen state', async () => {
   const { player, button } = await buildFixture();
 
-  player._mediaStore.fullscreen.set(true);
+  player._store.fullscreen.set(true);
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.true;
   expect(button.getAttribute('aria-pressed')).to.equal('true');
   expect(button.hasAttribute('media-fullscreen')).to.be.true;
 
-  player._mediaStore.fullscreen.set(false);
+  player._store.fullscreen.set(false);
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.false;
@@ -66,7 +66,7 @@ test('it should enter fullscreen', async function () {
     .spyOn(player, 'requestFullscreen')
     .mockImplementation(() => Promise.resolve());
 
-  player._mediaStore.fullscreen.set(false);
+  player._store.fullscreen.set(false);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
@@ -82,7 +82,7 @@ test('it should exit fullscreen', async function () {
     .spyOn(player, 'exitFullscreen')
     .mockImplementation(() => Promise.resolve());
 
-  player._mediaStore.fullscreen.set(true);
+  player._store.fullscreen.set(true);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));

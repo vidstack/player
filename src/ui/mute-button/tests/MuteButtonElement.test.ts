@@ -32,14 +32,14 @@ test('shadow DOM snapshot', async function () {
 test('it should update muted state', async function () {
   const { player, button } = await buildFixture();
 
-  player._mediaStore.muted.set(true);
+  player._store.muted.set(true);
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.true;
   expect(button.getAttribute('aria-pressed')).to.equal('true');
   expect(button.hasAttribute('media-muted')).to.be.true;
 
-  player._mediaStore.muted.set(false);
+  player._store.muted.set(false);
   await elementUpdated(button);
 
   expect(button.isPressed).to.be.false;
@@ -52,7 +52,7 @@ test('it should mute player', async function () {
 
   const mutedSpy = vi.spyOn(player, 'muted', 'set');
 
-  player._mediaStore.muted.set(false);
+  player._store.muted.set(false);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
@@ -66,7 +66,7 @@ test('it should unmute player', async function () {
 
   const mutedSpy = vi.spyOn(player, 'muted', 'set');
 
-  player._mediaStore.muted.set(true);
+  player._store.muted.set(true);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));

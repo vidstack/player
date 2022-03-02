@@ -39,7 +39,7 @@ test('it should toggle `media-can-play` attribute as `canPlay` changes', async f
 
   expect(ui.hasAttribute('media-can-play')).to.be.false;
 
-  player._mediaStore.canPlay.set(true);
+  player._store.canPlay.set(true);
 
   await elementUpdated(ui);
 

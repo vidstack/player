@@ -751,7 +751,7 @@ export abstract class MediaProviderElement extends LitElement {
   protected _shouldSkipNextSrcChangeReset = true;
 
   protected _handleMediaSrcChange(src: string) {
-    this._mediaStore.currentSrc.set(src);
+    this._store.currentSrc.set(src);
 
     if (!this.hasUpdated) {
       return;
@@ -817,12 +817,12 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected readonly _mediaStoreConsumer = mediaStoreContext.consume(this);
 
-  get mediaStore(): ReadableMediaStoreRecord {
+  get store(): ReadableMediaStoreRecord {
     return this._mediaStoreConsumer.value;
   }
 
   /** @internal */
-  get _mediaStore(): WritableMediaStoreRecord {
+  get _store(): WritableMediaStoreRecord {
     return this._mediaStoreConsumer.value;
   }
 

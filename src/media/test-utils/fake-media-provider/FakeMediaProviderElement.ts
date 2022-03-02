@@ -16,7 +16,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   constructor() {
     super();
 
-    Object.keys(this._mediaStore).forEach((key) => {
+    Object.keys(this._store).forEach((key) => {
       Object.defineProperty(this, `emulate-${key.toLowerCase()}`, {
         set(value) {
           this._connectedQueue.queue(`emulate-${key}`, () => {
