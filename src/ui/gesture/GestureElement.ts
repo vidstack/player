@@ -37,6 +37,7 @@ export type GestureAction =
  *
  * This is a simple list, but it should give you an idea on when to reach for this element.
  *
+ * @experimental
  * @tagname vds-gesture
  * @example
  * ```html
