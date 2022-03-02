@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=14.19.0"
   },
   "main": "dist-prod/index.js",
   "module": "dist-prod/index.js",
