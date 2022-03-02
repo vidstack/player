@@ -1,3 +1,14 @@
+# [0.12.0](https://github.com/vidstack/player/compare/v0.11.0...v0.12.0) (2022-03-02)
+
+### Bug Fixes
+
+- rename `provider.mediaStore` -> `provider.store` ([ac6cf7f](https://github.com/vidstack/player/commit/ac6cf7fc105c07659df4f895bc84c62ca066ee0b))
+- rename `slider.sliderStore` -> `slider.store` ([c0563e8](https://github.com/vidstack/player/commit/c0563e86a35ce2eb46bc2926acd20b5dc596922c))
+
+### Features
+
+- include `elements.json` (metadata file) in package distribution ([59a5b6f](https://github.com/vidstack/player/commit/59a5b6f281b0562f4dfb6e4d1c5f958deff7c9d4))
+
 # [0.11.0](https://github.com/vidstack/player/compare/v0.10.6...v0.11.0) (2022-03-01)
 
 ### Bug Fixes
