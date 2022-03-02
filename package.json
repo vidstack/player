@@ -17,6 +17,7 @@
     "define/",
     "react/",
     "types/",
+    "elements.json",
     "tailwind.cjs",
     "vscode.html-data.json",
     "index.d.ts",
@@ -47,6 +48,7 @@
     },
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
+    "./elements.json": "./elements.json",
     "./vscode.html-data.json": "./vscode.html-data.json"
   },
   "contributors": [

@@ -3,6 +3,7 @@
 import {
   ComponentMeta,
   EventMeta,
+  jsonPlugin,
   litPlugin,
   type Plugin,
   vscodeHtmlDataPlugin
@@ -27,8 +28,26 @@ const pkgContent = readFileSync(
 ).toString();
 const pkg: Record<string, any> = JSON.parse(pkgContent);
 
+const SRC_DIR = path.resolve(process.cwd(), 'src');
+
 export default [
   litPlugin(),
+  jsonPlugin({
+    transformJson(data) {
+      for (const component of data.components) {
+        component.source.dirPath = path.relative(
+          SRC_DIR,
+          component.source.dirPath
+        );
+        component.source.filePath = path.relative(
+          SRC_DIR,
+          component.source.filePath
+        );
+      }
+
+      return data;
+    }
+  }),
   vscodeHtmlDataPlugin({
     transformAttributeData(prop, data) {
       const refs = (data.references ??= []);
