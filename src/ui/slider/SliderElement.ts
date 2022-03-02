@@ -92,7 +92,7 @@ export class SliderElement extends LitElement {
 
   protected readonly _sliderStoreProvider = sliderStoreContext.provide(this);
 
-  get sliderStore() {
+  get store() {
     return this._sliderStoreProvider.value;
   }
 
@@ -105,11 +105,11 @@ export class SliderElement extends LitElement {
    */
   @property({ reflect: true, type: Number })
   get min() {
-    return get(this.sliderStore.min);
+    return get(this.store.min);
   }
 
   set min(newMin) {
-    this.sliderStore.min.set(newMin);
+    this.store.min.set(newMin);
   }
 
   /**
@@ -117,11 +117,11 @@ export class SliderElement extends LitElement {
    */
   @property({ reflect: true, type: Number })
   get max() {
-    return get(this.sliderStore.max);
+    return get(this.store.max);
   }
 
   set max(newMax) {
-    this.sliderStore.max.set(newMax);
+    this.store.max.set(newMax);
   }
 
   /**
@@ -186,7 +186,7 @@ export class SliderElement extends LitElement {
    * @default false
    */
   get isDragging(): boolean {
-    return get(this.sliderStore.dragging);
+    return get(this.store.dragging);
   }
 
   /**
@@ -220,7 +220,7 @@ export class SliderElement extends LitElement {
    * @default 0
    */
   get pointerValue() {
-    return get(this.sliderStore.pointerValue);
+    return get(this.store.pointerValue);
   }
 
   /**
@@ -257,7 +257,7 @@ export class SliderElement extends LitElement {
     this._updatePointerCSSProps();
 
     this._disconnectDisposal.add(
-      this.sliderStore.interactive.subscribe(($interactive) => {
+      this.store.interactive.subscribe(($interactive) => {
         setAttribute(this, 'interactive', $interactive);
       })
     );
@@ -270,14 +270,14 @@ export class SliderElement extends LitElement {
       changedProperties.has('max')
     ) {
       this.value = this._getClampedValue(this.value);
-      this.sliderStore.value.set(this.value);
+      this.store.value.set(this.value);
       this._updateFillCSSProps();
       this._dispatchValueChange();
     }
 
     if (changedProperties.has('disabled') && this.disabled) {
-      this.sliderStore.dragging.set(false);
-      this.sliderStore.pointing.set(false);
+      this.store.dragging.set(false);
+      this.store.pointing.set(false);
       this.removeAttribute('dragging');
       this.removeAttribute('pointing');
       this.removeAttribute('interactive');
@@ -307,7 +307,7 @@ export class SliderElement extends LitElement {
     () => {
       if (this.disabled) return;
       this.setAttribute('pointing', '');
-      this.sliderStore.pointing.set(true);
+      this.store.pointing.set(true);
     }
   );
 
@@ -317,7 +317,7 @@ export class SliderElement extends LitElement {
     (event) => {
       if (this.disabled || this.isDragging) return;
       const value = this._getValueBasedOnThumbPosition(event);
-      this.sliderStore.pointerValue.set(value);
+      this.store.pointerValue.set(value);
       this._dispatchPointerValueChange(event);
     }
   );
@@ -328,7 +328,7 @@ export class SliderElement extends LitElement {
     () => {
       if (this.disabled) return;
       this.removeAttribute('pointing');
-      this.sliderStore.pointing.set(false);
+      this.store.pointing.set(false);
     }
   );
 
@@ -451,11 +451,11 @@ export class SliderElement extends LitElement {
   protected _startDragging(event: PointerEvent) {
     if (this.isDragging) return;
 
-    this.sliderStore.dragging.set(true);
+    this.store.dragging.set(true);
     this.setAttribute('dragging', '');
 
     const value = this._getValueBasedOnThumbPosition(event);
-    this.sliderStore.pointerValue.set(value);
+    this.store.pointerValue.set(value);
 
     this._dispatchPointerValueChange(event);
 
@@ -472,20 +472,20 @@ export class SliderElement extends LitElement {
   protected readonly _onDrag = rafThrottle((event: PointerEvent) => {
     if (this.disabled || !this.isDragging) return;
     const value = this._getValueBasedOnThumbPosition(event);
-    this.sliderStore.pointerValue.set(value);
+    this.store.pointerValue.set(value);
     this._dispatchPointerValueChange(event);
   });
 
   protected _stopDragging(event: PointerEvent) {
     if (!this.isDragging) return;
 
-    this.sliderStore.dragging.set(false);
+    this.store.dragging.set(false);
     this._dispatchValueChange.cancel();
     this.removeAttribute('dragging');
 
     const value = this._getValueBasedOnThumbPosition(event);
     this.value = value;
-    this.sliderStore.pointerValue.set(value);
+    this.store.pointerValue.set(value);
 
     this._dispatchValueChange(event);
     this._dispatchPointerValueChange(event);
