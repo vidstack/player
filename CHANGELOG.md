@@ -1,3 +1,9 @@
+## [0.12.1](https://github.com/vidstack/player/compare/v0.12.0...v0.12.1) (2022-03-02)
+
+### Bug Fixes
+
+- drop node requirement from `>=16` to `>=14.9` ([c8ac432](https://github.com/vidstack/player/commit/c8ac432e0adbcb4ba8adcf479d949e5262fb4f21))
+
 # [0.12.0](https://github.com/vidstack/player/compare/v0.11.0...v0.12.0) (2022-03-02)
 
 ### Bug Fixes
