@@ -127,7 +127,7 @@ describe('media request queue', function () {
     await provider.mediaRequestQueue.waitForFlush();
 
     expect(playSpy).not.toHaveBeenCalled();
-    expect(pauseSpy).toHaveBeenCalledOnce();
+    expect(pauseSpy).to.not.toHaveBeenCalled();
   });
 });
 

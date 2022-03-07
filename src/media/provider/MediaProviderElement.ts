@@ -77,11 +77,6 @@ export abstract class MediaProviderElement extends LitElement {
     super.connectedCallback();
     this._logMediaEvents();
 
-    // Set initial paused attribute.
-    if (this.paused) {
-      this.setAttribute('paused', '');
-    }
-
     // Give the initial hide poster event a chance to reach the controller.
     window.requestAnimationFrame(() => {
       if (isUndefined(this.__canLoadPoster)) {
@@ -305,6 +300,8 @@ export abstract class MediaProviderElement extends LitElement {
 
   set paused(shouldPause) {
     this.mediaRequestQueue.queue('paused', () => {
+      if (this.paused === shouldPause) return;
+
       try {
         if (!shouldPause) {
           this.play();

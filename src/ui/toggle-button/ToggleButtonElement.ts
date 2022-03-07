@@ -99,13 +99,6 @@ export class ToggleButtonElement extends LitElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
-  /**
-   * Whether the toggle is in the `pressed` state.
-   */
-  get isPressed() {
-    return this.pressed;
-  }
-
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
