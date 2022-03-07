@@ -83,11 +83,5 @@ export function mediaStoreSubscription<
   property: T,
   onChange: (value: MediaContext[T]) => void
 ) {
-  return storeRecordSubscription(
-    host,
-    mediaStoreContext,
-    property,
-    // @ts-expect-error - ?
-    onChange
-  );
+  return storeRecordSubscription(host, mediaStoreContext, property, onChange);
 }

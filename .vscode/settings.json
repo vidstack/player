@@ -1,4 +1,5 @@
 {
   "html.customData": ["./vscode.html-data.json"],
-  "css.customData": []
+  "css.customData": [],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
