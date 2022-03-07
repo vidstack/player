@@ -85,9 +85,7 @@ export class Html5MediaElement extends MediaProviderElement {
   controlsList: MediaControlsList | undefined;
 
   /**
-   * Whether to use CORS to fetch the related image. See
-   * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin) for more
-   * information.
+   * Whether to use CORS to fetch the related image.
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/crossOrigin
    */
@@ -125,9 +123,9 @@ export class Html5MediaElement extends MediaProviderElement {
 
   /**
    * Provides a hint to the browser about what the author thinks will lead to the best user
-   * experience with regards to what content is loaded before the video is played. See
-   * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload) for more
-   * information.
+   * experience with regards to what content is loaded before the video is played.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload
    */
   @property({ reflect: true })
   preload: MediaPreloadOption | undefined;
