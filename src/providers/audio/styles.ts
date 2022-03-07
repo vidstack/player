@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export const audioElementStyles = css`
   :host {
-    display: block;
+    display: inline;
     contain: content;
   }
 
@@ -11,7 +11,7 @@ export const audioElementStyles = css`
   }
 
   audio {
-    display: inline-block;
+    display: inline;
     border-radius: inherit;
     vertical-align: middle;
     outline: 0;

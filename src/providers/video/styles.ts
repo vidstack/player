@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export const videoElementStyles = css`
   :host {
-    display: block;
+    display: inline-block;
     contain: content;
   }
 
@@ -18,7 +18,6 @@ export const videoElementStyles = css`
     border: 0;
     user-select: none;
     -webkit-user-select: none;
-    max-height: 100vh;
   }
 
   video:not([width]) {
