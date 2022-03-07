@@ -1,3 +1,13 @@
+## [0.12.2](https://github.com/vidstack/player/compare/v0.12.1...v0.12.2) (2022-03-07)
+
+### Bug Fixes
+
+- `paused`, `muted`, `src`, and `poster` attrs not in-sync ([6beca8b](https://github.com/vidstack/player/commit/6beca8b46810ab4c9f5df3d72fc737e7a73cf1b9))
+- clean up aspect ratio implementation ([e8b9027](https://github.com/vidstack/player/commit/e8b90277df0b50f5d5dad30bcd21dbc1d5cb0ed0))
+- media does not automatically fill aspect ratio container ([c50b9a8](https://github.com/vidstack/player/commit/c50b9a869616a089c1a68753b9c0aaa55a2c08d3))
+- reflect additional `Html5MediaElement` attributes ([1bd08bc](https://github.com/vidstack/player/commit/1bd08bc1296cb407645d35d5d7289c51f51e6b73))
+- set slightly better defaults for audio/video ([572c394](https://github.com/vidstack/player/commit/572c3942825fcd2b71200d90cd42de05ffbd7ce9))
+
 ## [0.12.1](https://github.com/vidstack/player/compare/v0.12.0...v0.12.1) (2022-03-02)
 
 ### Bug Fixes
