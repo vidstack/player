@@ -11,6 +11,7 @@ import {
 import { LogController, LogDispatcher } from '../../base/logger';
 import { RequestQueue } from '../../base/queue';
 import { WritableStore } from '../../base/stores';
+import { setAttribute } from '../../utils/dom';
 import { keysOf } from '../../utils/object';
 import { isNil } from '../../utils/unit';
 import { VdsMediaEvent } from '../events';
@@ -120,6 +121,14 @@ export class MediaController {
     this._mediaProviderConnectedQueue.start();
     this._mediaProviderDisconnectedDisposal.add(() => {
       this._mediaProviderConnectedQueue.stop();
+    });
+  }
+
+  protected _setProviderAttr(name: string, value: string | boolean | null) {
+    this._mediaProviderConnectedQueue.queue(`attr:${name}`, () => {
+      if (this.mediaProvider) {
+        setAttribute(this._mediaProvider!, name, value);
+      }
     });
   }
 
@@ -542,6 +551,8 @@ export class MediaController {
       this._store.paused.set(false);
       this._store.autoplayError.set(undefined);
 
+      this._setProviderAttr('paused', false);
+
       if (this._mediaProvider?.ended || this._isReplay) {
         this._isReplay = false;
         this._store.ended.set(false);
@@ -626,6 +637,8 @@ export class MediaController {
       this._store.playing.set(false);
       this._store.seeking.set(false);
 
+      this._setProviderAttr('paused', true);
+
       this._stopWaiting();
       this._clearMediaStateTracking();
     }
@@ -647,6 +660,7 @@ export class MediaController {
       this._store.volume.set(event.detail.volume);
       this._store.muted.set(event.detail.muted);
       this._satisfyMediaRequest('volume', event);
+      this._setProviderAttr('muted', event.detail.muted);
     }
   );
 
@@ -773,6 +787,7 @@ export class MediaController {
     'vds-poster-change',
     (event) => {
       this._store.currentPoster.set(event.detail);
+      this._setProviderAttr('poster', event.detail);
     }
   );
 
@@ -840,6 +855,7 @@ export class MediaController {
       this._mediaEvents.push(event);
 
       this._store.currentSrc.set(event.detail);
+      this._setProviderAttr('src', event.detail);
 
       const dontReset = new Set<keyof WritableMediaStoreRecord>([
         'currentSrc',

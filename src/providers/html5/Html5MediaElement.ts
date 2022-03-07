@@ -82,7 +82,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList
    */
   @property({ reflect: true })
-  controlsList: MediaControlsList | undefined = undefined;
+  controlsList: MediaControlsList | undefined;
 
   /**
    * Whether to use CORS to fetch the related image. See
