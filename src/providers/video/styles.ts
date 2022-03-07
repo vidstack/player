@@ -25,6 +25,6 @@ export const videoElementStyles = css`
   }
 
   video:not([height]) {
-    height: auto;
+    height: 100%;
   }
 `;

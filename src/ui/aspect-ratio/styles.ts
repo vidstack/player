@@ -46,10 +46,10 @@ export const aspectRatioElementStyles = css`
     );
 
     display: block;
-    height: 0;
-    padding-bottom: var(--vds-aspect-ratio-padding);
     position: relative;
     width: 100%;
+    height: 0;
+    padding-bottom: var(--vds-aspect-ratio-padding);
   }
 
   :host([hidden]) {
@@ -58,12 +58,15 @@ export const aspectRatioElementStyles = css`
 
   slot {
     display: block;
-    height: 100%;
     position: absolute;
     width: 100%;
+    height: 100%;
   }
 
   ::slotted(*) {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 100% !important;
     height: 100% !important;
   }

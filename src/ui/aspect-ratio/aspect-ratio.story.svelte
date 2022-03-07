@@ -8,16 +8,21 @@
   import { ControlsAddon } from '@vitebook/client/addons';
   import { safelyDefineCustomElement } from '../../utils/dom';
   import { AspectRatioElement } from './AspectRatioElement';
+  import { VideoElement } from '../../providers/video';
 
   safelyDefineCustomElement('vds-aspect-ratio', AspectRatioElement);
+  safelyDefineCustomElement('vds-video', VideoElement);
 
   let minHeight = '150px';
   let maxHeight = '100vh';
-  let ratio = '2:1';
+  let ratio = '16 / 9';
+
+  const src = 'https://media-files.vidstack.io/720p.mp4';
+  const poster = 'https://media-files.vidstack.io/poster.png';
 </script>
 
-<vds-aspect-ratio {minHeight} {maxHeight} {ratio}>
-  <div />
+<vds-aspect-ratio min-height={minHeight} max-height={maxHeight} {ratio}>
+  <vds-video {src} {poster} controls />
 </vds-aspect-ratio>
 
 <ControlsAddon>
@@ -40,10 +45,5 @@
 <style>
   vds-aspect-ratio {
     max-width: 85%;
-  }
-
-  div {
-    height: 100%;
-    background-color: #000;
   }
 </style>

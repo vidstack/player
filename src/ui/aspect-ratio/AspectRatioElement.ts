@@ -14,16 +14,15 @@ import { aspectRatioElementStyles } from './styles';
 
 /**
  * This element creates a container that will hold the dimensions of the desired aspect ratio. This
- * container is useful for reserving space for media (img, video, etc.) as it loads over the
- * network.
+ * container is useful for reserving space for media as it loads over the network.
  *
  * 💡  If your browser matrix supports the
  * [`aspect-ratio`](https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio) CSS property
  * then you can skip using this component, and set the desired aspect ratio directly on the
- * element.
+ * provider.
  *
  * 💡 By default it respects the browser's default width and height for media. This is not specific
- * to the loaded media but instead a general setting of `1:2`.
+ * to the loaded media but instead a general setting of `1/2`.
  *
  * @tagname vds-aspect-ratio
  * @cssprop --vds-min-height - The minimum height of the container (defaults to `150px`).
@@ -31,7 +30,7 @@ import { aspectRatioElementStyles } from './styles';
  * @cssprop --vds-aspect-ratio - The desired aspect ratio (defaults to `calc(150 / 300)`).
  * @example
  * ```html
- * <vds-aspect-ratio ratio="16:9">
+ * <vds-aspect-ratio ratio="16/9">
  *   <vds-video-player>
  *     <!-- ... -->
  *   </vds-video-player>
@@ -56,16 +55,18 @@ export class AspectRatioElement extends LitElement {
   maxHeight = '100vh';
 
   /**
-   * The desired aspect ratio setting given as `'width:height'` (eg: `'16:9'`).
+   * The desired aspect ratio setting given as `'width/height'` (eg: `'16/9'`).
    */
   @property({ reflect: true })
-  ratio = '2:1';
+  ratio = '16/9';
 
   /**
-   * Whether the current `ratio` is a valid aspect ratio setting in the form `width:height`.
+   * Whether the current `ratio` is a valid aspect ratio setting in the form `width/height`.
    */
   get isValidRatio() {
-    return isString(this.ratio) ? /\d{1,2}:\d{1,2}/.test(this.ratio) : false;
+    return isString(this.ratio)
+      ? /\d{1,2}\s*?(?:\/|:)\s*?\d{1,2}/.test(this.ratio)
+      : false;
   }
 
   protected override update(changedProperties: PropertyValues) {
@@ -99,6 +100,9 @@ export class AspectRatioElement extends LitElement {
   }
 
   protected _parseAspectRatio(): [number, number] {
-    return this.ratio!.split(':').map(Number) as [number, number];
+    return this.ratio!.split(/\s*?(?:\/|:)\s*?/).map(Number) as [
+      number,
+      number
+    ];
   }
 }
