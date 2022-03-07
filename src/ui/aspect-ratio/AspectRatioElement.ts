@@ -8,7 +8,6 @@ import {
 import { property } from 'lit/decorators.js';
 
 import { setCSSProperty } from '../../utils/dom';
-import { round } from '../../utils/number';
 import { isString } from '../../utils/unit';
 import { aspectRatioElementStyles } from './styles';
 
@@ -21,13 +20,10 @@ import { aspectRatioElementStyles } from './styles';
  * then you can skip using this component, and set the desired aspect ratio directly on the
  * provider.
  *
- * 💡 By default it respects the browser's default width and height for media. This is not specific
- * to the loaded media but instead a general setting of `1/2`.
+ * 💡 By default it respects the browser's default aspect-ratio for media. This is not specific
+ * to the loaded media but instead a general setting of `2/1`.
  *
  * @tagname vds-aspect-ratio
- * @cssprop --vds-min-height - The minimum height of the container (defaults to `150px`).
- * @cssprop --vds-max-height - The maximum height of the container (defaults to `100vh`).
- * @cssprop --vds-aspect-ratio - The desired aspect ratio (defaults to `calc(150 / 300)`).
  * @example
  * ```html
  * <vds-aspect-ratio ratio="16/9">
@@ -58,7 +54,7 @@ export class AspectRatioElement extends LitElement {
    * The desired aspect ratio setting given as `'width/height'` (eg: `'16/9'`).
    */
   @property({ reflect: true })
-  ratio = '16/9';
+  ratio = '2/1';
 
   /**
    * Whether the current `ratio` is a valid aspect ratio setting in the form `width/height`.
@@ -92,10 +88,13 @@ export class AspectRatioElement extends LitElement {
   protected _updateAspectRatio() {
     if (this.isValidRatio) {
       const [width, height] = this._parseAspectRatio();
-      const roundedRatio = round(height / width, 4);
-      setCSSProperty(this, 'aspect-ratio', String(roundedRatio));
+      setCSSProperty(
+        this,
+        'aspect-ratio-percent',
+        `${(height / width) * 100}%`
+      );
     } else {
-      setCSSProperty(this, 'aspect-ratio', '0.5');
+      setCSSProperty(this, 'aspect-ratio-percent', '50%');
     }
   }
 
