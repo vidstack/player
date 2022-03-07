@@ -81,7 +81,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * @example 'nodownload nofullscreen noremoteplayback'
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList
    */
-  @property()
+  @property({ reflect: true })
   controlsList: MediaControlsList | undefined = undefined;
 
   /**
@@ -91,7 +91,7 @@ export class Html5MediaElement extends MediaProviderElement {
    *
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/crossOrigin
    */
-  @property()
+  @property({ reflect: true })
   crossOrigin: MediaCrossOriginOption | undefined;
 
   /**
@@ -129,19 +129,19 @@ export class Html5MediaElement extends MediaProviderElement {
    * [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload) for more
    * information.
    */
-  @property()
+  @property({ reflect: true })
   preload: MediaPreloadOption | undefined;
 
   /**
    * The width of the media player.
    */
-  @property({ type: Number })
+  @property({ type: Number, reflect: true })
   width: number | undefined;
 
   /**
    * The height of the media player.
    */
-  @property({ type: Number })
+  @property({ type: Number, reflect: true })
   height: number | undefined;
 
   @state() protected __src = '';
