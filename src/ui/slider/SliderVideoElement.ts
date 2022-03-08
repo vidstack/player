@@ -44,7 +44,7 @@ export class SliderVideoElement extends LitElement {
     return [
       css`
         :host {
-          display: block;
+          display: inline-block;
           contain: content;
         }
 
@@ -54,6 +54,8 @@ export class SliderVideoElement extends LitElement {
 
         video {
           display: block;
+          width: 100%;
+          height: auto;
         }
       `
     ];

@@ -91,25 +91,25 @@
 
 <style>
   vds-slider {
-    --slider-height: 48px;
-    --slider-thumb-width: 24px;
-    --slider-track-height: 4px;
+    --height: 48px;
+    --thumb-width: 24px;
+    --track-height: 4px;
 
     display: flex;
     align-items: center;
     position: relative;
     cursor: pointer;
-    height: var(--slider-height);
+    height: var(--height);
     width: 100%;
     /** Prevent thumb flowing out of slider. */
-    margin: 0 calc(var(--slider-thumb-width) / 2);
+    margin: 0 calc(var(--thumb-width) / 2);
     max-width: 85%;
   }
 
   .track {
     background-color: #6366f1;
     width: 100%;
-    height: var(--slider-track-height);
+    height: var(--track-height);
     position: absolute;
     top: 50%;
     left: 0;
@@ -129,7 +129,7 @@
     position: absolute;
     top: 0;
     left: var(--vds-slider-fill-percent);
-    width: var(--slider-thumb-width);
+    width: var(--thumb-width);
     height: 100%;
     transform: translateX(-50%); /** re-center along x-axis. */
     z-index: 2; /** above track fill. */
@@ -144,8 +144,8 @@
     position: absolute;
     top: 50%;
     left: 0;
-    width: var(--slider-thumb-width);
-    height: var(--slider-thumb-width);
+    width: var(--thumb-width);
+    height: var(--thumb-width);
     border-radius: 9999px;
     background-color: #fff;
     transform: translateY(-50%);
@@ -158,7 +158,7 @@
     position: absolute;
     top: -32px;
     left: -6px;
-    width: calc(var(--slider-thumb-width) + 12px);
+    width: calc(var(--thumb-width) + 12px);
     will-change: left;
     color: #000;
     border-radius: 2px;
