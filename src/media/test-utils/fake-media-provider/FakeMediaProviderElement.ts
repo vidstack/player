@@ -20,7 +20,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
       Object.defineProperty(this, `emulate-${key.toLowerCase()}`, {
         set(value) {
           this._connectedQueue.queue(`emulate-${key}`, () => {
-            this._mediaStore[key].set(value);
+            this._store[key].set(value);
 
             if (key === 'canPlay') {
               if (value) {

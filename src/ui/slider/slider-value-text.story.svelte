@@ -34,18 +34,17 @@
   }}
 >
   <div class="track" />
-  <div class="track-fill" />
+  <div class="track fill" />
   <div class="thumb-container">
     <div class="thumb" />
+    <vds-slider-value-text
+      {type}
+      {format}
+      decimal-places={decimalPlaces}
+      show-hours={showHours ? showHours : null}
+      pad-hours={padHours ? padHours : null}
+    />
   </div>
-
-  <vds-slider-value-text
-    {type}
-    {format}
-    decimal-places={decimalPlaces}
-    show-hours={showHours ? showHours : null}
-    pad-hours={padHours ? padHours : null}
-  />
 </vds-slider>
 
 <ControlsAddon>
@@ -92,73 +91,77 @@
 
 <style>
   vds-slider {
+    --slider-height: 48px;
+    --slider-thumb-width: 24px;
+    --slider-track-height: 4px;
+
     display: flex;
     align-items: center;
-    border: 0;
-    cursor: pointer;
-    outline: 0;
     position: relative;
-    width: 375px;
-    height: 48px;
+    cursor: pointer;
+    height: var(--slider-height);
+    width: 100%;
+    /** Prevent thumb flowing out of slider. */
+    margin: 0 calc(var(--slider-thumb-width) / 2);
+    max-width: 85%;
+  }
+
+  .track {
+    background-color: #6366f1;
+    width: 100%;
+    height: var(--slider-track-height);
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 0;
+    transform: translateY(-50%);
+  }
+
+  .track.fill {
+    background-color: #a5b4fc;
+    transform-origin: left center;
+    transform: translateY(-50%) scaleX(var(--vds-slider-fill-rate));
+    will-change: transform;
+    z-index: 1; /** above track. */
   }
 
   .thumb-container {
     position: absolute;
-    top: 0px;
-    width: 20px;
-    height: 100%;
-    outline: 0;
-    z-index: 1;
-    transform: translateX(-50%);
-    will-change: left;
+    top: 0;
     left: var(--vds-slider-fill-percent);
+    width: var(--slider-thumb-width);
+    height: 100%;
+    transform: translateX(-50%); /** re-center along x-axis. */
+    z-index: 2; /** above track fill. */
+    will-change: left;
   }
 
-  :global(vds-slider[dragging] .thumb-container) {
-    left: var(--vds-slider-pointer-percent) !important;
+  :global([dragging] .thumb-container) {
+    left: var(--vds-slider-pointer-percent);
   }
 
   .thumb {
     position: absolute;
-    border: 0;
-    top: 50%;
-    left: 0px;
-    width: 20px;
-    height: 20px;
-    outline: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transform: translateY(-50%) scale(0.75);
-    transition: transform 100ms ease-out 0s;
-    will-change: transform;
-    background-color: #161616;
-  }
-
-  .track {
-    z-index: 0;
-    width: 100%;
-    height: 12.5px;
-    pointer-events: none;
-    background-color: #fafafa;
-  }
-
-  .track-fill {
-    z-index: 0;
-    position: absolute;
     top: 50%;
     left: 0;
-    width: 100%;
-    height: 12.5px;
-    pointer-events: none;
-    background: #3a3a3a;
-    transform-origin: left center;
-    transform: translate(0%, -50%) scaleX(var(--vds-slider-fill-rate));
-    will-change: transform;
+    width: var(--slider-thumb-width);
+    height: var(--slider-thumb-width);
+    border-radius: 9999px;
+    background-color: #fff;
+    transform: translateY(-50%);
   }
 
   vds-slider-value-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    top: -24px;
-    right: 0;
+    top: -32px;
+    left: -6px;
+    width: calc(var(--slider-thumb-width) + 12px);
+    will-change: left;
+    color: #000;
+    border-radius: 2px;
+    background-color: #fff;
   }
 </style>
