@@ -64,7 +64,9 @@
     display: flex;
     justify-content: center;
     min-width: 96px;
-    background-color: orange;
+    border-radius: 2px;
+    padding: 4px;
+    background-color: white;
   }
 
   .play,

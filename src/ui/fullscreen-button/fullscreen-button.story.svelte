@@ -73,8 +73,10 @@
   vds-fullscreen-button {
     display: flex;
     justify-content: center;
-    min-width: 208px;
-    background-color: orange;
+    min-width: 96px;
+    border-radius: 2px;
+    padding: 4px;
+    background-color: white;
   }
 
   .enter,
