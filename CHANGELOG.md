@@ -1,3 +1,11 @@
+## [0.12.3](https://github.com/vidstack/player/compare/v0.12.2...v0.12.3) (2022-03-09)
+
+### Bug Fixes
+
+- `repeat` and `priority` attrs on `<vds-gesture>` not converted to number ([6e4f1b0](https://github.com/vidstack/player/commit/6e4f1b0d2569cc536a1d0d20b0a8ffd5d9a6f9ca))
+- rename `shared-playback` to `single-playback` on `<vds-media-sync>` ([25b887d](https://github.com/vidstack/player/commit/25b887d07b4994eed3b1c7f9af3c60282167b69f))
+- set better default styles for `<vds-slider-video>` ([b513aca](https://github.com/vidstack/player/commit/b513aca9461201c5b7aee3c16590a0ddf58fdbab))
+
 ## [0.12.2](https://github.com/vidstack/player/compare/v0.12.1...v0.12.2) (2022-03-07)
 
 ### Bug Fixes
