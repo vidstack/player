@@ -116,7 +116,7 @@ export class GestureElement extends LitElement {
    * @example 1 - wait for event to occur twice.
    * @example 2 - wait for event to occur thrice.
    */
-  @property() repeat = 0;
+  @property({ type: Number }) repeat = 0;
 
   /**
    * The level of importance given to this gesture. If multiple gestures occur at the same time,
@@ -127,7 +127,7 @@ export class GestureElement extends LitElement {
    *
    * @default 10
    */
-  @property() priority = 10;
+  @property({ type: Number }) priority = 10;
 
   /**
    * An action describes the type of media request event that will be dispatched, which will
