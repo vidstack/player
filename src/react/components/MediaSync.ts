@@ -16,7 +16,7 @@ Fired when media volume has been synchronized.
 
 Synchronization includes:
 
-- Shared media playback (eg: user plays a video while another is already playing, so we pause
+- Single media playback (eg: user plays a video while another is already playing, so we pause
 the newly inactive player).
 
 - Shared media volume (eg: user sets desired volume to 50% on one player, and they expect it to
