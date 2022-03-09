@@ -4,17 +4,9 @@ First off, thank you for taking the time to contribute to Vidstack ❤️
 
 ## 💭 Knowledge
 
-### TypeScript
-
-This project is written with [TypeScript](https://www.typescriptlang.org/).
-
-If you're unfamiliar with Typescript or languages such as Java, then this might be a slight
-roadblock for you. Having said that, if you're keen to start learning, then why not start
-today!
-
-### LitElement
-
-This project uses [lit-element][lit-element] to build [Web Components][web-components].
+- Code is written in [TypeScript][typescript].
+- We use [Lit][lit] to build [Web Components][web-components].
+- Story files (visual testing) are written using [Svelte][svelte].
 
 ## 🎒 Getting Started
 
@@ -24,17 +16,14 @@ Let's setup our machine. The only software you'll need to install is:
 
 - [node](https://nodejs.org/en/download)
 - [git](https://git-scm.com/downloads)
+- [volta](https://docs.volta.sh/guide) or [nvm](https://github.com/nvm-sh/nvm) (we recommend volta)
 
-They're very easy to install. Simply follow the links, and you should be up and running in
-no time.
+They're very easy to install, just follow the links and you should be up and running in no time.
 
-### Project Setup
+### Fork & Clone
 
-**Working on your first Pull Request?** Check out
-[How to Contribute to an Open Source Project on GitHub][pr-beginner-series].
-
-Head over to the [repository][vds-player] on GitHub and click the Fork button in the top
-right corner. After the project has been forked, run the following commands in your terminal:
+Next, head over to the [Player repository on GitHub][vds-player] and click the `Fork` button in the
+top right corner. After the project has been forked, run the following commands in your terminal...
 
 ```bash
 # Replace {github-username} with your GitHub username.
@@ -42,12 +31,11 @@ $: git clone https://github.com/{github-username}/player vds-player --depth=1
 
 $: cd vds-player
 
-# Create a branch for your PR, replace {issue-no} with the GitHub issue number.
-$: git checkout -b issue-{issue-no}
+$: npm install
 ```
 
-It'll help if we keep our `main` branch pointing at the original repository and make
-pull requests from the forked branch.
+**OPTIONAL:** Now it'll help if we keep our `main` branch pointing at the original repository and
+make pull requests from the forked branch.
 
 ```bash
 # Add the original repository as a "remote" called "upstream".
@@ -63,14 +51,26 @@ $: git branch --set-upstream-to=upstream/main main
 $: git pull
 ```
 
-## 🧪 Test
+### Node
+
+Once you're done, set your Node version to match the required version by the repo. If you've
+installed `volta` then it will automatically pin it, and if you're using `nvm` simply run `nvm use`
+from the project root.
+
+## 🧪 Testing
 
 ### Unit
 
-For unit tests, you can simply create a `*.test.ts` file next to the file you are testing, and
-run `npm run test` or `npm run test:watch` in the terminal. This project uses
-[Web Test Runner][web-test-runner] for writing/running unit tests. To learn more about
-writing unit tests, follow the link to the Web Test Runner site, and see other tests in the project.
+For unit tests, you can create a `*.test.ts` file, and run `npm run test` or
+`npm run test:watch` in the terminal. This project uses [Vitest][vitest] for writing/running
+unit tests. To learn more about writing unit tests, follow the link to the Vitest site,
+and see other tests in the repo.
+
+### Visual
+
+We currently use [Vitebook][vitebook] (Storybook alternative) for visual testing. You can
+run `npm run vitebook:dev` to launch the development environment. Refer to other story files
+(`.story.svelte`) in the repo to learn how to create one.
 
 ## ✍️ Commit
 
@@ -82,7 +82,7 @@ Simply refer to the link, and check out existing commits to get an idea of how t
 $: git add .
 
 # Commit changes.
-$: git commit -m 'your commit message'
+$: git commit -m '(fix|feat): your commit message'
 
 # Push changes up to GitHub.
 $: git push
@@ -98,9 +98,11 @@ vet it and see if it should be merged. Please don't be disheartened if it's not 
 contribution is appreciated more then you can imagine, and even a failed PR can teach us a lot ❤️
 
 [typescript]: https://www.typescriptlang.org
-[lit-element]: https://lit-element.polymer-project.org/guide
+[lit]: https://lit.dev
 [web-components]: https://developer.mozilla.org/en-US/docs/Web/Web_Components
-[web-test-runner]: https://modern-web.dev/docs/test-runner/overview
+[vitest]: https://vitest.dev
+[vitebook]: https://github.com/vitebook/vitebook
 [vds-player]: https://github.com/vidstack/player
 [semantic-commit-style]: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
 [pr-beginner-series]: https://app.egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github
+[svelte]: https://svelte.dev
