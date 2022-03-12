@@ -1,0 +1,11 @@
+import './vds-audio-player.js';
+import './vds-audio.js';
+import './vds-hls-player.js';
+import './vds-hls.js';
+import './vds-media-controller.js';
+import './vds-media-ui.js';
+import './vds-media-sync.js';
+import './vds-media-visibility.js';
+import './vds-video-player.js';
+import './vds-video.js';
+import './dangerously-all-ui.js';

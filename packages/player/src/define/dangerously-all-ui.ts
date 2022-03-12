@@ -1,0 +1,13 @@
+import './vds-aspect-ratio.js';
+import './vds-fullscreen-button.js';
+import './vds-gesture.js';
+import './vds-mute-button.js';
+import './vds-play-button.js';
+import './vds-poster.js';
+import './vds-slider-value-text.js';
+import './vds-slider-video.js';
+import './vds-slider.js';
+import './vds-time-slider.js';
+import './vds-time.js';
+import './vds-toggle-button.js';
+import './vds-volume-slider.js';

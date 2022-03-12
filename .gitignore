@@ -1,15 +1,23 @@
 dist/
 dist-*/
-/bundle/
-/types/
-/react/
-/define/
+
+.temp/
+
+.turbo
+turbo-graph*
+
+.svelte-kit
+
 /scratchpad/
 /sandbox/
+/apps/*/sandbox/
+/packages/*/sandbox/
 
-.vitebook/.cache
-.vitebook/.temp
-.vitebook/dist
+packages/*/define/
+packages/*/types/
+packages/*/react/
+packages/*/src/react/index.ts
+packages/*/src/react/components/
 
 elements.json
 vscode.html-data.json

@@ -1,116 +1,26 @@
 {
-  "name": "@vidstack/player",
-  "version": "0.12.3",
-  "description": "Headless web components that make integrating media on the a web a breeze.",
-  "license": "MIT",
+  "name": "vidstack-workspace",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=14.19.0"
-  },
-  "main": "dist-prod/index.js",
-  "module": "dist-prod/index.js",
-  "files": [
-    "src/",
-    "dist/",
-    "dist-prod/",
-    "dist-cdn/",
-    "define/",
-    "react/",
-    "types/",
-    "elements.json",
-    "tailwind.cjs",
-    "vscode.html-data.json",
-    "index.d.ts",
-    "globals.d.ts"
+  "workspaces": [
+    "apps/*",
+    "packages/*"
   ],
-  "sideEffects": [
-    "./define/*.js",
-    "./src/define/*.ts",
-    "./dist/define/*.js",
-    "./dist-prod/define/*.js",
-    "./dist-cdn/define/*.js"
-  ],
-  "exports": {
-    ".": {
-      "development": "./dist/index.js",
-      "default": "./dist-prod/index.js"
-    },
-    "./define/*": {
-      "development": "./dist/define/*",
-      "default": "./dist-prod/define/*"
-    },
-    "./cdn/define/*": {
-      "default": "./dist-cdn/define/*"
-    },
-    "./react": {
-      "development": "./dist/react/index.js",
-      "default": "./dist-prod/react/index.js"
-    },
-    "./package.json": "./package.json",
-    "./tailwind.cjs": "./tailwind.cjs",
-    "./elements.json": "./elements.json",
-    "./vscode.html-data.json": "./vscode.html-data.json"
-  },
-  "contributors": [
-    "Dave Furfero <furf@furf.com>",
-    "Rahim Alwer <rahim.alwer@gmail.com>",
-    "Sam Potts <sam@potts.es>"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vidstack/player.git"
-  },
-  "bugs": {
-    "url": "https://github.com/vidstack/player/issues"
-  },
   "scripts": {
-    "analyze": "celement analyze \"src/**/*{events,Element}.ts\"",
-    "build:base": "node .scripts/build.mjs --entry=\"src/index.ts,src/**/!(story-utils|test-utils|tests)/*.ts\"",
-    "build:dev": "rimraf dist && npm run build:base -- --outdir=dist",
-    "build:prod": "rimraf dist-prod && npm run build:base -- --outdir=dist-prod --prod",
-    "build:cdn": "rimraf dist-cdn && node .scripts/build.mjs --entry=\"src/define/*.ts\" --outdir=dist-cdn --external=hls.js --bundle --prod",
-    "build:watch": "run-s analyze && run-p \"build:dev -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
-    "build:types": "rimraf types && tsc -p tsconfig-build.json",
-    "build:definitions": "rimraf define && node .scripts/definitions.mjs",
-    "build:all": "run-s analyze && run-p build:dev build:prod build:cdn && run-s build:types build:definitions",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "clean": "rimraf define dist dist-* types elements.json vscode.html-data.json coverage react",
-    "lint": "run-s lint:*",
-    "lint:eslint": "eslint --ext .ts . --ignore-path .gitignore",
-    "lint:prettier": "prettier . --check --ignore-path .gitignore --loglevel warn",
-    "format": "run-s format:*",
-    "format:eslint": "npm run lint:eslint -- --fix",
-    "format:prettier": "npm run lint:prettier -- --write",
-    "spellcheck": "cspell 'src/**.ts' '*.md'",
+    "build": "turbo run build",
+    "build:dev": "turbo run analyze build build:types build:definitions --scope=\"@vidstack/*\" --no-deps",
+    "clean": "turbo run clean",
+    "dev": "pnpm clean && pnpm build:dev && turbo run dev --parallel",
+    "lint": "turbo run lint --parallel",
     "prepare": "husky install",
-    "start": "npm run vitebook:dev",
-    "test": "vitest --run",
-    "test:coverage": "vitest --run --coverage",
-    "test:watch": "vitest --watch",
-    "vitebook:dev": "vitebook dev",
-    "release": "node .scripts/release.mjs && npm run clean"
-  },
-  "dependencies": {
-    "@types/fscreen": "^1.0.1",
-    "fscreen": "^1.2.0",
-    "just-debounce-it": "^3.0.1",
-    "just-throttle": "^4.0.1"
-  },
-  "peerDependencies": {
-    "lit": "^2.1.1"
+    "release": "turbo run release",
+    "spellcheck": "cspell 'apps/**/*.md' 'packages/**.ts', 'packages/**/.md', '*.md'"
   },
   "devDependencies": {
-    "@celement/cli": "^0.0.6",
-    "@open-wc/semantic-dom-diff": "^0.19.5",
-    "@open-wc/testing-helpers": "^2.0.4",
     "@types/node": "^17.0.8",
-    "@types/react": "^17.0.39",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.24.0",
-    "@vitebook/client": "0.22.0",
-    "@vitebook/core": "0.22.0",
-    "@vitebook/theme-default": "0.22.0",
-    "c8": "^7.11.0",
     "chokidar": "^3.5.2",
     "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
@@ -123,75 +33,37 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-lit": "^1.3.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-svelte3": "^3.2.1",
     "eslint-plugin-wc": "^1.2.0",
     "execa": "^6.0.0",
     "fast-glob": "^3.2.7",
     "fs-extra": "^10.0.0",
     "gzip-size": "^7.0.0",
-    "hls.js": "^1.1.3",
     "husky": "^7.0.0",
-    "jsdom": "^19.0.0",
     "kleur": "^4.1.4",
     "lint-staged": "^12.1.5",
-    "lit": "^2.1.3",
     "minimist": "^1.2.5",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.6",
     "prettier": "^2.2.1",
-    "react": "^17.0.2",
+    "prettier-plugin-svelte": "^2.5.0",
+    "prettier-plugin-tailwindcss": "^0.1.7",
     "rimraf": "^3.0.2",
     "semver": "^7.3.5",
-    "svelte": "^3.45.0",
-    "tailwindcss": "^3.0.22",
-    "tslib": "^2.3.0",
-    "typescript": "^4.5.4",
-    "vite": "^2.8.1",
-    "vitest": "0.1.24"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "none",
-    "useTabs": false,
-    "tabWidth": 2
+    "svelte": "^3.46.4",
+    "turbo": "1.1.7-canary.3",
+    "typescript": "^4.5.4"
   },
   "lint-staged": {
-    "*.{js,ts}": "eslint --cache --fix",
-    "*.{js,ts,md,json}": "prettier --write",
-    "*.md,src/**/*.ts": "cspell --no-must-find-files"
+    "*.{js,ts,svelte}": "eslint --cache --fix",
+    "*.{js,ts,md,json,svelte}": "prettier --write",
+    "*.{md,ts}": "cspell --no-must-find-files"
   },
-  "publishConfig": {
-    "access": "public"
+  "engines": {
+    "node": ">=14.19.0",
+    "pnpm": ">=6"
   },
-  "keywords": [
-    "accessible",
-    "audio",
-    "customizable",
-    "dailymotion",
-    "dash",
-    "element",
-    "elements",
-    "extensible",
-    "file",
-    "framework-agnostic",
-    "hls",
-    "html5",
-    "lit",
-    "media",
-    "plyr",
-    "player",
-    "react",
-    "spec-compliant",
-    "universal",
-    "vds",
-    "video",
-    "vidstack",
-    "vime",
-    "vimeo",
-    "web-component",
-    "universal",
-    "youtube"
-  ],
   "volta": {
-    "node": "16.13.2"
-  }
+    "node": "14.19.0"
+  },
+  "packageManager": "pnpm@6.32.3"
 }

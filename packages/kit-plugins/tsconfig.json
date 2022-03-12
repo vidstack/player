@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig-build.json",
+  "compilerOptions": {
+    "declarationDir": "types",
+    "lib": ["es2019"]
+  },
+  "include": ["src/**/*.ts"]
+}

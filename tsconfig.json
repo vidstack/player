@@ -8,7 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "lib": ["dom", "dom.iterable", "es2019"],
-    "module": "es2015",
+    "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": false,
     "noImplicitReturns": true,
@@ -16,19 +16,18 @@
     "noImplicitOverride": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2019",
-    "typeRoots": ["node_modules/@types", "./src/global"],
-    "types": ["vitest/globals"]
+    "target": "es2019"
   },
-  "include": ["**/*.ts", "**/*.mjs"],
+  "include": ["**/*.ts", "**/*.js", "**/*.cjs"],
   "exclude": [
     "node_modules",
     "dist",
     "dist-*",
-    "types",
-    "react",
-    "define",
-    "globals.d.ts",
-    "index.d.ts"
+    "packages/*/define",
+    "packages/*/types",
+    "packages/*/react",
+    "packages/*/define",
+    "packages/*/globals.d.ts",
+    "packages/*/index.d.ts"
   ]
 }

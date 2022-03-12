@@ -1,0 +1,14 @@
+{
+  "name": "@vidstack/uploader",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@vidstack/foundation": "workspace:*"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

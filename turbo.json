@@ -1,0 +1,62 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "analyze": {
+      "dependsOn": ["^build"],
+      "outputs": ["elements.json", "vscode.html-data.json", "react/**"]
+    },
+    "build": {
+      "dependsOn": [
+        "analyze",
+        "^build",
+        "^build:prod",
+        "^build:node",
+        "^build:types",
+        "^build:definitions"
+      ],
+      "outputs": [
+        "dist/**",
+        "dist-prod/**",
+        "dist-node/**",
+        "define/**",
+        "types/**",
+        "react/**",
+        ".svelte-kit/**",
+        "elements.json",
+        "vscode.html-data.json"
+      ]
+    },
+    "build:prod": {
+      "dependsOn": ["^build", "^build:prod"],
+      "outputs": ["dist-prod/**"]
+    },
+    "build:node": {
+      "dependsOn": ["^build", "^build:node"],
+      "outputs": ["dist-node/**"]
+    },
+    "build:cdn": {
+      "dependsOn": ["^build", "^build:prod"],
+      "outputs": ["dist-cdn/**"]
+    },
+    "build:types": {
+      "dependsOn": ["^build:types"],
+      "outputs": ["types/**"]
+    },
+    "build:definitions": {
+      "dependsOn": ["build:types"],
+      "outputs": ["define/**"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false
+    },
+    "lint": {
+      "dependsOn": ["lint:eslint", "lint:prettier"]
+    },
+    "lint:eslint": {},
+    "lint:prettier": {}
+  }
+}

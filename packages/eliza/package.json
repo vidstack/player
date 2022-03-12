@@ -1,0 +1,65 @@
+{
+  "name": "@vidstack/eliza",
+  "version": "0.0.0",
+  "description": "Eliza collects metadata about your web components.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "cli.js",
+    "src/",
+    "dist/",
+    "types/"
+  ],
+  "bin": {
+    "eliza": "cli.js"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./cli.js": "./cli.js",
+    "./package.json": "./package.json"
+  },
+  "contributors": [
+    "Rahim Alwer <rahim.alwer@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vidstack/vidstack.git",
+    "directory": "packages/eliza"
+  },
+  "bugs": {
+    "url": "https://github.com/vidstack/vidstack/issues"
+  },
+  "scripts": {
+    "build": "node ../../.scripts/build.js --entry=src/index.ts --outdir=dist --platform=node --bundle --external=yargs,@vidstack/foundation,typescript",
+    "build:types": "tsc -p tsconfig.json",
+    "build:all": "run-p build build:types",
+    "clean": "rimraf dist types",
+    "watch": "run-p \"build -- -w\" \"build:types -- -w\"",
+    "lint:eslint": "eslint src --fix",
+    "lint:prettier": "prettier src --write --loglevel warn"
+  },
+  "dependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/lru-cache": "^7.4.0",
+    "@types/node": "^17.0.17",
+    "@types/normalize-path": "^3.0.0",
+    "@types/read-pkg-up": "^6.0.0",
+    "@types/yargs": "^17.0.8",
+    "@vidstack/foundation": "workspace:*",
+    "yargs": "^17.3.1"
+  },
+  "devDependencies": {
+    "fast-glob": "^3.2.11",
+    "fs-extra": "^10.0.0",
+    "kleur": "^4.1.4",
+    "lru-cache": "^7.4.4",
+    "normalize-path": "^3.0.0",
+    "read-pkg-up": "^9.1.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.6.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "name": "@vidstack/foundation",
+  "version": "0.0.0",
+  "description": "Foundational functions and classes used by Vidstack products.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "./src/dom-shim.ts"
+  ],
+  "files": [
+    "src/",
+    "dist/",
+    "dist-node/",
+    "dist-prod/",
+    "types/",
+    "index.d.ts",
+    "globals.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "node": "./dist-node/index.js",
+      "development": "./dist/index.js",
+      "default": "./dist-prod/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "contributors": [
+    "Rahim Alwer <rahim.alwer@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vidstack/vidstack.git",
+    "directory": "packages/foundation"
+  },
+  "bugs": {
+    "url": "https://github.com/vidstack/vidstack/issues"
+  },
+  "scripts": {
+    "build:base": "node ../../.scripts/build.js --entry=src/index.ts --bundle",
+    "build:external": "pnpm build:base -- --external=lit",
+    "build": "pnpm build:external -- --outdir=dist --sourcemap",
+    "build:node": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --prod --domshim && pnpm patch:lit",
+    "build:prod": "pnpm build:external -- --outdir=dist-prod --prod",
+    "build:types": "tsc -p tsconfig.json",
+    "build:all": "run-p build build:node build:prod build:types",
+    "clean": "rimraf dist dist-node dist-prod types",
+    "dev": "run-p \"build -- -w\" \"build:types -- -w\" \"patch:lit -- -w\"",
+    "lint:eslint": "eslint src --fix",
+    "lint:prettier": "prettier src --write --loglevel warn",
+    "patch:lit": "node ../../.scripts/patch-lit-node.js"
+  },
+  "dependencies": {
+    "@types/fscreen": "^1.0.1"
+  },
+  "peerDependencies": {
+    "lit": "^2.1.1"
+  },
+  "devDependencies": {
+    "fscreen": "^1.2.0",
+    "just-debounce-it": "^3.0.1",
+    "just-throttle": "^4.0.1",
+    "lit": "^2.1.3",
+    "rimraf": "^3.0.2"
+  }
+}

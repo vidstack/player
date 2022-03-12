@@ -1,0 +1,54 @@
+:root {
+  font-size: 16px;
+  scroll-padding-top: 8rem;
+
+  --color-brand: #f30c59;
+  --color-gray-soft: #707070;
+  --color-gray-inverse: black;
+  --color-gray-current: white;
+  --color-gray-divider: #eaeaea;
+  --color-gray-hover: #f5f5f5;
+  --color-gray-hover-inverse: #353535;
+  --color-gray-elevate: white;
+  --color-gray-body: white;
+
+  --prose-pre-bg: #1f2937;
+}
+
+:root.dark {
+  color-scheme: dark;
+
+  --color-brand: #f75a8e;
+  --color-gray-soft: #8d8d8d;
+  --color-gray-inverse: white;
+  --color-gray-current: black;
+  --color-gray-divider: #313131;
+  --color-gray-hover: #353535;
+  --color-gray-hover-inverse: #f5f5f5;
+  --color-gray-elevate: #2d2d2d;
+  --color-gray-body: #1a1a1a;
+}
+
+.js-focus-visible :focus:not([data-focus-visible-added]) {
+  @apply outline-none;
+}
+
+.js-focus-visible [data-focus-visible-added] {
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.svg-responsive > svg {
+  width: 100%;
+  height: 100%;
+}

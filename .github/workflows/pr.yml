@@ -13,19 +13,22 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install Dependencies
-        run: npm ci
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: 6.24.4
+          run_install: true
 
       - name: Lint
-        run: npm run lint
+        run: pnpm lint
 
       - name: Build
-        run: npm run build:dev
+        run: pnpm build:dev
 
       - name: Build Types
-        run: npm run build:types
+        run: pnpm build:types
 
       - name: Run Tests
-        run: npm run test
+        run: pnpm test

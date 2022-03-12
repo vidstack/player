@@ -11,15 +11,5 @@
     "incremental": false,
     "sourceMap": true,
     "useDefineForClassFields": false
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": [
-    "src/**/*.test*.js",
-    "src/**/*.test*.ts",
-    "src/**/story/**",
-    "src/**/stories/**",
-    "src/global/tests",
-    "src/**/story-utils/**",
-    "src/media/test-utils"
-  ]
+  }
 }

@@ -1,14 +1,27 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true
+    es2017: true,
+    node: true,
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json'
+    project: './tsconfig.json',
+    sourceType: 'module',
+    ecmaVersion: 2020,
   },
-  ignorePatterns: ['index.d.ts', 'globals.d.ts', 'src/react/components/**'],
-  plugins: ['simple-import-sort'],
+  ignorePatterns: [
+    'eliza.config.ts',
+    'packages/*/define',
+    'packages/*/types',
+    'packages/*/react',
+    'packages/*/index.d.ts',
+    'packages/*/globals.d.ts',
+    'packages/*/src/react/index.ts',
+    'packages/*/src/react/components/**',
+  ],
+  plugins: ['svelte3', '@typescript-eslint', 'simple-import-sort'],
+  overrides: [{ files: ['*.svelte'], processor: 'svelte3/svelte3' }],
   extends: [
     'plugin:wc/recommended',
     'plugin:lit/recommended',
@@ -16,7 +29,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
-    'prettier'
+    'prettier',
   ],
   rules: {
     'class-methods-use-this': 'off',
@@ -32,11 +45,10 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/no-unused-vars': 'off'
+    '@typescript-eslint/no-unused-vars': 'off',
   },
   settings: {
-    'import/resolver': {
-      typescript: {}
-    }
-  }
+    'import/resolver': { typescript: {} },
+    'svelte3/typescript': () => require('typescript'),
+  },
 };
