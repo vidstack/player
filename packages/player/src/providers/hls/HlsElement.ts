@@ -52,7 +52,7 @@ const HLS_CDN_SRC_PROD = `${HLS_CDN_SRC_BASE}.min.js` as const;
  * @slot - Used to pass in `<source>` and `<track>` elements to the underlying HTML5 media player.
  * @csspart media - The video element (`<video>`).
  * @csspart video - Alias for `media` part.
- * @events './events.ts'
+ * @events ./events.ts
  * @example
  * ```html
  * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
@@ -251,7 +251,7 @@ export class HlsElement extends VideoElement {
   /**
    * Whether native HLS support is available and whether it should be used. Generally defaults
    * to `false` as long as `window.MediaSource` is defined to enforce consistency by
-   * using `hls.js` whereever possible.
+   * using `hls.js` where ever possible.
    *
    * @default false
    */
@@ -289,7 +289,7 @@ export class HlsElement extends VideoElement {
 
     if (__DEV__) {
       this._logger
-        ?.infoGroup('preconnecting to `hls.js` download')
+        ?.infoGroup('preconnect to `hls.js` download')
         .labelledLog('URL', this.hlsLibrary)
         .dispatch();
     }

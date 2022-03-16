@@ -26,7 +26,7 @@ let syncingMediaVolume = false;
  *
  * @tagname vds-media-sync
  * @slot - Used to pass in content, typically a media player/provider.
- * @events './media-sync.events.ts'
+ * @events ./media-sync.events.ts
  * @example
  * ```html
  * <vds-media-sync

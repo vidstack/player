@@ -59,7 +59,7 @@ export enum SliderKeyDirection {
  * @cssprop --vds-slider-pointer-rate - The ratio of the slider that is filled up to the device pointer.
  * @cssprop --vds-slider-pointer-value - The amount of the slider that is filled up to the device pointer.
  * @cssprop --vds-slider-pointer-percent - The pointer rate expressed as a percentage.
- * @events './events.ts'
+ * @events ./events.ts
  * @example
  * ```html
  * <vds-slider
