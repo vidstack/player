@@ -1,23 +1,25 @@
 import {
-  FullscreenChangeEvent,
-  FullscreenErrorEvent,
-  FullscreenSupportChange,
+  type FullscreenChangeEvent,
+  type FullscreenErrorEvent,
+  type FullscreenSupportChange,
+  type ScreenOrientationChangeEvent,
+  type ScreenOrientationLockChangeEvent,
   VdsEvent,
 } from '@vidstack/foundation';
 
-import type { MediaErrorDetail } from './MediaError.js';
+import { type MediaErrorDetail } from './MediaError.js';
 import { MediaType } from './MediaType.js';
-import type { MediaProviderElement } from './provider/index.js';
+import { type MediaProviderElement } from './provider/index.js';
 import {
-  MuteRequestEvent,
-  PauseIdlingRequestEvent,
-  PauseRequestEvent,
-  PlayRequestEvent,
-  ResumeIdlingRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent,
-  UnmuteRequestEvent,
-  VolumeChangeRequestEvent,
+  type MuteRequestEvent,
+  type PauseIdlingRequestEvent,
+  type PauseRequestEvent,
+  type PlayRequestEvent,
+  type ResumeIdlingRequestEvent,
+  type SeekingRequestEvent,
+  type SeekRequestEvent,
+  type UnmuteRequestEvent,
+  type VolumeChangeRequestEvent,
 } from './request.events.js';
 import { ViewType } from './ViewType.js';
 
@@ -58,6 +60,8 @@ export type MediaEvents = {
   'vds-stalled': MediaStalledEvent;
   'vds-started': MediaStartedEvent;
   'vds-suspend': MediaSuspendEvent;
+  'vds-screen-orientation-change': ScreenOrientationChangeEvent;
+  'vds-screen-orientation-lock-change': ScreenOrientationLockChangeEvent;
   'vds-time-update': MediaTimeUpdateEvent;
   'vds-view-type-change': MediaViewTypeChangeEvent;
   'vds-volume-change': MediaVolumeChangeEvent;
