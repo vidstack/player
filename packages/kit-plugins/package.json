@@ -1,37 +1,19 @@
 {
   "name": "@vidstack/kit-plugins",
   "version": "0.0.0",
-  "description": "Collection of Vite plugins that we use with Svelte Kit apps.",
-  "license": "MIT",
+  "private": true,
   "type": "module",
-  "sideEffects": false,
-  "types": "types",
-  "files": [
-    "dist/",
-    "types/"
-  ],
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./dist-node/index.js",
     "./package.json": "./package.json"
   },
-  "contributors": [
-    "Rahim Alwer <rahim.alwer@gmail.com>"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vidstack/vidstack.git",
-    "directory": "packages/kit-plugins"
-  },
-  "bugs": {
-    "url": "https://github.com/vidstack/vidstack/issues"
-  },
   "scripts": {
-    "build:base": "node ../../.scripts/build.js --entry=src/index.ts --outdir=dist --platform=node --bundle --requireshim",
-    "build": "pnpm build:base -- --external=@vidstack/eliza,@vidstack/foundation,vite,shiki,toml",
+    "build:pkg": "run-p build:node build:types",
+    "build:base": "node ../../.scripts/build.js --entry=src/index.ts",
+    "build:node": "pnpm build:base -- --platform=node --outdir=dist-node --bundle --requireshim --external=@vidstack/eliza,@vidstack/foundation,vite,shiki,toml",
     "build:types": "tsc -p tsconfig.json",
-    "build:all": "run-p build build:types",
-    "clean": "rimraf dist types",
-    "watch": "run-p \"build -- -w\" \"build:types -- -w\"",
+    "clean": "rimraf dist-node types",
+    "watch": "run-p \"build:node -- -w\" \"build:types -- -w\"",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn"
   },
@@ -54,8 +36,5 @@
     "markdown-it-emoji": "^2.0.0",
     "rimraf": "^3.0.2",
     "vite": "^2.8.6"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

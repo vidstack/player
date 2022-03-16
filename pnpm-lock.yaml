@@ -88,6 +88,7 @@ importers:
       '@tailwindcss/forms': ^0.4.0
       '@tailwindcss/typography': ^0.5.2
       '@types/react': ^17.0.39
+      '@vidstack/eliza': workspace:*
       '@vidstack/foundation': workspace:*
       '@vidstack/kit-plugins': workspace:*
       '@vidstack/player': workspace:*
@@ -122,6 +123,7 @@ importers:
       '@sveltejs/kit': 1.0.0-next.295_svelte@3.46.4
       '@tailwindcss/typography': 0.5.2_tailwindcss@3.0.23
       '@types/react': 17.0.40
+      '@vidstack/eliza': link:../../packages/eliza
       '@vidstack/kit-plugins': link:../../packages/kit-plugins
       autoprefixer: 10.4.2_postcss@8.4.8
       postcss: 8.4.8

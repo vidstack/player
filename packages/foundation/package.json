@@ -36,15 +36,15 @@
     "url": "https://github.com/vidstack/vidstack/issues"
   },
   "scripts": {
+    "build:pkg": "run-p build:dev build:node build:prod build:types",
     "build:base": "node ../../.scripts/build.js --entry=src/index.ts --bundle",
     "build:external": "pnpm build:base -- --external=lit",
-    "build": "pnpm build:external -- --outdir=dist --sourcemap",
+    "build:dev": "pnpm build:external -- --outdir=dist --sourcemap",
     "build:node": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --prod --domshim",
     "build:prod": "pnpm build:external -- --outdir=dist-prod --prod",
     "build:types": "tsc -p tsconfig.json",
-    "build:all": "run-p build build:node build:prod build:types",
     "clean": "rimraf dist dist-node dist-prod types",
-    "dev": "run-p \"build -- -w\" \"build:types -- -w\"",
+    "dev": "run-p \"build:dev -- -w\" \"build:types -- -w\"",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
     "test": "vitest --run",

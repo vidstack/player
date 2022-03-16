@@ -8,14 +8,15 @@
   "files": [
     "cli.js",
     "src/",
-    "dist/",
-    "types/"
+    "dist-node/",
+    "types/",
+    "index.d.ts"
   ],
   "bin": {
     "eliza": "cli.js"
   },
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./dist-node/index.js",
     "./cli.js": "./cli.js",
     "./package.json": "./package.json"
   },
@@ -31,11 +32,12 @@
     "url": "https://github.com/vidstack/vidstack/issues"
   },
   "scripts": {
-    "build": "node ../../.scripts/build.js --entry=src/index.ts --outdir=dist --platform=node --bundle --requireshim --external=yargs,@vidstack/foundation,typescript",
+    "build:pkg": "run-p build:node build:types",
+    "build:base": "node ../../.scripts/build.js --entry=src/index.ts",
+    "build:node": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --requireshim --external=yargs,@vidstack/foundation,typescript",
     "build:types": "tsc -p tsconfig.json",
-    "build:all": "run-p build build:types",
-    "clean": "rimraf dist types",
-    "watch": "run-p \"build -- -w\" \"build:types -- -w\"",
+    "clean": "rimraf dist-node types",
+    "watch": "run-p \"build:node -- -w\" \"build:types -- -w\"",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn"
   },

@@ -8,6 +8,10 @@ import { readFileSync } from 'fs';
 
 const args = minimist(process.argv.slice(2));
 
+if (args.prod) {
+  process.env.NODE_ENV = 'production';
+}
+
 if (!args.entry) {
   console.error(kleur.red(`\n\n🚨 Missing entry argument \`--entry\`\n\n`));
 }

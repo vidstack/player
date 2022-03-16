@@ -3,13 +3,13 @@
   "baseBranch": "origin/main",
   "pipeline": {
     "analyze": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:node"],
       "outputs": ["elements.json", "vscode.html-data.json", "react/**"]
     },
     "build": {
       "dependsOn": [
         "analyze",
-        "^build",
+        "^build:dev",
         "^build:prod",
         "^build:node",
         "^build:types",
@@ -22,21 +22,25 @@
         "define/**",
         "types/**",
         "react/**",
-        ".svelte-kit/**",
         "elements.json",
         "vscode.html-data.json"
       ]
     },
+    "build:app": {
+      "dependsOn": ["^build"],
+      "outputs": [".svelte-kit/**"]
+    },
+    "build:dev": {
+      "outputs": ["dist/**"]
+    },
     "build:prod": {
-      "dependsOn": ["^build", "^build:prod"],
       "outputs": ["dist-prod/**"]
     },
     "build:node": {
-      "dependsOn": ["^build", "^build:node"],
       "outputs": ["dist-node/**"]
     },
     "build:cdn": {
-      "dependsOn": ["^build", "^build:prod"],
+      "dependsOn": ["^build:prod"],
       "outputs": ["dist-cdn/**"]
     },
     "build:types": {
