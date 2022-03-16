@@ -1,11 +1,6 @@
 {
   "version": "0.2",
-  "ignorePaths": [
-    "package.json",
-    "rollup.config.js",
-    "cspell.json",
-    "CHANGELOG.md"
-  ],
+  "ignorePaths": ["package.json", "rollup.config.js", "cspell.json", "CHANGELOG.md"],
   "dictionaryDefinitions": [],
   "dictionaries": [],
   "words": [
@@ -81,6 +76,7 @@
     "vidstack",
     "vime",
     "vitebook",
+    "vite",
     "vitest",
     "vorbis",
     "weba",

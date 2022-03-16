@@ -7,10 +7,15 @@ import { apiDocsPlugin } from './apiDocsPlugin';
 import { headingsPlugin } from './headingsPlugin';
 
 const CWD = process.cwd();
-const elementsPath = resolve(CWD, 'node_modules/@vidstack/player/elements.json');
-const elements = getJson(elementsPath);
+const components: ComponentMeta[] = [];
 
-const components: ComponentMeta[] = elements.components;
+try {
+  const elementsPath = resolve(CWD, 'node_modules/@vidstack/player/elements.json');
+  const elements = getJson(elementsPath);
+  components.push(...elements.components);
+} catch (e) {
+  // no-op
+}
 
 export const componentsPlugin = (): Plugin[] => [
   apiDocsPlugin(components),
