@@ -59,7 +59,7 @@ export type GestureAction =
 
 The `repeat` <AttrWord /> represents of number of times a gesture event `type` should be
 repeated before the action is performed. If you want an event to occur _twice_ before the action
-is performed, this will be a _single_ repitition (i.e., value of `1`).
+is performed, this will be a _single_ repetition (i.e., value of `1`).
 
 <slot name="repeat" />
 
@@ -93,7 +93,7 @@ import ContextualMenu from '$img/contextual-menu.png'
 
 :::danger
 Be careful when styling other components such as a poster or overlay on top of gestures. The
-`pointer-events:ignore` CSS property should be `none` unless you explicity want to block the gesture
+`pointer-events:ignore` CSS property should be `none` unless you explicitly want to block the gesture
 in a given region on the player.
 :::
 

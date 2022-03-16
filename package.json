@@ -15,7 +15,7 @@
     "lint": "turbo run lint --parallel",
     "prepare": "husky install",
     "release": "turbo run release",
-    "spellcheck": "cspell 'apps/**/*.md' 'packages/**.ts', 'packages/**/.md', '*.md'"
+    "spellcheck": "cspell 'apps/**/*.md' 'packages/**.ts', 'packages/**/.md', '*.md' --gitignore --cache"
   },
   "devDependencies": {
     "@types/node": "^17.0.8",

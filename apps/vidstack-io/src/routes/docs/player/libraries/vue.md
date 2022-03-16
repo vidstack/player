@@ -42,7 +42,7 @@ register the custom element and any dependencies so you can start using it.
 ```
 
 You can read more about [importing elements](../getting-started/foundation.md#elements) in the
-'Foundation' walkthrough.
+'Foundation' walk-through.
 
 ## Element References
 

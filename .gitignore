@@ -1,8 +1,6 @@
 dist/
 dist-*/
 
-.temp/
-
 .turbo
 turbo-graph*
 
@@ -53,8 +51,10 @@ speed-measure-plugin*.json
 /out-tsc
 /bazel-out
 /.pnp
+.temp/
 .pnp.js
 .eslintcache
+.cspellcache
 .nyc_output/
 .idea/
 .versions/

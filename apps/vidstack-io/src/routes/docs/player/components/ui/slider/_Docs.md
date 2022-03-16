@@ -1,7 +1,7 @@
 ## Usage
 
 The `<vds-slider>` component is a custom-built range input (`input[type="range"]`) that is cross-browser
-friendly, ARIA friendly, mouse/touch-friendly and easily stylable. The slider allows users
+friendly, ARIA friendly, mouse/touch-friendly and easily style-able. The slider allows users
 to input numeric values between a minimum and maximum value.
 
 Other sliders in the library such as `<vds-time-slider>` and `<vds-volume-slider>` extend the

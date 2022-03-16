@@ -20,7 +20,7 @@ import { VideoPlayer, PlayButton } from '@vidstack/player/react';
 
 Keep in mind that we're implicitly registering the underlying custom element by importing a
 React component. You can read more about how [importing elements](../getting-started/foundation.md#elements)
-works in the 'Foundation' walkthrough.
+works in the 'Foundation' walk-through.
 
 ## Element References
 

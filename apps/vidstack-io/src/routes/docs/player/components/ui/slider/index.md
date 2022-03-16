@@ -21,7 +21,7 @@ import Docs from './_Docs.md';
 ```
 
 ```html:slot=tw-variants
-<div class="pointing:bg-indigio-300 dragging:bg-indigo-500" />
+<div class="pointing:bg-indigo-300 dragging:bg-indigo-500" />
 ```
 
 ```html:slot=tw-variables

@@ -21,7 +21,7 @@ import Docs from '../_Docs.md';
 ```
 
 ```jsx:slot=tw-variants
-<div className="pointing:bg-indigio-300 dragging:bg-indigo-500" />
+<div className="pointing:bg-indigo-300 dragging:bg-indigo-500" />
 ```
 
 ```jsx:slot=tw-variables
