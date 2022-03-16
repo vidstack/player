@@ -1,8 +1,8 @@
 import { eventListener, round, setAttributeIfEmpty, VdsEvent } from '@vidstack/foundation';
 import { property } from 'lit/decorators.js';
 
-import { mediaStoreSubscription } from '../../media/index.js';
-import { SliderElement } from '../slider/index.js';
+import { mediaStoreSubscription } from '../../media';
+import { SliderElement } from '../slider';
 
 /**
  * A slider control that lets the user specify their desired volume level.

@@ -1,1 +1,1 @@
-export * from './createComponent.js';
+export * from './createComponent';

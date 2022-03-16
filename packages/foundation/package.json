@@ -39,15 +39,16 @@
     "build:base": "node ../../.scripts/build.js --entry=src/index.ts --bundle",
     "build:external": "pnpm build:base -- --external=lit",
     "build": "pnpm build:external -- --outdir=dist --sourcemap",
-    "build:node": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --prod --domshim && pnpm patch:lit",
+    "build:node": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --prod --domshim",
     "build:prod": "pnpm build:external -- --outdir=dist-prod --prod",
     "build:types": "tsc -p tsconfig.json",
     "build:all": "run-p build build:node build:prod build:types",
     "clean": "rimraf dist dist-node dist-prod types",
-    "dev": "run-p \"build -- -w\" \"build:types -- -w\" \"patch:lit -- -w\"",
+    "dev": "run-p \"build -- -w\" \"build:types -- -w\"",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
-    "patch:lit": "node ../../.scripts/patch-lit-node.js"
+    "test": "vitest --run",
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
     "@types/fscreen": "^1.0.1"
@@ -56,10 +57,16 @@
     "lit": "^2.1.1"
   },
   "devDependencies": {
+    "@open-wc/semantic-dom-diff": "^0.19.5",
+    "@open-wc/testing-helpers": "^2.1.2",
     "fscreen": "^1.2.0",
+    "jsdom": "^19.0.0",
     "just-debounce-it": "^3.0.1",
     "just-throttle": "^4.0.1",
     "lit": "^2.1.3",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "tslib": "^2.3.1",
+    "vite": "^2.8.6",
+    "vitest": "^0.6.1"
   }
 }

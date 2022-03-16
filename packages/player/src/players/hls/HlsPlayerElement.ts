@@ -1,7 +1,7 @@
 import { TemplateResult } from 'lit';
 
-import { WithMediaPlayer } from '../../media/index.js';
-import { HlsElement } from '../../providers/hls/index.js';
+import { WithMediaPlayer } from '../../media';
+import { HlsElement } from '../../providers/hls';
 
 /**
  * Embeds video content into documents via the native `<video>` element. It may contain

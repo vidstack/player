@@ -13,9 +13,9 @@ import { html, type PropertyValues, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 
-import { CanPlay, MediaProviderElement, MediaType, ViewType } from '../../media/index.js';
-import { MediaNetworkState } from './MediaNetworkState.js';
-import { MediaReadyState } from './MediaReadyState.js';
+import { CanPlay, MediaProviderElement, MediaType, ViewType } from '../../media';
+import { MediaNetworkState } from './MediaNetworkState';
+import { MediaReadyState } from './MediaReadyState';
 
 export const AUDIO_EXTENSIONS =
   /\.(m4a|mp4a|mpga|mp2|mp2a|mp3|m2a|m3a|wav|weba|aac|oga|spx)($|\?)/i;

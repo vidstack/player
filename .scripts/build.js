@@ -4,6 +4,7 @@ import globby from 'fast-glob';
 import { build } from 'esbuild';
 import kleur from 'kleur';
 import { gzipSizeFromFileSync } from 'gzip-size';
+import { readFileSync } from 'fs';
 
 const args = minimist(process.argv.slice(2));
 
@@ -17,7 +18,7 @@ if (!args.outdir) {
 
 const IS_NODE = args.platform === 'node';
 const nodeShims = IS_NODE
-  ? [args.domshim && domShim(), requireShim()].filter(Boolean).join('\n')
+  ? [args.domshim && domShim(), args.requireshim && requireShim()].filter(Boolean).join('\n')
   : '';
 
 async function main() {
@@ -34,7 +35,7 @@ async function main() {
     logLevel: args.logLevel ?? 'warning',
     platform: args.platform ?? 'browser',
     format: 'esm',
-    target: 'es2019',
+    target: 'es2020',
     watch: args.watch || args.w,
     splitting: IS_NODE || args.nosplit ? false : true,
     chunkNames: 'chunks/[name].[hash]',
@@ -50,6 +51,24 @@ async function main() {
     define: { __DEV__: args.prod ? 'false' : 'true', __NODE__: IS_NODE ? 'true' : 'false' },
     bundle: args.bundle,
     external: args.bundle ? [...(args.external?.split(',') ?? [])] : undefined,
+    plugins: [
+      IS_NODE && {
+        name: 'patch-lit-node',
+        setup(build) {
+          build.onLoad({ filter: /node_modules\/@?lit/ }, async (args) => {
+            let contents = readFileSync(args.path).toString();
+            contents = contents.replace(
+              /window\./g,
+              '(typeof window !== "undefined" ? window : null)?.',
+            );
+            return {
+              contents,
+              loader: 'js',
+            };
+          });
+        },
+      },
+    ].filter(Boolean),
   });
 
   if (args.meta) {
@@ -158,7 +177,13 @@ function requireShim() {
  */
 function domShim() {
   return `
-export const getWindow = () => {
+if (
+  !/test/.test(process.env.NODE_ENV) &&
+  !import.meta.env?.TEST &&
+  !process.env.NO_DOM_SHIM &&
+  globalThis.document === undefined
+) {
+function getWindow() {
   const attributes = new WeakMap();
   const attributesForElement = (element) => {
     let attrs = attributes.get(element);
@@ -248,9 +273,8 @@ export const getWindow = () => {
   return window;
 };
 
-if (globalThis.document === undefined) {
-  const window = getWindow();
-  Object.assign(globalThis, window);
+const window = getWindow();
+Object.assign(globalThis, window);
 }
   `;
 }

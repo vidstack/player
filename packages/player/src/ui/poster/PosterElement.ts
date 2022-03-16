@@ -3,9 +3,9 @@ import { css, CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { MediaRemoteControl, mediaStoreSubscription } from '../../media/index.js';
+import { MediaRemoteControl, mediaStoreSubscription } from '../../media';
 
-const preconnected = new Set();
+const didPreconnect = new Set();
 
 /**
  * Loads and displays the current media poster image. By default, the media provider's
@@ -74,9 +74,9 @@ export class PosterElement extends LitElement {
 
     mediaStoreSubscription(this, 'currentPoster', ($poster) => {
       window.requestAnimationFrame(() => {
-        if (!this.__canLoad && !preconnected.has($poster)) {
+        if (!this.__canLoad && !didPreconnect.has($poster)) {
           preconnect($poster, 'prefetch');
-          preconnected.add($poster);
+          didPreconnect.add($poster);
         }
       });
 
@@ -128,7 +128,7 @@ export class PosterElement extends LitElement {
 
   /**
    * Whether the poster should be loaded immediately, or once it has entered the viewport.
-   * By default it is `undefined`, in which it fallsback to respecting the loading strategy
+   * By default it is `undefined`, in which it falls back to respecting the loading strategy
    * defined on the media provider element.
    *
    * @default undefined

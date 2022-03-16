@@ -1,1 +1,1 @@
-export * from './WithMediaPlayer.js';
+export * from './WithMediaPlayer';

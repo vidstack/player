@@ -13,7 +13,7 @@ import { css, type CSSResultGroup, LitElement, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import { type Ref } from 'lit/directives/ref.js';
 
-import { mediaContainerContext, mediaStoreContext } from '../../media/index.js';
+import { mediaContainerContext, mediaStoreContext } from '../../media';
 
 // We perform gestures in batches to enable prioritization. Each batch belongs to a root
 // media container. This is to ensure gestures on one player don't affect another.
@@ -117,9 +117,9 @@ export class GestureElement extends LitElement {
    * The number of times a gesture event `type` should be repeated before the action is
    * performed. Keep in mind that the provided value is a multiplier, and not a constant. Thus, if
    * you want an event to occur twice before the action is performed, this will be a single
-   * repitition (eg: value of `1`).
+   * repetition (eg: value of `1`).
    *
-   * @defualt 0
+   * @default 0
    * @example 0 - wait for event to occur once.
    * @example 1 - wait for event to occur twice.
    * @example 2 - wait for event to occur thrice.

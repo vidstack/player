@@ -1,7 +1,7 @@
 import { DisposalBin, listen } from '@vidstack/foundation';
 import type { ReactiveControllerHost } from 'lit';
 
-import type { MediaControllerEvents } from '../controller/index.js';
+import type { MediaControllerEvents } from '../controller';
 
 /**
  * Simplifies attaching event listeners to a media provider below in the DOM.

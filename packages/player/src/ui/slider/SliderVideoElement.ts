@@ -10,7 +10,7 @@ import {
 import { property, state } from 'lit/decorators.js';
 import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 
-import { sliderStoreContext } from './store.js';
+import { sliderStoreContext } from './store';
 
 /**
  * Used to load a low-resolution video to be displayed when the user is hovering or dragging

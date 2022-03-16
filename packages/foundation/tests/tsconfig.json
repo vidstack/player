@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "$lib": ["../src/index.ts"]
+    }
+  },
+  "include": ["**/*.ts"]
+}

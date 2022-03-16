@@ -1,1 +1,1 @@
-export * from './TimeElement.js';
+export * from './TimeElement';

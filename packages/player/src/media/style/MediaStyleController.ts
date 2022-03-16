@@ -1,8 +1,8 @@
 import { camelToKebabCase, DisposalBin } from '@vidstack/foundation';
 import type { ReactiveControllerHost } from 'lit';
 
-import type { MediaContext } from '../MediaContext.js';
-import { mediaStoreContext } from '../store.js';
+import type { MediaContext } from '../MediaContext';
+import { mediaStoreContext } from '../store';
 
 export abstract class MediaStyleController {
   protected _disposal = new DisposalBin();

@@ -8,9 +8,9 @@ import {
 import { type CSSResultGroup, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { mediaStoreSubscription } from '../../media/index.js';
-import { SliderElement } from '../slider/index.js';
-import { timeSliderElementStyles } from './styles.js';
+import { mediaStoreSubscription } from '../../media';
+import { SliderElement } from '../slider';
+import { timeSliderElementStyles } from './styles';
 
 /**
  * A slider that lets the user control the current media playback time.

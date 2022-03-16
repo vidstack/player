@@ -1,1 +1,1 @@
-export * from './GestureElement.js';
+export * from './GestureElement';

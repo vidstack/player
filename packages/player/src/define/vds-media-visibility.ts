@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { MediaVisibilityElement } from '../media/manage/MediaVisibilityElement.js';
+import { MediaVisibilityElement } from '../media/manage/MediaVisibilityElement';
 
 safelyDefineCustomElement('vds-media-visibility', MediaVisibilityElement);
 

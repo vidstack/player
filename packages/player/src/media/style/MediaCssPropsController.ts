@@ -1,6 +1,6 @@
 import { isNumber, isString } from '@vidstack/foundation';
 
-import { MediaStyleController } from './MediaStyleController.js';
+import { MediaStyleController } from './MediaStyleController';
 
 class MediaCssPropsController extends MediaStyleController {
   protected _handleValueChange(_, attrName: string, value: unknown) {

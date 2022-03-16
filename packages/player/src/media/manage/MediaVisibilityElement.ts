@@ -8,7 +8,7 @@ import {
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import type { MediaProviderElement } from '../provider/index.js';
+import type { MediaProviderElement } from '../provider';
 
 export type EnterVisibilityMediaAction = 'play' | 'unmute';
 export type ExitVisibilityMediaAction = 'pause' | 'mute';

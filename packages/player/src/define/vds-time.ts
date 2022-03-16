@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { TimeElement } from '../ui/time/TimeElement.js';
+import { TimeElement } from '../ui/time/TimeElement';
 
 safelyDefineCustomElement('vds-time', TimeElement);
 

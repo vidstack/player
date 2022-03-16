@@ -1,6 +1,6 @@
 import { VdsEvent } from '@vidstack/foundation';
 
-import type { SliderElement } from './SliderElement.js';
+import type { SliderElement } from './SliderElement';
 
 export type SliderEvents = {
   'vds-slider-drag-start': SliderDragStartEvent;

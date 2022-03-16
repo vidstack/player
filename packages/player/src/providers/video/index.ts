@@ -1,3 +1,3 @@
-export * from './fullscreen/index.js';
-export * from './presentation/index.js';
-export * from './VideoElement.js';
+export * from './fullscreen';
+export * from './presentation';
+export * from './VideoElement';

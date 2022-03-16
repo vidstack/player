@@ -2,7 +2,7 @@ import './vds-media-ui';
 
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { VideoPlayerElement } from '../players/video/VideoPlayerElement.js';
+import { VideoPlayerElement } from '../players/video/VideoPlayerElement';
 
 safelyDefineCustomElement('vds-video-player', VideoPlayerElement);
 

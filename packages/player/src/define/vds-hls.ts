@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { HlsElement } from '../providers/hls/HlsElement.js';
+import { HlsElement } from '../providers/hls/HlsElement';
 
 safelyDefineCustomElement('vds-hls', HlsElement);
 

@@ -26,7 +26,7 @@
     "url": "https://github.com/vidstack/vidstack/issues"
   },
   "scripts": {
-    "build:base": "node ../../.scripts/build.js --entry=src/index.ts --outdir=dist --platform=node --bundle",
+    "build:base": "node ../../.scripts/build.js --entry=src/index.ts --outdir=dist --platform=node --bundle --requireshim",
     "build": "pnpm build:base -- --external=@vidstack/eliza,@vidstack/foundation,vite,shiki,toml",
     "build:types": "tsc -p tsconfig.json",
     "build:all": "run-p build build:types",

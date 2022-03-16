@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { PlayButtonElement } from '../ui/play-button/PlayButtonElement.js';
+import { PlayButtonElement } from '../ui/play-button/PlayButtonElement';
 
 safelyDefineCustomElement('vds-play-button', PlayButtonElement);
 

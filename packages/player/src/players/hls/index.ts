@@ -1,1 +1,1 @@
-export * from './HlsPlayerElement.js';
+export * from './HlsPlayerElement';

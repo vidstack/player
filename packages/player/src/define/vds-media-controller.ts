@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { MediaControllerElement } from '../media/controller/MediaControllerElement.js';
+import { MediaControllerElement } from '../media/controller/MediaControllerElement';
 
 safelyDefineCustomElement('vds-media-controller', MediaControllerElement);
 

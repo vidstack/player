@@ -2,7 +2,7 @@ import { derived, DisposalBin, formatTime, ReadableStore } from '@vidstack/found
 import { css, type CSSResultGroup, html, LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { mediaStoreContext } from '../../media/index.js';
+import { mediaStoreContext } from '../../media';
 
 /**
  * Outputs a media duration (eg: `currentTime`, `duration`, `bufferedAmount`, etc.) value as time

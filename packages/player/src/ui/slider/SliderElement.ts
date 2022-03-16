@@ -22,9 +22,9 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { MediaRemoteControl } from '../../media/index.js';
-import { sliderStoreContext } from './store.js';
-import { sliderElementStyles } from './styles.js';
+import { MediaRemoteControl } from '../../media';
+import { sliderStoreContext } from './store';
+import { sliderElementStyles } from './styles';
 
 /**
  * The direction to move the thumb, associated with key symbols.

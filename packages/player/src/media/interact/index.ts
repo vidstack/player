@@ -1,2 +1,2 @@
-export * from './mediaEventListener.js';
-export * from './MediaRemoteControl.js';
+export * from './mediaEventListener';
+export * from './MediaRemoteControl';

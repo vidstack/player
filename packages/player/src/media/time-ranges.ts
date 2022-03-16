@@ -24,7 +24,7 @@ function rangeCheck(fnName: 'start' | 'end', index: number, maxIndex: number) {
  * Get the time for the specified index at the start or end of a `TimeRanges` object.
  *
  * @param fnName - The function name to use for logging.
- * @param valueIndex - The property that should be used to get the time. should be  0 for 'start' or  1 for 'end'.
+ * @param valueIndex - The property that should be used to get the time. should be  0 for 'start' or  1 for 'end'.';
  * @param ranges - An array of time ranges.
  * @param rangeIndex - The index to start the search at.
  */

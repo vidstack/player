@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { MediaSyncElement } from '../media/manage/MediaSyncElement.js';
+import { MediaSyncElement } from '../media/manage/MediaSyncElement';
 
 safelyDefineCustomElement('vds-media-sync', MediaSyncElement);
 

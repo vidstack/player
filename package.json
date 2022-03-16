@@ -9,10 +9,12 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "build:dev": "turbo run analyze build build:types build:definitions --scope=\"@vidstack/*\" --no-deps",
+    "build:dev": "turbo run analyze build build:node build:types build:definitions --scope=\"@vidstack/*\" --no-deps",
     "clean": "turbo run clean",
     "dev": "pnpm clean && pnpm build:dev && turbo run dev --parallel",
     "lint": "turbo run lint --parallel",
+    "test": "turbo run test --parallel",
+    "test:esm": "node .scripts/test-node-esm.js",
     "prepare": "husky install",
     "release": "turbo run release",
     "spellcheck": "cspell 'apps/**/*.md' 'packages/**.ts', 'packages/**/.md', '*.md' --gitignore --cache"

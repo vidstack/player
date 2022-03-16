@@ -1,1 +1,1 @@
-export * from './PosterElement.js';
+export * from './PosterElement';

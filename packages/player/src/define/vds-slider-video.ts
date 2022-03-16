@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { SliderVideoElement } from '../ui/slider/SliderVideoElement.js';
+import { SliderVideoElement } from '../ui/slider/SliderVideoElement';
 
 safelyDefineCustomElement('vds-slider-video', SliderVideoElement);
 

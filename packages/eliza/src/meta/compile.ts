@@ -17,7 +17,7 @@ const defaultOptions: CompilerOptions = {
   noEmitOnError: false,
   allowJs: true,
   experimentalDecorators: true,
-  target: ts.ScriptTarget.ES2019,
+  target: ts.ScriptTarget.ES2020,
   downlevelIteration: true,
   module: ts.ModuleKind.ESNext,
   strictNullChecks: true,

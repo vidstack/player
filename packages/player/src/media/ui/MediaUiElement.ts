@@ -8,10 +8,10 @@ import {
 } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { mediaStoreSubscription } from '../store.js';
-import { bindMediaPropsToAttrs, bindMediaPropsToCssProps } from '../style/index.js';
-import { ViewType } from '../ViewType.js';
-import { mediaUiElementStyles } from './styles.js';
+import { mediaStoreSubscription } from '../store';
+import { bindMediaPropsToAttrs, bindMediaPropsToCssProps } from '../style';
+import { ViewType } from '../ViewType';
+import { mediaUiElementStyles } from './styles';
 
 /**
  * This is a general styling container which holds your UI elements. Media attributes and

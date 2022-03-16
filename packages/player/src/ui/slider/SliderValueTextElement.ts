@@ -2,7 +2,7 @@ import { derived, DisposalBin, formatTime, ReadableStore, round } from '@vidstac
 import { css, type CSSResultGroup, html, LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { sliderStoreContext } from './store.js';
+import { sliderStoreContext } from './store';
 
 /**
  * Outputs the current slider value as text.

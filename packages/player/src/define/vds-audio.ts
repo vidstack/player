@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { AudioElement } from '../providers/audio/AudioElement.js';
+import { AudioElement } from '../providers/audio/AudioElement';
 
 safelyDefineCustomElement('vds-audio', AudioElement);
 

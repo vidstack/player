@@ -1,5 +1,4 @@
 import { VdsEvent } from '@vidstack/foundation';
-import type Hls from 'hls.js';
 import type {
   AudioTrackLoadedData,
   AudioTracksUpdatedData,
@@ -50,8 +49,9 @@ import type {
   SubtitleTrackSwitchData,
   TrackLoadingData,
 } from 'hls.js';
+import type Hls from 'hls.js';
 
-import type { HlsElement } from './HlsElement.js';
+import type { HlsElement } from './HlsElement';
 
 export type HlsEvents = {
   'vds-hls-lib-load-start': HlsLibLoadStartEvent;
@@ -495,7 +495,7 @@ export type HlsFpsDropEvent = VdsHlsEvent<FPSDropData>;
 export type HlsFpsDropLevelCappingEvent = VdsHlsEvent<FPSDropLevelCappingData>;
 
 /**
- * Fired when an error has occured during loading or playback.
+ * Fired when an error has occurred during loading or playback.
  *
  * @event
  */

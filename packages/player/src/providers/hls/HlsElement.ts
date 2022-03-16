@@ -12,9 +12,9 @@ import type { ErrorData, Events as HlsEvent, HlsConfig, LevelLoadedData } from '
 import { type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { CanPlay, MediaErrorCode, MediaType } from '../../media/index.js';
-import { VideoElement } from '../video/index.js';
-import type { DynamicHlsConstructorImport, HlsConstructor } from './types.js';
+import { CanPlay, MediaErrorCode, MediaType } from '../../media';
+import { VideoElement } from '../video';
+import type { DynamicHlsConstructorImport, HlsConstructor } from './types';
 import {
   HlsConstructorLoadCallbacks,
   importHlsConstructor,
@@ -22,7 +22,7 @@ import {
   isHlsEventType,
   loadHlsConstructorScript,
   vdsToHlsEventType,
-} from './utils.js';
+} from './utils';
 
 export const HLS_EXTENSIONS = /\.(m3u8)($|\?)/i;
 

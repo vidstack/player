@@ -1,6 +1,6 @@
 import { VdsEvent } from '@vidstack/foundation';
 
-import { MediaVolumeChange } from '../events.js';
+import { MediaVolumeChange } from '../events';
 
 export type MediaSyncEvents = {
   'vds-media-volume-sync': MediaVolumeSyncEvent;

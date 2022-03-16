@@ -1,8 +1,8 @@
 import { vdsEvent } from '@vidstack/foundation';
 import { html } from 'lit';
 
-import { CanPlay } from '../CanPlay.js';
-import { MediaProviderElement } from '../provider/index.js';
+import { CanPlay } from '../CanPlay';
+import { MediaProviderElement } from '../provider';
 
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can

@@ -15,11 +15,11 @@ import {
 } from '@vidstack/foundation';
 import type { ReactiveElement } from 'lit';
 
-import { VdsMediaEvent } from '../events.js';
-import { MediaProviderElement } from '../provider/MediaProviderElement.js';
-import { PendingMediaRequests } from '../request.events.js';
-import { mediaStoreContext, ReadableMediaStoreRecord, WritableMediaStoreRecord } from '../store.js';
-import { MediaIdleController } from './MediaIdleController.js';
+import { VdsMediaEvent } from '../events';
+import { MediaProviderElement } from '../provider/MediaProviderElement';
+import { PendingMediaRequests } from '../request.events';
+import { mediaStoreContext, ReadableMediaStoreRecord, WritableMediaStoreRecord } from '../store';
+import { MediaIdleController } from './MediaIdleController';
 
 export type MediaControllerHost = ReactiveElement & {
   exitFullscreen?(): Promise<void>;

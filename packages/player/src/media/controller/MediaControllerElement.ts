@@ -6,8 +6,8 @@ import {
 } from '@vidstack/foundation';
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
-import { MediaController } from './MediaController.js';
-import { mediaControllerStyles } from './styles.js';
+import { MediaController } from './MediaController';
+import { mediaControllerStyles } from './styles';
 
 /**
  * Fired when the media controller connects to the DOM.

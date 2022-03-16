@@ -2,8 +2,8 @@ import { debounce, DisposalBin, eventListener, listen, vdsEvent } from '@vidstac
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import type { MediaVolumeChange, MediaVolumeChangeEvent } from '../events.js';
-import type { MediaProviderElement } from '../provider/index.js';
+import type { MediaVolumeChange, MediaVolumeChangeEvent } from '../events';
+import type { MediaProviderElement } from '../provider';
 
 const mediaProviders = new Set<MediaProviderElement>();
 

@@ -16,7 +16,7 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { toggleButtonElementStyles } from './styles.js';
+import { toggleButtonElementStyles } from './styles';
 
 /**
  * The foundation for any toggle button such as a `play-button` or `mute-button`.

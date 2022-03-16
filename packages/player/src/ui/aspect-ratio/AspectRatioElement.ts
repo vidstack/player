@@ -8,7 +8,7 @@ import {
 } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { aspectRatioElementStyles } from './styles.js';
+import { aspectRatioElementStyles } from './styles';
 
 /**
  * This element creates a container that will hold the dimensions of the desired aspect ratio. This

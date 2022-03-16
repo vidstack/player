@@ -1,5 +1,5 @@
-import { WithMediaPlayer } from '../player/index.js';
-import { FakeMediaProviderElement } from './FakeMediaProviderElement.js';
+import { WithMediaPlayer } from '../player';
+import { FakeMediaProviderElement } from './FakeMediaProviderElement';
 
 /**
  * A fake media player that's used for testing. This class alone does nothing special. It can

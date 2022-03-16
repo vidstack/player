@@ -8,14 +8,14 @@ import {
 import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 
-import { MediaProviderElement } from '../provider/index.js';
-import { basePlayerStyles } from './styles.js';
+import { MediaProviderElement } from '../provider';
+import { basePlayerStyles } from './styles';
 
 /**
  * Holds a contextual reference to the media container element. The container simply wraps the
  * media provider element to match it's dimensions, so it can be used by UI components to attach
  * event listeners too (eg: `GestureElement`). This container sits behind `<vds-media-ui>`, so
- * controls and other elements can safely be placed ontop to prevent background events.
+ * controls and other elements can safely be placed on top to prevent background events.
  *
  * ❓ The container exists because a provider is rendered dynamically, and the only API for
  * accessing the underlying element is via the `engine` property on `MediaProviderElement`, but

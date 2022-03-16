@@ -1,6 +1,6 @@
-import { type MediaErrorDetail } from './MediaError.js';
-import { MediaType } from './MediaType.js';
-import { ViewType } from './ViewType.js';
+import { type MediaErrorDetail } from './MediaError';
+import { MediaType } from './MediaType';
+import { ViewType } from './ViewType';
 
 export type MediaContext = {
   /**

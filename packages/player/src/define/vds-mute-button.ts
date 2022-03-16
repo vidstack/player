@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { MuteButtonElement } from '../ui/mute-button/MuteButtonElement.js';
+import { MuteButtonElement } from '../ui/mute-button/MuteButtonElement';
 
 safelyDefineCustomElement('vds-mute-button', MuteButtonElement);
 

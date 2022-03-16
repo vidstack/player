@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { SliderValueTextElement } from '../ui/slider/SliderValueTextElement.js';
+import { SliderValueTextElement } from '../ui/slider/SliderValueTextElement';
 
 safelyDefineCustomElement('vds-slider-value-text', SliderValueTextElement);
 

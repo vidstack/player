@@ -1,7 +1,10 @@
 {
   "extends": "../../tsconfig-build.json",
   "compilerOptions": {
-    "declarationDir": "types"
+    "declarationDir": "types",
+    "paths": {
+      "$vidstack/player": ["./src"]
+    }
   },
   "include": ["src/**/*.ts"]
 }

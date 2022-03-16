@@ -1,1 +1,1 @@
-export * from './VolumeSliderElement.js';
+export * from './VolumeSliderElement';

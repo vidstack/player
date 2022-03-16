@@ -7,7 +7,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
-    "lib": ["dom", "dom.iterable", "es2019"],
+    "lib": ["dom", "dom.iterable", "es2020"],
     "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": false,
@@ -16,7 +16,7 @@
     "noImplicitOverride": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2019"
+    "target": "es2020"
   },
   "include": ["**/*.ts", "**/*.js", "**/*.cjs"],
   "exclude": [

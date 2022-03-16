@@ -1,2 +1,2 @@
-export * from './events.js';
-export * from './VideoPresentationController.js';
+export * from './events';
+export * from './VideoPresentationController';

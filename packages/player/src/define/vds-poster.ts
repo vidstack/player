@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { PosterElement } from '../ui/poster/PosterElement.js';
+import { PosterElement } from '../ui/poster/PosterElement';
 
 safelyDefineCustomElement('vds-poster', PosterElement);
 

@@ -57,6 +57,7 @@
       "dependsOn": ["lint:eslint", "lint:prettier"]
     },
     "lint:eslint": {},
-    "lint:prettier": {}
+    "lint:prettier": {},
+    "test": {}
   }
 }

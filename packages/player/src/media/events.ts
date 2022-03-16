@@ -7,9 +7,9 @@ import {
   VdsEvent,
 } from '@vidstack/foundation';
 
-import { type MediaErrorDetail } from './MediaError.js';
-import { MediaType } from './MediaType.js';
-import { type MediaProviderElement } from './provider/index.js';
+import { type MediaErrorDetail } from './MediaError';
+import { MediaType } from './MediaType';
+import { type MediaProviderElement } from './provider';
 import {
   type MuteRequestEvent,
   type PauseIdlingRequestEvent,
@@ -20,8 +20,8 @@ import {
   type SeekRequestEvent,
   type UnmuteRequestEvent,
   type VolumeChangeRequestEvent,
-} from './request.events.js';
-import { ViewType } from './ViewType.js';
+} from './request.events';
+import { ViewType } from './ViewType';
 
 export type MediaEvents = {
   'vds-abort': MediaAbortEvent;

@@ -1,1 +1,1 @@
-export * from './FullscreenButtonElement.js';
+export * from './FullscreenButtonElement';

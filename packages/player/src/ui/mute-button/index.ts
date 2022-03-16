@@ -1,1 +1,1 @@
-export * from './MuteButtonElement.js';
+export * from './MuteButtonElement';

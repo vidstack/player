@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { AspectRatioElement } from '../ui/aspect-ratio/AspectRatioElement.js';
+import { AspectRatioElement } from '../ui/aspect-ratio/AspectRatioElement';
 
 safelyDefineCustomElement('vds-aspect-ratio', AspectRatioElement);
 

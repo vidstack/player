@@ -3,11 +3,11 @@ import { CSSResultGroup, html, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';
 
-import { ViewType } from '../../media/index.js';
-import { Html5MediaElement } from '../html5/index.js';
-import { VideoFullscreenController } from './fullscreen/index.js';
-import { VideoPresentationController } from './presentation/index.js';
-import { videoElementStyles } from './styles.js';
+import { ViewType } from '../../media';
+import { Html5MediaElement } from '../html5';
+import { VideoFullscreenController } from './fullscreen';
+import { VideoPresentationController } from './presentation';
+import { videoElementStyles } from './styles';
 
 /**
  * Embeds video content into documents via the native `<video>` element. It may contain

@@ -7,7 +7,7 @@ import {
 } from '@vidstack/foundation';
 import type { Events as HlsEvent } from 'hls.js';
 
-import type { DynamicHlsConstructorImport, HlsConstructor } from './types.js';
+import type { DynamicHlsConstructorImport, HlsConstructor } from './types';
 
 const HLS_CTOR_CACHE = new Map<any, HlsConstructor>();
 

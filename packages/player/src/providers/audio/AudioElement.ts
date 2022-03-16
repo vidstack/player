@@ -2,8 +2,8 @@ import { ifNonEmpty, ifNumber } from '@vidstack/foundation';
 import { CSSResultGroup, html, TemplateResult } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 
-import { Html5MediaElement } from '../html5/index.js';
-import { audioElementStyles } from './styles.js';
+import { Html5MediaElement } from '../html5';
+import { audioElementStyles } from './styles';
 
 /**
  * Used to embed sound content into documents via the native `<audio>` element. It may contain

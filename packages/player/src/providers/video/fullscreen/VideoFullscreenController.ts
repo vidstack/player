@@ -6,10 +6,7 @@ import {
   ScreenOrientationController,
 } from '@vidstack/foundation';
 
-import {
-  VideoPresentationChangeEvent,
-  VideoPresentationController,
-} from '../presentation/index.js';
+import { VideoPresentationChangeEvent, VideoPresentationController } from '../presentation';
 
 /**
  * Extends the base `FullscreenController` with additional logic for handling fullscreen

@@ -2,7 +2,7 @@ import './vds-media-ui';
 
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { HlsPlayerElement } from '../players/hls/HlsPlayerElement.js';
+import { HlsPlayerElement } from '../players/hls/HlsPlayerElement';
 
 safelyDefineCustomElement('vds-hls-player', HlsPlayerElement);
 

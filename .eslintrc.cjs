@@ -20,7 +20,7 @@ module.exports = {
     'packages/*/src/react/index.ts',
     'packages/*/src/react/components/**',
   ],
-  plugins: ['svelte3', '@typescript-eslint', 'simple-import-sort'],
+  plugins: ['import', 'svelte3', '@typescript-eslint', 'simple-import-sort'],
   overrides: [{ files: ['*.svelte'], processor: 'svelte3/svelte3' }],
   extends: [
     'plugin:wc/recommended',
@@ -39,7 +39,6 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'simple-import-sort/exports': 'error',
     'simple-import-sort/imports': 'error',
-    // TODO: resolve all these warnings later.
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-empty-function': 'off',
@@ -48,7 +47,19 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
   },
   settings: {
-    'import/resolver': { typescript: {} },
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
+    },
+    'import/resolver': {
+      typescript: {
+        project: [
+          'tsconfig.json',
+          'apps/*/tsconfig.json',
+          'packages/*/tsconfig.json',
+          'packages/*/tests/tsconfig.json',
+        ],
+      },
+    },
     'svelte3/typescript': () => require('typescript'),
   },
 };

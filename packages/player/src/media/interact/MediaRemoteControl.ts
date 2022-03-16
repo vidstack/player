@@ -1,7 +1,7 @@
 import { ExtractEventInit, hostRequestQueue, LogDispatcher, vdsEvent } from '@vidstack/foundation';
 import type { ReactiveControllerHost } from 'lit';
 
-import { MediaRequestEvents } from '../request.events.js';
+import { MediaRequestEvents } from '../request.events';
 
 /**
  * A simple facade for dispatching media requests to the nearest media controller.

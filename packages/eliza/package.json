@@ -31,7 +31,7 @@
     "url": "https://github.com/vidstack/vidstack/issues"
   },
   "scripts": {
-    "build": "node ../../.scripts/build.js --entry=src/index.ts --outdir=dist --platform=node --bundle --external=yargs,@vidstack/foundation,typescript",
+    "build": "node ../../.scripts/build.js --entry=src/index.ts --outdir=dist --platform=node --bundle --requireshim --external=yargs,@vidstack/foundation,typescript",
     "build:types": "tsc -p tsconfig.json",
     "build:all": "run-p build build:types",
     "clean": "rimraf dist types",

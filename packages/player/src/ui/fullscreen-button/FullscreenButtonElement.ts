@@ -1,7 +1,7 @@
 import { setAttribute, setAttributeIfEmpty } from '@vidstack/foundation';
 
-import { MediaRemoteControl, mediaStoreSubscription } from '../../media/index.js';
-import { ToggleButtonElement } from '../toggle-button/index.js';
+import { MediaRemoteControl, mediaStoreSubscription } from '../../media';
+import { ToggleButtonElement } from '../toggle-button';
 
 /**
  * A button for toggling the fullscreen mode of the player.

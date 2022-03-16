@@ -19,13 +19,13 @@ import {
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { CanPlay } from '../CanPlay.js';
-import { MediaController } from '../controller/index.js';
-import type { MediaEvents } from '../events.js';
-import { MediaContext } from '../MediaContext.js';
-import { MediaType } from '../MediaType.js';
-import { mediaStoreContext, ReadableMediaStoreRecord, WritableMediaStoreRecord } from '../store.js';
-import { ViewType } from '../ViewType.js';
+import { CanPlay } from '../CanPlay';
+import { MediaController } from '../controller';
+import type { MediaEvents } from '../events';
+import { MediaContext } from '../MediaContext';
+import { MediaType } from '../MediaType';
+import { mediaStoreContext, ReadableMediaStoreRecord, WritableMediaStoreRecord } from '../store';
+import { ViewType } from '../ViewType';
 
 /**
  * Fired when the media provider connects to the DOM.

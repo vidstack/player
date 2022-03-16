@@ -7,10 +7,10 @@ import {
 } from '@vidstack/foundation';
 import type { ReactiveControllerHost } from 'lit';
 
-import type { MediaContext } from './MediaContext.js';
-import { MediaType } from './MediaType.js';
-import { createTimeRanges } from './time-ranges.js';
-import { ViewType } from './ViewType.js';
+import type { MediaContext } from './MediaContext';
+import { MediaType } from './MediaType';
+import { createTimeRanges } from './time-ranges';
+import { ViewType } from './ViewType';
 
 export type WritableMediaStoreRecord = {
   [Prop in keyof MediaContext]: WritableStore<MediaContext[Prop]>;

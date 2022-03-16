@@ -1,1 +1,1 @@
-export * from './MediaUiElement.js';
+export * from './MediaUiElement';

@@ -1,6 +1,6 @@
 import { isNumber, isString, setAttribute } from '@vidstack/foundation';
 
-import { MediaStyleController } from './MediaStyleController.js';
+import { MediaStyleController } from './MediaStyleController';
 
 class MediaAttrsController extends MediaStyleController {
   protected _handleValueChange(_, attrName: string, value: unknown) {

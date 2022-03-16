@@ -1,7 +1,7 @@
 import { TemplateResult } from 'lit';
 
-import { WithMediaPlayer } from '../../media/index.js';
-import { AudioElement } from '../../providers/audio/index.js';
+import { WithMediaPlayer } from '../../media';
+import { AudioElement } from '../../providers/audio';
 
 /**
  * Used to embed sound content into documents via the native `<audio>` element. It may contain

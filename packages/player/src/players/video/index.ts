@@ -1,1 +1,1 @@
-export * from './VideoPlayerElement.js';
+export * from './VideoPlayerElement';

@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { FullscreenButtonElement } from '../ui/fullscreen-button/FullscreenButtonElement.js';
+import { FullscreenButtonElement } from '../ui/fullscreen-button/FullscreenButtonElement';
 
 safelyDefineCustomElement('vds-fullscreen-button', FullscreenButtonElement);
 
