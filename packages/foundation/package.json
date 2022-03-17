@@ -45,6 +45,7 @@
     "build:types": "tsc -p tsconfig.json",
     "clean": "rimraf dist dist-node dist-prod types",
     "dev": "run-p \"build:dev -- -w\" \"build:types -- -w\"",
+    "watch": "pnpm dev",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
     "test": "vitest --run",

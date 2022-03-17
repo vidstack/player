@@ -1,6 +1,6 @@
 {
   "name": "vidstack-workspace",
-  "version": "0.0.0",
+  "version": "0.12.3",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -11,12 +11,14 @@
     "build": "turbo run build",
     "build:app": "turbo run build:app",
     "clean": "turbo run clean",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "dev": "pnpm clean && pnpm build && turbo run dev --parallel",
     "lint": "turbo run lint --parallel",
     "test": "turbo run test --parallel",
     "test:esm": "node .scripts/test-node-esm.js",
     "prepare": "husky install",
     "release": "turbo run build build:cdn test && pnpm test:esm && node .scripts/release.js",
+    "release:dry": "pnpm release -- --dry",
     "spellcheck": "cspell 'apps/**/*.md' 'packages/**.ts', 'packages/**/.md', '*.md' --gitignore --cache"
   },
   "devDependencies": {
@@ -46,7 +48,7 @@
     "lint-staged": "^12.1.5",
     "minimist": "^1.2.5",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.2.1",
+    "prettier": "^2.6.0",
     "prettier-plugin-svelte": "^2.5.0",
     "prettier-plugin-tailwindcss": "^0.1.7",
     "rimraf": "^3.0.2",

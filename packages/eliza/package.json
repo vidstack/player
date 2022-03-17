@@ -1,17 +1,9 @@
 {
   "name": "@vidstack/eliza",
   "version": "0.0.0",
-  "description": "Eliza collects metadata about your web components.",
-  "license": "MIT",
+  "private": true,
   "type": "module",
   "sideEffects": false,
-  "files": [
-    "cli.js",
-    "src/",
-    "dist-node/",
-    "types/",
-    "index.d.ts"
-  ],
   "bin": {
     "eliza": "cli.js"
   },
@@ -19,17 +11,6 @@
     ".": "./dist-node/index.js",
     "./cli.js": "./cli.js",
     "./package.json": "./package.json"
-  },
-  "contributors": [
-    "Rahim Alwer <rahim.alwer@gmail.com>"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vidstack/vidstack.git",
-    "directory": "packages/eliza"
-  },
-  "bugs": {
-    "url": "https://github.com/vidstack/vidstack/issues"
   },
   "scripts": {
     "build:pkg": "run-p build:node build:types",
@@ -60,8 +41,5 @@
     "read-pkg-up": "^9.1.0",
     "rimraf": "^3.0.2",
     "typescript": "^4.6.2"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

@@ -1,10 +1,7 @@
 # Vidstack Eliza
 
-[![package-badge]][package]
 [![discord-badge]][discord]
 
-[package]: https://www.npmjs.com/package/@vidstack/eliza
-[package-badge]: https://img.shields.io/npm/v/@vidstack/eliza/latest
 [discord]: https://discord.com/invite/7RGU7wvsu9
 [discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white
 
@@ -16,12 +13,6 @@ The following are some plugins available out of the box:
 
 - **JSON:** Transforms component metadata into JSON format.
 - **VSCode:** Transforms component metadata into [VSCode Custom Data](https://github.com/microsoft/vscode-custom-data).
-
-## Install
-
-```bash
-$: npm install @vidstack/eliza -D
-```
 
 ## Usage
 

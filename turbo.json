@@ -14,16 +14,6 @@
         "^build:node",
         "^build:types",
         "^build:definitions"
-      ],
-      "outputs": [
-        "dist/**",
-        "dist-prod/**",
-        "dist-node/**",
-        "define/**",
-        "types/**",
-        "react/**",
-        "elements.json",
-        "vscode.html-data.json"
       ]
     },
     "build:app": {

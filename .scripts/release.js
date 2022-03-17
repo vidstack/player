@@ -1,14 +1,16 @@
-// @ts-check
+/**
+ * Thanks: https://github.com/vuejs/vue-next/blob/master/scripts/release.js
+ */
 
-import minimist from 'minimist';
-import { execa } from 'execa';
 import kleur from 'kleur';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
+import { execa } from 'execa';
+import fs from 'fs';
+import minimist from 'minimist';
+import path from 'path';
 import prompt from 'enquirer';
 import semver from 'semver';
-import path from 'path';
-import fs from 'fs';
 
 // @ts-expect-error - .
 const require = createRequire(import.meta.url);
@@ -17,11 +19,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const args = minimist(process.argv.slice(2));
 const isDryRun = args.dry;
-const skipBuild = args.skipBuild;
-const skipTests = args.skipTests;
+const skippedPackages = [];
 const currentVersion = require('../package.json').version;
 
 if (isDryRun) console.log(kleur.cyan('\n☂️  Running in dry mode...\n'));
+
+const packages = fs
+  .readdirSync(path.resolve(__dirname, '../packages'))
+  .filter((p) => !p.startsWith('.'));
 
 const preId =
   args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)[0]);
@@ -46,6 +51,10 @@ async function dryRun(bin, args, opts = {}) {
 }
 
 const runIfNotDry = isDryRun ? dryRun : run;
+
+function getPkgRoot(pkgName) {
+  return path.resolve(__dirname, '../packages/' + pkgName);
+}
 
 function step(msg) {
   console.info('\n✨ ' + kleur.cyan(msg) + '\n');
@@ -94,28 +103,26 @@ async function main() {
     return;
   }
 
-  step('Updating version...');
-  updatePackageVersion(targetVersion);
+  // update all package versions and inter-dependencies
+  step('Updating cross dependencies...');
+  updateVersions(targetVersion);
 
-  step('Updating lockfile...');
-  await run(`npm`, ['install']);
-
-  step('Running tests...');
-  if (!skipTests && !isDryRun) {
-    await run('npm', ['run', 'test:coverage']);
-  } else {
-    console.log(`(skipped)`);
-  }
-
-  step('Building package...');
-  if (!skipBuild && !isDryRun) {
-    await run('npm', ['run', 'build:all']);
-  } else {
-    console.log(`(skipped)`);
-  }
-
+  // generate changelog
   step('Generating changelog...');
   await run(`npm`, ['run', 'changelog']);
+
+  // publish packages
+  for (const pkg of packages) {
+    await publishPackage(pkg, targetVersion, runIfNotDry);
+  }
+
+  // put back workspace settings
+  step('Adding back workspace settings...');
+  updateVersions('workspace:*');
+
+  // update lockfile
+  step('Updating lockfile...');
+  await run(`pnpm`, ['install']);
 
   const { stdout } = await run('git', ['diff'], { stdio: 'pipe' });
   if (stdout) {
@@ -126,40 +133,74 @@ async function main() {
     console.log('No changes to commit.');
   }
 
-  publishPackage(targetVersion);
-
+  // push to GitHub
   step('Pushing to GitHub...');
   await runIfNotDry('git', ['tag', `v${targetVersion}`]);
-  await runIfNotDry('git', ['push', 'upstream', 'main', `refs/tags/v${targetVersion}`]);
-  await runIfNotDry('git', ['push', 'upstream', 'main']);
+  await runIfNotDry('git', ['push', 'origin', `refs/tags/v${targetVersion}`]);
+  await runIfNotDry('git', ['push']);
 
   if (isDryRun) {
-    console.log(`\nDry run finished - run \`git diff\` to see package changes.`);
+    console.log(`\nDry run finished - run git diff to see package changes.`);
   }
 
+  if (skippedPackages.length) {
+    console.log(
+      kleur.yellow(
+        `The following packages are skipped and NOT published:\n- ${skippedPackages.join('\n- ')}`,
+      ),
+    );
+  }
   console.log();
 }
 
-function updatePackageVersion(version) {
-  const pkgRoot = path.resolve(__dirname, '..');
+function updateVersions(version) {
+  // 1. update root package.json
+  updatePackageVersion(path.resolve(__dirname, '..'), version);
+  // 2. update all packages
+  packages.forEach((p) => updatePackageVersion(getPkgRoot(p), version));
+}
+
+function updatePackageVersion(pkgRoot, version) {
   const pkgPath = path.resolve(pkgRoot, 'package.json');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-  pkg.version = version;
+
+  if (version !== 'workspace:*') pkg.version = version;
+
+  if (!pkg.private) {
+    updatePackageDeps(pkg, 'dependencies', version);
+    updatePackageDeps(pkg, 'peerDependencies', version);
+  }
+
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
 }
 
-async function publishPackage(version) {
-  const pkgRoot = path.resolve(__dirname, '..');
+function updatePackageDeps(pkg, depType, version) {
+  const deps = pkg[depType];
+  if (!deps) return;
+  Object.keys(deps).forEach((dep) => {
+    if (dep.startsWith('@vidstack') && packages.includes(dep.replace(/^@vidstack\//, ''))) {
+      const color = version === 'workspace:*' ? 'cyan' : 'yellow';
+      console.log(kleur[color](`🦠 ${pkg.name} -> ${depType} -> ${dep}@${version}`));
+      deps[dep] = version;
+    }
+  });
+}
+
+async function publishPackage(pkgName, version, runIfNotDry) {
+  if (skippedPackages.includes(pkgName)) {
+    return;
+  }
+
+  const pkgRoot = getPkgRoot(pkgName);
   const pkgPath = path.resolve(pkgRoot, 'package.json');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-  const pkgName = pkg.name;
 
   if (pkg.private) {
+    console.log(kleur.red(`\n🚫 Skipping private package: ${pkg.name}`));
     return;
   }
 
   let releaseTag = null;
-
   if (args.tag) {
     releaseTag = args.tag;
   } else if (version.includes('alpha')) {
@@ -168,8 +209,6 @@ async function publishPackage(version) {
     releaseTag = 'beta';
   } else if (version.includes('rc')) {
     releaseTag = 'rc';
-  } else {
-    releaseTag = 'latest';
   }
 
   step(`Publishing ${pkgName}...`);
@@ -191,11 +230,10 @@ async function publishPackage(version) {
         stdio: 'pipe',
       },
     );
-
-    console.log(kleur.green(`✅ Successfully published ${pkgName}@${version}`));
+    console.log(kleur.green(`\n✅ Successfully published ${pkgName}@${version}`));
   } catch (e) {
     if (/** @type {any} */ (e).stderr.match(/previously published/)) {
-      console.log(kleur.red(`🚫 Skipping already published: ${pkgName}`));
+      console.log(kleur.red(`\n🚫 Skipping already published: ${pkgName}`));
     } else {
       throw e;
     }

@@ -83,6 +83,7 @@
     "build:definitions": "node ../../.scripts/definitions.js",
     "clean": "rimraf define dist dist-* types elements.json vscode.html-data.json coverage react src/react/index.ts src/react/components",
     "dev": "run-p \"analyze -- -w\" \"build:dev -- -w\" \"build:types -- -w\" \"build:definitions -- -w\"",
+    "watch": "pnpm dev",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
     "test": "vitest --run",

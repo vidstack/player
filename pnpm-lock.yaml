@@ -30,7 +30,7 @@ importers:
       lint-staged: ^12.1.5
       minimist: ^1.2.5
       npm-run-all: ^4.1.5
-      prettier: ^2.2.1
+      prettier: ^2.6.0
       prettier-plugin-svelte: ^2.5.0
       prettier-plugin-tailwindcss: ^0.1.7
       rimraf: ^3.0.2
@@ -65,9 +65,9 @@ importers:
       lint-staged: 12.3.5_enquirer@2.3.6
       minimist: 1.2.5
       npm-run-all: 4.1.5
-      prettier: 2.5.1
-      prettier-plugin-svelte: 2.6.0_prettier@2.5.1+svelte@3.46.4
-      prettier-plugin-tailwindcss: 0.1.8_prettier@2.5.1
+      prettier: 2.6.0
+      prettier-plugin-svelte: 2.6.0_prettier@2.6.0+svelte@3.46.4
+      prettier-plugin-tailwindcss: 0.1.8_prettier@2.6.0
       rimraf: 3.0.2
       semver: 7.3.5
       svelte: 3.46.4
@@ -4827,27 +4827,27 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-svelte/2.6.0_prettier@2.5.1+svelte@3.46.4:
+  /prettier-plugin-svelte/2.6.0_prettier@2.6.0+svelte@3.46.4:
     resolution: {integrity: sha512-NPSRf6Y5rufRlBleok/pqg4+1FyGsL0zYhkYP6hnueeL1J/uCm3OfOZPsLX4zqD9VAdcXfyEL2PYqGv8ZoOSfA==}
     peerDependencies:
       prettier: ^1.16.4 || ^2.0.0
       svelte: ^3.2.0
     dependencies:
-      prettier: 2.5.1
+      prettier: 2.6.0
       svelte: 3.46.4
     dev: true
 
-  /prettier-plugin-tailwindcss/0.1.8_prettier@2.5.1:
+  /prettier-plugin-tailwindcss/0.1.8_prettier@2.6.0:
     resolution: {integrity: sha512-hwarSBCswAXa+kqYtaAkFr3Vop9o04WOyZs0qo3NyvW8L7f1rif61wRyq0+ArmVThOuRBcJF5hjGXYk86cwemg==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
       prettier: '>=2.2.0'
     dependencies:
-      prettier: 2.5.1
+      prettier: 2.6.0
     dev: true
 
-  /prettier/2.5.1:
-    resolution: {integrity: sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==}
+  /prettier/2.6.0:
+    resolution: {integrity: sha512-m2FgJibYrBGGgQXNzfd0PuDGShJgRavjUoRCw1mZERIWVSXF0iLzLm+aOqTAbLnC3n6JzUhAA8uZnFVghHJ86A==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
