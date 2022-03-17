@@ -38,7 +38,12 @@ export const apiDocsPlugin = (components: ComponentMeta[]): Plugin => {
               for (const prop of component[key]) {
                 ['description', 'documentation'].forEach((d) => {
                   if (prop[d]) {
-                    prop[d] = parser.render(prop[d].replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+                    prop[d] = parser
+                      .render(prop[d])
+                      .replace(
+                        /<code>(.*?)<\/code>/g,
+                        (_, c) => `<code>${c.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>`,
+                      );
                   }
                 });
               }
