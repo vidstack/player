@@ -16,6 +16,7 @@
     "lint": "turbo run lint --parallel",
     "test": "turbo run test --parallel",
     "test:esm": "node .scripts/test-node-esm.js",
+    "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
     "release": "turbo run build build:cdn test && pnpm test:esm && node .scripts/release.js",
     "release:dry": "pnpm release -- --dry",
