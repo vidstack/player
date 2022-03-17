@@ -5,7 +5,7 @@ const kleur = require('kleur');
 const apps = fs.readdirSync(path.resolve(__dirname, 'apps'));
 const packages = fs.readdirSync(path.resolve(__dirname, 'packages'));
 const ignore = new Set(['.DS_Store']);
-const validScopes = ['root', ...apps, ...packages].filter((scope) => !ignore.has(scope));
+const validScopes = ['root', 'ci', ...apps, ...packages].filter((scope) => !ignore.has(scope));
 
 module.exports = {
   extends: ['@commitlint/config-conventional'],

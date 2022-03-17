@@ -21,14 +21,11 @@ jobs:
           version: 6.24.4
           run_install: true
 
+      - name: Build
+        run: pnpm build
+
       - name: Lint
         run: pnpm lint
-
-      - name: Build
-        run: pnpm build:dev
-
-      - name: Build Types
-        run: pnpm build:types
 
       - name: Run Tests
         run: pnpm test
