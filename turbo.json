@@ -20,6 +20,10 @@
       "dependsOn": ["^analyze", "^build:node", "^build:prod", "^build:types", "^build:definitions"],
       "outputs": [".svelte-kit/**"]
     },
+    "build:vercel": {
+      "dependsOn": ["build:app"],
+      "outputs": [".vercel_build_output"]
+    },
     "build:dev": {
       "outputs": ["dist/**"]
     },
