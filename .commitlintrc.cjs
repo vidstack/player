@@ -33,5 +33,5 @@ module.exports = {
       },
     },
   ],
-  helpUrl: 'https://github.com/vidstack/vidstack/.github/CONTRIBUTING.md',
+  helpUrl: 'https://github.com/vidstack/vidstack/blob/main/.github/CONTRIBUTING.md',
 };
