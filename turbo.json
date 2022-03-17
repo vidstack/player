@@ -17,7 +17,7 @@
       ]
     },
     "build:app": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^analyze", "^build:node", "^build:prod", "^build:types", "^build:definitions"],
       "outputs": [".svelte-kit/**"]
     },
     "build:dev": {
