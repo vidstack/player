@@ -1,3 +1,10 @@
+# [0.13.0](https://github.com/mihar-22/vidstack/compare/v0.12.3...v0.13.0) (2022-03-17)
+
+### Bug Fixes
+
+- include screen orientation events in media events ([f4fd62c](https://github.com/mihar-22/vidstack/commit/f4fd62cb32e696b9d8e2ff4aaf93d65fa07c612a))
+- **player:** imports in node context fail ([982cc2c](https://github.com/mihar-22/vidstack/commit/982cc2c7d0a6777bcb71901f1161cd01ad71f964))
+
 ## [0.12.3](https://github.com/vidstack/player/compare/v0.12.2...v0.12.3) (2022-03-09)
 
 ### Bug Fixes
