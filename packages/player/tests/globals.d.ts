@@ -1,2 +1,2 @@
 /// <reference types="vitest/globals" />
-/// <reference types="../globals" />
+/// <reference types="../src/globals" />

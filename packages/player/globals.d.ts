@@ -8,10 +8,10 @@ import type {
   MediaRequestEvents,
   MediaSyncEvents,
   MediaVisibilityEvents,
-} from './src/media';
-import type { HlsEvents } from './src/providers/hls';
-import type { VideoPresentationEvents } from './src/providers/video';
-import type { SliderEvents } from './src/ui/slider';
+} from './types/media';
+import type { HlsEvents } from './types/providers/hls';
+import type { VideoPresentationEvents } from './types/providers/video';
+import type { SliderEvents } from './types/ui/slider';
 
 declare global {
   interface GlobalEventHandlersEventMap

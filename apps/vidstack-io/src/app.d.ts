@@ -2,6 +2,7 @@
 
 /// <reference types="@sveltejs/kit" />
 /// <reference types="@vidstack/player/globals" />
+/// <reference types="@vidstack/kit-plugins/globals" />
 /// <reference types="unplugin-icons/types/svelte" />
 
 // See https://kit.svelte.dev/docs/typescript for information about these interfaces
