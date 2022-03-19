@@ -119,7 +119,7 @@ export async function transpileModuleOnce(filePath: string): Promise<unknown> {
     compilerOptions: defaultOptions,
   });
 
-  const tmpDir = resolve(process.cwd(), 'node_modules/@vidstack/eliza/.temp');
+  const tmpDir = resolve(process.cwd(), 'node_modules/.temp');
 
   if (!existsSync(tmpDir)) {
     mkdirSync(tmpDir);
