@@ -13,6 +13,10 @@ CSS property if [browser support](https://caniuse.com/mdn-css_properties_aspect-
 suitable to your application.
 
 ```css:copy
+vds-video-player {
+  width: 100%;
+}
+
 /* You can replace `vds-video-player` with any provider/player. */
 vds-video-player::part(media) {
 	width: 100%;

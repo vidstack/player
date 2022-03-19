@@ -1,15 +1,13 @@
 import adapter from '@sveltejs/adapter-auto';
-import { componentsPlugin, highlightCodePlugin, svelteMarkdownPlugin } from '@vidstack/kit-plugins';
 import path from 'path';
 import * as preprocess from 'svelte-preprocess';
 import Icons from 'unplugin-icons/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  extensions: ['.svelte', '.md'],
+  extensions: ['.svelte'],
 
-  // @ts-expect-error - CJS -> ESM conversion.
-  preprocess: [preprocess.default.typescript()],
+  preprocess: [preprocess.default()],
 
   kit: {
     adapter: adapter(),
@@ -28,12 +26,7 @@ const config = {
           $utils: path.resolve('./src/lib/utils'),
         },
       },
-      plugins: [
-        componentsPlugin(),
-        svelteMarkdownPlugin({ baseUrl: '/' }),
-        highlightCodePlugin(),
-        Icons({ compiler: 'svelte' }),
-      ],
+      plugins: [Icons({ compiler: 'svelte' })],
     },
   },
 };

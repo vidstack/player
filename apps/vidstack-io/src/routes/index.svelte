@@ -1,6 +1,6 @@
 <script>
-  import Navbar from '$components/layout/navbar/Navbar.svelte';
-  import Footer from '$components/layout/Footer.svelte';
+  import Navbar from '$layout/Navbar.svelte';
+  import Footer from '$layout/Footer.svelte';
 
   import HeroSection from './_components/_HeroSection.svelte';
   import OpenSourceSection from './_components/_OpenSourceSection.svelte';

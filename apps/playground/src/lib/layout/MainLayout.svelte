@@ -3,18 +3,17 @@
   import RightArrowIcon from '~icons/ri/arrow-right-s-line';
 
   import clsx from 'clsx';
-  import Navbar from './navbar/Navbar.svelte';
-  import Sidebar, { getSidebarContext } from './sidebar/Sidebar.svelte';
+  import Navbar from './Navbar.svelte';
+  import Sidebar, { getSidebarContext } from './Sidebar.svelte';
 
   import { ariaBool, hideDocumentScrollbar } from '@vidstack/foundation';
   import { type CloseDialogCallback, dialogManager } from '$actions/dialogManager';
-  import Button from '$components/base/Button.svelte';
 
   let isSidebarOpen = false;
   let isNavPopoverOpen = false;
   let closeSidebar: CloseDialogCallback;
 
-  const { activeCategory, activeItem, nextItem, previousItem } = getSidebarContext();
+  const { activeCategory, activeComponent, activeVariant } = getSidebarContext();
 </script>
 
 <div
@@ -65,11 +64,11 @@
 
       <ol class="text-md mt-px ml-1 flex items-center whitespace-nowrap leading-6 text-gray-soft">
         <li class="flex items-center">
-          {$activeCategory}
+          {$activeComponent}
           <RightArrowIcon class="mx-1" width="16" height="16" />
         </li>
         <li class="truncate font-semibold text-slate-900 dark:text-slate-200">
-          {$activeItem?.title}
+          {$activeVariant?.title}
         </li>
       </ol>
     </div>
@@ -79,32 +78,10 @@
 <main class="max-w-8xl z-20 mx-auto 1200:pr-10">
   <Sidebar open={isSidebarOpen} on:close={(e) => closeSidebar(e.detail)} />
 
-  <div class="px-4 576:px-6 768:px-8 992:pl-[21rem]">
-    <div class="relative mx-auto mt-[13rem] w-full max-w-3xl 992:mt-32">
-      <slot />
-
-      {#if $previousItem || $nextItem}
-        <hr class="mt-20 border-gray-divider" />
-      {/if}
-
-      <div class="flex items-center pt-12 pb-20 text-lg font-semibold text-gray-300 992:text-xl">
-        {#if $previousItem}
-          <div class="mb-4 flex flex-col items-start">
-            <span class="ml-3 mb-4 inline-block text-gray-inverse">Previous</span>
-            <Button arrow="left" href={$previousItem.slug} class="hover:text-gray-inverse">
-              {$previousItem.title}
-            </Button>
-          </div>
-        {/if}
-
-        {#if $nextItem}
-          <div class="ml-auto mb-4 flex flex-col items-end">
-            <span class="mr-3 mb-4 inline-block text-gray-inverse">Next</span>
-            <Button arrow="right" href={$nextItem.slug} class="hover:text-gray-inverse">
-              {$nextItem.title}
-            </Button>
-          </div>
-        {/if}
+  <div class="px-4 576:px-6 768:px-8 992:pl-[19rem]">
+    <div class="relative mx-auto mt-[13rem] w-full 992:mt-32">
+      <div class="flex justify-center w-full">
+        <slot />
       </div>
     </div>
   </div>

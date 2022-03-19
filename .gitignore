@@ -11,6 +11,8 @@ turbo-graph*
 /apps/*/sandbox/
 /packages/*/sandbox/
 
+/apps/*/build/
+
 packages/*/define/
 packages/*/types/
 packages/*/react/

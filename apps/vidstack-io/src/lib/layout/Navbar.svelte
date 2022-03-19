@@ -1,19 +1,19 @@
 <script lang="ts">
   import clsx from 'clsx';
   import { createEventDispatcher } from 'svelte';
-  import { page } from '$app/stores';
 
   import MenuIcon from '~icons/ri/menu-5-line';
   import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-fill';
 
+  import { colorScheme } from '$stores/colorScheme';
+  import { uppercaseFirstLetter } from '@vidstack/foundation';
+  import LazyDocSearch from '$components/markdown/LazyDocSearch.svelte';
+  import Popover from '$components/base/Popover.svelte';
+  import SocialLink from '$components/social/SocialLink.svelte';
   import VidstackLogoIcon from '$img/brand/vidstack-logo.svg?raw';
 
   import ColorSchemeMenu from './ColorSchemeMenu.svelte';
-  import { colorScheme } from '$stores/colorScheme';
-  import { uppercaseFirstLetter } from '@vidstack/foundation';
-  import Popover from '$components/base/Popover.svelte';
-  import SocialLink from '$components/social/SocialLink.svelte';
-  import LazyDocSearch from '$components/markdown/LazyDocSearch.svelte';
+  import NavLink from './NavLink.svelte';
 
   export let contain = false;
 
@@ -66,21 +66,8 @@
           <h1 class="mb-6 text-xl font-medium">Links</h1>
           <nav>
             <ul>
-              {#each navLinks as { title, slug, match } (title + slug)}
-                {@const isActive = match.test($page.url.pathname)}
-                <li class="mt-4 first:mt-0">
-                  <a
-                    class={clsx(
-                      isActive
-                        ? 'border-b-2 border-brand text-gray-inverse'
-                        : 'text-gray-soft hover:text-gray-inverse',
-                    )}
-                    href={slug}
-                    sveltekit:prefetch
-                  >
-                    {title}
-                  </a>
-                </li>
+              {#each navLinks as navLink (navLink.title)}
+                <NavLink {...navLink} />
               {/each}
             </ul>
           </nav>
@@ -129,21 +116,8 @@
     <div class="hidden 992:flex 992:items-center">
       <nav>
         <ul class="flex items-center space-x-8 text-lg font-medium">
-          {#each navLinks as { title, slug, match } (title + slug)}
-            {@const isActive = match.test($page.url.pathname)}
-            <li>
-              <a
-                class={clsx(
-                  isActive
-                    ? 'border-brand border-b hover:border-b-2 focus-visible:border-b-2'
-                    : 'text-gray-inverse hover:border-b-2 border-current',
-                )}
-                href={slug}
-                sveltekit:prefetch
-              >
-                {title}
-              </a>
-            </li>
+          {#each navLinks as navLink (navLink.title)}
+            <NavLink {...navLink} />
           {/each}
         </ul>
       </nav>

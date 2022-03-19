@@ -1,6 +1,6 @@
 <script lang="ts">
-  import DocsLayout from '$components/layout/DocsLayout.svelte';
-  import { createSidebarContext, toItems } from '$components/layout/sidebar/Sidebar.svelte';
+  import DocsLayout from '$layout/DocsLayout.svelte';
+  import { createSidebarContext, toItems } from '$layout/Sidebar.svelte';
   import { EXPERIMENTAL_TAG_NAMES } from '$stores/element';
   import { isReactPath } from '$stores/path';
   import { isString } from '@vidstack/foundation';

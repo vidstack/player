@@ -1,5 +1,37 @@
 {
   "name": "playground",
   "version": "0.0.0",
-  "private": true
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "svelte-kit dev --port 3002",
+    "build:app": "svelte-kit build",
+    "clean": "rimraf .svelte-kit",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint:prettier": "prettier src --write --loglevel warn",
+    "preview": "svelte-kit preview --port 3002"
+  },
+  "dependencies": {
+    "@vidstack/foundation": "workspace:*",
+    "@vidstack/player": "workspace:*",
+    "clsx": "^1.1.1",
+    "lit": "^2.1.3",
+    "svelte-class-transition": "^1.0.4"
+  },
+  "devDependencies": {
+    "@iconify-json/ri": "^1.1.0",
+    "@sveltejs/adapter-auto": "^1.0.0-next.30",
+    "@sveltejs/kit": "^1.0.0-next.288",
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.6",
+    "rimraf": "^3.0.2",
+    "svelte": "^3.46.4",
+    "svelte-check": "^2.2.6",
+    "svelte-preprocess": "^4.10.1",
+    "tailwindcss": "^3.0.23",
+    "tslib": "^2.3.1",
+    "typescript": "~4.5.4",
+    "unplugin-icons": "^0.13.2"
+  }
 }
