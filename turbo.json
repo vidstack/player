@@ -3,7 +3,7 @@
   "baseBranch": "origin/main",
   "pipeline": {
     "analyze": {
-      "dependsOn": ["^build:node"],
+      "dependsOn": ["^build:node", "^build:types"],
       "outputs": ["elements.json", "vscode.html-data.json", "react/**"]
     },
     "build": {
