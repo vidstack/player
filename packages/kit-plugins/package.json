@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/kit-plugins",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "private": true,
   "type": "module",
   "exports": {

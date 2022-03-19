@@ -1,3 +1,10 @@
+## [0.13.1](https://github.com/mihar-22/vidstack/compare/v0.13.0...v0.13.1) (2022-03-19)
+
+### Bug Fixes
+
+- **kit-plugins:** incorrectly escaping `<` and `>` symbols in `<code>` ([849387e](https://github.com/mihar-22/vidstack/commit/849387e3fac11ce7aba238ae6e82bd886e3a5524))
+- **player:** package types are leaking ([ab0d9c9](https://github.com/mihar-22/vidstack/commit/ab0d9c98cd893a7e159eeae040c235289023cc56)), closes [#634](https://github.com/mihar-22/vidstack/issues/634)
+
 # [0.13.0](https://github.com/mihar-22/vidstack/compare/v0.12.3...v0.13.0) (2022-03-17)
 
 ### Bug Fixes
