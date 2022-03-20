@@ -201,8 +201,9 @@ export class SliderElement extends LitElement {
    * `fillRate` = 0.5 (result)
    */
   get fillRate(): number {
-    const range = this.max - this.min;
-    return range > 0 ? this.value / range : 0;
+    const range = this.max - this.min,
+      offset = this.value - this.min;
+    return range > 0 ? offset / range : 0;
   }
 
   /**
@@ -229,8 +230,9 @@ export class SliderElement extends LitElement {
    * @default 0
    */
   get pointerRate() {
-    const range = this.max - this.min;
-    return range > 0 ? this.pointerValue / range : 0;
+    const range = this.max - this.min,
+      offset = this.pointerValue - this.min;
+    return range > 0 ? offset / range : 0;
   }
 
   /**
