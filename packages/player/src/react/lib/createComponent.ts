@@ -1,7 +1,7 @@
 /**
  * Copied from https://github.com/lit/lit/blob/main/packages/labs/react/src/create-component.ts.
  *
- * Waiting for https://github.com/lit/lit/issues/2546 to be resovled before going back to
+ * Waiting for https://github.com/lit/lit/issues/2546 to be resolved before going back to
  * `@lit-labs/react`.
  */
 
