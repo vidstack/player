@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "svelte-kit dev --port 3001",
     "build:app": "svelte-kit build",
-    "build:vercel": "pnpm build:app",
+    "build:vercel": "svelte-kit build",
     "clean": "rimraf .svelte-kit",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
