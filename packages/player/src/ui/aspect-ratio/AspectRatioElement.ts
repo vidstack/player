@@ -1,12 +1,7 @@
-import { isString, setCSSProperty } from '@vidstack/foundation';
-import {
-  type CSSResultGroup,
-  html,
-  LitElement,
-  type PropertyValues,
-  type TemplateResult,
-} from 'lit';
+import { isString } from '@vidstack/foundation';
+import { type CSSResultGroup, html, LitElement, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
 import { aspectRatioElementStyles } from './styles';
 
@@ -62,48 +57,28 @@ export class AspectRatioElement extends LitElement {
     return isString(this.ratio) ? /\d{1,2}\s*?(?:\/|:)\s*?\d{1,2}/.test(this.ratio) : false;
   }
 
-  override connectedCallback(): void {
-    super.connectedCallback();
-    this._updateAspectRatio();
-    this._updateMinHeight();
-    this._updateMaxHeight();
-  }
-
-  protected override update(changedProperties: PropertyValues) {
-    super.update(changedProperties);
-
-    if (changedProperties.has('ratio')) {
-      this._updateAspectRatio();
-    }
-
-    if (changedProperties.has('minHeight')) {
-      this._updateMinHeight();
-    }
-
-    if (changedProperties.has('maxHeight')) {
-      this._updateMaxHeight();
-    }
-  }
-
   override render(): TemplateResult {
-    return html`<slot></slot>`;
+    return html`
+      <div
+        class="container"
+        style=${styleMap({
+          '--vds-aspect-ratio-percent': this._getAspectRatioPercent(),
+          '--vds-aspect-ratio-min-height': this.minHeight ?? '150px',
+          '--vds-aspect-ratio-max-height': this.maxHeight ?? '100vh',
+        })}
+      >
+        <slot></slot>
+      </div>
+    `;
   }
 
-  protected _updateAspectRatio() {
+  protected _getAspectRatioPercent() {
     if (this.isValidRatio) {
       const [width, height] = this._parseAspectRatio();
-      setCSSProperty(this, 'aspect-ratio-percent', `${(height / width) * 100}%`);
-    } else {
-      setCSSProperty(this, 'aspect-ratio-percent', '50%');
+      return `${(height / width) * 100}%`;
     }
-  }
 
-  protected _updateMinHeight() {
-    setCSSProperty(this, 'min-height', this.minHeight);
-  }
-
-  protected _updateMaxHeight() {
-    setCSSProperty(this, 'max-height', this.maxHeight);
+    return '50%';
   }
 
   protected _parseAspectRatio(): [number, number] {

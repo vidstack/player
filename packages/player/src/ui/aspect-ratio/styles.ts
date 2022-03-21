@@ -3,17 +3,20 @@ import { css } from 'lit';
 export const aspectRatioElementStyles = css`
   :host {
     display: block;
-    height: 0;
-    padding-bottom: min(
-      max(var(--vds-min-height), var(--vds-aspect-ratio-percent)),
-      var(--vds-max-height)
-    );
-    position: relative;
-    width: 100%;
   }
 
   :host([hidden]) {
     display: none;
+  }
+
+  .container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: min(
+      max(var(--vds-aspect-ratio-min-height), var(--vds-aspect-ratio-percent)),
+      var(--vds-aspect-ratio-max-height)
+    );
   }
 
   slot {
