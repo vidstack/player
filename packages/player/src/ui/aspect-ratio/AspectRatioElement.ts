@@ -62,6 +62,13 @@ export class AspectRatioElement extends LitElement {
     return isString(this.ratio) ? /\d{1,2}\s*?(?:\/|:)\s*?\d{1,2}/.test(this.ratio) : false;
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this._updateAspectRatio();
+    this._updateMinHeight();
+    this._updateMaxHeight();
+  }
+
   protected override update(changedProperties: PropertyValues) {
     super.update(changedProperties);
 
@@ -70,11 +77,11 @@ export class AspectRatioElement extends LitElement {
     }
 
     if (changedProperties.has('minHeight')) {
-      setCSSProperty(this, 'min-height', this.minHeight);
+      this._updateMinHeight();
     }
 
     if (changedProperties.has('maxHeight')) {
-      setCSSProperty(this, 'max-height', this.maxHeight);
+      this._updateMaxHeight();
     }
   }
 
@@ -89,6 +96,14 @@ export class AspectRatioElement extends LitElement {
     } else {
       setCSSProperty(this, 'aspect-ratio-percent', '50%');
     }
+  }
+
+  protected _updateMinHeight() {
+    setCSSProperty(this, 'min-height', this.minHeight);
+  }
+
+  protected _updateMaxHeight() {
+    setCSSProperty(this, 'max-height', this.maxHeight);
   }
 
   protected _parseAspectRatio(): [number, number] {
