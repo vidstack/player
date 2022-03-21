@@ -1,3 +1,10 @@
+## [0.13.2](https://github.com/vidstack/vidstack/compare/v0.13.1...v0.13.2) (2022-03-21)
+
+### Bug Fixes
+
+- **player:** `AspectRatioElement` css variables not set on connect ([7c03e9c](https://github.com/vidstack/vidstack/commit/7c03e9c8647698fd9790188d552b627f1a17c845))
+- **player:** unexpected fill/pointer rate on `SliderElement` when `min` > 0 ([#630](https://github.com/vidstack/vidstack/issues/630)) ([6f12753](https://github.com/vidstack/vidstack/commit/6f12753b9e86f33eea4a4a8311a046505c6eefa2))
+
 ## [0.13.1](https://github.com/vidstack/vidstack/compare/v0.13.0...v0.13.1) (2022-03-19)
 
 ### Bug Fixes
