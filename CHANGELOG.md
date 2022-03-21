@@ -1,3 +1,9 @@
+## [0.13.3](https://github.com/vidstack/vidstack/compare/v0.13.2...v0.13.3) (2022-03-21)
+
+### Bug Fixes
+
+- **player:** `AspectRatioElement` not rendering in svelte kit ([a568064](https://github.com/vidstack/vidstack/commit/a56806456eb07f73946f0b7054cb7887b127790d))
+
 ## [0.13.2](https://github.com/vidstack/vidstack/compare/v0.13.1...v0.13.2) (2022-03-21)
 
 ### Bug Fixes
