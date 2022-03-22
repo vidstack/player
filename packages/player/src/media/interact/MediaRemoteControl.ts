@@ -1,7 +1,16 @@
-import { ExtractEventInit, hostRequestQueue, LogDispatcher, vdsEvent } from '@vidstack/foundation';
-import type { ReactiveControllerHost } from 'lit';
+import {
+  type ExtractEventInit,
+  hostRequestQueue,
+  LogDispatcher,
+  vdsEvent,
+} from '@vidstack/foundation';
+import { type ReactiveControllerHost } from 'lit';
 
-import { MediaRequestEvents } from '../request.events';
+import type {
+  EnterFullscreenRequestEvent,
+  MediaFullscreenRequestTarget,
+  MediaRequestEvents,
+} from '../request.events';
 
 /**
  * A simple facade for dispatching media requests to the nearest media controller.
@@ -52,15 +61,17 @@ export class MediaRemoteControl {
     });
   }
 
-  enterFullscreen(event?: Event) {
+  enterFullscreen(target?: MediaFullscreenRequestTarget, event?: Event) {
     this._dispatchRequest('vds-enter-fullscreen-request', {
       triggerEvent: event,
+      detail: target,
     });
   }
 
-  exitFullscreen(event?: Event) {
+  exitFullscreen(target?: MediaFullscreenRequestTarget, event?: Event) {
     this._dispatchRequest('vds-exit-fullscreen-request', {
       triggerEvent: event,
+      detail: target,
     });
   }
 

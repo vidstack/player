@@ -88,7 +88,7 @@ it('should dispatch enter fullscreen request', async function () {
   const triggerEvent = new MouseEvent('click');
 
   setTimeout(() => {
-    remoteControl.control.enterFullscreen(triggerEvent);
+    remoteControl.control.enterFullscreen(undefined, triggerEvent);
   });
 
   const event = await waitForEvent(controller, 'vds-enter-fullscreen-request');
@@ -102,7 +102,7 @@ it('should dispatch exit fullscreen request', async function () {
   const triggerEvent = new MouseEvent('click');
 
   setTimeout(() => {
-    remoteControl.control.exitFullscreen(triggerEvent);
+    remoteControl.control.exitFullscreen(undefined, triggerEvent);
   });
 
   const event = await waitForEvent(controller, 'vds-exit-fullscreen-request');

@@ -1,6 +1,11 @@
 import { setAttribute, setAttributeIfEmpty } from '@vidstack/foundation';
+import { property } from 'lit/decorators.js';
 
-import { MediaRemoteControl, mediaStoreSubscription } from '../../media';
+import {
+  type MediaFullscreenRequestTarget,
+  MediaRemoteControl,
+  mediaStoreSubscription,
+} from '../../media';
 import { ToggleButtonElement } from '../toggle-button';
 
 /**
@@ -37,6 +42,15 @@ import { ToggleButtonElement } from '../toggle-button';
 export class FullscreenButtonElement extends ToggleButtonElement {
   protected readonly _mediaRemote = new MediaRemoteControl(this);
 
+  /**
+   * The target element on which to request fullscreen on. The target can be the media controller
+   * or provider.
+   *
+   * @default 'provider'
+   */
+  @property({ attribute: 'fullscreen-target' })
+  fullscreenTarget?: MediaFullscreenRequestTarget;
+
   constructor() {
     super();
 
@@ -58,9 +72,9 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     if (this.disabled) return;
 
     if (this.pressed) {
-      this._mediaRemote.exitFullscreen(event);
+      this._mediaRemote.exitFullscreen(this.fullscreenTarget, event);
     } else {
-      this._mediaRemote.enterFullscreen(event);
+      this._mediaRemote.enterFullscreen(this.fullscreenTarget, event);
     }
   }
 }

@@ -363,8 +363,19 @@ export class MediaController {
     'vds-enter-fullscreen-request',
     this._createMediaRequestHandler('fullscreen', async (event) => {
       if (this.mediaProvider?.fullscreen) return;
-      this._pendingMediaRequests.fullscreen.push(event);
-      await this._host.requestFullscreen();
+
+      const target = event.detail ?? 'provider';
+
+      if (target === 'provider' && this.mediaProvider) {
+        this._pendingMediaRequests.fullscreen.push(event);
+        await this.mediaProvider.requestFullscreen();
+        return;
+      }
+
+      if (target === 'controller') {
+        this._pendingMediaRequests.fullscreen.push(event);
+        await this._host.requestFullscreen();
+      }
     }),
   );
 
@@ -373,8 +384,19 @@ export class MediaController {
     'vds-exit-fullscreen-request',
     this._createMediaRequestHandler('fullscreen', async (event) => {
       if (!this.mediaProvider?.fullscreen) return;
-      this._pendingMediaRequests.fullscreen.push(event);
-      await this._host.exitFullscreen?.();
+
+      const target = event.detail ?? 'provider';
+
+      if (target === 'provider' && this.mediaProvider) {
+        this._pendingMediaRequests.fullscreen.push(event);
+        await this.mediaProvider.exitFullscreen();
+        return;
+      }
+
+      if (target === 'controller') {
+        this._pendingMediaRequests.fullscreen.push(event);
+        await this._host.exitFullscreen?.();
+      }
     }),
   );
 
