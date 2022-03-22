@@ -12,6 +12,7 @@
   const gettingStartedSlug = (s) => baseSlug(`getting-started/${s}`);
   const coreConceptsSlug = (s) => baseSlug(`core-concepts/${s}`);
   const librariesSlug = (s) => baseSlug(`libraries/${s}`);
+  const frameworksSlug = (s) => baseSlug(`frameworks/${s}`);
 
   const ext = () => ($isReactPath ? '/react' : '');
   const componentsSlug = (path: string) => `${baseUrl}components/${path}${ext()}`;
@@ -36,6 +37,7 @@
         'styling',
       ].map(toItems(gettingStartedSlug)),
       Libraries: ['react', 'svelte', 'vue', 'tailwind'].map(toItems(librariesSlug)),
+      Frameworks: [['next-js', { title: 'Next.js' }]].map(toItems(frameworksSlug)),
       'Core Concepts': [
         'architecture',
         'lifecycle',
@@ -82,8 +84,8 @@
 </script>
 
 <DocsLayout>
-  <div class="markdown prose z-10 dark:prose-invert">
-    <p class="mb-3.5 text-[15px] font-semibold leading-6 text-brand">
+  <div class="markdown prose dark:prose-invert z-10">
+    <p class="text-brand mb-3.5 text-[15px] font-semibold leading-6">
       {$activeCategory}
     </p>
 
