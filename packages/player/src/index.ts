@@ -3,9 +3,6 @@ if (__DEV__) {
 }
 
 export * from './media';
-export * from './players/audio';
-export * from './players/hls';
-export * from './players/video';
 export * from './providers/audio';
 export * from './providers/hls';
 export * from './providers/html5';

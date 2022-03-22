@@ -3,7 +3,6 @@
 import type {
   MediaConnectEvent,
   MediaEvents,
-  MediaPlayerConnectEvent,
   MediaProviderConnectEvent,
   MediaRequestEvents,
   MediaSyncEvents,
@@ -23,7 +22,6 @@ declare global {
       SliderEvents,
       VideoPresentationEvents {
     'vds-media-connect': MediaConnectEvent;
-    'vds-media-player-connect': MediaPlayerConnectEvent;
     'vds-media-provider-connect': MediaProviderConnectEvent;
   }
 }
