@@ -1,15 +1,10 @@
-import '$lib/define/vds-media-controller';
+import '$lib/define/vds-media';
 import '$lib/define/vds-fake-media-provider';
 
 import { fixture, html } from '@open-wc/testing-helpers';
-import { get, isFunction, waitForEvent } from '@vidstack/foundation';
+import { get } from '@vidstack/foundation';
 
-import {
-  FakeMediaProviderElement,
-  type MediaControllerConnectEvent,
-  MediaControllerElement,
-  MediaRemoteControl,
-} from '$lib';
+import { FakeMediaProviderElement, MediaElement, MediaRemoteControl } from '$lib';
 
 async function buildFixture() {
   const provider = await fixture<FakeMediaProviderElement>(`
@@ -19,49 +14,28 @@ async function buildFixture() {
   return { provider };
 }
 
-it('should dispatch discovery event', async () => {
-  const controller = document.createElement('vds-media-controller');
-
-  setTimeout(() => {
-    window.document.body.append(controller);
-  });
-
-  const { detail } = (await waitForEvent(
-    document,
-    'vds-media-controller-connect',
-  )) as MediaControllerConnectEvent;
-
-  expect(detail.element).to.be.instanceOf(MediaControllerElement);
-  expect(isFunction(detail.onDisconnect)).to.be.true;
-});
-
 describe('media provider', () => {
   it('should connect/disconnect', async function () {
-    const controller = await fixture<MediaControllerElement>(
-      html`<vds-media-controller></vds-media-controller>`,
-    );
-
+    const media = await fixture<MediaElement>(html`<vds-media></vds-media>`);
     const provider = document.createElement('vds-fake-media-provider');
 
-    controller.append(provider);
-    expect(controller.controller.mediaProvider === provider).to.be.true;
+    media.append(provider);
+    expect(media.controller.mediaProvider === provider).to.be.true;
 
     provider.remove();
-    expect(controller.controller.mediaProvider).to.be.undefined;
+    expect(media.controller.mediaProvider).to.be.undefined;
   });
 
   it('should copy media provider store', async function () {
-    const controller = await fixture<MediaControllerElement>(
-      html`<vds-media-controller></vds-media-controller>`,
-    );
-
+    const media = await fixture<MediaElement>(html`<vds-media></vds-media>`);
     const provider = document.createElement('vds-fake-media-provider');
+
     provider._store.currentSrc.set('testing');
     provider._store.duration.set(1000);
 
-    controller.append(provider);
+    media.append(provider);
 
-    const controllerStore = controller.controller.store;
+    const controllerStore = media.controller.store;
     expect(get(controllerStore.currentSrc)).to.equal('testing');
     expect(get(controllerStore.duration)).to.equal(1000);
   });

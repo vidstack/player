@@ -11,3 +11,8 @@ declare global {
     'vds-video-player': VideoPlayerElement;
   }
 }
+
+if (__DEV__) {
+  // TODO: add release notes link.
+  console.warn('`<vds-video-player>` has been deprecated and will be removed in 1.0.');
+}
