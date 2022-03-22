@@ -21,11 +21,11 @@ const didPreconnect = new Set();
  * @csspart img - The img element.
  * @example
  * ```html
- * <vds-media-ui>
+ * <vds-media>
  *   <vds-poster
  *     alt="Large alien ship hovering over New York."
  *   ></vds-poster>
- * </vds-media-ui>
+ * </vds-media>
  * ```
  * @example
  * ```css

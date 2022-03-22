@@ -50,7 +50,7 @@ export type GestureAction =
  * @tagname vds-gesture
  * @example
  * ```html
- * <vds-media-ui>
+ * <vds-media>
  *   <vds-gesture type="mouseleave" action="pause"></vds-gesture>
  *   <vds-gesture type="click" action="toggle:paused"></vds-gesture>
  *   <vds-gesture
@@ -59,7 +59,7 @@ export type GestureAction =
  *     action="toggle:fullscreen"
  *     priority="0"
  *   ></vds-gesture>
- * </vds-media-ui>
+ * </vds-media>
  * ```
  */
 export class GestureElement extends LitElement {
