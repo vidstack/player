@@ -1,5 +1,6 @@
 import type { PluginSimple } from 'markdown-it';
 
+import { uncommentTemplateTags } from '../../utils/htmlEscape';
 import { resolveHighlightLines } from './resolveHighlightLines';
 import { resolveLanguage } from './resolveLanguage';
 
@@ -30,10 +31,12 @@ export const codePlugin: PluginSimple = (parser) => {
     // Resolve language from token info.
     const language = resolveLanguage(info);
 
+    // Get un-escaped code content.
+    const content = uncommentTemplateTags(token.content);
+
     // Try to get highlighted code.
     const code =
-      options.highlight?.(token.content, language.name, '') ||
-      parser.utils.escapeHtml(token.content);
+      options.highlight?.(content, language.name, '') || parser.utils.escapeHtml(content);
 
     const html = code.replace(/\sclass="shiki" style=".*?"/, '').trim();
 

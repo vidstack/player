@@ -11,6 +11,7 @@ import type {
   ParsedMarkdownResult,
   ParseMarkdownOptions,
 } from './types';
+import { commentOutTemplateTags, uncommentTemplateTags } from './utils/htmlEscape';
 import { preventViteReplace } from './utils/preventViteReplace';
 import { slugify } from './utils/slugify';
 
@@ -217,19 +218,6 @@ function parseMarkdown(
   return result;
 }
 
-const TEMPLATE_TAG_RE =
-  /(\{#(if|each|await|key).*\})|(\{:(else|then|catch).*\})|(\{\/(if|each|key|await)\})|(\{@(html|debug).*\})/gim;
-function commentOutTemplateTags(source: string) {
-  return source.replace(TEMPLATE_TAG_RE, (match) => {
-    return `<!--&%& ${match} &%&-->`;
-  });
-}
-
-const TEMPLATE_TAG_COMMENT_RE = /(<!--&%&\s)|(\s&%&-->)/gim;
-function uncommentTemplateTags(source: string) {
-  return source.replace(TEMPLATE_TAG_COMMENT_RE, '');
-}
-
 const OPENING_SCRIPT_TAG_RE = /<\s*script[^>]*>/;
 const OPENING_SCRIPT_MODULE_TAG_RE = /<\s*script[^>]*\scontext="module"\s*[^>]*>/;
 const CLOSING_SCRIPT_TAG_RE = /<\/script>/;
@@ -238,16 +226,16 @@ const CLOSING_STYLE_TAG_RE = /<\/style>/;
 const OPENING_SVELTE_HEAD_TAG_RE = /<\s*svelte:head[^>]*>/;
 const CLOSING_SVELTE_HEAD_TAG_RE = /<\/svelte:head>/;
 function dedupeHoistedTags(tags: string[] = []): string[] {
-  const deduped = new Map();
+  const dedupe = new Map();
 
   const merge = (key: string, tag: string, openingTagRe: RegExp, closingTagRE: RegExp) => {
-    if (!deduped.has(key)) {
-      deduped.set(key, tag);
+    if (!dedupe.has(key)) {
+      dedupe.set(key, tag);
       return;
     }
 
-    const block = deduped.get(key)!;
-    deduped.set(key, block.replace(closingTagRE, tag.replace(openingTagRe, '')));
+    const block = dedupe.get(key)!;
+    dedupe.set(key, block.replace(closingTagRE, tag.replace(openingTagRe, '')));
   };
 
   tags.forEach((tag) => {
@@ -261,11 +249,11 @@ function dedupeHoistedTags(tags: string[] = []): string[] {
       merge('svelte:head', tag, OPENING_SVELTE_HEAD_TAG_RE, CLOSING_SVELTE_HEAD_TAG_RE);
     } else {
       // Treat unknowns as unique and leave them as-is.
-      deduped.set(Symbol(), tag);
+      dedupe.set(Symbol(), tag);
     }
   });
 
-  return Array.from(deduped.values());
+  return Array.from(dedupe.values());
 }
 
 function uppercaseFirstLetter(str: string) {

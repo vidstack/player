@@ -37,7 +37,10 @@
         'styling',
       ].map(toItems(gettingStartedSlug)),
       Libraries: ['react', 'svelte', 'vue', 'tailwind'].map(toItems(librariesSlug)),
-      Frameworks: [['next-js', { title: 'Next.js' }]].map(toItems(frameworksSlug)),
+      Frameworks: [
+        ['next-js', { title: 'Next.js' }],
+        ['svelte-kit', { title: 'SvelteKit' }],
+      ].map(toItems(frameworksSlug)),
       'Core Concepts': [
         'architecture',
         'lifecycle',

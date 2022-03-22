@@ -6,11 +6,11 @@ In this section, you'll find a simple overview of how to use the library with
 ## Setup
 
 Good news, you don't need to do anything to make it work with Next.js, simply follow the
-[React](../libraries/react.md) guide.
+[React guide](../libraries/react.md).
 
 ## SSR
 
-Vidstack Player can be rendered server-side without any issues, but it's essential to remember
+Vidstack Player elements can be rendered server-side without any issues, but it's essential to remember
 that this will only render elements in the
 [light DOM](https://developers.google.com/web/fundamentals/web-components/shadowdom#lightdom).
 Therefore, the inner contents of any element you import from this library will not be rendered if
@@ -28,7 +28,7 @@ hiding it once the custom element is defined by using the
 </VideoPlayer>
 ```
 
-```css
+```css:copy
 /* Hide the `<video>` element once the custom element is defined. */
 vds-video-player:defined > video {
   display: none;
