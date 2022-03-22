@@ -7,7 +7,6 @@ export * from './MediaContext';
 export * from './MediaElement';
 export * from './MediaError';
 export * from './MediaType';
-export * from './player';
 export * from './provider';
 export * from './request.events';
 export * from './store';
