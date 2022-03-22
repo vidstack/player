@@ -35,14 +35,14 @@ reference to a custom element if needed. This is _generally_ only required when 
 
 ```svelte
 <script lang="ts">
-	import { type VideoPlayerElement } from '@vidstack/player';
+  import { type VideoPlayerElement } from '@vidstack/player';
 
-	let videoPlayer: VideoPlayerElement;
+  let videoPlayer: VideoPlayerElement;
 
-	$: if (videoPlayer) {
-		const canPlayType = videoPlayer.canPlayType('video/mp4');
-		// ...
-	}
+  $: if (videoPlayer) {
+    const canPlayType = videoPlayer.canPlayType('video/mp4');
+    // ...
+  }
 </script>
 
 <vds-video-player bind:this={videoPlayer} />
@@ -68,11 +68,11 @@ can be imported from the `@vidstack/player` module.
 
 ```svelte
 <script lang="ts">
-	import { type MediaPlayingEvent } from '@vidstack/player';
+  import { type MediaPlayingEvent } from '@vidstack/player';
 
-	function onPlaying(event: MediaPlayingEvent) {
-		// ...
-	}
+  function onPlaying(event: MediaPlayingEvent) {
+    // ...
+  }
 </script>
 
 <vds-video-player on:vds-playing={onPlaying} />
@@ -109,6 +109,23 @@ vds-poster[img-error] {
 }
 :global([media-paused] .pause-icon) {
 }
+```
+
+:::yes
+Global styles using [`svelte-preprocess`](https://github.com/sveltejs/svelte-preprocess):
+:::
+
+```html
+<style global>
+  vds-poster[img-error] {
+  }
+
+  vds-media-ui[media-paused] .pause-icon {
+  }
+
+  vds-media-ui:not([media-paused]) .play-icon {
+  }
+</style>
 ```
 
 :::yes
