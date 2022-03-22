@@ -2,7 +2,7 @@ import '$lib/define/vds-media-controller';
 import '$lib/define/vds-fake-media-provider';
 
 import { fixture, html } from '@open-wc/testing-helpers';
-import { isFunction, waitForEvent } from '@vidstack/foundation';
+import { get, isFunction, waitForEvent } from '@vidstack/foundation';
 
 import {
   FakeMediaProviderElement,
@@ -44,11 +44,26 @@ describe('media provider', () => {
     const provider = document.createElement('vds-fake-media-provider');
 
     controller.append(provider);
-    // TODO: something wrong with JSDOM here?
-    // expect(controller.controller.mediaProvider === provider).to.be.true;
+    expect(controller.controller.mediaProvider === provider).to.be.true;
 
     provider.remove();
     expect(controller.controller.mediaProvider).to.be.undefined;
+  });
+
+  it('should copy media provider store', async function () {
+    const controller = await fixture<MediaControllerElement>(
+      html`<vds-media-controller></vds-media-controller>`,
+    );
+
+    const provider = document.createElement('vds-fake-media-provider');
+    provider._store.currentSrc.set('testing');
+    provider._store.duration.set(1000);
+
+    controller.append(provider);
+
+    const controllerStore = controller.controller.store;
+    expect(get(controllerStore.currentSrc)).to.equal('testing');
+    expect(get(controllerStore.duration)).to.equal(1000);
   });
 });
 

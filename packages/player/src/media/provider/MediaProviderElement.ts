@@ -24,7 +24,7 @@ import { MediaController } from '../controller';
 import type { MediaEvents } from '../events';
 import { MediaContext } from '../MediaContext';
 import { MediaType } from '../MediaType';
-import { mediaStoreContext, ReadableMediaStoreRecord, WritableMediaStoreRecord } from '../store';
+import { createMediaStore, ReadableMediaStoreRecord, WritableMediaStoreRecord } from '../store';
 import { ViewType } from '../ViewType';
 
 /**
@@ -70,6 +70,13 @@ export abstract class MediaProviderElement extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+
+    // If no media controller was attached, then create one and attach to self.
+    if (!this._mediaController) {
+      const controller = new MediaController(this);
+      controller.attachMediaProvider(this, (cb) => this._disconnectDisposal.add(cb));
+    }
+
     this._logMediaEvents();
 
     // Give the initial hide poster event a chance to reach the controller.
@@ -762,7 +769,8 @@ export abstract class MediaProviderElement extends LitElement {
   // Media Controller
   // -------------------------------------------------------------------------------------------
 
-  protected readonly _mediaController = new MediaController(this);
+  protected _mediaController?: MediaController;
+  protected _mediaControllerConnectedQueue = new RequestQueue();
 
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
@@ -770,12 +778,14 @@ export abstract class MediaProviderElement extends LitElement {
    */
   @property({ attribute: 'log-level' })
   get logLevel() {
-    return this._mediaController.logLevel;
+    return this._mediaController?.logLevel ?? 'silent';
   }
 
   set logLevel(level) {
     if (__DEV__) {
-      this._mediaController.logLevel = level;
+      this._mediaControllerConnectedQueue.queue('log-level', () => {
+        this._mediaController!.logLevel = level;
+      });
     }
   }
 
@@ -787,29 +797,50 @@ export abstract class MediaProviderElement extends LitElement {
    */
   @property({ attribute: 'idle-delay', type: Number })
   get idleDelay() {
-    return this._mediaController.idleDelay;
+    return this._mediaController?.idleDelay ?? 0;
   }
 
   set idleDelay(delay) {
-    this._mediaController.idleDelay = delay;
+    this._mediaControllerConnectedQueue.queue('idle-delay', () => {
+      this._mediaController!.idleDelay = delay;
+    });
+  }
+
+  /**
+   * Attach a media controller to the media provider.
+   */
+  attachMediaController(
+    mediaController: MediaController,
+    onDisconnect: (callback: () => void) => void,
+  ) {
+    this._mediaController = mediaController;
+    this._mediaStore = mediaController._store;
+    this._mediaControllerConnectedQueue.start();
+
+    onDisconnect(() => {
+      this._mediaControllerConnectedQueue.destroy();
+      this._mediaController = undefined;
+      this._mediaStore = createMediaStore();
+    });
   }
 
   // -------------------------------------------------------------------------------------------
   // Store
   // -------------------------------------------------------------------------------------------
 
-  protected readonly _mediaStoreConsumer = mediaStoreContext.consume(this);
+  /** @internal */
+  protected _mediaStore = createMediaStore();
 
   get store(): ReadableMediaStoreRecord {
-    return this._mediaStoreConsumer.value;
+    return this._mediaStore;
   }
 
   /** @internal */
   get _store(): WritableMediaStoreRecord {
-    return this._mediaStoreConsumer.value;
+    return this._mediaStore;
   }
 
-  readonly mediaState = new Proxy(() => this._mediaStoreConsumer.value, {
+  readonly mediaState = new Proxy(() => this._mediaStore, {
     get(target, key) {
       return get(target()[key]);
     },

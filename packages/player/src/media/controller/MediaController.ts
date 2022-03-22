@@ -1,24 +1,60 @@
 import {
   appendTriggerEvent,
+  copyStoreRecords,
   debounce,
   DisposalBin,
   eventListener,
+  type FullscreenSupportChange,
   isNil,
   keysOf,
+  listen,
   LogController,
   LogDispatcher,
   RequestQueue,
-  setAttribute,
   throttle,
   vdsEvent,
   WritableStore,
 } from '@vidstack/foundation';
-import type { ReactiveElement } from 'lit';
+import { type ReactiveElement } from 'lit';
 
-import { VdsMediaEvent } from '../events';
-import { MediaProviderElement } from '../provider/MediaProviderElement';
-import { PendingMediaRequests } from '../request.events';
-import { mediaStoreContext, ReadableMediaStoreRecord, WritableMediaStoreRecord } from '../store';
+import type {
+  MediaAutoplayChangeEvent,
+  MediaAutoplayEvent,
+  MediaAutoplayFailEvent,
+  MediaCanPlayEvent,
+  MediaCanPlayThroughEvent,
+  MediaControlsChangeEvent,
+  MediaDurationChangeEvent,
+  MediaEndedEvent,
+  MediaErrorEvent,
+  MediaLoadedDataEvent,
+  MediaLoadedMetadataEvent,
+  MediaLoadStartEvent,
+  MediaLoopChangeEvent,
+  MediaPauseEvent,
+  MediaPlayEvent,
+  MediaPlayingEvent,
+  MediaPlaysinlineChangeEvent,
+  MediaPosterChangeEvent,
+  MediaProgressEvent,
+  MediaSeekedEvent,
+  MediaSeekingEvent,
+  MediaSrcChangeEvent,
+  MediaTimeUpdateEvent,
+  MediaTypeChangeEvent,
+  MediaVolumeChangeEvent,
+  MediaWaitingEvent,
+  VdsMediaEvent,
+} from '../events';
+import { type MediaProviderElement } from '../provider/MediaProviderElement';
+import { type PendingMediaRequests } from '../request.events';
+import {
+  createMediaStore,
+  mediaStoreContext,
+  type ReadableMediaStoreRecord,
+  resetMediaStore,
+  type WritableMediaStoreRecord,
+} from '../store';
 import { MediaIdleController } from './MediaIdleController';
 
 export type MediaControllerHost = ReactiveElement & {
@@ -81,24 +117,35 @@ export class MediaController {
     return this._mediaProvider;
   }
 
+  /**
+   * Attach a media provider to the media controller.
+   */
+  attachMediaProvider(
+    mediaProvider: MediaProviderElement,
+    onDisconnect: (callback: () => void) => void,
+  ) {
+    if (!isNil(this.mediaProvider) || this.mediaProvider === mediaProvider) return;
+
+    // Clear any existing listeners.
+    this._handleMediaProviderDisconnect();
+
+    this._mediaProvider = mediaProvider;
+
+    copyStoreRecords(this._mediaProvider._store, this._store);
+    this._attachMediaEventListeners();
+
+    mediaProvider.attachMediaController(this, (cb) => this._disconnectDisposal.add(cb));
+
+    this._flushMediaProviderConnectedQueue();
+    onDisconnect(this._handleMediaProviderDisconnect.bind(this));
+  }
+
   protected _handleMediaProviderConnect = eventListener(
     this._host,
     'vds-media-provider-connect',
     (event) => {
-      // @ts-expect-error - not typed.
-      if (event.detail.connected) return;
-
       const { element, onDisconnect } = event.detail;
-
-      // @ts-expect-error - not typed.
-      event.detail.connected = true;
-
-      if (this.mediaProvider === element) return;
-
-      this._handleMediaProviderDisconnect();
-      this._mediaProvider = element;
-      this._flushMediaProviderConnectedQueue();
-      onDisconnect(this._handleMediaProviderDisconnect.bind(this));
+      this.attachMediaProvider(element, onDisconnect);
     },
   );
 
@@ -107,21 +154,13 @@ export class MediaController {
     this._mediaProviderConnectedQueue.destroy();
     this._mediaProviderDisconnectedDisposal.empty();
     this._mediaProvider = undefined;
-    this._store.canLoad.set(false);
+    resetMediaStore(this._store);
   }
 
   protected _flushMediaProviderConnectedQueue() {
     this._mediaProviderConnectedQueue.start();
     this._mediaProviderDisconnectedDisposal.add(() => {
       this._mediaProviderConnectedQueue.stop();
-    });
-  }
-
-  protected _setProviderAttr(name: string, value: string | boolean | null) {
-    this._mediaProviderConnectedQueue.queue(`attr:${name}`, () => {
-      if (this.mediaProvider) {
-        setAttribute(this._mediaProvider!, name, value);
-      }
     });
   }
 
@@ -425,6 +464,46 @@ export class MediaController {
   protected _originalWaitingEvent?: Event;
   protected _mediaEvents: Event[] = [];
 
+  protected _attachMediaEventListeners() {
+    if (!this._mediaProvider) return;
+
+    const mediaEventListeners = {
+      'vds-load-start': this._handleLoadStart,
+      'vds-loaded-data': this._handleLoadedData,
+      'vds-loaded-metadata': this._handleLoadedMetadata,
+      'vds-can-play': this._handleCanPlay,
+      'vds-can-play-through': this._handleCanPlayThrough,
+      'vds-autoplay': this._handleAutoplay,
+      'vds-autoplay-fail': this._handleAutoplayFail,
+      'vds-play': this._handlePlay,
+      'vds-play-fail': this._handlePlayFail,
+      'vds-playing': this._handlePlaying,
+      'vds-pause': this._handlePause,
+      'vds-time-update': this._handleTimeUpdate,
+      'vds-volume-change': this._handleVolumeChange,
+      'vds-seeking': this._handleSeeking,
+      'vds-seeked': this._handleSeeked,
+      'vds-waiting': this._handleWaiting,
+      'vds-ended': this._handleEnded,
+      'vds-autoplay-change': this._handleAutoplayChange,
+      'vds-error': this._handleError,
+      'vds-fullscreen-support-change': this._handleFullscreenSupportChange,
+      'vds-poster-change': this._handlePosterChange,
+      'vds-loop-change': this._handleLoopChange,
+      'vds-playsinline-change': this._handlePlaysinlineChange,
+      'vds-controls-change': this._handleControlsChange,
+      'vds-media-type-change': this._handleMediaTypeChange,
+      'vds-duration-change': this._handleDurationChange,
+      'vds-progress': this._handleProgress,
+      'vds-src-change': this._handleSrcChange,
+    };
+
+    for (const eventType of keysOf(mediaEventListeners)) {
+      const listener = mediaEventListeners[eventType].bind(this);
+      this._mediaProviderDisconnectedDisposal.add(listen(this._mediaProvider, eventType, listener));
+    }
+  }
+
   protected _clearMediaStateTracking() {
     this._isReplay = false;
     this._isLooping = false;
@@ -437,30 +516,26 @@ export class MediaController {
     return this._mediaEvents[this._mediaEvents.map((e) => e.type).lastIndexOf(eventType)];
   }
 
-  protected readonly _handleLoadStart = eventListener(this._host, 'vds-load-start', (event) => {
+  protected _handleLoadStart(event: MediaLoadStartEvent) {
     this._mediaEvents.push(event);
     appendTriggerEvent(event, this._findLastMediaEvent('vds-src-change'));
     this._store.currentSrc.set(event.detail.src);
     this._store.currentPoster.set(event.detail.poster);
     this._store.mediaType.set(event.detail.mediaType);
     this._store.viewType.set(event.detail.viewType);
-  });
+  }
 
-  protected readonly _handleLoadedData = eventListener(this._host, 'vds-loaded-data', (event) => {
+  protected _handleLoadedData(event: MediaLoadedDataEvent) {
     this._mediaEvents.push(event);
     appendTriggerEvent(event, this._findLastMediaEvent('vds-load-start'));
-  });
+  }
 
-  protected readonly _handleLoadedMetadata = eventListener(
-    this._host,
-    'vds-loaded-metadata',
-    (event) => {
-      this._mediaEvents.push(event);
-      appendTriggerEvent(event, this._findLastMediaEvent('vds-load-start'));
-    },
-  );
+  protected _handleLoadedMetadata(event: MediaLoadedMetadataEvent) {
+    this._mediaEvents.push(event);
+    appendTriggerEvent(event, this._findLastMediaEvent('vds-load-start'));
+  }
 
-  protected readonly _handleCanPlay = eventListener(this._host, 'vds-can-play', (event) => {
+  protected _handleCanPlay(event: MediaCanPlayEvent) {
     this._mediaEvents.push(event);
 
     // Avoid infinite chain - `hls.js` will not fire `canplay` event.
@@ -470,35 +545,27 @@ export class MediaController {
 
     this._store.canPlay.set(true);
     this._store.duration.set(event.detail.duration);
-  });
+  }
 
-  protected readonly _handleCanPlayThrough = eventListener(
-    this._host,
-    'vds-can-play-through',
-    (event) => {
-      appendTriggerEvent(event, this._findLastMediaEvent('vds-can-play'));
-    },
-  );
+  protected _handleCanPlayThrough(event: MediaCanPlayThroughEvent) {
+    appendTriggerEvent(event, this._findLastMediaEvent('vds-can-play'));
+  }
 
-  protected readonly _handleAutoplay = eventListener(this._host, 'vds-autoplay', (event) => {
+  protected _handleAutoplay(event: MediaAutoplayEvent) {
     this._mediaEvents.push(event);
     appendTriggerEvent(event, this._findLastMediaEvent('vds-play'));
     appendTriggerEvent(event, this._findLastMediaEvent('vds-can-play'));
     this._store.autoplayError.set(undefined);
-  });
+  }
 
-  protected readonly _handleAutoplayFail = eventListener(
-    this._host,
-    'vds-autoplay-fail',
-    (event) => {
-      appendTriggerEvent(event, this._findLastMediaEvent('vds-play-fail'));
-      appendTriggerEvent(event, this._findLastMediaEvent('vds-can-play'));
-      this._store.autoplayError.set(event.detail);
-      this._clearMediaStateTracking();
-    },
-  );
+  protected _handleAutoplayFail(event: MediaAutoplayFailEvent) {
+    appendTriggerEvent(event, this._findLastMediaEvent('vds-play-fail'));
+    appendTriggerEvent(event, this._findLastMediaEvent('vds-can-play'));
+    this._store.autoplayError.set(event.detail);
+    this._clearMediaStateTracking();
+  }
 
-  protected readonly _handlePlay = eventListener(this._host, 'vds-play', (event) => {
+  protected _handlePlay(event: MediaPlayEvent) {
     if (this._isLooping || !this._mediaProvider?.paused) {
       event.stopImmediatePropagation();
       return;
@@ -513,8 +580,6 @@ export class MediaController {
     this._store.paused.set(false);
     this._store.autoplayError.set(undefined);
 
-    this._setProviderAttr('paused', false);
-
     if (this._mediaProvider?.ended || this._isReplay) {
       this._isReplay = false;
       this._store.ended.set(false);
@@ -523,9 +588,9 @@ export class MediaController {
       });
       this._mediaProvider?.dispatchEvent(replayEvent);
     }
-  });
+  }
 
-  protected readonly _handlePlayFail = eventListener(this._host, 'vds-play-fail', (event) => {
+  protected _handlePlayFail(event: MediaPlayEvent) {
     this._mediaEvents.push(event);
 
     this._stopWaiting();
@@ -538,9 +603,9 @@ export class MediaController {
     this._satisfyMediaRequest('play', event);
 
     this._clearMediaStateTracking();
-  });
+  }
 
-  protected readonly _handlePlaying = eventListener(this._host, 'vds-playing', (event) => {
+  protected _handlePlaying(event: MediaPlayingEvent) {
     this._mediaEvents.push(event);
 
     const playEvent = this._findLastMediaEvent('vds-play');
@@ -570,9 +635,9 @@ export class MediaController {
       this._store.started.set(true);
       this._mediaProvider?.dispatchEvent(vdsEvent('vds-started', { triggerEvent: event }));
     }
-  });
+  }
 
-  protected readonly _handlePause = eventListener(this._host, 'vds-pause', (event) => {
+  protected _handlePause(event: MediaPauseEvent) {
     if (this._isLooping) {
       event.stopImmediatePropagation();
       return;
@@ -585,44 +650,33 @@ export class MediaController {
     this._store.playing.set(false);
     this._store.seeking.set(false);
 
-    this._setProviderAttr('paused', true);
-
     this._stopWaiting();
     this._clearMediaStateTracking();
-  });
+  }
 
-  protected readonly _handleTimeUpdate = eventListener(this._host, 'vds-time-update', (event) => {
+  protected _handleTimeUpdate(event: MediaTimeUpdateEvent) {
     this._store.currentTime.set(event.detail);
     this._store.waiting.set(false);
-  });
+  }
 
-  protected readonly _handleVolumeChange = eventListener(
-    this._host,
-    'vds-volume-change',
-    (event) => {
-      this._store.volume.set(event.detail.volume);
-      this._store.muted.set(event.detail.muted);
-      this._satisfyMediaRequest('volume', event);
-      this._setProviderAttr('muted', event.detail.muted);
+  protected _handleVolumeChange(event: MediaVolumeChangeEvent) {
+    this._store.volume.set(event.detail.volume);
+    this._store.muted.set(event.detail.muted);
+    this._satisfyMediaRequest('volume', event);
+  }
+
+  protected readonly _handleSeeking = throttle(
+    (event: MediaSeekingEvent) => {
+      this._mediaEvents.push(event);
+      this._store.seeking.set(true);
+      this._store.currentTime.set(event.detail);
+      this._satisfyMediaRequest('seeking', event);
     },
+    150,
+    { leading: true },
   );
 
-  protected readonly _handleSeeking = eventListener(
-    this._host,
-    'vds-seeking',
-    throttle(
-      (event) => {
-        this._mediaEvents.push(event);
-        this._store.seeking.set(true);
-        this._store.currentTime.set(event.detail);
-        this._satisfyMediaRequest('seeking', event);
-      },
-      150,
-      { leading: true },
-    ),
-  );
-
-  protected readonly _handleSeeked = eventListener(this._host, 'vds-seeked', (event) => {
+  protected _handleSeeked(event: MediaSeekedEvent) {
     // We don't want `seeked` events firing while seeking is updating media playback position.
     if (this._isSeekingRequestPending) {
       this._store.seeking.set(true);
@@ -646,7 +700,7 @@ export class MediaController {
       this._store.currentTime.set(event.detail);
       this._satisfyMediaRequest('seeked', event);
     }
-  });
+  }
 
   protected _stopWaiting() {
     this._fireWaiting.cancel();
@@ -668,14 +722,14 @@ export class MediaController {
     this._firingWaiting = false;
   }, 300);
 
-  protected readonly _handleWaiting = eventListener(this._host, 'vds-waiting', (event) => {
+  protected _handleWaiting(event: MediaWaitingEvent) {
     if (this._firingWaiting) return;
     event.stopImmediatePropagation();
     this._originalWaitingEvent = event;
     this._fireWaiting();
-  });
+  }
 
-  protected readonly _handleEnded = eventListener(this._host, 'vds-ended', (event) => {
+  protected _handleEnded(event: MediaEndedEvent) {
     if (this._isLooping) {
       event.stopImmediatePropagation();
       return;
@@ -687,74 +741,45 @@ export class MediaController {
     this._store.seeking.set(false);
     this._store.ended.set(true);
     this._clearMediaStateTracking();
-  });
+  }
 
-  protected readonly _handleAutoplayChange = eventListener(
-    this._host,
-    'vds-autoplay-change',
-    (event) => {
-      this._store.autoplay.set(event.detail);
-    },
-  );
+  protected _handleAutoplayChange(event: MediaAutoplayChangeEvent) {
+    this._store.autoplay.set(event.detail);
+  }
 
-  protected readonly _handleError = eventListener(this._host, 'vds-error', (event) => {
+  protected _handleError(event: MediaErrorEvent) {
     this._store.error.set(event.detail);
-  });
+  }
 
-  protected readonly _handleFullscreenSupportChange = eventListener(
-    this._host,
-    'vds-fullscreen-support-change',
-    (event) => {
-      this._store.canFullscreen.set(event.detail);
-    },
-  );
+  protected _handleFullscreenSupportChange(event: FullscreenSupportChange) {
+    this._store.canFullscreen.set(event.detail);
+  }
 
-  protected readonly _handlePosterChange = eventListener(
-    this._host,
-    'vds-poster-change',
-    (event) => {
-      this._store.currentPoster.set(event.detail);
-      this._setProviderAttr('poster', event.detail);
-    },
-  );
+  protected _handlePosterChange(event: MediaPosterChangeEvent) {
+    this._store.currentPoster.set(event.detail);
+  }
 
-  protected readonly _handleLoopChange = eventListener(this._host, 'vds-loop-change', (event) => {
+  protected _handleLoopChange(event: MediaLoopChangeEvent) {
     this._store.loop.set(event.detail);
-  });
+  }
 
-  protected readonly _handlePlaysinlineChange = eventListener(
-    this._host,
-    'vds-playsinline-change',
-    (event) => {
-      this._store.playsinline.set(event.detail);
-    },
-  );
+  protected _handlePlaysinlineChange(event: MediaPlaysinlineChangeEvent) {
+    this._store.playsinline.set(event.detail);
+  }
 
-  protected readonly _handleControlsChange = eventListener(
-    this._host,
-    'vds-controls-change',
-    (event) => {
-      this._store.controls.set(event.detail);
-    },
-  );
+  protected _handleControlsChange(event: MediaControlsChangeEvent) {
+    this._store.controls.set(event.detail);
+  }
 
-  protected readonly _handleMediaTypeChange = eventListener(
-    this._host,
-    'vds-media-type-change',
-    (event) => {
-      this._store.mediaType.set(event.detail);
-    },
-  );
+  protected _handleMediaTypeChange(event: MediaTypeChangeEvent) {
+    this._store.mediaType.set(event.detail);
+  }
 
-  protected readonly _handleDurationChange = eventListener(
-    this._host,
-    'vds-duration-change',
-    (event) => {
-      this._store.duration.set(event.detail);
-    },
-  );
+  protected _handleDurationChange(event: MediaDurationChangeEvent) {
+    this._store.duration.set(event.detail);
+  }
 
-  protected readonly _handleProgress = eventListener(this._host, 'vds-progress', (event) => {
+  protected _handleProgress(event: MediaProgressEvent) {
     const { buffered, seekable } = event.detail;
     const bufferedAmount = buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
     const seekableAmount = seekable.length === 0 ? 0 : seekable.end(seekable.length - 1);
@@ -762,14 +787,13 @@ export class MediaController {
     this._store.bufferedAmount.set(bufferedAmount);
     this._store.seekable.set(seekable);
     this._store.seekableAmount.set(seekableAmount);
-  });
+  }
 
-  protected readonly _handleSrcChange = eventListener(this._host, 'vds-src-change', (event) => {
+  protected _handleSrcChange(event: MediaSrcChangeEvent) {
     this._clearMediaStateTracking();
     this._mediaEvents.push(event);
 
     this._store.currentSrc.set(event.detail);
-    this._setProviderAttr('src', event.detail);
 
     const dontReset = new Set<keyof WritableMediaStoreRecord>([
       'currentSrc',
@@ -790,5 +814,5 @@ export class MediaController {
         (store[prop] as WritableStore<unknown>).set(store[prop].initialValue);
       }
     });
-  });
+  }
 }

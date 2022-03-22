@@ -4,7 +4,7 @@ import '$lib/define/vds-fake-media-player';
 import { fixture } from '@open-wc/testing-helpers';
 import { html } from 'lit';
 
-import { FakeMediaPlayerElement, FakeMediaProviderElement, MediaControllerElement } from '$lib';
+import { FakeMediaPlayerElement } from '$lib';
 
 export type MediaFixture = {
   player: FakeMediaPlayerElement;

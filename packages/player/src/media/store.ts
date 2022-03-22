@@ -1,5 +1,6 @@
 import {
   createContext,
+  keysOf,
   ReadableStore,
   storeRecordSubscription,
   writable,
@@ -20,39 +21,54 @@ export type ReadableMediaStoreRecord = {
   [Prop in keyof MediaContext]: ReadableStore<MediaContext[Prop]>;
 };
 
+export const MEDIA_STORE_DEFAULTS: MediaContext = {
+  autoplay: false,
+  autoplayError: undefined,
+  buffered: createTimeRanges(),
+  duration: 0,
+  bufferedAmount: 0,
+  canLoad: false,
+  canPlay: false,
+  canFullscreen: false,
+  controls: false,
+  currentPoster: '',
+  currentSrc: '',
+  currentTime: 0,
+  ended: false,
+  error: undefined,
+  fullscreen: false,
+  idle: false,
+  loop: false,
+  mediaType: MediaType.Unknown,
+  muted: false,
+  paused: true,
+  played: createTimeRanges(),
+  playing: false,
+  playsinline: false,
+  seekable: createTimeRanges(),
+  seekableAmount: 0,
+  seeking: false,
+  started: false,
+  viewType: ViewType.Unknown,
+  volume: 1,
+  waiting: false,
+};
+
 export function createMediaStore(): WritableMediaStoreRecord {
-  return {
-    autoplay: writable(false),
-    autoplayError: writable(undefined),
-    buffered: writable(createTimeRanges()),
-    duration: writable(0),
-    bufferedAmount: writable(0),
-    canLoad: writable(false),
-    canPlay: writable(false),
-    canFullscreen: writable(false),
-    controls: writable(false),
-    currentPoster: writable(''),
-    currentSrc: writable(''),
-    currentTime: writable(0),
-    ended: writable(false),
-    error: writable(undefined),
-    fullscreen: writable(false),
-    idle: writable(false),
-    loop: writable(false),
-    mediaType: writable(MediaType.Unknown),
-    muted: writable(false),
-    paused: writable(true),
-    played: writable(createTimeRanges()),
-    playing: writable(false),
-    playsinline: writable(false),
-    seekable: writable(createTimeRanges()),
-    seekableAmount: writable(0),
-    seeking: writable(false),
-    started: writable(false),
-    viewType: writable(ViewType.Unknown),
-    volume: writable(1),
-    waiting: writable(false),
-  };
+  const store = {};
+
+  for (const prop of keysOf(MEDIA_STORE_DEFAULTS)) {
+    store[prop] = writable(MEDIA_STORE_DEFAULTS[prop]);
+  }
+
+  return store as WritableMediaStoreRecord;
+}
+
+export function resetMediaStore(store: WritableMediaStoreRecord) {
+  for (const prop of keysOf(MEDIA_STORE_DEFAULTS)) {
+    // @ts-expect-error - nonsense type error.
+    store[prop].set(MEDIA_STORE_DEFAULTS[prop]);
+  }
 }
 
 export const mediaStoreContext = createContext(createMediaStore);

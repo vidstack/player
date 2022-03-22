@@ -28,17 +28,14 @@ export type MediaControllerConnectEvent = DiscoveryEvent<MediaControllerElement>
  * - Listen for media request events and fulfill them by calling the appropriate props/methods on
  * the current media provider.
  *
- * 💡 The base `MediaPlayer` acts as both a media controller and provider.
+ * 💡 A `MediaProviderElement` _can_ as both a media controller and provider.
  *
  * @tagname vds-media-controller
  * @slot - Used to pass in components that use/manage media state.
  * @example
  * ```html
  * <vds-media-controller>
- *   <vds-video-player>
- *     <!-- UI components here. -->
- *   </vds-video-player>
- *
+ *   <vds-video src="..." />
  *   <!-- Other components that use/manage media state here. -->
  * </vds-media-controller>
  * ```

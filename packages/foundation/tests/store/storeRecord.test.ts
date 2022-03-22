@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 
-import { storeRecordSubscription, writable } from '$lib';
+import { copyStoreRecords, get, storeRecordSubscription, writable } from '$lib';
 
 class FakeElement extends LitElement {
   store = { a: writable(0), b: writable(0) };
@@ -37,4 +37,34 @@ it('should subscribe to selected store once connected', () => {
   el.store.a.set(40);
 
   expect(el.subscription).to.not.toHaveBeenCalledWith(40);
+});
+
+describe(copyStoreRecords.name, () => {
+  it('should copy store record values from b to a', () => {
+    const recordA = {
+      a: writable(0),
+      b: writable('a'),
+      c: writable('c'), // test if non-matching prop throws
+    };
+
+    const recordB = {
+      a: writable(5),
+      b: writable('b'),
+      d: writable('d'), // test if non-matching prop throws
+    };
+
+    // Copy record B into A.
+    copyStoreRecords(recordB, recordA);
+
+    expect(get(recordA.a)).to.equal(5);
+    expect(get(recordA.b)).to.equal('b');
+    expect(get(recordA.c)).to.equal('c');
+
+    expect(get(recordB.a)).to.equal(5);
+    expect(get(recordB.b)).to.equal('b');
+    expect(get(recordB.d)).to.equal('d');
+
+    expect(Object.keys(recordA).length).to.equal(3);
+    expect(Object.keys(recordB).length).to.equal(3);
+  });
 });
