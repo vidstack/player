@@ -25,7 +25,7 @@ module.exports = {
               `\n${kleur.bold('Examples:')} ${[
                 kleur.cyan('\n\n- chore(root): update `pnpm-lock.yaml`'),
                 kleur.cyan('- feat(player): new play button element `vds-play-button`'),
-                kleur.cyan('- fix(vidstack-io): missing title on markdown pages\n\n'),
+                kleur.cyan('- fix(site): missing title on markdown pages\n\n'),
               ].join('\n')}`,
             ].join('\n'),
           ];
