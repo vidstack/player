@@ -49,7 +49,6 @@ import type {
 import { type MediaProviderElement } from '../provider/MediaProviderElement';
 import { type PendingMediaRequests } from '../request.events';
 import {
-  createMediaStore,
   mediaStoreContext,
   type ReadableMediaStoreRecord,
   resetMediaStore,

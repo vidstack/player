@@ -11,3 +11,8 @@ declare global {
     'vds-hls-player': HlsPlayerElement;
   }
 }
+
+if (__DEV__) {
+  // TODO: add release notes link.
+  console.warn('`<vds-hls-player>` has been deprecated and will be removed in 1.0.');
+}

@@ -6,3 +6,8 @@ import { FakeMediaProviderElement } from './FakeMediaProviderElement';
  * be combined with Sinon spies/stubs/mocks to set the player in the desired state.
  */
 export class FakeMediaPlayerElement extends WithMediaPlayer(FakeMediaProviderElement) {}
+
+if (__DEV__) {
+  // TODO: add release notes link.
+  console.warn('`<vds-fake-media-player>` has been deprecated and will be removed in 1.0.');
+}

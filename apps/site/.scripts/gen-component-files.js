@@ -15,7 +15,7 @@ const ROUTES_DIR = resolve(CWD, 'src/routes');
 const PLAYER_DOCS_DIR = resolve(ROUTES_DIR, 'docs/player/components');
 
 const ignoredCategories = [/^players/];
-const ignoredElements = [/vds-media-ui/, /vds-media-controller/];
+const ignoredElements = [/vds-media-ui/];
 
 console.log(kleur.cyan(`Scaffolding component documentation files.\n`));
 

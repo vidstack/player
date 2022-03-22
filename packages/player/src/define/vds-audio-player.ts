@@ -11,3 +11,8 @@ declare global {
     'vds-audio-player': AudioPlayerElement;
   }
 }
+
+if (__DEV__) {
+  // TODO: add release notes link.
+  console.warn('`<vds-audio-player>` has been deprecated and will be removed in 1.0.');
+}

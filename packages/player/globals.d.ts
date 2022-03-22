@@ -1,7 +1,7 @@
 /// <reference types="@vidstack/foundation/globals" />
 
 import type {
-  MediaControllerConnectEvent,
+  MediaConnectEvent,
   MediaEvents,
   MediaPlayerConnectEvent,
   MediaProviderConnectEvent,
@@ -22,8 +22,8 @@ declare global {
       MediaSyncEvents,
       SliderEvents,
       VideoPresentationEvents {
+    'vds-media-connect': MediaConnectEvent;
     'vds-media-player-connect': MediaPlayerConnectEvent;
-    'vds-media-controller-connect': MediaControllerConnectEvent;
     'vds-media-provider-connect': MediaProviderConnectEvent;
   }
 }
