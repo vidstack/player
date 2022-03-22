@@ -11,5 +11,4 @@ export * from './provider';
 export * from './request.events';
 export * from './store';
 export * from './test-utils';
-export * from './ui';
 export * from './ViewType';

@@ -9,8 +9,6 @@ it('should define all vds elements', () => {
     'vds-gesture',
     'vds-hls',
     'vds-media',
-    'vds-media-controller',
-    'vds-media-ui',
     'vds-media-sync',
     'vds-media-visibility',
     'vds-mute-button',
