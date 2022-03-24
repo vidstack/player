@@ -62,7 +62,7 @@ export class MediaElement extends LitElement {
     return [
       css`
         :host {
-          display: contents;
+          display: block;
         }
 
         :host([hidden]) {
