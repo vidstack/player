@@ -58,6 +58,14 @@ export class VideoElement extends Html5MediaElement {
         :host([hidden]) {
           display: none;
         }
+
+        ::slotted(video:not([width])) {
+          width: var(--vds-video-width, 100%);
+        }
+
+        ::slotted(video:not([height])) {
+          height: var(--vds-video-height, auto);
+        }
       `,
     ];
   }

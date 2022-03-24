@@ -29,6 +29,8 @@ export const aspectRatioElementStyles = css`
   }
 
   ::slotted(*) {
+    --vds-video-width: 100%;
+    --vds-video-height: 100%;
     width: 100%;
     height: 100%;
   }
