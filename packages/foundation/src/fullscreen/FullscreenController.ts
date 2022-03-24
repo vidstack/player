@@ -4,7 +4,7 @@ import { ReactiveElement } from 'lit';
 import { vdsEvent } from '../events';
 import { LogDispatcher } from '../logger';
 import { ScreenOrientationController, ScreenOrientationLock } from '../screen-orientation';
-import { DisposalBin } from '../utils/events';
+import { DisposalBin, listen } from '../utils/events';
 import { isUndefined, noop } from '../utils/unit';
 
 export type FullscreenControllerHost = ReactiveElement & {
