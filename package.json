@@ -21,7 +21,8 @@
     "prepare": "husky install",
     "release": "turbo run build build:cdn test && pnpm test:esm && node .scripts/release.js",
     "release:dry": "pnpm release -- --dry",
-    "spellcheck": "cspell 'apps/**/*.md' 'packages/**.ts', 'packages/**/.md', '*.md' --gitignore --cache"
+    "spellcheck": "cspell 'apps/**/*.md' 'packages/**.ts', 'packages/**/.md', '*.md' --gitignore --cache",
+    "validate": "turbo run build lint test && pnpm test:esm"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
