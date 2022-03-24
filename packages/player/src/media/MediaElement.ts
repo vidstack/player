@@ -76,6 +76,8 @@ export class MediaElement extends LitElement {
   @state() protected __mediaIsVideoView = false;
   @state() protected __mediaPlaysinline = false;
 
+  readonly controller = new MediaController(this);
+
   constructor() {
     super();
 
@@ -103,12 +105,6 @@ export class MediaElement extends LitElement {
     setAttribute(this, 'media-ui-hidden', this._shouldHideMediaUI());
     super.update(changedProperties);
   }
-
-  // -------------------------------------------------------------------------------------------
-  // Properties
-  // -------------------------------------------------------------------------------------------
-
-  readonly controller = new MediaController(this);
 
   // -------------------------------------------------------------------------------------------
   // Lifecycle
@@ -144,7 +140,7 @@ export class MediaElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   protected _bindMediaAttributes() {
-    bindMediaPropsToAttrs(this, [
+    bindMediaPropsToAttrs(this, this.controller.store, [
       'autoplay',
       'autoplayError',
       'canLoad',
@@ -168,7 +164,12 @@ export class MediaElement extends LitElement {
   }
 
   protected _bindMediaCSSProperties() {
-    bindMediaPropsToCssProps(this, ['bufferedAmount', 'currentTime', 'duration', 'seekableAmount']);
+    bindMediaPropsToCssProps(this, this.controller.store, [
+      'bufferedAmount',
+      'currentTime',
+      'duration',
+      'seekableAmount',
+    ]);
   }
 
   protected _shouldHideMediaUI(): boolean {

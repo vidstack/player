@@ -12,8 +12,8 @@ import {
   LogDispatcher,
   RequestQueue,
   throttle,
+  unwrapStoreRecord,
   vdsEvent,
-  WritableStore,
 } from '@vidstack/foundation';
 import { type ReactiveElement } from 'lit';
 
@@ -24,6 +24,7 @@ import type {
   MediaCanPlayEvent,
   MediaCanPlayThroughEvent,
   MediaControlsChangeEvent,
+  MediaCurrentSrcChangeEvent,
   MediaDurationChangeEvent,
   MediaEndedEvent,
   MediaErrorEvent,
@@ -31,6 +32,7 @@ import type {
   MediaLoadedMetadataEvent,
   MediaLoadStartEvent,
   MediaLoopChangeEvent,
+  MediaMetadataEventDetail,
   MediaPauseEvent,
   MediaPlayEvent,
   MediaPlayingEvent,
@@ -42,18 +44,22 @@ import type {
   MediaSrcChangeEvent,
   MediaTimeUpdateEvent,
   MediaTypeChangeEvent,
+  MediaViewTypeChangeEvent,
   MediaVolumeChangeEvent,
   MediaWaitingEvent,
   VdsMediaEvent,
 } from '../events';
+import { mediaProviderElementContext } from '../provider';
 import { type MediaProviderElement } from '../provider/MediaProviderElement';
 import { type PendingMediaRequests } from '../request.events';
 import {
   mediaStoreContext,
   type ReadableMediaStoreRecord,
   resetMediaStore,
+  softResetMediaStore,
   type WritableMediaStoreRecord,
 } from '../store';
+import { ViewType } from '../ViewType';
 import { MediaIdleController } from './MediaIdleController';
 
 export type MediaControllerHost = ReactiveElement & {
@@ -83,6 +89,7 @@ export class MediaController {
         this._clearPendingMediaRequests();
         this._mediaProviderConnectedQueue.destroy();
         this._mediaProviderDisconnectedDisposal.empty();
+        this._skipInitialSrcChange = true;
         this._disconnectDisposal.empty();
       },
     });
@@ -112,6 +119,8 @@ export class MediaController {
 
   protected _mediaProvider: MediaProviderElement | undefined;
 
+  protected readonly _mediaProviderContext = mediaProviderElementContext.provide(this._host);
+
   get mediaProvider() {
     return this._mediaProvider;
   }
@@ -129,6 +138,7 @@ export class MediaController {
     this._handleMediaProviderDisconnect();
 
     this._mediaProvider = mediaProvider;
+    this._mediaProviderContext.value.set(mediaProvider);
 
     copyStoreRecords(this._mediaProvider._store, this._store);
     this._attachMediaEventListeners();
@@ -153,7 +163,9 @@ export class MediaController {
     this._mediaProviderConnectedQueue.destroy();
     this._mediaProviderDisconnectedDisposal.empty();
     this._mediaProvider = undefined;
+    this._mediaProviderContext.value.set(undefined);
     resetMediaStore(this._store);
+    this._store.viewType.set(ViewType.Unknown);
   }
 
   protected _flushMediaProviderConnectedQueue() {
@@ -177,6 +189,8 @@ export class MediaController {
   get _store(): WritableMediaStoreRecord {
     return this._mediaStoreProvider.value;
   }
+
+  readonly state = unwrapStoreRecord(() => this._store);
 
   // -------------------------------------------------------------------------------------------
   // Media Idle Controller
@@ -268,17 +282,13 @@ export class MediaController {
     };
   }
 
-  protected _handleCanLoad = eventListener(this._host, 'vds-can-load', () => {
-    this._store.canLoad.set(true);
-  });
-
   protected _handleMuteRequest = eventListener(
     this._host,
     'vds-mute-request',
     this._createMediaRequestHandler('muted', (event) => {
-      if (this._mediaProvider?.muted === true) return;
+      if (this._mediaProvider?._muted === true) return;
       this._pendingMediaRequests.volume.push(event);
-      this.mediaProvider!.muted = true;
+      this.mediaProvider!._muted = true;
     }),
   );
 
@@ -286,9 +296,9 @@ export class MediaController {
     this._host,
     'vds-unmute-request',
     this._createMediaRequestHandler('muted', (event) => {
-      if (this._mediaProvider?.muted === false) return;
+      if (this._mediaProvider?._muted === false) return;
       this._pendingMediaRequests.volume.push(event);
-      this.mediaProvider!.muted = false;
+      this.mediaProvider!._muted = false;
     }),
   );
 
@@ -296,9 +306,9 @@ export class MediaController {
     this._host,
     'vds-play-request',
     this._createMediaRequestHandler('paused', (event) => {
-      if (this._mediaProvider?.paused === false) return;
+      if (this._mediaProvider?._paused === false) return;
       this._pendingMediaRequests.play.push(event);
-      this.mediaProvider!.paused = false;
+      this.mediaProvider!._paused = false;
     }),
   );
 
@@ -306,9 +316,9 @@ export class MediaController {
     this._host,
     'vds-pause-request',
     this._createMediaRequestHandler('paused', (event) => {
-      if (this._mediaProvider?.paused === true) return;
+      if (this._mediaProvider?._paused === true) return;
       this._pendingMediaRequests.pause.push(event);
-      this.mediaProvider!.paused = true;
+      this.mediaProvider!._paused = true;
     }),
   );
 
@@ -329,7 +339,7 @@ export class MediaController {
     this._host,
     'vds-seek-request',
     this._createMediaRequestHandler('seeking', (event) => {
-      if (this._mediaProvider?.ended) {
+      if (this.store.ended) {
         this._isReplay = true;
       }
 
@@ -339,11 +349,11 @@ export class MediaController {
       let time = event.detail;
 
       // Snap to end if close enough.
-      if (this.mediaProvider!.duration - event.detail < 0.25) {
-        time = this.mediaProvider!.duration;
+      if (this.state.duration - event.detail < 0.25) {
+        time = this.state.duration;
       }
 
-      this.mediaProvider!.currentTime = time;
+      this.mediaProvider!._currentTime = time;
     }),
   );
 
@@ -351,9 +361,9 @@ export class MediaController {
     this._host,
     'vds-volume-change-request',
     this._createMediaRequestHandler('volume', (event) => {
-      if (this._mediaProvider?.volume === event.detail) return;
+      if (this._mediaProvider?._volume === event.detail) return;
       this._pendingMediaRequests.volume.push(event);
-      this.mediaProvider!.volume = event.detail;
+      this.mediaProvider!._volume = event.detail;
     }),
   );
 
@@ -361,7 +371,7 @@ export class MediaController {
     this._host,
     'vds-enter-fullscreen-request',
     this._createMediaRequestHandler('fullscreen', async (event) => {
-      if (this.mediaProvider?.fullscreen) return;
+      if (this.state.fullscreen) return;
 
       const target = event.detail ?? 'provider';
 
@@ -382,7 +392,7 @@ export class MediaController {
     this._host,
     'vds-exit-fullscreen-request',
     this._createMediaRequestHandler('fullscreen', async (event) => {
-      if (!this.mediaProvider?.fullscreen) return;
+      if (!this.state.fullscreen) return;
 
       const target = event.detail ?? 'provider';
 
@@ -423,7 +433,7 @@ export class MediaController {
     this._host,
     'vds-show-poster-request',
     this._createMediaRequestHandler('poster', () => {
-      this._mediaProvider!.__canLoadPoster = true;
+      this._mediaProvider!.canLoadPoster = true;
     }),
   );
 
@@ -431,7 +441,7 @@ export class MediaController {
     this._host,
     'vds-hide-poster-request',
     this._createMediaRequestHandler('poster', () => {
-      this._mediaProvider!.__canLoadPoster = false;
+      this._mediaProvider!.canLoadPoster = false;
     }),
   );
 
@@ -489,11 +499,13 @@ export class MediaController {
     if (!this._mediaProvider) return;
 
     const mediaEventListeners = {
+      'vds-can-load': this._handleCanLoad,
       'vds-load-start': this._handleLoadStart,
       'vds-loaded-data': this._handleLoadedData,
       'vds-loaded-metadata': this._handleLoadedMetadata,
       'vds-can-play': this._handleCanPlay,
       'vds-can-play-through': this._handleCanPlayThrough,
+      'vds-current-src-change': this._handleCurrentSrcChange,
       'vds-autoplay': this._handleAutoplay,
       'vds-autoplay-fail': this._handleAutoplayFail,
       'vds-play': this._handlePlay,
@@ -514,14 +526,15 @@ export class MediaController {
       'vds-playsinline-change': this._handlePlaysinlineChange,
       'vds-controls-change': this._handleControlsChange,
       'vds-media-type-change': this._handleMediaTypeChange,
+      'vds-view-type-change': this._handleViewTypeChange,
       'vds-duration-change': this._handleDurationChange,
       'vds-progress': this._handleProgress,
       'vds-src-change': this._handleSrcChange,
     };
 
     for (const eventType of keysOf(mediaEventListeners)) {
-      const listener = mediaEventListeners[eventType].bind(this);
-      this._mediaProviderDisconnectedDisposal.add(listen(this._mediaProvider, eventType, listener));
+      const handler = mediaEventListeners[eventType].bind(this);
+      this._mediaProviderDisconnectedDisposal.add(listen(this._mediaProvider, eventType, handler));
     }
   }
 
@@ -537,13 +550,22 @@ export class MediaController {
     return this._mediaEvents[this._mediaEvents.map((e) => e.type).lastIndexOf(eventType)];
   }
 
+  protected _handleCanLoad() {
+    this._store.canLoad.set(true);
+  }
+
+  protected _updateMetadata(metadata: MediaMetadataEventDetail) {
+    this._store.src.set(metadata.src);
+    this._store.currentSrc.set(metadata.currentSrc);
+    this._store.poster.set(metadata.poster);
+    this._store.mediaType.set(metadata.mediaType);
+    this._store.viewType.set(metadata.viewType);
+  }
+
   protected _handleLoadStart(event: MediaLoadStartEvent) {
+    this._updateMetadata(event.detail);
     this._mediaEvents.push(event);
     appendTriggerEvent(event, this._findLastMediaEvent('vds-src-change'));
-    this._store.currentSrc.set(event.detail.src);
-    this._store.currentPoster.set(event.detail.poster);
-    this._store.mediaType.set(event.detail.mediaType);
-    this._store.viewType.set(event.detail.viewType);
   }
 
   protected _handleLoadedData(event: MediaLoadedDataEvent) {
@@ -552,6 +574,7 @@ export class MediaController {
   }
 
   protected _handleLoadedMetadata(event: MediaLoadedMetadataEvent) {
+    this._updateMetadata(event.detail);
     this._mediaEvents.push(event);
     appendTriggerEvent(event, this._findLastMediaEvent('vds-load-start'));
   }
@@ -569,6 +592,8 @@ export class MediaController {
   }
 
   protected _handleCanPlayThrough(event: MediaCanPlayThroughEvent) {
+    this._store.canPlay.set(true);
+    this._store.duration.set(event.detail.duration);
     appendTriggerEvent(event, this._findLastMediaEvent('vds-can-play'));
   }
 
@@ -587,7 +612,7 @@ export class MediaController {
   }
 
   protected _handlePlay(event: MediaPlayEvent) {
-    if (this._isLooping || !this._mediaProvider?.paused) {
+    if (this._isLooping || !this._mediaProvider?._paused) {
       event.stopImmediatePropagation();
       return;
     }
@@ -601,7 +626,7 @@ export class MediaController {
     this._store.paused.set(false);
     this._store.autoplayError.set(undefined);
 
-    if (this._mediaProvider?.ended || this._isReplay) {
+    if (this.state.ended || this._isReplay) {
       this._isReplay = false;
       this._store.ended.set(false);
       const replayEvent = vdsEvent('vds-replay', {
@@ -652,7 +677,7 @@ export class MediaController {
       return;
     }
 
-    if (!this._mediaProvider?.started) {
+    if (!this.state.started) {
       this._store.started.set(true);
       this._mediaProvider?.dispatchEvent(vdsEvent('vds-started', { triggerEvent: event }));
     }
@@ -702,19 +727,19 @@ export class MediaController {
     if (this._isSeekingRequestPending) {
       this._store.seeking.set(true);
       event.stopImmediatePropagation();
-    } else if (this._mediaProvider?.seeking) {
+    } else if (this.state.seeking) {
       this._mediaEvents.push(event);
 
       appendTriggerEvent(event, this._findLastMediaEvent('vds-waiting'));
       appendTriggerEvent(event, this._findLastMediaEvent('vds-seeking'));
 
-      if (this._mediaProvider.paused) {
+      if (this.state.paused) {
         this._stopWaiting();
       }
 
       this._store.seeking.set(false);
 
-      if (event.detail !== this._mediaProvider.duration) {
+      if (event.detail !== this.state.duration) {
         this._store.ended.set(false);
       }
 
@@ -768,6 +793,10 @@ export class MediaController {
     this._store.autoplay.set(event.detail);
   }
 
+  protected _handleCurrentSrcChange(event: MediaCurrentSrcChangeEvent) {
+    this._store.currentSrc.set(event.detail);
+  }
+
   protected _handleError(event: MediaErrorEvent) {
     this._store.error.set(event.detail);
   }
@@ -777,7 +806,7 @@ export class MediaController {
   }
 
   protected _handlePosterChange(event: MediaPosterChangeEvent) {
-    this._store.currentPoster.set(event.detail);
+    this._store.poster.set(event.detail);
   }
 
   protected _handleLoopChange(event: MediaLoopChangeEvent) {
@@ -810,30 +839,21 @@ export class MediaController {
     this._store.seekableAmount.set(seekableAmount);
   }
 
+  protected _skipInitialSrcChange = true;
   protected _handleSrcChange(event: MediaSrcChangeEvent) {
+    this._store.src.set(event.detail);
+
+    // Skip resets before first playback to ensure initial properties set make it to the provider.
+    if (this._skipInitialSrcChange) {
+      this._skipInitialSrcChange = false;
+      return;
+    }
+
     this._clearMediaStateTracking();
-    this._mediaEvents.push(event);
+    softResetMediaStore(this._store);
+  }
 
-    this._store.currentSrc.set(event.detail);
-
-    const dontReset = new Set<keyof WritableMediaStoreRecord>([
-      'currentSrc',
-      'autoplay',
-      'canFullscreen',
-      'controls',
-      'canLoad',
-      'loop',
-      'muted',
-      'playsinline',
-      'viewType',
-      'volume',
-    ]);
-
-    const store = this._store;
-    keysOf(store).forEach((prop) => {
-      if (!dontReset.has(prop)) {
-        (store[prop] as WritableStore<unknown>).set(store[prop].initialValue);
-      }
-    });
+  protected _handleViewTypeChange(event: MediaViewTypeChangeEvent) {
+    this._store.viewType.set(event.detail);
   }
 }

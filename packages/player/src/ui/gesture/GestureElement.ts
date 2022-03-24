@@ -1,19 +1,22 @@
 import {
-  type ContextConsumerController,
-  DeferredPromise,
+  type DeferredPromise,
   deferredPromise,
   DisposalBin,
   isMouseEvent,
   isPointerEvent,
   isTouchEvent,
   listen,
+  storeSubscription,
   vdsEvent,
 } from '@vidstack/foundation';
 import { css, type CSSResultGroup, LitElement, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
-import { type Ref } from 'lit/directives/ref.js';
 
-import { mediaContainerContext, mediaStoreContext } from '../../media';
+import {
+  type MediaProviderElement,
+  mediaProviderElementContext,
+  mediaStoreContext,
+} from '../../media';
 
 // We perform gestures in batches to enable prioritization. Each batch belongs to a root
 // media container. This is to ensure gestures on one player don't affect another.
@@ -82,22 +85,24 @@ export class GestureElement extends LitElement {
     ];
   }
 
+  protected _mediaProviderElement?: MediaProviderElement;
   protected _disposal = new DisposalBin();
-
-  protected _mediaContainerConsumer: ContextConsumerController<Ref<HTMLElement>> =
-    mediaContainerContext.consume(this);
-  protected get _mediaContainer() {
-    return this._mediaContainerConsumer.value.value;
-  }
 
   /** Pending actions that belong to the same container as this gesture element. */
   protected get _pendingActions() {
-    return this._mediaContainer ? pendingActions.get(this._mediaContainer) : undefined;
+    return this._mediaProviderElement ? pendingActions.get(this._mediaProviderElement) : undefined;
   }
 
   /** Pending action that belongs to this gesture element. */
   protected get _pendingAction() {
     return this._pendingActions?.get(this);
+  }
+
+  constructor() {
+    super();
+    storeSubscription(this, mediaProviderElementContext, (element) => {
+      this._mediaProviderElement = element;
+    });
   }
 
   // -------------------------------------------------------------------------------------------
@@ -157,8 +162,8 @@ export class GestureElement extends LitElement {
 
     // Wait for media container to be attached to DOM.
     window.requestAnimationFrame(() => {
-      if (this._mediaContainer) {
-        pendingActions.set(this._mediaContainer, new Map());
+      if (this._mediaProviderElement) {
+        pendingActions.set(this._mediaProviderElement, new Map());
       }
     });
   }
@@ -212,7 +217,7 @@ export class GestureElement extends LitElement {
   protected _attachListener() {
     this._disposal.empty();
 
-    if (!this._mediaContainer || !this.type || !this.action) return;
+    if (!this._mediaProviderElement || !this.type || !this.action) return;
 
     let count = 0;
     let timeoutId;
@@ -228,14 +233,14 @@ export class GestureElement extends LitElement {
           this._pendingActions?.delete(this);
         }
 
-        processPendingActions(this._mediaContainer!);
+        processPendingActions(this._mediaProviderElement!);
 
         count = 0;
         promise?.resolve();
       }, 250);
     };
 
-    const off = listen(this._mediaContainer, this.type, (event) => {
+    const off = listen(this._mediaProviderElement, this.type, (event) => {
       if (!this._validateEvent(event)) return;
 
       event.preventDefault();

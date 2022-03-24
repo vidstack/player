@@ -1,10 +1,10 @@
 import { type ReactiveControllerHost } from 'lit';
 
-import { Context, isContext } from '../context';
+import { type Context, isContext } from '../context';
 import { keysOf } from '../utils/object';
 import { get } from './stores';
 import { storeSubscription } from './storeSubscription';
-import { type ReadableStoreRecord, type StoreValue, WritableStoreRecord } from './types';
+import type { ReadableStoreRecord, StoreValue, WritableStoreRecord } from './types';
 
 /**
  * Helper function to subscribe to an individual store record item for the life of the given
@@ -70,4 +70,27 @@ export function copyStoreRecords(
 
     if (valA !== valB) storeB.set(valA);
   }
+}
+
+/**
+ * Unwraps a store record using a proxy and returning the underlying value when a key is accessed.
+ */
+export function unwrapStoreRecord<StoreRecord extends ReadableStoreRecord>(
+  store: () => StoreRecord,
+): { [Prop in keyof StoreRecord]: StoreValue<StoreRecord[Prop]> } {
+  return new Proxy(store, {
+    get(target, key) {
+      // @ts-expect-error
+      return get(target()[key]);
+    },
+    has(target, key) {
+      return Reflect.has(target(), key);
+    },
+    ownKeys(target) {
+      return Reflect.ownKeys(target());
+    },
+    getOwnPropertyDescriptor(target, key) {
+      return Reflect.getOwnPropertyDescriptor(target(), key);
+    },
+  }) as any;
 }

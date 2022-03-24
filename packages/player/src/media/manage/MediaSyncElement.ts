@@ -102,8 +102,8 @@ export class MediaSyncElement extends LitElement {
 
       const savedVolume = this._getSavedMediaVolume();
       if (savedVolume) {
-        this._mediaProvider.volume = savedVolume.volume;
-        this._mediaProvider.muted = savedVolume.muted;
+        this._mediaProvider._volume = savedVolume.volume;
+        this._mediaProvider._muted = savedVolume.muted;
       }
 
       if (this.singlePlayback) {
@@ -149,7 +149,7 @@ export class MediaSyncElement extends LitElement {
 
     mediaProviders.forEach((provider) => {
       if (provider !== this._mediaProvider) {
-        provider.paused = true;
+        provider._paused = true;
       }
     });
 
@@ -168,8 +168,8 @@ export class MediaSyncElement extends LitElement {
 
     mediaProviders.forEach((provider) => {
       if (provider !== this._mediaProvider) {
-        provider.volume = volume;
-        provider.muted = muted;
+        provider._volume = volume;
+        provider._muted = muted;
       }
     });
 

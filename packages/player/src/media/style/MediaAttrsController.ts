@@ -4,11 +4,13 @@ import { MediaStyleController } from './MediaStyleController';
 
 class MediaAttrsController extends MediaStyleController {
   protected _handleValueChange(_, attrName: string, value: unknown) {
-    setAttribute(
-      this._host,
-      attrName,
-      isString(value) || isNumber(value) ? String(value) : !!value,
-    );
+    window.requestAnimationFrame(() => {
+      setAttribute(
+        this._host,
+        attrName,
+        isString(value) || isNumber(value) ? String(value) : !!value,
+      );
+    });
   }
 
   protected _handleDisconnect(_, attrName: string) {

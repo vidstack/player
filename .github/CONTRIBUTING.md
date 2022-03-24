@@ -101,6 +101,23 @@ $: pnpm dev
 $: pnpm dev --filter vidstack.io
 ```
 
+### Sandbox
+
+A sandbox is a Vite development environment that enables you to play with a package right in your
+browser. The sandbox directory is Git-ignored so you can safely do whatever you like inside of
+it.
+
+```bash
+# Play with `@vidstack/foundation` package in your browser.
+$: pnpm sandbox --filter @vidstack/foundation
+
+# Play with `@vidstack/player` package in your browser.
+$: pnpm sandbox --filter @vidstack/player
+```
+
+After running any of the commands above, you can find the sandbox directory at `packages/*/sandbox`.
+You can delete the directory and re-run the sandbox command to reset it.
+
 ## 🧪 Testing
 
 Unit tests are located in the `tests` directory inside an app or package. Run

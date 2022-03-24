@@ -1,4 +1,3 @@
-export * from './CanPlay';
 export * from './controller';
 export * from './events';
 export * from './interact';

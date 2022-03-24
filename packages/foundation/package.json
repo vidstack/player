@@ -14,6 +14,7 @@
     "dist-prod/",
     "types/",
     "index.d.ts",
+    "dom.d.ts",
     "globals.d.ts"
   ],
   "exports": {
@@ -48,6 +49,8 @@
     "watch": "pnpm dev",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
+    "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3090",
+    "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
     "test": "vitest --run",
     "test:watch": "vitest --watch"
   },

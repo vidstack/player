@@ -12,11 +12,11 @@ import type { ErrorData, Events as HlsEvent, HlsConfig, LevelLoadedData } from '
 import { type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { CanPlay, MediaErrorCode, MediaType } from '../../media';
+import { MediaErrorCode, MediaType } from '../../media';
 import { VideoElement } from '../video';
 import type { DynamicHlsConstructorImport, HlsConstructor } from './types';
 import {
-  HlsConstructorLoadCallbacks,
+  type HlsConstructorLoadCallbacks,
   importHlsConstructor,
   isHlsConstructorCached,
   isHlsEventType,
@@ -26,43 +26,79 @@ import {
 
 export const HLS_EXTENSIONS = /\.(m3u8)($|\?)/i;
 
-export const HLS_TYPES = new Set(['application/x-mpegURL', 'application/vnd.apple.mpegurl']);
+// Taken from video.js
+export const HLS_TYPES = new Set([
+  // Apple sanctioned
+  'application/vnd.apple.mpegurl',
+  // Apple sanctioned for backwards compatibility
+  'audio/mpegurl',
+  // Very common
+  'audio/x-mpegurl',
+  // Very common
+  'application/x-mpegurl',
+  // Included for completeness
+  'video/x-mpegurl',
+  'video/mpegurl',
+  'application/mpegurl',
+]);
 
 const HLS_CDN_SRC_BASE = 'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.light';
 const HLS_CDN_SRC_DEV = `${HLS_CDN_SRC_BASE}.js` as const;
 const HLS_CDN_SRC_PROD = `${HLS_CDN_SRC_BASE}.min.js` as const;
 
 /**
- * Embeds video content into documents via the native `<video>` element. It may contain
- * one or more video sources, represented using the `src` attribute or the `<source>` element: the
- * browser will choose the most suitable one.
- *
- * In addition, this element introduces support for HLS streaming via the popular `hls.js` library.
+ * The `<vds-hls>` element introduces support for HLS streaming via the popular `hls.js` library.
  * HLS streaming is either [supported natively](https://caniuse.com/?search=hls) (generally
  * on iOS), or in environments that [support the Media Stream API](https://caniuse.com/?search=mediastream).
  *
- * 💡 This element contains the exact same interface as the `<video>` element. It re-dispatches
- * all the native events if needed, but prefer the `vds-*` variants (eg: `vds-play`) as they
- * iron out any browser issues. It also dispatches all the `hls.js` events.
- *
  * 💡 This element re-dispatches all `hls.js` events so you can listen for them through the
- * native DOM interface (eg: `addEventListener('vds-hls-media-attaching', ...)`).
+ * native DOM interface (i.e., `vds-hls-media-attaching`).
  *
  * @tagname vds-hls
- * @slot - Used to pass in `<source>` and `<track>` elements to the underlying HTML5 media player.
- * @csspart media - The video element (`<video>`).
- * @csspart video - Alias for `media` part.
+ * @slot - Used to pass in `<video>` element.
  * @events ./events.ts
  * @example
  * ```html
- * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
- *   <!-- Additional media resources here. -->
+ * <vds-hls>
+ *   <video
+ *     src="https://media-files.vidstack.io/hls/index.m3u8"
+ *     poster="https://media-files.vidstack.io/poster.png"
+ *     preload="none"
+ *     data-preload="metadata"
+ *   ></video>
  * </vds-hls>
  * ```
  * @example
  * ```html
- * <vds-hls src="/media/index.m3u8" poster="/media/poster.png">
- *   <track default kind="subtitles" src="/media/subs/en.vtt" srclang="en" label="English" />
+ * <vds-hls loading="lazy">
+ *   <video
+ *     src="https://media-files.vidstack.io/hls/index.m3u8"
+ *     preload="none"
+ *     data-preload="metadata"
+ *     data-poster="https://media-files.vidstack.io/poster.png"
+ *   ></video>
+ * </vds-hls>
+ * ```
+ * @example
+ * ```html
+ * <vds-hls>
+ *   <video
+ *     poster="https://media-files.vidstack.io/poster.png"
+ *     preload="none"
+ *     data-preload="metadata"
+ *   >
+ *     <source
+ *       src="https://media-files.vidstack.io/hls/index.m3u8"
+ *       type="application/x-mpegURL"
+ *     />
+ *     <track
+ *       default
+ *       kind="subtitles"
+ *       srclang="en"
+ *       label="English"
+ *       src="https://media-files.vidstack.io/subs/english.vtt"
+ *     />
+ *   </video>
  * </vds-hls>
  * ```
  */
@@ -134,20 +170,9 @@ export class HlsElement extends VideoElement {
     return this._isHlsEngineAttached;
   }
 
-  override get currentSrc() {
-    return this.isHlsStream && !this.shouldUseNativeHlsSupport
-      ? this.src
-      : this.videoEngine?.currentSrc ?? '';
-  }
-
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
-
-  override connectedCallback() {
-    super.connectedCallback();
-    this._preconnectToHlsLibDownload();
-  }
 
   protected override async update(changedProperties: PropertyValues) {
     super.update(changedProperties);
@@ -159,18 +184,6 @@ export class HlsElement extends VideoElement {
     ) {
       this._preconnectToHlsLibDownload();
     }
-
-    if (
-      changedProperties.has('hlsLibrary') &&
-      this.hasUpdated &&
-      this.canLoad &&
-      !this.shouldUseNativeHlsSupport &&
-      isHlsjsSupported()
-    ) {
-      await this._buildHlsEngine(true);
-      this._attachHlsEngine();
-      this._loadSrcOnHlsEngine();
-    }
   }
 
   override disconnectedCallback() {
@@ -178,37 +191,9 @@ export class HlsElement extends VideoElement {
     super.disconnectedCallback();
   }
 
-  override async handleMediaCanLoad() {
-    await super.handleMediaCanLoad();
-
-    if (!this._hasAttachedSourceNodes) {
-      window.requestAnimationFrame(() => {
-        this._handleMediaSrcChange();
-      });
-    }
-
-    /**
-     * We can't actually determine whether there is native HLS support until the underlying
-     * `<video>` element has rendered, since we rely on calling `canPlayType` on it. Thus we retry
-     * this getter here, and if it returns `true` we request an update so the `src` is set
-     * on the `<video>` element (determined by `_shouldSetVideoSrcAttr()` method).
-     */
-    if (this.shouldUseNativeHlsSupport) {
-      this.requestUpdate();
-    }
-  }
-
   // -------------------------------------------------------------------------------------------
-  // Methods
+  // Support Checks
   // -------------------------------------------------------------------------------------------
-
-  override canPlayType(type: string): CanPlay {
-    if (HLS_TYPES.has(type)) {
-      this.isHlsSupported ? CanPlay.Probably : CanPlay.No;
-    }
-
-    return super.canPlayType(type);
-  }
 
   /**
    * Whether HLS streaming is supported in this environment.
@@ -223,7 +208,7 @@ export class HlsElement extends VideoElement {
    * @default false
    */
   get isHlsStream(): boolean {
-    return HLS_EXTENSIONS.test(this.src);
+    return HLS_EXTENSIONS.test(this.state.src);
   }
 
   /**
@@ -231,21 +216,20 @@ export class HlsElement extends VideoElement {
    * after the provider has connected to the DOM (wait for `MediaProviderConnectEvent`).
    */
   get hasNativeHlsSupport(): boolean {
-    /**
-     * We need to call this directly on `HTMLMediaElement`, calling `this.shouldPlayType(...)`
-     * won't work here because it'll use the `CanPlayType` result from this provider override
-     * which will incorrectly indicate that HLS can natively played due to `hls.js` support.
-     */
-    const canPlayType = super.canPlayType('application/vnd.apple.mpegurl');
+    const video = document.createElement('video');
+
+    const canPlayType = Array.from(HLS_TYPES).some((canItPlay) =>
+      /maybe|probably/i.test(video.canPlayType(canItPlay)),
+    );
 
     if (__DEV__) {
       this._logger
-        ?.infoGroup('checking for native HLS support')
+        ?.infoGroup('Checking for native HLS support')
         .labelledLog('Can play type', canPlayType)
         .dispatch();
     }
 
-    return canPlayType === CanPlay.Maybe || canPlayType === CanPlay.Probably;
+    return canPlayType;
   }
 
   /**
@@ -256,21 +240,8 @@ export class HlsElement extends VideoElement {
    * @default false
    */
   get shouldUseNativeHlsSupport(): boolean {
-    /**
-     * // TODO: stage-2 we'll need to rework this line and determine when to "upgrade" to `hls.js`.
-     *
-     * @see https://github.com/vidstack/player/issues/376
-     */
     if (isHlsjsSupported()) return false;
     return this.hasNativeHlsSupport;
-  }
-
-  /**
-   * Notifies the `VideoElement` whether the `src` attribute should be set on the rendered
-   * `<video>` element. If we're using `hls.js` we don't want to override the `blob`.
-   */
-  protected override _shouldSetVideoSrcAttr(): boolean {
-    return this.canLoad && (this.shouldUseNativeHlsSupport || !this.isHlsStream);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -289,7 +260,7 @@ export class HlsElement extends VideoElement {
 
     if (__DEV__) {
       this._logger
-        ?.infoGroup('preconnect to `hls.js` download')
+        ?.infoGroup('Preconnect to `hls.js` download')
         .labelledLog('URL', this.hlsLibrary)
         .dispatch();
     }
@@ -299,7 +270,13 @@ export class HlsElement extends VideoElement {
 
   protected async _buildHlsEngine(forceRebuild = false): Promise<void> {
     // Need to mount on `<video>`.
-    if (isNil(this.videoEngine) && !forceRebuild && !isUndefined(this.hlsEngine)) {
+    if (isNil(this.videoElement) && !forceRebuild && !isUndefined(this.hlsEngine)) {
+      this._logger
+        ?.infoGroup('🏗️ Could not build HLS engine')
+        .labelledLog('Video Element', this.videoElement)
+        .labelledLog('HLS Engine', this.hlsEngine)
+        .labelledLog('Force Rebuild Flag', forceRebuild)
+        .dispatch();
       return;
     }
 
@@ -394,8 +371,8 @@ export class HlsElement extends VideoElement {
     if (__DEV__) {
       this._logger
         ?.infoGroup('🏗️ HLS engine built')
+        .labelledLog('Video Element', this.videoElement)
         .labelledLog('HLS Engine', this.hlsEngine)
-        .labelledLog('Video Engine', this.videoEngine)
         .dispatch();
     }
 
@@ -418,23 +395,23 @@ export class HlsElement extends VideoElement {
   protected _prevHlsEngineSrc = '';
 
   // Let `Html5MediaElement` know we're taking over ready events.
-  protected override _willAnotherEngineAttach(): boolean {
+  protected override _willAnotherEngineAttachSrc(): boolean {
     return this.isHlsStream && !this.shouldUseNativeHlsSupport;
   }
 
   protected _attachHlsEngine(): void {
-    if (this.isHlsEngineAttached || isUndefined(this.hlsEngine) || isNil(this.videoEngine)) {
+    if (this.isHlsEngineAttached || isUndefined(this.hlsEngine) || isNil(this.videoElement)) {
       return;
     }
 
-    this.hlsEngine.attachMedia(this.videoEngine);
+    this.hlsEngine.attachMedia(this.videoElement);
     this._isHlsEngineAttached = true;
 
     if (__DEV__) {
       this._logger
-        ?.infoGroup('🏗️ attached HLS engine')
+        ?.infoGroup('🏗️ Attached HLS engine')
+        .labelledLog('Video Element', this.videoElement)
         .labelledLog('HLS Engine', this._hlsEngine)
-        .labelledLog('Video Engine', this.videoEngine)
         .dispatch();
     }
   }
@@ -448,37 +425,37 @@ export class HlsElement extends VideoElement {
 
     if (__DEV__) {
       this._logger
-        ?.infoGroup('🏗️ detached HLS engine')
-        .labelledLog('Video Engine', this.videoEngine)
+        ?.infoGroup('🏗️ Detached HLS engine')
+        .labelledLog('Video Element', this.videoElement)
         .dispatch();
     }
   }
 
-  protected _loadSrcOnHlsEngine(): void {
+  protected _loadSrcOnHlsEngine(src: string): void {
     if (
       isNil(this.hlsEngine) ||
       !this.isHlsStream ||
       this.shouldUseNativeHlsSupport ||
-      this.src === this._prevHlsEngineSrc
+      src === this._prevHlsEngineSrc
     ) {
       return;
     }
 
     if (__DEV__) {
       this._logger
-        ?.infoGroup(`📼 loading src`)
-        .labelledLog('Src', this.src)
+        ?.infoGroup(`📼 Loading Source`)
+        .labelledLog('Src', src)
+        .labelledLog('Video Element', this.videoElement)
         .labelledLog('HLS Engine', this._hlsEngine)
-        .labelledLog('Video Engine', this.videoEngine)
         .dispatch();
     }
 
-    this.hlsEngine.loadSource(this.src);
-    this._prevHlsEngineSrc = this.src;
+    this.hlsEngine.loadSource(src);
+    this._prevHlsEngineSrc = src;
   }
 
   protected override _getMediaType(): MediaType {
-    if (this.mediaType === MediaType.LiveVideo) {
+    if (this.state.mediaType === MediaType.LiveVideo) {
       return MediaType.LiveVideo;
     }
 
@@ -490,17 +467,24 @@ export class HlsElement extends VideoElement {
   }
 
   // -------------------------------------------------------------------------------------------
-  // Events
+  // Src Changes
   // -------------------------------------------------------------------------------------------
 
-  protected override get _mediaReadyOnMetadataLoad() {
-    return true;
+  override canPlaySrc(src: string): boolean {
+    return (this.isHlsSupported && HLS_EXTENSIONS.test(src)) || super.canPlaySrc(src);
   }
 
-  protected override async _handleMediaSrcChange() {
-    if (this._prevHlsEngineSrc === this.src) return;
+  protected override _ignoreSrcChange(src: string): boolean {
+    return src.startsWith('blob:') || super._ignoreSrcChange(src);
+  }
 
-    await super._handleMediaSrcChange();
+  protected override _handleMediaSrcChange(src: string) {
+    super._handleMediaSrcChange(src);
+    this._handleHlsSrcChange(src);
+  }
+
+  protected async _handleHlsSrcChange(src: string) {
+    if (this._prevHlsEngineSrc === src) return;
 
     // We don't want to load `hls.js` until the browser has had a chance to paint.
     if (!this.hasUpdated || !this.canLoad) return;
@@ -510,9 +494,6 @@ export class HlsElement extends VideoElement {
       return;
     }
 
-    // Need to wait for `src` attribute on `<video>` to clear if last `src` was not using HLS engine.
-    await this.updateComplete;
-
     if (isNil(this.hlsLibrary) || this.shouldUseNativeHlsSupport) return;
 
     if (isUndefined(this.hlsEngine)) {
@@ -520,11 +501,23 @@ export class HlsElement extends VideoElement {
     }
 
     if (__DEV__) {
-      this._logger?.debug(`📼 detected hls src change \`${this.src}\``);
+      this._logger?.debug(`📼 Detected HLS source change \`${this.state.src}\``);
     }
 
     this._attachHlsEngine();
-    this._loadSrcOnHlsEngine();
+    this._loadSrcOnHlsEngine(src);
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Events
+  // -------------------------------------------------------------------------------------------
+
+  protected override _handleLoadedMetadata(event: Event): void {
+    super._handleLoadedMetadata(event);
+    this._handleMediaReady({
+      event,
+      duration: this.mediaElement!.duration,
+    });
   }
 
   protected _listenToHlsEngine(): void {
@@ -545,12 +538,12 @@ export class HlsElement extends VideoElement {
     if (__DEV__) {
       this._logger
         ?.errorGroup(`HLS error \`${eventType}\``)
-        .labelledLog('Event type', eventType)
-        .labelledLog('Data', data)
-        .labelledLog('Src', this.src)
-        .labelledLog('State', { ...this.mediaState })
+        .labelledLog('Video Element', this.videoElement)
         .labelledLog('HLS Engine', this._hlsEngine)
-        .labelledLog('Video Engine', this.videoEngine)
+        .labelledLog('Event Type', eventType)
+        .labelledLog('Data', data)
+        .labelledLog('Src', this.state.src)
+        .labelledLog('State', { ...this.state })
         .dispatch();
     }
 
@@ -582,7 +575,7 @@ export class HlsElement extends VideoElement {
   }
 
   protected _handleHlsLevelLoaded(eventType: string, data: LevelLoadedData): void {
-    if (this.canPlay) return;
+    if (this.state.canPlay) return;
     this._handleHlsMediaReady(eventType, data);
   }
 
@@ -592,7 +585,7 @@ export class HlsElement extends VideoElement {
     const event = new VdsEvent(eventType, { detail: data });
 
     const mediaType = live ? MediaType.LiveVideo : MediaType.Video;
-    if (this.mediaState.mediaType !== mediaType) {
+    if (this.state.mediaType !== mediaType) {
       this.dispatchEvent(
         vdsEvent('vds-media-type-change', {
           detail: mediaType,
@@ -601,7 +594,7 @@ export class HlsElement extends VideoElement {
       );
     }
 
-    if (this.duration !== duration) {
+    if (this.state.duration !== duration) {
       this.dispatchEvent(
         vdsEvent('vds-duration-change', {
           detail: duration,

@@ -243,9 +243,9 @@ export class MediaVisibilityElement extends LitElement {
     if (!this._mediaProvider) return;
 
     if (mediaAction === 'play') {
-      this._mediaProvider.paused = false;
+      this._mediaProvider._paused = false;
     } else if (mediaAction === 'unmute') {
-      this._mediaProvider.muted = false;
+      this._mediaProvider._muted = false;
     }
   }
 
@@ -253,9 +253,9 @@ export class MediaVisibilityElement extends LitElement {
     if (!this._mediaProvider) return;
 
     if (mediaAction === 'pause') {
-      this._mediaProvider.paused = true;
+      this._mediaProvider._paused = true;
     } else if (mediaAction === 'mute') {
-      this._mediaProvider.muted = true;
+      this._mediaProvider._muted = true;
     }
   }
 

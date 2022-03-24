@@ -1,4 +1,6 @@
 import {
+  type ArrayElement,
+  DisposalBin,
   getNumberOfDecimalPlaces,
   getSlottedChildren,
   isNil,
@@ -6,204 +8,34 @@ import {
   isUndefined,
   keysOf,
   listen,
-  redispatchEvent,
+  observeAttributes,
   vdsEvent,
 } from '@vidstack/foundation';
-import { html, type PropertyValues, type TemplateResult } from 'lit';
-import { property, state } from 'lit/decorators.js';
-import { createRef, type Ref } from 'lit/directives/ref.js';
+import { type PropertyValues } from 'lit';
 
-import { CanPlay, MediaProviderElement, MediaType, ViewType } from '../../media';
-import { MediaNetworkState } from './MediaNetworkState';
-import { MediaReadyState } from './MediaReadyState';
+import { MediaProviderElement, MediaType } from '../../media';
 
 export const AUDIO_EXTENSIONS =
   /\.(m4a|mp4a|mpga|mp2|mp2a|mp3|m2a|m3a|wav|weba|aac|oga|spx)($|\?)/i;
 
-export const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v)($|\?)/i;
+export const VIDEO_EXTENSIONS = /\.(mp4|og[gv]|webm|mov|m4v|avi)($|\?)/i;
 
-/**
- * A DOMString` indicating the `CORS` setting for this media element.
- *
- * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
- */
-export type MediaCrossOriginOption = 'anonymous' | 'use-credentials';
-
-/**
- * Is a `DOMString` that reflects the `preload` HTML attribute, indicating what data should be
- * preloaded, if any.
- */
-export type MediaPreloadOption = 'none' | 'metadata' | 'auto';
-
-/**
- * `DOMTokenList` that helps the user agent select what controls to show on the media element
- * whenever the user agent shows its own set of controls. The `DOMTokenList` takes one or more of
- * three possible values: `nodownload`, `nofullscreen`, and `noremoteplayback`.
- *
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList
- */
-export type MediaControlsList =
-  | 'nodownload'
-  | 'nofullscreen'
-  | 'noremoteplayback'
-  | 'nodownload nofullscreen'
-  | 'nodownload noremoteplayback'
-  | 'nofullscreen noremoteplayback'
-  | 'nodownload nofullscreen noremoteplayback';
-
-/**
- * The object which serves as the source of the media associated with the `HTMLMediaElement`. The
- * object can be a `MediaStream`, `MediaSource`, `Blob`, or `File` (which inherits from `Blob`).
- *
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
- * @link https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
- * @link https://developer.mozilla.org/en-US/docs/Web/API/MediaSource
- * @link https://developer.mozilla.org/en-US/docs/Web/API/Blob
- * @link https://developer.mozilla.org/en-US/docs/Web/API/File
- */
-export type MediaSrcObject = MediaStream | MediaSource | Blob | File;
+function getMediaTypeFromExt(src: string) {
+  if (AUDIO_EXTENSIONS.test(src)) return MediaType.Audio;
+  if (VIDEO_EXTENSIONS.test(src)) return MediaType.Video;
+  return MediaType.Unknown;
+}
 
 /**
  * Enables loading, playing and controlling media files via the HTML5 MediaElement API. This is
  * used internally by the `vds-audio` and `vds-video` components. This provider only contains
  * glue code so don't bother using it on it's own.
- *
- * @slot - Pass `<source>` and `<track>` elements to the underlying HTML5 media player.
  */
 export class Html5MediaElement extends MediaProviderElement {
-  // -------------------------------------------------------------------------------------------
-  // Properties
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * Determines what controls to show on the media element whenever the browser shows its own set
-   * of controls (e.g. when the controls attribute is specified).
-   *
-   * @example 'nodownload nofullscreen noremoteplayback'
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controlsList
-   */
-  @property({ reflect: true })
-  controlsList: MediaControlsList | undefined;
-
-  /**
-   * Whether to use CORS to fetch the related image.
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/crossOrigin
-   */
-  @property({ reflect: true })
-  crossOrigin: MediaCrossOriginOption | undefined;
-
-  /**
-   * Reflects the muted attribute, which indicates whether the audio output should be muted by
-   * default.  This property has no dynamic effect. To mute and unmute the audio output, use
-   * the `muted` property.
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/defaultMuted
-   */
-  @property({ type: Boolean })
-  defaultMuted: boolean | undefined;
-
-  /**
-   * A `double` indicating the default playback rate for the media.
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/defaultPlaybackRate
-   */
-  @property({ type: Number })
-  defaultPlaybackRate: number | undefined;
-
-  /**
-   *  Whether to disable the capability of remote playback in devices that are
-   * attached using wired (HDMI, DVI, etc.) and wireless technologies (Miracast, Chromecast,
-   * DLNA, AirPlay, etc).
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/disableRemotePlayback
-   * @see https://www.w3.org/TR/remote-playback/#the-disableremoteplayback-attribute
-   */
-  @property({ type: Boolean })
-  disableRemotePlayback: boolean | undefined;
-
-  /**
-   * Provides a hint to the browser about what the author thinks will lead to the best user
-   * experience with regards to what content is loaded before the video is played.
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload
-   */
-  @property({ reflect: true })
-  preload: MediaPreloadOption | undefined;
-
-  /**
-   * The width of the media player.
-   */
-  @property({ type: Number, reflect: true })
-  width: number | undefined;
-
-  /**
-   * The height of the media player.
-   */
-  @property({ type: Number, reflect: true })
-  height: number | undefined;
-
-  @state() protected __src = '';
-
-  /**
-   * The URL of a media resource to use.
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src
-   */
-  @property()
-  get src(): string {
-    return this.__src;
-  }
-
-  set src(newSrc) {
-    if (this.__src !== newSrc) {
-      this.__src = newSrc;
-      this._handleMediaSrcChange();
-    }
-  }
-
-  protected readonly _mediaRef: Ref<HTMLMediaElement> = createRef();
+  protected _mediaElement?: HTMLMediaElement;
 
   get mediaElement() {
-    return this._mediaRef.value;
-  }
-
-  /**
-   * Sets or returns the object which serves as the source of the media associated with the
-   * `HTMLMediaElement`.
-   *
-   * @default undefined
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
-   */
-  get srcObject(): MediaSrcObject | undefined {
-    return this.mediaElement?.srcObject ?? undefined;
-  }
-
-  set srcObject(newSrcObject) {
-    if (!isUndefined(this.mediaElement) && this.mediaElement.srcObject !== newSrcObject) {
-      // TODO: this has to be attached after `firstUpdated`?
-      this.mediaElement.srcObject = newSrcObject ?? null;
-      this._handleMediaSrcChange();
-    }
-  }
-
-  /**
-   * Indicates the readiness state of the media.
-   *
-   * @default ReadyState.HaveNothing
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState
-   */
-  get readyState() {
-    return this.mediaElement?.readyState ?? MediaReadyState.HaveNothing;
-  }
-
-  /**
-   * Indicates the current state of the fetching of media over the network.
-   *
-   * @default NetworkState.Empty
-   */
-  get networkState() {
-    return this.mediaElement?.networkState ?? MediaNetworkState.Empty;
+    return this._mediaElement;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -213,29 +45,14 @@ export class Html5MediaElement extends MediaProviderElement {
   protected override firstUpdated(changedProps: PropertyValues): void {
     super.firstUpdated(changedProps);
     if (this.canLoad) {
-      this._bindMediaEventListeners();
+      this._attachMediaEventListeners();
     }
   }
 
   override disconnectedCallback() {
     this._isMediaWaiting = false;
-    this._hasAttachedSourceNodes = false;
     super.disconnectedCallback();
     this._cancelTimeUpdates();
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Render
-  // -------------------------------------------------------------------------------------------
-
-  /**
-   * Override this to modify the content rendered inside `<audio>` and `<video>` elements.
-   */
-  protected _renderMediaChildren(): TemplateResult {
-    return html`
-      <slot @slotchange="${this._handleDefaultSlotChange}"></slot>
-      Your browser does not support the <code>audio</code> or <code>video</code> element.
-    `;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -261,7 +78,7 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _requestTimeUpdate() {
     const newTime = this.mediaElement?.currentTime ?? 0;
 
-    if (this.currentTime !== newTime) {
+    if (this._currentTime !== newTime) {
       this._updateCurrentTime(newTime);
     }
 
@@ -275,58 +92,208 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-time-update', {
         // Avoid errors where `currentTime` can have higher precision than duration.
-        detail: Math.min(newTime, this.duration),
+        detail: Math.min(newTime, this.mediaElement?.duration ?? 0),
         triggerEvent,
       }),
     );
   }
 
   // -------------------------------------------------------------------------------------------
-  // Slots
+  // Media Element (Connect)
   // -------------------------------------------------------------------------------------------
 
-  protected _handleDefaultSlotChange() {
-    if (isNil(this.mediaElement) || !this.canLoad) return;
-    this._cancelTimeUpdates();
-    this._cleanupOldSourceNodes();
-    this._attachNewSourceNodes();
+  protected _hasMediaElementConnected = false;
+  protected _mediaElementDisposal = new DisposalBin();
+
+  handleDefaultSlotChange() {
+    // Wait a frame to give events a chance to reach media controller (e.g., `vds-hide-poster-request`).
+    window.requestAnimationFrame(() => {
+      const mediaElement = getSlottedChildren(this)[0] as HTMLMediaElement | null;
+      const tagName = mediaElement?.tagName.toLowerCase();
+
+      if (tagName && !/(audio|video)/.test(tagName)) {
+        if (__DEV__) {
+          throw Error(
+            `[vds]: expected <audio> or <video> in default slot. Received: <${tagName}>.`,
+          );
+        }
+      }
+
+      this._handleMediaElementDisconnect();
+      this._mediaElement = mediaElement ?? undefined;
+      this._handleMediaElementConnect();
+    });
   }
 
-  protected _cleanupOldSourceNodes() {
-    const nodes = this.mediaElement?.querySelectorAll('source,track');
-    nodes?.forEach((node) => node.remove());
-    this._hasAttachedSourceNodes = false;
+  protected _canMediaElementConnect() {
+    return this.canLoad && !isNil(this.mediaElement) && !this._hasMediaElementConnected;
   }
 
-  protected _hasAttachedSourceNodes = false;
-  protected _attachNewSourceNodes() {
-    if (!this.canLoad || this._hasAttachedSourceNodes) return;
+  protected _handleMediaElementConnect() {
+    const mediaEl = this.mediaElement!;
 
-    const validTags = new Set(['source', 'track']);
+    if (!this._canMediaElementConnect()) return;
 
-    const nodes = getSlottedChildren(this).filter((node) =>
-      validTags.has(node.tagName.toLowerCase()),
-    );
+    this._observeMediaAttributes();
+    this._attachMediaEventListeners();
+    this._observeMediaSrc();
 
-    const initialSrc = (nodes[0] as HTMLSourceElement)?.src;
-    if (initialSrc) {
-      this.__src = initialSrc;
+    if (this.canLoadPoster && mediaEl.hasAttribute('data-poster')) {
+      mediaEl.setAttribute('poster', mediaEl.getAttribute('data-poster')!);
     }
 
-    if (__DEV__ && nodes.length > 0) {
+    if (!this._willAnotherEngineAttachSrc()) {
+      this._startPreloadingMedia();
+    }
+
+    // Autoplay already failed
+    if (mediaEl.readyState > 2 && mediaEl.autoplay && !this.state.playing) {
+      this.dispatchEvent(
+        vdsEvent('vds-autoplay-fail', {
+          detail: {
+            muted: this.state.muted,
+            error: Error('Autoplay failed to start playback.'),
+          },
+        }),
+      );
+    }
+
+    if (__DEV__) {
       this._logger
-        ?.infoGroup('Found `<source>` and/or `<track>` elements')
-        .labelledLog('Nodes', nodes)
+        ?.infoGroup('Media element connected')
+        .labelledLog('Media Element', mediaEl)
         .dispatch();
     }
 
-    nodes.forEach((node) => this.mediaElement?.appendChild(node.cloneNode()));
+    this._hasMediaElementConnected = true;
+    this._disconnectDisposal.add(this._handleMediaElementDisconnect.bind(this));
+  }
 
-    window.requestAnimationFrame(async () => {
-      await this._handleMediaSrcChange();
+  protected _handleMediaElementDisconnect() {
+    this._cancelTimeUpdates();
+    this._mediaElementDisposal.empty();
+    this._mediaElement = undefined;
+
+    if (this._hasMediaElementConnected && __DEV__) {
+      this._logger
+        ?.infoGroup('Media element disconnected')
+        .labelledLog('Media Element', this.mediaElement)
+        .dispatch();
+    }
+
+    this._hasMediaElementConnected = false;
+  }
+
+  override handleMediaCanLoad() {
+    super.handleMediaCanLoad();
+    this._handleMediaElementConnect();
+  }
+
+  protected _startPreloadingMedia() {
+    const mediaEl = this.mediaElement;
+    if (mediaEl?.hasAttribute('data-preload')) {
+      mediaEl.setAttribute('preload', mediaEl.getAttribute('data-preload') ?? 'metadata');
+    }
+  }
+
+  protected _observeMediaAttributes() {
+    // We should manage these. Media might have already started playback at this point so we can't
+    // prevent autoplay, but it ensures we manually handle loops and any future autoplays.
+    for (const attrName of ['autoplay', 'loop']) {
+      if (this.mediaElement!.hasAttribute(attrName)) {
+        this.mediaElement!.removeAttribute(attrName);
+        this.mediaElement!.setAttribute(`data-${attrName}`, '');
+      }
+    }
+
+    const mediaAttrs = ['autoplay', 'poster', 'controls', 'loop', 'playsinline'] as const;
+    const mediaDataAttrs = ['autoplay', 'poster', 'loop'].map((attrName) => `data-${attrName}`);
+    // Order is important as media attrs have higher priority (should override data attrs).
+    const observedAttrs = [...mediaDataAttrs, ...mediaAttrs];
+
+    const observer = observeAttributes(this.mediaElement!, observedAttrs, (attrName, attrValue) => {
+      const name = attrName?.replace('data-', '') as ArrayElement<typeof mediaAttrs>;
+      const value = name !== 'poster' ? attrValue !== null : attrValue ?? '';
+      if (this.state[name] !== value) {
+        const changeEventType = `vds-${name}-change` as const;
+        this.dispatchEvent(vdsEvent(changeEventType, { detail: value }));
+      }
     });
 
-    this._hasAttachedSourceNodes = true;
+    this._mediaElementDisposal.add(() => observer.disconnect());
+  }
+
+  /**
+   * Whether the media element can probably play the given media resource based on it's URL.
+   */
+  canPlaySrc(src: string) {
+    const ext = src.split('.').reverse()[0];
+    const type = `${getMediaTypeFromExt(src)}/${ext}`;
+    return /maybe|probably/i.test(this.mediaElement?.canPlayType(type) ?? '');
+  }
+
+  /**
+   * Override method to ensure unnecessary src changes don't occur (e.g., blobs).
+   */
+  protected _ignoreSrcChange(src: string) {
+    return this.state.src === src;
+  }
+
+  protected _observeMediaSrc() {
+    const onSrcChange = () => {
+      let src = '';
+
+      // Simple selection algorithm:
+      // 1. If `src` is set then use that.
+      // 2. If `src` is not set, and there's only one resource then use that.
+      // 3. If there's multiple resources, try to find the best suitable.
+      // 4. If nothing is found, default is empty string.
+      if (!this.mediaElement!.src) {
+        const resources = this._getMediaSources();
+
+        if (resources.length === 1) {
+          src = resources[0];
+        } else {
+          // Find first that browser can play.
+          for (const resource of resources) {
+            /// TODO: prioritize `probably` over `maybe`.
+            if (this.canPlaySrc(resource)) {
+              src = resource;
+              break;
+            }
+          }
+        }
+      } else {
+        src = this.mediaElement!.src;
+      }
+
+      if (this._ignoreSrcChange(src)) return;
+
+      this._isMediaWaiting = false;
+      this._handleMediaSrcChange(src);
+
+      if (this.canLoad && !this._willAnotherEngineAttachSrc()) {
+        this.mediaElement!.src = src;
+        this.mediaElement!.load();
+      }
+    };
+
+    onSrcChange();
+    const observer = new MutationObserver(onSrcChange);
+    observer.observe(this.mediaElement!, { attributeFilter: ['src'], subtree: true });
+    this._mediaElementDisposal.add(() => observer.disconnect());
+  }
+
+  protected _getMediaSources() {
+    const resources = [
+      this.mediaElement?.src,
+      ...Array.from(this.mediaElement?.querySelectorAll('source') ?? []).map(
+        (source) => source.src,
+      ),
+    ].filter(Boolean);
+
+    // Only uniques.
+    return Array.from(new Set(resources)) as string[];
   }
 
   // -------------------------------------------------------------------------------------------
@@ -336,21 +303,10 @@ export class Html5MediaElement extends MediaProviderElement {
   // An un-debounced waiting tracker (this.waiting is debounced inside the media controller).
   protected _isMediaWaiting = false;
 
-  override async handleMediaCanLoad() {
-    await super.handleMediaCanLoad();
+  protected _attachMediaEventListeners() {
+    if (isNil(this.mediaElement)) return;
 
-    this._bindMediaEventListeners();
-
-    if (getSlottedChildren(this).length > 0) {
-      this._attachNewSourceNodes();
-    }
-  }
-
-  protected _isListeningToMediaElement = false;
-  protected _bindMediaEventListeners() {
-    if (isNil(this.mediaElement) || this._isListeningToMediaElement) return;
-
-    const eventListeners = {
+    const mediaEventListeners = {
       abort: this._handleAbort,
       canplay: this._handleCanPlay,
       canplaythrough: this._handleCanPlayThrough,
@@ -375,37 +331,27 @@ export class Html5MediaElement extends MediaProviderElement {
       waiting: this._handleWaiting,
     };
 
-    keysOf(eventListeners).forEach((type) => {
-      const handler = eventListeners[type].bind(this);
-      this._disconnectDisposal.add(
-        listen(this.mediaElement!, type, async (event: Event) => {
-          if (__DEV__) {
-            this._logger
-              ?.debugGroup(`📺 fired \`${event.type}\``)
-              .labelledLog('Event', event)
-              .labelledLog('Engine', this.engine)
-              .labelledLog('State', { ...this.mediaState })
-              .dispatch();
-          }
+    keysOf(mediaEventListeners).forEach((type) => {
+      const handler = mediaEventListeners[type].bind(this);
 
-          await handler(event);
+      const off = listen(this.mediaElement!, type, async (event: Event) => {
+        if (__DEV__) {
+          this._logger
+            ?.debugGroup(`📺 fired \`${event.type}\``)
+            .labelledLog('Event', event)
+            .labelledLog('State', { ...this.state })
+            .dispatch();
+        }
 
-          // re-dispatch native event for spec-compliance.
-          redispatchEvent(this, event);
+        await handler(event);
+      });
 
-          this.requestUpdate();
-        }),
-      );
+      this._mediaElementDisposal.add(off);
     });
 
     if (__DEV__) {
       this._logger?.debug('attached event listeners');
     }
-
-    this._isListeningToMediaElement = true;
-    this._disconnectDisposal.add(() => {
-      this._isListeningToMediaElement = false;
-    });
   }
 
   protected _handleAbort(event: Event) {
@@ -413,13 +359,16 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleCanPlay(event: Event) {
-    if (this.mediaState.canPlay) return;
-    if (!this._willAnotherEngineAttach())
+    if (this.state.canPlay) return;
+
+    if (!this._willAnotherEngineAttachSrc()) {
       this._handleMediaReady({ event, duration: this.mediaElement!.duration });
+    }
   }
 
   protected _handleCanPlayThrough(event: Event) {
-    if (this.started) return;
+    if (this.state.started) return;
+
     this.dispatchEvent(
       vdsEvent('vds-can-play-through', {
         triggerEvent: event,
@@ -432,14 +381,20 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-load-start', {
         triggerEvent: event,
-        detail: {
-          src: this.mediaElement!.currentSrc,
-          poster: this.currentPoster,
-          mediaType: this._getMediaType(),
-          viewType: this._getViewType(),
-        },
+        detail: this._getMediaMetadata(),
       }),
     );
+  }
+
+  protected _getMediaMetadata() {
+    return {
+      src: this.state.src,
+      currentSrc: this.mediaElement!.currentSrc ?? this.mediaElement!.src,
+      duration: this.mediaElement!.duration || 0,
+      poster: (this.mediaElement as HTMLVideoElement).poster,
+      mediaType: this._getMediaType(),
+      viewType: this.state.viewType,
+    };
   }
 
   protected _handleEmptied(event: Event) {
@@ -454,41 +409,27 @@ export class Html5MediaElement extends MediaProviderElement {
    * Can be used to indicate another engine such as `hls.js` will attach to the media element
    * so it can handle certain ready events.
    */
-  protected _willAnotherEngineAttach(): boolean {
-    return false;
-  }
-
-  // For `hls.js` or any engine to mark ready state when metadata has loaded.
-  protected get _mediaReadyOnMetadataLoad() {
+  protected _willAnotherEngineAttachSrc(): boolean {
     return false;
   }
 
   protected _handleLoadedMetadata(event: Event) {
+    // Sync volume state before metadata.
     this.dispatchEvent(
-      vdsEvent('vds-duration-change', {
-        detail: this.mediaElement!.duration,
-        triggerEvent: event,
+      vdsEvent('vds-volume-change', {
+        detail: {
+          volume: this.mediaElement!.volume,
+          muted: this.mediaElement!.muted,
+        },
       }),
     );
 
     this.dispatchEvent(
       vdsEvent('vds-loaded-metadata', {
         triggerEvent: event,
-        detail: {
-          src: this.mediaElement!.currentSrc,
-          duration: this.mediaElement!.duration,
-        },
+        detail: this._getMediaMetadata(),
       }),
     );
-
-    this._determineMediaType(event);
-
-    if (this._mediaReadyOnMetadataLoad) {
-      this._handleMediaReady({
-        event,
-        duration: this.mediaElement!.duration,
-      });
-    }
   }
 
   protected _determineMediaType(event: Event) {
@@ -508,7 +449,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _handlePause(event: Event) {
     // Avoid seeking events triggering pause.
-    if (this.readyState === 1 && !this._isMediaWaiting) {
+    if (this.mediaElement!.readyState === 1 && !this._isMediaWaiting) {
       return;
     }
 
@@ -525,7 +466,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleDurationChange(event: Event) {
-    if (this.ended) {
+    if (this.mediaElement!.ended) {
       this._updateCurrentTime(this.mediaElement!.duration, event);
     }
 
@@ -575,12 +516,12 @@ export class Html5MediaElement extends MediaProviderElement {
 
     // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
     if (
-      Math.trunc(currentTime) === Math.trunc(this.duration) &&
-      getNumberOfDecimalPlaces(this.duration) > getNumberOfDecimalPlaces(currentTime)
+      Math.trunc(currentTime) === Math.trunc(this.mediaElement!.duration) &&
+      getNumberOfDecimalPlaces(this.mediaElement!.duration) > getNumberOfDecimalPlaces(currentTime)
     ) {
-      this._updateCurrentTime(this.duration, event);
+      this._updateCurrentTime(this.mediaElement!.duration, event);
 
-      if (!this.ended) {
+      if (!this.mediaElement!.ended) {
         try {
           this.play();
         } catch (e) {
@@ -593,7 +534,7 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handleStalled(event: Event) {
     this.dispatchEvent(vdsEvent('vds-stalled', { triggerEvent: event }));
 
-    if (this.readyState < 3) {
+    if (this.mediaElement!.readyState < 3) {
       this._isMediaWaiting = true;
       this.dispatchEvent(vdsEvent('vds-waiting', { triggerEvent: event }));
     }
@@ -612,7 +553,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleWaiting(event: Event) {
-    if (this.readyState < 3) {
+    if (this.mediaElement!.readyState < 3) {
       this._isMediaWaiting = true;
       this.dispatchEvent(vdsEvent('vds-waiting', { triggerEvent: event }));
     }
@@ -626,12 +567,12 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handleEnded(event: Event) {
     this._cancelTimeUpdates();
 
-    this._updateCurrentTime(this.duration, event);
+    this._updateCurrentTime(this.mediaElement!.duration, event);
 
     const endEvent = vdsEvent('vds-end', { triggerEvent: event });
     this.dispatchEvent(endEvent);
 
-    if (this.loop) {
+    if (this.state.loop) {
       this._handleLoop();
     } else {
       this.dispatchEvent(vdsEvent('vds-ended', { triggerEvent: event }));
@@ -639,7 +580,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleLoop() {
-    const hasCustomControls = isUndefined(this.controls);
+    const hasCustomControls = isUndefined(this.mediaElement!.controls);
 
     // Forcefully hide controls to prevent flashing when looping. Calling `play()` at end
     // of media may show a flash of native controls on iOS, even if `controls` property is not set.
@@ -670,14 +611,6 @@ export class Html5MediaElement extends MediaProviderElement {
   // Provider Methods
   // -------------------------------------------------------------------------------------------
 
-  protected _getPaused() {
-    return this.mediaElement!.paused;
-  }
-
-  protected _getVolume() {
-    return this.mediaElement!.volume;
-  }
-
   protected _setVolume(newVolume: number) {
     this.mediaElement!.volume = newVolume;
   }
@@ -688,67 +621,8 @@ export class Html5MediaElement extends MediaProviderElement {
     }
   }
 
-  protected _getMuted() {
-    return this.mediaElement!.muted;
-  }
-
   protected _setMuted(isMuted: boolean) {
     this.mediaElement!.muted = isMuted;
-  }
-
-  protected override async _handleMediaSrcChange(): Promise<void> {
-    this._isMediaWaiting = false;
-
-    await super._handleMediaSrcChange(this.src);
-
-    if (!this._willAnotherEngineAttach()) {
-      // Wait for `src` attribute to be updated on underlying `<audio>` or `<video>` element.
-      await this.updateComplete;
-
-      if (__DEV__) {
-        this._logger?.debug('Calling `load()` on media element');
-      }
-
-      if (this.canLoad) {
-        this.mediaElement?.load();
-      }
-    }
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Readonly Properties
-  // -------------------------------------------------------------------------------------------
-
-  get engine() {
-    return this.mediaElement;
-  }
-
-  override get buffered() {
-    if (isNil(this.mediaElement)) return new TimeRanges();
-    return this.mediaElement.buffered;
-  }
-
-  /**
-   * Returns a `MediaError` object for the most recent error, or `undefined` if there has not been
-   * an error.
-   *
-   * @default undefined
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
-   */
-  override get error() {
-    return this.mediaElement?.error ?? undefined;
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Methods
-  // -------------------------------------------------------------------------------------------
-
-  canPlayType(type: string): CanPlay {
-    if (isNil(this.mediaElement)) {
-      return CanPlay.No;
-    }
-
-    return this.mediaElement.canPlayType(type) as CanPlay;
   }
 
   async play() {
@@ -777,55 +651,7 @@ export class Html5MediaElement extends MediaProviderElement {
     return this.mediaElement?.pause();
   }
 
-  /**
-   * 🧑‍🔬 **EXPERIMENTAL:** Returns a `MediaStream` object which is streaming a real-time capture
-   * of the content being rendered in the media element. This method will return `undefined`
-   * if this API is not available.
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/captureStream
-   */
-  captureStream(): MediaStream | undefined {
-    this._throwIfNotReadyForPlayback();
-    return this.mediaElement?.captureStream?.();
-  }
-
-  /**
-   * Resets the media element to its initial state and begins the process of selecting a media
-   * source and loading the media in preparation for playback to begin at the beginning. The
-   * amount of media data that is prefetched is determined by the value of the element's
-   * `preload` attribute.
-   *
-   * 💡 You should generally not need to call this method as it's handled by the library.
-   *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/load
-   */
-  load(): void {
-    this.mediaElement?.load();
-  }
-
   protected _getMediaType(): MediaType {
-    if (AUDIO_EXTENSIONS.test(this.currentSrc)) {
-      return MediaType.Audio;
-    }
-
-    if (VIDEO_EXTENSIONS.test(this.currentSrc)) {
-      return MediaType.Video;
-    }
-
-    return MediaType.Unknown;
-  }
-
-  protected _getViewType(): ViewType {
-    const mediaType = this._getMediaType();
-
-    if (mediaType === MediaType.Video || mediaType === MediaType.LiveVideo) {
-      return ViewType.Video;
-    }
-
-    if (mediaType === MediaType.Audio) {
-      return ViewType.Audio;
-    }
-
-    return ViewType.Unknown;
+    return getMediaTypeFromExt(this.state.src);
   }
 }

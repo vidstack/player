@@ -31,7 +31,7 @@ export const MEDIA_STORE_DEFAULTS: MediaContext = {
   canPlay: false,
   canFullscreen: false,
   controls: false,
-  currentPoster: '',
+  poster: '',
   currentSrc: '',
   currentTime: 0,
   ended: false,
@@ -48,6 +48,7 @@ export const MEDIA_STORE_DEFAULTS: MediaContext = {
   seekable: createTimeRanges(),
   seekableAmount: 0,
   seeking: false,
+  src: '',
   started: false,
   viewType: ViewType.Unknown,
   volume: 1,
@@ -64,6 +65,35 @@ export function createMediaStore(): WritableMediaStoreRecord {
   return store as WritableMediaStoreRecord;
 }
 
+const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof WritableMediaStoreRecord>([
+  'autoplay',
+  'canFullscreen',
+  'canLoad',
+  'controls',
+  'currentSrc',
+  'loop',
+  'muted',
+  'playsinline',
+  'poster',
+  'src',
+  'viewType',
+  'volume',
+]);
+
+/**
+ * Resets all media state and leaves general player state intact (i.e., `autoplay`, `volume`, etc.).
+ */
+export function softResetMediaStore(store: WritableMediaStoreRecord) {
+  keysOf(store).forEach((prop) => {
+    if (!DO_NOT_RESET_ON_SRC_CHANGE.has(prop)) {
+      (store[prop] as WritableStore<unknown>).set(store[prop].initialValue);
+    }
+  });
+}
+
+/**
+ * Hard resets all media state in the store.
+ */
 export function resetMediaStore(store: WritableMediaStoreRecord) {
   for (const prop of keysOf(MEDIA_STORE_DEFAULTS)) {
     // @ts-expect-error - nonsense type error.

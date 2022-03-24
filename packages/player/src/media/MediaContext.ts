@@ -91,10 +91,9 @@ export type MediaContext = {
    *
    * @default ''
    */
-  currentPoster: string;
+  poster: string;
   /**
-   * The absolute URL of the media resource that has been chosen. Defaults to `''` if no
-   * media has been loaded.
+   * The absolute URL of the chosen media resource. Defaults to `''` if no media has been loaded.
    *
    * @default ''
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc
@@ -220,6 +219,13 @@ export type MediaContext = {
    * @default false
    */
   seeking: boolean;
+  /**
+   * The URL of the current media resource to be considered for playback. Prefer using `currentSrc`.
+   *
+   * @default ''
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src
+   */
+  src: string;
   /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    *
