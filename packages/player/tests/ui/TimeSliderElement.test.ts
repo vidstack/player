@@ -5,10 +5,8 @@ import { html } from 'lit';
 import { buildMediaPlayerFixture } from '$test-utils';
 
 async function buildFixture() {
-  const { player } = await buildMediaPlayerFixture(html` <vds-time-slider></vds-time-slider> `);
-
-  const timeSlider = player.querySelector('vds-time-slider')!;
-
+  const { media } = await buildMediaPlayerFixture(html` <vds-time-slider></vds-time-slider> `);
+  const timeSlider = media.querySelector('vds-time-slider')!;
   return { timeSlider };
 }
 

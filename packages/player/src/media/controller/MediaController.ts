@@ -190,7 +190,7 @@ export class MediaController {
     return this._mediaStoreProvider.value;
   }
 
-  readonly state = unwrapStoreRecord(() => this._store);
+  readonly state = unwrapStoreRecord(this._store);
 
   // -------------------------------------------------------------------------------------------
   // Media Idle Controller

@@ -76,21 +76,21 @@ export function copyStoreRecords(
  * Unwraps a store record using a proxy and returning the underlying value when a key is accessed.
  */
 export function unwrapStoreRecord<StoreRecord extends ReadableStoreRecord>(
-  store: () => StoreRecord,
+  store: StoreRecord,
 ): { [Prop in keyof StoreRecord]: StoreValue<StoreRecord[Prop]> } {
   return new Proxy(store, {
     get(target, key) {
       // @ts-expect-error
-      return get(target()[key]);
+      return get(target[key]);
     },
     has(target, key) {
-      return Reflect.has(target(), key);
+      return Reflect.has(target, key);
     },
     ownKeys(target) {
-      return Reflect.ownKeys(target());
+      return Reflect.ownKeys(target);
     },
     getOwnPropertyDescriptor(target, key) {
-      return Reflect.getOwnPropertyDescriptor(target(), key);
+      return Reflect.getOwnPropertyDescriptor(target, key);
     },
   }) as any;
 }

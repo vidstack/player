@@ -1,3 +1,5 @@
+import '$lib/define/vds-media';
+
 import { isFunction, waitForEvent } from '@vidstack/foundation';
 
 import { MediaConnectEvent, MediaElement } from '$lib';

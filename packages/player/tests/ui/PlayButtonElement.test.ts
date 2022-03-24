@@ -7,16 +7,16 @@ import { html } from 'lit';
 import { buildMediaPlayerFixture } from '$test-utils';
 
 async function buildFixture() {
-  const { player } = await buildMediaPlayerFixture(html`
+  const { media, provider } = await buildMediaPlayerFixture(html`
     <vds-play-button>
       <div class="play"></div>
       <div class="pause"></div>
     </vds-play-button>
   `);
 
-  const button = player.querySelector('vds-play-button')!;
+  const button = media.querySelector('vds-play-button')!;
 
-  return { player, button };
+  return { media, provider, button };
 }
 
 it('should render light DOM', async function () {
@@ -30,16 +30,16 @@ it('should render shadow DOM', async function () {
 });
 
 it('should update paused state', async function () {
-  const { player, button } = await buildFixture();
+  const { media, button } = await buildFixture();
 
-  player._store.paused.set(true);
+  media.controller._store.paused.set(true);
   await elementUpdated(button);
 
   expect(button.pressed).to.be.false;
   expect(button.getAttribute('aria-pressed')).to.equal('false');
   expect(button.hasAttribute('media-paused')).to.be.true;
 
-  player._store.paused.set(false);
+  media.controller._store.paused.set(false);
   await elementUpdated(button);
 
   expect(button.pressed).to.be.true;
@@ -48,11 +48,11 @@ it('should update paused state', async function () {
 });
 
 it('should play', async function () {
-  const { player, button } = await buildFixture();
+  const { media, provider, button } = await buildFixture();
 
-  const pausedSpy = vi.spyOn(player, 'paused', 'set');
+  const pausedSpy = vi.spyOn(provider, '_paused', 'set');
 
-  player._store.paused.set(true);
+  media.controller._store.paused.set(true);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
@@ -62,11 +62,11 @@ it('should play', async function () {
 });
 
 it('should pause', async function () {
-  const { player, button } = await buildFixture();
+  const { media, provider, button } = await buildFixture();
 
-  const pausedSpy = vi.spyOn(player, 'paused', 'set');
+  const pausedSpy = vi.spyOn(provider, '_paused', 'set');
 
-  player._store.paused.set(false);
+  media.controller._store.paused.set(false);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
