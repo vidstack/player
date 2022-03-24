@@ -72,7 +72,7 @@ export class PosterElement extends LitElement {
   constructor() {
     super();
 
-    mediaStoreSubscription(this, 'currentPoster', ($poster) => {
+    mediaStoreSubscription(this, 'poster', ($poster) => {
       window.requestAnimationFrame(() => {
         if (!this.__canLoad && !didPreconnect.has($poster)) {
           preconnect($poster, 'prefetch');

@@ -30,13 +30,13 @@ describe('media provider', () => {
     const media = await fixture<MediaElement>(html`<vds-media></vds-media>`);
     const provider = document.createElement('vds-fake-media-provider');
 
-    provider._store.currentSrc.set('testing');
+    provider._store.src.set('testing');
     provider._store.duration.set(1000);
 
     media.append(provider);
 
     const controllerStore = media.controller.store;
-    expect(get(controllerStore.currentSrc)).to.equal('testing');
+    expect(get(controllerStore.src)).to.equal('testing');
     expect(get(controllerStore.duration)).to.equal(1000);
   });
 });

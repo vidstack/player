@@ -4,10 +4,12 @@ import { MediaStyleController } from './MediaStyleController';
 
 class MediaCssPropsController extends MediaStyleController {
   protected _handleValueChange(_, attrName: string, value: unknown) {
-    this._host.style.setProperty(
-      this._getCssPropName(attrName),
-      isString(value) || isNumber(value) ? String(value) : null,
-    );
+    window.requestAnimationFrame(() => {
+      this._host.style.setProperty(
+        this._getCssPropName(attrName),
+        isString(value) || isNumber(value) ? String(value) : null,
+      );
+    });
   }
 
   protected _getCssPropName(attrName: string) {

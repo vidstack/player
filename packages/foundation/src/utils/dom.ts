@@ -18,6 +18,22 @@ export function raf(callback?: () => void): Promise<number> {
 }
 
 /**
+ * Walks up the DOM tree from the given node's parent element up to the root. The `onDiscover`
+ * callback can return `true` to skip walking up the rest of tree.
+ */
+export function walkUpDOMTree(
+  node: HTMLElement,
+  onDiscover: (node: HTMLElement) => void | boolean,
+) {
+  let parent = node.parentElement;
+
+  while (parent) {
+    const skip = onDiscover(parent);
+    parent = skip ? null : parent.parentElement;
+  }
+}
+
+/**
  * Builds an `exportsparts` attribute value given an array of `parts` and an optional `prefix`.
  *
  * @param parts
@@ -127,20 +143,30 @@ export function getElementAttributes(elementCtor: typeof LitElement): Set<string
   return new Set(elementCtor.observedAttributes);
 }
 
-export function observeAttributes(
+export function observeAttributes<T extends string>(
   element: Element,
-  attributes: Set<string>,
-  onChange: (attrName: string, attrValue: string | null) => void,
+  attributes: readonly T[],
+  onChange: (attrName: T, attrValue: string | null) => void,
+  { skipInitial = false } = {},
 ): MutationObserver {
+  const callback = (attrName: T) => {
+    const attrValue = element.getAttribute(attrName);
+    onChange?.(attrName, attrValue);
+  };
+
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       if (mutation.type === 'attributes') {
-        const attrName = mutation.attributeName as string;
-        const attrValue = element.getAttribute(attrName);
-        onChange?.(attrName, attrValue);
+        callback(mutation.attributeName as T);
       }
     }
   });
+
+  if (!skipInitial) {
+    for (const attrName of attributes) {
+      callback(attrName);
+    }
+  }
 
   observer.observe(element, {
     attributeFilter: Array.from(attributes),

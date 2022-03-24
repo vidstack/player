@@ -1,7 +1,5 @@
 import { vdsEvent } from '@vidstack/foundation';
-import { html } from 'lit';
 
-import { CanPlay } from '../CanPlay';
 import { MediaProviderElement } from '../provider';
 
 /**
@@ -38,14 +36,10 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   override connectedCallback() {
     super.connectedCallback();
 
-    if (this.canPlay) {
+    if (this.state.canPlay) {
       // Set false so `_handleMediaReady` return early.
       this.forceMediaReady();
     }
-  }
-
-  override render() {
-    return html`<slot></slot>`;
   }
 
   // -------------------------------------------------------------------------------------------
@@ -66,7 +60,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-volume-change', {
         detail: {
-          volume: this.volume,
+          volume: this._volume,
           muted,
         },
       }),
@@ -78,10 +72,14 @@ export class FakeMediaProviderElement extends MediaProviderElement {
       vdsEvent('vds-volume-change', {
         detail: {
           volume,
-          muted: this.muted,
+          muted: this._muted,
         },
       }),
     );
+  }
+
+  handleDefaultSlotChange() {
+    // no-op
   }
 
   // -------------------------------------------------------------------------------------------
@@ -95,10 +93,6 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
   // Playback
   // -------------------------------------------------------------------------------------------
-
-  canPlayType() {
-    return CanPlay.No;
-  }
 
   async play() {
     this.dispatchEvent(vdsEvent('vds-play'));

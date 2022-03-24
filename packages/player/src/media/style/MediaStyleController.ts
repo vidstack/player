@@ -1,39 +1,43 @@
 import { camelToKebabCase, DisposalBin } from '@vidstack/foundation';
-import type { ReactiveControllerHost } from 'lit';
+import { type ReactiveElement } from 'lit';
 
-import type { MediaContext } from '../MediaContext';
-import { mediaStoreContext } from '../store';
+import { type MediaContext } from '../MediaContext';
+import { type ReadableMediaStoreRecord } from '../store';
 
 export abstract class MediaStyleController {
   protected _disposal = new DisposalBin();
-  protected _consumer: ReturnType<typeof mediaStoreContext['consume']>;
 
   constructor(
-    protected readonly _host: ReactiveControllerHost & HTMLElement,
+    protected readonly _host: ReactiveElement,
+    protected readonly _store: ReadableMediaStoreRecord,
     protected readonly _mediaProps: (keyof MediaContext)[],
   ) {
-    this._consumer = mediaStoreContext.consume(_host);
-
-    _host.addController({
+    this._host.addController({
       hostConnected: this._hostConnected.bind(this),
       hostDisconnected: this._hostDisconnected.bind(this),
     });
   }
 
   protected _hostConnected() {
-    for (const propName of this._mediaProps) {
-      const store = this._consumer.value[propName];
+    const idleCallback = window.requestIdleCallback ?? ((cb: () => void) => cb());
 
-      if (store) {
-        const attrName = this._getMediaAttrName(propName);
+    idleCallback(() => {
+      for (const propName of this._mediaProps) {
+        const store = this._store[propName];
 
-        const unsub = store.subscribe(($v) => {
-          this._handleValueChange(propName, attrName, $v);
-        });
+        if (store) {
+          const attrName = this._getMediaAttrName(propName);
 
-        this._disposal.add(unsub);
+          const unsub = store.subscribe(($v) => {
+            window.requestAnimationFrame(() => {
+              this._handleValueChange(propName, attrName, $v);
+            });
+          });
+
+          this._disposal.add(unsub);
+        }
       }
-    }
+    });
   }
 
   protected _hostDisconnected() {

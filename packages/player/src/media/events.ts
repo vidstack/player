@@ -32,6 +32,7 @@ export type MediaEvents = {
   'vds-can-play-through': MediaCanPlayThroughEvent;
   'vds-can-play': MediaCanPlayEvent;
   'vds-controls-change': MediaControlsChangeEvent;
+  'vds-current-src-change': MediaCurrentSrcChangeEvent;
   'vds-duration-change': MediaDurationChangeEvent;
   'vds-emptied': MediaEmptiedEvent;
   'vds-end': MediaEndEvent;
@@ -140,6 +141,13 @@ export type MediaCanPlayThroughEvent = VdsMediaEvent<{ duration: number }>;
 export type MediaControlsChangeEvent = VdsMediaEvent<boolean>;
 
 /**
+ * Fired when the `currentSrc` property has changed value.
+ *
+ * @event
+ */
+export type MediaCurrentSrcChangeEvent = VdsMediaEvent<string>;
+
+/**
  * Fired when the `duration` property changes.
  *
  * @event
@@ -207,16 +215,22 @@ export type MediaIdleChangeEvent = VdsMediaEvent<boolean> & {
  */
 export type MediaLoadedDataEvent = VdsMediaEvent<void>;
 
+export type MediaMetadataEventDetail = {
+  src: string;
+  currentSrc: string;
+  duration: number;
+  poster: string;
+  mediaType: MediaType;
+  viewType: ViewType;
+};
+
 /**
  * Fired when the metadata has been loaded.
  *
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event
  */
-export type MediaLoadedMetadataEvent = VdsMediaEvent<{
-  src: string;
-  duration: number;
-}>;
+export type MediaLoadedMetadataEvent = VdsMediaEvent<MediaMetadataEventDetail>;
 
 /**
  * Fired when the `loop` property has changed value.
@@ -231,12 +245,7 @@ export type MediaLoopChangeEvent = VdsMediaEvent<boolean>;
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event
  */
-export type MediaLoadStartEvent = VdsMediaEvent<{
-  src: string;
-  poster: string;
-  mediaType: MediaType;
-  viewType: ViewType;
-}>;
+export type MediaLoadStartEvent = VdsMediaEvent<MediaMetadataEventDetail>;
 
 /**
  * Fired when the `mediaType` property changes value.
@@ -334,7 +343,7 @@ export type MediaSeekingEvent = VdsMediaEvent<number> & {
 };
 
 /**
- * Fired when the `currentSrc` property has changed value.
+ * Fired when the `src` property has changed value.
  *
  * @event
  */

@@ -70,7 +70,7 @@ describe(observeAttributes.name, function () {
 
     const callbackSpy = vi.fn();
 
-    const observer = observeAttributes(elementA, new Set(['a', 'b']), callbackSpy);
+    const observer = observeAttributes(elementA, ['a', 'b'], callbackSpy);
 
     elementA.setAttribute('a', '10');
     await raf();

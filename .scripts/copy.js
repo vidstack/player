@@ -11,6 +11,7 @@ const watch = args.watch || args.w;
 
 const targetDir = path.resolve(process.cwd(), args.entry);
 const destDir = path.resolve(process.cwd(), args.outdir);
+const overwrite = args.overwrite !== 'false';
 const glob = args.glob ?? '*';
 
 if (!args.entry) {
@@ -38,6 +39,6 @@ if (watch) {
 } else {
   const files = globby.sync(glob, { absolute: true, cwd: targetDir });
   files.forEach((file) => {
-    fs.copy(file, resolveDest(file));
+    fs.copy(file, resolveDest(file), { overwrite });
   });
 }
