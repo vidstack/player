@@ -8,11 +8,9 @@ import { html } from 'lit';
 import { buildMediaPlayerFixture } from '$test-utils';
 
 async function buildFixture() {
-  const { player } = await buildMediaPlayerFixture(html` <vds-volume-slider></vds-volume-slider> `);
-
-  const volumeSlider = player.querySelector('vds-volume-slider')!;
-
-  return { player, volumeSlider };
+  const { media } = await buildMediaPlayerFixture(html`<vds-volume-slider></vds-volume-slider>`);
+  const volumeSlider = media.querySelector('vds-volume-slider')!;
+  return { media, volumeSlider };
 }
 
 it('should render DOM correctly', async function () {
@@ -34,16 +32,16 @@ it('should render DOM correctly', async function () {
 });
 
 it('should update when media volume changes', async function () {
-  const { player, volumeSlider } = await buildFixture();
+  const { media, volumeSlider } = await buildFixture();
 
   expect(volumeSlider.value).to.equal(100);
 
-  player._store.volume.set(0.25);
+  media.controller._store.volume.set(0.25);
   await elementUpdated(volumeSlider);
 
   expect(volumeSlider.value).to.equal(25);
 
-  player._store.volume.set(0.85);
+  media.controller._store.volume.set(0.85);
   await elementUpdated(volumeSlider);
 
   expect(volumeSlider.value).to.equal(85);
@@ -51,13 +49,13 @@ it('should update when media volume changes', async function () {
 
 // Why does this only work if ran as only test?
 test.skip('it should dispatch volume change request', async function () {
-  const { player, volumeSlider } = await buildFixture();
+  const { media, volumeSlider } = await buildFixture();
 
   setTimeout(() => {
     volumeSlider.dispatchEvent(vdsEvent('vds-slider-drag-value-change', { detail: 80 }));
   }, 0);
 
-  const { detail } = await waitForEvent(player, 'vds-volume-change-request');
+  const { detail } = await waitForEvent(media, 'vds-volume-change-request');
 
   expect(detail).to.equal(0.8);
 });

@@ -7,16 +7,16 @@ import { html } from 'lit';
 import { buildMediaPlayerFixture } from '$test-utils';
 
 async function buildFixture() {
-  const { player } = await buildMediaPlayerFixture(html`
+  const { media, provider } = await buildMediaPlayerFixture(html`
     <vds-mute-button>
       <div class="mute"></div>
       <div class="unmute"></div>
     </vds-mute-button>
   `);
 
-  const button = player.querySelector('vds-mute-button')!;
+  const button = media.querySelector('vds-mute-button')!;
 
-  return { player, button };
+  return { media, provider, button };
 }
 
 it('should render light DOM', async function () {
@@ -30,16 +30,16 @@ it('should render shadow DOM', async function () {
 });
 
 it('should update muted state', async function () {
-  const { player, button } = await buildFixture();
+  const { media, button } = await buildFixture();
 
-  player._store.muted.set(true);
+  media.controller._store.muted.set(true);
   await elementUpdated(button);
 
   expect(button.pressed).to.be.true;
   expect(button.getAttribute('aria-pressed')).to.equal('true');
   expect(button.hasAttribute('media-muted')).to.be.true;
 
-  player._store.muted.set(false);
+  media.controller._store.muted.set(false);
   await elementUpdated(button);
 
   expect(button.pressed).to.be.false;
@@ -48,11 +48,11 @@ it('should update muted state', async function () {
 });
 
 it('should mute player', async function () {
-  const { player, button } = await buildFixture();
+  const { media, provider, button } = await buildFixture();
 
-  const mutedSpy = vi.spyOn(player, 'muted', 'set');
+  const mutedSpy = vi.spyOn(provider, '_muted', 'set');
 
-  player._store.muted.set(false);
+  media.controller._store.muted.set(false);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
@@ -62,11 +62,11 @@ it('should mute player', async function () {
 });
 
 it('should unmute player', async function () {
-  const { player, button } = await buildFixture();
+  const { media, provider, button } = await buildFixture();
 
-  const mutedSpy = vi.spyOn(player, 'muted', 'set');
+  const mutedSpy = vi.spyOn(provider, '_muted', 'set');
 
-  player._store.muted.set(true);
+  media.controller._store.muted.set(true);
   await elementUpdated(button);
 
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));

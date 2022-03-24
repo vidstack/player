@@ -78,6 +78,10 @@ export class MediaElement extends LitElement {
 
   readonly controller = new MediaController(this);
 
+  get provider() {
+    return this.controller.mediaProvider;
+  }
+
   constructor() {
     super();
 

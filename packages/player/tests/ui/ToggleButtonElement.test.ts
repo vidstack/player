@@ -7,14 +7,14 @@ import { html } from 'lit';
 import { buildMediaPlayerFixture } from '$test-utils';
 
 async function buildFixture() {
-  const { player } = await buildMediaPlayerFixture(html`
+  const { media } = await buildMediaPlayerFixture(html`
     <vds-toggle-button>
       <div class="pressed"></div>
       <div class="not-pressed"></div>
     </vds-toggle-button>
   `);
 
-  const toggle = player.querySelector('vds-toggle-button')!;
+  const toggle = media.querySelector('vds-toggle-button')!;
 
   return { toggle };
 }

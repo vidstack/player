@@ -410,12 +410,14 @@ export abstract class MediaProviderElement extends LitElement {
   ) {
     this._mediaController = mediaController;
     this._store = mediaController._store;
+    this._state = mediaController.state;
     this._mediaControllerConnectedQueue.start();
 
     onDisconnect(() => {
       this._mediaControllerConnectedQueue.destroy();
       this._mediaController = undefined;
       this._store = createMediaStore();
+      this._state = unwrapStoreRecord(this._store);
     });
   }
 
@@ -426,10 +428,15 @@ export abstract class MediaProviderElement extends LitElement {
   /** @internal */
   _store = createMediaStore();
 
-  readonly state = unwrapStoreRecord(() => this._store);
+  /** @internal */
+  _state = unwrapStoreRecord(this._store);
 
-  get store(): ReadableMediaStoreRecord {
+  store(): ReadableMediaStoreRecord {
     return this._store;
+  }
+
+  get state() {
+    return this._state;
   }
 
   // -------------------------------------------------------------------------------------------

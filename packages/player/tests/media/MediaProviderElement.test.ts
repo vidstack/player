@@ -1,16 +1,14 @@
+import '$lib/define/vds-media';
 import '$lib/define/vds-fake-media-provider';
 
-import { elementUpdated, fixture } from '@open-wc/testing-helpers';
+import { elementUpdated } from '@open-wc/testing-helpers';
 import { isFunction, waitForEvent } from '@vidstack/foundation';
 
-import { FakeMediaProviderElement, MediaProviderElement } from '$lib';
+import { MediaProviderElement } from '$lib';
+import { buildMediaPlayerFixture } from '$test-utils';
 
 async function buildFixture() {
-  const provider = await fixture<FakeMediaProviderElement>(
-    `<vds-fake-media-provider></vds-fake-media-provider>`,
-  );
-
-  return { provider };
+  return await buildMediaPlayerFixture();
 }
 
 it('should render light DOM', async function () {
@@ -43,7 +41,7 @@ it('it should update volume', async function () {
   const volume = 0.75;
   const volumeSpy = vi.spyOn(provider, '_setVolume');
   await provider.mediaRequestQueue.start();
-  provider.volume = volume;
+  provider._volume = volume;
   expect(volumeSpy).toHaveBeenCalledWith(volume);
 });
 
@@ -52,18 +50,19 @@ it('it should update currentTime', async function () {
   const currentTime = 420;
   const currentTimeSpy = vi.spyOn(provider, '_setCurrentTime');
   await provider.mediaRequestQueue.start();
-  provider.currentTime = currentTime;
+  provider._currentTime = currentTime;
   expect(currentTimeSpy).toHaveBeenCalledWith(currentTime);
 });
 
 it('it should update paused', async function () {
-  const { provider } = await buildFixture();
+  const { media, provider } = await buildFixture();
   const playSpy = vi.spyOn(provider, 'play');
   const pauseSpy = vi.spyOn(provider, 'pause');
   await provider.mediaRequestQueue.start();
-  provider.paused = false;
+  provider._paused = false;
   expect(playSpy).toHaveBeenCalledOnce();
-  provider.paused = true;
+  media.controller._store.paused.set(false);
+  provider._paused = true;
   expect(pauseSpy).toHaveBeenCalledOnce();
 });
 
@@ -71,7 +70,7 @@ it('it should update muted', async function () {
   const { provider } = await buildFixture();
   const mutedSpy = vi.spyOn(provider, '_setMuted');
   await provider.mediaRequestQueue.start();
-  provider.muted = true;
+  provider._muted = true;
   expect(mutedSpy).toHaveBeenCalledWith(true);
 });
 
@@ -82,7 +81,7 @@ describe('media request queue', function () {
     const volumeSpy = vi.spyOn(provider, '_setVolume');
 
     // Queue.
-    provider.volume = 0.53;
+    provider._volume = 0.53;
     expect(provider.mediaRequestQueue.size, 'queue size').to.equal(1);
 
     // Flush.
@@ -100,7 +99,7 @@ describe('media request queue', function () {
 
     await provider.mediaRequestQueue.start();
 
-    provider.volume = 0.53;
+    provider._volume = 0.53;
 
     await elementUpdated(provider);
 
@@ -114,10 +113,10 @@ describe('media request queue', function () {
     const playSpy = vi.spyOn(provider, 'play');
     const pauseSpy = vi.spyOn(provider, 'pause');
 
-    provider.paused = false;
+    provider._paused = false;
 
     setTimeout(() => {
-      provider.paused = true;
+      provider._paused = true;
       expect(provider.mediaRequestQueue.size, 'queue size').to.equal(1);
       provider.mediaRequestQueue.start();
     });
