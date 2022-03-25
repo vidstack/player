@@ -4,10 +4,10 @@ import { elementUpdated } from '@open-wc/testing-helpers';
 import { waitForEvent } from '@vidstack/foundation';
 import { html } from 'lit';
 
-import { buildMediaPlayerFixture } from '$test-utils';
+import { buildMediaFixture } from '$test-utils';
 
 async function buildFixture() {
-  const { media } = await buildMediaPlayerFixture(html`
+  const { media } = await buildMediaFixture(html`
     <vds-toggle-button>
       <div class="pressed"></div>
       <div class="not-pressed"></div>

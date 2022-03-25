@@ -22,9 +22,9 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
             if (key === 'canPlay') {
               if (value) {
-                this.mediaRequestQueue.start();
+                this.mediaQueue.start();
               } else {
-                this.mediaRequestQueue.stop();
+                this.mediaQueue.stop();
               }
             }
           });
@@ -60,7 +60,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-volume-change', {
         detail: {
-          volume: this._volume,
+          volume: this.state.volume,
           muted,
         },
       }),
@@ -72,7 +72,7 @@ export class FakeMediaProviderElement extends MediaProviderElement {
       vdsEvent('vds-volume-change', {
         detail: {
           volume,
-          muted: this._muted,
+          muted: this.state.muted,
         },
       }),
     );
@@ -80,14 +80,6 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   handleDefaultSlotChange() {
     // no-op
-  }
-
-  // -------------------------------------------------------------------------------------------
-  // Readonly Properties
-  // -------------------------------------------------------------------------------------------
-
-  get engine() {
-    return undefined;
   }
 
   // -------------------------------------------------------------------------------------------

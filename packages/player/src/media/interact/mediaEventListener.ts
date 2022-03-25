@@ -1,12 +1,12 @@
-import { DisposalBin, listen } from '@vidstack/foundation';
+import { discover, listen } from '@vidstack/foundation';
 import type { ReactiveControllerHost } from 'lit';
 
 import type { MediaControllerEvents } from '../controller';
+import { mediaProviderDiscoveryId } from '../provider';
 
 /**
- * Simplifies attaching event listeners to a media provider below in the DOM.
- * Listens for a connect event from the media provider and then attaches event listeners
- * directly on it. This is required because media events don't bubble by default.
+ * Simplifies attaching event listeners to a media provider below in the DOM. This is required
+ * because media events don't bubble by default.
  *
  * @example
  * ```ts
@@ -21,29 +21,15 @@ import type { MediaControllerEvents } from '../controller';
  * ```
  */
 export function mediaEventListener<MediaEvent extends keyof MediaControllerEvents>(
-  host: ReactiveControllerHost & EventTarget,
+  host: ReactiveControllerHost & HTMLElement,
   eventType: MediaEvent,
   listener: (event: MediaControllerEvents[MediaEvent]) => void,
 ) {
-  const disposal = new DisposalBin();
-
-  host.addController({
-    hostConnected: () => {
-      disposal.add(
-        listen(host, 'vds-media-provider-connect', (event) => {
-          const { element: mediaProvider, onDisconnect } = event.detail;
-
-          // @ts-expect-error - ?
-          const off = listen(mediaProvider, eventType, listener);
-          disposal.add(off);
-          onDisconnect(() => {
-            off?.();
-          });
-        }),
-      );
-    },
-    hostDisconnected: () => {
-      disposal.empty();
-    },
+  discover(host, mediaProviderDiscoveryId, (provider, onDisconnect) => {
+    // @ts-expect-error - ?
+    const off = listen(provider, eventType, listener);
+    onDisconnect(() => {
+      off?.();
+    });
   });
 }

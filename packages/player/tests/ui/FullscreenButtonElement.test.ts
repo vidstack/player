@@ -4,10 +4,10 @@ import { elementUpdated } from '@open-wc/testing-helpers';
 import { waitForEvent } from '@vidstack/foundation';
 import { html } from 'lit';
 
-import { buildMediaPlayerFixture } from '$test-utils';
+import { buildMediaFixture } from '$test-utils';
 
 async function buildFixture() {
-  const { media, provider } = await buildMediaPlayerFixture(html`
+  const { media, provider } = await buildMediaFixture(html`
     <vds-fullscreen-button>
       <div class="enter"></div>
       <div class="exit"></div>

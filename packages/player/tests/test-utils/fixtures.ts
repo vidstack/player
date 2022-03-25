@@ -11,7 +11,7 @@ export type MediaFixture = {
   provider: FakeMediaProviderElement;
 };
 
-export async function buildMediaPlayerFixture(uiSlot = html``): Promise<MediaFixture> {
+export async function buildMediaFixture(uiSlot = html``): Promise<MediaFixture> {
   const media = await fixture<MediaElement>(
     html`
       <vds-media>

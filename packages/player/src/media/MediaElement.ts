@@ -1,5 +1,5 @@
 import {
-  discover,
+  discoverable,
   type DiscoveryEvent,
   FullscreenController,
   IS_IOS,
@@ -79,13 +79,13 @@ export class MediaElement extends LitElement {
   @state() protected __mediaPlaysinline = false;
 
   get provider() {
-    return this.controller.mediaProvider;
+    return this.controller.provider;
   }
 
   constructor() {
     super();
 
-    discover(this, 'vds-media-connect');
+    discoverable(this, 'vds-media-connect');
 
     mediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
       this.__mediaFullscreen = $fullscreen;

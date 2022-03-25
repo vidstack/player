@@ -2,10 +2,10 @@ import '$lib/define/vds-time-slider';
 
 import { html } from 'lit';
 
-import { buildMediaPlayerFixture } from '$test-utils';
+import { buildMediaFixture } from '$test-utils';
 
 async function buildFixture() {
-  const { media } = await buildMediaPlayerFixture(html` <vds-time-slider></vds-time-slider> `);
+  const { media } = await buildMediaFixture(html` <vds-time-slider></vds-time-slider> `);
   const timeSlider = media.querySelector('vds-time-slider')!;
   return { timeSlider };
 }

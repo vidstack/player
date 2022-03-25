@@ -19,7 +19,6 @@ export type OrphanContextConsumer = {
 const orphanConsumers = new Map<symbol, OrphanContextConsumer[]>();
 
 export class ContextConsumerController<T> {
-  protected _registered = false;
   protected _registrationCallbacks?: ((value: T) => void)[] = [];
 
   get id() {
@@ -31,7 +30,7 @@ export class ContextConsumerController<T> {
   }
 
   get registered() {
-    return this._registered;
+    return this.id in this._host;
   }
 
   constructor(
@@ -57,7 +56,6 @@ export class ContextConsumerController<T> {
 
     const setValue = (value) => {
       this._host[this.id] = value;
-      this._registered = true;
       this._registrationCallbacks?.forEach((fn) => fn(value));
       this._registrationCallbacks = undefined;
     };

@@ -1,8 +1,10 @@
 import { VdsEvent } from '../../events';
 
+export type DisconnectCallback = (callback: () => void) => void;
+
 export type DiscoveryEventDetail<Discoverable extends Element> = {
   element: Discoverable;
-  onDisconnect: (callback: () => void) => void;
+  onDisconnect: DisconnectCallback;
 };
 
 /**
