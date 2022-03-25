@@ -1,7 +1,8 @@
 import {
   clampNumber,
   createIntersectionController,
-  discover,
+  type DisconnectCallback,
+  discoverable,
   type DiscoveryEvent,
   DisposalBin,
   FullscreenController,
@@ -24,6 +25,8 @@ import type { MediaEvents } from '../events';
 import { createMediaStore, type ReadableMediaStoreRecord } from '../store';
 import { ViewType } from '../ViewType';
 
+export const mediaProviderDiscoveryId = Symbol('@vidstack/media-provider-discovery');
+
 /**
  * Fired when the media provider connects to the DOM.
  *
@@ -41,7 +44,7 @@ export abstract class MediaProviderElement extends LitElement {
   constructor() {
     super();
 
-    discover(this, 'vds-media-provider-connect');
+    discoverable(this, 'vds-media-provider-connect', { register: mediaProviderDiscoveryId });
 
     const intersectionController = createIntersectionController(
       this,
@@ -69,12 +72,6 @@ export abstract class MediaProviderElement extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
 
-    // If no media controller was attached, create one and attach to self.
-    if (!this._mediaController) {
-      const controller = new MediaController(this);
-      controller.attachMediaProvider(this, (cb) => this._disconnectDisposal.add(cb));
-    }
-
     this._logMediaEvents();
 
     // Give the initial hide poster event a chance to reach the controller.
@@ -87,6 +84,12 @@ export abstract class MediaProviderElement extends LitElement {
 
   protected override firstUpdated(changedProperties: PropertyValues) {
     super.firstUpdated(changedProperties);
+
+    // If no media controller was attached, create one and attach to self.
+    if (!this._controller) {
+      const controller = new MediaController(this);
+      controller.attachMediaProvider(this, (cb) => this._disconnectDisposal.add(cb));
+    }
 
     this.dispatchEvent(
       vdsEvent('vds-fullscreen-support-change', {
@@ -105,7 +108,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.mediaRequestQueue.destroy();
+    this.mediaQueue.destroy();
     this._disconnectDisposal.empty();
   }
 
@@ -168,7 +171,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   /** @internal */
   set _volume(requestedVolume) {
-    this.mediaRequestQueue.queue('volume', () => {
+    this.mediaQueue.queue('volume', () => {
       const volume = clampNumber(0, requestedVolume, 1);
       if (notEqual(this.state.volume, volume)) {
         this._setVolume(volume);
@@ -180,7 +183,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   /** @internal */
   set _paused(shouldPause) {
-    this.mediaRequestQueue.queue('paused', () => {
+    this.mediaQueue.queue('paused', () => {
       if (this.state.paused === shouldPause) return;
 
       try {
@@ -197,7 +200,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   /** @internal */
   set _currentTime(requestedTime) {
-    this.mediaRequestQueue.queue('time', () => {
+    this.mediaQueue.queue('time', () => {
       if (notEqual(this.state.currentTime, requestedTime)) {
         this._setCurrentTime(requestedTime);
       }
@@ -208,7 +211,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   /** @internal */
   set _muted(shouldMute) {
-    this.mediaRequestQueue.queue('muted', () => {
+    this.mediaQueue.queue('muted', () => {
       if (notEqual(this.state.muted, shouldMute)) {
         this._setMuted(shouldMute);
       }
@@ -306,7 +309,7 @@ export abstract class MediaProviderElement extends LitElement {
       }),
     );
 
-    await this.mediaRequestQueue.start();
+    await this.mediaQueue.start();
 
     if (__DEV__) {
       this._logger
@@ -356,7 +359,7 @@ export abstract class MediaProviderElement extends LitElement {
         .dispatch();
     }
 
-    this.mediaRequestQueue.stop();
+    this.mediaQueue.stop();
     this.dispatchEvent(vdsEvent('vds-src-change', { detail: src ?? '' }));
   }
 
@@ -364,8 +367,12 @@ export abstract class MediaProviderElement extends LitElement {
   // Media Controller
   // -------------------------------------------------------------------------------------------
 
-  protected _mediaController?: MediaController;
-  protected _mediaControllerConnectedQueue = new RequestQueue();
+  protected _controller?: MediaController;
+  protected _controllerQueue = new RequestQueue();
+
+  get controller() {
+    return this._controller;
+  }
 
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
@@ -373,13 +380,13 @@ export abstract class MediaProviderElement extends LitElement {
    */
   @property({ attribute: 'log-level' })
   get logLevel() {
-    return this._mediaController?.logLevel ?? 'silent';
+    return this._controller?.logLevel ?? 'silent';
   }
 
   set logLevel(level) {
     if (__DEV__) {
-      this._mediaControllerConnectedQueue.queue('log-level', () => {
-        this._mediaController!.logLevel = level;
+      this._controllerQueue.queue('log-level', () => {
+        this._controller!.logLevel = level;
       });
     }
   }
@@ -392,30 +399,27 @@ export abstract class MediaProviderElement extends LitElement {
    */
   @property({ attribute: 'idle-delay', type: Number })
   get idleDelay() {
-    return this._mediaController?.idleDelay ?? 0;
+    return this._controller?.idleDelay ?? 0;
   }
 
   set idleDelay(delay) {
-    this._mediaControllerConnectedQueue.queue('idle-delay', () => {
-      this._mediaController!.idleDelay = delay;
+    this._controllerQueue.queue('idle-delay', () => {
+      this._controller!.idleDelay = delay;
     });
   }
 
   /**
    * Attach a media controller to the media provider.
    */
-  attachMediaController(
-    mediaController: MediaController,
-    onDisconnect: (callback: () => void) => void,
-  ) {
-    this._mediaController = mediaController;
-    this._store = mediaController._store;
-    this._state = mediaController.state;
-    this._mediaControllerConnectedQueue.start();
+  attachMediaController(controller: MediaController, onDisconnect: DisconnectCallback) {
+    this._controller = controller;
+    this._store = controller._store;
+    this._state = controller.state;
+    this._controllerQueue.start();
 
     onDisconnect(() => {
-      this._mediaControllerConnectedQueue.destroy();
-      this._mediaController = undefined;
+      this._controllerQueue.destroy();
+      this._controller = undefined;
       this._store = createMediaStore();
       this._state = unwrapStoreRecord(this._store);
     });
@@ -452,7 +456,7 @@ export abstract class MediaProviderElement extends LitElement {
    * Queue actions to be taken on the current media provider when it's ready for playback, marked
    * by the `canPlay` property. If the media provider is ready, actions will be invoked immediately.
    */
-  readonly mediaRequestQueue = new RequestQueue();
+  readonly mediaQueue = new RequestQueue();
 
   // -------------------------------------------------------------------------------------------
   // Orientation

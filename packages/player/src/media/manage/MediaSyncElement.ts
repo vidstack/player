@@ -1,9 +1,16 @@
-import { debounce, DisposalBin, eventListener, listen, vdsEvent } from '@vidstack/foundation';
+import {
+  debounce,
+  type DisconnectCallback,
+  discover,
+  DisposalBin,
+  listen,
+  vdsEvent,
+} from '@vidstack/foundation';
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import type { MediaVolumeChange, MediaVolumeChangeEvent } from '../events';
-import type { MediaProviderElement } from '../provider';
+import { mediaProviderDiscoveryId, type MediaProviderElement } from '../provider';
 
 const mediaProviders = new Set<MediaProviderElement>();
 
@@ -39,6 +46,18 @@ let syncingMediaVolume = false;
  * ```
  */
 export class MediaSyncElement extends LitElement {
+  constructor() {
+    super();
+
+    discover(this, mediaProviderDiscoveryId, (provider, onDisconnect) => {
+      this._handleMediaProviderConnect(provider as MediaProviderElement, onDisconnect);
+    });
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
+
   /**
    * Whether only one is player should be playing at a time.
    *
@@ -73,7 +92,7 @@ export class MediaSyncElement extends LitElement {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this._mediaProviderDisposal.empty();
+    this._providerDisposal.empty();
   }
 
   override render() {
@@ -84,59 +103,53 @@ export class MediaSyncElement extends LitElement {
   // Media Provider Connect
   // -------------------------------------------------------------------------------------------
 
-  protected _mediaProvider?: MediaProviderElement;
-  protected _mediaProviderDisposal = new DisposalBin();
+  protected _provider?: MediaProviderElement;
+  protected _providerDisposal = new DisposalBin();
 
-  get mediaProvider() {
-    return this._mediaProvider;
+  get provider() {
+    return this._provider;
   }
 
-  protected _handleMediaProviderConnect = eventListener(
-    this,
-    'vds-media-provider-connect',
-    (event) => {
-      const { element, onDisconnect } = event.detail;
+  protected _handleMediaProviderConnect(
+    provider: MediaProviderElement,
+    onDisconnect: DisconnectCallback,
+  ) {
+    this._provider = provider;
+    mediaProviders.add(provider);
 
-      this._mediaProvider = element;
-      mediaProviders.add(element);
+    const savedVolume = this._getSavedMediaVolume();
+    if (savedVolume) {
+      this._provider._volume = savedVolume.volume;
+      this._provider._muted = savedVolume.muted;
+    }
 
-      const savedVolume = this._getSavedMediaVolume();
-      if (savedVolume) {
-        this._mediaProvider._volume = savedVolume.volume;
-        this._mediaProvider._muted = savedVolume.muted;
-      }
+    if (this.singlePlayback) {
+      const off = listen(provider, 'vds-play', this._handleMediaPlay.bind(this));
+      this._providerDisposal.add(off);
+    }
 
-      if (this.singlePlayback) {
-        const off = listen(element, 'vds-play', this._handleMediaPlay.bind(this));
-        this._mediaProviderDisposal.add(off);
-      }
+    if (this.sharedVolume) {
+      const off = listen(
+        provider,
+        'vds-volume-change',
+        debounce(this._handleMediaVolumeChange.bind(this), 10, true),
+      );
 
-      if (this.sharedVolume) {
-        const off = listen(
-          element,
-          'vds-volume-change',
-          debounce(this._handleMediaVolumeChange.bind(this), 10, true),
-        );
+      this._providerDisposal.add(off);
+    }
 
-        this._mediaProviderDisposal.add(off);
-      }
+    if (this.volumeStorageKey) {
+      const off = listen(provider, 'vds-volume-change', this._saveMediaVolume.bind(this));
 
-      if (this.volumeStorageKey) {
-        const off = listen(element, 'vds-volume-change', this._saveMediaVolume.bind(this));
+      this._providerDisposal.add(off);
+    }
 
-        this._mediaProviderDisposal.add(off);
-      }
-
-      this._mediaProviderDisposal.add(() => {
-        mediaProviders.delete(element);
-        this._mediaProvider = undefined;
-      });
-
-      onDisconnect(() => {
-        this._mediaProviderDisposal.empty();
-      });
-    },
-  );
+    onDisconnect(() => {
+      mediaProviders.delete(provider);
+      this._provider = undefined;
+      this._providerDisposal.empty();
+    });
+  }
 
   // -------------------------------------------------------------------------------------------
   // Playback
@@ -148,7 +161,7 @@ export class MediaSyncElement extends LitElement {
     syncingMediaPlayback = true;
 
     mediaProviders.forEach((provider) => {
-      if (provider !== this._mediaProvider) {
+      if (provider !== this._provider) {
         provider._paused = true;
       }
     });
@@ -167,7 +180,7 @@ export class MediaSyncElement extends LitElement {
     const { volume, muted } = event.detail;
 
     mediaProviders.forEach((provider) => {
-      if (provider !== this._mediaProvider) {
+      if (provider !== this._provider) {
         provider._volume = volume;
         provider._muted = muted;
       }

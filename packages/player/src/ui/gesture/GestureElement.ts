@@ -100,6 +100,8 @@ export class GestureElement extends LitElement {
 
   constructor() {
     super();
+    // TODO: fix this type error.
+    // @ts-expect-error - ?
     storeSubscription(this, mediaProviderElementContext, (element) => {
       this._mediaProviderElement = element;
     });

@@ -1,11 +1,11 @@
 import { LitElement } from 'lit';
 
-import { discover, isFunction, waitForEvent } from '$lib';
+import { discoverable, isFunction, waitForEvent } from '$lib';
 
 class FakeElement extends LitElement {
   constructor() {
     super();
-    discover(this, 'vds-noop');
+    discoverable(this, 'vds-noop');
   }
 }
 

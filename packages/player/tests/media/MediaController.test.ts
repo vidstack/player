@@ -20,10 +20,10 @@ describe('media provider', () => {
     const provider = document.createElement('vds-fake-media-provider');
 
     media.append(provider);
-    expect(media.controller.mediaProvider === provider).to.be.true;
+    expect(media.controller.provider === provider).to.be.true;
 
     provider.remove();
-    expect(media.controller.mediaProvider).to.be.undefined;
+    expect(media.controller.provider).to.be.undefined;
   });
 
   it('should copy media provider store', async function () {
@@ -47,13 +47,14 @@ describe('media requests', () => {
     const mutedSpy = vi.spyOn(provider, '_muted', 'set');
     const remote = new MediaRemoteControl(provider);
 
-    await provider.mediaRequestQueue.start();
+    await provider.mediaQueue.start();
 
     expect(mutedSpy).not.toHaveBeenCalled();
 
     remote.mute();
     expect(mutedSpy).toHaveBeenCalledWith(true);
 
+    provider.controller?._store.muted.set(true);
     remote.unmute();
     expect(mutedSpy).toHaveBeenCalledWith(false);
   });
@@ -63,13 +64,15 @@ describe('media requests', () => {
     const pausedSpy = vi.spyOn(provider, '_paused', 'set');
     const remote = new MediaRemoteControl(provider);
 
-    await provider.mediaRequestQueue.start();
+    await provider.mediaQueue.start();
 
     expect(pausedSpy).not.toHaveBeenCalled();
 
+    provider.controller?._store.paused.set(false);
     remote.pause();
     expect(pausedSpy).toHaveBeenCalledWith(true);
 
+    provider.controller?._store.paused.set(true);
     remote.play();
     expect(pausedSpy).toHaveBeenCalledWith(false);
   });
@@ -79,7 +82,7 @@ describe('media requests', () => {
     const currentTimeSpy = vi.spyOn(provider, '_currentTime', 'set');
     const remote = new MediaRemoteControl(provider);
 
-    await provider.mediaRequestQueue.start();
+    await provider.mediaQueue.start();
     provider._store.duration.set(300);
 
     expect(currentTimeSpy).not.toHaveBeenCalled();
@@ -97,10 +100,11 @@ describe('media requests', () => {
     const volumeSpy = vi.spyOn(provider, '_volume', 'set');
     const remote = new MediaRemoteControl(provider);
 
-    await provider.mediaRequestQueue.start();
+    await provider.mediaQueue.start();
 
     expect(volumeSpy).not.toHaveBeenCalled();
 
+    provider.controller?._store.volume.set(0.5);
     remote.changeVolume(1);
     expect(volumeSpy).toHaveBeenCalledWith(1);
   });

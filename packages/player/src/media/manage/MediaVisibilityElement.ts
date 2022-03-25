@@ -1,6 +1,7 @@
 import {
+  type DisconnectCallback,
+  discover,
   DisposalBin,
-  eventListener,
   IntersectionController,
   PageController,
   vdsEvent,
@@ -8,7 +9,7 @@ import {
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import type { MediaProviderElement } from '../provider';
+import { mediaProviderDiscoveryId, type MediaProviderElement } from '../provider';
 
 export type EnterVisibilityMediaAction = 'play' | 'unmute';
 export type ExitVisibilityMediaAction = 'pause' | 'mute';
@@ -41,6 +42,18 @@ export type ExitVisibilityMediaAction = 'pause' | 'mute';
  * ```
  */
 export class MediaVisibilityElement extends LitElement {
+  constructor() {
+    super();
+
+    discover(this, mediaProviderDiscoveryId, (provider, onDisconnect) => {
+      this._handleMediaProviderConnect(provider as MediaProviderElement, onDisconnect);
+    });
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
+
   /**
    * The action to perform on the media provider when it enters the viewport.
    *
@@ -142,7 +155,7 @@ export class MediaVisibilityElement extends LitElement {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._hasIntersected = false;
-    this._mediaProviderDisposal.empty();
+    this._providerDisposal.empty();
   }
 
   override render() {
@@ -153,30 +166,24 @@ export class MediaVisibilityElement extends LitElement {
   // Media Provider Connect
   // -------------------------------------------------------------------------------------------
 
-  protected _mediaProvider?: MediaProviderElement;
-  protected _mediaProviderDisposal = new DisposalBin();
+  protected _provider?: MediaProviderElement;
+  protected _providerDisposal = new DisposalBin();
 
-  get mediaProvider() {
-    return this._mediaProvider;
+  get provider() {
+    return this._provider;
   }
 
-  protected _handleMediaProviderConnect = eventListener(
-    this,
-    'vds-media-provider-connect',
-    (event) => {
-      const { element, onDisconnect } = event.detail;
+  protected _handleMediaProviderConnect(
+    provider: MediaProviderElement,
+    onDisconnect: DisconnectCallback,
+  ) {
+    this._provider = provider;
 
-      this._mediaProvider = element;
-
-      this._mediaProviderDisposal.add(() => {
-        this._mediaProvider = undefined;
-      });
-
-      onDisconnect(() => {
-        this._mediaProviderDisposal.empty();
-      });
-    },
-  );
+    onDisconnect(() => {
+      this._provider = undefined;
+      this._providerDisposal.empty();
+    });
+  }
 
   // -------------------------------------------------------------------------------------------
   // Observers
@@ -240,34 +247,34 @@ export class MediaVisibilityElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   protected _triggerOnEnter(mediaAction?: EnterVisibilityMediaAction) {
-    if (!this._mediaProvider) return;
+    if (!this._provider) return;
 
     if (mediaAction === 'play') {
-      this._mediaProvider._paused = false;
+      this._provider._paused = false;
     } else if (mediaAction === 'unmute') {
-      this._mediaProvider._muted = false;
+      this._provider._muted = false;
     }
   }
 
   protected _triggerOnExit(mediaAction?: ExitVisibilityMediaAction) {
-    if (!this._mediaProvider) return;
+    if (!this._provider) return;
 
     if (mediaAction === 'pause') {
-      this._mediaProvider._paused = true;
+      this._provider._paused = true;
     } else if (mediaAction === 'mute') {
-      this._mediaProvider._muted = true;
+      this._provider._muted = true;
     }
   }
 
   protected _dispatchVisibilityChange() {
-    if (!this._mediaProvider) return;
+    if (!this._provider) return;
 
     this.dispatchEvent(
       vdsEvent('vds-media-visibility-change', {
         bubbles: true,
         composed: true,
         detail: {
-          provider: this._mediaProvider,
+          provider: this._provider,
           viewport: {
             isIntersecting: this.isIntersecting,
           },

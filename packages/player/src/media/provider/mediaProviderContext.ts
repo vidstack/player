@@ -9,5 +9,5 @@ export type MediaProviderElementContext = Context<WritableStore<MediaProviderEle
  * `<vds-hls>`, etc.).
  */
 export const mediaProviderElementContext: MediaProviderElementContext = createContext(() =>
-  writable(undefined),
+  writable<MediaProviderElement | undefined>(undefined),
 );
