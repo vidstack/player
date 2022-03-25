@@ -1,12 +1,12 @@
 import {
   createContext,
   keysOf,
-  ReadableStore,
+  type ReadableStore,
   storeRecordSubscription,
+  type StoreSubscriptionHost,
   writable,
-  WritableStore,
+  type WritableStore,
 } from '@vidstack/foundation';
-import type { ReactiveControllerHost } from 'lit';
 
 import type { MediaContext } from './MediaContext';
 import { MediaType } from './MediaType';
@@ -123,7 +123,7 @@ export const mediaStoreContext = createContext(createMediaStore);
  * ```
  */
 export function mediaStoreSubscription<T extends keyof ReadableMediaStoreRecord>(
-  host: ReactiveControllerHost & EventTarget,
+  host: StoreSubscriptionHost,
   property: T,
   onChange: (value: MediaContext[T]) => void,
 ) {

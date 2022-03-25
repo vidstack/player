@@ -1,9 +1,7 @@
-import { type ReactiveControllerHost } from 'lit';
-
 import { type Context, isContext } from '../context';
 import { keysOf } from '../utils/object';
 import { get } from './stores';
-import { storeSubscription } from './storeSubscription';
+import { storeSubscription, type StoreSubscriptionHost } from './storeSubscription';
 import type { ReadableStoreRecord, StoreValue, WritableStoreRecord } from './types';
 
 /**
@@ -29,19 +27,23 @@ export function storeRecordSubscription<
   StoreRecord extends ReadableStoreRecord,
   Key extends keyof StoreRecord,
 >(
-  host: ReactiveControllerHost & EventTarget,
+  host: StoreSubscriptionHost,
   store: StoreRecord | Context<StoreRecord>,
   key: Key,
   onChange: (value: StoreValue<StoreRecord[Key]>) => void,
 ) {
-  if (isContext(store)) {
+  if (isContext<Context<StoreRecord>>(store)) {
     const consumer = store.consume(host);
 
     let unsubscribe: () => void;
 
+    const subscribe = () => {
+      unsubscribe = consumer.value[key].subscribe(onChange);
+    };
+
     host.addController({
       hostConnected: () => {
-        unsubscribe = consumer.value[key].subscribe(onChange);
+        consumer.whenRegistered(subscribe);
       },
       hostDisconnected: () => {
         unsubscribe?.();

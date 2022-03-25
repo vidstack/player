@@ -72,11 +72,11 @@ export class MediaElement extends LitElement {
     ];
   }
 
+  readonly controller = new MediaController(this);
+
   @state() protected __mediaFullscreen = false;
   @state() protected __mediaIsVideoView = false;
   @state() protected __mediaPlaysinline = false;
-
-  readonly controller = new MediaController(this);
 
   get provider() {
     return this.controller.mediaProvider;

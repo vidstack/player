@@ -1,7 +1,5 @@
-import { type ReactiveControllerHost } from 'lit';
-
-import { ContextConsumerController } from './ContextConsumerController';
-import { ContextProviderController } from './ContextProviderController';
+import { ContextConsumerController, type ContextConsumerHost } from './ContextConsumerController';
+import { ContextProviderController, type ContextProviderHost } from './ContextProviderController';
 
 /**
  * Creates and returns a pairable context consumer and provider.
@@ -21,6 +19,6 @@ export function createContext<T>(initValue: () => T): Context<T> {
 
 export interface Context<T> {
   readonly id: symbol;
-  provide(host: ReactiveControllerHost & EventTarget): ContextProviderController<T>;
-  consume(host: ReactiveControllerHost & EventTarget): ContextConsumerController<T>;
+  provide(host: ContextProviderHost): ContextProviderController<T>;
+  consume(host: ContextConsumerHost): ContextConsumerController<T>;
 }
