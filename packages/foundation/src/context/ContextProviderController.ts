@@ -1,6 +1,7 @@
 import { type ReactiveControllerHost } from 'lit';
 
 import { DisposalBin, listen } from '../utils/events';
+import { adoptOrphans } from './ContextConsumerController';
 import { type ContextConsumerConnectEvent } from './events';
 
 export type ProvideContextOptions<T> = {
@@ -9,6 +10,8 @@ export type ProvideContextOptions<T> = {
    */
   id: symbol;
 };
+
+export type ContextProviderHost = ReactiveControllerHost & Node;
 
 export class ContextProviderController<T> {
   protected _stopDisposal = new DisposalBin();
@@ -23,7 +26,7 @@ export class ContextProviderController<T> {
   }
 
   constructor(
-    protected readonly _host: ReactiveControllerHost & EventTarget,
+    protected readonly _host: ContextProviderHost,
     readonly _initValue: () => T,
     protected readonly _options: ProvideContextOptions<T>,
   ) {
@@ -43,6 +46,10 @@ export class ContextProviderController<T> {
       'vds-context-consumer-connect',
       this._handleConsumerConnect.bind(this),
     );
+
+    for (const orphan of adoptOrphans(this.id, this._host)) {
+      orphan.setValue(this._value);
+    }
 
     this._stopDisposal.add(dispose);
   }

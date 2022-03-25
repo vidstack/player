@@ -1,7 +1,9 @@
 import { type ReactiveControllerHost } from 'lit';
 
-import { Context, ContextConsumerController, isContext } from '../context';
+import { type Context, ContextConsumerController, isContext } from '../context';
 import { type ReadableStore } from './types';
+
+export type StoreSubscriptionHost = ReactiveControllerHost & Node;
 
 /**
  * Helper function to subscribe to a store for the life of the given `host` element, meaning
@@ -23,21 +25,29 @@ import { type ReadableStore } from './types';
  * ```
  */
 export function storeSubscription<T>(
-  host: ReactiveControllerHost & EventTarget,
+  host: StoreSubscriptionHost,
   store: ReadableStore<T> | Context<ReadableStore<T>>,
   onChange: (value: T) => void,
 ) {
   let consumer: ContextConsumerController<ReadableStore<T>> | undefined;
 
-  if (isContext(store)) {
+  let unsubscribe: () => void;
+
+  const subscribe = () => {
+    unsubscribe = (consumer?.value ?? (store as ReadableStore<T>)).subscribe(onChange);
+  };
+
+  if (isContext<Context<ReadableStore<T>>>(store)) {
     consumer = store.consume(host);
   }
 
-  let unsubscribe: () => void;
-
   host.addController({
     hostConnected() {
-      unsubscribe = (consumer?.value ?? (store as ReadableStore<T>)).subscribe(onChange);
+      if (isContext(store)) {
+        consumer!.whenRegistered(subscribe);
+      } else {
+        subscribe();
+      }
     },
     hostDisconnected() {
       unsubscribe?.();
