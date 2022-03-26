@@ -12,10 +12,10 @@ import { MediaType } from './MediaType';
 import { type MediaProviderElement } from './provider';
 import {
   type MuteRequestEvent,
-  type PauseIdlingRequestEvent,
   type PauseRequestEvent,
+  type PauseUserIdleRequestEvent,
   type PlayRequestEvent,
-  type ResumeIdlingRequestEvent,
+  type ResumeUserIdleRequestEvent,
   type SeekingRequestEvent,
   type SeekRequestEvent,
   type UnmuteRequestEvent,
@@ -41,7 +41,7 @@ export type MediaEvents = {
   'vds-fullscreen-change': FullscreenChangeEvent;
   'vds-fullscreen-error': FullscreenErrorEvent;
   'vds-fullscreen-support-change': FullscreenSupportChange;
-  'vds-idle-change': MediaIdleChangeEvent;
+  'vds-user-idle-change': UserIdleChangeEvent;
   'vds-load-start': MediaLoadStartEvent;
   'vds-loaded-data': MediaLoadedDataEvent;
   'vds-loaded-metadata': MediaLoadedMetadataEvent;
@@ -196,14 +196,14 @@ export type MediaEndedEvent = VdsMediaEvent<void>;
 export type MediaErrorEvent = VdsMediaEvent<MediaErrorDetail>;
 
 /**
- * Fired when the media idle state changes. Media is idle when playback is progressing (playing),
+ * Fired when the user idle state changes. The user is idle when playback is progressing (playing),
  * and there is no user activity for a set period of time (default is 2.5s). The event
- * detail contains whether media is idle (`true`), or not (`false`).
+ * detail contains whether the user is idle (`true`), or not (`false`).
  *
  * @event
  */
-export type MediaIdleChangeEvent = VdsMediaEvent<boolean> & {
-  requestEvent?: ResumeIdlingRequestEvent | PauseIdlingRequestEvent;
+export type UserIdleChangeEvent = VdsMediaEvent<boolean> & {
+  requestEvent?: ResumeUserIdleRequestEvent | PauseUserIdleRequestEvent;
 };
 
 /**

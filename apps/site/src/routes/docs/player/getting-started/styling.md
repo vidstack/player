@@ -57,7 +57,7 @@ hide it based on some media state:
  * Hide controls if either media is idle (no user activity), or media is
  * not ready for playback.
  */
-[media-idle] > .controls,
+[media-user-idle] > .controls,
 :not([media-can-play]) > .controls {
 	opacity: 0;
 }

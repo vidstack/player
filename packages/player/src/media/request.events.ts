@@ -10,8 +10,8 @@ export type MediaRequestEvents = {
   'vds-seek-request': SeekRequestEvent;
   'vds-seeking-request': SeekingRequestEvent;
   'vds-volume-change-request': VolumeChangeRequestEvent;
-  'vds-resume-idling-request': ResumeIdlingRequestEvent;
-  'vds-pause-idling-request': PauseIdlingRequestEvent;
+  'vds-resume-user-idle-request': ResumeUserIdleRequestEvent;
+  'vds-pause-user-idle-request': PauseUserIdleRequestEvent;
   'vds-show-poster-request': ShowPosterRequestEvent;
   'vds-hide-poster-request': HidePosterRequestEvent;
   'vds-loop-request': LoopRequestEvent;
@@ -24,7 +24,7 @@ export type PendingMediaRequests = {
   fullscreen: (EnterFullscreenRequestEvent | ExitFullscreenRequestEvent)[];
   seeked: SeekRequestEvent[];
   seeking: SeekingRequestEvent[];
-  idle: (ResumeIdlingRequestEvent | PauseIdlingRequestEvent)[];
+  userIdle: (ResumeUserIdleRequestEvent | PauseUserIdleRequestEvent)[];
 };
 
 /**
@@ -116,24 +116,25 @@ export type SeekingRequestEvent = VdsEvent<number>;
 export type VolumeChangeRequestEvent = VdsEvent<number>;
 
 /**
- * Fired when media idle state tracking may resume.
+ * Fired when user idle state tracking may resume. This is typically called after requesting
+ * the idle state to pause via `vds-pause-user-idle-request`.
  *
  * @event
  * @bubbles
  * @composed
  */
-export type ResumeIdlingRequestEvent = VdsEvent<void>;
+export type ResumeUserIdleRequestEvent = VdsEvent<void>;
 
 /**
- * Fired when media idle state tracking should pause. This is typically used when a control
- * is being actively interacted with, and we don't want the media `idle` state changing until
+ * Fired when user idle state tracking should pause. This is typically used when a control
+ * is being actively interacted with, and we don't want the `idle` state changing until
  * the interaction is complete (eg: scrubbing, or settings is open).
  *
  * @event
  * @bubbles
  * @composed
  */
-export type PauseIdlingRequestEvent = VdsEvent<void>;
+export type PauseUserIdleRequestEvent = VdsEvent<void>;
 
 /**
  * Fired when requesting the poster _should_ be rendered by the media provider element. This

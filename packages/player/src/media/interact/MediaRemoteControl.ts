@@ -96,14 +96,14 @@ export class MediaRemoteControl {
     });
   }
 
-  resumeIdling(event?: Event) {
-    this._dispatchRequest('vds-resume-idling-request', {
+  resumeUserIdle(event?: Event) {
+    this._dispatchRequest('vds-resume-user-idle-request', {
       triggerEvent: event,
     });
   }
 
-  pauseIdling(event?: Event) {
-    this._dispatchRequest('vds-pause-idling-request', {
+  pauseUserIdle(event?: Event) {
+    this._dispatchRequest('vds-pause-user-idle-request', {
       triggerEvent: event,
     });
   }
