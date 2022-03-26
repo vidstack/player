@@ -699,7 +699,9 @@ export class MediaController {
   }
 
   protected _handleTimeUpdate(event: MediaTimeUpdateEvent) {
-    this._store.currentTime.set(event.detail);
+    const { currentTime, played } = event.detail;
+    this._store.currentTime.set(currentTime);
+    this._store.played.set(played);
     this._store.waiting.set(false);
   }
 
