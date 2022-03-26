@@ -65,7 +65,7 @@ import {
   type WritableMediaStoreRecord,
 } from '../store';
 import { ViewType } from '../ViewType';
-import { MediaIdleController } from './MediaIdleController';
+import { UserIdleController } from './UserIdleController';
 
 export type MediaControllerHost = ReactiveElement & {
   exitFullscreen?(): Promise<void>;
@@ -191,22 +191,22 @@ export class MediaController {
   readonly state = unwrapStoreRecord(this._store);
 
   // -------------------------------------------------------------------------------------------
-  // Media Idle Controller
+  // User Idle Controller
   // -------------------------------------------------------------------------------------------
 
-  protected _mediaIdleController = new MediaIdleController(this._host, this._store);
+  protected _userIdleController = new UserIdleController(this._host, this._store);
 
   get idleDelay() {
-    return this._mediaIdleController.delay;
+    return this._userIdleController.delay;
   }
 
   set idleDelay(delay) {
-    this._mediaIdleController.delay = delay;
+    this._userIdleController.delay = delay;
   }
 
-  protected _handleIdleChange = eventListener(this._host, 'vds-idle-change', (event) => {
-    this._store.idle.set(event.detail);
-    this._satisfyMediaRequest('idle', event);
+  protected _handleIdleChange = eventListener(this._host, 'vds-user-idle-change', (event) => {
+    this._store.userIdle.set(event.detail);
+    this._satisfyMediaRequest('userIdle', event);
   });
 
   // -------------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ export class MediaController {
     fullscreen: [],
     seeked: [],
     seeking: [],
-    idle: [],
+    userIdle: [],
   };
 
   protected _clearPendingMediaRequests(): void {
@@ -409,21 +409,21 @@ export class MediaController {
 
   protected readonly _handleResumeIdlingRequest = eventListener(
     this._host,
-    'vds-resume-idling-request',
+    'vds-resume-user-idle-request',
     (event) => {
       if (!this._mediaRequestEventGateway(event)) return;
-      this._pendingMediaRequests.idle.push(event);
-      this._mediaIdleController.paused = false;
+      this._pendingMediaRequests.userIdle.push(event);
+      this._userIdleController.paused = false;
     },
   );
 
   protected readonly _handlePauseIdlingRequest = eventListener(
     this._host,
-    'vds-pause-idling-request',
+    'vds-pause-user-idle-request',
     (event) => {
       if (!this._mediaRequestEventGateway(event)) return;
-      this._pendingMediaRequests.idle.push(event);
-      this._mediaIdleController.paused = true;
+      this._pendingMediaRequests.userIdle.push(event);
+      this._userIdleController.paused = true;
     },
   );
 

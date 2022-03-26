@@ -51,7 +51,7 @@ it('should create media variants', async () => {
     *[media-fullscreen] .media-fullscreen\\\\:opacity-100 {
         opacity: 1
     }
-    *[media-idle] .media-idle\\\\:opacity-100 {
+    *[media-user-idle] .media-user-idle\\\\:opacity-100 {
         opacity: 1
     }
     *[media-loop] .media-loop\\\\:opacity-100 {

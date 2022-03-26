@@ -12,7 +12,7 @@ export let title = 'Attribute';
 | `media-ended`          | Playback has reached the end.                      |
 | `media-error`          | Issue with media loading/playback.                 |
 | `media-fullscreen`     | Media is in fullscreen mode.                       |
-| `media-idle`           | User is not active during playback.                |
+| `media-user-idle`      | User is not active during playback.                |
 | `media-loop`           | Media is set to loop back to start on end.         |
 | `media-muted`          | Media is muted.                                    |
 | `media-paused`         | Playback is in a paused state.                     |

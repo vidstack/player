@@ -11,7 +11,7 @@ const mediaAttrs = [
   'ended',
   'error',
   'fullscreen',
-  'idle',
+  'user-idle',
   'loop',
   'muted',
   'paused',
@@ -19,7 +19,7 @@ const mediaAttrs = [
   'playsinline',
   'seeking',
   'started',
-  'waiting'
+  'waiting',
 ].map((attr) => `media-${attr}`);
 
 const sliderAttrs = ['dragging', 'pointing', 'interactive'];
@@ -37,5 +37,5 @@ const vidstackPlayerPlugin = plugin(function ({ addVariant }) {
 module.exports = {
   ...vidstackPlayerPlugin,
   mediaAttrs,
-  sliderAttrs
+  sliderAttrs,
 };

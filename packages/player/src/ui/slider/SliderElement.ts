@@ -448,7 +448,7 @@ export class SliderElement extends LitElement {
       }),
     );
 
-    this._mediaRemote.pauseIdling(event);
+    this._mediaRemote.pauseUserIdle(event);
   }
 
   protected readonly _onDrag = rafThrottle((event: PointerEvent) => {
@@ -479,7 +479,7 @@ export class SliderElement extends LitElement {
       }),
     );
 
-    this._mediaRemote.resumeIdling(event);
+    this._mediaRemote.resumeUserIdle(event);
   }
 
   // -------------------------------------------------------------------------------------------

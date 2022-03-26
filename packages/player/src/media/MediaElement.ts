@@ -153,7 +153,7 @@ export class MediaElement extends LitElement {
       'ended',
       'error',
       'fullscreen',
-      'idle',
+      'userIdle',
       'loop',
       'mediaType',
       'muted',

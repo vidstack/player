@@ -132,13 +132,13 @@ export type MediaContext = {
    */
   fullscreen: boolean;
   /**
-   * Whether media playback is idle. This will occur when media playback is progressing (playing)
+   * Whether the user is idle. This will occur when media playback is progressing (playing)
    * without any detected user activity for a set period of time (default is 2.5s). This means as
-   * long as media is paused, `idle` will be `false`.
+   * long as media is paused, `userIdle` will be `false`.
    *
    * @default false
    */
-  idle: boolean;
+  userIdle: boolean;
   /**
    * Whether media should automatically start playing from the beginning (replay) every time
    * it ends.

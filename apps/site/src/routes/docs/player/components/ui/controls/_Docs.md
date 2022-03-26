@@ -17,7 +17,7 @@ The following media attributes can be useful when building a controls container:
 ```css:copy
 /* Hide controls while media is loading, or user is idle. */
 :not([media-can-play]) .controls,
-[media-idle] .controls {
+[media-user-idle] .controls {
 	opacity: 0;
 }
 
@@ -33,7 +33,7 @@ In the following example, we create a conventional three-tier (top/middle/bottom
 could put place social icons at the top, play button in the middle, and scrubber at the bottom. It's
 completely up to you!
 
-We're using the `media-idle:ignore` and `media-can-play:ignore` attributes in this example to
+We're using the `media-user-idle:ignore` and `media-can-play:ignore` attributes in this example to
 hide the controls if media is not ready for playback, or the user is idle.
 
 <slot name="styling" />
@@ -74,7 +74,7 @@ hide the controls if media is not ready for playback, or the user is idle.
 }
 
 /* Hide controls if media is not ready for playback, or user is idle. */
-[media-idle] .controls,
+[media-user-idle] .controls,
 :not([media-can-play]) .controls {
 	opacity: 0;
 	visibility: hidden;

@@ -1,7 +1,7 @@
 import { debounce, DisposalBin, listen, type ReadableStore, vdsEvent } from '@vidstack/foundation';
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import { type ReactiveController, type ReactiveControllerHost } from 'lit';
 
-export class MediaIdleController implements ReactiveController {
+export class UserIdleController implements ReactiveController {
   protected _idle = false;
   protected _idleTimeout?: any;
   protected _mediaPaused = false;
@@ -84,7 +84,7 @@ export class MediaIdleController implements ReactiveController {
 
   protected _dispatchIdleChange(isIdle: boolean) {
     if (this._idle !== isIdle) {
-      this._host.dispatchEvent(vdsEvent('vds-idle-change', { detail: isIdle }));
+      this._host.dispatchEvent(vdsEvent('vds-user-idle-change', { detail: isIdle }));
       this._idle = isIdle;
     }
   }

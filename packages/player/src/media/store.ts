@@ -37,7 +37,7 @@ export const MEDIA_STORE_DEFAULTS: MediaContext = {
   ended: false,
   error: undefined,
   fullscreen: false,
-  idle: false,
+  userIdle: false,
   loop: false,
   mediaType: MediaType.Unknown,
   muted: false,
