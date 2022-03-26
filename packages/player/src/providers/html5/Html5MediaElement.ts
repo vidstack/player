@@ -92,7 +92,10 @@ export class Html5MediaElement extends MediaProviderElement {
     this.dispatchEvent(
       vdsEvent('vds-time-update', {
         // Avoid errors where `currentTime` can have higher precision than duration.
-        detail: Math.min(newTime, this.mediaElement?.duration ?? 0),
+        detail: {
+          currentTime: Math.min(newTime, this.mediaElement?.duration ?? 0),
+          played: this.mediaElement!.played,
+        },
         triggerEvent,
       }),
     );

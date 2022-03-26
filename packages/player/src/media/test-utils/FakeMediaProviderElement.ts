@@ -1,6 +1,7 @@
 import { vdsEvent } from '@vidstack/foundation';
 
 import { MediaProviderElement } from '../provider';
+import { createTimeRanges } from '../time-ranges';
 
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can
@@ -52,7 +53,14 @@ export class FakeMediaProviderElement extends MediaProviderElement {
 
   _setCurrentTime(time: number) {
     this.dispatchEvent(vdsEvent('vds-seeking', { detail: time }));
-    this.dispatchEvent(vdsEvent('vds-time-update', { detail: time }));
+    this.dispatchEvent(
+      vdsEvent('vds-time-update', {
+        detail: {
+          currentTime: time,
+          played: createTimeRanges(0, time),
+        },
+      }),
+    );
     this.dispatchEvent(vdsEvent('vds-seeked', { detail: time }));
   }
 

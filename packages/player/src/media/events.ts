@@ -391,7 +391,10 @@ export type MediaReplayEvent = VdsMediaEvent<void> & {
  * @event
  * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event
  */
-export type MediaTimeUpdateEvent = VdsMediaEvent<number>;
+export type MediaTimeUpdateEvent = VdsMediaEvent<{
+  currentTime: number;
+  played: TimeRanges;
+}>;
 
 /**
  * Fired when the `viewType` property changes `value`. This will generally fire when the
