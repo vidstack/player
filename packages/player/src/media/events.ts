@@ -216,7 +216,7 @@ export type UserIdleChangeEvent = VdsMediaEvent<boolean> & {
 export type MediaLoadedDataEvent = VdsMediaEvent<void>;
 
 export type MediaMetadataEventDetail = {
-  src: string;
+  src: string[];
   currentSrc: string;
   duration: number;
   poster: string;
@@ -347,7 +347,7 @@ export type MediaSeekingEvent = VdsMediaEvent<number> & {
  *
  * @event
  */
-export type MediaSrcChangeEvent = VdsMediaEvent<string>;
+export type MediaSrcChangeEvent = VdsMediaEvent<string[]>;
 
 /**
  * Fired when the user agent is trying to fetch media data, but data is unexpectedly not

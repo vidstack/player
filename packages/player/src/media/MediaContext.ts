@@ -220,12 +220,13 @@ export type MediaContext = {
    */
   seeking: boolean;
   /**
-   * The URL of the current media resource to be considered for playback. Prefer using `currentSrc`.
+   * The URL of the current media resource/s to be considered for playback. Use `currentSrc` to
+   * get the currently loaded resource.
    *
-   * @default ''
+   * @default []
    * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src
    */
-  src: string;
+  src: string[];
   /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    *
