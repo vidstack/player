@@ -3,6 +3,9 @@ import { deferredPromise } from '../utils/promise';
 export class RequestQueue {
   protected readonly _requestQueue = new Map<string | symbol, () => void | Promise<void>>();
 
+  // Tracks order of keys.
+  protected _requestKeys: (string | symbol)[] = [];
+
   protected _pendingFlush = deferredPromise();
 
   protected _isServing = false;
@@ -44,6 +47,7 @@ export class RequestQueue {
       return;
     }
 
+    this._requestKeys = [...this._requestKeys.filter((k) => k !== key), key];
     this._requestQueue.set(key, callback);
   }
 
@@ -67,10 +71,11 @@ export class RequestQueue {
   }
 
   protected _flush() {
-    for (const requestKey of this._requestQueue.keys()) {
+    for (const requestKey of this._requestKeys) {
       this.serve(requestKey);
     }
 
+    this._requestKeys = [];
     this._release();
   }
 

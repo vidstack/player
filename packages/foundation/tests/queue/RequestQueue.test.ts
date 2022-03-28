@@ -31,6 +31,31 @@ it('should serve items in queue', async () => {
   expect(q.size).to.equal(0);
 });
 
+it('should flush queue in-order', async () => {
+  const q = new RequestQueue();
+
+  let timestampA, timestampB, timestampC;
+
+  const itemA = () => {
+    timestampA = process.hrtime();
+  };
+  const itemB = () => {
+    timestampB = process.hrtime();
+  };
+  const itemC = () => {
+    timestampC = process.hrtime();
+  };
+
+  q.queue('a', itemA);
+  q.queue('b', itemB);
+  q.queue('c', itemC);
+
+  q.start();
+
+  expect(timestampA < timestampB && timestampA < timestampC).to.be.true;
+  expect(timestampB < timestampC).to.be.true;
+});
+
 it('should flush pending requests on start', async () => {
   const q = new RequestQueue();
 
