@@ -19,7 +19,7 @@ be registered separately; otherwise, the following will happen:
 
 ```js
 // The event type will default to `Event` instead of `MediaPlayEvent`.
-player.addEventListener('vds-play', (event) => {});
+provider.addEventListener('vds-play', (event) => {});
 ```
 
 Events are a core part of working with the player library, so we highly recommend you resolve

@@ -47,7 +47,11 @@ const HLS_CDN_SRC_DEV = `${HLS_CDN_SRC_BASE}.js` as const;
 const HLS_CDN_SRC_PROD = `${HLS_CDN_SRC_BASE}.min.js` as const;
 
 /**
- * The `<vds-hls>` element introduces support for HLS streaming via the popular `hls.js` library.
+ * The `<vds-hls>` element adapts the underlying `<video>` element to satisfy the media provider
+ * contract, which generally involves providing a consistent API for loading, managing, and
+ * tracking media state.
+ *
+ * This element also introduces support for HLS streaming via the popular `hls.js` library.
  * HLS streaming is either [supported natively](https://caniuse.com/?search=hls) (generally
  * on iOS), or in environments that [support the Media Stream API](https://caniuse.com/?search=mediastream).
  *
@@ -55,37 +59,49 @@ const HLS_CDN_SRC_PROD = `${HLS_CDN_SRC_BASE}.min.js` as const;
  * native DOM interface (i.e., `vds-hls-media-attaching`).
  *
  * @tagname vds-hls
- * @slot - Used to pass in `<video>` element.
+ * @slot - Used to pass in the `<video>` element.
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+ * @link https://github.com/video-dev/hls.js/blob/master/docs/API.md
  * @events ./events.ts
  * @example
  * ```html
- * <vds-hls>
+ * <vds-hls
+ *  preload="metadata"
+ *  poster="https://media-files.vidstack.io/poster.png"
+ * >
  *   <video
- *     src="https://media-files.vidstack.io/hls/index.m3u8"
- *     poster="https://media-files.vidstack.io/poster.png"
+ *     controls
  *     preload="none"
- *     data-preload="metadata"
+ *     src="https://media-files.vidstack.io/hls/index.m3u8"
+ *     poster="https://media-files.vidstack.io/poster-seo.png"
  *   ></video>
  * </vds-hls>
  * ```
  * @example
  * ```html
- * <vds-hls loading="lazy">
+ * <vds-hls
+ *   loading="lazy"
+ *   preload="metadata"
+ *   poster="https://media-files.vidstack.io/poster.png"
+ * >
  *   <video
- *     src="https://media-files.vidstack.io/hls/index.m3u8"
+ *     controls
  *     preload="none"
- *     data-preload="metadata"
- *     data-poster="https://media-files.vidstack.io/poster.png"
+ *     src="https://media-files.vidstack.io/hls/index.m3u8"
+ *     poster="https://media-files.vidstack.io/poster-seo.png"
  *   ></video>
  * </vds-hls>
  * ```
  * @example
  * ```html
- * <vds-hls>
+ * <vds-hls
+ *   preload="metadata"
+ *   poster="https://media-files.vidstack.io/poster.png"
+ * >
  *   <video
- *     poster="https://media-files.vidstack.io/poster.png"
+ *     controls
  *     preload="none"
- *     data-preload="metadata"
+ *     poster="https://media-files.vidstack.io/poster-seo.png"
  *   >
  *     <source
  *       src="https://media-files.vidstack.io/hls/index.m3u8"

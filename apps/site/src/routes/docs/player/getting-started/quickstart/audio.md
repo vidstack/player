@@ -11,10 +11,11 @@ npm i lit @vidstack/player
 
 !!!
 
-!!!step :title=Register Element :desc=Register the `vds-audio-player` custom element. The `.js` extension is required for the package export map to work.
+!!!step :title=Register Elements :desc=Register the custom media elements. The `.js` extension is required for the package export map to work.
 
 ```js:copy
-import '@vidstack/player/define/vds-audio-player.js';
+import '@vidstack/player/define/vds-media.js';
+import '@vidstack/player/define/vds-audio.js';
 ```
 
 !!!
@@ -22,16 +23,18 @@ import '@vidstack/player/define/vds-audio-player.js';
 !!!step :title=Add Player Markup :desc=Add the following player HTML boilerplate to get started.
 
 ```html:copy
-<vds-audio-player
-	src="https://media-files.vidstack.io/audio.mp3"
-	controls
-	loading="lazy"
->
-	<!-- `<source>` and `<track>` elements can go here. -->
-	<vds-media-ui slot="ui">
-  	<!-- UI elements go here. -->
-	</vds-media-ui>
-</vds-audio-player>
+<vds-media>
+  <vds-audio
+    loading="lazy"
+    preload="metadata"
+  >
+    <audio
+      controls
+	    src="https://media-files.vidstack.io/audio.mp3"
+      preload="none"
+    ></audio>
+  </vds-audio>
+</vds-media>
 ```
 
 !!!

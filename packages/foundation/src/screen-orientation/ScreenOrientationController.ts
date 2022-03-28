@@ -7,7 +7,7 @@ import { canOrientScreen, IS_CLIENT } from '../utils/support';
 import { ScreenOrientation, ScreenOrientationLock } from './ScreenOrientation';
 
 /**
- * Contains the logic for managing the window's screen orientation.
+ * This class contains logic for managing the window's screen orientation.
  *
  * @example
  * ```ts

@@ -21,7 +21,9 @@ import { aspectRatioElementStyles } from './styles';
  * @example
  * ```html
  * <vds-aspect-ratio ratio="16/9">
- *  <video src="..."></video>
+ *  <vds-video>
+ *   <!-- ... -->
+ *  </vds-video>
  * </vds-aspect-ratio>
  * ```
  */

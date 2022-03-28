@@ -11,10 +11,11 @@ npm i lit @vidstack/player
 
 !!!
 
-!!!step :title=Register Element :desc=Register the `vds-video-player` custom element. The `.js` extension is required for the package export map to work.
+!!!step :title=Register Elements :desc=Register the custom media elements. The `.js` extension is required for the package export map to work.
 
 ```js:copy
-import '@vidstack/player/define/vds-video-player.js';
+import '@vidstack/player/define/vds-media.js';
+import '@vidstack/player/define/vds-video.js';
 ```
 
 !!!
@@ -22,17 +23,20 @@ import '@vidstack/player/define/vds-video-player.js';
 !!!step :title=Add Player Markup :desc=Add the following player HTML boilerplate to get started.
 
 ```html:copy
-<vds-video-player
-	src="https://media-files.vidstack.io/720p.mp4"
-	poster="https://media-files.vidstack.io/poster.png"
-	controls
-	loading="lazy"
->
-	<!-- `<source>` and `<track>` elements can go here. -->
-	<vds-media-ui slot="ui">
-  	<!-- UI elements go here. -->
-	</vds-media-ui>
-</vds-video-player>
+<vds-media>
+  <vds-video
+    loading="lazy"
+    poster="https://media-files.vidstack.io/poster.png"
+    preload="metadata"
+  >
+    <video
+      controls
+    	src="https://media-files.vidstack.io/720p.mp4"
+      poster="https://media-files.vidstack.io/poster-seo.png"
+      preload="none"
+    ></video>
+  </vds-video>
+</vds-media>
 ```
 
 !!!

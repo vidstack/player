@@ -5,25 +5,37 @@ import { ViewType } from '../../media';
 import { Html5MediaElement } from '../html5';
 
 /**
+ * The `<vds-audio>` element adapts the underlying `<audio>` element to satisfy the media provider
+ * contract, which generally involves providing a consistent API for loading, managing, and
+ * tracking media state.
+ *
+ * Most the logic for this element is contained in the `Html5MediaElement` class because both the
+ * `<audio>` and `<video>` elements implement the native `HTMLMediaElement` interface.
+ *
  * @tagname vds-audio
- * @slot - Used to pass in `<audio>` element.
+ * @slot - Used to pass in the `<audio>` element.
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
  * @example
  * ```html
- * <vds-audio>
- *   <audio src="https://media-files.vidstack.io/audio.mp3"></audio>
+ * <vds-audio preload="metadata">
+ *   <audio
+ *     controls
+ *     preload="none"
+ *     src="https://media-files.vidstack.io/audio.mp3"
+ *    ></audio>
  * </vds-audio>
  * ```
  * @example
  * ```html
- * <vds-audio>
- *   <audio>
+ * <vds-audio preload="metadata">
+ *   <audio controls preload="none">
  *     <source src="https://media-files.vidstack.io/audio.mp3" type="audio/mp3" />
  *   </audio>
  * </vds-audio>
  * @example
  * ```html
- * <vds-audio loading="lazy">
- *   <audio preload="none" data-preload="metadata">
+ * <vds-audio loading="lazy" preload="metadata">
+ *   <audio controls preload="none">
  *     <source src="https://media-files.vidstack.io/audio.mp3" type="audio/mp3" />
  *   </audio>
  * </vds-audio>
