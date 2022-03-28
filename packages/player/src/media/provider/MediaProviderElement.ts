@@ -37,8 +37,33 @@ export const mediaProviderDiscoveryId = Symbol('@vidstack/media-provider-discove
 export type MediaProviderConnectEvent = DiscoveryEvent<MediaProviderElement>;
 
 /**
+ * This is the base class that all other concrete provider implementations will extend such as the
+ * `Html5MediaElement` or `EmbeddedMediaElement`. This class should provide shared functionality
+ * and behaviour that is required by all other providers. Anything specific should exist
+ * in a higher-level implementation.
+ *
+ * A media provider employs the adapter design pattern to wrap an existing provider such as
+ * the native HTMLMediaElement (i.e., `<video>`), or embedded media (i.e., `<iframe>`), and
+ * provide a consistent interface that will enable the media controller to satisfy requests
+ * (e.g., satisfy a play request by calling play on the media provider, and confirming the
+ * operation was successful or if it failed).
+ *
+ * A media provider is generally responsible for:
+ *
+ * - Handling the media loading process and determining the most appropriate time to invoke it.
+ * - Providing a minimal and consistent set of properties for the media controller to satisfy media
+ *   requests (e.g., `paused` property for controlling playback state).
+ * - Providing a consistent events interface by firing `vds-*` specific custom media events (e.g.,
+ *   `vds-play`, `vds-playing`, and so on).
+ * - Manually invoking autoplay so we can track failure.
+ * - Providing a consistent fullscreen API to the underlying media provider element.
+ *
+ * Note: Properties on this element are considered to be "upgraded" as they're safe to call before
+ * media is ready for playback.
+ *
  * @events ../events.ts
  * @events ../request.events.ts
+ * @link https://en.wikipedia.org/wiki/Adapter_pattern
  */
 export abstract class MediaProviderElement extends LitElement {
   constructor() {
@@ -450,7 +475,7 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * Queue actions to be applied safely after the element has connected to the DOM.
    */
-  readonly _connectedQueue = hostRequestQueue(this);
+  readonly connectedQueue = hostRequestQueue(this);
 
   /**
    * Queue actions to be taken on the current media provider when it's ready for playback, marked

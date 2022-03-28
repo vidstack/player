@@ -14,7 +14,7 @@ npm i lit hls.js @vidstack/player
 !!!step :title=Import Components :desc=Import player components into the `jsx` or `tsx` file where you'll be building your player.
 
 ```js:copy
-import { HlsPlayer, MediaUi } from '@vidstack/player/react';
+import { Hls as HLS, Media } from '@vidstack/player/react';
 ```
 
 !!!
@@ -22,17 +22,20 @@ import { HlsPlayer, MediaUi } from '@vidstack/player/react';
 !!!step :title=Add Player Markup :desc=Add the following player JSX boilerplate to get started.
 
 ```jsx:copy
-<HlsPlayer
-	src="https://media-files.vidstack.io/hls/index.m3u8"
-	poster="https://media-files.vidstack.io/poster.png"
-	controls
-	loading="lazy"
->
-	{/* `<source>` and `<track>` elements can go here. */}
-	<MediaUi slot="ui">
-  	{/* UI elements go here. */}
-	</MediaUi>
-</HlsPlayer>
+<Media>
+  <HLS
+    loading="lazy"
+    poster="https://media-files.vidstack.io/poster.png"
+    preload="metadata"
+  >
+    <video
+      controls
+      src="https://media-files.vidstack.io/hls/index.m3u8"
+      poster="https://media-files.vidstack.io/poster-seo.png"
+      preload="none"
+    ></video>
+  </HLS>
+</Media>
 ```
 
 !!!

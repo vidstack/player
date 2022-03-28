@@ -36,7 +36,7 @@
         'foundation',
         'styling',
       ].map(toItems(gettingStartedSlug)),
-      Libraries: ['react', 'svelte', 'vue', 'tailwind'].map(toItems(librariesSlug)),
+      Libraries: ['react', 'svelte', 'lit', 'vue', 'tailwind'].map(toItems(librariesSlug)),
       Frameworks: [
         ['next-js', { title: 'Next.js' }],
         ['svelte-kit', { title: 'SvelteKit' }],

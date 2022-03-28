@@ -11,10 +11,10 @@ npm i lit @vidstack/player
 
 !!!
 
-!!!step :title=Import Components :desc=Import player components into the `jsx` or `tsx` file where you'll be building your player.
+!!!step :title=Import Components :desc=Import media components into the `jsx` or `tsx` file where you'll be building your player.
 
 ```js:copy
-import { AudioPlayer, MediaUi } from '@vidstack/player/react';
+import { Audio, Media } from '@vidstack/player/react';
 ```
 
 !!!
@@ -22,16 +22,18 @@ import { AudioPlayer, MediaUi } from '@vidstack/player/react';
 !!!step :title=Add Player Markup :desc=Add the following player JSX boilerplate to get started.
 
 ```jsx:copy
-<AudioPlayer
-	src="https://media-files.vidstack.io/audio.mp3"
-	controls
-	loading="lazy"
->
-	{/* `<source>` and `<track>` elements can go here. */}
-	<MediaUi slot="ui">
-  	{/* UI elements go here. */}
-	</MediaUi>
-</AudioPlayer>
+<Media>
+  <Audio
+    loading="lazy"
+    preload="metadata"
+  >
+    <audio
+      controls
+      src="https://media-files.vidstack.io/audio.mp3"
+      preload="none"
+    ></audio>
+  </Audio>
+</Media>
 ```
 
 !!!

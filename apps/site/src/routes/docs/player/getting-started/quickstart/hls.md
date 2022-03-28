@@ -11,10 +11,11 @@ npm i lit hls.js @vidstack/player
 
 !!!
 
-!!!step :title=Register Element :desc=Register the `vds-hls-player` custom element. The `.js` extension is required for the package export map to work.
+!!!step :title=Register Elements :desc=Register the custom media elements. The `.js` extension is required for the package export map to work.
 
 ```js:copy
-import '@vidstack/player/define/vds-hls-player.js';
+import '@vidstack/player/define/vds-media.js';
+import '@vidstack/player/define/vds-hls.js';
 ```
 
 !!!
@@ -22,17 +23,20 @@ import '@vidstack/player/define/vds-hls-player.js';
 !!!step :title=Add Player Markup :desc=Add the following player HTML boilerplate to get started.
 
 ```html:copy
-<vds-hls-player
-	src="https://media-files.vidstack.io/hls/index.m3u8"
-	poster="https://media-files.vidstack.io/poster.png"
-	controls
-	loading="lazy"
->
-	<!-- `<source>` and `<track>` elements can go here. -->
-	<vds-media-ui slot="ui">
-  	<!-- UI elements go here. -->
-	</vds-media-ui>
-</vds-hls-player>
+<vds-media>
+  <vds-hls
+    loading="lazy"
+    poster="https://media-files.vidstack.io/poster.png"
+    preload="metadata"
+  >
+    <video
+      controls
+	    src="https://media-files.vidstack.io/hls/index.m3u8"
+      poster="https://media-files.vidstack.io/poster-seo.png"
+      preload="none"
+    ></video>
+  </vds-hls>
+</vds-media>
 ```
 
 !!!

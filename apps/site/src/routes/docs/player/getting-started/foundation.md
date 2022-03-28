@@ -19,9 +19,7 @@ documentation on how to register it, how to use it, and an API reference.
 You can register an element by importing it from the `@vidstack/player/define/*` path. When the
 import is loaded it will safely register the element and any dependencies in
 the [custom elements registry](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry).
-By 'safely' we mean that the register function will check if it's being called server-side, or
-if the element has already been registered to avoid throwing an error. In short, this means that the
-import is safe to use on both client-side and server-side.
+By 'safely' we mean that the register import paths are safe to use on both client-side and server-side.
 
 Firstly, we register the elements we're using by grabbing the import code snippet from the component's
 respective docs, or letting autocomplete help us out in our IDE:
@@ -40,16 +38,16 @@ automatically based on your Node environment setting (`NODE_ENV`).
 :::
 
 Next, we can use the defined elements, and the browser will "upgrade" them once the script
-above has run. Progressive enhancement is one of the best parts of custom elements because they
-can be used before they're defined!
+above has run.
 
 ```html
-<!-- Browser will upgrade elements once the script above has run. -->
-<vds-video-player>
-  <vds-media-ui>
-    <vds-play-button />
-  </vds-media-ui>
-</vds-video-player>
+<!-- Browser will upgrade custom elements once it's defined. -->
+<vds-media>
+  <vds-video>
+    <video src="..."></video>
+  </vds-video>
+  <!-- ... -->
+</vds-media>
 ```
 
 ## Typescript
@@ -92,46 +90,12 @@ seen in the example above.
 
 ## Media State
 
-The player exposes a superset of the [`HTMLMediaElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement)
-API. Therefore, you can swap out a native provider (e.g., `<video>`) for a Vidstack implementation
-(e.g., `<vds-video-player>`) and it'll just work :tada:
-
-You can update media state by changing attribute or property values. Actions that require the
-media to be ready are queued and applied right after the `vds-can-play` event is fired. Only the
-last change is executed if it's applied more than once before media is ready for playback.
-Therefore, we always recommend updating state through attributes or properties unless you
-explicitly want to handle the result of some method.
-
-:::tip
-You might decide to call the `play()` method instead of using the `paused` property to be
-notified of when an error is thrown to handle failure. The player already handles cases like
-this and will fire a `vds-play-fail` event, and in the case of autoplay a `vds-autoplay-fail` event.
-:::
-
-### Attribute
-
-```html
-<!-- Paused. -->
-<vds-video-player paused />
-<!-- Still Paused. -->
-<vds-video-player paused="false" />
-<!-- Not Paused. -->
-<vds-video-player />
-```
-
-### Property
-
-```js
-// Safely queued and executed after player is ready.
-player.paused = false;
-// Executed immediately regardless of player state (throws).
-player.play();
-```
+...
 
 ## Media Events
 
 :::tip
-You can find a list of all events fired by the player in the API section of the respective
+You can find a list of all events fired by the provider in the API section of the respective
 provider's documentation.
 :::
 
@@ -143,9 +107,8 @@ with `vds-` to get the custom variant.
 - `canplay` -> `vds-can-play`
 - `play` -> `vds-play`
 
-The player still dispatches the original media event (e.g., `play`) for backwards compatibility. Prefer
-the custom variant as it smooths out any issues, and contains rich information such as the
-request event that triggered it, or the origin event that kicked it off.
+Prefer our events as they smooth out any unexpected behaviour across browsers, and contain rich
+information such as the request event that triggered it, or the origin event that kicked it off.
 
 ### Request Events
 

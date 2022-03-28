@@ -30,6 +30,14 @@ export class RequestQueue {
     await this._pendingFlush.promise;
   }
 
+  /**
+   * Queue the given `callback` to be invoked at a later time by either calling the `serve()` or
+   * `start()` methods. If the queue has started serving (i.e., `start()` was already called),
+   * then the callback will be invoked immediately.
+   *
+   * @param key - Uniquely identifies this callback so duplicates are ignored.
+   * @param callback - The function to call when this item in the queue is being served.
+   */
   async queue(key: string | symbol, callback: () => void | Promise<void>) {
     if (this._isServing) {
       await callback();
@@ -39,13 +47,16 @@ export class RequestQueue {
     this._requestQueue.set(key, callback);
   }
 
+  /**
+   * Invokes the callback with the given `key` in the queue (if it exists).
+   */
   async serve(key: string | symbol) {
     await this._requestQueue.get(key)?.();
     this._requestQueue.delete(key);
   }
 
   /**
-   * Start serving requests.
+   * Flush all queued items and start serving future requests immediately until `stop()` is called.
    */
   async start() {
     await this._flush();
@@ -77,6 +88,10 @@ export class RequestQueue {
     this._isServing = false;
   }
 
+  /**
+   * Stop serving requests, empty the request queue, and release any promises waiting for the
+   * queue to flush.
+   */
   destroy() {
     this.stop();
     this._empty();

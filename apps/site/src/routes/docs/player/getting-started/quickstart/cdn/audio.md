@@ -3,13 +3,14 @@ title: Audio Player Installation (CDN)
 description: Instructions to get your audio player up and running through a CDN.
 ---
 
-!!!step :title=Register Element :desc=Add the following `script` tag to register the `vds-audio-player` custom element.
+!!!step :title=Register Elements :desc=Add the following `script` tags to register the custom media elements.
 
-```html:copy-highlight{4}
+```html:copy-highlight{4-5}
 <!doctype html>
 <html>
 <head>
-	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player/dist-cdn/define/vds-audio-player.js"></script>
+	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player/dist-cdn/define/vds-media.js"></script>
+	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player/dist-cdn/define/vds-audio.js"></script>
 </head>
 <body>
 	<!-- ... -->
@@ -22,16 +23,18 @@ description: Instructions to get your audio player up and running through a CDN.
 !!!step :title=Add Player Markup :desc=Add the following player HTML boilerplate to get started.
 
 ```html:copy
-<vds-audio-player
-	src="https://media-files.vidstack.io/audio.mp3"
-	controls
-	loading="lazy"
->
-	<!-- `<source>` and `<track>` elements can go here. -->
-	<vds-media-ui slot="ui">
-  	<!-- UI elements go here. -->
-	</vds-media-ui>
-</vds-audio-player>
+<vds-media>
+  <vds-audio
+    loading="lazy"
+    preload="metadata"
+  >
+    <audio
+      controls
+	    src="https://media-files.vidstack.io/audio.mp3"
+      preload="none"
+    ></audio>
+  </vds-audio>
+</vds-media>
 ```
 
 !!!

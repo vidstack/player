@@ -27,9 +27,11 @@ function getMediaTypeFromExt(src: string) {
 }
 
 /**
- * Enables loading, playing and controlling media files via the HTML5 MediaElement API. This is
- * used internally by the `vds-audio` and `vds-video` components. This provider only contains
- * glue code so don't bother using it on it's own.
+ * This class adapts the underlying media element such as `<audio>` or `<video>` to
+ * satisfy the media provider contract, which generally involves providing a consistent API
+ * for loading, managing, and tracking media state.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
  */
 export class Html5MediaElement extends MediaProviderElement {
   protected _mediaElement?: HTMLMediaElement;
@@ -112,9 +114,9 @@ export class Html5MediaElement extends MediaProviderElement {
     // Wait a frame to give events a chance to reach media controller (e.g., `vds-hide-poster-request`).
     window.requestAnimationFrame(() => {
       const mediaElement = getSlottedChildren(this)[0] as HTMLMediaElement | null;
-      const tagName = mediaElement?.tagName.toLowerCase();
+      const tagName = mediaElement?.tagName;
 
-      if (tagName && !/(audio|video)/.test(tagName)) {
+      if (tagName && !/^(audio|video)$/i.test(tagName)) {
         if (__DEV__) {
           throw Error(
             `[vds]: expected <audio> or <video> in default slot. Received: <${tagName}>.`,

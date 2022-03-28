@@ -35,6 +35,10 @@
   padding: 0;
 }
 
+.markdown .steps + p {
+  margin-top: 2.5rem;
+}
+
 .markdown .header-anchor {
   margin-left: -1.25em;
   padding: 0 0.23em;

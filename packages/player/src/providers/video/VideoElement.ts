@@ -7,34 +7,60 @@ import { VideoFullscreenController } from './fullscreen';
 import { VideoPresentationController } from './presentation';
 
 /**
+ * The `<vds-video>` element adapts the underlying `<video>` element to satisfy the media provider
+ * contract, which generally involves providing a consistent API for loading, managing, and
+ * tracking media state.
+ *
+ * Most the logic for this element is contained in the `Html5MediaElement` class because both the
+ * `<audio>` and `<video>` elements implement the native `HTMLMediaElement` interface.
+ *
  * @tagname vds-video
- * @slot - Used to pass in `<video>` element.
+ * @slot - Used to pass in the `<video>` element.
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
  * @events ./presentation/events.ts
  * @example
  * ```html
- * <vds-video>
+ * <vds-video
+ *   preload="metadata"
+ *   poster="https://media-files.vidstack.io/poster.png"
+ * >
  *   <video
- *     src="https://media-files.vidstack.io/720p.mp4"
- *     poster="https://media-files.vidstack.io/poster.png"
- *   ></video>
- * </vds-video>
- * ```
- * @example
- * ```html
- * <vds-video loading="lazy">
- *   <video
- *     src="https://media-files.vidstack.io/720p.mp4"
+ *     controls
  *     preload="none"
- *     data-preload="metadata"
- *     data-poster="https://media-files.vidstack.io/poster.png"
+ *     src="https://media-files.vidstack.io/720p.mp4"
+ *     poster="https://media-files.vidstack.io/poster-seo.png"
  *   ></video>
  * </vds-video>
  * ```
  * @example
  * ```html
- * <vds-video>
- *   <video poster="https://media-files.vidstack.io/poster.png">
- *     <source src="https://media-files.vidstack.io/720p.mp4" type="video/mp4" />
+ * <vds-video
+ *   loading="lazy"
+ *   preload="metadata"
+ *   poster="https://media-files.vidstack.io/poster.png"
+ * >
+ *   <video
+ *     preload="none"
+ *     src="https://media-files.vidstack.io/720p.mp4"
+ *     poster="https://media-files.vidstack.io/poster-seo.png"
+ *   ></video>
+ * </vds-video>
+ * ```
+ * @example
+ * ```html
+ * <vds-video
+ *   preload="metadata"
+ *   poster="https://media-files.vidstack.io/poster.png"
+ * >
+ *   <video
+ *     controls
+ *     preload="none"
+ *     poster="https://media-files.vidstack.io/poster-seo.png"
+ *   >
+ *     <source
+ *       src="https://media-files.vidstack.io/720p.mp4"
+ *       type="video/mp4"
+ *     />
  *     <track
  *       default
  *       kind="subtitles"
