@@ -796,8 +796,18 @@ export class MediaController {
     this._store.autoplay.set(event.detail);
   }
 
+  protected _skipInitialSrcChange = true;
   protected _handleCurrentSrcChange(event: MediaCurrentSrcChangeEvent) {
     this._store.currentSrc.set(event.detail);
+
+    // Skip resets before first playback to ensure initial properties set make it to the provider.
+    if (this._skipInitialSrcChange) {
+      this._skipInitialSrcChange = false;
+      return;
+    }
+
+    this._clearMediaStateTracking();
+    softResetMediaStore(this._store);
   }
 
   protected _handleError(event: MediaErrorEvent) {
@@ -842,18 +852,8 @@ export class MediaController {
     this._store.seekableAmount.set(seekableAmount);
   }
 
-  protected _skipInitialSrcChange = true;
   protected _handleSrcChange(event: MediaSrcChangeEvent) {
     this._store.src.set(event.detail);
-
-    // Skip resets before first playback to ensure initial properties set make it to the provider.
-    if (this._skipInitialSrcChange) {
-      this._skipInitialSrcChange = false;
-      return;
-    }
-
-    this._clearMediaStateTracking();
-    softResetMediaStore(this._store);
   }
 
   protected _handleViewTypeChange(event: MediaViewTypeChangeEvent) {

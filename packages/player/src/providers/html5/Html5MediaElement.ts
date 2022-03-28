@@ -164,7 +164,7 @@ export class Html5MediaElement extends MediaProviderElement {
     setAttribute(mediaEl, 'controls', this.controls);
 
     this._attachMediaEventListeners();
-    this._observeMediaSrc();
+    this._observeMediaSources();
 
     if (this.canLoadPoster) {
       mediaEl.setAttribute('poster', this.poster);
@@ -204,63 +204,27 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _startPreloadingMedia() {
-    if (this._willAnotherEngineAttachSrc) return;
-    this.mediaElement?.setAttribute('preload', this.preload);
+    this.mediaElement!.setAttribute('preload', this.preload);
+
+    const isNetworkActive = this.mediaElement!.networkState >= 1;
+    this._ignoreNextAbortEvent = isNetworkActive;
+    this._ignoreNextEmptiedEvent = isNetworkActive;
+
+    this.mediaElement!.load();
+
+    setTimeout(() => {
+      this._ignoreNextAbortEvent = false;
+      this._ignoreNextEmptiedEvent = false;
+    }, 0);
   }
 
-  /**
-   * Whether the media element can probably play the given media resource based on it's URL.
-   */
-  canPlaySrc(src: string) {
-    const ext = src.split('.').reverse()[0];
-    const type = `${getMediaTypeFromExt(src)}/${ext}`;
-    return /maybe|probably/i.test(this.mediaElement?.canPlayType(type) ?? '');
-  }
-
-  /**
-   * Override method to ensure unnecessary src changes don't occur (e.g., blobs).
-   */
-  protected _ignoreSrcChange(src: string) {
-    return this.state.src === src;
-  }
-
-  protected _observeMediaSrc() {
+  protected _observeMediaSources() {
     const onSrcChange = () => {
-      let src = '';
-
-      // Simple selection algorithm:
-      // 1. If `src` is set then use that.
-      // 2. If `src` is not set, and there's only one resource then use that.
-      // 3. If there's multiple resources, try to find the best suitable.
-      // 4. If nothing is found, default is empty string.
-      if (!this.mediaElement!.src) {
-        const resources = this._getMediaSources();
-
-        if (resources.length === 1) {
-          src = resources[0];
-        } else {
-          // Find first that browser can play.
-          for (const resource of resources) {
-            /// TODO: prioritize `probably` over `maybe`.
-            if (this.canPlaySrc(resource)) {
-              src = resource;
-              break;
-            }
-          }
-        }
-      } else {
-        src = this.mediaElement!.src;
-      }
-
-      if (this._ignoreSrcChange(src)) return;
-
-      this._isMediaWaiting = false;
-      this._handleMediaSrcChange(src);
-
-      if (this.canLoad && !this._willAnotherEngineAttachSrc) {
-        this.mediaElement!.src = src;
-        this.mediaElement!.load();
-      }
+      this.dispatchEvent(
+        vdsEvent('vds-src-change', {
+          detail: this._getMediaSources(),
+        }),
+      );
     };
 
     onSrcChange();
@@ -279,6 +243,17 @@ export class Html5MediaElement extends MediaProviderElement {
 
     // Only uniques.
     return Array.from(new Set(resources)) as string[];
+  }
+
+  protected _getMediaMetadata() {
+    return {
+      src: this.state.src, // Set before metadata is retrieved.
+      currentSrc: this.mediaElement!.currentSrc,
+      duration: this.mediaElement!.duration || 0,
+      poster: (this.mediaElement as HTMLVideoElement).poster,
+      mediaType: this._getMediaType(),
+      viewType: this.state.viewType,
+    };
   }
 
   // -------------------------------------------------------------------------------------------
@@ -339,16 +314,15 @@ export class Html5MediaElement extends MediaProviderElement {
     }
   }
 
-  protected _handleAbort(event: Event) {
+  protected _ignoreNextAbortEvent = false;
+  protected _handleAbort(event?: Event) {
+    if (this._ignoreNextAbortEvent) return;
     this.dispatchEvent(vdsEvent('vds-abort', { triggerEvent: event }));
+    this._handleCurrentSrcChange('', event);
   }
 
   protected _handleCanPlay(event: Event) {
-    if (this.state.canPlay) return;
-
-    if (!this._willAnotherEngineAttachSrc) {
-      this._handleMediaReady({ event, duration: this.mediaElement!.duration });
-    }
+    this._handleMediaReady({ event, duration: this.mediaElement!.duration });
   }
 
   protected _handleCanPlayThrough(event: Event) {
@@ -363,6 +337,13 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleLoadStart(event: Event) {
+    this._handleCurrentSrcChange(this.mediaElement!.currentSrc, event);
+
+    if (this.mediaElement!.currentSrc === '') {
+      this._handleAbort();
+      return;
+    }
+
     this.dispatchEvent(
       vdsEvent('vds-load-start', {
         triggerEvent: event,
@@ -371,31 +352,14 @@ export class Html5MediaElement extends MediaProviderElement {
     );
   }
 
-  protected _getMediaMetadata() {
-    return {
-      src: this.state.src,
-      currentSrc: this.mediaElement!.currentSrc ?? this.mediaElement!.src,
-      duration: this.mediaElement!.duration || 0,
-      poster: (this.mediaElement as HTMLVideoElement).poster,
-      mediaType: this._getMediaType(),
-      viewType: this.state.viewType,
-    };
-  }
-
+  protected _ignoreNextEmptiedEvent = false;
   protected _handleEmptied(event: Event) {
+    if (this._ignoreNextEmptiedEvent) return;
     this.dispatchEvent(vdsEvent('vds-emptied', { triggerEvent: event }));
   }
 
   protected _handleLoadedData(event: Event) {
     this.dispatchEvent(vdsEvent('vds-loaded-data', { triggerEvent: event }));
-  }
-
-  /**
-   * Can be used to indicate another engine such as `hls.js` will attach to the media element
-   * so it can handle certain ready events.
-   */
-  protected get _willAnotherEngineAttachSrc(): boolean {
-    return false;
   }
 
   protected _handleLoadedMetadata(event: Event) {
@@ -653,6 +617,6 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _getMediaType(): MediaType {
-    return getMediaTypeFromExt(this.state.src);
+    return getMediaTypeFromExt(this.state.currentSrc);
   }
 }

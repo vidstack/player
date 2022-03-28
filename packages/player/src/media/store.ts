@@ -48,7 +48,7 @@ export const MEDIA_STORE_DEFAULTS: MediaContext = {
   seekable: createTimeRanges(),
   seekableAmount: 0,
   seeking: false,
-  src: '',
+  src: [],
   started: false,
   viewType: ViewType.Unknown,
   volume: 1,

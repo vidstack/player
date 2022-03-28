@@ -193,11 +193,7 @@ export class HlsElement extends VideoElement {
   protected override async update(changedProperties: PropertyValues) {
     super.update(changedProperties);
 
-    if (
-      changedProperties.has('hlsLibrary') &&
-      !this.shouldUseNativeHlsSupport &&
-      isHlsjsSupported()
-    ) {
+    if (changedProperties.has('hlsLibrary') && isHlsjsSupported()) {
       this._preconnectToHlsLibDownload();
     }
   }
@@ -215,7 +211,7 @@ export class HlsElement extends VideoElement {
    * Whether HLS streaming is supported in this environment.
    */
   get isHlsSupported(): boolean {
-    return (this.Hls?.isSupported() ?? isHlsjsSupported()) || this.hasNativeHlsSupport;
+    return this.Hls?.isSupported() ?? isHlsjsSupported();
   }
 
   /**
@@ -224,40 +220,7 @@ export class HlsElement extends VideoElement {
    * @default false
    */
   get isHlsStream(): boolean {
-    return HLS_EXTENSIONS.test(this.state.src);
-  }
-
-  /**
-   * Whether the browser natively supports HLS, mostly only true in Safari. Only call this method
-   * after the provider has connected to the DOM (wait for `MediaProviderConnectEvent`).
-   */
-  get hasNativeHlsSupport(): boolean {
-    const video = document.createElement('video');
-
-    const canPlayType = Array.from(HLS_TYPES).some((canItPlay) =>
-      /maybe|probably/i.test(video.canPlayType(canItPlay)),
-    );
-
-    if (__DEV__) {
-      this._logger
-        ?.infoGroup('Checking for native HLS support')
-        .labelledLog('Can play type', canPlayType)
-        .dispatch();
-    }
-
-    return canPlayType;
-  }
-
-  /**
-   * Whether native HLS support is available and whether it should be used. Generally defaults
-   * to `false` as long as `window.MediaSource` is defined to enforce consistency by
-   * using `hls.js` where ever possible.
-   *
-   * @default false
-   */
-  get shouldUseNativeHlsSupport(): boolean {
-    if (isHlsjsSupported()) return false;
-    return this.hasNativeHlsSupport;
+    return this.state.src.length === 1 && HLS_EXTENSIONS.test(this.state.src[0]);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -410,11 +373,6 @@ export class HlsElement extends VideoElement {
 
   protected _prevHlsEngineSrc = '';
 
-  // Let `Html5MediaElement` know we're taking over ready events.
-  protected override get _willAnotherEngineAttachSrc(): boolean {
-    return this.isHlsStream && !this.shouldUseNativeHlsSupport;
-  }
-
   protected _attachHlsEngine(): void {
     if (this.isHlsEngineAttached || isUndefined(this.hlsEngine) || isNil(this.videoElement)) {
       return;
@@ -448,12 +406,7 @@ export class HlsElement extends VideoElement {
   }
 
   protected _loadSrcOnHlsEngine(src: string): void {
-    if (
-      isNil(this.hlsEngine) ||
-      !this.isHlsStream ||
-      this.shouldUseNativeHlsSupport ||
-      src === this._prevHlsEngineSrc
-    ) {
+    if (isNil(this.hlsEngine) || !this.isHlsStream || src === this._prevHlsEngineSrc) {
       return;
     }
 
@@ -486,17 +439,17 @@ export class HlsElement extends VideoElement {
   // Src Changes
   // -------------------------------------------------------------------------------------------
 
-  override canPlaySrc(src: string): boolean {
-    return (this.isHlsSupported && HLS_EXTENSIONS.test(src)) || super.canPlaySrc(src);
-  }
+  protected override _handleAbort(event?: Event): void {
+    if (this.isHlsSupported) {
+      for (const src of this.state.src) {
+        if (HLS_EXTENSIONS.test(src)) {
+          this._handleHlsSrcChange(src);
+          return;
+        }
+      }
+    }
 
-  protected override _ignoreSrcChange(src: string): boolean {
-    return src.startsWith('blob:') || super._ignoreSrcChange(src);
-  }
-
-  protected override _handleMediaSrcChange(src: string) {
-    super._handleMediaSrcChange(src);
-    this._handleHlsSrcChange(src);
+    super._handleAbort(event);
   }
 
   protected async _handleHlsSrcChange(src: string) {
@@ -510,7 +463,7 @@ export class HlsElement extends VideoElement {
       return;
     }
 
-    if (isNil(this.hlsLibrary) || this.shouldUseNativeHlsSupport) return;
+    if (isNil(this.hlsLibrary)) return;
 
     if (isUndefined(this.hlsEngine)) {
       await this._buildHlsEngine();

@@ -150,6 +150,7 @@ export abstract class MediaProviderElement extends LitElement {
         'vds-abort',
         'vds-can-play',
         'vds-can-play-through',
+        'vds-current-src-change',
         'vds-duration-change',
         'vds-emptied',
         'vds-ended',
@@ -448,6 +449,7 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   protected async _handleMediaReady({ event, duration }: { event?: Event; duration: number }) {
+    // Return if it was already fired.
     if (this.state.canPlay) return;
 
     this.dispatchEvent(
@@ -470,16 +472,25 @@ export abstract class MediaProviderElement extends LitElement {
     await this._attemptAutoplay();
   }
 
-  protected _handleMediaSrcChange(src: string) {
+  protected _handleCurrentSrcChange(currentSrc: string, triggerEvent?: Event) {
+    if (this.state.currentSrc === currentSrc) return;
+
     if (__DEV__) {
       this._logger
         ?.infoGroup('📼 Media source change')
         .labelledLog('Src', this.state.src)
+        .labelledLog('Current Src', currentSrc)
         .dispatch();
     }
 
     this.mediaQueue.stop();
-    this.dispatchEvent(vdsEvent('vds-src-change', { detail: src ?? '' }));
+
+    this.dispatchEvent(
+      vdsEvent('vds-current-src-change', {
+        detail: currentSrc,
+        triggerEvent,
+      }),
+    );
   }
 
   // -------------------------------------------------------------------------------------------
