@@ -220,7 +220,7 @@ export class HlsElement extends VideoElement {
    * @default false
    */
   get isHlsStream(): boolean {
-    return this.state.src.length === 1 && HLS_EXTENSIONS.test(this.state.src[0]);
+    return this.state.src.some((src) => HLS_EXTENSIONS.test(src));
   }
 
   // -------------------------------------------------------------------------------------------
