@@ -84,8 +84,16 @@ export type MediaControllerHost = ReactiveElement & {
  */
 export class MediaController {
   protected readonly _disconnectDisposal = new DisposalBin();
-  protected readonly _providerQueue = new RequestQueue();
-  protected readonly _providerDisposal = new DisposalBin();
+
+  /**
+   * Queue actions to be invoked after the provider has connected to the media controller.
+   */
+  readonly providerQueue = new RequestQueue();
+
+  /**
+   * Queue actions to be invoked after the provider has detached from the media controller.
+   */
+  readonly providerDisposal = new DisposalBin();
 
   constructor(protected readonly _host: MediaControllerHost) {
     discover(_host, mediaProviderDiscoveryId, (element, onDisconnect) => {
@@ -96,8 +104,8 @@ export class MediaController {
       hostDisconnected: () => {
         this._clearMediaStateTracking();
         this._clearPendingMediaRequests();
-        this._providerQueue.destroy();
-        this._providerDisposal.empty();
+        this.providerQueue.destroy();
+        this.providerDisposal.empty();
         this._skipInitialSrcChange = true;
         this._disconnectDisposal.empty();
       },
@@ -161,8 +169,8 @@ export class MediaController {
 
   protected _handleMediaProviderDisconnect() {
     if (isNil(this.provider)) return;
-    this._providerQueue.destroy();
-    this._providerDisposal.empty();
+    this.providerQueue.destroy();
+    this.providerDisposal.empty();
     this._provider = undefined;
     this._providerContext.value.set(undefined);
     resetMediaStore(this._store);
@@ -170,9 +178,9 @@ export class MediaController {
   }
 
   protected _flushMediaProviderConnectedQueue() {
-    this._providerQueue.start();
-    this._providerDisposal.add(() => {
-      this._providerQueue.stop();
+    this.providerQueue.start();
+    this.providerDisposal.add(() => {
+      this.providerQueue.stop();
     });
   }
 
@@ -269,16 +277,16 @@ export class MediaController {
     queueKey: string,
     callback: (event: E) => void | Promise<void>,
   ) {
-    return async (event: E) => {
+    return (event: E) => {
       if (!this._mediaRequestEventGateway(event)) return;
 
       if (this._provider) {
-        await callback(event);
+        callback(event);
         return;
       }
 
-      this._providerQueue.queue(queueKey, async () => {
-        await callback(event);
+      this.providerQueue.queue(queueKey, () => {
+        callback(event);
       });
     };
   }
@@ -535,7 +543,7 @@ export class MediaController {
 
     for (const eventType of keysOf(mediaEventListeners)) {
       const handler = mediaEventListeners[eventType].bind(this);
-      this._providerDisposal.add(listen(this._provider, eventType, handler));
+      this.providerDisposal.add(listen(this._provider, eventType, handler));
     }
   }
 
