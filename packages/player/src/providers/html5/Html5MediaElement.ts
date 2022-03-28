@@ -1,5 +1,4 @@
 import {
-  type ArrayElement,
   DisposalBin,
   getNumberOfDecimalPlaces,
   getSlottedChildren,
@@ -8,10 +7,11 @@ import {
   isUndefined,
   keysOf,
   listen,
-  observeAttributes,
+  setAttribute,
   vdsEvent,
 } from '@vidstack/foundation';
 import { type PropertyValues } from 'lit';
+import { property } from 'lit/decorators.js';
 
 import { MediaProviderElement, MediaType } from '../../media';
 
@@ -58,6 +58,25 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   // -------------------------------------------------------------------------------------------
+  // Properties
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Configures the preload setting of the underlying media element once it can load (see
+   * `loading` property). This will overwrite any existing `preload` value on the `<audio>`
+   * or `<video>` element.
+   *
+   * The `preload` attribute provides a hint to the browser about what the author thinks will
+   * lead to the best user experience with regards to what content is loaded before the video is
+   * played. The recommended default is `metadata`.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload
+   * @default 'metadata'
+   */
+  @property({ reflect: true })
+  preload: 'none' | 'metadata' | 'auto' = 'metadata';
+
+  // -------------------------------------------------------------------------------------------
   // Time Updates
   // The `timeupdate` event fires surprisingly infrequently during playback, meaning your progress
   // bar (or whatever else is synced to the currentTime) moves in a choppy fashion. This helps
@@ -80,7 +99,7 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _requestTimeUpdate() {
     const newTime = this.mediaElement?.currentTime ?? 0;
 
-    if (this._currentTime !== newTime) {
+    if (this.state.currentTime !== newTime) {
       this._updateCurrentTime(newTime);
     }
 
@@ -130,38 +149,28 @@ export class Html5MediaElement extends MediaProviderElement {
     });
   }
 
-  protected _canMediaElementConnect() {
+  protected get _canMediaElementConnect() {
     return this.canLoad && !isNil(this.mediaElement) && !this._hasMediaElementConnected;
   }
 
   protected _handleMediaElementConnect() {
+    if (!this._canMediaElementConnect) return;
+
     const mediaEl = this.mediaElement!;
 
-    if (!this._canMediaElementConnect()) return;
+    // Update or remove any attributes that we manage.
+    mediaEl.removeAttribute('loop');
+    mediaEl.removeAttribute('poster');
+    setAttribute(mediaEl, 'controls', this.controls);
 
-    this._observeMediaAttributes();
     this._attachMediaEventListeners();
     this._observeMediaSrc();
 
-    if (this.canLoadPoster && mediaEl.hasAttribute('data-poster')) {
-      mediaEl.setAttribute('poster', mediaEl.getAttribute('data-poster')!);
+    if (this.canLoadPoster) {
+      mediaEl.setAttribute('poster', this.poster);
     }
 
-    if (!this._willAnotherEngineAttachSrc()) {
-      this._startPreloadingMedia();
-    }
-
-    // Autoplay already failed
-    if (mediaEl.readyState > 2 && mediaEl.autoplay && !this.state.playing) {
-      this.dispatchEvent(
-        vdsEvent('vds-autoplay-fail', {
-          detail: {
-            muted: this.state.muted,
-            error: Error('Autoplay failed to start playback.'),
-          },
-        }),
-      );
-    }
+    this._startPreloadingMedia();
 
     if (__DEV__) {
       this._logger
@@ -189,43 +198,14 @@ export class Html5MediaElement extends MediaProviderElement {
     this._hasMediaElementConnected = false;
   }
 
-  override handleMediaCanLoad() {
-    super.handleMediaCanLoad();
+  override startLoadingMedia() {
+    super.startLoadingMedia();
     this._handleMediaElementConnect();
   }
 
   protected _startPreloadingMedia() {
-    const mediaEl = this.mediaElement;
-    if (mediaEl?.hasAttribute('data-preload')) {
-      mediaEl.setAttribute('preload', mediaEl.getAttribute('data-preload') ?? 'metadata');
-    }
-  }
-
-  protected _observeMediaAttributes() {
-    // We should manage these. Media might have already started playback at this point so we can't
-    // prevent autoplay, but it ensures we manually handle loops and any future autoplays.
-    for (const attrName of ['autoplay', 'loop']) {
-      if (this.mediaElement!.hasAttribute(attrName)) {
-        this.mediaElement!.removeAttribute(attrName);
-        this.mediaElement!.setAttribute(`data-${attrName}`, '');
-      }
-    }
-
-    const mediaAttrs = ['autoplay', 'poster', 'controls', 'loop', 'playsinline'] as const;
-    const mediaDataAttrs = ['autoplay', 'poster', 'loop'].map((attrName) => `data-${attrName}`);
-    // Order is important as media attrs have higher priority (should override data attrs).
-    const observedAttrs = [...mediaDataAttrs, ...mediaAttrs];
-
-    const observer = observeAttributes(this.mediaElement!, observedAttrs, (attrName, attrValue) => {
-      const name = attrName?.replace('data-', '') as ArrayElement<typeof mediaAttrs>;
-      const value = name !== 'poster' ? attrValue !== null : attrValue ?? '';
-      if (this.state[name] !== value) {
-        const changeEventType = `vds-${name}-change` as const;
-        this.dispatchEvent(vdsEvent(changeEventType, { detail: value }));
-      }
-    });
-
-    this._mediaElementDisposal.add(() => observer.disconnect());
+    if (this._willAnotherEngineAttachSrc) return;
+    this.mediaElement?.setAttribute('preload', this.preload);
   }
 
   /**
@@ -277,7 +257,7 @@ export class Html5MediaElement extends MediaProviderElement {
       this._isMediaWaiting = false;
       this._handleMediaSrcChange(src);
 
-      if (this.canLoad && !this._willAnotherEngineAttachSrc()) {
+      if (this.canLoad && !this._willAnotherEngineAttachSrc) {
         this.mediaElement!.src = src;
         this.mediaElement!.load();
       }
@@ -366,7 +346,7 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _handleCanPlay(event: Event) {
     if (this.state.canPlay) return;
 
-    if (!this._willAnotherEngineAttachSrc()) {
+    if (!this._willAnotherEngineAttachSrc) {
       this._handleMediaReady({ event, duration: this.mediaElement!.duration });
     }
   }
@@ -414,7 +394,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * Can be used to indicate another engine such as `hls.js` will attach to the media element
    * so it can handle certain ready events.
    */
-  protected _willAnotherEngineAttachSrc(): boolean {
+  protected get _willAnotherEngineAttachSrc(): boolean {
     return false;
   }
 
@@ -448,7 +428,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _handlePlay(event: Event) {
     const playEvent = vdsEvent('vds-play', { triggerEvent: event });
-    playEvent.autoplay = this._autoplayAttemptPending;
+    playEvent.autoplay = this._attemptingAutoplay;
     this.dispatchEvent(playEvent);
   }
 
@@ -616,14 +596,30 @@ export class Html5MediaElement extends MediaProviderElement {
   // Provider Methods
   // -------------------------------------------------------------------------------------------
 
+  protected _getPaused(): boolean {
+    return this.mediaElement?.paused ?? true;
+  }
+
+  protected _getVolume(): number {
+    return this.mediaElement?.volume ?? 1;
+  }
+
   protected _setVolume(newVolume: number) {
     this.mediaElement!.volume = newVolume;
+  }
+
+  protected _getCurrentTime(): number {
+    return this.mediaElement?.currentTime ?? 0;
   }
 
   protected _setCurrentTime(newTime: number) {
     if (this.mediaElement!.currentTime !== newTime) {
       this.mediaElement!.currentTime = newTime;
     }
+  }
+
+  protected _getMuted() {
+    return this.mediaElement?.muted ?? false;
   }
 
   protected _setMuted(isMuted: boolean) {
@@ -641,7 +637,7 @@ export class Html5MediaElement extends MediaProviderElement {
       return this.mediaElement?.play();
     } catch (error) {
       const playErrorEvent = vdsEvent('vds-play-fail');
-      playErrorEvent.autoplay = this._autoplayAttemptPending;
+      playErrorEvent.autoplay = this._attemptingAutoplay;
       playErrorEvent.error = error as Error;
       throw error;
     }

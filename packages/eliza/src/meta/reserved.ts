@@ -104,6 +104,7 @@ const HTML_ELEMENT_KEYS = [
   'blur',
   'addEventListener',
   'removeEventListener',
+  'dispatchEvent',
 ];
 
 const ELEMENT_KEYS = [

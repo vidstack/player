@@ -50,7 +50,7 @@ it('should update muted state', async function () {
 it('should mute player', async function () {
   const { media, provider, button } = await buildFixture();
 
-  const mutedSpy = vi.spyOn(provider, '_muted', 'set');
+  const mutedSpy = vi.spyOn(provider, 'muted', 'set');
 
   media.controller._store.muted.set(false);
   await elementUpdated(button);
@@ -64,7 +64,7 @@ it('should mute player', async function () {
 it('should unmute player', async function () {
   const { media, provider, button } = await buildFixture();
 
-  const mutedSpy = vi.spyOn(provider, '_muted', 'set');
+  const mutedSpy = vi.spyOn(provider, 'muted', 'set');
 
   media.controller._store.muted.set(true);
   await elementUpdated(button);

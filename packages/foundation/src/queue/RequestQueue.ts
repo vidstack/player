@@ -38,9 +38,9 @@ export class RequestQueue {
    * @param key - Uniquely identifies this callback so duplicates are ignored.
    * @param callback - The function to call when this item in the queue is being served.
    */
-  async queue(key: string | symbol, callback: () => void | Promise<void>) {
+  queue(key: string | symbol, callback: () => void) {
     if (this._isServing) {
-      await callback();
+      callback();
       return;
     }
 
@@ -50,23 +50,27 @@ export class RequestQueue {
   /**
    * Invokes the callback with the given `key` in the queue (if it exists).
    */
-  async serve(key: string | symbol) {
-    await this._requestQueue.get(key)?.();
+  serve(key: string | symbol) {
+    this._requestQueue.get(key)?.();
     this._requestQueue.delete(key);
   }
 
   /**
    * Flush all queued items and start serving future requests immediately until `stop()` is called.
    */
-  async start() {
-    await this._flush();
+  start() {
+    this._flush();
     this._isServing = true;
-    if (this._requestQueue.size > 0) await this._flush();
+    if (this._requestQueue.size > 0) {
+      this._flush();
+    }
   }
 
-  protected async _flush() {
-    const requests = Array.from(this._requestQueue.keys());
-    await Promise.all(requests.map((reqKey) => this.serve(reqKey)));
+  protected _flush() {
+    for (const requestKey of this._requestQueue.keys()) {
+      this.serve(requestKey);
+    }
+
     this._release();
   }
 
