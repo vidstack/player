@@ -1,45 +1,12 @@
 import '$lib/define/vds-media';
 import '$lib/define/vds-fake-media-provider';
 
-import { fixture, html } from '@open-wc/testing-helpers';
-import { get } from '@vidstack/foundation';
-
-import { FakeMediaProviderElement, MediaElement, MediaRemoteControl } from '$lib';
+import { MediaRemoteControl } from '$lib';
+import { buildMediaFixture } from '$test-utils';
 
 async function buildFixture() {
-  const provider = await fixture<FakeMediaProviderElement>(`
-      <vds-fake-media-provider></vds-fake-media-provider>
-  `);
-
-  return { provider };
+  return buildMediaFixture();
 }
-
-describe('media provider', () => {
-  it('should connect/disconnect', async function () {
-    const media = await fixture<MediaElement>(html`<vds-media></vds-media>`);
-    const provider = document.createElement('vds-fake-media-provider');
-
-    media.append(provider);
-    expect(media.controller.provider === provider).to.be.true;
-
-    provider.remove();
-    expect(media.controller.provider).to.be.undefined;
-  });
-
-  it('should copy media provider store', async function () {
-    const media = await fixture<MediaElement>(html`<vds-media></vds-media>`);
-    const provider = document.createElement('vds-fake-media-provider');
-
-    provider._store.src.set('testing');
-    provider._store.duration.set(1000);
-
-    media.append(provider);
-
-    const controllerStore = media.controller.store;
-    expect(get(controllerStore.src)).to.equal('testing');
-    expect(get(controllerStore.duration)).to.equal(1000);
-  });
-});
 
 describe('media requests', () => {
   it('should handle mute/unmute requests', async function () {
@@ -104,9 +71,8 @@ describe('media requests', () => {
 
     expect(volumeSpy).not.toHaveBeenCalled();
 
-    provider.controller?._store.volume.set(0.5);
-    remote.changeVolume(1);
-    expect(volumeSpy).toHaveBeenCalledWith(1);
+    remote.changeVolume(0.5);
+    expect(volumeSpy).toHaveBeenCalledWith(0.5);
   });
 
   it.skip('should handle enter/exit fullscreen requests', async function () {

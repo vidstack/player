@@ -1,3 +1,4 @@
+import '$lib/define/vds-media';
 import '$lib/define/vds-fake-media-provider';
 
 import { vdsEvent, waitForEvent } from '@vidstack/foundation';
@@ -13,9 +14,12 @@ class MediaListenerElement extends LitElement {
 window.customElements.define('media-listener', MediaListenerElement);
 
 it('should listen to media events', async function () {
-  const listener = document.createElement('media-listener') as MediaListenerElement;
+  const media = document.createElement('vds-media');
 
-  window.document.body.append(listener);
+  const listener = document.createElement('media-listener') as MediaListenerElement;
+  media.append(listener);
+
+  window.document.body.append(media);
 
   const provider = document.createElement('vds-fake-media-provider');
   setTimeout(() => {
@@ -33,20 +37,25 @@ it('should listen to media events', async function () {
 });
 
 it('should stop listening to media events when listener disconnects', async function () {
-  const listener = document.createElement('media-listener') as MediaListenerElement;
+  const media = document.createElement('vds-media');
 
-  window.document.body.append(listener);
+  const listener = document.createElement('media-listener') as MediaListenerElement;
+  media.append(listener);
+
+  window.document.body.append(media);
 
   const pauseEvent = vdsEvent('vds-pause');
   listener.dispatchEvent(pauseEvent);
-
   expect(listener.pauseListener).toHaveBeenCalledTimes(0);
 });
 
 it('should stop listening to media events when provider disconnects', async function () {
-  const listener = document.createElement('media-listener') as MediaListenerElement;
+  const media = document.createElement('vds-media');
 
-  window.document.body.append(listener);
+  const listener = document.createElement('media-listener') as MediaListenerElement;
+  media.append(listener);
+
+  window.document.body.append(media);
 
   const provider = document.createElement('vds-fake-media-provider');
   setTimeout(() => {
@@ -58,8 +67,6 @@ it('should stop listening to media events when provider disconnects', async func
   provider.remove();
 
   const pauseEvent = vdsEvent('vds-pause');
-
   provider.dispatchEvent(pauseEvent);
-
   expect(listener.pauseListener).toHaveBeenCalledTimes(0);
 });
