@@ -10,17 +10,17 @@ import {
   isUndefined,
   listen,
   LogDispatcher,
-  notEqual,
   RequestQueue,
   ScreenOrientationController,
   ScreenOrientationLock,
+  setAttribute,
   unwrapStoreRecord,
   vdsEvent,
 } from '@vidstack/foundation';
 import { html, LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { MediaController } from '../controller';
+import { type MediaController } from '../controller';
 import type { MediaEvents } from '../events';
 import { createMediaStore, type ReadableMediaStoreRecord } from '../store';
 import { ViewType } from '../ViewType';
@@ -81,7 +81,7 @@ export abstract class MediaProviderElement extends LitElement {
         }
 
         if (entries[0]?.isIntersecting) {
-          this.handleMediaCanLoad();
+          this.startLoadingMedia();
           intersectionController.hostDisconnected();
         }
       },
@@ -99,6 +99,10 @@ export abstract class MediaProviderElement extends LitElement {
 
     this._logMediaEvents();
 
+    // Initialize some media attributes.
+    setAttribute(this, 'paused', this.paused);
+    setAttribute(this, 'muted', this.muted);
+
     // Give the initial hide poster event a chance to reach the controller.
     window.requestAnimationFrame(() => {
       if (isUndefined(this.canLoadPoster)) {
@@ -110,12 +114,6 @@ export abstract class MediaProviderElement extends LitElement {
   protected override firstUpdated(changedProperties: PropertyValues) {
     super.firstUpdated(changedProperties);
 
-    // If no media controller was attached, create one and attach to self.
-    if (!this._controller) {
-      const controller = new MediaController(this);
-      controller.attachMediaProvider(this, (cb) => this._disconnectDisposal.add(cb));
-    }
-
     this.dispatchEvent(
       vdsEvent('vds-fullscreen-support-change', {
         detail: this.canFullscreen,
@@ -123,7 +121,7 @@ export abstract class MediaProviderElement extends LitElement {
     );
 
     if (this.loading === 'eager') {
-      this.handleMediaCanLoad();
+      this.startLoadingMedia();
     }
   }
 
@@ -137,6 +135,7 @@ export abstract class MediaProviderElement extends LitElement {
     this._disconnectDisposal.empty();
   }
 
+  /* @internal */
   abstract handleDefaultSlotChange(): void | Promise<void>;
 
   // -------------------------------------------------------------------------------------------
@@ -194,56 +193,171 @@ export abstract class MediaProviderElement extends LitElement {
   // Properties
   // -------------------------------------------------------------------------------------------
 
-  /** @internal */
-  set _volume(requestedVolume) {
+  /**
+   * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
+   *
+   * @default 1
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
+   */
+  @property({ type: Number, reflect: true })
+  get volume() {
+    return this._getVolume();
+  }
+
+  set volume(newVolume) {
     this.mediaQueue.queue('volume', () => {
-      const volume = clampNumber(0, requestedVolume, 1);
-      if (notEqual(this.state.volume, volume)) {
-        this._setVolume(volume);
+      const oldVol = this.volume;
+      const newVol = clampNumber(0, newVolume, 1);
+      if (oldVol !== newVol) {
+        this._setVolume(newVol);
+        this.requestUpdate('volume', oldVol);
       }
     });
   }
 
+  protected abstract _getVolume(): number;
   protected abstract _setVolume(newVolume: number): void;
 
-  /** @internal */
-  set _paused(shouldPause) {
+  /**
+   * Whether playback should be paused. Defaults to `true` if no media has loaded or playback has
+   * not started. Setting this to `false` will begin/resume playback.
+   *
+   * @default true
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused
+   */
+  @property({ type: Boolean, reflect: true })
+  get paused() {
+    return this._getPaused();
+  }
+
+  set paused(newPaused) {
     this.mediaQueue.queue('paused', () => {
-      if (this.state.paused === shouldPause) return;
+      if (this.paused === newPaused) return;
 
       try {
-        if (!shouldPause) {
+        if (!newPaused) {
           this.play();
         } else {
           this.pause();
         }
+
+        this.requestUpdate('paused', !newPaused);
       } catch (e) {
         this._logger?.error('paused-change-fail', e);
       }
     });
   }
 
-  /** @internal */
-  set _currentTime(requestedTime) {
-    this.mediaQueue.queue('time', () => {
-      if (notEqual(this.state.currentTime, requestedTime)) {
-        this._setCurrentTime(requestedTime);
+  protected abstract _getPaused(): boolean;
+
+  /**
+   * A `double` indicating the current playback time in seconds. Defaults to `0` if the media has
+   * not started to play and has not seeked. Setting this value seeks the media to the new
+   * time. The value can be set to a minimum of `0` and maximum of the total length of the
+   * media indicated by the `duration`.
+   *
+   * @default 0
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime
+   */
+  @property({ type: Number })
+  get currentTime() {
+    return this._getCurrentTime();
+  }
+
+  set currentTime(newTime) {
+    this.mediaQueue.queue('current-time', () => {
+      const oldTime = this.currentTime;
+      if (oldTime !== newTime) {
+        this._setCurrentTime(newTime);
+        this.requestUpdate('currentTime', oldTime);
       }
     });
   }
 
+  protected abstract _getCurrentTime(): number;
   protected abstract _setCurrentTime(newTime: number): void;
 
-  /** @internal */
-  set _muted(shouldMute) {
+  /**
+   * Whether the audio is muted or not.
+   *
+   * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted
+   */
+  @property({ type: Boolean, reflect: true })
+  get muted() {
+    return this._getMuted();
+  }
+
+  set muted(newMuted) {
     this.mediaQueue.queue('muted', () => {
-      if (notEqual(this.state.muted, shouldMute)) {
-        this._setMuted(shouldMute);
+      const oldMuted = this.muted;
+      if (oldMuted !== newMuted) {
+        this._setMuted(newMuted);
+        this.requestUpdate('muted', oldMuted);
       }
     });
   }
 
+  protected abstract _getMuted(): boolean;
   protected abstract _setMuted(isMuted: boolean): void;
+
+  /**
+   * A URL for an image to be shown while the video is downloading.
+   */
+  @property({ reflect: true })
+  get poster() {
+    return this.state.poster;
+  }
+
+  set poster(newPoster) {
+    const oldPoster = this.poster;
+    if (oldPoster !== newPoster) {
+      this.dispatchEvent(vdsEvent('vds-poster-change', { detail: newPoster }));
+      this.requestUpdate('poster', oldPoster);
+    }
+  }
+
+  /**
+   * Whether media should automatically start playing from the beginning (replay) every time
+   * it ends.
+   *
+   * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop
+   */
+  @property({ type: Boolean, reflect: true })
+  get loop() {
+    return this.state.loop;
+  }
+
+  set loop(newLoop) {
+    const oldLoop = this.loop;
+    if (oldLoop !== newLoop) {
+      this.dispatchEvent(vdsEvent('vds-loop-change', { detail: newLoop }));
+      this.requestUpdate('loop', oldLoop);
+    }
+  }
+
+  /**
+   * Indicates whether a user interface should be shown for controlling the resource. Set this to
+   * `false` when you want to provide your own custom controls, and `true` if you want the current
+   * provider to supply its own default controls. Depending on the provider, changing this prop
+   * may cause the player to completely reset.
+   *
+   * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls
+   */
+  @property({ type: Boolean, reflect: true })
+  get controls() {
+    return this.state.controls;
+  }
+
+  set controls(newControls) {
+    const oldControls = this.controls;
+    if (oldControls !== newControls) {
+      this.dispatchEvent(vdsEvent('vds-controls-change', { detail: newControls }));
+      this.requestUpdate('controls', oldControls);
+    }
+  }
 
   // -------------------------------------------------------------------------------------------
   // Loading
@@ -259,25 +373,34 @@ export abstract class MediaProviderElement extends LitElement {
   @state() canLoadPoster?: boolean;
 
   /**
-   * Whether media is allowed to begin loading. This depends on the `loading` configuration. If
-   * `eager`, `canLoad` will be `true` immediately, and if `lazy` this will become `true` once
-   * the media has entered the viewport.
+   * Whether media is allowed to begin loading. This depends on the `loading` configuration.
+   *
+   * - If `eager`, this will return `true` immediately.
+   * - If `lazy`, this will return `true` after the media has entered the viewport.
+   * - If `custom`, this will return `true` after the `startLoadingMedia()` method is called.
    */
   get canLoad() {
     return this.state.canLoad;
   }
 
   /**
-   * Indicates when the provider can begin loading media. If `eager`, media will be loaded
-   * immediately, and `lazy` will delay loading until the provider has entered the viewport.
+   * Indicates when the provider can begin loading media.
+   *
+   * - If `eager` media will be loaded immediately.
+   * - If `lazy` media will delay loading until the provider has entered the viewport.
+   * - If `custom` media will wait for the `startLoadingMedia()` method to be called.
+   *
+   * @default 'eager'
    */
   @property({ attribute: 'loading' })
-  loading: 'eager' | 'lazy' = 'eager';
+  loading: 'eager' | 'lazy' | 'custom' = 'eager';
 
   /**
-   * Called when media can begin loading.
+   * Called when media can begin loading. Calling this method will trigger the initial provider
+   * loading process. Calling it more than once has no effect.
    */
-  handleMediaCanLoad() {
+  startLoadingMedia() {
+    this.controllerQueue;
     this.dispatchEvent(vdsEvent('vds-can-load'));
   }
 
@@ -334,7 +457,7 @@ export abstract class MediaProviderElement extends LitElement {
       }),
     );
 
-    await this.mediaQueue.start();
+    this.mediaQueue.start();
 
     if (__DEV__) {
       this._logger
@@ -344,36 +467,7 @@ export abstract class MediaProviderElement extends LitElement {
         .dispatch();
     }
 
-    await this.attemptAutoplay();
-  }
-
-  protected _autoplayAttemptPending = false;
-
-  get canAttemptAutoplay() {
-    return this.state.autoplay && !this.state.started;
-  }
-
-  async attemptAutoplay(): Promise<void> {
-    if (!this.state.canPlay || !this.canAttemptAutoplay) return;
-
-    this._autoplayAttemptPending = true;
-
-    try {
-      await this.play();
-      this.dispatchEvent(vdsEvent('vds-autoplay', { detail: { muted: this._muted } }));
-    } catch (error) {
-      this.dispatchEvent(
-        vdsEvent('vds-autoplay-fail', {
-          detail: {
-            muted: this._muted,
-            error: error as Error,
-          },
-        }),
-      );
-      this.requestUpdate();
-    }
-
-    this._autoplayAttemptPending = false;
+    await this._attemptAutoplay();
   }
 
   protected _handleMediaSrcChange(src: string) {
@@ -389,12 +483,80 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   // -------------------------------------------------------------------------------------------
+  // Autoplay
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Whether playback should automatically begin as soon as enough media is available to do so
+   * without interruption.
+   *
+   * Sites which automatically play audio (or videos with an audio track) can be an unpleasant
+   * experience for users, so it should be avoided when possible. If you must offer autoplay
+   * functionality, you should make it opt-in (requiring a user to specifically enable it).
+   *
+   * However, autoplay can be useful when creating media elements whose source will be set at a
+   * later time, under user control.
+   *
+   * @default false
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay
+   */
+  @property({ type: Boolean, reflect: true })
+  get autoplay() {
+    return this.state.autoplay;
+  }
+
+  set autoplay(newAutoplay: boolean) {
+    if (this.autoplay !== newAutoplay) {
+      this.dispatchEvent(vdsEvent('vds-autoplay-change', { detail: newAutoplay }));
+      this.requestUpdate('autoplay', !newAutoplay);
+    }
+
+    this._attemptAutoplay();
+  }
+
+  protected _attemptingAutoplay = false;
+
+  protected get _canAttemptAutoplay() {
+    return this.state.canPlay && this.state.autoplay && !this.state.started;
+  }
+
+  protected async _attemptAutoplay(): Promise<void> {
+    if (!this._canAttemptAutoplay) return;
+
+    this._attemptingAutoplay = true;
+
+    try {
+      await this.play();
+      this.dispatchEvent(vdsEvent('vds-autoplay', { detail: { muted: this.muted } }));
+    } catch (error) {
+      this.dispatchEvent(
+        vdsEvent('vds-autoplay-fail', {
+          detail: {
+            muted: this.muted,
+            error: error as Error,
+          },
+        }),
+      );
+      this.requestUpdate();
+    }
+
+    this._attemptingAutoplay = false;
+  }
+
+  // -------------------------------------------------------------------------------------------
   // Media Controller
   // -------------------------------------------------------------------------------------------
 
   protected _controller?: MediaController;
-  protected _controllerQueue = new RequestQueue();
 
+  /**
+   * Queue actions to be applied safely after the provider has attached to the media controller.
+   */
+  protected controllerQueue = new RequestQueue();
+
+  /**
+   * The media controller that this provider is attached to.
+   */
   get controller() {
     return this._controller;
   }
@@ -410,7 +572,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   set logLevel(level) {
     if (__DEV__) {
-      this._controllerQueue.queue('log-level', () => {
+      this.controllerQueue.queue('log-level', () => {
         this._controller!.logLevel = level;
       });
     }
@@ -428,7 +590,7 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   set idleDelay(delay) {
-    this._controllerQueue.queue('idle-delay', () => {
+    this.controllerQueue.queue('idle-delay', () => {
       this._controller!.idleDelay = delay;
     });
   }
@@ -440,14 +602,27 @@ export abstract class MediaProviderElement extends LitElement {
     this._controller = controller;
     this._store = controller._store;
     this._state = controller.state;
-    this._controllerQueue.start();
+    this.controllerQueue.start();
 
     onDisconnect(() => {
-      this._controllerQueue.destroy();
+      this.controllerQueue.destroy();
       this._controller = undefined;
       this._store = createMediaStore();
       this._state = unwrapStoreRecord(this._store);
     });
+  }
+
+  // Override to ensure media events reach the media controller.
+  override dispatchEvent(event: Event): boolean {
+    if (!this._controller && event.type.startsWith('vds-')) {
+      this.controllerQueue.queue(event.type, () => {
+        super.dispatchEvent(event);
+      });
+
+      return false;
+    }
+
+    return super.dispatchEvent(event);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -473,13 +648,13 @@ export abstract class MediaProviderElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   /**
-   * Queue actions to be applied safely after the element has connected to the DOM.
+   * Queue actions to be applied after the element has connected to the DOM.
    */
   readonly connectedQueue = hostRequestQueue(this);
 
   /**
-   * Queue actions to be taken on the current media provider when it's ready for playback, marked
-   * by the `canPlay` property. If the media provider is ready, actions will be invoked immediately.
+   * Queue actions to be taken on the current media provider when it's ready for playback (i.e.,
+   * `canPlay`). If the media provider is ready, actions will be invoked immediately.
    */
   readonly mediaQueue = new RequestQueue();
 
@@ -508,9 +683,20 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   /**
+   * Whether the player is currently in fullscreen mode.
+   *
+   * @default false
+   */
+  get fullscreen(): boolean {
+    return this.fullscreenController.isFullscreen;
+  }
+
+  /**
    * This will indicate the orientation to lock the screen to when in fullscreen mode and
    * the Screen Orientation API is available. The default is `undefined` which indicates
    * no screen orientation change.
+   *
+   * @default undefined
    */
   @property({ attribute: 'fullscreen-orientation' })
   get fullscreenOrientation(): ScreenOrientationLock | undefined {
@@ -518,7 +704,11 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   set fullscreenOrientation(lockType) {
-    this.fullscreenController.screenOrientationLock = lockType;
+    const prevLockType = this.fullscreenController.screenOrientationLock;
+    if (prevLockType !== lockType) {
+      this.fullscreenController.screenOrientationLock = lockType;
+      this.requestUpdate('fullscreen-orientation', prevLockType);
+    }
   }
 
   override async requestFullscreen(): Promise<void> {

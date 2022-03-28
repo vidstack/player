@@ -130,12 +130,15 @@ export class MediaController {
 
   protected readonly _providerContext = mediaProviderElementContext.provide(this._host);
 
+  /**
+   * The media provider that is attached this media controller.
+   */
   get provider() {
     return this._provider;
   }
 
   /**
-   * Attach a media provider to the media controller.
+   * Attach a media provider to this media controller.
    */
   attachMediaProvider(provider: MediaProviderElement, onDisconnect: DisconnectCallback) {
     if (!isNil(this.provider) || this.provider === provider) return;
@@ -286,7 +289,7 @@ export class MediaController {
     this._createMediaRequestHandler('muted', (event) => {
       if (this.state.muted) return;
       this._pendingMediaRequests.volume.push(event);
-      this.provider!._muted = true;
+      this.provider!.muted = true;
     }),
   );
 
@@ -296,7 +299,7 @@ export class MediaController {
     this._createMediaRequestHandler('muted', (event) => {
       if (!this.state.muted) return;
       this._pendingMediaRequests.volume.push(event);
-      this.provider!._muted = false;
+      this.provider!.muted = false;
     }),
   );
 
@@ -306,7 +309,7 @@ export class MediaController {
     this._createMediaRequestHandler('paused', (event) => {
       if (!this.state.paused) return;
       this._pendingMediaRequests.play.push(event);
-      this.provider!._paused = false;
+      this.provider!.paused = false;
     }),
   );
 
@@ -316,7 +319,7 @@ export class MediaController {
     this._createMediaRequestHandler('paused', (event) => {
       if (this.state.paused) return;
       this._pendingMediaRequests.pause.push(event);
-      this.provider!._paused = true;
+      this.provider!.paused = true;
     }),
   );
 
@@ -351,7 +354,7 @@ export class MediaController {
         time = this.state.duration;
       }
 
-      this.provider!._currentTime = time;
+      this.provider!.currentTime = time;
     }),
   );
 
@@ -361,7 +364,7 @@ export class MediaController {
     this._createMediaRequestHandler('volume', (event) => {
       if (this.state.volume === event.detail) return;
       this._pendingMediaRequests.volume.push(event);
-      this.provider!._volume = event.detail;
+      this.provider!.volume = event.detail;
     }),
   );
 
@@ -610,7 +613,7 @@ export class MediaController {
   }
 
   protected _handlePlay(event: MediaPlayEvent) {
-    if (this._isLooping || !this._provider?._paused) {
+    if (this._isLooping || !this._provider?.paused) {
       event.stopImmediatePropagation();
       return;
     }

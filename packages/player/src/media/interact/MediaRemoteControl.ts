@@ -6,11 +6,7 @@ import {
 } from '@vidstack/foundation';
 import { type ReactiveControllerHost } from 'lit';
 
-import type {
-  EnterFullscreenRequestEvent,
-  MediaFullscreenRequestTarget,
-  MediaRequestEvents,
-} from '../request.events';
+import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../request.events';
 
 /**
  * A simple facade for dispatching media requests to the nearest media controller.

@@ -250,9 +250,9 @@ export class MediaVisibilityElement extends LitElement {
     if (!this._provider) return;
 
     if (mediaAction === 'play') {
-      this._provider._paused = false;
+      this._provider.paused = false;
     } else if (mediaAction === 'unmute') {
-      this._provider._muted = false;
+      this._provider.muted = false;
     }
   }
 
@@ -260,9 +260,9 @@ export class MediaVisibilityElement extends LitElement {
     if (!this._provider) return;
 
     if (mediaAction === 'pause') {
-      this._provider._paused = true;
+      this._provider.paused = true;
     } else if (mediaAction === 'mute') {
-      this._provider._muted = true;
+      this._provider.muted = true;
     }
   }
 

@@ -40,7 +40,7 @@ it('should flush pending requests on start', async () => {
   q.queue('a', itemA);
   q.queue('b', itemB);
 
-  await q.start();
+  q.start();
 
   expect(itemA).toHaveBeenCalledOnce();
   expect(itemB).toHaveBeenCalledOnce();
@@ -49,7 +49,7 @@ it('should flush pending requests on start', async () => {
 it('should serve immediately once started', async () => {
   const q = new RequestQueue();
 
-  await q.start();
+  q.start();
 
   const itemA = vi.fn();
   const itemB = vi.fn();
@@ -64,8 +64,8 @@ it('should serve immediately once started', async () => {
 it('should not serve immediately once stopped', async () => {
   const q = new RequestQueue();
 
-  await q.start();
-  await q.stop();
+  q.start();
+  q.stop();
 
   const itemA = vi.fn();
   const itemB = vi.fn();

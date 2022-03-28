@@ -411,7 +411,7 @@ export class HlsElement extends VideoElement {
   protected _prevHlsEngineSrc = '';
 
   // Let `Html5MediaElement` know we're taking over ready events.
-  protected override _willAnotherEngineAttachSrc(): boolean {
+  protected override get _willAnotherEngineAttachSrc(): boolean {
     return this.isHlsStream && !this.shouldUseNativeHlsSupport;
   }
 

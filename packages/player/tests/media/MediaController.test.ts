@@ -44,10 +44,10 @@ describe('media provider', () => {
 describe('media requests', () => {
   it('should handle mute/unmute requests', async function () {
     const { provider } = await buildFixture();
-    const mutedSpy = vi.spyOn(provider, '_muted', 'set');
+    const mutedSpy = vi.spyOn(provider, 'muted', 'set');
     const remote = new MediaRemoteControl(provider);
 
-    await provider.mediaQueue.start();
+    provider.mediaQueue.start();
 
     expect(mutedSpy).not.toHaveBeenCalled();
 
@@ -61,10 +61,10 @@ describe('media requests', () => {
 
   it('should handle play/pause requests', async function () {
     const { provider } = await buildFixture();
-    const pausedSpy = vi.spyOn(provider, '_paused', 'set');
+    const pausedSpy = vi.spyOn(provider, 'paused', 'set');
     const remote = new MediaRemoteControl(provider);
 
-    await provider.mediaQueue.start();
+    provider.mediaQueue.start();
 
     expect(pausedSpy).not.toHaveBeenCalled();
 
@@ -79,10 +79,10 @@ describe('media requests', () => {
 
   it('should handle seeking/seek requests', async function () {
     const { provider } = await buildFixture();
-    const currentTimeSpy = vi.spyOn(provider, '_currentTime', 'set');
+    const currentTimeSpy = vi.spyOn(provider, 'currentTime', 'set');
     const remote = new MediaRemoteControl(provider);
 
-    await provider.mediaQueue.start();
+    provider.mediaQueue.start();
     provider._store.duration.set(300);
 
     expect(currentTimeSpy).not.toHaveBeenCalled();
@@ -97,10 +97,10 @@ describe('media requests', () => {
   it('should handle volume change request', async function () {
     const { provider } = await buildFixture();
 
-    const volumeSpy = vi.spyOn(provider, '_volume', 'set');
+    const volumeSpy = vi.spyOn(provider, 'volume', 'set');
     const remote = new MediaRemoteControl(provider);
 
-    await provider.mediaQueue.start();
+    provider.mediaQueue.start();
 
     expect(volumeSpy).not.toHaveBeenCalled();
 

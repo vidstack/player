@@ -51,7 +51,15 @@ export class FakeMediaProviderElement extends MediaProviderElement {
     return this._handleMediaReady({ duration: 0 });
   }
 
-  _setCurrentTime(time: number) {
+  protected _getPaused() {
+    return this.state.paused;
+  }
+
+  protected _getCurrentTime() {
+    return this.state.currentTime;
+  }
+
+  protected _setCurrentTime(time: number) {
     this.dispatchEvent(vdsEvent('vds-seeking', { detail: time }));
     this.dispatchEvent(
       vdsEvent('vds-time-update', {
@@ -64,7 +72,11 @@ export class FakeMediaProviderElement extends MediaProviderElement {
     this.dispatchEvent(vdsEvent('vds-seeked', { detail: time }));
   }
 
-  _setMuted(muted: boolean) {
+  protected _getMuted() {
+    return this.state.muted;
+  }
+
+  protected _setMuted(muted: boolean) {
     this.dispatchEvent(
       vdsEvent('vds-volume-change', {
         detail: {
@@ -75,7 +87,11 @@ export class FakeMediaProviderElement extends MediaProviderElement {
     );
   }
 
-  _setVolume(volume: number) {
+  protected _getVolume() {
+    return this.state.volume;
+  }
+
+  protected _setVolume(volume: number) {
     this.dispatchEvent(
       vdsEvent('vds-volume-change', {
         detail: {

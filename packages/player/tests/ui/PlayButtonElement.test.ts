@@ -50,7 +50,7 @@ it('should update paused state', async function () {
 it('should play', async function () {
   const { media, provider, button } = await buildFixture();
 
-  const pausedSpy = vi.spyOn(provider, '_paused', 'set');
+  const pausedSpy = vi.spyOn(provider, 'paused', 'set');
 
   media.controller._store.paused.set(true);
   await elementUpdated(button);
@@ -64,7 +64,7 @@ it('should play', async function () {
 it('should pause', async function () {
   const { media, provider, button } = await buildFixture();
 
-  const pausedSpy = vi.spyOn(provider, '_paused', 'set');
+  const pausedSpy = vi.spyOn(provider, 'paused', 'set');
 
   media.controller._store.paused.set(false);
   await elementUpdated(button);
