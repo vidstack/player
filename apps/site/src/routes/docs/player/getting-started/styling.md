@@ -4,61 +4,67 @@ description: Introduction to styling Vidstack Player.
 
 # Player Styling
 
-:::tip
-Remove the `controls` attribute we added in the install step if you're building a custom UI to
-avoid double controls (i.e., native and custom).
-:::
-
 All UI elements in the library are headless, meaning they contain no styling out of the box. It's
 up to you how they look, as they only provide some core functionality. For example,
 the `vds-play-button` element will dispatch play and pause requests when pressed, but other than
 that, it is completely blank.
 
-## Media UI
+## Media Attributes
 
-The player exposes media state as attributes and CSS variables on the `vds-media-ui` element:
+The player exposes media state as attributes and CSS variables on the `<vds-media>` element:
 
 ```html
-<vds-video-player src="...">
-  <vds-media-ui
-    media-paused
-    media-waiting
-    media-can-play
-    ...
-    style="--media-current-time: 500; --media-duration: 1000; ..."
-  >
-    <!-- ... -->
-  </vds-media-ui>
-</vds-video-player>
+<vds-media
+  media-paused
+  media-waiting
+  media-can-load
+  media-can-play
+  ...
+  style="--vds-media-current-time: 500; --vds-media-duration: 1000; ..."
+>
+  <!-- ... -->
+</vds-media>
 ```
 
 You can use the presence and absence of these attributes to style children of the
-`<vds-media-ui>` element with CSS. Here's a quick example where we add a controls container and
+`<vds-media>` element with CSS. Here's a quick example where we add a controls container and
 hide it based on some media state:
 
-```html:title=player.html
-<vds-media-ui>
-	<div class="controls">
-		<vds-play-button></vds-play-button>
-		<!-- ... -->
-	</div>
-</vds-media-ui>
+```html:title=player.html:copy-highlight{3-5}
+<vds-media>
+  <!-- ... -->
+  <div class="media-controls">
+    <!-- ... -->
+  </div>
+</vds-media>
 ```
 
-```css:title=player.css
-.controls {
+```css:title=player.css:copy
+.media-controls {
 	display: flex;
-	opacity: 1;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 	width: 100%;
+  min-height: 48px;
+	opacity: 1;
 	transition: opacity ease 300ms;
+  /* Position above media provider. */
+  z-index: 1;
+}
+
+/* Avoid double controls on iOS Safari. */
+vds-media[media-ui-hidden] .media-controls {
+  opacity: 0;
+  visibility: hidden;
 }
 
 /*
- * Hide controls if either media is idle (no user activity), or media is
- * not ready for playback.
+ * Hide controls if either user is idle, or media is not
+ * ready for playback.
  */
-[media-user-idle] > .controls,
-:not([media-can-play]) > .controls {
+vds-media[media-user-idle] .media-controls,
+vds-media:not([media-can-play]) .media-controls {
 	opacity: 0;
 }
 ```
@@ -66,11 +72,12 @@ hide it based on some media state:
 [`[attr]`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors) selects
 elements based on the presence or value of an attribute, and the [`:not()`](https://developer.mozilla.org/en-US/docs/Web/CSS/:not)
 pseudo-class represents elements that do _not_ match a list of selectors. We can combine these to
-create powerful selectors based on the media state being updated on the `vds-media-ui` element.
+create powerful selectors based on the media state being exposed and updated on the
+`<vds-media>` element.
 
 ## Media Attributes
 
-Here's a reference table that displays all the media attributes that are set on the `vds-media-ui`
+Here's a reference table that displays all the media attributes that are set on the `<vds-media>`
 element.
 
 <script>
@@ -81,7 +88,7 @@ import MediaAttrsTable from '$components/reference/MediaAttrsTable.md';
 
 ## Media CSS Variables
 
-Here's a reference table that displays all the media CSS variables that are set on the `vds-media-ui`
+Here's a reference table that displays all the media CSS variables that are set on the `<vds-media>`
 element.
 
 <script>

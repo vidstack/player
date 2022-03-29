@@ -621,7 +621,7 @@ export class MediaController {
   }
 
   protected _handlePlay(event: MediaPlayEvent) {
-    if (this._isLooping || !this._provider?.paused) {
+    if (this._isLooping || !this.state.paused) {
       event.stopImmediatePropagation();
       return;
     }

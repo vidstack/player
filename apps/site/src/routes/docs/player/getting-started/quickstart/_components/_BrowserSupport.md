@@ -5,7 +5,7 @@ We support at _minimum_ ~92.74% of users tracked on [caniuse](https://caniuse.co
 :::
 
 Ensure the following browser support table is suitable for your application. We've built the
-player for the modern web; thus, we try to avoid bloated polyfills and outdated environments as
+library for the modern web; thus, we try to avoid bloated polyfills and outdated environments as
 much as possible. At the moment, we only support browsers that fully implement
 the [Custom Elements V1](https://caniuse.com/custom-elementsv1).
 

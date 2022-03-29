@@ -22,7 +22,7 @@ import '@vidstack/player/define/dangerously-all.js';
 {:else}
 
 ```html:copy
-<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player/dist-cdn/define/dangerously-all.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist-cdn/define/dangerously-all.js"></script>
 ```
 
 {/if}
@@ -38,7 +38,7 @@ import '@vidstack/player/define/dangerously-all-ui.js';
 {:else}
 
 ```html:copy
-<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player/dist-cdn/define/dangerously-all-ui.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist-cdn/define/dangerously-all-ui.js"></script>
 ```
 
 {/if}

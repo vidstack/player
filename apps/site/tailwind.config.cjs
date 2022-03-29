@@ -111,6 +111,8 @@ function typography() {
   return (theme) => ({
     DEFAULT: {
       css: {
+        '--tw-prose-counters': 'black',
+        '--tw-prose-invert-counters': 'white',
         color: theme('colors.gray.soft'),
         fontSize: '18px',
         maxWidth: 'none',

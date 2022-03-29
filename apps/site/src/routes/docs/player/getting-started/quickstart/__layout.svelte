@@ -80,7 +80,7 @@
 <h1>Quickstart</h1>
 
 <p>
-  This section will get you up and running with the player. You'll find specific instructions below
+  This section will get you up and running with the library. You'll find specific instructions below
   depending on the type of installation method (NPM/CDN), framework (HTML/React), and provider
   (Audio/Video/HLS) you opt to use.
 </p>
