@@ -11,11 +11,7 @@ export const elementTagName = derived(page, ($page) => {
 });
 
 /** Auto-generate in the future by using doc tags in `@vidstack/player`. */
-export const EXPERIMENTAL_TAG_NAMES = new Set([
-  'vds-media-sync',
-  'vds-media-visibility',
-  'vds-gesture',
-]);
+export const EXPERIMENTAL_TAG_NAMES = new Set(['vds-media-visibility', 'vds-gesture']);
 
 export const isElementExperimental = derived(elementTagName, ($tagName) =>
   EXPERIMENTAL_TAG_NAMES.has($tagName),
