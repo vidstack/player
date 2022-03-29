@@ -8,12 +8,12 @@ controller.
 
 ```css:copy
 /* Hide pause text when media _is_ paused. */
-[media-paused] .pause {
+vds-media[paused] .pause {
 	display: none;
 }
 
 /* Hide play text when media _is not_ paused. */
-:not([media-paused]) .play {
+vds-media:not([paused]) .play {
 	display: none;
 }
 ```
@@ -50,11 +50,11 @@ vds-play-button > svg {
 	transition: opacity ease 150ms;
 }
 
-[media-paused] .pause-icon {
+vds-media[paused] .pause-icon {
 	opacity: 0;
 }
 
-:not([media-paused]) .play-icon {
+vds-media:not([paused]) .play-icon {
 	opacity: 0;
 }
 ```

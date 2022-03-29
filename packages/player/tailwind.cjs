@@ -20,17 +20,17 @@ const mediaAttrs = [
   'seeking',
   'started',
   'waiting',
-].map((attr) => `media-${attr}`);
+];
 
 const sliderAttrs = ['dragging', 'pointing', 'interactive'];
 
 const vidstackPlayerPlugin = plugin(function ({ addVariant }) {
   mediaAttrs.forEach((mediaAttr) => {
-    addVariant(mediaAttr, `*[${mediaAttr}] &`);
+    addVariant(`media-${mediaAttr}`, `vds-media[${mediaAttr}] &`);
   });
 
   sliderAttrs.forEach((sliderAttr) => {
-    addVariant(sliderAttr, `*[${sliderAttr}] &`);
+    addVariant(sliderAttr, `vds-media *[${sliderAttr}] &`);
   });
 });
 

@@ -5,24 +5,24 @@ some HTML, CSS, and [media attributes](../../../getting-started/styling.md#media
 
 The following media attributes can be useful when building a controls container:
 
-| Attribute                     | Use-Case                                                                    |
-| ----------------------------- | --------------------------------------------------------------------------- |
-| `media-autoplay-error:ignore` | Show controls when autoplay fails so the user can start playback manually.  |
-| `media-can-load:ignore`       | Show controls skeleton while media is loading.                              |
-| `media-can-play:ignore`       | Hide controls while media is not ready for playback.                        |
-| `media-can-idle:ignore`       | Hide controls while media is idle (i.e., user is not active).               |
-| `media-can-started:ignore`    | Hide controls after media has started (e.g., hide initial big play button). |
-| `media-can-fullscreen:ignore` | Show alternative controls for when media is in fullscreen.                  |
+| Attribute               | Use-Case                                                                    |
+| ----------------------- | --------------------------------------------------------------------------- |
+| `autoplay-error:ignore` | Show controls when autoplay fails so the user can start playback manually.  |
+| `can-load:ignore`       | Show controls skeleton while media is loading.                              |
+| `can-play:ignore`       | Hide controls while media is not ready for playback.                        |
+| `can-idle:ignore`       | Hide controls while media is idle (i.e., user is not active).               |
+| `can-started:ignore`    | Hide controls after media has started (e.g., hide initial big play button). |
+| `can-fullscreen:ignore` | Show alternative controls for when media is in fullscreen.                  |
 
 ```css:copy
 /* Hide controls while media is loading, or user is idle. */
-:not([media-can-play]) .controls,
-[media-user-idle] .controls {
+vds-media:not([can-play]) .controls,
+vds-media[user-idle] .controls {
 	opacity: 0;
 }
 
 /* Show controls if autoplay fails. */
-[media-autoplay-error] .controls {
+vds-media[autoplay-error] .controls {
 	opacity: 1;
 }
 ```
@@ -33,7 +33,7 @@ In the following example, we create a conventional three-tier (top/middle/bottom
 could put place social icons at the top, play button in the middle, and scrubber at the bottom. It's
 completely up to you!
 
-We're using the `media-user-idle:ignore` and `media-can-play:ignore` attributes in this example to
+We're using the `user-idle:ignore` and `can-play:ignore` attributes in this example to
 hide the controls if media is not ready for playback, or the user is idle.
 
 <slot name="styling" />
@@ -74,8 +74,8 @@ hide the controls if media is not ready for playback, or the user is idle.
 }
 
 /* Hide controls if media is not ready for playback, or user is idle. */
-[media-user-idle] .controls,
-:not([media-can-play]) .controls {
+vds-media[user-idle] .controls,
+vds-media:not([can-play]) .controls {
 	opacity: 0;
 	visibility: hidden;
 }

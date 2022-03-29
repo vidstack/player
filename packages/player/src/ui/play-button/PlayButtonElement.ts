@@ -6,9 +6,9 @@ import { ToggleButtonElement } from '../toggle-button';
 /**
  * A button for toggling the playback state (play/pause) of the current media.
  *
- * 💡 The following media attributes are applied:
+ * 💡 The following attributes are applied:
  *
- * - `media-paused`: Applied when media playback has paused.
+ * - `paused`: Applied when media playback has paused.
  *
  * @tagname vds-play-button
  * @slot - Used to pass content into the play toggle for showing play/pause states.
@@ -21,11 +21,11 @@ import { ToggleButtonElement } from '../toggle-button';
  * ```
  * @example
  * ```css
- * vds-play-button:not([media-paused]) .play {
+ * vds-play-button:not([paused]) .play {
  *   display: none;
  * }
  *
- * vds-play-button[media-paused] .pause {
+ * vds-play-button[paused] .pause {
  *   display: none;
  * }
  * ```
@@ -38,7 +38,7 @@ export class PlayButtonElement extends ToggleButtonElement {
 
     mediaStoreSubscription(this, 'paused', ($paused) => {
       this.pressed = !$paused;
-      setAttribute(this, 'media-paused', $paused);
+      setAttribute(this, 'paused', $paused);
     });
   }
 

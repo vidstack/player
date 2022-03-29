@@ -6,9 +6,9 @@ import { ToggleButtonElement } from '../toggle-button';
 /**
  * A button for toggling the muted state of the player.
  *
- * 💡 The following media attributes are applied:
+ * 💡 The following attributes are applied:
  *
- * - `media-muted`: Applied when media audio has been muted.
+ * - `muted`: Applied when media audio has been muted.
  *
  * @tagname vds-mute-button
  * @slot - Used to pass content into the mute toggle for showing mute/unmute states.
@@ -21,11 +21,11 @@ import { ToggleButtonElement } from '../toggle-button';
  * ```
  * @example
  * ```css
- * vds-mute-button[media-muted] .mute {
+ * vds-mute-button[muted] .mute {
  *   display: none;
  * }
  *
- * vds-mute-button:not([media-muted]) .unmute {
+ * vds-mute-button:not([muted]) .unmute {
  *   display: none;
  * }
  * ```
@@ -38,7 +38,7 @@ export class MuteButtonElement extends ToggleButtonElement {
 
     mediaStoreSubscription(this, 'muted', ($muted) => {
       this.pressed = $muted;
-      setAttribute(this, 'media-muted', $muted);
+      setAttribute(this, 'muted', $muted);
     });
   }
 

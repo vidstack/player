@@ -37,14 +37,14 @@ it('should update paused state', async function () {
 
   expect(button.pressed).to.be.false;
   expect(button.getAttribute('aria-pressed')).to.equal('false');
-  expect(button.hasAttribute('media-paused')).to.be.true;
+  expect(button.hasAttribute('paused')).to.be.true;
 
   media.controller._store.paused.set(false);
   await elementUpdated(button);
 
   expect(button.pressed).to.be.true;
   expect(button.getAttribute('aria-pressed')).to.equal('true');
-  expect(button.hasAttribute('media-paused')).to.be.false;
+  expect(button.hasAttribute('paused')).to.be.false;
 });
 
 it('should play', async function () {
