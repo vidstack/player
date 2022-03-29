@@ -156,6 +156,7 @@ export class Html5MediaElement extends MediaProviderElement {
     setAttribute(mediaEl, 'controls', this.controls);
 
     this._attachMediaEventListeners();
+    this._observePlaysinline();
     this._observeMediaSources();
 
     if (this.canLoadPoster && this.poster.length > 0) {
@@ -208,6 +209,21 @@ export class Html5MediaElement extends MediaProviderElement {
       this._ignoreNextAbortEvent = false;
       this._ignoreNextEmptiedEvent = false;
     }, 0);
+  }
+
+  protected _observePlaysinline() {
+    const onPlaysinlineChange = () => {
+      this.dispatchEvent(
+        vdsEvent('vds-playsinline-change', {
+          detail: this.mediaElement!.hasAttribute('playsinline'),
+        }),
+      );
+    };
+
+    onPlaysinlineChange();
+    const observer = new MutationObserver(onPlaysinlineChange);
+    observer.observe(this.mediaElement!, { attributeFilter: ['playsinline'] });
+    this._mediaElementDisposal.add(() => observer.disconnect());
   }
 
   protected _observeMediaSources() {
