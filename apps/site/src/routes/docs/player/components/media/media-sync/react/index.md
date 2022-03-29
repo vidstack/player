@@ -34,13 +34,13 @@ import Docs from '../_Docs.md';
 ```
 
 ```jsx:copy:slot=sync-volume
-<MediaSync sharedVolume>
+<MediaSync syncVolume>
   {/* ... */}
 </MediaSync>
 ```
 
 ```jsx:slot=volume-storage
-<MediaSync sharedVolume volumeStorageKey="my-storage-key">
+<MediaSync syncVolume volumeStorageKey="my-storage-key">
   {/* ... */}
 </MediaSync>
 ```

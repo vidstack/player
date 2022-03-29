@@ -20,7 +20,7 @@ will be paused if a new provider begins to play:
 
 ### Sync Volume
 
-The `shared-volume` <AttrWord /> will synchronize the `muted` and `volume`
+The `sync-volume` <AttrWord /> will synchronize the `muted` and `volume`
 state between all providers that are registered with `<vds-media-sync>`:
 
 <slot name="sync-volume" />
