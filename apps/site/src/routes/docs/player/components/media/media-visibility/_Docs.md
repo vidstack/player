@@ -9,11 +9,6 @@ changing tabs, or scrolling the provider in and out of view.
 
 <slot name="usage" />
 
-Each provider must be a child of `<vds-media-visibility>`, so they can register with the component and
-be managed together:
-
-<slot name="usage-multiple" />
-
 ## Viewport Visibility
 
 You can perform actions on a provider as media enters or exits the browser's

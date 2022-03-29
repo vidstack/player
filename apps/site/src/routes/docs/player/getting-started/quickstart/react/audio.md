@@ -23,10 +23,7 @@ import { Audio, Media } from '@vidstack/player/react';
 
 ```jsx:copy
 <Media>
-  <Audio
-    loading="lazy"
-    preload="metadata"
-  >
+  <Audio>
     <audio
       controls
       src="https://media-files.vidstack.io/audio.mp3"

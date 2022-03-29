@@ -17,7 +17,7 @@ import { Html5MediaElement } from '../html5';
  * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
  * @example
  * ```html
- * <vds-audio preload="metadata">
+ * <vds-audio>
  *   <audio
  *     controls
  *     preload="none"
@@ -27,14 +27,7 @@ import { Html5MediaElement } from '../html5';
  * ```
  * @example
  * ```html
- * <vds-audio preload="metadata">
- *   <audio controls preload="none">
- *     <source src="https://media-files.vidstack.io/audio.mp3" type="audio/mp3" />
- *   </audio>
- * </vds-audio>
- * @example
- * ```html
- * <vds-audio loading="lazy" preload="metadata">
+ * <vds-audio>
  *   <audio controls preload="none">
  *     <source src="https://media-files.vidstack.io/audio.mp3" type="audio/mp3" />
  *   </audio>

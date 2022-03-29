@@ -106,7 +106,7 @@ metadata to the event `detail`, and contain rich information such as the [reques
 that triggered it or the origin event that kicked it off.
 
 ```js
-const provider = document.createElement('vds-video');
+const provider = document.querySelector('vds-video');
 
 provider.addEventListener('vds-loaded-metadata', (event) => {
   // Original media event (`loadedmetadata`) is still available.
@@ -130,8 +130,8 @@ trigger a `play()` call. The provider should respond with a `vds-play` event to 
 request was satisfied.
 
 ```js
-const media = document.createElement('vds-media');
-const provider = document.createElement('vds-video');
+const media = document.querySelector('vds-media');
+const provider = document.querySelector('vds-video');
 
 media.addEventListener('vds-play–request', () => {
   console.log('Play request was made.');
@@ -155,7 +155,7 @@ to the **origin event**, which is the event that started the chain.
 ```js
 import { hasTriggerEvent } from '@vidstack/player';
 
-const provider = document.createElement('vds-video');
+const provider = document.querySelector('vds-video');
 
 provider.addEventListener('vds-play', (event) => {
   // Was this triggered by an actual person?
@@ -190,7 +190,7 @@ Tracking media state via events:
 :::
 
 ```js
-const provider = document.createElement('vds-video');
+const provider = document.querySelector('vds-video');
 
 let paused = true;
 
@@ -208,7 +208,7 @@ Tracking media state via store subscription:
 :::
 
 ```js
-const media = document.createElement('vds-media');
+const media = document.querySelector('vds-media');
 
 const unsubscribe = media.store.paused.subscribe(($paused) => {
   console.log('Is Paused:', $paused);

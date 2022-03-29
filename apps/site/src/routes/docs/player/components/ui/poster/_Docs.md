@@ -26,22 +26,6 @@ vds-poster {
 }
 ```
 
-### Loading Strategy
-
-You can specify a loading strategy if desired (`eager` or `lazy`); otherwise, it'll fall back to
-the strategy defined on the media player.
-
-- `eager` will load the poster immediately.
-- `lazy` will load the poster once it has entered the browser's viewport.
-
-<slot name="loading-strategy" />
-
-:::no
-Declaring a loading strategy on both the media player and poster is unnecessary:
-:::
-
-<slot name="double-loading-strategy" />
-
 ### Loading Attributes
 
 The following loading attributes are applied to the `vds-poster:ignore` element:

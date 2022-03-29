@@ -23,11 +23,13 @@ center of the player:
 <slot name="styling" />
 
 ```css:copy
-.buffering-container {
-	display: flex;
+.media-buffering-container {
 	position: absolute;
 	top: 0;
 	left: 0;
+	display: flex;
+  align-items: center;
+  justify-content: center;
 	width: 100%;
 	height: 100%;
 	/* prevent blocking lower elements (e.g., gestures). */
@@ -36,27 +38,27 @@ center of the player:
 	z-index: 1;
 }
 
-.buffering-icon {
-	width: 64px;
-	height: 64px;
+.media-buffering-icon {
+	width: 96px;
+	height: 96px;
 	color: white;
 	opacity: 0;
 	transition: opacity 200ms ease;
 }
 
-.buffering-track {
+.media-buffering-track {
 	opacity: 0.25;
 }
 
-.buffering-track-fill {
+.media-buffering-track-fill {
 	opacity: 0.75;
 	stroke-dasharray: 100;
 	stroke-dashoffset: 50;
 }
 
 /* Show buffering indicator while media is not ready, or buffering. */
-vds-media:not([can-play]) .buffering-icon,
-vds-media[waiting] .buffering-icon {
+vds-media:not([can-play]) .media-buffering-icon,
+vds-media[waiting] .media-buffering-icon {
 	opacity: 1;
 	animation: spin 1s linear infinite;
 }

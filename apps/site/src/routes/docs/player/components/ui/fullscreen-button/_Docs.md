@@ -15,12 +15,12 @@ event to the media controller.
 
 ```css:copy
 /* Hide enter fullscreen text when media _is_ fullscreen. */
-vds-media[fullscreen] .enter-fs {
+vds-media[fullscreen] .media-enter-fs {
 	display: none;
 }
 
 /* Hide exit fullscreen text when media _is not_ fullscreen. */
-vds-media:not([fullscreen]) .exit-fs {
+vds-media:not([fullscreen]) .media-exit-fs {
 	display: none;
 }
 ```
@@ -52,11 +52,11 @@ vds-fullscreen-button > svg {
 	transition: opacity ease 150ms;
 }
 
-vds-media[fullscreen] .enter-fs-icon {
+vds-media[fullscreen] .media-enter-fs-icon {
 	opacity: 0;
 }
 
-vds-media:not([fullscreen]) .exit-fs-icon {
+vds-media:not([fullscreen]) .media-exit-fs-icon {
 	opacity: 0;
 }
 ```

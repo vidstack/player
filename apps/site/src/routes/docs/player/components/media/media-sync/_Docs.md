@@ -5,7 +5,7 @@ ensuring they're in sync (i.e., same state).
 
 <slot name="usage" />
 
-Each provider must be a child of `<vds-media-sync>`, so they can register with the component and
+Each provider must be a descendant of `<vds-media-sync>`, so they can register with the component and
 be managed together:
 
 <slot name="usage-multiple" />

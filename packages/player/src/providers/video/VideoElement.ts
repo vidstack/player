@@ -20,10 +20,7 @@ import { VideoPresentationController } from './presentation';
  * @events ./presentation/events.ts
  * @example
  * ```html
- * <vds-video
- *   preload="metadata"
- *   poster="https://media-files.vidstack.io/poster.png"
- * >
+ * <vds-video poster="https://media-files.vidstack.io/poster.png">
  *   <video
  *     controls
  *     preload="none"
@@ -34,24 +31,7 @@ import { VideoPresentationController } from './presentation';
  * ```
  * @example
  * ```html
- * <vds-video
- *   loading="lazy"
- *   preload="metadata"
- *   poster="https://media-files.vidstack.io/poster.png"
- * >
- *   <video
- *     preload="none"
- *     src="https://media-files.vidstack.io/720p.mp4"
- *     poster="https://media-files.vidstack.io/poster-seo.png"
- *   ></video>
- * </vds-video>
- * ```
- * @example
- * ```html
- * <vds-video
- *   preload="metadata"
- *   poster="https://media-files.vidstack.io/poster.png"
- * >
+ * <vds-video poster="https://media-files.vidstack.io/poster.png">
  *   <video
  *     controls
  *     preload="none"

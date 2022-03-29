@@ -8,25 +8,12 @@ npm i hls.js
 
 ## Usage
 
-:::info
-The HLS provider extends the API of the native `<video>` element so you can replace
-it with `<vds-hls>` and it'll just work! Refer to [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video)
-for more information about the native `<video>` element.
-:::
-
 Embeds streamable video content into documents using the native `<video>` element, and streams media using
 the [HTTP Live Streaming (HLS)](https://en.wikipedia.org/wiki/HTTP_Live_Streaming) protocol.
 HLS streaming is [supported natively](https://caniuse.com/?search=hls) in some browsers (e.g., iOS Safari),
 otherwise, we fallback to using [`hls.js`](https://github.com/video-dev/hls.js).
 
 <slot name="usage" />
-
-## Player
-
-The `<vds-hls-player>` component is a light extension on top of `<vds-hls>` to enable a custom
-player UI to be built. Thus, the entire HLS provider's API is available when interacting with it.
-
-<slot name="player" />
 
 ## Loading `hls.js`
 

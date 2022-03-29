@@ -65,10 +65,7 @@ const HLS_CDN_SRC_PROD = `${HLS_CDN_SRC_BASE}.min.js` as const;
  * @events ./events.ts
  * @example
  * ```html
- * <vds-hls
- *  preload="metadata"
- *  poster="https://media-files.vidstack.io/poster.png"
- * >
+ * <vds-hls poster="https://media-files.vidstack.io/poster.png">
  *   <video
  *     controls
  *     preload="none"
@@ -79,25 +76,7 @@ const HLS_CDN_SRC_PROD = `${HLS_CDN_SRC_BASE}.min.js` as const;
  * ```
  * @example
  * ```html
- * <vds-hls
- *   loading="lazy"
- *   preload="metadata"
- *   poster="https://media-files.vidstack.io/poster.png"
- * >
- *   <video
- *     controls
- *     preload="none"
- *     src="https://media-files.vidstack.io/hls/index.m3u8"
- *     poster="https://media-files.vidstack.io/poster-seo.png"
- *   ></video>
- * </vds-hls>
- * ```
- * @example
- * ```html
- * <vds-hls
- *   preload="metadata"
- *   poster="https://media-files.vidstack.io/poster.png"
- * >
+ * <vds-hls poster="https://media-files.vidstack.io/poster.png">
  *   <video
  *     controls
  *     preload="none"

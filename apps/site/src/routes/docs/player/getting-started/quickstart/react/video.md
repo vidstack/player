@@ -23,11 +23,7 @@ import { Media, Video } from '@vidstack/player/react';
 
 ```jsx:copy
 <Media>
-  <Video
-    loading="lazy"
-    poster="https://media-files.vidstack.io/poster.png"
-    preload="metadata"
-  >
+  <Video poster="https://media-files.vidstack.io/poster.png">
     <video
       controls
 	    src="https://media-files.vidstack.io/720p.mp4"

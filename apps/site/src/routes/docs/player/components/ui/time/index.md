@@ -4,12 +4,8 @@ import Docs from './_Docs.md';
 
 <Docs>
 
-```html:copy-highlight:slot=usage{3}
-<vds-video-player>
-	<vds-media-ui>
-		<vds-time type="current"></vds-time>
-	</vds-media-ui>
-</vds-video-player>
+```html:copy:slot=usage
+<vds-time type="current"></vds-time>
 ```
 
 ```html:copy:slot=remaining-time

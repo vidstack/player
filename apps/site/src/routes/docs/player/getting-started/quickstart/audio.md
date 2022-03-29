@@ -24,10 +24,7 @@ import '@vidstack/player/define/vds-audio.js';
 
 ```html:copy
 <vds-media>
-  <vds-audio
-    loading="lazy"
-    preload="metadata"
-  >
+  <vds-audio>
     <audio
       controls
 	    src="https://media-files.vidstack.io/audio.mp3"

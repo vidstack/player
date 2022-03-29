@@ -27,24 +27,20 @@ module.exports = {
 
 ## Usage
 
-The player exposes media state on the `vds-media-ui` element. For example:
+The `<vds-media>` element exposes media state as HTML attributes and CSS properties like so:
 
 ```html
-<vds-video-player src="...">
-  <vds-media-ui
-    paused
-    waiting
-    can-play
-    ...
-    style="--vds-current-time: 500; --vds-duration: 1000; ..."
-  >
-    <!-- ... -->
-  </vds-media-ui>
-</vds-video-player>
+<vds-media
+  paused
+  waiting
+  seeking
+  can-play
+  ...
+  style="--vds-current-time: 500; --vds-duration: 1000; ..."
+>
+  <!-- ... -->
+</vds-media>
 ```
-
-Media state is exposed as attributes and CSS properties on `vds-media-ui` so you can style your
-player elements without being forced to write JS.
 
 :::no
 If we were to write vanilla CSS to show and hide icons inside a play button, it might look
@@ -52,13 +48,13 @@ something like this:
 :::
 
 ```css
-.media-play-icon,
-vds-media[paused] .media-pause-icon {
+.play-icon,
+vds-media[paused] .pause-icon {
   opacity: 0;
 }
 
-.media-pause-icon,
-vds-media[paused] .media-play-icon {
+.pause-icon,
+vds-media[paused] .play-icon {
   opacity: 100;
 }
 ```
@@ -67,30 +63,32 @@ vds-media[paused] .media-play-icon {
 Using the Tailwind plugin, we could rewrite it like so:
 :::
 
-```html{4-7}
-<vds-video-player src="...">
-	<vds-media-ui>
-		<vds-play-button>
-			<!-- Pause Icon. -->
-			<svg class="media-paused:opacity-0 opacity-100"></svg>
-			<!-- Play Icon. -->
-			<svg class="media-paused:opacity-100 opacity-0"></svg>
-		</vds-play-button>
-	</vds-media-ui>
-</vds-video-player>
+```html{7,9}
+<vds-media>
+  <!-- ... -->
+
+  <div class="media-controls">
+    <vds-play-button>
+      <!-- Pause Icon. -->
+      <svg class="opacity-100 media-paused:opacity-0"></svg>
+      <!-- Play Icon. -->
+      <svg class="opacity-0 media-paused:opacity-100"></svg>
+    </vds-play-button>
+  </div>
+</vds-media>
 ```
 
-Isn't that so much easier to comprehend? Well that's basically the plugin in a nutshell,
+Isn't that so much easier to comprehend? That's basically the plugin in a nutshell,
 we'll leave the rest to your imagination. In the next sections, you'll find out more about
 each of the variants and CSS variables available when using our plugin.
 
 ## Media Variants
 
 <script>
-import MediaAttrsTable from '$components/reference/MediaAttrsTable.md';
+import MediaVariantsTable from '$components/reference/MediaVariantsTable.md';
 </script>
 
-<MediaAttrsTable title="Variant" />
+<MediaVariantsTable />
 
 ## Media CSS Variables
 
@@ -115,7 +113,7 @@ we change the fill background color.
     class="
 			media-waiting:bg-sky-500 absolute top-0 left-0 h-full w-full
 			origin-left
-			scale-x-[calc(var(--vds-media-current-time)/var(--vds-media-duration))]
+			scale-x-[calc(var(--vds-current-time)/var(--vds-duration))]
 			transform bg-gray-400 will-change-transform
 		"
   ></div>

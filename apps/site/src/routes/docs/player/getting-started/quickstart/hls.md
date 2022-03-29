@@ -24,11 +24,7 @@ import '@vidstack/player/define/vds-hls.js';
 
 ```html:copy
 <vds-media>
-  <vds-hls
-    loading="lazy"
-    poster="https://media-files.vidstack.io/poster.png"
-    preload="metadata"
-  >
+  <vds-hls poster="https://media-files.vidstack.io/poster.png">
     <video
       controls
 	    src="https://media-files.vidstack.io/hls/index.m3u8"

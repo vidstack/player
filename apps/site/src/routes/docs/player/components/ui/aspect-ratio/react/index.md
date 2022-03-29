@@ -11,9 +11,9 @@ import Docs from '../_Docs.md';
 	maxHeight="100vh"
 >
 	{/* Must be direct child. */}
-	<VideoPlayer>
+	<Video>
 		{/* ... */}
-	</VideoPlayer>
+	</Video>
 </AspectRatio>
 ```
 

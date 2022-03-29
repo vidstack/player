@@ -12,20 +12,10 @@ import Docs from './_Docs.md';
 
 ```html:copy:slot=usage
 <vds-media-visibility>
-	<!-- Does not have to be a direct child -->
-	<vds-video-player>
+	<!-- Does not have to be a direct child. -->
+	<vds-video>
 		<!-- .... -->
-	</vds-video-player>
-</vds-media-visibility>
-```
-
-```html:copy:slot=usage-multiple
-<vds-media-visibility>
-	<vds-video-player />
-</vds-media-visibility>
-
-<vds-media-visibility>
-	<vds-video-player />
+	</vds-video>
 </vds-media-visibility>
 ```
 
@@ -39,9 +29,9 @@ import Docs from './_Docs.md';
 ```
 
 ```js:copy-highlight:slot=viewport-visibility-change{3-8}
-const element = document.querySelector('vds-media-visibility');
+const mediaVisibility = document.querySelector('vds-media-visibility');
 
-element.addEventListener('vds-media-visibility-change', (event) => {
+mediaVisibility.addEventListener('vds-media-visibility-change', (event) => {
 	const { viewport } = event.detail;
 	if (viewport.isIntersecting) {
 		// ...
@@ -65,9 +55,9 @@ element.addEventListener('vds-media-visibility-change', (event) => {
 ```
 
 ```js:copy-highlight:slot=page-visibility-change{3-11}
-const element = document.querySelector('vds-media-visibility');
+const mediaVisibility = document.querySelector('vds-media-visibility');
 
-element.addEventListener('vds-media-visibility-change', (event) => {
+mediaVisibility.addEventListener('vds-media-visibility-change', (event) => {
 	const { page } = event.detail;
 	// state can be: 'active' | 'passive' | 'hidden'
 	// visibility can be: 'visible' | 'hidden'

@@ -5,28 +5,14 @@ import Docs from '../_Docs.md'
 <Docs>
 
 ```jsx:copy:slot=usage
-<Hls
-	controls
-	width="1280"
-	height="720"
-	loading="lazy"
-	src="https://media-files.vidstack.io/hls/index.m3u8"
-	poster="https://media-files.vidstack.io/poster.png"
-/>
-```
-
-```jsx:copy:slot=player
-<HlsPlayer
-	width="1280"
-	height="720"
-	loading="lazy"
-	src="https://media-files.vidstack.io/hls/index.m3u8"
-	poster="https://media-files.vidstack.io/poster.png"
->
-	<MediaUi slot="ui">
-		<!-- ... -->
-	</MediaUi>
-</HlsPlayer>
+<Hls poster="https://media-files.vidstack.io/poster.png">
+  <video
+	  controls
+    preload="none"
+  	src="https://media-files.vidstack.io/hls/index.m3u8"
+	  poster="https://media-files.vidstack.io/poster-seo.png"
+  ></video>
+</Hls>
 ```
 
 ```jsx:slot=loading-hls
@@ -61,7 +47,7 @@ import Hls from 'hls.js';
 ```
 
 ```js:slot=hls-engine
-const hlsjs = hlsProviderRef.hlsEngine;
+const hlsjs = providerRef.hlsEngine;
 ```
 
 ```jsx:copy-highlight:slot=hls-engine-events{13-14}
@@ -76,10 +62,12 @@ function Example() {
 	}
 
 	return (
-		<Hls
-			onHlsInstance={onHlsInstance}
-			onHlsDestroying={onHlsDestroy}
-		/>
+    <Hls
+      onHlsInstance={onHlsInstance}
+      onHlsDestroying={onHlsDestroy}
+    >
+      {/* ... */}
+    </Hls>
 	)
 }
 ```

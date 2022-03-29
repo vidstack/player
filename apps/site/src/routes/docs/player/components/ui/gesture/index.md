@@ -4,17 +4,19 @@ import Docs from './_Docs.md';
 
 <Docs>
 
-```html:copy-highlight:slot=usage{3-8}
-<vds-video-player>
-	<vds-media-ui>
-		<vds-gesture
-			type="click"
-			repeat="0"
-			action="toggle:paused"
-			priority="1"
-		></vds-gesture>
-	</vds-media-ui>
-</vds-video-player>
+```html:copy-highlight:slot=usage{6-11}
+<vds-media>
+	<vds-video>
+    <!-- ... -->
+	</vds-video>
+
+  <vds-gesture
+    type="click"
+    repeat="0"
+    action="toggle:paused"
+    priority="1"
+  ></vds-gesture>
+</vds-media>
 ```
 
 ```html:slot=repeat

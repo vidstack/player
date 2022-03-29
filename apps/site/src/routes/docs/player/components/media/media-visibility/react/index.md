@@ -12,20 +12,10 @@ import Docs from '../_Docs.md';
 
 ```jsx:copy:slot=usage
 <MediaVisibility>
-	<!-- Does not have to be a direct child -->
-	<VideoPlayer>
-		<!-- .... -->
-	</VideoPlayer>
-</MediaVisibility>
-```
-
-```jsx:copy:slot=usage-multiple
-<MediaVisibility>
-	<VideoPlayer />
-</MediaVisibility>
-
-<MediaVisibility>
-	<VideoPlayer />
+  {/* Does not have to be a direct child. */}
+	<Video>
+    {/* ... */}
+	</Video>
 </MediaVisibility>
 ```
 

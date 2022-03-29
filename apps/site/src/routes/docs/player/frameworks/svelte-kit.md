@@ -15,29 +15,31 @@ our components so they're only loaded client-side like so:
 
 ```svelte:title=Player.svelte
 <script>
-  import '@vidstack/player/define/vds-video-player.js';
-  import '@vidstack/player/define/vds-play-button.js';
+  import '@vidstack/player/define/vds-media.js';
+  import '@vidstack/player/define/vds-video.js';
 
   export let src;
+  export let poster;
 </script>
 
-<vds-video-player {src}>
-  <vds-media-ui>
-		<vds-play-button />
-	</vds-media-ui>
-</vds-video-player>
+<vds-media>
+  <vds-video {poster}>
+    <video {src} controls preload="none" />
+  </vds-video>
+</vds-media>
 ```
 
 ```svelte:title=LazyPlayer.svelte:copy
 <script>
   export let src;
+  export let poster;
 </script>
 
 {#await import('./Player.svelte')}
   <!-- Render video if JavaScript is disabled. -->
-  <video {src} />
+  <video {src} {poster} controls preload="none" />
 {:then Player}
-  <svelte:component {src} this={Player.default} />
+  <svelte:component {src} {poster} this={Player.default} />
 {/await}
 ```
 
@@ -46,5 +48,5 @@ our components so they're only loaded client-side like so:
   import LazyPlayer from './LazyPlayer.svelte';
 </script>
 
-<LazyPlayer src="..." />
+<LazyPlayer src="..." poster="..." />
 ```
