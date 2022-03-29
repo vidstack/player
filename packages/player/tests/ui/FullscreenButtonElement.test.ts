@@ -49,14 +49,14 @@ it('should update fullscreen state', async () => {
 
   expect(button.pressed).to.be.true;
   expect(button.getAttribute('aria-pressed')).to.equal('true');
-  expect(button.hasAttribute('media-fullscreen')).to.be.true;
+  expect(button.hasAttribute('fullscreen')).to.be.true;
 
   media.controller._store.fullscreen.set(false);
   await elementUpdated(button);
 
   expect(button.pressed).to.be.false;
   expect(button.getAttribute('aria-pressed')).to.equal('false');
-  expect(button.hasAttribute('media-fullscreen')).to.be.false;
+  expect(button.hasAttribute('fullscreen')).to.be.false;
 });
 
 it('should enter fullscreen', async function () {

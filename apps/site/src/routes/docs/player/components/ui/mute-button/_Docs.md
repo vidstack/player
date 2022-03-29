@@ -8,12 +8,12 @@ controller.
 
 ```css:copy
 /* Hide mute text when media _is_ muted. */
-[media-muted] .mute {
+vds-media[muted] .mute {
 	display: none;
 }
 
 /* Hide unmute text when media _is not_ muted. */
-:not([media-muted]) .unmute {
+vds-media:not([muted]) .unmute {
 	display: none;
 }
 ```
@@ -45,11 +45,11 @@ vds-mute-button > svg {
 	transition: opacity ease 150ms;
 }
 
-[media-muted] .mute-icon {
+vds-media[muted] .mute-icon {
 	opacity: 0;
 }
 
-:not([media-muted]) .unmute-icon {
+vds-media:not([muted]) .unmute-icon {
 	opacity: 0;
 }
 ```

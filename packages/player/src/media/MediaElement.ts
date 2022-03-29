@@ -108,7 +108,7 @@ export class MediaElement extends LitElement {
   // -------------------------------------------------------------------------------------------
 
   protected override update(changedProperties: PropertyValues) {
-    setAttribute(this, 'media-ui-hidden', this._shouldHideMediaUI());
+    setAttribute(this, 'hide-ui', this._shouldHideMediaUI());
     super.update(changedProperties);
   }
 

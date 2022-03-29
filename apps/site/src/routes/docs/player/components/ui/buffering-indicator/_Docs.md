@@ -3,14 +3,14 @@
 We don't provide a buffering indicator component out of the box because you can easily create one with
 some HTML, CSS, and [media attributes](../../../getting-started/styling.md#media-attributes).
 
-The `media-waiting:ignore` attribute can be used to show the indicator while media is buffering.
-Optionally, the `media-can-play:ignore` attribute could also be used to display the indicator while
+The `waiting:ignore` attribute can be used to show the indicator while media is buffering.
+Optionally, the `can-play:ignore` attribute could also be used to display the indicator while
 media is initially loading.
 
 ```css:copy
 /* Show buffering indicator while media is not ready, or buffering. */
-:not([media-can-play]) .buffering-icon,
-[media-waiting] .buffering-icon {
+vds-media:not([can-play]) .buffering-icon,
+vds-media[waiting] .buffering-icon {
 	opacity: 1;
 }
 ```
@@ -55,8 +55,8 @@ center of the player:
 }
 
 /* Show buffering indicator while media is not ready, or buffering. */
-:not([media-can-play]) .buffering-icon,
-[media-waiting] .buffering-icon {
+vds-media:not([can-play]) .buffering-icon,
+vds-media[waiting] .buffering-icon {
 	opacity: 1;
 	animation: spin 1s linear infinite;
 }

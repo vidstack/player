@@ -32,11 +32,11 @@ The player exposes media state on the `vds-media-ui` element. For example:
 ```html
 <vds-video-player src="...">
   <vds-media-ui
-    media-paused
-    media-waiting
-    media-can-play
+    paused
+    waiting
+    can-play
     ...
-    style="--vds-media-current-time: 500; --vds-media-duration: 1000; ..."
+    style="--vds-current-time: 500; --vds-duration: 1000; ..."
   >
     <!-- ... -->
   </vds-media-ui>
@@ -53,12 +53,12 @@ something like this:
 
 ```css
 .media-play-icon,
-[media-paused] .media-pause-icon {
+vds-media[paused] .media-pause-icon {
   opacity: 0;
 }
 
 .media-pause-icon,
-[media-paused] .media-play-icon {
+vds-media[paused] .media-play-icon {
   opacity: 100;
 }
 ```

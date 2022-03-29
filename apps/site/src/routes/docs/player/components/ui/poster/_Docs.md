@@ -115,13 +115,13 @@ vds-poster[img-error] {
 }
 
 /* Show when media is ready. */
-[media-can-play] .big-play-button-container {
+vds-media[can-play] .big-play-button-container {
 	opacity: 1;
 }
 
 /* Hide when playback starts. */
-[media-started] vds-poster,
-[media-started] .big-play-button-container {
+vds-media[started] vds-poster,
+vds-media[started] .big-play-button-container {
 	opacity: 0;
 	pointer-events: none;
 }

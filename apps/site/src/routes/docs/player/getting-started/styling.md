@@ -15,12 +15,13 @@ The player exposes media state as attributes and CSS variables on the `<vds-medi
 
 ```html
 <vds-media
-  media-paused
-  media-waiting
-  media-can-load
-  media-can-play
+  paused
+  seeking
+  waiting
+  can-load
+  can-play
   ...
-  style="--vds-media-current-time: 500; --vds-media-duration: 1000; ..."
+  style="--vds-current-time: 500; --vds-duration: 1000; ..."
 >
   <!-- ... -->
 </vds-media>
@@ -54,7 +55,7 @@ hide it based on some media state:
 }
 
 /* Avoid double controls on iOS Safari. */
-vds-media[media-ui-hidden] .media-controls {
+vds-media[hide-ui] .media-controls {
   opacity: 0;
   visibility: hidden;
 }
@@ -63,8 +64,8 @@ vds-media[media-ui-hidden] .media-controls {
  * Hide controls if either user is idle, or media is not
  * ready for playback.
  */
-vds-media[media-user-idle] .media-controls,
-vds-media:not([media-can-play]) .media-controls {
+vds-media[user-idle] .media-controls,
+vds-media:not([can-play]) .media-controls {
 	opacity: 0;
 }
 ```

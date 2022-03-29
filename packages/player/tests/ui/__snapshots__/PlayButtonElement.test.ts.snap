@@ -4,7 +4,7 @@ exports[`should render light DOM 1`] = `
 <vds-play-button
   aria-label="Play"
   aria-pressed="false"
-  media-paused=""
+  paused=""
   role="button"
   tabindex="0"
 >

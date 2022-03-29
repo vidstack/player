@@ -49,8 +49,7 @@ export abstract class MediaStyleController {
   }
 
   protected _getMediaAttrName(propName: string) {
-    // Replacing `media` because we don't want stuff like `media-media-type`.
-    return `media-${camelToKebabCase(propName.replace('media', ''))}`;
+    return camelToKebabCase(propName);
   }
 
   protected abstract _handleValueChange(propName: string, attrName: string, value: unknown);
