@@ -21,6 +21,8 @@ import { mediaStoreSubscription } from './store';
 import { bindMediaPropsToAttrs, bindMediaPropsToCssProps } from './style';
 import { ViewType } from './ViewType';
 
+export const mediaDiscoveryId = Symbol('@vidstack/media-discovery');
+
 /**
  * Fired when `<vds-media>` connects to the DOM.
  *
@@ -95,7 +97,7 @@ export class MediaElement extends LitElement {
   constructor() {
     super();
 
-    discoverable(this, 'vds-media-connect');
+    discoverable(this, 'vds-media-connect', { register: mediaDiscoveryId });
 
     mediaStoreSubscription(this, 'fullscreen', ($fullscreen) => {
       this.__mediaFullscreen = $fullscreen;
