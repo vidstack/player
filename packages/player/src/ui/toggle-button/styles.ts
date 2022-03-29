@@ -5,6 +5,7 @@ export const toggleButtonElementStyles = css`
     display: table;
     contain: content;
     user-select: none;
+    cursor: pointer;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
