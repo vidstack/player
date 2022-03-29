@@ -58,7 +58,7 @@ vds-slider-video {
 	--opacity-duration: 200ms;
 
 	/* clamp video to left and right of slider. */
-	--left-clamp: max(var(--width-half), var(--vds-slider-pointer-percent));
+	--left-clamp: max(var(--width-half), var(--vds-pointer-percent));
 	--right-clamp: calc(100% - var(--width-half));
 	--left: min(var(--left-clamp), var(--right-clamp));
 

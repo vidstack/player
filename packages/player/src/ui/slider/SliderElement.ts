@@ -359,9 +359,9 @@ export class SliderElement extends LitElement {
   );
 
   protected _updateFillCSSProps() {
-    setCSSProperty(this, 'slider-fill-value', `${this.value}`);
-    setCSSProperty(this, 'slider-fill-rate', `${this.fillRate}`);
-    setCSSProperty(this, 'slider-fill-percent', `${this.fillPercent}%`);
+    setCSSProperty(this, 'fill-value', `${this.value}`);
+    setCSSProperty(this, 'fill-rate', `${this.fillRate}`);
+    setCSSProperty(this, 'fill-percent', `${this.fillPercent}%`);
   }
 
   protected readonly _handlePointerValueChange = eventListener(
@@ -371,9 +371,9 @@ export class SliderElement extends LitElement {
   );
 
   protected _updatePointerCSSProps() {
-    setCSSProperty(this, 'slider-pointer-value', `${this.pointerValue}`);
-    setCSSProperty(this, 'slider-pointer-rate', `${this.pointerRate}`);
-    setCSSProperty(this, 'slider-pointer-percent', `${this.pointerPercent}%`);
+    setCSSProperty(this, 'pointer-value', `${this.pointerValue}`);
+    setCSSProperty(this, 'pointer-rate', `${this.pointerRate}`);
+    setCSSProperty(this, 'pointer-percent', `${this.pointerPercent}%`);
   }
 
   // -------------------------------------------------------------------------------------------
