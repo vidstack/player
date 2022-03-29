@@ -25,8 +25,8 @@ let syncingMediaVolume = false;
  * - Single media playback (eg: user plays a video while another is already playing, so we pause
  * the newly inactive player).
  *
- * - Shared media volume (eg: user sets desired volume to 50% on one player, and they expect it to
- * be consistent across all players).
+ * - Synchronized media volume (eg: user sets desired volume to 50% on one player, and they expect
+ * it to be consistent across all players).
  *
  * - Saving media volume to local storage (eg: user sets desired to volume 50%, they leave
  * the site, and when they come back they expect it to be 50% without any interaction).
@@ -38,7 +38,7 @@ let syncingMediaVolume = false;
  * ```html
  * <vds-media-sync
  *   single-playback
- *   shared-volume
+ *   sync-volume
  *   volume-storage-key="@vidstack/volume"
  * >
  *   <!-- ... -->
@@ -71,8 +71,8 @@ export class MediaSyncElement extends LitElement {
    *
    * @default false
    */
-  @property({ type: Boolean, attribute: 'shared-volume' })
-  sharedVolume = false;
+  @property({ type: Boolean, attribute: 'sync-volume' })
+  syncVolume = false;
 
   /**
    * If a value is provided, volume will be saved to local storage to the given key as it's
@@ -128,7 +128,7 @@ export class MediaSyncElement extends LitElement {
       this._providerDisposal.add(off);
     }
 
-    if (this.sharedVolume) {
+    if (this.syncVolume) {
       const off = listen(
         provider,
         'vds-volume-change',
