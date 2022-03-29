@@ -9,8 +9,8 @@ description: Instructions to get your HLS player up and running through a CDN.
 <!doctype html>
 <html>
 <head>
-	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player/dist-cdn/define/vds-media.js"></script>
-	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player/dist-cdn/define/vds-hls.js"></script>
+	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist-cdn/define/vds-media.js"></script>
+	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist-cdn/define/vds-hls.js"></script>
 </head>
 <body>
 	<!-- ... -->

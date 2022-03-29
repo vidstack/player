@@ -6,7 +6,7 @@ description: Instructions to get your audio player installed and on-screen.
 !!!step :title=Install NPM Package :desc=Install `@vidstack/player` and dependencies via NPM.
 
 ```bash:copy
-npm i lit @vidstack/player
+npm i lit @vidstack/player@next
 ```
 
 !!!

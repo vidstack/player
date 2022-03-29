@@ -10,7 +10,6 @@ import {
   setAttribute,
   vdsEvent,
 } from '@vidstack/foundation';
-import { type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { MediaProviderElement, MediaType } from '../../media';
@@ -43,13 +42,6 @@ export class Html5MediaElement extends MediaProviderElement {
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
-
-  protected override firstUpdated(changedProps: PropertyValues): void {
-    super.firstUpdated(changedProps);
-    if (this.canLoad) {
-      this._attachMediaEventListeners();
-    }
-  }
 
   override disconnectedCallback() {
     this._isMediaWaiting = false;

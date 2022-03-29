@@ -63,6 +63,7 @@ export class MediaElement extends LitElement {
       css`
         :host {
           display: block;
+          position: relative;
           contain: content;
         }
 
