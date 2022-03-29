@@ -158,7 +158,7 @@ export class Html5MediaElement extends MediaProviderElement {
     this._attachMediaEventListeners();
     this._observeMediaSources();
 
-    if (this.canLoadPoster) {
+    if (this.canLoadPoster && this.poster.length > 0) {
       mediaEl.setAttribute('poster', this.poster);
     }
 
