@@ -34,14 +34,14 @@ The CSS variables listed in the table below can be used to style your own slider
 variables represent the current value, and the `pointer` variables represent the current value
 at the device pointer (mouse/thumb).
 
-| Variable                              | Description                                                |
-| ------------------------------------- | ---------------------------------------------------------- |
-| `--vds-slider-fill-value:ignore`      | Slider fill amount (e.g., `30`).                           |
-| `--vds-slider-fill-rate:ignore`       | The fill value expressed as a ratio (e.g., `0.3`).         |
-| `--vds-slider-fill-percent:ignore`    | The fill rate expressed as a percentage (e.g., `30%`).     |
-| `--vds-slider-pointer-value:ignore`   | Fill amount up to the device pointer (e.g., `30`).         |
-| `--vds-slider-pointer-rate:ignore`    | The pointer value expressed as a ratio (e.g., `0.3`).      |
-| `--vds-slider-pointer-percent:ignore` | The pointer rate expressed as a percentage. (e.g., `30%`). |
+| Variable                       | Description                                                |
+| ------------------------------ | ---------------------------------------------------------- |
+| `--vds-fill-value:ignore`      | Slider fill amount (e.g., `30`).                           |
+| `--vds-fill-rate:ignore`       | The fill value expressed as a ratio (e.g., `0.3`).         |
+| `--vds-fill-percent:ignore`    | The fill rate expressed as a percentage (e.g., `30%`).     |
+| `--vds-pointer-value:ignore`   | Fill amount up to the device pointer (e.g., `30`).         |
+| `--vds-pointer-rate:ignore`    | The pointer value expressed as a ratio (e.g., `0.3`).      |
+| `--vds-pointer-percent:ignore` | The pointer rate expressed as a percentage. (e.g., `30%`). |
 
 ### Example
 
@@ -79,7 +79,7 @@ vds-slider {
 .slider-track.fill {
 	background-color: #a5b4fc;
 	transform-origin: left center;
-	transform: translateY(-50%) scaleX(var(--vds-slider-fill-rate));
+	transform: translateY(-50%) scaleX(var(--vds-fill-rate));
 	will-change: transform;
 	z-index: 1; /** above track. */
 }
@@ -87,7 +87,7 @@ vds-slider {
 .slider-thumb-container {
 	position: absolute;
 	top: 0;
-	left: var(--vds-slider-fill-percent);
+	left: var(--vds-fill-percent);
 	width: var(--thumb-width);
 	height: 100%;
 	transform: translateX(-50%); /** re-center along x-axis. */
@@ -96,7 +96,7 @@ vds-slider {
 }
 
 [dragging] .slider-thumb-container {
-	left: var(--vds-slider-pointer-percent);
+	left: var(--vds-pointer-percent);
 }
 
 .slider-thumb {
@@ -136,7 +136,7 @@ if you're using Tailwind CSS v3+ and use the [CSS variables listed above](#css-v
 ### Example
 
 The following example showcases a slider with a thumb inside positioned at the current value
-(indicated by the `--vds-slider-fill-percent:ignore` variable). When the device pointer enters the slider,
+(indicated by the `--vds-fill-percent:ignore` variable). When the device pointer enters the slider,
 or the thumb begins to be dragged (indicated by the `interactive` variant), we pin the thumb to the
 device pointer position.
 

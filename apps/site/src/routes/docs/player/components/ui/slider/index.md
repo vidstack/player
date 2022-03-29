@@ -25,7 +25,7 @@ import Docs from './_Docs.md';
 ```
 
 ```html:slot=tw-variables
-<div class="left-[var(--vds-slider-fill-percent)]" />
+<div class="left-[var(--vds-fill-percent)]" />
 ```
 
 ```html:slot=tw-example
@@ -33,8 +33,8 @@ import Docs from './_Docs.md';
 	<!-- Slider Thumb. -->
 	<div
 		class="
-			position interactive:left-[var(--vds-slider-pointer-percent)]
-			absolute top-0 left-[var(--vds-slider-fill-percent)]
+			position interactive:left-[var(--vds-pointer-percent)]
+			absolute top-0 left-[var(--vds-fill-percent)]
 			h-4 w-4 -translate-x-1/2 transform bg-gray-400
 			will-change-[left]
 		"

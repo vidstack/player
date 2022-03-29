@@ -57,7 +57,7 @@ vds-slider-value-text {
 /* position text at pointer when device pointing in slider. */
 [pointing] vds-slider-value-text {
 	opacity: 1;
-	left: var(--vds-slider-pointer-percent);
+	left: var(--vds-pointer-percent);
 }
 ```
 
