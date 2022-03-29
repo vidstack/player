@@ -45,7 +45,7 @@ export enum SliderKeyDirection {
  * friendly and easily stylable. This component allows users to input numeric values between a
  * minimum and maximum value.
  *
- * 💡 The following attributes are also available on the host element:
+ * 💡 The following attributes are available on the host element:
  *
  * - `pointing`: Whether a device pointer is within the slider bounds.
  * - `dragging`: Whether the slider thumb is currently being dragged.

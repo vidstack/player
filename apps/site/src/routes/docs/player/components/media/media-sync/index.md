@@ -6,21 +6,25 @@ import Docs from './_Docs.md';
 
 ```html:copy:slot=usage
 <vds-media-sync>
-	<!-- Does not have to be a direct child. -->
-	<vds-video-player>
-		<!-- .... -->
-	</vds-video-player>
+  <!-- Does not have to be a direct child. -->
+  <vds-video>
+    <!-- .... -->
+  </vds-video>
 </vds-media-sync>
 ```
 
-```html:copy:slot=usage-multiple
-<vds-media-sync>
-	<vds-video-player />
-</vds-media-sync>
+```html:slot=usage-multiple
+<vds-media>
+  <vds-media-sync>
+    <vds-video></vds-video>
+  </vds-media-sync>
+</vds-media>
 
-<vds-media-sync>
-	<vds-video-player />
-</vds-media-sync>
+<vds-media>
+  <vds-media-sync>
+    <vds-video></vds-video>
+  </vds-media-sync>
+</vds-media>
 ```
 
 ```html:copy:slot=sync-playback
@@ -36,9 +40,9 @@ import Docs from './_Docs.md';
 ```
 
 ```js:copy-highlight:slot=volume-sync-event{3-6}
-const element = document.querySelector('vds-media-sync');
+const mediaSync = document.querySelector('vds-media-sync');
 
-element.addEventListener('vds-media-volume-sync', (event) => {
+mediaSync.addEventListener('vds-media-volume-sync', (event) => {
 	const { muted, volume } = event.detail;
 	// ...
 });

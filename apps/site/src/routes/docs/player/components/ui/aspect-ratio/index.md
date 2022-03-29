@@ -11,9 +11,9 @@ import Docs from './_Docs.md';
 	max-height="100vh"
 >
 	<!-- Must be direct child. -->
-	<vds-video-player>
+	<vds-video>
 		<!-- ... -->
-	</vds-video-player>
+	</vds-video>
 </vds-aspect-ratio>
 ```
 

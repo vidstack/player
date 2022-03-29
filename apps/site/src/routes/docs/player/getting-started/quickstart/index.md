@@ -24,11 +24,7 @@ import '@vidstack/player/define/vds-video.js';
 
 ```html:copy
 <vds-media>
-  <vds-video
-    loading="lazy"
-    poster="https://media-files.vidstack.io/poster.png"
-    preload="metadata"
-  >
+  <vds-video poster="https://media-files.vidstack.io/poster.png">
     <video
       controls
     	src="https://media-files.vidstack.io/720p.mp4"

@@ -6,21 +6,25 @@ import Docs from '../_Docs.md';
 
 ```jsx:copy:slot=usage
 <MediaSync>
-	{/* Does not have to be a direct child. */}
-	<VideoPlayer>
-		{/* .... */}
-	</VideoPlayer>
+  {/* Does not have to be a direct child. */}
+  <Video>
+    {/* ... */}
+  </Video>
 </MediaSync>
 ```
 
-```jsx:copy:slot=usage-multiple
-<MediaSync>
-	<VideoPlayer />
-</MediaSync>
+```jsx:slot=usage-multiple
+<Media>
+  <MediaSync>
+    <Video></Video>
+  </MediaSync>
+</Media>
 
-<MediaSync>
-	<VideoPlayer />
-</MediaSync>
+<Media>
+  <MediaSync>
+    <Video></Video>
+  </MediaSync>
+</Media>
 ```
 
 ```jsx:copy:slot=sync-playback

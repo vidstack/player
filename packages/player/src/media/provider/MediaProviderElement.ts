@@ -391,10 +391,10 @@ export abstract class MediaProviderElement extends LitElement {
    * - If `lazy` media will delay loading until the provider has entered the viewport.
    * - If `custom` media will wait for the `startLoadingMedia()` method to be called.
    *
-   * @default 'eager'
+   * @default 'lazy'
    */
   @property({ attribute: 'loading' })
-  loading: 'eager' | 'lazy' | 'custom' = 'eager';
+  loading: 'eager' | 'lazy' | 'custom' = 'lazy';
 
   /**
    * Called when media can begin loading. Calling this method will trigger the initial provider

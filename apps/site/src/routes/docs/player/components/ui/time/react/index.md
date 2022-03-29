@@ -4,12 +4,8 @@ import Docs from '../_Docs.md';
 
 <Docs>
 
-```jsx:copy-highlight:slot=usage{3}
-<VideoPlayer>
-	<MediaUi>
-		<Time type="current" />
-	</MediaUi>
-</VideoPlayer>
+```jsx:copy:slot=usage
+<Time type="current" />
 ```
 
 ```jsx:copy:slot=remaining-time

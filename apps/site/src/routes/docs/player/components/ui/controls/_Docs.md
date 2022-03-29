@@ -16,13 +16,13 @@ The following media attributes can be useful when building a controls container:
 
 ```css:copy
 /* Hide controls while media is loading, or user is idle. */
-vds-media:not([can-play]) .controls,
-vds-media[user-idle] .controls {
+vds-media:not([can-play]) .media-controls,
+vds-media[user-idle] .media-controls {
 	opacity: 0;
 }
 
 /* Show controls if autoplay fails. */
-vds-media[autoplay-error] .controls {
+vds-media[autoplay-error] .media-controls {
 	opacity: 1;
 }
 ```
@@ -39,9 +39,11 @@ hide the controls if media is not ready for playback, or the user is idle.
 <slot name="styling" />
 
 ```css:copy
-.controls-container {
-	display: flex;
+.media-controls-container {
 	position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -52,30 +54,19 @@ hide the controls if media is not ready for playback, or the user is idle.
 	z-index: 1;
 }
 
-.controls {
+.media-controls {
 	display: flex;
 	width: 100%;
+  min-height: 48px;
 	opacity: 1;
 	transition: opacity 200ms ease;
 	/** prevent clicks triggering lower elements. */
 	pointer-events: auto;
 }
 
-.controls.top {
-	align-self: flex-start;
-}
-
-.controls.middle {
-	align-self: center;
-}
-
-.controls.bottom {
-	align-self: flex-end;
-}
-
 /* Hide controls if media is not ready for playback, or user is idle. */
-vds-media[user-idle] .controls,
-vds-media:not([can-play]) .controls {
+vds-media[user-idle] .media-controls,
+vds-media:not([can-play]) .media-controls {
 	opacity: 0;
 	visibility: hidden;
 }

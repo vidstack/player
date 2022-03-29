@@ -4,12 +4,10 @@ import Docs from '../_Docs.md';
 
 <Docs>
 
-```jsx:copy-highlight:slot=usage{3}
-<VideoPlayer>
-	<MediaUi>
-		<VolumeSlider />
-	</MediaUi>
-</VideoPlayer>
+```jsx:copy:slot=usage
+<VolumeSlider>
+  {/* ... */}
+</VolumeSlider>
 ```
 
 </Docs>

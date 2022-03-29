@@ -24,10 +24,7 @@ description: Instructions to get your audio player up and running through a CDN.
 
 ```html:copy
 <vds-media>
-  <vds-audio
-    loading="lazy"
-    preload="metadata"
-  >
+  <vds-audio>
     <audio
       controls
 	    src="https://media-files.vidstack.io/audio.mp3"

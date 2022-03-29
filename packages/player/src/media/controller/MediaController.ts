@@ -564,9 +564,7 @@ export class MediaController {
   }
 
   protected _updateMetadata(metadata: MediaMetadataEventDetail) {
-    this._store.src.set(metadata.src);
     this._store.currentSrc.set(metadata.currentSrc);
-    this._store.poster.set(metadata.poster);
     this._store.mediaType.set(metadata.mediaType);
     this._store.viewType.set(metadata.viewType);
   }

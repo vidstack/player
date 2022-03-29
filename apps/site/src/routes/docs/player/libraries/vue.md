@@ -28,16 +28,21 @@ register the custom element and any dependencies so you can start using it.
 ```vue:title=MyPlayer.vue:copy
 <script>
 	// `.js` extension is required for Node exports to work.
-  import '@vidstack/player/define/vds-video-player.js';
+  import '@vidstack/player/define/vds-media.js';
+  import '@vidstack/player/define/vds-video.js';
   import '@vidstack/player/define/vds-play-button.js';
 </script>
 
 <template>
-	<vds-video-player>
-		<vds-media-ui>
+	<vds-media>
+		<vds-video>
+      <!-- ... -->
+		</vds-video>
+
+    <div class="media-controls">
 			<vds-play-button />
-		</vds-media-ui>
-	</vds-video-player>
+    </div>
+	</vds-media>
 </template>
 ```
 
@@ -54,19 +59,22 @@ calling a method.
 
 ```vue:copy
 <script lang="ts">
-import { type VideoPlayerElement } from '@vidstack/player';
+import { type VideoElement } from '@vidstack/player';
 
 export default {
 	mounted() {
-		const player = this.$refs.player as VideoPlayerElement;
-		const canPlayType = player.canPlayType('video/mp4');
-		// ...
+		const provider = this.$refs.provider as VideoElement;
+    provider.startLoadingMedia();
 	}
 };
 </script>
 
 <template>
-	<vds-video-player ref="player" />
+  <vds-media>
+    <vds-video loading="custom" ref="provider">
+      <!-- ... -->
+    </vds-video>
+  </vds-media>
 </template>
 ```
 
@@ -75,18 +83,21 @@ export default {
 ```vue:copy
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { type VideoPlayerElement } from '@vidstack/player';
+import { type VideoElement } from '@vidstack/player';
 
-const player = ref<VideoPlayerElement>(null);
+const provider = ref<VideoElement>(null);
 
 onMounted(() => {
-	const canPlayType = player.value!.canPlayType('video/mp4');
-	// ...
+	provider.value!.startLoadingMedia();
 });
 </script>
 
 <template>
-	<vds-video-player ref="player" />
+  <vds-media>
+    <vds-video loading="custom" ref="provider">
+      <!-- ... -->
+    </vds-video>
+  </vds-media>
 </template>
 ```
 
@@ -98,12 +109,9 @@ such as objects and arrays without any issues.
 
 ```vue
 <template>
-  <vds-hls :hls-config="{ lowLatencyMode: true }" />
+  <vds-hls :hlsLibrary="() => import('hls.js')" :hlsConfig="{ lowLatencyMode: true }" />
 </template>
 ```
-
-Typically this would fail since `hls-config` is _not_ a property on `HlsElement`, but we define
-it as one, so you can go on with your day and not worry about whether to use `hls-config` or `.hlsConfig`.
 
 ## Events
 
@@ -126,7 +134,11 @@ export default {
 </script>
 
 <template>
-	<vds-video-player @vds-playing="onPlaying" />
+  <vds-media>
+    <vds-video @vds-playing="onPlaying">
+      <!-- ... -->
+    </vds-video>
+  </vds-media>
 </template>
 ```
 
@@ -142,7 +154,11 @@ function onPlaying(event: MediaPlayingEvent) {
 </script>
 
 <template>
-	<vds-video-player @vds-playing="onPlaying" />
+  <vds-media>
+    <vds-video @vds-playing="onPlaying">
+      <!-- ... -->
+    </vds-video>
+  </vds-media>
 </template>
 ```
 

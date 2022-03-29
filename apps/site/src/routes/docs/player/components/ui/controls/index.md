@@ -8,16 +8,18 @@ import Docs from './_Docs.md';
 
 <Docs>
 
-```html:copy-highlight:slot=styling{3-7}
-<vds-video-player>
-	<vds-media-ui>
-		<div class="controls-container">
-			<div class="controls top"></div>
-			<div class="controls middle"></div>
-			<div class="controls bottom"></div>
-		</div>
-	</vds-media-ui>
-</vds-video-player>
+```html:copy-highlight:slot=styling{6-10}
+<vds-media>
+  <vds-video>
+    <!-- ... -->
+  </vds-video>
+
+  <div class="media-controls-container">
+    <div class="media-controls"></div>
+    <div class="media-controls"></div>
+    <div class="media-controls"></div>
+  </div>
+</vds-media>
 ```
 
 </Docs>

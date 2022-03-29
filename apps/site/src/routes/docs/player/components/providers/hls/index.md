@@ -5,28 +5,14 @@ import Docs from './_Docs.md';
 <Docs>
 
 ```html:copy:slot=usage
-<vds-hls
-	controls
-	width="1280"
-	height="720"
-	loading="lazy"
-	src="https://media-files.vidstack.io/hls/index.m3u8"
-	poster="https://media-files.vidstack.io/poster.png"
-></vds-hls>
-```
-
-```html:copy:slot=player
-<vds-hls-player
-	width="1280"
-	height="720"
-	loading="lazy"
-	src="https://media-files.vidstack.io/hls/index.m3u8"
-	poster="https://media-files.vidstack.io/poster.png"
->
-	<vds-media-ui slot="ui">
-		<!-- ... -->
-	</vds-media-ui>
-</vds-hls-player>
+<vds-hls poster="https://media-files.vidstack.io/poster.png">
+  <video
+	  controls
+    preload="none"
+  	src="https://media-files.vidstack.io/hls/index.m3u8"
+	  poster="https://media-files.vidstack.io/poster-seo.png"
+  ></video>
+</vds-hls>
 ```
 
 ```html:slot=loading-hls
@@ -43,18 +29,18 @@ import Docs from './_Docs.md';
 ```js:slot=importing-hls{1,4}
 import Hls from 'hls.js';
 
-const element = document.querySelector('vds-hls');
-element.hlsLibrary = Hls;
+const provider = document.querySelector('vds-hls');
+provider.hlsLibrary = Hls;
 ```
 
 ```js:slot=dynamically-import-hls{2}
-const element = document.querySelector('vds-hls');
-element.hlsLibrary = () => import('hls.js');
+const provider = document.querySelector('vds-hls');
+provider.hlsLibrary = () => import('hls.js');
 ```
 
 ```js:slot=configuring-hls{2}
-const element = document.querySelector('vds-hls');
-element.hlsConfig = { lowLatencyMode: true };
+const provider = document.querySelector('vds-hls');
+provider.hlsConfig = { lowLatencyMode: true };
 ```
 
 ```svelte:copy-highlight{2}
@@ -64,27 +50,27 @@ element.hlsConfig = { lowLatencyMode: true };
 ```
 
 ```js:slot=hls-engine{2}
-const element = document.querySelector('vds-hls');
-const hlsjs = element.hlsEngine;
+const provider = document.querySelector('vds-hls');
+const hlsjs = provider.hlsEngine;
 ```
 
 ```js:slot=hls-engine-events{3-10}
-const element = document.querySelector('vds-hls');
+const provider = document.querySelector('vds-hls');
 
-element.addEventListener('vds-hls-instance', (event) => {
+provider.addEventListener('vds-hls-instance', (event) => {
 	const hlsjs = event.detail;
 	// ...
 });
 
-element.addEventListener('vds-hls-destroying', (event) => {
+provider.addEventListener('vds-hls-destroying', (event) => {
 	// ...
 });
 ```
 
 ```js:slot=hls-events{3-6}
-const element = document.querySelector('vds-hls');
+const provider = document.querySelector('vds-hls');
 
-element.addEventListener('vds-hls-manifest-loaded', (event) => {
+provider.addEventListener('vds-hls-manifest-loaded', (event) => {
   const levelLoadedData = event.detail;
   // ...
 });

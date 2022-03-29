@@ -4,17 +4,19 @@ import Docs from '../_Docs.md';
 
 <Docs>
 
-```jsx:copy-highlight:slot=usage{3-8}
-<VideoPlayer>
-	<MediaUi>
-		<Gesture
-			type="click"
-			repeat="0"
-			action="toggle:paused"
-			priority="1"
-		/>
-	</MediaUi>
-</VideoPlayer>
+```jsx:copy-highlight:slot=usage{6-11}
+<Media>
+	<Video>
+    {/* ... */}
+	</Video>
+
+  <Gesture
+    type="click"
+    repeat="0"
+    action="toggle:paused"
+    priority="1"
+  />
+</Media>
 ```
 
 ```jsx:slot=repeat

@@ -11,14 +11,15 @@ In this section, you'll find a simple overview of how to use the React version o
 You can import all components from the path `@vidstack/player/react`. Component names mirror
 the element tag name except they're in PascalCase without the `vds` prefix.
 
+- `vds-media` -> `Media`
+- `vds-video` -> `Video`
 - `vds-play-button` -> `PlayButton`
-- `vds-slider-value-text` -> `SliderValueText`
 
 ```js
-import { VideoPlayer, PlayButton } from '@vidstack/player/react';
+import { Media, Video, PlayButton } from '@vidstack/player/react';
 ```
 
-Keep in mind that we're implicitly registering the underlying custom element by importing a
+Keep in mind that you're implicitly registering the underlying custom element by importing a
 React component. You can read more about how [importing elements](../getting-started/foundation.md#elements)
 works in the 'Foundation' walk-through.
 
@@ -29,18 +30,24 @@ All components forward the underlying custom element reference, so you can use t
 
 ```tsx
 import { useRef, useEffect } from 'React';
-import { type VideoPlayerElement } from '@vidstack/player';
-import { VideoPlayer } from '@vidstack/player/react';
+import { type VideoElement } from '@vidstack/player';
+import { Media, Video } from '@vidstack/player/react';
 
 function MyPlayer() {
-  const playerRef = useRef<VideoPlayerElement>(null);
+  const providerRef = useRef<VideoElement>(null);
 
   useEffect(() => {
-    const canPlayType = playerRef.current!.canPlayType('video/mp4');
-    // ...
+    const provider = providerRef.current;
+    provider.startLoadingMedia();
   }, []);
 
-  return <VideoPlayer ref={playerRef} />;
+  return (
+    <Media>
+      <Video loading="custom" ref={providerRef}>
+        <video src="..." />
+      </Video>
+    </Media>
+  );
 }
 ```
 
@@ -51,10 +58,16 @@ element itself; therefore, you can pass in complex data types such as objects an
 any issues.
 
 ```tsx
-import { HlsPlayer } from '@vidstack/player/react';
+import { Media, Hls } from '@vidstack/player/react';
 
 function MyPlayer() {
-  return <HlsPlayer hlsConfig={{ lowLatencyMode: true }} />;
+  return (
+    <Media>
+      <Hls hlsLibrary={() => import('hls.js')} hlsConfig={{ lowLatencyMode: true }}>
+        <video src="..." />
+      </Hls>
+    </Media>
+  );
 }
 ```
 
@@ -68,14 +81,20 @@ PascalCase, and without the `vds` prefix.
 
 ```tsx
 import { type MediaPlayingEvent } from '@vidstack/player';
-import { VideoPlayer } from '@vidstack/player/react';
+import { Media, Video } from '@vidstack/player/react';
 
 function MyPlayer() {
   function onPlaying(event: MediaPlayingEvent) {
     // ...
   }
 
-  return <VideoPlayer onPlaying={onPlaying} />;
+  return (
+    <Media>
+      <Video onPlaying={onPlaying}>
+        <video src="..." />
+      </Video>
+    </Media>
+  );
 }
 ```
 

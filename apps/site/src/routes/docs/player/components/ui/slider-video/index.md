@@ -13,8 +13,8 @@ import Docs from './_Docs.md';
 ```
 
 ```js:slot=video-events{2-4}
-const element = document.querySelector('vds-slider-video');
-element.addEventListener('canplay', (event) => {
+const sliderVideo = document.querySelector('vds-slider-video');
+sliderVideo.addEventListener('canplay', (event) => {
 	// ...
 });
 ```

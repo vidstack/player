@@ -8,16 +8,18 @@ import Docs from '../_Docs.md';
 
 <Docs>
 
-```jsx:copy-highlight:slot=styling{3-7}
-<VideoPlayer>
-	<MediaUi>
-		<div className="controls-container">
-			<div className="controls top"></div>
-			<div className="controls middle"></div>
-			<div className="controls bottom"></div>
-		</div>
-	</MediaUi>
-</VideoPlayer>
+```jsx:copy-highlight:slot=styling{6-10}
+<Media>
+  <Video>
+    {/* ... */}
+  </Video>
+
+  <div className="media-controls-container">
+    <div className="media-controls"></div>
+    <div className="media-controls"></div>
+    <div className="media-controls"></div>
+  </div>
+</Media>
 ```
 
 </Docs>

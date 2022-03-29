@@ -4,12 +4,10 @@ import Docs from './_Docs.md';
 
 <Docs>
 
-```html:copy-highlight:slot=usage{3}
-<vds-video-player>
-	<vds-media-ui>
-		<vds-volume-slider></vds-volume-slider>
-	</vds-media-ui>
-</vds-video-player>
+```html:copy:slot=usage
+<vds-volume-slider>
+  <!-- ... -->
+</vds-volume-slider>
 ```
 
 </Docs>

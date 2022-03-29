@@ -14,15 +14,20 @@ register the custom element and any dependencies so you can start using it.
 ```svelte:title=MyPlayer.svelte:copy
 <script>
 	// `.js` extension is required for Node exports to work.
-  import '@vidstack/player/define/vds-video-player.js';
+  import '@vidstack/player/define/vds-media.js';
+  import '@vidstack/player/define/vds-video.js';
   import '@vidstack/player/define/vds-play-button.js';
 </script>
 
-<vds-video-player>
-  <vds-media-ui>
-		<vds-play-button />
-	</vds-media-ui>
-</vds-video-player>
+<vds-media>
+  <vds-video>
+    <!-- ... -->
+	</vds-video>
+
+  <div class="media-controls">
+    <vds-play-button />
+  </div>
+</vds-media>
 ```
 
 You can read more about [importing elements](../getting-started/foundation.md#elements) in the
@@ -35,17 +40,21 @@ reference to a custom element if needed. This is _generally_ only required when 
 
 ```svelte
 <script lang="ts">
-  import { type VideoPlayerElement } from '@vidstack/player';
+  import { type VideoElement } from '@vidstack/player';
 
-  let videoPlayer: VideoPlayerElement;
+  let provider: VideoElement;
 
-  $: if (videoPlayer) {
-    const canPlayType = videoPlayer.canPlayType('video/mp4');
+  $: if (provider) {
+    provider.startLoadingMedia();
     // ...
   }
 </script>
 
-<vds-video-player bind:this={videoPlayer} />
+<vds-media>
+  <vds-video loading="custom" bind:this={provider}>
+    <!-- ... -->
+  </vds-video>
+</vds-media>
 ```
 
 ## Properties
@@ -55,11 +64,8 @@ the value as a DOM property if the key is present; therefore, you can pass in co
 such as objects and arrays without any issues.
 
 ```svelte
-<vds-hls hls-config={{ lowLatencyMode: true }} />
+<vds-hls hls-library={() => import('hls.js')} hls-config={{ lowLatencyMode: true }} />
 ```
-
-Typically this would fail since `hls-config` is _not_ a property on `HlsElement`, but we define
-it as one, so you can go on with your day and not worry about whether to use `hls-config` or `hlsConfig`.
 
 ## Events
 
@@ -75,7 +81,11 @@ can be imported from the `@vidstack/player` module.
   }
 </script>
 
-<vds-video-player on:vds-playing={onPlaying} />
+<vds-media>
+  <vds-video on:vds-playing={onPlaying}>
+    <!-- ... -->
+  </vds-video>
+</vds-media>
 ```
 
 ## Custom Attributes (CSS)
@@ -85,66 +95,31 @@ Unfortunately, Svelte doesn't play nicely with it. You'll receive a warning in y
 IDE, _and_ it won't compile the CSS properly. Writing well-defined global attribute selectors
 will resolve all issues.
 
-:::no
-Shorthand scoped attribute selectors:
-:::
-
-```css
-/* BAD EXAMPLES! */
-
-vds-poster[img-error] {
-}
-
-[media-paused] .pause-icon {
-}
-
-:not([media-paused]) .play-icon {
-}
-
-/*
- Due to CSS specificity and Svelte class scoping,
- the `.pause-icon` class will override the global selector below.
-*/
-.pause-icon {
-}
-:global([media-paused] .pause-icon) {
-}
-```
-
-:::yes
 Global styles using [`svelte-preprocess`](https://github.com/sveltejs/svelte-preprocess):
-:::
 
-```html
+```html{1}
 <style global>
   vds-poster[img-error] {
   }
 
-  vds-media-ui[media-paused] .pause-icon {
+  vds-media[paused] .pause-icon {
   }
 
-  vds-media-ui:not([media-paused]) .play-icon {
+  vds-media:not([paused]) .play-icon {
   }
 </style>
 ```
 
-:::yes
-Well-defined global attribute selectors:
-:::
+Or, well-defined global attribute selectors:
 
 ```css
-/* GOOD EXAMPLES! */
-
 vds-poster:global([img-error]) {
 }
 
-:global(vds-media-ui:not([media-paused])) .play-icon {
+vds-media:global([paused]) .pause-icon {
 }
 
-.pause-icon {
-}
-
-:global(vds-media-ui[media-paused]) .pause-icon {
+vds-media:global(:not([paused])) .play-icon {
 }
 ```
 
