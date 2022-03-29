@@ -59,7 +59,9 @@
       ]
         .map(markAsExperimental)
         .map(toItems(providers, true)),
-      Media: ['media-sync', 'media-visibility'].map(markAsExperimental).map(toItems(media, true)),
+      Media: ['media', 'media-sync', 'media-visibility']
+        .map(markAsExperimental)
+        .map(toItems(media, true)),
       UI: [
         'aspect-ratio',
         'poster',

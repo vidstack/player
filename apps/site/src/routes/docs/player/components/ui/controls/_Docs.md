@@ -64,6 +64,8 @@ hide the controls if media is not ready for playback, or the user is idle.
 	pointer-events: auto;
 }
 
+/* Avoid double controls on iOS Safari. */
+vds-media[hide-ui] .media-controls,
 /* Hide controls if media is not ready for playback, or user is idle. */
 vds-media[user-idle] .media-controls,
 vds-media:not([can-play]) .media-controls {

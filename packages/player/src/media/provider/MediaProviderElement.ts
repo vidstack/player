@@ -62,7 +62,6 @@ export type MediaProviderConnectEvent = DiscoveryEvent<MediaProviderElement>;
  * media is ready for playback.
  *
  * @events ../events.ts
- * @events ../request.events.ts
  * @link https://en.wikipedia.org/wiki/Adapter_pattern
  */
 export abstract class MediaProviderElement extends LitElement {
