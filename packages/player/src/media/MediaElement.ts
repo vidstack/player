@@ -31,21 +31,22 @@ import { ViewType } from './ViewType';
 export type MediaConnectEvent = DiscoveryEvent<MediaElement>;
 
 /**
- * All media elements exist inside the `<vds-media>` element. It's main jobs are to attach a
- * media controller to a media provider, and expose media state through attributes and
- * CSS properties for styling purposes.
+ * All media elements exist inside the `<vds-media>` component. It's main jobs are to host the
+ * media controller, and expose media state through attributes and CSS properties for styling purposes.
  *
- * The media controller acts as a message bus between the media provider and all other
- * components, such as UI components and plugins. The main responsibilities are:
+ * The media controller is central to the player architecture, hence why it's hosted by `<vds-media>`
+ * which is the top-most component. The controller acts as a message bus between the media provider
+ * and UI. The main responsibilities include:
  *
- * - Provide the media context that is used to pass media state down to components (this
- * context is injected into and managed by the media provider).
+ * - Providing the media context that is used to pass media state down to components. This context
+ * is injected into and managed by the media provider.
  *
- * - Listen for media request events and fulfill them by calling the appropriate props/methods on
- * the current media provider.
+ * - Listening for media request events and satisfying them by calling the appropriate props/methods
+ * on the current media provider.
  *
  * @tagname vds-media
- * @slot - Used to pass in components that use/manage media state.
+ * @slot - Used to pass in components that use/manage/provide media state.
+ * @events ./request.events.ts
  * @example
  * ```html
  * <vds-media>
@@ -74,12 +75,19 @@ export class MediaElement extends LitElement {
     ];
   }
 
+  /**
+   * The media controller which is responsible for updating the media store and satisfying media
+   * requests.
+   */
   readonly controller = new MediaController(this);
 
   @state() protected __mediaFullscreen = false;
   @state() protected __mediaIsVideoView = false;
   @state() protected __mediaPlaysinline = false;
 
+  /**
+   * The media provider element (e.g., `vds-video`) that is attached to the controller.
+   */
   get provider() {
     return this.controller.provider;
   }
