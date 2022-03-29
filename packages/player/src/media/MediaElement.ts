@@ -38,7 +38,7 @@ export type MediaConnectEvent = DiscoveryEvent<MediaElement>;
  *
  * The media controller is central to the player architecture, hence why it's hosted by `<vds-media>`
  * which is the top-most component. The controller acts as a message bus between the media provider
- * and UI. The main responsibilities include:
+ * and UI. The controller's responsibilities include:
  *
  * - Providing the media context that is used to pass media state down to components. This context
  * is injected into and managed by the media provider.
