@@ -1,4 +1,4 @@
-import { createIntersectionController, isUndefined, preconnect } from '@vidstack/foundation';
+import { preconnect } from '@vidstack/foundation';
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -9,7 +9,7 @@ const didPreconnect = new Set();
 
 /**
  * Loads and displays the current media poster image. By default, the media provider's
- * loading strategy is respected, otherwise you can specify `eager` or `lazy`.
+ * loading strategy is respected meaning the poster won't load until the media can.
  *
  * 💡 The following img attributes are applied:
  *
@@ -22,9 +22,7 @@ const didPreconnect = new Set();
  * @example
  * ```html
  * <vds-media>
- *   <vds-poster
- *     alt="Large alien ship hovering over New York."
- *   ></vds-poster>
+ *   <vds-poster alt="Large alien ship hovering over New York."></vds-poster>
  * </vds-media>
  * ```
  * @example
@@ -81,33 +79,12 @@ export class PosterElement extends LitElement {
       });
 
       this.__src = $poster;
-
-      if (this.__canLoad) {
-        this._setImgLoadingAttr();
-      }
     });
 
     mediaStoreSubscription(this, 'canLoad', ($canLoad) => {
-      if (isUndefined(this.loading)) {
-        this._handleCanLoadChange($canLoad);
-      }
+      this._handleCanLoadChange($canLoad);
+      this.__canLoad = $canLoad;
     });
-
-    const intersectionController = createIntersectionController(
-      this,
-      { threshold: 0 },
-      (entries) => {
-        if (this.loading !== 'lazy') {
-          intersectionController.hostDisconnected();
-          return;
-        }
-
-        if (entries[0]?.isIntersecting) {
-          this._handleCanLoadChange(true);
-          intersectionController.hostDisconnected();
-        }
-      },
-    );
   }
 
   // -------------------------------------------------------------------------------------------
@@ -127,15 +104,6 @@ export class PosterElement extends LitElement {
   }
 
   /**
-   * Whether the poster should be loaded immediately, or once it has entered the viewport.
-   * By default it is `undefined`, in which it falls back to respecting the loading strategy
-   * defined on the media provider element.
-   *
-   * @default undefined
-   */
-  @property() loading?: 'eager' | 'lazy';
-
-  /**
    * ♿ **ARIA:** Provides alternative information for a poster image if a user for some reason
    * cannot view it.
    *
@@ -151,18 +119,12 @@ export class PosterElement extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-
-    if (this.loading === 'eager') {
-      this._handleCanLoadChange(true);
-    }
-
     this._mediaRemoteControl.hidePoster();
   }
 
   override disconnectedCallback(): void {
     this._mediaRemoteControl.showPoster();
     super.disconnectedCallback();
-    this.__src = undefined;
     this._handleCanLoadChange(false);
   }
 
@@ -185,7 +147,7 @@ export class PosterElement extends LitElement {
   protected _setImgLoadingAttr() {
     this.removeAttribute('img-error');
     this.removeAttribute('img-loaded');
-    if (this.__canLoad && this.src) {
+    if (this.src && this.src.length > 0) {
       this.setAttribute('img-loading', '');
     }
   }
@@ -208,7 +170,5 @@ export class PosterElement extends LitElement {
       this.removeAttribute('img-loaded');
       this.removeAttribute('img-loading');
     }
-
-    this.__canLoad = canLoad;
   }
 }

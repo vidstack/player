@@ -2,13 +2,15 @@
 
 The `<vds-poster>` component loads and displays the current media poster image. When
 this component is present, the `poster` attribute will not be applied to the media provider to
-prevent double loading.
+prevent double loading. Furthermore, this element will respect the loading strategy defined
+on the media provider; therefore, the poster won't load until the media can (lazy).
 
 We recommend using `<vds-poster>` over the HTML5 `poster` attribute because the behavior will
-be more consistent browser-to-browser. The native poster will sometimes load and disappear as soon as the
-first media frame is ready depending on your `preload` setting. Secondly, you can place this
-poster over the media and controls while loading to improve the overall design; you can't do this
-if using the native `poster` attribute because it lives inside the browser's media element.
+be more consistent browser-to-browser. The native poster will sometimes load and disappear as
+soon as the first media frame is ready depending on your `preload` setting. Secondly, you can
+place this poster over the media and controls while loading to improve the overall design; you
+can't do this if using the native `poster` attribute because it lives inside the browser's
+media element.
 
 <slot name="usage" />
 
