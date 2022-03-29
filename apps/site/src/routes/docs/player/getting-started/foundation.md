@@ -34,6 +34,7 @@ The player is made up of three core parts:
    - Listening for [media request events](#request-events) so it can try and satisfy them (e.g.,
      accepting a play request and satisfying it by calling play on the media provider).
    - Exposing media state through HTML attributes and CSS properties for [styling](./styling.md) purposes.
+   - Listening to media events and updating state in the media store.
 2. A media provider is an adapter that wraps an existing provider such as
    the native HTMLMediaElement (i.e., `<video>`), or embedded media (i.e., `<iframe>`). It's main
    jobs are:
