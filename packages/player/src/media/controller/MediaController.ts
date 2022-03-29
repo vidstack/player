@@ -73,14 +73,15 @@ export type MediaControllerHost = ReactiveElement & {
 
 /**
  * The media controller acts as a message bus between the media provider and all other
- * components, such as UI components and plugins. The main responsibilities are:
+ * components, such as UI components and plugins. The controller's main responsibilities are:
  *
- * - Provide the media store context that is used to pass media state down to components.
+ * - Providing the media store context down to all child consumers (i.e., UI elements) so they can
+ * subscribe to media state changes.
  *
- * - Listen for media request events and fulfill them by calling the appropriate props/methods on
- * the current media provider.
+ * - Listening for media request events so it can try and satisfy them (e.g., accepting a play
+ * request and satisfying it by calling play on the media provider).
  *
- * - Listen for media events and update the media store.
+ * - Listening to media events and updating state in the media store.
  */
 export class MediaController {
   protected readonly _disconnectDisposal = new DisposalBin();
