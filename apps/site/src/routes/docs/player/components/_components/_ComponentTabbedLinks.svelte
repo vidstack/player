@@ -4,7 +4,7 @@
 
   $: path = $page.url.pathname;
   $: docsHref = path.includes('/api') ? path.replace(/\/api\/?/, '') : path;
-  $: apiHref = !path.includes('/api') ? `${path}/api` : path;
+  $: apiHref = !path.includes('/api') ? `${path.replace(/\/$/, '')}/api` : path;
 
   $: links = [
     { title: 'Docs', href: docsHref },
