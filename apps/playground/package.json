@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "svelte-kit dev --port 3002",
+    "dev": "svelte-kit dev --port 3002 --host",
     "build:app": "svelte-kit build",
     "clean": "rimraf .svelte-kit",
     "check": "svelte-check --tsconfig ./tsconfig.json",

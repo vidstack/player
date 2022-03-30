@@ -165,6 +165,18 @@ export class HlsElement extends VideoElement {
     return this._isHlsEngineAttached;
   }
 
+  protected _currentHlsSrc = '';
+
+  /**
+   * The absolute URL of the chosen HLS media resource. Defaults to `''` if no media has been
+   * loaded.
+   *
+   * @default ''
+   */
+  get currentHlsSrc() {
+    return this._currentHlsSrc;
+  }
+
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
@@ -341,7 +353,7 @@ export class HlsElement extends VideoElement {
 
   protected _destroyHlsEngine(): void {
     this.hlsEngine?.destroy();
-    this._prevHlsEngineSrc = '';
+    this._currentHlsSrc = '';
     this._hlsEngine = undefined;
     this._isHlsEngineAttached = false;
 
@@ -349,8 +361,6 @@ export class HlsElement extends VideoElement {
       this._logger?.info('🏗️ Destroyed HLS engine');
     }
   }
-
-  protected _prevHlsEngineSrc = '';
 
   protected _attachHlsEngine(): void {
     if (this.isHlsEngineAttached || isUndefined(this.hlsEngine) || isNil(this.videoElement)) {
@@ -374,7 +384,7 @@ export class HlsElement extends VideoElement {
 
     this.hlsEngine?.detachMedia();
     this._isHlsEngineAttached = false;
-    this._prevHlsEngineSrc = '';
+    this._currentHlsSrc = '';
 
     if (__DEV__) {
       this._logger
@@ -385,7 +395,7 @@ export class HlsElement extends VideoElement {
   }
 
   protected _loadSrcOnHlsEngine(src: string): void {
-    if (isNil(this.hlsEngine) || !this.isHlsStream || src === this._prevHlsEngineSrc) {
+    if (isNil(this.hlsEngine) || !this.isHlsStream || src === this._currentHlsSrc) {
       return;
     }
 
@@ -399,7 +409,7 @@ export class HlsElement extends VideoElement {
     }
 
     this.hlsEngine.loadSource(src);
-    this._prevHlsEngineSrc = src;
+    this._currentHlsSrc = src;
   }
 
   protected override _getMediaType(): MediaType {
@@ -418,6 +428,15 @@ export class HlsElement extends VideoElement {
   // Src Changes
   // -------------------------------------------------------------------------------------------
 
+  protected override _handleSrcChange(sources: string[]): void {
+    // Don't lose initial src because hls.js will overwrite it with blob.
+    if (this._currentHlsSrc.length > 0 && !sources.includes(this._currentHlsSrc)) {
+      sources.push(this._currentHlsSrc);
+    }
+
+    super._handleSrcChange(sources);
+  }
+
   protected override _handleAbort(event?: Event): void {
     if (this.isHlsSupported) {
       for (const src of this.state.src) {
@@ -432,7 +451,7 @@ export class HlsElement extends VideoElement {
   }
 
   protected async _handleHlsSrcChange(src: string) {
-    if (this._prevHlsEngineSrc === src) return;
+    if (this._currentHlsSrc === src) return;
 
     // We don't want to load `hls.js` until the browser has had a chance to paint.
     if (!this.hasUpdated || !this.canLoad) return;
