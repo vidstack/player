@@ -18,6 +18,8 @@ const config = {
       entries: ['*'],
     },
 
+    trailingSlash: 'always',
+
     vite: {
       plugins: [
         componentsPlugin(),

@@ -16,7 +16,11 @@
     const path = url.pathname;
 
     if ($framework === 'react') {
-      goto($isApiPath ? `${path.replace(/\/api\/?/, '')}/react/api` : `${path}/react`);
+      goto(
+        $isApiPath
+          ? `${path.replace(/\/api\/?/, '')}/react/api`
+          : `${path.replace(/\/$/, '')}/react`,
+      );
     } else {
       goto(path.replace(/\/react/, ''));
     }
