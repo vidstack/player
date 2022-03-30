@@ -10,7 +10,7 @@ The following media attributes can be useful when building a controls container:
 | `autoplay-error:ignore` | Show controls when autoplay fails so the user can start playback manually.  |
 | `can-load:ignore`       | Show controls skeleton while media is loading.                              |
 | `can-play:ignore`       | Hide controls while media is not ready for playback.                        |
-| `can-idle:ignore`       | Hide controls while media is idle (i.e., user is not active).               |
+| `user-idle:ignore`      | Hide controls while media is idle (i.e., user is not active).               |
 | `can-started:ignore`    | Hide controls after media has started (e.g., hide initial big play button). |
 | `can-fullscreen:ignore` | Show alternative controls for when media is in fullscreen.                  |
 
