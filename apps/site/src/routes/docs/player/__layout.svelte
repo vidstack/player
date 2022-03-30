@@ -7,7 +7,7 @@
   import { derived } from 'svelte/store';
 
   const baseUrl = '/docs/player/';
-  const baseSlug = (path: string) => `${baseUrl}${path}`;
+  const baseSlug = (path: string) => `${baseUrl}${path}/`;
 
   const gettingStartedSlug = (s) => baseSlug(`getting-started/${s}`);
   const coreConceptsSlug = (s) => baseSlug(`core-concepts/${s}`);
@@ -15,7 +15,7 @@
   const frameworksSlug = (s) => baseSlug(`frameworks/${s}`);
 
   const ext = () => ($isReactPath ? '/react' : '');
-  const componentsSlug = (path: string) => `${baseUrl}components/${path}${ext()}`;
+  const componentsSlug = (path: string) => `${baseUrl}components/${path}${ext()}/`;
   const providers = (s) => componentsSlug(`providers/${s}`);
   const media = (s) => componentsSlug(`media/${s}`);
   const ui = (s) => componentsSlug(`ui/${s}`);
@@ -35,7 +35,7 @@
         'editor-setup',
         'foundation',
         'styling',
-        'releases',
+        ['releases', { match: true }],
       ].map(toItems(gettingStartedSlug)),
       Libraries: ['react', 'svelte', 'lit', 'vue', 'tailwind'].map(toItems(librariesSlug)),
       Frameworks: [

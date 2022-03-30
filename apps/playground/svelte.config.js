@@ -16,6 +16,8 @@ const config = {
       entries: ['*'],
     },
 
+    trailingSlash: 'always',
+
     vite: {
       plugins: [Icons({ compiler: 'svelte' })],
     },
