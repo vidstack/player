@@ -150,6 +150,10 @@ export class Html5MediaElement extends MediaProviderElement {
 
     const mediaEl = this.mediaElement!;
 
+    if (mediaEl.hasAttribute('loop')) {
+      this.loop = true;
+    }
+
     // Update or remove any attributes that we manage.
     mediaEl.removeAttribute('loop');
     mediaEl.removeAttribute('poster');
