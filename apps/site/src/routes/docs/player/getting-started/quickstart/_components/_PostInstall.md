@@ -35,11 +35,33 @@ the element will jump from the default `150px` width and `300px` height to the i
 triggering a layout shift which is a [poor user experience indicator](https://web.dev/cls) for
 both your users and search engines (i.e., Google).
 
-To avoid a layout shift, we recommend you use an aspect ratio container which holds a fixed
-ratio (e.g., `16/9`). Ideally the ratio set should match the ratio of the media content
-itself (i.e., intrinsic aspect ratio). This will ensure you're media size adapts responsively to the
-viewport size. See our [`vds-aspect-ratio`](../../../components/ui/aspect-ratio/index.md)
-component on how you can achieve this.
+To avoid a layout shift, we recommend you fill `100%` of your media container and use an aspect
+ratio container which holds a fixed ratio (e.g., `16/9`). Ideally the ratio set should match the
+ratio of the media content itself (i.e., intrinsic aspect ratio).
+
+Firstly, set the media and provider element's width to `100%` like so:
+
+```css:copy
+vds-media,
+vds-video,
+vds-hls {
+  width: 100%;
+}
+```
+
+Next, see our [`vds-aspect-ratio`](../../../components/ui/aspect-ratio/index.md) component for how
+to set a fixed aspect ratio for your media content. Once complete, your media content should now
+adapt responsively without a layout shift!
+
+:::info
+You may still see a layout shift if the `vds-aspect-ratio` component script is imported late.
+Consider including it in your critical render path (e.g., in your root `App.*` file).
+
+```js:title=App.*:copy
+import '@vidstack/player/define/vds-aspect-ratio.js';
+```
+
+:::
 
 {/if}
 

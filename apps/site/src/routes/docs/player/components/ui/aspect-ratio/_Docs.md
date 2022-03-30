@@ -13,7 +13,9 @@ CSS property if [browser support](https://caniuse.com/mdn-css_properties_aspect-
 suitable to your application.
 
 ```css:copy
-vds-video {
+vds-media,
+vds-video,
+vds-hls {
   width: 100%;
 }
 
