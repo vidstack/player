@@ -212,33 +212,26 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _observePlaysinline() {
-    const onPlaysinlineChange = () => {
-      this.dispatchEvent(
-        vdsEvent('vds-playsinline-change', {
-          detail: this.mediaElement!.hasAttribute('playsinline'),
-        }),
-      );
-    };
-
-    onPlaysinlineChange();
-    const observer = new MutationObserver(onPlaysinlineChange);
+    const isPlayingInline = () => this.mediaElement!.hasAttribute('playsinline');
+    this._handlePlaysinlineChange(isPlayingInline());
+    const observer = new MutationObserver(() => this._handlePlaysinlineChange(isPlayingInline()));
     observer.observe(this.mediaElement!, { attributeFilter: ['playsinline'] });
     this._mediaElementDisposal.add(() => observer.disconnect());
   }
 
-  protected _observeMediaSources() {
-    const onSrcChange = () => {
-      this.dispatchEvent(
-        vdsEvent('vds-src-change', {
-          detail: this._getMediaSources(),
-        }),
-      );
-    };
+  protected _handlePlaysinlineChange(playsinline: boolean) {
+    this.dispatchEvent(vdsEvent('vds-playsinline-change', { detail: playsinline }));
+  }
 
-    onSrcChange();
-    const observer = new MutationObserver(onSrcChange);
+  protected _observeMediaSources() {
+    this._handleSrcChange(this._getMediaSources());
+    const observer = new MutationObserver(() => this._handleSrcChange(this._getMediaSources()));
     observer.observe(this.mediaElement!, { attributeFilter: ['src'], subtree: true });
     this._mediaElementDisposal.add(() => observer.disconnect());
+  }
+
+  protected _handleSrcChange(sources: string[]) {
+    this.dispatchEvent(vdsEvent('vds-src-change', { detail: sources }));
   }
 
   protected _getMediaSources() {
