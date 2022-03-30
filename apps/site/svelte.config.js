@@ -1,6 +1,5 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 import { componentsPlugin, highlightCodePlugin, svelteMarkdownPlugin } from '@vidstack/kit-plugins';
-import path from 'path';
 import * as preprocess from 'svelte-preprocess';
 import Icons from 'unplugin-icons/vite';
 
@@ -14,20 +13,12 @@ const config = {
   kit: {
     adapter: adapter(),
 
+    prerender: {
+      default: true,
+      entries: ['*'],
+    },
+
     vite: {
-      resolve: {
-        alias: {
-          $actions: path.resolve('./src/lib/actions'),
-          $components: path.resolve('./src/lib/components'),
-          $fonts: path.resolve('./src/lib/fonts'),
-          $img: path.resolve('./src/lib/img'),
-          $polyfills: path.resolve('./src/lib/polyfills'),
-          $layout: path.resolve('./src/lib/layout'),
-          $stores: path.resolve('./src/lib/stores'),
-          $styles: path.resolve('./src/lib/styles'),
-          $utils: path.resolve('./src/lib/utils'),
-        },
-      },
       plugins: [
         componentsPlugin(),
         svelteMarkdownPlugin({ baseUrl: '/' }),

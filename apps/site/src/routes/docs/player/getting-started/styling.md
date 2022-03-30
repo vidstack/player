@@ -82,7 +82,7 @@ Here's a reference table that displays all the media attributes that are set on 
 element.
 
 <script>
-import MediaAttrsTable from '$components/reference/MediaAttrsTable.md';
+import MediaAttrsTable from '$lib/components/reference/MediaAttrsTable.md';
 </script>
 
 <MediaAttrsTable  />
@@ -93,7 +93,7 @@ Here's a reference table that displays all the media CSS variables that are set 
 element.
 
 <script>
-import MediaVarsTable from '$components/reference/MediaVarsTable.md';
+import MediaVarsTable from '$lib/components/reference/MediaVarsTable.md';
 </script>
 
 <MediaVarsTable />

@@ -81,7 +81,7 @@ function addGlobalImports(tags: string[]) {
     'Yes',
     'No',
   ]
-    .map((component) => `import ${component} from '$components/markdown/${component}.svelte';`)
+    .map((component) => `import ${component} from '$lib/components/markdown/${component}.svelte';`)
     .join('\n');
 
   tags.push(['<script>', globalImports, '</script>'].join('\n'));
@@ -128,7 +128,7 @@ function addMarkdownSlug(baseUrl: string, filePath: string, hoistedTags: string[
     [
       '<script>',
       [
-        "import { markdownSlug } from '$stores/markdown';",
+        "import { markdownSlug } from '$lib/stores/markdown';",
         'markdownSlug.set(__slug);',
         "import { onDestroy as __onDestroyMarkdownSlug } from 'svelte';",
         "__onDestroyMarkdownSlug(() => { markdownSlug.set(''); });",
@@ -151,7 +151,7 @@ function addMarkdownMeta(tags: string[], meta: MarkdownMeta) {
     [
       '<script>',
       [
-        "import { markdownMeta } from '$stores/markdown';",
+        "import { markdownMeta } from '$lib/stores/markdown';",
         'markdownMeta.set(__markdown);',
         "import { onDestroy as __onDestroyMarkdownMeta } from 'svelte';",
         '__onDestroyMarkdownMeta(() => { markdownMeta.set(null); });',

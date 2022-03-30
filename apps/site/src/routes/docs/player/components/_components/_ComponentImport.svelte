@@ -13,9 +13,9 @@
   } from './_snippets/_import-component.jsx?highlight';
 
   import { kebabToPascalCase } from '@vidstack/foundation';
-  import { isReactPath } from '$stores/path';
-  import { elementTagName } from '$stores/element';
-  import CodeFence from '$components/markdown/CodeFence.svelte';
+  import { isReactPath } from '$lib/stores/path';
+  import { elementTagName } from '$lib/stores/element';
+  import CodeFence from '$lib/components/markdown/CodeFence.svelte';
 
   $: js = [jsRawCode, jsHlsCode].map((s) => s.replace('{TAG_NAME}', $elementTagName));
   $: cdn = [cdnRawCode, cdnHlCode].map((s) => s.replace('{TAG_NAME}', $elementTagName));

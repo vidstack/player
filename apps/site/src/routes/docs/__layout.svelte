@@ -1,8 +1,8 @@
 <script lang="ts">
-  import '$styles/markdown.css';
+  import '$lib/styles/markdown.css';
 
   import { page } from '$app/stores';
-  import socialCardLarge from '$img/brand/social-card-large.jpg';
+  import socialCardLarge from '$lib/img/brand/social-card-large.jpg';
 </script>
 
 <svelte:head>

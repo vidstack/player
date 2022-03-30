@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isApiPath, isReactPath } from '$stores/path';
+  import { isApiPath, isReactPath } from '$lib/stores/path';
 
   export let href: string;
 

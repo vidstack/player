@@ -1,5 +1,5 @@
 <script>
-  import ComponentPreviewLayout from '$layout/ComponentPreviewLayout.svelte';
+  import ComponentPreviewLayout from '$lib/layout/ComponentPreviewLayout.svelte';
 </script>
 
 <ComponentPreviewLayout>

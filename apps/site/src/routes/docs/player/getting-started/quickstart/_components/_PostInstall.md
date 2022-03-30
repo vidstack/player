@@ -3,8 +3,6 @@
 
   export let installMethod;
   export let frameworkType;
-  export let providerLink;
-  export let providerApiLink;
   export let providerType;
 </script>
 

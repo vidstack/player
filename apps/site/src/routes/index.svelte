@@ -1,6 +1,6 @@
 <script>
-  import Navbar from '$layout/Navbar.svelte';
-  import Footer from '$layout/Footer.svelte';
+  import Navbar from '$lib/layout/Navbar.svelte';
+  import Footer from '$lib/layout/Footer.svelte';
 
   import HeroSection from './_components/_HeroSection.svelte';
   import OpenSourceSection from './_components/_OpenSourceSection.svelte';
@@ -17,7 +17,7 @@
 
 <Navbar contain />
 
-<main class="z-0 flex min-w-full flex-col items-center pt-16 768:items-start">
+<main class="768:items-start z-0 flex min-w-full flex-col items-center pt-16">
   <HeroSection />
   <HowSection />
   <OpenSourceSection />

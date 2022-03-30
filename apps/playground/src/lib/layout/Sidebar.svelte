@@ -88,8 +88,8 @@
   import CloseIcon from '~icons/ri/close-fill';
 
   import { ariaBool, wasEnterKeyPressed, scrollIntoCenter } from '@vidstack/foundation';
-  import { isLargeScreen } from '$stores/isLargeScreen';
-  import Overlay from '$components/base/Overlay.svelte';
+  import { isLargeScreen } from '$lib/stores/isLargeScreen';
+  import Overlay from '$lib/components/base/Overlay.svelte';
   import { derived, type Readable } from 'svelte/store';
 
   const dispatch = createEventDispatcher();

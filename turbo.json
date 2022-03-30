@@ -18,11 +18,7 @@
     },
     "build:app": {
       "dependsOn": ["^analyze", "^build:node", "^build:prod", "^build:types", "^build:definitions"],
-      "outputs": [".svelte-kit/**"]
-    },
-    "build:vercel": {
-      "dependsOn": ["^analyze", "^build:node", "^build:prod", "^build:types", "^build:definitions"],
-      "outputs": [".svelte-kit/**", ".vercel_build_output/**"]
+      "outputs": [".svelte-kit/**", "build/**"]
     },
     "build:dev": {
       "outputs": ["dist/**"]

@@ -5,12 +5,12 @@
   import MenuIcon from '~icons/ri/menu-5-line';
   import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-fill';
 
-  import { colorScheme } from '$stores/colorScheme';
+  import { colorScheme } from '$lib/stores/colorScheme';
   import { uppercaseFirstLetter } from '@vidstack/foundation';
-  import LazyDocSearch from '$components/markdown/LazyDocSearch.svelte';
-  import Popover from '$components/base/Popover.svelte';
-  import SocialLink from '$components/social/SocialLink.svelte';
-  import VidstackLogoIcon from '$img/brand/vidstack-logo.svg?raw';
+  import LazyDocSearch from '$lib/components/markdown/LazyDocSearch.svelte';
+  import Popover from '$lib/components/base/Popover.svelte';
+  import SocialLink from '$lib/components/social/SocialLink.svelte';
+  import VidstackLogoIcon from '$lib/img/brand/vidstack-logo.svg?raw';
 
   import ColorSchemeMenu from './ColorSchemeMenu.svelte';
   import NavLink from './NavLink.svelte';
@@ -30,13 +30,13 @@
   const navLinks = [
     {
       title: 'Documentation',
-      slug: '/docs/player/getting-started/quickstart',
+      slug: '/docs/player',
       match: /^\/docs\/player/,
     },
   ];
 </script>
 
-<div class="flex w-full flex-col items-center justify-center px-5 py-4 1200:py-5">
+<div class="1200:py-5 flex w-full flex-col items-center justify-center px-5 py-4">
   <div class={clsx('flex w-full items-center', contain && '1200:mx-auto 1200:max-w-7xl')}>
     <a
       href="/"
@@ -44,7 +44,7 @@
       sveltekit:prefetch
     >
       <span class="sr-only">Go home</span>
-      <div class="svg-responsive h-7 w-32 overflow-hidden text-gray-inverse">
+      <div class="svg-responsive text-gray-inverse h-7 w-32 overflow-hidden">
         {@html VidstackLogoIcon}
       </div>
     </a>
@@ -53,7 +53,7 @@
 
     <div class="flex-1" />
 
-    <div class="-mr-2 flex items-center 992:hidden">
+    <div class="992:hidden -mr-2 flex items-center">
       <LazyDocSearch />
 
       <Popover overlay on:open={onOpenPopover} on:close={onClosePopover}>
@@ -113,7 +113,7 @@
       </Popover>
     </div>
 
-    <div class="hidden 992:flex 992:items-center">
+    <div class="992:flex 992:items-center hidden">
       <nav>
         <ul class="flex items-center space-x-8 text-lg font-medium">
           {#each navLinks as navLink (navLink.title)}
@@ -122,7 +122,7 @@
         </ul>
       </nav>
 
-      <div class="mx-5 h-7 w-2 border-l-[1.5px] border-gray-divider" />
+      <div class="border-gray-divider mx-5 h-7 w-2 border-l-[1.5px]" />
 
       <div class="hidden: flex items-center">
         <div class="flex space-x-4">

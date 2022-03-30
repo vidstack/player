@@ -1,18 +1,18 @@
 <script>
-	import DocSearchSkeleton from './DocSearchSkeleton.svelte';
+  import DocSearchSkeleton from './DocSearchSkeleton.svelte';
 
-	let hasDocSearchLoaded = false;
-	const DocSearchLoader = async () => {
-		const Component = await import('$components/markdown/DocSearch.svelte');
-		hasDocSearchLoaded = true;
-		return Component;
-	};
+  let hasDocSearchLoaded = false;
+  const DocSearchLoader = async () => {
+    const Component = await import('$lib/components/markdown/DocSearch.svelte');
+    hasDocSearchLoaded = true;
+    return Component;
+  };
 </script>
 
 {#if !hasDocSearchLoaded}
-	<DocSearchSkeleton />
+  <DocSearchSkeleton />
 {/if}
 
 {#await DocSearchLoader() then Component}
-	<svelte:component this={Component.default} />
+  <svelte:component this={Component.default} />
 {/await}

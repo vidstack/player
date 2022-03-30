@@ -85,7 +85,7 @@ each of the variants and CSS variables available when using our plugin.
 ## Media Variants
 
 <script>
-import MediaVariantsTable from '$components/reference/MediaVariantsTable.md';
+import MediaVariantsTable from '$lib/components/reference/MediaVariantsTable.md';
 </script>
 
 <MediaVariantsTable />
@@ -96,7 +96,7 @@ You can take advantage of [arbitrary values](https://tailwindcss.com/docs/adding
 if you're using Tailwind CSS v3+ and use the following CSS media variables.
 
 <script>
-import MediaVarsTable from '$components/reference/MediaVarsTable.md';
+import MediaVarsTable from '$lib/components/reference/MediaVarsTable.md';
 </script>
 
 <MediaVarsTable />

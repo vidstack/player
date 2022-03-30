@@ -1,7 +1,7 @@
 import { wasEnterKeyPressed } from '@vidstack/foundation';
 import { listen, tick } from 'svelte/internal';
 
-import { createDisposalBin } from '$utils/events';
+import { createDisposalBin } from '$lib/utils/events';
 
 export type DialogManagerOptions = {
   onOpen?: () => void;

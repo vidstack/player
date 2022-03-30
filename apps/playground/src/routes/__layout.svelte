@@ -13,13 +13,13 @@
 </script>
 
 <script lang="ts">
-  import '$styles/fonts.css';
-  import '$styles/tailwind.css';
-  import '$styles/app.css';
-  import '$polyfills/focus-visible';
+  import '$lib/styles/fonts.css';
+  import '$lib/styles/tailwind.css';
+  import '$lib/styles/app.css';
+  import '$lib/polyfills/focus-visible';
 
-  import MainLayout from '$layout/MainLayout.svelte';
-  import { createSidebarContext, type SidebarNav } from '$layout/Sidebar.svelte';
+  import MainLayout from '$lib/layout/MainLayout.svelte';
+  import { createSidebarContext, type SidebarNav } from '$lib/layout/Sidebar.svelte';
   import { readable } from 'svelte/store';
 
   export let sidebar;

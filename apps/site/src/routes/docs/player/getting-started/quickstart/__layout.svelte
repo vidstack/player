@@ -3,10 +3,10 @@
 
   import { goto } from '$app/navigation';
   import { navigating, page } from '$app/stores';
-  import Chip from '$components/base/Chip.svelte';
-  import Select from '$components/base/Select.svelte';
-  import Steps from '$components/markdown/Steps.svelte';
-  import Step from '$components/markdown/Step.svelte';
+  import Chip from '$lib/components/base/Chip.svelte';
+  import Select from '$lib/components/base/Select.svelte';
+  import Steps from '$lib/components/markdown/Steps.svelte';
+  import Step from '$lib/components/markdown/Step.svelte';
 
   import InstallNpm from './_components/_InstallNPM.md';
   import InstallCdn from './_components/_InstallCDN.md';
@@ -16,8 +16,11 @@
   import BrowserSupport from './_components/_BrowserSupport.md';
   import PostInstall from './_components/_PostInstall.md';
 
-  import { installMethod as _installMethod, type InstallMethodType } from '$stores/installMethod';
-  import { framework as _framework, type FrameworkType } from '$stores/framework';
+  import {
+    installMethod as _installMethod,
+    type InstallMethodType,
+  } from '$lib/stores/installMethod';
+  import { framework as _framework, type FrameworkType } from '$lib/stores/framework';
 
   const basePath = '/docs/player/getting-started/quickstart';
 
@@ -165,4 +168,4 @@
   <slot />
 </Steps>
 
-<PostInstall {providerType} {providerLink} {providerApiLink} {frameworkType} {installMethod} />
+<PostInstall {providerType} {frameworkType} {installMethod} />

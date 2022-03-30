@@ -1,18 +1,3 @@
 {
-  "extends": "./.svelte-kit/tsconfig.json",
-  "compilerOptions": {
-    "paths": {
-      "$lib": ["src/lib"],
-      "$lib/*": ["src/lib/*"],
-      "$actions/*": ["src/lib/actions/*"],
-      "$components/*": ["src/lib/components/*"],
-      "$fonts/*": ["src/lib/fonts/*"],
-      "$img/*": ["src/lib/img/*"],
-      "$polyfills/*": ["src/lib/polyfills/*"],
-      "$layout/*": ["src/lib/layout/*"],
-      "$stores/*": ["src/lib/stores/*"],
-      "$styles/*": ["src/lib/styles/*"],
-      "$utils/*": ["src/lib/utils/*"]
-    }
-  }
+  "extends": "./.svelte-kit/tsconfig.json"
 }
