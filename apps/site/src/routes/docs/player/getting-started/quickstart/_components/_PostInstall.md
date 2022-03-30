@@ -10,6 +10,58 @@
 
 Congratulations, you're done! You should see the media player rendered on your site :tada:
 
+## Native Media Controls
+
+By default, we'll remove the controls on the underlying `<audio>` or `<video>` element as we
+expect a custom user interface (UI) to be presented. Set the `controls` property on the provider
+component if you'd like to display the native UI controls like so:
+
+{#if frameworkType === 'React'}
+
+```jsx
+<Video controls>
+  <video controls></video>
+</Video>
+```
+
+{:else}
+
+```html
+<vds-video controls>
+  <video controls></video>
+</vds-video>
+```
+
+{/if}
+
+## Media Autoplay
+
+We manually handle autoplay so we can detect when it fails. In addition, the `autoplay` attribute
+will take priority over the `preload` attribute so media won't be lazy loaded.
+
+Therefore, ensure you set `autoplay` on the provider component instead of the underlying media
+element like so:
+
+{#if frameworkType === 'React'}
+
+```jsx
+<Video autoplay>
+  {/* Do not set autoplay on media element. */}
+  <video></video>
+</Video>
+```
+
+{:else}
+
+```html
+<vds-video autoplay>
+  <!-- Do not set autoplay on media element. -->
+  <video></video>
+</vds-video>
+```
+
+{/if}
+
 {#if providerType !== 'Audio'}
 
 ## Player Poster
