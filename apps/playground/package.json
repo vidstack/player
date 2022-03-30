@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@iconify-json/ri": "^1.1.0",
-    "@sveltejs/adapter-auto": "^1.0.0-next.30",
+    "@sveltejs/adapter-static": "^1.0.0-next.29",
     "@sveltejs/kit": "^1.0.0-next.288",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.6",

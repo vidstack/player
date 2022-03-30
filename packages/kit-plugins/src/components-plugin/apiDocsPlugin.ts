@@ -61,7 +61,7 @@ export const apiDocsPlugin = (components: ComponentMeta[]): Plugin => {
           '---',
           '',
           '<script context="module">',
-          "  import ComponentApiTable from '$components/markdown/ComponentApiTable.svelte';",
+          "  import ComponentApiTable from '$lib/components/markdown/ComponentApiTable.svelte';",
           `  const __api = ${component ? serializeApi(component, isReact) : '{}'};`,
           '</script>',
           '',

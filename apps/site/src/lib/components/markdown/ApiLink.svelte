@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { elementTagName } from '$stores/element';
-  import { isReactPath } from '$stores/path';
+  import { elementTagName } from '$lib/stores/element';
+  import { isReactPath } from '$lib/stores/path';
 
-  import { getSidebarContext } from '$layout/Sidebar.svelte';
+  import { getSidebarContext } from '$lib/layout/Sidebar.svelte';
 
   export let hash: string | null = null;
 

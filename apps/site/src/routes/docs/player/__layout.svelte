@@ -1,8 +1,8 @@
 <script lang="ts">
-  import DocsLayout from '$layout/DocsLayout.svelte';
-  import { createSidebarContext, toItems } from '$layout/Sidebar.svelte';
-  import { EXPERIMENTAL_TAG_NAMES } from '$stores/element';
-  import { isReactPath } from '$stores/path';
+  import DocsLayout from '$lib/layout/DocsLayout.svelte';
+  import { createSidebarContext, toItems } from '$lib/layout/Sidebar.svelte';
+  import { EXPERIMENTAL_TAG_NAMES } from '$lib/stores/element';
+  import { isReactPath } from '$lib/stores/path';
   import { isString } from '@vidstack/foundation';
   import { derived } from 'svelte/store';
 
@@ -35,6 +35,7 @@
         'editor-setup',
         'foundation',
         'styling',
+        'releases',
       ].map(toItems(gettingStartedSlug)),
       Libraries: ['react', 'svelte', 'lit', 'vue', 'tailwind'].map(toItems(librariesSlug)),
       Frameworks: [

@@ -1,5 +1,5 @@
 <script>
-  import { isReactPath } from '$stores/path';
+  import { isReactPath } from '$lib/stores/path';
 
   import { uppercaseFirstLetter } from '@vidstack/foundation';
 

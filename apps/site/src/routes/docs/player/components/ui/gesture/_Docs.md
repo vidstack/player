@@ -81,7 +81,7 @@ Due to event listeners being attached directly to the media container, they don'
 video element's contextual menu (i.e., the menu opened when you right-click the video element):
 
 <script>
-import ContextualMenu from '$img/contextual-menu.png'
+import ContextualMenu from '$lib/img/contextual-menu.png'
 </script>
 
 <img

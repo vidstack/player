@@ -4,7 +4,7 @@
   font-display: swap;
   font-style: normal;
   font-named-instance: 'Regular';
-  src: url('$fonts/Inter-VF.roman-latin.woff2') format('woff2');
+  src: url('$lib/fonts/Inter-VF.roman-latin.woff2') format('woff2');
 }
 
 @font-face {
@@ -13,15 +13,15 @@
   font-display: swap;
   font-style: italic;
   font-named-instance: 'Italic';
-  src: url('$fonts/Inter-VF.italic-latin.woff2') format('woff2');
+  src: url('$lib/fonts/Inter-VF.italic-latin.woff2') format('woff2');
 }
 
 @font-face {
   font-family: 'Fira Code VF';
   font-weight: 300 700;
   font-style: normal;
-  src: url('$fonts/FiraCode-VF.woff2') format('woff2-variations'),
-    url('$fonts/FiraCode-VF.woff') format('woff-variations');
+  src: url('$lib/fonts/FiraCode-VF.woff2') format('woff2-variations'),
+    url('$lib/fonts/FiraCode-VF.woff') format('woff-variations');
 }
 
 .font-mono {

@@ -47,7 +47,7 @@
   import { page } from '$app/stores';
   import { browser } from '$app/env';
   import { ariaBool, camelToKebabCase, camelToTitleCase } from '@vidstack/foundation';
-  import { isReactPath } from '$stores/path';
+  import { isReactPath } from '$lib/stores/path';
 
   export let api: ComponentApi;
 
@@ -135,7 +135,7 @@
           <a
             href={categoryLinks[category]}
             target="_blank"
-            class="flex h-full items-center border-0 px-2.5 text-gray-300 hover:text-gray-inverse"
+            class="hover:text-gray-inverse flex h-full items-center border-0 px-2.5 text-gray-300"
           >
             <span class="sr-only">Learn more about {category}</span>
             <QuestionIcon width="24" height="24" />
@@ -146,8 +146,8 @@
       <div
         id={`scroll-${category}`}
         class={clsx(
-          'flex flex-col border border-gray-divider relative',
-          'overflow-auto scrollbar:!w-1.5 scrollbar:!h-1.5 scrollbar:bg-transparent',
+          'border-gray-divider relative flex flex-col border',
+          'scrollbar:!w-1.5 scrollbar:!h-1.5 scrollbar:bg-transparent overflow-auto',
           'scrollbar-track:!bg-gray-divider scrollbar-thumb:!rounded scrollbar-thumb:!bg-gray-300',
           'scrollbar-track:!rounded mt-[2em]',
           !showAll && 'max-h-[390px]',
@@ -158,11 +158,11 @@
           {@const isOpen = _isOpen[key]}
           {@const hasLink = 'link' in prop}
 
-          <div id={key} class="flex flex-col border-t border-gray-divider first:border-0">
+          <div id={key} class="border-gray-divider flex flex-col border-t first:border-0">
             <div
-              class="not-prose relative w-full border-b border-gray-divider hover:bg-[#fafafa] dark:hover:bg-[#343434]"
+              class="not-prose border-gray-divider relative w-full border-b hover:bg-[#fafafa] dark:hover:bg-[#343434]"
             >
-              <h3 class="text-sm font-medium text-gray-inverse">
+              <h3 class="text-gray-inverse text-sm font-medium">
                 <button
                   id={`accordion-btn-${key}`}
                   class="h-full w-full py-2 px-2.5 text-left"
@@ -198,7 +198,7 @@
             <div
               id={`accordion-${key}`}
               aria-labelledby={`accordion-btn-${key}`}
-              class={clsx(!isOpen && 'hidden', 'p-4 pb-0 prose dark:prose-invert relative')}
+              class={clsx(!isOpen && 'hidden', 'prose dark:prose-invert relative p-4 pb-0')}
             >
               {#if hasTypes}
                 <div class="flex flex-col space-y-4 pt-2 font-mono text-sm">
@@ -228,9 +228,9 @@
       </div>
 
       {#if filterHasDesc(api[category]).length > 3}
-        <div class="mt-4 flex items-center justify-end text-sm text-gray-soft">
+        <div class="text-gray-soft mt-4 flex items-center justify-end text-sm">
           <button
-            class="rounded-sm px-2.5 py-1 font-medium hover:text-gray-inverse"
+            class="hover:text-gray-inverse rounded-sm px-2.5 py-1 font-medium"
             aria-checked={ariaBool(isAllOpen[category])}
             on:click={() => {
               isAllOpen[category] = !isAllOpen[category];
@@ -246,7 +246,7 @@
 
           {#if isAllOpen[category] || filterHasDesc(api[category]).length > 10}
             <button
-              class="rounded-sm px-2.5 py-1 font-medium hover:text-gray-inverse"
+              class="hover:text-gray-inverse rounded-sm px-2.5 py-1 font-medium"
               aria-checked={ariaBool(showAll)}
               on:click={() => {
                 _showAll[category] = !_showAll[category];

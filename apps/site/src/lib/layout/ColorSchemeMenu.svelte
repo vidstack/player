@@ -3,9 +3,9 @@
   import SunIcon from '~icons/ri/sun-fill';
   import SettingsIcon from '~icons/ri/settings-2-fill';
 
-  import Menu from '$components/base/Menu.svelte';
-  import MenuItem from '$components/base/MenuItem.svelte';
-  import { colorScheme, colorSchemes, isDarkColorScheme } from '$stores/colorScheme';
+  import Menu from '$lib/components/base/Menu.svelte';
+  import MenuItem from '$lib/components/base/MenuItem.svelte';
+  import { colorScheme, colorSchemes, isDarkColorScheme } from '$lib/stores/colorScheme';
   import { uppercaseFirstLetter } from '@vidstack/foundation';
 
   const buttonIcon = {

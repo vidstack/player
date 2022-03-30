@@ -1,17 +1,15 @@
 <script>
-	import TabbedLinks from '$components/markdown/TabbedLinks.svelte';
-	import { markdownSlug } from '$stores/markdown';
+  import TabbedLinks from '$lib/components/markdown/TabbedLinks.svelte';
+  import { page } from '$app/stores';
 
-	$: docsHref = $markdownSlug.includes('/api')
-		? $markdownSlug.replace(/\/api\/?/, '')
-		: $markdownSlug;
+  $: path = $page.url.pathname;
+  $: docsHref = path.includes('/api') ? path.replace(/\/api\/?/, '') : path;
+  $: apiHref = !path.includes('/api') ? `${path}/api` : path;
 
-	$: apiHref = !$markdownSlug.includes('/api') ? `${$markdownSlug}/api` : $markdownSlug;
-
-	$: links = [
-		{ title: 'Docs', href: docsHref },
-		{ title: 'API', href: apiHref }
-	];
+  $: links = [
+    { title: 'Docs', href: docsHref },
+    { title: 'API', href: apiHref },
+  ];
 </script>
 
 <TabbedLinks {links} />

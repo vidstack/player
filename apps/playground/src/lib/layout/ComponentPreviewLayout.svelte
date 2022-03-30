@@ -1,5 +1,5 @@
 <script>
-  import ComponentPreview from '$components/preview/ComponentPreview.svelte';
+  import ComponentPreview from '$lib/components/preview/ComponentPreview.svelte';
 </script>
 
 <div class="mx-auto flex max-w-[720px] flex-col px-4 pb-20">

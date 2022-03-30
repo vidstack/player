@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isComponentsPath, isReactPath } from '$stores/path';
+  import { isComponentsPath, isReactPath } from '$lib/stores/path';
   import { kebabToCamelCase, kebabToPascalCase } from '@vidstack/foundation';
 
   export let code: string;

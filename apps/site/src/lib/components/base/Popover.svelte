@@ -10,8 +10,8 @@
   import CloseIcon from '~icons/ri/close-fill';
 
   import { ariaBool, wasEnterKeyPressed, hideDocumentScrollbar } from '@vidstack/foundation';
-  import { dialogManager, type CloseDialogCallback } from '$actions/dialogManager';
-  import { isLargeScreen } from '$stores/isLargeScreen';
+  import { dialogManager, type CloseDialogCallback } from '$lib/actions/dialogManager';
+  import { isLargeScreen } from '$lib/stores/isLargeScreen';
 
   import Overlay from './Overlay.svelte';
 
@@ -80,20 +80,20 @@
     <div
       id={popoverId}
       class={clsx(
-        'absolute -top-4 -right-5 min-w-[340px] p-5 pt-4 origin-top-right z-50',
+        'absolute -top-4 -right-5 z-50 min-w-[340px] origin-top-right p-5 pt-4',
         !open && 'invisible',
       )}
       tabindex="-1"
       role="dialog"
     >
       <div
-        class="flex min-h-[60px] flex-col overflow-hidden rounded-md border border-gray-divider bg-gray-elevate shadow-md"
+        class="border-gray-divider bg-gray-elevate flex min-h-[60px] flex-col overflow-hidden rounded-md border shadow-md"
       >
         <div class="flex items-center">
           <div class="flex-1" />
           <button
             class={clsx(
-              'p-4 text-gray-soft hover:text-gray-inverse',
+              'text-gray-soft hover:text-gray-inverse p-4',
               !open && 'pointer-events-none',
             )}
             on:pointerdown={() => closeDialog()}

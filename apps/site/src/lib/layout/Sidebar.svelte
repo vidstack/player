@@ -108,9 +108,9 @@
   import CloseIcon from '~icons/ri/close-fill';
 
   import { ariaBool, wasEnterKeyPressed, scrollIntoCenter } from '@vidstack/foundation';
-  import { isLargeScreen } from '$stores/isLargeScreen';
-  import Overlay from '$components/base/Overlay.svelte';
-  import LazyDocSearch from '$components/markdown/LazyDocSearch.svelte';
+  import { isLargeScreen } from '$lib/stores/isLargeScreen';
+  import Overlay from '$lib/components/base/Overlay.svelte';
+  import LazyDocSearch from '$lib/components/markdown/LazyDocSearch.svelte';
   import { derived, type Readable } from 'svelte/store';
 
   const dispatch = createEventDispatcher();
@@ -138,9 +138,9 @@
 <aside
   id="main-sidebar"
   class={clsx(
-    'fixed inset-0 z-50 w-96 992:w-72 max-w-[85vw] overflow-y-auto bg-gray-body',
-    'border-r border-gray-divider',
-    'transform transition-transform duration-200 ease-out -translate-x-full will-change-transform',
+    '992:w-72 bg-gray-body fixed inset-0 z-50 w-96 max-w-[85vw] overflow-y-auto',
+    'border-gray-divider border-r',
+    '-translate-x-full transform transition-transform duration-200 ease-out will-change-transform',
     open && 'translate-x-0',
     '992:top-[4.5rem] 992:pb-[5rem] 1200:top-20 1200:pb-24 992:left-0 992:w-[19.5rem] 992:h-full 992:translate-x-0 992:translate-y-px',
   )}
@@ -148,10 +148,10 @@
   aria-modal={ariaBool(!$isLargeScreen)}
   bind:this={sidebar}
 >
-  <div class="sticky top-0 left-0 flex items-center 992:hidden">
+  <div class="992:hidden sticky top-0 left-0 flex items-center">
     <div class="flex-1" />
     <button
-      class={clsx('p-4 text-gray-soft hover:text-gray-inverse', !open && 'pointer-events-none')}
+      class={clsx('text-gray-soft hover:text-gray-inverse p-4', !open && 'pointer-events-none')}
       on:pointerdown={() => dispatch('close')}
       on:keydown={(e) => wasEnterKeyPressed(e) && dispatch('close', true)}
     >
@@ -161,7 +161,7 @@
   </div>
 
   <nav class="p-6 pt-0 pl-8">
-    <div class="pointer-events-none sticky top-0 -ml-0.5 hidden min-h-[80px] 992:block">
+    <div class="992:block pointer-events-none sticky top-0 -ml-0.5 hidden min-h-[80px]">
       <div class="h-6 bg-white dark:bg-gray-800" />
       <div class="pointer-events-auto relative bg-white dark:bg-gray-800">
         <LazyDocSearch />
@@ -172,17 +172,17 @@
     <ul>
       {#each Object.keys($nav) as category (category)}
         {@const items = $nav[category]}
-        <li class="mt-12 first:mt-0 992:mt-10">
-          <h5 class="text-gray-strong mb-8 text-lg font-semibold 992:mb-3">{category}</h5>
-          <ul class="space-y-3 border-l border-gray-divider">
+        <li class="992:mt-10 mt-12 first:mt-0">
+          <h5 class="text-gray-strong 992:mb-3 mb-8 text-lg font-semibold">{category}</h5>
+          <ul class="border-gray-divider space-y-3 border-l">
             {#each items as item (item.title + item.slug)}
               <li class="first:mt-6">
                 <a
                   class={clsx(
-                    'border-l-2 -ml-px pl-4 py-2 992:py-1.5 flex items-center',
+                    '992:py-1.5 -ml-px flex items-center border-l-2 py-2 pl-4',
                     isActiveSidebarItem(item, $page.url.pathname)
-                      ? 'border-brand-200 dark:border-brand font-semibold text-brand'
-                      : 'border-transparent font-normal hover:border-gray-inverse text-gray-soft hover:text-gray-inverse',
+                      ? 'border-brand-200 dark:border-brand text-brand font-semibold'
+                      : 'hover:border-gray-inverse text-gray-soft hover:text-gray-inverse border-transparent font-normal',
                   )}
                   href={item.slug}
                   sveltekit:prefetch
@@ -201,6 +201,6 @@
   </nav>
 </aside>
 
-<div class="z-40 992:hidden">
+<div class="992:hidden z-40">
   <Overlay {open} />
 </div>

@@ -4,7 +4,7 @@ description: IDE configuration settings to improve the experience of working wit
 ---
 
 <script>
-import VsCodeAutocomplete from '$img/vscode-autocomplete.png'
+import VsCodeAutocomplete from '$lib/img/vscode-autocomplete.png'
 </script>
 
 # Editor Setup
