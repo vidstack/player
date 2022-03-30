@@ -18,6 +18,9 @@ import { VideoPresentationController } from './presentation';
  * @slot - Used to pass in the `<video>` element.
  * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
  * @events ./presentation/events.ts
+ * @cssprop --vds-video-width - The width of the video element.
+ * @cssprop --vds-video-height - The height of the video element.
+ * @cssprop --vds-video-bg-color - The background color of the video content.
  * @example
  * ```html
  * <vds-video poster="https://media-files.vidstack.io/poster.png">
@@ -58,7 +61,7 @@ export class VideoElement extends Html5MediaElement {
       css`
         :host {
           display: inline-block;
-          background-color: #000;
+          background-color: var(--vds-video-bg-color, #000);
         }
 
         :host([hidden]) {

@@ -56,7 +56,7 @@ export class MediaElement extends LitElement {
     return [
       css`
         :host {
-          display: block;
+          display: inline-block;
           position: relative;
           contain: content;
         }
