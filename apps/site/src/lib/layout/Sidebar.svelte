@@ -13,8 +13,7 @@
   export function isActiveSidebarItem({ match, slug }: SidebarItem, currentPath: string) {
     const isMatch =
       match &&
-      (currentPath === slug ||
-        (currentPath.startsWith(slug) && currentPath[slug.length - 1] === '/'));
+      (currentPath === slug || (currentPath.startsWith(slug) && currentPath[slug.length] === '/'));
 
     return match ? isMatch : currentPath === slug;
   }
