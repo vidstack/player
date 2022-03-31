@@ -1,4 +1,4 @@
-# [1.3.0](https://github.com/vidstack/vidstack/compare/v0.13.3...v1.3.0) (2022-03-31)
+# [1.3.0-next](https://github.com/vidstack/vidstack/compare/v0.13.3...v1.3.0) (2022-03-31)
 
 ### Bug Fixes
 
