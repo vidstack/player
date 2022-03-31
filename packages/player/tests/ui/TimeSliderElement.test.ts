@@ -23,7 +23,7 @@ it('should render light DOM', async function () {
       autocomplete="off"
       role="slider"
       tabindex="0"
-      style="--vds-slider-fill-value: 0; --vds-slider-fill-rate: 0; --vds-slider-fill-percent: 0%; --vds-slider-pointer-value: 0; --vds-slider-pointer-rate: 0; --vds-slider-pointer-percent: 0%;"
+      style="--vds-fill-value: 0; --vds-fill-rate: 0; --vds-fill-percent: 0%; --vds-pointer-value: 0; --vds-pointer-rate: 0; --vds-pointer-percent: 0%;"
     ></vds-time-slider>
   `);
 });

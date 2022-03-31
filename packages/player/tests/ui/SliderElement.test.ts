@@ -24,7 +24,7 @@ it('should render light DOM', async function () {
       autocomplete="off"
       role="slider"
       tabindex="0"
-      style="--vds-slider-fill-value: 50; --vds-slider-fill-rate: 0.5; --vds-slider-fill-percent: 50%; --vds-slider-pointer-value: 0; --vds-slider-pointer-rate: 0; --vds-slider-pointer-percent: 0%;"
+      style="--vds-fill-value: 50; --vds-fill-rate: 0.5; --vds-fill-percent: 50%; --vds-pointer-value: 0; --vds-pointer-rate: 0; --vds-pointer-percent: 0%;"
    ></vds-slider>
   `);
 });
