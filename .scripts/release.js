@@ -209,6 +209,9 @@ async function publishPackage(pkgName, version, runIfNotDry) {
     releaseTag = 'beta';
   } else if (version.includes('rc')) {
     releaseTag = 'rc';
+  } else {
+    // TODO: Remove at 1.0 release.
+    releaseTag = 'next';
   }
 
   step(`Publishing ${pkgName}...`);

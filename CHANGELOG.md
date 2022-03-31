@@ -1,3 +1,39 @@
+# [1.3.0](https://github.com/vidstack/vidstack/compare/v0.13.3...v1.3.0) (2022-03-31)
+
+### Bug Fixes
+
+- **foundation:** `listen` function not imported by `FullscreenController` ([7324416](https://github.com/vidstack/vidstack/commit/73244162d03530117ebefd2b0841e030be060156)), closes [#637](https://github.com/vidstack/vidstack/issues/637)
+- **foundation:** request queue should be flushed in-order ([977f5bd](https://github.com/vidstack/vidstack/commit/977f5bd3d73eb9e78d9b57db75300337dc8dc358))
+- **player:** `AspectRatioElement`- ensure aspect ratio is held by `<video>` element ([8d2be90](https://github.com/vidstack/vidstack/commit/8d2be902cfb02e9917cb776134bdd222fe464c5e))
+- **player:** `isHlsStream` should test all sources ([f17af0c](https://github.com/vidstack/vidstack/commit/f17af0c474969f0ef74f638a7bd407065fe5e385))
+- **player:** connect orphan context consumers ([434c849](https://github.com/vidstack/vidstack/commit/434c849edae88ae77167687b1841428c37c0fb96))
+- **player:** current hls media src is overwritten ([565ac85](https://github.com/vidstack/vidstack/commit/565ac852dd919753e22e50cc7399be7b93fca831))
+- **player:** detect `loop` on media element and update store ([33b992a](https://github.com/vidstack/vidstack/commit/33b992a54a5e72d1af1a2aac87a209acae8f2141))
+- **player:** do not overwrite video poster if not set ([81a5bf0](https://github.com/vidstack/vidstack/commit/81a5bf042d675d8c8b5c82da07ffa39411b8fd26))
+- **player:** drop `<vds-media-ui>` element ([d380f64](https://github.com/vidstack/vidstack/commit/d380f640c18a1a192b8503b0c5831d8dfbfde683))
+- **player:** migrate from `data-` attributes to regular attributes ([b0b7caa](https://github.com/vidstack/vidstack/commit/b0b7caaa4149a25b4a1259f9cdac6705ea923638))
+- **player:** observe `playsline` changes on media element to update store ([63ca0bb](https://github.com/vidstack/vidstack/commit/63ca0bb47fb361aff0028369599ac34c1cfe9b39))
+- **player:** prefer browsers source selection algorithm ([87f6574](https://github.com/vidstack/vidstack/commit/87f65740524fffc3cb2cce6fbec20d6e1a36c1c6))
+- **player:** remove `<vds-*-player>` elements ([0103cbd](https://github.com/vidstack/vidstack/commit/0103cbd71a2da339b818f789e1b70d424671e4c0))
+- **player:** remove `slider` prefix from slider css variables ([6856ad6](https://github.com/vidstack/vidstack/commit/6856ad60f3cdc50037e7022754b8f3f381f4c4cb))
+- **player:** remove superflous `loading` property on `<vds-poster>` ([ef5e291](https://github.com/vidstack/vidstack/commit/ef5e291ed1c0532107d8de4648fb7347d8e0ee0a))
+- **player:** rename `media-idle` to `user-idle` ([7e12d34](https://github.com/vidstack/vidstack/commit/7e12d342e4c35bf491f0f143a8dbf40f5e7cb82d))
+- **player:** rename media sync `sharedVolume` prop to `syncVolume` ([94209c8](https://github.com/vidstack/vidstack/commit/94209c82322cdc731fcaacf2d1302948f5da25df))
+- **player:** support bi-directional element discovery ([d72467f](https://github.com/vidstack/vidstack/commit/d72467f88f2586f8d57f0dd90d2bd30ea169fe5a))
+- **player:** toggle button cursor should default to `pointer` ([10fa41d](https://github.com/vidstack/vidstack/commit/10fa41d5a343835332e55e005ffd6e96f3ae4896))
+- **player:** update `played` media store ([0c9f7ad](https://github.com/vidstack/vidstack/commit/0c9f7ad0b4081ffc43c6e0fd644b7ca0f729f720))
+
+### Features
+
+- **player:** contain media styles ([8aecd9c](https://github.com/vidstack/vidstack/commit/8aecd9cfc9ce916fdaa246c10bfd65506e70e0bb))
+- **player:** media controller can now be parent of media provider ([76d8fe8](https://github.com/vidstack/vidstack/commit/76d8fe86b83f1ec490f4dad8162f29b8cbc28b6f))
+- **player:** new `<vds-media>` element ([0f72b10](https://github.com/vidstack/vidstack/commit/0f72b10026f1d86805d91e7c66f72baf966efe40))
+- **player:** new `fullscreen-target` attribute on `FullscreenButtonElement` ([ac7721d](https://github.com/vidstack/vidstack/commit/ac7721d61e6c5edae18da450cbb57098723bb511))
+- **player:** progressively enhanced media ([3492c76](https://github.com/vidstack/vidstack/commit/3492c76c920083b6639220f93a6ed1ec303f592d))
+- **player:** register `<vds-media>` as discoverable ([03c3e3b](https://github.com/vidstack/vidstack/commit/03c3e3b054c8c2b31cdb848987fb39cff0e99a3c))
+- **player:** remove experimental sticker on `vds-media-sync` ([fa4d487](https://github.com/vidstack/vidstack/commit/fa4d4876d653e194b947971b087eeffdb4105084))
+- **player:** shorter media attr names on `<vds-media>` ([4e7c680](https://github.com/vidstack/vidstack/commit/4e7c6807eebfa9744051e66302671be8e839b7d2))
+
 ## [0.13.3](https://github.com/vidstack/vidstack/compare/v0.13.2...v0.13.3) (2022-03-21)
 
 ### Bug Fixes

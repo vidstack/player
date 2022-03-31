@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/uploader",
-  "version": "0.13.3",
+  "version": "1.3.0",
   "private": true,
   "dependencies": {
     "@vidstack/foundation": "workspace:*"
