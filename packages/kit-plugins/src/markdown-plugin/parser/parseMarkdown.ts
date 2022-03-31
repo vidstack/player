@@ -48,7 +48,6 @@ export function parseMarkdownToSvelte(
 
   if (isRoute) {
     addHeadTags(filePath, hoistedTags, meta);
-    addMarkdownMeta(hoistedTags, meta);
     addMarkdownSlug(options.baseUrl ?? '/', filePath, hoistedTags);
   }
 
@@ -132,29 +131,6 @@ function addMarkdownSlug(baseUrl: string, filePath: string, hoistedTags: string[
         'markdownSlug.set(__slug);',
         "import { onDestroy as __onDestroyMarkdownSlug } from 'svelte';",
         "__onDestroyMarkdownSlug(() => { markdownSlug.set(''); });",
-      ].join('\n'),
-      '</script>',
-    ].join('\n'),
-  );
-}
-
-function addMarkdownMeta(tags: string[], meta: MarkdownMeta) {
-  tags.push(
-    [
-      '<script context="module">',
-      `export const /*#__PURE__*/__markdown = ${JSON.stringify(meta, null, 2)};`,
-      '</script>',
-    ].join('\n'),
-  );
-
-  tags.push(
-    [
-      '<script>',
-      [
-        "import { markdownMeta } from '$lib/stores/markdown';",
-        'markdownMeta.set(__markdown);',
-        "import { onDestroy as __onDestroyMarkdownMeta } from 'svelte';",
-        '__onDestroyMarkdownMeta(() => { markdownMeta.set(null); });',
       ].join('\n'),
       '</script>',
     ].join('\n'),

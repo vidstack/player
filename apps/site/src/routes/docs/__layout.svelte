@@ -1,8 +1,28 @@
+<script lang="ts" context="module">
+  import type { Load } from '@sveltejs/kit';
+
+  export const load: Load = async ({ url, fetch }) => {
+    const res = await fetch(`/docs/meta/${url.pathname.replace(/\//g, '%2f')}.json`);
+    const { meta } = await res.json();
+
+    return {
+      props: {
+        meta,
+      },
+    };
+  };
+</script>
+
 <script lang="ts">
   import '$lib/styles/markdown.css';
 
   import { page } from '$app/stores';
   import socialCardLarge from '$lib/img/brand/social-card-large.jpg';
+  import { markdownMeta, type MarkdownMeta } from '$lib/stores/markdown';
+
+  export let meta: MarkdownMeta;
+
+  $: markdownMeta.set(meta);
 </script>
 
 <svelte:head>

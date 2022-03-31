@@ -1,6 +1,6 @@
 import path from 'path';
 import minimist from 'minimist';
-import globby from 'fast-glob';
+import { globbySync } from 'globby';
 import { build } from 'esbuild';
 import kleur from 'kleur';
 import { gzipSizeFromFileSync } from 'gzip-size';
@@ -27,7 +27,7 @@ const nodeShims = IS_NODE
 
 async function main() {
   const entryPoints = (args.entry.includes(',') ? args.entry.split(',') : [args.entry])
-    .map((glob) => globby.sync(glob))
+    .map((glob) => globbySync(glob))
     .flat();
 
   const outdir = path.resolve(process.cwd(), args.outdir);

@@ -1,6 +1,6 @@
 import minimist from 'minimist';
 import fs from 'fs-extra';
-import globby from 'fast-glob';
+import { globbySync } from 'globby';
 import path from 'path';
 import chokidar from 'chokidar';
 import kleur from 'kleur';
@@ -37,7 +37,7 @@ if (watch) {
     .on('add', (file) => fs.copy(file, resolveDest(file)))
     .on('unlink', (file) => fs.remove(resolveDest(file)));
 } else {
-  const files = globby.sync(glob, { absolute: true, cwd: targetDir });
+  const files = globbySync(glob, { absolute: true, cwd: targetDir });
   files.forEach((file) => {
     fs.copy(file, resolveDest(file), { overwrite });
   });

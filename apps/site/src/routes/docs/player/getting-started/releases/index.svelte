@@ -3,7 +3,7 @@
 
   export const prerender = true;
 
-  export const load: Load = async () => {
+  export const load: Load = async ({ fetch }) => {
     const res = await fetch(`/docs/player/getting-started/releases/latest.json`);
     const { slug } = await res.json();
 

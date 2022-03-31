@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { derived, writable } from 'svelte/store';
 
 export type MarkdownFrontmatter = Record<string, unknown>;
 
@@ -18,7 +18,12 @@ export type MarkdownMeta = {
   lastUpdated: number;
 };
 
-// Singletons that are managed in `parseMarkdown.ts`.
-
 export const markdownMeta = writable<MarkdownMeta | null>(null);
 export const markdownSlug = writable<string>('');
+
+export const hasMarkdownHeaders = derived(
+  markdownMeta,
+  (meta) =>
+    meta?.headers &&
+    [...meta.headers.map((h) => h.title), ...meta.headers.map((h) => h.children).flat()].length > 1,
+);

@@ -158,7 +158,7 @@ const provider = document.querySelector('vds-video');
 provider.startLoadingMedia();
 ```
 
-## Simpler Attributes and CSS Properties
+## Simpler Style Names
 
 We've simplified attribute and CSS property names in the library.
 

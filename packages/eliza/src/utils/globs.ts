@@ -1,5 +1,5 @@
-import fastGlob from 'fast-glob';
 import { existsSync, lstatSync } from 'fs';
+import { globbySync } from 'globby';
 import normalizePath from 'normalize-path';
 
 const IGNORE_GLOBS = ['**/node_modules/**', '**/web_modules/**'];
@@ -28,7 +28,7 @@ async function expandGlobs(globs: string | string[]): Promise<string[]> {
         const dirExists = existsSync(g) && lstatSync(g).isDirectory();
 
         if (dirExists) {
-          return fastGlob([fastGlobNormalize(`${g}/${DEFAULT_DIR_GLOB}`)], {
+          return globbySync([fastGlobNormalize(`${g}/${DEFAULT_DIR_GLOB}`)], {
             ignore: IGNORE_GLOBS,
             absolute: true,
             followSymbolicLinks: false,
@@ -38,7 +38,7 @@ async function expandGlobs(globs: string | string[]): Promise<string[]> {
         // the glob wasn't a directory
       }
 
-      return fastGlob([fastGlobNormalize(g)], {
+      return globbySync([fastGlobNormalize(g)], {
         ignore: IGNORE_GLOBS,
         absolute: true,
         followSymbolicLinks: false,

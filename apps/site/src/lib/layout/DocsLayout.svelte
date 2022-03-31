@@ -9,6 +9,8 @@
   import { ariaBool, hideDocumentScrollbar } from '@vidstack/foundation';
   import { type CloseDialogCallback, dialogManager } from '$lib/actions/dialogManager';
   import Button from '$lib/components/base/Button.svelte';
+  import OnThisPage from './OnThisPage.svelte';
+  import { hasMarkdownHeaders } from '$lib/stores/markdown';
 
   let isSidebarOpen = false;
   let isNavPopoverOpen = false;
@@ -79,9 +81,13 @@
 <main class="max-w-8xl 1200:pr-10 z-20 mx-auto">
   <Sidebar open={isSidebarOpen} on:close={(e) => closeSidebar(e.detail)} />
 
-  <div class="576:px-6 768:px-8 992:pl-[21rem] px-4">
+  <div
+    class={clsx('576:px-6 768:px-8 992:pl-[21rem] px-4', $hasMarkdownHeaders && '1200:mr-[18rem]')}
+  >
     <div class="992:mt-32 relative mx-auto mt-[13rem] w-full max-w-3xl">
       <slot />
+
+      <OnThisPage />
 
       {#if $previousItem || $nextItem}
         <hr class="border-gray-divider mt-20" />

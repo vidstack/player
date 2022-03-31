@@ -1,6 +1,6 @@
 ## What can you do?
 
-- [Start using Vidstack](../quickstart/index.md) and give us feedback.
+- [Start using Vidstack](../../quickstart/index.md) and give us feedback.
 - Try to tackle any of our [1.0 issues](https://github.com/vidstack/vidstack/projects/1) so
   we can get there faster.
 - Help us improve the [player documentation](https://github.com/vidstack/vidstack/tree/main/apps/site)

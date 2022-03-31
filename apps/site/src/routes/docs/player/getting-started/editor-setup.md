@@ -4,12 +4,13 @@ description: IDE configuration settings to improve the experience of working wit
 ---
 
 <script>
-import VsCodeAutocomplete from '$lib/img/vscode-autocomplete.png'
+import VsCodeAutocomplete from '$lib/img/vscode-autocomplete.png';
 </script>
 
 # Editor Setup
 
-<p>In this section you'll find {__markdown.description}</p>
+In this section you'll find IDE configuration settings to improve the experience of working
+with Vidstack Player.
 
 ## TypeScript
 

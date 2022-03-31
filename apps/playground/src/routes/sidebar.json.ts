@@ -1,10 +1,10 @@
 import { kebabToTitleCase } from '@vidstack/foundation';
-import globby from 'fast-glob';
+import { globbySync } from 'globby';
 import path from 'path';
 
 export async function get() {
   // eslint-disable-next-line import/no-named-as-default-member
-  const filePaths = globby.sync('./**/!(_).svelte', {
+  const filePaths = globbySync('./**/!(_).svelte', {
     cwd: path.resolve('./src/routes'),
   });
 

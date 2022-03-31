@@ -1,4 +1,4 @@
-import globby from 'fast-glob';
+import { globbySync } from 'globby';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import kleur from 'kleur';
@@ -7,7 +7,7 @@ import kleur from 'kleur';
 const CWD = dirname(fileURLToPath(import.meta.url));
 
 async function main() {
-  const files = await globby(
+  const files = globbySync(
     [
       '../packages/*/dist-node/index.js',
       '../packages/*/dist-node/define/*.js',

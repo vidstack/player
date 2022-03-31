@@ -1,6 +1,6 @@
 import minimist from 'minimist';
 import fs from 'fs-extra';
-import globby from 'fast-glob';
+import { globbySync } from 'globby';
 import path from 'path';
 import chokidar from 'chokidar';
 
@@ -52,7 +52,7 @@ if (watch) {
       fs.remove(dest.replace(/\.d\.ts$/, '.js'));
     });
 } else {
-  const files = globby.sync(`${targetDir}/*`, { absolute: true });
+  const files = globbySync(`${targetDir}/*`, { absolute: true });
   files.forEach((file) => {
     copy(file);
   });
