@@ -17,7 +17,7 @@ export async function get() {
     .map(
       (url) => `
 			<url>
-				<loc>https://vidstack.io/${url}</loc>
+				<loc>https://vidstack.io/${url}/</loc>
 				<changefreq>daily</changefreq>
 				<priority>0.7</priority>
 			</url>
