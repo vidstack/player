@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-auto';
 import * as preprocess from 'svelte-preprocess';
 import Icons from 'unplugin-icons/vite';
 
@@ -15,8 +15,6 @@ const config = {
       default: true,
       entries: ['*'],
     },
-
-    trailingSlash: 'always',
 
     vite: {
       plugins: [Icons({ compiler: 'svelte' })],

@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-auto';
 import { componentsPlugin, highlightCodePlugin, svelteMarkdownPlugin } from '@vidstack/kit-plugins';
 import * as preprocess from 'svelte-preprocess';
 import Icons from 'unplugin-icons/vite';
@@ -17,8 +17,6 @@ const config = {
       default: true,
       entries: ['*'],
     },
-
-    trailingSlash: 'always',
 
     vite: {
       plugins: [
