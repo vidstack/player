@@ -1,5 +1,3 @@
-## Browser Support
-
 :::info
 We support at _minimum_ ~92.74% of users tracked on [caniuse](https://caniuse.com).
 :::

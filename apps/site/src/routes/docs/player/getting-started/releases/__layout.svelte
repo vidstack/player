@@ -19,7 +19,7 @@
   import { lowercaseFirstLetter, uppercaseFirstLetter } from '@vidstack/foundation';
   import { page } from '$app/stores';
 
-  import Help from './_Help.md';
+  import Help from './_components/_Help.md';
 
   export let slugs;
 
