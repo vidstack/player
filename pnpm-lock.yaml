@@ -136,6 +136,7 @@ importers:
       autoprefixer: ^10.4.2
       clsx: ^1.1.1
       lit: ^2.1.3
+      nprogress: ^0.2.0
       postcss: ^8.4.6
       react: ^17.0.2
       react-dom: ^17.0.2
@@ -170,6 +171,7 @@ importers:
       '@vidstack/eliza': link:../../packages/eliza
       '@vidstack/kit-plugins': link:../../packages/kit-plugins
       autoprefixer: 10.4.2_postcss@8.4.8
+      nprogress: 0.2.0
       postcss: 8.4.8
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -4714,6 +4716,10 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       path-key: 4.0.0
+    dev: true
+
+  /nprogress/0.2.0:
+    resolution: {integrity: sha1-y480xTIT2JVyP8urkH6UIq28r7E=}
     dev: true
 
   /nwsapi/2.2.0:
