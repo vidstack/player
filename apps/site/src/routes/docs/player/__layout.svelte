@@ -90,11 +90,11 @@
 </script>
 
 <DocsLayout>
-  <div class="markdown prose dark:prose-invert z-10">
+  <article class="markdown prose dark:prose-invert z-10">
     <p class="text-brand mb-3.5 text-[15px] font-semibold leading-6">
       {$activeCategory}
     </p>
 
     <slot />
-  </div>
+  </article>
 </DocsLayout>

@@ -8,13 +8,16 @@
   import { useActiveHeaderLinks } from './useActiveHeaderLinks';
 
   useActiveHeaderLinks();
+
+  let __class = '';
+  export { __class as class };
+
+  export let style = '';
 </script>
 
 {#if $hasMarkdownHeaders}
-  <div
-    class="on-this-page px-16 fixed hidden 1200:block top-32 right-[max(0px,calc(50%-45rem))] w-[19.5rem"
-  >
-    <h5 class="font-semibold text-gray-inverse text-lg">On this page</h5>
+  <div class={clsx('on-this-page', __class)} {style}>
+    <h5 class="font-semibold w-full text-left text-gray-inverse text-lg">On this page</h5>
     <ul class="space-y-4 mt-4">
       {#each $markdownMeta.headers as header (header.slug)}
         <li
@@ -31,7 +34,7 @@
             {#each header.children as childHeader (childHeader.slug)}
               <li
                 class={clsx(
-                  'flex group items-center group',
+                  'flex group group',
                   $page.url.hash === `#${childHeader.slug}`
                     ? 'text-brand'
                     : 'text-gray-soft hover:text-gray-inverse',
@@ -40,7 +43,7 @@
                 <RightArrowIcon
                   width="20"
                   height="20"
-                  class="mr-px text-gray-300 dark:text-gray-400 group-hover:text-gray-soft"
+                  class="mr-px mt-px text-gray-300 dark:text-gray-400 group-hover:text-gray-soft"
                 />
                 <a href={`#${childHeader.slug}`}>{childHeader.title}</a>
               </li>

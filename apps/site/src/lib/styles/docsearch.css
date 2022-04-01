@@ -35,7 +35,7 @@
 }
 
 .DocSearch-Button {
-  @apply flex h-auto w-full items-center rounded-sm bg-gray-elevate py-2.5 px-3 shadow-sm hover:bg-gray-hover;
+  @apply bg-gray-elevate hover:bg-gray-hover flex h-auto w-full items-center rounded-sm py-2.5 px-3 shadow-sm;
   @apply m-0 transform text-[15px] transition-transform duration-300 ease-out hover:scale-105;
   border: 1px solid var(--color-gray-divider);
 }
@@ -49,7 +49,7 @@
 }
 
 .DocSearch-Button-Placeholder {
-  @apply m-0 h-auto p-0 text-[15px] font-normal text-gray-inverse;
+  @apply text-gray-inverse m-0 h-auto p-0 text-[15px] font-normal;
 }
 
 .DocSearch-Button-Keys {
@@ -58,7 +58,7 @@
 }
 
 .DocSearch-Button-Key {
-  @apply top-0 m-0 flex h-auto w-auto space-x-0.5 bg-none p-0 text-[15px] font-semibold text-gray-inverse shadow-none;
+  @apply text-gray-inverse top-0 m-0 flex h-auto w-auto space-x-0.5 bg-none p-0 text-[15px] font-semibold shadow-none;
 }
 
 .DocSearch-Input {
@@ -78,8 +78,12 @@
 
 @media only screen and (max-width: 991px) {
   .DocSearch-Button {
-    --docsearch-text-color: var(--text-gray-soft);
+    --docsearch-text-color: var(--color-gray-soft);
     @apply m-0 mr-2 border-0 bg-transparent p-0 hover:bg-transparent;
+  }
+
+  .DocSearch-Button:hover {
+    --docsearch-text-color: var(--color-gray-inverse);
   }
 
   .DocSearch-Button-Placeholder {

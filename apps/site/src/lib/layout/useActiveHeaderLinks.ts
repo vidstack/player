@@ -83,7 +83,15 @@ export function useActiveHeaderLinks() {
     }
   };
 
-  const onScroll = throttleAndDebounce(() => tick().then(() => setActiveRouteHash()), 100);
+  const onScroll = throttleAndDebounce(
+    () =>
+      tick().then(() =>
+        window.requestAnimationFrame(() => {
+          setActiveRouteHash();
+        }),
+      ),
+    100,
+  );
 
   onMount(() => {
     onScroll();

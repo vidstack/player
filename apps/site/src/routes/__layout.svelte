@@ -10,6 +10,7 @@
   import { onMount } from 'svelte';
   import { navigating } from '$app/stores';
   import { browser } from '$app/env';
+  import { hideDocumentScrollbar } from '@vidstack/foundation';
 
   onMount(() => {
     // Strange fix for strange issue -_O_- (`cmd + k` opening two docsearch containers).
@@ -28,7 +29,7 @@
 
   let navigatingTimeout;
 
-  $: if (browser && $navigating) {
+  function showProgress() {
     window.clearTimeout(navigatingTimeout);
     navigatingTimeout = window.setTimeout(() => {
       if (!$navigating) return;
@@ -36,9 +37,21 @@
     }, 500);
   }
 
-  $: if (browser && !$navigating) {
-    window.clearTimeout(navigatingTimeout);
+  function hideProgress() {
     NProgress.done();
+    window.clearTimeout(navigatingTimeout);
+    hideDocumentScrollbar(false);
+
+    // Fix to catch progress accidentally starting.
+    window.setTimeout(() => {
+      if (!$navigating) NProgress.done();
+    }, 500);
+  }
+
+  $: if (browser && $navigating) {
+    showProgress();
+  } else if (browser) {
+    hideProgress();
   }
 </script>
 

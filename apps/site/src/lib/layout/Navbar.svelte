@@ -37,7 +37,7 @@
 </script>
 
 <div class="1200:py-5 flex w-full flex-col items-center justify-center px-5 py-4">
-  <div class={clsx('flex w-full items-center', contain && '1200:mx-auto 1200:max-w-7xl')}>
+  <div class={clsx('flex w-full items-center', contain && 'max-w-[1440px] mx-auto')}>
     <a
       href="/"
       class="ml-1 flex transform-gpu items-center transition-transform duration-100 hover:scale-105"

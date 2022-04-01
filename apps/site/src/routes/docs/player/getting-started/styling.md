@@ -9,7 +9,7 @@ up to you how they look, as they only provide some core functionality. For examp
 the `vds-play-button` element will dispatch play and pause requests when pressed, but other than
 that, it is completely blank.
 
-## Media Attributes
+## Introduction
 
 The player exposes media state as attributes and CSS variables on the `<vds-media>` element:
 

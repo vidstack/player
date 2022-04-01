@@ -18,7 +18,7 @@
       </p>
 
       <Button class="mt-16" type="raised" arrow="right" href="/docs/player/" sveltekit:prefetch>
-        Start Building
+        Documentation
       </Button>
     </div>
   </div>

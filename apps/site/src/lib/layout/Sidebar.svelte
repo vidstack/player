@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import { isString, kebabToTitleCase } from '@vidstack/foundation';
+  import { isFunction, isString, kebabToTitleCase } from '@vidstack/foundation';
 
   export type SidebarItem = {
     title: string;
@@ -120,6 +120,11 @@
   // Only valid on small screen (<992px).
   export let open = false;
 
+  let _class: string | ((state: { open: boolean }) => string) = '';
+  export { _class as class };
+
+  export let style = '';
+
   const { nav, activeItem } = getSidebarContext();
 
   function scrollToActiveItem() {
@@ -137,16 +142,11 @@
 
 <aside
   id="main-sidebar"
-  class={clsx(
-    '992:w-72 bg-gray-body fixed inset-0 z-50 w-96 max-w-[85vw] overflow-y-auto',
-    'border-gray-divider border-r',
-    '-translate-x-full transform transition-transform duration-200 ease-out will-change-transform',
-    open && 'translate-x-0',
-    '992:top-[4.5rem] 992:pb-[5rem] 1200:top-20 1200:pb-24 992:left-0 992:w-[19.5rem] 992:h-full 992:translate-x-0 992:translate-y-px',
-  )}
+  class={clsx('sidebar', isFunction(_class) ? _class({ open }) : _class)}
   role={!$isLargeScreen ? 'dialog' : null}
   aria-modal={ariaBool(!$isLargeScreen)}
   bind:this={sidebar}
+  {style}
 >
   <div class="992:hidden sticky top-0 left-0 flex items-center">
     <div class="flex-1" />
@@ -160,7 +160,7 @@
     </button>
   </div>
 
-  <nav class="p-6 pt-0 pl-8">
+  <nav>
     <div class="992:block pointer-events-none sticky top-0 -ml-0.5 hidden min-h-[80px]">
       <div class="h-6 bg-white dark:bg-gray-800" />
       <div class="pointer-events-auto relative bg-white dark:bg-gray-800">
