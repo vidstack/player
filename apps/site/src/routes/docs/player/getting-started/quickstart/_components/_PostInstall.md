@@ -6,7 +6,7 @@
   export let providerType;
 </script>
 
-Congratulations, you're done! You should see the media player rendered on your site :tada:
+Congratulations, you're done! You should see the media player on your site :tada:
 
 ## Native Media Controls
 

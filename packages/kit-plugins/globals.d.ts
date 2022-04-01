@@ -9,9 +9,8 @@ declare module '*?highlight' {
 declare module '*.md' {
   import { SvelteComponent } from 'svelte';
 
-  const component: SvelteComponent;
   const __slug: string;
 
   export { __slug };
-  export default component;
+  export default SvelteComponent;
 }
