@@ -87,21 +87,10 @@ both your users and search engines (i.e., Google).
 
 To avoid a layout shift, we recommend you fill `100%` of your media container and use an aspect
 ratio container which holds a fixed ratio (e.g., `16/9`). Ideally the ratio set should match the
-ratio of the media content itself (i.e., intrinsic aspect ratio).
-
-Firstly, set the media and provider element's width to `100%` like so:
-
-```css:copy
-vds-media,
-vds-video,
-vds-hls {
-  width: 100%;
-}
-```
-
-Next, see our [`vds-aspect-ratio`](../../../components/ui/aspect-ratio/index.md) component for how
-to set a fixed aspect ratio for your media content. Once complete, your media content should now
-adapt responsively without a layout shift!
+ratio of the media content itself (i.e., intrinsic aspect ratio). See our
+[`vds-aspect-ratio`](../../../components/ui/aspect-ratio/index.md) component for how you can
+achieve this. Once complete, your media content should now adapt responsively without a layout
+shift!
 
 :::info
 You may still see a layout shift if the `vds-aspect-ratio` component script is imported late.

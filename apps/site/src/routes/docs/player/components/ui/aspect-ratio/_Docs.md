@@ -6,6 +6,19 @@ or avoiding layout shifts while media loads over the network.
 
 <slot name="usage" />
 
+## Styling
+
+For the media to be rendered correctly, you need to ensure the media elements fill their
+container like so:
+
+```css:copy
+vds-media,
+vds-video,
+vds-hls {
+  width: 100%;
+}
+```
+
 ### `aspect-ratio`
 
 You can skip using this component, and use the [`aspect-ratio:ignore`](https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio)
