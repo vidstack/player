@@ -6,7 +6,7 @@ import {
   listen,
   vdsEvent,
 } from '@vidstack/foundation';
-import { html, LitElement } from 'lit';
+import { css, type CSSResultGroup, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import type { MediaVolumeChange, MediaVolumeChangeEvent } from '../events';
@@ -46,6 +46,14 @@ let syncingMediaVolume = false;
  * ```
  */
 export class MediaSyncElement extends LitElement {
+  static override get styles(): CSSResultGroup {
+    return css`
+      :host {
+        display: contents;
+      }
+    `;
+  }
+
   constructor() {
     super();
 

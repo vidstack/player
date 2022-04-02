@@ -72,7 +72,7 @@ export abstract class MediaProviderElement extends LitElement {
 
     const intersectionController = createIntersectionController(
       this,
-      { threshold: 0 },
+      { target: this, threshold: 0 },
       (entries) => {
         if (this.loading !== 'lazy') {
           intersectionController.hostDisconnected();

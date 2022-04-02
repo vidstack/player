@@ -99,8 +99,8 @@ export class MediaController {
   readonly providerDisposal = new DisposalBin();
 
   constructor(protected readonly _host: MediaControllerHost) {
-    discover(_host, mediaProviderDiscoveryId, (element, onDisconnect) => {
-      this.attachMediaProvider(element as MediaProviderElement, onDisconnect);
+    discover(_host, mediaProviderDiscoveryId, (provider, onDisconnect) => {
+      this.attachMediaProvider(provider as MediaProviderElement, onDisconnect);
     });
 
     _host.addController({

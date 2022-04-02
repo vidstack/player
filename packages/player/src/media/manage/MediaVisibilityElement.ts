@@ -6,7 +6,7 @@ import {
   PageController,
   vdsEvent,
 } from '@vidstack/foundation';
-import { html, LitElement } from 'lit';
+import { css, type CSSResultGroup, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { mediaProviderDiscoveryId, type MediaProviderElement } from '../provider';
@@ -42,6 +42,14 @@ export type ExitVisibilityMediaAction = 'pause' | 'mute';
  * ```
  */
 export class MediaVisibilityElement extends LitElement {
+  static override get styles(): CSSResultGroup {
+    return css`
+      :host {
+        display: contents;
+      }
+    `;
+  }
+
   constructor() {
     super();
 
@@ -178,8 +186,10 @@ export class MediaVisibilityElement extends LitElement {
     onDisconnect: DisconnectCallback,
   ) {
     this._provider = provider;
+    const unobserve = this.intersectionController.observe(provider);
 
     onDisconnect(() => {
+      unobserve();
       this._provider = undefined;
       this._providerDisposal.empty();
     });

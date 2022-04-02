@@ -75,7 +75,7 @@ export type IntersectionControllerConfig = {
  * during the host's update cycle.
  */
 export class IntersectionController implements ReactiveController {
-  protected _target: Element | null;
+  protected _target: Element | undefined;
   protected _observer!: IntersectionObserver;
   protected _skipInitial = false;
 
@@ -100,8 +100,7 @@ export class IntersectionController implements ReactiveController {
   ) {
     const { target, skipInitial, ...intersectionObserverInit } = config;
 
-    this._target = target === null ? target : target ?? (this._host as unknown as Element);
-
+    this._target = target ?? undefined;
     this._skipInitial = skipInitial ?? this._skipInitial;
 
     if (!window.IntersectionObserver) {
@@ -137,7 +136,7 @@ export class IntersectionController implements ReactiveController {
   }
 
   hostDisconnected() {
-    this.disconnect();
+    this._disconnect();
   }
 
   async hostUpdated() {
@@ -158,12 +157,15 @@ export class IntersectionController implements ReactiveController {
     // This will always trigger the callback since the initial intersection state is reported.
     this._observer.observe(target);
     this._unobservedUpdate = true;
+    return () => {
+      this._observer.unobserve(target);
+    };
   }
 
   /**
    * Disconnects the observer. This is done automatically when the host disconnects.
    */
-  protected disconnect() {
+  protected _disconnect() {
     this._observer.disconnect();
   }
 }
