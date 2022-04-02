@@ -4,6 +4,7 @@ import {
   FullscreenController,
   IS_IOS,
   ScreenOrientationController,
+  ScreenOrientationLock,
   setAttribute,
 } from '@vidstack/foundation';
 import {
@@ -14,7 +15,7 @@ import {
   type PropertyValues,
   type TemplateResult,
 } from 'lit';
-import { state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { MediaController } from './controller';
 import { mediaStoreSubscription } from './store';
@@ -122,23 +123,72 @@ export class MediaElement extends LitElement {
   }
 
   // -------------------------------------------------------------------------------------------
+  // Orientation
+  // -------------------------------------------------------------------------------------------
+
+  /**
+   * Controls the screen orientation of the current browser window.
+   */
+  readonly screenOrientationController = new ScreenOrientationController(this);
+
+  // -------------------------------------------------------------------------------------------
   // Fullscreen
   // -------------------------------------------------------------------------------------------
 
-  readonly fullscreenController = new FullscreenController(
-    this,
-    new ScreenOrientationController(this),
-  );
+  /**
+   * Controls the fullscreen state of the current element.
+   */
+  readonly fullscreenController = new FullscreenController(this, this.screenOrientationController);
 
-  override async requestFullscreen(): Promise<void> {
-    if (this.fullscreenController.isRequestingNativeFullscreen) {
-      return super.requestFullscreen();
-    }
-
-    return this.fullscreenController.requestFullscreen();
+  /**
+   * Whether the native browser fullscreen API is available. This does not mean that the
+   * operation is guaranteed to be successful, only that it can be attempted.
+   *
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   */
+  get canFullscreen(): boolean {
+    return this.fullscreenController.isSupported;
   }
 
-  async exitFullscreen(): Promise<void> {
+  /**
+   * Whether the media element is currently in fullscreen mode.
+   */
+  get fullscreen(): boolean {
+    return this.fullscreenController.isFullscreen;
+  }
+
+  /**
+   * This will indicate the orientation to lock the screen to when in fullscreen mode and
+   * the Screen Orientation API is available. The default is `undefined` which indicates
+   * no screen orientation change.
+   *
+   * @default undefined
+   */
+  @property({ attribute: 'fullscreen-orientation' })
+  get fullscreenOrientation(): ScreenOrientationLock | undefined {
+    return this.fullscreenController.screenOrientationLock;
+  }
+
+  set fullscreenOrientation(lockType) {
+    const prevLockType = this.fullscreenController.screenOrientationLock;
+    if (prevLockType !== lockType) {
+      this.fullscreenController.screenOrientationLock = lockType;
+      this.requestUpdate('fullscreen-orientation', prevLockType);
+    }
+  }
+
+  /**
+   * Attempts to display the element in fullscreen. The promise will resolve if successful, and
+   * reject if not.
+   */
+  enterFullscreen(): Promise<void> {
+    return this.fullscreenController.enterFullscreen();
+  }
+
+  /**
+   * Attempts to display the element inline by exiting fullscreen.
+   */
+  exitFullscreen(): Promise<void> {
     return this.fullscreenController.exitFullscreen();
   }
 

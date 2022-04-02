@@ -33,15 +33,11 @@ import { VideoPresentationChangeEvent, VideoPresentationController } from '../pr
  *     new VideoPresentationController(this),
  *   );
  *
- *   async requestFullscreen() {
- *     if (this.fullscreenController.isRequestingNativeFullscreen) {
- *       return super.requestFullscreen();
- *     }
- *
- *     return this.fullscreenController.requestFullscreen();
+ *   enterFullscreen() {
+ *     return this.fullscreenController.enterFullscreen();
  *   }
  *
- *   async exitFullscreen() {
+ *   exitFullscreen() {
  *     return this.fullscreenController.exitFullscreen();
  *   }
  * }

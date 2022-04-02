@@ -8,7 +8,7 @@ import { DisposalBin, listen } from '../utils/events';
 import { isUndefined, noop } from '../utils/unit';
 
 export type FullscreenControllerHost = ReactiveElement & {
-  requestFullscreen(): Promise<void>;
+  enterFullscreen(): Promise<void>;
   exitFullscreen(): Promise<void>;
 };
 
@@ -27,12 +27,8 @@ export type FullscreenControllerHost = ReactiveElement & {
  *     new ScreenOrientationController(this),
  *   );
  *
- *   requestFullscreen() {
- *     if (this.fullscreenController.isRequestingNativeFullscreen) {
- *       return super.requestFullscreen();
- *     }
- *
- *     return this.fullscreenController.requestFullscreen();
+ *   enterFullscreen() {
+ *     return this.fullscreenController.enterFullscreen();
  *   }
  *
  *   exitFullscreen() {
@@ -45,18 +41,6 @@ export class FullscreenController {
   protected readonly _listenerDisposal: DisposalBin;
 
   protected readonly _logger = __DEV__ ? new LogDispatcher(this._host) : undefined;
-
-  /**
-   * Used to avoid an infinite loop by indicating when the native `requestFullscreen()` method
-   * is being called.
-   *
-   * Bad Call Stack: host.requestFullscreen() -> controller.requestFullscreen() ->
-   * fscreen.requestFullscreen() -> controller.requestFullscreen() -> fscreen.requestFullscreen() ...
-   *
-   * Good Call Stack: host.requestFullscreen() -> controller.requestFullscreen() -> fscreen.requestFullscreen()
-   * -> (native request fullscreen method on host)
-   */
-  isRequestingNativeFullscreen = false;
 
   /**
    * This will indicate the orientation to lock the screen to when in fullscreen mode. The default
@@ -172,7 +156,7 @@ export class FullscreenController {
     };
   }
 
-  async requestFullscreen(): Promise<void> {
+  async enterFullscreen(): Promise<void> {
     if (this.isFullscreen) return;
 
     this._throwIfNoFullscreenSupport();
@@ -197,10 +181,7 @@ export class FullscreenController {
   }
 
   protected async _makeEnterFullscreenRequest(): Promise<void> {
-    this.isRequestingNativeFullscreen = true;
-    const response = await fscreen.requestFullscreen(this._host);
-    this.isRequestingNativeFullscreen = false;
-    return response;
+    return fscreen.requestFullscreen(this._host);
   }
 
   protected _handleFullscreenChange(event: Event) {

@@ -46,14 +46,16 @@ export type MuteRequestEvent = VdsEvent<void>;
 export type UnmuteRequestEvent = VdsEvent<void>;
 
 /**
- * Whether to request fullscreen on the media controller or provider element.
+ * Whether to request fullscreen on the media (i.e., `<vds-media>`) or provider element
+ * (e.g., `<vds-video>`).
  *
- * @default 'provider'
+ * @default 'media'
  */
-export type MediaFullscreenRequestTarget = 'controller' | 'provider';
+export type MediaFullscreenRequestTarget = 'media' | 'provider';
 
 /**
- * Fired when requesting media to enter fullscreen.
+ * Fired when requesting media to enter fullscreen. The event `detail` can specify the
+ * fullscreen target, which can be the media or provider element (defaults to `media`).
  *
  * @event
  * @bubbles
@@ -62,7 +64,8 @@ export type MediaFullscreenRequestTarget = 'controller' | 'provider';
 export type EnterFullscreenRequestEvent = VdsEvent<MediaFullscreenRequestTarget>;
 
 /**
- * Fired when requesting media to exit fullscreen.
+ * Fired when requesting media to exit fullscreen. The event `detail` can specify the fullscreen
+ * target, which can be the media or provider element (defaults to `media`).
  *
  * @event
  * @bubbles

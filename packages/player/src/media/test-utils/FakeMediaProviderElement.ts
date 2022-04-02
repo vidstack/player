@@ -122,8 +122,8 @@ export class FakeMediaProviderElement extends MediaProviderElement {
   // Fullscreen
   // -------------------------------------------------------------------------------------------
 
-  override async requestFullscreen() {
-    await super.requestFullscreen();
+  override async enterFullscreen() {
+    await super.enterFullscreen();
     this.dispatchEvent(vdsEvent('vds-fullscreen-change', { detail: true }));
   }
 

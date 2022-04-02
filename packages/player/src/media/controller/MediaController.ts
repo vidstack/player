@@ -68,6 +68,8 @@ import { ViewType } from '../ViewType';
 import { UserIdleController } from './UserIdleController';
 
 export type MediaControllerHost = ReactiveElement & {
+  readonly canFullscreen: boolean;
+  enterFullscreen?(): Promise<void>;
   exitFullscreen?(): Promise<void>;
 };
 
@@ -383,17 +385,14 @@ export class MediaController {
     this._createMediaRequestHandler('fullscreen', async (event) => {
       if (this.state.fullscreen) return;
 
-      const target = event.detail ?? 'provider';
+      const target = event.detail ?? 'media';
 
-      if (target === 'provider' && this.provider) {
+      if (target === 'media' && this._host.canFullscreen) {
         this._pendingMediaRequests.fullscreen.push(event);
-        await this.provider.requestFullscreen();
-        return;
-      }
-
-      if (target === 'controller') {
+        await this._host.enterFullscreen?.();
+      } else if (this.provider) {
         this._pendingMediaRequests.fullscreen.push(event);
-        await this._host.requestFullscreen();
+        await this.provider.enterFullscreen();
       }
     }),
   );
@@ -404,17 +403,14 @@ export class MediaController {
     this._createMediaRequestHandler('fullscreen', async (event) => {
       if (!this.state.fullscreen) return;
 
-      const target = event.detail ?? 'provider';
+      const target = event.detail ?? 'media';
 
-      if (target === 'provider' && this.provider) {
-        this._pendingMediaRequests.fullscreen.push(event);
-        await this.provider.exitFullscreen();
-        return;
-      }
-
-      if (target === 'controller') {
+      if (target === 'media' && this._host.canFullscreen) {
         this._pendingMediaRequests.fullscreen.push(event);
         await this._host.exitFullscreen?.();
+      } else if (this.provider) {
+        this._pendingMediaRequests.fullscreen.push(event);
+        await this.provider.exitFullscreen();
       }
     }),
   );

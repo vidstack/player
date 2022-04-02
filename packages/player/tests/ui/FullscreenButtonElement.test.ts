@@ -62,8 +62,8 @@ it('should update fullscreen state', async () => {
 it('should enter fullscreen', async function () {
   const { media, provider, button } = await buildFixture();
 
-  const requestFullscreenSpy = vi
-    .spyOn(provider, 'requestFullscreen')
+  const enterFullscreenSpy = vi
+    .spyOn(provider, 'enterFullscreen')
     .mockImplementation(() => Promise.resolve());
 
   media.controller._store.fullscreen.set(false);
@@ -72,7 +72,7 @@ it('should enter fullscreen', async function () {
   setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
 
   await waitForEvent(button, 'vds-enter-fullscreen-request');
-  expect(requestFullscreenSpy).toHaveBeenCalledOnce();
+  expect(enterFullscreenSpy).toHaveBeenCalledOnce();
 });
 
 it('should exit fullscreen', async function () {

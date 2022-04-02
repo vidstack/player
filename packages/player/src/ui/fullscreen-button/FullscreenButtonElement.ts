@@ -43,10 +43,10 @@ export class FullscreenButtonElement extends ToggleButtonElement {
   protected readonly _mediaRemote = new MediaRemoteControl(this);
 
   /**
-   * The target element on which to request fullscreen on. The target can be the media controller
-   * or provider.
+   * The target element on which to request fullscreen on. The target can be the `media`
+   * (i.e., `<vds-media>`) or `provider` (e.g., `<vds-video>`) element.
    *
-   * @default 'provider'
+   * @default 'media'
    */
   @property({ attribute: 'fullscreen-target' })
   fullscreenTarget?: MediaFullscreenRequestTarget;

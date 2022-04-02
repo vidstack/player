@@ -672,12 +672,18 @@ export abstract class MediaProviderElement extends LitElement {
   // Orientation
   // -------------------------------------------------------------------------------------------
 
+  /**
+   * Controls the screen orientation of the current browser window.
+   */
   readonly screenOrientationController = new ScreenOrientationController(this);
 
   // -------------------------------------------------------------------------------------------
   // Fullscreen
   // -------------------------------------------------------------------------------------------
 
+  /**
+   * Controls the fullscreen state of the current element.
+   */
   readonly fullscreenController = new FullscreenController(this, this.screenOrientationController);
 
   /**
@@ -685,7 +691,6 @@ export abstract class MediaProviderElement extends LitElement {
    * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
    * only that it can be attempted.
    *
-   * @default false
    * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
    */
   get canFullscreen(): boolean {
@@ -693,7 +698,7 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   /**
-   * Whether the player is currently in fullscreen mode.
+   * Whether the provider is currently in fullscreen mode.
    *
    * @default false
    */
@@ -721,14 +726,17 @@ export abstract class MediaProviderElement extends LitElement {
     }
   }
 
-  override async requestFullscreen(): Promise<void> {
-    if (this.fullscreenController.isRequestingNativeFullscreen) {
-      return super.requestFullscreen();
-    }
-
-    return this.fullscreenController.requestFullscreen();
+  /**
+   * Attempts to display the element in fullscreen. The promise will resolve if successful, and
+   * reject if not.
+   */
+  enterFullscreen(): Promise<void> {
+    return this.fullscreenController.enterFullscreen();
   }
 
+  /**
+   * Attempts to display the element inline by exiting fullscreen.
+   */
   exitFullscreen(): Promise<void> {
     return this.fullscreenController.exitFullscreen();
   }

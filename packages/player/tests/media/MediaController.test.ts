@@ -78,16 +78,16 @@ describe('media requests', () => {
   it.skip('should handle enter/exit fullscreen requests', async function () {
     const { provider } = await buildFixture();
 
-    const requestFullscreenSpy = vi.spyOn(provider, 'requestFullscreen');
+    const enterFullscreenSpy = vi.spyOn(provider, 'enterFullscreen');
     const exitFullscreenSpy = vi.spyOn(provider, 'exitFullscreen');
 
     const remote = new MediaRemoteControl(provider);
 
-    expect(requestFullscreenSpy).not.toHaveBeenCalled();
+    expect(enterFullscreenSpy).not.toHaveBeenCalled();
     expect(exitFullscreenSpy).not.toHaveBeenCalled();
 
     remote.enterFullscreen();
-    expect(requestFullscreenSpy).toHaveBeenCalledWith(1);
+    expect(enterFullscreenSpy).toHaveBeenCalledWith(1);
 
     remote.exitFullscreen();
     expect(exitFullscreenSpy).toHaveBeenCalledWith(1);
