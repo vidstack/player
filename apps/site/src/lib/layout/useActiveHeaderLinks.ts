@@ -4,7 +4,7 @@ import { goto } from '$app/navigation';
 import { markdownMeta } from '$lib/stores/markdown';
 import { createDisposalBin } from '$lib/utils/events';
 
-const NAVBAR_HEIGHT = 100;
+const NAVBAR_HEIGHT = 160;
 
 export function useActiveHeaderLinks() {
   const disposal = createDisposalBin();

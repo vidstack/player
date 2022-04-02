@@ -11,6 +11,12 @@ import Docs from '../_Docs.md';
 </FullscreenButton>
 ```
 
+```jsx:copy-highlight{2}:slot=fullscreen-target
+<FullscreenButton
+  fullscreenTarget="provider"
+/>
+```
+
 ```jsx:copy:slot=styling
 <FullscreenButton>
 	<svg className="media-enter-fs-icon" ariaHidden="true" viewBox="0 0 24 24">

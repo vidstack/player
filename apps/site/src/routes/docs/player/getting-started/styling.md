@@ -54,7 +54,7 @@ hide it based on some media state:
   z-index: 1;
 }
 
-/* Avoid double controls on iOS Safari. */
+/* Avoid double controls on iOS when in fullscreen. */
 vds-media[hide-ui] .media-controls {
   opacity: 0;
   visibility: hidden;

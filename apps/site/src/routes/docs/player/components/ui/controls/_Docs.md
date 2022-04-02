@@ -15,6 +15,8 @@ The following media attributes can be useful when building a controls container:
 | `can-fullscreen:ignore` | Show alternative controls for when media is in fullscreen.                  |
 
 ```css:copy
+/* Avoid double controls on iOS when in fullscreen. */
+vds-media[hide-ui] .media-controls,
 /* Hide controls while media is loading, or user is idle. */
 vds-media:not([can-play]) .media-controls,
 vds-media[user-idle] .media-controls {
@@ -64,7 +66,7 @@ hide the controls if media is not ready for playback, or the user is idle.
 	pointer-events: auto;
 }
 
-/* Avoid double controls on iOS Safari. */
+/* Avoid double controls on iOS when in fullscreen. */
 vds-media[hide-ui] .media-controls,
 /* Hide controls if media is not ready for playback, or user is idle. */
 vds-media[user-idle] .media-controls,

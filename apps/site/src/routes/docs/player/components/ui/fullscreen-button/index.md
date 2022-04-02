@@ -11,6 +11,12 @@ import Docs from './_Docs.md';
 </vds-fullscreen-button>
 ```
 
+```html:copy-highlight{2}:slot=fullscreen-target
+<vds-fullscreen-button
+  fullscreen-target="provider"
+/>
+```
+
 ```html:copy:slot=styling
 <vds-fullscreen-button>
 	<svg class="media-enter-fs-icon" aria-hidden="true" viewBox="0 0 24 24">

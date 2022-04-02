@@ -25,6 +25,37 @@ vds-media:not([fullscreen]) .media-exit-fs {
 }
 ```
 
+### Fullscreen Target
+
+By default, the `<vds-fullscreen-button>` component will fire a request to enter fullscreen
+on the current media (i.e., `<vds-media>`). The request handler will naturally fallback to the current
+media provider (e.g., `<vds-video>`) if the native
+[Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API) is not available.
+
+You can specify that you only want to display the provider in fullscreen and not the entire media
+like so:
+
+<slot name="fullscreen-target" />
+
+:::warning
+By setting `fullscreen-target` to `provider`, the controller will only request fullscreen on the
+media provider element, meaning your custom UI will _not_ be displayed when in fullscreen.
+:::
+
+### Avoiding Double Controls (iOS)
+
+The native media controls can not be hidden on iOS when in fullscreen mode even if the `controls`
+property is not set. We recommend hiding them to avoid double controls by using the
+`hide-ui:ignore` attribute on the `vds-media:ignore` element.
+
+```css
+/* Avoid double controls on iOS when in fullscreen. */
+vds-media[hide-ui] .media-controls {
+  opacity: 0;
+  visibility: hidden;
+}
+```
+
 ## Styling
 
 Here's a styled `<vds-fullscreen-button>` example containing enter and exit fullscreen icons:
