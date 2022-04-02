@@ -17,7 +17,7 @@ import type {
 } from 'typescript';
 import ts from 'typescript';
 
-import { getMemberName, isDecoratedClassMember, isDecoratorNamed, isMemberPrivate } from '../utils';
+import { getMemberName, isDecoratorNamed, isMemberPrivate } from '../utils';
 import {
   type ComponentMeta,
   type CssPartMeta,
@@ -132,13 +132,7 @@ function findProps(
   declaration: ClassDeclaration | ClassExpression,
 ): PropMeta[] {
   return declaration.members
-    .filter(
-      (node) =>
-        (ts.isPropertyDeclaration(node) &&
-          isDecoratedClassMember(node) &&
-          node.decorators!.find(isDecoratorNamed('property'))) ||
-        (ts.isGetAccessor(node) && !isMemberPrivate(node)),
-    )
+    .filter((node) => ts.isPropertyDeclaration(node) && !isMemberPrivate(node))
     .filter((node) => {
       const name = getMemberName(checker, node) ?? '';
       return !name.startsWith('_');

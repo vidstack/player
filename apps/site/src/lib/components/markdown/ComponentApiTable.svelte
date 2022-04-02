@@ -7,6 +7,7 @@
       type: string;
       link?: string;
       attr?: string;
+      hasAttr: boolean;
     }[];
     methods: {
       name: string;
@@ -80,6 +81,7 @@
   function getInfo(category: string, prop: any) {
     return [
       category === 'properties' &&
+        prop.hasAttr &&
         !prop.readonly &&
         !$isReactPath && ['Attribute', prop.attr ?? camelToKebabCase(prop.name)],
       [category === 'methods' ? 'Signature' : 'Type', prop.type],

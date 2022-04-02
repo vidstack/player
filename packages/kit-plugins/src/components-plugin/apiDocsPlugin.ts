@@ -93,6 +93,7 @@ function extractProps(component: ComponentMeta) {
     .filter((prop) => !prop.internal)
     .map((prop) => ({
       attr: camelToKebabCase(prop.name) !== prop.attribute ? prop.attribute : undefined,
+      hasAttr: !!prop.attribute,
       name: prop.name,
       description: prop.documentation,
       readonly: prop.readonly,

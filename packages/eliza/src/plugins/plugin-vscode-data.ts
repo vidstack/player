@@ -53,7 +53,7 @@ export const vscodeHtmlDataPlugin: PluginBuilder<Partial<VscodeHtmlDataPluginCon
             .filter((prop) => !!prop.attribute && !prop.readonly && !prop.internal)
             .map((prop) => {
               const data: IAttributeData = {
-                name: prop.attribute,
+                name: prop.attribute!,
                 description: prop.documentation,
                 values: prop.unionTypesText
                   ?.filter(

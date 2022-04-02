@@ -18,7 +18,7 @@ export interface PropMeta {
   required: boolean;
   readonly: boolean;
   optional: boolean;
-  attribute: string;
+  attribute?: string;
   reflect: boolean;
   internal: boolean;
   deprecated: boolean;

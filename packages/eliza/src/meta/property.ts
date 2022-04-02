@@ -17,7 +17,12 @@ import type {
 import ts from 'typescript';
 
 import { LogLevel, reportDiagnosticByNode } from '../logger';
-import { getDeclarationParameters, isDecoratorNamed, isMemberPrivate } from '../utils';
+import {
+  getDeclarationParameters,
+  isDecoratedClassMember,
+  isDecoratorNamed,
+  isMemberPrivate,
+} from '../utils';
 import { type PropMeta, type PropTypeInfo } from './component';
 import { findDocTag, getDocTags, hasDocTag } from './doc-tags';
 import { getDocumentation } from './docs';
@@ -55,6 +60,11 @@ export function buildPropMeta<T>(
   const isStatic =
     declaration.modifiers?.some((m) => m.kind === ts.SyntaxKind.StaticKeyword) ?? false;
 
+  const hasAttribute =
+    ts.isPropertyDeclaration(declaration) &&
+    isDecoratedClassMember(declaration) &&
+    declaration.decorators!.find(isDecoratorNamed('property'));
+
   if (isProperty && isMemberPrivate(declaration)) {
     reportDiagnosticByNode(
       [
@@ -74,6 +84,7 @@ export function buildPropMeta<T>(
 
   // Prop can have an attribute if type is NOT "unknown".
   if (
+    hasAttribute &&
     (typeText !== 'unknown' || (!isProperty && hasSetter)) &&
     !isUndefined(propOptions) &&
     !isUndefined(transformPropOptions)
@@ -94,9 +105,11 @@ export function buildPropMeta<T>(
   prop.readonly =
     (!isProperty && !hasSetter) || (!hasSetter && hasDocTag(prop.docTags, 'readonly'));
 
-  prop.attribute = !prop.readonly
-    ? prop.attribute ?? camelToKebabCase(name)
-    : findDocTag(prop.docTags, 'attribute')?.text;
+  if (hasAttribute) {
+    prop.attribute = !prop.readonly
+      ? prop.attribute ?? camelToKebabCase(name)
+      : findDocTag(prop.docTags, 'attribute')?.text;
+  }
 
   prop.internal = hasDocTag(prop.docTags, 'internal');
   prop.deprecated = hasDocTag(prop.docTags, 'deprecated');
