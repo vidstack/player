@@ -1,3 +1,12 @@
+# [1.4.0](https://github.com/vidstack/vidstack/compare/v1.3.0...v1.4.0) (2022-04-03)
+
+### Bug Fixes
+
+- **eliza:** ensure all properties are included in analysis ([32fa9b0](https://github.com/vidstack/vidstack/commit/32fa9b0d0da54dee28babb9ee6f835ac846b49bd))
+- **player:** completely rewire fullscreen logic ([55532fc](https://github.com/vidstack/vidstack/commit/55532fc96dd18210cb9e06f54317a53481694e32))
+- **player:** media visibility not observing correct target ([2abf0a2](https://github.com/vidstack/vidstack/commit/2abf0a24d7b131d724fa90a483293dd30ba61370)), closes [#633](https://github.com/vidstack/vidstack/issues/633)
+- **player:** new package builds with improved ts support ([03b6862](https://github.com/vidstack/vidstack/commit/03b686274dd665f40451ed925a3dffc8fa05d304))
+
 # [1.3.0-next](https://github.com/vidstack/vidstack/compare/v0.13.3...v1.3.0) (2022-03-31)
 
 ### Bug Fixes
