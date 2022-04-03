@@ -90,7 +90,12 @@
 
 <BrowserSupport />
 
-<h2 class="992:flex-row 992:items-center mb-10 flex flex-col">
+<h2
+  id="player-installation"
+  class="992:flex-row 992:items-center mb-10 flex flex-col"
+  tabindex="-1"
+>
+  <a href="#player-installation" class="header-anchor" aria-hidden="true">#</a>
   Player Installation
   <div class="992:ml-2 992:mt-0 mt-4 -ml-2 inline-flex space-x-1.5 text-white dark:text-black">
     <Chip class={clsx(installMethod === 'CDN' ? 'bg-lime-600 dark:bg-lime-300' : 'hidden')}>

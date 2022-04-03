@@ -111,6 +111,6 @@ designing your own. Skins which provide what you're looking for are not availabl
 on our roadmap. Follow us on [Twitter](https://twitter.com/vidstackjs?lang=en) or
 [Discord](https://discord.com/invite/7RGU7wvsu9) to be notified when it's ready.
 
-{#if frameworkType !== 'React'}
-<DangerouslyAll {installMethod} />
+{#if installMethod === 'NPM' && frameworkType !== 'React'}
+<DangerouslyAll />
 {/if}

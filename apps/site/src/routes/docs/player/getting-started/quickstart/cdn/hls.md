@@ -5,17 +5,21 @@ description: Instructions to get your HLS player up and running through a CDN.
 
 !!!step :title=Register Elements :desc=Add the following `script` tags to register the custom media elements.
 
-```html:copy-highlight{4-5}
+```html:copy-highlight{4}
 <!doctype html>
 <html>
 <head>
-	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist-cdn/define/vds-media.js"></script>
-	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist-cdn/define/vds-hls.js"></script>
+	<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist-cdn/bundle.js"></script>
 </head>
-<body>
-	<!-- ... -->
-</body>
+<!-- ... -->
 </html>
+```
+
+You can register specific elements like so:
+
+```html:copy
+<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist-cdn/define/vds-media.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist-cdn/define/vds-hls.js"></script>
 ```
 
 !!!
