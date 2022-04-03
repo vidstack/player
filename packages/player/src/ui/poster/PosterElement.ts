@@ -97,7 +97,7 @@ export class PosterElement extends LitElement {
   /**
    * The URL of the current poster resource.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   get src() {
     return this.__src;
@@ -107,7 +107,7 @@ export class PosterElement extends LitElement {
    * ♿ **ARIA:** Provides alternative information for a poster image if a user for some reason
    * cannot view it.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property() alt?: string;
 

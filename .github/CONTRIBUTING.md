@@ -82,7 +82,7 @@ $: pnpm build
 $: pnpm build:app
 
 # Build single package
-$: pnpm build:pkg --filter @vidstack/player
+$: pnpm build --filter @vidstack/player
 
 # Build single app
 $: pnpm build:app --filter vidstack.io

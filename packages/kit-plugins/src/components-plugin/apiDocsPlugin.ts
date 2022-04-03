@@ -158,7 +158,7 @@ function extractCssProps(component: ComponentMeta) {
 function findLink(prop: PropMeta | MethodMeta | EventMeta) {
   return (
     // Prioritize MDN links.
-    prop.docTags.find((tag) => tag.name === 'link' && /(mozilla|mdn)/.test(tag.text ?? ''))?.text ??
-    prop.docTags.find((tag) => tag.name === 'link')?.text
+    prop.docTags.find((tag) => /(see|link)/.test(tag.name) && /(mozilla|mdn)/.test(tag.text ?? ''))
+      ?.text ?? prop.docTags.find((tag) => /(see|link)/.test(tag.name))?.text
   );
 }

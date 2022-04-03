@@ -60,8 +60,8 @@ const HLS_CDN_SRC_PROD = `${HLS_CDN_SRC_BASE}.min.js` as const;
  *
  * @tagname vds-hls
  * @slot - Used to pass in the `<video>` element.
- * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
- * @link https://github.com/video-dev/hls.js/blob/master/docs/API.md
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video}
+ * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md}
  * @events ./events.ts
  * @example
  * ```html
@@ -124,7 +124,7 @@ export class HlsElement extends VideoElement {
   /**
    * The `hls.js` configuration object.
    *
-   * @link https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning
+   * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning}
    */
   @property({ type: Object, attribute: 'hls-config' })
   hlsConfig: Partial<HlsConfig | undefined> = {};
@@ -132,8 +132,7 @@ export class HlsElement extends VideoElement {
   /**
    * The `hls.js` constructor (supports dynamic imports) or a URL of where it can be found.
    *
-   * @default DEV: 'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.js'
-   * @default PROD: 'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.min.js'
+   * @defaultValue `https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.js`
    */
   @property({ attribute: 'hls-library' })
   hlsLibrary: HlsConstructor | DynamicHlsConstructorImport | string | undefined = __DEV__
@@ -159,7 +158,7 @@ export class HlsElement extends VideoElement {
   /**
    * Whether the `hls.js` instance has mounted the `HtmlMediaElement`.
    *
-   * @default false
+   * @defaultValue false
    */
   get isHlsEngineAttached() {
     return this._isHlsEngineAttached;
@@ -171,7 +170,7 @@ export class HlsElement extends VideoElement {
    * The absolute URL of the chosen HLS media resource. Defaults to `''` if no media has been
    * loaded.
    *
-   * @default ''
+   * @defaultValue ''
    */
   get currentHlsSrc() {
     return this._currentHlsSrc;
@@ -208,7 +207,7 @@ export class HlsElement extends VideoElement {
   /**
    * Whether the current src is using HLS.
    *
-   * @default false
+   * @defaultValue false
    */
   get isHlsStream(): boolean {
     return this.state.src.some((src) => HLS_EXTENSIONS.test(src));

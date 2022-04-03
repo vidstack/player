@@ -260,8 +260,6 @@ export class MediaController {
 
   /**
    * Override this to allow media events to bubble up the DOM.
-   *
-   * @param event
    */
   protected _mediaRequestEventGateway(event: Event) {
     event.stopPropagation();

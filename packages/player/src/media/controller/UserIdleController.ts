@@ -12,7 +12,7 @@ export class UserIdleController implements ReactiveController {
    * The amount of delay in milliseconds while media playback is progressing without user
    * activity to indicate an idle state.
    *
-   * @default 2000
+   * @defaultValue 2000
    */
   delay = 2000;
 

@@ -183,7 +183,7 @@ export class SliderElement extends LitElement {
   /**
    * Whether the slider thumb is currently being dragged.
    *
-   * @default false
+   * @defaultValue false
    */
   get isDragging(): boolean {
     return get(this.store.dragging);
@@ -192,7 +192,7 @@ export class SliderElement extends LitElement {
   /**
    * The current value to range ratio.
    *
-   * @default 0.5
+   * @defaultValue 0.5
    * @example
    * `min` = 0
    * `max` = 10
@@ -209,7 +209,7 @@ export class SliderElement extends LitElement {
   /**
    * The fill rate expressed as a percentage (`fillRate * 100`).
    *
-   * @default 50
+   * @defaultValue 50
    */
   get fillPercent(): number {
     return this.fillRate * 100;
@@ -218,7 +218,7 @@ export class SliderElement extends LitElement {
   /**
    * The value at which the device pointer is pointing to inside the slider.
    *
-   * @default 0
+   * @defaultValue 0
    */
   get pointerValue() {
     return get(this.store.pointerValue);
@@ -227,7 +227,7 @@ export class SliderElement extends LitElement {
   /**
    * The pointer value to range ratio.
    *
-   * @default 0
+   * @defaultValue 0
    */
   get pointerRate() {
     const range = this.max - this.min,
@@ -238,7 +238,7 @@ export class SliderElement extends LitElement {
   /**
    * The pointer rate expressed as a percentage (`pointerRate * 100`).
    *
-   * @default 0
+   * @defaultValue 0
    */
   get pointerPercent() {
     return this.pointerRate * 100;

@@ -49,7 +49,7 @@ export type UnmuteRequestEvent = VdsEvent<void>;
  * Whether to request fullscreen on the media (i.e., `<vds-media>`) or provider element
  * (e.g., `<vds-video>`).
  *
- * @default 'media'
+ * @defaultValue 'media'
  */
 export type MediaFullscreenRequestTarget = 'media' | 'provider';
 
@@ -163,7 +163,6 @@ export type HidePosterRequestEvent = VdsEvent<void>;
  * Internal event that is fired by a media provider when requesting media playback to restart after
  * reaching the end. This event also helps notify the media controller that media will be looping.
  *
- * @internal
  * @event
  * @bubbles
  * @composed

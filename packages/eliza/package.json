@@ -13,12 +13,12 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build:pkg": "run-p build:node build:types",
+    "build": "run-p build:dist build:types",
     "build:base": "node ../../.scripts/build.js --entry=src/index.ts",
-    "build:node": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --requireshim --external=yargs,@vidstack/foundation,typescript",
+    "build:dist": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --requireshim --external=yargs,@vidstack/foundation,typescript",
     "build:types": "tsc -p tsconfig.json",
     "clean": "rimraf dist-node types",
-    "watch": "run-p \"build:node -- -w\" \"build:types -- -w\"",
+    "watch": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn"
   },

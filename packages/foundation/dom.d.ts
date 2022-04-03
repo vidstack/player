@@ -34,7 +34,7 @@ declare global {
     /**
      * A Boolean value indicating whether the video is displaying in fullscreen mode.
      *
-     * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1630493-webkitdisplayingfullscreen
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1630493-webkitdisplayingfullscreen}
      */
     readonly webkitDisplayingFullscreen?: boolean;
 
@@ -45,7 +45,7 @@ declare global {
      * `false` if the meta data is `loaded` or the `loadedmetadata` event has not fired, and if
      * the files are audio-only.
      *
-     * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1628805-webkitsupportsfullscreen
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1628805-webkitsupportsfullscreen}
      */
     readonly webkitSupportsFullscreen?: boolean;
 
@@ -57,7 +57,7 @@ declare global {
     /**
      * A property indicating the presentation mode.
      *
-     * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode}
      */
     readonly webkitPresentationMode?: WebKitPresentationMode;
 
@@ -67,14 +67,14 @@ declare global {
      * This method throws an exception if the element is not allowed to enter fullscreen—that is,
      * if `webkitSupportsFullscreen` is false.
      *
-     * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen}
      */
     webkitEnterFullscreen?(): void;
 
     /**
      * Exits fullscreen mode.
      *
-     * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1629468-webkitexitfullscreen
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1629468-webkitexitfullscreen}
      */
     webkitExitFullscreen?(): void;
 
@@ -85,14 +85,14 @@ declare global {
      * `false` if the meta data is `loaded` or the `loadedmetadata` event has not fired, and if
      * the files are audio-only.
      *
-     * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1629816-webkitsupportspresentationmode
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1629816-webkitsupportspresentationmode}
      */
     webkitSupportsPresentationMode?(mode: WebKitPresentationMode): boolean;
 
     /**
      * Sets the presentation mode for video playback.
      *
-     * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631224-webkitsetpresentationmode
+     * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631224-webkitsetpresentationmode}
      */
     webkitSetPresentationMode?(mode: WebKitPresentationMode): Promise<void>;
   }
@@ -151,7 +151,7 @@ export interface ResizeObserverOptions {
    * Sets which box model the observer will observe changes to. Possible values
    * are `content-box` (the default), and `border-box`.
    *
-   * @default 'content-box'
+   * @defaultValue 'content-box'
    */
   box?: 'content-box' | 'border-box';
 }

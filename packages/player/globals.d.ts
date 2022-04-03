@@ -1,16 +1,16 @@
 /// <reference types="@vidstack/foundation/globals" />
 
 import type {
+  HlsEvents,
   MediaConnectEvent,
   MediaEvents,
   MediaProviderConnectEvent,
   MediaRequestEvents,
   MediaSyncEvents,
   MediaVisibilityEvents,
-} from './types/media';
-import type { HlsEvents } from './types/providers/hls';
-import type { VideoPresentationEvents } from './types/providers/video';
-import type { SliderEvents } from './types/ui/slider';
+  SliderEvents,
+  VideoPresentationEvents,
+} from './index';
 
 declare global {
   interface GlobalEventHandlersEventMap

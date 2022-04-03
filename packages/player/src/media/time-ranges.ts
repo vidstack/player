@@ -70,7 +70,7 @@ function createTimeRangesObj(ranges?: [number, number][]): TimeRanges {
  * array of ranges (an array of arrays of two numbers each).
  * @param end - The end of a single range. Cannot be used with the array form of the
  * `start` argument.
- * @link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges}
  */
 export function createTimeRanges(start?: number | [number, number][], end?: number): TimeRanges {
   if (isArray(start)) {

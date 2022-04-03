@@ -19,7 +19,7 @@ export function lowercaseFirstLetter(str: string) {
 /**
  * Converts a kebab-case string to Title Case.
  *
- * @example 'myProperty' -> 'My Property'
+ * @example `myProperty -> My Property`
  */
 export function kebabToTitleCase(str: string) {
   return uppercaseFirstLetter(str.replace(/-./g, (x) => ' ' + x[1].toUpperCase()));
@@ -28,7 +28,7 @@ export function kebabToTitleCase(str: string) {
 /**
  * Converts a camelCase string to kebab-case.
  *
- * @example 'myProperty' -> 'my-property'
+ * @example `myProperty -> my-property`
  */
 export function camelToKebabCase(str: string) {
   return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
@@ -37,7 +37,7 @@ export function camelToKebabCase(str: string) {
 /**
  * Converts a kebab-case string to camelCase.
  *
- * @example 'my-property' -> 'myProperty'
+ * @example `my-property -> myProperty`
  */
 export function kebabToCamelCase(str: string) {
   return str.replace(/-./g, (x) => x[1].toUpperCase());
@@ -46,7 +46,7 @@ export function kebabToCamelCase(str: string) {
 /**
  * Converts a kebab-case string to PascalCase.
  *
- * @example 'myProperty' -> 'MyProperty'
+ * @example `myProperty -> MyProperty`
  */
 export function kebabToPascalCase(str: string) {
   return kebabToTitleCase(str).replace(/\s/g, '');
@@ -55,7 +55,7 @@ export function kebabToPascalCase(str: string) {
 /**
  * Converts a camelCase string to Title Case.
  *
- * @example 'myProperty' -> 'Title Case'
+ * @example `myProperty -> Title Case`
  */
 export function camelToTitleCase(str: string) {
   return uppercaseFirstLetter(str.replace(/([A-Z])/g, ' $1'));

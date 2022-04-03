@@ -144,7 +144,7 @@ export class MediaElement extends LitElement {
    * Whether the native browser fullscreen API is available. This does not mean that the
    * operation is guaranteed to be successful, only that it can be attempted.
    *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API}
    */
   get canFullscreen(): boolean {
     return this.fullscreenController.isSupported;
@@ -162,7 +162,7 @@ export class MediaElement extends LitElement {
    * the Screen Orientation API is available. The default is `undefined` which indicates
    * no screen orientation change.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property({ attribute: 'fullscreen-orientation' })
   get fullscreenOrientation(): ScreenOrientationLock | undefined {

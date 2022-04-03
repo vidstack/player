@@ -65,7 +65,7 @@ export class MediaVisibilityElement extends LitElement {
   /**
    * The action to perform on the media provider when it enters the viewport.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property({ attribute: 'enter-viewport' })
   enterViewport?: EnterVisibilityMediaAction;
@@ -73,7 +73,7 @@ export class MediaVisibilityElement extends LitElement {
   /**
    * The action to perform on the media provider when it exits the viewport.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property({ attribute: 'exit-viewport' })
   exitViewport?: ExitVisibilityMediaAction;
@@ -81,7 +81,7 @@ export class MediaVisibilityElement extends LitElement {
   /**
    * The amount of time in milliseconds to delay viewport enter actions.
    *
-   * @default 0
+   * @defaultValue 0
    */
   @property({ type: Number, attribute: 'viewport-enter-delay' })
   viewportEnterDelay = 0;
@@ -89,7 +89,7 @@ export class MediaVisibilityElement extends LitElement {
   /**
    * The action to perform on the media provider when the page becomes visible.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property({ attribute: 'enter-page' })
   enterPage?: EnterVisibilityMediaAction;
@@ -97,7 +97,7 @@ export class MediaVisibilityElement extends LitElement {
   /**
    * The action to perform on the media provider when the page becomes hidden.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property({ attribute: 'exit-page' })
   exitPage?: ExitVisibilityMediaAction;
@@ -114,7 +114,7 @@ export class MediaVisibilityElement extends LitElement {
    * - Use `state` when you want completely visible / not visible.
    * - Use `visibility` when you want partially visible / not visible.
    *
-   * @default 'state'
+   * @defaultValue 'state'
    */
   @property({ attribute: 'page-change-type' })
   pageChangeType: 'state' | 'visibility' = 'state';
@@ -122,7 +122,7 @@ export class MediaVisibilityElement extends LitElement {
   /**
    * The amount of time in milliseconds to delay page enter actions.
    *
-   * @default 0
+   * @defaultValue 0
    */
   @property({ type: Number, attribute: 'page-enter-delay' })
   pageEnterDelay = 0;
@@ -132,7 +132,7 @@ export class MediaVisibilityElement extends LitElement {
    * of the media player. Must be a ancestor of the media player. Defaults to the browser viewport
    * if not specified.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property({ attribute: 'intersection-root' })
   intersectionRoot?: string;
@@ -141,7 +141,7 @@ export class MediaVisibilityElement extends LitElement {
    * A number which indicates at what percentage of the media player's visibility the observer's
    * `onEnter` and `onExit` actions should be triggered.
    *
-   * @default 1
+   * @defaultValue 1
    */
   @property({ type: Number, attribute: 'intersection-threshold' })
   intersectionThreshold = 1;

@@ -78,7 +78,7 @@ export type VdsMediaEvent<DetailType = unknown> = VdsEvent<DetailType> & {
  * Fired when the resource was not fully loaded, but not as the result of an error.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/abort_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/abort_event}
  */
 export type MediaAbortEvent = VdsMediaEvent<void>;
 
@@ -120,7 +120,7 @@ export type MediaCanLoadEvent = VdsMediaEvent<void>;
  * loaded to play the media up to its end without having to stop for further buffering of content.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event}
  */
 export type MediaCanPlayEvent = VdsMediaEvent<{ duration: number }>;
 
@@ -129,7 +129,7 @@ export type MediaCanPlayEvent = VdsMediaEvent<{ duration: number }>;
  * loaded to play the media up to its end without having to stop for further buffering of content.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event}
  */
 export type MediaCanPlayThroughEvent = VdsMediaEvent<{ duration: number }>;
 
@@ -151,7 +151,7 @@ export type MediaCurrentSrcChangeEvent = VdsMediaEvent<string>;
  * Fired when the `duration` property changes.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/durationchange_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/durationchange_event}
  */
 export type MediaDurationChangeEvent = VdsMediaEvent<number>;
 
@@ -159,7 +159,7 @@ export type MediaDurationChangeEvent = VdsMediaEvent<number>;
  * Fired when the media has become empty.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/emptied_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/emptied_event}
  */
 export type MediaEmptiedEvent = VdsMediaEvent<void>;
 
@@ -179,7 +179,7 @@ export type MediaEndEvent = VdsMediaEvent<void>;
  * and `MediaEndEvent`).
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended_event}
  */
 export type MediaEndedEvent = VdsMediaEvent<void>;
 
@@ -190,8 +190,8 @@ export type MediaEndedEvent = VdsMediaEvent<void>;
  * the general type of error that occurred.
  *
  * @event
- * @link https://html.spec.whatwg.org/multipage/media.html#error-codes
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
+ * @see {@link https://html.spec.whatwg.org/multipage/media.html#error-codes}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event}
  */
 export type MediaErrorEvent = VdsMediaEvent<MediaErrorDetail>;
 
@@ -211,7 +211,7 @@ export type UserIdleChangeEvent = VdsMediaEvent<boolean> & {
  * the first frame.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadeddata_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadeddata_event}
  */
 export type MediaLoadedDataEvent = VdsMediaEvent<void>;
 
@@ -228,7 +228,7 @@ export type MediaMetadataEventDetail = {
  * Fired when the metadata has been loaded.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event}
  */
 export type MediaLoadedMetadataEvent = VdsMediaEvent<MediaMetadataEventDetail>;
 
@@ -243,7 +243,7 @@ export type MediaLoopChangeEvent = VdsMediaEvent<boolean>;
  * Fired when the browser has started to load a resource.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event}
  */
 export type MediaLoadStartEvent = VdsMediaEvent<MediaMetadataEventDetail>;
 
@@ -260,7 +260,7 @@ export type MediaTypeChangeEvent = VdsMediaEvent<MediaType>;
  * `pause()` method.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event}
  */
 export type MediaPauseEvent = VdsMediaEvent<void> & {
   requestEvent?: PauseRequestEvent;
@@ -271,7 +271,7 @@ export type MediaPauseEvent = VdsMediaEvent<void> & {
  * method, or the `autoplay` attribute.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play_event}
  */
 export type MediaPlayEvent = VdsMediaEvent<void> & {
   autoplay?: boolean;
@@ -291,7 +291,7 @@ export type MediaPlayFailEvent = VdsMediaEvent<void> & {
  * Fired when playback is ready to start after having been paused or delayed due to lack of data.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event}
  */
 export type MediaPlayingEvent = VdsMediaEvent<void>;
 
@@ -313,7 +313,7 @@ export type MediaPosterChangeEvent = VdsMediaEvent<string>;
  * Fired periodically as the browser loads a resource.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event}
  */
 export type MediaProgressEvent = VdsMediaEvent<{
   buffered: TimeRanges;
@@ -325,7 +325,7 @@ export type MediaProgressEvent = VdsMediaEvent<{
  * `seeking` property is changed to `false`.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event}
  */
 export type MediaSeekedEvent = VdsMediaEvent<number> & {
   requestEvent?: SeekRequestEvent;
@@ -336,7 +336,7 @@ export type MediaSeekedEvent = VdsMediaEvent<number> & {
  * media is seeking to a new position.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event}
  */
 export type MediaSeekingEvent = VdsMediaEvent<number> & {
   requestEvent?: SeekingRequestEvent;
@@ -354,7 +354,7 @@ export type MediaSrcChangeEvent = VdsMediaEvent<string[]>;
  * forthcoming.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/stalled_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/stalled_event}
  */
 export type MediaStalledEvent = VdsMediaEvent<void>;
 
@@ -370,7 +370,7 @@ export type MediaStartedEvent = VdsMediaEvent<void>;
  * Fired when media data loading has been suspended.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/suspend_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/suspend_event}
  */
 export type MediaSuspendEvent = VdsMediaEvent<void>;
 
@@ -389,7 +389,7 @@ export type MediaReplayEvent = VdsMediaEvent<void> & {
  * user seeking.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event}
  */
 export type MediaTimeUpdateEvent = VdsMediaEvent<{
   currentTime: number;
@@ -414,7 +414,7 @@ export type MediaVolumeChange = {
  * Fired when the `volume` or `muted` properties change value.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event}
  */
 export type MediaVolumeChangeEvent = VdsMediaEvent<MediaVolumeChange> & {
   requestEvent?: MuteRequestEvent | UnmuteRequestEvent | VolumeChangeRequestEvent;
@@ -424,6 +424,6 @@ export type MediaVolumeChangeEvent = VdsMediaEvent<MediaVolumeChange> & {
  * Fired when playback has stopped because of a temporary lack of data.
  *
  * @event
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/waiting_event
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/waiting_event}
  */
 export type MediaWaitingEvent = VdsMediaEvent<void>;

@@ -35,9 +35,6 @@ export function walkUpDOMTree(
 
 /**
  * Builds an `exportsparts` attribute value given an array of `parts` and an optional `prefix`.
- *
- * @param parts
- * @param prefix
  */
 export function buildExportPartsAttr(
   parts: string[],
@@ -59,7 +56,6 @@ export function buildExportPartsAttr(
  *
  * @param name - A string representing the name you are giving the element.
  * @param constructor - A class object that defines the behavior of the element.
- * @param isClient
  */
 export function safelyDefineCustomElement(
   name: string,

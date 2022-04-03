@@ -4,15 +4,11 @@
   "description": "Foundational functions and classes used by Vidstack products.",
   "license": "MIT",
   "type": "module",
-  "sideEffects": [
-    "./src/dom-shim.ts"
-  ],
+  "sideEffects": false,
   "files": [
-    "src/",
     "dist/",
     "dist-node/",
     "dist-prod/",
-    "types/",
     "index.d.ts",
     "dom.d.ts",
     "globals.d.ts"
@@ -37,15 +33,12 @@
     "url": "https://github.com/vidstack/vidstack/issues"
   },
   "scripts": {
-    "build:pkg": "run-p build:dev build:node build:prod build:types",
-    "build:base": "node ../../.scripts/build.js --entry=src/index.ts --bundle",
-    "build:external": "pnpm build:base -- --external=lit",
-    "build:dev": "pnpm build:external -- --outdir=dist --sourcemap",
-    "build:node": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --prod --domshim",
-    "build:prod": "pnpm build:external -- --outdir=dist-prod --prod",
-    "build:types": "tsc -p tsconfig.json",
+    "build": "pnpm clean && run-p build:dist build:types",
+    "build:dist": "rollup -c",
+    "build:types": "tsc -p tsconfig.json && pnpm build:types:dist && rimraf types dist/foundation.d.ts",
+    "build:types:dist": "api-extractor run",
     "clean": "rimraf dist dist-node dist-prod types",
-    "dev": "run-p \"build:dev -- -w\" \"build:types -- -w\"",
+    "dev": "pnpm build:dist -- -w",
     "watch": "pnpm dev",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
@@ -55,22 +48,26 @@
     "test:watch": "vitest --watch"
   },
   "dependencies": {
-    "@types/fscreen": "^1.0.1"
+    "@types/fscreen": "^1.0.1",
+    "just-debounce-it": "^3.0.1",
+    "just-throttle": "^4.0.1"
   },
   "peerDependencies": {
     "lit": "^2.1.1"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.20.0",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@vidstack/rollup-plugins": "workspace:*",
     "fscreen": "^1.2.0",
     "jsdom": "^19.0.0",
-    "just-debounce-it": "^3.0.1",
-    "just-throttle": "^4.0.1",
     "lit": "^2.1.3",
     "rimraf": "^3.0.2",
+    "rollup": "^2.70.1",
     "tslib": "^2.3.1",
-    "vite": "^2.8.6",
+    "vite": "^2.9.1",
     "vitest": "^0.6.1"
   }
 }

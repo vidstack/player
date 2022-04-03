@@ -3,7 +3,7 @@ name: 'Weekly'
 on:
   schedule:
     # Each week at 00:00:00 on Sunday.
-    - cron: '0 * * * 0'
+    - cron: '* 0 * * 0'
 
 jobs:
   lockfile:

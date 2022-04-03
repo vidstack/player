@@ -74,7 +74,7 @@ export class SliderVideoElement extends LitElement {
   /**
    * The URL of a media resource to use.
    *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    */
   @property() src: string | undefined;
 

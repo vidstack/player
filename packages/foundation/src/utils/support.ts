@@ -26,7 +26,7 @@ export function currentSafariVersion(): number {
 /**
  * Checks if a video player can enter fullscreen.
  *
- * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen
+ * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen}
  */
 export function canFullscreenVideo(): boolean {
   if (!IS_CLIENT) return false;
@@ -44,7 +44,7 @@ export function canObserveIntersection(): boolean {
 /**
  * Checks if the ScreenOrientation API is available.
  *
- * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation}
  */
 export function canOrientScreen(): boolean {
   return (
@@ -58,7 +58,7 @@ export function canOrientScreen(): boolean {
 /**
  * Checks if the screen orientation can be changed.
  *
- * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation}
  */
 export function canRotateScreen(): boolean {
   return (
@@ -71,7 +71,7 @@ export function canRotateScreen(): boolean {
 /**
  * Reduced motion iOS & MacOS setting.
  *
- * @link https://webkit.org/blog/7551/responsive-design-for-motion/
+ * @see {@link https://webkit.org/blog/7551/responsive-design-for-motion/}
  */
 export function isReducedMotionPreferred(): boolean {
   return (
@@ -92,7 +92,7 @@ export function canPlayHLSNatively(): boolean {
  * Checks if the native HTML5 video player can enter picture-in-picture (PIP) mode when using
  * the Chrome browser.
  *
- * @link  https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture
+ * @see {@link https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture}
  */
 export function canUsePiPInChrome(): boolean {
   if (!IS_CLIENT) return false;
@@ -105,7 +105,7 @@ export function canUsePiPInChrome(): boolean {
  * the desktop Safari browser, iOS Safari appears to "support" PiP through the check, however PiP
  * does not function.
  *
- * @link https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls
+ * @see {@link https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls}
  */
 export function canUsePiPInSafari(): boolean {
   if (!IS_CLIENT) return false;
@@ -131,9 +131,7 @@ export function canUsePiP(): boolean {
  * a `play()` call, autoplay is supported. Although this unintuitive, it works across browsers
  * and is currently the lightest way to detect autoplay without using a data source.
  *
- * @param muted
- * @param playsinline
- * @link https://github.com/ampproject/amphtml/blob/9bc8756536956780e249d895f3e1001acdee0bc0/src/utils/video.js#L25
+ * @see {@link https://github.com/ampproject/amphtml/blob/9bc8756536956780e249d895f3e1001acdee0bc0/src/utils/video.js#L25}
  */
 export function canAutoplay(muted = true, playsinline = true): Promise<boolean> {
   if (!IS_CLIENT) return Promise.resolve(false);
@@ -167,14 +165,14 @@ export function canAutoplay(muted = true, playsinline = true): Promise<boolean> 
 }
 
 /**
- * @link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts
+ * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
 export function getMediaSource(): typeof MediaSource | undefined {
   return window?.MediaSource ?? window?.WebKitMediaSource;
 }
 
 /**
- * @link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts
+ * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
 export function getSourceBuffer(): typeof SourceBuffer | undefined {
   return window?.SourceBuffer ?? window?.WebKitSourceBuffer;
@@ -183,7 +181,7 @@ export function getSourceBuffer(): typeof SourceBuffer | undefined {
 /**
  * Whether `hls.js` is supported in this environment.
  *
- * @link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts
+ * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
 export function isHlsjsSupported(): boolean {
   const mediaSource = getMediaSource();

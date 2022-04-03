@@ -14,7 +14,7 @@ import { Html5MediaElement } from '../html5';
  *
  * @tagname vds-audio
  * @slot - Used to pass in the `<audio>` element.
- * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio}
  * @example
  * ```html
  * <vds-audio>

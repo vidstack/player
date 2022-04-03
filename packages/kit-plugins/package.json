@@ -8,12 +8,12 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build:pkg": "run-p build:node build:types",
+    "build": "run-p build:dist build:types",
     "build:base": "node ../../.scripts/build.js --entry=src/index.ts",
-    "build:node": "pnpm build:base -- --platform=node --outdir=dist-node --bundle --requireshim --external=@vidstack/eliza,@vidstack/foundation,vite,shiki,toml",
+    "build:dist": "pnpm build:base -- --platform=node --outdir=dist-node --bundle --requireshim --external=@vidstack/eliza,@vidstack/foundation,vite,shiki,toml",
     "build:types": "tsc -p tsconfig.json",
     "clean": "rimraf dist-node types",
-    "watch": "run-p \"build:node -- -w\" \"build:types -- -w\"",
+    "watch": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn"
   },
@@ -35,6 +35,6 @@
     "markdown-it-container": "^3.0.0",
     "markdown-it-emoji": "^2.0.0",
     "rimraf": "^3.0.2",
-    "vite": "^2.8.6"
+    "vite": "^2.9.1"
   }
 }

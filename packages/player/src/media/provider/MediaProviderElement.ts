@@ -62,7 +62,7 @@ export type MediaProviderConnectEvent = DiscoveryEvent<MediaProviderElement>;
  * media is ready for playback.
  *
  * @events ../events.ts
- * @link https://en.wikipedia.org/wiki/Adapter_pattern
+ * @see {@link https://en.wikipedia.org/wiki/Adapter_pattern}
  */
 export abstract class MediaProviderElement extends LitElement {
   constructor() {
@@ -196,8 +196,8 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
    *
-   * @default 1
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
+   * @defaultValue 1
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume}
    */
   @property({ type: Number, reflect: true })
   get volume() {
@@ -222,8 +222,8 @@ export abstract class MediaProviderElement extends LitElement {
    * Whether playback should be paused. Defaults to `true` if no media has loaded or playback has
    * not started. Setting this to `false` will begin/resume playback.
    *
-   * @default true
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused
+   * @defaultValue true
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused}
    */
   @property({ type: Boolean, reflect: true })
   get paused() {
@@ -256,8 +256,8 @@ export abstract class MediaProviderElement extends LitElement {
    * time. The value can be set to a minimum of `0` and maximum of the total length of the
    * media indicated by the `duration`.
    *
-   * @default 0
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime
+   * @defaultValue 0
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime}
    */
   @property({ type: Number })
   get currentTime() {
@@ -280,8 +280,8 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * Whether the audio is muted or not.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted}
    */
   @property({ type: Boolean, reflect: true })
   get muted() {
@@ -321,8 +321,8 @@ export abstract class MediaProviderElement extends LitElement {
    * Whether media should automatically start playing from the beginning (replay) every time
    * it ends.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop}
    */
   @property({ type: Boolean, reflect: true })
   get loop() {
@@ -343,8 +343,8 @@ export abstract class MediaProviderElement extends LitElement {
    * provider to supply its own default controls. Depending on the provider, changing this prop
    * may cause the player to completely reset.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls}
    */
   @property({ type: Boolean, reflect: true })
   get controls() {
@@ -390,7 +390,7 @@ export abstract class MediaProviderElement extends LitElement {
    * - If `lazy` media will delay loading until the provider has entered the viewport.
    * - If `custom` media will wait for the `startLoadingMedia()` method to be called.
    *
-   * @default 'lazy'
+   * @defaultValue 'lazy'
    */
   @property({ attribute: 'loading' })
   loading: 'eager' | 'lazy' | 'custom' = 'lazy';
@@ -413,19 +413,19 @@ export abstract class MediaProviderElement extends LitElement {
    * user has interacted with the player, the promise may be rejected subject to the browser's
    * autoplay policies.
    *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play}
    */
   abstract play(): Promise<void>;
 
   /**
    * Pauses playback of the media.
    *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause}
    */
   abstract pause(): Promise<void>;
 
   /**
-   * @throws {Error} - Will throw if media is not ready for playback.
+   * @throws Will throw if media is not ready for playback.
    */
   protected _throwIfNotReadyForPlayback() {
     if (!this.state.canPlay) {
@@ -439,7 +439,7 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   /**
-   * @throws {Error} - Will throw if player is not in a video view.
+   * @throws Will throw if player is not in a video view.
    */
   protected _throwIfNotVideoView() {
     if (this.state.viewType !== ViewType.Video) {
@@ -507,8 +507,8 @@ export abstract class MediaProviderElement extends LitElement {
    * However, autoplay can be useful when creating media elements whose source will be set at a
    * later time, under user control.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay}
    */
   @property({ type: Boolean, reflect: true })
   get autoplay() {
@@ -592,7 +592,7 @@ export abstract class MediaProviderElement extends LitElement {
    * The amount of delay in milliseconds while media playback is progressing without user
    * activity to indicate an idle state.
    *
-   * @default 2000
+   * @defaultValue 2000
    */
   @property({ attribute: 'idle-delay', type: Number })
   get idleDelay() {
@@ -691,7 +691,7 @@ export abstract class MediaProviderElement extends LitElement {
    * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
    * only that it can be attempted.
    *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API}
    */
   get canFullscreen(): boolean {
     return this.fullscreenController.isSupported;
@@ -700,7 +700,7 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * Whether the provider is currently in fullscreen mode.
    *
-   * @default false
+   * @defaultValue false
    */
   get fullscreen(): boolean {
     return this.fullscreenController.isFullscreen;
@@ -711,7 +711,7 @@ export abstract class MediaProviderElement extends LitElement {
    * the Screen Orientation API is available. The default is `undefined` which indicates
    * no screen orientation change.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property({ attribute: 'fullscreen-orientation' })
   get fullscreenOrientation(): ScreenOrientationLock | undefined {

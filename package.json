@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build:dist build:types",
     "build:app": "turbo run build:app",
     "build:vercel": "turbo run build:vercel",
     "clean": "turbo run clean",
@@ -19,10 +19,10 @@
     "test:esm": "node .scripts/test-node-esm.js",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
-    "release": "turbo run build build:cdn test && pnpm test:esm && node .scripts/release.js",
+    "release": "turbo run build:dist build:types test && pnpm test:esm && node .scripts/release.js",
     "release:dry": "pnpm release -- --dry",
     "spellcheck": "cspell 'apps/**/*.md' 'packages/**.ts', 'packages/**/.md', '*.md' --gitignore --cache",
-    "validate": "turbo run build lint test && pnpm test:esm"
+    "validate": "turbo run build:dist build:types lint test && pnpm test:esm"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
@@ -35,7 +35,7 @@
     "cross-env": "^7.0.3",
     "cspell": "^5.15.2",
     "enquirer": "^2.3.6",
-    "esbuild": "^0.14.23",
+    "esbuild": "^0.14.29",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-import-resolver-typescript": "^2.5.0",

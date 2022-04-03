@@ -54,9 +54,6 @@ export type ExtractEventInit<Event> = VdsEventInit<ExtractEventDetail<Event>>;
 
 /**
  * Helps build a `VdsEvent` with type safety.
- *
- * @param type
- * @param eventInit
  */
 export function vdsEvent<EventType extends keyof GlobalEventHandlersEventMap>(
   type: EventType,
@@ -73,8 +70,6 @@ export function isVdsEvent(event: Event | undefined): event is VdsEvent<unknown>
 /**
  * Walks up the event chain (following each `triggerEvent`) and returns the origin event
  * that started the chain.
- *
- * @param event
  */
 export function getOriginEvent(event: VdsEvent): Event | undefined {
   let triggerEvent = event.triggerEvent as VdsEvent;

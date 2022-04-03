@@ -19,8 +19,8 @@ export type ReadableStore<T> = {
 
   /**
    * Subscribe on value changes.
-   * @param run subscription callback
-   * @param invalidate cleanup callback
+   * @param run - subscription callback
+   * @param invalidate - cleanup callback
    */
   subscribe(
     this: void,
@@ -33,13 +33,13 @@ export type ReadableStore<T> = {
 export type WritableStore<T> = ReadableStore<T> & {
   /**
    * Set value and inform subscribers.
-   * @param value to set
+   * @param value - to set
    */
   set(this: void, value: T): void;
 
   /**
    * Update value using callback and inform subscribers.
-   * @param updater callback
+   * @param updater - callback
    */
   update(this: void, updater: StoreUpdater<T>): void;
 };

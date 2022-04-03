@@ -13,6 +13,9 @@ turbo-graph*
 
 /apps/*/build/
 
+packages/foundation/index.d.ts
+packages/player/index.d.ts
+
 packages/*/define/
 packages/*/types/
 packages/*/react/

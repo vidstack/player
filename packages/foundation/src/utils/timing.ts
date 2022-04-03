@@ -18,7 +18,7 @@ export function wait(delay: number): Promise<void> {
  * Creates a throttled function that only invokes `func` at most once per animation frame.
  *
  * @param func - The function to throttle.
- * @link https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame}
  */
 export function rafThrottle<Fn extends (...args: any[]) => void>(
   func: Fn,

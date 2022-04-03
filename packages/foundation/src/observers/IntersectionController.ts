@@ -151,7 +151,7 @@ export class IntersectionController implements ReactiveController {
    * Observe the target element. The controller's `target` is automatically observed when the
    * host connects.
    *
-   * @param target Element to observe
+   * @param target - Element to observe
    */
   observe(target: Element) {
     // This will always trigger the callback since the initial intersection state is reported.

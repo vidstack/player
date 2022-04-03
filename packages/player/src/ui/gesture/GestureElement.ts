@@ -126,7 +126,7 @@ export class GestureElement extends LitElement {
    * you want an event to occur twice before the action is performed, this will be a single
    * repetition (eg: value of `1`).
    *
-   * @default 0
+   * @defaultValue 0
    * @example 0 - wait for event to occur once.
    * @example 1 - wait for event to occur twice.
    * @example 2 - wait for event to occur thrice.
@@ -140,7 +140,7 @@ export class GestureElement extends LitElement {
    *
    *💡 A lower priority value means greater prioritization (eg: `0 > 1 > 2 > ... > 100`).
    *
-   * @default 10
+   * @defaultValue 10
    */
   @property({ type: Number }) priority = 10;
 

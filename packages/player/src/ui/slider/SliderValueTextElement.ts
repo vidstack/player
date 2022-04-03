@@ -67,7 +67,7 @@ export class SliderValueTextElement extends LitElement {
   /**
    * Determines how the value is formatted.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property() format?: 'percent' | 'time';
 
@@ -75,8 +75,8 @@ export class SliderValueTextElement extends LitElement {
    * Whether the time should always show the hours unit, even if the time is less than
    * 1 hour. Only available if the `format` attribute is set to `time`.
    *
-   * @default false
-   * @example `20:30` -> `0:20:35`
+   * @defaultValue false
+   * @example `20:30 -> 0:20:35`
    */
   @property({ attribute: 'show-hours', type: Boolean })
   showHours = false;
@@ -85,8 +85,8 @@ export class SliderValueTextElement extends LitElement {
    * Whether the hours unit should be padded with zeroes to a length of 2. Only available if
    * the `format` attribute is set to `time`.
    *
-   * @default false
-   * @example `1:20:03` -> `01:20:03`
+   * @defaultValue false
+   * @example `1:20:03 -> 01:20:03`
    */
   @property({ attribute: 'pad-hours', type: Boolean })
   padHours = false;
@@ -95,7 +95,7 @@ export class SliderValueTextElement extends LitElement {
    * Round the value when formatted as a percentage to the given number of decimal places. Only
    * available if `format` attribute is `percent`.
    *
-   * @default 2
+   * @defaultValue 2
    */
   @property({ attribute: 'decimal-places', type: Number })
   decimalPlaces = 2;

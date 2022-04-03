@@ -46,7 +46,7 @@ export class FullscreenButtonElement extends ToggleButtonElement {
    * The target element on which to request fullscreen on. The target can be the `media`
    * (i.e., `<vds-media>`) or `provider` (e.g., `<vds-video>`) element.
    *
-   * @default 'media'
+   * @defaultValue 'media'
    */
   @property({ attribute: 'fullscreen-target' })
   fullscreenTarget?: MediaFullscreenRequestTarget;

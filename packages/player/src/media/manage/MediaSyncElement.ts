@@ -69,7 +69,7 @@ export class MediaSyncElement extends LitElement {
   /**
    * Whether only one is player should be playing at a time.
    *
-   * @default false
+   * @defaultValue false
    */
   @property({ type: Boolean, attribute: 'single-playback' })
   singlePlayback = false;
@@ -77,7 +77,7 @@ export class MediaSyncElement extends LitElement {
   /**
    * Whether media volume should be in-sync across all media players.
    *
-   * @default false
+   * @defaultValue false
    */
   @property({ type: Boolean, attribute: 'sync-volume' })
   syncVolume = false;
@@ -89,7 +89,7 @@ export class MediaSyncElement extends LitElement {
    *
    * Note that this includes both the volume and muted state.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   @property({ attribute: 'volume-storage-key' })
   volumeStorageKey?: string;

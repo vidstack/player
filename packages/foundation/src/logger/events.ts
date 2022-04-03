@@ -14,13 +14,13 @@ export type LogEvent = VdsEvent<{
   /**
    * The log level.
    *
-   * @default 'info'
+   * @defaultValue 'info'
    */
   level?: LogLevel;
   /**
    * Data to be logged.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   data?: any[];
 }>;

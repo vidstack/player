@@ -247,7 +247,7 @@ export function mergeComponentPart(
         if (prop === 'docTags') {
           mergeDocTags(valueA, valueB);
           if (part === 'props' && (propA as PropMeta).defaultValue.length === 0) {
-            const defaultValue = valueB.find((tag) => tag.name === 'default' && tag.text);
+            const defaultValue = valueB.find((tag) => tag.name === 'defaultValue' && tag.text);
             (propA as PropMeta).defaultValue = defaultValue ?? '';
           }
         } else if (prop === 'documentation' && isUndefined(valueA)) {

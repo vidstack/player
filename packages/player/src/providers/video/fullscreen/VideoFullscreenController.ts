@@ -66,7 +66,7 @@ export class VideoFullscreenController extends FullscreenController {
    * Whether a fallback fullscreen API is available on Safari using presentation modes. This
    * is only used on iOS where the native fullscreen API is not available.
    *
-   * @link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode
+   * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode}
    */
   get isSupportedOnSafari() {
     return this._presentationController.isSupported;

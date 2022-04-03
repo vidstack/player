@@ -27,7 +27,7 @@ export function isReactiveElementConstructor(
  *
  * @param decoratorName
  * @param context
- * @link https://github.com/tc39/proposal-decorators
+ * @see {@link https://github.com/tc39/proposal-decorators}
  */
 export function throwIfTC39Decorator(decoratorName: string, context: any) {
   if (Object.hasOwnProperty.call(context, 'kind')) {

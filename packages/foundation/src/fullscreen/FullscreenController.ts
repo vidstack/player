@@ -107,7 +107,6 @@ export class FullscreenController {
   }
 
   /**
-   * @param listener
    * @returns Stop listening function.
    */
   protected _addFullscreenChangeEventListener(
@@ -132,7 +131,6 @@ export class FullscreenController {
   }
 
   /**
-   * @param listener
    * @returns Stop listening function.
    */
   protected _addFullscreenErrorEventListener(
@@ -242,7 +240,7 @@ export class FullscreenController {
   }
 
   /**
-   * @throws {Error} - Will throw if Fullscreen API is not enabled or supported.
+   * @throws Will throw if Fullscreen API is not enabled or supported.
    */
   protected _throwIfNoFullscreenSupport() {
     if (this.isSupported) return;

@@ -127,5 +127,6 @@ export function mediaStoreSubscription<T extends keyof ReadableMediaStoreRecord>
   property: T,
   onChange: (value: MediaContext[T]) => void,
 ) {
+  // @ts-ignore - remove after we upgrade api-extractor to use 4.6.
   return storeRecordSubscription(host, mediaStoreContext, property, onChange);
 }

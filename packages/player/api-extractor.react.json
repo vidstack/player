@@ -1,0 +1,10 @@
+{
+  "extends": "./api-extractor.json",
+
+  "mainEntryPointFilePath": "./types/react/index.d.ts",
+
+  "dtsRollup": {
+    "enabled": true,
+    "publicTrimmedFilePath": "./react/index.d.ts"
+  }
+}

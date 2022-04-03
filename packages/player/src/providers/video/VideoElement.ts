@@ -16,7 +16,7 @@ import { VideoPresentationController } from './presentation';
  *
  * @tagname vds-video
  * @slot - Used to pass in the `<video>` element.
- * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video}
  * @events ./presentation/events.ts
  * @cssprop --vds-video-width - The width of the video element.
  * @cssprop --vds-video-height - The height of the video element.

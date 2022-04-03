@@ -14,15 +14,15 @@ export type MediaContext = {
    * However, autoplay can be useful when creating media elements whose source will be set at a
    * later time, under user control.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay}
    */
   autoplay: boolean;
   /**
    * Set to an error when autoplay has failed to begin playback. This can be used to determine
    * when to show a recovery UI in the event autoplay fails.
    *
-   * @default undefined
+   * @defaultValue undefined
    */
   autoplayError: { muted: boolean; error: Error } | undefined;
   /**
@@ -30,9 +30,9 @@ export type MediaContext = {
    * browser has buffered (if any) at the moment the buffered property is accessed. This is usually
    * contiguous but if the user jumps about while media is buffering, it may contain holes.
    *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/buffered
-   * @default TimeRanges
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges}
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/buffered}
+   * @defaultValue TimeRanges
    */
   buffered: TimeRanges;
   /**
@@ -40,15 +40,15 @@ export type MediaContext = {
    * available, the returned value is `0`. If the media is of indefinite length (such as
    * streamed live media, a WebRTC call's media, or similar), the value is `+Infinity`.
    *
-   * @default 0
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration
+   * @defaultValue 0
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration}
    */
   duration: number;
   /**
    * Converts the `buffered` time ranges into an absolute value to indicate the amount of
    * media that has buffered from `0` to `duration`.
    *
-   * @default 0
+   * @defaultValue 0
    */
   bufferedAmount: number;
   /**
@@ -62,8 +62,8 @@ export type MediaContext = {
    * loaded to play the media up to its end without having to stop for further buffering of
    * content.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event}
    */
   canPlay: boolean;
   /**
@@ -71,8 +71,8 @@ export type MediaContext = {
    * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
    * only that it can be attempted.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API}
    */
   canFullscreen: boolean;
   /**
@@ -81,22 +81,22 @@ export type MediaContext = {
    * provider to supply its own default controls. Depending on the provider, changing this prop
    * may cause the player to completely reset.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls}
    */
   controls: boolean;
   /**
    * The URL of the current poster. Defaults to `''` if no media/poster has been given or
    * loaded.
    *
-   * @default ''
+   * @defaultValue ''
    */
   poster: string;
   /**
    * The absolute URL of the chosen media resource. Defaults to `''` if no media has been loaded.
    *
-   * @default ''
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc
+   * @defaultValue ''
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc}
    */
   currentSrc: string;
   /**
@@ -105,30 +105,30 @@ export type MediaContext = {
    * time. The value can be set to a minimum of `0` and maximum of the total length of the
    * media (indicated by the duration prop).
    *
-   * @default 0
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime
+   * @defaultValue 0
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime}
    */
   currentTime: number;
   /**
    * Whether media playback has reached the end. In other words it'll be true
    * if `currentTime === duration`.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended}
    */
   ended: boolean;
   /**
    * Contains the most recent media error or undefined if there's been none. You can listen for
    * `vds-error` event updates and examine this object to debug further.
    *
-   * @default undefined
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error
+   * @defaultValue undefined
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error}
    */
   error: MediaErrorDetail | undefined;
   /**
    * Whether the player is currently in fullscreen mode.
    *
-   * @default false
+   * @defaultValue false
    */
   fullscreen: boolean;
   /**
@@ -136,50 +136,50 @@ export type MediaContext = {
    * without any detected user activity for a set period of time (default is 2.5s). This means as
    * long as media is paused, `userIdle` will be `false`.
    *
-   * @default false
+   * @defaultValue false
    */
   userIdle: boolean;
   /**
    * Whether media should automatically start playing from the beginning (replay) every time
    * it ends.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop}
    */
   loop: boolean;
   /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
    *
-   * @default MediaType.Unknown
+   * @defaultValue MediaType.Unknown
    */
   mediaType: MediaType;
   /**
    * Whether the audio is muted or not.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted}
    */
   muted: boolean;
   /**
    * Whether playback should be paused. Defaults to `true` if no media has loaded or playback has
    * not started. Setting this to `false` will begin/resume playback.
    *
-   * @default true
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused
+   * @defaultValue true
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused}
    */
   paused: boolean;
   /**
    * Contains the ranges of the media source that the browser has played, if any.
    *
-   * @default TimeRanges
+   * @defaultValue TimeRanges
    */
   played: TimeRanges;
   /**
    * Whether media is actively playing back. Defaults to `false` if no media has
    * loaded or playback has not started.
    *
-   * @default false
+   * @defaultValue false
    */
   playing: boolean;
   /**
@@ -187,8 +187,8 @@ export type MediaContext = {
    * that setting this to `false` does not imply that the video will always be played in fullscreen.
    * Depending on the provider, changing this prop may cause the player to completely reset.
    *
-   * @default false
-   * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-playsinline
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-playsinline}
    */
   playsinline: boolean;
   /**
@@ -201,36 +201,36 @@ export type MediaContext = {
    * be delivered from the server and so can be ready to play almost immediately — thus they are
    * seekable.
    *
-   * @default TimeRanges
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seekable
+   * @defaultValue TimeRanges
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges}
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seekable}
    */
   seekable: TimeRanges;
   /**
    * Converts the `seekable` time ranges into an absolute value to indicate the amount of
    * media that is seekable from `0` to `duration`.
    *
-   * @default 0
+   * @defaultValue 0
    */
   seekableAmount: number;
   /**
    * Whether media is actively seeking to an new playback position.
    *
-   * @default false
+   * @defaultValue false
    */
   seeking: boolean;
   /**
    * The URL of the current media resource/s to be considered for playback. Use `currentSrc` to
    * get the currently loaded resource.
    *
-   * @default []
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src
+   * @defaultValue []
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    */
   src: string[];
   /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    *
-   * @default false
+   * @defaultValue false
    */
   started: boolean;
   /**
@@ -240,20 +240,20 @@ export type MediaContext = {
    * audio with a poster. This is subject to the provider allowing it. Defaults to `unknown`
    * when no media has been loaded.
    *
-   * @default ViewType.Unknown
+   * @defaultValue ViewType.Unknown
    */
   viewType: ViewType;
   /**
    * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
    *
-   * @default 1
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
+   * @defaultValue 1
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume}
    */
   volume: number;
   /**
    * Whether playback has temporarily stopped because of a lack of temporary data.
    *
-   * @default false
+   * @defaultValue false
    */
   waiting: boolean;
 };

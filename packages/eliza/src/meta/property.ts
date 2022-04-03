@@ -122,7 +122,7 @@ export function buildPropMeta<T>(
 
   prop.defaultValue = ts.isPropertyDeclaration(declaration)
     ? declaration.initializer?.getText()
-    : findDocTag(prop.docTags, 'default')?.text;
+    : findDocTag(prop.docTags, 'defaultValue')?.text;
 
   prop.defaultValue = prop.defaultValue ?? (prop.optional ? 'undefined' : '');
 

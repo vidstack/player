@@ -67,7 +67,7 @@ export class ScreenOrientationController {
   /**
    * Whether the screen orientation is currently locked.
    *
-   * @default false
+   * @defaultValue false
    */
   get isLocked(): boolean {
     return this._isScreenOrientationLocked;
@@ -78,7 +78,7 @@ export class ScreenOrientationController {
    * Screen Orientation API. This method will throw an error if the API is unavailable.
    *
    * @param lockType - The screen lock orientation type.
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation}
    * @see https://w3c.github.io/screen-orientation
    */
   async lock(lockType: ScreenOrientationLock): Promise<void> {
@@ -104,7 +104,7 @@ export class ScreenOrientationController {
    * Unlocks the orientation of the player to it's default state using the Screen Orientation
    * API. This method will throw an error if the API is unavailable.
    *
-   * @link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation}
    * @see https://w3c.github.io/screen-orientation
    */
   async unlock(): Promise<void> {
@@ -161,7 +161,7 @@ export class ScreenOrientationController {
   }
 
   /**
-   * @throws {Error} - Will throw if Screen Orientation API is unavailable.
+   * @throws Will throw if Screen Orientation API is unavailable.
    */
   protected _throwIfScreenOrientationUnavailable() {
     if (this.canOrient) return;

@@ -197,7 +197,13 @@ function vdsReactPlugin(): Plugin {
         mkdirSync(OUTPUT_DIR);
       }
 
-      const index: string[] = [AUTO_GEN_COMMENT, '', "export * from './lib/index.js';", ''];
+      const index: string[] = [
+        AUTO_GEN_COMMENT,
+        '',
+        "export * from '../index.js';",
+        "export * from './lib/index.js';",
+        '',
+      ];
 
       for (const component of components) {
         const { className, source } = component;
@@ -271,7 +277,6 @@ function vdsReactPlugin(): Plugin {
         resolve(rootReactDir, 'index.js'),
         "// This file only exists so it's easier for you to autocomplete the file path in your IDE.",
       );
-      writeFileSync(resolve(rootReactDir, 'index.d.ts'), "export * from '../types/react';");
     },
   };
 }

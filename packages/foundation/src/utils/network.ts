@@ -28,8 +28,6 @@ export function isObjOrJSON(value: unknown): boolean {
 
 /**
  * If an object return otherwise try to parse it as json.
- *
- * @param value
  */
 export function objOrParseJSON<T>(value: unknown): T | undefined {
   return (isObject(value) ? value : tryParseJSON(value)) as any;
@@ -58,7 +56,7 @@ export function loadImage(src: string, minWidth = 1): Promise<HTMLImageElement> 
 /**
  * Loads a script into the DOM.
  *
- * @param src The URL of where the script is located.
+ * @param src - The URL of where the script is located.
  */
 export async function loadScript(src: string): Promise<unknown> {
   const hasLoaded = document.querySelector(`script[src="${src}"]`);
@@ -84,8 +82,6 @@ export async function loadScript(src: string): Promise<unknown> {
 
 /**
  * Tries to parse json and return a object.
- *
- * @param data
  */
 export function decodeJSON<T>(data: unknown): T | undefined {
   if (!isObjOrJSON(data)) return undefined;
@@ -94,10 +90,6 @@ export function decodeJSON<T>(data: unknown): T | undefined {
 
 /**
  * Attempts to safely decode a URI component, on failure it returns the given fallback.
- *
- * @param component
- * @param fallback
- * @param isClient
  */
 export function tryDecodeURIComponent(
   component: string,
@@ -119,7 +111,7 @@ const QUERY_STRING_REGEX = /(?:^[#?]?|&)([^=&]+)(?:=([^&]*))?/g;
  * Returns a simple key/value map and duplicate keys are merged into an array.
  *
  * @param qs - The query string to parse.
- * @link https://github.com/ampproject/amphtml/blob/c7c46cec71bac92f5c5da31dcc6366c18577f566/src/url-parse-query-string.js#L31
+ * @see {@link https://github.com/ampproject/amphtml/blob/c7c46cec71bac92f5c5da31dcc6366c18577f566/src/url-parse-query-string.js#L31}
  */
 export function parseQueryString<T>(qs?: string): T {
   const params = Object.create(null);
@@ -149,8 +141,6 @@ export type Params = Record<string, unknown>;
 
 /**
  * Serializes the given params into a query string.
- *
- * @param params
  */
 export function serializeQueryString(params: Params): string {
   const qs: string[] = [];
@@ -176,10 +166,6 @@ export function serializeQueryString(params: Params): string {
 
 /**
  * Notifies the browser to start establishing a connection with the given URL.
- *
- * @param url
- * @param rel
- * @param isClient
  */
 export function preconnect(
   url: string,
@@ -204,9 +190,6 @@ export function preconnect(
 
 /**
  * Safely appends the given query string to the given URL.
- *
- * @param url
- * @param qs
  */
 export function appendQueryStringToURL(url: string, qs?: string): string {
   if (isUndefined(qs) || qs.length === 0) return url;
@@ -216,9 +199,6 @@ export function appendQueryStringToURL(url: string, qs?: string): string {
 
 /**
  * Serializes the given params into a query string and appends them to the given URL.
- *
- * @param url
- * @param params
  */
 export function appendParamsToURL(url: string, params: string | Params): string {
   return appendQueryStringToURL(url, isObject(params) ? serializeQueryString(params) : params);
@@ -226,8 +206,6 @@ export function appendParamsToURL(url: string, params: string | Params): string 
 
 /**
  * Tries to convert a query string into a object.
- *
- * @param qs
  */
 export function decodeQueryString<T>(qs: string): T | undefined {
   if (!isString(qs)) return undefined;

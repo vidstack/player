@@ -1,4 +1,4 @@
-import { escapeQuotes, filterUnique, isUndefined } from '@vidstack/foundation';
+import { escapeQuotes, filterUnique } from '@vidstack/foundation';
 import kleur from 'kleur';
 import normalizePath from 'normalize-path';
 import { dirname, resolve } from 'path';
@@ -17,7 +17,14 @@ export function splitJsDocTagText(tag: DocTagMeta) {
   };
 }
 
-export function resolveDocTagPath(node: Node, text?: string) {
+export function resolveDocTagText(node: Node, text?: string | Node[]) {
+  // This resolves the case where a doc tag is nested (e.g., `@see {@link ...}`)
+  if (typeof text === 'object') {
+    // @ts-expect-error - .
+    text = text.find((text) => !!text.name).text as string;
+    return text?.startsWith('://') ? `https${text}` : text;
+  }
+
   if (!text || !/^('|")?(\.\/|\.\.\/)/.test(text ?? '')) return text;
 
   const filePath = normalizePath(node.getSourceFile().fileName);
@@ -30,7 +37,7 @@ export const getDocTags = (node: Node): DocTagMeta[] =>
   ((node as any).jsDoc?.[0]?.tags ?? []).map((docTagNode: any) => ({
     node: docTagNode,
     name: docTagNode.tagName.escapedText,
-    text: resolveDocTagPath(node, docTagNode.comment),
+    text: resolveDocTagText(node, docTagNode.comment),
   }));
 
 export const findDocTag = (tags: DocTagMeta[], name: string): DocTagMeta | undefined =>

@@ -64,10 +64,10 @@ export function parseTime(duration: number): ParsedTime {
  * @param duration - The length of time to parse in seconds.
  * @param shouldPadHours - Whether to pad the hours to be length of 2.
  * @param shouldAlwaysShowHours - Whether to always show the hours unit.
- * @example `01:20` -> `minutes:seconds`
- * @example `3:01:20` -> `hours:minutes:seconds`
- * @example `03:01:20` -> If `shouldPadHours` is `true`
- * @example `0:01:20` -> If `shouldAlwaysShowHours` is `true`
+ * @example `01:20 -> minutes:seconds`
+ * @example `3:01:20 -> hours:minutes:seconds`
+ * @example If `shouldPadHours` is `true` - `03:01:20`
+ * @example If `shouldAlwaysShowHours` is `true` - `0:01:20`
  */
 export function formatTime(
   duration: number,
@@ -118,7 +118,7 @@ export function formatSpokenTime(duration: number): string {
  * spec below.
  *
  * @param duration - The length of time to parse in seconds.
- * @see https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string
+ * @see {@link https://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#valid-duration-string}
  */
 export function formatHtml5Duration(duration: number): string {
   const { hours, minutes, seconds, fraction } = parseTime(duration);

@@ -1,7 +1,7 @@
 /**
  * The screen orientation type.
  *
- * @link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
  * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
  */
 export enum ScreenOrientation {
@@ -43,7 +43,7 @@ export enum ScreenOrientation {
 /**
  * The screen orientation lock type.
  *
- * @link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
  * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
  */
 export enum ScreenOrientationLock {

@@ -27,10 +27,6 @@ export function deferredPromise<ResolveType = void, RejectType = void>(): Deferr
 
 /**
  * Wraps a promise so it can timeout.
- *
- * @param promise
- * @param timeout
- * @param timeoutMsg
  */
 export function timedPromise<T>(
   promise: Promise<T>,

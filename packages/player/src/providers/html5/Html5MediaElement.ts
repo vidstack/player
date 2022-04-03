@@ -30,7 +30,7 @@ function getMediaTypeFromExt(src: string) {
  * satisfy the media provider contract, which generally involves providing a consistent API
  * for loading, managing, and tracking media state.
  *
- * @link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement}
  */
 export class Html5MediaElement extends MediaProviderElement {
   protected _mediaElement?: HTMLMediaElement;
@@ -62,8 +62,8 @@ export class Html5MediaElement extends MediaProviderElement {
    * lead to the best user experience with regards to what content is loaded before the video is
    * played. The recommended default is `metadata`.
    *
-   * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload
-   * @default 'metadata'
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload}
+   * @defaultValue 'metadata'
    */
   @property({ reflect: true })
   preload: 'none' | 'metadata' | 'auto' = 'metadata';
