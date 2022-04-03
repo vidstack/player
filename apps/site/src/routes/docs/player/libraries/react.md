@@ -30,8 +30,7 @@ All components forward the underlying custom element reference, so you can use t
 
 ```tsx
 import { useRef, useEffect } from 'React';
-import { type VideoElement } from '@vidstack/player';
-import { Media, Video } from '@vidstack/player/react';
+import { Media, Video, type VideoElement } from '@vidstack/player/react';
 
 function MyPlayer() {
   const providerRef = useRef<VideoElement>(null);
@@ -80,8 +79,7 @@ PascalCase, and without the `vds` prefix.
 - `vds-can-play` -> `onCanPlay`
 
 ```tsx
-import { type MediaPlayingEvent } from '@vidstack/player';
-import { Media, Video } from '@vidstack/player/react';
+import { Media, Video, type MediaPlayingEvent } from '@vidstack/player/react';
 
 function MyPlayer() {
   function onPlaying(event: MediaPlayingEvent) {
