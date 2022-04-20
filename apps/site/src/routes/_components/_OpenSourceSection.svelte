@@ -3,7 +3,7 @@
 
   import GitHubIcon from '~icons/ri/github-fill';
 
-  import Chip from '$lib/components/base/Chip.svelte';
+  import { Chip } from '@svelteness/kit-docs';
 
   const openSourceProjects = [
     {

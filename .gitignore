@@ -12,6 +12,7 @@ turbo-graph*
 /packages/*/sandbox/
 
 /apps/*/build/
+/apps/*/.vercel_build_output/
 
 packages/foundation/index.d.ts
 packages/player/index.d.ts

@@ -1,7 +1,9 @@
-import adapter from '@sveltejs/adapter-auto';
-import { componentsPlugin, highlightCodePlugin, svelteMarkdownPlugin } from '@vidstack/kit-plugins';
+import adapter from '@sveltejs/adapter-static';
+import { kitDocsPlugin } from '@svelteness/kit-docs/node';
 import * as preprocess from 'svelte-preprocess';
 import Icons from 'unplugin-icons/vite';
+
+import { componentsPlugin } from './plugins/components-plugin/index.js';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -20,10 +22,13 @@ const config = {
 
     vite: {
       plugins: [
-        componentsPlugin(),
-        svelteMarkdownPlugin({ baseUrl: '/' }),
-        highlightCodePlugin(),
         Icons({ compiler: 'svelte' }),
+        componentsPlugin(),
+        kitDocsPlugin({
+          shiki: {
+            theme: 'material-ocean',
+          },
+        }),
       ],
     },
   },

@@ -1,32 +1,47 @@
 :root {
   font-size: 16px;
-  scroll-padding-top: 8rem;
+  scroll-padding-top: 12rem;
+
+  --font-family-sans: Inter VF, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --font-family-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation, Mono,
+    Fira Code VF, monospace;
 
   --color-brand: #f30c59;
-  --color-gray-soft: #707070;
-  --color-gray-inverse: black;
-  --color-gray-current: white;
-  --color-gray-divider: #eaeaea;
-  --color-gray-hover: #f5f5f5;
-  --color-gray-hover-inverse: #353535;
-  --color-gray-elevate: white;
-  --color-gray-body: white;
+  --color-brand-rgb: 243, 12, 89;
 
-  --prose-pre-bg: #1f2937;
+  --color-gray-soft: rgb(112, 112, 112);
+  --color-gray-inverse: rgb(0, 0, 0);
+  --color-gray-current: rgb(255, 255, 255);
+  --color-gray-divider: rgb(234, 234, 234);
+  --color-gray-hover: rgb(245, 245, 245);
+  --color-gray-hover-inverse: rgb(53, 53, 53);
+  --color-gray-elevate: rgb(255, 255, 255);
+  --color-gray-body: rgb(255, 255, 255);
+}
+
+@media screen and (min-width: 992px) {
+  :root {
+    scroll-padding-top: 8rem;
+  }
 }
 
 :root.dark {
   color-scheme: dark;
 
   --color-brand: #f75a8e;
-  --color-gray-soft: #8d8d8d;
-  --color-gray-inverse: white;
-  --color-gray-current: black;
-  --color-gray-divider: #313131;
-  --color-gray-hover: #353535;
-  --color-gray-hover-inverse: #f5f5f5;
-  --color-gray-elevate: #2d2d2d;
-  --color-gray-body: #1a1a1a;
+  --color-brand-rgb: 247, 90, 142;
+
+  --color-gray-soft: rgb(140, 140, 140);
+  --color-gray-inverse: rgb(255, 255, 255);
+  --color-gray-current: rgb(0, 0, 0);
+  --color-gray-divider: rgb(49, 49, 49);
+  --color-gray-hover: rgb(54, 54, 54);
+  --color-gray-hover-inverse: rgb(245, 245, 245);
+  --color-gray-elevate: rgb(45, 45, 45);
+  --color-gray-body: rgb(26, 26, 26);
 }
 
 .js-focus-visible :focus:not([data-focus-visible-added]) {

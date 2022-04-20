@@ -3,7 +3,8 @@
   "compilerOptions": {
     "paths": {
       "$lib": ["src/lib"],
-      "$lib/*": ["src/lib/*"]
+      "$lib/*": ["src/lib/*"],
+      "$kitDocs/*": ["src/kit-docs/*"]
     }
   }
 }

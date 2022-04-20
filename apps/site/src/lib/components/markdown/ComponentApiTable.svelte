@@ -47,8 +47,9 @@
 
   import { page } from '$app/stores';
   import { browser } from '$app/env';
-  import { ariaBool, camelToKebabCase, camelToTitleCase } from '@vidstack/foundation';
   import { isReactPath } from '$lib/stores/path';
+  import { ariaBool, camelToKebabCase, camelToTitleCase } from '@vidstack/foundation';
+  import { goto } from '$app/navigation';
 
   export let api: ComponentApi;
 
@@ -94,6 +95,9 @@
 
     const hash = $page.url.hash;
     const key = hash.slice(1);
+
+    if (!key.includes('--')) return;
+
     const category = key.split('--')[0];
     const heading = document.getElementById(category);
     const scroll = document.getElementById(`scroll-${category}`);

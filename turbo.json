@@ -24,10 +24,6 @@
       "dependsOn": ["^build:dist", "^build:types"],
       "outputs": [".svelte-kit/**", "build/**"]
     },
-    "build:vercel": {
-      "dependsOn": ["^build:dist", "^build:types"],
-      "outputs": [".svelte-kit/**", ".vercel_build_output/**"]
-    },
     "clean": {
       "cache": false
     },

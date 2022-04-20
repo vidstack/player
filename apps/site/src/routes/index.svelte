@@ -1,5 +1,4 @@
 <script>
-  import Navbar from '$lib/layout/Navbar.svelte';
   import Footer from '$lib/layout/Footer.svelte';
 
   import HeroSection from './_components/_HeroSection.svelte';
@@ -15,12 +14,8 @@
   <meta property="og:title" content={title} />
 </svelte:head>
 
-<Navbar contain />
-
-<main class="768:items-start z-0 flex min-w-full flex-col items-center pt-16">
-  <HeroSection />
-  <HowSection />
-  <OpenSourceSection />
-</main>
+<HeroSection />
+<HowSection />
+<OpenSourceSection />
 
 <Footer />

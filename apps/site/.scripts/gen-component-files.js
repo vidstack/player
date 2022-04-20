@@ -45,7 +45,7 @@ for (const component of components) {
   const routePath = relative(ROUTES_DIR, apiFilePath);
 
   const apiComment =
-    '<!-- Built on demand in `apiDocsPlugin.ts`, and for styling see `ComponentApiTable.svelte`. -->\n';
+    '<!-- Built on demand in `apiDocsPlugin.js`, and for styling see `ComponentApiTable.svelte`. -->\n';
 
   const indexContent = [
     '<script>',

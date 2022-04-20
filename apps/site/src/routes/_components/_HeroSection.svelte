@@ -1,5 +1,5 @@
 <script>
-  import Button from '$lib/components/base/Button.svelte';
+  import { Button } from '@svelteness/kit-docs';
 </script>
 
 <section class="576:px-8 992:px-14 1200:pt-8 1200:pb-16 mx-auto w-full max-w-6xl px-4">

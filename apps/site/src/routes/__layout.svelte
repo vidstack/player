@@ -1,16 +1,69 @@
-<script>
+<script lang="ts" context="module">
+  export const load = createKitDocsLoader({
+    sidebar: {
+      '/': null,
+      '/docs/player': '/docs/player',
+    },
+  });
+</script>
+
+<script lang="ts">
   import '$lib/styles/fonts.css';
   import '$lib/styles/tailwind.css';
   import '$lib/styles/app.css';
+  import '$lib/styles/kit-docs.css';
   import '$lib/polyfills/focus-visible';
-  import './__layout.css';
+
+  import '@docsearch/css';
+  import '@svelteness/kit-docs/client/styles/docsearch.css';
 
   import NProgress from 'nprogress';
-
+  import clsx from 'clsx';
   import { onMount } from 'svelte';
-  import { navigating } from '$app/stores';
+  import { writable } from 'svelte/store';
+
+  import { page, navigating } from '$app/stores';
   import { browser } from '$app/env';
   import { hideDocumentScrollbar } from '@vidstack/foundation';
+  import {
+    Button,
+    createKitDocsLoader,
+    createSidebarContext,
+    KitDocs,
+    KitDocsLayout,
+    type NavbarConfig,
+    type ResolvedSidebarConfig,
+    type MarkdownMeta,
+    type NavigationConfig,
+  } from '@svelteness/kit-docs';
+  import { Algolia } from '@svelteness/kit-docs/client/algolia';
+  import SocialLink from '$lib/components/social/SocialLink.svelte';
+  import { frameworkSpecificSidebar } from '$lib/stores/framework';
+
+  import socialCardLarge from '$lib/img/brand/social-card-large.jpg';
+  import vidstackLogo from '$lib/img/brand/vidstack-logo.svg?raw';
+
+  export let meta: MarkdownMeta | null = null;
+  export let sidebar: ResolvedSidebarConfig | null = null;
+
+  const navbar: NavbarConfig = {
+    links: [{ title: 'Documentation', slug: '/docs/player', match: /\/docs\/player/ }],
+  };
+
+  const navigation: NavigationConfig = {
+    canUpdateHash: (hash) => {
+      const currentHash = $page.url.hash.includes('--')
+        ? $page.url.hash.split('--')[0]
+        : $page.url.hash;
+      return currentHash !== hash;
+    },
+    cleanHash: (hash) => (hash.includes('--') ? hash.split('--')[0] : hash),
+  };
+
+  const _sidebar = writable<ResolvedSidebarConfig | null>(null);
+  $: $_sidebar = sidebar;
+  const frameworkSidebar = frameworkSpecificSidebar(_sidebar);
+  const { activeCategory } = createSidebarContext(frameworkSidebar);
 
   onMount(() => {
     // Strange fix for strange issue -_O_- (`cmd + k` opening two docsearch containers).
@@ -53,6 +106,117 @@
   } else if (browser) {
     hideProgress();
   }
+
+  $: category = $activeCategory ? `${$activeCategory}: ` : '';
+  $: title = meta ? `${category}${meta.title} | Vidstack` : null;
+  $: description = meta?.description;
+
+  $: isHomePath = $page.url.pathname === '/';
+  $: isDocsPath = $page.url.pathname.startsWith('/docs');
 </script>
 
-<slot />
+<svelte:head>
+  {#key $page.url.pathname}
+    {#if title}
+      <title>{title}</title>
+      <meta property="og:title" content={title} />
+      <meta name="twitter:title" content={title} />
+    {/if}
+    {#if description}
+      <meta name="description" content={description} />
+      <meta name="twitter:description" content={description} />
+      <meta name="og:description" content={description} />
+    {/if}
+    {#if title && description}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@vidstackjs" />
+      <meta name="twitter:image" content={`https://vidstack.io${socialCardLarge}`} />
+      <meta name="twitter:creator" content="@vidstackjs" />
+      <meta property="og:site_name" content="Vidstack" />
+      <meta property="og:url" content={`https://vidstack.io${$page.url.pathname}`} />
+      <meta property="og:type" content="article" />
+      <meta property="og:image" content={`https://vidstack.io${socialCardLarge}`} />
+    {/if}
+  {/key}
+</svelte:head>
+
+<div
+  class="contents"
+  style={clsx(
+    !isDocsPath && `--kd-content-max-width: none;`,
+    isHomePath && `--kd-navbar-border-bottom: none;`,
+  )}
+>
+  <KitDocs {meta}>
+    <KitDocsLayout {navigation} {navbar} sidebar={$frameworkSidebar} search>
+      <Algolia
+        apiKey="03b81ed3b7849b33599967cec76734fe"
+        appId="JV3QY1UI79"
+        indexName="vidstack"
+        slot="search"
+      />
+
+      <div slot="navbar-left">
+        <div
+          class="logo transform-gpu transition-transform duration-150 ease-out hover:scale-105 ml-1"
+        >
+          <Button href="/">
+            <div class="svg-responsive text-gray-inverse h-7 w-32 overflow-hidden">
+              {@html vidstackLogo}
+            </div>
+          </Button>
+        </div>
+      </div>
+
+      <div class="socials flex -mx-2" slot="navbar-right-alt">
+        <SocialLink type="twitter" />
+        <SocialLink type="discord" />
+        <SocialLink type="gitHub" />
+      </div>
+
+      <slot />
+    </KitDocsLayout>
+  </KitDocs>
+</div>
+
+<style>
+  .logo {
+    margin-top: 0.25rem;
+  }
+
+  .socials > :global(a) {
+    padding: 0 0.5rem;
+  }
+
+  /* Make clicks pass-through */
+  :global(#nprogress) {
+    pointer-events: none;
+  }
+
+  :global(#nprogress .bar) {
+    background: var(--color-brand);
+
+    position: fixed;
+    z-index: 1031;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 2.5px;
+  }
+
+  /* Fancy blur effect */
+  :global(#nprogress .peg) {
+    display: block;
+    position: absolute;
+    right: 0px;
+    width: 100px;
+    height: 100%;
+    box-shadow: 0 0 10px var(--color-brand), 0 0 5px var(--color-brand);
+    opacity: 1;
+
+    -webkit-transform: rotate(3deg) translate(0px, -4px);
+    -ms-transform: rotate(3deg) translate(0px, -4px);
+    transform: rotate(3deg) translate(0px, -4px);
+  }
+</style>

@@ -3,6 +3,7 @@ import minimist from 'minimist';
 import { globbySync } from 'globby';
 import { build } from 'esbuild';
 import kleur from 'kleur';
+import { readFileSync } from 'fs';
 
 const args = minimist(process.argv.slice(2));
 
@@ -51,8 +52,15 @@ async function main() {
     incremental: args.watch || args.w,
     define: { __DEV__: args.prod ? 'false' : 'true', __NODE__: IS_NODE ? 'true' : 'false' },
     bundle: args.bundle,
-    external: args.bundle ? [...(args.external?.split(',') ?? [])] : undefined,
+    external: args.bundle
+      ? [...(args.external?.split(',') ?? []), ...(args.externaldeps ? getDeps() : [])]
+      : undefined,
   });
+}
+
+function getDeps() {
+  const pkg = JSON.parse(readFileSync(path.resolve(process.cwd(), 'package.json')).toString());
+  return [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})];
 }
 
 function requireShim() {

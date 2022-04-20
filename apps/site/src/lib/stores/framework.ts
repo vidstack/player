@@ -1,25 +1,26 @@
-import { writable } from 'svelte/store';
+import type { ResolvedSidebarConfig } from '@svelteness/kit-docs';
+import { derived, type Readable } from 'svelte/store';
 
-import { browser } from '$app/env';
-
-const LOCAL_STORAGE_KEY = 'vidstack::framework';
-
-const initValue = () => {
-  const savedValue = browser && localStorage[LOCAL_STORAGE_KEY];
-  return savedValue ? savedValue : 'html';
-};
+import { isReactPath } from './path';
 
 export type FrameworkType = 'html' | 'react';
 
-const store = writable<FrameworkType>(initValue());
+export const framework = derived(isReactPath, ($isReactPath) => ($isReactPath ? 'react' : 'html'));
 
-export const framework = {
-  ...store,
-  set(value: FrameworkType) {
-    if (browser) {
-      localStorage[LOCAL_STORAGE_KEY] = value;
+const stripFrameworkRE = /\/react\/?/;
+const componentsRe = /\/components\//;
+
+export const frameworkSpecificSidebar = (sidebar: Readable<ResolvedSidebarConfig>) =>
+  derived([framework, sidebar], ([$framework, $sidebar]) => {
+    const isReact = $framework === 'react';
+
+    const frameworkSidebar = { links: {}, ...($sidebar ?? {}) };
+
+    for (const item of Object.values(frameworkSidebar.links).flat()) {
+      if (componentsRe.test(item.slug)) {
+        item.slug = `${item.slug.replace(stripFrameworkRE, '')}${isReact ? '/react' : ''}`;
+      }
     }
 
-    store.set(value);
-  },
-} as const;
+    return frameworkSidebar;
+  });

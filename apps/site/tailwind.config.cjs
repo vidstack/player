@@ -1,25 +1,16 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
-
 module.exports = {
   experimental: {
     optimizeUniversalDefaults: true,
   },
-  content: ['./src/**/*.{html,svelte,md,js,ts}'],
+  content: [
+    './src/**/*.{html,svelte,md,js,ts}',
+    './node_modules/@svelteness/kit-docs/client/**/*.svelte',
+  ],
   darkMode: 'class',
   theme: {
     fontFamily: {
-      sans: ['Inter VF', ...defaultTheme.fontFamily.sans],
-      mono: [
-        'ui-monospace',
-        'SFMono-Regular',
-        'SF Mono',
-        'Menlo',
-        'Consolas',
-        'Liberation',
-        'Mono',
-        'Fira Code VF',
-        'monospace',
-      ],
+      sans: ['var(--font-family-sans)'],
+      mono: ['var(--font-family-mono)'],
     },
     screens: {
       420: '420px',
@@ -67,51 +58,31 @@ module.exports = {
           elevate: 'var(--color-gray-elevate)',
           body: 'var(--color-gray-body)',
         },
-        code: {
-          highlight: 'rgb(125 211 252 / 0.1)',
-        },
       },
-      keyframes: {
-        'flash-code': {
-          '0%': { backgroundColor: 'rgb(125 211 252 / 0.1)' },
-          '100%': { backgroundColor: 'transparent' },
-        },
-        'brand-text-colors': {
-          '0%': { color: '#ff6418' },
-          '33%': { color: '#e72828' },
-          '66%': { color: '#f64480' },
-          '100%': { color: '#ff6418' },
-        },
-      },
-      animation: {
-        'flash-code': 'flash-code 1s forwards',
-        'flash-code-slow': 'flash-code 2s forwards',
-        'brand-text-colors': 'brand-text-colors 15s infinite',
-      },
-      typography: typography(),
+      typography,
     },
   },
   plugins: [
     require('@tailwindcss/typography'),
-    // require('@tailwindcss/forms')({
-    // 	strategy: 'class'
-    // }),
-    function ({ addVariant }) {
-      addVariant(
-        'supports-backdrop-blur',
-        '@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))',
-      );
-      addVariant('supports-scrollbars', '@supports selector(::-webkit-scrollbar)');
-      addVariant('children', '& > *');
-      addVariant('scrollbar', '&::-webkit-scrollbar');
-      addVariant('scrollbar-track', '&::-webkit-scrollbar-track');
-      addVariant('scrollbar-thumb', '&::-webkit-scrollbar-thumb');
-    },
+    // require('@tailwindcss/forms')({ strategy: 'class' }),
+    customVariants,
   ],
 };
 
-function typography() {
-  return (theme) => ({
+function customVariants({ addVariant }) {
+  addVariant(
+    'supports-backdrop-blur',
+    '@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))',
+  );
+  addVariant('supports-scrollbars', '@supports selector(::-webkit-scrollbar)');
+  addVariant('children', '& > *');
+  addVariant('scrollbar', '&::-webkit-scrollbar');
+  addVariant('scrollbar-track', '&::-webkit-scrollbar-track');
+  addVariant('scrollbar-thumb', '&::-webkit-scrollbar-thumb');
+}
+
+function typography(theme) {
+  return {
     DEFAULT: {
       css: {
         '--tw-prose-counters': 'black',
@@ -179,7 +150,7 @@ function typography() {
         a: {
           fontWeight: theme('fontWeight.semibold'),
           textDecoration: 'none',
-          borderBottom: `1px solid var(--color-brand)`,
+          borderBottom: `1px solid var(--kd-color-brand)`,
         },
         'a:hover': {
           borderBottomWidth: '2px',
@@ -200,7 +171,7 @@ function typography() {
           fontVariantLigatures: 'none',
         },
         pre: {
-          backgroundColor: 'var(--prose-pre-bg)',
+          backgroundColor: 'var(--kd-prose-pre-bg)',
           boxShadow: 'none',
           display: 'flex',
         },
@@ -243,6 +214,18 @@ function typography() {
         'tbody code': {
           fontSize: theme('fontSize.sm')[0],
         },
+        'thead th:first-child': {
+          paddingLeft: '0.5714286em',
+        },
+        'thead th:last-child': {
+          paddingRight: '0.5714286em',
+        },
+        'tbody td:first-child': {
+          paddingLeft: '0.5714286em',
+        },
+        'tbody td:last-child': {
+          paddingRight: '0.5714286em',
+        },
         'tbody tr td:first-child code': {
           color: theme('colors.indigo.500'),
           paddingLeft: '8px',
@@ -273,5 +256,5 @@ function typography() {
         },
       },
     },
-  });
+  };
 }
