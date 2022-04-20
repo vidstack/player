@@ -8,8 +8,8 @@ const CDN_EXTERNAL = ['hls.js'];
 
 const PLUGINS = ({ dev = false } = {}) => [
   nodeResolve({ exportConditions: [dev ? 'development' : 'production'] }),
-  esbuild({ define: { __DEV__: dev ? 'true' : 'false' } }),
-  !dev && minifyHTML({ include: /(styles|Element)\.(js|ts)/ }),
+  esbuild({ define: { __DEV__: 'false' } }),
+  minifyHTML({ include: /(styles|Element)\.(js|ts)/ }),
 ];
 
 /** @returns {import('rollup').OutputOptions} */

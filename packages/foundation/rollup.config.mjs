@@ -6,7 +6,7 @@ const EXTERNAL = [/node_modules\/@?lit/];
 
 const PLUGINS = ({ dev = false } = {}) => [
   nodeResolve(),
-  esbuild({ define: { __DEV__: dev ? 'true' : 'false' } }),
+  esbuild({ define: { __DEV__: 'false' } }),
 ];
 
 /** @type {import('rollup').RollupOptions} */

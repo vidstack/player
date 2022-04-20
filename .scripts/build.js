@@ -41,7 +41,7 @@ async function main() {
     splitting: IS_NODE || args.nosplit ? false : true,
     chunkNames: 'chunks/[name].[hash]',
     banner: { js: NODE_SHIMS },
-    minify: args.minify,
+    minify: true, //args.minify,
     mangleProps: args.mangle ? /^_/ : undefined,
     reserveProps: args.mangle ? /^__/ : undefined,
     legalComments: 'none',
