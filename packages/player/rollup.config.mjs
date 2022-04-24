@@ -1,6 +1,6 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { globbySync } from 'globby';
-import { esbuild, litNode, minifyHTML } from '@vidstack/rollup-plugins';
+import { esbuild, litNode, minifyHTML } from '@vidstack/rollup';
 
 const INPUT = ['src/index.ts', 'src/react/index.ts', ...globbySync('src/define/*.ts')];
 const EXTERNAL = ['@vidstack/foundation', /node_modules\/@?lit/, 'react'];

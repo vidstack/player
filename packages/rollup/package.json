@@ -1,5 +1,5 @@
 {
-  "name": "@vidstack/rollup-plugins",
+  "name": "@vidstack/rollup",
   "version": "1.4.0",
   "private": true,
   "type": "module",

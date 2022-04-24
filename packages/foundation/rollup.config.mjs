@@ -1,5 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import { esbuild, litNode } from '@vidstack/rollup-plugins';
+import { esbuild, litNode } from '@vidstack/rollup';
 
 const INPUT = ['src/index.ts'];
 const EXTERNAL = [/node_modules\/@?lit/];
