@@ -2,7 +2,7 @@
   import { Button } from '@svelteness/kit-docs';
 </script>
 
-<section class="576:px-8 992:px-14 1200:pt-8 1200:pb-16 mx-auto w-full max-w-6xl px-4">
+<section class="576:px-8 992:px-14 1200:pb-16 mx-auto w-full max-w-6xl px-4 pt-16">
   <div class="992:mt-12 flex flex-col">
     <div class="flex flex-col items-center justify-center">
       <h1
