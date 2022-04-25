@@ -126,7 +126,7 @@ importers:
       '@sveltejs/adapter-auto': next
       '@sveltejs/adapter-static': next
       '@sveltejs/kit': next
-      '@svelteness/kit-docs': ^0.18.3
+      '@svelteness/kit-docs': ^0.19.0
       '@tailwindcss/forms': ^0.4.0
       '@tailwindcss/typography': ^0.5.2
       '@types/react': ^17.0.39
@@ -156,7 +156,7 @@ importers:
     dependencies:
       '@docsearch/css': 3.0.0
       '@docsearch/js': 3.0.0_5377e26b52c02809078cfcbfa66845b0
-      '@svelteness/kit-docs': 0.18.4_svelte@3.47.0
+      '@svelteness/kit-docs': 0.19.0_svelte@3.47.0
       '@tailwindcss/forms': 0.4.1_tailwindcss@3.0.24
       '@vidstack/foundation': link:../../packages/foundation
       '@vidstack/player': link:../../packages/player
@@ -1215,8 +1215,8 @@ packages:
       - supports-color
     dev: true
 
-  /@svelteness/kit-docs/0.18.4_svelte@3.47.0:
-    resolution: {integrity: sha512-REWfNoG+1ndSxw7Ljr6Htf0xnjvaoKXo8McP8fMs8Nz1UrKY3OnL3Zq92ksSUwj7HsyzVRcZuG5S8zoMDvkpBQ==}
+  /@svelteness/kit-docs/0.19.0_svelte@3.47.0:
+    resolution: {integrity: sha512-M/yS5OJzBixwL9UlpGZf6onU83PbbJHMwcM8N6Y5anXnvLWmED+96sRJW/qs9VAaLW+6lV9L9k2BgAZ4+WDDWA==}
     engines: {node: '>=14.19.0'}
     dependencies:
       '@types/lru-cache': 7.6.1
