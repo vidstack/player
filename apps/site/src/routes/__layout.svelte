@@ -38,13 +38,17 @@
   } from '@svelteness/kit-docs';
   import { Algolia } from '@svelteness/kit-docs/client/algolia';
   import SocialLink from '$lib/components/social/SocialLink.svelte';
-  import { frameworkSpecificSidebar } from '$lib/stores/framework';
+  import { framework, frameworkSpecificSidebar } from '$lib/stores/framework';
 
   import socialCardLarge from '$lib/img/brand/social-card-large.jpg';
   import vidstackLogo from '$lib/img/brand/vidstack-logo.svg?raw';
+  import vidstackSymbol from '$lib/img/brand/vidstack-symbol.svg?raw';
+  import FrameworkSelect from './docs/player/[...5]components/_components/_FrameworkSelect.svelte';
 
   export let meta: MarkdownMeta | null = null;
   export let sidebar: ResolvedSidebarConfig | null = null;
+
+  framework.set(/\/react\/?/.test($page.url.pathname) ? 'react' : 'html');
 
   const navbar: NavbarConfig = {
     links: [{ title: 'Documentation', slug: '/docs/player', match: /\/docs\/player/ }],
@@ -165,16 +169,27 @@
         slot="search"
       />
 
-      <div slot="navbar-left">
+      <div class="flex items-center" slot="navbar-left">
         <div
-          class="logo ml-1 transform-gpu transition-transform duration-150 ease-out hover:scale-105"
+          class="logo ml-2 transform-gpu transition-transform duration-150 ease-out hover:scale-105"
         >
           <Button href="/">
-            <div class="svg-responsive text-gray-inverse h-7 w-32 overflow-hidden">
+            <div
+              class="svg-responsive text-gray-inverse 992:inline-block hidden h-7 w-32 overflow-hidden"
+            >
               {@html vidstackLogo}
+            </div>
+            <div class="svg-responsive 992:hidden -ml-2 h-8">
+              {@html vidstackSymbol}
             </div>
           </Button>
         </div>
+
+        {#if isDocsPath}
+          <div class="992:ml-3 ml-2 -mt-0.5">
+            <FrameworkSelect />
+          </div>
+        {/if}
       </div>
 
       <div class="socials -mx-2 flex" slot="navbar-right-alt">

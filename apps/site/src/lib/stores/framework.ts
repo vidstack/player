@@ -1,11 +1,9 @@
 import type { ResolvedSidebarConfig } from '@svelteness/kit-docs';
-import { derived, type Readable } from 'svelte/store';
-
-import { isReactPath } from './path';
+import { derived, type Readable, writable } from 'svelte/store';
 
 export type FrameworkType = 'html' | 'react';
 
-export const framework = derived(isReactPath, ($isReactPath) => ($isReactPath ? 'react' : 'html'));
+export const framework = writable<FrameworkType>('html');
 
 const stripFrameworkRE = /\/react\/?/;
 const componentsRe = /\/components\//;

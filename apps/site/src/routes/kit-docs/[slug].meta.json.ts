@@ -44,11 +44,18 @@ const resolveComponentDocs: FileResolver = (slug, { resolve }) => {
 
   return {
     file: resolve(docsSlug),
-    transform: ({ meta }) => {
+    transform: ({ meta, parser }) => {
       const name = basename(slug.replace(/\/react\/?/, ''));
       const title = titles[name] ?? kebabToTitleCase(name);
 
       meta.title = `${title} Docs${/react/.test(slug) ? ' (React)' : ''}`;
+
+      meta.description = meta.description
+        ? parser
+            .render(meta.description)
+            .replace(/<CodeInline code={"(.*?)"} \/>/g, '<code>$1</code>')
+        : undefined;
+
       meta.frontmatter.component_frameworks = hasDocs;
 
       if (hasImports && meta.headers[0]?.title !== 'Import') {
@@ -71,7 +78,6 @@ const transformApi: MetaTransform = ({ slug, meta }) => {
   const title = `${componentName} API${titlePostfix}`;
 
   meta.title = title;
-  meta.frontmatter.component_frameworks = true;
   meta.frontmatter.component_imports = !noImportsRE.test(slug);
 
   if (!meta.headers.length) {
@@ -122,7 +128,8 @@ export const transformQuickstart: MetaTransform = ({ slug, meta }) => {
 };
 
 export const get = createMetaRequestHandler({
-  exclude: ['/index'],
+  exclude: ['/index.svelte'],
+  extensions: ['.md', '.svelte'],
   resolve: [resolveComponentDocs],
   transform: [transformApi, transformQuickstart],
 });

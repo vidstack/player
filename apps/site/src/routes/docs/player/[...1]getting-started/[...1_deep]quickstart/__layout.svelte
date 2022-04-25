@@ -17,7 +17,7 @@
     installMethod as _installMethod,
     type InstallMethodType,
   } from '$lib/stores/installMethod';
-  import { framework as _framework, type FrameworkType } from '$lib/stores/framework';
+  import { framework, framework as _framework, type FrameworkType } from '$lib/stores/framework';
 
   const basePath = '/docs/player/getting-started/quickstart';
 

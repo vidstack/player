@@ -8,17 +8,11 @@
   import ComponentHeading from './_components/_ComponentHeading.svelte';
   import ComponentImport from './_components/_ComponentImport.svelte';
   import ComponentTabbedLinks from './_components/_ComponentTabbedLinks.svelte';
-  import FrameworkSelect from './_components/_FrameworkSelect.svelte';
 
   $: hasImport = !!$kitDocs.meta?.frontmatter.component_imports;
-  $: hasFrameworks = !!$kitDocs.meta?.frontmatter.component_frameworks;
 </script>
 
 <ComponentHeading />
-
-{#if hasFrameworks}
-  <FrameworkSelect />
-{/if}
 
 {#if hasImport}
   <ComponentTabbedLinks />
@@ -30,7 +24,7 @@
 
 {#if !$isApiPath && hasImport}
   <div>
-    <h2 id="import" tabindex="-1">
+    <h2 class="mt-10" id="import" tabindex="-1">
       <a class="header-anchor" href="#import" aria-hidden="true">#</a>
       Import
     </h2>

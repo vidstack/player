@@ -42,8 +42,14 @@
 
 <h1>Release ({value})</h1>
 
-<div class="my-10">
-  <Select title="Release" bind:value on:change={onChange}>
+<div class="-mt-2.5 mb-12">
+  <Select
+    title="Release"
+    bind:value
+    on:change={onChange}
+    --kd-value-font-size="1rem"
+    --kd-min-width="9rem"
+  >
     {#each options as option}
       <option>{option}</option>
     {/each}
