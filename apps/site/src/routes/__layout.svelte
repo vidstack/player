@@ -50,11 +50,20 @@
     links: [{ title: 'Documentation', slug: '/docs/player', match: /\/docs\/player/ }],
   };
 
+  let canUpdateHash = false;
   const navigation: NavigationConfig = {
     canUpdateHash: (hash) => {
-      const currentHash = $page.url.hash.includes('--')
-        ? $page.url.hash.split('--')[0]
-        : $page.url.hash;
+      const isApiHash = $page.url.hash.includes('--');
+
+      // Skip first updates to prevent messing with initial api hash.
+      if (isApiHash && !canUpdateHash) {
+        window.setTimeout(() => {
+          canUpdateHash = true;
+        }, 150);
+        return false;
+      }
+
+      const currentHash = isApiHash ? $page.url.hash.split('--')[0] : $page.url.hash;
       return currentHash !== hash;
     },
     cleanHash: (hash) => (hash.includes('--') ? hash.split('--')[0] : hash),
@@ -158,7 +167,7 @@
 
       <div slot="navbar-left">
         <div
-          class="logo transform-gpu transition-transform duration-150 ease-out hover:scale-105 ml-1"
+          class="logo ml-1 transform-gpu transition-transform duration-150 ease-out hover:scale-105"
         >
           <Button href="/">
             <div class="svg-responsive text-gray-inverse h-7 w-32 overflow-hidden">
@@ -168,7 +177,7 @@
         </div>
       </div>
 
-      <div class="socials flex -mx-2" slot="navbar-right-alt">
+      <div class="socials -mx-2 flex" slot="navbar-right-alt">
         <SocialLink type="twitter" />
         <SocialLink type="discord" />
         <SocialLink type="gitHub" />
