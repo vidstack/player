@@ -91,7 +91,7 @@ import ContextualMenu from '$lib/img/contextual-menu.png'
 
 ## Styling
 
-:::danger
+:::admonition type="danger"
 Be careful when styling other components such as a poster or overlay on top of gestures. The
 `pointer-events:ignore` CSS property should be `none` unless you explicitly want to block the gesture
 in a given region on the player.

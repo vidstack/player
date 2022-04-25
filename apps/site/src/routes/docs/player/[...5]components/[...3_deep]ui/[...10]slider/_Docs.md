@@ -111,7 +111,7 @@ vds-slider {
 }
 ```
 
-:::tip
+:::admonition type="tip"
 You can take this example even further by reading through the [`<vds-slider-value-text>`](../slider-value-text/index.md),
 and [`<vds-slider-video>`](../slider-video/index.md) docs when you're ready.
 :::

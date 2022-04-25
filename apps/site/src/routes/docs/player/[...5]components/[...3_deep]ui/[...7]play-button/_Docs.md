@@ -22,7 +22,7 @@ vds-media:not([paused]) .media-play {
 
 Here's a simple styled `<vds-play-button>` example containing a play and pause icon:
 
-:::tip
+:::admonition type="tip"
 You can extend this example by adding a replay SVG icon, and showing it whilst hiding the play icon
 when the `media-ended` attribute is present.
 :::
