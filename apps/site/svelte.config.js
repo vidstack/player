@@ -1,9 +1,18 @@
 import adapter from '@sveltejs/adapter-static';
-import { kitDocsPlugin } from '@svelteness/kit-docs/node';
+import { cleanFilePath, kitDocsPlugin } from '@svelteness/kit-docs/node';
+import { globbySync } from 'globby';
+import { extname } from 'path';
 import * as preprocess from 'svelte-preprocess';
 import Icons from 'unplugin-icons/vite';
 
 import { componentsPlugin } from './plugins/components-plugin/index.js';
+
+const slugify = (filePath) => {
+  const cleanPath = cleanFilePath(filePath);
+  return `/${cleanPath.replace(extname(cleanPath), '').replace(/\/?index$/, '')}`;
+};
+
+const entries = globbySync('src/routes/**/[^_]*.{md,svelte}').map(slugify);
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -17,7 +26,7 @@ const config = {
 
     prerender: {
       default: true,
-      entries: ['*'],
+      entries: ['*', ...entries],
     },
 
     vite: {

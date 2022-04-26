@@ -179,7 +179,7 @@
             >
               {@html vidstackLogo}
             </div>
-            <div class="svg-responsive 992:hidden -ml-2 h-8">
+            <div class="svg-responsive 992:hidden -ml-2 h-8 w-8 overflow-hidden">
               {@html vidstackSymbol}
             </div>
           </Button>
