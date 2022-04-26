@@ -59,11 +59,9 @@
     canUpdateHash: (hash) => {
       const isApiHash = $page.url.hash.includes('--');
 
-      // Skip first updates to prevent messing with initial api hash.
+      // Skip first update to prevent messing with initial api hash.
       if (isApiHash && !canUpdateHash) {
-        window.setTimeout(() => {
-          canUpdateHash = true;
-        }, 150);
+        canUpdateHash = true;
         return false;
       }
 
@@ -173,7 +171,7 @@
         <div
           class="logo ml-2 transform-gpu transition-transform duration-150 ease-out hover:scale-105"
         >
-          <Button href="/">
+          <Button class="rounded-md px-1 pt-4" href="/">
             <div
               class="svg-responsive text-gray-inverse 992:inline-block hidden h-7 w-32 overflow-hidden"
             >
@@ -192,7 +190,7 @@
         {/if}
       </div>
 
-      <div class="socials -mx-2 flex" slot="navbar-right-alt">
+      <div class="socials -ml-1 flex" slot="navbar-right-alt">
         <SocialLink type="twitter" />
         <SocialLink type="discord" />
         <SocialLink type="gitHub" />
@@ -206,10 +204,6 @@
 <style>
   .logo {
     margin-top: 0.25rem;
-  }
-
-  .socials > :global(a) {
-    padding: 0 0.5rem;
   }
 
   /* Make clicks pass-through */

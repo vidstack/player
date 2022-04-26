@@ -20,6 +20,8 @@
   --color-gray-hover-inverse: rgb(53, 53, 53);
   --color-gray-elevate: rgb(255, 255, 255);
   --color-gray-body: rgb(255, 255, 255);
+
+  --color-focus: rgb(99 102 241 / 0.75);
 }
 
 @media screen and (min-width: 992px) {
@@ -34,6 +36,8 @@
   --color-brand: #f75a8e;
   --color-brand-rgb: 247, 90, 142;
 
+  --color-focus: rgb(165 180 252);
+
   --color-gray-soft: rgb(140, 140, 140);
   --color-gray-inverse: rgb(255, 255, 255);
   --color-gray-current: rgb(0, 0, 0);
@@ -46,9 +50,6 @@
 
 .js-focus-visible :focus:not([data-focus-visible-added]) {
   @apply outline-none;
-}
-
-.js-focus-visible [data-focus-visible-added] {
 }
 
 * {
@@ -66,4 +67,8 @@
 .svg-responsive > svg {
   width: 100%;
   height: 100%;
+}
+
+.DocSearch-Button-Key {
+  @apply !ring-0;
 }

@@ -65,8 +65,8 @@
           {project.description}
         </p>
         <div class="flex justify-end rounded-b-lg py-6">
-          <a href={project.repoHref} target="_blank">
-            <GitHubIcon class="text-gray-soft hover:text-gray-inverse ml-2 h-7 w-7" />
+          <a class="flex items-center" href={project.repoHref} target="_blank">
+            <GitHubIcon class="text-gray-soft hover:text-gray-inverse h-7 w-7" />
             <span class="sr-only">{`Vidstack ${project.name} GitHub Repo`}</span>
           </a>
         </div>

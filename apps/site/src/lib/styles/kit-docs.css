@@ -13,6 +13,8 @@
   --kd-color-gray-elevate: var(--color-gray-elevate);
   --kd-color-gray-body: var(--color-gray-body);
 
+  --kd-color-focus: var(--color-focus);
+
   --kd-code-fence-bg: var(--kd-prose-pre-bg, rgb(31, 41, 55));
   --kd-code-fence-top-bar-bg: rgba(31, 41, 55, 0.3);
   --kd-code-copied-bg-color: rgba(var(--color-brand-rgb), 0.8);
