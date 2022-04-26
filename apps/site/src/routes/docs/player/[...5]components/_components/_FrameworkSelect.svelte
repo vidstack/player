@@ -1,9 +1,6 @@
 <script lang="ts">
   import HTMLIcon from '~icons/ri/html5-fill';
   import ReactIcon from '~icons/ri/reactjs-fill';
-  import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-fill';
-
-  import clsx from 'clsx';
   import { Select } from '@svelteness/kit-docs';
 
   import { framework, type FrameworkType } from '$lib/stores/framework';
@@ -13,14 +10,14 @@
   let value = $isReactPath ? 'React' : 'HTML';
 
   function onChange() {
-    if (!$isComponentsPath) return;
+    $framework = value.toLowerCase() as FrameworkType;
 
-    const _framework = value.toLowerCase() as FrameworkType;
+    if (!$isComponentsPath) return;
 
     const url = new URL(location.href);
     const path = url.pathname;
 
-    if (_framework === 'react') {
+    if ($framework === 'react') {
       goto(
         $isApiPath
           ? `${path.replace(/\/api\/?/, '')}/react/api`
@@ -29,8 +26,6 @@
     } else {
       goto(path.replace(/\/react/, ''));
     }
-
-    $framework = _framework;
   }
 
   $: value = $framework === 'html' ? 'HTML' : 'React';
