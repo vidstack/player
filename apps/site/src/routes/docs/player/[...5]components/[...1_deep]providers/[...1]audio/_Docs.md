@@ -1,3 +1,7 @@
+---
+description: This provider enables audio playback via the HTML5 audio element.
+---
+
 ## Usage
 
 The audio provider is used to embed sound content into documents via the native

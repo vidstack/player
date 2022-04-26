@@ -1,3 +1,7 @@
+---
+description: This element is used to mute and unmute media.
+---
+
 ## Usage
 
 The `<vds-mute-button>` component will toggle the `muted` state of media as it's pressed by

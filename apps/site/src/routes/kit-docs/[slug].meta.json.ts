@@ -7,7 +7,7 @@ import {
 import type { ComponentMeta } from '@vidstack/eliza';
 import { kebabToTitleCase, lowercaseFirstLetter } from '@vidstack/foundation';
 import { readFileSync } from 'fs';
-import { basename, dirname, resolve } from 'path';
+import { basename, resolve } from 'path';
 
 const __cwd = process.cwd();
 
@@ -17,7 +17,7 @@ const apiRE = /\/api\/?$/;
 const quickstartRE = /getting-started\/quickstart/;
 const noImportsRE = /(youtube|vimeo|controls|buffering-indicator)/;
 
-const titles = {
+const componentTitles = {
   hls: 'HLS',
   youtube: 'YouTube',
 };
@@ -33,77 +33,64 @@ try {
 }
 
 const resolveComponentDocs: FileResolver = (slug, { resolve }) => {
-  if (!componentsDirRE.test(slug) || apiRE.test(slug)) return;
+  if (!componentsDirRE.test(slug)) return;
 
   const hasDocs = !noDocsRE.test(slug);
-  const hasImports = !noImportsRE.test(slug);
 
   const docsSlug = hasDocs
-    ? slug.replace(/(.+)\/(.*?)$/, '$1/$2/_Docs').replace('/react', '')
+    ? slug
+        .replace(/(.+)\/(.*?)$/, '$1/$2/_Docs')
+        .replace('/react', '')
+        .replace('/api', '')
     : slug;
 
-  return {
-    file: resolve(docsSlug),
-    transform: ({ meta, parser }) => {
-      const name = basename(slug.replace(/\/react\/?/, ''));
-      const title = titles[name] ?? kebabToTitleCase(name);
+  return resolve(docsSlug);
+};
 
-      meta.title = `${title} Docs${/react/.test(slug) ? ' (React)' : ''}`;
+const transformComponentsDocs: MetaTransform = ({ slug, meta }) => {
+  if (!componentsDirRE.test(slug)) return;
 
-      meta.description = meta.description
-        ? parser
-            .render(meta.description)
-            .replace(/<CodeInline code={"(.*?)"} \/>/g, '<code>$1</code>')
-        : undefined;
+  const name = basename(slug.replace(/\/react\/?/, '').replace(/\/?api$/, ''));
+  const title = componentTitles[name] ?? kebabToTitleCase(name);
+  const hasImports = !noImportsRE.test(slug);
+  const isApiSlug = apiRE.test(slug);
 
-      meta.frontmatter.component_frameworks = hasDocs;
+  meta.title = `${title} ${isApiSlug ? 'API' : 'Docs'}${/react/.test(slug) ? ' (React)' : ''}`;
 
-      if (hasImports && meta.headers[0]?.title !== 'Import') {
-        meta.frontmatter.component_imports = true;
-        meta.headers.unshift({ level: 2, title: 'Import', slug: 'import' });
-      }
-    },
-  };
+  if (!isApiSlug && hasImports && meta.headers[0]?.title !== 'Import') {
+    meta.frontmatter.component_imports = true;
+    meta.headers.unshift({ level: 2, title: 'Import', slug: 'import' });
+  }
 };
 
 const transformApi: MetaTransform = ({ slug, meta }) => {
   if (!componentsDirRE.test(slug) || !apiRE.test(slug)) return;
 
-  const name = basename(dirname(slug.replace(/\/react/, '')));
+  const name = basename(slug.replace(/\/react/, '').replace(/\/?api$/, ''));
   const tagName = `vds-${name}`;
+  const component = components.find((component) => component.tagName === tagName);
 
-  const isReact = /\/react\/?/.test(slug);
-  const componentName = titles[name] ?? kebabToTitleCase(name);
-  const titlePostfix = isReact ? ' (React)' : '';
-  const title = `${componentName} API${titlePostfix}`;
+  const title = {
+    props: 'Properties',
+    methods: 'Methods',
+    events: 'Events',
+    slots: 'Slots',
+    cssProps: 'CSS Props',
+    cssParts: 'CSS Parts',
+  };
 
-  meta.title = title;
+  const headers: MarkdownHeader[] = (
+    ['props', 'methods', 'events', 'slots', 'cssProps', 'cssParts'] as const
+  )
+    .filter((key) => (component[key]?.length ?? 0) > 0)
+    .map((key) => ({
+      title: title[key],
+      slug: lowercaseFirstLetter(title[key].replace(' ', '').replace('CSS', 'css')),
+      level: 2,
+    }));
+
+  meta.headers = [...headers];
   meta.frontmatter.component_imports = !noImportsRE.test(slug);
-
-  if (!meta.headers.length) {
-    const component = components.find((component) => component.tagName === tagName);
-
-    const title = {
-      props: 'Properties',
-      methods: 'Methods',
-      events: 'Events',
-      slots: 'Slots',
-      cssProps: 'CSS Props',
-      cssParts: 'CSS Parts',
-    };
-
-    const headers: MarkdownHeader[] = (
-      ['props', 'methods', 'events', 'slots', 'cssProps', 'cssParts'] as const
-    )
-      .filter((key) => (component[key]?.length ?? 0) > 0)
-      .map((key) => ({
-        title: title[key],
-        slug: lowercaseFirstLetter(title[key].replace(' ', '').replace('CSS', 'css')),
-        level: 2,
-      }));
-
-    meta.headers.push(...headers);
-  }
 };
 
 export const transformQuickstart: MetaTransform = ({ slug, meta }) => {
@@ -131,5 +118,5 @@ export const get = createMetaRequestHandler({
   exclude: ['/index.svelte'],
   extensions: ['.md', '.svelte'],
   resolve: [resolveComponentDocs],
-  transform: [transformApi, transformQuickstart],
+  transform: [transformComponentsDocs, transformApi, transformQuickstart],
 });

@@ -1,3 +1,7 @@
+---
+description: This element is used to create a range input for controlling the current time of playback.
+---
+
 ## Usage
 
 The `<vds-time-slider>` component (aka scrubber) extends [`<vds-slider>`](../slider/index.md) ,

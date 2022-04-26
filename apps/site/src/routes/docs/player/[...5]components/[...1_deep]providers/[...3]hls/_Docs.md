@@ -1,3 +1,7 @@
+---
+description: This provider enables streaming media using the HTTP Live Streaming (HLS) protocol.
+---
+
 ## Install
 
 You'll need to install `hls.js` if you're using the HLS provider locally (i.e., not over a CDN):
@@ -8,8 +12,9 @@ npm i hls.js
 
 ## Usage
 
-Embeds streamable video content into documents using the native `<video>` element, and streams media using
-the [HTTP Live Streaming (HLS)](https://en.wikipedia.org/wiki/HTTP_Live_Streaming) protocol.
+This provider is used to embed streamable video content into documents using the native
+[`<video>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video) element, and supports
+streaming media using the [HTTP Live Streaming (HLS)](https://en.wikipedia.org/wiki/HTTP_Live_Streaming) protocol.
 HLS streaming is [supported natively](https://caniuse.com/?search=hls) in some browsers (e.g., iOS Safari),
 otherwise, we fallback to using [`hls.js`](https://github.com/video-dev/hls.js).
 

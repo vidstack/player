@@ -1,3 +1,7 @@
+---
+description: This element is used to display the current value of a slider in various formats such as a raw value, percentage, or time.
+---
+
 ## Usage
 
 The `<vds-slider-value-text>` component displays the current value of a parent slider, or the

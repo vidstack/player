@@ -1,7 +1,12 @@
+---
+description: This element is used to load and display a preview video over a slider.
+---
+
 ## Usage
 
-The `<vds-slider-video>` component can be used to load a video in [`<vds-slider>`](../slider/index.md). This is _generally_ used to show a preview
-video (low-resolution) as the user interacts with the time slider.
+The `<vds-slider-video>` component can be used to load a video in [`<vds-slider>`](../slider/index.md).
+This is _generally_ used to show a preview video (low-resolution) as the user interacts with the
+time slider.
 
 The point at which the user is hovering or dragging (`pointerValue`) is the preview time position.
 The video will automatically be synced with said value, so ensure both the preview and loaded

@@ -1,3 +1,7 @@
+---
+description: This element is used to perform media actions based on user gestures (e.g., double click for fullscreen).
+---
+
 ## Usage
 
 The `<vds-gesture>` component enables actions to be performed on the media provider based on

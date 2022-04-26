@@ -1,3 +1,7 @@
+---
+description: This element is used to create a container with a fixed aspect ratio around a media provider.
+---
+
 ## Usage
 
 The `<vds-aspect-ratio>` component creates a container that will try to hold the dimensions of the

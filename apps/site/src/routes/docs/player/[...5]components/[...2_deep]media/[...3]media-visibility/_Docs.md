@@ -1,3 +1,7 @@
+---
+description: This element is used to manage media state as page or viewport visibility changes.
+---
+
 ## Usage
 
 The `<vds-media-visibility>` component can be used to manage the playback/volume state of a provider

@@ -1,3 +1,7 @@
+---
+description: This page showcases how to create a container for a collection of media controls.
+---
+
 ## Usage
 
 We don't provide a controls component out of the box because you can easily create one with

@@ -1,3 +1,7 @@
+---
+description: This element is used to create an input for controlling a range of values (e.g., media volume or time).
+---
+
 ## Usage
 
 The `<vds-slider>` component is a custom-built range input (`input[type="range"]`) that is cross-browser

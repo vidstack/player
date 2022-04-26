@@ -1,3 +1,7 @@
+---
+description: This element is used to display a media poster or thumbnail image, generally before playback begins.
+---
+
 ## Usage
 
 The `<vds-poster>` component loads and displays the current media poster image. When

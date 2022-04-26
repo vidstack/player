@@ -1,3 +1,7 @@
+---
+description: This page showcases how to create a loading indicator for when media has paused due to a lack of data.
+---
+
 ## Usage
 
 We don't provide a buffering indicator component out of the box because you can easily create one with

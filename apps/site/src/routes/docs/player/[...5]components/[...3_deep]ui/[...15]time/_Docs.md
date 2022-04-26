@@ -1,3 +1,7 @@
+---
+description: This element is used to display certain media states as a unit of time, such as the current time or duration.
+---
+
 ## Usage
 
 The `<vds-time>` component displays time formatted text (e.g., `01:30` represents 1 minute 30 seconds).

@@ -1,3 +1,7 @@
+---
+description: This element is used to enter and exit fullscreen.
+---
+
 ## Usage
 
 :::admonition type="danger"

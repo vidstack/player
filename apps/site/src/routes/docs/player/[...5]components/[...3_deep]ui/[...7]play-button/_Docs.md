@@ -1,3 +1,7 @@
+---
+description: This element is used to play and pause media.
+---
+
 ## Usage
 
 The `<vds-play-button>` component will toggle the `paused` state of media as it's pressed by

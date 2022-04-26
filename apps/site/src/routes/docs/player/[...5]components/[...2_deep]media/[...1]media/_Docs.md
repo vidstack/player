@@ -1,3 +1,7 @@
+---
+description: This is the top-most element in the library used to group media elements and control the flow of media state.
+---
+
 ## Usage
 
 All media elements exist inside the `<vds-media>` component. It's main jobs are to host the

@@ -1,3 +1,7 @@
+---
+description: This element is used to create buttons that have an on and off state (i.e., toggle).
+---
+
 ## Usage
 
 The `<vds-toggle>` component is a foundational element used to build other toggle buttons such as

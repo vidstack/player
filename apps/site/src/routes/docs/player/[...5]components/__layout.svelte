@@ -18,7 +18,7 @@
   <ComponentTabbedLinks />
 {/if}
 
-{#if $isElementExperimental}
+{#if $isElementExperimental && !$isApiPath}
   <ExperimentalWarning />
 {/if}
 

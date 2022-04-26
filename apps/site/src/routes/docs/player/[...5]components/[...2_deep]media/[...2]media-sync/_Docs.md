@@ -1,3 +1,7 @@
+---
+description: This element is used to keep media states such as playback and volume in sync between multiple players.
+---
+
 ## Usage
 
 The `<vds-media-sync>` component manages playback and volume of multiple provider elements by

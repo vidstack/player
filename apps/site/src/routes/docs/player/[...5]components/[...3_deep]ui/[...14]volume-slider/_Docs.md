@@ -1,3 +1,7 @@
+---
+description: This element is used to create a range input for controlling the volume of media.
+---
+
 ## Usage
 
 The `<vds-volume-slider>` component extends [`<vds-slider>`](../slider/index.md) , and two-way
