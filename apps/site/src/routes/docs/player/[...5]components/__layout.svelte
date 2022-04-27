@@ -2,7 +2,8 @@
   import { elementTagName, isElementExperimental } from '$lib/stores/element';
   import { isApiPath } from '$lib/stores/path';
 
-  import { CodeInline, kitDocs } from '@svelteness/kit-docs';
+  import { kitDocs } from '@svelteness/kit-docs';
+  import CodeInline from '$kitDocs/CodeInline.svelte';
   import ExperimentalWarning from '$kitDocs/ExperimentalWarning.svelte';
 
   import ComponentHeading from './_components/_ComponentHeading.svelte';

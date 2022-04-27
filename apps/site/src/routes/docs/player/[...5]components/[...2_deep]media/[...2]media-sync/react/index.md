@@ -39,7 +39,7 @@ import Docs from '../_Docs.md';
 </MediaSync>
 ```
 
-```js copyHighlight|slot=volume-sync-event{2-6}
+```js copyHighlight|slot=volume-sync-event{2-5}
 <MediaSync
   onMediaVolumeSync={(event) => {
     const { muted, volume } = event.detail;

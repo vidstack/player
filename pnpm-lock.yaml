@@ -85,7 +85,7 @@ importers:
       '@sveltejs/adapter-auto': next
       '@sveltejs/adapter-static': next
       '@sveltejs/kit': next
-      '@svelteness/kit-docs': ^0.22.6
+      '@svelteness/kit-docs': ^0.22.7
       '@tailwindcss/forms': ^0.4.0
       '@tailwindcss/typography': ^0.5.2
       '@types/react': ^17.0.39
@@ -115,7 +115,7 @@ importers:
     dependencies:
       '@docsearch/css': 3.0.0
       '@docsearch/js': 3.0.0_5377e26b52c02809078cfcbfa66845b0
-      '@svelteness/kit-docs': 0.22.6_svelte@3.47.0
+      '@svelteness/kit-docs': 0.22.7_svelte@3.47.0
       '@tailwindcss/forms': 0.4.1_tailwindcss@3.0.24
       '@vidstack/foundation': link:../../packages/foundation
       '@vidstack/player': link:../../packages/player
@@ -127,7 +127,7 @@ importers:
       '@iconify-json/ri': 1.1.1
       '@sveltejs/adapter-auto': 1.0.0-next.39
       '@sveltejs/adapter-static': 1.0.0-next.29
-      '@sveltejs/kit': 1.0.0-next.321_svelte@3.47.0
+      '@sveltejs/kit': 1.0.0-next.322_svelte@3.47.0
       '@tailwindcss/typography': 0.5.2_tailwindcss@3.0.24
       '@types/react': 17.0.44
       '@vidstack/eliza': link:../../packages/eliza
@@ -1132,8 +1132,8 @@ packages:
       esbuild: 0.14.38
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.321_svelte@3.47.0:
-    resolution: {integrity: sha512-Egdmxc+oxmKKhXAtLLHj6LnZQnfxgk/DpdRitDxDlSQq/hj1zSVswe3kGjPDaquNMkxXbvZcHwhbZvNnVTnWag==}
+  /@sveltejs/kit/1.0.0-next.322_svelte@3.47.0:
+    resolution: {integrity: sha512-RPGu1LzE7PhPEqMf/MjGp9CAhBYtYbjpEKMR89KlfvNHCnRuXFdoR4Yrv9o1yGGN+kHSLcRJzibKHxe34AebJA==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
@@ -1174,8 +1174,8 @@ packages:
       - supports-color
     dev: true
 
-  /@svelteness/kit-docs/0.22.6_svelte@3.47.0:
-    resolution: {integrity: sha512-kBuuwG/f/bVaoLGTGfNKuNj2Ec6ckBLXBlcNXcnE9DrrPZSopozwMbpYa1aPY43uVXXQh/soXtTUn4ZvuEEnsQ==}
+  /@svelteness/kit-docs/0.22.7_svelte@3.47.0:
+    resolution: {integrity: sha512-LTB5rdquRyshZv/FQIgZiiYlHRp4zlvkPmQdoaU/iB3lHYpwgLKKCf4+1QIH9oly+0UHP8AhrrgLcD7WNT6+9Q==}
     engines: {node: '>=14.19.0'}
     dependencies:
       '@types/lru-cache': 7.6.1

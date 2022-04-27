@@ -25,7 +25,6 @@ export const frameworkSpecificSidebar = (sidebar: Readable<ResolvedSidebarConfig
 
         const tagName = `vds-${item.title.replace(/\s/g, '-').toLowerCase()}`;
         if (EXPERIMENTAL_TAG_NAMES.has(tagName)) {
-          // @ts-expect-error - typed incorrectly.
           item.icon = { after: ExperimentalIcon };
         }
       }
