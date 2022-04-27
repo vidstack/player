@@ -132,7 +132,9 @@ function findProps(
   declaration: ClassDeclaration | ClassExpression,
 ): PropMeta[] {
   return declaration.members
-    .filter((node) => ts.isPropertyDeclaration(node) && !isMemberPrivate(node))
+    .filter((node) => {
+      return (ts.isPropertyDeclaration(node) || ts.isGetAccessor(node)) && !isMemberPrivate(node);
+    })
     .filter((node) => {
       const name = getMemberName(checker, node) ?? '';
       return !name.startsWith('_');

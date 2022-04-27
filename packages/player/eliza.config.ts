@@ -21,12 +21,14 @@ import prettier from 'prettier';
 import type { Identifier, TypeChecker } from 'typescript';
 import ts from 'typescript';
 
+const CWD = process.cwd();
+
 const AUTO_GEN_COMMENT = '// [@vidstack/eliza] AUTO GENERATED BELOW';
 
-const pkgContent = readFileSync(resolve(process.cwd(), './package.json')).toString();
+const pkgContent = readFileSync(resolve(CWD, './package.json')).toString();
 const pkg: Record<string, any> = JSON.parse(pkgContent);
 
-const SRC_DIR = resolve(process.cwd(), 'src');
+const SRC_DIR = resolve(CWD, 'src');
 
 export default [
   jsonPlugin({
@@ -62,6 +64,7 @@ export default [
   }),
   vdsEventsPlugin(),
   vdsReactPlugin(),
+  vdsSveltePlugin(),
 ];
 
 /**
@@ -190,8 +193,8 @@ function vdsReactPlugin(): Plugin {
   return {
     name: '@vidstack/player/react',
     async transform(components) {
-      const INDEX_FILE = resolve(process.cwd(), 'src/react/index.ts');
-      const OUTPUT_DIR = resolve(process.cwd(), 'src/react/components');
+      const INDEX_FILE = resolve(CWD, 'src/react/index.ts');
+      const OUTPUT_DIR = resolve(CWD, 'src/react/components');
 
       if (!existsSync(OUTPUT_DIR)) {
         mkdirSync(OUTPUT_DIR);
@@ -252,13 +255,7 @@ function vdsReactPlugin(): Plugin {
         const outputFileName = displayName;
         const outputPath = resolve(OUTPUT_DIR, `${outputFileName}.ts`);
 
-        writeFileSync(
-          outputPath,
-          prettier.format(fileContent, {
-            filepath: outputPath,
-            ...pkg.prettier,
-          }),
-        );
+        writeFileFormattedSync(outputPath, fileContent);
 
         index.push(
           `export { default as ${displayName} } from './components/${outputFileName}.js';`,
@@ -267,7 +264,7 @@ function vdsReactPlugin(): Plugin {
 
       writeFileSync(INDEX_FILE, [...index, ''].join('\n'));
 
-      const rootReactDir = resolve(process.cwd(), 'react');
+      const rootReactDir = resolve(CWD, 'react');
 
       if (!existsSync(rootReactDir)) {
         mkdirSync(rootReactDir);
@@ -279,4 +276,84 @@ function vdsReactPlugin(): Plugin {
       );
     },
   };
+}
+
+function vdsSveltePlugin(): Plugin {
+  return {
+    name: '@vidstack/player/svelte',
+    async transform(components) {
+      const CLIENT_INDEX_FILE = resolve(CWD, 'src/svelte/client/index.ts');
+      const CLIENT_OUTPUT_DIR = resolve(CWD, 'src/svelte/client/components');
+      const NODE_INDEX_FILE = resolve(CWD, 'src/svelte/node/index.ts');
+      const NODE_OUTPUT_DIR = resolve(CWD, 'src/svelte/node/components');
+
+      const INDEX_FILES = [CLIENT_INDEX_FILE, NODE_INDEX_FILE];
+      const OUTPUT_DIRS = [CLIENT_OUTPUT_DIR, NODE_OUTPUT_DIR];
+
+      for (const dir of OUTPUT_DIRS) {
+        if (!existsSync(dir)) {
+          mkdirSync(dir);
+        }
+      }
+
+      const index: string[] = [
+        AUTO_GEN_COMMENT,
+        '',
+        "export * from '../../index.js';",
+        "export * from './lib/index.js';",
+        '',
+      ];
+
+      for (const component of components) {
+        const { className } = component;
+
+        const displayName = className.replace('Element', '');
+        const outputFileName = displayName;
+
+        const componentContent = (ssr: boolean) => `
+          // [@vidstack/eliza] THIS FILE IS AUTO GENERATED - SEE \`eliza.config.ts\`
+          ${ssr ? '' : `\nimport '../../../define/${component.tagName}.js';\n`}
+          import { createComponent } from '../lib/index.js';
+
+          export default createComponent('${component.tagName}');
+        `;
+
+        for (const dir of OUTPUT_DIRS) {
+          const outputPath = resolve(dir, `${outputFileName}.js`);
+          const ssr = dir.includes('svelte/node');
+          writeFileFormattedSync(outputPath, componentContent(ssr));
+        }
+
+        index.push(
+          `export { default as ${displayName} } from './components/${outputFileName}.js';`,
+        );
+      }
+
+      for (const indexFile of INDEX_FILES) {
+        writeFileSync(indexFile, [...index, ''].join('\n'));
+      }
+
+      const rootSvelteDir = resolve(CWD, 'svelte');
+
+      if (!existsSync(rootSvelteDir)) {
+        mkdirSync(rootSvelteDir);
+      }
+
+      writeFileSync(
+        resolve(rootSvelteDir, 'index.js'),
+        "// This file only exists so it's easier for you to autocomplete the file path in your IDE.",
+      );
+    },
+  };
+}
+
+function writeFileFormattedSync(filePath: string, content: string) {
+  writeFileSync(filePath, format(filePath, content));
+}
+
+function format(filePath: string, content: string) {
+  return prettier.format(content, {
+    filepath: filePath,
+    ...pkg.prettier,
+  });
 }

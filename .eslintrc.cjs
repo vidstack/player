@@ -15,6 +15,7 @@ module.exports = {
     'packages/*/define',
     'packages/*/types',
     'packages/*/react',
+    'packages/*/svelte',
     'packages/*/index.d.ts',
     'packages/*/globals.d.ts',
     'packages/*/src/react/index.ts',

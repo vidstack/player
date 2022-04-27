@@ -2,8 +2,22 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { globbySync } from 'globby';
 import { esbuild, litNode, minifyHTML } from '@vidstack/rollup';
 
-const INPUT = ['src/index.ts', 'src/react/index.ts', ...globbySync('src/define/*.ts')];
-const EXTERNAL = ['@vidstack/foundation', /node_modules\/@?lit/, 'react'];
+const INPUT = [
+  'src/index.ts',
+  'src/react/index.ts',
+  'src/svelte/client/index.ts',
+  'src/svelte/node/index.ts',
+  ...globbySync('src/define/*.ts'),
+];
+
+const EXTERNAL = [
+  '@vidstack/foundation',
+  /node_modules\/@?lit/,
+  'react',
+  'svelte',
+  'svelte/internal',
+];
+
 const CDN_EXTERNAL = ['hls.js'];
 
 const PLUGINS = ({ dev = false } = {}) => [
@@ -53,11 +67,19 @@ const NODE = {
         return `react/${chunk.name}.js`;
       }
 
+      if (/src\/svelte\/client/.test(chunk.facadeModuleId)) {
+        return `svelte/client/${chunk.name}.js`;
+      }
+
+      if (/src\/svelte\/node/.test(chunk.facadeModuleId)) {
+        return `svelte/node/${chunk.name}.js`;
+      }
+
       return `${chunk.name}.js`;
     },
   },
   preserveEntrySignatures: 'allow-extension',
-  external: ['@vidstack/foundation', 'react'],
+  external: ['@vidstack/foundation', 'react', 'svelte', 'svelte/internal'],
   plugins: [...PLUGINS(), litNode()],
 };
 

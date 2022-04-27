@@ -1,0 +1,10 @@
+{
+  "extends": "./api-extractor.json",
+
+  "mainEntryPointFilePath": "./types/svelte/client/index.d.ts",
+
+  "dtsRollup": {
+    "enabled": true,
+    "publicTrimmedFilePath": "./svelte/index.d.ts"
+  }
+}

@@ -26,6 +26,7 @@
     "packages/*/define",
     "packages/*/types",
     "packages/*/react",
+    "packages/*/svelte",
     "packages/*/define",
     "packages/*/globals.d.ts",
     "packages/*/index.d.ts"

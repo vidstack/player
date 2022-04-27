@@ -52,20 +52,22 @@ export function buildPropMeta<T>(
   const type = checker.getTypeAtLocation(declaration);
   const typeDeclaration = type.aliasSymbol?.declarations?.[0];
   const name = symbol.escapedName as string;
-  const isProperty = ts.isPropertyDeclaration(declaration) || ts.isPropertySignature(declaration);
+  const isAccessor = ts.isGetAccessor(declaration);
   const decorator = declaration.decorators?.find(isDecoratorNamed(propDecoratorName));
   const decoratorParams = decorator ? getDeclarationParameters<T>(decorator) : undefined;
   const propOptions = decoratorParams?.[0] as T | undefined;
-  const hasSetter = !isProperty ? (symbol.declarations?.length ?? 0) > 1 : undefined;
+  const hasSetter = ts.isGetAccessor(declaration)
+    ? (symbol.declarations?.length ?? 0) > 1
+    : undefined;
   const isStatic =
     declaration.modifiers?.some((m) => m.kind === ts.SyntaxKind.StaticKeyword) ?? false;
 
   const hasAttribute =
-    ts.isPropertyDeclaration(declaration) &&
+    (ts.isPropertyDeclaration(declaration) || ts.isGetAccessor(declaration)) &&
     isDecoratedClassMember(declaration) &&
     declaration.decorators!.find(isDecoratorNamed('property'));
 
-  if (isProperty && isMemberPrivate(declaration)) {
+  if (isMemberPrivate(declaration)) {
     reportDiagnosticByNode(
       [
         `Property \`${name}\` cannot be \`private\` or \`protected\`. Use the`,
@@ -85,7 +87,7 @@ export function buildPropMeta<T>(
   // Prop can have an attribute if type is NOT "unknown".
   if (
     hasAttribute &&
-    (typeText !== 'unknown' || (!isProperty && hasSetter)) &&
+    (typeText !== 'unknown' || (isAccessor && hasSetter)) &&
     !isUndefined(propOptions) &&
     !isUndefined(transformPropOptions)
   ) {
@@ -103,7 +105,10 @@ export function buildPropMeta<T>(
   prop.docTags = getDocTags(declaration);
 
   prop.readonly =
-    (!isProperty && !hasSetter) || (!hasSetter && hasDocTag(prop.docTags, 'readonly'));
+    (isAccessor && !hasSetter) ||
+    (!hasSetter && hasDocTag(prop.docTags, 'readonly')) ||
+    (declaration.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ReadonlyKeyword) ??
+      false);
 
   if (hasAttribute) {
     prop.attribute = !prop.readonly

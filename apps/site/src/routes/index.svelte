@@ -2,8 +2,8 @@
   import Footer from '$lib/layout/Footer.svelte';
 
   import HeroSection from './_components/_HeroSection.svelte';
-  import OpenSourceSection from './_components/_OpenSourceSection.svelte';
   import HowSection from './_components/_HowSection.svelte';
+  import OpenSourceSection from './_components/_OpenSourceSection.svelte';
 
   const title = 'Vidstack - Frontend video tools to build awesome media experiences on the web.';
 </script>

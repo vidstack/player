@@ -14,6 +14,7 @@
     "dist-cdn/",
     "define/",
     "react/",
+    "svelte/",
     "index.d.ts",
     "globals.d.ts",
     "elements.json",
@@ -46,6 +47,11 @@
       "development": "./dist/react/index.js",
       "default": "./dist-prod/react/index.js"
     },
+    "./svelte": {
+      "node": "./dist-node/svelte/node/index.js",
+      "development": "./dist/svelte/client/index.js",
+      "default": "./dist-prod/svelte/client/index.js"
+    },
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
     "./elements.json": "./elements.json",
@@ -69,10 +75,11 @@
     "build": "pnpm clean && pnpm analyze && run-p build:dist build:types",
     "build:dist": "rollup -c && pnpm minify:cdn",
     "build:definitions": "node ../../.scripts/definitions.js",
-    "build:types": "tsc -p tsconfig.json && pnpm build:types:dist && pnpm build:types:react && rimraf types dist/player.d.ts",
+    "build:types": "tsc -p tsconfig.json && run-s build:types:* && rimraf types dist/player.d.ts",
     "build:types:dist": "api-extractor run && pnpm build:definitions",
     "build:types:react": "api-extractor run -c api-extractor.react.json",
-    "clean": "rimraf define dist dist-* types elements.json vscode.html-data.json coverage react src/react/index.ts src/react/components",
+    "build:types:svelte": "node ./.scripts/build-svelte-types.js && api-extractor run -c api-extractor.svelte.json",
+    "clean": "rimraf define dist dist-* types coverage src/react/components src/svelte/{client,node}/components",
     "dev": "run-p \"pnpm analyze -- -w\" \"pnpm build:dist -- -w\"",
     "watch": "pnpm dev",
     "lint:eslint": "eslint src --fix",

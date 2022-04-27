@@ -5,6 +5,7 @@ import type {
   ClassElement,
   Identifier,
   MethodSignature,
+  Node,
   PropertySignature,
   TypeChecker,
 } from 'typescript';
