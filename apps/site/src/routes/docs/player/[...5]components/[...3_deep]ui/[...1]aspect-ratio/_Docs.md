@@ -1,5 +1,5 @@
 ---
-description: This element is used to create a container with a fixed aspect ratio around a media provider.
+description: This component is used to create a container with a fixed aspect ratio around a media provider.
 ---
 
 ## Usage

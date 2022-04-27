@@ -1,5 +1,5 @@
 ---
-description: This element is used to create a range input for controlling the current time of playback.
+description: This component is used to create a range input for controlling the current time of playback.
 ---
 
 ## Usage

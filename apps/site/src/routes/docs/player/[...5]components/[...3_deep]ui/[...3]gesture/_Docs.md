@@ -1,5 +1,5 @@
 ---
-description: This element is used to perform media actions based on user gestures (e.g., double click for fullscreen).
+description: This component is used to perform media actions based on user gestures (e.g., double click for fullscreen).
 ---
 
 ## Usage

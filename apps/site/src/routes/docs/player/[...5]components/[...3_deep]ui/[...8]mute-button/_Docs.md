@@ -1,5 +1,5 @@
 ---
-description: This element is used to mute and unmute media.
+description: This component is used to mute and unmute media.
 ---
 
 ## Usage

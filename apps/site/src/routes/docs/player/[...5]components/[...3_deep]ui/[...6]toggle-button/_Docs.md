@@ -1,5 +1,5 @@
 ---
-description: This element is used to create buttons that have an on and off state (i.e., toggle).
+description: This component is used to create buttons that have an on and off state (i.e., toggle).
 ---
 
 ## Usage

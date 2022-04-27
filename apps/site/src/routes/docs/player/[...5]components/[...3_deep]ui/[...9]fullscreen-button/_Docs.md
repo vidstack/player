@@ -1,5 +1,5 @@
 ---
-description: This element is used to enter and exit fullscreen.
+description: This component is used to enter and exit fullscreen.
 ---
 
 ## Usage

@@ -1,5 +1,5 @@
 ---
-description: This element is used to play and pause media.
+description: This component is used to play and pause media.
 ---
 
 ## Usage

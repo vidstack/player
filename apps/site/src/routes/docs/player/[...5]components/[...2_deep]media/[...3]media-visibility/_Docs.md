@@ -1,5 +1,5 @@
 ---
-description: This element is used to manage media state as page or viewport visibility changes.
+description: This component is used to manage media state as page or viewport visibility changes.
 ---
 
 ## Usage

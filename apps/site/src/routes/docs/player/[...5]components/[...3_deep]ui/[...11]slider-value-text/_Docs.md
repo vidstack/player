@@ -1,5 +1,5 @@
 ---
-description: This element is used to display the current value of a slider in various formats such as a raw value, percentage, or time.
+description: This component is used to display the current value of a slider in various formats such as a raw value, percentage, or time.
 ---
 
 ## Usage

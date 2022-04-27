@@ -1,5 +1,5 @@
 ---
-description: This element is used to display certain media states as a unit of time, such as the current time or duration.
+description: This component is used to display certain media states as a unit of time, such as the current time or duration.
 ---
 
 ## Usage

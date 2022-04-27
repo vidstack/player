@@ -1,5 +1,5 @@
 ---
-description: This element is used to create an input for controlling a range of values (e.g., media volume or time).
+description: This component is used to create an input for controlling a range of values (e.g., media volume or time).
 ---
 
 ## Usage

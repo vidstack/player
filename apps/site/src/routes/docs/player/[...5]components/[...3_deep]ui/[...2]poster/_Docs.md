@@ -1,5 +1,5 @@
 ---
-description: This element is used to display a media poster or thumbnail image, generally before playback begins.
+description: This component is used to display a media poster or thumbnail image, generally before playback begins.
 ---
 
 ## Usage

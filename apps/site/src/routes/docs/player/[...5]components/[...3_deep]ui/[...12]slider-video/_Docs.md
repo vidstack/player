@@ -1,5 +1,5 @@
 ---
-description: This element is used to load and display a preview video over a slider.
+description: This component is used to load and display a preview video over a slider.
 ---
 
 ## Usage

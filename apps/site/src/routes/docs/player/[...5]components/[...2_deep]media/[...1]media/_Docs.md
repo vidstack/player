@@ -1,5 +1,5 @@
 ---
-description: This is the top-most element in the library used to group media elements and control the flow of media state.
+description: This is the top-most component in the library used to group media elements and control the flow of media state.
 ---
 
 ## Usage
