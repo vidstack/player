@@ -310,12 +310,18 @@ function vdsSveltePlugin(): Plugin {
         const displayName = className.replace('Element', '');
         const outputFileName = displayName;
 
+        const slots = `['default', ${component.slots
+          .map((slot) => slot.name.toLowerCase())
+          .filter((slot) => slot !== 'default')
+          .map((slot) => `'${slot}'`)
+          .join(', ')}]`;
+
         const componentContent = (ssr: boolean) => `
           // [@vidstack/eliza] THIS FILE IS AUTO GENERATED - SEE \`eliza.config.ts\`
           ${ssr ? '' : `\nimport '../../../define/${component.tagName}.js';\n`}
           import { createComponent } from '../lib/index.js';
 
-          export default createComponent('${component.tagName}');
+          export default createComponent('${component.tagName}', ${slots});
         `;
 
         for (const dir of OUTPUT_DIRS) {

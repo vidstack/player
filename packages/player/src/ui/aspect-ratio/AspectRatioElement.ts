@@ -18,6 +18,7 @@ import { aspectRatioElementStyles } from './styles';
  * to the loaded media but instead a general setting of `2/1`.
  *
  * @tagname vds-aspect-ratio
+ * @slot - Used to pass in a media provider element.
  * @example
  * ```html
  * <vds-aspect-ratio ratio="16/9">

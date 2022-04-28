@@ -15,6 +15,10 @@ for (const component of components) {
   const className = component.className;
   const displayName = component.className.replace('Element', '');
 
+  const slotNames = component.slots
+    .map((slot) => slot.name.toLowerCase())
+    .filter((slot) => slot !== 'default');
+
   const dtsContent = `
 // [@vidstack/eliza] THIS FILE IS AUTO GENERATED - SEE \`eliza.config.ts\`
 
@@ -37,7 +41,7 @@ export default class ${displayName} extends SvelteComponentTyped<
       .join('\n')}
   } & Partial<ARIAMixin>,
   GlobalEventHandlersEventMap,
-  { default: {}; }
+  { default: {}; ${slotNames.map((slot) => `${slot}: {};`).join(' ')} }
 > {
   get element(): ${className} | null;
 };
