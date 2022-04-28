@@ -1,8 +1,11 @@
 dist/
 dist-*/
 
+tsconfig.tsbuildinfo
+
 .turbo
 turbo-graph*
+.wireit
 
 .svelte-kit
 

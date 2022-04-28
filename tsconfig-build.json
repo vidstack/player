@@ -8,7 +8,7 @@
     "preserveWatchOutput": true,
     "noEmit": false,
     "importHelpers": true,
-    "incremental": false,
+    "incremental": true,
     "sourceMap": true,
     "useDefineForClassFields": false
   }

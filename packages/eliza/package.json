@@ -13,10 +13,9 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "run-p build:dist build:types",
     "build:base": "node ../../.scripts/build.js --entry=src/index.ts",
     "build:dist": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --requireshim --external=yargs,@vidstack/foundation,typescript",
-    "build:types": "tsc -p tsconfig.json",
+    "build:types": "tsc -p tsconfig.json --pretty",
     "clean": "rimraf dist-node types",
     "watch": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
     "lint:eslint": "eslint src --fix",

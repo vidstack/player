@@ -33,17 +33,16 @@
     "url": "https://github.com/vidstack/vidstack/issues"
   },
   "scripts": {
-    "build": "pnpm clean && run-p build:dist build:types",
     "build:dist": "rollup -c",
-    "build:types": "tsc -p tsconfig.json && pnpm build:types:dist && rimraf types dist/foundation.d.ts",
-    "build:types:dist": "api-extractor run",
+    "build:types": "tsc -p tsconfig.json --pretty",
+    "extract:types": "api-extractor run && rimraf dist/**/*.d.ts",
     "clean": "rimraf dist dist-node dist-prod types",
-    "dev": "pnpm build:dist -- -w",
+    "dev": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
     "watch": "pnpm dev",
-    "lint:eslint": "eslint src --fix",
-    "lint:prettier": "prettier src --write --loglevel warn",
     "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3090",
     "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
+    "lint:eslint": "eslint src --fix",
+    "lint:prettier": "prettier src --write --loglevel warn",
     "test": "vitest --run",
     "test:watch": "vitest --watch"
   },

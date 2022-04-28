@@ -2,27 +2,68 @@
   "$schema": "https://turborepo.org/schema.json",
   "baseBranch": "origin/main",
   "pipeline": {
+    "build:app": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**", ".svelte-kit/**"]
+    },
     "analyze": {
-      "dependsOn": ["^build:dist", "^build:types"],
+      "dependsOn": ["^build:dist", "^extract:types"],
       "outputs": [
-        "elements.json",
-        "vscode.html-data.json",
-        "react/index.js",
         "src/react/index.ts",
-        "src/react/components/**"
+        "src/react/components/**",
+        "src/svelte/{client,node}/index.ts",
+        "src/svelte/{client,node}/components/**",
+        "react/index.js",
+        "svelte/index.js",
+        "elements.json",
+        "vscode.html-data.json"
+      ]
+    },
+    "build": {
+      "dependsOn": [
+        "build:dist",
+        "build:definitions",
+        "extract:types",
+        "extract:types:react",
+        "extract:types:svelte",
+        "minify:cdn"
       ]
     },
     "build:dist": {
       "dependsOn": ["analyze", "^build:dist"],
-      "outputs": ["dist/**", "dist-prod/**", "dist-cdn/**", "dist-node/**"]
+      "outputs": ["dist/**", "dist-node/**", "dist-cdn/**", "dist-prod/**"]
+    },
+    "build:definitions": {
+      "dependsOn": ["build:types"],
+      "inputs": ["src/define/**"],
+      "outputs": ["define/**"]
     },
     "build:types": {
-      "dependsOn": ["analyze", "^build:types"],
-      "outputs": ["index.d.ts", "react/index.d.ts", "types/**"]
+      "dependsOn": ["analyze", "^extract:types"],
+      "outputs": ["types/**", "tsconfig.tsbuildinfo"]
     },
-    "build:app": {
-      "dependsOn": ["^build:dist", "^build:types"],
-      "outputs": [".svelte-kit/**", "build/**"]
+    "extract:types": {
+      "dependsOn": ["build:types"],
+      "inputs": ["types/**", "tsconfig.json"],
+      "outputs": ["index.d.ts"]
+    },
+    "extract:types:react": {
+      "dependsOn": ["build:types"],
+      "inputs": ["types/**", "tsconfig.json"],
+      "outputs": ["react/index.d.ts"]
+    },
+    "extract:types:svelte": {
+      "dependsOn": ["build:types"],
+      "inputs": ["types/**", "tsconfig.json"],
+      "outputs": ["svelte/index.d.ts"]
+    },
+    "minify:cdn": {
+      "dependsOn": ["build:dist"],
+      "inputs": ["dist-cdn/**"],
+      "outputs": ["dist-cdn/**"]
+    },
+    "test": {
+      "inputs": ["src/**", "tests/**", "vite.config.ts"]
     },
     "clean": {
       "cache": false
@@ -33,8 +74,11 @@
     "lint": {
       "dependsOn": ["lint:eslint", "lint:prettier"]
     },
-    "lint:eslint": {},
-    "lint:prettier": {},
-    "test": {}
+    "lint:eslint": {
+      "inputs": ["src/**"]
+    },
+    "lint:prettier": {
+      "inputs": ["src/**"]
+    }
   }
 }
