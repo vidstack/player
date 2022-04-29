@@ -151,6 +151,15 @@ export abstract class MediaProviderElement extends LitElement {
     store.fullscreen.set(false);
   }
 
+  /**
+   * Hard destroy the media provider and clear all state. This voids the media provider unusable,
+   * so call with caution. Generally best to only call this in a framework destroy hook.
+   */
+  destroy() {
+    this.disconnectedCallback();
+    this.dispatchEvent(vdsEvent('vds-destroy'));
+  }
+
   // -------------------------------------------------------------------------------------------
   // Logging
   // -------------------------------------------------------------------------------------------

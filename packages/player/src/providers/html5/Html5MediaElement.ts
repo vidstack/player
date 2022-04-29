@@ -50,6 +50,17 @@ export class Html5MediaElement extends MediaProviderElement {
     this._cancelTimeUpdates();
   }
 
+  override destroy() {
+    if (this.mediaElement) {
+      this.mediaElement.pause();
+      this.mediaElement.src = '';
+      this.mediaElement.innerHTML = '';
+      this.mediaElement.load();
+    }
+
+    super.destroy();
+  }
+
   // -------------------------------------------------------------------------------------------
   // Properties
   // -------------------------------------------------------------------------------------------
@@ -635,7 +646,6 @@ export class Html5MediaElement extends MediaProviderElement {
       this._logger?.info('attempting to pause...');
     }
 
-    this._throwIfNotReadyForPlayback();
     return this.mediaElement?.pause();
   }
 

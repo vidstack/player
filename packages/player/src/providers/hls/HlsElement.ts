@@ -188,8 +188,9 @@ export class HlsElement extends VideoElement {
     }
   }
 
-  override disconnectedCallback() {
-    super.disconnectedCallback();
+  override destroy() {
+    this._destroyHlsEngine();
+    super.destroy();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -349,17 +350,6 @@ export class HlsElement extends VideoElement {
     this._listenToHlsEngine();
   }
 
-  protected _destroyHlsEngine(): void {
-    this.hlsEngine?.destroy();
-    this._currentHlsSrc = '';
-    this._hlsEngine = undefined;
-    this._isHlsEngineAttached = false;
-
-    if (__DEV__) {
-      this._logger?.info('🏗️ Destroyed HLS engine');
-    }
-  }
-
   protected _attachHlsEngine(): void {
     if (this.isHlsEngineAttached || isUndefined(this.hlsEngine) || isNil(this.videoElement)) {
       return;
@@ -420,6 +410,17 @@ export class HlsElement extends VideoElement {
     }
 
     return super._getMediaType();
+  }
+
+  protected _destroyHlsEngine(): void {
+    this._hlsEngine?.destroy();
+    this._currentHlsSrc = '';
+    this._hlsEngine = undefined;
+    this._isHlsEngineAttached = false;
+
+    if (__DEV__) {
+      this._logger?.info('🏗️ Destroyed HLS engine');
+    }
   }
 
   // -------------------------------------------------------------------------------------------

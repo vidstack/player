@@ -33,6 +33,7 @@ export type MediaEvents = {
   'vds-can-play': MediaCanPlayEvent;
   'vds-controls-change': MediaControlsChangeEvent;
   'vds-current-src-change': MediaCurrentSrcChangeEvent;
+  'vds-destroy': MediaDestroyEvent;
   'vds-duration-change': MediaDurationChangeEvent;
   'vds-emptied': MediaEmptiedEvent;
   'vds-end': MediaEndEvent;
@@ -146,6 +147,13 @@ export type MediaControlsChangeEvent = VdsMediaEvent<boolean>;
  * @event
  */
 export type MediaCurrentSrcChangeEvent = VdsMediaEvent<string>;
+
+/**
+ * Fired when the media provider element is manually destroyed by calling the `destroy()` method.
+ *
+ * @event
+ */
+export type MediaDestroyEvent = VdsMediaEvent<void>;
 
 /**
  * Fired when the `duration` property changes.
