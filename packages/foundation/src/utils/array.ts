@@ -1,5 +1,9 @@
 import { isNull, isUndefined } from './unit';
 
+export function isScalarArrayEqual<T extends string | number | boolean>(arrayA: T[], arrayB: T[]) {
+  return arrayA.length === arrayB.length && arrayA.every((value, i) => value === arrayB[i]);
+}
+
 export function filterUnique<T>(
   items: T[],
   key: keyof T,

@@ -189,7 +189,6 @@ export class HlsElement extends VideoElement {
   }
 
   override disconnectedCallback() {
-    this._destroyHlsEngine();
     super.disconnectedCallback();
   }
 

@@ -1,5 +1,6 @@
 import {
   clampNumber,
+  copyStoreRecords,
   createIntersectionController,
   type DisconnectCallback,
   discoverable,
@@ -22,7 +23,11 @@ import { property, state } from 'lit/decorators.js';
 
 import { type MediaController } from '../controller';
 import type { MediaEvents } from '../events';
-import { createMediaStore, type ReadableMediaStoreRecord } from '../store';
+import {
+  createMediaStore,
+  type ReadableMediaStoreRecord,
+  WritableMediaStoreRecord,
+} from '../store';
 import { ViewType } from '../ViewType';
 
 export const mediaProviderDiscoveryId = Symbol('@vidstack/media-provider-discovery');
@@ -129,13 +134,22 @@ export abstract class MediaProviderElement extends LitElement {
   }
 
   override disconnectedCallback() {
-    super.disconnectedCallback();
+    this._updateMediaStoreOnDisconnect(this._store);
     this.mediaQueue.destroy();
     this._disconnectDisposal.empty();
+    super.disconnectedCallback();
   }
 
   /* @internal */
   abstract handleDefaultSlotChange(): void | Promise<void>;
+
+  protected _updateMediaStoreOnDisconnect(store: WritableMediaStoreRecord) {
+    store.paused.set(true);
+    store.playing.set(false);
+    store.seeking.set(false);
+    store.waiting.set(false);
+    store.fullscreen.set(false);
+  }
 
   // -------------------------------------------------------------------------------------------
   // Logging
@@ -400,7 +414,7 @@ export abstract class MediaProviderElement extends LitElement {
    * loading process. Calling it more than once has no effect.
    */
   startLoadingMedia() {
-    this.controllerQueue;
+    if (this.state.canPlay) return;
     this.dispatchEvent(vdsEvent('vds-can-load'));
   }
 
@@ -616,15 +630,22 @@ export abstract class MediaProviderElement extends LitElement {
 
     onDisconnect(() => {
       this.controllerQueue.destroy();
-      this._controller = undefined;
+
       this._store = createMediaStore();
       this._state = unwrapStoreRecord(this._store);
+
+      if (this._controller) {
+        copyStoreRecords(this._controller._store, this._store);
+        this._updateMediaStoreOnDisconnect(this._controller._store);
+      }
+
+      this._controller = undefined;
     });
   }
 
   // Override to ensure media events reach the media controller.
   override dispatchEvent(event: Event): boolean {
-    if (!this._controller && event.type.startsWith('vds-')) {
+    if (this.isConnected && !this._controller && event.type.startsWith('vds-')) {
       this.controllerQueue.queue(event.type, () => {
         super.dispatchEvent(event);
       });

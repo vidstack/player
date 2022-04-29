@@ -4,6 +4,7 @@ import {
   getSlottedChildren,
   isNil,
   isNumber,
+  isScalarArrayEqual,
   isUndefined,
   keysOf,
   listen,
@@ -122,68 +123,79 @@ export class Html5MediaElement extends MediaProviderElement {
   protected _mediaElementDisposal = new DisposalBin();
 
   handleDefaultSlotChange() {
-    // Wait a frame to give events a chance to reach media controller (e.g., `vds-hide-poster-request`).
-    window.requestAnimationFrame(() => {
-      const mediaElement = getSlottedChildren(this)[0] as HTMLMediaElement | null;
-      const tagName = mediaElement?.tagName;
-
-      if (tagName && !/^(audio|video)$/i.test(tagName)) {
-        if (__DEV__) {
-          throw Error(
-            `[vds]: expected <audio> or <video> in default slot. Received: <${tagName}>.`,
-          );
-        }
-      }
-
-      this._handleMediaElementDisconnect();
-      this._mediaElement = mediaElement ?? undefined;
-      this._handleMediaElementConnect();
-    });
+    this._handleMediaElementDisconnect();
+    this._handleMediaElementConnect();
   }
 
   protected get _canMediaElementConnect() {
     return this.canLoad && !isNil(this.mediaElement) && !this._hasMediaElementConnected;
   }
 
+  protected _findSlottedMediaElement() {
+    const mediaElement = getSlottedChildren(this)[0] as HTMLMediaElement | null;
+    const tagName = mediaElement?.tagName;
+
+    if (tagName && !/^(audio|video)$/i.test(tagName)) {
+      if (__DEV__) {
+        throw Error(`[vds]: expected <audio> or <video> in default slot. Received: <${tagName}>.`);
+      }
+    }
+
+    this._mediaElement = mediaElement ?? undefined;
+  }
+
   protected _handleMediaElementConnect() {
-    if (!this._canMediaElementConnect) return;
+    // Wait a frame to give events a chance to reach media controller (e.g., `vds-hide-poster-request`).
+    window.requestAnimationFrame(() => {
+      this._findSlottedMediaElement();
 
-    const mediaEl = this.mediaElement!;
+      if (!this._canMediaElementConnect) return;
 
-    if (mediaEl.hasAttribute('loop')) {
-      this.loop = true;
-    }
+      const mediaEl = this.mediaElement!;
 
-    // Update or remove any attributes that we manage.
-    mediaEl.removeAttribute('loop');
-    mediaEl.removeAttribute('poster');
-    setAttribute(mediaEl, 'controls', this.controls);
+      if (mediaEl.hasAttribute('loop')) {
+        this.loop = true;
+      }
 
-    this._attachMediaEventListeners();
-    this._observePlaysinline();
-    this._observeMediaSources();
+      // Update or remove any attributes that we manage.
+      mediaEl.removeAttribute('loop');
+      mediaEl.removeAttribute('poster');
+      setAttribute(mediaEl, 'controls', this.controls);
 
-    if (this.canLoadPoster && this.poster.length > 0) {
-      mediaEl.setAttribute('poster', this.poster);
-    }
+      this._attachMediaEventListeners();
+      this._observePlaysinline();
+      this._observeMediaSources();
 
-    this._startPreloadingMedia();
+      if (
+        this.canLoadPoster &&
+        this.poster.length > 0 &&
+        mediaEl.getAttribute('poster') !== this.poster
+      ) {
+        mediaEl.setAttribute('poster', this.poster);
+      }
 
-    if (__DEV__) {
-      this._logger
-        ?.infoGroup('Media element connected')
-        .labelledLog('Media Element', mediaEl)
-        .dispatch();
-    }
+      this._startPreloadingMedia();
 
-    this._hasMediaElementConnected = true;
-    this._disconnectDisposal.add(this._handleMediaElementDisconnect.bind(this));
+      if (__DEV__) {
+        this._logger
+          ?.infoGroup('Media element connected')
+          .labelledLog('Media Element', mediaEl)
+          .dispatch();
+      }
+
+      this._hasMediaElementConnected = true;
+      this._disconnectDisposal.add(this._handleMediaElementDisconnect.bind(this));
+    });
   }
 
   protected _handleMediaElementDisconnect() {
     this._cancelTimeUpdates();
-    this._mediaElementDisposal.empty();
-    this._mediaElement = undefined;
+
+    // Wait for any final events to be emitted after disconnection.
+    window.requestAnimationFrame(() => {
+      this._mediaElementDisposal.empty();
+      this._mediaElement = undefined;
+    });
 
     if (this._hasMediaElementConnected && __DEV__) {
       this._logger
@@ -201,6 +213,8 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _startPreloadingMedia() {
+    if (this.state.canPlay) return;
+
     this.mediaElement!.setAttribute('preload', this.preload);
 
     const isNetworkActive = this.mediaElement!.networkState >= 1;
@@ -235,7 +249,11 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleSrcChange(sources: string[]) {
-    this.dispatchEvent(vdsEvent('vds-src-change', { detail: sources }));
+    const prevSources = this.state.src;
+
+    if (!isScalarArrayEqual(prevSources, sources)) {
+      this.dispatchEvent(vdsEvent('vds-src-change', { detail: sources }));
+    }
   }
 
   protected _getMediaSources() {

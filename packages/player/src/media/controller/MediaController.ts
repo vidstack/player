@@ -172,6 +172,7 @@ export class MediaController {
 
   protected _handleMediaProviderDisconnect() {
     if (isNil(this.provider)) return;
+    this._stopWaiting();
     this.providerQueue.destroy();
     this.providerDisposal.empty();
     this._provider = undefined;
