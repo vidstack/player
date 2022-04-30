@@ -1,3 +1,18 @@
+# [1.5.0](https://github.com/vidstack/vidstack/compare/v1.4.0...v1.5.0) (2022-04-30)
+
+### Bug Fixes
+
+- **player:** loop property not taking effect ([e55c14f](https://github.com/vidstack/vidstack/commit/e55c14ffe4c5b34ddae85da608a1be80ae3c4eab))
+- **player:** preserve media state across dom disconnects ([62325eb](https://github.com/vidstack/vidstack/commit/62325ebb207e2b9320467dd5271180709c291462))
+- **player:** prop reflection causing ssr mismatch with react ([fdb59f1](https://github.com/vidstack/vidstack/commit/fdb59f193650f1ae5a2fbf5f1c0421c0f8c97b0c))
+- **player:** slotted styles were broken by formatter ([30f90c4](https://github.com/vidstack/vidstack/commit/30f90c46c5c5fb57f50b4400ebf640e290e62e46))
+
+### Features
+
+- **player:** new hard `destroy` method on media provider elements ([f713d06](https://github.com/vidstack/vidstack/commit/f713d0681edf8c63012bf69e402741550eaeff53))
+- **player:** new svelte component wrappers ([0133f51](https://github.com/vidstack/vidstack/commit/0133f51859dd18674abf7afa8b5848a267a9639f))
+- **player:** svelte wrappers can forward all slots to custom element ([288bb9a](https://github.com/vidstack/vidstack/commit/288bb9a73a08c5d97108f31fde3417f3bb7623cf))
+
 # [1.4.0-next](https://github.com/vidstack/vidstack/compare/v1.3.0...v1.4.0) (2022-04-03)
 
 ### Bug Fixes
