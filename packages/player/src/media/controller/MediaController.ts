@@ -450,22 +450,18 @@ export class MediaController {
     }),
   );
 
-  protected readonly _handleLoopRequest = eventListener(
-    this._host,
-    'vds-loop-request',
-    this._createMediaRequestHandler('loop', () => {
-      window.requestAnimationFrame(async () => {
-        try {
-          this._isLooping = true;
-          this._isReplay = true;
-          await this._provider!.play();
-        } catch (e) {
-          this._isReplay = false;
-          this._isLooping = false;
-        }
-      });
-    }),
-  );
+  protected readonly _handleLoopRequest = this._createMediaRequestHandler('loop', () => {
+    window.requestAnimationFrame(async () => {
+      try {
+        this._isLooping = true;
+        this._isReplay = true;
+        await this._provider!.play();
+      } catch (e) {
+        this._isReplay = false;
+        this._isLooping = false;
+      }
+    });
+  });
 
   // -------------------------------------------------------------------------------------------
   // Fullscreen Events
@@ -513,6 +509,7 @@ export class MediaController {
       'vds-current-src-change': this._handleCurrentSrcChange,
       'vds-autoplay': this._handleAutoplay,
       'vds-autoplay-fail': this._handleAutoplayFail,
+      'vds-loop-request': this._handleLoopRequest,
       'vds-play': this._handlePlay,
       'vds-play-fail': this._handlePlayFail,
       'vds-playing': this._handlePlaying,

@@ -563,7 +563,7 @@ export class Html5MediaElement extends MediaProviderElement {
   }
 
   protected _handleLoop() {
-    const hasCustomControls = isUndefined(this.mediaElement!.controls);
+    const hasCustomControls = isNil(this.controls);
 
     // Forcefully hide controls to prevent flashing when looping. Calling `play()` at end
     // of media may show a flash of native controls on iOS, even if `controls` property is not set.
