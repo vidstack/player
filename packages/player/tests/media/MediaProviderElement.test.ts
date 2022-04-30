@@ -14,7 +14,7 @@ async function buildFixture() {
 it('should render light DOM', async function () {
   const { provider } = await buildFixture();
   expect(provider).dom.to.equal(`
-    <vds-fake-media-provider paused></vds-fake-media-provider>
+    <vds-fake-media-provider></vds-fake-media-provider>
   `);
 });
 
@@ -46,7 +46,7 @@ describe('media request queue', function () {
     // Queue.
     provider.volume = 0.53;
     expect(provider.volume).to.equal(1);
-    expect(provider.mediaQueue.size, 'queue size').to.equal(2);
+    expect(provider.mediaQueue.size, 'queue size').to.equal(1);
 
     // Flush.
     provider.mediaQueue.start();

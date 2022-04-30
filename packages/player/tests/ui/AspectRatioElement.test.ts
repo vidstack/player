@@ -25,11 +25,7 @@ async function buildFixture(props: Partial<AspectRatioElement> = {}) {
 it('should render light DOM', async function () {
   const { aspectRatioElement } = await buildFixture();
   expect(aspectRatioElement).dom.to.equal(`
-      <vds-aspect-ratio
-        max-height="100vh"
-        min-height="150px"
-        ratio="2/1"
-      ></vds-aspect-ratio>
+      <vds-aspect-ratio></vds-aspect-ratio>
     `);
 });
 

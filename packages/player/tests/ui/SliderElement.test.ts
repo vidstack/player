@@ -15,7 +15,6 @@ it('should render light DOM', async function () {
   const slider = await buildFixture();
   expect(slider).dom.to.equal(`
     <vds-slider
-      value="50"
       aria-orientation="horizontal"
       aria-valuemax="100"
       aria-valuemin="0"
