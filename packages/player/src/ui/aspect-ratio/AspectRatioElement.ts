@@ -35,20 +35,26 @@ export class AspectRatioElement extends LitElement {
 
   /**
    * The minimum height of the container.
+   *
+   * @defaultValue '150px'
    */
-  @property({ attribute: 'min-height', reflect: true })
+  @property({ attribute: 'min-height' })
   minHeight = '150px';
 
   /**
    * The maximum height of the container.
+   *
+   * @defaultValue '100vh'
    */
-  @property({ attribute: 'max-height', reflect: true })
+  @property({ attribute: 'max-height' })
   maxHeight = '100vh';
 
   /**
    * The desired aspect ratio setting given as `'width/height'` (eg: `'16/9'`).
+   *
+   * @defaultValue '2/1'
    */
-  @property({ reflect: true })
+  @property()
   ratio = '2/1';
 
   /**

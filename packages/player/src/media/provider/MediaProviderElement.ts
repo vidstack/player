@@ -103,10 +103,6 @@ export abstract class MediaProviderElement extends LitElement {
 
     this._logMediaEvents();
 
-    // Initialize some media attributes.
-    setAttribute(this, 'paused', this.paused);
-    setAttribute(this, 'muted', this.muted);
-
     // Give the initial hide poster event a chance to reach the controller.
     window.requestAnimationFrame(() => {
       if (isUndefined(this.canLoadPoster)) {
@@ -222,7 +218,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @defaultValue 1
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume}
    */
-  @property({ type: Number, reflect: true })
+  @property({ type: Number })
   get volume() {
     return this._getVolume();
   }
@@ -248,7 +244,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @defaultValue true
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/paused}
    */
-  @property({ type: Boolean, reflect: true })
+  @property({ type: Boolean })
   get paused() {
     return this._getPaused();
   }
@@ -306,7 +302,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @defaultValue false
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted}
    */
-  @property({ type: Boolean, reflect: true })
+  @property({ type: Boolean })
   get muted() {
     return this._getMuted();
   }
@@ -327,7 +323,7 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * A URL for an image to be shown while the video is downloading.
    */
-  @property({ reflect: true })
+  @property()
   get poster() {
     return this.state.poster;
   }
@@ -347,7 +343,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @defaultValue false
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop}
    */
-  @property({ type: Boolean, reflect: true })
+  @property({ type: Boolean })
   get loop() {
     return this.state.loop;
   }
@@ -369,7 +365,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @defaultValue false
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls}
    */
-  @property({ type: Boolean, reflect: true })
+  @property({ type: Boolean })
   get controls() {
     return this.state.controls;
   }
@@ -533,7 +529,7 @@ export abstract class MediaProviderElement extends LitElement {
    * @defaultValue false
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/autoplay}
    */
-  @property({ type: Boolean, reflect: true })
+  @property({ type: Boolean })
   get autoplay() {
     return this.state.autoplay;
   }

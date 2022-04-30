@@ -96,6 +96,8 @@ export class ToggleButtonElement extends LitElement {
 
   /**
    * Whether the underlying button should be disabled (non-interactive).
+   *
+   * @defaultValue false
    */
   @property({ type: Boolean, reflect: true })
   disabled = false;

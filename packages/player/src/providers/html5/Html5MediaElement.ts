@@ -77,7 +77,7 @@ export class Html5MediaElement extends MediaProviderElement {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload}
    * @defaultValue 'metadata'
    */
-  @property({ reflect: true })
+  @property()
   preload: 'none' | 'metadata' | 'auto' = 'metadata';
 
   // -------------------------------------------------------------------------------------------

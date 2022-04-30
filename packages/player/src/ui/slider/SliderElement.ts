@@ -102,8 +102,10 @@ export class SliderElement extends LitElement {
 
   /**
    * The lowest slider value in the range of permitted values.
+   *
+   * @defaultValue 0
    */
-  @property({ reflect: true, type: Number })
+  @property({ type: Number })
   get min() {
     return get(this.store.min);
   }
@@ -114,8 +116,10 @@ export class SliderElement extends LitElement {
 
   /**
    * The greatest slider value in the range of permitted values.
+   *
+   * @defaultValue 100
    */
-  @property({ reflect: true, type: Number })
+  @property({ type: Number })
   get max() {
     return get(this.store.max);
   }
@@ -126,20 +130,26 @@ export class SliderElement extends LitElement {
 
   /**
    * Whether the slider should be disabled (non-interactive).
+   *
+   * @defaultValue false
    */
   @property({ reflect: true, type: Boolean })
   disabled = false;
 
   /**
    * The current slider value.
+   *
+   * @defaultValue 50
    */
-  @property({ reflect: true, type: Number })
+  @property({ type: Number })
   value = 50;
 
   /**
    * A number that specifies the granularity that the slider value must adhere to.
+   *
+   * @defaultValue 1
    */
-  @property({ type: Number, reflect: true })
+  @property({ type: Number })
   get step() {
     return this._step;
   }
