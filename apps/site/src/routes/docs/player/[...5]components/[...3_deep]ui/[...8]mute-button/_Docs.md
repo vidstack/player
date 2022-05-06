@@ -26,34 +26,5 @@ vds-media:not([muted]) .media-unmute {
 
 Here's a styled `<vds-mute-button>` example containing a mute and unmute icon:
 
-<slot name="styling" />
-
-```css copy
-vds-mute-button {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  cursor: pointer;
-  color: white;
-}
-
-vds-mute-button > svg {
-  /** `absolute` so icons are placed on top of each other. */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-  transition: opacity ease 150ms;
-}
-
-vds-media[muted] .media-mute-icon {
-  opacity: 0;
-}
-
-vds-media:not([muted]) .media-unmute-icon {
-  opacity: 0;
-}
-```
+:::stackblitz_example name="styling"
+:::

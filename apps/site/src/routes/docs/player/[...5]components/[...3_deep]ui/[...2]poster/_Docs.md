@@ -63,56 +63,8 @@ vds-poster[img-error] {
 
 ## Styling
 
-In the following code snippets, we put together a poster with a big play button on top, once
-playback starts they'll both fade out.
+In the following example, we put together a poster with a big play button on top, once
+playback starts they'll both fade out:
 
-<slot name="styling" />
-
-```css copy
-vds-poster {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-/* Hide poster if it fails to load. */
-/* It'd be better if we replaced it with something else. */
-vds-poster[img-error] {
-  display: none;
-}
-
-.big-play-button-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 300ms ease-in;
-  z-index: 1; /** Above `vds-poster`. */
-}
-
-.big-play-button-container .play-icon {
-  color: white;
-  width: 56px;
-  height: 56px;
-}
-
-/* Show when media is ready. */
-vds-media[can-play] .big-play-button-container {
-  opacity: 1;
-}
-
-/* Hide when playback starts. */
-vds-media[started] vds-poster,
-vds-media[started] .big-play-button-container {
-  opacity: 0;
-  pointer-events: none;
-}
-```
+:::stackblitz_example name="styling"
+:::

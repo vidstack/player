@@ -22,11 +22,4 @@ import Docs from './_Docs.md';
 </vds-volume-slider>
 ```
 
-```html copyHighlight|slot=styling{3}
-<vds-slider>
-  <!-- ... -->
-  <vds-slider-value-text type="pointer"></vds-slider-value-text>
-</vds-slider>
-```
-
 </Docs>

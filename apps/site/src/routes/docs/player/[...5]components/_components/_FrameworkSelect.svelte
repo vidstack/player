@@ -16,15 +16,19 @@
 
     const url = new URL(location.href);
     const path = url.pathname;
+    const hash = url.hash;
 
     if ($framework === 'react') {
-      goto(
+      const href = `${
         $isApiPath
           ? `${path.replace(/\/api\/?/, '')}/react/api`
-          : `${path.replace(/\/$/, '')}/react`,
-      );
+          : `${path.replace(/\/$/, '')}/react`
+      }${hash}`;
+
+      goto(href);
     } else {
-      goto(path.replace(/\/react/, ''));
+      const href = `${path.replace(/\/react/, '')}${hash}`;
+      goto(href);
     }
   }
 

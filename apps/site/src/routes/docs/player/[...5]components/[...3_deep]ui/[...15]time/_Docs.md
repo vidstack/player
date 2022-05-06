@@ -18,6 +18,9 @@ The `type` <AttrWord /> can be set to:
   due to `byte-range:ignore` requests.
 - `duration`: The total length of media.
 
+:::stackblitz_example name="usage"
+:::
+
 ## Remaining Time
 
 You can use the `remainder` <AttrWord /> to display the duration minus the selected `type`.

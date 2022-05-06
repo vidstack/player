@@ -116,23 +116,5 @@ seeking -> toggling fullscreen -> toggling playback.
 Notice pausing on mouseleave will occur regardless of the priority set because it doesn't conflict with other
 gesture event types (i.e., they generally don't occur at the same time).
 
-<slot name="styling" />
-
-```css
-vds-gesture {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.seek-gesture {
-  width: 25%;
-}
-
-.seek-gesture.right {
-  left: unset;
-  right: 0;
-}
-```
+:::stackblitz_example name="styling"
+:::

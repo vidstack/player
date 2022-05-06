@@ -39,7 +39,7 @@
     "clean": "rimraf dist dist-node dist-prod types",
     "dev": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
     "watch": "pnpm dev",
-    "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3090",
+    "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3100",
     "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",

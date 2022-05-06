@@ -28,6 +28,9 @@ You can perform actions on a provider as media enters or exits the browser's
   the `viewport-enter-delay` <AttrWord />. Setting a delay helps avoid jittery state changes as
   the user scrolls (i.e., rapidly playing/pausing media).
 
+:::stackblitz_example name="viewport-visibility"
+:::
+
 ### Viewport Change Event
 
 You can listen to the `vds-media-visibility-change` event to be notified of any changes
@@ -56,6 +59,9 @@ provider as page visibility changes like so:
 - The `page-change-type` <AttrWord /> refers to the type of `hidden` state that will trigger the entry
   and exit actions. It can be set to `state` or `visibility`. We'll explain the difference in the
   next section.
+
+:::stackblitz_example name="page-visibility"
+:::
 
 ### Page State vs. Visibility
 

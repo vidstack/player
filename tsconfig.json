@@ -18,7 +18,7 @@
     "strict": true,
     "target": "es2020"
   },
-  "include": ["**/*.ts", "**/*.js", "**/*.cjs"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.cjs"],
   "exclude": [
     "node_modules",
     "dist",

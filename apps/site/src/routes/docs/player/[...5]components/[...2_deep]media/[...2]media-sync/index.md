@@ -27,7 +27,7 @@ import Docs from './_Docs.md';
 </vds-media>
 ```
 
-```html copy|slot=sync-playback
+```html copy|slot=single-playback
 <vds-media-sync single-playback />
 ```
 

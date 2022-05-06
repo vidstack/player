@@ -44,7 +44,7 @@ import Hls from 'hls.js';
 const hlsjs = providerRef.hlsEngine;
 ```
 
-```jsx copyHighlight|slot=hls-engine-events{13-14}
+```jsx copyHighlight|slot=hls-engine-events{12}
 function Example() {
   function onHlsInstance(event) {
     const hlsjs = event.detail;

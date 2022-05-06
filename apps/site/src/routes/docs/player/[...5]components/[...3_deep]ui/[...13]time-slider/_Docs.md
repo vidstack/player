@@ -20,10 +20,7 @@ The slider's range is assumed to be in seconds between `0` (min) and length of m
 
 ## Styling
 
-The `<vds-time-slider>` component is simply a slider with some additional logic for binding to the
-current playback time. We recommend reading through the [`<vds-slider>`](../slider/index.md),
-[`<vds-slider-value-text>`](../slider-value-text/index.md), and [`<vds-slider-video>`](../slider-video/index.md)
-docs to get an idea of how to style it to your liking.
+In the following example, we add a conventional time slider inside some media:
 
-After copying any examples, remember to replace `<vds-slider>` with
-`<vds-time-slider>` in markup, and `vds-slider:ignore` with `vds-time-slider:ignore` in CSS.
+:::stackblitz_example name="styling"
+:::

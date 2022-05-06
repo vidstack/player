@@ -27,45 +27,8 @@ Or, with the `<vds-volume-slider>` to display the current volume:
 
 ## Styling
 
-In the following code snippets, we extend the work we started in the [slider example](../slider/index.md#example),
-by adding a small tooltip that displays the current slider value at the position the user is
-hovering over.
+In the following example, we add a small tooltip that displays the current time the user is
+hovering over above the slider:
 
-Start by adding the following highlighted markup inside the slider:
-
-<slot name="styling" />
-
-Next, we extend the CSS in the slider example with the following:
-
-```css copy
-vds-slider-value-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  /* slightly above the thumb. */
-  top: -32px;
-  left: 0;
-  /* fixed width so value updates don't re-size. */
-  width: calc(var(--thumb-width) + 8px);
-  opacity: 0;
-  transition: opacity ease 150ms;
-  /* re-position to center. */
-  transform: translateX(-50%);
-  will-change: left;
-  color: #000;
-  border-radius: 2px;
-  background-color: #fff;
-}
-
-/* position text at pointer when device pointing in slider. */
-[pointing] vds-slider-value-text {
-  opacity: 1;
-  left: var(--vds-pointer-percent);
-}
-```
-
-Done! Just like that we added a hover tooltip to the slider. This example remains the same whether
-you decide to show the preview time inside a time slider (`format="time"`), or percentage of
-volume inside a volume slider (`format="percentage"`). It's a flexible component designed to
-fit multiple use cases.
+:::stackblitz_example name="styling"
+:::

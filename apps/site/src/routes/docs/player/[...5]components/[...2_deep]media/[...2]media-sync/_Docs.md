@@ -14,13 +14,16 @@ be managed together:
 
 <slot name="usage-multiple" />
 
-### Sync Playback
+### Single Playback
 
 The `single-playback` <AttrWord /> will ensure that only one media provider is
 playing at any given moment. All providers that are registered with `<vds-media-sync>` and playing
 will be paused if a new provider begins to play:
 
-<slot name="sync-playback" />
+<slot name="single-playback" />
+
+:::stackblitz_example name="single-playback"
+:::
 
 ### Sync Volume
 
@@ -37,3 +40,6 @@ You can save the volume level to local storage, so it persists across page refre
 Finally, a `vds-media-volume-sync` event will be fired as the volume is synchronized.
 
 <slot name="volume-sync-event" />
+
+:::stackblitz_example name="sync-volume"
+:::

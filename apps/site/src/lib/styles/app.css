@@ -22,11 +22,17 @@
   --color-gray-body: rgb(255, 255, 255);
 
   --color-focus: rgb(99 102 241 / 0.75);
+
+  /* stackblitz */
+  --sb-width: 100%;
+  --sb-height: 300px;
+  --sb-bg-color: hsl(220 10% 14%);
 }
 
 @media screen and (min-width: 992px) {
   :root {
     scroll-padding-top: 8rem;
+    --sb-height: 500px;
   }
 }
 

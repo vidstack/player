@@ -84,7 +84,7 @@
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
     "minify:cdn": "node ../../.scripts/minify.js --entry=dist-cdn/**/*.js --outdir=dist-cdn",
-    "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3091",
+    "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3101",
     "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
     "test": "vitest --run",
     "test:watch": "vitest --watch"

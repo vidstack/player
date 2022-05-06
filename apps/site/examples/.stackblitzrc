@@ -1,0 +1,4 @@
+{
+  "installDependencies": false,
+  "startCommand": "node .scripts/stackblitz.js && npm i && npm run dev"
+}

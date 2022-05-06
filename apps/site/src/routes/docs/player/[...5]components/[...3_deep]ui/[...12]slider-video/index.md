@@ -17,11 +17,4 @@ sliderVideo.addEventListener('canplay', (event) => {
 });
 ```
 
-```html copyHighlight|slot=styling{3}
-<vds-time-slider>
-  <!-- ... -->
-  <vds-slider-video src="https://media-files.vidstack.io/240p.mp4"></vds-slider-video>
-</vds-time-slider>
-```
-
 </Docs>

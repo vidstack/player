@@ -20,7 +20,7 @@ for (const component of components) {
     .filter((slot) => slot !== 'default');
 
   const dtsContent = `
-// [@vidstack/eliza] THIS FILE IS AUTO GENERATED - SEE \`eliza.config.ts\`
+// [@vidstack/player] THIS FILE IS AUTO GENERATED - SEE \`.scripts/build-svelte-types.js\`
 
 import { SvelteComponentTyped } from "svelte";
 import { ${className} } from '../../../';

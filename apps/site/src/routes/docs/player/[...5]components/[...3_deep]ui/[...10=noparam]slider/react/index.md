@@ -10,16 +10,6 @@ import Docs from '../_Docs.md';
 </Slider>
 ```
 
-```jsx copy|slot=example
-<Slider>
-  <div className="slider-track" />
-  <div className="slider-track fill" />
-  <div className="slider-thumb-container">
-    <div className="slider-thumb" />
-  </div>
-</Slider>
-```
-
 ```jsx|slot=tw-variants
 <div className="pointing:bg-indigo-300 dragging:bg-indigo-500" />
 ```

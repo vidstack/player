@@ -117,6 +117,10 @@
   margin-top: 0.5rem;
 }
 
+.kit-docs ul + .stackblitz {
+  margin-top: 2rem;
+}
+
 .kit-docs h1 + .steps,
 .kit-docs h2 + .steps,
 .kit-docs h3 + .steps {

@@ -56,6 +56,7 @@ module.exports = {
         project: [
           'tsconfig.json',
           'apps/*/tsconfig.json',
+          'apps/site/examples/tsconfig.json',
           'packages/*/tsconfig.json',
           'packages/*/tests/tsconfig.json',
         ],

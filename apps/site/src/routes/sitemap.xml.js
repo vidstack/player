@@ -1,23 +1,22 @@
+import { slugifyFilePath } from '@svelteness/kit-docs/node';
 import path from 'path';
 
 export async function get() {
   const filePaths = Object.keys(await import.meta.glob('./**/*.{svelte,md}'));
 
   const urls = filePaths
+    .map((filePath) => {
+      const relativePath = `src/routes/${filePath.replace('./', '')}`;
+      return slugifyFilePath(relativePath);
+    })
     .filter((filePath) => {
       const fileName = path.basename(filePath);
       return !fileName.startsWith('_');
     })
-    .map((filePath) =>
-      filePath
-        .slice(2)
-        .replace(path.extname(filePath), '')
-        .replace(/index$/, ''),
-    )
     .map(
-      (url) => `
+      (path) => `
 			<url>
-				<loc>https://vidstack.io/${url}</loc>
+				<loc>https://vidstack.io${path}</loc>
 				<changefreq>daily</changefreq>
 				<priority>0.7</priority>
 			</url>

@@ -36,46 +36,11 @@ vds-media[autoplay-error] .media-controls {
 ## Styling
 
 In the following example, we create a conventional three-tier (top/middle/bottom) set of controls. You
-could put place social icons at the top, play button in the middle, and scrubber at the bottom. It's
+could place social icons at the top, play button in the middle, and scrubber at the bottom. It's
 completely up to you!
 
 We're using the `user-idle:ignore` and `can-play:ignore` attributes in this example to
 hide the controls if media is not ready for playback, or the user is idle.
 
-<slot name="styling" />
-
-```css copy
-.media-controls-container {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /* prevent blocking lower elements (e.g., gestures). */
-  pointer-events: none;
-  /** place above poster (optional). */
-  z-index: 1;
-}
-
-.media-controls {
-  display: flex;
-  width: 100%;
-  min-height: 48px;
-  opacity: 1;
-  transition: opacity 200ms ease;
-  /** prevent clicks triggering lower elements. */
-  pointer-events: auto;
-}
-
-/* Avoid double controls on iOS when in fullscreen. */
-vds-media[hide-ui] .media-controls,
-/* Hide controls if media is not ready for playback, or user is idle. */
-vds-media[user-idle] .media-controls,
-vds-media:not([can-play]) .media-controls {
-  opacity: 0;
-  visibility: hidden;
-}
-```
+:::stackblitz_example name="styling"
+:::

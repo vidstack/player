@@ -28,24 +28,4 @@ import Docs from './_Docs.md';
 <vds-gesture type="click" repeat="1" priority="0" action="seek:30" />
 ```
 
-```html copy|slot=styling
-<vds-gesture type="mouseleave" action="pause"></vds-gesture>
-<vds-gesture type="click" action="toggle:paused"></vds-gesture>
-<vds-gesture type="click" repeat="1" priority="1" action="toggle:fullscreen"></vds-gesture>
-<vds-gesture
-  class="seek-gesture left"
-  type="click"
-  repeat="1"
-  priority="0"
-  action="seek:-30"
-></vds-gesture>
-<vds-gesture
-  class="seek-gesture right"
-  type="click"
-  repeat="1"
-  priority="0"
-  action="seek:30"
-></vds-gesture>
-```
-
 </Docs>

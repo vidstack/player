@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
-import { apiDocsPlugin } from './apiDocsPlugin.js';
+import { apiDocsPlugin } from './apiDocs.js';
 
 const __cwd = process.cwd();
 

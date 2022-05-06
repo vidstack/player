@@ -10,15 +10,16 @@ or avoiding layout shifts while media loads over the network.
 
 <slot name="usage" />
 
+:::stackblitz_example name="usage"
+:::
+
 ## Styling
 
 For the media to be rendered correctly, you need to ensure the media elements fill their
 container like so:
 
 ```css copy
-vds-media,
-vds-video,
-vds-hls {
+vds-media {
   width: 100%;
 }
 ```
@@ -30,9 +31,7 @@ CSS property if [browser support](https://caniuse.com/mdn-css_properties_aspect-
 suitable to your application.
 
 ```css copy
-vds-media,
-vds-video,
-vds-hls {
+vds-media {
   width: 100%;
 }
 

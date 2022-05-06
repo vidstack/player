@@ -50,49 +50,8 @@ listen to if needed.
 
 ## Styling
 
-In the following code snippets, we extend the work we started in the [slider example](../slider/index.md#example),
-by displaying the preview video at the position the user is hovering over.
+In the following example, we show a preview time and video at the point the user is hovering
+over on the slider:
 
-<slot name="styling" />
-
-```css copy
-vds-slider-video {
-  --width: 156px;
-  --width-half: calc(var(--width) / 2);
-  --top: calc(-1 * var(--width-half) - 24px);
-  --opacity-duration: 200ms;
-
-  /* clamp video to left and right of slider. */
-  --left-clamp: max(var(--width-half), var(--vds-pointer-percent));
-  --right-clamp: calc(100% - var(--width-half));
-  --left: min(var(--left-clamp), var(--right-clamp));
-
-  position: absolute;
-  top: var(--top);
-  left: var(--left);
-  width: var(--width);
-  opacity: 0;
-  transition: opacity ease-out var(--opacity-duration);
-  /* re-position to center. */
-  transform: translateX(-50%);
-  will-change: left;
-  border-radius: 2px;
-  background-color: #000;
-}
-
-/* show video while device pointer is inside slider. */
-[pointing] vds-slider-video {
-  opacity: 1;
-  transition: opacity ease-in var(--opacity-duration);
-}
-
-/* Temporarily hide video while loading. */
-vds-slider-video:not([video-can-play]) {
-  opacity: 0 !important;
-}
-
-/* Hide video if it fails to load. */
-vds-slider-video[video-error] {
-  display: none;
-}
-```
+:::stackblitz_example name="styling"
+:::

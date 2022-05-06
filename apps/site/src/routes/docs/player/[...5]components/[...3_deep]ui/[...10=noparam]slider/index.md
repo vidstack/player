@@ -10,16 +10,6 @@ import Docs from './_Docs.md';
 </vds-slider>
 ```
 
-```html copy|slot=example
-<vds-slider>
-  <div class="slider-track"></div>
-  <div class="slider-track fill"></div>
-  <div class="slider-thumb-container">
-    <div class="slider-thumb"></div>
-  </div>
-</vds-slider>
-```
-
 ```html|slot=tw-variants
 <div class="pointing:bg-indigo-300 dragging:bg-indigo-500" />
 ```

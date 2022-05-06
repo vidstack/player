@@ -9,6 +9,9 @@ native [`<video>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/vid
 
 <slot name="usage" />
 
+:::stackblitz_example name="usage"
+:::
+
 ### Multiple Sources
 
 The list of [supported media formats](https://developer.mozilla.org/en-US/docs/Web/Media/Formats)
@@ -17,3 +20,6 @@ that all the relevant browsers support, or provide multiple video sources in eno
 formats that all the browsers you need to support are covered.
 
 <slot name="multiple-sources" />
+
+:::stackblitz_example name="multiple-sources"
+:::

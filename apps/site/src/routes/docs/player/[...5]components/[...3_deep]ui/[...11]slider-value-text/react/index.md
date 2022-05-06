@@ -22,11 +22,4 @@ import Docs from '../_Docs.md';
 </VolumeSlider>
 ```
 
-```jsx copyHighlight|slot=styling{3}
-<Slider>
-  {/* ... */}
-  <SliderValueText type="pointer" />
-</Slider>
-```
-
 </Docs>

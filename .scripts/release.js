@@ -12,9 +12,7 @@ import path from 'path';
 import prompt from 'enquirer';
 import semver from 'semver';
 
-// @ts-expect-error - .
 const require = createRequire(import.meta.url);
-// @ts-expect-error - .
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const args = minimist(process.argv.slice(2));
@@ -24,9 +22,10 @@ const currentVersion = require('../package.json').version;
 
 if (isDryRun) console.log(kleur.cyan('\n☂️  Running in dry mode...\n'));
 
-const packages = fs
-  .readdirSync(path.resolve(__dirname, '../packages'))
-  .filter((p) => !p.startsWith('.'));
+const examplesDir = fs.readdirSync(path.resolve(__dirname, '../apps/site/examples'));
+const packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages'));
+
+const packages = [...examplesDir, ...packagesDir].filter((p) => !p.startsWith('.'));
 
 const preId =
   args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)[0]);

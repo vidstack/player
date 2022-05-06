@@ -62,13 +62,13 @@
       "inputs": ["dist-cdn/**"],
       "outputs": ["dist-cdn/**"]
     },
+    "dev": {
+      "cache": false
+    },
     "test": {
       "inputs": ["src/**", "tests/**", "vite.config.ts"]
     },
     "clean": {
-      "cache": false
-    },
-    "dev": {
       "cache": false
     },
     "lint": {

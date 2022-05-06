@@ -26,35 +26,4 @@ import Docs from '../_Docs.md';
 <Gesture type="click" repeat="1" priority="0" action="seek:30" />
 ```
 
-```jsx copy|slot=styling
-<Gesture
-	type="mouseleave"
-	action="pause"
-/>
-<Gesture
-	type="click"
-	action="toggle:paused"
-/>
-<Gesture
-	type="click"
-	repeat="1"
-	priority="1"
-	action="toggle:fullscreen"
-/>
-<Gesture
-	className="seek-gesture left"
-	type="click"
-	repeat="1"
-	priority="0"
-	action="seek:-30"
-/>
-<Gesture
-	className="seek-gesture right"
-	type="click"
-	repeat="1"
-	priority="0"
-	action="seek:30"
-/>
-```
-
 </Docs>

@@ -20,6 +20,9 @@ otherwise, we fallback to using [`hls.js`](https://github.com/video-dev/hls.js).
 
 <slot name="usage" />
 
+:::stackblitz_example name="usage"
+:::
+
 ## Loading `hls.js`
 
 The HLS provider will default to loading the light version of `hls.js` from [JSDelivr](https://jsdelivr.com). We load

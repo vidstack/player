@@ -64,34 +64,5 @@ vds-media[hide-ui] .media-controls {
 
 Here's a styled `<vds-fullscreen-button>` example containing enter and exit fullscreen icons:
 
-<slot name="styling" />
-
-```css copy
-vds-fullscreen-button {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  cursor: pointer;
-  color: white;
-}
-
-vds-fullscreen-button > svg {
-  /** `absolute` so icons are placed on top of each other. */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-  transition: opacity ease 150ms;
-}
-
-vds-media[fullscreen] .media-enter-fs-icon {
-  opacity: 0;
-}
-
-vds-media:not([fullscreen]) .media-exit-fs-icon {
-  opacity: 0;
-}
-```
+:::stackblitz_example name="styling"
+:::
