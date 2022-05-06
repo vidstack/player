@@ -650,7 +650,7 @@ export abstract class MediaProviderElement extends LitElement {
 
   // Override to ensure media events reach the media controller.
   override dispatchEvent(event: Event): boolean {
-    if (this.isConnected && !this._controller && event.type.startsWith('vds-')) {
+    if (!this._controller && event.type.startsWith('vds-') && event.type !== 'vds-destroy') {
       this.controllerQueue.queue(event.type, () => {
         super.dispatchEvent(event);
       });
