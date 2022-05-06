@@ -28,7 +28,7 @@
   $: initialPath = `/${path}/${name}_${ext.replace(/^\./, '')}?${theme}`;
   $: markupFile = `/src/${path}/${name}${ext}`;
   $: cssFile = css || path.includes('/components/ui') ? `/src/${path}/${name}.css` : null;
-  $: files = [markupFile, cssFile].filter(Boolean);
+  $: files = [cssFile, markupFile].filter(Boolean);
   $: src = dev ? `http://localhost:4001${initialPath}` : null;
 </script>
 

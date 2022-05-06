@@ -28,7 +28,7 @@
   $: explorer = `hideExplorer=${Number(hideExplorer)}`;
   $: load = `ctl=${Number(clickToLoad)}`;
   $: theme = `theme=${!$isDarkColorScheme ? 'light' : 'dark'}`;
-  $: files = (isString(file) ? [file] : file).map((file) => `file=${encodeURIComponent(file)}`);
+  $: files = (isString(file) ? [file] : file).map(encodeURIComponent).join(',');
   $: initialpath = `initialpath=/${encodeURIComponent(initialPath.replace(/^\//, ''))}`;
   $: params = `embed=1&${initialpath}&${devtools}&${devtoolsheight}&${navigation}&${explorer}&${load}&${theme}&${files}&view=${view}`;
 
