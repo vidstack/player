@@ -1,10 +1,7 @@
 ---
+title: Svelte
 description: Introduction to using Vidstack Player with Svelte.
 ---
-
-# Svelte
-
-In this section, you'll find a simple overview of how to use the library with Svelte.
 
 ## Importing Components
 
@@ -29,9 +26,6 @@ register the custom element and any dependencies so you can start using it.
   </div>
 </vds-media>
 ```
-
-You can read more about [importing elements](../getting-started/foundation.md#elements) in the
-'Foundation' walk-through.
 
 ## Element References
 

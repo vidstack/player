@@ -7,7 +7,7 @@ const __cwd = process.cwd();
 
 const releasesDir = resolve(
   __cwd,
-  'src/routes/docs/player/[...1]getting-started/[...5_deep]releases',
+  'src/routes/docs/player/[...1]getting-started/[...7_deep]releases',
 );
 
 const files = globbySync('*.md', { cwd: releasesDir });

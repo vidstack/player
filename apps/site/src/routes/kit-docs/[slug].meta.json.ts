@@ -1,8 +1,10 @@
 import {
   createMetaRequestHandler,
   type FileResolver,
+  getFrontmatter,
   type MarkdownHeader,
   type MetaTransform,
+  resolveSlug,
 } from '@svelteness/kit-docs/node';
 import type { ComponentMeta } from '@vidstack/eliza';
 import { kebabToTitleCase, lowercaseFirstLetter } from '@vidstack/foundation';
@@ -11,10 +13,10 @@ import { basename, resolve } from 'path';
 
 const __cwd = process.cwd();
 
+const quickstartRE = /\/quickstart/;
 const componentsDirRE = /\/components\//;
 const noDocsRE = /(youtube|vimeo)/;
 const apiRE = /\/api\/?$/;
-const quickstartRE = /getting-started\/quickstart/;
 const noImportsRE = /(youtube|vimeo|controls|buffering-indicator)/;
 
 const componentTitles = {
@@ -32,6 +34,11 @@ try {
   // no-op
 }
 
+const resolveQuickstartDocs: FileResolver = (slug, { resolve }) => {
+  if (!quickstartRE.test(slug)) return;
+  return 'src/routes/docs/player/[...1]getting-started/[...1_deep]quickstart/__layout.md';
+};
+
 const resolveComponentDocs: FileResolver = (slug, { resolve }) => {
   if (!componentsDirRE.test(slug)) return;
 
@@ -45,6 +52,16 @@ const resolveComponentDocs: FileResolver = (slug, { resolve }) => {
     : slug;
 
   return resolve(docsSlug);
+};
+
+const transformQuickstartDocs: MetaTransform = ({ slug, meta }) => {
+  if (!quickstartRE.test(slug)) return;
+
+  const fileContent = readFileSync(resolveSlug(slug)).toString();
+  const frontmatter = getFrontmatter(fileContent);
+
+  meta.title = frontmatter.title;
+  meta.description = frontmatter.description;
 };
 
 const transformComponentsDocs: MetaTransform = ({ slug, meta }) => {
@@ -93,30 +110,9 @@ const transformApi: MetaTransform = ({ slug, meta }) => {
   meta.frontmatter.component_imports = !noImportsRE.test(slug);
 };
 
-export const transformQuickstart: MetaTransform = ({ slug, meta }) => {
-  if (!quickstartRE.test(slug) || meta.headers.length) return;
-
-  const headers = [
-    { title: 'Player Installation', slug: 'player-installation', level: 2, children: [] },
-    { title: 'Native Media Controls', slug: 'native-media-controls', level: 2, children: [] },
-    { title: 'Media Autoplay', slug: 'media-autoplay', level: 2, children: [] },
-    { title: 'Player Poster', slug: 'player-poster', level: 2, children: [] },
-    { title: 'Player Sizing', slug: 'player-sizing', level: 2, children: [] },
-    { title: 'Player Skins', slug: 'player-skins', level: 2, children: [] },
-    !/(quickstart\/(cdn|react))/.test(slug) && {
-      title: 'Importing Everything',
-      slug: 'importing-everything',
-      level: 2,
-      children: [],
-    },
-  ].filter(Boolean) as MarkdownHeader[];
-
-  meta.headers.push(...headers);
-};
-
 export const get = createMetaRequestHandler({
   exclude: ['/index.svelte'],
   extensions: ['.md', '.svelte'],
-  resolve: [resolveComponentDocs],
-  transform: [transformComponentsDocs, transformApi, transformQuickstart],
+  resolve: [resolveQuickstartDocs, resolveComponentDocs],
+  transform: [transformQuickstartDocs, transformComponentsDocs, transformApi],
 });

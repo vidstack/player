@@ -1,10 +1,7 @@
 ---
-description: Introduction to using the React distribution.
+title: React
+description: Introduction to using Vidstack Player with React.
 ---
-
-# React
-
-In this section, you'll find a simple overview of how to use the React version of the library.
 
 ## Importing Components
 
@@ -20,8 +17,7 @@ import { Media, Video, PlayButton } from '@vidstack/player/react';
 ```
 
 Keep in mind that you're implicitly registering the underlying custom element by importing a
-React component. You can read more about how [importing elements](../getting-started/foundation.md#elements)
-works in the 'Foundation' walk-through.
+React component.
 
 ## Element References
 

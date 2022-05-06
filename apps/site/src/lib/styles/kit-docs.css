@@ -35,7 +35,7 @@
 
   --kd-content-max-width: 1440px;
 
-  --kd-article-max-width: 85ch;
+  --kd-article-max-width: 88ch;
 }
 
 @media screen and (min-width: 768px) {

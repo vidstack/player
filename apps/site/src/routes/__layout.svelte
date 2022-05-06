@@ -38,17 +38,17 @@
   } from '@svelteness/kit-docs';
   import { Algolia } from '@svelteness/kit-docs/client/algolia';
   import SocialLink from '$lib/components/social/SocialLink.svelte';
-  import { framework, frameworkSpecificSidebar } from '$lib/stores/framework';
+  import { lib, libSpecificSidebar } from '$lib/stores/lib';
 
   import socialCardLarge from '$lib/img/brand/social-card-large.jpg';
   import vidstackLogo from '$lib/img/brand/vidstack-logo.svg?raw';
   import vidstackSymbol from '$lib/img/brand/vidstack-symbol.svg?raw';
-  import FrameworkSelect from './docs/player/[...5]components/_components/_FrameworkSelect.svelte';
+  import LibSelect from '$lib/components/LibSelect.svelte';
 
   export let meta: MarkdownMeta | null = null;
   export let sidebar: ResolvedSidebarConfig | null = null;
 
-  framework.set(/\/react\/?/.test($page.url.pathname) ? 'react' : 'html');
+  lib.set(/\/react\/?/.test($page.url.pathname) ? 'react' : 'html');
 
   const navbar: NavbarConfig = {
     links: [{ title: 'Documentation', slug: '/docs/player', match: /\/docs\/player/ }],
@@ -73,8 +73,8 @@
 
   const _sidebar = writable<ResolvedSidebarConfig | null>(null);
   $: $_sidebar = sidebar;
-  const frameworkSidebar = frameworkSpecificSidebar(_sidebar);
-  const { activeCategory } = createSidebarContext(frameworkSidebar);
+  const libSidebar = libSpecificSidebar(_sidebar);
+  const { activeCategory } = createSidebarContext(libSidebar);
 
   onMount(() => {
     // Strange fix for strange issue -_O_- (`cmd + k` opening two docsearch containers).
@@ -159,7 +159,7 @@
   )}
 >
   <KitDocs {meta}>
-    <KitDocsLayout {navigation} {navbar} sidebar={$frameworkSidebar} search>
+    <KitDocsLayout {navigation} {navbar} sidebar={$libSidebar} search>
       <Algolia
         apiKey="03b81ed3b7849b33599967cec76734fe"
         appId="JV3QY1UI79"
@@ -185,7 +185,7 @@
 
         {#if isDocsPath}
           <div class="992:ml-3 ml-2 -mt-0.5">
-            <FrameworkSelect />
+            <LibSelect />
           </div>
         {/if}
       </div>

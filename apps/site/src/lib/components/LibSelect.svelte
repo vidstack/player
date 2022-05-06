@@ -1,16 +1,17 @@
 <script lang="ts">
   import HTMLIcon from '~icons/ri/html5-fill';
   import ReactIcon from '~icons/ri/reactjs-fill';
+
   import { Select } from '@svelteness/kit-docs';
 
-  import { framework, type FrameworkType } from '$lib/stores/framework';
+  import { lib, type LibType } from '$lib/stores/lib';
   import { isApiPath, isComponentsPath, isReactPath } from '$lib/stores/path';
   import { goto } from '$app/navigation';
 
   let value = $isReactPath ? 'React' : 'HTML';
 
   function onChange() {
-    $framework = value.toLowerCase() as FrameworkType;
+    $lib = value.toLowerCase() as LibType;
 
     if (!$isComponentsPath) return;
 
@@ -18,7 +19,7 @@
     const path = url.pathname;
     const hash = url.hash;
 
-    if ($framework === 'react') {
+    if ($lib === 'react') {
       const href = `${
         $isApiPath
           ? `${path.replace(/\/api\/?/, '')}/react/api`
@@ -32,10 +33,10 @@
     }
   }
 
-  $: value = $framework === 'html' ? 'HTML' : 'React';
+  $: value = $lib === 'html' ? 'HTML' : 'React';
 </script>
 
-<Select title="Current Framework" bind:value on:change={onChange} raised={false}>
+<Select title="Current JS Library" bind:value on:change={onChange} raised={false}>
   <div class="mr-1" aria-hidden="true" slot="before-title">
     {#if value === 'React'}
       <ReactIcon width="16" height="16" />

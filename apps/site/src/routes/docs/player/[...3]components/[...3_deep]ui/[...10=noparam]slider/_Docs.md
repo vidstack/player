@@ -61,7 +61,7 @@ and [`<vds-slider-video>`](../slider-video/index.md) docs when you're ready.
 
 ## Tailwind
 
-The following section is for Tailwind CSS users who have installed our [Tailwind Plugin](../../../libraries/tailwind.md).
+The following section is for Tailwind CSS users who have installed our [Tailwind Plugin](/docs/player/getting-started/libraries/tailwind).
 
 ### Variants
 

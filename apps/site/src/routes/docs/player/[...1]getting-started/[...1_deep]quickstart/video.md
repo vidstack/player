@@ -1,7 +1,6 @@
 ---
 title: Video Player Installation
 description: Instructions to get your video player installed and on-screen.
-sidebar_title: Quickstart
 ---
 
 !!!step title="Install NPM Package"|(slot=description)=Install `@vidstack/player` and dependencies via NPM.

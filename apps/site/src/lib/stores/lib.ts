@@ -6,16 +6,16 @@ import ExperimentalIcon from '~icons/ri/test-tube-fill';
 
 import { EXPERIMENTAL_TAG_NAMES } from './element';
 
-export type FrameworkType = 'html' | 'react';
+export type LibType = 'html' | 'react';
 
-export const framework = writable<FrameworkType>('html');
+export const lib = writable<LibType>('html');
 
 const stripFrameworkRE = /\/react\/?/;
 const componentsRe = /\/components\//;
 
-export const frameworkSpecificSidebar = (sidebar: Readable<ResolvedSidebarConfig>) =>
-  derived([framework, sidebar], ([$framework, $sidebar]) => {
-    const isReact = $framework === 'react';
+export const libSpecificSidebar = (sidebar: Readable<ResolvedSidebarConfig>) =>
+  derived([lib, sidebar], ([$lib, $sidebar]) => {
+    const isReact = $lib === 'react';
 
     const frameworkSidebar = { links: {}, ...($sidebar ?? {}) };
 

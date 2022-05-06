@@ -1,10 +1,7 @@
 ---
-description: Register player plugin to add `media-*` variants to Tailwind CSS.
+title: Tailwind
+description: Introduction to using Vidstack Player with Tailwind.
 ---
-
-# Tailwind
-
-In this section you'll learn how to install our Tailwind CSS plugin and how to use it.
 
 ## Why?
 

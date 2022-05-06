@@ -11,8 +11,8 @@
   $: categorySegment = $activeCategory.toLowerCase();
   $: base = `/docs/player/components/${categorySegment}`;
   $: componentSegment = $elementTagName.replace('vds-', '');
-  $: frameworkSegment = $isReactPath ? '/react' : '';
-  $: apiUrl = `${base}/${componentSegment}${frameworkSegment}/api${hash ? `#${hash}` : ''}`;
+  $: libSegment = $isReactPath ? '/react' : '';
+  $: apiUrl = `${base}/${componentSegment}${libSegment}/api${hash ? `#${hash}` : ''}`;
 </script>
 
 <a href={apiUrl}><slot /></a>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { dev } from '$app/env';
   import { page } from '$app/stores';
-  import { framework } from '$lib/stores/framework';
+  import { lib } from '$lib/stores/lib';
 
   import { isDarkColorScheme } from '@svelteness/kit-docs';
   import { uppercaseFirstLetter } from '@vidstack/foundation';
@@ -9,10 +9,11 @@
   import Stackblitz from './Stackblitz.svelte';
 
   export let name: string;
+  export let css = false;
   export let title = `${uppercaseFirstLetter(name.replace(/-/g, ' '))} example`;
 
-  function getExt(framework) {
-    switch (framework) {
+  function getExt(lib) {
+    switch (lib) {
       case 'html':
         return '.html';
       case 'react':
@@ -21,13 +22,13 @@
   }
 
   $: project = `github/vidstack/vidstack/tree/main/apps/site/examples`;
-  $: ext = getExt($framework);
+  $: ext = getExt($lib);
   $: path = $page.url.pathname.replace(/^\/?docs\//, '').replace('/react', '');
   $: theme = `theme=${!$isDarkColorScheme ? 'light' : 'dark'}`;
   $: initialPath = `/${path}/${name}_${ext.replace(/^\./, '')}?${theme}`;
-  $: markupFile = `/${path}/${name}${ext}`;
-  $: cssFile = `/${path}/${name}.css`;
-  $: files = [markupFile, cssFile];
+  $: markupFile = `/src/${path}/${name}${ext}`;
+  $: cssFile = css || path.includes('/components/ui') ? `/src/${path}/${name}.css` : null;
+  $: files = [markupFile, cssFile].filter(Boolean);
   $: src = dev ? `http://localhost:4001${initialPath}` : null;
 </script>
 

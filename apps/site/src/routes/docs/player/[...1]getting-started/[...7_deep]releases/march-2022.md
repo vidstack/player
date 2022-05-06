@@ -1,5 +1,6 @@
 ---
 title: Release (March 2022)
+description: See what's new in the March 2022 release!
 ---
 
 The March 2022 release includes major changes and improvements to the player Beta as we progress

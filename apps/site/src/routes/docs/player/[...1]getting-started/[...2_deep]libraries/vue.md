@@ -1,10 +1,7 @@
 ---
+title: Vue
 description: Introduction to using Vidstack Player with Vue.
 ---
-
-# Vue
-
-In this section, you'll find a simple overview of how to use the library with Vue.
 
 ## Configuration
 
@@ -45,9 +42,6 @@ import '@vidstack/player/define/vds-play-button.js';
   </vds-media>
 </template>
 ```
-
-You can read more about [importing elements](../getting-started/foundation.md#elements) in the
-'Foundation' walk-through.
 
 ## Element References
 
