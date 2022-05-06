@@ -242,7 +242,7 @@ export class MediaVisibilityElement extends LitElement {
 
     if (newState === 'hidden') {
       this._triggerOnExit(this.exitPage);
-    } else if (this.enterViewport) {
+    } else if (this.enterPage) {
       this._pageTimeout = window.setTimeout(() => {
         this._triggerOnEnter(this.enterPage);
         this._pageTimeout = undefined;
