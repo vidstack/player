@@ -20,7 +20,7 @@
     }
   }
 
-  $: project = `github/vidstack/vidstack/tree/apps/site/examples`;
+  $: project = `github/vidstack/vidstack/tree/main/apps/site/examples`;
   $: ext = getExt($framework);
   $: path = $page.url.pathname.replace(/^\/?docs\//, '').replace('/react', '');
   $: theme = `theme=${!$isDarkColorScheme ? 'light' : 'dark'}`;
