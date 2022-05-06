@@ -22,10 +22,10 @@ const currentVersion = require('../package.json').version;
 
 if (isDryRun) console.log(kleur.cyan('\n☂️  Running in dry mode...\n'));
 
-const examplesDir = fs.readdirSync(path.resolve(__dirname, '../apps/site/examples'));
+const siteExamplesDir = path.resolve(__dirname, '../apps/site/examples');
 const packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages'));
 
-const packages = [...examplesDir, ...packagesDir].filter((p) => !p.startsWith('.'));
+const packages = packagesDir.filter((p) => !p.startsWith('.'));
 
 const preId =
   args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)[0]);
@@ -157,6 +157,8 @@ function updateVersions(version) {
   updatePackageVersion(path.resolve(__dirname, '..'), version);
   // 2. update all packages
   packages.forEach((p) => updatePackageVersion(getPkgRoot(p), version));
+  // 3. update site examples
+  updatePackageVersion(siteExamplesDir, version);
 }
 
 function updatePackageVersion(pkgRoot, version) {

@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/vidstack/vidstack/compare/v1.5.0...v1.5.2) (2022-05-06)
+
+### Bug Fixes
+
+- **player:** enter page actions on `<vds-media-visibility>` not applied ([43267ee](https://github.com/vidstack/vidstack/commit/43267eeca9fe44cd0e8dde5f7464f2b912b4b08c))
+- **player:** events before dom connection not reaching media controller ([8f1f39a](https://github.com/vidstack/vidstack/commit/8f1f39ad9cc4300edfb7885e8e916519348e6a08))
+
 # [1.5.0-next](https://github.com/vidstack/vidstack/compare/v1.4.0...v1.5.0) (2022-04-30)
 
 ### Bug Fixes
