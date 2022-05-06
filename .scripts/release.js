@@ -155,10 +155,14 @@ async function main() {
 function updateVersions(version) {
   // 1. update root package.json
   updatePackageVersion(path.resolve(__dirname, '..'), version);
+
   // 2. update all packages
   packages.forEach((p) => updatePackageVersion(getPkgRoot(p), version));
-  // 3. update site examples
-  updatePackageVersion(siteExamplesDir, version);
+
+  // 3. update site example
+  if (version !== 'workspace:*') {
+    updatePackageVersion(siteExamplesDir, version);
+  }
 }
 
 function updatePackageVersion(pkgRoot, version) {

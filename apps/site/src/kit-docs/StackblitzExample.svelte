@@ -42,5 +42,4 @@
   hideNavigation
   hideDevTools
   hideExplorer
-  clickToLoad
 />
