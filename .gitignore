@@ -7,7 +7,8 @@ tsconfig.tsbuildinfo
 turbo-graph*
 .wireit
 
-.svelte-kit
+.svelte-kit/
+.output/
 
 /scratchpad/
 /sandbox/

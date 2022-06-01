@@ -1,0 +1,9 @@
+/* Hide mute text when media _is_ muted. */
+vds-media[muted] .media-mute {
+  display: none;
+}
+
+/* Hide unmute text when media _is not_ muted. */
+vds-media:not([muted]) .media-unmute {
+  display: none;
+}

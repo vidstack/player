@@ -1,7 +1,5 @@
 # vidstack.io
 
-Vidstack uses [SvelteKit](https://kit.svelte.dev) for its site.
-
 1. Clone this repo:
 
 ```bash
@@ -23,7 +21,7 @@ pnpm i
 4. Start the dev server:
 
 ```bash
-pnpm dev
+pnpm dev --filter site
 ```
 
 5. Open site at [`http://localhost:3001`](http://localhost:3001).

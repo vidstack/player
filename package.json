@@ -55,8 +55,8 @@
     "lint-staged": "^12.1.5",
     "minimist": "^1.2.5",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.6.0",
-    "prettier-plugin-tailwindcss": "^0.1.7",
+    "prettier": "^2.6.2",
+    "prettier-plugin-tailwindcss": "^0.1.11",
     "rimraf": "^3.0.2",
     "semver": "^7.3.5",
     "svelte": "^3.46.4",
@@ -65,15 +65,15 @@
   },
   "lint-staged": {
     "*.{js,ts,svelte}": "eslint --cache --fix",
-    "*.{js,ts,md,json,svelte}": "prettier --write",
+    "*.{js,ts,jsx,tsx,md,json,vue,svelte}": "prettier --write",
     "*.{md,ts}": "cspell --no-must-find-files"
   },
   "engines": {
-    "node": ">=14.19.0",
+    "node": ">=16",
     "pnpm": ">=6"
   },
   "volta": {
-    "node": "14.19.0"
+    "node": "16.15.1"
   },
   "packageManager": "pnpm@6.32.3"
 }

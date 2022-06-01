@@ -1,0 +1,9 @@
+/* Hide enter fullscreen text when media _is_ fullscreen. */
+vds-media[fullscreen] .media-enter-fs {
+  display: none;
+}
+
+/* Hide exit fullscreen text when media _is not_ fullscreen. */
+vds-media:not([fullscreen]) .media-exit-fs {
+  display: none;
+}

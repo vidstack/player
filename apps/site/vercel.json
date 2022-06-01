@@ -1,6 +1,4 @@
 {
   "cleanUrls": true,
-  "github": {
-    "silent": true
-  }
+  "github": { "silent": true }
 }

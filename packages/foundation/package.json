@@ -36,7 +36,7 @@
     "build:dist": "rollup -c",
     "build:types": "tsc -p tsconfig.json --pretty",
     "extract:types": "api-extractor run && rimraf dist/**/*.d.ts",
-    "clean": "rimraf dist dist-node dist-prod types",
+    "clean": "rimraf dist dist-node dist-prod",
     "dev": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
     "watch": "pnpm dev",
     "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3100",

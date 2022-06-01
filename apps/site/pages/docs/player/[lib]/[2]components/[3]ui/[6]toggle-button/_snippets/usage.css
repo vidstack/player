@@ -1,0 +1,7 @@
+vds-toggle-button[pressed] .pressed {
+  display: none;
+}
+
+vds-toggle-button:not([pressed]) .not-pressed {
+  display: none;
+}

@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=14.19.0"
+    "node": ">=16"
   },
   "files": [
     "dist/",
@@ -78,7 +78,7 @@
     "extract:types": "api-extractor run",
     "extract:types:react": "api-extractor run -c api-extractor.react.json",
     "extract:types:svelte": "node ./.scripts/build-svelte-types.js && api-extractor run -c api-extractor.svelte.json",
-    "clean": "rimraf define dist dist-* types coverage svelte react src/react/components src/svelte/{client,node}/components",
+    "clean": "rimraf define dist dist-* coverage svelte react src/react/components src/svelte/{client,node}/components",
     "dev": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
     "watch": "pnpm dev",
     "lint:eslint": "eslint src --fix",

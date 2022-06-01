@@ -1,8 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.js-focus-visible [data-focus-visible-added] {
-  @apply outline-none ring-2;
-  --tw-ring-color: var(--color-focus);
-}

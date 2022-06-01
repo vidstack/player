@@ -1,0 +1,110 @@
+.media-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 8px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/**
+ * -----------------------------------------------------------
+ * Mute Button
+ * -----------------------------------------------------------
+ */
+
+vds-mute-button {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+}
+
+vds-mute-button > svg {
+  /** `absolute` so icons are placed on top of each other. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  transition: opacity ease 150ms;
+}
+
+vds-media:not([muted]) .media-mute-icon {
+  opacity: 0;
+}
+
+vds-media[muted] .media-unmute-icon {
+  opacity: 0;
+}
+
+/**
+ * -----------------------------------------------------------
+ * Volume Slider
+ * -----------------------------------------------------------
+ */
+
+vds-volume-slider {
+  --height: 48px;
+  --thumb-width: 24px;
+  --track-height: 4px;
+
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 200px;
+  height: var(--height);
+  /** Prevent thumb flowing out of slider. */
+  margin: 0 calc(var(--thumb-width) / 2);
+  cursor: pointer;
+}
+
+.slider-track {
+  background-color: #6366f1;
+  width: 100%;
+  height: var(--track-height);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 0;
+  transform: translateY(-50%);
+}
+
+.slider-track.fill {
+  background-color: #a5b4fc;
+  transform-origin: left center;
+  transform: translateY(-50%) scaleX(var(--vds-fill-rate));
+  will-change: transform;
+  z-index: 1; /** above track. */
+}
+
+.slider-thumb-container {
+  position: absolute;
+  top: 0;
+  left: var(--vds-fill-percent);
+  width: var(--thumb-width);
+  height: 100%;
+  transform: translateX(-50%); /** re-center along x-axis. */
+  z-index: 2; /** above track fill. */
+  will-change: left;
+}
+
+vds-volume-slider[dragging] .slider-thumb-container {
+  left: var(--vds-pointer-percent);
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--thumb-width);
+  height: var(--thumb-width);
+  border-radius: 9999px;
+  background-color: #fff;
+  transform: translateY(-50%);
+}

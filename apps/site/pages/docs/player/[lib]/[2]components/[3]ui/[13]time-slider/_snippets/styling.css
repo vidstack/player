@@ -1,0 +1,73 @@
+.media-controls {
+  display: flex;
+  width: 100%;
+  padding: 0 8px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/**
+ * -----------------------------------------------------------
+ * Time Slider
+ * -----------------------------------------------------------
+ */
+
+vds-time-slider {
+  --height: 48px;
+  --thumb-width: 24px;
+  --track-height: 4px;
+
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--height);
+  /** Prevent thumb flowing out of slider. */
+  margin: 0 calc(var(--thumb-width) / 2);
+  cursor: pointer;
+}
+
+.slider-track {
+  background-color: #6366f1;
+  width: 100%;
+  height: var(--track-height);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 0;
+  transform: translateY(-50%);
+}
+
+.slider-track.fill {
+  background-color: #a5b4fc;
+  transform-origin: left center;
+  transform: translateY(-50%) scaleX(var(--vds-fill-rate));
+  will-change: transform;
+  z-index: 1; /** above track. */
+}
+
+.slider-thumb-container {
+  position: absolute;
+  top: 0;
+  left: var(--vds-fill-percent);
+  width: var(--thumb-width);
+  height: 100%;
+  transform: translateX(-50%); /** re-center along x-axis. */
+  z-index: 2; /** above track fill. */
+  will-change: left;
+}
+
+vds-time-slider[dragging] .slider-thumb-container {
+  left: var(--vds-pointer-percent);
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--thumb-width);
+  height: var(--thumb-width);
+  border-radius: 9999px;
+  background-color: #fff;
+  transform: translateY(-50%);
+}

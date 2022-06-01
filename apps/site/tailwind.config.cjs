@@ -1,12 +1,9 @@
 module.exports = {
+  darkMode: 'class',
+  content: ['./src/**/*.{svelte,md}', './pages/**/*.{svelte,md}'],
   experimental: {
     optimizeUniversalDefaults: true,
   },
-  content: [
-    './src/**/*.{html,svelte,md,js,ts}',
-    './node_modules/@svelteness/kit-docs/client/**/*.svelte',
-  ],
-  darkMode: 'class',
   theme: {
     fontFamily: {
       sans: ['var(--font-family-sans)'],
@@ -46,9 +43,11 @@ module.exports = {
           400: '#616161',
           500: '#313131',
           600: '#292929',
-          700: '#222222',
-          800: '#1A1A1A',
-          900: '#121212',
+          700: '#202020',
+          800: '#161616',
+          900: '#181818',
+          outline: 'var(--color-gray-outline)',
+          'outline-strong': 'var(--color-gray-outline-strong)',
           divider: 'var(--color-gray-divider)',
           soft: 'var(--color-gray-soft)',
           inverse: 'var(--color-gray-inverse)',
@@ -59,14 +58,20 @@ module.exports = {
           body: 'var(--color-gray-body)',
         },
       },
+      animation: {
+        indeterminate: 'indeterminate 1.2s linear infinite',
+      },
+      keyframes: {
+        indeterminate: {
+          '0%': { transform: 'translateX(0) scaleX(0)' },
+          '40%': { transform: 'translateX(0) scaleX(0.4)' },
+          '100%': { transform: 'translateX(100%) scaleX(0.5)' },
+        },
+      },
       typography,
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-    // require('@tailwindcss/forms')({ strategy: 'class' }),
-    customVariants,
-  ],
+  plugins: [require('@tailwindcss/typography'), customVariants],
 };
 
 function customVariants({ addVariant }) {
@@ -74,11 +79,6 @@ function customVariants({ addVariant }) {
     'supports-backdrop-blur',
     '@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))',
   );
-  addVariant('supports-scrollbars', '@supports selector(::-webkit-scrollbar)');
-  addVariant('children', '& > *');
-  addVariant('scrollbar', '&::-webkit-scrollbar');
-  addVariant('scrollbar-track', '&::-webkit-scrollbar-track');
-  addVariant('scrollbar-thumb', '&::-webkit-scrollbar-thumb');
 }
 
 function typography(theme) {
@@ -87,7 +87,7 @@ function typography(theme) {
       css: {
         '--tw-prose-counters': 'black',
         '--tw-prose-invert-counters': 'white',
-        color: theme('colors.gray.soft'),
+        color: '#585858',
         fontSize: '18px',
         maxWidth: 'none',
         hr: {
@@ -99,6 +99,7 @@ function typography(theme) {
           letterSpacing: '-0.025em',
         },
         h2: {
+          marginTop: `1.75em`,
           marginBottom: `${16 / 24}em`,
         },
         h3: {
@@ -126,7 +127,7 @@ function typography(theme) {
           ...theme('fontSize.sm')[1],
         },
         ul: {
-          paddingLeft: '1rem',
+          paddingLeft: '1.25rem',
         },
         'ul > li': {
           position: 'relative',
@@ -150,7 +151,7 @@ function typography(theme) {
         a: {
           fontWeight: theme('fontWeight.semibold'),
           textDecoration: 'none',
-          borderBottom: `1px solid var(--kd-color-brand)`,
+          borderBottom: `1px solid var(--color-brand)`,
         },
         'a:hover': {
           borderBottomWidth: '2px',
@@ -167,11 +168,11 @@ function typography(theme) {
           fontWeight: 'inherit',
         },
         code: {
-          fontWeight: theme('fontWeight.medium'),
+          fontWeight: theme('fontWeight.semibold'),
           fontVariantLigatures: 'none',
         },
         pre: {
-          backgroundColor: 'var(--kd-prose-pre-bg)',
+          backgroundColor: 'var(--code-fence-bg)',
           boxShadow: 'none',
           display: 'flex',
         },
@@ -248,6 +249,7 @@ function typography(theme) {
     },
     invert: {
       css: {
+        color: '#a3a3a3',
         'tbody tr:nth-child(odd)': {
           backgroundColor: theme('colors.gray.700'),
         },

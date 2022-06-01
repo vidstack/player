@@ -25,7 +25,7 @@ import { toggleButtonElementStyles } from './styles';
  * @slot - Used to pass content into the toggle for showing pressed and not pressed states.
  * @example
  * ```html
- * <vds-toggle-button label="Some action">
+ * <vds-toggle-button aria-label="Some action">
  *   <div class="pressed">Pressed</div>
  *   <div class="not-pressed">Not Pressed</div>
  * </vds-toggle-button>

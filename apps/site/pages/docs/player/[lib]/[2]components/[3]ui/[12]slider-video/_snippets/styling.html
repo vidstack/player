@@ -1,0 +1,23 @@
+<script>
+  import '@vidstack/player/define/vds-time-slider.js';
+  import '@vidstack/player/define/vds-slider-video.js';
+  import '@vidstack/player/define/vds-slider-value-text.js';
+</script>
+
+<vds-media>
+  <!-- ... -->
+  <div class="media-controls">
+    <vds-time-slider>
+      <div class="slider-track"></div>
+      <div class="slider-track fill"></div>
+      <div class="slider-thumb-container">
+        <div class="slider-thumb"></div>
+      </div>
+
+      <div class="media-preview-container">
+        <vds-slider-video src="https://media-files.vidstack.io/240p.mp4"></vds-slider-video>
+        <vds-slider-value-text type="pointer" format="time"></vds-slider-value-text>
+      </div>
+    </vds-time-slider>
+  </div>
+</vds-media>

@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.js-focus-visible [data-focus-visible-added] {
+  @apply outline-none ring-2;
+  --tw-ring-color: var(--color-focus);
+}
+
+.DocSearch-Form:focus-within {
+  @apply ring-2;
+  --tw-ring-color: var(--color-focus);
+}
+
+.svg-responsive > svg {
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * -----------------------------------------------------
+ * SCROLLBAR
+ * -----------------------------------------------------
+ */
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-contain {
+  overscroll-behavior: contain;
+}
+
+.scrollbar {
+  scrollbar-width: thin;
+  --scrollbar-track-bg: rgb(234 234 234);
+  --scrollbar-thumb-bg: rgb(112 112 112);
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .scrollbar {
+    scroll-behavior: smooth;
+  }
+}
+
+.dark .scrollbar,
+.prefers-dark-scheme.scrollbar,
+.prefers-dark-scheme .scrollbar {
+  --scrollbar-track-bg: rgb(32 32 32);
+  --scrollbar-thumb-bg: rgb(97 97 97);
+}
+
+.scrollbar::-webkit-scrollbar {
+  @apply !h-1.5 !w-1.5 !bg-transparent;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  @apply !rounded;
+  background-color: var(--scrollbar-track-bg) !important;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  @apply !rounded;
+  background-color: var(--scrollbar-thumb-bg) !important;
+}
+
+/*
+ * -----------------------------------------------------
+ * BLUR
+ * -----------------------------------------------------
+ */
+
+.blur-bg {
+  @apply bg-gray-body backdrop-blur backdrop-filter dark:bg-gray-800;
+}
+
+@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {
+  .blur-bg {
+    @apply bg-white/60 dark:bg-gray-800/60;
+  }
+}

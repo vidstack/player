@@ -1,0 +1,9 @@
+/* Hide pause text when media _is_ paused. */
+vds-media[paused] .media-pause {
+  display: none;
+}
+
+/* Hide play text when media _is not_ paused. */
+vds-media:not([paused]) .media-play {
+  display: none;
+}
