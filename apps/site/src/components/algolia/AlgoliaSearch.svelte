@@ -16,7 +16,7 @@
   let container;
   let mounted = false;
 
-  onMount(() => {
+  $: if (container) {
     docsearch({
       container,
       placeholder,
@@ -27,7 +27,9 @@
         facetFilters: [`jslib:${$jsLib}`, `version:latest`],
       },
     });
+  }
 
+  onMount(() => {
     mounted = true;
     return () => {
       mounted = false;
