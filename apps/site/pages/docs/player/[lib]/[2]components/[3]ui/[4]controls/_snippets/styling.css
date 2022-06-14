@@ -13,7 +13,7 @@
   z-index: 1;
 }
 
-.media-controls {
+.media-controls-group {
   display: flex;
   width: 100%;
   min-height: 48px;
@@ -25,10 +25,10 @@
 }
 
 /* Avoid double controls on iOS when in fullscreen. */
-vds-media[hide-ui] .media-controls,
+vds-media[hide-ui] .media-controls-group,
 /* Hide controls if media is not ready for playback, or user is idle. */
-vds-media[user-idle] .media-controls,
-vds-media:not([can-play]) .media-controls {
+vds-media[user-idle] .media-controls-group,
+vds-media:not([can-play]) .media-controls-group {
   opacity: 0;
   visibility: hidden;
 }

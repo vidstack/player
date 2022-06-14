@@ -31,9 +31,9 @@
     </AspectRatio>
 
     <div class="media-controls-container">
-      <div class="media-controls">Controls Top</div>
-      <div class="media-controls">Controls Middle</div>
-      <div class="media-controls">Controls Bottom</div>
+      <div class="media-controls-group">Controls Top</div>
+      <div class="media-controls-group">Controls Middle</div>
+      <div class="media-controls-group">Controls Bottom</div>
     </div>
   </Media>
 
