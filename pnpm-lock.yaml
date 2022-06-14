@@ -27,7 +27,6 @@ importers:
       fs-extra: ^10.0.0
       globby: ^13.1.1
       gzip-size: ^7.0.0
-      husky: ^7.0.0
       kleur: ^4.1.4
       lint-staged: ^12.1.5
       minimist: ^1.2.5
@@ -36,6 +35,7 @@ importers:
       prettier-plugin-tailwindcss: ^0.1.11
       rimraf: ^3.0.2
       semver: ^7.3.5
+      simple-git-hooks: ^2.8.0
       svelte: ^3.46.4
       turbo: ^1.2.4
       typescript: ^4.5.4
@@ -63,15 +63,15 @@ importers:
       fs-extra: 10.1.0
       globby: 13.1.2
       gzip-size: 7.0.0
-      husky: 7.0.4
       kleur: 4.1.4
       lint-staged: 12.5.0_enquirer@2.3.6
       minimist: 1.2.6
       npm-run-all: 4.1.5
-      prettier: 2.6.2
-      prettier-plugin-tailwindcss: 0.1.11_prettier@2.6.2
+      prettier: 2.7.0
+      prettier-plugin-tailwindcss: 0.1.11_prettier@2.7.0
       rimraf: 3.0.2
       semver: 7.3.7
+      simple-git-hooks: 2.8.0
       svelte: 3.48.0
       turbo: 1.2.16
       typescript: 4.7.3
@@ -118,8 +118,8 @@ importers:
       '@tailwindcss/typography': 0.5.2_tailwindcss@3.1.2
       '@types/react': 17.0.45
       '@vidstack/eliza': link:../../packages/eliza
-      '@vitebook/core': 0.42.1_shiki@0.10.1+vite@2.9.12
-      '@vitebook/svelte': 0.42.1_bvon76zuwajshqaxirwsryohja
+      '@vitebook/core': 0.42.3_shiki@0.10.1+vite@2.9.12
+      '@vitebook/svelte': 0.42.3_lloqjgtoporbhqktt5bdjglq6q
       autoprefixer: 10.4.7_postcss@8.4.14
       gray-matter: 4.0.3
       nprogress: 0.2.0
@@ -1525,8 +1525,8 @@ packages:
       eslint-visitor-keys: 2.1.0
     dev: true
 
-  /@vitebook/core/0.42.1_shiki@0.10.1+vite@2.9.12:
-    resolution: {integrity: sha512-oAPsCxJkOpQ2V7Jbq1aBcIRAPpPONmBgnpfaCyq5Q+8R0koFFsYYHGa1itR/qHSVI7gvnyL6OKsNzyqamiQQew==}
+  /@vitebook/core/0.42.3_shiki@0.10.1+vite@2.9.12:
+    resolution: {integrity: sha512-Tjd+f+Xx41fTF6YUYQ4lIMXRgetmOcVInXrGW7Ho16q5GLeucjHQASPqaGlQ/C7CcoThVneqj0ov4rKlbof71g==}
     engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
@@ -1559,15 +1559,15 @@ packages:
       vite: 2.9.12
     dev: true
 
-  /@vitebook/svelte/0.42.1_bvon76zuwajshqaxirwsryohja:
-    resolution: {integrity: sha512-pbf4V5gcSLVCo96zlfiFZruaW1q09eI88Z15yMOXJQDDtAz/9R84jBUkW374Zyq0AbURJ0YRJFcCWoJ6Fj7d5Q==}
+  /@vitebook/svelte/0.42.3_lloqjgtoporbhqktt5bdjglq6q:
+    resolution: {integrity: sha512-pqDzbEYrQGIQlQF+EeIgrRy/9/7vCETJ3wDEcD6yUAE23VrR7IbqcNYioV24dQsCisTaDKIup7sN0LLlWU1XVA==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@vitebook/core': 0.42.1
+      '@vitebook/core': 0.42.3
       svelte: ^3.40.0
     dependencies:
       '@sveltejs/vite-plugin-svelte': 1.0.0-next.29_svelte@3.48.0+vite@2.9.12
-      '@vitebook/core': 0.42.1_shiki@0.10.1+vite@2.9.12
+      '@vitebook/core': 0.42.3_shiki@0.10.1+vite@2.9.12
       magic-string: 0.25.9
       svelte: 3.48.0
     transitivePeerDependencies:
@@ -4060,12 +4060,6 @@ packages:
     engines: {node: '>=12.20.0'}
     dev: true
 
-  /husky/7.0.4:
-    resolution: {integrity: sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==}
-    engines: {node: '>=12'}
-    hasBin: true
-    dev: true
-
   /iconv-lite/0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -5506,17 +5500,17 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-tailwindcss/0.1.11_prettier@2.6.2:
+  /prettier-plugin-tailwindcss/0.1.11_prettier@2.7.0:
     resolution: {integrity: sha512-a28+1jvpIZQdZ/W97wOXb6VqI762MKE/TxMMuibMEHhyYsSxQA8Ek30KObd5kJI2HF1ldtSYprFayXJXi3pz8Q==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
       prettier: '>=2.2.0'
     dependencies:
-      prettier: 2.6.2
+      prettier: 2.7.0
     dev: true
 
-  /prettier/2.6.2:
-    resolution: {integrity: sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew==}
+  /prettier/2.7.0:
+    resolution: {integrity: sha512-nwoX4GMFgxoPC6diHvSwmK/4yU8FFH3V8XWtLQrbj4IBsK2pkYhG4kf/ljF/haaZ/aii+wNJqISrCDPgxGWDVQ==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
@@ -5936,6 +5930,12 @@ packages:
 
   /signal-exit/3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
+    dev: true
+
+  /simple-git-hooks/2.8.0:
+    resolution: {integrity: sha512-ocmZQORwa6x9mxg+gVIAp5o4wXiWOHGXyrDBA0+UxGKIEKOyFtL4LWNKkP/2ornQPdlnlDGDteVeYP5FjhIoWA==}
+    hasBin: true
+    requiresBuild: true
     dev: true
 
   /slash/3.0.0:

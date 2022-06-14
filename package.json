@@ -17,7 +17,6 @@
     "test": "turbo run test --parallel",
     "test:esm": "node .scripts/test-node-esm.js",
     "preinstall": "npx only-allow pnpm",
-    "prepare": "husky install",
     "release": "pnpm run build --filter=./packages/* && pnpm test:esm && node .scripts/release.js",
     "release:dry": "pnpm run release --dry",
     "sandbox:foundation": "pnpm -F foundation sandbox",
@@ -49,7 +48,6 @@
     "fs-extra": "^10.0.0",
     "globby": "^13.1.1",
     "gzip-size": "^7.0.0",
-    "husky": "^7.0.0",
     "kleur": "^4.1.4",
     "lint-staged": "^12.1.5",
     "minimist": "^1.2.5",
@@ -58,9 +56,14 @@
     "prettier-plugin-tailwindcss": "^0.1.11",
     "rimraf": "^3.0.2",
     "semver": "^7.3.5",
+    "simple-git-hooks": "^2.8.0",
     "svelte": "^3.46.4",
     "turbo": "^1.2.4",
     "typescript": "^4.5.4"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx --no-install lint-staged",
+    "commit-msg": "npx --no -- commitlint --edit $1"
   },
   "lint-staged": {
     "*.{js,ts,svelte}": "eslint --cache --fix",

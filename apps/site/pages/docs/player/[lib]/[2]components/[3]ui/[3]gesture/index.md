@@ -62,7 +62,7 @@ lower priority values mean a higher index:
 Due to event listeners being attached directly to the media container, they don't block the
 video element's contextual menu (i.e., the menu opened when you right-click the video element):
 
-![The native video element with the contextual menu opened.](/src/img/contextual-menu.png)
+![The native video element with the contextual menu opened.]($src/img/contextual-menu.png)
 
 ## Styling
 

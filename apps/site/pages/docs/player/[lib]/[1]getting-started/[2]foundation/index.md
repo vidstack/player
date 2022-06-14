@@ -157,7 +157,7 @@ VSCode provides support for extending the known HTML entities through
 autocomplete suggestions for custom player elements and on-hover information such as
 documentation and type data.
 
-![Before and after screenshot difference of using the VSCode custom data extension.](/src/img/vscode-autocomplete.png)
+![Before and after screenshot difference of using the VSCode custom data extension.]($src/img/vscode-autocomplete.png)
 
 {% steps %}
 
