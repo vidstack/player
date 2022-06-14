@@ -31,7 +31,13 @@
   display: none;
 }
 
-.scroll-contain {
+@media screen and (min-width: 1280px) {
+  .scroll-contain {
+    overscroll-behavior: contain;
+  }
+}
+
+.scroll-contain-mobile {
   overscroll-behavior: contain;
 }
 
