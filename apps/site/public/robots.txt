@@ -1,5 +1,19 @@
-User-agent: Algolia Crawler
-Disallow:
+User-agent: *
+Disallow: /sitemap-search.xml
 
 User-agent: *
-Disallow: /
+Disallow: /docs/player/react/*
+
+User-agent: *
+Disallow: /docs/player/vue/*
+
+User-agent: *
+Disallow: /docs/player/svelte/*
+
+User-agent: Algolia Crawler
+Allow: /sitemap-search.xml
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.vidstack.io/sitemap.xml
