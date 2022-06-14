@@ -21,7 +21,7 @@ pnpm i
 4. Start the dev server:
 
 ```bash
-pnpm dev --filter site
+pnpm -F site dev
 ```
 
 5. Open site at [`http://localhost:3001`](http://localhost:3001).

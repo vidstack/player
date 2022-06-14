@@ -35,16 +35,17 @@
   "scripts": {
     "build:dist": "rollup -c",
     "build:types": "tsc -p tsconfig.json --pretty",
-    "extract:types": "api-extractor run && rimraf dist/**/*.d.ts",
+    "types": "api-extractor run -c types.json && rimraf dist/**/*.d.ts",
     "clean": "rimraf dist dist-node dist-prod",
-    "dev": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
-    "watch": "pnpm dev",
+    "dev": "run-p watch:dist watch:types",
     "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3100",
     "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
     "test": "vitest --run",
-    "test:watch": "vitest --watch"
+    "watch:dist": "pnpm run build:dist -w",
+    "watch:types": "node ../../.scripts/run-on-change.js --glob=\"src/**/*.ts\" --scripts=build:types,types",
+    "watch:test": "vitest --watch"
   },
   "dependencies": {
     "@types/fscreen": "^1.0.1",

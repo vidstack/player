@@ -75,19 +75,21 @@
     "build:dist": "rollup -c",
     "build:definitions": "node ../../.scripts/definitions.js",
     "build:types": "tsc -p tsconfig.json --pretty && rimraf dist/**/*.d.ts",
-    "extract:types": "api-extractor run",
-    "extract:types:react": "api-extractor run -c api-extractor.react.json",
-    "extract:types:svelte": "node ./.scripts/build-svelte-types.js && api-extractor run -c api-extractor.svelte.json",
+    "types": "api-extractor run -c types.json",
+    "types:react": "api-extractor run -c types.react.json",
+    "types:svelte": "node ./.scripts/build-svelte-types.js && api-extractor run -c types.svelte.json",
     "clean": "rimraf define dist dist-* coverage svelte react src/react/components src/svelte/{client,node}/components",
-    "dev": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
-    "watch": "pnpm dev",
+    "dev": "run-p watch:dist watch:analyze watch:types",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
     "minify:cdn": "node ../../.scripts/minify.js --entry=dist-cdn/**/*.js --outdir=dist-cdn",
     "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3101",
     "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
     "test": "vitest --run",
-    "test:watch": "vitest --watch"
+    "watch:dist": "pnpm run build:dist -w",
+    "watch:analyze": "pnpm run analyze -w",
+    "watch:types": "node ../../.scripts/run-on-change.js --glob=\"src/**/*.ts\" --scripts=build:types,types,types:react,types:svelte",
+    "watch:test": "vitest --watch"
   },
   "dependencies": {
     "@vidstack/foundation": "workspace:*"

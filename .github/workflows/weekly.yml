@@ -10,15 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup PNPM
-        uses: pnpm/action-setup@v2.1.0
+        uses: pnpm/action-setup@v2
         with:
-          version: 6.24.4
+          version: 7.2.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: 'pnpm'

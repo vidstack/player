@@ -1,5 +1,7 @@
 {
-  "extends": "./api-extractor.json",
+  "extends": "../../types.base.json",
+
+  "projectFolder": ".",
 
   "mainEntryPointFilePath": "./types/svelte/client/index.d.ts",
 

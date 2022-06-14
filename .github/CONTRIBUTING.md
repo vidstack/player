@@ -63,10 +63,10 @@ it will automatically pin it, and if you're using `nvm` simply run `nvm use` fro
 $: pnpm i
 
 # Install dependency for a single package.
-$: pnpm install {package} --filter @vidstack/player
+$: pnpm -F player install {package}
 
 # Update a dependency for a single package.
-$: pnpm up {package} --filter @vitebook/player
+$: pnpm -F player up {package}
 
 # Update a dependency for all packages.
 $: pnpm up {package}@{version} -r
@@ -76,29 +76,16 @@ $: pnpm up {package}@{version} -r
 
 ```bash
 # Build all packages (turbo)
-$: pnpm build
-
-# Build all apps (turbo)
-$: pnpm build:app
+$: pnpm run build --filter=./packages/*
 
 # Build single package
-$: pnpm build --filter @vidstack/player
+$: pnpm run build --filter=player
 
 # Build single app
-$: pnpm build:app --filter vidstack.io
+$: pnpm run build --filter=site
 
 # Build and watch single package
-$: pnpm watch --filter @vidstack/player
-```
-
-## 💻 Development
-
-```bash
-# Run workspace in dev mode (turbo)
-$: pnpm dev
-
-# Run single app in dev mode
-$: pnpm dev --filter vidstack.io
+$: pnpm -F player dev
 ```
 
 ### Sandbox
@@ -109,10 +96,10 @@ it.
 
 ```bash
 # Play with `@vidstack/foundation` package in your browser.
-$: pnpm sandbox --filter @vidstack/foundation
+$: pnpm -F foundation sandbox
 
 # Play with `@vidstack/player` package in your browser.
-$: pnpm sandbox --filter @vidstack/player
+$: pnpm -F player sandbox
 ```
 
 After running any of the commands above, you can find the sandbox directory at `packages/*/sandbox`.
@@ -121,7 +108,7 @@ You can delete the directory and re-run the sandbox command to reset it.
 ## 🧪 Testing
 
 Unit tests are located in the `tests` directory inside an app or package. Run
-`pnpm test --filter {pkg_name}` or `pnpm test:watch --filter {pkg_name}` in the terminal. This
+`pnpm test --filter {pkg_name}` or `pnpm watch:test --filter {pkg_name}` in the terminal. This
 project uses [Vitest][vitest] for writing/running unit tests. To learn more about writing unit
 tests, follow the link to the Vitest site, and see other tests in the repo.
 
@@ -130,10 +117,10 @@ tests, follow the link to the Vitest site, and see other tests in the repo.
 $: pnpm test
 
 # Run tests in single package
-$: pnpm test --filter @vidstack/player
+$: pnpm -F player test
 
 # Run tests in watch mode for a single package
-$: pnpm test:watch --filter @vidstack/player
+$: pnpm -F player watch:test
 ```
 
 ## ✍️ Committing

@@ -5,24 +5,23 @@
   "type": "module",
   "workspaces": [
     "packages/*",
-    "apps/*",
-    "apps/site/examples"
+    "apps/*"
   ],
   "scripts": {
     "build": "turbo run clean && turbo run build",
-    "build:site": "turbo run build:app --filter=site",
-    "dev:site": "turbo run dev --filter=./apps/site/** --parallel",
+    "build:site": "turbo run build --filter=site",
     "clean": "turbo run clean",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && node .scripts/fix-changelog.js",
+    "dev:site": "pnpm -F site dev",
     "lint": "turbo run lint --parallel",
     "test": "turbo run test --parallel",
     "test:esm": "node .scripts/test-node-esm.js",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
-    "release": "turbo run build test && pnpm test:esm && node .scripts/release.js",
-    "release:dry": "pnpm release -- --dry",
-    "sandbox:foundation": "pnpm sandbox --filter foundation",
-    "sandbox:player": "pnpm sandbox --filter player",
+    "release": "pnpm run build --filter=./packages/* && pnpm test:esm && node .scripts/release.js",
+    "release:dry": "pnpm run release --dry",
+    "sandbox:foundation": "pnpm -F foundation sandbox",
+    "sandbox:player": "pnpm -F player sandbox",
     "spellcheck": "cspell 'apps/**/*.md' 'packages/**.ts', 'packages/**/.md', '*.md' --gitignore --cache",
     "validate": "turbo run build lint test && pnpm test:esm"
   },
@@ -70,10 +69,10 @@
   },
   "engines": {
     "node": ">=16",
-    "pnpm": ">=6"
+    "pnpm": ">=7"
   },
   "volta": {
     "node": "16.15.1"
   },
-  "packageManager": "pnpm@6.32.3"
+  "packageManager": "pnpm@7.2.1"
 }

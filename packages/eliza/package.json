@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build:base": "node ../../.scripts/build.js --entry=src/index.ts",
-    "build:dist": "pnpm build:base -- --outdir=dist-node --platform=node --bundle --requireshim --external=yargs,@vidstack/foundation,typescript",
+    "build:dist": "pnpm run build:base --outdir=dist-node --platform=node --bundle --requireshim --external=yargs,@vidstack/foundation,typescript",
     "build:types": "tsc -p tsconfig.json --pretty",
     "clean": "rimraf dist-node",
     "watch": "run-p \"build:dist -- -w\" \"build:types -- -w\"",

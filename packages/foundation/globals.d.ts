@@ -1,13 +1,11 @@
 /// <reference types="./dom" />
 
-// -------------------------------------------------------------------------------------------
-// Global Events
-// -------------------------------------------------------------------------------------------
-
-import type { ContextConsumerConnectEvent } from './types/context';
-import type { FullscreenEvents } from './types/fullscreen';
-import type { LoggerEvents } from './types/logger/events';
-import type { ScreenOrientationEvents } from './types/screen-orientation';
+import type {
+  ContextConsumerConnectEvent,
+  FullscreenEvents,
+  LoggerEvents,
+  ScreenOrientationEvents,
+} from './index';
 
 declare global {
   interface GlobalEventHandlersEventMap

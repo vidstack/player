@@ -1,5 +1,7 @@
 {
-  "extends": "./api-extractor.json",
+  "extends": "../../types.base.json",
+
+  "projectFolder": ".",
 
   "mainEntryPointFilePath": "./types/react/index.d.ts",
 
