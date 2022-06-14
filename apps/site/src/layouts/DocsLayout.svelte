@@ -130,13 +130,15 @@
     </div>
 
     {#if $previousLink || $nextLink}
-      <hr class="border-gray-divider mt-20" />
+      <hr class="border-gray-divider 992:mt-20 mt-14" />
 
-      <div class="992:text-xl flex items-center pt-12 pb-20 text-lg font-semibold text-gray-300">
+      <div
+        class="992:text-xl 992:pt-12 flex items-center pt-8 pb-20 text-lg font-semibold text-gray-300"
+      >
         {#if $previousLink}
           <div class="mb-4 flex flex-col items-start">
-            <span class="text-gray-inverse mb-4 ml-3 inline-block">Previous</span>
-            <Button arrow="left" href={$previousLink.slug} class="hover:text-gray-inverse">
+            <span class="text-gray-inverse mb-4 inline-block">Previous</span>
+            <Button arrow="left" href={$previousLink.slug} class="hover:text-gray-inverse -ml-3">
               {$previousLink.title}
             </Button>
           </div>
@@ -144,8 +146,8 @@
 
         {#if $nextLink}
           <div class="ml-auto mb-4 flex flex-col items-end">
-            <span class="text-gray-inverse mr-3 mb-4 inline-block">Next</span>
-            <Button arrow="right" href={$nextLink.slug} class="hover:text-gray-inverse">
+            <span class="text-gray-inverse mb-4 inline-block">Next</span>
+            <Button arrow="right" href={$nextLink.slug} class="hover:text-gray-inverse -mr-3">
               {$nextLink.title}
             </Button>
           </div>
