@@ -36,4 +36,10 @@ export * from './providers/hls';
 export * from './providers/html5';
 export * from './providers/video';
 export * from './ui';
-export { isHlsjsSupported } from '@vidstack/foundation';
+export {
+  appendTriggerEvent,
+  findTriggerEvent,
+  hasTriggerEvent,
+  isHlsjsSupported,
+  walkTriggerEventChain,
+} from '@vidstack/foundation';
