@@ -472,8 +472,19 @@ export class MediaController {
     'vds-fullscreen-change',
     (event) => {
       this._store.fullscreen.set(event.detail);
+
+      if (event.target !== this._host) return;
+
       // @ts-expect-error - not a media event.
       this._satisfyMediaRequest('fullscreen', event);
+
+      // forward event on provider for any listeners.
+      this._provider?.dispatchEvent(
+        vdsEvent('vds-fullscreen-change', {
+          detail: event.detail,
+          triggerEvent: event,
+        }),
+      );
     },
   );
 
@@ -481,8 +492,18 @@ export class MediaController {
     this._host,
     'vds-fullscreen-error',
     (event) => {
+      if (event.target !== this._host) return;
+
       // @ts-expect-error - not a media event.
       this._satisfyMediaRequest('fullscreen', event);
+
+      // forward event on provider for any listeners.
+      this._provider?.dispatchEvent(
+        vdsEvent('vds-fullscreen-error', {
+          detail: event.detail,
+          triggerEvent: event,
+        }),
+      );
     },
   );
 
