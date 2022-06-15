@@ -3,7 +3,7 @@
   import ArrowRightIcon from '~icons/ri/arrow-right-s-fill';
 
   export const events = [
-    'pointerdown (origin)',
+    'pointerup (origin)',
     'vds-play-request',
     'play (native)',
     'vds-play',
@@ -12,7 +12,7 @@
   ];
 </script>
 
-<div class="flex items-center flex-wrap space-y-2 mt-4 mb-10" style="--chip-border-radius: 5px;">
+<div class="mt-4 mb-10 flex flex-wrap items-center space-y-2" style="--chip-border-radius: 5px;">
   <div />
 
   {#each events.reverse() as event, i}

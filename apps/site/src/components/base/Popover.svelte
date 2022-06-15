@@ -43,7 +43,7 @@
   }
 </script>
 
-<div class="text-left relative inline-block not-prose">
+<div class="not-prose relative inline-block text-left">
   <button
     id={popoverButtonId}
     type="button"
@@ -81,23 +81,23 @@
     <div
       id={popoverId}
       class={clsx(
-        'absolute -top-4 -right-0 min-w-[340px] p-5 pt-4 origin-top-right z-50',
+        'absolute -top-4 -right-0 z-50 min-w-[340px] origin-top-right p-5 pt-4',
         !open && 'invisible',
       )}
       tabindex="-1"
       role="dialog"
     >
       <div
-        class="bg-gray-elevate border border-gray-outline rounded-md flex flex-col shadow-md min-h-[60px] overflow-hidden"
+        class="bg-gray-elevate border-gray-outline flex min-h-[60px] flex-col overflow-hidden rounded-md border shadow-md"
       >
-        <div class="flex z-20 items-center">
+        <div class="z-20 flex items-center">
           <div class="flex-1" />
           <button
             class={clsx(
-              'p-4 text-gray-soft hover:text-gray-inverse mt-[0.125rem] mr-[0.125rem]',
+              'text-gray-soft hover:text-gray-inverse mt-[0.125rem] mr-[0.125rem] p-4',
               !open && 'pointer-events-none',
             )}
-            on:pointerdown={() => closeDialog()}
+            on:pointerup={() => closeDialog()}
             on:keydown={(e) => wasEnterKeyPressed(e) && closeDialog(true)}
           >
             <CloseIcon width="28" height="28" />

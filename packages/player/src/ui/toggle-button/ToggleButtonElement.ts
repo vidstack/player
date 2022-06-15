@@ -56,7 +56,7 @@ export class ToggleButtonElement extends LitElement {
 
     focusVisiblePolyfill(this);
 
-    (['pointerdown', 'keydown'] as const).forEach((eventType) => {
+    (['pointerup', 'keydown'] as const).forEach((eventType) => {
       eventListener(this, eventType, (event) => {
         if (this.disabled || (isKeyboardEvent(event) && !isKeyboardClick(event))) {
           return;

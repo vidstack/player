@@ -55,7 +55,7 @@ it('should play', async function () {
   media.controller._store.paused.set(true);
   await elementUpdated(button);
 
-  setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
+  setTimeout(() => button.dispatchEvent(new MouseEvent('pointerup')));
 
   await waitForEvent(button, 'vds-play-request');
   expect(pausedSpy).toHaveBeenCalledWith(false);
@@ -69,7 +69,7 @@ it('should pause', async function () {
   media.controller._store.paused.set(false);
   await elementUpdated(button);
 
-  setTimeout(() => button.dispatchEvent(new MouseEvent('pointerdown')));
+  setTimeout(() => button.dispatchEvent(new MouseEvent('pointerup')));
 
   await waitForEvent(button, 'vds-pause-request');
   expect(pausedSpy).toHaveBeenCalledWith(true);

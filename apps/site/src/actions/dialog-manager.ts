@@ -54,7 +54,7 @@ export function dialogManager(
     if (dialogEl) {
       // Prevent it bubbling up to document body so we can determine when to close dialog.
       dialogDisposal.add(listen(dialogEl, 'click', (e) => e.stopPropagation()));
-      dialogDisposal.add(listen(dialogEl, 'pointerdown', (e) => e.stopPropagation()));
+      dialogDisposal.add(listen(dialogEl, 'pointerup', (e) => e.stopPropagation()));
 
       disposal.add(
         listen(dialogEl, 'vds-close-dialog', (e: CustomEvent<boolean>) => onCloseDialog(e.detail)),
@@ -194,14 +194,14 @@ export function dialogManager(
   }
 
   disposal.add(
-    listen(dialogBtn, 'pointerdown', (e) => {
+    listen(dialogBtn, 'pointerup', (e) => {
       setTimeout(() => {
         onOpenDialog(e);
       }, 100);
     }),
   );
 
-  disposal.add(listen(document.body, 'pointerdown', () => onCloseDialog()));
+  disposal.add(listen(document.body, 'pointerup', () => onCloseDialog()));
   disposal.add(
     listen(dialogBtn, 'keydown', (e) => wasEnterKeyPressed(e) && onOpenDialogWithKeyboard()),
   );

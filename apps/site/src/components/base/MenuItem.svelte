@@ -18,7 +18,7 @@
 
 <li
   class={clsx(
-    'flex items-center px-4 py-2 text-base hover:cursor-pointer transition-colors duraiton-100',
+    'duraiton-100 flex items-center px-4 py-2 text-base transition-colors hover:cursor-pointer',
     selected
       ? 'text-brand'
       : 'text-gray-soft hover:text-gray-inverse focus-visible:text-gray-inverse',
@@ -26,7 +26,7 @@
   role="menuitem"
   tabindex="-1"
   on:keydown={onSelect}
-  on:pointerdown={() => dispatch('select')}
+  on:pointerup={() => dispatch('select')}
 >
   {#if $$slots.icon}
     <div class="mr-3 h-5 w-5">

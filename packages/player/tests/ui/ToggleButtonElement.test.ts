@@ -42,19 +42,19 @@ it('should toggle pressed state on click', async function () {
   const { toggle } = await buildFixture();
 
   setTimeout(() => {
-    toggle.dispatchEvent(new MouseEvent('pointerdown'));
+    toggle.dispatchEvent(new MouseEvent('pointerup'));
   });
 
-  await waitForEvent(toggle, 'pointerdown');
+  await waitForEvent(toggle, 'pointerup');
   await elementUpdated(toggle);
 
   expect(toggle.getAttribute('aria-pressed')).to.equal('true');
 
   setTimeout(() => {
-    toggle.dispatchEvent(new MouseEvent('pointerdown'));
+    toggle.dispatchEvent(new MouseEvent('pointerup'));
   });
 
-  await waitForEvent(toggle, 'pointerdown');
+  await waitForEvent(toggle, 'pointerup');
   await elementUpdated(toggle);
 
   expect(toggle.getAttribute('aria-pressed')).to.equal('false');

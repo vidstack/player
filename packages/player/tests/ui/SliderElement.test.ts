@@ -127,7 +127,7 @@ it('should multiply steps when shift key is held down', async function () {
   expect(slider.value).to.equal(50);
 });
 
-it('should start dragging on thumb pointerdown and stop on document pointerup', async function () {
+it('should start dragging on thumb pointerup and stop on document pointerup', async function () {
   const slider = await buildFixture();
 
   setTimeout(() => slider.dispatchEvent(new MouseEvent('pointerdown')));
