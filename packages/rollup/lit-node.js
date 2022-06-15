@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 /**
  * @returns {import('rollup').Plugin}
  */
@@ -6,14 +9,29 @@ export function litNode() {
   const windowRE = /window\./g;
   const safeWindowCall = '(typeof window !== "undefined" ? window : null)?.';
 
+  let includeShim = false;
+
   return {
     name: 'lit-node',
     generateBundle(_, bundle) {
       for (const file of Object.keys(bundle)) {
         const chunk = bundle[file];
+
         if (chunk.type === 'chunk' && (chunk.isEntry || litCodeRE.test(chunk.code))) {
-          chunk.code = DOM_SHIM + chunk.code.replace(windowRE, safeWindowCall);
+          const relativePath = path.relative(path.dirname(chunk.fileName), '.');
+          const shimImportPath = relativePath.length > 0 ? relativePath : '.';
+          const importCode = `import "${shimImportPath}/dom-shim.js";\n`;
+          chunk.code = importCode + chunk.code.replace(windowRE, safeWindowCall);
+          includeShim = true;
         }
+      }
+    },
+    writeBundle(options) {
+      const outdir = options.dir ?? (options.file && path.dirname(options.file));
+
+      if (outdir && includeShim) {
+        const filePath = path.resolve(outdir, 'dom-shim.js');
+        fs.writeFileSync(filePath, DOM_SHIM);
       }
     },
   };

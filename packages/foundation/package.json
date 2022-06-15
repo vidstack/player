@@ -7,17 +7,15 @@
   "sideEffects": false,
   "files": [
     "dist/",
-    "dist-node/",
-    "dist-prod/",
     "index.d.ts",
     "dom.d.ts",
     "globals.d.ts"
   ],
   "exports": {
     ".": {
-      "node": "./dist-node/index.js",
-      "development": "./dist/index.js",
-      "default": "./dist-prod/index.js"
+      "node": "./dist/node/index.js",
+      "development": "./dist/dev/index.js",
+      "default": "./dist/prod/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -34,9 +32,8 @@
   },
   "scripts": {
     "build:dist": "rollup -c",
-    "build:types": "tsc -p tsconfig.json --pretty",
-    "types": "api-extractor run -c types.json && rimraf dist/**/*.d.ts",
-    "clean": "rimraf dist dist-node dist-prod",
+    "build:types": "tsc -p tsconfig.json --pretty && api-extractor run -c types.json && rimraf dist/**/*.d.ts",
+    "clean": "rimraf dist",
     "dev": "run-p watch:dist watch:types",
     "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3100",
     "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
@@ -44,7 +41,7 @@
     "lint:prettier": "prettier src --write --loglevel warn",
     "test": "vitest --run",
     "watch:dist": "pnpm run build:dist -w",
-    "watch:types": "node ../../.scripts/run-on-change.js --glob=\"src/**/*.ts\" --scripts=build:types,types",
+    "watch:types": "node ../../.scripts/run-on-change.js --glob=\"src/**/*.ts\" --scripts=build:types",
     "watch:test": "vitest --watch"
   },
   "dependencies": {

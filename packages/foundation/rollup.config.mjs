@@ -13,7 +13,7 @@ const PLUGINS = ({ dev = false } = {}) => [
 const DEV = {
   input: INPUT,
   output: {
-    file: 'dist/index.js',
+    file: 'dist/dev/index.js',
     format: 'esm',
   },
   external: EXTERNAL,
@@ -24,7 +24,7 @@ const DEV = {
 const PROD = {
   input: INPUT,
   output: {
-    file: 'dist-prod/index.js',
+    file: 'dist/prod/index.js',
     format: 'esm',
   },
   external: EXTERNAL,
@@ -35,7 +35,7 @@ const PROD = {
 const NODE = {
   input: INPUT,
   output: {
-    file: 'dist-node/index.js',
+    file: 'dist/node/index.js',
     format: 'esm',
   },
   plugins: [...PLUGINS(), litNode()],

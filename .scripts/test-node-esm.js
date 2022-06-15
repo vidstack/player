@@ -3,16 +3,11 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import kleur from 'kleur';
 
-// @ts-expect-error
 const CWD = dirname(fileURLToPath(import.meta.url));
 
 async function main() {
   const files = globbySync(
-    [
-      '../packages/*/dist-node/index.js',
-      '../packages/*/dist-node/define/*.js',
-      '../packages/*/dist-node/react/index.js',
-    ],
+    ['../packages/*/dist/node/index.js', '../packages/*/dist/node/define/*.js'],
     { cwd: CWD },
   );
 

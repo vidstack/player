@@ -1,9 +1,23 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import { esbuild, litNode, minifyHTML } from '@vidstack/rollup';
 import { globbySync } from 'globby';
+import { esbuild, litNode, minifyHTML } from '@vidstack/rollup';
 
-const INPUT = ['src/index.ts', ...globbySync('src/define/*.ts')];
-const EXTERNAL = [/@vidstack/, /node_modules\/@?lit/];
+const INPUT = [
+  'src/index.ts',
+  'src/react/index.ts',
+  'src/svelte/client/index.ts',
+  'src/svelte/node/index.ts',
+  ...globbySync('src/define/*.ts'),
+];
+
+const EXTERNAL = [
+  '@vidstack/foundation',
+  /node_modules\/@?lit/,
+  'react',
+  'svelte',
+  'svelte/internal',
+];
+
 const CDN_EXTERNAL = ['hls.js'];
 
 const PLUGINS = ({ dev = false } = {}) => [
@@ -23,7 +37,7 @@ const ESM_OUTPUT = ({ dir = '' }) => ({
 /** @type {import('rollup').RollupOptions} */
 const DEV = {
   input: INPUT,
-  output: ESM_OUTPUT({ dir: 'dist/dev' }),
+  output: ESM_OUTPUT({ dir: 'dist' }),
   preserveEntrySignatures: 'allow-extension',
   external: EXTERNAL,
   plugins: PLUGINS({ dev: true }),
@@ -32,7 +46,7 @@ const DEV = {
 /** @type {import('rollup').RollupOptions} */
 const PROD = {
   input: INPUT,
-  output: ESM_OUTPUT({ dir: 'dist/prod' }),
+  output: ESM_OUTPUT({ dir: 'dist-prod' }),
   preserveEntrySignatures: 'allow-extension',
   external: EXTERNAL,
   plugins: PLUGINS(),
@@ -42,21 +56,30 @@ const PROD = {
 const NODE = {
   input: INPUT,
   output: {
-    dir: 'dist/node',
+    dir: 'dist-node',
     format: 'esm',
     entryFileNames(chunk) {
-      if (/src\/define/.test(chunk.facadeModuleId ?? '')) {
+      if (/src\/define/.test(chunk.facadeModuleId)) {
         return `define/${chunk.name}.js`;
+      }
+
+      if (/src\/react/.test(chunk.facadeModuleId)) {
+        return `react/${chunk.name}.js`;
+      }
+
+      if (/src\/svelte\/client/.test(chunk.facadeModuleId)) {
+        return `svelte/client/${chunk.name}.js`;
+      }
+
+      if (/src\/svelte\/node/.test(chunk.facadeModuleId)) {
+        return `svelte/node/${chunk.name}.js`;
       }
 
       return `${chunk.name}.js`;
     },
-    chunkFileNames(chunk) {
-      return `shared/${chunk.name}.js`;
-    },
   },
   preserveEntrySignatures: 'allow-extension',
-  external: ['@vidstack/foundation'],
+  external: ['@vidstack/foundation', 'react', 'svelte', 'svelte/internal'],
   plugins: [...PLUGINS(), litNode()],
 };
 
@@ -64,7 +87,7 @@ const NODE = {
 const CDN_BUNDLE = {
   input: 'src/define/dangerously-all.ts',
   output: {
-    file: 'dist/cdn/bundle.js',
+    file: 'dist-cdn/bundle.js',
     format: 'esm',
   },
   external: CDN_EXTERNAL,
@@ -75,7 +98,7 @@ const CDN_BUNDLE = {
 const CDN_DEFINE = {
   input: globbySync('src/define/*.ts'),
   output: {
-    dir: 'dist/cdn/define',
+    dir: 'dist-cdn/define',
     format: 'esm',
   },
   external: CDN_EXTERNAL,

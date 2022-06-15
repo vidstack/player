@@ -1,4 +1,4 @@
-# Vidstack Player
+# Vidstack Player (Svelte)
 
 [![package-badge]][package]
 [![discord-badge]][discord]

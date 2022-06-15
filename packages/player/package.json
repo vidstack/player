@@ -1,7 +1,7 @@
 {
   "name": "@vidstack/player",
   "version": "1.5.2",
-  "description": "Headless web components that make integrating media on the a web a breeze.",
+  "description": "Vidstack Player: Design a modern media player only using HTML and CSS.",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -9,12 +9,7 @@
   },
   "files": [
     "dist/",
-    "dist-node/",
-    "dist-prod/",
-    "dist-cdn/",
     "define/",
-    "react/",
-    "svelte/",
     "index.d.ts",
     "globals.d.ts",
     "elements.json",
@@ -22,35 +17,21 @@
     "vscode.html-data.json"
   ],
   "sideEffects": [
-    "./define/*.js",
-    "./src/define/*.ts",
-    "./dist/define/*.js",
-    "./dist-prod/define/*.js",
-    "./dist-cdn/define/*.js"
+    "./dist/**/define/*.js"
   ],
   "exports": {
     ".": {
-      "node": "./dist-node/index.js",
-      "development": "./dist/index.js",
-      "default": "./dist-prod/index.js"
+      "node": "./dist/node/index.js",
+      "development": "./dist/dev/index.js",
+      "default": "./dist/prod/index.js"
     },
     "./define/*": {
-      "node": "./dist-node/define/*",
-      "development": "./dist/define/*",
-      "default": "./dist-prod/define/*"
+      "node": "./dist/node/define/*",
+      "development": "./dist/dev/define/*",
+      "default": "./dist/prod/define/*"
     },
     "./cdn/define/*": {
-      "default": "./dist-cdn/define/*"
-    },
-    "./react": {
-      "node": "./dist-node/react/index.js",
-      "development": "./dist/react/index.js",
-      "default": "./dist-prod/react/index.js"
-    },
-    "./svelte": {
-      "node": "./dist-node/svelte/node/index.js",
-      "development": "./dist/svelte/client/index.js",
-      "default": "./dist-prod/svelte/client/index.js"
+      "default": "./dist/cdn/define/*"
     },
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
@@ -74,21 +55,18 @@
     "analyze": "eliza \"src/**/*{events,Element}.ts\"",
     "build:dist": "rollup -c",
     "build:definitions": "node ../../.scripts/definitions.js",
-    "build:types": "tsc -p tsconfig.json --pretty && rimraf dist/**/*.d.ts",
-    "types": "api-extractor run -c types.json",
-    "types:react": "api-extractor run -c types.react.json",
-    "types:svelte": "node ./.scripts/build-svelte-types.js && api-extractor run -c types.svelte.json",
-    "clean": "rimraf define dist dist-* coverage svelte react src/react/components src/svelte/{client,node}/components",
+    "build:types": "tsc -p tsconfig.json --pretty && api-extractor run -c types.json && rimraf dist/**/*.d.ts",
+    "clean": "rimraf define dist coverage",
     "dev": "run-p watch:dist watch:analyze watch:types",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
-    "minify:cdn": "node ../../.scripts/minify.js --entry=dist-cdn/**/*.js --outdir=dist-cdn",
+    "minify:cdn": "node ../../.scripts/minify.js --entry=dist/cdn/**/*.js --outdir=dist/cdn",
     "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3101",
     "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
     "test": "vitest --run",
     "watch:dist": "pnpm run build:dist -w",
     "watch:analyze": "pnpm run analyze -w",
-    "watch:types": "node ../../.scripts/run-on-change.js --glob=\"src/**/*.ts\" --scripts=build:types,types,types:react,types:svelte",
+    "watch:types": "node ../../.scripts/run-on-change.js --glob=\"src/**/*.ts\" --scripts=build:types",
     "watch:test": "vitest --watch"
   },
   "dependencies": {
@@ -104,7 +82,6 @@
     "@open-wc/testing-helpers": "^2.1.2",
     "@rollup/plugin-node-resolve": "^13.1.3",
     "@types/lru-cache": "^7.4.0",
-    "@types/react": "^17.0.39",
     "@vidstack/eliza": "workspace:*",
     "@vidstack/rollup": "workspace:*",
     "autoprefixer": "^10.4.2",
@@ -115,10 +92,8 @@
     "lru-cache": "^7.4.4",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.6",
-    "react": "^17.0.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.70.1",
-    "svelte": "^3.45.0",
     "tailwindcss": "^3.0.22",
     "tslib": "^2.3.0",
     "typescript": "^4.5.4",
@@ -143,7 +118,6 @@
     "media",
     "plyr",
     "player",
-    "react",
     "spec-compliant",
     "universal",
     "vds",

@@ -85,19 +85,19 @@ export const vscodeHtmlDataPlugin: PluginBuilder<Partial<VscodeHtmlDataPluginCon
  * https://github.com/microsoft/vscode-html-languageservice/blob/master/src/htmlLanguageTypes.ts#L164
  */
 
-interface IReference {
+export interface IReference {
   name: string;
   url: string;
 }
 
-interface ITagData {
+export interface ITagData {
   name: string;
   description?: string;
   attributes: IAttributeData[];
   references?: IReference[];
 }
 
-interface IAttributeData {
+export interface IAttributeData {
   name: string;
   description?: string;
   valueSet?: string;
@@ -105,18 +105,18 @@ interface IAttributeData {
   references?: IReference[];
 }
 
-interface IValueData {
+export interface IValueData {
   name: string;
   description?: string;
   references?: IReference[];
 }
 
-interface IValueSet {
+export interface IValueSet {
   name: string;
   values: IValueData[];
 }
 
-interface HTMLDataV1 {
+export interface HTMLDataV1 {
   version: 1 | 1.1;
   tags?: ITagData[];
   globalAttributes?: IAttributeData[];

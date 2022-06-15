@@ -12,23 +12,15 @@ import {
   type Plugin,
   vscodeHtmlDataPlugin,
 } from '@vidstack/eliza';
-import { kebabToPascalCase } from '@vidstack/foundation';
 import { createHash } from 'crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import LRUCache from 'lru-cache';
 import { relative, resolve } from 'path';
-import prettier from 'prettier';
 import type { Identifier, TypeChecker } from 'typescript';
 import ts from 'typescript';
 
-const CWD = process.cwd();
+const __cwd = process.cwd();
 
-const AUTO_GEN_COMMENT = '// [@vidstack/eliza] AUTO GENERATED BELOW';
-
-const pkgContent = readFileSync(resolve(CWD, './package.json')).toString();
-const pkg: Record<string, any> = JSON.parse(pkgContent);
-
-const SRC_DIR = resolve(CWD, 'src');
+const SRC_DIR = resolve(__cwd, 'src');
 
 export default [
   jsonPlugin({
@@ -63,8 +55,6 @@ export default [
     },
   }),
   vdsEventsPlugin(),
-  vdsReactPlugin(),
-  vdsSveltePlugin(),
 ];
 
 /**
@@ -187,179 +177,4 @@ function vdsEventsPlugin(): Plugin {
       }
     },
   };
-}
-
-function vdsReactPlugin(): Plugin {
-  return {
-    name: '@vidstack/player/react',
-    async transform(components) {
-      const INDEX_FILE = resolve(CWD, 'src/react/index.ts');
-      const OUTPUT_DIR = resolve(CWD, 'src/react/components');
-
-      if (!existsSync(OUTPUT_DIR)) {
-        mkdirSync(OUTPUT_DIR);
-      }
-
-      const index: string[] = [
-        AUTO_GEN_COMMENT,
-        '',
-        "export * from '../index.js';",
-        "export * from './lib/index.js';",
-        '',
-      ];
-
-      for (const component of components) {
-        const { className, source } = component;
-
-        const displayName = className.replace('Element', '');
-        const relativePath = relative(OUTPUT_DIR, source.dirPath);
-
-        const events: string[] = [];
-        for (const event of component.events) {
-          const linkTags = event.docTags
-            .filter((tag) => tag.name === 'link')
-            .map((tag) => `@link ${tag.text}`)
-            .join('\n');
-
-          const docs = event.documentation
-            ? `/**\n${event.documentation}${linkTags ? '\n\n' : ''}${linkTags}\n*/\n`
-            : '';
-
-          const reactEventName = `on${kebabToPascalCase(event.name.replace(/^vds-/, ''))}`;
-
-          events.push(`${docs}${reactEventName}: '${event.name}',`);
-        }
-
-        const fileContent = `
-          // [@vidstack/eliza] THIS FILE IS AUTO GENERATED - SEE \`eliza.config.ts\`
-
-          import '../../define/${component.tagName}.js';
-          import * as React from 'react';
-          import { createComponent } from '../lib/index.js';
-          import { ${component.className} } from '${relativePath}/index.js';
-
-          const EVENTS = {${events.join('\n')}} as const
-
-          /** ${component.documentation} */
-          const ${displayName} = createComponent(
-            React,
-            '${component.tagName}',
-            ${component.className},
-            EVENTS,
-            '${displayName}'
-          );
-
-          export default ${displayName};
-        `;
-
-        const outputFileName = displayName;
-        const outputPath = resolve(OUTPUT_DIR, `${outputFileName}.ts`);
-
-        writeFileFormattedSync(outputPath, fileContent);
-
-        index.push(
-          `export { default as ${displayName} } from './components/${outputFileName}.js';`,
-        );
-      }
-
-      writeFileSync(INDEX_FILE, [...index, ''].join('\n'));
-
-      const rootReactDir = resolve(CWD, 'react');
-
-      if (!existsSync(rootReactDir)) {
-        mkdirSync(rootReactDir);
-      }
-
-      writeFileSync(
-        resolve(rootReactDir, 'index.js'),
-        "// This file only exists so it's easier for you to autocomplete the file path in your IDE.",
-      );
-    },
-  };
-}
-
-function vdsSveltePlugin(): Plugin {
-  return {
-    name: '@vidstack/player/svelte',
-    async transform(components) {
-      const CLIENT_INDEX_FILE = resolve(CWD, 'src/svelte/client/index.ts');
-      const CLIENT_OUTPUT_DIR = resolve(CWD, 'src/svelte/client/components');
-      const NODE_INDEX_FILE = resolve(CWD, 'src/svelte/node/index.ts');
-      const NODE_OUTPUT_DIR = resolve(CWD, 'src/svelte/node/components');
-
-      const INDEX_FILES = [CLIENT_INDEX_FILE, NODE_INDEX_FILE];
-      const OUTPUT_DIRS = [CLIENT_OUTPUT_DIR, NODE_OUTPUT_DIR];
-
-      for (const dir of OUTPUT_DIRS) {
-        if (!existsSync(dir)) {
-          mkdirSync(dir);
-        }
-      }
-
-      const index: string[] = [
-        AUTO_GEN_COMMENT,
-        '',
-        "export * from '../../index.js';",
-        "export * from './lib/index.js';",
-        '',
-      ];
-
-      for (const component of components) {
-        const { className } = component;
-
-        const displayName = className.replace('Element', '');
-        const outputFileName = displayName;
-
-        const slots = `['default', ${component.slots
-          .map((slot) => slot.name.toLowerCase())
-          .filter((slot) => slot !== 'default')
-          .map((slot) => `'${slot}'`)
-          .join(', ')}]`;
-
-        const componentContent = (ssr: boolean) => `
-          // [@vidstack/eliza] THIS FILE IS AUTO GENERATED - SEE \`eliza.config.ts\`
-          ${ssr ? '' : `\nimport '../../../define/${component.tagName}.js';\n`}
-          import { createComponent } from '../lib/index.js';
-
-          export default createComponent('${component.tagName}', ${slots});
-        `;
-
-        for (const dir of OUTPUT_DIRS) {
-          const outputPath = resolve(dir, `${outputFileName}.js`);
-          const ssr = dir.includes('svelte/node');
-          writeFileFormattedSync(outputPath, componentContent(ssr));
-        }
-
-        index.push(
-          `export { default as ${displayName} } from './components/${outputFileName}.js';`,
-        );
-      }
-
-      for (const indexFile of INDEX_FILES) {
-        writeFileSync(indexFile, [...index, ''].join('\n'));
-      }
-
-      const rootSvelteDir = resolve(CWD, 'svelte');
-
-      if (!existsSync(rootSvelteDir)) {
-        mkdirSync(rootSvelteDir);
-      }
-
-      writeFileSync(
-        resolve(rootSvelteDir, 'index.js'),
-        "// This file only exists so it's easier for you to autocomplete the file path in your IDE.",
-      );
-    },
-  };
-}
-
-function writeFileFormattedSync(filePath: string, content: string) {
-  writeFileSync(filePath, format(filePath, content));
-}
-
-function format(filePath: string, content: string) {
-  return prettier.format(content, {
-    filepath: filePath,
-    ...pkg.prettier,
-  });
 }

@@ -3,10 +3,10 @@
 
   "projectFolder": ".",
 
-  "mainEntryPointFilePath": "./types/react/index.d.ts",
+  "mainEntryPointFilePath": "./types/index.d.ts",
 
   "dtsRollup": {
     "enabled": true,
-    "publicTrimmedFilePath": "./react/index.d.ts"
+    "publicTrimmedFilePath": "./index.d.ts"
   }
 }

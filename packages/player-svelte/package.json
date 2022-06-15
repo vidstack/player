@@ -1,0 +1,90 @@
+{
+  "name": "@vidstack/player-svelte",
+  "version": "1.5.2",
+  "description": "Vidstack Player (Svelte): Design a modern media player only using HTML and CSS.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "dist/",
+    "define/",
+    "index.d.ts",
+    "globals.d.ts"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "node": "./dist-node/index.js",
+      "development": "./dist/index.js",
+      "default": "./dist-prod/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "contributors": [
+    "Rahim Alwer <rahim.alwer@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vidstack/vidstack.git",
+    "directory": "packages/player-react"
+  },
+  "bugs": {
+    "url": "https://github.com/vidstack/vidstack/issues"
+  },
+  "scripts": {
+    "build:dist": "rollup -c",
+    "build:types": "tsc -p tsconfig.json --pretty",
+    "types": "node ./.scripts/build-svelte-types.js && api-extractor run -c types.svelte.json",
+    "clean": "rimraf dist dist-* src/components",
+    "dev": "run-p watch:dist watch:analyze watch:types",
+    "lint:eslint": "eslint src --fix",
+    "lint:prettier": "prettier src --write --loglevel warn",
+    "watch:dist": "pnpm run build:dist -w",
+    "watch:types": "node ../../.scripts/run-on-change.js --glob=\"src/**/*.ts\" --scripts=build:types,types,types:react,types:svelte"
+  },
+  "dependencies": {
+    "@vidstack/foundation": "workspace:*",
+    "@vidstack/player": "workspace:*"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "^7.20.0",
+    "@vidstack/rollup": "workspace:*",
+    "npm-run-all": "^4.1.5",
+    "react": "^17.0.2",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.70.1",
+    "tslib": "^2.3.0",
+    "tsx": "^3.4.2",
+    "typescript": "^4.5.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "accessible",
+    "audio",
+    "components",
+    "customizable",
+    "dailymotion",
+    "extensible",
+    "file",
+    "hls",
+    "html5",
+    "media",
+    "plyr",
+    "player",
+    "svelte",
+    "spec-compliant",
+    "universal",
+    "vds",
+    "video",
+    "vidstack",
+    "vime",
+    "vimeo",
+    "web-component",
+    "universal",
+    "youtube"
+  ]
+}
