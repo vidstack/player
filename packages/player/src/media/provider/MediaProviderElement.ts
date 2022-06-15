@@ -11,6 +11,7 @@ import {
   isUndefined,
   listen,
   LogDispatcher,
+  raf,
   RequestQueue,
   ScreenOrientationController,
   ScreenOrientationLock,
@@ -133,7 +134,15 @@ export abstract class MediaProviderElement extends LitElement {
     this._updateMediaStoreOnDisconnect(this._store);
     this.mediaQueue.destroy();
     this._disconnectDisposal.empty();
+
     super.disconnectedCallback();
+
+    // Destroy after 2 ticks if it hasn't re-connected.
+    raf(() => {
+      raf(() => {
+        if (!this.isConnected) this.destroy();
+      });
+    });
   }
 
   /* @internal */
@@ -149,10 +158,10 @@ export abstract class MediaProviderElement extends LitElement {
 
   /**
    * Hard destroy the media provider and clear all state. This voids the media provider unusable,
-   * so call with caution. Generally best to only call this in a framework destroy hook.
+   * so call with caution.
    */
   destroy() {
-    this.disconnectedCallback();
+    if (this.isConnected) this.disconnectedCallback();
     this.dispatchEvent(vdsEvent('vds-destroy'));
   }
 
