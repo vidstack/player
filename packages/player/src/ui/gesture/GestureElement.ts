@@ -12,11 +12,8 @@ import {
 import { css, type CSSResultGroup, LitElement, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import {
-  type MediaProviderElement,
-  mediaProviderElementContext,
-  mediaStoreContext,
-} from '../../media';
+import { mediaProviderElementContext, mediaStoreContext } from '../../media';
+import { type MediaProviderElement } from '../../media/provider/MediaProviderElement';
 
 // We perform gestures in batches to enable prioritization. Each batch belongs to a root
 // media container. This is to ensure gestures on one player don't affect another.

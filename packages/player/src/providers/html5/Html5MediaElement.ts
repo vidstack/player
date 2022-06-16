@@ -13,7 +13,8 @@ import {
 } from '@vidstack/foundation';
 import { property } from 'lit/decorators.js';
 
-import { MediaProviderElement, MediaType } from '../../media';
+import { MediaType } from '../../media';
+import { MediaProviderElement } from '../../media/provider/MediaProviderElement';
 
 export const AUDIO_EXTENSIONS =
   /\.(m4a|mp4a|mpga|mp2|mp2a|mp3|m2a|m3a|wav|weba|aac|oga|spx)($|\?)/i;

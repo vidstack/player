@@ -1,6 +1,6 @@
 import type { PageState, PageVisibility, VdsEvent } from '@vidstack/foundation';
 
-import type { MediaProviderElement } from '../provider';
+import type { MediaProviderElement } from '../provider/MediaProviderElement';
 
 export type MediaVisibilityEvents = {
   'vds-media-visibility-change': MediaVisibilityChangeEvent;

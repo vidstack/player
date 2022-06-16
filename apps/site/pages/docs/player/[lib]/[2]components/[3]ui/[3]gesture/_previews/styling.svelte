@@ -2,7 +2,7 @@
   import '../_snippets/styling.css';
 
   import { onMount } from 'svelte';
-  import { AspectRatio, Gesture, Media, Video } from '@vidstack/player/svelte';
+  import { AspectRatio, Gesture, Media, Video } from '@vidstack/player-svelte';
 
   let hideMessage = false;
   onMount(() => {

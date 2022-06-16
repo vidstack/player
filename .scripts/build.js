@@ -1,9 +1,9 @@
 import path from 'path';
+
 import minimist from 'minimist';
-import { globbySync } from 'globby';
 import { build } from 'esbuild';
 import kleur from 'kleur';
-import { readFileSync } from 'fs';
+import { commonOptions } from './common-build.js';
 
 const args = minimist(process.argv.slice(2));
 
@@ -19,61 +19,26 @@ if (!args.outdir) {
   console.error(kleur.red(`\n\n🚨 Missing outdir argument \`--outdir\`\n\n`));
 }
 
-const IS_NODE = args.platform === 'node';
-
-const NODE_SHIMS = IS_NODE ? [args.requireshim && requireShim()].filter(Boolean).join('\n') : '';
-
 async function main() {
-  const entryPoints = (args.entry.includes(',') ? args.entry.split(',') : [args.entry])
-    .map((glob) => globbySync(glob))
-    .flat();
-
+  const entry = args.entry.includes(',') ? args.entry.split(',') : [args.entry];
   const outdir = path.resolve(process.cwd(), args.outdir);
+  const watch = args.watch || args.w;
 
   await build({
-    entryPoints,
+    ...commonOptions({
+      entry,
+      dev: !args.prod,
+      node: args.platform === 'node',
+      external: args.external.split(','),
+      externalizeDeps: args.externaldeps,
+    }),
     outdir,
-    outbase: args.outbase ?? 'src',
-    logLevel: args.logLevel ?? 'warning',
-    platform: args.platform ?? 'browser',
-    format: 'esm',
-    target: args.target ?? IS_NODE ? 'node16' : 'esnext',
-    watch: args.watch || args.w,
-    splitting: IS_NODE || args.nosplit ? false : true,
-    chunkNames: 'chunks/[name].[hash]',
-    banner: { js: NODE_SHIMS },
-    minify: args.minify,
-    mangleProps: args.mangle ? /^_/ : undefined,
-    reserveProps: args.mangle ? /^__/ : undefined,
-    legalComments: 'none',
-    sourcemap: args.sourcemap,
-    treeShaking: true,
-    metafile: args.bundle && !args.watch && !args.w,
-    incremental: args.watch || args.w,
-    define: { __DEV__: args.prod ? 'false' : 'true', __NODE__: IS_NODE ? 'true' : 'false' },
+    watch,
+    incremental: watch,
     bundle: args.bundle,
-    external: args.bundle
-      ? [...(args.external?.split(',') ?? []), ...(args.externaldeps ? getDeps() : [])]
-      : undefined,
+    outbase: args.outbase ?? 'src',
+    sourcemap: args.sourcemap,
   });
-}
-
-function getDeps() {
-  const pkg = JSON.parse(readFileSync(path.resolve(process.cwd(), 'package.json')).toString());
-  return [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})];
-}
-
-function requireShim() {
-  return [
-    "import __path from 'path';",
-    "import { fileURLToPath as __fileURLToPath } from 'url';",
-    "import { createRequire as __createRequire } from 'module';",
-    'const require = __createRequire(import.meta.url);',
-    'var __require = function(x) { return require(x); };',
-    '__require.__proto__.resolve = require.resolve;',
-    'const __filename = __fileURLToPath(import.meta.url);',
-    'const __dirname = __path.dirname(__filename);',
-  ].join('\n');
 }
 
 main().catch((e) => {

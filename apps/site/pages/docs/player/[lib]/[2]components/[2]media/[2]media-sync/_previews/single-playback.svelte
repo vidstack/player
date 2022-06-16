@@ -1,5 +1,5 @@
 <script>
-  import { Media, MediaSync, Video, AspectRatio } from '@vidstack/player/svelte';
+  import { Media, MediaSync, Video, AspectRatio } from '@vidstack/player-svelte';
 </script>
 
 <div class="flex flex-col">

@@ -1,7 +1,7 @@
 <script>
   import '../_snippets/styling.css';
 
-  import { Media, Video, AspectRatio, Poster, PlayButton, Gesture } from '@vidstack/player/svelte';
+  import { Media, Video, AspectRatio, Poster, PlayButton, Gesture } from '@vidstack/player-svelte';
 </script>
 
 <Media class="w-full max-w-md">

@@ -9,7 +9,10 @@ import {
 import { css, type CSSResultGroup, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { mediaProviderDiscoveryId, type MediaProviderElement } from '../provider';
+import {
+  mediaProviderDiscoveryId,
+  type MediaProviderElement,
+} from '../provider/MediaProviderElement';
 
 export type EnterVisibilityMediaAction = 'play' | 'unmute';
 export type ExitVisibilityMediaAction = 'pause' | 'mute';

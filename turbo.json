@@ -3,67 +3,20 @@
   "baseBranch": "origin/main",
   "pipeline": {
     "analyze": {
-      "dependsOn": ["^build:dist", "^types"],
-      "outputs": [
-        "src/react/index.ts",
-        "src/react/components/**",
-        "src/svelte/{client,node}/index.ts",
-        "src/svelte/{client,node}/components/**",
-        "react/index.js",
-        "svelte/index.js",
-        "elements.json",
-        "vscode.html-data.json"
-      ]
+      "dependsOn": ["^bundle", "^types"],
+      "outputs": ["elements.json", "vscode.html-data.json"]
     },
     "build": {
-      "dependsOn": [
-        "build:dist",
-        "build:definitions",
-        "types",
-        "types:react",
-        "types:svelte",
-        "minify:cdn"
-      ],
+      "dependsOn": ["bundle", "types"],
       "outputs": ["build/**"]
     },
-    "build:dist": {
-      "dependsOn": ["analyze", "^build:dist"],
-      "outputs": ["dist/**", "dist-node/**", "dist-cdn/**", "dist-prod/**"]
-    },
-    "build:definitions": {
-      "dependsOn": ["build:types"],
-      "inputs": ["src/define/**"],
-      "outputs": ["define/**"]
-    },
-    "build:types": {
-      "dependsOn": ["analyze", "^types"],
-      "outputs": ["types/**", "tsconfig.tsbuildinfo"]
+    "bundle": {
+      "dependsOn": ["^analyze", "^bundle", "clean"],
+      "outputs": ["dist/**", "src/**/_components"]
     },
     "types": {
-      "dependsOn": ["build:types"],
-      "inputs": ["types/**", "tsconfig.json"],
-      "outputs": ["index.d.ts"]
-    },
-    "types:react": {
-      "dependsOn": ["build:types"],
-      "inputs": ["types/**", "tsconfig.json"],
-      "outputs": ["react/index.d.ts"]
-    },
-    "types:svelte": {
-      "dependsOn": ["build:types"],
-      "inputs": ["types/**", "tsconfig.json"],
-      "outputs": ["svelte/index.d.ts"]
-    },
-    "minify:cdn": {
-      "dependsOn": ["build:dist"],
-      "inputs": ["dist-cdn/**"],
-      "outputs": ["dist-cdn/**"]
-    },
-    "dev": {
-      "cache": false
-    },
-    "test": {
-      "inputs": ["src/**", "tests/**", "vite.config.ts"]
+      "dependsOn": ["^analyze", "^types", "clean"],
+      "outputs": ["index.d.ts", "define/**", "types/**", "tsconfig.tsbuildinfo"]
     },
     "clean": {
       "cache": false

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { type MediaVolumeSyncEvent } from '@vidstack/player';
-  import { Media, MediaSync, Video, AspectRatio } from '@vidstack/player/svelte';
+  import { Media, MediaSync, Video, AspectRatio } from '@vidstack/player-svelte';
 
   function onMediaVolumeSync(event: MediaVolumeSyncEvent) {
     const { volume, muted } = event.detail;

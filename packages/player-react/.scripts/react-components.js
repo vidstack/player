@@ -5,15 +5,14 @@ import { writeFile } from 'fs/promises';
 
 const __cwd = process.cwd();
 
-/** @type {import('@vidstack/eliza').ComponentMeta[]} */
-const components = [];
-const elementsPath = path.resolve(__cwd, 'node_modules/@vidstack/player/elements.json');
-const elements = JSON.parse(fs.readFileSync(elementsPath, { encoding: 'utf-8' }));
-components.push(...elements.components);
-
-const AUTOGEN_COMMENT = '// THIS FILE IS AUTO GENERATED - SEE `.scripts/build-components.js`';
-
 async function main() {
+  /** @type {import('@vidstack/eliza').ComponentMeta[]} */
+  const components = [];
+  const elementsPath = path.resolve(__cwd, 'node_modules/@vidstack/player/elements.json');
+  const elements = JSON.parse(fs.readFileSync(elementsPath, { encoding: 'utf-8' }));
+  components.push(...elements.components);
+
+  const AUTOGEN_COMMENT = '// THIS FILE IS AUTO GENERATED - SEE `.scripts/build-components.js`';
   const COMPONENTS_DIR = path.resolve(__cwd, 'src/_components');
 
   if (!fs.existsSync(COMPONENTS_DIR)) fs.mkdirSync(COMPONENTS_DIR);
@@ -47,12 +46,16 @@ async function main() {
 
       const fileContent = `${AUTOGEN_COMMENT}
 
-import '@vidstack/player/define/${component.tagName}';
-
 import { ${component.className} } from '@vidstack/player';
 import * as React from 'react';
 
 import { createComponent } from '../lib';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    '${component.tagName}': ${component.className};
+  }
+}
 
 const EVENTS = {${events.join('\n')}} as const
 

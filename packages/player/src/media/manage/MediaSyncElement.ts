@@ -10,7 +10,10 @@ import { css, type CSSResultGroup, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import type { MediaVolumeChange, MediaVolumeChangeEvent } from '../events';
-import { mediaProviderDiscoveryId, type MediaProviderElement } from '../provider';
+import {
+  mediaProviderDiscoveryId,
+  type MediaProviderElement,
+} from '../provider/MediaProviderElement';
 
 const mediaProviders = new Set<MediaProviderElement>();
 

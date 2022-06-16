@@ -86,7 +86,7 @@ export async function loadHlsConstructorScript(
     if (!isFunction((window as any).Hls)) {
       throw Error(
         __DEV__
-          ? '[vds]: Failed loading `hls.js`. Could not find a valid constructor at `window.Hls`.'
+          ? '[vds]: Failed loading `hls.js`. Could not find a valid Hls constructor on window'
           : '',
       );
     }

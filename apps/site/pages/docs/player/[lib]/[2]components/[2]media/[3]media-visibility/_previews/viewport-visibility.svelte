@@ -1,6 +1,6 @@
 <script lang="ts">
   import { type MediaVisibilityChangeEvent } from '@vidstack/player';
-  import { Media, MediaVisibility, Video, AspectRatio } from '@vidstack/player/svelte';
+  import { Media, MediaVisibility, Video, AspectRatio } from '@vidstack/player-svelte';
 
   import ArrowUpIcon from '~icons/ri/arrow-up-line';
   import ArrowDownIcon from '~icons/ri/arrow-down-line';

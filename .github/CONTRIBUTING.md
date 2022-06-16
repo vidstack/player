@@ -76,16 +76,13 @@ $: pnpm up {package}@{version} -r
 
 ```bash
 # Build all packages (turbo)
-$: pnpm run build --filter=./packages/*
+$: pnpm build
 
-# Build single package
-$: pnpm run build --filter=player
-
-# Build single app
-$: pnpm run build --filter=site
+# Build single package (turbo) - see root `package.json` for more
+$: pnpm build:player
 
 # Build and watch single package
-$: pnpm -F player dev
+$: pnpm -F player watch
 ```
 
 ### Sandbox

@@ -1,5 +1,5 @@
 <script>
-  import { AspectRatio, Gesture, Media, Time, Video } from '@vidstack/player/svelte';
+  import { AspectRatio, Gesture, Media, Time, Video } from '@vidstack/player-svelte';
 </script>
 
 <Media class="w-full max-w-md">

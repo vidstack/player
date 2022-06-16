@@ -16,9 +16,7 @@
     "tailwind.cjs",
     "vscode.html-data.json"
   ],
-  "sideEffects": [
-    "./dist/**/define/*.js"
-  ],
+  "sideEffects": true,
   "exports": {
     ".": {
       "node": "./dist/node/index.js",
@@ -53,21 +51,20 @@
   },
   "scripts": {
     "analyze": "eliza \"src/**/*{events,Element}.ts\"",
-    "build:dist": "rollup -c",
-    "build:definitions": "node ../../.scripts/definitions.js",
-    "build:types": "tsc -p tsconfig.json --pretty && api-extractor run -c types.json && rimraf dist/**/*.d.ts",
+    "bundle": "node ../../.scripts/bundle.js",
     "clean": "rimraf define dist coverage",
-    "dev": "run-p watch:dist watch:analyze watch:types",
+    "watch": "run-p watch:bundle watch:analyze watch:types",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
-    "minify:cdn": "node ../../.scripts/minify.js --entry=dist/cdn/**/*.js --outdir=dist/cdn",
-    "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3101",
     "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
+    "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3101",
     "test": "vitest --run",
-    "watch:dist": "pnpm run build:dist -w",
+    "types": "node ../../.scripts/types.js",
+    "post:types": "node ../../.scripts/definitions.js",
     "watch:analyze": "pnpm run analyze -w",
-    "watch:types": "node ../../.scripts/run-on-change.js --glob=\"src/**/*.ts\" --scripts=build:types",
-    "watch:test": "vitest --watch"
+    "watch:bundle": "pnpm run bundle -w",
+    "watch:test": "vitest --watch",
+    "watch:types": "pnpm run types -w"
   },
   "dependencies": {
     "@vidstack/foundation": "workspace:*"
@@ -80,10 +77,8 @@
     "@microsoft/api-extractor": "^7.20.0",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
-    "@rollup/plugin-node-resolve": "^13.1.3",
     "@types/lru-cache": "^7.4.0",
     "@vidstack/eliza": "workspace:*",
-    "@vidstack/rollup": "workspace:*",
     "autoprefixer": "^10.4.2",
     "hls.js": "^1.1.3",
     "jsdom": "^19.0.0",
@@ -93,7 +88,6 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.6",
     "rimraf": "^3.0.2",
-    "rollup": "^2.70.1",
     "tailwindcss": "^3.0.22",
     "tslib": "^2.3.0",
     "typescript": "^4.5.4",

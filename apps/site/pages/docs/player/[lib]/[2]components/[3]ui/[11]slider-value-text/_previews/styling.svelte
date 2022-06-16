@@ -8,7 +8,7 @@
     SliderValueText,
     TimeSlider,
     Video,
-  } from '@vidstack/player/svelte';
+  } from '@vidstack/player-svelte';
 </script>
 
 <Media class="w-full max-w-md">

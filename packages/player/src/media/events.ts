@@ -9,7 +9,7 @@ import {
 
 import { type MediaErrorDetail } from './MediaError';
 import { MediaType } from './MediaType';
-import { type MediaProviderElement } from './provider';
+import { type MediaProviderElement } from './provider/MediaProviderElement';
 import {
   type MuteRequestEvent,
   type PauseRequestEvent,

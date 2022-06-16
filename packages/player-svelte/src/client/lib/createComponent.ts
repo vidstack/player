@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import { kebabToCamelCase } from '@vidstack/foundation';
+import {
+  type Constructor,
+  kebabToCamelCase,
+  safelyDefineCustomElement,
+} from '@vidstack/foundation';
 import {
   append_hydration,
   assign,
@@ -17,7 +21,6 @@ import {
   init,
   insert_hydration,
   listen,
-  noop,
   safe_not_equal,
   SvelteComponent,
   tick,
@@ -28,6 +31,7 @@ import {
 
 export function createComponent(
   tag_name: keyof HTMLElementTagNameMap,
+  element_class: Constructor<HTMLElement>,
   slots: string[],
 ): typeof SvelteComponent {
   function create_fragment(ctx: any) {
@@ -94,6 +98,8 @@ export function createComponent(
         for (const slot_name of slots) {
           $$slots[slot_name].slot?.m(custom_element, null);
         }
+
+        safelyDefineCustomElement(tag_name, element_class);
 
         current = true;
       },

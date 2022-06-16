@@ -13,13 +13,14 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build:base": "node ../../.scripts/build.js --entry=src/index.ts",
-    "build:dist": "pnpm run build:base --outdir=dist/node --platform=node --bundle --requireshim --external=yargs,@vidstack/foundation,typescript",
-    "build:types": "tsc -p tsconfig.json --pretty && api-extractor run -c types.json && rimraf dist/**/*.d.ts",
+    "bundle": "node ../../.scripts/bundle.js",
     "clean": "rimraf dist",
-    "watch": "run-p \"build:dist -- -w\" \"build:types -- -w\"",
     "lint:eslint": "eslint src --fix",
-    "lint:prettier": "prettier src --write --loglevel warn"
+    "lint:prettier": "prettier src --write --loglevel warn",
+    "types": "node ../../.scripts/types.js",
+    "watch": "run-p watch:*",
+    "watch:bundle": "pnpm run bundle -w",
+    "watch:types": "pnpm run types -w"
   },
   "dependencies": {
     "@microsoft/api-extractor": "^7.20.0",

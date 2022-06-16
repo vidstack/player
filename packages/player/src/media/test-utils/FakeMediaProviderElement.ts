@@ -1,6 +1,6 @@
 import { vdsEvent } from '@vidstack/foundation';
 
-import { MediaProviderElement } from '../provider';
+import { MediaProviderElement } from '../provider/MediaProviderElement';
 import { createTimeRanges } from '../time-ranges';
 
 /**

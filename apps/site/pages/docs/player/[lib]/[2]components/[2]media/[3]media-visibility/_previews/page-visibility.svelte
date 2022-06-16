@@ -1,6 +1,6 @@
 <script lang="ts">
   import { type MediaVisibilityChangeEvent } from '@vidstack/player';
-  import { Media, MediaVisibility, Video, AspectRatio } from '@vidstack/player/svelte';
+  import { Media, MediaVisibility, Video, AspectRatio } from '@vidstack/player-svelte';
 
   function onMediaVisibilityChange(event: MediaVisibilityChangeEvent) {
     const { page } = event.detail;

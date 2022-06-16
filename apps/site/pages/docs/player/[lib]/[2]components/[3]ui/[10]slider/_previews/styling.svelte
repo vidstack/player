@@ -1,7 +1,7 @@
 <script>
   import '../_snippets/styling.css';
 
-  import { Slider } from '@vidstack/player/svelte';
+  import { Slider } from '@vidstack/player-svelte';
 </script>
 
 <Slider>

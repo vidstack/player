@@ -1,5 +1,5 @@
 <script>
-  import { Media, Audio } from '@vidstack/player/svelte';
+  import { Media, Audio, PlayButton } from '@vidstack/player-svelte';
 </script>
 
 <Media>

@@ -1,9 +1,8 @@
-import { spawn } from 'child_process';
 import chokidar from 'chokidar';
 import kleur from 'kleur';
 import minimist from 'minimist';
+import { execa } from 'execa';
 
-const cwd = process.cwd();
 const args = minimist(process.argv.slice(2));
 
 if (!args.glob) {
@@ -21,17 +20,8 @@ async function onChange() {
   if (running) return;
 
   running = true;
-  for (const script of scripts) await runScript(script);
+  for (const script of scripts) await execa('pnpm', ['run', script], { stdio: 'inherit' });
   running = false;
-}
-
-function runScript(script) {
-  return new Promise((resolve) => {
-    const ps = spawn('pnpm', ['run', script], { stdio: 'inherit', cwd });
-    ps.on('close', () => {
-      resolve();
-    });
-  });
 }
 
 onChange();

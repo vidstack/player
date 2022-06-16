@@ -31,18 +31,18 @@
     "url": "https://github.com/vidstack/vidstack/issues"
   },
   "scripts": {
-    "build:dist": "rollup -c",
-    "build:types": "tsc -p tsconfig.json --pretty && api-extractor run -c types.json && rimraf dist/**/*.d.ts",
+    "bundle": "node ../../.scripts/bundle.js",
     "clean": "rimraf dist",
-    "dev": "run-p watch:dist watch:types",
-    "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3100",
-    "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
+    "sandbox:prepare": "node ../../.scripts/copy.js --entry=.templates/sandbox --outdir=sandbox --overwrite=false",
+    "sandbox": "pnpm sandbox:prepare && vite --open /sandbox/index.html --port 3100",
     "test": "vitest --run",
-    "watch:dist": "pnpm run build:dist -w",
-    "watch:types": "node ../../.scripts/run-on-change.js --glob=\"src/**/*.ts\" --scripts=build:types",
-    "watch:test": "vitest --watch"
+    "types": "node ../../.scripts/types.js",
+    "watch": "run-p watch:bundle watch:types",
+    "watch:bundle": "pnpm run bundle -w",
+    "watch:test": "vitest --watch",
+    "watch:types": "pnpm run types -w"
   },
   "dependencies": {
     "@types/fscreen": "^1.0.1",
@@ -56,14 +56,10 @@
     "@microsoft/api-extractor": "^7.20.0",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
-    "@rollup/plugin-node-resolve": "^13.1.3",
-    "@vidstack/rollup": "workspace:*",
     "fscreen": "^1.2.0",
     "jsdom": "^19.0.0",
     "lit": "^2.1.3",
     "rimraf": "^3.0.2",
-    "rollup": "^2.70.1",
-    "tslib": "^2.3.1",
     "vite": "^2.9.1",
     "vitest": "^0.6.1"
   }

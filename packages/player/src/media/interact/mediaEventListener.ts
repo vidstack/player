@@ -2,7 +2,7 @@ import { discover, listen } from '@vidstack/foundation';
 import type { ReactiveControllerHost } from 'lit';
 
 import type { MediaControllerEvents } from '../controller';
-import { mediaProviderDiscoveryId } from '../provider';
+import { mediaProviderDiscoveryId } from '../provider/MediaProviderElement';
 
 /**
  * Simplifies attaching event listeners to a media provider below in the DOM. This is required

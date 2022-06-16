@@ -5,7 +5,7 @@
  * `@lit-labs/react`.
  */
 
-import { type Constructor } from '@vidstack/foundation';
+import { type Constructor, safelyDefineCustomElement } from '@vidstack/foundation';
 import * as ReactModule from 'react';
 
 const reservedReactProperties = new Set(['children', 'localName', 'ref', 'style', 'className']);
@@ -117,6 +117,8 @@ export const createComponent = <I extends HTMLElement, E extends Record<string, 
   events?: E,
   displayName?: string,
 ) => {
+  safelyDefineCustomElement(tagName, elementClass);
+
   const Component = React.Component;
   const createElement = React.createElement;
 

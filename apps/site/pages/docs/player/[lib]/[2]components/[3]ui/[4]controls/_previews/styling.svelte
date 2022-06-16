@@ -2,7 +2,7 @@
   import '../_snippets/styling.css';
 
   import { onMount } from 'svelte';
-  import { AspectRatio, Media, Video } from '@vidstack/player/svelte';
+  import { AspectRatio, Media, Video } from '@vidstack/player-svelte';
 
   let root;
   let canPlay;
