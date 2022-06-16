@@ -38,7 +38,7 @@ async function main() {
       }),
       bundle: true,
       minify: true,
-      outfile: 'dist/cdn/bundle.js',
+      outfile: 'cdn/bundle.js',
     }),
     build({
       ...shared({
@@ -49,7 +49,7 @@ async function main() {
       bundle: true,
       splitting: true,
       minify: true,
-      outdir: 'dist/cdn/define',
+      outdir: 'cdn/define',
     }),
   ]);
 }

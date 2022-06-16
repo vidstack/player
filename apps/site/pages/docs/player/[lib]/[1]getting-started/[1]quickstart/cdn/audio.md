@@ -18,7 +18,7 @@ Add the following `script` tags to register the custom media elements.
   <head>
     <script
       type="module"
-      src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist/cdn/bundle.js"
+      src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/cdn/bundle.js"
     ></script>
   </head>
   <!-- ... -->
@@ -30,11 +30,11 @@ You can register specific elements like so:
 ```html {% copy=true %}
 <script
   type="module"
-  src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist/cdn/define/vds-media.js"
+  src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/cdn/define/vds-media.js"
 ></script>
 <script
   type="module"
-  src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/dist/cdn/define/vds-audio.js"
+  src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/cdn/define/vds-audio.js"
 ></script>
 ```
 

@@ -18,6 +18,7 @@ turbo-graph*
 /apps/*/.vercel_build_output/
 
 packages/*/dist/
+packages/*/cdn/
 packages/*/define/
 packages/*/types/
 packages/*/index.d.ts

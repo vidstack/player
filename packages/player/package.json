@@ -29,7 +29,7 @@
       "default": "./dist/prod/define/*"
     },
     "./cdn/define/*": {
-      "default": "./dist/cdn/define/*"
+      "default": "./cdn/define/*"
     },
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
@@ -52,7 +52,7 @@
   "scripts": {
     "analyze": "eliza \"src/**/*{events,Element}.ts\"",
     "bundle": "node ../../.scripts/bundle.js",
-    "clean": "rimraf define dist coverage",
+    "clean": "rimraf define dist cdn coverage",
     "watch": "run-p watch:bundle watch:analyze watch:types",
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",

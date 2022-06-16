@@ -12,7 +12,7 @@
     },
     "bundle": {
       "dependsOn": ["^analyze", "^bundle", "clean"],
-      "outputs": ["dist/**", "src/**/_components"]
+      "outputs": ["dist/**", "cdn/**", "src/**/_components"]
     },
     "types": {
       "dependsOn": ["^analyze", "^types", "clean"],
