@@ -16,7 +16,10 @@
     "tailwind.cjs",
     "vscode.html-data.json"
   ],
-  "sideEffects": true,
+  "sideEffects": [
+    "./src/define/*.ts",
+    "./dist/*/define/*.js"
+  ],
   "exports": {
     ".": {
       "node": "./dist/node/index.js",
