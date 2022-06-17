@@ -8,11 +8,10 @@ import type {
 } from './index';
 
 declare global {
-  interface GlobalEventHandlersEventMap
-    extends FullscreenEvents,
-      ScreenOrientationEvents,
-      LoggerEvents {
+  interface VdsElementEventMap extends FullscreenEvents, ScreenOrientationEvents, LoggerEvents {
     'vds-noop': any;
     'vds-context-consumer-connect': ContextConsumerConnectEvent;
   }
 }
+
+export {};

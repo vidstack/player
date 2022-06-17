@@ -1,6 +1,6 @@
-export type GlobalEventHandlerMap = {
-  [EventType in keyof GlobalEventHandlersEventMap]?: (
-    event: GlobalEventHandlersEventMap[EventType],
+export type HTMLElementEventCallbackMap = {
+  [EventType in keyof HTMLElementEventMap]?: (
+    event: HTMLElementEventMap[EventType],
   ) => void | Promise<void>;
 };
 
@@ -20,10 +20,10 @@ export type GlobalEventHandlerMap = {
  * disposeListener();
  * ```
  */
-export function listen<EventType extends keyof GlobalEventHandlerMap>(
+export function listen<EventType extends keyof HTMLElementEventCallbackMap>(
   target: EventTarget,
   type: EventType,
-  listener: GlobalEventHandlerMap[EventType],
+  listener: HTMLElementEventCallbackMap[EventType],
   options?: boolean | EventListenerOptions | AddEventListenerOptions,
 ): () => void {
   target.addEventListener(type, listener as EventListener, options);
@@ -48,13 +48,14 @@ export function isTouchEvent(event: Event | undefined): event is TouchEvent {
 export function isMouseEvent(event: Event | undefined): event is MouseEvent {
   return eventTypeIncludes(event, ['click', 'mouse']);
 }
-export async function waitForEvent<EventType extends keyof GlobalEventHandlersEventMap>(
+
+export async function waitForEvent<EventType extends keyof HTMLElementEventMap>(
   target: EventTarget,
   type: EventType,
   options?: (EventListenerOptions | AddEventListenerOptions) & {
     timeout?: number;
   },
-): Promise<GlobalEventHandlersEventMap[EventType]> {
+): Promise<HTMLElementEventMap[EventType]> {
   return new Promise((resolve, reject) => {
     const timerId = window.setTimeout(() => {
       reject(`Timed out waiting for event \`${type}\`.`);

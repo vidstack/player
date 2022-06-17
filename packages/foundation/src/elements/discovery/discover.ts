@@ -63,7 +63,7 @@ export function discover(host: DiscovererHost, id: symbol, callback: DiscoveryCa
  */
 export function discoverable(
   host: DiscovererHost,
-  eventType: keyof GlobalEventHandlersEventMap,
+  eventType: keyof VdsElementEventMap,
   options: { register?: symbol } = {},
 ) {
   const id = options.register;

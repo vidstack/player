@@ -1,15 +1,15 @@
 import { type ReactiveControllerHost } from 'lit';
 
-import { type GlobalEventHandlerMap, listen } from '../utils/events';
+import { type HTMLElementEventCallbackMap, listen } from '../utils/events';
 
 /**
  * Add an event listener to the given `host` element until it's disconnected from the DOM, at which
  * point the listener will be removed.
  */
-export function eventListener<EventType extends keyof GlobalEventHandlerMap>(
+export function eventListener<EventType extends keyof HTMLElementEventCallbackMap>(
   host: ReactiveControllerHost & EventTarget,
   type: EventType,
-  listener: GlobalEventHandlerMap[EventType],
+  listener: HTMLElementEventCallbackMap[EventType],
   options?: (EventListenerOptions | AddEventListenerOptions) & {
     target?: EventTarget;
   },

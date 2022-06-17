@@ -17,6 +17,6 @@ export type DiscoveryEvent<Discoverable extends Element> = VdsEvent<
 >;
 
 export type ScopedDiscoveryEvent<Discoverable extends Element = Element> = {
-  TYPE: keyof GlobalEventHandlersEventMap;
+  TYPE: keyof HTMLElementEventMap;
   new (...args: any): DiscoveryEvent<Discoverable>;
 };

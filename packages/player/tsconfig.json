@@ -4,7 +4,8 @@
     "declarationDir": "types",
     "paths": {
       "$vidstack/player": ["./src"]
-    }
+    },
+    "types": ["@vidstack/foundation/globals"]
   },
   "include": ["src/**/*.ts"]
 }

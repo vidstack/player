@@ -569,7 +569,7 @@ export class MediaController {
     this._mediaEvents = [];
   }
 
-  protected _findLastMediaEvent(eventType: keyof GlobalEventHandlersEventMap) {
+  protected _findLastMediaEvent(eventType: keyof HTMLElementEventMap) {
     return this._mediaEvents[this._mediaEvents.map((e) => e.type).lastIndexOf(eventType)];
   }
 

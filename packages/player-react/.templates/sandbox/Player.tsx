@@ -1,3 +1,5 @@
+/// <reference types="@vidstack/player/globals" />
+
 function Player() {
   return (
     <>

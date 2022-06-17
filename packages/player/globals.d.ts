@@ -13,7 +13,7 @@ import type {
 } from './index';
 
 declare global {
-  interface GlobalEventHandlersEventMap
+  interface VdsElementEventMap
     extends HlsEvents,
       MediaEvents,
       MediaRequestEvents,
@@ -25,3 +25,5 @@ declare global {
     'vds-media-provider-connect': MediaProviderConnectEvent;
   }
 }
+
+export {};

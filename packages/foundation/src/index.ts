@@ -6,10 +6,9 @@ import type { LoggerEvents } from './logger/events';
 import type { ScreenOrientationEvents } from './screen-orientation';
 
 declare global {
-  interface GlobalEventHandlersEventMap
-    extends FullscreenEvents,
-      ScreenOrientationEvents,
-      LoggerEvents {
+  const __DEV__: true;
+
+  interface VdsElementEventMap extends FullscreenEvents, ScreenOrientationEvents, LoggerEvents {
     'vds-noop': any;
     'vds-context-consumer-connect': ContextConsumerConnectEvent;
   }

@@ -4,7 +4,7 @@ import { writeFile } from 'fs/promises';
 
 const __cwd = process.cwd();
 
-const AUTOGEN_COMMENT = '// THIS FILE IS AUTO GENERATED - SEE `.scripts/build-components.js`';
+const AUTOGEN_COMMENT = '// THIS FILE IS AUTO GENERATED - SEE `.scripts/svelte-components.js`';
 
 async function main() {
   /** @type {import('@vidstack/eliza').ComponentMeta[]} */

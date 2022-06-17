@@ -55,10 +55,10 @@ export type ExtractEventInit<Event> = VdsEventInit<ExtractEventDetail<Event>>;
 /**
  * Helps build a `VdsEvent` with type safety.
  */
-export function vdsEvent<EventType extends keyof GlobalEventHandlersEventMap>(
+export function vdsEvent<EventType extends keyof VdsElementEventMap>(
   type: EventType,
-  eventInit: ExtractEventInit<GlobalEventHandlersEventMap[EventType]> = {},
-): GlobalEventHandlersEventMap[EventType] {
+  eventInit: ExtractEventInit<VdsElementEventMap[EventType]> = {},
+): VdsElementEventMap[EventType] {
   return new VdsEvent(type, eventInit);
 }
 
@@ -114,10 +114,10 @@ export function walkTriggerEventChain<T>(
  * @param event - The event on which to look for a trigger event.
  * @param eventType - The type of event to find.
  */
-export function findTriggerEvent<T extends keyof GlobalEventHandlersEventMap>(
+export function findTriggerEvent<T extends keyof HTMLElementEventMap>(
   event: Event,
   eventType: T,
-): GlobalEventHandlersEventMap[T] | undefined {
+): HTMLElementEventMap[T] | undefined {
   return walkTriggerEventChain(event, (e) => e.type === eventType)?.[0];
 }
 
@@ -127,7 +127,7 @@ export function findTriggerEvent<T extends keyof GlobalEventHandlersEventMap>(
  * @param event - The event on which to look for a trigger event.
  * @param eventType - The type of event to find.
  */
-export function hasTriggerEvent<T extends keyof GlobalEventHandlersEventMap>(
+export function hasTriggerEvent<T extends keyof HTMLElementEventMap>(
   event: Event,
   eventType: T,
 ): boolean {

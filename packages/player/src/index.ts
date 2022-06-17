@@ -1,5 +1,3 @@
-/// <reference types="./globals" />
-
 import type {
   MediaConnectEvent,
   MediaEvents,
@@ -13,7 +11,9 @@ import type { VideoPresentationEvents } from './providers/video';
 import type { SliderEvents } from './ui/slider';
 
 declare global {
-  interface GlobalEventHandlersEventMap
+  const __DEV__: true;
+
+  interface VdsElementEventMap
     extends HlsEvents,
       MediaEvents,
       MediaRequestEvents,

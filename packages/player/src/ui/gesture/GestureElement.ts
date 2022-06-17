@@ -22,7 +22,7 @@ const pendingActions = new Map<
   Map<GestureElement, [event: Event, promise: DeferredPromise]>
 >();
 
-export type GestureType = keyof GlobalEventHandlersEventMap;
+export type GestureType = keyof HTMLElementEventMap;
 
 export type GestureAction =
   | 'play'

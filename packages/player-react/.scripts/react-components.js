@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { kebabToPascalCase } from '@vidstack/foundation';
 import { writeFile } from 'fs/promises';
 
 const __cwd = process.cwd();
+
+const AUTOGEN_COMMENT = '// THIS FILE IS AUTO GENERATED - SEE `.scripts/react-components.js`';
 
 async function main() {
   /** @type {import('@vidstack/eliza').ComponentMeta[]} */
@@ -12,7 +13,6 @@ async function main() {
   const elements = JSON.parse(fs.readFileSync(elementsPath, { encoding: 'utf-8' }));
   components.push(...elements.components);
 
-  const AUTOGEN_COMMENT = '// THIS FILE IS AUTO GENERATED - SEE `.scripts/build-components.js`';
   const COMPONENTS_DIR = path.resolve(__cwd, 'src/_components');
 
   if (!fs.existsSync(COMPONENTS_DIR)) fs.mkdirSync(COMPONENTS_DIR);
@@ -25,25 +25,6 @@ async function main() {
       const { className } = component;
 
       const displayName = className.replace('Element', '');
-
-      /** @type {string[]} */
-      const events = [];
-
-      for (const event of component.events) {
-        const linkTags = event.docTags
-          .filter((tag) => tag.name === 'link')
-          .map((tag) => `@link ${tag.text}`)
-          .join('\n');
-
-        const docs = event.documentation
-          ? `/**\n${event.documentation}${linkTags ? '\n\n' : ''}${linkTags}\n*/\n`
-          : '';
-
-        const reactEventName = `on${kebabToPascalCase(event.name.replace(/^vds-/, ''))}`;
-
-        events.push(`${docs}${reactEventName}: '${event.name}',`);
-      }
-
       const fileContent = `${AUTOGEN_COMMENT}
 
 import { ${component.className} } from '@vidstack/player';
@@ -57,16 +38,8 @@ declare global {
   }
 }
 
-const EVENTS = {${events.join('\n')}} as const
-
 /** ${component.documentation} */
-const ${displayName} = createComponent(
-  React,
-  '${component.tagName}',
-  ${component.className},
-  EVENTS,
-  '${displayName}'
-);
+const ${displayName} = createComponent(React, '${component.tagName}', ${component.className});
 
 export default ${displayName};`;
 

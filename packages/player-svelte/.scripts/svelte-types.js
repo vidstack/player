@@ -50,7 +50,7 @@ export default class ${displayName} extends SvelteComponentTyped<
       )
       .join('\n')}
   } & Partial<ARIAMixin>,
-  GlobalEventHandlersEventMap,
+  HTMLElementEventMap,
   { default: {}; ${slotNames.map((slot) => `${slot}: {};`).join(' ')} }
 > {
   get element(): ${component.className} | null;
