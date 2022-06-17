@@ -13,7 +13,6 @@
     "define/",
     "index.d.ts",
     "globals.d.ts",
-    "elements.json",
     "tailwind.cjs",
     "vscode.html-data.json"
   ],
