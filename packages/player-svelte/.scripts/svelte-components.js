@@ -51,7 +51,7 @@ declare global {
   }
 }
 
-export default createComponent('${component.tagName}', ${component.className}, ${slots});
+export default  /* @__PURE__ */ createComponent('${component.tagName}', ${component.className}, ${slots});
 `;
 
       for (const dir of OUTPUT_DIRS) {

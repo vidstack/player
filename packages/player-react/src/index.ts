@@ -1,2 +1,2 @@
 export * from './_components';
-export * from './lib';
+export type { VdsElementEventCallbackMap, VdsReactComponentProps } from './lib';

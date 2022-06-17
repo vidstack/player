@@ -30,12 +30,6 @@ function copy(file) {
     return;
   }
 
-  // Write a JS file so editor can autocomplete file paths when importing.
-  fs.writeFile(
-    dest.replace(/\.d\.ts$/, '.js'),
-    "// This file only exists so it's easier for you to autocomplete the file path in your IDE.",
-  );
-
   // Write type definition file and fix import paths.
   fs.writeFile(
     dest,

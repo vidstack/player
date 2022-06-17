@@ -39,9 +39,7 @@ declare global {
 }
 
 /** ${component.documentation} */
-const ${displayName} = createComponent(React, '${component.tagName}', ${component.className});
-
-export default ${displayName};`;
+export default  /* @__PURE__ */ createComponent(React, '${component.tagName}', ${component.className});`;
 
       const outputFileName = displayName;
       const outputPath = path.resolve(COMPONENTS_DIR, `${outputFileName}.ts`);

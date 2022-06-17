@@ -18,8 +18,8 @@
     "vscode.html-data.json"
   ],
   "sideEffects": [
-    "./src/define/*.ts",
-    "./dist/*/define/*.js"
+    "./dist/*/define/*.js",
+    "./src/define/*.ts"
   ],
   "exports": {
     ".": {
@@ -32,9 +32,7 @@
       "development": "./dist/dev/define/*",
       "default": "./dist/prod/define/*"
     },
-    "./cdn/define/*": {
-      "default": "./cdn/define/*"
-    },
+    "./cdn/define/*": "./cdn/define/*",
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
     "./elements.json": "./elements.json",
