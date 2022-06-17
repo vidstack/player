@@ -8,13 +8,7 @@ async function main() {
   const minifyHtml = /(styles|Element)\.(js|ts)/;
 
   /** @param {Partial<Parameters<typeof commonOptions>[0]>} args */
-  const shared = (args = {}) =>
-    commonOptions({
-      entry,
-      external,
-      minifyHtml,
-      ...args,
-    });
+  const shared = (args = {}) => commonOptions({ entry, external, minifyHtml, ...args });
 
   await Promise.all([
     build({
@@ -34,6 +28,7 @@ async function main() {
       ...shared({ node: true, external: [/^@vidstack/] }),
       bundle: true,
       splitting: true,
+      minify: true,
       outdir: 'dist/node',
     }),
     build({

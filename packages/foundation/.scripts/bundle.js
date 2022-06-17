@@ -22,6 +22,7 @@ async function main() {
     build({
       ...shared({ node: true, domShim: true, external: [] }),
       bundle: true,
+      minify: true,
       outdir: 'dist/node',
     }),
   ]);

@@ -59,6 +59,7 @@
     "lint:eslint": "eslint src --fix",
     "lint:prettier": "prettier src --write --loglevel warn",
     "sandbox": "node ../../.scripts/sandbox.js",
+    "sandbox:build": "vite build sandbox",
     "test": "vitest --run",
     "types": "node ../../.scripts/types.js",
     "post:types": "node ../../.scripts/definitions.js",

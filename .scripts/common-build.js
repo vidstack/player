@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { globby, globbySync } from 'globby';
 import { readFile, writeFile } from 'fs/promises';
+import { transform } from 'esbuild';
 
 /**
  * @param {{
@@ -124,7 +125,7 @@ function domShimPlugin({ force = false }) {
       build.onEnd(async () => {
         if (!includeShim && !force) return;
 
-        const shim = domShimCode();
+        const shim = (await transform(domShimCode(), { minify: true, target: 'esnext' })).code;
 
         const files = await globby(`${outdir}/**/*.js`);
         await Promise.all([
