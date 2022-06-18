@@ -1,8 +1,9 @@
 {
-  "extends": "../../tsconfig-build.json",
+  "extends": "../../tsconfig-base.json",
   "compilerOptions": {
-    "declarationDir": "types",
     "baseUrl": ".",
+    "rootDir": "src",
+    "declarationDir": "types",
     "paths": {
       "$test-utils": ["src/test-utils/index.ts"]
     },

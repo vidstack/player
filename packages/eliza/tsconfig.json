@@ -1,8 +1,9 @@
 {
-  "extends": "../../tsconfig-build.json",
+  "extends": "../../tsconfig-base.json",
   "compilerOptions": {
-    "declarationDir": "types",
-    "lib": ["es2020"]
+    "baseUrl": ".",
+    "rootDir": "src",
+    "declarationDir": "types"
   },
   "include": ["src/**/*.ts"]
 }
