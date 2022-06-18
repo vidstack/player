@@ -1,4 +1,6 @@
-import { redispatchEvent, VdsEvent, waitForEvent } from '$lib';
+import { waitForEvent } from '../utils/events';
+import { redispatchEvent } from './redispatch';
+import { VdsEvent } from './VdsEvent';
 
 it('should redispatch event', async () => {
   const el = document.createElement('div');

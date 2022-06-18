@@ -1,4 +1,7 @@
-import { isGroupedLog, LogDispatcher, LogLevel, waitForEvent } from '$lib';
+import { waitForEvent } from '../utils/events';
+import { isGroupedLog } from './grouped-log';
+import { LogDispatcher } from './LogDispatcher';
+import { LogLevel } from './LogLevel';
 
 async function expectLogEvent(level: LogLevel) {
   const target = document.createElement('div');

@@ -1,5 +1,5 @@
 import { logEvent } from './events';
-import { GROUPED_LOG_ID, GroupedLog, groupedLog } from './groupedLog';
+import { GROUPED_LOG_ID, GroupedLog, groupedLog } from './grouped-log';
 import { type LogLevel } from './LogLevel';
 
 /**

@@ -8,15 +8,15 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      $lib: '/src/index.ts',
+      '$test-utils': '/src/test-utils/index.ts',
     },
   },
   // https://vitest.dev/config
   test: {
-    include: ['tests/**/*.test.ts'],
+    include: ['src/**/*.test.ts'],
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['tests/setup.ts'],
+    setupFiles: ['src/test-utils/setup.ts'],
     testTimeout: 2500,
   },
 });

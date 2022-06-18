@@ -1,4 +1,4 @@
-import { RequestQueue } from '$lib';
+import { RequestQueue } from './RequestQueue';
 
 it('should return correct queue size', () => {
   const q = new RequestQueue();

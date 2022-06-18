@@ -1,19 +1,15 @@
 export function setProperty(node: Element, name: string, value: unknown, old: unknown) {
   if (name.startsWith('onVds') && value !== old) {
-    // example: `onClick` -> `click`
-    // example: `onVdsPlay` -> `vds-play`
-    const eventType = name.startsWith('vds-')
-      ? name
-          .replace('on', '')
-          .replace(/[A-Z]/g, (x) => `-${x[0].toLowerCase()}`)
-          .slice(1)
-      : name.replace('on', '').toLowerCase();
+    // `onVdsPlay` -> `vds-play`
+    const eventType = name
+      .replace('on', '')
+      .replace(/[A-Z]/g, (x) => `-${x[0].toLowerCase()}`)
+      .slice(1);
 
     updateEventListener(node, eventType, value as (e?: Event) => void);
-    return;
+  } else {
+    node[name] = value;
   }
-
-  node[name] = value;
 }
 
 export function setRef(ref: React.Ref<unknown>, value: Element | null) {

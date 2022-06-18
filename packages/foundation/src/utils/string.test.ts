@@ -4,7 +4,7 @@ import {
   kebabToCamelCase,
   kebabToPascalCase,
   kebabToTitleCase,
-} from '$lib';
+} from './string';
 
 describe(camelToKebabCase.name, () => {
   it('should convert to kebab-case', () => {

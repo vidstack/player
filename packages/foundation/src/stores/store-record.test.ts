@@ -1,6 +1,7 @@
 import { LitElement } from 'lit';
 
-import { copyStoreRecords, get, storeRecordSubscription, writable } from '$lib';
+import { copyStoreRecords, storeRecordSubscription } from './store-record';
+import { get, writable } from './stores';
 
 class FakeElement extends LitElement {
   store = { a: writable(0), b: writable(0) };

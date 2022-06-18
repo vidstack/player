@@ -1,6 +1,6 @@
 import { fixture, html, oneEvent } from '@open-wc/testing-helpers';
 
-import { DisposalBin, isPointerEvent, listen } from '$lib';
+import { DisposalBin, isPointerEvent, listen } from './events';
 
 it('should return true given pointer event', () => {
   expect(isPointerEvent(new MouseEvent('pointer-'))).to.be.true;

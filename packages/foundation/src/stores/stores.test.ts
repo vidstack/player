@@ -3,7 +3,7 @@
  * Svelte, where it's been heavily tested.
  */
 
-import { derived, readable, writable } from '$lib';
+import { derived, readable, writable } from './stores';
 
 describe('readable store', () => {
   it('should update subscribers', () => {

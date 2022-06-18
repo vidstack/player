@@ -2,13 +2,13 @@ import { elementUpdated, fixture } from '@open-wc/testing-helpers';
 import { html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { ifNonEmpty } from '$lib';
+import { ifNumber } from './if-number';
 
 class FakeElement extends LitElement {
-  @state() value: string | undefined;
+  @state() value: number | undefined | null;
 
   override render() {
-    return html`<div test-attr=${ifNonEmpty(this.value)}></div>`;
+    return html`<div test-attr=${ifNumber(this.value)}></div>`;
   }
 }
 
@@ -27,16 +27,16 @@ it('should not set attribute given undefined', async () => {
   expect(root?.hasAttribute('test-attr')).to.be.false;
 });
 
-it('should not set attribute given empty string', async () => {
+it('should not set attribute given null', async () => {
   const { el, root } = await buildFixture();
-  el.value = '';
+  el.value = null;
   await elementUpdated(el);
   expect(root?.hasAttribute('test-attr')).to.be.false;
 });
 
-it('should set attribute given filled string', async () => {
+it('should set attribute given number', async () => {
   const { el, root } = await buildFixture();
-  el.value = 'testing';
+  el.value = 10;
   await elementUpdated(el);
-  expect(root?.getAttribute('test-attr')).to.equal('testing');
+  expect(root?.getAttribute('test-attr')).to.equal('10');
 });

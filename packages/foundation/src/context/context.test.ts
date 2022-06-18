@@ -1,7 +1,7 @@
 import { fixture } from '@open-wc/testing-helpers';
 import { html, LitElement } from 'lit';
 
-import { createContext } from '$lib';
+import { createContext, isContext } from './context';
 
 const ctxA = createContext(() => ({}));
 
@@ -44,4 +44,18 @@ it('should cache context value on host element', async () => {
   ctxA.consume(consumer);
 
   expect(connectEventListenerSpy).not.toHaveBeenCalled();
+});
+
+describe('isContext', () => {
+  it('should return true given context', () => {
+    expect(isContext(createContext(() => 10))).to.be.true;
+  });
+
+  it('should returns false given non-context object', () => {
+    expect(isContext({})).to.be.false;
+  });
+
+  it('should return false given primitive value', () => {
+    expect(isContext('')).to.be.false;
+  });
 });

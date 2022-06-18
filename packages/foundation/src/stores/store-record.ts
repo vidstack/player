@@ -1,7 +1,7 @@
 import { type Context, isContext } from '../context';
 import { keysOf } from '../utils/object';
+import { storeSubscription, type StoreSubscriptionHost } from './store-subscription';
 import { get } from './stores';
-import { storeSubscription, type StoreSubscriptionHost } from './storeSubscription';
 import type { ReadableStoreRecord, StoreValue, WritableStoreRecord } from './types';
 
 /**

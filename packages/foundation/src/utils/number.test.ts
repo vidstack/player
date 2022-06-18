@@ -1,4 +1,4 @@
-import { clampNumber, getNumberOfDecimalPlaces, round } from '$lib';
+import { clampNumber, getNumberOfDecimalPlaces, round } from './number';
 
 describe(round.name, function () {
   it('should round to given number of decimal places', () => {

@@ -9,7 +9,7 @@ import {
   serializeQueryString,
   tryDecodeURIComponent,
   tryParseJSON,
-} from '$lib';
+} from './network';
 
 describe(tryParseJSON.name, function () {
   it('should return obj given valid JSON', function () {

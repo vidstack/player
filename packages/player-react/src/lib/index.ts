@@ -1,1 +1,1 @@
-export * from './createComponent';
+export * from './create-component';

@@ -1,4 +1,4 @@
-import { omit, pick } from '$lib';
+import { omit, pick } from './object';
 
 describe(pick.name, function () {
   it('should return picked keys', function () {

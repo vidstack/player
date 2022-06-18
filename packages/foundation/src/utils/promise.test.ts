@@ -1,6 +1,6 @@
 import { waitUntil } from '@open-wc/testing-helpers';
 
-import { deferredPromise, timedPromise } from '$lib';
+import { deferredPromise, timedPromise } from './promise';
 
 describe(deferredPromise.name, function () {
   it('should resolve', function (done) {

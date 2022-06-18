@@ -1,4 +1,4 @@
-import { isVdsEvent, VdsEvent, vdsEvent } from '$lib';
+import { isVdsEvent, VdsEvent, vdsEvent } from './VdsEvent';
 
 describe(vdsEvent.name, () => {
   it('should create VdsEvent', () => {

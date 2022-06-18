@@ -8,7 +8,7 @@ import {
   isString,
   isUndefined,
   noop,
-} from '$lib';
+} from './unit';
 
 describe(isArray.name, function () {
   it('should return true only if given an array', function () {

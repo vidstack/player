@@ -3,7 +3,7 @@ import { type ReactiveControllerHost } from 'lit';
 import { DisposalBin, listen } from '../utils/events';
 import { isString, isUndefined } from '../utils/unit';
 import { getColor, saveColor } from './colors';
-import { GroupedLog, isGroupedLog } from './groupedLog';
+import { GroupedLog, isGroupedLog } from './grouped-log';
 import { LogLevel, LogLevelColor, LogLevelValue } from './LogLevel';
 import { ms } from './ms';
 

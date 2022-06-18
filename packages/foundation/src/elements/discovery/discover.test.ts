@@ -1,6 +1,8 @@
 import { LitElement } from 'lit';
 
-import { discoverable, isFunction, waitForEvent } from '$lib';
+import { waitForEvent } from '../../utils/events';
+import { isFunction } from '../../utils/unit';
+import { discoverable } from './discover';
 
 class FakeElement extends LitElement {
   constructor() {

@@ -1,2 +1,2 @@
-export * from './hostRequestQueue';
+export * from './host-request-queue';
 export * from './RequestQueue';

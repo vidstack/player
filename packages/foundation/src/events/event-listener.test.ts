@@ -1,7 +1,7 @@
 import { fixture, nextFrame } from '@open-wc/testing-helpers';
 import { html, LitElement } from 'lit';
 
-import { eventListener } from '$lib';
+import { eventListener } from './event-listener';
 
 class FakeElement extends LitElement {
   listener = vi.fn();

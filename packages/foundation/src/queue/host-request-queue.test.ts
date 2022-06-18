@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 
-import { hostRequestQueue } from '$lib';
+import { hostRequestQueue } from './host-request-queue';
 
 class FakeElement extends LitElement {
   q = hostRequestQueue(this);

@@ -4,7 +4,7 @@ import {
   formatTime,
   padNumberWithZeroes,
   parseTime,
-} from '$lib';
+} from './time';
 
 describe(padNumberWithZeroes.name, function () {
   it('should pad correctly', function () {

@@ -1,7 +1,7 @@
 import { fixture } from '@open-wc/testing-helpers';
 import { html, LitElement, PropertyDeclarations } from 'lit';
 
-import { getElementAttributes, observeAttributes, raf, safelyDefineCustomElement } from '$lib';
+import { getElementAttributes, observeAttributes, raf, safelyDefineCustomElement } from './dom';
 
 describe(safelyDefineCustomElement.name, function () {
   class FakeElement extends LitElement {

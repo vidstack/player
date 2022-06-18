@@ -8,11 +8,6 @@ export default defineConfig({
   define: {
     __DEV__: !IS_TEST_ENV,
   },
-  esbuild: {
-    // minify: true,
-    // mangleProps: /^_/,
-    // reserveProps: /^__/,
-  },
   resolve: {
     alias: {
       $define: '/src/define',
