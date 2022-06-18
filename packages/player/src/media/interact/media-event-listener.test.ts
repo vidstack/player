@@ -1,10 +1,10 @@
-import '$lib/define/vds-media';
-import '$lib/define/vds-fake-media-provider';
+import '$define/vds-media';
+import '$define/vds-fake-media-provider';
 
 import { vdsEvent, waitForEvent } from '@vidstack/foundation';
 import { LitElement } from 'lit';
 
-import { mediaEventListener } from '$lib';
+import { mediaEventListener } from './media-event-listener';
 
 class MediaListenerElement extends LitElement {
   pauseListener = vi.fn();

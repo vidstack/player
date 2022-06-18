@@ -1,4 +1,4 @@
-import '$lib/define/vds-mute-button';
+import '$define/vds-mute-button';
 
 import { elementUpdated } from '@open-wc/testing-helpers';
 import { waitForEvent } from '@vidstack/foundation';

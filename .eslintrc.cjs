@@ -49,12 +49,7 @@ module.exports = {
     },
     'import/resolver': {
       typescript: {
-        project: [
-          'tsconfig.json',
-          'apps/*/tsconfig.json',
-          'packages/*/tsconfig.json',
-          'packages/*/tests/tsconfig.json',
-        ],
+        project: ['tsconfig.json', 'apps/*/tsconfig.json', 'packages/*/tsconfig.json'],
       },
     },
     'svelte3/typescript': () => require('typescript'),

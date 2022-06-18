@@ -1,10 +1,10 @@
-import '$lib/define/vds-slider';
+import '$define/vds-slider';
 
 import { elementUpdated, fixture } from '@open-wc/testing-helpers';
 import { waitForEvent } from '@vidstack/foundation';
 import { html } from 'lit';
 
-import { SliderElement } from '$lib';
+import { SliderElement } from './SliderElement';
 
 async function buildFixture() {
   const slider = await fixture<SliderElement>(html`<vds-slider></vds-slider>`);

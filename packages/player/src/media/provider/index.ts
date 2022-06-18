@@ -1,2 +1,2 @@
-export * from './mediaProviderContext';
+export * from './media-provider-context';
 export * from './MediaProviderElement';

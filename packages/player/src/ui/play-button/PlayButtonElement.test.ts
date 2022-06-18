@@ -1,4 +1,4 @@
-import '$lib/define/vds-play-button';
+import '$define/vds-play-button';
 
 import { elementUpdated } from '@open-wc/testing-helpers';
 import { waitForEvent } from '@vidstack/foundation';

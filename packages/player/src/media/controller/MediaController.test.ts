@@ -1,8 +1,9 @@
-import '$lib/define/vds-media';
-import '$lib/define/vds-fake-media-provider';
+import '$define/vds-media';
+import '$define/vds-fake-media-provider';
 
-import { MediaRemoteControl } from '$lib';
 import { buildMediaFixture } from '$test-utils';
+
+import { MediaRemoteControl } from '../interact';
 
 async function buildFixture() {
   return buildMediaFixture();

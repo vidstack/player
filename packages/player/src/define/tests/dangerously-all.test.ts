@@ -1,5 +1,3 @@
-import '$lib/define/dangerously-all';
-
 it('should define all vds elements', () => {
   const elements = [
     'vds-aspect-ratio',

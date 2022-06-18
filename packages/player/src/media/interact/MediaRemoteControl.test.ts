@@ -2,7 +2,7 @@ import { fixture } from '@open-wc/testing-helpers';
 import { waitForEvent } from '@vidstack/foundation';
 import { html, LitElement } from 'lit';
 
-import { MediaRemoteControl } from '$lib';
+import { MediaRemoteControl } from './MediaRemoteControl';
 
 class RemoteControlElement extends LitElement {
   control = new MediaRemoteControl(this);

@@ -1,7 +1,7 @@
 import { vdsEvent } from '@vidstack/foundation';
 
-import { MediaProviderElement } from '../provider/MediaProviderElement';
-import { createTimeRanges } from '../time-ranges';
+import { MediaProviderElement } from '../media/provider/MediaProviderElement';
+import { createTimeRanges } from '../media/time-ranges';
 
 /**
  * A fake media provider that's used for testing. This class alone does nothing special. It can

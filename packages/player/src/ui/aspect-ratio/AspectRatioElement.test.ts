@@ -1,10 +1,10 @@
-import '$lib/define/vds-aspect-ratio';
+import '$define/vds-aspect-ratio';
 
 import { fixture } from '@open-wc/testing-helpers';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { AspectRatioElement } from '$lib';
+import { AspectRatioElement } from './AspectRatioElement';
 
 async function buildFixture(props: Partial<AspectRatioElement> = {}) {
   const aspectRatioElement = await fixture<AspectRatioElement>(

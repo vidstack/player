@@ -1,4 +1,4 @@
-import '$lib/define/vds-time-slider';
+import '$define/vds-time-slider';
 
 import { html } from 'lit';
 

@@ -1,11 +1,12 @@
-import '$lib/define/vds-media';
-import '$lib/define/vds-fake-media-provider';
+import '$define/vds-media';
+import '$define/vds-fake-media-provider';
 
 import { elementUpdated } from '@open-wc/testing-helpers';
 import { isFunction, waitForEvent } from '@vidstack/foundation';
 
-import { MediaProviderElement } from '$lib';
 import { buildMediaFixture } from '$test-utils';
+
+import { MediaProviderElement } from './MediaProviderElement';
 
 async function buildFixture() {
   return buildMediaFixture();

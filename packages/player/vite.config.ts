@@ -15,17 +15,17 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      $lib: '/src',
-      '$test-utils': '/tests/test-utils/index.ts',
+      $define: '/src/define',
+      '$test-utils': '/src/test-utils/index.ts',
       '@vidstack/foundation': '/node_modules/@vidstack/foundation/src/index.ts',
     },
   },
   // https://vitest.dev/config
   test: {
-    include: ['tests/**/*.test.ts'],
+    include: ['src/**/*.test.ts'],
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['tests/setup.ts'],
+    setupFiles: ['src/test-utils/setup.ts'],
     testTimeout: 2500,
   },
 });

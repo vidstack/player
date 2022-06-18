@@ -1,5 +1,5 @@
-import '$lib/define/vds-slider';
-import '$lib/define/vds-volume-slider';
+import '$define/vds-slider';
+import '$define/vds-volume-slider';
 
 import { elementUpdated } from '@open-wc/testing-helpers';
 import { vdsEvent, waitForEvent } from '@vidstack/foundation';

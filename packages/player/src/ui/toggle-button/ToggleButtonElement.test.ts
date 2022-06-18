@@ -1,4 +1,4 @@
-import '$lib/define/vds-toggle-button';
+import '$define/vds-toggle-button';
 
 import { elementUpdated } from '@open-wc/testing-helpers';
 import { waitForEvent } from '@vidstack/foundation';

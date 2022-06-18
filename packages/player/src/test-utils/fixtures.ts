@@ -1,10 +1,11 @@
-import '$lib/define/vds-media';
-import '$lib/define/vds-fake-media-provider';
+import '$define/vds-media';
+import '$define/vds-fake-media-provider';
 
 import { fixture } from '@open-wc/testing-helpers';
 import { html } from 'lit';
 
-import { FakeMediaProviderElement, MediaElement } from '$lib';
+import { MediaElement } from '../media/MediaElement';
+import { FakeMediaProviderElement } from './FakeMediaProviderElement';
 
 export type MediaFixture = {
   media: MediaElement;

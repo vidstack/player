@@ -1,4 +1,4 @@
-import '$lib/define/vds-fullscreen-button';
+import '$define/vds-fullscreen-button';
 
 import { elementUpdated } from '@open-wc/testing-helpers';
 import { waitForEvent } from '@vidstack/foundation';

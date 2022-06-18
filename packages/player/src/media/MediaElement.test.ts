@@ -1,8 +1,8 @@
-import '$lib/define/vds-media';
+import '$define/vds-media';
 
 import { isFunction, waitForEvent } from '@vidstack/foundation';
 
-import { MediaConnectEvent, MediaElement } from '$lib';
+import { MediaConnectEvent, MediaElement } from './MediaElement';
 
 it('should dispatch discovery event', async () => {
   const controller = document.createElement('vds-media');
