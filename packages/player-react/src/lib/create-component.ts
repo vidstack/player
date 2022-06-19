@@ -34,10 +34,6 @@ export const createComponent = <E extends HTMLElement>(
   type Props = VdsReactComponentProps<E>;
   type ElementRef = React.Ref<E>;
 
-  // Props used by this component wrapper. This is the UserProps and the
-  // special `__forwardedRef` property. Note, this ref is special because
-  // it's both needed in this component to get access to the rendered element
-  // and must fulfill any ref passed by the user.
   type ComponentProps = Props & {
     __forwardedRef?: ElementRef;
   };

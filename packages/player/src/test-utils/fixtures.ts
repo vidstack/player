@@ -1,5 +1,5 @@
 import '$define/vds-media';
-import '$define/vds-fake-media-provider';
+import './vds-fake-media-provider';
 
 import { fixture } from '@open-wc/testing-helpers';
 import { html } from 'lit';

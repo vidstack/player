@@ -1,7 +1,9 @@
 import { execa } from 'execa';
 import chokidar from 'chokidar';
 import minimist from 'minimist';
-import { readFile } from 'fs/promises';
+import fs from 'fs';
+import { globby } from 'globby';
+import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
 
 const __cwd = process.cwd();
@@ -12,6 +14,8 @@ const pkgPath = path.resolve(__cwd, 'package.json');
 const pkg = JSON.parse(await readFile(pkgPath, 'utf-8'));
 
 async function main() {
+  await execa('rimraf', ['dist']);
+
   if (pkg.scripts['pre:bundle']) {
     await execa('pnpm', ['run', 'pre:bundle'], { stdio: 'inherit' });
   }
@@ -20,6 +24,34 @@ async function main() {
 
   if (pkg.scripts['post:bundle']) {
     await execa('pnpm', ['run', 'post:bundle'], { stdio: 'inherit' });
+  }
+
+  // Mark side effects.
+  if (fs.existsSync('dist/dev/define')) {
+    const files = await globby('dist/{dev,prod}/define/vds-*.js');
+    const chunkRE = /chunk\..*?\.js/;
+    const sideEffectChunks = [];
+
+    await Promise.all(
+      files.map(async (file) => {
+        const dev = file.startsWith('dist/dev');
+        const content = await readFile(file, 'utf8');
+        const chunkName = content.match(chunkRE)?.[0];
+        if (chunkName) {
+          const chunkPath = `./dist/${dev ? 'dev' : 'prod'}/chunks/${chunkName}`;
+          sideEffectChunks.push(chunkPath);
+        }
+      }),
+    );
+
+    if (sideEffectChunks.length > 0) {
+      pkg.sideEffects = [
+        ...pkg.sideEffects.filter((file) => !file.includes('chunks')),
+        ...sideEffectChunks.sort(),
+      ];
+
+      await writeFile(pkgPath, JSON.stringify(pkg, null, 2));
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 import { safelyDefineCustomElement } from '@vidstack/foundation';
 
-import { FakeMediaProviderElement } from '../test-utils/FakeMediaProviderElement';
+import { FakeMediaProviderElement } from './FakeMediaProviderElement';
 
 safelyDefineCustomElement('vds-fake-media-provider', FakeMediaProviderElement);
 

@@ -16,10 +16,6 @@
     "tailwind.cjs",
     "vscode.html-data.json"
   ],
-  "sideEffects": [
-    "./dist/*/define/*.js",
-    "./src/define/*.ts"
-  ],
   "exports": {
     ".": {
       "node": "./dist/node/index.js",
@@ -98,6 +94,48 @@
   "publishConfig": {
     "access": "public"
   },
+  "sideEffects": [
+    "./src/define/*.ts",
+    "./dist/*/define/*.js",
+    "./dist/dev/chunks/chunk.2ZBTO2DU.js",
+    "./dist/dev/chunks/chunk.4FXYLSSB.js",
+    "./dist/dev/chunks/chunk.5NODOM5E.js",
+    "./dist/dev/chunks/chunk.BSL5U6FP.js",
+    "./dist/dev/chunks/chunk.C7FODFEE.js",
+    "./dist/dev/chunks/chunk.CR4IJ66U.js",
+    "./dist/dev/chunks/chunk.DZWOUTXA.js",
+    "./dist/dev/chunks/chunk.EI5K32VZ.js",
+    "./dist/dev/chunks/chunk.EYGLTDRW.js",
+    "./dist/dev/chunks/chunk.IV2FLHKE.js",
+    "./dist/dev/chunks/chunk.J5Z44BEL.js",
+    "./dist/dev/chunks/chunk.LIVWMLHT.js",
+    "./dist/dev/chunks/chunk.NNT3L3AB.js",
+    "./dist/dev/chunks/chunk.O3LH4MAF.js",
+    "./dist/dev/chunks/chunk.OD6X5MIZ.js",
+    "./dist/dev/chunks/chunk.QGAAYEWZ.js",
+    "./dist/dev/chunks/chunk.UKYTHPNW.js",
+    "./dist/dev/chunks/chunk.VN6HZUWF.js",
+    "./dist/dev/chunks/chunk.XD6CFBCO.js",
+    "./dist/prod/chunks/chunk.4TNYJL62.js",
+    "./dist/prod/chunks/chunk.4UXMWFCE.js",
+    "./dist/prod/chunks/chunk.DTG4IQTX.js",
+    "./dist/prod/chunks/chunk.DWZHLZFV.js",
+    "./dist/prod/chunks/chunk.DXUTBFRX.js",
+    "./dist/prod/chunks/chunk.FJGCY7WE.js",
+    "./dist/prod/chunks/chunk.GXZPH4A6.js",
+    "./dist/prod/chunks/chunk.H5W6VNAD.js",
+    "./dist/prod/chunks/chunk.HBVFYVXW.js",
+    "./dist/prod/chunks/chunk.JPIWRJWL.js",
+    "./dist/prod/chunks/chunk.MRUPQLOG.js",
+    "./dist/prod/chunks/chunk.P2TMO6XP.js",
+    "./dist/prod/chunks/chunk.TJ6S3Z5R.js",
+    "./dist/prod/chunks/chunk.VIMNHPWE.js",
+    "./dist/prod/chunks/chunk.WHBY7EXL.js",
+    "./dist/prod/chunks/chunk.YMIDXUKT.js",
+    "./dist/prod/chunks/chunk.ZJGU2DCD.js",
+    "./dist/prod/chunks/chunk.ZO6XE2DJ.js",
+    "./dist/prod/chunks/chunk.ZTJL2BQD.js"
+  ],
   "keywords": [
     "accessible",
     "audio",

@@ -1,5 +1,5 @@
 import '$define/vds-media';
-import '$define/vds-fake-media-provider';
+import '$test-utils/vds-fake-media-provider';
 
 import { buildMediaFixture } from '$test-utils';
 

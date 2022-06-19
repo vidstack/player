@@ -1,5 +1,5 @@
 import '$define/vds-media';
-import '$define/vds-fake-media-provider';
+import '$test-utils/vds-fake-media-provider';
 
 import { vdsEvent, waitForEvent } from '@vidstack/foundation';
 import { LitElement } from 'lit';

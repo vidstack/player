@@ -11,7 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
       $define: '/src/define',
-      '$test-utils': '/src/test-utils/index.ts',
+      '$test-utils': '/src/test-utils',
       '@vidstack/foundation': '/node_modules/@vidstack/foundation/src/index.ts',
     },
   },

@@ -3,21 +3,18 @@ import fs from 'fs-extra';
 import { globbySync } from 'globby';
 import path from 'path';
 import chokidar from 'chokidar';
+import { execa } from 'execa';
+
+const __cwd = process.cwd();
 
 const args = minimist(process.argv.slice(2));
-
 const watch = args.watch || args.w;
 
-const targetDir = path.resolve(process.cwd(), 'types/define');
-const destDir = path.resolve(process.cwd(), 'define');
+const targetDir = path.resolve(__cwd, 'types/define');
+const destDir = path.resolve(__cwd, 'define');
 
-if (!fs.existsSync(targetDir)) {
-  fs.mkdir(targetDir, { recursive: true });
-}
-
-if (!fs.existsSync(destDir)) {
-  fs.mkdir(destDir);
-}
+await execa('rimraf', ['define']);
+await fs.mkdir(destDir);
 
 function resolveDest(file) {
   return path.resolve(destDir, path.relative(targetDir, file));
