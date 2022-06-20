@@ -2,6 +2,7 @@ import { execa } from 'execa';
 import chokidar from 'chokidar';
 import minimist from 'minimist';
 import { readFile } from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
 
 const __cwd = process.cwd();
@@ -11,12 +12,15 @@ const args = minimist(process.argv.slice(2));
 const pkgPath = path.resolve(__cwd, 'package.json');
 const pkg = JSON.parse(await readFile(pkgPath, 'utf-8'));
 
+const tsConfigFile = fs.existsSync('tsconfig.build.json') ? 'tsconfig.build.json' : 'tsconfig.json';
+
 async function main() {
   try {
     if (pkg.scripts['pre:types']) {
       await execa('pnpm', ['run', 'pre:types'], { stdio: 'inherit' });
     }
-    await execa('tsc', ['-p', 'tsconfig.json', '--pretty'], { stdio: 'inherit' });
+
+    await execa('tsc', ['-p', tsConfigFile, '--pretty'], { stdio: 'inherit' });
 
     if (pkg.scripts['pre:types:extract']) {
       await execa('pnpm', ['run', 'pre:types:extract'], { stdio: 'inherit' });

@@ -67,8 +67,11 @@ export const createComponent = <E extends HTMLElement>(
       }
     }
 
-    override componentDidMount() {
+    override componentWillMount() {
       safelyDefineCustomElement(tagName, elementClass);
+    }
+
+    override componentDidMount() {
       this._updateElement();
     }
 

@@ -2,6 +2,7 @@ import {
   type ExtractEventInit,
   hostRequestQueue,
   LogDispatcher,
+  RequestQueue,
   vdsEvent,
 } from '@vidstack/foundation';
 import { type ReactiveControllerHost } from 'lit';
@@ -25,102 +26,105 @@ import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../reques
  * ```
  */
 export class MediaRemoteControl {
-  protected _ref?: Element;
+  protected _target?: EventTarget | null;
+  protected _logger?: LogDispatcher;
+  protected readonly _requests: RequestQueue;
 
-  protected readonly _connectedQueue = hostRequestQueue(this._host);
-
-  protected readonly _logger = __DEV__ ? new LogDispatcher(this._host) : undefined;
-
-  constructor(protected readonly _host: ReactiveControllerHost & EventTarget) {}
-
-  play(event?: Event) {
-    this._dispatchRequest('vds-play-request', {
-      triggerEvent: event,
-    });
+  constructor(_host?: ReactiveControllerHost & EventTarget) {
+    if (_host) {
+      this._target = _host;
+      this._createLogger(_host);
+      this._requests = hostRequestQueue(_host);
+    } else {
+      this._requests = new RequestQueue();
+    }
   }
 
-  pause(event?: Event) {
-    this._dispatchRequest('vds-pause-request', {
-      triggerEvent: event,
-    });
+  play(triggerEvent?: Event) {
+    this._dispatchRequest('vds-play-request', { triggerEvent });
   }
 
-  mute(event?: Event) {
-    this._dispatchRequest('vds-mute-request', {
-      triggerEvent: event,
-    });
+  pause(triggerEvent?: Event) {
+    this._dispatchRequest('vds-pause-request', { triggerEvent });
   }
 
-  unmute(event?: Event) {
-    this._dispatchRequest('vds-unmute-request', {
-      triggerEvent: event,
-    });
+  mute(triggerEvent?: Event) {
+    this._dispatchRequest('vds-mute-request', { triggerEvent });
   }
 
-  enterFullscreen(target?: MediaFullscreenRequestTarget, event?: Event) {
+  unmute(triggerEvent?: Event) {
+    this._dispatchRequest('vds-unmute-request', { triggerEvent });
+  }
+
+  enterFullscreen(target?: MediaFullscreenRequestTarget, triggerEvent?: Event) {
     this._dispatchRequest('vds-enter-fullscreen-request', {
-      triggerEvent: event,
+      triggerEvent,
       detail: target,
     });
   }
 
-  exitFullscreen(target?: MediaFullscreenRequestTarget, event?: Event) {
+  exitFullscreen(target?: MediaFullscreenRequestTarget, triggerEvent?: Event) {
     this._dispatchRequest('vds-exit-fullscreen-request', {
-      triggerEvent: event,
+      triggerEvent,
       detail: target,
     });
   }
 
-  seeking(time: number, event?: Event) {
+  seeking(time: number, triggerEvent?: Event) {
     this._dispatchRequest('vds-seeking-request', {
       detail: time,
-      triggerEvent: event,
+      triggerEvent,
     });
   }
 
-  seek(time: number, event?: Event) {
+  seek(time: number, triggerEvent?: Event) {
     this._dispatchRequest('vds-seek-request', {
       detail: time,
-      triggerEvent: event,
+      triggerEvent,
     });
   }
 
-  changeVolume(volume: number, event?: Event) {
+  changeVolume(volume: number, triggerEvent?: Event) {
     this._dispatchRequest('vds-volume-change-request', {
       detail: volume,
-      triggerEvent: event,
+      triggerEvent,
     });
   }
 
-  resumeUserIdle(event?: Event) {
-    this._dispatchRequest('vds-resume-user-idle-request', {
-      triggerEvent: event,
-    });
+  resumeUserIdle(triggerEvent?: Event) {
+    this._dispatchRequest('vds-resume-user-idle-request', { triggerEvent });
   }
 
-  pauseUserIdle(event?: Event) {
-    this._dispatchRequest('vds-pause-user-idle-request', {
-      triggerEvent: event,
-    });
+  pauseUserIdle(triggerEvent?: Event) {
+    this._dispatchRequest('vds-pause-user-idle-request', { triggerEvent });
   }
 
-  showPoster(event?: Event) {
-    this._dispatchRequest('vds-show-poster-request', {
-      triggerEvent: event,
-    });
+  showPoster(triggerEvent?: Event) {
+    this._dispatchRequest('vds-show-poster-request', { triggerEvent });
   }
 
-  hidePoster(event?: Event) {
-    this._dispatchRequest('vds-hide-poster-request', {
-      triggerEvent: event,
-    });
+  hidePoster(triggerEvent?: Event) {
+    this._dispatchRequest('vds-hide-poster-request', { triggerEvent });
+  }
+
+  setTarget(target?: EventTarget | null) {
+    if (this._target === target) return;
+
+    this._target = target;
+
+    if (target) {
+      this._createLogger(target);
+      this._requests.start();
+    } else {
+      this._requests.stop();
+    }
   }
 
   protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(
     type: EventType,
     eventInit: ExtractEventInit<MediaRequestEvents[EventType]>,
   ) {
-    this._connectedQueue.queue(type, () => {
+    this._requests.queue(type, () => {
       const request = vdsEvent(type, {
         ...eventInit,
         bubbles: true,
@@ -135,7 +139,13 @@ export class MediaRemoteControl {
           .dispatch();
       }
 
-      this._host.dispatchEvent(request);
+      this._target?.dispatchEvent(request);
     });
+  }
+
+  protected _createLogger(target: EventTarget) {
+    if (__DEV__) {
+      this._logger = new LogDispatcher(target);
+    }
   }
 }

@@ -518,7 +518,7 @@ export class MediaController {
   protected _mediaEvents: Event[] = [];
 
   protected _attachMediaEventListeners() {
-    if (!this._provider || __NODE__) return;
+    if (!this._provider) return;
 
     const mediaEventListeners = {
       'vds-can-load': this._handleCanLoad,

@@ -4,9 +4,9 @@
   "description": "Foundational functions and classes used by Vidstack products.",
   "license": "MIT",
   "type": "module",
-  "sideEffects": false,
   "files": [
     "dist/",
+    "shims/",
     "index.d.ts",
     "dom.d.ts",
     "globals.d.ts"
@@ -17,8 +17,12 @@
       "development": "./dist/dev/index.js",
       "default": "./dist/prod/index.js"
     },
+    "./shims/*": "./shims/*",
     "./package.json": "./package.json"
   },
+  "sideEffects": [
+    "./shims/*.js"
+  ],
   "contributors": [
     "Rahim Alwer <rahim.alwer@gmail.com>"
   ],

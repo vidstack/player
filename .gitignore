@@ -1,6 +1,7 @@
 dist/
 dist-*/
 
+.tsbuildinfo
 tsconfig.tsbuildinfo
 
 .turbo

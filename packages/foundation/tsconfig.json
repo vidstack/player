@@ -1,14 +1,14 @@
 {
-  "extends": "../../tsconfig-base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "src",
     "declarationDir": "types",
+    "tsBuildInfoFile": ".tsbuildinfo",
     "paths": {
       "$test-utils": ["src/test-utils/index.ts"]
     },
     "types": ["@types/node", "vitest/globals"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"]
+  "include": ["src/**/*.ts"]
 }

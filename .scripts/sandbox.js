@@ -7,6 +7,8 @@ const __cwd = process.cwd();
 async function main() {
   const SANDBOX_DIR = path.resolve(__cwd, 'sandbox');
   const SANDBOX_SERVER_FILE = path.resolve(SANDBOX_DIR, 'server.js');
+  const SANDBOX_NODE_MODULES = path.resolve(SANDBOX_DIR, 'node_modules');
+  const SANDBOX_PKG = path.resolve(SANDBOX_DIR, 'package.json');
 
   if (!fs.existsSync(SANDBOX_DIR)) {
     await execa(
@@ -19,11 +21,10 @@ async function main() {
       ],
       { stdio: 'inherit' },
     );
+  }
 
-    const sandboxPkgPath = path.resolve(SANDBOX_DIR, 'package.json');
-    if (fs.existsSync(sandboxPkgPath)) {
-      await execa('pnpm', ['-C', 'sandbox', 'i'], { stdio: 'inherit' });
-    }
+  if (fs.existsSync(SANDBOX_PKG) && !fs.existsSync(SANDBOX_NODE_MODULES)) {
+    await execa('pnpm', ['-C', 'sandbox', 'i'], { stdio: 'inherit' });
   }
 
   if (fs.existsSync(SANDBOX_SERVER_FILE)) {

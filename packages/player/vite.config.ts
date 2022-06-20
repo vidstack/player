@@ -7,6 +7,7 @@ const IS_TEST_ENV = process.env.NODE_ENV === 'test';
 export default defineConfig({
   define: {
     __DEV__: !IS_TEST_ENV,
+    __NODE__: false,
   },
   resolve: {
     alias: {

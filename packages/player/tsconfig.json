@@ -1,9 +1,10 @@
 {
-  "extends": "../../tsconfig-base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "src",
     "declarationDir": "types",
+    "tsBuildInfoFile": ".tsbuildinfo",
     "paths": {
       "$define/*": ["src/define/*"],
       "$test-utils": ["src/test-utils/index.ts"],
@@ -11,6 +12,5 @@
     },
     "types": ["@types/node", "vitest/globals", "@vidstack/foundation/globals"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"]
+  "include": ["src/**/*.ts"]
 }

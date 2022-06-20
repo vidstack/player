@@ -1,4 +1,4 @@
-import '@vidstack/player/shims/install-ssr.js';
+import '@vidstack/foundation/shims/install-ssr.js';
 
 import { render } from '@lit-labs/ssr';
 import { html } from 'lit';

@@ -25,6 +25,7 @@
     "packages/*/define",
     "packages/*/types",
     "packages/*/globals.d.ts",
-    "packages/*/index.d.ts"
+    "packages/*/index.d.ts",
+    "packages/*/sandbox"
   ]
 }

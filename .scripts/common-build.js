@@ -102,31 +102,26 @@ function externalizeDepsPlugin({ externals }) {
 function nodeSafePlugin() {
   const windowRE = /window\./g;
   const safeWindowCall = '(typeof window !== "undefined" ? window : null)?.';
+  const isFoundationPkg = process.cwd().includes('packages/foundation');
 
   return {
-    name: '@vidstack/dom-shim',
+    name: '@vidstack/node-safe',
     setup(build) {
       const outdir = build.initialOptions.outdir;
       if (!outdir) return;
 
-      let safeWindowCalls = false;
-      build.onStart(() => {
-        safeWindowCalls = false;
-      });
-
-      build.onResolve({ filter: /^lit/ }, () => {
-        safeWindowCalls = true;
-        return null;
-      });
+      const shim = `import "${
+        isFoundationPkg ? '../..' : '@vidstack/foundation'
+      }/shims/install-safe.js";`;
 
       build.onEnd(async () => {
-        if (!safeWindowCalls) return;
-
         const files = await globby(`${outdir}/**/*.js`);
         await Promise.all([
           files.map(async (file) => {
             const content = await readFile(file, { encoding: 'utf-8' });
-            const newContent = content.replace(windowRE, safeWindowCall);
+            const newContent = content
+              .replace(windowRE, safeWindowCall)
+              .replace('"use strict";', `"use strict";\n${shim}`);
             await writeFile(file, newContent);
           }),
         ]);

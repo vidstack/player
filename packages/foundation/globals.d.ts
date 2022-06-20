@@ -1,4 +1,4 @@
-/// <reference types="./dom" />
+/// <reference path="./dom.d.ts" />
 
 import type {
   ContextConsumerConnectEvent,
