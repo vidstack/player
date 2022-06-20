@@ -20,7 +20,7 @@ async function main() {
       outdir: 'dist/prod',
     }),
     build({
-      ...shared({ node: true, domShim: true, external: [] }),
+      ...shared({ node: true, external: [] }),
       bundle: true,
       minify: true,
       outdir: 'dist/node',

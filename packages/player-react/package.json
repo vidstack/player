@@ -13,7 +13,10 @@
   ],
   "sideEffects": false,
   "exports": {
-    ".": "./dist/index.js",
+    ".": {
+      "node": "./dist/node/index.js",
+      "default": "./dist/client/index.js"
+    },
     "./package.json": "./package.json"
   },
   "contributors": [
@@ -43,11 +46,13 @@
     "watch:types": "pnpm run types -w"
   },
   "dependencies": {
+    "@lit-labs/ssr": "^2.2.0",
     "@vidstack/foundation": "workspace:*"
   },
   "peerDependencies": {
     "@vidstack/player": "workspace:*",
-    "react": "^18.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.20.0",

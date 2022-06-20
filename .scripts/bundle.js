@@ -13,8 +13,13 @@ const args = minimist(process.argv.slice(2));
 const pkgPath = path.resolve(__cwd, 'package.json');
 const pkg = JSON.parse(await readFile(pkgPath, 'utf-8'));
 
+let cleanedDist = false;
+
 async function main() {
-  await execa('rimraf', ['dist']);
+  if (!args.w || !cleanedDist) {
+    await execa('rimraf', ['dist']);
+    cleanedDist = true;
+  }
 
   if (pkg.scripts['pre:bundle']) {
     await execa('pnpm', ['run', 'pre:bundle'], { stdio: 'inherit' });

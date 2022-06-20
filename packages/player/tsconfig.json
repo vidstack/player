@@ -9,7 +9,7 @@
       "$test-utils": ["src/test-utils/index.ts"],
       "$test-utils/*": ["src/test-utils/*"]
     },
-    "types": ["vitest/globals", "@vidstack/foundation/globals"]
+    "types": ["@types/node", "vitest/globals", "@vidstack/foundation/globals"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.ts"]

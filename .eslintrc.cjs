@@ -12,6 +12,7 @@ module.exports = {
   },
   ignorePatterns: [
     'eliza.config.ts',
+    'packages/*/shims',
     'packages/*/define',
     'packages/*/types',
     'packages/*/index.d.ts',

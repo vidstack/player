@@ -19,6 +19,11 @@ async function main() {
       ],
       { stdio: 'inherit' },
     );
+
+    const sandboxPkgPath = path.resolve(SANDBOX_DIR, 'package.json');
+    if (fs.existsSync(sandboxPkgPath)) {
+      await execa('pnpm', ['-C', 'sandbox', 'i'], { stdio: 'inherit' });
+    }
   }
 
   if (fs.existsSync(SANDBOX_SERVER_FILE)) {

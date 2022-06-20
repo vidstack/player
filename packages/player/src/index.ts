@@ -12,6 +12,7 @@ import type { SliderEvents } from './ui/slider';
 
 declare global {
   const __DEV__: true;
+  const __NODE__: true;
 
   interface VdsElementEventMap
     extends HlsEvents,

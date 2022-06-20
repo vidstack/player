@@ -3,7 +3,7 @@
 
   "projectFolder": ".",
 
-  "mainEntryPointFilePath": "./types/index.d.ts",
+  "mainEntryPointFilePath": "./types/client/index.d.ts",
 
   "dtsRollup": {
     "enabled": true,

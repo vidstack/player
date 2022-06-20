@@ -32,7 +32,7 @@ export async function createServer(root = __dirname) {
   // use vite's connect instance as middleware
   app.use(vite.middlewares);
 
-  app.use('*', async (req, res) => {
+  app.use('*', async (req, res, next) => {
     try {
       const url = req.originalUrl;
 
@@ -46,8 +46,7 @@ export async function createServer(root = __dirname) {
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
     } catch (e) {
       vite.ssrFixStacktrace(e);
-      console.log(e.stack);
-      res.status(500).end(e.stack);
+      next(e);
     }
   });
 

@@ -8,7 +8,8 @@ import type { PascalCase } from 'type-fest';
 
 import { setProperty, setRef } from './utils';
 
-const reservedReactProperties = new Set(['children', 'localName', 'ref', 'style', 'className']);
+// reserved react props
+const blacklist = new Set(['children', 'localName', 'ref', 'style', 'className']);
 
 export type VdsElementEventCallbackMap = {
   [Event in keyof VdsElementEventMap as `on${PascalCase<Event>}`]: (
@@ -38,10 +39,10 @@ export const createComponent = <E extends HTMLElement>(
     __forwardedRef?: ElementRef;
   };
 
-  const elementClassProps = new Set();
+  const whitelist = new Set();
   for (const p in elementClass.prototype) {
-    if (!(p in HTMLElement.prototype) && !reservedReactProperties.has(p)) {
-      elementClassProps.add(p);
+    if (!(p in HTMLElement.prototype)) {
+      whitelist.add(p);
     }
   }
 
@@ -95,17 +96,19 @@ export const createComponent = <E extends HTMLElement>(
         };
       }
 
-      const props: any = { ref: this._ref };
+      const props: any = { ref: this._ref, suppressHydrationWarning: true };
 
       this._elementProps = {};
 
-      for (const [k, v] of Object.entries(this.props)) {
-        if (elementClassProps.has(k) || k.startsWith('onVds')) {
-          this._elementProps[k] = v;
+      for (const [prop, value] of Object.entries(this.props)) {
+        if (prop === '__forwardedRef') continue;
+
+        if (!blacklist.has(prop) && (whitelist.has(prop) || prop.startsWith('onVds'))) {
+          this._elementProps[prop] = value;
         } else {
           // React does *not* handle `className` for custom elements so
           // coerce it to `class` so it's handled correctly.
-          props[k === 'className' ? 'class' : k] = v;
+          props[prop === 'className' ? 'class' : prop] = value;
         }
       }
 

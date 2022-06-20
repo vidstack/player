@@ -6,6 +6,7 @@ async function main() {
   const external = [/^@vidstack/, /^lit/, 'hls.js'];
   const externalCDN = ['hls.js'];
   const minifyHtml = /(styles|Element)\.(js|ts)/;
+  const debug = process.argv.includes('--debug');
 
   /** @param {Partial<Parameters<typeof commonOptions>[0]>} args */
   const shared = (args = {}) => commonOptions({ entry, external, minifyHtml, ...args });
@@ -21,35 +22,34 @@ async function main() {
       ...shared(),
       bundle: true,
       splitting: true,
-      minify: true,
+      minify: !debug,
       outdir: 'dist/prod',
     }),
     build({
       ...shared({ node: true, external: [/^@vidstack/] }),
       bundle: true,
-      splitting: true,
-      minify: true,
+      splitting: !debug,
       outdir: 'dist/node',
     }),
     build({
       ...shared({
         entry: ['src/define/dangerously-all.ts'],
         external: externalCDN,
-        mangle: true,
+        mangle: !debug,
       }),
       bundle: true,
-      minify: true,
+      minify: !debug,
       outfile: 'cdn/bundle.js',
     }),
     build({
       ...shared({
         entry: ['src/define/*.ts'],
         external: externalCDN,
-        mangle: true,
+        mangle: !debug,
       }),
       bundle: true,
       splitting: true,
-      minify: true,
+      minify: !debug,
       outdir: 'cdn/define',
     }),
   ]);

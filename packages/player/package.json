@@ -11,6 +11,8 @@
     "dist/",
     "cdn/",
     "define/",
+    "shims/",
+    "hydrate.js",
     "index.d.ts",
     "globals.d.ts",
     "tailwind.cjs",
@@ -27,7 +29,12 @@
       "development": "./dist/dev/define/*",
       "default": "./dist/prod/define/*"
     },
+    "./hydrate.js": {
+      "node": "./shims/no-op.js",
+      "default": "./hydrate.js"
+    },
     "./cdn/define/*": "./cdn/define/*",
+    "./shims/*": "./shims/*",
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
     "./elements.json": "./elements.json",
@@ -64,7 +71,8 @@
     "watch:types": "pnpm run types -w"
   },
   "dependencies": {
-    "@vidstack/foundation": "workspace:*"
+    "@vidstack/foundation": "workspace:*",
+    "@webcomponents/template-shadowroot": "^0.1.0"
   },
   "peerDependencies": {
     "lit": "^2.1.1"
@@ -96,14 +104,16 @@
   },
   "sideEffects": [
     "./src/define/*.ts",
+    "./shims/*.js",
+    "./hydrate.js",
     "./dist/*/define/*.js",
+    "./dist/node/**/*.js",
     "./dist/dev/chunks/chunk.2ZBTO2DU.js",
     "./dist/dev/chunks/chunk.4FXYLSSB.js",
     "./dist/dev/chunks/chunk.5NODOM5E.js",
     "./dist/dev/chunks/chunk.BSL5U6FP.js",
     "./dist/dev/chunks/chunk.C7FODFEE.js",
     "./dist/dev/chunks/chunk.CR4IJ66U.js",
-    "./dist/dev/chunks/chunk.DZWOUTXA.js",
     "./dist/dev/chunks/chunk.EI5K32VZ.js",
     "./dist/dev/chunks/chunk.EYGLTDRW.js",
     "./dist/dev/chunks/chunk.IV2FLHKE.js",
@@ -114,6 +124,7 @@
     "./dist/dev/chunks/chunk.OD6X5MIZ.js",
     "./dist/dev/chunks/chunk.QGAAYEWZ.js",
     "./dist/dev/chunks/chunk.UKYTHPNW.js",
+    "./dist/dev/chunks/chunk.VLHKAWJJ.js",
     "./dist/dev/chunks/chunk.VN6HZUWF.js",
     "./dist/dev/chunks/chunk.XD6CFBCO.js",
     "./dist/prod/chunks/chunk.4TNYJL62.js",
@@ -122,6 +133,7 @@
     "./dist/prod/chunks/chunk.DWZHLZFV.js",
     "./dist/prod/chunks/chunk.DXUTBFRX.js",
     "./dist/prod/chunks/chunk.FJGCY7WE.js",
+    "./dist/prod/chunks/chunk.G76SXFY4.js",
     "./dist/prod/chunks/chunk.GXZPH4A6.js",
     "./dist/prod/chunks/chunk.H5W6VNAD.js",
     "./dist/prod/chunks/chunk.HBVFYVXW.js",
@@ -132,7 +144,6 @@
     "./dist/prod/chunks/chunk.VIMNHPWE.js",
     "./dist/prod/chunks/chunk.WHBY7EXL.js",
     "./dist/prod/chunks/chunk.YMIDXUKT.js",
-    "./dist/prod/chunks/chunk.ZJGU2DCD.js",
     "./dist/prod/chunks/chunk.ZO6XE2DJ.js",
     "./dist/prod/chunks/chunk.ZTJL2BQD.js"
   ],

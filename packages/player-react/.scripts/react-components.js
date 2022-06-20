@@ -13,9 +13,15 @@ async function main() {
   const elements = JSON.parse(fs.readFileSync(elementsPath, { encoding: 'utf-8' }));
   components.push(...elements.components);
 
-  const COMPONENTS_DIR = path.resolve(__cwd, 'src/_components');
+  const CLIENT_OUTPUT_DIR = path.resolve(__cwd, 'src/client/_components');
+  const NODE_OUTPUT_DIR = path.resolve(__cwd, 'src/node/_components');
+  const OUTPUT_DIRS = [CLIENT_OUTPUT_DIR, NODE_OUTPUT_DIR];
 
-  if (!fs.existsSync(COMPONENTS_DIR)) fs.mkdirSync(COMPONENTS_DIR);
+  for (const dir of OUTPUT_DIRS) {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  }
 
   /** @type {string[]} */
   const index = [AUTOGEN_COMMENT, ''];
@@ -25,8 +31,9 @@ async function main() {
       const { className } = component;
 
       const displayName = className.replace('Element', '');
-      const fileContent = `${AUTOGEN_COMMENT}
 
+      // ~~~ CLIENT ~~~
+      const clientContent = `${AUTOGEN_COMMENT}\n
 import { ${component.className} } from '@vidstack/player';
 import * as React from 'react';
 
@@ -39,19 +46,33 @@ declare global {
 }
 
 /** ${component.documentation} */
-export default  /* @__PURE__ */ createComponent(React, '${component.tagName}', ${component.className});`;
+export default  /* @__PURE__ */ createComponent(React, '${component.tagName}', ${component.className});\n`;
+
+      // ~~~ NODE ~~~
+      const nodeContent = `${AUTOGEN_COMMENT}\n
+import * as React from 'react';
+
+import { createComponent } from '../lib';
+
+export default  /* @__PURE__ */ createComponent(React, '${component.tagName}');\n`;
 
       const outputFileName = displayName;
-      const outputPath = path.resolve(COMPONENTS_DIR, `${outputFileName}.ts`);
 
-      await writeFile(outputPath, fileContent);
+      const clientPath = path.resolve(CLIENT_OUTPUT_DIR, `${outputFileName}.ts`);
+      await writeFile(clientPath, clientContent);
+
+      const nodePath = path.resolve(NODE_OUTPUT_DIR, `${outputFileName}.ts`);
+      await writeFile(nodePath, nodeContent);
 
       index.push(`export { default as ${displayName} } from './${outputFileName}';`);
     }),
   );
 
   index.push('');
-  await writeFile(path.resolve(COMPONENTS_DIR, 'index.ts'), index.join('\n'));
+
+  for (const dir of OUTPUT_DIRS) {
+    await writeFile(path.resolve(dir, 'index.ts'), index.join('\n'));
+  }
 }
 
 main();

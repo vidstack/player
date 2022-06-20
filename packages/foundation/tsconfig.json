@@ -7,7 +7,7 @@
     "paths": {
       "$test-utils": ["src/test-utils/index.ts"]
     },
-    "types": ["vitest/globals"]
+    "types": ["@types/node", "vitest/globals"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.test.ts"]

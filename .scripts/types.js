@@ -12,26 +12,29 @@ const pkgPath = path.resolve(__cwd, 'package.json');
 const pkg = JSON.parse(await readFile(pkgPath, 'utf-8'));
 
 async function main() {
-  if (pkg.scripts['pre:types']) {
-    await execa('pnpm', ['run', 'pre:types'], { stdio: 'inherit' });
-  }
+  try {
+    if (pkg.scripts['pre:types']) {
+      await execa('pnpm', ['run', 'pre:types'], { stdio: 'inherit' });
+    }
+    await execa('tsc', ['-p', 'tsconfig.json', '--pretty'], { stdio: 'inherit' });
 
-  await execa('tsc', ['-p', 'tsconfig.json', '--pretty'], { stdio: 'inherit' });
+    if (pkg.scripts['pre:types:extract']) {
+      await execa('pnpm', ['run', 'pre:types:extract'], { stdio: 'inherit' });
+    }
 
-  if (pkg.scripts['pre:types:extract']) {
-    await execa('pnpm', ['run', 'pre:types:extract'], { stdio: 'inherit' });
-  }
+    await execa('api-extractor', ['run', '-c', 'types.json'], { stdio: 'inherit' });
 
-  await execa('api-extractor', ['run', '-c', 'types.json'], { stdio: 'inherit' });
+    if (pkg.scripts['post:types:extract']) {
+      await execa('pnpm', ['run', 'post:types:extract'], { stdio: 'inherit' });
+    }
 
-  if (pkg.scripts['post:types:extract']) {
-    await execa('pnpm', ['run', 'post:types:extract'], { stdio: 'inherit' });
-  }
+    await execa('rimraf', ['dist/**/*.d.ts'], { stdio: 'inherit' });
 
-  await execa('rimraf', ['dist/**/*.d.ts'], { stdio: 'inherit' });
-
-  if (pkg.scripts['post:types']) {
-    await execa('pnpm', ['run', 'post:types'], { stdio: 'inherit' });
+    if (pkg.scripts['post:types']) {
+      await execa('pnpm', ['run', 'post:types'], { stdio: 'inherit' });
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
 
