@@ -4,9 +4,9 @@ function MediaPlayer() {
   return (
     <Media>
       {/* Single click. */}
-      <Gesture type="click" repeat="0" />
+      <Gesture type="click" repeat={0} />
       {/* Double click. */}
-      <Gesture type="click" repeat="1" />
+      <Gesture type="click" repeat={1} />
     </Media>
   );
 }

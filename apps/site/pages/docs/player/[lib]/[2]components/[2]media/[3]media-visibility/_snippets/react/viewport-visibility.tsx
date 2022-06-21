@@ -6,8 +6,8 @@ function MediaPlayer() {
       <MediaVisibility
         enterViewport="play"
         exitViewport="pause"
-        intersectionThreshold="1"
-        viewportEnterDelay="0"
+        intersectionThreshold={1}
+        viewportEnterDelay={0}
       >
         {/* ... */}
       </MediaVisibility>

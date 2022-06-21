@@ -12,7 +12,7 @@ function Example() {
     const userPlayed = event.isOriginTrusted;
 
     // Equivalent
-    const isTrusted = userPlayed.originEvent.isTrusted;
+    const isTrusted = event.originEvent.isTrusted;
   }
 
   function onPlaying(event: MediaPlayingEvent) {
@@ -29,7 +29,7 @@ function Example() {
 
   return (
     <Media>
-      <Video onPlay={onPlay} onPlaying={onPlaying}>
+      <Video onVdsPlay={onPlay} onVdsPlaying={onPlaying}>
         {/* ... */}
       </Video>
     </Media>

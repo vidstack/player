@@ -15,8 +15,8 @@ function MediaPlayer() {
   }
 
   return (
-    <Media onPlayRequest={onPlayRequest}>
-      <Video onPlay={onPlay}>{/* ... */}</Video>
+    <Media onVdsPlayRequest={onPlayRequest}>
+      <Video onVdsPlay={onPlay}>{/* ... */}</Video>
     </Media>
   );
 }

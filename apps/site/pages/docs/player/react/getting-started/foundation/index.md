@@ -74,10 +74,11 @@ function MyPlayer() {
 ## Events
 
 All custom events are forwarded to a callback whose name mirrors the original event name but in
-PascalCase, and without the `vds` prefix.
+PascalCase:
 
-- `vds-play` -> `onPlay`
-- `vds-can-play` -> `onCanPlay`
+- `vds-play` -> `onVdsPlay`
+- `vds-playing` -> `onVdsPlaying`
+- `vds-can-play` -> `onVdsCanPlay`
 
 ```tsx
 import { type MediaPlayingEvent } from '@vidstack/player';
@@ -90,7 +91,7 @@ function MyPlayer() {
 
   return (
     <Media>
-      <Video onPlaying={onPlaying}>
+      <Video onVdsPlaying={onPlaying}>
         <video src="..." />
       </Video>
     </Media>
@@ -98,11 +99,142 @@ function MyPlayer() {
 }
 ```
 
-## Media Store
+## Media Hooks
 
-The media store enables you to subscribe directly to specific media state changes, rather than
-listening to potentially multiple DOM events and binding it yourself.
+We provide a few hooks to make it easy for you to interact with the current media such as
+getting the current state of playback (e.g., "is the media paused?"), or dispatching
+[media request events](/docs/player/getting-started/events/#request-events) (e.g., request media to
+play/pause).
 
-We're working on a `useMediaStore` hook so you can easily two-way bind to media state. Follow
-us on [Twitter](https://twitter.com/vidstackjs?lang=en) or [Discord](https://discord.com/invite/7RGU7wvsu9)
-to be notified of when it's ready.
+### `useMediaContext`
+
+The media context hook enables you to subscribe directly to specific media state changes, rather
+than listening to potentially multiple DOM events and binding it yourself.
+
+{% no %}
+Tracking media state via events:
+{% /no %}
+
+```tsx
+import { useState } from 'react';
+import { Media, Video } from '@vidstack/player-react';
+
+function MediaPlayer() {
+  const [paused, setPaused] = useState(false);
+
+  return (
+    <Media>
+      <Video onVdsPlay={() => setPaused(false)} onVdsPause={() => setPaused(true)}>
+        {/* ... */}
+      </Video>
+    </Media>
+  );
+}
+```
+
+{% yes %}
+Tracking media state via store hook:
+{% /yes %}
+
+```tsx
+import { useRef } from 'react';
+import { type MediaElement } from '@vidstack/player';
+import { Media, useMediaContext } from '@vidstack/player-react';
+
+function MediaPlayer() {
+  const ref = useRef<MediaElement>(null);
+
+  // - This is a live subscription to the paused store.
+  // - All stores are lazily subscribed to on prop access.
+  const { paused } = useMediaContext(ref);
+
+  return <Media ref={ref}>{/* ... */}</Media>;
+}
+```
+
+```tsx
+function MediaChild() {
+  // No ref required if used inside `<Media>` child component.
+  const { paused } = useMediaContext();
+}
+
+function MediaPlayer() {
+  return (
+    <Media>
+      <MediaChild />
+    </Media>
+  );
+}
+```
+
+Your IDE should provide helpful suggestions and docs on the context properties that are available. You
+can also use the [`MediaContext`](https://github.com/vidstack/vidstack/blob/main/packages/player/src/media/MediaContext.ts)
+interface on GitHub as a reference.
+
+### `useMediaRemote`
+
+The media remote hook provides a simple facade for dispatching
+[media request events](/docs/player/getting-started/events/#request-events). This can be used to
+request media playback to play/pause, change the current volume level, seek to a different time
+position, and other actions that change media state.
+
+```tsx
+import React from 'react';
+import { useMediaRemote, useMediaContext } from '@vidstack/player-react';
+
+function PlayButton() {
+  const remote = useMediaRemote();
+  const { paused } = useMediaContext();
+
+  function onPointerUp({ nativeEvent }: React.PointerEvent) {
+    if (paused) {
+      // - We are providing the "triggerEvent" here.
+      // - Trigger events allow us to trace events back to their origin.
+      // - The media play event will have this pointer event in its chain.
+      remote.play(nativeEvent);
+    } else {
+      remote.pause(nativeEvent);
+    }
+  }
+
+  return <button onPointerUp={onPointerUp}>{/* ... */}</button>;
+}
+```
+
+Your IDE should provide helpful suggestions and docs on the available methods. You can also use
+the [`MediaRemoteControl`](https://github.com/vidstack/vidstack/blob/main/packages/player/src/media/interact/MediaRemoteControl.ts)
+source on GitHub as a reference.
+
+### `useMediaElement`
+
+The following hook provides you with a reference to the nearest parent `MediaElement`. You can
+generally avoid using this hook unless you need direct access to some DOM API on the media element.
+
+```tsx
+import { useMediaElement } from '@vidstack/player-react';
+
+function MediaChild() {
+  const media = useMediaElement();
+  // ...
+}
+```
+
+{% no %}
+Avoid calling methods directly on the provider element:
+{% /no %}
+
+```tsx
+import { useEffect } from 'react';
+import { useMediaElement } from '@vidstack/player-react';
+
+function MediaChild() {
+  const media = useMediaElement();
+
+  useEffect(() => {
+    // BAD: try to avoid doing this as you will lose valuable information
+    // provided by event chains. Prefer the request/response model by using
+    // the `useMediaRemote` hook.
+    media.provider?.play();
+  }, [media]);
+}
+```

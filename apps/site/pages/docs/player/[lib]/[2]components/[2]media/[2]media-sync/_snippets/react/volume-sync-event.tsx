@@ -9,7 +9,7 @@ function MediaPlayer() {
 
   return (
     <Media>
-      <MediaSync onMediaVolumeSync={onVolumeSync}>{/* ... */}</MediaSync>
+      <MediaSync onVdsMediaVolumeSync={onVolumeSync}>{/* ... */}</MediaSync>
     </Media>
   );
 }

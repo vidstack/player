@@ -12,7 +12,7 @@ function MediaPlayer() {
   }
 
   return (
-    <Hls onHlsInstance={onInstance} onHlsDestroying={onDestroy}>
+    <Hls onVdsHlsInstance={onInstance} onVdsHlsDestroying={onDestroy}>
       {/* ... */}
     </Hls>
   );

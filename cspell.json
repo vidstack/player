@@ -11,6 +11,7 @@
     "behaviour",
     "bfcache",
     "builtins",
+    "callout",
     "canfullscreen",
     "caniuse",
     "canplay",

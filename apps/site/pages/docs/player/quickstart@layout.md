@@ -101,28 +101,6 @@ Congratulations, you're done 🎉 You might not see anything yet and that's okay
 haven't designed a UI! You can quickly try showing the [`native controls`](#media-controls) to see
 if everything is working.
 
-## TypeScript
-
-We've written the player library with TypeScript, and we distribute all types with the
-`@vidstack/player` package. VSCode will detect them by default, but global event types need to
-be registered separately; otherwise, the following will happen:
-
-```js
-// The event type will default to `Event` instead of `MediaPlayEvent`.
-provider.addEventListener('vds-play', (event) => {});
-```
-
-Events are a core part of working with the player library, so we highly recommend you resolve
-this by adding the following to your TypeScript configuration file:
-
-```json {% title="tsconfig.json" copyHighlight=true highlight="3" %}
-{
-  "compilerOptions": {
-    "types": ["@vidstack/player/globals"]
-  }
-}
-```
-
 ## Media Controls
 
 By default, we'll remove the controls on the underlying `<audio>` or `<video>` element as we
@@ -145,7 +123,7 @@ element like so:
 
 You can declare a second poster in your markup like so:
 
-{% code_snippet name="seo-poster" highlight="html:2|react:7" /%}
+{% code_snippet name="seo-poster" highlight="html:2|react:7-8" /%}
 
 The one on the Vidstack provider element is the poster that you expect your users to load and see.
 The other on the `<video>` element is shown temporarily as the primary poster loads, or if
@@ -159,27 +137,20 @@ See the [Structured Video Data](https://developers.google.com/search/docs/advanc
 documentation by Google to learn how to explicitly provide rich information about your videos.
 {% /callout %}
 
-## Player Sizing
+## Media Sizing
 
 By default, the browser will use the [intrinsic size](https://developer.mozilla.org/en-US/docs/Glossary/Intrinsic_Size)
 of the loaded media to set the dimensions of the provider. As media loads over the network,
-the element will jump from the default `150px` width and `300px` height to the intrinsic media size,
-triggering a layout shift which is a [poor user experience indicator](https://web.dev/cls) for
-both your users and search engines (i.e., Google).
+the element will jump from the default size to the intrinsic media size, triggering a layout shift
+which is a [poor user experience indicator](https://web.dev/cls) for both your users and search
+engines (i.e., Google).
 
 To avoid a layout shift, we recommend you fill `100%` of your media container and use an aspect
-ratio container which holds a fixed ratio (e.g., `16/9`). Ideally the ratio set should match the
-ratio of the media content itself (i.e., intrinsic aspect ratio). See our
-[`$tag:vds-aspect-ratio`](/docs/player/components/ui/aspect-ratio/index.html) component for how you can
-achieve this. Once complete, your media content should now adapt responsively without a layout
-shift!
+ratio container which holds a fixed ratio (e.g., `16/9`) like so:
 
-{% callout type="info" %}
-You may still see a layout shift if the `$tag:vds-aspect-ratio` component is imported late.
-Consider including it in your critical render path (e.g., in your root `App.*` file).
+{% code_snippets name="sizing" highlight="" css=true copy=true copySteps=true highlight="html:2,6-8|react:1,6" /%}
 
-```js title=App.*|copy
-import '@vidstack/player/define/vds-aspect-ratio.js';
-```
-
+{% callout type="tip" %}
+Ideally the ratio set should match the ratio of the media content itself (i.e., intrinsic aspect ratio)
+otherwise you'll end up with a letterbox template (empty black bars on the left/right of the media).
 {% /callout %}

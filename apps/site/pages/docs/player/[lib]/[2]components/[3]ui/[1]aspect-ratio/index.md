@@ -17,6 +17,7 @@ container like so:
 
 ```css {% copy=true %}
 vds-media {
+  display: inline-block;
   width: 100%;
 }
 ```
@@ -29,6 +30,7 @@ suitable to your application.
 
 ```css {% copy=true %}
 vds-media {
+  display: inline-block;
   width: 100%;
 }
 

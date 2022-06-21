@@ -117,6 +117,26 @@ unsubscribe();
 
 ## Typescript
 
+We've written the player library with TypeScript, and we distribute all types with the
+`@vidstack/player` package. VSCode will detect them by default, but global event types need to
+be registered separately; otherwise, the following will happen:
+
+```js
+// The event type will default to `Event` instead of `MediaPlayEvent`.
+provider.addEventListener('vds-play', (event) => {});
+```
+
+Events are a core part of working with the player library, so we highly recommend you resolve
+this by adding the following to your TypeScript configuration file:
+
+```json {% title="tsconfig.json" copyHighlight=true highlight="3" %}
+{
+  "compilerOptions": {
+    "types": ["@vidstack/player/globals"]
+  }
+}
+```
+
 ### Element Types
 
 You can import element types directly from the package if you're using TypeScript like so:

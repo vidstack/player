@@ -16,7 +16,7 @@ function MediaPlayer() {
 
   return (
     <Media>
-      <MediaVisibility onMediaVisibilityChange={onVisibilityChange}>{/* ... */}</MediaVisibility>
+      <MediaVisibility onVdsMediaVisibilityChange={onVisibilityChange}>{/* ... */}</MediaVisibility>
     </Media>
   );
 }

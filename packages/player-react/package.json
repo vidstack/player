@@ -9,7 +9,8 @@
   },
   "files": [
     "dist/",
-    "index.d.ts"
+    "index.d.ts",
+    "globals.d.ts"
   ],
   "sideEffects": false,
   "exports": {
