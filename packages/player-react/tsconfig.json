@@ -6,7 +6,7 @@
     "declarationDir": "types",
     "jsx": "react",
     "tsBuildInfoFile": ".tsbuildinfo",
-    "types": ["@types/node", "@vidstack/player/globals"]
+    "types": ["@types/node", "vitest/globals", "@vidstack/player/globals"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

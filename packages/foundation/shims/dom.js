@@ -22,6 +22,16 @@ export function getWindow() {
         value,
       }));
     }
+    get style() {
+      return {
+        setProperty(name, value) {
+          const attrs = attributesForElement(this);
+          let styles = attrs.get('style') ?? '';
+          styles += `${name}: ${value};`;
+          attrs.set('style', styles);
+        },
+      };
+    }
     addEventListener() {}
     removeEventListener() {}
     setAttribute(name, value) {
@@ -48,6 +58,8 @@ export function getWindow() {
     get adoptedStyleSheets() {
       return [];
     }
+    addEventListener() {}
+    removeEventListener() {}
     createTreeWalker() {
       return {};
     }
@@ -104,6 +116,8 @@ export function getWindow() {
     MutationObserver: class {
       observe() {}
     },
+    addEventListener() {},
+    removeEventListener() {},
     requestAnimationFrame() {},
   };
 

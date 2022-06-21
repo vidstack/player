@@ -14,11 +14,15 @@ let ssrInProgress = false;
 const tags = new Set<string>();
 const blacklist = new Set(['children', 'localName', 'ref', 'style', 'className']);
 
-const ssrFile = path.resolve(path.dirname(fileURLToPath(import.meta.url)), './ssr.js');
+const ssrFile = path.resolve(path.dirname(fileURLToPath(import.meta.url)), './exec-ssr.js');
 
 const camelCaseRE = /[a-z][A-Z]/g;
 
-export const createComponent = (React: typeof ReactModule, tagName: string) => {
+export const createComponent = (
+  React: typeof ReactModule,
+  tagName: string,
+  { skipSSR = false } = {},
+) => {
   const Component = React.Component;
   const createElement = React.createElement;
 
@@ -44,7 +48,7 @@ export const createComponent = (React: typeof ReactModule, tagName: string) => {
         }
       }
 
-      if (!ssrInProgress) {
+      if (!ssrInProgress && !skipSSR) {
         ssrInProgress = true;
 
         const openTag = `<${tagName}>`;

@@ -7,6 +7,7 @@ import type { ScreenOrientationEvents } from './screen-orientation';
 
 declare global {
   const __DEV__: true;
+  const __NODE__: true;
 
   interface VdsElementEventMap extends FullscreenEvents, ScreenOrientationEvents, LoggerEvents {
     'vds-noop': any;

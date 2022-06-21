@@ -146,6 +146,8 @@ export class PageController implements ReactiveController {
   }
 
   protected _determinePageState(event?: Event): PageState {
+    if (__NODE__) return 'hidden';
+
     if (event?.type === 'blur' || document.visibilityState === 'hidden') {
       return 'hidden';
     }

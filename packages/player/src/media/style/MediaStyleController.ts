@@ -19,7 +19,7 @@ export abstract class MediaStyleController {
   }
 
   protected _hostConnected() {
-    const idleCallback = window.requestIdleCallback ?? ((cb: () => void) => cb());
+    const idleCallback = window?.requestIdleCallback ?? ((cb: () => void) => cb());
 
     idleCallback(() => {
       for (const propName of this._mediaProps) {
@@ -29,7 +29,7 @@ export abstract class MediaStyleController {
           const attrName = this._getMediaAttrName(propName);
 
           const unsub = store.subscribe(($v) => {
-            window.requestAnimationFrame(() => {
+            window?.requestAnimationFrame(() => {
               this._handleValueChange(propName, attrName, $v);
             });
           });

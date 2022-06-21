@@ -1,24 +1,18 @@
-import '@vidstack/foundation/shims/install-ssr.js';
-
 import { render } from '@lit-labs/ssr';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-async function main() {
-  const { html: reactHTML, tagNames } = /** @type {{ html: string; tagNames: string; }} */ (
-    process.env
-  );
-
-  const tags = JSON.parse(tagNames);
-
+/**
+ * @param {string} reactHTML
+ * @param {string[]} tags
+ */
+export async function ssr(reactHTML, tags) {
   for (const tag of tags) {
     await import(`@vidstack/player/define/${tag}.js`);
   }
 
   const template = html`${unsafeHTML(reactHTML)}`;
-  const ssrHTML = trimOuterMarkers(iterableToString(render(template)));
-
-  process.stdout.write(JSON.stringify({ html: ssrHTML }));
+  return trimOuterMarkers(iterableToString(render(template)));
 }
 
 function trimOuterMarkers(renderedContent) {
@@ -32,5 +26,3 @@ const iterableToString = (iterable) => {
   for (const i of iterable) s += i;
   return s;
 };
-
-main();

@@ -22,14 +22,19 @@ async function main() {
       bundle: true,
       outdir: 'dist/node',
     }),
-    copySSRFile(),
+    copySSRFiles(),
   ]);
 }
 
-async function copySSRFile() {
-  const filePath = path.resolve('src/node/lib/ssr.js');
-  const destPath = path.resolve('dist/node/ssr.js');
-  await fs.copyFile(filePath, destPath);
+async function copySSRFiles() {
+  const files = ['src/node/lib/ssr.js', 'src/node/lib/exec-ssr.js'];
+
+  await Promise.all(
+    await files.map(async (filePath) => {
+      const destPath = path.resolve(`dist/node/${path.basename(filePath)}`);
+      await fs.copyFile(filePath, destPath);
+    }),
+  );
 }
 
 main().catch((e) => {

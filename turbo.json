@@ -29,6 +29,9 @@
     },
     "lint:prettier": {
       "inputs": ["src/**"]
+    },
+    "test": {
+      "dependsOn": ["^analyze", "^bundle"]
     }
   }
 }

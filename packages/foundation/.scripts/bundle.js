@@ -4,6 +4,7 @@ import { commonOptions } from '../../../.scripts/common-build.js';
 async function main() {
   const entry = ['src/index.ts'];
   const external = [/^lit/];
+  const debug = process.argv.includes('--debug');
 
   /** @param {Partial<Parameters<typeof commonOptions>[0]>} args */
   const shared = (args = {}) => commonOptions({ entry, external, ...args });
@@ -22,7 +23,7 @@ async function main() {
     build({
       ...shared({ node: true, external: [] }),
       bundle: true,
-      minify: true,
+      minify: !debug,
       outdir: 'dist/node',
     }),
   ]);
