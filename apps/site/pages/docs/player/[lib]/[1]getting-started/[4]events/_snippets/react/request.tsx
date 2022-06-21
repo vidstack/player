@@ -1,5 +1,5 @@
 import { type MediaPlayEvent, type PlayRequestEvent } from '@vidstack/player';
-import { Media, Video } from '@vidstack/player/react';
+import { Media, Video } from '@vidstack/player-react';
 
 function MediaPlayer() {
   // 1. request is made.

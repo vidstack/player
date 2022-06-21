@@ -9,7 +9,7 @@ In this section, we'll go through the basics of using Vidstack Player with React
 
 ## Importing Components
 
-You can import all components from the path `@vidstack/player/react`. Component names mirror
+You can import all components from the path `@vidstack/player-react`. Component names mirror
 the element tag name except they're in PascalCase without the `vds` prefix.
 
 - `vds-media` -> `Media`
@@ -17,7 +17,7 @@ the element tag name except they're in PascalCase without the `vds` prefix.
 - `vds-play-button` -> `PlayButton`
 
 ```js
-import { Media, Video, PlayButton } from '@vidstack/player/react';
+import { Media, Video, PlayButton } from '@vidstack/player-react';
 ```
 
 Keep in mind that you're implicitly registering the underlying custom element by importing a
@@ -31,7 +31,7 @@ All components forward the underlying custom element reference, so you can use t
 ```tsx
 import { useRef, useEffect } from 'React';
 import { type VideoElement } from '@vidstack/player';
-import { Media, Video } from '@vidstack/player/react';
+import { Media, Video } from '@vidstack/player-react';
 
 function MyPlayer() {
   const providerRef = useRef<VideoElement>(null);
@@ -58,7 +58,7 @@ element itself; therefore, you can pass in complex data types such as objects an
 any issues.
 
 ```tsx
-import { Media, Hls } from '@vidstack/player/react';
+import { Media, Hls } from '@vidstack/player-react';
 
 function MyPlayer() {
   return (
@@ -81,7 +81,7 @@ PascalCase, and without the `vds` prefix.
 
 ```tsx
 import { type MediaPlayingEvent } from '@vidstack/player';
-import { Media, Video } from '@vidstack/player/react';
+import { Media, Video } from '@vidstack/player-react';
 
 function MyPlayer() {
   function onPlaying(event: MediaPlayingEvent) {

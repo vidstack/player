@@ -25,6 +25,7 @@
     "@tailwindcss/typography": "^0.5.2",
     "@types/react": "^17.0.39",
     "@vidstack/eliza": "workspace:*",
+    "@vidstack/player-react": "workspace:*",
     "@vitebook/core": "next",
     "@vitebook/svelte": "next",
     "autoprefixer": "^10.4.2",

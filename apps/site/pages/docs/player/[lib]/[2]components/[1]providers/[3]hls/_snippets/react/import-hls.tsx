@@ -1,4 +1,4 @@
-import { Hls } from '@vidstack/player/react';
+import { Hls } from '@vidstack/player-react';
 import hlsjs from 'hls.js';
 
 function MediaPlayer() {

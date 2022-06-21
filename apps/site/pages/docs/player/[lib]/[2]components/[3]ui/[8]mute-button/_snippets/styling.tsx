@@ -1,4 +1,4 @@
-import { Media, MuteButton } from '@vidstack/player/react';
+import { Media, MuteButton } from '@vidstack/player-react';
 
 function MediaPlayer() {
   return (

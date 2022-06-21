@@ -1,5 +1,5 @@
 import { type HlsElement } from '@vidstack/player';
-import { Hls } from '@vidstack/player/react';
+import { Hls } from '@vidstack/player-react';
 import hlsjs from 'hls.js';
 import { useRef } from 'React';
 

@@ -1,4 +1,4 @@
-import { Slider } from '@vidstack/player/react';
+import { Slider } from '@vidstack/player-react';
 
 function MySlider() {
   return (

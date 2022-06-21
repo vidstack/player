@@ -1,1 +1,1 @@
-import { TagName } from '@vidstack/player/react';
+import { TagName } from '@vidstack/player-react';

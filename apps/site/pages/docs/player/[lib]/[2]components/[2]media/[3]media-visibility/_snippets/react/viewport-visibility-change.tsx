@@ -1,5 +1,5 @@
 import { type MediaVisibilityChangeEvent } from '@vidstack/player';
-import { Media, MediaVisibility } from '@vidstack/player/react';
+import { Media, MediaVisibility } from '@vidstack/player-react';
 
 function MediaPlayer() {
   function onVisibilityChange(event: MediaVisibilityChangeEvent) {

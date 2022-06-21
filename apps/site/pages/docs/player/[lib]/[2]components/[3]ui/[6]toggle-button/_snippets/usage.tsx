@@ -1,4 +1,4 @@
-import { ToggleButton } from '@vidstack/player/react';
+import { ToggleButton } from '@vidstack/player-react';
 
 function MyToggleButton() {
   return (

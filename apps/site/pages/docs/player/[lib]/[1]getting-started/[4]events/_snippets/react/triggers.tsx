@@ -4,7 +4,7 @@ import {
   type MediaPlayingEvent,
   walkTriggerEventChain,
 } from '@vidstack/player';
-import { Media, Video } from '@vidstack/player/react';
+import { Media, Video } from '@vidstack/player-react';
 
 function Example() {
   function onPlay(event: MediaPlayEvent) {

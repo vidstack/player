@@ -1,4 +1,4 @@
-import { Media, MediaVisibility } from '@vidstack/player/react';
+import { Media, MediaVisibility } from '@vidstack/player-react';
 
 function MediaPlayer() {
   return (

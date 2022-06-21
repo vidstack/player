@@ -1,4 +1,4 @@
-import { Gesture, Media, PlayButton, Poster } from '@vidstack/player/react';
+import { Gesture, Media, PlayButton, Poster } from '@vidstack/player-react';
 
 function MediaPlayer() {
   return (

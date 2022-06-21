@@ -1,5 +1,5 @@
 import { type MediaVolumeSyncEvent } from '@vidstack/player';
-import { Media, MediaSync } from '@vidstack/player/react';
+import { Media, MediaSync } from '@vidstack/player-react';
 
 function MediaPlayer() {
   function onVolumeSync(event: MediaVolumeSyncEvent) {

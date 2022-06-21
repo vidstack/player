@@ -9,11 +9,11 @@ description: Instructions to get your audio player installed and on-screen using
 ### Install NPM Package {% slot="title" %}
 
 {% slot name="description" %}
-Install `@vidstack/player` and dependencies via NPM.
+Install `@vidstack/player-react` and dependencies via NPM.
 {% /slot %}
 
 ```bash {% copy=true %}
-npm i lit @vidstack/player@next
+npm i lit @vidstack/player@next @vidstack/player-react@next
 ```
 
 {% /step %}
@@ -27,7 +27,7 @@ Import media components into the `jsx` or `tsx` file where you'll be building yo
 {% /slot %}
 
 ```js {% copy=true %}
-import { Audio, Media } from '@vidstack/player/react';
+import { Audio, Media } from '@vidstack/player-react';
 ```
 
 {% /step %}

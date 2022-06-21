@@ -1,5 +1,5 @@
 import { type MediaLoadedMetadataEvent } from '@vidstack/player';
-import { Media, Video } from '@vidstack/player/react';
+import { Media, Video } from '@vidstack/player-react';
 
 function MediaPlayer() {
   function onLoadedMetadata(event: MediaLoadedMetadataEvent) {

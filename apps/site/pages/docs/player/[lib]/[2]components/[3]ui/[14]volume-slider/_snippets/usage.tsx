@@ -1,4 +1,4 @@
-import { Media, VolumeSlider } from '@vidstack/player/react';
+import { Media, VolumeSlider } from '@vidstack/player-react';
 
 function MediaPlayer() {
   return (

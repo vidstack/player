@@ -1,4 +1,4 @@
-import { Media, PlayButton } from '@vidstack/player/react';
+import { Media, PlayButton } from '@vidstack/player-react';
 
 function MediaPlayer() {
   return (
