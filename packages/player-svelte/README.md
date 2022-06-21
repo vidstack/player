@@ -27,8 +27,8 @@ Vidstack Player is [MIT licensed](./LICENSE).
 
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr
-[package]: https://www.npmjs.com/package/@vidstack/player
-[package-badge]: https://img.shields.io/npm/v/@vidstack/player/latest
+[package]: https://www.npmjs.com/package/@vidstack/player-svelte
+[package-badge]: https://img.shields.io/npm/v/@vidstack/player-svelte/latest
 [discord]: https://discord.com/invite/7RGU7wvsu9
 [discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white
 [discussions]: https://github.com/vidstack/vidstack/discussions
