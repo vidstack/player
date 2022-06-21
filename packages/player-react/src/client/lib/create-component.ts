@@ -54,6 +54,11 @@ export const createComponent = <E extends HTMLElement>(
 
     static displayName = (elementClass as { name: string }).name.replace('Element', '');
 
+    constructor(props) {
+      super(props);
+      safelyDefineCustomElement(tagName, elementClass);
+    }
+
     private _updateElement(oldProps?: ComponentProps) {
       if (this._element === null) return;
 
@@ -65,10 +70,6 @@ export const createComponent = <E extends HTMLElement>(
           oldProps ? oldProps[prop as keyof ComponentProps] : undefined,
         );
       }
-    }
-
-    override componentWillMount() {
-      safelyDefineCustomElement(tagName, elementClass);
     }
 
     override componentDidMount() {

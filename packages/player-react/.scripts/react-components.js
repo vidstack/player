@@ -64,7 +64,9 @@ export default  /* @__PURE__ */ createComponent(React, '${component.tagName}');\
       const nodePath = path.resolve(NODE_OUTPUT_DIR, `${outputFileName}.ts`);
       await writeFile(nodePath, nodeContent);
 
-      index.push(`export { default as ${displayName} } from './${outputFileName}';`);
+      if (component.tagName !== 'vds-media') {
+        index.push(`export { default as ${displayName} } from './${outputFileName}';`);
+      }
     }),
   );
 

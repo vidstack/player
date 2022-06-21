@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "rootDir": "src",
     "declarationDir": "types",
+    "jsx": "react",
     "tsBuildInfoFile": ".tsbuildinfo",
     "types": ["@types/node", "@vidstack/player/globals"]
   },

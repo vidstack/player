@@ -77,7 +77,7 @@ export const createComponent = (React: typeof ReactModule, tagName: string) => {
     }
   }
 
-  const ForwardedComponent = React.forwardRef((props?: any, ref?: any) =>
+  const ForwardedComponent = React.forwardRef<any, any>((props, ref) =>
     createElement(ReactComponent, { ...props, __forwardedRef: ref }, props?.children),
   );
 
