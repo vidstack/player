@@ -49,3 +49,20 @@ Add the following player JSX boilerplate to get started.
 ```
 
 {% /step %}
+
+{% step %}
+
+### Hydrate (SSR) {% slot="title" %}
+
+{% slot name="description" %}
+Import the hydration module in the root application (i.e., `_app.jsx`) _or_ page
+component containing your player:
+{% /slot %}
+
+```jsx {% copyHighlight=true highlight="3" %}
+// Only required if pre-rendering or SSR.
+// E.g., Next.js or Remix.
+import '@vidstack/player/hydrate.js';
+```
+
+{% /step %}

@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 
 import { getWindow } from './dom.js';
 
