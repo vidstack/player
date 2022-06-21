@@ -37,31 +37,38 @@ export function useMediaElement() {
  * }
  * ```
  */
-export function useMediaContext(): Readonly<MediaContext> {
-  const mediaElement = useMediaElement();
-
+export function useMediaContext(
+  media?: MediaElement | null | RefObject<MediaElement>,
+): Readonly<MediaContext> {
   const [_, update] = useState(0);
   const subscriptions = useRef(new Map<keyof MediaContext, (() => void) | undefined>());
+
+  const mediaElement = useMediaElement();
+  const [currentMedia, setCurrentMedia] = useState<MediaElement | null>(null);
+
+  useEffect(() => {
+    setCurrentMedia((media && 'current' in media ? media.current : media) ?? mediaElement);
+  }, [media, mediaElement]);
 
   function subscribe(prop: keyof MediaContext) {
     if (subscriptions.current.get(prop)) return;
     subscriptions.current.set(
       prop,
-      mediaElement?.controller.store[prop].subscribe(() => {
+      currentMedia?.controller.store[prop].subscribe(() => {
         update((n) => n + 1);
       }),
     );
   }
 
   const proxy = useMemo(() => {
-    const context = mediaElement?.controller.state ?? MEDIA_STORE_DEFAULTS;
+    const context = currentMedia?.controller.state ?? MEDIA_STORE_DEFAULTS;
     return new Proxy(context, {
       get(_, prop: keyof MediaContext) {
         subscribe(prop);
         return context[prop];
       },
     }) as unknown as MediaContext;
-  }, [mediaElement]);
+  }, [currentMedia]);
 
   useEffect(() => {
     for (const prop of subscriptions.current.keys()) {
@@ -74,7 +81,7 @@ export function useMediaContext(): Readonly<MediaContext> {
         subscriptions.current.set(prop, undefined);
       }
     };
-  }, [mediaElement]);
+  }, [currentMedia]);
 
   return proxy;
 }
@@ -95,16 +102,22 @@ export function useMediaContext(): Readonly<MediaContext> {
  * }
  * ```
  */
-export function useMediaRemote(target?: RefObject<EventTarget | null>) {
+export function useMediaRemote(target?: EventTarget | null | RefObject<EventTarget>) {
   const mediaElement = useMediaElement();
   const remote = useRef(new MediaRemoteControl());
 
+  const [currentTarget, setCurrentTarget] = useState<EventTarget | null>(null);
+
   useEffect(() => {
-    remote.current.setTarget(target?.current ?? mediaElement);
+    setCurrentTarget((target && 'current' in target ? target.current : target) ?? mediaElement);
+  }, [target, mediaElement]);
+
+  useEffect(() => {
+    remote.current.setTarget(currentTarget);
     return () => {
       remote.current.setTarget(null);
     };
-  }, [mediaElement, target]);
+  }, [currentTarget]);
 
   return remote.current;
 }

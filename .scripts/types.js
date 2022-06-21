@@ -54,7 +54,7 @@ onChange();
 
 if (args.w) {
   chokidar
-    .watch(['src/**/*.ts', ...(args.glob?.split(',') ?? [])])
+    .watch(['src/**/*.ts', 'src/**/*.tsx', ...(args.glob?.split(',') ?? [])])
     .on('add', onChange)
     .on('change', onChange)
     .on('unlink', onChange);
