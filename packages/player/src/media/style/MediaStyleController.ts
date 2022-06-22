@@ -1,4 +1,4 @@
-import { camelToKebabCase, DisposalBin } from '@vidstack/foundation';
+import { camelToKebabCase, DisposalBin, requestIdleCallback } from '@vidstack/foundation';
 import { type ReactiveElement } from 'lit';
 
 import { type MediaContext } from '../MediaContext';
@@ -19,9 +19,7 @@ export abstract class MediaStyleController {
   }
 
   protected _hostConnected() {
-    const idleCallback = window?.requestIdleCallback ?? ((cb: () => void) => cb());
-
-    idleCallback(() => {
+    requestIdleCallback(() => {
       for (const propName of this._mediaProps) {
         const store = this._store[propName];
 

@@ -12,6 +12,7 @@ import {
   listen,
   LogDispatcher,
   raf,
+  requestIdleCallback,
   RequestQueue,
   ScreenOrientationController,
   ScreenOrientationLock,
@@ -80,7 +81,8 @@ export abstract class MediaProviderElement extends LitElement {
       this,
       { target: this, threshold: 0 },
       (entries) => {
-        if (this.loading !== 'lazy') {
+        // TODO: remove lazy before 1.0 release.
+        if (!/(visible|lazy)/.test(this.loading)) {
           intersectionController.hostDisconnected();
           return;
         }
@@ -121,8 +123,12 @@ export abstract class MediaProviderElement extends LitElement {
       }),
     );
 
-    if (this.loading === 'eager') {
+    if (this.canLoad || this.loading === 'eager') {
       this.startLoadingMedia();
+    } else if (this.loading === 'idle') {
+      requestIdleCallback(() => {
+        this.startLoadingMedia();
+      });
     }
   }
 
@@ -414,14 +420,15 @@ export abstract class MediaProviderElement extends LitElement {
   /**
    * Indicates when the provider can begin loading media.
    *
-   * - If `eager` media will be loaded immediately.
-   * - If `lazy` media will delay loading until the provider has entered the viewport.
-   * - If `custom` media will wait for the `startLoadingMedia()` method to be called.
+   * - `eager`: media will be loaded immediately.
+   * - `idle`: media will be loaded after the page has loaded and `requestIdleCallback` is fired.
+   * - `visible`: media will delay loading until the provider has entered the viewport.
+   * - `custom`: media will wait for the `startLoadingMedia()` method or `vds-start-loading` event.
    *
-   * @defaultValue 'lazy'
+   * @defaultValue 'visible'
    */
   @property({ attribute: 'loading' })
-  loading: 'eager' | 'lazy' | 'custom' = 'lazy';
+  loading: 'eager' | 'idle' | 'visible' | 'custom' = 'visible';
 
   /**
    * Called when media can begin loading. Calling this method will trigger the initial provider

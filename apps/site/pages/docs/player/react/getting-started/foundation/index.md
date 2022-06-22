@@ -34,16 +34,15 @@ import { type VideoElement } from '@vidstack/player';
 import { Media, Video } from '@vidstack/player-react';
 
 function MyPlayer() {
-  const providerRef = useRef<VideoElement>(null);
+  const provider = useRef<VideoElement>(null);
 
   useEffect(() => {
-    const provider = providerRef.current;
-    provider.startLoadingMedia();
+    provider.current!.startLoadingMedia();
   }, []);
 
   return (
     <Media>
-      <Video loading="custom" ref={providerRef}>
+      <Video loading="custom" ref={provider}>
         <video src="..." />
       </Video>
     </Media>
@@ -142,13 +141,13 @@ import { type MediaElement } from '@vidstack/player';
 import { Media, useMediaContext } from '@vidstack/player-react';
 
 function MediaPlayer() {
-  const ref = useRef<MediaElement>(null);
+  const media = useRef<MediaElement>(null);
 
   // - This is a live subscription to the paused store.
   // - All stores are lazily subscribed to on prop access.
-  const { paused } = useMediaContext(ref);
+  const { paused } = useMediaContext(media);
 
-  return <Media ref={ref}>{/* ... */}</Media>;
+  return <Media ref={media}>{/* ... */}</Media>;
 }
 ```
 

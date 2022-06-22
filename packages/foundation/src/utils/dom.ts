@@ -170,3 +170,30 @@ export function observeAttributes<T extends string>(
 
   return observer;
 }
+
+/**
+ * Triggered after the page has finished loaded and during the browser's idle period.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback}
+ */
+export function requestIdleCallback(callback: () => void) {
+  if (__NODE__) {
+    callback();
+    return;
+  }
+
+  const idle = window.requestIdleCallback ?? ((fn: () => void) => fn());
+
+  if (document.readyState === 'complete') {
+    idle(callback);
+  } else {
+    window.addEventListener(
+      'load',
+      () => {
+        idle(callback);
+      },
+      { once: true },
+    );
+  }
+}

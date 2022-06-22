@@ -109,15 +109,35 @@ component if you'd like to display the native UI controls like so:
 
 {% code_snippet name="controls" highlight="html:3-4|react:7-8" /%}
 
+## Media Loading
+
+The following media loading strategies are available:
+
+- `eager`: Load media immediately - use when media needs to be interactive as soon as possible.
+- `idle`: Load media once the page has loaded and the `requestIdleCallback` is fired - use when media is
+  lower priority and doesn't need to be interactive immediately.
+- `visible` **(default)**: Load media once it has entered the visual viewport - use when media is below the fold and you prefer
+  delaying loading until it's required.
+- `custom`: Load media when the `startLoadingMedia()` method is called _or_ the `vds-start-loading`
+  event is dispatched - use when you need fine control of when media should begin loading.
+
+{% code_snippet name="loading-idle" highlight="html:2|react:6" /%}
+
+Here's another example using a custom loading strategy:
+
+{% code_snippet name="loading-custom" highlight="html:4,9|react:11,16" /%}
+
 ## Media Autoplay
 
-We manually handle autoplay so we can detect when it fails. In addition, the `autoplay` attribute
-will take priority over the `preload` attribute so media won't be lazy loaded.
-
-Therefore, ensure you set `autoplay` on the provider component instead of the underlying media
-element like so:
+We manually handle autoplay so we can detect when it fails. Therefore, ensure you set `autoplay` on
+the provider component instead of the underlying media element like so:
 
 {% code_snippet name="autoplay" highlight="html:1|react:5" /%}
+
+{% callout type="danger" %}
+The `autoplay` attribute on the `<audio>` or `<video>` element will take priority over the
+`preload` attribute. Never set this attribute because it will break the loading process.
+{% /callout %}
 
 ## Media Poster
 

@@ -3,12 +3,12 @@ import { Hls } from '@vidstack/player-react';
 import { useEffect, useRef } from 'react';
 
 function MediaPlayer() {
-  const providerRef = useRef<HlsElement>(null);
+  const provider = useRef<HlsElement>(null);
 
   useEffect(() => {
     // `hls.js` instance.
-    const engine = providerRef.current!.hlsEngine;
+    const engine = provider.current!.hlsEngine;
   }, []);
 
-  return <Hls ref={providerRef}>{/* ... */}</Hls>;
+  return <Hls ref={provider}>{/* ... */}</Hls>;
 }
