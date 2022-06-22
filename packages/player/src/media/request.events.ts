@@ -1,6 +1,7 @@
 import { VdsEvent } from '@vidstack/foundation';
 
 export type MediaRequestEvents = {
+  'vds-start-loading': StartLoadingRequestEvent;
   'vds-mute-request': MuteRequestEvent;
   'vds-unmute-request': UnmuteRequestEvent;
   'vds-enter-fullscreen-request': EnterFullscreenRequestEvent;
@@ -18,6 +19,7 @@ export type MediaRequestEvents = {
 };
 
 export type PendingMediaRequests = {
+  loading: StartLoadingRequestEvent[];
   play: PlayRequestEvent[];
   pause: PauseRequestEvent[];
   volume: (MuteRequestEvent | UnmuteRequestEvent | VolumeChangeRequestEvent)[];
@@ -26,6 +28,16 @@ export type PendingMediaRequests = {
   seeking: SeekingRequestEvent[];
   userIdle: (ResumeUserIdleRequestEvent | PauseUserIdleRequestEvent)[];
 };
+
+/**
+ * Fired when requesting media to begin loading. This will only take effect if the `loading`
+ * strategy on the provider is set to `custom`.
+ *
+ * @event
+ * @bubbles
+ * @composed
+ */
+export type StartLoadingRequestEvent = VdsEvent<void>;
 
 /**
  * Fired when requesting the media to be muted.

@@ -233,6 +233,7 @@ export class MediaController {
    * event type the request is waiting for to be considered "satisfied".
    */
   protected _pendingMediaRequests: PendingMediaRequests = {
+    loading: [],
     play: [],
     pause: [],
     volume: [],
@@ -292,6 +293,16 @@ export class MediaController {
       });
     };
   }
+
+  protected _handleStartLoadingRequest = eventListener(
+    this._host,
+    'vds-start-loading',
+    this._createMediaRequestHandler('loading', (event) => {
+      if (this.state.canLoad) return;
+      this._pendingMediaRequests.loading.push(event);
+      this._provider!.startLoadingMedia();
+    }),
+  );
 
   protected _handleMuteRequest = eventListener(
     this._host,
@@ -573,8 +584,10 @@ export class MediaController {
     return this._mediaEvents[this._mediaEvents.map((e) => e.type).lastIndexOf(eventType)];
   }
 
-  protected _handleCanLoad() {
+  protected _handleCanLoad(event: MediaCanPlayEvent) {
     this._store.canLoad.set(true);
+    this._mediaEvents.push(event);
+    this._satisfyMediaRequest('loading', event);
   }
 
   protected _updateMetadata(metadata: MediaMetadataEventDetail) {
@@ -587,6 +600,7 @@ export class MediaController {
     this._updateMetadata(event.detail);
     this._mediaEvents.push(event);
     appendTriggerEvent(event, this._findLastMediaEvent('vds-src-change'));
+    appendTriggerEvent(event, this._findLastMediaEvent('vds-can-load'));
   }
 
   protected _handleLoadedData(event: MediaLoadedDataEvent) {

@@ -40,6 +40,10 @@ export class MediaRemoteControl {
     }
   }
 
+  startLoading(triggerEvent?: Event) {
+    this._dispatchRequest('vds-start-loading', { triggerEvent });
+  }
+
   play(triggerEvent?: Event) {
     this._dispatchRequest('vds-play-request', { triggerEvent });
   }
