@@ -71,7 +71,7 @@
     "*.{js,ts,svelte}": "eslint --cache --fix",
     "*.{js,ts,jsx,tsx,md,json,vue,svelte}": "prettier --write",
     "*.{md,ts}": "cspell --no-must-find-files",
-    "packages/player/**": "pnpm -F player bundle"
+    "./packages/player/**": "pnpm -F player bundle"
   },
   "engines": {
     "node": ">=16",

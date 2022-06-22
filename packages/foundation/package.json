@@ -11,6 +11,10 @@
     "dom.d.ts",
     "globals.d.ts"
   ],
+  "sideEffects": [
+    "./shims/*.js"
+  ],
+  "module": "./dist/prod/index.js",
   "exports": {
     ".": {
       "node": "./dist/node/index.js",
@@ -20,9 +24,6 @@
     "./shims/*": "./shims/*",
     "./package.json": "./package.json"
   },
-  "sideEffects": [
-    "./shims/*.js"
-  ],
   "contributors": [
     "Rahim Alwer <rahim.alwer@gmail.com>"
   ],

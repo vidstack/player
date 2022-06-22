@@ -13,6 +13,7 @@
     "globals.d.ts"
   ],
   "sideEffects": false,
+  "module": "./dist/client/index.js",
   "exports": {
     ".": {
       "node": "./dist/node/index.js",

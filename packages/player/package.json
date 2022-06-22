@@ -18,6 +18,7 @@
     "tailwind.cjs",
     "vscode.html-data.json"
   ],
+  "module": "./dist/prod/index.js",
   "exports": {
     ".": {
       "node": "./dist/node/index.js",

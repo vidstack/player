@@ -143,7 +143,7 @@ The `autoplay` attribute on the `<audio>` or `<video>` element will take priorit
 
 You can declare a second poster in your markup like so:
 
-{% code_snippet name="seo-poster" highlight="html:2|react:7-8" /%}
+{% code_snippet name="seo-poster" highlight="html:2-3|react:7-8" /%}
 
 The one on the Vidstack provider element is the poster that you expect your users to load and see.
 The other on the `<video>` element is shown temporarily as the primary poster loads, or if
