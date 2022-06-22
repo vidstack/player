@@ -48,8 +48,8 @@ export class FullscreenButtonElement extends ToggleButtonElement {
    *
    * @defaultValue 'media'
    */
-  @property({ attribute: 'fullscreen-target' })
-  fullscreenTarget?: MediaFullscreenRequestTarget;
+  @property({ attribute: 'target' })
+  target?: MediaFullscreenRequestTarget;
 
   constructor() {
     super();
@@ -72,9 +72,9 @@ export class FullscreenButtonElement extends ToggleButtonElement {
     if (this.disabled) return;
 
     if (this.pressed) {
-      this._mediaRemote.exitFullscreen(this.fullscreenTarget, event);
+      this._mediaRemote.exitFullscreen(this.target, event);
     } else {
-      this._mediaRemote.enterFullscreen(this.fullscreenTarget, event);
+      this._mediaRemote.enterFullscreen(this.target, event);
     }
   }
 }

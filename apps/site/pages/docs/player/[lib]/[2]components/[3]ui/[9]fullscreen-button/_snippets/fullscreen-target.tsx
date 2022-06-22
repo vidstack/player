@@ -4,7 +4,7 @@ function MediaPlayer() {
   return (
     <Media>
       {/* ... */}
-      <FullscreenButton fullscreenTarget="provider" />
+      <FullscreenButton target="provider" />
     </Media>
   );
 }

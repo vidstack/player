@@ -30,7 +30,7 @@ like so:
 {% code_snippet name="fullscreen-target" /%}
 
 {% callout type="warning" %}
-By setting `fullscreen-target` to `provider`, the controller will only request fullscreen on the
+By setting `target` to `provider`, the controller will only request fullscreen on the
 media provider element, meaning your custom UI will _not_ be displayed when in fullscreen.
 {% /callout %}
 
