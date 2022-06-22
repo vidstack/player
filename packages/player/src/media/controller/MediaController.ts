@@ -104,6 +104,11 @@ export class MediaController {
     });
 
     _host.addController({
+      hostConnected: () => {
+        if (!this.state.canPlay) {
+          this._host.setAttribute('aria-busy', 'true');
+        }
+      },
       hostDisconnected: () => {
         this._clearMediaStateTracking();
         this._clearPendingMediaRequests();
@@ -638,6 +643,7 @@ export class MediaController {
 
     this._store.canPlay.set(true);
     this._store.duration.set(event.detail.duration);
+    this._host.setAttribute('aria-busy', 'false');
   }
 
   protected _handleCanPlayThrough(event: MediaCanPlayThroughEvent) {
@@ -856,6 +862,7 @@ export class MediaController {
 
     this._clearMediaStateTracking();
     softResetMediaStore(this._store);
+    this._host.setAttribute('aria-busy', 'true');
   }
 
   protected _handleError(event: MediaErrorEvent) {
