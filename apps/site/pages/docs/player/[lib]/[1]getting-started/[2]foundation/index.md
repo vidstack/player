@@ -212,3 +212,65 @@ Add the custom HTML data file path to `html.customData` inside the newly created
 {% /step %}
 
 {% /steps %}
+
+## Lit Helpers
+
+The following sections cover helper functions you can use when working with [Lit](https://lit.dev)
+elements.
+
+### `mediaStoreSubscription`
+
+The `mediaStoreSubscription` enables you to subscribe directly to specific media state changes
+like so:
+
+```ts
+import { mediaStoreSubscription, LitElement } from '@vidstack/player';
+
+class MyElement extends LitElement {
+  constructor() {
+    super();
+    mediaStoreSubscription(this, 'paused', ($paused) => {
+      // ...
+    });
+  }
+}
+```
+
+Your IDE should provide helpful suggestions and docs on the store properties that are available. You
+can also use the [`MediaContext`](https://github.com/vidstack/vidstack/blob/main/packages/player/src/media/MediaContext.ts)
+interface on GitHub as a reference.
+
+### `MediaRemoteControl`
+
+The `MediaRemoteControl` class provides a simple facade for dispatching
+[media request events](/docs/player/getting-started/events/#request-events). This can be used to
+request media playback to play/pause, change the current volume level, seek to a different time
+position, and other actions that change media state.
+
+```ts
+import { html, LitElement } from 'lit';
+import { MediaRemoteControl } from '@vidstack/player';
+
+class PlayButtonElement extends LitElement {
+  protected _remote = new MediaRemoteControl(this);
+
+  protected _makePlayRequest(triggerEvent: Event) {
+      // - We are providing the "triggerEvent" here.
+      // - Trigger events allow us to trace events back to their origin.
+      // - The media play event will have this pointer event in its chain.
+    this._remote.play(triggerEvent);
+  }
+
+  function render() {
+    return html`
+      <button @pointerup=${this._makePlayRequest}>
+        <!-- ... -->
+      </button>
+    `
+  }
+}
+```
+
+Your IDE should provide helpful suggestions and docs on the available methods. You can also use
+the [`MediaRemoteControl`](https://github.com/vidstack/vidstack/blob/main/packages/player/src/media/interact/MediaRemoteControl.ts)
+source on GitHub as a reference.
