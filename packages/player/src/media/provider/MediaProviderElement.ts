@@ -124,7 +124,9 @@ export abstract class MediaProviderElement extends LitElement {
     );
 
     if (this.canLoad || this.loading === 'eager') {
-      this.startLoadingMedia();
+      window?.requestAnimationFrame(() => {
+        this.startLoadingMedia();
+      });
     } else if (this.loading === 'idle') {
       requestIdleCallback(() => {
         this.startLoadingMedia();

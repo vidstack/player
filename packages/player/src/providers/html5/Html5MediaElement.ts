@@ -265,6 +265,7 @@ export class Html5MediaElement extends MediaProviderElement {
 
     if (!isScalarArrayEqual(prevSources, sources)) {
       this.dispatchEvent(vdsEvent('vds-src-change', { detail: sources }));
+      this.mediaElement?.load();
     }
   }
 
