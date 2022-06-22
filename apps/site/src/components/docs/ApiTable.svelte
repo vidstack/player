@@ -45,7 +45,7 @@
   }
 
   function jsxEventName(eventName: string) {
-    return `on${kebabToPascalCase(eventName.replace('vds-', ''))}`;
+    return `on${kebabToPascalCase(eventName)}`;
   }
 
   function getInfo(category: string, prop: any) {
@@ -56,7 +56,6 @@
         $jsLib !== 'react' && ['Attribute', prop.attr ?? camelToKebabCase(prop.name)],
       [category === 'methods' ? 'Signature' : 'Type', prop.type],
       category === 'events' && ['Detail', prop.detail],
-      category === 'events' && ['JSX', jsxEventName(prop.name)],
     ].filter(Boolean);
   }
 
@@ -102,7 +101,7 @@
 
   {#if filterHasDesc(api[category]).length > 0}
     <div>
-      <div class="flex mt-[2em] mb-[0.666em] items-center">
+      <div class="mt-[2em] mb-[0.666em] flex items-center">
         <h2 id={category} class="m-0">
           <a class="header-anchor" href={`#${category}`} aria-hidden="true">#</a>
           {camelToTitleCase(category).replace('Css', 'CSS')}
@@ -111,7 +110,7 @@
           <a
             href={categoryLinks[category]}
             target="_blank"
-            class="flex h-full border-0 px-2.5 text-gray-300 items-center hover:text-gray-inverse"
+            class="hover:text-gray-inverse flex h-full items-center border-0 px-2.5 text-gray-300"
           >
             <span class="sr-only">Learn more about {category}</span>
             <QuestionIcon width="24" height="24" />
@@ -122,7 +121,7 @@
       <div
         id={`scroll-${category}`}
         class={clsx(
-          'border-gray-outline relative flex flex-col border scrollbar scroll-contain overflow-auto mt-[2em]',
+          'border-gray-outline scrollbar scroll-contain relative mt-[2em] flex flex-col overflow-auto border',
           !showAll && 'max-h-[390px]',
         )}
       >
@@ -131,14 +130,14 @@
           {@const isOpen = _isOpen[key]}
           {@const hasLink = 'link' in prop}
 
-          <div id={key} class="border-gray-outline border-t flex flex-col first:border-0">
+          <div id={key} class="border-gray-outline flex flex-col border-t first:border-0">
             <div
-              class="border-gray-outline border-b w-full not-prose relative hover:bg-[#fafafa] dark:hover:bg-[#343434]"
+              class="border-gray-outline not-prose relative w-full border-b hover:bg-[#fafafa] dark:hover:bg-[#343434]"
             >
-              <h3 class="font-medium text-gray-inverse text-sm">
+              <h3 class="text-gray-inverse text-sm font-medium">
                 <button
                   id={`accordion-btn-${key}`}
-                  class="h-full text-left w-full py-2 px-2.5"
+                  class="h-full w-full py-2 px-2.5 text-left"
                   aria-controls={`accordion-${key}`}
                   aria-expanded={ariaBool(isOpen)}
                   on:click={() => {
@@ -146,11 +145,15 @@
                     window.history.pushState({}, '', `#${key}`);
                   }}
                 >
-                  <code class="font-medium">{prop.name}</code>
+                  <code class="font-medium">
+                    {category === 'events' && $jsLib === 'react'
+                      ? jsxEventName(prop.name)
+                      : prop.name}
+                  </code>
 
                   {#if hasReadonly && prop.readonly}
                     <span
-                      class="rounded-md font-mono bg-gray-200 py-px text-xs ml-1.5 px-2 dark:bg-gray-600"
+                      class="ml-1.5 rounded-md bg-gray-200 py-px px-2 font-mono text-xs dark:bg-gray-600"
                     >
                       readonly
                     </span>
@@ -174,7 +177,7 @@
               class={clsx(!isOpen && 'hidden', 'prose dark:prose-invert relative p-4 pb-0')}
             >
               {#if hasTypes}
-                <div class="flex flex-col font-mono space-y-4 text-sm pt-2">
+                <div class="flex flex-col space-y-4 pt-2 font-mono text-sm">
                   {#each getInfo(category, prop) as [title, code] (title)}
                     <div>
                       <span class="text-gray-inverse">{title}:</span>
@@ -187,7 +190,7 @@
               {/if}
 
               {#if hasLink}
-                <a class="text-sm top-5 right-5 absolute" href={prop.link} target="_blank">
+                <a class="absolute top-5 right-5 text-sm" href={prop.link} target="_blank">
                   {isMDNLink(prop.link) ? 'MDN' : 'Reference'}
                 </a>
               {/if}
@@ -201,9 +204,9 @@
       </div>
 
       {#if filterHasDesc(api[category]).length > 3}
-        <div class="flex mt-4 text-gray-soft text-sm items-center justify-end">
+        <div class="text-gray-soft mt-4 flex items-center justify-end text-sm">
           <button
-            class="rounded-sm font-medium py-1 px-2.5 hover:text-gray-inverse"
+            class="hover:text-gray-inverse rounded-sm py-1 px-2.5 font-medium"
             aria-checked={ariaBool(isAllOpen[category])}
             on:click={() => {
               isAllOpen[category] = !isAllOpen[category];
@@ -219,7 +222,7 @@
 
           {#if isAllOpen[category] || filterHasDesc(api[category]).length > 10}
             <button
-              class="rounded-sm font-medium py-1 px-2.5 hover:text-gray-inverse"
+              class="hover:text-gray-inverse rounded-sm py-1 px-2.5 font-medium"
               aria-checked={ariaBool(showAll)}
               on:click={() => {
                 _showAll[category] = !_showAll[category];

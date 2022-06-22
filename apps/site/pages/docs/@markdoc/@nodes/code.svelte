@@ -19,7 +19,7 @@
   }
 
   function toJSXEventName(eventName: string) {
-    return `on${kebabToPascalCase(eventName.replace('vds-', ''))}`;
+    return `on${kebabToPascalCase(eventName)}`;
   }
 
   function translate(lib: JSLibType, code: string) {
