@@ -56,7 +56,7 @@ Add the following player JSX boilerplate to get started.
 
 {% slot name="description" %}
 Import the hydration module in the root application (i.e., `_app.jsx`) _or_ page
-component containing your player:
+component containing your player.
 {% /slot %}
 
 ```jsx {% copyHighlight=true highlight="3" %}

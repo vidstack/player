@@ -154,3 +154,45 @@ ratio container which holds a fixed ratio (e.g., `16/9`) like so:
 Ideally the ratio set should match the ratio of the media content itself (i.e., intrinsic aspect ratio)
 otherwise you'll end up with a letterbox template (empty black bars on the left/right of the media).
 {% /callout %}
+
+## Avoiding FOUC
+
+Custom elements contain internal styles in their component definition so they're not applied until
+the JS chunk has loaded and the component is registered. This can cause a "flash of unstyled
+content" (FOUC). You can avoid this by hiding the top-level media element until it's defined like
+so:
+
+```css {% copyHighlight=true highlight="3-7" %}
+/* In an SSR environment, use the code snippet below - not this one. */
+
+/* Hide media element until it's defined. */
+vds-media:not(:defined) {
+  visibility: hidden;
+}
+```
+
+### SSR
+
+{% callout type="info" %}
+This section only applies if you're using a JS integration such as React _and_ you're rendering
+your application server-side (includes pre-rendering). Keep reading if you're using an application
+framework such as Next.js, Remix, SvelteKit, or Nuxt.
+{% /callout %}
+
+Our integrations handle rendering custom elements server-side as part of your application. Therefore,
+there is no FOUC in browsers that [support Declarative Shadow DOM](https://caniuse.com/declarative-shadow-dom) 🎉
+
+However, FOUC issues still occur in browsers that don't support the proposal yet. Our `hydrate.js`
+script provides a polyfill but it requires JS to load, so changes won't be applied for a tick. The
+best way to avoid FOUC issues in this case is by hiding the media element's children until the
+template is attached like so:
+
+```css {% copy=true %}
+/* Hide media element until shadow root is attached. */
+vds-media:not(:defined) > template[shadowroot] ~ * {
+  visibility: hidden;
+}
+```
+
+The rule is ignored in browsers that support Declarative Shadow DOM because the `template shadowroot>`
+child is removed during HTML parsing.
