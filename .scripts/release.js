@@ -22,7 +22,6 @@ const currentVersion = require('../package.json').version;
 
 if (isDryRun) console.log(kleur.cyan('\n☂️  Running in dry mode...\n'));
 
-const siteExamplesDir = path.resolve(__dirname, '../apps/site/examples');
 const packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages'));
 
 const packages = packagesDir.filter((p) => !p.startsWith('.'));
@@ -158,11 +157,6 @@ function updateVersions(version) {
 
   // 2. update all packages
   packages.forEach((p) => updatePackageVersion(getPkgRoot(p), version));
-
-  // 3. update site example
-  if (version !== 'workspace:*') {
-    updatePackageVersion(siteExamplesDir, version);
-  }
 }
 
 function updatePackageVersion(pkgRoot, version) {

@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/player",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Vidstack Player: Design a modern media player only using HTML and CSS.",
   "license": "MIT",
   "type": "module",

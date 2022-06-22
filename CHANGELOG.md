@@ -1,3 +1,43 @@
+# [1.6.0](https://github.com/vidstack/vidstack/compare/v1.5.2...v1.6.0) (2022-06-22)
+
+### Bug Fixes
+
+- add `module` key to `package.json` ([5bc1195](https://github.com/vidstack/vidstack/commit/5bc1195a0a24d00af6816ee59151d37f901639f9))
+- minify node bundles ([d551623](https://github.com/vidstack/vidstack/commit/d55162304bdadbdc6cefa551e5070611accecd42))
+- **player-react:** clean up event callback types ([e7553f0](https://github.com/vidstack/vidstack/commit/e7553f0d416aad736c927006607a7568956fcf0b))
+- **player-react:** do not serialzie functions during ssr ([6cedf1d](https://github.com/vidstack/vidstack/commit/6cedf1d78834964006b8544f53401c0eb93c7707))
+- **player-react:** manage hook refs correctly ([1033dd4](https://github.com/vidstack/vidstack/commit/1033dd44e7fd3c21752cf649ab9f1281b33036cb))
+- **player-react:** mark components as side-effect free ([65b4684](https://github.com/vidstack/vidstack/commit/65b4684dd8d0fc79a68ac36bfa8e85cf59937f64))
+- **player:** automatically destroy media provider if no re-connect ([860ae3f](https://github.com/vidstack/vidstack/commit/860ae3f9df7a309633627bd8bb3b80d616bba8e8))
+- **player:** autoplay not working with eager loading strategy ([0c20875](https://github.com/vidstack/vidstack/commit/0c2087552ac80d7a01a95ba587b2b89e122b1e17))
+- **player:** export trigger event utility functions ([7e91d17](https://github.com/vidstack/vidstack/commit/7e91d17e5566ebef58e885120b00fbf9a7fac5c1))
+- **player:** forward fullscreen events on media provider ([134c578](https://github.com/vidstack/vidstack/commit/134c5782ae738920346db7914dd69faef1e315cd)), closes [#658](https://github.com/vidstack/vidstack/issues/658)
+- **player:** handle muted/volume edge cases ([479bf83](https://github.com/vidstack/vidstack/commit/479bf839e4b9cf63ab26715b841e20c074589d02))
+- **player:** include `cdn` dir in package files ([488ca26](https://github.com/vidstack/vidstack/commit/488ca26e07a4022fc885e5341773631f2d9296aa))
+- **player:** mark side-effectful chunks ([750d311](https://github.com/vidstack/vidstack/commit/750d31103286f43e649fd33696bc6a1f0a7c28a0))
+- **player:** mark side-effectful files for bundlers ([436cd5a](https://github.com/vidstack/vidstack/commit/436cd5a7e62ee832d54741d08be0ab37e39278d7))
+- **player:** prefer `pointerup` event for toggle buttons ([9c9e517](https://github.com/vidstack/vidstack/commit/9c9e5179302f19734b56ce1ec26c77458da1bf99)), closes [#661](https://github.com/vidstack/vidstack/issues/661)
+- **player:** remove `elements.json` from distribution ([bfd7add](https://github.com/vidstack/vidstack/commit/bfd7add2c1748f0cf73e89b58b08a2b499d7ebd4))
+- **player:** rename `fullscreen-target` -> `target` on `<vds-fullscreen-button>` ([169d0ad](https://github.com/vidstack/vidstack/commit/169d0adf7805b5f360fb6d93103cda7fc3f56e79))
+- **site:** controls styling example conflicting with others ([12cfcdd](https://github.com/vidstack/vidstack/commit/12cfcdd836bb6ed0e3e9ec29f15ed579406df43b))
+- **site:** include missing cdn quickstart pages in prod ([7ce55cd](https://github.com/vidstack/vidstack/commit/7ce55cdedd20c3cf37c894ffe25749736ed3b535))
+- **site:** incorrect jsx event names ([32a9ba2](https://github.com/vidstack/vidstack/commit/32a9ba2304295015dda3d332444527983f13e4d6))
+- **site:** next/prev buttons breaking on small mobile ([c3e880f](https://github.com/vidstack/vidstack/commit/c3e880f1dab343bf18daed1c6084e53da7d4669c))
+- **site:** only scroll contain on larger screens ([e863567](https://github.com/vidstack/vidstack/commit/e863567e9d886bf1bafdd01137fcf52bbe2053e3))
+- **site:** trailing slashes always on ([e8c7093](https://github.com/vidstack/vidstack/commit/e8c709345efbc6b481c168166aecfcbd59fca755))
+- **site:** turn off clean urls ([1ba67c1](https://github.com/vidstack/vidstack/commit/1ba67c1b0235d72ba0caff1136ed469fc6d717bc))
+- **site:** update docsearch facet filters when changed ([6e64c9a](https://github.com/vidstack/vidstack/commit/6e64c9a98e349acb97f7a6fa468efc05e4ffd875))
+
+### Features
+
+- **player-react:** add ssr/hydration support ([93269d4](https://github.com/vidstack/vidstack/commit/93269d40647531d2552341aa536fc05a52f1b327))
+- **player-react:** media hooks ([368246f](https://github.com/vidstack/vidstack/commit/368246f914a98c06730b2ee4e240d6bb30ba0980))
+- **player:** add `aria-busy` attribute based on media can play state ([367f509](https://github.com/vidstack/vidstack/commit/367f509e5574d978d092c7ff1cab083858e363e5))
+- **player:** move `dist-cdn` to `cdn` ([8d2c60b](https://github.com/vidstack/vidstack/commit/8d2c60bb65ef405bc977a69336d7614fda8d53f0))
+- **player:** move js framework integrations to own packages ([15051cf](https://github.com/vidstack/vidstack/commit/15051cf7bb0fce459cb81237f6c64fefaa751918))
+- **player:** new `idle` loading strategy ([92bca7f](https://github.com/vidstack/vidstack/commit/92bca7f79a605993c72351ee05c3204e8a392c4d))
+- **player:** new custom loading trigger event `vds-start-loading` ([9f9bc55](https://github.com/vidstack/vidstack/commit/9f9bc5521536932960505f04e42f8abda5d2fd6c))
+
 ## [1.5.2](https://github.com/vidstack/vidstack/compare/v1.5.0...v1.5.2) (2022-05-06)
 
 ### Bug Fixes

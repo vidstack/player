@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/player-react",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Vidstack Player (React): Design a modern media player only using JSX and CSS.",
   "license": "MIT",
   "type": "module",
