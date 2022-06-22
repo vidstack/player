@@ -33,18 +33,32 @@ import { ToggleButtonElement } from '../toggle-button';
 export class MuteButtonElement extends ToggleButtonElement {
   protected readonly _mediaRemote = new MediaRemoteControl(this);
 
+  protected _volume = 1;
+  protected _muted = false;
+
   constructor() {
     super();
 
+    mediaStoreSubscription(this, 'volume', ($volume) => {
+      this._volume = $volume;
+      this._handleMutedChange();
+    });
+
     mediaStoreSubscription(this, 'muted', ($muted) => {
-      this.pressed = $muted;
-      setAttribute(this, 'muted', $muted);
+      this._muted = $muted;
+      this._handleMutedChange();
     });
   }
 
   override connectedCallback(): void {
     super.connectedCallback();
     setAttributeIfEmpty(this, 'aria-label', 'Mute');
+  }
+
+  protected _handleMutedChange() {
+    const muted = this._muted || this._volume === 0;
+    this.pressed = muted;
+    setAttribute(this, 'muted', muted);
   }
 
   protected override _handleButtonClick(event: Event) {

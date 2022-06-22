@@ -319,8 +319,14 @@ export class MediaController {
     'vds-unmute-request',
     this._createMediaRequestHandler('muted', (event) => {
       if (!this.state.muted) return;
+
       this._pendingMediaRequests.volume.push(event);
       this.provider!.muted = false;
+
+      if (this.state.volume === 0) {
+        this._pendingMediaRequests.volume.push(event);
+        this.provider!.volume = 0.25;
+      }
     }),
   );
 
@@ -383,9 +389,17 @@ export class MediaController {
     this._host,
     'vds-volume-change-request',
     this._createMediaRequestHandler('volume', (event) => {
-      if (this.state.volume === event.detail) return;
+      const volume = event.detail;
+
+      if (this.state.volume === volume) return;
+
       this._pendingMediaRequests.volume.push(event);
-      this.provider!.volume = event.detail;
+      this.provider!.volume = volume;
+
+      if (volume > 0 && this.state.muted) {
+        this._pendingMediaRequests.volume.push(event);
+        this.provider!.muted = false;
+      }
     }),
   );
 
