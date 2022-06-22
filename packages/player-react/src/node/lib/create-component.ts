@@ -34,7 +34,7 @@ export const createComponent = (
       delete props.__forwardedRef;
 
       for (const prop of Object.keys(props)) {
-        if (prop.startsWith('_') || blacklist.has(prop)) {
+        if (prop.startsWith('_') || blacklist.has(prop) || typeof props[prop] === 'function') {
           continue;
         }
 
