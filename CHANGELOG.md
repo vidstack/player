@@ -1,3 +1,9 @@
+## [1.6.1](https://github.com/vidstack/vidstack/compare/v1.6.0...v1.6.1) (2022-06-23)
+
+### Bug Fixes
+
+- **player:** calling `load()` on src change breaking hls ([ee01263](https://github.com/vidstack/vidstack/commit/ee01263c762be6c1dc8ab3c32de7c1d2d3f297b2))
+
 # [1.6.0](https://github.com/vidstack/vidstack/compare/v1.5.2...v1.6.0) (2022-06-22)
 
 ### Bug Fixes

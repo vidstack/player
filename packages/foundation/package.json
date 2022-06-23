@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/foundation",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Foundational functions and classes used by Vidstack products.",
   "license": "MIT",
   "type": "module",
