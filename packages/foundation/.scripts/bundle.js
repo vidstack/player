@@ -21,10 +21,10 @@ async function main() {
       outdir: 'dist/prod',
     }),
     build({
-      ...shared({ node: true, external: [] }),
+      ...shared({ node: true, entry: ['src/node.ts'], external: [] }),
       bundle: true,
       // minify: !debug,
-      outdir: 'dist/node',
+      outfile: 'dist/node/index.js',
     }),
   ]);
 }

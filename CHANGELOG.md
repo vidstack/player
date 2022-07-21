@@ -1,3 +1,9 @@
+## [1.6.2](https://github.com/vidstack/vidstack/compare/v1.6.1...v1.6.2) (2022-07-21)
+
+### Bug Fixes
+
+- **player-react:** nextjs ssr failing ([ec5b54c](https://github.com/vidstack/vidstack/commit/ec5b54c0e7c3e4a5a4ebed4877b0b4a75829d5f0)), closes [#666](https://github.com/vidstack/vidstack/issues/666)
+
 ## [1.6.1](https://github.com/vidstack/vidstack/compare/v1.6.0...v1.6.1) (2022-06-23)
 
 ### Bug Fixes
