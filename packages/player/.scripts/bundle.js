@@ -22,7 +22,7 @@ async function main() {
       ...shared(),
       bundle: true,
       splitting: true,
-      minify: !debug,
+      // minify: !debug,
       outdir: 'dist/prod',
     }),
     build({

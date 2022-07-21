@@ -63,7 +63,7 @@
     "@open-wc/testing-helpers": "^2.1.2",
     "fscreen": "^1.2.0",
     "jsdom": "^19.0.0",
-    "lit": "^2.1.3",
+    "lit": "^2.2.7",
     "rimraf": "^3.0.2",
     "vite": "^2.9.1",
     "vitest": "^0.6.1"

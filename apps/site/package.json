@@ -16,7 +16,7 @@
     "@vidstack/player": "workspace:*",
     "@vidstack/player-svelte": "workspace:*",
     "clsx": "^1.1.1",
-    "lit": "^2.1.3",
+    "lit": "^2.2.7",
     "svelte-class-transition": "^1.0.4"
   },
   "devDependencies": {

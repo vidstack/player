@@ -61,12 +61,10 @@ export const createComponent = (
             {
               env: { ...process.env, html, tagNames: JSON.stringify(Array.from(tags)) },
             },
-          );
-
-          const { html: ssrHTML } = JSON.parse(ssrResult.toString()) as { html: string };
+          ).toString();
 
           props.dangerouslySetInnerHTML = {
-            __html: ssrHTML.slice(openTag.length, -closeTag.length),
+            __html: ssrResult.slice(openTag.length, -closeTag.length),
           };
 
           delete props.children;

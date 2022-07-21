@@ -7,7 +7,7 @@ async function main() {
     process.env
   );
   const html = await ssr(reactHTML, JSON.parse(tagNames));
-  process.stdout.write(JSON.stringify({ html }));
+  process.stdout.write(html);
 }
 
 main();

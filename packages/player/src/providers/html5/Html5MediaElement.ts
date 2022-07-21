@@ -145,9 +145,9 @@ export class Html5MediaElement extends MediaProviderElement {
 
   protected _findSlottedMediaElement() {
     const mediaElement = getSlottedChildren(this)[0] as HTMLMediaElement | null;
-    const tagName = mediaElement?.tagName;
+    const tagName = mediaElement?.tagName ?? '';
 
-    if (tagName && !/^(audio|video)$/i.test(tagName)) {
+    if (!/^(audio|video)$/i.test(tagName)) {
       if (__DEV__) {
         throw Error(`[vds]: expected <audio> or <video> in default slot. Received: <${tagName}>.`);
       }

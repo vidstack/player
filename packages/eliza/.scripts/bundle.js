@@ -10,8 +10,8 @@ async function main() {
       external: ['yargs', /@vidstack/, 'typescript'],
     }),
     bundle: true,
-    minify: true,
-    outdir: 'dist/node',
+    // minify: true,
+    outfile: 'dist/node/index.js',
   });
 }
 

@@ -43,7 +43,7 @@ Add the following player JSX boilerplate to get started.
 ```jsx {% copy=true %}
 <Media>
   <Video poster="https://media-files.vidstack.io/poster.png">
-    <video src="https://media-files.vidstack.io/720p.mp4" preload="none" />
+    <video src="https://media-files.vidstack.io/720p.mp4" preload="none" data-video="0" />
   </Video>
 </Media>
 ```
