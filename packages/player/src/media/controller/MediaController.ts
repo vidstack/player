@@ -894,7 +894,8 @@ export class MediaController {
   }
 
   protected _handleDurationChange(event: MediaDurationChangeEvent) {
-    this._store.duration.set(event.detail);
+    const duration = event.detail;
+    this._store.duration.set(!isNaN(duration) ? duration : 0);
   }
 
   protected _handleProgress(event: MediaProgressEvent) {
