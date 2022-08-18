@@ -50,7 +50,7 @@
     class={clsx(
       'inline-flex w-full justify-center rounded-md p-2 text-lg font-medium',
       'transform-gpu transition-transform hover:scale-[1.025]',
-      open ? 'text-gray-inverse' : 'text-gray-soft hover:text-gray-inverse',
+      open ? 'text-inverse' : 'text-soft hover:text-inverse',
     )}
     aria-controls={popoverId}
     aria-expanded={ariaBool(open)}
@@ -88,13 +88,13 @@
       role="dialog"
     >
       <div
-        class="bg-gray-elevate border-gray-outline flex min-h-[60px] flex-col overflow-hidden rounded-md border shadow-md"
+        class="bg-elevate border-elevate-border flex min-h-[60px] flex-col overflow-hidden rounded-md border-[1.5px] shadow-lg"
       >
         <div class="z-20 flex items-center">
           <div class="flex-1" />
           <button
             class={clsx(
-              'text-gray-soft hover:text-gray-inverse mt-[0.125rem] mr-[0.125rem] p-4',
+              'text-soft hover:text-inverse mt-[0.125rem] mr-[0.125rem] p-4',
               !open && 'pointer-events-none',
             )}
             on:pointerup={() => closeDialog()}
@@ -105,7 +105,7 @@
           </button>
         </div>
 
-        <div class="-mt-[2.5rem] px-4 pt-2.5 pb-6">
+        <div class="-mt-[2.5rem] px-4 pt-8 pb-6">
           <slot />
         </div>
       </div>

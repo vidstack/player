@@ -52,7 +52,7 @@
 </script>
 
 <div class="docs contents">
-  <MainLayout>
+  <MainLayout --main-direction="row">
     <MetaTags />
 
     <svelte:fragment slot="search">
@@ -60,11 +60,11 @@
     </svelte:fragment>
 
     <svelte:fragment slot="navbar-bottom">
-      <div class="border-gray-outline 992:hidden mt-3 flex w-full items-center border-t pt-4">
+      <div class="border-divider 992:hidden mt-3 flex w-full items-center border-t pt-4">
         <button
           id="main-sidebar-button"
           type="button"
-          class="text-gray-soft hover:text-gray-inverse inline-flex justify-center rounded-md p-2 text-sm font-medium"
+          class="text-soft hover:text-inverse inline-flex justify-center rounded-md p-2 text-sm font-medium"
           aria-controls="main-sidebar"
           aria-expanded={ariaBool(isSidebarOpen)}
           aria-haspopup="true"
@@ -86,9 +86,7 @@
           <span class="sr-only">Open Sidebar</span>
           <MenuUnfoldIcon width="28" height="28" />
         </button>
-        <ol
-          class="text-md text-gray-soft mt-px ml-2.5 flex items-center whitespace-nowrap leading-6"
-        >
+        <ol class="text-md text-soft mt-px ml-2.5 flex items-center whitespace-nowrap leading-6">
           <li class="flex items-center">
             {$activeCategory}
             <RightArrowIcon class="mx-1" width="16" height="16" />
@@ -105,7 +103,7 @@
         {search}
         class={({ open }) =>
           clsx(
-            'bg-gray-body border-gray-outline scrollbar scroll-contain-mobile fixed top-0 left-0 z-50 transform self-start border-r',
+            'bg-body scrollbar scroll-contain-mobile fixed top-0 left-0 z-50 transform self-start',
             '-translate-x-full transform transition-transform duration-200 ease-out will-change-transform',
             'max-h-screen min-h-screen min-w-[var(--sidebar-min-width)] max-w-[var(--sidebar-max-width)]',
             '992:translate-x-0 922:block 992:sticky 992:z-0 overflow-y-auto p-[var(--sidebar-padding)]',
@@ -130,15 +128,15 @@
     </div>
 
     {#if $previousLink || $nextLink}
-      <hr class="border-gray-divider 992:mt-20 mt-14" />
+      <hr class="border-divider 992:mt-20 mt-14" />
 
       <div
         class="992:text-xl 992:pt-12 flex items-center pt-8 pb-20 text-lg font-semibold text-gray-300"
       >
         {#if $previousLink}
           <div class="mb-4 flex flex-col items-start">
-            <span class="text-gray-inverse mb-4 inline-block">Previous</span>
-            <Button arrow="left" href={$previousLink.slug} class="hover:text-gray-inverse -ml-3">
+            <span class="text-inverse mb-4 inline-block">Previous</span>
+            <Button arrow="left" href={$previousLink.slug} class="hover:text-inverse -ml-2">
               {$previousLink.title}
             </Button>
           </div>
@@ -146,8 +144,8 @@
 
         {#if $nextLink}
           <div class="ml-auto mb-4 flex flex-col items-end">
-            <span class="text-gray-inverse mb-4 inline-block">Next</span>
-            <Button arrow="right" href={$nextLink.slug} class="hover:text-gray-inverse -mr-3">
+            <span class="text-inverse mb-4 inline-block">Next</span>
+            <Button arrow="right" href={$nextLink.slug} class="hover:text-inverse -mr-3">
               {$nextLink.title}
             </Button>
           </div>

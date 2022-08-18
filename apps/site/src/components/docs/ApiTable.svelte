@@ -110,7 +110,7 @@
           <a
             href={categoryLinks[category]}
             target="_blank"
-            class="hover:text-gray-inverse flex h-full items-center border-0 px-2.5 text-gray-300"
+            class="flex h-full transform items-center border-0 px-2.5 transition-transform ease-in hover:scale-110"
           >
             <span class="sr-only">Learn more about {category}</span>
             <QuestionIcon width="24" height="24" />
@@ -121,8 +121,8 @@
       <div
         id={`scroll-${category}`}
         class={clsx(
-          'border-gray-outline scrollbar scroll-contain relative mt-[2em] flex flex-col overflow-auto border',
-          !showAll && 'max-h-[390px]',
+          'border-divider scrollbar scroll-contain relative mt-[2em] flex flex-col overflow-auto border',
+          !showAll && 'max-h-[375px]',
         )}
       >
         {#each filterHasDesc(api[category]) as prop (prop)}
@@ -130,14 +130,19 @@
           {@const isOpen = _isOpen[key]}
           {@const hasLink = 'link' in prop}
 
-          <div id={key} class="border-gray-outline flex flex-col border-t first:border-0">
-            <div
-              class="border-gray-outline not-prose relative w-full border-b hover:bg-[#fafafa] dark:hover:bg-[#343434]"
-            >
-              <h3 class="text-gray-inverse text-sm font-medium">
+          <div
+            id={key}
+            class={clsx(
+              'border-divider flex flex-col border-b last:border-0',
+              'hover:bg-elevate',
+              isOpen && 'border-b first:border-b last:border-0',
+            )}
+          >
+            <div class="not-prose w-ful relative">
+              <h3 class="text-inverse text-sm font-medium">
                 <button
                   id={`accordion-btn-${key}`}
-                  class="h-full w-full py-2 px-2.5 text-left"
+                  class="h-full w-full py-2.5 px-2.5 text-left"
                   aria-controls={`accordion-${key}`}
                   aria-expanded={ariaBool(isOpen)}
                   on:click={() => {
@@ -152,9 +157,7 @@
                   </code>
 
                   {#if hasReadonly && prop.readonly}
-                    <span
-                      class="ml-1.5 rounded-md bg-gray-200 py-px px-2 font-mono text-xs dark:bg-gray-600"
-                    >
+                    <span class="bg-divider ml-1.5 rounded-md py-0.5 px-1.5 font-mono text-xs">
                       readonly
                     </span>
                   {/if}
@@ -180,7 +183,7 @@
                 <div class="flex flex-col space-y-4 pt-2 font-mono text-sm">
                   {#each getInfo(category, prop) as [title, code] (title)}
                     <div>
-                      <span class="text-gray-inverse">{title}:</span>
+                      <span class="text-inverse">{title}:</span>
                       <code class="-ml-1 text-indigo-500 dark:text-indigo-300">
                         {code}
                       </code>
@@ -204,9 +207,9 @@
       </div>
 
       {#if filterHasDesc(api[category]).length > 3}
-        <div class="text-gray-soft mt-4 flex items-center justify-end text-sm">
+        <div class="text-soft mt-4 flex items-center justify-end text-sm">
           <button
-            class="hover:text-gray-inverse rounded-sm py-1 px-2.5 font-medium"
+            class="hover:text-inverse rounded-sm py-1 px-2.5 font-medium"
             aria-checked={ariaBool(isAllOpen[category])}
             on:click={() => {
               isAllOpen[category] = !isAllOpen[category];
@@ -222,7 +225,7 @@
 
           {#if isAllOpen[category] || filterHasDesc(api[category]).length > 10}
             <button
-              class="hover:text-gray-inverse rounded-sm py-1 px-2.5 font-medium"
+              class="hover:text-inverse rounded-sm py-1 px-2.5 font-medium"
               aria-checked={ariaBool(showAll)}
               on:click={() => {
                 _showAll[category] = !_showAll[category];

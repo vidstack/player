@@ -19,23 +19,23 @@
 
 <li
   class={clsx(
-    'step relative pl-10 1200:grid before:content-[counter(step)] before:absolute',
-    'before:left-0 before:flex before:items-center before:justify-center before:w-[calc(1.375rem+1px)]',
+    'step 1200:grid relative pl-10 before:absolute before:content-[counter(step)]',
+    'before:left-0 before:flex before:w-[calc(1.375rem+1px)] before:items-center before:justify-center',
     'before:h-[calc(1.375rem+1px)] before:text-[0.7rem] before:font-bold before:text-white dark:before:text-black',
-    'before:rounded-md before:shadow-md before:bg before:bg-gray-inverse before:border before:border-gray-soft',
-    'pb-8 after:absolute after:top-[calc(1.875rem+1px)] after:bottom-0 after:left-[0.6875rem] after:w-px after:bg-gray-divider',
+    'before:bg before:bg-inverse before:rounded-md before:shadow-sm',
+    'after:bg-divider pb-8 after:absolute after:top-[calc(1.875rem+1px)] after:bottom-0 after:left-[0.6875rem] after:w-px',
     orientation === 'horizontal' ? 'grid-cols-5 gap-10' : 'grid-cols-4 gap-4',
     index === $steps && 'after:hidden',
   )}
   style="counter-increment: step;"
   bind:this={li}
 >
-  <div class={clsx('mb-6 1200:mb-2', orientation === 'horizontal' ? 'col-span-2' : 'col-span-4')}>
-    <span class="not-prose mb-4 text-base font-semibold leading-7 text-gray-inverse">
+  <div class={clsx('not-prose mt-0', orientation === 'horizontal' ? 'col-span-2' : 'col-span-4')}>
+    <span class="text-inverse text-base font-semibold leading-7">
       <slot name="title" />
     </span>
 
-    <div class="description text-sm">
+    <div class="description mt-2 text-sm">
       <slot name="description" />
     </div>
   </div>

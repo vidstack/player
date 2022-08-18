@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
   content: ['./src/**/*.{svelte,md}', './pages/**/*.{svelte,md}'],
@@ -33,6 +34,7 @@ module.exports = {
           700: '#C20A47',
           800: '#920735',
           900: '#610523',
+          soft: 'var(--color-brand-soft)',
         },
         gray: {
           DEFAULT: '#313131',
@@ -46,17 +48,17 @@ module.exports = {
           700: '#202020',
           800: '#161616',
           900: '#181818',
-          outline: 'var(--color-gray-outline)',
-          'outline-strong': 'var(--color-gray-outline-strong)',
-          divider: 'var(--color-gray-divider)',
-          soft: 'var(--color-gray-soft)',
-          inverse: 'var(--color-gray-inverse)',
-          current: 'var(--color-gray-current)',
-          hover: 'var(--color-gray-hover)',
-          'hover-inverse': 'var(--color-gray-hover-inverse)',
-          elevate: 'var(--color-gray-elevate)',
-          body: 'var(--color-gray-body)',
         },
+        outline: 'var(--color-outline)',
+        divider: 'var(--color-divider)',
+        soft: 'var(--color-soft)',
+        inverse: 'var(--color-inverse)',
+        current: 'var(--color-current)',
+        hover: 'var(--color-hover)',
+        'hover-inverse': 'var(--color-hover-inverse)',
+        elevate: 'var(--color-elevate)',
+        'elevate-border': 'var(--color-elevate-border)',
+        body: 'var(--color-body)',
       },
       animation: {
         indeterminate: 'indeterminate 1.2s linear infinite',
@@ -91,7 +93,7 @@ function typography(theme) {
         fontSize: '18px',
         maxWidth: 'none',
         hr: {
-          borderColor: theme('colors.gray.divider'),
+          borderColor: theme('colors.divider'),
           marginTop: '3em',
           marginBottom: '3em',
         },
@@ -134,7 +136,7 @@ function typography(theme) {
           paddingLeft: '0.25rem',
         },
         'ul > li::marker': {
-          color: theme('colors.gray.inverse'),
+          color: theme('colors.inverse'),
         },
         'ul > li::before': {
           content: '""',
@@ -190,7 +192,7 @@ function typography(theme) {
         },
         thead: {
           color: theme('colors.gray.inverse'),
-          borderBottomColor: theme('colors.gray.divider'),
+          borderBottomColor: theme('colors.divider'),
         },
         tbody: {
           verticalAlign: 'baseline',
@@ -201,13 +203,10 @@ function typography(theme) {
         },
         'tbody tr': {
           fontSize: theme('fontSize.sm')[0],
-          borderBottomColor: theme('colors.gray.divider'),
+          borderBottomColor: theme('colors.divider'),
         },
         'tbody td': {
           whiteSpace: 'nowrap',
-        },
-        'tbody tr:nth-child(odd)': {
-          backgroundColor: theme('colors.gray.100'),
         },
         'tbody tr:last-child': {
           borderBottomWidth: '1px',
@@ -241,7 +240,7 @@ function typography(theme) {
           marginTop: `${12 / 14}em`,
         },
         blockQuote: {
-          color: theme('colors.gray.inverse'),
+          color: theme('colors.inverse'),
           borderRadius: 2,
           borderColor: 'currentColor',
         },
@@ -250,11 +249,11 @@ function typography(theme) {
     invert: {
       css: {
         color: '#a3a3a3',
-        'tbody tr:nth-child(odd)': {
-          backgroundColor: theme('colors.gray.700'),
-        },
         'tbody tr td:first-child code': {
           color: theme('colors.indigo.300'),
+        },
+        'tbody tr': {
+          borderBottomColor: theme('colors.divider'),
         },
       },
     },

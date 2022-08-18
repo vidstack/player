@@ -23,13 +23,12 @@
   }
 </script>
 
-<div class="text-left relative inline-block not-prose">
+<div class="not-prose relative inline-block text-left">
   <button
     id={menuButtonId}
     type="button"
     class={clsx(
-      'inline-flex w-full justify-center rounded-md p-2 text-lg font-medium transform-gpu transition-transform hover:scale-[1.1]',
-      open ? 'text-gray-inverse' : 'text-gray-soft hover:text-gray-inverse',
+      'inline-flex w-full transform-gpu justify-center rounded-md p-2 text-lg font-medium transition-transform hover:scale-[1.1]',
     )}
     aria-controls={menuId}
     aria-expanded={ariaBool(open)}
@@ -55,7 +54,7 @@
   >
     <ul
       id={menuId}
-      class="bg-gray-elevate border border-gray-divider rounded-md shadow-md mt-2 origin-top-right right-0 w-40 z-50 absolute"
+      class="bg-elevate border-elevate-border absolute right-0 z-50 mt-2 w-40 origin-top-right rounded-md border-[1.5px] shadow-lg"
       role="menu"
       aria-orientation="vertical"
       aria-labelledby={menuButtonId}

@@ -6,8 +6,14 @@
   import GitHubIcon from '~icons/ri/github-fill';
   import TwitterIcon from '~icons/ri/twitter-fill';
 
+  export let width = 24;
+  export let height = 24;
   export let type: 'discord' | 'gitHub' | 'twitter';
   export let title = uppercaseFirstLetter(type);
+  export let showTitle = false;
+
+  let _class = '';
+  export { _class as class };
 
   const href = {
     discord: 'https://discord.com/invite/7RGU7wvsu9',
@@ -24,15 +30,21 @@
 
 <a
   href={href[type]}
-  class="rounded-md flex border-0 text-gray-soft p-2 relative items-center hover:text-gray-inverse transform-gpu transition-transform hover:scale-[1.1]"
+  class={clsx(
+    'group relative flex transform-gpu items-center rounded-md border-0 p-2 transition-transform hover:scale-[1.1]',
+  )}
   target="_blank"
 >
   <svelte:component
     this={icons[type]}
-    class={clsx($$slots.default && 'mr-2.5')}
-    width="24"
-    height="24"
+    class={clsx($$slots.default && 'mr-2.5', _class)}
+    {width}
+    {height}
   />
-  <span class="sr-only">{title}</span>
+  <span
+    class={clsx(showTitle ? '768:block text-soft group-hover:text-inverse ml-2 hidden' : 'sr-only')}
+  >
+    {title}
+  </span>
   <slot />
 </a>

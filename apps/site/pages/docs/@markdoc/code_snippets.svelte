@@ -16,21 +16,21 @@
 </script>
 
 <div
-  class="code-snippets relative border border-gray-outline rounded-md shadow-lg overflow-hidden my-8 prefers-dark-scheme text-gray-300"
+  class="code-snippets border-elevate-border prefers-dark-scheme relative my-8 overflow-hidden rounded-md border-[1.5px] text-gray-300 shadow-lg"
   style="background-color: var(--code-fence-bg);"
 >
   {#if snippetNames.length > 1}
     <div
-      class="code-snippets-tabs flex flex-row no-scrollbar not-prose z-10 border-b border-gray-outline"
+      class="code-snippets-tabs no-scrollbar not-prose border-divider z-10 flex flex-row border-b"
     >
-      <ul class="w-full list-none flex whitespace-nowrap">
+      <ul class="flex w-full list-none whitespace-nowrap">
         {#each snippetNames as name, i (name)}
           <li class="z-0 focus-within:z-10">
             <button
               class={clsx(
-                'font-mono text-sm px-5 py-2 focus-visible:m-px',
+                'px-5 py-2 font-mono text-sm focus-visible:m-px',
                 activeTab === i
-                  ? 'border-brand border-b text-brand bg-gray-700'
+                  ? 'border-brand text-brand border-b bg-gray-700'
                   : 'hover:text-white',
               )}
               on:click={() => {
@@ -60,6 +60,6 @@
 
 <style>
   .code-snippets :global(.code-fence) {
-    @apply m-0 rounded-none shadow-none border-0;
+    @apply m-0 rounded-none border-0 shadow-none;
   }
 </style>

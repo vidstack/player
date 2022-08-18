@@ -90,7 +90,7 @@
 }
 
 .docs .step .description > code {
-  color: var(--color-gray-inverse);
+  color: var(--color-inverse);
 }
 
 .docs .step .code-fence {

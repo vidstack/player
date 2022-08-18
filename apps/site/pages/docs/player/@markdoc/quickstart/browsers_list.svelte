@@ -1,4 +1,4 @@
-<ul class="not-prose flex flex-col space-y-2.5 font-mono text-gray-inverse">
+<ul class="not-prose text-inverse flex flex-col space-y-2.5 font-mono">
   <li>Edge 79+</li>
   <li>Firefox 72+</li>
   <li>Chrome 73+</li>

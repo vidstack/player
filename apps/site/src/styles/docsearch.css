@@ -1,7 +1,7 @@
 :root {
   --docsearch-primary-color: var(--color-brand);
   --docsearch-highlight-color: var(--docsearch-primary-color);
-  --docsearch-text-color: var(--color-gray-inverse);
+  --docsearch-text-color: var(--color-inverse);
   --docsearch-searchbox-shadow: none;
   --docsearch-searchbox-focus-background: transparent;
   --docsearch-key-gradient: transparent;
@@ -11,7 +11,7 @@
   --docsearch-muted-color: #606060;
   --docsearch-logo-color: #606060;
   --docsearch-hit-color: #606060;
-  --docsearch-hit-active-color: var(--color-gray-inverse);
+  --docsearch-hit-active-color: var(--color-inverse);
   --docsearch-hit-background: none;
 }
 
@@ -32,9 +32,9 @@
 }
 
 .DocSearch-Button {
-  @apply hover:bg-gray-hover flex h-auto w-full items-center rounded-md bg-transparent py-1.5 px-3 shadow-sm;
+  @apply bg-elevate hover:bg-elevate flex h-auto w-full items-center rounded-md py-1.5 px-3 shadow-md hover:shadow-md;
   @apply m-0 transform-gpu text-[15px] transition-transform hover:scale-[1.025];
-  border: 1px solid var(--color-gray-outline);
+  border: 1.5px solid var(--color-elevate-border);
 }
 
 .DocSearch-Button:focus-visible,
@@ -58,7 +58,7 @@
 }
 
 .DocSearch-Button-Placeholder {
-  @apply text-gray-inverse m-0 h-auto p-0 text-sm font-normal;
+  @apply text-inverse m-0 h-auto p-0 text-sm font-normal;
 }
 
 .DocSearch-Button-Keys {
@@ -67,7 +67,7 @@
 }
 
 .DocSearch-Button-Key {
-  @apply text-gray-soft top-0 m-0 flex h-auto w-auto justify-center space-x-0.5 bg-none p-0 text-[14px] font-semibold shadow-none;
+  @apply text-soft top-0 m-0 flex h-auto w-auto justify-center space-x-0.5 bg-none p-0 text-[14px] font-semibold shadow-none;
 }
 
 .DocSearch-Button-Key:first-child {
@@ -155,7 +155,7 @@
 
 @media only screen and (max-width: 991px) {
   .DocSearch-Button {
-    --docsearch-text-color: var(--color-gray-soft);
+    --docsearch-text-color: var(--color-soft);
     @apply m-0 flex h-12 w-12 items-center justify-center border-0 bg-transparent p-0 hover:bg-transparent;
   }
 
@@ -172,7 +172,7 @@
   }
 
   .DocSearch-Search-Icon:hover {
-    color: var(--color-gray-inverse);
+    color: var(--color-inverse);
   }
 
   .DocSearch-Button {

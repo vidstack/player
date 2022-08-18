@@ -7,8 +7,8 @@
 
 <div
   class={clsx(
-    'inline-flex h-6 items-center justify-center px-2.5 py-1 text-xs tracking-wide font-mono font-medium',
-    'border border-gray-outline shadow-sm',
+    'inline-flex h-6 items-center justify-center px-2.5 py-1 font-mono text-xs font-medium tracking-wide',
+    'border-divider border shadow-sm',
     __class,
   )}
   style="border-radius: var(--chip-border-radius, 9999px);"

@@ -71,7 +71,7 @@
 
 {#if currentSnippet && !hasLoaded}
   <div
-    class="code-fence relative scrollbar overflow-y-auto max-h-[60vh] 576:max-h-[32rem] my-8 rounded-md shadow-lg mx-auto border border-gray-outline prefers-dark-scheme"
+    class="code-fence scrollbar 576:max-h-[32rem] border-elevate-border prefers-dark-scheme relative my-8 mx-auto max-h-[60vh] overflow-y-auto rounded-md border-[1.5px] shadow-lg"
     style="background-color: var(--code-fence-bg);"
     aria-busy={ariaBool(!hasLoaded)}
     use:intersectionObserver={{ callback: onIntersect }}
@@ -88,7 +88,7 @@
       <div class={clsx($$restProps.nums && '992:pl-10')}>
         <pre
           class={clsx(
-            'm-0 scrollbar',
+            'scrollbar m-0',
             $$restProps.nums && lineNums.length >= 100 ? 'pl-6' : 'pl-3',
           )}>
           <code
@@ -102,10 +102,10 @@
 
       {#if $$restProps.nums}
         <pre
-          class="hidden 992:flex absolute top-3.5 left-0 m-0 flex-col text-sm leading-[27px]"
+          class="992:flex absolute top-3.5 left-0 m-0 hidden flex-col text-sm leading-[27px]"
           style="border-radius: 0; padding-top: 0;">
           <div
-            class="hidden flex-none select-none text-right text-gray-300 992:block"
+            class="text-300 992:block hidden flex-none select-none text-right"
             aria-hidden="true">{lineNums.join('\n')}</div>
 		    </pre>
       {/if}

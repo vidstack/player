@@ -50,10 +50,7 @@
   <div class="992:hidden sticky top-0 left-0 z-10 flex items-center">
     <div class="flex-1" />
     <button
-      class={clsx(
-        'text-gray-soft hover:text-gray-inverse -mx-6 p-4',
-        !open && 'pointer-events-none',
-      )}
+      class={clsx('text-soft hover:text-inverse -mx-6 p-4', !open && 'pointer-events-none')}
       on:pointerup={() => dispatch('close')}
       on:keydown={(e) => wasEnterKeyPressed(e) && dispatch('close', true)}
     >
@@ -65,18 +62,18 @@
   <nav class="992:px-1 992:mt-0 -mt-6">
     {#if search}
       <div class="pointer-events-none sticky top-0 z-0 -ml-0.5 min-h-[80px]">
-        <div class="992:h-6 bg-white dark:bg-gray-800" />
-        <div class="pointer-events-auto relative bg-white dark:bg-gray-800">
+        <div class="992:h-6 bg-body dark:bg-gray-800" />
+        <div class="bg-body pointer-events-auto relative dark:bg-gray-800">
           <div class="992:block hidden">
             <slot name="search" />
           </div>
-          <div class="992:h-4 h-14 bg-white dark:bg-gray-800" />
+          <div class="992:h-4 bg-body h-14 dark:bg-gray-800" />
           <div class="flex w-full items-center space-x-2">
             <LibSelect />
             <VersionSelect />
           </div>
         </div>
-        <div class="h-10 bg-gradient-to-b from-white dark:from-gray-800" />
+        <div class="from-body h-10 bg-gradient-to-b dark:from-gray-800" />
       </div>
     {/if}
 
@@ -86,10 +83,10 @@
       {#each Object.keys($links) as category (category)}
         {@const categoryLinks = $links[category]}
         <li class="mt-9 first:mt-0">
-          <h5 class="text-gray-strong font-semibold">
+          <h5 class="text-strong font-semibold">
             {category}
           </h5>
-          <ul class="border-gray-divider space-y-3 border-l">
+          <ul class="border-divider space-y-3 border-l">
             {#each categoryLinks as link (link.title + link.slug)}
               <li class="first:mt-5">
                 <a
@@ -97,7 +94,7 @@
                     '992:py-1 -ml-px flex items-center border-l-2 py-2 pl-4',
                     isActiveSidebarLink(link, $route.url.pathname)
                       ? 'text-brand font-semibold'
-                      : 'hover:border-gray-inverse text-gray-soft hover:text-gray-inverse border-transparent font-normal',
+                      : 'hover:border-inverse text-soft hover:text-inverse border-transparent font-normal',
                   )}
                   href={link.slug}
                   style={isActiveSidebarLink(link, $route.url.pathname)

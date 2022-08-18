@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  border-color: var(--color-divider);
+}
+
 .js-focus-visible [data-focus-visible-added] {
   @apply outline-none ring-2;
   --tw-ring-color: var(--color-focus);
@@ -43,21 +47,14 @@
 
 .scrollbar {
   scrollbar-width: thin;
-  --scrollbar-track-bg: rgb(234 234 234);
-  --scrollbar-thumb-bg: rgb(112 112 112);
+  --scrollbar-track-bg: var(--color-divider);
+  --scrollbar-thumb-bg: var(--color-soft);
 }
 
 @media screen and (prefers-reduced-motion: no-preference) {
   .scrollbar {
     scroll-behavior: smooth;
   }
-}
-
-.dark .scrollbar,
-.prefers-dark-scheme.scrollbar,
-.prefers-dark-scheme .scrollbar {
-  --scrollbar-track-bg: rgb(32 32 32);
-  --scrollbar-thumb-bg: rgb(97 97 97);
 }
 
 .scrollbar::-webkit-scrollbar {
@@ -81,11 +78,12 @@
  */
 
 .blur-bg {
-  @apply bg-gray-body backdrop-blur backdrop-filter dark:bg-gray-800;
+  @apply bg-body backdrop-blur backdrop-filter dark:bg-gray-800;
 }
 
 @supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {
   .blur-bg {
-    @apply bg-white/60 dark:bg-gray-800/60;
+    background-color: rgb(255 248 238 / 0.6);
+    @apply dark:bg-gray-800/60;
   }
 }

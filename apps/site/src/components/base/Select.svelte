@@ -16,21 +16,21 @@
 <div class={clsx('inline-block', block && 'w-full')}>
   <label
     class={clsx(
-      'relative flex items-center border pl-2.5 pr-1 shadow-sm min-w-[85px]',
-      'transition-transform hover:scale-[1.025] transform-gpu hover:bg-gray-hover',
+      'relative flex min-w-[85px] items-center border-[1.5px] pl-2.5 pr-1 shadow-md',
+      'bg-elevate transform-gpu transition-transform hover:scale-[1.025]',
       rounded && 'rounded-md',
       block ? 'py-1' : 'py-0.5',
-      disabled ? 'text-gray-300' : 'text-gray-inverse focus-within:ring-2',
+      disabled ? 'text-gray-300' : 'text-inverse focus-within:ring-2',
     )}
-    style="--tw-ring-color: var(--color-focus); border-color: var(--select-border-color, var(--color-gray-outline));"
+    style="--tw-ring-color: var(--color-focus); border-color: var(--select-border-color, var(--color-elevate-border));"
   >
     <slot name="before-title" />
 
-    <div class="flex items-center w-full">
+    <div class="flex w-full items-center">
       <span class="sr-only">{title}</span>
 
       <span
-        class="flex h-full items-center mr-auto"
+        class="mr-auto flex h-full items-center"
         style="font-size: var(--select-value-font-size, 0.875rem);"
       >
         {value}
@@ -39,12 +39,12 @@
       <ArrowDropDownIcon
         width={arrowWidth}
         height={arrowHeight}
-        class="mt-0.5 ml-[var(--select-arrow-margin-left,-1px)]"
+        class="pointer-events-none mt-0.5 ml-[var(--select-arrow-margin-left,-1px)]"
       />
     </div>
 
     <select
-      class="cursor-pointer opacity-0 inset-0 absolute appearance-none px-4 py-6"
+      class="absolute inset-0 cursor-pointer appearance-none px-4 py-6 opacity-0"
       bind:value
       on:change
       {disabled}

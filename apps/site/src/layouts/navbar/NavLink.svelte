@@ -10,11 +10,11 @@
   $: isActive = match?.test($route.url.pathname);
 </script>
 
-<li class="mt-4 992:mt-0 first:mt-0">
+<li class="992:mt-0 mt-4 first:mt-0">
   <a
     class={clsx(
-      'p-1 border-brand hover:border-b-2 text-lg 992:text-base',
-      isActive ? 'text-gray-inverse' : 'text-gray-soft hover:text-gray-inverse',
+      '992:text-base p-1 text-lg',
+      isActive ? 'text-inverse' : 'text-soft hover:text-inverse',
     )}
     href={slug}
     target={isNull(match) ? '_blank' : null}

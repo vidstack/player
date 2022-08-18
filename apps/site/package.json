@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vitebook dev --port 3001 --host",
     "build": "vitebook build",
-    "preview": "vitebook preview --port 3001",
+    "preview": "vitebook preview --port 3001 --host",
     "lint:prettier": "prettier . --write --loglevel warn"
   },
   "dependencies": {

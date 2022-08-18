@@ -1,11 +1,11 @@
 <div class="not-prose my-10 flex items-start">
   <div
-    class="relative -ml-1 mr-2.5 flex min-h-[24px] min-w-[24px] items-center justify-center rounded-full bg-rose-400 text-white"
+    class="relative -ml-1 mr-2.5 flex min-h-[24px] min-w-[24px] items-center justify-center rounded-full bg-rose-600 text-white dark:bg-rose-400 dark:text-black"
   >
     <svg
       width="6"
       height="6"
-      class="-ml-px scale-x-[1.1] scale-y-[1.1] transform overflow-visible"
+      class="scale-x-[1.1] scale-y-[1.1] transform overflow-visible"
       aria-hidden="true"
     >
       <path

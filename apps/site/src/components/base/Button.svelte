@@ -3,6 +3,7 @@
 
   import clsx from 'clsx';
 
+  export let primary = false;
   export let type: 'flat' | 'raised' = 'flat';
   export let arrow: 'left' | 'right' | null = null;
 
@@ -15,10 +16,14 @@
   $: isButton = __as === 'button' && isUndefined($$restProps['href']);
 
   $: buttonClass = clsx(
-    'group transform-gpu text-lg font-medium transition-transform hover:scale-105',
-    type === 'raised' &&
-      'bg-gray-inverse text-gray-current hover:bg-gray-hover-inverse shadow-md hover:shadow-xl px-8 py-3',
-    (isButton || type === 'raised') && 'rounded-md',
+    'group transform-gpu text-base font-medium transition-transform hover:scale-105',
+    type === 'raised' && 'shadow-md hover:shadow-lg flex items-center justify-center',
+    (isButton || type === 'raised') && 'rounded-full px-4 992:px-5 py-2',
+    type === 'raised'
+      ? primary
+        ? 'bg-inverse text-current'
+        : 'bg-current border-2 border-inverse text-inverse'
+      : false,
     __class,
   );
 

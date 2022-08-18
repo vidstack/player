@@ -25,24 +25,24 @@
 
 <div
   class={clsx(
-    'admonition my-8 border-2 border-l-8 p-4 rounded-md mx-auto shadow-xl',
-    type === 'note' && 'border-pink-400 bg-pink-300/10',
-    type === 'info' && 'border-blue-400 bg-blue-300/10',
-    type === 'tip' && 'border-green-400 bg-green-300/10',
-    type === 'warning' && 'border-yellow-400 bg-yellow-400/10',
-    type === 'danger' && 'border-red-400 bg-red-300/10',
-    type === 'experimental' && 'border-indigo-400 bg-indigo-300/10',
+    'admonition bg-elevate my-8 mx-auto rounded-md border-2 border-l-8 p-4 shadow-md',
+    type === 'note' && 'border-pink-600 dark:border-pink-400',
+    type === 'info' && 'border-blue-600 dark:border-blue-400',
+    type === 'tip' && 'border-green-600 dark:border-green-400',
+    type === 'warning' && 'border-yellow-600 dark:border-yellow-400',
+    type === 'danger' && 'border-red-600 dark:border-red-400',
+    type === 'experimental' && 'border-indigo-600 dark:border-indigo-400',
   )}
 >
   <div
     class={clsx(
       'flex h-full items-center font-bold',
-      type === 'note' && 'text-pink-400',
-      type === 'info' && 'text-blue-400',
-      type === 'tip' && 'text-green-400',
-      type === 'warning' && 'text-yellow-400',
-      type === 'danger' && 'text-red-400',
-      type === 'experimental' && 'text-indigo-400',
+      type === 'note' && 'text-pink-600 dark:text-pink-400',
+      type === 'info' && 'text-blue-600 dark:text-blue-400',
+      type === 'tip' && 'text-green-600 dark:text-green-400',
+      type === 'warning' && 'text-yellow-600 dark:text-yellow-400',
+      type === 'danger' && 'text-red-600 dark:text-red-400',
+      type === 'experimental' && 'text-indigo-600 dark:text-indigo-400',
     )}
   >
     <svelte:component this={icons[type]} class="mr-1.5 text-xl" />
@@ -51,7 +51,7 @@
     </span>
   </div>
 
-  <div class="pl-1 text-lg text-gray-inverse">
+  <div class="text-inverse pl-1 text-lg">
     <slot />
   </div>
 </div>

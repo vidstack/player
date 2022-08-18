@@ -3,7 +3,7 @@
   import NProgress from 'nprogress';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  import { navigation } from '@vitebook/svelte';
+  import { navigation, route } from '@vitebook/svelte';
   import { hideDocumentScrollbar } from '@vidstack/foundation';
 
   import { env } from '$src/env';
@@ -27,6 +27,11 @@
       slug: addJSLibToPath(`/docs/player/`, $jsLib),
       match: /\/docs\/player/,
     },
+    // {
+    //   title: 'Blog',
+    //   slug: '/blog/',
+    //   match: /\/blog\//,
+    // },
   ]);
 
   setNavbarContext({ links: navLinks });
@@ -78,7 +83,10 @@
 
 <div class="contents" style="--app-navbar-height: var(--navbar-height);">
   <div
-    class="bg-gray-body h-full min-h-full min-w-full transition-transform ease-out duration-150"
+    class={clsx(
+      'h-full min-h-full min-w-full transition-transform duration-150 ease-out',
+      $route.url.pathname !== '/' && 'bg-body',
+    )}
     style={clsx(
       'font-family: var(--font-family-sans, inherit);',
       `--navbar-height: calc(var(--app-navbar-height) + var(--breadcrumbs-height));`,
@@ -87,7 +95,7 @@
     <div
       class={clsx(
         'fixed top-0 z-30 w-full flex-none transform-gpu transition-transform duration-150 ease-out',
-        isNavPopoverOpen ? 'bg-gray-100 dark:bg-gray-800' : 'blur-bg',
+        isNavPopoverOpen ? '' : 'blur-bg',
         collapseNavbar
           ? '-translate-y-[calc(calc(var(--navbar-height)-var(--breadcrumbs-height))+8px)]'
           : 'translate-y-0',
@@ -110,15 +118,15 @@
         <svelte:fragment slot="left">
           <div class="flex items-center">
             <div
-              class="ml-2 transform-gpu transition-transform ease-out duration-150 logo hover:scale-105"
+              class="logo ml-2 transform-gpu transition-transform duration-150 ease-out hover:scale-105"
             >
               <Button class="rounded-md px-1 pt-4" href="/">
                 <div
-                  class="h-[26px] text-gray-inverse svg-responsive hidden overflow-hidden 992:inline-block"
+                  class="text-inverse svg-responsive 992:inline-block hidden h-[26px] overflow-hidden"
                 >
                   {@html vidstackLogo}
                 </div>
-                <div class="h-8 -ml-2 mt-0.5 w-8 svg-responsive overflow-hidden 992:hidden">
+                <div class="svg-responsive 992:hidden -ml-2 mt-0.5 h-8 w-8 overflow-hidden">
                   {@html vidstackSymbol}
                 </div>
               </Button>
@@ -134,9 +142,7 @@
 
         <svelte:fragment slot="right-alt">
           <slot name="navbar-right-alt" />
-          <div class="flex -ml-1 socials">
-            <SocialLink type="twitter" />
-            <SocialLink type="discord" />
+          <div class="socials flex">
             <SocialLink type="gitHub" />
           </div>
         </svelte:fragment>
@@ -148,16 +154,12 @@
     </div>
 
     <div
-      class="flex flex-row mx-auto min-h-full max-w-[var(--content-max-width)] pt-[var(--navbar-height)] w-full z-20"
+      class="z-90 relative mx-auto flex min-h-full w-full max-w-[var(--content-max-width)]"
+      style="overflow-x: var(--main-overflow-x, unset); flex-direction: var(--main-direction, column);"
     >
       <slot name="before-main" />
-
       <main
-        class={clsx(
-          'w-full overflow-x-hidden pt-8',
-          `992:min-h-[calc(100vh-var(--navbar-height))]`,
-          'min-h-[calc(100vh-var(--navbar-height))]',
-        )}
+        class={clsx('min-h-screen w-full overflow-hidden pt-[calc(var(--navbar-height)+2rem)]')}
         style={clsx(
           `max-width: var(--main-max-width, var(--article-max-width));`,
           `padding-left: var(--main-padding-x);`,
@@ -166,7 +168,6 @@
       >
         <slot />
       </main>
-
       <slot name="after-main" />
     </div>
   </div>

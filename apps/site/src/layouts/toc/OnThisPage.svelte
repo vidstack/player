@@ -37,14 +37,14 @@
 
 {#if headings.length > 1 || headings[0]?.children.length}
   <div class={clsx('on-this-page', __class)} {style}>
-    <h5 class="font-semibold text-left text-gray-inverse text-lg w-full">On this page</h5>
-    <ul class="space-y-4 mt-4">
+    <h5 class="text-inverse w-full text-left text-lg font-semibold">On this page</h5>
+    <ul class="mt-4 space-y-4">
       {#each headings as heading (heading.id)}
         <li
           class={clsx(
             ($ctx.cleanHash?.($route.url.hash) ?? $route.url.hash) === `#${heading.id}`
               ? 'text-brand'
-              : 'text-gray-soft hover:text-gray-inverse',
+              : 'text-soft hover:text-inverse',
           )}
         >
           <a href={`#${heading.id}`}>{heading.title}</a>
@@ -55,16 +55,16 @@
             {#each heading.children as childHeader (childHeader.id)}
               <li
                 class={clsx(
-                  'flex group group',
+                  'group group flex',
                   ($ctx.cleanHash?.($route.url.hash) ?? $route.url.hash) === `#${childHeader.id}`
                     ? 'text-brand'
-                    : 'text-gray-soft hover:text-gray-inverse',
+                    : 'text-soft hover:text-inverse',
                 )}
               >
                 <RightArrowIcon
                   width="20"
                   height="20"
-                  class="mt-px mr-px text-gray-300 dark:text-gray-400 group-hover:text-gray-soft"
+                  class="group-hover:text-soft mt-px mr-px text-gray-300 dark:text-gray-400"
                 />
                 <a href={`#${childHeader.id}`}>{childHeader.title}</a>
               </li>

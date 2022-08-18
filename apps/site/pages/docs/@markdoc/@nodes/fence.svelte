@@ -80,15 +80,15 @@
 
 <div
   class={clsx(
-    'code-fence overflow-y-auto relative max-h-[60vh] 576:max-h-[32rem] my-8 rounded-md shadow-lg mx-auto',
-    'border border-gray-outline prefers-dark-scheme scrollbar scroll-contain',
+    'code-fence 576:max-h-[32rem] relative my-8 mx-auto max-h-[60vh] overflow-y-auto rounded-md shadow-lg',
+    'border-elevate-border prefers-dark-scheme scrollbar scroll-contain border-[1.5px]',
     lang && `lang-${lang}`,
   )}
   style="background-color: var(--code-fence-bg);"
 >
   {#if showTopBar}
     <div
-      class="code-fence-top-bar sticky top-0 left-0 z-10 flex items-center pt-2 py-1 backdrop-filter backdrop-blur"
+      class="code-fence-top-bar sticky top-0 left-0 z-10 flex items-center py-1 pt-2 backdrop-blur backdrop-filter"
       style="background-color: var(--code-fence-top-bar-bg);"
     >
       {#if hasTopbarTitle}
@@ -105,7 +105,7 @@
         >
           <div
             class={clsx(
-              'text-gray-current absolute top-2.5 right-4 transition-opacity z-10 duration-300 px-2 py-1 rounded-md ease-out text-sm font-mono',
+              'absolute top-2.5 right-4 z-10 rounded-md px-2 py-1 font-mono text-sm text-current transition-opacity duration-300 ease-out',
               showCopiedCodePrompt ? 'opacity-100' : 'hidden opacity-0',
             )}
             aria-hidden="true"
@@ -120,7 +120,7 @@
             class={clsx(
               showCopiedCodePrompt
                 ? 'opacity-0'
-                : 'opacity-100 transition-opacity duration-600 ease-in',
+                : 'duration-600 opacity-100 transition-opacity ease-in',
             )}
           />
           <span class="sr-only">Copy</span>
@@ -138,10 +138,10 @@
 
     {#if nums}
       <pre
-        class="hidden 992:flex absolute top-3.5 left-0 m-0 flex-col text-sm leading-[27px]"
+        class="992:flex absolute top-3.5 left-0 m-0 hidden flex-col text-sm leading-[27px]"
         style="border-radius: 0; padding-top: 0;">
 			  <div
-          class="hidden flex-none select-none text-right text-gray-300 992:block"
+          class="992:block hidden flex-none select-none text-right text-gray-300"
           aria-hidden="true">{lines.join('\n')}</div>
 		  </pre>
     {/if}

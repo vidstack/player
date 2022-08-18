@@ -25,7 +25,7 @@ export const scrollDirection = readable<'none' | 'up' | 'down'>('none', (set) =>
   const unsub = scrollTop.subscribe(($scrollTop) => {
     if ($scrollTop > lastScrollTop) {
       set('down');
-    } else {
+    } else if (lastScrollTop - $scrollTop > 240) {
       set('up');
     }
 
