@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/analytics",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "private": true,
   "dependencies": {
     "@vidstack/foundation": "workspace:*"

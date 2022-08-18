@@ -1,3 +1,18 @@
+## [1.6.3](https://github.com/vidstack/vidstack/compare/v1.6.2...v1.6.3) (2022-08-18)
+
+### Bug Fixes
+
+- **player:** `muted` state should be `true` when volume equals 0 ([8f59522](https://github.com/vidstack/vidstack/commit/8f5952252d9a28224adf1bf90a7d3065d2c5e3f6))
+- **player:** add `NaN` checks for media duration ([d7d8c27](https://github.com/vidstack/vidstack/commit/d7d8c275d3e4aeba941914e28e94357aefdaed62))
+- **player:** catch late fullscreen support check for iOS safari ([1ee42cd](https://github.com/vidstack/vidstack/commit/1ee42cdf9f988ef1f358353c60ece704c354d08a))
+- **player:** change `ScreenOrientation` from `enum` to string literal type ([9159e55](https://github.com/vidstack/vidstack/commit/9159e553cbfb64f08fee3eefdf9a19dd99401757))
+- **player:** debounce messes up user idle tracking ([3243918](https://github.com/vidstack/vidstack/commit/3243918b6c2b33cda7987cbfa22277354f69121b))
+- **player:** ignore gestures while user is idle ([c308165](https://github.com/vidstack/vidstack/commit/c308165c128c69a3bc48e36360751806652d6226))
+
+### Features
+
+- **site:** pre 1.0 redesign ([5f575f8](https://github.com/vidstack/vidstack/commit/5f575f8b65137629ad5636b4550bc3e6ada985d8))
+
 ## [1.6.2](https://github.com/vidstack/vidstack/compare/v1.6.1...v1.6.2) (2022-07-21)
 
 ### Bug Fixes
