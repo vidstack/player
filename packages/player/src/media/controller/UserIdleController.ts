@@ -1,4 +1,4 @@
-import { debounce, DisposalBin, listen, type ReadableStore, vdsEvent } from '@vidstack/foundation';
+import { DisposalBin, listen, type ReadableStore, vdsEvent } from '@vidstack/foundation';
 import { type ReactiveController, type ReactiveControllerHost } from 'lit';
 
 export class UserIdleController implements ReactiveController {
@@ -44,14 +44,8 @@ export class UserIdleController implements ReactiveController {
     );
 
     const startIdleTimerEvents = ['pointerdown', 'pointermove', 'focus', 'keydown'] as const;
-
     startIdleTimerEvents.forEach((eventType) => {
-      const off = listen(
-        this._host,
-        eventType,
-        debounce(this._handleIdleChange.bind(this), 250, true),
-      );
-
+      const off = listen(this._host, eventType, this._handleIdleChange.bind(this));
       this._disposal.add(off);
     });
   }
@@ -78,7 +72,6 @@ export class UserIdleController implements ReactiveController {
 
   protected _stopIdleTimer() {
     window.clearTimeout(this._idleTimeout);
-    this._idleTimeout = undefined;
     this._dispatchIdleChange(false);
   }
 
