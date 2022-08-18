@@ -764,7 +764,7 @@ export class MediaController {
 
   protected _handleVolumeChange(event: MediaVolumeChangeEvent) {
     this._store.volume.set(event.detail.volume);
-    this._store.muted.set(event.detail.muted);
+    this._store.muted.set(event.detail.muted || event.detail.volume === 0);
     this._satisfyMediaRequest('volume', event);
   }
 
