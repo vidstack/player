@@ -1,4 +1,5 @@
 import {
+  debounce,
   type DeferredPromise,
   deferredPromise,
   DisposalBin,
@@ -12,7 +13,11 @@ import {
 import { css, type CSSResultGroup, LitElement, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { mediaProviderElementContext, mediaStoreContext } from '../../media';
+import {
+  mediaProviderElementContext,
+  mediaStoreContext,
+  mediaStoreSubscription,
+} from '../../media';
 import { type MediaProviderElement } from '../../media/provider/MediaProviderElement';
 
 // We perform gestures in batches to enable prioritization. Each batch belongs to a root
@@ -83,6 +88,7 @@ export class GestureElement extends LitElement {
   }
 
   protected _mediaProviderElement?: MediaProviderElement;
+  protected _isUserIdle = false;
   protected _disposal = new DisposalBin();
 
   /** Pending actions that belong to the same container as this gesture element. */
@@ -102,6 +108,13 @@ export class GestureElement extends LitElement {
     storeSubscription(this, mediaProviderElementContext, (element) => {
       this._mediaProviderElement = element;
     });
+    mediaStoreSubscription(
+      this,
+      'userIdle',
+      debounce(($idle) => {
+        this._isUserIdle = $idle;
+      }, 300),
+    );
   }
 
   // -------------------------------------------------------------------------------------------
@@ -152,13 +165,19 @@ export class GestureElement extends LitElement {
    */
   @property() action?: GestureAction;
 
+  /**
+   * Whether the gesture action can be triggered while the user is idle.
+   *
+   * @defaultValue false
+   */
+  @property({ type: Boolean, attribute: 'while-idle' }) whileIdle = false;
+
   // -------------------------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------------------------
 
   override connectedCallback(): void {
     super.connectedCallback();
-
     // Wait for media container to be attached to DOM.
     window.requestAnimationFrame(() => {
       if (this._mediaProviderElement) {
@@ -236,7 +255,7 @@ export class GestureElement extends LitElement {
 
         count = 0;
         promise?.resolve();
-      }, 250);
+      }, 200);
     };
 
     const off = listen(this._mediaProviderElement, this.type, (event) => {
@@ -255,6 +274,8 @@ export class GestureElement extends LitElement {
   }
 
   protected _validateEvent(event: Event) {
+    if (!this.whileIdle && this._isUserIdle) return false;
+
     if (isPointerEvent(event) || isMouseEvent(event) || isTouchEvent(event)) {
       const touch = isTouchEvent(event) ? event.touches[0] : undefined;
 

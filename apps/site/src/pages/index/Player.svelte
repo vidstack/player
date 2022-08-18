@@ -6,9 +6,9 @@
   import { onMount } from 'svelte';
   import PlayerTimeSlider from './PlayerTimeSlider.svelte';
   import PlayerGestures from './PlayerGestures.svelte';
-  import PlayerDesktopControlBar from './PlayerDesktopControlBar.svelte';
+  import PlayerDesktopControls from './PlayerDesktopControls.svelte';
   import PlayerBufferingIndicator from './PlayerBufferingIndicator.svelte';
-  import PlayerMobileControlBar from './PlayerMobileControlBar.svelte';
+  import PlayerMobileControls from './PlayerMobileControls.svelte';
 
   let previewTime = 0,
     started = false,
@@ -130,7 +130,7 @@
       )}
     >
       <div class="media-controls 768:pb-0 flex h-full w-full flex-col px-1 pb-2">
-        <PlayerMobileControlBar />
+        <PlayerMobileControls />
 
         <div class="768:block hidden flex-1" />
 
@@ -150,7 +150,7 @@
           />
         </div>
 
-        <PlayerDesktopControlBar />
+        <PlayerDesktopControls />
       </div>
 
       <PlayerGestures />

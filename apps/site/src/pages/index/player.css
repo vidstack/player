@@ -7,10 +7,6 @@
   padding: 8px;
 }
 
-vds-fullscreen-button[hidden] {
-  display: inline-block !important;
-}
-
 .media[hide-ui] .media-controls,
 .media:not([can-play]) .media-controls,
 .media[user-idle] .media-controls {

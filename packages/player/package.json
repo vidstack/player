@@ -108,8 +108,8 @@
     "./dist/*/define/*.js",
     "./dist/node/**/*.js",
     "./dist/dev/chunks/chunk.2H5TZ5MD.js",
+    "./dist/dev/chunks/chunk.3FKGOTJJ.js",
     "./dist/dev/chunks/chunk.3XQ6X7RS.js",
-    "./dist/dev/chunks/chunk.5NODOM5E.js",
     "./dist/dev/chunks/chunk.BW5TILBB.js",
     "./dist/dev/chunks/chunk.DHVSUC7R.js",
     "./dist/dev/chunks/chunk.EYGLTDRW.js",
@@ -141,9 +141,9 @@
     "./dist/prod/chunks/chunk.LQGXRT3X.js",
     "./dist/prod/chunks/chunk.QEHUVNM3.js",
     "./dist/prod/chunks/chunk.SABBNAJT.js",
-    "./dist/prod/chunks/chunk.T2F2ZUOZ.js",
     "./dist/prod/chunks/chunk.UFMAEC7M.js",
     "./dist/prod/chunks/chunk.W57EKHLQ.js",
+    "./dist/prod/chunks/chunk.XNVM2IML.js",
     "./dist/prod/chunks/chunk.XOP7GJ4M.js"
   ],
   "keywords": [
