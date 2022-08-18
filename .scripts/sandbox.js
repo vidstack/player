@@ -30,7 +30,9 @@ async function main() {
   if (fs.existsSync(SANDBOX_SERVER_FILE)) {
     await execa('node', [SANDBOX_SERVER_FILE], { stdio: 'inherit' });
   } else {
-    await execa('vite', ['--open=/sandbox/index.html', '--port=3100'], { stdio: 'inherit' });
+    await execa('vite', ['--open=/sandbox/index.html', '--port=3100', '--host'], {
+      stdio: 'inherit',
+    });
   }
 }
 

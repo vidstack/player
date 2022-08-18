@@ -174,6 +174,14 @@ export class Html5MediaElement extends MediaProviderElement {
       mediaEl.removeAttribute('poster');
       setAttribute(mediaEl, 'controls', this.controls);
 
+      if (!this.state.canFullscreen && this.fullscreenController.isSupported) {
+        this.dispatchEvent(
+          vdsEvent('vds-fullscreen-support-change', {
+            detail: this.canFullscreen,
+          }),
+        );
+      }
+
       this._attachMediaEventListeners();
       this._observePlaysinline();
       this._observeMediaSources();
