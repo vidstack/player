@@ -8,6 +8,7 @@
   action="seek:-30"
   repeat={1}
   priority={0}
+  whileIdle
 />
 
 <Gesture
@@ -16,6 +17,7 @@
   action="seek:30"
   repeat={1}
   priority={0}
+  whileIdle
 />
 
 <Gesture

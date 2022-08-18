@@ -11,7 +11,7 @@
 </script>
 
 <TimeSlider
-  class="media-slider media-time-slider pointer-events-auto relative flex h-[48px] w-full translate-y-4 transform cursor-pointer items-center"
+  class="media-slider media-time-slider 768:translate-y-4 pointer-events-auto relative flex h-[48px] w-full translate-y-2 transform cursor-pointer items-center"
   on:vds-slider-pointer-value-change={(e) => {
     dispatch('preview-time-update', e.detail);
   }}

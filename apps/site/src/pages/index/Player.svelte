@@ -98,10 +98,9 @@
     --media-preview-width={`${previewWidth}px`}
     --media-preview-height={`${previewHeight}px`}
   >
-    <MediaVisibility exitViewport="pause" intersectionThreshold={1}>
+    <MediaVisibility exit-viewport="pause" intersection-threshold={1}>
       <Hls
         class="h-full w-full bg-none"
-        playsinline
         muted
         volume={0.2}
         poster={`https://image.mux.com/${playbackId}/thumbnail.png?width=896&height=504&fit_mode=smartcrop&time=${posterTime}`}

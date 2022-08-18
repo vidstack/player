@@ -35,7 +35,7 @@
 
   <div class="flex-1" />
 
-  <div class="flex w-full translate-y-[26px] transform flex-row items-center">
+  <div class="flex w-full translate-y-[18px] transform flex-row items-center">
     <div class="flex-1" />
     <div
       class="flex items-center justify-between rounded-sm bg-[#161616] px-1.5 py-[2px] text-xs"

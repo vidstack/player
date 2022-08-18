@@ -25,6 +25,7 @@ vds-media[hide-ui] .media-controls,
 vds-media:not([can-play]) .media-controls,
 vds-media[user-idle] .media-controls {
   opacity: 0;
+  visibility: hidden;
 }
 
 /* Show controls if autoplay fails. */
