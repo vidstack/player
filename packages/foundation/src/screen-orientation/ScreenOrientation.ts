@@ -4,14 +4,14 @@
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
  * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
  */
-export enum ScreenOrientation {
+export type ScreenOrientation =
   /**
    * Landscape-primary is an orientation where the screen width is greater than the screen height.
    * If the device's natural orientation is landscape, then it is in landscape-primary when held
    * in that position. If the device's natural orientation is portrait, the user agent sets
    * landscape-primary from the two options as shown in the screen orientation values table.
    */
-  LandscapePrimary = 'landscape-primary',
+  | 'landscape-primary'
 
   /**
    * Landscape-secondary is an orientation where the screen width is greater than the screen
@@ -20,7 +20,7 @@ export enum ScreenOrientation {
    * the user agent sets landscape-secondary from the two options as shown in the screen
    * orientation values table.
    */
-  LandscapeSecondary = 'landscape-secondary',
+  | 'landscape-secondary'
 
   /**
    * Portrait-primary is an orientation where the screen width is less than or equal to the screen
@@ -28,7 +28,7 @@ export enum ScreenOrientation {
    * held in that position. If the device's natural orientation is landscape, the user agent sets
    * portrait-primary from the two options as shown in the screen orientation values table.
    */
-  PortraitPrimary = 'portrait-primary',
+  | 'portrait-primary'
 
   /**
    * Portrait-secondary is an orientation where the screen width is less than or equal to the
@@ -37,8 +37,7 @@ export enum ScreenOrientation {
    * orientation is landscape, the user agent sets portrait-secondary from the two options as
    * shown in the screen orientation values table.
    */
-  PortraitSecondary = 'portrait-secondary',
-}
+  | 'portrait-secondary';
 
 /**
  * The screen orientation lock type.
@@ -46,19 +45,19 @@ export enum ScreenOrientation {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
  * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
  */
-export enum ScreenOrientationLock {
+export type ScreenOrientationLock =
   /**
    * Any is an orientation that means the screen can be locked to any one of portrait-primary,
    * portrait-secondary, landscape-primary and landscape-secondary.
    */
-  Any = 'any',
+  | 'any'
 
   /**
    * Landscape is an orientation where the screen width is greater than the screen height and
    * depending on platform convention locking the screen to landscape can represent
    * landscape-primary, landscape-secondary or both.
    */
-  Landscape = 'landscape',
+  | 'landscape'
 
   /**
    * Landscape-primary is an orientation where the screen width is greater than the screen height.
@@ -66,7 +65,7 @@ export enum ScreenOrientationLock {
    * in that position. If the device's natural orientation is portrait, the user agent sets
    * landscape-primary from the two options as shown in the screen orientation values table.
    */
-  LandscapePrimary = 'landscape-primary',
+  | 'landscape-primary'
 
   /**
    * Landscape-secondary is an orientation where the screen width is greater than the screen
@@ -75,21 +74,21 @@ export enum ScreenOrientationLock {
    * the user agent sets landscape-secondary from the two options as shown in the screen
    * orientation values table.
    */
-  LandscapeSecondary = 'landscape-secondary',
+  | 'landscape-secondary'
 
   /**
    * Natural is an orientation that refers to either portrait-primary or landscape-primary
    * depending on the device's usual orientation. This orientation is usually provided by the
    * underlying operating system.
    */
-  Natural = 'natural',
+  | 'natural'
 
   /**
    * Portrait is an orientation where the screen width is less than or equal to the screen height
    * and depending on platform convention locking the screen to portrait can represent
    * portrait-primary, portrait-secondary or both.
    */
-  Portrait = 'portrait',
+  | 'portrait'
 
   /**
    * Portrait-primary is an orientation where the screen width is less than or equal to the screen
@@ -97,7 +96,7 @@ export enum ScreenOrientationLock {
    * held in that position. If the device's natural orientation is landscape, the user agent sets
    * portrait-primary from the two options as shown in the screen orientation values table.
    */
-  PortraitPrimary = 'portrait-primary',
+  | 'portrait-primary'
 
   /**
    * Portrait-secondary is an orientation where the screen width is less than or equal to the
@@ -106,5 +105,4 @@ export enum ScreenOrientationLock {
    * orientation is landscape, the user agent sets portrait-secondary from the two options as
    * shown in the screen orientation values table.
    */
-  PortraitSecondary = 'portrait-secondary',
-}
+  | 'portrait-secondary';
