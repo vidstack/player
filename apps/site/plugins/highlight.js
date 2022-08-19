@@ -1,9 +1,8 @@
-import { slash } from '@vitebook/core/node';
 import { readFile } from 'fs/promises';
 import path from 'path';
 import { getHighlighter, renderToHtml } from 'shiki';
 
-import { getSnippetPath } from './snippets.js';
+import { getSnippetPath, snippetsMap } from './snippets.js';
 
 /**
  * @param {import('shiki').HighlighterOptions} options
@@ -13,10 +12,8 @@ export default (options = {}) => {
   /** @type {import('shiki').Highlighter} */
   let shiki;
 
-  const queryRE = /\?highlight.*/;
-
-  const idToFile = new Map();
   const fileToId = new Map();
+  const highlightQueryRE = /\?highlight.*/;
 
   const theme =
     (typeof options.theme === 'string' ? options.theme : options.theme?.name) ??
@@ -48,50 +45,52 @@ export default (options = {}) => {
       });
     },
     async resolveId(id, importer) {
-      // We have to resolve a new ID to prevent any Vite plugins trying to transform these files.
-      if (queryRE.test(id)) {
-        const lang = new URLSearchParams(id).get('lang');
-        const cleanId = `${id.replace(queryRE, '')}${lang ? `.${lang}` : ''}`;
+      if (snippetsMap.has(id)) return id;
 
-        const filePath = idToFile.has(id)
-          ? idToFile.get(id)
-          : (await this.resolve(cleanId, importer, { skipSelf: true })).id;
+      if (highlightQueryRE.test(id)) {
+        const resolvedFilePath =
+          (
+            await this.resolve(id.replace(highlightQueryRE, ''), importer, {
+              skipSelf: true,
+            })
+          )?.id ?? '';
 
+        const filePath = path.relative(process.cwd(), resolvedFilePath);
         const ext = path.extname(filePath);
-        const resolvedId = `${slash(filePath.replace(ext, ''))}?highlight&lang=${
-          lang ?? ext.slice(1)
-        }`;
+        const lang = ext.slice(1);
 
-        fileToId.set(filePath, resolvedId);
-        idToFile.set(resolvedId, filePath);
-
-        return { id: resolvedId };
+        const snippetId = `:virtual/${filePath.replace(ext, '')}?highlight&lang=${lang}`;
+        snippetsMap.set(snippetId, { filePath: filePath, lang });
+        return snippetId;
       }
     },
     async load(id) {
-      if (!idToFile.has(id)) return null;
+      if (snippetsMap.has(id)) {
+        const { filePath, lang } = /** @type {import('./snippets').Snippet} */ (
+          snippetsMap.get(id)
+        );
 
-      const file = idToFile.get(id);
-      const code = await readFile(file, { encoding: 'utf-8' });
-      const lang = new URLSearchParams(id).get('lang');
-      const highlightedCode = await highlight(code, lang);
+        fileToId.set(filePath, id);
+        const code = await readFile(filePath, { encoding: 'utf-8' });
+        const highlightedCode = await highlight(code, lang);
 
-      return [
-        `export const lang = "${lang}";`,
-        `export const code = ${JSON.stringify(code)};`,
-        `export const highlightedCode = ${JSON.stringify(highlightedCode)};`,
-      ].join('\n');
+        return [
+          `export const lang = "${lang}";`,
+          `export const code = ${JSON.stringify(code)};`,
+          `export const highlightedCode = ${JSON.stringify(highlightedCode)};`,
+        ].join('\n');
+      }
+
+      return null;
     },
     async handleHotUpdate({ file, server }) {
       if (fileToId.has(file)) {
         const id = fileToId.get(file);
-        const ext = path.extname(file);
-        const lang = ext.slice(1);
         const relativeFilePath = path.relative(process.cwd(), file);
-        const filePathNoExt = relativeFilePath.replace(ext, '');
 
-        idToFile.delete(id);
-        server.moduleGraph.invalidateModule(server.moduleGraph.getModuleById(id));
+        server.moduleGraph.invalidateModule(
+          /** @type {import('vite').ModuleNode} */ (server.moduleGraph.getModuleById(id)),
+        );
 
         server.ws.send({
           type: 'custom',
@@ -99,7 +98,7 @@ export default (options = {}) => {
           data: {
             name: path.basename(relativeFilePath),
             file: relativeFilePath,
-            importPath: `/${filePathNoExt}?highlight&lang=${lang}&t=${Date.now()}`,
+            importPath: `/${id}&t=${Date.now()}`,
             path: getSnippetPath(relativeFilePath),
           },
         });

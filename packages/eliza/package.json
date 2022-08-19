@@ -25,10 +25,8 @@
   "dependencies": {
     "@microsoft/api-extractor": "^7.20.0",
     "@types/fs-extra": "^9.0.13",
-    "@types/lru-cache": "^7.4.0",
     "@types/node": "^17.0.17",
     "@types/normalize-path": "^3.0.0",
-    "@types/read-pkg-up": "^6.0.0",
     "@types/yargs": "^17.0.8",
     "@vidstack/foundation": "workspace:*",
     "yargs": "^17.3.1"

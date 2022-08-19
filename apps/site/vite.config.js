@@ -55,7 +55,6 @@ export default defineConfig({
  */
 function typescriptPreprocessor() {
   const typescriptRE = /^(ts|typescript)($||\/)/;
-
   return {
     async script({ filename, attributes, content }) {
       const isTypescript =

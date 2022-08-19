@@ -1,17 +1,15 @@
 <script>
+  import MetaTags from '$src/components/base/MetaTags.svelte';
   import MainLayout from '$src/layouts/MainLayout.svelte';
   import HeroSection from '$src/pages/index/HeroSection.svelte';
   import Player from '$src/pages/index/Player.svelte';
   import Footer from '$src/layouts/Footer.svelte';
-
-  const title = 'Vidstack - Frontend video tools to build awesome media experiences on the web.';
 </script>
 
-<svelte:head>
-  <title>{title}</title>
-  <meta name="twitter:title" content={title} />
-  <meta property="og:title" content={title} />
-</svelte:head>
+<MetaTags
+  title="Vidstack: Media tooling for frontend developers"
+  description="Vidstack makes it easier to build awesome media experiences on the web."
+/>
 
 <MainLayout --navbar-border-bottom="none" --main-padding-x="none" --main-overflow-x="hidden">
   <HeroSection />

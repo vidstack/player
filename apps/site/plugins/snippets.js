@@ -10,6 +10,15 @@ const PREVIEWS_REQ_ID = `/${PREVIEWS_ID}`;
 
 const snippetRE = /pages\/docs\/.*?_snippets/;
 const previewRE = /pages\/docs\/.*?_previews/;
+/**
+ * @typedef {{
+ *  filePath: string;
+ *  lang: string;
+ * }} Snippet
+ */
+
+/** @type {Map<string, Snippet>} */
+export const snippetsMap = new Map();
 
 /** @returns {import('vite').Plugin}  */
 export default () => {
@@ -95,15 +104,20 @@ async function getSnippets() {
 
       const name = path.basename(filePath);
       const lines = content.split('\n');
+      const ext = path.extname(filePath);
+      const lang = ext.slice(1);
 
       const scrollX = Math.max(...lines.map((line) => line.length));
+
+      const id = `:virtual/${filePath.replace(ext, '')}?lang=${lang}`;
+      snippetsMap.set(id, { filePath, lang: lang });
 
       snippets.push({
         name,
         path: pathname,
         lines: lines.length - 1,
         scrollX,
-        loader: `() => import('${slash(filePath)}?highlight')`,
+        loader: `() => import('${id}')`,
       });
     }),
   );

@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 
 export function getWindow() {
   const attributes = new WeakMap();
@@ -121,5 +121,5 @@ export function getWindow() {
     requestAnimationFrame() {},
   };
 
-  return window;
+  return /** @type {any} */ (window);
 }

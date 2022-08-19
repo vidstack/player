@@ -9,7 +9,7 @@
   import { ariaBool, hideDocumentScrollbar } from '@vidstack/foundation';
 
   import Button from '$src/components/base/Button.svelte';
-  import MetaTags from '$src/components/docs/MetaTags.svelte';
+  import DocsMetaTags from '$src/components/docs/DocsMetaTags.svelte';
   import { type CloseDialogCallback, dialogManager } from '$src/actions/dialog-manager';
 
   import MenuUnfoldIcon from '~icons/ri/menu-unfold-fill';
@@ -53,7 +53,7 @@
 
 <div class="docs contents">
   <MainLayout --main-direction="row">
-    <MetaTags />
+    <DocsMetaTags />
 
     <svelte:fragment slot="search">
       <slot name="search" />

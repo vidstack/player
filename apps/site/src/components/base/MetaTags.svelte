@@ -1,36 +1,13 @@
 <script lang="ts">
-  import { frontmatter, markdown, route } from '@vitebook/svelte';
-
-  import { getSidebarContext } from '$src/layouts/sidebar/context';
+  import { route } from '@vitebook/svelte';
   import socialCardLarge from '$src/img/brand/social-card-large.jpg';
-  import { jsLib, titleCaseJSLib } from '$src/stores/js-lib';
-  import { elementHeading } from '$src/stores/element';
-  import { isApiPath } from '$src/stores/path';
 
-  const { activeCategory } = getSidebarContext();
-
-  $: category = $activeCategory ? `${$activeCategory}: ` : '';
-  $: lib = $jsLib !== 'html' ? ` (${titleCaseJSLib($jsLib)})` : '';
-
-  $: mdTitle = $frontmatter?.title ?? $markdown?.title;
-
-  $: elementTitle =
-    $elementHeading.length > 0 ? `${$elementHeading}${$isApiPath ? ' API' : ''}` : null;
-
-  $: title =
-    mdTitle || elementTitle ? `${category}${mdTitle ?? elementTitle}${lib} | Vidstack` : null;
-
-  $: description = $markdown?.frontmatter.description;
+  export let title: string | null = null;
+  export let description: string | null = null;
 </script>
 
 <svelte:head>
-  <meta name="docsearch:version" content="latest" />
-
-  {#key $jsLib}
-    <meta name="docsearch:jslib" content={$jsLib} />
-  {/key}
-
-  {#key title}
+  {#key `${title}${description}`}
     {#if title}
       <title>{title}</title>
       <meta property="og:title" content={title} />
