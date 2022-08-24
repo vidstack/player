@@ -3,7 +3,7 @@
 [![package-badge]][package]
 [![discord-badge]][discord]
 
-Design a modern media player only using HTML and CSS. The successor to [Plyr][plyr] `3.x` and
+Build a modern video & audio player only using HTML and CSS. The successor to [Plyr][plyr] `3.x` and
 [Vime][vime] `5.x`.
 
 ## Beta

@@ -7,8 +7,8 @@
 </script>
 
 <MetaTags
-  title="Vidstack: Media tooling for frontend developers"
-  description="Vidstack makes it easier to build awesome media experiences on the web."
+  title="Vidstack: Where people build awesome media experiences"
+  description="Vidstack makes it easier to work with video & audio on the web."
 />
 
 <MainLayout --navbar-border-bottom="none" --main-padding-x="none" --main-overflow-x="hidden">

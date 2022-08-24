@@ -48,7 +48,7 @@
       <h1
         class="992:mt-6 768:text-5xl 768:leading-[3.5rem] 768:max-w-3xl 992:text-6xl 992:leading-[4.5rem] 992:max-w-5xl mt-8 text-center text-4xl font-extrabold leading-[3rem]"
       >
-        Design a modern media player only using HTML
+        Build a modern media player only using HTML
         <span class="992:hidden">&</span>
         <span class="992:inline hidden">and</span>
         CSS
@@ -58,7 +58,7 @@
         class="text-soft 992:text-lg 576:text-xl mx-auto mt-6 max-w-3xl text-center text-base leading-relaxed"
       >
         Open-source, headless, accessible, and declarative player UI framework. Completely
-        customizable, lightweight, and packed with rich events.
+        customizable, lightweight, and packed with rich media events.
       </p>
 
       <div class="mt-12 flex space-x-4">
