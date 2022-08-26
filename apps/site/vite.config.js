@@ -18,6 +18,9 @@ export default defineConfig({
     routes: {
       entries: [
         ...['/', '/audio.html', '/hls.html'].map(
+          (path) => `/docs/player/getting-started/quickstart${path}`,
+        ),
+        ...['/', '/audio.html', '/hls.html'].map(
           (path) => `/docs/player/getting-started/quickstart/cdn${path}`,
         ),
       ],
