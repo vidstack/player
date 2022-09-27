@@ -28,7 +28,7 @@ export const createComponent = <E extends HTMLElement>(
   React: typeof ReactModule,
   tagName: string,
   elementClass: Constructor<E>,
-) => {
+): ReactModule.ForwardRefExoticComponent<VdsReactComponentProps<E>> => {
   const Component = React.Component;
   const createElement = React.createElement;
 
@@ -131,5 +131,5 @@ export const createComponent = <E extends HTMLElement>(
   // To ease debugging in the React Developer Tools
   ForwardedComponent.displayName = ReactComponent.displayName;
 
-  return ForwardedComponent;
+  return ForwardedComponent as any;
 };
