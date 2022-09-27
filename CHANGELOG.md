@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/vidstack/vidstack/compare/v1.6.3...v1.6.4) (2022-09-27)
+
+### Bug Fixes
+
+- **player-react:** simplify react component types output ([3159bba](https://github.com/vidstack/vidstack/commit/3159bba9eea46723d145a00638f4036f9929fe8a))
+- **site:** missing quickstart provider html files in build ([adcd811](https://github.com/vidstack/vidstack/commit/adcd811a1cc235a699661f0bf87fed7b355f7945))
+
 ## [1.6.3](https://github.com/vidstack/vidstack/compare/v1.6.2...v1.6.3) (2022-08-18)
 
 ### Bug Fixes

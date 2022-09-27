@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/player-svelte",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Vidstack Player (Svelte): Design a modern media player only using HTML and CSS.",
   "license": "MIT",
   "type": "module",
