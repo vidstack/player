@@ -32,6 +32,8 @@
     },
     "test": {
       "dependsOn": ["^analyze", "^bundle"]
-    }
+    },
+    "preview": {},
+    "dev": {}
   }
 }
