@@ -31,9 +31,9 @@
 
 {#if $comingSoonElement}
   <p>This component is not available yet.</p>
-{:else if $jsLib === 'react'}
+{:else if !hideSnippets && $jsLib === 'react'}
   <CodeFence lang="tsx" code={react[0]} highlightedCode={react[1]} copy />
-{:else}
+{:else if !hideSnippets}
   <CodeFence lang="js" code={js[0]} highlightedCode={js[1]} copy />
   <CodeFence lang="html" title="cdn" code={cdn[0]} highlightedCode={cdn[1]} copy />
 {/if}
