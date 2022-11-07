@@ -10,7 +10,7 @@
   $: docsHref = path.endsWith('/api.html') ? path.replace(/\/api\.html$/, '/') : path;
   $: apiHref = !path.includes('/api.html') ? `${path.replace(/\/$/, '')}/api.html` : path;
 
-  /* remove Import code snippets from buffering indicator and controls page */
+  /* remove API Tab for buffering indicator and controls page */
   const invalidElements = new Set(['vds-buffering-indicator', 'vds-controls']);
   $: hideSnippets = invalidElements.has($elementTagName);
 </script>
