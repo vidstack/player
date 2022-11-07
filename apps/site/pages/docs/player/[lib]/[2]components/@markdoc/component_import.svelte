@@ -18,6 +18,10 @@
   import { comingSoonElement, elementTagName } from '$src/stores/element';
   import { jsLib } from '$src/stores/js-lib';
 
+  /* remove Import code snippets from buffering indicator and controls page */
+  const invalidElements = new Set(['vds-buffering-indicator', 'vds-controls']);
+  $: hideSnippets = invalidElements.has($elementTagName);
+
   $: js = [jsRawCode, jsHlsCode].map((s) => s.replace('{TAG_NAME}', $elementTagName));
   $: cdn = [cdnRawCode, cdnHlCode].map((s) => s.replace('{TAG_NAME}', $elementTagName));
   $: react = [reactRawCode, reactHlCode].map((s) =>
