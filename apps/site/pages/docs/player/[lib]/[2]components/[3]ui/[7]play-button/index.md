@@ -17,5 +17,5 @@ Here's a simple styled `$tag:vds-play-button` example containing a play and paus
 
 {% callout type="tip" %}
 You can extend the preview above by adding a replay SVG icon, and showing it whilst hiding the play icon
-when the `media-ended` attribute is present.
+when the `ended` attribute is present.
 {% /callout %}
