@@ -15,6 +15,8 @@
     "build:player-react": "turbo run build --filter=player-react",
     "build:player-svelte": "turbo run build --filter=player-svelte",
     "build:site": "turbo run build --filter=site",
+    "preview:site": "turbo run preview --filter=site",
+    "dev:site": "turbo run dev --filter=site",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && node .scripts/fix-changelog.js",
     "lint": "turbo run lint --parallel",
     "test": "turbo run test --parallel",
