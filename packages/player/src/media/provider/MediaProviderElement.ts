@@ -558,7 +558,9 @@ export abstract class MediaProviderElement extends LitElement {
       this.requestUpdate('autoplay', !newAutoplay);
     }
 
-    this._attemptAutoplay();
+    if (this.autoplay) {
+      this._attemptAutoplay();
+    }
   }
 
   protected _attemptingAutoplay = false;
