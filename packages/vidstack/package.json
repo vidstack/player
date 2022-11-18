@@ -4,6 +4,7 @@
   "description": "Build awesome media experiences on the web.",
   "license": "MIT",
   "type": "module",
+  "module": "./dist/prod/index.js",
   "engines": {
     "node": ">=16"
   },
@@ -17,7 +18,47 @@
     "elements/",
     "tailwind.*"
   ],
-  "module": "./dist/prod/index.js",
+  "scripts": {
+    "analyze": "maverick analyze \"src/**/*Element.ts\"",
+    "dev": "pnpm run build --watch & pnpm run analyze -w",
+    "build": "rimraf dist elements && tsup",
+    "format": "prettier src --write --loglevel warn",
+    "sandbox": "node ../../.scripts/sandbox.js",
+    "sandbox:build": "vite build sandbox",
+    "test": "vitest --run",
+    "test:watch": "vitest --watch"
+  },
+  "dependencies": {
+    "maverick.js": "^0.0.4"
+  },
+  "devDependencies": {
+    "@maverick-js/compiler": "^0.0.4",
+    "@open-wc/semantic-dom-diff": "^0.19.5",
+    "@open-wc/testing-helpers": "^2.1.2",
+    "autoprefixer": "^10.4.2",
+    "hls.js": "^1.1.3",
+    "jsdom": "^19.0.0",
+    "postcss": "^8.4.6",
+    "rimraf": "^3.0.2",
+    "tailwindcss": "^3.0.22",
+    "tslib": "^2.3.0",
+    "typescript": "^4.8.5",
+    "vite": "^3.0.0",
+    "vitest": "^0.6.1"
+  },
+  "contributors": [
+    "Dave Furfero <furf@furf.com>",
+    "Rahim Alwer <rahim.alwer@gmail.com>",
+    "Sam Potts <sam@potts.es>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vidstack/vidstack.git",
+    "directory": "packages/vidstack"
+  },
+  "bugs": {
+    "url": "https://github.com/vidstack/vidstack/issues"
+  },
   "exports": {
     ".": {
       "types": "./index.d.ts",
@@ -39,46 +80,6 @@
     "./tailwind.cjs": "./tailwind.cjs",
     "./elements.json": "./elements.json",
     "./vscode.html-data.json": "./vscode.html-data.json"
-  },
-  "contributors": [
-    "Dave Furfero <furf@furf.com>",
-    "Rahim Alwer <rahim.alwer@gmail.com>",
-    "Sam Potts <sam@potts.es>"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vidstack/vidstack.git",
-    "directory": "packages/vidstack"
-  },
-  "bugs": {
-    "url": "https://github.com/vidstack/vidstack/issues"
-  },
-  "scripts": {
-    "analyze": "maverick analyze \"src/**/*Element.ts\"",
-    "dev": "pnpm run build --watch & pnpm run analyze -w",
-    "build": "rimraf dist elements && tsup",
-    "format": "prettier src --write --loglevel warn",
-    "sandbox": "node ../../.scripts/sandbox.js",
-    "sandbox:build": "vite build sandbox",
-    "test": "vitest --run",
-    "test:watch": "vitest --watch"
-  },
-  "dependencies": {
-    "maverick.js": "^0.0.3"
-  },
-  "devDependencies": {
-    "@open-wc/semantic-dom-diff": "^0.19.5",
-    "@open-wc/testing-helpers": "^2.1.2",
-    "autoprefixer": "^10.4.2",
-    "hls.js": "^1.1.3",
-    "jsdom": "^19.0.0",
-    "postcss": "^8.4.6",
-    "rimraf": "^3.0.2",
-    "tailwindcss": "^3.0.22",
-    "tslib": "^2.3.0",
-    "typescript": "^4.8.5",
-    "vite": "^3.0.0",
-    "vitest": "^0.6.1"
   },
   "publishConfig": {
     "access": "public"
