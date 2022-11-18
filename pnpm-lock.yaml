@@ -107,13 +107,13 @@ importers:
 
   packages/vidstack:
     specifiers:
-      '@maverick-js/compiler': ^0.0.4
+      '@maverick-js/compiler': ^0.0.6
       '@open-wc/semantic-dom-diff': ^0.19.5
       '@open-wc/testing-helpers': ^2.1.2
       autoprefixer: ^10.4.2
       hls.js: ^1.1.3
       jsdom: ^19.0.0
-      maverick.js: ^0.0.4
+      maverick.js: ^0.0.6
       postcss: ^8.4.6
       rimraf: ^3.0.2
       tailwindcss: ^3.0.22
@@ -122,9 +122,9 @@ importers:
       vite: ^3.0.0
       vitest: ^0.6.1
     dependencies:
-      maverick.js: 0.0.4
+      maverick.js: 0.0.6
     devDependencies:
-      '@maverick-js/compiler': 0.0.4_vite@3.2.4
+      '@maverick-js/compiler': 0.0.6_vite@3.2.4
       '@open-wc/semantic-dom-diff': 0.19.7
       '@open-wc/testing-helpers': 2.1.4
       autoprefixer: 10.4.13_postcss@8.4.19
@@ -877,8 +877,8 @@ packages:
       '@types/react': 17.0.52
     dev: true
 
-  /@maverick-js/compiler/0.0.4_vite@3.2.4:
-    resolution: {integrity: sha512-QwrfFdTom5z0Nuvzc5hr5HHECXAhHWaWClqMhUqfTTP/KdvXgEhp/7QXML054lIuYr6X0Yla9ZZJDogReZ/0Dg==}
+  /@maverick-js/compiler/0.0.6_vite@3.2.4:
+    resolution: {integrity: sha512-K9AHm2t+D6ciLPP7eMV+Wm8z+Z3T6aBcoVwAtk5khBbSITk4Bd01bxBXaibHHrY/Dqlopv4zpKyxDXL7g0Wj5Q==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
@@ -4218,8 +4218,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /maverick.js/0.0.4:
-    resolution: {integrity: sha512-Toy7VWdRl1vAnLmjcoqK07G0AyHM1bAVABv8UOUFqQ2RSSO2saMHC7utDVVDelkEeNAE2DvZf+kggkv5cMCVZg==}
+  /maverick.js/0.0.6:
+    resolution: {integrity: sha512-CRcUCsprEosB186PkZpbUcWGrNhkP4zkxARkmNVmO+lhwf68EMrl83m+GMLW2otfErEaDgj4ajY6+eizriB38g==}
     engines: {node: '>=16'}
     dependencies:
       type-fest: 2.19.0

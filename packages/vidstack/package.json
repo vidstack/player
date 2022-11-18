@@ -29,10 +29,10 @@
     "test:watch": "vitest --watch"
   },
   "dependencies": {
-    "maverick.js": "^0.0.4"
+    "maverick.js": "^0.0.6"
   },
   "devDependencies": {
-    "@maverick-js/compiler": "^0.0.4",
+    "@maverick-js/compiler": "^0.0.6",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
     "autoprefixer": "^10.4.2",
