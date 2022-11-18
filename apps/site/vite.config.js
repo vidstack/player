@@ -1,5 +1,6 @@
+import { svelte as Svelte } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from '@vitebook/core/node';
-import SveltePlugin from '@vitebook/svelte/node';
+import VitebookSvelte from '@vitebook/svelte/node';
 import { transform as esbuildTransform } from 'esbuild';
 import Icons from 'unplugin-icons/vite';
 
@@ -44,10 +45,9 @@ export default defineConfig({
       Snippets(),
       ComponentApi(),
       Icons({ compiler: 'svelte' }),
-      SveltePlugin({
-        svelte: {
-          preprocess: [typescriptPreprocessor()],
-        },
+      VitebookSvelte(),
+      Svelte({
+        preprocess: [typescriptPreprocessor()],
       }),
     ],
   },

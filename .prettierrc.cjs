@@ -8,6 +8,10 @@ module.exports = {
     // `prettier-plugin-tailwindcss` also includes `prettier-plugin-svelte`
     // @see https://github.com/sveltejs/prettier-plugin-svelte#usage-with-tailwind-prettier-plugin
     require('prettier-plugin-tailwindcss'),
+    require('@trivago/prettier-plugin-sort-imports'),
   ],
-  overrides: [],
+  importOrder: ['^[../]', '^[./]'],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+  importOrderCaseInsensitive: true,
 };

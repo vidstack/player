@@ -1,4 +1,4 @@
-# Vidstack Player
+# Vidstack
 
 [![package-badge]][package]
 [![discord-badge]][discord]
@@ -9,7 +9,7 @@ Vidstack Player is customizable, lightweight, accessible, and framework agnostic
 
 ## Beta
 
-We are currently in Beta. If you'd like to get notified when 1.0 is released: 
+We are currently in Beta. If you'd like to get notified when 1.0 is released:
 
 - [Watch Player Repository](https://github.com/vidstack/player)
 - [Follow Player 1.0 Project Board](https://github.com/vidstack/player/projects/1)
@@ -27,11 +27,11 @@ If you need help with anything related to Vidstack Player, or if you'd like to c
 [Join Discord Server][discord]
 
 ## Sponsors ❤️
+
 A special thanks to the following sponsors who are kindly supporting Vidstack:
 
 - [Mux](https://www.mux.com/)
 - [Vercel](https://vercel.com/)
-
 
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr

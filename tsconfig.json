@@ -5,6 +5,7 @@
     "alwaysStrict": true,
     "checkJs": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "lib": ["dom", "dom.iterable", "es2020"],
@@ -22,8 +23,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "packages/*/define",
-    "packages/*/types",
+    "packages/*/elements",
     "packages/*/globals.d.ts",
     "packages/*/index.d.ts",
     "packages/*/sandbox"

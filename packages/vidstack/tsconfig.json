@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "src",
+    "declarationDir": "types",
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "paths": {
+      "$elements/*": ["src/elements/*"],
+      "$test-utils": ["src/test-utils/index.ts"],
+      "$test-utils/*": ["src/test-utils/*"]
+    },
+    "types": ["@types/node", "vitest/globals"]
+  },
+  "include": ["src/**/*.ts"]
+}

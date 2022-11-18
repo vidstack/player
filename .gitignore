@@ -6,10 +6,6 @@ tsconfig.tsbuildinfo
 
 .turbo
 turbo-graph*
-.wireit
-
-.svelte-kit/
-.output/
 
 /scratchpad/
 /sandbox/
@@ -19,18 +15,11 @@ turbo-graph*
 /apps/*/.vercel_build_output/
 
 packages/*/dist/
-packages/*/cdn/
-packages/*/define/
-packages/*/types/
-packages/*/index.d.ts
-packages/player-*/src/_components/
-packages/player-*/src/*/_components/
-/packages/*/sandbox/
+packages/*/elements/
+packages/*/sandbox/
 
 elements.json
 vscode.html-data.json
-vscode.css-data.json
-custom-elements.json
 
 *~
 *.sw[mnpcod]
@@ -63,7 +52,6 @@ speed-measure-plugin*.json
 /.pnp
 .temp/
 .pnp.js
-.eslintcache
 .cspellcache
 .nyc_output/
 .idea/
