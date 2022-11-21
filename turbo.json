@@ -6,9 +6,11 @@
       "outputs": ["dist/**", "elements/**", "elements.json", "vscode.html-data.json"]
     },
     "format": {
+      "dependsOn": ["format"],
       "inputs": ["src/**"]
     },
     "test": {
+      "dependsOn": ["test", "test:server"],
       "inputs": ["src/**"]
     }
   }
