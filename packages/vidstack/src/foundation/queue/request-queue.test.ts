@@ -116,7 +116,7 @@ it('should release pending flush when destroyed', async () => {
   const q = new RequestQueue();
 
   setTimeout(() => {
-    q.destroy();
+    q.reset();
   });
 
   await q.waitForFlush();
@@ -131,7 +131,7 @@ it('should clear queue when destroyed', async () => {
   q.queue('a', itemA);
   q.queue('b', itemB);
 
-  await q.destroy();
+  await q.reset();
 
   expect(itemA).not.toHaveBeenCalled();
   expect(itemB).not.toHaveBeenCalled();

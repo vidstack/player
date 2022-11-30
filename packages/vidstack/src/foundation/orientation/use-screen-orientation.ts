@@ -15,9 +15,7 @@ export function useHostedScreenOrientation() {
 
 const CAN_ORIENT_SCREEN = canOrientScreen();
 
-export function useScreenOrientation({
-  $target,
-}: UseScreenOrientationOptions): UseScreenOrientation {
+export function useScreenOrientation({ $target }: UseScreenOrientationProps): UseScreenOrientation {
   const $orientation = observable<ScreenOrientationType | undefined>(getScreenOrientation()),
     $locked = observable(false);
 
@@ -54,13 +52,13 @@ export function useScreenOrientation({
   }
 
   return {
-    get $orientation() {
+    get orientation() {
       return $orientation();
     },
-    get $locked() {
+    get locked() {
       return $locked();
     },
-    get canOrient() {
+    get supported() {
       return CAN_ORIENT_SCREEN;
     },
     lock,
@@ -81,30 +79,32 @@ function getScreenOrientation() {
   return __SERVER__ ? undefined : (window.screen?.orientation?.type as ScreenOrientationType);
 }
 
-export type UseScreenOrientationOptions = {
+export type UseScreenOrientationProps = {
   $target: Observable<Element | null>;
 };
 
 export type UseScreenOrientation = {
   /**
    * The current screen orientation. It will return `undefined` if the Screen Orientation API
-   * is not available. This is a reactive observable call.
+   * is not available.
    *
+   * @observable
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
    * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
    */
-  readonly $orientation: ScreenOrientationType | undefined;
+  readonly orientation: ScreenOrientationType | undefined;
   /**
    * Whether the screen orientation is currently locked.
    *
+   * @observable
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
    * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
    */
-  readonly $locked: boolean;
+  readonly locked: boolean;
   /**
    * Whether the native Screen Orientation API is available.
    */
-  readonly canOrient: boolean;
+  readonly supported: boolean;
   /**
    * Locks the orientation of the screen to the desired orientation type using the
    * Screen Orientation API.

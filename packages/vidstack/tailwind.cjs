@@ -1,6 +1,6 @@
-const plugin = require('tailwindcss/plugin');
+const createPlugin = require('tailwindcss/plugin');
 
-const mediaAttrs = [
+const mediaAttributes = [
   'autoplay',
   'autoplay-error',
   'duration',
@@ -21,20 +21,20 @@ const mediaAttrs = [
   'waiting',
 ];
 
-const sliderAttrs = ['dragging', 'pointing', 'interactive'];
+const sliderAttributes = ['dragging', 'pointing', 'interactive'];
 
-const vidstackPlayerPlugin = plugin(function ({ addVariant }) {
-  mediaAttrs.forEach((mediaAttr) => {
+const vidstackPlugin = createPlugin(function ({ addVariant }) {
+  mediaAttributes.forEach((mediaAttr) => {
     addVariant(`media-${mediaAttr}`, `vds-media[${mediaAttr}] &`);
   });
 
-  sliderAttrs.forEach((sliderAttr) => {
+  sliderAttributes.forEach((sliderAttr) => {
     addVariant(sliderAttr, `vds-media *[${sliderAttr}] &`);
   });
 });
 
 module.exports = {
-  ...vidstackPlayerPlugin,
-  mediaAttrs,
-  sliderAttrs,
+  ...vidstackPlugin,
+  mediaAttributes,
+  sliderAttributes,
 };

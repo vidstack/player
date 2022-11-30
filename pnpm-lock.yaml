@@ -107,7 +107,7 @@ importers:
 
   packages/vidstack:
     specifiers:
-      '@maverick-js/compiler': ^0.5.1
+      '@maverick-js/compiler': ^0.8.0
       '@open-wc/semantic-dom-diff': ^0.19.5
       '@open-wc/testing-helpers': ^2.1.2
       '@types/fscreen': ^1.0.1
@@ -115,7 +115,9 @@ importers:
       fscreen: ^1.2.0
       hls.js: ^1.1.3
       jsdom: ^19.0.0
-      maverick.js: ^0.5.1
+      just-debounce-it: ^3.1.1
+      just-throttle: ^4.1.1
+      maverick.js: ^0.8.0
       postcss: ^8.4.6
       rimraf: ^3.0.2
       tailwindcss: ^3.0.22
@@ -125,10 +127,10 @@ importers:
       vite: ^3.2.3
       vitest: ^0.25.1
     dependencies:
-      maverick.js: 0.5.1
+      maverick.js: 0.8.0
       type-fest: 3.2.0
     devDependencies:
-      '@maverick-js/compiler': 0.5.1_vite@3.2.4
+      '@maverick-js/compiler': 0.8.0_vite@3.2.4
       '@open-wc/semantic-dom-diff': 0.19.7
       '@open-wc/testing-helpers': 2.1.4
       '@types/fscreen': 1.0.1
@@ -136,6 +138,8 @@ importers:
       fscreen: 1.2.0
       hls.js: 1.2.7
       jsdom: 19.0.0
+      just-debounce-it: 3.1.1
+      just-throttle: 4.1.1
       postcss: 8.4.19
       rimraf: 3.0.2
       tailwindcss: 3.2.4
@@ -883,8 +887,8 @@ packages:
       '@types/react': 17.0.52
     dev: true
 
-  /@maverick-js/compiler/0.5.1_vite@3.2.4:
-    resolution: {integrity: sha512-l29xArz5u2ZgpdTvJB1eoGMnXHtX+vXF3S2TD40Z+uvaCD/w/GO4VMiVc7dgKs5bS0wQLcivVo8gzXInu3xEFA==}
+  /@maverick-js/compiler/0.8.0_vite@3.2.4:
+    resolution: {integrity: sha512-Am/htzpI4R/5/96Yp5PZLBDhkRFrm2qYtR0peg0EyVX3+9HcF0J1Ar6O/qVKcl7ddDSkiKU635F9F89ir2qJDw==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
@@ -3924,6 +3928,14 @@ packages:
     engines: {'0': node >= 0.2.0}
     dev: true
 
+  /just-debounce-it/3.1.1:
+    resolution: {integrity: sha512-oPsuRyWp99LJaQ4KXC3A42tQNqkRTcPy0A8BCkRZ5cPCgsx81upB2KUrmHZvDUNhnCDKe7MshfTuWFQB9iXwDg==}
+    dev: true
+
+  /just-throttle/4.1.1:
+    resolution: {integrity: sha512-OK1iESPWjZZnKRYpMsaFb0TSAv74OtbB8CiCRA1tNub1/R0S47n7edXsQ64GtpfIuiGVwSjPNLwkePl4owlDug==}
+    dev: true
+
   /keygrip/1.1.0:
     resolution: {integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==}
     engines: {node: '>= 0.6'}
@@ -4237,8 +4249,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /maverick.js/0.5.1:
-    resolution: {integrity: sha512-mRxJnUqLnAANCTpVDz9auayix8Kw1oSsFRYKIHMbYs5ICbbEa8Ym0smKUw5YTFglWP5lNS2LsruL5kqoFVY27w==}
+  /maverick.js/0.8.0:
+    resolution: {integrity: sha512-trBQ2D7F0yE+5Iw4GYo6OFqcQ6L8+0NZOVVqZ4AZk19QUWHlldIf0eVmvKcw+TzDNtROLa8w8Qb9tz9Qa2yG9A==}
     engines: {node: '>=16'}
     dependencies:
       type-fest: 2.19.0

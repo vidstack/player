@@ -13,6 +13,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '$test-utils': '/src/test-utils',
+      'vidstack/elements': '/src/elements',
+      'vidstack/player': '/src/player',
     },
   },
   plugins: [

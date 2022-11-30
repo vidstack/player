@@ -4,20 +4,22 @@ import { useHost } from 'maverick.js/std';
 import { connectedHostElement } from '../../utils/host';
 
 export function useHostedIntersectionObserver(
-  options: Omit<UseIntersectionObserverOptions, '$target'>,
+  props?: Omit<UseIntersectionObserverProps, '$target'>,
 ): UseIntersectionObserver {
   const host = useHost();
   return useIntersectionObserver({
     $target: connectedHostElement(host),
-    ...options,
+    ...props,
   });
 }
 
 export function useIntersectionObserver(
-  options: UseIntersectionObserverOptions,
+  props: UseIntersectionObserverProps,
 ): UseIntersectionObserver {
   const $intersecting = observable(false),
-    { $target, skipInitial, callback, ...observerInit } = options;
+    { $target, skipInitial, callback, ...observerInit } = props;
+
+  let disconnect: (() => void) | undefined;
 
   effect(() => {
     const target = $target();
@@ -40,25 +42,36 @@ export function useIntersectionObserver(
     }, observerInit);
 
     observer.observe(target);
-    return () => observer.disconnect();
+    return (disconnect = () => {
+      observer.disconnect();
+      disconnect = undefined;
+    });
   });
 
   return {
-    get $intersecting() {
+    get intersecting() {
       return $intersecting();
+    },
+    disconnect() {
+      disconnect?.();
     },
   };
 }
 
 export type UseIntersectionObserver = {
   /**
-   * Whether the current host element is intersecting with configured viewport. This is a reactive
-   * observable call.
+   * Whether the current host element is intersecting with configured viewport.
+   *
+   * @observable
    */
-  readonly $intersecting: boolean;
+  readonly intersecting: boolean;
+  /**
+   * Disconnect any active intersection observers.
+   */
+  disconnect(): void;
 };
 
-export type UseIntersectionObserverOptions = {
+export type UseIntersectionObserverProps = {
   /**
    * The element to observe. No observer is created if a falsy value is set.
    */

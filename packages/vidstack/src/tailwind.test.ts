@@ -2,14 +2,14 @@ import path from 'path';
 import postcss from 'postcss';
 import tailwindcss from 'tailwindcss';
 
-import vidstackPlayerPlugin from '../tailwind.cjs';
+import vidstackPlugin from '../tailwind.cjs';
 
 async function run(content: string) {
   return postcss([
     tailwindcss({
       content: [{ raw: content }],
       corePlugins: { preflight: false },
-      plugins: [vidstackPlayerPlugin],
+      plugins: [vidstackPlugin],
     }),
   ]).process(['@tailwind components;', '@tailwind utilities;'].join('\n'), {
     from: `${path.resolve(__filename)}?test=${'should create media variants'}`,
@@ -17,7 +17,7 @@ async function run(content: string) {
 }
 
 it('should create media variants', async () => {
-  const content = vidstackPlayerPlugin.mediaAttrs
+  const content = vidstackPlugin.mediaAttributes
     .map((mediaAttr) => `media-${mediaAttr}:opacity-100`)
     .join(' ');
 
@@ -82,7 +82,7 @@ it('should create media variants', async () => {
 });
 
 it('should create slider variants', async () => {
-  const content = vidstackPlayerPlugin.sliderAttrs
+  const content = vidstackPlugin.sliderAttributes
     .map((sliderAttr) => `${sliderAttr}:opacity-100`)
     .join(' ');
 

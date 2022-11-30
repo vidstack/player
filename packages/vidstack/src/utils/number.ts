@@ -16,3 +16,10 @@ export function round(num: number, decimalPlaces = 2): number {
 export function getNumberOfDecimalPlaces(num: number): number {
   return String(num).split('.')[1]?.length ?? 0;
 }
+
+/**
+ * Clamp a given `value` between a minimum and maximum value.
+ */
+export function clampNumber(min: number, value: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}

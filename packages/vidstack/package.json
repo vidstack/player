@@ -4,23 +4,18 @@
   "description": "Build awesome media experiences on the web.",
   "license": "MIT",
   "type": "module",
-  "module": "./dist/prod/index.js",
   "engines": {
     "node": ">=16"
   },
-  "sideEffects": [
-    "./elements/*.js",
-    "./src/elements/*.ts"
-  ],
+  "sideEffects": false,
   "files": [
     "*.d.ts",
     "dist/",
-    "elements/",
     "tailwind.*",
     "vscode.html-data.json"
   ],
   "scripts": {
-    "analyze": "maverick analyze \"src/**/*Element.ts\"",
+    "analyze": "maverick analyze \"src/elements.ts\"",
     "dev": "pnpm run build --watch & pnpm run analyze -w",
     "build": "rimraf dist elements && tsup",
     "format": "prettier src --write --loglevel warn",
@@ -32,11 +27,11 @@
     "test:server:watch": "SERVER=true vitest --watch"
   },
   "dependencies": {
-    "maverick.js": "^0.5.1",
+    "maverick.js": "^0.8.0",
     "type-fest": "^3.2.0"
   },
   "devDependencies": {
-    "@maverick-js/compiler": "^0.5.1",
+    "@maverick-js/compiler": "^0.8.0",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
     "@types/fscreen": "^1.0.1",
@@ -44,6 +39,8 @@
     "fscreen": "^1.2.0",
     "hls.js": "^1.1.3",
     "jsdom": "^19.0.0",
+    "just-debounce-it": "^3.1.1",
+    "just-throttle": "^4.1.1",
     "postcss": "^8.4.6",
     "rimraf": "^3.0.2",
     "tailwindcss": "^3.0.22",
@@ -66,21 +63,21 @@
     "url": "https://github.com/vidstack/vidstack/issues"
   },
   "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "development": "./dist/dev/index.js",
-      "test": "./dist/dev/index.js",
-      "deno": "./dist/server/index.js",
-      "node": "./dist/server/index.js",
-      "default": "./dist/prod/index.js"
+    "./elements": {
+      "types": "./elements.d.ts",
+      "development": "./dist/dev/elements.js",
+      "test": "./dist/dev/elements.js",
+      "deno": "./dist/server/elements.js",
+      "node": "./dist/server/elements.js",
+      "default": "./dist/prod/elements.js"
     },
-    "./elements/*": {
-      "types": "./elements/*",
-      "development": "./elements/dev/*",
-      "test": "./elements/dev/*",
-      "deno": "./elements/server/*",
-      "node": "./elements/server/*",
-      "default": "./elements/prod/*"
+    "./player": {
+      "types": "./player.d.ts",
+      "development": "./dist/dev/player.js",
+      "test": "./dist/dev/player.js",
+      "deno": "./dist/server/player.js",
+      "node": "./dist/server/player.js",
+      "default": "./dist/prod/player.js"
     },
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",

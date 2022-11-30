@@ -1,0 +1,5 @@
+vds-media {
+  display: inline-block;
+  position: relative;
+  contain: content;
+}

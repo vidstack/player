@@ -1,4 +1,4 @@
-import { listen } from 'maverick.js/std';
+import { listenEvent } from 'maverick.js/std';
 
 export async function waitForEvent<EventType extends keyof MaverickEventRecord>(
   target: EventTarget,
@@ -10,7 +10,7 @@ export async function waitForEvent<EventType extends keyof MaverickEventRecord>(
       reject(`Timed out waiting for event \`${type}\`.`);
     }, options?.timeout ?? 1000);
 
-    listen(
+    listenEvent(
       target,
       type,
       (event: any) => {

@@ -1,30 +1,38 @@
-import { onConnect } from 'maverick.js/element';
-import { isString, isUndefined, listenEvent } from 'maverick.js/std';
+import { effect, Observable } from 'maverick.js';
+import { isString, isUndefined, listenEvent, useHost } from 'maverick.js/std';
 
+import { connectedHostElement } from '../../utils/host';
 import { getLogColor, saveLogColor } from './colors';
 import { GroupedLog, isGroupedLog } from './create-grouped-log';
 import { type LogLevel, LogLevelColor, LogLevelValue } from './log-level';
 import { ms } from './ms';
 
 export function useHostedLogPrinter() {
-  if (!__DEV__) return;
+  const host = useHost();
+  return useLogPrinter({ $target: connectedHostElement(host) });
+}
+
+export function useLogPrinter({ $target }: UseLogPrinterProps): UseLogPrinter {
+  // No log printing in production.
+  if (!__DEV__) {
+    return {
+      get logLevel(): LogLevel {
+        return 'silent';
+      },
+      set logLevel(_: LogLevel) {
+        // no-op
+      },
+    };
+  }
 
   let logLevel: LogLevel = 'warn',
     lastLogTimestamp: number | undefined = undefined;
 
-  const calcLastLogTimeDiff = () => {
-    const time = performance.now();
-    const diff = time - (lastLogTimestamp ?? (lastLogTimestamp = performance.now()));
-    lastLogTimestamp = time;
-    return ms(diff);
-  };
+  effect(() => {
+    const target = $target();
+    if (!target) return;
 
-  const printTimeDiff = () => {
-    labelledPrint('Time since last log', calcLastLogTimeDiff());
-  };
-
-  onConnect((host) => {
-    listenEvent(host, 'vds-log', (event) => {
+    listenEvent(target, 'vds-log', (event) => {
       event.stopPropagation();
 
       const eventTargetName = (
@@ -71,7 +79,41 @@ export function useHostedLogPrinter() {
       lastLogTimestamp = undefined;
     };
   });
+
+  const calcLastLogTimeDiff = () => {
+    const time = performance.now();
+    const diff = time - (lastLogTimestamp ?? (lastLogTimestamp = performance.now()));
+    lastLogTimestamp = time;
+    return ms(diff);
+  };
+
+  const printTimeDiff = () => {
+    labelledPrint('Time since last log', calcLastLogTimeDiff());
+  };
+
+  return {
+    get logLevel() {
+      return logLevel;
+    },
+    set logLevel(level) {
+      logLevel = level;
+    },
+  };
 }
+
+export type UseLogPrinterProps = {
+  /**
+   * The target element on which to listen for `vds-log` events on.
+   */
+  $target: Observable<HTMLElement | null>;
+};
+
+export type UseLogPrinter = {
+  /**
+   * The current log level.
+   */
+  logLevel: LogLevel;
+};
 
 function print(level: LogLevel, ...data: any[]) {
   console[level as 'info'](...data);

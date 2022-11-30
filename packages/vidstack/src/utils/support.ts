@@ -4,7 +4,7 @@ export const UA = __SERVER__ ? '' : window.navigator?.userAgent.toLowerCase();
 export const IS_IOS = /iphone|ipad|ipod|ios|CriOS|FxiOS/.test(UA);
 export const IS_IPHONE = /(iPhone|iPod)/gi.test(window.navigator?.platform);
 export const IS_CHROME = !__SERVER__ && !!window.chrome;
-export const IS_SAFARI = !__SERVER__ && (window.safari || IS_IOS || /(apple|safari)/.test(UA));
+export const IS_SAFARI = !__SERVER__ && (window.safari || /(apple|safari)/.test(UA));
 
 /**
  * Returns the current version of Safari. Defaults to `0` if unknown.

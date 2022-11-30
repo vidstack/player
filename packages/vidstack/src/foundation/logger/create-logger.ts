@@ -65,7 +65,7 @@ export function createLogger(): Logger {
 }
 
 export function useHostedLogger() {
-  if (!__DEV__ || __SERVER__) return;
+  if (!__DEV__) return;
 
   const host = useHost(),
     $el = connectedHostElement(host),

@@ -16,8 +16,8 @@ export function usePageVisibility(): UsePageVisibility {
     $state.set(determinePageState());
     $visibility.set(document.visibilityState);
 
-    for (const event of PAGE_EVENTS) {
-      listenEvent(window, event, handlePageEvent);
+    for (const eventType of PAGE_EVENTS) {
+      listenEvent(window, eventType, handlePageEvent);
     }
 
     /**
@@ -55,10 +55,10 @@ export function usePageVisibility(): UsePageVisibility {
   }
 
   return {
-    get $state() {
+    get state() {
       return $state();
     },
-    get $visibility() {
+    get visibility() {
       return $visibility();
     },
   };
@@ -84,9 +84,10 @@ export type UsePageVisibility = {
    * - **passive:** A page is in the passive state if it is visible and does not have input focus.
    * - **hidden:** A page is in the hidden state if it is not visible.
    *
+   * @observable
    * @see https://developers.google.com/web/updates/2018/07/page-lifecycle-api#states
    */
-  readonly $state: PageState;
+  readonly state: PageState;
   /**
    * The current document visibility state.
    *
@@ -96,7 +97,8 @@ export type UsePageVisibility = {
    * document is either a background tab or part of a minimized window, or the OS screen lock is
    * active.
    *
+   * @observable
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState
    */
-  readonly $visibility: DocumentVisibility;
+  readonly visibility: DocumentVisibility;
 };

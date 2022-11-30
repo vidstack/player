@@ -5,10 +5,10 @@ import { listenEvent, useHost } from 'maverick.js/std';
 
 import { dispatchFullscreenChange, dispatchFullscreenError } from './dispatch';
 
-export function useFullscreen(options?: UseFullscreenOptions): UseFullscreen {
+export function useFullscreen(props?: UseFullscreenProps): UseFullscreen {
   const host = useHost(),
-    $fullscreen = observable(false),
-    exit = () => exitFullscreen(host.el, options);
+    $active = observable(false),
+    exit = () => exitFullscreen(host.el, props);
 
   // Tracks whether we're the active fullscreen event listener. Fullscreen events can only be
   // listened to globally on the document so we need to know if they relate to the current host
@@ -18,9 +18,9 @@ export function useFullscreen(options?: UseFullscreenOptions): UseFullscreen {
   onConnect(() => {
     listenEvent(fscreen as any, 'fullscreenchange', async (event) => {
       const current = isFullscreen(host.el!);
-      if (current === $fullscreen()) return;
+      if (current === $active()) return;
       if (!current) listening = false;
-      $fullscreen.set(current);
+      $active.set(current);
       dispatchFullscreenChange(host.el, current, event);
     });
 
@@ -36,15 +36,16 @@ export function useFullscreen(options?: UseFullscreenOptions): UseFullscreen {
   });
 
   return {
-    get $fullscreen() {
-      if (isFullscreen(host.el)) $fullscreen.set(true);
-      return $fullscreen();
+    get active() {
+      return $active();
     },
-    canFullscreen,
+    get supported() {
+      return canFullscreen();
+    },
     async requestFullscreen() {
       try {
         listening = true;
-        return await requestFullscreen(host.el, options);
+        return await requestFullscreen(host.el, props);
       } catch (error) {
         listening = false;
         throw error;
@@ -73,7 +74,7 @@ function isFullscreen(host?: HTMLElement | null): boolean {
 
 async function requestFullscreen(
   host: HTMLElement | null,
-  options?: UseFullscreenOptions,
+  options?: UseFullscreenProps,
 ): Promise<void> {
   if (!host || isFullscreen(host)) return;
   assertFullscreenAPI();
@@ -83,7 +84,7 @@ async function requestFullscreen(
 
 async function exitFullscreen(
   host: HTMLElement | null,
-  options?: UseFullscreenOptions,
+  options?: UseFullscreenProps,
 ): Promise<void> {
   if (!host || !isFullscreen(host)) return;
   assertFullscreenAPI();
@@ -102,14 +103,19 @@ function assertFullscreenAPI() {
 
 export type UseFullscreen = {
   /**
-   * Whether the host element is in fullscreen mode. This is a reactive observable call.
+   * Whether the host element is in fullscreen mode.
+   *
+   * @observable
    */
-  readonly $fullscreen: boolean;
+  readonly active: boolean;
   /**
-   * Whether fullscreen mode can be requested - does not imply that the request will be successful,
-   * only that it can be made.
+   * Whether the native browser fullscreen API is available, or the current provider can
+   * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
+   * only that it can be attempted.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API}
    */
-  canFullscreen(): boolean;
+  readonly supported: boolean;
   /**
    * Request to display the current host element in fullscreen.
    *
@@ -126,7 +132,7 @@ export type UseFullscreen = {
   exitFullscreen(): Promise<void>;
 };
 
-export type UseFullscreenOptions = {
+export type UseFullscreenProps = {
   onBeforeRequest?: () => Promise<void>;
   onBeforeExit?: () => Promise<void>;
 };
