@@ -42,7 +42,7 @@
           />
         </svg>
 
-        <span>Vidstack Player 1.0 will launch November</span>
+        <span>Vidstack Player 1.0 Coming Soon</span>
       </div>
 
       <h1
