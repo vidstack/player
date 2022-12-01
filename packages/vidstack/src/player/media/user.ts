@@ -73,7 +73,7 @@ export function useMediaUser(): UseMediaUser {
   };
 }
 
-export type UseMediaUser = {
+export interface UseMediaUser {
   idle: {
     /**
      * Whether the media user is currently idle.
@@ -95,7 +95,7 @@ export type UseMediaUser = {
      */
     delay: number;
   };
-};
+}
 
 function dispatchIdleChange(target: EventTarget | null, isIdle: boolean, triggerEvent?: Event) {
   dispatchEvent(target, 'vds-user-idle-change', { detail: isIdle, triggerEvent });

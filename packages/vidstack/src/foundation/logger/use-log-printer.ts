@@ -101,19 +101,19 @@ export function useLogPrinter({ $target }: UseLogPrinterProps): UseLogPrinter {
   };
 }
 
-export type UseLogPrinterProps = {
+export interface UseLogPrinterProps {
   /**
    * The target element on which to listen for `vds-log` events on.
    */
   $target: Observable<HTMLElement | null>;
-};
+}
 
-export type UseLogPrinter = {
+export interface UseLogPrinter {
   /**
    * The current log level.
    */
   logLevel: LogLevel;
-};
+}
 
 function print(level: LogLevel, ...data: any[]) {
   console[level as 'info'](...data);

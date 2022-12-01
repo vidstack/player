@@ -63,7 +63,7 @@ export function useMediaController(props: {
   };
 }
 
-export type UseMediaController = {
+export interface UseMediaController {
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
    * and `debug`.
@@ -92,4 +92,4 @@ export type UseMediaController = {
    * Attempts to display this element inline by exiting fullscreen.
    */
   exitFullscreen(): Promise<void>;
-};
+}

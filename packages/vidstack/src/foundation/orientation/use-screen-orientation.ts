@@ -79,11 +79,11 @@ function getScreenOrientation() {
   return __SERVER__ ? undefined : (window.screen?.orientation?.type as ScreenOrientationType);
 }
 
-export type UseScreenOrientationProps = {
+export interface UseScreenOrientationProps {
   $target: Observable<Element | null>;
-};
+}
 
-export type UseScreenOrientation = {
+export interface UseScreenOrientation {
   /**
    * The current screen orientation. It will return `undefined` if the Screen Orientation API
    * is not available.
@@ -124,4 +124,4 @@ export type UseScreenOrientation = {
    * @see {@link https://w3c.github.io/screen-orientation}
    */
   unlock(): Promise<void>;
-};
+}

@@ -1,6 +1,6 @@
 import type { MediaErrorDetail, MediaType, ViewType } from './types';
 
-export type MediaState = {
+export interface MediaState {
   /**
    * Whether playback should automatically begin as soon as enough media is available to do so
    * without interruption.
@@ -254,4 +254,4 @@ export type MediaState = {
    * @defaultValue false
    */
   waiting: boolean;
-};
+}

@@ -9,7 +9,6 @@ import {
 } from 'maverick.js';
 import { onConnect, onDestroy } from 'maverick.js/element';
 import { dispatchEvent, useHost } from 'maverick.js/std';
-import type { Simplify } from 'type-fest';
 
 import type { useFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
 import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
@@ -135,16 +134,16 @@ export function useMediaProvider(props: UseMediaProviderProps): UseMediaProvider
   };
 }
 
-export type UseMediaProviderProps = {
+export interface UseMediaProviderProps {
   $provider: MediaProviderProps;
   adapter: MediaProviderAdapter;
   useFullscreen: typeof useFullscreen;
   onDefaultSlotChange: (element: HTMLElement) => void;
-};
+}
 
-export type UseMediaProvider = Simplify<
-  Omit<MediaProviderMembers, keyof MediaProviderProps> & MediaProviderAdapter
->;
+export interface UseMediaProvider
+  extends Omit<MediaProviderMembers, keyof MediaProviderProps>,
+    MediaProviderAdapter {}
 
 function useLogging($provider: MediaProviderProps) {
   if (!__DEV__) return;

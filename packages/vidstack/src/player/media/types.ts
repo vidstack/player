@@ -28,8 +28,8 @@ export type MediaType = 'unknown' | 'audio' | 'video' | 'live-video';
  */
 export type MediaErrorCode = 1 | 2 | 3 | 4;
 
-export type MediaErrorDetail = {
+export interface MediaErrorDetail {
   message: string;
   code: MediaErrorCode;
   mediaError?: MediaError;
-};
+}

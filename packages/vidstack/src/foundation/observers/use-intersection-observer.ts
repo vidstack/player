@@ -58,7 +58,7 @@ export function useIntersectionObserver(
   };
 }
 
-export type UseIntersectionObserver = {
+export interface UseIntersectionObserver {
   /**
    * Whether the current host element is intersecting with configured viewport.
    *
@@ -69,9 +69,9 @@ export type UseIntersectionObserver = {
    * Disconnect any active intersection observers.
    */
   disconnect(): void;
-};
+}
 
-export type UseIntersectionObserverProps = {
+export interface UseIntersectionObserverProps {
   /**
    * The element to observe. No observer is created if a falsy value is set.
    */
@@ -110,4 +110,4 @@ export type UseIntersectionObserverProps = {
    * Invoked when an intersection event occurs.
    */
   callback?: IntersectionObserverCallback;
-};
+}

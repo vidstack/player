@@ -24,13 +24,7 @@ export function padNumberWithZeroes(num: number, expectedLength: number): string
   return str;
 }
 
-export enum TimeUnit {
-  Hours = 'hours',
-  Minutes = 'minutes',
-  Seconds = 'seconds',
-  /** Represents a fraction of a second in decimal form. */
-  Fraction = 'fraction',
-}
+export type TimeUnit = 'hours' | 'minutes' | 'seconds' | 'fraction';
 
 export type ParsedTime = {
   [P in TimeUnit]: number;
@@ -47,12 +41,11 @@ export function parseTime(duration: number): ParsedTime {
   const minutes = Math.trunc((duration % 3600) / 60);
   const seconds = Math.trunc(duration % 60);
   const fraction = Number((duration - Math.trunc(duration)).toPrecision(3));
-
   return {
-    [TimeUnit.Hours]: hours,
-    [TimeUnit.Minutes]: minutes,
-    [TimeUnit.Seconds]: seconds,
-    [TimeUnit.Fraction]: fraction,
+    hours,
+    minutes,
+    seconds,
+    fraction,
   };
 }
 

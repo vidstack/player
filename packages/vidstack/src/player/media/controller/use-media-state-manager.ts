@@ -24,7 +24,6 @@ import { softResetMediaState, useInternalMediaState } from '../store';
 import type { MediaRequestQueueRecord, UseMediaRequestManager } from './use-media-request-manager';
 
 export function useMediaStateManager(requestManager?: UseMediaRequestManager) {
-  /** Queue actions to be invoked after the provider has connected to the media controller. */
   const host = useHost(),
     $connectedHost = connectedHostElement(host),
     $media = useInternalMediaState()!,

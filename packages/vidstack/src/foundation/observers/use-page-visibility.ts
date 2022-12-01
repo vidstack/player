@@ -75,7 +75,7 @@ export type PageState = 'active' | 'passive' | 'hidden';
 
 export type DocumentVisibility = 'visible' | 'hidden';
 
-export type UsePageVisibility = {
+export interface UsePageVisibility {
   /**
    * The current page state. Important to note we only account for a subset of page states, as
    * the rest aren't valuable to the player at the moment.
@@ -101,4 +101,4 @@ export type UsePageVisibility = {
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState
    */
   readonly visibility: DocumentVisibility;
-};
+}

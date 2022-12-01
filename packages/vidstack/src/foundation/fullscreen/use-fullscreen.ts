@@ -101,7 +101,7 @@ function assertFullscreenAPI() {
   );
 }
 
-export type UseFullscreen = {
+export interface UseFullscreen {
   /**
    * Whether the host element is in fullscreen mode.
    *
@@ -130,9 +130,9 @@ export type UseFullscreen = {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Document/exitFullscreen}
    */
   exitFullscreen(): Promise<void>;
-};
+}
 
-export type UseFullscreenProps = {
+export interface UseFullscreenProps {
   onBeforeRequest?: () => Promise<void>;
   onBeforeExit?: () => Promise<void>;
-};
+}

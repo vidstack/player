@@ -6,7 +6,7 @@ import { createGroupedLog, GROUPED_LOG, type GroupedLog } from './create-grouped
 import { dispatchLogEvent } from './dispatch';
 import type { LogLevel } from './log-level';
 
-export type Logger = {
+export interface Logger {
   error(...data: any[]): boolean;
   warn(...data: any[]): boolean;
   info(...data: any[]): boolean;
@@ -16,9 +16,9 @@ export type Logger = {
   infoGroup(title: string): GroupedLogger;
   debugGroup(title: string): GroupedLogger;
   setTarget(newTarget: EventTarget | null): void;
-};
+}
 
-export type GroupedLogger = {
+export interface GroupedLogger {
   readonly [GROUPED_LOG]?: true;
   readonly title: string;
   readonly logs: ({ label?: string; data: any[] } | GroupedLog)[];
@@ -27,7 +27,7 @@ export type GroupedLogger = {
   groupStart(title: string): GroupedLogger;
   groupEnd(): GroupedLogger;
   dispatch(): boolean;
-};
+}
 
 /**
  * Create a simple facade that simplifies dispatching log events from a given `host` target.

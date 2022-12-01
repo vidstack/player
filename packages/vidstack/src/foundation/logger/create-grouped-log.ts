@@ -2,7 +2,7 @@ import { isObject } from 'maverick.js/std';
 
 export const GROUPED_LOG = Symbol('GROUPED_LOG');
 
-export type GroupedLog = {
+export interface GroupedLog {
   readonly [GROUPED_LOG]?: true;
   readonly title: string;
   readonly logs: ({ label?: string; data: any[] } | GroupedLog)[];
@@ -10,7 +10,7 @@ export type GroupedLog = {
   labelledLog(label: string, ...data: any[]): GroupedLog;
   groupStart(title: string): GroupedLog;
   groupEnd(): GroupedLog;
-};
+}
 
 export function isGroupedLog(data: unknown): data is GroupedLog {
   return isObject(data) && data[GROUPED_LOG];

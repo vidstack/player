@@ -45,7 +45,7 @@ export function useMediaEventsLogger() {
 
   onConnect((host) => {
     for (const eventType of mediaEvents!) {
-      listenEvent(host, eventType, (event) => {
+      listenEvent(host, eventType as string, (event) => {
         logger
           ?.infoGroup(`📡 dispatching \`${eventType}\``)
           .labelledLog('Media', { ...$media })

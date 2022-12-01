@@ -1,14 +1,14 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 declare global {
-  interface MaverickOnAttributes extends FullscreenEvents {}
+  interface HTMLElementEventMap extends FullscreenEvents {}
 }
 
-export type FullscreenEvents = {
+export interface FullscreenEvents {
   'vds-fullscreen-change': FullscreenChangeEvent;
   'vds-fullscreen-error': FullscreenErrorEvent;
   'vds-fullscreen-support-change': FullscreenSupportChange;
-};
+}
 
 /**
  * Fired when an element enters/exits fullscreen. The event detail is a `boolean` indicating
@@ -18,7 +18,7 @@ export type FullscreenEvents = {
  * @bubbles
  * @composed
  */
-export type FullscreenChangeEvent = DOMEvent<boolean>;
+export interface FullscreenChangeEvent extends DOMEvent<boolean> {}
 
 /**
  * Fired when an error occurs either entering or exiting fullscreen. This will generally occur
@@ -28,7 +28,7 @@ export type FullscreenChangeEvent = DOMEvent<boolean>;
  * @bubbles
  * @composed
  */
-export type FullscreenErrorEvent = DOMEvent<unknown>;
+export interface FullscreenErrorEvent extends DOMEvent<unknown> {}
 
 /**
  * Fired when fullscreen support has changed. To be clear, support does not guarantee the
@@ -38,4 +38,4 @@ export type FullscreenErrorEvent = DOMEvent<unknown>;
  *
  * @event
  */
-export type FullscreenSupportChange = DOMEvent<boolean>;
+export interface FullscreenSupportChange extends DOMEvent<boolean> {}

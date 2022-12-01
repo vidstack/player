@@ -3,13 +3,13 @@ import type { DOMEvent } from 'maverick.js/std';
 import type { ScreenOrientationLockType, ScreenOrientationType } from './screen-orientation';
 
 declare global {
-  interface MaverickOnAttributes extends ScreenOrientationEvents {}
+  interface HTMLElementEventMap extends ScreenOrientationEvents {}
 }
 
-export type ScreenOrientationEvents = {
+export interface ScreenOrientationEvents {
   'vds-orientation-change': ScreenOrientationChangeEvent;
   'vds-orientation-lock-change': ScreenOrientationLockChangeEvent;
-};
+}
 
 /**
  * Fired when the current screen orientation changes.
@@ -18,7 +18,7 @@ export type ScreenOrientationEvents = {
  * @bubbles
  * @composed
  */
-export type ScreenOrientationChangeEvent = DOMEvent<ScreenOrientationType>;
+export interface ScreenOrientationChangeEvent extends DOMEvent<ScreenOrientationType> {}
 
 /**
  * Fired when the current screen orientation lock changes.
@@ -27,4 +27,4 @@ export type ScreenOrientationChangeEvent = DOMEvent<ScreenOrientationType>;
  * @bubbles
  * @composed
  */
-export type ScreenOrientationLockChangeEvent = DOMEvent<ScreenOrientationLockType>;
+export interface ScreenOrientationLockChangeEvent extends DOMEvent<ScreenOrientationLockType> {}

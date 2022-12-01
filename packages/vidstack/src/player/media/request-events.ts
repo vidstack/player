@@ -1,10 +1,11 @@
+import type { ElementEventRecord } from 'maverick.js/element';
 import type { DOMEvent } from 'maverick.js/std';
 
 declare global {
-  interface MaverickEventRecord extends MediaRequestEvents {}
+  interface HTMLElementEventMap extends MediaRequestEvents {}
 }
 
-export type MediaRequestEvents = {
+export interface MediaRequestEvents extends ElementEventRecord {
   'vds-start-loading': StartLoadingRequestEvent;
   'vds-mute-request': MuteRequestEvent;
   'vds-unmute-request': UnmuteRequestEvent;
@@ -20,7 +21,7 @@ export type MediaRequestEvents = {
   'vds-show-poster-request': ShowPosterRequestEvent;
   'vds-hide-poster-request': HidePosterRequestEvent;
   'vds-loop-request': LoopRequestEvent;
-};
+}
 
 /**
  * Fired when requesting media to begin loading. This will only take effect if the `loading`
@@ -30,7 +31,7 @@ export type MediaRequestEvents = {
  * @bubbles
  * @composed
  */
-export type StartLoadingRequestEvent = DOMEvent<void>;
+export interface StartLoadingRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the media to be muted.
@@ -39,7 +40,7 @@ export type StartLoadingRequestEvent = DOMEvent<void>;
  * @bubbles
  * @composed
  */
-export type MuteRequestEvent = DOMEvent<void>;
+export interface MuteRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the media to be unmuted.
@@ -48,7 +49,7 @@ export type MuteRequestEvent = DOMEvent<void>;
  * @bubbles
  * @composed
  */
-export type UnmuteRequestEvent = DOMEvent<void>;
+export interface UnmuteRequestEvent extends DOMEvent<void> {}
 
 /**
  * Whether to request fullscreen on the media (i.e., `<vds-media>`) or provider element
@@ -66,7 +67,7 @@ export type MediaFullscreenRequestTarget = 'media' | 'provider';
  * @bubbles
  * @composed
  */
-export type EnterFullscreenRequestEvent = DOMEvent<MediaFullscreenRequestTarget>;
+export interface EnterFullscreenRequestEvent extends DOMEvent<MediaFullscreenRequestTarget> {}
 
 /**
  * Fired when requesting media to exit fullscreen. The event `detail` can specify the fullscreen
@@ -76,7 +77,7 @@ export type EnterFullscreenRequestEvent = DOMEvent<MediaFullscreenRequestTarget>
  * @bubbles
  * @composed
  */
-export type ExitFullscreenRequestEvent = DOMEvent<MediaFullscreenRequestTarget>;
+export interface ExitFullscreenRequestEvent extends DOMEvent<MediaFullscreenRequestTarget> {}
 
 /**
  * Fired when requesting media playback to begin/resume.
@@ -85,7 +86,7 @@ export type ExitFullscreenRequestEvent = DOMEvent<MediaFullscreenRequestTarget>;
  * @bubbles
  * @composed
  */
-export type PlayRequestEvent = DOMEvent<void>;
+export interface PlayRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting media playback to temporarily stop.
@@ -94,7 +95,7 @@ export type PlayRequestEvent = DOMEvent<void>;
  * @bubbles
  * @composed
  */
-export type PauseRequestEvent = DOMEvent<void>;
+export interface PauseRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting a time change. In other words, moving the playhead to a new position.
@@ -103,7 +104,7 @@ export type PauseRequestEvent = DOMEvent<void>;
  * @bubbles
  * @composed
  */
-export type SeekRequestEvent = DOMEvent<number>;
+export interface SeekRequestEvent extends DOMEvent<number> {}
 
 /**
  * Fired when seeking/scrubbing to a new playback position.
@@ -112,7 +113,7 @@ export type SeekRequestEvent = DOMEvent<number>;
  * @bubbles
  * @composed
  */
-export type SeekingRequestEvent = DOMEvent<number>;
+export interface SeekingRequestEvent extends DOMEvent<number> {}
 
 /**
  * Fired when requesting the media volume to be set to a new level.
@@ -121,7 +122,7 @@ export type SeekingRequestEvent = DOMEvent<number>;
  * @bubbles
  * @composed
  */
-export type VolumeChangeRequestEvent = DOMEvent<number>;
+export interface VolumeChangeRequestEvent extends DOMEvent<number> {}
 
 /**
  * Fired when user idle state tracking may resume. This is typically called after requesting
@@ -131,7 +132,7 @@ export type VolumeChangeRequestEvent = DOMEvent<number>;
  * @bubbles
  * @composed
  */
-export type ResumeUserIdleRequestEvent = DOMEvent<void>;
+export interface ResumeUserIdleRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when user idle state tracking should pause. This is typically used when a control
@@ -142,7 +143,7 @@ export type ResumeUserIdleRequestEvent = DOMEvent<void>;
  * @bubbles
  * @composed
  */
-export type PauseUserIdleRequestEvent = DOMEvent<void>;
+export interface PauseUserIdleRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the poster _should_ be rendered by the media provider element. This
@@ -152,7 +153,7 @@ export type PauseUserIdleRequestEvent = DOMEvent<void>;
  * @bubbles
  * @composed
  */
-export type ShowPosterRequestEvent = DOMEvent<void>;
+export interface ShowPosterRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the poster should _not_ be rendered by the media provider element. This
@@ -162,7 +163,7 @@ export type ShowPosterRequestEvent = DOMEvent<void>;
  * @bubbles
  * @composed
  */
-export type HidePosterRequestEvent = DOMEvent<void>;
+export interface HidePosterRequestEvent extends DOMEvent<void> {}
 
 /**
  * Internal event that is fired by a media provider when requesting media playback to restart after
@@ -172,4 +173,4 @@ export type HidePosterRequestEvent = DOMEvent<void>;
  * @bubbles
  * @composed
  */
-export type LoopRequestEvent = DOMEvent<void>;
+export interface LoopRequestEvent extends DOMEvent<void> {}

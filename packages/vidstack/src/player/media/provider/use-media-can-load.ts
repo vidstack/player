@@ -8,7 +8,10 @@ import type { MediaProviderProps } from './types';
 /**
  * This hook is responsible for initializing and updating the media `canPlay` state.
  */
-export function useMediaCanLoad(host: ElementInstanceHost, $provider: MediaProviderProps) {
+export function useMediaCanLoad(
+  host: ElementInstanceHost<any, any>,
+  $provider: MediaProviderProps,
+) {
   const $canLoad = observable(false);
 
   onConnect(() => {

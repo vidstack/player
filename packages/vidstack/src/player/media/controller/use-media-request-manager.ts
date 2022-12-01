@@ -199,14 +199,14 @@ export function useMediaRequestManager({
   };
 }
 
-export type UseMediaRequestManager = {
+export interface UseMediaRequestManagerProps {
+  user: UseMediaUser;
+  fullscreen: UseFullscreen;
+}
+
+export interface UseMediaRequestManager {
   $isSeekingRequest: ObservableSubject<boolean>;
   $isLooping: ObservableSubject<boolean>;
   $isReplay: ObservableSubject<boolean>;
   requestQueue: MediaRequestQueue;
-};
-
-export type UseMediaRequestManagerProps = {
-  user: UseMediaUser;
-  fullscreen: UseFullscreen;
-};
+}
