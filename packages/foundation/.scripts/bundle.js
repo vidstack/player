@@ -3,7 +3,7 @@ import { commonOptions } from '../../../.scripts/common-build.js';
 
 async function main() {
   const entry = ['src/index.ts'];
-  const external = [/^lit/];
+  const external = [/^lit/, /just-/];
   const debug = process.argv.includes('--debug');
 
   /** @param {Partial<Parameters<typeof commonOptions>[0]>} args */
