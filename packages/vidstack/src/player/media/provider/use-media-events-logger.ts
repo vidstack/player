@@ -1,9 +1,11 @@
+import type { ReadSignal } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
 import { listenEvent } from 'maverick.js/std';
 
-import { useHostedLogger } from '../../../foundation/logger/create-logger';
+import { useLogger } from '../../../foundation/logger/use-logger';
 import type { MediaEvents } from '../events';
 import { useMediaState } from '../store';
+import type { MediaProviderElement } from './types';
 
 const mediaEvents: (keyof MediaEvents)[] | undefined = __DEV__
   ? [
@@ -37,15 +39,16 @@ const mediaEvents: (keyof MediaEvents)[] | undefined = __DEV__
     ]
   : undefined;
 
-export function useMediaEventsLogger() {
+export function useMediaEventsLogger($target: ReadSignal<MediaProviderElement | null>) {
   if (!__DEV__) return;
 
   const $media = useMediaState(),
-    logger = useHostedLogger();
+    logger = useLogger($target);
 
-  onConnect((host) => {
+  onConnect(() => {
+    const target = $target()!;
     for (const eventType of mediaEvents!) {
-      listenEvent(host, eventType as string, (event) => {
+      listenEvent(target, eventType, (event) => {
         logger
           ?.infoGroup(`📡 dispatching \`${eventType}\``)
           .labelledLog('Media', { ...$media })

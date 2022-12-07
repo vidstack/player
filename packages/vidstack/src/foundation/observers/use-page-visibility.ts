@@ -1,4 +1,4 @@
-import { observable } from 'maverick.js';
+import { signal } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
 import { listenEvent } from 'maverick.js/std';
 
@@ -7,8 +7,8 @@ import { IS_SAFARI } from '../../utils/support';
 const PAGE_EVENTS = ['focus', 'blur', 'visibilitychange', 'pageshow', 'pagehide'] as const;
 
 export function usePageVisibility(): UsePageVisibility {
-  const $state = observable(determinePageState()),
-    $visibility = observable<DocumentVisibility>(__SERVER__ ? 'visible' : document.visibilityState);
+  const $state = signal(determinePageState()),
+    $visibility = signal<DocumentVisibility>(__SERVER__ ? 'visible' : document.visibilityState);
 
   let safariBeforeUnloadTimeout: any;
 
@@ -17,6 +17,7 @@ export function usePageVisibility(): UsePageVisibility {
     $visibility.set(document.visibilityState);
 
     for (const eventType of PAGE_EVENTS) {
+      // @ts-expect-error - visibilitychange event type missing
       listenEvent(window, eventType, handlePageEvent);
     }
 
@@ -32,6 +33,7 @@ export function usePageVisibility(): UsePageVisibility {
      * @see https://bugs.webkit.org/show_bug.cgi?id=151234
      */
     if (IS_SAFARI) {
+      // @ts-expect-error - beforeunload event type missing
       listenEvent(window, 'beforeunload', (event) => {
         safariBeforeUnloadTimeout = setTimeout(() => {
           if (!(event.defaultPrevented || (event.returnValue as any).length > 0)) {
@@ -84,7 +86,7 @@ export interface UsePageVisibility {
    * - **passive:** A page is in the passive state if it is visible and does not have input focus.
    * - **hidden:** A page is in the hidden state if it is not visible.
    *
-   * @observable
+   * @signal
    * @see https://developers.google.com/web/updates/2018/07/page-lifecycle-api#states
    */
   readonly state: PageState;
@@ -97,7 +99,7 @@ export interface UsePageVisibility {
    * document is either a background tab or part of a minimized window, or the OS screen lock is
    * active.
    *
-   * @observable
+   * @signal
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilityState
    */
   readonly visibility: DocumentVisibility;

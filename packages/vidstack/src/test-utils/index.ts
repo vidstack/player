@@ -1,18 +1,17 @@
 import { listenEvent } from 'maverick.js/std';
 
-export async function waitForEvent<EventType extends keyof HTMLElementEventMap>(
+export async function waitForEvent<Event>(
   target: EventTarget,
-  type: EventType,
+  type: string,
   options?: (EventListenerOptions | AddEventListenerOptions) & { timeout?: number },
-): Promise<HTMLElementEventMap[EventType]> {
+): Promise<Event> {
   return new Promise((resolve, reject) => {
     const timerId = window.setTimeout(() => {
       reject(`Timed out waiting for event \`${type}\`.`);
     }, options?.timeout ?? 1000);
-
     listenEvent(
       target,
-      type as string,
+      type as any,
       (event: any) => {
         window.clearTimeout(timerId);
         resolve(event);

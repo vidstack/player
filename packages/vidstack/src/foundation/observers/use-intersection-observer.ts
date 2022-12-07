@@ -1,23 +1,11 @@
-import { effect, Observable, observable } from 'maverick.js';
-import { useHost } from 'maverick.js/std';
-
-import { connectedHostElement } from '../../utils/host';
-
-export function useHostedIntersectionObserver(
-  props?: Omit<UseIntersectionObserverProps, '$target'>,
-): UseIntersectionObserver {
-  const host = useHost();
-  return useIntersectionObserver({
-    $target: connectedHostElement(host),
-    ...props,
-  });
-}
+import { effect, ReadSignal, signal } from 'maverick.js';
 
 export function useIntersectionObserver(
-  props: UseIntersectionObserverProps,
+  $target: ReadSignal<Element | null>,
+  props: UseIntersectionObserverProps = {},
 ): UseIntersectionObserver {
-  const $intersecting = observable(false),
-    { $target, skipInitial, callback, ...observerInit } = props;
+  const $intersecting = signal(false),
+    { skipInitial, callback, ...observerInit } = props;
 
   let disconnect: (() => void) | undefined;
 
@@ -62,7 +50,7 @@ export interface UseIntersectionObserver {
   /**
    * Whether the current host element is intersecting with configured viewport.
    *
-   * @observable
+   * @signal
    */
   readonly intersecting: boolean;
   /**
@@ -72,10 +60,6 @@ export interface UseIntersectionObserver {
 }
 
 export interface UseIntersectionObserverProps {
-  /**
-   * The element to observe. No observer is created if a falsy value is set.
-   */
-  $target: Observable<Element | null>;
   /**
    * The element that is used as the viewport for checking visibility of the target. Must be the
    * ancestor of the target. Defaults to the browser viewport if not specified or if `null`.

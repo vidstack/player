@@ -1,10 +1,10 @@
+import type { HTMLCustomElement } from 'maverick.js/element';
 import type { DOMEvent } from 'maverick.js/std';
 
 import type { ScreenOrientationLockType, ScreenOrientationType } from './screen-orientation';
 
-declare global {
-  interface HTMLElementEventMap extends ScreenOrientationEvents {}
-}
+export interface ScreenOrientationEventTarget
+  extends HTMLCustomElement<any, ScreenOrientationEvents> {}
 
 export interface ScreenOrientationEvents {
   'vds-orientation-change': ScreenOrientationChangeEvent;

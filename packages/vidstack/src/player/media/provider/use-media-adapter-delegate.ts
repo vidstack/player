@@ -1,27 +1,28 @@
-import { effect } from 'maverick.js';
+import { effect, ReadSignal } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
 import { listenEvent } from 'maverick.js/std';
 
-import { useHostedLogger } from '../../../foundation/logger/create-logger';
+import { useLogger } from '../../../foundation/logger/use-logger';
 import { RequestQueue } from '../../../foundation/queue/request-queue';
 import { clampNumber } from '../../../utils/number';
-import type { MediaProviderAdapter, MediaProviderProps } from './types';
+import type { MediaProviderAdapter, MediaProviderElement, MediaProviderProps } from './types';
 
 /**
  * This hook is responsible for setting provider props on the adapter. All properties are only
  * set when media is ready for playback to avoid errors and to ensure changes are applied.
  */
 export function useMediaAdapterDelegate(
+  $target: ReadSignal<MediaProviderElement | null>,
   $provider: MediaProviderProps,
   adapter: MediaProviderAdapter,
 ) {
-  const logger = __DEV__ ? useHostedLogger() : undefined,
+  const logger = __DEV__ ? useLogger($target) : undefined,
     /** Queue ensures adapter is only updated if media is ready for playback. */
     canPlayQueue = new RequestQueue();
 
-  onConnect((host) => {
-    listenEvent(host, 'vds-can-play', () => canPlayQueue.start());
-    listenEvent(host, 'vds-current-src-change', () => canPlayQueue.stop());
+  onConnect(() => {
+    listenEvent($target()!, 'vds-can-play', () => canPlayQueue.start());
+    listenEvent($target()!, 'vds-current-src-change', () => canPlayQueue.stop());
   });
 
   effect(() => {

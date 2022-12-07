@@ -1,15 +1,12 @@
-import { effect } from 'maverick.js';
-import { DOMEvent, useHost } from 'maverick.js/std';
+import { effect, ReadSignal } from 'maverick.js';
+import { DOMEvent } from 'maverick.js/std';
 
 import { createLogger, Logger } from '../../foundation/logger/create-logger';
 import { RequestQueue } from '../../foundation/queue/request-queue';
-import { connectedHostElement } from '../../utils/host';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request-events';
 
-export function useHostedMediaRemoteControl() {
-  const host = useHost(),
-    $target = connectedHostElement(host),
-    logger = __DEV__ ? createLogger() : undefined,
+export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
+  const logger = __DEV__ ? createLogger() : undefined,
     remote = new MediaRemoteControl(logger);
 
   effect(() => {

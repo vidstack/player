@@ -1,14 +1,17 @@
 import fscreen from 'fscreen';
-import { observable } from 'maverick.js';
+import { ReadSignal, signal } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
-import { listenEvent, useHost } from 'maverick.js/std';
+import { listenEvent } from 'maverick.js/std';
 
 import { dispatchFullscreenChange, dispatchFullscreenError } from './dispatch';
+import type { FullscreenEventTarget } from './events';
 
-export function useFullscreen(props?: UseFullscreenProps): UseFullscreen {
-  const host = useHost(),
-    $active = observable(false),
-    exit = () => exitFullscreen(host.el, props);
+export function useFullscreen(
+  $target: ReadSignal<FullscreenEventTarget | null>,
+  props: UseFullscreenProps,
+): UseFullscreen {
+  const $active = signal(false),
+    exit = () => exitFullscreen($target(), props);
 
   // Tracks whether we're the active fullscreen event listener. Fullscreen events can only be
   // listened to globally on the document so we need to know if they relate to the current host
@@ -17,16 +20,16 @@ export function useFullscreen(props?: UseFullscreenProps): UseFullscreen {
 
   onConnect(() => {
     listenEvent(fscreen as any, 'fullscreenchange', async (event) => {
-      const current = isFullscreen(host.el!);
+      const current = isFullscreen($target());
       if (current === $active()) return;
       if (!current) listening = false;
       $active.set(current);
-      dispatchFullscreenChange(host.el, current, event);
+      dispatchFullscreenChange($target(), current, event);
     });
 
     listenEvent(fscreen as any, 'fullscreenerror', (event) => {
       if (!listening) return;
-      dispatchFullscreenError(host.el, event);
+      dispatchFullscreenError($target(), event);
       listening = false;
     });
 
@@ -45,7 +48,7 @@ export function useFullscreen(props?: UseFullscreenProps): UseFullscreen {
     async requestFullscreen() {
       try {
         listening = true;
-        return await requestFullscreen(host.el, props);
+        return await requestFullscreen($target(), props);
       } catch (error) {
         listening = false;
         throw error;
@@ -105,7 +108,7 @@ export interface UseFullscreen {
   /**
    * Whether the host element is in fullscreen mode.
    *
-   * @observable
+   * @signal
    */
   readonly active: boolean;
   /**

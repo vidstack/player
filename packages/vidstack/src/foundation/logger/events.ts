@@ -3,7 +3,7 @@ import type { DOMEvent } from 'maverick.js/std';
 import type { LogLevel } from './log-level';
 
 declare global {
-  interface HTMLElementEventMap extends LoggerEvents {}
+  interface MaverickOnAttributes extends LoggerEvents {}
 }
 
 export interface LoggerEvents {

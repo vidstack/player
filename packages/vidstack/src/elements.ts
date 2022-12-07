@@ -1,4 +1,4 @@
-import { defineCustomElement } from 'maverick.js/element';
+import { registerCustomElement } from 'maverick.js/element';
 
 export type VidstackElement =
   | 'vds-aspect-ratio'
@@ -85,10 +85,10 @@ const ELEMENT_DEFINITION_LOADER = {
 
 async function loadCustomElement(tagName: VidstackElement) {
   const definition = await ELEMENT_DEFINITION_LOADER[tagName]();
-  defineCustomElement(definition);
+  registerCustomElement(definition);
 }
 
 async function loadAllCustomElements() {
   const definitions = (await import('./elements-all')).default;
-  return Promise.all(definitions.map(defineCustomElement));
+  return Promise.all(definitions.map(registerCustomElement));
 }

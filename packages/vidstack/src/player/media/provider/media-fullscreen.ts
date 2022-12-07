@@ -7,7 +7,7 @@ import type { UseScreenOrientation } from '../../../foundation/orientation/use-s
 export function withMediaFullscreenOptions(props: {
   lockType: ScreenOrientationLockType | undefined;
   orientation: UseScreenOrientation;
-}): UseFullscreenProps {
+}): Omit<UseFullscreenProps, '$target'> {
   let orientationLocked = false;
   return {
     async onBeforeRequest() {

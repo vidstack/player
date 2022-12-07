@@ -1,18 +1,18 @@
-import { effect, observable, root } from 'maverick.js';
-import { ElementInstanceHost, onConnect } from 'maverick.js/element';
+import { effect, ReadSignal, root, signal } from 'maverick.js';
+import { onConnect } from 'maverick.js/element';
 import { dispatchEvent, waitAnimationFrame, waitIdlePeriod } from 'maverick.js/std';
 
 import { useIntersectionObserver } from '../../../foundation/observers/use-intersection-observer';
-import type { MediaProviderProps } from './types';
+import type { MediaProviderElement, MediaProviderProps } from './types';
 
 /**
  * This hook is responsible for initializing and updating the media `canPlay` state.
  */
 export function useMediaCanLoad(
-  host: ElementInstanceHost<any, any>,
+  $target: ReadSignal<MediaProviderElement | null>,
   $provider: MediaProviderProps,
 ) {
-  const $canLoad = observable(false);
+  const $canLoad = signal(false);
 
   onConnect(() => {
     if ($provider.load === 'eager') {
@@ -21,7 +21,7 @@ export function useMediaCanLoad(
       waitIdlePeriod(startLoadingMedia);
     } else if ($provider.load === 'visible') {
       root((dispose) => {
-        const io = useIntersectionObserver({ $target: () => host.el });
+        const io = useIntersectionObserver($target);
         effect(() => {
           if (io.intersecting) {
             startLoadingMedia();
@@ -34,7 +34,7 @@ export function useMediaCanLoad(
 
   function startLoadingMedia() {
     $canLoad.set(true);
-    dispatchEvent(host.el, 'vds-can-load');
+    dispatchEvent($target(), 'vds-can-load');
   }
 
   return { $canLoad, startLoadingMedia };

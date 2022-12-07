@@ -1,15 +1,15 @@
-import { effect, observable, ObservableSubject, useContext } from 'maverick.js';
-import { onConnect } from 'maverick.js/element';
+import { effect, ReadSignal, signal, useContext, WriteSignal } from 'maverick.js';
 import { keysOf, listenEvent } from 'maverick.js/std';
 
 import type { UseFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
-import { useHostedLogger } from '../../../foundation/logger/create-logger';
+import { useLogger } from '../../../foundation/logger/use-logger';
 import { Queue } from '../../../foundation/queue/queue';
-import { MediaProvider, SET_CAN_LOAD_POSTER } from '../provider/types';
+import { MediaProviderElement, SET_CAN_LOAD_POSTER } from '../provider/types';
 import { MediaProviderContext } from '../provider/use-media-provider';
 import type * as RE from '../request-events';
 import { useInternalMediaState } from '../store';
 import type { UseMediaUser } from '../user';
+import type { MediaControllerEventTarget } from './events';
 
 export type MediaRequestQueue = Queue<MediaRequestQueueRecord>;
 
@@ -24,19 +24,20 @@ export type MediaRequestQueueRecord = {
   userIdle: RE.ResumeUserIdleRequestEvent | RE.PauseUserIdleRequestEvent;
 };
 
-export function useMediaRequestManager({
-  fullscreen,
-  user,
-}: UseMediaRequestManagerProps): UseMediaRequestManager {
-  const logger = useHostedLogger(),
+export function useMediaRequestManager(
+  $target: ReadSignal<MediaControllerEventTarget | null>,
+  user: UseMediaUser,
+  fullscreen: UseFullscreen,
+): UseMediaRequestManager {
+  const logger = useLogger($target),
     $media = useInternalMediaState(),
-    $isLooping = observable(false),
-    $isReplay = observable(false),
-    $isSeekingRequest = observable(false),
+    $isLooping = signal(false),
+    $isReplay = signal(false),
+    $isSeekingRequest = signal(false),
     $mediaProvider = useContext(MediaProviderContext),
     requestQueue: MediaRequestQueue = new Queue();
 
-  let provider: MediaProvider | null = null;
+  let provider: MediaProviderElement | null = null;
   effect(() => {
     provider = $mediaProvider();
   });
@@ -47,29 +48,31 @@ export function useMediaRequestManager({
     }
   }
 
-  onConnect((host) => {
-    // TODO: can we delay any of these event listeners?
-    const eventHandlers = {
-      'vds-start-loading': onStartLoading,
-      'vds-mute-request': onMuteRequest,
-      'vds-unmute-request': onUnmuteRequest,
-      'vds-play-request': onPlayRequest,
-      'vds-pause-request': onPauseRequest,
-      'vds-seeking-request': onSeekingRequest,
-      'vds-seek-request': onSeekRequest,
-      'vds-volume-change-request': onVolumeChangeRequest,
-      'vds-enter-fullscreen-request': onEnterFullscreenRequest,
-      'vds-exit-fullscreen-request': onExitFullscreenRequest,
-      'vds-resume-user-idle-request': onResumeIdlingRequest,
-      'vds-pause-user-idle-request': onPauseIdlingRequest,
-      'vds-show-poster-request': onShowPosterRequest,
-      'vds-hide-poster-request': onHidePosterRequest,
-      'vds-loop-request': onLoopRequest,
-    };
+  // TODO: can we delay any of these event listeners?
+  const eventHandlers = {
+    'vds-start-loading': onStartLoading,
+    'vds-mute-request': onMuteRequest,
+    'vds-unmute-request': onUnmuteRequest,
+    'vds-play-request': onPlayRequest,
+    'vds-pause-request': onPauseRequest,
+    'vds-seeking-request': onSeekingRequest,
+    'vds-seek-request': onSeekRequest,
+    'vds-volume-change-request': onVolumeChangeRequest,
+    'vds-enter-fullscreen-request': onEnterFullscreenRequest,
+    'vds-exit-fullscreen-request': onExitFullscreenRequest,
+    'vds-resume-user-idle-request': onResumeIdlingRequest,
+    'vds-pause-user-idle-request': onPauseIdlingRequest,
+    'vds-show-poster-request': onShowPosterRequest,
+    'vds-hide-poster-request': onHidePosterRequest,
+    'vds-loop-request': onLoopRequest,
+  };
 
+  effect(() => {
+    const target = $target();
+    if (!target) return;
     for (const eventType of keysOf(eventHandlers)) {
       const handler = eventHandlers[eventType];
-      listenEvent(host, eventType, (event) => {
+      listenEvent(target, eventType, (event) => {
         event.stopPropagation();
         if (__DEV__) logRequest(event);
         if (provider) handler(event as any);
@@ -199,14 +202,9 @@ export function useMediaRequestManager({
   };
 }
 
-export interface UseMediaRequestManagerProps {
-  user: UseMediaUser;
-  fullscreen: UseFullscreen;
-}
-
 export interface UseMediaRequestManager {
-  $isSeekingRequest: ObservableSubject<boolean>;
-  $isLooping: ObservableSubject<boolean>;
-  $isReplay: ObservableSubject<boolean>;
+  $isSeekingRequest: WriteSignal<boolean>;
+  $isLooping: WriteSignal<boolean>;
+  $isReplay: WriteSignal<boolean>;
   requestQueue: MediaRequestQueue;
 }

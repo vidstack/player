@@ -1,27 +1,28 @@
-import { onConnect } from 'maverick.js/element';
+import { effect, ReadSignal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
-export function useHostedFocusVisible() {
+export function useFocusVisible($target: ReadSignal<HTMLElement | null>) {
   let usingKeyboard = false;
 
-  onConnect((host) => {
+  effect(() => {
+    const target = $target();
+    if (!target) return;
+
     listenEvent(document, 'pointerdown', () => {
       usingKeyboard = false;
     });
 
-    listenEvent(host, 'keydown', (e) => {
+    listenEvent(target, 'keydown', (e) => {
       if (e.metaKey || e.altKey || e.ctrlKey) return;
       usingKeyboard = true;
     });
 
-    listenEvent(host, 'focus', (e) => {
-      if (usingKeyboard) {
-        host.classList.add('focus-visible');
-      }
+    listenEvent(target, 'focus', () => {
+      if (usingKeyboard) target.classList.add('focus-visible');
     });
 
-    listenEvent(host, 'blur', (e) => {
-      host.classList.remove('focus-visible');
+    listenEvent(target, 'blur', () => {
+      target.classList.remove('focus-visible');
     });
   });
 }

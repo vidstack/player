@@ -1,23 +1,18 @@
-import { effect, Observable, observable } from 'maverick.js';
-import { listenEvent, useHost } from 'maverick.js/std';
+import { effect, ReadSignal, signal } from 'maverick.js';
+import { listenEvent } from 'maverick.js/std';
 
-import { connectedHostElement } from '../../utils/host';
 import { canOrientScreen } from '../../utils/support';
 import { dispatchLockChange, dispatchOrientationChange } from './dispatch';
+import type { ScreenOrientationEventTarget } from './events';
 import type { ScreenOrientationLockType, ScreenOrientationType } from './screen-orientation';
-
-export function useHostedScreenOrientation() {
-  const host = useHost();
-  return useScreenOrientation({
-    $target: connectedHostElement(host),
-  });
-}
 
 const CAN_ORIENT_SCREEN = canOrientScreen();
 
-export function useScreenOrientation({ $target }: UseScreenOrientationProps): UseScreenOrientation {
-  const $orientation = observable<ScreenOrientationType | undefined>(getScreenOrientation()),
-    $locked = observable(false);
+export function useScreenOrientation(
+  $target: ReadSignal<ScreenOrientationEventTarget | null>,
+): UseScreenOrientation {
+  const $orientation = signal<ScreenOrientationType | undefined>(getScreenOrientation()),
+    $locked = signal(false);
 
   if (CAN_ORIENT_SCREEN) {
     effect(() => {
@@ -79,16 +74,12 @@ function getScreenOrientation() {
   return __SERVER__ ? undefined : (window.screen?.orientation?.type as ScreenOrientationType);
 }
 
-export interface UseScreenOrientationProps {
-  $target: Observable<Element | null>;
-}
-
 export interface UseScreenOrientation {
   /**
    * The current screen orientation. It will return `undefined` if the Screen Orientation API
    * is not available.
    *
-   * @observable
+   * @signal
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
    * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
    */
@@ -96,7 +87,7 @@ export interface UseScreenOrientation {
   /**
    * Whether the screen orientation is currently locked.
    *
-   * @observable
+   * @signal
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
    * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
    */

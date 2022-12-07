@@ -1,26 +1,27 @@
-import { effect, observable } from 'maverick.js';
+import { effect, ReadSignal, signal } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
+import type { MediaControllerEventTarget } from './controller/events';
 import { useMediaState } from './store';
 
 const IDLE_EVENTS = ['pointerdown', 'pointermove', 'focus', 'keydown'] as const;
 
-export function useMediaUser(): UseMediaUser {
+export function useMediaUser($target: ReadSignal<MediaControllerEventTarget | null>): UseMediaUser {
   let $media = useMediaState(),
     idleTimeout: any,
     delay = 2000,
     triggerEvent: Event | undefined,
-    $idle = observable(false),
-    $paused = observable(false);
+    $idle = signal(false),
+    $paused = signal(false);
 
   effect(() => {
     if ($media.paused) $paused.set(true);
   });
 
-  onConnect((host) => {
+  onConnect(() => {
     for (const eventType of IDLE_EVENTS) {
-      listenEvent(host, eventType, handleIdleChange);
+      listenEvent($target()!, eventType, handleIdleChange);
     }
 
     effect(() => {
@@ -33,7 +34,7 @@ export function useMediaUser(): UseMediaUser {
     effect(() => {
       const idle = $idle();
       window.clearTimeout(idleTimeout);
-      dispatchIdleChange(host, idle, triggerEvent);
+      dispatchIdleChange($target(), idle, triggerEvent);
       triggerEvent = undefined;
     });
 
@@ -78,13 +79,13 @@ export interface UseMediaUser {
     /**
      * Whether the media user is currently idle.
      *
-     * @observable
+     * @signal
      */
     readonly idling: boolean;
     /**
      * Whether idle state tracking has been paused.
      *
-     * @observable
+     * @signal
      */
     paused: boolean;
     /**
@@ -97,6 +98,13 @@ export interface UseMediaUser {
   };
 }
 
-function dispatchIdleChange(target: EventTarget | null, isIdle: boolean, triggerEvent?: Event) {
-  dispatchEvent(target, 'vds-user-idle-change', { detail: isIdle, triggerEvent });
+function dispatchIdleChange(
+  target: MediaControllerEventTarget | null,
+  isIdle: boolean,
+  triggerEvent?: Event,
+) {
+  dispatchEvent(target, 'vds-user-idle-change', {
+    detail: isIdle,
+    triggerEvent,
+  });
 }

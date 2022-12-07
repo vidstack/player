@@ -1,7 +1,9 @@
 import { dispatchEvent } from 'maverick.js/std';
 
+import type { FullscreenEventTarget } from './events';
+
 export function dispatchFullscreenChange(
-  target: EventTarget | null,
+  target: FullscreenEventTarget | null,
   isFullscreen: boolean,
   triggerEvent?: Event,
 ) {
@@ -13,7 +15,10 @@ export function dispatchFullscreenChange(
   });
 }
 
-export function dispatchFullscreenError(target: EventTarget | null, triggerEvent?: Event) {
+export function dispatchFullscreenError(
+  target: FullscreenEventTarget | null,
+  triggerEvent?: Event,
+) {
   dispatchEvent(target, 'vds-fullscreen-error', {
     detail: null,
     bubbles: true,

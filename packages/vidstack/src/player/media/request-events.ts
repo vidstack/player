@@ -1,11 +1,6 @@
-import type { ElementEventRecord } from 'maverick.js/element';
 import type { DOMEvent } from 'maverick.js/std';
 
-declare global {
-  interface HTMLElementEventMap extends MediaRequestEvents {}
-}
-
-export interface MediaRequestEvents extends ElementEventRecord {
+export interface MediaRequestEvents {
   'vds-start-loading': StartLoadingRequestEvent;
   'vds-mute-request': MuteRequestEvent;
   'vds-unmute-request': UnmuteRequestEvent;

@@ -3,22 +3,23 @@ import {
   effect,
   getScheduler,
   hasProvidedContext,
-  observable,
   provideContext,
+  ReadSignal,
+  signal,
   useContext,
 } from 'maverick.js';
 import { onConnect, onDestroy } from 'maverick.js/element';
-import { dispatchEvent, useHost } from 'maverick.js/std';
+import { dispatchEvent } from 'maverick.js/std';
 
 import type { useFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
 import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
-import { useHostedScreenOrientation } from '../../../foundation/orientation/use-screen-orientation';
+import { useScreenOrientation } from '../../../foundation/orientation/use-screen-orientation';
 import { useMediaStateManager } from '../controller/use-media-state-manager';
 import { MediaStateContext, useInternalMediaState } from '../store';
 import { withMediaFullscreenOptions } from './media-fullscreen';
 import {
-  type MediaProvider,
   type MediaProviderAdapter,
+  type MediaProviderElement,
   type MediaProviderMembers,
   type MediaProviderProps,
   SET_CAN_LOAD_POSTER,
@@ -28,7 +29,7 @@ import { useMediaCanLoad } from './use-media-can-load';
 import { useMediaEventsLogger } from './use-media-events-logger';
 import { useMediaPropChange } from './use-media-prop-change';
 
-export const MediaProviderContext = createContext(() => observable<MediaProvider | null>(null));
+export const MediaProviderContext = createContext(() => signal<MediaProviderElement | null>(null));
 
 /**
  * Contains shared logic between all media providers. This hook is mainly responsible for acting
@@ -40,19 +41,22 @@ export const MediaProviderContext = createContext(() => observable<MediaProvider
  * 1. Dispatch relevant events when the media provider props are changed.
  * 2. Create and return the `MediaProviderMembers` object.
  */
-export function useMediaProvider(props: UseMediaProviderProps): UseMediaProvider {
+export function useMediaProvider(
+  $target: ReadSignal<MediaProviderElement | null>,
+  props: UseMediaProviderProps,
+): UseMediaProvider {
   if (!hasProvidedContext(MediaProviderContext)) {
     provideContext(MediaStateContext);
     provideContext(MediaProviderContext);
-    useMediaStateManager();
+    useMediaStateManager($target);
   }
 
-  const host = useHost(),
-    { $provider, adapter, useFullscreen } = props,
+  const { $provider, adapter, useFullscreen } = props,
     $media = useInternalMediaState()!,
-    $canLoadPoster = observable(false),
-    orientation = useHostedScreenOrientation(),
+    $canLoadPoster = signal(false),
+    orientation = useScreenOrientation($target),
     fullscreen = useFullscreen(
+      $target,
       withMediaFullscreenOptions({
         get lockType() {
           return $provider.fullscreenOrientation;
@@ -61,20 +65,20 @@ export function useMediaProvider(props: UseMediaProviderProps): UseMediaProvider
       }),
     );
 
-  if (__DEV__) useLogging($provider);
-  const { $canLoad, startLoadingMedia } = useMediaCanLoad(host, $provider);
-  useMediaPropChange($provider);
-  useMediaAdapterDelegate($provider, adapter);
+  if (__DEV__) useLogging($target, $provider);
+  const { $canLoad, startLoadingMedia } = useMediaCanLoad($target, $provider);
+  useMediaPropChange($target, $provider);
+  useMediaAdapterDelegate($target, $provider, adapter);
 
-  onConnect((host) => {
+  onConnect(() => {
     const $mediaProvider = useContext(MediaProviderContext);
 
-    $mediaProvider.set(host as unknown as MediaProvider);
+    $mediaProvider.set($target());
     getScheduler().flushSync();
 
     const canFullscreen = fullscreen.supported;
     $media.canFullscreen = canFullscreen;
-    dispatchEvent(host, 'vds-fullscreen-support-change', {
+    dispatchEvent($target(), 'vds-fullscreen-support-change', {
       detail: canFullscreen,
     });
 
@@ -84,7 +88,7 @@ export function useMediaProvider(props: UseMediaProviderProps): UseMediaProvider
     };
   });
 
-  onDestroy((host) => dispatchEvent(host, 'vds-destroy'));
+  onDestroy(() => dispatchEvent($target(), 'vds-destroy'));
 
   return {
     orientation,
@@ -145,19 +149,19 @@ export interface UseMediaProvider
   extends Omit<MediaProviderMembers, keyof MediaProviderProps>,
     MediaProviderAdapter {}
 
-function useLogging($provider: MediaProviderProps) {
+function useLogging(
+  $target: ReadSignal<MediaProviderElement | null>,
+  $provider: MediaProviderProps,
+) {
   if (!__DEV__) return;
 
-  useMediaEventsLogger();
+  useMediaEventsLogger($target);
 
-  onConnect((host) => {
-    const mediaElement = host.closest('vds-media');
+  onConnect(() => {
+    const mediaElement = $target()!.closest('vds-media');
 
     if (!mediaElement) {
-      const printer = useLogPrinter({
-        $target: () => host,
-      });
-
+      const printer = useLogPrinter($target);
       effect(() => {
         printer.logLevel = $provider.logLevel;
       });

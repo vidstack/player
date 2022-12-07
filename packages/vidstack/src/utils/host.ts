@@ -1,8 +1,9 @@
-import type { Observable } from 'maverick.js';
-import type { ElementInstanceHost, MaverickElement } from 'maverick.js/element';
+import type { ReadSignal } from 'maverick.js';
+import { useHostConnected } from 'maverick.js/std';
 
-export function connectedHostElement(
-  host: ElementInstanceHost<any, any>,
-): Observable<MaverickElement | null> {
-  return () => (host.$connected ? host.el : null);
+export function withConnectedHost<T extends Element>(
+  target: ReadSignal<T | null>,
+): ReadSignal<T | null> {
+  const $connected = useHostConnected();
+  return () => ($connected() ? target() : null);
 }

@@ -1,7 +1,20 @@
-import type { MediaEvents } from '../events';
+import type { HTMLCustomElement } from 'maverick.js/element';
+
+import type { FullscreenEvents } from '../../../foundation/fullscreen/events';
+import type { LoggerEvents } from '../../../foundation/logger/events';
+import type { ScreenOrientationEvents } from '../../../foundation/orientation/events';
+import type { UserIdleChangeEvent } from '../events';
 import type { MediaRequestEvents } from '../request-events';
 
+export interface MediaControllerEventTarget extends HTMLCustomElement<any, MediaControllerEvents> {}
+
 /**
- * All media events that are dispatched up to a media controller.
+ * All media events that are dispatched up to or by a media controller.
  */
-export interface MediaControllerEvents extends MediaEvents, MediaRequestEvents {}
+export interface MediaControllerEvents
+  extends MediaRequestEvents,
+    FullscreenEvents,
+    ScreenOrientationEvents,
+    LoggerEvents {
+  'vds-user-idle-change': UserIdleChangeEvent;
+}

@@ -1,4 +1,3 @@
-import type { ElementEventRecord } from 'maverick.js/element';
 import type { DOMEvent } from 'maverick.js/std';
 
 import type {
@@ -10,7 +9,7 @@ import type {
   ScreenOrientationChangeEvent,
   ScreenOrientationLockChangeEvent,
 } from '../../foundation/orientation/events';
-import type { MediaProvider } from './provider/types';
+import type { MediaProviderElement } from './provider/types';
 import type {
   MuteRequestEvent,
   PauseRequestEvent,
@@ -24,7 +23,7 @@ import type {
 } from './request-events';
 import type { MediaErrorDetail, MediaType, ViewType } from './types';
 
-export interface MediaEvents extends ElementEventRecord {
+export interface MediaEvents {
   'vds-abort': MediaAbortEvent;
   'vds-autoplay-change': MediaAutoplayChangeEvent;
   'vds-autoplay-fail': MediaAutoplayFailEvent;
@@ -72,7 +71,7 @@ export interface MediaEvents extends ElementEventRecord {
 }
 
 export interface VdsMediaEvent<DetailType = unknown> extends DOMEvent<DetailType> {
-  target: MediaProvider;
+  target: MediaProviderElement;
   requestEvent?: DOMEvent<any>;
 }
 

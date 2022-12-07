@@ -1,15 +1,24 @@
-import type { MaverickElement } from 'maverick.js/element';
+import type { HTMLCustomElement } from 'maverick.js/element';
 
+import type { FullscreenEvents } from '../../../foundation/fullscreen/events';
 import type { UseFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
+import type { LoggerEvents } from '../../../foundation/logger/events';
 import type { LogLevel } from '../../../foundation/logger/log-level';
+import type { ScreenOrientationEvents } from '../../../foundation/orientation/events';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/screen-orientation';
 import type { UseScreenOrientation } from '../../../foundation/orientation/use-screen-orientation';
 import type { MediaState } from '../context';
 import type { MediaEvents } from '../events';
 
-export interface MediaProvider
-  extends MaverickElement<MediaProviderProps, MediaEvents>,
+export interface MediaProviderElement
+  extends HTMLCustomElement<MediaProviderProps, MediaProviderEvents>,
     MediaProviderMembers {}
+
+export interface MediaProviderEvents
+  extends MediaEvents,
+    FullscreenEvents,
+    ScreenOrientationEvents,
+    LoggerEvents {}
 
 export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
 

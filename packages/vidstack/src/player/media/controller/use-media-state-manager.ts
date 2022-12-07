@@ -1,44 +1,43 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
-import { effect, useContext } from 'maverick.js';
+import { effect, ReadSignal, useContext } from 'maverick.js';
 import { onAttach } from 'maverick.js/element';
 import {
   appendTriggerEvent,
-  createEvent,
   dispatchEvent,
+  DOMEvent,
   listenEvent,
   useDisposalBin,
-  useHost,
 } from 'maverick.js/std';
 
 import type {
   FullscreenChangeEvent,
   FullscreenErrorEvent,
 } from '../../../foundation/fullscreen/events';
-import { connectedHostElement } from '../../../utils/host';
 import type { MediaState } from '../context';
 import type * as ME from '../events';
-import type { MediaProvider } from '../provider/types';
+import type { MediaProviderElement } from '../provider/types';
 import { MediaProviderContext } from '../provider/use-media-provider';
 import { softResetMediaState, useInternalMediaState } from '../store';
 import type { MediaRequestQueueRecord, UseMediaRequestManager } from './use-media-request-manager';
 
-export function useMediaStateManager(requestManager?: UseMediaRequestManager) {
-  const host = useHost(),
-    $connectedHost = connectedHostElement(host),
-    $media = useInternalMediaState()!,
+export function useMediaStateManager(
+  $target: ReadSignal<HTMLElement | null>,
+  requestManager?: UseMediaRequestManager,
+) {
+  const $media = useInternalMediaState()!,
     $mediaProvider = useContext(MediaProviderContext),
     disposal = useDisposalBin(),
     requestQueue = requestManager?.requestQueue,
     trackedEvents = new Map<string, ME.VdsMediaEvent>();
 
-  let provider: MediaProvider | null = null;
+  let provider: MediaProviderElement | null = null;
   effect(() => {
     provider = $mediaProvider();
   });
 
-  onAttach((host) => {
-    host.setAttribute('aria-busy', 'true');
+  onAttach(() => {
+    $target()?.setAttribute('aria-busy', 'true');
   });
 
   let skipInitialSrcChange = true,
@@ -49,7 +48,7 @@ export function useMediaStateManager(requestManager?: UseMediaRequestManager) {
     lastWaitingEvent: Event | undefined;
 
   effect(() => {
-    if ($connectedHost() && provider) {
+    if ($target() && provider) {
       listenEvent(provider, 'vds-can-load', trackEvent(onCanLoad));
       listenEvent(provider, 'vds-src-change', trackEvent(onSrcChange));
       listenEvent(provider, 'vds-current-src-change', trackEvent(onCurrentSrcChange));
@@ -112,7 +111,7 @@ export function useMediaStateManager(requestManager?: UseMediaRequestManager) {
 
     resetTracking();
     softResetMediaState($media);
-    host.el!.setAttribute('aria-busy', 'true');
+    $target()?.setAttribute('aria-busy', 'true');
   }
 
   function onLoadStart(event: ME.MediaLoadStartEvent) {
@@ -181,7 +180,7 @@ export function useMediaStateManager(requestManager?: UseMediaRequestManager) {
 
     $media.canPlay = true;
     $media.duration = event.detail.duration;
-    host.el!.setAttribute('aria-busy', 'false');
+    $target()?.setAttribute('aria-busy', 'false');
   }
 
   function onCanPlayThrough(event: ME.MediaCanPlayThroughEvent) {
@@ -324,9 +323,12 @@ export function useMediaStateManager(requestManager?: UseMediaRequestManager) {
     if (!lastWaitingEvent) return;
 
     firingWaiting = true;
-    const event = createEvent('vds-waiting', {
+
+    const event = new DOMEvent('vds-waiting', {
+      detail: undefined,
       triggerEvent: lastWaitingEvent,
-    });
+    }) as ME.MediaWaitingEvent;
+
     trackedEvents.set('vds-waiting', event);
 
     $media.waiting = true;
@@ -366,7 +368,7 @@ export function useMediaStateManager(requestManager?: UseMediaRequestManager) {
 
   function onFullscreenChange(event: FullscreenChangeEvent) {
     $media.fullscreen = event.detail;
-    if (event.target !== host.el) return;
+    if (event.target !== $target()) return;
 
     // @ts-expect-error - not a media event.
     satisfyMediaRequest('fullscreen', event);
@@ -379,7 +381,7 @@ export function useMediaStateManager(requestManager?: UseMediaRequestManager) {
   }
 
   function onFullscreenError(event: FullscreenErrorEvent) {
-    if (event.target !== host.el) return;
+    if (event.target !== $target()) return;
 
     // @ts-expect-error - not a media event.
     satisfyMediaRequest('fullscreen', event);

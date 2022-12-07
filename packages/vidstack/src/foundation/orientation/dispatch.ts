@@ -1,9 +1,10 @@
 import { dispatchEvent } from 'maverick.js/std';
 
+import type { ScreenOrientationEventTarget } from './events';
 import type { ScreenOrientationLockType, ScreenOrientationType } from './screen-orientation';
 
 export function dispatchOrientationChange(
-  target: EventTarget | null,
+  target: ScreenOrientationEventTarget | null,
   orientation: ScreenOrientationType,
   triggerEvent?: Event,
 ) {
@@ -16,7 +17,7 @@ export function dispatchOrientationChange(
 }
 
 export function dispatchLockChange(
-  target: EventTarget | null,
+  target: ScreenOrientationEventTarget | null,
   lockType: ScreenOrientationLockType,
 ) {
   dispatchEvent(target, 'vds-orientation-lock-change', {

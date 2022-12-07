@@ -1,18 +1,12 @@
-import { effect, Observable } from 'maverick.js';
-import { isString, isUndefined, listenEvent, useHost } from 'maverick.js/std';
+import { effect, ReadSignal } from 'maverick.js';
+import { isString, isUndefined, listenEvent } from 'maverick.js/std';
 
-import { connectedHostElement } from '../../utils/host';
 import { getLogColor, saveLogColor } from './colors';
 import { GroupedLog, isGroupedLog } from './create-grouped-log';
 import { type LogLevel, LogLevelColor, LogLevelValue } from './log-level';
 import { ms } from './ms';
 
-export function useHostedLogPrinter() {
-  const host = useHost();
-  return useLogPrinter({ $target: connectedHostElement(host) });
-}
-
-export function useLogPrinter({ $target }: UseLogPrinterProps): UseLogPrinter {
+export function useLogPrinter($target: ReadSignal<EventTarget | null>): UseLogPrinter {
   // No log printing in production.
   if (!__DEV__) {
     return {
@@ -99,13 +93,6 @@ export function useLogPrinter({ $target }: UseLogPrinterProps): UseLogPrinter {
       logLevel = level;
     },
   };
-}
-
-export interface UseLogPrinterProps {
-  /**
-   * The target element on which to listen for `vds-log` events on.
-   */
-  $target: Observable<HTMLElement | null>;
 }
 
 export interface UseLogPrinter {

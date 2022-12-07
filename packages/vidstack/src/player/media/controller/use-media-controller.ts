@@ -1,17 +1,18 @@
-import { provideContext } from 'maverick.js';
+import { provideContext, ReadSignal } from 'maverick.js';
 
 import { UseFullscreen, useFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
 import type { LogLevel } from '../../../foundation/logger/log-level';
-import { useHostedLogPrinter } from '../../../foundation/logger/use-log-printer';
+import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/screen-orientation';
 import {
-  useHostedScreenOrientation,
+  useScreenOrientation,
   UseScreenOrientation,
 } from '../../../foundation/orientation/use-screen-orientation';
 import { withMediaFullscreenOptions } from '../provider/media-fullscreen';
 import { MediaProviderContext } from '../provider/use-media-provider';
 import { MediaStateContext } from '../store';
 import { UseMediaUser, useMediaUser } from '../user';
+import type { MediaControllerEventTarget } from './events';
 import { useMediaRequestManager } from './use-media-request-manager';
 import { useMediaStateManager } from './use-media-state-manager';
 
@@ -27,26 +28,28 @@ import { useMediaStateManager } from './use-media-state-manager';
  *
  * - Listening to media events and updating state in the media store.
  */
-export function useMediaController(props: {
-  fullscreenOrientation: ScreenOrientationLockType | undefined;
-}): UseMediaController {
+export function useMediaController(
+  $target: ReadSignal<MediaControllerEventTarget | null>,
+  { $fullscreenOrientation }: UseMediaControllerProps,
+): UseMediaController {
   provideContext(MediaStateContext);
   provideContext(MediaProviderContext);
 
-  const user = useMediaUser(),
-    orientation = useHostedScreenOrientation(),
+  const user = useMediaUser($target),
+    orientation = useScreenOrientation($target),
     fullscreen = useFullscreen(
+      $target,
       withMediaFullscreenOptions({
         get lockType() {
-          return props.fullscreenOrientation;
+          return $fullscreenOrientation();
         },
         orientation,
       }),
     ),
-    logPrinter = __DEV__ ? useHostedLogPrinter() : undefined,
-    requestManager = useMediaRequestManager({ user, fullscreen });
+    logPrinter = __DEV__ ? useLogPrinter($target) : undefined,
+    requestManager = useMediaRequestManager($target, user, fullscreen);
 
-  useMediaStateManager(requestManager);
+  useMediaStateManager($target, requestManager);
 
   return {
     user,
@@ -61,6 +64,10 @@ export function useMediaController(props: {
     enterFullscreen: fullscreen.requestFullscreen,
     exitFullscreen: fullscreen.exitFullscreen,
   };
+}
+
+export interface UseMediaControllerProps {
+  $fullscreenOrientation: ReadSignal<ScreenOrientationLockType | undefined>;
 }
 
 export interface UseMediaController {

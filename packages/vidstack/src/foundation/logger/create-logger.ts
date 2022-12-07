@@ -1,7 +1,3 @@
-import { effect } from 'maverick.js';
-import { useHost } from 'maverick.js/std';
-
-import { connectedHostElement } from '../../utils/host';
 import { createGroupedLog, GROUPED_LOG, type GroupedLog } from './create-grouped-log';
 import { dispatchLogEvent } from './dispatch';
 import type { LogLevel } from './log-level';
@@ -62,16 +58,4 @@ export function createLogger(): Logger {
       target = newTarget;
     },
   };
-}
-
-export function useHostedLogger() {
-  if (!__DEV__) return;
-
-  const host = useHost(),
-    $el = connectedHostElement(host),
-    logger = createLogger();
-
-  effect(() => logger.setTarget($el()));
-
-  return logger;
 }
