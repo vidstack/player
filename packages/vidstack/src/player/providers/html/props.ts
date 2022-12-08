@@ -1,9 +1,9 @@
-import type { ElementPropDefinitions } from 'maverick.js/element';
+import type { CustomElementPropDefinitions } from 'maverick.js/element';
 
 import { mediaProviderPropDefs } from '../../media/provider/props';
 import type { MediaProviderProps } from '../../media/provider/types';
 
-export const htmlMediaElementPropDefs: ElementPropDefinitions<HtmlMediaElementProps> = {
+export const htmlMediaElementPropDefs: CustomElementPropDefinitions<HtmlMediaElementProps> = {
   ...mediaProviderPropDefs,
   preload: { initial: 'metadata' },
 };

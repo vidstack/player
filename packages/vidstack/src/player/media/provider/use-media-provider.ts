@@ -17,12 +17,11 @@ import { useScreenOrientation } from '../../../foundation/orientation/use-screen
 import { useMediaStateManager } from '../controller/use-media-state-manager';
 import { MediaStateContext, useInternalMediaState } from '../store';
 import { withMediaFullscreenOptions } from './media-fullscreen';
-import {
-  type MediaProviderAdapter,
-  type MediaProviderElement,
-  type MediaProviderMembers,
-  type MediaProviderProps,
-  SET_CAN_LOAD_POSTER,
+import type {
+  MediaProviderAdapter,
+  MediaProviderElement,
+  MediaProviderMembers,
+  MediaProviderProps,
 } from './types';
 import { useMediaAdapterDelegate } from './use-media-adapter-delegate';
 import { useMediaCanLoad } from './use-media-can-load';
@@ -53,7 +52,6 @@ export function useMediaProvider(
 
   const { $provider, adapter, useFullscreen } = props,
     $media = useInternalMediaState()!,
-    $canLoadPoster = signal(false),
     orientation = useScreenOrientation($target),
     fullscreen = useFullscreen(
       $target,
@@ -126,10 +124,6 @@ export function useMediaProvider(
     get canLoad() {
       return $canLoad();
     },
-    get canLoadPoster() {
-      return $canLoadPoster();
-    },
-    [SET_CAN_LOAD_POSTER]: $canLoadPoster.set,
     startLoadingMedia,
     play: adapter.play,
     pause: adapter.pause,
@@ -142,7 +136,6 @@ export interface UseMediaProviderProps {
   $provider: MediaProviderProps;
   adapter: MediaProviderAdapter;
   useFullscreen: typeof useFullscreen;
-  onDefaultSlotChange: (element: HTMLElement) => void;
 }
 
 export interface UseMediaProvider

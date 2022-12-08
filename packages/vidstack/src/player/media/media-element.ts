@@ -9,16 +9,12 @@ import {
   setStyle,
 } from 'maverick.js/std';
 
-import type { FullscreenEvents } from '../../foundation/fullscreen/events';
-import type { LoggerEvents } from '../../foundation/logger/events';
-import type { ScreenOrientationEvents } from '../../foundation/orientation/events';
 import type { ScreenOrientationLockType } from '../../foundation/orientation/screen-orientation';
 import { withConnectedHost } from '../../utils/host';
 import { IS_IOS } from '../../utils/support';
 import type { MediaState } from './context';
 import type { MediaControllerEvents } from './controller/events';
 import { UseMediaController, useMediaController } from './controller/use-media-controller';
-import type { MediaRequestEvents } from './request-events';
 import { useMediaState } from './store';
 
 declare global {
@@ -85,11 +81,11 @@ export const MediaElementDefinition = defineCustomElement<MediaElement>({
       );
 
       for (const prop of MEDIA_ATTRIBUTES) {
-        setAttribute(host.el!, camelToKebabCase(prop), () => $media[prop]);
+        setAttribute(host.el!, camelToKebabCase(prop as string), () => $media[prop]);
       }
 
       for (const prop of MEDIA_CSS_VARS) {
-        setStyle(host.el!, `--${camelToKebabCase(prop)}`, () => $media[prop]);
+        setStyle(host.el!, `--${camelToKebabCase(prop as string)}`, () => $media[prop]);
       }
     });
 

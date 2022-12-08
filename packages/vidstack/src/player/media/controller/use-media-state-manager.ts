@@ -31,11 +31,6 @@ export function useMediaStateManager(
     requestQueue = requestManager?.requestQueue,
     trackedEvents = new Map<string, ME.VdsMediaEvent>();
 
-  let provider: MediaProviderElement | null = null;
-  effect(() => {
-    provider = $mediaProvider();
-  });
-
   onAttach(() => {
     $target()?.setAttribute('aria-busy', 'true');
   });
@@ -47,8 +42,10 @@ export function useMediaStateManager(
     firingWaiting = false,
     lastWaitingEvent: Event | undefined;
 
+  let provider: MediaProviderElement | null = null;
   effect(() => {
-    if ($target() && provider) {
+    provider = $target() ? $mediaProvider() : null;
+    if (provider) {
       listenEvent(provider, 'vds-can-load', trackEvent(onCanLoad));
       listenEvent(provider, 'vds-src-change', trackEvent(onSrcChange));
       listenEvent(provider, 'vds-current-src-change', trackEvent(onCurrentSrcChange));

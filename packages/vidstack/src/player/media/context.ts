@@ -1,5 +1,10 @@
 import type { MediaErrorDetail, MediaType, ViewType } from './types';
 
+/** @internal */
+export const ATTEMPTING_AUTOPLAY = Symbol(__DEV__ ? 'ATTEMPTING_AUTOPLAY' : 0);
+/** @internal */
+export const CAN_LOAD_POSTER = Symbol(__DEV__ ? 'CAN_LOAD_POSTER' : 0);
+
 export interface MediaState {
   /**
    * Whether playback should automatically begin as soon as enough media is available to do so
@@ -254,4 +259,8 @@ export interface MediaState {
    * @defaultValue false
    */
   waiting: boolean;
+  /** @internal */
+  [ATTEMPTING_AUTOPLAY]: boolean;
+  /** @internal */
+  [CAN_LOAD_POSTER]: boolean;
 }

@@ -9,6 +9,7 @@ import type { ScreenOrientationLockType } from '../../../foundation/orientation/
 import type { UseScreenOrientation } from '../../../foundation/orientation/use-screen-orientation';
 import type { MediaState } from '../context';
 import type { MediaEvents } from '../events';
+import type { LoopRequestEvent } from '../request-events';
 
 export interface MediaProviderElement
   extends HTMLCustomElement<MediaProviderProps, MediaProviderEvents>,
@@ -18,7 +19,9 @@ export interface MediaProviderEvents
   extends MediaEvents,
     FullscreenEvents,
     ScreenOrientationEvents,
-    LoggerEvents {}
+    LoggerEvents {
+  'vds-loop-request': LoopRequestEvent;
+}
 
 export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
 
@@ -58,8 +61,6 @@ export interface MediaProviderProps
   fullscreenOrientation: ScreenOrientationLockType | undefined;
 }
 
-export const SET_CAN_LOAD_POSTER = Symbol(__DEV__ ? 'SET_CAN_LOAD_POSTER' : 0);
-
 export interface MediaProviderMembers extends MediaProviderProps {
   /**
    * Controls the screen orientation of the current browser window and dispatches orientation
@@ -81,15 +82,6 @@ export interface MediaProviderMembers extends MediaProviderProps {
    * @observable
    */
   readonly canLoad: boolean;
-  /**
-   * Determines whether the native poster can load. Used to avoid loading posters twice when a
-   * custom poster element is being used (eg: `<vds-poster>`).
-   *
-   * @observable
-   */
-  readonly canLoadPoster: boolean;
-  /** @internal */
-  [SET_CAN_LOAD_POSTER](canLoad: boolean): void;
   /**
    * Begins/resumes playback of the media. If this method is called programmatically before the
    * user has interacted with the player, the promise may be rejected subject to the browser's

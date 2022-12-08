@@ -1,5 +1,4 @@
 import { effect, ReadSignal } from 'maverick.js';
-import { onConnect } from 'maverick.js/element';
 import { dispatchEvent } from 'maverick.js/std';
 
 import { useInternalMediaState } from '../store';
@@ -16,8 +15,9 @@ export function useMediaPropChange(
 ) {
   const $media = useInternalMediaState()!;
 
-  onConnect(() => {
+  effect(() => {
     const target = $target();
+    if (!target) return;
 
     effect(() => {
       const autoplay = $provider.autoplay;

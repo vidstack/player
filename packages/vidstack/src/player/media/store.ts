@@ -1,7 +1,7 @@
 import { createContext, createStore, useContext } from 'maverick.js';
 import { keysOf } from 'maverick.js/std';
 
-import type { MediaState } from './context';
+import { ATTEMPTING_AUTOPLAY, CAN_LOAD_POSTER, MediaState } from './context';
 import { createTimeRanges } from './time-ranges';
 
 export const MediaStateContext = createContext<MediaState>(() => mediaStore.create());
@@ -46,6 +46,8 @@ export const mediaStore = createStore<MediaState>({
   viewType: 'unknown',
   volume: 1,
   waiting: false,
+  [ATTEMPTING_AUTOPLAY]: false,
+  [CAN_LOAD_POSTER]: true,
 });
 
 const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([

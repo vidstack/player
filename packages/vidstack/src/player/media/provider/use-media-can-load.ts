@@ -10,16 +10,20 @@ import type { MediaProviderElement, MediaProviderProps } from './types';
  */
 export function useMediaCanLoad(
   $target: ReadSignal<MediaProviderElement | null>,
-  $provider: MediaProviderProps,
+  $providerProps: MediaProviderProps,
 ) {
   const $canLoad = signal(false);
 
+  effect(() => {
+    if ($canLoad()) dispatchEvent($target(), 'vds-can-load');
+  });
+
   onConnect(() => {
-    if ($provider.load === 'eager') {
+    if ($providerProps.load === 'eager') {
       waitAnimationFrame(startLoadingMedia);
-    } else if ($provider.load === 'idle') {
+    } else if ($providerProps.load === 'idle') {
       waitIdlePeriod(startLoadingMedia);
-    } else if ($provider.load === 'visible') {
+    } else if ($providerProps.load === 'visible') {
       root((dispose) => {
         const io = useIntersectionObserver($target);
         effect(() => {
@@ -34,7 +38,6 @@ export function useMediaCanLoad(
 
   function startLoadingMedia() {
     $canLoad.set(true);
-    dispatchEvent($target(), 'vds-can-load');
   }
 
   return { $canLoad, startLoadingMedia };

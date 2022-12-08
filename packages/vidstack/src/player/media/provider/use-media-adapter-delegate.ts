@@ -1,5 +1,4 @@
 import { effect, ReadSignal } from 'maverick.js';
-import { onConnect } from 'maverick.js/element';
 import { listenEvent } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
@@ -20,9 +19,12 @@ export function useMediaAdapterDelegate(
     /** Queue ensures adapter is only updated if media is ready for playback. */
     canPlayQueue = new RequestQueue();
 
-  onConnect(() => {
-    listenEvent($target()!, 'vds-can-play', () => canPlayQueue.start());
-    listenEvent($target()!, 'vds-current-src-change', () => canPlayQueue.stop());
+  effect(() => {
+    const target = $target();
+    if (target) {
+      listenEvent(target, 'vds-can-play', () => canPlayQueue.start());
+      listenEvent(target, 'vds-current-src-change', () => canPlayQueue.stop());
+    }
   });
 
   effect(() => {

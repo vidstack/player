@@ -1,6 +1,5 @@
 import fscreen from 'fscreen';
-import { ReadSignal, signal } from 'maverick.js';
-import { onConnect } from 'maverick.js/element';
+import { effect, ReadSignal, signal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import { dispatchFullscreenChange, dispatchFullscreenError } from './dispatch';
@@ -18,24 +17,30 @@ export function useFullscreen(
   // element or not.
   let listening = false;
 
-  onConnect(() => {
-    listenEvent(fscreen as any, 'fullscreenchange', async (event) => {
-      const current = isFullscreen($target());
-      if (current === $active()) return;
-      if (!current) listening = false;
-      $active.set(current);
-      dispatchFullscreenChange($target(), current, event);
-    });
+  effect(() => {
+    const target = $target();
 
-    listenEvent(fscreen as any, 'fullscreenerror', (event) => {
-      if (!listening) return;
-      dispatchFullscreenError($target(), event);
-      listening = false;
-    });
+    if (target) {
+      listenEvent(fscreen as any, 'fullscreenchange', async (event) => {
+        const current = isFullscreen(target);
+        if (current === $active()) return;
+        if (!current) listening = false;
+        $active.set(current);
+        dispatchFullscreenChange(target, current, event);
+      });
 
-    return async () => {
-      if (canFullscreen()) await exit();
-    };
+      listenEvent(fscreen as any, 'fullscreenerror', (event) => {
+        if (!listening) return;
+        dispatchFullscreenError(target, event);
+        listening = false;
+      });
+
+      return async () => {
+        if (canFullscreen()) await exit();
+      };
+    }
+
+    return;
   });
 
   return {

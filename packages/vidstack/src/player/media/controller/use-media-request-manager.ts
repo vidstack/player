@@ -4,7 +4,8 @@ import { keysOf, listenEvent } from 'maverick.js/std';
 import type { UseFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { Queue } from '../../../foundation/queue/queue';
-import { MediaProviderElement, SET_CAN_LOAD_POSTER } from '../provider/types';
+import { CAN_LOAD_POSTER } from '../context';
+import type { MediaProviderElement } from '../provider/types';
 import { MediaProviderContext } from '../provider/use-media-provider';
 import type * as RE from '../request-events';
 import { useInternalMediaState } from '../store';
@@ -29,7 +30,7 @@ export function useMediaRequestManager(
   user: UseMediaUser,
   fullscreen: UseFullscreen,
 ): UseMediaRequestManager {
-  const logger = useLogger($target),
+  const logger = __DEV__ ? useLogger($target) : undefined,
     $media = useInternalMediaState(),
     $isLooping = signal(false),
     $isReplay = signal(false),
@@ -174,11 +175,11 @@ export function useMediaRequestManager(
   }
 
   function onShowPosterRequest(event: RE.ShowPosterRequestEvent) {
-    provider![SET_CAN_LOAD_POSTER](true);
+    $media[CAN_LOAD_POSTER] = true;
   }
 
   function onHidePosterRequest(event: RE.HidePosterRequestEvent) {
-    provider![SET_CAN_LOAD_POSTER](false);
+    $media[CAN_LOAD_POSTER] = false;
   }
 
   function onLoopRequest(event: RE.LoopRequestEvent) {

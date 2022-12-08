@@ -1,5 +1,4 @@
 import { effect, ReadSignal, signal } from 'maverick.js';
-import { onConnect } from 'maverick.js/element';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
 import type { MediaControllerEventTarget } from './controller/events';
@@ -19,9 +18,12 @@ export function useMediaUser($target: ReadSignal<MediaControllerEventTarget | nu
     if ($media.paused) $paused.set(true);
   });
 
-  onConnect(() => {
+  effect(() => {
+    const target = $target();
+    if (!target) return;
+
     for (const eventType of IDLE_EVENTS) {
-      listenEvent($target()!, eventType, handleIdleChange);
+      listenEvent(target, eventType, handleIdleChange);
     }
 
     effect(() => {

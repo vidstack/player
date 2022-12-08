@@ -1,5 +1,4 @@
-import type { ReadSignal } from 'maverick.js';
-import { onConnect } from 'maverick.js/element';
+import { effect, ReadSignal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
@@ -45,16 +44,18 @@ export function useMediaEventsLogger($target: ReadSignal<MediaProviderElement | 
   const $media = useMediaState(),
     logger = useLogger($target);
 
-  onConnect(() => {
-    const target = $target()!;
-    for (const eventType of mediaEvents!) {
-      listenEvent(target, eventType, (event) => {
-        logger
-          ?.infoGroup(`📡 dispatching \`${eventType}\``)
-          .labelledLog('Media', { ...$media })
-          .labelledLog('Event', event)
-          .dispatch();
-      });
+  effect(() => {
+    const target = $target();
+    if (target) {
+      for (const eventType of mediaEvents!) {
+        listenEvent(target, eventType, (event) => {
+          logger
+            ?.infoGroup(`📡 dispatching \`${eventType}\``)
+            .labelledLog('Media', { ...$media })
+            .labelledLog('Event', event)
+            .dispatch();
+        });
+      }
     }
   });
 }
