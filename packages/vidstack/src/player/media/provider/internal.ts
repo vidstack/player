@@ -1,7 +1,8 @@
-import { dispatchEvent } from 'maverick.js/std';
+import { dispatchEvent, DOMEvent } from 'maverick.js/std';
 
 import type { Logger } from '../../../foundation/logger/create-logger';
-import { ATTEMPTING_AUTOPLAY, MediaState } from '../context';
+import type { MediaCurrentSrcChangeEvent } from '../events';
+import { ATTEMPTING_AUTOPLAY, MediaState } from '../state';
 import type { MediaProviderElement } from './types';
 
 export function canAttemptAutoplay($media: MediaState) {
@@ -71,9 +72,8 @@ export function onCurrentSrcChange(
   $media: MediaState,
   provider: MediaProviderElement,
   currentSrc: string,
-  triggerEvent?: Event,
   logger?: Logger,
-) {
+): MediaCurrentSrcChangeEvent | undefined {
   if ($media.currentSrc === currentSrc) return;
 
   if (__DEV__) {
@@ -84,10 +84,12 @@ export function onCurrentSrcChange(
       .dispatch();
   }
 
-  dispatchEvent(provider, 'vds-current-src-change', {
+  const event = new DOMEvent('vds-current-src-change', {
     detail: currentSrc,
-    triggerEvent,
-  });
+  }) as MediaCurrentSrcChangeEvent;
+
+  provider.dispatchEvent(event);
+  return event;
 }
 
 export function resetPlaybackIfEnded(provider: MediaProviderElement, $media: MediaState) {

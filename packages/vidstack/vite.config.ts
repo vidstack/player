@@ -17,6 +17,9 @@ export default defineConfig({
       'vidstack/player': '/src/player',
     },
   },
+  optimizeDeps: {
+    exclude: ['maverick.js'],
+  },
   plugins: [
     maverick({
       include: ['src/**/*.{jsx,tsx}'],

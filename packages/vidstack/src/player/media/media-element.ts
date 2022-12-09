@@ -10,11 +10,10 @@ import {
 } from 'maverick.js/std';
 
 import type { ScreenOrientationLockType } from '../../foundation/orientation/screen-orientation';
-import { withConnectedHost } from '../../utils/host';
 import { IS_IOS } from '../../utils/support';
-import type { MediaState } from './context';
 import type { MediaControllerEvents } from './controller/events';
 import { UseMediaController, useMediaController } from './controller/use-media-controller';
+import type { MediaState } from './state';
 import { useMediaState } from './store';
 
 declare global {
@@ -67,11 +66,12 @@ export const MediaElementDefinition = defineCustomElement<MediaElement>({
      * The media controller which is responsible for updating the media state store and satisfying
      * media requests.
      */
-    const $el = withConnectedHost(() => host.el),
+    const $el = () => (host.$connected ? host.el : null),
       controller = useMediaController($el, {
         $fullscreenOrientation: () => props.fullscreenOrientation,
-      }),
-      $media = useMediaState();
+      });
+
+    const $media = useMediaState();
 
     onAttach(() => {
       setAttribute(

@@ -7,9 +7,9 @@ import type { LogLevel } from '../../../foundation/logger/log-level';
 import type { ScreenOrientationEvents } from '../../../foundation/orientation/events';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/screen-orientation';
 import type { UseScreenOrientation } from '../../../foundation/orientation/use-screen-orientation';
-import type { MediaState } from '../context';
 import type { MediaEvents } from '../events';
 import type { LoopRequestEvent } from '../request-events';
+import type { MediaState } from '../state';
 
 export interface MediaProviderElement
   extends HTMLCustomElement<MediaProviderProps, MediaProviderEvents>,

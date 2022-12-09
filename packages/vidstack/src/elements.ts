@@ -1,4 +1,5 @@
 import { registerCustomElement } from 'maverick.js/element';
+import { uppercaseFirstChar } from 'maverick.js/std';
 
 export type VidstackElement =
   | 'vds-aspect-ratio'
@@ -62,33 +63,37 @@ export async function defineCustomElements(
   return !promises.length ? loadAllCustomElements() : Promise.all(promises);
 }
 
-const ELEMENT_DEFINITION_LOADER = {
-  // 'aspect-ratio': () => import(''),
-  // 'fullscreen-button': () => import(''),
-  // 'media-sync': () => import(''),
-  // 'media-visibility': () => import(''),
-  // 'mute-button': () => import(''),
-  // 'play-button': () => import(''),
-  // 'slider-value-text': () => import(''),
-  // 'slider-video': () => import(''),
-  // 'time-slider': () => import(''),
-  // 'volume-slider': () => import(''),
-  // audio: () => import(''),
-  // gesture: () => import(''),
-  // hls: () => import(''),
-  media: () => import('./player/media/media-element'),
-  // poster: () => import(''),
-  // slider: () => import(''),
-  // time: () => import(''),
-  // video: () => import(''),
+// TODO: add all element loaders and remove expect error below.
+// @ts-expect-error - we haven't defined all elements yet.
+const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
+  // 'vds-aspect-ratio': () => import(''),
+  // 'vds-fullscreen-button': () => import(''),
+  // 'vds-media-sync': () => import(''),
+  // 'vds-media-visibility': () => import(''),
+  // 'vds-mute-button': () => import(''),
+  // 'vds-play-button': () => import(''),
+  // 'vds-slider-value-text': () => import(''),
+  // 'vds-slider-video': () => import(''),
+  // 'vds-time-slider': () => import(''),
+  // 'vds-volume-slider': () => import(''),
+  'vds-audio': () => import('./player/providers/audio/audio-element'),
+  // 'vds-gesture': () => import(''),
+  // 'vds-hls': () => import(''),
+  'vds-media': () => import('./player/media/media-element'),
+  // 'vds-poster': () => import(''),
+  // 'vds-slider': () => import(''),
+  // 'vds-time': () => import(''),
+  // 'vds-video': () => import(''),
 };
 
 async function loadCustomElement(tagName: VidstackElement) {
-  const definition = await ELEMENT_DEFINITION_LOADER[tagName]();
+  const name = tagName.replace('vds-', ''),
+    specifier = uppercaseFirstChar(name) + 'ElementDefinition',
+    definition = (await ELEMENT_DEFINITION_LOADER[tagName]())[specifier];
   registerCustomElement(definition);
 }
 
 async function loadAllCustomElements() {
   const definitions = (await import('./elements-all')).default;
-  return Promise.all(definitions.map(registerCustomElement));
+  return definitions.map(registerCustomElement);
 }

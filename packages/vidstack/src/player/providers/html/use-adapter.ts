@@ -3,10 +3,10 @@ import { DOMEvent, setAttribute } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { coerceToError } from '../../../utils/error';
-import { ATTEMPTING_AUTOPLAY, MediaState } from '../../media/context';
 import type { MediaPlayFailEvent } from '../../media/events';
 import { resetPlaybackIfEnded, throwIfNotReadyForPlayback } from '../../media/provider/internal';
 import type { MediaProviderAdapter } from '../../media/provider/types';
+import { ATTEMPTING_AUTOPLAY, MediaState } from '../../media/state';
 import type { HtmlMediaProviderElement } from './types';
 
 export function useHtmlMediaElementAdapter(

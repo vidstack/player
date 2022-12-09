@@ -1,4 +1,4 @@
-import { effect, ReadSignal, root, signal } from 'maverick.js';
+import { effect, ReadSignal, root } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
 import { dispatchEvent, waitAnimationFrame, waitIdlePeriod } from 'maverick.js/std';
 
@@ -12,12 +12,6 @@ export function useMediaCanLoad(
   $target: ReadSignal<MediaProviderElement | null>,
   $providerProps: MediaProviderProps,
 ) {
-  const $canLoad = signal(false);
-
-  effect(() => {
-    if ($canLoad()) dispatchEvent($target(), 'vds-can-load');
-  });
-
   onConnect(() => {
     if ($providerProps.load === 'eager') {
       waitAnimationFrame(startLoadingMedia);
@@ -37,8 +31,8 @@ export function useMediaCanLoad(
   });
 
   function startLoadingMedia() {
-    $canLoad.set(true);
+    dispatchEvent($target(), 'vds-can-load');
   }
 
-  return { $canLoad, startLoadingMedia };
+  return { startLoadingMedia };
 }

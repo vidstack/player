@@ -1,20 +1,18 @@
-import { effect, ReadSignal, signal } from 'maverick.js';
-import { onConnect } from 'maverick.js/element';
-import { dispatchEvent, getSlottedChildren, isNull, setAttribute } from 'maverick.js/std';
+import { effect, ReadSignal } from 'maverick.js';
+import { dispatchEvent, isNull, setAttribute } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { isArrayEqual } from '../../../utils/array';
-import { CAN_LOAD_POSTER, MediaState } from '../../media/context';
+import { CAN_LOAD_POSTER, MediaState } from '../../media/state';
 import type { HtmlMediaProviderElement } from './types';
+import { IGNORE_NEXT_ABORT, IGNORE_NEXT_EMPTIED } from './use-events';
 
 export function useHtmlMediaElementConnect(
   $target: ReadSignal<HtmlMediaProviderElement | null>,
+  $mediaElement: ReadSignal<HTMLMediaElement | null>,
   $media: MediaState,
 ) {
-  const logger = __DEV__ ? useLogger($target) : undefined,
-    $mediaElement = signal<HTMLMediaElement | null>(null);
-
-  onConnect(onDefaultSlotChange);
+  const logger = __DEV__ ? useLogger($target) : undefined;
 
   effect(() => {
     const provider = $target(),
@@ -71,7 +69,17 @@ export function useHtmlMediaElementConnect(
   function startPreloadingMedia(media: HTMLMediaElement) {
     if ($media.canPlay) return;
     media.setAttribute('preload', $target()!.preload);
-    if (media.networkState < 1) media.load();
+
+    if (media.networkState >= 1) {
+      media[IGNORE_NEXT_ABORT] = true;
+      media[IGNORE_NEXT_EMPTIED] = true;
+      setTimeout(() => {
+        media[IGNORE_NEXT_ABORT] = false;
+        media[IGNORE_NEXT_EMPTIED] = false;
+      }, 0);
+    }
+
+    media.load();
   }
 
   function handleSrcChange() {
@@ -91,23 +99,4 @@ export function useHtmlMediaElementConnect(
     ].filter(Boolean);
     return Array.from(new Set(resources)) as string[];
   }
-
-  function onDefaultSlotChange() {
-    const el = getSlottedChildren($target()!)[0] as HTMLMediaElement | null;
-
-    if (el && !/^(audio|video)$/i.test(el.tagName)) {
-      throw Error(
-        __DEV__
-          ? `[vds]: expected <audio> or <video> in default slot. Received: <${el.tagName}>.`
-          : '',
-      );
-    }
-
-    $mediaElement.set(el);
-  }
-
-  return {
-    $mediaElement,
-    onDefaultSlotChange,
-  };
 }

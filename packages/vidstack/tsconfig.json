@@ -1,12 +1,18 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "maverick.js",
     "paths": {
       "$test-utils": ["./src/test-utils/index.ts"],
-      "vidstack/player": ["src/styles/index.ts"],
+      "vidstack/player": ["./src/player/index.ts"],
       "vidstack/elements": ["./src/elements.ts"]
     },
     "types": ["@types/node", "vitest/globals"]
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/player/providers/audio/audio-element.tsx",
+    "src/player/providers/audio/audio-element.tsx"
+  ]
 }

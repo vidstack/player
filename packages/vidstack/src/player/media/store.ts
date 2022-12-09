@@ -1,7 +1,7 @@
 import { createContext, createStore, useContext } from 'maverick.js';
 import { keysOf } from 'maverick.js/std';
 
-import { ATTEMPTING_AUTOPLAY, CAN_LOAD_POSTER, MediaState } from './context';
+import { ATTEMPTING_AUTOPLAY, CAN_LOAD_POSTER, MediaState } from './state';
 import { createTimeRanges } from './time-ranges';
 
 export const MediaStateContext = createContext<MediaState>(() => mediaStore.create());
@@ -68,16 +68,16 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
 /**
  * Resets all media state and leaves general player state intact (i.e., `autoplay`, `volume`, etc.).
  */
-export function softResetMediaState(media: MediaState) {
+export function softResetMediaState($media: MediaState) {
   for (const prop of keysOf(mediaStore.initial)) {
     if (!DO_NOT_RESET_ON_SRC_CHANGE.has(prop)) {
-      media[prop as any] = mediaStore.initial[prop];
+      $media[prop as any] = mediaStore.initial[prop];
     }
   }
 }
 
-export function hardResetMediaState(media: MediaState) {
+export function hardResetMediaState($media: MediaState) {
   for (const prop of Object.keys(mediaStore.initial)) {
-    media[prop] = mediaStore.initial[prop];
+    $media[prop] = mediaStore.initial[prop];
   }
 }

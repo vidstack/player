@@ -3,3 +3,7 @@ vds-media {
   position: relative;
   contain: content;
 }
+
+vds-audio {
+  display: inline-block;
+}

@@ -5,11 +5,14 @@ import { useRAFLoop } from '../../../foundation/hooks/use-raf-loop';
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { getMediaTypeFromExt } from '../../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../../utils/number';
-import { ATTEMPTING_AUTOPLAY, MediaState } from '../../media/context';
 import type { MediaPlayEvent } from '../../media/events';
 import { onCurrentSrcChange, onMediaReady } from '../../media/provider/internal';
+import { ATTEMPTING_AUTOPLAY, MediaState } from '../../media/state';
 import type { MediaErrorCode } from '../../media/types';
 import type { HtmlMediaProviderElement } from './types';
+
+export const IGNORE_NEXT_ABORT = Symbol(__DEV__ ? 'IGNORE_NEXT_ABORT' : 0);
+export const IGNORE_NEXT_EMPTIED = Symbol(__DEV__ ? 'IGNORE_NEXT_EMPTIED' : 0);
 
 export function useHtmlMediaElementEvents(
   $target: ReadSignal<HtmlMediaProviderElement | null>,
@@ -72,17 +75,18 @@ export function useHtmlMediaElementEvents(
   }
 
   function attachInitialEventListeners() {
-    attachMediaEventListener('error', onError);
+    attachMediaEventListener('loadstart', onLoadStart);
     attachMediaEventListener('abort', onAbort);
     attachMediaEventListener('emptied', onEmptied);
-    attachMediaEventListener('loadstart', onLoadStart);
+    attachMediaEventListener('error', onError);
+
     if (__DEV__) {
       logger?.debug('attached initial media event listeners');
     }
   }
 
   function attachLoadStartEventListeners() {
-    if (!attachedLoadStartEventListeners) return;
+    if (attachedLoadStartEventListeners) return;
     disposal.add(
       attachMediaEventListener('loadeddata', onLoadedData),
       attachMediaEventListener('loadedmetadata', onLoadedMetadata),
@@ -96,7 +100,7 @@ export function useHtmlMediaElementEvents(
   }
 
   function attachCanPlayEventListeners() {
-    if (!attachedCanPlayEventListeners) return;
+    if (attachedCanPlayEventListeners) return;
     disposal.add(
       attachMediaEventListener('play', onPlay),
       attachMediaEventListener('pause', onPause),
@@ -125,12 +129,15 @@ export function useHtmlMediaElementEvents(
   }
 
   function onAbort(event?: Event) {
+    if (media![IGNORE_NEXT_ABORT]) return;
+    const srcChangeEvent = onCurrentSrcChange($media, provider!, '', logger);
+    if (srcChangeEvent) onMediaTypeChange(srcChangeEvent);
     dispatchEvent(provider, 'vds-abort', { triggerEvent: event });
-    onCurrentSrcChange($media, provider!, '', event, logger);
   }
 
   function onLoadStart(event: Event) {
-    onCurrentSrcChange($media, provider!, media!.currentSrc, event);
+    const srcChangeEvent = onCurrentSrcChange($media, provider!, media!.currentSrc, logger);
+    if (srcChangeEvent) onMediaTypeChange(srcChangeEvent);
 
     if (media!.currentSrc === '') {
       onAbort();
@@ -146,6 +153,7 @@ export function useHtmlMediaElementEvents(
   }
 
   function onEmptied(event: Event) {
+    if (media![IGNORE_NEXT_EMPTIED]) return;
     dispatchEvent(provider, 'vds-emptied', { triggerEvent: event });
   }
 
@@ -170,7 +178,7 @@ export function useHtmlMediaElementEvents(
     });
   }
 
-  function determineMediaType(event: Event) {
+  function onMediaTypeChange(event: Event) {
     dispatchEvent(provider, 'vds-media-type-change', {
       detail: getMediaTypeFromExt($media.currentSrc),
       triggerEvent: event,
@@ -178,8 +186,7 @@ export function useHtmlMediaElementEvents(
   }
 
   function onPlay(event: Event) {
-    const playEvent = new DOMEvent<void>('vds-play', {
-      detail: undefined,
+    const playEvent = new DOMEvent('vds-play', {
       triggerEvent: event,
     }) as MediaPlayEvent;
     playEvent.autoplay = $media[ATTEMPTING_AUTOPLAY];

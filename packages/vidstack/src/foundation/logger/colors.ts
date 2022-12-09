@@ -21,7 +21,7 @@ function generateColor() {
 function init(): Map<string, string> {
   if (!__DEV__) return new Map();
 
-  let colors = {};
+  let colors;
 
   try {
     colors = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!);
@@ -29,5 +29,5 @@ function init(): Map<string, string> {
     // no-op
   }
 
-  return new Map(Object.entries(colors));
+  return new Map(Object.entries(colors ?? {}));
 }

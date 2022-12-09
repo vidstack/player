@@ -1,14 +1,14 @@
 import {
   createContext,
   effect,
-  getScheduler,
   hasProvidedContext,
   provideContext,
   ReadSignal,
   signal,
+  tick,
   useContext,
 } from 'maverick.js';
-import { onConnect, onDestroy } from 'maverick.js/element';
+import { onConnect, onMount } from 'maverick.js/element';
 import { dispatchEvent } from 'maverick.js/std';
 
 import type { useFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
@@ -64,7 +64,7 @@ export function useMediaProvider(
     );
 
   if (__DEV__) useLogging($target, $provider);
-  const { $canLoad, startLoadingMedia } = useMediaCanLoad($target, $provider);
+  const { startLoadingMedia } = useMediaCanLoad($target, $provider);
   useMediaPropChange($target, $provider);
   useMediaAdapterDelegate($target, $provider, adapter);
 
@@ -72,7 +72,7 @@ export function useMediaProvider(
     const $mediaProvider = useContext(MediaProviderContext);
 
     $mediaProvider.set($target());
-    getScheduler().flushSync();
+    tick();
 
     const canFullscreen = fullscreen.supported;
     $media.canFullscreen = canFullscreen;
@@ -82,11 +82,15 @@ export function useMediaProvider(
 
     return () => {
       $mediaProvider.set(null);
-      getScheduler().flushSync();
+      tick();
     };
   });
 
-  onDestroy(() => dispatchEvent($target(), 'vds-destroy'));
+  onMount(() => {
+    return () => {
+      dispatchEvent($target(), 'vds-destroy');
+    };
+  });
 
   return {
     orientation,
@@ -122,7 +126,7 @@ export function useMediaProvider(
       $provider.playsinline = playsinline;
     },
     get canLoad() {
-      return $canLoad();
+      return $media.canLoad;
     },
     startLoadingMedia,
     play: adapter.play,
