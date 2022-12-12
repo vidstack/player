@@ -4,14 +4,19 @@ import { dispatchEvent, isNull, setAttribute } from 'maverick.js/std';
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { isArrayEqual } from '../../../utils/array';
 import { CAN_LOAD_POSTER, MediaState } from '../../media/state';
-import type { HtmlMediaProviderElement } from './types';
+import type { HTMLProviderElement } from './types';
 import { IGNORE_NEXT_ABORT, IGNORE_NEXT_EMPTIED } from './use-events';
 
-export function useHtmlMediaElementConnect(
-  $target: ReadSignal<HtmlMediaProviderElement | null>,
+/**
+ * Handles the DOM connection and disconnection of the underlying HTML media element (e.g.,
+ * `<audio>` or `<video>`). This hook uses the `MutationObserver` to observer child changes to the
+ * given provider element (`$target`) and
+ */
+export function useHTMLProviderConnect(
+  $target: ReadSignal<HTMLProviderElement | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
   $media: MediaState,
-) {
+): void {
   const logger = __DEV__ ? useLogger($target) : undefined;
 
   effect(() => {
@@ -32,7 +37,7 @@ export function useHtmlMediaElementConnect(
     return;
   });
 
-  function onMediaElementConnect(provider: HtmlMediaProviderElement, media: HTMLMediaElement) {
+  function onMediaElementConnect(provider: HTMLProviderElement, media: HTMLMediaElement) {
     // Update or remove any attributes that we manage.
     if (media.hasAttribute('loop')) provider.loop = true;
     media.removeAttribute('loop');

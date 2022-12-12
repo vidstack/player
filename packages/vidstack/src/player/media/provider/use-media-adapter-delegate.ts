@@ -12,7 +12,7 @@ import type { MediaProviderAdapter, MediaProviderElement, MediaProviderProps } f
  */
 export function useMediaAdapterDelegate(
   $target: ReadSignal<MediaProviderElement | null>,
-  $provider: MediaProviderProps,
+  $providerProps: MediaProviderProps,
   adapter: MediaProviderAdapter,
 ) {
   const logger = __DEV__ ? useLogger($target) : undefined,
@@ -28,7 +28,7 @@ export function useMediaAdapterDelegate(
   });
 
   effect(() => {
-    const paused = $provider.paused;
+    const paused = $providerProps.paused;
     canPlayQueue.queue('paused', () => {
       try {
         if (!paused) {
@@ -45,22 +45,22 @@ export function useMediaAdapterDelegate(
   });
 
   effect(() => {
-    const volume = clampNumber(0, $provider.volume, 1);
+    const volume = clampNumber(0, $providerProps.volume, 1);
     canPlayQueue.queue('volume', () => (adapter.volume = volume));
   });
 
   effect(() => {
-    const muted = $provider.muted;
+    const muted = $providerProps.muted;
     canPlayQueue.queue('muted', () => (adapter.muted = muted));
   });
 
   effect(() => {
-    const currentTime = $provider.currentTime;
+    const currentTime = $providerProps.currentTime;
     canPlayQueue.queue('currentTime', () => (adapter.currentTime = currentTime));
   });
 
   effect(() => {
-    const playsinline = $provider.playsinline;
+    const playsinline = $providerProps.playsinline;
     canPlayQueue.queue('playsinline', () => (adapter.playsinline = playsinline));
   });
 }

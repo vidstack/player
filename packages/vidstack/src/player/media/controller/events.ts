@@ -8,9 +8,6 @@ import type { MediaRequestEvents } from '../request-events';
 
 export interface MediaControllerEventTarget extends HTMLCustomElement<any, MediaControllerEvents> {}
 
-/**
- * All media events that are dispatched up to or by a media controller.
- */
 export interface MediaControllerEvents
   extends MediaRequestEvents,
     FullscreenEvents,

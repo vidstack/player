@@ -2,7 +2,7 @@ import type { CustomElementPropDefinitions } from 'maverick.js/element';
 
 import type { MediaProviderProps } from './types';
 
-export const mediaProviderPropDefs: CustomElementPropDefinitions<MediaProviderProps> = {
+export const mediaProviderProps: CustomElementPropDefinitions<MediaProviderProps> = {
   logLevel: { initial: 'silent' },
   load: { initial: 'visible' },
   autoplay: { initial: false },

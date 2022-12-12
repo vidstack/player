@@ -9,18 +9,24 @@ import type { MediaPlayEvent } from '../../media/events';
 import { onCurrentSrcChange, onMediaReady } from '../../media/provider/internal';
 import { ATTEMPTING_AUTOPLAY, MediaState } from '../../media/state';
 import type { MediaErrorCode } from '../../media/types';
-import type { HtmlMediaProviderElement } from './types';
+import type { HTMLProviderElement } from './types';
 
+// We ignore these events in the case that media has begun loading before our consent. These events
+// will fire when we call `media.load()`.
 export const IGNORE_NEXT_ABORT = Symbol(__DEV__ ? 'IGNORE_NEXT_ABORT' : 0);
 export const IGNORE_NEXT_EMPTIED = Symbol(__DEV__ ? 'IGNORE_NEXT_EMPTIED' : 0);
 
-export function useHtmlMediaElementEvents(
-  $target: ReadSignal<HtmlMediaProviderElement | null>,
+/**
+ * This is hook is mainly responsible for listening to events fired by a `HTMLMediaElement` and
+ * dispatching the respective Vidstack media events (e.g., `play` -> `vds-play`).
+ */
+export function useHTMLProviderEvents(
+  $target: ReadSignal<HTMLProviderElement | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
   $media: MediaState,
 ): void {
   // An un-debounced waiting tracker (waiting is debounced inside the media controller).
-  let provider: HtmlMediaProviderElement | null = null,
+  let provider: HTMLProviderElement | null = null,
     media: HTMLMediaElement | null = null,
     logger = __DEV__ ? useLogger($target) : undefined,
     disposal = useDisposalBin(),
@@ -34,7 +40,6 @@ export function useHtmlMediaElementEvents(
    * resolve that by retreiving time updates in a request animation frame loop.
    */
   const timeRafLoop = useRAFLoop(() => {
-    const media = $mediaElement();
     if (!media) return;
     const newTime = media.currentTime;
     if ($media.currentTime !== newTime) updateCurrentTime(newTime);

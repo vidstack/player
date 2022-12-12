@@ -11,6 +11,7 @@ import {
 import { onConnect, onMount } from 'maverick.js/element';
 import { dispatchEvent } from 'maverick.js/std';
 
+import type { FullscreenEventTarget } from '../../../foundation/fullscreen/events';
 import type { useFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
 import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
 import { useScreenOrientation } from '../../../foundation/orientation/use-screen-orientation';
@@ -40,9 +41,9 @@ export const MediaProviderContext = createContext(() => signal<MediaProviderElem
  * 1. Dispatch relevant events when the media provider props are changed.
  * 2. Create and return the `MediaProviderMembers` object.
  */
-export function useMediaProvider(
-  $target: ReadSignal<MediaProviderElement | null>,
-  props: UseMediaProviderProps,
+export function useMediaProvider<Target extends MediaProviderElement>(
+  $target: ReadSignal<Target | null>,
+  props: UseMediaProviderProps<Target>,
 ): UseMediaProvider {
   if (!hasProvidedContext(MediaProviderContext)) {
     provideContext(MediaStateContext);
@@ -50,23 +51,23 @@ export function useMediaProvider(
     useMediaStateManager($target);
   }
 
-  const { $provider, adapter, useFullscreen } = props,
+  const { $providerProps, adapter } = props,
     $media = useInternalMediaState()!,
     orientation = useScreenOrientation($target),
-    fullscreen = useFullscreen(
+    fullscreen = props.fullscreen(
       $target,
       withMediaFullscreenOptions({
         get lockType() {
-          return $provider.fullscreenOrientation;
+          return $providerProps.fullscreenOrientation;
         },
         orientation,
       }),
     );
 
-  if (__DEV__) useLogging($target, $provider);
-  const { startLoadingMedia } = useMediaCanLoad($target, $provider);
-  useMediaPropChange($target, $provider);
-  useMediaAdapterDelegate($target, $provider, adapter);
+  if (__DEV__) useLogging($target, $providerProps);
+  const { startLoadingMedia } = useMediaCanLoad($target, $providerProps);
+  useMediaPropChange($target, $providerProps);
+  useMediaAdapterDelegate($target, $providerProps, adapter);
 
   onConnect(() => {
     const $mediaProvider = useContext(MediaProviderContext);
@@ -76,7 +77,8 @@ export function useMediaProvider(
 
     const canFullscreen = fullscreen.supported;
     $media.canFullscreen = canFullscreen;
-    dispatchEvent($target(), 'vds-fullscreen-support-change', {
+    // TODO: why do we need to type cast this? failing to infer custom element events from generic.
+    dispatchEvent($target() as MediaProviderElement, 'vds-fullscreen-support-change', {
       detail: canFullscreen,
     });
 
@@ -88,7 +90,7 @@ export function useMediaProvider(
 
   onMount(() => {
     return () => {
-      dispatchEvent($target(), 'vds-destroy');
+      dispatchEvent($target() as MediaProviderElement, 'vds-destroy');
     };
   });
 
@@ -99,31 +101,31 @@ export function useMediaProvider(
       return adapter.paused;
     },
     set paused(paused) {
-      $provider.paused = paused;
+      $providerProps.paused = paused;
     },
     get currentTime() {
       return adapter.currentTime;
     },
     set currentTime(currentTime) {
-      $provider.currentTime = currentTime;
+      $providerProps.currentTime = currentTime;
     },
     get volume() {
       return adapter.volume;
     },
     set volume(volume) {
-      $provider.volume = volume;
+      $providerProps.volume = volume;
     },
     get muted() {
       return adapter.muted;
     },
     set muted(muted) {
-      $provider.muted = muted;
+      $providerProps.muted = muted;
     },
     get playsinline() {
       return adapter.playsinline;
     },
     set playsinline(playsinline) {
-      $provider.playsinline = playsinline;
+      $providerProps.playsinline = playsinline;
     },
     get canLoad() {
       return $media.canLoad;
@@ -136,10 +138,10 @@ export function useMediaProvider(
   };
 }
 
-export interface UseMediaProviderProps {
-  $provider: MediaProviderProps;
+export interface UseMediaProviderProps<Target extends FullscreenEventTarget> {
+  $providerProps: MediaProviderProps;
   adapter: MediaProviderAdapter;
-  useFullscreen: typeof useFullscreen;
+  fullscreen: typeof useFullscreen<Target>;
 }
 
 export interface UseMediaProvider
@@ -148,7 +150,7 @@ export interface UseMediaProvider
 
 function useLogging(
   $target: ReadSignal<MediaProviderElement | null>,
-  $provider: MediaProviderProps,
+  $providerProps: MediaProviderProps,
 ) {
   if (!__DEV__) return;
 
@@ -160,11 +162,11 @@ function useLogging(
     if (!mediaElement) {
       const printer = useLogPrinter($target);
       effect(() => {
-        printer.logLevel = $provider.logLevel;
+        printer.logLevel = $providerProps.logLevel;
       });
     } else {
       effect(() => {
-        mediaElement.logLevel = $provider.logLevel;
+        mediaElement.logLevel = $providerProps.logLevel;
       });
     }
   });

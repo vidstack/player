@@ -6,7 +6,7 @@ import { useIntersectionObserver } from '../../../foundation/observers/use-inter
 import type { MediaProviderElement, MediaProviderProps } from './types';
 
 /**
- * This hook is responsible for initializing and updating the media `canPlay` state.
+ * This hook is responsible for determing when media can begin loading.
  */
 export function useMediaCanLoad(
   $target: ReadSignal<MediaProviderElement | null>,

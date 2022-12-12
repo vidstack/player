@@ -11,7 +11,7 @@ import type { MediaProviderElement, MediaProviderProps } from './types';
  */
 export function useMediaPropChange(
   $target: ReadSignal<MediaProviderElement | null>,
-  $provider: MediaProviderProps,
+  $providerProps: MediaProviderProps,
 ) {
   const $media = useInternalMediaState()!;
 
@@ -20,31 +20,31 @@ export function useMediaPropChange(
     if (!target) return;
 
     effect(() => {
-      const autoplay = $provider.autoplay;
+      const autoplay = $providerProps.autoplay;
       $media.autoplay = autoplay;
       dispatchEvent(target, 'vds-autoplay-change', { detail: autoplay });
     });
 
     effect(() => {
-      const poster = $provider.poster;
+      const poster = $providerProps.poster;
       $media.poster = poster;
       dispatchEvent(target, 'vds-poster-change', { detail: poster });
     });
 
     effect(() => {
-      const loop = $provider.loop;
+      const loop = $providerProps.loop;
       $media.loop = loop;
       dispatchEvent(target, 'vds-loop-change', { detail: loop });
     });
 
     effect(() => {
-      const controls = $provider.controls;
+      const controls = $providerProps.controls;
       $media.controls = controls;
       dispatchEvent(target, 'vds-controls-change', { detail: controls });
     });
 
     effect(() => {
-      const playsinline = $provider.playsinline;
+      const playsinline = $providerProps.playsinline;
       $media.playsinline = playsinline;
       dispatchEvent(target, 'vds-playsinline-change', { detail: playsinline });
     });

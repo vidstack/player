@@ -79,7 +79,7 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
   'vds-audio': () => import('./player/providers/audio/audio-element'),
   // 'vds-gesture': () => import(''),
   // 'vds-hls': () => import(''),
-  'vds-media': () => import('./player/media/media-element'),
+  'vds-media': () => import('./player/media/element/media-element'),
   // 'vds-poster': () => import(''),
   // 'vds-slider': () => import(''),
   // 'vds-time': () => import(''),

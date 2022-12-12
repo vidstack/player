@@ -1,16 +1,16 @@
 import fscreen from 'fscreen';
-import { effect, ReadSignal, signal } from 'maverick.js';
+import { effect, peek, ReadSignal, signal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import { dispatchFullscreenChange, dispatchFullscreenError } from './dispatch';
 import type { FullscreenEventTarget } from './events';
 
-export function useFullscreen(
-  $target: ReadSignal<FullscreenEventTarget | null>,
+export function useFullscreen<T extends FullscreenEventTarget>(
+  $target: ReadSignal<T | null>,
   props: UseFullscreenProps,
 ): UseFullscreen {
   const $active = signal(false),
-    exit = () => exitFullscreen($target(), props);
+    exit = () => exitFullscreen(peek($target), props);
 
   // Tracks whether we're the active fullscreen event listener. Fullscreen events can only be
   // listened to globally on the document so we need to know if they relate to the current host
@@ -53,7 +53,7 @@ export function useFullscreen(
     async requestFullscreen() {
       try {
         listening = true;
-        return await requestFullscreen($target(), props);
+        return await requestFullscreen(peek($target), props);
       } catch (error) {
         listening = false;
         throw error;

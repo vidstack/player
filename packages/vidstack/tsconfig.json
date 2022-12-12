@@ -10,9 +10,5 @@
     },
     "types": ["@types/node", "vitest/globals"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/player/providers/audio/audio-element.tsx",
-    "src/player/providers/audio/audio-element.tsx"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

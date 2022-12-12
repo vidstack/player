@@ -63,7 +63,7 @@ export function throwIfNotReadyForPlayback($media: MediaState) {
   if ($media.canPlay) return;
   throw Error(
     __DEV__
-      ? `Media is not ready - wait for \`vds-can-play\` event.`
+      ? `[vidstack] media is not ready - wait for \`vds-can-play\` event.`
       : '[vidstack] media not ready',
   );
 }

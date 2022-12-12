@@ -7,3 +7,16 @@ vds-media {
 vds-audio {
   display: inline-block;
 }
+
+vds-video {
+  display: inline-block;
+  background-color: var(--vds-video-bg-color, #000);
+}
+
+vds-video > video:not([width]) {
+  width: var(--vds-video-width, 100%);
+}
+
+vds-video > video:not([height]) {
+  height: var(--vds-video-height, auto);
+}

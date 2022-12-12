@@ -25,6 +25,11 @@ export type MediaRequestQueueRecord = {
   userIdle: RE.ResumeUserIdleRequestEvent | RE.PauseUserIdleRequestEvent;
 };
 
+/**
+ * This hook is responsible for listening to media request events and calling the appropriate
+ * actions on the current media provider. Do note that we queue actions until a media provider
+ * has connected.
+ */
 export function useMediaRequestManager(
   $target: ReadSignal<MediaControllerEventTarget | null>,
   user: UseMediaUser,

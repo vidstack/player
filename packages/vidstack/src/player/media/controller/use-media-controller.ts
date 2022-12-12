@@ -17,11 +17,13 @@ import { useMediaRequestManager } from './use-media-request-manager';
 import { useMediaStateManager } from './use-media-state-manager';
 
 /**
- * The media controller acts as a message bus between the media provider and all other
- * components, such as UI components. The controller's main responsibilities are:
+ * The media controller acts as a message bus between the media provider and all other components
+ * (e.g., UI components).
  *
- * - Providing the media store context down to all child consumers (i.e., UI elements) so they can
- * subscribe to media state changes.
+ * The controller's main responsibilities are:
+ *
+ * - Providing the media state context down to all child consumers (i.e., UI elements) so they can
+ * subscribe to media state signals.
  *
  * - Listening for media request events so it can try and satisfy them (e.g., accepting a play
  * request and satisfying it by calling play on the media provider).

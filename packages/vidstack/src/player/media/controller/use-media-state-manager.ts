@@ -21,6 +21,10 @@ import type { MediaState } from '../state';
 import { softResetMediaState, useInternalMediaState } from '../store';
 import type { MediaRequestQueueRecord, UseMediaRequestManager } from './use-media-request-manager';
 
+/**
+ * This hook is responsible for listening to and normalizing media events, updating the media
+ * state context, and satisfying media requests if a manager arg is provided.
+ */
 export function useMediaStateManager(
   $target: ReadSignal<HTMLElement | null>,
   requestManager?: UseMediaRequestManager,
@@ -30,10 +34,6 @@ export function useMediaStateManager(
     disposal = useDisposalBin(),
     requestQueue = requestManager?.requestQueue,
     trackedEvents = new Map<string, ME.VdsMediaEvent>();
-
-  onAttach(() => {
-    $target()?.setAttribute('aria-busy', 'true');
-  });
 
   let provider: MediaProviderElement | null = null,
     skipInitialSrcChange = true,
@@ -45,6 +45,10 @@ export function useMediaStateManager(
     connected = false,
     lastWaitingEvent: Event | undefined,
     $connectedMediaProvider = computed(() => ($target() ? $mediaProvider() : null));
+
+  onAttach(() => {
+    $target()?.setAttribute('aria-busy', 'true');
+  });
 
   effect(() => {
     provider = $connectedMediaProvider();
@@ -69,6 +73,7 @@ export function useMediaStateManager(
 
   function resetTracking() {
     stopWaiting();
+    softResetMediaState($media);
     requestManager?.$isReplay.set(false);
     requestManager?.$isLooping.set(false);
     firingWaiting = false;

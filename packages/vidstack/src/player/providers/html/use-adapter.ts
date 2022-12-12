@@ -7,10 +7,13 @@ import type { MediaPlayFailEvent } from '../../media/events';
 import { resetPlaybackIfEnded, throwIfNotReadyForPlayback } from '../../media/provider/internal';
 import type { MediaProviderAdapter } from '../../media/provider/types';
 import { ATTEMPTING_AUTOPLAY, MediaState } from '../../media/state';
-import type { HtmlMediaProviderElement } from './types';
+import type { HTMLProviderElement } from './types';
 
-export function useHtmlMediaElementAdapter(
-  $target: ReadSignal<HtmlMediaProviderElement | null>,
+/**
+ * Adapts the underlying HTMLMediaElement API to satisfy the `MediaProviderAdapter` interface.
+ */
+export function useHTMLProviderAdapter(
+  $target: ReadSignal<HTMLProviderElement | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
   $media: MediaState,
 ): MediaProviderAdapter {
@@ -51,6 +54,7 @@ export function useHtmlMediaElementAdapter(
         return $mediaElement()!.play();
       } catch (error) {
         const provider = $target();
+
         if (provider) {
           const event = new DOMEvent('vds-play-fail') as MediaPlayFailEvent;
           event.autoplay = $media[ATTEMPTING_AUTOPLAY];
