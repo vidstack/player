@@ -83,7 +83,7 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
   // 'vds-poster': () => import(''),
   // 'vds-slider': () => import(''),
   // 'vds-time': () => import(''),
-  // 'vds-video': () => import(''),
+  'vds-video': () => import('./player/providers/video/video-element'),
 };
 
 async function loadCustomElement(tagName: VidstackElement) {
