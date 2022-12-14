@@ -6,12 +6,21 @@ import { videoProviderProps } from './props';
 import type { VideoElement } from './types';
 import { useVideoFullscreen } from './use-video-fullscreen';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'vds-video': VideoElement;
+  }
+}
+
 export const VideoElementDefinition = defineCustomElement<VideoElement>({
   tagName: 'vds-video',
   props: videoProviderProps,
   setup({ host, props, accessors }) {
-    const $target = () => (host.$connected ? host.el : null);
-    const { members } = useHTMLProvider($target, props, useVideoFullscreen);
+    const $target = () => (host.$connected ? host.el : null),
+      { members } = useHTMLProvider<VideoElement>($target, {
+        $props: props,
+        fullscreen: useVideoFullscreen,
+      });
 
     onConnect(() => {
       dispatchEvent(host.el, 'vds-view-type-change', { detail: 'video' });

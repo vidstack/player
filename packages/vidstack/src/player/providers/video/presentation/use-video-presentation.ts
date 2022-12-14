@@ -24,7 +24,7 @@ export function useVideoPresentation(
   $target: ReadSignal<VideoElement | null>,
   props: UseFullscreenProps,
 ): UseVideoPresentation {
-  const $video = () => $target()?.mediaElement as HTMLVideoElement,
+  const $video = () => $target()?.mediaElement as HTMLVideoElement | null,
     $mode = signal<WebKitPresentationMode>('inline'),
     $supported = () => isFunction($video()?.webkitSetPresentationMode),
     logger = __DEV__ ? useLogger($target) : undefined;
@@ -48,7 +48,7 @@ export function useVideoPresentation(
       logger?.infoGroup('presentation mode change').labelledLog('Event', event).dispatch();
     }
 
-    $mode.set($video().webkitPresentationMode!);
+    $mode.set($video()!.webkitPresentationMode!);
 
     dispatchEvent($target(), 'vds-video-presentation-change', {
       detail: $mode(),

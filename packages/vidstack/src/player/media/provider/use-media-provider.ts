@@ -9,7 +9,7 @@ import {
   useContext,
 } from 'maverick.js';
 import { onConnect, onMount } from 'maverick.js/element';
-import { dispatchEvent } from 'maverick.js/std';
+import { dispatchEvent, mergeProperties } from 'maverick.js/std';
 
 import type { FullscreenEventTarget } from '../../../foundation/fullscreen/events';
 import type { useFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
@@ -51,23 +51,23 @@ export function useMediaProvider<Target extends MediaProviderElement>(
     useMediaStateManager($target);
   }
 
-  const { $providerProps, adapter } = props,
+  const { $props, adapter } = props,
     $media = useInternalMediaState()!,
     orientation = useScreenOrientation($target),
     fullscreen = props.fullscreen(
       $target,
       withMediaFullscreenOptions({
         get lockType() {
-          return $providerProps.fullscreenOrientation;
+          return $props.fullscreenOrientation;
         },
         orientation,
       }),
     );
 
-  if (__DEV__) useLogging($target, $providerProps);
-  const { startLoadingMedia } = useMediaCanLoad($target, $providerProps);
-  useMediaPropChange($target, $providerProps);
-  useMediaAdapterDelegate($target, $providerProps, adapter);
+  if (__DEV__) useLogging($target, $props);
+  const { startLoadingMedia } = useMediaCanLoad($target, $props);
+  useMediaPropChange($target, $props);
+  useMediaAdapterDelegate($target, $props, adapter);
 
   onConnect(() => {
     const $mediaProvider = useContext(MediaProviderContext);
@@ -94,52 +94,20 @@ export function useMediaProvider<Target extends MediaProviderElement>(
     };
   });
 
-  return {
+  return mergeProperties(adapter, {
     orientation,
     fullscreen,
-    get paused() {
-      return adapter.paused;
-    },
-    set paused(paused) {
-      $providerProps.paused = paused;
-    },
-    get currentTime() {
-      return adapter.currentTime;
-    },
-    set currentTime(currentTime) {
-      $providerProps.currentTime = currentTime;
-    },
-    get volume() {
-      return adapter.volume;
-    },
-    set volume(volume) {
-      $providerProps.volume = volume;
-    },
-    get muted() {
-      return adapter.muted;
-    },
-    set muted(muted) {
-      $providerProps.muted = muted;
-    },
-    get playsinline() {
-      return adapter.playsinline;
-    },
-    set playsinline(playsinline) {
-      $providerProps.playsinline = playsinline;
-    },
     get canLoad() {
       return $media.canLoad;
     },
     startLoadingMedia,
-    play: adapter.play,
-    pause: adapter.pause,
     enterFullscreen: fullscreen.requestFullscreen,
     exitFullscreen: fullscreen.exitFullscreen,
-  };
+  });
 }
 
 export interface UseMediaProviderProps<Target extends FullscreenEventTarget> {
-  $providerProps: MediaProviderProps;
+  $props: MediaProviderProps;
   adapter: MediaProviderAdapter;
   fullscreen: typeof useFullscreen<Target>;
 }
@@ -148,25 +116,17 @@ export interface UseMediaProvider
   extends Omit<MediaProviderMembers, keyof MediaProviderProps>,
     MediaProviderAdapter {}
 
-function useLogging(
-  $target: ReadSignal<MediaProviderElement | null>,
-  $providerProps: MediaProviderProps,
-) {
+function useLogging($target: ReadSignal<MediaProviderElement | null>, $props: MediaProviderProps) {
   if (!__DEV__) return;
 
   useMediaEventsLogger($target);
 
   onConnect(() => {
     const mediaElement = $target()!.closest('vds-media');
-
     if (!mediaElement) {
       const printer = useLogPrinter($target);
       effect(() => {
-        printer.logLevel = $providerProps.logLevel;
-      });
-    } else {
-      effect(() => {
-        mediaElement.logLevel = $providerProps.logLevel;
+        printer.logLevel = $props.logLevel;
       });
     }
   });

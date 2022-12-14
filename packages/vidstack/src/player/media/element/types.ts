@@ -1,8 +1,10 @@
 import type { HTMLCustomElement } from 'maverick.js/element';
+import type { DOMEvent } from 'maverick.js/std';
 
+import type { LogLevel } from '../../../foundation/logger/log-level';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/screen-orientation';
+import type { MediaControllerEvents } from '../controller/events';
 import type { UseMediaController } from '../controller/use-media-controller';
-import type { MediaElementEvents } from './events';
 
 /**
  * All media elements exist inside the `<vds-media>` component. It's main jobs are to host the
@@ -24,10 +26,14 @@ import type { MediaElementEvents } from './events';
  */
 export interface MediaElement
   extends HTMLCustomElement<MediaElementProps, MediaElementEvents>,
-    MediaElementProps,
-    UseMediaController {}
+    MediaElementMembers {}
 
 export interface MediaElementProps {
+  /**
+   * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
+   * and `debug`.
+   */
+  logLevel: LogLevel;
   /**
    * The amount of delay in milliseconds while media playback is progressing without user
    * activity to indicate an idle state.
@@ -40,3 +46,17 @@ export interface MediaElementProps {
    */
   fullscreenOrientation: ScreenOrientationLockType | undefined;
 }
+
+export interface MediaElementMembers extends MediaElementProps, UseMediaController {}
+
+export interface MediaElementEvents extends MediaControllerEvents {
+  'vds-media-connect': MediaElementConnectEvent;
+}
+
+/**
+ * Fired when the media element `<vds-media>` connects to the DOM.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaElementConnectEvent extends DOMEvent<MediaElement> {}

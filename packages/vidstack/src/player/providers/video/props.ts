@@ -1,3 +1,7 @@
-import { htmlProviderProps } from '../html/props';
+import type { CustomElementPropDefinitions } from 'maverick.js/element';
 
-export const videoProviderProps = htmlProviderProps;
+import { htmlProviderProps } from '../html/props';
+import type { VideoProviderProps } from './types';
+
+export const videoProviderProps: CustomElementPropDefinitions<VideoProviderProps> =
+  htmlProviderProps;

@@ -6,24 +6,24 @@ import { useLogger } from '../../../foundation/logger/use-logger';
 import { getMediaTypeFromExt } from '../../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../../utils/number';
 import type { MediaPlayEvent } from '../../media/events';
-import { onCurrentSrcChange, onMediaReady } from '../../media/provider/internal';
+import { onMediaReady, onMediaSrcChange } from '../../media/provider/internal';
 import { ATTEMPTING_AUTOPLAY, MediaState } from '../../media/state';
 import type { MediaErrorCode } from '../../media/types';
 import type { HTMLProviderElement } from './types';
+import type { UseHTMLProviderProps } from './use-provider';
 
-// We ignore these events in the case that media has begun loading before our consent. These events
-// will fire when we call `media.load()`.
+export const ENGINE = Symbol(__DEV__ ? 'ENGINE' : 0);
 export const IGNORE_NEXT_ABORT = Symbol(__DEV__ ? 'IGNORE_NEXT_ABORT' : 0);
-export const IGNORE_NEXT_EMPTIED = Symbol(__DEV__ ? 'IGNORE_NEXT_EMPTIED' : 0);
 
 /**
  * This is hook is mainly responsible for listening to events fired by a `HTMLMediaElement` and
  * dispatching the respective Vidstack media events (e.g., `play` -> `vds-play`).
  */
-export function useHTMLProviderEvents(
-  $target: ReadSignal<HTMLProviderElement | null>,
+export function useHTMLProviderEvents<T extends HTMLProviderElement>(
+  $target: ReadSignal<T | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
   $media: MediaState,
+  props: UseHTMLProviderProps<T>,
 ): void {
   // An un-debounced waiting tracker (waiting is debounced inside the media controller).
   let provider: HTMLProviderElement | null = null,
@@ -37,7 +37,7 @@ export function useHTMLProviderEvents(
   /**
    * The `timeupdate` event fires surprisingly infrequently during playback, meaning your progress
    * bar (or whatever else is synced to the currentTime) moves in a choppy fashion. This helps
-   * resolve that by retreiving time updates in a request animation frame loop.
+   * resolve that by retrieving time updates in a request animation frame loop.
    */
   const timeRafLoop = useRAFLoop(() => {
     if (!media) return;
@@ -98,6 +98,7 @@ export function useHTMLProviderEvents(
       attachMediaEventListener('canplay', onCanPlay),
       attachMediaEventListener('canplaythrough', onCanPlayThrough),
       attachMediaEventListener('durationchange', onDurationChange),
+      attachMediaEventListener('progress', onProgress),
       attachMediaEventListener('stalled', onStalled),
       attachMediaEventListener('suspend', onSuspend),
     );
@@ -110,7 +111,6 @@ export function useHTMLProviderEvents(
       attachMediaEventListener('play', onPlay),
       attachMediaEventListener('pause', onPause),
       attachMediaEventListener('playing', onPlaying),
-      attachMediaEventListener('progress', onProgress),
       attachMediaEventListener('ratechange', onRateChange),
       attachMediaEventListener('seeked', onSeeked),
       attachMediaEventListener('seeking', onSeeking),
@@ -133,32 +133,36 @@ export function useHTMLProviderEvents(
     });
   }
 
-  function onAbort(event?: Event) {
-    if (media![IGNORE_NEXT_ABORT]) return;
-    const srcChangeEvent = onCurrentSrcChange($media, provider!, '', logger);
-    if (srcChangeEvent) onMediaTypeChange(srcChangeEvent);
+  function onSourceChange() {
+    const source = $media.sources.find((src) => src.src === media!.currentSrc);
+    onMediaSrcChange($media, provider!, source ?? { src: media!.currentSrc }, logger);
+    onMediaTypeChange();
+  }
+
+  function onAbort(event: Event) {
+    if (media![IGNORE_NEXT_ABORT]) {
+      media![IGNORE_NEXT_ABORT] = false;
+      return;
+    }
+
+    if (props.onAbort?.(event)) return;
+
+    onSourceChange();
     dispatchEvent(provider, 'vds-abort', { triggerEvent: event });
   }
 
   function onLoadStart(event: Event) {
-    const srcChangeEvent = onCurrentSrcChange($media, provider!, media!.currentSrc, logger);
-    if (srcChangeEvent) onMediaTypeChange(srcChangeEvent);
-
-    if (media!.currentSrc === '') {
-      onAbort();
+    if (media!.networkState === 3) {
+      onAbort(event);
       return;
     }
 
+    if (!media![ENGINE]) onSourceChange();
     attachLoadStartEventListeners();
-
-    dispatchEvent(provider, 'vds-load-start', {
-      triggerEvent: event,
-      detail: getMediaMetadata(),
-    });
+    dispatchEvent(provider, 'vds-load-start', { triggerEvent: event });
   }
 
   function onEmptied(event: Event) {
-    if (media![IGNORE_NEXT_EMPTIED]) return;
     dispatchEvent(provider, 'vds-emptied', { triggerEvent: event });
   }
 
@@ -167,27 +171,25 @@ export function useHTMLProviderEvents(
   }
 
   function onLoadedMetadata(event: Event) {
+    onMediaTypeChange();
     attachCanPlayEventListeners();
 
     // Sync volume state before metadata.
     dispatchEvent(provider, 'vds-volume-change', {
-      detail: {
-        volume: media!.volume,
-        muted: media!.muted,
-      },
+      detail: { volume: media!.volume, muted: media!.muted },
     });
 
-    dispatchEvent(provider, 'vds-loaded-metadata', {
-      triggerEvent: event,
-      detail: getMediaMetadata(),
-    });
+    dispatchEvent(provider, 'vds-loaded-metadata', { triggerEvent: event });
+
+    props.onLoadedMetadata?.(event);
   }
 
-  function onMediaTypeChange(event: Event) {
-    dispatchEvent(provider, 'vds-media-type-change', {
-      detail: getMediaTypeFromExt($media.currentSrc),
-      triggerEvent: event,
-    });
+  function onMediaTypeChange() {
+    const isLive = !Number.isFinite(media!.duration);
+    const mediaType = isLive ? 'live-video' : getMediaTypeFromExt($media.source);
+    if (mediaType !== $media.mediaType) {
+      dispatchEvent(provider, 'vds-media-type-change', { detail: mediaType });
+    }
   }
 
   function onPlay(event: Event) {
@@ -334,16 +336,5 @@ export function useHTMLProviderEvents(
       },
       triggerEvent: event,
     });
-  }
-
-  function getMediaMetadata() {
-    return {
-      src: $media.src, // Set before metadata is retrieved.
-      currentSrc: media!.currentSrc,
-      duration: media!.duration || 0,
-      poster: (media as HTMLVideoElement).poster,
-      mediaType: getMediaTypeFromExt($media.currentSrc),
-      viewType: $media.viewType,
-    };
   }
 }

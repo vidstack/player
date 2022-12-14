@@ -1,11 +1,12 @@
-import { effect, ReadSignal } from 'maverick.js';
+import { effect, peek, ReadSignal } from 'maverick.js';
 import { dispatchEvent, isNull, setAttribute } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
-import { isArrayEqual } from '../../../utils/array';
 import { CAN_LOAD_POSTER, MediaState } from '../../media/state';
+import type { MediaSrc } from '../../media/types';
 import type { HTMLProviderElement } from './types';
-import { IGNORE_NEXT_ABORT, IGNORE_NEXT_EMPTIED } from './use-events';
+import { IGNORE_NEXT_ABORT } from './use-events';
+import type { UseHTMLProviderProps } from './use-provider';
 
 /**
  * Handles the DOM connection and disconnection of the underlying HTML media element (e.g.,
@@ -16,6 +17,7 @@ export function useHTMLProviderConnect(
   $target: ReadSignal<HTMLProviderElement | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
   $media: MediaState,
+  props: UseHTMLProviderProps<any>,
 ): void {
   const logger = __DEV__ ? useLogger($target) : undefined;
 
@@ -24,17 +26,8 @@ export function useHTMLProviderConnect(
       media = $mediaElement();
 
     if ($media.canLoad && !isNull(provider) && !isNull(media)) {
-      return onMediaElementConnect(provider, media);
+      return peek(() => onMediaElementConnect(provider, media));
     }
-
-    if (__DEV__) {
-      logger
-        ?.infoGroup('Media element disconnected')
-        .labelledLog('Media Element', $mediaElement())
-        .dispatch();
-    }
-
-    return;
   });
 
   function onMediaElementConnect(provider: HTMLProviderElement, media: HTMLMediaElement) {
@@ -59,49 +52,59 @@ export function useHTMLProviderConnect(
       media.setAttribute('poster', provider.poster);
     }
 
-    startPreloadingMedia(media);
+    if (!$media.canPlay) {
+      media.setAttribute('preload', $target()!.preload);
+    }
+
+    if (media.networkState === 1 || media.networkState === 2) {
+      media[IGNORE_NEXT_ABORT] = true;
+    }
+
+    onSourcesChange();
+    const observer = new MutationObserver(onSourcesChange);
+
+    observer.observe(media, {
+      attributeFilter: ['src', 'type'],
+      subtree: true,
+      childList: true,
+    });
 
     if (__DEV__) {
       logger?.infoGroup('Media element connected').labelledLog('Media Element', media).dispatch();
     }
 
-    handleSrcChange();
-    const observer = new MutationObserver(handleSrcChange);
-    observer.observe(media, { attributeFilter: ['src'], subtree: true });
-    return () => observer.disconnect();
+    return () => {
+      if (__DEV__) {
+        logger
+          ?.infoGroup('Media element disconnected')
+          .labelledLog('Media Element', media)
+          .dispatch();
+      }
+
+      observer.disconnect();
+    };
   }
 
-  function startPreloadingMedia(media: HTMLMediaElement) {
-    if ($media.canPlay) return;
-    media.setAttribute('preload', $target()!.preload);
+  function onSourcesChange() {
+    const sources = getMediaResources(),
+      prev = $media.sources,
+      equal = sources.length === prev.length && sources.every((src, i) => src.src === prev[i].src);
 
-    if (media.networkState >= 1) {
-      media[IGNORE_NEXT_ABORT] = true;
-      media[IGNORE_NEXT_EMPTIED] = true;
-      setTimeout(() => {
-        media[IGNORE_NEXT_ABORT] = false;
-        media[IGNORE_NEXT_EMPTIED] = false;
-      }, 0);
-    }
+    props.onSourcesChange?.(sources);
 
-    media.load();
-  }
-
-  function handleSrcChange() {
-    const sources = getMediaSources();
-    const prevSources = $media.src;
-    if (!isArrayEqual(prevSources, sources)) {
-      dispatchEvent($target(), 'vds-src-change', {
-        detail: sources,
-      });
+    if (!equal) {
+      dispatchEvent($target(), 'vds-sources-change', { detail: sources });
+      $mediaElement()?.load();
     }
   }
 
-  function getMediaSources() {
-    const resources = [
-      $mediaElement()?.src,
-      ...Array.from($mediaElement()?.querySelectorAll('source') ?? []).map((source) => source.src),
-    ].filter(Boolean);
-    return Array.from(new Set(resources)) as string[];
+  function getMediaResources(): MediaSrc[] {
+    const media = $mediaElement()!;
+    return [
+      media.src && { src: media.src },
+      ...Array.from(media.querySelectorAll('source') ?? []).map(
+        (source) => source.src && { src: source.src, type: source.type },
+      ),
+    ].filter(Boolean) as MediaSrc[];
   }
 }

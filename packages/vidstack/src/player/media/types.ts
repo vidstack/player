@@ -33,3 +33,8 @@ export interface MediaErrorDetail {
   code: MediaErrorCode;
   mediaError?: MediaError;
 }
+
+export interface MediaSrc {
+  src: string;
+  type?: string;
+}

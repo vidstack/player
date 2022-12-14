@@ -33,7 +33,7 @@ export function useMediaStateManager(
     $mediaProvider = useContext(MediaProviderContext),
     disposal = useDisposalBin(),
     requestQueue = requestManager?.requestQueue,
-    trackedEvents = new Map<string, ME.VdsMediaEvent>();
+    trackedEvents = new Map<string, ME.MediaEvent>();
 
   let provider: MediaProviderElement | null = null,
     skipInitialSrcChange = true,
@@ -55,11 +55,12 @@ export function useMediaStateManager(
     if (provider) {
       listenEvent(provider, 'vds-view-type-change', onViewTypeChange);
       listenEvent(provider, 'vds-can-load', trackEvent(onCanLoad));
-      listenEvent(provider, 'vds-src-change', trackEvent(onSrcChange));
-      listenEvent(provider, 'vds-current-src-change', trackEvent(onCurrentSrcChange));
+      listenEvent(provider, 'vds-sources-change', trackEvent(onSourcesChange));
+      listenEvent(provider, 'vds-source-change', trackEvent(onSourceChange));
       connected = true;
     } else if (connected) {
       resetTracking();
+      softResetMediaState($media);
       disposal.empty();
       requestQueue?.reset();
       skipInitialSrcChange = true;
@@ -73,7 +74,6 @@ export function useMediaStateManager(
 
   function resetTracking() {
     stopWaiting();
-    softResetMediaState($media);
     requestManager?.$isReplay.set(false);
     requestManager?.$isLooping.set(false);
     firingWaiting = false;
@@ -82,7 +82,7 @@ export function useMediaStateManager(
   }
 
   // Keep track of dispatched media events so we can use them to build event chains.
-  function trackEvent<T extends (event: ME.VdsMediaEvent<any>) => void>(callback: T): T {
+  function trackEvent<T extends (event: ME.MediaEvent<any>) => void>(callback: T): T {
     return ((event) => {
       trackedEvents.set(event.type, event);
       callback(event);
@@ -92,11 +92,18 @@ export function useMediaStateManager(
   function attachCanLoadEventListeners() {
     if (attachedCanLoadListeners) return;
     disposal.add(
+      listenEvent(provider!, 'vds-media-type-change', onMediaTypeChange),
       listenEvent(provider!, 'vds-load-start', trackEvent(onLoadStart)),
       listenEvent(provider!, 'vds-abort', trackEvent(onAbort)),
       listenEvent(provider!, 'vds-error', trackEvent(onError)),
     );
     attachedCanLoadListeners = true;
+  }
+
+  function onMediaTypeChange(event: ME.MediaTypeChangeEvent) {
+    appendTriggerEvent(event, trackedEvents.get('vds-source-change'));
+    $media.mediaType = event.detail;
+    $media.live = event.detail.includes('live');
   }
 
   function onViewTypeChange(event: ME.MediaViewTypeChangeEvent) {
@@ -109,25 +116,25 @@ export function useMediaStateManager(
     satisfyMediaRequest('load', event);
   }
 
-  function onSrcChange(event: ME.MediaSrcChangeEvent) {
-    $media.src = event.detail;
+  function onSourcesChange(event: ME.MediaSourcesChangeEvent) {
+    $media.sources = event.detail;
   }
 
-  function onCurrentSrcChange(event: ME.MediaCurrentSrcChangeEvent) {
-    $media.currentSrc = event.detail;
+  function onSourceChange(event: ME.MediaSourceChangeEvent) {
+    appendTriggerEvent(event, trackedEvents.get('vds-sources-change'));
+
+    $media.source = event.detail;
     $target()?.setAttribute('aria-busy', 'true');
 
-    // Skip resets before first playback to ensure initial properties set make it to the provider.
+    // Skip resets before first playback to ensure initial properties and track events are kept.
     if (skipInitialSrcChange) {
       skipInitialSrcChange = false;
       return;
     }
 
     resetTracking();
-  }
-
-  function onAbort(event: ME.MediaAbortEvent) {
-    appendTriggerEvent(event, trackedEvents.get('vds-current-src-change'));
+    softResetMediaState($media);
+    trackedEvents.set(event.type, event);
   }
 
   function attachLoadStartEventListeners() {
@@ -138,14 +145,19 @@ export function useMediaStateManager(
       listenEvent(provider!, 'vds-can-play', trackEvent(onCanPlay)),
       listenEvent(provider!, 'vds-can-play-through', onCanPlayThrough),
       listenEvent(provider!, 'vds-duration-change', onDurationChange),
+      listenEvent(provider!, 'vds-progress', (e) => onProgress($media, e)),
     );
     attachedLoadStartListeners = true;
   }
 
+  function onAbort(event: ME.MediaAbortEvent) {
+    appendTriggerEvent(event, trackedEvents.get('vds-source-change'));
+    appendTriggerEvent(event, trackedEvents.get('vds-can-load'));
+  }
+
   function onLoadStart(event: ME.MediaLoadStartEvent) {
     attachLoadStartEventListeners();
-    updateMediaMetadata($media, event.detail);
-    appendTriggerEvent(event, trackedEvents.get('vds-current-src-change'));
+    appendTriggerEvent(event, trackedEvents.get('vds-source-change'));
     appendTriggerEvent(event, trackedEvents.get('vds-can-load'));
   }
 
@@ -155,7 +167,6 @@ export function useMediaStateManager(
   }
 
   function onLoadedMetadata(event: ME.MediaLoadedMetadataEvent) {
-    updateMediaMetadata($media, event.detail);
     appendTriggerEvent(event, trackedEvents.get('vds-load-start'));
   }
 
@@ -172,7 +183,6 @@ export function useMediaStateManager(
       listenEvent(provider!, 'vds-play', trackEvent(onPlay)),
       listenEvent(provider!, 'vds-play-fail', trackEvent(onPlayFail)),
       listenEvent(provider!, 'vds-playing', trackEvent(onPlaying)),
-      listenEvent(provider!, 'vds-progress', (e) => onProgress($media, e)),
       listenEvent(provider!, 'vds-duration-change', onDurationChange),
       listenEvent(provider!, 'vds-time-update', onTimeUpdate),
       listenEvent(provider!, 'vds-volume-change', onVolumeChange),
@@ -247,8 +257,6 @@ export function useMediaStateManager(
   }
 
   function onPlayFail(event: ME.MediaPlayFailEvent) {
-    stopWaiting();
-
     appendTriggerEvent(event, trackedEvents.get('vds-play'));
     satisfyMediaRequest('play', event);
 
@@ -268,8 +276,7 @@ export function useMediaStateManager(
       appendTriggerEvent(event, trackedEvents.get('vds-seeked'));
     }
 
-    stopWaiting();
-    resetTracking();
+    setTimeout(() => resetTracking(), 0);
 
     $media.paused = false;
     $media.playing = true;
@@ -301,7 +308,6 @@ export function useMediaStateManager(
     $media.playing = false;
     $media.seeking = false;
 
-    stopWaiting();
     resetTracking();
   }
 
@@ -376,7 +382,6 @@ export function useMediaStateManager(
     $media.seeking = false;
     $media.ended = true;
 
-    stopWaiting();
     resetTracking();
   }
 
@@ -414,7 +419,7 @@ export function useMediaStateManager(
 
   function satisfyMediaRequest<T extends keyof MediaRequestQueueRecord>(
     request: T,
-    event: ME.VdsMediaEvent,
+    event: ME.MediaEvent,
   ) {
     requestQueue?.serve(request, (requestEvent) => {
       event.requestEvent = requestEvent;
@@ -431,10 +436,4 @@ function onProgress(media: MediaState, event: ME.MediaProgressEvent) {
   media.bufferedAmount = bufferedAmount;
   media.seekable = seekable;
   media.seekableAmount = seekableAmount;
-}
-
-function updateMediaMetadata($media: MediaState, metadata: ME.MediaMetadataEventDetail) {
-  $media.currentSrc = metadata.currentSrc;
-  $media.mediaType = metadata.mediaType;
-  $media.viewType = metadata.viewType;
 }

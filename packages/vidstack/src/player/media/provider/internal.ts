@@ -1,38 +1,9 @@
-import { dispatchEvent, DOMEvent } from 'maverick.js/std';
+import { dispatchEvent } from 'maverick.js/std';
 
 import type { Logger } from '../../../foundation/logger/create-logger';
-import type { MediaCurrentSrcChangeEvent } from '../events';
 import { ATTEMPTING_AUTOPLAY, MediaState } from '../state';
+import type { MediaSrc } from '../types';
 import type { MediaProviderElement } from './types';
-
-export function canAttemptAutoplay($media: MediaState) {
-  return $media.canPlay && $media.autoplay && !$media.started;
-}
-
-export async function attemptAutoplay(
-  provider: MediaProviderElement,
-  $media: MediaState,
-): Promise<void> {
-  if (!canAttemptAutoplay($media)) return;
-
-  $media[ATTEMPTING_AUTOPLAY] = true;
-
-  try {
-    await provider.play();
-    dispatchEvent(provider, 'vds-autoplay', {
-      detail: { muted: $media.muted },
-    });
-  } catch (error) {
-    dispatchEvent(provider, 'vds-autoplay-fail', {
-      detail: {
-        muted: $media.muted,
-        error: error as Error,
-      },
-    });
-  } finally {
-    $media[ATTEMPTING_AUTOPLAY] = false;
-  }
-}
 
 export async function onMediaReady(
   $media: MediaState,
@@ -56,7 +27,53 @@ export async function onMediaReady(
       .dispatch();
   }
 
-  await attemptAutoplay(provider, $media);
+  if ($media.canPlay && $media.autoplay && !$media.started) {
+    await attemptAutoplay(provider, $media);
+  }
+}
+
+export function onMediaSrcChange(
+  $media: MediaState,
+  provider: MediaProviderElement,
+  src: MediaSrc,
+  logger?: Logger,
+) {
+  if ($media.source.src === src.src) return;
+
+  if (__DEV__) {
+    logger
+      ?.infoGroup('📼 Media source change')
+      .labelledLog('Sources', $media.sources)
+      .labelledLog('Current Src', src)
+      .dispatch();
+  }
+
+  dispatchEvent(provider, 'vds-source-change', { detail: src });
+}
+
+async function attemptAutoplay(provider: MediaProviderElement, $media: MediaState): Promise<void> {
+  $media[ATTEMPTING_AUTOPLAY] = true;
+
+  try {
+    await provider.play();
+    dispatchEvent(provider, 'vds-autoplay', {
+      detail: { muted: $media.muted },
+    });
+  } catch (error) {
+    dispatchEvent(provider, 'vds-autoplay-fail', {
+      detail: {
+        muted: $media.muted,
+        error: error as Error,
+      },
+    });
+  } finally {
+    $media[ATTEMPTING_AUTOPLAY] = false;
+  }
+}
+
+export function resetPlaybackIfEnded(provider: MediaProviderElement, $media: MediaState) {
+  if (!$media.ended || $media.currentTime === 0) return;
+  provider.currentTime = 0;
 }
 
 export function throwIfNotReadyForPlayback($media: MediaState) {
@@ -66,33 +83,4 @@ export function throwIfNotReadyForPlayback($media: MediaState) {
       ? `[vidstack] media is not ready - wait for \`vds-can-play\` event.`
       : '[vidstack] media not ready',
   );
-}
-
-export function onCurrentSrcChange(
-  $media: MediaState,
-  provider: MediaProviderElement,
-  currentSrc: string,
-  logger?: Logger,
-): MediaCurrentSrcChangeEvent | undefined {
-  if ($media.currentSrc === currentSrc) return;
-
-  if (__DEV__) {
-    logger
-      ?.infoGroup('📼 Media source change')
-      .labelledLog('Src', $media.src)
-      .labelledLog('Current Src', currentSrc)
-      .dispatch();
-  }
-
-  const event = new DOMEvent('vds-current-src-change', {
-    detail: currentSrc,
-  }) as MediaCurrentSrcChangeEvent;
-
-  provider.dispatchEvent(event);
-  return event;
-}
-
-export function resetPlaybackIfEnded(provider: MediaProviderElement, $media: MediaState) {
-  if (!$media.ended || $media.currentTime === 0) return;
-  provider.currentTime = 0;
 }

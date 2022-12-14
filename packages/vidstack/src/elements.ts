@@ -5,7 +5,7 @@ export type VidstackElement =
   | 'vds-aspect-ratio'
   | 'vds-audio'
   | 'vds-gesture'
-  | 'vds-hls'
+  | 'vds-hls-video'
   | 'vds-media-sync'
   | 'vds-media-visibility'
   | 'vds-media'
@@ -78,7 +78,7 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
   // 'vds-volume-slider': () => import(''),
   'vds-audio': () => import('./player/providers/audio/audio-element'),
   // 'vds-gesture': () => import(''),
-  // 'vds-hls': () => import(''),
+  'vds-hls-video': () => import('./player/providers/hls/hls-video-element'),
   'vds-media': () => import('./player/media/element/media-element'),
   // 'vds-poster': () => import(''),
   // 'vds-slider': () => import(''),
@@ -88,7 +88,7 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
 
 async function loadCustomElement(tagName: VidstackElement) {
   const name = tagName.replace('vds-', ''),
-    specifier = uppercaseFirstChar(name) + 'ElementDefinition',
+    specifier = uppercaseFirstChar(name).replace(/^hls/, 'HLS') + 'ElementDefinition',
     definition = (await ELEMENT_DEFINITION_LOADER[tagName]())[specifier];
   registerCustomElement(definition);
 }

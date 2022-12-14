@@ -135,7 +135,7 @@ export function getSourceBuffer(): typeof SourceBuffer | undefined {
  *
  * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
-export function isHlsjsSupported(): boolean {
+export function isHLSSupported(): boolean {
   const mediaSource = getMediaSource();
 
   if (isUndefined(mediaSource)) return false;

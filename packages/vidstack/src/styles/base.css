@@ -8,15 +8,18 @@ vds-audio {
   display: inline-block;
 }
 
-vds-video {
+vds-video,
+vds-hls-video {
   display: inline-block;
   background-color: var(--vds-video-bg-color, #000);
 }
 
-vds-video > video:not([width]) {
+vds-video > video:not([width]),
+vds-hls-video > video:not([width]) {
   width: var(--vds-video-width, 100%);
 }
 
-vds-video > video:not([height]) {
+vds-video > video:not([height]),
+vds-hls-video > video:not([height]) {
   height: var(--vds-video-height, auto);
 }

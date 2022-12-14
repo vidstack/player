@@ -12,8 +12,7 @@ import { IS_IOS } from '../../../utils/support';
 import { useMediaController } from '../controller/use-media-controller';
 import type { MediaState } from '../state';
 import { useMediaState } from '../store';
-import type { MediaElementConnectEvent } from './events';
-import type { MediaElement } from './types';
+import type { MediaElement, MediaElementConnectEvent } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -57,6 +56,7 @@ const MEDIA_CSS_VARS: (keyof MediaState)[] = [
 export const MediaElementDefinition = defineCustomElement<MediaElement>({
   tagName: 'vds-media',
   props: {
+    logLevel: { initial: 'silent' },
     userIdleDelay: { initial: 2000 },
     fullscreenOrientation: {},
   },
@@ -65,8 +65,8 @@ export const MediaElementDefinition = defineCustomElement<MediaElement>({
      * The media controller which is responsible for updating the media state store and satisfying
      * media requests.
      */
-    const $el = () => (host.$connected ? host.el : null),
-      controller = useMediaController($el, {
+    const $target = () => (host.$connected ? host.el : null),
+      controller = useMediaController($target, {
         $fullscreenOrientation: () => props.fullscreenOrientation,
       });
 
@@ -89,11 +89,15 @@ export const MediaElementDefinition = defineCustomElement<MediaElement>({
     });
 
     effect(() => {
+      controller.logLevel = props.logLevel;
+    });
+
+    effect(() => {
       controller.user.idle.delay = props.userIdleDelay;
     });
 
     onConnect(() => {
-      const el = $el()!;
+      const el = $target()!;
       dispatchEvent(el, 'vds-media-connect', {
         detail: el,
         bubbles: true,

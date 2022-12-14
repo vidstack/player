@@ -1,4 +1,4 @@
-import type { MediaErrorDetail, MediaType, ViewType } from './types';
+import type { MediaErrorDetail, MediaSrc, MediaType, ViewType } from './types';
 
 /** @internal */
 export const ATTEMPTING_AUTOPLAY = Symbol(__DEV__ ? 'ATTEMPTING_AUTOPLAY' : 0);
@@ -96,13 +96,6 @@ export interface MediaState {
    */
   poster: string;
   /**
-   * The absolute URL of the chosen media resource. Defaults to `''` if no media has been loaded.
-   *
-   * @defaultValue ''
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc}
-   */
-  currentSrc: string;
-  /**
    * A `double` indicating the current playback time in seconds. Defaults to `0` if the media has
    * not started to play and has not seeked. Setting this value seeks the media to the new
    * time. The value can be set to a minimum of `0` and maximum of the total length of the
@@ -150,6 +143,10 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop}
    */
   loop: boolean;
+  /**
+   * Whether media is currently a live stream.
+   */
+  live: boolean;
   /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
@@ -223,13 +220,19 @@ export interface MediaState {
    */
   seeking: boolean;
   /**
-   * The URL of the current media resource/s to be considered for playback. Use `currentSrc` to
-   * get the currently loaded resource.
+   * The chosen media resource. Defaults to `{ src: '' }` if no media has been loaded.
+   *
+   * @defaultValue { src: '' }
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc}
+   */
+  source: MediaSrc;
+  /**
+   * The URL and optionally type of the current media resource/s to be considered for playback.
+   * Use `source` to get the currently loaded resource.
    *
    * @defaultValue []
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    */
-  src: string[];
+  sources: MediaSrc[];
   /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    *

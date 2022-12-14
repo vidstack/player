@@ -6,18 +6,18 @@ import { useIntersectionObserver } from '../../../foundation/observers/use-inter
 import type { MediaProviderElement, MediaProviderProps } from './types';
 
 /**
- * This hook is responsible for determing when media can begin loading.
+ * This hook is responsible for determining when media can begin loading.
  */
 export function useMediaCanLoad(
   $target: ReadSignal<MediaProviderElement | null>,
-  $providerProps: MediaProviderProps,
+  $props: MediaProviderProps,
 ) {
   onConnect(() => {
-    if ($providerProps.load === 'eager') {
+    if ($props.load === 'eager') {
       waitAnimationFrame(startLoadingMedia);
-    } else if ($providerProps.load === 'idle') {
+    } else if ($props.load === 'idle') {
       waitIdlePeriod(startLoadingMedia);
-    } else if ($providerProps.load === 'visible') {
+    } else if ($props.load === 'visible') {
       root((dispose) => {
         const io = useIntersectionObserver($target);
         effect(() => {

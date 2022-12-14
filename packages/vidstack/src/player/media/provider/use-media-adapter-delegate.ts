@@ -12,7 +12,7 @@ import type { MediaProviderAdapter, MediaProviderElement, MediaProviderProps } f
  */
 export function useMediaAdapterDelegate(
   $target: ReadSignal<MediaProviderElement | null>,
-  $providerProps: MediaProviderProps,
+  $props: MediaProviderProps,
   adapter: MediaProviderAdapter,
 ) {
   const logger = __DEV__ ? useLogger($target) : undefined,
@@ -23,12 +23,12 @@ export function useMediaAdapterDelegate(
     const target = $target();
     if (target) {
       listenEvent(target, 'vds-can-play', () => canPlayQueue.start());
-      listenEvent(target, 'vds-current-src-change', () => canPlayQueue.stop());
+      listenEvent(target, 'vds-source-change', () => canPlayQueue.stop());
     }
   });
 
   effect(() => {
-    const paused = $providerProps.paused;
+    const paused = $props.paused;
     canPlayQueue.queue('paused', () => {
       try {
         if (!paused) {
@@ -45,22 +45,22 @@ export function useMediaAdapterDelegate(
   });
 
   effect(() => {
-    const volume = clampNumber(0, $providerProps.volume, 1);
+    const volume = clampNumber(0, $props.volume, 1);
     canPlayQueue.queue('volume', () => (adapter.volume = volume));
   });
 
   effect(() => {
-    const muted = $providerProps.muted;
+    const muted = $props.muted;
     canPlayQueue.queue('muted', () => (adapter.muted = muted));
   });
 
   effect(() => {
-    const currentTime = $providerProps.currentTime;
+    const currentTime = $props.currentTime;
     canPlayQueue.queue('currentTime', () => (adapter.currentTime = currentTime));
   });
 
   effect(() => {
-    const playsinline = $providerProps.playsinline;
+    const playsinline = $props.playsinline;
     canPlayQueue.queue('playsinline', () => (adapter.playsinline = playsinline));
   });
 }
