@@ -1,13 +1,9 @@
 import { registerCustomElement } from 'maverick.js/element';
-import { uppercaseFirstChar } from 'maverick.js/std';
 
 export type VidstackElement =
   | 'vds-aspect-ratio'
   | 'vds-audio'
-  | 'vds-gesture'
   | 'vds-hls-video'
-  | 'vds-media-sync'
-  | 'vds-media-visibility'
   | 'vds-media'
   | 'vds-poster'
   | 'vds-video'
@@ -68,16 +64,13 @@ export async function defineCustomElements(
 const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
   // 'vds-aspect-ratio': () => import(''),
   // 'vds-fullscreen-button': () => import(''),
-  // 'vds-media-sync': () => import(''),
-  // 'vds-media-visibility': () => import(''),
-  // 'vds-mute-button': () => import(''),
+  'vds-mute-button': () => import('./player/ui/mute-button/mute-button-element'),
   'vds-play-button': () => import('./player/ui/play-button/play-button-element'),
   // 'vds-slider-value-text': () => import(''),
   // 'vds-slider-video': () => import(''),
   // 'vds-time-slider': () => import(''),
   // 'vds-volume-slider': () => import(''),
   'vds-audio': () => import('./player/providers/audio/audio-element'),
-  // 'vds-gesture': () => import(''),
   'vds-hls-video': () => import('./player/providers/hls/hls-video-element'),
   'vds-media': () => import('./player/media/element/media-element'),
   // 'vds-poster': () => import(''),
@@ -87,10 +80,9 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
 };
 
 async function loadCustomElement(tagName: VidstackElement) {
-  const name = tagName.replace('vds-', ''),
-    specifier = uppercaseFirstChar(name).replace(/^hls/, 'HLS') + 'ElementDefinition',
-    definition = (await ELEMENT_DEFINITION_LOADER[tagName]())[specifier];
-  registerCustomElement(definition);
+  const mod = await ELEMENT_DEFINITION_LOADER[tagName](),
+    specifier = Object.keys(mod).find((key) => key.includes('Definition'));
+  if (specifier) registerCustomElement(mod[specifier]);
 }
 
 async function loadAllCustomElements() {

@@ -42,7 +42,9 @@ vds-hls-video > video:not([height]) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-vds-play-button {
+vds-play-button,
+vds-mute-button,
+vds-fullscreen-button {
   display: table;
   contain: content;
   user-select: none;
@@ -51,16 +53,22 @@ vds-play-button {
   -webkit-tap-highlight-color: transparent;
 }
 
-vds-play-button:focus {
+vds-play-button:focus,
+vds-mute-button:focus,
+vds-fullscreen-button:focus {
   outline: none;
 }
 
-vds-play-button:focus-visible {
+vds-play-button:focus-visible,
+vds-mute-button:focus-visible,
+vds-fullscreen-button:focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-vds-play-button.focus-visible {
+vds-play-button.focus-visible,
+vds-mute-button.focus-visible,
+vds-fullscreen-button.focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
