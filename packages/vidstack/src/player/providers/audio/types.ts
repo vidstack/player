@@ -2,6 +2,12 @@ import type { HTMLCustomElement } from 'maverick.js/element';
 
 import type { HTMLProviderEvents, HTMLProviderMembers, HTMLProviderProps } from '../html/types';
 
+export interface AudioProviderProps extends HTMLProviderProps {}
+
+export interface AudioProviderEvents extends HTMLProviderEvents {}
+
+export interface AudioProviderMembers extends HTMLProviderMembers {}
+
 /**
  * The `<vds-audio>` element adapts the underlying `<audio>` element to satisfy the media provider
  * contract, which generally involves providing a consistent API for loading, managing, and
@@ -32,9 +38,3 @@ import type { HTMLProviderEvents, HTMLProviderMembers, HTMLProviderProps } from 
 export interface AudioElement
   extends HTMLCustomElement<AudioProviderProps, AudioProviderEvents>,
     AudioProviderMembers {}
-
-export interface AudioProviderProps extends HTMLProviderProps {}
-
-export interface AudioProviderEvents extends HTMLProviderEvents {}
-
-export interface AudioProviderMembers extends HTMLProviderMembers {}

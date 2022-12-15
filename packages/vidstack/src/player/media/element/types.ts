@@ -6,28 +6,6 @@ import type { ScreenOrientationLockType } from '../../../foundation/orientation/
 import type { MediaControllerEvents } from '../controller/events';
 import type { UseMediaController } from '../controller/use-media-controller';
 
-/**
- * All media elements exist inside the `<vds-media>` component. It's main jobs are to host the
- * media controller, and expose media state through HTML attributes and CSS properties for styling
- * purposes.
- *
- * @tagname vds-media
- * @slot - Used to pass in components that use/manage/provide media state.
- * @example
- * ```html
- * <vds-media>
- *   <vds-video>
- *     <video src="..." />
- *   </vds-video>
- *
- *   <!-- Other components that use/manage media state here. -->
- * </vds-media>
- * ```
- */
-export interface MediaElement
-  extends HTMLCustomElement<MediaElementProps, MediaElementEvents>,
-    MediaElementMembers {}
-
 export interface MediaElementProps {
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
@@ -60,3 +38,25 @@ export interface MediaElementEvents extends MediaControllerEvents {
  * @composed
  */
 export interface MediaElementConnectEvent extends DOMEvent<MediaElement> {}
+
+/**
+ * All media elements exist inside the `<vds-media>` component. It's main jobs are to host the
+ * media controller, and expose media state through HTML attributes and CSS properties for styling
+ * purposes.
+ *
+ * @tagname vds-media
+ * @slot - Used to pass in components that use/manage/provide media state.
+ * @example
+ * ```html
+ * <vds-media>
+ *   <vds-video>
+ *     <video src="..." />
+ *   </vds-video>
+ *
+ *   <!-- Other components that use/manage media state here. -->
+ * </vds-media>
+ * ```
+ */
+export interface MediaElement
+  extends HTMLCustomElement<MediaElementProps, MediaElementEvents>,
+    MediaElementMembers {}

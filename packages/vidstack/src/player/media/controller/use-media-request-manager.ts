@@ -111,13 +111,13 @@ export function useMediaRequestManager(
   function onPlayRequest(event: RE.PlayRequestEvent) {
     if (!$media.paused) return;
     requestQueue.queue('play', event);
-    provider!.paused = false;
+    provider!.play();
   }
 
   function onPauseRequest(event: RE.PauseRequestEvent) {
     if ($media.paused) return;
     requestQueue.queue('pause', event);
-    provider!.paused = true;
+    provider!.pause();
   }
 
   function onSeekingRequest(event: RE.SeekingRequestEvent) {

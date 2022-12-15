@@ -1,9 +1,10 @@
-import { effect, ReadSignal } from 'maverick.js';
+import { effect, ReadSignal, signal } from 'maverick.js';
 import { DOMEvent } from 'maverick.js/std';
 
 import { createLogger, Logger } from '../../foundation/logger/create-logger';
 import { RequestQueue } from '../../foundation/queue/request-queue';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request-events';
+import { useMediaState } from './store';
 
 export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
   const logger = __DEV__ ? createLogger() : undefined,
@@ -21,10 +22,19 @@ export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
  * A simple facade for dispatching media requests to the nearest media controller.
  */
 export class MediaRemoteControl {
-  protected _target?: EventTarget | null;
+  protected _target = signal<EventTarget | null>(null);
   protected _requests = new RequestQueue();
 
-  constructor(protected _logger?: Logger) {}
+  constructor(protected _logger?: Logger) {
+    const $media = useMediaState();
+    effect(() => {
+      if (this._target() && $media.canPlay) {
+        this._requests.start();
+      } else {
+        this._requests.stop();
+      }
+    });
+  }
 
   startLoading(triggerEvent?: Event) {
     this._dispatchRequest('vds-start-loading', undefined, triggerEvent);
@@ -82,16 +92,8 @@ export class MediaRemoteControl {
     this._dispatchRequest('vds-hide-poster-request', undefined, triggerEvent);
   }
 
-  setTarget(target?: EventTarget | null) {
-    if (this._target === target) return;
-
-    this._target = target;
-
-    if (target) {
-      this._requests.start();
-    } else {
-      this._requests.stop();
-    }
+  setTarget(target: EventTarget | null) {
+    this._target.set(target);
   }
 
   protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(
@@ -100,7 +102,7 @@ export class MediaRemoteControl {
     triggerEvent?: Event,
   ) {
     this._requests.queue(type, () => {
-      const request = new DOMEvent(type, {
+      const request = new DOMEvent<any>(type, {
         bubbles: true,
         composed: true,
         detail,
@@ -115,7 +117,7 @@ export class MediaRemoteControl {
           .dispatch();
       }
 
-      this._target?.dispatchEvent(request);
+      this._target()!.dispatchEvent(request);
     });
   }
 }

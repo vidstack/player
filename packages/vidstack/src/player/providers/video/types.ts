@@ -4,6 +4,14 @@ import type { HTMLProviderEvents, HTMLProviderMembers, HTMLProviderProps } from 
 import type { VideoPresentationEvents } from './presentation/events';
 import type { UseVideoFullscreen } from './use-video-fullscreen';
 
+export interface VideoProviderProps extends HTMLProviderProps {}
+
+export interface VideoProviderEvents extends HTMLProviderEvents, VideoPresentationEvents {}
+
+export interface VideoProviderMembers extends HTMLProviderMembers {
+  readonly fullscreen: UseVideoFullscreen;
+}
+
 /**
  * The `<vds-video>` element adapts the underlying `<video>` element to satisfy the media provider
  * contract, which generally involves providing a consistent API for loading, managing, and
@@ -52,11 +60,3 @@ import type { UseVideoFullscreen } from './use-video-fullscreen';
 export interface VideoElement
   extends HTMLCustomElement<VideoProviderProps, VideoProviderEvents>,
     VideoProviderMembers {}
-
-export interface VideoProviderProps extends HTMLProviderProps {}
-
-export interface VideoProviderEvents extends HTMLProviderEvents, VideoPresentationEvents {}
-
-export interface VideoProviderMembers extends HTMLProviderMembers {
-  readonly fullscreen: UseVideoFullscreen;
-}

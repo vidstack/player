@@ -4,9 +4,56 @@ import type { HTMLCustomElement } from 'maverick.js/element';
 import type { VideoProviderMembers, VideoProviderProps } from '../video/types';
 import type { HLSProviderEvents } from './events';
 
+export { HLSProviderEvents };
+
 export type HLSConstructor = typeof HLS.default;
 export type HLSConstructorLoader = () => Promise<{ default: HLSConstructor } | undefined>;
 export type HLSLibrary = HLSConstructor | HLSConstructorLoader | string | undefined;
+
+export interface HLSProviderProps extends VideoProviderProps {
+  /**
+   * The `hls.js` configuration object.
+   *
+   * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning}
+   */
+  hlsConfig: Partial<HLS.HlsConfig>;
+  /**
+   * The `hls.js` constructor (supports dynamic imports) or a URL of where it can be found.
+   *
+   * @defaultValue `https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.js`
+   */
+  hlsLibrary: HLSLibrary;
+}
+
+export interface HLSProviderMembers extends VideoProviderMembers {
+  readonly hls: {
+    /**
+     * The `hls.js` constructor.
+     */
+    readonly ctor: HLSConstructor | null;
+    /**
+     * The current `hls.js` instance.
+     *
+     * @signal
+     */
+    readonly engine: HLS.default | null;
+    /**
+     * Whether HLS streaming is supported in this environment.
+     */
+    readonly supported: boolean;
+    /**
+     * Whether the `hls.js` instance has mounted the `HTMLMediaElement`.
+     *
+     * @signal
+     * @defaultValue false
+     */
+    readonly attached: boolean;
+  };
+
+  // see https://github.com/vidstack/player/issues/583
+  'hls-config': HLS.HlsConfig;
+  'hls-library': HLSLibrary;
+}
 
 /**
  * The `<vds-hls-video>` element adapts the underlying `<video>` element to satisfy the media
@@ -63,50 +110,3 @@ export type HLSLibrary = HLSConstructor | HLSConstructorLoader | string | undefi
 export interface HLSVideoElement
   extends HTMLCustomElement<HLSProviderProps, HLSProviderEvents>,
     HLSProviderMembers {}
-
-export interface HLSProviderProps extends VideoProviderProps {
-  /**
-   * The `hls.js` configuration object.
-   *
-   * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning}
-   */
-  hlsConfig: Partial<HLS.HlsConfig>;
-  /**
-   * The `hls.js` constructor (supports dynamic imports) or a URL of where it can be found.
-   *
-   * @defaultValue `https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.js`
-   */
-  hlsLibrary: HLSLibrary;
-}
-
-export { HLSProviderEvents };
-
-export interface HLSProviderMembers extends VideoProviderMembers {
-  readonly hls: {
-    /**
-     * The `hls.js` constructor.
-     */
-    readonly ctor: HLSConstructor | null;
-    /**
-     * The current `hls.js` instance.
-     *
-     * @signal
-     */
-    readonly engine: HLS.default | null;
-    /**
-     * Whether HLS streaming is supported in this environment.
-     */
-    readonly supported: boolean;
-    /**
-     * Whether the `hls.js` instance has mounted the `HTMLMediaElement`.
-     *
-     * @signal
-     * @defaultValue false
-     */
-    readonly attached: boolean;
-  };
-
-  // see https://github.com/vidstack/player/issues/583
-  'hls-config': HLS.HlsConfig;
-  'hls-library': HLSLibrary;
-}

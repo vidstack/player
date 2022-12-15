@@ -1,8 +1,20 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * MEDIA
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
 vds-media {
   display: inline-block;
   position: relative;
   contain: content;
 }
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * PROVIDERS
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
 
 vds-audio {
   display: inline-block;
@@ -22,4 +34,33 @@ vds-hls-video > video:not([width]) {
 vds-video > video:not([height]),
 vds-hls-video > video:not([height]) {
   height: var(--vds-video-height, auto);
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * BUTTONS
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+vds-play-button {
+  display: table;
+  contain: content;
+  user-select: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+vds-play-button:focus {
+  outline: none;
+}
+
+vds-play-button:focus-visible {
+  outline: 1px auto Highlight;
+  outline: 1px auto -webkit-focus-ring-color;
+}
+
+vds-play-button.focus-visible {
+  outline: 1px auto Highlight;
+  outline: 1px auto -webkit-focus-ring-color;
 }

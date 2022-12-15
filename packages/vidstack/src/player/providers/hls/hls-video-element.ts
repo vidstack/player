@@ -7,10 +7,10 @@ import { HLS_VIDEO_EXTENSIONS, HLS_VIDEO_TYPES } from '../../../utils/mime';
 import { isHLSSupported } from '../../../utils/support';
 import { onMediaSrcChange } from '../../media/provider/internal';
 import { useMediaState } from '../../media/store';
+import { htmlProviderProps } from '../html/props';
 import { ENGINE, IGNORE_NEXT_ABORT } from '../html/use-events';
 import { useHTMLProvider } from '../html/use-provider';
 import { useVideoFullscreen } from '../video/use-video-fullscreen';
-import { hlsVideoProviderProps } from './props';
 import type { HLSVideoElement } from './types';
 import { useHLSEngine } from './use-hls-engine';
 import { useHLSPreconnect } from './use-hls-preconnect';
@@ -21,11 +21,20 @@ declare global {
   }
 }
 
+const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
 const HLS_JS_SUPPORTED = isHLSSupported();
 
 export const HLSVideoElementDefinition = defineCustomElement<HLSVideoElement>({
   tagName: 'vds-hls-video',
-  props: hlsVideoProviderProps,
+  props: {
+    ...htmlProviderProps,
+    hlsConfig: {
+      initial: {},
+    },
+    hlsLibrary: {
+      initial: `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls.light${__DEV__ ? '.js' : '.min.js'}`,
+    },
+  },
   setup({ host, props, accessors }) {
     const $target = () => (host.$connected ? host.el : null),
       $media = useMediaState(),

@@ -2,8 +2,8 @@ import { defineCustomElement, onConnect } from 'maverick.js/element';
 import { dispatchEvent, mergeProperties } from 'maverick.js/std';
 
 import { useFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
+import { htmlProviderProps } from '../html/props';
 import { useHTMLProvider } from '../html/use-provider';
-import { audioProviderProps } from './props';
 import type { AudioElement } from './types';
 
 declare global {
@@ -14,7 +14,7 @@ declare global {
 
 export const AudioElementDefinition = defineCustomElement<AudioElement>({
   tagName: 'vds-audio',
-  props: audioProviderProps,
+  props: htmlProviderProps,
   setup({ host, props, accessors }) {
     const $target = () => (host.$connected ? host.el : null),
       { members } = useHTMLProvider<AudioElement>($target, {

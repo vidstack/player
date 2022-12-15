@@ -71,7 +71,7 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
   // 'vds-media-sync': () => import(''),
   // 'vds-media-visibility': () => import(''),
   // 'vds-mute-button': () => import(''),
-  // 'vds-play-button': () => import(''),
+  'vds-play-button': () => import('./player/ui/play-button/play-button-element'),
   // 'vds-slider-value-text': () => import(''),
   // 'vds-slider-video': () => import(''),
   // 'vds-time-slider': () => import(''),
