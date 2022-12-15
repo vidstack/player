@@ -1,15 +1,17 @@
-import { MediaElementDefinition } from './player/media/element/media-element';
-import { AudioElementDefinition } from './player/providers/audio/audio-element';
-import { HLSVideoElementDefinition } from './player/providers/hls/hls-video-element';
-import { VideoElementDefinition } from './player/providers/video/video-element';
-import { MuteButtonElementDefinition } from './player/ui/mute-button/mute-button-element';
-import { PlayButtonElementDefinition } from './player/ui/play-button/play-button-element';
+import { MediaDefinition } from './player/media/element/element';
+import { AudioDefinition } from './player/providers/audio/element';
+import { HLSVideoDefinition } from './player/providers/hls/element';
+import { VideoDefinition } from './player/providers/video/element';
+import FullscreenButtonDefinition from './player/ui/fullscreen-button/element';
+import { MuteButtonDefinition } from './player/ui/mute-button/element';
+import { PlayButtonDefinition } from './player/ui/play-button/element';
 
 export default [
-  MediaElementDefinition,
-  AudioElementDefinition,
-  VideoElementDefinition,
-  HLSVideoElementDefinition,
-  PlayButtonElementDefinition,
-  MuteButtonElementDefinition,
+  MediaDefinition,
+  AudioDefinition,
+  VideoDefinition,
+  HLSVideoDefinition,
+  PlayButtonDefinition,
+  MuteButtonDefinition,
+  FullscreenButtonDefinition,
 ];

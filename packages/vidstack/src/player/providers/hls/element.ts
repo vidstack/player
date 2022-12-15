@@ -24,7 +24,7 @@ declare global {
 const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
 const HLS_JS_SUPPORTED = isHLSSupported();
 
-export const HLSVideoElementDefinition = defineCustomElement<HLSVideoElement>({
+export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
   tagName: 'vds-hls-video',
   props: {
     ...htmlProviderProps,
@@ -148,3 +148,5 @@ export const HLSVideoElementDefinition = defineCustomElement<HLSVideoElement>({
     });
   },
 });
+
+export default HLSVideoDefinition;

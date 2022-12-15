@@ -15,7 +15,7 @@
     "vscode.html-data.json"
   ],
   "scripts": {
-    "analyze": "maverick analyze \"src/**/*-element.ts\"",
+    "analyze": "maverick analyze \"src/**/element.ts\"",
     "dev": "pnpm run build --watch & pnpm run analyze -w",
     "build": "rimraf dist elements && tsup",
     "format": "prettier src --write --loglevel warn",

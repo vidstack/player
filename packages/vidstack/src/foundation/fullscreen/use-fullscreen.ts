@@ -22,11 +22,11 @@ export function useFullscreen<T extends FullscreenEventTarget>(
 
     if (target) {
       listenEvent(fscreen as any, 'fullscreenchange', async (event) => {
-        const current = isFullscreen(target);
-        if (current === $active()) return;
-        if (!current) listening = false;
-        $active.set(current);
-        dispatchFullscreenChange(target, current, event);
+        const active = isFullscreen(target);
+        if (active === $active()) return;
+        if (!active) listening = false;
+        $active.set(active);
+        dispatchFullscreenChange(target, active, event);
       });
 
       listenEvent(fscreen as any, 'fullscreenerror', (event) => {

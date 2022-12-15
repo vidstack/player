@@ -13,6 +13,7 @@ import {
 import type {
   FullscreenChangeEvent,
   FullscreenErrorEvent,
+  FullscreenEventTarget,
 } from '../../../foundation/fullscreen/events';
 import type * as ME from '../events';
 import type { MediaProviderElement } from '../provider/types';
@@ -26,7 +27,7 @@ import type { MediaRequestQueueRecord, UseMediaRequestManager } from './use-medi
  * state context, and satisfying media requests if a manager arg is provided.
  */
 export function useMediaStateManager(
-  $target: ReadSignal<HTMLElement | null>,
+  $target: ReadSignal<FullscreenEventTarget | null>,
   requestManager?: UseMediaRequestManager,
 ) {
   const $media = useInternalMediaState()!,
@@ -51,7 +52,17 @@ export function useMediaStateManager(
   });
 
   effect(() => {
+    const target = $target();
+    // target may be media controller which can also fullscreen.
+    if (target && target !== provider) {
+      listenEvent(target, 'vds-fullscreen-change', onFullscreenChange);
+      listenEvent(target, 'vds-fullscreen-error', onFullscreenError);
+    }
+  });
+
+  effect(() => {
     provider = $connectedMediaProvider();
+
     if (provider) {
       listenEvent(provider, 'vds-view-type-change', onViewTypeChange);
       listenEvent(provider, 'vds-can-load', trackEvent(onCanLoad));
@@ -194,8 +205,6 @@ export function useMediaStateManager(
       listenEvent(provider!, 'vds-seeked', trackEvent(onSeeked)),
       listenEvent(provider!, 'vds-waiting', onWaiting),
       listenEvent(provider!, 'vds-ended', onEnded),
-      listenEvent(provider!, 'vds-fullscreen-change', onFullscreenChange),
-      listenEvent(provider!, 'vds-fullscreen-error', onFullscreenError),
     );
     attachedCanPlayListeners = true;
   }
@@ -392,29 +401,30 @@ export function useMediaStateManager(
 
   function onFullscreenChange(event: FullscreenChangeEvent) {
     $media.fullscreen = event.detail;
-    if (event.target !== $target()) return;
 
     // @ts-expect-error - not a media event.
     satisfyMediaRequest('fullscreen', event);
 
     // Forward event on media provider for any listeners.
-    dispatchEvent(provider, 'vds-fullscreen-change', {
-      detail: event.detail,
-      triggerEvent: event,
-    });
+    if (event.target !== provider) {
+      dispatchEvent(provider, 'vds-fullscreen-change', {
+        detail: event.detail,
+        triggerEvent: event,
+      });
+    }
   }
 
   function onFullscreenError(event: FullscreenErrorEvent) {
-    if (event.target !== $target()) return;
-
     // @ts-expect-error - not a media event.
     satisfyMediaRequest('fullscreen', event);
 
     // Forward event on media provider for any listeners.
-    dispatchEvent(provider, 'vds-fullscreen-error', {
-      detail: event.detail,
-      triggerEvent: event,
-    });
+    if (event.target !== provider) {
+      dispatchEvent(provider, 'vds-fullscreen-error', {
+        detail: event.detail,
+        triggerEvent: event,
+      });
+    }
   }
 
   function satisfyMediaRequest<T extends keyof MediaRequestQueueRecord>(

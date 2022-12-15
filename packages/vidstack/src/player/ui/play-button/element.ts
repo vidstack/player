@@ -13,14 +13,13 @@ declare global {
   }
 }
 
-export const PlayButtonElementDefinition = defineCustomElement<PlayButtonElement>({
+export const PlayButtonDefinition = defineCustomElement<PlayButtonElement>({
   tagName: 'vds-play-button',
   props: toggleButtonProps,
   setup({ host, props }) {
     const $target = () => (host.$connected ? host.el : null),
       $media = useMediaState(),
-      $pressed = () => !$media.paused,
-      toggle = useToggleButton(host, $target, $pressed, {
+      toggle = useToggleButton(host, $target, () => !$media.paused, {
         $props: props,
         onPress,
       }),
@@ -39,3 +38,5 @@ export const PlayButtonElementDefinition = defineCustomElement<PlayButtonElement
     return toggle;
   },
 });
+
+export default PlayButtonDefinition;

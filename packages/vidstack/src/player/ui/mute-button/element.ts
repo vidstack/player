@@ -14,7 +14,7 @@ declare global {
   }
 }
 
-export const MuteButtonElementDefinition = defineCustomElement<MuteButtonElement>({
+export const MuteButtonDefinition = defineCustomElement<MuteButtonElement>({
   tagName: 'vds-mute-button',
   props: toggleButtonProps,
   setup({ host, props }) {
@@ -40,3 +40,5 @@ export const MuteButtonElementDefinition = defineCustomElement<MuteButtonElement
     return toggle;
   },
 });
+
+export default MuteButtonDefinition;

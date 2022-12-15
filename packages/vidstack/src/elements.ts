@@ -63,26 +63,25 @@ export async function defineCustomElements(
 // @ts-expect-error - we haven't defined all elements yet.
 const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
   // 'vds-aspect-ratio': () => import(''),
-  // 'vds-fullscreen-button': () => import(''),
-  'vds-mute-button': () => import('./player/ui/mute-button/mute-button-element'),
-  'vds-play-button': () => import('./player/ui/play-button/play-button-element'),
+  'vds-fullscreen-button': () => import('./player/ui/fullscreen-button/element'),
+  'vds-mute-button': () => import('./player/ui/mute-button/element'),
+  'vds-play-button': () => import('./player/ui/play-button/element'),
   // 'vds-slider-value-text': () => import(''),
   // 'vds-slider-video': () => import(''),
   // 'vds-time-slider': () => import(''),
   // 'vds-volume-slider': () => import(''),
-  'vds-audio': () => import('./player/providers/audio/audio-element'),
-  'vds-hls-video': () => import('./player/providers/hls/hls-video-element'),
-  'vds-media': () => import('./player/media/element/media-element'),
+  'vds-audio': () => import('./player/providers/audio/element'),
+  'vds-hls-video': () => import('./player/providers/hls/element'),
+  'vds-media': () => import('./player/media/element/element'),
   // 'vds-poster': () => import(''),
   // 'vds-slider': () => import(''),
   // 'vds-time': () => import(''),
-  'vds-video': () => import('./player/providers/video/video-element'),
+  'vds-video': () => import('./player/providers/video/element'),
 };
 
 async function loadCustomElement(tagName: VidstackElement) {
-  const mod = await ELEMENT_DEFINITION_LOADER[tagName](),
-    specifier = Object.keys(mod).find((key) => key.includes('Definition'));
-  if (specifier) registerCustomElement(mod[specifier]);
+  const mod = await ELEMENT_DEFINITION_LOADER[tagName]();
+  registerCustomElement(mod.default);
 }
 
 async function loadAllCustomElements() {

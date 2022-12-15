@@ -53,7 +53,7 @@ const MEDIA_CSS_VARS: (keyof MediaState)[] = [
   'seekableAmount',
 ];
 
-export const MediaElementDefinition = defineCustomElement<MediaElement>({
+export const MediaDefinition = defineCustomElement<MediaElement>({
   tagName: 'vds-media',
   props: {
     logLevel: { initial: 'silent' },
@@ -108,3 +108,5 @@ export const MediaElementDefinition = defineCustomElement<MediaElement>({
     return mergeProperties(accessors(), controller);
   },
 });
+
+export default MediaDefinition;
