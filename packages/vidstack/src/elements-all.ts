@@ -5,6 +5,7 @@ import { VideoDefinition } from './player/providers/video/element';
 import FullscreenButtonDefinition from './player/ui/fullscreen-button/element';
 import { MuteButtonDefinition } from './player/ui/mute-button/element';
 import { PlayButtonDefinition } from './player/ui/play-button/element';
+import { VolumeSliderDefinition } from './player/ui/volume-slider/element';
 
 export default [
   MediaDefinition,
@@ -14,4 +15,5 @@ export default [
   PlayButtonDefinition,
   MuteButtonDefinition,
   FullscreenButtonDefinition,
+  VolumeSliderDefinition,
 ];

@@ -6,7 +6,7 @@ import { useFocusVisible } from '../../../foundation/observers/use-focus-visible
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
 import type { SliderProps } from './props';
-import { SliderStoreContext } from './store';
+import { SliderStore, SliderStoreContext } from './store';
 import type { SliderElement, SliderMembers } from './types';
 import { useSliderEvents } from './use-events';
 import { getClampedValue } from './utils';
@@ -19,7 +19,7 @@ export function useSlider(
   host: CustomElementHost<SliderElement>,
   $props: Signals<SliderProps>,
   accessors: () => SliderProps,
-): SliderMembers {
+): UseSlider {
   provideContext(SliderStoreContext);
 
   const $store = useContext(SliderStoreContext),
@@ -71,18 +71,26 @@ export function useSlider(
     $store.pointing = false;
   });
 
-  return mergeProperties($store, accessors(), {
-    get dragging() {
-      return $store.dragging;
-    },
-    get pointing() {
-      return $store.pointing;
-    },
-    get value() {
-      return $store.value;
-    },
-    set value(value) {
-      $store.value = value;
-    },
-  });
+  return {
+    $store,
+    members: mergeProperties($store, accessors(), {
+      get dragging() {
+        return $store.dragging;
+      },
+      get pointing() {
+        return $store.pointing;
+      },
+      get value() {
+        return $store.value;
+      },
+      set value(value) {
+        $store.value = value;
+      },
+    }),
+  };
+}
+
+export interface UseSlider {
+  $store: SliderStore;
+  members: SliderMembers;
 }
