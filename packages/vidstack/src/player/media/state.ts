@@ -53,7 +53,7 @@ export interface MediaState {
    *
    * @defaultValue 0
    */
-  bufferedAmount: number;
+  readonly bufferedAmount: number;
   /**
    * Whether media is allowed to begin loading. This depends on the `loading` configuration.
    * If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will become `true`
@@ -212,7 +212,7 @@ export interface MediaState {
    *
    * @defaultValue 0
    */
-  seekableAmount: number;
+  readonly seekableAmount: number;
   /**
    * Whether media is actively seeking to a new playback position.
    *

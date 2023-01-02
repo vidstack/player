@@ -3,21 +3,23 @@ import { onConnect } from 'maverick.js/element';
 import { dispatchEvent, waitAnimationFrame, waitIdlePeriod } from 'maverick.js/std';
 
 import { useIntersectionObserver } from '../../../foundation/observers/use-intersection-observer';
-import type { MediaProviderElement, MediaProviderProps } from './types';
+import type { MediaLoadingStrategy, MediaProviderElement, MediaProviderProps } from './types';
 
 /**
  * This hook is responsible for determining when media can begin loading.
  */
 export function useMediaCanLoad(
   $target: ReadSignal<MediaProviderElement | null>,
-  $props: MediaProviderProps,
+  $load: ReadSignal<MediaLoadingStrategy>,
 ) {
   onConnect(() => {
-    if ($props.load === 'eager') {
+    const load = $load();
+
+    if (load === 'eager') {
       waitAnimationFrame(startLoadingMedia);
-    } else if ($props.load === 'idle') {
+    } else if (load === 'idle') {
       waitIdlePeriod(startLoadingMedia);
-    } else if ($props.load === 'visible') {
+    } else if (load === 'visible') {
       root((dispose) => {
         const io = useIntersectionObserver($target);
         effect(() => {

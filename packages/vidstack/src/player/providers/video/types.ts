@@ -12,6 +12,21 @@ export interface VideoProviderMembers extends HTMLProviderMembers {
   readonly fullscreen: UseVideoFullscreen;
 }
 
+export interface VideoProviderCSSVars {
+  /**
+   * The width of the video element.
+   */
+  '--vds-video-width': number;
+  /**
+   * The height of the video element.
+   */
+  '--vds-video-height': number;
+  /**
+   * The background color of the video content.
+   */
+  '--vds-video-bg-color': string;
+}
+
 /**
  * The `<vds-video>` element adapts the underlying `<video>` element to satisfy the media provider
  * contract, which generally involves providing a consistent API for loading, managing, and
@@ -20,9 +35,6 @@ export interface VideoProviderMembers extends HTMLProviderMembers {
  * @tagname vds-video
  * @slot - Used to pass in the `<video>` element.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video}
- * @cssprop --vds-video-width - The width of the video element.
- * @cssprop --vds-video-height - The height of the video element.
- * @cssprop --vds-video-bg-color - The background color of the video content.
  * @example
  * ```html
  * <vds-video poster="https://media-files.vidstack.io/poster.png">
@@ -58,5 +70,5 @@ export interface VideoProviderMembers extends HTMLProviderMembers {
  * ```
  */
 export interface VideoElement
-  extends HTMLCustomElement<VideoProviderProps, VideoProviderEvents>,
+  extends HTMLCustomElement<VideoProviderProps, VideoProviderEvents, VideoProviderCSSVars>,
     VideoProviderMembers {}

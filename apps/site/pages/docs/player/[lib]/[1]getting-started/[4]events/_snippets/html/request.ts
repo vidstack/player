@@ -22,7 +22,7 @@ function onPlayButtonClick(event: PointerEvent) {
     new VdsEvent('vds-play-request', {
       composed: true,
       bubbles: true,
-      triggerEvent: event,
+      trigger: event,
     }),
   );
 }

@@ -16,14 +16,15 @@ export const VideoDefinition = defineCustomElement<VideoElement>({
   tagName: 'vds-video',
   props: htmlProviderProps,
   setup({ host, props, accessors }) {
-    const $target = () => (host.$connected ? host.el : null),
-      { members } = useHTMLProvider<VideoElement>($target, {
-        $props: props,
-        fullscreen: useVideoFullscreen,
-      });
+    const { members } = useHTMLProvider<VideoElement>(host.$el, {
+      $props: props,
+      fullscreen: useVideoFullscreen,
+    });
 
     onConnect(() => {
-      dispatchEvent(host.el, 'vds-view-type-change', { detail: 'video' });
+      setTimeout(() => {
+        dispatchEvent(host.el, 'vds-view-type-change', { detail: 'video' });
+      }, 0);
     });
 
     return mergeProperties(accessors(), members);

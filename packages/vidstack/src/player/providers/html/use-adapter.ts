@@ -6,7 +6,8 @@ import { coerceToError } from '../../../utils/error';
 import type { MediaPlayFailEvent } from '../../media/events';
 import { resetPlaybackIfEnded, throwIfNotReadyForPlayback } from '../../media/provider/internal';
 import type { MediaProviderAdapter } from '../../media/provider/types';
-import { ATTEMPTING_AUTOPLAY, MediaState } from '../../media/state';
+import { ATTEMPTING_AUTOPLAY } from '../../media/state';
+import type { MediaStore } from '../../media/store';
 import type { HTMLProviderElement } from './types';
 
 /**
@@ -15,7 +16,7 @@ import type { HTMLProviderElement } from './types';
 export function useHTMLProviderAdapter(
   $target: ReadSignal<HTMLProviderElement | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
-  $media: MediaState,
+  $media: MediaStore,
 ): MediaProviderAdapter {
   const logger = __DEV__ ? useLogger($mediaElement) : undefined;
   return {

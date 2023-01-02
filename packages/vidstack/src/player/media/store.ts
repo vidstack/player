@@ -1,25 +1,15 @@
 import { createContext, createStore, useContext } from 'maverick.js';
-import { keysOf } from 'maverick.js/std';
 
 import { ATTEMPTING_AUTOPLAY, CAN_LOAD_POSTER, MediaState } from './state';
 import { createTimeRanges } from './time-ranges';
 
-export const MediaStateContext = createContext<MediaState>(() => mediaStore.create());
+export interface MediaStore extends MediaState {}
 
-export function useMediaState(): Readonly<MediaState> {
-  return useContext(MediaStateContext);
-}
-
-export function useInternalMediaState() {
-  return useContext(MediaStateContext);
-}
-
-export const mediaStore = createStore<MediaState>({
+const mediaStore = createStore<MediaStore>({
   autoplay: false,
   autoplayError: undefined,
   buffered: createTimeRanges(),
   duration: 0,
-  bufferedAmount: 0,
   canLoad: false,
   canPlay: false,
   canFullscreen: false,
@@ -39,7 +29,6 @@ export const mediaStore = createStore<MediaState>({
   playing: false,
   playsinline: false,
   seekable: createTimeRanges(),
-  seekableAmount: 0,
   seeking: false,
   source: { src: '' },
   sources: [],
@@ -47,11 +36,29 @@ export const mediaStore = createStore<MediaState>({
   viewType: 'unknown',
   volume: 1,
   waiting: false,
+  get bufferedAmount() {
+    const buffered = this.buffered;
+    return buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
+  },
+  get seekableAmount() {
+    const seekable = this.seekable;
+    return seekable.length === 0 ? 0 : seekable.end(seekable.length - 1);
+  },
   [ATTEMPTING_AUTOPLAY]: false,
   [CAN_LOAD_POSTER]: true,
 });
 
-const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
+export const MediaStoreContext = createContext<MediaStore>(() => mediaStore.create());
+
+export function useMediaStore(): Readonly<MediaStore> {
+  return useContext(MediaStoreContext);
+}
+
+export function useInternalMediaStore() {
+  return useContext(MediaStoreContext);
+}
+
+const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'autoplay',
   'canFullscreen',
   'canLoad',
@@ -64,21 +71,16 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaState>([
   'sources',
   'viewType',
   'volume',
+  CAN_LOAD_POSTER,
 ]);
 
 /**
  * Resets all media state and leaves general player state intact (i.e., `autoplay`, `volume`, etc.).
  */
-export function softResetMediaState($media: MediaState) {
-  for (const prop of keysOf(mediaStore.initial)) {
-    if (!DO_NOT_RESET_ON_SRC_CHANGE.has(prop)) {
-      $media[prop as any] = mediaStore.initial[prop];
-    }
-  }
+export function softResetMediaStore($media: MediaStore) {
+  mediaStore.reset($media, (prop) => !DO_NOT_RESET_ON_SRC_CHANGE.has(prop));
 }
 
-export function hardResetMediaState($media: MediaState) {
-  for (const prop of Object.keys(mediaStore.initial)) {
-    $media[prop] = mediaStore.initial[prop];
-  }
+export function hardResetMediaStore($media: MediaStore) {
+  mediaStore.reset($media);
 }

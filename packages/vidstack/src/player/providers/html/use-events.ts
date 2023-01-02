@@ -7,7 +7,8 @@ import { getMediaTypeFromExt } from '../../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../../utils/number';
 import type { MediaPlayEvent } from '../../media/events';
 import { onMediaReady, onMediaSrcChange } from '../../media/provider/internal';
-import { ATTEMPTING_AUTOPLAY, MediaState } from '../../media/state';
+import { ATTEMPTING_AUTOPLAY } from '../../media/state';
+import type { MediaStore } from '../../media/store';
 import type { MediaErrorCode } from '../../media/types';
 import type { HTMLProviderElement } from './types';
 import type { UseHTMLProviderProps } from './use-provider';
@@ -22,7 +23,7 @@ export const IGNORE_NEXT_ABORT = Symbol(__DEV__ ? 'IGNORE_NEXT_ABORT' : 0);
 export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   $target: ReadSignal<T | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
-  $media: MediaState,
+  $media: MediaStore,
   props: UseHTMLProviderProps<T>,
 ): void {
   // An un-debounced waiting tracker (waiting is debounced inside the media controller).
@@ -84,7 +85,6 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     attachMediaEventListener('abort', onAbort);
     attachMediaEventListener('emptied', onEmptied);
     attachMediaEventListener('error', onError);
-
     if (__DEV__) {
       logger?.debug('attached initial media event listeners');
     }
@@ -121,7 +121,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     attachedCanPlayEventListeners = true;
   }
 
-  function updateCurrentTime(newTime: number, triggerEvent?: Event) {
+  function updateCurrentTime(newTime: number, trigger?: Event) {
     if (!media) return;
     dispatchEvent(provider, 'vds-time-update', {
       // Avoid errors where `currentTime` can have higher precision than duration.
@@ -129,7 +129,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
         currentTime: Math.min(newTime, media.duration),
         played: media.played,
       },
-      triggerEvent,
+      trigger,
     });
   }
 
@@ -148,7 +148,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     if (props.onAbort?.(event)) return;
 
     onSourceChange();
-    dispatchEvent(provider, 'vds-abort', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-abort', { trigger: event });
   }
 
   function onLoadStart(event: Event) {
@@ -159,15 +159,15 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
     if (!media![ENGINE]) onSourceChange();
     attachLoadStartEventListeners();
-    dispatchEvent(provider, 'vds-load-start', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-load-start', { trigger: event });
   }
 
   function onEmptied(event: Event) {
-    dispatchEvent(provider, 'vds-emptied', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-emptied', { trigger: event });
   }
 
   function onLoadedData(event: Event) {
-    dispatchEvent(provider, 'vds-loaded-data', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-loaded-data', { trigger: event });
   }
 
   function onLoadedMetadata(event: Event) {
@@ -179,7 +179,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
       detail: { volume: media!.volume, muted: media!.muted },
     });
 
-    dispatchEvent(provider, 'vds-loaded-metadata', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-loaded-metadata', { trigger: event });
 
     props.onLoadedMetadata?.(event);
   }
@@ -194,7 +194,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
   function onPlay(event: Event) {
     const playEvent = new DOMEvent('vds-play', {
-      triggerEvent: event,
+      trigger: event,
     }) as MediaPlayEvent;
     playEvent.autoplay = $media[ATTEMPTING_AUTOPLAY];
     provider!.dispatchEvent(playEvent);
@@ -205,7 +205,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     if (media!.readyState === 1 && !isMediaWaiting) return;
     isMediaWaiting = false;
     timeRafLoop.stop();
-    dispatchEvent(provider, 'vds-pause', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-pause', { trigger: event });
   }
 
   function onCanPlay(event: Event) {
@@ -215,40 +215,40 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   function onCanPlayThrough(event: Event) {
     if ($media.started) return;
     dispatchEvent(provider, 'vds-can-play-through', {
-      triggerEvent: event,
+      trigger: event,
       detail: { duration: media!.duration },
     });
   }
 
   function onPlaying(event: Event) {
     isMediaWaiting = false;
-    dispatchEvent(provider, 'vds-playing', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-playing', { trigger: event });
     timeRafLoop.start();
   }
 
   function onStalled(event: Event) {
-    dispatchEvent(provider, 'vds-stalled', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-stalled', { trigger: event });
     if (media!.readyState < 3) {
       isMediaWaiting = true;
-      dispatchEvent(provider, 'vds-waiting', { triggerEvent: event });
+      dispatchEvent(provider, 'vds-waiting', { trigger: event });
     }
   }
 
   function onWaiting(event: Event) {
     if (media!.readyState < 3) {
       isMediaWaiting = true;
-      dispatchEvent(provider, 'vds-waiting', { triggerEvent: event });
+      dispatchEvent(provider, 'vds-waiting', { trigger: event });
     }
   }
 
   function onEnded(event: Event) {
     timeRafLoop.stop();
     updateCurrentTime(media!.duration, event);
-    dispatchEvent(provider, 'vds-end', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-end', { trigger: event });
     if ($media.loop) {
       onLoop();
     } else {
-      dispatchEvent(provider, 'vds-ended', { triggerEvent: event });
+      dispatchEvent(provider, 'vds-ended', { trigger: event });
     }
   }
 
@@ -256,7 +256,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     if ($media.ended) updateCurrentTime(media!.duration, event);
     dispatchEvent(provider, 'vds-duration-change', {
       detail: media!.duration,
-      triggerEvent: event,
+      trigger: event,
     });
   }
 
@@ -266,14 +266,14 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
         volume: media!.volume,
         muted: media!.muted,
       },
-      triggerEvent: event,
+      trigger: event,
     });
   }
 
   function onSeeked(event: Event) {
     dispatchEvent(provider, 'vds-seeked', {
       detail: media!.currentTime,
-      triggerEvent: event,
+      trigger: event,
     });
 
     // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
@@ -295,7 +295,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   function onSeeking(event: Event) {
     dispatchEvent(provider, 'vds-seeking', {
       detail: media!.currentTime,
-      triggerEvent: event,
+      trigger: event,
     });
   }
 
@@ -305,7 +305,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
         buffered: media!.buffered,
         seekable: media!.seekable,
       },
-      triggerEvent: event,
+      trigger: event,
     });
   }
 
@@ -318,7 +318,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   }
 
   function onSuspend(event: Event) {
-    dispatchEvent(provider, 'vds-suspend', { triggerEvent: event });
+    dispatchEvent(provider, 'vds-suspend', { trigger: event });
   }
 
   function onRateChange(event: Event) {
@@ -334,7 +334,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
         code: mediaError.code as MediaErrorCode,
         mediaError: mediaError,
       },
-      triggerEvent: event,
+      trigger: event,
     });
   }
 }

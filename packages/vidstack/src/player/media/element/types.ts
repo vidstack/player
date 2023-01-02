@@ -39,6 +39,25 @@ export interface MediaElementEvents extends MediaControllerEvents {
  */
 export interface MediaElementConnectEvent extends DOMEvent<MediaElement> {}
 
+export interface MediaElementCSSVars {
+  /**
+   * The amount of media that has buffered in seconds (0 -> duration).
+   */
+  readonly 'vds-buffered-amount': number;
+  /**
+   * The current playback time in seconds (0 -> duration).
+   */
+  readonly 'vds-current-time': number;
+  /**
+   * The total length of media in seconds.
+   */
+  readonly 'vds-duration': number;
+  /**
+   * The amount of media that is seekable in seconds (0 -> duration).
+   */
+  readonly 'vds-seekable-amount': number;
+}
+
 /**
  * All media elements exist inside the `<vds-media>` component. It's main jobs are to host the
  * media controller, and expose media state through HTML attributes and CSS properties for styling
@@ -58,5 +77,5 @@ export interface MediaElementConnectEvent extends DOMEvent<MediaElement> {}
  * ```
  */
 export interface MediaElement
-  extends HTMLCustomElement<MediaElementProps, MediaElementEvents>,
+  extends HTMLCustomElement<MediaElementProps, MediaElementEvents, MediaElementCSSVars>,
     MediaElementMembers {}

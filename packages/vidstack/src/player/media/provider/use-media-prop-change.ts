@@ -1,7 +1,7 @@
-import { effect, ReadSignal } from 'maverick.js';
+import { effect, ReadSignal, Signals } from 'maverick.js';
 import { dispatchEvent } from 'maverick.js/std';
 
-import { useInternalMediaState } from '../store';
+import { useInternalMediaStore } from '../store';
 import type { MediaProviderElement, MediaProviderProps } from './types';
 
 /**
@@ -11,40 +11,40 @@ import type { MediaProviderElement, MediaProviderProps } from './types';
  */
 export function useMediaPropChange(
   $target: ReadSignal<MediaProviderElement | null>,
-  $props: MediaProviderProps,
+  { $autoplay, $poster, $loop, $controls, $playsinline }: Signals<MediaProviderProps>,
 ) {
-  const $media = useInternalMediaState()!;
+  const $media = useInternalMediaStore()!;
 
   effect(() => {
     const target = $target();
     if (!target) return;
 
     effect(() => {
-      const autoplay = $props.autoplay;
+      const autoplay = $autoplay();
       $media.autoplay = autoplay;
       dispatchEvent(target, 'vds-autoplay-change', { detail: autoplay });
     });
 
     effect(() => {
-      const poster = $props.poster;
+      const poster = $poster();
       $media.poster = poster;
       dispatchEvent(target, 'vds-poster-change', { detail: poster });
     });
 
     effect(() => {
-      const loop = $props.loop;
+      const loop = $loop();
       $media.loop = loop;
       dispatchEvent(target, 'vds-loop-change', { detail: loop });
     });
 
     effect(() => {
-      const controls = $props.controls;
+      const controls = $controls();
       $media.controls = controls;
       dispatchEvent(target, 'vds-controls-change', { detail: controls });
     });
 
     effect(() => {
-      const playsinline = $props.playsinline;
+      const playsinline = $playsinline();
       $media.playsinline = playsinline;
       dispatchEvent(target, 'vds-playsinline-change', { detail: playsinline });
     });

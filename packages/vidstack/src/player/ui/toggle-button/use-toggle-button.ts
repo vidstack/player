@@ -1,12 +1,6 @@
-import { effect, ReadSignal } from 'maverick.js';
+import { effect, Signals } from 'maverick.js';
 import { CustomElementHost, onAttach } from 'maverick.js/element';
-import {
-  ariaBool,
-  isKeyboardClick,
-  isKeyboardEvent,
-  listenEvent,
-  setAttribute,
-} from 'maverick.js/std';
+import { ariaBool, isKeyboardClick, isKeyboardEvent, listenEvent } from 'maverick.js/std';
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
@@ -14,27 +8,28 @@ import type { ToggleButtonElement, ToggleButtonMembers, ToggleButtonProps } from
 
 export function useToggleButton(
   host: CustomElementHost<ToggleButtonElement>,
-  $target: ReadSignal<ToggleButtonElement | null>,
-  $pressed: ReadSignal<boolean>,
-  { $props, ...props }: UseToggleButtonProps,
+  { $props: { $pressed, $disabled }, ...props }: UseToggleButtonProps,
 ): ToggleButtonMembers {
+  host.setAttributes({
+    'aria-pressed': () => ariaBool($pressed()),
+  });
+
+  useFocusVisible(host.$el);
+
   onAttach(() => {
     setAttributeIfEmpty(host.el!, 'tabindex', '0');
     setAttributeIfEmpty(host.el!, 'role', 'button');
-    setAttribute(host.el!, 'aria-pressed', () => ariaBool($pressed()));
   });
 
-  useFocusVisible($target);
-
   effect(() => {
-    const target = $target();
+    const target = host.$el();
     if (!target) return;
     const clickEvents = ['pointerup', 'keydown'] as const;
     for (const eventType of clickEvents) listenEvent(target, eventType, onPress);
   });
 
   function onPress(event: Event) {
-    const disabled = $props.disabled;
+    const disabled = $disabled();
     if (disabled || (isKeyboardEvent(event) && !isKeyboardClick(event))) {
       if (disabled) event.stopImmediatePropagation();
       return;
@@ -48,12 +43,16 @@ export function useToggleButton(
       return $pressed();
     },
     get disabled() {
-      return $props.disabled;
+      return $disabled();
     },
   };
 }
 
 export interface UseToggleButtonProps {
-  $props: ToggleButtonProps;
+  $props: Signals<
+    ToggleButtonProps & {
+      pressed: boolean;
+    }
+  >;
   onPress?(event: Event): void;
 }

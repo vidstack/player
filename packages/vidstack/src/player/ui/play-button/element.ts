@@ -1,8 +1,7 @@
 import { defineCustomElement, onAttach } from 'maverick.js/element';
-import { setAttribute } from 'maverick.js/std';
 
 import { useMediaRemoteControl } from '../../media/remote-control';
-import { useMediaState } from '../../media/store';
+import { useMediaStore } from '../../media/store';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
 import type { PlayButtonElement } from './types';
@@ -16,23 +15,23 @@ declare global {
 export const PlayButtonDefinition = defineCustomElement<PlayButtonElement>({
   tagName: 'vds-play-button',
   props: toggleButtonProps,
-  setup({ host, props }) {
-    const $target = () => (host.$connected ? host.el : null),
-      $media = useMediaState(),
-      toggle = useToggleButton(host, $target, () => !$media.paused, {
-        $props: props,
+  setup({ host, props: { $disabled } }) {
+    const $media = useMediaStore(),
+      $pressed = () => !$media.paused,
+      toggle = useToggleButton(host, {
+        $props: { $pressed, $disabled },
         onPress,
       }),
-      remote = useMediaRemoteControl($target);
+      remote = useMediaRemoteControl(host.$el);
 
-    onAttach(() => {
-      setAttribute(host.el!, 'paused', () => $media.paused);
-      setAttribute(host.el!, 'aria-label', () => ($media.paused ? 'Play' : 'Pause'));
+    host.setAttributes({
+      paused: () => $media.paused,
+      'aria-label': () => ($media.paused ? 'Play' : 'Pause'),
     });
 
     function onPress(event: Event) {
-      if (props.disabled) return;
-      toggle.pressed ? remote.pause(event) : remote.play(event);
+      if ($disabled()) return;
+      $pressed() ? remote.pause(event) : remote.play(event);
     }
 
     return toggle;

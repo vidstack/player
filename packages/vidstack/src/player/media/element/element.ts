@@ -1,17 +1,11 @@
 import { effect } from 'maverick.js';
-import { defineCustomElement, onAttach, onConnect } from 'maverick.js/element';
-import {
-  camelToKebabCase,
-  dispatchEvent,
-  mergeProperties,
-  setAttribute,
-  setStyle,
-} from 'maverick.js/std';
+import { AttributesRecord, defineCustomElement, onConnect } from 'maverick.js/element';
+import { camelToKebabCase, dispatchEvent, mergeProperties } from 'maverick.js/std';
 
 import { IS_IOS } from '../../../utils/support';
 import { useMediaController } from '../controller/use-media-controller';
 import type { MediaState } from '../state';
-import { useMediaState } from '../store';
+import { useMediaStore } from '../store';
 import type { MediaElement, MediaElementConnectEvent } from './types';
 
 declare global {
@@ -46,13 +40,6 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'waiting',
 ];
 
-const MEDIA_CSS_VARS: (keyof MediaState)[] = [
-  'bufferedAmount',
-  'currentTime',
-  'duration',
-  'seekableAmount',
-];
-
 export const MediaDefinition = defineCustomElement<MediaElement>({
   tagName: 'vds-media',
   props: {
@@ -60,46 +47,45 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     userIdleDelay: { initial: 2000 },
     fullscreenOrientation: {},
   },
-  setup({ props, host, accessors }) {
+  setup({ props: { $logLevel, $userIdleDelay, $fullscreenOrientation }, host, accessors }) {
     /**
      * The media controller which is responsible for updating the media state store and satisfying
      * media requests.
      */
-    const $target = () => (host.$connected ? host.el : null),
-      controller = useMediaController($target, {
-        $fullscreenOrientation: () => props.fullscreenOrientation,
-      });
+    const controller = useMediaController(host.$el, {
+      $fullscreenOrientation,
+    });
 
-    const $media = useMediaState();
+    const $media = useMediaStore(),
+      $attrs: AttributesRecord = {
+        'hide-ui': () =>
+          IS_IOS && $media.viewType === 'video' && (!$media.playsinline || $media.fullscreen),
+      };
 
-    onAttach(() => {
-      setAttribute(
-        host.el!,
-        'hide-ui',
-        () => IS_IOS && $media.viewType === 'video' && (!$media.playsinline || $media.fullscreen),
-      );
+    for (const prop of MEDIA_ATTRIBUTES) {
+      $attrs[camelToKebabCase(prop as string)] = () => $media[prop] as string | number;
+    }
 
-      for (const prop of MEDIA_ATTRIBUTES) {
-        setAttribute(host.el!, camelToKebabCase(prop as string), () => $media[prop]);
-      }
+    host.setAttributes($attrs);
 
-      for (const prop of MEDIA_CSS_VARS) {
-        setStyle(host.el!, `--${camelToKebabCase(prop as string)}`, () => $media[prop]);
-      }
+    host.setCSSVars({
+      '--vds-buffered-amount': () => $media.bufferedAmount,
+      '--vds-current-time': () => $media.currentTime,
+      '--vds-duration': () => $media.duration,
+      '--vds-seekable-amount': () => $media.seekableAmount,
     });
 
     effect(() => {
-      controller.logLevel = props.logLevel;
+      controller.logLevel = $logLevel();
     });
 
     effect(() => {
-      controller.user.idle.delay = props.userIdleDelay;
+      controller.user.idle.delay = $userIdleDelay();
     });
 
     onConnect(() => {
-      const el = $target()!;
-      dispatchEvent(el, 'vds-media-connect', {
-        detail: el,
+      dispatchEvent(host.el!, 'vds-media-connect', {
+        detail: host.el!,
         bubbles: true,
         composed: true,
       });

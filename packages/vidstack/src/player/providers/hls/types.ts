@@ -1,7 +1,11 @@
 import type * as HLS from 'hls.js';
 import type { HTMLCustomElement } from 'maverick.js/element';
 
-import type { VideoProviderMembers, VideoProviderProps } from '../video/types';
+import type {
+  VideoProviderCSSVars,
+  VideoProviderMembers,
+  VideoProviderProps,
+} from '../video/types';
 import type { HLSProviderEvents } from './events';
 
 export { HLSProviderEvents };
@@ -54,6 +58,8 @@ export interface HLSProviderMembers extends VideoProviderMembers {
   'hls-config': HLS.HlsConfig;
   'hls-library': HLSLibrary;
 }
+
+export interface HLSProviderCSSVars extends VideoProviderCSSVars {}
 
 /**
  * The `<vds-hls-video>` element adapts the underlying `<video>` element to satisfy the media
@@ -108,5 +114,5 @@ export interface HLSProviderMembers extends VideoProviderMembers {
  * ```
  */
 export interface HLSVideoElement
-  extends HTMLCustomElement<HLSProviderProps, HLSProviderEvents>,
+  extends HTMLCustomElement<HLSProviderProps, HLSProviderEvents, HLSProviderCSSVars>,
     HLSProviderMembers {}

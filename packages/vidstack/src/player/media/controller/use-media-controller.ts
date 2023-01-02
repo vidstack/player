@@ -10,7 +10,7 @@ import {
 } from '../../../foundation/orientation/use-screen-orientation';
 import { withMediaFullscreenOptions } from '../provider/media-fullscreen';
 import { MediaProviderContext } from '../provider/use-media-provider';
-import { MediaStateContext } from '../store';
+import { MediaStoreContext } from '../store';
 import { UseMediaUser, useMediaUser } from '../user';
 import type { MediaControllerEventTarget } from './events';
 import { useMediaRequestManager } from './use-media-request-manager';
@@ -34,7 +34,7 @@ export function useMediaController(
   $target: ReadSignal<MediaControllerEventTarget | null>,
   { $fullscreenOrientation }: UseMediaControllerProps,
 ): UseMediaController {
-  provideContext(MediaStateContext);
+  provideContext(MediaStoreContext);
   provideContext(MediaProviderContext);
 
   const user = useMediaUser($target),
@@ -42,9 +42,7 @@ export function useMediaController(
     fullscreen = useFullscreen(
       $target,
       withMediaFullscreenOptions({
-        get lockType() {
-          return $fullscreenOrientation();
-        },
+        $lockType: $fullscreenOrientation,
         orientation,
       }),
     ),

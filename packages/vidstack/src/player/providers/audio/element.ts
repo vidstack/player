@@ -16,14 +16,15 @@ export const AudioDefinition = defineCustomElement<AudioElement>({
   tagName: 'vds-audio',
   props: htmlProviderProps,
   setup({ host, props, accessors }) {
-    const $target = () => (host.$connected ? host.el : null),
-      { members } = useHTMLProvider<AudioElement>($target, {
-        $props: props,
-        fullscreen: useFullscreen,
-      });
+    const { members } = useHTMLProvider<AudioElement>(host.$el, {
+      $props: props,
+      fullscreen: useFullscreen,
+    });
 
     onConnect(() => {
-      dispatchEvent(host.el, 'vds-view-type-change', { detail: 'audio' });
+      setTimeout(() => {
+        dispatchEvent(host.el, 'vds-view-type-change', { detail: 'audio' });
+      }, 0);
     });
 
     return mergeProperties(accessors(), members);

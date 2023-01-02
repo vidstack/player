@@ -52,12 +52,12 @@ export function useVideoPresentation(
 
     dispatchEvent($target(), 'vds-video-presentation-change', {
       detail: $mode(),
-      triggerEvent: event,
+      trigger: event,
     });
 
     dispatchEvent($target(), 'vds-fullscreen-change', {
       detail: $mode() === 'fullscreen',
-      triggerEvent: event,
+      trigger: event,
     });
   }
 

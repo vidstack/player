@@ -1,4 +1,4 @@
-import { effect, ReadSignal, signal } from 'maverick.js';
+import { effect, peek, ReadSignal, signal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import { canOrientScreen } from '../../utils/support';
@@ -35,7 +35,7 @@ export function useScreenOrientation(
     assertScreenOrientationAPI();
     await screen.orientation.lock(lockType);
     $locked.set(true);
-    dispatchLockChange($target(), lockType);
+    dispatchLockChange(peek($target), lockType);
   }
 
   async function unlock() {
@@ -43,7 +43,7 @@ export function useScreenOrientation(
     await screen.orientation.unlock();
     $locked.set(false);
     const lockType = screen.orientation.type as ScreenOrientationLockType;
-    dispatchLockChange($target(), lockType);
+    dispatchLockChange(peek($target), lockType);
   }
 
   return {

@@ -3,7 +3,7 @@ import { listenEvent } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
 import type { MediaEvents } from '../events';
-import { useMediaState } from '../store';
+import { useMediaStore } from '../store';
 import type { MediaProviderElement } from './types';
 
 const mediaEvents: (keyof MediaEvents)[] | undefined = __DEV__
@@ -42,7 +42,7 @@ const mediaEvents: (keyof MediaEvents)[] | undefined = __DEV__
 export function useMediaEventsLogger($target: ReadSignal<MediaProviderElement | null>) {
   if (!__DEV__) return;
 
-  const $media = useMediaState(),
+  const $media = useMediaStore(),
     logger = useLogger($target);
 
   effect(() => {

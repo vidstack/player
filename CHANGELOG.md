@@ -302,7 +302,7 @@
 - rename `hostedStoreRecordSubscription` -> `storeRecordSubscription` ([d142592](https://github.com/vidstack/vidstack/commit/d14259250593c19e5e2fe4a18880569fd7790932))
 - rename `hostedStoreSubscription` -> `storeSubscription` ([01bec4f](https://github.com/vidstack/vidstack/commit/01bec4f23b33ee3a50a624ea3965b951b30edb13))
 - rename `loading-strategy` to `loading` - matching native `<img />` ([adc84f3](https://github.com/vidstack/vidstack/commit/adc84f31aad673be9a20276981ff9657fac4dcdc))
-- rename `originalEvent` to `triggerEvent` ([4d08a37](https://github.com/vidstack/vidstack/commit/4d08a37d929444263ffb452f14137c521c6e005a))
+- rename `originalEvent` to `trigger` ([4d08a37](https://github.com/vidstack/vidstack/commit/4d08a37d929444263ffb452f14137c521c6e005a))
 - **ui:** custom poster should prevent native poster rendering ([4fff98b](https://github.com/vidstack/vidstack/commit/4fff98bf65ba1b1900538471e1f5d341b7b3698d))
 - **ui:** keyboard not updating time slider ([8770ab3](https://github.com/vidstack/vidstack/commit/8770ab39bbbf3f2a06bc452ff321b4fc202c9bd1))
 - **ui:** refactor time slider to use value instead of % ([b4d5aa1](https://github.com/vidstack/vidstack/commit/b4d5aa1028d19946c29ef012e420351500524fd5))
@@ -312,7 +312,7 @@
 ### Features
 
 - `hls.js` 1.0 support 🎉 ([f3ac886](https://github.com/vidstack/vidstack/commit/f3ac8868db4883b7c5c6f240a0ebb7d29c2772c6)), closes [#591](https://github.com/vidstack/vidstack/issues/591)
-- attach media request events to `triggerEvent` chain ([dc8b5d8](https://github.com/vidstack/vidstack/commit/dc8b5d88ac8bb849eb364cc620904e6d27f37391))
+- attach media request events to `trigger` chain ([dc8b5d8](https://github.com/vidstack/vidstack/commit/dc8b5d88ac8bb849eb364cc620904e6d27f37391))
 - include vscode custom html data ([d1b4245](https://github.com/vidstack/vidstack/commit/d1b4245ae4e632bb2f93be7493c05802993c1f60)), closes [#584](https://github.com/vidstack/vidstack/issues/584)
 - new `<vds-media-text />` component ([ef4fa34](https://github.com/vidstack/vidstack/commit/ef4fa34b26c61e3fc77a4fa22541e821b74bdd87)), closes [#610](https://github.com/vidstack/vidstack/issues/610)
 - new `<vds-slider-value-text />` component ([e2b3b28](https://github.com/vidstack/vidstack/commit/e2b3b287a4aef5907edd224604eea2f215727060)), closes [#611](https://github.com/vidstack/vidstack/issues/611)
@@ -590,7 +590,7 @@
 - add `debug` option to context provider options ([27d76a5](https://github.com/vidstack/vidstack/commit/27d76a53f5dea3569299f77fc74cef59dca926a5))
 - add `logLevel` property to media provider element ([6c41af8](https://github.com/vidstack/vidstack/commit/6c41af846ce5bdf830e81c935bbc0d14fc7241e2))
 - add `requestEvent` to `vds-replay` event ([bb2fab8](https://github.com/vidstack/vidstack/commit/bb2fab8c661ebbb4a3344471bcb8fa5ab8daf8fb))
-- add `triggerEvent` to `vds-replay` event ([f24b283](https://github.com/vidstack/vidstack/commit/f24b2836f6d5cc114f320dfee1e6439ab4f8e7eb))
+- add `trigger` to `vds-replay` event ([f24b283](https://github.com/vidstack/vidstack/commit/f24b2836f6d5cc114f320dfee1e6439ab4f8e7eb))
 - add detailed levelled logging in dev ([5afa940](https://github.com/vidstack/vidstack/commit/5afa940dbe1aa5588f73cce2eba147a23b72e668))
 - add new `bundle/` to quickly load/test elements from CDN ([b8124ef](https://github.com/vidstack/vidstack/commit/b8124ef3ec3cc78c3c3469c8c12ba1797e09330a))
 - allow `RequestKey` to be a symbol in `RequestQueue` ([6aed5a6](https://github.com/vidstack/vidstack/commit/6aed5a69f68839747a2d408216a656f584bcfcbf))

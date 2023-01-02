@@ -1,4 +1,4 @@
-import { ReadSignal, signal } from 'maverick.js';
+import { ReadSignal, signal, Signals } from 'maverick.js';
 import { InferCustomElementProps, onConnect } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
 
@@ -6,7 +6,7 @@ import type { useFullscreen } from '../../../foundation/fullscreen/use-fullscree
 import { onMediaSrcChange } from '../../media/provider/internal';
 import type { MediaProviderAdapter } from '../../media/provider/types';
 import { useMediaProvider } from '../../media/provider/use-media-provider';
-import { useMediaState } from '../../media/store';
+import { useMediaStore } from '../../media/store';
 import type { MediaSrc } from '../../media/types';
 import type { HTMLProviderElement, HTMLProviderMembers, HTMLProviderProps } from './types';
 import { useHTMLProviderAdapter } from './use-adapter';
@@ -24,7 +24,7 @@ export function useHTMLProvider<T extends HTMLProviderElement>(
   $target: ReadSignal<T | null>,
   props: UseHTMLProviderProps<T>,
 ): UseHTMLProvider {
-  const $media = useMediaState(),
+  const $media = useMediaStore(),
     $mediaElement = signal<HTMLMediaElement | null>(null),
     adapter = useHTMLProviderAdapter($target, $mediaElement, $media),
     members = useMediaProvider($target, {
@@ -74,7 +74,7 @@ export interface UseHTMLProvider {
 }
 
 export interface UseHTMLProviderProps<T extends HTMLProviderElement> {
-  $props: InferCustomElementProps<T>;
+  $props: Signals<InferCustomElementProps<T>>;
   fullscreen: typeof useFullscreen<T>;
   /** return `true` if the abort has been handled. */
   onAbort?(event: Event): boolean;

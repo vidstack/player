@@ -4,16 +4,22 @@ import { DOMEvent } from 'maverick.js/std';
 import { createLogger, Logger } from '../../foundation/logger/create-logger';
 import { RequestQueue } from '../../foundation/queue/request-queue';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request-events';
-import { useMediaState } from './store';
+import { useMediaStore } from './store';
+
+const remotes = new WeakMap<ReadSignal<EventTarget | null>, MediaRemoteControl>();
 
 export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
   const logger = __DEV__ ? createLogger() : undefined,
-    remote = new MediaRemoteControl(logger);
+    remote = remotes.get($target) ?? new MediaRemoteControl(logger);
 
-  effect(() => {
-    if (__DEV__) logger?.setTarget($target());
-    remote.setTarget($target());
-  });
+  if (!remotes.has($target)) {
+    effect(() => {
+      if (__DEV__) logger?.setTarget($target());
+      remote.setTarget($target());
+    });
+
+    remotes.set($target, remote);
+  }
 
   return remote;
 }
@@ -26,7 +32,7 @@ export class MediaRemoteControl {
   protected _requests = new RequestQueue();
 
   constructor(protected _logger?: Logger) {
-    const $media = useMediaState();
+    const $media = useMediaStore();
     effect(() => {
       if (this._target() && $media.canPlay) {
         this._requests.start();
@@ -36,60 +42,60 @@ export class MediaRemoteControl {
     });
   }
 
-  startLoading(triggerEvent?: Event) {
-    this._dispatchRequest('vds-start-loading', undefined, triggerEvent);
+  startLoading(trigger?: Event) {
+    this._dispatchRequest('vds-start-loading', trigger);
   }
 
-  play(triggerEvent?: Event) {
-    this._dispatchRequest('vds-play-request', undefined, triggerEvent);
+  play(trigger?: Event) {
+    this._dispatchRequest('vds-play-request', trigger);
   }
 
-  pause(triggerEvent?: Event) {
-    this._dispatchRequest('vds-pause-request', undefined, triggerEvent);
+  pause(trigger?: Event) {
+    this._dispatchRequest('vds-pause-request', trigger);
   }
 
-  mute(triggerEvent?: Event) {
-    this._dispatchRequest('vds-mute-request', undefined, triggerEvent);
+  mute(trigger?: Event) {
+    this._dispatchRequest('vds-mute-request', trigger);
   }
 
-  unmute(triggerEvent?: Event) {
-    this._dispatchRequest('vds-unmute-request', undefined, triggerEvent);
+  unmute(trigger?: Event) {
+    this._dispatchRequest('vds-unmute-request', trigger);
   }
 
-  enterFullscreen(target?: MediaFullscreenRequestTarget, triggerEvent?: Event) {
-    this._dispatchRequest('vds-enter-fullscreen-request', target, triggerEvent);
+  enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
+    this._dispatchRequest('vds-enter-fullscreen-request', trigger, target);
   }
 
-  exitFullscreen(target?: MediaFullscreenRequestTarget, triggerEvent?: Event) {
-    this._dispatchRequest('vds-exit-fullscreen-request', target, triggerEvent);
+  exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
+    this._dispatchRequest('vds-exit-fullscreen-request', trigger, target);
   }
 
-  seeking(time: number, triggerEvent?: Event) {
-    this._dispatchRequest('vds-seeking-request', time, triggerEvent);
+  seeking(time: number, trigger?: Event) {
+    this._dispatchRequest('vds-seeking-request', trigger, time);
   }
 
-  seek(time: number, triggerEvent?: Event) {
-    this._dispatchRequest('vds-seek-request', time, triggerEvent);
+  seek(time: number, trigger?: Event) {
+    this._dispatchRequest('vds-seek-request', trigger, time);
   }
 
-  changeVolume(volume: number, triggerEvent?: Event) {
-    this._dispatchRequest('vds-volume-change-request', volume, triggerEvent);
+  changeVolume(volume: number, trigger?: Event) {
+    this._dispatchRequest('vds-volume-change-request', trigger, volume);
   }
 
-  resumeUserIdle(triggerEvent?: Event) {
-    this._dispatchRequest('vds-resume-user-idle-request', undefined, triggerEvent);
+  resumeUserIdle(trigger?: Event) {
+    this._dispatchRequest('vds-resume-user-idle-request', trigger);
   }
 
-  pauseUserIdle(triggerEvent?: Event) {
-    this._dispatchRequest('vds-pause-user-idle-request', undefined, triggerEvent);
+  pauseUserIdle(trigger?: Event) {
+    this._dispatchRequest('vds-pause-user-idle-request', trigger);
   }
 
-  showPoster(triggerEvent?: Event) {
-    this._dispatchRequest('vds-show-poster-request', undefined, triggerEvent);
+  showPoster(trigger?: Event) {
+    this._dispatchRequest('vds-show-poster-request', trigger);
   }
 
-  hidePoster(triggerEvent?: Event) {
-    this._dispatchRequest('vds-hide-poster-request', undefined, triggerEvent);
+  hidePoster(trigger?: Event) {
+    this._dispatchRequest('vds-hide-poster-request', trigger);
   }
 
   setTarget(target: EventTarget | null) {
@@ -98,22 +104,22 @@ export class MediaRemoteControl {
 
   protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(
     type: EventType,
+    trigger?: Event,
     detail?: MediaRequestEvents[EventType]['detail'],
-    triggerEvent?: Event,
   ) {
     this._requests.queue(type, () => {
       const request = new DOMEvent<any>(type, {
         bubbles: true,
         composed: true,
         detail,
-        triggerEvent,
+        trigger,
       });
 
       if (__DEV__) {
         this._logger
           ?.infoGroup(`📨 dispatching \`${type}\``)
           .labelledLog('Request Event', request)
-          .labelledLog('Trigger Event', triggerEvent)
+          .labelledLog('Trigger Event', trigger)
           .dispatch();
       }
 

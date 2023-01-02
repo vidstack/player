@@ -6,13 +6,13 @@ import type { ScreenOrientationLockType, ScreenOrientationType } from './screen-
 export function dispatchOrientationChange(
   target: ScreenOrientationEventTarget | null,
   orientation: ScreenOrientationType,
-  triggerEvent?: Event,
+  trigger?: Event,
 ) {
   dispatchEvent(target, 'vds-orientation-change', {
     bubbles: true,
     composed: true,
     detail: orientation,
-    triggerEvent,
+    trigger,
   });
 }
 

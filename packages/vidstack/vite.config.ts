@@ -23,7 +23,7 @@ export default defineConfig({
   plugins: [
     maverick({
       include: ['src/**/*.{jsx,tsx}'],
-      hydratable: (id) => id.includes('hydrate'),
+      hydratable: true,
     }),
   ],
   // https://vitest.dev/config

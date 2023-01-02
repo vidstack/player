@@ -17,7 +17,7 @@ the element tag name except they're in PascalCase without the `vds` prefix.
 - `vds-play-button` -> `PlayButton`
 
 ```js
-import { Media, Video, PlayButton } from '@vidstack/player-react';
+import { Media, PlayButton, Video } from '@vidstack/player-react';
 ```
 
 Keep in mind that you're implicitly registering the underlying custom element by importing a
@@ -29,9 +29,9 @@ All components forward the underlying custom element reference, so you can use t
 `useRef` hook to get a hold of it. This is _generally_ only required when calling a method.
 
 ```tsx
-import { useRef, useEffect } from 'React';
 import { type VideoElement } from '@vidstack/player';
 import { Media, Video } from '@vidstack/player-react';
+import { useEffect, useRef } from 'React';
 
 function MyPlayer() {
   const provider = useRef<VideoElement>(null);
@@ -57,7 +57,7 @@ element itself; therefore, you can pass in complex data types such as objects an
 any issues.
 
 ```tsx
-import { Media, Hls } from '@vidstack/player-react';
+import { Hls, Media } from '@vidstack/player-react';
 
 function MyPlayer() {
   return (
@@ -115,8 +115,8 @@ Tracking media state via events:
 {% /no %}
 
 ```tsx
-import { useState } from 'react';
 import { Media, Video } from '@vidstack/player-react';
+import { useState } from 'react';
 
 function MediaPlayer() {
   const [paused, setPaused] = useState(false);
@@ -136,9 +136,9 @@ Tracking media state via store hook:
 {% /yes %}
 
 ```tsx
-import { useRef } from 'react';
 import { type MediaElement } from '@vidstack/player';
 import { Media, useMediaContext } from '@vidstack/player-react';
+import { useRef } from 'react';
 
 function MediaPlayer() {
   const media = useRef<MediaElement>(null);
@@ -178,8 +178,8 @@ request media playback to play/pause, change the current volume level, seek to a
 position, and other actions that change media state.
 
 ```tsx
+import { useMediaContext, useMediaRemote } from '@vidstack/player-react';
 import React from 'react';
-import { useMediaRemote, useMediaContext } from '@vidstack/player-react';
 
 function PlayButton() {
   const remote = useMediaRemote();
@@ -187,7 +187,7 @@ function PlayButton() {
 
   function onPointerUp({ nativeEvent }: React.PointerEvent) {
     if (paused) {
-      // - We are providing the "triggerEvent" here.
+      // - We are providing the "trigger" here.
       // - Trigger events allow us to trace events back to their origin.
       // - The media play event will have this pointer event in its chain.
       remote.play(nativeEvent);
@@ -223,8 +223,8 @@ Avoid calling methods directly on the provider element:
 {% /no %}
 
 ```tsx
-import { useEffect } from 'react';
 import { useMediaElement } from '@vidstack/player-react';
+import { useEffect } from 'react';
 
 function MediaChild() {
   const media = useMediaElement();

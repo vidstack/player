@@ -2,15 +2,15 @@ import { effect, ReadSignal, signal } from 'maverick.js';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
 import type { MediaControllerEventTarget } from './controller/events';
-import { useMediaState } from './store';
+import { useMediaStore } from './store';
 
 const IDLE_EVENTS = ['pointerdown', 'pointermove', 'focus', 'keydown'] as const;
 
 export function useMediaUser($target: ReadSignal<MediaControllerEventTarget | null>): UseMediaUser {
-  let $media = useMediaState(),
+  let $media = useMediaStore(),
     idleTimeout: any,
     delay = 2000,
-    triggerEvent: Event | undefined,
+    trigger: Event | undefined,
     $idle = signal(false),
     $paused = signal(false);
 
@@ -28,7 +28,7 @@ export function useMediaUser($target: ReadSignal<MediaControllerEventTarget | nu
 
     effect(() => {
       if ($paused()) {
-        triggerEvent = undefined;
+        trigger = undefined;
         $idle.set(true);
       }
     });
@@ -36,12 +36,12 @@ export function useMediaUser($target: ReadSignal<MediaControllerEventTarget | nu
     effect(() => {
       const idle = $idle();
       window.clearTimeout(idleTimeout);
-      dispatchIdleChange($target(), idle, triggerEvent);
-      triggerEvent = undefined;
+      dispatchIdleChange($target(), idle, trigger);
+      trigger = undefined;
     });
 
     return () => {
-      triggerEvent = undefined;
+      trigger = undefined;
       $idle.set(true);
     };
   });
@@ -50,7 +50,7 @@ export function useMediaUser($target: ReadSignal<MediaControllerEventTarget | nu
     if ($paused()) return;
     window.clearTimeout(idleTimeout);
     idleTimeout = window.setTimeout(() => {
-      triggerEvent = event;
+      trigger = event;
       $idle.set(false);
     }, delay);
   }
@@ -103,10 +103,10 @@ export interface UseMediaUser {
 function dispatchIdleChange(
   target: MediaControllerEventTarget | null,
   isIdle: boolean,
-  triggerEvent?: Event,
+  trigger?: Event,
 ) {
   dispatchEvent(target, 'vds-user-idle-change', {
     detail: isIdle,
-    triggerEvent,
+    trigger,
   });
 }

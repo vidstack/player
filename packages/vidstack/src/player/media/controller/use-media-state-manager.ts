@@ -18,8 +18,7 @@ import type {
 import type * as ME from '../events';
 import type { MediaProviderElement } from '../provider/types';
 import { MediaProviderContext } from '../provider/use-media-provider';
-import type { MediaState } from '../state';
-import { softResetMediaState, useInternalMediaState } from '../store';
+import { MediaStore, softResetMediaStore, useInternalMediaStore } from '../store';
 import type { MediaRequestQueueRecord, UseMediaRequestManager } from './use-media-request-manager';
 
 /**
@@ -30,7 +29,7 @@ export function useMediaStateManager(
   $target: ReadSignal<FullscreenEventTarget | null>,
   requestManager?: UseMediaRequestManager,
 ) {
-  const $media = useInternalMediaState()!,
+  const $media = useInternalMediaStore()!,
     $mediaProvider = useContext(MediaProviderContext),
     disposal = useDisposalBin(),
     requestQueue = requestManager?.requestQueue,
@@ -71,7 +70,7 @@ export function useMediaStateManager(
       connected = true;
     } else if (connected) {
       resetTracking();
-      softResetMediaState($media);
+      softResetMediaStore($media);
       disposal.empty();
       requestQueue?.reset();
       skipInitialSrcChange = true;
@@ -144,7 +143,7 @@ export function useMediaStateManager(
     }
 
     resetTracking();
-    softResetMediaState($media);
+    softResetMediaStore($media);
     trackedEvents.set(event.type, event);
   }
 
@@ -213,7 +212,7 @@ export function useMediaStateManager(
     attachCanPlayListeners();
 
     // Avoid infinite chain - `hls.js` will not fire `canplay` event.
-    if (event.triggerEvent?.type !== 'loadedmetadata') {
+    if (event.trigger?.type !== 'loadedmetadata') {
       appendTriggerEvent(event, trackedEvents.get('vds-loaded-metadata'));
     }
 
@@ -261,7 +260,7 @@ export function useMediaStateManager(
     if ($media.ended || requestManager?.$isReplay()) {
       requestManager?.$isReplay.set(false);
       $media.ended = false;
-      dispatchEvent(provider, 'vds-replay', { triggerEvent: event });
+      dispatchEvent(provider, 'vds-replay', { trigger: event });
     }
   }
 
@@ -300,7 +299,7 @@ export function useMediaStateManager(
 
     if (!$media.started) {
       $media.started = true;
-      dispatchEvent(provider, 'vds-started', { triggerEvent: event });
+      dispatchEvent(provider, 'vds-started', { trigger: event });
     }
   }
 
@@ -360,7 +359,7 @@ export function useMediaStateManager(
     firingWaiting = true;
 
     const event = new DOMEvent('vds-waiting', {
-      triggerEvent: lastWaitingEvent,
+      trigger: lastWaitingEvent,
     }) as ME.MediaWaitingEvent;
 
     trackedEvents.set('vds-waiting', event);
@@ -409,7 +408,7 @@ export function useMediaStateManager(
     if (event.target !== provider) {
       dispatchEvent(provider, 'vds-fullscreen-change', {
         detail: event.detail,
-        triggerEvent: event,
+        trigger: event,
       });
     }
   }
@@ -422,7 +421,7 @@ export function useMediaStateManager(
     if (event.target !== provider) {
       dispatchEvent(provider, 'vds-fullscreen-error', {
         detail: event.detail,
-        triggerEvent: event,
+        trigger: event,
       });
     }
   }
@@ -438,12 +437,8 @@ export function useMediaStateManager(
   }
 }
 
-function onProgress(media: MediaState, event: ME.MediaProgressEvent) {
+function onProgress($media: MediaStore, event: ME.MediaProgressEvent) {
   const { buffered, seekable } = event.detail;
-  const bufferedAmount = buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
-  const seekableAmount = seekable.length === 0 ? 0 : seekable.end(seekable.length - 1);
-  media.buffered = buffered;
-  media.bufferedAmount = bufferedAmount;
-  media.seekable = seekable;
-  media.seekableAmount = seekableAmount;
+  $media.buffered = buffered;
+  $media.seekable = seekable;
 }

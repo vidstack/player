@@ -15,7 +15,6 @@ export type VidstackUIElement =
   | 'vds-play-button'
   | 'vds-slider-value-text'
   | 'vds-slider-video'
-  | 'vds-slider'
   | 'vds-time-slider'
   | 'vds-time'
   | 'vds-volume-slider';
@@ -74,7 +73,6 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
   'vds-hls-video': () => import('./player/providers/hls/element'),
   'vds-media': () => import('./player/media/element/element'),
   // 'vds-poster': () => import(''),
-  // 'vds-slider': () => import(''),
   // 'vds-time': () => import(''),
   'vds-video': () => import('./player/providers/video/element'),
 };

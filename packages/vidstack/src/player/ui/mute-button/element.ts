@@ -1,9 +1,8 @@
 import { computed } from 'maverick.js';
-import { defineCustomElement, onAttach } from 'maverick.js/element';
-import { setAttribute } from 'maverick.js/std';
+import { defineCustomElement } from 'maverick.js/element';
 
 import { useMediaRemoteControl } from '../../media/remote-control';
-import { useMediaState } from '../../media/store';
+import { useMediaStore } from '../../media/store';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
 import type { MuteButtonElement } from './types';
@@ -17,24 +16,23 @@ declare global {
 export const MuteButtonDefinition = defineCustomElement<MuteButtonElement>({
   tagName: 'vds-mute-button',
   props: toggleButtonProps,
-  setup({ host, props }) {
-    const $target = () => (host.$connected ? host.el : null),
-      $media = useMediaState(),
-      $muted = computed(() => $media.muted || $media.volume === 0),
-      toggle = useToggleButton(host, $target, $muted, {
-        $props: props,
+  setup({ host, props: { $disabled } }) {
+    const $media = useMediaStore(),
+      $pressed = computed(() => $media.muted || $media.volume === 0),
+      toggle = useToggleButton(host, {
+        $props: { $pressed, $disabled },
         onPress,
       }),
-      remote = useMediaRemoteControl($target);
+      remote = useMediaRemoteControl(host.$el);
 
-    onAttach(() => {
-      setAttribute(host.el!, 'muted', $muted);
-      setAttribute(host.el!, 'aria-label', () => ($muted() ? 'Unmute' : 'Mute'));
+    host.setAttributes({
+      muted: $pressed,
+      'aria-label': () => ($pressed() ? 'Unmute' : 'Mute'),
     });
 
     function onPress(event: Event) {
-      if (props.disabled) return;
-      toggle.pressed ? remote.unmute(event) : remote.mute(event);
+      if ($disabled()) return;
+      $pressed() ? remote.unmute(event) : remote.mute(event);
     }
 
     return toggle;

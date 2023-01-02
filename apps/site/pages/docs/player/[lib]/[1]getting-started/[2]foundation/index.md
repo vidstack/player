@@ -25,10 +25,10 @@ Firstly, we register the elements we're using by grabbing the import code snippe
 respective docs, or letting autocomplete help us out in our IDE:
 
 ```js {% copyHighlight=true highlight="4" %}
-import '@vidstack/player/define/vds-media.js';
-import '@vidstack/player/define/vds-video.js';
 // Discover elements by typing this in your IDE.
 import '@vidstack/player/define/';
+import '@vidstack/player/define/vds-media.js';
+import '@vidstack/player/define/vds-video.js';
 ```
 
 {% callout type="info" %}
@@ -142,7 +142,7 @@ this by adding the following to your TypeScript configuration file:
 You can import element types directly from the package if you're using TypeScript like so:
 
 ```ts {% copy=true %}
-import { type VideoElement, type PlayButtonElement } from '@vidstack/player';
+import { type PlayButtonElement, type VideoElement } from '@vidstack/player';
 
 let provider: VideoElement;
 ```
@@ -158,8 +158,8 @@ Event types can be imported directly from the package if you're using TypeScript
 
 ```ts {% copy=true %}
 import {
-  type MediaPlayEvent,
   type MediaCanPlayEvent,
+  type MediaPlayEvent,
   type MediaTimeUpdateEvent,
 } from '@vidstack/player';
 ```
@@ -224,7 +224,7 @@ The `mediaStoreSubscription` enables you to subscribe directly to specific media
 like so:
 
 ```ts
-import { mediaStoreSubscription, LitElement } from '@vidstack/player';
+import { LitElement, mediaStoreSubscription } from '@vidstack/player';
 
 class MyElement extends LitElement {
   constructor() {
@@ -254,11 +254,11 @@ import { MediaRemoteControl } from '@vidstack/player';
 class PlayButtonElement extends LitElement {
   protected _remote = new MediaRemoteControl(this);
 
-  protected _makePlayRequest(triggerEvent: Event) {
-      // - We are providing the "triggerEvent" here.
+  protected _makePlayRequest(trigger: Event) {
+      // - We are providing the "trigger" here.
       // - Trigger events allow us to trace events back to their origin.
       // - The media play event will have this pointer event in its chain.
-    this._remote.play(triggerEvent);
+    this._remote.play(trigger);
   }
 
   function render() {

@@ -1,4 +1,4 @@
-import { effect, ReadSignal } from 'maverick.js';
+import { effect, ReadSignal, Signals } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
@@ -12,7 +12,7 @@ import type { MediaProviderAdapter, MediaProviderElement, MediaProviderProps } f
  */
 export function useMediaAdapterDelegate(
   $target: ReadSignal<MediaProviderElement | null>,
-  $props: MediaProviderProps,
+  { $paused, $volume, $muted, $currentTime, $playsinline }: Signals<MediaProviderProps>,
   adapter: MediaProviderAdapter,
 ) {
   const logger = __DEV__ ? useLogger($target) : undefined,
@@ -21,14 +21,13 @@ export function useMediaAdapterDelegate(
 
   effect(() => {
     const target = $target();
-    if (target) {
-      listenEvent(target, 'vds-can-play', () => canPlayQueue.start());
-      listenEvent(target, 'vds-source-change', () => canPlayQueue.stop());
-    }
+    if (!target) return;
+    listenEvent(target, 'vds-can-play', () => canPlayQueue.start());
+    listenEvent(target, 'vds-source-change', () => canPlayQueue.stop());
   });
 
   effect(() => {
-    const paused = $props.paused;
+    const paused = $paused();
     canPlayQueue.queue('paused', () => {
       try {
         if (!paused) {
@@ -45,22 +44,22 @@ export function useMediaAdapterDelegate(
   });
 
   effect(() => {
-    const volume = clampNumber(0, $props.volume, 1);
+    const volume = clampNumber(0, $volume(), 1);
     canPlayQueue.queue('volume', () => (adapter.volume = volume));
   });
 
   effect(() => {
-    const muted = $props.muted;
+    const muted = $muted();
     canPlayQueue.queue('muted', () => (adapter.muted = muted));
   });
 
   effect(() => {
-    const currentTime = $props.currentTime;
+    const currentTime = $currentTime();
     canPlayQueue.queue('currentTime', () => (adapter.currentTime = currentTime));
   });
 
   effect(() => {
-    const playsinline = $props.playsinline;
+    const playsinline = $playsinline();
     canPlayQueue.queue('playsinline', () => (adapter.playsinline = playsinline));
   });
 }

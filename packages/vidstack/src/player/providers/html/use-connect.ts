@@ -2,7 +2,8 @@ import { effect, peek, ReadSignal } from 'maverick.js';
 import { dispatchEvent, isNull, setAttribute } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
-import { CAN_LOAD_POSTER, MediaState } from '../../media/state';
+import { CAN_LOAD_POSTER } from '../../media/state';
+import type { MediaStore } from '../../media/store';
 import type { MediaSrc } from '../../media/types';
 import type { HTMLProviderElement } from './types';
 import { IGNORE_NEXT_ABORT } from './use-events';
@@ -16,7 +17,7 @@ import type { UseHTMLProviderProps } from './use-provider';
 export function useHTMLProviderConnect(
   $target: ReadSignal<HTMLProviderElement | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
-  $media: MediaState,
+  $media: MediaStore,
   props: UseHTMLProviderProps<any>,
 ): void {
   const logger = __DEV__ ? useLogger($target) : undefined;
@@ -49,11 +50,11 @@ export function useHTMLProviderConnect(
       provider.poster.length > 0 &&
       media.getAttribute('poster') !== provider.poster
     ) {
-      media.setAttribute('poster', provider.poster);
+      setAttribute(media, 'poster', provider.poster);
     }
 
     if (!$media.canPlay) {
-      media.setAttribute('preload', $target()!.preload);
+      setAttribute(media, 'preload', $target()!.preload);
     }
 
     if (media.networkState === 1 || media.networkState === 2) {

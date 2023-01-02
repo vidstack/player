@@ -1,4 +1,4 @@
-import { peek, signal } from 'maverick.js';
+import { Dispose, peek, signal } from 'maverick.js';
 import { defineCustomElement, onConnect } from 'maverick.js/element';
 import { dispatchEvent, DOMEvent, listenEvent, mergeProperties } from 'maverick.js/std';
 
@@ -6,7 +6,7 @@ import { useLogger } from '../../../foundation/logger/use-logger';
 import { HLS_VIDEO_EXTENSIONS, HLS_VIDEO_TYPES } from '../../../utils/mime';
 import { isHLSSupported } from '../../../utils/support';
 import { onMediaSrcChange } from '../../media/provider/internal';
-import { useMediaState } from '../../media/store';
+import { useMediaStore } from '../../media/store';
 import { htmlProviderProps } from '../html/props';
 import { ENGINE, IGNORE_NEXT_ABORT } from '../html/use-events';
 import { useHTMLProvider } from '../html/use-provider';
@@ -36,18 +36,19 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
     },
   },
   setup({ host, props, accessors }) {
-    const $target = () => (host.$connected ? host.el : null),
-      $media = useMediaState(),
+    const $media = useMediaStore(),
       $canLoadLib = signal(false),
-      logger = __DEV__ ? useLogger($target) : undefined;
+      logger = __DEV__ ? useLogger(host.$el) : undefined;
 
     onConnect(() => {
-      dispatchEvent(host.el, 'vds-view-type-change', { detail: 'video' });
+      setTimeout(() => {
+        dispatchEvent(host.el, 'vds-view-type-change', { detail: 'video' });
+      }, 0);
     });
 
-    useHLSPreconnect(props, logger);
+    useHLSPreconnect(props.$hlsLibrary, logger);
 
-    const { members } = useHTMLProvider<HLSVideoElement>($target, {
+    const { members } = useHTMLProvider<HLSVideoElement>(host.$el, {
       $props: props,
       fullscreen: useVideoFullscreen,
       onAbort,
@@ -57,7 +58,6 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
 
     const { $ctor, $engine, $attached, $isHLSSource } = useHLSEngine(
       host,
-      $target,
       $canLoadLib,
       $media,
       props,
@@ -67,10 +67,10 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
       // Don't lose initial source because hls.js will overwrite it with blob.
       if (peek($isHLSSource) && !sources.find((src) => src.src === $media.source.src)) {
         if (!$media.canPlay) {
-          $target()!.mediaElement![IGNORE_NEXT_ABORT] = true;
+          host.el!.mediaElement![IGNORE_NEXT_ABORT] = true;
           sources.push($media.source);
         } else {
-          onMediaSrcChange($media, $target()!, { src: '' }, logger);
+          onMediaSrcChange($media, host.el!, { src: '' }, logger);
         }
       }
     }
@@ -98,14 +98,14 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
       return false;
     }
 
-    let removePlayingListener: (() => void) | null = null;
+    let removePlayingListener: Dispose | null = null;
     function onLoadedMetadata(event: Event) {
       if ($canLoadLib()) return;
 
       const media = event.target! as HTMLMediaElement;
 
       // Native HLS does not reliably fire `canplay` event.
-      media.dispatchEvent(new DOMEvent<void>('canplay', { triggerEvent: event }));
+      media.dispatchEvent(new DOMEvent<void>('canplay', { trigger: event }));
 
       removePlayingListener?.();
       // Seek to live position.

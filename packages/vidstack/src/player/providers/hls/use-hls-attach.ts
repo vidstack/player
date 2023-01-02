@@ -2,7 +2,7 @@ import type * as HLS from 'hls.js';
 import { effect, peek, ReadSignal, signal } from 'maverick.js';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
-import type { MediaState } from '../../media/state';
+import type { MediaStore } from '../../media/store';
 import type { HLSConstructor, HLSVideoElement } from './types';
 
 export function useHLSAttach(
@@ -10,7 +10,7 @@ export function useHLSAttach(
   $target: ReadSignal<HLSVideoElement | null>,
   $engine: ReadSignal<HLS.default | null>,
   $isHLSSource: ReadSignal<boolean>,
-  $media: MediaState,
+  $media: MediaStore,
   onLevelLoaded: (eventType: string, data: HLS.LevelLoadedData) => void,
 ) {
   const $attached = signal(false),

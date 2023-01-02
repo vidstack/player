@@ -8,7 +8,7 @@ import type { MediaProviderElement } from '../provider/types';
 import { MediaProviderContext } from '../provider/use-media-provider';
 import type * as RE from '../request-events';
 import { CAN_LOAD_POSTER } from '../state';
-import { useInternalMediaState } from '../store';
+import { useInternalMediaStore } from '../store';
 import type { UseMediaUser } from '../user';
 import type { MediaControllerEventTarget } from './events';
 
@@ -36,7 +36,7 @@ export function useMediaRequestManager(
   fullscreen: UseFullscreen,
 ): UseMediaRequestManager {
   const logger = __DEV__ ? useLogger($target) : undefined,
-    $media = useInternalMediaState(),
+    $media = useInternalMediaStore(),
     $isLooping = signal(false),
     $isReplay = signal(false),
     $isSeekingRequest = signal(false),

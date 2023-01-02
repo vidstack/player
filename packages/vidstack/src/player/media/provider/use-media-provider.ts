@@ -5,6 +5,7 @@ import {
   provideContext,
   ReadSignal,
   signal,
+  Signals,
   tick,
   useContext,
 } from 'maverick.js';
@@ -13,10 +14,11 @@ import { dispatchEvent, mergeProperties } from 'maverick.js/std';
 
 import type { FullscreenEventTarget } from '../../../foundation/fullscreen/events';
 import type { useFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
+import type { LogLevel } from '../../../foundation/logger/log-level';
 import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
 import { useScreenOrientation } from '../../../foundation/orientation/use-screen-orientation';
 import { useMediaStateManager } from '../controller/use-media-state-manager';
-import { MediaStateContext, useInternalMediaState } from '../store';
+import { MediaStoreContext, useInternalMediaStore } from '../store';
 import { withMediaFullscreenOptions } from './media-fullscreen';
 import type {
   MediaProviderAdapter,
@@ -43,29 +45,26 @@ export const MediaProviderContext = createContext(() => signal<MediaProviderElem
  */
 export function useMediaProvider<Target extends MediaProviderElement>(
   $target: ReadSignal<Target | null>,
-  props: UseMediaProviderProps<Target>,
+  { $props, adapter, ...props }: UseMediaProviderProps<Target>,
 ): UseMediaProvider {
   if (!hasProvidedContext(MediaProviderContext)) {
-    provideContext(MediaStateContext);
+    provideContext(MediaStoreContext);
     provideContext(MediaProviderContext);
     useMediaStateManager($target);
   }
 
-  const { $props, adapter } = props,
-    $media = useInternalMediaState()!,
+  const $media = useInternalMediaStore()!,
     orientation = useScreenOrientation($target),
     fullscreen = props.fullscreen(
       $target,
       withMediaFullscreenOptions({
-        get lockType() {
-          return $props.fullscreenOrientation;
-        },
+        $lockType: $props.$fullscreenOrientation,
         orientation,
       }),
     );
 
-  if (__DEV__) useLogging($target, $props);
-  const { startLoadingMedia } = useMediaCanLoad($target, $props);
+  if (__DEV__) useLogging($target, $props.$logLevel);
+  const { startLoadingMedia } = useMediaCanLoad($target, $props.$load);
   useMediaPropChange($target, $props);
   useMediaAdapterDelegate($target, $props, adapter);
 
@@ -77,6 +76,7 @@ export function useMediaProvider<Target extends MediaProviderElement>(
 
     const canFullscreen = fullscreen.supported;
     $media.canFullscreen = canFullscreen;
+
     // TODO: why do we need to type cast this? failing to infer custom element events from generic.
     dispatchEvent($target() as MediaProviderElement, 'vds-fullscreen-support-change', {
       detail: canFullscreen,
@@ -107,7 +107,7 @@ export function useMediaProvider<Target extends MediaProviderElement>(
 }
 
 export interface UseMediaProviderProps<Target extends FullscreenEventTarget> {
-  $props: MediaProviderProps;
+  $props: Signals<MediaProviderProps>;
   adapter: MediaProviderAdapter;
   fullscreen: typeof useFullscreen<Target>;
 }
@@ -116,7 +116,10 @@ export interface UseMediaProvider
   extends Omit<MediaProviderMembers, keyof MediaProviderProps>,
     MediaProviderAdapter {}
 
-function useLogging($target: ReadSignal<MediaProviderElement | null>, $props: MediaProviderProps) {
+function useLogging(
+  $target: ReadSignal<MediaProviderElement | null>,
+  $logLevel: ReadSignal<LogLevel>,
+) {
   if (!__DEV__) return;
 
   useMediaEventsLogger($target);
@@ -126,7 +129,7 @@ function useLogging($target: ReadSignal<MediaProviderElement | null>, $props: Me
     if (!mediaElement) {
       const printer = useLogPrinter($target);
       effect(() => {
-        printer.logLevel = $props.logLevel;
+        printer.logLevel = $logLevel();
       });
     }
   });
