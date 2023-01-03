@@ -1,4 +1,4 @@
-import { effect, peek, provideContext, Signals, useContext } from 'maverick.js';
+import { effect, peek, provideContext, ReadSignal, Signals, useContext } from 'maverick.js';
 import { CustomElementHost, onAttach } from 'maverick.js/element';
 import { ariaBool, mergeProperties } from 'maverick.js/std';
 
@@ -8,7 +8,7 @@ import { round } from '../../../utils/number';
 import type { SliderProps } from './props';
 import { SliderStore, SliderStoreContext } from './store';
 import type { SliderElement, SliderMembers } from './types';
-import { useSliderEvents } from './use-events';
+import { SliderEventCallbacks, useSliderEvents } from './use-events';
 import { getClampedValue } from './utils';
 
 /**
@@ -17,7 +17,7 @@ import { getClampedValue } from './utils';
  */
 export function useSlider(
   host: CustomElementHost<SliderElement>,
-  $props: Signals<SliderProps>,
+  { $props, readonly, aria, ...callbacks }: UseSliderProps,
   accessors: () => SliderProps,
 ): UseSlider {
   provideContext(SliderStoreContext);
@@ -30,10 +30,10 @@ export function useSlider(
     pointing: () => $store.pointing,
     interactive: () => $store.interactive,
     'aria-disabled': () => ariaBool($disabled()),
-    'aria-valuemin': () => $store.min,
-    'aria-valuemax': () => $store.max,
-    'aria-valuenow': () => $store.value,
-    'aria-valuetext': () => round(($store.value / $store.max) * 100, 2) + '%',
+    'aria-valuemin': aria?.valueMin ?? (() => $store.min),
+    'aria-valuemax': aria?.valueMax ?? (() => $store.max),
+    'aria-valuenow': aria?.valueNow ?? (() => $store.value),
+    'aria-valuetext': aria?.valueText ?? (() => round(($store.value / $store.max) * 100, 2) + '%'),
   });
 
   host.setCSSVars({
@@ -46,7 +46,7 @@ export function useSlider(
   });
 
   useFocusVisible(host.$el);
-  useSliderEvents(host.$el, $props, $store);
+  useSliderEvents(host, $props, callbacks, $store);
 
   onAttach(() => {
     setAttributeIfEmpty(host.el!, 'role', 'slider');
@@ -55,15 +55,17 @@ export function useSlider(
     setAttributeIfEmpty(host.el!, 'autocomplete', 'off');
   });
 
-  effect(() => {
-    $store.min = $min();
-    $store.max = $max();
-  });
+  if (!readonly) {
+    effect(() => {
+      $store.min = $min();
+      $store.max = $max();
+    });
 
-  effect(() => {
-    if (peek(() => $store.dragging)) return;
-    $store.value = getClampedValue($store.min, $store.max, $value(), $step());
-  });
+    effect(() => {
+      if (peek(() => $store.dragging)) return;
+      $store.value = getClampedValue($store.min, $store.max, $value(), $step());
+    });
+  }
 
   effect(() => {
     if (!$disabled()) return;
@@ -93,4 +95,15 @@ export function useSlider(
 export interface UseSlider {
   $store: SliderStore;
   members: SliderMembers;
+}
+
+export interface UseSliderProps extends SliderEventCallbacks {
+  $props: Signals<SliderProps>;
+  readonly?: boolean;
+  aria?: {
+    valueMin?: number | ReadSignal<number>;
+    valueMax?: number | ReadSignal<number>;
+    valueNow?: number | ReadSignal<number>;
+    valueText?: string | ReadSignal<string>;
+  };
 }

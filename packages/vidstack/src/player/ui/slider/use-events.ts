@@ -1,7 +1,14 @@
-import { effect, peek, ReadSignal, Signals } from 'maverick.js';
-import { dispatchEvent, listenEvent } from 'maverick.js/std';
+import { effect, Signals } from 'maverick.js';
+import type { CustomElementHost } from 'maverick.js/element';
+import { createEvent, dispatchEvent, listenEvent } from 'maverick.js/std';
 
 import { useMediaRemoteControl } from '../../media/remote-control';
+import type {
+  SliderDragEndEvent,
+  SliderDragStartEvent,
+  SliderDragValueChangeEvent,
+  SliderValueChangeEvent,
+} from './events';
 import type { SliderStore } from './store';
 import type { SliderElement, SliderProps } from './types';
 import { getValueFromRate } from './utils';
@@ -21,14 +28,15 @@ const SliderKeyDirection = {
 } as const;
 
 export function useSliderEvents(
-  $target: ReadSignal<SliderElement | null>,
+  host: CustomElementHost<SliderElement>,
   { $disabled, $step, $keyboardStep, $shiftKeyMultiplier }: Signals<SliderProps>,
+  { onValueChange, onDragStart, onDragValueChange, onDragEnd }: SliderEventCallbacks,
   $store: SliderStore,
 ) {
-  const remote = useMediaRemoteControl($target);
+  const remote = useMediaRemoteControl(host.$el);
 
   effect(() => {
-    const target = $target();
+    const target = host.$el();
     if (!target || $disabled()) return;
     listenEvent(target, 'pointerenter', onPointerEnter);
     listenEvent(target, 'pointermove', onPointerMove);
@@ -44,65 +52,42 @@ export function useSliderEvents(
     listenEvent(document, 'touchmove', onDocumentTouchMove, { passive: true });
   });
 
-  let target: SliderElement | null = null;
-  effect(() => {
-    target = $target();
-  });
-
-  let valueTriggerEvent: Event | undefined;
-  effect(() => {
-    dispatchEvent(target, 'vds-slider-value-change', {
-      detail: $store.value,
-      trigger: valueTriggerEvent,
-    });
-
-    valueTriggerEvent = undefined;
-  });
-
-  let pointerTriggerEvent: Event | undefined;
-  effect(() => {
-    const pointerValue = $store.pointerValue;
-
-    dispatchEvent(target, 'vds-slider-pointer-value-change', {
-      detail: pointerValue,
-      trigger: pointerTriggerEvent,
-    });
-
-    if (peek(() => $store.dragging)) {
-      dispatchEvent(target, 'vds-slider-drag-value-change', {
-        detail: pointerValue,
-        trigger: pointerTriggerEvent,
-      });
-    }
-
-    pointerTriggerEvent = undefined;
-  });
-
-  let dragTriggerEvent: Event | undefined;
-  effect(() => {
-    dispatchEvent(target, $store.dragging ? 'vds-slider-drag-start' : 'vds-slider-drag-end', {
-      detail: peek(() => $store.value),
-      trigger: dragTriggerEvent,
-    });
-
-    dragTriggerEvent = undefined;
-  });
-
   function getValue(event: PointerEvent) {
     const thumbClientX = event.clientX;
-    const { left: trackLeft, width: trackWidth } = target!.getBoundingClientRect();
+    const { left: trackLeft, width: trackWidth } = host.el!.getBoundingClientRect();
     const thumbPositionRate = (thumbClientX - trackLeft) / trackWidth;
     return getValueFromRate($store.min, $store.max, thumbPositionRate, $step());
   }
 
   function updateValue(value: number, trigger?: Event) {
     $store.value = value;
-    valueTriggerEvent = trigger;
+
+    const event = createEvent(host.el, 'vds-slider-value-change', {
+      detail: $store.value,
+      trigger,
+    });
+
+    host.el?.dispatchEvent(event);
+    onValueChange?.(event);
   }
 
-  function updatePointerValue(value: number, trigger?: Event) {
+  function updatePointerValue(value: number, trigger?: PointerEvent) {
     $store.pointerValue = value;
-    pointerTriggerEvent = trigger;
+
+    dispatchEvent(host.el, 'vds-slider-pointer-value-change', {
+      detail: value,
+      trigger,
+    });
+
+    if ($store.dragging) {
+      const event = createEvent(host.el, 'vds-slider-drag-value-change', {
+        detail: value,
+        trigger,
+      });
+
+      host.el?.dispatchEvent(event);
+      onDragValueChange?.(event);
+    }
   }
 
   function onPointerEnter() {
@@ -125,7 +110,6 @@ export function useSliderEvents(
 
   function onKeyDown(event: KeyboardEvent) {
     const { key, shiftKey } = event;
-
     const isValidKey = Object.keys(SliderKeyDirection).includes(key);
     if (!isValidKey) return;
 
@@ -141,9 +125,15 @@ export function useSliderEvents(
   function onStartDragging(event: PointerEvent) {
     if ($store.dragging) return;
     $store.dragging = true;
-    updatePointerValue(getValue(event), event);
+    const value = getValue(event);
+    updatePointerValue(value, event);
     remote.pauseUserIdle(event);
-    dragTriggerEvent = event;
+    const dragStartEvent = createEvent(host.el, 'vds-slider-drag-start', {
+      detail: value,
+      trigger: event,
+    });
+    host.el?.dispatchEvent(dragStartEvent);
+    onDragStart?.(dragStartEvent);
   }
 
   function onStopDragging(event: PointerEvent) {
@@ -153,7 +143,12 @@ export function useSliderEvents(
     updateValue(value, event);
     updatePointerValue(value, event);
     remote.resumeUserIdle(event);
-    dragTriggerEvent = event;
+    const dragEndEvent = createEvent(host.el, 'vds-slider-drag-start', {
+      detail: value,
+      trigger: event,
+    });
+    host.el?.dispatchEvent(dragEndEvent);
+    onDragEnd?.(dragEndEvent);
   }
 
   // -------------------------------------------------------------------------------------------
@@ -171,4 +166,11 @@ export function useSliderEvents(
   function onDocumentPointerMove(event: PointerEvent) {
     updatePointerValue(getValue(event), event);
   }
+}
+
+export interface SliderEventCallbacks {
+  onValueChange?(event: SliderValueChangeEvent): void;
+  onDragStart?(event: SliderDragStartEvent): void;
+  onDragValueChange?(event: SliderDragValueChangeEvent): void;
+  onDragEnd?(event: SliderDragEndEvent): void;
 }

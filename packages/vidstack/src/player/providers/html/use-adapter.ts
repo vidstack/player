@@ -1,9 +1,8 @@
 import type { ReadSignal } from 'maverick.js';
-import { DOMEvent, setAttribute } from 'maverick.js/std';
+import { createEvent, setAttribute } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { coerceToError } from '../../../utils/error';
-import type { MediaPlayFailEvent } from '../../media/events';
 import { resetPlaybackIfEnded, throwIfNotReadyForPlayback } from '../../media/provider/internal';
 import type { MediaProviderAdapter } from '../../media/provider/types';
 import { ATTEMPTING_AUTOPLAY } from '../../media/state';
@@ -57,7 +56,7 @@ export function useHTMLProviderAdapter(
         const provider = $target();
 
         if (provider) {
-          const event = new DOMEvent('vds-play-fail') as MediaPlayFailEvent;
+          const event = createEvent($target, 'vds-play-fail');
           event.autoplay = $media[ATTEMPTING_AUTOPLAY];
           event.error = coerceToError(error);
           provider.dispatchEvent(event);

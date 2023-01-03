@@ -1,4 +1,4 @@
-import { registerCustomElement } from 'maverick.js/element';
+import { CustomElementDefinition, registerCustomElement } from 'maverick.js/element';
 
 export type VidstackElement =
   | 'vds-aspect-ratio'
@@ -58,16 +58,22 @@ export async function defineCustomElements(
   return !promises.length ? loadAllCustomElements() : Promise.all(promises);
 }
 
+export interface CustomElementModuleLoader {
+  (): Promise<{
+    default: CustomElementDefinition;
+  }>;
+}
+
 // TODO: add all element loaders and remove expect error below.
 // @ts-expect-error - we haven't defined all elements yet.
-const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, () => Promise<any>> = {
+const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, CustomElementModuleLoader> = {
   // 'vds-aspect-ratio': () => import(''),
   'vds-fullscreen-button': () => import('./player/ui/fullscreen-button/element'),
   'vds-mute-button': () => import('./player/ui/mute-button/element'),
   'vds-play-button': () => import('./player/ui/play-button/element'),
   // 'vds-slider-value-text': () => import(''),
   // 'vds-slider-video': () => import(''),
-  // 'vds-time-slider': () => import(''),
+  'vds-time-slider': () => import('./player/ui/time-slider/element'),
   'vds-volume-slider': () => import('./player/ui/volume-slider/element'),
   'vds-audio': () => import('./player/providers/audio/element'),
   'vds-hls-video': () => import('./player/providers/hls/element'),

@@ -1,11 +1,12 @@
 import { effect } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
-import { listenEvent, mergeProperties } from 'maverick.js/std';
+import { mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
 import { useMediaRemoteControl } from '../../media/remote-control';
 import { useMediaStore } from '../../media/store';
+import type { SliderDragValueChangeEvent, SliderValueChangeEvent } from '../slider/events';
 import { useSlider } from '../slider/use-slider';
 import { volumeSliderProps } from './props';
 import type { VolumeSliderElement } from './types';
@@ -15,7 +16,17 @@ export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
   props: volumeSliderProps,
   setup({ host, props, accessors }) {
     const $media = useMediaStore(),
-      { $store, members } = useSlider(host, props, accessors),
+      { $store, members } = useSlider(
+        host,
+        {
+          $props: props,
+          readonly: true,
+          aria: { valueMin: 0, valueMax: 100 },
+          onValueChange: onVolumeChange,
+          onDragValueChange: onVolumeChange,
+        },
+        accessors,
+      ),
       remote = useMediaRemoteControl(host.$el);
 
     onAttach(() => {
@@ -26,16 +37,8 @@ export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
       $store.value = $media.volume * 100;
     });
 
-    effect(() => {
-      const target = host.$el();
-      if (!target) return;
-      listenEvent(target, 'vds-slider-value-change', onVolumeChange);
-      listenEvent(target, 'vds-slider-drag-value-change', onVolumeChange);
-    });
-
-    function onVolumeChange(event: Event) {
-      const newVolume = $store.value;
-      const mediaVolume = round(newVolume / 100, 3);
+    function onVolumeChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
+      const mediaVolume = round(event.detail / 100, 3);
       remote.changeVolume(mediaVolume, event);
     }
 
@@ -53,3 +56,5 @@ export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
     });
   },
 });
+
+export default VolumeSliderDefinition;
