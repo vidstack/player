@@ -30,7 +30,6 @@ export interface FullscreenButtonMembers extends ToggleButtonMembers, Fullscreen
  * requested (no support). There are default styles for this by setting the `display` property to
  * `none`. Important to be aware of this and update it according to your needs.
  *
- * @tagname vds-fullscreen-button
  * @slot - Used to pass content into the fullscreen toggle for showing enter/exit states.
  * @example
  * ```html

@@ -63,7 +63,6 @@ export interface MediaElementCSSVars {
  * media controller, and expose media state through HTML attributes and CSS properties for styling
  * purposes.
  *
- * @tagname vds-media
  * @slot - Used to pass in components that use/manage/provide media state.
  * @example
  * ```html

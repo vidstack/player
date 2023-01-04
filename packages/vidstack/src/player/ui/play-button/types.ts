@@ -19,7 +19,6 @@ export interface PlayButtonMembers extends ToggleButtonMembers {}
  *
  * - `paused`: Applied when media playback has paused.
  *
- * @tagname vds-play-button
  * @slot - Used to pass content into the play toggle for showing play/pause states.
  * @example
  * ```html

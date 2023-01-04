@@ -67,7 +67,7 @@ export interface CustomElementModuleLoader {
 // TODO: add all element loaders and remove expect error below.
 // @ts-expect-error - we haven't defined all elements yet.
 const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, CustomElementModuleLoader> = {
-  // 'vds-aspect-ratio': () => import(''),
+  'vds-aspect-ratio': () => import('./player/ui/aspect-ratio/element'),
   'vds-fullscreen-button': () => import('./player/ui/fullscreen-button/element'),
   'vds-mute-button': () => import('./player/ui/mute-button/element'),
   'vds-play-button': () => import('./player/ui/play-button/element'),

@@ -13,7 +13,6 @@ export interface AudioProviderMembers extends HTMLProviderMembers {}
  * contract, which generally involves providing a consistent API for loading, managing, and
  * tracking media state.
  *
- * @tagname vds-audio
  * @slot - Used to pass in the `<audio>` element.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio}
  * @example

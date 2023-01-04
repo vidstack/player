@@ -15,7 +15,6 @@ export interface VolumeSliderMembers
 /**
  * A slider control that lets the user specify their desired volume level.
  *
- * @tagname vds-volume-slider
  * @slot - Used to pass in slider parts such as the thumb or track.
  * @example
  * ```html

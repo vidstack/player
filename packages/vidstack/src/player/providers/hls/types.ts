@@ -75,7 +75,6 @@ export interface HLSProviderCSSVars extends VideoProviderCSSVars {}
  * 💡 This element can attach `hls.js` events so you can listen to them through the native DOM
  * interface (i.e., .addEventListener(`vds-hls-media-attaching`)).
  *
- * @tagname vds-hls
  * @slot - Used to pass in the `<video>` element.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video}
  * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md}

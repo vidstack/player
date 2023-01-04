@@ -16,7 +16,6 @@ export interface TimeSliderMembers
 /**
  * A slider control that lets the user specify their desired time level.
  *
- * @tagname vds-time-slider
  * @slot - Used to pass in slider parts such as the thumb or track.
  * @example
  * ```html

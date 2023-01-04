@@ -32,7 +32,6 @@ export interface VideoProviderCSSVars {
  * contract, which generally involves providing a consistent API for loading, managing, and
  * tracking media state.
  *
- * @tagname vds-video
  * @slot - Used to pass in the `<video>` element.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video}
  * @example

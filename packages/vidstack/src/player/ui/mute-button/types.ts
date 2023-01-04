@@ -19,7 +19,6 @@ export interface MuteButtonMembers extends ToggleButtonMembers {}
  *
  * - `muted`: Applied when media audio has been muted.
  *
- * @tagname vds-mute-button
  * @slot - Used to pass content into the mute toggle for showing mute/unmute states.
  * @example
  * ```html
