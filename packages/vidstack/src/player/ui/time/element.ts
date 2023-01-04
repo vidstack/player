@@ -3,8 +3,8 @@ import { defineCustomElement } from 'maverick.js/element';
 
 import { formatTime } from '../../../utils/time';
 import { MediaStore, useMediaStore } from '../../media/store';
-import { TimeProps, timeProps } from './props';
-import type { TimeElement } from './types';
+import { timeProps } from './props';
+import type { TimeElement, TimeProps } from './types';
 
 export const TimeElementDefinition = defineCustomElement<TimeElement>({
   tagName: 'vds-time',

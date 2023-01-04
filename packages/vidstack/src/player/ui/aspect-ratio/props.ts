@@ -5,5 +5,5 @@ import type { AspectRatioProps } from './types';
 export const aspectRatioProps: CustomElementPropDefinitions<AspectRatioProps> = {
   minHeight: { initial: '150px' },
   maxHeight: { initial: '100vh' },
-  ratio: { initial: '2/1' },
+  ratio: { initial: '16/9' },
 };

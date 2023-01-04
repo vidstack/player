@@ -71,7 +71,7 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, CustomElementModuleLoad
   'vds-fullscreen-button': () => import('./player/ui/fullscreen-button/element'),
   'vds-mute-button': () => import('./player/ui/mute-button/element'),
   'vds-play-button': () => import('./player/ui/play-button/element'),
-  // 'vds-slider-value-text': () => import(''),
+  'vds-slider-value-text': () => import('./player/ui/slider-value-text/element'),
   // 'vds-slider-video': () => import(''),
   'vds-time-slider': () => import('./player/ui/time-slider/element'),
   'vds-volume-slider': () => import('./player/ui/volume-slider/element'),

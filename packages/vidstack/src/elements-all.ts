@@ -7,6 +7,7 @@ import FullscreenButtonDefinition from './player/ui/fullscreen-button/element';
 import MuteButtonDefinition from './player/ui/mute-button/element';
 import PlayButtonDefinition from './player/ui/play-button/element';
 import PosterDefinition from './player/ui/poster/element';
+import { SliderValueTextDefinition } from './player/ui/slider-value-text/element';
 import TimeSliderDefinition from './player/ui/time-slider/element';
 import TimeElementDefinition from './player/ui/time/element';
 import VolumeSliderDefinition from './player/ui/volume-slider/element';
@@ -24,4 +25,5 @@ export default [
   TimeSliderDefinition,
   VolumeSliderDefinition,
   TimeElementDefinition,
+  SliderValueTextDefinition,
 ];
