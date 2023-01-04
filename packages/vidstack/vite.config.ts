@@ -24,6 +24,7 @@ export default defineConfig({
     maverick({
       include: ['src/**/*.{jsx,tsx}'],
       hydratable: true,
+      diffArrays: false,
     }),
   ],
   // https://vitest.dev/config

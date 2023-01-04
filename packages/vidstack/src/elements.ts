@@ -78,7 +78,7 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, CustomElementModuleLoad
   'vds-audio': () => import('./player/providers/audio/element'),
   'vds-hls-video': () => import('./player/providers/hls/element'),
   'vds-media': () => import('./player/media/element/element'),
-  // 'vds-poster': () => import(''),
+  'vds-poster': () => import('./player/ui/poster/element'),
   'vds-time': () => import('./player/ui/time/element'),
   'vds-video': () => import('./player/providers/video/element'),
 };

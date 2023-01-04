@@ -1,8 +1,21 @@
 import type { HTMLCustomElement } from 'maverick.js/element';
 
-import type { AspectRatioProps } from './props';
-
-export { AspectRatioProps };
+export interface AspectRatioProps {
+  /**
+   * The minimum height of the container.
+   */
+  minHeight: string;
+  /**
+   * The maximum height of the container.
+   */
+  maxHeight: string;
+  /**
+   * The desired aspect ratio setting given as `'width/height'` (eg: `'16/9'`).
+   *
+   * @defaultValue '2/1'
+   */
+  ratio: string;
+}
 
 /**
  * This element creates a container that will hold the dimensions of the desired aspect ratio. This

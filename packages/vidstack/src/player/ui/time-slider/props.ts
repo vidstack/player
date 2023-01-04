@@ -1,6 +1,7 @@
 import type { CustomElementPropDefinitions } from 'maverick.js/element';
 
-import { SliderProps, sliderProps } from '../slider/props';
+import { sliderProps } from '../slider/props';
+import type { TimeSliderProps } from './types';
 
 export const timeSliderProps: CustomElementPropDefinitions<TimeSliderProps> = {
   ...sliderProps,
@@ -11,16 +12,3 @@ export const timeSliderProps: CustomElementPropDefinitions<TimeSliderProps> = {
   pauseWhileDragging: { initial: false },
   seekingRequestThrottle: { initial: 100 },
 };
-
-export interface TimeSliderProps extends SliderProps {
-  /**
-   * Whether it should request playback to pause while the user is dragging the
-   * thumb. If the media was playing before the dragging starts, the state will be restored by
-   * dispatching a user play request once the dragging ends.
-   */
-  pauseWhileDragging: boolean;
-  /**
-   * The amount of milliseconds to throttle media seeking request events being dispatched.
-   */
-  seekingRequestThrottle: number;
-}
