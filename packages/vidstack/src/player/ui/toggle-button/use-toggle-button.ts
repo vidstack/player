@@ -11,6 +11,7 @@ export function useToggleButton(
   { $props: { $pressed, $disabled }, ...props }: UseToggleButtonProps,
 ): ToggleButtonMembers {
   host.setAttributes({
+    disabled: $disabled,
     'aria-pressed': () => ariaBool($pressed()),
   });
 

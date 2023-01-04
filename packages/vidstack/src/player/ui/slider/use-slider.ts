@@ -26,6 +26,7 @@ export function useSlider(
     { $disabled, $min, $max, $value, $step } = $props;
 
   host.setAttributes({
+    disabled: $props.$disabled,
     dragging: () => $store.dragging,
     pointing: () => $store.pointing,
     interactive: () => $store.interactive,

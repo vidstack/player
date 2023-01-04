@@ -100,3 +100,14 @@ vds-time-slider.focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * TIME
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+vds-time {
+  display: inline-block;
+  contain: content;
+}

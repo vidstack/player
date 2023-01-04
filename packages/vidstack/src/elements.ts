@@ -1,4 +1,4 @@
-import { CustomElementDefinition, registerCustomElement } from 'maverick.js/element';
+import { CustomElementDefinition, registerLiteCustomElement } from 'maverick.js/element';
 
 export type VidstackElement =
   | 'vds-aspect-ratio'
@@ -79,16 +79,16 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, CustomElementModuleLoad
   'vds-hls-video': () => import('./player/providers/hls/element'),
   'vds-media': () => import('./player/media/element/element'),
   // 'vds-poster': () => import(''),
-  // 'vds-time': () => import(''),
+  'vds-time': () => import('./player/ui/time/element'),
   'vds-video': () => import('./player/providers/video/element'),
 };
 
 async function loadCustomElement(tagName: VidstackElement) {
   const mod = await ELEMENT_DEFINITION_LOADER[tagName]();
-  registerCustomElement(mod.default);
+  registerLiteCustomElement(mod.default);
 }
 
 async function loadAllCustomElements() {
   const definitions = (await import('./elements-all')).default;
-  return definitions.map(registerCustomElement);
+  return definitions.map(registerLiteCustomElement);
 }
