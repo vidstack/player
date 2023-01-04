@@ -14,7 +14,6 @@ export interface ScreenOrientationEvents {
 /**
  * Fired when the current screen orientation changes.
  *
- * @event
  * @bubbles
  * @composed
  */
@@ -23,7 +22,6 @@ export interface ScreenOrientationChangeEvent extends DOMEvent<ScreenOrientation
 /**
  * Fired when the current screen orientation lock changes.
  *
- * @event
  * @bubbles
  * @composed
  */

@@ -12,13 +12,13 @@ export const TimeElementDefinition = defineCustomElement<TimeElement>({
   setup({ props: { $remainder, $padHours, $showHours, $type } }) {
     const $media = useMediaStore();
 
-    const formattedTime = computed(() => {
+    const $formattedTime = computed(() => {
       const seconds = getSeconds($type(), $media);
       const time = $remainder() ? Math.max(0, $media.duration - seconds) : seconds;
       return formatTime(time, $padHours(), $showHours());
     });
 
-    return formattedTime;
+    return () => $formattedTime;
   },
 });
 

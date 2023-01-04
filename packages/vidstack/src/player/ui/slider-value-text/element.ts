@@ -11,13 +11,13 @@ export const SliderValueTextDefinition = defineCustomElement<SliderValueTextElem
   tagName: 'vds-slider-value-text',
   props: sliderValueTextProps,
   setup({ props: { $type, $format, $decimalPlaces, $padHours, $showHours } }) {
-    const $store = useSliderStore();
+    const $slider = useSliderStore();
 
-    const text = computed(() => {
-      const value = $type() === 'current' ? $store.value : $store.pointerValue;
+    const $text = computed(() => {
+      const value = $type() === 'current' ? $slider.value : $slider.pointerValue;
       const format = $format();
       if (format === 'percent') {
-        const range = $store.max - $store.min;
+        const range = $slider.max - $slider.min;
         const percent = (value / range) * 100;
         return `${round(percent, $decimalPlaces())}%`;
       } else if (format === 'time') {
@@ -27,7 +27,7 @@ export const SliderValueTextDefinition = defineCustomElement<SliderValueTextElem
       }
     });
 
-    return text;
+    return () => $text;
   },
 });
 

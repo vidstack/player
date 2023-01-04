@@ -11,7 +11,6 @@ export interface LoggerEvents {
 }
 
 /**
- * @event
  * @bubbles
  * @composed
  */

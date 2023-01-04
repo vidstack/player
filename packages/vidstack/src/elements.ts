@@ -1,15 +1,15 @@
 import { CustomElementDefinition, registerLiteCustomElement } from 'maverick.js/element';
 
-export type VidstackElement =
+export type VidstackElementTagName =
   | 'vds-aspect-ratio'
   | 'vds-audio'
   | 'vds-hls-video'
   | 'vds-media'
   | 'vds-poster'
   | 'vds-video'
-  | VidstackUIElement;
+  | VidstackUIElementTagName;
 
-export type VidstackUIElement =
+export type VidstackUIElementTagName =
   | 'vds-fullscreen-button'
   | 'vds-mute-button'
   | 'vds-play-button'
@@ -40,7 +40,7 @@ export type VidstackUIElement =
  */
 export async function defineCustomElements(
   init?: (registry: {
-    define: (tagName: VidstackElement) => Promise<void>;
+    define: (tagName: VidstackElementTagName) => Promise<void>;
   }) => void | Promise<void>,
 ) {
   if (__SERVER__) return;
@@ -64,15 +64,13 @@ export interface CustomElementModuleLoader {
   }>;
 }
 
-// TODO: add all element loaders and remove expect error below.
-// @ts-expect-error - we haven't defined all elements yet.
-const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, CustomElementModuleLoader> = {
+const ELEMENT_DEFINITION_LOADER: Record<VidstackElementTagName, CustomElementModuleLoader> = {
   'vds-aspect-ratio': () => import('./player/ui/aspect-ratio/element'),
   'vds-fullscreen-button': () => import('./player/ui/fullscreen-button/element'),
   'vds-mute-button': () => import('./player/ui/mute-button/element'),
   'vds-play-button': () => import('./player/ui/play-button/element'),
   'vds-slider-value-text': () => import('./player/ui/slider-value-text/element'),
-  // 'vds-slider-video': () => import(''),
+  'vds-slider-video': () => import('./player/ui/slider-video/element'),
   'vds-time-slider': () => import('./player/ui/time-slider/element'),
   'vds-volume-slider': () => import('./player/ui/volume-slider/element'),
   'vds-audio': () => import('./player/providers/audio/element'),
@@ -83,7 +81,7 @@ const ELEMENT_DEFINITION_LOADER: Record<VidstackElement, CustomElementModuleLoad
   'vds-video': () => import('./player/providers/video/element'),
 };
 
-async function loadCustomElement(tagName: VidstackElement) {
+async function loadCustomElement(tagName: VidstackElementTagName) {
   const mod = await ELEMENT_DEFINITION_LOADER[tagName]();
   registerLiteCustomElement(mod.default);
 }

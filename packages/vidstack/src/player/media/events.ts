@@ -78,23 +78,18 @@ export interface MediaEvent<Detail = unknown> extends DOMEvent<Detail> {
 /**
  * Fired when the resource was not fully loaded, but not as the result of an error.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/abort_event}
  */
 export interface MediaAbortEvent extends MediaEvent<void> {}
 
 /**
  * Fired when the `autoplay` property has changed value.
- *
- * @event
  */
 export interface MediaAutoplayChangeEvent extends MediaEvent<boolean> {}
 
 /**
  * Fired when an autoplay attempt has failed. The event detail contains the error that
  * had occurred on the last autoplay attempt which caused it to fail.
- *
- * @event
  */
 export interface MediaAutoplayFailEvent
   extends MediaEvent<{
@@ -105,8 +100,6 @@ export interface MediaAutoplayFailEvent
 /**
  * Fired when an autoplay attempt has successfully been made (ie: media playback has automatically
  * started). The event detail whether media is `muted` before any attempts are made.
- *
- * @event
  */
 export interface MediaAutoplayEvent extends MediaEvent<{ muted: boolean }> {}
 
@@ -121,7 +114,6 @@ export interface MediaCanLoadEvent extends MediaEvent<void> {}
  * Fired when the user agent can play the media, but estimates that **not enough** data has been
  * loaded to play the media up to its end without having to stop for further buffering of content.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event}
  */
 export interface MediaCanPlayEvent extends MediaEvent<{ duration: number }> {}
@@ -130,36 +122,28 @@ export interface MediaCanPlayEvent extends MediaEvent<{ duration: number }> {}
  * Fired when the user agent can play the media, and estimates that **enough** data has been
  * loaded to play the media up to its end without having to stop for further buffering of content.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event}
  */
 export interface MediaCanPlayThroughEvent extends MediaEvent<{ duration: number }> {}
 
 /**
  * Fired when the `controls` property has changed value.
- *
- * @event
  */
 export interface MediaControlsChangeEvent extends MediaEvent<boolean> {}
 
 /**
  * Fired when the `source` property has changed value.
- *
- * @event
  */
 export interface MediaSourceChangeEvent extends MediaEvent<MediaSrc> {}
 
 /**
  * Fired when the media provider element is manually destroyed by calling the `destroy()` method.
- *
- * @event
  */
 export interface MediaDestroyEvent extends MediaEvent<void> {}
 
 /**
  * Fired when the `duration` property changes.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/durationchange_event}
  */
 export interface MediaDurationChangeEvent extends MediaEvent<number> {}
@@ -167,7 +151,6 @@ export interface MediaDurationChangeEvent extends MediaEvent<number> {}
 /**
  * Fired when the media has become empty.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/emptied_event}
  */
 export interface MediaEmptiedEvent extends MediaEvent<void> {}
@@ -176,8 +159,6 @@ export interface MediaEmptiedEvent extends MediaEvent<void> {}
  * Fired each time media playback has reached the end. This is fired even if the
  * `loop` property is `true`, which is generally when you'd reach for this event over the
  * `MediaEndedEvent` if you want to be notified of media looping.
- *
- * @event
  */
 export interface MediaEndEvent extends MediaEvent<void> {}
 
@@ -187,7 +168,6 @@ export interface MediaEndEvent extends MediaEvent<void> {}
  * beginning again due to the `loop` property being `true` (see `MediaReplayEvent`
  * and `MediaEndEvent`).
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ended_event}
  */
 export interface MediaEndedEvent extends MediaEvent<void> {}
@@ -198,7 +178,6 @@ export interface MediaEndedEvent extends MediaEvent<void> {}
  * information about the error (empty string if nothing available), and a code that identifies
  * the general type of error that occurred.
  *
- * @event
  * @see {@link https://html.spec.whatwg.org/multipage/media.html#error-codes}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event}
  */
@@ -208,8 +187,6 @@ export interface MediaErrorEvent extends MediaEvent<MediaErrorDetail> {}
  * Fired when the user idle state changes. The user is idle when playback is progressing (playing),
  * and there is no user activity for a set period of time (default is 2.5s). The event
  * detail contains whether the user is idle (`true`), or not (`false`).
- *
- * @event
  */
 export interface UserIdleChangeEvent extends MediaEvent<boolean> {
   requestEvent?: ResumeUserIdleRequestEvent | PauseUserIdleRequestEvent;
@@ -219,7 +196,6 @@ export interface UserIdleChangeEvent extends MediaEvent<boolean> {
  * Fired when the frame at the current playback position of the media has finished loading; often
  * the first frame.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadeddata_event}
  */
 export interface MediaLoadedDataEvent extends MediaEvent<void> {}
@@ -227,30 +203,24 @@ export interface MediaLoadedDataEvent extends MediaEvent<void> {}
 /**
  * Fired when the metadata has been loaded.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadedmetadata_event}
  */
 export interface MediaLoadedMetadataEvent extends MediaEvent<void> {}
 
 /**
  * Fired when the `loop` property has changed value.
- *
- * @event
  */
 export interface MediaLoopChangeEvent extends MediaEvent<boolean> {}
 
 /**
  * Fired when the browser has started to load a resource.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loadstart_event}
  */
 export interface MediaLoadStartEvent extends MediaEvent<void> {}
 
 /**
  * Fired when the `mediaType` property changes value.
- *
- * @event
  */
 export interface MediaTypeChangeEvent extends MediaEvent<MediaType> {}
 
@@ -259,7 +229,6 @@ export interface MediaTypeChangeEvent extends MediaEvent<MediaType> {}
  * `paused` state, most commonly after the media has been paused through a call to the
  * `pause()` method.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event}
  */
 export interface MediaPauseEvent extends MediaEvent<void> {
@@ -270,7 +239,6 @@ export interface MediaPauseEvent extends MediaEvent<void> {
  * Fired when the `paused` property is changed from `true` to `false`, as a result of the `play()`
  * method, or the `autoplay` attribute.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play_event}
  */
 export interface MediaPlayEvent extends MediaEvent<void> {
@@ -290,29 +258,23 @@ export interface MediaPlayFailEvent extends MediaEvent<void> {
 /**
  * Fired when playback is ready to start after having been paused or delayed due to lack of data.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event}
  */
 export interface MediaPlayingEvent extends MediaEvent<void> {}
 
 /**
  * Fired when the `playsinline` property has changed value.
- *
- * @event
  */
 export interface MediaPlaysinlineChangeEvent extends MediaEvent<boolean> {}
 
 /**
  * Fired when the `currentPoster` property has changed value.
- *
- * @event
  */
 export interface MediaPosterChangeEvent extends MediaEvent<string> {}
 
 /**
  * Fired periodically as the browser loads a resource.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event}
  */
 export interface MediaProgressEvent
@@ -325,7 +287,6 @@ export interface MediaProgressEvent
  * Fired when a seek operation completed, the current playback position has changed, and the
  * `seeking` property is changed to `false`.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event}
  */
 export interface MediaSeekedEvent extends MediaEvent<number> {
@@ -336,7 +297,6 @@ export interface MediaSeekedEvent extends MediaEvent<number> {
  * Fired when a seek operation starts, meaning the seeking property has changed to `true` and the
  * media is seeking to a new position.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event}
  */
 export interface MediaSeekingEvent extends MediaEvent<number> {
@@ -345,8 +305,6 @@ export interface MediaSeekingEvent extends MediaEvent<number> {
 
 /**
  * Fired when the current media sources has changed.
- *
- * @event
  */
 export interface MediaSourcesChangeEvent extends MediaEvent<MediaSrc[]> {}
 
@@ -354,7 +312,6 @@ export interface MediaSourcesChangeEvent extends MediaEvent<MediaSrc[]> {}
  * Fired when the user agent is trying to fetch media data, but data is unexpectedly not
  * forthcoming.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/stalled_event}
  */
 export interface MediaStalledEvent extends MediaEvent<void> {}
@@ -362,15 +319,12 @@ export interface MediaStalledEvent extends MediaEvent<void> {}
 /**
  * Fired when media playback has just started, in other words the at the moment the following
  * happens: `currentTime > 0`.
- *
- * @event
  */
 export interface MediaStartedEvent extends MediaEvent<void> {}
 
 /**
  * Fired when media data loading has been suspended.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/suspend_event}
  */
 export interface MediaSuspendEvent extends MediaEvent<void> {}
@@ -378,8 +332,6 @@ export interface MediaSuspendEvent extends MediaEvent<void> {}
 /**
  * Fired when media playback starts again after being in an `ended` state. This is fired
  * when the `loop` property is `true` and media loops, whereas the `vds-play` event is not.
- *
- * @event
  */
 export interface MediaReplayEvent extends MediaEvent<void> {
   requestEvent?: PlayRequestEvent;
@@ -389,7 +341,6 @@ export interface MediaReplayEvent extends MediaEvent<void> {
  * Fired when the `currentTime` property value changes due to media playback or the
  * user seeking.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdate_event}
  */
 export interface MediaTimeUpdateEvent
@@ -402,8 +353,6 @@ export interface MediaTimeUpdateEvent
  * Fired when the `viewType` property changes `value`. This will generally fire when the
  * new provider has mounted and determined what type of player view is appropriate given
  * the type of media it can play.
- *
- * @event
  */
 export interface MediaViewTypeChangeEvent extends MediaEvent<ViewType> {}
 
@@ -415,7 +364,6 @@ export interface MediaVolumeChange {
 /**
  * Fired when the `volume` or `muted` properties change value.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event}
  */
 export interface MediaVolumeChangeEvent extends MediaEvent<MediaVolumeChange> {
@@ -425,7 +373,6 @@ export interface MediaVolumeChangeEvent extends MediaEvent<MediaVolumeChange> {
 /**
  * Fired when playback has stopped because of a temporary lack of data.
  *
- * @event
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/waiting_event}
  */
 export interface MediaWaitingEvent extends MediaEvent<void> {}
