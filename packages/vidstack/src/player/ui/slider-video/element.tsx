@@ -6,6 +6,12 @@ import { useSliderStore } from '../slider/store';
 import { sliderVideoProps } from './props';
 import type { SliderVideoElement } from './types';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'vds-slider-video': SliderVideoElement;
+  }
+}
+
 export const SliderVideoDefinition = defineCustomElement<SliderVideoElement>({
   tagName: 'vds-slider-video',
   props: sliderVideoProps,

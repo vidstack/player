@@ -6,6 +6,12 @@ import { MediaStore, useMediaStore } from '../../media/store';
 import { timeProps } from './props';
 import type { TimeElement, TimeProps } from './types';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'vds-time': TimeElement;
+  }
+}
+
 export const TimeElementDefinition = defineCustomElement<TimeElement>({
   tagName: 'vds-time',
   props: timeProps,

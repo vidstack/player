@@ -7,6 +7,12 @@ import { useSliderStore } from '../slider/store';
 import { sliderValueTextProps } from './props';
 import type { SliderValueTextElement } from './types';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'vds-slider-value-text': SliderValueTextElement;
+  }
+}
+
 export const SliderValueTextDefinition = defineCustomElement<SliderValueTextElement>({
   tagName: 'vds-slider-value-text',
   props: sliderValueTextProps,

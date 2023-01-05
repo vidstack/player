@@ -11,6 +11,12 @@ import { useSlider } from '../slider/use-slider';
 import { volumeSliderProps } from './props';
 import type { VolumeSliderElement } from './types';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'vds-volume-slider': VolumeSliderElement;
+  }
+}
+
 export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
   tagName: 'vds-volume-slider',
   props: volumeSliderProps,

@@ -7,6 +7,12 @@ import { useMediaStore } from '../../media/store';
 import { posterProps } from './props';
 import type { PosterElement } from './types';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'vds-poster': PosterElement;
+  }
+}
+
 export const PosterDefinition = defineCustomElement<PosterElement>({
   tagName: 'vds-poster',
   props: posterProps,

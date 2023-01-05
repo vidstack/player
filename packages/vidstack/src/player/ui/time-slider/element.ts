@@ -17,6 +17,12 @@ import { useSlider } from '../slider/use-slider';
 import { timeSliderProps } from './props';
 import type { TimeSliderElement } from './types';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'vds-time–slider': TimeSliderElement;
+  }
+}
+
 export const TimeSliderDefinition = defineCustomElement<TimeSliderElement>({
   tagName: 'vds-time-slider',
   props: timeSliderProps,

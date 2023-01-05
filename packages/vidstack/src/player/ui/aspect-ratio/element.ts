@@ -4,6 +4,12 @@ import { isString } from 'maverick.js/std';
 import { aspectRatioProps } from './props';
 import type { AspectRatioElement } from './types';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'vds-aspect-ratio': AspectRatioElement;
+  }
+}
+
 export const AspectRatioDefinition = defineCustomElement<AspectRatioElement>({
   tagName: 'vds-aspect-ratio',
   props: aspectRatioProps,
