@@ -16,15 +16,15 @@ export interface VideoProviderCSSVars {
   /**
    * The width of the video element.
    */
-  '--vds-video-width': number;
+  'video-width': number;
   /**
    * The height of the video element.
    */
-  '--vds-video-height': number;
+  'video-height': number;
   /**
    * The background color of the video content.
    */
-  '--vds-video-bg-color': string;
+  'video-bg-color': string;
 }
 
 /**

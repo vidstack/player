@@ -43,19 +43,19 @@ export interface MediaElementCSSVars {
   /**
    * The amount of media that has buffered in seconds (0 -> duration).
    */
-  readonly 'vds-buffered-amount': number;
+  readonly 'media-buffered-amount': number;
   /**
    * The current playback time in seconds (0 -> duration).
    */
-  readonly 'vds-current-time': number;
+  readonly 'media-current-time': number;
   /**
    * The total length of media in seconds.
    */
-  readonly 'vds-duration': number;
+  readonly 'media-duration': number;
   /**
    * The amount of media that is seekable in seconds (0 -> duration).
    */
-  readonly 'vds-seekable-amount': number;
+  readonly 'media-seekable-amount': number;
 }
 
 /**

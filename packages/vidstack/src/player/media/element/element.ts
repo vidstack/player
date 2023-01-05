@@ -69,10 +69,10 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     host.setAttributes($attrs);
 
     host.setCSSVars({
-      '--vds-buffered-amount': () => $media.bufferedAmount,
-      '--vds-current-time': () => $media.currentTime,
-      '--vds-duration': () => $media.duration,
-      '--vds-seekable-amount': () => $media.seekableAmount,
+      '--media-buffered-amount': () => $media.bufferedAmount,
+      '--media-current-time': () => $media.currentTime,
+      '--media-duration': () => $media.duration,
+      '--media-seekable-amount': () => $media.seekableAmount,
     });
 
     effect(() => {

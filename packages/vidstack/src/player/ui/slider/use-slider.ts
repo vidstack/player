@@ -38,12 +38,12 @@ export function useSlider(
   });
 
   host.setCSSVars({
-    '--vds-slider-fill-rate': () => $store.fillRate,
-    '--vds-slider-fill-value': () => $store.value,
-    '--vds-slider-fill-percent': () => $store.fillPercent + '%',
-    '--vds-slider-pointer-rate': () => $store.pointerRate,
-    '--vds-slider-pointer-value': () => $store.pointerValue,
-    '--vds-slider-pointer-percent': () => $store.pointerPercent + '%',
+    '--slider-fill-rate': () => $store.fillRate,
+    '--slider-fill-value': () => $store.value,
+    '--slider-fill-percent': () => $store.fillPercent + '%',
+    '--slider-pointer-rate': () => $store.pointerRate,
+    '--slider-pointer-value': () => $store.pointerValue,
+    '--slider-pointer-percent': () => $store.pointerPercent + '%',
   });
 
   useFocusVisible(host.$el);

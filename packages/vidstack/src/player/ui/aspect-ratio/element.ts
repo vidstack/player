@@ -9,9 +9,9 @@ export const AspectRatioDefinition = defineCustomElement<AspectRatioElement>({
   props: aspectRatioProps,
   setup({ host, props: { $minHeight, $maxHeight, $ratio } }) {
     host.setStyles({
-      '--vds-aspect-ratio-percent': calcPercent,
-      '--vds-aspect-ratio-min-height': $minHeight,
-      '--vds-aspect-ratio-max-height': $maxHeight,
+      '--percent': calcPercent,
+      '--min-height': $minHeight,
+      '--max-height': $maxHeight,
     });
 
     function calcPercent() {
