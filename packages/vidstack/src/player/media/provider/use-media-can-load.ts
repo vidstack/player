@@ -33,7 +33,7 @@ export function useMediaCanLoad(
   });
 
   function startLoadingMedia() {
-    dispatchEvent($target(), 'vds-can-load');
+    dispatchEvent($target(), 'can-load');
   }
 
   return { startLoadingMedia };

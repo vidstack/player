@@ -13,5 +13,5 @@ export interface MediaControllerEvents
     FullscreenEvents,
     ScreenOrientationEvents,
     LoggerEvents {
-  'vds-user-idle-change': UserIdleChangeEvent;
+  'user-idle-change': UserIdleChangeEvent;
 }

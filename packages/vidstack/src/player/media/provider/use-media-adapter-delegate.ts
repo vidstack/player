@@ -22,8 +22,8 @@ export function useMediaAdapterDelegate(
   effect(() => {
     const target = $target();
     if (!target) return;
-    listenEvent(target, 'vds-can-play', () => canPlayQueue.start());
-    listenEvent(target, 'vds-source-change', () => canPlayQueue.stop());
+    listenEvent(target, 'can-play', () => canPlayQueue.start());
+    listenEvent(target, 'source-change', () => canPlayQueue.stop());
   });
 
   effect(() => {

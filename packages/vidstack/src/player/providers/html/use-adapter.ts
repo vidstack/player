@@ -56,7 +56,7 @@ export function useHTMLProviderAdapter(
         const provider = $target();
 
         if (provider) {
-          const event = createEvent($target, 'vds-play-fail');
+          const event = createEvent($target, 'play-fail');
           event.autoplay = $media[ATTEMPTING_AUTOPLAY];
           event.error = coerceToError(error);
           provider.dispatchEvent(event);

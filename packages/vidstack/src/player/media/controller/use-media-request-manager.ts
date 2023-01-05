@@ -56,21 +56,21 @@ export function useMediaRequestManager(
 
   // TODO: can we delay any of these event listeners?
   const eventHandlers = {
-    'vds-start-loading': onStartLoading,
-    'vds-mute-request': onMuteRequest,
-    'vds-unmute-request': onUnmuteRequest,
-    'vds-play-request': onPlayRequest,
-    'vds-pause-request': onPauseRequest,
-    'vds-seeking-request': onSeekingRequest,
-    'vds-seek-request': onSeekRequest,
-    'vds-volume-change-request': onVolumeChangeRequest,
-    'vds-enter-fullscreen-request': onEnterFullscreenRequest,
-    'vds-exit-fullscreen-request': onExitFullscreenRequest,
-    'vds-resume-user-idle-request': onResumeIdlingRequest,
-    'vds-pause-user-idle-request': onPauseIdlingRequest,
-    'vds-show-poster-request': onShowPosterRequest,
-    'vds-hide-poster-request': onHidePosterRequest,
-    'vds-loop-request': onLoopRequest,
+    'media-start-loading': onStartLoading,
+    'media-mute-request': onMuteRequest,
+    'media-unmute-request': onUnmuteRequest,
+    'media-play-request': onPlayRequest,
+    'media-pause-request': onPauseRequest,
+    'media-seeking-request': onSeekingRequest,
+    'media-seek-request': onSeekRequest,
+    'media-volume-change-request': onVolumeChangeRequest,
+    'media-enter-fullscreen-request': onEnterFullscreenRequest,
+    'media-exit-fullscreen-request': onExitFullscreenRequest,
+    'media-resume-user-idle-request': onResumeIdlingRequest,
+    'media-pause-user-idle-request': onPauseIdlingRequest,
+    'media-show-poster-request': onShowPosterRequest,
+    'media-hide-poster-request': onHidePosterRequest,
+    'media-loop-request': onLoopRequest,
   };
 
   effect(() => {

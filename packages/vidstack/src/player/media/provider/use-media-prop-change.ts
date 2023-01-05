@@ -22,31 +22,31 @@ export function useMediaPropChange(
     effect(() => {
       const autoplay = $autoplay();
       $media.autoplay = autoplay;
-      dispatchEvent(target, 'vds-autoplay-change', { detail: autoplay });
+      dispatchEvent(target, 'autoplay-change', { detail: autoplay });
     });
 
     effect(() => {
       const poster = $poster();
       $media.poster = poster;
-      dispatchEvent(target, 'vds-poster-change', { detail: poster });
+      dispatchEvent(target, 'poster-change', { detail: poster });
     });
 
     effect(() => {
       const loop = $loop();
       $media.loop = loop;
-      dispatchEvent(target, 'vds-loop-change', { detail: loop });
+      dispatchEvent(target, 'loop-change', { detail: loop });
     });
 
     effect(() => {
       const controls = $controls();
       $media.controls = controls;
-      dispatchEvent(target, 'vds-controls-change', { detail: controls });
+      dispatchEvent(target, 'controls-change', { detail: controls });
     });
 
     effect(() => {
       const playsinline = $playsinline();
       $media.playsinline = playsinline;
-      dispatchEvent(target, 'vds-playsinline-change', { detail: playsinline });
+      dispatchEvent(target, 'playsinline-change', { detail: playsinline });
     });
   });
 }

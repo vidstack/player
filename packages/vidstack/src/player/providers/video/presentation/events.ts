@@ -1,7 +1,7 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 export type VideoPresentationEvents = {
-  'vds-video-presentation-change': VideoPresentationChangeEvent;
+  'video-presentation-change': VideoPresentationChangeEvent;
 };
 
 /**

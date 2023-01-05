@@ -50,12 +50,12 @@ export function useVideoPresentation(
 
     $mode.set($video()!.webkitPresentationMode!);
 
-    dispatchEvent($target(), 'vds-video-presentation-change', {
+    dispatchEvent($target(), 'video-presentation-change', {
       detail: $mode(),
       trigger: event,
     });
 
-    dispatchEvent($target(), 'vds-fullscreen-change', {
+    dispatchEvent($target(), 'fullscreen-change', {
       detail: $mode() === 'fullscreen',
       trigger: event,
     });

@@ -14,7 +14,7 @@ declare global {
   }
 
   interface HTMLElementEventMap {
-    'vds-media-connect': MediaElementConnectEvent;
+    'media-connect': MediaElementConnectEvent;
   }
 }
 
@@ -84,7 +84,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     });
 
     onConnect(() => {
-      dispatchEvent(host.el!, 'vds-media-connect', {
+      dispatchEvent(host.el!, 'media-connect', {
         detail: host.el!,
         bubbles: true,
         composed: true,

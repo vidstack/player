@@ -48,7 +48,7 @@ export function useHLSEngine(
     const engine = new ctor($hlsConfig());
     $engine.set(engine);
     attachHLSEventListeners(ctor, engine);
-    dispatchEvent(host.el, 'vds-hls-instance', { detail: engine });
+    dispatchEvent(host.el, 'hls-instance', { detail: engine });
 
     return () => {
       engine.destroy();
@@ -72,8 +72,8 @@ export function useHLSEngine(
     const event = new DOMEvent(eventType, { detail: data });
     const mediaType: MediaType = live ? 'live-video' : 'video';
 
-    dispatchEvent(host.el, 'vds-media-type-change', { detail: mediaType, trigger: event });
-    dispatchEvent(host.el, 'vds-duration-change', { detail: duration, trigger: event });
+    dispatchEvent(host.el, 'media-type-change', { detail: mediaType, trigger: event });
+    dispatchEvent(host.el, 'duration-change', { detail: duration, trigger: event });
 
     const engine = $engine()!;
     const media = engine.media!;

@@ -20,7 +20,7 @@ export interface MediaProviderEvents
     FullscreenEvents,
     ScreenOrientationEvents,
     LoggerEvents {
-  'vds-loop-request': LoopRequestEvent;
+  'loop-request': LoopRequestEvent;
 }
 
 export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
@@ -50,7 +50,7 @@ export interface MediaProviderProps
    * - `eager`: media will be loaded immediately.
    * - `idle`: media will be loaded after the page has loaded and `requestIdleCallback` is fired.
    * - `visible`: media will delay loading until the provider has entered the viewport.
-   * - `custom`: media will wait for the `startLoadingMedia()` method or `vds-start-loading` event.
+   * - `custom`: media will wait for the `startLoadingMedia()` method or `media-start-loading` event.
    */
   load: MediaLoadingStrategy;
   /**

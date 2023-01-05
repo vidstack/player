@@ -7,8 +7,8 @@ export interface ScreenOrientationEventTarget
   extends HTMLCustomElement<any, ScreenOrientationEvents> {}
 
 export interface ScreenOrientationEvents {
-  'vds-orientation-change': ScreenOrientationChangeEvent;
-  'vds-orientation-lock-change': ScreenOrientationLockChangeEvent;
+  'orientation-change': ScreenOrientationChangeEvent;
+  'orientation-lock-change': ScreenOrientationLockChangeEvent;
 }
 
 /**

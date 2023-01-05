@@ -43,59 +43,59 @@ export class MediaRemoteControl {
   }
 
   startLoading(trigger?: Event) {
-    this._dispatchRequest('vds-start-loading', trigger);
+    this._dispatchRequest('media-start-loading', trigger);
   }
 
   play(trigger?: Event) {
-    this._dispatchRequest('vds-play-request', trigger);
+    this._dispatchRequest('media-play-request', trigger);
   }
 
   pause(trigger?: Event) {
-    this._dispatchRequest('vds-pause-request', trigger);
+    this._dispatchRequest('media-pause-request', trigger);
   }
 
   mute(trigger?: Event) {
-    this._dispatchRequest('vds-mute-request', trigger);
+    this._dispatchRequest('media-mute-request', trigger);
   }
 
   unmute(trigger?: Event) {
-    this._dispatchRequest('vds-unmute-request', trigger);
+    this._dispatchRequest('media-unmute-request', trigger);
   }
 
   enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
-    this._dispatchRequest('vds-enter-fullscreen-request', trigger, target);
+    this._dispatchRequest('media-enter-fullscreen-request', trigger, target);
   }
 
   exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
-    this._dispatchRequest('vds-exit-fullscreen-request', trigger, target);
+    this._dispatchRequest('media-exit-fullscreen-request', trigger, target);
   }
 
   seeking(time: number, trigger?: Event) {
-    this._dispatchRequest('vds-seeking-request', trigger, time);
+    this._dispatchRequest('media-seeking-request', trigger, time);
   }
 
   seek(time: number, trigger?: Event) {
-    this._dispatchRequest('vds-seek-request', trigger, time);
+    this._dispatchRequest('media-seek-request', trigger, time);
   }
 
   changeVolume(volume: number, trigger?: Event) {
-    this._dispatchRequest('vds-volume-change-request', trigger, volume);
+    this._dispatchRequest('media-volume-change-request', trigger, volume);
   }
 
   resumeUserIdle(trigger?: Event) {
-    this._dispatchRequest('vds-resume-user-idle-request', trigger);
+    this._dispatchRequest('media-resume-user-idle-request', trigger);
   }
 
   pauseUserIdle(trigger?: Event) {
-    this._dispatchRequest('vds-pause-user-idle-request', trigger);
+    this._dispatchRequest('media-pause-user-idle-request', trigger);
   }
 
   showPoster(trigger?: Event) {
-    this._dispatchRequest('vds-show-poster-request', trigger);
+    this._dispatchRequest('media-show-poster-request', trigger);
   }
 
   hidePoster(trigger?: Event) {
-    this._dispatchRequest('vds-hide-poster-request', trigger);
+    this._dispatchRequest('media-hide-poster-request', trigger);
   }
 
   setTarget(target: EventTarget | null) {

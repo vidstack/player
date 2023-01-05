@@ -5,65 +5,65 @@ import type { VideoProviderEvents } from '../video/types';
 import type { HLSVideoElement } from './types';
 
 export interface HLSProviderEvents extends VideoProviderEvents {
-  'vds-hls-lib-load-start': HLSLibLoadStartEvent;
-  'vds-hls-lib-loaded': HLSLibLoadedEvent;
-  'vds-hls-lib-load-error': HLSLibLoadErrorEvent;
-  'vds-hls-instance': HLSInstanceEvent;
-  'vds-hls-unsupported': HLSUnsupportedEvent;
+  'hls-lib-load-start': HLSLibLoadStartEvent;
+  'hls-lib-loaded': HLSLibLoadedEvent;
+  'hls-lib-load-error': HLSLibLoadErrorEvent;
+  'hls-instance': HLSInstanceEvent;
+  'hls-unsupported': HLSUnsupportedEvent;
   // re-dispatched `hls.js` events below
-  'vds-hls-media-attaching': HLSMediaAttachingEvent;
-  'vds-hls-media-attached': HLSMediaAttachedEvent;
-  'vds-hls-media-detaching': HLSMediaDetachingEvent;
-  'vds-hls-media-detached': HLSMediaDetachedEvent;
-  'vds-hls-buffer-reset': HLSBufferResetEvent;
-  'vds-hls-buffer-codecs': HLSBufferCodecsEvent;
-  'vds-hls-buffer-created': HLSBufferCreatedEvent;
-  'vds-hls-buffer-appending': HLSBufferAppendingEvent;
-  'vds-hls-buffer-appended': HLSBufferAppendedEvent;
-  'vds-hls-buffer-eos': HLSBufferEosEvent;
-  'vds-hls-buffer-flushing': HLSBufferFlushingEvent;
-  'vds-hls-buffer-flushed': HLSBufferFlushedEvent;
-  'vds-hls-manifest-loading': HLSManifestLoadingEvent;
-  'vds-hls-manifest-loaded': HLSManifestLoadedEvent;
-  'vds-hls-manifest-parsed': HLSManifestParsedEvent;
-  'vds-hls-level-switching': HLSLevelSwitchingEvent;
-  'vds-hls-level-switched': HLSLevelSwitchedEvent;
-  'vds-hls-level-loading': HLSLevelLoadingEvent;
-  'vds-hls-level-loaded': HLSLevelLoadedEvent;
-  'vds-hls-level-updated': HLSLevelUpdatedEvent;
-  'vds-hls-level-pts-updated': HLSLevelPtsUpdatedEvent;
-  'vds-hls-levels-updated': HLSLevelsUpdatedEvent;
-  'vds-hls-audio-tracks-updated': HLSAudioTracksUpdatedEvent;
-  'vds-hls-audio-track-switching': HLSAudioTrackSwitchingEvent;
-  'vds-hls-audio-track-switched': HLSAudioTrackSwitchedEvent;
-  'vds-hls-audio-track-loading': HLSAudioTrackLoadingEvent;
-  'vds-hls-audio-track-loaded': HLSAudioTrackLoadedEvent;
-  'vds-hls-subtitle-tracks-updated': HLSSubtitleTracksUpdatedEvent;
-  'vds-hls-subtitle-tracks-cleared': HLSSubtitleTracksClearedEvent;
-  'vds-hls-subtitle-track-switch': HLSSubtitleTrackSwitchEvent;
-  'vds-hls-subtitle-track-loading': HLSSubtitleTrackLoadingEvent;
-  'vds-hls-subtitle-track-loaded': HLSSubtitleTrackLoadedEvent;
-  'vds-hls-subtitle-frag-processed': HLSSubtitleFragProcessedEvent;
-  'vds-hls-cues-parsed': HLSCuesParsedEvent;
-  'vds-hls-non-native-text-tracks-found': HLSNonNativeTextTracksFoundEvent;
-  'vds-hls-init-pts-found': HLSInitPtsFoundEvent;
-  'vds-hls-frag-loading': HLSFragLoadingEvent;
-  'vds-hls-frag-load-emergency-aborted': HLSFragLoadEmergencyAbortedEvent;
-  'vds-hls-frag-loaded': HLSFragLoadedEvent;
-  'vds-hls-frag-decrypted': HLSFragDecryptedEvent;
-  'vds-hls-frag-parsing-init-segment': HLSFragParsingInitSegmentEvent;
-  'vds-hls-frag-parsing-userdata': HLSFragParsingUserdataEvent;
-  'vds-hls-frag-parsing-metadata': HLSFragParsingMetadataEvent;
-  'vds-hls-frag-parsed': HLSFragParsedEvent;
-  'vds-hls-frag-buffered-data': HLSFragBufferedDataEvent;
-  'vds-hls-frag-changed': HLSFragChangedEvent;
-  'vds-hls-fps-drop': HLSFpsDropEvent;
-  'vds-hls-fps-drop-level-capping': HLSFpsDropLevelCappingEvent;
-  'vds-hls-error': HLSErrorEvent;
-  'vds-hls-destroying': HLSDestroyingEvent;
-  'vds-hls-key-loading': HLSKeyLoadingEvent;
-  'vds-hls-key-loaded': HLSKeyLoadedEvent;
-  'vds-hls-back-buffer-reached': HLSBackBufferReachedEvent;
+  'hls-media-attaching': HLSMediaAttachingEvent;
+  'hls-media-attached': HLSMediaAttachedEvent;
+  'hls-media-detaching': HLSMediaDetachingEvent;
+  'hls-media-detached': HLSMediaDetachedEvent;
+  'hls-buffer-reset': HLSBufferResetEvent;
+  'hls-buffer-codecs': HLSBufferCodecsEvent;
+  'hls-buffer-created': HLSBufferCreatedEvent;
+  'hls-buffer-appending': HLSBufferAppendingEvent;
+  'hls-buffer-appended': HLSBufferAppendedEvent;
+  'hls-buffer-eos': HLSBufferEosEvent;
+  'hls-buffer-flushing': HLSBufferFlushingEvent;
+  'hls-buffer-flushed': HLSBufferFlushedEvent;
+  'hls-manifest-loading': HLSManifestLoadingEvent;
+  'hls-manifest-loaded': HLSManifestLoadedEvent;
+  'hls-manifest-parsed': HLSManifestParsedEvent;
+  'hls-level-switching': HLSLevelSwitchingEvent;
+  'hls-level-switched': HLSLevelSwitchedEvent;
+  'hls-level-loading': HLSLevelLoadingEvent;
+  'hls-level-loaded': HLSLevelLoadedEvent;
+  'hls-level-updated': HLSLevelUpdatedEvent;
+  'hls-level-pts-updated': HLSLevelPtsUpdatedEvent;
+  'hls-levels-updated': HLSLevelsUpdatedEvent;
+  'hls-audio-tracks-updated': HLSAudioTracksUpdatedEvent;
+  'hls-audio-track-switching': HLSAudioTrackSwitchingEvent;
+  'hls-audio-track-switched': HLSAudioTrackSwitchedEvent;
+  'hls-audio-track-loading': HLSAudioTrackLoadingEvent;
+  'hls-audio-track-loaded': HLSAudioTrackLoadedEvent;
+  'hls-subtitle-tracks-updated': HLSSubtitleTracksUpdatedEvent;
+  'hls-subtitle-tracks-cleared': HLSSubtitleTracksClearedEvent;
+  'hls-subtitle-track-switch': HLSSubtitleTrackSwitchEvent;
+  'hls-subtitle-track-loading': HLSSubtitleTrackLoadingEvent;
+  'hls-subtitle-track-loaded': HLSSubtitleTrackLoadedEvent;
+  'hls-subtitle-frag-processed': HLSSubtitleFragProcessedEvent;
+  'hls-cues-parsed': HLSCuesParsedEvent;
+  'hls-non-native-text-tracks-found': HLSNonNativeTextTracksFoundEvent;
+  'hls-init-pts-found': HLSInitPtsFoundEvent;
+  'hls-frag-loading': HLSFragLoadingEvent;
+  'hls-frag-load-emergency-aborted': HLSFragLoadEmergencyAbortedEvent;
+  'hls-frag-loaded': HLSFragLoadedEvent;
+  'hls-frag-decrypted': HLSFragDecryptedEvent;
+  'hls-frag-parsing-init-segment': HLSFragParsingInitSegmentEvent;
+  'hls-frag-parsing-userdata': HLSFragParsingUserdataEvent;
+  'hls-frag-parsing-metadata': HLSFragParsingMetadataEvent;
+  'hls-frag-parsed': HLSFragParsedEvent;
+  'hls-frag-buffered-data': HLSFragBufferedDataEvent;
+  'hls-frag-changed': HLSFragChangedEvent;
+  'hls-fps-drop': HLSFpsDropEvent;
+  'hls-fps-drop-level-capping': HLSFpsDropLevelCappingEvent;
+  'hls-error': HLSErrorEvent;
+  'hls-destroying': HLSDestroyingEvent;
+  'hls-key-loading': HLSKeyLoadingEvent;
+  'hls-key-loaded': HLSKeyLoadedEvent;
+  'hls-back-buffer-reached': HLSBackBufferReachedEvent;
 }
 
 export interface HLSMediaEvent<DetailType = unknown> extends DOMEvent<DetailType> {
@@ -350,7 +350,7 @@ export interface HLSFpsDropLevelCappingEvent extends HLSMediaEvent<HLS.FPSDropLe
 export interface HLSErrorEvent extends HLSMediaEvent<HLS.ErrorData> {}
 
 /**
- * Fired when the `hls.js` instance is being destroyed. Different from `vds-hls-media-detached` as
+ * Fired when the `hls.js` instance is being destroyed. Different from `hls-media-detached` as
  * one could want to detach, and reattach media to the `hls.js` instance to handle mid-rolls.
  */
 export interface HLSDestroyingEvent extends HLSMediaEvent<void> {}

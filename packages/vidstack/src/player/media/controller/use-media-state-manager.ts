@@ -54,8 +54,8 @@ export function useMediaStateManager(
     const target = $target();
     // target may be media controller which can also fullscreen.
     if (target && target !== provider) {
-      listenEvent(target, 'vds-fullscreen-change', onFullscreenChange);
-      listenEvent(target, 'vds-fullscreen-error', onFullscreenError);
+      listenEvent(target, 'fullscreen-change', onFullscreenChange);
+      listenEvent(target, 'fullscreen-error', onFullscreenError);
     }
   });
 
@@ -63,10 +63,10 @@ export function useMediaStateManager(
     provider = $connectedMediaProvider();
 
     if (provider) {
-      listenEvent(provider, 'vds-view-type-change', onViewTypeChange);
-      listenEvent(provider, 'vds-can-load', trackEvent(onCanLoad));
-      listenEvent(provider, 'vds-sources-change', trackEvent(onSourcesChange));
-      listenEvent(provider, 'vds-source-change', trackEvent(onSourceChange));
+      listenEvent(provider, 'view-type-change', onViewTypeChange);
+      listenEvent(provider, 'can-load', trackEvent(onCanLoad));
+      listenEvent(provider, 'sources-change', trackEvent(onSourcesChange));
+      listenEvent(provider, 'source-change', trackEvent(onSourceChange));
       connected = true;
     } else if (connected) {
       resetTracking();
@@ -102,16 +102,16 @@ export function useMediaStateManager(
   function attachCanLoadEventListeners() {
     if (attachedCanLoadListeners) return;
     disposal.add(
-      listenEvent(provider!, 'vds-media-type-change', onMediaTypeChange),
-      listenEvent(provider!, 'vds-load-start', trackEvent(onLoadStart)),
-      listenEvent(provider!, 'vds-abort', trackEvent(onAbort)),
-      listenEvent(provider!, 'vds-error', trackEvent(onError)),
+      listenEvent(provider!, 'media-type-change', onMediaTypeChange),
+      listenEvent(provider!, 'load-start', trackEvent(onLoadStart)),
+      listenEvent(provider!, 'abort', trackEvent(onAbort)),
+      listenEvent(provider!, 'error', trackEvent(onError)),
     );
     attachedCanLoadListeners = true;
   }
 
   function onMediaTypeChange(event: ME.MediaTypeChangeEvent) {
-    appendTriggerEvent(event, trackedEvents.get('vds-source-change'));
+    appendTriggerEvent(event, trackedEvents.get('source-change'));
     $media.mediaType = event.detail;
     $media.live = event.detail.includes('live');
   }
@@ -131,7 +131,7 @@ export function useMediaStateManager(
   }
 
   function onSourceChange(event: ME.MediaSourceChangeEvent) {
-    appendTriggerEvent(event, trackedEvents.get('vds-sources-change'));
+    appendTriggerEvent(event, trackedEvents.get('sources-change'));
 
     $media.source = event.detail;
     $target()?.setAttribute('aria-busy', 'true');
@@ -150,60 +150,56 @@ export function useMediaStateManager(
   function attachLoadStartEventListeners() {
     if (attachedLoadStartListeners) return;
     disposal.add(
-      listenEvent(provider!, 'vds-loaded-metadata', trackEvent(onLoadedMetadata)),
-      listenEvent(provider!, 'vds-loaded-data', trackEvent(onLoadedData)),
-      listenEvent(provider!, 'vds-can-play', trackEvent(onCanPlay)),
-      listenEvent(provider!, 'vds-can-play-through', onCanPlayThrough),
-      listenEvent(provider!, 'vds-duration-change', onDurationChange),
-      listenEvent(provider!, 'vds-progress', (e) => onProgress($media, e)),
+      listenEvent(provider!, 'loaded-metadata', trackEvent(onLoadedMetadata)),
+      listenEvent(provider!, 'loaded-data', trackEvent(onLoadedData)),
+      listenEvent(provider!, 'can-play', trackEvent(onCanPlay)),
+      listenEvent(provider!, 'can-play-through', onCanPlayThrough),
+      listenEvent(provider!, 'duration-change', onDurationChange),
+      listenEvent(provider!, 'progress', (e) => onProgress($media, e)),
     );
     attachedLoadStartListeners = true;
   }
 
   function onAbort(event: ME.MediaAbortEvent) {
-    appendTriggerEvent(event, trackedEvents.get('vds-source-change'));
-    appendTriggerEvent(event, trackedEvents.get('vds-can-load'));
+    appendTriggerEvent(event, trackedEvents.get('source-change'));
+    appendTriggerEvent(event, trackedEvents.get('can-load'));
   }
 
   function onLoadStart(event: ME.MediaLoadStartEvent) {
     attachLoadStartEventListeners();
-    appendTriggerEvent(event, trackedEvents.get('vds-source-change'));
-    appendTriggerEvent(event, trackedEvents.get('vds-can-load'));
+    appendTriggerEvent(event, trackedEvents.get('source-change'));
+    appendTriggerEvent(event, trackedEvents.get('can-load'));
   }
 
   function onError(event: ME.MediaErrorEvent) {
     $media.error = event.detail;
-    appendTriggerEvent(event, trackedEvents.get('vds-abort'));
+    appendTriggerEvent(event, trackedEvents.get('abort'));
   }
 
   function onLoadedMetadata(event: ME.MediaLoadedMetadataEvent) {
-    appendTriggerEvent(event, trackedEvents.get('vds-load-start'));
+    appendTriggerEvent(event, trackedEvents.get('load-start'));
   }
 
   function onLoadedData(event: ME.MediaLoadedDataEvent) {
-    appendTriggerEvent(event, trackedEvents.get('vds-load-start'));
+    appendTriggerEvent(event, trackedEvents.get('load-start'));
   }
 
   function attachCanPlayListeners() {
     if (attachedCanPlayListeners) return;
     disposal.add(
-      listenEvent(provider!, 'vds-autoplay', trackEvent(onAutoplay)),
-      listenEvent(provider!, 'vds-autoplay-fail', trackEvent(onAutoplayFail)),
-      listenEvent(provider!, 'vds-pause', trackEvent(onPause)),
-      listenEvent(provider!, 'vds-play', trackEvent(onPlay)),
-      listenEvent(provider!, 'vds-play-fail', trackEvent(onPlayFail)),
-      listenEvent(provider!, 'vds-playing', trackEvent(onPlaying)),
-      listenEvent(provider!, 'vds-duration-change', onDurationChange),
-      listenEvent(provider!, 'vds-time-update', onTimeUpdate),
-      listenEvent(provider!, 'vds-volume-change', onVolumeChange),
-      listenEvent(
-        provider!,
-        'vds-seeking',
-        throttle(trackEvent(onSeeking), 150, { leading: true }),
-      ),
-      listenEvent(provider!, 'vds-seeked', trackEvent(onSeeked)),
-      listenEvent(provider!, 'vds-waiting', onWaiting),
-      listenEvent(provider!, 'vds-ended', onEnded),
+      listenEvent(provider!, 'autoplay', trackEvent(onAutoplay)),
+      listenEvent(provider!, 'autoplay-fail', trackEvent(onAutoplayFail)),
+      listenEvent(provider!, 'pause', trackEvent(onPause)),
+      listenEvent(provider!, 'play', trackEvent(onPlay)),
+      listenEvent(provider!, 'play-fail', trackEvent(onPlayFail)),
+      listenEvent(provider!, 'playing', trackEvent(onPlaying)),
+      listenEvent(provider!, 'duration-change', onDurationChange),
+      listenEvent(provider!, 'time-update', onTimeUpdate),
+      listenEvent(provider!, 'volume-change', onVolumeChange),
+      listenEvent(provider!, 'seeking', throttle(trackEvent(onSeeking), 150, { leading: true })),
+      listenEvent(provider!, 'seeked', trackEvent(onSeeked)),
+      listenEvent(provider!, 'waiting', onWaiting),
+      listenEvent(provider!, 'ended', onEnded),
     );
     attachedCanPlayListeners = true;
   }
@@ -213,7 +209,7 @@ export function useMediaStateManager(
 
     // Avoid infinite chain - `hls.js` will not fire `canplay` event.
     if (event.trigger?.type !== 'loadedmetadata') {
-      appendTriggerEvent(event, trackedEvents.get('vds-loaded-metadata'));
+      appendTriggerEvent(event, trackedEvents.get('loaded-metadata'));
     }
 
     $media.canPlay = true;
@@ -224,7 +220,7 @@ export function useMediaStateManager(
   function onCanPlayThrough(event: ME.MediaCanPlayThroughEvent) {
     $media.canPlay = true;
     $media.duration = event.detail.duration;
-    appendTriggerEvent(event, trackedEvents.get('vds-can-play'));
+    appendTriggerEvent(event, trackedEvents.get('can-play'));
   }
 
   function onDurationChange(event: ME.MediaDurationChangeEvent) {
@@ -233,14 +229,14 @@ export function useMediaStateManager(
   }
 
   function onAutoplay(event: ME.MediaAutoplayEvent) {
-    appendTriggerEvent(event, trackedEvents.get('vds-play'));
-    appendTriggerEvent(event, trackedEvents.get('vds-can-play'));
+    appendTriggerEvent(event, trackedEvents.get('play'));
+    appendTriggerEvent(event, trackedEvents.get('can-play'));
     $media.autoplayError = undefined;
   }
 
   function onAutoplayFail(event: ME.MediaAutoplayFailEvent) {
-    appendTriggerEvent(event, trackedEvents.get('vds-play-fail'));
-    appendTriggerEvent(event, trackedEvents.get('vds-can-play'));
+    appendTriggerEvent(event, trackedEvents.get('play-fail'));
+    appendTriggerEvent(event, trackedEvents.get('can-play'));
     $media.autoplayError = event.detail;
     resetTracking();
   }
@@ -251,7 +247,7 @@ export function useMediaStateManager(
       return;
     }
 
-    appendTriggerEvent(event, trackedEvents.get('vds-waiting'));
+    appendTriggerEvent(event, trackedEvents.get('waiting'));
     satisfyMediaRequest('play', event);
 
     $media.paused = false;
@@ -260,12 +256,12 @@ export function useMediaStateManager(
     if ($media.ended || requestManager?.$isReplay()) {
       requestManager?.$isReplay.set(false);
       $media.ended = false;
-      dispatchEvent(provider, 'vds-replay', { trigger: event });
+      dispatchEvent(provider, 'replay', { trigger: event });
     }
   }
 
   function onPlayFail(event: ME.MediaPlayFailEvent) {
-    appendTriggerEvent(event, trackedEvents.get('vds-play'));
+    appendTriggerEvent(event, trackedEvents.get('play'));
     satisfyMediaRequest('play', event);
 
     $media.paused = true;
@@ -275,13 +271,13 @@ export function useMediaStateManager(
   }
 
   function onPlaying(event: ME.MediaPlayingEvent) {
-    const playEvent = trackedEvents.get('vds-play');
+    const playEvent = trackedEvents.get('play');
 
     if (playEvent) {
-      appendTriggerEvent(event, trackedEvents.get('vds-waiting'));
+      appendTriggerEvent(event, trackedEvents.get('waiting'));
       appendTriggerEvent(event, playEvent);
     } else {
-      appendTriggerEvent(event, trackedEvents.get('vds-seeked'));
+      appendTriggerEvent(event, trackedEvents.get('seeked'));
     }
 
     setTimeout(() => resetTracking(), 0);
@@ -299,7 +295,7 @@ export function useMediaStateManager(
 
     if (!$media.started) {
       $media.started = true;
-      dispatchEvent(provider, 'vds-started', { trigger: event });
+      dispatchEvent(provider, 'started', { trigger: event });
     }
   }
 
@@ -309,7 +305,7 @@ export function useMediaStateManager(
       return;
     }
 
-    appendTriggerEvent(event, trackedEvents.get('vds-seeked'));
+    appendTriggerEvent(event, trackedEvents.get('seeked'));
     satisfyMediaRequest('pause', event);
 
     $media.paused = true;
@@ -343,8 +339,8 @@ export function useMediaStateManager(
       $media.seeking = true;
       event.stopImmediatePropagation();
     } else if ($media.seeking) {
-      appendTriggerEvent(event, trackedEvents.get('vds-waiting'));
-      appendTriggerEvent(event, trackedEvents.get('vds-seeking'));
+      appendTriggerEvent(event, trackedEvents.get('waiting'));
+      appendTriggerEvent(event, trackedEvents.get('seeking'));
       if ($media.paused) stopWaiting();
       $media.seeking = false;
       if (event.detail !== $media.duration) $media.ended = false;
@@ -358,11 +354,11 @@ export function useMediaStateManager(
 
     firingWaiting = true;
 
-    const event = new DOMEvent('vds-waiting', {
+    const event = new DOMEvent('waiting', {
       trigger: lastWaitingEvent,
     }) as ME.MediaWaitingEvent;
 
-    trackedEvents.set('vds-waiting', event);
+    trackedEvents.set('waiting', event);
 
     $media.waiting = true;
     $media.playing = false;
@@ -406,7 +402,7 @@ export function useMediaStateManager(
 
     // Forward event on media provider for any listeners.
     if (event.target !== provider) {
-      dispatchEvent(provider, 'vds-fullscreen-change', {
+      dispatchEvent(provider, 'fullscreen-change', {
         detail: event.detail,
         trigger: event,
       });
@@ -419,7 +415,7 @@ export function useMediaStateManager(
 
     // Forward event on media provider for any listeners.
     if (event.target !== provider) {
-      dispatchEvent(provider, 'vds-fullscreen-error', {
+      dispatchEvent(provider, 'fullscreen-error', {
         detail: event.detail,
         trigger: event,
       });

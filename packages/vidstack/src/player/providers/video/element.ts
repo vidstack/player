@@ -23,7 +23,7 @@ export const VideoDefinition = defineCustomElement<VideoElement>({
 
     onConnect(() => {
       setTimeout(() => {
-        dispatchEvent(host.el, 'vds-view-type-change', { detail: 'video' });
+        dispatchEvent(host.el, 'view-type-change', { detail: 'video' });
       }, 0);
     });
 

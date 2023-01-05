@@ -40,7 +40,7 @@ export function useHTMLProviderConnect(
 
     // We call this here again mainly for iOS since it uses the video presentation API.
     if (!$media.canFullscreen && provider.fullscreen.supported) {
-      dispatchEvent(provider, 'vds-fullscreen-support-change', {
+      dispatchEvent(provider, 'fullscreen-support-change', {
         detail: provider.fullscreen.supported,
       });
     }
@@ -94,7 +94,7 @@ export function useHTMLProviderConnect(
     props.onSourcesChange?.(sources);
 
     if (!equal) {
-      dispatchEvent($target(), 'vds-sources-change', { detail: sources });
+      dispatchEvent($target(), 'sources-change', { detail: sources });
       $mediaElement()?.load();
     }
   }

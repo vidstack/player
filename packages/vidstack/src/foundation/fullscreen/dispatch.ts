@@ -7,7 +7,7 @@ export function dispatchFullscreenChange(
   isFullscreen: boolean,
   trigger?: Event,
 ) {
-  dispatchEvent(target, 'vds-fullscreen-change', {
+  dispatchEvent(target, 'fullscreen-change', {
     detail: isFullscreen,
     bubbles: true,
     composed: true,
@@ -16,7 +16,7 @@ export function dispatchFullscreenChange(
 }
 
 export function dispatchFullscreenError(target: FullscreenEventTarget | null, trigger?: Event) {
-  dispatchEvent(target, 'vds-fullscreen-error', {
+  dispatchEvent(target, 'fullscreen-error', {
     detail: null,
     bubbles: true,
     composed: true,

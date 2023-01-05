@@ -15,7 +15,7 @@ export async function onMediaReady(
 ) {
   if ($media.canPlay) return;
 
-  dispatchEvent(provider, 'vds-can-play', {
+  dispatchEvent(provider, 'can-play', {
     detail: { duration },
     trigger,
   });
@@ -49,7 +49,7 @@ export function onMediaSrcChange(
       .dispatch();
   }
 
-  dispatchEvent(provider, 'vds-source-change', { detail: src });
+  dispatchEvent(provider, 'source-change', { detail: src });
 }
 
 async function attemptAutoplay(provider: MediaProviderElement, $media: MediaStore): Promise<void> {
@@ -57,11 +57,11 @@ async function attemptAutoplay(provider: MediaProviderElement, $media: MediaStor
 
   try {
     await provider.play();
-    dispatchEvent(provider, 'vds-autoplay', {
+    dispatchEvent(provider, 'autoplay', {
       detail: { muted: $media.muted },
     });
   } catch (error) {
-    dispatchEvent(provider, 'vds-autoplay-fail', {
+    dispatchEvent(provider, 'autoplay-fail', {
       detail: {
         muted: $media.muted,
         error: error as Error,
@@ -81,7 +81,7 @@ export function throwIfNotReadyForPlayback($media: MediaStore) {
   if ($media.canPlay) return;
   throw Error(
     __DEV__
-      ? `[vidstack] media is not ready - wait for \`vds-can-play\` event.`
+      ? `[vidstack] media is not ready - wait for \`can-play\` event.`
       : '[vidstack] media not ready',
   );
 }

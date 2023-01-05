@@ -23,7 +23,7 @@ export const AudioDefinition = defineCustomElement<AudioElement>({
 
     onConnect(() => {
       setTimeout(() => {
-        dispatchEvent(host.el, 'vds-view-type-change', { detail: 'audio' });
+        dispatchEvent(host.el, 'view-type-change', { detail: 'audio' });
       }, 0);
     });
 

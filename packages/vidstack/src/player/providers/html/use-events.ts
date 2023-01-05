@@ -18,7 +18,7 @@ export const IGNORE_NEXT_ABORT = Symbol(__DEV__ ? 'IGNORE_NEXT_ABORT' : 0);
 
 /**
  * This is hook is mainly responsible for listening to events fired by a `HTMLMediaElement` and
- * dispatching the respective Vidstack media events (e.g., `play` -> `vds-play`).
+ * dispatching the respective Vidstack media events (e.g., `canplay` -> `can-play`).
  */
 export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   $target: ReadSignal<T | null>,
@@ -123,7 +123,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
   function updateCurrentTime(newTime: number, trigger?: Event) {
     if (!media) return;
-    dispatchEvent(provider, 'vds-time-update', {
+    dispatchEvent(provider, 'time-update', {
       // Avoid errors where `currentTime` can have higher precision than duration.
       detail: {
         currentTime: Math.min(newTime, media.duration),
@@ -148,7 +148,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     if (props.onAbort?.(event)) return;
 
     onSourceChange();
-    dispatchEvent(provider, 'vds-abort', { trigger: event });
+    dispatchEvent(provider, 'abort', { trigger: event });
   }
 
   function onLoadStart(event: Event) {
@@ -159,15 +159,15 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
     if (!media![ENGINE]) onSourceChange();
     attachLoadStartEventListeners();
-    dispatchEvent(provider, 'vds-load-start', { trigger: event });
+    dispatchEvent(provider, 'load-start', { trigger: event });
   }
 
   function onEmptied(event: Event) {
-    dispatchEvent(provider, 'vds-emptied', { trigger: event });
+    dispatchEvent(provider, 'emptied', { trigger: event });
   }
 
   function onLoadedData(event: Event) {
-    dispatchEvent(provider, 'vds-loaded-data', { trigger: event });
+    dispatchEvent(provider, 'loaded-data', { trigger: event });
   }
 
   function onLoadedMetadata(event: Event) {
@@ -175,11 +175,11 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     attachCanPlayEventListeners();
 
     // Sync volume state before metadata.
-    dispatchEvent(provider, 'vds-volume-change', {
+    dispatchEvent(provider, 'volume-change', {
       detail: { volume: media!.volume, muted: media!.muted },
     });
 
-    dispatchEvent(provider, 'vds-loaded-metadata', { trigger: event });
+    dispatchEvent(provider, 'loaded-metadata', { trigger: event });
 
     props.onLoadedMetadata?.(event);
   }
@@ -188,12 +188,12 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     const isLive = !Number.isFinite(media!.duration);
     const mediaType = isLive ? 'live-video' : getMediaTypeFromExt($media.source);
     if (mediaType !== $media.mediaType) {
-      dispatchEvent(provider, 'vds-media-type-change', { detail: mediaType });
+      dispatchEvent(provider, 'media-type-change', { detail: mediaType });
     }
   }
 
   function onPlay(event: Event) {
-    const playEvent = new DOMEvent('vds-play', {
+    const playEvent = new DOMEvent('play', {
       trigger: event,
     }) as MediaPlayEvent;
     playEvent.autoplay = $media[ATTEMPTING_AUTOPLAY];
@@ -205,7 +205,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     if (media!.readyState === 1 && !isMediaWaiting) return;
     isMediaWaiting = false;
     timeRafLoop.stop();
-    dispatchEvent(provider, 'vds-pause', { trigger: event });
+    dispatchEvent(provider, 'pause', { trigger: event });
   }
 
   function onCanPlay(event: Event) {
@@ -214,7 +214,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
   function onCanPlayThrough(event: Event) {
     if ($media.started) return;
-    dispatchEvent(provider, 'vds-can-play-through', {
+    dispatchEvent(provider, 'can-play-through', {
       trigger: event,
       detail: { duration: media!.duration },
     });
@@ -222,46 +222,46 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
   function onPlaying(event: Event) {
     isMediaWaiting = false;
-    dispatchEvent(provider, 'vds-playing', { trigger: event });
+    dispatchEvent(provider, 'playing', { trigger: event });
     timeRafLoop.start();
   }
 
   function onStalled(event: Event) {
-    dispatchEvent(provider, 'vds-stalled', { trigger: event });
+    dispatchEvent(provider, 'stalled', { trigger: event });
     if (media!.readyState < 3) {
       isMediaWaiting = true;
-      dispatchEvent(provider, 'vds-waiting', { trigger: event });
+      dispatchEvent(provider, 'waiting', { trigger: event });
     }
   }
 
   function onWaiting(event: Event) {
     if (media!.readyState < 3) {
       isMediaWaiting = true;
-      dispatchEvent(provider, 'vds-waiting', { trigger: event });
+      dispatchEvent(provider, 'waiting', { trigger: event });
     }
   }
 
   function onEnded(event: Event) {
     timeRafLoop.stop();
     updateCurrentTime(media!.duration, event);
-    dispatchEvent(provider, 'vds-end', { trigger: event });
+    dispatchEvent(provider, 'end', { trigger: event });
     if ($media.loop) {
       onLoop();
     } else {
-      dispatchEvent(provider, 'vds-ended', { trigger: event });
+      dispatchEvent(provider, 'ended', { trigger: event });
     }
   }
 
   function onDurationChange(event: Event) {
     if ($media.ended) updateCurrentTime(media!.duration, event);
-    dispatchEvent(provider, 'vds-duration-change', {
+    dispatchEvent(provider, 'duration-change', {
       detail: media!.duration,
       trigger: event,
     });
   }
 
   function onVolumeChange(event: Event) {
-    dispatchEvent(provider, 'vds-volume-change', {
+    dispatchEvent(provider, 'volume-change', {
       detail: {
         volume: media!.volume,
         muted: media!.muted,
@@ -271,7 +271,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   }
 
   function onSeeked(event: Event) {
-    dispatchEvent(provider, 'vds-seeked', {
+    dispatchEvent(provider, 'seeked', {
       detail: media!.currentTime,
       trigger: event,
     });
@@ -293,14 +293,14 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   }
 
   function onSeeking(event: Event) {
-    dispatchEvent(provider, 'vds-seeking', {
+    dispatchEvent(provider, 'seeking', {
       detail: media!.currentTime,
       trigger: event,
     });
   }
 
   function onProgress(event: Event) {
-    dispatchEvent(provider, 'vds-progress', {
+    dispatchEvent(provider, 'progress', {
       detail: {
         buffered: media!.buffered,
         seekable: media!.seekable,
@@ -314,11 +314,11 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     // Forcefully hide controls to prevent flashing when looping. Calling `play()` at end
     // of media may show a flash of native controls on iOS, even if `controls` property is not set.
     if (hasCustomControls) media!.controls = false;
-    dispatchEvent(provider, 'vds-loop-request');
+    dispatchEvent(provider, 'loop-request');
   }
 
   function onSuspend(event: Event) {
-    dispatchEvent(provider, 'vds-suspend', { trigger: event });
+    dispatchEvent(provider, 'suspend', { trigger: event });
   }
 
   function onRateChange(event: Event) {
@@ -328,7 +328,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   function onError(event: Event) {
     const mediaError = media!.error;
     if (!mediaError) return;
-    dispatchEvent(provider, 'vds-error', {
+    dispatchEvent(provider, 'error', {
       detail: {
         message: mediaError.message,
         code: mediaError.code as MediaErrorCode,

@@ -78,7 +78,7 @@ export function useMediaProvider<Target extends MediaProviderElement>(
     $media.canFullscreen = canFullscreen;
 
     // TODO: why do we need to type cast this? failing to infer custom element events from generic.
-    dispatchEvent($target() as MediaProviderElement, 'vds-fullscreen-support-change', {
+    dispatchEvent($target() as MediaProviderElement, 'fullscreen-support-change', {
       detail: canFullscreen,
     });
 
@@ -90,7 +90,7 @@ export function useMediaProvider<Target extends MediaProviderElement>(
 
   onMount(() => {
     return () => {
-      dispatchEvent($target() as MediaProviderElement, 'vds-destroy');
+      dispatchEvent($target() as MediaProviderElement, 'destroy');
     };
   });
 

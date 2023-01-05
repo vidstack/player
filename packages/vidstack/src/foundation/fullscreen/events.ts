@@ -4,9 +4,9 @@ import type { DOMEvent } from 'maverick.js/std';
 export interface FullscreenEventTarget extends HTMLCustomElement<any, FullscreenEvents> {}
 
 export interface FullscreenEvents {
-  'vds-fullscreen-change': FullscreenChangeEvent;
-  'vds-fullscreen-error': FullscreenErrorEvent;
-  'vds-fullscreen-support-change': FullscreenSupportChange;
+  'fullscreen-change': FullscreenChangeEvent;
+  'fullscreen-error': FullscreenErrorEvent;
+  'fullscreen-support-change': FullscreenSupportChange;
 }
 
 /**

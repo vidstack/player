@@ -3,11 +3,11 @@ import type { DOMEvent } from 'maverick.js/std';
 import type { SliderElement } from './types';
 
 export interface SliderEvents {
-  'vds-slider-drag-start': SliderDragStartEvent;
-  'vds-slider-drag-end': SliderDragEndEvent;
-  'vds-slider-drag-value-change': SliderDragValueChangeEvent;
-  'vds-slider-value-change': SliderValueChangeEvent;
-  'vds-slider-pointer-value-change': SliderPointerValueChangeEvent;
+  'drag-start': SliderDragStartEvent;
+  'drag-end': SliderDragEndEvent;
+  'drag-value-change': SliderDragValueChangeEvent;
+  'value-change': SliderValueChangeEvent;
+  'pointer-value-change': SliderPointerValueChangeEvent;
 }
 
 export interface SliderEvent<Detail = unknown> extends DOMEvent<Detail> {

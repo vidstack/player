@@ -105,7 +105,7 @@ function dispatchIdleChange(
   isIdle: boolean,
   trigger?: Event,
 ) {
-  dispatchEvent(target, 'vds-user-idle-change', {
+  dispatchEvent(target, 'user-idle-change', {
     detail: isIdle,
     trigger,
   });

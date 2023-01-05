@@ -42,7 +42,7 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
 
     onConnect(() => {
       setTimeout(() => {
-        dispatchEvent(host.el, 'vds-view-type-change', { detail: 'video' });
+        dispatchEvent(host.el, 'view-type-change', { detail: 'video' });
       }, 0);
     });
 

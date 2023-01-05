@@ -8,7 +8,7 @@ export function dispatchOrientationChange(
   orientation: ScreenOrientationType,
   trigger?: Event,
 ) {
-  dispatchEvent(target, 'vds-orientation-change', {
+  dispatchEvent(target, 'orientation-change', {
     bubbles: true,
     composed: true,
     detail: orientation,
@@ -20,7 +20,7 @@ export function dispatchLockChange(
   target: ScreenOrientationEventTarget | null,
   lockType: ScreenOrientationLockType,
 ) {
-  dispatchEvent(target, 'vds-orientation-lock-change', {
+  dispatchEvent(target, 'orientation-lock-change', {
     bubbles: true,
     composed: true,
     detail: lockType,

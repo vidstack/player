@@ -28,7 +28,7 @@ export interface MediaElementProps {
 export interface MediaElementMembers extends MediaElementProps, UseMediaController {}
 
 export interface MediaElementEvents extends MediaControllerEvents {
-  'vds-media-connect': MediaElementConnectEvent;
+  'media-connect': MediaElementConnectEvent;
 }
 
 /**

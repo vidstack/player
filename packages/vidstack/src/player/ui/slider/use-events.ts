@@ -62,7 +62,7 @@ export function useSliderEvents(
   function updateValue(value: number, trigger?: Event) {
     $store.value = value;
 
-    const event = createEvent(host.el, 'vds-slider-value-change', {
+    const event = createEvent(host.el, 'value-change', {
       detail: $store.value,
       trigger,
     });
@@ -74,13 +74,13 @@ export function useSliderEvents(
   function updatePointerValue(value: number, trigger?: PointerEvent) {
     $store.pointerValue = value;
 
-    dispatchEvent(host.el, 'vds-slider-pointer-value-change', {
+    dispatchEvent(host.el, 'value-change', {
       detail: value,
       trigger,
     });
 
     if ($store.dragging) {
-      const event = createEvent(host.el, 'vds-slider-drag-value-change', {
+      const event = createEvent(host.el, 'drag-value-change', {
         detail: value,
         trigger,
       });
@@ -128,7 +128,7 @@ export function useSliderEvents(
     const value = getValue(event);
     updatePointerValue(value, event);
     remote.pauseUserIdle(event);
-    const dragStartEvent = createEvent(host.el, 'vds-slider-drag-start', {
+    const dragStartEvent = createEvent(host.el, 'drag-start', {
       detail: value,
       trigger: event,
     });
@@ -143,7 +143,7 @@ export function useSliderEvents(
     updateValue(value, event);
     updatePointerValue(value, event);
     remote.resumeUserIdle(event);
-    const dragEndEvent = createEvent(host.el, 'vds-slider-drag-start', {
+    const dragEndEvent = createEvent(host.el, 'drag-start', {
       detail: value,
       trigger: event,
     });

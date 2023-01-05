@@ -115,7 +115,7 @@ export interface MediaState {
   ended: boolean;
   /**
    * Contains the most recent media error or undefined if there's been none. You can listen for
-   * `vds-error` event updates and examine this object to debug further.
+   * `error` event updates and examine this object to debug further.
    *
    * @defaultValue undefined
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error}

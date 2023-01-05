@@ -1,21 +1,21 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 export interface MediaRequestEvents {
-  'vds-start-loading': StartLoadingRequestEvent;
-  'vds-mute-request': MuteRequestEvent;
-  'vds-unmute-request': UnmuteRequestEvent;
-  'vds-enter-fullscreen-request': EnterFullscreenRequestEvent;
-  'vds-exit-fullscreen-request': ExitFullscreenRequestEvent;
-  'vds-play-request': PlayRequestEvent;
-  'vds-pause-request': PauseRequestEvent;
-  'vds-seek-request': SeekRequestEvent;
-  'vds-seeking-request': SeekingRequestEvent;
-  'vds-volume-change-request': VolumeChangeRequestEvent;
-  'vds-resume-user-idle-request': ResumeUserIdleRequestEvent;
-  'vds-pause-user-idle-request': PauseUserIdleRequestEvent;
-  'vds-show-poster-request': ShowPosterRequestEvent;
-  'vds-hide-poster-request': HidePosterRequestEvent;
-  'vds-loop-request': LoopRequestEvent;
+  'media-start-loading': StartLoadingRequestEvent;
+  'media-mute-request': MuteRequestEvent;
+  'media-unmute-request': UnmuteRequestEvent;
+  'media-enter-fullscreen-request': EnterFullscreenRequestEvent;
+  'media-exit-fullscreen-request': ExitFullscreenRequestEvent;
+  'media-play-request': PlayRequestEvent;
+  'media-pause-request': PauseRequestEvent;
+  'media-seek-request': SeekRequestEvent;
+  'media-seeking-request': SeekingRequestEvent;
+  'media-volume-change-request': VolumeChangeRequestEvent;
+  'media-resume-user-idle-request': ResumeUserIdleRequestEvent;
+  'media-pause-user-idle-request': PauseUserIdleRequestEvent;
+  'media-show-poster-request': ShowPosterRequestEvent;
+  'media-hide-poster-request': HidePosterRequestEvent;
+  'media-loop-request': LoopRequestEvent;
 }
 
 /**

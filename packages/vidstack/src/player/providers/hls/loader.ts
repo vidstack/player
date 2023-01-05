@@ -32,7 +32,7 @@ export async function loadHLSLibrary(
         logger?.infoGroup('Starting to load `hls.js`').labelledLog('URL', lib).dispatch();
       }
 
-      dispatchEvent(target, 'vds-hls-lib-load-start');
+      dispatchEvent(target, 'hls-lib-load-start');
     },
     onLoaded(ctor) {
       if (__DEV__) {
@@ -43,7 +43,7 @@ export async function loadHLSLibrary(
           .dispatch();
       }
 
-      dispatchEvent(target, 'vds-hls-lib-loaded', { detail: ctor });
+      dispatchEvent(target, 'hls-lib-loaded', { detail: ctor });
     },
     onLoadError(e) {
       const error = coerceToError(e);
@@ -56,8 +56,8 @@ export async function loadHLSLibrary(
           .dispatch();
       }
 
-      dispatchEvent(target, 'vds-hls-lib-load-error', { detail: error });
-      dispatchEvent(target, 'vds-error', { detail: { message: error.message, code: 4 } });
+      dispatchEvent(target, 'hls-lib-load-error', { detail: error });
+      dispatchEvent(target, 'error', { detail: { message: error.message, code: 4 } });
     },
   };
 
@@ -74,8 +74,8 @@ export async function loadHLSLibrary(
   if (!ctor.isSupported()) {
     const message = '[vidstack]: `hls.js` is not supported in this environment';
     if (__DEV__) logger?.error(message);
-    dispatchEvent(target, 'vds-hls-unsupported');
-    dispatchEvent(target, 'vds-error', { detail: { message, code: 4 } });
+    dispatchEvent(target, 'hls-unsupported');
+    dispatchEvent(target, 'error', { detail: { message, code: 4 } });
     return null;
   }
 
@@ -129,7 +129,7 @@ async function importHLS(
 /**
  * Loads `hls.js` from the remote source given via `hlsLibrary` into the window namespace. This
  * is because `hls.js` in {currentYear} still doesn't provide a ESM export. This method will
- * return `undefined` if it fails to load the script. Listen to `vds-hls-lib-load-error` to be
+ * return `undefined` if it fails to load the script. Listen to `hls-lib-load-error` to be
  * notified of any failures.
  */
 async function loadHLSScript(

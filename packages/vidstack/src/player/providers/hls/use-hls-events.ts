@@ -6,14 +6,14 @@ import { DOMEvent, kebabToCamelCase } from 'maverick.js/std';
 import type { HLSProviderEvents } from './events';
 import type { HLSVideoElement } from './types';
 
-const PREFIX = 'vds-hls-';
+const PREFIX = 'hls-';
 
-// `vds-hls-media-attaching` -> `hlsMediaAttaching`
+// `hls-media-attaching` -> `hlsMediaAttaching`
 function vdsToHLSEventType(type: string) {
-  return kebabToCamelCase(type.replace('vds-', '')) as HLS.Events;
+  return kebabToCamelCase(type) as HLS.Events;
 }
 
-// these events are not `hls.js` events but start with the `vds-hls-` prefix.
+// these events are not `hls.js` events but start with the `hls-` prefix.
 const ignore = new Set<keyof HLSProviderEvents>([
   `${PREFIX}lib-load-start`,
   `${PREFIX}lib-loaded`,
@@ -22,7 +22,7 @@ const ignore = new Set<keyof HLSProviderEvents>([
   `${PREFIX}unsupported`,
 ]);
 
-// e.g., `vds-hls-media-attaching`
+// e.g., `hls-media-attaching`
 function isHLSEventType(type: string): type is HLS.Events {
   return type.startsWith(PREFIX) && !ignore.has(type as keyof HLSProviderEvents);
 }
