@@ -427,7 +427,7 @@ export function useMediaStateManager(
     event: ME.MediaEvent,
   ) {
     requestQueue?.serve(request, (requestEvent) => {
-      event.requestEvent = requestEvent;
+      event.request = requestEvent;
       appendTriggerEvent(event, requestEvent);
     });
   }

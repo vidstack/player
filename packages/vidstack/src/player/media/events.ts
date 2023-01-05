@@ -72,7 +72,7 @@ export interface MediaEvents {
 
 export interface MediaEvent<Detail = unknown> extends DOMEvent<Detail> {
   target: MediaProviderElement;
-  requestEvent?: DOMEvent<any>;
+  request?: DOMEvent<any>;
 }
 
 /**
@@ -189,7 +189,7 @@ export interface MediaErrorEvent extends MediaEvent<MediaErrorDetail> {}
  * detail contains whether the user is idle (`true`), or not (`false`).
  */
 export interface UserIdleChangeEvent extends MediaEvent<boolean> {
-  requestEvent?: ResumeUserIdleRequestEvent | PauseUserIdleRequestEvent;
+  request?: ResumeUserIdleRequestEvent | PauseUserIdleRequestEvent;
 }
 
 /**
@@ -232,7 +232,7 @@ export interface MediaTypeChangeEvent extends MediaEvent<MediaType> {}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event}
  */
 export interface MediaPauseEvent extends MediaEvent<void> {
-  requestEvent?: PauseRequestEvent;
+  request?: PauseRequestEvent;
 }
 
 /**
@@ -243,7 +243,7 @@ export interface MediaPauseEvent extends MediaEvent<void> {
  */
 export interface MediaPlayEvent extends MediaEvent<void> {
   autoplay?: boolean;
-  requestEvent?: PlayRequestEvent;
+  request?: PlayRequestEvent;
 }
 
 /**
@@ -252,7 +252,7 @@ export interface MediaPlayEvent extends MediaEvent<void> {
 export interface MediaPlayFailEvent extends MediaEvent<void> {
   autoplay?: boolean;
   error?: Error;
-  requestEvent?: PlayRequestEvent;
+  request?: PlayRequestEvent;
 }
 
 /**
@@ -290,7 +290,7 @@ export interface MediaProgressEvent
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event}
  */
 export interface MediaSeekedEvent extends MediaEvent<number> {
-  requestEvent?: SeekRequestEvent;
+  request?: SeekRequestEvent;
 }
 
 /**
@@ -300,7 +300,7 @@ export interface MediaSeekedEvent extends MediaEvent<number> {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event}
  */
 export interface MediaSeekingEvent extends MediaEvent<number> {
-  requestEvent?: SeekingRequestEvent;
+  request?: SeekingRequestEvent;
 }
 
 /**
@@ -334,7 +334,7 @@ export interface MediaSuspendEvent extends MediaEvent<void> {}
  * when the `loop` property is `true` and media loops, whereas the `vds-play` event is not.
  */
 export interface MediaReplayEvent extends MediaEvent<void> {
-  requestEvent?: PlayRequestEvent;
+  request?: PlayRequestEvent;
 }
 
 /**
@@ -367,7 +367,7 @@ export interface MediaVolumeChange {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event}
  */
 export interface MediaVolumeChangeEvent extends MediaEvent<MediaVolumeChange> {
-  requestEvent?: MuteRequestEvent | UnmuteRequestEvent | VolumeChangeRequestEvent;
+  request?: MuteRequestEvent | UnmuteRequestEvent | VolumeChangeRequestEvent;
 }
 
 /**
