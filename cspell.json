@@ -102,6 +102,8 @@
     "TLDR",
     "totalduration",
     "touchstart",
+    "treeshake",
+    "tsup",
     "turborepo",
     "unmute",
     "unplugin",

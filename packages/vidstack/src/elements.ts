@@ -1,15 +1,13 @@
-import { CustomElementDefinition, registerLiteCustomElement } from 'maverick.js/element';
+import type { CustomElementDefinition } from 'maverick.js/element';
 
-export type VidstackElementTagName =
-  | 'vds-aspect-ratio'
-  | 'vds-audio'
-  | 'vds-hls-video'
-  | 'vds-media'
-  | 'vds-poster'
-  | 'vds-video'
-  | VidstackUIElementTagName;
+export type VidstackElementTagName = VidstackProviderElementTagName | VidstackUIElementTagName;
+
+export type VidstackProviderElementTagName = 'vds-audio' | 'vds-video' | 'vds-hls-video';
 
 export type VidstackUIElementTagName =
+  | 'vds-media'
+  | 'vds-aspect-ratio'
+  | 'vds-poster'
   | 'vds-fullscreen-button'
   | 'vds-mute-button'
   | 'vds-play-button'
@@ -58,35 +56,37 @@ export async function defineCustomElements(
   return !promises.length ? loadAllCustomElements() : Promise.all(promises);
 }
 
-export interface CustomElementModuleLoader {
+interface CustomElementModuleLoader {
   (): Promise<{
     default: CustomElementDefinition;
   }>;
 }
 
 const ELEMENT_DEFINITION_LOADER: Record<VidstackElementTagName, CustomElementModuleLoader> = {
-  'vds-aspect-ratio': () => import('./player/ui/aspect-ratio/element'),
-  'vds-fullscreen-button': () => import('./player/ui/fullscreen-button/element'),
-  'vds-mute-button': () => import('./player/ui/mute-button/element'),
-  'vds-play-button': () => import('./player/ui/play-button/element'),
-  'vds-slider-value-text': () => import('./player/ui/slider-value-text/element'),
-  'vds-slider-video': () => import('./player/ui/slider-video/element'),
-  'vds-time-slider': () => import('./player/ui/time-slider/element'),
-  'vds-volume-slider': () => import('./player/ui/volume-slider/element'),
-  'vds-audio': () => import('./player/providers/audio/element'),
-  'vds-hls-video': () => import('./player/providers/hls/element'),
-  'vds-media': () => import('./player/media/element/element'),
-  'vds-poster': () => import('./player/ui/poster/element'),
-  'vds-time': () => import('./player/ui/time/element'),
-  'vds-video': () => import('./player/providers/video/element'),
+  // Providers
+  'vds-audio': () => import('./player/providers/audio/element.js'),
+  'vds-video': () => import('./player/providers/video/element.js'),
+  'vds-hls-video': () => import('./player/providers/hls/element.js'),
+  // UI
+  'vds-aspect-ratio': () => import('./player/ui/aspect-ratio/element.js'),
+  'vds-fullscreen-button': () => import('./player/ui/fullscreen-button/element.js'),
+  'vds-mute-button': () => import('./player/ui/mute-button/element.js'),
+  'vds-play-button': () => import('./player/ui/play-button/element.js'),
+  'vds-slider-value-text': () => import('./player/ui/slider-value-text/element.js'),
+  'vds-slider-video': () => import('./player/ui/slider-video/element.js'),
+  'vds-time-slider': () => import('./player/ui/time-slider/element.js'),
+  'vds-volume-slider': () => import('./player/ui/volume-slider/element.js'),
+  'vds-media': () => import('./player/media/element/element.js'),
+  'vds-poster': () => import('./player/ui/poster/element.js'),
+  'vds-time': () => import('./player/ui/time/element.js'),
 };
 
 async function loadCustomElement(tagName: VidstackElementTagName) {
+  const { registerLiteCustomElement } = await import('maverick.js/element');
   const mod = await ELEMENT_DEFINITION_LOADER[tagName]();
   registerLiteCustomElement(mod.default);
 }
 
 async function loadAllCustomElements() {
-  const definitions = (await import('./elements-all')).default;
-  return definitions.map(registerLiteCustomElement);
+  return (await import('./elements-all.js')).default();
 }

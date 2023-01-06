@@ -9,7 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "importsNotUsedAsValues": "error",
-    "incremental": true,
     "lib": ["dom", "dom.iterable", "es2020"],
     "module": "esnext",
     "moduleResolution": "node",

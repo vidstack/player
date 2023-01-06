@@ -28,7 +28,7 @@ export const SliderVideoDefinition = defineCustomElement<SliderVideoElement>({
     });
 
     effect(() => {
-      if (videoElement && $canPlay()) videoElement.currentTime = $slider.pointerValue;
+      if ($canPlay() && videoElement) videoElement.currentTime = $slider.pointerValue;
     });
 
     effect(() => {
