@@ -12,7 +12,7 @@ import { PosterDefinition } from './player/ui/poster/element';
 import { SliderValueTextDefinition } from './player/ui/slider-value-text/element';
 import { SliderVideoDefinition } from './player/ui/slider-video/element';
 import { TimeSliderDefinition } from './player/ui/time-slider/element';
-import { TimeElementDefinition } from './player/ui/time/element';
+import { TimeDefinition } from './player/ui/time/element';
 import { VolumeSliderDefinition } from './player/ui/volume-slider/element';
 
 const ELEMENTS = [
@@ -27,7 +27,7 @@ const ELEMENTS = [
   FullscreenButtonDefinition,
   TimeSliderDefinition,
   VolumeSliderDefinition,
-  TimeElementDefinition,
+  TimeDefinition,
   SliderValueTextDefinition,
   SliderVideoDefinition,
 ];

@@ -37,7 +37,7 @@ A special thanks to the following sponsors who are kindly supporting Vidstack:
 [plyr]: https://github.com/sampotts/plyr
 [discord]: https://discord.com/invite/7RGU7wvsu9
 [website]: https://www.vidstack.io/
-[package]: https://www.npmjs.com/package/@vidstack/player@next
-[package-badge]: https://img.shields.io/npm/v/@vidstack/player/next
+[package]: https://www.npmjs.com/package/vidstack
+[package-badge]: https://img.shields.io/npm/v/vidstack
 [discord]: https://discord.com/invite/7RGU7wvsu9
 [discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white

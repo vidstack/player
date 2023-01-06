@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-export const TimeElementDefinition = defineCustomElement<TimeElement>({
+export const TimeDefinition = defineCustomElement<TimeElement>({
   tagName: 'vds-time',
   props: timeProps,
   setup({ props: { $remainder, $padHours, $showHours, $type } }) {
@@ -41,4 +41,4 @@ function getSeconds(type: TimeProps['type'], $media: MediaStore) {
   }
 }
 
-export default TimeElementDefinition;
+export default TimeDefinition;

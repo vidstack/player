@@ -1,0 +1,62 @@
+{
+  "name": "@vidstack/react",
+  "version": "0.0.1",
+  "description": "Build awesome media experiences on the web.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "*.d.ts",
+    "dist/"
+  ],
+  "scripts": {
+    "build": "rimraf dist && node .scripts/prebuild.js && tsup",
+    "format": "prettier src --write --loglevel warn"
+  },
+  "peerDependencies": {
+    "@types/react": "^17.0.0",
+    "maverick.js": "^0.26.0",
+    "react": "^17.0.0",
+    "vidstack": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "maverick.js": "^0.26.0",
+    "react": "^17.0.0",
+    "rimraf": "^3.0.0",
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.0",
+    "vidstack": "workspace:*"
+  },
+  "contributors": [
+    "Rahim Alwer <rahim.alwer@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vidstack/vidstack.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/vidstack/vidstack/issues"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "require": "./dist/server.cjs",
+      "node": "./dist/server.js",
+      "deno": "./dist/server.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "vidstack",
+    "player",
+    "react"
+  ]
+}

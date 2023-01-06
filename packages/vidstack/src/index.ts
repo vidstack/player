@@ -60,5 +60,5 @@ export { PosterDefinition } from './player/ui/poster/element';
 export { SliderValueTextDefinition } from './player/ui/slider-value-text/element';
 export { SliderVideoDefinition } from './player/ui/slider-video/element';
 export { TimeSliderDefinition } from './player/ui/time-slider/element';
-export { TimeElementDefinition } from './player/ui/time/element';
+export { TimeDefinition } from './player/ui/time/element';
 export { VolumeSliderDefinition } from './player/ui/volume-slider/element';
