@@ -10,6 +10,7 @@ export * from './foundation/orientation/events';
 export * from './foundation/orientation/screen-orientation';
 
 // Player Media
+export * from './player/media/element/context';
 export * from './player/media/element/types';
 export * from './player/media/events';
 export * from './player/media/events';

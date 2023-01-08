@@ -5,7 +5,7 @@ import { createTimeRanges } from './time-ranges';
 
 export interface MediaStore extends MediaState {}
 
-const mediaStore = createStore<MediaStore>({
+export const mediaStore = createStore<MediaStore>({
   autoplay: false,
   autoplayError: undefined,
   buffered: createTimeRanges(),

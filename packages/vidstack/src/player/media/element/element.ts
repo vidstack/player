@@ -1,4 +1,4 @@
-import { effect } from 'maverick.js';
+import { effect, provideContext } from 'maverick.js';
 import { AttributesRecord, defineCustomElement, onConnect } from 'maverick.js/element';
 import { camelToKebabCase, dispatchEvent, mergeProperties } from 'maverick.js/std';
 
@@ -6,6 +6,7 @@ import { IS_IOS } from '../../../utils/support';
 import { useMediaController } from '../controller/use-media-controller';
 import type { MediaState } from '../state';
 import { useMediaStore } from '../store';
+import { MediaElementContext } from './context';
 import type { MediaElement, MediaElementConnectEvent } from './types';
 
 declare global {
@@ -48,6 +49,8 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     fullscreenOrientation: {},
   },
   setup({ props: { $logLevel, $userIdleDelay, $fullscreenOrientation }, host, accessors }) {
+    provideContext(MediaElementContext, host.$el);
+
     /**
      * The media controller which is responsible for updating the media state store and satisfying
      * media requests.
@@ -91,7 +94,11 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       });
     });
 
-    return mergeProperties(accessors(), controller);
+    return mergeProperties(accessors(), controller, {
+      get $store() {
+        return $media;
+      },
+    });
   },
 });
 

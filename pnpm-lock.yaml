@@ -108,7 +108,7 @@ importers:
   packages/react:
     specifiers:
       '@types/react': ^17.0.0
-      maverick.js: ^0.26.2
+      maverick.js: ^0.26.3
       react: ^17.0.0
       rimraf: ^3.0.0
       tsup: ^6.5.0
@@ -116,7 +116,7 @@ importers:
       vidstack: workspace:*
     devDependencies:
       '@types/react': 17.0.52
-      maverick.js: 0.26.2
+      maverick.js: 0.26.3
       react: 17.0.2
       rimraf: 3.0.2
       tsup: 6.5.0_typescript@4.9.4
@@ -125,7 +125,7 @@ importers:
 
   packages/vidstack:
     specifiers:
-      '@maverick-js/compiler': ^0.26.2
+      '@maverick-js/compiler': ^0.26.3
       '@open-wc/semantic-dom-diff': ^0.19.5
       '@open-wc/testing-helpers': ^2.1.2
       '@types/fscreen': ^1.0.1
@@ -135,7 +135,7 @@ importers:
       jsdom: ^19.0.0
       just-debounce-it: ^3.1.1
       just-throttle: ^4.1.1
-      maverick.js: ^0.26.2
+      maverick.js: ^0.26.3
       postcss: ^8.4.6
       rimraf: ^3.0.2
       tailwindcss: ^3.0.22
@@ -146,10 +146,10 @@ importers:
       vite: ^3.2.3
       vitest: ^0.25.1
     dependencies:
-      maverick.js: 0.26.2
+      maverick.js: 0.26.3
       type-fest: 3.5.1
     devDependencies:
-      '@maverick-js/compiler': 0.26.2
+      '@maverick-js/compiler': 0.26.3
       '@open-wc/semantic-dom-diff': 0.19.7
       '@open-wc/testing-helpers': 2.1.4
       '@types/fscreen': 1.0.1
@@ -904,8 +904,8 @@ packages:
       '@types/react': 17.0.52
     dev: true
 
-  /@maverick-js/compiler/0.26.2:
-    resolution: {integrity: sha512-xZXbTtV+8JTwj28OrSkMkwkpRNV8skIu9vgIfbZOLlrcPipUWIXkDEeKNcsJepA0ayYlb4PAeiSi2Ye+LbP5FQ==}
+  /@maverick-js/compiler/0.26.3:
+    resolution: {integrity: sha512-aonhpLl7O/XhHSllPB29tZH/AoZ73mb+UctqrdcUObmcXJNNz9Ie0ddFridf6zWocHYr4GZhH19M5GHJm2JKDg==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
@@ -4312,8 +4312,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /maverick.js/0.26.2:
-    resolution: {integrity: sha512-u9ZjRB9OphvHOFbn9K3Azjoack5Py2VHTI9EMj54keSO9aYi5KVPxk0GwkwmhLY8PdR/baaJW8sS85/6UibCYg==}
+  /maverick.js/0.26.3:
+    resolution: {integrity: sha512-oBIej9RXy/zGGFg9NJAx0aGHrB2dC6LgY5sOVC8zdALEFFt82a4girw1pfQcvM6yDZ+CV1rJ9KuO0xsKBaea5Q==}
     engines: {node: '>=16'}
     dependencies:
       '@maverick-js/signals': 5.6.3

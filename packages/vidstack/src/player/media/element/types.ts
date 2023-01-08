@@ -5,6 +5,7 @@ import type { LogLevel } from '../../../foundation/logger/log-level';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/screen-orientation';
 import type { MediaControllerEvents } from '../controller/events';
 import type { UseMediaController } from '../controller/use-media-controller';
+import type { MediaStore } from '../store';
 
 export interface MediaElementProps {
   /**
@@ -25,7 +26,12 @@ export interface MediaElementProps {
   fullscreenOrientation: ScreenOrientationLockType | undefined;
 }
 
-export interface MediaElementMembers extends MediaElementProps, UseMediaController {}
+export interface MediaElementMembers extends MediaElementProps, UseMediaController {
+  /**
+   * The media store holds all current media state.
+   */
+  readonly $store: Readonly<MediaStore>;
+}
 
 export interface MediaElementEvents extends MediaControllerEvents {
   'media-connect': MediaElementConnectEvent;
