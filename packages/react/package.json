@@ -4,6 +4,7 @@
   "description": "Build awesome media experiences on the web.",
   "license": "MIT",
   "type": "module",
+  "types": "dist/types/index.d.ts",
   "sideEffects": false,
   "engines": {
     "node": ">=16"
@@ -14,17 +15,19 @@
   ],
   "scripts": {
     "build": "rimraf dist && node .scripts/prebuild.js && tsup",
+    "types": "tsc -p tsconfig.build.json",
+    "clean": "rimraf dist",
     "format": "prettier src --write --loglevel warn"
   },
   "peerDependencies": {
     "@types/react": "^17.0.0",
-    "maverick.js": "^0.26.0",
+    "maverick.js": "^0.26.1",
     "react": "^17.0.0",
     "vidstack": "^0.0.1"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
-    "maverick.js": "^0.26.0",
+    "maverick.js": "^0.26.1",
     "react": "^17.0.0",
     "rimraf": "^3.0.0",
     "tsup": "^6.5.0",

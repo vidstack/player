@@ -13,6 +13,7 @@ function dist({ server }: BundleOptions): Options {
     tsconfig: 'tsconfig.build.json',
     target: server ? 'node16' : 'esnext',
     platform: server ? 'node' : 'browser',
+    clean: false,
     outDir: 'dist',
     define: {
       __SERVER__: server ? 'true' : 'false',

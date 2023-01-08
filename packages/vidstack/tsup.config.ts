@@ -35,6 +35,7 @@ function dist({ dev, server, hydrate }: BundleOptions): Options {
       __TEST__: 'false',
     },
     esbuildPlugins: [
+      // @ts-expect-error - symlink error (ignore)
       maverick({
         include: 'src/**/*.tsx',
         generate: server ? 'ssr' : 'dom',
@@ -53,7 +54,6 @@ function dist({ dev, server, hydrate }: BundleOptions): Options {
 function cdn({ dev = false } = {}): Options {
   return {
     ...dist({ dev, server: false, hydrate: false }),
-    dts: false,
     target: 'es2020',
     minify: !dev,
     noExternal: ['maverick.js'],
@@ -69,7 +69,7 @@ export default defineConfig([
   DEV_CONFIG,
   { ...DEV_CONFIG, entry: ALL_ELEMENTS, splitting: false },
   // PROD
-  { ...PROD_CONFIG, dts: true },
+  PROD_CONFIG,
   { ...PROD_CONFIG, entry: ALL_ELEMENTS, splitting: false },
   // CDN (DEV)
   CDN_DEV_CONFIG,

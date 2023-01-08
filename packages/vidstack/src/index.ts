@@ -1,5 +1,3 @@
-/// <reference types="@maverick-js/signals" />
-
 if (__DEV__) {
   console.warn('[vidstack] dev mode - not recommended for production!');
 }

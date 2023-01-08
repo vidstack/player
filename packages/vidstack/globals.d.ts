@@ -1,6 +1,6 @@
 /// <reference types="maverick.js" />
 /// <reference path="./dom.d.ts" />
-/// <reference path="./elements.d.ts" />
-/// <reference path="./index.d.ts" />
+/// <reference path="./dist/types/elements-all.d.ts" />
+/// <reference path="./dist/types/index.d.ts" />
 
 export {};

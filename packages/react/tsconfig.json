@@ -5,7 +5,7 @@
     "paths": {
       "@vidstack/react": ["./src/index.ts"]
     },
-    "types": ["@types/node", "vitest/globals"]
+    "types": ["@types/node"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "dist/types",
     "paths": {}
   },
   "exclude": ["src/**/*.test.ts", "src/test-utils"]

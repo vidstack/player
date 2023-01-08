@@ -33,7 +33,6 @@ export function useHLSEngine(
     const lib = $hlsLibrary();
     loadHLSLibrary(host.el!, lib, logger).then((ctor) => {
       if ($hlsLibrary() !== lib) return;
-      // @ts-expect-error - fix in maverick signals
       $ctor.set(() => ctor);
     });
   });

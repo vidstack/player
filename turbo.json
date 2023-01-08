@@ -5,7 +5,14 @@
       "outputs": ["elements.json", "vscode.html-data.json"]
     },
     "build": {
-      "dependsOn": ["analyze", "^build"],
+      "dependsOn": ["^analyze", "clean"],
+      "outputs": ["dist/**"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "types": {
+      "dependsOn": ["^types", "clean"],
       "outputs": ["dist/**"]
     },
     "format": {
