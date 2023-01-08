@@ -108,7 +108,7 @@ importers:
   packages/react:
     specifiers:
       '@types/react': ^17.0.0
-      maverick.js: ^0.26.1
+      maverick.js: ^0.26.2
       react: ^17.0.0
       rimraf: ^3.0.0
       tsup: ^6.5.0
@@ -116,7 +116,7 @@ importers:
       vidstack: workspace:*
     devDependencies:
       '@types/react': 17.0.52
-      maverick.js: 0.26.1
+      maverick.js: 0.26.2
       react: 17.0.2
       rimraf: 3.0.2
       tsup: 6.5.0_typescript@4.9.4
@@ -125,7 +125,7 @@ importers:
 
   packages/vidstack:
     specifiers:
-      '@maverick-js/compiler': ^0.26.1
+      '@maverick-js/compiler': ^0.26.2
       '@open-wc/semantic-dom-diff': ^0.19.5
       '@open-wc/testing-helpers': ^2.1.2
       '@types/fscreen': ^1.0.1
@@ -135,7 +135,7 @@ importers:
       jsdom: ^19.0.0
       just-debounce-it: ^3.1.1
       just-throttle: ^4.1.1
-      maverick.js: ^0.26.1
+      maverick.js: ^0.26.2
       postcss: ^8.4.6
       rimraf: ^3.0.2
       tailwindcss: ^3.0.22
@@ -146,10 +146,10 @@ importers:
       vite: ^3.2.3
       vitest: ^0.25.1
     dependencies:
-      maverick.js: 0.26.1
+      maverick.js: 0.26.2
       type-fest: 3.5.1
     devDependencies:
-      '@maverick-js/compiler': 0.26.1
+      '@maverick-js/compiler': 0.26.2
       '@open-wc/semantic-dom-diff': 0.19.7
       '@open-wc/testing-helpers': 2.1.4
       '@types/fscreen': 1.0.1
@@ -904,8 +904,8 @@ packages:
       '@types/react': 17.0.52
     dev: true
 
-  /@maverick-js/compiler/0.26.1:
-    resolution: {integrity: sha512-GCiTe5koPem8oYhXntIMdUz5t7ldzvhhjGdK42SABG2RXMJtSiw448Vr1GROh7h62wn2nC9USUT0xOKtUt5JjQ==}
+  /@maverick-js/compiler/0.26.2:
+    resolution: {integrity: sha512-xZXbTtV+8JTwj28OrSkMkwkpRNV8skIu9vgIfbZOLlrcPipUWIXkDEeKNcsJepA0ayYlb4PAeiSi2Ye+LbP5FQ==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
@@ -925,8 +925,8 @@ packages:
       - rollup
     dev: true
 
-  /@maverick-js/signals/5.6.2:
-    resolution: {integrity: sha512-TBFhvo0KlcGGWLN6YPWWMVaPZjl1GazLPWqCwI5GXkX6sD/IGZY4TdSFLHfutDJGa6fdxm6xlpHWGJxoVY7DdA==}
+  /@maverick-js/signals/5.6.3:
+    resolution: {integrity: sha512-bqHEbNpSsrcgRLs28cZBoptw6QuBI+nlsZDbSFdoTleU1INIiTUG/O4ZzxKox6/p14csmmIhl0zB2mIiagm4Jg==}
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -4312,11 +4312,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /maverick.js/0.26.1:
-    resolution: {integrity: sha512-y/R8g5FX+C0Vs/0zcbDg4FGNBRz/y9XdZIRLxrqU/cZSXwm+4oe+6a9m6SBqqErg+9FpPdCAFhtSN16IKoZ3vA==}
+  /maverick.js/0.26.2:
+    resolution: {integrity: sha512-u9ZjRB9OphvHOFbn9K3Azjoack5Py2VHTI9EMj54keSO9aYi5KVPxk0GwkwmhLY8PdR/baaJW8sS85/6UibCYg==}
     engines: {node: '>=16'}
     dependencies:
-      '@maverick-js/signals': 5.6.2
+      '@maverick-js/signals': 5.6.3
       type-fest: 2.19.0
 
   /media-typer/0.3.0:
