@@ -14,7 +14,7 @@
     "dist/"
   ],
   "scripts": {
-    "build": "rimraf dist && node .scripts/prebuild.js && tsup",
+    "build": "node .scripts/prebuild.js && tsup",
     "types": "tsc -p tsconfig.build.json",
     "clean": "rimraf dist",
     "format": "prettier src --write --loglevel warn"

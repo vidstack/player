@@ -1,9 +1,9 @@
-import minimist from 'minimist';
+import chokidar from 'chokidar';
 import fs from 'fs-extra';
 import { globbySync } from 'globby';
-import path from 'path';
-import chokidar from 'chokidar';
 import kleur from 'kleur';
+import minimist from 'minimist';
+import path from 'path';
 
 const args = minimist(process.argv.slice(2));
 

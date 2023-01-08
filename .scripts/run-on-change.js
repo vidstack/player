@@ -1,7 +1,7 @@
 import chokidar from 'chokidar';
+import { execa } from 'execa';
 import kleur from 'kleur';
 import minimist from 'minimist';
-import { execa } from 'execa';
 
 const args = minimist(process.argv.slice(2));
 
