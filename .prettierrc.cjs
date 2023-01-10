@@ -8,9 +8,9 @@ module.exports = {
     // `prettier-plugin-tailwindcss` also includes `prettier-plugin-svelte`
     // @see https://github.com/sveltejs/prettier-plugin-svelte#usage-with-tailwind-prettier-plugin
     require('prettier-plugin-tailwindcss'),
-    require('@trivago/prettier-plugin-sort-imports'),
+    require('@ianvs/prettier-plugin-sort-imports'),
   ],
-  importOrder: ['^[../]', '^[./]'],
+  importOrder: ['.css$', '<THIRD_PARTY_MODULES>', '^[../]', '^[./]'],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrderCaseInsensitive: true,
