@@ -1,23 +1,22 @@
 <script lang="ts">
+  import { navigation, route } from '@vitebook';
   import clsx from 'clsx';
   import NProgress from 'nprogress';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  import { navigation, route } from '@vitebook/svelte';
-  import { hideDocumentScrollbar } from '@vidstack/foundation';
 
+  import Button from '$src/components/base/Button.svelte';
+  import SocialLink from '$src/components/social/SocialLink.svelte';
   import { env } from '$src/env';
-  import { isLargeScreen } from '$src/stores/screen';
-  import { scrollDirection, scrollTop } from '$src/stores/scroll';
-  import { addJSLibToPath, jsLib } from '$src/stores/js-lib';
-
   import vidstackLogo from '$src/img/brand/vidstack-logo.svg?raw';
   import vidstackSymbol from '$src/img/brand/vidstack-symbol.svg?raw';
+  import { addJSLibToPath, jsLib } from '$src/stores/js-lib';
+  import { isLargeScreen } from '$src/stores/screen';
+  import { scrollDirection, scrollTop } from '$src/stores/scroll';
+  import { hideDocumentScrollbar } from '$src/utils/scroll';
 
-  import Navbar from './navbar/Navbar.svelte';
-  import SocialLink from '$src/components/social/SocialLink.svelte';
-  import Button from '$src/components/base/Button.svelte';
   import { setNavbarContext, type NavLinks } from './navbar/context';
+  import Navbar from './navbar/Navbar.svelte';
 
   export let isNavPopoverOpen = false;
 

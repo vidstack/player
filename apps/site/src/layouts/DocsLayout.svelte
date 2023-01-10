@@ -3,23 +3,22 @@
   import '@docsearch/css';
   import '$src/styles/docsearch.css';
 
-  import clsx from 'clsx';
-  import { type Readable, writable } from 'svelte/store';
-  import { markdown, route } from '@vitebook/svelte';
-  import { ariaBool, hideDocumentScrollbar } from '@vidstack/foundation';
-
+  import { dialogManager, type CloseDialogCallback } from '$src/actions/dialog-manager';
   import Button from '$src/components/base/Button.svelte';
   import DocsMetaTags from '$src/components/docs/DocsMetaTags.svelte';
-  import { type CloseDialogCallback, dialogManager } from '$src/actions/dialog-manager';
-
-  import MenuUnfoldIcon from '~icons/ri/menu-unfold-fill';
+  import { ariaBool } from '$src/utils/aria';
+  import { hideDocumentScrollbar } from '$src/utils/scroll';
+  import { markdown, route } from '@vitebook/svelte';
+  import clsx from 'clsx';
+  import { writable, type Readable } from 'svelte/store';
   import RightArrowIcon from '~icons/ri/arrow-right-s-line';
+  import MenuUnfoldIcon from '~icons/ri/menu-unfold-fill';
 
   import MainLayout from './MainLayout.svelte';
-  import Sidebar from './sidebar/Sidebar.svelte';
-  import OnThisPage from './toc/OnThisPage.svelte';
   import { createSidebarContext, setSidebarContext, type SidebarLinks } from './sidebar/context';
+  import Sidebar from './sidebar/Sidebar.svelte';
   import { setOnThisPageContext, type OnThisPageConfig } from './toc/context';
+  import OnThisPage from './toc/OnThisPage.svelte';
 
   export let sidebar: Readable<SidebarLinks>;
 

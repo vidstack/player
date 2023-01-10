@@ -1,14 +1,10 @@
-<script>
-  import { Media, Audio, PlayButton } from '@vidstack/player-svelte';
-</script>
-
-<Media>
-  <Audio controls>
+<vds-media>
+  <vds-audio controls>
     <audio
       class="w-72 992:w-80"
       controls
       preload="none"
       src="https://media-files.vidstack.io/audio.mp3"
     />
-  </Audio>
-</Media>
+  </vds-audio>
+</vds-media>

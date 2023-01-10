@@ -9,7 +9,7 @@ In this section, we'll go through the basics of using Vidstack Player with React
 
 ## Importing Components
 
-You can import all components from the path `@vidstack/player-react`. Component names mirror
+You can import all components from the path `@vidstack/react`. Component names mirror
 the element tag name except they're in PascalCase without the `vds` prefix.
 
 - `vds-media` -> `Media`
@@ -17,7 +17,7 @@ the element tag name except they're in PascalCase without the `vds` prefix.
 - `vds-play-button` -> `PlayButton`
 
 ```js
-import { Media, PlayButton, Video } from '@vidstack/player-react';
+import { Media, PlayButton, Video } from '@vidstack/react';
 ```
 
 Keep in mind that you're implicitly registering the underlying custom element by importing a

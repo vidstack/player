@@ -1,22 +1,21 @@
 <script lang="ts">
-  import { kebabToPascalCase } from '@vidstack/foundation';
-  import CodeFence from '../../../../@markdoc/@nodes/fence.svelte';
-
-  import {
-    code as jsRawCode,
-    highlightedCode as jsHlsCode,
-  } from './_imports/import-component.js?highlight';
-  import {
-    code as cdnRawCode,
-    highlightedCode as cdnHlCode,
-  } from './_imports/import-component.html?highlight';
-  import {
-    code as reactRawCode,
-    highlightedCode as reactHlCode,
-  } from './_imports/import-component.tsx?highlight';
-
   import { comingSoonElement, elementTagName } from '$src/stores/element';
   import { jsLib } from '$src/stores/js-lib';
+  import { kebabToPascalCase } from '$src/utils/string';
+
+  import CodeFence from '../../../../@markdoc/@nodes/fence.svelte';
+  import {
+    highlightedCode as cdnHlCode,
+    code as cdnRawCode,
+  } from './_imports/import-component.html?highlight';
+  import {
+    highlightedCode as jsHlsCode,
+    code as jsRawCode,
+  } from './_imports/import-component.js?highlight';
+  import {
+    highlightedCode as reactHlCode,
+    code as reactRawCode,
+  } from './_imports/import-component.tsx?highlight';
 
   /* remove Import code snippets from buffering indicator and controls page */
   const invalidElements = new Set(['vds-buffering-indicator', 'vds-controls']);

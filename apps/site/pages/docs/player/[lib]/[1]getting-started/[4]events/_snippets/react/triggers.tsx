@@ -1,10 +1,10 @@
+import { Media, Video } from '@vidstack/react';
 import {
   hasTriggerEvent,
+  walkTriggerEventChain,
   type MediaPlayEvent,
   type MediaPlayingEvent,
-  walkTriggerEventChain,
-} from '@vidstack/player';
-import { Media, Video } from '@vidstack/player-react';
+} from 'vidstack';
 
 function Example() {
   function onPlay(event: MediaPlayEvent) {
@@ -22,14 +22,14 @@ function Example() {
     });
 
     // Is this resuming from buffering?
-    if (hasTriggerEvent(event, 'vds-waiting')) {
+    if (hasTriggerEvent(event, 'waiting')) {
       // ...
     }
   }
 
   return (
     <Media>
-      <Video onVdsPlay={onPlay} onVdsPlaying={onPlaying}>
+      <Video onPlay={onPlay} onPlaying={onPlaying}>
         {/* ... */}
       </Video>
     </Media>

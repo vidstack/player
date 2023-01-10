@@ -1,19 +1,17 @@
 <script>
   import '../_snippets/styling.css';
-
-  import { AspectRatio, Media, FullscreenButton, Video, Gesture } from '@vidstack/player-svelte';
 </script>
 
-<Media class="w-full max-w-xs relative">
-  <AspectRatio ratio="16/9">
-    <Video autoplay muted volume={0.2} poster="https://media-files.vidstack.io/poster-2.png">
+<vds-media class="w-full max-w-xs relative">
+  <vds-aspect-ratio ratio="16/9">
+    <vds-video autoplay muted volume={0.2} poster="https://media-files.vidstack.io/poster-2.png">
       <video preload="none" src="https://media-files.vidstack.io/360p.mp4">
         <track kind="captions" />
       </video>
-    </Video>
-  </AspectRatio>
+    </vds-video>
+  </vds-aspect-ratio>
 
-  <FullscreenButton class="absolute bottom-12 right-2">
+  <vds-fullscreen-button class="absolute bottom-12 right-2">
     <svg class="media-enter-fs-icon" aria-hidden="true" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -26,9 +24,9 @@
         d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"
       />
     </svg>
-  </FullscreenButton>
+  </vds-fullscreen-button>
 
-  <Gesture class="absolute inset-0 w-full h-full" type="click" action="toggle:paused" />
+  <!-- <Gesture class="absolute inset-0 w-full h-full" type="click" action="toggle:paused" /> -->
 
   <svg
     class="animate-bounce text-white mt-4 mr-1 ml-auto"
@@ -44,4 +42,4 @@
       d="M13 7.828V20h-2V7.828l-5.364 5.364l-1.414-1.414L12 4l7.778 7.778l-1.414 1.414L13 7.828z"
     />
   </svg>
-</Media>
+</vds-media>

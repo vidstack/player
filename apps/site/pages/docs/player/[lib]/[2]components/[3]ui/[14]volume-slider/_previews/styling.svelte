@@ -1,27 +1,18 @@
 <script>
   import '../_snippets/styling.css';
-
-  import {
-    AspectRatio,
-    Gesture,
-    Media,
-    MuteButton,
-    VolumeSlider,
-    Video,
-  } from '@vidstack/player-svelte';
 </script>
 
-<Media class="w-full max-w-md">
-  <AspectRatio ratio="16/9">
-    <Video volume={0.2} autoplay muted>
+<vds-media class="w-full max-w-md">
+  <vds-aspect-ratio ratio="16/9">
+    <vds-video volume={0.2} autoplay muted>
       <video preload="none" src="https://media-files.vidstack.io/360p.mp4">
         <track kind="captions" />
       </video>
-    </Video>
-  </AspectRatio>
+    </vds-video>
+  </vds-aspect-ratio>
 
   <div class="media-controls">
-    <MuteButton>
+    <vds-mute-button>
       <svg class="media-mute-icon" aria-hidden="true" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -34,14 +25,15 @@
           d="M5.889 16H2a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h3.889l5.294-4.332a.5.5 0 0 1 .817.387v15.89a.5.5 0 0 1-.817.387L5.89 16zm13.517 4.134l-1.416-1.416A8.978 8.978 0 0 0 21 12a8.982 8.982 0 0 0-3.304-6.968l1.42-1.42A10.976 10.976 0 0 1 23 12c0 3.223-1.386 6.122-3.594 8.134zm-3.543-3.543l-1.422-1.422A3.993 3.993 0 0 0 16 12c0-1.43-.75-2.685-1.88-3.392l1.439-1.439A5.991 5.991 0 0 1 18 12c0 1.842-.83 3.49-2.137 4.591z"
         />
       </svg>
-    </MuteButton>
-    <VolumeSlider>
+    </vds-mute-button>
+    <vds-volume-slider>
       <div class="slider-track" />
       <div class="slider-track fill" />
       <div class="slider-thumb-container">
         <div class="slider-thumb" />
       </div>
-    </VolumeSlider>
+    </vds-volume-slider>
   </div>
-  <Gesture class="absolute top-0 left-0 w-full h-full" action="toggle:paused" type="click" />
-</Media>
+
+  <!-- <Gesture class="absolute top-0 left-0 w-full h-full" action="toggle:paused" type="click" /> -->
+</vds-media>

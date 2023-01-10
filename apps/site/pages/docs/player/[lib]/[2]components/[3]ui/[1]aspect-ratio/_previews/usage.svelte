@@ -1,10 +1,6 @@
-<script>
-  import { Media, Hls, AspectRatio } from '@vidstack/player-svelte';
-</script>
-
-<Media class="w-full max-w-md">
-  <AspectRatio ratio="16/9">
-    <Hls controls poster="https://media-files.vidstack.io/poster.png">
+<vds-media class="w-full max-w-md">
+  <vds-aspect-ratio ratio="16/9">
+    <vds-hls-video controls poster="https://media-files.vidstack.io/poster.png">
       <video
         controls
         preload="none"
@@ -13,6 +9,6 @@
       >
         <track kind="captions" />
       </video>
-    </Hls>
-  </AspectRatio>
-</Media>
+    </vds-hls-video>
+  </vds-aspect-ratio>
+</vds-media>

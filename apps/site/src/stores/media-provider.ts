@@ -1,5 +1,6 @@
-import { uppercaseFirstLetter } from '@vidstack/foundation';
 import { writable } from 'svelte/store';
+
+import { uppercaseFirstLetter } from '$src/utils/string';
 
 export type MediaProviderType = 'audio' | 'video' | 'hls';
 

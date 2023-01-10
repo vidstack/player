@@ -1,4 +1,4 @@
-import { Audio } from '@vidstack/player-react';
+import { Audio } from '@vidstack/react';
 
 function MediaPlayer() {
   return (

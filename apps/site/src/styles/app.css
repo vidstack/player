@@ -25,8 +25,6 @@
   --color-elevate-border: #140c00;
   --color-body: #fff8ee;
 
-  --color-dots: rgba(216, 191, 161, 0.2);
-
   --color-focus: #6366f1bf;
 
   --navbar-height: 4rem;
@@ -34,24 +32,6 @@
   --navbar-max-width: 1440px;
   --navbar-border-bottom: 1px solid var(--color-divider);
   --breadcrumbs-height: 0px;
-
-  --gradient-linear-rose: linear-gradient(90deg, #fed7aa 0.14%, #fbcfe8 100.14%);
-
-  --gradient-radial-pink: radial-gradient(
-    94.88% 218.42% at 50% 50%,
-    rgba(219, 39, 119, 0.2) 0%,
-    rgba(236, 72, 153, 0) 100%
-  );
-  --gradient-radial-rose: radial-gradient(
-    94.88% 218.42% at 50% 50%,
-    rgba(225, 29, 72, 0.2) 0%,
-    rgba(244, 63, 94, 0) 100%
-  );
-  --gradient-radial-orange: radial-gradient(
-    94.88% 218.42% at 50% 50%,
-    rgba(234, 88, 12, 0.2) 0%,
-    rgba(249, 115, 22, 0) 100%
-  );
 
   --main-padding-x: 1rem;
 }
@@ -94,8 +74,6 @@
   --color-elevate-border: #0a0a0a;
   --color-body: #161616;
 
-  --color-dots: rgba(30, 30, 30, 0.6);
-
   --color-focus: #a5b4fc;
 }
 
@@ -105,9 +83,4 @@
 
 * {
   -webkit-tap-highlight-color: transparent;
-}
-
-body {
-  background-size: 40px 40px;
-  background-image: radial-gradient(var(--color-dots) 2px, transparent 0);
 }

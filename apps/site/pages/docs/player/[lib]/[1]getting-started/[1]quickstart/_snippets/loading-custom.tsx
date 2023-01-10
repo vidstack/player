@@ -1,6 +1,6 @@
-import { type MediaElement } from '@vidstack/player';
-import { Media, useMediaRemote, Video } from '@vidstack/player-react';
+import { Media, useMediaRemote, Video } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
+import type { MediaElement } from 'vidstack';
 
 function MediaPlayer() {
   const media = useRef<MediaElement>(null);

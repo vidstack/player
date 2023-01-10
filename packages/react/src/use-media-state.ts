@@ -9,7 +9,7 @@ import { MediaElement, mediaStore, MediaStore, MediaStoreContext } from 'vidstac
  *
  * @example
  * ```tsx
- * import { useMediaState } from '@vidstack/player-react';
+ * import { useMediaState } from '@vidstack/react';
  *
  * function Component() {
  *  const isPlaying = useMediaState('playing');

@@ -3,11 +3,10 @@
 </script>
 
 <script lang="ts">
+  import { dialogManager } from '$src/actions/dialog-manager';
+  import { ariaBool } from '$src/utils/aria';
   import clsx from 'clsx';
   import Transition from 'svelte-class-transition';
-  import { ariaBool } from '@vidstack/foundation';
-
-  import { dialogManager } from '$src/actions/dialog-manager';
 
   export let open = false;
 

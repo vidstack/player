@@ -10,7 +10,7 @@ module.exports = {
     require('prettier-plugin-tailwindcss'),
     require('@ianvs/prettier-plugin-sort-imports'),
   ],
-  importOrder: ['.css$', '<THIRD_PARTY_MODULES>', '^[../]', '^[./]'],
+  importOrder: ['.css$', '<THIRD_PARTY_MODULES>', '^[$]', '^[../]', '^[./]'],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrderCaseInsensitive: true,

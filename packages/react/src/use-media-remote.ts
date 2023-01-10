@@ -11,7 +11,7 @@ import { MediaElementContext, MediaRemoteControl } from 'vidstack';
  *
  * @example
  * ```tsx
- * import { useMediaRemote } from '@vidstack/player-react';
+ * import { useMediaRemote } from '@vidstack/react';
  *
  * function PlayButton() {
  *   const remote = useMediaRemote();

@@ -1,13 +1,10 @@
-import { type MediaLoadedMetadataEvent } from '@vidstack/player';
-import { Media, Video } from '@vidstack/player-react';
+import { Media, Video } from '@vidstack/react';
+import type { MediaLoadedMetadataEvent } from 'vidstack';
 
 function MediaPlayer() {
   function onLoadedMetadata(event: MediaLoadedMetadataEvent) {
     // original media event (`loadedmetadata`) is still available.
     const originalMediaEvent = event.trigger;
-
-    // event detail contains goodies.
-    const { currentSrc, duration, poster, mediaType } = event.detail;
   }
 
   return (

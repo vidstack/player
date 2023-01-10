@@ -1,28 +1,18 @@
 <script>
   import '../_snippets/styling.css';
-
-  import {
-    AspectRatio,
-    Gesture,
-    Media,
-    SliderValueText,
-    SliderVideo,
-    TimeSlider,
-    Video,
-  } from '@vidstack/player-svelte';
 </script>
 
-<Media class="w-full max-w-md">
-  <AspectRatio ratio="16/9">
-    <Video autoplay muted>
+<vds-media class="w-full max-w-md">
+  <vds-aspect-ratio ratio="16/9">
+    <vds-video autoplay muted>
       <video preload="none" src="https://media-files.vidstack.io/360p.mp4">
         <track kind="captions" />
       </video>
-    </Video>
-  </AspectRatio>
+    </vds-video>
+  </vds-aspect-ratio>
 
   <div class="media-controls">
-    <TimeSlider>
+    <vds-time-slider>
       <div class="slider-track" />
       <div class="slider-track fill" />
       <div class="slider-thumb-container">
@@ -30,11 +20,11 @@
       </div>
 
       <div class="media-preview-container">
-        <SliderVideo src="https://media-files.vidstack.io/240p.mp4" />
-        <SliderValueText type="pointer" format="time" />
+        <vds-slider-video src="https://media-files.vidstack.io/240p.mp4" />
+        <vds-slider-value-text type="pointer" format="time" />
       </div>
-    </TimeSlider>
+    </vds-time-slider>
   </div>
 
-  <Gesture class="absolute top-0 left-0 w-full h-full" action="toggle:paused" type="click" />
-</Media>
+  <!-- <Gesture class="absolute top-0 left-0 w-full h-full" action="toggle:paused" type="click" /> -->
+</vds-media>

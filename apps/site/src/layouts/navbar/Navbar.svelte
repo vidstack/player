@@ -1,17 +1,16 @@
 <script lang="ts">
   import clsx from 'clsx';
   import { createEventDispatcher } from 'svelte';
-  import { uppercaseFirstLetter } from '@vidstack/foundation';
-
   import MenuIcon from '~icons/ri/menu-5-line';
 
-  import { colorScheme } from '$src/stores/color-scheme';
-  import Popover from '$src/components/base/Popover.svelte';
   import ColorSchemeMenu from '$src/components/base/ColorSchemeMenu.svelte';
-
-  import NavLinkItem from './NavLink.svelte';
-  import { getNavbarContext } from './context';
+  import Popover from '$src/components/base/Popover.svelte';
   import Select from '$src/components/base/Select.svelte';
+  import { colorScheme } from '$src/stores/color-scheme';
+  import { uppercaseFirstLetter } from '$src/utils/string';
+
+  import { getNavbarContext } from './context';
+  import NavLinkItem from './NavLink.svelte';
 
   export let search = false;
 

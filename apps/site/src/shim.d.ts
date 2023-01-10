@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
-/// <reference types="@vidstack/player/globals" />
-/// <reference types="@vitebook/core/globals" />
-/// <reference types="@vitebook/svelte/globals" />
+/// <reference types="vidstack/globals" />
+/// <reference types="@vessel-js/app/globals" />
+/// <reference types="@vessel-js/svelte/globals" />
 /// <reference types="unplugin-icons/types/svelte" />
 
 declare module '*?highlight' {

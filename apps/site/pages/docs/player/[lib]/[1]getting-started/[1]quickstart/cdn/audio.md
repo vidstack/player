@@ -16,10 +16,7 @@ Add the following `script` tags to register the custom media elements.
 <!DOCTYPE html>
 <html>
   <head>
-    <script
-      type="module"
-      src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/cdn/bundle.js"
-    ></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/vidstack"></script>
   </head>
   <!-- ... -->
 </html>

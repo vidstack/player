@@ -1,11 +1,10 @@
 <script lang="ts">
-  import clsx from 'clsx';
-  import { ariaBool } from '@vidstack/foundation';
-
-  import { jsLib, jsLibExts } from '$src/stores/js-lib';
   import { intersectionObserver } from '$src/actions/intersection-observer';
-  import { codeSnippets } from '$src/stores/code-snippets';
   import IndeterminateLoading from '$src/components/base/IndeterminateLoading.svelte';
+  import { codeSnippets } from '$src/stores/code-snippets';
+  import { jsLib, jsLibExts } from '$src/stores/js-lib';
+  import { ariaBool } from '$src/utils/aria';
+  import clsx from 'clsx';
 
   import CodeFence from './@nodes/fence.svelte';
 

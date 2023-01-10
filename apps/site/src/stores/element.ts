@@ -1,6 +1,7 @@
-import { kebabToTitleCase } from '@vidstack/foundation';
 import { route } from '@vitebook/svelte';
 import { derived } from 'svelte/store';
+
+import { kebabToTitleCase } from '$src/utils/string';
 
 export const elementTagName = derived(route, ($route) => getTagNameFromPath($route.url.pathname));
 
@@ -14,7 +15,7 @@ export const comingSoonElement = derived(elementTagName, ($tagName) =>
   /vds-(youtube|vimeo)/.test($tagName),
 );
 
-/** Auto-generate in the future by using doc tags in `@vidstack/player`. */
+/** Auto-generate in the future by using doc tags in `vidstack`. */
 export const EXPERIMENTAL_TAG_NAMES = new Set(['vds-media-visibility', 'vds-gesture']);
 
 export const isElementExperimental = derived(elementTagName, ($tagName) =>

@@ -1,15 +1,18 @@
 <script lang="ts">
+  import { route } from '@vitebook/svelte';
   import clsx from 'clsx';
   import { createEventDispatcher, onMount } from 'svelte';
-  import { route } from '@vitebook/svelte';
-  import { ariaBool, wasEnterKeyPressed, isFunction, scrollIntoCenter } from '@vidstack/foundation';
-
   import CloseIcon from '~icons/ri/close-fill';
 
-  import { isLargeScreen } from '$src/stores/screen';
   import Overlay from '$src/components/base/Overlay.svelte';
   import LibSelect from '$src/components/docs/LibSelect.svelte';
   import VersionSelect from '$src/components/docs/VersionSelect.svelte';
+  import { isLargeScreen } from '$src/stores/screen';
+  import { ariaBool } from '$src/utils/aria';
+  import { wasEnterKeyPressed } from '$src/utils/keyboard';
+  import { scrollIntoCenter } from '$src/utils/scroll';
+  import { isFunction } from '$src/utils/unit';
+
   import { getSidebarContext, isActiveSidebarLink } from './context';
 
   const dispatch = createEventDispatcher();

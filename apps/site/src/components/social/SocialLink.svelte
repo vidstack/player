@@ -1,7 +1,6 @@
 <script lang="ts">
+  import { uppercaseFirstLetter } from '$src/utils/string';
   import clsx from 'clsx';
-  import { uppercaseFirstLetter } from '@vidstack/foundation';
-
   import DiscordIcon from '~icons/ri/discord-fill';
   import GitHubIcon from '~icons/ri/github-fill';
   import TwitterIcon from '~icons/ri/twitter-fill';

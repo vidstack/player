@@ -1,6 +1,6 @@
 <script lang="ts">
   import { jsLib, type JSLibType } from '$src/stores/js-lib';
-  import { kebabToCamelCase, kebabToPascalCase } from '@vidstack/foundation';
+  import { kebabToCamelCase, kebabToPascalCase } from '$src/utils/string';
 
   export let code: string = '';
 

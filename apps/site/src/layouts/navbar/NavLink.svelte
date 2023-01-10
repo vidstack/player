@@ -1,7 +1,8 @@
 <script lang="ts">
-  import clsx from 'clsx';
   import { route } from '@vitebook/svelte';
-  import { isNull } from '@vidstack/foundation';
+  import clsx from 'clsx';
+
+  import { isNull } from '$src/utils/unit';
 
   export let title: string;
   export let slug: string;

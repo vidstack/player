@@ -1,20 +1,14 @@
 <script lang="ts">
+  import { env } from '$src/env';
+  import type { ComponentApi } from '$src/server/component-api';
+  import { jsLib } from '$src/stores/js-lib';
+  import { ariaBool } from '$src/utils/aria';
+  import { camelToKebabCase, camelToTitleCase, kebabToPascalCase } from '$src/utils/string';
+  import { route } from '@vitebook/svelte';
   import clsx from 'clsx';
   import { tick } from 'svelte';
-
-  import QuestionIcon from '~icons/ri/question-fill';
   import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-fill';
-
-  import { route } from '@vitebook/svelte';
-  import { env } from '$src/env';
-  import {
-    ariaBool,
-    camelToKebabCase,
-    camelToTitleCase,
-    kebabToPascalCase,
-  } from '@vidstack/foundation';
-  import { jsLib } from '$src/stores/js-lib';
-  import type { ComponentApi } from '$src/server/component-api';
+  import QuestionIcon from '~icons/ri/question-fill';
 
   export let api: ComponentApi;
 

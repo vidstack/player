@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { isUndefined } from '@vidstack/foundation';
-
+  import { isUndefined } from '$src/utils/unit';
   import clsx from 'clsx';
 
   export let primary = false;

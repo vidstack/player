@@ -1,4 +1,4 @@
-import { Media, Video } from '@vidstack/player-react';
+import { Media, Video } from '@vidstack/react';
 
 function MediaPlayer() {
   return (

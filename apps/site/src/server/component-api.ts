@@ -1,9 +1,10 @@
-import { getTagNameFromPath } from '$src/stores/element';
 import type { ComponentMeta, EventMeta, MethodMeta, PropMeta } from '@vidstack/eliza';
 import { camelToKebabCase } from '@vidstack/foundation';
 import { escapeHTML } from '@vitebook/core';
 import fs from 'fs/promises';
 import path from 'path';
+
+import { getTagNameFromPath } from '$src/stores/element';
 
 const __cwd = process.cwd();
 const components: ComponentMeta[] = [];

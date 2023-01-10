@@ -1,7 +1,8 @@
-import { type SidebarLinks } from '$src/layouts/sidebar/context';
-import { uppercaseFirstLetter } from '@vidstack/foundation';
 import { derived, get, writable, type Readable } from 'svelte/store';
 import ExperimentalIcon from '~icons/ri/test-tube-fill';
+
+import type { SidebarLinks } from '$src/layouts/sidebar/context';
+import { uppercaseFirstLetter } from '$src/utils/string';
 
 import { EXPERIMENTAL_TAG_NAMES } from './element';
 

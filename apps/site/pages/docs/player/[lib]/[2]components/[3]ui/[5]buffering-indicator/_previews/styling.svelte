@@ -2,15 +2,20 @@
   import '../_snippets/styling.css';
 
   import { onMount } from 'svelte';
-  import { AspectRatio, Media, Video } from '@vidstack/player-svelte';
 
   let root;
   let canPlay;
   let waiting;
 
+  let canPlayValue = false;
+  let waitingValue = false;
+
+  $: if (canPlay) canPlay.set(canPlayValue);
+  $: if (waiting) waiting.set(waitingValue);
+
   onMount(async () => {
     const media = await findMedia();
-    ({ canPlay, waiting } = media.controller._store);
+    ({ canPlay, waiting } = media.$store);
   });
 
   function findMedia() {
@@ -24,10 +29,10 @@
 </script>
 
 <div class="contents" bind:this={root}>
-  <Media class="w-full max-w-xs">
-    <AspectRatio ratio="16/9">
-      <Video />
-    </AspectRatio>
+  <vds-media class="w-full max-w-xs">
+    <vds-aspect-ratio ratio="16/9">
+      <vds-video />
+    </vds-aspect-ratio>
 
     <div class="media-buffering-container">
       <svg class="media-buffering-icon" fill="none" viewBox="0 0 120 120" aria-hidden="true">
@@ -50,17 +55,17 @@
         />
       </svg>
     </div>
-  </Media>
+  </vds-media>
 
   <div class="my-4 flex space-x-4 px-2">
     <label>
       Can Play
-      <input type="checkbox" bind:checked={$canPlay} />
+      <input type="checkbox" bind:checked={canPlayValue} />
     </label>
 
     <label>
       Buffering
-      <input type="checkbox" bind:checked={$waiting} />
+      <input type="checkbox" bind:checked={waitingValue} />
     </label>
   </div>
 </div>

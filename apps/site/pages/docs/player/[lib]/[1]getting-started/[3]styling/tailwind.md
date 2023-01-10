@@ -18,7 +18,7 @@ You can register the plugin by adding the following to `tailwind.config.js`:
 
 ```js {% title="tailwind.config.js" copyHighlight=true highlight="2" %}
 module.exports = {
-  plugins: [require('@vidstack/player/tailwind.cjs')],
+  plugins: [require('vidstack/tailwind.cjs')],
 };
 ```
 

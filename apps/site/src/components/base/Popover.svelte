@@ -3,15 +3,15 @@
 </script>
 
 <script lang="ts">
+  import { dialogManager, type CloseDialogCallback } from '$src/actions/dialog-manager';
+  import { isLargeScreen } from '$src/stores/screen';
+  import { ariaBool } from '$src/utils/aria';
+  import { wasEnterKeyPressed } from '$src/utils/keyboard';
+  import { hideDocumentScrollbar } from '$src/utils/scroll';
   import clsx from 'clsx';
   import { createEventDispatcher } from 'svelte';
   import Transition from 'svelte-class-transition';
-  import { ariaBool, wasEnterKeyPressed, hideDocumentScrollbar } from '@vidstack/foundation';
-
   import CloseIcon from '~icons/ri/close-fill';
-
-  import { dialogManager, type CloseDialogCallback } from '$src/actions/dialog-manager';
-  import { isLargeScreen } from '$src/stores/screen';
 
   import Overlay from './Overlay.svelte';
 

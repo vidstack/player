@@ -1,14 +1,12 @@
 <script lang="ts">
-  import { uppercaseFirstLetter } from '@vidstack/foundation';
-
-  import MoonIcon from '~icons/ri/moon-clear-fill';
-  import SunIcon from '~icons/ri/sun-fill';
-  import SettingsIcon from '~icons/ri/settings-2-fill';
-
   import Menu from '$src/components/base/Menu.svelte';
   import MenuItem from '$src/components/base/MenuItem.svelte';
   import { colorScheme, colorSchemes, isDarkColorScheme } from '$src/stores/color-scheme';
+  import { uppercaseFirstLetter } from '$src/utils/string';
   import clsx from 'clsx';
+  import MoonIcon from '~icons/ri/moon-clear-fill';
+  import SettingsIcon from '~icons/ri/settings-2-fill';
+  import SunIcon from '~icons/ri/sun-fill';
 
   const buttonIcon = {
     light: SunIcon,
