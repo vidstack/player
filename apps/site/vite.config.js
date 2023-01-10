@@ -5,11 +5,15 @@ import { transform as esbuildTransform } from 'esbuild';
 import icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
 
-import componentApiMeta from './plugins/component-api-meta.js';
 import highlight from './plugins/highlight.js';
 import snippets from './plugins/snippets.js';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      $lib: '/lib',
+    },
+  },
   plugins: [
     highlight(),
     snippets(),
@@ -18,24 +22,21 @@ export default defineConfig({
       markdown: {
         highlighter: 'shiki',
         shiki: { theme: 'material-ocean' },
-        transformMeta: [componentApiMeta()],
       },
       routes: {
         entries: [
-          ...['/', '/audio.html', '/hls.html'].map(
-            (path) => `/docs/player/getting-started/quickstart${path}`,
-          ),
-          ...['/', '/audio.html', '/hls.html'].map(
+          ...['', '/audio', '/hls'].map((path) => `/docs/player/getting-started/quickstart${path}`),
+          ...['', '/audio', '/hls'].map(
             (path) => `/docs/player/getting-started/quickstart/cdn${path}`,
           ),
         ],
-        matchers: [{ name: 'lib', matcher: /(vue|react|svelte)?/ }],
+        matchers: [{ name: 'lib', matcher: ':lib(react)?' }],
       },
       sitemap: [
         {
           origin: 'https://vidstack.io',
           filename: 'sitemap.xml',
-          exclude: /docs\/player\/(vue|react|svelte)/,
+          exclude: /docs\/(react|svelte|vue)/,
         },
         {
           origin: 'https://vidstack.io',

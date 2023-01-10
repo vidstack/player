@@ -1,7 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
-  content: ['./src/**/*.{svelte,md}', './pages/**/*.{svelte,md}'],
+  content: [
+    './lib/**/*.{svelte,md}',
+    './app/**/*.{html,svelte,md}',
+    './app/**/.markdoc/**/*.{md,svelte}',
+    './app/**/.previews/**/*.{md,svelte}',
+    './app/**/.snippets/**/*.{md,svelte}',
+  ],
   experimental: {
     optimizeUniversalDefaults: true,
   },

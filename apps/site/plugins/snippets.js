@@ -9,8 +9,13 @@ const SNIPPETS_REQ_ID = `/${SNIPPETS_ID}`;
 const PREVIEWS_ID = ':virtual/code_previews';
 const PREVIEWS_REQ_ID = `/${PREVIEWS_ID}`;
 
-const snippetRE = /pages\/docs\/.*?_snippets/;
-const previewRE = /pages\/docs\/.*?_previews/;
+const snippetRE = /app\/docs\/\[lib\]\/.*?\.snippets/;
+const previewRE = /app\/docs\/\[lib\]\/.*?\.previews/;
+
+const stripBasePathRE = /^\/?app\/docs\/\[lib\]\/.*?\//;
+const stripPreviewDirRE = /\/\.previews.*$/;
+const stripSnippetsDirRE = /\/\.snippets.*$/;
+
 /**
  * @typedef {{
  *  filePath: string;
@@ -66,11 +71,7 @@ export default () => {
 async function getPreviews() {
   /** @type {{ name: string; path: string; loader: string; }[]} */
   const previews = [];
-
-  const stripBasePathRE = /^\/?pages\/docs\/player\/.*?\//;
-  const stripSnippetsDirRE = /\/_previews.*$/;
-
-  const files = await globby('pages/docs/player/[lib]/**/_previews/**/*.svelte');
+  const files = await globby('app/**/.previews/**/*.svelte');
 
   await Promise.all(
     files.map(async (filePath) => {
@@ -78,8 +79,7 @@ async function getPreviews() {
 
       const pathname = stripRouteMeta(filePath)
         .replace(stripBasePathRE, '')
-        .replace(stripSnippetsDirRE, '')
-        .replace('/[lib]/', '');
+        .replace(stripPreviewDirRE, '');
 
       previews.push({
         name,
@@ -96,7 +96,7 @@ async function getSnippets() {
   /** @type {{ name: string; path: string; lines: number; scrollX: number; loader: string; }[]} */
   let snippets = [];
 
-  const files = await globby('pages/docs/player/[lib]/**/_snippets/**/*[^.md]');
+  const files = await globby('app/**/.snippets/**/*[^.md]');
 
   await Promise.all(
     files.map(async (filePath) => {
@@ -126,9 +126,6 @@ async function getSnippets() {
   return snippets;
 }
 
-const stripBasePathRE = /^\/?pages\/docs\/player\/\[lib\]\//;
-const stripSnippetsDirRE = /\/_snippets.*$/;
-
 /**
  * @param {string} filePath
  */
@@ -137,7 +134,7 @@ export function getSnippetPath(filePath) {
 }
 
 function slash(str) {
-  str.replace(/^\/?/, '/');
+  return str.replace(/^\/?/, '/');
 }
 
 const stripImportQuotesRE = /"\(\) => import\((.+)\)"/g;

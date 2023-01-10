@@ -5,6 +5,7 @@
  */
 
 vds-media {
+  width: 100%;
   display: inline-block;
   position: relative;
   contain: content;
