@@ -1,10 +1,9 @@
+import type { SidebarLink, SidebarLinks } from '$src/layouts/sidebar/context';
+import { formatElementHeading } from '$src/stores/element';
 import { kebabToTitleCase } from '@vidstack/foundation';
 import { noendslash, sortOrderedPageFiles } from '@vitebook/core';
 import fs from 'fs';
 import path from 'path';
-
-import type { SidebarLink, SidebarLinks } from '$src/layouts/sidebar/context';
-import { formatElementHeading } from '$src/stores/element';
 
 export function readDirDeepSync(dir: string, exclude?: RegExp) {
   const files: string[] = [];
