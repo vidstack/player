@@ -1,6 +1,5 @@
-import { derived, writable } from 'svelte/store';
-
 import snippets from ':virtual/code_snippets';
+import { derived, writable } from 'svelte/store';
 
 import { simplePathname } from './path';
 

@@ -1,6 +1,7 @@
+import { listen, tick } from 'svelte/internal';
+
 import { createDisposalBin } from '$src/utils/events';
 import { wasEnterKeyPressed } from '$src/utils/keyboard';
-import { listen, tick } from 'svelte/internal';
 
 export type DialogManagerOptions = {
   onOpen?: () => void;

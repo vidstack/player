@@ -22,13 +22,13 @@
   },
   "peerDependencies": {
     "@types/react": "^17.0.0",
-    "maverick.js": "^0.26.11",
+    "maverick.js": "^0.26.12",
     "react": "^17.0.0",
     "vidstack": "^0.0.1"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
-    "maverick.js": "^0.26.11",
+    "maverick.js": "^0.26.12",
     "react": "^17.0.0",
     "rimraf": "^3.0.0",
     "tsup": "^6.5.0",

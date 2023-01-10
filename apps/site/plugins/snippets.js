@@ -1,7 +1,8 @@
-import { slash, stripImportQuotesFromJson, stripPageOrderFromPath } from '@vitebook/core/node';
-import { readFile } from 'fs/promises';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+
+import { stripRouteMeta } from '@vessel-js/app/node';
 import { globby } from 'globby';
-import path from 'path';
 
 const SNIPPETS_ID = ':virtual/code_snippets';
 const SNIPPETS_REQ_ID = `/${SNIPPETS_ID}`;
@@ -75,7 +76,7 @@ async function getPreviews() {
     files.map(async (filePath) => {
       const name = path.basename(filePath, '.svelte');
 
-      const pathname = stripPageOrderFromPath(filePath)
+      const pathname = stripRouteMeta(filePath)
         .replace(stripBasePathRE, '')
         .replace(stripSnippetsDirRE, '')
         .replace('/[lib]/', '');
@@ -132,7 +133,14 @@ const stripSnippetsDirRE = /\/_snippets.*$/;
  * @param {string} filePath
  */
 export function getSnippetPath(filePath) {
-  return stripPageOrderFromPath(filePath)
-    .replace(stripBasePathRE, '')
-    .replace(stripSnippetsDirRE, '');
+  return stripRouteMeta(filePath).replace(stripBasePathRE, '').replace(stripSnippetsDirRE, '');
+}
+
+function slash(str) {
+  str.replace(/^\/?/, '/');
+}
+
+const stripImportQuotesRE = /"\(\) => import\((.+)\)"/g;
+function stripImportQuotesFromJson(json) {
+  return json.replace(stripImportQuotesRE, `() => import($1)`);
 }

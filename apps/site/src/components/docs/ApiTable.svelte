@@ -1,14 +1,15 @@
 <script lang="ts">
-  import { env } from '$src/env';
-  import type { ComponentApi } from '$src/server/component-api';
-  import { jsLib } from '$src/stores/js-lib';
-  import { ariaBool } from '$src/utils/aria';
-  import { camelToKebabCase, camelToTitleCase, kebabToPascalCase } from '$src/utils/string';
   import { route } from '@vitebook/svelte';
   import clsx from 'clsx';
   import { tick } from 'svelte';
   import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-fill';
   import QuestionIcon from '~icons/ri/question-fill';
+
+  import { env } from '$src/env';
+  import type { ComponentApi } from '$src/server/component-api';
+  import { jsLib } from '$src/stores/js-lib';
+  import { ariaBool } from '$src/utils/aria';
+  import { camelToTitleCase, kebabToPascalCase } from '$src/utils/string';
 
   export let api: ComponentApi;
 
@@ -16,13 +17,13 @@
   let _showAll = {};
   let isAllOpen = {};
 
-  const categories = Object.keys(api); // ['properties', 'methods', 'events', ...]
-  const noTypes = new Set(['slots', 'cssProps', 'cssParts']);
+  const categories = Object.keys(api); // ['props', 'events', 'slots', ...]
+  const noTypes = new Set(['slots', 'cssParts']);
 
   const categoryLinks = {
     slots:
       'https://developers.google.com/web/fundamentals/web-components/shadowdom#composition_slot',
-    cssProps: 'https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties',
+    cssVars: 'https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties',
     cssParts: 'https://developer.mozilla.org/en-US/docs/Web/CSS/::part',
   };
 
@@ -30,8 +31,8 @@
     return /(mdn|mozilla)/.test(link);
   }
 
-  function filterHasDesc(category) {
-    return category.filter((prop) => prop.description);
+  function filterHasDocs(category) {
+    return category.filter((prop) => prop.docs);
   }
 
   function propToKey(category: string, propName: string) {
@@ -45,10 +46,10 @@
   function getInfo(category: string, prop: any) {
     return [
       category === 'properties' &&
-        prop.hasAttr &&
+        prop.attr &&
         !prop.readonly &&
-        $jsLib !== 'react' && ['Attribute', prop.attr ?? camelToKebabCase(prop.name)],
-      [category === 'methods' ? 'Signature' : 'Type', prop.type],
+        $jsLib !== 'react' && ['Attribute', prop.attr],
+      prop.type && ['Type', prop.type],
       category === 'events' && ['Detail', prop.detail],
     ].filter(Boolean);
   }
@@ -91,9 +92,9 @@
 {#each categories as category (category)}
   {@const showAll = _showAll[category]}
   {@const hasTypes = !noTypes.has(category)}
-  {@const hasReadonly = category === 'properties'}
+  {@const hasReadonly = /props|members|cssvars/.test(category)}
 
-  {#if filterHasDesc(api[category]).length > 0}
+  {#if filterHasDocs(api[category]).length > 0}
     <div>
       <div class="mt-[2em] mb-[0.666em] flex items-center">
         <h2 id={category} class="m-0">
@@ -102,9 +103,10 @@
         </h2>
         {#if categoryLinks[category]}
           <a
+            class="flex h-full transform items-center border-0 px-2.5 transition-transform ease-in hover:scale-110"
             href={categoryLinks[category]}
             target="_blank"
-            class="flex h-full transform items-center border-0 px-2.5 transition-transform ease-in hover:scale-110"
+            rel="noreferrer"
           >
             <span class="sr-only">Learn more about {category}</span>
             <QuestionIcon width="24" height="24" />
@@ -119,7 +121,7 @@
           !showAll && 'max-h-[375px]',
         )}
       >
-        {#each filterHasDesc(api[category]) as prop (prop)}
+        {#each filterHasDocs(api[category]) as prop (prop)}
           {@const key = propToKey(category, prop.name)}
           {@const isOpen = _isOpen[key]}
           {@const hasLink = 'link' in prop}
@@ -187,20 +189,25 @@
               {/if}
 
               {#if hasLink}
-                <a class="absolute top-5 right-5 text-sm" href={prop.link} target="_blank">
+                <a
+                  class="absolute top-5 right-5 text-sm"
+                  href={prop.link}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {isMDNLink(prop.link) ? 'MDN' : 'Reference'}
                 </a>
               {/if}
 
               <div class={clsx('pb-3 text-sm', hasTypes && 'mt-6')}>
-                {@html prop.description}
+                {@html prop.docs}
               </div>
             </div>
           </div>
         {/each}
       </div>
 
-      {#if filterHasDesc(api[category]).length > 3}
+      {#if filterHasDocs(api[category]).length > 3}
         <div class="text-soft mt-4 flex items-center justify-end text-sm">
           <button
             class="hover:text-inverse rounded-sm py-1 px-2.5 font-medium"
@@ -217,7 +224,7 @@
             {!isAllOpen[category] ? 'Open All' : 'Close All'}
           </button>
 
-          {#if isAllOpen[category] || filterHasDesc(api[category]).length > 10}
+          {#if isAllOpen[category] || filterHasDocs(api[category]).length > 10}
             <button
               class="hover:text-inverse rounded-sm py-1 px-2.5 font-medium"
               aria-checked={ariaBool(showAll)}

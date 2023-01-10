@@ -7,18 +7,20 @@
     "dev": "vitebook dev --port 3001 --host",
     "build": "vitebook build",
     "preview": "vitebook preview --port 3001 --host",
-    "lint:prettier": "prettier . --write --loglevel warn"
+    "format": "prettier . --write --loglevel warn"
   },
   "dependencies": {
     "@docsearch/css": "^3.3.0",
     "@docsearch/js": "^3.3.0",
     "clsx": "^1.2.0",
+    "html-entities": "^2.3.3",
     "svelte-class-transition": "^1.0.4",
     "vidstack": "workspace:*"
   },
   "devDependencies": {
     "@algolia/client-search": "^4.14.0",
     "@iconify-json/ri": "^1.1.0",
+    "@maverick-js/compiler": "^0.26.12",
     "@sveltejs/vite-plugin-svelte": "^2.0.0",
     "@tailwindcss/typography": "^0.5.0",
     "@types/markdown-it": "^12.2.0",

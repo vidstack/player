@@ -1,170 +1,140 @@
-import type { ComponentMeta, EventMeta, MethodMeta, PropMeta } from '@vidstack/eliza';
-import { camelToKebabCase } from '@vidstack/foundation';
-import { escapeHTML } from '@vitebook/core';
-import fs from 'fs/promises';
-import path from 'path';
+import {
+  ComponentMeta,
+  EventMeta,
+  MethodMeta,
+  PropMeta,
+  walkComponentDocs,
+} from '@maverick-js/compiler/analyze';
+import { encode } from 'html-entities';
+import elements from 'vidstack/elements.json';
 
 import { getTagNameFromPath } from '$src/stores/element';
 
-const __cwd = process.cwd();
-const components: ComponentMeta[] = [];
+const findRE = /`(.*?)`/g;
+const replace = (_, c) => `<code>${encode(c)}</code>`;
 
-export async function loadComponentAPI(pathname: string) {
-  await readComponents();
-
+export async function loadComponentAPI(pathname: string): Promise<ComponentApi> {
   const tagName = getTagNameFromPath(pathname);
-  const component = components.find((component) => component.tagName === tagName)!;
+  const component = elements.components.find((component) => component.tag.name === tagName)!;
 
   if (!component) return {};
 
-  parseDocs(component);
+  walkComponentDocs(component, (docs) => docs.replace(findRE, replace));
 
   return {
-    properties: extractProps(component),
-    methods: extractMethods(component),
+    props: extractProps(component),
     events: extractEvents(component),
     slots: extractSlots(component),
-    cssProps: extractCssProps(component),
+    cssVars: extractCssVars(component),
     cssParts: extractCssParts(component),
+    members: extractMembers(component),
   };
-}
-
-async function readComponents() {
-  if (components.length > 0) return;
-  const elementsPath = path.resolve(__cwd, 'node_modules/@vidstack/player/elements.json');
-  const elements = await getJson(elementsPath);
-  components.push(...elements.components);
-}
-
-async function getJson(filePath: string) {
-  return JSON.parse(await fs.readFile(filePath, { encoding: 'utf-8' }));
 }
 
 function extractProps(component: ComponentMeta) {
   return component.props
-    .filter((prop) => !prop.internal)
+    ?.filter((prop) => !prop.internal)
     .map((prop) => ({
-      attr: camelToKebabCase(prop.name) !== prop.attribute ? prop.attribute : undefined,
-      hasAttr: !!prop.attribute,
+      attr: prop.attribute,
       name: prop.name,
-      description: prop.documentation,
+      docs: prop.docs,
       readonly: prop.readonly,
-      type: prop.typeInfo.original,
+      type: prop.type?.serialized,
       link: findLink(prop),
-    }));
-}
-
-function extractMethods(component: ComponentMeta) {
-  return component.methods
-    .filter((method) => !method.internal)
-    .map((method) => ({
-      name: method.name,
-      static: method.static,
-      description: method.documentation,
-      type: method.typeInfo.signatureText,
-      link: findLink(method),
     }));
 }
 
 function extractEvents(component: ComponentMeta) {
   return component.events
-    .filter((event) => !event.internal)
+    ?.filter((event) => !event.internal)
     .map((event) => ({
       name: event.name,
-      description: event.documentation,
-      type: event.typeInfo.original,
+      docs: event.docs,
+      type: event.type?.serialized,
+      detail: event.detail,
       link: findLink(event),
-      detail: getEventDetail(event),
     }));
 }
 
-function getEventDetail(event: EventMeta) {
-  return event.typeInfo.resolved?.match(/<(.*?)>/)?.[1];
+function extractSlots(component: ComponentMeta) {
+  return component.slots?.map((slot) => ({
+    name: slot.name || 'DEFAULT',
+    docs: slot.docs,
+  }));
 }
 
-function extractSlots(component: ComponentMeta) {
-  return component.slots.map((slot) => ({
-    name: slot.name,
-    description: slot.description,
+function extractCssVars(component: ComponentMeta) {
+  return component.cssvars?.map((prop) => ({
+    name: prop.name,
+    docs: prop.docs,
+    type: prop.type?.serialized,
+    readonly: prop.readonly,
   }));
 }
 
 function extractCssParts(component: ComponentMeta) {
-  return component.cssParts.map((cssPart) => ({
-    name: cssPart.name,
-    description: cssPart.description,
+  return component.cssparts?.map((part) => ({
+    name: part.name,
+    docs: part.docs,
   }));
 }
 
-function extractCssProps(component: ComponentMeta) {
-  return component.cssProps.map((cssProp) => ({
-    name: cssProp.name,
-    description: cssProp.description,
-  }));
+function extractMembers(component: ComponentMeta) {
+  if (!component.members) return;
+  return [...(component.members.props || []), ...(component.members.methods || [])]
+    .filter((prop) => !prop.internal)
+    .map((prop) => ({
+      name: prop.name,
+      docs: prop.docs,
+      type: (prop as MethodMeta).signature?.type ?? (prop as PropMeta).type?.serialized,
+      readonly: (prop as PropMeta).readonly,
+      link: findLink(prop),
+    }));
 }
 
 function findLink(prop: PropMeta | MethodMeta | EventMeta) {
-  return (
-    // Prioritize MDN links.
-    prop.docTags.find((tag) => /(see|link)/.test(tag.name) && /(mozilla|mdn)/.test(tag.text ?? ''))
-      ?.text ?? prop.docTags.find((tag) => /(see|link)/.test(tag.name))?.text
+  // Prioritize MDN links.
+  const mdnLink = prop.doctags?.find(
+    (tag) => /(see|link)/.test(tag.name) && /(mozilla|mdn)/.test(tag.text ?? ''),
   );
-}
-
-function parseDocs(component: ComponentMeta) {
-  if (!component) return;
-
-  const findRE = /`(.*?)`/g;
-  const replace = (_, c) => `<code>${escapeHTML(c)}</code>`;
-
-  for (const key of Object.keys(component)) {
-    if (!Array.isArray(component[key])) continue;
-
-    // @ts-expect-error - ignore
-    for (const prop of component[key]) {
-      for (const d of ['description', 'documentation']) {
-        if (prop[d]) {
-          prop[d] = prop[d].replace(findRE, replace);
-        }
-      }
-    }
-  }
+  return mdnLink?.text ?? prop.doctags?.find((tag) => /(see|link)/.test(tag.name))?.text;
 }
 
 export type ComponentApi = {
-  properties: {
+  props?: {
     name: string;
-    description?: string;
-    readonly: boolean;
-    type: string;
-    link?: string;
     attr?: string;
-    hasAttr: boolean;
-  }[];
-  methods: {
-    name: string;
-    static: boolean;
-    description?: string;
-    type: string;
+    docs?: string;
+    readonly?: boolean;
+    type?: string;
     link?: string;
   }[];
-  events: {
+  events?: {
     name: string;
-    description?: string;
-    type: string;
+    docs?: string;
+    type?: string;
     link?: string;
     detail?: string;
   }[];
-  slots: {
+  slots?: {
     name: string;
-    description?: string;
+    docs?: string;
   }[];
-  cssProps: {
+  cssVars?: {
     name: string;
-    description?: string;
+    docs?: string;
+    type?: string;
+    readonly?: boolean;
   }[];
-  cssParts: {
+  cssParts?: {
     name: string;
-    description?: string;
+    docs?: string;
+  }[];
+  members?: {
+    name: string;
+    readonly?: boolean;
+    docs?: string;
+    type?: string;
+    link?: string;
   }[];
 };
