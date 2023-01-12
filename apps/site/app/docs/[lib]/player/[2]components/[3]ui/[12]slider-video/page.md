@@ -4,7 +4,7 @@ description: This component is used to load and display a preview video over a s
 
 ## Usage
 
-The `$tag:vds-slider-video` component can be used to load a video in [`$tag:vds-slider`](/docs/player/components/ui/slider/).
+The `$tag:vds-slider-video` component can be used to load a video in [`$tag:vds-slider`](/docs/player/components/ui/slider).
 This is _generally_ used to show a preview video (low-resolution) as the user interacts with the
 time slider.
 

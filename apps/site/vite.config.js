@@ -24,12 +24,12 @@ export default defineConfig({
         shiki: { theme: 'material-ocean' },
       },
       routes: {
-        entries: [
-          ...['', '/audio', '/hls'].map((path) => `/docs/player/getting-started/quickstart${path}`),
+        entries: ['', '/react'].flatMap((lib) => [
+          ...['', '/audio', '/hls'].map((p) => `/docs${lib}/player/getting-started/quickstart${p}`),
           ...['', '/audio', '/hls'].map(
-            (path) => `/docs/player/getting-started/quickstart/cdn${path}`,
+            (p) => `/docs${lib}/player/getting-started/quickstart/cdn${p}`,
           ),
-        ],
+        ]),
         matchers: [{ name: 'lib', matcher: ':lib(react)?' }],
       },
       sitemap: [

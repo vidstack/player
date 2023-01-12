@@ -4,7 +4,7 @@ description: This component is used to create a range input for controlling the 
 
 ## Usage
 
-The `$tag:vds-time-slider` component (aka scrubber) extends [`$tag:vds-slider`](/docs/player/components/ui/slider/) ,
+The `$tag:vds-time-slider` component (aka scrubber) extends [`$tag:vds-slider`](/docs/player/components/ui/slider) ,
 and two-way binds the slider's value with the provider's current playback time position.
 
 The slider receives time updates from the provider through the media store, and it'll actively

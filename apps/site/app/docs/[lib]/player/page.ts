@@ -1,8 +1,10 @@
-import { redirect } from '@vessel-js/app/http';
-import type { ServerLoader } from '@vessel-js/app/server';
+import type { StaticLoader } from '@vessel-js/app/server';
 
-export const EDGE = true;
-
-export const serverLoader: ServerLoader = ({ request }) => {
-  throw redirect(request.URL.pathname + '/getting-started/quickstart', 302);
+export const staticLoader: StaticLoader = ({ params }) => {
+  return {
+    redirect: {
+      path: `docs${params.lib ? `/${params.lib}` : ''}/player/getting-started/quickstart`,
+      status: 302,
+    },
+  };
 };

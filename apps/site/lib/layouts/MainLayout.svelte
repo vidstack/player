@@ -23,7 +23,7 @@
   const navLinks = writable<NavLinks>([
     {
       title: 'Documentation',
-      slug: addJSLibToPath(`/docs/player/`),
+      slug: addJSLibToPath(`/docs/player`),
       match: /\/docs\/player/,
     },
   ]);

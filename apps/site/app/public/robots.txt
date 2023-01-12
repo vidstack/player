@@ -8,13 +8,13 @@ User-agent: *
 Disallow: /sitemap-search.xml
 
 User-agent: *
-Disallow: /docs/player/react/*
+Disallow: /docs/react/*
 
 User-agent: *
-Disallow: /docs/player/vue/*
+Disallow: /docs/vue/*
 
 User-agent: *
-Disallow: /docs/player/svelte/*
+Disallow: /docs/svelte/*
 
 User-agent: *
 Allow: /

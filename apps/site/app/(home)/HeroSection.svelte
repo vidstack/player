@@ -24,7 +24,7 @@
       </p>
 
       <div class="mt-12 flex space-x-4">
-        <Button primary type="raised" href={addJSLibToPath(`/docs/player/`, $jsLib)}>
+        <Button primary type="raised" href={addJSLibToPath(`/docs/player`, $jsLib)}>
           Try Player Beta
         </Button>
       </div>

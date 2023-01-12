@@ -4,6 +4,8 @@ dist-*/
 .tsbuildinfo
 tsconfig.tsbuildinfo
 
+.vessel
+.vercel
 .turbo
 turbo-graph*
 

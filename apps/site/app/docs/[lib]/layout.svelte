@@ -4,7 +4,7 @@
   export async function staticLoader() {
     return {
       data: { sidebar: loadPlayerSidebar() },
-      cache: () => true,
+      cache: ({ params }) => params.lib || '',
     };
   }
 </script>
