@@ -12,8 +12,8 @@ import { MediaElement, mediaStore, MediaStore, MediaStoreContext } from 'vidstac
  * import { useMediaState } from '@vidstack/react';
  *
  * function Component() {
- *  const isPlaying = useMediaState('playing');
- *  return <div>{isPlaying ? 'Media is _not_ playing.' : 'Media is playing.'}</div>
+ *  const { playing } = useMediaState();
+ *  return <div>{playing ? 'Media is _not_ playing.' : 'Media is playing.'}</div>
  * }
  * ```
  */

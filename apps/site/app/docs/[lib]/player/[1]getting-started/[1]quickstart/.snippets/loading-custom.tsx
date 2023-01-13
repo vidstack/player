@@ -8,12 +8,13 @@ function MediaPlayer() {
 
   useEffect(() => {
     // Call whenever you like.
+    // Method is also available on the `<vds-video>` element.
     remote.startLoading();
   }, []);
 
   return (
     <Media ref={media}>
-      <Video loading="custom">{/* ... */}</Video>
+      <Video load="custom">{/* ... */}</Video>
     </Media>
   );
 }

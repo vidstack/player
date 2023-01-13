@@ -1,10 +1,10 @@
-import { type HlsManifestLoadedEvent } from '@vidstack/player';
-import { Hls } from '@vidstack/player-react';
+import { HLSVideo } from '@vidstack/react';
+import type { HLSManifestLoadedEvent } from 'vidstack';
 
 function MediaPlayer() {
-  function onManifestLoaded(event: HlsManifestLoadedEvent) {
+  function onManifestLoaded(event: HLSManifestLoadedEvent) {
     // ...
   }
 
-  return <Hls onVdsHlsManifestLoaded={onManifestLoaded}>{/* ... */}</Hls>;
+  return <HLSVideo onHlsManifestLoaded={onManifestLoaded}>{/* ... */}</HLSVideo>;
 }

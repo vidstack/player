@@ -9,26 +9,27 @@ In this section, we'll look at the rich event system that's available when worki
 
 ## Media Events
 
-The media provider fires a superset of `HTMLMediaElement` events. You can kebab-case and prefix any
+The media provider fires a superset of `HTMLMediaElement` events. You can kebab-case any
 [native media event type](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#events)
-with `vds-` to get the custom variant.
+to get the Vidstack variant:
 
-- `loadedmetadata` -> `vds-loaded-metadata`
-- `canplay` -> `vds-can-play`
-- `play` -> `vds-play`
+- `play` -> `play`
+- `canplay` -> `can-play`
+- `loadedmetadata` -> `loaded-metadata`
 
-Prefer our events as they smooth out any unexpected behaviour across browsers, attach additional
-metadata to the event `detail`, and contain rich information such as the [request event](#request-events)
-that triggered it or the origin event that kicked it off.
+Prefer our events over the native media element events (e.g., `<video>`) as they smooth out any
+unexpected behaviour across browsers, attach additional metadata to the event `detail`, and contain
+rich information such as the [request event](#request-events) that triggered it or the origin event
+that kicked it off.
 
 {% code_snippet name="events" /%}
 
 ## Request Events
 
 Request events are fired when 'requesting' the controller to update the provider's state. For example,
-the `vds-play-request` event is a request to begin/resume playback, and as a consequence it'll
-trigger a `play()` call. The provider should respond with a `vds-play` event to confirm the
-request was satisfied.
+the `media-play-request` event is a request to begin/resume playback, and as a consequence it'll
+trigger a `play()` call. The provider should respond with a `play` event to confirm the request was
+satisfied.
 
 {% code_snippet name="request" /%}
 

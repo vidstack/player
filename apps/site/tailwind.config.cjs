@@ -157,7 +157,7 @@ function typography(theme) {
           margin: 0,
         },
         a: {
-          fontWeight: theme('fontWeight.semibold'),
+          fontWeight: theme('fontWeight.normal'),
           textDecoration: 'none',
           borderBottom: `1px solid var(--color-brand)`,
         },

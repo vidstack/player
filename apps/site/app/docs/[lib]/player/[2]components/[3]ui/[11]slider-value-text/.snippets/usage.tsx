@@ -1,4 +1,4 @@
-import { Slider, SliderValueText } from '@vidstack/player-react';
+import { Slider, SliderValueText } from '@vidstack/react';
 
 function MySlider() {
   return (

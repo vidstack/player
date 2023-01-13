@@ -5,8 +5,7 @@ const provider = document.querySelector('vds-video')!;
 provider.addEventListener('play', (event) => {
   // was this triggered by an actual person?
   const userPlayed = event.isOriginTrusted;
-
-  // equivalent
+  // equivalent to above
   const isTrusted = event.originEvent.isTrusted;
 });
 

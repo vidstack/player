@@ -4,11 +4,11 @@
 
   export const events = [
     'pointerup (origin)',
-    'vds-play-request',
+    'media-play-request',
     'play (native)',
-    'vds-play',
+    'play (vidstack)',
     'playing (native)',
-    'vds-playing',
+    'playing (vidstack)',
   ];
 </script>
 

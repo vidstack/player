@@ -33,7 +33,7 @@ The `<vds-media>` element exposes media state as HTML attributes and CSS propert
   seeking
   can-play
   ...
-  style="--vds-current-time: 500; --vds-duration: 1000; ..."
+  style="--media-current-time: 500; --media-duration: 1000; ..."
 >
   <!-- ... -->
 </vds-media>

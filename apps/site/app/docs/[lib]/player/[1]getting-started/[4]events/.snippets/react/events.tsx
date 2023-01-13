@@ -9,7 +9,7 @@ function MediaPlayer() {
 
   return (
     <Media>
-      <Video onVdsLoadedMetadata={onLoadedMetadata}>{/* ... */}</Video>
+      <Video onLoadedMetadata={onLoadedMetadata}>{/* ... */}</Video>
     </Media>
   );
 }

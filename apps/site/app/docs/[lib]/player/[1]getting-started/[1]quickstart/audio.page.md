@@ -9,11 +9,11 @@ description: Instructions to get your audio player installed and on-screen using
 ### Install NPM Package {% slot="title" %}
 
 {% slot name="description" %}
-Install `@vidstack/player` and dependencies via NPM.
+Install `vidstack` and dependencies via NPM.
 {% /slot %}
 
 ```bash {% copy=true %}
-npm i lit @vidstack/player@next
+npm i vidstack
 ```
 
 {% /step %}
@@ -23,12 +23,12 @@ npm i lit @vidstack/player@next
 ### Register Elements {% slot="title" %}
 
 {% slot name="description" %}
-Register the custom media elements. The `.js` extension is required for the package export map to work.
+Register the custom media elements and base styles.
 {% /slot %}
 
 ```js {% copy=true %}
-import '@vidstack/player/define/vds-media.js';
-import '@vidstack/player/define/vds-audio.js';
+import 'vidstack/styles/base.css';
+import 'vidstack/elements';
 ```
 
 {% /step %}

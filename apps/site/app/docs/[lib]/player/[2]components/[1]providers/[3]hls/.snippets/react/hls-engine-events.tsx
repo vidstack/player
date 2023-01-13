@@ -1,19 +1,19 @@
-import { type HlsDestroyingEvent, type HlsInstanceEvent } from '@vidstack/player';
-import { Hls } from '@vidstack/player-react';
+import { HLSVideo } from '@vidstack/react';
+import type { HLSDestroyingEvent, HLSInstanceEvent } from 'vidstack';
 
 function MediaPlayer() {
-  function onInstance(event: HlsInstanceEvent) {
+  function onInstance(event: HLSInstanceEvent) {
     // `hls.js` instance.
     const hls = event.detail;
   }
 
-  function onDestroy(event: HlsDestroyingEvent) {
+  function onDestroy(event: HLSDestroyingEvent) {
     // ...
   }
 
   return (
-    <Hls onVdsHlsInstance={onInstance} onVdsHlsDestroying={onDestroy}>
+    <HLSVideo onHlsInstance={onInstance} onHlsDestroying={onDestroy}>
       {/* ... */}
-    </Hls>
+    </HLSVideo>
   );
 }

@@ -9,33 +9,18 @@ description: Instructions to get your HLS player up and running through a CDN.
 ### Register Elements {% slot="title" %}
 
 {% slot name="description" %}
-Add the following `script` tags to register the custom media elements.
+Add the following `link` and `script` tags to register the custom media elements.
 {% /slot %}
 
-```html {% copyHighlight=true highlight="4-7" %}
+```html {% copyHighlight=true highlight="4-5" %}
 <!DOCTYPE html>
 <html>
   <head>
-    <script
-      type="module"
-      src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/cdn/bundle.js"
-    ></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vidstack/styles/base.min.css"></link>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/vidstack"></script>
   </head>
   <!-- ... -->
 </html>
-```
-
-You can register specific elements like so:
-
-```html {% copy=true %}
-<script
-  type="module"
-  src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/cdn/define/vds-media.js"
-></script>
-<script
-  type="module"
-  src="https://cdn.jsdelivr.net/npm/@vidstack/player@next/cdn/define/vds-hls.js"
-></script>
 ```
 
 {% /step %}
@@ -50,9 +35,9 @@ Add the following player HTML boilerplate to get started.
 
 ```html {% copy=true %}
 <vds-media>
-  <vds-hls poster="https://media-files.vidstack.io/poster.png">
+  <vds-hls-video poster="https://media-files.vidstack.io/poster.png">
     <video src="https://media-files.vidstack.io/hls/index.m3u8" preload="none"></video>
-  </vds-hls>
+  </vds-hls-video>
 </vds-media>
 ```
 

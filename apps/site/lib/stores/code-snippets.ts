@@ -6,7 +6,7 @@ import { cleanPathname } from './path';
 const store = writable(snippets);
 
 export const codeSnippets = derived([cleanPathname, store], ([$pathname, $snippets]) => {
-  return $snippets.filter((snippet) => $pathname.endsWith(snippet.path));
+  return $snippets.filter((snippet) => $pathname.startsWith(snippet.path));
 });
 
 if (import.meta.hot) {

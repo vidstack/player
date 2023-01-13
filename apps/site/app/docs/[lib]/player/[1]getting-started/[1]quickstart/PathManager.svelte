@@ -23,10 +23,10 @@
     const mediaProviderPath = `/${provider === 'video' ? '' : provider}`;
 
     if (install !== prevInstall) {
-      url.hash = '#select-install-method';
+      url.hash = '#select-js-library';
       prevInstall = install;
     } else if (lib !== prevLib) {
-      url.hash = '#select-js-library';
+      url.hash = '#select-media-provider';
       prevLib = lib;
     } else if (provider !== prevProvider) {
       url.hash = '#select-media-provider';

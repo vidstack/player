@@ -95,6 +95,24 @@ for ~96.42% of users tracked on caniuse.
 
 <slot />
 
+{% step orientation="horizontal" %}
+
+### Add Global Types {% slot="title" %}
+
+{% slot name="description" %}
+Add global Vidstack types if you're using TypeScript.
+{% /slot %}
+
+```json {% title="tsconfig.json" copyHighlight=true highlight="3" %}
+{
+  "compilerOptions": {
+    "types": ["vidstack/globals"]
+  }
+}
+```
+
+{% /step %}
+
 {% /steps %}
 
 Congratulations, you're done 🎉 You might not see anything yet and that's okay because you
@@ -118,14 +136,14 @@ The following media loading strategies are available:
   lower priority and doesn't need to be interactive immediately.
 - `visible` **(default)**: Load media once it has entered the visual viewport - use when media is below the fold and you prefer
   delaying loading until it's required.
-- `custom`: Load media when the `startLoadingMedia()` method is called _or_ the `vds-start-loading`
+- `custom`: Load media when the `startLoadingMedia()` method is called _or_ the `media-start-loading`
   event is dispatched - use when you need fine control of when media should begin loading.
 
 {% code_snippet name="loading-idle" highlight="html:2|react:6" /%}
 
 Here's another example using a custom loading strategy:
 
-{% code_snippet name="loading-custom" highlight="html:4,9|react:11,16" /%}
+{% code_snippet name="loading-custom" highlight="html:5,10|react:12,17" /%}
 
 ## Media Autoplay
 
@@ -165,10 +183,10 @@ the element will jump from the default size to the intrinsic media size, trigger
 which is a [poor user experience indicator](https://web.dev/cls) for both your users and search
 engines (i.e., Google).
 
-To avoid a layout shift, we recommend you fill `100%` of your media container and use an aspect
-ratio container which holds a fixed ratio (e.g., `16/9`) like so:
+To avoid a layout shift, we recommend use an aspect ratio container which holds a fixed ratio
+(e.g., `16/9`) like so:
 
-{% code_snippets name="sizing" highlight="" css=true copy=true copySteps=true highlight="html:2,6-8|react:1,6" /%}
+{% code_snippets name="sizing" highlight="" copy=true copySteps=true highlight="html:2,6-8|react:1,6" /%}
 
 {% callout type="tip" %}
 Ideally the ratio set should match the ratio of the media content itself (i.e., intrinsic aspect ratio)

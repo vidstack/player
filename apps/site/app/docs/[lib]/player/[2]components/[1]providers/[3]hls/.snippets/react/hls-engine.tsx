@@ -1,14 +1,14 @@
-import { type HlsElement } from '@vidstack/player';
-import { Hls } from '@vidstack/player-react';
+import { HLSVideo } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
+import type { HLSVideoElement } from 'vidstack';
 
 function MediaPlayer() {
-  const provider = useRef<HlsElement>(null);
+  const provider = useRef<HLSVideoElement>(null);
 
   useEffect(() => {
     // `hls.js` instance.
-    const engine = provider.current!.hlsEngine;
+    const engine = provider.current!.hls.engine;
   }, []);
 
-  return <Hls ref={provider}>{/* ... */}</Hls>;
+  return <HLSVideo ref={provider}>{/* ... */}</HLSVideo>;
 }

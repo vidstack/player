@@ -24,7 +24,7 @@ The player exposes media state as attributes and CSS variables on the `<vds-medi
   can-load
   can-play
   ...
-  style="--vds-current-time: 500; --vds-duration: 1000; ..."
+  style="--media-current-time: 500; --media-duration: 1000; ..."
 >
   <!-- ... -->
 </vds-media>

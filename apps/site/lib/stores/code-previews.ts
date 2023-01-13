@@ -6,7 +6,7 @@ import { cleanPathname } from './path';
 const store = writable(previews);
 
 export const codePreviews = derived([cleanPathname, store], ([$pathname, $previews]) =>
-  $previews.filter((preview) => $pathname.endsWith(preview.path)),
+  $previews.filter((preview) => $pathname.startsWith(preview.path)),
 );
 
 if (import.meta.hot) {

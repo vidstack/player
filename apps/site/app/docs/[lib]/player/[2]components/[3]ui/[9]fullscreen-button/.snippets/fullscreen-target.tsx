@@ -1,4 +1,4 @@
-import { FullscreenButton, Media } from '@vidstack/player-react';
+import { FullscreenButton, Media } from '@vidstack/react';
 
 function MediaPlayer() {
   return (

@@ -1,12 +1,13 @@
 <script type="module">
   function loadWhenImReady() {
-    const provider = document.querySelector('video');
+    const provider = document.querySelector('vds-video');
+    // ...
     provider.startLoadingMedia();
   }
 </script>
 
 <vds-media>
-  <vds-video loading="custom">
+  <vds-video load="custom">
     <!-- ... -->
   </vds-video>
 </vds-media>

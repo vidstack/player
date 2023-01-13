@@ -1,4 +1,4 @@
-import { AspectRatio, Media, Video } from '@vidstack/player-react';
+import { AspectRatio, Media, Video } from '@vidstack/react';
 
 function MediaPlayer() {
   return (

@@ -9,11 +9,11 @@ description: Instructions to get your HLS player installed and on-screen using H
 ### Install NPM Package {% slot="title" %}
 
 {% slot name="description" %}
-Install `@vidstack/player` and dependencies via NPM.
+Install `vidstack` and dependencies via NPM.
 {% /slot %}
 
 ```bash {% copy=true %}
-npm i lit hls.js @vidstack/player@next
+npm i hls.js vidstack
 ```
 
 {% /step %}
@@ -23,12 +23,12 @@ npm i lit hls.js @vidstack/player@next
 ### Register Elements {% slot="title" %}
 
 {% slot name="description" %}
-Register the custom media elements. The `.js` extension is required for the package export map to work.
+Register the custom media elements and base styles.
 {% /slot %}
 
 ```js {% copy=true %}
-import '@vidstack/player/define/vds-media.js';
-import '@vidstack/player/define/vds-hls.js';
+import 'vidstack/styles/base.css';
+import 'vidstack/elements';
 ```
 
 {% /step %}
@@ -43,9 +43,9 @@ Add the following player HTML boilerplate to get started.
 
 ```html {% copy=true %}
 <vds-media>
-  <vds-hls poster="https://media-files.vidstack.io/poster.png">
+  <vds-hls-video poster="https://media-files.vidstack.io/poster.png">
     <video src="https://media-files.vidstack.io/hls/index.m3u8" preload="none"></video>
-  </vds-hls>
+  </vds-hls-video>
 </vds-media>
 ```
 
