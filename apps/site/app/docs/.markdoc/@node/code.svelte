@@ -11,7 +11,10 @@
   $: translatedCode = translate($jsLib, cleanCode);
 
   function toComponentName(tagName: string) {
-    return `&lt;${kebabToPascalCase(tagName.replace(/^vds-/, '').replace(/>$/, ''))}&gt;`;
+    return `&lt;${kebabToPascalCase(tagName.replace(/^vds-/, '').replace(/>$/, '')).replace(
+      'Hls',
+      'HLS',
+    )}&gt;`;
   }
 
   function toPropertyName(attrName: string) {

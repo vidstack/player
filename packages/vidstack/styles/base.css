@@ -80,7 +80,8 @@ vds-fullscreen-button.focus-visible {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-vds-time-slider {
+vds-time-slider,
+vds-volume-slider {
   display: block;
   contain: layout;
   user-select: none;
@@ -88,16 +89,19 @@ vds-time-slider {
   -webkit-tap-highlight-color: transparent;
 }
 
-vds-time-slider:focus {
+vds-time-slider:focus,
+vds-volume-slider:focus {
   outline: none;
 }
 
-vds-time-slider:focus-visible {
+vds-time-slider:focus-visible,
+vds-volume-slider:focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-vds-time-slider.focus-visible {
+vds-time-slider.focus-visible,
+vds-volume-slider.focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }

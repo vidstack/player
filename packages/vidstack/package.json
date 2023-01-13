@@ -85,6 +85,7 @@
       "deno": "./dist/server/elements.js",
       "default": "./dist/prod/elements.js"
     },
+    "./styles/*": "./styles/*",
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
     "./elements.json": "./elements.json",

@@ -5,7 +5,7 @@ description: This component is used to enter and exit fullscreen.
 ## Usage
 
 The `$tag:vds-fullscreen-button` component will toggle the `fullscreen` state of media as it's
-pressed by dispatching a `vds-enter-fullscreen-request`, and `vds-exit-fullscreen-request`
+pressed by dispatching a `media-enter-fullscreen-request`, and `media-exit-fullscreen-request`
 event to the media controller.
 
 {% code_snippets name="usage" css=true copyHighlight=true highlight="html:3-6|react:7-10" /%}

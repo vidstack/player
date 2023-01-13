@@ -8,19 +8,7 @@ The `$tag:vds-aspect-ratio` component creates a container that will try to hold 
 desired aspect ratio. Fixed dimensions are great for creating uniform and responsive boxes,
 or avoiding layout shifts while media loads over the network.
 
-{% code_preview name="usage" size="medium" css=true copyHighlight=true highlight="html:2,7|react:6,9" /%}
-
-## Styling
-
-For the media to be rendered correctly, you need to ensure the media elements fill their
-container like so:
-
-```css {% copy=true %}
-vds-media {
-  display: inline-block;
-  width: 100%;
-}
-```
+{% code_preview name="usage" size="medium" copyHighlight=true highlight="html:2,7|react:6,9" /%}
 
 ### `aspect-ratio`
 
@@ -29,11 +17,6 @@ CSS property if [browser support](https://caniuse.com/mdn-css_properties_aspect-
 suitable to your application.
 
 ```css {% copy=true %}
-vds-media {
-  display: inline-block;
-  width: 100%;
-}
-
 video {
   aspect-ratio: 16 / 9;
 }

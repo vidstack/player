@@ -78,7 +78,7 @@ vds-volume-slider {
 .slider-track.fill {
   background-color: #a5b4fc;
   transform-origin: left center;
-  transform: translateY(-50%) scaleX(var(--vds-fill-rate));
+  transform: translateY(-50%) scaleX(var(--slider-fill-rate));
   will-change: transform;
   z-index: 1; /** above track. */
 }
@@ -86,7 +86,7 @@ vds-volume-slider {
 .slider-thumb-container {
   position: absolute;
   top: 0;
-  left: var(--vds-fill-percent);
+  left: var(--slider-fill-percent);
   width: var(--thumb-width);
   height: 100%;
   transform: translateX(-50%); /** re-center along x-axis. */
@@ -95,7 +95,7 @@ vds-volume-slider {
 }
 
 vds-volume-slider[dragging] .slider-thumb-container {
-  left: var(--vds-pointer-percent);
+  left: var(--slider-pointer-percent);
 }
 
 .slider-thumb {

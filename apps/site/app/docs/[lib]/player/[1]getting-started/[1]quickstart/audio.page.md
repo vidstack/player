@@ -28,7 +28,10 @@ Register the custom media elements and base styles.
 
 ```js {% copy=true %}
 import 'vidstack/styles/base.css';
-import 'vidstack/elements';
+
+import { defineCustomElements } from 'vidstack/elements';
+
+defineCustomElements();
 ```
 
 {% /step %}

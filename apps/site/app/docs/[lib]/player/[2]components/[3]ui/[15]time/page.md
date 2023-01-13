@@ -8,7 +8,7 @@ The `$tag:vds-time` component displays time formatted text (e.g., `01:30` repres
 30 seconds). The time can be based on either the current time, buffered amount, seekable amount,
 or duration.
 
-{% code_snippet name="usage" copyHighlight=true highlight="html:3|react:8" /%}
+{% code_snippet name="usage" copyHighlight=true highlight="html:3|react:7" /%}
 
 The `type` property can be set to:
 
@@ -25,4 +25,4 @@ The `type` property can be set to:
 
 You can use the `remainder` property to display the duration minus the selected `type`.
 
-{% code_snippet name="remainder" copyHighlight=true highlight="html:4|react:7" /%}
+{% code_snippet name="remainder" copyHighlight=true highlight="html:4|react:8" /%}

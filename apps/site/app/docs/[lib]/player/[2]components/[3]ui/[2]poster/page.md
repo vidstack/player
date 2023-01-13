@@ -51,4 +51,4 @@ vds-poster[img-error] {
 In the following example, we put together a poster with a big play button on top, once
 playback starts they'll both fade out:
 
-{% code_preview name="styling" css=true copySteps=true highlight="html:2-5,11-24|react:1,8-21" /%}
+{% code_preview name="styling" css=true copySteps=true highlight="html:4-17|react:1,8-21" /%}

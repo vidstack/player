@@ -4,7 +4,7 @@ description: This component is used to load and display a preview video over a s
 
 ## Usage
 
-The `$tag:vds-slider-video` component can be used to load a video in [`$tag:vds-slider`](/docs/player/components/ui/slider).
+The `$tag:vds-slider-video` component can be used to load a video in a slider.
 This is _generally_ used to show a preview video (low-resolution) as the user interacts with the
 time slider.
 
@@ -18,12 +18,12 @@ video are of the same length (i.e., duration).
 
 The following video attributes are applied to the `vds-slider-video` element:
 
-- `video-can-play`: Present when the video is ready for playback.
-- `video-error`: Present when media loading fails.
+- `can-play`: Present when the video is ready for playback.
+- `error`: Present when media loading fails.
 
 ```html
 <!-- Example. -->
-<vds-slider-video video-error />
+<vds-slider-video error />
 ```
 
 You can use these attributes to further style the slider video as it's being loaded, such as hiding
@@ -31,12 +31,12 @@ it before media is ready or if it fails to load.
 
 ```css {% copy=true %}
 /* Temporarily hide video while loading. */
-vds-slider-video:not([video-can-play]) {
+vds-slider-video:not([can-play]) {
   opacity: 0;
 }
 
 /* Hide video if it fails to load. */
-vds-slider-video[video-error] {
+vds-slider-video[error] {
   display: none;
 }
 ```

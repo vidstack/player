@@ -40,7 +40,7 @@ export const SliderVideoDefinition = defineCustomElement<SliderVideoElement>({
 
     function onCanPlay(trigger: Event) {
       $canPlay.set(true);
-      dispatchEvent(host.el, 'canplay', { trigger });
+      dispatchEvent(host.el, 'can-play', { trigger });
     }
 
     function onError(trigger: Event) {

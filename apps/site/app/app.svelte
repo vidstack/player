@@ -4,6 +4,8 @@
   import '$lib/styles/tailwind.css';
   import '$lib/polyfills/focus-visible';
 
+  import 'vidstack/styles/base.css';
+
   import { useRouter } from '@vessel-js/svelte';
   import { RouteAnnouncer, RouterOutlet } from '@vessel-js/svelte';
   import { defineCustomElements } from 'vidstack/elements';

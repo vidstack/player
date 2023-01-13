@@ -29,7 +29,7 @@ export const elementHeading = derived(elementTagName, ($elementTagName) => {
 });
 
 export function formatElementHeading(name: string) {
-  if (name === 'Hls') return 'HLS';
+  if (name === 'Hls Video') return 'HLS Video';
   if (name === 'Youtube') return 'YouTube';
   return name;
 }

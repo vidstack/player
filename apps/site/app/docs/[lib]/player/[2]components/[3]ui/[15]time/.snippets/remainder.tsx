@@ -4,7 +4,8 @@ function MediaPlayer() {
   return (
     <Media>
       {/* ... */}
-      <Time type="current" />
+      {/* Displays the amount of time remaining until playback ends. */}
+      <Time type="current" remainder />
     </Media>
   );
 }

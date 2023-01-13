@@ -2,7 +2,7 @@
   import '../.snippets/styling.css';
 </script>
 
-<vds-media class="w-full max-w-md">
+<vds-media class="max-w-md">
   <vds-aspect-ratio ratio="16/9">
     <vds-video muted poster="https://media-files.vidstack.io/poster.png">
       <video preload="none" src="https://media-files.vidstack.io/360p.mp4">

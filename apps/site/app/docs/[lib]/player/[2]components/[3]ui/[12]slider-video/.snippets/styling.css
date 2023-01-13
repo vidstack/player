@@ -42,7 +42,7 @@ vds-time-slider {
 .slider-track.fill {
   background-color: #a5b4fc;
   transform-origin: left center;
-  transform: translateY(-50%) scaleX(var(--vds-fill-rate));
+  transform: translateY(-50%) scaleX(var(--slider-fill-rate));
   will-change: transform;
   z-index: 1; /** above track. */
 }
@@ -50,7 +50,7 @@ vds-time-slider {
 .slider-thumb-container {
   position: absolute;
   top: 0;
-  left: var(--vds-fill-percent);
+  left: var(--slider-fill-percent);
   width: var(--thumb-width);
   height: 100%;
   transform: translateX(-50%); /** re-center along x-axis. */
@@ -59,7 +59,7 @@ vds-time-slider {
 }
 
 vds-time-slider[dragging] .slider-thumb-container {
-  left: var(--vds-pointer-percent);
+  left: var(--slider-pointer-percent);
 }
 
 .slider-thumb {
@@ -86,7 +86,7 @@ vds-time-slider[dragging] .slider-thumb-container {
   --opacity-duration: 200ms;
 
   /* clamp video to left and right of slider. */
-  --left-clamp: max(var(--width-half), var(--vds-pointer-percent));
+  --left-clamp: max(var(--width-half), var(--slider-pointer-percent));
   --right-clamp: calc(100% - var(--width-half));
   --left: min(var(--left-clamp), var(--right-clamp));
 
@@ -123,12 +123,12 @@ vds-slider-video {
 }
 
 /* Temporarily hide video while loading. */
-vds-slider-video:not([video-can-play]) {
+vds-slider-video:not([can-play]) {
   opacity: 0 !important;
 }
 
 /* Hide video if it fails to load. */
-vds-slider-video[video-error] {
+vds-slider-video[error] {
   display: none;
 }
 

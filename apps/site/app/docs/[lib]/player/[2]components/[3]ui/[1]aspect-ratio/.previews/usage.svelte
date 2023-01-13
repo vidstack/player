@@ -1,14 +1,9 @@
 <vds-media class="w-full max-w-md">
   <vds-aspect-ratio ratio="16/9">
-    <vds-hls-video controls poster="https://media-files.vidstack.io/poster.png">
-      <video
-        controls
-        preload="none"
-        src="https://media-files.vidstack.io/hls/index.m3u8"
-        poster="https://media-files.vidstack.io/poster-seo.png"
-      >
+    <vds-video controls poster="https://media-files.vidstack.io/poster.png">
+      <video preload="none" src="https://media-files.vidstack.io/720p.mp4">
         <track kind="captions" />
       </video>
-    </vds-hls-video>
+    </vds-video>
   </vds-aspect-ratio>
 </vds-media>

@@ -33,7 +33,7 @@ function links(slugs: string[], filter: RegExp): SidebarLink[] {
     .filter((slug) => filter.test(slug))
     .map((slug) => {
       return {
-        title: formatElementHeading(kebabToTitleCase(slug.split('/').pop()!)),
+        title: formatElementHeading(kebabToTitleCase(slug.split('/').pop()!).replace('Hls', 'HLS')),
         slug: `/docs/player${slug}`,
       };
     });

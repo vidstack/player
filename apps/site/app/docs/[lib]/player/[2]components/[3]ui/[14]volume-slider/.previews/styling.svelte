@@ -35,5 +35,5 @@
     </vds-volume-slider>
   </div>
 
-  <!-- <Gesture class="absolute top-0 left-0 w-full h-full" action="toggle:paused" type="click" /> -->
+  <!-- <vds-gesture class="absolute top-0 left-0 w-full h-full" action="toggle:paused" type="click" /> -->
 </vds-media>

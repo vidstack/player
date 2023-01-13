@@ -11,7 +11,7 @@ export interface SliderVideoProps {
 }
 
 export interface SliderVideoEvents {
-  canplay: SliderVideoCanPlayEvent;
+  'can-play': SliderVideoCanPlayEvent;
   error: SliderVideoErrorEvent;
 }
 

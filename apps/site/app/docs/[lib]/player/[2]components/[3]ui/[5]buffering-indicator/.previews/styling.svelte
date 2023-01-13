@@ -3,19 +3,16 @@
 
   import { onMount } from 'svelte';
 
-  let root;
-  let canPlay;
-  let waiting;
+  let root,
+    media,
+    canPlay = true,
+    waiting = true;
 
-  let canPlayValue = false;
-  let waitingValue = false;
-
-  $: if (canPlay) canPlay.set(canPlayValue);
-  $: if (waiting) waiting.set(waitingValue);
+  $: if (media) media.$store.canPlay = canPlay;
+  $: if (media) media.$store.waiting = waiting;
 
   onMount(async () => {
-    const media = await findMedia();
-    ({ canPlay, waiting } = media.$store);
+    media = await findMedia();
   });
 
   function findMedia() {
@@ -60,12 +57,12 @@
   <div class="my-4 flex space-x-4 px-2">
     <label>
       Can Play
-      <input type="checkbox" bind:checked={canPlayValue} />
+      <input type="checkbox" bind:checked={canPlay} />
     </label>
 
     <label>
       Buffering
-      <input type="checkbox" bind:checked={waitingValue} />
+      <input type="checkbox" bind:checked={waiting} />
     </label>
   </div>
 </div>

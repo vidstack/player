@@ -5,8 +5,4 @@
 
 {% experimental_element /%}
 
-## Import
-
-{% component_import /%}
-
 <slot />

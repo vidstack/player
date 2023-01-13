@@ -14,7 +14,7 @@ const findRE = /`(.*?)`/g;
 const replace = (_, c) => `<code>${encode(c)}</code>`;
 
 export async function loadComponentAPI(pathname: string): Promise<ComponentApi> {
-  const tagName = getTagNameFromPath(pathname);
+  let tagName = getTagNameFromPath(pathname);
   const component = elements.components.find((component) => component.tag.name === tagName)!;
 
   if (!component) return {};

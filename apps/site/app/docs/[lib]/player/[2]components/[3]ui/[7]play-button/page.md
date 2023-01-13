@@ -5,7 +5,7 @@ description: This component is used to play and pause media.
 ## Usage
 
 The `$tag:vds-play-button` component will toggle the `paused` state of media as it's pressed by
-dispatching a `vds-play-request`, and `vds-pause-request` event to the media controller.
+dispatching a `media-play-request`, and `media-pause-request` event to the media controller.
 
 {% code_snippets name="usage" css=true copyHighlight=true highlight="html:3-6|react:7-10" /%}
 
