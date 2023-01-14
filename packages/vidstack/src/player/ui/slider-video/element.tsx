@@ -61,5 +61,3 @@ export const SliderVideoDefinition = defineCustomElement<SliderVideoElement>({
     );
   },
 });
-
-export default SliderVideoDefinition;

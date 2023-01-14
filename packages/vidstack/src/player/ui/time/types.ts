@@ -30,6 +30,7 @@ export interface TimeProps {
  * Outputs a media duration (eg: `currentTime`, `duration`, `bufferedAmount`, etc.) value as time
  * formatted text.
  *
+ * @docs {@link https://www.vidstack.io/docs/player/components/ui/time}
  * @example
  * ```html
  * <vds-time type="current"></vds-time>

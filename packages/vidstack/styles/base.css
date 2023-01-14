@@ -11,6 +11,10 @@ vds-media {
   contain: content;
 }
 
+vds-media[view-type='audio'] {
+  width: auto;
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * PROVIDERS
@@ -46,12 +50,47 @@ vds-hls-video > video:not([height]) {
 vds-play-button,
 vds-mute-button,
 vds-fullscreen-button {
-  display: table;
+  display: inline-block;
+  position: relative;
+  color: white;
   contain: content;
   user-select: none;
   cursor: pointer;
+  min-width: 48px;
+  min-height: 48px;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+vds-play-button *[slot],
+vds-mute-button *[slot],
+vds-fullscreen-button *[slot] {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+vds-play-button[paused] [slot='play'],
+vds-play-button:not([paused]) [slot='pause'],
+vds-mute-button[volume-high] [slot='volume-high'],
+vds-mute-button[volume-low] [slot='volume-low'],
+vds-mute-button[muted] [slot='volume-muted'],
+vds-fullscreen-button:not([fullscreen]) [slot='enter'],
+vds-fullscreen-button[fullscreen] [slot='exit'] {
+  opacity: 1;
+}
+
+vds-fullscreen-button[hidden] {
+  display: none;
+}
+
+vds-play-button > shadow-root:not(:only-child),
+vds-mute-button > shadow-root:not(:only-child),
+vds-fullscreen-button > shadow-root:not(:only-child) {
+  display: none;
 }
 
 vds-play-button:focus,

@@ -28,30 +28,31 @@ export interface VideoProviderCSSVars {
 }
 
 /**
- * The `<vds-video>` element adapts the underlying `<video>` element to satisfy the media provider
+ * The `<vds-video>` component adapts the slotted `<video>` element to satisfy the media provider
  * contract, which generally involves providing a consistent API for loading, managing, and
  * tracking media state.
  *
- * @slot - Used to pass in the `<video>` element.
+ * @docs {@link https://www.vidstack.io/docs/player/components/providers/video}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video}
+ * @slot - Used to pass in the `<video>` element.
  * @example
  * ```html
- * <vds-video poster="https://media-files.vidstack.io/poster.png">
+ * <vds-video>
  *   <video
  *     controls
  *     preload="none"
  *     src="https://media-files.vidstack.io/720p.mp4"
- *     poster="https://media-files.vidstack.io/poster-seo.png"
+ *     poster="https://media-files.vidstack.io/poster.png"
  *   ></video>
  * </vds-video>
  * ```
  * @example
  * ```html
- * <vds-video poster="https://media-files.vidstack.io/poster.png">
+ * <vds-video>
  *   <video
  *     controls
  *     preload="none"
- *     poster="https://media-files.vidstack.io/poster-seo.png"
+ *     poster="https://media-files.vidstack.io/poster.png"
  *   >
  *     <source
  *       src="https://media-files.vidstack.io/720p.mp4"

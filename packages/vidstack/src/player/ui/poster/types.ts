@@ -12,12 +12,7 @@ export interface PosterProps {
  * Loads and displays the current media poster image. By default, the media provider's
  * loading strategy is respected meaning the poster won't load until the media can.
  *
- * 💡 The following img attributes are applied:
- *
- * - `img-loading`: When the poster image is in the process of being downloaded by the browser.
- * - `img-loaded`: When the poster image has successfully loaded.
- * - `img-error`: When the poster image has failed to load.
- *
+ * @docs {@link https://www.vidstack.io/docs/player/components/ui/poster}
  * @example
  * ```html
  * <vds-media>

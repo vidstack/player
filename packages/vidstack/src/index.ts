@@ -8,6 +8,12 @@ export * from './foundation/fullscreen/events';
 export * from './foundation/logger/events';
 export * from './foundation/orientation/events';
 export * from './foundation/orientation/screen-orientation';
+export {
+  hasTriggerEvent,
+  walkTriggerEventChain,
+  findTriggerEvent,
+  appendTriggerEvent,
+} from 'maverick.js/std';
 
 // Player Media
 export * from './player/media/element/context';

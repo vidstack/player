@@ -30,5 +30,3 @@ export const VideoDefinition = defineCustomElement<VideoElement>({
     return mergeProperties(accessors(), members);
   },
 });
-
-export default VideoDefinition;

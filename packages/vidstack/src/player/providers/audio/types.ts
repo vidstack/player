@@ -9,10 +9,11 @@ export interface AudioProviderEvents extends HTMLProviderEvents {}
 export interface AudioProviderMembers extends HTMLProviderMembers {}
 
 /**
- * The `<vds-audio>` element adapts the underlying `<audio>` element to satisfy the media provider
+ * The `<vds-audio>` component adapts the slotted `<audio>` element to satisfy the media provider
  * contract, which generally involves providing a consistent API for loading, managing, and
  * tracking media state.
  *
+ * @docs {@link https://www.vidstack.io/docs/player/components/providers/audio}
  * @slot - Used to pass in the `<audio>` element.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio}
  * @example

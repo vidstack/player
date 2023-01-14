@@ -15,27 +15,11 @@ export interface PlayButtonMembers extends ToggleButtonMembers {}
 /**
  * A button for toggling the playback state (play/pause) of the current media.
  *
- * 💡 The following attributes are applied:
- *
- * - `paused`: Applied when media playback has paused.
- *
- * @slot - Used to pass content into the play toggle for showing play/pause states.
+ * @docs {@link https://www.vidstack.io/docs/player/components/ui/play-button}
+ * @slot - Used to override the play/pause icons.
  * @example
  * ```html
- * <vds-play-button>
- *   <div class="play">Play</div>
- *   <div class="pause">Pause</div>
- * </vds-play-button>
- * ```
- * @example
- * ```css
- * vds-play-button:not([paused]) .play {
- *   display: none;
- * }
- *
- * vds-play-button[paused] .pause {
- *   display: none;
- * }
+ * <vds-play-button></vds-play-button>
  * ```
  */
 export interface PlayButtonElement

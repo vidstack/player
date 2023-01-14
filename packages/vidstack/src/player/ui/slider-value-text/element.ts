@@ -36,5 +36,3 @@ export const SliderValueTextDefinition = defineCustomElement<SliderValueTextElem
     return () => $text;
   },
 });
-
-export default SliderValueTextDefinition;

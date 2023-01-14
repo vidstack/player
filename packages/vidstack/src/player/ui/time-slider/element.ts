@@ -112,5 +112,3 @@ export const TimeSliderDefinition = defineCustomElement<TimeSliderElement>({
     });
   },
 });
-
-export default TimeSliderDefinition;

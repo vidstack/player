@@ -22,31 +22,11 @@ export interface FullscreenButtonMembers extends ToggleButtonMembers, Fullscreen
 /**
  * A button for toggling the fullscreen mode of the player.
  *
- * 💡 The following attributes are applied:
- *
- * - `fullscreen`: Applied when the media has entered fullscreen.
- *
- * 🚨 The `hidden` attribute will be present on this element in the event fullscreen cannot be
- * requested (no support). There are default styles for this by setting the `display` property to
- * `none`. Important to be aware of this and update it according to your needs.
- *
- * @slot - Used to pass content into the fullscreen toggle for showing enter/exit states.
+ * @docs {@link https://www.vidstack.io/docs/player/components/ui/fullscreen-button}
+ * @slot - Used to override the enter/exit icons.
  * @example
  * ```html
- * <vds-fullscreen-button>
- *   <div class="enter">Enter</div>
- *   <div class="exit">Exit</div>
- * </vds-fullscreen-button>
- * ```
- * @example
- * ```css
- * vds-fullscreen-button[fullscreen] .enter {
- *   display: none;
- * }
- *
- * vds-fullscreen-button:not([fullscreen]) .exit {
- *   display: none;
- * }
+ * <vds-fullscreen-button></vds-fullscreen-button>
  * ```
  */
 export interface FullscreenButtonElement

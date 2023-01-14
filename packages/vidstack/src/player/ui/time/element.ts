@@ -40,5 +40,3 @@ function getSeconds(type: TimeProps['type'], $media: MediaStore) {
       return $media.currentTime;
   }
 }
-
-export default TimeDefinition;

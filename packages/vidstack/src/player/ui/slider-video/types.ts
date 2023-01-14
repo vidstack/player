@@ -46,20 +46,13 @@ export interface SliderVideoErrorEvent extends DOMEvent<void> {
  * time position. The video will automatically be updated to match, so ensure it's of the same
  * length as the original.
  *
- * 💡 The following attributes are updated for your styling needs:
- *
- * - `can-play`: Applied when the video is ready for playback.
- * - `error`: Applied when a media error has been encountered.
- *
- * 💡 The `canplay` and `error` events are re-dispatched by this element for you to listen to if
- * needed.
- *
+ * @docs {@link https://www.vidstack.io/docs/player/components/ui/slider-video}
  * @example
  * ```html
  * <vds-time-slider>
- *  <vds-slider-video
- *    src="/low-res-video.mp4"
- *  ></vds-slider-video>
+ *   <div class="preview">
+ *     <vds-slider-video src="/low-res-video.mp4"></vds-slider-video>
+ *   </div>
  * </vds-time-slider>
  * ```
  */

@@ -33,7 +33,16 @@ export interface SliderValueTextProps {
 /**
  * Outputs the current slider value as text.
  *
+ * @docs {@link https://www.vidstack.io/docs/player/components/ui/slider-value-text}
  * @tagname vds-slider-value-text
+ * @example
+ * ```html
+ * <vds-time-slider>
+ *   <div class="preview">
+ *     <vds-slider-value-text type="current"></vds-slider-value-text>
+ *   </div>
+ * </vds-time-slider>
+ * ```
  * @example
  * ```html
  * <vds-slider-value-text

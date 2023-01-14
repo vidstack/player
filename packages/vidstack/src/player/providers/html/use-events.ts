@@ -140,12 +140,10 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   }
 
   function onAbort(event: Event) {
-    if (media![IGNORE_NEXT_ABORT]) {
+    if (props.onAbort?.(event) || media![IGNORE_NEXT_ABORT]) {
       media![IGNORE_NEXT_ABORT] = false;
       return;
     }
-
-    if (props.onAbort?.(event)) return;
 
     onSourceChange();
     dispatchEvent(provider, 'abort', { trigger: event });

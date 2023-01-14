@@ -30,6 +30,11 @@ export interface HLSProviderProps extends VideoProviderProps {
 }
 
 export interface HLSProviderMembers extends VideoProviderMembers {
+  /**
+   * Contains the HLS constructor, engine (i.e., `hls.js` instance), and additional information
+   * on whether HLS is supported in this environment or the current engine is attached to the
+   * underlying HTML media element.
+   */
   readonly hls: {
     /**
      * The `hls.js` constructor.
@@ -62,40 +67,37 @@ export interface HLSProviderMembers extends VideoProviderMembers {
 export interface HLSProviderCSSVars extends VideoProviderCSSVars {}
 
 /**
- * The `<vds-hls-video>` element adapts the underlying `<video>` element to satisfy the media
- * provider interface, which generally involves providing a consistent API for loading, managing,
- * and tracking media state.
- *
- * This element also introduces support for HLS streaming via the popular `hls.js` library.
- * HLS streaming is either [supported natively](https://caniuse.com/?search=hls) (generally
+ * The `<vds-hls-video>` component introduces support for HLS streaming via the popular `hls.js`
+ * library. HLS streaming is either [supported natively](https://caniuse.com/?search=hls) (generally
  * on iOS), or in environments that [support the Media Stream API](https://caniuse.com/?search=mediastream).
  *
  * Do note, `hls.js` is only loaded when needed and supported.
  *
  * 💡 This element can attach `hls.js` events so you can listen to them through the native DOM
- * interface (i.e., .addEventListener(`hls-media-attaching`)).
+ * interface (i.e., el.addEventListener(`hls-media-attaching`)).
  *
- * @slot - Used to pass in the `<video>` element.
+ * @docs {@link https://www.vidstack.io/docs/player/components/providers/hls-video}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video}
  * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md}
+ * @slot - Used to pass in the `<video>` element.
  * @example
  * ```html
- * <vds-hls-video poster="https://media-files.vidstack.io/poster.png">
+ * <vds-hls-video>
  *   <video
  *     controls
  *     preload="none"
  *     src="https://media-files.vidstack.io/hls/index.m3u8"
- *     poster="https://media-files.vidstack.io/poster-seo.png"
+ *     poster="https://media-files.vidstack.io/poster.png"
  *   ></video>
  * </vds-hls-video>
  * ```
  * @example
  * ```html
- * <vds-hls-video poster="https://media-files.vidstack.io/poster.png">
+ * <vds-hls-video>
  *   <video
  *     controls
  *     preload="none"
- *     poster="https://media-files.vidstack.io/poster-seo.png"
+ *     poster="https://media-files.vidstack.io/poster.png"
  *   >
  *     <source
  *       src="https://media-files.vidstack.io/hls/index.m3u8"

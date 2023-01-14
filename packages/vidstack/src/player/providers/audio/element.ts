@@ -30,5 +30,3 @@ export const AudioDefinition = defineCustomElement<AudioElement>({
     return mergeProperties(accessors(), members);
   },
 });
-
-export default AudioDefinition;

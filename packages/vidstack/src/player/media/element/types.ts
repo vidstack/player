@@ -5,6 +5,7 @@ import type { LogLevel } from '../../../foundation/logger/log-level';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/screen-orientation';
 import type { MediaControllerEvents } from '../controller/events';
 import type { UseMediaController } from '../controller/use-media-controller';
+import type { MediaProviderElement } from '../provider/types';
 import type { MediaStore } from '../store';
 
 export interface MediaElementProps {
@@ -27,6 +28,10 @@ export interface MediaElementProps {
 }
 
 export interface MediaElementMembers extends MediaElementProps, UseMediaController {
+  /**
+   * The current media provider element.
+   */
+  readonly provider: MediaProviderElement | null;
   /**
    * The media store holds all current media state.
    */
@@ -69,6 +74,7 @@ export interface MediaElementCSSVars {
  * media controller, and expose media state through HTML attributes and CSS properties for styling
  * purposes.
  *
+ * @docs {@link https://www.vidstack.io/docs/player/components/media/media}
  * @slot - Used to pass in components that use/manage/provide media state.
  * @example
  * ```html

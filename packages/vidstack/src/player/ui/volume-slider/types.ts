@@ -15,11 +15,18 @@ export interface VolumeSliderMembers
 /**
  * A slider control that lets the user specify their desired volume level.
  *
- * @slot - Used to pass in slider parts such as the thumb or track.
+ * @docs {@link https://www.vidstack.io/docs/player/components/ui/volume-slider}
+ * @slot - Used to extend the slider UI.
+ * @example
+ * ```html
+ * <vds-volume-slider></vds-volume-slider>
+ * ```
  * @example
  * ```html
  * <vds-volume-slider>
- *   <div class="thumb"></div>
+ *   <div class="preview">
+ *     <vds-slider-value-text type="current"></vds-slider-value-text>
+ *   </div>
  * </vds-volume-slider>
  * ```
  */

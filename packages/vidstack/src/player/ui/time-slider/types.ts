@@ -26,11 +26,18 @@ export interface TimeSliderMembers
 /**
  * A slider control that lets the user specify their desired time level.
  *
- * @slot - Used to pass in slider parts such as the thumb or track.
+ * @docs {@link https://www.vidstack.io/docs/player/components/ui/time-slider}
+ * @slot - Used to extend the slider UI.
+ * @example
+ * ```html
+ * <vds-time-slider></vds-time-slider>
+ * ```
  * @example
  * ```html
  * <vds-time-slider>
- *   <div class="thumb"></div>
+ *   <div class="preview">
+ *     <vds-slider-value-text type="current"></vds-slider-value-text>
+ *   </div>
  * </vds-time-slider>
  * ```
  */

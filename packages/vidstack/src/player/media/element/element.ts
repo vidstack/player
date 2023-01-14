@@ -95,11 +95,12 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     });
 
     return mergeProperties(accessors(), controller, {
+      get provider() {
+        return controller.provider;
+      },
       get $store() {
         return $media;
       },
     });
   },
 });
-
-export default MediaDefinition;

@@ -61,5 +61,3 @@ export const PosterDefinition = defineCustomElement<PosterElement>({
     return () => <img src={$imgSrc()} alt={$imgAlt()} $on:load={onLoad} $on:error={onError} />;
   },
 });
-
-export default PosterDefinition;

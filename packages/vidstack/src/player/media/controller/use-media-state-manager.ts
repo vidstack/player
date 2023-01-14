@@ -168,7 +168,6 @@ export function useMediaStateManager(
   function onLoadStart(event: ME.MediaLoadStartEvent) {
     attachLoadStartEventListeners();
     appendTriggerEvent(event, trackedEvents.get('source-change'));
-    appendTriggerEvent(event, trackedEvents.get('can-load'));
   }
 
   function onError(event: ME.MediaErrorEvent) {
@@ -431,6 +430,8 @@ export function useMediaStateManager(
       appendTriggerEvent(event, requestEvent);
     });
   }
+
+  return { $mediaProvider };
 }
 
 function onProgress($media: MediaStore, event: ME.MediaProgressEvent) {

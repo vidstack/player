@@ -104,7 +104,7 @@ function MyPlayer() {
 
 We provide a few hooks to make it easy for you to interact with the current media such as
 getting the current state of playback (e.g., "is the media paused?"), or dispatching
-[media request events](/docs/player/getting-started/events/#request-events) (e.g., request media to
+[media request events](/docs/player/getting-started/events#request-events) (e.g., request media to
 play/pause).
 
 ### `useMediaState`
@@ -175,7 +175,7 @@ interface on GitHub as a reference.
 ### `useMediaRemote`
 
 The media remote hook provides a simple facade for dispatching
-[media request events](/docs/player/getting-started/events/#request-events). This can be used to
+[media request events](/docs/player/getting-started/events#request-events). This can be used to
 request media playback to play/pause, change the current volume level, seek to a different time
 position, and other actions that change media state.
 

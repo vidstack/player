@@ -148,5 +148,3 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
     });
   },
 });
-
-export default HLSVideoDefinition;

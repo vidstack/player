@@ -33,5 +33,3 @@ export const AspectRatioDefinition = defineCustomElement<AspectRatioElement>({
     }
   },
 });
-
-export default AspectRatioDefinition;

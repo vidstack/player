@@ -62,5 +62,3 @@ export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
     });
   },
 });
-
-export default VolumeSliderDefinition;

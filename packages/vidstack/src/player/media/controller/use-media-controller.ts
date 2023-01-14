@@ -9,6 +9,7 @@ import {
   UseScreenOrientation,
 } from '../../../foundation/orientation/use-screen-orientation';
 import { withMediaFullscreenOptions } from '../provider/media-fullscreen';
+import type { MediaProviderElement } from '../provider/types';
 import { MediaProviderContext } from '../provider/use-media-provider';
 import { MediaStoreContext } from '../store';
 import { UseMediaUser, useMediaUser } from '../user';
@@ -47,14 +48,16 @@ export function useMediaController(
       }),
     ),
     logPrinter = __DEV__ ? useLogPrinter($target) : undefined,
-    requestManager = useMediaRequestManager($target, user, fullscreen);
-
-  useMediaStateManager($target, requestManager);
+    requestManager = useMediaRequestManager($target, user, fullscreen),
+    { $mediaProvider } = useMediaStateManager($target, requestManager);
 
   return {
     user,
     orientation,
     fullscreen,
+    get provider() {
+      return $mediaProvider();
+    },
     get logLevel() {
       return __DEV__ ? logPrinter!.logLevel : 'silent';
     },
@@ -79,17 +82,21 @@ export interface UseMediaController {
   /**
    * Media user settings which currently supports configuring user idling behavior.
    */
-  user: UseMediaUser;
+  readonly user: UseMediaUser;
+  /**
+   * The current media provider element.
+   */
+  readonly provider: MediaProviderElement | null;
   /**
    * Controls the screen orientation of the current browser window and dispatches orientation
    * change events on this element.
    */
-  orientation: UseScreenOrientation;
+  readonly orientation: UseScreenOrientation;
   /**
    * Controls the fullscreen state of this element and dispatches fullscreen change/error
    * events on this element.
    */
-  fullscreen: UseFullscreen;
+  readonly fullscreen: UseFullscreen;
   /**
    * Attempts to display this element in fullscreen. The promise will resolve if successful, and
    * reject if not.

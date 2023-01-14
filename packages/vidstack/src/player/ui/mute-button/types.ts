@@ -15,27 +15,11 @@ export interface MuteButtonMembers extends ToggleButtonMembers {}
 /**
  * A button for toggling the muted state of the player.
  *
- * 💡 The following attributes are applied:
- *
- * - `muted`: Applied when media audio has been muted.
- *
- * @slot - Used to pass content into the mute toggle for showing mute/unmute states.
+ * @docs {@link https://www.vidstack.io/docs/player/components/ui/mute-button}
+ * @slot - Used to override the volume low, high, and muted icons.
  * @example
  * ```html
- * <vds-mute-button>
- *   <div class="mute">Mute</div>
- *   <div class="unmute">Unmute</div>
- * </vds-mute-button>
- * ```
- * @example
- * ```css
- * vds-mute-button[muted] .mute {
- *   display: none;
- * }
- *
- * vds-mute-button:not([muted]) .unmute {
- *   display: none;
- * }
+ * <vds-mute-button></vds-mute-button>
  * ```
  */
 export interface MuteButtonElement

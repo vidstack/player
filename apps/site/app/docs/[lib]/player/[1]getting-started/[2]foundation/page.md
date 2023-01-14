@@ -61,7 +61,7 @@ unsubscribe();
 ## Media Remote
 
 The `MediaRemoteControl` class provides a simple facade for dispatching
-[media request events](/docs/player/getting-started/events/#request-events). This can be used to
+[media request events](/docs/player/getting-started/events#request-events). This can be used to
 request media playback to play/pause, change the current volume level, seek to a different time
 position, and other actions that change media state.
 
