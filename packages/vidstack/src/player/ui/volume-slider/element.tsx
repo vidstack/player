@@ -59,6 +59,17 @@ export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
       get value() {
         return members.value;
       },
+      $render: () => {
+        return (
+          <>
+            <div part="track"></div>
+            <div part="track track-fill"></div>
+            <div part="thumb-container">
+              <div part="thumb"></div>
+            </div>
+          </>
+        );
+      },
     });
   },
 });

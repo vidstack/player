@@ -41,6 +41,14 @@ vds-hls-video > video:not([height]) {
   height: var(--video-height, auto);
 }
 
+vds-time {
+  display: inline-block;
+  contain: content;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: sans-serif;
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * BUTTONS
@@ -52,45 +60,11 @@ vds-mute-button,
 vds-fullscreen-button {
   display: inline-block;
   position: relative;
-  color: white;
   contain: content;
   user-select: none;
   cursor: pointer;
-  min-width: 48px;
-  min-height: 48px;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
-}
-
-vds-play-button *[slot],
-vds-mute-button *[slot],
-vds-fullscreen-button *[slot] {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-}
-
-vds-play-button[paused] [slot='play'],
-vds-play-button:not([paused]) [slot='pause'],
-vds-mute-button[volume-high] [slot='volume-high'],
-vds-mute-button[volume-low] [slot='volume-low'],
-vds-mute-button[muted] [slot='volume-muted'],
-vds-fullscreen-button:not([fullscreen]) [slot='enter'],
-vds-fullscreen-button[fullscreen] [slot='exit'] {
-  opacity: 1;
-}
-
-vds-fullscreen-button[hidden] {
-  display: none;
-}
-
-vds-play-button > shadow-root:not(:only-child),
-vds-mute-button > shadow-root:not(:only-child),
-vds-fullscreen-button > shadow-root:not(:only-child) {
-  display: none;
 }
 
 vds-play-button:focus,
@@ -121,8 +95,10 @@ vds-fullscreen-button.focus-visible {
 
 vds-time-slider,
 vds-volume-slider {
-  display: block;
+  display: inline-block;
   contain: layout;
+  width: 100%;
+  cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -155,6 +131,7 @@ vds-slider-value-text {
   display: inline-block;
   contain: content;
   font-size: 14px;
+  font-family: sans-serif;
 }
 
 /*
@@ -172,17 +149,6 @@ vds-slider-video video {
   display: block;
   width: 100%;
   height: auto;
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * TIME
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-vds-time {
-  display: inline-block;
-  contain: content;
 }
 
 /*

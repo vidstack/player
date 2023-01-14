@@ -1,0 +1,46 @@
+vds-play-button,
+vds-mute-button,
+vds-fullscreen-button {
+  border-radius: 2px;
+  color: white;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+vds-play-button *[slot],
+vds-mute-button *[slot],
+vds-fullscreen-button *[slot] {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+vds-play-button[paused] [slot='play'],
+vds-play-button:not([paused]) [slot='pause'],
+vds-mute-button[volume-high] [slot='volume-high'],
+vds-mute-button[volume-low] [slot='volume-low'],
+vds-mute-button[muted] [slot='volume-muted'],
+vds-fullscreen-button:not([fullscreen]) [slot='enter'],
+vds-fullscreen-button[fullscreen] [slot='exit'] {
+  opacity: 1;
+}
+
+vds-fullscreen-button[hidden] {
+  display: none;
+}
+
+vds-play-button > shadow-root:not(:only-child),
+vds-mute-button > shadow-root:not(:only-child),
+vds-fullscreen-button > shadow-root:not(:only-child) {
+  display: none;
+}
+
+vds-play-button:hover,
+vds-mute-button:hover,
+vds-fullscreen-button:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in;
+}
