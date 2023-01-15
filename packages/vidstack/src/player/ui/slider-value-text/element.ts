@@ -25,7 +25,7 @@ export const SliderValueTextDefinition = defineCustomElement<SliderValueTextElem
       if (format === 'percent') {
         const range = $slider.max - $slider.min;
         const percent = (value / range) * 100;
-        return `${round(percent, $decimalPlaces())}%`;
+        return round(percent, $decimalPlaces()) + '﹪';
       } else if (format === 'time') {
         return formatTime(value, $padHours(), $showHours());
       } else {

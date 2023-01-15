@@ -24,9 +24,11 @@ export interface VolumeSliderMembers
  * @example
  * ```html
  * <vds-volume-slider>
- *   <div class="preview">
- *     <vds-slider-value-text type="current"></vds-slider-value-text>
- *   </div>
+ *   <vds-slider-value-text
+ *     type="pointer"
+ *     format="percent"
+ *     slot="preview"
+ *   ></vds-slider-value-text>
  * </vds-volume-slider>
  * ```
  */

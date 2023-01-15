@@ -96,6 +96,7 @@ vds-fullscreen-button.focus-visible {
 vds-time-slider,
 vds-volume-slider {
   display: inline-block;
+  position: relative;
   contain: layout;
   width: 100%;
   cursor: pointer;
@@ -143,12 +144,25 @@ vds-slider-value-text {
 vds-slider-video {
   display: inline-block;
   contain: content;
+  background-color: black;
 }
 
 vds-slider-video video {
   display: block;
-  width: 100%;
   height: auto;
+  width: 156px;
+}
+
+/* Temporarily hide video while loading. */
+vds-slider-video:not([can-play]) {
+  opacity: 0;
+}
+
+/* Hide video if it fails to load. */
+vds-slider-video[error],
+vds-slider-video[error] video {
+  display: none;
+  width: 0px;
 }
 
 /*
@@ -203,4 +217,8 @@ vds-poster img {
   user-select: none;
   -webkit-user-select: none;
   box-sizing: border-box;
+}
+
+vds-poster[img-error] {
+  display: none;
 }

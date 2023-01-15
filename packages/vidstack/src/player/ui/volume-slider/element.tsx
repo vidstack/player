@@ -1,3 +1,4 @@
+import throttle from 'just-throttle';
 import { effect } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
@@ -28,8 +29,8 @@ export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
           $props: props,
           readonly: true,
           aria: { valueMin: 0, valueMax: 100 },
-          onValueChange: onVolumeChange,
-          onDragValueChange: onVolumeChange,
+          onValueChange: throttle(onVolumeChange, 25),
+          onDragValueChange: throttle(onVolumeChange, 25),
         },
         accessors,
       ),
@@ -40,7 +41,7 @@ export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
     });
 
     effect(() => {
-      $store.value = $media.volume * 100;
+      $store.value = $media.muted ? 0 : $media.volume * 100;
     });
 
     function onVolumeChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {

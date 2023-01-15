@@ -1,6 +1,6 @@
 import { effect, peek, provideContext, ReadSignal, Signals, useContext } from 'maverick.js';
 import { CustomElementHost, onAttach } from 'maverick.js/element';
-import { ariaBool, mergeProperties } from 'maverick.js/std';
+import { ariaBool, mergeProperties, setStyle } from 'maverick.js/std';
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
@@ -54,6 +54,22 @@ export function useSlider(
     setAttributeIfEmpty(host.el!, 'tabindex', '0');
     setAttributeIfEmpty(host.el!, 'aria-orientation', 'horizontal');
     setAttributeIfEmpty(host.el!, 'autocomplete', 'off');
+  });
+
+  effect(() => {
+    const target = host.$el();
+    if (!target) return;
+
+    const preview = target.querySelector('[slot="preview"]') as HTMLElement;
+    if (!preview) return;
+
+    const observer = new ResizeObserver(function onPreviewResize([entry]) {
+      setStyle(preview, '--computed-width', entry.contentRect.width + 'px');
+      setStyle(preview, '--computed-height', entry.contentRect.height + 'px');
+    });
+
+    observer.observe(preview);
+    return () => observer.disconnect();
   });
 
   if (!readonly) {

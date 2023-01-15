@@ -50,9 +50,7 @@ export interface SliderVideoErrorEvent extends DOMEvent<void> {
  * @example
  * ```html
  * <vds-time-slider>
- *   <div class="preview">
- *     <vds-slider-video src="/low-res-video.mp4"></vds-slider-video>
- *   </div>
+ *   <vds-slider-video src="/low-res-video.mp4" slot="preview"></vds-slider-video>
  * </vds-time-slider>
  * ```
  */
