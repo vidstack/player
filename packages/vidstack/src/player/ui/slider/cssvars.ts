@@ -1,4 +1,10 @@
 export interface SliderCSSVars {
+  // TODO: add the following after writable CSS vars are optional in Maverick
+  // --media-slider-height, 48px
+  // --media-slider-thumb-size, 14px
+  // --media-slider-focused-thumb-size, calc(var(--thumb-size) * 1.1)
+  // --media-slider-track-height, 4px
+  // --media-slider-focused-track-height, calc(var(--track-height) * 1.25)
   /**
    * The ratio of the slider that is filled (eg: `0.3`).
    */

@@ -91,7 +91,7 @@
           </h5>
           <ul class="border-divider space-y-3 border-l">
             {#each categoryLinks as link (link.title + link.slug)}
-              <li class="first:mt-5">
+              <li class="first:mt-5 flex items-center">
                 <a
                   class={clsx(
                     '992:py-1 -ml-px flex items-center border-l-2 py-2 pl-4',
@@ -105,12 +105,9 @@
                     : ''}
                   data-prefetch
                 >
-                  {#if link.icon?.before}
-                    <svelte:component this={link.icon.before} class="mr-1" width="20" height="20" />
-                  {/if}
                   {link.title}
-                  {#if link.icon?.after}
-                    <svelte:component this={link.icon.after} class="ml-1" width="20" height="20" />
+                  {#if link.wip}
+                    *
                   {/if}
                 </a>
               </li>

@@ -1,3 +1,7 @@
+body {
+  overflow-y: scroll;
+}
+
 .docs {
   --breadcrumbs-height: 5rem;
 

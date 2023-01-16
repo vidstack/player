@@ -7,6 +7,12 @@ vds-fullscreen-button {
   min-height: 48px;
 }
 
+vds-play-button > shadow-root,
+vds-mute-button > shadow-root,
+vds-fullscreen-button > shadow-root {
+  display: unset;
+}
+
 vds-play-button *[slot],
 vds-mute-button *[slot],
 vds-fullscreen-button *[slot] {

@@ -1,10 +1,7 @@
 import { derived, get, writable, type Readable } from 'svelte/store';
-import ExperimentalIcon from '~icons/ri/test-tube-fill';
 
 import type { SidebarLinks } from '$lib/layouts/sidebar/context';
 import { uppercaseFirstLetter } from '$lib/utils/string';
-
-import { EXPERIMENTAL_TAG_NAMES } from './element';
 
 export type JSLibType = 'html' | 'react' | 'svelte' | 'vue';
 
@@ -60,11 +57,6 @@ export const currentJSLibSidebar = (links: Readable<SidebarLinks>) =>
 
     for (const item of Object.values(libLinks).flat()) {
       item.slug = addJSLibToPath(item.slug, $jsLib);
-
-      const tagName = `vds-${item.title.replace(/\s/g, '-').toLowerCase()}`;
-      if (EXPERIMENTAL_TAG_NAMES.has(tagName)) {
-        item.icon = { after: ExperimentalIcon };
-      }
     }
 
     return libLinks;

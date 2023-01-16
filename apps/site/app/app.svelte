@@ -5,6 +5,8 @@
   import '$lib/polyfills/focus-visible';
 
   import 'vidstack/styles/base.css';
+  import 'vidstack/styles/ui/buttons.css';
+  import 'vidstack/styles/ui/sliders.css';
 
   import { useRouter } from '@vessel-js/svelte';
   import { RouteAnnouncer, RouterOutlet } from '@vessel-js/svelte';

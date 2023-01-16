@@ -19,8 +19,8 @@
       <p
         class="text-soft 992:text-lg 576:text-xl mx-auto mt-6 max-w-3xl text-center text-base leading-relaxed"
       >
-        Open-source, headless, accessible, and declarative player UI framework. Completely
-        customizable, lightweight, and packed with rich media events.
+        Open-source, accessible, and declarative player UI framework. Completely customizable,
+        lightweight, and packed with rich media events.
       </p>
 
       <div class="mt-12 flex space-x-4">

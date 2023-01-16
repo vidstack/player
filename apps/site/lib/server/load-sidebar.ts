@@ -22,19 +22,42 @@ export function loadPlayerSidebar(): SidebarLinks {
 
   return {
     'Getting Started': links(slugs, /^\/getting-started/),
+    'Core Concepts': links(slugs, /^\/core-concepts/),
     Providers: links(slugs, /^\/components\/providers/),
-    Media: links(slugs, /^\/components\/media/),
-    UI: links(slugs, /^\/components\/ui/),
+    Styling: links(slugs, /^\/styling/),
+    Layout: links(slugs, /^\/components\/layout/),
+    Display: links(slugs, /^\/components\/display/),
+    Buttons: links(slugs, /^\/components\/buttons/),
+    Sliders: links(slugs, /^\/components\/sliders/),
   };
 }
+
+const WIP = new Set([
+  'Architecture',
+  'Autoplay',
+  'Fullscreen',
+  'Accessibility',
+  'Skins',
+  'YouTube',
+  'Vimeo',
+  'Captions',
+  'Live Indicator',
+  'PIP Button',
+  'Captions Button',
+]);
 
 function links(slugs: string[], filter: RegExp): SidebarLink[] {
   return slugs
     .filter((slug) => filter.test(slug))
     .map((slug) => {
+      const title = formatElementHeading(
+        kebabToTitleCase(slug.split('/').pop()!).replace('Hls', 'HLS').replace('Pip', 'PIP'),
+      );
+
       return {
-        title: formatElementHeading(kebabToTitleCase(slug.split('/').pop()!).replace('Hls', 'HLS')),
+        title,
         slug: `/docs/player${slug}`,
+        wip: WIP.has(title),
       };
     });
 }

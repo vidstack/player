@@ -25,9 +25,11 @@ export default defineConfig({
       },
       routes: {
         entries: ['', '/react'].flatMap((lib) => [
-          ...['', '/audio', '/hls'].map((p) => `/docs${lib}/player/getting-started/quickstart${p}`),
           ...['', '/audio', '/hls'].map(
-            (p) => `/docs${lib}/player/getting-started/quickstart/cdn${p}`,
+            (p) => `/docs${lib}/player/getting-started/installation${p}`,
+          ),
+          ...['', '/audio', '/hls'].map(
+            (p) => `/docs${lib}/player/getting-started/installation/cdn${p}`,
           ),
         ]),
         matchers: [{ name: 'lib', matcher: ':lib(react)?' }],

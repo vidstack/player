@@ -292,6 +292,10 @@ export function useMediaStateManager(
       return;
     }
 
+    onStarted(event);
+  }
+
+  function onStarted(event: Event) {
     if (!$media.started) {
       $media.started = true;
       dispatchEvent(provider, 'started', { trigger: event });
@@ -345,6 +349,7 @@ export function useMediaStateManager(
       if (event.detail !== $media.duration) $media.ended = false;
       $media.currentTime = event.detail;
       satisfyMediaRequest('seeked', event);
+      onStarted(event);
     }
   }
 

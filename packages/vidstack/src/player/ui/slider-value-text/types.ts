@@ -38,9 +38,11 @@ export interface SliderValueTextProps {
  * @example
  * ```html
  * <vds-time-slider>
- *   <div class="preview">
- *     <vds-slider-value-text type="current"></vds-slider-value-text>
- *   </div>
+ *   <vds-slider-value-text
+ *     type="pointer"
+ *     format="time"
+ *     slot="preview"
+ *   ></vds-slider-value-text>
  * </vds-time-slider>
  * ```
  * @example

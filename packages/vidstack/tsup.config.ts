@@ -1,5 +1,19 @@
+import fs from 'node:fs';
+
 import { esbuild as maverick } from '@maverick-js/compiler';
+import { globbySync } from 'globby';
 import { defineConfig, type Options } from 'tsup';
+
+const defineEntries = globbySync('src/define/*.ts').reduce((entries, file) => {
+  const entry = file.replace('src/', '').replace(/\.ts$/, '');
+  entries[entry] = file;
+  return entries;
+}, {});
+
+if (!fs.existsSync('define')) fs.mkdirSync('define');
+for (const entry of Object.keys(defineEntries)) {
+  fs.writeFileSync(entry + '.js', '// editor file - real file exists in `dist` dir');
+}
 
 const SERVER_CONFIG = dist({ dev: false, server: true, hydrate: false }),
   DEV_CONFIG = dist({ dev: true, server: false, hydrate: true }),
@@ -18,6 +32,7 @@ function dist({ dev, server, hydrate }: BundleOptions): Options {
     entry: {
       index: 'src/index.ts',
       elements: 'src/elements.ts',
+      ...defineEntries,
     },
     format: server ? ['esm', 'cjs'] : 'esm',
     external: ['maverick.js', 'hls.js'],

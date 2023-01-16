@@ -17,6 +17,7 @@ turbo-graph*
 /apps/*/.vercel_build_output/
 
 packages/*/dist/
+packages/*/define/
 packages/*/elements/
 packages/*/sandbox/
 

@@ -34,8 +34,8 @@
   }
 </script>
 
-{#if headings.length > 1 || headings[0]?.children.length}
-  <div class={clsx('on-this-page', __class)} {style}>
+<div class={clsx('on-this-page', __class)} {style}>
+  {#if headings.length > 1 || headings[0]?.children.length}
     <h5 class="text-inverse w-full text-left text-lg font-semibold">On this page</h5>
     <ul class="mt-4 space-y-4">
       {#each headings as heading (heading.id)}
@@ -74,5 +74,5 @@
         {/if}
       {/each}
     </ul>
-  </div>
-{/if}
+  {/if}
+</div>

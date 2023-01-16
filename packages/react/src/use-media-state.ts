@@ -1,7 +1,8 @@
-import { effect } from 'maverick.js';
+import { effect, signal, StopEffect } from 'maverick.js';
 import { useReactContext } from 'maverick.js/react';
-import { RefObject, useEffect, useState } from 'react';
-import { MediaElement, mediaStore, MediaStore, MediaStoreContext } from 'vidstack';
+import { noop } from 'maverick.js/std';
+import { RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { MediaElement, MediaState, mediaStore, MediaStoreContext } from 'vidstack';
 
 /**
  * This hook is used to access the current media state on the nearest parent media element (i.e.,
@@ -17,11 +18,11 @@ import { MediaElement, mediaStore, MediaStore, MediaStoreContext } from 'vidstac
  * }
  * ```
  */
-export function useMediaState<T extends keyof MediaStore>(
-  prop: T,
+export function useMediaState(
   target?: MediaElement | null | RefObject<MediaElement>,
-): MediaStore[T] {
-  const [state, setState] = useState<MediaStore[T]>(mediaStore.initial[prop]),
+): Readonly<MediaState> {
+  const [_, update] = useState(0),
+    stop = useRef<StopEffect | null>(null),
     $store = useReactContext(MediaStoreContext);
 
   if (__DEV__ && !target && !$store) {
@@ -32,11 +33,27 @@ export function useMediaState<T extends keyof MediaStore>(
     );
   }
 
-  useEffect(() => {
-    const media = target && 'current' in target ? target.current : target;
-    const store = media?.$store ?? $store;
-    if (store) return effect(() => void setState(store[prop]));
-  }, [prop, target, $store]);
+  useEffect(() => () => stop.current?.(), []);
 
-  return state;
+  return useMemo(() => {
+    const media = target && 'current' in target ? target.current : target,
+      state = media?.state ?? $store ?? mediaStore.initial,
+      $props = signal<(keyof MediaState)[]>([]);
+
+    stop.current?.();
+    stop.current = effect(() => {
+      const props = $props;
+      for (let i = 0; i < props.length; i++) state[props[i]];
+      update((n) => n + 1);
+    });
+
+    return new Proxy(state, {
+      get(_, prop: keyof MediaState) {
+        $props.set((prev) => [...prev, prop]);
+        return state[prop];
+      },
+      // @ts-expect-error
+      set: noop,
+    });
+  }, [target]);
 }

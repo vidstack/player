@@ -1,3 +1,12 @@
+/* hide default UI - only shown if optional UI css files are loaded. */
+vds-play-button > shadow-root,
+vds-mute-button > shadow-root,
+vds-fullscreen-button > shadow-root,
+vds-time-slider > shadow-root,
+vds-volume-slider > shadow-root {
+  display: none;
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * MEDIA
@@ -8,7 +17,7 @@ vds-media {
   width: 100%;
   display: inline-block;
   position: relative;
-  contain: content;
+  contain: layout;
 }
 
 vds-media[view-type='audio'] {
@@ -201,11 +210,13 @@ vds-poster {
   position: absolute;
   top: 0;
   left: 0;
+  opacity: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
   object-fit: cover;
   box-sizing: border-box;
+  transition: opacity 0.2s ease-out;
 }
 
 vds-poster img {
@@ -221,4 +232,9 @@ vds-poster img {
 
 vds-poster[img-error] {
   display: none;
+}
+
+vds-media:not([started]) vds-poster {
+  opacity: 1;
+  pointer-events: auto;
 }

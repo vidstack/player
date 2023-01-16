@@ -32,20 +32,17 @@
         <section class="flex flex-col">
           <h1 class="text-lg font-semibold">Getting Started</h1>
           <ul class="text-soft mt-4 space-y-4">
-            <!-- <li class="hover:text-inverse">
-              <a href="/docs/player/getting-started/introduction/">Introduction</a>
-            </li> -->
             <li class="hover:text-inverse">
-              <a href="/docs/player/getting-started/quickstart/">Quickstart</a>
+              <a href="/docs/player/getting-started/installation">Installation</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/getting-started/foundation/">Foundation</a>
+              <a href="/docs/player/getting-started/foundation">Foundation</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/getting-started/styling/">Styling</a>
+              <a href="/docs/player/getting-started/styling">Styling</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/getting-started/events/">Events</a>
+              <a href="/docs/player/getting-started/events">Events</a>
             </li>
           </ul>
         </section>
@@ -54,10 +51,10 @@
           <h1 class="text-lg font-semibold">Frameworks</h1>
           <ul class="text-soft mt-4 space-y-4">
             <li class="hover:text-inverse">
-              <a href="/docs/player/getting-started/quickstart/">HTML</a>
+              <a href="/docs/player/getting-started/installation">HTML</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/react/getting-started/quickstart/">React</a>
+              <a href="/docs/react/player/getting-started/installation">React</a>
             </li>
           </ul>
         </section>
@@ -66,13 +63,13 @@
           <h1 class="text-lg font-semibold">Providers</h1>
           <ul class="text-soft mt-4 space-y-4">
             <li class="hover:text-inverse">
-              <a href="/docs/player/components/providers/audio/">Audio</a>
+              <a href="/docs/player/components/providers/audio">Audio</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/components/providers/video/">Video</a>
+              <a href="/docs/player/components/providers/video">Video</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/components/providers/hls/">HLS</a>
+              <a href="/docs/player/components/providers/hls">HLS</a>
             </li>
           </ul>
         </section>
@@ -81,10 +78,10 @@
           <h1 class="text-lg font-bold">Resources</h1>
           <ul class="text-soft mt-4 space-y-4">
             <li class="hover:text-inverse">
-              <a href="/blog/">Blog</a>
+              <a href="/blog">Blog</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/privacy-policy/">Privacy</a>
+              <a href="/privacy-policy/>Privacy</a>
             </li>
           </ul>
         </section> -->

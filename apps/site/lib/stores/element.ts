@@ -13,22 +13,12 @@ export function getTagNameFromPath(path: string) {
   return name ? `vds-${name}` : '';
 }
 
-export const comingSoonElement = derived(elementTagName, ($tagName) =>
-  /vds-(youtube|vimeo)/.test($tagName),
-);
-
-/** Auto-generate in the future by using doc tags in `vidstack`. */
-export const EXPERIMENTAL_TAG_NAMES = new Set(['vds-media-visibility', 'vds-gesture']);
-
-export const isElementExperimental = derived(elementTagName, ($tagName) =>
-  EXPERIMENTAL_TAG_NAMES.has($tagName),
-);
-
 export const elementHeading = derived(elementTagName, ($elementTagName) => {
   return `${formatElementHeading(kebabToTitleCase($elementTagName.replace('vds-', '')))}`;
 });
 
 export function formatElementHeading(name: string) {
+  if (name === 'Pip Button') return 'PIP Button';
   if (name === 'Hls Video') return 'HLS Video';
   if (name === 'Youtube') return 'YouTube';
   return name;

@@ -55,7 +55,9 @@ export function useMediaAdapterDelegate(
 
   effect(() => {
     const currentTime = $currentTime();
-    canPlayQueue.queue('currentTime', () => (adapter.currentTime = currentTime));
+    if (currentTime !== adapter.currentTime) {
+      canPlayQueue.queue('currentTime', () => (adapter.currentTime = currentTime));
+    }
   });
 
   effect(() => {

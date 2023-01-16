@@ -1,11 +1,11 @@
-import { effect, provideContext } from 'maverick.js';
+import { effect, MaybeStopEffect, provideContext } from 'maverick.js';
 import { AttributesRecord, defineCustomElement, onConnect } from 'maverick.js/element';
-import { camelToKebabCase, dispatchEvent, mergeProperties } from 'maverick.js/std';
+import { camelToKebabCase, dispatchEvent, mergeProperties, noop } from 'maverick.js/std';
 
 import { IS_IOS } from '../../../utils/support';
 import { useMediaController } from '../controller/use-media-controller';
 import type { MediaState } from '../state';
-import { useMediaStore } from '../store';
+import { MediaStore, useMediaStore } from '../store';
 import { MediaElementContext } from './context';
 import type { MediaElement, MediaElementConnectEvent } from './types';
 
@@ -61,7 +61,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
 
     const $media = useMediaStore(),
       $attrs: AttributesRecord = {
-        'hide-ui': () =>
+        'ios-fullscreen': () =>
           IS_IOS && $media.viewType === 'video' && (!$media.playsinline || $media.fullscreen),
       };
 
@@ -94,13 +94,26 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       });
     });
 
+    function subscribe(this: keyof MediaStore, callback: (value: any) => MaybeStopEffect) {
+      return effect(() => callback($media[this]));
+    }
+
     return mergeProperties(accessors(), controller, {
-      get provider() {
-        return controller.provider;
-      },
       get $store() {
         return $media;
       },
+      get provider() {
+        return controller.provider;
+      },
+      state: new Proxy($media, {
+        // @ts-expect-error
+        set: noop,
+      }),
+      store: new Proxy($media, {
+        get: (_, prop: keyof MediaStore) => ({ subscribe: subscribe.bind(prop) }),
+        // @ts-expect-error
+        set: noop,
+      }),
     });
   },
 });

@@ -5,7 +5,7 @@ import { derived, type Readable } from 'svelte/store';
 export type SidebarLink = {
   title: string;
   slug: string;
-  icon?: { before?: typeof SvelteComponent; after?: typeof SvelteComponent };
+  wip?: boolean;
 };
 
 export type SidebarLinks = {

@@ -12,6 +12,11 @@ vds-volume-slider {
   margin: 0 calc(var(--thumb-size) / 2);
 }
 
+vds-time-slider > shadow-root,
+vds-volume-slider > shadow-root {
+  display: unset;
+}
+
 vds-time-slider [part~='track'],
 vds-volume-slider [part~='track'] {
   z-index: 0;
@@ -24,10 +29,8 @@ vds-volume-slider [part~='track'] {
   background-color: #5a595a;
 }
 
-vds-time-slider[pointing] [part~='track'],
-vds-volume-slider[pointing] [part~='track'],
-vds-time-slider[dragging] [part~='track'],
-vds-volume-slider[dragging] [part~='track'] {
+vds-time-slider[interactive] [part~='track'],
+vds-volume-slider[interactive] [part~='track'] {
   height: var(--track-focus-height);
 }
 
@@ -79,10 +82,8 @@ vds-volume-slider [part='thumb'] {
   transition: opacity 0.15s ease-in;
 }
 
-vds-time-slider[pointing] [part='thumb'],
-vds-volume-slider[pointing] [part='thumb'],
-vds-time-slider[dragging] [part='thumb'],
-vds-volume-slider[dragging] [part='thumb'] {
+vds-time-slider[interactive] [part='thumb'],
+vds-volume-slider[interactive] [part='thumb'] {
   opacity: 1;
   transition: opacity 0.2s ease-in;
   width: var(--thumb-focus-size);
@@ -100,7 +101,7 @@ vds-volume-slider [slot='preview'] {
   /* --computed-width and --computed-height is added by JS in `use-slider.ts` */
   --width: var(--media-slider-preview-width, var(--computed-width));
   --width-half: calc(var(--width) / 2);
-  --top: calc(-1 * calc(var(--computed-height)));
+  --top: calc(-1 * var(--media-slider-preview-gap, calc(var(--computed-height) + 8px)));
 
   /* clamp video to left and right of slider. */
   --left-clamp: max(var(--width-half), var(--slider-pointer-percent));
@@ -123,17 +124,15 @@ vds-volume-slider [slot='preview'] {
   transform: translateX(-50%);
 }
 
-vds-time-slider[pointing] [slot='preview'],
-vds-volume-slider[pointing] [slot='preview'],
-vds-time-slider[dragging] [slot='preview'],
-vds-volume-slider[dragging] [slot='preview'] {
+vds-time-slider[interactive] [slot='preview'],
+vds-volume-slider[interactive] [slot='preview'] {
   opacity: 1;
   transition: opacity 0.2s ease-in;
 }
 
 vds-time-slider vds-slider-value-text,
 vds-volume-slider vds-slider-value-text {
-  padding: 0 8px;
+  padding: 1px 10px;
   color: hsl(0, 0%, 70%);
   background-color: black;
 }

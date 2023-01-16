@@ -37,23 +37,17 @@ export interface VideoProviderCSSVars {
  * @slot - Used to pass in the `<video>` element.
  * @example
  * ```html
- * <vds-video>
+ * <vds-video poster="https://media-files.vidstack.io/poster.png">
  *   <video
- *     controls
  *     preload="none"
  *     src="https://media-files.vidstack.io/720p.mp4"
- *     poster="https://media-files.vidstack.io/poster.png"
  *   ></video>
  * </vds-video>
  * ```
  * @example
  * ```html
- * <vds-video>
- *   <video
- *     controls
- *     preload="none"
- *     poster="https://media-files.vidstack.io/poster.png"
- *   >
+ * <vds-video poster="https://media-files.vidstack.io/poster.png">
+ *   <video preload="none">
  *     <source
  *       src="https://media-files.vidstack.io/720p.mp4"
  *       type="video/mp4"

@@ -82,23 +82,17 @@ export interface HLSProviderCSSVars extends VideoProviderCSSVars {}
  * @slot - Used to pass in the `<video>` element.
  * @example
  * ```html
- * <vds-hls-video>
+ * <vds-hls-video  poster="https://media-files.vidstack.io/poster.png">
  *   <video
- *     controls
  *     preload="none"
  *     src="https://media-files.vidstack.io/hls/index.m3u8"
- *     poster="https://media-files.vidstack.io/poster.png"
  *   ></video>
  * </vds-hls-video>
  * ```
  * @example
  * ```html
- * <vds-hls-video>
- *   <video
- *     controls
- *     preload="none"
- *     poster="https://media-files.vidstack.io/poster.png"
- *   >
+ * <vds-hls-video poster="https://media-files.vidstack.io/poster.png">
+ *   <video preload="none">
  *     <source
  *       src="https://media-files.vidstack.io/hls/index.m3u8"
  *       type="application/x-mpegURL"

@@ -63,9 +63,16 @@ export function useSlider(
     const preview = target.querySelector('[slot="preview"]') as HTMLElement;
     if (!preview) return;
 
+    let stabilize = false;
     const observer = new ResizeObserver(function onPreviewResize([entry]) {
-      setStyle(preview, '--computed-width', entry.contentRect.width + 'px');
-      setStyle(preview, '--computed-height', entry.contentRect.height + 'px');
+      if (stabilize) {
+        stabilize = false;
+        return;
+      }
+      const { inlineSize, blockSize } = entry.borderBoxSize[0];
+      setStyle(preview, '--computed-width', inlineSize + 'px');
+      setStyle(preview, '--computed-height', blockSize + 'px');
+      stabilize = true;
     });
 
     observer.observe(preview);

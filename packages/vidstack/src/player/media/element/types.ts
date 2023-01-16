@@ -1,3 +1,4 @@
+import type { Dispose, MaybeStopEffect } from 'maverick.js';
 import type { HTMLCustomElement } from 'maverick.js/element';
 import type { DOMEvent } from 'maverick.js/std';
 
@@ -6,6 +7,7 @@ import type { ScreenOrientationLockType } from '../../../foundation/orientation/
 import type { MediaControllerEvents } from '../controller/events';
 import type { UseMediaController } from '../controller/use-media-controller';
 import type { MediaProviderElement } from '../provider/types';
+import type { MediaState } from '../state';
 import type { MediaStore } from '../store';
 
 export interface MediaElementProps {
@@ -28,14 +30,36 @@ export interface MediaElementProps {
 }
 
 export interface MediaElementMembers extends MediaElementProps, UseMediaController {
+  /** @internal */
+  readonly $store: MediaStore;
   /**
    * The current media provider element.
    */
   readonly provider: MediaProviderElement | null;
   /**
-   * The media store holds all current media state.
+   * This object contains all current media state (e.g., `paused`, `playing`, etc.).
    */
-  readonly $store: Readonly<MediaStore>;
+  readonly state: Readonly<MediaState>;
+  /**
+   * Enables subscribing to live updates of individually selected media state.
+   *
+   * @example
+   * ```ts
+   * const media = document.querySelector('vds-media');
+   * media.store.paused.subscribe(paused => {
+   *   // ...
+   * });
+   * ```
+   */
+  readonly store: MediaElementStore;
+}
+
+export type MediaElementStore = {
+  readonly [Prop in keyof MediaStore]: Subscribable<MediaStore[Prop]>;
+};
+
+export interface Subscribable<Value> {
+  subscribe(callback: (value: Value) => MaybeStopEffect): Dispose;
 }
 
 export interface MediaElementEvents extends MediaControllerEvents {

@@ -12,6 +12,7 @@
   "files": [
     "*.d.ts",
     "dist/",
+    "define/",
     "styles/",
     "tailwind.*",
     "vscode.html-data.json"
@@ -85,6 +86,7 @@
       "deno": "./dist/server/elements.js",
       "default": "./dist/prod/elements.js"
     },
+    "./define/*": "./define/*",
     "./styles/*": "./styles/*",
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
