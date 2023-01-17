@@ -5,11 +5,12 @@
 
 Build your media player only using HTML and CSS 🐼
 
-Vidstack Player is customizable, lightweight, accessible, and framework agnostic. It is also the successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
+Vidstack Player is customizable, lightweight, accessible, and framework agnostic. It is also the
+successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
 
 ## Beta
 
-We are currently in Beta. If you'd like to get notified when 1.0 is released:
+Our player is currently in Beta. If you'd like to get notified when 1.0 is released:
 
 - [Watch Player Repository](https://github.com/vidstack/player)
 - [Follow Player 1.0 Project Board](https://github.com/vidstack/player/projects/1)
