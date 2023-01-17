@@ -1,11 +1,10 @@
 <script lang="ts">
   import clsx from 'clsx';
-
-  import NoteIcon from '~icons/ri/sticky-note-fill';
+  import WarningIcon from '~icons/ri/error-warning-fill';
   import InfoIcon from '~icons/ri/information-fill';
   import TipIcon from '~icons/ri/lightbulb-flash-fill';
-  import WarningIcon from '~icons/ri/error-warning-fill';
   import DangerIcon from '~icons/ri/skull-2-fill';
+  import NoteIcon from '~icons/ri/sticky-note-fill';
   import ExperimentalIcon from '~icons/ri/test-tube-fill';
 
   export let title: string | null = null;

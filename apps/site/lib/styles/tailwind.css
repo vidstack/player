@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 * {
-  border-color: var(--color-divider);
+  border-color: var(--color-border);
 }
 
 .js-focus-visible [data-focus-visible-added] {
@@ -47,7 +47,7 @@
 
 .scrollbar {
   scrollbar-width: thin;
-  --scrollbar-track-bg: var(--color-divider);
+  --scrollbar-track-bg: var(--color-border);
   --scrollbar-thumb-bg: var(--color-soft);
 }
 
@@ -78,12 +78,12 @@
  */
 
 .blur-bg {
-  @apply bg-body backdrop-blur backdrop-filter dark:bg-gray-800;
+  @apply bg-body dark:bg-body backdrop-blur backdrop-filter;
 }
 
 @supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {
   .blur-bg {
-    background-color: rgb(255 248 238 / 0.6);
-    @apply dark:bg-gray-800/60;
+    background-color: rgba(249, 250, 251, 0.6);
+    @apply dark:bg-[#111827]/60;
   }
 }

@@ -30,41 +30,17 @@ module.exports = {
       colors: {
         brand: {
           DEFAULT: 'var(--color-brand)',
-          50: '#F87EA7',
-          100: '#E8E8E8',
-          200: '#F76998',
-          300: '#F75A8E',
-          400: '#F64C84',
-          500: '#F53D7A',
-          600: '#F30C59',
-          700: '#C20A47',
-          800: '#920735',
-          900: '#610523',
-          soft: 'var(--color-brand-soft)',
         },
-        gray: {
-          DEFAULT: '#313131',
-          50: '#FFFFFF',
-          100: '#FBFBFB',
-          200: '#EAEAEA',
-          300: '#a5a5a5',
-          400: '#616161',
-          500: '#313131',
-          600: '#292929',
-          700: '#202020',
-          800: '#161616',
-          900: '#181818',
+        focus: {
+          DEFAULT: 'var(--color-focus)',
         },
-        outline: 'var(--color-outline)',
-        divider: 'var(--color-divider)',
+        gray: {},
+        border: 'var(--color-border)',
         soft: 'var(--color-soft)',
         inverse: 'var(--color-inverse)',
         current: 'var(--color-current)',
-        hover: 'var(--color-hover)',
-        'hover-inverse': 'var(--color-hover-inverse)',
-        elevate: 'var(--color-elevate)',
-        'elevate-border': 'var(--color-elevate-border)',
         body: 'var(--color-body)',
+        elevate: 'var(--color-elevate)',
       },
       animation: {
         indeterminate: 'indeterminate 1.2s linear infinite',
@@ -99,7 +75,7 @@ function typography(theme) {
         fontSize: '18px',
         maxWidth: 'none',
         hr: {
-          borderColor: theme('colors.divider'),
+          borderColor: theme('colors.border'),
           marginTop: '3em',
           marginBottom: '3em',
         },
@@ -198,7 +174,7 @@ function typography(theme) {
         },
         thead: {
           color: theme('colors.gray.inverse'),
-          borderBottomColor: theme('colors.divider'),
+          borderBottomColor: theme('colors.border'),
         },
         tbody: {
           verticalAlign: 'baseline',
@@ -209,7 +185,7 @@ function typography(theme) {
         },
         'tbody tr': {
           fontSize: theme('fontSize.sm')[0],
-          borderBottomColor: theme('colors.divider'),
+          borderBottomColor: theme('colors.border'),
         },
         'tbody td': {
           whiteSpace: 'nowrap',
@@ -259,7 +235,7 @@ function typography(theme) {
           color: theme('colors.indigo.300'),
         },
         'tbody tr': {
-          borderBottomColor: theme('colors.divider'),
+          borderBottomColor: theme('colors.border'),
         },
       },
     },
