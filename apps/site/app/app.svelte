@@ -28,7 +28,7 @@
       };
     });
 
-    scrollDelegate.scroll({ hash: router.url.hash });
+    if (router.url.hash) scrollDelegate.scroll({ hash: router.url.hash });
     router.setScrollDelegate(scrollDelegate);
   });
 </script>

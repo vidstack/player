@@ -2,13 +2,6 @@
 
 First off, thank you for taking the time to contribute to Vidstack ❤️
 
-## 💭 Knowledge
-
-- Code is written in [TypeScript][typescript].
-- Apps are built with [SvelteKit][svelte-kit].
-- We use [Lit][lit] to build [Web Components][web-components].
-- [Turborepo][turborepo] makes our monorepo go vroom!
-
 ## 🎒 Getting Started
 
 ### Installation
@@ -63,10 +56,10 @@ it will automatically pin it, and if you're using `nvm` simply run `nvm use` fro
 $: pnpm i
 
 # Install dependency for a single package.
-$: pnpm -F player install {package}
+$: pnpm -F vidstack install {package}
 
 # Update a dependency for a single package.
-$: pnpm -F player up {package}
+$: pnpm -F vidstack up {package}
 
 # Update a dependency for all packages.
 $: pnpm up {package}@{version} -r
@@ -79,10 +72,10 @@ $: pnpm up {package}@{version} -r
 $: pnpm build
 
 # Build single package (turbo) - see root `package.json` for more
-$: pnpm build:player
+$: pnpm build:vidstack
 
 # Build and watch single package
-$: pnpm -F player watch
+$: pnpm -F vidstack dev
 ```
 
 ### Sandbox
@@ -92,33 +85,12 @@ browser. The sandbox directory is Git-ignored so you can safely do whatever you 
 it.
 
 ```bash
-# Play with `@vidstack/foundation` package in your browser.
-$: pnpm -F foundation sandbox
-
-# Play with `@vidstack/player` package in your browser.
-$: pnpm -F player sandbox
+# Play with `vidstack` package in your browser.
+$: pnpm -F vidstack sandbox
 ```
 
 After running any of the commands above, you can find the sandbox directory at `packages/*/sandbox`.
 You can delete the directory and re-run the sandbox command to reset it.
-
-## 🧪 Testing
-
-Unit tests are located in the `tests` directory inside an app or package. Run
-`pnpm test --filter {pkg_name}` or `pnpm watch:test --filter {pkg_name}` in the terminal. This
-project uses [Vitest][vitest] for writing/running unit tests. To learn more about writing unit
-tests, follow the link to the Vitest site, and see other tests in the repo.
-
-```bash
-# Run all tests (turbo)
-$: pnpm test
-
-# Run tests in single package
-$: pnpm -F player test
-
-# Run tests in watch mode for a single package
-$: pnpm -F player watch:test
-```
 
 ## ✍️ Committing
 
@@ -135,10 +107,7 @@ Don't expect your PR to be accepted immediately, or accepted at all. Give the co
 vet it and see if it should be merged. Please don't be disheartened if it's not accepted. Your
 contribution is appreciated more then you can imagine, and even a failed PR can teach us a lot ❤️
 
-[lit]: https://lit.dev
 [semantic-commit-style]: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
-[svelte]: https://svelte.dev
-[svelte-kit]: https://kit.svelte.dev
 [turborepo]: https://turborepo.org
 [typescript]: https://www.typescriptlang.org
 [vidstack-gh]: https://github.com/vidstack/vidstack
