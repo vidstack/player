@@ -63,7 +63,7 @@ export interface Subscribable<Value> {
 }
 
 export interface MediaElementEvents extends MediaControllerEvents {
-  'media-connect': MediaElementConnectEvent;
+  'media-connect': MediaConnectEvent;
 }
 
 /**
@@ -72,7 +72,7 @@ export interface MediaElementEvents extends MediaControllerEvents {
  * @bubbles
  * @composed
  */
-export interface MediaElementConnectEvent extends DOMEvent<MediaElement> {}
+export interface MediaConnectEvent extends DOMEvent<MediaElement> {}
 
 export interface MediaElementCSSVars {
   /**

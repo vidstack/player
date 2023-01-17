@@ -18,3 +18,10 @@ between the media provider and UI components. It's responsibilities include:
 - Listening to media events and updating state in the media store.
 
 {% code_snippet name="usage" copy=true  /%}
+
+## Connect Event
+
+The `<vds-media>` element will fire a `media-connect` event that will bubble up the DOM so you
+can obtain a reference to it when it's ready:
+
+{% code_snippet name="connect-event" copy=true  /%}

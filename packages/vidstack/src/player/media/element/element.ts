@@ -7,7 +7,7 @@ import { useMediaController } from '../controller/use-media-controller';
 import type { MediaState } from '../state';
 import { MediaStore, useMediaStore } from '../store';
 import { MediaElementContext } from './context';
-import type { MediaElement, MediaElementConnectEvent } from './types';
+import type { MediaConnectEvent, MediaElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -15,7 +15,7 @@ declare global {
   }
 
   interface HTMLElementEventMap {
-    'media-connect': MediaElementConnectEvent;
+    'media-connect': MediaConnectEvent;
   }
 }
 
