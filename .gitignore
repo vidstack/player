@@ -20,6 +20,7 @@ packages/*/dist/
 packages/*/define/
 packages/*/elements/
 packages/*/sandbox/
+packages/react/src/components.ts
 
 elements.json
 vscode.html-data.json
