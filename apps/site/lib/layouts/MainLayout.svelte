@@ -137,6 +137,7 @@
         <svelte:fragment slot="right-alt">
           <slot name="navbar-right-alt" />
           <div class="socials flex">
+            <SocialLink type="twitter" />
             <SocialLink type="gitHub" />
           </div>
         </svelte:fragment>

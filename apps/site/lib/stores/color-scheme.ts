@@ -13,6 +13,7 @@ const prefersDarkColorScheme = mediaQuery('(prefers-color-scheme: dark)');
 export const colorSchemes: ColorScheme[] = ['light', 'dark', 'system'];
 
 const __colorScheme = writable<ColorScheme>(currentColorScheme());
+
 export const colorScheme = {
   ...__colorScheme,
   set(scheme: ColorScheme) {
