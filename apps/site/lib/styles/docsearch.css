@@ -8,9 +8,9 @@
   --docsearch-key-shadow: none;
   --docsearch-modal-background: #fafafa;
   --docsearch-footer-background: #ededed;
-  --docsearch-muted-color: #606060;
-  --docsearch-logo-color: #606060;
-  --docsearch-hit-color: #606060;
+  --docsearch-muted-color: rgb(var(--color-soft));
+  --docsearch-logo-color: rgb(var(--color-soft));
+  --docsearch-hit-color: rgb(var(--color-soft));
   --docsearch-hit-active-color: rgb(var(--color-inverse));
   --docsearch-hit-background: none;
 }
@@ -18,13 +18,19 @@
 :root.dark {
   --docsearch-modal-shadow: none;
   --docsearch-footer-shadow: none;
-  --docsearch-hit-background: #292929;
-  --docsearch-hit-color: #b4b4b4;
-  --docsearch-modal-background: #2d2d2d;
+  --docsearch-hit-background: rgb(var(--color-elevate));
+  --docsearch-hit-color: rgb(var(--color-soft));
+  --docsearch-modal-background: rgb(var(--color-current));
   --docsearch-hit-shadow: none;
-  --docsearch-footer-background: #242424;
-  --docsearch-muted-color: #b4b4b4;
-  --docsearch-logo-color: #b4b4b4;
+  --docsearch-footer-background: rgb(var(--color-current));
+  --docsearch-muted-color: rgb(var(--color-soft));
+  --docsearch-logo-color: rgb(var(--color-soft));
+}
+
+.DocSearch-Logo path,
+.DocSearch-Logo rect {
+  color: rgb(var(--color-soft)) !important;
+  fill: rgb(var(--color-soft)) !important;
 }
 
 .DocSearch-Container {
@@ -98,7 +104,8 @@
 
 .DocSearch-Input:focus,
 .DocSearch-Input:focus-visible {
-  @apply text-inverse shadow-none outline-0;
+  @apply text-inverse;
+  box-shadow: none;
 }
 
 .DocSearch-Hit {
