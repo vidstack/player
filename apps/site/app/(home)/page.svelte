@@ -14,80 +14,70 @@
 <MainLayout --navbar-border-bottom="none" --main-padding-x="none" --main-overflow-x="hidden">
   <HeroSection />
 
-  <div class="flex flex-col items-center justify-center px-4 768:px-12 mb-10 768:mb-32">
-    <h2
-      class="font-bold text-3xl 768:text-4xl 992:text-5xl text-center leading-10 768:leading-[64px] mt-28 mb-20 768:mt-40 768:mb-20"
-    >
-      Built and designed for all devs
-    </h2>
-
+  <div
+    class="flex flex-col items-center justify-center px-4 768:px-12 mb-10 768:mb-32 mt-28 768:mt-20"
+  >
     <div class="grid grid-cols-1 gap-y-16 768:grid-cols-2 gap-x-32 768:gap-y-20">
       <div>
-        <h3 class="font-semibold text-lg leading-8">Lightest Player on the Web</h3>
+        <div class="text-brand text-[15px] font-medium">Performant</div>
+        <h3 class="font-semibold text-lg leading-8 mt-2">
+          The package is tiny - use only what you need
+        </h3>
         <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
-          We’re committed to delivering the lightest player package possible. Vidstack Player is
-          tree shakeable and completely modular. This means your final bundle will only consist of
-          the code you have used. We don’t control your final package size, you do.
+          We’re committed to delivering the lightest and fastest player package possible. Vidstack
+          Player is tree-shakeable and completely modular. Not only that, but we're one of the only
+          players that can SSR out of the box!
         </p>
       </div>
       <div>
-        <h3 class="font-semibold text-lg leading-8">Accessible</h3>
+        <div class="text-brand text-[15px] font-medium">Accessible</div>
+        <h3 class="font-semibold text-lg leading-8 mt-2">
+          Deliver an experience everyone can enjoy
+        </h3>
         <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
-          Vidstack places a lot of importance on accessibility. If you look across the web today,
-          media players are lacking attention in this space. An accessible player means everyone
-          despite limitations and restrictions can watch or listen to your media.
+          A good media player experience does not get in the way of a user, rather it meets their
+          needs. We follow ARIA guidelines by applying roles and labels for screen readers, provide
+          a variety of device input feedback, keyboard shortcuts, and captions.
         </p>
       </div>
       <div>
-        <h3 class="font-semibold text-lg leading-8">Fully customizable</h3>
+        <div class="text-brand text-[15px] font-medium">Customizable</div>
+        <h3 class="font-semibold text-lg leading-8 mt-2">Design the player you've always wanted</h3>
         <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
-          Vidstack Player is built with headless components so you’re in complete control of how
-          they look. You can finally design the perfect media experience using only HTML and CSS.
+          We have multiple provider integrations, expose media state as attributes so you can style
+          with CSS, expansive collection of UI components that are easily themed out of the box, and
+          even the option to go completely headless.
         </p>
       </div>
       <div>
-        <h3 class="font-semibold text-lg leading-8 inline-block">Community skin</h3>
-        <div
-          class="inline-block rounded-full bg-brand/10 text-brand py-0.5 px-2 font-medium text-sm ml-2 tracking-wide"
-        >
-          coming soon
-        </div>
+        <div class="text-brand text-[15px] font-medium">Skins</div>
+        <h3 class="font-semibold text-lg leading-8 inline-block mt-2">
+          Ship faster with our community skin
+        </h3>
         <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
-          Vidstack Player comes with an out-of-the-box look. This means that if you don’t have the
-          time and resources to go down a completely custom route, you can use our community skin to
-          get up and running quickly.
+          If you don’t have the time and resources to go down a completely custom route, you can use
+          our community skin to get up and running quickly. Our designs are built with the highest
+          quality and target audio, video, live, and live DVR.
         </p>
       </div>
       <div>
-        <h3 class="font-semibold text-lg leading-8">Framework agnostic</h3>
+        <div class="text-brand text-[15px] font-medium">Track interactions</div>
+        <h3 class="font-semibold text-lg leading-8 mt-2">
+          Easily track and manage complex media state
+        </h3>
+        <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
+          Every player interaction triggers an event, and every event becomes part of a chain. This
+          makes it possible to track events back to their origin, determine how they were triggered
+          (system/user), and uncover anything that might've occurred along the way.
+        </p>
+      </div>
+      <div>
+        <div class="text-brand text-[15px] font-medium">Framework-agnostic</div>
+        <h3 class="font-semibold text-lg leading-8 mt-2">No matter your stack - it will work</h3>
         <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
           There’s a plethora of frontend libraries and frameworks to choose from today. We strive to
           provide a smooth development experience regardless of which you choose. Vidstack Player
-          integrates with React, Vue, Svelte, Tailwind CSS, and more.
-        </p>
-      </div>
-      <div>
-        <h3 class="font-semibold text-lg leading-8">Rich event system</h3>
-        <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
-          The native events that come with players are not comprehensive, and often they done draw a
-          clear line of events that occur upon player interactio. Our event system is build ontop of
-          the native events, and all we’ve done is made it much more extensive.
-        </p>
-      </div>
-      <div>
-        <h3 class="font-semibold text-lg leading-8">Tailwind plugin</h3>
-        <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
-          Tailwind is a popular CSS framework for the web, and since we’re focused on HTML and CSS
-          and efficiency, it would make it much more enjoyable to design and build your player with
-          an already awesome framework. Design your player even faster with the TailwindCSS plugin.
-        </p>
-      </div>
-      <div>
-        <h3 class="font-semibold text-lg leading-8">IDE integration</h3>
-        <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
-          Focusing on developer experience, as you’re coding, you would like to know what UI options
-          you have without having to flip to our documentation then back. Our IDE integration guides
-          you every step of the way, making your experience butter smooth.
+          integrates with React, Vue (coming soon), Svelte (coming soon), Tailwind CSS, and more.
         </p>
       </div>
     </div>
