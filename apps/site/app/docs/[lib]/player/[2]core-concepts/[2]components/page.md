@@ -27,7 +27,7 @@ defineCustomElements();
 
 Or, individually like so:
 
-```js
+```js {% copy=true %}
 // The `.js` extension is required.
 import 'vidstack/define/vds-media.js';
 import 'vidstack/define/vds-video.js';
@@ -46,6 +46,71 @@ has loaded and run.
   <!-- ... -->
 </vds-media>
 ```
+
+## Attach Hook
+
+Vidstack elements go through a two-step process in which they're defined then attached before
+they're finally ready to be interacted with:
+
+```ts
+const provider = document.querySelector('vds-video');
+
+// 1. Like any other custom element it needs to be defined:
+customElements.whenDefined('vds-video', () => {
+  // `vds-video` is now defined.
+
+  // 2. Wait for the custom element instance to be attached.
+  provider.onAttach(() => {
+    // Safe to now interact with instance props/methods.
+    provider.play();
+  });
+});
+```
+
+You can await the `defineCustomElements` call to ensure _all_ elements are defined:
+
+```ts
+import { defineCustomElements } from 'vidstack/elements';
+
+async function onLoad() {
+  await defineCustomElements();
+  const provider = document.querySelector('vds-video');
+  provider.onAttach(() => {
+    // ...
+  });
+}
+
+document.addEventListener('load', onLoad, { once: true });
+```
+
+## Keep Alive
+
+By default, Vidstack elements will be destroyed when they've disconnected from the DOM and have not
+re-connected after an animation frame tick. You can specify that an element should be kept
+alive like so:
+
+```html
+<!-- Keep this element and all children alive until manually destroyed. -->
+<vds-media keep-alive>
+  <!-- This will be kept alive as well. -->
+  <vds-video></vds-video>
+  <!-- ... -->
+</vds-media>
+```
+
+Now, you can manually destroy the element instance and all children by calling the `destroy()`
+method on the element that you specified to keep alive like so:
+
+```ts
+const media = document.querySelector('vds-media');
+// This will destroy the media element instance and all child instances.
+media.destroy();
+```
+
+{% callout type="info" %}
+You don't need to worry about keeping elements alive if you're using a framework integration such
+as React. Elements will be disposed of correctly based on the framework lifecycle.
+{% /callout %}
 
 ## Attributes
 

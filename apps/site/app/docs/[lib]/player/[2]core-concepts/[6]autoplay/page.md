@@ -38,7 +38,7 @@ The following media attributes are available for styling based on the current au
 state:
 
 ```css
-vds-media[autoplay][started]:not([autoplay-error]) {
+vds-media[autoplay][started] {
   /** autoplay has successfully started. */
 }
 

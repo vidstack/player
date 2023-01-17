@@ -19,7 +19,9 @@
     return new Promise((resolve) => {
       window.requestAnimationFrame(() => {
         const media = root.querySelector('vds-media');
-        resolve(media ? media : findMedia());
+        media.onAttach(() => {
+          resolve(media ? media : findMedia());
+        });
       });
     });
   }

@@ -1,3 +1,3 @@
-import { defineCustomElements } from './elements';
+import registerAllElements from './register';
 
-defineCustomElements();
+registerAllElements();

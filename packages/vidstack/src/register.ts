@@ -15,23 +15,21 @@ import { TimeSliderDefinition } from './player/ui/time-slider/element';
 import { TimeDefinition } from './player/ui/time/element';
 import { VolumeSliderDefinition } from './player/ui/volume-slider/element';
 
-const ELEMENTS = [
-  AspectRatioDefinition,
-  PosterDefinition,
-  MediaDefinition,
-  AudioDefinition,
-  VideoDefinition,
-  HLSVideoDefinition,
-  PlayButtonDefinition,
-  MuteButtonDefinition,
-  FullscreenButtonDefinition,
-  TimeSliderDefinition,
-  VolumeSliderDefinition,
-  TimeDefinition,
-  SliderValueTextDefinition,
-  SliderVideoDefinition,
-];
-
-export default async function registerAllElements(): Promise<void> {
-  await Promise.all(ELEMENTS.map(registerLiteCustomElement));
+export default function registerAllElements(): void {
+  [
+    AspectRatioDefinition,
+    PosterDefinition,
+    MediaDefinition,
+    AudioDefinition,
+    VideoDefinition,
+    HLSVideoDefinition,
+    PlayButtonDefinition,
+    MuteButtonDefinition,
+    FullscreenButtonDefinition,
+    TimeSliderDefinition,
+    VolumeSliderDefinition,
+    TimeDefinition,
+    SliderValueTextDefinition,
+    SliderVideoDefinition,
+  ].map(registerLiteCustomElement);
 }

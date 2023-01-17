@@ -38,7 +38,7 @@ defineCustomElements();
 
 You can register specific elements like so:
 
-```js
+```js {% copy=true %}
 // the `.js` extension is required.
 import 'vidstack/define/vds-media.js';
 import 'vidstack/define/vds-hls-video.js';
