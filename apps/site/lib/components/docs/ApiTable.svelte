@@ -119,7 +119,7 @@
       <div
         id={`scroll-${category}`}
         class={clsx(
-          'border-divider scrollbar scroll-contain relative mt-[2em] flex flex-col overflow-auto border',
+          'border-border scrollbar scroll-contain relative mt-[2em] flex flex-col overflow-auto border',
           !showAll && 'max-h-[375px]',
         )}
       >
@@ -131,7 +131,7 @@
           <div
             id={key}
             class={clsx(
-              'border-divider flex flex-col border-b last:border-0',
+              'border-border flex flex-col border-b last:border-0',
               'hover:bg-elevate',
               isOpen && 'border-b first:border-b last:border-0',
             )}
@@ -155,7 +155,7 @@
                   </code>
 
                   {#if hasReadonly && prop.readonly}
-                    <span class="bg-divider ml-1.5 rounded-md py-0.5 px-1.5 font-mono text-xs">
+                    <span class="bg-border ml-1.5 rounded-md py-0.5 px-1.5 font-mono text-xs">
                       readonly
                     </span>
                   {/if}

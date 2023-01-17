@@ -63,7 +63,7 @@
     </svelte:fragment>
 
     <svelte:fragment slot="navbar-bottom">
-      <div class="border-divider 992:hidden mt-3 flex w-full items-center border-t pt-4">
+      <div class="border-border 992:hidden mt-3 flex w-full items-center border-t pt-4">
         <button
           id="main-sidebar-button"
           type="button"
@@ -131,7 +131,7 @@
     </div>
 
     {#if $previousLink || $nextLink}
-      <hr class="border-divider 992:mt-20 mt-14" />
+      <hr class="border-border 992:mt-20 mt-14" />
 
       <div
         class="992:text-xl 992:pt-12 flex items-center pt-8 pb-20 text-lg font-semibold text-gray-300"

@@ -83,7 +83,6 @@
 
 @supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {
   .blur-bg {
-    background-color: rgba(249, 250, 251, 0.6);
-    @apply dark:bg-[#111827]/60;
+    @apply bg-body/20 dark:bg-body/60;
   }
 }

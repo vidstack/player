@@ -29,18 +29,18 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          DEFAULT: 'var(--color-brand)',
+          DEFAULT: 'rgb(var(--color-brand) / <alpha-value>)',
         },
         focus: {
-          DEFAULT: 'var(--color-focus)',
+          DEFAULT: 'rgb(var(--color-focus) / <alpha-value>)',
         },
         gray: {},
-        border: 'var(--color-border)',
-        soft: 'var(--color-soft)',
-        inverse: 'var(--color-inverse)',
-        current: 'var(--color-current)',
-        body: 'var(--color-body)',
-        elevate: 'var(--color-elevate)',
+        border: 'rgb(var(--color-border) / <alpha-value>)',
+        soft: 'rgb(var(--color-soft) / <alpha-value>)',
+        inverse: 'rgb(var(--color-inverse) / <alpha-value>)',
+        current: 'rgb(var(--color-current) / <alpha-value>)',
+        body: 'rgb(var(--color-body) / <alpha-value>)',
+        elevate: 'rgb(var(--color-elevate) / <alpha-value>)',
       },
       animation: {
         indeterminate: 'indeterminate 1.2s linear infinite',

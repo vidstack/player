@@ -24,7 +24,7 @@
 
 <div
   class={clsx(
-    'admonition bg-elevate my-8 mx-auto rounded-md border-2 border-l-8 p-4 shadow-md',
+    'admonition bg-elevate my-8 mx-auto rounded-md border-2 border-l-8 p-4',
     type === 'note' && 'border-pink-600 dark:border-pink-400',
     type === 'info' && 'border-blue-600 dark:border-blue-400',
     type === 'tip' && 'border-green-600 dark:border-green-400',

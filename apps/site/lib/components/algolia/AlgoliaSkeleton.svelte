@@ -1,6 +1,6 @@
 <!-- For SSR to prevent sidebar jumping on initial render. -->
 <div
-  class="border-elevate-border bg-elevate 992:flex hidden w-full items-center rounded-md border py-2 px-3 text-sm shadow-md"
+  class="border-border bg-elevate 992:flex hidden w-full items-center rounded-md border py-2 px-3 text-sm"
 >
   <div class="flex flex-1 items-center">
     <svg width="16" height="16" class="DocSearch-Search-Icon" viewBox="0 0 20 20">

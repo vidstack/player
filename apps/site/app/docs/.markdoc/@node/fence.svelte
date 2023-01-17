@@ -79,8 +79,8 @@
 
 <div
   class={clsx(
-    'code-fence 576:max-h-[32rem] relative my-8 mx-auto max-h-[60vh] overflow-y-auto rounded-md shadow-lg',
-    'border-elevate-border prefers-dark-scheme scrollbar scroll-contain border-[1.5px]',
+    'code-fence 576:max-h-[32rem] relative my-8 mx-auto max-h-[60vh] overflow-y-auto rounded-md',
+    'border-border prefers-dark-scheme scrollbar scroll-contain border-[1.5px]',
     lang && `lang-${lang}`,
   )}
   style="background-color: var(--code-fence-bg);"

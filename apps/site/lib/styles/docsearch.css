@@ -32,9 +32,9 @@
 }
 
 .DocSearch-Button {
-  @apply bg-elevate hover:bg-elevate flex h-auto w-full items-center rounded-md py-1.5 px-3 shadow-md hover:shadow-md;
+  @apply bg-elevate hover:bg-elevate flex h-auto w-full items-center rounded-md py-1.5 px-3;
   @apply m-0 transform-gpu text-[15px] transition-transform hover:scale-[1.025];
-  border: 1.5px solid var(--color-elevate-border);
+  border: 1.5px solid var(--color-border);
 }
 
 .DocSearch-Button:focus-visible,

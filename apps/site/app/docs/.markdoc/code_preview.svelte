@@ -37,7 +37,7 @@
 </script>
 
 <div
-  class="code-preview border-elevate-border text-300 prefers-dark-scheme my-8 mx-auto overflow-hidden rounded-md border-[1.5px] shadow-lg"
+  class="code-preview border-border text-300 prefers-dark-scheme my-8 mx-auto overflow-hidden rounded-md border-[1.5px]"
   style="background-color: var(--code-fence-bg);"
   aria-busy={ariaBool(!hasLoaded)}
   use:intersectionObserver={{ callback: onIntersect }}
@@ -45,7 +45,7 @@
   <div
     class={clsx(
       'scroll-contain scrollbar relative w-full overflow-auto rounded-md rounded-b-none',
-      'border-divider not-prose 576:p-4 992:p-6 border-b p-2',
+      'border-border not-prose 576:p-4 992:p-6 border-b p-2',
       size === 'xsmall' && 'h-[7rem] max-h-28',
       size === 'small' && 'h-[12rem] max-h-48',
       size === 'medium' && 'h-[18rem] max-h-72',

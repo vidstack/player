@@ -10,7 +10,7 @@
 
 <li class="992:mt-0 mt-4 first:mt-0">
   <a
-    class={clsx('992:text-base p-1 text-lg', 'text-inverse')}
+    class="text-soft hover:font-medium font-base hover:underline hover:text-brand"
     href={slug}
     target={isNull(match) ? '_blank' : null}
     data-prefetch

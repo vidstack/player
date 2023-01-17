@@ -54,7 +54,7 @@
   >
     <ul
       id={menuId}
-      class="bg-elevate border-elevate-border absolute right-0 z-50 mt-2 w-40 origin-top-right rounded-md border-[1.5px] shadow-lg"
+      class="bg-elevate border-border absolute right-0 z-50 mt-2 w-40 origin-top-right rounded-md border-[1.5px]"
       role="menu"
       aria-orientation="vertical"
       aria-labelledby={menuButtonId}

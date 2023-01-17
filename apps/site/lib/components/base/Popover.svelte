@@ -89,7 +89,7 @@
       role="dialog"
     >
       <div
-        class="bg-elevate border-elevate-border flex min-h-[60px] flex-col overflow-hidden rounded-md border-[1.5px] shadow-lg"
+        class="bg-elevate border-border flex min-h-[60px] flex-col overflow-hidden rounded-md border-[1.5px]"
       >
         <div class="z-20 flex items-center">
           <div class="flex-1" />

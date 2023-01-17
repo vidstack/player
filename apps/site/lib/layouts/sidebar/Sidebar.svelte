@@ -89,7 +89,7 @@
           <h5 class="text-strong font-semibold">
             {category}
           </h5>
-          <ul class="border-divider space-y-3 border-l">
+          <ul class="border-border space-y-3 border-l">
             {#each categoryLinks as link (link.title + link.slug)}
               <li class="first:mt-5 flex items-center">
                 <a

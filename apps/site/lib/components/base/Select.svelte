@@ -1,6 +1,5 @@
 <script lang="ts">
   import clsx from 'clsx';
-
   import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-line';
 
   export let title: string;
@@ -16,13 +15,13 @@
 <div class={clsx('inline-block', block && 'w-full')}>
   <label
     class={clsx(
-      'relative flex min-w-[85px] items-center border-[1.5px] pl-2.5 pr-1 shadow-md',
+      'relative flex min-w-[85px] items-center border-[1.5px] pl-2.5 pr-1',
       'bg-elevate transform-gpu transition-transform hover:scale-[1.025]',
       rounded && 'rounded-md',
       block ? 'py-1' : 'py-0.5',
       disabled ? 'text-gray-300' : 'text-inverse focus-within:ring-2',
     )}
-    style="--tw-ring-color: var(--color-focus); border-color: var(--select-border-color, var(--color-elevate-border));"
+    style="--tw-ring-color: var(--color-focus); border-color: var(--select-border-color, var(--color-border));"
   >
     <slot name="before-title" />
 

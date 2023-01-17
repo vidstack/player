@@ -60,7 +60,7 @@
 
         <slot name="popover-middle" />
 
-        <hr class="border-divider my-6 h-2 w-full border-t" />
+        <hr class="border-border my-6 h-2 w-full border-t" />
 
         <section class="flex flex-col items-start" aria-label="Options">
           <div class="flex flex-col space-y-6">

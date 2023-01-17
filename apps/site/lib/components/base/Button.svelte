@@ -17,11 +17,11 @@
 
   $: buttonClass = clsx(
     'group transform-gpu text-base font-medium transition-transform hover:scale-105',
-    type === 'raised' && 'shadow-md hover:shadow-lg flex items-center justify-center',
-    (isButton || type === 'raised') && 'rounded-full px-4 992:px-5 py-2',
+    type === 'raised' && 'flex items-center justify-center',
+    (isButton || type === 'raised') && 'rounded-md px-4 992:px-5 py-2',
     type === 'raised'
       ? primary
-        ? 'bg-inverse text-current'
+        ? 'bg-inverse text-current hover:bg-inverse/90'
         : 'bg-current border-2 border-inverse text-inverse'
       : false,
     __class,

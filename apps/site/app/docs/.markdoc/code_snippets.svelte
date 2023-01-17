@@ -17,12 +17,12 @@
 </script>
 
 <div
-  class="code-snippets border-elevate-border prefers-dark-scheme relative my-8 overflow-hidden rounded-md border-[1.5px] text-gray-300 shadow-lg"
+  class="code-snippets border-border prefers-dark-scheme relative my-8 overflow-hidden rounded-md border-[1.5px] text-gray-300"
   style="background-color: var(--code-fence-bg);"
 >
   {#if snippetNames.length > 1}
     <div
-      class="code-snippets-tabs no-scrollbar not-prose border-divider z-10 flex flex-row border-b"
+      class="code-snippets-tabs no-scrollbar not-prose border-border z-10 flex flex-row border-b"
     >
       <ul class="flex w-full list-none whitespace-nowrap">
         {#each snippetNames as name, i (name)}
