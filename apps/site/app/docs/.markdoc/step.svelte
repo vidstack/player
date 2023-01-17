@@ -22,7 +22,7 @@
   class={clsx(
     'step 1200:grid relative pl-10 before:absolute before:content-[counter(step)]',
     'before:left-0 before:flex before:w-[calc(1.375rem+1px)] before:items-center before:justify-center',
-    'before:h-[calc(1.375rem+1px)] before:text-[0.7rem] before:font-bold before:text-white dark:before:text-black',
+    'before:h-[calc(1.375rem+1px)] before:text-[0.7rem] before:font-bold before:text-current',
     'before:bg before:bg-inverse before:rounded-md',
     'after:bg-border pb-8 after:absolute after:top-[calc(1.875rem+1px)] after:bottom-0 after:left-[0.6875rem] after:w-px',
     orientation === 'horizontal' ? 'grid-cols-5 gap-10' : 'grid-cols-4 gap-4',

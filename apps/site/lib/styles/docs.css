@@ -14,15 +14,30 @@ body {
   --article-max-width: 88ch;
 }
 
+code *[style*='color: #676E95; font-'] {
+  color: #838996 !important;
+}
+
+.dark code *[style*='color: #676E95; font-'] {
+  color: #98a1b4 !important;
+}
+
 .code-preview,
 .code-snippets,
 .code-fence {
-  --code-fence-bg: rgb(22, 22, 22);
-  --code-fence-top-bar-bg: rgb(22, 22, 22);
-  --code-copied-bg-color: rgba(var(--color-brand-rgb) / 80);
+  --code-fence-bg: rgb(var(--color-current));
+  --code-fence-top-bar-bg: rgb(var(--color-current) / 0.6);
+  --code-copied-bg-color: rgb(var(--color-brand-rgb) / 0.8);
   --terminal-line-pointer: rgb(var(--color-brand));
   --code-highlight-border: rgb(var(--color-brand));
-  --code-highlight-color: rgba(var(--color-brand-rgb) / 8);
+  --code-highlight-color: rgb(var(--color-brand-rgb) / 0.08);
+}
+
+.dark .code-preview,
+.dark .code-snippets,
+.dark .code-fence {
+  --code-fence-bg: rgb(var(--color-elevate));
+  --code-fence-top-bar-bg: rgb(var(--color-elevate) / 0.8);
 }
 
 @supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {

@@ -65,18 +65,18 @@
   <nav class="992:px-1 992:mt-0 -mt-6">
     {#if search}
       <div class="pointer-events-none sticky top-0 z-0 -ml-0.5 min-h-[80px]">
-        <div class="992:h-6 bg-body dark:bg-gray-800" />
-        <div class="bg-body pointer-events-auto relative dark:bg-gray-800">
+        <div class="992:h-6 bg-body" />
+        <div class="bg-body pointer-events-auto relative">
           <div class="992:block hidden">
             <slot name="search" />
           </div>
-          <div class="992:h-4 bg-body h-14 dark:bg-gray-800" />
+          <div class="992:h-4 bg-body h-14" />
           <div class="flex w-full items-center space-x-2">
             <LibSelect />
             <VersionSelect />
           </div>
         </div>
-        <div class="from-body h-10 bg-gradient-to-b dark:from-gray-800" />
+        <div class="from-body h-10 bg-gradient-to-b" />
       </div>
     {/if}
 
@@ -97,7 +97,7 @@
                     '992:py-1 -ml-px flex items-center border-l-2 py-2 pl-4',
                     isActiveSidebarLink(link, $route.matchedURL.pathname)
                       ? 'text-brand font-semibold'
-                      : 'hover:border-inverse text-soft hover:text-inverse border-transparent font-normal',
+                      : 'hover:border-inverse focus-visible:border-inverse text-soft hover:text-inverse focus-visible:text-inverse border-transparent font-normal',
                   )}
                   href={link.slug}
                   style={isActiveSidebarLink(link, $route.matchedURL.pathname)

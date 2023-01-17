@@ -80,7 +80,7 @@
 <div
   class={clsx(
     'code-fence 576:max-h-[32rem] relative my-8 mx-auto max-h-[60vh] overflow-y-auto rounded-md',
-    'border-border prefers-dark-scheme scrollbar scroll-contain border-[1.5px]',
+    'prefers-dark-scheme scrollbar scroll-contain shadow-xl border-border border',
     lang && `lang-${lang}`,
   )}
   style="background-color: var(--code-fence-bg);"
@@ -91,7 +91,7 @@
       style="background-color: var(--code-fence-top-bar-bg);"
     >
       {#if hasTopbarTitle}
-        <span class="code-fence-title ml-3.5 font-mono text-sm text-gray-300">{topbarTitle}</span>
+        <span class="code-fence-title ml-3.5 font-mono text-sm text-soft">{topbarTitle}</span>
       {/if}
 
       <div class="flex-1" />
@@ -99,12 +99,12 @@
       {#if copy}
         <button
           type="button"
-          class="mr-2 px-2 py-1 hover:text-white"
+          class="mr-2 px-2 py-1 text-soft hover:text-inverse"
           on:click={copyCodeToClipboard}
         >
           <div
             class={clsx(
-              'absolute top-2.5 right-4 z-10 rounded-md px-2 py-1 font-mono text-sm text-current transition-opacity duration-300 ease-out',
+              'absolute top-2.5 right-4 z-10 rounded-md px-2 py-1 font-mono text-sm transition-opacity duration-300 ease-out',
               showCopiedCodePrompt ? 'opacity-100' : 'hidden opacity-0',
             )}
             aria-hidden="true"
@@ -140,7 +140,7 @@
         class="992:flex absolute top-3.5 left-0 m-0 hidden flex-col text-sm leading-[27px]"
         style="border-radius: 0; padding-top: 0;">
 			  <div
-          class="992:block hidden flex-none select-none text-right text-gray-300"
+          class="992:block hidden flex-none select-none text-right text-soft"
           aria-hidden="true">{lines.join('\n')}</div>
 		  </pre>
     {/if}

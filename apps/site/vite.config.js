@@ -21,7 +21,7 @@ export default defineConfig({
     vessel({
       markdown: {
         highlighter: 'shiki',
-        shiki: { theme: 'material-ocean' },
+        shiki: { theme: 'material-palenight' },
       },
       routes: {
         entries: ['', '/react'].flatMap((lib) => [

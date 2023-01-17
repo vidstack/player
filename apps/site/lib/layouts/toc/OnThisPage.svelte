@@ -65,7 +65,7 @@
                 <RightArrowIcon
                   width="20"
                   height="20"
-                  class="group-hover:text-soft mt-px mr-px text-gray-300 dark:text-gray-400"
+                  class="group-hover:text-inverse mt-px mr-px text-soft"
                 />
                 <a href={`#${childHeader.id}`}>{childHeader.title}</a>
               </li>

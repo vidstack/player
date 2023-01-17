@@ -69,13 +69,13 @@ function typography(theme) {
   return {
     DEFAULT: {
       css: {
-        '--tw-prose-counters': 'black',
-        '--tw-prose-invert-counters': 'white',
-        color: '#585858',
+        '--tw-prose-counters': 'rgb(var(--color-inverse))',
+        '--tw-prose-invert-counters': 'rgb(var(--color-inverse))',
+        color: 'rgb(var(--color-soft))',
         fontSize: '18px',
         maxWidth: 'none',
         hr: {
-          borderColor: theme('colors.border'),
+          borderColor: 'rgb(var(--color-border))',
           marginTop: '3em',
           marginBottom: '3em',
         },
@@ -118,7 +118,7 @@ function typography(theme) {
           paddingLeft: '0.25rem',
         },
         'ul > li::marker': {
-          color: theme('colors.inverse'),
+          color: 'rgb(var(--color-inverse))',
         },
         'ul > li::before': {
           content: '""',
@@ -135,7 +135,7 @@ function typography(theme) {
         a: {
           fontWeight: theme('fontWeight.normal'),
           textDecoration: 'none',
-          borderBottom: `1px solid var(--color-brand)`,
+          borderBottom: `1px solid rgb(var(--color-brand))`,
         },
         'a:hover': {
           borderBottomWidth: '2px',
@@ -173,8 +173,8 @@ function typography(theme) {
           borderCollapse: 'collapse',
         },
         thead: {
-          color: theme('colors.gray.inverse'),
-          borderBottomColor: theme('colors.border'),
+          color: 'rgb(var(--color-inverse))',
+          borderBottomColor: 'rgb(var(--color-border))',
         },
         tbody: {
           verticalAlign: 'baseline',
@@ -185,7 +185,7 @@ function typography(theme) {
         },
         'tbody tr': {
           fontSize: theme('fontSize.sm')[0],
-          borderBottomColor: theme('colors.border'),
+          borderBottomColor: 'rgb(var(--color-border))',
         },
         'tbody td': {
           whiteSpace: 'nowrap',
@@ -222,7 +222,7 @@ function typography(theme) {
           marginTop: `${12 / 14}em`,
         },
         blockQuote: {
-          color: theme('colors.inverse'),
+          color: 'rgb(var(--color-inverse))',
           borderRadius: 2,
           borderColor: 'currentColor',
         },
@@ -230,12 +230,12 @@ function typography(theme) {
     },
     invert: {
       css: {
-        color: '#a3a3a3',
+        color: 'rgb(var(--color-soft))',
         'tbody tr td:first-child code': {
           color: theme('colors.indigo.300'),
         },
         'tbody tr': {
-          borderBottomColor: theme('colors.border'),
+          borderBottomColor: 'rgb(var(--color-border))',
         },
       },
     },

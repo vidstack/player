@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 * {
-  border-color: var(--color-border);
+  border-color: rgb(var(--color-border));
 }
 
 .js-focus-visible [data-focus-visible-added] {
   @apply outline-none ring-2;
-  --tw-ring-color: var(--color-focus);
+  --tw-ring-color: rgb(var(--color-focus));
 }
 
 .DocSearch-Form:focus-within {
   @apply ring-2;
-  --tw-ring-color: var(--color-focus);
+  --tw-ring-color: rgb(var(--color-focus));
 }
 
 .svg-responsive > svg {
@@ -47,8 +47,12 @@
 
 .scrollbar {
   scrollbar-width: thin;
-  --scrollbar-track-bg: var(--color-border);
-  --scrollbar-thumb-bg: var(--color-soft);
+  --scrollbar-track-bg: rgb(var(--color-border) / 0.3);
+  --scrollbar-thumb-bg: rgb(var(--color-border));
+}
+
+.dark .scrollbar {
+  --scrollbar-track-bg: rgb(var(--color-border) / 0.2);
 }
 
 @media screen and (prefers-reduced-motion: no-preference) {
@@ -58,7 +62,7 @@
 }
 
 .scrollbar::-webkit-scrollbar {
-  @apply !h-1.5 !w-1.5 !bg-transparent;
+  @apply !h-1.5 !w-[5px] !bg-transparent;
 }
 
 .scrollbar::-webkit-scrollbar-track {

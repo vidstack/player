@@ -23,7 +23,7 @@
       ? primary
         ? 'bg-inverse text-current hover:bg-inverse/90'
         : 'bg-current border-2 border-inverse text-inverse'
-      : false,
+      : 'text-soft hover:text-inverse',
     __class,
   );
 

@@ -17,7 +17,7 @@
 </script>
 
 <div
-  class="code-snippets border-border prefers-dark-scheme relative my-8 overflow-hidden rounded-md border-[1.5px] text-gray-300"
+  class="code-snippets border-border prefers-dark-scheme relative my-8 overflow-hidden rounded-md border text-soft shadow-xl"
   style="background-color: var(--code-fence-bg);"
 >
   {#if snippetNames.length > 1}
@@ -31,8 +31,8 @@
               class={clsx(
                 'px-5 py-2 font-mono text-sm focus-visible:m-px',
                 activeTab === i
-                  ? 'border-brand text-brand border-b bg-gray-700'
-                  : 'hover:text-white',
+                  ? 'border-brand text-brand border-b bg-gray-700/20'
+                  : 'hover:text-inverse',
               )}
               on:click={() => {
                 activeTab = i;

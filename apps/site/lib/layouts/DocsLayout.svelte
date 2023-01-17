@@ -134,7 +134,7 @@
       <hr class="border-border 992:mt-20 mt-14" />
 
       <div
-        class="992:text-xl 992:pt-12 flex items-center pt-8 pb-20 text-lg font-semibold text-gray-300"
+        class="992:text-xl 992:pt-12 flex items-center pt-8 pb-20 text-lg font-semibold text-soft"
       >
         {#if $previousLink}
           <div class="mb-4 flex flex-col items-start">
@@ -148,7 +148,7 @@
         {#if $nextLink}
           <div class="ml-auto mb-4 flex flex-col items-end">
             <span class="text-inverse mb-4 inline-block">Next</span>
-            <Button arrow="right" href={$nextLink.slug} class="hover:text-inverse -mr-3">
+            <Button arrow="right" href={$nextLink.slug} class="-mr-3">
               {$nextLink.title}
             </Button>
           </div>

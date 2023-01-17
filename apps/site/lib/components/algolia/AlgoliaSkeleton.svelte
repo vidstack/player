@@ -12,11 +12,11 @@
         stroke-linecap="round"
         stroke-linejoin="round"
       />
-      <span class="text-sm">Search</span>
+      <span class="text-sm text-soft font-normal">Search</span>
     </svg>
   </div>
 
-  <span class="text-soft flex space-x-0.5 font-mono font-semibold">
+  <span class="text-soft flex space-x-0.5 font-mono font-medium">
     <span class="text-[17px]">⌘</span>
     <span class="text-[14px]">K</span>
   </span>

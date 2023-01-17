@@ -37,7 +37,7 @@
 </script>
 
 <div
-  class="code-preview border-border text-300 prefers-dark-scheme my-8 mx-auto overflow-hidden rounded-md border-[1.5px]"
+  class="code-preview text-soft prefers-dark-scheme my-8 mx-auto overflow-hidden rounded-md shadow-xl border-border border"
   style="background-color: var(--code-fence-bg);"
   aria-busy={ariaBool(!hasLoaded)}
   use:intersectionObserver={{ callback: onIntersect }}

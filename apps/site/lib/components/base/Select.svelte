@@ -19,9 +19,11 @@
       'bg-elevate transform-gpu transition-transform hover:scale-[1.025]',
       rounded && 'rounded-md',
       block ? 'py-1' : 'py-0.5',
-      disabled ? 'text-gray-300' : 'text-inverse focus-within:ring-2',
+      disabled
+        ? 'text-soft/40'
+        : 'text-soft hover:text-inverse focus-within:text-inverse focus-within:ring-2',
     )}
-    style="--tw-ring-color: var(--color-focus); border-color: var(--select-border-color, var(--color-border));"
+    style="--tw-ring-color: rgb(var(--color-focus)); border-color: var(--select-border-color, rgb(var(--color-border)));"
   >
     <slot name="before-title" />
 

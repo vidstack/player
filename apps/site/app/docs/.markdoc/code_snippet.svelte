@@ -71,7 +71,7 @@
 
 {#if currentSnippet && !hasLoaded}
   <div
-    class="code-fence scrollbar 576:max-h-[32rem] border-border prefers-dark-scheme relative my-8 mx-auto max-h-[60vh] overflow-y-auto rounded-md border-[1.5px]"
+    class="code-fence scrollbar 576:max-h-[32rem] border-border prefers-dark-scheme relative my-8 mx-auto max-h-[60vh] overflow-y-auto rounded-md border shadow-xl"
     style="background-color: var(--code-fence-bg);"
     aria-busy={ariaBool(!hasLoaded)}
     use:intersectionObserver={{ callback: onIntersect }}
