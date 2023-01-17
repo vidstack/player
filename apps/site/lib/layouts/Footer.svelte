@@ -1,5 +1,4 @@
 <script lang="ts">
-  import SocialLink from '$lib/components/social/SocialLink.svelte';
   import vidstackLogo from '$lib/img/brand/vidstack-logo.svg?raw';
   import vidstackSymbol from '$lib/img/brand/vidstack-symbol.svg?raw';
 </script>
@@ -7,8 +6,8 @@
 <footer class="576:px-8 mt-28 w-full px-6 py-10 text-base">
   <div class="mx-auto w-full max-w-[var(--navbar-max-width)]">
     <div class="flex flex-col">
-      <div class="576:flex-row 576:space-y-0 576:space-x-16 flex flex-col space-y-10">
-        <div class="576:flex-col 576:items-start flex flex-row items-center">
+      <div class="768:flex-row 768:space-y-0 768:space-x-16 flex flex-col space-y-10">
+        <div class="768:flex-col 768:items-start flex flex-row items-center">
           <div
             class="text-inverse svg-responsive 992:inline-block hidden h-[26px] w-[128px] overflow-hidden"
           >
@@ -16,14 +15,6 @@
           </div>
           <div class="svg-responsive 992:hidden -ml-2 mt-0.5 h-9 w-9 overflow-hidden">
             {@html vidstackSymbol}
-          </div>
-          <div class="576:hidden pointer-events-none flex-1" />
-          <div
-            class="576:mr-0 576:space-x-0 576:flex-col 576:space-y-2 576:-ml-2 576:mt-8 -mr-2 flex flex-row space-x-2"
-          >
-            <SocialLink class="768:w-6 768:h-6 h-7 w-7" type="twitter" showTitle />
-            <SocialLink class="768:w-6 768:h-6 h-7 w-7" type="discord" showTitle />
-            <SocialLink class="768:w-6 768:h-6 h-7 w-7" type="gitHub" showTitle />
           </div>
         </div>
 
@@ -36,13 +27,13 @@
               <a href="/docs/player/getting-started/installation">Installation</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/getting-started/foundation">Foundation</a>
+              <a href="/docs/player/getting-started/editor-setup">Editor Setup</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/getting-started/styling">Styling</a>
+              <a href="/docs/player/core-concepts/architecture">Architecture</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/getting-started/events">Events</a>
+              <a href="/docs/player/styling/basics">Styling</a>
             </li>
           </ul>
         </section>
@@ -69,22 +60,25 @@
               <a href="/docs/player/components/providers/video">Video</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/docs/player/components/providers/hls">HLS</a>
+              <a href="/docs/player/components/providers/hls-video">HLS Video</a>
             </li>
           </ul>
         </section>
 
-        <!-- <section class="flex flex-col">
-          <h1 class="text-lg font-bold">Resources</h1>
+        <section class="flex flex-col">
+          <h1 class="text-lg font-bold">Socials</h1>
           <ul class="text-soft mt-4 space-y-4">
             <li class="hover:text-inverse">
-              <a href="/blog">Blog</a>
+              <a href="https://twitter.com/vidstackjs?lang=en">Twitter</a>
             </li>
             <li class="hover:text-inverse">
-              <a href="/privacy-policy/>Privacy</a>
+              <a href="https://github.com/vidstack">GitHub</a>
+            </li>
+            <li class="hover:text-inverse">
+              <a href="https://discord.com/invite/7RGU7wvsu9">Discord</a>
             </li>
           </ul>
-        </section> -->
+        </section>
       </div>
 
       <span class="576:flex-row text-soft mt-16 flex flex-col text-left text-sm leading-relaxed">
