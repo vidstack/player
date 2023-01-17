@@ -8,10 +8,10 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build --filter=./packages/*",
-    "build:vidstack": "turbo run build --filter=vidstack",
-    "build:react": "turbo run build --filter=react",
-    "build:site": "turbo run build --filter=site",
+    "build": "turbo run build types --filter=./packages/*",
+    "build:vidstack": "turbo run build types --filter=vidstack",
+    "build:react": "turbo run build types --filter=react",
+    "build:site": "turbo run build types --filter=site",
     "preview:site": "turbo run preview --filter=site",
     "dev:site": "turbo run dev --filter=site",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && node .scripts/fix-changelog.js",

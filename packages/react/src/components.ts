@@ -319,7 +319,6 @@ A slider control that lets the user specify their desired volume level.
 *  <SliderValueText
 *    type="pointer"
 *    format="percent"
-*    slot="preview"
 *  ></SliderValueText>
 *</VolumeSlider>
 *```
