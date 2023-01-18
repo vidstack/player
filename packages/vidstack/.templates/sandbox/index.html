@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <title>Vidstack Sandbox</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/sandbox/favicon-32x32.png" />
+    <link rel="stylesheet" href="../styles/base.css" />
+    <link rel="stylesheet" href="../styles/ui/buttons.css" />
+    <link rel="stylesheet" href="../styles/ui/sliders.css" />
+
+    <script type="module">
+      // Imports and registers all custom elements in the library.
+      import { defineCustomElements } from '../src/elements.ts';
+
+      await defineCustomElements();
+
+      // CODE HERE
+    </script>
+  </head>
+
+  <body>
+    <h1>Sandbox</h1>
+
+    <p style="margin-top: 24px">
+      Play with Vidstack in your browser, see the
+      <code style="font-weight: bold">`packages/vidstack/sandbox`</code>
+      directory. None of your changes will be commited (git-ignored folder).
+    </p>
+  </body>
+</html>

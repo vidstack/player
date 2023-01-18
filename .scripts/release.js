@@ -1,34 +1,26 @@
 /**
  * Thanks: https://github.com/vuejs/vue-next/blob/master/scripts/release.js
  */
-
-import kleur from 'kleur';
-import { createRequire } from 'module';
-import { fileURLToPath } from 'url';
+import prompt from 'enquirer';
 import { execa } from 'execa';
 import fs from 'fs';
+import kleur from 'kleur';
 import minimist from 'minimist';
+import { createRequire } from 'module';
 import path from 'path';
-import prompt from 'enquirer';
 import semver from 'semver';
+import { fileURLToPath } from 'url';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 const args = minimist(process.argv.slice(2));
 const isDryRun = args.dry;
 const skippedPackages = [];
 const currentVersion = require('../package.json').version;
-
-if (isDryRun) console.log(kleur.cyan('\n☂️  Running in dry mode...\n'));
-
 const packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages'));
-
 const packages = packagesDir.filter((p) => !p.startsWith('.'));
-
 const preId =
-  args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)[0]);
-
+  args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)?.[0]);
 const versionIncrements = [
   'patch',
   'minor',
@@ -101,24 +93,19 @@ async function main() {
     return;
   }
 
-  // update all package versions and inter-dependencies
   step('Updating cross dependencies...');
   updateVersions(targetVersion);
 
-  // generate changelog
   step('Generating changelog...');
   await run(`npm`, ['run', 'changelog']);
 
-  // publish packages
   for (const pkg of packages) {
     await publishPackage(pkg, targetVersion, runIfNotDry);
   }
 
-  // put back workspace settings
   step('Adding back workspace settings...');
   updateVersions('workspace:*');
 
-  // update lockfile
   step('Updating lockfile...');
   await run(`pnpm`, ['install']);
 
@@ -131,7 +118,6 @@ async function main() {
     console.log('No changes to commit.');
   }
 
-  // push to GitHub
   step('Pushing to GitHub...');
   await runIfNotDry('git', ['tag', `v${targetVersion}`]);
   await runIfNotDry('git', ['push', 'upstream', `refs/tags/v${targetVersion}`]);
@@ -154,7 +140,6 @@ async function main() {
 function updateVersions(version) {
   // 1. update root package.json
   updatePackageVersion(path.resolve(__dirname, '..'), version);
-
   // 2. update all packages
   packages.forEach((p) => updatePackageVersion(getPkgRoot(p), version));
 }
@@ -177,7 +162,7 @@ function updatePackageDeps(pkg, depType, version) {
   const deps = pkg[depType];
   if (!deps) return;
   Object.keys(deps).forEach((dep) => {
-    if (dep.startsWith('@vidstack') && packages.includes(dep.replace(/^@vidstack\//, ''))) {
+    if (/^@?vidstack/.test(dep) && packages.includes(dep.replace(/^@?vidstack\//, ''))) {
       const color = version === 'workspace:*' ? 'cyan' : 'yellow';
       console.log(kleur[color](`🦠 ${pkg.name} -> ${depType} -> ${dep}@${version}`));
       deps[dep] = version;
@@ -209,24 +194,15 @@ async function publishPackage(pkgName, version, runIfNotDry) {
   } else if (version.includes('rc')) {
     releaseTag = 'rc';
   } else {
-    // TODO: Remove at 1.0 release.
-    releaseTag = 'next';
+    releaseTag = 'latest';
   }
 
   step(`Publishing ${pkgName}...`);
 
   try {
     await runIfNotDry(
-      // use of yarn is intentional here as we rely on its publishing behavior.
       'yarn',
-      [
-        'publish',
-        '--new-version',
-        version,
-        ...(releaseTag ? ['--tag', releaseTag] : []),
-        '--access',
-        'public',
-      ],
+      ['publish', '--new-version', version, '--tag', releaseTag, '--access', 'public'],
       {
         cwd: pkgRoot,
         stdio: 'pipe',
@@ -241,6 +217,8 @@ async function publishPackage(pkgName, version, runIfNotDry) {
     }
   }
 }
+
+if (isDryRun) console.log(kleur.cyan('\n☂️  Running in dry mode...\n'));
 
 main().catch((err) => {
   console.error(err);

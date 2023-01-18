@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "paths": {
+      "@vidstack/react": ["./src/index.ts"]
+    },
+    "types": ["@types/node"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

@@ -1,7 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
-  content: ['./src/**/*.{svelte,md}', './pages/**/*.{svelte,md}'],
+  content: [
+    './lib/**/*.{svelte,md}',
+    './app/**/*.{html,svelte,md}',
+    './app/**/.markdoc/**/*.{md,svelte}',
+    './app/**/.previews/**/*.{md,svelte}',
+    './app/**/.snippets/**/*.{md,svelte}',
+  ],
   experimental: {
     optimizeUniversalDefaults: true,
   },
@@ -23,42 +29,18 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          DEFAULT: 'var(--color-brand)',
-          50: '#F87EA7',
-          100: '#E8E8E8',
-          200: '#F76998',
-          300: '#F75A8E',
-          400: '#F64C84',
-          500: '#F53D7A',
-          600: '#F30C59',
-          700: '#C20A47',
-          800: '#920735',
-          900: '#610523',
-          soft: 'var(--color-brand-soft)',
+          DEFAULT: 'rgb(var(--color-brand) / <alpha-value>)',
         },
-        gray: {
-          DEFAULT: '#313131',
-          50: '#FFFFFF',
-          100: '#FBFBFB',
-          200: '#EAEAEA',
-          300: '#a5a5a5',
-          400: '#616161',
-          500: '#313131',
-          600: '#292929',
-          700: '#202020',
-          800: '#161616',
-          900: '#181818',
+        focus: {
+          DEFAULT: 'rgb(var(--color-focus) / <alpha-value>)',
         },
-        outline: 'var(--color-outline)',
-        divider: 'var(--color-divider)',
-        soft: 'var(--color-soft)',
-        inverse: 'var(--color-inverse)',
-        current: 'var(--color-current)',
-        hover: 'var(--color-hover)',
-        'hover-inverse': 'var(--color-hover-inverse)',
-        elevate: 'var(--color-elevate)',
-        'elevate-border': 'var(--color-elevate-border)',
-        body: 'var(--color-body)',
+        gray: {},
+        border: 'rgb(var(--color-border) / <alpha-value>)',
+        soft: 'rgb(var(--color-soft) / <alpha-value>)',
+        inverse: 'rgb(var(--color-inverse) / <alpha-value>)',
+        current: 'rgb(var(--color-current) / <alpha-value>)',
+        body: 'rgb(var(--color-body) / <alpha-value>)',
+        elevate: 'rgb(var(--color-elevate) / <alpha-value>)',
       },
       animation: {
         indeterminate: 'indeterminate 1.2s linear infinite',
@@ -87,13 +69,13 @@ function typography(theme) {
   return {
     DEFAULT: {
       css: {
-        '--tw-prose-counters': 'black',
-        '--tw-prose-invert-counters': 'white',
-        color: '#585858',
+        '--tw-prose-counters': 'rgb(var(--color-inverse))',
+        '--tw-prose-invert-counters': 'rgb(var(--color-inverse))',
+        color: 'rgb(var(--color-soft))',
         fontSize: '18px',
         maxWidth: 'none',
         hr: {
-          borderColor: theme('colors.divider'),
+          borderColor: 'rgb(var(--color-border))',
           marginTop: '3em',
           marginBottom: '3em',
         },
@@ -136,7 +118,7 @@ function typography(theme) {
           paddingLeft: '0.25rem',
         },
         'ul > li::marker': {
-          color: theme('colors.inverse'),
+          color: 'rgb(var(--color-inverse))',
         },
         'ul > li::before': {
           content: '""',
@@ -151,9 +133,9 @@ function typography(theme) {
           margin: 0,
         },
         a: {
-          fontWeight: theme('fontWeight.semibold'),
+          fontWeight: theme('fontWeight.normal'),
           textDecoration: 'none',
-          borderBottom: `1px solid var(--color-brand)`,
+          borderBottom: `1px solid rgb(var(--color-brand))`,
         },
         'a:hover': {
           borderBottomWidth: '2px',
@@ -191,8 +173,8 @@ function typography(theme) {
           borderCollapse: 'collapse',
         },
         thead: {
-          color: theme('colors.gray.inverse'),
-          borderBottomColor: theme('colors.divider'),
+          color: 'rgb(var(--color-inverse))',
+          borderBottomColor: 'rgb(var(--color-border))',
         },
         tbody: {
           verticalAlign: 'baseline',
@@ -203,7 +185,7 @@ function typography(theme) {
         },
         'tbody tr': {
           fontSize: theme('fontSize.sm')[0],
-          borderBottomColor: theme('colors.divider'),
+          borderBottomColor: 'rgb(var(--color-border))',
         },
         'tbody td': {
           whiteSpace: 'nowrap',
@@ -240,7 +222,7 @@ function typography(theme) {
           marginTop: `${12 / 14}em`,
         },
         blockQuote: {
-          color: theme('colors.inverse'),
+          color: 'rgb(var(--color-inverse))',
           borderRadius: 2,
           borderColor: 'currentColor',
         },
@@ -248,12 +230,12 @@ function typography(theme) {
     },
     invert: {
       css: {
-        color: '#a3a3a3',
+        color: 'rgb(var(--color-soft))',
         'tbody tr td:first-child code': {
           color: theme('colors.indigo.300'),
         },
         'tbody tr': {
-          borderBottomColor: theme('colors.divider'),
+          borderBottomColor: 'rgb(var(--color-border))',
         },
       },
     },

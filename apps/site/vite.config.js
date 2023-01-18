@@ -1,56 +1,58 @@
-import { defineConfig } from '@vitebook/core/node';
-import SveltePlugin from '@vitebook/svelte/node';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { vessel } from '@vessel-js/app/node';
+import { vesselSvelte } from '@vessel-js/svelte/node';
 import { transform as esbuildTransform } from 'esbuild';
-import Icons from 'unplugin-icons/vite';
+import icons from 'unplugin-icons/vite';
+import { defineConfig } from 'vite';
 
-import ComponentApi from './plugins/component-api.js';
-import Highlight from './plugins/highlight.js';
-import Snippets from './plugins/snippets.js';
+import highlight from './plugins/highlight.js';
+import snippets from './plugins/snippets.js';
 
 export default defineConfig({
-  vitebook: {
-    markdown: {
-      highlighter: 'shiki',
-      shiki: {
-        theme: 'material-ocean',
-      },
+  resolve: {
+    alias: {
+      $lib: '/lib',
     },
-    routes: {
-      entries: [
-        ...['/', '/audio.html', '/hls.html'].map(
-          (path) => `/docs/player/getting-started/quickstart${path}`,
-        ),
-        ...['/', '/audio.html', '/hls.html'].map(
-          (path) => `/docs/player/getting-started/quickstart/cdn${path}`,
-        ),
-      ],
-      matchers: {
-        lib: /(vue|react|svelte)?/,
-      },
-    },
-    sitemap: [
-      {
-        baseUrl: 'https://vidstack.io',
-        filename: 'sitemap.xml',
-        exclude: /docs\/player\/(vue|react|svelte)/,
-      },
-      {
-        baseUrl: 'https://vidstack.io',
-        filename: 'sitemap-search.xml',
-      },
-    ],
-    plugins: [
-      Highlight(),
-      Snippets(),
-      ComponentApi(),
-      Icons({ compiler: 'svelte' }),
-      SveltePlugin({
-        svelte: {
-          preprocess: [typescriptPreprocessor()],
-        },
-      }),
-    ],
   },
+  plugins: [
+    highlight(),
+    snippets(),
+    icons({ compiler: 'svelte' }),
+    vessel({
+      markdown: {
+        highlighter: 'shiki',
+        shiki: { theme: 'material-palenight' },
+      },
+      routes: {
+        entries: ['', '/react'].flatMap((lib) => [
+          ...['', '/audio', '/hls'].map(
+            (p) => `/docs${lib}/player/getting-started/installation${p}`,
+          ),
+          ...['', '/audio', '/hls'].map(
+            (p) => `/docs${lib}/player/getting-started/installation/cdn${p}`,
+          ),
+        ]),
+        matchers: [{ name: 'lib', matcher: ':lib(react)?' }],
+      },
+      sitemap: [
+        {
+          origin: 'https://vidstack.io',
+          filename: 'sitemap.xml',
+          exclude: /docs\/(react|svelte|vue)/,
+        },
+        {
+          origin: 'https://vidstack.io',
+          filename: 'sitemap-search.xml',
+        },
+      ],
+    }),
+    vesselSvelte(),
+    svelte({
+      extensions: ['.svelte', '.md'],
+      compilerOptions: { hydratable: true },
+      preprocess: [typescriptPreprocessor()],
+    }),
+  ],
 });
 
 /**

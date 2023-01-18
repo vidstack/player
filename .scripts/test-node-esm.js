@@ -1,7 +1,7 @@
 import { globbySync } from 'globby';
+import kleur from 'kleur';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import kleur from 'kleur';
 
 const CWD = dirname(fileURLToPath(import.meta.url));
 

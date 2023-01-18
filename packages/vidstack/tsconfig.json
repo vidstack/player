@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "maverick.js",
+    "paths": {
+      "$test-utils": ["./src/test-utils/index.ts"],
+      "vidstack": ["./src/index.ts"],
+      "vidstack/elements": ["./src/elements.ts"]
+    },
+    "types": ["@types/node", "vitest/globals"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

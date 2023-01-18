@@ -1,9 +1,9 @@
-import minimist from 'minimist';
+import chokidar from 'chokidar';
 import fs from 'fs-extra';
 import { globbySync } from 'globby';
-import path from 'path';
-import chokidar from 'chokidar';
 import kleur from 'kleur';
+import minimist from 'minimist';
+import path from 'path';
 
 const args = minimist(process.argv.slice(2));
 
@@ -12,7 +12,7 @@ const watch = args.watch || args.w;
 const targetDir = path.resolve(process.cwd(), args.entry);
 const destDir = path.resolve(process.cwd(), args.outdir);
 const overwrite = args.overwrite !== 'false';
-const glob = args.glob ?? '*';
+const glob = args.glob ?? '**';
 
 if (!args.entry) {
   console.error(kleur.red(`\n\n🚨 Missing entry argument \`--entry\`\n\n`));

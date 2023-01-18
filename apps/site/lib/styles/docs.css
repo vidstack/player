@@ -1,0 +1,164 @@
+body {
+  overflow-y: scroll;
+}
+
+.docs {
+  --breadcrumbs-height: 5rem;
+
+  --sidebar-min-width: 320px;
+  --sidebar-max-width: screen;
+  --sidebar-padding: 0 1.75rem 2rem;
+  --sidebar-border-active: rgb(var(--color-brand));
+
+  --content-max-width: 1440px;
+  --article-max-width: 88ch;
+}
+
+code *[style*='color: #676E95; font-'] {
+  color: #838996 !important;
+}
+
+.dark code *[style*='color: #676E95; font-'] {
+  color: #89909d !important;
+}
+
+.code-preview,
+.code-snippets,
+.code-fence {
+  --code-fence-bg: rgb(var(--color-current));
+  --code-fence-top-bar-bg: rgb(var(--color-current) / 0.6);
+  --code-copied-bg-color: rgb(var(--color-brand-rgb) / 0.8);
+  --terminal-line-pointer: rgb(var(--color-brand));
+  --code-highlight-border: rgb(var(--color-brand));
+  --code-highlight-color: rgb(var(--color-brand-rgb) / 0.08);
+}
+
+.dark .code-preview,
+.dark .code-snippets,
+.dark .code-fence {
+  --code-fence-bg: rgb(var(--color-elevate));
+  --code-fence-top-bar-bg: rgb(var(--color-elevate) / 0.8);
+}
+
+@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {
+  .code-preview,
+  .code-snippets,
+  .code-fence {
+    --code-fence-top-bar-bg: rgb(22, 22, 22 / 0.6);
+  }
+}
+
+@media screen and (min-width: 768px) {
+}
+
+@media screen and (min-width: 992px) {
+  .docs {
+    --breadcrumbs-height: 0px;
+
+    --sidebar-min-width: 15rem;
+    --sidebar-max-width: 17rem;
+    --sidebar-padding: 0 0.5rem 2rem 1.5rem;
+  }
+}
+
+@media screen and (min-width: 1460px) {
+  .docs {
+    --sidebar-padding: 0 0.5rem 2rem 0.25rem;
+  }
+}
+
+.docs pre {
+  tab-size: 2;
+  -o-tab-size: 2;
+  -moz-tab-size: 2;
+}
+
+.docs p + .admonition,
+.docs p + .steps {
+  margin-top: 2.5rem;
+}
+
+.docs .steps + p {
+  margin-top: 4rem;
+}
+
+.docs .admonition + .steps {
+  margin-top: 3.5rem;
+}
+
+.docs .admonition + table {
+  margin-top: 4rem;
+}
+
+.docs .tabbed-links + p {
+  margin-top: 2.5rem;
+}
+
+.docs .code-fence .code pre {
+  margin: 0;
+}
+
+.docs .code-fence.lang-bash pre span {
+  color: #fafafa !important;
+}
+
+.docs .code-fence.lang-bash pre .line:not(:empty)::before {
+  content: '> ';
+  font-weight: bold;
+  color: var(--terminal-line-pointer);
+}
+
+.docs .step .description > code {
+  color: rgb(var(--color-inverse));
+}
+
+.docs .step .code-fence {
+  margin: 0;
+  padding: 0;
+}
+
+.docs .code-fence + .code-fence {
+  margin-top: 0.5rem;
+}
+
+.docs h1 + .steps,
+.docs h2 + .steps,
+.docs h3 + .steps {
+  margin-top: 2.5rem;
+}
+
+.docs .header-anchor {
+  margin-left: -1.25em;
+  padding: 0 0.23em;
+  font-size: 0.8em;
+  opacity: 0;
+  border: 0;
+  background-color: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .docs h1:hover .header-anchor,
+  .docs h2:hover .header-anchor,
+  .docs h3:hover .header-anchor,
+  .docs h4:hover .header-anchor {
+    opacity: 1;
+  }
+}
+
+@media (pointer: coarse) {
+  .docs h1:focus .header-anchor,
+  .docs h2:focus .header-anchor,
+  .docs h3:focus .header-anchor,
+  .docs h4:focus .header-anchor {
+    opacity: 1;
+    margin-left: 0;
+  }
+}
+
+.docs .header-anchor:focus {
+  opacity: 1;
+}
+
+.DocSearch-Button-Key {
+  @apply !ring-0;
+}

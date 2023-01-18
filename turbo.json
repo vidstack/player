@@ -1,39 +1,26 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "baseBranch": "origin/main",
   "pipeline": {
     "analyze": {
-      "dependsOn": ["^bundle", "^types"],
       "outputs": ["elements.json", "vscode.html-data.json"]
     },
     "build": {
-      "dependsOn": ["bundle", "types"],
-      "outputs": ["build/**"]
-    },
-    "bundle": {
-      "dependsOn": ["^analyze", "^bundle", "clean"],
-      "outputs": ["dist/**", "cdn/**", "src/**/_components"]
-    },
-    "types": {
-      "dependsOn": ["^analyze", "^types", "clean"],
-      "outputs": ["index.d.ts", "define/**", "types/**", "tsconfig.tsbuildinfo"]
+      "dependsOn": ["^analyze", "^build", "clean"],
+      "outputs": ["dist/**"]
     },
     "clean": {
       "cache": false
     },
-    "lint": {
-      "dependsOn": ["lint:eslint", "lint:prettier"]
+    "types": {
+      "dependsOn": ["^types", "clean"],
+      "outputs": ["dist/**"]
     },
-    "lint:eslint": {
-      "inputs": ["src/**"]
-    },
-    "lint:prettier": {
+    "format": {
       "inputs": ["src/**"]
     },
     "test": {
-      "dependsOn": ["^analyze", "^bundle"]
-    },
-    "preview": {},
-    "dev": {}
+      "dependsOn": ["test", "test:server"],
+      "inputs": ["src/**"]
+    }
   }
 }

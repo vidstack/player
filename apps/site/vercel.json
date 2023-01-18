@@ -1,4 +1,10 @@
 {
-  "trailingSlash": true,
-  "github": { "silent": true }
+  "github": { "silent": true },
+  "redirects": [
+    {
+      "source": "/docs/player/react/:path*",
+      "destination": "/docs/react/player/:path*",
+      "permanent": true
+    }
+  ]
 }

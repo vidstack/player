@@ -1,8 +1,0 @@
-{
-  "name": "sandbox",
-  "type": "module",
-  "version": "0.0.0",
-  "dependencies": {
-    "@vidstack/player-react": "link:../"
-  }
-}
