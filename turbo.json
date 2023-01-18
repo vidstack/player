@@ -6,7 +6,7 @@
     },
     "build": {
       "dependsOn": ["^analyze", "^build", "clean"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", ".vercel/**"]
     },
     "clean": {
       "cache": false
