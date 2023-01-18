@@ -55,8 +55,8 @@ importers:
       '@tailwindcss/typography': ^0.5.0
       '@types/markdown-it': ^12.2.0
       '@types/react': ^17.0.0
-      '@vessel-js/app': 0.2.0
-      '@vessel-js/svelte': 0.2.0
+      '@vessel-js/app': 0.2.2
+      '@vessel-js/svelte': 0.2.2
       '@vidstack/react': workspace:*
       autoprefixer: ^10.4.0
       clsx: ^1.2.0
@@ -90,8 +90,8 @@ importers:
       '@tailwindcss/typography': 0.5.8_tailwindcss@3.2.4
       '@types/markdown-it': 12.2.3
       '@types/react': 17.0.52
-      '@vessel-js/app': 0.2.0_uvw4dkenclnq7pcawpslkykgoy
-      '@vessel-js/svelte': 0.2.0_6nwudcnu5lvibyak4d4ixb7gge
+      '@vessel-js/app': 0.2.2_uvw4dkenclnq7pcawpslkykgoy
+      '@vessel-js/svelte': 0.2.2_wvuk75txkslyj5fhlnb25rymhe
       autoprefixer: 10.4.13_postcss@8.4.20
       gray-matter: 4.0.3
       nprogress: 0.2.0
@@ -1214,8 +1214,8 @@ packages:
       '@types/node': 18.11.18
     dev: true
 
-  /@vessel-js/app/0.2.0_uvw4dkenclnq7pcawpslkykgoy:
-    resolution: {integrity: sha512-hxyGqa6Ki+xpRD4eLEaQl/cS9cch8rD4sciPGvJ9GFIl1FOxEyLKyclYclQfmR+TqmiT8KuB4QXc9egXNugL0A==}
+  /@vessel-js/app/0.2.2_uvw4dkenclnq7pcawpslkykgoy:
+    resolution: {integrity: sha512-yPCCvgsJIJkklhvkUvVMG6265w3jyy7qocZElOaQn53OcNr7dr/FpIyGENNmMHVYe9bHFCq/cmSPZc2x5x5Y9A==}
     engines: {node: '>=16'}
     peerDependencies:
       vite: ^4.0.0
@@ -1248,14 +1248,14 @@ packages:
       - rollup
     dev: true
 
-  /@vessel-js/svelte/0.2.0_6nwudcnu5lvibyak4d4ixb7gge:
-    resolution: {integrity: sha512-RxCQVOioFx4TRNDiV6kqPiQOhqJFGxHWXdPb19dTusjbku2qdP+kplFPQ6kYMu3liVXvFdb3uwj5srotLnnqlA==}
+  /@vessel-js/svelte/0.2.2_wvuk75txkslyj5fhlnb25rymhe:
+    resolution: {integrity: sha512-WOVnubXg0utviUkdD+Jttw0v7axtHH8AUDTv/GieZYJk+9dlKX+Ck8y3osPHfqrt1dF5JY9GFmDKrtsSl7H7vA==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@vessel-js/app': 0.2.0
+      '@vessel-js/app': 0.2.2
       svelte: ^3.55.0
     dependencies:
-      '@vessel-js/app': 0.2.0_uvw4dkenclnq7pcawpslkykgoy
+      '@vessel-js/app': 0.2.2_uvw4dkenclnq7pcawpslkykgoy
       globby: 13.1.3
       pathe: 1.0.0
       svelte: 3.55.0
