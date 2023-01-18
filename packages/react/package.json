@@ -24,7 +24,7 @@
     "@types/react": "^17.0.0",
     "maverick.js": "^0.27.0",
     "react": "^17.0.0",
-    "vidstack": "^0.0.1"
+    "vidstack": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",

@@ -1,13 +1,22 @@
-## [1.6.5](https://github.com/vidstack/player/compare/v1.6.3...v1.6.5) (2022-12-02)
-
+## [0.0.1](https://github.com/vidstack/vidstack/compare/v1.6.3...v0.0.1) (2023-01-18)
 
 ### Bug Fixes
 
-* **foundation:** external just lib dependencies ([3affd80](https://github.com/vidstack/player/commit/3affd80409689bdeaa62c0ef603dc0a479354f63))
-* **player-react:** simplify react component types output ([5e0548a](https://github.com/vidstack/player/commit/5e0548a49cf62018dc7f6d1f3a06d0cb239ee4f4))
-* **site:** missing quickstart provider html files in build ([adcd811](https://github.com/vidstack/player/commit/adcd811a1cc235a699661f0bf87fed7b355f7945))
+- **foundation:** external just lib dependencies ([3affd80](https://github.com/vidstack/vidstack/commit/3affd80409689bdeaa62c0ef603dc0a479354f63))
+- **player-react:** simplify react component types output ([5e0548a](https://github.com/vidstack/vidstack/commit/5e0548a49cf62018dc7f6d1f3a06d0cb239ee4f4))
+- **site:** missing quickstart provider html files in build ([adcd811](https://github.com/vidstack/vidstack/commit/adcd811a1cc235a699661f0bf87fed7b355f7945))
 
+### Features
 
+- migration to maverick ([#700](https://github.com/vidstack/vidstack/issues/700)) ([f3b07d3](https://github.com/vidstack/vidstack/commit/f3b07d3b35d7d1cb442e5eaf77e79ce0f6f70996))
+
+## [1.6.5](https://github.com/vidstack/player/compare/v1.6.3...v1.6.5) (2022-12-02)
+
+### Bug Fixes
+
+- **foundation:** external just lib dependencies ([3affd80](https://github.com/vidstack/player/commit/3affd80409689bdeaa62c0ef603dc0a479354f63))
+- **player-react:** simplify react component types output ([5e0548a](https://github.com/vidstack/player/commit/5e0548a49cf62018dc7f6d1f3a06d0cb239ee4f4))
+- **site:** missing quickstart provider html files in build ([adcd811](https://github.com/vidstack/player/commit/adcd811a1cc235a699661f0bf87fed7b355f7945))
 
 ## [1.6.4](https://github.com/vidstack/vidstack/compare/v1.6.3...v1.6.4) (2022-09-27)
 

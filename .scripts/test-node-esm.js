@@ -8,9 +8,9 @@ const CWD = dirname(fileURLToPath(import.meta.url));
 async function main() {
   const files = globbySync(
     [
-      '../packages/*/dist/index.js',
-      '../packages/*/dist/node/index.js',
-      '../packages/*/dist/node/define/*.js',
+      '../packages/*/dist/server.js',
+      '../packages/*/dist/server/index.js',
+      '../packages/*/dist/server/elements.js',
     ],
     { cwd: CWD },
   );
