@@ -1,3 +1,9 @@
+## [0.0.2](https://github.com/vidstack/vidstack/compare/v0.0.1...v0.0.2) (2023-01-18)
+
+### Bug Fixes
+
+- force bump ([bb9dae4](https://github.com/vidstack/vidstack/commit/bb9dae45f64791a1bad7b321194729d7ba81ce71))
+
 ## [0.0.1](https://github.com/vidstack/vidstack/compare/v1.6.3...v0.0.1) (2023-01-18)
 
 ### Bug Fixes
