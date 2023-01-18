@@ -19,6 +19,11 @@ export default defineConfig({
     snippets(),
     icons({ compiler: 'svelte' }),
     vessel({
+      build: {
+        adapter: {
+          use: 'vercel',
+        },
+      },
       markdown: {
         highlighter: 'shiki',
         shiki: { theme: 'material-palenight' },
