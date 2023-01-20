@@ -1,8 +1,8 @@
 import { isFunction, isUndefined } from 'maverick.js/std';
 
-export const UA = __SERVER__ ? '' : window.navigator?.userAgent.toLowerCase();
-export const IS_IOS = /iphone|ipad|ipod|ios|CriOS|FxiOS/.test(UA);
-export const IS_IPHONE = /(iPhone|iPod)/gi.test(window.navigator?.platform);
+export const UA = __SERVER__ ? '' : navigator?.userAgent.toLowerCase();
+export const IS_IOS = !__SERVER__ && /iphone|ipad|ipod|ios|CriOS|FxiOS/.test(UA);
+export const IS_IPHONE = !__SERVER__ && /(iPhone|iPod)/gi.test(navigator?.platform);
 export const IS_CHROME = !__SERVER__ && !!window.chrome;
 export const IS_SAFARI = !__SERVER__ && (window.safari || /(apple|safari)/.test(UA));
 
@@ -120,14 +120,14 @@ export function canUsePiP(): boolean {
  * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
 export function getMediaSource(): typeof MediaSource | undefined {
-  return window?.MediaSource ?? window?.WebKitMediaSource;
+  return __SERVER__ ? undefined : window?.MediaSource ?? window?.WebKitMediaSource;
 }
 
 /**
  * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
 export function getSourceBuffer(): typeof SourceBuffer | undefined {
-  return window?.SourceBuffer ?? window?.WebKitSourceBuffer;
+  return __SERVER__ ? undefined : window?.SourceBuffer ?? window?.WebKitSourceBuffer;
 }
 
 /**
@@ -136,6 +136,8 @@ export function getSourceBuffer(): typeof SourceBuffer | undefined {
  * @see {@link https://github.com/video-dev/hls.js/blob/master/src/is-supported.ts}
  */
 export function isHLSSupported(): boolean {
+  if (__SERVER__) return false;
+
   const mediaSource = getMediaSource();
 
   if (isUndefined(mediaSource)) return false;
