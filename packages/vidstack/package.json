@@ -71,19 +71,19 @@
   "jsdelivr": "./dist/cdn/prod.js",
   "exports": {
     ".": {
-      "development": "./dist/dev/index.js",
       "test": "./dist/dev/index.js",
       "require": "./dist/server/index.cjs",
       "node": "./dist/server/index.js",
       "deno": "./dist/server/index.js",
+      "development": "./dist/dev/index.js",
       "default": "./dist/prod/index.js"
     },
     "./elements": {
-      "development": "./dist/dev/elements.js",
       "test": "./dist/dev/elements.js",
       "require": "./dist/server/elements.cjs",
       "node": "./dist/server/elements.js",
       "deno": "./dist/server/elements.js",
+      "development": "./dist/dev/elements.js",
       "default": "./dist/prod/elements.js"
     },
     "./define/*": "./define/*",
