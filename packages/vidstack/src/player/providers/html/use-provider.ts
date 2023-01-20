@@ -43,14 +43,14 @@ export function useHTMLProvider<T extends HTMLProviderElement>(
   });
 
   function onDefaultSlotChange() {
-    const el = $target()!.firstElementChild as HTMLMediaElement | null;
+    const target = $target()!;
+    const tagNameRE = /audio|video/i;
+    const el = Array.from(target.children).find((el) =>
+      tagNameRE.test(el.tagName),
+    ) as HTMLMediaElement | null;
 
-    if (el && !/^(audio|video)$/i.test(el.tagName)) {
-      throw Error(
-        __DEV__
-          ? `[vidstack] expected <audio> or <video> in default slot. Received: <${el.tagName}>.`
-          : '',
-      );
+    if (__DEV__ && !el) {
+      console.warn('[vidstack] failed to find <audio> or <video> element in default slot.');
     }
 
     $mediaElement.set(el);
