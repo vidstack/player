@@ -66,7 +66,7 @@ for (const component of components) {
 
   content.push(
     `/**\n${component.docs}${docsLinkTag}${exampleTags}\n*/`,
-    `export const ${name} = createLiteReactElement(${defName});`,
+    `export const ${name} = /* #__PURE__*/ createLiteReactElement(${defName});`,
     '',
   );
 }
