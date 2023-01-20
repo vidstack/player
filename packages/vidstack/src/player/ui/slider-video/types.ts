@@ -46,7 +46,7 @@ export interface SliderVideoErrorEvent extends DOMEvent<void> {
  * time position. The video will automatically be updated to match, so ensure it's of the same
  * length as the original.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/ui/slider-video}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-video}
  * @example
  * ```html
  * <vds-time-slider>

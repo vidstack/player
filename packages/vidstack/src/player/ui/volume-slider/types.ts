@@ -15,7 +15,7 @@ export interface VolumeSliderMembers
 /**
  * A slider control that lets the user specify their desired volume level.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/ui/volume-slider}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/volume-slider}
  * @slot preview - Used to insert a slider preview.
  * @example
  * ```html

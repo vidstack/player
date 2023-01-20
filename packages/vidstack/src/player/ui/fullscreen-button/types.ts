@@ -22,7 +22,7 @@ export interface FullscreenButtonMembers extends ToggleButtonMembers, Fullscreen
 /**
  * A button for toggling the fullscreen mode of the player.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/ui/fullscreen-button}
+ * @docs {@link https://www.vidstack.io/docs/player/components/buttons/fullscreen-button}
  * @slot enter - Used to override the default enter fullscreen icon.
  * @slot exit - Used to override the default exit fullscreen icon.
  * @example

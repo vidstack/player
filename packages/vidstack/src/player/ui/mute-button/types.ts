@@ -15,7 +15,7 @@ export interface MuteButtonMembers extends ToggleButtonMembers {}
 /**
  * A button for toggling the muted state of the player.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/ui/mute-button}
+ * @docs {@link https://www.vidstack.io/docs/player/components/buttons/mute-button}
  * @slot volume-muted - Used to override the default muted icon.
  * @slot volume-low - Used to override the default volume low icon.
  * @slot volume-high - Used to override the default volume high icon.

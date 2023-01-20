@@ -12,7 +12,7 @@ export interface PosterProps {
  * Loads and displays the current media poster image. By default, the media provider's
  * loading strategy is respected meaning the poster won't load until the media can.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/ui/poster}
+ * @docs {@link https://www.vidstack.io/docs/player/components/layout/poster}
  * @example
  * ```html
  * <vds-media>

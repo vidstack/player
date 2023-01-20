@@ -15,7 +15,7 @@ export interface PlayButtonMembers extends ToggleButtonMembers {}
 /**
  * A button for toggling the playback state (play/pause) of the current media.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/ui/play-button}
+ * @docs {@link https://www.vidstack.io/docs/player/components/buttons/play-button}
  * @slot play - Used to override the default play icon.
  * @slot pause - Used to override the default pause icon.
  * @example

@@ -26,7 +26,7 @@ export interface TimeSliderMembers
 /**
  * A slider control that lets the user specify their desired time level.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/ui/time-slider}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/time-slider}
  * @slot preview - Used to insert a slider preview.
  * @example
  * ```html

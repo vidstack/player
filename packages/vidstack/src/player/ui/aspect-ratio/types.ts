@@ -30,7 +30,7 @@ export interface AspectRatioProps {
  * 💡 By default it respects the browser's default aspect-ratio for media. This is not specific
  * to the loaded media but instead a general setting of `2/1`.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/ui/aspect-ratio}
+ * @docs {@link https://www.vidstack.io/docs/player/components/layout/aspect-ratio}
  * @slot - Used to pass in a media provider element.
  * @example
  * ```html

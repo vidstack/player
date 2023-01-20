@@ -98,7 +98,7 @@ export interface MediaElementCSSVars {
  * media controller, and expose media state through HTML attributes and CSS properties for styling
  * purposes.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/media/media}
+ * @docs {@link https://www.vidstack.io/docs/player/components/layout/media}
  * @slot - Used to pass in components that use/manage/provide media state.
  * @example
  * ```html
