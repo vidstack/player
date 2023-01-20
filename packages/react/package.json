@@ -48,10 +48,10 @@
   },
   "exports": {
     ".": {
-      "development": "./dist/dev.js",
       "require": "./dist/server.cjs",
       "node": "./dist/server.js",
       "deno": "./dist/server.js",
+      "development": "./dist/dev.js",
       "default": "./dist/prod.js"
     }
   },
