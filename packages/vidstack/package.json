@@ -86,7 +86,14 @@
       "development": "./dist/dev/elements.js",
       "default": "./dist/prod/elements.js"
     },
-    "./define/*": "./define/*",
+    "./define/*": {
+      "test": "./dist/dev/define/*",
+      "require": "./dist/server/define/*",
+      "node": "./dist/server/define/*",
+      "deno": "./dist/server/define/*",
+      "development": "./dist/dev/define/*",
+      "default": "./dist/prod/define/*"
+    },
     "./styles/*": "./styles/*",
     "./package.json": "./package.json",
     "./tailwind.cjs": "./tailwind.cjs",
