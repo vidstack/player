@@ -42,7 +42,7 @@ for (const component of components) {
 
   const link = component.doctags
     ?.find((tag) => tag.name === 'docs')
-    ?.text?.replace('.io/docs', './io/docs/react');
+    ?.text?.replace('.io/docs', '.io/docs/react');
 
   const examples = component.doctags
     ?.filter((tag) => tag.name === 'example' && tag.text)
