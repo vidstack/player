@@ -27,10 +27,10 @@ code *[style*='color: #676E95; font-'] {
 .code-fence {
   --code-fence-bg: rgb(var(--color-current));
   --code-fence-top-bar-bg: rgb(var(--color-current) / 0.6);
-  --code-copied-bg-color: rgb(var(--color-brand-rgb) / 0.8);
+  --code-copied-bg-color: rgb(var(--color-brand) / 0.8);
   --terminal-line-pointer: rgb(var(--color-brand));
   --code-highlight-border: rgb(var(--color-brand));
-  --code-highlight-color: rgb(var(--color-brand-rgb) / 0.08);
+  --code-highlight-color: rgb(var(--color-brand) / 0.08);
 }
 
 .dark .code-preview,
