@@ -16,6 +16,7 @@ export {
 } from 'maverick.js/std';
 
 // Player Media
+export * from './player/media/element/controller/types';
 export * from './player/media/element/context';
 export * from './player/media/element/types';
 export * from './player/media/events';

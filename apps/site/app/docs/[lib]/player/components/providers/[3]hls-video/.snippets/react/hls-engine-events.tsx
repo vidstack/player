@@ -1,4 +1,4 @@
-import { HLSVideo } from '@vidstack/react';
+import { HLSVideo, Media } from '@vidstack/react';
 import type { HLSDestroyingEvent, HLSInstanceEvent } from 'vidstack';
 
 function MediaPlayer() {
@@ -12,8 +12,10 @@ function MediaPlayer() {
   }
 
   return (
-    <HLSVideo onHlsInstance={onInstance} onHlsDestroying={onDestroy}>
-      {/* ... */}
-    </HLSVideo>
+    <Media>
+      <HLSVideo onHlsInstance={onInstance} onHlsDestroying={onDestroy}>
+        {/* ... */}
+      </HLSVideo>
+    </Media>
   );
 }

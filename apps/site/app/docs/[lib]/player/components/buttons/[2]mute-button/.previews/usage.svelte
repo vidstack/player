@@ -1,6 +1,12 @@
-<vds-media class="w-full max-w-xs relative">
+<vds-media
+  class="w-full max-w-xs relative"
+  volume={0.2}
+  poster="https://media-files.vidstack.io/poster-2.png"
+  playsinline
+  view="video"
+>
   <vds-aspect-ratio ratio="16/9">
-    <vds-video volume={0.2} poster="https://media-files.vidstack.io/poster-2.png">
+    <vds-video>
       <video preload="none" src="https://media-files.vidstack.io/360p.mp4">
         <track kind="captions" />
       </video>

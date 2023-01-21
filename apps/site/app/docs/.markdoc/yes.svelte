@@ -1,6 +1,6 @@
 <div class="not-prose my-10 flex items-start">
   <div
-    class="relative -ml-1 mr-2.5 flex h-6 min-h-[24px] w-6 min-w-[24px] items-center justify-center rounded-full bg-[#16a34a] text-current dark:bg-[#22c55e]"
+    class="relative -ml-1 mr-2.5 flex h-6 min-h-[24px] w-6 min-w-[24px] items-center justify-center rounded-full bg-[#16a34a] text-body dark:bg-[#22c55e]"
   >
     <svg
       width="6"

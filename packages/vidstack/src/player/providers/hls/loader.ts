@@ -3,6 +3,7 @@ import { dispatchEvent, isFunction, isString, isUndefined } from 'maverick.js/st
 import type { Logger } from '../../../foundation/logger/create-logger';
 import { coerceToError } from '../../../utils/error';
 import { loadScript } from '../../../utils/network';
+import type { MediaControllerDelegate } from '../../media/element/controller/controller-delegate';
 import type { HLSConstructor, HLSConstructorLoader, HLSLibrary, HLSVideoElement } from './types';
 
 const ctorCache = new Map<any, HLSConstructor>();
@@ -20,6 +21,7 @@ export function isHLSConstructorCached(src: string) {
 export async function loadHLSLibrary(
   target: HLSVideoElement,
   lib: HLSLibrary,
+  delegate: MediaControllerDelegate,
   logger?: Logger,
 ): Promise<HLSConstructor | null> {
   if (__DEV__) {
@@ -57,7 +59,7 @@ export async function loadHLSLibrary(
       }
 
       dispatchEvent(target, 'hls-lib-load-error', { detail: error });
-      dispatchEvent(target, 'error', { detail: { message: error.message, code: 4 } });
+      delegate.dispatch('error', { detail: { message: error.message, code: 4 } });
     },
   };
 
@@ -75,7 +77,7 @@ export async function loadHLSLibrary(
     const message = '[vidstack]: `hls.js` is not supported in this environment';
     if (__DEV__) logger?.error(message);
     dispatchEvent(target, 'hls-unsupported');
-    dispatchEvent(target, 'error', { detail: { message, code: 4 } });
+    delegate.dispatch('error', { detail: { message, code: 4 } });
     return null;
   }
 

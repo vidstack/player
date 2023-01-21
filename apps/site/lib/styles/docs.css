@@ -25,8 +25,8 @@ code *[style*='color: #676E95; font-'] {
 .code-preview,
 .code-snippets,
 .code-fence {
-  --code-fence-bg: rgb(var(--color-current));
-  --code-fence-top-bar-bg: rgb(var(--color-current) / 0.6);
+  --code-fence-bg: rgb(var(--color-body));
+  --code-fence-top-bar-bg: rgb(var(--color-body) / 0.6);
   --code-copied-bg-color: rgb(var(--color-brand) / 0.8);
   --terminal-line-pointer: rgb(var(--color-brand));
   --code-highlight-border: rgb(var(--color-brand));

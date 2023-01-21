@@ -1,10 +1,10 @@
 import { effect, ReadSignal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
-import { useLogger } from '../../../foundation/logger/use-logger';
-import type { MediaEvents } from '../events';
-import { useMediaStore } from '../store';
-import type { MediaProviderElement } from './types';
+import { useLogger } from '../../../../foundation/logger/use-logger';
+import type { MediaElement } from '../../element/types';
+import type { MediaEvents } from '../../events';
+import { useMediaStore } from '../../store';
 
 const mediaEvents: (keyof MediaEvents)[] | undefined = __DEV__
   ? [
@@ -19,7 +19,7 @@ const mediaEvents: (keyof MediaEvents)[] | undefined = __DEV__
       'loaded-data',
       'loaded-metadata',
       'load-start',
-      'media-type-change',
+      'media-change',
       'pause',
       'play',
       'playing',
@@ -33,13 +33,13 @@ const mediaEvents: (keyof MediaEvents)[] | undefined = __DEV__
       'suspend',
       'replay',
       // 'time-update',
-      'view-type-change',
+      'view-change',
       'volume-change',
       'waiting',
     ]
   : undefined;
 
-export function useMediaEventsLogger($target: ReadSignal<MediaProviderElement | null>) {
+export function useMediaEventsLogger($target: ReadSignal<MediaElement | null>) {
   if (!__DEV__) return;
 
   const $media = useMediaStore(),

@@ -1,6 +1,6 @@
-<vds-media class="w-full max-w-md">
+<vds-media class="w-full max-w-md" playsinline autoplay muted>
   <vds-aspect-ratio ratio="16/9">
-    <vds-video autoplay muted>
+    <vds-video>
       <video preload="none" src="https://media-files.vidstack.io/360p.mp4">
         <track kind="captions" />
       </video>

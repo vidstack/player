@@ -1,11 +1,9 @@
 import { effect, peek, ReadSignal, signal } from 'maverick.js';
 import { dispatchEvent, isFunction, listenEvent } from 'maverick.js/std';
 
-import type {
-  UseFullscreen,
-  UseFullscreenProps,
-} from '../../../../foundation/fullscreen/use-fullscreen';
+import type { UseFullscreen } from '../../../../foundation/fullscreen/use-fullscreen';
 import { useLogger } from '../../../../foundation/logger/use-logger';
+import type { MediaControllerDelegate } from '../../../media/element/controller/controller-delegate';
 import type { VideoElement } from '../types';
 
 declare global {
@@ -22,7 +20,7 @@ declare global {
  */
 export function useVideoPresentation(
   $target: ReadSignal<VideoElement | null>,
-  props: UseFullscreenProps,
+  delegate: MediaControllerDelegate,
 ): UseVideoPresentation {
   const $video = () => $target()?.mediaElement as HTMLVideoElement | null,
     $mode = signal<WebKitPresentationMode>('inline'),
@@ -55,16 +53,10 @@ export function useVideoPresentation(
       trigger: event,
     });
 
-    dispatchEvent($target(), 'fullscreen-change', {
+    delegate.dispatch('fullscreen-change', {
       detail: $mode() === 'fullscreen',
       trigger: event,
     });
-  }
-
-  function throwIfNotSupported() {
-    if (!$supported()) {
-      throw Error(__DEV__ ? '[vidstack] WebKit presentation API not available' : '');
-    }
   }
 
   return {
@@ -80,16 +72,12 @@ export function useVideoPresentation(
     async requestFullscreen() {
       await peek(async () => {
         if ($mode() === 'fullscreen') return;
-        throwIfNotSupported();
-        await props.onBeforeRequest?.();
         $video()!.webkitSetPresentationMode!('fullscreen');
       });
     },
     async exitFullscreen() {
       await peek(async () => {
         if ($mode() === 'inline') return;
-        throwIfNotSupported();
-        await props.onBeforeExit?.();
         $video()!.webkitSetPresentationMode!('inline');
       });
     },

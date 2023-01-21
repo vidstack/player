@@ -1,17 +1,17 @@
-import { ReadSignal, signal, Signals } from 'maverick.js';
-import { InferCustomElementProps, onConnect } from 'maverick.js/element';
-import { mergeProperties } from 'maverick.js/std';
+import { ReadSignal, signal } from 'maverick.js';
+import { onConnect } from 'maverick.js/element';
 
-import type { useFullscreen } from '../../../foundation/fullscreen/use-fullscreen';
-import { onMediaSrcChange } from '../../media/provider/internal';
-import type { MediaProviderAdapter } from '../../media/provider/types';
+import {
+  MediaControllerDelegate,
+  useMediaControllerDelegate,
+} from '../../media/element/controller/controller-delegate';
 import { useMediaProvider } from '../../media/provider/use-media-provider';
 import { useMediaStore } from '../../media/store';
 import type { MediaSrc } from '../../media/types';
 import type { HTMLProviderElement, HTMLProviderMembers, HTMLProviderProps } from './types';
-import { useHTMLProviderAdapter } from './use-adapter';
-import { useHTMLProviderConnect } from './use-connect';
-import { useHTMLProviderEvents } from './use-events';
+import { useHTMLMediaElementAdapter } from './use-adapter';
+import { useHTMLMediaElementConnect } from './use-connect';
+import { useHTMLMediaElementEvents } from './use-events';
 
 /**
  * This hook adapts the underlying media element such as `<audio>` or `<video>` to
@@ -20,20 +20,18 @@ import { useHTMLProviderEvents } from './use-events';
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement}
  */
-export function useHTMLProvider<T extends HTMLProviderElement>(
-  $target: ReadSignal<T | null>,
-  props: UseHTMLProviderProps<T>,
-): UseHTMLProvider {
+export function useHTMLMediaElement(
+  $target: ReadSignal<HTMLProviderElement | null>,
+  props: UseHTMLMediaElementProps = {},
+): UseHTMLMediaElement {
   const $media = useMediaStore(),
     $mediaElement = signal<HTMLMediaElement | null>(null),
-    adapter = useHTMLProviderAdapter($target, $mediaElement, $media),
-    members = useMediaProvider($target, {
-      ...props,
-      adapter,
-    });
+    adapter = useHTMLMediaElementAdapter($mediaElement),
+    delegate = useMediaControllerDelegate();
 
-  useHTMLProviderEvents($target, $mediaElement, $media, props);
-  useHTMLProviderConnect($target, $mediaElement, $media, props);
+  useMediaProvider($target);
+  useHTMLMediaElementEvents($target, $mediaElement, $media, delegate, props);
+  useHTMLMediaElementConnect($target, $mediaElement, $media, delegate, props);
 
   onConnect(() => {
     onDefaultSlotChange();
@@ -55,27 +53,28 @@ export function useHTMLProvider<T extends HTMLProviderElement>(
 
     $mediaElement.set(el);
     // Reset src and tracking if media element is removed.
-    if (!el) onMediaSrcChange($media, $target()!, { src: '' });
+    if (!el) delegate.srcChange({ src: '' });
   }
 
   return {
-    members: mergeProperties(members, {
+    members: {
       get mediaElement() {
         return $mediaElement();
       },
-    }),
-    adapter,
+      get adapter() {
+        return adapter;
+      },
+    },
+    delegate,
   };
 }
 
-export interface UseHTMLProvider {
+export interface UseHTMLMediaElement {
   members: Omit<HTMLProviderMembers, keyof HTMLProviderProps>;
-  adapter: MediaProviderAdapter;
+  delegate: MediaControllerDelegate;
 }
 
-export interface UseHTMLProviderProps<T extends HTMLProviderElement> {
-  $props: Signals<InferCustomElementProps<T>>;
-  fullscreen: typeof useFullscreen<T>;
+export interface UseHTMLMediaElementProps {
   /** return `true` if the abort has been handled. */
   onAbort?(event: Event): boolean;
   onPlay?(event: Event): void;

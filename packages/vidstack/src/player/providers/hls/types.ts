@@ -82,30 +82,34 @@ export interface HLSProviderCSSVars extends VideoProviderCSSVars {}
  * @slot - Used to pass in the `<video>` element.
  * @example
  * ```html
- * <vds-hls-video  poster="https://media-files.vidstack.io/poster.png">
- *   <video
- *     preload="none"
- *     src="https://media-files.vidstack.io/hls/index.m3u8"
- *   ></video>
- * </vds-hls-video>
+ * <vds-media poster="https://media-files.vidstack.io/poster.png">
+ *   <vds-hls-video>
+ *     <video
+ *       preload="none"
+ *       src="https://media-files.vidstack.io/hls/index.m3u8"
+ *     ></video>
+ *   </vds-hls-video>
+ * </vds-media>
  * ```
  * @example
  * ```html
- * <vds-hls-video poster="https://media-files.vidstack.io/poster.png">
- *   <video preload="none">
- *     <source
- *       src="https://media-files.vidstack.io/hls/index.m3u8"
- *       type="application/x-mpegURL"
- *     />
- *     <track
- *       default
- *       kind="subtitles"
- *       srclang="en"
- *       label="English"
- *       src="https://media-files.vidstack.io/subs/english.vtt"
- *     />
- *   </video>
- * </vds-hls-video>
+ * <vds-media poster="https://media-files.vidstack.io/poster.png">
+ *   <vds-hls-video>
+ *     <video preload="none">
+ *       <source
+ *         src="https://media-files.vidstack.io/hls/index.m3u8"
+ *         type="application/x-mpegURL"
+ *       />
+ *       <track
+ *         default
+ *         kind="subtitles"
+ *         srclang="en"
+ *         label="English"
+ *         src="https://media-files.vidstack.io/subs/english.vtt"
+ *       />
+ *     </video>
+ *   </vds-hls-video>
+ * </vds-media>
  * ```
  */
 export interface HLSVideoElement

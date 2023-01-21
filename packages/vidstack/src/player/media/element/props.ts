@@ -1,8 +1,8 @@
 import type { CustomElementPropDefinitions } from 'maverick.js/element';
 
-import type { MediaProviderProps } from './types';
+import type { MediaElementProps } from './types';
 
-export const mediaProviderProps: CustomElementPropDefinitions<MediaProviderProps> = {
+export const mediaElementProps: CustomElementPropDefinitions<MediaElementProps> = {
   logLevel: { initial: 'silent' },
   load: { initial: 'visible' },
   autoplay: { initial: false },
@@ -11,8 +11,10 @@ export const mediaProviderProps: CustomElementPropDefinitions<MediaProviderProps
   loop: { initial: false },
   paused: { initial: true },
   volume: { initial: 1 },
+  view: { initial: 'video' },
   muted: { initial: false },
   controls: { initial: false },
   currentTime: { initial: 0 },
   fullscreenOrientation: {},
+  userIdleDelay: { initial: 2000 },
 };

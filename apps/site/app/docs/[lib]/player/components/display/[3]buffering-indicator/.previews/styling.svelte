@@ -28,9 +28,13 @@
 </script>
 
 <div class="contents" bind:this={root}>
-  <vds-media class="w-full max-w-xs">
+  <vds-media class="w-full max-w-xs" view="video">
     <vds-aspect-ratio ratio="16/9">
-      <vds-video />
+      <vds-video>
+        <video>
+          <track kind="captions" />
+        </video>
+      </vds-video>
     </vds-aspect-ratio>
 
     <div class="media-buffering-container">

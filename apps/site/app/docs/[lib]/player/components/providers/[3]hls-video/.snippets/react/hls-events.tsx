@@ -1,4 +1,4 @@
-import { HLSVideo } from '@vidstack/react';
+import { HLSVideo, Media } from '@vidstack/react';
 import type { HLSManifestLoadedEvent } from 'vidstack';
 
 function MediaPlayer() {
@@ -6,5 +6,9 @@ function MediaPlayer() {
     // ...
   }
 
-  return <HLSVideo onHlsManifestLoaded={onManifestLoaded}>{/* ... */}</HLSVideo>;
+  return (
+    <Media>
+      <HLSVideo onHlsManifestLoaded={onManifestLoaded}>{/* ... */}</HLSVideo>
+    </Media>
+  );
 }

@@ -10,7 +10,8 @@ import type {
 export interface FullscreenButtonProps extends ToggleButtonProps {
   /**
    * The target element on which to request fullscreen on. The target can be the `media`
-   * (i.e., `<vds-media>`) or `provider` (e.g., `<vds-video>`) element.
+   * (i.e., `<vds-media>`) or `provider` (e.g., `<vds-video>`) element. The `prefer-media` option
+   * will first see if the native fullscreen API is available, if not it'll try the media provider.
    */
   target: MediaFullscreenRequestTarget | undefined;
 }

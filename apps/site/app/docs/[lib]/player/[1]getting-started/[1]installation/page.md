@@ -55,9 +55,9 @@ Add the following player HTML boilerplate to get started.
 {% /slot %}
 
 ```html {% copy=true %}
-<vds-media>
-  <!-- remove `controls` attribute if you're designing a custom UI -->
-  <vds-video controls poster="https://media-files.vidstack.io/poster.png">
+<!-- remove `controls` attribute if you're designing a custom UI -->
+<vds-media controls poster="https://media-files.vidstack.io/poster.png" view="video">
+  <vds-video>
     <video src="https://media-files.vidstack.io/720p.mp4" preload="none"></video>
   </vds-video>
 </vds-media>

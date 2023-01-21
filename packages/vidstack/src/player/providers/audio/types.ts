@@ -9,30 +9,32 @@ export interface AudioProviderEvents extends HTMLProviderEvents {}
 export interface AudioProviderMembers extends HTMLProviderMembers {}
 
 /**
- * The `<vds-audio>` component adapts the slotted `<audio>` element to satisfy the media provider
- * contract, which generally involves providing a consistent API for loading, managing, and
- * tracking media state.
+ * The `<vds-audio>` component adapts the slotted `<audio>` element to enable loading audio
+ * via the HTML Media Element API.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/providers/audio}
- * @slot - Used to pass in the `<audio>` element.
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio}
+ * @slot - Used to pass in the `<audio>` element.
  * @example
  * ```html
- * <vds-audio>
- *   <audio
- *     controls
- *     preload="none"
- *     src="https://media-files.vidstack.io/audio.mp3"
- *    ></audio>
- * </vds-audio>
+ * <vds-media controls view="audio">
+ *   <vds-audio>
+ *     <audio
+ *       preload="none"
+ *       src="https://media-files.vidstack.io/audio.mp3"
+ *     ></audio>
+ *   </vds-audio>
+ * </vds-media>
  * ```
  * @example
  * ```html
- * <vds-audio>
- *   <audio controls preload="none">
- *     <source src="https://media-files.vidstack.io/audio.mp3" type="audio/mp3" />
- *   </audio>
- * </vds-audio>
+ * <vds-media controls view="audio">
+ *   <vds-audio>
+ *     <audio preload="none">
+ *       <source src="https://media-files.vidstack.io/audio.mp3" type="audio/mp3" />
+ *     </audio>
+ *   </vds-audio>
+ * </vds-media>
  * ```
  */
 export interface AudioElement

@@ -45,10 +45,10 @@ Add the following player JSX boilerplate to get started.
 {% /slot %}
 
 ```jsx {% copy=true %}
-<Media>
-  {/* remove `controls` attribute if you're designing a custom UI */}
-  <Video controls poster="https://media-files.vidstack.io/poster.png">
-    <video src="https://media-files.vidstack.io/720p.mp4" preload="none" />
+<Media controls poster="https://media-files.vidstack.io/poster.png" view="video">
+  {/* ^ remove `controls` attribute if you're designing a custom UI */}
+  <Video>
+    <video src="https://media-files.vidstack.io/720p.mp4" preload="none" data-video="0" />
   </Video>
 </Media>
 ```

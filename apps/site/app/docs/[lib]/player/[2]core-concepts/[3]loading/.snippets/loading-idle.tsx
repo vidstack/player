@@ -1,9 +1,5 @@
-import { Media, Video } from '@vidstack/react';
+import { Media } from '@vidstack/react';
 
 function MediaPlayer() {
-  return (
-    <Media>
-      <Video load="idle">{/* ... */}</Video>
-    </Media>
-  );
+  return <Media load="idle">{/* ... */}</Media>;
 }

@@ -38,10 +38,10 @@ strategies are available:
 - `custom`: Load media when the `startLoadingMedia()` method is called _or_ the `media-start-loading`
   event is dispatched - use when you need fine control of when media should begin loading.
 
-{% code_snippet name="loading-idle" highlight="html:2|react:6" /%}
+{% code_snippet name="loading-idle" highlight="html:1|react:4" /%}
 
 ### Custom Loading Strategy
 
 Here's another example using a custom loading strategy:
 
-{% code_snippet name="loading-custom" highlight="html:5,10|react:12,17" /%}
+{% code_snippet name="loading-custom" highlight="html:5,9|react:11,15" /%}

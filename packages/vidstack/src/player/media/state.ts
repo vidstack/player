@@ -1,4 +1,5 @@
-import type { MediaErrorDetail, MediaSrc, MediaType, ViewType } from './types';
+import type { LogLevel } from '../../foundation/logger/log-level';
+import type { MediaErrorDetail, MediaSrc, MediaType, MediaViewType } from './types';
 
 /** @internal */
 export const ATTEMPTING_AUTOPLAY = Symbol(__DEV__ ? 'ATTEMPTING_AUTOPLAY' : 0);
@@ -144,6 +145,11 @@ export interface MediaState {
    */
   loop: boolean;
   /**
+   * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
+   * and `debug`.
+   */
+  logLevel: LogLevel;
+  /**
    * Whether media is currently a live stream.
    */
   live: boolean;
@@ -151,9 +157,9 @@ export interface MediaState {
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
    *
-   * @defaultValue MediaType.Unknown
+   * @defaultValue 'unknown'
    */
-  mediaType: MediaType;
+  media: MediaType;
   /**
    * Whether the audio is muted or not.
    *
@@ -240,15 +246,12 @@ export interface MediaState {
    */
   started: boolean;
   /**
-   * The type of player view that is being used, whether it's an audio player view or
-   * video player view. Normally if the media type is of audio then the view is of type audio, but
-   * in some cases it might be desirable to show a different view type. For example, when playing
-   * audio with a poster. This is subject to the provider allowing it. Defaults to `unknown`
-   * when no media has been loaded.
+   * The type of player view that should be used (i.e., audio or video). By default this is set
+   * to `video`.
    *
-   * @defaultValue ViewType.Unknown
+   * @defaultValue 'video'
    */
-  viewType: ViewType;
+  view: MediaViewType;
   /**
    * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
    *

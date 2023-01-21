@@ -45,15 +45,14 @@ export interface UnmuteRequestEvent extends DOMEvent<void> {}
 
 /**
  * Whether to request fullscreen on the media (i.e., `<vds-media>`) or provider element
- * (e.g., `<vds-video>`).
- *
- * @defaultValue 'media'
+ * (e.g., `<vds-video>`). The `prefer-media` option will first see if the native fullscreen API is
+ * available, if not it'll try the media provider.
  */
-export type MediaFullscreenRequestTarget = 'media' | 'provider';
+export type MediaFullscreenRequestTarget = 'prefer-media' | 'media' | 'provider';
 
 /**
  * Fired when requesting media to enter fullscreen. The event `detail` can specify the
- * fullscreen target, which can be the media or provider element (defaults to `media`).
+ * fullscreen target, which can be the media or provider element (defaults to `prefer-media`).
  *
  * @bubbles
  * @composed
@@ -62,7 +61,7 @@ export interface EnterFullscreenRequestEvent extends DOMEvent<MediaFullscreenReq
 
 /**
  * Fired when requesting media to exit fullscreen. The event `detail` can specify the fullscreen
- * target, which can be the media or provider element (defaults to `media`).
+ * target, which can be the media or provider element (defaults to `prefer-media`).
  *
  * @bubbles
  * @composed

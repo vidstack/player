@@ -1,16 +1,14 @@
 import { Dispose, peek, signal } from 'maverick.js';
-import { defineCustomElement, onConnect } from 'maverick.js/element';
-import { dispatchEvent, DOMEvent, listenEvent, mergeProperties } from 'maverick.js/std';
+import { defineCustomElement } from 'maverick.js/element';
+import { DOMEvent, listenEvent, mergeProperties } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { HLS_VIDEO_EXTENSIONS, HLS_VIDEO_TYPES } from '../../../utils/mime';
 import { isHLSSupported } from '../../../utils/support';
-import { onMediaSrcChange } from '../../media/provider/internal';
 import { useMediaStore } from '../../media/store';
 import { htmlProviderProps } from '../html/props';
 import { ENGINE, IGNORE_NEXT_ABORT } from '../html/use-events';
-import { useHTMLProvider } from '../html/use-provider';
-import { useVideoFullscreen } from '../video/use-video-fullscreen';
+import { useVideoElement } from '../video/use-element';
 import type { HLSVideoElement } from './types';
 import { useHLSEngine } from './use-hls-engine';
 import { useHLSPreconnect } from './use-hls-preconnect';
@@ -40,17 +38,9 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
       $canLoadLib = signal(false),
       logger = __DEV__ ? useLogger(host.$el) : undefined;
 
-    onConnect(() => {
-      setTimeout(() => {
-        dispatchEvent(host.el, 'view-type-change', { detail: 'video' });
-      }, 0);
-    });
-
     useHLSPreconnect(props.$hlsLibrary, logger);
 
-    const { members } = useHTMLProvider<HLSVideoElement>(host.$el, {
-      $props: props,
-      fullscreen: useVideoFullscreen,
+    const { delegate, members } = useVideoElement(host.$el, {
       onAbort,
       onLoadedMetadata,
       onSourcesChange,
@@ -58,8 +48,9 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
 
     const { $ctor, $engine, $attached, $isHLSSource } = useHLSEngine(
       host,
-      $canLoadLib,
       $media,
+      $canLoadLib,
+      delegate,
       props,
     );
 
@@ -70,7 +61,7 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
           host.el!.mediaElement![IGNORE_NEXT_ABORT] = true;
           sources.push($media.source);
         } else {
-          onMediaSrcChange($media, host.el!, { src: '' }, logger);
+          delegate.srcChange({ src: '' });
         }
       }
     }
@@ -87,7 +78,7 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
         );
 
       if (source) {
-        onMediaSrcChange($media, host.el!, source, logger);
+        delegate.srcChange(source);
         event.target![ENGINE] = true;
         $canLoadLib.set(true);
         return true;

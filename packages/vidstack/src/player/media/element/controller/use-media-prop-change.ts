@@ -1,23 +1,47 @@
 import { effect, ReadSignal, Signals } from 'maverick.js';
 import { dispatchEvent } from 'maverick.js/std';
 
-import { useInternalMediaStore } from '../store';
-import type { MediaProviderElement, MediaProviderProps } from './types';
+import type { MediaElement } from '../../element/types';
+import type { MediaStore } from '../../store';
+import type { MediaControllerProps } from './types';
 
 /**
  * This hook is responsible for dispatching media events that are in response to prop changes. Other
- * events dispatched by the media provider are in response to a media events, these events are
+ * events dispatched by the media controller are in response to a media events, these events are
  * the odd ones that are in response to prop changes.
  */
 export function useMediaPropChange(
-  $target: ReadSignal<MediaProviderElement | null>,
-  { $autoplay, $poster, $loop, $controls, $playsinline }: Signals<MediaProviderProps>,
+  $target: ReadSignal<MediaElement | null>,
+  $media: MediaStore,
+  {
+    $autoplay,
+    $poster,
+    $loop,
+    $controls,
+    $playsinline,
+    $view,
+    $logLevel,
+  }: Signals<MediaControllerProps>,
 ) {
-  const $media = useInternalMediaStore()!;
+  if (__SERVER__) {
+    $media.autoplay = $autoplay();
+    $media.poster = $poster();
+    $media.loop = $loop();
+    $media.controls = $controls();
+    $media.playsinline = $playsinline();
+    $media.view = $view();
+    return;
+  }
 
   effect(() => {
     const target = $target();
     if (!target) return;
+
+    if (__DEV__) {
+      effect(() => {
+        $media.logLevel = $logLevel();
+      });
+    }
 
     effect(() => {
       const autoplay = $autoplay();
@@ -47,6 +71,12 @@ export function useMediaPropChange(
       const playsinline = $playsinline();
       $media.playsinline = playsinline;
       dispatchEvent(target, 'playsinline-change', { detail: playsinline });
+    });
+
+    effect(() => {
+      const view = $view();
+      $media.view = view;
+      dispatchEvent(target, 'view-change', { detail: view });
     });
   });
 }

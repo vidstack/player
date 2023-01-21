@@ -23,7 +23,7 @@ a poor experience.
 ## Autoplay
 
 We manually handle autoplay so we can detect when it fails. Therefore, ensure you set `autoplay` on
-the provider component instead of the underlying media element like so:
+the media component instead of the underlying provider like so:
 
 {% code_snippet name="autoplay" highlight="html:1|react:5" /%}
 

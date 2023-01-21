@@ -5,12 +5,9 @@ import { listenEvent } from 'maverick.js/std';
 import { dispatchFullscreenChange, dispatchFullscreenError } from './dispatch';
 import type { FullscreenEventTarget } from './events';
 
-export function useFullscreen<T extends FullscreenEventTarget>(
-  $target: ReadSignal<T | null>,
-  props: UseFullscreenProps,
-): UseFullscreen {
+export function useFullscreen($target: ReadSignal<FullscreenEventTarget | null>): UseFullscreen {
   const $active = signal(false),
-    exit = () => exitFullscreen(peek($target), props);
+    exit = () => exitFullscreen(peek($target));
 
   // Tracks whether we're the active fullscreen event listener. Fullscreen events can only be
   // listened to globally on the document so we need to know if they relate to the current host
@@ -53,7 +50,7 @@ export function useFullscreen<T extends FullscreenEventTarget>(
     async requestFullscreen() {
       try {
         listening = true;
-        return await requestFullscreen(peek($target), props);
+        return await requestFullscreen(peek($target));
       } catch (error) {
         listening = false;
         throw error;
@@ -80,23 +77,15 @@ function isFullscreen(host?: HTMLElement | null): boolean {
   }
 }
 
-async function requestFullscreen(
-  host: HTMLElement | null,
-  options?: UseFullscreenProps,
-): Promise<void> {
+async function requestFullscreen(host: HTMLElement | null): Promise<void> {
   if (!host || isFullscreen(host)) return;
   assertFullscreenAPI();
-  await options?.onBeforeRequest?.();
   return fscreen.requestFullscreen(host);
 }
 
-async function exitFullscreen(
-  host: HTMLElement | null,
-  options?: UseFullscreenProps,
-): Promise<void> {
+async function exitFullscreen(host: HTMLElement | null): Promise<void> {
   if (!host || !isFullscreen(host)) return;
   assertFullscreenAPI();
-  await options?.onBeforeExit?.();
   return fscreen.exitFullscreen();
 }
 
@@ -138,9 +127,4 @@ export interface UseFullscreen {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Document/exitFullscreen}
    */
   exitFullscreen(): Promise<void>;
-}
-
-export interface UseFullscreenProps {
-  onBeforeRequest?: () => Promise<void>;
-  onBeforeExit?: () => Promise<void>;
 }

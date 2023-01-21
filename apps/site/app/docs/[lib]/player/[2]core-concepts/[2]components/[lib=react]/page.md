@@ -31,18 +31,18 @@ All components forward the underlying custom element reference, so you can use t
 ```tsx
 import { Media, Video } from '@vidstack/react';
 import { useEffect, useRef } from 'React';
-import { type VideoElement } from 'vidstack';
+import { type MediaElement } from 'vidstack';
 
 function MyPlayer() {
-  const provider = useRef<VideoElement>(null);
+  const media = useRef<MediaElement>(null);
 
   useEffect(() => {
-    provider.current!.startLoadingMedia();
+    media.current!.startLoadingMedia();
   }, []);
 
   return (
-    <Media>
-      <Video loading="custom" ref={provider}>
+    <Media load="custom" ref={media}>
+      <Video>
         <video src="..." />
       </Video>
     </Media>
@@ -63,12 +63,8 @@ import { useState } from 'react';
 function MyPlayer() {
   const [paused, setPaused] = useState(true);
   return (
-    <Media>
-      <HLSVideo
-        paused={paused}
-        hlsLibrary={() => import('hls.js')}
-        hlsConfig={{ lowLatencyMode: true }}
-      >
+    <Media paused={paused}>
+      <HLSVideo hlsLibrary={() => import('hls.js')} hlsConfig={{ lowLatencyMode: true }}>
         <video src="..." />
       </HLSVideo>
     </Media>
@@ -91,8 +87,8 @@ function MyPlayer() {
   }
 
   return (
-    <Media>
-      <Video onPlaying={onPlaying}>
+    <Media onPlaying={onPlaying}>
+      <Video>
         <video src="..." />
       </Video>
     </Media>
@@ -103,10 +99,10 @@ function MyPlayer() {
 ## Element Types
 
 All element types are classes named using _PascalCase_ and _suffixed_ with the word `Element`
-(e.g., `AudioElement`).
+(e.g., `MediaElement`).
 
 ```ts {% copy=true %}
-import { type PlayButtonElement, type VideoElement } from 'vidstack';
+import { type MediaElement, type VideoElement } from 'vidstack';
 
-let provider: VideoElement;
+let media: MediaElement;
 ```

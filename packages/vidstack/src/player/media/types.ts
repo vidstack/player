@@ -1,12 +1,19 @@
 /**
- * Indicates the current view type which determines how the media will be presented.
- */
-export type ViewType = 'unknown' | 'audio' | 'video';
-
-/**
  * Indicates the type of media currently loading/loaded.
  */
 export type MediaType = 'unknown' | 'audio' | 'video' | 'live-video';
+
+/**
+ * Indicates the current view type which determines how the media will be presented.
+ */
+export type MediaViewType = 'audio' | 'video';
+
+/**
+ * Indicates the type of strategy that should be used to initiate the loading process.
+ *
+ * @docs {@see https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
+ */
+export type MediaLoadingStrategy = 'eager' | 'idle' | 'visible' | 'custom';
 
 /**
  * A number which represents the general type of error that occurred.

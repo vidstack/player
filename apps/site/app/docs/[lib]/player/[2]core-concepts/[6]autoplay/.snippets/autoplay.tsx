@@ -1,10 +1,12 @@
-import { Video } from '@vidstack/react';
+import { Media, Video } from '@vidstack/react';
 
 function MediaPlayer() {
   return (
-    <Video autoplay>
-      {/* Do not set autoplay on media element. */}
-      <video></video>
-    </Video>
+    <Media autoplay>
+      <Video>
+        {/* Do not set autoplay on media element. */}
+        <video></video>
+      </Video>
+    </Media>
   );
 }

@@ -7,6 +7,22 @@ description: How to read and update media state with Vidstack Player.
 
 In this section, we'll look at the API available for reading and updating media state.
 
+## Media State
+
+You can retrieve a snapshot of the current media state like so:
+
+```js
+const media = document.querySelector('vds-media');
+
+const {
+  paused,
+  playing,
+  waiting,
+  currentTime,
+  // ...
+} = media.state;
+```
+
 ## Media Store
 
 The `<vds-media>` element has a media store that keeps track of the running state of the player.
@@ -18,15 +34,15 @@ Tracking media state via events:
 {% /no %}
 
 ```js
-const provider = document.querySelector('vds-video');
+const media = document.querySelector('vds-media');
 
 let paused = true;
 
-provider.addEventListener('pause', () => {
+media.addEventListener('pause', () => {
   paused = true;
 });
 
-provider.addEventListener('play', () => {
+media.addEventListener('play', () => {
   paused = false;
 });
 ```
@@ -38,8 +54,10 @@ Tracking media state via store subscription:
 ```js
 const media = document.querySelector('vds-media');
 
+const { paused } = media.store;
+
 // The given function will re-run as the `paused` state changes.
-const unsubscribe = media.store.paused.subscribe((paused) => {
+const unsubscribe = paused.subscribe((paused) => {
   console.log('Paused:', paused);
 });
 

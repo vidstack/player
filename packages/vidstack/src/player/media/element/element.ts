@@ -1,12 +1,29 @@
-import { effect, MaybeStopEffect, provideContext } from 'maverick.js';
-import { AttributesRecord, defineCustomElement, onConnect } from 'maverick.js/element';
+import { effect, MaybeStopEffect, peek, provideContext, signal } from 'maverick.js';
+import { AttributesRecord, defineCustomElement, onConnect, onMount } from 'maverick.js/element';
 import { camelToKebabCase, dispatchEvent, mergeProperties, noop } from 'maverick.js/std';
 
+import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
+import { Queue } from '../../../foundation/queue/queue';
 import { IS_IOS } from '../../../utils/support';
-import { useMediaController } from '../controller/use-media-controller';
+import { MediaProviderContext } from '../provider/use-media-provider';
 import type { MediaState } from '../state';
-import { MediaStore, useMediaStore } from '../store';
+import { MediaStore, MediaStoreContext, useMediaStore } from '../store';
 import { MediaElementContext } from './context';
+import { useMediaAdapterDelegate } from './controller/adapter-delegate';
+import {
+  createMediaControllerDelegate,
+  MediaControllerDelegateContext,
+} from './controller/controller-delegate';
+import type { MediaControllerStore } from './controller/types';
+import { useMediaCanLoad } from './controller/use-media-can-load';
+import { useMediaEventsLogger } from './controller/use-media-events-logger';
+import { useMediaPropChange } from './controller/use-media-prop-change';
+import {
+  MediaRequestManagerInit,
+  useMediaRequestManager,
+} from './controller/use-media-request-manager';
+import { useMediaStateManager } from './controller/use-media-state-manager';
+import { mediaElementProps } from './props';
 import type { MediaConnectEvent, MediaElement } from './types';
 
 declare global {
@@ -29,7 +46,7 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'error',
   'fullscreen',
   'loop',
-  'mediaType',
+  'media',
   'muted',
   'paused',
   'playing',
@@ -37,33 +54,54 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'seeking',
   'started',
   'userIdle',
-  'viewType',
+  'view',
   'waiting',
 ];
 
 export const MediaDefinition = defineCustomElement<MediaElement>({
   tagName: 'vds-media',
-  props: {
-    logLevel: { initial: 'silent' },
-    userIdleDelay: { initial: 2000 },
-    fullscreenOrientation: {},
-  },
-  setup({ props: { $logLevel, $userIdleDelay, $fullscreenOrientation }, host, accessors }) {
+  props: mediaElementProps,
+  setup({ host, props, accessors }) {
+    provideContext(MediaStoreContext);
+    provideContext(MediaProviderContext);
     provideContext(MediaElementContext, host.$el);
 
-    /**
-     * The media controller which is responsible for updating the media state store and satisfying
-     * media requests.
-     */
-    const controller = useMediaController(host.$el, {
-      $fullscreenOrientation,
-    });
+    const logPrinter = __DEV__ ? useLogPrinter(host.$el) : undefined;
+    if (__DEV__) {
+      effect(() => {
+        logPrinter!.logLevel = props.$logLevel();
+      });
+    }
 
     const $media = useMediaStore(),
-      $attrs: AttributesRecord = {
-        'ios-fullscreen': () =>
-          IS_IOS && $media.viewType === 'video' && (!$media.playsinline || $media.fullscreen),
-      };
+      requestManagerInit: MediaRequestManagerInit = {
+        requestQueue: new Queue(),
+        $isLooping: signal(false),
+        $isReplay: signal(false),
+        $isSeekingRequest: signal(false),
+      },
+      stateManager = useMediaStateManager(host.$el, $media, requestManagerInit),
+      requestManager = useMediaRequestManager(host.$el, props, stateManager, requestManagerInit);
+
+    const delegate = createMediaControllerDelegate(host.$el, $media, stateManager.handleMediaEvent);
+    provideContext(MediaControllerDelegateContext, delegate);
+
+    useMediaPropChange(host.$el, $media, props);
+    useMediaCanLoad(host.$el, props.$load, startLoadingMedia);
+
+    useMediaAdapterDelegate(
+      () => peek(stateManager.$mediaProvider)?.adapter,
+      $media,
+      requestManager,
+      props,
+    );
+
+    if (__DEV__) useMediaEventsLogger(host.$el);
+
+    const $attrs: AttributesRecord = {
+      'ios-fullscreen': () =>
+        IS_IOS && $media.view === 'video' && (!props.$playsinline() || $media.fullscreen),
+    };
 
     for (const prop of MEDIA_ATTRIBUTES) {
       $attrs[camelToKebabCase(prop as string)] = () => $media[prop] as string | number;
@@ -78,42 +116,58 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       '--media-seekable-amount': () => $media.seekableAmount,
     });
 
-    effect(() => {
-      controller.logLevel = $logLevel();
-    });
-
-    effect(() => {
-      controller.user.idle.delay = $userIdleDelay();
-    });
-
     onConnect(() => {
-      dispatchEvent(host.el!, 'media-connect', {
+      dispatchEvent(host.el, 'media-connect', {
         detail: host.el!,
         bubbles: true,
         composed: true,
       });
     });
 
+    onMount(() => {
+      return () => {
+        dispatchEvent(host.el, 'destroy');
+      };
+    });
+
+    function startLoadingMedia() {
+      delegate.dispatch('can-load');
+    }
+
     function subscribe(this: keyof MediaStore, callback: (value: any) => MaybeStopEffect) {
       return effect(() => callback($media[this]));
     }
 
-    return mergeProperties(accessors(), controller, {
-      get $store() {
-        return $media;
+    return mergeProperties(
+      {
+        get user() {
+          return requestManager.user;
+        },
+        get orientation() {
+          return requestManager.orientation;
+        },
+        get provider() {
+          return stateManager.$mediaProvider();
+        },
+        get $store() {
+          return $media;
+        },
+        state: new Proxy($media, {
+          // @ts-expect-error
+          set: noop,
+        }),
+        store: new Proxy($media, {
+          get: (_, prop: keyof MediaStore) => ({ subscribe: subscribe.bind(prop) }),
+          // @ts-expect-error
+          set: noop,
+        }) as unknown as MediaControllerStore,
+        startLoadingMedia,
+        play: requestManager.play,
+        pause: requestManager.pause,
+        enterFullscreen: requestManager.enterFullscreen,
+        exitFullscreen: requestManager.exitFullscreen,
       },
-      get provider() {
-        return controller.provider;
-      },
-      state: new Proxy($media, {
-        // @ts-expect-error
-        set: noop,
-      }),
-      store: new Proxy($media, {
-        get: (_, prop: keyof MediaStore) => ({ subscribe: subscribe.bind(prop) }),
-        // @ts-expect-error
-        set: noop,
-      }),
-    });
+      accessors(),
+    );
   },
 });

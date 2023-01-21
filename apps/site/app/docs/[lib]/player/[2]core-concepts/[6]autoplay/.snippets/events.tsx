@@ -1,4 +1,4 @@
-import { Video } from '@vidstack/react';
+import { Media } from '@vidstack/react';
 import { type MediaAutoplayEvent, type MediaAutoplayFailEvent } from 'vidstack';
 
 function MediaPlayer() {
@@ -13,8 +13,8 @@ function MediaPlayer() {
   }
 
   return (
-    <Video autoplay onAutoplay={onAutoplay} onAutoplayFail={onAutoplayFail}>
+    <Media autoplay onAutoplay={onAutoplay} onAutoplayFail={onAutoplayFail}>
       {/* ... */}
-    </Video>
+    </Media>
   );
 }

@@ -17,7 +17,7 @@ export const FullscreenButtonDefinition = defineCustomElement<FullscreenButtonEl
   tagName: 'vds-fullscreen-button',
   props: {
     ...toggleButtonProps,
-    target: { initial: 'media' },
+    target: { initial: 'prefer-media' },
   },
   setup({ host, props: { $target, $disabled }, accessors }) {
     const $media = useMediaStore(),

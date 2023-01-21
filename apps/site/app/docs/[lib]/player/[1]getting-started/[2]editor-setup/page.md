@@ -11,18 +11,15 @@ when working with Vidstack.
 ## TypeScript
 
 We've written the player library with TypeScript, and we distribute all types with the
-`vidstack` package. VSCode will detect them by default, but global event types need to
-be registered separately; otherwise, the following will happen:
+`vidstack` package. VSCode will detect them by default, but global DOM APIs will not be
+automatically updated:
 
 ```js
-// The event type will default to `Event` instead of `MediaPlayEvent`.
-provider.addEventListener('play', (event) => {
-  event; // ❌ wrong type
-});
+// ❌ The type will default to `Element` instead of `MediaElement`.
+const media = document.querySelector('vds-media');
 ```
 
-Events are a core part of working with the player library, so we highly recommend you resolve
-this by adding the following to your TypeScript configuration file:
+You can resolve this by adding the following to your TypeScript configuration file:
 
 ```json {% title="tsconfig.json" copyHighlight=true highlight="3" %}
 {

@@ -1,4 +1,4 @@
-import { HLSVideo } from '@vidstack/react';
+import { HLSVideo, Media } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
 import type { HLSVideoElement } from 'vidstack';
 
@@ -10,5 +10,9 @@ function MediaPlayer() {
     const engine = provider.current!.hls.engine;
   }, []);
 
-  return <HLSVideo ref={provider}>{/* ... */}</HLSVideo>;
+  return (
+    <Media>
+      <HLSVideo ref={provider}>{/* ... */}</HLSVideo>{' '}
+    </Media>
+  );
 }

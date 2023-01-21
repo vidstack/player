@@ -1,4 +1,4 @@
-import { Media, Video } from '@vidstack/react';
+import { Media } from '@vidstack/react';
 import type { MediaLoadedMetadataEvent } from 'vidstack';
 
 function MediaPlayer() {
@@ -7,9 +7,5 @@ function MediaPlayer() {
     const originalMediaEvent = event.trigger;
   }
 
-  return (
-    <Media>
-      <Video onLoadedMetadata={onLoadedMetadata}>{/* ... */}</Video>
-    </Media>
-  );
+  return <Media onLoadedMetadata={onLoadedMetadata}>{/* ... */}</Media>;
 }

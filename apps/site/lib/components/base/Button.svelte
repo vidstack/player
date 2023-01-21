@@ -21,8 +21,8 @@
     (isButton || type === 'raised') && 'rounded-md px-4 992:px-5 py-2',
     type === 'raised'
       ? primary
-        ? 'bg-inverse text-current hover:bg-inverse/90'
-        : 'bg-current border-2 border-inverse text-inverse'
+        ? 'bg-inverse text-body hover:bg-inverse/90'
+        : 'bg-body border-2 border-inverse text-inverse'
       : 'text-soft hover:text-inverse',
     __class,
   );

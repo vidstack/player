@@ -39,6 +39,7 @@ export function useScreenOrientation(
   }
 
   async function unlock() {
+    if (!peek($locked)) return;
     assertScreenOrientationAPI();
     await screen.orientation.unlock();
     $locked.set(false);

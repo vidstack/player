@@ -20,7 +20,7 @@ vds-media {
   contain: layout;
 }
 
-vds-media[view-type='audio'] {
+vds-media[view='audio'] {
   width: auto;
 }
 

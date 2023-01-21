@@ -1,4 +1,4 @@
-import { Media, Video } from '@vidstack/react';
+import { Media } from '@vidstack/react';
 import {
   hasTriggerEvent,
   walkTriggerEventChain,
@@ -27,10 +27,8 @@ function Example() {
   }
 
   return (
-    <Media>
-      <Video onPlay={onPlay} onPlaying={onPlaying}>
-        {/* ... */}
-      </Video>
+    <Media onPlay={onPlay} onPlaying={onPlaying}>
+      {/* ... */}
     </Media>
   );
 }

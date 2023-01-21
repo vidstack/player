@@ -1,4 +1,4 @@
-import { Media, useMediaRemote, Video } from '@vidstack/react';
+import { Media, useMediaRemote } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
 import type { MediaElement } from 'vidstack';
 
@@ -8,13 +8,12 @@ function MediaPlayer() {
 
   useEffect(() => {
     // Call whenever you like.
-    // Method is also available on the `<vds-video>` element.
     remote.startLoading();
   }, []);
 
   return (
-    <Media ref={media}>
-      <Video load="custom">{/* ... */}</Video>
+    <Media load="custom" ref={media}>
+      {/* ... */}
     </Media>
   );
 }

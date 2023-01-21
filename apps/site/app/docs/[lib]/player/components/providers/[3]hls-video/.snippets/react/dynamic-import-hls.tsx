@@ -1,5 +1,9 @@
-import { HLSVideo } from '@vidstack/react';
+import { HLSVideo, Media } from '@vidstack/react';
 
 function MediaPlayer() {
-  return <HLSVideo hlsLibrary={() => import('hls.js')}>{/* ... */}</HLSVideo>;
+  return (
+    <Media>
+      <HLSVideo hlsLibrary={() => import('hls.js')}>{/* ... */}</HLSVideo>
+    </Media>
+  );
 }

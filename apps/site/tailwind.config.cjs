@@ -38,7 +38,6 @@ module.exports = {
         border: 'rgb(var(--color-border) / <alpha-value>)',
         soft: 'rgb(var(--color-soft) / <alpha-value>)',
         inverse: 'rgb(var(--color-inverse) / <alpha-value>)',
-        current: 'rgb(var(--color-current) / <alpha-value>)',
         body: 'rgb(var(--color-body) / <alpha-value>)',
         elevate: 'rgb(var(--color-elevate) / <alpha-value>)',
       },

@@ -45,10 +45,10 @@ Add the following player JSX boilerplate to get started.
 {% /slot %}
 
 ```jsx {% copy=true %}
-<Media>
-  {/* remove `controls` attribute if you're designing a custom UI */}
-  <HLSVideo controls poster="https://media-files.vidstack.io/poster.png">
-    <video src="https://media-files.vidstack.io/hls/index.m3u8" preload="none" />
+<Media controls poster="https://media-files.vidstack.io/poster.png" view="video">
+  {/* ^ remove `controls` attribute if you're designing a custom UI */}
+  <HLSVideo>
+    <video src="https://media-files.vidstack.io/hls/index.m3u8" preload="none" data-video="0" />
   </HLSVideo>
 </Media>
 ```

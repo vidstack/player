@@ -1,17 +1,15 @@
 import { effect, ReadSignal } from 'maverick.js';
-import { dispatchEvent, DOMEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
+import { dispatchEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
 
 import { useRAFLoop } from '../../../foundation/hooks/use-raf-loop';
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { getMediaTypeFromExt } from '../../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../../utils/number';
-import type { MediaPlayEvent } from '../../media/events';
-import { onMediaReady, onMediaSrcChange } from '../../media/provider/internal';
-import { ATTEMPTING_AUTOPLAY } from '../../media/state';
+import type { MediaControllerDelegate } from '../../media/element/controller/controller-delegate';
 import type { MediaStore } from '../../media/store';
 import type { MediaErrorCode } from '../../media/types';
 import type { HTMLProviderElement } from './types';
-import type { UseHTMLProviderProps } from './use-provider';
+import type { UseHTMLMediaElementProps } from './use-element';
 
 export const ENGINE = Symbol(__DEV__ ? 'ENGINE' : 0);
 export const IGNORE_NEXT_ABORT = Symbol(__DEV__ ? 'IGNORE_NEXT_ABORT' : 0);
@@ -20,15 +18,14 @@ export const IGNORE_NEXT_ABORT = Symbol(__DEV__ ? 'IGNORE_NEXT_ABORT' : 0);
  * This is hook is mainly responsible for listening to events fired by a `HTMLMediaElement` and
  * dispatching the respective Vidstack media events (e.g., `canplay` -> `can-play`).
  */
-export function useHTMLProviderEvents<T extends HTMLProviderElement>(
-  $target: ReadSignal<T | null>,
+export function useHTMLMediaElementEvents(
+  $target: ReadSignal<HTMLProviderElement | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
   $media: MediaStore,
-  props: UseHTMLProviderProps<T>,
+  delegate: MediaControllerDelegate,
+  props: UseHTMLMediaElementProps,
 ): void {
-  // An un-debounced waiting tracker (waiting is debounced inside the media controller).
-  let provider: HTMLProviderElement | null = null,
-    media: HTMLMediaElement | null = null,
+  let media: HTMLMediaElement | null = null,
     logger = __DEV__ ? useLogger($target) : undefined,
     disposal = useDisposalBin(),
     isMediaWaiting = false,
@@ -47,9 +44,8 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   });
 
   effect(() => {
-    provider = $target();
     media = $mediaElement();
-    if (provider && media) attachInitialEventListeners();
+    if ($target() && media) attachInitialEventListeners();
     return () => {
       timeRafLoop.stop();
       disposal.empty();
@@ -123,7 +119,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
   function updateCurrentTime(newTime: number, trigger?: Event) {
     if (!media) return;
-    dispatchEvent(provider, 'time-update', {
+    delegate.dispatch('time-update', {
       // Avoid errors where `currentTime` can have higher precision than duration.
       detail: {
         currentTime: Math.min(newTime, media.duration),
@@ -135,7 +131,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
   function onSourceChange() {
     const source = $media.sources.find((src) => src.src === media!.currentSrc);
-    onMediaSrcChange($media, provider!, source ?? { src: media!.currentSrc }, logger);
+    delegate.srcChange(source ?? { src: media!.currentSrc });
     onMediaTypeChange();
   }
 
@@ -146,7 +142,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     }
 
     onSourceChange();
-    dispatchEvent(provider, 'abort', { trigger: event });
+    delegate.dispatch('abort', { trigger: event });
   }
 
   function onLoadStart(event: Event) {
@@ -157,15 +153,15 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
     if (!media![ENGINE]) onSourceChange();
     attachLoadStartEventListeners();
-    dispatchEvent(provider, 'load-start', { trigger: event });
+    delegate.dispatch('load-start', { trigger: event });
   }
 
   function onEmptied(event: Event) {
-    dispatchEvent(provider, 'emptied', { trigger: event });
+    delegate.dispatch('emptied', { trigger: event });
   }
 
   function onLoadedData(event: Event) {
-    dispatchEvent(provider, 'loaded-data', { trigger: event });
+    delegate.dispatch('loaded-data', { trigger: event });
   }
 
   function onLoadedMetadata(event: Event) {
@@ -173,11 +169,11 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     attachCanPlayEventListeners();
 
     // Sync volume state before metadata.
-    dispatchEvent(provider, 'volume-change', {
+    delegate.dispatch('volume-change', {
       detail: { volume: media!.volume, muted: media!.muted },
     });
 
-    dispatchEvent(provider, 'loaded-metadata', { trigger: event });
+    delegate.dispatch('loaded-metadata', { trigger: event });
 
     props.onLoadedMetadata?.(event);
   }
@@ -185,17 +181,13 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   function onMediaTypeChange() {
     const isLive = !Number.isFinite(media!.duration);
     const mediaType = isLive ? 'live-video' : getMediaTypeFromExt($media.source);
-    if (mediaType !== $media.mediaType) {
-      dispatchEvent(provider, 'media-type-change', { detail: mediaType });
+    if (mediaType !== $media.media) {
+      delegate.dispatch('media-change', { detail: mediaType });
     }
   }
 
   function onPlay(event: Event) {
-    const playEvent = new DOMEvent('play', {
-      trigger: event,
-    }) as MediaPlayEvent;
-    playEvent.autoplay = $media[ATTEMPTING_AUTOPLAY];
-    provider!.dispatchEvent(playEvent);
+    delegate.dispatch('play', { trigger: event });
   }
 
   function onPause(event: Event) {
@@ -203,16 +195,16 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
     if (media!.readyState === 1 && !isMediaWaiting) return;
     isMediaWaiting = false;
     timeRafLoop.stop();
-    dispatchEvent(provider, 'pause', { trigger: event });
+    delegate.dispatch('pause', { trigger: event });
   }
 
   function onCanPlay(event: Event) {
-    onMediaReady($media, provider!, media!.duration, event, logger);
+    delegate.mediaReady(media!.duration, event);
   }
 
   function onCanPlayThrough(event: Event) {
     if ($media.started) return;
-    dispatchEvent(provider, 'can-play-through', {
+    delegate.dispatch('can-play-through', {
       trigger: event,
       detail: { duration: media!.duration },
     });
@@ -220,46 +212,46 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
 
   function onPlaying(event: Event) {
     isMediaWaiting = false;
-    dispatchEvent(provider, 'playing', { trigger: event });
+    delegate.dispatch('playing', { trigger: event });
     timeRafLoop.start();
   }
 
   function onStalled(event: Event) {
-    dispatchEvent(provider, 'stalled', { trigger: event });
+    delegate.dispatch('stalled', { trigger: event });
     if (media!.readyState < 3) {
       isMediaWaiting = true;
-      dispatchEvent(provider, 'waiting', { trigger: event });
+      delegate.dispatch('waiting', { trigger: event });
     }
   }
 
   function onWaiting(event: Event) {
     if (media!.readyState < 3) {
       isMediaWaiting = true;
-      dispatchEvent(provider, 'waiting', { trigger: event });
+      delegate.dispatch('waiting', { trigger: event });
     }
   }
 
   function onEnded(event: Event) {
     timeRafLoop.stop();
     updateCurrentTime(media!.duration, event);
-    dispatchEvent(provider, 'end', { trigger: event });
+    delegate.dispatch('end', { trigger: event });
     if ($media.loop) {
       onLoop();
     } else {
-      dispatchEvent(provider, 'ended', { trigger: event });
+      delegate.dispatch('ended', { trigger: event });
     }
   }
 
   function onDurationChange(event: Event) {
     if ($media.ended) updateCurrentTime(media!.duration, event);
-    dispatchEvent(provider, 'duration-change', {
+    delegate.dispatch('duration-change', {
       detail: media!.duration,
       trigger: event,
     });
   }
 
   function onVolumeChange(event: Event) {
-    dispatchEvent(provider, 'volume-change', {
+    delegate.dispatch('volume-change', {
       detail: {
         volume: media!.volume,
         muted: media!.muted,
@@ -269,7 +261,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   }
 
   function onSeeked(event: Event) {
-    dispatchEvent(provider, 'seeked', {
+    delegate.dispatch('seeked', {
       detail: media!.currentTime,
       trigger: event,
     });
@@ -280,25 +272,19 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
       getNumberOfDecimalPlaces(media!.duration) > getNumberOfDecimalPlaces(media!.currentTime)
     ) {
       updateCurrentTime(media!.duration, event);
-      if (!media!.ended) {
-        try {
-          provider!.play();
-        } catch (e) {
-          // no-op
-        }
-      }
+      if (!media!.ended) dispatchEvent($target(), 'media-play-request');
     }
   }
 
   function onSeeking(event: Event) {
-    dispatchEvent(provider, 'seeking', {
+    delegate.dispatch('seeking', {
       detail: media!.currentTime,
       trigger: event,
     });
   }
 
   function onProgress(event: Event) {
-    dispatchEvent(provider, 'progress', {
+    delegate.dispatch('progress', {
       detail: {
         buffered: media!.buffered,
         seekable: media!.seekable,
@@ -308,15 +294,15 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   }
 
   function onLoop() {
-    const hasCustomControls = isNil(provider!.controls);
+    const hasCustomControls = isNil($media!.controls);
     // Forcefully hide controls to prevent flashing when looping. Calling `play()` at end
     // of media may show a flash of native controls on iOS, even if `controls` property is not set.
     if (hasCustomControls) media!.controls = false;
-    dispatchEvent(provider, 'loop-request');
+    dispatchEvent($target(), 'media-loop-request');
   }
 
   function onSuspend(event: Event) {
-    dispatchEvent(provider, 'suspend', { trigger: event });
+    delegate.dispatch('suspend', { trigger: event });
   }
 
   function onRateChange(event: Event) {
@@ -326,7 +312,7 @@ export function useHTMLProviderEvents<T extends HTMLProviderElement>(
   function onError(event: Event) {
     const mediaError = media!.error;
     if (!mediaError) return;
-    dispatchEvent(provider, 'error', {
+    delegate.dispatch('error', {
       detail: {
         message: mediaError.message,
         code: mediaError.code as MediaErrorCode,

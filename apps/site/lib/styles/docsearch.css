@@ -20,9 +20,9 @@
   --docsearch-footer-shadow: none;
   --docsearch-hit-background: rgb(var(--color-elevate));
   --docsearch-hit-color: rgb(var(--color-soft));
-  --docsearch-modal-background: rgb(var(--color-current));
+  --docsearch-modal-background: rgb(var(--color-body));
   --docsearch-hit-shadow: none;
-  --docsearch-footer-background: rgb(var(--color-current));
+  --docsearch-footer-background: rgb(var(--color-body));
   --docsearch-muted-color: rgb(var(--color-soft));
   --docsearch-logo-color: rgb(var(--color-soft));
 }

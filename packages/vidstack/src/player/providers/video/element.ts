@@ -1,10 +1,9 @@
-import { defineCustomElement, onConnect } from 'maverick.js/element';
-import { dispatchEvent, mergeProperties } from 'maverick.js/std';
+import { defineCustomElement } from 'maverick.js/element';
+import { mergeProperties } from 'maverick.js/std';
 
 import { htmlProviderProps } from '../html/props';
-import { useHTMLProvider } from '../html/use-provider';
 import type { VideoElement } from './types';
-import { useVideoFullscreen } from './use-video-fullscreen';
+import { useVideoElement } from './use-element';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -15,18 +14,7 @@ declare global {
 export const VideoDefinition = defineCustomElement<VideoElement>({
   tagName: 'vds-video',
   props: htmlProviderProps,
-  setup({ host, props, accessors }) {
-    const { members } = useHTMLProvider<VideoElement>(host.$el, {
-      $props: props,
-      fullscreen: useVideoFullscreen,
-    });
-
-    onConnect(() => {
-      setTimeout(() => {
-        dispatchEvent(host.el, 'view-type-change', { detail: 'video' });
-      }, 0);
-    });
-
-    return mergeProperties(accessors(), members);
+  setup({ host, accessors }) {
+    return mergeProperties(accessors(), useVideoElement(host.$el).members);
   },
 });

@@ -5,6 +5,7 @@ import { dispatchEvent, DOMEvent } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { HLS_VIDEO_EXTENSIONS, HLS_VIDEO_TYPES } from '../../../utils/mime';
+import type { MediaControllerDelegate } from '../../media/element/controller/controller-delegate';
 import type { MediaStore } from '../../media/store';
 import type { MediaType } from '../../media/types';
 import { loadHLSLibrary } from './loader';
@@ -14,8 +15,9 @@ import { useHLSEvents } from './use-hls-events';
 
 export function useHLSEngine(
   host: CustomElementHost<HLSVideoElement>,
-  $canLoadLib: ReadSignal<boolean>,
   $media: MediaStore,
+  $canLoadLib: ReadSignal<boolean>,
+  delegate: MediaControllerDelegate,
   { $hlsLibrary, $hlsConfig }: Signals<HLSProviderProps>,
 ) {
   const $isHLSSource = () =>
@@ -31,7 +33,7 @@ export function useHLSEngine(
   effect(() => {
     if (!$canLoadLib()) return;
     const lib = $hlsLibrary();
-    loadHLSLibrary(host.el!, lib, logger).then((ctor) => {
+    loadHLSLibrary(host.el!, lib, delegate, logger).then((ctor) => {
       if ($hlsLibrary() !== lib) return;
       $ctor.set(() => ctor);
     });
@@ -71,8 +73,8 @@ export function useHLSEngine(
     const event = new DOMEvent(eventType, { detail: data });
     const mediaType: MediaType = live ? 'live-video' : 'video';
 
-    dispatchEvent(host.el, 'media-type-change', { detail: mediaType, trigger: event });
-    dispatchEvent(host.el, 'duration-change', { detail: duration, trigger: event });
+    delegate.dispatch('media-change', { detail: mediaType, trigger: event });
+    delegate.dispatch('duration-change', { detail: duration, trigger: event });
 
     const engine = $engine()!;
     const media = engine.media!;

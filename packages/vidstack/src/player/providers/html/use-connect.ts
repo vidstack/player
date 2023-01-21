@@ -1,56 +1,50 @@
 import { effect, peek, ReadSignal } from 'maverick.js';
-import { dispatchEvent, isNull, setAttribute } from 'maverick.js/std';
+import { isNull, setAttribute } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
+import type { MediaControllerDelegate } from '../../media/element/controller/controller-delegate';
 import { CAN_LOAD_POSTER } from '../../media/state';
 import type { MediaStore } from '../../media/store';
 import type { MediaSrc } from '../../media/types';
 import type { HTMLProviderElement } from './types';
+import type { UseHTMLMediaElementProps } from './use-element';
 import { IGNORE_NEXT_ABORT } from './use-events';
-import type { UseHTMLProviderProps } from './use-provider';
 
 /**
  * Handles the DOM connection and disconnection of the underlying HTML media element (e.g.,
  * `<audio>` or `<video>`). This hook uses the `MutationObserver` to observer child changes to the
  * given provider element (`$target`) and
  */
-export function useHTMLProviderConnect(
+export function useHTMLMediaElementConnect(
   $target: ReadSignal<HTMLProviderElement | null>,
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
   $media: MediaStore,
-  props: UseHTMLProviderProps<any>,
+  delegate: MediaControllerDelegate,
+  props: UseHTMLMediaElementProps,
 ): void {
   const logger = __DEV__ ? useLogger($target) : undefined;
 
   effect(() => {
     const provider = $target(),
       media = $mediaElement();
-
     if ($media.canLoad && !isNull(provider) && !isNull(media)) {
-      return peek(() => onMediaElementConnect(provider, media));
+      return peek(() => onMediaElementConnect(media));
     }
   });
 
-  function onMediaElementConnect(provider: HTMLProviderElement, media: HTMLMediaElement) {
+  function onMediaElementConnect(media: HTMLMediaElement) {
     // Update or remove any attributes that we manage.
-    if (media.hasAttribute('loop')) provider.loop = true;
+    if (media.hasAttribute('loop')) $media.loop = true;
     media.removeAttribute('loop');
     media.removeAttribute('poster');
-    setAttribute(media, 'controls', provider.controls);
-
-    // We call this here again mainly for iOS since it uses the video presentation API.
-    if (!$media.canFullscreen && provider.fullscreen.supported) {
-      dispatchEvent(provider, 'fullscreen-support-change', {
-        detail: provider.fullscreen.supported,
-      });
-    }
+    setAttribute(media, 'controls', $media.controls);
 
     if (
       $media[CAN_LOAD_POSTER] &&
-      provider.poster.length > 0 &&
-      media.getAttribute('poster') !== provider.poster
+      $media.poster.length > 0 &&
+      media.getAttribute('poster') !== $media.poster
     ) {
-      setAttribute(media, 'poster', provider.poster);
+      setAttribute(media, 'poster', $media.poster);
     }
 
     if (!$media.canPlay) {
@@ -94,7 +88,7 @@ export function useHTMLProviderConnect(
     props.onSourcesChange?.(sources);
 
     if (!equal) {
-      dispatchEvent($target(), 'sources-change', { detail: sources });
+      delegate.dispatch('sources-change', { detail: sources });
       $mediaElement()?.load();
     }
   }

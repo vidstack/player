@@ -1,16 +1,13 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 import type {
-  FullscreenChangeEvent,
-  FullscreenErrorEvent,
-  FullscreenSupportChange,
-} from '../../foundation/fullscreen/events';
-import type {
   ScreenOrientationChangeEvent,
   ScreenOrientationLockChangeEvent,
 } from '../../foundation/orientation/events';
-import type { MediaProviderElement } from './provider/types';
+import type { MediaElement } from './element/types';
 import type {
+  EnterFullscreenRequestEvent,
+  ExitFullscreenRequestEvent,
   MuteRequestEvent,
   PauseRequestEvent,
   PauseUserIdleRequestEvent,
@@ -21,7 +18,7 @@ import type {
   UnmuteRequestEvent,
   VolumeChangeRequestEvent,
 } from './request-events';
-import type { MediaErrorDetail, MediaSrc, MediaType, ViewType } from './types';
+import type { MediaErrorDetail, MediaSrc, MediaType, MediaViewType } from './types';
 
 export interface MediaEvents {
   abort: MediaAbortEvent;
@@ -38,15 +35,14 @@ export interface MediaEvents {
   end: MediaEndEvent;
   ended: MediaEndedEvent;
   error: MediaErrorEvent;
-  'fullscreen-change': FullscreenChangeEvent;
-  'fullscreen-error': FullscreenErrorEvent;
-  'fullscreen-support-change': FullscreenSupportChange;
+  'fullscreen-change': MediaFullscreenChangeEvent;
+  'fullscreen-error': MediaFullscreenErrorEvent;
   'user-idle-change': UserIdleChangeEvent;
   'load-start': MediaLoadStartEvent;
   'loaded-data': MediaLoadedDataEvent;
   'loaded-metadata': MediaLoadedMetadataEvent;
   'loop-change': MediaLoopChangeEvent;
-  'media-type-change': MediaTypeChangeEvent;
+  'media-change': MediaChangeEvent;
   pause: MediaPauseEvent;
   'play-fail': MediaPlayFailEvent;
   play: MediaPlayEvent;
@@ -65,13 +61,13 @@ export interface MediaEvents {
   'screen-orientation-change': ScreenOrientationChangeEvent;
   'screen-orientation-lock-change': ScreenOrientationLockChangeEvent;
   'time-update': MediaTimeUpdateEvent;
-  'view-type-change': MediaViewTypeChangeEvent;
+  'view-change': MediaViewChangeEvent;
   'volume-change': MediaVolumeChangeEvent;
   waiting: MediaWaitingEvent;
 }
 
 export interface MediaEvent<Detail = unknown> extends DOMEvent<Detail> {
-  target: MediaProviderElement;
+  target: MediaElement;
   request?: DOMEvent<any>;
 }
 
@@ -184,6 +180,28 @@ export interface MediaEndedEvent extends MediaEvent<void> {}
 export interface MediaErrorEvent extends MediaEvent<MediaErrorDetail> {}
 
 /**
+ * Fired when media enters/exits fullscreen. The event detail is a `boolean` indicating
+ * if fullscreen was entered (`true`) or exited (`false`).
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaFullscreenChangeEvent extends MediaEvent<boolean> {
+  request?: EnterFullscreenRequestEvent | ExitFullscreenRequestEvent;
+}
+
+/**
+ * Fired when an error occurs either entering or exiting fullscreen. This will generally occur
+ * if fullscreen is not supported or the user has not interacted with the page yet.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaFullscreenErrorEvent extends MediaEvent<unknown> {
+  request?: EnterFullscreenRequestEvent | ExitFullscreenRequestEvent;
+}
+
+/**
  * Fired when the user idle state changes. The user is idle when playback is progressing (playing),
  * and there is no user activity for a set period of time (default is 2.5s). The event
  * detail contains whether the user is idle (`true`), or not (`false`).
@@ -220,9 +238,9 @@ export interface MediaLoopChangeEvent extends MediaEvent<boolean> {}
 export interface MediaLoadStartEvent extends MediaEvent<void> {}
 
 /**
- * Fired when the `mediaType` property changes value.
+ * Fired when the `media` property changes value.
  */
-export interface MediaTypeChangeEvent extends MediaEvent<MediaType> {}
+export interface MediaChangeEvent extends MediaEvent<MediaType> {}
 
 /**
  * Fired when a request to `pause` an activity is handled and the activity has entered its
@@ -249,9 +267,8 @@ export interface MediaPlayEvent extends MediaEvent<void> {
 /**
  * Fired when an attempt to start media playback results in an error.
  */
-export interface MediaPlayFailEvent extends MediaEvent<void> {
+export interface MediaPlayFailEvent extends MediaEvent<Error> {
   autoplay?: boolean;
-  error?: Error;
   request?: PlayRequestEvent;
 }
 
@@ -354,7 +371,7 @@ export interface MediaTimeUpdateEvent
  * new provider has mounted and determined what type of player view is appropriate given
  * the type of media it can play.
  */
-export interface MediaViewTypeChangeEvent extends MediaEvent<ViewType> {}
+export interface MediaViewChangeEvent extends MediaEvent<MediaViewType> {}
 
 export interface MediaVolumeChange {
   muted: boolean;

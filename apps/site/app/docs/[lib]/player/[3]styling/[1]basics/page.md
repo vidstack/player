@@ -42,6 +42,7 @@ vds-media:not([paused]) .bar {
 .baz {
   transform-origin: left;
   transform: scaleX(calc(var(--media-current-time) / var(--media-duration)));
+  will-change: transform;
 }
 ```
 

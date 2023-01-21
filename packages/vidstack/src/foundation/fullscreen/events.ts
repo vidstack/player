@@ -6,7 +6,6 @@ export interface FullscreenEventTarget extends HTMLCustomElement<any, Fullscreen
 export interface FullscreenEvents {
   'fullscreen-change': FullscreenChangeEvent;
   'fullscreen-error': FullscreenErrorEvent;
-  'fullscreen-support-change': FullscreenSupportChange;
 }
 
 /**
@@ -26,11 +25,3 @@ export interface FullscreenChangeEvent extends DOMEvent<boolean> {}
  * @composed
  */
 export interface FullscreenErrorEvent extends DOMEvent<unknown> {}
-
-/**
- * Fired when fullscreen support has changed. To be clear, support does not guarantee the
- * fullscreen request happening, as the browser might still reject the request if it's attempted
- * without user interaction. The event detail is a `boolean` that indicates whether it's
- * supported (`true`), or not (`false`).
- */
-export interface FullscreenSupportChange extends DOMEvent<boolean> {}

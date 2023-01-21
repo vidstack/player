@@ -9,7 +9,7 @@ In this section, we'll look at the rich event system that's available when worki
 
 ## Media Events
 
-The media provider fires a superset of [`HTMLMediaElement` events](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#events):
+The media element fires a superset of [`HTMLMediaElement` events](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#events):
 
 - `play` -> `$event:play`
 - `canplay` -> `$event:can-play`

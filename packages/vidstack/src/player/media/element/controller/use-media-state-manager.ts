@@ -1,50 +1,55 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
-import { computed, effect, ReadSignal, useContext } from 'maverick.js';
+import { effect, ReadSignal, useContext } from 'maverick.js';
 import { onAttach } from 'maverick.js/element';
-import {
-  appendTriggerEvent,
-  dispatchEvent,
-  DOMEvent,
-  listenEvent,
-  useDisposalBin,
-} from 'maverick.js/std';
+import { appendTriggerEvent, createEvent, listenEvent, useDisposalBin } from 'maverick.js/std';
 
-import type {
-  FullscreenChangeEvent,
-  FullscreenErrorEvent,
-  FullscreenEventTarget,
-} from '../../../foundation/fullscreen/events';
-import type * as ME from '../events';
-import type { MediaProviderElement } from '../provider/types';
-import { MediaProviderContext } from '../provider/use-media-provider';
-import { MediaStore, softResetMediaStore, useInternalMediaStore } from '../store';
-import type { MediaRequestQueueRecord, UseMediaRequestManager } from './use-media-request-manager';
+import type * as ME from '../../events';
+import type { MediaProviderElement } from '../../provider/types';
+import { MediaProviderContext } from '../../provider/use-media-provider';
+import { ATTEMPTING_AUTOPLAY } from '../../state';
+import { MediaStore, softResetMediaStore } from '../../store';
+import type { MediaControllerElement } from './types';
+import type { MediaRequestManagerInit, MediaRequestQueueRecord } from './use-media-request-manager';
+
+const trackedEventType = new Set<keyof ME.MediaEvents>([
+  'autoplay',
+  'autoplay-fail',
+  'can-load',
+  'sources-change',
+  'source-change',
+  'load-start',
+  'abort',
+  'error',
+  'loaded-metadata',
+  'loaded-data',
+  'can-play',
+  'play',
+  'play-fail',
+  'pause',
+  'playing',
+  'seeking',
+  'seeked',
+  'waiting',
+]);
 
 /**
  * This hook is responsible for listening to and normalizing media events, updating the media
  * state context, and satisfying media requests if a manager arg is provided.
  */
 export function useMediaStateManager(
-  $target: ReadSignal<FullscreenEventTarget | null>,
-  requestManager?: UseMediaRequestManager,
-) {
-  const $media = useInternalMediaStore()!,
-    $mediaProvider = useContext(MediaProviderContext),
+  $target: ReadSignal<MediaControllerElement | null>,
+  $media: MediaStore,
+  { requestQueue, $isLooping, $isReplay, $isSeekingRequest }: MediaRequestManagerInit,
+): MediaStateManager {
+  const $mediaProvider = useContext(MediaProviderContext),
     disposal = useDisposalBin(),
-    requestQueue = requestManager?.requestQueue,
     trackedEvents = new Map<string, ME.MediaEvent>();
 
-  let provider: MediaProviderElement | null = null,
-    skipInitialSrcChange = true,
-    attachedCanLoadListeners = false,
-    attachedLoadStartListeners = false,
-    attachedCanPlayListeners = false,
+  let skipInitialSrcChange = true,
     fireWaitingEvent: { (): void; cancel(): void },
     firingWaiting = false,
-    connected = false,
-    lastWaitingEvent: Event | undefined,
-    $connectedMediaProvider = computed(() => ($target() ? $mediaProvider() : null));
+    lastWaitingEvent: Event | undefined;
 
   onAttach(() => {
     $target()?.setAttribute('aria-busy', 'true');
@@ -52,77 +57,68 @@ export function useMediaStateManager(
 
   effect(() => {
     const target = $target();
-    // target may be media controller which can also fullscreen.
-    if (target && target !== provider) {
-      listenEvent(target, 'fullscreen-change', onFullscreenChange);
-      listenEvent(target, 'fullscreen-error', onFullscreenError);
-    }
+    if (!target) return;
+    listenEvent(target, 'fullscreen-change', onFullscreenChange);
+    listenEvent(target, 'fullscreen-error', onFullscreenError);
   });
 
   effect(() => {
-    provider = $connectedMediaProvider();
-
-    if (provider) {
-      listenEvent(provider, 'view-type-change', onViewTypeChange);
-      listenEvent(provider, 'can-load', trackEvent(onCanLoad));
-      listenEvent(provider, 'sources-change', trackEvent(onSourcesChange));
-      listenEvent(provider, 'source-change', trackEvent(onSourceChange));
-      connected = true;
-    } else if (connected) {
-      resetTracking();
-      softResetMediaStore($media);
-      disposal.empty();
-      requestQueue?.reset();
-      skipInitialSrcChange = true;
-      attachedCanLoadListeners = false;
-      attachedLoadStartListeners = false;
-      attachedCanPlayListeners = false;
-      $media.viewType = 'unknown';
-      connected = false;
-    }
+    if ($mediaProvider()) return;
+    resetTracking();
+    softResetMediaStore($media);
+    disposal.empty();
+    requestQueue.reset();
+    skipInitialSrcChange = true;
   });
+
+  const eventHandlers = {
+    autoplay: onAutoplay,
+    'autoplay-fail': onAutoplayFail,
+    'can-load': onCanLoad,
+    'can-play-through': onCanPlayThrough,
+    'can-play': onCanPlay,
+    'duration-change': onDurationChange,
+    'load-start': onLoadStart,
+    'loaded-data': onLoadedData,
+    'loaded-metadata': onLoadedMetadata,
+    'media-change': onMediaTypeChange,
+    'play-fail': onPlayFail,
+    'source-change': onSourceChange,
+    'sources-change': onSourcesChange,
+    'time-update': onTimeUpdate,
+    'volume-change': onVolumeChange,
+    'fullscreen-change': onFullscreenChange,
+    'fullscreen-error': onFullscreenError,
+    abort: onAbort,
+    ended: onEnded,
+    error: onError,
+    pause: onPause,
+    play: onPlay,
+    playing: onPlaying,
+    progress: onProgress,
+    seeked: onSeeked,
+    seeking: throttle(onSeeking, 150, { leading: true }),
+    waiting: onWaiting,
+  };
 
   function resetTracking() {
     stopWaiting();
-    requestManager?.$isReplay.set(false);
-    requestManager?.$isLooping.set(false);
+    $isReplay.set(false);
+    $isLooping.set(false);
     firingWaiting = false;
     lastWaitingEvent = undefined;
     trackedEvents.clear();
   }
 
-  // Keep track of dispatched media events so we can use them to build event chains.
-  function trackEvent<T extends (event: ME.MediaEvent<any>) => void>(callback: T): T {
-    return ((event) => {
-      trackedEvents.set(event.type, event);
-      callback(event);
-    }) as T;
-  }
-
-  function attachCanLoadEventListeners() {
-    if (attachedCanLoadListeners) return;
-    disposal.add(
-      listenEvent(provider!, 'media-type-change', onMediaTypeChange),
-      listenEvent(provider!, 'load-start', trackEvent(onLoadStart)),
-      listenEvent(provider!, 'abort', trackEvent(onAbort)),
-      listenEvent(provider!, 'error', trackEvent(onError)),
-    );
-    attachedCanLoadListeners = true;
-  }
-
-  function onMediaTypeChange(event: ME.MediaTypeChangeEvent) {
+  function onMediaTypeChange(event: ME.MediaChangeEvent) {
     appendTriggerEvent(event, trackedEvents.get('source-change'));
-    $media.mediaType = event.detail;
+    $media.media = event.detail;
     $media.live = event.detail.includes('live');
-  }
-
-  function onViewTypeChange(event: ME.MediaViewTypeChangeEvent) {
-    $media.viewType = event.detail;
   }
 
   function onCanLoad(event: ME.MediaCanLoadEvent) {
     $media.canLoad = true;
-    attachCanLoadEventListeners();
+    trackedEvents.set('can-load', event);
     satisfyMediaRequest('load', event);
   }
 
@@ -147,26 +143,12 @@ export function useMediaStateManager(
     trackedEvents.set(event.type, event);
   }
 
-  function attachLoadStartEventListeners() {
-    if (attachedLoadStartListeners) return;
-    disposal.add(
-      listenEvent(provider!, 'loaded-metadata', trackEvent(onLoadedMetadata)),
-      listenEvent(provider!, 'loaded-data', trackEvent(onLoadedData)),
-      listenEvent(provider!, 'can-play', trackEvent(onCanPlay)),
-      listenEvent(provider!, 'can-play-through', onCanPlayThrough),
-      listenEvent(provider!, 'duration-change', onDurationChange),
-      listenEvent(provider!, 'progress', (e) => onProgress($media, e)),
-    );
-    attachedLoadStartListeners = true;
-  }
-
   function onAbort(event: ME.MediaAbortEvent) {
     appendTriggerEvent(event, trackedEvents.get('source-change'));
     appendTriggerEvent(event, trackedEvents.get('can-load'));
   }
 
   function onLoadStart(event: ME.MediaLoadStartEvent) {
-    attachLoadStartEventListeners();
     appendTriggerEvent(event, trackedEvents.get('source-change'));
   }
 
@@ -183,29 +165,7 @@ export function useMediaStateManager(
     appendTriggerEvent(event, trackedEvents.get('load-start'));
   }
 
-  function attachCanPlayListeners() {
-    if (attachedCanPlayListeners) return;
-    disposal.add(
-      listenEvent(provider!, 'autoplay', trackEvent(onAutoplay)),
-      listenEvent(provider!, 'autoplay-fail', trackEvent(onAutoplayFail)),
-      listenEvent(provider!, 'pause', trackEvent(onPause)),
-      listenEvent(provider!, 'play', trackEvent(onPlay)),
-      listenEvent(provider!, 'play-fail', trackEvent(onPlayFail)),
-      listenEvent(provider!, 'playing', trackEvent(onPlaying)),
-      listenEvent(provider!, 'duration-change', onDurationChange),
-      listenEvent(provider!, 'time-update', onTimeUpdate),
-      listenEvent(provider!, 'volume-change', onVolumeChange),
-      listenEvent(provider!, 'seeking', throttle(trackEvent(onSeeking), 150, { leading: true })),
-      listenEvent(provider!, 'seeked', trackEvent(onSeeked)),
-      listenEvent(provider!, 'waiting', onWaiting),
-      listenEvent(provider!, 'ended', onEnded),
-    );
-    attachedCanPlayListeners = true;
-  }
-
   function onCanPlay(event: ME.MediaCanPlayEvent) {
-    attachCanPlayListeners();
-
     // Avoid infinite chain - `hls.js` will not fire `canplay` event.
     if (event.trigger?.type !== 'loadedmetadata') {
       appendTriggerEvent(event, trackedEvents.get('loaded-metadata'));
@@ -227,6 +187,12 @@ export function useMediaStateManager(
     $media.duration = !isNaN(duration) ? duration : 0;
   }
 
+  function onProgress(event: ME.MediaProgressEvent) {
+    const { buffered, seekable } = event.detail;
+    $media.buffered = buffered;
+    $media.seekable = seekable;
+  }
+
   function onAutoplay(event: ME.MediaAutoplayEvent) {
     appendTriggerEvent(event, trackedEvents.get('play'));
     appendTriggerEvent(event, trackedEvents.get('can-play'));
@@ -241,7 +207,9 @@ export function useMediaStateManager(
   }
 
   function onPlay(event: ME.MediaPlayEvent) {
-    if (requestManager?.$isLooping() || !$media.paused) {
+    event.autoplay = $media[ATTEMPTING_AUTOPLAY];
+
+    if ($isLooping() || !$media.paused) {
       event.stopImmediatePropagation();
       return;
     }
@@ -252,10 +220,10 @@ export function useMediaStateManager(
     $media.paused = false;
     $media.autoplayError = undefined;
 
-    if ($media.ended || requestManager?.$isReplay()) {
-      requestManager?.$isReplay.set(false);
+    if ($media.ended || $isReplay()) {
+      $isReplay.set(false);
       $media.ended = false;
-      dispatchEvent(provider, 'replay', { trigger: event });
+      handleMediaEvent(createEvent($target, 'replay', { trigger: event }));
     }
   }
 
@@ -286,9 +254,9 @@ export function useMediaStateManager(
     $media.seeking = false;
     $media.ended = false;
 
-    if (requestManager?.$isLooping()) {
+    if ($isLooping()) {
       event.stopImmediatePropagation();
-      requestManager.$isLooping.set(false);
+      $isLooping.set(false);
       return;
     }
 
@@ -298,12 +266,12 @@ export function useMediaStateManager(
   function onStarted(event: Event) {
     if (!$media.started) {
       $media.started = true;
-      dispatchEvent(provider, 'started', { trigger: event });
+      handleMediaEvent(createEvent($target, 'started', { trigger: event }));
     }
   }
 
   function onPause(event: ME.MediaPauseEvent) {
-    if (requestManager?.$isLooping()) {
+    if ($isLooping()) {
       event.stopImmediatePropagation();
       return;
     }
@@ -338,7 +306,7 @@ export function useMediaStateManager(
   }
 
   function onSeeked(event: ME.MediaSeekedEvent) {
-    if (requestManager?.$isSeekingRequest()) {
+    if ($isSeekingRequest()) {
       $media.seeking = true;
       event.stopImmediatePropagation();
     } else if ($media.seeking) {
@@ -355,32 +323,25 @@ export function useMediaStateManager(
 
   fireWaitingEvent = debounce(() => {
     if (!lastWaitingEvent) return;
-
     firingWaiting = true;
-
-    const event = new DOMEvent('waiting', {
-      trigger: lastWaitingEvent,
-    }) as ME.MediaWaitingEvent;
-
-    trackedEvents.set('waiting', event);
-
     $media.waiting = true;
     $media.playing = false;
-
-    provider?.dispatchEvent(event);
+    const event = createEvent($target, 'waiting', { trigger: lastWaitingEvent });
+    trackedEvents.set('waiting', event);
+    $target()?.dispatchEvent(event);
     lastWaitingEvent = undefined;
     firingWaiting = false;
   }, 300);
 
   function onWaiting(event: ME.MediaWaitingEvent) {
-    if (firingWaiting || requestManager?.$isSeekingRequest()) return;
+    if (firingWaiting || $isSeekingRequest()) return;
     event.stopImmediatePropagation();
     lastWaitingEvent = event;
     fireWaitingEvent();
   }
 
   function onEnded(event: ME.MediaEndedEvent) {
-    if (requestManager?.$isLooping()) {
+    if ($isLooping()) {
       event.stopImmediatePropagation();
       return;
     }
@@ -398,49 +359,42 @@ export function useMediaStateManager(
     $media.waiting = false;
   }
 
-  function onFullscreenChange(event: FullscreenChangeEvent) {
+  function onFullscreenChange(event: ME.MediaFullscreenChangeEvent) {
     $media.fullscreen = event.detail;
-
-    // @ts-expect-error - not a media event.
     satisfyMediaRequest('fullscreen', event);
-
-    // Forward event on media provider for any listeners.
-    if (event.target !== provider) {
-      dispatchEvent(provider, 'fullscreen-change', {
-        detail: event.detail,
-        trigger: event,
-      });
-    }
   }
 
-  function onFullscreenError(event: FullscreenErrorEvent) {
-    // @ts-expect-error - not a media event.
+  function onFullscreenError(event: ME.MediaFullscreenErrorEvent) {
     satisfyMediaRequest('fullscreen', event);
-
-    // Forward event on media provider for any listeners.
-    if (event.target !== provider) {
-      dispatchEvent(provider, 'fullscreen-error', {
-        detail: event.detail,
-        trigger: event,
-      });
-    }
   }
 
   function satisfyMediaRequest<T extends keyof MediaRequestQueueRecord>(
     request: T,
     event: ME.MediaEvent,
   ) {
-    requestQueue?.serve(request, (requestEvent) => {
+    requestQueue.serve(request, (requestEvent) => {
       event.request = requestEvent;
       appendTriggerEvent(event, requestEvent);
     });
   }
 
-  return { $mediaProvider };
+  function handleMediaEvent(event: Event) {
+    eventHandlers[event.type]?.(event);
+
+    if (trackedEventType.has(event.type as keyof ME.MediaEvents)) {
+      trackedEvents.set(event.type, event as ME.MediaEvent);
+    }
+
+    $target()?.dispatchEvent(event);
+  }
+
+  return {
+    $mediaProvider,
+    handleMediaEvent,
+  };
 }
 
-function onProgress($media: MediaStore, event: ME.MediaProgressEvent) {
-  const { buffered, seekable } = event.detail;
-  $media.buffered = buffered;
-  $media.seekable = seekable;
+export interface MediaStateManager {
+  $mediaProvider: ReadSignal<MediaProviderElement | null>;
+  handleMediaEvent(event: Event): void;
 }

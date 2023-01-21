@@ -11,7 +11,7 @@ In this section, we'll go through the basics of working with the custom elements
 
 We provide a variety of components out of the box that help enhance the player.
 
-Some are concerned with layout such as `<vds-aspect-ratio>` and `<vds-controls>`, some provide visual
+Some are concerned with layout such as `<vds-media>` and `<vds-aspect-ratio>`, some provide visual
 controls such as `<vds-play-button>` or `<vds-time-slider>`, and others manage player instances.
 
 We recommend either searching (`cmd + k`) for what you're looking for or browsing the sidebar.
@@ -53,16 +53,16 @@ Vidstack elements go through a two-step process in which they're defined then at
 they're finally ready to be interacted with:
 
 ```ts
-const provider = document.querySelector('vds-video');
+const media = document.querySelector('vds-media');
 
 // 1. Like any other custom element it needs to be defined:
-customElements.whenDefined('vds-video', () => {
-  // `vds-video` is now defined.
+customElements.whenDefined('vds-media', () => {
+  // `vds-media` is now defined.
 
   // 2. Wait for the custom element instance to be attached.
-  provider.onAttach(() => {
+  media.onAttach(() => {
     // Safe to now interact with instance props/methods.
-    provider.play();
+    media.play();
   });
 });
 ```
@@ -74,8 +74,8 @@ import { defineCustomElements } from 'vidstack/elements';
 
 async function onLoad() {
   await defineCustomElements();
-  const provider = document.querySelector('vds-video');
-  provider.onAttach(() => {
+  const media = document.querySelector('vds-media');
+  media.onAttach(() => {
     // ...
   });
 }
@@ -130,9 +130,9 @@ Events can be listened to by obtaining a reference to the element instance and a
 event listener like so:
 
 ```ts
-const provider = document.querySelector('vds-video');
+const media = document.querySelector('vds-media');
 
-provider.addEventListener('play', function onPlay() {
+media.addEventListener('play', function onPlay() {
   // ...
 });
 ```
@@ -143,22 +143,22 @@ Obtaining a reference to the element instance enables you to manipulate the cust
 and directly call properties/methods like so:
 
 ```ts
-const provider = document.querySelector('vds-video');
+const media = document.querySelector('vds-media');
 
 // Set a instance property:
-provider.muted = true;
+media.muted = true;
 
 // Call a instance method:
-provider.play();
+media.play();
 ```
 
 ## Element Types
 
 All element types are classes named using _PascalCase_ and _suffixed_ with the word `Element`
-(e.g., `AudioElement`).
+(e.g., `MediaElement`).
 
 ```ts {% copy=true %}
-import { type PlayButtonElement, type VideoElement } from 'vidstack';
+import { type MediaElement, type VideoElement } from 'vidstack';
 
-let provider: VideoElement;
+let media: MediaElement;
 ```

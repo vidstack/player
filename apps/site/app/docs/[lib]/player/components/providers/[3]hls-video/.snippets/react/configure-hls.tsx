@@ -1,5 +1,9 @@
-import { HLSVideo } from '@vidstack/react';
+import { HLSVideo, Media } from '@vidstack/react';
 
 function MediaPlayer() {
-  return <HLSVideo hlsConfig={{ lowLatencyMode: true }}>{/* ... */}</HLSVideo>;
+  return (
+    <Media>
+      <HLSVideo hlsConfig={{ lowLatencyMode: true }}>{/* ... */}</HLSVideo>
+    </Media>
+  );
 }

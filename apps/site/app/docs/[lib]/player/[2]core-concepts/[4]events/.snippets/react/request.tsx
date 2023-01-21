@@ -1,4 +1,4 @@
-import { Media, Video } from '@vidstack/react';
+import { Media } from '@vidstack/react';
 import type { MediaPlayEvent, PlayRequestEvent } from 'vidstack';
 
 function MediaPlayer() {
@@ -15,8 +15,8 @@ function MediaPlayer() {
   }
 
   return (
-    <Media onPlayRequest={onPlayRequest}>
-      <Video onPlay={onPlay}>{/* ... */}</Video>
+    <Media onPlayRequest={onPlayRequest} onPlay={onPlay}>
+      {/* ... */}
     </Media>
   );
 }

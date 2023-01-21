@@ -1,23 +1,11 @@
 import type { ReadSignal } from 'maverick.js';
-import { createEvent, setAttribute } from 'maverick.js/std';
+import { setAttribute } from 'maverick.js/std';
 
-import { useLogger } from '../../../foundation/logger/use-logger';
-import { coerceToError } from '../../../utils/error';
-import { resetPlaybackIfEnded, throwIfNotReadyForPlayback } from '../../media/provider/internal';
-import type { MediaProviderAdapter } from '../../media/provider/types';
-import { ATTEMPTING_AUTOPLAY } from '../../media/state';
-import type { MediaStore } from '../../media/store';
-import type { HTMLProviderElement } from './types';
+import type { MediaAdapter } from '../../media/element/controller/types';
 
-/**
- * Adapts the underlying HTMLMediaElement API to satisfy the `MediaProviderAdapter` interface.
- */
-export function useHTMLProviderAdapter(
-  $target: ReadSignal<HTMLProviderElement | null>,
+export function useHTMLMediaElementAdapter(
   $mediaElement: ReadSignal<HTMLMediaElement | null>,
-  $media: MediaStore,
-): MediaProviderAdapter {
-  const logger = __DEV__ ? useLogger($mediaElement) : undefined;
+): MediaAdapter {
   return {
     get paused() {
       return $mediaElement()?.paused ?? true;
@@ -47,26 +35,9 @@ export function useHTMLProviderAdapter(
       setAttribute($mediaElement()!, 'playsinline', playsinline);
     },
     async play() {
-      if (__DEV__) logger?.info('attempting to play...');
-      try {
-        throwIfNotReadyForPlayback($media);
-        await resetPlaybackIfEnded($target()!, $media);
-        return $mediaElement()!.play();
-      } catch (error) {
-        const provider = $target();
-
-        if (provider) {
-          const event = createEvent($target, 'play-fail');
-          event.autoplay = $media[ATTEMPTING_AUTOPLAY];
-          event.error = coerceToError(error);
-          provider.dispatchEvent(event);
-        }
-
-        throw error;
-      }
+      return $mediaElement()?.play();
     },
     async pause() {
-      if (__DEV__) logger?.info('attempting to pause...');
       return $mediaElement()?.pause();
     },
   };

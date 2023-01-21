@@ -55,9 +55,9 @@ Add the following player HTML boilerplate to get started.
 {% /slot %}
 
 ```html {% copy=true %}
-<vds-media>
-  <!-- remove `controls` attribute if you're designing a custom UI -->
-  <vds-audio controls>
+<!-- remove `controls` attribute if you're designing a custom UI -->
+<vds-media controls view="audio">
+  <vds-audio>
     <audio src="https://media-files.vidstack.io/audio.mp3" preload="none"></audio>
   </vds-audio>
 </vds-media>

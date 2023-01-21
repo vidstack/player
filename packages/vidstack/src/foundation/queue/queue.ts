@@ -1,4 +1,4 @@
-export class Queue<QueueRecord extends Record<string, unknown>> {
+export class Queue<QueueRecord> {
   protected _queue = new Map<keyof QueueRecord, Set<any>>();
 
   /**
