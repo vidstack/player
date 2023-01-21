@@ -17,3 +17,4 @@
 | `seeking`        | Media or user is seeking to new playback position. |
 | `started`        | Media playback has started.                        |
 | `waiting`        | Media is waiting for more data (i.e., buffering).  |
+| `ios-controls`   | iOS media controls are visible.                    |

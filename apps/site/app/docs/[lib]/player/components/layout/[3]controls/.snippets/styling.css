@@ -24,8 +24,8 @@
   pointer-events: auto;
 }
 
-/* Avoid double controls on iOS when in fullscreen. */
-vds-media[ios-fullscreen] .media-controls-group,
+/* Avoid double controls on iOS. */
+vds-media[ios-controls] .media-controls-group,
 /* Hide controls if media is not ready for playback, or user is idle. */
 vds-media[user-idle] .media-controls-group,
 vds-media:not([can-play]) .media-controls-group {

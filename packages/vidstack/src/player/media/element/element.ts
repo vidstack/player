@@ -99,8 +99,11 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     if (__DEV__) useMediaEventsLogger(host.$el);
 
     const $attrs: AttributesRecord = {
-      'ios-fullscreen': () =>
-        IS_IOS && $media.view === 'video' && (!props.$playsinline() || $media.fullscreen),
+      'ios-controls': () =>
+        IS_IOS &&
+        $media.media.includes('video') &&
+        $media.controls &&
+        (!props.$playsinline() || $media.fullscreen),
     };
 
     for (const prop of MEDIA_ATTRIBUTES) {
