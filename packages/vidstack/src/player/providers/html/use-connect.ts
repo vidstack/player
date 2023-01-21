@@ -3,7 +3,6 @@ import { isNull, setAttribute } from 'maverick.js/std';
 
 import { useLogger } from '../../../foundation/logger/use-logger';
 import type { MediaControllerDelegate } from '../../media/element/controller/controller-delegate';
-import { CAN_LOAD_POSTER } from '../../media/state';
 import type { MediaStore } from '../../media/store';
 import type { MediaSrc } from '../../media/types';
 import type { HTMLProviderElement } from './types';
@@ -39,13 +38,13 @@ export function useHTMLMediaElementConnect(
     media.removeAttribute('poster');
     setAttribute(media, 'controls', $media.controls);
 
-    if (
-      $media[CAN_LOAD_POSTER] &&
-      $media.poster.length > 0 &&
-      media.getAttribute('poster') !== $media.poster
-    ) {
-      setAttribute(media, 'poster', $media.poster);
-    }
+    effect(() => {
+      setAttribute(
+        media,
+        'poster',
+        $media.canLoadPoster && $media.poster.length > 0 && $media.poster,
+      );
+    });
 
     if (!$media.canPlay) {
       setAttribute(media, 'preload', $target()!.preload);

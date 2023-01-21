@@ -10,7 +10,6 @@ import {
 import type { Queue } from '../../../../foundation/queue/queue';
 import { coerceToError } from '../../../../utils/error';
 import type * as RE from '../../request-events';
-import { ATTEMPTING_AUTOPLAY, CAN_LOAD_POSTER } from '../../state';
 import { useInternalMediaStore } from '../../store';
 import { useMediaUser, UseMediaUser } from '../../user';
 import type { MediaAdapter, MediaControllerElement, MediaControllerProps } from './types';
@@ -186,11 +185,11 @@ export function useMediaRequestManager(
   }
 
   function onShowPosterRequest(event: RE.ShowPosterRequestEvent) {
-    $media[CAN_LOAD_POSTER] = true;
+    $media.canLoadPoster = true;
   }
 
   function onHidePosterRequest(event: RE.HidePosterRequestEvent) {
-    $media[CAN_LOAD_POSTER] = false;
+    $media.canLoadPoster = false;
   }
 
   function onLoopRequest(event: RE.LoopRequestEvent) {
@@ -226,7 +225,7 @@ export function useMediaRequestManager(
       return adapter!.play();
     } catch (error) {
       const errorEvent = createEvent($target, 'play-fail', { detail: coerceToError(error) });
-      errorEvent.autoplay = $media[ATTEMPTING_AUTOPLAY];
+      errorEvent.autoplay = $media.attemptingAutoplay;
       stateManager.handleMediaEvent(errorEvent);
       throw error;
     }

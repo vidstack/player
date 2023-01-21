@@ -7,7 +7,6 @@ import { appendTriggerEvent, createEvent, listenEvent, useDisposalBin } from 'ma
 import type * as ME from '../../events';
 import type { MediaProviderElement } from '../../provider/types';
 import { MediaProviderContext } from '../../provider/use-media-provider';
-import { ATTEMPTING_AUTOPLAY } from '../../state';
 import { MediaStore, softResetMediaStore } from '../../store';
 import type { MediaControllerElement } from './types';
 import type { MediaRequestManagerInit, MediaRequestQueueRecord } from './use-media-request-manager';
@@ -207,7 +206,7 @@ export function useMediaStateManager(
   }
 
   function onPlay(event: ME.MediaPlayEvent) {
-    event.autoplay = $media[ATTEMPTING_AUTOPLAY];
+    event.autoplay = $media.attemptingAutoplay;
 
     if ($isLooping() || !$media.paused) {
       event.stopImmediatePropagation();

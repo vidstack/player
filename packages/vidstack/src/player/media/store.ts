@@ -1,6 +1,6 @@
 import { createContext, createStore, useContext } from 'maverick.js';
 
-import { ATTEMPTING_AUTOPLAY, CAN_LOAD_POSTER, MediaState } from './state';
+import type { MediaState } from './state';
 import { createTimeRanges } from './time-ranges';
 
 export interface MediaStore extends MediaState {}
@@ -45,8 +45,9 @@ export const mediaStore = createStore<MediaStore>({
     const seekable = this.seekable;
     return seekable.length === 0 ? 0 : seekable.end(seekable.length - 1);
   },
-  [ATTEMPTING_AUTOPLAY]: false,
-  [CAN_LOAD_POSTER]: true,
+  // internal
+  attemptingAutoplay: false,
+  canLoadPoster: false,
 });
 
 export const MediaStoreContext = createContext<MediaStore>(() => mediaStore.create());
@@ -73,7 +74,7 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'sources',
   'view',
   'volume',
-  CAN_LOAD_POSTER,
+  'canLoadPoster',
 ]);
 
 /**

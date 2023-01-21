@@ -1,11 +1,6 @@
 import type { LogLevel } from '../../foundation/logger/log-level';
 import type { MediaErrorDetail, MediaSrc, MediaType, MediaViewType } from './types';
 
-/** @internal */
-export const ATTEMPTING_AUTOPLAY = Symbol(__DEV__ ? 'ATTEMPTING_AUTOPLAY' : 0);
-/** @internal */
-export const CAN_LOAD_POSTER = Symbol(__DEV__ ? 'CAN_LOAD_POSTER' : 0);
-
 export interface MediaState {
   /**
    * Whether playback should automatically begin as soon as enough media is available to do so
@@ -266,7 +261,7 @@ export interface MediaState {
    */
   waiting: boolean;
   /** @internal */
-  [ATTEMPTING_AUTOPLAY]: boolean;
+  attemptingAutoplay: boolean;
   /** @internal */
-  [CAN_LOAD_POSTER]: boolean;
+  canLoadPoster: boolean;
 }

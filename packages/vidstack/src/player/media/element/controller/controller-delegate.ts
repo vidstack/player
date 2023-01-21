@@ -3,7 +3,6 @@ import { DOMEvent, InferEventDetail, InferEventInit } from 'maverick.js/std';
 
 import { useLogger } from '../../../../foundation/logger/use-logger';
 import type { MediaEvents } from '../../events';
-import { ATTEMPTING_AUTOPLAY } from '../../state';
 import type { MediaStore } from '../../store';
 import type { MediaSrc } from '../../types';
 import type { MediaControllerElement } from './types';
@@ -56,7 +55,7 @@ export function createMediaControllerDelegate(
   }
 
   async function attemptAutoplay() {
-    $media[ATTEMPTING_AUTOPLAY] = true;
+    $media.attemptingAutoplay = true;
     try {
       await $target()!.play();
       dispatch('autoplay', { detail: { muted: $media.muted } });
@@ -68,7 +67,7 @@ export function createMediaControllerDelegate(
         },
       });
     } finally {
-      $media[ATTEMPTING_AUTOPLAY] = false;
+      $media.attemptingAutoplay = false;
     }
   }
 
