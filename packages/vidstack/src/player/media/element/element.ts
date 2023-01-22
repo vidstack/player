@@ -7,7 +7,7 @@ import {
   signal,
 } from 'maverick.js';
 import { AttributesRecord, defineCustomElement, onConnect, onMount } from 'maverick.js/element';
-import { camelToKebabCase, dispatchEvent, mergeProperties, noop } from 'maverick.js/std';
+import { camelToKebabCase, dispatchEvent, isNull, mergeProperties, noop } from 'maverick.js/std';
 
 import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
 import { Queue } from '../../../foundation/queue/queue';
@@ -142,6 +142,10 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
         detail: host.el!,
         bubbles: true,
         composed: true,
+      });
+
+      window.requestAnimationFrame(() => {
+        if (isNull($media.canLoadPoster)) $media.canLoadPoster = true;
       });
     });
 

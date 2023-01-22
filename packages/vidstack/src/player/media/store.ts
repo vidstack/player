@@ -47,7 +47,7 @@ export const mediaStore = createStore<MediaStore>({
   },
   // internal
   attemptingAutoplay: false,
-  canLoadPoster: false,
+  canLoadPoster: null,
 });
 
 const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([

@@ -263,5 +263,5 @@ export interface MediaState {
   /** @internal */
   attemptingAutoplay: boolean;
   /** @internal */
-  canLoadPoster: boolean;
+  canLoadPoster: boolean | null;
 }
