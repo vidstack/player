@@ -6,17 +6,17 @@ import type {
 } from '../../foundation/orientation/events';
 import type { MediaElement } from './element/types';
 import type {
-  EnterFullscreenRequestEvent,
-  ExitFullscreenRequestEvent,
-  MuteRequestEvent,
-  PauseRequestEvent,
-  PauseUserIdleRequestEvent,
-  PlayRequestEvent,
-  ResumeUserIdleRequestEvent,
-  SeekingRequestEvent,
-  SeekRequestEvent,
-  UnmuteRequestEvent,
-  VolumeChangeRequestEvent,
+  MediaEnterFullscreenRequestEvent,
+  MediaExitFullscreenRequestEvent,
+  MediaMuteRequestEvent,
+  MediaPauseRequestEvent,
+  MediaPauseUserIdleRequestEvent,
+  MediaPlayRequestEvent,
+  MediaResumeUserIdleRequestEvent,
+  MediaSeekingRequestEvent,
+  MediaSeekRequestEvent,
+  MediaUnmuteRequestEvent,
+  MediaVolumeChangeRequestEvent,
 } from './request-events';
 import type { MediaErrorDetail, MediaSrc, MediaType, MediaViewType } from './types';
 
@@ -187,7 +187,7 @@ export interface MediaErrorEvent extends MediaEvent<MediaErrorDetail> {}
  * @composed
  */
 export interface MediaFullscreenChangeEvent extends MediaEvent<boolean> {
-  request?: EnterFullscreenRequestEvent | ExitFullscreenRequestEvent;
+  request?: MediaEnterFullscreenRequestEvent | MediaExitFullscreenRequestEvent;
 }
 
 /**
@@ -198,7 +198,7 @@ export interface MediaFullscreenChangeEvent extends MediaEvent<boolean> {
  * @composed
  */
 export interface MediaFullscreenErrorEvent extends MediaEvent<unknown> {
-  request?: EnterFullscreenRequestEvent | ExitFullscreenRequestEvent;
+  request?: MediaEnterFullscreenRequestEvent | MediaExitFullscreenRequestEvent;
 }
 
 /**
@@ -207,7 +207,7 @@ export interface MediaFullscreenErrorEvent extends MediaEvent<unknown> {
  * detail contains whether the user is idle (`true`), or not (`false`).
  */
 export interface UserIdleChangeEvent extends MediaEvent<boolean> {
-  request?: ResumeUserIdleRequestEvent | PauseUserIdleRequestEvent;
+  request?: MediaResumeUserIdleRequestEvent | MediaPauseUserIdleRequestEvent;
 }
 
 /**
@@ -250,7 +250,7 @@ export interface MediaChangeEvent extends MediaEvent<MediaType> {}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event}
  */
 export interface MediaPauseEvent extends MediaEvent<void> {
-  request?: PauseRequestEvent;
+  request?: MediaPauseRequestEvent;
 }
 
 /**
@@ -261,7 +261,7 @@ export interface MediaPauseEvent extends MediaEvent<void> {
  */
 export interface MediaPlayEvent extends MediaEvent<void> {
   autoplay?: boolean;
-  request?: PlayRequestEvent;
+  request?: MediaPlayRequestEvent;
 }
 
 /**
@@ -269,7 +269,7 @@ export interface MediaPlayEvent extends MediaEvent<void> {
  */
 export interface MediaPlayFailEvent extends MediaEvent<Error> {
   autoplay?: boolean;
-  request?: PlayRequestEvent;
+  request?: MediaPlayRequestEvent;
 }
 
 /**
@@ -307,7 +307,7 @@ export interface MediaProgressEvent
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event}
  */
 export interface MediaSeekedEvent extends MediaEvent<number> {
-  request?: SeekRequestEvent;
+  request?: MediaSeekRequestEvent;
 }
 
 /**
@@ -317,7 +317,7 @@ export interface MediaSeekedEvent extends MediaEvent<number> {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event}
  */
 export interface MediaSeekingEvent extends MediaEvent<number> {
-  request?: SeekingRequestEvent;
+  request?: MediaSeekingRequestEvent;
 }
 
 /**
@@ -351,7 +351,7 @@ export interface MediaSuspendEvent extends MediaEvent<void> {}
  * when the `loop` property is `true` and media loops, whereas the `vds-play` event is not.
  */
 export interface MediaReplayEvent extends MediaEvent<void> {
-  request?: PlayRequestEvent;
+  request?: MediaPlayRequestEvent;
 }
 
 /**
@@ -384,7 +384,7 @@ export interface MediaVolumeChange {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event}
  */
 export interface MediaVolumeChangeEvent extends MediaEvent<MediaVolumeChange> {
-  request?: MuteRequestEvent | UnmuteRequestEvent | VolumeChangeRequestEvent;
+  request?: MediaMuteRequestEvent | MediaUnmuteRequestEvent | MediaVolumeChangeRequestEvent;
 }
 
 /**

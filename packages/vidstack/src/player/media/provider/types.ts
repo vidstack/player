@@ -1,7 +1,7 @@
 import type { HTMLCustomElement } from 'maverick.js/element';
 
 import type { MediaAdapter } from '../element/controller/types';
-import type { LoopRequestEvent, PlayRequestEvent } from '../request-events';
+import type { MediaLoopRequestEvent, MediaPlayRequestEvent } from '../request-events';
 
 export interface MediaProviderElement
   extends HTMLCustomElement<MediaProviderProps, MediaProviderEvents>,
@@ -11,9 +11,9 @@ export interface MediaProviderProps {}
 
 export interface MediaProviderEvents {
   /** @internal */
-  'media-play-request': PlayRequestEvent;
+  'media-play-request': MediaPlayRequestEvent;
   /** @internal */
-  'media-loop-request': LoopRequestEvent;
+  'media-loop-request': MediaLoopRequestEvent;
 }
 
 export interface MediaProviderMembers extends MediaProviderProps {

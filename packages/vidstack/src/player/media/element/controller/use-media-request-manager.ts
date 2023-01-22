@@ -85,19 +85,19 @@ export function useMediaRequestManager(
     }
   });
 
-  function onStartLoading(event: RE.StartLoadingRequestEvent) {
+  function onStartLoading(event: RE.MediaStartLoadingRequestEvent) {
     if ($media.canLoad) return;
     requestQueue.queue('load', event);
     stateManager.handleMediaEvent(createEvent($target, 'can-load'));
   }
 
-  function onMuteRequest(event: RE.MuteRequestEvent) {
+  function onMuteRequest(event: RE.MediaMuteRequestEvent) {
     if ($media.muted) return;
     requestQueue.queue('volume', event);
     adapter!.muted = true;
   }
 
-  function onUnmuteRequest(event: RE.UnmuteRequestEvent) {
+  function onUnmuteRequest(event: RE.MediaUnmuteRequestEvent) {
     if (!$media.muted) return;
     requestQueue.queue('volume', event);
     adapter!.muted = false;
@@ -107,7 +107,7 @@ export function useMediaRequestManager(
     }
   }
 
-  async function onPlayRequest(event: RE.PlayRequestEvent) {
+  async function onPlayRequest(event: RE.MediaPlayRequestEvent) {
     if (!$media.paused) return;
     try {
       requestQueue.queue('play', event);
@@ -118,7 +118,7 @@ export function useMediaRequestManager(
     }
   }
 
-  async function onPauseRequest(event: RE.PauseRequestEvent) {
+  async function onPauseRequest(event: RE.MediaPauseRequestEvent) {
     if ($media.paused) return;
     try {
       requestQueue.queue('pause', event);
@@ -129,13 +129,13 @@ export function useMediaRequestManager(
     }
   }
 
-  function onSeekingRequest(event: RE.SeekingRequestEvent) {
+  function onSeekingRequest(event: RE.MediaSeekingRequestEvent) {
     requestQueue.queue('seeking', event);
     $media.seeking = true;
     $isSeekingRequest.set(true);
   }
 
-  function onSeekRequest(event: RE.SeekRequestEvent) {
+  function onSeekRequest(event: RE.MediaSeekRequestEvent) {
     if ($media.ended) $isReplay.set(true);
     requestQueue.queue('seeked', event);
     $isSeekingRequest.set(false);
@@ -143,7 +143,7 @@ export function useMediaRequestManager(
     adapter!.currentTime = $media.duration - event.detail < 0.25 ? $media.duration : event.detail;
   }
 
-  function onVolumeChangeRequest(event: RE.VolumeChangeRequestEvent) {
+  function onVolumeChangeRequest(event: RE.MediaVolumeChangeRequestEvent) {
     const volume = event.detail;
     if ($media.volume === volume) return;
     requestQueue.queue('volume', event);
@@ -154,7 +154,7 @@ export function useMediaRequestManager(
     }
   }
 
-  async function onEnterFullscreenRequest(event: RE.EnterFullscreenRequestEvent) {
+  async function onEnterFullscreenRequest(event: RE.MediaEnterFullscreenRequestEvent) {
     try {
       requestQueue.queue('fullscreen', event);
       await enterFullscreen(event.detail);
@@ -164,7 +164,7 @@ export function useMediaRequestManager(
     }
   }
 
-  async function onExitFullscreenRequest(event: RE.ExitFullscreenRequestEvent) {
+  async function onExitFullscreenRequest(event: RE.MediaExitFullscreenRequestEvent) {
     try {
       requestQueue.queue('fullscreen', event);
       await exitFullscreen(event.detail);
@@ -174,25 +174,25 @@ export function useMediaRequestManager(
     }
   }
 
-  function onResumeIdlingRequest(event: RE.ResumeUserIdleRequestEvent) {
+  function onResumeIdlingRequest(event: RE.MediaResumeUserIdleRequestEvent) {
     requestQueue.queue('userIdle', event);
     user.idle.paused = false;
   }
 
-  function onPauseIdlingRequest(event: RE.PauseUserIdleRequestEvent) {
+  function onPauseIdlingRequest(event: RE.MediaPauseUserIdleRequestEvent) {
     requestQueue.queue('userIdle', event);
     user.idle.paused = true;
   }
 
-  function onShowPosterRequest(event: RE.ShowPosterRequestEvent) {
+  function onShowPosterRequest(event: RE.MediaShowPosterRequestEvent) {
     $media.canLoadPoster = true;
   }
 
-  function onHidePosterRequest(event: RE.HidePosterRequestEvent) {
+  function onHidePosterRequest(event: RE.MediaHidePosterRequestEvent) {
     $media.canLoadPoster = false;
   }
 
-  function onLoopRequest(event: RE.LoopRequestEvent) {
+  function onLoopRequest(event: RE.MediaLoopRequestEvent) {
     window.requestAnimationFrame(async () => {
       try {
         $isLooping.set(true);
@@ -289,14 +289,14 @@ function throwIfNotReadyForPlayback() {
 export interface MediaRequestQueue extends Queue<MediaRequestQueueRecord> {}
 
 export interface MediaRequestQueueRecord {
-  load: RE.StartLoadingRequestEvent;
-  play: RE.PlayRequestEvent;
-  pause: RE.PauseRequestEvent;
-  volume: RE.VolumeChangeRequestEvent | RE.MuteRequestEvent | RE.UnmuteRequestEvent;
-  fullscreen: RE.EnterFullscreenRequestEvent | RE.ExitFullscreenRequestEvent;
-  seeked: RE.SeekRequestEvent;
-  seeking: RE.SeekingRequestEvent;
-  userIdle: RE.ResumeUserIdleRequestEvent | RE.PauseUserIdleRequestEvent;
+  load: RE.MediaStartLoadingRequestEvent;
+  play: RE.MediaPlayRequestEvent;
+  pause: RE.MediaPauseRequestEvent;
+  volume: RE.MediaVolumeChangeRequestEvent | RE.MediaMuteRequestEvent | RE.MediaUnmuteRequestEvent;
+  fullscreen: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
+  seeked: RE.MediaSeekRequestEvent;
+  seeking: RE.MediaSeekingRequestEvent;
+  userIdle: RE.MediaResumeUserIdleRequestEvent | RE.MediaPauseUserIdleRequestEvent;
 }
 
 export interface MediaRequestManagerInit {

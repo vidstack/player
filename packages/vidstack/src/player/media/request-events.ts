@@ -1,21 +1,21 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 export interface MediaRequestEvents {
-  'media-start-loading': StartLoadingRequestEvent;
-  'media-mute-request': MuteRequestEvent;
-  'media-unmute-request': UnmuteRequestEvent;
-  'media-enter-fullscreen-request': EnterFullscreenRequestEvent;
-  'media-exit-fullscreen-request': ExitFullscreenRequestEvent;
-  'media-play-request': PlayRequestEvent;
-  'media-pause-request': PauseRequestEvent;
-  'media-seek-request': SeekRequestEvent;
-  'media-seeking-request': SeekingRequestEvent;
-  'media-volume-change-request': VolumeChangeRequestEvent;
-  'media-resume-user-idle-request': ResumeUserIdleRequestEvent;
-  'media-pause-user-idle-request': PauseUserIdleRequestEvent;
-  'media-show-poster-request': ShowPosterRequestEvent;
-  'media-hide-poster-request': HidePosterRequestEvent;
-  'media-loop-request': LoopRequestEvent;
+  'media-start-loading': MediaStartLoadingRequestEvent;
+  'media-mute-request': MediaMuteRequestEvent;
+  'media-unmute-request': MediaUnmuteRequestEvent;
+  'media-enter-fullscreen-request': MediaEnterFullscreenRequestEvent;
+  'media-exit-fullscreen-request': MediaExitFullscreenRequestEvent;
+  'media-play-request': MediaPlayRequestEvent;
+  'media-pause-request': MediaPauseRequestEvent;
+  'media-seek-request': MediaSeekRequestEvent;
+  'media-seeking-request': MediaSeekingRequestEvent;
+  'media-volume-change-request': MediaVolumeChangeRequestEvent;
+  'media-resume-user-idle-request': MediaResumeUserIdleRequestEvent;
+  'media-pause-user-idle-request': MediaPauseUserIdleRequestEvent;
+  'media-show-poster-request': MediaShowPosterRequestEvent;
+  'media-hide-poster-request': MediaHidePosterRequestEvent;
+  'media-loop-request': MediaLoopRequestEvent;
 }
 
 /**
@@ -25,7 +25,7 @@ export interface MediaRequestEvents {
  * @bubbles
  * @composed
  */
-export interface StartLoadingRequestEvent extends DOMEvent<void> {}
+export interface MediaStartLoadingRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the media to be muted.
@@ -33,7 +33,7 @@ export interface StartLoadingRequestEvent extends DOMEvent<void> {}
  * @bubbles
  * @composed
  */
-export interface MuteRequestEvent extends DOMEvent<void> {}
+export interface MediaMuteRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the media to be unmuted.
@@ -41,7 +41,7 @@ export interface MuteRequestEvent extends DOMEvent<void> {}
  * @bubbles
  * @composed
  */
-export interface UnmuteRequestEvent extends DOMEvent<void> {}
+export interface MediaUnmuteRequestEvent extends DOMEvent<void> {}
 
 /**
  * Whether to request fullscreen on the media (i.e., `<vds-media>`) or provider element
@@ -57,7 +57,7 @@ export type MediaFullscreenRequestTarget = 'prefer-media' | 'media' | 'provider'
  * @bubbles
  * @composed
  */
-export interface EnterFullscreenRequestEvent extends DOMEvent<MediaFullscreenRequestTarget> {}
+export interface MediaEnterFullscreenRequestEvent extends DOMEvent<MediaFullscreenRequestTarget> {}
 
 /**
  * Fired when requesting media to exit fullscreen. The event `detail` can specify the fullscreen
@@ -66,7 +66,7 @@ export interface EnterFullscreenRequestEvent extends DOMEvent<MediaFullscreenReq
  * @bubbles
  * @composed
  */
-export interface ExitFullscreenRequestEvent extends DOMEvent<MediaFullscreenRequestTarget> {}
+export interface MediaExitFullscreenRequestEvent extends DOMEvent<MediaFullscreenRequestTarget> {}
 
 /**
  * Fired when requesting media playback to begin/resume.
@@ -74,7 +74,7 @@ export interface ExitFullscreenRequestEvent extends DOMEvent<MediaFullscreenRequ
  * @bubbles
  * @composed
  */
-export interface PlayRequestEvent extends DOMEvent<void> {}
+export interface MediaPlayRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting media playback to temporarily stop.
@@ -82,7 +82,7 @@ export interface PlayRequestEvent extends DOMEvent<void> {}
  * @bubbles
  * @composed
  */
-export interface PauseRequestEvent extends DOMEvent<void> {}
+export interface MediaPauseRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting a time change. In other words, moving the playhead to a new position.
@@ -90,7 +90,7 @@ export interface PauseRequestEvent extends DOMEvent<void> {}
  * @bubbles
  * @composed
  */
-export interface SeekRequestEvent extends DOMEvent<number> {}
+export interface MediaSeekRequestEvent extends DOMEvent<number> {}
 
 /**
  * Fired when seeking/scrubbing to a new playback position.
@@ -98,7 +98,7 @@ export interface SeekRequestEvent extends DOMEvent<number> {}
  * @bubbles
  * @composed
  */
-export interface SeekingRequestEvent extends DOMEvent<number> {}
+export interface MediaSeekingRequestEvent extends DOMEvent<number> {}
 
 /**
  * Fired when requesting the media volume to be set to a new level.
@@ -106,7 +106,7 @@ export interface SeekingRequestEvent extends DOMEvent<number> {}
  * @bubbles
  * @composed
  */
-export interface VolumeChangeRequestEvent extends DOMEvent<number> {}
+export interface MediaVolumeChangeRequestEvent extends DOMEvent<number> {}
 
 /**
  * Fired when user idle state tracking may resume. This is typically called after requesting
@@ -115,7 +115,7 @@ export interface VolumeChangeRequestEvent extends DOMEvent<number> {}
  * @bubbles
  * @composed
  */
-export interface ResumeUserIdleRequestEvent extends DOMEvent<void> {}
+export interface MediaResumeUserIdleRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when user idle state tracking should pause. This is typically used when a control
@@ -125,7 +125,7 @@ export interface ResumeUserIdleRequestEvent extends DOMEvent<void> {}
  * @bubbles
  * @composed
  */
-export interface PauseUserIdleRequestEvent extends DOMEvent<void> {}
+export interface MediaPauseUserIdleRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the poster _should_ be rendered by the media provider element. This
@@ -134,7 +134,7 @@ export interface PauseUserIdleRequestEvent extends DOMEvent<void> {}
  * @bubbles
  * @composed
  */
-export interface ShowPosterRequestEvent extends DOMEvent<void> {}
+export interface MediaShowPosterRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting the poster should _not_ be rendered by the media provider element. This
@@ -143,7 +143,7 @@ export interface ShowPosterRequestEvent extends DOMEvent<void> {}
  * @bubbles
  * @composed
  */
-export interface HidePosterRequestEvent extends DOMEvent<void> {}
+export interface MediaHidePosterRequestEvent extends DOMEvent<void> {}
 
 /**
  * Internal event that is fired by a media provider when requesting media playback to restart after
@@ -152,4 +152,4 @@ export interface HidePosterRequestEvent extends DOMEvent<void> {}
  * @bubbles
  * @composed
  */
-export interface LoopRequestEvent extends DOMEvent<void> {}
+export interface MediaLoopRequestEvent extends DOMEvent<void> {}
