@@ -69,7 +69,12 @@ export function useSlider(
         stabilize = false;
         return;
       }
-      const { inlineSize, blockSize } = entry.borderBoxSize[0];
+
+      const { inlineSize, blockSize } = entry.borderBoxSize?.[0] || {
+        inlineSize: entry.contentRect.width,
+        blockSize: entry.contentRect.height,
+      };
+
       setStyle(preview, '--computed-width', inlineSize + 'px');
       setStyle(preview, '--computed-height', blockSize + 'px');
       stabilize = true;

@@ -16,7 +16,7 @@ export const SliderVideoDefinition = defineCustomElement<SliderVideoElement>({
   tagName: 'vds-slider-video',
   props: sliderVideoProps,
   setup({ host, props: { $src } }) {
-    let videoElement: HTMLVideoElement | null;
+    let videoElement: HTMLVideoElement | null = null;
 
     const $canPlay = signal(false),
       $error = signal(false),
