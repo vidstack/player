@@ -1,44 +1,38 @@
-import { effect } from 'maverick.js';
 import { useReactContext } from 'maverick.js/react';
+import { isUndefined } from 'maverick.js/std';
 import { RefObject, useEffect, useRef } from 'react';
-import { MediaElementContext, MediaRemoteControl } from 'vidstack';
+import { mediaContext, MediaRemoteControl } from 'vidstack';
 
 /**
  * A media remote provides a simple facade for dispatching media requests to the nearest media
  * controller.
  *
- * @param target - The DOM event target to dispatch request events from.
+ * @param target - The DOM event target to dispatch request events from. Defaults to `<vds-media>`
+ * if no target is provided.
  *
- * @example
- * ```tsx
- * import { useMediaRemote } from '@vidstack/react';
- *
- * function PlayButton() {
- *   const remote = useMediaRemote();
- *   return <button onPointerUp={({ nativeEvent }) => remote.play(nativeEvent)}>Play</button>;
- * }
- * ```
+ * @docs {@link https://vidstack.io/docs/react/player/core-concepts/state-management#updating}
  */
 export function useMediaRemote(
-  target?: EventTarget | null | RefObject<EventTarget>,
+  target?: EventTarget | null | RefObject<EventTarget | null>,
 ): MediaRemoteControl {
   const remote = useRef(new MediaRemoteControl()),
-    $mediaElement = useReactContext(MediaElementContext);
+    context = useReactContext(mediaContext);
 
-  if (__DEV__ && !target && !$mediaElement) {
-    console.warn(
-      '[vidstack] `useMediaRemote` requires second argument containing a ref to a DOM element' +
-        ' if _not_ called inside a child component of `<Media>`.',
+  if (__DEV__ && isUndefined(target) && !context) {
+    throw Error(
+      '[vidstack] `useMediaRemote` requires `target` argument containing a ref to a DOM element' +
+        ' if no media context is provided - did you forget to provide it?`.',
     );
   }
 
   useEffect(() => {
-    const remoteTarget = target || $mediaElement?.();
-    if (remoteTarget) {
-      remote.current.setTarget('current' in remoteTarget ? remoteTarget.current : remoteTarget);
-    } else if ($mediaElement) {
-      return effect(() => void remote.current.setTarget($mediaElement()));
+    if (!isUndefined(target)) {
+      remote.current.setTarget(target && 'current' in target ? target.current : target);
+    } else if (context) {
+      remote.current.setTarget(context.element());
     }
+
+    return () => remote.current.setTarget(null);
   }, [target]);
 
   return remote.current;

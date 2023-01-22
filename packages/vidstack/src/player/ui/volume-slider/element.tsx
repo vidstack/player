@@ -5,8 +5,8 @@ import { mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
+import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
-import { useMediaStore } from '../../media/store';
 import type { SliderDragValueChangeEvent, SliderValueChangeEvent } from '../slider/events';
 import { useSlider } from '../slider/use-slider';
 import { volumeSliderProps } from './props';

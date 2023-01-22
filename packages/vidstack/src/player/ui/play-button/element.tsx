@@ -1,8 +1,8 @@
 import { defineCustomElement } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
 
+import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
-import { useMediaStore } from '../../media/store';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
 import type { PlayButtonElement } from './types';

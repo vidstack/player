@@ -7,7 +7,7 @@ description: How to read and update media state with Vidstack Player.
 
 In this section, we'll look at the API available for reading and updating media state.
 
-## Media State
+## Reading
 
 You can retrieve a snapshot of the current media state like so:
 
@@ -23,7 +23,7 @@ const {
 } = media.state;
 ```
 
-## Media Store
+## Subscribing
 
 The `<vds-media>` element has a media store that keeps track of the running state of the player.
 The store enables you to subscribe directly to specific media state changes, rather than
@@ -64,7 +64,7 @@ const unsubscribe = paused.subscribe((paused) => {
 unsubscribe();
 ```
 
-## Media Remote
+## Updating
 
 The `MediaRemoteControl` class provides a simple facade for dispatching
 [media request events](/docs/player/core-concepts/events#request-events). This can be used to

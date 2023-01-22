@@ -1,8 +1,8 @@
 import { effect, ReadSignal, signal } from 'maverick.js';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
+import { useMediaStore } from './context';
 import type { MediaControllerElement } from './element/controller/types';
-import { useMediaStore } from './store';
 
 const IDLE_EVENTS = ['pointerdown', 'pointermove', 'focus', 'keydown'] as const;
 

@@ -5,7 +5,7 @@ import { DOMEvent, listenEvent, mergeProperties } from 'maverick.js/std';
 import { useLogger } from '../../../foundation/logger/use-logger';
 import { HLS_VIDEO_EXTENSIONS, HLS_VIDEO_TYPES } from '../../../utils/mime';
 import { isHLSSupported } from '../../../utils/support';
-import { useMediaStore } from '../../media/store';
+import { useMediaStore } from '../../media/context';
 import { htmlProviderProps } from '../html/props';
 import { ENGINE, IGNORE_NEXT_ABORT } from '../html/use-events';
 import { useVideoElement } from '../video/use-element';

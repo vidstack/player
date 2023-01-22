@@ -28,10 +28,10 @@ const sliderStore = createStore<SliderStore>({
   },
 });
 
-export const SliderStoreContext = createContext(() => sliderStore.create());
+export const sliderStoreContext = createContext(() => sliderStore.create());
 
 export function useSliderStore(): Readonly<SliderStore> {
-  return useContext(SliderStoreContext);
+  return useContext(sliderStoreContext);
 }
 
 export interface SliderStore {

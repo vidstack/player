@@ -7,7 +7,7 @@ import type { MediaElementProps } from '../types';
 import type { MediaAdapter } from './types';
 import type { MediaRequestManager } from './use-media-request-manager';
 
-export const MediaAdapterContext = createContext(() => signal<MediaAdapter | null>(null));
+export const mediaAdapterContext = createContext(() => signal<MediaAdapter | null>(null));
 
 /**
  * This hook is responsible for setting provider props on the adapter. All properties are only

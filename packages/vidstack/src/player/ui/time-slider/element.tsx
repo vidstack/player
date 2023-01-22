@@ -5,8 +5,8 @@ import { isKeyboardEvent, mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { formatSpokenTime } from '../../../utils/time';
+import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
-import { useMediaStore } from '../../media/store';
 import type {
   SliderDragEndEvent,
   SliderDragStartEvent,

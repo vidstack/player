@@ -2,7 +2,8 @@ import { computed } from 'maverick.js';
 import { defineCustomElement } from 'maverick.js/element';
 
 import { formatTime } from '../../../utils/time';
-import { MediaStore, useMediaStore } from '../../media/store';
+import { useMediaStore } from '../../media/context';
+import type { MediaStore } from '../../media/store';
 import { timeProps } from './props';
 import type { TimeElement, TimeProps } from './types';
 

@@ -3,8 +3,8 @@ import { DOMEvent } from 'maverick.js/std';
 
 import { createLogger, Logger } from '../../foundation/logger/create-logger';
 import { RequestQueue } from '../../foundation/queue/request-queue';
+import { useMediaStore } from './context';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request-events';
-import { useMediaStore } from './store';
 
 const remotes = new WeakMap<ReadSignal<EventTarget | null>, MediaRemoteControl>();
 

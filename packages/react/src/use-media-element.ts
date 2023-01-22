@@ -1,23 +1,25 @@
 import { useReactContext } from 'maverick.js/react';
 import { useEffect, useState } from 'react';
-import { MediaElement, MediaElementContext } from 'vidstack';
+import { mediaContext, MediaElement } from 'vidstack';
 
 /**
- * Returns the nearest parent media element (i.e., `<vds-media>`). This hook can only be used
- * inside a child of the `<Media>` component.
+ * Returns the nearest parent media element (i.e., `<vds-media>`).
+ *
+ * @docs {@link https://vidstack.io/docs/react/player/core-concepts/state-management#media-element}
  */
 export function useMediaElement(): MediaElement | null {
   const [element, setElement] = useState<MediaElement | null>(null),
-    $mediaElement = useReactContext(MediaElementContext);
+    context = useReactContext(mediaContext);
 
-  if (__DEV__ && !$mediaElement) {
-    console.warn(
-      '[vidstack] `useMediaElement` can only be called inside a child component of `<Media>`.',
-    );
+  if (__DEV__ && !context) {
+    throw Error('[vidstack] no media context was found - did you forget to provide it?');
   }
 
   useEffect(() => {
-    if ($mediaElement) setElement($mediaElement());
+    if (!context) return;
+    const media = context.element()!;
+    media.onAttach(() => void setElement(media));
+    return () => setElement(null);
   }, []);
 
   return element;

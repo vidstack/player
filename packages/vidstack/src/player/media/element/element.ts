@@ -1,18 +1,25 @@
-import { effect, MaybeStopEffect, peek, provideContext, signal } from 'maverick.js';
+import {
+  effect,
+  hasProvidedContext,
+  MaybeStopEffect,
+  peek,
+  provideContext,
+  signal,
+} from 'maverick.js';
 import { AttributesRecord, defineCustomElement, onConnect, onMount } from 'maverick.js/element';
 import { camelToKebabCase, dispatchEvent, mergeProperties, noop } from 'maverick.js/std';
 
 import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
 import { Queue } from '../../../foundation/queue/queue';
 import { IS_IOS } from '../../../utils/support';
-import { MediaProviderContext } from '../provider/use-media-provider';
+import { mediaContext, useMedia } from '../context';
+import { mediaProviderContext } from '../provider/use-media-provider';
 import type { MediaState } from '../state';
-import { MediaStore, MediaStoreContext, useMediaStore } from '../store';
-import { MediaElementContext } from './context';
+import type { MediaStore } from '../store';
 import { useMediaAdapterDelegate } from './controller/adapter-delegate';
 import {
   createMediaControllerDelegate,
-  MediaControllerDelegateContext,
+  mediaControllerDelegateContext,
 } from './controller/controller-delegate';
 import type { MediaControllerStore } from './controller/types';
 import { useMediaCanLoad } from './controller/use-media-can-load';
@@ -62,9 +69,9 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
   tagName: 'vds-media',
   props: mediaElementProps,
   setup({ host, props, accessors }) {
-    provideContext(MediaStoreContext);
-    provideContext(MediaProviderContext);
-    provideContext(MediaElementContext, host.$el);
+    if (!hasProvidedContext(mediaContext)) provideContext(mediaContext);
+
+    provideContext(mediaProviderContext);
 
     const logPrinter = __DEV__ ? useLogPrinter(host.$el) : undefined;
     if (__DEV__) {
@@ -73,7 +80,8 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       });
     }
 
-    const $media = useMediaStore(),
+    const media = useMedia(),
+      $media = media.store,
       requestManagerInit: MediaRequestManagerInit = {
         requestQueue: new Queue(),
         $isLooping: signal(false),
@@ -81,10 +89,16 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
         $isSeekingRequest: signal(false),
       },
       stateManager = useMediaStateManager(host.$el, $media, requestManagerInit),
-      requestManager = useMediaRequestManager(host.$el, props, stateManager, requestManagerInit);
+      requestManager = useMediaRequestManager(
+        host.$el,
+        $media,
+        stateManager,
+        props,
+        requestManagerInit,
+      );
 
     const delegate = createMediaControllerDelegate(host.$el, $media, stateManager.handleMediaEvent);
-    provideContext(MediaControllerDelegateContext, delegate);
+    provideContext(mediaControllerDelegateContext, delegate);
 
     useMediaPropChange(host.$el, $media, props);
     useMediaCanLoad(host.$el, props.$load, startLoadingMedia);
@@ -117,6 +131,10 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       '--media-current-time': () => $media.currentTime,
       '--media-duration': () => $media.duration,
       '--media-seekable-amount': () => $media.seekableAmount,
+    });
+
+    effect(() => {
+      media.element.set(host.$el());
     });
 
     onConnect(() => {

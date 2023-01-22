@@ -6,7 +6,7 @@ import { appendTriggerEvent, createEvent, listenEvent, useDisposalBin } from 'ma
 
 import type * as ME from '../../events';
 import type { MediaProviderElement } from '../../provider/types';
-import { MediaProviderContext } from '../../provider/use-media-provider';
+import { mediaProviderContext } from '../../provider/use-media-provider';
 import { MediaStore, softResetMediaStore } from '../../store';
 import type { MediaControllerElement } from './types';
 import type { MediaRequestManagerInit, MediaRequestQueueRecord } from './use-media-request-manager';
@@ -41,7 +41,7 @@ export function useMediaStateManager(
   $media: MediaStore,
   { requestQueue, $isLooping, $isReplay, $isSeekingRequest }: MediaRequestManagerInit,
 ): MediaStateManager {
-  const $mediaProvider = useContext(MediaProviderContext),
+  const $mediaProvider = useContext(mediaProviderContext),
     disposal = useDisposalBin(),
     trackedEvents = new Map<string, ME.MediaEvent>();
 

@@ -6,7 +6,7 @@ import { useFocusVisible } from '../../../foundation/observers/use-focus-visible
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
 import type { SliderProps } from './props';
-import { SliderStore, SliderStoreContext } from './store';
+import { SliderStore, sliderStoreContext } from './store';
 import type { SliderElement, SliderMembers } from './types';
 import { SliderEventCallbacks, useSliderEvents } from './use-events';
 import { getClampedValue } from './utils';
@@ -20,9 +20,9 @@ export function useSlider(
   { $props, readonly, aria, ...callbacks }: UseSliderProps,
   accessors: () => SliderProps,
 ): UseSlider {
-  provideContext(SliderStoreContext);
+  provideContext(sliderStoreContext);
 
-  const $store = useContext(SliderStoreContext),
+  const $store = useContext(sliderStoreContext),
     { $disabled, $min, $max, $value, $step } = $props;
 
   host.setAttributes({

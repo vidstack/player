@@ -2,9 +2,9 @@ import { createContext, effect, ReadSignal, signal, useContext } from 'maverick.
 
 import type { MediaProviderElement } from './types';
 
-export const MediaProviderContext = createContext(() => signal<MediaProviderElement | null>(null));
+export const mediaProviderContext = createContext(() => signal<MediaProviderElement | null>(null));
 
 export function useMediaProvider($target: ReadSignal<MediaProviderElement | null>): void {
-  const $mediaProvider = useContext(MediaProviderContext);
+  const $mediaProvider = useContext(mediaProviderContext);
   effect(() => void $mediaProvider.set($target()));
 }

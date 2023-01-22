@@ -1,12 +1,12 @@
 import { ReadSignal, signal } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
 
+import { useMediaStore } from '../../media/context';
 import {
   MediaControllerDelegate,
   useMediaControllerDelegate,
 } from '../../media/element/controller/controller-delegate';
 import { useMediaProvider } from '../../media/provider/use-media-provider';
-import { useMediaStore } from '../../media/store';
 import type { MediaSrc } from '../../media/types';
 import type { HTMLProviderElement, HTMLProviderMembers, HTMLProviderProps } from './types';
 import { useHTMLMediaElementAdapter } from './use-adapter';

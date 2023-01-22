@@ -7,7 +7,31 @@ description: How to read and update media state with our React hooks.
 
 In this section, we'll look at the React hooks available for reading and updating media state.
 
-## `useMediaState`
+## Setup
+
+The `<MediaProvider>` is required to enable using media hooks:
+
+```tsx
+import { Media, MediaProvider } from '@vidstack/react';
+
+export function MediaPlayer() {
+  return (
+    <MediaProvider>
+      <Media>
+        {/* provider goes here */}
+        <MediaPlayerUI />
+      </Media>
+    </MediaProvider>
+  );
+}
+
+function MediaPlayerUI() {
+  // Media hooks can be used here.
+  return <div className="media-controls">{/* ... */}</div>;
+}
+```
+
+## Reading
 
 The media state hook enables you to subscribe directly to specific media state changes, rather
 than listening to potentially multiple DOM events and binding it yourself.
@@ -34,38 +58,21 @@ function MediaPlayer() {
 Tracking media state via hook:
 {% /yes %}
 
-```tsx {% highlight="8-10" %}
+```tsx {% highlight="8" %}
 import { Media, useMediaState } from '@vidstack/react';
-import { useRef } from 'react';
 import { type MediaElement } from 'vidstack';
 
-function MediaPlayer() {
-  const media = useRef<MediaElement>(null);
-
-  // - This is a live subscription to the paused store.
+// This component is a child of `<MediaProvider>`
+function MediaPlayerUI() {
+  // - This is a live subscription to the media paused store.
   // - All stores are lazily subscribed to on prop access.
-  const { paused } = useMediaState(media);
-
-  return <Media ref={media}>{/* ... */}</Media>;
-}
-```
-
-```tsx
-function MediaPlayer() {
-  return (
-    <Media>
-      <MediaChild />
-    </Media>
-  );
-}
-
-function MediaChild() {
-  // No ref required if used inside `<Media>` child component.
   const { paused } = useMediaState();
+
+  // ...
 }
 ```
 
-Your IDE should provide helpful suggestions and docs on the context properties that are available. You
+Your IDE should provide helpful suggestions and docs on the media props that are available. You
 can also use the [`MediaState`](https://github.com/vidstack/vidstack/blob/main/packages/vidstack/src/player/media/state.ts)
 interface on GitHub as a reference.
 
@@ -74,43 +81,58 @@ interface on GitHub as a reference.
 Media state can be directly accessed on the `<Media>` component if you'd like to avoid unnecessary
 re-renders:
 
-```tsx {% highlight="9" %}
-import { Media } from '@vidstack/react';
+```tsx {% highlight="11" %}
+import { Media, useCustomElement } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
 import { type MediaElement } from 'vidstack';
 
 function MediaPlayer() {
-  const media = useRef<MediaElement>(null);
+  const mediaRef = useRef<MediaElement>(null),
+    media = useCustomElement(mediaRef);
 
   useEffect(() => {
-    const { paused } = media.current.state;
-  }, []);
+    if (!media) return;
+    const { paused } = media.state;
+  }, [media]);
 
-  return <Media ref={media}>{/* ... */}</Media>;
+  return <Media ref={mediaRef}>{/* ... */}</Media>;
 }
 ```
 
-## `useMediaRemote`
+Or, if inside a child of `<MediaProvider>`:
+
+```tsx {% highlight="8" %}
+import { useMediaElement } from '@vidstack/react';
+
+// This component is a child of `<MediaProvider>`
+function MediaPlayerUI() {
+  const media = useMediaElement();
+  useEffect(() => {
+    if (!media) return;
+    const { paused } = media.state;
+  }, [media]);
+}
+```
+
+## Updating
 
 The media remote hook provides a simple facade for dispatching
 [media request events](/docs/player/core-concepts/events#request-events). This can be used to
 request media playback to play/pause, change the current volume level, seek to a different time
 position, and other actions that change media state.
 
-```tsx {% highlight="6,10" %}
-import { useMediaRemote, useMediaState } from '@vidstack/react';
-import { useRef } from 'react';
+```tsx {% highlight="5,8" %}
+import { useMediaRemote } from '@vidstack/react';
 
-function MediaPlayer() {
-  const media = useRef<MediaElement>(null);
-  const remote = useMediaRemote(media);
-  const { paused } = useMediaState();
+// This component is a child of `<MediaProvider>`
+function MediaPlayerUI() {
+  const remote = useMediaRemote();
 
   function requestPlay() {
     remote.play();
   }
 
-  return <Media ref={media}>{/* ... */}</Media>;
+  // ...
 }
 ```
 
@@ -121,14 +143,13 @@ back to their origin event. This can be useful when trying to understand how a m
 triggered, or when analyzing data such as the time difference between the request and when the media
 was actually played.
 
-```tsx {% highlight="8,11-18" %}
+```tsx {% highlight="7,14,16" %}
 import { useMediaRemote } from '@vidstack/react';
 import { useRef, type PointerEvent } from 'react';
 
 function PlayButton() {
   const button = useRef<HTMLButtonElement>(null);
 
-  // ref is optional here inside a `<Media>` child component.
   const remote = useMediaRemote(button);
 
   function onPointerUp({ nativeEvent }: PointerEvent) {
@@ -150,7 +171,7 @@ function PlayButton() {
 }
 ```
 
-## `useMediaElement`
+## Media Element
 
 The following hook provides you with a reference to the nearest parent `MediaElement`. You can
 generally avoid using this hook unless you need direct access to some method or DOM API on the
@@ -158,10 +179,16 @@ media element.
 
 ```tsx
 import { useMediaElement } from '@vidstack/react';
+import { useEffect } from 'react';
 
-function MediaChild() {
+// This component is a child of `<MediaProvider>`
+function MediaPlayerUI() {
   const media = useMediaElement();
-  // ...
+
+  useEffect(() => {
+    if (!media) return;
+    // ...
+  }, [media]);
 }
 ```
 
@@ -173,10 +200,12 @@ Avoid calling methods directly on the media element:
 import { useMediaElement } from '@vidstack/react';
 import { useEffect } from 'react';
 
-function MediaChild() {
+// This component is a child of `<MediaProvider>`
+function MediaPlayerUI() {
   const media = useMediaElement();
 
   useEffect(() => {
+    if (!media) return;
     // BAD: try to avoid doing this as you will lose valuable information
     // provided by event chains. Prefer the request/response model by using
     // the `useMediaRemote` hook.

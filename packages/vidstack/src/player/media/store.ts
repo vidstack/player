@@ -1,4 +1,4 @@
-import { createContext, createStore, useContext } from 'maverick.js';
+import { createStore } from 'maverick.js';
 
 import type { MediaState } from './state';
 import { createTimeRanges } from './time-ranges';
@@ -49,16 +49,6 @@ export const mediaStore = createStore<MediaStore>({
   attemptingAutoplay: false,
   canLoadPoster: false,
 });
-
-export const MediaStoreContext = createContext<MediaStore>(() => mediaStore.create());
-
-export function useMediaStore(): Readonly<MediaStore> {
-  return useContext(MediaStoreContext);
-}
-
-export function useInternalMediaStore() {
-  return useContext(MediaStoreContext);
-}
 
 const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'autoplay',

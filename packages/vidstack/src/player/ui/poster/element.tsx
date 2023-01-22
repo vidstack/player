@@ -2,8 +2,8 @@ import { effect, signal } from 'maverick.js';
 import { defineCustomElement, onConnect } from 'maverick.js/element';
 
 import { preconnect } from '../../../utils/network';
+import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
-import { useMediaStore } from '../../media/store';
 import { posterProps } from './props';
 import type { PosterElement } from './types';
 

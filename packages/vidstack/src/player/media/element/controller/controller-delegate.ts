@@ -7,7 +7,7 @@ import type { MediaStore } from '../../store';
 import type { MediaSrc } from '../../types';
 import type { MediaControllerElement } from './types';
 
-export const MediaControllerDelegateContext = createContext<MediaControllerDelegate>();
+export const mediaControllerDelegateContext = createContext<MediaControllerDelegate>();
 
 export interface MediaControllerDelegate {
   attemptAutoplay(): Promise<void>;
@@ -22,7 +22,7 @@ export interface MediaControllerDelegate {
 }
 
 export function useMediaControllerDelegate(): MediaControllerDelegate {
-  return useContext(MediaControllerDelegateContext);
+  return useContext(mediaControllerDelegateContext);
 }
 
 export function createMediaControllerDelegate(

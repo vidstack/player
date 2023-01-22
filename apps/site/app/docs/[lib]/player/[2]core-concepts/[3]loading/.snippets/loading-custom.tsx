@@ -1,18 +1,19 @@
-import { Media, useMediaRemote } from '@vidstack/react';
+import { Media, useCustomElement } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
 import type { MediaElement } from 'vidstack';
 
 function MediaPlayer() {
-  const media = useRef<MediaElement>(null);
-  const remote = useMediaRemote(media);
+  const mediaRef = useRef<MediaElement>(null),
+    media = useCustomElement(mediaRef);
 
   useEffect(() => {
-    // Call whenever you like.
-    remote.startLoading();
-  }, []);
+    if (!media) return;
+    // Call whenever you like - also available on `useMediaRemote`.
+    media.startLoadingMedia();
+  }, [media]);
 
   return (
-    <Media load="custom" ref={media}>
+    <Media load="custom" ref={mediaRef}>
       {/* ... */}
     </Media>
   );

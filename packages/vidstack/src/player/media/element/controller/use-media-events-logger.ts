@@ -2,9 +2,9 @@ import { effect, ReadSignal } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
 import { useLogger } from '../../../../foundation/logger/use-logger';
+import { useMediaStore } from '../../context';
 import type { MediaElement } from '../../element/types';
 import type { MediaEvents } from '../../events';
-import { useMediaStore } from '../../store';
 
 const mediaEvents: (keyof MediaEvents)[] | undefined = __DEV__
   ? [

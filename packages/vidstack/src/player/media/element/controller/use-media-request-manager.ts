@@ -10,7 +10,7 @@ import {
 import type { Queue } from '../../../../foundation/queue/queue';
 import { coerceToError } from '../../../../utils/error';
 import type * as RE from '../../request-events';
-import { useInternalMediaStore } from '../../store';
+import type { MediaStore } from '../../store';
 import { useMediaUser, UseMediaUser } from '../../user';
 import type { MediaAdapter, MediaControllerElement, MediaControllerProps } from './types';
 import type { MediaStateManager } from './use-media-state-manager';
@@ -22,13 +22,13 @@ import type { MediaStateManager } from './use-media-state-manager';
  */
 export function useMediaRequestManager(
   $target: ReadSignal<MediaControllerElement | null>,
-  $props: Signals<MediaControllerProps>,
+  $media: MediaStore,
   stateManager: MediaStateManager,
+  $props: Signals<MediaControllerProps>,
   { requestQueue, $isLooping, $isReplay, $isSeekingRequest }: MediaRequestManagerInit,
 ): MediaRequestManager {
   const user = useMediaUser($target),
     logger = __DEV__ ? useLogger($target) : undefined,
-    $media = useInternalMediaStore(),
     orientation = useScreenOrientation($target),
     fullscreen = useFullscreen($target);
 

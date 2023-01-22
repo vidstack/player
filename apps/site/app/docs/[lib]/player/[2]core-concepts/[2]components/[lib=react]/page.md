@@ -26,22 +26,27 @@ React component.
 ## Element References
 
 All components forward the underlying custom element reference, so you can use the familiar
-`useRef` hook to get a hold of it. This is _generally_ only required when calling a method.
+`useRef` hook to get a hold of it.
+
+The ref can be passed into the `useCustomElement` hook to ensure that the underlying
+component instance has been attached so props/methods on it can be safely accessed.
 
 ```tsx
-import { Media, Video } from '@vidstack/react';
+import { Media, useCustomElement, Video } from '@vidstack/react';
 import { useEffect, useRef } from 'React';
 import { type MediaElement } from 'vidstack';
 
-function MyPlayer() {
-  const media = useRef<MediaElement>(null);
+function MediaPlayer() {
+  const mediaRef = useRef<MediaElement>(null),
+    media = useCustomElement(mediaRef);
 
   useEffect(() => {
-    media.current!.startLoadingMedia();
-  }, []);
+    if (!media) return;
+    media.startLoadingMedia();
+  }, [media]);
 
   return (
-    <Media load="custom" ref={media}>
+    <Media load="custom" ref={mediaRef}>
       <Video>
         <video src="..." />
       </Video>
@@ -60,7 +65,7 @@ any issues.
 import { HLSVideo, Media } from '@vidstack/react';
 import { useState } from 'react';
 
-function MyPlayer() {
+function MediaPlayer() {
   const [paused, setPaused] = useState(true);
   return (
     <Media paused={paused}>
@@ -81,7 +86,7 @@ PascalCase:
 import { Media, Video } from '@vidstack/react';
 import { type MediaPlayingEvent } from 'vidstack';
 
-function MyPlayer() {
+function MediaPlayer() {
   function onPlaying(event: MediaPlayingEvent) {
     // ...
   }
