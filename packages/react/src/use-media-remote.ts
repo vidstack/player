@@ -1,6 +1,7 @@
-import { useReactContext } from 'maverick.js/react';
+import { scoped } from 'maverick.js';
+import { useReactContext, useReactScope } from 'maverick.js/react';
 import { isUndefined } from 'maverick.js/std';
-import { RefObject, useEffect, useRef } from 'react';
+import { RefObject, useEffect, useMemo } from 'react';
 import { mediaContext, MediaRemoteControl } from 'vidstack';
 
 /**
@@ -15,7 +16,7 @@ import { mediaContext, MediaRemoteControl } from 'vidstack';
 export function useMediaRemote(
   target?: EventTarget | null | RefObject<EventTarget | null>,
 ): MediaRemoteControl {
-  const remote = useRef(new MediaRemoteControl()),
+  const scope = useReactScope(),
     context = useReactContext(mediaContext);
 
   if (__DEV__ && isUndefined(target) && !context) {
@@ -25,15 +26,17 @@ export function useMediaRemote(
     );
   }
 
+  const remote = useMemo(() => scoped(() => new MediaRemoteControl(), scope!.current)!, []);
+
   useEffect(() => {
     if (!isUndefined(target)) {
-      remote.current.setTarget(target && 'current' in target ? target.current : target);
+      remote.setTarget(target && 'current' in target ? target.current : target);
     } else if (context) {
-      remote.current.setTarget(context.$element());
+      remote.setTarget(context.$element());
     }
 
-    return () => remote.current.setTarget(null);
+    return () => remote.setTarget(null);
   }, [target]);
 
-  return remote.current;
+  return remote;
 }

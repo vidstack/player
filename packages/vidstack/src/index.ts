@@ -22,7 +22,7 @@ export * from './player/media/element/types';
 export * from './player/media/events';
 export * from './player/media/events';
 export * from './player/media/provider/types';
-export * from './player/media/remote-control';
+export { MediaRemoteControl } from './player/media/remote-control';
 export * from './player/media/request-events';
 export * from './player/media/state';
 export * from './player/media/store';
