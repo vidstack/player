@@ -45,9 +45,9 @@ Or, you can dynamically import it like so:
 
 The provider will fire the following events while loading `hls.js`:
 
-- `$event:hls-lib-load-start`: Fired when we begin downloading the library.
-- `$event:hls-lib-loaded`: Fired when the library has been loaded.
-- `$event:hls-lib-load-error`: Fired when the library _fails_ to download.
+- `$event:lib-load-start`: Fired when we begin downloading the library.
+- `$event:lib-loaded`: Fired when the library has been loaded.
+- `$event:lib-load-error`: Fired when the library _fails_ to download.
 
 These events are fired regardless of how you decide to load the library (i.e., import or CDN).
 
@@ -59,13 +59,9 @@ You can configure `hls.js` using the `config` property like so:
 
 ## HLS Engine
 
-If you need access to the `hls.js` instance, you can access it off the `hls.engine` property
-on the `$tag:vds-hls-video` component:
-
-{% code_snippet name="hls-engine" copy=true /%}
-
-Listen to the `$event:hls-instance` event to be notified of when it's created (called before media
-is attached), and the `$event:hls-destroying` event for when it will be destroyed.
+If you need access to the `hls.js` instance, you can listen to the `$event:instance` event to
+be notified of when it's created (called before media is attached), and the `$event:destroying`
+event for when it will be destroyed.
 
 {% code_snippet name="hls-engine-events" copy=true /%}
 
@@ -74,8 +70,18 @@ is attached), and the `$event:hls-destroying` event for when it will be destroye
 All [`hls.js` events](https://github.com/video-dev/hls.js/blob/master/docs/API.md#runtime-events)
 can be listened to directly off the `$tag:vds-hls-video` component. Some examples include:
 
-- `Hls.Events.MEDIA_ATTACHED` -> `$event:hls-media-attached`
-- `Hls.Events.MANIFEST_LOADED` -> `$event:hls-manifest-loaded`
-- `Hls.Events.LEVEL_SWITCHING` -> `$event:hls-level-switching`
+- `Hls.Events.MEDIA_ATTACHED` -> `$event:media-attached`
+- `Hls.Events.MANIFEST_LOADED` -> `$event:manifest-loaded`
+- `Hls.Events.LEVEL_SWITCHING` -> `$event:level-switching`
 
 {% code_snippet name="hls-events" copy=true /%}
+
+All HLS event types are prefixed with `HLS` and end with `Event` like so:
+
+```ts
+import {
+  type HLSLevelSwitchingEvent,
+  type HLSManifestLoadedEvent,
+  type HLSMediaAttachedEvent,
+} from 'vidstack';
+```

@@ -8,7 +8,7 @@ function MediaPlayer() {
 
   return (
     <Media>
-      <HLSVideo onHlsManifestLoaded={onManifestLoaded}>{/* ... */}</HLSVideo>
+      <HLSVideo onManifestLoaded={onManifestLoaded}>{/* ... */}</HLSVideo>
     </Media>
   );
 }

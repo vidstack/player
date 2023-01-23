@@ -13,7 +13,7 @@ function MediaPlayer() {
 
   return (
     <Media>
-      <HLSVideo onHlsInstance={onInstance} onHlsDestroying={onDestroy}>
+      <HLSVideo onInstance={onInstance} onDestroying={onDestroy}>
         {/* ... */}
       </HLSVideo>
     </Media>

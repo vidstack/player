@@ -21,5 +21,5 @@ export interface MediaProviderMembers extends MediaProviderProps {
    * The media adapter provides a consistent interface with retrieving and updating media state
    * on a media provider. The adapter is used by the media controller to update media state.
    */
-  adapter: MediaAdapter;
+  readonly adapter: MediaAdapter;
 }

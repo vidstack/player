@@ -1,10 +1,10 @@
 const provider = document.querySelector('vds-hls-video');
 
-provider.addEventListener('hls-instance', (event) => {
+provider.addEventListener('instance', (event) => {
   const hlsjs = event.detail;
   // ...
 });
 
-provider.addEventListener('hls-destroying', (event) => {
+provider.addEventListener('destroying', (event) => {
   // ...
 });

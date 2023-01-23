@@ -26,10 +26,11 @@ export function useHLSEngine(
   const $ctor = signal<HLSConstructor | null>(null),
     $engine = signal<HLS.default | null>(null),
     $attached = useHLSAttach($ctor, host.$el, $engine, $isHLSSource, $media, onLevelLoaded),
-    events = useHLSEvents(host, $engine),
     logger = __DEV__ ? useLogger(host.$el) : undefined;
 
-  // Load `libr$library`
+  useHLSEvents(host, $ctor, $engine);
+
+  // Load HLS library
   effect(() => {
     if (!$canLoadLib()) return;
     const lib = $library();
@@ -47,9 +48,9 @@ export function useHLSEngine(
     if (!ctor || !video || !$canLoadLib()) return;
 
     const engine = new ctor($config());
+    engine.on(ctor.Events.ERROR, onError);
     $engine.set(engine);
-    attachHLSEventListeners(ctor, engine);
-    dispatchEvent(host.el, 'hls-instance', { detail: engine });
+    dispatchEvent(host.el, 'instance', { detail: engine });
 
     return () => {
       engine.destroy();
@@ -57,13 +58,6 @@ export function useHLSEngine(
       if (__DEV__) logger?.info('🏗️ Destroyed HLS engine');
     };
   });
-
-  function attachHLSEventListeners(ctor: HLSConstructor, engine: HLS.default): void {
-    engine.on(ctor.Events.ERROR, onError);
-    for (const { type, listener, options } of events.listeners) {
-      engine[options?.once ? 'once' : 'on'](type, listener, options?.context);
-    }
-  }
 
   function onLevelLoaded(eventType: string, data: HLS.LevelLoadedData): void {
     if ($media.canPlay) return;
@@ -115,5 +109,10 @@ export function useHLSEngine(
     }
   }
 
-  return { $ctor, $engine, $attached, $isHLSSource };
+  return {
+    $ctor,
+    $engine,
+    $attached,
+    $isHLSSource,
+  };
 }

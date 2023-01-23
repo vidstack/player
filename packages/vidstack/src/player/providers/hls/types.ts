@@ -1,4 +1,5 @@
 import type * as HLS from 'hls.js';
+import type { WriteSignal } from 'maverick.js';
 import type { HTMLCustomElement } from 'maverick.js/element';
 
 import type {
@@ -30,6 +31,10 @@ export interface HLSProviderProps extends VideoProviderProps {
 }
 
 export interface HLSProviderMembers extends VideoProviderMembers {
+  /* @internal */
+  $$_add_listeners?: WriteSignal<[type: string, once?: boolean][]>;
+  /* @internal */
+  $$_remove_listeners?: WriteSignal<string[]>;
   /**
    * Contains the HLS constructor, engine (i.e., `hls.js` instance), and additional information
    * on whether HLS is supported in this environment or the current engine is attached to the

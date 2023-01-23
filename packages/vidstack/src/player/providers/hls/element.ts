@@ -33,6 +33,22 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
       initial: `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls.light${__DEV__ ? '.js' : '.min.js'}`,
     },
   },
+  construct(this: HLSVideoElement) {
+    this.$$_add_listeners = signal<[type: string, once?: boolean][]>([]);
+    this.$$_remove_listeners = signal<string[]>([]);
+
+    const addEventListener = this.addEventListener;
+    this.addEventListener = function (this: HLSVideoElement, eventType, handler, options) {
+      this.$$_add_listeners!.set((l) => [...l, [eventType, options?.once]]);
+      return addEventListener.call(this, eventType, handler, options);
+    };
+
+    const removeEventListener = this.removeEventListener;
+    this.removeEventListener = function (this: HLSVideoElement, eventType, handler, options) {
+      this.$$_remove_listeners!.set((l) => [...l, eventType]);
+      return removeEventListener.call(this, eventType, handler, options);
+    };
+  },
   setup({ host, props, accessors }) {
     const $media = useMediaStore(),
       $canLoadLib = signal(false),
