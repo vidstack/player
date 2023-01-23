@@ -173,9 +173,8 @@ function PlayButton() {
 
 ## Media Element
 
-The following hook provides you with a reference to the nearest parent `MediaElement`. You can
-generally avoid using this hook unless you need direct access to some method or DOM API on the
-media element.
+The following hook provides you with a reference to the nearest parent `MediaElement` (i.e.,
+`<vds-media>`).
 
 ```tsx
 import { useMediaElement } from '@vidstack/react';
@@ -211,5 +210,29 @@ function MediaPlayerUI() {
     // the `useMediaRemote` hook.
     media.play();
   }, [media]);
+}
+```
+
+## Media Provider
+
+The following hook provides you with a reference to the nearest parent `MediaProviderElement` (e.g.,
+`<vds-video>` or `<vds-hls-video>`).
+
+```tsx
+import { useMediaProviderElement } from '@vidstack/react';
+import { useEffect } from 'react';
+import { isHLSVideoElement } from 'vidstack';
+
+// This component is a child of `<MediaProvider>`
+function MediaPlayerUI() {
+  const provider = useMediaProviderElement();
+
+  useEffect(() => {
+    if (isHLSVideoElement(provider)) {
+      provider.hls.onInit((hls) => {
+        //
+      });
+    }
+  }, [provider]);
 }
 ```

@@ -36,6 +36,7 @@ export * from './player/providers/video/presentation/events';
 export * from './player/providers/video/types';
 export * from './player/providers/hls/events';
 export * from './player/providers/hls/types';
+export * from './player/providers/type-check';
 
 // Player UI
 export * from './player/ui/aspect-ratio/types';

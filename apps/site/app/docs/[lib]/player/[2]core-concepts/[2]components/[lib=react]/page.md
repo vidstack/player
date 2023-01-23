@@ -111,3 +111,25 @@ import { type MediaElement, type VideoElement } from 'vidstack';
 
 let media: MediaElement;
 ```
+
+## Provider Types
+
+The following utilities can be useful for narrowing the type of a media provider element:
+
+```ts {% copy=true %}
+import {
+  isAudioElement,
+  isHLSVideoElement,
+  isVideoElement,
+  type AudioElement,
+  type HLSVideoElement,
+  type MediaProviderElement,
+  type VideoElement,
+} from 'vidstack';
+
+let provider: MediaProviderElement;
+
+if (isHLSVideoElement(provider)) {
+  provider; // type `HLSVideoElement`
+}
+```

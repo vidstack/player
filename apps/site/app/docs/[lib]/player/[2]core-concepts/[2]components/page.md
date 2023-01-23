@@ -145,11 +145,13 @@ and directly call properties/methods like so:
 ```ts
 const media = document.querySelector('vds-media');
 
-// Set a instance property:
-media.muted = true;
+media.onAttach(() => {
+  // Set a instance property:
+  media.muted = true;
 
-// Call a instance method:
-media.play();
+  // Call a instance method:
+  media.play();
+});
 ```
 
 ## Element Types
@@ -161,4 +163,27 @@ All element types are classes named using _PascalCase_ and _suffixed_ with the w
 import { type MediaElement, type VideoElement } from 'vidstack';
 
 let media: MediaElement;
+```
+
+## Provider Types
+
+The following utilities can be useful for narrowing the type of a media provider element:
+
+```ts {% copy=true %}
+import {
+  isAudioElement,
+  isHLSVideoElement,
+  isVideoElement,
+  type AudioElement,
+  type HLSVideoElement,
+  type MediaElement,
+  type MediaProviderElement,
+  type VideoElement,
+} from 'vidstack';
+
+let media: MediaElement;
+
+if (isHLSVideoElement(media.provider)) {
+  media.provider; // type `HLSVideoElement`
+}
 ```
