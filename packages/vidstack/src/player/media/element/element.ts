@@ -97,24 +97,19 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     const delegate = createMediaControllerDelegate(host.$el, $media, stateManager.handleMediaEvent);
     provideContext(mediaControllerDelegateContext, delegate);
 
+    // init
+    for (const prop of Object.keys(props)) {
+      const propName = prop.slice(1);
+      if (propName in $media) $media[propName] = props[prop]();
+    }
+
+    $media.muted = props.$muted() || props.$volume() === 0;
+
     useMediaPropChange(host.$el, $media, props);
     useMediaCanLoad(host.$el, props.$load, startLoadingMedia);
     useMediaAdapterDelegate(() => peek(context.$provider)?.adapter, $media, requestManager, props);
 
     if (__DEV__) useMediaEventsLogger(host.$el);
-
-    if (__SERVER__) {
-      $media.autoplay = props.$autoplay();
-      $media.poster = props.$poster();
-      $media.loop = props.$loop();
-      $media.controls = props.$controls();
-      $media.view = props.$view();
-      $media.paused = props.$paused();
-      $media.volume = props.$volume();
-      $media.muted = props.$muted();
-      $media.currentTime = props.$currentTime();
-      $media.playsinline = props.$playsinline();
-    }
 
     const $attrs: AttributesRecord = {
       'ios-controls': () =>

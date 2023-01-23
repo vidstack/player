@@ -33,10 +33,15 @@ export function useHTMLMediaElementConnect(
 
   function onMediaElementConnect(media: HTMLMediaElement) {
     // Update or remove any attributes that we manage.
+    media.muted = $media.muted;
+    media.volume = $media.volume;
     if (media.hasAttribute('loop')) $media.loop = true;
+
+    setAttribute(media, 'controls', $media.controls);
+    setAttribute(media, 'playsinline', $media.playsinline);
+
     media.removeAttribute('loop');
     media.removeAttribute('poster');
-    setAttribute(media, 'controls', $media.controls);
 
     effect(() => {
       setAttribute(
