@@ -129,7 +129,7 @@ async function importHLS(
 }
 
 /**
- * Loads `hls.js` from the remote source given via `hlsLibrary` into the window namespace. This
+ * Loads `hls.js` from the remote source given via `library` into the window namespace. This
  * is because `hls.js` in {currentYear} still doesn't provide a ESM export. This method will
  * return `undefined` if it fails to load the script. Listen to `hls-lib-load-error` to be
  * notified of any failures.

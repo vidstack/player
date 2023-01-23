@@ -29,7 +29,7 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
     hlsConfig: {
       initial: {},
     },
-    hlsLibrary: {
+    library: {
       initial: `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls.light${__DEV__ ? '.js' : '.min.js'}`,
     },
   },
@@ -38,7 +38,7 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
       $canLoadLib = signal(false),
       logger = __DEV__ ? useLogger(host.$el) : undefined;
 
-    useHLSPreconnect(props.$hlsLibrary, logger);
+    useHLSPreconnect(props.$library, logger);
 
     const { delegate, members } = useVideoElement(host.$el, {
       onAbort,
@@ -128,13 +128,6 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
         get attached() {
           return $attached();
         },
-      },
-      // see https://github.com/vidstack/player/issues/583
-      set 'hls-config'(config) {
-        accessors().hlsConfig = config;
-      },
-      set 'hls-library'(lib) {
-        accessors().hlsLibrary = lib;
       },
     });
   },

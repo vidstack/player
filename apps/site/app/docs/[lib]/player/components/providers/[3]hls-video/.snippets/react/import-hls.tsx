@@ -4,7 +4,7 @@ import HLS from 'hls.js';
 function MediaPlayer() {
   return (
     <Media>
-      <HLSVideo hlsLibrary={HLS}>{/* ... */}</HLSVideo>
+      <HLSVideo library={HLS}>{/* ... */}</HLSVideo>
     </Media>
   );
 }

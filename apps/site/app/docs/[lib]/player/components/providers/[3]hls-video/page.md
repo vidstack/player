@@ -27,12 +27,12 @@ the default bundle in development, and the minified version in production.
 
 {% code_snippet name="loading-hls" copy=true /%}
 
-You can point `hls-library` at any URL that re-exports `hls.js@^1.0`. This means you can use your
+You can point `library` at any URL that re-exports `hls.js@^1.0`. This means you can use your
 own server or CDN if desired.
 
 ### Importing `hls.js`
 
-You can also load `hls.js` by statically, or dynamically importing it and setting the `hlsLibrary`
+You can also load `hls.js` by statically, or dynamically importing it and setting the `library`
 property like so:
 
 {% code_snippet name="import-hls" copy=true  /%}

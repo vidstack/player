@@ -7,17 +7,17 @@ import { preconnect } from '../../../utils/network';
 import { isHLSConstructorCached } from './loader';
 import type { HLSLibrary } from './types';
 
-export function useHLSPreconnect($hlsLibrary: ReadSignal<HLSLibrary>, logger?: Logger) {
+export function useHLSPreconnect($library: ReadSignal<HLSLibrary>, logger?: Logger) {
   onConnect(() => {
     effect(() => {
-      const hlsLibrary = $hlsLibrary();
+      const lib = $library();
 
-      if (isString(hlsLibrary) && !isHLSConstructorCached(hlsLibrary)) {
+      if (isString(lib) && !isHLSConstructorCached(lib)) {
         if (__DEV__) {
-          logger?.infoGroup('Pre-connecting `hls.js`').labelledLog('URL', hlsLibrary).dispatch();
+          logger?.infoGroup('Pre-connecting `hls.js`').labelledLog('URL', lib).dispatch();
         }
 
-        preconnect(hlsLibrary);
+        preconnect(lib);
       }
     });
   });

@@ -18,7 +18,7 @@ export function useHLSEngine(
   $media: MediaStore,
   $canLoadLib: ReadSignal<boolean>,
   delegate: MediaControllerDelegate,
-  { $hlsLibrary, $hlsConfig }: Signals<HLSProviderProps>,
+  { $library, $hlsConfig }: Signals<HLSProviderProps>,
 ) {
   const $isHLSSource = () =>
     HLS_VIDEO_TYPES.has($media.source.type!) || HLS_VIDEO_EXTENSIONS.test($media.source.src);
@@ -29,12 +29,12 @@ export function useHLSEngine(
     events = useHLSEvents(host, $engine),
     logger = __DEV__ ? useLogger(host.$el) : undefined;
 
-  // Load `hlsLibrary`
+  // Load `libr$library`
   effect(() => {
     if (!$canLoadLib()) return;
-    const lib = $hlsLibrary();
+    const lib = $library();
     loadHLSLibrary(host.el!, lib, delegate, logger).then((ctor) => {
-      if ($hlsLibrary() !== lib) return;
+      if ($library() !== lib) return;
       $ctor.set(() => ctor);
     });
   });

@@ -26,7 +26,7 @@ export interface HLSProviderProps extends VideoProviderProps {
    *
    * @defaultValue `https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.js`
    */
-  hlsLibrary: HLSLibrary;
+  library: HLSLibrary;
 }
 
 export interface HLSProviderMembers extends VideoProviderMembers {
@@ -58,10 +58,6 @@ export interface HLSProviderMembers extends VideoProviderMembers {
      */
     readonly attached: boolean;
   };
-
-  // see https://github.com/vidstack/player/issues/583
-  'hls-config': HLS.HlsConfig;
-  'hls-library': HLSLibrary;
 }
 
 export interface HLSProviderCSSVars extends VideoProviderCSSVars {}
