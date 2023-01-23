@@ -18,7 +18,7 @@
     "vscode.html-data.json"
   ],
   "scripts": {
-    "dev": "pnpm clean && tsup --watch & pnpm run analyze -w",
+    "dev": "pnpm clean && tsup --watch & pnpm run types -w",
     "analyze": "maverick analyze \"src/**/element.{ts,tsx}\"",
     "build": "tsup",
     "types": "tsc -p tsconfig.build.json",
