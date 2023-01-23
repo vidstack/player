@@ -18,7 +18,7 @@ export function useHLSEngine(
   $media: MediaStore,
   $canLoadLib: ReadSignal<boolean>,
   delegate: MediaControllerDelegate,
-  { $library, $hlsConfig }: Signals<HLSProviderProps>,
+  { $library, $config }: Signals<HLSProviderProps>,
 ) {
   const $isHLSSource = () =>
     HLS_VIDEO_TYPES.has($media.source.type!) || HLS_VIDEO_EXTENSIONS.test($media.source.src);
@@ -46,7 +46,7 @@ export function useHLSEngine(
 
     if (!ctor || !video || !$canLoadLib()) return;
 
-    const engine = new ctor($hlsConfig());
+    const engine = new ctor($config());
     $engine.set(engine);
     attachHLSEventListeners(ctor, engine);
     dispatchEvent(host.el, 'hls-instance', { detail: engine });

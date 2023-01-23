@@ -20,7 +20,7 @@ export interface HLSProviderProps extends VideoProviderProps {
    *
    * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning}
    */
-  hlsConfig: Partial<HLS.HlsConfig>;
+  config: Partial<HLS.HlsConfig>;
   /**
    * The `hls.js` constructor (supports dynamic imports) or a URL of where it can be found.
    *

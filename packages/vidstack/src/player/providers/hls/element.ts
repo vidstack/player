@@ -26,7 +26,7 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
   tagName: 'vds-hls-video',
   props: {
     ...htmlProviderProps,
-    hlsConfig: {
+    config: {
       initial: {},
     },
     library: {

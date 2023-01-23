@@ -69,7 +69,7 @@ function MediaPlayer() {
   const [paused, setPaused] = useState(true);
   return (
     <Media paused={paused}>
-      <HLSVideo library={() => import('hls.js')} hlsConfig={{ lowLatencyMode: true }}>
+      <HLSVideo library={() => import('hls.js')} config={{ lowLatencyMode: true }}>
         <video src="..." />
       </HLSVideo>
     </Media>

@@ -53,7 +53,7 @@ These events are fired regardless of how you decide to load the library (i.e., i
 
 ## Configuring `hls.js`
 
-You can configure `hls.js` using the `hlsConfig` property like so:
+You can configure `hls.js` using the `config` property like so:
 
 {% code_snippet name="configure-hls" copy=true /%}
 
