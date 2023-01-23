@@ -29,7 +29,7 @@ export function useMediaRemote(
     if (!isUndefined(target)) {
       remote.current.setTarget(target && 'current' in target ? target.current : target);
     } else if (context) {
-      remote.current.setTarget(context.element());
+      remote.current.setTarget(context.$element());
     }
 
     return () => remote.current.setTarget(null);

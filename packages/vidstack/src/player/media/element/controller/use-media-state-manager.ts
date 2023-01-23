@@ -4,9 +4,9 @@ import { effect, ReadSignal, useContext } from 'maverick.js';
 import { onAttach } from 'maverick.js/element';
 import { appendTriggerEvent, createEvent, listenEvent, useDisposalBin } from 'maverick.js/std';
 
+import type { MediaContext } from '../../context';
 import type * as ME from '../../events';
 import type { MediaProviderElement } from '../../provider/types';
-import { mediaProviderContext } from '../../provider/use-media-provider';
 import { MediaStore, softResetMediaStore } from '../../store';
 import type { MediaControllerElement } from './types';
 import type { MediaRequestManagerInit, MediaRequestQueueRecord } from './use-media-request-manager';
@@ -38,10 +38,11 @@ const trackedEventType = new Set<keyof ME.MediaEvents>([
  */
 export function useMediaStateManager(
   $target: ReadSignal<MediaControllerElement | null>,
-  $media: MediaStore,
+  media: MediaContext,
   { requestQueue, $isLooping, $isReplay, $isSeekingRequest }: MediaRequestManagerInit,
 ): MediaStateManager {
-  const $mediaProvider = useContext(mediaProviderContext),
+  const $media = media.$store,
+    $mediaProvider = media.$provider,
     disposal = useDisposalBin(),
     trackedEvents = new Map<string, ME.MediaEvent>();
 
@@ -388,12 +389,10 @@ export function useMediaStateManager(
   }
 
   return {
-    $mediaProvider,
     handleMediaEvent,
   };
 }
 
 export interface MediaStateManager {
-  $mediaProvider: ReadSignal<MediaProviderElement | null>;
   handleMediaEvent(event: Event): void;
 }

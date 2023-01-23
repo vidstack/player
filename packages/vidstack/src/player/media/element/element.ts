@@ -13,7 +13,6 @@ import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
 import { Queue } from '../../../foundation/queue/queue';
 import { IS_IOS } from '../../../utils/support';
 import { mediaContext, useMedia } from '../context';
-import { mediaProviderContext } from '../provider/use-media-provider';
 import type { MediaState } from '../state';
 import type { MediaStore } from '../store';
 import { useMediaAdapterDelegate } from './controller/adapter-delegate';
@@ -71,8 +70,6 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
   setup({ host, props, accessors }) {
     if (!hasProvidedContext(mediaContext)) provideContext(mediaContext);
 
-    provideContext(mediaProviderContext);
-
     const logPrinter = __DEV__ ? useLogPrinter(host.$el) : undefined;
     if (__DEV__) {
       effect(() => {
@@ -80,18 +77,18 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       });
     }
 
-    const media = useMedia(),
-      $media = media.store,
+    const context = useMedia(),
+      $media = context.$store,
       requestManagerInit: MediaRequestManagerInit = {
         requestQueue: new Queue(),
         $isLooping: signal(false),
         $isReplay: signal(false),
         $isSeekingRequest: signal(false),
       },
-      stateManager = useMediaStateManager(host.$el, $media, requestManagerInit),
+      stateManager = useMediaStateManager(host.$el, context, requestManagerInit),
       requestManager = useMediaRequestManager(
         host.$el,
-        $media,
+        context,
         stateManager,
         props,
         requestManagerInit,
@@ -102,13 +99,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
 
     useMediaPropChange(host.$el, $media, props);
     useMediaCanLoad(host.$el, props.$load, startLoadingMedia);
-
-    useMediaAdapterDelegate(
-      () => peek(stateManager.$mediaProvider)?.adapter,
-      $media,
-      requestManager,
-      props,
-    );
+    useMediaAdapterDelegate(() => peek(context.$provider)?.adapter, $media, requestManager, props);
 
     if (__DEV__) useMediaEventsLogger(host.$el);
 
@@ -147,7 +138,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     });
 
     effect(() => {
-      media.element.set(host.$el());
+      context.$element.set(host.$el());
     });
 
     onConnect(() => {
@@ -185,7 +176,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
           return requestManager.orientation;
         },
         get provider() {
-          return stateManager.$mediaProvider();
+          return context.$provider();
         },
         get $store() {
           return $media;

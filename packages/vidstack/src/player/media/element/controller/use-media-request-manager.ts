@@ -9,8 +9,8 @@ import {
 } from '../../../../foundation/orientation/use-screen-orientation';
 import type { Queue } from '../../../../foundation/queue/queue';
 import { coerceToError } from '../../../../utils/error';
+import type { MediaContext } from '../../context';
 import type * as RE from '../../request-events';
-import type { MediaStore } from '../../store';
 import { useMediaUser, UseMediaUser } from '../../user';
 import type { MediaAdapter, MediaControllerElement, MediaControllerProps } from './types';
 import type { MediaStateManager } from './use-media-state-manager';
@@ -22,19 +22,21 @@ import type { MediaStateManager } from './use-media-state-manager';
  */
 export function useMediaRequestManager(
   $target: ReadSignal<MediaControllerElement | null>,
-  $media: MediaStore,
+  media: MediaContext,
   stateManager: MediaStateManager,
   $props: Signals<MediaControllerProps>,
   { requestQueue, $isLooping, $isReplay, $isSeekingRequest }: MediaRequestManagerInit,
 ): MediaRequestManager {
-  const user = useMediaUser($target),
+  const $media = media.$store,
+    $mediaProvider = media.$provider,
+    user = useMediaUser($target),
     logger = __DEV__ ? useLogger($target) : undefined,
     orientation = useScreenOrientation($target),
     fullscreen = useFullscreen($target);
 
   let adapter: MediaAdapter | null = null;
   effect(() => {
-    adapter = stateManager.$mediaProvider()?.adapter || null;
+    adapter = $mediaProvider()?.adapter || null;
   });
 
   effect(() => {
@@ -43,7 +45,7 @@ export function useMediaRequestManager(
 
   effect(() => {
     const supported =
-      fullscreen.supported || stateManager.$mediaProvider()?.adapter.fullscreen?.supported || false;
+      fullscreen.supported || $mediaProvider()?.adapter.fullscreen?.supported || false;
     if ($media.canLoad && peek(() => $media.canFullscreen) === supported) return;
     $media.canFullscreen = supported;
   });

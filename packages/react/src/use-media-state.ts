@@ -24,7 +24,7 @@ export function useMediaState(): Readonly<MediaState> {
   return useMemo(() => {
     const observing = new Set<keyof MediaState>(),
       $props = signal<(keyof MediaState)[]>([]),
-      $store = context!.store;
+      $store = context!.$store;
 
     stopEffect.current = effect(() => {
       const props = $props();

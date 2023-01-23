@@ -17,7 +17,7 @@ export function useMediaElement(): MediaElement | null {
 
   useEffect(() => {
     if (!context) return;
-    const media = context.element()!;
+    const media = context.$element()!;
     media.onAttach(() => void setElement(media));
     return () => setElement(null);
   }, []);
