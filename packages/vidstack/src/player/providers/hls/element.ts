@@ -130,21 +130,25 @@ export const HLSVideoDefinition = defineCustomElement<HLSVideoElement>({
       }
     }
 
-    return mergeProperties(accessors(), members, {
-      hls: {
-        get ctor() {
-          return peek($ctor);
-        },
-        get engine() {
-          return $engine();
-        },
-        get supported() {
-          return HLS_JS_SUPPORTED;
-        },
-        get attached() {
-          return $attached();
+    return mergeProperties(
+      {
+        hls: {
+          get ctor() {
+            return peek($ctor);
+          },
+          get engine() {
+            return $engine();
+          },
+          get supported() {
+            return HLS_JS_SUPPORTED;
+          },
+          get attached() {
+            return $attached();
+          },
         },
       },
-    });
+      accessors(),
+      members,
+    );
   },
 });

@@ -40,29 +40,31 @@ export interface HLSProviderMembers extends VideoProviderMembers {
    * on whether HLS is supported in this environment or the current engine is attached to the
    * underlying HTML media element.
    */
-  readonly hls: {
-    /**
-     * The `hls.js` constructor.
-     */
-    readonly ctor: HLSConstructor | null;
-    /**
-     * The current `hls.js` instance.
-     *
-     * @signal
-     */
-    readonly engine: HLS.default | null;
-    /**
-     * Whether HLS streaming is supported in this environment.
-     */
-    readonly supported: boolean;
-    /**
-     * Whether the `hls.js` instance has mounted the `HTMLMediaElement`.
-     *
-     * @signal
-     * @defaultValue false
-     */
-    readonly attached: boolean;
-  };
+  readonly hls: HLSContext;
+}
+
+export interface HLSContext {
+  /**
+   * The `hls.js` constructor.
+   */
+  readonly ctor: HLSConstructor | null;
+  /**
+   * The current `hls.js` instance.
+   *
+   * @signal
+   */
+  readonly engine: HLS.default | null;
+  /**
+   * Whether HLS streaming is supported in this environment.
+   */
+  readonly supported: boolean;
+  /**
+   * Whether the `hls.js` instance has mounted the `HTMLMediaElement`.
+   *
+   * @signal
+   * @defaultValue false
+   */
+  readonly attached: boolean;
 }
 
 export interface HLSProviderCSSVars extends VideoProviderCSSVars {}

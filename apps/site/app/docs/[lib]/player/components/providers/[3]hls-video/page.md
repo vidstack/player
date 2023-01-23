@@ -57,9 +57,16 @@ You can configure `hls.js` using the `config` property like so:
 
 {% code_snippet name="configure-hls" copy=true /%}
 
+## HLS Context
+
+The `hls` instance property contains additional data such as the loaded `hls.js` constructor and
+instance. It can be accessed like so:
+
+{% code_snippet name="hls-context" copy=true highlight="html:3-4|react:11-12"/%}
+
 ## HLS Engine
 
-If you need access to the `hls.js` instance, you can listen to the `$event:instance` event to
+If you need access to the `hls.js` instance, you can also listen to the `$event:instance` event to
 be notified of when it's created (called before media is attached), and the `$event:destroying`
 event for when it will be destroyed.
 

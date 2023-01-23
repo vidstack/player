@@ -229,9 +229,13 @@ function MediaPlayerUI() {
 
   useEffect(() => {
     if (isHLSVideoElement(provider)) {
-      provider.hls.onInit((hls) => {
-        //
-      });
+      provider.addEventListener(
+        'instance',
+        (event) => {
+          const engine = event.detail; // hls.js instance
+        },
+        { once: true },
+      );
     }
   }, [provider]);
 }
