@@ -23,15 +23,7 @@ export function useMediaPropChange(
     $logLevel,
   }: Signals<MediaControllerProps>,
 ) {
-  if (__SERVER__) {
-    $media.autoplay = $autoplay();
-    $media.poster = $poster();
-    $media.loop = $loop();
-    $media.controls = $controls();
-    $media.playsinline = $playsinline();
-    $media.view = $view();
-    return;
-  }
+  if (__SERVER__) return;
 
   effect(() => {
     const target = $target();

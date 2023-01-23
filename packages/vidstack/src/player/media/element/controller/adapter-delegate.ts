@@ -19,6 +19,8 @@ export function useMediaAdapterDelegate(
   requestManager: MediaRequestManager,
   { $paused, $volume, $muted, $currentTime, $playsinline }: Signals<MediaElementProps>,
 ) {
+  if (__SERVER__) return;
+
   /** Queue ensures adapter is only updated if media is ready for playback. */
   const canPlayQueue = new RequestQueue();
 

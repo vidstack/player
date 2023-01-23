@@ -112,6 +112,19 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
 
     if (__DEV__) useMediaEventsLogger(host.$el);
 
+    if (__SERVER__) {
+      $media.autoplay = props.$autoplay();
+      $media.poster = props.$poster();
+      $media.loop = props.$loop();
+      $media.controls = props.$controls();
+      $media.view = props.$view();
+      $media.paused = props.$paused();
+      $media.volume = props.$volume();
+      $media.muted = props.$muted();
+      $media.currentTime = props.$currentTime();
+      $media.playsinline = props.$playsinline();
+    }
+
     const $attrs: AttributesRecord = {
       'ios-controls': () =>
         IS_IOS &&

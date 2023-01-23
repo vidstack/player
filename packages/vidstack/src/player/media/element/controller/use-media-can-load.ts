@@ -13,6 +13,8 @@ export function useMediaCanLoad(
   $load: ReadSignal<MediaLoadingStrategy>,
   startLoadingMedia: () => void,
 ) {
+  if (__SERVER__) return;
+
   onConnect(async () => {
     const load = $load();
 
