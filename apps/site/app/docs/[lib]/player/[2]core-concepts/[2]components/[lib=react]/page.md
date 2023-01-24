@@ -28,25 +28,20 @@ React component.
 All components forward the underlying custom element reference, so you can use the familiar
 `useRef` hook to get a hold of it.
 
-The ref can be passed into the `useCustomElement` hook to ensure that the underlying
-component instance has been attached so props/methods on it can be safely accessed.
-
 ```tsx
-import { Media, useCustomElement, Video } from '@vidstack/react';
+import { Media, Video } from '@vidstack/react';
 import { useEffect, useRef } from 'React';
 import { type MediaElement } from 'vidstack';
 
 function MediaPlayer() {
-  const mediaRef = useRef<MediaElement>(null),
-    media = useCustomElement(mediaRef);
+  const media = useRef<MediaElement>(null);
 
   useEffect(() => {
-    if (!media) return;
-    media.startLoadingMedia();
-  }, [media]);
+    media.current!.startLoadingMedia();
+  }, []);
 
   return (
-    <Media load="custom" ref={mediaRef}>
+    <Media load="custom" ref={media}>
       <Video>
         <video src="..." />
       </Video>

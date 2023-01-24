@@ -2,11 +2,12 @@ import {
   effect,
   hasProvidedContext,
   MaybeStopEffect,
+  onDispose,
   peek,
   provideContext,
   signal,
 } from 'maverick.js';
-import { AttributesRecord, defineCustomElement, onConnect, onMount } from 'maverick.js/element';
+import { AttributesRecord, defineCustomElement, onConnect } from 'maverick.js/element';
 import { camelToKebabCase, dispatchEvent, isNull, mergeProperties, noop } from 'maverick.js/std';
 
 import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
@@ -148,10 +149,8 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       });
     });
 
-    onMount(() => {
-      return () => {
-        dispatchEvent(host.el, 'destroy');
-      };
+    onDispose(() => {
+      dispatchEvent(host.el, 'destroy');
     });
 
     function startLoadingMedia() {

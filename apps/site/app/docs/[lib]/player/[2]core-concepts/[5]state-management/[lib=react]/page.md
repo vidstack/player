@@ -82,20 +82,18 @@ Media state can be directly accessed on the `<Media>` component if you'd like to
 re-renders:
 
 ```tsx {% highlight="11" %}
-import { Media, useCustomElement } from '@vidstack/react';
+import { Media } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
 import { type MediaElement } from 'vidstack';
 
 function MediaPlayer() {
-  const mediaRef = useRef<MediaElement>(null),
-    media = useCustomElement(mediaRef);
+  const media = useRef<MediaElement>(null);
 
   useEffect(() => {
-    if (!media) return;
-    const { paused } = media.state;
-  }, [media]);
+    const { paused } = media.current!.state;
+  }, []);
 
-  return <Media ref={mediaRef}>{/* ... */}</Media>;
+  return <Media ref={media}>{/* ... */}</Media>;
 }
 ```
 
