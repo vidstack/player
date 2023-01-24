@@ -35,7 +35,7 @@ strategies are available:
   lower priority and doesn't need to be interactive immediately.
 - `visible`: Load media once it has entered the visual viewport - use when media is below the fold and you prefer
   delaying loading until it's required.
-- `custom`: Load media when the `startLoadingMedia()` method is called _or_ the `media-start-loading`
+- `custom`: Load media when the `startLoading()` method is called _or_ the `media-start-loading`
   event is dispatched - use when you need fine control of when media should begin loading.
 
 {% code_snippet name="loading-idle" highlight="html:1|react:4" /%}

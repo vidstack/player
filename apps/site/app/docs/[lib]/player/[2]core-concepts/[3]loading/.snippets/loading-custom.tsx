@@ -7,7 +7,7 @@ function MediaPlayer() {
 
   useEffect(() => {
     // Call whenever you like - also available on `useMediaRemote`.
-    media.current!.startLoadingMedia();
+    media.current!.startLoading();
   }, []);
 
   return (

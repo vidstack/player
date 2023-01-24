@@ -107,7 +107,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     $media.muted = props.$muted() || props.$volume() === 0;
 
     useMediaPropChange(host.$el, $media, props);
-    useMediaCanLoad(host.$el, props.$load, startLoadingMedia);
+    useMediaCanLoad(host.$el, props.$load, startLoading);
     useMediaAdapterDelegate(() => peek(context.$provider)?.adapter, $media, requestManager, props);
 
     if (__DEV__) useMediaEventsLogger(host.$el);
@@ -153,7 +153,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       dispatchEvent(host.el, 'destroy');
     });
 
-    function startLoadingMedia() {
+    function startLoading() {
       delegate.dispatch('can-load');
     }
 
@@ -184,7 +184,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
           // @ts-expect-error
           set: noop,
         }) as unknown as MediaControllerStore,
-        startLoadingMedia,
+        startLoading,
         play: requestManager.play,
         pause: requestManager.pause,
         enterFullscreen: requestManager.enterFullscreen,

@@ -37,7 +37,7 @@ function MediaPlayer() {
   const media = useRef<MediaElement>(null);
 
   useEffect(() => {
-    media.current!.startLoadingMedia();
+    media.current!.startLoading();
   }, []);
 
   return (

@@ -11,7 +11,7 @@ import type { MediaLoadingStrategy } from '../../types';
 export function useMediaCanLoad(
   $target: ReadSignal<MediaElement | null>,
   $load: ReadSignal<MediaLoadingStrategy>,
-  startLoadingMedia: () => void,
+  startLoading: () => void,
 ) {
   if (__SERVER__) return;
 
@@ -19,16 +19,16 @@ export function useMediaCanLoad(
     const load = $load();
 
     if (load === 'eager') {
-      requestAnimationFrame(startLoadingMedia);
+      requestAnimationFrame(startLoading);
     } else if (load === 'idle') {
       const { waitIdlePeriod } = await import('maverick.js/std');
-      waitIdlePeriod(startLoadingMedia);
+      waitIdlePeriod(startLoading);
     } else if (load === 'visible') {
       root(async (dispose) => {
         const io = useIntersectionObserver($target);
         effect(() => {
           if (io.intersecting) {
-            startLoadingMedia();
+            startLoading();
             dispose();
           }
         });

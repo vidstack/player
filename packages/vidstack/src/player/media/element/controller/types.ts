@@ -48,7 +48,7 @@ export interface MediaControllerProps
    * - `eager`: media will be loaded immediately.
    * - `idle`: media will be loaded after the page has loaded and `requestIdleCallback` is fired.
    * - `visible`: media will delay loading until the provider has entered the viewport.
-   * - `custom`: media will wait for the `startLoadingMedia()` method or `media-start-loading` event.
+   * - `custom`: media will wait for the `startLoading()` method or `media-start-loading` event.
    */
   load: MediaLoadingStrategy;
   /**
@@ -114,7 +114,7 @@ export interface MediaController {
    * Called when media can begin loading. Calling this method will trigger the initial provider
    * loading process. Calling it more than once has no effect.
    */
-  startLoadingMedia(): void;
+  startLoading(): void;
   /**
    * Attempts to display this element in fullscreen. The promise will resolve if successful, and
    * reject if not.
