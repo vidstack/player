@@ -44,4 +44,4 @@ strategies are available:
 
 Here's another example using a custom loading strategy:
 
-{% code_snippet name="loading-custom" highlight="html:5,9|react:12,16" /%}
+{% code_snippet name="loading-custom" highlight="html:5,9|react:10,14" /%}

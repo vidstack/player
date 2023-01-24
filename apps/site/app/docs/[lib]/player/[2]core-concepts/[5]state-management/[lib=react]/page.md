@@ -81,7 +81,7 @@ interface on GitHub as a reference.
 Media state can be directly accessed on the `<Media>` component if you'd like to avoid unnecessary
 re-renders:
 
-```tsx {% highlight="11" %}
+```tsx {% highlight="9" %}
 import { Media } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
 import { type MediaElement } from 'vidstack';

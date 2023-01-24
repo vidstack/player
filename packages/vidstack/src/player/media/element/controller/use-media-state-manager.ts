@@ -1,13 +1,12 @@
 import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
-import { effect, ReadSignal, useContext } from 'maverick.js';
+import { effect, ReadSignal } from 'maverick.js';
 import { onAttach } from 'maverick.js/element';
 import { appendTriggerEvent, createEvent, listenEvent, useDisposalBin } from 'maverick.js/std';
 
 import type { MediaContext } from '../../context';
 import type * as ME from '../../events';
-import type { MediaProviderElement } from '../../provider/types';
-import { MediaStore, softResetMediaStore } from '../../store';
+import { softResetMediaStore } from '../../store';
 import type { MediaControllerElement } from './types';
 import type { MediaRequestManagerInit, MediaRequestQueueRecord } from './use-media-request-manager';
 
