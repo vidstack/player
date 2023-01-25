@@ -11,10 +11,10 @@
 
   --color-brand: 216 35 117;
   --color-focus: 79 70 229;
-  --color-soft: 75 85 99;
-  --color-body: 249 250 251;
+  --color-soft: 68 78 94;
+  --color-body: 250 250 250;
   --color-elevate: 243 244 246;
-  --color-inverse: 17 24 39;
+  --color-inverse: 5 11 23;
   --color-border: 209 213 219;
 
   --navbar-height: 4rem;
@@ -47,13 +47,12 @@
 :root.dark,
 .prefers-dark-scheme {
   color-scheme: dark;
-
   --color-brand: 244 114 182;
-  --color-soft: 169 176 191;
-  --color-inverse: 249 250 251;
-  --color-border: 75 85 99;
-  --color-elevate: 31 41 55;
-  --color-body: 17 24 39;
+  --color-soft: 150 155 166;
+  --color-inverse: 245 245 245;
+  --color-border: 38 48 64;
+  --color-elevate: 10 19 33;
+  --color-body: 5 11 23;
   --color-focus: 129 140 248;
 }
 
