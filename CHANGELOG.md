@@ -1,3 +1,11 @@
+## [0.1.3](https://github.com/mihar-22/vidstack/compare/v0.1.2...v0.1.3) (2023-01-25)
+
+### Bug Fixes
+
+- **vidstack:** add `MediaOrientationChangeEvent` type ([4c67ae2](https://github.com/mihar-22/vidstack/commit/4c67ae2b190f316bc9d43773a4f6bbb251bfe7a4))
+- **vidstack:** fullscreen events should not bubble similar to other media events ([4e9bd32](https://github.com/mihar-22/vidstack/commit/4e9bd3269b51af13ac27f914afeec844778cb426))
+- **vidstack:** simplify screen orientation events ([c922d15](https://github.com/mihar-22/vidstack/commit/c922d152890d88be32f9becccd9f61903a3e9bb9))
+
 ## [0.1.2](https://github.com/mihar-22/vidstack/compare/v0.1.1...v0.1.2) (2023-01-25)
 
 ### Bug Fixes
