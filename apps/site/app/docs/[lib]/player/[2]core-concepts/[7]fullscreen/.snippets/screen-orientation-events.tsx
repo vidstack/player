@@ -7,7 +7,7 @@ import {
 
 function MediaPlayer() {
   function onScreenOrientationChange(event: ScreenOrientationChangeEvent) {
-    const { orientation, lockType } = event.detail;
+    const { orientation, lock } = event.detail;
   }
 
   return <Media onScreenOrientationChange={onScreenOrientationChange}>{/* ... */}</Media>;

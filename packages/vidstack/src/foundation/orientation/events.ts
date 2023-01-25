@@ -8,21 +8,15 @@ export interface ScreenOrientationEventTarget
 
 export interface ScreenOrientationEvents {
   'orientation-change': ScreenOrientationChangeEvent;
-  'orientation-lock-change': ScreenOrientationLockChangeEvent;
+}
+
+export interface ScreenOrientationChangeEventDetail {
+  orientation: ScreenOrientationType;
+  lock?: ScreenOrientationLockType;
 }
 
 /**
  * Fired when the current screen orientation changes.
- *
- * @bubbles
- * @composed
  */
-export interface ScreenOrientationChangeEvent extends DOMEvent<ScreenOrientationType> {}
-
-/**
- * Fired when the current screen orientation lock changes.
- *
- * @bubbles
- * @composed
- */
-export interface ScreenOrientationLockChangeEvent extends DOMEvent<ScreenOrientationLockType> {}
+export interface ScreenOrientationChangeEvent
+  extends DOMEvent<ScreenOrientationChangeEventDetail> {}

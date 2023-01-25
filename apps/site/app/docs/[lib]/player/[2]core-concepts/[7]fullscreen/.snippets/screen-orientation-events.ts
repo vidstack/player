@@ -7,5 +7,5 @@ import {
 const media = document.querySelector('vds-media');
 
 media.addEventListener('screen-orientation-change', (event: ScreenOrientationChangeEvent) => {
-  const { orientation, lockType } = event.detail;
+  const { orientation, lock } = event.detail;
 });
