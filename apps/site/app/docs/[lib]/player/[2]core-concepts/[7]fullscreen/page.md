@@ -5,20 +5,19 @@ description: How to manage fullscreen with Vidstack Player.
 
 # {% $frontmatter.title %}
 
-In this section, we'll look at how to manage fullscreen.
+In this section, we'll look at how to request and track fullscreen changes.
 
 ## Requests
 
 You can request to enter or exit fullscreen on the `<vds-media>` element like so:
 
-{% code_snippet name="request" /%}
+{% code_snippet name="request" highlight="html:5,15|react:10,20" /%}
 
 ### Target
 
 By default, calling the `enterFullscreen()` method will first attempt to use the
 [Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API) so the
-custom media UI is displayed, otherwise it'll fallback to the current media provider. When loading
-media with
+custom media UI is displayed, otherwise it'll fallback to the current media provider.
 
 You can specify that you only want to display the provider in fullscreen and not the entire media
 by specifying the fullscreen target like so:
@@ -38,7 +37,7 @@ media provider element, meaning your custom UI will _not_ be displayed when in f
 The media remote provides methods for dispatching `media-enter-fullscreen` and
 `media-exit-fullscreen` requests like so:
 
-{% code_snippet name="remote" /%}
+{% code_snippet name="remote" highlight="html:3,6,12|react:7,13" /%}
 
 ## Styling
 
