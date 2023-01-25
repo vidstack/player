@@ -8,15 +8,11 @@ description: How to autoplay media and handle failure with Vidstack Player.
 In this section, we'll look at how to autoplay media and detect when it inevitably
 fails.
 
-{% callout type="warning" %}
-This page is still a work-in-progress.
-{% /callout %}
-
 ## Introduction
 
 A perfect starting point on understanding how browsers handle autoplay is [this article by
 Chrome Developers](https://developer.chrome.com/blog/autoplay/). In short, the best chance you have
-for autoplay working on a site where a user is visiting for the first time or irregularly is by
+for autoplay working on a site where a user is visiting for the first time, or irregularly is by
 muting the media. Try to encourage the user to either play or unmute the media themselves to avoid
 a poor experience.
 

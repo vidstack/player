@@ -21,6 +21,23 @@ To avoid a layout shift, we recommend use an aspect ratio container which holds 
 
 {% code_snippets name="sizing" /%}
 
+{% if_js_lib is="html" %}
+
+```css {% copy=true %}
+vds-media {
+  --media-width: 1920px;
+  --media-aspect-ratio: 16 / 9;
+}
+
+.media-container {
+  background-color: black;
+  width: var(--media-width);
+  height: calc(var(--media-width) / var(--media-aspect-ratio));
+}
+```
+
+{% /if_js_lib %}
+
 Ideally the ratio set should match the ratio of the media content itself (i.e., intrinsic aspect ratio)
 otherwise you'll end up with a letterbox template (empty black bars on the left/right of the media).
 

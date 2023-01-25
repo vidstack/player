@@ -141,24 +141,19 @@ back to their origin event. This can be useful when trying to understand how a m
 triggered, or when analyzing data such as the time difference between the request and when the media
 was actually played.
 
-```tsx {% highlight="7,14,16" %}
+```tsx {% highlight="6,12" %}
 import { useMediaRemote } from '@vidstack/react';
 import { useRef, type PointerEvent } from 'react';
 
 function PlayButton() {
   const button = useRef<HTMLButtonElement>(null);
-
   const remote = useMediaRemote(button);
 
   function onPointerUp({ nativeEvent }: PointerEvent) {
-    if (paused) {
-      // - We are providing the "trigger" here.
-      // - Trigger events allow us to trace events back to their origin.
-      // - The media play event will have this pointer event in its chain.
-      remote.play(nativeEvent);
-    } else {
-      remote.pause(nativeEvent);
-    }
+    // - We are providing the "trigger" here.
+    // - Trigger events allow us to trace events back to their origin.
+    // - The media play event will have this pointer event in its chain.
+    remote.togglePaused(nativeEvent);
   }
 
   return (
