@@ -1,8 +1,7 @@
 import fscreen from 'fscreen';
 import { effect, peek, ReadSignal, signal } from 'maverick.js';
-import { listenEvent } from 'maverick.js/std';
+import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
-import { dispatchFullscreenChange, dispatchFullscreenError } from './dispatch';
 import type { FullscreenEventTarget } from './events';
 
 export function useFullscreen($target: ReadSignal<FullscreenEventTarget | null>): UseFullscreen {
@@ -18,17 +17,17 @@ export function useFullscreen($target: ReadSignal<FullscreenEventTarget | null>)
     const target = $target();
 
     if (target) {
-      listenEvent(fscreen as any, 'fullscreenchange', async (event) => {
+      listenEvent(fscreen as any, 'fullscreenchange', async (trigger) => {
         const active = isFullscreen(target);
         if (active === $active()) return;
         if (!active) listening = false;
         $active.set(active);
-        dispatchFullscreenChange(target, active, event);
+        dispatchEvent(target, 'fullscreen-change', { detail: active, trigger });
       });
 
-      listenEvent(fscreen as any, 'fullscreenerror', (event) => {
+      listenEvent(fscreen as any, 'fullscreenerror', (trigger) => {
         if (!listening) return;
-        dispatchFullscreenError(target, event);
+        dispatchEvent(target, 'fullscreen-error', { detail: null, trigger });
         listening = false;
       });
 
