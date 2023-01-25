@@ -1,3 +1,9 @@
+## [0.1.2](https://github.com/mihar-22/vidstack/compare/v0.1.1...v0.1.2) (2023-01-25)
+
+### Bug Fixes
+
+- **vidstack:** `user-idle` attribute is not being applied ([45a5531](https://github.com/mihar-22/vidstack/commit/45a553125a7c24b3a6b62719f20eaf2b588f92a6))
+
 ## [0.1.1](https://github.com/mihar-22/vidstack/compare/v0.1.0...v0.1.1) (2023-01-25)
 
 ### Bug Fixes
