@@ -1,9 +1,6 @@
 import type { DOMEvent } from 'maverick.js/std';
 
-import type {
-  ScreenOrientationChangeEvent,
-  ScreenOrientationLockChangeEvent,
-} from '../../foundation/orientation/events';
+import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
 import type { MediaElement } from './element/types';
 import type {
   MediaEnterFullscreenRequestEvent,
@@ -58,8 +55,7 @@ export interface MediaEvents {
   stalled: MediaStalledEvent;
   started: MediaStartedEvent;
   suspend: MediaSuspendEvent;
-  'screen-orientation-change': ScreenOrientationChangeEvent;
-  'screen-orientation-lock-change': ScreenOrientationLockChangeEvent;
+  'orientation-change': MediaOrientationChangeEvent;
   'time-update': MediaTimeUpdateEvent;
   'view-change': MediaViewChangeEvent;
   'volume-change': MediaVolumeChangeEvent;
@@ -345,6 +341,11 @@ export interface MediaStartedEvent extends MediaEvent<void> {}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/suspend_event}
  */
 export interface MediaSuspendEvent extends MediaEvent<void> {}
+
+/**
+ * Fired when a screen orientation change is requested on or by the media.
+ */
+export interface MediaOrientationChangeEvent extends ScreenOrientationChangeEvent {}
 
 /**
  * Fired when media playback starts again after being in an `ended` state. This is fired

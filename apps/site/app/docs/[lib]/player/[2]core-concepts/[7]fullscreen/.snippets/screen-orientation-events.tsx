@@ -1,14 +1,14 @@
 import { Media } from '@vidstack/react';
 import {
-  type ScreenOrientationChangeEvent,
+  type MediaOrientationChangeEvent,
   type ScreenOrientationLockType,
   type ScreenOrientationType,
 } from 'vidstack';
 
 function MediaPlayer() {
-  function onScreenOrientationChange(event: ScreenOrientationChangeEvent) {
+  function onOrientationChange(event: MediaOrientationChangeEvent) {
     const { orientation, lock } = event.detail;
   }
 
-  return <Media onScreenOrientationChange={onScreenOrientationChange}>{/* ... */}</Media>;
+  return <Media onOrientationChange={onOrientationChange}>{/* ... */}</Media>;
 }
