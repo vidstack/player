@@ -1,4 +1,4 @@
-import { effect, ReadSignal, signal } from 'maverick.js';
+import { effect, peek, ReadSignal, signal } from 'maverick.js';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
 import { useMediaStore } from './context';
@@ -15,7 +15,7 @@ export function useMediaUser($target: ReadSignal<MediaControllerElement | null>)
     $paused = signal(false);
 
   effect(() => {
-    if ($media.paused) $paused.set(true);
+    $paused.set($media.paused);
   });
 
   effect(() => {
@@ -50,7 +50,8 @@ export function useMediaUser($target: ReadSignal<MediaControllerElement | null>)
   });
 
   function handleIdleChange(event: Event) {
-    if ($paused()) return;
+    if (peek($paused)) return;
+    $idle.set(true);
     window.clearTimeout(idleTimeout);
     idleTimeout = window.setTimeout(() => {
       trigger = event;

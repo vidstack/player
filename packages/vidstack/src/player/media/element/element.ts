@@ -124,6 +124,9 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       $attrs[camelToKebabCase(prop as string)] = () => $media[prop] as string | number;
     }
 
+    const userIdle = requestManager.user.idle;
+    $attrs['user-idle'] = () => userIdle.idling;
+
     host.setAttributes($attrs);
 
     host.setCSSVars({
