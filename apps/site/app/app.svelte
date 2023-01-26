@@ -18,17 +18,8 @@
 
   onMount(() => {
     defineCustomElements();
-
     const scrollDelegate = createComplexScrollDelegate(router);
-
-    scrollDelegate.setBase(() => {
-      return {
-        top: 96,
-        behavior: 'smooth',
-      };
-    });
-
-    if (router.url.hash) scrollDelegate.scroll({ hash: router.url.hash });
+    // scrollDelegate.setBase(() => ({ top: 96 }));
     router.setScrollDelegate(scrollDelegate);
   });
 </script>

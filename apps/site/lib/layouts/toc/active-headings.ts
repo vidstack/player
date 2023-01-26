@@ -32,11 +32,7 @@ export function useActiveHeaderLinks(config: Readable<OnThisPageConfig>) {
 
   async function gotoHash(hash: string) {
     if (canUpdateHash && !canUpdateHash(hash)) return;
-    await router.go(hash as `#${string}`, {
-      replace: true,
-      keepfocus: true,
-      scroll: () => false,
-    });
+    router.hashChanged(hash);
   }
 
   const setActiveHash = async () => {
@@ -57,7 +53,7 @@ export function useActiveHeaderLinks(config: Readable<OnThisPageConfig>) {
     const scrollY = window.scrollY;
     const innerHeight = window.innerHeight;
     const offsetHeight = document.body.offsetHeight;
-    const isBottom = scrollY + innerHeight === offsetHeight;
+    const isBottom = Math.abs(scrollY + innerHeight - offsetHeight) < 1;
 
     // page bottom - highlight last one
     if (anchors.length && isBottom) {

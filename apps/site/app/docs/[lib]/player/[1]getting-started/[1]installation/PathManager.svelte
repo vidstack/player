@@ -16,20 +16,16 @@
     if (window.scrollY === 0) return;
 
     const url = new URL('/docs/player/getting-started/installation', location.href);
-    url.hash = location.hash;
 
     const isCDN = install === 'cdn';
     const installPath = isCDN ? '/cdn' : '';
     const mediaProviderPath = `/${provider === 'video' ? '' : provider}`;
 
     if (install !== prevInstall) {
-      url.hash = '#select-install-method';
       prevInstall = install;
     } else if (lib !== prevLib) {
-      url.hash = '#select-js-library';
       prevLib = lib;
     } else if (provider !== prevProvider) {
-      url.hash = '#select-media-provider';
       prevProvider = provider;
     }
 
@@ -38,7 +34,7 @@
       isCDN ? 'html' : lib,
     );
 
-    router.go(url);
+    router.go(url, { scroll: () => false });
   }
 
   $: if (env.browser && router.url.pathname.includes('getting-started/installation')) {
