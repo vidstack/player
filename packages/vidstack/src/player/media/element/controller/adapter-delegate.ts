@@ -2,6 +2,7 @@ import { createContext, effect, ReadSignal, signal, Signals } from 'maverick.js'
 
 import { RequestQueue } from '../../../../foundation/queue/request-queue';
 import { clampNumber } from '../../../../utils/number';
+import type { MediaState } from '../../state';
 import type { MediaStore } from '../../store';
 import type { MediaElementProps } from '../types';
 import type { MediaAdapter } from './types';
@@ -29,32 +30,56 @@ export function useMediaAdapterDelegate(
     else canPlayQueue.stop();
   });
 
-  effect(() => {
-    const paused = $paused();
+  effect(() => setMuted($muted()));
+  effect(() => setPaused($paused()));
+  effect(() => setVolume($volume()));
+  effect(() => setCurrentTime($currentTime()));
+  effect(() => setPlaysinline($playsinline()));
+
+  function setPaused(paused: boolean) {
     if (paused) canPlayQueue.queue('paused', requestManager.pause);
     else canPlayQueue.queue('paused', requestManager.play);
-  });
+  }
 
-  effect(() => {
-    const volume = clampNumber(0, $volume(), 1);
-    canPlayQueue.queue('volume', () => ($adapter()!.volume = volume));
-  });
+  function setVolume(volume: number) {
+    const newVolume = clampNumber(0, volume, 1);
+    canPlayQueue.queue('volume', () => ($adapter()!.volume = newVolume));
+  }
 
-  effect(() => {
-    const muted = $muted();
+  function setMuted(muted: boolean) {
     canPlayQueue.queue('muted', () => ($adapter()!.muted = muted));
-  });
+  }
 
-  effect(() => {
-    const currentTime = $currentTime();
+  function setCurrentTime(currentTime: number) {
     canPlayQueue.queue('currentTime', () => {
       const adapter = $adapter();
       if (currentTime !== adapter!.currentTime) adapter!.currentTime = currentTime;
     });
-  });
+  }
 
-  effect(() => {
-    const playsinline = $playsinline();
+  function setPlaysinline(playsinline: boolean) {
     canPlayQueue.queue('playsinline', () => ($adapter()!.playsinline = playsinline));
-  });
+  }
+
+  const delegate = {} as Pick<
+    MediaState,
+    'paused' | 'muted' | 'volume' | 'currentTime' | 'playsinline'
+  >;
+
+  const setters: Record<keyof typeof delegate, (value: any) => void> = {
+    paused: setPaused,
+    muted: setMuted,
+    volume: setVolume,
+    currentTime: setCurrentTime,
+    playsinline: setPlaysinline,
+  };
+
+  for (const prop of Object.keys(setters)) {
+    Object.defineProperty(delegate, prop, {
+      get: () => $media[prop],
+      set: setters[prop],
+    });
+  }
+
+  return delegate;
 }

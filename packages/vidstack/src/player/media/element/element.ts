@@ -115,7 +115,13 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
 
     useMediaPropChange(host.$el, $media, props);
     useMediaCanLoad(host.$el, props.$load, startLoading);
-    useMediaAdapterDelegate(() => peek(context.$provider)?.adapter, $media, requestManager, props);
+
+    const adapterDelegate = useMediaAdapterDelegate(
+      () => peek(context.$provider)?.adapter,
+      $media,
+      requestManager,
+      props,
+    );
 
     if (__DEV__) useMediaEventsLogger(host.$el);
 
@@ -203,6 +209,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
         exitFullscreen: requestManager.exitFullscreen,
       },
       accessors(),
+      adapterDelegate,
     );
   },
 });
