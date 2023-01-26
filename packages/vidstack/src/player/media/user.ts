@@ -1,10 +1,10 @@
-import { effect, peek, ReadSignal, signal } from 'maverick.js';
+import { computed, effect, peek, ReadSignal, signal } from 'maverick.js';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
 import { useMediaStore } from './context';
 import type { MediaControllerElement } from './element/controller/types';
 
-const IDLE_EVENTS = ['pointerdown', 'pointermove', 'focus', 'keydown'] as const;
+const STOP_IDLE_EVENTS = ['pointerup', 'pointermove', 'focus', 'keydown', 'playing'] as const;
 
 export function useMediaUser($target: ReadSignal<MediaControllerElement | null>): UseMediaUser {
   let $media = useMediaStore(),
@@ -12,51 +12,33 @@ export function useMediaUser($target: ReadSignal<MediaControllerElement | null>)
     delay = 2000,
     trigger: Event | undefined,
     $idle = signal(false),
-    $paused = signal(false);
-
-  effect(() => {
-    $paused.set($media.paused);
-  });
+    $userPaused = signal(false),
+    $paused = computed(() => $userPaused() || $media.paused);
 
   effect(() => {
     const target = $target();
     if (!target) return;
 
-    for (const eventType of IDLE_EVENTS) {
-      listenEvent(target, eventType, handleIdleChange);
+    for (const eventType of STOP_IDLE_EVENTS) {
+      listenEvent(target, eventType, stopIdling);
     }
 
     effect(() => {
-      if ($paused()) {
-        trigger = undefined;
-        $idle.set(true);
-      }
-    });
-
-    effect(() => {
-      const idle = $idle();
       window.clearTimeout(idleTimeout);
-      dispatchEvent(target, 'user-idle-change', {
-        detail: idle,
-        trigger,
-      });
+      const idle = $idle();
+      dispatchEvent(target, 'user-idle-change', { detail: idle, trigger });
       trigger = undefined;
     });
 
-    return () => {
-      trigger = undefined;
-      $idle.set(true);
-    };
+    return () => $idle.set(false);
   });
 
-  function handleIdleChange(event: Event) {
+  function stopIdling(event: Event) {
     if (peek($paused)) return;
-    $idle.set(true);
+    if ($idle()) trigger = event;
+    $idle.set(false);
     window.clearTimeout(idleTimeout);
-    idleTimeout = window.setTimeout(() => {
-      trigger = event;
-      $idle.set(false);
-    }, delay);
+    idleTimeout = window.setTimeout(() => $idle.set(!peek($paused)), delay);
   }
 
   return {
@@ -65,10 +47,10 @@ export function useMediaUser($target: ReadSignal<MediaControllerElement | null>)
         return $idle();
       },
       get paused() {
-        return $paused();
+        return $userPaused();
       },
       set paused(paused) {
-        $paused.set(paused);
+        $userPaused.set(paused);
       },
       get delay() {
         return delay;
