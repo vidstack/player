@@ -31,7 +31,7 @@ import 'vidstack/styles/base.css';
 import 'vidstack/styles/ui/buttons.css';
 import 'vidstack/styles/ui/sliders.css';
 
-import { HlsVideo, Media } from '@vidstack/react';
+import { HLSVideo, Media } from '@vidstack/react';
 ```
 
 {% /step %}
