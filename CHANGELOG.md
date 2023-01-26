@@ -1,3 +1,15 @@
+## [0.1.4](https://github.com/mihar-22/vidstack/compare/v0.1.3...v0.1.4) (2023-01-26)
+
+### Bug Fixes
+
+- **vidstack:** `<vds-media>` props are not in-sync with media store ([1ae9047](https://github.com/mihar-22/vidstack/commit/1ae90478614634a808982eb318d768b9f51c6f7f))
+- **vidstack:** better html support for `MediaRemoteControl` ([0def947](https://github.com/mihar-22/vidstack/commit/0def94700c27274d28127404d2f40bb59a47d319))
+- **vidstack:** idling not working as expected ([9e3764c](https://github.com/mihar-22/vidstack/commit/9e3764c4dcec962bd021811deea67930d79c65fa))
+
+### Features
+
+- **vidstack:** new toggle methods on `MediaRemoteControl` ([647bbc3](https://github.com/mihar-22/vidstack/commit/647bbc3b9a2c0a5792e1eda5e18491868c203ce2))
+
 ## [0.1.3](https://github.com/mihar-22/vidstack/compare/v0.1.2...v0.1.3) (2023-01-25)
 
 ### Bug Fixes
