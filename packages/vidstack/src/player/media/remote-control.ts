@@ -43,7 +43,7 @@ export class MediaRemoteControl {
       this._$media = signal<MediaElement | null>(null);
 
       effect(() => {
-        if (this._$target() && this._$media()?.state.canPlay) this._requests.start();
+        if (this._$target() && this._$media()) this._requests.start();
         else this._requests.stop();
       });
 
@@ -131,6 +131,48 @@ export class MediaRemoteControl {
     this._dispatchRequest('media-hide-poster-request', trigger);
   }
 
+  togglePaused(trigger?: Event) {
+    const media = this.getMedia();
+
+    if (!media) {
+      if (__DEV__) this._noMediaWarning(this.togglePaused.name);
+      return;
+    }
+
+    media.onAttach(() => {
+      if (media.state.paused) this.play(trigger);
+      else this.pause(trigger);
+    });
+  }
+
+  toggleMuted(trigger?: Event) {
+    const media = this.getMedia();
+
+    if (!media) {
+      if (__DEV__) this._noMediaWarning(this.toggleMuted.name);
+      return;
+    }
+
+    media.onAttach(() => {
+      if (media.state.muted) this.unmute(trigger);
+      else this.mute(trigger);
+    });
+  }
+
+  toggleFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
+    const media = this.getMedia();
+
+    if (!media) {
+      if (__DEV__) this._noMediaWarning(this.toggleFullscreen.name);
+      return;
+    }
+
+    media.onAttach(() => {
+      if (media.state.fullscreen) this.exitFullscreen(target, trigger);
+      else this.enterFullscreen(target, trigger);
+    });
+  }
+
   destroy() {
     this._dispose();
   }
@@ -160,5 +202,23 @@ export class MediaRemoteControl {
 
       this._$target()!.dispatchEvent(request);
     });
+  }
+
+  private _noMediaWarning(method: string) {
+    if (__DEV__) {
+      if (!peek(this._$target)) {
+        console.warn(
+          `[vidstack] attempted to call \`MediaRemoteControl.${method}\`() that requires media` +
+            ` which was not found because target has not connected to the DOM yet`,
+        );
+
+        return;
+      }
+
+      console.warn(
+        `[vidstack] attempted to call \`MediaRemoteControl.${method}\`() that requires` +
+          ' media but failed because remote could not find a parent media element from target',
+      );
+    }
   }
 }
