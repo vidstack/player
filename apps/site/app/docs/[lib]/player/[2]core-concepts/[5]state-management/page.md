@@ -83,6 +83,38 @@ remote.setTarget(button);
 
 button.addEventListener('pointerup', (pointerEvent) => {
   // 3. Make a play request and pass the pointer event as the trigger.
+  // Trigger events are optional - enables tracing event origin.
   remote.play(pointerEvent);
 });
+
+// 4. Destroy remote when no longer required.
+remote.destroy();
+```
+
+## Media Element
+
+The `MediaRemoteControl` can attempt to find the nearest parent media element once a target has
+been attached like so:
+
+```ts
+import { isHLSVideoElement, MediaRemoteControl } from 'vidstack';
+
+// 1. Create the media remote control.
+const remote = new MediaRemoteControl();
+
+// 2. Set a target element to search from.
+const button = document.querySelector('button');
+remote.setTarget(button);
+
+// 3. Find media element
+const media = remote.getMedia(); // `MediaElement | null`
+
+media?.onAttach(() => {
+  if (isHLSVideoElement(media.provider)) {
+    // ...
+  }
+});
+
+// 4. Destroy remote when no longer required.
+remote.destroy();
 ```

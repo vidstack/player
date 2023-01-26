@@ -7,8 +7,15 @@ import {
   provideContext,
   signal,
 } from 'maverick.js';
-import { AttributesRecord, defineCustomElement, onConnect } from 'maverick.js/element';
-import { camelToKebabCase, dispatchEvent, isNull, mergeProperties, noop } from 'maverick.js/std';
+import { AttributesRecord, defineCustomElement, onAttach, onConnect } from 'maverick.js/element';
+import {
+  camelToKebabCase,
+  dispatchEvent,
+  isNull,
+  listenEvent,
+  mergeProperties,
+  noop,
+} from 'maverick.js/std';
 
 import { useLogPrinter } from '../../../foundation/logger/use-log-printer';
 import { Queue } from '../../../foundation/queue/queue';
@@ -136,8 +143,10 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       '--media-seekable-amount': () => $media.seekableAmount,
     });
 
-    effect(() => {
-      context.$element.set(host.$el());
+    effect(() => void context.$element.set(host.$el()));
+
+    onAttach(() => {
+      listenEvent(host.el!, 'vds-find-media', ({ detail }) => detail(host.el));
     });
 
     onConnect(() => {

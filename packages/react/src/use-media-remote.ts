@@ -29,10 +29,16 @@ export function useMediaRemote(
   const remote = useMemo(() => scoped(() => new MediaRemoteControl(), scope)!, []);
 
   useEffect(() => {
-    if (!isUndefined(target)) {
+    const hasTarget = !isUndefined(target);
+
+    if (hasTarget) {
       remote.setTarget(target && 'current' in target ? target.current : target);
-    } else if (context) {
-      remote.setTarget(context.$element());
+    }
+
+    if (context) {
+      const media = context.$element();
+      if (!hasTarget) remote.setTarget(media);
+      remote.setMedia(media);
     }
 
     return () => remote.setTarget(null);

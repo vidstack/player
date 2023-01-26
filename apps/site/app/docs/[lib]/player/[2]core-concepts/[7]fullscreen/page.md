@@ -34,8 +34,8 @@ media provider element, meaning your custom UI will _not_ be displayed when in f
 
 ### Media Remote
 
-The media remote provides methods for dispatching `media-enter-fullscreen` and
-`media-exit-fullscreen` requests like so:
+The [media remote](/docs/player/core-concepts/state-management#updating) provides methods for
+dispatching `media-enter-fullscreen` and `media-exit-fullscreen` requests like so:
 
 {% code_snippet name="remote" highlight="html:3,6,12|react:7,13" /%}
 

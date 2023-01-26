@@ -1,21 +1,25 @@
-import { effect, ReadSignal, signal } from 'maverick.js';
+import { Dispose, effect, peek, ReadSignal, root, signal, WriteSignal } from 'maverick.js';
+import { onConnect } from 'maverick.js/element';
 import { DOMEvent } from 'maverick.js/std';
 
 import { createLogger, Logger } from '../../foundation/logger/create-logger';
 import { RequestQueue } from '../../foundation/queue/request-queue';
-import { useMediaStore } from './context';
+import { useMedia } from './context';
+import type { MediaElement } from './element/types';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request-events';
 
 const remotes = new WeakMap<ReadSignal<EventTarget | null>, MediaRemoteControl>();
 
 export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
   const logger = __DEV__ ? createLogger() : undefined,
-    remote = remotes.get($target) ?? new MediaRemoteControl(logger);
+    remote = remotes.get($target) || new MediaRemoteControl(logger);
 
   if (!remotes.has($target)) {
-    effect(() => {
-      if (__DEV__) logger?.setTarget($target());
-      remote.setTarget($target());
+    onConnect(() => {
+      const target = $target();
+      if (__DEV__) logger?.setTarget(target);
+      remote.setTarget(target);
+      remote.setMedia(useMedia().$element());
     });
 
     remotes.set($target, remote);
@@ -28,18 +32,47 @@ export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
  * A simple facade for dispatching media requests to the nearest media controller.
  */
 export class MediaRemoteControl {
-  protected _target = signal<EventTarget | null>(null);
+  protected _$target!: WriteSignal<EventTarget | null>;
+  protected _$media!: WriteSignal<MediaElement | null>;
   protected _requests = new RequestQueue();
+  protected _dispose!: Dispose;
 
   constructor(protected _logger?: Logger) {
-    const $media = useMediaStore();
-    effect(() => {
-      if (this._target() && $media.canPlay) {
-        this._requests.start();
-      } else {
-        this._requests.stop();
-      }
+    root((dispose) => {
+      this._$target = signal<EventTarget | null>(null);
+      this._$media = signal<MediaElement | null>(null);
+
+      effect(() => {
+        if (this._$target() && this._$media()?.state.canPlay) this._requests.start();
+        else this._requests.stop();
+      });
+
+      this._dispose = dispose;
     });
+  }
+
+  setTarget(target: EventTarget | null) {
+    this._$target.set(target);
+    if (!target) this._$media.set(null);
+  }
+
+  getMedia(): MediaElement | null {
+    const media = peek(this._$media);
+    if (media) return media;
+
+    peek(this._$target)?.dispatchEvent(
+      new DOMEvent('vds-find-media', {
+        detail: this._$media,
+        bubbles: true,
+        composed: true,
+      }),
+    );
+
+    return peek(this._$media);
+  }
+
+  setMedia(media: MediaElement | null) {
+    this._$media.set(media);
   }
 
   startLoading(trigger?: Event) {
@@ -98,8 +131,8 @@ export class MediaRemoteControl {
     this._dispatchRequest('media-hide-poster-request', trigger);
   }
 
-  setTarget(target: EventTarget | null) {
-    this._target.set(target);
+  destroy() {
+    this._dispose();
   }
 
   protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(
@@ -107,6 +140,8 @@ export class MediaRemoteControl {
     trigger?: Event,
     detail?: MediaRequestEvents[EventType]['detail'],
   ) {
+    if (!peek(this._$media)) this.getMedia();
+
     this._requests.queue(type, () => {
       const request = new DOMEvent<any>(type, {
         bubbles: true,
@@ -123,7 +158,7 @@ export class MediaRemoteControl {
           .dispatch();
       }
 
-      this._target()!.dispatchEvent(request);
+      this._$target()!.dispatchEvent(request);
     });
   }
 }

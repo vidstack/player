@@ -11,6 +11,8 @@ export interface MediaElementProps extends MediaControllerProps {}
 
 export interface MediaElementEvents extends MediaControllerEvents {
   'media-connect': MediaConnectEvent;
+  /** @internal */
+  'vds-find-media': FindMediaEvent;
 }
 
 export interface MediaElementMembers extends MediaElementProps, MediaController {}
@@ -22,6 +24,13 @@ export interface MediaElementMembers extends MediaElementProps, MediaController 
  * @composed
  */
 export interface MediaConnectEvent extends DOMEvent<MediaElement> {}
+
+export interface FindMediaEventDetail {
+  (element: MediaElement | null): void;
+}
+
+/** @internal @bubbles @composed */
+export interface FindMediaEvent extends DOMEvent<FindMediaEventDetail> {}
 
 export interface MediaElementCSSVars {
   /**
