@@ -1,3 +1,13 @@
+## [0.1.5](https://github.com/mihar-22/vidstack/compare/v0.1.4...v0.1.5) (2023-01-27)
+
+### Bug Fixes
+
+- **react:** remote not attached to media due to mount order ([62207b0](https://github.com/mihar-22/vidstack/commit/62207b08277e09db6e6483eec3c76c8b1aa13dd2))
+
+### Features
+
+- **vidstack:** include component doc links in vscode custom data ([072586b](https://github.com/mihar-22/vidstack/commit/072586bcdb00448f3670baca24a1e4c53dac1989))
+
 ## [0.1.4](https://github.com/mihar-22/vidstack/compare/v0.1.3...v0.1.4) (2023-01-26)
 
 ### Bug Fixes

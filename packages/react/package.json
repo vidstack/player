@@ -1,6 +1,6 @@
 {
   "name": "@vidstack/react",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Build awesome media experiences on the web.",
   "license": "MIT",
   "type": "module",
