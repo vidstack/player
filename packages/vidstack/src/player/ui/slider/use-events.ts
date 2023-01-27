@@ -2,6 +2,7 @@ import { effect, Signals } from 'maverick.js';
 import type { CustomElementHost } from 'maverick.js/element';
 import { createEvent, dispatchEvent, listenEvent } from 'maverick.js/std';
 
+import { IS_SAFARI } from '../../../utils/support';
 import { useMediaRemoteControl } from '../../media/remote-control';
 import type {
   SliderDragEndEvent,
@@ -49,7 +50,7 @@ export function useSliderEvents(
     if ($disabled() || !$store.dragging) return;
     listenEvent(document, 'pointerup', onDocumentPointerUp);
     listenEvent(document, 'pointermove', onDocumentPointerMove);
-    listenEvent(document, 'touchmove', onDocumentTouchMove, { passive: true });
+    if (IS_SAFARI) listenEvent(document, 'touchmove', onDocumentTouchMove, { passive: false });
   });
 
   function getValue(event: PointerEvent) {
