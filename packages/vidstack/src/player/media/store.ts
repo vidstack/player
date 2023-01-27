@@ -1,4 +1,4 @@
-import { createStore } from 'maverick.js';
+import { createStore, tick } from 'maverick.js';
 
 import type { MediaState } from './state';
 import { createTimeRanges } from './time-ranges';
@@ -72,8 +72,10 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
  */
 export function softResetMediaStore($media: MediaStore) {
   mediaStore.reset($media, (prop) => !DO_NOT_RESET_ON_SRC_CHANGE.has(prop));
+  tick();
 }
 
 export function hardResetMediaStore($media: MediaStore) {
   mediaStore.reset($media);
+  tick();
 }

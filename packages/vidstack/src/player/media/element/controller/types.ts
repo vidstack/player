@@ -1,4 +1,4 @@
-import type { Dispose, MaybeStopEffect } from 'maverick.js';
+import type { Dispose, Maybe, MaybeStopEffect } from 'maverick.js';
 import type { HTMLCustomElement } from 'maverick.js/element';
 
 import type { UseFullscreen } from '../../../../foundation/fullscreen/use-fullscreen';
@@ -90,12 +90,12 @@ export interface MediaController {
    * @example
    * ```ts
    * const media = document.querySelector('vds-media');
-   * media.store.paused.subscribe(paused => {
+   * media.subscribe(({ paused }) => {
    *   // ...
    * });
    * ```
    */
-  readonly store: MediaControllerStore;
+  readonly subscribe: MediaSubscribe;
   /**
    * Begins/resumes playback of the media. If this method is called programmatically before the
    * user has interacted with the player, the promise may be rejected subject to the browser's
@@ -126,12 +126,8 @@ export interface MediaController {
   exitFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
 }
 
-export type MediaControllerStore = {
-  readonly [Prop in keyof MediaStore]: Subscribable<MediaStore[Prop]>;
-};
-
-export interface Subscribable<Value> {
-  subscribe(callback: (value: Value) => MaybeStopEffect): Dispose;
+export interface MediaSubscribe {
+  (callback: (store: MediaStore) => Maybe<Dispose>): Dispose;
 }
 
 export interface MediaControllerEvents

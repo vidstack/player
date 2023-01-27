@@ -54,14 +54,28 @@ Tracking media state via store subscription:
 ```js
 const media = document.querySelector('vds-media');
 
-const { paused } = media.store;
-
-// The given function will re-run as the `paused` state changes.
-const unsubscribe = paused.subscribe((paused) => {
+// Any media state accessed will create a dependency.
+// The given callback will re-run as `paused` or `playing` state changes.
+const unsubscribe = media.subscribe(({ paused, playing }) => {
   console.log('Paused:', paused);
+  console.log('Playing:', playing);
 });
 
 unsubscribe();
+```
+
+You can create individual subscriptions if needed like so:
+
+```js
+const media = document.querySelector('vds-media');
+
+const unsubPaused = media.subscribe(({ paused }) => {
+  // ...
+});
+
+const unsubCurrentTime = media.subscribe(({ currentTime }) => {
+  // ...
+});
 ```
 
 ## Updating

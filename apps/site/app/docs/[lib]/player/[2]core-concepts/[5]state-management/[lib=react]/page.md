@@ -64,10 +64,9 @@ import { type MediaElement } from 'vidstack';
 
 // This component is a child of `<MediaProvider>`
 function MediaPlayerUI() {
-  // - This is a live subscription to the media paused store.
-  // - All stores are lazily subscribed to on prop access.
+  // - This is a live subscription to the media paused state.
+  // - All subscriptions are lazily created on prop access.
   const { paused } = useMediaState();
-
   // ...
 }
 ```

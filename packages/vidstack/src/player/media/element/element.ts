@@ -1,10 +1,11 @@
 import {
   effect,
+  getScope,
   hasProvidedContext,
-  MaybeStopEffect,
   onDispose,
   peek,
   provideContext,
+  scoped,
   signal,
 } from 'maverick.js';
 import { AttributesRecord, defineCustomElement, onAttach, onConnect } from 'maverick.js/element';
@@ -22,13 +23,11 @@ import { Queue } from '../../../foundation/queue/queue';
 import { IS_IOS } from '../../../utils/support';
 import { mediaContext, useMedia } from '../context';
 import type { MediaState } from '../state';
-import type { MediaStore } from '../store';
 import { useMediaAdapterDelegate } from './controller/adapter-delegate';
 import {
   createMediaControllerDelegate,
   mediaControllerDelegateContext,
 } from './controller/controller-delegate';
-import type { MediaControllerStore } from './controller/types';
 import { useMediaCanLoad } from './controller/use-media-can-load';
 import { useMediaEventsLogger } from './controller/use-media-events-logger';
 import { useMediaPropChange } from './controller/use-media-prop-change';
@@ -85,7 +84,8 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       });
     }
 
-    const context = useMedia(),
+    const scope = getScope(),
+      context = useMedia(),
       $media = context.$store,
       requestManagerInit: MediaRequestManagerInit = {
         requestQueue: new Queue(),
@@ -175,10 +175,6 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
       delegate.dispatch('can-load');
     }
 
-    function subscribe(this: keyof MediaStore, callback: (value: any) => MaybeStopEffect) {
-      return effect(() => callback($media[this]));
-    }
-
     return mergeProperties(
       {
         get user() {
@@ -197,11 +193,7 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
           // @ts-expect-error
           set: noop,
         }),
-        store: new Proxy($media, {
-          get: (_, prop: keyof MediaStore) => ({ subscribe: subscribe.bind(prop) }),
-          // @ts-expect-error
-          set: noop,
-        }) as unknown as MediaControllerStore,
+        subscribe: (callback) => scoped(() => effect(() => callback($media)), scope)!,
         startLoading,
         play: requestManager.play,
         pause: requestManager.pause,
