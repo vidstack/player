@@ -1,5 +1,4 @@
 import { Dispose, effect, peek, ReadSignal, root, signal, WriteSignal } from 'maverick.js';
-import { onConnect } from 'maverick.js/element';
 import { DOMEvent } from 'maverick.js/std';
 
 import { createLogger, Logger } from '../../foundation/logger/create-logger';
@@ -12,14 +11,15 @@ const remotes = new WeakMap<ReadSignal<EventTarget | null>, MediaRemoteControl>(
 
 export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
   const logger = __DEV__ ? createLogger() : undefined,
+    media = useMedia(),
     remote = remotes.get($target) || new MediaRemoteControl(logger);
 
   if (!remotes.has($target)) {
-    onConnect(() => {
+    effect(() => {
       const target = $target();
       if (__DEV__) logger?.setTarget(target);
       remote.setTarget(target);
-      remote.setMedia(useMedia().$element());
+      remote.setMedia(media.$element());
     });
 
     remotes.set($target, remote);

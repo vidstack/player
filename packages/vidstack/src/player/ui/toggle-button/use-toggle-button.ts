@@ -31,6 +31,7 @@ export function useToggleButton(
 
   function onPress(event: Event) {
     const disabled = $disabled();
+
     if (disabled || (isKeyboardEvent(event) && !isKeyboardClick(event))) {
       if (disabled) event.stopImmediatePropagation();
       return;
