@@ -41,7 +41,7 @@ const trackedEventType = new Set<keyof ME.MediaEvents>([
  * state context, and satisfying media requests if a manager arg is provided.
  */
 export function createMediaStateManager(
-  { $element: $controller, $provider, $store }: MediaContext,
+  { $player, $provider, $store }: MediaContext,
   requests: MediaRequestContext,
 ): MediaStateManager {
   if (__SERVER__) return { handle: noop };
@@ -55,11 +55,11 @@ export function createMediaStateManager(
     lastWaitingEvent: Event | undefined;
 
   onAttach(() => {
-    $controller()?.setAttribute('aria-busy', 'true');
+    $player()?.setAttribute('aria-busy', 'true');
   });
 
   effect(() => {
-    const target = $controller();
+    const target = $player();
     if (!target) return;
     listenEvent(target, 'fullscreen-change', onFullscreenChange);
     listenEvent(target, 'fullscreen-error', onFullscreenError);
@@ -133,7 +133,7 @@ export function createMediaStateManager(
     appendTriggerEvent(event, trackedEvents.get('sources-change'));
 
     $store.source = event.detail;
-    $controller()?.setAttribute('aria-busy', 'true');
+    $player()?.setAttribute('aria-busy', 'true');
 
     // Skip resets before first playback to ensure initial properties and track events are kept.
     if (skipInitialSrcChange) {
@@ -176,7 +176,7 @@ export function createMediaStateManager(
 
     $store.canPlay = true;
     $store.duration = event.detail.duration;
-    $controller()?.setAttribute('aria-busy', 'false');
+    $player()?.setAttribute('aria-busy', 'false');
   }
 
   function onCanPlayThrough(event: ME.MediaCanPlayThroughEvent) {
@@ -226,7 +226,7 @@ export function createMediaStateManager(
     if ($store.ended || requests._$isReplay()) {
       requests._$isReplay.set(false);
       $store.ended = false;
-      handleMediaEvent(createEvent($controller, 'replay', { trigger: event }));
+      handleMediaEvent(createEvent($player, 'replay', { trigger: event }));
     }
   }
 
@@ -269,7 +269,7 @@ export function createMediaStateManager(
   function onStarted(event: Event) {
     if (!$store.started) {
       $store.started = true;
-      handleMediaEvent(createEvent($controller, 'started', { trigger: event }));
+      handleMediaEvent(createEvent($player, 'started', { trigger: event }));
     }
   }
 
@@ -329,9 +329,9 @@ export function createMediaStateManager(
     firingWaiting = true;
     $store.waiting = true;
     $store.playing = false;
-    const event = createEvent($controller, 'waiting', { trigger: lastWaitingEvent });
+    const event = createEvent($player, 'waiting', { trigger: lastWaitingEvent });
     trackedEvents.set('waiting', event);
-    $controller()?.dispatchEvent(event);
+    $player()?.dispatchEvent(event);
     lastWaitingEvent = undefined;
     firingWaiting = false;
   }, 300);
@@ -388,7 +388,7 @@ export function createMediaStateManager(
       trackedEvents.set(event.type, event as ME.MediaEvent);
     }
 
-    $controller()?.dispatchEvent(event);
+    $player()?.dispatchEvent(event);
   }
 
   return { handle: handleMediaEvent };

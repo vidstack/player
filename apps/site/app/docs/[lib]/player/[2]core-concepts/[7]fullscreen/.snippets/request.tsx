@@ -1,13 +1,13 @@
-import { Media } from '@vidstack/react';
+import { MediaPlayer } from '@vidstack/react';
 import { useRef } from 'react';
-import { type MediaElement } from 'vidstack';
+import { type MediaPlayerElement } from 'vidstack';
 
-function MediaPlayer() {
-  const media = useRef<MediaElement>(null);
+function Player() {
+  const player = useRef<MediaPlayerElement>(null);
 
   async function manageFullscreen() {
     try {
-      await media.current!.enterFullscreen();
+      await player.current!.enterFullscreen();
     } catch (e) {
       // This will generally throw if:
       // 1. Fullscreen API is not available.
@@ -17,12 +17,12 @@ function MediaPlayer() {
     // ...
 
     try {
-      await media.current!.exitFullscreen();
+      await player.current!.exitFullscreen();
     } catch (e) {
       // This will generally throw if:
       // 1. Fullscreen API is not available.
     }
   }
 
-  return <Media ref={media}>{/* ... */}</Media>;
+  return <MediaPlayer ref={player}>{/* ... */}</MediaPlayer>;
 }

@@ -1,12 +1,11 @@
-import { AspectRatio, Media, Poster, Video } from '@vidstack/react';
+import { MediaOutlet, MediaPlayer, MediaPoster } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media poster="https://media-files.vidstack.io/poster.png">
-      <AspectRatio ratio="16/9">
-        <Video>{/* ... */}</Video>
-        <Poster alt="Agent 327 blowing flames with a hair dryer." />
-      </AspectRatio>
-    </Media>
+    <MediaPlayer poster="https://media-files.vidstack.io/poster.png" aspect-ratio={16 / 9}>
+      <MediaOutlet>
+        <MediaPoster alt="Agent 327 blowing flames with a hair dryer." />
+      </MediaOutlet>
+    </MediaPlayer>
   );
 }

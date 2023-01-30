@@ -9,16 +9,15 @@ In this section, we'll look at the rich event system that's available when worki
 
 ## Media Events
 
-The media element fires a superset of [`HTMLMediaElement` events](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#events):
+The player element fires a superset of [`HTMLMediaElement` events](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#events):
 
 - `play` -> `$event:play`
 - `canplay` -> `$event:can-play`
 - `loadedmetadata` -> `$event:loaded-metadata`
 
-Prefer our events over the native media element events (e.g., `<video>`) as they smooth out any
-unexpected behaviour across browsers, attach additional metadata to the event `detail`, and contain
-rich information such as the [request event](#request-events) that triggered it or the origin event
-that kicked it off.
+Vidstack media events smooth out any unexpected behaviour across browsers, attach additional
+metadata to the event `detail`, and contain rich information such as the [request event](#request-events)
+that triggered it or the origin event that kicked it off.
 
 {% code_snippet name="events" /%}
 
@@ -45,7 +44,7 @@ The following is an example of a chain that is created when the play button is c
 
 All event types are named using _PascalCase_ and _suffixed_ with the word `Event`
 (e.g., `SliderDragStartEvent`). Furthermore, media events are all _prefixed_ with the word `Media` as
-seen in the example above.
+seen in the examples below.
 
 ```ts {% copy=true %}
 import {

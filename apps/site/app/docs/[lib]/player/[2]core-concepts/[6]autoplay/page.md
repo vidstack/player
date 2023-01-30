@@ -16,17 +16,7 @@ for autoplay working on a site where a user is visiting for the first time, or i
 muting the media. Try to encourage the user to either play or unmute the media themselves to avoid
 a poor experience.
 
-## Autoplay
-
-We manually handle autoplay so we can detect when it fails. Therefore, ensure you set `autoplay` on
-the media component instead of the underlying provider like so:
-
 {% code_snippet name="autoplay" highlight="html:1|react:5" /%}
-
-{% callout type="danger" %}
-The `autoplay` attribute on the `<audio>` or `<video>` element will take priority over the
-`preload` attribute. Never set this attribute because it will break the loading process.
-{% /callout %}
 
 ## Styling
 
@@ -34,11 +24,11 @@ The following media attributes are available for styling based on the current au
 state:
 
 ```css
-vds-media[autoplay][started] {
+media-player[autoplay][playing] {
   /** autoplay has successfully started. */
 }
 
-vds-media[autoplay-error] {
+media-player[autoplay-error] {
   /** autoplay has failed. */
 }
 ```

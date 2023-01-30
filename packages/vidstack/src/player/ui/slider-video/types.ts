@@ -49,10 +49,10 @@ export interface SliderVideoErrorEvent extends DOMEvent<void> {
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-video}
  * @example
  * ```html
- * <vds-time-slider>
- *   <vds-slider-video src="/low-res-video.mp4" slot="preview"></vds-slider-video>
- * </vds-time-slider>
+ * <media-time-slider>
+ *   <media-slider-video src="/low-res-video.mp4" slot="preview"></media-slider-video>
+ * </media-time-slider>
  * ```
  */
-export interface SliderVideoElement
+export interface MediaSliderVideoElement
   extends HTMLCustomElement<SliderVideoProps, SliderVideoEvents> {}

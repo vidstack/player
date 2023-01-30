@@ -7,30 +7,6 @@ description: How to read and update media state with our React hooks.
 
 In this section, we'll look at the React hooks available for reading and updating media state.
 
-## Setup
-
-The `<MediaProvider>` is required to enable using media hooks:
-
-```tsx
-import { Media, MediaProvider } from '@vidstack/react';
-
-export function MediaPlayer() {
-  return (
-    <MediaProvider>
-      <Media>
-        {/* provider goes here */}
-        <MediaPlayerUI />
-      </Media>
-    </MediaProvider>
-  );
-}
-
-function MediaPlayerUI() {
-  // Media hooks can be used here.
-  return <div className="media-controls">{/* ... */}</div>;
-}
-```
-
 ## Reading
 
 The media state hook enables you to subscribe directly to specific media state changes, rather
@@ -41,15 +17,15 @@ Tracking media state via events:
 {% /no %}
 
 ```tsx
-import { Media } from '@vidstack/react';
+import { MediaPlayer } from '@vidstack/react';
 import { useState } from 'react';
 
-function MediaPlayer() {
+function Player() {
   const [paused, setPaused] = useState(true);
   return (
-    <Media onPlay={() => setPaused(false)} onPause={() => setPaused(true)}>
+    <MediaPlayer onPlay={() => setPaused(false)} onPause={() => setPaused(true)}>
       {/* ... */}
-    </Media>
+    </MediaPlayer>
   );
 }
 ```
@@ -58,14 +34,28 @@ function MediaPlayer() {
 Tracking media state via hook:
 {% /yes %}
 
-```tsx {% highlight="8" %}
-import { Media, useMediaState } from '@vidstack/react';
-import { type MediaElement } from 'vidstack';
+```tsx {% highlight="9" %}
+import { useMediaState } from '@vidstack/react';
+import { MediaPlayer, type MediaPlayerElement } from '@vidstack/react';
+import { useRef } from 'react';
 
-// This component is a child of `<MediaProvider>`
-function MediaPlayerUI() {
+function Player() {
+  const player = useRef<MediaPlayerElement>(null);
   // - This is a live subscription to the media paused state.
   // - All subscriptions are lazily created on prop access.
+  const { paused } = useMediaState(player);
+  return <MediaPlayer ref={player}>{/* ... */}</MediaPlayer>;
+}
+```
+
+Or, if inside a child of `<MediaPlayer>`:
+
+```tsx {% highlight="6" %}
+import { useMediaState } from '@vidstack/react';
+
+// This component is a child of `<MediaPlayer>`
+function MediaPlayerUI() {
+  // No ref required.
   const { paused } = useMediaState();
   // ...
 }
@@ -77,37 +67,42 @@ interface on GitHub as a reference.
 
 ### Avoiding Renders
 
-Media state can be directly accessed on the `<Media>` component if you'd like to avoid unnecessary
-re-renders:
+Media state can be directly accessed on the `<MediaPlayer>` component if you'd like to avoid
+unnecessary re-renders:
 
-```tsx {% highlight="9" %}
-import { Media } from '@vidstack/react';
+```tsx {% highlight="9,11-14" %}
+import { MediaPlayer } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
-import { type MediaElement } from 'vidstack';
+import { type MediaPlayerElement } from 'vidstack';
 
-function MediaPlayer() {
-  const media = useRef<MediaElement>(null);
+function Player() {
+  const player = useRef<MediaPlayerElement>(null);
 
   useEffect(() => {
-    const { paused } = media.current!.state;
+    const { paused } = player.current!.state;
+
+    // Or, subscribe for updates.
+    return player.subscribe(({ currentTime }) => {
+      // ...
+    });
   }, []);
 
-  return <Media ref={media}>{/* ... */}</Media>;
+  return <MediaPlayer ref={player}>{/* ... */}</MediaPlayer>;
 }
 ```
 
-Or, if inside a child of `<MediaProvider>`:
+Or, if inside a child of `<MediaPlayer>`:
 
-```tsx {% highlight="8" %}
-import { useMediaElement } from '@vidstack/react';
+```tsx
+import { useMediaPlayer } from '@vidstack/react';
 
-// This component is a child of `<MediaProvider>`
+// This component is a child of `<MediaPlayer>`
 function MediaPlayerUI() {
-  const media = useMediaElement();
+  const player = useMediaPlayer();
   useEffect(() => {
-    if (!media) return;
-    const { paused } = media.state;
-  }, [media]);
+    if (!player) return;
+    // Same as example above here.
+  }, [player]);
 }
 ```
 
@@ -118,17 +113,35 @@ The media remote hook provides a simple facade for dispatching
 request media playback to play/pause, change the current volume level, seek to a different time
 position, and other actions that change media state.
 
-```tsx {% highlight="5,8" %}
+```tsx {% highlight="10-13" %}
+import { MediaPlayer } from '@vidstack/react';
+import { useEffect, useRef } from 'react';
+import { type MediaPlayerElement } from 'vidstack';
+
+function Player() {
+  const player = useRef<MediaPlayerElement>(null);
+  const remote = useMediaRemote(player);
+
+  useEffect(() => {
+    remote.play();
+    remote.pause();
+    remote.togglePaused();
+    // ...
+  }, []);
+
+  return <MediaPlayer ref={player}>{/* ... */}</MediaPlayer>;
+}
+```
+
+Or, if inside a child of `<MediaPlayer>`:
+
+```tsx {% highlight="6" %}
 import { useMediaRemote } from '@vidstack/react';
 
-// This component is a child of `<MediaProvider>`
+// This component is a child of `<MediaPlayer>`
 function MediaPlayerUI() {
+  // No ref required.
   const remote = useMediaRemote();
-
-  function requestPlay() {
-    remote.play();
-  }
-
   // ...
 }
 ```
@@ -140,94 +153,111 @@ back to their origin event. This can be useful when trying to understand how a m
 triggered, or when analyzing data such as the time difference between the request and when the media
 was actually played.
 
-```tsx {% highlight="6,12" %}
+```tsx {% highlight="5,10" %}
 import { useMediaRemote } from '@vidstack/react';
-import { useRef, type PointerEvent } from 'react';
+import { type PointerEvent } from 'react';
 
 function PlayButton() {
-  const button = useRef<HTMLButtonElement>(null);
-  const remote = useMediaRemote(button);
+  const remote = useMediaRemote();
 
   function onPointerUp({ nativeEvent }: PointerEvent) {
     // - We are providing the "trigger" here.
-    // - Trigger events allow us to trace events back to their origin.
     // - The media play event will have this pointer event in its chain.
     remote.togglePaused(nativeEvent);
   }
 
-  return (
-    <button ref={button} onPointerUp={onPointerUp}>
-      {/* ... */}
-    </button>
-  );
+  return <button onPointerUp={onPointerUp}>{/* ... */}</button>;
 }
 ```
 
-## Media Element
+You can set a target to dispatch events from if you're performing actions without trigger events
+like so:
 
-The following hook provides you with a reference to the nearest parent `MediaElement` (i.e.,
-`<vds-media>`).
+```tsx {% highlight="7,10" %}
+import { useMediaRemote } from '@vidstack/react';
+import { useEffect, useRef } from 'react';
 
-```tsx
-import { useMediaElement } from '@vidstack/react';
-import { useEffect } from 'react';
-
-// This component is a child of `<MediaProvider>`
-function MediaPlayerUI() {
-  const media = useMediaElement();
+function Foo() {
+  const div = useRef<HTMLDivElement>(null);
+  // Pass `div` as target to dispatch media requests from.
+  const remote = useMediaRemote(div);
 
   useEffect(() => {
-    if (!media) return;
+    remote.seek(100);
+  }, []);
+
+  return <div ref={div}>{/* ... */}</div>;
+}
+```
+
+## Media Player
+
+The following hook provides you with a reference to the nearest parent `MediaPlayerElement` (i.e.,
+`<media–player>`).
+
+```tsx
+import { useMediaPlayer } from '@vidstack/react';
+import { useEffect } from 'react';
+
+// This component is a child of `<MediaPlayer>`
+function MediaPlayerUI() {
+  const player = useMediaPlayer();
+  useEffect(() => {
+    if (!player) return;
     // ...
-  }, [media]);
+  }, [player]);
 }
 ```
 
 {% no %}
-Avoid calling methods directly on the media element:
+Avoid calling methods directly on the player element:
 {% /no %}
 
 ```tsx
-import { useMediaElement } from '@vidstack/react';
+import { useMediaPlayer } from '@vidstack/react';
 import { useEffect } from 'react';
 
-// This component is a child of `<MediaProvider>`
+// This component is a child of `<MediaPlayer>`
 function MediaPlayerUI() {
-  const media = useMediaElement();
-
+  const player = useMediaPlayer();
   useEffect(() => {
-    if (!media) return;
+    if (!player) return;
     // BAD: try to avoid doing this as you will lose valuable information
     // provided by event chains. Prefer the request/response model by using
     // the `useMediaRemote` hook.
-    media.play();
-  }, [media]);
+    player.play();
+  }, [player]);
 }
 ```
 
+All player properties and methods can be found in the [`<media-player>` API reference](/docs/player/components/layout/player/api).
+
 ## Media Provider
 
-The following hook provides you with a reference to the nearest parent `MediaProviderElement` (e.g.,
-`<vds-video>` or `<vds-hls-video>`).
+The following hook provides you with a reference to the current `MediaProvider`:
 
 ```tsx
-import { useMediaProviderElement } from '@vidstack/react';
+import { useMediaProvider } from '@vidstack/react';
 import { useEffect } from 'react';
-import { isHLSVideoElement } from 'vidstack';
+import { isAudioProvider, isHLSProvider, isVideoProvider } from 'vidstack';
 
-// This component is a child of `<MediaProvider>`
+// This component is a child of `<MediaPlayer>`
 function MediaPlayerUI() {
-  const provider = useMediaProviderElement();
+  const provider = useMediaProvider();
 
   useEffect(() => {
-    if (isHLSVideoElement(provider)) {
-      provider.addEventListener(
-        'instance',
-        (event) => {
-          const engine = event.detail; // hls.js instance
-        },
-        { once: true },
-      );
+    if (isAudioProvider(provider)) {
+      const audioElement = provider.audio;
+    }
+
+    if (isVideoProvider(provider)) {
+      const videoElement = provider.video;
+    }
+
+    if (isHLSProvider(provider)) {
+      provider.onInstance((hlsjs) => {
+        // ...
+      });
     }
   }, [provider]);
 }

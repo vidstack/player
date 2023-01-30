@@ -10,14 +10,14 @@ In this section, we'll go through the basics of using Vidstack Player components
 ## Importing Components
 
 You can import all components from the path `@vidstack/react`. Component names mirror
-the element tag name except they're in PascalCase without the `vds` prefix.
+the element tag name except they're in PascalCase:
 
-- `vds-media` -> `Media`
-- `vds-video` -> `Video`
-- `vds-play-button` -> `PlayButton`
+- `media-player` -> `MediaPlayer`
+- `media-outlet` -> `MediaOutlet`
+- `media-play-button` -> `MediaPlayButton`
 
 ```js
-import { Media, PlayButton, Video } from '@vidstack/react';
+import { MediaOutlet, MediaPlayButton, MediaPlayer } from '@vidstack/react';
 ```
 
 Keep in mind that you're implicitly registering the underlying custom element by importing a
@@ -29,23 +29,21 @@ All components forward the underlying custom element reference, so you can use t
 `useRef` hook to get a hold of it.
 
 ```tsx
-import { Media, Video } from '@vidstack/react';
+import { MediaOutlet, MediaPlayer } from '@vidstack/react';
 import { useEffect, useRef } from 'React';
-import { type MediaElement } from 'vidstack';
+import { type MediaPlayerElement } from 'vidstack';
 
-function MediaPlayer() {
-  const media = useRef<MediaElement>(null);
+function Player() {
+  const player = useRef<MediaPlayerElement>(null);
 
   useEffect(() => {
-    media.current!.startLoading();
+    player.current!.startLoading();
   }, []);
 
   return (
-    <Media load="custom" ref={media}>
-      <Video>
-        <video src="..." />
-      </Video>
-    </Media>
+    <MediaPlayer load="custom" ref={player}>
+      <MediaOutlet></MediaOutlet>
+    </MediaPlayer>
   );
 }
 ```
@@ -57,17 +55,15 @@ element itself; therefore, you can pass in complex data types such as objects an
 any issues.
 
 ```tsx
-import { HLSVideo, Media } from '@vidstack/react';
+import { MediaPlayer } from '@vidstack/react';
 import { useState } from 'react';
 
-function MediaPlayer() {
+function Player() {
   const [paused, setPaused] = useState(true);
   return (
-    <Media paused={paused}>
-      <HLSVideo library={() => import('hls.js')} config={{ lowLatencyMode: true }}>
-        <video src="..." />
-      </HLSVideo>
-    </Media>
+    <MediaPlayer src={[{ src: '...', type: '...' }]} paused={paused}>
+      {/* ... */}
+    </MediaPlayer>
   );
 }
 ```
@@ -78,20 +74,18 @@ All custom events are forwarded to a callback whose name mirrors the original ev
 PascalCase:
 
 ```tsx
-import { Media, Video } from '@vidstack/react';
+import { MediaOutlet, MediaPlayer } from '@vidstack/react';
 import { type MediaPlayingEvent } from 'vidstack';
 
-function MediaPlayer() {
+function Player() {
   function onPlaying(event: MediaPlayingEvent) {
     // ...
   }
 
   return (
-    <Media onPlaying={onPlaying}>
-      <Video>
-        <video src="..." />
-      </Video>
-    </Media>
+    <MediaPlayer onPlaying={onPlaying}>
+      <MediaOutlet />
+    </MediaPlayer>
   );
 }
 ```
@@ -99,32 +93,49 @@ function MediaPlayer() {
 ## Element Types
 
 All element types are classes named using _PascalCase_ and _suffixed_ with the word `Element`
-(e.g., `MediaElement`).
+(e.g., `MediaPlayerElement`).
 
 ```ts {% copy=true %}
-import { type MediaElement, type VideoElement } from 'vidstack';
+import { type MediaOutlet, type MediaPlayerElement } from 'vidstack';
 
-let media: MediaElement;
+let player: MediaPlayerElement;
 ```
 
 ## Provider Types
 
-The following utilities can be useful for narrowing the type of a media provider element:
+The following utilities can be useful for narrowing the type of a media provider:
 
-```ts {% copy=true %}
+```tsx {% copy=true %}
 import {
-  isAudioElement,
-  isHLSVideoElement,
-  isVideoElement,
-  type AudioElement,
-  type HLSVideoElement,
-  type MediaProviderElement,
-  type VideoElement,
+  isAudioProvider,
+  isHLSProvider,
+  isVideoProvider,
+  type AudioProvider,
+  type HLSProvider,
+  type MediaProvider,
+  type VideoProvider,
 } from 'vidstack';
 
-let provider: MediaProviderElement;
+function Player() {
+  function onProviderChange(event: MediaProviderChangeEvent) {
+    const provider = event.detail;
 
-if (isHLSVideoElement(provider)) {
-  provider; // type `HLSVideoElement`
+    if (isAudioProvider(provider)) {
+      const audioElement = provider.audio;
+    }
+
+    if (isVideoProvider(provider)) {
+      const videoElement = provider.video;
+    }
+
+    if (isHLSProvider(provider)) {
+      provider.config = { lowLatencyMode: true };
+      provider.onInstance((hls) => {
+        // ...
+      });
+    }
+  }
+
+  return <MediaPlayer onProviderChange={onProviderChange}>{/* ... */}</MediaPlayer>;
 }
 ```

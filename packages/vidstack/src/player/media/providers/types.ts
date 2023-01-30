@@ -3,7 +3,7 @@ import type { HTMLCustomElement } from 'maverick.js/element';
 
 import type { FullscreenAdapter } from '../../../foundation/fullscreen/fullscreen';
 import type { Logger } from '../../../foundation/logger/create-logger';
-import type { MediaElement } from '../../element/types';
+import type { MediaPlayerElement } from '../../element/types';
 import type { MediaControllerDelegate } from '../controller/controller-delegate';
 import type { MediaState } from '../state';
 import type { MediaStore } from '../store';
@@ -32,9 +32,9 @@ export interface MediaProvider
 
 export interface MediaProviderContext {
   logger?: Logger;
-  player: MediaElement;
+  player: MediaPlayerElement;
   delegate: MediaControllerDelegate;
-  $player: ReadSignal<MediaElement | null>;
+  $player: ReadSignal<MediaPlayerElement | null>;
   $store: MediaStore;
 }
 

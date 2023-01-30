@@ -1,10 +1,10 @@
-import { Media, TimeSlider } from '@vidstack/react';
+import { MediaPlayer, MediaTimeSlider } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
+    <MediaPlayer>
       {/* ... */}
-      <TimeSlider />
-    </Media>
+      <MediaTimeSlider />
+    </MediaPlayer>
   );
 }

@@ -20,16 +20,16 @@ The following media attributes can be useful when building a controls container:
 
 ```css {% copy=true %}
 /* Avoid double controls on iOS. */
-vds-media[ios-controls] .media-controls,
+media-player[ios-controls] .media-controls,
 /* Hide controls while media is loading, or user is idle. */
-vds-media:not([can-play]) .media-controls,
-vds-media[user-idle] .media-controls {
+media-player:not([can-play]) .media-controls,
+media-player[user-idle] .media-controls {
   opacity: 0;
   visibility: hidden;
 }
 
 /* Show controls if autoplay fails. */
-vds-media[autoplay-error] .media-controls {
+media-player[autoplay-error] .media-controls {
   opacity: 1;
 }
 ```

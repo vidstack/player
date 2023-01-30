@@ -14,16 +14,16 @@ import { IS_IOS } from '../../utils/support';
 import { createMediaController } from '../media/controller/create';
 import { useSourceSelection } from '../media/controller/source-selection';
 import type { MediaState } from '../media/state';
-import { mediaElementProps } from './props';
-import type { MediaConnectEvent, MediaElement } from './types';
+import { mediaPlayerProps } from './props';
+import type { MediaPlayerConnectEvent, MediaPlayerElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-media': MediaElement;
+    'media-player': MediaPlayerElement;
   }
 
   interface HTMLElementEventMap {
-    'media-connect': MediaConnectEvent;
+    'media-player-connect': MediaPlayerConnectEvent;
   }
 }
 
@@ -51,10 +51,10 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
 
 export const HLS_LISTENERS = Symbol(__DEV__ ? 'HLS_LISTENERS' : 0);
 
-export const MediaDefinition = defineCustomElement<MediaElement>({
-  tagName: 'vds-media',
-  props: mediaElementProps,
-  construct(this: MediaElement) {
+export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
+  tagName: 'media-player',
+  props: mediaPlayerProps,
+  construct(this: MediaPlayerElement) {
     this[HLS_LISTENERS] = signal<string[]>([]);
     const addEventListener = this.addEventListener;
     this.addEventListener = function (type, handler, options) {
@@ -73,12 +73,12 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     }
 
     onAttach(() => {
-      controller._context.$element.set(host.el);
-      listenEvent(host.el!, 'vds-find-media', ({ detail }) => detail(host.el));
+      controller._context.$player.set(host.el);
+      listenEvent(host.el!, 'find-media-player', ({ detail }) => detail(host.el));
     });
 
     onConnect(() => {
-      dispatchEvent(host.el, 'media-connect', {
+      dispatchEvent(host.el, 'media-player-connect', {
         detail: host.el!,
         bubbles: true,
         composed: true,
@@ -102,9 +102,6 @@ export const MediaDefinition = defineCustomElement<MediaElement>({
     for (const prop of MEDIA_ATTRIBUTES) {
       $attrs[camelToKebabCase(prop as string)] = () => $store[prop] as string | number;
     }
-
-    const userIdle = controller._request._user.idle;
-    $attrs['user-idle'] = () => userIdle.idling;
 
     host.setAttributes($attrs);
 

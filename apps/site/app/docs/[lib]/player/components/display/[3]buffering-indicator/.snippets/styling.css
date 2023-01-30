@@ -32,8 +32,8 @@
 }
 
 /* Show buffering indicator while media is not ready, or buffering. */
-vds-media:not([can-play]) .media-buffering-icon,
-vds-media[waiting] .media-buffering-icon {
+media-player:not([can-play]) .media-buffering-icon,
+media-player[waiting] .media-buffering-icon {
   opacity: 1;
   animation: spin 1s linear infinite;
 }

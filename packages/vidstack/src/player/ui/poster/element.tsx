@@ -5,16 +5,16 @@ import { preconnect } from '../../../utils/network';
 import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
 import { posterProps } from './props';
-import type { PosterElement } from './types';
+import type { MediaPosterElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-poster': PosterElement;
+    'media-poster': MediaPosterElement;
   }
 }
 
-export const PosterDefinition = defineCustomElement<PosterElement>({
-  tagName: 'vds-poster',
+export const PosterDefinition = defineCustomElement<MediaPosterElement>({
+  tagName: 'media-poster',
   props: posterProps,
   setup({ host, props: { $alt } }) {
     const $media = useMediaStore(),

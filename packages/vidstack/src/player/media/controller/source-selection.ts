@@ -2,7 +2,7 @@ import { effect, peek, ReadSignal, tick } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
 import { inferSrcType } from '../../../utils/mime';
-import type { MediaElementProps } from '../../element/types';
+import type { MediaPlayerProps } from '../../element/types';
 import type { MediaContext } from '../context';
 import { AudioProviderLoader } from '../providers/audio/loader';
 import { HLSProviderLoader } from '../providers/hls/loader';
@@ -16,7 +16,7 @@ const PROVIDER_LOADERS: MediaProviderLoader[] = [
 ];
 
 export function useSourceSelection(
-  $src: ReadSignal<MediaElementProps['src']>,
+  $src: ReadSignal<MediaPlayerProps['src']>,
   { $loader, $store, delegate, logger }: MediaContext,
 ): void {
   if (__SERVER__) {
@@ -65,10 +65,10 @@ export function useSourceSelection(
     $loader.set(null);
   });
 
-  // The rest of the loading process is handled inside `<vds-media-outlet>`.
+  // The rest of the loading process is handled inside `<media-outlet>`.
 }
 
-function normalizeSrc(src: MediaElementProps['src']) {
+function normalizeSrc(src: MediaPlayerProps['src']) {
   return (isString(src) ? [{ src }] : src).map(({ src, type }) => ({
     src,
     type: type ?? inferSrcType(src),

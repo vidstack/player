@@ -21,9 +21,9 @@ export interface MuteButtonMembers extends ToggleButtonMembers {}
  * @slot volume-high - Used to override the default volume high icon.
  * @example
  * ```html
- * <vds-mute-button></vds-mute-button>
+ * <media-mute-button></media-mute-button>
  * ```
  */
-export interface MuteButtonElement
+export interface MediaMuteButtonElement
   extends HTMLCustomElement<MuteButtonProps, MuteButtonEvents>,
     MuteButtonMembers {}

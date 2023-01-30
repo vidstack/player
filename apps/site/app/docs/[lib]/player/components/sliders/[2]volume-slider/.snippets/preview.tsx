@@ -1,11 +1,11 @@
-import { Media, SliderValueText, VolumeSlider } from '@vidstack/react';
+import { MediaPlayer, MediaSliderValueText, MediaVolumeSlider } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
-      <VolumeSlider>
-        <SliderValueText type="pointer" format="percent" slot="preview" />
-      </VolumeSlider>
-    </Media>
+    <MediaPlayer>
+      <MediaVolumeSlider>
+        <MediaSliderValueText type="pointer" format="percent" slot="preview" />
+      </MediaVolumeSlider>
+    </MediaPlayer>
   );
 }

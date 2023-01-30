@@ -1,12 +1,12 @@
 <script>
   function onConnect(event) {
-    const media = event.target;
-    media.$store.duration = 231;
+    const player = event.target;
+    player.$store.duration = 231;
   }
 </script>
 
-<vds-media class="w-full max-w-xs relative" on:media-connect={onConnect} view="video">
-  <vds-time-slider>
-    <vds-slider-value-text type="pointer" format="time" slot="preview" />
-  </vds-time-slider>
-</vds-media>
+<media-player class="w-full max-w-xs relative" on:media-player-connect={onConnect} view="video">
+  <media-time-slider>
+    <media-slider-value-text type="pointer" format="time" slot="preview" />
+  </media-time-slider>
+</media-player>

@@ -1,7 +1,7 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { MediaDefinition } from './player/element/element';
-import { MediaOutletDefinition } from './player/media/outlet/element';
+import { PlayerDefinition } from './player/element/element';
+import { OutletDefinition } from './player/media/outlet/element';
 import { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
 import { MuteButtonDefinition } from './player/ui/mute-button/element';
 import { PlayButtonDefinition } from './player/ui/play-button/element';
@@ -14,9 +14,9 @@ import { VolumeSliderDefinition } from './player/ui/volume-slider/element';
 
 export default function registerAllElements(): void {
   [
+    PlayerDefinition,
+    OutletDefinition,
     PosterDefinition,
-    MediaDefinition,
-    MediaOutletDefinition,
     PlayButtonDefinition,
     MuteButtonDefinition,
     FullscreenButtonDefinition,

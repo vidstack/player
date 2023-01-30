@@ -1,13 +1,13 @@
-import { Media, MuteButton } from '@vidstack/react';
+import { MediaMuteButton, MediaPlayer } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
-      <MuteButton>
+    <MediaPlayer>
+      <MediaMuteButton>
         <svg slot="volume-muted">{/* ... */}</svg>
         <svg slot="volume-low">{/* ... */}</svg>
         <svg slot="volume-high">{/* ... */}</svg>
-      </MuteButton>
-    </Media>
+      </MediaMuteButton>
+    </MediaPlayer>
   );
 }

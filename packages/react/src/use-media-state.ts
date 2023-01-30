@@ -5,8 +5,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { mediaContext, MediaState } from 'vidstack';
 
 /**
- * This hook is used to access the current media state on the nearest parent media element (i.e.,
- * `<vds-media>`).
+ * This hook is used to access the current media state on the nearest parent player element (i.e.,
+ * `<media-player>`).
  *
  * @docs {@link https://vidstack.io/docs/react/player/core-concepts/state-management#reading}
  */
@@ -19,7 +19,7 @@ export function useMediaState(): Readonly<MediaState> {
     context = useReactContext(mediaContext);
 
   if (__DEV__ && !context) {
-    throw Error('[vidstack] no media context was found - did you forget to provide it?');
+    throw Error('[vidstack] no media context was found - was this called outside `<MediaPlayer>`?');
   }
 
   useEffect(() => {

@@ -1,23 +1,19 @@
-<vds-media
+<media-player
   class="w-full max-w-xs relative"
   volume={0.2}
+  src="https://media-files.vidstack.io/360p.mp4"
   poster="https://media-files.vidstack.io/poster-2.png"
   playsinline
   view="video"
+  aspect-ratio="16/9"
 >
-  <vds-aspect-ratio ratio="16/9">
-    <vds-video>
-      <video preload="none" src="https://media-files.vidstack.io/360p.mp4">
-        <track kind="captions" />
-      </video>
-    </vds-video>
-
-    <vds-poster alt="Agent 327 blowing flames with a hair dryer." />
-  </vds-aspect-ratio>
+  <media-outlet>
+    <media-poster alt="Agent 327 blowing flames with a hair dryer." />
+  </media-outlet>
 
   <div class="w-full flex items-center">
-    <vds-play-button />
-    <vds-mute-button />
-    <vds-volume-slider />
+    <media-play-button />
+    <media-mute-button />
+    <media-volume-slider />
   </div>
-</vds-media>
+</media-player>

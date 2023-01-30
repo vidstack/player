@@ -15,16 +15,16 @@ import type {
   SliderValueChangeEvent,
 } from '../slider/events';
 import { timeSliderProps } from './props';
-import type { TimeSliderElement } from './types';
+import type { MediaTimeSliderElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-time–slider': TimeSliderElement;
+    'media-time–slider': MediaTimeSliderElement;
   }
 }
 
-export const TimeSliderDefinition = defineCustomElement<TimeSliderElement>({
-  tagName: 'vds-time-slider',
+export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>({
+  tagName: 'media-time-slider',
   props: timeSliderProps,
   setup({ host, props: { $pauseWhileDragging, $seekingRequestThrottle, ...props }, accessors }) {
     const $media = useMediaStore(),

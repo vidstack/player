@@ -1,7 +1,7 @@
 import type * as HLS from 'hls.js';
 import type { DOMEvent } from 'maverick.js/std';
 
-import type { MediaElement } from '../../../element/types';
+import type { MediaPlayerElement } from '../../../element/types';
 
 export interface HLSProviderEvents {
   'hls-lib-load-start': HLSLibLoadStartEvent;
@@ -66,7 +66,7 @@ export interface HLSProviderEvents {
 }
 
 export interface HLSMediaEvent<DetailType = unknown> extends DOMEvent<DetailType> {
-  target: MediaElement;
+  target: MediaPlayerElement;
 }
 
 /**

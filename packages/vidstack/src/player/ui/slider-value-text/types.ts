@@ -34,37 +34,36 @@ export interface SliderValueTextProps {
  * Outputs the current slider value as text.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-value-text}
- * @tagname vds-slider-value-text
  * @example
  * ```html
- * <vds-time-slider>
- *   <vds-slider-value-text
+ * <media-time-slider>
+ *   <media-slider-value-text
  *     type="pointer"
  *     format="time"
  *     slot="preview"
- *   ></vds-slider-value-text>
- * </vds-time-slider>
+ *   ></media-slider-value-text>
+ * </media-time-slider>
  * ```
  * @example
  * ```html
- * <vds-slider-value-text
+ * <media-slider-value-text
  *   type="current"
- * ></vds-slider-value-text>
+ * ></media-slider-value-text>
  * ```
  * @example
  * ```html
- * <vds-slider-value-text
+ * <media-slider-value-text
  *   format="time"
  *   show-hours
  *   pad-hours
- * ></vds-slider-value-text>
+ * ></media-slider-value-text>
  * ```
  * @example
  * ```html
- * <vds-slider-value-text
+ * <media-slider-value-text
  *   format="percent"
  *   decimal-places="2"
- * ></vds-slider-value-text>
+ * ></media-slider-value-text>
  * ```
  */
-export interface SliderValueTextElement extends HTMLCustomElement<SliderValueTextProps> {}
+export interface MediaSliderValueTextElement extends HTMLCustomElement<SliderValueTextProps> {}

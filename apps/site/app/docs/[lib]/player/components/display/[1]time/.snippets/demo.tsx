@@ -1,13 +1,13 @@
-import { Media, Time } from '@vidstack/react';
+import { MediaPlayer, MediaTime } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
-      <Time type="current" />
-      <Time type="seekable" />
-      <Time type="buffered" />
-      <Time type="duration" />
-      <Time type="current" remainder />
-    </Media>
+    <MediaPlayer>
+      <MediaTime type="current" />
+      <MediaTime type="seekable" />
+      <MediaTime type="buffered" />
+      <MediaTime type="duration" />
+      <MediaTime type="current" remainder />
+    </MediaPlayer>
   );
 }

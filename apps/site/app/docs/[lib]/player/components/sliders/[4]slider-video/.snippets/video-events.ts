@@ -1,4 +1,4 @@
-const sliderVideo = document.querySelector('vds-slider-video');
+const sliderVideo = document.querySelector('media-slider-video');
 
 sliderVideo.addEventListener('can-play', (event) => {
   // ...

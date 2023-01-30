@@ -1,11 +1,11 @@
-import { Media, SliderVideo, TimeSlider } from '@vidstack/react';
+import { MediaPlayer, MediaSliderVideo, MediaTimeSlider } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
+    <MediaPlayer>
       {/* ... */}
-      <TimeSlider>
-        <SliderVideo
+      <MediaTimeSlider>
+        <MediaSliderVideo
           src="https://media-files.vidstack.io/240p.mp4"
           onCanPlay={() => {
             /* ... */
@@ -14,7 +14,7 @@ function MediaPlayer() {
             /* ... */
           }}
         />
-      </TimeSlider>
-    </Media>
+      </MediaTimeSlider>
+    </MediaPlayer>
   );
 }

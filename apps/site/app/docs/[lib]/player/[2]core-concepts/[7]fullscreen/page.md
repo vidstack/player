@@ -9,7 +9,7 @@ In this section, we'll look at how to request and track fullscreen changes.
 
 ## Requests
 
-You can request to enter or exit fullscreen on the `<vds-media>` element like so:
+You can request to enter or exit fullscreen on the `<media-player>` element like so:
 
 {% code_snippet name="request" highlight="html:5,15|react:10,20" /%}
 
@@ -29,7 +29,7 @@ media.enterFullscreen('provider');
 
 {% callout type="warning" %}
 By setting `target` to `provider`, the controller will only request fullscreen on the
-media provider element, meaning your custom UI will _not_ be displayed when in fullscreen.
+media provider, meaning your custom UI will _not_ be displayed when in fullscreen.
 {% /callout %}
 
 ### Media Remote
@@ -37,26 +37,26 @@ media provider element, meaning your custom UI will _not_ be displayed when in f
 The [media remote](/docs/player/core-concepts/state-management#updating) provides methods for
 dispatching `media-enter-fullscreen` and `media-exit-fullscreen` requests like so:
 
-{% code_snippet name="remote" highlight="html:3,6,12|react:7,13" /%}
+{% code_snippet name="remote" highlight="html:3,10|react:6,12" /%}
 
 ## Styling
 
 The following media attributes are available for styling based on the current fullscreen state:
 
 ```css
-vds-media[can-fullscreen] {
+media-player[can-fullscreen] {
   /* fullscreen API is available. */
 }
 
-vds-media:not([can-fullscreen]) {
+media-player:not([can-fullscreen]) {
   /* fullscreen API is _not_ available. */
 }
 
-vds-media[fullscreen] {
+media-player[fullscreen] {
   /* fullscreen is active. */
 }
 
-vds-media:not([fullscreen]) {
+media-player:not([fullscreen]) {
   /* fullscreen is _not_ active. */
 }
 ```

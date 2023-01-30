@@ -11,8 +11,8 @@ In this section, we'll go through the basics of working with the custom elements
 
 We provide a variety of components out of the box that help enhance the player.
 
-Some are concerned with layout such as `<vds-media>` and `<vds-aspect-ratio>`, some provide visual
-controls such as `<vds-play-button>` or `<vds-time-slider>`, and others manage player instances.
+Some are concerned with layout such as `<media-player>` and `<media-outlet>`, some provide visual
+controls such as `<media-play-button>` or `<media-time-slider>`, and others manage player instances.
 
 We recommend either searching (`cmd + k`) for what you're looking for or browsing the sidebar.
 Each element contains documentation on how to use/style it, and an API reference.
@@ -29,8 +29,8 @@ Or, individually like so:
 
 ```js {% copy=true %}
 // The `.js` extension is required.
-import 'vidstack/define/vds-media.js';
-import 'vidstack/define/vds-video.js';
+import 'vidstack/define/media-player.js';
+import 'vidstack/define/media-poster.js';
 ```
 
 Next, we can use the defined elements and the browser will "upgrade" them once the script above
@@ -38,13 +38,10 @@ has loaded and run.
 
 ```html
 <!-- Browser will upgrade custom elements once they're defined. -->
-<vds-media>
-  <vds-video>
-    <!-- This will render immediately because it's in the light DOM. -->
-    <video src="..."></video>
-  </vds-video>
-  <!-- ... -->
-</vds-media>
+<media-player>
+  <media-outlet></media-outlet>
+  <media-poster></media-poster>
+</media-player>
 ```
 
 ## Attach Hook
@@ -53,16 +50,16 @@ Vidstack elements go through a two-step process in which they're defined then at
 they're finally ready to be interacted with:
 
 ```ts
-const media = document.querySelector('vds-media');
+const player = document.querySelector('media-player');
 
 // 1. Like any other custom element it needs to be defined:
-customElements.whenDefined('vds-media', () => {
-  // `vds-media` is now defined.
+customElements.whenDefined('media-player', () => {
+  // `media-player` is now defined.
 
   // 2. Wait for the custom element instance to be attached.
-  media.onAttach(() => {
+  player.onAttach(() => {
     // Safe to now interact with instance props/methods.
-    media.play();
+    player.play();
   });
 });
 ```
@@ -74,8 +71,8 @@ import { defineCustomElements } from 'vidstack/elements';
 
 async function onLoad() {
   await defineCustomElements();
-  const media = document.querySelector('vds-media');
-  media.onAttach(() => {
+  const player = document.querySelector('media-player');
+  player.onAttach(() => {
     // ...
   });
 }
@@ -91,20 +88,20 @@ alive like so:
 
 ```html
 <!-- Keep this element and all children alive until manually destroyed. -->
-<vds-media keep-alive>
+<media-player keep-alive>
   <!-- This will be kept alive as well. -->
-  <vds-video></vds-video>
+  <media-outlet></media-outlet>
   <!-- ... -->
-</vds-media>
+</media-player>
 ```
 
 Now, you can manually destroy the element instance and all children by calling the `destroy()`
 method on the element that you specified to keep alive like so:
 
 ```ts
-const media = document.querySelector('vds-media');
-// This will destroy the media element instance and all child instances.
-media.destroy();
+const player = document.querySelector('media-player');
+// This will destroy the player element instance and all child instances.
+player.destroy();
 ```
 
 {% callout type="info" %}
@@ -118,7 +115,7 @@ Most component props can be set directly in HTML via attributes like so:
 
 ```html
 <!-- The following will set the `type` and `format` props. -->
-<vds-time type="current" format="time"></vds-time>
+<media-time type="current" format="time"></media-time>
 ```
 
 All attributes in Vidstack are the kebab-case variant of the property name. For example, the
@@ -130,9 +127,9 @@ Events can be listened to by obtaining a reference to the element instance and a
 event listener like so:
 
 ```ts
-const media = document.querySelector('vds-media');
+const player = document.querySelector('media-player');
 
-media.addEventListener('play', function onPlay() {
+player.addEventListener('play', function onPlay() {
   // ...
 });
 ```
@@ -143,47 +140,61 @@ Obtaining a reference to the element instance enables you to manipulate the cust
 and directly call properties/methods like so:
 
 ```ts
-const media = document.querySelector('vds-media');
+const player = document.querySelector('media-player');
 
-media.onAttach(() => {
+player.onAttach(() => {
   // Set a instance property:
-  media.muted = true;
+  player.muted = true;
 
   // Call a instance method:
-  media.play();
+  player.play();
 });
 ```
 
 ## Element Types
 
 All element types are classes named using _PascalCase_ and _suffixed_ with the word `Element`
-(e.g., `MediaElement`).
+(e.g., `MediaPlayerElement`).
 
 ```ts {% copy=true %}
-import { type MediaElement, type VideoElement } from 'vidstack';
+import { type MediaPlayerElement, type MediaPosterElement } from 'vidstack';
 
-let media: MediaElement;
+let player: MediaPlayerElement;
 ```
 
 ## Provider Types
 
-The following utilities can be useful for narrowing the type of a media provider element:
+The following utilities can be useful for narrowing the type of a media provider:
 
 ```ts {% copy=true %}
 import {
-  isAudioElement,
-  isHLSVideoElement,
-  isVideoElement,
-  type AudioElement,
-  type HLSVideoElement,
-  type MediaElement,
-  type MediaProviderElement,
-  type VideoElement,
+  isAudioProvider,
+  isHLSProvider,
+  isVideoProvider,
+  type AudioProvider,
+  type HLSProvider,
+  type MediaProvider,
+  type VideoProvider,
 } from 'vidstack';
 
-let media: MediaElement;
+const player = document.querySelector('media-player');
 
-if (isHLSVideoElement(media.provider)) {
-  media.provider; // type `HLSVideoElement`
-}
+player.addEventListener('provider-change', (event) => {
+  const provider = event.detail;
+
+  if (isAudioProvider(provider)) {
+    const audioElement = provider.audio;
+  }
+
+  if (isVideoProvider(provider)) {
+    const videoElement = provider.video;
+  }
+
+  if (isHLSProvider(provider)) {
+    provider.config = { lowLatencyMode: true };
+    provider.onInit((hls) => {
+      // ...
+    });
+  }
+});
 ```

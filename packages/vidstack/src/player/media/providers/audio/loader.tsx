@@ -18,7 +18,7 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
   async load() {
     if (__DEV__ && !this._audio) {
       throw Error(
-        '[vidstack] `<audio>` element was not found - did you forget to include `<vds-media-outlet>`?',
+        '[vidstack] `<audio>` element was not found - did you forget to include `<media-outlet>`?',
       );
     }
 
@@ -38,6 +38,10 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
       );
     }
 
-    return <audio preload="none" $ref={(el) => void (this._audio = el)}></audio>;
+    const controls = () => $store.controls;
+
+    return (
+      <audio controls={controls()} preload="none" $ref={(el) => void (this._audio = el)}></audio>
+    );
   }
 }

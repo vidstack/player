@@ -23,14 +23,14 @@ import type { MediaControllerProps } from './types';
  * has connected.
  */
 export function createMediaRequestManager(
-  { $element: $controller, $store, $provider, logger }: MediaContext,
+  { $player, $store, $provider, logger }: MediaContext,
   handler: MediaStateManager,
   requests: MediaRequestContext,
   $props: Signals<MediaControllerProps>,
 ): MediaRequestManager {
-  const user = createMediaUser($controller),
-    orientation = createScreenOrientationAdapter($controller),
-    fullscreen = createFullscreenAdapter($controller);
+  const user = createMediaUser($player, $store),
+    orientation = createScreenOrientationAdapter($player),
+    fullscreen = createFullscreenAdapter($player);
 
   if (__SERVER__) {
     return {
@@ -78,7 +78,7 @@ export function createMediaRequestManager(
   };
 
   effect(() => {
-    const target = $controller();
+    const target = $player();
     if (!target) return;
     for (const eventType of keysOf(eventHandlers)) {
       const handler = eventHandlers[eventType];
@@ -93,7 +93,7 @@ export function createMediaRequestManager(
   function onStartLoading(event: RE.MediaStartLoadingRequestEvent) {
     if ($store.canLoad) return;
     requests._queue._enqueue('load', event);
-    handler.handle(createEvent($controller, 'can-load'));
+    handler.handle(createEvent($player, 'can-load'));
   }
 
   function onMuteRequest(event: RE.MediaMuteRequestEvent) {
@@ -118,7 +118,7 @@ export function createMediaRequestManager(
       requests._queue._enqueue('play', event);
       await $provider()!.play();
     } catch (e) {
-      const errorEvent = createEvent($controller, 'play-fail', { detail: coerceToError(e) });
+      const errorEvent = createEvent($player, 'play-fail', { detail: coerceToError(e) });
       handler.handle(errorEvent);
     }
   }
@@ -165,7 +165,7 @@ export function createMediaRequestManager(
       requests._queue._enqueue('fullscreen', event);
       await enterFullscreen(event.detail);
     } catch (e) {
-      const errorEvent = createEvent($controller, 'fullscreen-error', { detail: coerceToError(e) });
+      const errorEvent = createEvent($player, 'fullscreen-error', { detail: coerceToError(e) });
       handler.handle(errorEvent);
     }
   }
@@ -175,7 +175,7 @@ export function createMediaRequestManager(
       requests._queue._enqueue('fullscreen', event);
       await exitFullscreen(event.detail);
     } catch (e) {
-      const errorEvent = createEvent($controller, 'fullscreen-error', { detail: coerceToError(e) });
+      const errorEvent = createEvent($player, 'fullscreen-error', { detail: coerceToError(e) });
       handler.handle(errorEvent);
     }
   }
@@ -227,11 +227,11 @@ export function createMediaRequestManager(
     if (!$store.paused) return;
     try {
       const provider = peek($provider);
-      if (!provider || !$controller()?.state.canPlay) throwIfNotReadyForPlayback();
+      if (!provider || !$player()?.state.canPlay) throwIfNotReadyForPlayback();
       if ($store.ended || $store.currentTime === 0) provider!.currentTime = 0;
       return provider!.play();
     } catch (error) {
-      const errorEvent = createEvent($controller, 'play-fail', { detail: coerceToError(error) });
+      const errorEvent = createEvent($player, 'play-fail', { detail: coerceToError(error) });
       errorEvent.autoplay = $store.attemptingAutoplay;
       handler.handle(errorEvent);
       throw error;
@@ -241,7 +241,7 @@ export function createMediaRequestManager(
   async function pause() {
     if ($store.paused) return;
     const provider = peek($provider);
-    if (!provider || !$controller()?.state.canPlay) throwIfNotReadyForPlayback();
+    if (!provider || !$player()?.state.canPlay) throwIfNotReadyForPlayback();
     return provider!.pause();
   }
 

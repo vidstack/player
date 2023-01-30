@@ -38,13 +38,13 @@ const mediaEvents: (keyof MediaEvents)[] | undefined = __DEV__
     ]
   : undefined;
 
-export function useMediaEventsLogger({ $element: $target, $store }: MediaContext, logger?: Logger) {
+export function useMediaEventsLogger({ $player, $store }: MediaContext, logger?: Logger) {
   if (!__DEV__) return;
   effect(() => {
-    const target = $target();
-    if (target) {
+    const player = $player();
+    if (player) {
       for (const eventType of mediaEvents!) {
-        listenEvent(target, eventType, (event) => {
+        listenEvent(player, eventType, (event) => {
           logger
             ?.infoGroup(`📡 dispatching \`${eventType}\``)
             .labelledLog('Media Store', { ...$store })

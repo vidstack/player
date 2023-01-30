@@ -20,7 +20,7 @@ export function useMediaProviderDelegate(
   const canPlayQueue = new RequestQueue();
 
   effect(() => {
-    if ($store.canPlay) canPlayQueue._start();
+    if ($store.canPlay && $provider()) canPlayQueue._start();
     else canPlayQueue._stop();
   });
 

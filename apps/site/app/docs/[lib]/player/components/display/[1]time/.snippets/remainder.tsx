@@ -1,11 +1,11 @@
-import { Media, Time } from '@vidstack/react';
+import { MediaPlayer, MediaTime } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
+    <MediaPlayer>
       {/* ... */}
       {/* Displays the amount of time remaining until playback ends. */}
-      <Time type="current" remainder />
-    </Media>
+      <MediaTime type="current" remainder />
+    </MediaPlayer>
   );
 }

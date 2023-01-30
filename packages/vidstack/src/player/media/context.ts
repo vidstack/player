@@ -1,13 +1,13 @@
 import { createContext, useContext, WriteSignal } from 'maverick.js';
 
 import type { Logger } from '../../foundation/logger/create-logger';
-import type { MediaElement } from '../element/types';
+import type { MediaPlayerElement } from '../element/types';
 import type { MediaControllerDelegate } from './controller/controller-delegate';
 import type { MediaProvider, MediaProviderLoader } from './providers/types';
 import type { MediaStore } from './store';
 
 export interface MediaContext {
-  $element: WriteSignal<MediaElement | null>;
+  $player: WriteSignal<MediaPlayerElement | null>;
   $loader: WriteSignal<MediaProviderLoader | null>;
   $provider: WriteSignal<MediaProvider | null>;
   $store: MediaStore;

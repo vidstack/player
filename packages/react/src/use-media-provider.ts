@@ -13,7 +13,9 @@ export function useMediaProvider(): MediaProvider | null {
     context = useReactContext(mediaContext);
 
   if (__DEV__ && !context) {
-    throw Error('[vidstack] no media context was found - did you forget to provide it?');
+    throw Error(
+      '[vidstack] no media context was found - was this called outside of `<MediaPlayer`?',
+    );
   }
 
   useEffect(() => {

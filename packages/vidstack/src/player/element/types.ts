@@ -7,7 +7,7 @@ import type {
   MediaControllerProps,
 } from '../media/controller/types';
 
-export interface MediaElementProps extends MediaControllerProps {
+export interface MediaPlayerProps extends MediaControllerProps {
   /**
    * The URL and optionally type of the current media resource/s to be considered for playback.
    *
@@ -20,28 +20,28 @@ export interface MediaElementProps extends MediaControllerProps {
   aspectRatio: number | null;
 }
 
-export interface MediaElementEvents extends MediaControllerEvents {
-  'media-connect': MediaConnectEvent;
+export interface MediaPlayerEvents extends MediaControllerEvents {
+  'media-player-connect': MediaPlayerConnectEvent;
   /** @internal */
-  'vds-find-media': FindMediaEvent;
+  'find-media-player': FindMediaPlayerEvent;
 }
 
-export interface MediaElementMembers extends MediaElementProps, MediaController {}
+export interface MediaPlayerMembers extends MediaPlayerProps, MediaController {}
 
 /**
- * Fired when the media element `<vds-media>` connects to the DOM.
+ * Fired when the player element `<media-player>` connects to the DOM.
  *
  * @bubbles
  * @composed
  */
-export interface MediaConnectEvent extends DOMEvent<MediaElement> {}
+export interface MediaPlayerConnectEvent extends DOMEvent<MediaPlayerElement> {}
 
-export interface FindMediaEventDetail {
-  (element: MediaElement | null): void;
+export interface FindMediaPlayerEventDetail {
+  (player: MediaPlayerElement | null): void;
 }
 
 /** @internal @bubbles @composed */
-export interface FindMediaEvent extends DOMEvent<FindMediaEventDetail> {}
+export interface FindMediaPlayerEvent extends DOMEvent<FindMediaPlayerEventDetail> {}
 
 export interface MediaElementCSSVars {
   /**
@@ -75,20 +75,21 @@ export interface MediaElementCSSVars {
 }
 
 /**
- * All media elements exist inside the `<vds-media>` component. This component's main
+ * All media elements exist inside the `<media-player>` component. This component's main
  * responsibilities are to manage media state updates, dispatch media events, handle media
  * requests, and expose media state through HTML attributes and CSS properties for styling
  * purposes.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/layout/media}
+ * @docs {@link https://www.vidstack.io/docs/player/components/layout/player}
  * @slot - Used to pass in media components.
  * @example
  * ```html
- * <vds-media>
+ * <media-player src="...">
+ *   <media-outlet></media-outlet>
  *   <!-- Other components that use/manage media state here. -->
- * </vds-media>
+ * </media-player>
  * ```
  */
-export interface MediaElement
-  extends HTMLCustomElement<MediaElementProps, MediaElementEvents, MediaElementCSSVars>,
-    MediaElementMembers {}
+export interface MediaPlayerElement
+  extends HTMLCustomElement<MediaPlayerProps, MediaPlayerEvents, MediaElementCSSVars>,
+    MediaPlayerMembers {}

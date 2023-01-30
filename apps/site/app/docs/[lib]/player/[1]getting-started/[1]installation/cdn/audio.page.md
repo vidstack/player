@@ -37,11 +37,9 @@ Add the following player HTML boilerplate to get started.
 
 ```html {% copy=true %}
 <!-- remove `controls` attribute if you're designing a custom UI -->
-<vds-media controls view="audio">
-  <vds-audio>
-    <audio src="https://media-files.vidstack.io/audio.mp3" preload="none"></audio>
-  </vds-audio>
-</vds-media>
+<media-player src="https://media-files.vidstack.io/audio.mp3" controls view="audio">
+  <media-outlet></media-outlet>
+</media-player>
 ```
 
 {% /step %}

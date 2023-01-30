@@ -4,8 +4,8 @@ import {
   type ScreenOrientationType,
 } from 'vidstack';
 
-const media = document.querySelector('vds-media');
+const player = document.querySelector('media-player');
 
-media.addEventListener('orientation-change', (event: MediaOrientationChangeEvent) => {
+player.addEventListener('orientation-change', (event: MediaOrientationChangeEvent) => {
   const { orientation, lock } = event.detail;
 });

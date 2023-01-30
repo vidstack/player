@@ -44,15 +44,14 @@ export interface MediaMuteRequestEvent extends DOMEvent<void> {}
 export interface MediaUnmuteRequestEvent extends DOMEvent<void> {}
 
 /**
- * Whether to request fullscreen on the media (i.e., `<vds-media>`) or provider element
- * (e.g., `<vds-video>`). The `prefer-media` option will first see if the native fullscreen API is
- * available, if not it'll try the media provider.
+ * Whether to request fullscreen on the media (i.e., `<media-player>`). The `prefer-media` option
+ * will first see if the native fullscreen API is available, if not it'll try the media provider.
  */
 export type MediaFullscreenRequestTarget = 'prefer-media' | 'media' | 'provider';
 
 /**
  * Fired when requesting media to enter fullscreen. The event `detail` can specify the
- * fullscreen target, which can be the media or provider element (defaults to `prefer-media`).
+ * fullscreen target, which can be the media or provider (defaults to `prefer-media`).
  *
  * @bubbles
  * @composed
@@ -61,7 +60,7 @@ export interface MediaEnterFullscreenRequestEvent extends DOMEvent<MediaFullscre
 
 /**
  * Fired when requesting media to exit fullscreen. The event `detail` can specify the fullscreen
- * target, which can be the media or provider element (defaults to `prefer-media`).
+ * target, which can be the media or provider (defaults to `prefer-media`).
  *
  * @bubbles
  * @composed
@@ -110,7 +109,7 @@ export interface MediaVolumeChangeRequestEvent extends DOMEvent<number> {}
 
 /**
  * Fired when user idle state tracking may resume. This is typically called after requesting
- * the idle state to pause via `vds-pause-user-idle-request`.
+ * the idle state to pause via `media-pause-user-idle-request`.
  *
  * @bubbles
  * @composed
@@ -128,8 +127,8 @@ export interface MediaResumeUserIdleRequestEvent extends DOMEvent<void> {}
 export interface MediaPauseUserIdleRequestEvent extends DOMEvent<void> {}
 
 /**
- * Fired when requesting the poster _should_ be rendered by the media provider element. This
- * should be fired if a custom poster element is _not_ being used.
+ * Fired when requesting the poster _should_ be rendered by the media provider. This should be
+ * fired if a custom poster is _not_ being used.
  *
  * @bubbles
  * @composed
@@ -137,8 +136,8 @@ export interface MediaPauseUserIdleRequestEvent extends DOMEvent<void> {}
 export interface MediaShowPosterRequestEvent extends DOMEvent<void> {}
 
 /**
- * Fired when requesting the poster should _not_ be rendered by the media provider element. This
- * should be fired if a custom poster element is being used (eg: `vds-poster`).
+ * Fired when requesting the poster should _not_ be rendered by the media provider. This
+ * should be fired if a custom poster element is being used (e.g., `media-poster`).
  *
  * @bubbles
  * @composed

@@ -1,13 +1,13 @@
 import { type MediaAutoplayEvent, type MediaAutoplayFailEvent } from 'vidstack';
 
-const media = document.querySelector('vds-media');
+const player = document.querySelector('media-player');
 
-media.addEventListener('autoplay', (event: MediaAutoplayEvent) => {
+player.addEventListener('autoplay', (event: MediaAutoplayEvent) => {
   // autoplay has successfully started.
   const requestEvent = event.request;
 });
 
-media.addEventListener('autoplay-fail', (event: MediaAutoplayFailEvent) => {
+player.addEventListener('autoplay-fail', (event: MediaAutoplayFailEvent) => {
   // autoplay has failed.
   const requestEvent = event.request;
   console.log(event.detail.muted); // was media muted?

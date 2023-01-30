@@ -10,16 +10,15 @@ export const elementTagName = derived(route, ($route) =>
 const elementNameRE = /\/components\/.*?\/(.*?)($|\/|\#)/;
 export function getTagNameFromPath(path: string) {
   const name = path.match(elementNameRE)?.[1];
-  return name ? `vds-${name}` : '';
+  return name ? `media-${name}` : '';
 }
 
 export const elementHeading = derived(elementTagName, ($elementTagName) => {
-  return `${formatElementHeading(kebabToTitleCase($elementTagName.replace('vds-', '')))}`;
+  return `${formatElementHeading(kebabToTitleCase($elementTagName.replace('media-', '')))}`;
 });
 
 export function formatElementHeading(name: string) {
   if (name === 'Pip Button') return 'PIP Button';
-  if (name === 'Hls Video') return 'HLS Video';
   if (name === 'Youtube') return 'YouTube';
   return name;
 }

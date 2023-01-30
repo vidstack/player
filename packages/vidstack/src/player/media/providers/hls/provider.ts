@@ -1,5 +1,5 @@
 import type * as HLS from 'hls.js';
-import { Dispose, effect, signal } from 'maverick.js';
+import { Dispose, effect, peek, signal } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
 import { preconnect } from '../../../../utils/network';
@@ -20,15 +20,18 @@ const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
  * library. HLS streaming is either [supported natively](https://caniuse.com/?search=hls) (generally
  * on iOS), or in environments that [support the Media Stream API](https://caniuse.com/?search=mediastream).
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/providers/hls}
+ * @docs {@link https://www.vidstack.io/docs/player/providers/hls}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video}
  * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md}
  * @example
  * ```html
- * <vds-media
+ * <media-player
  *   src="https://media-files.vidstack.io/hls/index.m3u8"
  *   poster="https://media-files.vidstack.io/poster.png"
- * ></vds-media>
+ *   view="video"
+ * >
+ *   <media-outlet></media-outlet>
+ * </media-player>
  * ```
  */
 export class HLSProvider extends VideoProvider implements MediaProvider {
@@ -114,6 +117,8 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
    * attached to media.
    */
   onInstance(callback: HLSInstanceCallback): Dispose {
+    const instance = peek(this._$instance);
+    if (instance) callback(instance);
     this._instanceCallbacks.add(callback);
     return () => this._instanceCallbacks.delete(callback);
   }

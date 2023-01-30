@@ -10,16 +10,16 @@ import { useMediaRemoteControl } from '../../media/remote-control';
 import { createSlider } from '../slider/create';
 import type { SliderDragValueChangeEvent, SliderValueChangeEvent } from '../slider/events';
 import { volumeSliderProps } from './props';
-import type { VolumeSliderElement } from './types';
+import type { MediaVolumeSliderElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-volume-slider': VolumeSliderElement;
+    'media-volume-slider': MediaVolumeSliderElement;
   }
 }
 
-export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
-  tagName: 'vds-volume-slider',
+export const VolumeSliderDefinition = defineCustomElement<MediaVolumeSliderElement>({
+  tagName: 'media-volume-slider',
   props: volumeSliderProps,
   setup({ host, props, accessors }) {
     const $media = useMediaStore(),

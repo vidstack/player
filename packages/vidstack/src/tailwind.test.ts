@@ -1,6 +1,7 @@
-import path from 'path';
 import postcss from 'postcss';
 import tailwindcss from 'tailwindcss';
+
+import path from 'path';
 
 import vidstackPlugin from '../tailwind.cjs';
 
@@ -24,58 +25,58 @@ it('should create media variants', async () => {
   const css = await run(content);
 
   expect(css).toMatchInlineSnapshot(`
-    "vds-media[autoplay] .media-autoplay\\\\:opacity-100 {
+    "media-player[autoplay] .media-autoplay\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[autoplay-error] .media-autoplay-error\\\\:opacity-100 {
+    media-player[autoplay-error] .media-autoplay-error\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[duration] .media-duration\\\\:opacity-100 {
+    media-player[duration] .media-duration\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[can-load] .media-can-load\\\\:opacity-100 {
+    media-player[can-load] .media-can-load\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[can-play] .media-can-play\\\\:opacity-100 {
+    media-player[can-play] .media-can-play\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[can-fullscreen] .media-can-fullscreen\\\\:opacity-100 {
+    media-player[can-fullscreen] .media-can-fullscreen\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[ended] .media-ended\\\\:opacity-100 {
+    media-player[ended] .media-ended\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[error] .media-error\\\\:opacity-100 {
+    media-player[error] .media-error\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[fullscreen] .media-fullscreen\\\\:opacity-100 {
+    media-player[fullscreen] .media-fullscreen\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[user-idle] .media-user-idle\\\\:opacity-100 {
+    media-player[user-idle] .media-user-idle\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[loop] .media-loop\\\\:opacity-100 {
+    media-player[loop] .media-loop\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[muted] .media-muted\\\\:opacity-100 {
+    media-player[muted] .media-muted\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[paused] .media-paused\\\\:opacity-100 {
+    media-player[paused] .media-paused\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[playing] .media-playing\\\\:opacity-100 {
+    media-player[playing] .media-playing\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[playsinline] .media-playsinline\\\\:opacity-100 {
+    media-player[playsinline] .media-playsinline\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[seeking] .media-seeking\\\\:opacity-100 {
+    media-player[seeking] .media-seeking\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[started] .media-started\\\\:opacity-100 {
+    media-player[started] .media-started\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media[waiting] .media-waiting\\\\:opacity-100 {
+    media-player[waiting] .media-waiting\\\\:opacity-100 {
         opacity: 1
     }"
   `);
@@ -89,13 +90,13 @@ it('should create slider variants', async () => {
   const css = await run(content);
 
   expect(css).toMatchInlineSnapshot(`
-    "vds-media *[dragging] .dragging\\\\:opacity-100 {
+    "media-player *[dragging] .dragging\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media *[pointing] .pointing\\\\:opacity-100 {
+    media-player *[pointing] .pointing\\\\:opacity-100 {
         opacity: 1
     }
-    vds-media *[interactive] .interactive\\\\:opacity-100 {
+    media-player *[interactive] .interactive\\\\:opacity-100 {
         opacity: 1
     }"
   `);

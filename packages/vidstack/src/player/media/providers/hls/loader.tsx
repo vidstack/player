@@ -24,7 +24,7 @@ export class HLSProviderLoader
   override async load(context) {
     if (__DEV__ && !this._video) {
       throw Error(
-        '[vidstack] `<video>` element was not found - did you forget to include `<vds-media-outlet>`?',
+        '[vidstack] `<video>` element was not found - did you forget to include `<media-outlet>`?',
       );
     }
 

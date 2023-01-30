@@ -6,16 +6,16 @@ import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
-import type { MuteButtonElement } from './types';
+import type { MediaMuteButtonElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-mute-button': MuteButtonElement;
+    'media-mute-button': MediaMuteButtonElement;
   }
 }
 
-export const MuteButtonDefinition = defineCustomElement<MuteButtonElement>({
-  tagName: 'vds-mute-button',
+export const MuteButtonDefinition = defineCustomElement<MediaMuteButtonElement>({
+  tagName: 'media-mute-button',
   props: toggleButtonProps,
   setup({ host, props: { $disabled } }) {
     const $media = useMediaStore(),

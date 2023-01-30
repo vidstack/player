@@ -1,15 +1,19 @@
 <script>
   function onConnect(event) {
-    const media = event.target;
-    media.$store.duration = 231;
+    const player = event.target;
+    player.$store.duration = 231;
   }
 </script>
 
-<vds-media class="w-full max-w-md relative mt-20" on:media-connect={onConnect} view="video">
-  <vds-time-slider>
+<media-player
+  class="w-full max-w-md relative mt-20"
+  view="video"
+  on:media-player-connect={onConnect}
+>
+  <media-time-slider>
     <div slot="preview">
-      <vds-slider-video src="https://media-files.vidstack.io/240p.mp4" />
-      <vds-slider-value-text type="pointer" format="time" />
+      <media-slider-video src="https://media-files.vidstack.io/240p.mp4" />
+      <media-slider-value-text type="pointer" format="time" />
     </div>
-  </vds-time-slider>
-</vds-media>
+  </media-time-slider>
+</media-player>

@@ -10,8 +10,8 @@ import type {
 export interface FullscreenButtonProps extends ToggleButtonProps {
   /**
    * The target element on which to request fullscreen on. The target can be the `media`
-   * (i.e., `<vds-media>`) or `provider` (e.g., `<vds-video>`) element. The `prefer-media` option
-   * will first see if the native fullscreen API is available, if not it'll try the media provider.
+   * (i.e., `<media-player>`) or `provider`. The `prefer-media` option will first see if the native
+   * fullscreen API is available, if not it'll try the media provider.
    */
   target: MediaFullscreenRequestTarget | undefined;
 }
@@ -28,9 +28,9 @@ export interface FullscreenButtonMembers extends ToggleButtonMembers, Fullscreen
  * @slot exit - Used to override the default exit fullscreen icon.
  * @example
  * ```html
- * <vds-fullscreen-button></vds-fullscreen-button>
+ * <media-fullscreen-button></media-fullscreen-button>
  * ```
  */
-export interface FullscreenButtonElement
+export interface MediaFullscreenButtonElement
   extends HTMLCustomElement<FullscreenButtonProps, FullscreenButtonEvents>,
     FullscreenButtonMembers {}

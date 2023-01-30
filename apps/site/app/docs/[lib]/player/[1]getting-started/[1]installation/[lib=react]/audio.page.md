@@ -31,7 +31,7 @@ import 'vidstack/styles/base.css';
 import 'vidstack/styles/ui/buttons.css';
 import 'vidstack/styles/ui/sliders.css';
 
-import { Audio, Media } from '@vidstack/react';
+import { MediaOutlet, MediaPlayer } from '@vidstack/react';
 ```
 
 {% /step %}
@@ -45,12 +45,10 @@ Add the following player JSX boilerplate to get started.
 {% /slot %}
 
 ```jsx {% copy=true %}
-<Media controls view="audio">
+<MediaPlayer src="https://media-files.vidstack.io/audio.mp3" controls view="audio">
   {/* ^ remove `controls` attribute if you're designing a custom UI */}
-  <Audio>
-    <audio src="https://media-files.vidstack.io/audio.mp3" preload="none" />
-  </Audio>
-</Media>
+  <MediaOutlet />
+</MediaPlayer>
 ```
 
 {% /step %}

@@ -31,7 +31,7 @@ import 'vidstack/styles/base.css';
 import 'vidstack/styles/ui/buttons.css';
 import 'vidstack/styles/ui/sliders.css';
 
-import { HLSVideo, Media } from '@vidstack/react';
+import { MediaOutlet, MediaPlayer } from '@vidstack/react';
 ```
 
 {% /step %}
@@ -45,12 +45,15 @@ Add the following player JSX boilerplate to get started.
 {% /slot %}
 
 ```jsx {% copy=true %}
-<Media controls poster="https://media-files.vidstack.io/poster.png" view="video">
+<MediaPlayer
+  src="https://media-files.vidstack.io/hls/index.m3u8"
+  poster="https://media-files.vidstack.io/poster.png"
+  controls
+  view="video"
+>
   {/* ^ remove `controls` attribute if you're designing a custom UI */}
-  <HLSVideo>
-    <video src="https://media-files.vidstack.io/hls/index.m3u8" preload="none" data-video="0" />
-  </HLSVideo>
-</Media>
+  <MediaOutlet />
+</MediaPlayer>
 ```
 
 {% /step %}

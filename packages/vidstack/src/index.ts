@@ -60,8 +60,8 @@ export * from './player/ui/toggle-button/types';
 export * from './player/ui/volume-slider/types';
 
 // Media Player Definitions
-export { MediaDefinition } from './player/element/element';
-export { MediaOutletDefinition } from './player/media/outlet/element';
+export { PlayerDefinition } from './player/element/element';
+export { OutletDefinition } from './player/media/outlet/element';
 export { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
 export { MuteButtonDefinition } from './player/ui/mute-button/element';
 export { PlayButtonDefinition } from './player/ui/play-button/element';

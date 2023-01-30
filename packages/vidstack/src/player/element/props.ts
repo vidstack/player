@@ -1,8 +1,8 @@
 import type { CustomElementPropDefinitions } from 'maverick.js/element';
 
-import type { MediaElementProps } from './types';
+import type { MediaPlayerProps } from './types';
 
-export const mediaElementProps: CustomElementPropDefinitions<MediaElementProps> = {
+export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = {
   autoplay: { initial: false },
   aspectRatio: {
     initial: null,

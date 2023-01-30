@@ -1,8 +1,8 @@
-const media = document.querySelector('vds-media');
+const player = document.querySelector('media-player');
 
-media.onAttach(async () => {
+player.onAttach(async () => {
   try {
-    await media.enterFullscreen();
+    await player.enterFullscreen();
   } catch (e) {
     // This will generally throw if:
     // 1. Fullscreen API is not available.
@@ -12,7 +12,7 @@ media.onAttach(async () => {
   // ...
 
   try {
-    await media.exitFullscreen();
+    await player.exitFullscreen();
   } catch (e) {
     // This will generally throw if:
     // 1. Fullscreen API is not available.

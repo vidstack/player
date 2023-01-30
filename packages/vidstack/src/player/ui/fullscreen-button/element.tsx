@@ -5,16 +5,16 @@ import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
-import type { FullscreenButtonElement } from './types';
+import type { MediaFullscreenButtonElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-fullscreen-button': FullscreenButtonElement;
+    'media-fullscreen-button': MediaFullscreenButtonElement;
   }
 }
 
-export const FullscreenButtonDefinition = defineCustomElement<FullscreenButtonElement>({
-  tagName: 'vds-fullscreen-button',
+export const FullscreenButtonDefinition = defineCustomElement<MediaFullscreenButtonElement>({
+  tagName: 'media-fullscreen-button',
   props: {
     ...toggleButtonProps,
     target: { initial: 'prefer-media' },

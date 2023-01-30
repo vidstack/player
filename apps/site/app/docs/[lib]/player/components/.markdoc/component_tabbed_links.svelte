@@ -12,12 +12,11 @@
 
   /* remove API Tab for these elements */
   const elements = new Set([
-    'vds-buffering-indicator',
-    'vds-controls',
-    'vds-youtube',
-    'vds-vimeo',
-    'vds-captions',
-    'vds-live-indicator',
+    'media-buffering-indicator',
+    'media-controls',
+    'media-live-indicator',
+    'media-pip-button',
+    'media-captions-button',
   ]);
 
   $: hideAPI = elements.has($elementTagName);

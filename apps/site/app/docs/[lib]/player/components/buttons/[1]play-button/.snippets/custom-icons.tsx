@@ -1,12 +1,12 @@
-import { Media, PlayButton } from '@vidstack/react';
+import { MediaPlayButton, MediaPlayer } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
-      <PlayButton>
+    <MediaPlayer>
+      <MediaPlayButton>
         <svg slot="play">{/* ... */}</svg>
         <svg slot="pause">{/* ... */}</svg>
-      </PlayButton>
-    </Media>
+      </MediaPlayButton>
+    </MediaPlayer>
   );
 }

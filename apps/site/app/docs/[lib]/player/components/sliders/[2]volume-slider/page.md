@@ -4,7 +4,7 @@ description: This component is used to create a range input for controlling the 
 
 ## Usage
 
-The `$tag:vds-volume-slider` component receives volume updates from the provider through the media
+The `$tag:media-volume-slider` component receives volume updates from the provider through the media
 store, and dispatches a `media-volume-change-request` event to request updating the current volume
 level on the provider as the slider value changes.
 
@@ -19,7 +19,7 @@ You can override the default styles with CSS like so:
 
 ```css
 /* CSS vars are available for simple customization. */
-vds-volume-slider {
+media-volume-slider {
   /* Default values are shown below. */
   --media-slider-height: 48px;
   --media-slider-thumb-size: 14px;
@@ -29,39 +29,39 @@ vds-volume-slider {
 }
 
 /* Apply styles when device pointer is within slider bounds. */
-vds-volume-slider[pointing] {
+media-volume-slider[pointing] {
 }
 
 /* Apply styles when slider thumb is being dragged. */
-vds-volume-slider[dragging] {
+media-volume-slider[dragging] {
 }
 
 /* Shorthand for both dragging and pointing. */
-vds-volume-slider[interactive] {
+media-volume-slider[interactive] {
 }
 
 /* Apply styles to all tracks. */
-vds-volume-slider [part~='track'] {
+media-volume-slider [part~='track'] {
 }
 
 /* Apply styles to track when interactive. */
-vds-volume-slider[interactive] [part~='track'] {
+media-volume-slider[interactive] [part~='track'] {
 }
 
 /* Apply styles to track fill (played portion of slider). */
-vds-volume-slider [part~='track-fill'] {
+media-volume-slider [part~='track-fill'] {
 }
 
 /* Apply styles to track progress (buffered). */
-vds-volume-slider [part~='track-progress'] {
+media-volume-slider [part~='track-progress'] {
 }
 
 /* Apply styles to thumb container. */
-vds-volume-slider [part='thumb-container'] {
+media-volume-slider [part='thumb-container'] {
 }
 
 /* Apply styles to slider thumb. */
-vds-volume-slider [part='thumb'] {
+media-volume-slider [part='thumb'] {
 }
 ```
 
@@ -73,13 +73,13 @@ vds-volume-slider [part='thumb'] {
 
 ```css
 /* CSS vars are available for simple customization. */
-vds-volume-slider {
+media-volume-slider {
   /* Default values are shown below. */
   --media-slider-preview-width: var(--computed-width);
   --media-slider-preview-gap: calc(var(--computed-height) + 8px);
 }
 
 /** Override default preview styles. */
-vds-volume-slider [slot='preview'] {
+media-volume-slider [slot='preview'] {
 }
 ```

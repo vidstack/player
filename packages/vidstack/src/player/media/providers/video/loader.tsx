@@ -19,7 +19,7 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
   async load(context: MediaProviderContext) {
     if (__DEV__ && !this._video) {
       throw Error(
-        '[vidstack] `<video>` element was not found - did you forget to include `<vds-media-outlet>`?',
+        '[vidstack] `<video>` element was not found - did you forget to include `<media-outlet>`?',
       );
     }
 
@@ -40,8 +40,17 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
       );
     }
 
+    const controls = () => $store.controls;
     // === `true` because it's `null` to start with until we know if the poster can load.
     const poster = () => ($store.poster && $store.canLoadPoster === true ? $store.poster : null);
-    return <video poster={poster()} preload="none" $ref={(el) => void (this._video = el)}></video>;
+
+    return (
+      <video
+        controls={controls()}
+        poster={poster()}
+        preload="none"
+        $ref={(el) => void (this._video = el)}
+      ></video>
+    );
   }
 }

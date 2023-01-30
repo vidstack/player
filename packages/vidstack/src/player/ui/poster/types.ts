@@ -15,9 +15,9 @@ export interface PosterProps {
  * @docs {@link https://www.vidstack.io/docs/player/components/layout/poster}
  * @example
  * ```html
- * <vds-media>
- *   <vds-poster alt="Large alien ship hovering over New York."></vds-poster>
- * </vds-media>
+ * <media-player>
+ *   <media-poster alt="Large alien ship hovering over New York."></media-poster>
+ * </media-player>
  * ```
  */
-export interface PosterElement extends HTMLCustomElement<PosterProps> {}
+export interface MediaPosterElement extends HTMLCustomElement<PosterProps> {}

@@ -4,7 +4,7 @@ description: This component is used to load and display a preview video over a s
 
 ## Usage
 
-The `$tag:vds-slider-video` component can be used to load a video in a slider.
+The `$tag:media-slider-video` component can be used to load a video in a slider.
 This is _generally_ used to show a preview video (low-resolution) as the user interacts with the
 time slider.
 
@@ -16,13 +16,13 @@ video are of the same length (i.e., duration).
 
 ## Video Attributes
 
-The following video attributes are applied to the `vds-slider-video` element:
+The following video attributes are applied to the `media-slider-video` element:
 
 - `can-play`: Present when the video is ready for playback.
 - `error`: Present when media loading fails.
 
 ```html
-<vds-slider-video error />
+<media-slider-video error />
 ```
 
 You can use these attributes to further style the slider video as it's being loaded, such as hiding
@@ -41,11 +41,11 @@ You can override the default styles with CSS like so:
 
 ```css
 /* Override default styles. */
-vds-slider-video {
+media-slider-video {
 }
 
 /* Apply styles to the underlying `<video>` element. */
-vds-slider-video video {
+media-slider-video video {
   width: 156px;
 }
 ```

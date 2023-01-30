@@ -40,8 +40,7 @@ You can register specific elements like so:
 
 ```js {% copy=true %}
 // the `.js` extension is required.
-import 'vidstack/define/vds-media.js';
-import 'vidstack/define/vds-video.js';
+import 'vidstack/define/media-player.js';
 ```
 
 {% /step %}
@@ -56,11 +55,14 @@ Add the following player HTML boilerplate to get started.
 
 ```html {% copy=true %}
 <!-- remove `controls` attribute if you're designing a custom UI -->
-<vds-media controls poster="https://media-files.vidstack.io/poster.png" view="video">
-  <vds-video>
-    <video src="https://media-files.vidstack.io/720p.mp4" preload="none"></video>
-  </vds-video>
-</vds-media>
+<media-player
+  src="https://media-files.vidstack.io/720p.mp4"
+  poster="https://media-files.vidstack.io/poster.png"
+  controls
+  view="video"
+>
+  <media-outlet></media-outlet>
+</media-player>
 ```
 
 {% /step %}

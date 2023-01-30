@@ -1,10 +1,10 @@
-import { Media, VolumeSlider } from '@vidstack/react';
+import { MediaPlayer, MediaVolumeSlider } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
+    <MediaPlayer>
       {/* ... */}
-      <VolumeSlider />
-    </Media>
+      <MediaVolumeSlider />
+    </MediaPlayer>
   );
 }

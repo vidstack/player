@@ -32,8 +32,8 @@ const elements = JSON.parse(await fs.readFile(elementsFile, 'utf-8')),
 
 const outFile = path.resolve(__dirname, '../src/components.ts');
 
-const elementOpenRE = /<vds-(.*?)(\s|\n|>)/g,
-  elementCloseRE = /<\/vds-(.*?)>/g;
+const elementOpenRE = /<media-(.*?)(\s|\n|>)/g,
+  elementCloseRE = /<\/media-(.*?)>/g;
 
 for (const component of components) {
   const name = component.name.replace('Element', '');
@@ -52,8 +52,8 @@ for (const component of components) {
         tag.text
           ?.replace('```html', '```tsx')
           .replace(/<!--\s*(.*?)\s*-->/g, `$1`)
-          .replace(elementOpenRE, (_, m, m2) => '<' + kebabToPascalCase(m) + m2)
-          .replace(elementCloseRE, (_, m) => '</' + kebabToPascalCase(m) + '>')
+          .replace(elementOpenRE, (_, m, m2) => '<Media' + kebabToPascalCase(m) + m2)
+          .replace(elementCloseRE, (_, m) => '</Media' + kebabToPascalCase(m) + '>')
           .split('\n')
           .join('\n*'),
     );

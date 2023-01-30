@@ -1,21 +1,21 @@
-vds-play-button,
-vds-mute-button,
-vds-fullscreen-button {
+media-play-button,
+media-mute-button,
+media-fullscreen-button {
   border-radius: 2px;
   color: white;
   min-width: 48px;
   min-height: 48px;
 }
 
-vds-play-button > shadow-root,
-vds-mute-button > shadow-root,
-vds-fullscreen-button > shadow-root {
+media-play-button > shadow-root,
+media-mute-button > shadow-root,
+media-fullscreen-button > shadow-root {
   display: unset;
 }
 
-vds-play-button *[slot],
-vds-mute-button *[slot],
-vds-fullscreen-button *[slot] {
+media-play-button *[slot],
+media-mute-button *[slot],
+media-fullscreen-button *[slot] {
   display: block;
   position: absolute;
   top: 50%;
@@ -24,29 +24,29 @@ vds-fullscreen-button *[slot] {
   transform: translate(-50%, -50%);
 }
 
-vds-play-button[paused] [slot='play'],
-vds-play-button:not([paused]) [slot='pause'],
-vds-mute-button[volume-high] [slot='volume-high'],
-vds-mute-button[volume-low] [slot='volume-low'],
-vds-mute-button[muted] [slot='volume-muted'],
-vds-fullscreen-button:not([fullscreen]) [slot='enter'],
-vds-fullscreen-button[fullscreen] [slot='exit'] {
+media-play-button[paused] [slot='play'],
+media-play-button:not([paused]) [slot='pause'],
+media-mute-button[volume-high] [slot='volume-high'],
+media-mute-button[volume-low] [slot='volume-low'],
+media-mute-button[muted] [slot='volume-muted'],
+media-fullscreen-button:not([fullscreen]) [slot='enter'],
+media-fullscreen-button[fullscreen] [slot='exit'] {
   opacity: 1;
 }
 
-vds-fullscreen-button[hidden] {
+media-fullscreen-button[hidden] {
   display: none;
 }
 
-vds-play-button > shadow-root:not(:only-child),
-vds-mute-button > shadow-root:not(:only-child),
-vds-fullscreen-button > shadow-root:not(:only-child) {
+media-play-button > shadow-root:not(:only-child),
+media-mute-button > shadow-root:not(:only-child),
+media-fullscreen-button > shadow-root:not(:only-child) {
   display: none;
 }
 
-vds-play-button:hover,
-vds-mute-button:hover,
-vds-fullscreen-button:hover {
+media-play-button:hover,
+media-mute-button:hover,
+media-fullscreen-button:hover {
   transform: scale(1.1);
   transition: transform 0.2s ease-in;
 }

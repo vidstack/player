@@ -1,8 +1,8 @@
-import { Media } from '@vidstack/react';
+import { MediaPlayer } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
+    <MediaPlayer>
       {/* ... */}
       <div className="media-buffering-container">
         <svg className="media-buffering-icon" fill="none" viewBox="0 0 120 120" aria-hidden="true">
@@ -25,6 +25,6 @@ function MediaPlayer() {
           ></circle>
         </svg>
       </div>
-    </Media>
+    </MediaPlayer>
   );
 }

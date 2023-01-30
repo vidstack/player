@@ -1,12 +1,12 @@
-import { Media, SliderValueText, TimeSlider } from '@vidstack/react';
+import { MediaPlayer, MediaSliderValueText, MediaTimeSlider } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
+    <MediaPlayer>
       {/* ... */}
-      <TimeSlider>
-        <SliderValueText type="pointer" format="time" showHours padHours slot="preview" />
-      </TimeSlider>
-    </Media>
+      <MediaTimeSlider>
+        <MediaSliderValueText type="pointer" format="time" showHours padHours slot="preview" />
+      </MediaTimeSlider>
+    </MediaPlayer>
   );
 }

@@ -33,12 +33,12 @@ export interface TimeProps {
  * @docs {@link https://www.vidstack.io/docs/player/components/display/time}
  * @example
  * ```html
- * <vds-time type="current"></vds-time>
+ * <media-time type="current"></media-time>
  * ```
  * @example
  * ```html
  * <!-- Remaining time. -->
- * <vds-time type="current" remainder></vds-time>
+ * <media-time type="current" remainder></media-time>
  * ```
  */
-export interface TimeElement extends HTMLCustomElement<TimeProps> {}
+export interface MediaTimeElement extends HTMLCustomElement<TimeProps> {}

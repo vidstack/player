@@ -20,9 +20,9 @@ export interface PlayButtonMembers extends ToggleButtonMembers {}
  * @slot pause - Used to override the default pause icon.
  * @example
  * ```html
- * <vds-play-button></vds-play-button>
+ * <media-play-button></media-play-button>
  * ```
  */
-export interface PlayButtonElement
+export interface MediaPlayButtonElement
   extends HTMLCustomElement<PlayButtonProps, PlayButtonEvents>,
     PlayButtonMembers {}

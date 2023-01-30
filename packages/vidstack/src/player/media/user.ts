@@ -1,14 +1,16 @@
 import { computed, effect, peek, ReadSignal, signal } from 'maverick.js';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
-import { useMediaStore } from './context';
 import type { MediaControllerElement } from './controller/types';
+import type { MediaStore } from './store';
 
 const STOP_IDLE_EVENTS = ['pointerup', 'pointermove', 'focus', 'keydown', 'playing'] as const;
 
-export function createMediaUser($controller: ReadSignal<MediaControllerElement | null>): Mediauser {
-  let $media = useMediaStore(),
-    idleTimeout: any,
+export function createMediaUser(
+  $controller: ReadSignal<MediaControllerElement | null>,
+  $media: MediaStore,
+): Mediauser {
+  let idleTimeout: any,
     delay = 2000,
     trigger: Event | undefined,
     $idle = signal(false),
@@ -26,6 +28,7 @@ export function createMediaUser($controller: ReadSignal<MediaControllerElement |
     effect(() => {
       window.clearTimeout(idleTimeout);
       const idle = $idle();
+      $media.userIdle = idle;
       dispatchEvent(target, 'user-idle-change', { detail: idle, trigger });
       trigger = undefined;
     });

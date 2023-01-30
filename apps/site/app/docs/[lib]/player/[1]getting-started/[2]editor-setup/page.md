@@ -15,8 +15,8 @@ We've written the player library with TypeScript, and we distribute all types wi
 automatically updated:
 
 ```js
-// ❌ The type will default to `Element` instead of `MediaElement`.
-const media = document.querySelector('vds-media');
+// ❌ The type will default to `Element` instead of `MediaPlayerElement`.
+const player = document.querySelector('media-player');
 ```
 
 You can resolve this by adding the following to your TypeScript configuration file:

@@ -1,5 +1,5 @@
-import { Media } from '@vidstack/react';
+import { MediaPlayer } from '@vidstack/react';
 
-function MediaPlayer() {
-  return <Media fullscreenOrientation="landscape">{/* ... */}</Media>;
+function Player() {
+  return <MediaPlayer fullscreenOrientation="landscape">{/* ... */}</MediaPlayer>;
 }

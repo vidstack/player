@@ -1,7 +1,7 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
-import type { MediaElement } from '../element/types';
+import type { MediaPlayerElement } from '../element/types';
 import type { MediaProvider, MediaProviderLoader } from './providers/types';
 import type {
   MediaEnterFullscreenRequestEvent,
@@ -67,7 +67,7 @@ export interface MediaEvents {
 }
 
 export interface MediaEvent<Detail = unknown> extends DOMEvent<Detail> {
-  target: MediaElement;
+  target: MediaPlayerElement;
   request?: DOMEvent<any>;
 }
 
@@ -133,7 +133,7 @@ export interface MediaControlsChangeEvent extends MediaEvent<boolean> {}
 export interface MediaSourceChangeEvent extends MediaEvent<MediaSrc> {}
 
 /**
- * Fired when the media provider element is manually destroyed by calling the `destroy()` method.
+ * Fired when the player is manually destroyed by calling the `destroy()` method.
  */
 export interface MediaDestroyEvent extends MediaEvent<void> {}
 
@@ -373,7 +373,7 @@ export interface MediaOrientationChangeEvent extends ScreenOrientationChangeEven
 
 /**
  * Fired when media playback starts again after being in an `ended` state. This is fired
- * when the `loop` property is `true` and media loops, whereas the `vds-play` event is not.
+ * when the `loop` property is `true` and media loops, whereas the `play` event is not.
  */
 export interface MediaReplayEvent extends MediaEvent<void> {
   request?: MediaPlayRequestEvent;

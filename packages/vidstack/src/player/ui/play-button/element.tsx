@@ -5,16 +5,16 @@ import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
-import type { PlayButtonElement } from './types';
+import type { MediaPlayButtonElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-play-button': PlayButtonElement;
+    'media-play-button': MediaPlayButtonElement;
   }
 }
 
-export const PlayButtonDefinition = defineCustomElement<PlayButtonElement>({
-  tagName: 'vds-play-button',
+export const PlayButtonDefinition = defineCustomElement<MediaPlayButtonElement>({
+  tagName: 'media-play-button',
   props: toggleButtonProps,
   setup({ host, props: { $disabled } }) {
     const $media = useMediaStore(),

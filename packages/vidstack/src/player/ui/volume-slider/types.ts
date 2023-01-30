@@ -19,18 +19,18 @@ export interface VolumeSliderMembers
  * @slot preview - Used to insert a slider preview.
  * @example
  * ```html
- * <vds-volume-slider></vds-volume-slider>
+ * <media-volume-slider></media-volume-slider>
  * ```
  * @example
  * ```html
- * <vds-volume-slider>
- *   <vds-slider-value-text
+ * <media-volume-slider>
+ *   <media-slider-value-text
  *     type="pointer"
  *     format="percent"
- *   ></vds-slider-value-text>
- * </vds-volume-slider>
+ *   ></media-slider-value-text>
+ * </media-volume-slider>
  * ```
  */
-export interface VolumeSliderElement
+export interface MediaVolumeSliderElement
   extends HTMLCustomElement<VolumeSliderProps, VolumeSliderEvents, VolumeSliderCSSVars>,
     VolumeSliderMembers {}

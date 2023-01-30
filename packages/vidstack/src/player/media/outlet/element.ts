@@ -6,15 +6,11 @@ import { useMedia } from '../context';
 import type { MediaProviderContext } from '../providers/types';
 import type { MediaOutletElement } from './types';
 
-export const MediaOutletDefinition = defineCustomElement<MediaOutletElement>({
-  tagName: 'vds-media-outlet',
+export const OutletDefinition = defineCustomElement<MediaOutletElement>({
+  tagName: 'media-outlet',
   setup() {
     const media = useMedia(),
-      context: MediaProviderContext = {
-        ...media,
-        player: media.$element()!,
-        $player: media.$element,
-      },
+      context: MediaProviderContext = { ...media, player: media.$player()! },
       $rendered = signal(false);
 
     effect(() => {

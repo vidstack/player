@@ -67,7 +67,7 @@ export interface MediaController {
    */
   readonly user: Mediauser;
   /**
-   * The current media provider element.
+   * The current media provider.
    */
   readonly provider: MediaProvider | null;
   /**
@@ -84,8 +84,8 @@ export interface MediaController {
    *
    * @example
    * ```ts
-   * const media = document.querySelector('vds-media');
-   * media.subscribe(({ paused }) => {
+   * const player = document.querySelector('media-player');
+   * player.subscribe(({ paused }) => {
    *   // ...
    * });
    * ```

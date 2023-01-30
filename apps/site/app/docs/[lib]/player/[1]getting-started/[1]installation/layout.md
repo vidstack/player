@@ -20,13 +20,13 @@ depending on the type of installation method (NPM or CDN), library (HTML, React,
 
 {% install_npm /%}
 
-{% /if_media_provider %}
+{% /if_install_method %}
 
 {% if_install_method is="cdn" %}
 
 {% install_cdn /%}
 
-{% /if_media_provider %}
+{% /if_install_method %}
 
 {% /step %}
 

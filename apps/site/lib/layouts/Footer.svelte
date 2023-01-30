@@ -64,13 +64,13 @@
               <h1 class="text-base font-semibold">Providers</h1>
               <ul class="text-soft mt-4 space-y-4">
                 <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
-                  <a href="/docs/player/components/providers/audio">Audio</a>
+                  <a href="/docs/player/providers/audio">Audio</a>
                 </li>
                 <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
-                  <a href="/docs/player/components/providers/video">Video</a>
+                  <a href="/docs/player/providers/video">Video</a>
                 </li>
                 <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
-                  <a href="/docs/player/components/providers/hls-video">HLS Video</a>
+                  <a href="/docs/player/providers/hls">HLS Video</a>
                 </li>
               </ul>
             </section>

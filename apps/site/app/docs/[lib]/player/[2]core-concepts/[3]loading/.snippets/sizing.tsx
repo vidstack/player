@@ -1,9 +1,9 @@
-import { AspectRatio, Media } from '@vidstack/react';
+import { MediaOutlet, MediaPlayer } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
-      <AspectRatio ratio="16/9">{/* provider here. */}</AspectRatio>
-    </Media>
+    <MediaPlayer aspect-ratio={16 / 9}>
+      <MediaOutlet />
+    </MediaPlayer>
   );
 }

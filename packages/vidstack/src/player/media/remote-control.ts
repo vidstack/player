@@ -3,7 +3,7 @@ import { DOMEvent } from 'maverick.js/std';
 
 import { createLogger, Logger } from '../../foundation/logger/create-logger';
 import { RequestQueue } from '../../foundation/queue/request-queue';
-import type { MediaElement } from '../element/types';
+import type { MediaPlayerElement } from '../element/types';
 import { useMedia } from './context';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request-events';
 
@@ -19,7 +19,7 @@ export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
       const target = $target();
       if (__DEV__) logger?.setTarget(target);
       remote.setTarget(target);
-      remote.setMedia(media.$element());
+      remote.setPlayer(media.$player());
     });
 
     remotes.set($target, remote);
@@ -33,14 +33,14 @@ export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
  */
 export class MediaRemoteControl {
   protected _$target!: WriteSignal<EventTarget | null>;
-  protected _$player!: WriteSignal<MediaElement | null>;
+  protected _$player!: WriteSignal<MediaPlayerElement | null>;
   protected _requests = new RequestQueue();
   protected _dispose!: Dispose;
 
   constructor(protected _logger?: Logger) {
     root((dispose) => {
       this._$target = signal<EventTarget | null>(null);
-      this._$player = signal<MediaElement | null>(null);
+      this._$player = signal<MediaPlayerElement | null>(null);
 
       effect(() => {
         if (this._$target() && this._$player()) this._requests._start();
@@ -56,12 +56,12 @@ export class MediaRemoteControl {
     if (!target) this._$player.set(null);
   }
 
-  getMedia(): MediaElement | null {
-    const media = peek(this._$player);
-    if (media) return media;
+  getPlayer(): MediaPlayerElement | null {
+    const player = peek(this._$player);
+    if (player) return player;
 
     peek(this._$target)?.dispatchEvent(
-      new DOMEvent('vds-find-media', {
+      new DOMEvent('find-media-player', {
         detail: this._$player,
         bubbles: true,
         composed: true,
@@ -71,8 +71,8 @@ export class MediaRemoteControl {
     return peek(this._$player);
   }
 
-  setMedia(media: MediaElement | null) {
-    this._$player.set(media);
+  setPlayer(player: MediaPlayerElement | null) {
+    this._$player.set(player);
   }
 
   startLoading(trigger?: Event) {
@@ -132,43 +132,43 @@ export class MediaRemoteControl {
   }
 
   togglePaused(trigger?: Event) {
-    const media = this.getMedia();
+    const player = this.getPlayer();
 
-    if (!media) {
+    if (!player) {
       if (__DEV__) this._noMediaWarning(this.togglePaused.name);
       return;
     }
 
-    media.onAttach(() => {
-      if (media.state.paused) this.play(trigger);
+    player.onAttach(() => {
+      if (player.state.paused) this.play(trigger);
       else this.pause(trigger);
     });
   }
 
   toggleMuted(trigger?: Event) {
-    const media = this.getMedia();
+    const player = this.getPlayer();
 
-    if (!media) {
+    if (!player) {
       if (__DEV__) this._noMediaWarning(this.toggleMuted.name);
       return;
     }
 
-    media.onAttach(() => {
-      if (media.state.muted) this.unmute(trigger);
+    player.onAttach(() => {
+      if (player.state.muted) this.unmute(trigger);
       else this.mute(trigger);
     });
   }
 
   toggleFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
-    const media = this.getMedia();
+    const player = this.getPlayer();
 
-    if (!media) {
+    if (!player) {
       if (__DEV__) this._noMediaWarning(this.toggleFullscreen.name);
       return;
     }
 
-    media.onAttach(() => {
-      if (media.state.fullscreen) this.exitFullscreen(target, trigger);
+    player.onAttach(() => {
+      if (player.state.fullscreen) this.exitFullscreen(target, trigger);
       else this.enterFullscreen(target, trigger);
     });
   }
@@ -182,7 +182,7 @@ export class MediaRemoteControl {
     trigger?: Event,
     detail?: MediaRequestEvents[EventType]['detail'],
   ) {
-    if (!peek(this._$player)) this.getMedia();
+    if (!peek(this._$player)) this.getPlayer();
 
     this._requests._enqueue(type, () => {
       const request = new DOMEvent<any>(type, {
@@ -195,6 +195,8 @@ export class MediaRemoteControl {
       if (__DEV__) {
         this._logger
           ?.infoGroup(`📨 dispatching \`${type}\``)
+          .labelledLog('Target', peek(this._$target))
+          .labelledLog('Player', peek(this._$player))
           .labelledLog('Request Event', request)
           .labelledLog('Trigger Event', trigger)
           .dispatch();
@@ -208,7 +210,7 @@ export class MediaRemoteControl {
     if (__DEV__) {
       if (!peek(this._$target)) {
         console.warn(
-          `[vidstack] attempted to call \`MediaRemoteControl.${method}\`() that requires media` +
+          `[vidstack] attempted to call \`MediaRemoteControl.${method}\`() that requires player` +
             ` which was not found because target has not connected to the DOM yet`,
         );
 
@@ -217,7 +219,7 @@ export class MediaRemoteControl {
 
       console.warn(
         `[vidstack] attempted to call \`MediaRemoteControl.${method}\`() that requires` +
-          ' media but failed because remote could not find a parent media element from target',
+          ' player but failed because remote could not find a parent player element from target',
       );
     }
   }

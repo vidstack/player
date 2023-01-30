@@ -1,12 +1,12 @@
-import { FullscreenButton, Media } from '@vidstack/react';
+import { MediaFullscreenButton, MediaPlayer } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
-      <FullscreenButton>
+    <MediaPlayer>
+      <MediaFullscreenButton>
         <svg slot="enter">{/* ... */}</svg>
         <svg slot="exit">{/* ... */}</svg>
-      </FullscreenButton>
-    </Media>
+      </MediaFullscreenButton>
+    </MediaPlayer>
   );
 }

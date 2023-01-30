@@ -11,14 +11,17 @@ export const VIDEO_PROVIDER = Symbol(__DEV__ ? 'VIDEO_PROVIDER' : 0);
  * The video provider adapts the `<video>` element to enable loading videos via the HTML Media
  * Element API.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/providers/video}
+ * @docs {@link https://www.vidstack.io/docs/player/providers/video}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video}
  * @example
  * ```html
- * <vds-media
+ * <media-player
  *   src="https://media-files.vidstack.io/720p.mp4"
  *   poster="https://media-files.vidstack.io/poster.png"
- * ></vds-media>
+ *   view="video"
+ * >
+ *   <media-outlet></media-outlet>
+ * </media-player>
  * ```
  */
 export class VideoProvider extends HTMLMediaProvider implements MediaProvider {

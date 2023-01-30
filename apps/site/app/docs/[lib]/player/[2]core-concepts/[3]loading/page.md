@@ -16,23 +16,16 @@ the element will jump from the default size to the intrinsic media size, trigger
 which is a [poor user experience indicator](https://web.dev/cls) for both your users and search
 engines (i.e., Google).
 
-To avoid a layout shift, we recommend use an aspect ratio container which holds a fixed ratio
-(e.g., `16/9`) like so:
+To avoid a layout shift, we recommend setting the aspect ratio prop like so:
 
 {% code_snippets name="sizing" /%}
 
 {% if_js_lib is="html" %}
 
 ```css {% copy=true %}
-vds-media {
-  --media-width: 1920px;
+media-player {
+  /* Set aspect ratio here as well to avoid any initial layout shift. */
   --media-aspect-ratio: 16 / 9;
-}
-
-.media-container {
-  background-color: black;
-  width: var(--media-width);
-  height: calc(var(--media-width) / var(--media-aspect-ratio));
 }
 ```
 

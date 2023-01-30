@@ -1,12 +1,12 @@
 <script>
   function onConnect(event) {
-    const media = event.target;
-    media.$store.volume = 0.5;
+    const player = event.target;
+    player.$store.volume = 0.5;
   }
 </script>
 
-<vds-media class="w-full max-w-xs relative" on:media-connect={onConnect} view="video">
-  <vds-volume-slider>
-    <vds-slider-value-text type="pointer" format="percent" slot="preview" />
-  </vds-volume-slider>
-</vds-media>
+<media-player class="w-full max-w-xs relative" on:media-player-connect={onConnect} view="video">
+  <media-volume-slider>
+    <media-slider-value-text type="pointer" format="percent" slot="preview" />
+  </media-volume-slider>
+</media-player>

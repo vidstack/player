@@ -4,7 +4,7 @@ description: This component is used to display certain media states as a unit of
 
 ## Usage
 
-The `$tag:vds-time` component displays time formatted text (e.g., `01:30` represents 1 minute
+The `$tag:media-time` component displays time formatted text (e.g., `01:30` represents 1 minute
 30 seconds). The time can be based on either the current time, buffered amount, seekable amount,
 or duration.
 

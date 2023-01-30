@@ -1,9 +1,9 @@
 /* hide default UI - only shown if optional UI css files are loaded. */
-vds-play-button > shadow-root,
-vds-mute-button > shadow-root,
-vds-fullscreen-button > shadow-root,
-vds-time-slider > shadow-root,
-vds-volume-slider > shadow-root {
+media-play-button > shadow-root,
+media-mute-button > shadow-root,
+media-fullscreen-button > shadow-root,
+media-time-slider > shadow-root,
+media-volume-slider > shadow-root {
   display: none;
 }
 
@@ -13,24 +13,28 @@ vds-volume-slider > shadow-root {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-vds-media {
+media-player {
   width: 100%;
   display: inline-block;
   position: relative;
   contain: layout;
 }
 
-vds-media[view='audio'] {
+media-player[view='audio'] {
   width: auto;
 }
 
-vds-media-outlet video {
+media-outlet {
+  background-color: black;
+}
+
+media-outlet video {
   display: inline-block;
   width: 100%;
   height: auto;
 }
 
-vds-media[aspect-ratio] vds-media-outlet {
+media-player[aspect-ratio] media-outlet {
   position: relative;
   display: inline-block;
   width: 100%;
@@ -41,7 +45,7 @@ vds-media[aspect-ratio] vds-media-outlet {
   );
 }
 
-vds-media[aspect-ratio] vds-media-outlet > shadow-root > * {
+media-player[aspect-ratio] media-outlet > shadow-root > * {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -55,7 +59,7 @@ vds-media[aspect-ratio] vds-media-outlet > shadow-root > * {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-vds-time {
+media-time {
   display: inline-block;
   contain: content;
   font-size: 18px;
@@ -69,9 +73,9 @@ vds-time {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-vds-play-button,
-vds-mute-button,
-vds-fullscreen-button {
+media-play-button,
+media-mute-button,
+media-fullscreen-button {
   display: inline-block;
   position: relative;
   contain: content;
@@ -81,22 +85,22 @@ vds-fullscreen-button {
   -webkit-tap-highlight-color: transparent;
 }
 
-vds-play-button:focus,
-vds-mute-button:focus,
-vds-fullscreen-button:focus {
+media-play-button:focus,
+media-mute-button:focus,
+media-fullscreen-button:focus {
   outline: none;
 }
 
-vds-play-button:focus-visible,
-vds-mute-button:focus-visible,
-vds-fullscreen-button:focus-visible {
+media-play-button:focus-visible,
+media-mute-button:focus-visible,
+media-fullscreen-button:focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-vds-play-button.focus-visible,
-vds-mute-button.focus-visible,
-vds-fullscreen-button.focus-visible {
+media-play-button.focus-visible,
+media-mute-button.focus-visible,
+media-fullscreen-button.focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
@@ -107,8 +111,8 @@ vds-fullscreen-button.focus-visible {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-vds-time-slider,
-vds-volume-slider {
+media-time-slider,
+media-volume-slider {
   display: inline-block;
   position: relative;
   contain: layout;
@@ -120,19 +124,19 @@ vds-volume-slider {
   -webkit-tap-highlight-color: transparent;
 }
 
-vds-time-slider:focus,
-vds-volume-slider:focus {
+media-time-slider:focus,
+media-volume-slider:focus {
   outline: none;
 }
 
-vds-time-slider:focus-visible,
-vds-volume-slider:focus-visible {
+media-time-slider:focus-visible,
+media-volume-slider:focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-vds-time-slider.focus-visible,
-vds-volume-slider.focus-visible {
+media-time-slider.focus-visible,
+media-volume-slider.focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
@@ -143,7 +147,7 @@ vds-volume-slider.focus-visible {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-vds-slider-value-text {
+media-slider-value-text {
   display: inline-block;
   contain: content;
   font-size: 14px;
@@ -156,26 +160,26 @@ vds-slider-value-text {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-vds-slider-video {
+media-slider-video {
   display: inline-block;
   contain: content;
   background-color: black;
 }
 
-vds-slider-video video {
+media-slider-video video {
   display: block;
   height: auto;
   width: 156px;
 }
 
 /* Temporarily hide video while loading. */
-vds-slider-video:not([can-play]) {
+media-slider-video:not([can-play]) {
   opacity: 0;
 }
 
 /* Hide video if it fails to load. */
-vds-slider-video[error],
-vds-slider-video[error] video {
+media-slider-video[error],
+media-slider-video[error] video {
   display: none;
   width: 0px;
 }
@@ -186,7 +190,7 @@ vds-slider-video[error] video {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-vds-poster {
+media-poster {
   display: block;
   contain: content;
   position: absolute;
@@ -201,7 +205,7 @@ vds-poster {
   transition: opacity 0.2s ease-out;
 }
 
-vds-poster img {
+media-poster img {
   width: 100%;
   height: 100%;
   object-fit: inherit;
@@ -212,11 +216,11 @@ vds-poster img {
   box-sizing: border-box;
 }
 
-vds-poster[img-error] {
+media-poster[img-error] {
   display: none;
 }
 
-vds-media:not([started]) vds-poster {
+media-player:not([started]) media-poster {
   opacity: 1;
   pointer-events: auto;
 }

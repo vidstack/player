@@ -4,8 +4,8 @@ description: This page showcases how to create a loading indicator for when medi
 
 ## Usage
 
-We don't provide a buffering indicator component out of the box because you can easily create one with
-some HTML, CSS, and [media attributes](/docs/player/styling/basics#media-attributes).
+We don't provide a buffering indicator component out of the box because you can easily create one
+with some HTML, CSS, and [media attributes](/docs/player/styling/basics#media-attributes).
 
 The `waiting` attribute can be used to show the indicator while media is buffering.
 Optionally, the `can-play` attribute could also be used to display the indicator while
@@ -13,8 +13,8 @@ media is initially loading.
 
 ```css {% copy=true %}
 /* Show buffering indicator while media is not ready, or buffering. */
-vds-media:not([can-play]) .buffering-icon,
-vds-media[waiting] .buffering-icon {
+media-player:not([can-play]) .buffering-icon,
+media-player[waiting] .buffering-icon {
   opacity: 1;
 }
 ```

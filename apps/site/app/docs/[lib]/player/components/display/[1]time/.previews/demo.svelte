@@ -1,24 +1,24 @@
-<vds-media class="w-full max-w-md" playsinline autoplay muted>
-  <vds-aspect-ratio ratio="16/9">
-    <vds-video>
-      <video preload="none" src="https://media-files.vidstack.io/360p.mp4">
-        <track kind="captions" />
-      </video>
-    </vds-video>
-  </vds-aspect-ratio>
+<media-player
+  src="https://media-files.vidstack.io/360p.mp4"
+  class="w-full max-w-md"
+  playsinline
+  autoplay
+  muted
+  aspect-ratio="16/9"
+>
+  <media-outlet />
 
   <div
     class="media-times flex flex-col absolute top-0.5 left-0.5 p-1 text-sm text-white bg-black/50"
   >
-    <div>Current: <vds-time type="current" /></div>
-    <div>Seekable: <vds-time type="seekable" /></div>
-    <div>Buffered: <vds-time type="buffered" /></div>
-    <div>Duration: <vds-time type="duration" /></div>
-    <div>Remaining: <vds-time type="current" remainder /></div>
+    <div>Current: <media-time type="current" /></div>
+    <div>Seekable: <media-time type="seekable" /></div>
+    <div>Buffered: <media-time type="buffered" /></div>
+    <div>Duration: <media-time type="duration" /></div>
+    <div>Remaining: <media-time type="current" remainder /></div>
   </div>
-
   <!-- <Gesture class="absolute inset-0 w-full h-full" action="toggle:paused" type="click" /> -->
-</vds-media>
+</media-player>
 
 <style>
   .media-times > div {
@@ -27,7 +27,7 @@
     font-weight: bold;
   }
 
-  .media-times vds-time {
+  .media-times media-time {
     font-size: 14px;
     margin-left: 4px;
   }

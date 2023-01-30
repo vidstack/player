@@ -30,19 +30,19 @@ export interface TimeSliderMembers
  * @slot preview - Used to insert a slider preview.
  * @example
  * ```html
- * <vds-time-slider></vds-time-slider>
+ * <media-time-slider></media-time-slider>
  * ```
  * @example
  * ```html
- * <vds-time-slider>
- *   <vds-slider-value-text
+ * <media-time-slider>
+ *   <media-slider-value-text
  *     type="pointer"
  *     format="time"
  *     slot="preview"
- *   ></vds-slider-value-text>
- * </vds-time-slider>
+ *   ></media-slider-value-text>
+ * </media-time-slider>
  * ```
  */
-export interface TimeSliderElement
+export interface MediaTimeSliderElement
   extends HTMLCustomElement<TimeSliderProps, TimeSliderEvents, TimeSliderCSSVars>,
     TimeSliderMembers {}

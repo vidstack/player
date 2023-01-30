@@ -10,7 +10,7 @@ import type { MediaControllerProps } from './types';
  * the odd ones that are in response to prop changes.
  */
 export function useMediaPropChange(
-  { $element: $controller, $store }: MediaContext,
+  { $player, $store }: MediaContext,
   {
     $autoplay,
     $poster,
@@ -24,8 +24,8 @@ export function useMediaPropChange(
   if (__SERVER__) return;
 
   effect(() => {
-    const controller = $controller();
-    if (!controller) return;
+    const player = $player();
+    if (!player) return;
 
     if (__DEV__) {
       effect(() => {
@@ -36,37 +36,37 @@ export function useMediaPropChange(
     effect(() => {
       const autoplay = $autoplay();
       $store.autoplay = autoplay;
-      dispatchEvent(controller, 'autoplay-change', { detail: autoplay });
+      dispatchEvent(player, 'autoplay-change', { detail: autoplay });
     });
 
     effect(() => {
       const poster = $poster();
       $store.poster = poster;
-      dispatchEvent(controller, 'poster-change', { detail: poster });
+      dispatchEvent(player, 'poster-change', { detail: poster });
     });
 
     effect(() => {
       const loop = $loop();
       $store.loop = loop;
-      dispatchEvent(controller, 'loop-change', { detail: loop });
+      dispatchEvent(player, 'loop-change', { detail: loop });
     });
 
     effect(() => {
       const controls = $controls();
       $store.controls = controls;
-      dispatchEvent(controller, 'controls-change', { detail: controls });
+      dispatchEvent(player, 'controls-change', { detail: controls });
     });
 
     effect(() => {
       const playsinline = $playsinline();
       $store.playsinline = playsinline;
-      dispatchEvent(controller, 'playsinline-change', { detail: playsinline });
+      dispatchEvent(player, 'playsinline-change', { detail: playsinline });
     });
 
     effect(() => {
       const view = $view();
       $store.view = view;
-      dispatchEvent(controller, 'view-change', { detail: view });
+      dispatchEvent(player, 'view-change', { detail: view });
     });
   });
 }

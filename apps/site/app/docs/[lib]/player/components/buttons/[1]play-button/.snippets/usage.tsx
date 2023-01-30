@@ -1,9 +1,9 @@
-import { Media, PlayButton } from '@vidstack/react';
+import { MediaPlayButton, MediaPlayer } from '@vidstack/react';
 
-function MediaPlayer() {
+function Player() {
   return (
-    <Media>
-      <PlayButton />
-    </Media>
+    <MediaPlayer>
+      <MediaPlayButton />
+    </MediaPlayer>
   );
 }

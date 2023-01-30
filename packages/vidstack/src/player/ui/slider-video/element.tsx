@@ -4,16 +4,16 @@ import { dispatchEvent } from 'maverick.js/std';
 
 import { useSliderStore } from '../slider/store';
 import { sliderVideoProps } from './props';
-import type { SliderVideoElement } from './types';
+import type { MediaSliderVideoElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'vds-slider-video': SliderVideoElement;
+    'media-slider-video': MediaSliderVideoElement;
   }
 }
 
-export const SliderVideoDefinition = defineCustomElement<SliderVideoElement>({
-  tagName: 'vds-slider-video',
+export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement>({
+  tagName: 'media-slider-video',
   props: sliderVideoProps,
   setup({ host, props: { $src } }) {
     let videoElement: HTMLVideoElement | null = null;

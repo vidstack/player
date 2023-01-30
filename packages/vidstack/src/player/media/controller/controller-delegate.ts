@@ -16,7 +16,7 @@ export interface MediaControllerDelegate {
 }
 
 export function createMediaControllerDelegate(
-  { $element: $controller, $store, logger }: MediaContext,
+  { $player, $store, logger }: MediaContext,
   handle: (event: Event) => void,
 ): MediaControllerDelegate {
   if (__SERVER__) {
@@ -52,7 +52,7 @@ export function createMediaControllerDelegate(
   async function attemptAutoplay() {
     $store.attemptingAutoplay = true;
     try {
-      await $controller()!.play();
+      await $player()!.play();
       dispatch('autoplay', { detail: { muted: $store.muted } });
     } catch (error) {
       dispatch('autoplay-fail', {

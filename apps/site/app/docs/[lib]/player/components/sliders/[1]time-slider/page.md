@@ -4,7 +4,7 @@ description: This component is used to create a range input for controlling the 
 
 ## Usage
 
-The `$tag:vds-time-slider` component receives time updates from the provider through the media store,
+The `$tag:media-time-slider` component receives time updates from the provider through the media store,
 and actively dispatches a `media-seeking-request` event (throttled to once per `100ms`) as the
 slider value changes.
 
@@ -23,7 +23,7 @@ You can override the default styles with CSS like so:
 
 ```css
 /* CSS vars are available for simple customization. */
-vds-time-slider {
+media-time-slider {
   /* Default values are shown below. */
   --media-slider-height: 48px;
   --media-slider-thumb-size: 14px;
@@ -33,39 +33,39 @@ vds-time-slider {
 }
 
 /* Apply styles when device pointer is within slider bounds. */
-vds-time-slider[pointing] {
+media-time-slider[pointing] {
 }
 
 /* Apply styles when slider thumb is being dragged. */
-vds-time-slider[dragging] {
+media-time-slider[dragging] {
 }
 
 /* Shorthand for both dragging and pointing. */
-vds-time-slider[interactive] {
+media-time-slider[interactive] {
 }
 
 /* Apply styles to all tracks. */
-vds-time-slider [part~='track'] {
+media-time-slider [part~='track'] {
 }
 
 /* Apply styles to track when interactive. */
-vds-time-slider[interactive] [part~='track'] {
+media-time-slider[interactive] [part~='track'] {
 }
 
 /* Apply styles to track fill (played portion of slider). */
-vds-time-slider [part~='track-fill'] {
+media-time-slider [part~='track-fill'] {
 }
 
 /* Apply styles to track progress (buffered). */
-vds-time-slider [part~='track-progress'] {
+media-time-slider [part~='track-progress'] {
 }
 
 /* Apply styles to thumb container. */
-vds-time-slider [part='thumb-container'] {
+media-time-slider [part='thumb-container'] {
 }
 
 /* Apply styles to slider thumb. */
-vds-time-slider [part='thumb'] {
+media-time-slider [part='thumb'] {
 }
 ```
 
@@ -75,19 +75,19 @@ vds-time-slider [part='thumb'] {
 
 ### Grouping
 
-{% code_preview name="preview-group" copyHighlight=true highlight="html:2-5|react:7-10" /%}
+{% code_preview name="preview-group" copyHighlight=true highlight="html:2-5|react:12-15" /%}
 
 ### Styling
 
 ```css
 /* CSS vars are available for simple customization. */
-vds-time-slider {
+media-time-slider {
   /* Default values are shown below. */
   --media-slider-preview-width: var(--computed-width);
   --media-slider-preview-gap: calc(var(--computed-height) + 8px);
 }
 
 /** Override default preview styles. */
-vds-time-slider [slot='preview'] {
+media-time-slider [slot='preview'] {
 }
 ```

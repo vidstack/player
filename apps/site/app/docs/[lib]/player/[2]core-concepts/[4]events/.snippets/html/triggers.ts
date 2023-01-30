@@ -1,15 +1,15 @@
 import { hasTriggerEvent, walkTriggerEventChain } from 'vidstack';
 
-const media = document.querySelector('vds-media')!;
+const player = document.querySelector('media-player')!;
 
-media.addEventListener('play', (event) => {
+player.addEventListener('play', (event) => {
   // was this triggered by an actual person?
   const userPlayed = event.isOriginTrusted;
   // equivalent to above
   const isTrusted = event.originEvent.isTrusted;
 });
 
-media.addEventListener('playing', (event) => {
+player.addEventListener('playing', (event) => {
   // walk through each trigger event in the chain.
   walkTriggerEventChain(event, (trigger) => {
     console.log(trigger);

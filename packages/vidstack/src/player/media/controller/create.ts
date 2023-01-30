@@ -1,7 +1,7 @@
 import { provideContext, signal, Signals } from 'maverick.js';
 
 import { useLogger } from '../../../foundation/logger/logger';
-import type { MediaElement } from '../../element/types';
+import type { MediaPlayerElement } from '../../element/types';
 import { mediaContext, MediaContext } from '../context';
 import type { MediaProviderLoader } from '../providers/types';
 import { mediaStore } from '../store';
@@ -16,7 +16,7 @@ import type { MediaControllerProps } from './types';
 
 export function createMediaController(props: Signals<MediaControllerProps>) {
   const context = {
-    $element: signal<MediaElement | null>(null),
+    $player: signal<MediaPlayerElement | null>(null),
     $loader: signal<MediaProviderLoader | null>(null),
     $provider: signal<MediaProvider | null>(null),
     $store: mediaStore.create(),
@@ -25,7 +25,7 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
   provideContext(mediaContext, context);
 
   if (__DEV__) {
-    context.logger = useLogger(context.$element);
+    context.logger = useLogger(context.$player);
   }
 
   const requests = new MediaRequestContext(),
@@ -44,7 +44,7 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
 
   context.$store.muted = props.$muted() || props.$volume() === 0;
   useMediaPropChange(context, props);
-  useMediaCanLoad(context.$element, props.$load, startLoadingMedia);
+  useMediaCanLoad(context.$player, props.$load, startLoadingMedia);
   if (__DEV__) useMediaEventsLogger(context, context.logger);
 
   function startLoadingMedia() {

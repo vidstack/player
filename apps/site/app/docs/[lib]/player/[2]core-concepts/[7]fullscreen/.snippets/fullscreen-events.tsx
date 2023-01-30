@@ -1,7 +1,7 @@
-import { Media } from '@vidstack/react';
+import { MediaPlayer } from '@vidstack/react';
 import { type MediaFullscreenChangeEvent, type MediaFullscreenErrorEvent } from 'vidstack';
 
-function MediaPlayer() {
+function Player() {
   function onFullscreenChange(event: MediaFullscreenChangeEvent) {
     const requestEvent = event.request;
     const isFullscreen = event.detail;
@@ -13,8 +13,8 @@ function MediaPlayer() {
   }
 
   return (
-    <Media onFullscreenChange={onFullscreenChange} onFullscreenError={onFullscreenError}>
+    <MediaPlayer onFullscreenChange={onFullscreenChange} onFullscreenError={onFullscreenError}>
       {/* ... */}
-    </Media>
+    </MediaPlayer>
   );
 }

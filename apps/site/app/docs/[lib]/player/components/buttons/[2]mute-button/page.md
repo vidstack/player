@@ -4,7 +4,7 @@ description: This component is used to mute and unmute media.
 
 ## Usage
 
-The `$tag:vds-mute-button` component will toggle the `muted` state of media as it's pressed by
+The `$tag:media-mute-button` component will toggle the `muted` state of media as it's pressed by
 dispatching a `media-mute-request`, and `media-unmute-request` event to the media controller.
 
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:6" /%}
@@ -14,33 +14,33 @@ dispatching a `media-mute-request`, and `media-unmute-request` event to the medi
 You can override the default styles with CSS like so:
 
 ```css
-vds-mute-button {
+media-mute-button {
   color: pink;
   transition: opacity 0.2s ease-in;
 }
 
 /* Apply styles when media is muted. */
-vds-mute-button[muted] {
+media-mute-button[muted] {
 }
 
 /* Apply styles when media is _not_ muted. */
-vds-mute-button:not([muted]) {
+media-mute-button:not([muted]) {
 }
 
 /* Apply styles when media volume is low (0% < x < 50%). */
-vds-mute-button[volume-low] {
+media-mute-button[volume-low] {
 }
 
 /* Apply styles when media volume is high (≥50%). */
-vds-mute-button[volume-high] {
+media-mute-button[volume-high] {
 }
 
 /* Style default icons. */
-vds-mute-button [slot='volume-muted'] {
+media-mute-button [slot='volume-muted'] {
 }
-vds-mute-button [slot='volume-low'] {
+media-mute-button [slot='volume-low'] {
 }
-vds-mute-button [slot='volume-high'] {
+media-mute-button [slot='volume-high'] {
 }
 ```
 

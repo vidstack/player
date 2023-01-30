@@ -25,10 +25,10 @@
 }
 
 /* Avoid double controls on iOS. */
-vds-media[ios-controls] .media-controls-group,
+media-player[ios-controls] .media-controls-group,
 /* Hide controls if media is not ready for playback, or user is idle. */
-vds-media[user-idle] .media-controls-group,
-vds-media:not([can-play]) .media-controls-group {
+media-player[user-idle] .media-controls-group,
+media-player:not([can-play]) .media-controls-group {
   opacity: 0;
   visibility: hidden;
 }
