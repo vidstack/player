@@ -7,8 +7,8 @@ import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
 import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
+import { createSlider } from '../slider/create';
 import type { SliderDragValueChangeEvent, SliderValueChangeEvent } from '../slider/events';
-import { useSlider } from '../slider/use-slider';
 import { volumeSliderProps } from './props';
 import type { VolumeSliderElement } from './types';
 
@@ -23,7 +23,7 @@ export const VolumeSliderDefinition = defineCustomElement<VolumeSliderElement>({
   props: volumeSliderProps,
   setup({ host, props, accessors }) {
     const $media = useMediaStore(),
-      { $store, members } = useSlider(
+      { $store, members } = createSlider(
         host,
         {
           $props: props,

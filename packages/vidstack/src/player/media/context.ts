@@ -1,20 +1,21 @@
-import { createContext, signal, useContext, WriteSignal } from 'maverick.js';
+import { createContext, useContext, WriteSignal } from 'maverick.js';
 
-import type { MediaElement } from './element/types';
-import type { MediaProviderElement } from './provider/types';
-import { mediaStore, MediaStore } from './store';
+import type { Logger } from '../../foundation/logger/create-logger';
+import type { MediaElement } from '../element/types';
+import type { MediaControllerDelegate } from './controller/controller-delegate';
+import type { MediaProvider, MediaProviderLoader } from './providers/types';
+import type { MediaStore } from './store';
 
 export interface MediaContext {
   $element: WriteSignal<MediaElement | null>;
-  $provider: WriteSignal<MediaProviderElement | null>;
+  $loader: WriteSignal<MediaProviderLoader | null>;
+  $provider: WriteSignal<MediaProvider | null>;
   $store: MediaStore;
+  delegate: MediaControllerDelegate;
+  logger?: Logger;
 }
 
-export const mediaContext = createContext<MediaContext>(() => ({
-  $element: signal<MediaElement | null>(null),
-  $provider: signal<MediaProviderElement | null>(null),
-  $store: mediaStore.create(),
-}));
+export const mediaContext = createContext<MediaContext>();
 
 export function useMedia(): MediaContext {
   return useContext(mediaContext);

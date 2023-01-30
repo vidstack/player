@@ -3,8 +3,8 @@ import { DOMEvent } from 'maverick.js/std';
 
 import { createLogger, Logger } from '../../foundation/logger/create-logger';
 import { RequestQueue } from '../../foundation/queue/request-queue';
+import type { MediaElement } from '../element/types';
 import { useMedia } from './context';
-import type { MediaElement } from './element/types';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request-events';
 
 const remotes = new WeakMap<ReadSignal<EventTarget | null>, MediaRemoteControl>();
@@ -33,18 +33,18 @@ export function useMediaRemoteControl($target: ReadSignal<EventTarget | null>) {
  */
 export class MediaRemoteControl {
   protected _$target!: WriteSignal<EventTarget | null>;
-  protected _$media!: WriteSignal<MediaElement | null>;
+  protected _$player!: WriteSignal<MediaElement | null>;
   protected _requests = new RequestQueue();
   protected _dispose!: Dispose;
 
   constructor(protected _logger?: Logger) {
     root((dispose) => {
       this._$target = signal<EventTarget | null>(null);
-      this._$media = signal<MediaElement | null>(null);
+      this._$player = signal<MediaElement | null>(null);
 
       effect(() => {
-        if (this._$target() && this._$media()) this._requests.start();
-        else this._requests.stop();
+        if (this._$target() && this._$player()) this._requests._start();
+        else this._requests._stop();
       });
 
       this._dispose = dispose;
@@ -53,26 +53,26 @@ export class MediaRemoteControl {
 
   setTarget(target: EventTarget | null) {
     this._$target.set(target);
-    if (!target) this._$media.set(null);
+    if (!target) this._$player.set(null);
   }
 
   getMedia(): MediaElement | null {
-    const media = peek(this._$media);
+    const media = peek(this._$player);
     if (media) return media;
 
     peek(this._$target)?.dispatchEvent(
       new DOMEvent('vds-find-media', {
-        detail: this._$media,
+        detail: this._$player,
         bubbles: true,
         composed: true,
       }),
     );
 
-    return peek(this._$media);
+    return peek(this._$player);
   }
 
   setMedia(media: MediaElement | null) {
-    this._$media.set(media);
+    this._$player.set(media);
   }
 
   startLoading(trigger?: Event) {
@@ -182,9 +182,9 @@ export class MediaRemoteControl {
     trigger?: Event,
     detail?: MediaRequestEvents[EventType]['detail'],
   ) {
-    if (!peek(this._$media)) this.getMedia();
+    if (!peek(this._$player)) this.getMedia();
 
-    this._requests.queue(type, () => {
+    this._requests._enqueue(type, () => {
       const request = new DOMEvent<any>(type, {
         bubbles: true,
         composed: true,

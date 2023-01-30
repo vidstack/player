@@ -1,96 +1,123 @@
-export type ScreenOrientationType =
-  /**
-   * Landscape-primary is an orientation where the screen width is greater than the screen height.
-   * If the device's natural orientation is landscape, then it is in landscape-primary when held
-   * in that position. If the device's natural orientation is portrait, the user agent sets
-   * landscape-primary from the two options as shown in the screen orientation values table.
-   */
-  | 'landscape-primary'
+import { effect, peek, ReadSignal, signal } from 'maverick.js';
+import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
-  /**
-   * Landscape-secondary is an orientation where the screen width is greater than the screen
-   * height. If the device's natural orientation is landscape, it is in landscape-secondary when
-   * rotated 180º from its natural orientation. If the device's natural orientation is portrait,
-   * the user agent sets landscape-secondary from the two options as shown in the screen
-   * orientation values table.
-   */
-  | 'landscape-secondary'
+import { canOrientScreen } from '../../utils/support';
+import type { ScreenOrientationEventTarget } from './events';
+import type { ScreenOrientationLockType, ScreenOrientationType } from './types';
 
-  /**
-   * Portrait-primary is an orientation where the screen width is less than or equal to the screen
-   * height. If the device's natural orientation is portrait, then it is in portrait-primary when
-   * held in that position. If the device's natural orientation is landscape, the user agent sets
-   * portrait-primary from the two options as shown in the screen orientation values table.
-   */
-  | 'portrait-primary'
+const CAN_ORIENT_SCREEN = canOrientScreen();
 
-  /**
-   * Portrait-secondary is an orientation where the screen width is less than or equal to the
-   * screen height. If the device's natural orientation is portrait, then it is in
-   * portrait-secondary when rotated 180º from its natural position. If the device's natural
-   * orientation is landscape, the user agent sets portrait-secondary from the two options as
-   * shown in the screen orientation values table.
-   */
-  | 'portrait-secondary';
+export function createScreenOrientationAdapter(
+  $target: ReadSignal<ScreenOrientationEventTarget | null>,
+): ScreenOrientationAdapter {
+  const $orientation = signal<ScreenOrientationType | undefined>(getScreenOrientation()),
+    $locked = signal(false);
 
-export type ScreenOrientationLockType =
-  /**
-   * Any is an orientation that means the screen can be locked to any one of portrait-primary,
-   * portrait-secondary, landscape-primary and landscape-secondary.
-   */
-  | 'any'
+  let currentLock: ScreenOrientationLockType | undefined;
 
-  /**
-   * Landscape is an orientation where the screen width is greater than the screen height and
-   * depending on platform convention locking the screen to landscape can represent
-   * landscape-primary, landscape-secondary or both.
-   */
-  | 'landscape'
+  if (CAN_ORIENT_SCREEN) {
+    effect(() => {
+      const target = $target();
+      if (!target) return;
 
-  /**
-   * Landscape-primary is an orientation where the screen width is greater than the screen height.
-   * If the device's natural orientation is landscape, then it is in landscape-primary when held
-   * in that position. If the device's natural orientation is portrait, the user agent sets
-   * landscape-primary from the two options as shown in the screen orientation values table.
-   */
-  | 'landscape-primary'
+      listenEvent(screen.orientation, 'change', (trigger) => {
+        const orientation = getScreenOrientation()!;
+        $orientation.set(orientation);
+        dispatchEvent(target, 'orientation-change', {
+          detail: { orientation, lock: currentLock },
+          trigger,
+        });
+      });
 
-  /**
-   * Landscape-secondary is an orientation where the screen width is greater than the screen
-   * height. If the device's natural orientation is landscape, it is in landscape-secondary when
-   * rotated 180º from its natural orientation. If the device's natural orientation is portrait,
-   * the user agent sets landscape-secondary from the two options as shown in the screen
-   * orientation values table.
-   */
-  | 'landscape-secondary'
+      return async () => {
+        if (CAN_ORIENT_SCREEN && $locked()) await unlock();
+      };
+    });
+  }
 
-  /**
-   * Natural is an orientation that refers to either portrait-primary or landscape-primary
-   * depending on the device's usual orientation. This orientation is usually provided by the
-   * underlying operating system.
-   */
-  | 'natural'
+  async function lock(lockType) {
+    if (peek($locked)) return;
+    assertScreenOrientationAPI();
+    await screen.orientation.lock(lockType);
+    $locked.set(true);
+    currentLock = lockType;
+  }
 
-  /**
-   * Portrait is an orientation where the screen width is less than or equal to the screen height
-   * and depending on platform convention locking the screen to portrait can represent
-   * portrait-primary, portrait-secondary or both.
-   */
-  | 'portrait'
+  async function unlock() {
+    if (!peek($locked)) return;
+    assertScreenOrientationAPI();
+    currentLock = undefined;
+    await screen.orientation.unlock();
+    $locked.set(false);
+  }
 
-  /**
-   * Portrait-primary is an orientation where the screen width is less than or equal to the screen
-   * height. If the device's natural orientation is portrait, then it is in portrait-primary when
-   * held in that position. If the device's natural orientation is landscape, the user agent sets
-   * portrait-primary from the two options as shown in the screen orientation values table.
-   */
-  | 'portrait-primary'
+  return {
+    get orientation() {
+      return $orientation();
+    },
+    get locked() {
+      return $locked();
+    },
+    get supported() {
+      return CAN_ORIENT_SCREEN;
+    },
+    lock,
+    unlock,
+  };
+}
 
+function assertScreenOrientationAPI() {
+  if (!CAN_ORIENT_SCREEN) return;
+  throw Error(
+    __DEV__
+      ? '[vidstack] screen orientation API is not available'
+      : '[vidstack] no orientation API',
+  );
+}
+
+function getScreenOrientation() {
+  return __SERVER__ ? undefined : (window.screen?.orientation?.type as ScreenOrientationType);
+}
+
+export interface ScreenOrientationAdapter {
   /**
-   * Portrait-secondary is an orientation where the screen width is less than or equal to the
-   * screen height. If the device's natural orientation is portrait, then it is in
-   * portrait-secondary when rotated 180º from its natural position. If the device's natural
-   * orientation is landscape, the user agent sets portrait-secondary from the two options as
-   * shown in the screen orientation values table.
+   * The current screen orientation. It will return `undefined` if the Screen Orientation API
+   * is not available.
+   *
+   * @signal
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
+   * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
    */
-  | 'portrait-secondary';
+  readonly orientation: ScreenOrientationType | undefined;
+  /**
+   * Whether the screen orientation is currently locked.
+   *
+   * @signal
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation}
+   * @see https://w3c.github.io/screen-orientation/#screen-orientation-types-and-locks
+   */
+  readonly locked: boolean;
+  /**
+   * Whether the native Screen Orientation API is available.
+   */
+  readonly supported: boolean;
+  /**
+   * Locks the orientation of the screen to the desired orientation type using the
+   * Screen Orientation API.
+   *
+   * @param lockType - The screen lock orientation type.
+   * @throws Error - If screen orientation API is unavailable.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation}
+   * @see {@link https://w3c.github.io/screen-orientation}
+   */
+  lock(lockType: ScreenOrientationLockType): Promise<void>;
+  /**
+   * Unlocks the orientation of the screen to it's default state using the Screen Orientation
+   * API. This method will throw an error if the API is unavailable.
+   *
+   * @throws Error - If screen orientation API is unavailable.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation}
+   * @see {@link https://w3c.github.io/screen-orientation}
+   */
+  unlock(): Promise<void>;
+}

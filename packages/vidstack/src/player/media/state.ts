@@ -193,6 +193,17 @@ export interface MediaState {
    */
   playsinline: boolean;
   /**
+   * Configures the preload setting of the underlying media provider once it can load (see
+   * `loading` property).
+   *
+   * The `preload` attribute provides a hint to the browser about what the author thinks will
+   * lead to the best user experience with regards to what content is loaded before the video is
+   * played. The recommended default is `metadata`.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload}
+   */
+  preload: 'none' | 'metadata' | 'auto';
+  /**
    * Contains the time ranges that the user is able to seek to, if any. This tells us which parts
    * of the media can be played without delay; this is irrespective of whether that part has
    * been downloaded or not.
@@ -221,19 +232,19 @@ export interface MediaState {
    */
   seeking: boolean;
   /**
-   * The chosen media resource. Defaults to `{ src: '' }` if no media has been loaded.
-   *
-   * @defaultValue { src: '' }
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc}
-   */
-  source: MediaSrc;
-  /**
    * The URL and optionally type of the current media resource/s to be considered for playback.
    * Use `source` to get the currently loaded resource.
    *
    * @defaultValue []
    */
   sources: MediaSrc[];
+  /**
+   * The chosen media resource. Defaults to `{ src: '', type: '' }` if no media has been loaded.
+   *
+   * @defaultValue { src: '', type: '' }
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc}
+   */
+  source: MediaSrc;
   /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    *

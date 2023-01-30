@@ -1,7 +1,8 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
-import type { MediaElement } from './element/types';
+import type { MediaElement } from '../element/types';
+import type { MediaProvider, MediaProviderLoader } from './providers/types';
 import type {
   MediaEnterFullscreenRequestEvent,
   MediaExitFullscreenRequestEvent,
@@ -47,6 +48,9 @@ export interface MediaEvents {
   'playsinline-change': MediaPlaysinlineChangeEvent;
   'poster-change': MediaPosterChangeEvent;
   progress: MediaProgressEvent;
+  'provider-loader-change': MediaProviderLoaderChangeEvent;
+  'provider-change': MediaProviderChangeEvent;
+  'provider-setup': MediaProviderSetupEvent;
   replay: MediaReplayEvent;
   seeked: MediaSeekedEvent;
   seeking: MediaSeekingEvent;
@@ -295,6 +299,26 @@ export interface MediaProgressEvent
     buffered: TimeRanges;
     seekable: TimeRanges;
   }> {}
+
+/**
+ * Fired when the new media provider loader has been selected and rendered. This will be `null` if
+ * no loader is able to play one of the current sources.
+ */
+export interface MediaProviderLoaderChangeEvent extends MediaEvent<MediaProviderLoader | null> {}
+
+/**
+ * Fired when the new media provider has been selected. This will be `null` if no provider is
+ * able to play one of the current sources.
+ *
+ * This event is ideal for initially configuring any provider-specific settings.
+ */
+export interface MediaProviderChangeEvent extends MediaEvent<MediaProvider | null> {}
+
+/**
+ * Fired immediately after the provider has been set up. Do not try and configure the provider
+ * here as it'll be too late - prefer the `provider-change` event.
+ */
+export interface MediaProviderSetupEvent extends MediaEvent<MediaProvider> {}
 
 /**
  * Fired when a seek operation completed, the current playback position has changed, and the

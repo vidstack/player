@@ -43,5 +43,5 @@ export interface MediaErrorDetail {
 
 export interface MediaSrc {
   src: string;
-  type?: string;
+  type: string;
 }

@@ -3,10 +3,10 @@ import { RequestQueue } from './request-queue';
 it('should return correct queue size', () => {
   const q = new RequestQueue();
 
-  q.queue('a', () => {});
-  q.queue('b', () => {});
+  q._enqueue('a', () => {});
+  q._enqueue('b', () => {});
 
-  expect(q.size).to.equal(2);
+  expect(q._size).to.equal(2);
 });
 
 it('should serve items in queue', async () => {
@@ -15,20 +15,20 @@ it('should serve items in queue', async () => {
   const itemA = vi.fn();
   const itemB = vi.fn();
 
-  q.queue('a', itemA);
-  q.queue('b', itemB);
+  q._enqueue('a', itemA);
+  q._enqueue('b', itemB);
 
   expect(itemA).not.toHaveBeenCalled();
   expect(itemB).not.toHaveBeenCalled();
 
-  await q.serve('a');
+  await q._serve('a');
   expect(itemA).toHaveBeenCalledOnce();
   expect(itemB).not.toHaveBeenCalled();
-  expect(q.size).to.equal(1);
+  expect(q._size).to.equal(1);
 
-  await q.serve('b');
+  await q._serve('b');
   expect(itemB).toHaveBeenCalledOnce();
-  expect(q.size).to.equal(0);
+  expect(q._size).to.equal(0);
 });
 
 it('should flush queue in-order', async () => {
@@ -46,11 +46,11 @@ it('should flush queue in-order', async () => {
     timestampC = process.hrtime();
   };
 
-  q.queue('a', itemA);
-  q.queue('b', itemB);
-  q.queue('c', itemC);
+  q._enqueue('a', itemA);
+  q._enqueue('b', itemB);
+  q._enqueue('c', itemC);
 
-  q.start();
+  q._start();
 
   expect(timestampA < timestampB && timestampA < timestampC).to.be.true;
   expect(timestampB < timestampC).to.be.true;
@@ -62,10 +62,10 @@ it('should flush pending requests on start', async () => {
   const itemA = vi.fn();
   const itemB = vi.fn();
 
-  q.queue('a', itemA);
-  q.queue('b', itemB);
+  q._enqueue('a', itemA);
+  q._enqueue('b', itemB);
 
-  q.start();
+  q._start();
 
   expect(itemA).toHaveBeenCalledOnce();
   expect(itemB).toHaveBeenCalledOnce();
@@ -74,13 +74,13 @@ it('should flush pending requests on start', async () => {
 it('should serve immediately once started', async () => {
   const q = new RequestQueue();
 
-  q.start();
+  q._start();
 
   const itemA = vi.fn();
   const itemB = vi.fn();
 
-  q.queue('a', itemA);
-  q.queue('b', itemB);
+  q._enqueue('a', itemA);
+  q._enqueue('b', itemB);
 
   expect(itemA).toHaveBeenCalledOnce();
   expect(itemB).toHaveBeenCalledOnce();
@@ -89,14 +89,14 @@ it('should serve immediately once started', async () => {
 it('should not serve immediately once stopped', async () => {
   const q = new RequestQueue();
 
-  q.start();
-  q.stop();
+  q._start();
+  q._stop();
 
   const itemA = vi.fn();
   const itemB = vi.fn();
 
-  q.queue('a', itemA);
-  q.queue('b', itemB);
+  q._enqueue('a', itemA);
+  q._enqueue('b', itemB);
 
   expect(itemA).not.toHaveBeenCalled();
   expect(itemB).not.toHaveBeenCalled();
@@ -106,20 +106,20 @@ it('should release pending flush when started', async () => {
   const q = new RequestQueue();
 
   setTimeout(() => {
-    q.start();
+    q._start();
   });
 
-  await q.waitForFlush();
+  await q._waitForFlush();
 });
 
 it('should release pending flush when destroyed', async () => {
   const q = new RequestQueue();
 
   setTimeout(() => {
-    q.reset();
+    q._reset();
   });
 
-  await q.waitForFlush();
+  await q._waitForFlush();
 });
 
 it('should clear queue when destroyed', async () => {
@@ -128,12 +128,12 @@ it('should clear queue when destroyed', async () => {
   const itemA = vi.fn();
   const itemB = vi.fn();
 
-  q.queue('a', itemA);
-  q.queue('b', itemB);
+  q._enqueue('a', itemA);
+  q._enqueue('b', itemB);
 
-  await q.reset();
+  await q._reset();
 
   expect(itemA).not.toHaveBeenCalled();
   expect(itemB).not.toHaveBeenCalled();
-  expect(q.size).to.equal(0);
+  expect(q._size).to.equal(0);
 });

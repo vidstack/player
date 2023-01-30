@@ -8,7 +8,7 @@ export class RequestQueue {
   /**
    * The number of callbacks that are currently in queue.
    */
-  get size(): number {
+  get _size(): number {
     return this._queue.size;
   }
 
@@ -16,14 +16,14 @@ export class RequestQueue {
    * Whether items in the queue are being served immediately, otherwise they're queued to
    * be processed later.
    */
-  get isServing() {
+  get _isServing() {
     return this._serving;
   }
 
   /**
    * Waits for the queue to be flushed (ie: start serving).
    */
-  async waitForFlush() {
+  async _waitForFlush() {
     if (this._serving) return;
     await this._pending.promise;
   }
@@ -36,7 +36,7 @@ export class RequestQueue {
    * @param key - Uniquely identifies this callback so duplicates are ignored.
    * @param callback - The function to call when this item in the queue is being served.
    */
-  queue(key: string | symbol, callback: () => void) {
+  _enqueue(key: string | symbol, callback: () => void) {
     if (this._serving) {
       callback();
       return;
@@ -50,7 +50,7 @@ export class RequestQueue {
   /**
    * Invokes the callback with the given `key` in the queue (if it exists).
    */
-  serve(key: string | symbol) {
+  _serve(key: string | symbol) {
     this._queue.get(key)?.();
     this._queue.delete(key);
   }
@@ -58,7 +58,7 @@ export class RequestQueue {
   /**
    * Flush all queued items and start serving future requests immediately until `stop()` is called.
    */
-  start() {
+  _start() {
     this._flush();
     this._serving = true;
     if (this._queue.size > 0) this._flush();
@@ -67,7 +67,7 @@ export class RequestQueue {
   /**
    * Stop serving requests, they'll be queued until you begin processing again by calling `start()`.
    */
-  stop() {
+  _stop() {
     this._serving = false;
   }
 
@@ -75,14 +75,14 @@ export class RequestQueue {
    * Stop serving requests, empty the request queue, and release any promises waiting for the
    * queue to flush.
    */
-  reset() {
-    this.stop();
+  _reset() {
+    this._stop();
     this._queue.clear();
     this._release();
   }
 
   protected _flush() {
-    for (const key of this._queue.keys()) this.serve(key);
+    for (const key of this._queue.keys()) this._serve(key);
     this._release();
   }
 

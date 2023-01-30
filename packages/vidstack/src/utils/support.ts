@@ -1,10 +1,10 @@
 import { isFunction, isUndefined } from 'maverick.js/std';
 
 export const UA = __SERVER__ ? '' : navigator?.userAgent.toLowerCase();
-export const IS_IOS = !__SERVER__ && /iphone|ipad|ipod|ios|CriOS|FxiOS/.test(UA);
-export const IS_IPHONE = !__SERVER__ && /(iPhone|iPod)/gi.test(navigator?.platform);
+export const IS_IOS = !__SERVER__ && /iphone|ipad|ipod|ios|crios|fxios/i.test(UA);
+export const IS_IPHONE = !__SERVER__ && /(iphone|ipod)/gi.test(navigator?.platform);
 export const IS_CHROME = !__SERVER__ && !!window.chrome;
-export const IS_SAFARI = !__SERVER__ && (!!window.safari || /(apple|safari)/.test(UA));
+export const IS_SAFARI = !__SERVER__ && (!!window.safari || IS_IOS);
 
 /**
  * Returns the current version of Safari. Defaults to `0` if unknown.

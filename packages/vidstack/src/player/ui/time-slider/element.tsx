@@ -7,13 +7,13 @@ import { setAttributeIfEmpty } from '../../../utils/dom';
 import { formatSpokenTime } from '../../../utils/time';
 import { useMediaStore } from '../../media/context';
 import { useMediaRemoteControl } from '../../media/remote-control';
+import { createSlider } from '../slider/create';
 import type {
   SliderDragEndEvent,
   SliderDragStartEvent,
   SliderDragValueChangeEvent,
   SliderValueChangeEvent,
 } from '../slider/events';
-import { useSlider } from '../slider/use-slider';
 import { timeSliderProps } from './props';
 import type { TimeSliderElement } from './types';
 
@@ -28,7 +28,7 @@ export const TimeSliderDefinition = defineCustomElement<TimeSliderElement>({
   props: timeSliderProps,
   setup({ host, props: { $pauseWhileDragging, $seekingRequestThrottle, ...props }, accessors }) {
     const $media = useMediaStore(),
-      { $store, members } = useSlider(
+      { $store, members } = createSlider(
         host,
         {
           $props: props,

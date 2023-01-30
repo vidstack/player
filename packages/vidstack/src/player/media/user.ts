@@ -2,11 +2,11 @@ import { computed, effect, peek, ReadSignal, signal } from 'maverick.js';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
 import { useMediaStore } from './context';
-import type { MediaControllerElement } from './element/controller/types';
+import type { MediaControllerElement } from './controller/types';
 
 const STOP_IDLE_EVENTS = ['pointerup', 'pointermove', 'focus', 'keydown', 'playing'] as const;
 
-export function useMediaUser($target: ReadSignal<MediaControllerElement | null>): UseMediaUser {
+export function createMediaUser($controller: ReadSignal<MediaControllerElement | null>): Mediauser {
   let $media = useMediaStore(),
     idleTimeout: any,
     delay = 2000,
@@ -16,7 +16,7 @@ export function useMediaUser($target: ReadSignal<MediaControllerElement | null>)
     $paused = computed(() => $userPaused() || $media.paused);
 
   effect(() => {
-    const target = $target();
+    const target = $controller();
     if (!target) return;
 
     for (const eventType of STOP_IDLE_EVENTS) {
@@ -62,7 +62,7 @@ export function useMediaUser($target: ReadSignal<MediaControllerElement | null>)
   };
 }
 
-export interface UseMediaUser {
+export interface Mediauser {
   idle: {
     /**
      * Whether the media user is currently idle.

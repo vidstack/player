@@ -6,7 +6,7 @@ import { IS_SAFARI } from '../../utils/support';
 
 const PAGE_EVENTS = ['focus', 'blur', 'visibilitychange', 'pageshow', 'pagehide'] as const;
 
-export function usePageVisibility(): UsePageVisibility {
+export function usePageVisibility(): PageVisibilityAdapter {
   const $state = signal(determinePageState()),
     $visibility = signal<DocumentVisibility>(__SERVER__ ? 'visible' : document.visibilityState);
 
@@ -77,7 +77,7 @@ export type PageState = 'active' | 'passive' | 'hidden';
 
 export type DocumentVisibility = 'visible' | 'hidden';
 
-export interface UsePageVisibility {
+export interface PageVisibilityAdapter {
   /**
    * The current page state. Important to note we only account for a subset of page states, as
    * the rest aren't valuable to the player at the moment.
