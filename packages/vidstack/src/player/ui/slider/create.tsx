@@ -7,7 +7,7 @@ import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
 import type { SliderProps } from './props';
 import { SliderStore, sliderStoreContext } from './store';
-import type { SliderElement, SliderMembers } from './types';
+import type { MediaSliderElement, SliderMembers } from './types';
 import { SliderEventCallbacks, useSliderEvents } from './use-events';
 import { getClampedValue } from './utils';
 
@@ -16,7 +16,7 @@ import { getClampedValue } from './utils';
  * ARIA friendly, mouse/touch friendly and easily stylable.
  */
 export function createSlider(
-  host: CustomElementHost<SliderElement>,
+  host: CustomElementHost<MediaSliderElement>,
   { $props, readonly, aria, ...callbacks }: SliderInit,
   accessors: () => SliderProps,
 ): Slider {
@@ -116,6 +116,18 @@ export function createSlider(
       },
       set value(value) {
         $store.value = value;
+      },
+      $render: () => {
+        return (
+          <>
+            <div part="track"></div>
+            <div part="track track-fill"></div>
+            <div part="track track-progress"></div>
+            <div part="thumb-container">
+              <div part="thumb"></div>
+            </div>
+          </>
+        );
       },
     }),
   };

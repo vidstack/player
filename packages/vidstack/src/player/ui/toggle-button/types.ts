@@ -16,7 +16,7 @@ export interface ToggleButtonProps {
 
 export interface ToggleButtonEvents {}
 
-export interface ToggleButtonMembers extends ToggleButtonProps {
+export interface ToggleButtonMembers extends Omit<ToggleButtonProps, 'defaultPressed'> {
   /**
    * Whether the toggle is currently in a `pressed` state.
    *
@@ -33,11 +33,11 @@ export interface ToggleButtonMembers extends ToggleButtonProps {
  * @example
  * ```html
  * <media-toggle-button aria-label="...">
- *   <svg slot="pressed">...</svg>
- *   <svg slot="not-pressed">...</svg>
+ *   <svg slot="on">...</svg>
+ *   <svg slot="off">...</svg>
  * </media-toggle-button>
  * ```
  */
-export interface ToggleButtonElement
+export interface MediaToggleButtonElement
   extends HTMLCustomElement<ToggleButtonProps, ToggleButtonEvents>,
     ToggleButtonMembers {}

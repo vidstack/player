@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 import { execa } from 'execa';
 import kleur from 'kleur';
-import { kebabToPascalCase } from 'maverick.js/std';
+import { kebabToCamelCase, kebabToPascalCase } from 'maverick.js/std';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const elementsFile = path.resolve(__dirname, '../node_modules/vidstack/elements.json');
@@ -33,7 +33,10 @@ const elements = JSON.parse(await fs.readFile(elementsFile, 'utf-8')),
 const outFile = path.resolve(__dirname, '../src/components.ts');
 
 const elementOpenRE = /<media-(.*?)(\s|\n|>)/g,
-  elementCloseRE = /<\/media-(.*?)>/g;
+  elementCloseRE = /<\/media-(.*?)>/g,
+  numberPropRE = /\s(\w*?)=\"(\d+)\"/g,
+  booleanPropRE = /\s(\w*?)=\"(true|false)\"/g,
+  kebabAttrRE = /(\w+\-\w+)?/g;
 
 for (const component of components) {
   const name = component.name.replace('Element', '');
@@ -52,8 +55,11 @@ for (const component of components) {
         tag.text
           ?.replace('```html', '```tsx')
           .replace(/<!--\s*(.*?)\s*-->/g, `$1`)
-          .replace(elementOpenRE, (_, m, m2) => '<Media' + kebabToPascalCase(m) + m2)
-          .replace(elementCloseRE, (_, m) => '</Media' + kebabToPascalCase(m) + '>')
+          .replace(elementOpenRE, (_, tag, ret) => '<Media' + kebabToPascalCase(tag) + ret)
+          .replace(elementCloseRE, (_, tag) => '</Media' + kebabToPascalCase(tag) + '>')
+          .replace(kebabAttrRE, (prop) => `${kebabToCamelCase(prop)}`)
+          .replace(numberPropRE, (_, prop, value) => ` ${kebabToCamelCase(prop)}={${value}}`)
+          .replace(booleanPropRE, (_, prop, value) => ` ${kebabToCamelCase(prop)}={${value}}`)
           .split('\n')
           .join('\n*'),
     );

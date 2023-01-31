@@ -4,10 +4,10 @@ import { ariaBool, isKeyboardClick, isKeyboardEvent, listenEvent } from 'maveric
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
-import type { ToggleButtonElement, ToggleButtonMembers, ToggleButtonProps } from './types';
+import type { MediaToggleButtonElement, ToggleButtonMembers, ToggleButtonProps } from './types';
 
 export function useToggleButton(
-  host: CustomElementHost<ToggleButtonElement>,
+  host: CustomElementHost<MediaToggleButtonElement>,
   { $props: { $pressed, $disabled }, ...props }: UseToggleButtonProps,
 ): ToggleButtonMembers {
   host.setAttributes({
@@ -52,7 +52,7 @@ export function useToggleButton(
 
 export interface UseToggleButtonProps {
   $props: Signals<
-    ToggleButtonProps & {
+    Omit<ToggleButtonProps, 'defaultPressed'> & {
       pressed: boolean;
     }
   >;

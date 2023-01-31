@@ -1,6 +1,6 @@
 import type { DOMEvent } from 'maverick.js/std';
 
-import type { SliderElement } from './types';
+import type { MediaSliderElement } from './types';
 
 export interface SliderEvents {
   'drag-start': SliderDragStartEvent;
@@ -11,7 +11,7 @@ export interface SliderEvents {
 }
 
 export interface SliderEvent<Detail = unknown> extends DOMEvent<Detail> {
-  target: SliderElement;
+  target: MediaSliderElement;
 }
 
 /**

@@ -1,3 +1,4 @@
+media-slider,
 media-time-slider,
 media-volume-slider {
   --height: var(--media-slider-height, 48px);
@@ -12,11 +13,13 @@ media-volume-slider {
   margin: 0 calc(var(--thumb-size) / 2);
 }
 
+media-slider > shadow-root,
 media-time-slider > shadow-root,
 media-volume-slider > shadow-root {
   display: unset;
 }
 
+media-slider [part~='track'],
 media-time-slider [part~='track'],
 media-volume-slider [part~='track'] {
   z-index: 0;
@@ -29,11 +32,13 @@ media-volume-slider [part~='track'] {
   background-color: #5a595a;
 }
 
+media-slider[interactive] [part~='track'],
 media-time-slider[interactive] [part~='track'],
 media-volume-slider[interactive] [part~='track'] {
   height: var(--track-focus-height);
 }
 
+media-slider [part~='track-fill'],
 media-time-slider [part~='track-fill'],
 media-volume-slider [part~='track-fill'] {
   z-index: 2; /** above track and track progress. */
@@ -51,6 +56,7 @@ media-time-slider [part~='track-progress'] {
   transform: translateY(-50%) scaleX(calc(var(--media-buffered-amount) / var(--media-duration)));
 }
 
+media-slider [part='thumb-container'],
 media-time-slider [part='thumb-container'],
 media-volume-slider [part='thumb-container'] {
   z-index: 2; /** above track fill. */
@@ -63,11 +69,13 @@ media-volume-slider [part='thumb-container'] {
   will-change: left;
 }
 
+media-slider[dragging] [part='thumb-container'],
 media-time-slider[dragging] [part='thumb-container'],
 media-volume-slider[dragging] [part='thumb-container'] {
   left: var(--slider-pointer-percent);
 }
 
+media-slider [part='thumb'],
 media-time-slider [part='thumb'],
 media-volume-slider [part='thumb'] {
   position: absolute;
@@ -82,6 +90,7 @@ media-volume-slider [part='thumb'] {
   transition: opacity 0.15s ease-in;
 }
 
+media-slider[interactive] [part='thumb'],
 media-time-slider[interactive] [part='thumb'],
 media-volume-slider[interactive] [part='thumb'] {
   opacity: 1;
@@ -96,6 +105,7 @@ media-volume-slider[interactive] [part='thumb'] {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
+media-slider [slot='preview'],
 media-time-slider [slot='preview'],
 media-volume-slider [slot='preview'] {
   /* --computed-width and --computed-height is added by JS in `use-slider.ts` */
@@ -124,12 +134,14 @@ media-volume-slider [slot='preview'] {
   transform: translateX(-50%);
 }
 
+media-slider[interactive] [slot='preview'],
 media-time-slider[interactive] [slot='preview'],
 media-volume-slider[interactive] [slot='preview'] {
   opacity: 1;
   transition: opacity 0.2s ease-in;
 }
 
+media-slider media-slider-value-text,
 media-time-slider media-slider-value-text,
 media-volume-slider media-slider-value-text {
   padding: 1px 10px;

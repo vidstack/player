@@ -23,6 +23,16 @@ export interface SliderMembers
       >
     > {}
 
-export interface SliderElement
+/**
+ * A custom-built range input that is cross-browser friendly, ARIA friendly, mouse/touch-friendly
+ * and easily style-able. The slider allows users to input numeric values between a minimum and
+ * maximum value.
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider}
+ * @example
+ * ```html
+ * <media-slider min="0" max="100" value="50" aria-label="..."></media-slider>
+ * ```
+ */
+export interface MediaSliderElement
   extends HTMLCustomElement<SliderProps, SliderEvents, SliderCSSVars>,
     SliderMembers {}

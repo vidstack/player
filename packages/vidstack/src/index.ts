@@ -60,14 +60,16 @@ export * from './player/ui/toggle-button/types';
 export * from './player/ui/volume-slider/types';
 
 // Media Player Definitions
-export { PlayerDefinition } from './player/element/element';
-export { OutletDefinition } from './player/media/outlet/element';
 export { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
 export { MuteButtonDefinition } from './player/ui/mute-button/element';
+export { OutletDefinition } from './player/media/outlet/element';
 export { PlayButtonDefinition } from './player/ui/play-button/element';
+export { PlayerDefinition } from './player/element/element';
 export { PosterDefinition } from './player/ui/poster/element';
+export { SliderDefinition } from './player/ui/slider/element';
 export { SliderValueTextDefinition } from './player/ui/slider-value-text/element';
 export { SliderVideoDefinition } from './player/ui/slider-video/element';
-export { TimeSliderDefinition } from './player/ui/time-slider/element';
 export { TimeDefinition } from './player/ui/time/element';
+export { TimeSliderDefinition } from './player/ui/time-slider/element';
+export { ToggleButtonDefinition } from './player/ui/toggle-button/element';
 export { VolumeSliderDefinition } from './player/ui/volume-slider/element';

@@ -8,6 +8,7 @@ import { PlayButtonDefinition } from './player/ui/play-button/element';
 import { PosterDefinition } from './player/ui/poster/element';
 import { SliderValueTextDefinition } from './player/ui/slider-value-text/element';
 import { SliderVideoDefinition } from './player/ui/slider-video/element';
+import { SliderDefinition } from './player/ui/slider/element';
 import { TimeSliderDefinition } from './player/ui/time-slider/element';
 import { TimeDefinition } from './player/ui/time/element';
 import { ToggleButtonDefinition } from './player/ui/toggle-button/element';
@@ -23,9 +24,10 @@ export default function registerAllElements(): void {
     FullscreenButtonDefinition,
     TimeSliderDefinition,
     VolumeSliderDefinition,
+    ToggleButtonDefinition,
     TimeDefinition,
+    SliderDefinition,
     SliderValueTextDefinition,
     SliderVideoDefinition,
-    ToggleButtonDefinition,
   ].map(registerLiteCustomElement);
 }

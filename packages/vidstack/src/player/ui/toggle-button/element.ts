@@ -2,10 +2,16 @@ import { signal } from 'maverick.js';
 import { defineCustomElement } from 'maverick.js/element';
 
 import { toggleButtonProps } from './props';
-import type { ToggleButtonElement } from './types';
+import type { MediaToggleButtonElement } from './types';
 import { useToggleButton } from './use-toggle-button';
 
-export const ToggleButtonDefinition = defineCustomElement<ToggleButtonElement>({
+declare global {
+  interface HTMLElementTagNameMap {
+    'media-toggle-button': MediaToggleButtonElement;
+  }
+}
+
+export const ToggleButtonDefinition = defineCustomElement<MediaToggleButtonElement>({
   tagName: 'media-toggle-button',
   props: toggleButtonProps,
   setup({ host, props }) {

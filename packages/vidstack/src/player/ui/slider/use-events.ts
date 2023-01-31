@@ -11,7 +11,7 @@ import type {
   SliderValueChangeEvent,
 } from './events';
 import type { SliderStore } from './store';
-import type { SliderElement, SliderProps } from './types';
+import type { MediaSliderElement, SliderProps } from './types';
 import { getValueFromRate } from './utils';
 
 /**
@@ -29,7 +29,7 @@ const SliderKeyDirection = {
 } as const;
 
 export function useSliderEvents(
-  host: CustomElementHost<SliderElement>,
+  host: CustomElementHost<MediaSliderElement>,
   { $disabled, $step, $keyboardStep, $shiftKeyMultiplier }: Signals<SliderProps>,
   { onValueChange, onDragStart, onDragValueChange, onDragEnd }: SliderEventCallbacks,
   $store: SliderStore,
