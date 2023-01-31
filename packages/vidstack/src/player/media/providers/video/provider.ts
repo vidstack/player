@@ -27,6 +27,7 @@ export const VIDEO_PROVIDER = Symbol(__DEV__ ? 'VIDEO_PROVIDER' : 0);
 export class VideoProvider extends HTMLMediaProvider implements MediaProvider {
   [VIDEO_PROVIDER] = true;
 
+  type = 'video' as const;
   fullscreen: VideoPresentationAdapter;
 
   constructor(media: HTMLVideoElement, context: MediaProviderContext) {

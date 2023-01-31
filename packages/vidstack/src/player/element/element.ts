@@ -13,6 +13,7 @@ import { createLogPrinter } from '../../foundation/logger/log-printer';
 import { IS_IOS } from '../../utils/support';
 import { createMediaController } from '../media/controller/create';
 import { useSourceSelection } from '../media/controller/source-selection';
+import type { AnyMediaProvider } from '../media/controller/types';
 import type { MediaState } from '../media/state';
 import { mediaPlayerProps } from './props';
 import type { MediaPlayerConnectEvent, MediaPlayerElement } from './types';
@@ -126,7 +127,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
           return controller._request._orientation;
         },
         get provider() {
-          return controller._context.$provider();
+          return controller._context.$provider() as AnyMediaProvider;
         },
         get $store() {
           return $store;

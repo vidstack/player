@@ -7,9 +7,11 @@ import type { ScreenOrientationEvents } from '../../../foundation/orientation/ev
 import type { ScreenOrientationAdapter } from '../../../foundation/orientation/screen-orientation';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/types';
 import type { MediaEvents, UserIdleChangeEvent } from '../events';
+import type { AudioProvider } from '../providers/audio/provider';
 import type { HLSProviderEvents } from '../providers/hls/events';
-import type { MediaProvider } from '../providers/types';
+import type { HLSProvider } from '../providers/hls/provider';
 import type { VideoPresentationEvents } from '../providers/video/presentation/events';
+import type { VideoProvider } from '../providers/video/provider';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../request-events';
 import type { MediaState } from '../state';
 import type { MediaStore } from '../store';
@@ -59,6 +61,8 @@ export interface MediaControllerProps
   fullscreenOrientation: ScreenOrientationLockType | undefined;
 }
 
+export type AnyMediaProvider = AudioProvider | VideoProvider | HLSProvider;
+
 export interface MediaController {
   /** @internal */
   readonly $store: MediaStore;
@@ -69,7 +73,7 @@ export interface MediaController {
   /**
    * The current media provider.
    */
-  readonly provider: MediaProvider | null;
+  readonly provider: AnyMediaProvider | null;
   /**
    * Controls the screen orientation of the current browser window and dispatches orientation
    * change events on this element.

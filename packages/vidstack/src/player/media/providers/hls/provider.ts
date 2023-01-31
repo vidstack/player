@@ -42,6 +42,9 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
    */
   static supported = isHLSSupported();
 
+  // @ts-expect-error - override const
+  override type = 'hls' as const;
+
   protected _$ctor = signal<HLSConstructor | null>(null);
   protected _$instance = signal<HLS.default | null>(null);
   protected _$library = signal<HLSLibrary>(
