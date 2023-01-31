@@ -3,7 +3,7 @@ import type { CustomElementHost } from 'maverick.js/element';
 import { createEvent, dispatchEvent, listenEvent } from 'maverick.js/std';
 
 import { IS_SAFARI } from '../../../utils/support';
-import { useMediaRemoteControl } from '../../media/remote-control';
+import { useMedia } from '../../media/context';
 import type {
   SliderDragEndEvent,
   SliderDragStartEvent,
@@ -34,7 +34,7 @@ export function useSliderEvents(
   { onValueChange, onDragStart, onDragValueChange, onDragEnd }: SliderEventCallbacks,
   $store: SliderStore,
 ) {
-  const remote = useMediaRemoteControl(host.$el);
+  const remote = useMedia().remote;
 
   effect(() => {
     const target = host.$el();

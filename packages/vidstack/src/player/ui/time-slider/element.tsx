@@ -5,8 +5,7 @@ import { isKeyboardEvent, mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { formatSpokenTime } from '../../../utils/time';
-import { useMediaStore } from '../../media/context';
-import { useMediaRemoteControl } from '../../media/remote-control';
+import { useMedia } from '../../media/context';
 import { createSlider } from '../slider/create';
 import type {
   SliderDragEndEvent,
@@ -27,7 +26,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
   tagName: 'media-time-slider',
   props: timeSliderProps,
   setup({ host, props: { $pauseWhileDragging, $seekingRequestThrottle, ...props }, accessors }) {
-    const $media = useMediaStore(),
+    const { $store: $media, remote } = useMedia(),
       { $store, members } = createSlider(
         host,
         {
@@ -47,8 +46,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
           onDragValueChange,
         },
         accessors,
-      ),
-      remote = useMediaRemoteControl(host.$el);
+      );
 
     onAttach(() => {
       setAttributeIfEmpty(host.el!, 'aria-label', 'Media time');

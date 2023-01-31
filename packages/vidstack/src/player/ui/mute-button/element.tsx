@@ -2,8 +2,7 @@ import { computed } from 'maverick.js';
 import { defineCustomElement } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
 
-import { useMediaStore } from '../../media/context';
-import { useMediaRemoteControl } from '../../media/remote-control';
+import { useMedia } from '../../media/context';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
 import type { MediaMuteButtonElement } from './types';
@@ -18,13 +17,12 @@ export const MuteButtonDefinition = defineCustomElement<MediaMuteButtonElement>(
   tagName: 'media-mute-button',
   props: toggleButtonProps,
   setup({ host, props: { $disabled } }) {
-    const $media = useMediaStore(),
+    const { $store: $media, remote } = useMedia(),
       $pressed = computed(() => $media.muted || $media.volume === 0),
       toggle = useToggleButton(host, {
         $props: { $pressed, $disabled },
         onPress,
-      }),
-      remote = useMediaRemoteControl(host.$el);
+      });
 
     host.setAttributes({
       muted: $pressed,

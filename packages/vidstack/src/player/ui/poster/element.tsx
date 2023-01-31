@@ -2,8 +2,8 @@ import { effect, signal } from 'maverick.js';
 import { defineCustomElement, onConnect } from 'maverick.js/element';
 
 import { preconnect } from '../../../utils/network';
-import { useMediaStore } from '../../media/context';
-import { useMediaRemoteControl } from '../../media/remote-control';
+import { useMedia } from '../../media/context';
+import { MediaRemoteControl } from '../../media/remote-control';
 import { posterProps } from './props';
 import type { MediaPosterElement } from './types';
 
@@ -17,8 +17,8 @@ export const PosterDefinition = defineCustomElement<MediaPosterElement>({
   tagName: 'media-poster',
   props: posterProps,
   setup({ host, props: { $alt } }) {
-    const $media = useMediaStore(),
-      remote = useMediaRemoteControl(host.$el);
+    const { $store: $media } = useMedia(),
+      remote = new MediaRemoteControl();
 
     const $imgSrc = () => ($media.canLoad && $media.poster.length ? $media.poster : null),
       $imgAlt = () => ($imgSrc() ? $alt() : null),
@@ -37,6 +37,7 @@ export const PosterDefinition = defineCustomElement<MediaPosterElement>({
         if (!$media.canLoad) preconnect($media.poster);
       });
 
+      remote.setTarget(host.el);
       remote.hidePoster();
       return () => remote.showPoster();
     });

@@ -21,6 +21,7 @@ export interface MediaProviderLoader<Provider extends MediaProvider = MediaProvi
 
 export interface MediaProvider
   extends Pick<MediaState, 'paused' | 'muted' | 'currentTime' | 'volume' | 'playsinline'> {
+  readonly type: string;
   readonly fullscreen?: MediaFullscreenAdapter;
   preconnect?(context: MediaProviderContext): void;
   setup(context: MediaProviderContext): void;

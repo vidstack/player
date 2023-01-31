@@ -2,7 +2,7 @@ import { computed } from 'maverick.js';
 import { defineCustomElement } from 'maverick.js/element';
 
 import { formatTime } from '../../../utils/time';
-import { useMediaStore } from '../../media/context';
+import { useMedia } from '../../media/context';
 import type { MediaStore } from '../../media/store';
 import { timeProps } from './props';
 import type { MediaTimeElement, TimeProps } from './types';
@@ -17,7 +17,7 @@ export const TimeDefinition = defineCustomElement<MediaTimeElement>({
   tagName: 'media-time',
   props: timeProps,
   setup({ props: { $remainder, $padHours, $showHours, $type } }) {
-    const $media = useMediaStore();
+    const $media = useMedia().$store;
 
     const $formattedTime = computed(() => {
       const seconds = getSeconds($type(), $media);

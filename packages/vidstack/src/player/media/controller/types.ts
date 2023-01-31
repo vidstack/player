@@ -61,7 +61,10 @@ export interface MediaControllerProps
   fullscreenOrientation: ScreenOrientationLockType | undefined;
 }
 
-export type AnyMediaProvider = AudioProvider | VideoProvider | HLSProvider;
+export type AnyMediaProvider =
+  | ({ type: 'audio' } & AudioProvider)
+  | ({ type: 'video' } & VideoProvider)
+  | ({ type: 'hls' } & HLSProvider);
 
 export interface MediaController {
   /** @internal */

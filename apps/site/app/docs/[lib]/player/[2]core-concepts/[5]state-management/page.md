@@ -118,9 +118,6 @@ button.addEventListener('pointerup', (pointerEvent) => {
   // 2. Make a play request and pass the pointer event as the trigger.
   remote.play(pointerEvent);
 });
-
-// 3. Destroy remote when no longer required.
-remote.destroy();
 ```
 
 You can set a target to dispatch events from if you're performing actions without trigger events
@@ -163,7 +160,4 @@ player?.onAttach(() => {
     // ...
   }
 });
-
-// 4. Destroy remote when no longer required.
-remote.destroy();
 ```

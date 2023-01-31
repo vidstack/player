@@ -5,8 +5,7 @@ import { mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
-import { useMediaStore } from '../../media/context';
-import { useMediaRemoteControl } from '../../media/remote-control';
+import { useMedia } from '../../media/context';
 import { createSlider } from '../slider/create';
 import type { SliderDragValueChangeEvent, SliderValueChangeEvent } from '../slider/events';
 import { volumeSliderProps } from './props';
@@ -22,7 +21,7 @@ export const VolumeSliderDefinition = defineCustomElement<MediaVolumeSliderEleme
   tagName: 'media-volume-slider',
   props: volumeSliderProps,
   setup({ host, props, accessors }) {
-    const $media = useMediaStore(),
+    const { $store: $media, remote } = useMedia(),
       { $store, members } = createSlider(
         host,
         {
@@ -33,8 +32,7 @@ export const VolumeSliderDefinition = defineCustomElement<MediaVolumeSliderEleme
           onDragValueChange: throttle(onVolumeChange, 25),
         },
         accessors,
-      ),
-      remote = useMediaRemoteControl(host.$el);
+      );
 
     onAttach(() => {
       setAttributeIfEmpty(host.el!, 'aria-label', 'Media volume');

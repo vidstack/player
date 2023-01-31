@@ -4,6 +4,7 @@ import { useLogger } from '../../../foundation/logger/logger';
 import type { MediaPlayerElement } from '../../element/types';
 import { mediaContext, MediaContext } from '../context';
 import type { MediaProviderLoader } from '../providers/types';
+import { MediaRemoteControl } from '../remote-control';
 import { mediaStore } from '../store';
 import { useMediaCanLoad } from './can-load';
 import { createMediaControllerDelegate } from './controller-delegate';
@@ -24,9 +25,8 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
 
   provideContext(mediaContext, context);
 
-  if (__DEV__) {
-    context.logger = useLogger(context.$player);
-  }
+  if (__DEV__) context.logger = useLogger(context.$player);
+  context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
 
   const requests = new MediaRequestContext(),
     stateManager = createMediaStateManager(context, requests),

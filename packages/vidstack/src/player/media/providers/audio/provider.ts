@@ -21,7 +21,10 @@ export const AUDIO_PROVIDER = Symbol(__DEV__ ? 'AUDIO_PROVIDER' : 0);
  */
 export class AudioProvider extends HTMLMediaProvider implements MediaProvider {
   [AUDIO_PROVIDER] = true;
-  type = 'audio' as const;
+
+  override get type() {
+    return 'audio';
+  }
 
   /**
    * The native HTML `<audio>` element.

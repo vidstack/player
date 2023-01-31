@@ -16,6 +16,10 @@ export class HTMLMediaProvider implements MediaProvider {
     useHTMLMediaElementEvents(this, context);
   }
 
+  get type() {
+    return '';
+  }
+
   get media() {
     return this._media;
   }

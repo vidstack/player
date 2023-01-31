@@ -66,7 +66,8 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
   setup({ host, props, accessors }) {
     const scope = getScope()!,
       controller = createMediaController(props),
-      $store = controller._context.$store;
+      context = controller._context,
+      $store = context.$store;
 
     if (__DEV__) {
       const logPrinter = createLogPrinter(host.$el);
@@ -74,7 +75,9 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
     }
 
     onAttach(() => {
-      controller._context.$player.set(host.el);
+      context.$player.set(host.el);
+      context.remote.setTarget(host.el!);
+      context.remote.setPlayer(host.el!);
       listenEvent(host.el!, 'find-media-player', ({ detail }) => detail(host.el));
     });
 
@@ -127,7 +130,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
           return controller._request._orientation;
         },
         get provider() {
-          return controller._context.$provider() as AnyMediaProvider;
+          return context.$provider() as AnyMediaProvider;
         },
         get $store() {
           return $store;

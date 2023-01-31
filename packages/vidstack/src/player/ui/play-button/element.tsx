@@ -1,8 +1,7 @@
 import { defineCustomElement } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
 
-import { useMediaStore } from '../../media/context';
-import { useMediaRemoteControl } from '../../media/remote-control';
+import { useMedia } from '../../media/context';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
 import type { MediaPlayButtonElement } from './types';
@@ -17,13 +16,12 @@ export const PlayButtonDefinition = defineCustomElement<MediaPlayButtonElement>(
   tagName: 'media-play-button',
   props: toggleButtonProps,
   setup({ host, props: { $disabled } }) {
-    const $media = useMediaStore(),
+    const { $store: $media, remote } = useMedia(),
       $pressed = () => !$media.paused,
       toggle = useToggleButton(host, {
         $props: { $pressed, $disabled },
         onPress,
-      }),
-      remote = useMediaRemoteControl(host.$el);
+      });
 
     host.setAttributes({
       paused: () => $media.paused,

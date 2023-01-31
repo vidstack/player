@@ -1,8 +1,7 @@
 import { defineCustomElement } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
 
-import { useMediaStore } from '../../media/context';
-import { useMediaRemoteControl } from '../../media/remote-control';
+import { useMedia } from '../../media/context';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
 import type { MediaFullscreenButtonElement } from './types';
@@ -20,13 +19,12 @@ export const FullscreenButtonDefinition = defineCustomElement<MediaFullscreenBut
     target: { initial: 'prefer-media' },
   },
   setup({ host, props: { $target, $disabled }, accessors }) {
-    const $media = useMediaStore(),
+    const { $store: $media, remote } = useMedia(),
       $pressed = () => $media.fullscreen,
       toggle = useToggleButton(host, {
         $props: { $pressed, $disabled },
         onPress,
-      }),
-      remote = useMediaRemoteControl(host.$el);
+      });
 
     host.setAttributes({
       hidden: () => !$media.canFullscreen,

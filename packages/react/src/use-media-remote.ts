@@ -1,5 +1,5 @@
-import { scoped } from 'maverick.js';
-import { useReactContext, useReactScope } from 'maverick.js/react';
+import { peek } from 'maverick.js';
+import { useReactContext } from 'maverick.js/react';
 import { isUndefined } from 'maverick.js/std';
 import { RefObject, useEffect, useMemo } from 'react';
 import { mediaContext, MediaRemoteControl } from 'vidstack';
@@ -16,32 +16,20 @@ import { mediaContext, MediaRemoteControl } from 'vidstack';
 export function useMediaRemote(
   target?: EventTarget | null | RefObject<EventTarget | null>,
 ): MediaRemoteControl {
-  const scope = useReactScope(),
-    context = useReactContext(mediaContext);
-
-  if (__DEV__ && isUndefined(target) && !context) {
-    throw Error(
-      '[vidstack] `useMediaRemote` requires `target` argument containing a ref to a DOM element' +
-        ' if not called inside `<MediaPlayer>`.',
-    );
-  }
-
-  const remote = useMemo(() => scoped(() => new MediaRemoteControl(), scope)!, []);
+  const context = useReactContext(mediaContext),
+    remote = useMemo(() => new MediaRemoteControl(), []);
 
   useEffect(() => {
-    const hasTarget = !isUndefined(target);
+    const player = context && peek(context.$player);
 
-    if (hasTarget) {
-      remote.setTarget(target && 'current' in target ? target.current : target);
-    }
+    const ref = !isUndefined(target)
+      ? target && 'current' in target
+        ? target.current
+        : target
+      : player;
 
-    if (context) {
-      const player = context.$player();
-      if (!hasTarget) remote.setTarget(player);
-      remote.setPlayer(player);
-    }
-
-    return () => remote.setTarget(null);
+    remote.setTarget(ref || null);
+    remote.setPlayer(player || null);
   }, [target]);
 
   return remote;
