@@ -10,6 +10,7 @@ import { SliderValueTextDefinition } from './player/ui/slider-value-text/element
 import { SliderVideoDefinition } from './player/ui/slider-video/element';
 import { TimeSliderDefinition } from './player/ui/time-slider/element';
 import { TimeDefinition } from './player/ui/time/element';
+import { ToggleButtonDefinition } from './player/ui/toggle-button/element';
 import { VolumeSliderDefinition } from './player/ui/volume-slider/element';
 
 export default function registerAllElements(): void {
@@ -25,5 +26,6 @@ export default function registerAllElements(): void {
     TimeDefinition,
     SliderValueTextDefinition,
     SliderVideoDefinition,
+    ToggleButtonDefinition,
   ].map(registerLiteCustomElement);
 }

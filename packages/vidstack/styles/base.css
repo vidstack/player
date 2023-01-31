@@ -73,6 +73,7 @@ media-time {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
+media-toggle-button,
 media-play-button,
 media-mute-button,
 media-fullscreen-button {
@@ -85,12 +86,14 @@ media-fullscreen-button {
   -webkit-tap-highlight-color: transparent;
 }
 
+media-toggle-button:focus,
 media-play-button:focus,
 media-mute-button:focus,
 media-fullscreen-button:focus {
   outline: none;
 }
 
+media-toggle-button:focus-visible,
 media-play-button:focus-visible,
 media-mute-button:focus-visible,
 media-fullscreen-button:focus-visible {
@@ -98,6 +101,7 @@ media-fullscreen-button:focus-visible {
   outline: 1px auto -webkit-focus-ring-color;
 }
 
+media-toggle-button.focus-visible,
 media-play-button.focus-visible,
 media-mute-button.focus-visible,
 media-fullscreen-button.focus-visible {

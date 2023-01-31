@@ -1,3 +1,4 @@
+media-toggle-button,
 media-play-button,
 media-mute-button,
 media-fullscreen-button {
@@ -13,6 +14,7 @@ media-fullscreen-button > shadow-root {
   display: unset;
 }
 
+media-toggle-button *[slot],
 media-play-button *[slot],
 media-mute-button *[slot],
 media-fullscreen-button *[slot] {
@@ -24,6 +26,8 @@ media-fullscreen-button *[slot] {
   transform: translate(-50%, -50%);
 }
 
+media-toggle-button[pressed] [slot='on'],
+media-toggle-button:not([pressed]) [slot='off'],
 media-play-button[paused] [slot='play'],
 media-play-button:not([paused]) [slot='pause'],
 media-mute-button[volume-high] [slot='volume-high'],
@@ -44,6 +48,7 @@ media-fullscreen-button > shadow-root:not(:only-child) {
   display: none;
 }
 
+media-toggle-button:hover,
 media-play-button:hover,
 media-mute-button:hover,
 media-fullscreen-button:hover {
