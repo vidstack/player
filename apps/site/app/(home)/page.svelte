@@ -67,8 +67,9 @@
         </h3>
         <p class="max-w-[500px] mt-3 tracking-wide font-normal text-soft">
           Every player interaction triggers an event, and every event becomes part of a chain. This
-          makes it possible to track events back to their origin, determine how they were triggered
-          (system/user), and uncover anything that might've occurred along the way.
+          makes it possible to track events back to their origin and determine how they were
+          triggered (system/user). Combined with our state management APIs, you have everything you
+          need for managing your player.
         </p>
       </div>
       <div>

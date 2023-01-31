@@ -39,7 +39,7 @@
         class="text-soft 992:text-lg 576:text-xl mx-auto mt-8 max-w-3xl text-center text-base leading-relaxed"
       >
         Open-source, accessible, and declarative player UI framework. Completely customizable,
-        lightweight, and packed with rich media events.
+        lightweight, rich with events and state management hooks.
       </p>
 
       <div class="mt-10 flex space-x-4">
