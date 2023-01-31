@@ -35,7 +35,7 @@ Tracking media state via hook:
 {% /yes %}
 
 ```tsx {% highlight="9" %}
-import { useMediaState } from '@vidstack/react';
+import { useMediaStore } from '@vidstack/react';
 import { MediaPlayer, type MediaPlayerElement } from '@vidstack/react';
 import { useRef } from 'react';
 
@@ -43,7 +43,7 @@ function Player() {
   const player = useRef<MediaPlayerElement>(null);
   // - This is a live subscription to the media paused state.
   // - All subscriptions are lazily created on prop access.
-  const { paused } = useMediaState(player);
+  const { paused } = useMediaStore(player);
   return <MediaPlayer ref={player}>{/* ... */}</MediaPlayer>;
 }
 ```
@@ -51,12 +51,12 @@ function Player() {
 Or, if inside a child of `<MediaPlayer>`:
 
 ```tsx {% highlight="6" %}
-import { useMediaState } from '@vidstack/react';
+import { useMediaStore } from '@vidstack/react';
 
 // This component is a child of `<MediaPlayer>`
 function MediaPlayerUI() {
   // No ref required.
-  const { paused } = useMediaState();
+  const { paused } = useMediaStore();
   // ...
 }
 ```

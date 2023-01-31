@@ -5,12 +5,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { mediaContext, MediaState } from 'vidstack';
 
 /**
- * This hook is used to access the current media state on the nearest parent player element (i.e.,
- * `<media-player>`).
+ * This hook is used to subscribe to the current media state on the nearest parent
+ * player element (i.e., `<media-player>`).
  *
  * @docs {@link https://vidstack.io/docs/react/player/core-concepts/state-management#reading}
  */
-export function useMediaState(): Readonly<MediaState> {
+export function useMediaStore(): Readonly<MediaState> {
   const [_, update] = useState(0),
     tracking = useRef({
       $props: signal<(keyof MediaState)[]>([]),
