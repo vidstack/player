@@ -21,7 +21,7 @@ The slider's range is assumed to be in seconds between `0` (min) and length of m
 
 You can override the default styles with CSS like so:
 
-```css
+```css {% copy=true %}
 /* CSS vars are available for simple customization. */
 media-time-slider {
   /* Default values are shown below. */
@@ -43,7 +43,11 @@ media-time-slider[dragging] {
 /* Shorthand for both dragging and pointing. */
 media-time-slider[interactive] {
 }
+```
 
+### Parts
+
+```css {% copy=true %}
 /* Apply styles to all tracks. */
 media-time-slider [part~='track'] {
 }
@@ -66,6 +70,20 @@ media-time-slider [part='thumb-container'] {
 
 /* Apply styles to slider thumb. */
 media-time-slider [part='thumb'] {
+}
+```
+
+### Focus
+
+```css {% copy=true %}
+/* Apply styles when focused via keyboard. */
+media-time-slider:focus-visible {
+  outline: 1px auto purple;
+}
+
+/* Polyfill applies this class. */
+media-time-slider.focus-visible {
+  outline: 1px auto purple;
 }
 ```
 

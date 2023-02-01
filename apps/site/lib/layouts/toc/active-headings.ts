@@ -1,7 +1,8 @@
 import { useNavigation, useRouter } from '@vessel-js/svelte';
 import { onMount, tick } from 'svelte';
-import { get, Readable } from 'svelte/store';
+import { get, Readable, writable } from 'svelte/store';
 
+import { env } from '$lib/env';
 import { isExtraLargeScreen, isLargeScreen } from '$lib/stores/screen';
 import { createDisposalBin } from '$lib/utils/events.js';
 import { throttleAndDebounce } from '$lib/utils/timing';
@@ -11,6 +12,7 @@ import type { OnThisPageConfig } from './context';
 export function useActiveHeaderLinks(config: Readable<OnThisPageConfig>) {
   const router = useRouter();
   const navigation = useNavigation();
+  const index = writable(-1);
 
   const scrollDisposal = createDisposalBin();
   const destroyDisposal = createDisposalBin();
@@ -22,6 +24,12 @@ export function useActiveHeaderLinks(config: Readable<OnThisPageConfig>) {
       SCROLL_OFFSET = $is ? 96 : 192;
     }),
   );
+
+  if (env.browser) {
+    router.afterNavigate(() => {
+      index.set(-1);
+    });
+  }
 
   let canUpdateHash: OnThisPageConfig['canUpdateHash'] = undefined;
   destroyDisposal.add(
@@ -57,6 +65,7 @@ export function useActiveHeaderLinks(config: Readable<OnThisPageConfig>) {
 
     // page bottom - highlight last one
     if (anchors.length && isBottom) {
+      index.set(anchors.length - 1);
       await gotoHash(anchors[anchors.length - 1].hash);
       return;
     }
@@ -66,6 +75,7 @@ export function useActiveHeaderLinks(config: Readable<OnThisPageConfig>) {
       const nextAnchor = anchors[i + 1];
       const hash = isAnchorActive(i, anchor, nextAnchor);
       if (hash) {
+        index.set(i);
         await gotoHash(hash);
         return;
       }
@@ -113,4 +123,6 @@ export function useActiveHeaderLinks(config: Readable<OnThisPageConfig>) {
       destroyDisposal.dispose();
     };
   });
+
+  return index;
 }

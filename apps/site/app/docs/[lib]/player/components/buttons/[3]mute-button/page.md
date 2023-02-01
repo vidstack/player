@@ -13,7 +13,7 @@ dispatching a `media-mute-request`, and `media-unmute-request` event to the medi
 
 You can override the default styles with CSS like so:
 
-```css
+```css {% copy=true %}
 media-mute-button {
   color: pink;
   transition: opacity 0.2s ease-in;
@@ -41,6 +41,20 @@ media-mute-button [slot='volume-muted'] {
 media-mute-button [slot='volume-low'] {
 }
 media-mute-button [slot='volume-high'] {
+}
+```
+
+### Focus
+
+```css {% copy=true %}
+/* Apply styles when focused via keyboard. */
+media-mute-button:focus-visible {
+  outline: 1px auto purple;
+}
+
+/* Polyfill applies this class. */
+media-mute-button.focus-visible {
+  outline: 1px auto purple;
 }
 ```
 

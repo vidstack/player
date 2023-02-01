@@ -26,7 +26,7 @@ events and binding it yourself.
 
 You can override the default styles with CSS like so:
 
-```css
+```css {% copy=true %}
 /* CSS vars are available for simple customization. */
 media-slider {
   /* Default values are shown below. */
@@ -48,7 +48,11 @@ media-slider[dragging] {
 /* Shorthand for both dragging and pointing. */
 media-slider[interactive] {
 }
+```
 
+### Parts
+
+```css {% copy=true %}
 /* Apply styles to all tracks. */
 media-slider [part~='track'] {
 }
@@ -71,6 +75,20 @@ media-slider [part='thumb-container'] {
 
 /* Apply styles to slider thumb. */
 media-slider [part='thumb'] {
+}
+```
+
+### Focus
+
+```css {% copy=true %}
+/* Apply styles when focused via keyboard. */
+media-slider:focus-visible {
+  outline: 1px auto purple;
+}
+
+/* Polyfill applies this class. */
+media-slider.focus-visible {
+  outline: 1px auto purple;
 }
 ```
 

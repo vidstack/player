@@ -13,7 +13,7 @@ dispatching a `media-play-request`, and `media-pause-request` event to the media
 
 You can override the default styles with CSS like so:
 
-```css
+```css {% copy=true %}
 media-play-button {
   color: pink;
   transition: opacity 0.2s ease-in;
@@ -31,6 +31,20 @@ media-play-button:not([paused]) {
 media-play-button [slot='play'] {
 }
 media-play-button [slot='pause'] {
+}
+```
+
+### Focus
+
+```css {% copy=true %}
+/* Apply styles when focused via keyboard. */
+media-play-button:focus-visible {
+  outline: 1px auto purple;
+}
+
+/* Polyfill applies this class. */
+media-play-button.focus-visible {
+  outline: 1px auto purple;
 }
 ```
 

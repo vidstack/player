@@ -18,7 +18,7 @@ By default, the toggle will start in the off (not-pressed) state. You can start 
 
 You can override the default styles with CSS like so:
 
-```css
+```css {% copy=true %}
 media-toggle-button {
   transition: opacity 0.2s ease-in;
 }
@@ -29,5 +29,19 @@ media-toggle-button[pressed] {
 
 /* Apply styles when _not_ pressed. */
 media-toggle-button:not([pressed]) {
+}
+```
+
+### Focus
+
+```css {% copy=true %}
+/* Apply styles when focused via keyboard. */
+media-toggle-button:focus-visible {
+  outline: 1px auto purple;
+}
+
+/* Polyfill applies this class. */
+media-toggle-button.focus-visible {
+  outline: 1px auto purple;
 }
 ```

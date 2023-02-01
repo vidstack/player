@@ -17,7 +17,7 @@ The media volume range is between `0` (min) and `1` (max), but on the slider it'
 
 You can override the default styles with CSS like so:
 
-```css
+```css {% copy=true %}
 /* CSS vars are available for simple customization. */
 media-volume-slider {
   /* Default values are shown below. */
@@ -39,7 +39,11 @@ media-volume-slider[dragging] {
 /* Shorthand for both dragging and pointing. */
 media-volume-slider[interactive] {
 }
+```
 
+### Parts
+
+```css {% copy=true %}
 /* Apply styles to all tracks. */
 media-volume-slider [part~='track'] {
 }
@@ -62,6 +66,20 @@ media-volume-slider [part='thumb-container'] {
 
 /* Apply styles to slider thumb. */
 media-volume-slider [part='thumb'] {
+}
+```
+
+### Focus
+
+```css {% copy=true %}
+/* Apply styles when focused via keyboard. */
+media-volume-slider:focus-visible {
+  outline: 1px auto purple;
+}
+
+/* Polyfill applies this class. */
+media-volume-slider.focus-visible {
+  outline: 1px auto purple;
 }
 ```
 

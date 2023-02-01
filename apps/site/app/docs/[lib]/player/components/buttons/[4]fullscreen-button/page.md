@@ -38,7 +38,7 @@ meaning your custom UI will _not_ be displayed when in fullscreen.
 
 You can override the default styles with CSS like so:
 
-```css
+```css {% copy=true %}
 media-fullscreen-button {
   color: pink;
   transition: opacity 0.2s ease-in;
@@ -56,6 +56,20 @@ media-fullscreen-button:not([fullscreen]) {
 media-fullscreen-button [slot='enter'] {
 }
 media-fullscreen-button [slot='exit'] {
+}
+```
+
+### Focus
+
+```css {% copy=true %}
+/* Apply styles when focused via keyboard. */
+media-fullscreen-button:focus-visible {
+  outline: 1px auto purple;
+}
+
+/* Polyfill applies this class. */
+media-fullscreen-button.focus-visible {
+  outline: 1px auto purple;
 }
 ```
 

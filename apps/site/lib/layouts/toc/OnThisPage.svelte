@@ -13,7 +13,7 @@
   export let style = '';
 
   const { fallback, config } = getOnThisPageContext();
-  useActiveHeaderLinks(config);
+  const index = useActiveHeaderLinks(config);
 
   let headings: (MarkdownHeading & { children: MarkdownHeading[] })[] = [];
 
@@ -32,34 +32,38 @@
       }
     }
   }
+
+  function calcIndex(heading) {
+    let sum = 0;
+
+    for (let i = 0; i < headings.length; i++) {
+      if (headings[i] === heading) return sum;
+      sum += 1 + headings[i].children.length;
+    }
+
+    return sum;
+  }
 </script>
 
 <div class={clsx('on-this-page', __class)} {style}>
   {#if headings.length > 1 || headings[0]?.children.length}
     <h5 class="text-inverse w-full text-left text-lg font-semibold">On this page</h5>
     <ul class="mt-4 space-y-4">
-      {#each headings as heading (heading.id)}
-        <li
-          class={clsx(
-            ($config.cleanHash?.($route.matchedURL.hash) ?? $route.matchedURL.hash) ===
-              `#${heading.id}`
-              ? 'text-brand'
-              : 'text-soft hover:text-inverse',
-          )}
-        >
+      {#each headings as heading (heading)}
+        {@const i = calcIndex(heading)}
+        {@const activeParent =
+          i === $index || heading.children.some((_, j) => i + j + 1 === $index)}
+        <li class={clsx(activeParent ? 'text-brand' : 'text-soft hover:text-inverse')}>
           <a href={`#${heading.id}`}>{heading.title}</a>
         </li>
 
         {#if heading.children.length > 0}
           <ul class="space-y-3">
-            {#each heading.children as childHeader (childHeader.id)}
+            {#each heading.children as childHeader, j (childHeader)}
               <li
                 class={clsx(
                   'group group flex',
-                  ($config.cleanHash?.($route.matchedURL.hash) ?? $route.matchedURL.hash) ===
-                    `#${childHeader.id}`
-                    ? 'text-brand'
-                    : 'text-soft hover:text-inverse',
+                  i + j + 1 === $index ? 'text-brand' : 'text-soft hover:text-inverse',
                 )}
               >
                 <RightArrowIcon
