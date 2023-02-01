@@ -13,7 +13,7 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
   canPlay(src: MediaSrc) {
     return isString(src.src)
       ? VIDEO_EXTENSIONS.test(src.src) || VIDEO_TYPES.has(src.type) || (IS_SAFARI && isHLSSrc(src))
-      : src.type === 'video/stream';
+      : src.type === 'video/object';
   }
 
   mediaType(): MediaType {

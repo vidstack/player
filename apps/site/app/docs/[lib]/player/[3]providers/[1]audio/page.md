@@ -21,6 +21,17 @@ formats that all the browsers you need to support are covered.
 
 {% code_snippet name="multiple-sources" copy=true /%}
 
+### Source Objects
+
+The `src` property on the player accepts any of the following source objects:
+
+- [`MediaStream`](https://developer.mozilla.org/en-US/docs/Web/API/MediaStream)
+- [`MediaSource`](https://developer.mozilla.org/en-US/docs/Web/API/MediaSource)
+- [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob)
+- [`File`](https://developer.mozilla.org/en-US/docs/Web/API/File)
+
+{% code_snippet name="src-object" copy=true highlight="html:9" /%}
+
 ## Audio Element
 
 You can obtain a reference to the underlying `HTMLAudioElement` element like so:

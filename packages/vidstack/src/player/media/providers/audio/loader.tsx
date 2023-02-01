@@ -12,7 +12,7 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
   canPlay({ src, type }: MediaSrc) {
     return isString(src)
       ? AUDIO_EXTENSIONS.test(src) || AUDIO_TYPES.has(type)
-      : type === 'audio/stream';
+      : type === 'audio/object';
   }
 
   mediaType(): MediaType {

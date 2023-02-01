@@ -70,6 +70,6 @@ export function useSourceSelection(
 function normalizeSrc(src: MediaPlayerProps['src']) {
   return (isArray(src) ? src : [{ src }]).map(({ src, type }) => ({
     src,
-    type: type ?? (!isString(src) ? 'video/stream' : '?'),
+    type: type ?? (!isString(src) ? 'video/object' : '?'),
   }));
 }
