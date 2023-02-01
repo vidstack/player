@@ -5,11 +5,7 @@
   }
 </script>
 
-<media-player
-  class="w-full max-w-md relative mt-20"
-  view="video"
-  on:media-player-connect={onConnect}
->
+<media-player class="w-full max-w-md relative mt-20" on:media-player-connect={onConnect}>
   <media-time-slider>
     <div slot="preview">
       <media-slider-video src="https://media-files.vidstack.io/240p.mp4" />

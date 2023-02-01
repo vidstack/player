@@ -3,7 +3,6 @@
   src="https://media-files.vidstack.io/720p.mp4"
   poster="https://media-files.vidstack.io/poster.png"
   controls
-  view="video"
   aspect-ratio="16/9"
 >
   <media-outlet />

@@ -10,7 +10,6 @@ function Player() {
       ]}
       poster="https://media-files.vidstack.io/poster.png"
       controls
-      view="video"
     >
       <MediaOutlet />
     </MediaPlayer>

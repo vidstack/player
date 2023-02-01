@@ -18,7 +18,6 @@ export const VIDEO_PROVIDER = Symbol(__DEV__ ? 'VIDEO_PROVIDER' : 0);
  * <media-player
  *   src="https://media-files.vidstack.io/720p.mp4"
  *   poster="https://media-files.vidstack.io/poster.png"
- *   view="video"
  * >
  *   <media-outlet></media-outlet>
  * </media-player>

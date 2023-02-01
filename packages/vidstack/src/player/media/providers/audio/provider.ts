@@ -11,10 +11,7 @@ export const AUDIO_PROVIDER = Symbol(__DEV__ ? 'AUDIO_PROVIDER' : 0);
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio}
  * @example
  * ```html
- * <media-player
- *   src="https://media-files.vidstack.io/audio.mp3"
- *   view="audio"
- * >
+ * <media-player src="https://media-files.vidstack.io/audio.mp3">
  *   <media-outlet></media-outlet>
  * </media-player>
  * ```

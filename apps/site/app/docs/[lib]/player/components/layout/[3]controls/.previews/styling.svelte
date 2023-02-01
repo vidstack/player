@@ -18,7 +18,7 @@
 </script>
 
 <div class="contents">
-  <media-player class="w-full max-w-xs" view="video" aspect-ratio="16/9" bind:this={player}>
+  <media-player class="w-full max-w-xs" aspect-ratio="16/9" bind:this={player}>
     <media-outlet />
     <div class="media-controls-container">
       <div class="media-controls-group">Controls Top</div>

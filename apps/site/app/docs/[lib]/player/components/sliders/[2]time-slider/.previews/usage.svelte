@@ -4,7 +4,6 @@
   src="https://media-files.vidstack.io/360p.mp4"
   poster="https://media-files.vidstack.io/poster-2.png"
   playsinline
-  view="video"
   aspect-ratio="16/9"
 >
   <media-outlet />

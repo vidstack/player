@@ -28,7 +28,6 @@ const JS_DELIVR_CDN = 'https://cdn.jsdelivr.net';
  * <media-player
  *   src="https://media-files.vidstack.io/hls/index.m3u8"
  *   poster="https://media-files.vidstack.io/poster.png"
- *   view="video"
  * >
  *   <media-outlet></media-outlet>
  * </media-player>

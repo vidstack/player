@@ -8,7 +8,6 @@ function Player() {
         { src: 'https://media-files.vidstack.io/audio.ogg', type: 'audio/ogg' },
       ]}
       controls
-      view="audio"
     >
       <MediaOutlet />
     </MediaPlayer>

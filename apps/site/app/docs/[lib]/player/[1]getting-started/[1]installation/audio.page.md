@@ -55,7 +55,7 @@ Add the following player HTML boilerplate to get started.
 
 ```html {% copy=true %}
 <!-- remove `controls` attribute if you're designing a custom UI -->
-<media-player src="https://media-files.vidstack.io/audio.mp3" controls view="audio">
+<media-player src="https://media-files.vidstack.io/audio.mp3" controls>
   <media-outlet></media-outlet>
 </media-player>
 ```

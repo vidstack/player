@@ -59,7 +59,6 @@ Add the following player HTML boilerplate to get started.
   src="https://media-files.vidstack.io/hls/index.m3u8"
   poster="https://media-files.vidstack.io/poster.png"
   controls
-  view="video"
 >
   <media-outlet></media-outlet>
 </media-player>

@@ -21,18 +21,15 @@ media-player {
   contain: layout;
 }
 
-media-player[view='audio'] {
-  width: auto;
-}
-
-media-outlet {
-  background-color: black;
+media-outlet audio {
+  width: 100%;
 }
 
 media-outlet video {
   display: inline-block;
   width: 100%;
   height: auto;
+  background-color: black;
 }
 
 media-player[aspect-ratio] media-outlet {

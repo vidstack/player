@@ -45,7 +45,7 @@ Add the following player JSX boilerplate to get started.
 {% /slot %}
 
 ```jsx {% copy=true %}
-<MediaPlayer src="https://media-files.vidstack.io/audio.mp3" controls view="audio">
+<MediaPlayer src="https://media-files.vidstack.io/audio.mp3" controls>
   {/* ^ remove `controls` attribute if you're designing a custom UI */}
   <MediaOutlet />
 </MediaPlayer>
