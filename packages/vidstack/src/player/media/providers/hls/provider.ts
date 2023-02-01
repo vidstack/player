@@ -109,10 +109,11 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
     return this._$instance();
   }
 
-  override async loadSource(src: MediaSrc) {
+  override async loadSource({ src }: MediaSrc) {
     effect(() => {
+      if (!isString(src)) return;
       const instance = this._$instance();
-      instance?.loadSource(src.src);
+      instance?.loadSource(src);
     });
   }
 

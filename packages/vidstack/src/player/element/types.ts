@@ -12,8 +12,14 @@ export interface MediaPlayerProps extends MediaControllerProps {
    * The URL and optionally type of the current media resource/s to be considered for playback.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject}
    */
-  src: string | { src: string; type?: string }[];
+  src:
+    | string
+    | Blob
+    | MediaStream
+    | MediaSource
+    | { src: string | MediaStream | Blob | MediaSource; type?: string }[];
   /**
    * The aspect ratio of the player media given as 'width/height' (e.g., 16/9).
    */

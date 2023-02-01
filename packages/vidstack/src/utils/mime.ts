@@ -1,3 +1,5 @@
+import { isString, isUndefined } from 'maverick.js/std';
+
 import type { MediaSrc } from '../player/media/types';
 
 // https://github.com/cookpete/react-player/blob/master/src/patterns.js#L16
@@ -46,13 +48,19 @@ export const HLS_VIDEO_TYPES = new Set<string>([
 ]);
 
 export function isHLSSrc({ src, type }: MediaSrc): boolean {
-  return HLS_VIDEO_EXTENSIONS.test(src) || HLS_VIDEO_TYPES.has(type);
+  return (isString(src) && HLS_VIDEO_EXTENSIONS.test(src)) || HLS_VIDEO_TYPES.has(type);
 }
 
-export function inferSrcType(src: string): string {
-  const ext = src.split('.').pop();
-  if (AUDIO_EXTENSIONS.test(src)) return `audio/${ext}`;
-  if (VIDEO_EXTENSIONS.test(src)) return `video/${ext}`;
-  if (HLS_VIDEO_EXTENSIONS.test(src)) return 'application/x-mpegurl';
-  return 'unknown';
+export function isMediaStream(src: unknown): src is MediaStream {
+  return !__SERVER__ && !isUndefined(window.MediaStream) && src instanceof window.MediaStream;
 }
+
+// export function isMediaSource(src: unknown): src is MediaSource {
+//   const MediaSource = getMediaSource();
+//   return !!MediaSource && src instanceof MediaSource;
+// }
+
+// export function isBlob(src: unknown): src is Blob {
+//   // We can't use `instanceof Blob` because it might be polyfilled.
+//   return src?.constructor.name === 'Blob';
+// }

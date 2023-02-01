@@ -1,5 +1,6 @@
 import { effect, peek, signal } from 'maverick.js';
 import { defineCustomElement } from 'maverick.js/element';
+import { isString } from 'maverick.js/std';
 
 import { preconnect } from '../../../utils/network';
 import { useMedia } from '../context';
@@ -66,7 +67,7 @@ export const OutletDefinition = defineCustomElement<MediaOutletElement>({
       }
 
       try {
-        preconnect(new URL(source.src).origin, 'preconnect');
+        isString(source.src) && preconnect(new URL(source.src).origin, 'preconnect');
       } catch (e) {
         if (__DEV__) {
           media.logger

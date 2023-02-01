@@ -138,24 +138,24 @@ export function getSourceBuffer(): typeof SourceBuffer | undefined {
 export function isHLSSupported(): boolean {
   if (__SERVER__) return false;
 
-  const mediaSource = getMediaSource();
+  const MediaSource = getMediaSource();
 
-  if (isUndefined(mediaSource)) return false;
+  if (isUndefined(MediaSource)) return false;
 
   const isTypeSupported =
-    mediaSource &&
-    isFunction(mediaSource.isTypeSupported) &&
-    mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E,mp4a.40.2"');
+    MediaSource &&
+    isFunction(MediaSource.isTypeSupported) &&
+    MediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E,mp4a.40.2"');
 
-  const sourceBuffer = getSourceBuffer();
+  const SourceBuffer = getSourceBuffer();
 
   // If SourceBuffer is exposed ensure its API is valid because safari and old versions of Chrome
   // do not expose SourceBuffer globally so checking SourceBuffer.prototype is impossible.
   const isSourceBufferValid =
-    isUndefined(sourceBuffer) ||
-    (!isUndefined(sourceBuffer.prototype) &&
-      isFunction(sourceBuffer.prototype.appendBuffer) &&
-      isFunction(sourceBuffer.prototype.remove));
+    isUndefined(SourceBuffer) ||
+    (!isUndefined(SourceBuffer.prototype) &&
+      isFunction(SourceBuffer.prototype.appendBuffer) &&
+      isFunction(SourceBuffer.prototype.remove));
 
   return !!isTypeSupported && !!isSourceBufferValid;
 }

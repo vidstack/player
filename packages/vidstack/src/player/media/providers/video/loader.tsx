@@ -1,3 +1,5 @@
+import { isString } from 'maverick.js/std';
+
 import { isHLSSrc, VIDEO_EXTENSIONS, VIDEO_TYPES } from '../../../../utils/mime';
 import { IS_SAFARI } from '../../../../utils/support';
 import type { MediaStore } from '../../store';
@@ -9,9 +11,9 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
   _video!: HTMLVideoElement;
 
   canPlay(src: MediaSrc) {
-    return (
-      VIDEO_EXTENSIONS.test(src.src) || VIDEO_TYPES.has(src.type) || (IS_SAFARI && isHLSSrc(src))
-    );
+    return isString(src.src)
+      ? VIDEO_EXTENSIONS.test(src.src) || VIDEO_TYPES.has(src.type) || (IS_SAFARI && isHLSSrc(src))
+      : src.type === 'video/stream';
   }
 
   mediaType(): MediaType {
@@ -30,9 +32,10 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
 
   render($store: MediaStore) {
     if (__SERVER__) {
+      const src = $store.source.src;
       return (
         <video
-          src={$store.source.src}
+          src={isString(src) ? src : null}
           poster={$store.poster}
           muted={$store.muted}
           controls={$store.controls}

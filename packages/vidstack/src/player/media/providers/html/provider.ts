@@ -1,5 +1,7 @@
-import { setAttribute } from 'maverick.js/std';
+import { isString, setAttribute } from 'maverick.js/std';
 
+import { isMediaStream } from '../../../../utils/mime';
+import type { MediaSrc } from '../../types';
 import type { MediaProvider, MediaProviderContext } from '../types';
 import { useHTMLMediaElementEvents } from './use-events';
 
@@ -68,9 +70,16 @@ export class HTMLMediaProvider implements MediaProvider {
     return this._media.pause();
   }
 
-  async loadSource(src, preload) {
-    this._media.src = src.src;
+  async loadSource({ src }: MediaSrc, preload) {
     this._media.preload = preload;
+
+    if (isMediaStream(src)) {
+      this._media.srcObject = src;
+    } else {
+      this._media.srcObject = null;
+      this._media.src = isString(src) ? src : window.URL.createObjectURL(src);
+    }
+
     this._media.load();
   }
 }

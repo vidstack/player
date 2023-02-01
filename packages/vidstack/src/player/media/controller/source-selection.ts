@@ -1,7 +1,6 @@
 import { effect, peek, ReadSignal, tick } from 'maverick.js';
-import { isString } from 'maverick.js/std';
+import { isArray, isString } from 'maverick.js/std';
 
-import { inferSrcType } from '../../../utils/mime';
 import type { MediaPlayerProps } from '../../element/types';
 import type { MediaContext } from '../context';
 import { AudioProviderLoader } from '../providers/audio/loader';
@@ -69,8 +68,8 @@ export function useSourceSelection(
 }
 
 function normalizeSrc(src: MediaPlayerProps['src']) {
-  return (isString(src) ? [{ src }] : src).map(({ src, type }) => ({
+  return (isArray(src) ? src : [{ src }]).map(({ src, type }) => ({
     src,
-    type: type ?? inferSrcType(src),
+    type: type ?? (!isString(src) ? 'video/stream' : '?'),
   }));
 }
