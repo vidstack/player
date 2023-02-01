@@ -1,4 +1,4 @@
-import { AUDIO_EXTENSIONS } from '../../../../utils/mime';
+import { AUDIO_EXTENSIONS, AUDIO_TYPES } from '../../../../utils/mime';
 import type { MediaStore } from '../../store';
 import type { MediaType } from '../../types';
 import type { MediaProviderLoader } from '../types';
@@ -7,8 +7,8 @@ import type { AudioProvider } from './provider';
 export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
   _audio!: HTMLAudioElement;
 
-  canPlay({ src }) {
-    return AUDIO_EXTENSIONS.test(src);
+  canPlay({ src, type }) {
+    return AUDIO_EXTENSIONS.test(src) || AUDIO_TYPES.has(type);
   }
 
   mediaType(): MediaType {

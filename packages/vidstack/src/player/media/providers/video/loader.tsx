@@ -1,4 +1,4 @@
-import { isHLSSrc, VIDEO_EXTENSIONS } from '../../../../utils/mime';
+import { isHLSSrc, VIDEO_EXTENSIONS, VIDEO_TYPES } from '../../../../utils/mime';
 import { IS_SAFARI } from '../../../../utils/support';
 import type { MediaStore } from '../../store';
 import type { MediaSrc, MediaType } from '../../types';
@@ -9,7 +9,9 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
   _video!: HTMLVideoElement;
 
   canPlay(src: MediaSrc) {
-    return VIDEO_EXTENSIONS.test(src.src) || (IS_SAFARI && isHLSSrc(src));
+    return (
+      VIDEO_EXTENSIONS.test(src.src) || VIDEO_TYPES.has(src.type) || (IS_SAFARI && isHLSSrc(src))
+    );
   }
 
   mediaType(): MediaType {
