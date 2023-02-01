@@ -14,6 +14,14 @@ documentation on this page, particularly around styling and subscriptions, is va
 
 {% code_preview name="usage" size="xsmall" copyHighlight=true highlight="html:3|react:5" /%}
 
+## Subscribe
+
+The slider has a store that keeps track of the running slider state. The store enables you to
+subscribe directly to specific state changes, rather than listening to potentially multiple DOM
+events and binding it yourself.
+
+{% code_snippet name="subscribe" copy=true /%}
+
 ## Styling
 
 You can override the default styles with CSS like so:

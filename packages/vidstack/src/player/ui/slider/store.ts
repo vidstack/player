@@ -1,6 +1,6 @@
 import { createContext, createStore, useContext } from 'maverick.js';
 
-const sliderStore = createStore<SliderStore>({
+export const sliderStore = createStore<SliderStore>({
   min: 0,
   max: 100,
   value: 50,

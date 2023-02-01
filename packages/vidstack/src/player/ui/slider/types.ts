@@ -1,3 +1,4 @@
+import type { Dispose, Maybe } from 'maverick.js';
 import type { HTMLCustomElement } from 'maverick.js/element';
 
 import type { SliderCSSVars } from './cssvars';
@@ -21,7 +22,25 @@ export interface SliderMembers
         | 'pointerRate'
         | 'pointerPercent'
       >
-    > {}
+    > {
+  /** @internal */
+  $store: SliderStore;
+  /**
+   * Enables subscribing to live updates of individually selected slider state.
+   *
+   * @example
+   * ```ts
+   * slider.subscribe(({ value, dragging, pointing }) => {
+   *   // ...
+   * });
+   * ```
+   */
+  subscribe: SliderSubscribe;
+}
+
+export interface SliderSubscribe {
+  (callback: (store: SliderStore) => Maybe<Dispose>): Dispose;
+}
 
 /**
  * A custom-built range input that is cross-browser friendly, ARIA friendly, mouse/touch-friendly

@@ -1,4 +1,13 @@
-import { effect, peek, provideContext, ReadSignal, Signals, useContext } from 'maverick.js';
+import {
+  effect,
+  getScope,
+  peek,
+  provideContext,
+  ReadSignal,
+  scoped,
+  Signals,
+  useContext,
+} from 'maverick.js';
 import { CustomElementHost, onAttach } from 'maverick.js/element';
 import { ariaBool, mergeProperties, setStyle } from 'maverick.js/std';
 
@@ -22,7 +31,8 @@ export function createSlider(
 ): Slider {
   provideContext(sliderStoreContext);
 
-  const $store = useContext(sliderStoreContext),
+  const scope = getScope()!,
+    $store = useContext(sliderStoreContext),
     { $disabled, $min, $max, $value, $step } = $props;
 
   host.setAttributes({
@@ -104,32 +114,39 @@ export function createSlider(
 
   return {
     $store,
-    members: mergeProperties($store, accessors(), {
-      get dragging() {
-        return $store.dragging;
+    members: mergeProperties(
+      $store,
+      accessors(),
+      {
+        $store,
+        get dragging() {
+          return $store.dragging;
+        },
+        get pointing() {
+          return $store.pointing;
+        },
+        get value() {
+          return $store.value;
+        },
+        set value(value) {
+          $store.value = value;
+        },
+        subscribe: (callback) => scoped(() => effect(() => callback($store)), scope)!,
+        $render: () => {
+          return (
+            <>
+              <div part="track"></div>
+              <div part="track track-fill"></div>
+              <div part="track track-progress"></div>
+              <div part="thumb-container">
+                <div part="thumb"></div>
+              </div>
+            </>
+          );
+        },
       },
-      get pointing() {
-        return $store.pointing;
-      },
-      get value() {
-        return $store.value;
-      },
-      set value(value) {
-        $store.value = value;
-      },
-      $render: () => {
-        return (
-          <>
-            <div part="track"></div>
-            <div part="track track-fill"></div>
-            <div part="track track-progress"></div>
-            <div part="thumb-container">
-              <div part="thumb"></div>
-            </div>
-          </>
-        );
-      },
-    }),
+      {},
+    ),
   };
 }
 
