@@ -58,11 +58,11 @@ export default () => {
     },
     handleHotUpdate({ file, server }) {
       if (snippetRE.test(file)) {
-        server.moduleGraph.invalidateModule(server.moduleGraph.getModuleById(SNIPPETS_REQ_ID));
+        return [server.moduleGraph.getModuleById(SNIPPETS_REQ_ID)];
       }
 
       if (previewRE.test(file)) {
-        server.moduleGraph.invalidateModule(server.moduleGraph.getModuleById(PREVIEWS_REQ_ID));
+        return [server.moduleGraph.getModuleById(PREVIEWS_REQ_ID)];
       }
     },
   };

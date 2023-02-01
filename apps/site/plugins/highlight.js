@@ -85,9 +85,9 @@ export default (options = {}) => {
       return null;
     },
     async handleHotUpdate({ file, server }) {
-      if (fileToId.has(file)) {
-        const id = fileToId.get(file);
-        const relativeFilePath = path.relative(process.cwd(), file);
+      const relativeFilePath = path.relative(process.cwd(), file);
+      if (fileToId.has(relativeFilePath)) {
+        const id = fileToId.get(relativeFilePath);
 
         server.moduleGraph.invalidateModule(
           /** @type {import('vite').ModuleNode} */ (server.moduleGraph.getModuleById(id)),
@@ -99,7 +99,7 @@ export default (options = {}) => {
           data: {
             name: path.basename(relativeFilePath),
             file: relativeFilePath,
-            importPath: `/${id}&t=${Date.now()}`,
+            importPath: `/@id/${id}&t=${Date.now()}`,
             path: getSnippetPath(relativeFilePath),
           },
         });

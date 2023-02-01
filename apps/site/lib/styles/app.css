@@ -1,3 +1,14 @@
+:root,
+.prefers-light-scheme {
+  --color-brand: 216 35 117;
+  --color-focus: 79 70 229;
+  --color-soft: 68 78 94;
+  --color-body: 250 250 250;
+  --color-elevate: 243 244 246;
+  --color-inverse: 5 11 23;
+  --color-border: 209 213 219;
+}
+
 :root {
   font-size: 16px;
   scroll-padding-top: 6rem;
@@ -8,14 +19,6 @@
 
   --font-family-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation, Mono,
     Fira Code VF, monospace;
-
-  --color-brand: 216 35 117;
-  --color-focus: 79 70 229;
-  --color-soft: 68 78 94;
-  --color-body: 250 250 250;
-  --color-elevate: 243 244 246;
-  --color-inverse: 5 11 23;
-  --color-border: 209 213 219;
 
   --navbar-height: 4rem;
   --navbar-padding: 1rem 0.5rem;

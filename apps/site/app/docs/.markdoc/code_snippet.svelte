@@ -63,7 +63,9 @@
   if (import.meta.hot) {
     import.meta.hot.on('vidstack::invalidate_snippet', async ({ name, path, importPath }) => {
       if (currentSnippet && currentSnippet.path === path && filenames.includes(name)) {
-        tokens = await import(/* @vite-ignore */ importPath);
+        setTimeout(async () => {
+          tokens = await import(/* @vite-ignore */ importPath);
+        }, 150);
       }
     });
   }

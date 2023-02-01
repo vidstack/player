@@ -1,5 +1,5 @@
 import { effect, peek, signal } from 'maverick.js';
-import { defineCustomElement } from 'maverick.js/element';
+import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { isString } from 'maverick.js/std';
 
 import { preconnect } from '../../../utils/network';
@@ -9,10 +9,14 @@ import type { MediaOutletElement } from './types';
 
 export const OutletDefinition = defineCustomElement<MediaOutletElement>({
   tagName: 'media-outlet',
-  setup() {
+  setup({ host }) {
     const media = useMedia(),
       context: MediaProviderContext = { ...media, player: media.$player()! },
       $rendered = signal(false);
+
+    onAttach(() => {
+      host.el!.keepAlive = true;
+    });
 
     effect(() => {
       if (!$rendered()) return;

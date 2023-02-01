@@ -192,7 +192,7 @@ player.addEventListener('provider-change', (event) => {
 
   if (isHLSProvider(provider)) {
     provider.config = { lowLatencyMode: true };
-    provider.onInit((hls) => {
+    provider.onInstance((hls) => {
       // ...
     });
   }

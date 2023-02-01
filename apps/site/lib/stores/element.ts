@@ -10,11 +10,19 @@ export const elementTagName = derived(route, ($route) =>
 const elementNameRE = /\/components\/.*?\/(.*?)($|\/|\#)/;
 export function getTagNameFromPath(path: string) {
   const name = path.match(elementNameRE)?.[1];
-  return name ? `media-${name}` : '';
+  return name ? `media-${name.replace(/^media\-/, '')}` : '';
 }
 
+const leaveMediaPrefix = new Set(['media-outlet']);
+
 export const elementHeading = derived(elementTagName, ($elementTagName) => {
-  return `${formatElementHeading(kebabToTitleCase($elementTagName.replace('media-', '')))}`;
+  return `${formatElementHeading(
+    kebabToTitleCase(
+      leaveMediaPrefix.has($elementTagName)
+        ? $elementTagName
+        : $elementTagName.replace('media-', ''),
+    ),
+  )}`;
 });
 
 export function formatElementHeading(name: string) {
