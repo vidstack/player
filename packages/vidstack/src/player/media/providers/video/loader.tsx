@@ -2,9 +2,10 @@ import { isString } from 'maverick.js/std';
 
 import { isHLSSrc, VIDEO_EXTENSIONS, VIDEO_TYPES } from '../../../../utils/mime';
 import { IS_SAFARI } from '../../../../utils/support';
+import type { MediaContext } from '../../context';
 import type { MediaStore } from '../../store';
 import type { MediaSrc, MediaType } from '../../types';
-import type { MediaProviderContext, MediaProviderLoader } from '../types';
+import type { MediaProviderLoader } from '../types';
 import type { VideoProvider } from './provider';
 
 export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
@@ -20,7 +21,7 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
     return 'video';
   }
 
-  async load(context: MediaProviderContext) {
+  async load(context: MediaContext) {
     if (__DEV__ && !this._video) {
       throw Error(
         '[vidstack] `<video>` element was not found - did you forget to include `<media-outlet>`?',

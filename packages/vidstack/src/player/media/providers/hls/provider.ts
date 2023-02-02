@@ -5,7 +5,7 @@ import { isString } from 'maverick.js/std';
 import { preconnect } from '../../../../utils/network';
 import { isHLSSupported } from '../../../../utils/support';
 import type { MediaSrc } from '../../types';
-import type { MediaProvider, MediaProviderContext } from '../types';
+import type { MediaProvider, MediaSetupContext } from '../types';
 import { VideoProvider } from '../video/provider';
 import { loadHLSLibrary } from './lib-loader';
 import type { HLSConstructor, HLSInstanceCallback, HLSLibrary } from './types';
@@ -79,7 +79,7 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
     preconnect(lib);
   }
 
-  override setup(context: MediaProviderContext) {
+  override setup(context: MediaSetupContext) {
     super.setup(context);
 
     // Load HLS library

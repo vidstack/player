@@ -1,10 +1,9 @@
-import type { JSX, ReadSignal } from 'maverick.js';
+import type { JSX } from 'maverick.js';
 import type { HTMLCustomElement } from 'maverick.js/element';
 
 import type { FullscreenAdapter } from '../../../foundation/fullscreen/fullscreen';
-import type { Logger } from '../../../foundation/logger/create-logger';
 import type { MediaPlayerElement } from '../../element/types';
-import type { MediaControllerDelegate } from '../controller/controller-delegate';
+import type { MediaContext } from '../context';
 import type { MediaState } from '../state';
 import type { MediaStore } from '../store';
 import type { MediaSrc, MediaType } from '../types';
@@ -14,8 +13,8 @@ export interface MediaProviderElement extends HTMLCustomElement {}
 export interface MediaProviderLoader<Provider extends MediaProvider = MediaProvider> {
   canPlay(src: MediaSrc): boolean;
   mediaType(src: MediaSrc): MediaType;
-  preconnect?(context: MediaProviderContext): void;
-  load(context: MediaProviderContext): Promise<Provider>;
+  preconnect?(context: MediaContext): void;
+  load(context: MediaContext): Promise<Provider>;
   render($store: MediaStore): JSX.Element;
 }
 
@@ -23,20 +22,16 @@ export interface MediaProvider
   extends Pick<MediaState, 'paused' | 'muted' | 'currentTime' | 'volume' | 'playsinline'> {
   readonly type: string;
   readonly fullscreen?: MediaFullscreenAdapter;
-  preconnect?(context: MediaProviderContext): void;
-  setup(context: MediaProviderContext): void;
+  preconnect?(context: MediaContext): void;
+  setup(context: MediaSetupContext): void;
   destroy?(): void;
   play(): Promise<void>;
   pause(): Promise<void>;
   loadSource(src: MediaSrc, preload: MediaState['preload']): Promise<void>;
 }
 
-export interface MediaProviderContext {
-  logger?: Logger;
+export interface MediaSetupContext extends MediaContext {
   player: MediaPlayerElement;
-  delegate: MediaControllerDelegate;
-  $player: ReadSignal<MediaPlayerElement | null>;
-  $store: MediaStore;
 }
 
 export interface MediaFullscreenAdapter extends FullscreenAdapter {}

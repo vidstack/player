@@ -4,7 +4,7 @@ import { camelToKebabCase, dispatchEvent, DOMEvent, kebabToCamelCase } from 'mav
 
 import { HLS_LISTENERS } from '../../../element/element';
 import type { MediaType } from '../../types';
-import type { MediaProviderContext } from '../types';
+import type { MediaSetupContext } from '../types';
 import type { HLSProvider } from './provider';
 import type { HLSConstructor, HLSInstanceCallback } from './types';
 
@@ -16,7 +16,7 @@ export function useHLS(
   config: Partial<HLS.HlsConfig>,
   $ctor: ReadSignal<HLSConstructor | null>,
   $instance: WriteSignal<HLS.default | null>,
-  { player, logger, delegate, $store }: MediaProviderContext,
+  { player, logger, delegate, $store }: MediaSetupContext,
   callbacks: Set<HLSInstanceCallback>,
 ) {
   const listening = new Set<string>();

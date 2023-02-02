@@ -32,7 +32,7 @@ export * from './player/media/outlet/types';
 // Media Player Providers
 export {
   type MediaProvider,
-  type MediaProviderContext,
+  type MediaSetupContext,
   type MediaFullscreenAdapter,
   type MediaProviderLoader,
 } from './player/media/providers/types';

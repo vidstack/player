@@ -1,4 +1,5 @@
 import { AnyRecord, effect, signal, Store } from 'maverick.js';
+import { noop } from 'maverick.js/std';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 export function useStore<

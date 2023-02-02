@@ -41,7 +41,7 @@ const trackedEventType = new Set<keyof ME.MediaEvents>([
  * state context, and satisfying media requests if a manager arg is provided.
  */
 export function createMediaStateManager(
-  { $player, $provider, $store }: MediaContext,
+  { $player, $loader, $provider, $store, logger }: MediaContext,
   requests: MediaRequestContext,
 ): MediaStateManager {
   if (__SERVER__) return { handle: noop };
@@ -75,6 +75,8 @@ export function createMediaStateManager(
   });
 
   const eventHandlers = {
+    'provider-loader-change': onProviderLoaderChange,
+    'provider-change': onProviderChange,
     autoplay: onAutoplay,
     'autoplay-fail': onAutoplayFail,
     'can-load': onCanLoad,
@@ -113,6 +115,14 @@ export function createMediaStateManager(
     trackedEvents.clear();
   }
 
+  function onProviderLoaderChange(event: ME.MediaProviderLoaderChangeEvent) {
+    $loader.set(event.detail);
+  }
+
+  function onProviderChange(event: ME.MediaProviderChangeEvent) {
+    $provider.set(event.detail);
+  }
+
   function onMediaTypeChange(event: ME.MediaChangeEvent) {
     appendTriggerEvent(event, trackedEvents.get('source-change'));
     $store.media = event.detail;
@@ -134,6 +144,10 @@ export function createMediaStateManager(
 
     $store.source = event.detail;
     $player()?.setAttribute('aria-busy', 'true');
+
+    if (__DEV__) {
+      logger?.infoGroup('📼 Media source change').labelledLog('Source', event.detail).dispatch();
+    }
 
     // Skip resets before first playback to ensure initial properties and track events are kept.
     if (skipInitialSrcChange) {

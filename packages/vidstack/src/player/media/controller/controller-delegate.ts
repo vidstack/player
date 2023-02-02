@@ -1,4 +1,4 @@
-import { tick } from 'maverick.js';
+import { peek, tick } from 'maverick.js';
 import { DOMEvent, InferEventDetail, InferEventInit, noop } from 'maverick.js/std';
 
 import type { MediaContext } from '../context';
@@ -31,7 +31,7 @@ export function createMediaControllerDelegate(
   };
 
   async function ready(duration, trigger) {
-    if ($store.canPlay) return;
+    if (peek(() => $store.canPlay)) return;
 
     dispatch('can-play', { detail: { duration }, trigger });
     tick();

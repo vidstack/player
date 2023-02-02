@@ -2,7 +2,7 @@ import { dispatchEvent, isFunction, isString, isUndefined } from 'maverick.js/st
 
 import { coerceToError } from '../../../../utils/error';
 import { loadScript } from '../../../../utils/network';
-import type { MediaProviderContext } from '../types';
+import type { MediaSetupContext } from '../types';
 import type { HLSConstructor, HLSConstructorLoader, HLSLibrary } from './types';
 
 interface LoadHLSConstructorCallbacks {
@@ -13,7 +13,7 @@ interface LoadHLSConstructorCallbacks {
 
 export async function loadHLSLibrary(
   lib: HLSLibrary,
-  { player, delegate, logger }: MediaProviderContext,
+  { player, delegate, logger }: MediaSetupContext,
 ): Promise<HLSConstructor | null> {
   if (__DEV__) {
     logger?.info('🏗️ Loading HLS Library');

@@ -2,7 +2,7 @@ import { isString, setAttribute } from 'maverick.js/std';
 
 import { isMediaStream } from '../../../../utils/mime';
 import type { MediaSrc } from '../../types';
-import type { MediaProvider, MediaProviderContext } from '../types';
+import type { MediaProvider, MediaSetupContext } from '../types';
 import { useHTMLMediaElementEvents } from './use-events';
 
 /**
@@ -14,7 +14,7 @@ import { useHTMLMediaElementEvents } from './use-events';
 export class HTMLMediaProvider implements MediaProvider {
   constructor(protected _media: HTMLMediaElement) {}
 
-  setup(context: MediaProviderContext) {
+  setup(context: MediaSetupContext) {
     useHTMLMediaElementEvents(this, context);
   }
 

@@ -1,5 +1,6 @@
+import type { MediaContext } from '../../context';
 import { HTMLMediaProvider } from '../html/provider';
-import type { MediaProvider, MediaProviderContext } from '../types';
+import type { MediaProvider } from '../types';
 import {
   useVideoPresentation,
   VideoPresentationAdapter,
@@ -32,7 +33,7 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProvider {
 
   fullscreen: VideoPresentationAdapter;
 
-  constructor(media: HTMLVideoElement, context: MediaProviderContext) {
+  constructor(media: HTMLVideoElement, context: MediaContext) {
     super(media);
     this.fullscreen = useVideoPresentation(media, context);
   }

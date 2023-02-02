@@ -6,7 +6,7 @@ import { isHLSSrc } from '../../../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../../../utils/number';
 import { IS_SAFARI } from '../../../../utils/support';
 import type { MediaErrorCode } from '../../types';
-import type { MediaProviderContext } from '../types';
+import type { MediaSetupContext } from '../types';
 import type { HTMLMediaProvider } from './provider';
 
 /**
@@ -15,7 +15,7 @@ import type { HTMLMediaProvider } from './provider';
  */
 export function useHTMLMediaElementEvents(
   provider: HTMLMediaProvider,
-  { player, $store, delegate, logger }: MediaProviderContext,
+  { player, $store, delegate, logger }: MediaSetupContext,
 ): void {
   const disposal = useDisposalBin();
 

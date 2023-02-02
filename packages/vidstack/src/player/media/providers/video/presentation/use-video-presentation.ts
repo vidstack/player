@@ -2,7 +2,7 @@ import { peek, signal } from 'maverick.js';
 import { dispatchEvent, isFunction, listenEvent } from 'maverick.js/std';
 
 import type { FullscreenAdapter } from '../../../../../foundation/fullscreen/fullscreen';
-import type { MediaProviderContext } from '../../types';
+import type { MediaContext } from '../../../context';
 
 declare global {
   interface GlobalEventHandlersEventMap {
@@ -18,7 +18,7 @@ declare global {
  */
 export function useVideoPresentation(
   video: HTMLVideoElement,
-  { player, logger, delegate }: MediaProviderContext,
+  { $player, logger, delegate }: MediaContext,
 ): VideoPresentationAdapter {
   const $mode = signal<WebKitPresentationMode>('inline'),
     $supported = () => isFunction(video.webkitSetPresentationMode);
@@ -35,7 +35,7 @@ export function useVideoPresentation(
 
     $mode.set(video.webkitPresentationMode!);
 
-    dispatchEvent(player, 'video-presentation-change', {
+    dispatchEvent($player(), 'video-presentation-change', {
       detail: $mode(),
       trigger: event,
     });

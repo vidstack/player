@@ -76,8 +76,3 @@ export function softResetMediaStore($media: MediaStore) {
   mediaStore.reset($media, (prop) => !DO_NOT_RESET_ON_SRC_CHANGE.has(prop));
   tick();
 }
-
-export function hardResetMediaStore($media: MediaStore) {
-  mediaStore.reset($media);
-  tick();
-}
