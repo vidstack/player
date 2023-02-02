@@ -15,6 +15,7 @@
     "dist/"
   ],
   "scripts": {
+    "dev": "pnpm clean && tsup --watch & pnpm run types -w",
     "build": "node .scripts/prebuild.js && tsup",
     "types": "tsc -p tsconfig.build.json",
     "clean": "rimraf dist",

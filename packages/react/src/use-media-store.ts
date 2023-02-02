@@ -12,8 +12,13 @@ import { useStore } from './use-store';
  */
 export function useMediaStore(ref?: RefObject<MediaPlayerElement | null>): Readonly<MediaStore> {
   const context = useReactContext(mediaContext);
-  return useStore(
-    mediaStore,
-    (ref && 'current' in ref ? ref.current : ref)?.$store ?? context?.$store,
-  );
+
+  if (__DEV__ && !context && !ref) {
+    console.warn(
+      `[vidstack] \`useMediaStore\` requires \`RefObject<MediaPlayerElement>\` argument if called` +
+        ' outside the <MediaPlayer> component',
+    );
+  }
+
+  return useStore(mediaStore, ref, context?.$store);
 }

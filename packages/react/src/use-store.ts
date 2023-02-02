@@ -1,17 +1,26 @@
 import { AnyRecord, effect, signal, Store } from 'maverick.js';
 import { noop } from 'maverick.js/std';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { RefObject, useEffect, useMemo, useRef, useState } from 'react';
 
 export function useStore<
   Record extends AnyRecord,
-  Create extends Store<Record>,
+  StoreFactory extends Store<Record>,
   StoreRecord extends Record,
->(store: Create, $store?: StoreRecord | null): Record {
-  const [_, update] = useState(0),
+>(
+  factory: StoreFactory,
+  ref?: RefObject<{ $store: StoreRecord } | null>,
+  init?: StoreRecord,
+): Record {
+  const [$store, $setStore] = useState<StoreRecord | undefined>(init),
+    [_, update] = useState(0),
     tracking = useRef({
       $props: signal<(keyof Record)[]>([]),
       observing: new Set<keyof Record>(),
     });
+
+  useEffect(() => {
+    if (ref?.current) $setStore(ref.current.$store);
+  }, []);
 
   useEffect(() => {
     if (!$store) return;
@@ -23,7 +32,7 @@ export function useStore<
   }, [$store]);
 
   return useMemo(() => {
-    if (!$store) return store.initial;
+    if (!$store) return factory.initial;
     const { observing, $props } = tracking.current;
     return new Proxy($store, {
       get(_, prop: any) {

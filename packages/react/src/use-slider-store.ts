@@ -12,5 +12,13 @@ import { useStore } from './use-store';
  */
 export function useSliderStore(ref?: RefObject<MediaSliderElement | null>): SliderStore {
   const $store = useReactContext(sliderStoreContext);
-  return useStore(sliderStore, (ref && 'current' in ref ? ref.current : ref)?.$store ?? $store);
+
+  if (__DEV__ && !$store && !ref) {
+    console.warn(
+      `[vidstack] \`useSliderStore\` requires \`RefObject<MediaSliderElement>\` argument if called` +
+        ' outside a media slider component',
+    );
+  }
+
+  return useStore(sliderStore, ref, $store);
 }
