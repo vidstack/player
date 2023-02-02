@@ -1,3 +1,28 @@
+# [0.2.0](https://github.com/mihar-22/vidstack/compare/v0.1.5...v0.2.0) (2023-02-02)
+
+### Bug Fixes
+
+- **react:** `useMediaState` -> `useMediaStore` ([1cc1551](https://github.com/mihar-22/vidstack/commit/1cc1551dc3915459baf5c85f4eb91331a3c719f5))
+- **react:** hooks not subscribing to ref on mount ([269cb70](https://github.com/mihar-22/vidstack/commit/269cb70a78011956fe4b2b5e362a605051e7d929))
+- **react:** mount instance once during dev ([331cbf8](https://github.com/mihar-22/vidstack/commit/331cbf89dcd9e940542b924179eec8f717566ecc))
+- **react:** source selection process hanging ([e52ecb5](https://github.com/mihar-22/vidstack/commit/e52ecb5dd736b61e3ba5f8286444507c87906e00))
+- **vidstack:** `view` attr no longer required ([da37ffc](https://github.com/mihar-22/vidstack/commit/da37ffcc22ac46b2c4eb763a865c5eda2e0a10a0))
+- **vidstack:** not updating correctly on source+provider change ([b9f316a](https://github.com/mihar-22/vidstack/commit/b9f316a089c4b333155229317a3919df58374940))
+- **vidstack:** provider loader should test audio/video src type ([131fb08](https://github.com/mihar-22/vidstack/commit/131fb08279ca16fca86f9b4f0043a82e89875b61))
+- **vidstack:** sliders not working on touch ([68d4c2b](https://github.com/mihar-22/vidstack/commit/68d4c2b77eac739a4ba4ab29698446252c6daaf3))
+
+### Features
+
+- `vds-*` -> `media-*` tag prefix ([867b926](https://github.com/mihar-22/vidstack/commit/867b926d2a6a9c22c07d45ff8e57a23ba61f70d1))
+- new slider subscribe method and react hook ([7644ae2](https://github.com/mihar-22/vidstack/commit/7644ae2a2e70f50f7267822e74169e694debd6f9))
+- **vidstack:** `MediaRemoteControl` no longer requires target/destroy ([1ee1a44](https://github.com/mihar-22/vidstack/commit/1ee1a44aba1fae8e19af37e7999486eddbdaac41))
+- **vidstack:** `src` can now also accept `Blob`, `MediaSource`, `MediaStream` ([623dfea](https://github.com/mihar-22/vidstack/commit/623dfea52988b0ce4aae6bcc1e4c5af603a12024))
+- **vidstack:** allow provider type on player to be narrowed without ts ([b0203c6](https://github.com/mihar-22/vidstack/commit/b0203c628ac79d7644fba64b4e64be1fcd3c1964))
+- **vidstack:** new `<media-slider>` component ([6b1dc45](https://github.com/mihar-22/vidstack/commit/6b1dc45cebacdd547668cc7e9d83a0f8a5db43f8))
+- **vidstack:** new `<media-toggle-button>` component ([88d4e51](https://github.com/mihar-22/vidstack/commit/88d4e51d8237c3971932b7238dd297cf0274a9bd))
+- **vidstack:** rework media subscriptions ([b7a1564](https://github.com/mihar-22/vidstack/commit/b7a1564a9cd83f56326f916e7175cf9c9ae25b2d))
+- **vidstack:** rework providers ([f921b2b](https://github.com/mihar-22/vidstack/commit/f921b2b845c40f27e30345874060fb80fccccd47))
+
 ## [0.1.5](https://github.com/mihar-22/vidstack/compare/v0.1.4...v0.1.5) (2023-01-27)
 
 ### Bug Fixes
