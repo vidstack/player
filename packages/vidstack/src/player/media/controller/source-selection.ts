@@ -16,7 +16,7 @@ const PROVIDER_LOADERS: MediaProviderLoader[] = [
 
 export function useSourceSelection(
   $src: ReadSignal<MediaPlayerProps['src']>,
-  { $loader, $store, delegate, logger }: MediaContext,
+  { $loader, $provider, $store, delegate, logger }: MediaContext,
 ): void {
   if (__SERVER__) {
     $store.sources = normalizeSrc($src());
@@ -41,6 +41,9 @@ export function useSourceSelection(
     for (const src of sources) {
       const loader = PROVIDER_LOADERS.find((loader) => loader.canPlay(src));
       if (loader) {
+        if (loader !== peek($loader)) $provider.set(null);
+        $loader.set(loader);
+
         if (src.src !== source.src) {
           if (__DEV__) {
             logger
@@ -56,7 +59,6 @@ export function useSourceSelection(
           tick();
         }
 
-        $loader.set(loader);
         return;
       }
     }

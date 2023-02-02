@@ -24,7 +24,7 @@ by specifying the fullscreen target like so:
 
 ```ts
 // Accepts `prefer-media`, `media`, `provider`
-media.enterFullscreen('provider');
+player.enterFullscreen('provider');
 ```
 
 {% callout type="warning" %}

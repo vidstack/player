@@ -19,40 +19,36 @@ export const OutletDefinition = defineCustomElement<MediaOutletElement>({
     });
 
     effect(() => {
-      if (!$rendered()) return;
-
       const loader = media.$loader();
-
-      if (loader) {
-        peek(() => {
-          loader.preconnect?.(context);
-          media.delegate.dispatch('provider-loader-change', { detail: loader });
-          loader.load(context).then((provider) => {
-            // The src/loader might've changed by the time we load the provider.
-            if (peek(media.$loader) === loader) media.$provider.set(provider);
-          });
-        });
-      }
-
+      peek(() => {
+        loader?.preconnect?.(context);
+        media.delegate.dispatch('provider-loader-change', { detail: loader });
+      });
       return () => {
         $rendered.set(false);
-        media.$provider.set(null);
       };
     });
 
     effect(() => {
+      const loader = media.$loader();
+      if (!$rendered() || !loader) return;
+      peek(() => {
+        loader.load(context).then((provider) => {
+          // The src/loader might've changed by the time we load the provider.
+          if (peek(media.$loader) === loader) media.$provider.set(provider);
+        });
+      });
+    });
+
+    effect(() => {
       const provider = media.$provider();
-
       media.delegate.dispatch('provider-change', { detail: provider });
-
       if (!provider) return;
-
       if (media.$store.canLoad) {
         peek(() => provider.setup(context));
         media.delegate.dispatch('provider-setup', { detail: provider });
         return;
       }
-
       peek(() => provider.preconnect?.(context));
     });
 
@@ -82,7 +78,7 @@ export const OutletDefinition = defineCustomElement<MediaOutletElement>({
       }
     });
 
-    return () => {
+    return () => () => {
       $rendered.set(true);
       return media.$loader()?.render(media.$store);
     };
