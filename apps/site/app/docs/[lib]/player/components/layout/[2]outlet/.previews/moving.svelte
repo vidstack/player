@@ -9,6 +9,7 @@
 
   onMount(async () => {
     await customElements.whenDefined('media-outlet');
+    player.onAttach(() => void (player.muted = true));
     outlet.onAttach(() => void (ready = true));
   });
 

@@ -5,8 +5,8 @@ description: How to correctly handle loading media with Vidstack Player.
 
 # {% $frontmatter.title %}
 
-In this section, we'll look at how you can avoid layout shifts and apply different media loading
-strategies.
+In this section, we'll look at how to handle loading media and how the source/provider selection
+process works.
 
 ## Avoiding Layout Shifts
 
@@ -55,3 +55,72 @@ strategies are available:
 Here's another example using a custom loading strategy:
 
 {% code_snippet name="loading-custom" highlight="html:5,9|react:10,14" /%}
+
+## Loading Source
+
+The `src` property on the player can accept one or more media sources. We recommend providing
+`type` information for each source so the correct provider is selected.
+
+{% code_snippet name="loading-source" /%}
+
+In addition, the player accepts both audio and video [source objects](/docs/player/providers/video#source-objects).
+This includes `MediaStream`, `MediaSource`, `Blob`, and `File`.
+
+{% code_snippet name="loading-source-object" /%}
+
+### Extensions/Types
+
+The following is a list of supported media extensions and types for each provider:
+
+- **Audio Extension:** m4a, m4b, mp4a, mpga, mp2, mp2a, mp3, m2a, m3a, wav, weba, aac, oga, spx
+- **Audio Type:** audio/mpeg, audio/ogg, audio/3gp, audio/mp4, audio/webm, audio/flac, audio/object
+- **Video Extension:** mp4, ogg, ogv, webm, mov, m4v
+- **Video Type:** video/mp4, video/webm, video/3gp, video/ogg, video/avi, video/mpeg
+- **HLS Extension:** m3u8
+- **HLS Type:** application/vnd.apple.mpegurl, audio/mpegurl, audio/x-mpegurl, application/x-mpegurl,
+  video/x-mpegurl, video/mpegurl, application/mpegurl
+
+### Selection Process
+
+The source selection process is as follows:
+
+1. Detect a change on the `src` attr/prop.
+2. Normalize `src` into an array of `MediaSrc` objects (`{src, type}`). If a [source object](/docs/player/providers/video#source-objects) is provided, the `type` will default to `video/object`, otherwise `unknown`.
+3. The `$event:sources-change` event is fired.
+4. Walk through each source at a time in order and attempt to find a provider who can play it.
+   The `canPlay` method on each provider loader will check if the media extension or `type`
+   can be played. The first loader to return `true` will be promoted to active.
+5. The `$event:source-change` event is fired - the current source will be `null` if no provider
+   was matched.
+6. Start the [provider loading process](#provider-loading).
+
+{% code_snippet name="selection-process" /%}
+
+## Provider Loading
+
+Providers are auto-selected during the source selection process and dynamically
+loaded via a [`MediaProviderLoader`](https://github.com/vidstack/player/blob/main/packages/vidstack/src/player/media/providers/types.ts#L14). The loader is responsible for determining whether the underlying provider can play a given
+source, dynamically loading the provider when needed, and rendering content inside the `<media-outlet>`.
+Rendered output includes `<audio>`, `<video>`, and `<iframe>` elements.
+
+When a provider is selected via the [source selection](#selection-process) process, it will go
+through the following setup process:
+
+1. Destroy the old provider if it's no longer active.
+2. Wait for the new media provider loader to render so the underlying element (e.g., `<video>`) is
+   ready.
+3. The loader will attempt to preconnect any URLs for the current provider or source.
+4. The `$event:provider-loader-change` event is fired.
+5. The loader will dynamically import and initialize the provider instance.
+6. The `$event:provider-change` event is fired - this is the best time to configure the
+   provider before it runs through setup.
+7. Once the specified [loading strategy](#loading-strategies) has resolved, the provider `setup`
+   method is called. This step generally involves loading required libraries and attaching event
+   listeners.
+8. The `$event:provider-setup` event is fired.
+9. Finally, the `loadSource` method is called on the provider with the selected source.
+
+It's important to note that if the provider has not changed during a source change, then the setup
+process will be skipped and simply the new source will be loaded (step 9).
+
+{% code_snippet name="provider-loading" /%}
