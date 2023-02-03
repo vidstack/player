@@ -84,9 +84,9 @@ async function importHLS(
   callbacks.onLoadStart?.();
 
   // Must be static.
-  if (!isFunction(loader)) {
-    callbacks.onLoaded?.(loader);
-    return loader;
+  if (loader.prototype && loader.prototype !== Function) {
+    callbacks.onLoaded?.(loader as HLSConstructor);
+    return loader as HLSConstructor;
   }
 
   try {
