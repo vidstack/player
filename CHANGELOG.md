@@ -1,3 +1,14 @@
+## [0.2.1](https://github.com/mihar-22/vidstack/compare/v0.2.0...v0.2.1) (2023-02-03)
+
+### Bug Fixes
+
+- **vidstack:** add `define/media-outlet` empty file to avoid confusion ([fa4a558](https://github.com/mihar-22/vidstack/commit/fa4a558c201dd6854a0e4b6721477c9bbd5d9288))
+- **vidstack:** fire `provider-setup` after hls has loaded lib ([2d67029](https://github.com/mihar-22/vidstack/commit/2d67029e192482e5f9c20403671599bc04da6b28))
+- **vidstack:** hls does not ssr because it fails current checks ([5bb30d1](https://github.com/mihar-22/vidstack/commit/5bb30d1282fb467aae7827d05eb90a9df14cd9b9))
+- **vidstack:** hls dynamic imports are not set correctly ([87486ad](https://github.com/mihar-22/vidstack/commit/87486ad353d9f71babb0af00a540410a111990d2))
+- **vidstack:** slider value text and time not updating post-hydration ([f0b1aac](https://github.com/mihar-22/vidstack/commit/f0b1aac3866859890d2a2d3f6d5c1d2755c09fa1))
+- **vidstack:** static hls import not initialized ([47d532b](https://github.com/mihar-22/vidstack/commit/47d532bbf07a2c2138cc8e0642e8909c1b96868e))
+
 # [0.2.0](https://github.com/mihar-22/vidstack/compare/v0.1.5...v0.2.0) (2023-02-02)
 
 ### Bug Fixes
