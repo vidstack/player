@@ -1,5 +1,5 @@
 import { HTMLMediaProvider } from '../html/provider';
-import type { MediaProvider } from '../types';
+import type { MediaProvider, MediaSetupContext } from '../types';
 
 export const AUDIO_PROVIDER = Symbol(__DEV__ ? 'AUDIO_PROVIDER' : 0);
 
@@ -21,6 +21,11 @@ export class AudioProvider extends HTMLMediaProvider implements MediaProvider {
 
   override get type() {
     return 'audio';
+  }
+
+  override setup(context: MediaSetupContext): void {
+    super.setup(context);
+    if (this.type === 'audio') context.delegate.dispatch('provider-setup', { detail: this });
   }
 
   /**

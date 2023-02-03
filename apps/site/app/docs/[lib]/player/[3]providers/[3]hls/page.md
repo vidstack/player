@@ -60,12 +60,7 @@ You can configure `hls.js` using the `config` property on the provider like so:
 
 You can obtain a reference to the `hls.js` instance like so:
 
-{% code_snippet name="hls-instance" copyHighlight=true highlight="html:6-8|react:8-10" /%}
-
-You can also listen to the `$event:hls-instance` event to be notified of when it's created (called
-before media is attached), and the `$event:hls-destroying` event for when it will be destroyed.
-
-{% code_snippet name="hls-instance-events" copy=true /%}
+{% code_snippet name="hls-instance" copyHighlight=true highlight="html:6-7|react:8-9" /%}
 
 ## Events
 

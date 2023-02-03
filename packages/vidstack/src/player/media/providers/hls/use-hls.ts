@@ -37,6 +37,8 @@ export function useHLS(
     const levelLoadedEvent = peek($ctor)!.Events.LEVEL_LOADED;
     instance.once(levelLoadedEvent, onLevelLoaded);
 
+    delegate.dispatch('provider-setup', { detail: provider });
+
     return () => {
       listening.clear();
       instance.destroy();

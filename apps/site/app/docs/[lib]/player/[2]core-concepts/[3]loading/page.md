@@ -106,11 +106,12 @@ Rendered output includes `<audio>`, `<video>`, and `<iframe>` elements.
 When a provider is selected via the [source selection](#selection-process) process, it will go
 through the following setup process:
 
-1. Destroy the old provider if it's no longer active.
-2. Wait for the new media provider loader to render so the underlying element (e.g., `<video>`) is
+1. Destroy the old provider if it's no longer active and fire `$event:provider-change` event
+   with detail set to `null`.
+2. The loader will attempt to preconnect any URLs for the current provider or source.
+3. The `$event:provider-loader-change` event is fired.
+4. Wait for the new media provider loader to render so the underlying element (e.g., `<video>`) is
    ready.
-3. The loader will attempt to preconnect any URLs for the current provider or source.
-4. The `$event:provider-loader-change` event is fired.
 5. The loader will dynamically import and initialize the provider instance.
 6. The `$event:provider-change` event is fired - this is the best time to configure the
    provider before it runs through setup.

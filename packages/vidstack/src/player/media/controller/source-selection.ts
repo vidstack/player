@@ -78,7 +78,6 @@ export function useSourceSelection(
     if (!provider) return;
     if (context.$store.canLoad) {
       peek(() => provider.setup({ ...context, player: context.$player()! }));
-      context.delegate.dispatch('provider-setup', { detail: provider });
       return;
     }
     peek(() => provider.preconnect?.(context));

@@ -1,15 +1,14 @@
 import { MediaPlayer } from '@vidstack/react';
-import { isHLSProvider, type MediaProviderChangeEvent } from 'vidstack';
+import { isHLSProvider, type MediaProviderSetupEvent } from 'vidstack';
 
 function Player() {
-  function onProviderChange(event: MediaProviderChangeEvent) {
+  function onProviderSetup(event: MediaProviderSetupEvent) {
     const provider = event.detail;
     if (isHLSProvider(provider)) {
-      provider.onInstance((hls) => {
-        // ...
-      });
+      provider.ctor; // `hls.js` constructor
+      provider.instance; // `hls.js` instance
     }
   }
 
-  return <MediaPlayer onProviderChange={onProviderChange}>{/* ... */}</MediaPlayer>;
+  return <MediaPlayer onProviderSetup={onProviderSetup}>{/* ... */}</MediaPlayer>;
 }
