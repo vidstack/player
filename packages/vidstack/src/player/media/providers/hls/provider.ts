@@ -47,11 +47,11 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
 
   protected _$ctor = signal<HLSConstructor | null>(null);
   protected _$instance = signal<HLS.default | null>(null);
-  protected _$library = signal<HLSLibrary>(
-    `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls.light${__DEV__ ? '.js' : '.min.js'}`,
-  );
 
   protected _instanceCallbacks = new Set<HLSInstanceCallback>();
+  protected _library = `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls.light${
+    __DEV__ ? '.js' : '.min.js'
+  }`;
 
   /**
    * The `hls.js` configuration object.
@@ -66,31 +66,21 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
    * @defaultValue `https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.light.min.js`
    */
   get library() {
-    return this._$library();
+    return this._library;
   }
 
   set library(library) {
-    this._$library.set(library);
+    this._library = library;
   }
 
   preconnect(): void {
-    const lib = this._$library();
-    if (!isString(lib)) return;
-    preconnect(lib);
+    if (!isString(this._library)) return;
+    preconnect(this._library);
   }
 
   override setup(context: MediaSetupContext) {
     super.setup(context);
-
-    // Load HLS library
-    effect(() => {
-      const library = this._$library();
-      loadHLSLibrary(library, context).then((ctor) => {
-        if (this._$library() !== library) return;
-        this._$ctor.set(() => ctor);
-      });
-    });
-
+    loadHLSLibrary(this._library, context).then((ctor) => this._$ctor.set(() => ctor));
     useHLS(this, this.config, this._$ctor, this._$instance, context, this._instanceCallbacks);
   }
 
