@@ -1,3 +1,9 @@
+## [0.2.2](https://github.com/mihar-22/vidstack/compare/v0.2.1...v0.2.2) (2023-02-03)
+
+### Bug Fixes
+
+- **react:** aspect ratio not working - attr not reflected ([593ad6c](https://github.com/mihar-22/vidstack/commit/593ad6ce6e5154fb7939d71ff56cf8b0e3dff16e))
+
 ## [0.2.1](https://github.com/mihar-22/vidstack/compare/v0.2.0...v0.2.1) (2023-02-03)
 
 ### Bug Fixes
