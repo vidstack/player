@@ -23,7 +23,7 @@ function Player() {
       <MediaPlayer
         src="https://media-files.vidstack.io/720p.mp4"
         poster="https://media-files.vidstack.io/poster.png"
-        aspectRatio="16/9"
+        aspectRatio={16 / 9}
         ref={player}
       >
         <MediaOutlet ref={outlet} />

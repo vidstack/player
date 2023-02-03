@@ -96,6 +96,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
     useSourceSelection(props.$src, controller._context);
 
     const $attrs: AttributesRecord = {
+      'aspect-ratio': props.$aspectRatio,
       'ios-controls': () =>
         IS_IOS &&
         $store.media.includes('video') &&
