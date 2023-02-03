@@ -32,6 +32,7 @@ export function useSourceSelection(
         $loader.set(loader);
       }
     }
+    return;
   }
 
   effect(() => {
