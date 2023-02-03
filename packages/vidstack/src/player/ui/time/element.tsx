@@ -25,7 +25,7 @@ export const TimeDefinition = defineCustomElement<MediaTimeElement>({
       return formatTime(time, $padHours(), $showHours());
     });
 
-    return () => $formattedTime;
+    return () => <span>{$formattedTime()}</span>;
   },
 });
 

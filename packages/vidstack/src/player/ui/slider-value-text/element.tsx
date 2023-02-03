@@ -29,10 +29,10 @@ export const SliderValueTextDefinition = defineCustomElement<MediaSliderValueTex
       } else if (format === 'time') {
         return formatTime(value, $padHours(), $showHours());
       } else {
-        return value + '';
+        return value.toFixed(2);
       }
     });
 
-    return () => $text;
+    return () => <span>{$text()}</span>;
   },
 });
