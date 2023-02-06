@@ -10,22 +10,22 @@ import type { MediaProviderLoader } from '../providers/types';
 import { VideoProviderLoader } from '../providers/video/loader';
 import type { MediaSrc } from '../types';
 
-const PROVIDER_LOADERS: MediaProviderLoader[] = [
-  new AudioProviderLoader(),
-  new VideoProviderLoader(),
-  new HLSProviderLoader(),
-];
-
 export function useSourceSelection(
   $src: ReadSignal<MediaPlayerProps['src']>,
   context: MediaContext,
 ): void {
   const { $loader, $store, delegate } = context;
 
+  const loaders: MediaProviderLoader[] = [
+    new AudioProviderLoader(),
+    new VideoProviderLoader(),
+    new HLSProviderLoader(),
+  ];
+
   if (__SERVER__) {
     $store.sources = normalizeSrc($src());
     for (const src of $store.sources) {
-      const loader = PROVIDER_LOADERS.find((loader) => loader.canPlay(src));
+      const loader = loaders.find((loader) => loader.canPlay(src));
       if (loader) {
         $store.source = src;
         $store.media = loader.mediaType(src);
@@ -48,7 +48,7 @@ export function useSourceSelection(
       newLoader: MediaProviderLoader | null = null;
 
     for (const src of sources) {
-      const loader = PROVIDER_LOADERS.find((loader) => loader.canPlay(src));
+      const loader = loaders.find((loader) => loader.canPlay(src));
       if (loader) {
         newSource = src;
         newLoader = loader;
