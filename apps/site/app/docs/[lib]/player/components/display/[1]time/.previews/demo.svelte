@@ -4,6 +4,7 @@
   playsinline
   autoplay
   muted
+  volume={0}
   aspect-ratio="16/9"
 >
   <media-outlet />

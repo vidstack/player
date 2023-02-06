@@ -1,0 +1,19 @@
+media-play-button {
+  /* ... */
+}
+
+.media-play-icon,
+.media-pause-icon {
+  opacity: 0;
+  /* ... */
+}
+
+/* Show play icon when media is paused. */
+media-player[paused] .media-play-icon {
+  opacity: 1;
+}
+
+/* Show pause icon when media is _not_ paused. */
+media-player:not([paused]) .media-pause-icon {
+  opacity: 1;
+}

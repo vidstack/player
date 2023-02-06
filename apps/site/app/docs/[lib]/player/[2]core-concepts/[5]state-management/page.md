@@ -99,7 +99,7 @@ player.onAttach(() => {
 });
 ```
 
-All player properties and methods can be found in the [`<media-player>` API reference](/docs/player/components/layout/player/api).
+👉 All player properties and methods can be found in the [player API reference](/docs/player/components/layout/player/api).
 
 ### Media Remote
 

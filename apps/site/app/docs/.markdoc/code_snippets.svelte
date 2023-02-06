@@ -31,8 +31,8 @@
               class={clsx(
                 'px-5 py-2 font-mono text-sm focus-visible:m-px',
                 activeTab === i
-                  ? 'border-brand text-brand border-b bg-gray-700/20'
-                  : 'hover:text-inverse',
+                  ? 'border-brand text-brand border-b bg-border/40'
+                  : 'hover:text-inverse bg-border/20 border-b border-border',
               )}
               on:click={() => {
                 activeTab = i;

@@ -17,6 +17,7 @@
     'media-live-indicator',
     'media-pip-button',
     'media-captions-button',
+    'media-captions',
   ]);
 
   $: hideAPI = elements.has($elementTagName);

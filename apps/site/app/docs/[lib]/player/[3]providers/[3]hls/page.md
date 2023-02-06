@@ -23,7 +23,7 @@ npm i hls.js
 
 ## Loading `hls.js`
 
-The HLS provider will default to loading the light version of `hls.js` from [JSDelivr](https://jsdelivr.com). We load
+The HLS provider will default to loading `hls.js` from [JSDelivr](https://jsdelivr.com). We load
 the default bundle in development, and the minified version in production.
 
 {% code_snippet name="loading-hls" copyHighlight=true highlight="html:6-9|react:8-11" /%}

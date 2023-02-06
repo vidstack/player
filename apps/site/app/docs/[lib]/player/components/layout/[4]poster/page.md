@@ -16,12 +16,12 @@ place this poster over the media and controls while loading to improve the overa
 can't do this if using the native `poster` attribute because it lives inside the browser's
 media element.
 
-{% code_preview name="usage" size="large" copyHighlight=true highlight="html:5|react:7" /%}
+{% code_preview name="usage" size="large" copyHighlight=true highlight="html:3|react:7" /%}
 
 The poster can also be placed inside the aspect ratio container if there are controls outside
 of the media player:
 
-{% code_snippet name="usage-two" highlight="html:6|react:8" /%}
+{% code_snippet name="usage-two" highlight="html:3|react:7" /%}
 
 ### Loading Attributes
 

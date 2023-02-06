@@ -15,11 +15,13 @@ The player element fires a superset of [`HTMLMediaElement` events](https://devel
 - `canplay` -> `$event:can-play`
 - `loadedmetadata` -> `$event:loaded-metadata`
 
-Vidstack media events smooth out any unexpected behaviour across browsers, attach additional
+Vidstack media events smooth out any unexpected behavior across browsers, attach additional
 metadata to the event `detail`, and contain rich information such as the [request event](#request-events)
 that triggered it or the origin event that kicked it off.
 
 {% code_snippet name="events" /%}
+
+👉 A complete list of media events fired can be found in the [player API reference](/docs/player/components/layout/player/api#events).
 
 ## Request Events
 
