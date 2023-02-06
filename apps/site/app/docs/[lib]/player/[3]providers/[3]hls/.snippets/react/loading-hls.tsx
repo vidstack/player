@@ -6,9 +6,9 @@ function Player() {
     const provider = event.detail;
     if (isHLSProvider(provider)) {
       // Default development URL.
-      provider.library = 'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.light.js';
+      provider.library = 'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.js';
       // Default production URL.
-      provider.library = 'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.light.min.js';
+      provider.library = 'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.min.js';
     }
   }
 

@@ -49,7 +49,7 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
   protected _$instance = signal<HLS.default | null>(null);
 
   protected _instanceCallbacks = new Set<HLSInstanceCallback>();
-  protected _library: HLSLibrary = `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls.light${
+  protected _library: HLSLibrary = `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls${
     __DEV__ ? '.js' : '.min.js'
   }`;
 
@@ -63,7 +63,7 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
   /**
    * The `hls.js` constructor (supports dynamic imports) or a URL of where it can be found.
    *
-   * @defaultValue `https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.light.min.js`
+   * @defaultValue `https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.min.js`
    */
   get library() {
     return this._library;
