@@ -1,3 +1,12 @@
+## [0.2.3](https://github.com/mihar-22/vidstack/compare/v0.2.2...v0.2.3) (2023-02-06)
+
+### Bug Fixes
+
+- **vidstack:** add docs to the media remote control ([3bcf3d3](https://github.com/mihar-22/vidstack/commit/3bcf3d378da87118f4c8cdaacffed617677941d0))
+- **vidstack:** default to loading full version of `hls.js` - more reliable ([efcb11b](https://github.com/mihar-22/vidstack/commit/efcb11bc248f90b88c0bb2617c1ae356ff473d84))
+- **vidstack:** hls provider not working in devtools on iphone view ([7217412](https://github.com/mihar-22/vidstack/commit/72174121115ac511011ac81a0186ac04fea6d97c))
+- **vidstack:** multiple players freezing page ([91e23b6](https://github.com/mihar-22/vidstack/commit/91e23b6684f75b35166056ffaa2b03ead95e5bc3)), closes [#731](https://github.com/mihar-22/vidstack/issues/731)
+
 ## [0.2.2](https://github.com/mihar-22/vidstack/compare/v0.2.1...v0.2.2) (2023-02-03)
 
 ### Bug Fixes
