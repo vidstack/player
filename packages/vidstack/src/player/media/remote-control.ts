@@ -5,7 +5,11 @@ import type { MediaPlayerElement } from '../element/types';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request-events';
 
 /**
- * A simple facade for dispatching media requests to the nearest media controller.
+ * A simple facade for dispatching media requests to the nearest media player element.
+ *
+ * @docs {@link https://www.vidstack.io/docs/player/core-concepts/state-management#media-remote}
+ * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/state-management#updating}
+ *
  */
 export class MediaRemoteControl {
   protected _target: EventTarget | null = null;
@@ -13,11 +17,30 @@ export class MediaRemoteControl {
 
   constructor(protected _logger?: Logger) {}
 
+  /**
+   * Set the target from which to dispatch media requests events from. The events should bubble
+   * up from this target to the `<media-player>` element.
+   *
+   * @example
+   * ```ts
+   * const button = document.querySelector('button');
+   * remote.setTarget(button);
+   * ```
+   */
   setTarget(target: EventTarget | null) {
     this._target = target;
     if (__DEV__) this._logger?.setTarget(target);
   }
 
+  /**
+   * Returns the current `<media-player>` element. This method will attempt to find the player by
+   * searching up from either the given `target` or default target set via `remote.setTarget`.
+   *
+   * @example
+   * ```ts
+   * const player = remote.getPlayer();
+   * ```
+   */
   getPlayer(target?: EventTarget | null): MediaPlayerElement | null {
     if (this._player) return this._player;
 
@@ -32,66 +55,149 @@ export class MediaRemoteControl {
     return this._player;
   }
 
+  /**
+   * Set the current `<media-player>` element so the remote can support toggle methods such as
+   * `togglePaused` as they rely on the current media state.
+   */
   setPlayer(player: MediaPlayerElement | null) {
     this._player = player;
   }
 
+  /**
+   * Dispatch a request to start the media loading process. This will only work if the media
+   * player has been initialized with a custom loading strategy `<media-player load="custom">`.
+   *
+   * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/loading#loading-strategies}
+   */
   startLoading(trigger?: Event) {
     this._dispatchRequest('media-start-loading', trigger);
   }
 
+  /**
+   * Dispatch a request to begin/resume media playback.
+   */
   play(trigger?: Event) {
     this._dispatchRequest('media-play-request', trigger);
   }
 
+  /**
+   * Dispatch a request to pause media playback.
+   */
   pause(trigger?: Event) {
     this._dispatchRequest('media-pause-request', trigger);
   }
 
+  /**
+   * Dispatch a request to set the media volume to mute (0).
+   */
   mute(trigger?: Event) {
     this._dispatchRequest('media-mute-request', trigger);
   }
 
+  /**
+   * Dispatch a request to unmute the media volume and set it back to it's previous state.
+   */
   unmute(trigger?: Event) {
     this._dispatchRequest('media-unmute-request', trigger);
   }
 
+  /**
+   * Dispatch a request to enter fullscreen.
+   *
+   * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/fullscreen#media-remote}
+   */
   enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     this._dispatchRequest('media-enter-fullscreen-request', trigger, target);
   }
 
+  /**
+   * Dispatch a request to exit fullscreen.
+   *
+   * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/fullscreen#media-remote}
+   */
   exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     this._dispatchRequest('media-exit-fullscreen-request', trigger, target);
   }
 
+  /**
+   * Notify the media player that a seeking process is happening and to seek to the given `time`.
+   */
   seeking(time: number, trigger?: Event) {
     this._dispatchRequest('media-seeking-request', trigger, time);
   }
 
+  /**
+   * Notify the media player that a seeking operation has completed and to seek to the given `time`.
+   * This is generally called after a series of `remote.seeking()` calls.
+   */
   seek(time: number, trigger?: Event) {
     this._dispatchRequest('media-seek-request', trigger, time);
   }
 
+  /**
+   * Dispatch a request to update the media volume to the given `volume` level which is a value
+   * between 0 and 1.
+   *
+   * @example
+   * ```ts
+   * remote.changeVolume(0); // 0%
+   * remote.changeVolume(0.05); // 5%
+   * remote.changeVolume(0.5); // 50%
+   * remote.changeVolume(0.75); // 70%
+   * remote.changeVolume(1); // 100%
+   * ```
+   */
   changeVolume(volume: number, trigger?: Event) {
     this._dispatchRequest('media-volume-change-request', trigger, volume);
   }
 
+  /**
+   * Dispatch a request to resume user idle tracking. Refer to {@link MediaRemoteControl.pauseUserIdle}
+   * for more information.
+   */
   resumeUserIdle(trigger?: Event) {
     this._dispatchRequest('media-resume-user-idle-request', trigger);
   }
 
+  /**
+   * Dispatch a request to pause user idle tracking. Pausing tracking will result in the `user-idle`
+   * attribute and state being `false` until `remote.resumeUserIdle()` is called. This method
+   * is generally used when building custom controls and you'd like to prevent the UI from
+   * dissapearing.
+   *
+   * @example
+   * ```ts
+   * // Prevent user idling while menu is being interacted with.
+   * function onSettingsOpen() {
+   *   remote.pauseUserIdle();
+   * }
+   *
+   * function onSettingsClose() {
+   *   remote.resumeUserIdle();
+   * }
+   * ```
+   */
   pauseUserIdle(trigger?: Event) {
     this._dispatchRequest('media-pause-user-idle-request', trigger);
   }
 
+  /**
+   * Dispatch a request to load and show the native poster element.
+   */
   showPoster(trigger?: Event) {
     this._dispatchRequest('media-show-poster-request', trigger);
   }
 
+  /**
+   * Dispatch a request to prevent loading and to hide the native poster element.
+   */
   hidePoster(trigger?: Event) {
     this._dispatchRequest('media-hide-poster-request', trigger);
   }
 
+  /**
+   * Dispatch a request to toggle the media playback state.
+   */
   togglePaused(trigger?: Event) {
     const player = this.getPlayer(trigger?.target);
 
@@ -104,6 +210,9 @@ export class MediaRemoteControl {
     else this.pause(trigger);
   }
 
+  /**
+   * Dispatch a request to toggle the media muted state.
+   */
   toggleMuted(trigger?: Event) {
     const player = this.getPlayer(trigger?.target);
 
@@ -116,6 +225,11 @@ export class MediaRemoteControl {
     else this.mute(trigger);
   }
 
+  /**
+   * Dispatch a request to toggle the media fullscreen state.
+   *
+   * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/fullscreen#media-remote}
+   */
   toggleFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     const player = this.getPlayer(trigger?.target);
 
