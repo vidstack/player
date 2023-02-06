@@ -1,7 +1,7 @@
 import { isString } from 'maverick.js/std';
 
 import { isHLSSrc, VIDEO_EXTENSIONS, VIDEO_TYPES } from '../../../../utils/mime';
-import { IS_SAFARI } from '../../../../utils/support';
+import { canPlayHLSNatively } from '../../../../utils/support';
 import type { MediaContext } from '../../context';
 import type { MediaStore } from '../../store';
 import type { MediaSrc, MediaType } from '../../types';
@@ -15,7 +15,7 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
     return isString(src.src)
       ? VIDEO_EXTENSIONS.test(src.src) ||
           VIDEO_TYPES.has(src.type) ||
-          ((__SERVER__ || IS_SAFARI) && isHLSSrc(src))
+          (isHLSSrc(src) && (__SERVER__ || canPlayHLSNatively()))
       : src.type === 'video/object';
   }
 
