@@ -1,16 +1,19 @@
-## **Is your Pull Request request related to another issue in this repository ?**      
-<!-- _If so please link to other issues and PRs as appropriate_ -->
+### Related:
 
-## **Describe what the PR does**    
-<!-- _A clear and concise description of what the PR does. Feel free to use bulletpoints and checkboxes if needed [...]_ -->
+<!-- If possible, link to other issues and PRs as appropriate. -->
 
+### Description:
 
-## **State whether the PR is ready for review or whether it needs extra work**    
-<!-- _If you are still working on it and just setting it up for later review, or if it's ready to be reviewed for merging_ -->
+<!-- A clear and concise description of what the PR does. -->
 
-## **Additional context**    
-<!-- Add any other context or screenshots about the PR. -->
+### Ready?
 
+<!-- Is this PR ready to be reviewed? -->
 
-## **For Reviewers** 
-<!-- Provide a checklist for reviewers of what you'd expect them to do to review this PR -->
+### Anything Else?
+
+<!-- Links? References? Screenshots? Anything that will give us more context about the PR. -->
+
+### Review Process:
+
+<!-- If possible, provide a checklist for what you'd expect us to do in order to review this PR. -->

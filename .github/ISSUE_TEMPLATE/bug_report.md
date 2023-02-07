@@ -1,38 +1,41 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
+name: 🐛 Bug Report
+about: If you're sure it's a bug, or confirmed it via discord/discussions then can create a bug report.
 labels: bug
-assignees: 
-
 ---
 
-**Describe the bug**
-<!-- A clear and concise description of what the bug is. -->
+### Current Behavior:
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+<!-- A concise description of what you're experiencing. -->
 
-**Expected behavior**
-<!-- A clear and concise description of what you expected to happen. -->
+### Expected Behavior:
 
-**Screenshots**
-<!-- If applicable, add screenshots to help explain your problem. -->
+<!-- A concise description of what you expected to happen. -->
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+### Steps To Reproduce:
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+<!--
+Example: steps to reproduce the behavior:
+1. In this environment...
+2. With this config...
+3. Run '...'
+4. See error...
+-->
 
-**Additional context**
-<!-- Add any other context about the problem here. -->
+### Environment:
+
+<!--
+Example:
+- Framework: React
+- Meta Framework: Next.js
+- Node: 16.0.0
+- Device: iPhone@13
+- OS: iOS@14
+- Browser: Chrome@22
+-->
+
+### Anything Else?
+
+<!--
+Links? Screenshots? Anything that will give us more context about the issue that you are encountering.
+-->
