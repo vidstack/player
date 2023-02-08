@@ -10,7 +10,8 @@ Design a modern media player only using HTML and CSS. The successor to [Plyr][pl
 
 We're currently in Beta, some features may not be complete or missing. Join the
 [Discussions][discussions], or [Discord][discord] server to get involved. You can also see
-our [1.0 Project Board](https://github.com/vidstack/vidstack/projects/1) for what's planned ahead.
+our [Player Roadmap](https://github.com/orgs/vidstack/projects/1/views/1?groupedBy%5BcolumnId%5D=Milestone)
+for what's planned ahead.
 
 ## 📖 Docs
 

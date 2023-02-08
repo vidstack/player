@@ -13,7 +13,7 @@ successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
 Our player is currently in Beta. If you'd like to get notified when 1.0 is released:
 
 - [Watch Player Repository](https://github.com/vidstack/player)
-- [Follow Player 1.0 Project Board](https://github.com/vidstack/player/projects/1)
+- [Player Roadmap](https://github.com/orgs/vidstack/projects/1/views/1?groupedBy%5BcolumnId%5D=Milestone)
 
 ## Documentation
 
