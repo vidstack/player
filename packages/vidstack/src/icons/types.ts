@@ -1,0 +1,35 @@
+import type { IconType } from '@vidstack/icons';
+import type { HTMLCustomElement } from 'maverick.js/element';
+
+export interface MediaIconProps {
+  /**
+   * The type of icon. You can find a complete and searchable list on our website - see our
+   * [media catalog](https://vidstack.io/icons).
+   */
+  type: IconType | undefined;
+  /**
+   * The horizontal (width) and vertical (height) length of the underlying `<svg>` element.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width}
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height}
+   */
+  size: number;
+}
+
+export interface MediaIconMembers extends MediaIconProps {}
+
+export { type IconType };
+
+/**
+ * The `<media-icon>` component dynamically loads and renders our custom Vidstack icons. See our
+ * [media catalog](https://www.vidstack.io/icons) to preview them all. Do note, the icon `type` can
+ * be dynamically changed.
+ *
+ * @docs {@link https://www.vidstack.io/docs/player/components/display/icons}
+ * @example
+ * ```html
+ * <media-icon type="play" size="32"></media-icon>
+ * <media-icon type="pause" size="32"></media-icon>
+ * ```
+ */
+export interface MediaIconElement extends HTMLCustomElement<MediaIconProps>, MediaIconMembers {}

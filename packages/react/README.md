@@ -19,7 +19,7 @@ You can find our documentation at [vidstack.io](https://www.vidstack.io).
 
 ## 📝 License
 
-Vidstack is [MIT licensed](./LICENSE).
+Vidstack React is [MIT licensed](./LICENSE).
 
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr

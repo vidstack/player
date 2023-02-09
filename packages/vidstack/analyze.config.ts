@@ -1,3 +1,6 @@
+import { readdirSync } from 'node:fs';
+import path from 'node:path';
+
 import { createJSONPlugin, createVSCodePlugin } from '@maverick-js/compiler/analyze';
 
 export default [
@@ -5,6 +8,12 @@ export default [
   createVSCodePlugin({
     transformTagData(component, data) {
       const refs = (data.references ??= []);
+
+      if (component.tag.name === 'media-icon') {
+        const type = data.attributes.find((attr) => attr.name === 'type')!;
+        const icons = readdirSync('node_modules/@vidstack/icons/raw');
+        type.values = icons.map((name) => ({ name: path.basename(name, path.extname(name)) }));
+      }
 
       component.doctags
         ?.filter((tag) => (tag.name === 'docs' || tag.name === 'see') && tag.text)

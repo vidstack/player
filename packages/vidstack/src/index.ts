@@ -2,6 +2,9 @@ if (__DEV__) {
   console.warn('[vidstack] dev mode!');
 }
 
+// Icons
+export * from './icons/types';
+
 // Foundation
 export * from './foundation/fullscreen/events';
 export * from './foundation/fullscreen/events';
@@ -60,6 +63,7 @@ export * from './player/ui/toggle-button/types';
 export * from './player/ui/volume-slider/types';
 
 // Media Player Definitions
+export { MediaIconDefinition } from './icons/element';
 export { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
 export { MuteButtonDefinition } from './player/ui/mute-button/element';
 export { OutletDefinition } from './player/media/outlet/element';

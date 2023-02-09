@@ -14,6 +14,7 @@ function dist({ dev, server }: BundleOptions): Options {
     tsconfig: 'tsconfig.build.json',
     target: server ? 'node16' : 'esnext',
     platform: server ? 'node' : 'browser',
+    bundle: true,
     clean: false,
     outDir: 'dist',
     define: {
