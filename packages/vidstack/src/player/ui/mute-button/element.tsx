@@ -1,7 +1,7 @@
-import { mutePaths, volumeHighPaths, volumeLowPaths } from '@vidstack/icons';
 import { computed } from 'maverick.js';
 import { defineCustomElement } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
+import { mutePaths, volumeHighPaths, volumeLowPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
 import { useMedia } from '../../media/context';

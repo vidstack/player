@@ -1,4 +1,6 @@
 <script lang="ts">
+  import 'nprogress/nprogress.css';
+
   import { navigation, route } from '@vessel-js/svelte';
   import clsx from 'clsx';
   import NProgress from 'nprogress';
@@ -22,6 +24,11 @@
 
   const navLinks = writable<NavLinks>([
     {
+      title: 'Media Icons',
+      slug: addJSLibToPath(`/media-icons`),
+      match: /\/media-icons/,
+    },
+    {
       title: 'Documentation',
       slug: addJSLibToPath(`/docs/player`),
       match: /\/docs\/player/,
@@ -33,23 +40,20 @@
   $: collapseNavbar = $isLargeScreen ? false : $scrollTop > 60 && $scrollDirection === 'down';
 
   // https://github.com/rstacruz/nprogress#configuration
-  NProgress.configure({ minimum: 0.16 });
+  NProgress.configure({ minimum: 0.16, speed: 300 });
 
   let navigatingTimeout;
 
   function showProgress() {
     window.clearTimeout(navigatingTimeout);
     navigatingTimeout = window.setTimeout(() => {
-      if (!$navigation) return;
-      NProgress.start();
+      if ($navigation) NProgress.start();
     }, 500);
   }
 
   function hideProgress() {
-    NProgress.done();
     window.clearTimeout(navigatingTimeout);
-    hideDocumentScrollbar(false);
-
+    NProgress.done();
     // Fix to catch progress accidentally starting.
     window.setTimeout(() => {
       if (!$navigation) NProgress.done();
@@ -182,7 +186,7 @@
   }
 
   :global(#nprogress .bar) {
-    background: var(--color-brand);
+    background: rgb(var(--color-brand));
 
     position: fixed;
     z-index: 1031;
@@ -200,7 +204,7 @@
     right: 0px;
     width: 100px;
     height: 100%;
-    box-shadow: 0 0 10px var(--color-brand), 0 0 5px var(--color-brand);
+    box-shadow: 0 0 10px rgb(var(--color-brand)), 0 0 5px rgb(var(--color-brand));
     opacity: 1;
 
     -webkit-transform: rotate(3deg) translate(0px, -4px);

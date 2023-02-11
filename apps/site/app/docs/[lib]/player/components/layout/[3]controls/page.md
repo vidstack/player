@@ -5,7 +5,7 @@ description: This page showcases how to create a container for a collection of m
 ## Usage
 
 We don't provide a controls component out of the box because you can easily create one with
-some HTML, CSS, and [media attributes](/docs/player/styling/basics#media-attributes).
+some HTML, CSS, and [media attributes](/docs/player/styling/references#media-attributes).
 
 The following media attributes can be useful when building a controls container:
 

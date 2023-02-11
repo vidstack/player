@@ -1,7 +1,7 @@
 {
-  "name": "@vidstack/icons",
+  "name": "media-icons",
   "version": "0.2.0",
-  "description": "Beautifully hand-crafted collection of media icons.",
+  "description": "Open-source and beautifully hand-crafted collection of media icons.",
   "type": "module",
   "types": "dist/types/index.d.ts",
   "sideEffects": false,
@@ -46,5 +46,16 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "keywords": [
+    "open-source",
+    "icons",
+    "collection",
+    "set",
+    "audio",
+    "video",
+    "player",
+    "media",
+    "vidstack"
+  ]
 }

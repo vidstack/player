@@ -1,6 +1,6 @@
-import { pausePaths, playPaths } from '@vidstack/icons';
 import { defineCustomElement } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
+import { pausePaths, playPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
 import { useMedia } from '../../media/context';

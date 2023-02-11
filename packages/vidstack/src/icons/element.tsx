@@ -1,7 +1,7 @@
-import { lazyPaths, paths } from '@vidstack/icons';
 import { effect, peek, signal } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
+import { lazyPaths, paths } from 'media-icons';
 
 import type { MediaIconElement } from './types';
 
@@ -43,7 +43,7 @@ export const MediaIconDefinition = defineCustomElement<MediaIconElement>({
         <svg
           width={$size()}
           height={$size()}
-          viewBox="0 0 28 28"
+          viewBox="0 0 32 32"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           $prop:innerHTML={$paths}

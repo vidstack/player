@@ -1,6 +1,6 @@
-import { fullscreenExitPaths, fullscreenPaths } from '@vidstack/icons';
 import { defineCustomElement } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
+import { fullscreenExitPaths, fullscreenPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
 import { useMedia } from '../../media/context';

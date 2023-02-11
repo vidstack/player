@@ -23,15 +23,15 @@
   },
   "peerDependencies": {
     "@types/react": "^18.0.0",
-    "@vidstack/icons": "workspace:*",
     "maverick.js": "^0.32.3",
+    "media-icons": "workspace:*",
     "react": "^18.0.0",
     "vidstack": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "@vidstack/icons": "workspace:*",
     "maverick.js": "^0.32.3",
+    "media-icons": "workspace:*",
     "react": "^18.0.0",
     "rimraf": "^3.0.0",
     "tsup": "^6.5.0",

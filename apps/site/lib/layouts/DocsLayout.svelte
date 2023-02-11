@@ -1,5 +1,4 @@
 <script lang="ts">
-  import '$lib/styles/docs.css';
   import '@docsearch/css';
   import '$lib/styles/docsearch.css';
 

@@ -3,7 +3,7 @@ export function Icon({ width = 32, height = 32, slot, paths }: IconProps) {
     <svg
       width={width}
       height={height}
-      viewBox="0 0 28 28"
+      viewBox="0 0 32 32"
       fill="none"
       slot={slot}
       $prop:innerHTML={paths}

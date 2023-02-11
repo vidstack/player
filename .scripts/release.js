@@ -15,10 +15,11 @@ const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = minimist(process.argv.slice(2));
 const isDryRun = args.dry;
+const ignore = new Set(['media-icons']);
 const skippedPackages = [];
 const currentVersion = require('../package.json').version;
 const packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages'));
-const packages = packagesDir.filter((p) => !p.startsWith('.'));
+const packages = packagesDir.filter((pkg) => !pkg.startsWith('.') && !ignore.has(pkg));
 const preId =
   args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)?.[0]);
 const versionIncrements = [

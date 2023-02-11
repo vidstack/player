@@ -11,8 +11,19 @@ export default [
 
       if (component.tag.name === 'media-icon') {
         const type = data.attributes.find((attr) => attr.name === 'type')!;
-        const icons = readdirSync('node_modules/@vidstack/icons/raw');
-        type.values = icons.map((name) => ({ name: path.basename(name, path.extname(name)) }));
+        const icons = readdirSync('node_modules/media-icons/raw');
+        type.values = icons.map((fileName) => {
+          const iconName = path.basename(fileName, path.extname(fileName));
+          return {
+            name: iconName,
+            references: [
+              {
+                name: 'Preview Icon',
+                url: `https://vidstack.io/media-icons?lib=html&icon=${iconName}`,
+              },
+            ],
+          };
+        });
       }
 
       component.doctags

@@ -5,7 +5,7 @@
 
 <footer class="768:px-8 w-full px-6 py-10 text-base">
   <div class="mx-auto w-full max-w-[var(--navbar-max-width)]">
-    <div class="w-full flex mb-8 768:mb-16">
+    <div class="w-full flex mb-8 768:mb-16 992:pr-10">
       <div class="flex-1" />
       <div class="rounded-full w-20 h-6 border-border border-2" />
       <div class="rounded-full w-6 h-6 border-border border-2 ml-3" />
@@ -43,7 +43,7 @@
                   <a href="/docs/player/core-concepts/architecture">Architecture</a>
                 </li>
                 <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
-                  <a href="/docs/player/styling/basics">Styling</a>
+                  <a href="/docs/player/styling/foundation">Styling</a>
                 </li>
               </ul>
             </section>

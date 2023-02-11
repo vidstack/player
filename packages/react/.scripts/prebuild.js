@@ -96,7 +96,7 @@ async function buildComponents() {
 }
 
 async function buildIcons() {
-  const iconsDir = path.resolve(__dirname, '../node_modules/@vidstack/icons/raw');
+  const iconsDir = path.resolve(__dirname, '../node_modules/media-icons/raw');
   const files = await readdir(iconsDir, 'utf-8');
   const icons = {};
 
@@ -113,13 +113,13 @@ async function buildIcons() {
 
   const components = Object.keys(icons)
     .map(
-      (name) =>
-        `export const ${
-          kebabToPascalCase(name) + 'Icon'
+      (iconName) =>
+        `/** [Click here to preview icon](https://vidstack.io/media-icons?lib=react&icon=${iconName}) */\nexport const ${
+          kebabToPascalCase(iconName) + 'Icon'
         }: IconComponent = /* #__PURE__*/ forwardRef` +
         '((props, ref) => {\n' +
         `  return createElement(Icon, { ...props, ref, __paths: ${
-          kebabToCamelCase(name) + 'Paths'
+          kebabToCamelCase(iconName) + 'Paths'
         } });\n` +
         '});',
     )
@@ -127,7 +127,7 @@ async function buildIcons() {
 
   await writeFile(
     outFile,
-    `import { ${svgPathImports} } from '@vidstack/icons';
+    `import { ${svgPathImports} } from 'media-icons';
 import { createElement, forwardRef } from 'react';
 
 import { Icon, type IconComponent } from './icon';

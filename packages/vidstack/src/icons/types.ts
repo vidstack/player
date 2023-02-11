@@ -1,10 +1,10 @@
-import type { IconType } from '@vidstack/icons';
 import type { HTMLCustomElement } from 'maverick.js/element';
+import type { IconType } from 'media-icons';
 
 export interface MediaIconProps {
   /**
    * The type of icon. You can find a complete and searchable list on our website - see our
-   * [media catalog](https://vidstack.io/icons).
+   * [media icons catalog](https://vidstack.io/media-icons).
    */
   type: IconType | undefined;
   /**
@@ -22,7 +22,7 @@ export { type IconType };
 
 /**
  * The `<media-icon>` component dynamically loads and renders our custom Vidstack icons. See our
- * [media catalog](https://www.vidstack.io/icons) to preview them all. Do note, the icon `type` can
+ * [media icons catalog](https://www.vidstack.io/media-icons) to preview them all. Do note, the icon `type` can
  * be dynamically changed.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/display/icons}

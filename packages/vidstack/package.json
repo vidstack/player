@@ -32,8 +32,8 @@
     "test:server:watch": "SERVER=true vitest --watch"
   },
   "dependencies": {
-    "@vidstack/icons": "workspace:*",
     "maverick.js": "^0.32.3",
+    "media-icons": "workspace:*",
     "type-fest": "^3.5.0"
   },
   "devDependencies": {

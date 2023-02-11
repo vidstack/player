@@ -18,6 +18,7 @@
 
   export let open = false;
   export let overlay = false;
+  export let lockScrollbar = true;
 
   const dispatch = createEventDispatcher();
 
@@ -28,19 +29,19 @@
 
   function onOpenPopover() {
     open = true;
-    hideDocumentScrollbar(true);
+    if (lockScrollbar) hideDocumentScrollbar(true);
     dispatch('open');
   }
 
   function onClosePopover() {
     open = false;
-    hideDocumentScrollbar(false);
+    if (lockScrollbar) hideDocumentScrollbar(false);
     dispatch('close');
   }
 
   $: if ($isLargeScreen) {
     closeDialog?.();
-    hideDocumentScrollbar(false);
+    if (lockScrollbar) hideDocumentScrollbar(false);
   }
 </script>
 
@@ -49,7 +50,7 @@
     id={popoverButtonId}
     type="button"
     class={clsx(
-      'inline-flex w-full justify-center rounded-md p-2 text-lg font-medium',
+      'inline-flex w-full items-center flex-col justify-center rounded-md p-2 text-lg font-medium',
       'transform-gpu transition-transform hover:scale-[1.025]',
       open ? 'text-inverse' : 'text-soft hover:text-inverse',
     )}
@@ -89,7 +90,7 @@
       role="dialog"
     >
       <div
-        class="bg-elevate border-border flex min-h-[60px] flex-col overflow-hidden rounded-md border-[1.5px]"
+        class="bg-elevate border-border flex min-h-[60px] flex-col overflow-hidden rounded-md border"
       >
         <div class="z-20 flex items-center">
           <div class="flex-1" />

@@ -50,32 +50,6 @@ function applyFocusVisiblePolyfill(scope) {
   }
 
   /**
-   * Computes whether the given element should automatically trigger the
-   * `focus-visible` class being added, i.e. whether it should always match
-   * `:focus-visible` when focused.
-   * @param {Element} el
-   * @return {boolean}
-   */
-  function focusTriggersKeyboardModality(el) {
-    var type = el.type;
-    var tagName = el.tagName;
-
-    if (tagName === 'INPUT' && inputTypesAllowlist[type] && !el.readOnly) {
-      return true;
-    }
-
-    if (tagName === 'TEXTAREA' && !el.readOnly) {
-      return true;
-    }
-
-    if (el.isContentEditable) {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
    * Add the `focus-visible` class to the given element if it was not added by
    * the author.
    * @param {Element} el
@@ -146,7 +120,7 @@ function applyFocusVisiblePolyfill(scope) {
       return;
     }
 
-    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
+    if (hadKeyboardEvent) {
       addFocusVisibleClass(e.target);
     }
   }

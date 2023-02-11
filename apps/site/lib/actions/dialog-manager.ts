@@ -3,6 +3,8 @@ import { listen, tick } from 'svelte/internal';
 import { createDisposalBin } from '$lib/utils/events';
 import { wasEnterKeyPressed } from '$lib/utils/keyboard';
 
+import { FOCUSABLE_DIALOG_ELEMENTS } from './focus-trap';
+
 export type DialogManagerOptions = {
   onOpen?: () => void;
   onClose?: () => void;
@@ -15,20 +17,6 @@ export type DialogManagerOptions = {
 
 export type CloseDialogCallback = (focusBtn?: boolean) => void;
 
-export const FOCUSABLE_DIALOG_ELEMENTS = [
-  'a[href]',
-  'area[href]',
-  'input:not([disabled]):not([type="hidden"]):not([aria-hidden])',
-  'select:not([disabled]):not([aria-hidden])',
-  'textarea:not([disabled]):not([aria-hidden])',
-  'button:not([disabled]):not([aria-hidden])',
-  'iframe',
-  'object',
-  'embed',
-  '[contenteditable]',
-  '[tabindex]:not([tabindex^="-"])',
-];
-
 export function dialogManager(
   dialogBtn: HTMLElement,
   options: DialogManagerOptions = {},
@@ -37,8 +25,8 @@ export function dialogManager(
   const dialogDisposal = createDisposalBin();
 
   let open = false;
-  let currentListItemIndex: number;
-  let focusableElements: HTMLElement[];
+  let currentIndex: number;
+  let focusTargets: HTMLElement[];
 
   reset();
 
@@ -49,73 +37,72 @@ export function dialogManager(
     open = true;
 
     const dialogId = dialogBtn.getAttribute('aria-controls');
-    const dialogEl = document.querySelector(`#${dialogId}`);
+    const dialog = document.querySelector(`#${dialogId}`);
 
-    if (dialogEl) {
+    if (dialog) {
       // Prevent it bubbling up to document body so we can determine when to close dialog.
-      dialogDisposal.add(listen(dialogEl, 'click', (e) => e.stopPropagation()));
-      dialogDisposal.add(listen(dialogEl, 'pointerup', (e) => e.stopPropagation()));
-
-      disposal.add(
-        listen(dialogEl, 'vds-close-dialog', (e: CustomEvent<boolean>) => onCloseDialog(e.detail)),
-      );
+      dialogDisposal.add(listen(dialog, 'click', (e) => e.stopPropagation()));
+      dialogDisposal.add(listen(dialog, 'pointerup', (e) => e.stopPropagation()));
+      disposal.add(listen(dialog, 'vds-close-dialog', (e) => onCloseDialog(!!(e as any).detail)));
 
       // Prevent dialog opening triggering any of these by accident on touch.
-      for (const selector of FOCUSABLE_DIALOG_ELEMENTS) {
-        const elements = Array.from(dialogEl.querySelectorAll(selector)) as HTMLElement[];
-        for (const element of elements) {
-          element.style.pointerEvents = 'none';
-          setTimeout(() => {
-            element.style.pointerEvents = 'auto';
-          }, 500);
-        }
+      const focusTargets = Array.from(
+        dialog.querySelectorAll(FOCUSABLE_DIALOG_ELEMENTS.join(',')),
+      ) as HTMLElement[];
+
+      for (const element of focusTargets) {
+        element.style.pointerEvents = 'none';
+        setTimeout(() => {
+          element.style.pointerEvents = 'auto';
+        }, 500);
       }
 
       if (options.closeOnPointerLeave) {
-        dialogDisposal.add(listen(dialogEl, 'pointerleave', () => onCloseDialog()));
+        dialogDisposal.add(listen(dialog, 'pointerleave', () => onCloseDialog()));
       }
 
       if (options.closeOnSelectSelectors) {
-        for (const selector of options.closeOnSelectSelectors) {
-          const elements = Array.from(dialogEl.querySelectorAll(selector)) as HTMLElement[];
-          for (const element of elements) {
-            dialogDisposal.add(
-              listen(
-                element,
-                'keydown',
-                (e) => wasEnterKeyPressed(e) && setTimeout(() => onCloseDialog(true), 150),
-              ),
-            );
+        const closeTargets = Array.from(
+          dialog.querySelectorAll(options.closeOnSelectSelectors.join(',')),
+        ) as HTMLElement[];
 
-            let pointerTimer;
-            dialogDisposal.add(
-              listen(element, 'pointerup', () => {
-                window.clearTimeout(pointerTimer);
-                // Prevent user scrolling triggering close.
-                const y = dialogEl.scrollTop;
-                pointerTimer = setTimeout(() => {
-                  if (dialogEl.scrollTop === y) {
-                    onCloseDialog();
-                  }
-                }, 150);
-              }),
-            );
-          }
+        for (const element of closeTargets) {
+          dialogDisposal.add(
+            listen(
+              element,
+              'keydown',
+              (e) => wasEnterKeyPressed(e) && setTimeout(() => onCloseDialog(true), 150),
+            ),
+          );
+
+          let pointerTimer;
+          dialogDisposal.add(
+            listen(element, 'pointerup', () => {
+              window.clearTimeout(pointerTimer);
+              // Prevent user scrolling triggering close.
+              const y = dialog.scrollTop;
+              pointerTimer = setTimeout(() => {
+                if (dialog.scrollTop === y) {
+                  onCloseDialog();
+                }
+              }, 150);
+            }),
+          );
         }
       }
     }
 
     options.onOpen?.();
 
-    return dialogEl;
+    return dialog;
   }
 
-  function onCloseDialog(focusBtn = false) {
+  function onCloseDialog(keyboard = false) {
     if (!open) return;
     setTimeout(() => {
       reset();
       options.onClose?.();
-      if (focusBtn) {
+      if (keyboard) {
         dialogBtn?.focus();
       }
     }, 100);
@@ -124,20 +111,15 @@ export function dialogManager(
   function onOpenDialogWithKeyboard() {
     if (open) return;
 
-    const dialogEl = onOpenDialog();
-
-    if (!dialogEl) return;
-
-    dialogDisposal.add(listen(dialogEl, 'keydown', onDialogKeydown));
+    const dialog = onOpenDialog();
+    if (!dialog) return;
+    dialogDisposal.add(listen(dialog, 'keydown', onDialogKeydown));
 
     tick().then(() => {
-      for (const selector of options.focusSelectors ?? FOCUSABLE_DIALOG_ELEMENTS) {
-        const elements = Array.from(dialogEl.querySelectorAll(selector)) as HTMLElement[];
-        focusableElements.push(...elements);
-      }
-
-      if (focusableElements.length === 0) {
-        (dialogEl as HTMLElement)?.focus();
+      const selectors = options.focusSelectors ?? FOCUSABLE_DIALOG_ELEMENTS;
+      focusTargets = Array.from(dialog.querySelectorAll(selectors.join(','))) as HTMLElement[];
+      if (focusTargets.length === 0) {
+        (dialog as HTMLElement)?.focus();
       } else {
         focusChild(0);
       }
@@ -145,13 +127,16 @@ export function dialogManager(
   }
 
   function focusChild(index: number) {
-    focusableElements[index]?.focus();
-    currentListItemIndex = index;
+    focusTargets[index]?.focus();
+    currentIndex = index;
   }
 
   function nextIndex(delta: number) {
-    const noOfChildren = focusableElements.length;
-    return (currentListItemIndex + delta + noOfChildren) % noOfChildren;
+    let index = currentIndex;
+    do {
+      index = (index + delta + focusTargets.length) % focusTargets.length;
+    } while (focusTargets[index].offsetParent === null);
+    return index;
   }
 
   const keyboardActions = {
@@ -171,15 +156,13 @@ export function dialogManager(
       focusChild(0);
     },
     PageDown: () => {
-      focusChild(focusableElements.length - 1);
+      focusChild(focusTargets.length - 1);
     },
   };
 
-  function onDialogKeydown(event: KeyboardEvent) {
+  function onDialogKeydown(event: Event) {
     event.stopPropagation();
-
-    const action = keyboardActions[event.key];
-
+    const action = keyboardActions[(event as KeyboardEvent).key];
     if (action) {
       event.preventDefault();
       action(event);
@@ -188,8 +171,8 @@ export function dialogManager(
 
   function reset() {
     open = false;
-    focusableElements = [];
-    currentListItemIndex = -1;
+    focusTargets = [];
+    currentIndex = -1;
     dialogDisposal.dispose();
   }
 

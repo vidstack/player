@@ -12,9 +12,11 @@
   "dependencies": {
     "@docsearch/css": "^3.3.0",
     "@docsearch/js": "^3.3.0",
+    "@leeoniya/ufuzzy": "^1.0.2",
     "@vidstack/react": "workspace:*",
     "clsx": "^1.2.0",
     "html-entities": "^2.3.3",
+    "media-icons": "workspace:*",
     "svelte-class-transition": "^1.0.4",
     "vidstack": "workspace:*"
   },

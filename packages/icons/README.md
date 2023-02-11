@@ -1,83 +1,130 @@
-# Vidstack Icons
+# Media Icons
 
 [![package-badge]][package]
 [![discord-badge]][discord]
 
-Vidstack Icons is a beautifully hand-crafted collection of media icons. Our icons are
-bold, clean, consistent, and perfectly crafted. It is specifically designed to suit all types of
-media player interfaces.
+Media Icons is an open-source and beautifully hand-crafted collection of icons, designed by the
+[Vidstack][vidstack] team specifically for building audio and video players. Our icons are bold,
+clean, and consistent. All of the icons are free for both personal and commercial use.
 
-<img src="../../assets/icons.png" alt="Vidstack Icons Overview" />
+<img src="../../assets/media-icons.png" alt="Media Icons Overview" />
 
-## Catalog
+## Usage
 
-The easiest way to get started is by heading over to our [media catalog][catalog] on our website,
-searching for an icon, copying the raw SVG, and finally pasting it in your project.
+Media Icons can be used in any of the following ways:
 
-## Raw Import
+- [Catalog](#catalog)
+- [Bundle](#bundle)
+- [Raw SVG](#svg)
+- [Raw SVG Paths](#svg-paths)
+- [Figma](#figma)
 
-The raw SVG files can be imported from this package like so:
+### Catalog
 
-```js
-// Examples
-import PauseIcon from '@vidstack/icons/raw/pause.svg';
-import PlayIcon from '@vidstack/icons/raw/play.svg';
-```
+The easiest way to get started is by heading over to the [media icons catalog][catalog] on the
+Vidstack website, searching for an icon, copying the raw SVG, and finally pasting it in your
+project.
 
-## Bundle
+### Bundle
 
 We recommend using [unplugin-icons](https://github.com/antfu/unplugin-icons) as it has many
 bundler (Vite/Rollup/Webpack), framework (React/Vue/Preact/Solid/Svelte) and customization
 options.
 
-First, you'll need to configure the plugin like so:
+First, install the package:
+
+```bash
+npm i media-icons
+```
+
+Next, you'll need to configure the plugin like so:
 
 ```js
 import { FileSystemIconLoader } from 'unplugin-icons/loaders';
 
 Icons({
   customCollections: {
-    vidstack: FileSystemIconLoader('./node_modules/@vidstack/icons/raw'),
+    media: FileSystemIconLoader('./node_modules/media-icons/raw'),
   },
 });
 ```
 
-Now, you can import the icons like so:
+Finally, you can import the icons like so:
 
 ```js
-import PauseIcon from '~icons/vidstack/pause';
-import PlayIcon from '~icons/vidstack/play';
+// Replace {name} with the icon name.
+import ... from '~icons/media/{name}';
+// Examples
+import PauseIcon from '~icons/media/pause';
+import PlayIcon from '~icons/media/play';
 ```
 
-The complete list of icons can be found in our [media catalog][catalog].
+The complete list of icons can be found in our [media icons catalog][catalog].
 
-## React
+### SVG
 
-```bash
-npm i @vidstack/react
+The raw SVG files can be imported from this package like so:
+
+```js
+// Replace {name} with the icon name.
+import ... from 'media-icons/raw/{name}.svg';
+// Examples
+import PauseIcon from 'media-icons/raw/pause.svg';
+import PlayIcon from 'media-icons/raw/play.svg';
 ```
 
-```jsx
-import { PauseIcon, PlayIcon } from '@vidstack/react';
+### SVG Paths
 
-<PlayIcon width="28" height="28" />;
-<PauseIcon width="28" height="28" />;
+The raw SVG paths can be imported from this package like so:
+
+```js
+// camelCase variant of the icon name
+import { pausePaths, playPaths, ... } from 'media-icons';
 ```
 
-The complete list of icons can be found in our [media catalog][catalog].
+```js
+// All SVG paths (server-side)
+import { paths } from 'media-icons';
 
-## Figma
+paths.play; // string
+paths.pause;
+// ...
+```
 
-Our media icons are available on Figma! You can get a copy from our [community page][figma].
+```js
+// Dynamically loaded SVG paths (client-side)
+import { lazyPaths } from 'media-icons';
+
+lazyPaths.play(); // Promise<string>
+lazyPaths.pause();
+// ...
+```
+
+It's expected that the SVG paths are inserted into an `<svg>` element as `innerHTML` with the following setup:
+
+```html
+<svg
+  width="32"
+  height="32"
+  viewBox="0 0 32 32"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+></svg>
+```
+
+### Figma
+
+Our media icons are available on Figma! You can get a copy from the [Vidstack community page][figma].
 
 ## 📝 License
 
-Vidstack Icons is [MIT licensed](./LICENSE).
+Media Icons is [MIT licensed](./LICENSE).
 
 [vidstack]: https://vidstack.io
-[catalog]: https://vidstack.io/icons
-[package]: https://www.npmjs.com/package/@vidstack/icons
-[package-badge]: https://img.shields.io/npm/v/@vidstack/icons
+[catalog]: https://vidstack.io/media-icons
+[package]: https://www.npmjs.com/package/media-icons
+[package-badge]: https://img.shields.io/npm/v/media-icons
 [discord]: https://discord.com/invite/7RGU7wvsu9
 [figma]: https://www.figma.com/@vidstack
 [discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white

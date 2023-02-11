@@ -50,6 +50,7 @@ importers:
       '@docsearch/css': ^3.3.0
       '@docsearch/js': ^3.3.0
       '@iconify-json/ri': ^1.1.0
+      '@leeoniya/ufuzzy': ^1.0.2
       '@maverick-js/compiler': ^0.32.3
       '@sveltejs/vite-plugin-svelte': ^2.0.0
       '@tailwindcss/typography': ^0.5.0
@@ -62,6 +63,7 @@ importers:
       clsx: ^1.2.0
       gray-matter: ^4.0.0
       html-entities: ^2.3.3
+      media-icons: workspace:*
       nprogress: ^0.2.0
       postcss: ^8.4.0
       react: ^17.0.0
@@ -77,9 +79,11 @@ importers:
     dependencies:
       '@docsearch/css': 3.3.1
       '@docsearch/js': 3.3.1_xytgxt2sezzdzze37hf46cpsqm
+      '@leeoniya/ufuzzy': 1.0.2
       '@vidstack/react': link:../../packages/react
       clsx: 1.2.1
       html-entities: 2.3.3
+      media-icons: link:../../packages/icons
       svelte-class-transition: 1.0.4_svelte@3.55.0
       vidstack: link:../../packages/vidstack
     devDependencies:
@@ -116,8 +120,8 @@ importers:
   packages/react:
     specifiers:
       '@types/react': ^18.0.0
-      '@vidstack/icons': workspace:*
       maverick.js: ^0.32.3
+      media-icons: workspace:*
       react: ^18.0.0
       rimraf: ^3.0.0
       tsup: ^6.5.0
@@ -125,8 +129,8 @@ importers:
       vidstack: workspace:*
     devDependencies:
       '@types/react': 18.0.27
-      '@vidstack/icons': link:../icons
       maverick.js: 0.32.3
+      media-icons: link:../icons
       react: 18.2.0
       rimraf: 3.0.2
       tsup: 6.5.0_typescript@4.9.4
@@ -139,7 +143,6 @@ importers:
       '@open-wc/semantic-dom-diff': ^0.19.5
       '@open-wc/testing-helpers': ^2.1.2
       '@types/fscreen': ^1.0.1
-      '@vidstack/icons': workspace:*
       autoprefixer: ^10.4.2
       fscreen: ^1.2.0
       hls.js: ^1.2.0
@@ -147,6 +150,7 @@ importers:
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
       maverick.js: ^0.32.3
+      media-icons: workspace:*
       postcss: ^8.4.0
       rimraf: ^3.0.0
       tailwindcss: ^3.2.0
@@ -157,8 +161,8 @@ importers:
       vite: ^4.0.0
       vitest: ^0.27.0
     dependencies:
-      '@vidstack/icons': link:../icons
       maverick.js: 0.32.3
+      media-icons: link:../icons
       type-fest: 3.5.1
     devDependencies:
       '@maverick-js/compiler': 0.32.3
@@ -852,6 +856,10 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
+
+  /@leeoniya/ufuzzy/1.0.2:
+    resolution: {integrity: sha512-aqW3kkTvtGnBE6pvgZsSa89yvZPKCa+HPJDLfMZqfuh8LP1dAgzuN8XP9pH2CHN55PDnEqEe3x28AdvnkaUIIw==}
+    dev: false
 
   /@lit/reactive-element/1.5.0:
     resolution: {integrity: sha512-fQh9FDK0LPTwDk+0HhSZEtb8K0LTN1wXerwpGrWA+a8tWulYRDLI4vQDWp4GOIsewn0572KYV/oZ3+492D7osA==}

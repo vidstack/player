@@ -90,7 +90,7 @@
 
     <div class="992:flex 992:items-center hidden">
       <nav>
-        <ul class="mr-4 flex items-center space-x-4">
+        <ul class="mr-6 flex items-center space-x-6">
           {#each $links as navLink (navLink.title)}
             <NavLinkItem {...navLink} />
           {/each}

@@ -7,6 +7,7 @@
   import Overlay from '$lib/components/base/Overlay.svelte';
   import LibSelect from '$lib/components/docs/LibSelect.svelte';
   import VersionSelect from '$lib/components/docs/VersionSelect.svelte';
+  import { env } from '$lib/env';
   import { isLargeScreen } from '$lib/stores/screen';
   import { ariaBool } from '$lib/utils/aria';
   import { wasEnterKeyPressed } from '$lib/utils/keyboard';
@@ -40,13 +41,31 @@
   onMount(() => {
     scrollToActiveItem();
   });
+
+  let focusTimeout,
+    preventFocus = false;
+  $: if (env.browser) {
+    window.clearTimeout(focusTimeout);
+    if (!open && !$isLargeScreen) {
+      focusTimeout = setTimeout(() => {
+        preventFocus = true;
+      }, 500);
+    } else {
+      preventFocus = false;
+    }
+  }
 </script>
 
 <aside
   id="main-sidebar"
-  class={clsx('sidebar', isFunction(_class) ? _class({ open }) : _class)}
+  class={clsx(
+    'sidebar',
+    isFunction(_class) ? _class({ open }) : _class,
+    preventFocus ? 'invisible' : '',
+  )}
   role={!$isLargeScreen ? 'dialog' : null}
   aria-modal={ariaBool(!$isLargeScreen)}
+  aria-hidden={ariaBool(!open && !$isLargeScreen)}
   bind:this={sidebar}
   {style}
 >

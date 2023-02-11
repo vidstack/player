@@ -99,7 +99,10 @@
       {#if copy}
         <button
           type="button"
-          class="mr-2 px-2 py-1 text-soft hover:text-inverse"
+          class={clsx(
+            'mr-2 px-2 py-1 hover:text-inverse',
+            showCopiedCodePrompt ? 'text-inverse' : 'text-soft',
+          )}
           on:click={copyCodeToClipboard}
         >
           <div

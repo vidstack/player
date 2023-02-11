@@ -2,6 +2,7 @@
   import '$lib/styles/fonts.css';
   import '$lib/styles/app.css';
   import '$lib/styles/tailwind.css';
+  import '$lib/styles/docs.css';
   import '$lib/polyfills/focus-visible';
 
   import 'vidstack/styles/base.css';
