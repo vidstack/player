@@ -8,6 +8,13 @@ media-fullscreen-button {
   min-height: 48px;
 }
 
+media-play-button > shadow-root svg,
+media-mute-button > shadow-root svg,
+media-fullscreen-button > shadow-root svg {
+  width: 66.666%;
+  height: 66.666%;
+}
+
 media-play-button > shadow-root,
 media-mute-button > shadow-root,
 media-fullscreen-button > shadow-root {

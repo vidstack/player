@@ -1,10 +1,9 @@
-export function Icon({ width = 32, height = 32, slot, paths }: IconProps) {
+export function Icon({ slot, paths }: IconProps) {
   return (
     <svg
-      width={width}
-      height={height}
       viewBox="0 0 32 32"
       fill="none"
+      aria-hidden="true"
       slot={slot}
       $prop:innerHTML={paths}
     ></svg>
@@ -12,8 +11,6 @@ export function Icon({ width = 32, height = 32, slot, paths }: IconProps) {
 }
 
 export interface IconProps {
-  width?: number;
-  height?: number;
   slot?: string;
   paths: string;
 }
