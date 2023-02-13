@@ -25,6 +25,7 @@ export function loadPlayerSidebar(): SidebarLinks {
     'Core Concepts': links(slugs, /^\/core-concepts/),
     Providers: links(slugs, /^\/providers/),
     Styling: links(slugs, /^\/styling/),
+    Media: links(slugs, /^\/components\/media/),
     Layout: links(slugs, /^\/components\/layout/),
     Display: links(slugs, /^\/components\/display/),
     Buttons: links(slugs, /^\/components\/buttons/),

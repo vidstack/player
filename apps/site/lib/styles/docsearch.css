@@ -11,17 +11,16 @@
   --docsearch-muted-color: rgb(var(--color-soft));
   --docsearch-logo-color: rgb(var(--color-soft));
   --docsearch-hit-color: rgb(var(--color-soft));
+  --docsearch-hit-background: rgb(var(--color-elevate));
+  --docsearch-hit-shadow: none;
   --docsearch-hit-active-color: rgb(var(--color-inverse));
-  --docsearch-hit-background: none;
 }
 
 :root.dark {
   --docsearch-modal-shadow: none;
   --docsearch-footer-shadow: none;
-  --docsearch-hit-background: rgb(var(--color-elevate));
   --docsearch-hit-color: rgb(var(--color-soft));
   --docsearch-modal-background: rgb(var(--color-body));
-  --docsearch-hit-shadow: none;
   --docsearch-footer-background: rgb(var(--color-body));
   --docsearch-muted-color: rgb(var(--color-soft));
   --docsearch-logo-color: rgb(var(--color-soft));
@@ -109,11 +108,27 @@
 }
 
 .DocSearch-Hit {
-  @apply p-1;
+  @apply p-2;
+}
+
+.DocSearch-Hit-Tree {
+  @apply !hidden;
+}
+
+.DocSearch-Hit--Child {
+  @apply pl-6;
+}
+
+.DocSearch-Hit-icon {
+  @apply text-soft mr-1 flex h-10 w-10 items-center justify-center rounded-md bg-[#e5e5e5];
+}
+
+.dark .DocSearch-Hit-icon {
+  @apply bg-[#0e1a2d];
 }
 
 .DocSearch-Hit-source {
-  color: var(--docsearch-hit-text-color);
+  @apply text-inverse !py-2.5 !text-lg font-semibold;
 }
 
 .DocSearch-Hit[aria-selected='true'] a {

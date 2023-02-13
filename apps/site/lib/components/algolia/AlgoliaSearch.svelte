@@ -25,6 +25,20 @@
       searchParameters: {
         facetFilters: [`jslib:${$jsLib}`, `version:latest`],
       },
+      transformItems(items) {
+        return items.map((item) => {
+          const url = new URL(item.url);
+
+          if (item.type === 'lvl3' && item.hierarchy.lvl2) {
+            item._snippetResult.hierarchy.lvl1.value = `${item.hierarchy.lvl1} > ${item.hierarchy.lvl2}`;
+          }
+
+          return {
+            ...item,
+            url: `${url.pathname}${url.hash || ''}`,
+          };
+        });
+      },
     });
   }
 
