@@ -1,5 +1,6 @@
 <script lang="ts">
   import { colorScheme, isDarkColorScheme } from '$lib/stores/color-scheme';
+  import { isKeyboardClick } from '$lib/utils/keyboard';
 
   function onPointerUp() {
     $colorScheme = !$isDarkColorScheme ? 'dark' : 'light';
@@ -9,6 +10,9 @@
 <button
   class="min-w-[40px] min-h-[40px] flex items-center justify-center p-2 transform-gpu rounded-md border-0 transition-transform hover:scale-[1.1]"
   on:pointerup={onPointerUp}
+  on:keydown={(e) => {
+    if (isKeyboardClick(e)) onPointerUp();
+  }}
 >
   <span class="sr-only">Color Scheme</span>
   {#if !$isDarkColorScheme}

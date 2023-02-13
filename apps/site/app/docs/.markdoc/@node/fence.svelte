@@ -45,13 +45,17 @@
   let showCopiedCodePrompt = false;
   async function copyCodeToClipboard() {
     try {
-      const copiedCode =
+      let copiedCode =
         currentHighlightedLines.length > 0 && (copyHighlight || copySteps)
           ? unescapedRawCode
               .split('\n')
               .filter((_, i) => isHighlightLine(i + 1))
               .join('\n')
           : unescapedRawCode;
+
+      if (lang && /[j|t]sx/.test(lang) && lines.length === 1) {
+        copiedCode = copiedCode.replace(/;\n$/, '');
+      }
 
       await navigator.clipboard.writeText(copiedCode);
     } catch (e) {

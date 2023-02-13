@@ -34,7 +34,6 @@
   import DownloadIcon from '~icons/ri/file-download-fill';
 
   import { focusTrap } from '$lib/actions/focus-trap';
-  import Button from '$lib/components/base/Button.svelte';
   import MetaTags from '$lib/components/base/MetaTags.svelte';
   import Overlay from '$lib/components/base/Overlay.svelte';
   import { env } from '$lib/env';
@@ -368,7 +367,7 @@
             <Icon paths={$staticData.icons[icon].paths} />
           </div>
           <div class="text-center text-soft text-sm mt-4 w-full">
-            {icon}
+            {currentTab === 'react' ? kebabToPascalCase(icon) + 'Icon' : icon}
           </div>
         </button>
       {/each}
@@ -428,7 +427,9 @@
                   <Icon width="64" height="64" paths={$staticData.icons[selectedIcon].paths} />
                 {/if}
               </div>
-              <h1 class="mt-4 mb-2 text-xl font-medium text-inverse">{selectedIcon}</h1>
+              <h1 class="mt-4 mb-2 text-xl font-medium text-inverse">
+                {currentTab === 'react' ? kebabToPascalCase(selectedIcon) + 'Icon' : selectedIcon}
+              </h1>
               <a
                 class="px-4 py-2 hover:text-brand rounded-md"
                 href={downloadURL}
