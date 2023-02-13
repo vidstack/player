@@ -4,7 +4,7 @@ description: This component is used to display a media icon from our collection.
 
 Media Icons is a collection of icons we've designed at Vidstack to help with building audio and
 video player user interfaces. You can preview the entire collection in our
-[media icons catalog](/media-icons).
+[media icons catalog](/media-icons?lib=html).
 
 ## Usage
 

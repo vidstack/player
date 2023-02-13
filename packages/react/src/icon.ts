@@ -40,6 +40,7 @@ export const Icon: IconComponent = /* #__PURE__*/ forwardRef((props, ref) => {
     viewBox: '0 0 32 32',
     fill: 'none',
     xmlns: 'http://www.w3.org/2000/svg',
+    'aria-hidden': 'true',
     ref,
     dangerouslySetInnerHTML: { __html: __paths },
   });

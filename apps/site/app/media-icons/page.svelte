@@ -36,13 +36,14 @@
   import { focusTrap } from '$lib/actions/focus-trap';
   import MetaTags from '$lib/components/base/MetaTags.svelte';
   import Overlay from '$lib/components/base/Overlay.svelte';
+  import Select from '$lib/components/base/Select.svelte';
   import { env } from '$lib/env';
   import Footer from '$lib/layouts/Footer.svelte';
   import MainLayout from '$lib/layouts/MainLayout.svelte';
   import { ariaBool } from '$lib/utils/aria';
   import { isKeyboardClick, isKeyboardEvent } from '$lib/utils/keyboard';
   import { hideDocumentScrollbar } from '$lib/utils/scroll';
-  import { kebabToPascalCase, kebabToTitleCase } from '$lib/utils/string';
+  import { kebabToPascalCase, kebabToTitleCase, lowercaseFirstLetter } from '$lib/utils/string';
 
   import CodeFence from '../docs/.markdoc/@node/fence.svelte';
   import * as reactTemplate from './.code/icon.jsx?highlight';
@@ -55,26 +56,34 @@
 
   let searchText = '',
     searchInput: HTMLInputElement,
-    tabs = ['SVG', 'HTML', 'React'],
-    currentTab = getLibFromQuery(),
-    selectedIcon = getIconFromQuery(),
+    libs = ['SVG', 'HTML', 'React'],
+    currentLib = getLibFromQuery(),
+    currentIcon = getIconFromQuery(),
     closeDialogButton: HTMLButtonElement,
     isDialogOpen = false,
     menu: HTMLElement,
     menuId = 'icon-selection-menu';
 
-  if (env.browser && selectedIcon) {
-    onSelectIcon(selectedIcon, true);
+  if (env.browser && currentIcon) {
+    onSelectIcon(currentIcon, true);
   }
 
-  onMount(() =>
-    listen(document, 'keydown', (event) => {
+  onMount(() => {
+    const off = router.afterNavigate(() => {
+      currentLib = getLibFromQuery();
+      currentIcon = getIconFromQuery();
+      off();
+    });
+  });
+
+  onMount(() => {
+    return listen(document, 'keydown', (event) => {
       const keyboardEvent = event as KeyboardEvent;
       if ((keyboardEvent.metaKey && keyboardEvent.key === 'k') || keyboardEvent.key === '/') {
         requestAnimationFrame(() => searchInput.focus());
       }
-    }),
-  );
+    });
+  });
 
   function getLibFromQuery() {
     if (!env.browser) return 'svg';
@@ -92,18 +101,26 @@
     icons = Object.keys($staticData.icons),
     tags = icons.map((name) => name + '-' + $staticData.icons[name].tags);
 
-  $: indicies = search.filter(tags, searchText.replace(/\s+/, '-'));
+  $: indicies = search.filter(tags, normalizeSearchText(searchText));
   $: filteredIcons = indicies.map((i) => icons[i]);
 
-  $: svgSnippet = createSVGSnippet(selectedIcon);
-  $: rawImportSnippet = createRawImportSnippet(selectedIcon);
-  $: unpluginImportSnippet = createUnpluginImportSnippet(selectedIcon);
-  $: wcSnippet = createWCSnippet(selectedIcon);
-  $: reactSnippet = createReactSnippet(selectedIcon);
+  $: svgSnippet = createSVGSnippet(currentIcon);
+  $: rawImportSnippet = createRawImportSnippet(currentIcon);
+  $: unpluginImportSnippet = createUnpluginImportSnippet(currentIcon);
+  $: wcSnippet = createWCSnippet(currentIcon);
+  $: reactSnippet = createReactSnippet(currentIcon);
   $: downloadURL = env.browser
     ? URL.createObjectURL(new Blob([svgSnippet.code], { type: 'text/plain;charset=utf-8' }))
     : '';
   $: env.browser && hideDocumentScrollbar(isDialogOpen);
+
+  const upperCharRE = /[A-Z]/g;
+  function normalizeSearchText(text: string) {
+    return lowercaseFirstLetter(text.replace(/\s+/, '-')).replace(
+      upperCharRE,
+      (x) => '-' + x.toLowerCase(),
+    );
+  }
 
   const svgHighlight = svgTemplate.highlightedCode.split('\n');
   function createSVGSnippet(icon: string) {
@@ -173,7 +190,7 @@
 
   function onSelectIcon(icon: string, keyboard?: boolean) {
     updateSearchParams((params) => params.set('icon', icon));
-    selectedIcon = icon;
+    currentIcon = icon;
     isDialogOpen = true;
     if (keyboard) {
       tick().then(() => {
@@ -187,20 +204,20 @@
 
     if (keyboard) {
       const button = document.querySelector(
-        `[role="option"][aria-label="${kebabToTitleCase(selectedIcon) + ' Icon'}"]`,
+        `[role="option"][aria-label="${kebabToTitleCase(currentIcon) + ' Icon'}"]`,
       ) as HTMLButtonElement | null;
       button?.focus();
     }
 
     tick().then(() => {
-      selectedIcon = '';
+      currentIcon = '';
       updateSearchParams((params) => params.delete('icon'));
     });
   }
 
-  function onSelectTab(tab: string) {
-    currentTab = tab;
-    updateSearchParams((params) => params.set('lib', tab));
+  function onSelectLibrary(event: Event) {
+    currentLib = (event.target as HTMLSelectElement).value.toLowerCase();
+    updateSearchParams((params) => params.set('lib', currentLib));
   }
 
   function updateSearchParams(callback: (params: URLSearchParams) => void) {
@@ -301,42 +318,57 @@
     </div>
   </section>
 
-  <section class="my-20 px-4 768:px-12 max-w-[1440px] mx-auto" aria-label="Icons Collection">
-    <div class="relative flex-auto group max-w-xl mx-auto">
-      <input
-        class="border-b-2 font-base text-base placeholder:text-slate border-border w-full p-2 pl-8 block appearance-none"
-        type="search"
-        placeholder="Search all icons..."
-        bind:value={searchText}
-        bind:this={searchInput}
-        style="background: none;"
-      />
-      <svg
-        class="pointer-events-none absolute inset-y-0 left-1 h-full w-5 text-border group-focus-within:text-brand transition-colors duration-300 -mt-px"
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M11.1293 13.4711C11.0947 13.4365 11.0402 13.4321 11.0001 13.4601C9.86626 14.251 8.4873 14.7148 7 14.7148C3.13401 14.7148 0 11.5808 0 7.71484C0 3.84885 3.13401 0.714844 7 0.714844C10.866 0.714844 14 3.84885 14 7.71484C14 9.20245 13.536 10.5817 12.7447 11.7157C12.7167 11.7558 12.7212 11.8103 12.7558 11.8449L15.6463 14.7354C15.8416 14.9307 15.8416 15.2472 15.6463 15.4425L14.7271 16.3617C14.5318 16.557 14.2152 16.557 14.0199 16.3617L11.1293 13.4711ZM11.7012 7.71484C11.7012 10.3107 9.59682 12.415 7.00098 12.415C4.40513 12.415 2.30078 10.3107 2.30078 7.71484C2.30078 5.119 4.40513 3.01465 7.00098 3.01465C9.59682 3.01465 11.7012 5.119 11.7012 7.71484Z"
-          fill="currentColor"
+  <div class="mb-24 px-4 768:px-12 max-w-[1440px] mx-auto">
+    <section
+      class="my-16 992:my-20 flex items-center justify-center max-w-xl mx-auto"
+      aria-label="Search"
+    >
+      <div class="mr-4 mt-2">
+        <Select
+          title="Preferred SVG Library"
+          block
+          options={libs}
+          value={libs.find((lib) => lib.toLowerCase() === currentLib)}
+          on:change={onSelectLibrary}
         />
-      </svg>
-      <div
-        class="w-6 h-6 font-mono text-sm font-bold border border-border bg-elevate text-inverse flex items-center justify-center absolute right-1 top-2 rounded-sm"
-      >
-        /
       </div>
-    </div>
+      <div class="relative flex-auto group">
+        <input
+          class="border-b-2 font-base text-base placeholder:text-slate border-border w-full p-2 pl-8 block appearance-none"
+          type="search"
+          placeholder="Search all icons..."
+          bind:value={searchText}
+          bind:this={searchInput}
+          style="background: none;"
+        />
+        <svg
+          class="pointer-events-none absolute inset-y-0 left-1 h-full w-5 text-border group-focus-within:text-brand transition-colors duration-300 -mt-px"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M11.1293 13.4711C11.0947 13.4365 11.0402 13.4321 11.0001 13.4601C9.86626 14.251 8.4873 14.7148 7 14.7148C3.13401 14.7148 0 11.5808 0 7.71484C0 3.84885 3.13401 0.714844 7 0.714844C10.866 0.714844 14 3.84885 14 7.71484C14 9.20245 13.536 10.5817 12.7447 11.7157C12.7167 11.7558 12.7212 11.8103 12.7558 11.8449L15.6463 14.7354C15.8416 14.9307 15.8416 15.2472 15.6463 15.4425L14.7271 16.3617C14.5318 16.557 14.2152 16.557 14.0199 16.3617L11.1293 13.4711ZM11.7012 7.71484C11.7012 10.3107 9.59682 12.415 7.00098 12.415C4.40513 12.415 2.30078 10.3107 2.30078 7.71484C2.30078 5.119 4.40513 3.01465 7.00098 3.01465C9.59682 3.01465 11.7012 5.119 11.7012 7.71484Z"
+            fill="currentColor"
+          />
+        </svg>
+        <div
+          class="w-6 h-6 font-mono text-sm font-bold border border-border bg-elevate text-inverse flex items-center justify-center absolute right-1 top-2 rounded-sm"
+        >
+          /
+        </div>
+      </div>
+    </section>
 
-    <div
-      class="grid gap-4 768:gap-10 mt-12 grid-cols-[repeat(auto-fill,minmax(10rem,1fr))]"
+    <section
+      class="grid gap-4 768:gap-10 grid-cols-[repeat(auto-fill,minmax(10rem,1fr))]"
       role="listbox"
+      aria-label="Icons Collection"
     >
       {#each filteredIcons as icon (icon)}
         <button
@@ -347,7 +379,7 @@
           aria-controls={menuId}
           aria-haspopup="dialog"
           aria-label={kebabToTitleCase(icon) + ' Icon'}
-          aria-selected={ariaBool(icon === selectedIcon)}
+          aria-selected={ariaBool(icon === currentIcon)}
           on:pointerup|stopPropagation={() => onSelectIcon(icon)}
           on:keydown={(e) => {
             if (isKeyboardClick(e)) {
@@ -361,18 +393,18 @@
               'flex flex-col items-center justify-center text-inverse w-full border border-border',
               'hover:bg-elevate hover:border-2 group-focus:border-2 group-focus:bg-elevate',
               'h-[120px] rounded-md transition-colors duration-150',
-              selectedIcon === icon && 'bg-elevate border-2',
+              currentIcon === icon && 'bg-elevate border-2',
             )}
           >
             <Icon paths={$staticData.icons[icon].paths} />
           </div>
           <div class="text-center text-soft text-sm mt-4 w-full">
-            {currentTab === 'react' ? kebabToPascalCase(icon) + 'Icon' : icon}
+            {currentLib === 'react' ? kebabToPascalCase(icon) + 'Icon' : icon}
           </div>
         </button>
       {/each}
-    </div>
-  </section>
+    </section>
+  </div>
 
   <Overlay open={isDialogOpen} />
 
@@ -423,17 +455,17 @@
               <div
                 class="flex flex-col items-center border border-border justify-center text-inverse w-[120px] h-[120px] graph-paper bg-elevate"
               >
-                {#if selectedIcon}
-                  <Icon width="64" height="64" paths={$staticData.icons[selectedIcon].paths} />
+                {#if currentIcon}
+                  <Icon width="64" height="64" paths={$staticData.icons[currentIcon].paths} />
                 {/if}
               </div>
               <h1 class="mt-4 mb-2 text-xl font-medium text-inverse">
-                {currentTab === 'react' ? kebabToPascalCase(selectedIcon) + 'Icon' : selectedIcon}
+                {currentLib === 'react' ? kebabToPascalCase(currentIcon) + 'Icon' : currentIcon}
               </h1>
               <a
                 class="px-4 py-2 hover:text-brand rounded-md"
                 href={downloadURL}
-                download={`${selectedIcon}.svg`}
+                download={`${currentIcon}.svg`}
                 aria-label="download svg"
               >
                 <div class="flex flex-row items-center text-sm">
@@ -443,44 +475,13 @@
               </a>
             </div>
 
-            <div class="tabbed-links mt-8 mb-4 -ml-1 flex w-full p-1">
-              <div class="min-w-full flex-none p-1 max-w-full overflow-x-auto scrollbar">
-                <ul
-                  class="m-0 p-0 border-border flex space-x-5 whitespace-nowrap border-b"
-                  role="tablist"
-                >
-                  {#each tabs as tab (tab)}
-                    {@const id = tab.toLowerCase().replace(/\s/g, '-')}
-                    <li
-                      tabindex="0"
-                      class={clsx(
-                        '-mb-px flex font-medium cursor-pointer px-4 pt-3 pb-2.5 leading-6 hover:border-b-2 select-none',
-                        currentTab === id
-                          ? 'text-brand border-brand border-b-2 '
-                          : 'border-inverse',
-                        currentTab !== id && 'text-soft hover:text-inverse',
-                      )}
-                      id="${id}-tab"
-                      role="tab"
-                      aria-selected={ariaBool(currentTab === id)}
-                      aria-controls={`${id}-panel`}
-                      on:pointerup={() => onSelectTab(id)}
-                      on:keydown={(e) => isKeyboardClick(e) && onSelectTab(id)}
-                    >
-                      {tab}
-                    </li>
-                  {/each}
-                </ul>
-              </div>
-            </div>
-
-            <div class="py-4">
+            <div class="py-4 mt-8">
               <div
                 id="svg-panel"
                 role="tabpanel"
                 aria-labelledby="svg-tab"
-                aria-hidden={ariaBool(currentTab !== 'svg')}
-                class={clsx(currentTab !== 'svg' && 'hidden')}
+                aria-hidden={ariaBool(currentLib !== 'svg')}
+                class={clsx(currentLib !== 'svg' && 'hidden')}
               >
                 <div class="max-w-3xl">
                   <div>
@@ -502,8 +503,8 @@
                 id="html-panel"
                 role="tabpanel"
                 aria-labelledby="html-tab"
-                aria-hidden={ariaBool(currentTab !== 'html')}
-                class={clsx(currentTab !== 'html' && 'hidden')}
+                aria-hidden={ariaBool(currentLib !== 'html')}
+                class={clsx(currentLib !== 'html' && 'hidden')}
               >
                 <CodeFence lang="html" {...wcSnippet} copy />
                 <p>
@@ -517,8 +518,8 @@
                 id="react-panel"
                 role="tabpanel"
                 aria-labelledby="react-tab"
-                aria-hidden={ariaBool(currentTab !== 'react')}
-                class={clsx(currentTab !== 'react' && 'hidden')}
+                aria-hidden={ariaBool(currentLib !== 'react')}
+                class={clsx(currentLib !== 'react' && 'hidden')}
               >
                 <CodeFence lang="jsx" {...reactSnippet} copyHighlight highlight="3" />
                 <p>
