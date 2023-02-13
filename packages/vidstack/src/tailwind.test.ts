@@ -82,6 +82,71 @@ it('should create media variants', async () => {
   `);
 });
 
+it('should create _not_ media variants', async () => {
+  const content = vidstackPlugin.mediaAttributes
+    .map((mediaAttr) => `not-media-${mediaAttr}:opacity-100`)
+    .join(' ');
+
+  const css = await run(content);
+
+  expect(css).toMatchInlineSnapshot(`
+    "media-player:not([autoplay]) .not-media-autoplay\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([autoplay-error]) .not-media-autoplay-error\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([duration]) .not-media-duration\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([can-load]) .not-media-can-load\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([can-play]) .not-media-can-play\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([can-fullscreen]) .not-media-can-fullscreen\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([ended]) .not-media-ended\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([error]) .not-media-error\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([fullscreen]) .not-media-fullscreen\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([user-idle]) .not-media-user-idle\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([loop]) .not-media-loop\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([muted]) .not-media-muted\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([paused]) .not-media-paused\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([playing]) .not-media-playing\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([playsinline]) .not-media-playsinline\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([seeking]) .not-media-seeking\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([started]) .not-media-started\\\\:opacity-100 {
+        opacity: 1
+    }
+    media-player:not([waiting]) .not-media-waiting\\\\:opacity-100 {
+        opacity: 1
+    }"
+  `);
+});
+
 it('should create slider variants', async () => {
   const content = vidstackPlugin.sliderAttributes
     .map((sliderAttr) => `${sliderAttr}:opacity-100`)

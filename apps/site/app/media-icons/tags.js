@@ -372,8 +372,8 @@ export const tags = {
   ],
   'theatre-mode-exit': ['detail', 'close', 'dismiss', 'collapse', 'mini', 'hide', 'display'],
   'theatre-mode': ['focus', 'zen', 'open', 'expand', 'enter', 'enable', 'display'],
-  'thumbs-down': ['down-vote', 'no', 'dislike', 'disapprove', 'hand-down', 'yay'],
-  'thumbs-up': ['up-vote', 'yes', 'like', 'approve', 'hand-up', 'nay'],
+  'thumbs-down': ['down-vote', 'no', 'dislike', 'disapprove', 'hand-down', 'nay'],
+  'thumbs-up': ['up-vote', 'yes', 'like', 'approve', 'hand-up', 'yay'],
   timer: ['stopwatch', 'track', 'speed', 'rate', 'interval'],
   transcript: ['speech', 'text', 'print', 'words', 'display', 'aria', 'accessibility'],
   tv: ['device', 'smart-tv', 'big-screen', 'cast', 'project'],
@@ -382,6 +382,7 @@ export const tags = {
   'volume-low': ['unmute', 'minimum', 'speaker-wave', 'quiet', 'audio', 'sound', 'output'],
   'x-mark': [
     'cross',
+    'stop',
     'close',
     'exit',
     'hide',

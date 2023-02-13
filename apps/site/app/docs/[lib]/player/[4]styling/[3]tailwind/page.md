@@ -50,6 +50,29 @@ applied when a given media state is active.
 
 {% component this="../.tables/variants-table.md" /%}
 
+### Not Variants
+
+All [media variants](#media-variants) can be prefixed with `not-` to negate the selector.
+Classes with this prefix will be transformed into `media-player:not([state])` selectors.
+
+Few examples:
+
+- `not-media-paused`: Media is in the play state (not paused).
+- `not-media-playing`: Media playback is not active (not playing).
+- `not-media-can-play`: Media is not ready for playback (not can play).
+
+```html
+<!-- Input -->
+<div class="not-media-paused:opacity-0"></div>
+```
+
+```css
+/* Output */
+media-player:not([paused]) .not-media-paused\:opacity-0 {
+  opacity: 0;
+}
+```
+
 ## Media CSS Variables
 
 You can take advantage of [arbitrary values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values)
