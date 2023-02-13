@@ -84,3 +84,15 @@ import {
 ```
 
 You can find a complete list of HLS events in the [`<media-player>` API reference](/docs/player/components/layout/player/api#events--hls-lib-load-start).
+
+## Video Element
+
+You can obtain a reference to the underlying `HTMLVideoElement` element like so:
+
+{% code_snippet name="video-element" copy=true /%}
+
+### Event Target
+
+The `HTMLVideoElement` can also be referenced on _all media events_ like so:
+
+{% code_snippet name="event-target" copy=true /%}

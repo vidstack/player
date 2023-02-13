@@ -37,3 +37,9 @@ The `src` property on the player accepts any of the following source objects:
 You can obtain a reference to the underlying `HTMLVideoElement` element like so:
 
 {% code_snippet name="video-element" copy=true /%}
+
+### Event Target
+
+The `HTMLVideoElement` can also be referenced on _all media events_ like so:
+
+{% code_snippet name="event-target" copy=true /%}
