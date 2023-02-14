@@ -1,6 +1,6 @@
 :root {
   --docsearch-primary-color: rgb(var(--color-brand));
-  --docsearch-highlight-color: var(--docsearch-primary-color);
+  --docsearch-highlight-color: rgb(var(--color-focus));
   --docsearch-text-color: rgb(var(--color-soft));
   --docsearch-searchbox-shadow: none;
   --docsearch-searchbox-focus-background: transparent;
@@ -111,20 +111,28 @@
   @apply p-2;
 }
 
+.DocSearch-Hit-title {
+  @apply order-2;
+}
+
+.DocSearch-Hit-path {
+  @apply order-1 mb-1 self-start text-xs;
+}
+
 .DocSearch-Hit-Tree {
-  @apply !hidden;
+  /* @apply !hidden; */
 }
 
 .DocSearch-Hit--Child {
-  @apply pl-6;
+  @apply pl-5;
 }
 
 .DocSearch-Hit-icon {
-  @apply text-soft mr-1 flex h-10 w-10 items-center justify-center rounded-md bg-[#e5e5e5];
+  @apply text-soft mr-1 flex h-10 w-10 items-center justify-center rounded-md bg-[#e5e5e5] dark:bg-[#0e1a2d];
 }
 
-.dark .DocSearch-Hit-icon {
-  @apply bg-[#0e1a2d];
+.DocSearch-Hit-source {
+  @apply px-1 pt-3 pb-1 text-[1rem];
 }
 
 .DocSearch-Hit-source {
@@ -162,10 +170,6 @@
 
 .DocSearch-MagnifierLabel {
   color: var(--docsearch-text-color);
-}
-
-.DocSearch-Hit-source {
-  @apply px-1 pt-3 pb-1 text-[1rem];
 }
 
 .DocSearch-Search-Icon {
