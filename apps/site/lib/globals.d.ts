@@ -5,19 +5,42 @@
 /// <reference types="unplugin-icons/types/svelte" />
 
 declare module '*?highlight' {
-  const lang: string;
-  const code: string;
-  const highlightedCode: string;
-  export { code, highlightedCode, tokens };
+  export interface CodeHighlight {
+    lang: string;
+    code: string;
+    highlightedCode: string
+  };
+
+  const highlight: CodeHighlight;
+  export default highlight;
+}
+
+declare module '*?highlight-lazy' {
+  export interface LazyCodeHighlight {
+    lines: number;
+    scrollX: number;
+    loader: () => Promise<{default: {
+      lang: string;
+      code: string;
+      highlightedCode: string
+    }}>;
+  };
+
+  const highlight: LazyCodeHighlight;
+  export default highlight;
 }
 
 declare module ':virtual/code_snippets' {
-  export type CodeSnippet = {
+  export interface CodeSnippet {
     name: string;
     lines: number;
     scrollX: number;
     path: string;
-    loader: () => Promise<{ lang: string; code: string; highlightedCode: string }>;
+    loader: () => Promise<{default: {
+      lang: string;
+      code: string;
+      highlightedCode: string
+    }}>;
   };
 
   const snippets: CodeSnippet[];
@@ -25,7 +48,7 @@ declare module ':virtual/code_snippets' {
 }
 
 declare module ':virtual/code_previews' {
-  export type CodePreview = {
+  export interface CodePreview {
     name: string;
     path: string;
     loader: () => Promise<{ default: typeof import('svelte').SvelteComponent }>;

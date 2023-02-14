@@ -1,7 +1,11 @@
 <script lang="ts">
   import clsx from 'clsx';
+  import { createEventDispatcher } from 'svelte';
 
+  import { isKeyboardClick } from '$lib/utils/keyboard';
   import { isUndefined } from '$lib/utils/unit';
+
+  const dispatch = createEventDispatcher();
 
   export let primary = false;
   export let type: 'flat' | 'raised' = 'flat';
@@ -41,7 +45,12 @@
 </script>
 
 {#if isButton}
-  <button class={buttonClass} {...$$restProps}>
+  <button
+    class={buttonClass}
+    {...$$restProps}
+    on:pointerup={() => dispatch('press')}
+    on:keydown={(e) => isKeyboardClick(e) && dispatch('press')}
+  >
     {#if arrow === 'left'}
       <span class={arrowClass}>&lt;-</span>
     {/if}
@@ -52,7 +61,12 @@
   </button>
 {:else}
   <!-- svelte-ignore a11y-missing-attribute -->
-  <a class={buttonClass} {...$$restProps}>
+  <a
+    class={buttonClass}
+    {...$$restProps}
+    on:pointerup={() => dispatch('press')}
+    on:keydown={(e) => isKeyboardClick(e) && dispatch('press')}
+  >
     {#if arrow === 'left'}
       <span class={arrowClass}>&lt;-</span>
     {/if}

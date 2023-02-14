@@ -70,16 +70,15 @@ export default (options = {}) => {
         const { filePath, lang } = /** @type {import('./snippets').Snippet} */ (
           snippetsMap.get(id)
         );
-
         fileToId.set(filePath, id);
         const code = await readFile(filePath, { encoding: 'utf-8' });
         const highlightedCode = await highlight(code, lang);
-
-        return [
-          `export const lang = "${lang}";`,
-          `export const code = ${JSON.stringify(code)};`,
-          `export const highlightedCode = ${JSON.stringify(highlightedCode)};`,
-        ].join('\n');
+        const props = [
+          `lang: "${lang}"`,
+          `code: ${JSON.stringify(code)}`,
+          `highlightedCode: ${JSON.stringify(highlightedCode)}`,
+        ].join(',\n  ');
+        return `export default {\n  ${props}\n};`;
       }
 
       return null;

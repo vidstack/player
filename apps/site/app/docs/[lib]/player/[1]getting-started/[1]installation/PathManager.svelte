@@ -12,8 +12,12 @@
 
   const router = useRouter();
 
-  function onChange(lib: JSLibType, install: InstallMethodType, provider: MediaProviderType) {
-    if (window.scrollY === 0) return;
+  let skipFirst = true;
+  async function onChange(lib: JSLibType, install: InstallMethodType, provider: MediaProviderType) {
+    if (skipFirst) {
+      skipFirst = false;
+      return;
+    }
 
     const url = new URL('/docs/player/getting-started/installation', location.href);
 
@@ -34,7 +38,7 @@
       isCDN ? 'html' : lib,
     );
 
-    router.go(url, { scroll: () => false });
+    await router.go(url, { scroll: () => false });
   }
 
   $: if (env.browser && router.url.pathname.includes('getting-started/installation')) {

@@ -48,10 +48,10 @@
   import { kebabToPascalCase, kebabToTitleCase, lowercaseFirstLetter } from '$lib/utils/string';
 
   import CodeFence from '../docs/.markdoc/@node/fence.svelte';
-  import * as reactTemplate from './.code/icon.jsx?highlight';
-  import * as svgImportTemplate from './.code/svg-import.js?highlight';
-  import * as svgTemplate from './.code/svg.html?highlight';
-  import * as wcTemplate from './.code/wc.html?highlight';
+  import reactTemplate from './.code/icon.jsx?highlight';
+  import svgImportTemplate from './.code/svg-import.js?highlight';
+  import svgTemplate from './.code/svg.html?highlight';
+  import wcTemplate from './.code/wc.html?highlight';
   import Icon from './Icon.svelte';
   import IconGrid from './IconGrid.svelte';
 
