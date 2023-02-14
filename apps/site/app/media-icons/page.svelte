@@ -24,12 +24,13 @@
 </script>
 
 <script lang="ts">
+  import previews from ':virtual/code_previews';
   import uFuzzy from '@leeoniya/ufuzzy';
   import { staticData, useRouter } from '@vessel-js/svelte';
   import clsx from 'clsx';
   import { onMount, tick } from 'svelte';
   import Transition from 'svelte-class-transition';
-  import { listen } from 'svelte/internal';
+  import ArrowLeftIcon from '~icons/ri/arrow-left-fill';
   import CloseIcon from '~icons/ri/close-fill';
   import DownloadIcon from '~icons/ri/file-download-fill';
 
@@ -42,7 +43,7 @@
   import Footer from '$lib/layouts/Footer.svelte';
   import MainLayout from '$lib/layouts/MainLayout.svelte';
   import { ariaBool } from '$lib/utils/aria';
-  import { isKeyboardClick, isKeyboardEvent } from '$lib/utils/keyboard';
+  import { isKeyboardClick } from '$lib/utils/keyboard';
   import { hideDocumentScrollbar } from '$lib/utils/scroll';
   import { kebabToPascalCase, kebabToTitleCase, lowercaseFirstLetter } from '$lib/utils/string';
 
@@ -52,6 +53,7 @@
   import * as svgTemplate from './.code/svg.html?highlight';
   import * as wcTemplate from './.code/wc.html?highlight';
   import Icon from './Icon.svelte';
+  import IconGrid from './IconGrid.svelte';
 
   const router = useRouter();
 
@@ -59,13 +61,17 @@
     libs = ['SVG', 'HTML', 'React'],
     currentLib = getLibFromQuery(),
     currentIcon = getIconFromQuery(),
+    prevIcons: string[] = [],
     closeDialogButton: HTMLButtonElement,
     isDialogOpen = false,
-    menu: HTMLElement,
-    menuId = 'icon-selection-menu';
+    dialog: HTMLElement,
+    dialogId = 'icon-preview-dialog';
 
   if (env.browser && currentIcon) {
-    onSelectIcon(currentIcon, true);
+    onSelectIcon({
+      icon: currentIcon,
+      keyboard: true,
+    });
   }
 
   onMount(() => {
@@ -95,15 +101,34 @@
   $: indicies = fuzzy.filter(tags, normalizeSearchText(searchText));
   $: filteredIcons = indicies.map((i) => icons[i]);
 
+  $: currentTags = [
+    ...currentIcon.split('-'),
+    ...($staticData.icons[currentIcon]?.tags.split('-') || []),
+  ];
+  $: relatedIndicies = Array.from(
+    new Set(
+      currentTags.flatMap((searchTag) =>
+        Object.keys(tags).filter((i) => tags[i].includes(searchTag)),
+      ),
+    ),
+  );
+  $: relatedIcons = relatedIndicies.map((i) => icons[i]).filter((i) => i !== currentIcon);
+
   $: svgSnippet = createSVGSnippet(currentIcon);
   $: rawImportSnippet = createRawImportSnippet(currentIcon);
   $: unpluginImportSnippet = createUnpluginImportSnippet(currentIcon);
   $: wcSnippet = createWCSnippet(currentIcon);
   $: reactSnippet = createReactSnippet(currentIcon);
+
   $: downloadURL = env.browser
     ? URL.createObjectURL(new Blob([svgSnippet.code], { type: 'text/plain;charset=utf-8' }))
     : '';
+
   $: env.browser && hideDocumentScrollbar(isDialogOpen);
+
+  onMount(() => {
+    if (isDialogOpen) hideDocumentScrollbar(true);
+  });
 
   const upperCharRE = /[A-Z]/g;
   function normalizeSearchText(text: string) {
@@ -179,10 +204,24 @@
     };
   }
 
-  function onSelectIcon(icon: string, keyboard?: boolean) {
+  function onSelectIcon(detail: { icon: string; keyboard?: boolean }) {
+    const { icon, keyboard } = detail;
     updateSearchParams((params) => params.set('icon', icon));
+    prevIcons = [...prevIcons, currentIcon];
     currentIcon = icon;
     isDialogOpen = true;
+    tick().then(() => {
+      dialog?.scrollTo(0, 0);
+    });
+    if (keyboard) {
+      tick().then(() => {
+        closeDialogButton.focus();
+      });
+    }
+  }
+
+  function onSelectPreviousIcon(keyboard?: boolean) {
+    currentIcon = prevIcons.pop() ?? currentIcon;
     if (keyboard) {
       tick().then(() => {
         closeDialogButton.focus();
@@ -192,6 +231,7 @@
 
   function onCloseDialog(keyboard?: boolean) {
     isDialogOpen = false;
+    prevIcons = [];
 
     if (keyboard) {
       const button = document.querySelector(
@@ -331,45 +371,14 @@
       />
     </section>
 
-    <section
-      class="grid gap-4 768:gap-10 grid-cols-[repeat(auto-fill,minmax(10rem,1fr))]"
-      role="listbox"
-      aria-label="Icons Collection"
-    >
-      {#each filteredIcons as icon (icon)}
-        <button
-          class={clsx(
-            'flex flex-col items-center group justify-center cursor-pointer p-2 rounded-sm',
-          )}
-          role="option"
-          aria-controls={menuId}
-          aria-haspopup="dialog"
-          aria-label={kebabToTitleCase(icon) + ' Icon'}
-          aria-selected={ariaBool(icon === currentIcon)}
-          on:pointerup|stopPropagation={() => onSelectIcon(icon)}
-          on:keydown={(e) => {
-            if (isKeyboardClick(e)) {
-              e.stopPropagation();
-              onSelectIcon(icon, true);
-            }
-          }}
-        >
-          <div
-            class={clsx(
-              'flex flex-col items-center justify-center text-inverse w-full border border-border',
-              'hover:bg-elevate hover:border-2 group-focus:border-2 group-focus:bg-elevate',
-              'h-[120px] rounded-md transition-colors duration-150',
-              currentIcon === icon && 'bg-elevate border-2',
-            )}
-          >
-            <Icon paths={$staticData.icons[icon].paths} />
-          </div>
-          <div class="text-center text-soft text-sm mt-4 w-full">
-            {currentLib === 'react' ? kebabToPascalCase(icon) + 'Icon' : icon}
-          </div>
-        </button>
-      {/each}
-    </section>
+    <IconGrid
+      {currentIcon}
+      {currentLib}
+      {dialogId}
+      icons={$staticData.icons}
+      filter={filteredIcons}
+      on:select={(e) => onSelectIcon(e.detail)}
+    />
   </div>
 
   <Overlay open={isDialogOpen} />
@@ -385,13 +394,17 @@
     <div class="fixed inset-0 w-full h-full pointer-events-none z-50">
       <div class="flex w-full h-full items-center justify-center pointer-events-none">
         <ul
-          id={menuId}
-          class="bg-body mt-2 rounded-md border-border border pointer-events-auto max-w-[90vw] min-h-[70vh] max-h-[90vh] overflow-auto scrollbar relative"
-          role="menu"
+          id={dialogId}
+          class={clsx(
+            'bg-body mt-0 768:-mt-4 rounded-md border-border border pointer-events-auto',
+            'max-w-[95vw] 768:min-w-[700px] 768:max-w-[700px]',
+            'max-h-[90vh] 768:min-h-[700px] 768:max-h-[700px] overflow-auto scrollbar relative',
+          )}
+          role="dialog"
           tabindex="-1"
           aria-orientation="vertical"
           aria-hidden={ariaBool(!isDialogOpen)}
-          bind:this={menu}
+          bind:this={dialog}
           on:pointerup|stopPropagation
           on:keydown={(e) => {
             if (e.key !== 'Escape') e.stopPropagation();
@@ -400,18 +413,34 @@
           use:focusTrap
         >
           <div
-            class="z-20 flex items-center justify-end sticky top-0 left-0 right-0 w-full bg-body blur-bg"
+            class="z-20 flex items-center sticky top-0 left-0 right-0 w-full bg-body blur-bg text-soft"
           >
             <button
               class={clsx(
-                'text-soft hover:text-inverse p-4 rounded-md mt-[0.125rem] mr-[0.125rem]',
+                'hover:text-inverse p-4 rounded-md mt-[0.125rem]',
+                !open && 'pointer-events-none',
+                prevIcons.length === 0 ||
+                  (prevIcons.length === 1 &&
+                    (!prevIcons[0] || prevIcons[0] === currentIcon) &&
+                    'hidden'),
+              )}
+              on:pointerup={() => onSelectPreviousIcon()}
+              on:keydown={(e) => isKeyboardClick(e) && onSelectPreviousIcon(true)}
+            >
+              <Icon paths={$staticData.icons['arrow-left'].paths} />
+              <span class="sr-only">Previous Icon</span>
+            </button>
+            <div class="flex-1" />
+            <button
+              class={clsx(
+                'hover:text-inverse p-4 rounded-md mt-[0.125rem] mr-[0.125rem]',
                 !open && 'pointer-events-none',
               )}
               on:pointerup={() => onCloseDialog()}
               on:keydown={(e) => isKeyboardClick(e) && onCloseDialog(true)}
               bind:this={closeDialogButton}
             >
-              <CloseIcon width="28" height="28" />
+              <Icon paths={$staticData.icons['x-mark'].paths} />
               <span class="sr-only">Close</span>
             </button>
           </div>
@@ -419,7 +448,7 @@
           <div class="flex flex-col prose dark:prose-invert docs px-6 pb-4">
             <div class="flex flex-col items-center justify-center not-prose">
               <div
-                class="flex flex-col items-center border border-border justify-center text-inverse w-[120px] h-[120px] graph-paper bg-elevate"
+                class="flex flex-col items-center border border-border justify-center text-inverse w-[120px] h-[120px] rounded-sm graph-paper bg-elevate"
               >
                 {#if currentIcon}
                   <Icon width="64" height="64" paths={$staticData.icons[currentIcon].paths} />
@@ -441,59 +470,37 @@
               </a>
             </div>
 
-            <div class="py-4 mt-8">
-              <div
-                id="svg-panel"
-                role="tabpanel"
-                aria-labelledby="svg-tab"
-                aria-hidden={ariaBool(currentLib !== 'svg')}
-                class={clsx(currentLib !== 'svg' && 'hidden')}
-              >
-                <div class="max-w-3xl">
-                  <div>
-                    <h2 class="font-medium m-0 p-0 text-base mb-4">Code</h2>
-                    <CodeFence lang="html" {...svgSnippet} copy />
-                  </div>
-                  <div class="mt-4">
-                    <h2 class="font-medium m-0 p-0 text-base mb-4">Raw Import</h2>
+            <div class="py-4 mt-6">
+              <div class="max-w-3xl">
+                {#if currentLib === 'svg'}
+                  <CodeFence lang="html" {...svgSnippet} copy />
+                  <div class="mt-8">
+                    <h2 class="font-medium m-0 p-0 text-base mb-6">Raw Import</h2>
                     <CodeFence lang="js" {...rawImportSnippet} copy />
                   </div>
-                  <div class="mt-4">
-                    <h2 class="font-medium m-0 p-0 text-base mb-4">Unplugin Import</h2>
+                  <div class="mt-8">
+                    <h2 class="font-medium m-0 p-0 text-base mb-6">Unplugin Import</h2>
                     <CodeFence lang="js" {...unpluginImportSnippet} copy />
                   </div>
+                {:else if currentLib === 'html'}
+                  <CodeFence lang="html" {...wcSnippet} copy />
+                {:else if currentLib === 'react'}
+                  <CodeFence lang="jsx" {...reactSnippet} copyHighlight highlight="3" />
+                {/if}
+              </div>
+              {#if relatedIcons.length > 0}
+                <div class="mt-8">
+                  <h2 class="font-medium m-0 p-0 text-base mb-6">Related Icons</h2>
+                  <IconGrid
+                    compact
+                    {currentIcon}
+                    {currentLib}
+                    icons={$staticData.icons}
+                    filter={relatedIcons}
+                    on:select={(e) => onSelectIcon(e.detail)}
+                  />
                 </div>
-              </div>
-
-              <div
-                id="html-panel"
-                role="tabpanel"
-                aria-labelledby="html-tab"
-                aria-hidden={ariaBool(currentLib !== 'html')}
-                class={clsx(currentLib !== 'html' && 'hidden')}
-              >
-                <CodeFence lang="html" {...wcSnippet} copy />
-                <p>
-                  Follow the
-                  <a href="/docs/player/getting-started/installation">installation</a>
-                  guide to use this component.
-                </p>
-              </div>
-
-              <div
-                id="react-panel"
-                role="tabpanel"
-                aria-labelledby="react-tab"
-                aria-hidden={ariaBool(currentLib !== 'react')}
-                class={clsx(currentLib !== 'react' && 'hidden')}
-              >
-                <CodeFence lang="jsx" {...reactSnippet} copyHighlight highlight="3" />
-                <p>
-                  Follow the
-                  <a href="/docs/react/player/getting-started/installation">installation</a>
-                  guide to use this component.
-                </p>
-              </div>
+              {/if}
             </div>
           </div>
         </ul>
@@ -519,9 +526,6 @@
 
   .docs :global(.code-fence) {
     margin: 0;
-  }
-
-  div[role='tabpanel'][aria-hidden='true'] :global(*) {
-    display: none;
+    max-width: 100%;
   }
 </style>
