@@ -5,7 +5,9 @@
   "license": "MIT",
   "type": "module",
   "types": "dist/types/index.d.ts",
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/*/define/*.js"
+  ],
   "engines": {
     "node": ">=16"
   },
