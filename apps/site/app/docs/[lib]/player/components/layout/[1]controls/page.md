@@ -41,3 +41,10 @@ could place social icons at the top, play button in the middle, and scrubber at 
 completely up to you!
 
 {% code_preview name="styling" size="medium" css=true copyHighlight=true highlight="html:3-7|react:7-11" /%}
+
+## Examples
+
+See the media outlet docs for additional examples:
+
+- [Layouts](/docs/react/player/components/media/outlet#layouts)
+- [External Controls](/docs/react/player/components/media/outlet#slotting)
