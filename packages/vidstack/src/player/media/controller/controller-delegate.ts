@@ -30,7 +30,7 @@ export function createMediaControllerDelegate(
     handle(new DOMEvent<any>(type, init?.[0]));
   };
 
-  async function ready(duration, trigger) {
+  async function ready({ duration }, trigger) {
     if (peek(() => $store.canPlay)) return;
 
     dispatch('can-play', { detail: { duration }, trigger });
