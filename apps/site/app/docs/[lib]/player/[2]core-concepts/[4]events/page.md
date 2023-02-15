@@ -21,26 +21,56 @@ that triggered it or the origin event that kicked it off.
 
 {% code_snippet name="events" /%}
 
-👉 A complete list of media events fired can be found in the [player API reference](/docs/player/components/layout/player/api#events).
+👉 A complete list of media events fired can be found in the [Player API reference](/docs/player/components/layout/player/api#events).
 
 ## Request Events
 
-Request events are fired when 'requesting' the controller to update the provider's state. For example,
-the `media-play-request` event is a request to begin/resume playback, and as a consequence it'll
-trigger a `play()` call. The provider should respond with a `play` event to confirm the request was
-satisfied.
+Vidstack Player is built upon a request and response model for updating media state. Requests
+are dispatched as events to the `$tag:media-player` component. The player attempts to satisfy
+requests by performing operations on the provider based on the given request, and then attaching it
+to the corresponding media event.
+
+For example, the `media-play-request` event is a request to begin/resume playback, and as a
+consequence it'll trigger a `play()` call on the provider. The provider will respond with a
+`play` or `play-fail` event to confirm the request was satisfied.
 
 {% code_snippet name="request" /%}
+
+**When are request events fired?**
+
+Media request events are fired by Vidstack components generally in response to user actions.
+Most actions are a direct consequence to UI events such as pressing a button or dragging a
+slider. However, some actions may be indirect such as scrolling the player out of view, switching
+browser tabs, or the device going to sleep.
+
+**How are request events fired?**
+
+Request events are dispatched by using the
+[`MediaRemoteControl`](/docs/player/core-concepts/state-management#updating). A good practice is
+to always attach [event triggers](#event-triggers) to ensure requests can be traced back to
+their origin. This is the same way all Vidstack components dispatch requests internally.
+
+👉 A complete list of request events can be found in the [Player API reference](/docs/player/components/layout/player/api#events).
 
 ## Event Triggers
 
 All events in the library keep a history of **trigger events** which are stored as a
 chain. Each event points to the event that came before it all the way up to the **origin event**.
-The following is an example of a chain that is created when the play button is clicked:
+
+The following is an example of a chain that is created when the play button is clicked and
+media begins playing:
 
 {% triggers_visual /%}
 
 {% code_snippet name="triggers" /%}
+
+### Walking
+
+The event trigger chain can be walked through to discover additional information about how the event
+was triggered. For example, you could detect whether a playing event is resuming from a buffering
+event like so:
+
+{% code_snippet name="walking" /%}
 
 ## Event Types
 

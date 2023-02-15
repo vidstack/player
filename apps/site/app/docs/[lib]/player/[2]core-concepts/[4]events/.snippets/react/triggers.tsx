@@ -1,34 +1,17 @@
 import { MediaPlayer } from '@vidstack/react';
-import {
-  hasTriggerEvent,
-  walkTriggerEventChain,
-  type MediaPlayEvent,
-  type MediaPlayingEvent,
-} from 'vidstack';
+import { type MediaPlayEvent } from 'vidstack';
 
-function Example() {
+function Player() {
   function onPlay(event: MediaPlayEvent) {
+    // the event that triggered the media play request
+    const origin = event.originEvent; // e.g., PointerEvent
+
     // was this triggered by an actual person?
     const userPlayed = event.isOriginTrusted;
+
     // equivalent to above
-    const isTrusted = event.originEvent.isTrusted;
+    const isTrusted = event.originEvent?.isTrusted;
   }
 
-  function onPlaying(event: MediaPlayingEvent) {
-    // walk through each trigger event in the chain.
-    walkTriggerEventChain(event, (trigger) => {
-      console.log(trigger);
-    });
-
-    // is this resuming from buffering?
-    if (hasTriggerEvent(event, 'waiting')) {
-      // ...
-    }
-  }
-
-  return (
-    <MediaPlayer onPlay={onPlay} onPlaying={onPlaying}>
-      {/* ... */}
-    </MediaPlayer>
-  );
+  return <MediaPlayer onPlay={onPlay}>{/* ... */}</MediaPlayer>;
 }

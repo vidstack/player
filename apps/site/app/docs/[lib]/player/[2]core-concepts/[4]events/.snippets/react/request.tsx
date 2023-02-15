@@ -1,21 +1,29 @@
 import { MediaPlayer } from '@vidstack/react';
-import type { MediaPlayEvent, MediaPlayRequestEvent } from 'vidstack';
+import type { MediaPlayEvent, MediaPlayFailEvent, MediaPlayRequestEvent } from 'vidstack';
 
 function Player() {
-  // 1. request is made.
-  function onPlayRequest(event: MediaPlayRequestEvent) {
-    console.log('play request was made.');
+  // 1. request was made
+  function onMediaPlayRequest(event: MediaPlayRequestEvent) {
+    // ...
   }
 
-  // 2. request is satisfied.
-  function onPlay(event: MediaPlayEvent) {
-    // request events are attached to media events.
-    const playRequestEvent = event.request;
-    console.log('play request was satisfied.');
+  // 2. request succeeded
+  function onMediaPlay(event: MediaPlayEvent) {
+    // request events are attached to media events
+    const playRequestEvent = event.request; // MediaPlayRequestEvent
+  }
+
+  // 2. request failed
+  function onMediaPlayFail(event: MediaPlayFailEvent) {
+    // ...
   }
 
   return (
-    <MediaPlayer onPlayRequest={onPlayRequest} onPlay={onPlay}>
+    <MediaPlayer
+      onPlay={onMediaPlay}
+      onPlayFail={onMediaPlayFail}
+      onMediaPlayRequest={onMediaPlayRequest}
+    >
       {/* ... */}
     </MediaPlayer>
   );

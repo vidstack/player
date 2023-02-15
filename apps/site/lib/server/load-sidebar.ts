@@ -36,6 +36,7 @@ export function loadPlayerSidebar(): SidebarLinks {
 const WIP = new Set([
   'Architecture',
   'Accessibility',
+  'Keyboard',
   'Skins',
   'YouTube',
   'Vimeo',

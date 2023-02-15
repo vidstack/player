@@ -1,13 +1,17 @@
 const player = document.querySelector('media-player');
 
-// 1. request is made.
+// 1. request was made
 player.addEventListener('media-play–request', () => {
-  console.log('play request was made.');
+  // ...
 });
 
-// 2. request is satisfied.
+// 2. request succeeded
 player.addEventListener('play', (event) => {
-  // request events are attached to media events.
-  const playRequestEvent = event.request;
-  console.log('play request was satisfied.');
+  // request events are attached to media events
+  const playRequestEvent = event.request; // MediaPlayRequestEvent
+});
+
+// 2. request failed
+player.addEventListener('play-fail', (event) => {
+  // ...
 });
