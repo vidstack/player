@@ -51,6 +51,7 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "require": "./dist/server.cjs",
       "node": "./dist/server.js",
       "deno": "./dist/server.js",

@@ -44,6 +44,7 @@ export const MediaIconDefinition = defineCustomElement<MediaIconElement>({
         <svg
           width={$size()}
           height={$size()}
+          // @ts-expect-error
           color={$color()}
           viewBox="0 0 32 32"
           fill="none"

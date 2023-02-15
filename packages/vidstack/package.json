@@ -74,6 +74,7 @@
   "jsdelivr": "./dist/cdn/prod.js",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "test": "./dist/dev/index.js",
       "require": "./dist/server/index.cjs",
       "node": "./dist/server/index.js",
@@ -82,6 +83,7 @@
       "default": "./dist/prod/index.js"
     },
     "./elements": {
+      "types": "./dist/types/elements.d.ts",
       "test": "./dist/dev/elements.js",
       "require": "./dist/server/elements.cjs",
       "node": "./dist/server/elements.js",
@@ -90,6 +92,7 @@
       "default": "./dist/prod/elements.js"
     },
     "./define/*": {
+      "types": "./dist/types/define/*.d.ts",
       "test": "./dist/dev/define/*",
       "require": "./dist/server/define/*",
       "node": "./dist/server/define/*",
@@ -99,8 +102,14 @@
     },
     "./styles/*": "./styles/*",
     "./package.json": "./package.json",
-    "./tailwind.cjs": "./tailwind.cjs",
-    "./elements.json": "./elements.json",
+    "./tailwind.cjs": {
+      "types": "./tailwind.d.cts",
+      "default": "./tailwind.cjs"
+    },
+    "./elements.json": {
+      "types": "./elements.json.d.ts",
+      "default": "./elements.json"
+    },
     "./vscode.html-data.json": "./vscode.html-data.json"
   },
   "publishConfig": {
