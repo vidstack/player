@@ -38,6 +38,9 @@ export const mediaStore = createStore<MediaStore>({
   view: 'video',
   volume: 1,
   waiting: false,
+  get currentSrc() {
+    return this.source;
+  },
   get bufferedAmount() {
     const buffered = this.buffered;
     return buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);

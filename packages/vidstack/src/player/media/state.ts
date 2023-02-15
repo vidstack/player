@@ -245,6 +245,8 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc}
    */
   source: MediaSrc;
+  /** Alias for `source`. */
+  currentSrc: MediaSrc;
   /**
    * Whether media playback has started. In other words it will be true if `currentTime > 0`.
    *
