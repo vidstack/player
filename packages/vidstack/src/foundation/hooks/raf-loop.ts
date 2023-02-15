@@ -10,7 +10,7 @@ export function createRAFLoop(callback: () => void) {
   }
 
   function loop() {
-    id = window.requestAnimationFrame(() => {
+    id = window.requestAnimationFrame(function rafLoop() {
       if (isUndefined(id)) return;
       callback();
       loop();
