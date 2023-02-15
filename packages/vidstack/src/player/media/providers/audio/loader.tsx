@@ -11,7 +11,9 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
 
   canPlay({ src, type }: MediaSrc) {
     return isString(src)
-      ? AUDIO_EXTENSIONS.test(src) || AUDIO_TYPES.has(type)
+      ? AUDIO_EXTENSIONS.test(src) ||
+          AUDIO_TYPES.has(type) ||
+          (src.startsWith('blob:') && type === 'audio/object')
       : type === 'audio/object';
   }
 

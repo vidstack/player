@@ -6,6 +6,7 @@ import type {
   MediaControllerEvents,
   MediaControllerProps,
 } from '../media/controller/types';
+import type { MediaResource } from '../media/types';
 
 export interface MediaPlayerProps extends MediaControllerProps {
   /**
@@ -15,11 +16,9 @@ export interface MediaPlayerProps extends MediaControllerProps {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject}
    */
   src:
-    | string
-    | Blob
-    | MediaStream
-    | MediaSource
-    | { src: string | MediaStream | Blob | MediaSource; type?: string }[];
+    | MediaResource
+    | { src: MediaResource; type?: string }
+    | { src: MediaResource; type?: string }[];
   /**
    * The aspect ratio of the player media given as 'width/height' (e.g., 16/9).
    */

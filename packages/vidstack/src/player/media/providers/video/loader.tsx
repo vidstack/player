@@ -15,6 +15,7 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
     return isString(src.src)
       ? VIDEO_EXTENSIONS.test(src.src) ||
           VIDEO_TYPES.has(src.type) ||
+          (src.src.startsWith('blob:') && src.type === 'video/object') ||
           (isHLSSrc(src) && (__SERVER__ || canPlayHLSNatively()))
       : src.type === 'video/object';
   }

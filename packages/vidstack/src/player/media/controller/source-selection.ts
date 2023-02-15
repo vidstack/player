@@ -110,9 +110,11 @@ export function useSourceSelection(
   });
 }
 
-function normalizeSrc(src: MediaPlayerProps['src']) {
-  return (isArray(src) ? src : [{ src }]).map(({ src, type }) => ({
-    src,
-    type: type ?? (!isString(src) ? 'video/object' : '?'),
-  }));
+function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
+  return (isArray(src) ? src : [!isString(src) && 'src' in src ? src : { src }]).map(
+    ({ src, type }) => ({
+      src,
+      type: type ?? (!isString(src) || src.startsWith('blob:') ? 'video/object' : '?'),
+    }),
+  );
 }

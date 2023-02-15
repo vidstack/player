@@ -41,7 +41,9 @@ export interface MediaErrorDetail {
   mediaError?: MediaError;
 }
 
+export type MediaResource = string | MediaStream | MediaSource | Blob;
+
 export type MediaSrc = {
-  src: string | MediaStream | MediaSource | Blob;
+  src: MediaResource;
   type: string;
 };
