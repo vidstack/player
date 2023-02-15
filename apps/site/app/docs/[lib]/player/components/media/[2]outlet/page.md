@@ -1,5 +1,5 @@
 ---
-title: Media Outlet
+title: Outlet
 description: This component is used as a render target for the current provider.
 ---
 
