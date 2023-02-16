@@ -5,9 +5,15 @@ description: This component is used to mute and unmute media.
 ## Usage
 
 The `$tag:media-mute-button` component will toggle the `muted` state of media as it's pressed by
-dispatching a `media-mute-request`, and `media-unmute-request` event to the media controller.
+dispatching a `media-mute-request`, and `media-unmute-request` event to the player.
 
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:6" /%}
+
+## Custom Icons
+
+Here's an example containing custom muted and volume icons:
+
+{% code_snippet name="custom-icons" copyHighlight=true highlight="react:3-" /%}
 
 ## Styling
 
@@ -36,11 +42,11 @@ media-mute-button[volume-high] {
 }
 
 /* Style default icons. */
-media-mute-button [slot='volume-muted'] {
+media-mute-button svg[slot='volume-muted'] {
 }
-media-mute-button [slot='volume-low'] {
+media-mute-button svg[slot='volume-low'] {
 }
-media-mute-button [slot='volume-high'] {
+media-mute-button svg[slot='volume-high'] {
 }
 ```
 
@@ -58,8 +64,8 @@ media-mute-button.focus-visible {
 }
 ```
 
-## Custom Icons
+## Tailwind
 
-Here's an example containing custom muted and volume icons:
+The following is a headless example using Tailwind:
 
-{% code_snippet name="custom-icons" copyHighlight=true highlight="html:3-13|react:6-10" /%}
+{% code_snippet name="tailwind" copyHighlight=true highlight="react:3-" /%}

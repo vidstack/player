@@ -25,10 +25,9 @@ Icons can be further customized with CSS like so:
 ```css {% copy=true %}
 /* all icons */
 media-icon {
-}
-
-/* target svg */
-media-icon svg {
+  width: 32px;
+  height: 32px;
+  color: white;
 }
 
 /* specific icon */

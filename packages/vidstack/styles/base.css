@@ -60,6 +60,16 @@ media-player[aspect-ratio] media-outlet > shadow-root > * {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
+media-icon {
+  width: 32px;
+  height: 32px;
+}
+
+media-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
 media-time {
   display: inline-block;
   contain: content;
@@ -108,6 +118,10 @@ media-mute-button.focus-visible,
 media-fullscreen-button.focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
+}
+
+media-fullscreen-button[hidden] {
+  display: none;
 }
 
 /*

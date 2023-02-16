@@ -5,9 +5,15 @@ description: This component is used to play and pause media.
 ## Usage
 
 The `$tag:media-play-button` component will toggle the `paused` state of media as it's pressed by
-dispatching a `media-play-request`, and `media-pause-request` event to the media controller.
+dispatching a `media-play-request`, and `media-pause-request` event to the player.
 
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:6" /%}
+
+## Custom Icons
+
+Here's an example containing a custom play and pause icon:
+
+{% code_snippet name="custom-icons" copyHighlight=true highlight="react:3-" /%}
 
 ## Styling
 
@@ -28,9 +34,9 @@ media-play-button:not([paused]) {
 }
 
 /* Style default icons. */
-media-play-button [slot='play'] {
+media-play-button svg[slot='play'] {
 }
-media-play-button [slot='pause'] {
+media-play-button svg[slot='pause'] {
 }
 ```
 
@@ -48,8 +54,8 @@ media-play-button.focus-visible {
 }
 ```
 
-## Custom Icons
+## Tailwind
 
-Here's an example containing a custom play and pause icon:
+The following is a headless example using Tailwind:
 
-{% code_snippet name="custom-icons" copyHighlight=true highlight="html:3-10|react:6-9" /%}
+{% code_snippet name="tailwind" copyHighlight=true highlight="react:3-" /%}

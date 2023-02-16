@@ -6,7 +6,7 @@ description: This component is used to enter and exit fullscreen.
 
 The `$tag:media-fullscreen-button` component will toggle the `fullscreen` state of media as it's
 pressed by dispatching a `media-enter-fullscreen-request`, and `media-exit-fullscreen-request`
-event to the media controller.
+event to the player.
 
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:6" /%}
 
@@ -34,6 +34,12 @@ By setting `target` to `provider`, the controller will only request fullscreen o
 meaning your custom UI will _not_ be displayed when in fullscreen.
 {% /callout %}
 
+## Custom Icons
+
+Here's an example containing a custom enter and exit icon:
+
+{% code_snippet name="custom-icons" copyHighlight=true highlight="react:3-" /%}
+
 ## Styling
 
 You can override the default styles with CSS like so:
@@ -50,6 +56,10 @@ media-fullscreen-button[fullscreen] {
 
 /* Apply styles when media is _not_ fullscreened. */
 media-fullscreen-button:not([fullscreen]) {
+}
+
+/* Apply styles when fullscreen is not supported. */
+media-fullscreen-button[hidden] {
 }
 
 /* Style default icons. */
@@ -73,8 +83,8 @@ media-fullscreen-button.focus-visible {
 }
 ```
 
-## Custom Icons
+## Tailwind
 
-Here's an example containing a custom enter and exit icon:
+The following is a headless example using Tailwind:
 
-{% code_snippet name="custom-icons" copyHighlight=true highlight="html:3-10|react:6-9" /%}
+{% code_snippet name="tailwind" copyHighlight=true highlight="react:3-" /%}

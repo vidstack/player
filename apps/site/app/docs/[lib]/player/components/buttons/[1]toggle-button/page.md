@@ -7,7 +7,7 @@ description: This component is a generic button for displaying on and off states
 The `$tag:media-toggle-button` component is a generic toggle that can be used to display
 on (pressed) and off (not-pressed) states.
 
-{% code_preview name="usage" size="xsmall" copy=true /%}
+{% code_preview name="usage" size="xsmall" copyHighlight=true highlight="react:3-" /%}
 
 By default, the toggle will start in the off (not-pressed) state. You can start in the on state
 (pressed) like so:
@@ -45,3 +45,9 @@ media-toggle-button.focus-visible {
   outline: 1px auto purple;
 }
 ```
+
+## Tailwind
+
+The following is a headless example using Tailwind:
+
+{% code_snippet name="tailwind" copyHighlight=true highlight="react:3-" /%}

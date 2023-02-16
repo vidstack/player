@@ -8,7 +8,7 @@ The `$tag:media-time-slider` component receives time updates from the provider t
 and actively dispatches a `media-seeking-request` event (throttled to once per `100ms`) as the
 slider value changes.
 
-Seeking requests let the media controller know that the user is actively seeking but they haven't
+Seeking requests let the player know that the user is actively seeking but they haven't
 determined the final playback position they want to seek to. When the user stops dragging the
 slider, a `media-seek-request` event will be fired to request updating the current playback time
 to the slider's value.

@@ -53,8 +53,19 @@ module.exports = createPlugin.withOptions(function (options) {
       `media-player:not([can-play]) &`,
     ]);
 
+    // slider
     sliderAttributes.forEach((name) => {
       addVariant(`${sliderPrefix}${name}`, `media-player *[role="slider"][${name}] &`);
     });
+
+    // toggle
+    addVariant('pressed', `[role="button"][pressed] &`);
+    addVariant('not-pressed', `[role="button"]:not([pressed]) &`);
+
+    // volume
+    addVariant(`${mediaPrefix}volume-low`, `media-mute-button[volume-low] &`);
+    addVariant(`not-${mediaPrefix}volume-low`, `media-mute-button:not([volume-low]) &`);
+    addVariant(`${mediaPrefix}volume-high`, `media-mute-button[volume-high] &`);
+    addVariant(`not${mediaPrefix}volume-high`, `media-mute-button:not([volume-high]) &`);
   };
 });

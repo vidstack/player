@@ -6,8 +6,8 @@ import type { MediaControllerProps } from './types';
 
 /**
  * This hook is responsible for dispatching media events that are in response to prop changes. Other
- * events dispatched by the media controller are in response to a media events, these events are
- * the odd ones that are in response to prop changes.
+ * events dispatched by the player are in response to a media events, these events are the odd ones
+ * that are in response to prop changes.
  */
 export function useMediaPropChange(
   { $player, $store }: MediaContext,

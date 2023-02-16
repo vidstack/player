@@ -1,7 +1,1 @@
-<media-icon type="chromecast" size="32" />
-
-<style>
-  media-icon {
-    color: rgb(var(--color-inverse));
-  }
-</style>
+<media-icon class="w-10 h-10 text-inverse" type="chromecast" />

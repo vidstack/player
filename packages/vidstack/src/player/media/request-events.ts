@@ -146,7 +146,7 @@ export interface MediaHidePosterRequestEvent extends DOMEvent<void> {}
 
 /**
  * Internal event that is fired by a media provider when requesting media playback to restart after
- * reaching the end. This event also helps notify the media controller that media will be looping.
+ * reaching the end. This event also helps notify the player that media will be looping.
  *
  * @bubbles
  * @composed

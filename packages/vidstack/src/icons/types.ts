@@ -7,20 +7,6 @@ export interface MediaIconProps {
    * [media icons catalog](https://vidstack.io/media-icons).
    */
   type: IconType | undefined;
-  /**
-   * The color attribute is used to set the `currentColor` property of the SVG element which
-   * indirectly sets all path fill and stroke values.
-   *
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/color}
-   */
-  color: string | undefined;
-  /**
-   * The horizontal (width) and vertical (height) length of the underlying `<svg>` element.
-   *
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width}
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height}
-   */
-  size: number;
 }
 
 export interface MediaIconMembers extends MediaIconProps {}
@@ -35,8 +21,8 @@ export { type IconType };
  * @docs {@link https://www.vidstack.io/docs/player/components/display/icons}
  * @example
  * ```html
- * <media-icon type="play" size="32"></media-icon>
- * <media-icon type="pause" size="32"></media-icon>
+ * <media-icon type="play"></media-icon>
+ * <media-icon type="pause"></media-icon>
  * ```
  */
 export interface MediaIconElement extends HTMLCustomElement<MediaIconProps>, MediaIconMembers {}

@@ -19,7 +19,8 @@
 
   $: highlightLines = (highlight?.split(',').map((item) => {
     const range = item.split('-');
-    if (range.length === 1) range.push(range[0]);
+    if (range[1] === '') range[1] = linesCount - 1 + '';
+    else if (range.length === 1) range.push(range[0]);
     return range.map((str) => Number.parseInt(str, 10));
   }) ?? []) as [number, number][];
 
@@ -53,8 +54,8 @@
               .join('\n')
           : unescapedRawCode;
 
-      if (lang && /[j|t]sx/.test(lang) && lines.length === 1) {
-        copiedCode = copiedCode.replace(/;\n$/, '');
+      if (lang && /[j|t]sx/.test(lang)) {
+        copiedCode = copiedCode.replace(/;\n?$/, '');
       }
 
       await navigator.clipboard.writeText(copiedCode);

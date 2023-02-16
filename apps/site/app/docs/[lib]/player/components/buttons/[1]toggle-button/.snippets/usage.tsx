@@ -1,10 +1,6 @@
-import { MediaToggleButton } from '@vidstack/react';
+import { MediaToggleButton, ThumbsDownIcon, ThumbsUpIcon } from '@vidstack/react';
 
-function Toggle() {
-  return (
-    <MediaToggleButton aria-label="...">
-      <svg slot="on">{/* ... */}</svg>
-      <svg slot="off">{/* ... */}</svg>
-    </MediaToggleButton>
-  );
-}
+<MediaToggleButton aria-label="...">
+  <ThumbsUpIcon slot="on" />
+  <ThumbsDownIcon slot="off" />
+</MediaToggleButton>;
