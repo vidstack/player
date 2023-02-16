@@ -23,40 +23,38 @@ const mediaAttributes = [
 
 const sliderAttributes = ['dragging', 'pointing', 'interactive'];
 
-const vidstackPlugin = createPlugin(function ({ addBase, addVariant }) {
-  mediaAttributes.forEach((name) => {
-    addVariant(name, `media-player[${name}] &`);
-    addVariant(`not-${name}`, `media-player:not([${name}]) &`);
-    // media prefix
-    addVariant(`media-${name}`, `media-player[${name}] &`);
-    addVariant(`not-media-${name}`, `media-player:not([${name}]) &`);
-  });
+module.exports = createPlugin.withOptions(function (options) {
+  const mediaPrefix = options?.mediaPrefix ? `${options.mediaPrefix}-` : '';
+  const sliderPrefix = options?.sliderPrefix ? `${options.sliderPrefix}-` : '';
 
-  ['', 'media-'].map((prefix) => {
+  return function ({ addBase, addVariant }) {
+    mediaAttributes.forEach((name) => {
+      addVariant(`${mediaPrefix}${name}`, `media-player[${name}] &`);
+      addVariant(`not-${mediaPrefix}${name}`, `media-player:not([${name}]) &`);
+    });
+
     // buffering
-    addVariant(`${prefix}buffering`, [`media-player:not([can-play]) &`, `media-player[waiting] &`]);
-    addVariant(`not-${prefix}buffering`, [`media-player[can-play]:not([waiting]) &`]);
+    addVariant(`${mediaPrefix}buffering`, [
+      `media-player:not([can-play]) &`,
+      `media-player[waiting] &`,
+    ]);
+    addVariant(`not-${mediaPrefix}buffering`, [`media-player[can-play]:not([waiting]) &`]);
+
     // can-control
     addBase({
-      [`media-player[ios-controls] *[class*="${prefix}can-control"]`]: {
+      [`media-player[ios-controls] *[class*="${mediaPrefix}can-control"]`]: {
         display: 'none !important',
       },
     });
-    addVariant(`${prefix}can-control`, [`media-player[can-play]:not([user-idle]) &`]);
-    addVariant(`not-${prefix}can-control`, [
+    addVariant(`${mediaPrefix}can-control`, [`media-player[can-play]:not([user-idle]) &`]);
+    addVariant(`not-${mediaPrefix}can-control`, [
       `media-player[ios-controls] &`,
       `media-player[user-idle] &`,
       `media-player:not([can-play]) &`,
     ]);
-  });
 
-  sliderAttributes.forEach((name) => {
-    addVariant(name, `media-player *[${name}] &`);
-  });
+    sliderAttributes.forEach((name) => {
+      addVariant(`${sliderPrefix}${name}`, `media-player *[role="slider"][${name}] &`);
+    });
+  };
 });
-
-module.exports = {
-  ...vidstackPlugin,
-  mediaAttributes,
-  sliderAttributes,
-};

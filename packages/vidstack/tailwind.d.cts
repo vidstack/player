@@ -1,8 +1,14 @@
-declare const _exports: {
-  mediaAttributes: string[];
-  sliderAttributes: string[];
-  handler: import('tailwindcss/types/config').PluginCreator;
-  config?: import('tailwindcss').Config | undefined;
+declare function plugin(options?: PluginOptions): {
+  handler: () => void;
 };
 
-export = _exports;
+declare namespace plugin {
+  const __isOptionsFunction: true;
+}
+
+export = plugin;
+
+export interface PluginOptions {
+  mediaPrefix?: string;
+  sliderPrefix?: string;
+}

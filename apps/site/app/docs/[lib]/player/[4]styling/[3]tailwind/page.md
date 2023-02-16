@@ -24,6 +24,21 @@ module.exports = {
 };
 ```
 
+### Options
+
+The plugin accepts options for configuring prefixes on variants provided by Vidstack:
+
+```js {% title="tailwind.config.js" copyHighlight=true highlight="3-6" %}
+module.exports = {
+  plugins: [
+    require('vidstack/tailwind.cjs')({
+      mediaPrefix: 'media', // paused:... -> media-paused:...
+      sliderPrefix: 'slider', // dragging:... -> slider-dragging:...
+    }),
+  ],
+};
+```
+
 ## Usage
 
 The `<media-player>` element exposes media state as HTML attributes and CSS vars like so:
@@ -76,16 +91,6 @@ Few examples:
 media-player:not([paused]) .not-paused\:opacity-0 {
   opacity: 0;
 }
-```
-
-### Media Prefix
-
-The `media` prefix can be applied to all media variants and _not_ variants if desired:
-
-```html
-<!-- optional media prefix -->
-<div class="media-paused:opacity-0"></div>
-<div class="not-media-paused:opacity-0"></div>
 ```
 
 ## Media CSS Variables
