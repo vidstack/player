@@ -48,6 +48,11 @@ applied when a given media state is active.
 
 ## Media Variants
 
+```html
+<!-- example -->
+<div class="paused:opacity-0"></div>
+```
+
 {% component this="../.tables/variants-table.md" /%}
 
 ### Not Variants
@@ -57,20 +62,30 @@ Classes with this prefix will be transformed into `media-player:not([state])` se
 
 Few examples:
 
-- `not-media-paused`: Media is in the play state (not paused).
-- `not-media-playing`: Media playback is not active (not playing).
-- `not-media-can-play`: Media is not ready for playback (not can play).
+- `not-paused`: Media is in the play state (not paused).
+- `not-playing`: Media playback is not active (not playing).
+- `not-can-play`: Media is not ready for playback (not can play).
 
 ```html
-<!-- Input -->
-<div class="not-media-paused:opacity-0"></div>
+<!-- input -->
+<div class="not-paused:opacity-0"></div>
 ```
 
 ```css
-/* Output */
-media-player:not([paused]) .not-media-paused\:opacity-0 {
+/* output */
+media-player:not([paused]) .not-paused\:opacity-0 {
   opacity: 0;
 }
+```
+
+### Media Prefix
+
+The `media` prefix can be applied to all media variants and _not_ variants if desired:
+
+```html
+<!-- optional media prefix -->
+<div class="media-paused:opacity-0"></div>
+<div class="not-media-paused:opacity-0"></div>
 ```
 
 ## Media CSS Variables
@@ -79,3 +94,10 @@ You can take advantage of [arbitrary values](https://tailwindcss.com/docs/adding
 if you're using Tailwind CSS v3+ and use the following CSS media variables.
 
 {% component this="../.tables/vars-table.md" /%}
+
+```html
+<!-- example -->
+<div
+  class="scale-x-[calc(var(--media-current-time) / var(--media-duration))] origin-left transform"
+></div>
+```

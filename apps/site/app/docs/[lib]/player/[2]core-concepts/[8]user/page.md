@@ -7,6 +7,10 @@ description: Introduction to user tracking with Vidstack Player.
 
 In this section, we'll look at ways to track user actions with Vidstack Player.
 
+{% callout type="warning"%}
+This page is a work in progress.
+{% /callout %}
+
 ## Events
 
 All media events can be traced back to their origin, the event that started it all. The

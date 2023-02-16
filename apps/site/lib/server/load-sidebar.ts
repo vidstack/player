@@ -41,6 +41,7 @@ const WIP = new Set([
   'YouTube',
   'Vimeo',
   'Captions',
+  'User',
   'Live Indicator',
   'PIP Button',
   'Captions Button',

@@ -24,13 +24,16 @@ const mediaAttributes = [
 const sliderAttributes = ['dragging', 'pointing', 'interactive'];
 
 const vidstackPlugin = createPlugin(function ({ addVariant }) {
-  mediaAttributes.forEach((mediaAttr) => {
-    addVariant(`media-${mediaAttr}`, `media-player[${mediaAttr}] &`);
-    addVariant(`not-media-${mediaAttr}`, `media-player:not([${mediaAttr}]) &`);
+  mediaAttributes.forEach((name) => {
+    addVariant(name, `media-player[${name}] &`);
+    addVariant(`not-${name}`, `media-player:not([${name}]) &`);
+    // media prefix
+    addVariant(`media-${name}`, `media-player[${name}] &`);
+    addVariant(`not-media-${name}`, `media-player:not([${name}]) &`);
   });
 
-  sliderAttributes.forEach((sliderAttr) => {
-    addVariant(sliderAttr, `media-player *[${sliderAttr}] &`);
+  sliderAttributes.forEach((name) => {
+    addVariant(name, `media-player *[${name}] &`);
   });
 });
 

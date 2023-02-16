@@ -25,3 +25,9 @@ In the following example, we put together a conventional buffering spinner, and 
 center of the player:
 
 {% code_preview name="styling" size="medium" css=true copyHighlight=true highlight="html:3-23|react:7-27" /%}
+
+## Tailwind
+
+The [styling](#styling) example above adapted using Tailwind:
+
+{% code_snippet name="tailwind" copy=true /%}
