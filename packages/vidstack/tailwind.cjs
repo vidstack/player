@@ -23,7 +23,7 @@ const mediaAttributes = [
 
 const sliderAttributes = ['dragging', 'pointing', 'interactive'];
 
-const vidstackPlugin = createPlugin(function ({ addVariant }) {
+const vidstackPlugin = createPlugin(function ({ addBase, addVariant }) {
   mediaAttributes.forEach((name) => {
     addVariant(name, `media-player[${name}] &`);
     addVariant(`not-${name}`, `media-player:not([${name}]) &`);
@@ -36,6 +36,18 @@ const vidstackPlugin = createPlugin(function ({ addVariant }) {
     // buffering
     addVariant(`${prefix}buffering`, [`media-player:not([can-play]) &`, `media-player[waiting] &`]);
     addVariant(`not-${prefix}buffering`, [`media-player[can-play]:not([waiting]) &`]);
+    // can-control
+    addBase({
+      [`media-player[ios-controls] *[class*="${prefix}can-control"]`]: {
+        display: 'none !important',
+      },
+    });
+    addVariant(`${prefix}can-control`, [`media-player[can-play]:not([user-idle]) &`]);
+    addVariant(`not-${prefix}can-control`, [
+      `media-player[ios-controls] &`,
+      `media-player[user-idle] &`,
+      `media-player:not([can-play]) &`,
+    ]);
   });
 
   sliderAttributes.forEach((name) => {

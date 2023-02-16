@@ -1,6 +1,6 @@
-<div className="absolute inset-0 flex items-center justify-center w-full h-full pointer-events-none z-10">
+<div className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center">
   <svg
-    className="w-24 h-24 text-white opacity-0 transition-opacity duration-200 ease-linear buffering:opacity-100 buffering:animate-spin"
+    className="buffering:opacity-100 buffering:animate-spin h-24 w-24 text-white opacity-0 transition-opacity duration-200 ease-linear"
     fill="none"
     viewBox="0 0 120 120"
     aria-hidden="true"

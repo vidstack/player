@@ -19,13 +19,13 @@ The following media attributes can be useful when building a controls container:
 | `can-fullscreen` | Show alternative controls for when media is in fullscreen.                  |
 
 ```css {% copy=true %}
-/* Avoid double controls on iOS. */
+/* Avoid double controls on iOS when in fullscreen. */
 media-player[ios-controls] .media-controls,
 /* Hide controls while media is loading, or user is idle. */
 media-player:not([can-play]) .media-controls,
 media-player[user-idle] .media-controls {
   opacity: 0;
-  visibility: hidden;
+  pointer-events: none;
 }
 
 /* Show controls if autoplay fails. */
@@ -41,6 +41,12 @@ could place social icons at the top, play button in the middle, and scrubber at 
 completely up to you!
 
 {% code_preview name="styling" size="medium" css=true copyHighlight=true highlight="html:3-7|react:7-11" /%}
+
+## Tailwind
+
+The [styling](#styling) example above built with Tailwind:
+
+{% code_snippet name="tailwind" copy=true /%}
 
 ## Examples
 

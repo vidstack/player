@@ -28,6 +28,6 @@ center of the player:
 
 ## Tailwind
 
-The [styling](#styling) example above adapted using Tailwind:
+The [styling](#styling) example above built with Tailwind:
 
 {% code_snippet name="tailwind" copy=true /%}
