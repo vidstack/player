@@ -32,6 +32,12 @@ const vidstackPlugin = createPlugin(function ({ addVariant }) {
     addVariant(`not-media-${name}`, `media-player:not([${name}]) &`);
   });
 
+  ['', 'media-'].map((prefix) => {
+    // buffering
+    addVariant(`${prefix}buffering`, [`media-player:not([can-play]) &`, `media-player[waiting] &`]);
+    addVariant(`not-${prefix}buffering`, [`media-player[can-play]:not([waiting]) &`]);
+  });
+
   sliderAttributes.forEach((name) => {
     addVariant(name, `media-player *[${name}] &`);
   });
