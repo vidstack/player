@@ -5,6 +5,7 @@
 | `buffering`      | Media is not ready for playback or waiting for more data. |
 | `can-load`       | Media can begin loading.                                  |
 | `can-play`       | Media is ready to be played.                              |
+| `can-control`    | Media is ready for playback and user is not idle.         |
 | `can-fullscreen` | Media fullscreen is available.                            |
 | `ended`          | Playback has reached the end.                             |
 | `error`          | Issue with media loading/playback.                        |
