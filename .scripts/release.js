@@ -15,11 +15,10 @@ const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = minimist(process.argv.slice(2));
 const isDryRun = args.dry;
-const ignore = new Set(['media-icons']);
 const skippedPackages = [];
 const currentVersion = require('../package.json').version;
 const packagesDir = fs.readdirSync(path.resolve(__dirname, '../packages'));
-const packages = packagesDir.filter((pkg) => !pkg.startsWith('.') && !ignore.has(pkg));
+const packages = packagesDir.filter((pkg) => !pkg.startsWith('.'));
 const preId =
   args.preid || (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)?.[0]);
 const versionIncrements = [
@@ -159,14 +158,17 @@ function updatePackageVersion(pkgRoot, version) {
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
 }
 
+const workspace = new Set();
+
 function updatePackageDeps(pkg, depType, version) {
   const deps = pkg[depType];
   if (!deps) return;
   Object.keys(deps).forEach((dep) => {
-    if (/^@?vidstack/.test(dep) && packages.includes(dep.replace(/^@?vidstack\//, ''))) {
+    if (workspace.has(dep) || deps[dep] === 'workspace:*') {
       const color = version === 'workspace:*' ? 'cyan' : 'yellow';
       console.log(kleur[color](`🦠 ${pkg.name} -> ${depType} -> ${dep}@${version}`));
       deps[dep] = version;
+      workspace.add(dep);
     }
   });
 }
