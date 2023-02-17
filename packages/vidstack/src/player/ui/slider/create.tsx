@@ -73,6 +73,24 @@ export function createSlider(
     const preview = target.querySelector('[slot="preview"]') as HTMLElement;
     if (!preview) return;
 
+    const rect = preview.getBoundingClientRect();
+    const styles = {
+      '--computed-width': rect.width + 'px',
+      '--computed-height': rect.height + 'px',
+      '--preview-top':
+        'calc(-1 * var(--media-slider-preview-gap, calc(var(--preview-height) + 8px)))',
+      '--preview-width': 'var(--media-slider-preview-width, var(--computed-width))',
+      '--preview-height': 'var(--media-slider-preview-height, var(--computed-height))',
+      '--preview-width-half': 'calc(var(--preview-width) / 2)',
+      '--preview-left-clamp': 'max(var(--preview-width-half), var(--slider-pointer-percent))',
+      '--preview-right-clamp': 'calc(100% - var(--preview-width-half))',
+      '--preview-left': 'min(var(--preview-left-clamp), var(--preview-right-clamp))',
+    };
+
+    for (const name of Object.keys(styles)) {
+      setStyle(preview, name, styles[name]);
+    }
+
     let stabilize = false;
     const observer = new ResizeObserver(function onPreviewResize([entry]) {
       if (stabilize) {
@@ -87,6 +105,7 @@ export function createSlider(
 
       setStyle(preview, '--computed-width', inlineSize + 'px');
       setStyle(preview, '--computed-height', blockSize + 'px');
+
       stabilize = true;
     });
 

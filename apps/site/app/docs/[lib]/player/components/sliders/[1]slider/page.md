@@ -14,6 +14,16 @@ documentation on this page, particularly around styling and subscriptions, is va
 
 {% code_preview name="usage" size="xsmall" copyHighlight=true highlight="html:3|react:5" /%}
 
+## Preview
+
+The `preview` slot enables passing in any element to be displayed above the slider thumb
+when being interacted with:
+
+{% code_preview name="preview" size="small" copyHighlight=true highlight="html:2|react:4" /%}
+
+Any element you slot in will be sized and positioned automatically by the slider. It will also
+ensure the preview is correctly clamped so it doesn't go out of bounds.
+
 ## Subscribe
 
 The slider has a store that keeps track of the running slider state. The store enables you to
@@ -123,6 +133,34 @@ at the device pointer (mouse/thumb).
 | `--slider-pointer-rate`    | The pointer value expressed as a ratio (e.g., `0.3`).      |
 | `--slider-pointer-percent` | The pointer rate expressed as a percentage. (e.g., `30%`). |
 
+The slider will also apply the following CSS variables to the element in the `preview` slot:
+
+| Variable                | Description                                               |
+| ----------------------- | --------------------------------------------------------- |
+| `--preview-top`         | Negative vertical offset based on the preview height.     |
+| `--preview-left`        | The clamped horizontal offset based on the preview width. |
+| `--preview-width`       | The computed width of the preview.                        |
+| `--preview-height`      | The computed height of the preview.                       |
+| `--preview-width-half`  | The computed width divided in half.                       |
+| `--preview-left-clamp`  | The left clamp offset based on the preview width.         |
+| `--preview-right-clamp` | The right clamp offset based on the preview width.        |
+
+### Previews
+
+```css
+/* CSS vars are available for simple customization. */
+media-slider {
+  /* Default values are shown below. */
+  --media-slider-preview-width: var(--computed-width);
+  --media-slider-preview-height: var(--computed-height);
+  --media-slider-preview-gap: calc(var(--computed-height) + 8px);
+}
+
+/** Override default preview styles. */
+media-slider [slot='preview'] {
+}
+```
+
 ## Tailwind
 
 The following section is for Tailwind CSS users who have installed our [Tailwind Plugin](/docs/player/styling/tailwind).
@@ -144,21 +182,23 @@ if you're using Tailwind CSS v3+ and use the [CSS variables listed above](#css-v
 <div class="left-[var(--slider-fill-percent)]" />
 ```
 
-## Previews
+### Exposing Parts
 
-{% code_preview name="preview" size="small" copyHighlight=true highlight="html:2|react:4" /%}
+You can expose slider parts and override the default styles using CSS like so:
 
-### Styling
+{% code_snippet name="tw-expose" copy=true /%}
 
-```css
-/* CSS vars are available for simple customization. */
-media-slider {
-  /* Default values are shown below. */
-  --media-slider-preview-width: var(--computed-width);
-  --media-slider-preview-gap: calc(var(--computed-height) + 8px);
-}
+### Example
 
-/** Override default preview styles. */
-media-slider [slot='preview'] {
-}
-```
+A complete slider example built with Tailwind:
+
+{% code_snippet name="tailwind" copy=true /%}
+
+{% callout type="tip" %}
+
+- All of this code is reusable across other slider implementations.
+
+- Too verbose? You might prefer overriding the [default styles](#exposing-parts). Remember to
+  load them first if you haven't yet.
+
+{% /callout %}

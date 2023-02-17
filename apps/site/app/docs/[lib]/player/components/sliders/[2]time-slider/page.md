@@ -2,6 +2,9 @@
 description: This component is used to create a range input for controlling the current time of playback.
 ---
 
+📖 The [`$tag:media-slider`](/docs/player/components/sliders/slider) guide contains background
+documentation that can be used when working with the time slider component.
+
 ## Usage
 
 The `$tag:media-time-slider` component receives time updates from the provider through the media store,
@@ -16,6 +19,19 @@ to the slider's value.
 The slider's range is assumed to be in seconds between `0` (min) and length of media (max).
 
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:7" /%}
+
+## Preview
+
+The `preview` slot enables passing in any element to be displayed above the slider thumb
+when being interacted with:
+
+{% code_preview name="preview" size="small" copyHighlight=true highlight="html:2|react:7" /%}
+
+### Grouping
+
+Previews can be grouped by using a parent container element for the `preview` slot:
+
+{% code_preview name="preview-group" copyHighlight=true highlight="html:2-5|react:12-15" /%}
 
 ## Styling
 
@@ -87,15 +103,7 @@ media-time-slider.focus-visible {
 }
 ```
 
-## Previews
-
-{% code_preview name="preview" copyHighlight=true highlight="html:2|react:7" /%}
-
-### Grouping
-
-{% code_preview name="preview-group" copyHighlight=true highlight="html:2-5|react:12-15" /%}
-
-### Styling
+### Previews
 
 ```css
 /* CSS vars are available for simple customization. */
@@ -109,3 +117,17 @@ media-time-slider {
 media-time-slider [slot='preview'] {
 }
 ```
+
+## Tailwind
+
+📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
+contains background documentation on working with sliders.
+
+A complete time slider example built with Tailwind:
+
+{% code_snippet name="tailwind" copy=true /%}
+
+{% callout type="tip" %}
+All of this code is reusable across other slider implementations. The time slider example only
+contains an additional `track-progress` div.
+{% /callout %}

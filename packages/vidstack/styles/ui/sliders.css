@@ -19,9 +19,9 @@ media-volume-slider > shadow-root {
   display: unset;
 }
 
-media-slider [part~='track'],
-media-time-slider [part~='track'],
-media-volume-slider [part~='track'] {
+media-slider [part*='track'],
+media-time-slider [part*='track'],
+media-volume-slider [part*='track'] {
   z-index: 0;
   position: absolute;
   height: var(--track-height);
@@ -32,9 +32,9 @@ media-volume-slider [part~='track'] {
   background-color: #5a595a;
 }
 
-media-slider[interactive] [part~='track'],
-media-time-slider[interactive] [part~='track'],
-media-volume-slider[interactive] [part~='track'] {
+media-slider[interactive] [part*='track'],
+media-time-slider[interactive] [part*='track'],
+media-volume-slider[interactive] [part*='track'] {
   height: var(--track-focus-height);
 }
 
@@ -108,30 +108,18 @@ media-volume-slider[interactive] [part='thumb'] {
 media-slider [slot='preview'],
 media-time-slider [slot='preview'],
 media-volume-slider [slot='preview'] {
-  /* --computed-width and --computed-height is added by JS in `use-slider.ts` */
-  --width: var(--media-slider-preview-width, var(--computed-width));
-  --width-half: calc(var(--width) / 2);
-  --top: calc(-1 * var(--media-slider-preview-gap, calc(var(--computed-height) + 8px)));
-
-  /* clamp video to left and right of slider. */
-  --left-clamp: max(var(--width-half), var(--slider-pointer-percent));
-  --right-clamp: calc(100% - var(--width-half));
-  --left: min(var(--left-clamp), var(--right-clamp));
-
   display: flex;
+  position: absolute;
+  top: var(--preview-top);
+  left: var(--preview-left);
   flex-direction: column;
   align-items: center;
-  position: absolute;
-  top: var(--top);
-  left: var(--left);
-  width: var(--width);
   opacity: 0;
   border-radius: 2px;
   pointer-events: none;
+  transform: translateX(-50%);
   transition: opacity 0.2s ease-out;
   will-change: left;
-  /* re-position to center. */
-  transform: translateX(-50%);
 }
 
 media-slider[interactive] [slot='preview'],

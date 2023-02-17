@@ -4,6 +4,9 @@ description: This component is used to create a range input for controlling the 
 
 ## Usage
 
+📖 The [`$tag:media-slider`](/docs/player/components/sliders/slider) guide contains background
+documentation that can be used when working with the volume slider component.
+
 The `$tag:media-volume-slider` component receives volume updates from the provider through the media
 store, and dispatches a `media-volume-change-request` event to request updating the current volume
 level on the provider as the slider value changes.
@@ -12,6 +15,10 @@ The media volume range is between `0` (min) and `1` (max), but on the slider it'
 `100`. The conversion is automatically handled by this component.
 
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:7" /%}
+
+## Preview
+
+{% code_preview name="preview" size="small" copyHighlight=true highlight="html:2|react:7" /%}
 
 ## Styling
 
@@ -83,11 +90,7 @@ media-volume-slider.focus-visible {
 }
 ```
 
-## Previews
-
-{% code_preview name="preview" copyHighlight=true highlight="html:2|react:7" /%}
-
-### Styling
+### Previews
 
 ```css
 /* CSS vars are available for simple customization. */
@@ -101,3 +104,16 @@ media-volume-slider {
 media-volume-slider [slot='preview'] {
 }
 ```
+
+## Tailwind
+
+📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
+contains background documentation on working with sliders.
+
+A complete volume slider example built with Tailwind:
+
+{% code_snippet name="tailwind" copy=true /%}
+
+{% callout type="tip" %}
+All of this code is reusable across other slider implementations.
+{% /callout %}

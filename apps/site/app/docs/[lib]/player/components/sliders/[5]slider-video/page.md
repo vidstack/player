@@ -50,3 +50,12 @@ media-slider-video video {
   width: 156px;
 }
 ```
+
+## Tailwind
+
+{% code_snippet name="tailwind" copyHighlight=true highlight="html:3-8|react:3-5,8-" /%}
+
+{% callout type="info" %}
+A more complete [slider example](/docs/react/player/components/sliders/time-slider#tailwind) is
+available in the `$tag:media-time-slider` docs.
+{% /callout %}
