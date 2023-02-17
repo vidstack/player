@@ -1,3 +1,26 @@
+# [0.3.0](https://github.com/mihar-22/vidstack/compare/v0.2.3...v0.3.0) (2023-02-17)
+
+### Bug Fixes
+
+- support `bundler` ts module resolution ([e5635eb](https://github.com/mihar-22/vidstack/commit/e5635ebf759698f0960b2fe397e1e51376903aef)), closes [#771](https://github.com/mihar-22/vidstack/issues/771)
+- svg icons inside button should scale ([66be655](https://github.com/mihar-22/vidstack/commit/66be655228bd648d5790a6b7576b1489b8264b4d)), closes [#743](https://github.com/mihar-22/vidstack/issues/743)
+- **vidstack:** define imports are not included in prod ([99866f2](https://github.com/mihar-22/vidstack/commit/99866f2bc48288f7c98fa25464203e6c0aa495be)), closes [#773](https://github.com/mihar-22/vidstack/issues/773)
+- **vidstack:** duration nan on source change ([ba51c0d](https://github.com/mihar-22/vidstack/commit/ba51c0db1a4fc566bd91e162b8d6662b87f5eda4)), closes [#774](https://github.com/mihar-22/vidstack/issues/774)
+- **vidstack:** prevent playback immediately ending on seek request ([84f4065](https://github.com/mihar-22/vidstack/commit/84f4065d6d6cbdc516f3e88e1d2c84fc24de7039))
+
+### Features
+
+- new media icon component ([4290501](https://github.com/mihar-22/vidstack/commit/4290501d82ddcc414b50ae4e32c4b09887a09ddf)), closes [#744](https://github.com/mihar-22/vidstack/issues/744)
+- new media icons catalog ([a303804](https://github.com/mihar-22/vidstack/commit/a3038044762c953f53ccf37cdc990ec95d6ab110)), closes [#745](https://github.com/mihar-22/vidstack/issues/745)
+- **vidstack:** add `currentSrc` alias ([5dfa19c](https://github.com/mihar-22/vidstack/commit/5dfa19ceacb551ec3025a78846a952e3555b5fec))
+- **vidstack:** add blob uri support ([3c333db](https://github.com/mihar-22/vidstack/commit/3c333dbac7d282a36231db42000d957983c4e8f8)), closes [#762](https://github.com/mihar-22/vidstack/issues/762)
+- **vidstack:** element type checks ([775f074](https://github.com/mihar-22/vidstack/commit/775f074a5597b97cab87af0c1db4bfe425a47ac6)), closes [#741](https://github.com/mihar-22/vidstack/issues/741)
+- **vidstack:** media prefix on tailwind variants is now optional ([b3e2546](https://github.com/mihar-22/vidstack/commit/b3e2546f734b52e6586a6b132668017d1c778d2f)), closes [#742](https://github.com/mihar-22/vidstack/issues/742)
+- **vidstack:** new `buffering` tailwind media variant ([e65f93d](https://github.com/mihar-22/vidstack/commit/e65f93d46917207164904d12cf28860a7688dcf0)), closes [#742](https://github.com/mihar-22/vidstack/issues/742)
+- **vidstack:** new `can-control` tailwind variant ([962e458](https://github.com/mihar-22/vidstack/commit/962e458a2817bb16e3d025ed4e53feff53e3aea6)), closes [#742](https://github.com/mihar-22/vidstack/issues/742)
+- **vidstack:** tailwind not variants ([e7ce50e](https://github.com/mihar-22/vidstack/commit/e7ce50e6604977ede7c80fe2d4ab354aafb4abe1)), closes [#739](https://github.com/mihar-22/vidstack/issues/739)
+- **vidstack:** tailwind variant prefixes now configurable and empty by default ([7d10a48](https://github.com/mihar-22/vidstack/commit/7d10a4813ddb739749aa23e232d07238ae9987e9)), closes [#742](https://github.com/mihar-22/vidstack/issues/742)
+
 ## [0.2.3](https://github.com/mihar-22/vidstack/compare/v0.2.2...v0.2.3) (2023-02-06)
 
 ### Bug Fixes

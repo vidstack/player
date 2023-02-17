@@ -1,6 +1,6 @@
 {
   "name": "vidstack",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Build awesome media experiences on the web.",
   "license": "MIT",
   "type": "module",
