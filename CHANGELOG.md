@@ -1,3 +1,9 @@
+## [0.3.1](https://github.com/mihar-22/vidstack/compare/v0.3.0...v0.3.1) (2023-02-17)
+
+### Bug Fixes
+
+- no matching version for `media-icons` ([2e285ef](https://github.com/mihar-22/vidstack/commit/2e285ef5442bead09bf69ee6e69b8b2891d6e346)), closes [#779](https://github.com/mihar-22/vidstack/issues/779)
+
 # [0.3.0](https://github.com/mihar-22/vidstack/compare/v0.2.3...v0.3.0) (2023-02-17)
 
 ### Bug Fixes
