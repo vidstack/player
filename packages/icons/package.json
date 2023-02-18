@@ -1,6 +1,6 @@
 {
   "name": "media-icons",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Open-source and beautifully hand-crafted collection of media icons.",
   "type": "module",
   "types": "dist/types/index.d.ts",
