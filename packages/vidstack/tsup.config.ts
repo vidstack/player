@@ -71,7 +71,7 @@ function cdn({ dev = false } = {}): Options {
     entry: { [dev ? 'dev' : 'prod']: 'src/cdn.ts' },
     target: 'es2020',
     minify: !dev,
-    noExternal: ['maverick.js'],
+    noExternal: ['maverick.js', 'media-icons'],
     outDir: `dist/cdn`,
   };
 }
