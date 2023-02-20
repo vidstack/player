@@ -41,14 +41,17 @@ export const mediaStore = createStore<MediaStore>({
   get currentSrc() {
     return this.source;
   },
+  get bufferedStart() {
+    return getTimeRangesStart(this.buffered) ?? 0;
+  },
   get bufferedEnd() {
-    return getTimeRangesEnd(this.buffered) || 0;
+    return getTimeRangesEnd(this.buffered) ?? 0;
   },
   get seekableStart() {
-    return getTimeRangesStart(this.seekable) || 0;
+    return getTimeRangesStart(this.seekable) ?? 0;
   },
   get seekableEnd() {
-    return getTimeRangesEnd(this.seekable) || Infinity;
+    return getTimeRangesEnd(this.seekable) ?? Infinity;
   },
   // internal
   attemptingAutoplay: false,

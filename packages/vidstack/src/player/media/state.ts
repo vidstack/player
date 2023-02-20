@@ -35,6 +35,14 @@ export interface MediaState {
    */
   buffered: TimeRanges;
   /**
+   * The earliest time in seconds for which media has been buffered (i.e., downloaded by the
+   * browser).
+   *
+   * @defaultValue 0
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/buffered}
+   */
+  readonly bufferedStart: number;
+  /**
    * The latest time in seconds for which media has been buffered (i.e., downloaded by the
    * browser).
    *
