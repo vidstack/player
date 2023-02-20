@@ -49,9 +49,9 @@ export const mediaStore = createStore<MediaStore>({
     const seekable: TimeRanges = this.seekable;
     return seekable.length ? seekable.start(0) : 0;
   },
-  get seekableAmount() {
-    const seekable = this.seekable;
-    return seekable.length === 0 ? 0 : seekable.end(seekable.length - 1);
+  get seekableEnd() {
+    const seekable: TimeRanges = this.seekable;
+    return seekable.length ? seekable.end(seekable.length - 1) : Infinity;
   },
   // internal
   attemptingAutoplay: false,

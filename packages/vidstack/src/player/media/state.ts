@@ -227,12 +227,15 @@ export interface MediaState {
    */
   readonly seekableStart: number;
   /**
-   * Converts the `seekable` time ranges into an absolute value to indicate the amount of
-   * media that is seekable from `0` to `duration`.
+   * Contains the latest time in seconds at which media can be seeked to. This will default to
+   * `Infinity` if no seekable range is found. If byte-range requests are enabled on the server
+   * this should be equal to the media duration - note for live streams duration is a moving
+   * target.
    *
-   * @defaultValue 0
+   * @defaultValue Infinity
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seekable}
    */
-  readonly seekableAmount: number;
+  readonly seekableEnd: number;
   /**
    * Whether media is actively seeking to a new playback position.
    *

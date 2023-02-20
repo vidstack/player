@@ -34,7 +34,7 @@ function getSeconds(type: TimeProps['type'], $media: MediaStore) {
     case 'buffered':
       return $media.bufferedAmount;
     case 'seekable':
-      return $media.seekableAmount;
+      return $media.seekableEnd;
     case 'duration':
       return $media.duration;
     default:
