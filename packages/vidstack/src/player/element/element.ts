@@ -115,6 +115,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       '--media-buffered-end': () => $store.bufferedEnd,
       '--media-current-time': () => $store.currentTime,
       '--media-duration': () => $store.duration,
+      '--media-seekable-start': () => $store.seekableStart,
       '--media-seekable-end': () => $store.seekableEnd,
     });
 

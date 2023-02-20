@@ -75,6 +75,10 @@ export interface MediaElementCSSVars {
    */
   readonly 'media-duration': number;
   /**
+   * The earliest time in seconds at which media can be seeked to.
+   */
+  readonly 'media-seekable-start': number;
+  /**
    * The latest time in seconds at which media can be seeked to.
    */
   readonly 'media-seekable-end': number;
