@@ -53,7 +53,7 @@ media-time-slider [part~='track-progress'] {
   background-color: #878787;
   transform-origin: left center;
   will-change: transform;
-  transform: translateY(-50%) scaleX(calc(var(--media-buffered-amount) / var(--media-duration)));
+  transform: translateY(-50%) scaleX(calc(var(--media-buffered-end) / var(--media-duration)));
 }
 
 media-slider [part='thumb-container'],

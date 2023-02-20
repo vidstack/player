@@ -62,9 +62,10 @@ export interface MediaElementCSSVars {
    */
   readonly 'media-aspect-ratio': number | null;
   /**
-   * The amount of media that has buffered in seconds (0 -> duration).
+   * The latest time in seconds for which media has been buffered (i.e., downloaded by the
+   * browser).
    */
-  readonly 'media-buffered-amount': number;
+  readonly 'media-buffered-end': number;
   /**
    * The current playback time in seconds (0 -> duration).
    */
