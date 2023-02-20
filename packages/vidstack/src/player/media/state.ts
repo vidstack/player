@@ -219,6 +219,14 @@ export interface MediaState {
    */
   seekable: TimeRanges;
   /**
+   * Contains the earliest time in seconds at which media can be seeked to. Generally this is
+   * zero, but for live streams it may start at a non-zero value.
+   *
+   * @defaultValue 0
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seekable}
+   */
+  readonly seekableStart: number;
+  /**
    * Converts the `seekable` time ranges into an absolute value to indicate the amount of
    * media that is seekable from `0` to `duration`.
    *

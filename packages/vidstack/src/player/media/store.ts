@@ -45,6 +45,10 @@ export const mediaStore = createStore<MediaStore>({
     const buffered = this.buffered;
     return buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
   },
+  get seekableStart() {
+    const seekable: TimeRanges = this.seekable;
+    return seekable.length ? seekable.start(0) : 0;
+  },
   get seekableAmount() {
     const seekable = this.seekable;
     return seekable.length === 0 ? 0 : seekable.end(seekable.length - 1);
