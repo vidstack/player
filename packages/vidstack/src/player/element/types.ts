@@ -62,6 +62,11 @@ export interface MediaElementCSSVars {
    */
   readonly 'media-aspect-ratio': number | null;
   /**
+   * The earliest time in seconds for which media has been buffered (i.e., downloaded by the
+   * browser).
+   */
+  readonly 'media-buffered-start': number;
+  /**
    * The latest time in seconds for which media has been buffered (i.e., downloaded by the
    * browser).
    */

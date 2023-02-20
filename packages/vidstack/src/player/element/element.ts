@@ -112,6 +112,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
 
     host.setCSSVars({
       '--media-aspect-ratio': props.$aspectRatio,
+      '--media-buffered-start': () => $store.bufferedStart,
       '--media-buffered-end': () => $store.bufferedEnd,
       '--media-current-time': () => $store.currentTime,
       '--media-duration': () => $store.duration,
