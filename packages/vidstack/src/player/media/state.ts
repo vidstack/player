@@ -35,6 +35,14 @@ export interface MediaState {
    */
   buffered: TimeRanges;
   /**
+   * The latest time in seconds for which media has been buffered (i.e., downloaded by the
+   * browser).
+   *
+   * @defaultValue 0
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/buffered}
+   */
+  readonly bufferedEnd: number;
+  /**
    * A `double` indicating the total playback length of the media in seconds. If no media data is
    * available, the returned value is `0`. If the media is of indefinite length (such as
    * streamed live media, a WebRTC call's media, or similar), the value is `+Infinity`.
@@ -43,13 +51,6 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/duration}
    */
   duration: number;
-  /**
-   * Converts the `buffered` time ranges into an absolute value to indicate the amount of
-   * media that has buffered from `0` to `duration`.
-   *
-   * @defaultValue 0
-   */
-  readonly bufferedAmount: number;
   /**
    * Whether media is allowed to begin loading. This depends on the `loading` configuration.
    * If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will become `true`
@@ -227,10 +228,9 @@ export interface MediaState {
    */
   readonly seekableStart: number;
   /**
-   * Contains the latest time in seconds at which media can be seeked to. This will default to
-   * `Infinity` if no seekable range is found. If byte-range requests are enabled on the server
-   * this should be equal to the media duration - note for live streams duration is a moving
-   * target.
+   * The latest time in seconds at which media can be seeked to. This will default to `Infinity`
+   * if no seekable range is found. If byte-range requests are enabled on the server this should
+   * be equal to the media duration - note for live streams duration is a moving target.
    *
    * @defaultValue Infinity
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seekable}

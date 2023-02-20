@@ -4,26 +4,10 @@
 import { isArray, isNumber, isUndefined } from 'maverick.js/std';
 
 /**
- * Check if any of the time ranges are over the maximum index.
- *
- * @param fnName - The function name to use for logging.
- * @param index - The index to check.
- * @param maxIndex - The maximum possible index.
- * @throws {Error} - Will throw if index is out of bounds or non-numeric.
- */
-function rangeCheck(fnName: 'start' | 'end', index: number, maxIndex: number) {
-  if (!isNumber(index) || index < 0 || index > maxIndex) {
-    throw new Error(
-      `Failed to execute '${fnName}' on 'TimeRanges': The index provided (${index}) is non-numeric or out of bounds (0-${maxIndex}).`,
-    );
-  }
-}
-
-/**
  * Get the time for the specified index at the start or end of a `TimeRanges` object.
  *
  * @param fnName - The function name to use for logging.
- * @param valueIndex - The property that should be used to get the time. should be  0 for 'start' or  1 for 'end'.';
+ * @param valueIndex - The property that should be used to get the time. should be 0 for 'start' or  1 for 'end'.';
  * @param ranges - An array of time ranges.
  * @param rangeIndex - The index to start the search at.
  */
@@ -33,8 +17,8 @@ function getRange(
   ranges: [number, number][],
   rangeIndex: number,
 ): number {
-  rangeCheck(fnName, rangeIndex, ranges.length - 1);
-  return ranges[rangeIndex][valueIndex];
+  if (__DEV__) throwIfOutOfRange(fnName, rangeIndex, ranges.length - 1);
+  return ranges[rangeIndex][valueIndex] || Infinity;
 }
 
 /**
@@ -42,17 +26,9 @@ function getRange(
  *
  * @param ranges - An array of time ranges.
  */
-function createTimeRangesObj(ranges?: [number, number][]): TimeRanges {
+function buildTimeRanges(ranges?: [number, number][]): TimeRanges {
   if (isUndefined(ranges) || ranges.length === 0) {
-    const throwEmptyError = () => {
-      throw new Error('This TimeRanges object is empty');
-    };
-
-    return {
-      length: 0,
-      start: throwEmptyError,
-      end: throwEmptyError,
-    };
+    return { length: 0, start: emptyTimeRange, end: emptyTimeRange };
   }
 
   return {
@@ -73,10 +49,49 @@ function createTimeRangesObj(ranges?: [number, number][]): TimeRanges {
  */
 export function createTimeRanges(start?: number | [number, number][], end?: number): TimeRanges {
   if (isArray(start)) {
-    return createTimeRangesObj(start);
+    return buildTimeRanges(start);
   } else if (isUndefined(start) || isUndefined(end)) {
-    return createTimeRangesObj();
+    return buildTimeRanges();
   }
 
-  return createTimeRangesObj([[start, end]]);
+  return buildTimeRanges([[start, end]]);
+}
+
+export function getTimeRangesStart(ranges: TimeRanges) {
+  if (!ranges.length) return null;
+
+  let min = ranges.start(0);
+
+  for (let i = 1; i < ranges.length; i++) {
+    const value = ranges.start(i);
+    if (value < min) min = value;
+  }
+
+  return min;
+}
+
+export function getTimeRangesEnd(ranges: TimeRanges) {
+  if (!ranges.length) return null;
+
+  let max = ranges.end(0);
+
+  for (let i = 1; i < ranges.length; i++) {
+    const value = ranges.end(i);
+    if (value > max) max = value;
+  }
+
+  return max;
+}
+
+function throwIfOutOfRange(fnName: 'start' | 'end', index: number, end: number) {
+  if (!__DEV__) return;
+  if (!isNumber(index) || index < 0 || index > end) {
+    throw new Error(
+      `Failed to execute '${fnName}' on 'TimeRanges': The index provided (${index}) is non-numeric or out of bounds (0-${end}).`,
+    );
+  }
+}
+
+function emptyTimeRange(): any {
+  throw new Error(__DEV__ ? '`TimeRanges` object is empty.' : 'empty');
 }

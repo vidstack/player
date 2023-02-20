@@ -32,7 +32,7 @@ export const TimeDefinition = defineCustomElement<MediaTimeElement>({
 function getSeconds(type: TimeProps['type'], $media: MediaStore) {
   switch (type) {
     case 'buffered':
-      return $media.bufferedAmount;
+      return $media.bufferedEnd;
     case 'seekable':
       return $media.seekableEnd;
     case 'duration':

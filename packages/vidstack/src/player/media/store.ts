@@ -1,7 +1,7 @@
 import { createStore, tick } from 'maverick.js';
 
 import type { MediaState } from './state';
-import { createTimeRanges } from './time-ranges';
+import { createTimeRanges, getTimeRangesEnd, getTimeRangesStart } from './time-ranges';
 
 export interface MediaStore extends MediaState {}
 
@@ -41,17 +41,14 @@ export const mediaStore = createStore<MediaStore>({
   get currentSrc() {
     return this.source;
   },
-  get bufferedAmount() {
-    const buffered = this.buffered;
-    return buffered.length === 0 ? 0 : buffered.end(buffered.length - 1);
+  get bufferedEnd() {
+    return getTimeRangesEnd(this.buffered) || 0;
   },
   get seekableStart() {
-    const seekable: TimeRanges = this.seekable;
-    return seekable.length ? seekable.start(0) : 0;
+    return getTimeRangesStart(this.seekable) || 0;
   },
   get seekableEnd() {
-    const seekable: TimeRanges = this.seekable;
-    return seekable.length ? seekable.end(seekable.length - 1) : Infinity;
+    return getTimeRangesEnd(this.seekable) || Infinity;
   },
   // internal
   attemptingAutoplay: false,
