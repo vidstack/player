@@ -75,9 +75,9 @@ export interface MediaElementCSSVars {
    */
   readonly 'media-duration': number;
   /**
-   * The amount of media that is seekable in seconds (0 -> duration).
+   * The latest time in seconds at which media can be seeked to.
    */
-  readonly 'media-seekable-amount': number;
+  readonly 'media-seekable-end': number;
 }
 
 /**
