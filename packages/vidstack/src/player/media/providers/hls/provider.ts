@@ -45,6 +45,10 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
     return 'hls';
   }
 
+  get canLiveSync() {
+    return true;
+  }
+
   protected _$ctor = signal<HLSConstructor | null>(null);
   protected _$instance = signal<HLS.default | null>(null);
 

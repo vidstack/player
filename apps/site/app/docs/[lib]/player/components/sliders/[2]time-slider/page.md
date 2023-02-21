@@ -59,6 +59,10 @@ media-time-slider[dragging] {
 /* Shorthand for both dragging and pointing. */
 media-time-slider[interactive] {
 }
+
+/* Apply styles when at live edge. */
+media-player[live-edge] media-time-slider {
+}
 ```
 
 ### Parts
@@ -74,6 +78,10 @@ media-time-slider[interactive] [part~='track'] {
 
 /* Apply styles to track fill (played portion of slider). */
 media-time-slider [part~='track-fill'] {
+}
+
+/* Apply styles to track fill when at live edge. */
+media-player[live-edge] media-time-slider [part~='track-fill'] {
 }
 
 /* Apply styles to track progress (buffered). */

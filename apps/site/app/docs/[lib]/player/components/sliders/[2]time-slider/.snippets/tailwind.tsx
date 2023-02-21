@@ -20,7 +20,7 @@ function SliderTrack() {
 function SliderTrackFill() {
   return (
     <div
-      className="absolute top-1/2 left-0 z-20 h-[var(--track-height)] w-full -translate-y-1/2 scale-x-[var(--slider-fill-rate)] transform bg-white will-change-transform"
+      className="live-edge:bg-red absolute top-1/2 left-0 z-20 h-[var(--track-height)] w-full -translate-y-1/2 scale-x-[var(--slider-fill-rate)] transform bg-white will-change-transform"
       style={{ transformOrigin: 'left center' }}
     />
   );

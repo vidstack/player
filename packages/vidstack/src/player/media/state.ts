@@ -60,6 +60,15 @@ export interface MediaState {
    */
   duration: number;
   /**
+   * Whether the native browser fullscreen API is available, or the current provider can
+   * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
+   * only that it can be attempted.
+   *
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API}
+   */
+  canFullscreen: boolean;
+  /**
    * Whether media is allowed to begin loading. This depends on the `loading` configuration.
    * If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will become `true`
    * once the media has entered the viewport.
@@ -75,14 +84,12 @@ export interface MediaState {
    */
   canPlay: boolean;
   /**
-   * Whether the native browser fullscreen API is available, or the current provider can
-   * toggle fullscreen mode. This does not mean that the operation is guaranteed to be successful,
-   * only that it can be attempted.
+   * Whether seeking operations are possible on the current stream. This generally false for
+   * live streams that are loaded natively.
    *
-   * @defaultValue false
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API}
+   * @defaultValue true
    */
-  canFullscreen: boolean;
+  canSeek: boolean;
   /**
    * Indicates whether a user interface should be shown for controlling the resource. Set this to
    * `false` when you want to provide your own custom controls, and `true` if you want the current
@@ -110,14 +117,6 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime}
    */
   currentTime: number;
-  /**
-   * An approximation of what the live time currently is. Every 30ms, 0.03 seconds is added to the
-   * current value, when `seekableEnd` updates the value is reset back to `0.03`. For non-live
-   * streams this will default to 0.
-   *
-   * The live tracking scheme was taken from Video.js.
-   */
-  currentLiveTime: number;
   /**
    * Whether media playback has reached the end. In other words it'll be true
    * if `currentTime === duration`.
@@ -150,7 +149,7 @@ export interface MediaState {
   userIdle: boolean;
   /**
    * Whether the user has intentionally seeked behind the live edge. The user must've seeked
-   * roughly 2 seconds or more during a live stream for this to be considered true.
+   * roughly 2 or more seconds behind during a live stream for this to be considered true.
    *
    * @defaultValue false
    */
@@ -174,14 +173,14 @@ export interface MediaState {
   live: boolean;
   /**
    * The total length of the live stream starting at the first seekable time up to the
-   * current live time. If the `currentLiveTime` is `Infinity` or the stream is non-live then
+   * current live time. If the `duration` is `Infinity` or the stream is non-live then
    * this value will default to 0.
    *
    * @defaultValue 0
    */
   liveWindow: number;
   /**
-   * The number of seconds that `currentTime` can be behind the `currentLiveTime` to still be
+   * The number of seconds that `currentTime` can be behind `duration` and still be
    * considered live. The default value is 15, meaning the user can be up to 15 seconds behind
    * the live time and still be considered live.
    *
@@ -194,7 +193,7 @@ export interface MediaState {
    *
    * 1. The player is _not_ in a paused state.
    * 2. The user has _not_ seeked behind the live edge by more than 2s.
-   * 3. The `currentTime` is within the live tolerance of `currentLiveTime` (default is 15s).
+   * 3. The `currentTime` is within the live tolerance of `duration` (default is 15s).
    *
    * This value will default to `false` for non-live streams.
    *
@@ -340,6 +339,4 @@ export interface MediaState {
   attemptingAutoplay: boolean;
   /** @internal */
   canLoadPoster: boolean | null;
-  /** @internal */
-  liveDelta: number;
 }

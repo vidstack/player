@@ -1,4 +1,4 @@
-import { effect, Signals } from 'maverick.js';
+import { effect, peek, Signals } from 'maverick.js';
 
 import { RequestQueue } from '../../../foundation/queue/request-queue';
 import { clampNumber } from '../../../utils/number';
@@ -47,7 +47,16 @@ export function useMediaProviderDelegate(
   function setCurrentTime(currentTime: number) {
     canPlayQueue._enqueue('currentTime', () => {
       const adapter = $provider();
-      if (currentTime !== adapter!.currentTime) adapter!.currentTime = currentTime;
+      if (currentTime !== adapter!.currentTime) {
+        peek(() => {
+          const boundTime = Math.min(
+            Math.max(currentTime, $store.seekableStart + 0.1),
+            $store.duration - 0.1,
+          );
+
+          if (Number.isFinite(boundTime)) adapter!.currentTime = boundTime;
+        });
+      }
     });
   }
 

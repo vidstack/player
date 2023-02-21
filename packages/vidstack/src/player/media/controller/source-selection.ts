@@ -17,9 +17,9 @@ export function useSourceSelection(
   const { $loader, $store, delegate } = context;
 
   const loaders: MediaProviderLoader[] = [
-    new AudioProviderLoader(),
-    new VideoProviderLoader(),
     new HLSProviderLoader(),
+    new VideoProviderLoader(),
+    new AudioProviderLoader(),
   ];
 
   if (__SERVER__) {

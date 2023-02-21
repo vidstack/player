@@ -145,18 +145,24 @@ export function createMediaRequestManager(
   }
 
   function onSeekRequest(event: RE.MediaSeekRequestEvent) {
-    const seekTime = event.detail;
-
     if ($store.ended) requests._$isReplay.set(true);
+    requests._$isSeeking.set(false);
+    requests._queue._delete('seeking');
 
-    if (event.trigger?.isTrusted) {
-      const liveEdgeDiff = Math.abs($store.currentLiveTime - event.detail);
-      $store.userBehindLiveEdge = liveEdgeDiff > 2;
-    }
+    const boundTime = Math.min(
+      Math.max($store.seekableStart + 0.1, event.detail),
+      $store.duration - 0.1,
+    );
+
+    if (!Number.isFinite(boundTime)) return;
 
     requests._queue._enqueue('seeked', event);
-    requests._$isSeeking.set(false);
-    $provider()!.currentTime = seekTime === $store.duration ? seekTime - 0.1 : seekTime;
+    $provider()!.currentTime = boundTime;
+
+    if ($store.live && event.isOriginTrusted) {
+      const liveEdgeDiff = Math.abs($store.duration - boundTime);
+      $store.userBehindLiveEdge = liveEdgeDiff > 2;
+    }
   }
 
   function onSeekToLiveEdgeRequest(event: RE.MediaLiveEdgeRequestEvent) {
@@ -248,7 +254,7 @@ export function createMediaRequestManager(
     try {
       const provider = peek($provider);
       throwIfNotReadyForPlayback(provider, $player);
-      if ($store.ended) provider!.currentTime = 0;
+      if (peek(() => $store.ended)) provider!.currentTime = 0;
       return provider!.play();
     } catch (error) {
       const errorEvent = createEvent($player, 'play-fail', { detail: coerceToError(error) });
@@ -303,7 +309,7 @@ export function createMediaRequestManager(
     if (peek(() => !$store.live || $store.liveEdge)) return;
     const provider = peek($provider);
     throwIfNotReadyForPlayback(provider, $player);
-    provider!.currentTime = $store.currentLiveTime;
+    provider!.currentTime = $store.duration;
   }
 
   return {

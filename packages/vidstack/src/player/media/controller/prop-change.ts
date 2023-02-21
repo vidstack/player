@@ -73,5 +73,13 @@ export function useMediaPropChange(
     effect(() => {
       $store.liveTolerance = $liveTolerance();
     });
+
+    effect(() => {
+      dispatchEvent(player, 'live-change', { detail: $store.live });
+    });
+
+    effect(() => {
+      dispatchEvent(player, 'live-edge-change', { detail: $store.liveEdge });
+    });
   });
 }

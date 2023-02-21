@@ -1,8 +1,9 @@
-import { computed } from 'maverick.js';
+import { computed, useContext } from 'maverick.js';
 import { defineCustomElement } from 'maverick.js/element';
 
 import { round } from '../../../utils/number';
 import { formatTime } from '../../../utils/time';
+import { sliderValueFormattersContext } from '../slider/format';
 import { useSliderStore } from '../slider/store';
 import { sliderValueTextProps } from './props';
 import type { MediaSliderValueTextElement } from './types';
@@ -17,7 +18,8 @@ export const SliderValueTextDefinition = defineCustomElement<MediaSliderValueTex
   tagName: 'media-slider-value-text',
   props: sliderValueTextProps,
   setup({ props: { $type, $format, $decimalPlaces, $padHours, $showHours } }) {
-    const $slider = useSliderStore();
+    const $slider = useSliderStore(),
+      formatters = useContext(sliderValueFormattersContext);
 
     const $text = computed(() => {
       const value = $type() === 'current' ? $slider.value : $slider.pointerValue;
@@ -25,11 +27,11 @@ export const SliderValueTextDefinition = defineCustomElement<MediaSliderValueTex
       if (format === 'percent') {
         const range = $slider.max - $slider.min;
         const percent = (value / range) * 100;
-        return round(percent, $decimalPlaces()) + '﹪';
+        return (formatters.percent ?? round)(percent, $decimalPlaces()) + '﹪';
       } else if (format === 'time') {
-        return formatTime(value, $padHours(), $showHours());
+        return (formatters.time ?? formatTime)(value, $padHours(), $showHours());
       } else {
-        return value.toFixed(2);
+        return formatters.value?.(value) ?? value.toFixed(2);
       }
     });
 

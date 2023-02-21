@@ -2,10 +2,10 @@
 description: This component is used to create a range input for controlling the volume of media.
 ---
 
-## Usage
-
 📖 The [`$tag:media-slider`](/docs/player/components/sliders/slider) guide contains background
 documentation that can be used when working with the volume slider component.
+
+## Usage
 
 The `$tag:media-volume-slider` component receives volume updates from the provider through the media
 store, and dispatches a `media-volume-change-request` event to request updating the current volume

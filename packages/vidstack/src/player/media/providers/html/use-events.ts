@@ -21,8 +21,7 @@ export function useHTMLMediaElementEvents(
 
   let isMediaWaiting = false,
     attachedLoadStartEventListeners = false,
-    attachedCanPlayEventListeners = false,
-    seekedToLivePosition = false;
+    attachedCanPlayEventListeners = false;
 
   /**
    * The `timeupdate` event fires surprisingly infrequently during playback, meaning your progress
@@ -115,13 +114,10 @@ export function useHTMLMediaElementEvents(
   }
 
   function onAbort(event: Event) {
-    seekedToLivePosition = false;
     delegate.dispatch('abort', { trigger: event });
   }
 
   function onLoadStart(event: Event) {
-    seekedToLivePosition = false;
-
     if (provider.media.networkState === 3) {
       onAbort(event);
       return;
@@ -152,13 +148,25 @@ export function useHTMLMediaElementEvents(
 
     // Native HLS does not reliably fire `canplay` event.
     if (IS_SAFARI && isHLSSrc($store.source)) {
-      delegate.ready({ duration: provider.media.duration }, event);
+      delegate.ready(getCanPlayDetail(), event);
     }
   }
 
+  function getCanPlayDetail() {
+    return {
+      duration: provider.media.duration,
+      seekable: provider.media.seekable,
+    };
+  }
+
   function onMediaTypeChange() {
-    const isLive = !Number.isFinite(provider.media.duration);
-    if (isLive) delegate.dispatch('media-change', { detail: 'live-video' });
+    const isLive = !Number.isFinite(provider.media.duration),
+      isVideo = provider.media instanceof HTMLVideoElement;
+    if (isLive) {
+      delegate.dispatch('media-change', {
+        detail: isVideo ? 'live-video' : 'live-audio',
+      });
+    }
   }
 
   function onPlay(event: Event) {
@@ -174,14 +182,14 @@ export function useHTMLMediaElementEvents(
   }
 
   function onCanPlay(event: Event) {
-    delegate.ready({ duration: provider.media.duration }, event);
+    delegate.ready(getCanPlayDetail(), event);
   }
 
   function onCanPlayThrough(event: Event) {
     if ($store.started) return;
     delegate.dispatch('can-play-through', {
       trigger: event,
-      detail: { duration: provider.media.duration },
+      detail: getCanPlayDetail(),
     });
   }
 
@@ -189,12 +197,6 @@ export function useHTMLMediaElementEvents(
     isMediaWaiting = false;
     delegate.dispatch('playing', { trigger: event });
     timeRafLoop.start();
-    // Seek to live position.
-    if (!seekedToLivePosition && $store.live) {
-      const end = $store.seekable.end(0);
-      if (Number.isFinite(end)) provider.media.currentTime = end;
-      seekedToLivePosition = true;
-    }
   }
 
   function onStalled(event: Event) {
@@ -224,6 +226,7 @@ export function useHTMLMediaElementEvents(
   }
 
   function onDurationChange(event: Event) {
+    $store.canSeek = Number.isFinite(provider.media.duration);
     if ($store.ended) updateCurrentTime(provider.media.duration, event);
     delegate.dispatch('duration-change', {
       detail: provider.media.duration,
@@ -254,7 +257,9 @@ export function useHTMLMediaElementEvents(
         getNumberOfDecimalPlaces(provider.media.currentTime)
     ) {
       updateCurrentTime(provider.media.duration, event);
-      if (!provider.media.ended) dispatchEvent(player, 'media-play-request');
+      if (!provider.media.ended) {
+        dispatchEvent(player, 'media-play-request', { trigger: event });
+      }
     }
   }
 

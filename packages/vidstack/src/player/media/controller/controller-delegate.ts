@@ -12,7 +12,13 @@ export interface MediaControllerDelegate {
       : [init: InferEventInit<MediaEvents[Type]>]
   ): void;
 
-  ready(info: { duration: number }, trigger?: Event): Promise<void>;
+  ready(
+    info: {
+      duration: number;
+      seekable: TimeRanges;
+    },
+    trigger?: Event,
+  ): Promise<void>;
 }
 
 export function createMediaControllerDelegate(
@@ -30,10 +36,10 @@ export function createMediaControllerDelegate(
     handle(new DOMEvent<any>(type, init?.[0]));
   };
 
-  async function ready({ duration }, trigger) {
+  async function ready(info, trigger) {
     if (peek(() => $store.canPlay)) return;
 
-    dispatch('can-play', { detail: { duration }, trigger });
+    dispatch('can-play', { detail: info, trigger });
     tick();
 
     if (__DEV__) {

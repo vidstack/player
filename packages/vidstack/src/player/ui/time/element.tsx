@@ -20,8 +20,12 @@ export const TimeDefinition = defineCustomElement<MediaTimeElement>({
     const $media = useMedia().$store;
 
     const $formattedTime = computed(() => {
-      const seconds = getSeconds($type(), $media);
-      const time = $remainder() ? Math.max(0, $media.duration - seconds) : seconds;
+      const seconds = getSeconds($type(), $media),
+        duration = $media.duration;
+
+      if (!Number.isFinite(seconds + duration)) return 'LIVE';
+
+      const time = $remainder() ? Math.max(0, duration - seconds) : seconds;
       return formatTime(time, $padHours(), $showHours());
     });
 

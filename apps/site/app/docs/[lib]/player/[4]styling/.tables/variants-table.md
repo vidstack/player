@@ -3,10 +3,11 @@
 | `autoplay`       | Autoplay has successfully started.                        |
 | `autoplay-error` | Autoplay has failed to start.                             |
 | `buffering`      | Media is not ready for playback or waiting for more data. |
+| `can-fullscreen` | Media fullscreen is available.                            |
 | `can-load`       | Media can begin loading.                                  |
 | `can-play`       | Media is ready to be played.                              |
 | `can-control`    | Media is ready for playback and user is not idle.         |
-| `can-fullscreen` | Media fullscreen is available.                            |
+| `can-seek`       | Whether seeking is permitted for live stream.             |
 | `ended`          | Playback has reached the end.                             |
 | `error`          | Issue with media loading/playback.                        |
 | `fullscreen`     | Media is in fullscreen mode.                              |

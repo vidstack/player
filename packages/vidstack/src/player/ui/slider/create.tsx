@@ -14,6 +14,7 @@ import { ariaBool, mergeProperties, setStyle } from 'maverick.js/std';
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
+import { sliderValueFormattersContext } from './format';
 import type { SliderProps } from './props';
 import { SliderStore, sliderStoreContext } from './store';
 import type { MediaSliderElement, SliderMembers } from './types';
@@ -30,20 +31,21 @@ export function createSlider(
   accessors: () => SliderProps,
 ): Slider {
   provideContext(sliderStoreContext);
+  provideContext(sliderValueFormattersContext);
 
   const scope = getScope()!,
     $store = useContext(sliderStoreContext),
     { $disabled, $min, $max, $value, $step } = $props;
 
   host.setAttributes({
-    disabled: $props.$disabled,
+    disabled: $disabled,
     dragging: () => $store.dragging,
     pointing: () => $store.pointing,
     interactive: () => $store.interactive,
     'aria-disabled': () => ariaBool($disabled()),
     'aria-valuemin': aria?.valueMin ?? (() => $store.min),
     'aria-valuemax': aria?.valueMax ?? (() => $store.max),
-    'aria-valuenow': aria?.valueNow ?? (() => $store.value),
+    'aria-valuenow': aria?.valueNow ?? (() => Math.round($store.value)),
     'aria-valuetext': aria?.valueText ?? (() => round(($store.value / $store.max) * 100, 2) + '%'),
   });
 
@@ -68,7 +70,7 @@ export function createSlider(
 
   effect(() => {
     const target = host.$el();
-    if (!target) return;
+    if (!target || $disabled()) return;
 
     const preview = target.querySelector('[slot="preview"]') as HTMLElement;
     if (!preview) return;

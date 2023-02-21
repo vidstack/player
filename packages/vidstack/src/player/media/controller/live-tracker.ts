@@ -2,28 +2,32 @@ import { effect, peek } from 'maverick.js';
 
 import type { MediaContext } from '../context';
 
-export function useLiveTracker({ $store }: MediaContext) {
-  let lastTime = -1;
+export function useLiveTracker({ $store, $provider }: MediaContext) {
+  let lastTime = -1,
+    liveDelta = -1;
 
   effect(() => {
-    if (!$store.live) return;
-
-    lastTime = -1;
+    if (!$store.live || $provider()?.canLiveSync) return;
 
     effect(() => {
-      $store.seekableEnd;
-      $store.liveDelta = 0;
-      onInterval();
+      if (!$store.playing || !Number.isFinite($store.seekableEnd)) return;
+      lastTime = -1;
+      liveDelta = -1;
+      const id = peek(() => setInterval(onInterval, 30));
+      return () => clearInterval(id);
     });
 
-    const id = setInterval(onInterval, 30);
-    return () => clearInterval(id);
+    effect(() => {
+      liveDelta = 0;
+      onInterval();
+    });
   });
 
   function onInterval() {
     const newTime = Number(window.performance.now().toFixed(4)),
       deltaTime = lastTime === -1 ? 0 : (newTime - lastTime) / 1000;
-    $store.liveDelta = peek(() => $store.liveDelta) + deltaTime;
+    liveDelta += deltaTime;
+    $store.duration = liveDelta + $store.seekableEnd;
     lastTime = newTime;
   }
 }

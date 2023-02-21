@@ -124,7 +124,7 @@ export interface MediaController {
    */
   exitFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
   /**
-   * Sets the current time to the live edge (i.e., `currentLiveTime`). This is a no-op for non-live
+   * Sets the current time to the live edge (i.e., `duration`). This is a no-op for non-live
    * streams and will throw if called before media is ready for playback.
    */
   seekToLiveEdge(): void;

@@ -22,6 +22,7 @@ export interface MediaProvider
   extends Pick<MediaState, 'paused' | 'muted' | 'currentTime' | 'volume' | 'playsinline'> {
   readonly type: string;
   readonly fullscreen?: MediaFullscreenAdapter;
+  canLiveSync?: boolean;
   preconnect?(context: MediaContext): void;
   setup(context: MediaSetupContext): void;
   destroy?(): void;

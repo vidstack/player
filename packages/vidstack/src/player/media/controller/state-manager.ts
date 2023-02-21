@@ -189,25 +189,34 @@ export function createMediaStateManager(
     }
 
     $store.canPlay = true;
-    $store.duration = event.detail.duration;
+    $store.seekable = event.detail.seekable;
+    if (!$store.live) $store.duration = event.detail.duration;
     $player()?.setAttribute('aria-busy', 'false');
   }
 
   function onCanPlayThrough(event: ME.MediaCanPlayThroughEvent) {
     $store.canPlay = true;
-    $store.duration = event.detail.duration;
+    $store.seekable = event.detail.seekable;
+    if (!$store.live) $store.duration = event.detail.duration;
     appendTriggerEvent(event, trackedEvents.get('can-play'));
   }
 
   function onDurationChange(event: ME.MediaDurationChangeEvent) {
     const duration = event.detail;
-    $store.duration = !isNaN(duration) ? duration : 0;
+    if (!$store.live) $store.duration = !Number.isNaN(duration) ? duration : 0;
   }
 
   function onProgress(event: ME.MediaProgressEvent) {
     const { buffered, seekable } = event.detail;
     $store.buffered = buffered;
     $store.seekable = seekable;
+    if ($store.live) {
+      handleMediaEvent(
+        createEvent($player, 'duration-change', {
+          detail: $store.duration,
+        }),
+      );
+    }
   }
 
   function onAutoplay(event: ME.MediaAutoplayEvent) {
@@ -278,6 +287,20 @@ export function createMediaStateManager(
     }
 
     onStarted(event);
+    if (playEvent) seekLiveToEdge();
+  }
+
+  function seekLiveToEdge() {
+    const timeDiff = Math.abs($store.duration - $store.currentTime);
+    // Seek to live position if we've fallen behind (within tolerance).
+    if (
+      $store.live &&
+      !$store.userBehindLiveEdge &&
+      ($store.canSeek ? timeDiff <= $store.liveTolerance : timeDiff > $store.liveTolerance)
+    ) {
+      const end = Number.isFinite($store.duration) ? $store.duration : $store.seekableEnd;
+      if (Number.isFinite(end)) $provider()!.currentTime = end;
+    }
   }
 
   function onStarted(event: Event) {

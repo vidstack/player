@@ -36,6 +36,8 @@ export interface MediaEvents {
   'fullscreen-change': MediaFullscreenChangeEvent;
   'fullscreen-error': MediaFullscreenErrorEvent;
   'user-idle-change': UserIdleChangeEvent;
+  'live-change': MediaLiveChangeEvent;
+  'live-edge-change': MediaLiveEdgeChangeEvent;
   'load-start': MediaLoadStartEvent;
   'loaded-data': MediaLoadedDataEvent;
   'loaded-metadata': MediaLoadedMetadataEvent;
@@ -112,7 +114,12 @@ export interface MediaCanLoadEvent extends MediaEvent<void> {}
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplay_event}
  */
-export interface MediaCanPlayEvent extends MediaEvent<{ duration: number }> {}
+export interface MediaCanPlayEvent extends MediaEvent<MediaCanPlayDetail> {}
+
+export interface MediaCanPlayDetail {
+  duration: number;
+  seekable: TimeRanges;
+}
 
 /**
  * Fired when the user agent can play the media, and estimates that **enough** data has been
@@ -120,7 +127,7 @@ export interface MediaCanPlayEvent extends MediaEvent<{ duration: number }> {}
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canplaythrough_event}
  */
-export interface MediaCanPlayThroughEvent extends MediaEvent<{ duration: number }> {}
+export interface MediaCanPlayThroughEvent extends MediaEvent<MediaCanPlayDetail> {}
 
 /**
  * Fired when the `controls` property has changed value.
@@ -229,6 +236,18 @@ export interface MediaLoadedMetadataEvent extends MediaEvent<void> {}
  * Fired when the `loop` property has changed value.
  */
 export interface MediaLoopChangeEvent extends MediaEvent<boolean> {}
+
+/**
+ * Fired when the `live` state changes. The event detail indicates whether the current stream
+ * is live or not.
+ */
+export interface MediaLiveChangeEvent extends MediaEvent<boolean> {}
+
+/**
+ * Fired when the `liveEdge` state changes. The event detail indicates whether the user is viewing
+ * at the live edge or not.
+ */
+export interface MediaLiveEdgeChangeEvent extends MediaEvent<boolean> {}
 
 /**
  * Fired when the browser has started to load a resource.

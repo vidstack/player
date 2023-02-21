@@ -34,6 +34,7 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'canFullscreen',
   'canLoad',
   'canPlay',
+  'canSeek',
   'ended',
   'error',
   'fullscreen',
@@ -116,10 +117,10 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       '--media-aspect-ratio': props.$aspectRatio,
       '--media-buffered-start': () => $store.bufferedStart,
       '--media-buffered-end': () => $store.bufferedEnd,
-      '--media-current-time': () => $store.currentTime,
-      '--media-duration': () => $store.duration,
       '--media-seekable-start': () => $store.seekableStart,
       '--media-seekable-end': () => $store.seekableEnd,
+      '--media-current-time': () => 0 + $store.currentTime.toFixed(4),
+      '--media-duration': () => 0 + $store.duration.toFixed(4),
     });
 
     onDispose(() => {

@@ -48,12 +48,18 @@ media-volume-slider [part~='track-fill'] {
   transform: translateY(-50%) scaleX(var(--slider-fill-rate));
 }
 
+media-player[live-edge] media-time-slider [part~='track-fill'] {
+  background-color: #dc2626;
+}
+
 media-time-slider [part~='track-progress'] {
   z-index: 1; /** above track. */
+  left: 0;
   background-color: #878787;
   transform-origin: left center;
   will-change: transform;
-  transform: translateY(-50%) scaleX(calc(var(--media-buffered-end) / var(--media-duration)));
+  transform: translateY(-50%)
+    scaleX(min(calc(var(--media-buffered-end) / var(--media-duration)), 1));
 }
 
 media-slider [part='thumb-container'],

@@ -1,10 +1,10 @@
 import throttle from 'just-throttle';
-import { effect } from 'maverick.js';
+import { effect, provideContext } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
-import { isKeyboardEvent, mergeProperties } from 'maverick.js/std';
+import { DOMEvent, isKeyboardEvent, mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
-import { formatSpokenTime } from '../../../utils/time';
+import { formatSpokenTime, formatTime } from '../../../utils/time';
 import { useMedia } from '../../media/context';
 import { createSlider } from '../slider/create';
 import type {
@@ -13,6 +13,7 @@ import type {
   SliderDragValueChangeEvent,
   SliderValueChangeEvent,
 } from '../slider/events';
+import { sliderValueFormattersContext } from '../slider/format';
 import { timeSliderProps } from './props';
 import type { MediaTimeSliderElement } from './types';
 
@@ -25,21 +26,21 @@ declare global {
 export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>({
   tagName: 'media-time-slider',
   props: timeSliderProps,
-  setup({ host, props: { $pauseWhileDragging, $seekingRequestThrottle, ...props }, accessors }) {
+  setup({
+    host,
+    props: { $pauseWhileDragging, $seekingRequestThrottle, $disabled, ...props },
+    accessors,
+  }) {
     const { $store: $media, remote } = useMedia(),
       { $store, members } = createSlider(
         host,
         {
-          $props: props,
-          readonly: true,
-          aria: {
-            valueMin: 0,
-            valueMax: 100,
-            valueNow: () => Math.round($store.fillPercent),
-            valueText: () =>
-              // `currentTime` out of `duration`
-              `${formatSpokenTime($store.value)} out of ${formatSpokenTime($store.max)}`,
+          $props: {
+            ...props,
+            $disabled: () => $disabled() || !$media.canSeek,
           },
+          readonly: true,
+          aria: { valueMin: 0, valueMax: 100, valueText: getSpokenText },
           onValueChange,
           onDragStart,
           onDragEnd,
@@ -53,11 +54,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     });
 
     effect(() => {
-      $store.value = $media.currentTime;
-    });
-
-    effect(() => {
-      $store.max = $media.duration;
+      $store.value = getPercent($media.currentTime);
     });
 
     let dispatchSeeking: typeof seeking & { cancel(): void };
@@ -69,11 +66,21 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
       remote.seeking(time, event);
     }
 
-    function onValueChange(event: SliderValueChangeEvent) {
-      if (isKeyboardEvent(event.originEvent)) {
-        dispatchSeeking.cancel();
-        remote.seek(event.detail, event);
+    function seek(event: DOMEvent<number>) {
+      dispatchSeeking.cancel();
+
+      const percent = event.detail;
+
+      if ($media.live && percent >= 99) {
+        remote.seekToLiveEdge(event);
+        return;
       }
+
+      remote.seek(getTime(percent), event);
+    }
+
+    function onValueChange(event: SliderValueChangeEvent) {
+      if (isKeyboardEvent(event.originEvent)) seek(event);
     }
 
     let wasPlayingBeforeDragStart = false;
@@ -85,16 +92,59 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     }
 
     function onDragValueChange(event: SliderDragValueChangeEvent) {
-      dispatchSeeking(event.detail, event);
+      dispatchSeeking(getTime(event.detail), event);
     }
 
     function onDragEnd(event: SliderDragEndEvent) {
-      dispatchSeeking.cancel();
-      remote.seek(event.detail, event);
+      seek(event);
       if ($pauseWhileDragging() && wasPlayingBeforeDragStart) {
         remote.play(event);
       }
     }
+
+    function getTime(percent: number) {
+      return $media.seekableStart + (percent / 100) * $media.duration;
+    }
+
+    function getPercent(time: number) {
+      const rate = Math.max(
+        0,
+        Math.min(
+          1,
+          $media.liveEdge
+            ? 1
+            : (Math.min(time, $media.duration) - $media.seekableStart) / $media.duration,
+        ),
+      );
+
+      return Number.isNaN(rate) ? 0 : Number.isFinite(rate) ? rate * 100 : 100;
+    }
+
+    function getSpokenText() {
+      const time = getTime($store.value);
+      return Number.isFinite(time)
+        ? `${formatSpokenTime(time)} out of ${formatSpokenTime($media.duration)}`
+        : 'live';
+    }
+
+    provideContext(sliderValueFormattersContext, {
+      value(percent) {
+        const time = getTime(percent);
+        return Number.isFinite(time)
+          ? ($media.live ? time - $media.duration : time).toFixed(0)
+          : 'LIVE';
+      },
+      time(percent, padHours, showHours) {
+        const time = getTime(percent);
+        return Number.isFinite(time)
+          ? `${$media.live ? '-' : ''}${formatTime(
+              $media.live ? Math.abs(time - $media.duration) : time,
+              padHours,
+              showHours,
+            )}`
+          : 'LIVE';
+      },
+    });
 
     return mergeProperties(members, {
       // redeclare the following properties to ensure they're read only.

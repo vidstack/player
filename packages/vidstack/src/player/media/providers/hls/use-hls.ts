@@ -2,6 +2,7 @@ import type * as HLS from 'hls.js';
 import { effect, peek, ReadSignal, WriteSignal } from 'maverick.js';
 import { camelToKebabCase, dispatchEvent, DOMEvent, kebabToCamelCase } from 'maverick.js/std';
 
+import { createRAFLoop } from '../../../../foundation/hooks/raf-loop';
 import { HLS_LISTENERS } from '../../../element/element';
 import type { MediaType } from '../../types';
 import type { MediaSetupContext } from '../types';
@@ -47,6 +48,17 @@ export function useHLS(
     };
   });
 
+  effect(() => {
+    if (!$store.live) return;
+    const instance = $instance()!;
+    const rafLoop = createRAFLoop(() => {
+      const position = instance.liveSyncPosition;
+      $store.duration = position ?? Infinity;
+    });
+    rafLoop.start();
+    return rafLoop.stop;
+  });
+
   function dispatchHLSEvent(eventType: string, detail: any) {
     player.dispatchEvent(new DOMEvent(toDOMEventType(eventType), { detail }));
   }
@@ -74,10 +86,6 @@ export function useHLS(
     const instance = $instance()!;
     const media = instance.media!;
     media.dispatchEvent(new DOMEvent<void>('canplay', { trigger: event }));
-
-    if (!$store.autoplay && live && instance.liveSyncPosition) {
-      media.currentTime = instance.liveSyncPosition;
-    }
   }
 
   function onError(eventType: string, data: HLS.ErrorData) {

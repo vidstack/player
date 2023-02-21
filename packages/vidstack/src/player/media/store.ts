@@ -11,8 +11,9 @@ export const mediaStore = createStore<MediaStore>({
   buffered: createTimeRanges(),
   duration: 0,
   canLoad: false,
-  canPlay: false,
   canFullscreen: false,
+  canPlay: false,
+  canSeek: true,
   controls: false,
   poster: '',
   currentTime: 0,
@@ -20,7 +21,6 @@ export const mediaStore = createStore<MediaStore>({
   error: undefined,
   fullscreen: false,
   loop: false,
-  live: false,
   logLevel: __DEV__ ? 'warn' : 'silent',
   media: 'unknown',
   muted: false,
@@ -50,28 +50,24 @@ export const mediaStore = createStore<MediaStore>({
     return getTimeRangesStart(this.seekable) ?? 0;
   },
   get seekableEnd() {
-    return getTimeRangesEnd(this.seekable) ?? Infinity;
+    return this.canPlay ? getTimeRangesEnd(this.seekable) ?? Infinity : 0;
   },
   // ~~ user props ~~
   userIdle: false,
   userBehindLiveEdge: false,
   // ~~ live props ~~
-  liveDelta: 0, // internal
+  live: false,
   liveTolerance: 15,
-  get currentLiveTime() {
-    return this.live ? this.liveDelta + this.seekableEnd : 0;
-  },
   get liveWindow() {
-    const time = this.currentLiveTime;
-    return time === Infinity ? 0 : time - this.seekableStart;
+    const time = this.duration;
+    return Number.isFinite(time) ? time - this.seekableStart : 0;
   },
   get liveEdge() {
     return (
       this.live &&
-      (this.currentLiveTime === Infinity ||
-        (!this.paused &&
-          !this.userBehindLiveEdge &&
-          Math.abs(this.currentLiveTime - this.currentTime) <= this.liveTolerance))
+      (!this.canSeek ||
+        (!this.userBehindLiveEdge &&
+          Math.abs(this.duration - this.currentTime) <= this.liveTolerance))
     );
   },
   // ~~ internal props ~~

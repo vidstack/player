@@ -1,7 +1,7 @@
 /**
  * Indicates the type of media currently loading/loaded.
  */
-export type MediaType = 'unknown' | 'audio' | 'video' | 'live-video';
+export type MediaType = 'unknown' | 'audio' | 'live-audio' | 'video' | 'live-video';
 
 /**
  * Indicates the current view type which determines how the media will be presented.

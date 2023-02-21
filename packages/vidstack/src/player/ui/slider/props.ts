@@ -3,7 +3,7 @@ import type { CustomElementPropDefinitions } from 'maverick.js/element';
 export const sliderProps: CustomElementPropDefinitions<SliderProps> = {
   min: { initial: 0 },
   max: { initial: 100 },
-  disabled: { initial: false },
+  disabled: { initial: false, type: { from: false } },
   value: { initial: 100 },
   step: { initial: 1 },
   keyboardStep: { initial: 1 },
