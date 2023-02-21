@@ -70,6 +70,7 @@ export function createMediaRequestManager(
     'media-pause-request': onPauseRequest,
     'media-seeking-request': onSeekingRequest,
     'media-seek-request': onSeekRequest,
+    'media-live-edge-request': onSeekToLiveEdgeRequest,
     'media-volume-change-request': onVolumeChangeRequest,
     'media-enter-fullscreen-request': onEnterFullscreenRequest,
     'media-exit-fullscreen-request': onExitFullscreenRequest,
@@ -156,6 +157,16 @@ export function createMediaRequestManager(
     requests._queue._enqueue('seeked', event);
     requests._$isSeeking.set(false);
     $provider()!.currentTime = seekTime === $store.duration ? seekTime - 0.1 : seekTime;
+  }
+
+  function onSeekToLiveEdgeRequest(event: RE.MediaLiveEdgeRequestEvent) {
+    if (!$store.live || $store.liveEdge) return;
+    requests._queue._enqueue('seeked', event);
+    try {
+      seekToLiveEdge();
+    } catch (e) {
+      if (__DEV__) logger?.error('seek to live edge fail', e);
+    }
   }
 
   function onVolumeChangeRequest(event: RE.MediaVolumeChangeRequestEvent) {
@@ -331,7 +342,7 @@ export interface MediaRequestQueueRecord {
   pause: RE.MediaPauseRequestEvent;
   volume: RE.MediaVolumeChangeRequestEvent | RE.MediaMuteRequestEvent | RE.MediaUnmuteRequestEvent;
   fullscreen: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
-  seeked: RE.MediaSeekRequestEvent;
+  seeked: RE.MediaSeekRequestEvent | RE.MediaLiveEdgeRequestEvent;
   seeking: RE.MediaSeekingRequestEvent;
   userIdle: RE.MediaResumeUserIdleRequestEvent | RE.MediaPauseUserIdleRequestEvent;
 }

@@ -134,6 +134,10 @@ export class MediaRemoteControl {
     this._dispatchRequest('media-seek-request', trigger, time);
   }
 
+  seekToLiveEdge(trigger?: Event) {
+    this._dispatchRequest('media-live-edge-request', trigger);
+  }
+
   /**
    * Dispatch a request to update the media volume to the given `volume` level which is a value
    * between 0 and 1.

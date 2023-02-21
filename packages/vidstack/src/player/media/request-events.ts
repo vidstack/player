@@ -6,6 +6,7 @@ export interface MediaRequestEvents {
   'media-unmute-request': MediaUnmuteRequestEvent;
   'media-enter-fullscreen-request': MediaEnterFullscreenRequestEvent;
   'media-exit-fullscreen-request': MediaExitFullscreenRequestEvent;
+  'media-live-edge-request': MediaLiveEdgeRequestEvent;
   'media-play-request': MediaPlayRequestEvent;
   'media-pause-request': MediaPauseRequestEvent;
   'media-seek-request': MediaSeekRequestEvent;
@@ -66,6 +67,12 @@ export interface MediaEnterFullscreenRequestEvent extends DOMEvent<MediaFullscre
  * @composed
  */
 export interface MediaExitFullscreenRequestEvent extends DOMEvent<MediaFullscreenRequestTarget> {}
+
+/**
+ * Fired when requesting media to seek to the live edge (i.e., set the current time to the current
+ * live time).
+ */
+export interface MediaLiveEdgeRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting media playback to begin/resume.
