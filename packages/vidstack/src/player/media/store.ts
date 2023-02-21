@@ -41,9 +41,6 @@ export const mediaStore = createStore<MediaStore>({
   get currentSrc() {
     return this.source;
   },
-  get currentLiveTime() {
-    return this.live ? this.liveDelta + this.seekableEnd : 0;
-  },
   get bufferedStart() {
     return getTimeRangesStart(this.buffered) ?? 0;
   },
@@ -56,7 +53,16 @@ export const mediaStore = createStore<MediaStore>({
   get seekableEnd() {
     return getTimeRangesEnd(this.seekable) ?? Infinity;
   },
-  // internals
+  // ~~ live props ~~
+  get currentLiveTime() {
+    return this.live ? this.liveDelta + this.seekableEnd : 0;
+  },
+  get liveWindow() {
+    const time = this.currentLiveTime;
+    if (time === Infinity) return 0;
+    return time - this.seekableStart;
+  },
+  // ~~ internal props ~~
   attemptingAutoplay: false,
   canLoadPoster: null,
   liveDelta: 0,

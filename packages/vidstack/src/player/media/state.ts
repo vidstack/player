@@ -166,6 +166,14 @@ export interface MediaState {
    */
   live: boolean;
   /**
+   * The total length of the live stream starting at the first seekable time up to the
+   * current live time. If the `currentLiveTime` is `Infinity` or the stream is non-live then
+   * this value will default to 0.
+   *
+   * @defaultValue 0
+   */
+  liveWindow: number;
+  /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
    *
