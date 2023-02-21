@@ -111,6 +111,14 @@ export interface MediaState {
    */
   currentTime: number;
   /**
+   * An approximation of what the live time currently is. Every 30ms, 0.03 seconds is added to the
+   * current value, when `seekableEnd` updates the value is reset back to `0.03`. For non-live
+   * streams this will default to 0.
+   *
+   * The live tracking scheme was taken from Video.js.
+   */
+  currentLiveTime: number;
+  /**
    * Whether media playback has reached the end. In other words it'll be true
    * if `currentTime === duration`.
    *
@@ -296,4 +304,6 @@ export interface MediaState {
   attemptingAutoplay: boolean;
   /** @internal */
   canLoadPoster: boolean | null;
+  /** @internal */
+  liveDelta: number;
 }

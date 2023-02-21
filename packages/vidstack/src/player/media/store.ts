@@ -41,6 +41,9 @@ export const mediaStore = createStore<MediaStore>({
   get currentSrc() {
     return this.source;
   },
+  get currentLiveTime() {
+    return this.live ? this.liveDelta + this.seekableEnd : 0;
+  },
   get bufferedStart() {
     return getTimeRangesStart(this.buffered) ?? 0;
   },
@@ -53,9 +56,10 @@ export const mediaStore = createStore<MediaStore>({
   get seekableEnd() {
     return getTimeRangesEnd(this.seekable) ?? Infinity;
   },
-  // internal
+  // internals
   attemptingAutoplay: false,
   canLoadPoster: null,
+  liveDelta: 0,
 });
 
 const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([

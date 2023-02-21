@@ -9,6 +9,7 @@ import { mediaStore } from '../store';
 import { useMediaCanLoad } from './can-load';
 import { createMediaControllerDelegate } from './controller-delegate';
 import { useMediaEventsLogger } from './events-logger';
+import { useLiveTracker } from './live-tracker';
 import { useMediaPropChange } from './prop-change';
 import { useMediaProviderDelegate } from './provider-delegate';
 import { createMediaRequestManager, MediaRequestContext } from './request-manager';
@@ -28,7 +29,8 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
   if (__DEV__) context.logger = useLogger(context.$player);
   context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
 
-  const requests = new MediaRequestContext(),
+  const $store = context.$store,
+    requests = new MediaRequestContext(),
     stateManager = createMediaStateManager(context, requests),
     requestManager = createMediaRequestManager(context, stateManager, requests, props),
     delegate = createMediaControllerDelegate(context, stateManager.handle),
@@ -39,12 +41,13 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
   // init
   for (const prop of Object.keys(props)) {
     const propName = prop.slice(1);
-    if (propName in context.$store) context.$store[propName] = props[prop]();
+    if (propName in $store) $store[propName] = props[prop]();
   }
 
-  context.$store.muted = props.$muted() || props.$volume() === 0;
+  $store.muted = props.$muted() || props.$volume() === 0;
   useMediaPropChange(context, props);
   useMediaCanLoad(context.$player, props.$load, startLoadingMedia);
+  useLiveTracker(context);
   if (__DEV__) useMediaEventsLogger(context, context.logger);
 
   function startLoadingMedia() {
