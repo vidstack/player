@@ -10,6 +10,8 @@
 | `fullscreen`     | Media is in fullscreen mode.                       |
 | `user-idle`      | User is not active during playback.                |
 | `loop`           | Media is set to loop back to start on end.         |
+| `live`           | Media is a live stream.                            |
+| `live-edge`      | Current time is at the live edge.                  |
 | `muted`          | Media is muted.                                    |
 | `paused`         | Playback is in a paused state.                     |
 | `playing`        | Playback has started or resumed.                   |
