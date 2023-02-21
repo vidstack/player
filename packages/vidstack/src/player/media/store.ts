@@ -19,7 +19,6 @@ export const mediaStore = createStore<MediaStore>({
   ended: false,
   error: undefined,
   fullscreen: false,
-  userIdle: false,
   loop: false,
   live: false,
   logLevel: __DEV__ ? 'warn' : 'silent',
@@ -53,7 +52,11 @@ export const mediaStore = createStore<MediaStore>({
   get seekableEnd() {
     return getTimeRangesEnd(this.seekable) ?? Infinity;
   },
+  // ~~ user props ~~
+  userIdle: false,
+  userBehindLiveEdge: false,
   // ~~ live props ~~
+  liveDelta: 0, // internal
   liveTolerance: 15,
   get currentLiveTime() {
     return this.live ? this.liveDelta + this.seekableEnd : 0;
@@ -65,7 +68,6 @@ export const mediaStore = createStore<MediaStore>({
   // ~~ internal props ~~
   attemptingAutoplay: false,
   canLoadPoster: null,
-  liveDelta: 0,
 });
 
 const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([

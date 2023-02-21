@@ -142,7 +142,14 @@ export function createMediaRequestManager(
 
   function onSeekRequest(event: RE.MediaSeekRequestEvent) {
     const seekTime = event.detail;
+
     if ($store.ended) requests._$isReplay.set(true);
+
+    if (event.trigger?.isTrusted) {
+      const liveEdgeDiff = Math.abs($store.currentLiveTime - event.detail);
+      $store.userBehindLiveEdge = liveEdgeDiff > 2;
+    }
+
     requests._queue._enqueue('seeked', event);
     requests._$isSeeking.set(false);
     $provider()!.currentTime = seekTime === $store.duration ? seekTime - 0.1 : seekTime;

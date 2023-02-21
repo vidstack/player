@@ -149,6 +149,13 @@ export interface MediaState {
    */
   userIdle: boolean;
   /**
+   * Whether the user has intentionally seeked behind the live edge. The user must've seeked
+   * roughly 2 seconds or more during a live stream for this to be considered true.
+   *
+   * @defaultValue false
+   */
+  userBehindLiveEdge: boolean;
+  /**
    * Whether media should automatically start playing from the beginning (replay) every time
    * it ends.
    *
