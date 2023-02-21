@@ -38,6 +38,7 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'error',
   'fullscreen',
   'loop',
+  'live',
   'media',
   'muted',
   'paused',
