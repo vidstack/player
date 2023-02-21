@@ -189,6 +189,19 @@ export interface MediaState {
    */
   liveTolerance: number;
   /**
+   * Whether the current stream is at the live edge (i.e., at the furthest seekable part of the
+   * media). This is true if:
+   *
+   * 1. The player is _not_ in a paused state.
+   * 2. The user has _not_ seeked behind the live edge by more than 2s.
+   * 3. The `currentTime` is within the live tolerance of `currentLiveTime` (default is 15s).
+   *
+   * This value will default to `false` for non-live streams.
+   *
+   * @defaultValue false
+   */
+  liveEdge: boolean;
+  /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
    *

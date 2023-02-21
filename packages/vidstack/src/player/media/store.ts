@@ -65,6 +65,15 @@ export const mediaStore = createStore<MediaStore>({
     const time = this.currentLiveTime;
     return time === Infinity ? 0 : time - this.seekableStart;
   },
+  get liveEdge() {
+    return (
+      this.live &&
+      (this.currentLiveTime === Infinity ||
+        (!this.paused &&
+          !this.userBehindLiveEdge &&
+          Math.abs(this.currentLiveTime - this.currentTime) <= this.liveTolerance))
+    );
+  },
   // ~~ internal props ~~
   attemptingAutoplay: false,
   canLoadPoster: null,
