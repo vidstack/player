@@ -16,7 +16,7 @@ import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../reques
 import type { MediaState } from '../state';
 import type { MediaStore } from '../store';
 import type { MediaLoadingStrategy } from '../types';
-import type { Mediauser } from '../user';
+import type { MediaUser } from '../user';
 
 export interface MediaControllerProps
   // Prefer picking off the `MediaContext` type to ensure docs are kept in-sync.
@@ -73,7 +73,7 @@ export interface MediaController {
   /**
    * Media user settings which currently supports configuring user idling behavior.
    */
-  readonly user: Mediauser;
+  readonly user: MediaUser;
   /**
    * The current media provider.
    */
@@ -102,31 +102,37 @@ export interface MediaController {
   /**
    * Begins/resumes playback of the media. If this method is called programmatically before the
    * user has interacted with the player, the promise may be rejected subject to the browser's
-   * autoplay policies.
+   * autoplay policies. This method will throw if called before media is ready for playback.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play}
    */
   play(): Promise<void>;
   /**
-   * Pauses playback of the media.
+   * Pauses playback of the media. This will throw if called before media is ready for playback.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause}
    */
   pause(): Promise<void>;
   /**
+   * Attempts to display this element in fullscreen. The promise will resolve if successful, and
+   * reject if not. This will throw if any fullscreen API is _not_ currently available.
+   */
+  enterFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
+  /**
+   * Attempts to display this element inline by exiting fullscreen. This will throw if any
+   * fullscreen API is _not_ currently available.
+   */
+  exitFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
+  /**
+   * Sets the current time to the live edge (i.e., `currentLiveTime`). This is a no-op for non-live
+   * streams and will throw if called before media is ready for playback.
+   */
+  seekToLiveEdge(): void;
+  /**
    * Called when media can begin loading. Calling this method will trigger the initial provider
    * loading process. Calling it more than once has no effect.
    */
   startLoading(): void;
-  /**
-   * Attempts to display this element in fullscreen. The promise will resolve if successful, and
-   * reject if not.
-   */
-  enterFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
-  /**
-   * Attempts to display this element inline by exiting fullscreen.
-   */
-  exitFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
 }
 
 export interface MediaSubscribe {

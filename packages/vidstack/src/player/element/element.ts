@@ -146,6 +146,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
         startLoading: controller._start,
         play: controller._request._play,
         pause: controller._request._pause,
+        seekToLiveEdge: controller._request._seekToLiveEdge,
         enterFullscreen: controller._request._enterFullscreen,
         exitFullscreen: controller._request._exitFullscreen,
       },

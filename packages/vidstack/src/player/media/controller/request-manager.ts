@@ -1,4 +1,4 @@
-import { effect, peek, signal, Signals } from 'maverick.js';
+import { effect, peek, ReadSignal, signal, Signals } from 'maverick.js';
 import { createEvent, isUndefined, keysOf, listenEvent, noop } from 'maverick.js/std';
 
 import {
@@ -11,9 +11,11 @@ import {
 } from '../../../foundation/orientation/screen-orientation';
 import { Queue } from '../../../foundation/queue/queue';
 import { coerceToError } from '../../../utils/error';
+import type { MediaPlayerElement } from '../../element/types';
 import type { MediaContext } from '../context';
+import type { MediaProvider } from '../providers/types';
 import type * as RE from '../request-events';
-import { createMediaUser, Mediauser } from '../user';
+import { createMediaUser, MediaUser } from '../user';
 import type { MediaStateManager } from './state-manager';
 import type { MediaControllerProps } from './types';
 
@@ -38,6 +40,7 @@ export function createMediaRequestManager(
       _orientation: orientation,
       _play: noop as () => Promise<void>,
       _pause: noop as () => Promise<void>,
+      _seekToLiveEdge: noop,
       _enterFullscreen: noop as () => Promise<void>,
       _exitFullscreen: noop as () => Promise<void>,
     };
@@ -233,8 +236,8 @@ export function createMediaRequestManager(
     if (!$store.paused) return;
     try {
       const provider = peek($provider);
-      if (!provider || !$player()?.state.canPlay) throwIfNotReadyForPlayback();
-      if ($store.ended || $store.currentTime === 0) provider!.currentTime = 0;
+      throwIfNotReadyForPlayback(provider, $player);
+      if ($store.ended) provider!.currentTime = 0;
       return provider!.play();
     } catch (error) {
       const errorEvent = createEvent($player, 'play-fail', { detail: coerceToError(error) });
@@ -247,7 +250,7 @@ export function createMediaRequestManager(
   async function pause() {
     if ($store.paused) return;
     const provider = peek($provider);
-    if (!provider || !$player()?.state.canPlay) throwIfNotReadyForPlayback();
+    throwIfNotReadyForPlayback(provider, $player);
     return provider!.pause();
   }
 
@@ -284,6 +287,14 @@ export function createMediaRequestManager(
     return fs!.exit();
   }
 
+  function seekToLiveEdge() {
+    $store.userBehindLiveEdge = false;
+    if (peek(() => !$store.live || $store.liveEdge)) return;
+    const provider = peek($provider);
+    throwIfNotReadyForPlayback(provider, $player);
+    provider!.currentTime = $store.currentLiveTime;
+  }
+
   return {
     _user: user,
     _orientation: orientation,
@@ -291,10 +302,15 @@ export function createMediaRequestManager(
     _pause: pause,
     _enterFullscreen: enterFullscreen,
     _exitFullscreen: exitFullscreen,
+    _seekToLiveEdge: seekToLiveEdge,
   };
 }
 
-function throwIfNotReadyForPlayback() {
+function throwIfNotReadyForPlayback(
+  provider: MediaProvider | null,
+  $player: ReadSignal<MediaPlayerElement | null>,
+) {
+  if (provider && peek(() => $player()?.state.canPlay)) return;
   throw Error(
     __DEV__
       ? `[vidstack] media is not ready - wait for \`can-play\` event.`
@@ -321,10 +337,11 @@ export interface MediaRequestQueueRecord {
 }
 
 export interface MediaRequestManager {
-  _user: Mediauser;
+  _user: MediaUser;
   _orientation: ScreenOrientationAdapter;
   _play(): Promise<void>;
   _pause(): Promise<void>;
+  _seekToLiveEdge(): void;
   _enterFullscreen(target?: RE.MediaFullscreenRequestTarget): Promise<void>;
   _exitFullscreen(target?: RE.MediaFullscreenRequestTarget): Promise<void>;
 }

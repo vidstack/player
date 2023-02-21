@@ -9,7 +9,7 @@ const STOP_IDLE_EVENTS = ['pointerup', 'pointermove', 'focus', 'keydown', 'playi
 export function createMediaUser(
   $controller: ReadSignal<MediaControllerElement | null>,
   $media: MediaStore,
-): Mediauser {
+): MediaUser {
   let idleTimeout: any,
     delay = 2000,
     trigger: Event | undefined,
@@ -67,7 +67,7 @@ export function createMediaUser(
   };
 }
 
-export interface Mediauser {
+export interface MediaUser {
   idle: {
     /**
      * Whether the media user is currently idle.
