@@ -39,6 +39,7 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'fullscreen',
   'loop',
   'live',
+  'liveEdge',
   'media',
   'muted',
   'paused',
