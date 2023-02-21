@@ -17,6 +17,8 @@ const mediaAttributes = [
   'fullscreen',
   'user-idle',
   'loop',
+  'live',
+  'live-edge',
   'muted',
   'paused',
   'playing',
@@ -78,6 +80,12 @@ it('should create media variants', async () => {
         display: none
     }
     media-player[loop] .loop\\\\:hidden {
+        display: none
+    }
+    media-player[live] .live\\\\:hidden {
+        display: none
+    }
+    media-player[live-edge] .live-edge\\\\:hidden {
         display: none
     }
     media-player[muted] .muted\\\\:hidden {
@@ -148,6 +156,12 @@ it('should create _not_ media variants', async () => {
         display: none
     }
     media-player:not([loop]) .not-loop\\\\:hidden {
+        display: none
+    }
+    media-player:not([live]) .not-live\\\\:hidden {
+        display: none
+    }
+    media-player:not([live-edge]) .not-live-edge\\\\:hidden {
         display: none
     }
     media-player:not([muted]) .not-muted\\\\:hidden {
@@ -256,6 +270,18 @@ it('should apply prefix to media variants', async () => {
         display: none
     }
     media-player:not([loop]) .not-media-loop\\\\:hidden {
+        display: none
+    }
+    media-player[live] .media-live\\\\:hidden {
+        display: none
+    }
+    media-player:not([live]) .not-media-live\\\\:hidden {
+        display: none
+    }
+    media-player[live-edge] .media-live-edge\\\\:hidden {
+        display: none
+    }
+    media-player:not([live-edge]) .not-media-live-edge\\\\:hidden {
         display: none
     }
     media-player[muted] .media-muted\\\\:hidden {

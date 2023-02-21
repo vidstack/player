@@ -12,6 +12,8 @@ const mediaAttributes = [
   'fullscreen',
   'user-idle',
   'loop',
+  'live',
+  'live-edge',
   'muted',
   'paused',
   'playing',
