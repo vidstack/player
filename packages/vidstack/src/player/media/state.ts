@@ -174,6 +174,14 @@ export interface MediaState {
    */
   liveWindow: number;
   /**
+   * The number of seconds that `currentTime` can be behind the `currentLiveTime` to still be
+   * considered live. The default value is 15, meaning the user can be up to 15 seconds behind
+   * the live time and still be considered live.
+   *
+   * @defaultValue 15
+   */
+  liveTolerance: number;
+  /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
    *

@@ -19,6 +19,7 @@ export function useMediaPropChange(
     $playsinline,
     $view,
     $logLevel,
+    $liveTolerance,
   }: Signals<MediaControllerProps>,
 ) {
   if (__SERVER__) return;
@@ -67,6 +68,10 @@ export function useMediaPropChange(
       const view = $view();
       $store.view = view;
       dispatchEvent(player, 'view-change', { detail: view });
+    });
+
+    effect(() => {
+      $store.liveTolerance = $liveTolerance();
     });
   });
 }

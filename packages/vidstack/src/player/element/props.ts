@@ -29,4 +29,5 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
   userIdleDelay: { initial: 2000 },
   view: { initial: 'video' },
   volume: { initial: 1 },
+  liveTolerance: { initial: 15 },
 };

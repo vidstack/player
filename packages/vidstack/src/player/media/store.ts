@@ -54,13 +54,13 @@ export const mediaStore = createStore<MediaStore>({
     return getTimeRangesEnd(this.seekable) ?? Infinity;
   },
   // ~~ live props ~~
+  liveTolerance: 15,
   get currentLiveTime() {
     return this.live ? this.liveDelta + this.seekableEnd : 0;
   },
   get liveWindow() {
     const time = this.currentLiveTime;
-    if (time === Infinity) return 0;
-    return time - this.seekableStart;
+    return time === Infinity ? 0 : time - this.seekableStart;
   },
   // ~~ internal props ~~
   attemptingAutoplay: false,

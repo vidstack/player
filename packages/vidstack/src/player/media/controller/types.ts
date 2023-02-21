@@ -33,6 +33,7 @@ export interface MediaControllerProps
     | 'paused'
     | 'currentTime'
     | 'playsinline'
+    | 'liveTolerance'
   > {
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
