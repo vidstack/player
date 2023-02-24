@@ -61,7 +61,7 @@ export function useSliderEvents(
   }
 
   function updateValue(value: number, trigger?: Event) {
-    $store.value = value;
+    $store.value = Math.max($store.min, Math.min(value, $store.max));
 
     const event = createEvent(host.el, 'value-change', {
       detail: $store.value,
@@ -111,6 +111,16 @@ export function useSliderEvents(
 
   function onKeyDown(event: KeyboardEvent) {
     const { key, shiftKey } = event;
+
+    if (key === 'Home' || key === 'PageUp') {
+      updateValue($store.min, event);
+    } else if (key === 'End' || key === 'PageDown') {
+      updateValue($store.max, event);
+    } else if (/[0-9]/.test(key)) {
+      console.log(key);
+      updateValue((($store.max - $store.min) / 10) * Number(key), event);
+    }
+
     const isValidKey = Object.keys(SliderKeyDirection).includes(key);
     if (!isValidKey) return;
 
