@@ -4,6 +4,7 @@ import { MediaIconDefinition } from './icons/element';
 import { PlayerDefinition } from './player/element/element';
 import { OutletDefinition } from './player/media/outlet/element';
 import { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
+import { LiveIndicatorDefinition } from './player/ui/live-indicator/element';
 import { MuteButtonDefinition } from './player/ui/mute-button/element';
 import { PlayButtonDefinition } from './player/ui/play-button/element';
 import { PosterDefinition } from './player/ui/poster/element';
@@ -31,5 +32,6 @@ export default function registerAllElements(): void {
     SliderDefinition,
     SliderValueTextDefinition,
     SliderVideoDefinition,
+    LiveIndicatorDefinition,
   ].map(registerLiteCustomElement);
 }

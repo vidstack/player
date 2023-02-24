@@ -42,7 +42,6 @@ const WIP = new Set([
   'Vimeo',
   'Captions',
   'User',
-  'Live Indicator',
   'PIP Button',
   'Captions Button',
 ]);

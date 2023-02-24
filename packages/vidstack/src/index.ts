@@ -61,6 +61,7 @@ export * from './player/ui/time/types';
 export * from './player/ui/time-slider/types';
 export * from './player/ui/toggle-button/types';
 export * from './player/ui/volume-slider/types';
+export * from './player/ui/live-indicator/types';
 
 // Media Player Definitions
 export { MediaIconDefinition } from './icons/element';
@@ -77,3 +78,4 @@ export { TimeDefinition } from './player/ui/time/element';
 export { TimeSliderDefinition } from './player/ui/time-slider/element';
 export { ToggleButtonDefinition } from './player/ui/toggle-button/element';
 export { VolumeSliderDefinition } from './player/ui/volume-slider/element';
+export { LiveIndicatorDefinition } from './player/ui/live-indicator/element';

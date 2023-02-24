@@ -14,8 +14,8 @@
 }
 
 .media-buffering-icon {
-  width: 96px;
-  height: 96px;
+  width: 84px;
+  height: 84px;
   color: white;
   opacity: 0;
   transition: opacity 200ms ease;

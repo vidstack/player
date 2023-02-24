@@ -1,7 +1,14 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Buttons
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
 media-toggle-button,
 media-play-button,
 media-mute-button,
-media-fullscreen-button {
+media-fullscreen-button,
+media-live-indicator {
   border-radius: 2px;
   color: white;
   min-width: 48px;
@@ -17,7 +24,8 @@ media-fullscreen-button > shadow-root svg {
 
 media-play-button > shadow-root,
 media-mute-button > shadow-root,
-media-fullscreen-button > shadow-root {
+media-fullscreen-button > shadow-root,
+media-live-indicator > shadow-root {
   display: unset;
 }
 
@@ -51,7 +59,8 @@ media-fullscreen-button[hidden] {
 
 media-play-button > shadow-root:not(:only-child),
 media-mute-button > shadow-root:not(:only-child),
-media-fullscreen-button > shadow-root:not(:only-child) {
+media-fullscreen-button > shadow-root:not(:only-child),
+media-live-indicator > shadow-root:not(:only-child) {
   display: none;
 }
 
@@ -61,4 +70,51 @@ media-mute-button:hover,
 media-fullscreen-button:hover {
   transform: scale(1.1);
   transition: transform 0.2s ease-in;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Live Indicator
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+media-live-indicator {
+  min-width: auto;
+  min-height: auto;
+}
+
+media-live-indicator [part='container'] {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+media-live-indicator [part='text'] {
+  background-color: #8a8a8a;
+  border-radius: 2.5px;
+  color: #161616;
+  font-family: sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  padding: 2px 4px;
+  transition: color 0.3s ease;
+}
+
+media-live-indicator[live-edge] [part='text'] {
+  background-color: #dc2626;
+  color: white;
+}
+
+media-live-indicator:not([live]) > shadow-root {
+  display: none;
+}
+
+media-live-indicator:not([live]) *[slot='live'],
+media-live-indicator[live-edge] *[slot='live'],
+media-live-indicator[live] *[slot='not-live'],
+media-live-indicator:not([live-edge]) *[slot='live-edge'] {
+  display: none;
 }
