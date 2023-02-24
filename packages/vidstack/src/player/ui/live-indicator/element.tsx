@@ -1,5 +1,4 @@
-import { effect } from 'maverick.js';
-import { defineCustomElement } from 'maverick.js/element';
+import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { isKeyboardClick, isKeyboardEvent, listenEvent } from 'maverick.js/std';
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
@@ -27,11 +26,9 @@ export const LiveIndicatorDefinition = defineCustomElement<MediaLiveIndicatorEle
       'aria-label': () => ($media.live ? 'Go live' : null),
     });
 
-    effect(() => {
-      const target = host.$el();
-      if (!target) return;
+    onAttach(() => {
       const clickEvents = ['pointerup', 'keydown'] as const;
-      for (const eventType of clickEvents) listenEvent(target, eventType, onPress);
+      for (const eventType of clickEvents) listenEvent(host.el!, eventType, onPress);
     });
 
     function onPress(event: Event) {

@@ -4,9 +4,9 @@ description: This component is used to display the current live status of the st
 
 ## Usage
 
-This component displays the current live status of the stream. This includes whether it's
-live, at the live edge, or not live. In addition, this component is a button during live streams
-and will skip ahead to the live edge when pressed.
+The `$tag:media-live-indicator` component displays the current live status of the stream. This
+includes whether it's live, at the live edge, or not live. In addition, this component is a button
+during live streams and will skip ahead to the live edge when pressed.
 
 {% code_preview name="usage" copyHighlight=true highlight="react:6" /%}
 

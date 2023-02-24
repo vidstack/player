@@ -5,7 +5,8 @@ media-fullscreen-button > shadow-root,
 media-slider > shadow-root,
 media-time-slider > shadow-root,
 media-volume-slider > shadow-root,
-media-live-indicator > shadow-root {
+media-live-indicator > shadow-root,
+media-seek-button > shadow-root {
   display: none;
 }
 
@@ -89,7 +90,8 @@ media-toggle-button,
 media-play-button,
 media-mute-button,
 media-fullscreen-button,
-media-live-indicator {
+media-live-indicator,
+media-seek-button {
   display: inline-block;
   position: relative;
   contain: content;
@@ -107,6 +109,7 @@ media-toggle-button:focus,
 media-play-button:focus,
 media-mute-button:focus,
 media-fullscreen-button:focus,
+media-seek-button:focus,
 media-live-indicator:focus {
   outline: none;
 }
@@ -115,6 +118,7 @@ media-toggle-button:focus-visible,
 media-play-button:focus-visible,
 media-mute-button:focus-visible,
 media-fullscreen-button:focus-visible,
+media-seek-button:focus-visible,
 media-live-indicator:focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
@@ -124,6 +128,7 @@ media-toggle-button.focus-visible,
 media-play-button.focus-visible,
 media-mute-button.focus-visible,
 media-fullscreen-button.focus-visible,
+media-seek-button.focus-visible,
 media-live-indicator.focus-visible {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
