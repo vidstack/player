@@ -15,7 +15,8 @@ export function createMediaUser(
     trigger: Event | undefined,
     $idle = signal(false),
     $userPaused = signal(false),
-    $paused = computed(() => $userPaused() || $media.paused);
+    $paused = computed(() => $userPaused() || $media.paused),
+    $ended = computed(() => $media.ended);
 
   effect(() => {
     const target = $controller();
@@ -37,7 +38,9 @@ export function createMediaUser(
   });
 
   function stopIdling(event: Event) {
-    if (peek($paused)) return;
+    if (peek($paused) && !peek($ended)) {
+      return;
+    }
     if ($idle()) trigger = event;
     $idle.set(false);
     window.clearTimeout(idleTimeout);
