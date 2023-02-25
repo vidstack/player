@@ -16,55 +16,62 @@ import type {
   MediaUnmuteRequestEvent,
   MediaVolumeChangeRequestEvent,
 } from './request-events';
-import type { MediaErrorDetail, MediaSrc, MediaType, MediaViewType } from './types';
+import type {
+  MediaErrorDetail,
+  MediaSrc,
+  MediaStreamType,
+  MediaType,
+  MediaViewType,
+} from './types';
 
 export interface MediaEvents {
-  abort: MediaAbortEvent;
   'autoplay-change': MediaAutoplayChangeEvent;
   'autoplay-fail': MediaAutoplayFailEvent;
-  autoplay: MediaAutoplayEvent;
   'can-load': MediaCanLoadEvent;
   'can-play-through': MediaCanPlayThroughEvent;
   'can-play': MediaCanPlayEvent;
   'controls-change': MediaControlsChangeEvent;
-  destroy: MediaDestroyEvent;
   'duration-change': MediaDurationChangeEvent;
-  emptied: MediaEmptiedEvent;
-  end: MediaEndEvent;
-  ended: MediaEndedEvent;
-  error: MediaErrorEvent;
   'fullscreen-change': MediaFullscreenChangeEvent;
   'fullscreen-error': MediaFullscreenErrorEvent;
-  'user-idle-change': UserIdleChangeEvent;
   'live-change': MediaLiveChangeEvent;
   'live-edge-change': MediaLiveEdgeChangeEvent;
   'load-start': MediaLoadStartEvent;
   'loaded-data': MediaLoadedDataEvent;
   'loaded-metadata': MediaLoadedMetadataEvent;
   'loop-change': MediaLoopChangeEvent;
-  'media-change': MediaChangeEvent;
-  pause: MediaPauseEvent;
+  'media-type-change': MediaTypeChangeEvent;
+  'orientation-change': MediaOrientationChangeEvent;
   'play-fail': MediaPlayFailEvent;
-  play: MediaPlayEvent;
-  playing: MediaPlayingEvent;
   'playsinline-change': MediaPlaysinlineChangeEvent;
   'poster-change': MediaPosterChangeEvent;
-  progress: MediaProgressEvent;
-  'provider-loader-change': MediaProviderLoaderChangeEvent;
   'provider-change': MediaProviderChangeEvent;
+  'provider-loader-change': MediaProviderLoaderChangeEvent;
   'provider-setup': MediaProviderSetupEvent;
+  'source-change': MediaSourceChangeEvent;
+  'sources-change': MediaSourcesChangeEvent;
+  'time-update': MediaTimeUpdateEvent;
+  'user-idle-change': UserIdleChangeEvent;
+  'stream-type-change': MediaStreamTypeChangeEvent;
+  'view-type-change': MediaViewTypeChangeEvent;
+  'volume-change': MediaVolumeChangeEvent;
+  abort: MediaAbortEvent;
+  autoplay: MediaAutoplayEvent;
+  destroy: MediaDestroyEvent;
+  emptied: MediaEmptiedEvent;
+  end: MediaEndEvent;
+  ended: MediaEndedEvent;
+  error: MediaErrorEvent;
+  pause: MediaPauseEvent;
+  play: MediaPlayEvent;
+  playing: MediaPlayingEvent;
+  progress: MediaProgressEvent;
   replay: MediaReplayEvent;
   seeked: MediaSeekedEvent;
   seeking: MediaSeekingEvent;
-  'source-change': MediaSourceChangeEvent;
-  'sources-change': MediaSourcesChangeEvent;
   stalled: MediaStalledEvent;
   started: MediaStartedEvent;
   suspend: MediaSuspendEvent;
-  'orientation-change': MediaOrientationChangeEvent;
-  'time-update': MediaTimeUpdateEvent;
-  'view-change': MediaViewChangeEvent;
-  'volume-change': MediaVolumeChangeEvent;
   waiting: MediaWaitingEvent;
 }
 
@@ -259,7 +266,7 @@ export interface MediaLoadStartEvent extends MediaEvent<void> {}
 /**
  * Fired when the `media` property changes value.
  */
-export interface MediaChangeEvent extends MediaEvent<MediaType> {}
+export interface MediaTypeChangeEvent extends MediaEvent<MediaType> {}
 
 /**
  * Fired when a request to `pause` an activity is handled and the activity has entered its
@@ -411,11 +418,17 @@ export interface MediaTimeUpdateEvent
   }> {}
 
 /**
- * Fired when the `viewType` property changes `value`. This will generally fire when the
+ * Fired when the `streamType` property changes value. The event detail contains the type of
+ * stream (e.g., `on-demand`, `live`, `live:dvr`, etc.).
+ */
+export interface MediaStreamTypeChangeEvent extends MediaEvent<MediaStreamType> {}
+
+/**
+ * Fired when the `viewType` property changes value. This will generally fire when the
  * new provider has mounted and determined what type of player view is appropriate given
  * the type of media it can play.
  */
-export interface MediaViewChangeEvent extends MediaEvent<MediaViewType> {}
+export interface MediaViewTypeChangeEvent extends MediaEvent<MediaViewType> {}
 
 export interface MediaVolumeChange {
   muted: boolean;

@@ -11,6 +11,19 @@ which uses [`hls.js`](https://github.com/video-dev/hls.js/), and in
 will prefer using `hls.js` over the native engine when supported to enable a consistent and
 configurable experience across vendors.
 
+## Stream Type
+
+The live stream type can be set like so:
+
+{% code_snippet name="stream-type" /%}
+
+The type of stream can either be `on-demand`, `live`, `live:dvr`, `ll-live` (low-latency),
+`ll-live:dvr`.
+
+If the value is not set, it will be inferred by the player which can be less accurate (e.g.,
+identifying DVR support). The type will determine whether seeking operations are permitted and
+configure the default user interface accordingly.
+
 ## User Interface
 
 The following components will adapt to a live stream:
@@ -29,6 +42,8 @@ to read media state.
 
 The following media state can be useful during a live stream:
 
+- `streamType`: Indicates the [type of live stream](#stream-type). This can be provided by you or
+  inferred by the player.
 - `live`: Whether the current stream is live.
 - `liveEdge`: Whether the current stream is at the live edge (i.e., at the furthest seekable part
   of the media).

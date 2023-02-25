@@ -27,7 +27,8 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
   preload: { initial: 'metadata' },
   src: { initial: '' },
   userIdleDelay: { initial: 2000 },
-  view: { initial: 'video' },
+  viewType: { initial: 'unknown' },
+  streamType: { initial: 'unknown' },
   volume: { initial: 1 },
   liveTolerance: { initial: 15 },
 };

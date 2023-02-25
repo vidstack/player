@@ -1,5 +1,11 @@
 import type { LogLevel } from '../../foundation/logger/log-level';
-import type { MediaErrorDetail, MediaSrc, MediaType, MediaViewType } from './types';
+import type {
+  MediaErrorDetail,
+  MediaSrc,
+  MediaStreamType,
+  MediaType,
+  MediaViewType,
+} from './types';
 
 export interface MediaState {
   /**
@@ -206,7 +212,7 @@ export interface MediaState {
    *
    * @defaultValue 'unknown'
    */
-  media: MediaType;
+  mediaType: MediaType;
   /**
    * Whether the audio is muted or not.
    *
@@ -316,12 +322,18 @@ export interface MediaState {
    */
   started: boolean;
   /**
+   * The current media stream type. This value helps determine what type of UI should be
+   * displayed and whether seeking operations are permitted during live streams. If seeking
+   * is permitted, set this value to `live:dvr` or `ll-live:dvr`.
+   */
+  streamType: MediaStreamType;
+  /**
    * The type of player view that should be used (i.e., audio or video). By default this is set
    * to `video`.
    *
    * @defaultValue 'video'
    */
-  view: MediaViewType;
+  viewType: MediaViewType;
   /**
    * An `int` between `0` (silent) and `1` (loudest) indicating the audio volume. Defaults to `1`.
    *
@@ -335,8 +347,17 @@ export interface MediaState {
    * @defaultValue false
    */
   waiting: boolean;
+
+  // !!! INTERNALS !!!
+
   /** @internal */
   attemptingAutoplay: boolean;
   /** @internal */
   canLoadPoster: boolean | null;
+  /** @internal */
+  providedViewType: MediaViewType;
+  /** @internal */
+  providedStreamType: MediaStreamType;
+  /** @internal */
+  inferredStreamType: MediaStreamType;
 }

@@ -106,7 +106,7 @@ media-live-indicator [part='text'] {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 1.5px;
-  padding: 2px 4px;
+  padding: 1px 4px;
   transition: color 0.3s ease;
 }
 

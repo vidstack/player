@@ -136,7 +136,7 @@ export function useHTMLMediaElementEvents(
   }
 
   function onLoadedMetadata(event: Event) {
-    onMediaTypeChange();
+    onStreamTypeChange();
     attachCanPlayEventListeners();
 
     // Sync volume state before metadata.
@@ -159,14 +159,12 @@ export function useHTMLMediaElementEvents(
     };
   }
 
-  function onMediaTypeChange() {
-    const isLive = !Number.isFinite(provider.media.duration),
-      isVideo = provider.media instanceof HTMLVideoElement;
-    if (isLive) {
-      delegate.dispatch('media-change', {
-        detail: isVideo ? 'live-video' : 'live-audio',
-      });
-    }
+  function onStreamTypeChange() {
+    if ($store.streamType !== 'unknown') return;
+    const isLive = !Number.isFinite(provider.media.duration);
+    delegate.dispatch('stream-type-change', {
+      detail: isLive ? 'live' : 'on-demand',
+    });
   }
 
   function onPlay(event: Event) {
@@ -226,7 +224,6 @@ export function useHTMLMediaElementEvents(
   }
 
   function onDurationChange(event: Event) {
-    $store.canSeek = Number.isFinite(provider.media.duration);
     if ($store.ended) updateCurrentTime(provider.media.duration, event);
     delegate.dispatch('duration-change', {
       detail: provider.media.duration,

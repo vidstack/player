@@ -17,7 +17,6 @@ export function useMediaPropChange(
     $loop,
     $controls,
     $playsinline,
-    $view,
     $logLevel,
     $liveTolerance,
   }: Signals<MediaControllerProps>,
@@ -62,12 +61,6 @@ export function useMediaPropChange(
       const playsinline = $playsinline();
       $store.playsinline = playsinline;
       dispatchEvent(player, 'playsinline-change', { detail: playsinline });
-    });
-
-    effect(() => {
-      const view = $view();
-      $store.view = view;
-      dispatchEvent(player, 'view-change', { detail: view });
     });
 
     effect(() => {

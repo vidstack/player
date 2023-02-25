@@ -41,15 +41,16 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'loop',
   'live',
   'liveEdge',
-  'media',
+  'mediaType',
   'muted',
   'paused',
   'playing',
   'playsinline',
   'seeking',
   'started',
+  'streamType',
   'userIdle',
-  'view',
+  'viewType',
   'waiting',
 ];
 
@@ -102,7 +103,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       'aspect-ratio': props.$aspectRatio,
       'ios-controls': () =>
         IS_IOS &&
-        $store.media.includes('video') &&
+        $store.mediaType === 'video' &&
         $store.controls &&
         (!props.$playsinline() || $store.fullscreen),
     };

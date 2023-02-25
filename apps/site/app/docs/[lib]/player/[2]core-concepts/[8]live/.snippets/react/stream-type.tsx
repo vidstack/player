@@ -1,0 +1,1 @@
+<MediaPlayer streamType="live"></MediaPlayer>;

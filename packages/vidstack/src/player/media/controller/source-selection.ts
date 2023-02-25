@@ -28,7 +28,7 @@ export function useSourceSelection(
       const loader = loaders.find((loader) => loader.canPlay(src));
       if (loader) {
         $store.source = src;
-        $store.media = loader.mediaType(src);
+        $store.mediaType = loader.mediaType(src);
         $loader.set(loader);
       }
     }
@@ -57,7 +57,7 @@ export function useSourceSelection(
 
     if (newSource.src !== currentSource.src || newSource.type !== currentSource.type) {
       delegate.dispatch('source-change', { detail: newSource });
-      delegate.dispatch('media-change', {
+      delegate.dispatch('media-type-change', {
         detail: newLoader?.mediaType(newSource) || 'unknown',
       });
     }

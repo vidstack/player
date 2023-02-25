@@ -78,9 +78,12 @@ export function useHLS(
     const { live, totalduration: duration } = data.details;
 
     const event = new DOMEvent(eventType, { detail: data });
-    const mediaType: MediaType = live ? 'live-video' : 'video';
 
-    delegate.dispatch('media-change', { detail: mediaType, trigger: event });
+    delegate.dispatch('stream-type-change', {
+      detail: live ? (Number.isFinite(duration) ? 'live:dvr' : 'live') : 'on-demand',
+      trigger: event,
+    });
+
     delegate.dispatch('duration-change', { detail: duration, trigger: event });
 
     const instance = $instance()!;

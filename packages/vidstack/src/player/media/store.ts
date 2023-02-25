@@ -13,7 +13,6 @@ export const mediaStore = createStore<MediaStore>({
   canLoad: false,
   canFullscreen: false,
   canPlay: false,
-  canSeek: true,
   controls: false,
   poster: '',
   currentTime: 0,
@@ -22,7 +21,7 @@ export const mediaStore = createStore<MediaStore>({
   fullscreen: false,
   loop: false,
   logLevel: __DEV__ ? 'warn' : 'silent',
-  media: 'unknown',
+  mediaType: 'unknown',
   muted: false,
   paused: true,
   played: createTimeRanges(),
@@ -34,9 +33,19 @@ export const mediaStore = createStore<MediaStore>({
   source: { src: '', type: '' },
   sources: [],
   started: false,
-  view: 'video',
   volume: 1,
   waiting: false,
+  get canSeek() {
+    return /on-demand|:dvr/.test(this.streamType);
+  },
+  get viewType() {
+    return this.providedViewType !== 'unknown' ? this.providedViewType : this.mediaType;
+  },
+  get streamType() {
+    return this.providedStreamType !== 'unknown'
+      ? this.providedStreamType
+      : this.inferredStreamType;
+  },
   get currentSrc() {
     return this.source;
   },
@@ -56,8 +65,10 @@ export const mediaStore = createStore<MediaStore>({
   userIdle: false,
   userBehindLiveEdge: false,
   // ~~ live props ~~
-  live: false,
   liveTolerance: 15,
+  get live() {
+    return this.streamType.includes('live');
+  },
   get liveWindow() {
     const time = this.duration;
     return Number.isFinite(time) ? time - this.seekableStart : 0;
@@ -73,6 +84,9 @@ export const mediaStore = createStore<MediaStore>({
   // ~~ internal props ~~
   attemptingAutoplay: false,
   canLoadPoster: null,
+  providedViewType: 'unknown',
+  providedStreamType: 'unknown',
+  inferredStreamType: 'unknown',
 });
 
 const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
@@ -88,9 +102,10 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'poster',
   'source',
   'sources',
-  'view',
   'volume',
   'canLoadPoster',
+  'providedStreamType',
+  'providedViewType',
 ]);
 
 /**

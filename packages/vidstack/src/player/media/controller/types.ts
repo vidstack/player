@@ -23,17 +23,18 @@ export interface MediaControllerProps
   extends Pick<
     MediaState,
     | 'autoplay'
+    | 'controls'
+    | 'currentTime'
+    | 'liveTolerance'
+    | 'loop'
     | 'muted'
-    | 'volume'
+    | 'paused'
+    | 'playsinline'
     | 'poster'
     | 'preload'
-    | 'loop'
-    | 'view'
-    | 'controls'
-    | 'paused'
-    | 'currentTime'
-    | 'playsinline'
-    | 'liveTolerance'
+    | 'streamType'
+    | 'viewType'
+    | 'volume'
   > {
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,

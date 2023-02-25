@@ -1,4 +1,4 @@
-import { provideContext, signal, Signals } from 'maverick.js';
+import { effect, provideContext, signal, Signals } from 'maverick.js';
 
 import { useLogger } from '../../../foundation/logger/logger';
 import type { MediaPlayerElement } from '../../element/types';
@@ -38,11 +38,21 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
 
   context.delegate = delegate;
 
+  const providedProps = {
+    viewType: 'providedViewType',
+    streamType: 'providedStreamType',
+  };
+
   // init
   for (const prop of Object.keys(props)) {
     const propName = prop.slice(1);
-    if (propName in $store) $store[propName] = props[prop]();
+    if (propName in $store) $store[providedProps[propName] ?? propName] = props[prop]();
   }
+
+  effect(() => {
+    $store.providedViewType = props.$viewType();
+    $store.providedStreamType = props.$streamType();
+  });
 
   $store.muted = props.$muted() || props.$volume() === 0;
   useMediaPropChange(context, props);

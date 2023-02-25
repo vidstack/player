@@ -86,7 +86,8 @@ export function createMediaStateManager(
     'load-start': onLoadStart,
     'loaded-data': onLoadedData,
     'loaded-metadata': onLoadedMetadata,
-    'media-change': onMediaTypeChange,
+    'media-type-change': onMediaTypeChange,
+    'stream-type-change': onStreamTypeChange,
     'play-fail': onPlayFail,
     'source-change': onSourceChange,
     'sources-change': onSourcesChange,
@@ -123,10 +124,28 @@ export function createMediaStateManager(
     $provider.set(event.detail);
   }
 
-  function onMediaTypeChange(event: ME.MediaChangeEvent) {
+  function onMediaTypeChange(event: ME.MediaTypeChangeEvent) {
     appendTriggerEvent(event, trackedEvents.get('source-change'));
-    $store.media = event.detail;
-    $store.live = event.detail.includes('live');
+    const viewType = $store.viewType;
+    $store.mediaType = event.detail;
+    if (viewType !== $store.viewType) {
+      setTimeout(
+        () =>
+          $player()?.dispatchEvent(
+            createEvent($player, 'view-type-change', {
+              detail: $store.viewType,
+              trigger: event,
+            }),
+          ),
+        0,
+      );
+    }
+  }
+
+  function onStreamTypeChange(event: ME.MediaStreamTypeChangeEvent) {
+    appendTriggerEvent(event, trackedEvents.get('source-change'));
+    $store.inferredStreamType = event.detail;
+    (event as any).detail = $store.streamType;
   }
 
   function onCanLoad(event: ME.MediaCanLoadEvent) {

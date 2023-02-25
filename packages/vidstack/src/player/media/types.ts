@@ -1,12 +1,23 @@
 /**
- * Indicates the type of media currently loading/loaded.
+ * The current media type.
  */
-export type MediaType = 'unknown' | 'audio' | 'live-audio' | 'video' | 'live-video';
+export type MediaType = 'unknown' | 'audio' | 'video';
+
+/**
+ * The current media stream type.
+ */
+export type MediaStreamType =
+  | 'unknown'
+  | 'on-demand'
+  | 'live'
+  | 'live:dvr'
+  | 'll-live'
+  | 'll-live:dvr';
 
 /**
  * Indicates the current view type which determines how the media will be presented.
  */
-export type MediaViewType = 'audio' | 'video';
+export type MediaViewType = 'unknown' | 'audio' | 'video';
 
 /**
  * Indicates the type of strategy that should be used to initiate the loading process.
