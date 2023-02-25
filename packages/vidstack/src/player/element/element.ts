@@ -120,8 +120,8 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       '--media-buffered-end': () => $store.bufferedEnd,
       '--media-seekable-start': () => $store.seekableStart,
       '--media-seekable-end': () => $store.seekableEnd,
-      '--media-current-time': () => 0 + $store.currentTime.toFixed(4),
-      '--media-duration': () => 0 + $store.duration.toFixed(4),
+      '--media-current-time': () => Number($store.currentTime.toFixed(4)),
+      '--media-duration': () => Number($store.duration.toFixed(4)),
     });
 
     onDispose(() => {

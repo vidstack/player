@@ -9,6 +9,7 @@ import { MuteButtonDefinition } from './player/ui/mute-button/element';
 import { PlayButtonDefinition } from './player/ui/play-button/element';
 import { PosterDefinition } from './player/ui/poster/element';
 import { SeekButtonDefinition } from './player/ui/seek-button/element';
+import { SliderThumbnailDefinition } from './player/ui/slider-thumbnail/element';
 import { SliderValueTextDefinition } from './player/ui/slider-value-text/element';
 import { SliderVideoDefinition } from './player/ui/slider-video/element';
 import { SliderDefinition } from './player/ui/slider/element';
@@ -33,6 +34,7 @@ export default function registerAllElements(): void {
     TimeDefinition,
     SliderDefinition,
     SliderValueTextDefinition,
+    SliderThumbnailDefinition,
     SliderVideoDefinition,
     LiveIndicatorDefinition,
   ].map(registerLiteCustomElement);

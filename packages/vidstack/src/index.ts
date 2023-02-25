@@ -49,33 +49,37 @@ export * from './player/media/providers/hls/types';
 
 // Media Player UI
 export * from './player/ui/fullscreen-button/types';
-export * from './player/ui/play-button/types';
+export * from './player/ui/live-indicator/types';
 export * from './player/ui/mute-button/types';
+export * from './player/ui/play-button/types';
 export * from './player/ui/poster/types';
-export * from './player/ui/slider/types';
-export * from './player/ui/slider/events';
-export * from './player/ui/slider/store';
+export * from './player/ui/seek-button/types';
+export * from './player/ui/slider-thumbnail/types';
 export * from './player/ui/slider-value-text/types';
 export * from './player/ui/slider-video/types';
-export * from './player/ui/time/types';
+export * from './player/ui/slider/events';
+export * from './player/ui/slider/store';
+export * from './player/ui/slider/types';
 export * from './player/ui/time-slider/types';
+export * from './player/ui/time/types';
 export * from './player/ui/toggle-button/types';
 export * from './player/ui/volume-slider/types';
-export * from './player/ui/live-indicator/types';
 
 // Media Player Definitions
-export { MediaIconDefinition } from './icons/element';
 export { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
+export { LiveIndicatorDefinition } from './player/ui/live-indicator/element';
+export { MediaIconDefinition } from './icons/element';
 export { MuteButtonDefinition } from './player/ui/mute-button/element';
 export { OutletDefinition } from './player/media/outlet/element';
 export { PlayButtonDefinition } from './player/ui/play-button/element';
 export { PlayerDefinition } from './player/element/element';
 export { PosterDefinition } from './player/ui/poster/element';
+export { SeekButtonDefinition } from './player/ui/seek-button/element';
 export { SliderDefinition } from './player/ui/slider/element';
+export { SliderThumbnailDefinition } from './player/ui/slider-thumbnail/element';
 export { SliderValueTextDefinition } from './player/ui/slider-value-text/element';
 export { SliderVideoDefinition } from './player/ui/slider-video/element';
 export { TimeDefinition } from './player/ui/time/element';
 export { TimeSliderDefinition } from './player/ui/time-slider/element';
 export { ToggleButtonDefinition } from './player/ui/toggle-button/element';
 export { VolumeSliderDefinition } from './player/ui/volume-slider/element';
-export { LiveIndicatorDefinition } from './player/ui/live-indicator/element';

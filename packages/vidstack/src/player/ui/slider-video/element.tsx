@@ -2,6 +2,7 @@ import { effect, signal } from 'maverick.js';
 import { defineCustomElement } from 'maverick.js/element';
 import { dispatchEvent } from 'maverick.js/std';
 
+import { useMedia } from '../../media/context';
 import { useSliderStore } from '../slider/store';
 import { sliderVideoProps } from './props';
 import type { MediaSliderVideoElement } from './types';
@@ -20,15 +21,18 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
 
     const $canPlay = signal(false),
       $error = signal(false),
-      $slider = useSliderStore();
+      $slider = useSliderStore(),
+      { $store: $media } = useMedia();
 
     host.setAttributes({
       'can-play': $canPlay,
-      error: $error,
+      error: () => !!$error() || !Number.isFinite($media.duration),
     });
 
     effect(() => {
-      if ($canPlay() && videoElement) videoElement.currentTime = $slider.pointerValue;
+      if ($canPlay() && videoElement && Number.isFinite($media.duration)) {
+        videoElement.currentTime = ($slider.pointerValue / 100) * $media.duration;
+      }
     });
 
     effect(() => {
@@ -54,6 +58,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
         playsinline
         preload="auto"
         src={$src()}
+        part="video"
         $on:canplay={onCanPlay}
         $on:error={onError}
         $ref={(el) => void (videoElement = el)}

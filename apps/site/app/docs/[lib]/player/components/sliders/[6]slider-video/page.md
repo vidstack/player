@@ -1,5 +1,5 @@
 ---
-description: This component is used to load and display a preview video over a slider.
+description: This component is used to load and display a preview video over the time slider.
 ---
 
 ## Usage
@@ -45,8 +45,8 @@ You can override the default styles with CSS like so:
 media-slider-video {
 }
 
-/* Apply styles to the underlying `<video>` element. */
-media-slider-video video {
+/* Apply styles to <video> element part. */
+media-slider-video [part='video'] {
   width: 156px;
 }
 ```

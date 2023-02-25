@@ -59,6 +59,8 @@ export const PosterDefinition = defineCustomElement<MediaPosterElement>({
       $imgError.set(true);
     }
 
-    return () => <img src={$imgSrc()} alt={$imgAlt()} $on:load={onLoad} $on:error={onError} />;
+    return () => (
+      <img src={$imgSrc()} alt={$imgAlt()} part="img" $on:load={onLoad} $on:error={onError} />
+    );
   },
 });

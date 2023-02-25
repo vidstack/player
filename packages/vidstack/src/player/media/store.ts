@@ -36,7 +36,7 @@ export const mediaStore = createStore<MediaStore>({
   volume: 1,
   waiting: false,
   get canSeek() {
-    return /on-demand|:dvr/.test(this.streamType);
+    return /unknown|on-demand|:dvr/.test(this.streamType);
   },
   get viewType() {
     return this.providedViewType !== 'unknown' ? this.providedViewType : this.mediaType;

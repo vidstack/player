@@ -42,7 +42,7 @@ export interface SliderVideoErrorEvent extends DOMEvent<void> {
 
 /**
  * Used to load a low-resolution video to be displayed when the user is hovering or dragging
- * the slider. The point at which they're hovering or dragging (`pointerValue`) is the preview
+ * the time slider. The point at which they're hovering or dragging (`pointerValue`) is the preview
  * time position. The video will automatically be updated to match, so ensure it's of the same
  * length as the original.
  *

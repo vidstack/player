@@ -143,6 +143,7 @@ media-volume-slider media-slider-value-text {
   background-color: black;
 }
 
-media-slider-video + media-slider-value-text {
+media-slider-video:not([hidden]) + media-slider-value-text,
+media-slider-thumbnail:not([hidden]) + media-slider-value-text {
   margin-top: 8px;
 }

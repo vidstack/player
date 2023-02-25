@@ -6,10 +6,8 @@
 </script>
 
 <media-player class="w-full max-w-md relative mt-20" on:media-player-connect={onConnect}>
+  <media-outlet />
   <media-time-slider>
-    <div slot="preview">
-      <media-slider-thumbnail src="https://media-files.vidstack.io/thumbnails.vtt" />
-      <media-slider-value-text type="pointer" format="time" />
-    </div>
+    <media-slider-thumbnail src="https://media-files.vidstack.io/thumbnails.vtt" slot="preview" />
   </media-time-slider>
 </media-player>

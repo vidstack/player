@@ -80,7 +80,7 @@ export function createSlider(
       '--computed-width': rect.width + 'px',
       '--computed-height': rect.height + 'px',
       '--preview-top':
-        'calc(-1 * var(--media-slider-preview-gap, calc(var(--preview-height) + 8px)))',
+        'calc(-1 * var(--media-slider-preview-gap, calc(var(--preview-height) + 6px)))',
       '--preview-width': 'var(--media-slider-preview-width, var(--computed-width))',
       '--preview-height': 'var(--media-slider-preview-height, var(--computed-height))',
       '--preview-width-half': 'calc(var(--preview-width) / 2)',
@@ -93,24 +93,14 @@ export function createSlider(
       setStyle(preview, name, styles[name]);
     }
 
-    let stabilize = false;
-    const observer = new ResizeObserver(function onPreviewResize([entry]) {
-      if (stabilize) {
-        stabilize = false;
-        return;
-      }
+    function onPreviewResize() {
+      const rect = preview.getBoundingClientRect();
+      setStyle(preview, '--computed-width', rect.width + 'px');
+      setStyle(preview, '--computed-height', rect.height + 'px');
+    }
 
-      const { inlineSize, blockSize } = entry.borderBoxSize?.[0] || {
-        inlineSize: entry.contentRect.width,
-        blockSize: entry.contentRect.height,
-      };
-
-      setStyle(preview, '--computed-width', inlineSize + 'px');
-      setStyle(preview, '--computed-height', blockSize + 'px');
-
-      stabilize = true;
-    });
-
+    window.requestAnimationFrame(onPreviewResize);
+    const observer = new ResizeObserver(onPreviewResize);
     observer.observe(preview);
     return () => observer.disconnect();
   });
