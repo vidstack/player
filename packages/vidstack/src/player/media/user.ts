@@ -21,13 +21,16 @@ export function createMediaUser(
     const target = $controller();
     if (!target) return;
 
-    for (const eventType of STOP_IDLE_EVENTS) {
-      listenEvent(target, eventType, stopIdling);
-    }
+    effect(() => {
+      if ($paused()) return;
+      for (const eventType of STOP_IDLE_EVENTS) {
+        listenEvent(target, eventType, stopIdling);
+      }
+    });
 
     effect(() => {
       window.clearTimeout(idleTimeout);
-      const idle = $idle();
+      const idle = $idle() && !$paused();
       $media.userIdle = idle;
       dispatchEvent(target, 'user-idle-change', { detail: idle, trigger });
       trigger = undefined;
@@ -37,7 +40,6 @@ export function createMediaUser(
   });
 
   function stopIdling(event: Event) {
-    if (peek($paused)) return;
     if ($idle()) trigger = event;
     $idle.set(false);
     window.clearTimeout(idleTimeout);
