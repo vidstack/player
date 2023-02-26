@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/mihar-22/vidstack/compare/v0.3.2...v0.3.3) (2023-02-26)
+
+### Bug Fixes
+
+- **vidstack:** slider video shrinking at edge ([9de215a](https://github.com/mihar-22/vidstack/commit/9de215a2ea8fd3811ac5d3d34d9992d5906cff3d))
+- **vidstack:** user idle not removed on playback end ([1af57e4](https://github.com/mihar-22/vidstack/commit/1af57e4e88ed90d51380f5fa30cc50db4d4d0289)), closes [#783](https://github.com/mihar-22/vidstack/issues/783)
+
 ## [0.3.2](https://github.com/mihar-22/vidstack/compare/v0.3.1...v0.3.2) (2023-02-18)
 
 ### Bug Fixes
