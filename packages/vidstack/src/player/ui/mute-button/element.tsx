@@ -1,9 +1,10 @@
 import { computed } from 'maverick.js';
-import { defineCustomElement } from 'maverick.js/element';
+import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
 import { mutePaths, volumeHighPaths, volumeLowPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
+import { setARIALabel } from '../../../utils/dom';
 import { useMedia } from '../../media/context';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
@@ -18,7 +19,7 @@ declare global {
 export const MuteButtonDefinition = defineCustomElement<MediaMuteButtonElement>({
   tagName: 'media-mute-button',
   props: toggleButtonProps,
-  setup({ host, props: { $disabled } }) {
+  setup({ host, props: { $disabled, $defaultAppearance } }) {
     const { $store: $media, remote } = useMedia(),
       $pressed = computed(() => $media.muted || $media.volume === 0),
       toggle = useToggleButton(host, {
@@ -26,11 +27,15 @@ export const MuteButtonDefinition = defineCustomElement<MediaMuteButtonElement>(
         onPress,
       });
 
+    onAttach(() => {
+      setARIALabel(host.el!, () => ($pressed() ? 'Unmute' : 'Mute'));
+    });
+
     host.setAttributes({
       muted: $pressed,
       'volume-low': () => !$media.muted && $media.volume > 0 && $media.volume < 0.5,
       'volume-high': () => !$media.muted && $media.volume >= 0.5,
-      'aria-label': () => ($pressed() ? 'Unmute' : 'Mute'),
+      'default-appearance': $defaultAppearance,
     });
 
     function onPress(event: Event) {

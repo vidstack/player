@@ -1,6 +1,8 @@
 import type { HTMLCustomElement } from 'maverick.js/element';
 
-export interface ToggleButtonProps {
+import type { MediaButtonProps } from '../button/types';
+
+export interface ToggleButtonProps extends MediaButtonProps {
   /**
    * Whether the underlying button should be disabled (non-interactive).
    *
@@ -16,13 +18,19 @@ export interface ToggleButtonProps {
 
 export interface ToggleButtonEvents {}
 
-export interface ToggleButtonMembers extends Omit<ToggleButtonProps, 'defaultPressed'> {
+export interface ToggleButtonMembers {
+  /**
+   * Whether the underlying button is disabled (non-interactive).
+   *
+   * @signal
+   */
+  readonly disabled: boolean;
   /**
    * Whether the toggle is currently in a `pressed` state.
    *
    * @signal
    */
-  pressed: boolean;
+  readonly pressed: boolean;
 }
 
 /**

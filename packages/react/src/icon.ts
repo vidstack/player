@@ -41,6 +41,8 @@ export const Icon: IconComponent = /* #__PURE__*/ forwardRef((props, ref) => {
     fill: 'none',
     xmlns: 'http://www.w3.org/2000/svg',
     'aria-hidden': 'true',
+    focusable: 'false',
+    'data-media-icon': 'true',
     ref,
     dangerouslySetInnerHTML: { __html: __paths },
   });

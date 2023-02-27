@@ -4,39 +4,48 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-toggle-button,
-media-play-button,
-media-mute-button,
-media-fullscreen-button,
-media-seek-button,
-media-live-indicator {
-  border-radius: 2px;
-  color: white;
+:where([data-media-button]) {
+  border-radius: var(--media-button-border-radius, 2px);
+  color: var(--media-button-color, white);
   min-width: 48px;
   min-height: 48px;
+  transition: transform 0.2s ease-out;
+  touch-action: manipulation;
 }
 
-media-play-button > shadow-root svg,
-media-mute-button > shadow-root svg,
-media-fullscreen-button > shadow-root svg,
-media-seek-button > shadow-root svg {
-  width: 66.666%;
-  height: 66.666%;
+:where([data-media-button] > shadow-root svg) {
+  width: var(--media-button-icon-size, 66.666%);
+  height: var(--media-button-icon-size, 66.666%);
 }
 
-media-play-button > shadow-root,
-media-mute-button > shadow-root,
-media-fullscreen-button > shadow-root,
-media-seek-button > shadow-root,
-media-live-indicator > shadow-root {
+:where([data-media-button] > shadow-root) {
   display: unset;
 }
 
-media-toggle-button *[slot],
-media-play-button *[slot],
-media-mute-button *[slot],
-media-fullscreen-button *[slot],
-media-seek-button *[slot] {
+:where([data-media-button]:not([default-appearance]) > shadow-root:not(:only-child)) {
+  display: none;
+}
+
+:where([data-media-button]:hover) {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in;
+}
+
+:where([data-media-button])
+  :where(
+    [slot='on'],
+    [slot='off'],
+    [slot='play'],
+    [slot='pause'],
+    [slot='volume-high'],
+    [slot='volume-low'],
+    [slot='volume-muted'],
+    [slot='enter'],
+    [slot='exit'],
+    [slot='forward'],
+    [slot='backward'],
+
+  ) {
   display: block;
   position: absolute;
   top: 50%;
@@ -45,83 +54,22 @@ media-seek-button *[slot] {
   transform: translate(-50%, -50%);
 }
 
-media-toggle-button[pressed] [slot='on'],
-media-toggle-button:not([pressed]) [slot='off'],
-media-play-button[paused] [slot='play'],
-media-play-button:not([paused]) [slot='pause'],
-media-mute-button[volume-high] [slot='volume-high'],
-media-mute-button[volume-low] [slot='volume-low'],
-media-mute-button[muted] [slot='volume-muted'],
-media-fullscreen-button:not([fullscreen]) [slot='enter'],
-media-fullscreen-button[fullscreen] [slot='exit'],
-media-seek-button:not([seconds*='-']) [slot='forward'],
-media-seek-button[seconds*='-'] [slot='backward'] {
+:where(
+    media-toggle-button[pressed] [slot='on'],
+    media-toggle-button:not([pressed]) [slot='off'],
+    media-play-button[paused] [slot='play'],
+    media-play-button:not([paused]) [slot='pause'],
+    media-mute-button[volume-high] [slot='volume-high'],
+    media-mute-button[volume-low] [slot='volume-low'],
+    media-mute-button[muted] [slot='volume-muted'],
+    media-fullscreen-button:not([fullscreen]) [slot='enter'],
+    media-fullscreen-button[fullscreen] [slot='exit'],
+    media-seek-button:not([seconds*='-']) [slot='forward'],
+    media-seek-button[seconds*='-'] [slot='backward']
+  ) {
   opacity: 1;
 }
 
-media-fullscreen-button[hidden] {
-  display: none;
-}
-
-media-play-button > shadow-root:not(:only-child),
-media-mute-button > shadow-root:not(:only-child),
-media-fullscreen-button > shadow-root:not(:only-child),
-media-live-indicator > shadow-root:not(:only-child) {
-  display: none;
-}
-
-media-toggle-button:hover,
-media-play-button:hover,
-media-mute-button:hover,
-media-fullscreen-button:hover,
-media-seek-button:hover {
-  transform: scale(1.1);
-  transition: transform 0.2s ease-in;
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Live Indicator
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
-media-live-indicator {
-  min-width: auto;
-  min-height: auto;
-}
-
-media-live-indicator [part='container'] {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-media-live-indicator [part='text'] {
-  background-color: #8a8a8a;
-  border-radius: 2.5px;
-  color: #161616;
-  font-family: sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  padding: 1px 4px;
-  transition: color 0.3s ease;
-}
-
-media-live-indicator[live-edge] [part='text'] {
-  background-color: #dc2626;
-  color: white;
-}
-
-media-live-indicator:not([live]) > shadow-root {
-  display: none;
-}
-
-media-live-indicator:not([live]) *[slot='live'],
-media-live-indicator[live-edge] *[slot='live'],
-media-live-indicator[live] *[slot='not-live'],
-media-live-indicator:not([live-edge]) *[slot='live-edge'] {
+:where(media-fullscreen-button[hidden]) {
   display: none;
 }

@@ -14,6 +14,13 @@ By default, the toggle will start in the off (not-pressed) state. You can start 
 
 {% code_snippet name="default-pressed" /%}
 
+## Tooltips
+
+[Tooltips](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tooltip_role) can
+be provided like so:
+
+{% code_preview name="tooltips" size="small" copyHighlight=true highlight="react:3-" /%}
+
 ## Styling
 
 You can override the default styles with CSS like so:
@@ -36,12 +43,7 @@ media-toggle-button:not([pressed]) {
 
 ```css {% copy=true %}
 /* Apply styles when focused via keyboard. */
-media-toggle-button:focus-visible {
-  outline: 1px auto purple;
-}
-
-/* Polyfill applies this class. */
-media-toggle-button.focus-visible {
+:where(media-toggle-button:focus-visible, media-toggle-button.focus-visible) {
   outline: 1px auto purple;
 }
 ```
@@ -51,3 +53,9 @@ media-toggle-button.focus-visible {
 The following is a headless example using Tailwind:
 
 {% code_snippet name="tailwind" copyHighlight=true highlight="react:3-" /%}
+
+### Tooltips
+
+The following extends the example above with tooltips:
+
+{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:3-" /%}

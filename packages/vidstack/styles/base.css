@@ -1,12 +1,5 @@
 /* hide default UI - only shown if optional UI css files are loaded. */
-media-play-button > shadow-root,
-media-mute-button > shadow-root,
-media-fullscreen-button > shadow-root,
-media-slider > shadow-root,
-media-time-slider > shadow-root,
-media-volume-slider > shadow-root,
-media-live-indicator > shadow-root,
-media-seek-button > shadow-root {
+:where([data-media-button] > shadow-root, [data-media-slider] > shadow-root) {
   display: none;
 }
 
@@ -16,7 +9,7 @@ media-seek-button > shadow-root {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-player {
+:where(media-player) {
   width: 100%;
   display: inline-block;
   position: relative;
@@ -24,23 +17,23 @@ media-player {
   box-sizing: border-box;
 }
 
-media-outlet {
+:where(media-outlet) {
   display: block;
   box-sizing: border-box;
+  background-color: var(--media-outlet-bg-color, black);
 }
 
-media-outlet audio {
+:where(media-outlet audio) {
   width: 100%;
 }
 
-media-outlet video {
+:where(media-outlet video) {
   display: inline-block;
   width: 100%;
   height: auto;
-  background-color: black;
 }
 
-media-player[aspect-ratio] media-outlet {
+:where(media-player[aspect-ratio] media-outlet) {
   position: relative;
   width: 100%;
   height: 0;
@@ -50,7 +43,7 @@ media-player[aspect-ratio] media-outlet {
   );
 }
 
-media-player[aspect-ratio] media-outlet > shadow-root > * {
+:where(media-player[aspect-ratio] media-outlet > shadow-root > *) {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -64,22 +57,22 @@ media-player[aspect-ratio] media-outlet > shadow-root > * {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-icon {
+:where(media-icon) {
   width: 32px;
   height: 32px;
 }
 
-media-icon svg {
+:where(media-icon svg) {
   width: 100%;
   height: 100%;
 }
 
-media-time {
+:where(media-time) {
   display: inline-block;
   contain: content;
   font-size: 18px;
   font-weight: 500;
-  font-family: sans-serif;
+  font-family: var(--media-font-family, sans-serif);
 }
 
 /*
@@ -88,55 +81,30 @@ media-time {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-toggle-button,
-media-play-button,
-media-mute-button,
-media-fullscreen-button,
-media-live-indicator,
-media-seek-button {
+:where([data-media-button]) {
   display: inline-block;
   position: relative;
-  contain: content;
+  contain: layout;
   user-select: none;
   cursor: pointer;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-media-live-indicator:not([live]) {
+:where(media-live-indicator:not([live])) {
   cursor: unset;
 }
 
-media-toggle-button:focus,
-media-play-button:focus,
-media-mute-button:focus,
-media-fullscreen-button:focus,
-media-seek-button:focus,
-media-live-indicator:focus {
+:where([data-media-button]:focus) {
   outline: none;
 }
 
-media-toggle-button:focus-visible,
-media-play-button:focus-visible,
-media-mute-button:focus-visible,
-media-fullscreen-button:focus-visible,
-media-seek-button:focus-visible,
-media-live-indicator:focus-visible {
+:where([data-media-button]:focus-visible, [data-media-button].focus-visible) {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-media-toggle-button.focus-visible,
-media-play-button.focus-visible,
-media-mute-button.focus-visible,
-media-fullscreen-button.focus-visible,
-media-seek-button.focus-visible,
-media-live-indicator.focus-visible {
-  outline: 1px auto Highlight;
-  outline: 1px auto -webkit-focus-ring-color;
-}
-
-media-fullscreen-button[hidden] {
+:where(media-fullscreen-button[hidden]) {
   display: none;
 }
 
@@ -146,9 +114,7 @@ media-fullscreen-button[hidden] {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-slider,
-media-time-slider,
-media-volume-slider {
+:where([data-media-slider]) {
   display: inline-block;
   position: relative;
   contain: layout;
@@ -160,22 +126,16 @@ media-volume-slider {
   -webkit-tap-highlight-color: transparent;
 }
 
-media-slider:focus,
-media-time-slider:focus,
-media-volume-slider:focus {
+:where([data-media-slider]:focus) {
   outline: none;
 }
 
-media-slider:focus-visible,
-media-time-slider:focus-visible,
-media-volume-slider:focus-visible {
+:where([data-media-slider]:focus-visible) {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-media-slider.focus-visible,
-media-time-slider.focus-visible,
-media-volume-slider.focus-visible {
+:where([data-media-slider].focus-visible) {
   outline: 1px auto Highlight;
   outline: 1px auto -webkit-focus-ring-color;
 }
@@ -186,11 +146,11 @@ media-volume-slider.focus-visible {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-slider-value-text {
+:where(media-slider-value-text) {
   display: inline-block;
   contain: content;
   font-size: 14px;
-  font-family: sans-serif;
+  font-family: var(--media-font-family, sans-serif);
 }
 
 /*
@@ -199,7 +159,7 @@ media-slider-value-text {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-slider-thumbnail {
+:where(media-slider-thumbnail) {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -212,18 +172,18 @@ media-slider-thumbnail {
   background-color: black;
 }
 
-media-slider-thumbnail [part='container'] {
+:where(media-slider-thumbnail [part='container']) {
   display: block;
   width: var(--thumbnail-width);
   height: var(--thumbnail-height);
   overflow: hidden;
 }
 
-media-slider-thumbnail [part='img'] {
+:where(media-slider-thumbnail [part='img']) {
   max-width: unset !important;
 }
 
-media-slider-thumbnail[hidden] {
+:where(media-slider-thumbnail[hidden]) {
   display: none;
 }
 
@@ -233,14 +193,14 @@ media-slider-thumbnail[hidden] {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-slider-video {
+:where(media-slider-video) {
   display: inline-block;
   contain: content;
   background-color: black;
   box-sizing: border-box;
 }
 
-media-slider-video [part='video'] {
+:where(media-slider-video [part='video']) {
   display: block;
   height: auto;
   width: 156px;
@@ -248,13 +208,12 @@ media-slider-video [part='video'] {
 }
 
 /* Temporarily hide video while loading. */
-media-slider-video:not([can-play]) {
+:where(media-slider-video:not([can-play])) {
   opacity: 0;
 }
 
 /* Hide video if it fails to load. */
-media-slider-video[error],
-media-slider-video[error] [part='video'] {
+:where(media-slider-video[error], media-slider-video[error] [part='video']) {
   display: none;
   width: 0px;
 }
@@ -265,7 +224,7 @@ media-slider-video[error] [part='video'] {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-poster {
+:where(media-poster) {
   display: block;
   contain: content;
   position: absolute;
@@ -280,7 +239,7 @@ media-poster {
   transition: opacity 0.2s ease-out;
 }
 
-media-poster [part='img'] {
+:where(media-poster [part='img']) {
   width: 100%;
   height: 100%;
   object-fit: inherit;
@@ -291,11 +250,11 @@ media-poster [part='img'] {
   box-sizing: border-box;
 }
 
-media-poster[img-error] {
+:where(media-poster[img-error]) {
   display: none;
 }
 
-media-player:not([started]) media-poster {
+:where(media-player:not([started]) media-poster) {
   opacity: 1;
   pointer-events: auto;
 }

@@ -47,6 +47,7 @@ export function createSlider(
     'aria-valuemax': aria?.valueMax ?? (() => $store.max),
     'aria-valuenow': aria?.valueNow ?? (() => Math.round($store.value)),
     'aria-valuetext': aria?.valueText ?? (() => round(($store.value / $store.max) * 100, 2) + '%'),
+    'data-media-slider': true,
   });
 
   host.setCSSVars({

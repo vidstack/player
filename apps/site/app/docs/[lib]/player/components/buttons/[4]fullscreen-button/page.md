@@ -40,6 +40,13 @@ Here's an example containing a custom enter and exit icon:
 
 {% code_snippet name="custom-icons" copyHighlight=true highlight="react:3-" /%}
 
+## Tooltips
+
+[Tooltips](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tooltip_role) can
+be provided like so:
+
+{% code_preview name="tooltips" size="small" copyHighlight=true highlight="react:3-" /%}
+
 ## Styling
 
 You can override the default styles with CSS like so:
@@ -73,12 +80,7 @@ media-fullscreen-button [slot='exit'] {
 
 ```css {% copy=true %}
 /* Apply styles when focused via keyboard. */
-media-fullscreen-button:focus-visible {
-  outline: 1px auto purple;
-}
-
-/* Polyfill applies this class. */
-media-fullscreen-button.focus-visible {
+:where(media-fullscreen-button:focus-visible, media-fullscreen-button.focus-visible) {
   outline: 1px auto purple;
 }
 ```
@@ -88,3 +90,9 @@ media-fullscreen-button.focus-visible {
 The following is a headless example using Tailwind:
 
 {% code_snippet name="tailwind" copyHighlight=true highlight="react:3-" /%}
+
+### Tooltips
+
+The following extends the example above with tooltips:
+
+{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:3-" /%}

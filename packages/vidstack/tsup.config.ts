@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 
 import { esbuild as maverick } from '@maverick-js/compiler';
 import { globbySync } from 'globby';

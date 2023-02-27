@@ -11,8 +11,10 @@ export function useToggleButton(
   { $props: { $pressed, $disabled }, ...props }: UseToggleButtonProps,
 ): ToggleButtonMembers {
   host.setAttributes({
+    pressed: $pressed,
     disabled: $disabled,
     'aria-pressed': () => ariaBool($pressed()),
+    'data-media-button': true,
   });
 
   useFocusVisible(host.$el);
@@ -51,10 +53,6 @@ export function useToggleButton(
 }
 
 export interface UseToggleButtonProps {
-  $props: Signals<
-    Omit<ToggleButtonProps, 'defaultPressed'> & {
-      pressed: boolean;
-    }
-  >;
+  $props: Signals<Pick<ToggleButtonMembers, 'disabled' | 'pressed'>>;
   onPress?(event: Event): void;
 }

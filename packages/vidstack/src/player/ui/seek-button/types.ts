@@ -1,6 +1,8 @@
 import type { HTMLCustomElement } from 'maverick.js/element';
 
-export interface SeekButtonProps {
+import type { MediaButtonProps } from '../button/types';
+
+export interface SeekButtonProps extends MediaButtonProps {
   /**
    * The amount to seek the media playback forwards (positive number) or backwards (negative number)
    * when the seek button is pressed.

@@ -4,7 +4,7 @@ import { seekBackwardPaths, seekForwardPaths } from 'media-icons';
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
 import { Icon } from '../../../icons/icon';
-import { setAttributeIfEmpty } from '../../../utils/dom';
+import { setARIALabel, setAttributeIfEmpty } from '../../../utils/dom';
 import { useMedia } from '../../media/context';
 import type { MediaSeekButtonElement } from './types';
 
@@ -16,8 +16,8 @@ declare global {
 
 export const SeekButtonDefinition = defineCustomElement<MediaSeekButtonElement>({
   tagName: 'media-seek-button',
-  props: { seconds: { initial: 30 } },
-  setup({ host, props: { $seconds } }) {
+  props: { seconds: { initial: 30 }, defaultAppearance: { initial: false } },
+  setup({ host, props: { $seconds, $defaultAppearance } }) {
     const { $store: $media, remote } = useMedia();
 
     useFocusVisible(host.$el);
@@ -25,13 +25,18 @@ export const SeekButtonDefinition = defineCustomElement<MediaSeekButtonElement>(
     onAttach(() => {
       setAttributeIfEmpty(host.el!, 'tabindex', '0');
       setAttributeIfEmpty(host.el!, 'role', 'button');
+      setARIALabel(
+        host.el!,
+        () => `Seek ${$seconds() > 0 ? 'forward' : 'backward'} ${$seconds()} seconds`,
+      );
       const clickEvents = ['pointerup', 'keydown'] as const;
       for (const eventType of clickEvents) listenEvent(host.el!, eventType, onPress);
     });
 
     host.setAttributes({
       seconds: $seconds,
-      'aria-label': () => `Seek ${$seconds() > 0 ? 'forward' : 'backward'} ${$seconds()} seconds`,
+      'data-media-button': true,
+      'default-appearance': $defaultAppearance,
     });
 
     function onPress(event: Event) {

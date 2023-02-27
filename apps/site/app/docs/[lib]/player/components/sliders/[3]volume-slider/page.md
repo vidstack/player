@@ -80,12 +80,7 @@ media-volume-slider [part='thumb'] {
 
 ```css {% copy=true %}
 /* Apply styles when focused via keyboard. */
-media-volume-slider:focus-visible {
-  outline: 1px auto purple;
-}
-
-/* Polyfill applies this class. */
-media-volume-slider.focus-visible {
+:where(media-volume-slider:focus-visible, media-volume-slider.focus-visible) {
   outline: 1px auto purple;
 }
 ```

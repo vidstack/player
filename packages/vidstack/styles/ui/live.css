@@ -1,0 +1,48 @@
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Live Indicator
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(media-live-indicator) {
+  min-width: auto;
+  min-height: auto;
+}
+
+:where(media-live-indicator [part='container']) {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(media-live-indicator [part='text']) {
+  background-color: #8a8a8a;
+  font-size: var(--media-live-indicator-border-radius, 2.5px);
+  color: #161616;
+  font-family: var(--media-font-family, sans-serif);
+  font-size: var(--media-live-indicator-font-size, 12px);
+  font-weight: var(--media-live-indicator-font-weight, 600);
+  letter-spacing: 1.5px;
+  padding: 1px 4px;
+  transition: color 0.3s ease;
+}
+
+:where(media-live-indicator[live-edge] [part='text']) {
+  background-color: #dc2626;
+  color: white;
+}
+
+:where(media-live-indicator:not([live]) > shadow-root) {
+  display: none;
+}
+
+:where(
+    media-live-indicator:not([live]) [slot='live'],
+    media-live-indicator[live-edge] [slot='live'],
+    media-live-indicator[live] [slot='not-live'],
+    media-live-indicator:not([live-edge]) [slot='live-edge']
+  ) {
+  display: none;
+}

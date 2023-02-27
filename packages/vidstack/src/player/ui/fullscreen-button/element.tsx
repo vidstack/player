@@ -1,8 +1,9 @@
-import { defineCustomElement } from 'maverick.js/element';
+import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
 import { fullscreenExitPaths, fullscreenPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
+import { setARIALabel } from '../../../utils/dom';
 import { useMedia } from '../../media/context';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
@@ -20,7 +21,7 @@ export const FullscreenButtonDefinition = defineCustomElement<MediaFullscreenBut
     ...toggleButtonProps,
     target: { initial: 'prefer-media' },
   },
-  setup({ host, props: { $target, $disabled }, accessors }) {
+  setup({ host, props: { $target, $disabled, $defaultAppearance }, accessors }) {
     const { $store: $media, remote } = useMedia(),
       $pressed = () => $media.fullscreen,
       toggle = useToggleButton(host, {
@@ -28,10 +29,14 @@ export const FullscreenButtonDefinition = defineCustomElement<MediaFullscreenBut
         onPress,
       });
 
+    onAttach(() => {
+      setARIALabel(host.el!, () => ($media.fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'));
+    });
+
     host.setAttributes({
       hidden: () => !$media.canFullscreen,
       fullscreen: () => $media.fullscreen,
-      'aria-label': () => ($media.fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'),
+      'default-appearance': $defaultAppearance,
     });
 
     function onPress(event: Event) {

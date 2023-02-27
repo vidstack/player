@@ -21,10 +21,6 @@ export const ToggleButtonDefinition = defineCustomElement<MediaToggleButtonEleme
         onPress,
       });
 
-    host.setAttributes({
-      pressed: $pressed,
-    });
-
     function onPress() {
       if (props.$disabled()) return;
       $pressed.set((p) => !p);

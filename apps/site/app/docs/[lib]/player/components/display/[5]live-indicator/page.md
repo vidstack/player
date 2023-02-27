@@ -50,12 +50,7 @@ media-live-indicator [part='text'] {
 
 ```css
 /* Apply styles when focused via keyboard. */
-media-live-indicator:focus-visible {
-  outline: 1px auto purple;
-}
-
-/* Polyfill applies this class. */
-media-live-indicator.focus-visible {
+:where(media-live-indicator:focus-visible, media-live-indicator.focus-visible) {
   outline: 1px auto purple;
 }
 ```

@@ -1,6 +1,4 @@
-media-slider,
-media-time-slider,
-media-volume-slider {
+:where([data-media-slider]) {
   --height: var(--media-slider-height, 48px);
   --thumb-size: var(--media-slider-thumb-size, 14px);
   --thumb-focus-size: var(--media-slider-focused-thumb-size, calc(var(--thumb-size) * 1.1));
@@ -13,15 +11,11 @@ media-volume-slider {
   margin: 0 calc(var(--thumb-size) / 2);
 }
 
-media-slider > shadow-root,
-media-time-slider > shadow-root,
-media-volume-slider > shadow-root {
+:where([data-media-slider] > shadow-root) {
   display: unset;
 }
 
-media-slider [part*='track'],
-media-time-slider [part*='track'],
-media-volume-slider [part*='track'] {
+:where([data-media-slider] [part*='track']) {
   z-index: 0;
   position: absolute;
   height: var(--track-height);
@@ -32,15 +26,11 @@ media-volume-slider [part*='track'] {
   background-color: #5a595a;
 }
 
-media-slider[interactive] [part*='track'],
-media-time-slider[interactive] [part*='track'],
-media-volume-slider[interactive] [part*='track'] {
+:where([data-media-slider][interactive] [part*='track']) {
   height: var(--track-focus-height);
 }
 
-media-slider [part~='track-fill'],
-media-time-slider [part~='track-fill'],
-media-volume-slider [part~='track-fill'] {
+:where([data-media-slider] [part~='track-fill']) {
   z-index: 2; /** above track and track progress. */
   background-color: #fafafa;
   transform-origin: left center;
@@ -48,11 +38,11 @@ media-volume-slider [part~='track-fill'] {
   transform: translateY(-50%) scaleX(var(--slider-fill-rate));
 }
 
-media-player[live-edge] media-time-slider [part~='track-fill'] {
+:where(media-player[live-edge] media-time-slider [part~='track-fill']) {
   background-color: #dc2626;
 }
 
-media-time-slider [part~='track-progress'] {
+:where(media-time-slider [part~='track-progress']) {
   z-index: 1; /** above track. */
   left: 0;
   background-color: #878787;
@@ -62,9 +52,7 @@ media-time-slider [part~='track-progress'] {
     scaleX(min(calc(var(--media-buffered-end) / var(--media-duration)), 1));
 }
 
-media-slider [part='thumb-container'],
-media-time-slider [part='thumb-container'],
-media-volume-slider [part='thumb-container'] {
+:where([data-media-slider] [part='thumb-container']) {
   z-index: 2; /** above track fill. */
   position: absolute;
   top: 0;
@@ -75,15 +63,11 @@ media-volume-slider [part='thumb-container'] {
   will-change: left;
 }
 
-media-slider[dragging] [part='thumb-container'],
-media-time-slider[dragging] [part='thumb-container'],
-media-volume-slider[dragging] [part='thumb-container'] {
+:where([data-media-slider][dragging] [part='thumb-container']) {
   left: var(--slider-pointer-percent);
 }
 
-media-slider [part='thumb'],
-media-time-slider [part='thumb'],
-media-volume-slider [part='thumb'] {
+:where([data-media-slider] [part='thumb']) {
   position: absolute;
   top: 50%;
   left: 0;
@@ -96,9 +80,7 @@ media-volume-slider [part='thumb'] {
   transition: opacity 0.15s ease-in;
 }
 
-media-slider[interactive] [part='thumb'],
-media-time-slider[interactive] [part='thumb'],
-media-volume-slider[interactive] [part='thumb'] {
+:where([data-media-slider][interactive] [part='thumb']) {
   opacity: 1;
   transition: opacity 0.2s ease-in;
   width: var(--thumb-focus-size);
@@ -111,9 +93,7 @@ media-volume-slider[interactive] [part='thumb'] {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-media-slider [slot='preview'],
-media-time-slider [slot='preview'],
-media-volume-slider [slot='preview'] {
+:where([data-media-slider] [slot='preview']) {
   display: flex;
   position: absolute;
   top: var(--preview-top);
@@ -128,22 +108,20 @@ media-volume-slider [slot='preview'] {
   will-change: left;
 }
 
-media-slider[interactive] [slot='preview'],
-media-time-slider[interactive] [slot='preview'],
-media-volume-slider[interactive] [slot='preview'] {
+:where([data-media-slider][interactive] [slot='preview']) {
   opacity: 1;
   transition: opacity 0.2s ease-in;
 }
 
-media-slider media-slider-value-text,
-media-time-slider media-slider-value-text,
-media-volume-slider media-slider-value-text {
+:where([data-media-slider] media-slider-value-text) {
   padding: 1px 10px;
-  color: hsl(0, 0%, 70%);
+  color: hsl(0, 0%, 80%);
   background-color: black;
 }
 
-media-slider-video:not([hidden]) + media-slider-value-text,
-media-slider-thumbnail:not([hidden]) + media-slider-value-text {
+:where(
+    media-slider-video:not([hidden]) + media-slider-value-text,
+    media-slider-thumbnail:not([hidden]) + media-slider-value-text
+  ) {
   margin-top: 8px;
 }

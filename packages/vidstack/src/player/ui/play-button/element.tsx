@@ -1,8 +1,9 @@
-import { defineCustomElement } from 'maverick.js/element';
+import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
 import { pausePaths, playPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
+import { setARIALabel } from '../../../utils/dom';
 import { useMedia } from '../../media/context';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
@@ -17,7 +18,7 @@ declare global {
 export const PlayButtonDefinition = defineCustomElement<MediaPlayButtonElement>({
   tagName: 'media-play-button',
   props: toggleButtonProps,
-  setup({ host, props: { $disabled } }) {
+  setup({ host, props: { $disabled, $defaultAppearance } }) {
     const { $store: $media, remote } = useMedia(),
       $pressed = () => !$media.paused,
       toggle = useToggleButton(host, {
@@ -25,9 +26,13 @@ export const PlayButtonDefinition = defineCustomElement<MediaPlayButtonElement>(
         onPress,
       });
 
+    onAttach(() => {
+      setARIALabel(host.el!, () => ($media.paused ? 'Play' : 'Pause'));
+    });
+
     host.setAttributes({
+      'default-appearance': $defaultAppearance,
       paused: () => $media.paused,
-      'aria-label': () => ($media.paused ? 'Play' : 'Pause'),
     });
 
     function onPress(event: Event) {

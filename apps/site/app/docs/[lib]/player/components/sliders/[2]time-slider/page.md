@@ -101,12 +101,7 @@ media-time-slider [part='thumb'] {
 
 ```css {% copy=true %}
 /* Apply styles when focused via keyboard. */
-media-time-slider:focus-visible {
-  outline: 1px auto purple;
-}
-
-/* Polyfill applies this class. */
-media-time-slider.focus-visible {
+:where(media-time-slider:focus-visible, media-time-slider.focus-visible) {
   outline: 1px auto purple;
 }
 ```
