@@ -58,13 +58,13 @@ it('should create media variants', async () => {
     media-player[duration] .duration\\\\:hidden {
         display: none
     }
+    media-player[can-fullscreen] .can-fullscreen\\\\:hidden {
+        display: none
+    }
     media-player[can-load] .can-load\\\\:hidden {
         display: none
     }
     media-player[can-play] .can-play\\\\:hidden {
-        display: none
-    }
-    media-player[can-fullscreen] .can-fullscreen\\\\:hidden {
         display: none
     }
     media-player[ended] .ended\\\\:hidden {
@@ -134,13 +134,13 @@ it('should create _not_ media variants', async () => {
     media-player:not([duration]) .not-duration\\\\:hidden {
         display: none
     }
+    media-player:not([can-fullscreen]) .not-can-fullscreen\\\\:hidden {
+        display: none
+    }
     media-player:not([can-load]) .not-can-load\\\\:hidden {
         display: none
     }
     media-player:not([can-play]) .not-can-play\\\\:hidden {
-        display: none
-    }
-    media-player:not([can-fullscreen]) .not-can-fullscreen\\\\:hidden {
         display: none
     }
     media-player:not([ended]) .not-ended\\\\:hidden {
@@ -224,6 +224,12 @@ it('should apply prefix to media variants', async () => {
     media-player:not([duration]) .not-media-duration\\\\:hidden {
         display: none
     }
+    media-player[can-fullscreen] .media-can-fullscreen\\\\:hidden {
+        display: none
+    }
+    media-player:not([can-fullscreen]) .not-media-can-fullscreen\\\\:hidden {
+        display: none
+    }
     media-player[can-load] .media-can-load\\\\:hidden {
         display: none
     }
@@ -234,12 +240,6 @@ it('should apply prefix to media variants', async () => {
         display: none
     }
     media-player:not([can-play]) .not-media-can-play\\\\:hidden {
-        display: none
-    }
-    media-player[can-fullscreen] .media-can-fullscreen\\\\:hidden {
-        display: none
-    }
-    media-player:not([can-fullscreen]) .not-media-can-fullscreen\\\\:hidden {
         display: none
     }
     media-player[ended] .media-ended\\\\:hidden {

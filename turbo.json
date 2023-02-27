@@ -19,7 +19,6 @@
       "inputs": ["src/**"]
     },
     "test": {
-      "dependsOn": ["test", "test:server"],
       "inputs": ["src/**"]
     }
   }
