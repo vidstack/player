@@ -2,10 +2,24 @@ import { effect, ReadSignal, signal } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
 import { listenEvent, setAttribute } from 'maverick.js/std';
 
-export function useFocusVisible($target: ReadSignal<Element | null>) {
+let $keyboard = signal(false);
+
+if (!__SERVER__) {
+  listenEvent(document, 'pointerdown', () => {
+    $keyboard.set(false);
+  });
+
+  listenEvent(document, 'keydown', (e) => {
+    if (e.metaKey || e.altKey || e.ctrlKey) return;
+    $keyboard.set(true);
+  });
+}
+
+export function useFocusVisible($target: ReadSignal<Element | null>): ReadSignal<boolean> {
+  const $focus = signal(false);
+
   onConnect(() => {
-    const target = $target()!,
-      $keyboard = usingKeyboard();
+    const target = $target()!;
 
     effect(() => {
       if (!$keyboard()) {
@@ -16,29 +30,20 @@ export function useFocusVisible($target: ReadSignal<Element | null>) {
       }
 
       updateFocusAttr(target, document.activeElement === target);
-      listenEvent(target, 'focus', () => updateFocusAttr(target, true));
-      listenEvent(target, 'blur', () => updateFocusAttr(target, false));
+
+      listenEvent(target, 'focus', () => {
+        $focus.set(true);
+        updateFocusAttr(target, true);
+      });
+
+      listenEvent(target, 'blur', () => {
+        $focus.set(false);
+        updateFocusAttr(target, false);
+      });
     });
   });
-}
 
-let trackingKeyboard = false,
-  $keyboard = signal(false);
-
-export function usingKeyboard(): ReadSignal<boolean> {
-  if (trackingKeyboard) return $keyboard;
-
-  listenEvent(document, 'pointerdown', () => {
-    $keyboard.set(false);
-  });
-
-  listenEvent(document, 'keydown', (e) => {
-    if (e.metaKey || e.altKey || e.ctrlKey) return;
-    $keyboard.set(true);
-  });
-
-  trackingKeyboard = true;
-  return $keyboard;
+  return $focus;
 }
 
 function updateFocusAttr(target: Element, visible: boolean) {

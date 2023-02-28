@@ -1,6 +1,6 @@
 import { effect, Signals } from 'maverick.js';
 import type { CustomElementHost } from 'maverick.js/element';
-import { createEvent, dispatchEvent, listenEvent } from 'maverick.js/std';
+import { createEvent, dispatchEvent, isKeyboardEvent, listenEvent } from 'maverick.js/std';
 
 import { IS_SAFARI } from '../../../utils/support';
 import { useMedia } from '../../media/context';
@@ -63,6 +63,10 @@ export function useSliderEvents(
   function updateValue(value: number, trigger?: Event) {
     $store.value = Math.max($store.min, Math.min(value, $store.max));
 
+    if (isKeyboardEvent(trigger)) {
+      $store.pointerValue = $store.value;
+    }
+
     const event = createEvent(host.el, 'value-change', {
       detail: $store.value,
       trigger,
@@ -117,7 +121,6 @@ export function useSliderEvents(
     } else if (key === 'End' || key === 'PageDown') {
       updateValue($store.max, event);
     } else if (/[0-9]/.test(key)) {
-      console.log(key);
       updateValue((($store.max - $store.min) / 10) * Number(key), event);
     }
 

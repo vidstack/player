@@ -35,13 +35,14 @@ export function createSlider(
 
   const scope = getScope()!,
     $store = useContext(sliderStoreContext),
+    $focus = useFocusVisible(host.$el),
     { $disabled, $min, $max, $value, $step } = $props;
 
   host.setAttributes({
     disabled: $disabled,
     'data-dragging': () => $store.dragging,
     'data-pointing': () => $store.pointing,
-    'data-interactive': () => $store.interactive,
+    'data-interactive': () => $store.interactive || $focus(),
     'aria-disabled': () => ariaBool($disabled()),
     'aria-valuemin': aria?.valueMin ?? (() => $store.min),
     'aria-valuemax': aria?.valueMax ?? (() => $store.max),
@@ -59,7 +60,6 @@ export function createSlider(
     '--slider-pointer-percent': () => $store.pointerPercent + '%',
   });
 
-  useFocusVisible(host.$el);
   useSliderEvents(host, $props, callbacks, $store);
 
   onAttach(() => {
