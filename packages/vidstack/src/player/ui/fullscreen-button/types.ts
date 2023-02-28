@@ -18,7 +18,9 @@ export interface FullscreenButtonProps extends ToggleButtonProps {
 
 export interface FullscreenButtonEvents extends ToggleButtonEvents {}
 
-export interface FullscreenButtonMembers extends ToggleButtonMembers, FullscreenButtonProps {}
+export interface FullscreenButtonMembers
+  extends ToggleButtonMembers,
+    Omit<FullscreenButtonProps, 'disabled'> {}
 
 /**
  * A button for toggling the fullscreen mode of the player.

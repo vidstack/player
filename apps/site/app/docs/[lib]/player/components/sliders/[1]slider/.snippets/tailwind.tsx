@@ -6,7 +6,7 @@
   <SliderTrackFill />
   <SliderThumb />
   <SliderPreview>
-    <MediaSliderValueText type="pointer" format="percent" />
+    <MediaSliderValue type="pointer" format="percent" />
   </SliderPreview>
 </MediaSlider>;
 

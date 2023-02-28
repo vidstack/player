@@ -1,7 +1,7 @@
 import {
   MediaPlayer,
   MediaSliderThumbnail,
-  MediaSliderValueText,
+  MediaSliderValue,
   MediaTimeSlider,
 } from '@vidstack/react';
 
@@ -11,7 +11,7 @@ function Player() {
       <MediaTimeSlider>
         <div slot="preview">
           <MediaSliderThumbnail src="https://media-files.vidstack.io/thumbnails.vtt" />
-          <MediaSliderValueText type="pointer" format="time" />
+          <MediaSliderValue type="pointer" format="time" />
         </div>
       </MediaTimeSlider>
     </MediaPlayer>

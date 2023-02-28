@@ -113,15 +113,15 @@
   transition: opacity 0.2s ease-in;
 }
 
-:where([data-media-slider] media-slider-value-text) {
+:where([data-media-slider] media-slider-value) {
   padding: 1px 10px;
   color: hsl(0, 0%, 80%);
   background-color: black;
 }
 
 :where(
-    media-slider-video:not([hidden]) + media-slider-value-text,
-    media-slider-thumbnail:not([hidden]) + media-slider-value-text
+    media-slider-video:not([hidden]) + media-slider-value,
+    media-slider-thumbnail:not([hidden]) + media-slider-value
   ) {
   margin-top: 8px;
 }

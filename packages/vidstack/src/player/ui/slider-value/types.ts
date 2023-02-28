@@ -1,6 +1,6 @@
 import type { HTMLCustomElement } from 'maverick.js/element';
 
-export interface SliderValueTextProps {
+export interface SliderValueProps {
   /**
    * Whether to use the slider's current value, or pointer value.
    */
@@ -33,37 +33,37 @@ export interface SliderValueTextProps {
 /**
  * Outputs the current slider value as text.
  *
- * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-value-text}
+ * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-value}
  * @example
  * ```html
  * <media-time-slider>
- *   <media-slider-value-text
+ *   <media-slider-value
  *     type="pointer"
  *     format="time"
  *     slot="preview"
- *   ></media-slider-value-text>
+ *   ></media-slider-value>
  * </media-time-slider>
  * ```
  * @example
  * ```html
- * <media-slider-value-text
+ * <media-slider-value
  *   type="current"
- * ></media-slider-value-text>
+ * ></media-slider-value>
  * ```
  * @example
  * ```html
- * <media-slider-value-text
+ * <media-slider-value
  *   format="time"
  *   show-hours
  *   pad-hours
- * ></media-slider-value-text>
+ * ></media-slider-value>
  * ```
  * @example
  * ```html
- * <media-slider-value-text
+ * <media-slider-value
  *   format="percent"
  *   decimal-places="2"
- * ></media-slider-value-text>
+ * ></media-slider-value>
  * ```
  */
-export interface MediaSliderValueTextElement extends HTMLCustomElement<SliderValueTextProps> {}
+export interface MediaSliderValueElement extends HTMLCustomElement<SliderValueProps> {}

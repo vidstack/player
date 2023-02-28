@@ -1,8 +1,8 @@
 import type { CustomElementPropDefinitions } from 'maverick.js/element';
 
-import type { SliderValueTextProps } from './types';
+import type { SliderValueProps } from './types';
 
-export const sliderValueTextProps: CustomElementPropDefinitions<SliderValueTextProps> = {
+export const sliderValueTextProps: CustomElementPropDefinitions<SliderValueProps> = {
   type: { initial: 'current' },
   format: {},
   showHours: { initial: false },

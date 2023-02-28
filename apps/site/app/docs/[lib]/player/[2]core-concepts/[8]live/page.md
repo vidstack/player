@@ -32,7 +32,7 @@ The following components will adapt to a live stream:
 - `$tag:media-time-slider`: Disabled if seeking operations are not permitted for the live stream.
   When disabled, it can not be interacted with, no pointer/drag events will be fired, the thumb will
   pinned to the right edge, and the background color will be set to red.
-- `$tag:media-slider-value-text`: Displays a negative offset from the current live time when used
+- `$tag:media-slider-value`: Displays a negative offset from the current live time when used
   inside the time slider. The text "LIVE" will be displayed if the stream is not seekable.
 
 ## Media State

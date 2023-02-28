@@ -24,10 +24,10 @@ export interface VolumeSliderMembers
  * @example
  * ```html
  * <media-volume-slider>
- *   <media-slider-value-text
+ *   <media-slider-value
  *     type="pointer"
  *     format="percent"
- *   ></media-slider-value-text>
+ *   ></media-slider-value>
  * </media-volume-slider>
  * ```
  */

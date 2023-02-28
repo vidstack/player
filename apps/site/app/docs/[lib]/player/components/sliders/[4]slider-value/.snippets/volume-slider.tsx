@@ -3,6 +3,7 @@ import { MediaPlayer, MediaSliderValue, MediaVolumeSlider } from '@vidstack/reac
 function Player() {
   return (
     <MediaPlayer>
+      {/* ... */}
       <MediaVolumeSlider>
         <MediaSliderValue type="pointer" format="percent" slot="preview" />
       </MediaVolumeSlider>

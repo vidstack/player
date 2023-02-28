@@ -6,16 +6,16 @@ import { formatTime } from '../../../utils/time';
 import { sliderValueFormattersContext } from '../slider/format';
 import { useSliderStore } from '../slider/store';
 import { sliderValueTextProps } from './props';
-import type { MediaSliderValueTextElement } from './types';
+import type { MediaSliderValueElement } from './types';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'media-slider-value-text': MediaSliderValueTextElement;
+    'media-slider-value': MediaSliderValueElement;
   }
 }
 
-export const SliderValueTextDefinition = defineCustomElement<MediaSliderValueTextElement>({
-  tagName: 'media-slider-value-text',
+export const SliderValueDefinition = defineCustomElement<MediaSliderValueElement>({
+  tagName: 'media-slider-value',
   props: sliderValueTextProps,
   setup({ props: { $type, $format, $decimalPlaces, $padHours, $showHours } }) {
     const $slider = useSliderStore(),

@@ -35,11 +35,11 @@ export interface TimeSliderMembers
  * @example
  * ```html
  * <media-time-slider>
- *   <media-slider-value-text
+ *   <media-slider-value
  *     type="pointer"
  *     format="time"
  *     slot="preview"
- *   ></media-slider-value-text>
+ *   ></media-slider-value>
  * </media-time-slider>
  * ```
  */

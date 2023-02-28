@@ -10,7 +10,7 @@ import { PlayButtonDefinition } from './player/ui/play-button/element';
 import { PosterDefinition } from './player/ui/poster/element';
 import { SeekButtonDefinition } from './player/ui/seek-button/element';
 import { SliderThumbnailDefinition } from './player/ui/slider-thumbnail/element';
-import { SliderValueTextDefinition } from './player/ui/slider-value-text/element';
+import { SliderValueDefinition } from './player/ui/slider-value/element';
 import { SliderVideoDefinition } from './player/ui/slider-video/element';
 import { SliderDefinition } from './player/ui/slider/element';
 import { TimeSliderDefinition } from './player/ui/time-slider/element';
@@ -33,7 +33,7 @@ export default function registerAllElements(): void {
     ToggleButtonDefinition,
     TimeDefinition,
     SliderDefinition,
-    SliderValueTextDefinition,
+    SliderValueDefinition,
     SliderThumbnailDefinition,
     SliderVideoDefinition,
     LiveIndicatorDefinition,

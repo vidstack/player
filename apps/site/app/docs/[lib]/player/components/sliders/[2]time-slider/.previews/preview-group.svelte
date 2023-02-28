@@ -9,7 +9,7 @@
   <media-time-slider>
     <div slot="preview">
       <media-slider-thumbnail src="https://media-files.vidstack.io/thumbnails.vtt" />
-      <media-slider-value-text type="pointer" format="time" />
+      <media-slider-value type="pointer" format="time" />
     </div>
   </media-time-slider>
 </media-player>

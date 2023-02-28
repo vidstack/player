@@ -2,7 +2,7 @@
 <MediaTimeSlider>
   {/* ... */}
   <SliderPreview>
-    <MediaSliderValueText type="pointer" format="time" />
+    <MediaSliderValue type="pointer" format="time" />
   </SliderPreview>
 </MediaTimeSlider>;
 
