@@ -27,12 +27,12 @@ of the media player:
 
 The following loading attributes are applied to the `media-poster` element:
 
-- `img-loading`: Present when poster image is being downloaded by the browser.
-- `img-loaded`: Present when the poster image has successfully loaded.
-- `img-error`: Present when the poster image has failed to load.
+- `loading`: Present when poster image is being downloaded by the browser.
+- `loaded`: Present when the poster image has successfully loaded.
+- `hidden`: Present when the poster image has failed to load.
 
 ```html
-<media-poster img-loading />
+<media-poster loading />
 ```
 
 You can use these attributes to further style the poster as it's being loaded such as
@@ -41,10 +41,10 @@ when the image fails to load.
 
 ```css {% copy=true %}
 /* Do something while poster image is loading. */
-media-poster[img-loading] {
+media-poster[loading] {
 }
 
 /* Do something if poster image fails to load. */
-media-poster[img-error] {
+media-poster[hidden] {
 }
 ```

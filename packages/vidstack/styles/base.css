@@ -250,7 +250,7 @@
   box-sizing: border-box;
 }
 
-:where(media-poster[img-error]) {
+:where(media-poster[hidden]) {
   display: none;
 }
 

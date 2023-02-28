@@ -27,9 +27,10 @@ export const PosterDefinition = defineCustomElement<MediaPosterElement>({
       $imgError = signal(false);
 
     host.setAttributes({
-      'img-loading': $imgLoading,
-      'img-loaded': $imgLoaded,
-      'img-error': $imgError,
+      // @ts-expect-error - .
+      loading: $imgLoading,
+      loaded: $imgLoaded,
+      hidden: $imgError,
     });
 
     onConnect(() => {
