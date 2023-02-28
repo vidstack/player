@@ -1,7 +1,7 @@
 import throttle from 'just-throttle';
 import { effect, provideContext } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
-import { DOMEvent, isKeyboardEvent, mergeProperties } from 'maverick.js/std';
+import { DOMEvent, isKeyboardEvent, kebabToCamelCase, mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { formatSpokenTime, formatTime } from '../../../utils/time';
@@ -66,21 +66,35 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
       remote.seeking(time, event);
     }
 
-    function seek(event: DOMEvent<number>) {
-      dispatchSeeking.cancel();
-
-      const percent = event.detail;
-
+    function seek(time: number, percent: number, event: Event) {
       if ($media.live && percent >= 99) {
         remote.seekToLiveEdge(event);
         return;
       }
 
-      remote.seek(getTime(percent), event);
+      remote.seek(time, event);
+    }
+
+    let keyboardTimeout;
+    function timedSeek(event: DOMEvent<number>) {
+      dispatchSeeking.cancel();
+
+      const percent = event.detail,
+        time = getTime(percent);
+
+      if (isKeyboardEvent(event.originEvent)) {
+        window.clearTimeout(keyboardTimeout);
+        seeking(time, event);
+        keyboardTimeout = setTimeout(() => {
+          seek(time, percent, event);
+        }, 300);
+      } else {
+        seek(time, percent, event);
+      }
     }
 
     function onValueChange(event: SliderValueChangeEvent) {
-      if (isKeyboardEvent(event.originEvent)) seek(event);
+      if (isKeyboardEvent(event.originEvent)) timedSeek(event);
     }
 
     let wasPlayingBeforeDragStart = false;
@@ -96,7 +110,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     }
 
     function onDragEnd(event: SliderDragEndEvent) {
-      seek(event);
+      timedSeek(event);
       if ($pauseWhileDragging() && wasPlayingBeforeDragStart) {
         remote.play(event);
       }

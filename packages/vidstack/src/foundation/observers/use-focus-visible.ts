@@ -23,6 +23,7 @@ export function useFocusVisible($target: ReadSignal<Element | null>): ReadSignal
 
     effect(() => {
       if (!$keyboard()) {
+        $focus.set(false);
         updateFocusAttr(target, false);
         listenEvent(target, 'pointerenter', () => updateHoverAttr(target, true));
         listenEvent(target, 'pointerleave', () => updateHoverAttr(target, false));
