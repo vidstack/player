@@ -1,10 +1,10 @@
 import { MediaMuteButton, MuteIcon, VolumeHighIcon, VolumeLowIcon } from '@vidstack/react';
 
 <MediaMuteButton
-  className="flex h-12 w-12 items-center justify-center rounded-sm text-white"
+  className="group flex h-12 w-12 items-center justify-center rounded-sm text-white outline-none data-[focus]:ring-4 data-[focus]:ring-blue-400"
   aria-label="Mute"
 >
-  <MuteIcon className="muted:block hidden" />
-  <VolumeLowIcon className="volume-low:block hidden" />
-  <VolumeHighIcon className="volume-high:block hidden" />
+  <MuteIcon className="hidden group-data-[muted]:block" />
+  <VolumeLowIcon className="hidden group-data-[volume-low]:block" />
+  <VolumeHighIcon className="hidden group-data-[volume-high]:block" />
 </MediaMuteButton>;

@@ -39,9 +39,9 @@ export function createSlider(
 
   host.setAttributes({
     disabled: $disabled,
-    dragging: () => $store.dragging,
-    pointing: () => $store.pointing,
-    interactive: () => $store.interactive,
+    'data-dragging': () => $store.dragging,
+    'data-pointing': () => $store.pointing,
+    'data-interactive': () => $store.interactive,
     'aria-disabled': () => ariaBool($disabled()),
     'aria-valuemin': aria?.valueMin ?? (() => $store.min),
     'aria-valuemax': aria?.valueMax ?? (() => $store.max),

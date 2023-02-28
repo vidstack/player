@@ -77,7 +77,7 @@ media-slider-thumbnail {
 }
 
 /* Apply styles when thumbnails are loading. */
-media-slider-thumbnail[loading] {
+media-slider-thumbnail[data-loading] {
 }
 
 /* Apply styles to image container element part. */
@@ -89,7 +89,7 @@ media-slider-thumbnail [part='img'] {
 }
 
 /* Apply styles when VTT file fails to load. */
-media-slider-thumbnail[hidden] {
+media-slider-thumbnail[data-hidden] {
 }
 ```
 

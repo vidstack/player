@@ -58,15 +58,15 @@ media-fullscreen-button {
 }
 
 /* Apply styles when media is fullscreened. */
-media-fullscreen-button[fullscreen] {
+media-fullscreen-button[data-fullscreen] {
 }
 
 /* Apply styles when media is _not_ fullscreened. */
-media-fullscreen-button:not([fullscreen]) {
+media-fullscreen-button:not([data-fullscreen]) {
 }
 
 /* Apply styles when fullscreen is not supported. */
-media-fullscreen-button[hidden] {
+media-fullscreen-button[data-hidden] {
 }
 
 /* Style default icons. */
@@ -80,8 +80,8 @@ media-fullscreen-button [slot='exit'] {
 
 ```css {% copy=true %}
 /* Apply styles when focused via keyboard. */
-:where(media-fullscreen-button:focus-visible, media-fullscreen-button.focus-visible) {
-  outline: 1px auto purple;
+media-fullscreen-button[data-focus] {
+  outline: 3px solid blue;
 }
 ```
 

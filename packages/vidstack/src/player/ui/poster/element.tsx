@@ -22,15 +22,12 @@ export const PosterDefinition = defineCustomElement<MediaPosterElement>({
 
     const $imgSrc = () => ($media.canLoad && $media.poster.length ? $media.poster : null),
       $imgAlt = () => ($imgSrc() ? $alt() : null),
-      $imgLoading = signal(false),
-      $imgLoaded = signal(false),
+      $imgLoading = signal(true),
       $imgError = signal(false);
 
     host.setAttributes({
-      // @ts-expect-error - .
-      loading: $imgLoading,
-      loaded: $imgLoaded,
-      hidden: $imgError,
+      'data-loading': $imgLoading,
+      'data-hidden': $imgError,
     });
 
     onConnect(() => {
@@ -44,15 +41,13 @@ export const PosterDefinition = defineCustomElement<MediaPosterElement>({
     });
 
     effect(() => {
-      const loading = $media.canLoad && !!$media.poster;
-      $imgLoading.set(loading);
-      $imgLoaded.set(false);
+      const isLoading = $media.canLoad && !!$media.poster;
+      $imgLoading.set(isLoading);
       $imgError.set(false);
     });
 
     function onLoad() {
       $imgLoading.set(false);
-      $imgLoaded.set(true);
     }
 
     function onError() {

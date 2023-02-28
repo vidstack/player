@@ -34,8 +34,8 @@ export const FullscreenButtonDefinition = defineCustomElement<MediaFullscreenBut
     });
 
     host.setAttributes({
-      hidden: () => !$media.canFullscreen,
-      fullscreen: () => $media.fullscreen,
+      'data-hidden': () => !$media.canFullscreen,
+      'data-fullscreen': () => $media.fullscreen,
       'default-appearance': $defaultAppearance,
     });
 

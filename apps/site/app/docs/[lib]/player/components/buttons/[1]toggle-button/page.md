@@ -31,11 +31,11 @@ media-toggle-button {
 }
 
 /* Apply styles when pressed. */
-media-toggle-button[pressed] {
+media-toggle-button[data-pressed] {
 }
 
 /* Apply styles when _not_ pressed. */
-media-toggle-button:not([pressed]) {
+media-toggle-button:not([data-pressed]) {
 }
 ```
 
@@ -43,8 +43,8 @@ media-toggle-button:not([pressed]) {
 
 ```css {% copy=true %}
 /* Apply styles when focused via keyboard. */
-:where(media-toggle-button:focus-visible, media-toggle-button.focus-visible) {
-  outline: 1px auto purple;
+media-toggle-button[data-focus] {
+  outline: 3px solid blue;
 }
 ```
 

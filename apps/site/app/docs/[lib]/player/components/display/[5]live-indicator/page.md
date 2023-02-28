@@ -28,15 +28,15 @@ media-live-indicator {
 }
 
 /* Apply styles when stream is live. */
-media-live-indicator[live] {
+media-live-indicator[data-live] {
 }
 
 /* Apply styles when stream is _not_ live. */
-media-live-indicator:not([live]) {
+media-live-indicator:not([data-live]) {
 }
 
 /* Apply styles when stream is at live edge. */
-media-live-indicator[live-edge] {
+media-live-indicator[data-live-edge] {
 }
 
 /* Style default parts. */
@@ -50,8 +50,8 @@ media-live-indicator [part='text'] {
 
 ```css
 /* Apply styles when focused via keyboard. */
-:where(media-live-indicator:focus-visible, media-live-indicator.focus-visible) {
-  outline: 1px auto purple;
+media-live-indicator[data-focus] {
+  outline: 3px solid blue;
 }
 ```
 

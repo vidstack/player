@@ -22,11 +22,12 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
     const $canPlay = signal(false),
       $error = signal(false),
       $slider = useSliderStore(),
-      { $store: $media } = useMedia();
+      { $store: $media } = useMedia(),
+      $hidden = () => !!$error() || !Number.isFinite($media.duration);
 
     host.setAttributes({
-      'can-play': $canPlay,
-      hidden: () => !!$error() || !Number.isFinite($media.duration),
+      'data-loading': () => !$canPlay() && !$hidden(),
+      'data-hidden': $hidden,
     });
 
     effect(() => {

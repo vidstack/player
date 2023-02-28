@@ -27,9 +27,8 @@ export const SliderThumbnailDefinition = defineCustomElement<MediaSliderThumbnai
       { $store: $media } = useMedia();
 
     host.setAttributes({
-      // @ts-expect-error
-      loading: () => !$hidden() && !$imgLoaded(),
-      hidden: $hidden,
+      'data-loading': () => !$hidden() && !$imgLoaded(),
+      'data-hidden': $hidden,
     });
 
     // Load thumbnail VTT cues.

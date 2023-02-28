@@ -32,7 +32,7 @@ export const PlayButtonDefinition = defineCustomElement<MediaPlayButtonElement>(
 
     host.setAttributes({
       'default-appearance': $defaultAppearance,
-      paused: () => $media.paused,
+      'data-paused': () => $media.paused,
     });
 
     function onPress(event: Event) {

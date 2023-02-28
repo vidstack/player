@@ -48,15 +48,15 @@ media-slider {
 }
 
 /* Apply styles when device pointer is within slider bounds. */
-media-slider[pointing] {
+media-slider[data-pointing] {
 }
 
 /* Apply styles when slider thumb is being dragged. */
-media-slider[dragging] {
+media-slider[data-dragging] {
 }
 
-/* Shorthand for both dragging and pointing. */
-media-slider[interactive] {
+/* Dragging, pointing, or keyboard interaction. */
+media-slider[data-interactive] {
 }
 ```
 
@@ -68,7 +68,7 @@ media-slider [part~='track'] {
 }
 
 /* Apply styles to track when interactive. */
-media-slider[interactive] [part~='track'] {
+media-slider[data-interactive] [part~='track'] {
 }
 
 /* Apply styles to track fill (played portion of slider). */
@@ -91,27 +91,28 @@ media-slider [part='thumb'] {
 ### Focus
 
 ```css {% copy=true %}
-/* Apply styles when focused via keyboard. */
-:where(media-slider:focus-visible, media-slider.focus-visible) {
-  outline: 1px auto purple;
+/* Apply styles to slider when focused via keyboard. */
+media-slider[data-focus] {
+}
+
+/* Apply styles to slider track when focused via keyboard. */
+media-slider[data-focus] [part='track'] {
+  outline: 3px solid blue;
 }
 ```
 
-### Attributes
+### Data Attributes
 
-The attributes listed in the table below are applied to a slider element when valid. You can
+The data attributes listed in the table below are applied to a slider element. You can
 use the presence, or absence of these attributes to style the slider and any of it's children as
 desired.
 
-| Attribute     | Description                                           |
-| ------------- | ----------------------------------------------------- |
-| `dragging`    | Slider thumb is currently being dragged.              |
-| `pointing`    | Device pointer (mouse/touch) is within slider bounds. |
-| `interactive` | Either dragging or pointing is true.                  |
-
-```html
-<media-slider dragging interactive />
-```
+| Attribute          | Description                                           |
+| ------------------ | ----------------------------------------------------- |
+| `data-focus`       | Slider has keyboard focus.                            |
+| `data-dragging`    | Slider thumb is currently being dragged.              |
+| `data-pointing`    | Device pointer (mouse/touch) is within slider bounds. |
+| `data-interactive` | Either dragging or pointing is true.                  |
 
 ### CSS Variables
 
@@ -160,12 +161,12 @@ media-slider [slot='preview'] {
 
 The following section is for Tailwind CSS users who have installed our [Tailwind Plugin](/docs/player/styling/tailwind).
 
-### Variants {% id="tw-variants" %}
+### Data Attributes {% id="tw-variants" %}
 
-All the [attributes listed above](#attributes) are exposed as variants:
+All the [data attributes listed above](#data-attributes) can be used like so:
 
 ```html
-<div class="pointing:bg-indigo-300 dragging:bg-indigo-500" />
+<div class="group-data-[dragging]:bg-indigo-500" />
 ```
 
 ### CSS Variables {% id="tw-css-vars" %}

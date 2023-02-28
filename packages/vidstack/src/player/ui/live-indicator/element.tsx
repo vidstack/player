@@ -22,8 +22,8 @@ export const LiveIndicatorDefinition = defineCustomElement<MediaLiveIndicatorEle
     host.setAttributes({
       tabindex: () => ($media.live ? 0 : null),
       role: () => ($media.live ? 'button' : null),
-      live: () => $media.live,
-      'live-edge': () => $media.liveEdge,
+      'data-live': () => $media.live,
+      'data-live-edge': () => $media.liveEdge,
       'data-media-button': true,
     });
 

@@ -29,20 +29,20 @@
   transition: color 0.3s ease;
 }
 
-:where(media-live-indicator[live-edge] [part='text']) {
+:where(media-live-indicator[data-live-edge] [part='text']) {
   background-color: #dc2626;
   color: white;
 }
 
-:where(media-live-indicator:not([live]) > shadow-root) {
+:where(media-live-indicator:not([data-live]) > shadow-root) {
   display: none;
 }
 
 :where(
-    media-live-indicator:not([live]) [slot='live'],
-    media-live-indicator[live-edge] [slot='live'],
-    media-live-indicator[live] [slot='not-live'],
-    media-live-indicator:not([live-edge]) [slot='live-edge']
+    media-live-indicator:not([data-live]) [slot='live'],
+    media-live-indicator[data-live-edge] [slot='live'],
+    media-live-indicator[data-live] [slot='not-live'],
+    media-live-indicator:not([data-live-edge]) [slot='live-edge']
   ) {
   display: none;
 }

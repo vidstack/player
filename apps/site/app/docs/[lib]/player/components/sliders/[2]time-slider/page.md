@@ -2,8 +2,10 @@
 description: This component is used to create a range input for controlling the current time of playback.
 ---
 
+{% callout type="info" %}
 📖 The [`$tag:media-slider`](/docs/player/components/sliders/slider) guide contains background
 documentation that can be used when working with the time slider component.
+{% /callout %}
 
 ## Usage
 
@@ -49,15 +51,15 @@ media-time-slider {
 }
 
 /* Apply styles when device pointer is within slider bounds. */
-media-time-slider[pointing] {
+media-time-slider[data-pointing] {
 }
 
 /* Apply styles when slider thumb is being dragged. */
-media-time-slider[dragging] {
+media-time-slider[data-dragging] {
 }
 
 /* Shorthand for both dragging and pointing. */
-media-time-slider[interactive] {
+media-time-slider[data-interactive] {
 }
 
 /* Apply styles when at live edge. */
@@ -73,7 +75,7 @@ media-time-slider [part~='track'] {
 }
 
 /* Apply styles to track when interactive. */
-media-time-slider[interactive] [part~='track'] {
+media-time-slider[data-interactive] [part~='track'] {
 }
 
 /* Apply styles to track fill (played portion of slider). */
@@ -100,9 +102,13 @@ media-time-slider [part='thumb'] {
 ### Focus
 
 ```css {% copy=true %}
-/* Apply styles when focused via keyboard. */
-:where(media-time-slider:focus-visible, media-time-slider.focus-visible) {
-  outline: 1px auto purple;
+/* Apply styles to slider when focused via keyboard. */
+media-time-slider[data-focus] {
+}
+
+/* Apply styles to slider track when focused via keyboard. */
+media-time-slider[data-focus] [part='track'] {
+  outline: 3px solid blue;
 }
 ```
 
@@ -123,14 +129,15 @@ media-time-slider [slot='preview'] {
 
 ## Tailwind
 
-📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
-contains background documentation on working with sliders.
-
 A complete time slider example built with Tailwind:
 
 {% code_snippet name="tailwind" copy=true /%}
 
 {% callout type="tip" %}
-All of this code is reusable across other slider implementations. The time slider example only
-contains an additional `track-progress` div.
+
+- 📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
+  contains background documentation on working with sliders.
+- All of this code is reusable across other slider implementations. The time slider example only
+  contains an additional `track-progress` div.
+
 {% /callout %}

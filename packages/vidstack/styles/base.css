@@ -91,20 +91,20 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-:where(media-live-indicator:not([live])) {
-  cursor: unset;
-}
-
 :where([data-media-button]:focus) {
   outline: none;
 }
 
-:where([data-media-button]:focus-visible, [data-media-button].focus-visible) {
-  outline: 1px auto Highlight;
-  outline: 1px auto -webkit-focus-ring-color;
+:where([data-media-button][data-focus]) {
+  outline: var(--media-focus-ring, 3px solid Highlight);
+  outline: var(--media-focus-ring, 3px solid -webkit-focus-ring-color);
 }
 
-:where(media-fullscreen-button[hidden]) {
+:where(media-live-indicator:not([data-live])) {
+  cursor: unset;
+}
+
+:where(media-fullscreen-button[data-hidden]) {
   display: none;
 }
 
@@ -130,14 +130,10 @@
   outline: none;
 }
 
-:where([data-media-slider]:focus-visible) {
-  outline: 1px auto Highlight;
-  outline: 1px auto -webkit-focus-ring-color;
-}
-
-:where([data-media-slider].focus-visible) {
-  outline: 1px auto Highlight;
-  outline: 1px auto -webkit-focus-ring-color;
+:where([data-media-slider][data-focus] [part='track']) {
+  outline: var(--media-focus-ring, 3px solid Highlight);
+  outline: var(--media-focus-ring, 3px solid -webkit-focus-ring-color);
+  outline-offset: 3px;
 }
 
 /*
@@ -183,7 +179,7 @@
   max-width: unset !important;
 }
 
-:where(media-slider-thumbnail[hidden]) {
+:where(media-slider-thumbnail[data-hidden]) {
   display: none;
 }
 
@@ -194,10 +190,10 @@
  */
 
 :where(media-slider-video) {
-  display: inline-block;
-  contain: content;
   background-color: black;
   box-sizing: border-box;
+  contain: content;
+  display: inline-block;
 }
 
 :where(media-slider-video [part='video']) {
@@ -208,12 +204,12 @@
 }
 
 /* Temporarily hide video while loading. */
-:where(media-slider-video:not([can-play])) {
+:where(media-slider-video[data-loading]) {
   opacity: 0;
 }
 
 /* Hide video if it fails to load. */
-:where(media-slider-video[hidden], media-slider-video[hidden] [part='video']) {
+:where(media-slider-video[data-hidden], media-slider-video[data-hidden] [part='video']) {
   display: none;
   width: 0px;
 }
@@ -250,7 +246,7 @@
   box-sizing: border-box;
 }
 
-:where(media-poster[hidden]) {
+:where(media-poster[data-hidden]) {
   display: none;
 }
 

@@ -32,9 +32,9 @@ export const MuteButtonDefinition = defineCustomElement<MediaMuteButtonElement>(
     });
 
     host.setAttributes({
-      muted: $pressed,
-      'volume-low': () => !$media.muted && $media.volume > 0 && $media.volume < 0.5,
-      'volume-high': () => !$media.muted && $media.volume >= 0.5,
+      'data-muted': $pressed,
+      'data-volume-low': () => !$media.muted && $media.volume > 0 && $media.volume < 0.5,
+      'data-volume-high': () => !$media.muted && $media.volume >= 0.5,
       'default-appearance': $defaultAppearance,
     });
 

@@ -2,8 +2,10 @@
 description: This component is used to create a range input for controlling the volume of media.
 ---
 
+{% callout type="info" %}
 📖 The [`$tag:media-slider`](/docs/player/components/sliders/slider) guide contains background
 documentation that can be used when working with the volume slider component.
+{% /callout %}
 
 ## Usage
 
@@ -36,15 +38,15 @@ media-volume-slider {
 }
 
 /* Apply styles when device pointer is within slider bounds. */
-media-volume-slider[pointing] {
+media-volume-slider[data-pointing] {
 }
 
 /* Apply styles when slider thumb is being dragged. */
-media-volume-slider[dragging] {
+media-volume-slider[data-dragging] {
 }
 
 /* Shorthand for both dragging and pointing. */
-media-volume-slider[interactive] {
+media-volume-slider[data-interactive] {
 }
 ```
 
@@ -56,7 +58,7 @@ media-volume-slider [part~='track'] {
 }
 
 /* Apply styles to track when interactive. */
-media-volume-slider[interactive] [part~='track'] {
+media-volume-slider[data-interactive] [part~='track'] {
 }
 
 /* Apply styles to track fill (played portion of slider). */
@@ -79,9 +81,13 @@ media-volume-slider [part='thumb'] {
 ### Focus
 
 ```css {% copy=true %}
-/* Apply styles when focused via keyboard. */
-:where(media-volume-slider:focus-visible, media-volume-slider.focus-visible) {
-  outline: 1px auto purple;
+/* Apply styles to slider when focused via keyboard. */
+media-volume-slider[data-focus] {
+}
+
+/* Apply styles to slider track when focused via keyboard. */
+media-volume-slider[data-focus] [part='track'] {
+  outline: 3px solid blue;
 }
 ```
 
@@ -102,13 +108,14 @@ media-volume-slider [slot='preview'] {
 
 ## Tailwind
 
-📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
-contains background documentation on working with sliders.
-
 A complete volume slider example built with Tailwind:
 
 {% code_snippet name="tailwind" copy=true /%}
 
 {% callout type="tip" %}
-All of this code is reusable across other slider implementations.
+
+- 📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
+  contains background documentation on working with sliders.
+- All of this code is reusable across other slider implementations.
+
 {% /callout %}

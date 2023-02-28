@@ -51,8 +51,8 @@ media-seek-button svg[slot='forward'] {
 
 ```css {% copy=true %}
 /* Apply styles when focused via keyboard. */
-:where(media-seek-button:focus-visible, media-seek-button.focus-visible) {
-  outline: 1px auto purple;
+media-seek-button[data-focus] {
+  outline: 3px solid blue;
 }
 ```
 

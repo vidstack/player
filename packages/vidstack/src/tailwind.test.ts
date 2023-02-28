@@ -31,8 +31,6 @@ const mediaAttributes = [
   'buffering',
 ];
 
-const sliderAttributes = ['dragging', 'pointing', 'interactive'];
-
 async function run(content: string, options?: PluginOptions) {
   return postcss([
     tailwindcss({
@@ -345,38 +343,6 @@ it('should apply prefix to media variants', async () => {
         display: none
     }
     media-player:not([can-play]) .not-media-can-control\\\\:hidden {
-        display: none
-    }"
-  `);
-});
-
-it('should create slider variants', async () => {
-  const content = sliderAttributes.map((name) => `${name}:hidden`).join(' ');
-  const css = await run(content);
-  expect(css).toMatchInlineSnapshot(`
-    "media-player *[role=\\"slider\\"][dragging] .dragging\\\\:hidden {
-        display: none
-    }
-    media-player *[role=\\"slider\\"][pointing] .pointing\\\\:hidden {
-        display: none
-    }
-    media-player *[role=\\"slider\\"][interactive] .interactive\\\\:hidden {
-        display: none
-    }"
-  `);
-});
-
-it('should apply prefix to slider variants', async () => {
-  const content = sliderAttributes.map((name) => `slider-${name}:hidden`).join(' ');
-  const css = await run(content, { sliderPrefix: 'slider' });
-  expect(css).toMatchInlineSnapshot(`
-    "media-player *[role=\\"slider\\"][dragging] .slider-dragging\\\\:hidden {
-        display: none
-    }
-    media-player *[role=\\"slider\\"][pointing] .slider-pointing\\\\:hidden {
-        display: none
-    }
-    media-player *[role=\\"slider\\"][interactive] .slider-interactive\\\\:hidden {
         display: none
     }"
   `);

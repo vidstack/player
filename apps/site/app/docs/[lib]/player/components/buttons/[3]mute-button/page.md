@@ -33,19 +33,19 @@ media-mute-button {
 }
 
 /* Apply styles when media is muted. */
-media-mute-button[muted] {
+media-mute-button[data-muted] {
 }
 
 /* Apply styles when media is _not_ muted. */
-media-mute-button:not([muted]) {
+media-mute-button:not([data-muted]) {
 }
 
 /* Apply styles when media volume is low (0% < x < 50%). */
-media-mute-button[volume-low] {
+media-mute-button[data-volume-low] {
 }
 
 /* Apply styles when media volume is high (≥50%). */
-media-mute-button[volume-high] {
+media-mute-button[data-volume-high] {
 }
 
 /* Style default icons. */
@@ -61,8 +61,8 @@ media-mute-button svg[slot='volume-high'] {
 
 ```css {% copy=true %}
 /* Apply styles when focused via keyboard. */
-:where(media-mute-button:focus-visible, media-mute-button.focus-visible) {
-  outline: 1px auto purple;
+media-mute-button[data-focus] {
+  outline: 3px solid blue;
 }
 ```
 

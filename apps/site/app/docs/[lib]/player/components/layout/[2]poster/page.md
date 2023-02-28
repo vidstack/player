@@ -23,16 +23,15 @@ of the media player:
 
 {% code_snippet name="usage-two" highlight="html:3|react:7" /%}
 
-### Loading Attributes
+## Data Attributes
 
-The following loading attributes are applied to the `media-poster` element:
+The following data attributes are applied to the `media-poster` element:
 
-- `loading`: Present when poster image is being downloaded by the browser.
-- `loaded`: Present when the poster image has successfully loaded.
-- `hidden`: Present when the poster image has failed to load.
+- `data-loading`: Present when poster image is being downloaded by the browser.
+- `data-hidden`: Present when the poster image has failed to load.
 
 ```html
-<media-poster loading />
+<media-poster data-loading />
 ```
 
 You can use these attributes to further style the poster as it's being loaded such as
@@ -41,10 +40,10 @@ when the image fails to load.
 
 ```css {% copy=true %}
 /* Do something while poster image is loading. */
-media-poster[loading] {
+media-poster[data-loading] {
 }
 
 /* Do something if poster image fails to load. */
-media-poster[hidden] {
+media-poster[data-hidden] {
 }
 ```

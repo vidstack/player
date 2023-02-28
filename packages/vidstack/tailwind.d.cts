@@ -9,6 +9,6 @@ declare namespace plugin {
 export = plugin;
 
 export interface PluginOptions {
+  prefix?: string;
   mediaPrefix?: string;
-  sliderPrefix?: string;
 }

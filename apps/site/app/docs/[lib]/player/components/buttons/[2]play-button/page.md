@@ -33,11 +33,11 @@ media-play-button {
 }
 
 /* Apply styles when media is paused. */
-media-play-button[paused] {
+media-play-button[data-paused] {
 }
 
 /* Apply styles when media is _not_ paused. */
-media-play-button:not([paused]) {
+media-play-button:not([data-paused]) {
 }
 
 /* Style default icons. */
@@ -51,8 +51,8 @@ media-play-button svg[slot='pause'] {
 
 ```css {% copy=true %}
 /* Apply styles when focused via keyboard. */
-:where(media-play-button:focus-visible, media-play-button.focus-visible) {
-  outline: 1px auto purple;
+media-play-button[data-focus] {
+  outline: 3px solid blue;
 }
 ```
 

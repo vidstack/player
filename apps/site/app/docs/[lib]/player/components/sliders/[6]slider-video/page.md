@@ -14,22 +14,7 @@ video are of the same length (i.e., duration).
 
 {% code_preview name="usage" copyHighlight=true highlight="html:4-7|react:7" /%}
 
-## Video Attributes
-
-The following video attributes are applied to the `media-slider-video` element:
-
-- `can-play`: Present when the video is ready for playback.
-- `hidden`: Present when media loading fails.
-
-```html
-<!-- Attributes are automatically applied for styling. -->
-<media-slider-video can-play hidden />
-```
-
-You can use these attributes to further style the slider video as it's being loaded, such as hiding
-it before media is ready or if it fails to load.
-
-## Video Events
+## Events
 
 The native video `canplay` and `error` events are re-dispatched by this component for you to
 listen to if needed.
@@ -48,6 +33,14 @@ media-slider-video {
 /* Apply styles to <video> element part. */
 media-slider-video [part='video'] {
   width: 156px;
+}
+
+/* Apply styles when video is loading. */
+media-slider-video[data-loading] {
+}
+
+/* Apply styles when video fails to load. */
+media-slider-video[data-hidden] {
 }
 ```
 

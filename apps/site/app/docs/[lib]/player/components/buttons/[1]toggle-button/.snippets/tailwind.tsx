@@ -1,9 +1,9 @@
 import { MediaToggleButton, ThumbsDownIcon, ThumbsUpIcon } from '@vidstack/react';
 
 <MediaToggleButton
-  className="flex h-12 w-12 items-center justify-center rounded-sm text-white"
+  className="group flex h-12 w-12 items-center justify-center rounded-sm text-white outline-none data-[focus]:ring-4 data-[focus]:ring-blue-400"
   aria-label="Like"
 >
-  <ThumbsUpIcon className="pressed:block hidden" />
-  <ThumbsDownIcon className="not-pressed:block hidden" />
+  <ThumbsUpIcon className="hidden group-data-[pressed]:block" />
+  <ThumbsDownIcon className="group-data-[pressed]:hidden block" />
 </MediaToggleButton>;

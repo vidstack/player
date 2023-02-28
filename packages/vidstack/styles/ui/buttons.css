@@ -55,21 +55,21 @@
 }
 
 :where(
-    media-toggle-button[pressed] [slot='on'],
-    media-toggle-button:not([pressed]) [slot='off'],
-    media-play-button[paused] [slot='play'],
-    media-play-button:not([paused]) [slot='pause'],
-    media-mute-button[volume-high] [slot='volume-high'],
-    media-mute-button[volume-low] [slot='volume-low'],
-    media-mute-button[muted] [slot='volume-muted'],
-    media-fullscreen-button:not([fullscreen]) [slot='enter'],
-    media-fullscreen-button[fullscreen] [slot='exit'],
+    media-toggle-button[data-pressed] [slot='on'],
+    media-toggle-button:not([data-pressed]) [slot='off'],
+    media-play-button[data-paused] [slot='play'],
+    media-play-button:not([data-paused]) [slot='pause'],
+    media-mute-button[data-volume-high] [slot='volume-high'],
+    media-mute-button[data-volume-low] [slot='volume-low'],
+    media-mute-button[data-muted] [slot='volume-muted'],
+    media-fullscreen-button:not([data-fullscreen]) [slot='enter'],
+    media-fullscreen-button[data-fullscreen] [slot='exit'],
     media-seek-button:not([seconds*='-']) [slot='forward'],
     media-seek-button[seconds*='-'] [slot='backward']
   ) {
   opacity: 1;
 }
 
-:where(media-fullscreen-button[hidden]) {
+:where(media-fullscreen-button[data-hidden]) {
   display: none;
 }

@@ -28,12 +28,11 @@ module.exports = {
 
 The plugin accepts options for configuring prefixes on variants provided by Vidstack:
 
-```js {% title="tailwind.config.js" copyHighlight=true highlight="3-6" %}
+```js {% title="tailwind.config.js" copyHighlight=true highlight="3-5" %}
 module.exports = {
   plugins: [
     require('vidstack/tailwind.cjs')({
-      mediaPrefix: 'media', // paused:... -> media-paused:...
-      sliderPrefix: 'slider', // dragging:... -> slider-dragging:...
+      prefix: 'media', // paused:... -> media-paused:...
     }),
   ],
 };
@@ -103,6 +102,6 @@ if you're using Tailwind CSS v3+ and use the following CSS media variables.
 ```html
 <!-- example -->
 <div
-  class="scale-x-[calc(var(--media-current-time) / var(--media-duration))] origin-left transform"
+  class="origin-left scale-x-[calc(var(--media-current-time)/var(--media-duration))] transform"
 ></div>
 ```
