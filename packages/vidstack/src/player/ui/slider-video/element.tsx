@@ -26,7 +26,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
 
     host.setAttributes({
       'can-play': $canPlay,
-      error: () => !!$error() || !Number.isFinite($media.duration),
+      hidden: () => !!$error() || !Number.isFinite($media.duration),
     });
 
     effect(() => {

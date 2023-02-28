@@ -213,7 +213,7 @@
 }
 
 /* Hide video if it fails to load. */
-:where(media-slider-video[error], media-slider-video[error] [part='video']) {
+:where(media-slider-video[hidden], media-slider-video[hidden] [part='video']) {
   display: none;
   width: 0px;
 }

@@ -19,11 +19,11 @@ video are of the same length (i.e., duration).
 The following video attributes are applied to the `media-slider-video` element:
 
 - `can-play`: Present when the video is ready for playback.
-- `error`: Present when media loading fails.
+- `hidden`: Present when media loading fails.
 
 ```html
 <!-- Attributes are automatically applied for styling. -->
-<media-slider-video can-play error />
+<media-slider-video can-play hidden />
 ```
 
 You can use these attributes to further style the slider video as it's being loaded, such as hiding
