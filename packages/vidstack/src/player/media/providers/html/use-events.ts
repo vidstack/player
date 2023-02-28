@@ -5,6 +5,7 @@ import { createRAFLoop } from '../../../../foundation/hooks/raf-loop';
 import { isHLSSrc } from '../../../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../../../utils/number';
 import { IS_SAFARI } from '../../../../utils/support';
+import type { MediaCanPlayDetail } from '../../events';
 import type { MediaErrorCode } from '../../types';
 import type { MediaSetupContext } from '../types';
 import type { HTMLMediaProvider } from './provider';
@@ -152,9 +153,10 @@ export function useHTMLMediaElementEvents(
     }
   }
 
-  function getCanPlayDetail() {
+  function getCanPlayDetail(): MediaCanPlayDetail {
     return {
       duration: provider.media.duration,
+      buffered: provider.media.buffered,
       seekable: provider.media.seekable,
     };
   }

@@ -125,6 +125,7 @@ export interface MediaCanPlayEvent extends MediaEvent<MediaCanPlayDetail> {}
 
 export interface MediaCanPlayDetail {
   duration: number;
+  buffered: TimeRanges;
   seekable: TimeRanges;
 }
 

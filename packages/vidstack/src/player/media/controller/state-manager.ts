@@ -208,6 +208,7 @@ export function createMediaStateManager(
     }
 
     $store.canPlay = true;
+    $store.buffered = event.detail.buffered;
     $store.seekable = event.detail.seekable;
     if (!$store.live) $store.duration = event.detail.duration;
     $player()?.setAttribute('aria-busy', 'false');
@@ -215,6 +216,7 @@ export function createMediaStateManager(
 
   function onCanPlayThrough(event: ME.MediaCanPlayThroughEvent) {
     $store.canPlay = true;
+    $store.buffered = event.detail.buffered;
     $store.seekable = event.detail.seekable;
     if (!$store.live) $store.duration = event.detail.duration;
     appendTriggerEvent(event, trackedEvents.get('can-play'));
