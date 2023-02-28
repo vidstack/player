@@ -5,11 +5,7 @@
   import '$lib/styles/docs.css';
   import '$lib/polyfills/focus-visible';
 
-  import 'vidstack/styles/base.css';
-  import 'vidstack/styles/ui/buttons.css';
-  import 'vidstack/styles/ui/tooltips.css';
-  import 'vidstack/styles/ui/live.css';
-  import 'vidstack/styles/ui/sliders.css';
+  import 'vidstack/styles/defaults.css';
 
   import { useRouter } from '@vessel-js/svelte';
   import { RouteAnnouncer, RouterOutlet } from '@vessel-js/svelte';

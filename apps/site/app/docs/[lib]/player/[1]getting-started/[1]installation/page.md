@@ -27,6 +27,13 @@ Register the custom media elements and base styles.
 
 {% import_components /%}
 
+You can also register specific elements like so:
+
+```js {% copy=true %}
+// the `.js` extension is required.
+import 'vidstack/define/media-player.js';
+```
+
 {% /step %}
 
 {% step %}
@@ -38,5 +45,23 @@ Add the following player HTML boilerplate to get started.
 {% /slot %}
 
 {% player_markup /%}
+
+{% /step %}
+
+{% step orientation="horizontal" %}
+
+## Add Global Types {% slot="title" %}
+
+{% slot name="description" %}
+Add global Vidstack types if you're TypeScript.
+{% /slot %}
+
+```json {% title="tsconfig.json" copyHighlight=true highlight="3" %}
+{
+  "compilerOptions": {
+    "types": ["vidstack/globals"]
+  }
+}
+```
 
 {% /step %}

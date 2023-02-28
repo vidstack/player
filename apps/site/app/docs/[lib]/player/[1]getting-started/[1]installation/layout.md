@@ -42,22 +42,4 @@ depending on the type of installation method (NPM or CDN), library (HTML, React,
 
 <slot />
 
-{% step orientation="horizontal" %}
-
-## Add Global Types {% slot="title" %}
-
-{% slot name="description" %}
-Add global Vidstack types if you're using TypeScript.
-{% /slot %}
-
-```json {% title="tsconfig.json" copyHighlight=true highlight="3" %}
-{
-  "compilerOptions": {
-    "types": ["vidstack/globals"]
-  }
-}
-```
-
-{% /step %}
-
 {% /steps %}

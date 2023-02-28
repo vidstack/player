@@ -108,6 +108,12 @@ To speed up development, we provide default styles out of the box for all compon
 can be imported like so:
 
 ```js {% copy=true %}
+import 'vidstack/styles/defaults.css';
+```
+
+You can also individually import only the styles you need like so:
+
+```js {% copy=true %}
 import 'vidstack/styles/base.css';
 import 'vidstack/styles/ui/buttons.css';
 import 'vidstack/styles/ui/tooltips.css';

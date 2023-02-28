@@ -1,3 +1,4 @@
 globals.d.ts
 .code
 **/partials/markup
+**/partials/import

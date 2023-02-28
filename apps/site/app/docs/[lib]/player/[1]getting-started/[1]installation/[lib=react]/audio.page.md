@@ -42,3 +42,21 @@ Add the following player JSX boilerplate to get started.
 {% /step %}
 
 {% step %}
+
+{% step orientation="horizontal" %}
+
+## Add Global Types {% slot="title" %}
+
+{% slot name="description" %}
+Add global Vidstack types if you're TypeScript.
+{% /slot %}
+
+```json {% title="tsconfig.json" copyHighlight=true highlight="3" %}
+{
+  "compilerOptions": {
+    "types": ["vidstack/globals"]
+  }
+}
+```
+
+{% /step %}

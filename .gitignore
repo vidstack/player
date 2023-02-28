@@ -23,6 +23,7 @@ packages/*/sandbox/
 packages/icons/src/icons/
 packages/react/src/components.ts
 packages/react/src/icons.ts
+packages/vidstack/styles/defaults.css
 
 elements.json
 vscode.html-data.json

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { useRouter } from '@vessel-js/svelte';
+  import { onMount } from 'svelte';
 
   import { env } from '$lib/env';
   import { installMethod, type InstallMethodType } from '$lib/stores/install-method';
@@ -12,12 +13,13 @@
 
   const router = useRouter();
 
-  let skipFirst = true;
+  let mounted = false;
+  onMount(() => {
+    mounted = true;
+  });
+
   async function onChange(lib: JSLibType, install: InstallMethodType, provider: MediaProviderType) {
-    if (skipFirst) {
-      skipFirst = false;
-      return;
-    }
+    if (!mounted) return;
 
     const url = new URL('/docs/player/getting-started/installation', location.href);
 

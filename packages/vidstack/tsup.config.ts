@@ -5,6 +5,8 @@ import { esbuild as maverick } from '@maverick-js/compiler';
 import { globbySync } from 'globby';
 import { defineConfig, type Options } from 'tsup';
 
+// Build define directory.
+
 const defineEntries = globbySync('src/define/*.ts').reduce((entries, file) => {
   const entry = file.replace('src/', '').replace(/\.ts$/, '');
   entries[entry] = file;
@@ -15,6 +17,18 @@ if (!fs.existsSync('define')) fs.mkdirSync('define');
 for (const entry of Object.keys(defineEntries)) {
   fs.writeFileSync(entry + '.js', '// editor file - real file exists in `dist` dir');
 }
+
+// CSS merge.
+
+let defaultStyles = fs.readFileSync('styles/base.css', 'utf-8');
+
+for (const file of fs.readdirSync('styles/ui', 'utf-8')) {
+  defaultStyles += '\n' + fs.readFileSync(`styles/ui/${file}`, 'utf-8');
+}
+
+fs.writeFileSync('styles/defaults.css', defaultStyles);
+
+// Build configurations.
 
 const SERVER_CONFIG = dist({ dev: false, server: true, hydrate: false }),
   DEV_CONFIG = dist({ dev: true, server: false, hydrate: true }),
