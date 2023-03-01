@@ -20,6 +20,7 @@ export {
 
 // Media Player
 export * from './player/element/types';
+export { MEDIA_KEY_SHORTCUTS } from './player/element/keyboard';
 export { MediaContext, mediaContext } from './player/media/context';
 export * from './player/media/controller/types';
 export * from './player/media/events';

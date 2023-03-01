@@ -34,6 +34,17 @@ By setting `target` to `provider`, the controller will only request fullscreen o
 meaning your custom UI will _not_ be displayed when in fullscreen.
 {% /callout %}
 
+## Key Shortcuts
+
+Keyboard shortcuts can be specified either through the
+[global key shortcuts](/docs/player/core-concepts/keyboard#configuring-shortcuts) config, or on the
+component like so:
+
+{% code_snippet name="key-shortcuts" /%}
+
+👉 See the [`aria-keyshortcuts`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-keyshortcuts)
+docs for more information.
+
 ## Custom Icons
 
 Here's an example containing a custom enter and exit icon:

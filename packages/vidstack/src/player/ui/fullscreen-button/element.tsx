@@ -4,6 +4,7 @@ import { fullscreenExitPaths, fullscreenPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
 import { setARIALabel } from '../../../utils/dom';
+import { useARIAKeyShortcuts } from '../../element/keyboard';
 import { useMedia } from '../../media/context';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
@@ -28,6 +29,8 @@ export const FullscreenButtonDefinition = defineCustomElement<MediaFullscreenBut
         $props: { $pressed, $disabled },
         onPress,
       });
+
+    useARIAKeyShortcuts(host, 'toggleFullscreen');
 
     onAttach(() => {
       setARIALabel(host.el!, () => ($media.fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'));

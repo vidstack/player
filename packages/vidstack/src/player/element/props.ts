@@ -1,5 +1,6 @@
 import type { CustomElementPropDefinitions } from 'maverick.js/element';
 
+import { MEDIA_KEY_SHORTCUTS } from './keyboard';
 import type { MediaPlayerProps } from './types';
 
 export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = {
@@ -31,4 +32,7 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
   streamType: { initial: 'unknown' },
   volume: { initial: 1 },
   liveTolerance: { initial: 15 },
+  keyDisabled: { initial: false },
+  keyTarget: { initial: 'player' },
+  keyShortcuts: { initial: MEDIA_KEY_SHORTCUTS },
 };

@@ -6,7 +6,7 @@ import type {
   MediaControllerEvents,
   MediaControllerProps,
 } from '../media/controller/types';
-import type { MediaResource } from '../media/types';
+import type { MediaKeyShortcuts, MediaKeyTarget, MediaResource } from '../media/types';
 
 export interface MediaPlayerProps extends MediaControllerProps {
   /**
@@ -23,6 +23,47 @@ export interface MediaPlayerProps extends MediaControllerProps {
    * The aspect ratio of the player media given as 'width/height' (e.g., 16/9).
    */
   aspectRatio: number | null;
+  /**
+   * Whether keyboard support is disabled for the media player globally. This property won't disable
+   * standard ARIA keyboard controls for individual components when focused.
+   *
+   * @defaultValue 'false'
+   */
+  keyDisabled: boolean;
+  /**
+   * The target on which to listen for keyboard events (e.g., `keydown`):
+   *
+   * - `document`: the player will listen for events on the entire document. In the case that
+   * multiple players are on the page, only the most recently active player will receive input.
+   * - `player`: the player will listen for events on the player itself or one of its children
+   * were recently interacted with.
+   *
+   * @defaultValue `player`
+   */
+  keyTarget: MediaKeyTarget;
+  /**
+   * Extends global media player keyboard shortcuts. The shortcuts can be specified as a
+   * space-separated list of combinations (e.g., `p Control+Space`), see the provided doc link
+   * for more information.
+   *
+   * Do note, if `aria-keyshortcuts` is specified on a component then it will take precedence
+   * over the respective value set here.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-keyshortcuts}
+   * @example
+   * ```js
+   * keyShortcuts = {
+   *   togglePaused: 'k Space',
+   *   toggleMuted: 'm',
+   *   toggleFullscreen: 'f',
+   *   seekBackward: 'ArrowLeft',
+   *   seekForward: 'ArrowRight',
+   *   volumeUp: 'ArrowUp',
+   *   volumeDown: 'ArrowDown',
+   * }
+   * ```
+   */
+  keyShortcuts: MediaKeyShortcuts;
 }
 
 export interface MediaPlayerEvents extends MediaControllerEvents {

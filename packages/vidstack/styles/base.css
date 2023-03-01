@@ -17,6 +17,10 @@
   box-sizing: border-box;
 }
 
+:where(media-player:focus) {
+  outline: none;
+}
+
 :where(media-outlet) {
   display: block;
   box-sizing: border-box;

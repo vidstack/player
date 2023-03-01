@@ -9,6 +9,17 @@ dispatching a `media-play-request`, and `media-pause-request` event to the playe
 
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:6" /%}
 
+## Key Shortcuts
+
+Keyboard shortcuts can be specified either through the
+[global key shortcuts](/docs/player/core-concepts/keyboard#configuring-shortcuts) config, or on the
+component like so:
+
+{% code_snippet name="key-shortcuts" /%}
+
+👉 See the [`aria-keyshortcuts`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-keyshortcuts)
+docs for more information.
+
 ## Custom Icons
 
 Here's an example containing a custom play and pause icon:

@@ -154,7 +154,7 @@ export function createMediaRequestManager(
       $store.duration - 0.1,
     );
 
-    if (!Number.isFinite(boundTime)) return;
+    if (!Number.isFinite(boundTime) || !$store.canSeek) return;
 
     requests._queue._enqueue('seeked', event);
     $provider()!.currentTime = boundTime;

@@ -4,6 +4,7 @@ import { pausePaths, playPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
 import { setARIALabel } from '../../../utils/dom';
+import { useARIAKeyShortcuts } from '../../element/keyboard';
 import { useMedia } from '../../media/context';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
@@ -25,6 +26,8 @@ export const PlayButtonDefinition = defineCustomElement<MediaPlayButtonElement>(
         $props: { $pressed, $disabled },
         onPress,
       });
+
+    useARIAKeyShortcuts(host, 'togglePaused');
 
     onAttach(() => {
       setARIALabel(host.el!, () => ($media.paused ? 'Play' : 'Pause'));

@@ -80,6 +80,10 @@
   transition: opacity 0.15s ease-in;
 }
 
+:where([data-media-slider][data-dragging] [part='thumb']) {
+  box-shadow: 0 0 0 4px hsla(0, 0%, 100%, 0.4);
+}
+
 :where([data-media-slider][data-interactive] [part='thumb']) {
   opacity: 1;
   transition: opacity 0.2s ease-in;

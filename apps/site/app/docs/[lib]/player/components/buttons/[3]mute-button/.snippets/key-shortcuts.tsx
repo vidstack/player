@@ -1,0 +1,1 @@
+<MediaMuteButton aria-keyshortcuts="m" />;

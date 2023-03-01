@@ -10,11 +10,13 @@ import {
 } from 'maverick.js/std';
 
 import { createLogPrinter } from '../../foundation/logger/log-printer';
+import { useFocusVisible } from '../../foundation/observers/use-focus-visible';
 import { IS_IOS } from '../../utils/support';
 import { createMediaController } from '../media/controller/create';
 import { useSourceSelection } from '../media/controller/source-selection';
 import type { AnyMediaProvider } from '../media/controller/types';
 import type { MediaState } from '../media/state';
+import { useKeyboard } from './keyboard';
 import { mediaPlayerProps } from './props';
 import type { MediaPlayerConnectEvent, MediaPlayerElement } from './types';
 
@@ -79,6 +81,11 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
     }
 
     onAttach(() => {
+      host.el!.setAttribute('tabindex', '0');
+      if (!host.el!.hasAttribute('aria-label')) {
+        host.el!.setAttribute('aria-label', 'Media Player');
+      }
+
       context.$player.set(host.el);
       context.remote.setTarget(host.el!);
       context.remote.setPlayer(host.el!);
@@ -97,6 +104,10 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       });
     });
 
+    context.ariaKeys = {};
+    context.$keyShortcuts = props.$keyShortcuts;
+    useKeyboard(context, props);
+    useFocusVisible(host.$el);
     useSourceSelection(props.$src, controller._context);
 
     const $attrs: AttributesRecord = {

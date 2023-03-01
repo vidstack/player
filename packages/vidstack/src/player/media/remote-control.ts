@@ -152,7 +152,7 @@ export class MediaRemoteControl {
    * ```
    */
   changeVolume(volume: number, trigger?: Event) {
-    this._dispatchRequest('media-volume-change-request', trigger, volume);
+    this._dispatchRequest('media-volume-change-request', trigger, Math.max(0, Math.min(1, volume)));
   }
 
   /**
@@ -258,7 +258,12 @@ export class MediaRemoteControl {
       trigger,
     });
 
-    const target = trigger?.target ?? this._target;
+    const target =
+      trigger?.target === document ||
+      trigger?.target === window ||
+      trigger?.target === document.body
+        ? this._target ?? this.getPlayer()
+        : trigger?.target ?? this._target;
 
     if (__DEV__) {
       this._logger

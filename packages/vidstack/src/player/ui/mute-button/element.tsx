@@ -5,6 +5,7 @@ import { mutePaths, volumeHighPaths, volumeLowPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
 import { setARIALabel } from '../../../utils/dom';
+import { useARIAKeyShortcuts } from '../../element/keyboard';
 import { useMedia } from '../../media/context';
 import { toggleButtonProps } from '../toggle-button/props';
 import { useToggleButton } from '../toggle-button/use-toggle-button';
@@ -26,6 +27,8 @@ export const MuteButtonDefinition = defineCustomElement<MediaMuteButtonElement>(
         $props: { $pressed, $disabled },
         onPress,
       });
+
+    useARIAKeyShortcuts(host, 'toggleMuted');
 
     onAttach(() => {
       setARIALabel(host.el!, () => ($pressed() ? 'Unmute' : 'Mute'));

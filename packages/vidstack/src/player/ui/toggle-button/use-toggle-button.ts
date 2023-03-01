@@ -4,7 +4,7 @@ import { ariaBool, isKeyboardClick, isKeyboardEvent, listenEvent } from 'maveric
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
-import type { MediaToggleButtonElement, ToggleButtonMembers, ToggleButtonProps } from './types';
+import type { MediaToggleButtonElement, ToggleButtonMembers } from './types';
 
 export function useToggleButton(
   host: CustomElementHost<MediaToggleButtonElement>,
