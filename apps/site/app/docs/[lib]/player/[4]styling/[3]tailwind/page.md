@@ -105,3 +105,48 @@ if you're using Tailwind CSS v3+ and use the following CSS media variables.
   class="origin-left scale-x-[calc(var(--media-current-time)/var(--media-duration))] transform"
 ></div>
 ```
+
+## Data Attributes
+
+Data attributes are applied to components throughout the library to expose internal state for
+styling purposes:
+
+```html
+<media-play-button data-paused />
+<media-mute-button data-volume="high" />
+<media-live-indicator data-live-edge />
+```
+
+[Tailwind supports data attributes](https://tailwindcss.com/docs/hover-focus-and-other-states#data-attributes)
+out of the box to apply styles conditionally like so:
+
+```html
+<media-mute-button class="group">
+  <media-icon class="hidden group-data-[volume=muted]:block" type="mute"></media-icon>
+  <media-icon class="hidden group-data-[volume=low]:block" type="volume-low"></media-icon>
+  <media-icon class="hidden group-data-[volume=high]:block" type="volume-high"></media-icon>
+</media-mute-button>
+```
+
+👉 See the "Styling" and "Tailwind" sections for each component to see what data attributes
+are available for styling.
+
+### Focus
+
+The `focus-visible` pseudo-class and Tailwind variant does not work with custom elements in Safari.
+To remedy this, a `data-focus` attribute is applied to components when focused via keyboard. This
+attribute can be used to apply focus styling in Tailwind like so:
+
+```html
+<media-play-button class="outline-none data-[focus]:ring-4 data-[focus]:ring-blue-400" />
+```
+
+### Hocus
+
+The `data-hocus` attribute is applied to components when they're being keyboard focused or
+hovered on by a pointer device. This attribute is applied to help keep class lists concise
+and can be used like so:
+
+```html
+<media-play-button class="data-[hocus]:ring-blue-400" />
+```
