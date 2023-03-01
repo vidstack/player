@@ -4,10 +4,12 @@
 
 <media-player
   class="w-full max-w-xs relative"
-  volume={0.2}
+  volume={0.1}
   src="https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8"
-  playsinline
+  playsinline={true}
+  autoplay={true}
   aspect-ratio="16/9"
+  stream-type="ll-live"
 >
   <media-outlet>
     <div class="media-buffering-container">

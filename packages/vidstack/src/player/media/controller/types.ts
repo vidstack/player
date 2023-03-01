@@ -26,6 +26,7 @@ export interface MediaControllerProps
     | 'controls'
     | 'currentTime'
     | 'liveTolerance'
+    | 'minLiveDVRWindow'
     | 'loop'
     | 'muted'
     | 'paused'

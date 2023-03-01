@@ -130,6 +130,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+:where([data-media-slider][disabled]) {
+  cursor: unset;
+}
+
 :where([data-media-slider]:focus) {
   outline: none;
 }

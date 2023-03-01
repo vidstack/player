@@ -18,51 +18,24 @@ The live stream type can be set like so:
 {% code_snippet name="stream-type" /%}
 
 The type of stream can either be `on-demand`, `live`, `live:dvr`, `ll-live` (low-latency),
-`ll-live:dvr`.
+`ll-live:dvr`. If the value is not set, it will be inferred by the player which can be less
+accurate (e.g., at identifying DVR support).
 
-If the value is not set, it will be inferred by the player which can be less accurate (e.g.,
-identifying DVR support). The type will determine whether seeking operations are permitted and
-configure the default user interface accordingly.
+## Live DVR
 
-## User Interface
+Live DVR (Digital Video Recording) refers to live streams that support pausing, seeking back, and
+overall playing the live stream at the desired pace. Whether DVR is supported or not helps
+determine whether seeking operations are permitted during live streams, and consequently how to
+best configure UI components such as the time slider.
 
-The following components will adapt to a live stream:
+The player will try to infer whether a stream supports DVR but generally it's inaccurate. Prefer
+using the [stream type](#stream-type) property to specify whether DVR is supported or not. In
+addition, the `minLiveDVRWindow` can be used to specify the minimum seekable length in seconds
+before seeking operations are permitted (default value is 30 seconds):
 
-- `$tag:media-time`: Displays the text "LIVE" if the live stream is not seekable.
-- `$tag:media-time-slider`: Disabled if seeking operations are not permitted for the live stream.
-  When disabled, it can not be interacted with, no pointer/drag events will be fired, the thumb will
-  pinned to the right edge, and the background color will be set to red.
-- `$tag:media-slider-value`: Displays a negative offset from the current live time when used
-  inside the time slider. The text "LIVE" will be displayed if the stream is not seekable.
+{% code_snippet name="min-live-dvr" /%}
 
-## Media State
-
-📖 See the [state management guide](/docs/player/core-concepts/state-management#reading) for how
-to read media state.
-
-The following media state can be useful during a live stream:
-
-- `streamType`: Indicates the [type of live stream](#stream-type). This can be provided by you or
-  inferred by the player.
-- `live`: Whether the current stream is live.
-- `liveEdge`: Whether the current stream is at the live edge (i.e., at the furthest seekable part
-  of the media).
-- `liveTolerance`: The number of seconds that the current time can be behind duration and still be
-  considered live. The default value is 15, meaning the user can be up to 15 seconds behind
-  the live time and still be considered live. This value can be configured on the player.
-- `liveWindow`: The total length of the live stream starting at the first seekable time up to the
-  current live time. If the stream is not seekable or the stream is non-live then
-  this value will default to 0.
-- `canSeek`: Whether seeking is permitted for the live stream. This value will be false if the
-  duration on the native media element returns infinity.
-- `duration`: The current live time - synced to the edge.
-- `seekableStart`: Contains the earliest time in seconds at which media can be seeked to. Generally,
-  this is zero, but for live streams it may start at a non-zero value. This value can be infinity.
-- `seekableEnd`: The latest time in seconds at which media can be seeked to. This will default to
-  infinity if no seekable range is found.
-- `userBehindLiveEdge`: Whether the user has intentionally seeked behind the live edge. The user
-  must've seeked roughly 2 or more seconds behind during a live stream for this to be considered
-  true.
+The min DVR window is used in the following check: `seekableEnd - seekableStart >= minLiveDVRWindow`.
 
 ## Live Edge
 
@@ -89,6 +62,50 @@ the player like so:
 👉 The [MediaRemoteControl](/docs/react/player/core-concepts/state-management#updating) also provides a
 `seekToLiveEdge` method!
 
+## Media State
+
+{% callout type="info" %}
+📖 See the [state management guide](/docs/player/core-concepts/state-management#reading) for how
+to read media state.
+{% /callout %}
+
+The following media state can be useful during a live stream:
+
+- `streamType`: Indicates the [type of live stream](#stream-type). This can be provided by you or
+  inferred by the player.
+- `live`: Whether the current stream is live.
+- `liveEdge`: Whether the current stream is at the live edge (i.e., at the furthest seekable part
+  of the media).
+- `liveTolerance`: The number of seconds that the current time can be behind duration and still be
+  considered live. The default value is 15, meaning the user can be up to 15 seconds behind
+  the live time and still be considered live. This value can be configured on the player.
+- `liveWindow`: The total length of the live stream starting at the first seekable time up to the
+  current live time. If the stream is not seekable or the stream is non-live then
+  this value will default to 0.
+- `minLiveDVRWindow`: The minimum seekable length in seconds before media seeking operations are
+  permitted on live DVR streams. The default value is 30.
+- `canSeek`: Whether seeking is permitted for the live stream. This value will be false if the
+  duration on the native media element returns infinity.
+- `duration`: The current live time - synced to the edge.
+- `seekableStart`: Contains the earliest time in seconds at which media can be seeked to. Generally,
+  this is zero, but for live streams it may start at a non-zero value. This value can be infinity.
+- `seekableEnd`: The latest time in seconds at which media can be seeked to. This will default to
+  infinity if no seekable range is found.
+- `userBehindLiveEdge`: Whether the user has intentionally seeked behind the live edge. The user
+  must've seeked roughly 2 or more seconds behind during a live stream for this to be considered
+  true.
+
+## User Interface
+
+The following components will adapt to a live stream:
+
+- `$tag:media-time`: Displays the text "LIVE" if the live stream is not seekable.
+- `$tag:media-time-slider`: Disabled if seeking operations are not permitted for the live stream.
+  When disabled, it can not be interacted with, no pointer/drag events will be fired, the thumb will
+  pinned to the right edge, and the background color will be set to red.
+- `$tag:media-slider-value`: Displays a negative offset from the current live time when used
+  inside the time slider. The text "LIVE" will be displayed if the stream is not seekable.
+
 ## Styling
 
 The following media data attributes are available for styling based on the current live state:
@@ -103,7 +120,7 @@ media-player[data-live-edge] {
 }
 
 media-player[data-live][data-can-seek] {
-  /* seeking is permitted for live stream. */
+  /* seeking is permitted for live DVR stream. */
 }
 ```
 

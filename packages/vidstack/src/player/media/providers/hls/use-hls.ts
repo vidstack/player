@@ -51,6 +51,7 @@ export function useHLS(
   effect(() => {
     if (!$store.live) return;
     const instance = $instance()!;
+    if (!instance) return;
     const rafLoop = createRAFLoop(() => {
       const position = instance.liveSyncPosition;
       $store.duration = position ?? Infinity;

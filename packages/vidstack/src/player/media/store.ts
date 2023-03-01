@@ -35,9 +35,6 @@ export const mediaStore = createStore<MediaStore>({
   started: false,
   volume: 1,
   waiting: false,
-  get canSeek() {
-    return /unknown|on-demand|:dvr/.test(this.streamType) && Number.isFinite(this.duration);
-  },
   get viewType() {
     return this.providedViewType !== 'unknown' ? this.providedViewType : this.mediaType;
   },
@@ -66,6 +63,16 @@ export const mediaStore = createStore<MediaStore>({
   userBehindLiveEdge: false,
   // ~~ live props ~~
   liveTolerance: 15,
+  minLiveDVRWindow: 30,
+  get canSeek() {
+    return (
+      /unknown|on-demand|:dvr/.test(this.streamType) &&
+      Number.isFinite(this.duration) &&
+      (!this.live ||
+        (/:dvr/.test(this.streamType) &&
+          this.seekableEnd - this.seekableStart >= this.minLiveDVRWindow))
+    );
+  },
   get live() {
     return this.streamType.includes('live');
   },

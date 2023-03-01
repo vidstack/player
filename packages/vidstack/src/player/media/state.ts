@@ -207,6 +207,13 @@ export interface MediaState {
    */
   liveEdge: boolean;
   /**
+   * The minimum seekable length in seconds before seeking operations are permitted. This is
+   * essentially the following check: `seekableEnd - seekableStart >= minLiveDVRWindow`.
+   *
+   * @defaultValue 30
+   */
+  minLiveDVRWindow: number;
+  /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
    *

@@ -19,6 +19,7 @@ export function useMediaPropChange(
     $playsinline,
     $logLevel,
     $liveTolerance,
+    $minLiveDVRWindow,
   }: Signals<MediaControllerProps>,
 ) {
   if (__SERVER__) return;
@@ -65,6 +66,7 @@ export function useMediaPropChange(
 
     effect(() => {
       $store.liveTolerance = $liveTolerance();
+      $store.minLiveDVRWindow = $minLiveDVRWindow();
     });
 
     effect(() => {
