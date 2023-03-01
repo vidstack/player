@@ -30,7 +30,7 @@ const SliderKeyDirection = {
 
 export function useSliderEvents(
   host: CustomElementHost<MediaSliderElement>,
-  { $disabled, $step, $keyboardStep, $shiftKeyMultiplier }: Signals<SliderProps>,
+  { $disabled, $step, $keyStep, $shiftKeyMultiplier }: Signals<SliderProps>,
   { onValueChange, onDragStart, onDragValueChange, onDragEnd }: SliderEventCallbacks,
   $store: SliderStore,
 ) {
@@ -127,7 +127,7 @@ export function useSliderEvents(
     const isValidKey = Object.keys(SliderKeyDirection).includes(key);
     if (!isValidKey) return;
 
-    const modifiedStep = !shiftKey ? $keyboardStep() : $keyboardStep() * $shiftKeyMultiplier();
+    const modifiedStep = !shiftKey ? $keyStep() : $keyStep() * $shiftKeyMultiplier();
 
     const direction = Number(SliderKeyDirection[key]),
       diff = modifiedStep * direction,

@@ -6,7 +6,7 @@ export const sliderProps: CustomElementPropDefinitions<SliderProps> = {
   disabled: { initial: false, type: { from: false } },
   value: { initial: 100 },
   step: { initial: 1 },
-  keyboardStep: { initial: 1 },
+  keyStep: { initial: 1 },
   shiftKeyMultiplier: { initial: 5 },
 };
 
@@ -35,11 +35,11 @@ export interface SliderProps {
    * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
    * the slider via keyboard.
    */
-  keyboardStep: number;
+  keyStep: number;
   /**
-   * ♿ **ARIA:** A number that will be used to multiply the `keyboardStep` when the `Shift` key
+   * ♿ **ARIA:** A number that will be used to multiply the `keyStep` when the `Shift` key
    * is held down and the slider value is changed by pressing `LeftArrow` or `RightArrow`. Think
-   * of it as `keyboardStep * shiftKeyMultiplier`.
+   * of it as `keyStep * shiftKeyMultiplier`.
    */
   shiftKeyMultiplier: number;
 }
