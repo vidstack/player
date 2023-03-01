@@ -99,8 +99,10 @@ async function buildIcons() {
   const iconsDir = path.resolve(__dirname, '../node_modules/media-icons/raw');
   const files = await readdir(iconsDir, 'utf-8');
   const icons = {};
+  const ignore = new Set(['.DS_Store']);
 
   for (const file of files) {
+    if (ignore.has(file)) continue;
     const name = path.basename(file, path.extname(file));
     icons[name] = await readFile(path.resolve(iconsDir, file), 'utf-8');
   }

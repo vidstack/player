@@ -134,8 +134,8 @@ export const tags = {
   ],
   'arrow-expand': ['arrow-right', 'enter', 'open-menu', 'side-menu', 'expand', 'grow', 'appear'],
   eye: ['see', 'watch', 'view', 'visible', 'count', 'people', 'viewers'],
-  'seek-backward': [
-    'fast-backward',
+  'fast-backward': [
+    'seek',
     'skip',
     'rewind',
     'backtrack',
@@ -144,14 +144,7 @@ export const tags = {
     'behind',
     'double-arrow-left',
   ],
-  'seek-forward': [
-    'fast-forward',
-    'look-forward',
-    'skip',
-    'preview',
-    'ahead',
-    'double-arrow-right',
-  ],
+  'fast-forward': ['look-forward', 'seek', 'skip', 'preview', 'ahead', 'double-arrow-right'],
   flag: ['report', 'abuse', 'nation', 'country', 'language'],
   'fullscreen-arrow-exit': ['close', 'dismiss', 'collapse', 'arrow-diagonal-in'],
   'fullscreen-arrow': ['enter', 'open', 'expand', 'arrow-diagonal-out', 'enabled', 'selected'],
@@ -296,6 +289,8 @@ export const tags = {
   replay: ['play-again', 'loop', 'restart', 'refresh', 'playback'],
   rotate: ['screen', 'viewport', 'orientation', 'horizontal', 'vertical', 'device'],
   search: ['discover', 'explore', 'find', 'magnifying-glass'],
+  'seek-backward': ['jump', 'skip', 'rewind', 'backtrack', 'look-back', 'current-time', 'behind'],
+  'seek-forward': ['jump', 'look-forward', 'skip', 'preview', 'ahead'],
   'seek-backward-10': [
     'skip',
     'jump',

@@ -7,6 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const srcDir = path.resolve(__dirname, '../src');
 const outDir = path.resolve(srcDir, 'icons');
 const iconsDir = path.resolve(__dirname, '../raw');
+const ignore = new Set(['.DS_Store']);
 
 async function buildIcons() {
   if (existsSync(outDir)) await rm(outDir, { recursive: true });
@@ -16,6 +17,7 @@ async function buildIcons() {
   const files = await readdir(iconsDir);
 
   for (const file of files) {
+    if (ignore.has(file)) continue;
     const fileName = path.basename(file, path.extname(file));
     const filePath = path.resolve(iconsDir, file);
 

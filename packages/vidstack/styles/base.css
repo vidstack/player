@@ -250,7 +250,7 @@
   display: none;
 }
 
-:where(media-player:not([started]) media-poster) {
+:where(media-player:not([data-started]) media-poster) {
   opacity: 1;
   pointer-events: auto;
 }
