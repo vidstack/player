@@ -101,7 +101,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
 
     const $attrs: AttributesRecord = {
       'aspect-ratio': props.$aspectRatio,
-      'ios-controls': () =>
+      'data-ios-controls': () =>
         IS_IOS &&
         $store.mediaType === 'video' &&
         $store.controls &&
@@ -109,7 +109,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
     };
 
     for (const prop of MEDIA_ATTRIBUTES) {
-      $attrs[camelToKebabCase(prop as string)] = () => $store[prop] as string | number;
+      $attrs['data-' + camelToKebabCase(prop as string)] = () => $store[prop] as string | number;
     }
 
     host.setAttributes($attrs);

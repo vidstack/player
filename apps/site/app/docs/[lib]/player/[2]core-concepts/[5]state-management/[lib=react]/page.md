@@ -21,7 +21,7 @@ import { MediaPlayer } from '@vidstack/react';
 import { useState } from 'react';
 
 function Player() {
-  const [paused, setPaused] = useState(true);
+  const [data-paused, setPaused] = useState(true);
   return (
     <MediaPlayer onPlay={() => setPaused(false)} onPause={() => setPaused(true)}>
       {/* ... */}

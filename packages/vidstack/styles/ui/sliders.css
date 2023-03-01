@@ -38,7 +38,7 @@
   transform: translateY(-50%) scaleX(var(--slider-fill-rate));
 }
 
-:where(media-player[live-edge] media-time-slider [part~='track-fill']) {
+:where(media-player[data-live-edge] media-time-slider [part~='track-fill']) {
   background-color: #dc2626;
 }
 

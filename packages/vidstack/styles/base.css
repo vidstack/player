@@ -104,7 +104,7 @@
   cursor: unset;
 }
 
-:where(media-fullscreen-button[data-hidden]) {
+:where(media-fullscreen-button[data-hidden], media-seek-button[data-hidden]) {
   display: none;
 }
 

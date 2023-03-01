@@ -16,7 +16,7 @@ You can request to enter or exit fullscreen on the `<media-player>` element like
 ### Target
 
 By default, calling the `enterFullscreen()` method will first attempt to use the
-[Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API) so the
+[data-fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API) so the
 custom media UI is displayed, otherwise it'll fallback to the current media provider.
 
 You can specify that you only want to display the provider in fullscreen and not the entire media
@@ -44,19 +44,19 @@ dispatching `media-enter-fullscreen` and `media-exit-fullscreen` requests like s
 The following media attributes are available for styling based on the current fullscreen state:
 
 ```css
-media-player[can-fullscreen] {
+media-player[data-can-fullscreen] {
   /* fullscreen API is available. */
 }
 
-media-player:not([can-fullscreen]) {
+media-player:not([data-can-fullscreen]) {
   /* fullscreen API is _not_ available. */
 }
 
-media-player[fullscreen] {
+media-player[data-fullscreen] {
   /* fullscreen is active. */
 }
 
-media-player:not([fullscreen]) {
+media-player:not([data-fullscreen]) {
   /* fullscreen is _not_ active. */
 }
 ```

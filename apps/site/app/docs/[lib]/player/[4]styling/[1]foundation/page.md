@@ -11,17 +11,17 @@ library with CSS.
 ## Styling Elements
 
 Vidstack Player enables styling _any child element_ of the player with CSS based on the current
-media state. This is made possible by exposing media state as attributes and CSS variables on
+media state. This is made possible by exposing media state as data attributes and CSS variables on
 the `<media-player>` element like so:
 
 ```html
 <!-- These attrs/vars are reflected by the player. -->
 <media-player
-  paused
-  seeking
-  waiting
-  can-load
-  can-play
+  data-paused
+  data-seeking
+  data-waiting
+  data-can-load
+  data-can-play
   ...
   style="--media-current-time: 500; --media-duration: 1000; ..."
 >
@@ -29,16 +29,16 @@ the `<media-player>` element like so:
 </media-player>
 ```
 
-You can use the presence and/or absence of these media attributes to style children of the
+You can use the presence and/or absence of these media data attributes to style children of the
 `<media-player>` element with CSS. Here's a few simple examples:
 
 ```css {% title="player.css" copy=true %}
 /* Apply styles to `foo` class when media is paused. */
-media-player[paused] .foo {
+media-player[data-paused] .foo {
 }
 
 /* Apply styles to `bar` class when media is _not_ paused. */
-media-player:not([paused]) .bar {
+media-player:not([data-paused]) .bar {
 }
 
 /** Scale the `baz` class based on the % of playback progress. */
@@ -64,13 +64,13 @@ express newer and more powerful conditional selectors like so:
 ```css {% title="player.css" copy=true %}
 /* AND conditional style. */
 /* Apply styles when media playback has ended and user is idle. */
-media-player[user-idle][ended] {
+media-player[data-user-idle][data-ended] {
 }
 
 /* OR conditional style. */
 /* Apply styles if media is not ready for playback or it's buffering. */
-media-player:not([can-play]),
-media-player[waiting] {
+media-player:not([data-can-play]),
+media-player[data-waiting] {
 }
 ```
 

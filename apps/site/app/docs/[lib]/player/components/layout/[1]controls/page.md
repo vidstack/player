@@ -7,29 +7,29 @@ description: This page showcases how to create a container for a collection of m
 We don't provide a controls component out of the box because you can easily create one with
 some HTML, CSS, and [media attributes](/docs/player/styling/references#media-attributes).
 
-The following media attributes can be useful when building a controls container:
+The following media data attributes can be useful when building a controls container:
 
-| Attribute        | Use-Case                                                                    |
-| ---------------- | --------------------------------------------------------------------------- |
-| `autoplay-error` | Show controls when autoplay fails so the user can start playback manually.  |
-| `can-load`       | Show controls skeleton while media is loading.                              |
-| `can-play`       | Hide controls while media is not ready for playback.                        |
-| `user-idle`      | Hide controls while media is idle (i.e., user is not active).               |
-| `started`        | Hide controls after media has started (e.g., hide initial big play button). |
-| `can-fullscreen` | Show alternative controls for when media is in fullscreen.                  |
+| Attribute             | Use-Case                                                                    |
+| --------------------- | --------------------------------------------------------------------------- |
+| `data-autoplay-error` | Show controls when autoplay fails so the user can start playback.           |
+| `data-can-load`       | Show controls skeleton while media is loading.                              |
+| `data-can-play`       | Hide controls while media is not ready for playback.                        |
+| `data-user-idle`      | Hide controls while media is idle (i.e., user is not active).               |
+| `data-started`        | Hide controls after media has started (e.g., hide initial big play button). |
+| `data-can-fullscreen` | Show alternative controls for when media is in fullscreen.                  |
 
 ```css {% copy=true %}
 /* Avoid double controls on iOS when in fullscreen. */
-media-player[ios-controls] .media-controls,
+media-player[data-ios-controls] .media-controls,
 /* Hide controls while media is loading, or user is idle. */
-media-player:not([can-play]) .media-controls,
-media-player[user-idle] .media-controls {
+media-player:not([data-can-play]) .media-controls,
+media-player[data-user-idle] .media-controls {
   opacity: 0;
   pointer-events: none;
 }
 
 /* Show controls if autoplay fails. */
-media-player[autoplay-error] .media-controls {
+media-player[data-autoplay-error] .media-controls {
   opacity: 1;
 }
 ```

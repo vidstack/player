@@ -40,6 +40,10 @@ media-seek-button:not([seconds*='-']) {
 media-seek-button[seconds*='-'] {
 }
 
+/* Apply styles when media seeking is not permitted (e.g., live stream). */
+media-seek-button[data-hidden] {
+}
+
 /* Style default icons. */
 media-seek-button svg[slot='backward'] {
 }

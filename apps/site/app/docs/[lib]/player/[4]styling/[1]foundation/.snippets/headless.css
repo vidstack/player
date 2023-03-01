@@ -9,11 +9,11 @@ media-play-button {
 }
 
 /* Show play icon when media is paused. */
-media-player[paused] .media-play-icon {
+media-player[data-paused] .media-play-icon {
   opacity: 1;
 }
 
 /* Show pause icon when media is _not_ paused. */
-media-player:not([paused]) .media-pause-icon {
+media-player:not([data-paused]) .media-pause-icon {
   opacity: 1;
 }

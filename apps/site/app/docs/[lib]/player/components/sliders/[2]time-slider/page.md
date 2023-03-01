@@ -63,7 +63,7 @@ media-time-slider[data-interactive] {
 }
 
 /* Apply styles when at live edge. */
-media-player[live-edge] media-time-slider {
+media-player[data-live-edge] media-time-slider {
 }
 ```
 
@@ -83,7 +83,7 @@ media-time-slider [part~='track-fill'] {
 }
 
 /* Apply styles to track fill when at live edge. */
-media-player[live-edge] media-time-slider [part~='track-fill'] {
+media-player[data-live-edge] media-time-slider [part~='track-fill'] {
 }
 
 /* Apply styles to track progress (buffered). */

@@ -5,16 +5,16 @@ description: This page showcases how to create a loading indicator for when medi
 ## Usage
 
 We don't provide a buffering indicator component out of the box because you can easily create one
-with some HTML, CSS, and [media attributes](/docs/player/styling/references#media-attributes).
+with some HTML, CSS, and [media data attributes](/docs/player/styling/references#media-attributes).
 
-The `waiting` attribute can be used to show the indicator while media is buffering.
-Optionally, the `can-play` attribute could also be used to display the indicator while
+The `data-waiting` attribute can be used to show the indicator while media is buffering.
+Optionally, the `data-can-play` attribute could also be used to display the indicator while
 media is initially loading.
 
 ```css {% copy=true %}
 /* Show buffering indicator while media is not ready, or buffering. */
-media-player:not([can-play]) .buffering-icon,
-media-player[waiting] .buffering-icon {
+media-player:not([data-can-play]) .buffering-icon,
+media-player[data-waiting] .buffering-icon {
   opacity: 1;
 }
 ```

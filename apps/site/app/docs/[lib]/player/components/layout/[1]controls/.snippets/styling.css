@@ -25,10 +25,10 @@
 }
 
 /* Avoid double controls on iOS when in fullscreen. */
-media-player[ios-controls] .media-controls-group,
+media-player[data-ios-controls] .media-controls-group,
 /* Hide controls if media is not ready for playback, or user is idle. */
-media-player[user-idle] .media-controls-group,
-media-player:not([can-play]) .media-controls-group {
+media-player[data-user-idle] .media-controls-group,
+media-player:not([data-can-play]) .media-controls-group {
   opacity: 0;
   pointer-events: none;
 }

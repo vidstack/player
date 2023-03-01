@@ -37,6 +37,7 @@ export const SeekButtonDefinition = defineCustomElement<MediaSeekButtonElement>(
       seconds: $seconds,
       'data-media-button': true,
       'default-appearance': $defaultAppearance,
+      'data-hidden': () => !$media.canSeek,
     });
 
     function onPress(event: Event) {

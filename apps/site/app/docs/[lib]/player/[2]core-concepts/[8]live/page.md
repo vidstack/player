@@ -91,18 +91,18 @@ the player like so:
 
 ## Styling
 
-The following media attributes are available for styling based on the current live state:
+The following media data attributes are available for styling based on the current live state:
 
 ```css
-media-player[live] {
+media-player[data-live] {
   /* stream is live. */
 }
 
-media-player[live-edge] {
+media-player[data-live-edge] {
   /* stream is at the live edge. */
 }
 
-media-player[live][can-seek] {
+media-player[data-live][data-can-seek] {
   /* seeking is permitted for live stream. */
 }
 ```

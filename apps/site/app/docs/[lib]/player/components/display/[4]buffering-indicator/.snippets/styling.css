@@ -32,8 +32,8 @@
 }
 
 /* Show buffering indicator while media is not ready, or buffering. */
-media-player:not([can-play]) .media-buffering-icon,
-media-player[waiting] .media-buffering-icon {
+media-player:not([data-can-play]) .media-buffering-icon,
+media-player[data-waiting] .media-buffering-icon {
   opacity: 1;
   animation: spin 1s linear infinite;
 }

@@ -8,7 +8,6 @@ import vidstackPlugin, { PluginOptions } from '../tailwind.cjs';
 const mediaAttributes = [
   'autoplay',
   'autoplay-error',
-  'duration',
   'can-load',
   'can-play',
   'can-fullscreen',
@@ -47,73 +46,70 @@ it('should create media variants', async () => {
   const content = mediaAttributes.map((name) => `${name}:hidden`).join(' ');
   const css = await run(content);
   expect(css).toMatchInlineSnapshot(`
-    "media-player[autoplay] .autoplay\\\\:hidden {
+    "media-player[data-autoplay] .autoplay\\\\:hidden {
         display: none
     }
-    media-player[autoplay-error] .autoplay-error\\\\:hidden {
+    media-player[data-autoplay-error] .autoplay-error\\\\:hidden {
         display: none
     }
-    media-player[duration] .duration\\\\:hidden {
+    media-player[data-can-fullscreen] .can-fullscreen\\\\:hidden {
         display: none
     }
-    media-player[can-fullscreen] .can-fullscreen\\\\:hidden {
+    media-player[data-can-load] .can-load\\\\:hidden {
         display: none
     }
-    media-player[can-load] .can-load\\\\:hidden {
+    media-player[data-can-play] .can-play\\\\:hidden {
         display: none
     }
-    media-player[can-play] .can-play\\\\:hidden {
+    media-player[data-ended] .ended\\\\:hidden {
         display: none
     }
-    media-player[ended] .ended\\\\:hidden {
+    media-player[data-error] .error\\\\:hidden {
         display: none
     }
-    media-player[error] .error\\\\:hidden {
+    media-player[data-fullscreen] .fullscreen\\\\:hidden {
         display: none
     }
-    media-player[fullscreen] .fullscreen\\\\:hidden {
+    media-player[data-user-idle] .user-idle\\\\:hidden {
         display: none
     }
-    media-player[user-idle] .user-idle\\\\:hidden {
+    media-player[data-loop] .loop\\\\:hidden {
         display: none
     }
-    media-player[loop] .loop\\\\:hidden {
+    media-player[data-live] .live\\\\:hidden {
         display: none
     }
-    media-player[live] .live\\\\:hidden {
+    media-player[data-live-edge] .live-edge\\\\:hidden {
         display: none
     }
-    media-player[live-edge] .live-edge\\\\:hidden {
+    media-player[data-muted] .muted\\\\:hidden {
         display: none
     }
-    media-player[muted] .muted\\\\:hidden {
+    media-player[data-paused] .paused\\\\:hidden {
         display: none
     }
-    media-player[paused] .paused\\\\:hidden {
+    media-player[data-playing] .playing\\\\:hidden {
         display: none
     }
-    media-player[playing] .playing\\\\:hidden {
+    media-player[data-playsinline] .playsinline\\\\:hidden {
         display: none
     }
-    media-player[playsinline] .playsinline\\\\:hidden {
+    media-player[data-seeking] .seeking\\\\:hidden {
         display: none
     }
-    media-player[seeking] .seeking\\\\:hidden {
+    media-player[data-started] .started\\\\:hidden {
         display: none
     }
-    media-player[started] .started\\\\:hidden {
+    media-player[data-waiting] .waiting\\\\:hidden {
         display: none
     }
-    media-player[waiting] .waiting\\\\:hidden {
+    media-player:not([data-can-play]) .buffering\\\\:hidden {
         display: none
     }
-    media-player:not([can-play]) .buffering\\\\:hidden {
+    media-player[data-waiting] .buffering\\\\:hidden {
         display: none
     }
-    media-player[waiting] .buffering\\\\:hidden {
-        display: none
-    }
-    media-player[can-play]:not([user-idle]) .can-control\\\\:hidden {
+    media-player[data-can-play]:not([data-user-idle]) .can-control\\\\:hidden {
         display: none
     }"
   `);
@@ -123,76 +119,73 @@ it('should create _not_ media variants', async () => {
   const content = mediaAttributes.map((name) => `not-${name}:hidden`).join(' ');
   const css = await run(content);
   expect(css).toMatchInlineSnapshot(`
-    "media-player:not([autoplay]) .not-autoplay\\\\:hidden {
+    "media-player:not([data-autoplay]) .not-autoplay\\\\:hidden {
         display: none
     }
-    media-player:not([autoplay-error]) .not-autoplay-error\\\\:hidden {
+    media-player:not([data-autoplay-error]) .not-autoplay-error\\\\:hidden {
         display: none
     }
-    media-player:not([duration]) .not-duration\\\\:hidden {
+    media-player:not([data-can-fullscreen]) .not-can-fullscreen\\\\:hidden {
         display: none
     }
-    media-player:not([can-fullscreen]) .not-can-fullscreen\\\\:hidden {
+    media-player:not([data-can-load]) .not-can-load\\\\:hidden {
         display: none
     }
-    media-player:not([can-load]) .not-can-load\\\\:hidden {
+    media-player:not([data-can-play]) .not-can-play\\\\:hidden {
         display: none
     }
-    media-player:not([can-play]) .not-can-play\\\\:hidden {
+    media-player:not([data-ended]) .not-ended\\\\:hidden {
         display: none
     }
-    media-player:not([ended]) .not-ended\\\\:hidden {
+    media-player:not([data-error]) .not-error\\\\:hidden {
         display: none
     }
-    media-player:not([error]) .not-error\\\\:hidden {
+    media-player:not([data-fullscreen]) .not-fullscreen\\\\:hidden {
         display: none
     }
-    media-player:not([fullscreen]) .not-fullscreen\\\\:hidden {
+    media-player:not([data-user-idle]) .not-user-idle\\\\:hidden {
         display: none
     }
-    media-player:not([user-idle]) .not-user-idle\\\\:hidden {
+    media-player:not([data-loop]) .not-loop\\\\:hidden {
         display: none
     }
-    media-player:not([loop]) .not-loop\\\\:hidden {
+    media-player:not([data-live]) .not-live\\\\:hidden {
         display: none
     }
-    media-player:not([live]) .not-live\\\\:hidden {
+    media-player:not([data-live-edge]) .not-live-edge\\\\:hidden {
         display: none
     }
-    media-player:not([live-edge]) .not-live-edge\\\\:hidden {
+    media-player:not([data-muted]) .not-muted\\\\:hidden {
         display: none
     }
-    media-player:not([muted]) .not-muted\\\\:hidden {
+    media-player:not([data-paused]) .not-paused\\\\:hidden {
         display: none
     }
-    media-player:not([paused]) .not-paused\\\\:hidden {
+    media-player:not([data-playing]) .not-playing\\\\:hidden {
         display: none
     }
-    media-player:not([playing]) .not-playing\\\\:hidden {
+    media-player:not([data-playsinline]) .not-playsinline\\\\:hidden {
         display: none
     }
-    media-player:not([playsinline]) .not-playsinline\\\\:hidden {
+    media-player:not([data-seeking]) .not-seeking\\\\:hidden {
         display: none
     }
-    media-player:not([seeking]) .not-seeking\\\\:hidden {
+    media-player:not([data-started]) .not-started\\\\:hidden {
         display: none
     }
-    media-player:not([started]) .not-started\\\\:hidden {
+    media-player:not([data-waiting]) .not-waiting\\\\:hidden {
         display: none
     }
-    media-player:not([waiting]) .not-waiting\\\\:hidden {
+    media-player[data-can-play]:not([data-waiting]) .not-buffering\\\\:hidden {
         display: none
     }
-    media-player[can-play]:not([waiting]) .not-buffering\\\\:hidden {
+    media-player[data-ios-controls] .not-can-control\\\\:hidden {
         display: none
     }
-    media-player[ios-controls] .not-can-control\\\\:hidden {
+    media-player[data-user-idle] .not-can-control\\\\:hidden {
         display: none
     }
-    media-player[user-idle] .not-can-control\\\\:hidden {
-        display: none
-    }
-    media-player:not([can-play]) .not-can-control\\\\:hidden {
+    media-player:not([data-can-play]) .not-can-control\\\\:hidden {
         display: none
     }"
   `);
@@ -204,145 +197,139 @@ it('should apply prefix to media variants', async () => {
     .join(' ');
   const css = await run(content, { mediaPrefix: 'media' });
   expect(css).toMatchInlineSnapshot(`
-    "media-player[autoplay] .media-autoplay\\\\:hidden {
+    "media-player[data-autoplay] .media-autoplay\\\\:hidden {
         display: none
     }
-    media-player:not([autoplay]) .not-media-autoplay\\\\:hidden {
+    media-player:not([data-autoplay]) .not-media-autoplay\\\\:hidden {
         display: none
     }
-    media-player[autoplay-error] .media-autoplay-error\\\\:hidden {
+    media-player[data-autoplay-error] .media-autoplay-error\\\\:hidden {
         display: none
     }
-    media-player:not([autoplay-error]) .not-media-autoplay-error\\\\:hidden {
+    media-player:not([data-autoplay-error]) .not-media-autoplay-error\\\\:hidden {
         display: none
     }
-    media-player[duration] .media-duration\\\\:hidden {
+    media-player[data-can-fullscreen] .media-can-fullscreen\\\\:hidden {
         display: none
     }
-    media-player:not([duration]) .not-media-duration\\\\:hidden {
+    media-player:not([data-can-fullscreen]) .not-media-can-fullscreen\\\\:hidden {
         display: none
     }
-    media-player[can-fullscreen] .media-can-fullscreen\\\\:hidden {
+    media-player[data-can-load] .media-can-load\\\\:hidden {
         display: none
     }
-    media-player:not([can-fullscreen]) .not-media-can-fullscreen\\\\:hidden {
+    media-player:not([data-can-load]) .not-media-can-load\\\\:hidden {
         display: none
     }
-    media-player[can-load] .media-can-load\\\\:hidden {
+    media-player[data-can-play] .media-can-play\\\\:hidden {
         display: none
     }
-    media-player:not([can-load]) .not-media-can-load\\\\:hidden {
+    media-player:not([data-can-play]) .not-media-can-play\\\\:hidden {
         display: none
     }
-    media-player[can-play] .media-can-play\\\\:hidden {
+    media-player[data-ended] .media-ended\\\\:hidden {
         display: none
     }
-    media-player:not([can-play]) .not-media-can-play\\\\:hidden {
+    media-player:not([data-ended]) .not-media-ended\\\\:hidden {
         display: none
     }
-    media-player[ended] .media-ended\\\\:hidden {
+    media-player[data-error] .media-error\\\\:hidden {
         display: none
     }
-    media-player:not([ended]) .not-media-ended\\\\:hidden {
+    media-player:not([data-error]) .not-media-error\\\\:hidden {
         display: none
     }
-    media-player[error] .media-error\\\\:hidden {
+    media-player[data-fullscreen] .media-fullscreen\\\\:hidden {
         display: none
     }
-    media-player:not([error]) .not-media-error\\\\:hidden {
+    media-player:not([data-fullscreen]) .not-media-fullscreen\\\\:hidden {
         display: none
     }
-    media-player[fullscreen] .media-fullscreen\\\\:hidden {
+    media-player[data-user-idle] .media-user-idle\\\\:hidden {
         display: none
     }
-    media-player:not([fullscreen]) .not-media-fullscreen\\\\:hidden {
+    media-player:not([data-user-idle]) .not-media-user-idle\\\\:hidden {
         display: none
     }
-    media-player[user-idle] .media-user-idle\\\\:hidden {
+    media-player[data-loop] .media-loop\\\\:hidden {
         display: none
     }
-    media-player:not([user-idle]) .not-media-user-idle\\\\:hidden {
+    media-player:not([data-loop]) .not-media-loop\\\\:hidden {
         display: none
     }
-    media-player[loop] .media-loop\\\\:hidden {
+    media-player[data-live] .media-live\\\\:hidden {
         display: none
     }
-    media-player:not([loop]) .not-media-loop\\\\:hidden {
+    media-player:not([data-live]) .not-media-live\\\\:hidden {
         display: none
     }
-    media-player[live] .media-live\\\\:hidden {
+    media-player[data-live-edge] .media-live-edge\\\\:hidden {
         display: none
     }
-    media-player:not([live]) .not-media-live\\\\:hidden {
+    media-player:not([data-live-edge]) .not-media-live-edge\\\\:hidden {
         display: none
     }
-    media-player[live-edge] .media-live-edge\\\\:hidden {
+    media-player[data-muted] .media-muted\\\\:hidden {
         display: none
     }
-    media-player:not([live-edge]) .not-media-live-edge\\\\:hidden {
+    media-player:not([data-muted]) .not-media-muted\\\\:hidden {
         display: none
     }
-    media-player[muted] .media-muted\\\\:hidden {
+    media-player[data-paused] .media-paused\\\\:hidden {
         display: none
     }
-    media-player:not([muted]) .not-media-muted\\\\:hidden {
+    media-player:not([data-paused]) .not-media-paused\\\\:hidden {
         display: none
     }
-    media-player[paused] .media-paused\\\\:hidden {
+    media-player[data-playing] .media-playing\\\\:hidden {
         display: none
     }
-    media-player:not([paused]) .not-media-paused\\\\:hidden {
+    media-player:not([data-playing]) .not-media-playing\\\\:hidden {
         display: none
     }
-    media-player[playing] .media-playing\\\\:hidden {
+    media-player[data-playsinline] .media-playsinline\\\\:hidden {
         display: none
     }
-    media-player:not([playing]) .not-media-playing\\\\:hidden {
+    media-player:not([data-playsinline]) .not-media-playsinline\\\\:hidden {
         display: none
     }
-    media-player[playsinline] .media-playsinline\\\\:hidden {
+    media-player[data-seeking] .media-seeking\\\\:hidden {
         display: none
     }
-    media-player:not([playsinline]) .not-media-playsinline\\\\:hidden {
+    media-player:not([data-seeking]) .not-media-seeking\\\\:hidden {
         display: none
     }
-    media-player[seeking] .media-seeking\\\\:hidden {
+    media-player[data-started] .media-started\\\\:hidden {
         display: none
     }
-    media-player:not([seeking]) .not-media-seeking\\\\:hidden {
+    media-player:not([data-started]) .not-media-started\\\\:hidden {
         display: none
     }
-    media-player[started] .media-started\\\\:hidden {
+    media-player[data-waiting] .media-waiting\\\\:hidden {
         display: none
     }
-    media-player:not([started]) .not-media-started\\\\:hidden {
+    media-player:not([data-waiting]) .not-media-waiting\\\\:hidden {
         display: none
     }
-    media-player[waiting] .media-waiting\\\\:hidden {
+    media-player:not([data-can-play]) .media-buffering\\\\:hidden {
         display: none
     }
-    media-player:not([waiting]) .not-media-waiting\\\\:hidden {
+    media-player[data-waiting] .media-buffering\\\\:hidden {
         display: none
     }
-    media-player:not([can-play]) .media-buffering\\\\:hidden {
+    media-player[data-can-play]:not([data-waiting]) .not-media-buffering\\\\:hidden {
         display: none
     }
-    media-player[waiting] .media-buffering\\\\:hidden {
+    media-player[data-can-play]:not([data-user-idle]) .media-can-control\\\\:hidden {
         display: none
     }
-    media-player[can-play]:not([waiting]) .not-media-buffering\\\\:hidden {
+    media-player[data-ios-controls] .not-media-can-control\\\\:hidden {
         display: none
     }
-    media-player[can-play]:not([user-idle]) .media-can-control\\\\:hidden {
+    media-player[data-user-idle] .not-media-can-control\\\\:hidden {
         display: none
     }
-    media-player[ios-controls] .not-media-can-control\\\\:hidden {
-        display: none
-    }
-    media-player[user-idle] .not-media-can-control\\\\:hidden {
-        display: none
-    }
-    media-player:not([can-play]) .not-media-can-control\\\\:hidden {
+    media-player:not([data-can-play]) .not-media-can-control\\\\:hidden {
         display: none
     }"
   `);

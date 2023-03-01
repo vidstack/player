@@ -33,19 +33,19 @@ media-mute-button {
 }
 
 /* Apply styles when media is muted. */
-media-mute-button[data-muted] {
+media-mute-button[data-volume='muted'] {
 }
 
 /* Apply styles when media is _not_ muted. */
-media-mute-button:not([data-muted]) {
+media-mute-button:not([data-volume='muted']) {
 }
 
 /* Apply styles when media volume is low (0% < x < 50%). */
-media-mute-button[data-volume-low] {
+media-mute-button[data-volume='low'] {
 }
 
 /* Apply styles when media volume is high (≥50%). */
-media-mute-button[data-volume-high] {
+media-mute-button[data-volume='high'] {
 }
 
 /* Style default icons. */

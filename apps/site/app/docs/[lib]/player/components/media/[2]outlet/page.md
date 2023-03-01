@@ -31,10 +31,10 @@ layouts can also be achieved with CSS. Try to always start with CSS; only switch
 if you hit a wall.
 
 ```css
-media-player[live] {
+media-player[data-live] {
 }
 
-media-player:not([live]) {
+media-player:not([data-live]) {
 }
 ```
 

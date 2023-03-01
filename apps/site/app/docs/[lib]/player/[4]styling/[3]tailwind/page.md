@@ -40,14 +40,14 @@ module.exports = {
 
 ## Usage
 
-The `<media-player>` element exposes media state as HTML attributes and CSS vars like so:
+The `<media-player>` element exposes media state as HTML data attributes and CSS vars like so:
 
 ```html
 <media-player
-  paused
-  waiting
-  seeking
-  can-play
+  data-paused
+  data-waiting
+  data-seeking
+  data-can-play
   ...
   style="--media-current-time: 500; --media-duration: 1000; ..."
 >
@@ -87,7 +87,7 @@ Few examples:
 
 ```css
 /* output */
-media-player:not([paused]) .not-paused\:opacity-0 {
+media-player:not([data-paused]) .not-paused\:opacity-0 {
   opacity: 0;
 }
 ```

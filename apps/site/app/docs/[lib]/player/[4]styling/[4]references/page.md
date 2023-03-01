@@ -10,20 +10,20 @@ elements or components.
 
 ## Media Attributes
 
-Here's a reference table that displays all the media attributes that are set on the `<media-player>`
-element:
+Here's a reference table that displays all the media data attributes that are set on
+the `<media-player>` element:
 
 ```html
 <!-- Media attributes are reflected by the player. -->
-<media-player can-play paused ...></media-player>
+<media-player data-can-play data-paused ...></media-player>
 ```
 
 {% component this="../.tables/attrs-table.md" /%}
 
 ## Media CSS Variables
 
-Here's a reference table that displays all the media CSS variables that are set on the `<media-player>`
-element:
+Here's a reference table that displays all the media CSS variables that are set on
+the `<media-player>` element:
 
 ```html
 <!-- Media CSS variables are set by the player. -->

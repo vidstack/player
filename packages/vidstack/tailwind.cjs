@@ -30,25 +30,28 @@ module.exports = createPlugin.withOptions(function (options) {
 
   return function ({ addBase, addVariant }) {
     mediaAttributes.forEach((name) => {
-      addVariant(`${prefix}${name}`, `media-player[${name}] &`);
-      addVariant(`not-${prefix}${name}`, `media-player:not([${name}]) &`);
+      addVariant(`${prefix}${name}`, `media-player[data-${name}] &`);
+      addVariant(`not-${prefix}${name}`, `media-player:not([data-${name}]) &`);
     });
 
     // buffering
-    addVariant(`${prefix}buffering`, [`media-player:not([can-play]) &`, `media-player[waiting] &`]);
-    addVariant(`not-${prefix}buffering`, [`media-player[can-play]:not([waiting]) &`]);
+    addVariant(`${prefix}buffering`, [
+      `media-player:not([data-can-play]) &`,
+      `media-player[data-waiting] &`,
+    ]);
+    addVariant(`not-${prefix}buffering`, [`media-player[data-can-play]:not([data-waiting]) &`]);
 
     // can-control
     addBase({
-      [`media-player[ios-controls] *[class*="${prefix}can-control"]`]: {
+      [`media-player[data-ios-controls] *[class*="${prefix}can-control"]`]: {
         display: 'none !important',
       },
     });
-    addVariant(`${prefix}can-control`, [`media-player[can-play]:not([user-idle]) &`]);
+    addVariant(`${prefix}can-control`, [`media-player[data-can-play]:not([data-user-idle]) &`]);
     addVariant(`not-${prefix}can-control`, [
-      `media-player[ios-controls] &`,
-      `media-player[user-idle] &`,
-      `media-player:not([can-play]) &`,
+      `media-player[data-ios-controls] &`,
+      `media-player[data-user-idle] &`,
+      `media-player:not([data-can-play]) &`,
     ]);
   };
 });

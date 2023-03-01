@@ -20,15 +20,15 @@ a poor experience.
 
 ## Styling
 
-The following media attributes are available for styling based on the current autoplay
+The following media data attributes are available for styling based on the current autoplay
 state:
 
 ```css
-media-player[autoplay][playing] {
+media-player[data-autoplay][data-playing] {
   /** autoplay has successfully started. */
 }
 
-media-player[autoplay-error] {
+media-player[data-autoplay-error] {
   /** autoplay has failed. */
 }
 ```

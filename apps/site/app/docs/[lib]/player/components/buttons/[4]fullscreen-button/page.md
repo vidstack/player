@@ -22,7 +22,7 @@ not being displayed in your design.
 By default, the `$tag:media-fullscreen-button` component will fire a request to enter fullscreen
 on the player (i.e., `$tag:media-player`). The request handler will naturally fallback to the
 current media provider if the native
-[Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API) is not available.
+[data-fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API) is not available.
 
 You can specify that you only want to display the provider in fullscreen and not the entire media
 player like so:

@@ -9,9 +9,9 @@ function MuteButton() {
       aria-describedby={tooltipId}
     >
       {/* icons */}
-      <MuteIcon className="hidden group-data-[muted]:block" />
-      <VolumeLowIcon className="hidden group-data-[volume-low]:block" />
-      <VolumeHighIcon className="hidden group-data-[volume-high]:block" />
+      <MuteIcon className="hidden group-data-[volume=muted]:block" />
+      <VolumeLowIcon className="hidden group-data-[volume=low]:block" />
+      <VolumeHighIcon className="hidden group-data-[volume=high]:block" />
       {/* tooltip */}
       <div
         id={tooltipId}
