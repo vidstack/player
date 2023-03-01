@@ -87,6 +87,8 @@ export function useHLS(
     delegate.dispatch('duration-change', { detail: duration, trigger: event });
 
     const instance = $instance()!;
+    instance.lowLatencyMode = $store.streamType.includes('ll-');
+
     const media = instance.media!;
     media.dispatchEvent(new DOMEvent<void>('canplay', { trigger: event }));
   }
