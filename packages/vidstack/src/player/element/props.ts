@@ -11,7 +11,7 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
       from(value) {
         if (!value) return null;
         const [width, height] = value.split('/').map(Number);
-        return width / height;
+        return +(width / height).toFixed(4);
       },
     },
   },
@@ -31,7 +31,7 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
   viewType: { initial: 'unknown' },
   streamType: { initial: 'unknown' },
   volume: { initial: 1 },
-  liveTolerance: { initial: 15 },
+  liveEdgeTolerance: { initial: 10 },
   minLiveDVRWindow: { initial: 30 },
   keyDisabled: { initial: false },
   keyTarget: { initial: 'player' },

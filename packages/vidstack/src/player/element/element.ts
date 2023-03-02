@@ -12,7 +12,7 @@ import {
 import { createLogPrinter } from '../../foundation/logger/log-printer';
 import { useFocusVisible } from '../../foundation/observers/use-focus-visible';
 import { IS_IOS } from '../../utils/support';
-import { createMediaController } from '../media/controller/create';
+import { createMediaController } from '../media/controller/create-controller';
 import { useSourceSelection } from '../media/controller/source-selection';
 import type { AnyMediaProvider } from '../media/controller/types';
 import type { MediaState } from '../media/state';
@@ -73,7 +73,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
     const scope = getScope()!,
       controller = createMediaController(props),
       context = controller._context,
-      $store = context.$store;
+      $media = context.$store;
 
     if (__DEV__) {
       const logPrinter = createLogPrinter(host.$el);
@@ -100,7 +100,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       });
 
       window.requestAnimationFrame(() => {
-        if (isNull($store.canLoadPoster)) $store.canLoadPoster = true;
+        if (isNull($media.$$canLoadPoster)) $media.$$canLoadPoster = true;
       });
     });
 
@@ -114,25 +114,26 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       'aspect-ratio': props.$aspectRatio,
       'data-ios-controls': () =>
         IS_IOS &&
-        $store.mediaType === 'video' &&
-        $store.controls &&
-        (!props.$playsinline() || $store.fullscreen),
+        $media.mediaType === 'video' &&
+        $media.controls &&
+        (!props.$playsinline() || $media.fullscreen),
     };
 
     for (const prop of MEDIA_ATTRIBUTES) {
-      $attrs['data-' + camelToKebabCase(prop as string)] = () => $store[prop] as string | number;
+      $attrs['data-' + camelToKebabCase(prop as string)] = () => $media[prop] as string | number;
     }
 
     host.setAttributes($attrs);
 
     host.setCSSVars({
-      '--media-aspect-ratio': props.$aspectRatio,
-      '--media-buffered-start': () => $store.bufferedStart,
-      '--media-buffered-end': () => $store.bufferedEnd,
-      '--media-seekable-start': () => $store.seekableStart,
-      '--media-seekable-end': () => $store.seekableEnd,
-      '--media-current-time': () => Number($store.currentTime.toFixed(4)),
-      '--media-duration': () => Number($store.duration.toFixed(4)),
+      '--media-aspect-ratio': () => {
+        const ratio = props.$aspectRatio();
+        return ratio ? +ratio.toFixed(4) : null;
+      },
+      '--media-buffered': () => +$media.bufferedEnd.toFixed(3),
+      '--media-current-time': () => +$media.currentTime.toFixed(3),
+      '--media-duration': () =>
+        Number.isFinite($media.duration) ? +$media.duration.toFixed(3) : 0,
     });
 
     onDispose(() => {
@@ -151,13 +152,13 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
           return context.$provider() as AnyMediaProvider;
         },
         get $store() {
-          return $store;
+          return $media;
         },
-        state: new Proxy($store, {
+        state: new Proxy($media, {
           // @ts-expect-error
           set: noop,
         }),
-        subscribe: (callback) => scoped(() => effect(() => callback($store)), scope)!,
+        subscribe: (callback) => scoped(() => effect(() => callback($media)), scope)!,
         startLoading: controller._start,
         play: controller._request._play,
         pause: controller._request._pause,

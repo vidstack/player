@@ -9,7 +9,6 @@ import { mediaStore } from '../store';
 import { useMediaCanLoad } from './can-load';
 import { createMediaControllerDelegate } from './controller-delegate';
 import { useMediaEventsLogger } from './events-logger';
-import { useLiveTracker } from './live-tracker';
 import { useMediaPropChange } from './prop-change';
 import { useMediaProviderDelegate } from './provider-delegate';
 import { createMediaRequestManager, MediaRequestContext } from './request-manager';
@@ -50,14 +49,13 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
   }
 
   effect(() => {
-    $store.providedViewType = props.$viewType();
-    $store.providedStreamType = props.$streamType();
+    $store.$$providedViewType = props.$viewType();
+    $store.$$providedStreamType = props.$streamType();
   });
 
   $store.muted = props.$muted() || props.$volume() === 0;
   useMediaPropChange(context, props);
   useMediaCanLoad(context.$player, props.$load, startLoadingMedia);
-  useLiveTracker(context);
   if (__DEV__) useMediaEventsLogger(context, context.logger);
 
   function startLoadingMedia() {

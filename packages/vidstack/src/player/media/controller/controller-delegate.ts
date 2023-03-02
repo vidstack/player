@@ -56,7 +56,7 @@ export function createMediaControllerDelegate(
   }
 
   async function attemptAutoplay() {
-    $store.attemptingAutoplay = true;
+    $store.$$attemptingAutoplay = true;
     try {
       await $player()!.play();
       dispatch('autoplay', { detail: { muted: $store.muted } });
@@ -68,7 +68,7 @@ export function createMediaControllerDelegate(
         },
       });
     } finally {
-      $store.attemptingAutoplay = false;
+      $store.$$attemptingAutoplay = false;
     }
   }
 

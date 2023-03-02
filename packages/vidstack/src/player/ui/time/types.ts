@@ -4,7 +4,7 @@ export interface TimeProps {
   /**
    * The type of media time to track.
    */
-  type: 'current' | 'buffered' | 'duration' | 'seekable';
+  type: 'current' | 'buffered' | 'duration';
   /**
    * Whether the time should always show the hours unit, even if the time is less than
    * 1 hour.

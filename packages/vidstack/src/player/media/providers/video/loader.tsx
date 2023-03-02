@@ -51,7 +51,7 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
 
     const controls = () => $store.controls;
     // === `true` because it's `null` to start with until we know if the poster can load.
-    const poster = () => ($store.poster && $store.canLoadPoster === true ? $store.poster : null);
+    const poster = () => ($store.poster && $store.$$canLoadPoster === true ? $store.poster : null);
 
     return (
       <video

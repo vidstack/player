@@ -20,7 +20,7 @@ function SliderTrack() {
 function SliderTrackFill() {
   return (
     <div
-      className="live-edge:bg-red-500 absolute top-1/2 left-0 z-20 h-[var(--track-height)] w-full -translate-y-1/2 scale-x-[var(--slider-fill-rate)] transform bg-white will-change-transform"
+      className="live:bg-red-500 absolute top-1/2 left-0 z-20 h-[var(--track-height)] w-full -translate-y-1/2 scale-x-[var(--slider-fill-rate)] transform bg-white will-change-transform"
       style={{ transformOrigin: 'left center' }}
     />
   );
@@ -29,7 +29,7 @@ function SliderTrackFill() {
 function SliderTrackProgress() {
   return (
     <div
-      className="absolute top-1/2 left-0 z-10 h-[var(--track-height)] w-full -translate-y-1/2 scale-x-[calc(var(--media-buffered-end)/var(--media-duration))] transform bg-[#878787] will-change-transform"
+      className="absolute top-1/2 left-0 z-10 h-[var(--track-height)] w-full -translate-y-1/2 scale-x-[calc(var(--media-buffered)/var(--media-duration))] transform bg-[#878787] will-change-transform"
       style={{ transformOrigin: 'left center' }}
     ></div>
   );

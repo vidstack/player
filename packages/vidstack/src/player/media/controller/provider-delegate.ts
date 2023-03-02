@@ -12,7 +12,7 @@ import type { MediaControllerProps } from './types';
  * only set when media is ready for playback to avoid errors and to ensure changes are applied.
  */
 export function useMediaProviderDelegate(
-  { $provider, $store }: MediaContext,
+  { $provider, $store: $media }: MediaContext,
   requestManager: MediaRequestManager,
   { $paused, $volume, $muted, $currentTime, $playsinline }: Signals<MediaControllerProps>,
 ) {
@@ -20,7 +20,7 @@ export function useMediaProviderDelegate(
   const canPlayQueue = new RequestQueue();
 
   effect(() => {
-    if ($store.canPlay && $provider()) canPlayQueue._start();
+    if ($media.canPlay && $provider()) canPlayQueue._start();
     else canPlayQueue._stop();
   });
 
@@ -50,8 +50,8 @@ export function useMediaProviderDelegate(
       if (currentTime !== adapter!.currentTime) {
         peek(() => {
           const boundTime = Math.min(
-            Math.max(currentTime, $store.seekableStart + 0.1),
-            $store.duration - 0.1,
+            Math.max($media.seekableStart + 0.1, currentTime),
+            $media.seekableEnd - 0.1,
           );
 
           if (Number.isFinite(boundTime)) adapter!.currentTime = boundTime;
@@ -79,7 +79,7 @@ export function useMediaProviderDelegate(
 
   for (const prop of Object.keys(setters)) {
     Object.defineProperty(delegate, prop, {
-      get: () => $store[prop],
+      get: () => $media[prop],
       set: setters[prop],
     });
   }

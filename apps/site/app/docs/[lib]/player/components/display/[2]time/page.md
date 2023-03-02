@@ -13,10 +13,7 @@ or duration.
 The `type` property can be set to:
 
 - `current`: The current playback time.
-- `seekable`: The seekable amount of media (i.e., where the user can seek to without buffering).
-- `buffered`: The buffered amount of media. Similar to `seekable`, but the
-  [seekable amount can be greater than the buffered amount](https://developer.mozilla.org/en-US/docs/Web/Guide/Audio_and_video_delivery/buffering_seeking_time_ranges#seekable)
-  due to `byte-range` requests.
+- `buffered`: The buffered amount of media.
 - `duration`: The total length of media.
 
 {% code_preview name="demo" size="medium" /%}

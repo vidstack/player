@@ -35,24 +35,60 @@ before seeking operations are permitted (default value is 30 seconds):
 
 {% code_snippet name="min-live-dvr" /%}
 
-The min DVR window is used in the following check: `seekableEnd - seekableStart >= minLiveDVRWindow`.
+The min DVR window is used in the following check: `seekableWindow >= minLiveDVRWindow`.
 
 ## Live Edge
 
-The live edge is the furthest seekable part of the media that represents the current live time
-of the stream.
+The live edge is a window from the starting edge of the live stream (`liveEdgeStart`) to the furthest
+seekable part of the media (`seekableEnd`). The
+[`media-ui-extensions` live edge proposal](https://github.com/video-dev/media-ui-extensions/blob/main/proposals/0007-live-edge.md)
+covers the complexities involved in determining the live edge and why it can't be a single point
+in time, but rather a window.
+
+```sh
+|           |           |           |           |           |
+|___________|___________|___________|___________|___________|__________
+| <----------------------- Seekable Window ---------------------> |
+|                       | <--------- Live Edge Window ----------> |
+^ seekableStart         ^ liveEdgeStart                           ^ seekableEnd
+```
+
+The method used to determine the starting edge of the live stream depends on the HLS playback
+engine used:
+
+- The HLS provider uses the
+  [`liveSyncPosition`](https://github.com/video-dev/hls.js/blob/master/docs/API.md#hlslivesyncposition)
+  provided by `hls.js` to determine the live edge start. The starting edge is determined by a delay
+  that's set by the
+  [`liveSyncDurationCount`](https://github.com/video-dev/hls.js/blob/master/docs/API.md#livesyncdurationcount)
+  configuration which represents a multiple of `EXT-X-TARGETDURATION` (default multiple is safely 3).
+
+- The native playback engine on iOS Safari simply uses the furthest seekable part of the media
+  (i.e., `seekableEnd`).
+
+### Tolerance
+
+The `liveEdgeTolerance` value is used to further apply a safety buffer to account for
+buffering delays or accidental skips. The default value is 10, meaning the playback position can
+be 10 seconds behind live edge start and still be considered at the edge. It can be configured
+on the player like so:
+
+{% code_snippet name="live-edge-tolerance" /%}
+
+### Conditions
 
 The player determines whether it's at the live edge by checking the following conditions:
 
-1. If seeking is not permitted (i.e., `canSeek` is false) then we're always at the edge.
+1. If seeking is not permitted (i.e., `canSeek` is false) then we're always at the edge. This will
+   be falsy if there's no DVR support, seekable length is infinity, or the seekable window is not
+   equal to `minLiveDVRWindow`.
 2. The user hasn't intentionally seeked behind the edge by more than 2 seconds.
-3. The current playback time is within the live tolerance (default 15s) of the current live
-   time.
+3. The current playback time is greater than `liveEdgeStart` (minus the
+   safety `liveEdgeTolerance`).
 
-As long as the mentioned conditions above are true, the player will seek back to the live edge
-on subsequent plays. If the user naturally falls behind through buffering delays or by
-pausing, the player will consider the user not to be at the edge and not catch them up
-automatically. The user can seek back to the edge by scrubbing to the end of the time slider.
+If the user naturally falls behind through buffering delays or by pausing, the player will consider
+the user not to be at the edge and not catch them up automatically. The user can seek back to the
+edge by scrubbing to the end of the time slider or pressing the live indicator.
 
 You can also programmatically seek to the edge by calling the `seekToLiveEdge` method on
 the player like so:
@@ -69,30 +105,30 @@ the player like so:
 to read media state.
 {% /callout %}
 
-The following media state can be useful during a live stream:
+The following media state can be used during live streams:
 
 - `streamType`: Indicates the [type of live stream](#stream-type). This can be provided by you or
   inferred by the player.
 - `live`: Whether the current stream is live.
-- `liveEdge`: Whether the current stream is at the live edge (i.e., at the furthest seekable part
-  of the media).
-- `liveTolerance`: The number of seconds that the current time can be behind duration and still be
-  considered live. The default value is 15, meaning the user can be up to 15 seconds behind
-  the live time and still be considered live. This value can be configured on the player.
-- `liveWindow`: The total length of the live stream starting at the first seekable time up to the
-  current live time. If the stream is not seekable or the stream is non-live then
-  this value will default to 0.
+- `liveEdge`: Whether the current stream is inside the live edge window (including the live
+  edge tolerance buffer).
+- `liveEdgeTolerance`: The number of seconds that the current time can be behind the live edge
+  start and still be considered at the edge.
+- `liveEdgeWindow`: The length of the live edge window in seconds starting from start of the live
+  edge and ending at seekable end. If the duration of the stream is infinity or the stream is
+  non-live then this value will default to 0.
 - `minLiveDVRWindow`: The minimum seekable length in seconds before media seeking operations are
   permitted on live DVR streams. The default value is 30.
-- `canSeek`: Whether seeking is permitted for the live stream. This value will be false if the
-  duration on the native media element returns infinity.
-- `duration`: The current live time - synced to the edge.
-- `seekableStart`: Contains the earliest time in seconds at which media can be seeked to. Generally,
+- `canSeek`: Whether seeking is permitted for the live stream. This value will be false if there
+  is no DVR support, or the seekable window is smaller than the minimum live DVR window.
+- `seekableStart`: The earliest time in seconds at which media can be seeked to. Generally,
   this is zero, but for live streams it may start at a non-zero value. This value can be infinity.
-- `seekableEnd`: The latest time in seconds at which media can be seeked to. This will default to
+- `seekableEnd`: The furthest time in seconds at which media can be seeked to. This will default to
   infinity if no seekable range is found.
+- `seekableWindow`: The length of the seekable part of the media in seconds starting at seekable
+  start and ending at seekable end. This value can be infinity.
 - `userBehindLiveEdge`: Whether the user has intentionally seeked behind the live edge. The user
-  must've seeked roughly 2 or more seconds behind during a live stream for this to be considered
+  must've seeked 2 or more seconds behind during a live stream for this to be considered
   true.
 
 ## User Interface
@@ -101,8 +137,8 @@ The following components will adapt to a live stream:
 
 - `$tag:media-time`: Displays the text "LIVE" if the live stream is not seekable.
 - `$tag:media-time-slider`: Disabled if seeking operations are not permitted for the live stream.
-  When disabled, it can not be interacted with, no pointer/drag events will be fired, the thumb will
-  pinned to the right edge, and the background color will be set to red.
+  When disabled, it can not be interacted with, no pointer/drag events will be fired, and the
+  thumb will pinned to the right edge.
 - `$tag:media-slider-value`: Displays a negative offset from the current live time when used
   inside the time slider. The text "LIVE" will be displayed if the stream is not seekable.
 
@@ -111,16 +147,20 @@ The following components will adapt to a live stream:
 The following media data attributes are available for styling based on the current live state:
 
 ```css
+/* stream is live. */
 media-player[data-live] {
-  /* stream is live. */
 }
 
+/* stream is at the live edge. */
 media-player[data-live-edge] {
-  /* stream is at the live edge. */
 }
 
+/* stream is at the live edge and playing. */
+media-player[data-live-edge][data-playing] {
+}
+
+/* seeking is permitted for live DVR stream. */
 media-player[data-live][data-can-seek] {
-  /* seeking is permitted for live DVR stream. */
 }
 ```
 

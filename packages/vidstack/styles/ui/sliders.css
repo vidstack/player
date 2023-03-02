@@ -38,7 +38,7 @@
   transform: translateY(-50%) scaleX(var(--slider-fill-rate));
 }
 
-:where(media-player[data-live-edge] media-time-slider [part~='track-fill']) {
+:where(media-player[data-live] media-time-slider [part~='track-fill']) {
   background-color: #dc2626;
 }
 
@@ -48,8 +48,7 @@
   background-color: #878787;
   transform-origin: left center;
   will-change: transform;
-  transform: translateY(-50%)
-    scaleX(min(calc(var(--media-buffered-end) / var(--media-duration)), 1));
+  transform: translateY(-50%) scaleX(min(calc(var(--media-buffered) / var(--media-duration)), 1));
 }
 
 :where([data-media-slider] [part='thumb-container']) {

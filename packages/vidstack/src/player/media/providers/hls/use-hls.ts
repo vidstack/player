@@ -1,10 +1,10 @@
 import type * as HLS from 'hls.js';
+import throttle from 'just-throttle';
 import { effect, peek, ReadSignal, WriteSignal } from 'maverick.js';
 import { camelToKebabCase, dispatchEvent, DOMEvent, kebabToCamelCase } from 'maverick.js/std';
 
 import { createRAFLoop } from '../../../../foundation/hooks/raf-loop';
 import { HLS_LISTENERS } from '../../../element/element';
-import type { MediaType } from '../../types';
 import type { MediaSetupContext } from '../types';
 import type { HLSProvider } from './provider';
 import type { HLSConstructor, HLSInstanceCallback } from './types';
@@ -27,7 +27,13 @@ export function useHLS(
     const ctor = $ctor();
     if (!ctor) return;
 
-    const instance = new ctor(config);
+    const isLowLatencyStream = peek(() => $store.streamType).includes('ll-');
+
+    const instance = new ctor({
+      lowLatencyMode: isLowLatencyStream,
+      ...config,
+    });
+
     effect(() => void attachEventListeners(instance, player[HLS_LISTENERS]()));
     instance.on(ctor.Events.ERROR, onError);
     $instance.set(instance);
@@ -50,12 +56,14 @@ export function useHLS(
 
   effect(() => {
     if (!$store.live) return;
+
     const instance = $instance()!;
     if (!instance) return;
+
     const rafLoop = createRAFLoop(() => {
-      const position = instance.liveSyncPosition;
-      $store.duration = position ?? Infinity;
+      $store.$$liveSyncPosition = instance.liveSyncPosition ?? Infinity;
     });
+
     rafLoop.start();
     return rafLoop.stop;
   });
@@ -88,8 +96,6 @@ export function useHLS(
     delegate.dispatch('duration-change', { detail: duration, trigger: event });
 
     const instance = $instance()!;
-    instance.lowLatencyMode = $store.streamType.includes('ll-');
-
     const media = instance.media!;
     media.dispatchEvent(new DOMEvent<void>('canplay', { trigger: event }));
   }

@@ -95,7 +95,7 @@ export interface MediaState {
    *
    * @defaultValue true
    */
-  canSeek: boolean;
+  readonly canSeek: boolean;
   /**
    * Indicates whether a user interface should be shown for controlling the resource. Set this to
    * `false` when you want to provide your own custom controls, and `true` if you want the current
@@ -174,45 +174,56 @@ export interface MediaState {
    */
   logLevel: LogLevel;
   /**
-   * Whether media is currently a live stream.
+   * Whether the current media stream is live (i.e., being broadcast right now).
    */
   live: boolean;
   /**
-   * The total length of the live stream starting at the first seekable time up to the
-   * current live time. If the `duration` is `Infinity` or the stream is non-live then
-   * this value will default to 0.
+   * The number of seconds that `currentTime` can be behind `liveEdgeStart` and still be considered
+   * at the edge. The default value is 10, meaning the user can be up to 10 seconds behind the
+   * live edge start and still be considered live.
    *
-   * @defaultValue 0
+   * @defaultValue 10
    */
-  liveWindow: number;
+  liveEdgeTolerance: number;
   /**
-   * The number of seconds that `currentTime` can be behind `duration` and still be
-   * considered live. The default value is 15, meaning the user can be up to 15 seconds behind
-   * the live time and still be considered live.
+   * The minimum seekable length in seconds before seeking operations are permitted.
    *
-   * @defaultValue 15
+   * @defaultValue 30
    */
-  liveTolerance: number;
+  minLiveDVRWindow: number;
   /**
-   * Whether the current stream is at the live edge (i.e., at the furthest seekable part of the
-   * media). This is true if:
+   * Whether the current stream is at the live edge. This is true if:
    *
    * 1. The player is _not_ in a paused state.
-   * 2. The user has _not_ seeked behind the live edge by more than 2s.
-   * 3. The `currentTime` is within the live tolerance of `duration` (default is 15s).
+   * 2. The user has _not_ intentionally seeked behind live edge start.
+   * 3. The `currentTime` is greater or equal than `liveEdgeStart`.
    *
    * This value will default to `false` for non-live streams.
    *
    * @defaultValue false
    */
-  liveEdge: boolean;
+  readonly liveEdge: boolean;
   /**
-   * The minimum seekable length in seconds before seeking operations are permitted. This is
-   * essentially the following check: `seekableEnd - seekableStart >= minLiveDVRWindow`.
+   * This is the starting edge of the live stream.
    *
-   * @defaultValue 30
+   * A delay is applied in `hls.js` that's specified by the `liveSyncDurationCount` which is
+   * expressed as a multiple of `EXT-X-TARGETDURATION` (default value is safely set to 3). If
+   * set to `m`, playback will start from the fragment at `n-m`, where `n` is the last fragment
+   * of the live playlist. Decreasing this value is likely to cause playback stalls.
+   *
+   * The `seekableEnd` value is used as the live edge start in native playback engines.
+   *
+   * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#hlslivesyncposition}
+   * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#livesyncdurationcount}
+   * @see {@link https://github.com/video-dev/media-ui-extensions/blob/main/proposals/0007-live-edge.md}
    */
-  minLiveDVRWindow: number;
+  readonly liveEdgeStart: number;
+  /**
+   * The length of the live edge window in seconds starting from `liveEdgeStart` and ending at
+   * `seekableEnd`. If the `duration` of the stream is `Infinity` or the stream is non-live then
+   * this value will default to 0.
+   */
+  readonly liveEdgeWindow: number;
   /**
    * The type of media that is currently active, whether it's audio or video. Defaults
    * to `unknown` when no media has been loaded or the type cannot be determined.
@@ -301,6 +312,13 @@ export interface MediaState {
    */
   readonly seekableEnd: number;
   /**
+   * The length of the seekable window in seconds starting from `seekableStart` and ending at
+   * `seekableEnd`.
+   *
+   * @defaultValue 0
+   */
+  readonly seekableWindow: number;
+  /**
    * Whether media is actively seeking to a new playback position.
    *
    * @defaultValue false
@@ -358,13 +376,15 @@ export interface MediaState {
   // !!! INTERNALS !!!
 
   /** @internal */
-  attemptingAutoplay: boolean;
+  $$attemptingAutoplay: boolean;
   /** @internal */
-  canLoadPoster: boolean | null;
+  $$canLoadPoster: boolean | null;
   /** @internal */
-  providedViewType: MediaViewType;
+  $$providedViewType: MediaViewType;
   /** @internal */
-  providedStreamType: MediaStreamType;
+  $$providedStreamType: MediaStreamType;
   /** @internal */
-  inferredStreamType: MediaStreamType;
+  $$inferredStreamType: MediaStreamType;
+  /** @internal */
+  $$liveSyncPosition: number | null;
 }

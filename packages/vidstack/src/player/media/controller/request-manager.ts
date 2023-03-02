@@ -25,12 +25,12 @@ import type { MediaControllerProps } from './types';
  * has connected.
  */
 export function createMediaRequestManager(
-  { $player, $store, $provider, logger }: MediaContext,
+  { $player, $store: $media, $provider, logger }: MediaContext,
   handler: MediaStateManager,
   requests: MediaRequestContext,
   $props: Signals<MediaControllerProps>,
 ): MediaRequestManager {
-  const user = createMediaUser($player, $store),
+  const user = createMediaUser($player, $media),
     orientation = createScreenOrientationAdapter($player),
     fullscreen = createFullscreenAdapter($player);
 
@@ -52,8 +52,8 @@ export function createMediaRequestManager(
 
   effect(() => {
     const supported = fullscreen.supported || $provider()?.fullscreen?.supported || false;
-    if ($store.canLoad && peek(() => $store.canFullscreen) === supported) return;
-    $store.canFullscreen = supported;
+    if ($media.canLoad && peek(() => $media.canFullscreen) === supported) return;
+    $media.canFullscreen = supported;
   });
 
   function logRequest(event: Event) {
@@ -95,29 +95,29 @@ export function createMediaRequestManager(
   });
 
   function onStartLoading(event: RE.MediaStartLoadingRequestEvent) {
-    if ($store.canLoad) return;
+    if ($media.canLoad) return;
     requests._queue._enqueue('load', event);
     handler.handle(createEvent($player, 'can-load'));
   }
 
   function onMuteRequest(event: RE.MediaMuteRequestEvent) {
-    if ($store.muted) return;
+    if ($media.muted) return;
     requests._queue._enqueue('volume', event);
     $provider()!.muted = true;
   }
 
   function onUnmuteRequest(event: RE.MediaUnmuteRequestEvent) {
-    if (!$store.muted) return;
+    if (!$media.muted) return;
     requests._queue._enqueue('volume', event);
     $provider()!.muted = false;
-    if ($store.volume === 0) {
+    if ($media.volume === 0) {
       requests._queue._enqueue('volume', event);
       $provider()!.volume = 0.25;
     }
   }
 
   async function onPlayRequest(event: RE.MediaPlayRequestEvent) {
-    if (!$store.paused) return;
+    if (!$media.paused) return;
     try {
       requests._queue._enqueue('play', event);
       await $provider()!.play();
@@ -128,7 +128,7 @@ export function createMediaRequestManager(
   }
 
   async function onPauseRequest(event: RE.MediaPauseRequestEvent) {
-    if ($store.paused) return;
+    if ($media.paused) return;
     try {
       requests._queue._enqueue('pause', event);
       await $provider()!.pause();
@@ -140,33 +140,33 @@ export function createMediaRequestManager(
 
   function onSeekingRequest(event: RE.MediaSeekingRequestEvent) {
     requests._queue._enqueue('seeking', event);
-    $store.seeking = true;
+    $media.seeking = true;
     requests._$isSeeking.set(true);
   }
 
   function onSeekRequest(event: RE.MediaSeekRequestEvent) {
-    if ($store.ended) requests._$isReplay.set(true);
+    if ($media.ended) requests._$isReplay.set(true);
+
     requests._$isSeeking.set(false);
     requests._queue._delete('seeking');
 
     const boundTime = Math.min(
-      Math.max($store.seekableStart + 0.1, event.detail),
-      $store.duration - 0.1,
+      Math.max($media.seekableStart + 0.1, event.detail),
+      $media.seekableEnd - 0.1,
     );
 
-    if (!Number.isFinite(boundTime) || !$store.canSeek) return;
+    if (!Number.isFinite(boundTime) || !$media.canSeek) return;
 
     requests._queue._enqueue('seeked', event);
     $provider()!.currentTime = boundTime;
 
-    if ($store.live && event.isOriginTrusted) {
-      const liveEdgeDiff = Math.abs($store.duration - boundTime);
-      $store.userBehindLiveEdge = liveEdgeDiff > 2;
+    if ($media.live && event.isOriginTrusted && Math.abs($media.seekableEnd - boundTime) >= 2) {
+      $media.userBehindLiveEdge = true;
     }
   }
 
   function onSeekToLiveEdgeRequest(event: RE.MediaLiveEdgeRequestEvent) {
-    if (!$store.live || $store.liveEdge) return;
+    if (!$media.live || $media.liveEdge || !$media.canSeek) return;
     requests._queue._enqueue('seeked', event);
     try {
       seekToLiveEdge();
@@ -177,10 +177,10 @@ export function createMediaRequestManager(
 
   function onVolumeChangeRequest(event: RE.MediaVolumeChangeRequestEvent) {
     const volume = event.detail;
-    if ($store.volume === volume) return;
+    if ($media.volume === volume) return;
     requests._queue._enqueue('volume', event);
     $provider()!.volume = volume;
-    if (volume > 0 && $store.muted) {
+    if (volume > 0 && $media.muted) {
       requests._queue._enqueue('volume', event);
       $provider()!.muted = false;
     }
@@ -217,11 +217,11 @@ export function createMediaRequestManager(
   }
 
   function onShowPosterRequest(event: RE.MediaShowPosterRequestEvent) {
-    $store.canLoadPoster = true;
+    $media.$$canLoadPoster = true;
   }
 
   function onHidePosterRequest(event: RE.MediaHidePosterRequestEvent) {
-    $store.canLoadPoster = false;
+    $media.$$canLoadPoster = false;
   }
 
   function onLoopRequest(event: RE.MediaLoopRequestEvent) {
@@ -250,22 +250,22 @@ export function createMediaRequestManager(
   }
 
   async function play() {
-    if (!$store.paused) return;
+    if (!$media.paused) return;
     try {
       const provider = peek($provider);
       throwIfNotReadyForPlayback(provider, $player);
-      if (peek(() => $store.ended)) provider!.currentTime = 0;
+      if (peek(() => $media.ended)) provider!.currentTime = $media.seekableStart + 0.1;
       return provider!.play();
     } catch (error) {
       const errorEvent = createEvent($player, 'play-fail', { detail: coerceToError(error) });
-      errorEvent.autoplay = $store.attemptingAutoplay;
+      errorEvent.autoplay = $media.$$attemptingAutoplay;
       handler.handle(errorEvent);
       throw error;
     }
   }
 
   async function pause() {
-    if ($store.paused) return;
+    if ($media.paused) return;
     const provider = peek($provider);
     throwIfNotReadyForPlayback(provider, $player);
     return provider!.pause();
@@ -305,11 +305,11 @@ export function createMediaRequestManager(
   }
 
   function seekToLiveEdge() {
-    $store.userBehindLiveEdge = false;
-    if (peek(() => !$store.live || $store.liveEdge)) return;
+    $media.userBehindLiveEdge = false;
+    if (peek(() => !$media.live || $media.liveEdge || !$media.canSeek)) return;
     const provider = peek($provider);
     throwIfNotReadyForPlayback(provider, $player);
-    provider!.currentTime = $store.duration;
+    provider!.currentTime = $media.$$liveSyncPosition ?? $media.seekableEnd - 2;
   }
 
   return {

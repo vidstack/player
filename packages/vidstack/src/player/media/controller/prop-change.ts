@@ -18,7 +18,7 @@ export function useMediaPropChange(
     $controls,
     $playsinline,
     $logLevel,
-    $liveTolerance,
+    $liveEdgeTolerance,
     $minLiveDVRWindow,
   }: Signals<MediaControllerProps>,
 ) {
@@ -65,7 +65,7 @@ export function useMediaPropChange(
     });
 
     effect(() => {
-      $store.liveTolerance = $liveTolerance();
+      $store.liveEdgeTolerance = $liveEdgeTolerance();
       $store.minLiveDVRWindow = $minLiveDVRWindow();
     });
 

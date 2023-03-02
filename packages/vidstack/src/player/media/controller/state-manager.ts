@@ -5,6 +5,7 @@ import { onAttach } from 'maverick.js/element';
 import {
   appendTriggerEvent,
   createEvent,
+  dispatchEvent,
   listenEvent,
   noop,
   useDisposalBin,
@@ -41,7 +42,7 @@ const trackedEventType = new Set<keyof ME.MediaEvents>([
  * state context, and satisfying media requests if a manager arg is provided.
  */
 export function createMediaStateManager(
-  { $player, $loader, $provider, $store, logger }: MediaContext,
+  { $player, $loader, $provider, $store: $media, logger }: MediaContext,
   requests: MediaRequestContext,
 ): MediaStateManager {
   if (__SERVER__) return { handle: noop };
@@ -68,7 +69,7 @@ export function createMediaStateManager(
   effect(() => {
     if ($provider()) return;
     resetTracking();
-    softResetMediaStore($store);
+    softResetMediaStore($media);
     disposal.empty();
     requests._queue._reset();
     skipInitialSrcChange = true;
@@ -126,14 +127,14 @@ export function createMediaStateManager(
 
   function onMediaTypeChange(event: ME.MediaTypeChangeEvent) {
     appendTriggerEvent(event, trackedEvents.get('source-change'));
-    const viewType = $store.viewType;
-    $store.mediaType = event.detail;
-    if (viewType !== $store.viewType) {
+    const viewType = $media.viewType;
+    $media.mediaType = event.detail;
+    if (viewType !== $media.viewType) {
       setTimeout(
         () =>
           $player()?.dispatchEvent(
             createEvent($player, 'view-type-change', {
-              detail: $store.viewType,
+              detail: $media.viewType,
               trigger: event,
             }),
           ),
@@ -144,24 +145,24 @@ export function createMediaStateManager(
 
   function onStreamTypeChange(event: ME.MediaStreamTypeChangeEvent) {
     appendTriggerEvent(event, trackedEvents.get('source-change'));
-    $store.inferredStreamType = event.detail;
-    (event as any).detail = $store.streamType;
+    $media.$$inferredStreamType = event.detail;
+    (event as any).detail = $media.streamType;
   }
 
   function onCanLoad(event: ME.MediaCanLoadEvent) {
-    $store.canLoad = true;
+    $media.canLoad = true;
     trackedEvents.set('can-load', event);
     satisfyMediaRequest('load', event);
   }
 
   function onSourcesChange(event: ME.MediaSourcesChangeEvent) {
-    $store.sources = event.detail;
+    $media.sources = event.detail;
   }
 
   function onSourceChange(event: ME.MediaSourceChangeEvent) {
     appendTriggerEvent(event, trackedEvents.get('sources-change'));
 
-    $store.source = event.detail;
+    $media.source = event.detail;
     $player()?.setAttribute('aria-busy', 'true');
 
     if (__DEV__) {
@@ -175,7 +176,7 @@ export function createMediaStateManager(
     }
 
     resetTracking();
-    softResetMediaStore($store);
+    softResetMediaStore($media);
     trackedEvents.set(event.type, event);
   }
 
@@ -189,7 +190,7 @@ export function createMediaStateManager(
   }
 
   function onError(event: ME.MediaErrorEvent) {
-    $store.error = event.detail;
+    $media.error = event.detail;
     appendTriggerEvent(event, trackedEvents.get('abort'));
   }
 
@@ -207,56 +208,59 @@ export function createMediaStateManager(
       appendTriggerEvent(event, trackedEvents.get('loaded-metadata'));
     }
 
-    $store.canPlay = true;
-    $store.buffered = event.detail.buffered;
-    $store.seekable = event.detail.seekable;
-    if (!$store.live) $store.duration = event.detail.duration;
+    onCanPlayDetail(event.detail);
     $player()?.setAttribute('aria-busy', 'false');
   }
 
   function onCanPlayThrough(event: ME.MediaCanPlayThroughEvent) {
-    $store.canPlay = true;
-    $store.buffered = event.detail.buffered;
-    $store.seekable = event.detail.seekable;
-    if (!$store.live) $store.duration = event.detail.duration;
+    onCanPlayDetail(event.detail);
     appendTriggerEvent(event, trackedEvents.get('can-play'));
+  }
+
+  function onCanPlayDetail({ buffered, seekable }: ME.MediaCanPlayDetail) {
+    $media.seekable = seekable;
+    $media.buffered = buffered;
+    $media.duration = $media.seekableEnd;
+    $media.canPlay = true;
   }
 
   function onDurationChange(event: ME.MediaDurationChangeEvent) {
     const duration = event.detail;
-    if (!$store.live) $store.duration = !Number.isNaN(duration) ? duration : 0;
+    if (!$media.live) $media.duration = !Number.isNaN(duration) ? duration : 0;
   }
 
   function onProgress(event: ME.MediaProgressEvent) {
     const { buffered, seekable } = event.detail;
-    $store.buffered = buffered;
-    $store.seekable = seekable;
-    if ($store.live) {
-      handleMediaEvent(
-        createEvent($player, 'duration-change', {
-          detail: $store.duration,
-        }),
-      );
+
+    $media.buffered = buffered;
+    $media.seekable = seekable;
+
+    if ($media.live) {
+      $media.duration = $media.seekableEnd;
+      dispatchEvent($player(), 'duration-change', {
+        detail: $media.seekableEnd,
+        trigger: event,
+      });
     }
   }
 
   function onAutoplay(event: ME.MediaAutoplayEvent) {
     appendTriggerEvent(event, trackedEvents.get('play'));
     appendTriggerEvent(event, trackedEvents.get('can-play'));
-    $store.autoplayError = undefined;
+    $media.autoplayError = undefined;
   }
 
   function onAutoplayFail(event: ME.MediaAutoplayFailEvent) {
     appendTriggerEvent(event, trackedEvents.get('play-fail'));
     appendTriggerEvent(event, trackedEvents.get('can-play'));
-    $store.autoplayError = event.detail;
+    $media.autoplayError = event.detail;
     resetTracking();
   }
 
   function onPlay(event: ME.MediaPlayEvent) {
-    event.autoplay = $store.attemptingAutoplay;
+    event.autoplay = $media.$$attemptingAutoplay;
 
-    if (requests._$isLooping() || !$store.paused) {
+    if (requests._$isLooping() || !$media.paused) {
       event.stopImmediatePropagation();
       return;
     }
@@ -264,12 +268,12 @@ export function createMediaStateManager(
     appendTriggerEvent(event, trackedEvents.get('waiting'));
     satisfyMediaRequest('play', event);
 
-    $store.paused = false;
-    $store.autoplayError = undefined;
+    $media.paused = false;
+    $media.autoplayError = undefined;
 
-    if ($store.ended || requests._$isReplay()) {
+    if ($media.ended || requests._$isReplay()) {
       requests._$isReplay.set(false);
-      $store.ended = false;
+      $media.ended = false;
       handleMediaEvent(createEvent($player, 'replay', { trigger: event }));
     }
   }
@@ -278,8 +282,8 @@ export function createMediaStateManager(
     appendTriggerEvent(event, trackedEvents.get('play'));
     satisfyMediaRequest('play', event);
 
-    $store.paused = true;
-    $store.playing = false;
+    $media.paused = true;
+    $media.playing = false;
 
     resetTracking();
   }
@@ -296,10 +300,10 @@ export function createMediaStateManager(
 
     setTimeout(() => resetTracking(), 0);
 
-    $store.paused = false;
-    $store.playing = true;
-    $store.seeking = false;
-    $store.ended = false;
+    $media.paused = false;
+    $media.playing = true;
+    $media.seeking = false;
+    $media.ended = false;
 
     if (requests._$isLooping()) {
       event.stopImmediatePropagation();
@@ -308,25 +312,16 @@ export function createMediaStateManager(
     }
 
     onStarted(event);
-    if (playEvent) seekLiveToEdge();
-  }
-
-  function seekLiveToEdge() {
-    const timeDiff = Math.abs($store.duration - $store.currentTime);
-    // Seek to live position if we've fallen behind (within tolerance).
-    if (
-      $store.live &&
-      !$store.userBehindLiveEdge &&
-      ($store.canSeek ? timeDiff <= $store.liveTolerance : timeDiff > $store.liveTolerance)
-    ) {
-      const end = Number.isFinite($store.duration) ? $store.duration : $store.seekableEnd;
-      if (Number.isFinite(end)) $provider()!.currentTime = end;
-    }
   }
 
   function onStarted(event: Event) {
-    if (!$store.started) {
-      $store.started = true;
+    if (!$media.started) {
+      if ($media.live) {
+        const end = $media.$$liveSyncPosition ?? $media.seekableEnd - 2;
+        if (Number.isFinite(end)) $provider()!.currentTime = end;
+      }
+
+      $media.started = true;
       handleMediaEvent(createEvent($player, 'started', { trigger: event }));
     }
   }
@@ -340,53 +335,57 @@ export function createMediaStateManager(
     appendTriggerEvent(event, trackedEvents.get('seeked'));
     satisfyMediaRequest('pause', event);
 
-    $store.paused = true;
-    $store.playing = false;
-    $store.seeking = false;
+    $media.paused = true;
+    $media.playing = false;
+    $media.seeking = false;
 
     resetTracking();
   }
 
   function onTimeUpdate(event: ME.MediaTimeUpdateEvent) {
     const { currentTime, played } = event.detail;
-    $store.currentTime = currentTime;
-    $store.played = played;
-    $store.waiting = false;
+    $media.currentTime = currentTime;
+    $media.played = played;
+    $media.waiting = false;
   }
 
   function onVolumeChange(event: ME.MediaVolumeChangeEvent) {
-    $store.volume = event.detail.volume;
-    $store.muted = event.detail.muted || event.detail.volume === 0;
+    $media.volume = event.detail.volume;
+    $media.muted = event.detail.muted || event.detail.volume === 0;
     satisfyMediaRequest('volume', event);
   }
 
   function onSeeking(event: ME.MediaSeekingEvent) {
-    $store.seeking = true;
-    $store.currentTime = event.detail;
+    $media.seeking = true;
+    $media.currentTime = event.detail;
     satisfyMediaRequest('seeking', event);
   }
 
   function onSeeked(event: ME.MediaSeekedEvent) {
     if (requests._$isSeeking()) {
-      $store.seeking = true;
+      $media.seeking = true;
       event.stopImmediatePropagation();
-    } else if ($store.seeking) {
+    } else if ($media.seeking) {
       appendTriggerEvent(event, trackedEvents.get('waiting'));
       appendTriggerEvent(event, trackedEvents.get('seeking'));
-      if ($store.paused) stopWaiting();
-      $store.seeking = false;
-      if (event.detail !== $store.duration) $store.ended = false;
-      $store.currentTime = event.detail;
+      if ($media.paused) stopWaiting();
+      $media.seeking = false;
+      if (event.detail !== $media.duration) $media.ended = false;
+      $media.currentTime = event.detail;
       satisfyMediaRequest('seeked', event);
-      onStarted(event);
+      // Only start if user initiated.
+      const origin = event.originEvent;
+      if (origin && origin.isTrusted && !/seek/.test(origin.type)) {
+        onStarted(event);
+      }
     }
   }
 
   fireWaitingEvent = debounce(() => {
     if (!lastWaitingEvent) return;
     firingWaiting = true;
-    $store.waiting = true;
-    $store.playing = false;
+    $media.waiting = true;
+    $media.playing = false;
     const event = createEvent($player, 'waiting', { trigger: lastWaitingEvent });
     trackedEvents.set('waiting', event);
     $player()?.dispatchEvent(event);
@@ -407,21 +406,21 @@ export function createMediaStateManager(
       return;
     }
 
-    $store.paused = true;
-    $store.playing = false;
-    $store.seeking = false;
-    $store.ended = true;
+    $media.paused = true;
+    $media.playing = false;
+    $media.seeking = false;
+    $media.ended = true;
 
     resetTracking();
   }
 
   function stopWaiting() {
     fireWaitingEvent?.cancel();
-    $store.waiting = false;
+    $media.waiting = false;
   }
 
   function onFullscreenChange(event: ME.MediaFullscreenChangeEvent) {
-    $store.fullscreen = event.detail;
+    $media.fullscreen = event.detail;
     satisfyMediaRequest('fullscreen', event);
   }
 

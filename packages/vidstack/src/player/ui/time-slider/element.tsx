@@ -1,7 +1,7 @@
 import throttle from 'just-throttle';
 import { effect, provideContext } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
-import { DOMEvent, isKeyboardEvent, kebabToCamelCase, mergeProperties } from 'maverick.js/std';
+import { DOMEvent, isKeyboardEvent, mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { formatSpokenTime, formatTime } from '../../../utils/time';
@@ -117,18 +117,13 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     }
 
     function getTime(percent: number) {
-      return $media.seekableStart + (percent / 100) * $media.duration;
+      return (percent / 100) * $media.duration;
     }
 
     function getPercent(time: number) {
       const rate = Math.max(
         0,
-        Math.min(
-          1,
-          $media.liveEdge
-            ? 1
-            : (Math.min(time, $media.duration) - $media.seekableStart) / $media.duration,
-        ),
+        Math.min(1, $media.liveEdge ? 1 : Math.min(time, $media.duration) / $media.duration),
       );
 
       return Number.isNaN(rate) ? 0 : Number.isFinite(rate) ? rate * 100 : 100;
@@ -150,12 +145,9 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
       },
       time(percent, padHours, showHours) {
         const time = getTime(percent);
+        const value = $media.live ? time - $media.duration : time;
         return Number.isFinite(time)
-          ? `${$media.live ? '-' : ''}${formatTime(
-              $media.live ? Math.abs(time - $media.duration) : time,
-              padHours,
-              showHours,
-            )}`
+          ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), padHours, showHours)}`
           : 'LIVE';
       },
     });

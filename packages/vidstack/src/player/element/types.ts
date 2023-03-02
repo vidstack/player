@@ -103,15 +103,10 @@ export interface MediaElementCSSVars {
    */
   readonly 'media-aspect-ratio': number | null;
   /**
-   * The earliest time in seconds for which media has been buffered (i.e., downloaded by the
-   * browser).
-   */
-  readonly 'media-buffered-start': number;
-  /**
    * The latest time in seconds for which media has been buffered (i.e., downloaded by the
    * browser).
    */
-  readonly 'media-buffered-end': number;
+  readonly 'media-buffered': number;
   /**
    * The current playback time in seconds (0 -> duration).
    */
@@ -120,14 +115,6 @@ export interface MediaElementCSSVars {
    * The total length of media in seconds.
    */
   readonly 'media-duration': number;
-  /**
-   * The earliest time in seconds at which media can be seeked to.
-   */
-  readonly 'media-seekable-start': number;
-  /**
-   * The latest time in seconds at which media can be seeked to.
-   */
-  readonly 'media-seekable-end': number;
 }
 
 /**

@@ -25,17 +25,18 @@ export interface MediaControllerProps
     | 'autoplay'
     | 'controls'
     | 'currentTime'
-    | 'liveTolerance'
-    | 'minLiveDVRWindow'
     | 'loop'
     | 'muted'
     | 'paused'
     | 'playsinline'
     | 'poster'
     | 'preload'
-    | 'streamType'
     | 'viewType'
     | 'volume'
+    // live
+    | 'streamType'
+    | 'liveEdgeTolerance'
+    | 'minLiveDVRWindow'
   > {
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,

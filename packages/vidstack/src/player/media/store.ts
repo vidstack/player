@@ -36,12 +36,12 @@ export const mediaStore = createStore<MediaStore>({
   volume: 1,
   waiting: false,
   get viewType() {
-    return this.providedViewType !== 'unknown' ? this.providedViewType : this.mediaType;
+    return this.$$providedViewType !== 'unknown' ? this.$$providedViewType : this.mediaType;
   },
   get streamType() {
-    return this.providedStreamType !== 'unknown'
-      ? this.providedStreamType
-      : this.inferredStreamType;
+    return this.$$providedStreamType !== 'unknown'
+      ? this.$$providedStreamType
+      : this.$$inferredStreamType;
   },
   get currentSrc() {
     return this.source;
@@ -58,42 +58,48 @@ export const mediaStore = createStore<MediaStore>({
   get seekableEnd() {
     return this.canPlay ? getTimeRangesEnd(this.seekable) ?? Infinity : 0;
   },
+  get seekableWindow() {
+    return Math.max(0, this.seekableEnd - this.seekableStart);
+  },
   // ~~ user props ~~
   userIdle: false,
   userBehindLiveEdge: false,
   // ~~ live props ~~
-  liveTolerance: 15,
+  liveEdgeTolerance: 10,
   minLiveDVRWindow: 30,
   get canSeek() {
     return (
       /unknown|on-demand|:dvr/.test(this.streamType) &&
-      Number.isFinite(this.duration) &&
-      (!this.live ||
-        (/:dvr/.test(this.streamType) &&
-          this.seekableEnd - this.seekableStart >= this.minLiveDVRWindow))
+      Number.isFinite(this.seekableWindow) &&
+      (!this.live || (/:dvr/.test(this.streamType) && this.seekableWindow >= this.minLiveDVRWindow))
     );
   },
   get live() {
-    return this.streamType.includes('live');
+    return this.streamType.includes('live') || !Number.isFinite(this.duration);
   },
-  get liveWindow() {
-    const time = this.duration;
-    return Number.isFinite(time) ? time - this.seekableStart : 0;
+  get liveEdgeStart() {
+    return this.live && Number.isFinite(this.seekableEnd)
+      ? Math.max(0, (this.$$liveSyncPosition ?? this.seekableEnd) - this.liveEdgeTolerance)
+      : 0;
   },
   get liveEdge() {
     return (
       this.live &&
-      (!this.canSeek ||
-        (!this.userBehindLiveEdge &&
-          Math.abs(this.duration - this.currentTime) <= this.liveTolerance))
+      (!this.canSeek || (!this.userBehindLiveEdge && this.currentTime >= this.liveEdgeStart))
     );
   },
+  get liveEdgeWindow() {
+    return this.live && Number.isFinite(this.seekableEnd)
+      ? this.seekableEnd - this.liveEdgeStart
+      : 0;
+  },
   // ~~ internal props ~~
-  attemptingAutoplay: false,
-  canLoadPoster: null,
-  providedViewType: 'unknown',
-  providedStreamType: 'unknown',
-  inferredStreamType: 'unknown',
+  $$attemptingAutoplay: false,
+  $$canLoadPoster: null,
+  $$providedViewType: 'unknown',
+  $$providedStreamType: 'unknown',
+  $$inferredStreamType: 'unknown',
+  $$liveSyncPosition: null,
 });
 
 const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
@@ -110,9 +116,9 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'source',
   'sources',
   'volume',
-  'canLoadPoster',
-  'providedStreamType',
-  'providedViewType',
+  '$$canLoadPoster',
+  '$$providedStreamType',
+  '$$providedViewType',
 ]);
 
 /**

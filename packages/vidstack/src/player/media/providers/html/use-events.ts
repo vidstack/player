@@ -16,7 +16,7 @@ import type { HTMLMediaProvider } from './provider';
  */
 export function useHTMLMediaElementEvents(
   provider: HTMLMediaProvider,
-  { player, $store, delegate, logger }: MediaSetupContext,
+  { player, $store: $media, delegate, logger }: MediaSetupContext,
 ): void {
   const disposal = useDisposalBin();
 
@@ -31,7 +31,7 @@ export function useHTMLMediaElementEvents(
    */
   const timeRafLoop = createRAFLoop(() => {
     const newTime = provider.currentTime;
-    if ($store.currentTime !== newTime) updateCurrentTime(newTime);
+    if ($media.currentTime !== newTime) updateCurrentTime(newTime);
   });
 
   attachInitialEventListeners();
@@ -53,7 +53,7 @@ export function useHTMLMediaElementEvents(
             logger
               ?.debugGroup(`📺 fired \`${event.type}\``)
               .labelledLog('Event', event)
-              .labelledLog('Media Store', { ...$store })
+              .labelledLog('Media Store', { ...$media })
               .dispatch();
 
             handler(event);
@@ -105,9 +105,9 @@ export function useHTMLMediaElementEvents(
 
   function updateCurrentTime(newTime: number, trigger?: Event) {
     delegate.dispatch('time-update', {
-      // Avoid errors where `currentTime` can have higher precision than duration.
+      // Avoid errors where `currentTime` can have higher precision.
       detail: {
-        currentTime: Math.min(newTime, provider.media.duration),
+        currentTime: Math.min(newTime, $media.seekableEnd),
         played: provider.media.played,
       },
       trigger,
@@ -148,7 +148,7 @@ export function useHTMLMediaElementEvents(
     delegate.dispatch('loaded-metadata', { trigger: event });
 
     // Native HLS does not reliably fire `canplay` event.
-    if (IS_SAFARI && isHLSSrc($store.source)) {
+    if (IS_SAFARI && isHLSSrc($media.source)) {
       delegate.ready(getCanPlayDetail(), event);
     }
   }
@@ -162,7 +162,7 @@ export function useHTMLMediaElementEvents(
   }
 
   function onStreamTypeChange() {
-    if ($store.streamType !== 'unknown') return;
+    if ($media.streamType !== 'unknown') return;
     const isLive = !Number.isFinite(provider.media.duration);
     delegate.dispatch('stream-type-change', {
       detail: isLive ? 'live' : 'on-demand',
@@ -186,7 +186,7 @@ export function useHTMLMediaElementEvents(
   }
 
   function onCanPlayThrough(event: Event) {
-    if ($store.started) return;
+    if ($media.started) return;
     delegate.dispatch('can-play-through', {
       trigger: event,
       detail: getCanPlayDetail(),
@@ -218,7 +218,7 @@ export function useHTMLMediaElementEvents(
     timeRafLoop.stop();
     updateCurrentTime(provider.media.duration, event);
     delegate.dispatch('end', { trigger: event });
-    if ($store.loop) {
+    if ($media.loop) {
       onLoop();
     } else {
       delegate.dispatch('ended', { trigger: event });
@@ -226,7 +226,7 @@ export function useHTMLMediaElementEvents(
   }
 
   function onDurationChange(event: Event) {
-    if ($store.ended) updateCurrentTime(provider.media.duration, event);
+    if ($media.ended) updateCurrentTime(provider.media.duration, event);
     delegate.dispatch('duration-change', {
       detail: provider.media.duration,
       trigger: event,
