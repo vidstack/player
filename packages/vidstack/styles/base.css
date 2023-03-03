@@ -208,7 +208,6 @@
   display: block;
   height: auto;
   width: 156px;
-  max-width: unset;
 }
 
 /* Temporarily hide video while loading. */

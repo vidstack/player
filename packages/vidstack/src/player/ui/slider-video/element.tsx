@@ -68,6 +68,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
         $on:canplay={onCanPlay}
         $on:error={onError}
         $ref={(el) => void (videoElement = el)}
+        style="max-width: unset;"
       ></video>
     );
   },
