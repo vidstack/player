@@ -1,5 +1,5 @@
 import { effect, signal } from 'maverick.js';
-import { defineCustomElement } from 'maverick.js/element';
+import { defineCustomElement, onConnect } from 'maverick.js/element';
 import { dispatchEvent } from 'maverick.js/std';
 
 import { useMedia } from '../../media/context';
@@ -23,6 +23,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
       $error = signal(false),
       $slider = useSliderStore(),
       { $store: $media } = useMedia(),
+      $videoSrc = () => ($media.canLoad ? $src() : null),
       $hidden = () => !!$error() || !Number.isFinite($media.duration);
 
     host.setAttributes({
@@ -43,6 +44,10 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
       $error.set(false);
     });
 
+    onConnect(() => {
+      if (videoElement!.readyState >= 2) $canPlay.set(true);
+    });
+
     function onCanPlay(trigger: Event) {
       $canPlay.set(true);
       dispatchEvent(host.el, 'can-play', { trigger });
@@ -58,7 +63,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
         muted
         playsinline
         preload="auto"
-        src={$src()}
+        src={$videoSrc()}
         part="video"
         $on:canplay={onCanPlay}
         $on:error={onError}

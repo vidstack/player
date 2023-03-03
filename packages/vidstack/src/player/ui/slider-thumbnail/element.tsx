@@ -33,6 +33,8 @@ export const SliderThumbnailDefinition = defineCustomElement<MediaSliderThumbnai
 
     // Load thumbnail VTT cues.
     effect(() => {
+      if (!$media.canLoad) return;
+
       const video = document.createElement('video');
       video.crossOrigin = '';
 
