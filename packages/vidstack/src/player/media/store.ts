@@ -66,7 +66,7 @@ export const mediaStore = createStore<MediaStore>({
   userBehindLiveEdge: false,
   // ~~ live props ~~
   liveEdgeTolerance: 10,
-  minLiveDVRWindow: 30,
+  minLiveDVRWindow: 60,
   get canSeek() {
     return (
       /unknown|on-demand|:dvr/.test(this.streamType) &&

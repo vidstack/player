@@ -32,7 +32,7 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
   streamType: { initial: 'unknown' },
   volume: { initial: 1 },
   liveEdgeTolerance: { initial: 10 },
-  minLiveDVRWindow: { initial: 30 },
+  minLiveDVRWindow: { initial: 60 },
   keyDisabled: { initial: false },
   keyTarget: { initial: 'player' },
   keyShortcuts: { initial: MEDIA_KEY_SHORTCUTS },
