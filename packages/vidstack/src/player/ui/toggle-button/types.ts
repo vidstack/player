@@ -38,6 +38,12 @@ export interface ToggleButtonMembers {
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/toggle-button}
  * @slot - Used to passing in content for showing pressed and not pressed states.
+ * @slot tooltip-top-left - Used to place a tooltip above the button in the left corner.
+ * @slot tooltip-top-center - Used to place a tooltip above the button in the center.
+ * @slot tooltip-top-right - Used to place a tooltip above the button in the right corner.
+ * @slot tooltip-bottom-left - Used to place a tooltip below the button in the left corner.
+ * @slot tooltip-bottom-center - Used to place a tooltip below the button in the center.
+ * @slot tooltip-bottom-right - Used to place a tooltip below the button in the right corner.
  * @example
  * ```html
  * <media-toggle-button aria-label="...">
