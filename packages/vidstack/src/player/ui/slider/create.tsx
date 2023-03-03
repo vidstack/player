@@ -38,6 +38,10 @@ export function createSlider(
     $focus = useFocusVisible(host.$el),
     { $disabled, $min, $max, $value, $step } = $props;
 
+  effect(() => {
+    if ($focus()) $store.pointerValue = $store.value;
+  });
+
   host.setAttributes({
     disabled: $disabled,
     'data-dragging': () => $store.dragging,

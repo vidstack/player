@@ -1,4 +1,4 @@
-import { effect, onDispose, signal, Signals } from 'maverick.js';
+import { effect, onDispose, signal, Signals, tick } from 'maverick.js';
 import { CustomElementHost, onAttach } from 'maverick.js/element';
 import { isKeyboardClick, listenEvent } from 'maverick.js/std';
 
@@ -63,8 +63,9 @@ export function useKeyboard(
 
       const percent = (seekTo / duration) * 100;
       if (timeSlider) {
-        timeSlider.$store.dragging = true;
         timeSlider.$store.pointerValue = percent;
+        tick();
+        timeSlider.$store.dragging = true;
       }
 
       window.clearTimeout(seekTimeout);
