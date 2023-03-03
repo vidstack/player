@@ -1,3 +1,11 @@
+## [0.4.1](https://github.com/mihar-22/vidstack/compare/v0.4.0...v0.4.1) (2023-03-03)
+
+### Bug Fixes
+
+- **vidstack:** `max-width` should be unset on slider video part ([bb96e5f](https://github.com/mihar-22/vidstack/commit/bb96e5f2283e83664394278f58e35a6f92c3c13e))
+- **vidstack:** slider video should respect `canLoad` and handle late ready state ([7bfc8ba](https://github.com/mihar-22/vidstack/commit/7bfc8ba22094c71b053a81507a75bedb1d799566))
+- **vidstack:** update slider preview position on focus ([5018871](https://github.com/mihar-22/vidstack/commit/5018871c1692e99d81be51fbb50684c15c69ae8e)), closes [#787](https://github.com/mihar-22/vidstack/issues/787)
+
 # [0.4.0](https://github.com/mihar-22/vidstack/compare/v0.3.3...v0.4.0) (2023-03-03)
 
 ### Bug Fixes
