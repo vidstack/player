@@ -59,7 +59,7 @@
   --color-focus: 129 140 248;
 }
 
-.js-focus-visible :focus:not([data-focus-visible-added]) {
+.js-focus-visible :focus:not([data-focus-visible-added]):not([data-focus]) {
   @apply outline-none;
 }
 

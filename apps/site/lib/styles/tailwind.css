@@ -6,7 +6,7 @@
   border-color: rgb(var(--color-border));
 }
 
-.js-focus-visible [data-focus-visible-added] {
+.js-focus-visible [data-focus-visible-added]:not([data-focus]) {
   @apply outline-none ring-2;
   --tw-ring-color: rgb(var(--color-focus));
 }

@@ -26,6 +26,10 @@
   background-color: #5a595a;
 }
 
+:where([data-media-slider][data-focus] [part='track']) {
+  outline-offset: var(--thumb-size);
+}
+
 :where([data-media-slider][data-interactive] [part*='track']) {
   height: var(--track-focus-height);
 }
@@ -79,7 +83,7 @@
   transition: opacity 0.15s ease-in;
 }
 
-:where([data-media-slider][data-dragging] [part='thumb']) {
+:where([data-media-slider][data-dragging], [data-media-slider][data-focus]) :where([part='thumb']) {
   box-shadow: 0 0 0 4px hsla(0, 0%, 100%, 0.4);
 }
 
