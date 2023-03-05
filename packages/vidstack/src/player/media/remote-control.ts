@@ -210,6 +210,9 @@ export class MediaRemoteControl {
       return;
     }
 
+    // Prevent the event from bubbling up to default controls on safari/webkit.
+    trigger?.stopPropagation();
+
     if (player.state.paused) this.play(trigger);
     else this.pause(trigger);
   }
