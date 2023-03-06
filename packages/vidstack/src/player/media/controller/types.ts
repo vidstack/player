@@ -14,7 +14,7 @@ import type { VideoPresentationEvents } from '../providers/video/presentation/ev
 import type { VideoProvider } from '../providers/video/provider';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../request-events';
 import type { MediaStore } from '../store';
-import type { MediaLoadingStrategy } from '../types';
+import type { MediaLoadingStrategy, MediaResource } from '../types';
 import type { MediaUser } from '../user';
 
 export interface MediaControllerProps
@@ -37,6 +37,16 @@ export interface MediaControllerProps
     | 'liveEdgeTolerance'
     | 'minLiveDVRWindow'
   > {
+  /**
+   * The URL and optionally type of the current media resource/s to be considered for playback.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject}
+   */
+  src:
+    | MediaResource
+    | { src: MediaResource; type?: string }
+    | { src: MediaResource; type?: string }[];
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
    * and `debug`.
@@ -62,6 +72,16 @@ export interface MediaControllerProps
    * no screen orientation change.
    */
   fullscreenOrientation: ScreenOrientationLockType | undefined;
+  /**
+   * Whether native HLS support is preferred over using `hls.js`. We recommend setting this to
+   * `false` to ensure a consistent and configurable experience across browsers. In addition, our
+   * live stream support and DVR detection is much better with `hls.js` so choose accordingly.
+   *
+   * This should generally only be set to `true` if (1) you're working with HLS streams, and (2)
+   * you want AirPlay to work via the native Safari controls (i.e., `controls` attribute is
+   * present on the `<media-player>` element).
+   */
+  preferNativeHLS: boolean;
 }
 
 export type AnyMediaProvider =

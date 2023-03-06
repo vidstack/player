@@ -26,6 +26,10 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
   playsinline: { initial: false },
   poster: { initial: '' },
   preload: { initial: 'metadata' },
+  preferNativeHLS: {
+    initial: false,
+    attribute: 'prefer-native-hls',
+  },
   src: { initial: '' },
   userIdleDelay: { initial: 2000 },
   viewType: { initial: 'unknown' },
