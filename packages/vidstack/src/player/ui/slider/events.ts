@@ -5,9 +5,10 @@ import type { MediaSliderElement } from './types';
 export interface SliderEvents {
   'drag-start': SliderDragStartEvent;
   'drag-end': SliderDragEndEvent;
-  'drag-value-change': SliderDragValueChangeEvent;
   'value-change': SliderValueChangeEvent;
+  'drag-value-change': SliderDragValueChangeEvent;
   'pointer-value-change': SliderPointerValueChangeEvent;
+  'preview-value-change': SliderPreviewValueChangeEvent;
 }
 
 export interface SliderEvent<Detail = unknown> extends DOMEvent<Detail> {
@@ -42,3 +43,10 @@ export interface SliderDragValueChangeEvent extends SliderEvent<number> {}
  * event detail contains the value.
  */
 export interface SliderPointerValueChangeEvent extends SliderEvent<number> {}
+
+/**
+ * Fired when the slider preview value has changed. The preview value will change when the slider
+ * is not actively updating the current value. Preview updates can happen when the pointer device
+ * is inside the slider region whilst not dragging, or debounced keyboard updates are happening.
+ */
+export interface SliderPreviewValueChangeEvent extends SliderEvent<number> {}

@@ -1,7 +1,7 @@
 import throttle from 'just-throttle';
 import { effect, provideContext } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
-import { DOMEvent, isKeyboardEvent, mergeProperties } from 'maverick.js/std';
+import { dispatchEvent, DOMEvent, isKeyboardEvent, mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { formatSpokenTime, formatTime } from '../../../utils/time';
@@ -54,7 +54,9 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     });
 
     effect(() => {
-      $store.value = getPercent($media.currentTime);
+      const newValue = getPercent($media.currentTime);
+      $store.value = newValue;
+      dispatchEvent(host.el, 'value-change', { detail: newValue });
     });
 
     let dispatchSeeking: typeof seeking & { cancel(): void };
@@ -94,6 +96,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     }
 
     function onValueChange(event: SliderValueChangeEvent) {
+      if (!event.trigger) return;
       if (isKeyboardEvent(event.originEvent)) timedSeek(event);
     }
 

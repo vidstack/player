@@ -9,7 +9,7 @@ import {
   useContext,
 } from 'maverick.js';
 import { CustomElementHost, onAttach } from 'maverick.js/element';
-import { ariaBool, mergeProperties, setStyle } from 'maverick.js/std';
+import { ariaBool, mergeProperties, noop, setStyle } from 'maverick.js/std';
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
 import { setAttributeIfEmpty } from '../../../utils/dom';
@@ -35,18 +35,14 @@ export function createSlider(
 
   const scope = getScope()!,
     $store = useContext(sliderStoreContext),
-    $focus = useFocusVisible(host.$el),
+    $focused = useFocusVisible(host.$el),
     { $disabled, $min, $max, $value, $step } = $props;
-
-  effect(() => {
-    if ($focus()) $store.pointerValue = $store.value;
-  });
 
   host.setAttributes({
     disabled: $disabled,
     'data-dragging': () => $store.dragging,
     'data-pointing': () => $store.pointing,
-    'data-interactive': () => $store.interactive || $focus(),
+    'data-interactive': () => $store.interactive,
     'aria-disabled': () => ariaBool($disabled()),
     'aria-valuemin': aria?.valueMin ?? (() => $store.min),
     'aria-valuemax': aria?.valueMax ?? (() => $store.max),
@@ -71,6 +67,10 @@ export function createSlider(
     setAttributeIfEmpty(host.el!, 'tabindex', '0');
     setAttributeIfEmpty(host.el!, 'aria-orientation', 'horizontal');
     setAttributeIfEmpty(host.el!, 'autocomplete', 'off');
+  });
+
+  effect(() => {
+    $store.focused = $focused();
   });
 
   effect(() => {
@@ -131,22 +131,21 @@ export function createSlider(
   return {
     $store,
     members: mergeProperties(
-      $store,
       accessors(),
       {
-        $store,
-        get dragging() {
-          return $store.dragging;
-        },
-        get pointing() {
-          return $store.pointing;
-        },
         get value() {
           return $store.value;
         },
         set value(value) {
           $store.value = value;
         },
+        get $store() {
+          return $store;
+        },
+        state: new Proxy($store, {
+          // @ts-expect-error
+          set: noop,
+        }),
         subscribe: (callback) => scoped(() => effect(() => callback($store)), scope)!,
         $render: () => {
           return (

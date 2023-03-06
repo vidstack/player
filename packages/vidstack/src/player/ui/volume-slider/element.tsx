@@ -1,7 +1,7 @@
 import throttle from 'just-throttle';
 import { effect } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
-import { mergeProperties } from 'maverick.js/std';
+import { dispatchEvent, mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
@@ -39,10 +39,13 @@ export const VolumeSliderDefinition = defineCustomElement<MediaVolumeSliderEleme
     });
 
     effect(() => {
-      $store.value = $media.muted ? 0 : $media.volume * 100;
+      const newValue = $media.muted ? 0 : $media.volume * 100;
+      $store.value = newValue;
+      dispatchEvent(host.el, 'value-change', { detail: newValue });
     });
 
     function onVolumeChange(event: SliderValueChangeEvent | SliderDragValueChangeEvent) {
+      if (!event.trigger) return;
       const mediaVolume = round(event.detail / 100, 3);
       remote.changeVolume(mediaVolume, event);
     }

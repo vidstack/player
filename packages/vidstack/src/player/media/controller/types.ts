@@ -13,15 +13,14 @@ import type { HLSProvider } from '../providers/hls/provider';
 import type { VideoPresentationEvents } from '../providers/video/presentation/events';
 import type { VideoProvider } from '../providers/video/provider';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../request-events';
-import type { MediaState } from '../state';
 import type { MediaStore } from '../store';
 import type { MediaLoadingStrategy } from '../types';
 import type { MediaUser } from '../user';
 
 export interface MediaControllerProps
-  // Prefer picking off the `MediaContext` type to ensure docs are kept in-sync.
+  // Prefer picking off the `MediaStore` type to ensure docs are kept in-sync.
   extends Pick<
-    MediaState,
+    MediaStore,
     | 'autoplay'
     | 'controls'
     | 'currentTime'
@@ -89,7 +88,7 @@ export interface MediaController {
   /**
    * This object contains all current media state (e.g., `paused`, `playing`, etc.).
    */
-  readonly state: Readonly<MediaState>;
+  readonly state: Readonly<MediaStore>;
   /**
    * Enables subscribing to live updates of individually selected media state.
    *

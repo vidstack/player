@@ -8,23 +8,13 @@ import type { SliderStore } from './store';
 
 export { SliderProps, SliderEvents, SliderCSSVars };
 
-export interface SliderMembers
-  extends SliderProps,
-    Readonly<
-      Pick<
-        SliderStore,
-        | 'pointing'
-        | 'dragging'
-        | 'interactive'
-        | 'pointerValue'
-        | 'fillRate'
-        | 'fillPercent'
-        | 'pointerRate'
-        | 'pointerPercent'
-      >
-    > {
+export interface SliderMembers extends SliderProps {
   /** @internal */
   $store: SliderStore;
+  /**
+   * This object contains all current slider state (e.g., `dragging`, `fillPercent`, etc.).
+   */
+  state: Readonly<SliderStore>;
   /**
    * Enables subscribing to live updates of individually selected slider state.
    *

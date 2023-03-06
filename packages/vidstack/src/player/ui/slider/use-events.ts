@@ -63,36 +63,21 @@ export function useSliderEvents(
   function updateValue(value: number, trigger?: Event) {
     $store.value = Math.max($store.min, Math.min(value, $store.max));
 
-    if (isKeyboardEvent(trigger)) {
-      $store.pointerValue = $store.value;
-    }
-
-    const event = createEvent(host.el, 'value-change', {
-      detail: $store.value,
-      trigger,
-    });
-
+    const event = createEvent(host.el, 'value-change', { detail: $store.value, trigger });
     host.el?.dispatchEvent(event);
     onValueChange?.(event);
-  }
-
-  function updatePointerValue(value: number, trigger?: PointerEvent) {
-    $store.pointerValue = value;
-
-    dispatchEvent(host.el, 'value-change', {
-      detail: value,
-      trigger,
-    });
 
     if ($store.dragging) {
-      const event = createEvent(host.el, 'drag-value-change', {
-        detail: value,
-        trigger,
-      });
-
+      const event = createEvent(host.el, 'drag-value-change', { detail: value, trigger });
       host.el?.dispatchEvent(event);
       onDragValueChange?.(event);
     }
+  }
+
+  function updatePointerValue(value: number, trigger?: Event) {
+    if ($store.dragging) updateValue(value, trigger);
+    $store.pointerValue = value;
+    dispatchEvent(host.el, 'pointer-value-change', { detail: value, trigger });
   }
 
   function onPointerEnter() {
@@ -100,6 +85,7 @@ export function useSliderEvents(
   }
 
   function onPointerMove(event: PointerEvent) {
+    // Avoid double updates - use document pointer move.
     if ($store.dragging) return;
     updatePointerValue(getValue(event), event);
   }

@@ -24,6 +24,12 @@ when being interacted with:
 Any element you slot in will be sized and positioned automatically by the slider. It will also
 ensure the preview is correctly clamped so it doesn't go out of bounds.
 
+## State
+
+You can retrieve a snapshot of the current slider state like so:
+
+{% code_snippet name="state" copy=true /%}
+
 ## Subscribe
 
 The slider has a store that keeps track of the running slider state. The store enables you to
@@ -112,7 +118,7 @@ desired.
 | `data-focus`       | Slider has keyboard focus.                            |
 | `data-dragging`    | Slider thumb is currently being dragged.              |
 | `data-pointing`    | Device pointer (mouse/touch) is within slider bounds. |
-| `data-interactive` | Either dragging or pointing is true.                  |
+| `data-interactive` | Either dragging, pointing, or focus is true.          |
 
 ### CSS Variables
 

@@ -16,42 +16,44 @@ if (!__SERVER__) {
 }
 
 export function useFocusVisible($target: ReadSignal<Element | null>): ReadSignal<boolean> {
-  const $focus = signal(false);
+  const $focused = signal(false);
 
   onConnect(() => {
     const target = $target()!;
 
     effect(() => {
       if (!$keyboard()) {
-        $focus.set(false);
+        $focused.set(false);
         updateFocusAttr(target, false);
         listenEvent(target, 'pointerenter', () => updateHoverAttr(target, true));
         listenEvent(target, 'pointerleave', () => updateHoverAttr(target, false));
         return;
       }
 
-      updateFocusAttr(target, document.activeElement === target);
+      const active = document.activeElement === target;
+      $focused.set(active);
+      updateFocusAttr(target, active);
 
       listenEvent(target, 'focus', () => {
-        $focus.set(true);
+        $focused.set(true);
         updateFocusAttr(target, true);
       });
 
       listenEvent(target, 'blur', () => {
-        $focus.set(false);
+        $focused.set(false);
         updateFocusAttr(target, false);
       });
     });
   });
 
-  return $focus;
+  return $focused;
 }
 
-function updateFocusAttr(target: Element, visible: boolean) {
-  setAttribute(target, 'data-focus', visible);
-  setAttribute(target, 'data-hocus', visible);
+function updateFocusAttr(target: Element, isFocused: boolean) {
+  setAttribute(target, 'data-focus', isFocused);
+  setAttribute(target, 'data-hocus', isFocused);
 }
 
-function updateHoverAttr(target: Element, visible: boolean) {
-  setAttribute(target, 'data-hocus', visible);
+function updateHoverAttr(target: Element, isHovering: boolean) {
+  setAttribute(target, 'data-hocus', isHovering);
 }
