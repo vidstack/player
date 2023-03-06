@@ -84,12 +84,16 @@ export function useHLS(
   function onLevelLoaded(eventType: string, data: HLS.LevelLoadedData): void {
     if ($store.canPlay) return;
 
-    const { live, totalduration: duration } = data.details;
+    const { type, live, totalduration: duration } = data.details;
 
     const event = new DOMEvent(eventType, { detail: data });
 
     delegate.dispatch('stream-type-change', {
-      detail: live ? (Number.isFinite(duration) ? 'live:dvr' : 'live') : 'on-demand',
+      detail: live
+        ? type === 'EVENT' && Number.isFinite(duration)
+          ? 'live:dvr'
+          : 'live'
+        : 'on-demand',
       trigger: event,
     });
 
