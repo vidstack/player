@@ -42,7 +42,7 @@ export function useHLS(
 
     instance.attachMedia(provider.media);
     const levelLoadedEvent = peek($ctor)!.Events.LEVEL_LOADED;
-    instance.once(levelLoadedEvent, onLevelLoaded);
+    instance.on(levelLoadedEvent, onLevelLoaded);
 
     delegate.dispatch('provider-setup', { detail: provider });
 
