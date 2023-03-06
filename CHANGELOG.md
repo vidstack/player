@@ -1,3 +1,17 @@
+## [0.4.2](https://github.com/mihar-22/vidstack/compare/v0.4.1...v0.4.2) (2023-03-06)
+
+### Bug Fixes
+
+- **vidstack:** airplay not working with hlsjs ([1a5a6b1](https://github.com/mihar-22/vidstack/commit/1a5a6b17a6442ed36f3235b4d055a6aa128ecea2)), closes [#790](https://github.com/mihar-22/vidstack/issues/790)
+- **vidstack:** avoid conflicting keyboard shortcuts with native controls ([14ae6a3](https://github.com/mihar-22/vidstack/commit/14ae6a38a0630bdf4b4309201561110add639173)), closes [#788](https://github.com/mihar-22/vidstack/issues/788)
+- **vidstack:** canplay not fired on multiple hls source changes ([d0e4d72](https://github.com/mihar-22/vidstack/commit/d0e4d722dd18ba42c046d1ccb2296bac6d9c4120))
+- **vidstack:** detect live dvr based on hls playlist type ([3c8786b](https://github.com/mihar-22/vidstack/commit/3c8786b1ec8875b26ee0063815a421ba96eb28bd))
+- **vidstack:** import slider keyboard support ([b0fc69e](https://github.com/mihar-22/vidstack/commit/b0fc69ebe9ce0b2750f5cbb29db192febf2d93e8))
+- **vidstack:** keyboard seeking not working while playing ([fb6114c](https://github.com/mihar-22/vidstack/commit/fb6114c7a94b9e5ba8ea06c66afeb54b7bc091c5))
+- **vidstack:** moved store props on slider instance to `state` ([d4046fc](https://github.com/mihar-22/vidstack/commit/d4046fca96148b1b5b9455ce0e26abe77984b1a5))
+- **vidstack:** play event is not fired when autoplay is set ([b0a3b58](https://github.com/mihar-22/vidstack/commit/b0a3b58ada8ecea1f443085b801a747d7e74b81f))
+- **vidstack:** src change throwing error ([24f98b6](https://github.com/mihar-22/vidstack/commit/24f98b6b8db7b3386a9e738f09673f79185f9081))
+
 ## [0.4.1](https://github.com/mihar-22/vidstack/compare/v0.4.0...v0.4.1) (2023-03-03)
 
 ### Bug Fixes
