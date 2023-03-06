@@ -9,8 +9,9 @@ export interface SliderThumbnailProps {
 }
 
 /**
- * Used to show preview thumbnails when the user is hovering or dragging the time slider. The
- * point at which they're hovering or dragging (`pointerValue`) is the preview time position.
+ * Used to load/parse WebVTT files and display preview thumbnails when the user is hovering hover
+ * or dragging the time slider. The time ranges in the WebVTT file will automatically be matched
+ * based on the current pointer position.
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-thumbnail}
  * @example

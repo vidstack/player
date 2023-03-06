@@ -4,10 +4,12 @@ description: This component is used to load and display thumbnail images over th
 
 ## Usage
 
-The `$tag:media-slider-thumbnail` component can be used to load and display preview images over
-the time slider via [WebVTT](#webvtt) files. The time ranges in the WebVTT file will
-automatically be matched based on the pointer position (i.e., the point at which the user is
-hovering or dragging the slider).
+The `$tag:media-slider-thumbnail` component can be used to load/parse preview thumbnails from
+[WebVTT](#webvtt) files and display them over the time slider.
+
+The thumbnail image will be displayed when the user is hovering over or dragging the time slider,
+and the time ranges in the WebVTT file will automatically be matched based on the current pointer
+position.
 
 {% code_preview name="usage" copyHighlight=true highlight="html:4-7|react:7" /%}
 

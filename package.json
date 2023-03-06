@@ -1,6 +1,6 @@
 {
   "name": "vidstack-workspace",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -14,7 +14,7 @@
     "build:site": "turbo run build types --filter=site",
     "preview:site": "turbo run preview --filter=site",
     "dev:site": "turbo run dev --filter=site",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && node .scripts/changelog.js",
     "format": "turbo run format --parallel",
     "test": "turbo run test --parallel",
     "preinstall": "npx only-allow pnpm",

@@ -18,7 +18,9 @@ determined the final playback position they want to seek to. When the user stops
 slider, a `media-seek-request` event will be fired to request updating the current playback time
 to the slider's value.
 
-The slider's range is assumed to be in seconds between `0` (min) and length of media (max).
+The time slider's range is represented as a percentage `0%` (min) and `100%` (max). Internally
+percentages are used to calculate time positions where `100%` is equal to the length of the
+media (i.e., duration).
 
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:7" /%}
 

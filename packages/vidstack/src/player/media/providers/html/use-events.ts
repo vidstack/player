@@ -80,6 +80,7 @@ export function useHTMLMediaElementEvents(
       attachMediaEventListener('canplay', onCanPlay),
       attachMediaEventListener('canplaythrough', onCanPlayThrough),
       attachMediaEventListener('durationchange', onDurationChange),
+      attachMediaEventListener('play', onPlay),
       attachMediaEventListener('progress', onProgress),
       attachMediaEventListener('stalled', onStalled),
       attachMediaEventListener('suspend', onSuspend),
@@ -90,7 +91,6 @@ export function useHTMLMediaElementEvents(
   function attachCanPlayEventListeners() {
     if (attachedCanPlayEventListeners) return;
     disposal.add(
-      attachMediaEventListener('play', onPlay),
       attachMediaEventListener('pause', onPause),
       attachMediaEventListener('playing', onPlaying),
       attachMediaEventListener('ratechange', onRateChange),

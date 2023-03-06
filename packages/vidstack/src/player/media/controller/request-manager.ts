@@ -217,11 +217,11 @@ export function createMediaRequestManager(
   }
 
   function onShowPosterRequest(event: RE.MediaShowPosterRequestEvent) {
-    $media.$$canLoadPoster = true;
+    $media.canLoadPoster = true;
   }
 
   function onHidePosterRequest(event: RE.MediaHidePosterRequestEvent) {
-    $media.$$canLoadPoster = false;
+    $media.canLoadPoster = false;
   }
 
   function onLoopRequest(event: RE.MediaLoopRequestEvent) {
@@ -258,7 +258,7 @@ export function createMediaRequestManager(
       return provider!.play();
     } catch (error) {
       const errorEvent = createEvent($player, 'play-fail', { detail: coerceToError(error) });
-      errorEvent.autoplay = $media.$$attemptingAutoplay;
+      errorEvent.autoplay = $media.attemptingAutoplay;
       handler.handle(errorEvent);
       throw error;
     }
@@ -309,7 +309,7 @@ export function createMediaRequestManager(
     if (peek(() => !$media.live || $media.liveEdge || !$media.canSeek)) return;
     const provider = peek($provider);
     throwIfNotReadyForPlayback(provider, $player);
-    provider!.currentTime = $media.$$liveSyncPosition ?? $media.seekableEnd - 2;
+    provider!.currentTime = $media.liveSyncPosition ?? $media.seekableEnd - 2;
   }
 
   return {

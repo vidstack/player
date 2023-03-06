@@ -42,7 +42,7 @@ export function useHLS(
 
     instance.attachMedia(provider.media);
     const levelLoadedEvent = peek($ctor)!.Events.LEVEL_LOADED;
-    instance.once(levelLoadedEvent, onLevelLoaded);
+    instance.on(levelLoadedEvent, onLevelLoaded);
 
     delegate.dispatch('provider-setup', { detail: provider });
 
@@ -61,7 +61,7 @@ export function useHLS(
     if (!instance) return;
 
     const rafLoop = createRAFLoop(() => {
-      $store.$$liveSyncPosition = instance.liveSyncPosition ?? Infinity;
+      $store.liveSyncPosition = instance.liveSyncPosition ?? Infinity;
     });
 
     rafLoop.start();
@@ -84,12 +84,16 @@ export function useHLS(
   function onLevelLoaded(eventType: string, data: HLS.LevelLoadedData): void {
     if ($store.canPlay) return;
 
-    const { live, totalduration: duration } = data.details;
+    const { type, live, totalduration: duration } = data.details;
 
     const event = new DOMEvent(eventType, { detail: data });
 
     delegate.dispatch('stream-type-change', {
-      detail: live ? (Number.isFinite(duration) ? 'live:dvr' : 'live') : 'on-demand',
+      detail: live
+        ? type === 'EVENT' && Number.isFinite(duration)
+          ? 'live:dvr'
+          : 'live'
+        : 'on-demand',
       trigger: event,
     });
 

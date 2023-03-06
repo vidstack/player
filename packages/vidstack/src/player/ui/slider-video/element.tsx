@@ -33,7 +33,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
 
     effect(() => {
       if ($canPlay() && videoElement && Number.isFinite($media.duration)) {
-        videoElement.currentTime = ($slider.pointerValue / 100) * $media.duration;
+        videoElement.currentTime = $slider.pointerRate * $media.duration;
       }
     });
 
@@ -45,10 +45,10 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
     });
 
     onConnect(() => {
-      if (videoElement!.readyState >= 2) $canPlay.set(true);
+      if (videoElement!.readyState >= 2) onCanPlay();
     });
 
-    function onCanPlay(trigger: Event) {
+    function onCanPlay(trigger?: Event) {
       $canPlay.set(true);
       dispatchEvent(host.el, 'can-play', { trigger });
     }

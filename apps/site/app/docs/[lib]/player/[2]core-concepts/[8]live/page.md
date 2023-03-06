@@ -37,7 +37,7 @@ best configure UI components such as the time slider.
 The player will try to infer whether a stream supports DVR but generally it's inaccurate. Prefer
 using the [stream type](#stream-type) property to specify whether DVR is supported or not. In
 addition, the `minLiveDVRWindow` can be used to specify the minimum seekable length in seconds
-before seeking operations are permitted (default value is 30 seconds):
+before seeking operations are permitted (default value is 60 seconds):
 
 {% code_snippet name="min-live-dvr" /%}
 

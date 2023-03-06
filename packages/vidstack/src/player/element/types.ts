@@ -6,19 +6,9 @@ import type {
   MediaControllerEvents,
   MediaControllerProps,
 } from '../media/controller/types';
-import type { MediaKeyShortcuts, MediaKeyTarget, MediaResource } from '../media/types';
+import type { MediaKeyShortcuts, MediaKeyTarget } from '../media/types';
 
 export interface MediaPlayerProps extends MediaControllerProps {
-  /**
-   * The URL and optionally type of the current media resource/s to be considered for playback.
-   *
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject}
-   */
-  src:
-    | MediaResource
-    | { src: MediaResource; type?: string }
-    | { src: MediaResource; type?: string }[];
   /**
    * The aspect ratio of the player media given as 'width/height' (e.g., 16/9).
    */

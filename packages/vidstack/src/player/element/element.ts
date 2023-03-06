@@ -100,7 +100,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       });
 
       window.requestAnimationFrame(() => {
-        if (isNull($media.$$canLoadPoster)) $media.$$canLoadPoster = true;
+        if (isNull($media.canLoadPoster)) $media.canLoadPoster = true;
       });
     });
 
@@ -108,7 +108,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
     context.$keyShortcuts = props.$keyShortcuts;
     useKeyboard(context, props);
     useFocusVisible(host.$el);
-    useSourceSelection(props.$src, controller._context);
+    useSourceSelection(props.$src, props.$preferNativeHLS, controller._context);
 
     const $attrs: AttributesRecord = {
       'aspect-ratio': props.$aspectRatio,

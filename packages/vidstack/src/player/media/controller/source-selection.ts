@@ -1,31 +1,36 @@
-import { effect, peek, ReadSignal, tick } from 'maverick.js';
+import { computed, effect, peek, ReadSignal, signal, tick } from 'maverick.js';
 import { isArray, isString } from 'maverick.js/std';
 
 import { preconnect } from '../../../utils/network';
-import type { MediaPlayerProps } from '../../element/types';
 import type { MediaContext } from '../context';
 import { AudioProviderLoader } from '../providers/audio/loader';
 import { HLSProviderLoader } from '../providers/hls/loader';
 import type { MediaProviderLoader } from '../providers/types';
 import { VideoProviderLoader } from '../providers/video/loader';
 import type { MediaSrc } from '../types';
+import type { MediaControllerProps } from './types';
 
 export function useSourceSelection(
-  $src: ReadSignal<MediaPlayerProps['src']>,
+  $src: ReadSignal<MediaControllerProps['src']>,
+  $preferNativeHLS: ReadSignal<MediaControllerProps['preferNativeHLS']>,
   context: MediaContext,
 ): void {
   const { $loader, $store, delegate } = context;
 
-  const loaders: MediaProviderLoader[] = [
-    new HLSProviderLoader(),
-    new VideoProviderLoader(),
-    new AudioProviderLoader(),
-  ];
+  const HLS_LOADER = new HLSProviderLoader(),
+    VIDEO_LOADER = new VideoProviderLoader(),
+    AUDIO_LOADER = new AudioProviderLoader();
+
+  const $loaders = computed<MediaProviderLoader[]>(() => {
+    return $preferNativeHLS()
+      ? [VIDEO_LOADER, AUDIO_LOADER, HLS_LOADER]
+      : [HLS_LOADER, VIDEO_LOADER, AUDIO_LOADER];
+  });
 
   if (__SERVER__) {
     $store.sources = normalizeSrc($src());
     for (const src of $store.sources) {
-      const loader = loaders.find((loader) => loader.canPlay(src));
+      const loader = $loaders().find((loader) => loader.canPlay(src));
       if (loader) {
         $store.source = src;
         $store.mediaType = loader.mediaType(src);
@@ -48,7 +53,7 @@ export function useSourceSelection(
       newLoader: MediaProviderLoader | null = null;
 
     for (const src of sources) {
-      const loader = loaders.find((loader) => loader.canPlay(src));
+      const loader = peek($loaders).find((loader) => loader.canPlay(src));
       if (loader) {
         newSource = src;
         newLoader = loader;
@@ -110,7 +115,7 @@ export function useSourceSelection(
   });
 }
 
-function normalizeSrc(src: MediaPlayerProps['src']): MediaSrc[] {
+function normalizeSrc(src: MediaControllerProps['src']): MediaSrc[] {
   return (isArray(src) ? src : [!isString(src) && 'src' in src ? src : { src }]).map(
     ({ src, type }) => ({
       src,
