@@ -1,5 +1,5 @@
 import throttle from 'just-throttle';
-import { effect, provideContext } from 'maverick.js';
+import { effect, peek, provideContext } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { dispatchEvent, mergeProperties } from 'maverick.js/std';
 
@@ -57,8 +57,10 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
 
     effect(() => {
       const newValue = getPercent($media.currentTime);
-      $store.value = newValue;
-      dispatchEvent(host.el, 'value-change', { detail: newValue });
+      if (!peek(() => $store.dragging)) {
+        $store.value = newValue;
+        dispatchEvent(host.el, 'value-change', { detail: newValue });
+      }
     });
 
     let dispatchSeeking: typeof seeking & { cancel(): void };
