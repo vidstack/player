@@ -8,9 +8,10 @@ The `$tag:media-slider-video` component can be used to load a video in a slider.
 This is _generally_ used to show a preview video (low-resolution) as the user interacts with the
 time slider.
 
-The point at which the user is hovering or dragging (`pointerValue`) is the preview time position.
-The video will automatically be synced with said value, so ensure both the preview and loaded
-video are of the same length (i.e., duration).
+The preview video will be displayed when the user is hovering over or dragging the time slider,
+and it will automatically be updated to be in-sync with the current pointer position. Therefore,
+ensure it has the same length as the original media (i.e., same duration) to avoid displaying
+incorrect previews.
 
 {% code_preview name="usage" copyHighlight=true highlight="html:4-7|react:7" /%}
 

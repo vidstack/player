@@ -1,6 +1,6 @@
-import { effect, onDispose, signal, Signals, tick } from 'maverick.js';
+import { effect, onDispose, signal, Signals } from 'maverick.js';
 import { CustomElementHost, onAttach } from 'maverick.js/element';
-import { isKeyboardClick, listenEvent } from 'maverick.js/std';
+import { DOMEvent, isKeyboardClick, listenEvent } from 'maverick.js/std';
 
 import { MediaContext, useMedia } from '../media/context';
 import type { MediaKeyShortcuts } from '../media/types';
@@ -45,41 +45,57 @@ export function useKeyboard(
       });
     }
 
-    let seekTo, seekTimeout, timeSlider;
-    function debouncedSeek(event: KeyboardEvent, type: 'seekForward' | 'seekBackward') {
-      if (!$media.canSeek) return;
-      if (!timeSlider) timeSlider = player!.querySelector('media-time-slider');
-
-      const duration = $media.duration,
-        seekBy = event.shiftKey ? 10 : 5;
-
-      seekTo = Math.max(
+    let seekTotal;
+    function calcSeekAmount(event: KeyboardEvent, type: string) {
+      const seekBy = event.shiftKey ? 10 : 5;
+      return (seekTotal = Math.max(
         0,
         Math.min(
-          (seekTo ?? $media.currentTime) + (type === 'seekForward' ? +seekBy : -seekBy),
-          duration,
+          (seekTotal ?? $media.currentTime) + (type === 'seekForward' ? +seekBy : -seekBy),
+          $media.duration,
         ),
-      );
-
-      const percent = (seekTo / duration) * 100;
-      if (timeSlider) {
-        timeSlider.$store.pointerValue = percent;
-        tick();
-        timeSlider.$store.dragging = true;
-      }
-
-      window.clearTimeout(seekTimeout);
-      remote.seeking(seekTo, event);
-      seekTimeout = window.setTimeout(() => {
-        remote.seek(seekTo, event);
-        timeSlider.$store.value = percent;
-        timeSlider.$store.dragging = false;
-        timeSlider = null;
-        seekTo = null;
-      }, 300);
+      ));
     }
 
-    function handleKeyDown(event: KeyboardEvent) {
+    let timeSlider: Element | null = null;
+    function forwardTimeKeyEvent(event: KeyboardEvent) {
+      timeSlider?.dispatchEvent(new DOMEvent<void>(event.type, { trigger: event }));
+    }
+
+    function seeking(event: KeyboardEvent, type: string) {
+      if (!$media.canSeek) return;
+      if (!timeSlider) timeSlider = player!.querySelector('media-time-slider');
+      if (timeSlider) {
+        forwardTimeKeyEvent(event);
+      } else {
+        remote.seeking(calcSeekAmount(event, type), event);
+      }
+    }
+
+    function onKeyUp(event: KeyboardEvent) {
+      const sliderFocused = document.activeElement?.hasAttribute('data-media-slider');
+      if (!$media.canSeek || sliderFocused) return;
+
+      const method = getMatchingMethod(event);
+
+      if (method?.startsWith('seek')) {
+        event.preventDefault();
+        if (timeSlider) {
+          forwardTimeKeyEvent(event);
+          timeSlider = null;
+        } else {
+          remote.seek(calcSeekAmount(event, method), event);
+          seekTotal = 0;
+        }
+      }
+
+      if (method?.startsWith('volume')) {
+        const volumeSlider = player!.querySelector('media-volume-slider');
+        volumeSlider?.dispatchEvent(new DOMEvent<void>('keyup', { trigger: event }));
+      }
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
       if (!event.key || MODIFIER_KEYS.has(event.key)) return;
 
       const focused = document.activeElement;
@@ -90,8 +106,44 @@ export function useKeyboard(
         return;
       }
 
+      const sliderFocused = focused?.hasAttribute('data-media-slider'),
+        method = getMatchingMethod(event);
+
+      if (!method && /[0-9]/.test(event.key) && !sliderFocused) {
+        event.preventDefault();
+        remote.seek(($media.duration / 10) * Number(event.key), event);
+        return;
+      }
+
+      if (!method || (/volume|seek/.test(method) && sliderFocused)) return;
+
+      event.preventDefault();
+
+      switch (method) {
+        case 'seekForward':
+        case 'seekBackward':
+          seeking(event, method);
+          break;
+        case 'volumeUp':
+        case 'volumeDown':
+          const volumeSlider = player!.querySelector('media-volume-slider');
+          if (volumeSlider) {
+            volumeSlider.dispatchEvent(new DOMEvent<void>('keydown', { trigger: event }));
+          } else {
+            const value = event.shiftKey ? 0.1 : 0.05;
+            remote.changeVolume($media.volume + (method === 'volumeUp' ? +value : -value), event);
+          }
+          break;
+        case 'toggleFullscreen':
+          remote.toggleFullscreen('prefer-media', event);
+        default:
+          remote[method]?.(event);
+      }
+    }
+
+    function getMatchingMethod(event: KeyboardEvent) {
       const keyShortcuts = { ...$keyShortcuts(), ...ariaKeys };
-      const method = Object.keys(keyShortcuts).find((method) =>
+      return Object.keys(keyShortcuts).find((method) =>
         keyShortcuts[method].split(' ').some((keys) =>
           replaceSymbolKeys(keys)
             .replace(/Control/g, 'Ctrl')
@@ -103,40 +155,12 @@ export function useKeyboard(
             ),
         ),
       ) as keyof MediaKeyShortcuts | undefined;
-
-      const sliderFocused = focused?.hasAttribute('data-media-slider');
-      if (!method && /[0-9]/.test(event.key) && !sliderFocused) {
-        event.preventDefault();
-        remote.seek(($media.duration / 10) * Number(event.key), event);
-        return;
-      }
-
-      if (!method || (/volume|seek/.test(method) && sliderFocused)) {
-        return;
-      }
-
-      event.preventDefault();
-
-      switch (method) {
-        case 'seekForward':
-        case 'seekBackward':
-          debouncedSeek(event, method);
-          break;
-        case 'volumeUp':
-        case 'volumeDown':
-          const value = event.shiftKey ? 0.1 : 0.05;
-          remote.changeVolume($media.volume + (method === 'volumeUp' ? +value : -value), event);
-          break;
-        case 'toggleFullscreen':
-          remote.toggleFullscreen('prefer-media', event);
-        default:
-          remote[method]?.(event);
-      }
     }
 
     effect(() => {
       if (!$active()) return;
-      listenEvent(target, 'keydown', handleKeyDown);
+      listenEvent(target, 'keyup', onKeyUp);
+      listenEvent(target, 'keydown', onKeyDown);
     });
   });
 }

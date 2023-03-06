@@ -23,7 +23,7 @@ export interface SliderVideoEvents {
  */
 export interface SliderVideoCanPlayEvent extends DOMEvent<void> {
   /** The `canplay` media event. */
-  trigger: Event;
+  trigger?: Event;
 }
 
 /**
@@ -41,10 +41,9 @@ export interface SliderVideoErrorEvent extends DOMEvent<void> {
 }
 
 /**
- * Used to load a low-resolution video to be displayed when the user is hovering or dragging
- * the time slider. The point at which they're hovering or dragging (`pointerValue`) is the preview
- * time position. The video will automatically be updated to match, so ensure it's of the same
- * length as the original.
+ * Used to load a low-resolution video to be displayed when the user is hovering over or dragging
+ * the time slider. The preview video will automatically be updated to be in-sync with the current
+ * preview position, so ensure it has the same length as the original media (i.e., same duration).
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/sliders/slider-video}
  * @example

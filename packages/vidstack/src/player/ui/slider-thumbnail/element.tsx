@@ -71,7 +71,7 @@ export const SliderThumbnailDefinition = defineCustomElement<MediaSliderThumbnai
         return;
       }
 
-      const currentTime = ($slider.pointerValue / 100) * $media.duration;
+      const currentTime = $slider.pointerRate * $media.duration;
 
       for (let i = 0; i < cues.length; i++) {
         if (currentTime >= cues[i].startTime && currentTime <= cues[i].endTime) {

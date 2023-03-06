@@ -29,11 +29,19 @@ export interface SliderProps {
   value: number;
   /**
    * A number that specifies the granularity that the slider value must adhere to.
+   *
+   * A step is an abstract unit that may carry a different type of measure depending on the type of
+   * slider. For example, for the volume slider each step is 1% of volume, and for the time slider
+   * it is 1 second which is a varying percentage depending on the media duration.
    */
   step: number;
   /**
    * ♿ **ARIA:** A number that specifies the number of steps taken when interacting with
    * the slider via keyboard.
+   *
+   * A step is an abstract unit that may carry different type of measure depending on the type of
+   * slider. For example, for the volume slider each step is 1% of volume, and for the time slider
+   * it is 1 second which is a varying percentage depending on the media duration.
    */
   keyStep: number;
   /**

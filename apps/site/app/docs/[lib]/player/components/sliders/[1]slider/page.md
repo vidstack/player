@@ -5,12 +5,12 @@ description: This component is used to create an input for controlling a range o
 ## Usage
 
 The `$tag:media-slider` component is a custom-built range input that is cross-browser friendly,
-ARIA friendly, mouse/touch-friendly and easily style-able. The slider allows users to input
+ARIA friendly, mouse/touch/keyboard-friendly and easily style-able. The slider allows users to input
 numeric values between a minimum and maximum value.
 
 Other sliders in the library such as `$tag:media-time-slider` and `$tag:media-volume-slider`
 extend the `$tag:media-slider` component with additional functionality based on their use-case. All
-documentation on this page, particularly around styling and subscriptions, is valid for all sliders.
+documentation on this page, particularly around styling and subscriptions is valid for all sliders.
 
 {% code_preview name="usage" size="xsmall" copyHighlight=true highlight="html:3|react:5" /%}
 
@@ -126,14 +126,14 @@ The CSS variables listed in the table below can be used to style your own slider
 variables represent the current value, and the `pointer` variables represent the current value
 at the device pointer (mouse/thumb).
 
-| Variable                   | Description                                                |
-| -------------------------- | ---------------------------------------------------------- |
-| `--slider-fill-value`      | Slider fill amount (e.g., `30`).                           |
-| `--slider-fill-rate`       | The fill value expressed as a ratio (e.g., `0.3`).         |
-| `--slider-fill-percent`    | The fill rate expressed as a percentage (e.g., `30%`).     |
-| `--slider-pointer-value`   | Fill amount up to the device pointer (e.g., `30`).         |
-| `--slider-pointer-rate`    | The pointer value expressed as a ratio (e.g., `0.3`).      |
-| `--slider-pointer-percent` | The pointer rate expressed as a percentage. (e.g., `30%`). |
+| Variable                   | Description                                            |
+| -------------------------- | ------------------------------------------------------ |
+| `--slider-fill-value`      | Fill amount (e.g., `30`).                              |
+| `--slider-fill-rate`       | Fill value expressed as a ratio (e.g., `0.3`).         |
+| `--slider-fill-percent`    | Fill rate expressed as a percentage (e.g., `30%`).     |
+| `--slider-pointer-value`   | Fill amount up to the pointer position (e.g., `30`).   |
+| `--slider-pointer-rate`    | Pointer value expressed as a ratio (e.g., `0.3`).      |
+| `--slider-pointer-percent` | Pointer rate expressed as a percentage. (e.g., `30%`). |
 
 The slider will also apply the following CSS variables to the element in the `preview` slot:
 

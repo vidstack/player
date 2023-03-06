@@ -29,7 +29,6 @@ export const VolumeSliderDefinition = defineCustomElement<MediaVolumeSliderEleme
           readonly: true,
           aria: { valueMin: 0, valueMax: 100 },
           onValueChange: throttle(onVolumeChange, 25),
-          onDragValueChange: throttle(onVolumeChange, 25),
         },
         accessors,
       );

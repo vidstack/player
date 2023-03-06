@@ -1,7 +1,7 @@
 import throttle from 'just-throttle';
 import { effect, provideContext } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
-import { dispatchEvent, DOMEvent, isKeyboardEvent, mergeProperties } from 'maverick.js/std';
+import { dispatchEvent, mergeProperties } from 'maverick.js/std';
 
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { formatSpokenTime, formatTime } from '../../../utils/time';
@@ -37,13 +37,15 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
         {
           $props: {
             ...props,
+            $step: () => (props.$step() / $media.duration) * 100,
+            $keyStep: () => (props.$keyStep() / $media.duration) * 100,
             $disabled: () => $disabled() || !$media.canSeek,
           },
           readonly: true,
           aria: { valueMin: 0, valueMax: 100, valueText: getSpokenText },
-          onValueChange,
           onDragStart,
           onDragEnd,
+          onValueChange,
           onDragValueChange,
         },
         accessors,
@@ -69,35 +71,14 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     }
 
     function seek(time: number, percent: number, event: Event) {
+      dispatchSeeking.cancel();
+
       if ($media.live && percent >= 99) {
         remote.seekToLiveEdge(event);
         return;
       }
 
       remote.seek(time, event);
-    }
-
-    let keyboardTimeout;
-    function timedSeek(event: DOMEvent<number>) {
-      dispatchSeeking.cancel();
-
-      const percent = event.detail,
-        time = getTime(percent);
-
-      if (isKeyboardEvent(event.originEvent)) {
-        window.clearTimeout(keyboardTimeout);
-        seeking(time, event);
-        keyboardTimeout = setTimeout(() => {
-          seek(time, percent, event);
-        }, 300);
-      } else {
-        seek(time, percent, event);
-      }
-    }
-
-    function onValueChange(event: SliderValueChangeEvent) {
-      if (!event.trigger) return;
-      if (isKeyboardEvent(event.originEvent)) timedSeek(event);
     }
 
     let wasPlayingBeforeDragStart = false;
@@ -108,19 +89,26 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
       }
     }
 
+    function onValueChange(event: SliderValueChangeEvent) {
+      if ($store.dragging) return;
+      onDragEnd(event);
+    }
+
     function onDragValueChange(event: SliderDragValueChangeEvent) {
       dispatchSeeking(getTime(event.detail), event);
     }
 
-    function onDragEnd(event: SliderDragEndEvent) {
-      timedSeek(event);
+    function onDragEnd(event: SliderValueChangeEvent | SliderDragEndEvent) {
+      const percent = event.detail;
+      seek(getTime(percent), percent, event);
       if ($pauseWhileDragging() && wasPlayingBeforeDragStart) {
         remote.play(event);
+        wasPlayingBeforeDragStart = false;
       }
     }
 
     function getTime(percent: number) {
-      return (percent / 100) * $media.duration;
+      return Math.round((percent / 100) * $media.duration);
     }
 
     function getPercent(time: number) {

@@ -5,7 +5,6 @@ export const sliderStore = createStore<SliderStore>({
   max: 100,
   value: 50,
   pointerValue: 0,
-  previewValue: 0,
   focused: false,
   dragging: false,
   pointing: false,
@@ -23,12 +22,6 @@ export const sliderStore = createStore<SliderStore>({
   },
   get pointerPercent() {
     return this.pointerRate * 100;
-  },
-  get previewRate() {
-    return calcRate(this.min, this.max, this.previewValue);
-  },
-  get previewPercent() {
-    return this.previewRate * 100;
   },
 });
 
@@ -53,10 +46,6 @@ export interface SliderStore {
    * The value at which the device pointer is pointing to inside the slider.
    */
   pointerValue: number;
-  /**
-   * The value which is being previewed via pointer or keyboard device.
-   */
-  previewValue: number;
   /**
    * The minimum slider value.
    */
@@ -105,12 +94,4 @@ export interface SliderStore {
    * The pointer rate expressed as a percentage (`pointerRate * 100`).
    */
   readonly pointerPercent: number;
-  /**
-   * The preview value to range ratio.
-   */
-  readonly previewRate: number;
-  /**
-   * The preview rate expressed as a percentage (`previewRate * 100`).
-   */
-  readonly previewPercent: number;
 }

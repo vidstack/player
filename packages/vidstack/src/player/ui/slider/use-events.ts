@@ -1,6 +1,13 @@
 import { effect, Signals } from 'maverick.js';
 import type { CustomElementHost } from 'maverick.js/element';
-import { createEvent, dispatchEvent, isKeyboardEvent, listenEvent } from 'maverick.js/std';
+import {
+  createEvent,
+  dispatchEvent,
+  DOMEvent,
+  isDOMEvent,
+  isKeyboardEvent,
+  listenEvent,
+} from 'maverick.js/std';
 
 import { IS_SAFARI } from '../../../utils/support';
 import { useMedia } from '../../media/context';
@@ -20,12 +27,12 @@ import { getValueFromRate } from './utils';
 const SliderKeyDirection = {
   Left: -1,
   ArrowLeft: -1,
-  Up: -1,
-  ArrowUp: -1,
+  Up: 1,
+  ArrowUp: 1,
   Right: 1,
   ArrowRight: 1,
-  Down: 1,
-  ArrowDown: 1,
+  Down: -1,
+  ArrowDown: -1,
 } as const;
 
 export function useSliderEvents(
@@ -39,11 +46,13 @@ export function useSliderEvents(
   effect(() => {
     const target = host.$el();
     if (!target || $disabled()) return;
+    listenEvent(target, 'focus', onFocus);
     listenEvent(target, 'pointerenter', onPointerEnter);
     listenEvent(target, 'pointermove', onPointerMove);
     listenEvent(target, 'pointerleave', onPointerLeave);
     listenEvent(target, 'pointerdown', onPointerDown);
     listenEvent(target, 'keydown', onKeyDown);
+    listenEvent(target, 'keyup', onKeyUp);
   });
 
   effect(() => {
@@ -53,11 +62,8 @@ export function useSliderEvents(
     if (IS_SAFARI) listenEvent(document, 'touchmove', onDocumentTouchMove, { passive: false });
   });
 
-  function getValue(event: PointerEvent) {
-    const thumbClientX = event.clientX;
-    const { left: trackLeft, width: trackWidth } = host.el!.getBoundingClientRect();
-    const thumbPositionRate = (thumbClientX - trackLeft) / trackWidth;
-    return getValueFromRate($store.min, $store.max, thumbPositionRate, $step());
+  function onFocus() {
+    updatePointerValue($store.value);
   }
 
   function updateValue(value: number, trigger?: Event) {
@@ -75,9 +81,16 @@ export function useSliderEvents(
   }
 
   function updatePointerValue(value: number, trigger?: Event) {
-    if ($store.dragging) updateValue(value, trigger);
-    $store.pointerValue = value;
+    $store.pointerValue = Math.max($store.min, Math.min(value, $store.max));
     dispatchEvent(host.el, 'pointer-value-change', { detail: value, trigger });
+    if ($store.dragging) updateValue(value, trigger);
+  }
+
+  function getPointerValue(event: PointerEvent) {
+    const thumbClientX = event.clientX;
+    const { left: trackLeft, width: trackWidth } = host.el!.getBoundingClientRect();
+    const thumbPositionRate = (thumbClientX - trackLeft) / trackWidth;
+    return getValueFromRate($store.min, $store.max, thumbPositionRate, $step());
   }
 
   function onPointerEnter() {
@@ -87,7 +100,7 @@ export function useSliderEvents(
   function onPointerMove(event: PointerEvent) {
     // Avoid double updates - use document pointer move.
     if ($store.dragging) return;
-    updatePointerValue(getValue(event), event);
+    updatePointerValue(getPointerValue(event), event);
   }
 
   function onPointerLeave(event: PointerEvent) {
@@ -95,60 +108,93 @@ export function useSliderEvents(
   }
 
   function onPointerDown(event: PointerEvent) {
-    onStartDragging(event);
-    updatePointerValue(getValue(event), event);
+    const value = getPointerValue(event);
+    onStartDragging(value, event);
+    updatePointerValue(value, event);
   }
 
-  function onKeyDown(event: KeyboardEvent) {
-    const { key, shiftKey } = event;
-
-    if (key === 'Home' || key === 'PageUp') {
-      updateValue($store.min, event);
-    } else if (key === 'End' || key === 'PageDown') {
-      updateValue($store.max, event);
-    } else if (/[0-9]/.test(key)) {
-      updateValue((($store.max - $store.min) / 10) * Number(key), event);
-    }
-
-    const isValidKey = Object.keys(SliderKeyDirection).includes(key);
-    if (!isValidKey) return;
-
-    const modifiedStep = !shiftKey ? $keyStep() : $keyStep() * $shiftKeyMultiplier();
-
-    const direction = Number(SliderKeyDirection[key]),
-      diff = modifiedStep * direction,
-      steps = ($store.value + diff) / $step();
-
-    updateValue($step() * steps, event);
-  }
-
-  function onStartDragging(event: PointerEvent) {
+  function onStartDragging(value: number, trigger: Event) {
     if ($store.dragging) return;
     $store.dragging = true;
-    const value = getValue(event);
-    updatePointerValue(value, event);
-    remote.pauseUserIdle(event);
-    const dragStartEvent = createEvent(host.el, 'drag-start', {
-      detail: value,
-      trigger: event,
-    });
+    const dragStartEvent = createEvent(host.el, 'drag-start', { detail: value, trigger });
     host.el?.dispatchEvent(dragStartEvent);
     onDragStart?.(dragStartEvent);
   }
 
-  function onStopDragging(event: PointerEvent) {
+  function onStopDragging(value: number, trigger: Event) {
     if (!$store.dragging) return;
     $store.dragging = false;
-    const value = getValue(event);
-    updateValue(value, event);
-    updatePointerValue(value, event);
-    remote.resumeUserIdle(event);
-    const dragEndEvent = createEvent(host.el, 'drag-start', {
-      detail: value,
-      trigger: event,
-    });
+    remote.resumeUserIdle(trigger);
+    const dragEndEvent = createEvent(host.el, 'drag-start', { detail: value, trigger });
     host.el?.dispatchEvent(dragEndEvent);
     onDragEnd?.(dragEndEvent);
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Keyboard Events
+  // -------------------------------------------------------------------------------------------
+
+  let lastDownKey: string;
+  function onKeyDown(event: DOMEvent<void> | KeyboardEvent) {
+    if (isDOMEvent(event)) {
+      const trigger = event.trigger;
+      if (isKeyboardEvent(trigger)) event = trigger;
+      else return;
+    }
+
+    const { key } = event;
+
+    if (key === 'Home' || key === 'PageUp') {
+      updatePointerValue($store.min, event);
+      updateValue($store.min, event);
+      return;
+    } else if (key === 'End' || key === 'PageDown') {
+      updatePointerValue($store.max, event);
+      updateValue($store.max, event);
+      return;
+    } else if (/[0-9]/.test(key)) {
+      const value = (($store.max - $store.min) / 10) * Number(key);
+      updatePointerValue(value, event);
+      updateValue(value, event);
+      return;
+    }
+
+    const value = getKeyValue(event);
+    if (!value) return;
+
+    const repeat = key === lastDownKey;
+    if (!$store.dragging && repeat) onStartDragging(value, event);
+    updatePointerValue(value, event);
+    if (!repeat) updateValue(value, event);
+    lastDownKey = key;
+  }
+
+  function onKeyUp(event: DOMEvent<void> | KeyboardEvent) {
+    if (isDOMEvent(event)) {
+      const trigger = event.trigger;
+      if (isKeyboardEvent(trigger)) event = trigger;
+      else return;
+    }
+
+    lastDownKey = '';
+    if (!$store.dragging) return;
+    const value = getKeyValue(event) ?? $store.value;
+    updatePointerValue(value);
+    onStopDragging(value, event);
+  }
+
+  function getKeyValue(event: KeyboardEvent) {
+    const { key, shiftKey } = event,
+      isValidKey = Object.keys(SliderKeyDirection).includes(key);
+
+    if (!isValidKey) return;
+
+    const modifiedStep = !shiftKey ? $keyStep() : $keyStep() * $shiftKeyMultiplier(),
+      direction = Number(SliderKeyDirection[key]),
+      diff = modifiedStep * direction,
+      steps = ($store.value + diff) / $step();
+
+    return Number(($step() * steps).toFixed(3));
   }
 
   // -------------------------------------------------------------------------------------------
@@ -156,7 +202,9 @@ export function useSliderEvents(
   // -------------------------------------------------------------------------------------------
 
   function onDocumentPointerUp(event: PointerEvent) {
-    onStopDragging(event);
+    const value = getPointerValue(event);
+    updatePointerValue(value, event);
+    onStopDragging(value, event);
   }
 
   function onDocumentTouchMove(event: TouchEvent) {
@@ -164,7 +212,7 @@ export function useSliderEvents(
   }
 
   function onDocumentPointerMove(event: PointerEvent) {
-    updatePointerValue(getValue(event), event);
+    updatePointerValue(getPointerValue(event), event);
   }
 }
 
