@@ -376,15 +376,15 @@ export interface MediaState {
   // !!! INTERNALS !!!
 
   /** @internal */
-  $$attemptingAutoplay: boolean;
+  attemptingAutoplay: boolean;
   /** @internal */
-  $$canLoadPoster: boolean | null;
+  canLoadPoster: boolean | null;
   /** @internal */
-  $$providedViewType: MediaViewType;
+  providedViewType: MediaViewType;
   /** @internal */
-  $$providedStreamType: MediaStreamType;
+  providedStreamType: MediaStreamType;
   /** @internal */
-  $$inferredStreamType: MediaStreamType;
+  inferredStreamType: MediaStreamType;
   /** @internal */
-  $$liveSyncPosition: number | null;
+  liveSyncPosition: number | null;
 }

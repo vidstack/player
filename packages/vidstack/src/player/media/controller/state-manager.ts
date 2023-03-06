@@ -145,7 +145,7 @@ export function createMediaStateManager(
 
   function onStreamTypeChange(event: ME.MediaStreamTypeChangeEvent) {
     appendTriggerEvent(event, trackedEvents.get('source-change'));
-    $media.$$inferredStreamType = event.detail;
+    $media.inferredStreamType = event.detail;
     (event as any).detail = $media.streamType;
   }
 
@@ -258,7 +258,7 @@ export function createMediaStateManager(
   }
 
   function onPlay(event: ME.MediaPlayEvent) {
-    event.autoplay = $media.$$attemptingAutoplay;
+    event.autoplay = $media.attemptingAutoplay;
 
     if (requests._$isLooping() || !$media.paused) {
       event.stopImmediatePropagation();
@@ -317,7 +317,7 @@ export function createMediaStateManager(
   function onStarted(event: Event) {
     if (!$media.started) {
       if ($media.live) {
-        const end = $media.$$liveSyncPosition ?? $media.seekableEnd - 2;
+        const end = $media.liveSyncPosition ?? $media.seekableEnd - 2;
         if (Number.isFinite(end)) $provider()!.currentTime = end;
       }
 

@@ -36,12 +36,12 @@ export const mediaStore = createStore<MediaStore>({
   volume: 1,
   waiting: false,
   get viewType() {
-    return this.$$providedViewType !== 'unknown' ? this.$$providedViewType : this.mediaType;
+    return this.providedViewType !== 'unknown' ? this.providedViewType : this.mediaType;
   },
   get streamType() {
-    return this.$$providedStreamType !== 'unknown'
-      ? this.$$providedStreamType
-      : this.$$inferredStreamType;
+    return this.providedStreamType !== 'unknown'
+      ? this.providedStreamType
+      : this.inferredStreamType;
   },
   get currentSrc() {
     return this.source;
@@ -79,7 +79,7 @@ export const mediaStore = createStore<MediaStore>({
   },
   get liveEdgeStart() {
     return this.live && Number.isFinite(this.seekableEnd)
-      ? Math.max(0, (this.$$liveSyncPosition ?? this.seekableEnd) - this.liveEdgeTolerance)
+      ? Math.max(0, (this.liveSyncPosition ?? this.seekableEnd) - this.liveEdgeTolerance)
       : 0;
   },
   get liveEdge() {
@@ -94,12 +94,12 @@ export const mediaStore = createStore<MediaStore>({
       : 0;
   },
   // ~~ internal props ~~
-  $$attemptingAutoplay: false,
-  $$canLoadPoster: null,
-  $$providedViewType: 'unknown',
-  $$providedStreamType: 'unknown',
-  $$inferredStreamType: 'unknown',
-  $$liveSyncPosition: null,
+  attemptingAutoplay: false,
+  canLoadPoster: null,
+  providedViewType: 'unknown',
+  providedStreamType: 'unknown',
+  inferredStreamType: 'unknown',
+  liveSyncPosition: null,
 });
 
 const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
@@ -116,9 +116,9 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'source',
   'sources',
   'volume',
-  '$$canLoadPoster',
-  '$$providedStreamType',
-  '$$providedViewType',
+  'canLoadPoster',
+  'providedStreamType',
+  'providedViewType',
 ]);
 
 /**

@@ -49,8 +49,8 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
   }
 
   effect(() => {
-    $store.$$providedViewType = props.$viewType();
-    $store.$$providedStreamType = props.$streamType();
+    $store.providedViewType = props.$viewType();
+    $store.providedStreamType = props.$streamType();
   });
 
   $store.muted = props.$muted() || props.$volume() === 0;

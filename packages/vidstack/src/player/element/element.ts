@@ -100,7 +100,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       });
 
       window.requestAnimationFrame(() => {
-        if (isNull($media.$$canLoadPoster)) $media.$$canLoadPoster = true;
+        if (isNull($media.canLoadPoster)) $media.canLoadPoster = true;
       });
     });
 

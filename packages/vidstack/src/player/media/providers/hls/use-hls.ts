@@ -61,7 +61,7 @@ export function useHLS(
     if (!instance) return;
 
     const rafLoop = createRAFLoop(() => {
-      $store.$$liveSyncPosition = instance.liveSyncPosition ?? Infinity;
+      $store.liveSyncPosition = instance.liveSyncPosition ?? Infinity;
     });
 
     rafLoop.start();
