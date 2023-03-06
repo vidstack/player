@@ -18,7 +18,7 @@ export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {
 
 const MODIFIER_KEYS = new Set(['Shift', 'Alt', 'Meta', 'Control']),
   BUTTON_SELECTORS = 'button, [role="button"]',
-  IGNORE_SELECTORS = 'input, textarea, select, [contenteditable], [role^="menuitem"]';
+  IGNORE_SELECTORS = 'video, input, textarea, select, [contenteditable], [role^="menuitem"]';
 
 export function useKeyboard(
   { $player, $store: $media, ariaKeys, remote }: MediaContext,
@@ -44,6 +44,12 @@ export function useKeyboard(
         if (activePlayer !== undefined) $active.set(player === activePlayer);
       });
     }
+
+    effect(() => {
+      if (!$active()) return;
+      listenEvent(target, 'keyup', onKeyUp);
+      listenEvent(target, 'keydown', onKeyDown);
+    });
 
     let seekTotal;
     function calcSeekAmount(event: KeyboardEvent, type: string) {
@@ -73,8 +79,12 @@ export function useKeyboard(
     }
 
     function onKeyUp(event: KeyboardEvent) {
-      const sliderFocused = document.activeElement?.hasAttribute('data-media-slider');
-      if (!$media.canSeek || sliderFocused) return;
+      const focused = document.activeElement,
+        sliderFocused = focused?.hasAttribute('data-media-slider');
+
+      if (!event.key || !$media.canSeek || sliderFocused || focused?.matches(IGNORE_SELECTORS)) {
+        return;
+      }
 
       const method = getMatchingMethod(event);
 
@@ -99,6 +109,7 @@ export function useKeyboard(
       if (!event.key || MODIFIER_KEYS.has(event.key)) return;
 
       const focused = document.activeElement;
+
       if (
         focused?.matches(IGNORE_SELECTORS) ||
         (isKeyboardClick(event) && focused?.matches(BUTTON_SELECTORS))
@@ -156,12 +167,6 @@ export function useKeyboard(
         ),
       ) as keyof MediaKeyShortcuts | undefined;
     }
-
-    effect(() => {
-      if (!$active()) return;
-      listenEvent(target, 'keyup', onKeyUp);
-      listenEvent(target, 'keydown', onKeyDown);
-    });
   });
 }
 

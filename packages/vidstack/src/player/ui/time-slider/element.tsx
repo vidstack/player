@@ -90,7 +90,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     }
 
     function onValueChange(event: SliderValueChangeEvent) {
-      if ($store.dragging) return;
+      if ($store.dragging || !event.trigger) return;
       onDragEnd(event);
     }
 
