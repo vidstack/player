@@ -62,23 +62,28 @@ export function createMediaRequestManager(
     }
   }
 
-  const eventHandlers = {
-    'media-start-loading': onStartLoading,
-    'media-mute-request': onMuteRequest,
-    'media-unmute-request': onUnmuteRequest,
-    'media-play-request': onPlayRequest,
-    'media-pause-request': onPauseRequest,
-    'media-seeking-request': onSeekingRequest,
-    'media-seek-request': onSeekRequest,
-    'media-live-edge-request': onSeekToLiveEdgeRequest,
-    'media-volume-change-request': onVolumeChangeRequest,
+  type EventHandlers = {
+    [Type in keyof RE.MediaRequestEvents]: (event: RE.MediaRequestEvents[Type]) => void;
+  };
+
+  const eventHandlers: EventHandlers = {
     'media-enter-fullscreen-request': onEnterFullscreenRequest,
     'media-exit-fullscreen-request': onExitFullscreenRequest,
-    'media-resume-user-idle-request': onResumeIdlingRequest,
-    'media-pause-user-idle-request': onPauseIdlingRequest,
-    'media-show-poster-request': onShowPosterRequest,
     'media-hide-poster-request': onHidePosterRequest,
+    'media-live-edge-request': onSeekToLiveEdgeRequest,
     'media-loop-request': onLoopRequest,
+    'media-mute-request': onMuteRequest,
+    'media-pause-request': onPauseRequest,
+    'media-pause-user-idle-request': onPauseIdlingRequest,
+    'media-play-request': onPlayRequest,
+    'media-rate-change-request': onRateChangeRequest,
+    'media-resume-user-idle-request': onResumeIdlingRequest,
+    'media-seek-request': onSeekRequest,
+    'media-seeking-request': onSeekingRequest,
+    'media-show-poster-request': onShowPosterRequest,
+    'media-start-loading': onStartLoading,
+    'media-unmute-request': onUnmuteRequest,
+    'media-volume-change-request': onVolumeChangeRequest,
   };
 
   effect(() => {
@@ -88,7 +93,7 @@ export function createMediaRequestManager(
       const handler = eventHandlers[eventType];
       listenEvent(target, eventType, (event) => {
         event.stopPropagation();
-        if (__DEV__) logRequest(event);
+        if (__DEV__) logRequest(event as any);
         if (peek($provider)) handler(event as any);
       });
     }
@@ -114,6 +119,12 @@ export function createMediaRequestManager(
       requests._queue._enqueue('volume', event);
       $provider()!.volume = 0.25;
     }
+  }
+
+  function onRateChangeRequest(event: RE.MediaRateChangeRequestEvent) {
+    if ($media.playbackRate === event.detail) return;
+    requests._queue._enqueue('rate', event);
+    $provider()!.playbackRate = event.detail;
   }
 
   async function onPlayRequest(event: RE.MediaPlayRequestEvent) {
@@ -346,6 +357,7 @@ export interface MediaRequestQueueRecord {
   load: RE.MediaStartLoadingRequestEvent;
   play: RE.MediaPlayRequestEvent;
   pause: RE.MediaPauseRequestEvent;
+  rate: RE.MediaRateChangeRequestEvent;
   volume: RE.MediaVolumeChangeRequestEvent | RE.MediaMuteRequestEvent | RE.MediaUnmuteRequestEvent;
   fullscreen: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
   seeked: RE.MediaSeekRequestEvent | RE.MediaLiveEdgeRequestEvent;

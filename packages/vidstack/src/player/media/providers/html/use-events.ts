@@ -292,7 +292,10 @@ export function useHTMLMediaElementEvents(
   }
 
   function onRateChange(event: Event) {
-    // TODO: no-op for now but we'll add playback rate support later.
+    delegate.dispatch('rate-change', {
+      detail: provider.media.playbackRate,
+      trigger: event,
+    });
   }
 
   function onError(event: Event) {

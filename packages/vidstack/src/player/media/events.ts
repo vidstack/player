@@ -3,19 +3,7 @@ import type { DOMEvent } from 'maverick.js/std';
 import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
 import type { MediaPlayerElement } from '../element/types';
 import type { MediaProvider, MediaProviderLoader } from './providers/types';
-import type {
-  MediaEnterFullscreenRequestEvent,
-  MediaExitFullscreenRequestEvent,
-  MediaMuteRequestEvent,
-  MediaPauseRequestEvent,
-  MediaPauseUserIdleRequestEvent,
-  MediaPlayRequestEvent,
-  MediaResumeUserIdleRequestEvent,
-  MediaSeekingRequestEvent,
-  MediaSeekRequestEvent,
-  MediaUnmuteRequestEvent,
-  MediaVolumeChangeRequestEvent,
-} from './request-events';
+import type * as RE from './request-events';
 import type {
   MediaErrorDetail,
   MediaSrc,
@@ -48,6 +36,7 @@ export interface MediaEvents {
   'provider-change': MediaProviderChangeEvent;
   'provider-loader-change': MediaProviderLoaderChangeEvent;
   'provider-setup': MediaProviderSetupEvent;
+  'rate-change': MediaRateChangeEvent;
   'source-change': MediaSourceChangeEvent;
   'sources-change': MediaSourcesChangeEvent;
   'time-update': MediaTimeUpdateEvent;
@@ -143,6 +132,15 @@ export interface MediaCanPlayThroughEvent extends MediaEvent<MediaCanPlayDetail>
 export interface MediaControlsChangeEvent extends MediaEvent<boolean> {}
 
 /**
+ * Fired when the playback rate has changed. The event `detail` contains the new rate.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/ratechange_event}
+ */
+export interface MediaRateChangeEvent extends MediaEvent<number> {
+  request?: RE.MediaRateChangeRequestEvent;
+}
+
+/**
  * Fired when the `source` property has changed value.
  */
 export interface MediaSourceChangeEvent extends MediaEvent<MediaSrc> {}
@@ -202,7 +200,7 @@ export interface MediaErrorEvent extends MediaEvent<MediaErrorDetail> {}
  * @composed
  */
 export interface MediaFullscreenChangeEvent extends MediaEvent<boolean> {
-  request?: MediaEnterFullscreenRequestEvent | MediaExitFullscreenRequestEvent;
+  request?: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
 }
 
 /**
@@ -213,7 +211,7 @@ export interface MediaFullscreenChangeEvent extends MediaEvent<boolean> {
  * @composed
  */
 export interface MediaFullscreenErrorEvent extends MediaEvent<unknown> {
-  request?: MediaEnterFullscreenRequestEvent | MediaExitFullscreenRequestEvent;
+  request?: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
 }
 
 /**
@@ -222,7 +220,7 @@ export interface MediaFullscreenErrorEvent extends MediaEvent<unknown> {
  * detail contains whether the user is idle (`true`), or not (`false`).
  */
 export interface UserIdleChangeEvent extends MediaEvent<boolean> {
-  request?: MediaResumeUserIdleRequestEvent | MediaPauseUserIdleRequestEvent;
+  request?: RE.MediaResumeUserIdleRequestEvent | RE.MediaPauseUserIdleRequestEvent;
 }
 
 /**
@@ -277,7 +275,7 @@ export interface MediaTypeChangeEvent extends MediaEvent<MediaType> {}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause_event}
  */
 export interface MediaPauseEvent extends MediaEvent<void> {
-  request?: MediaPauseRequestEvent;
+  request?: RE.MediaPauseRequestEvent;
 }
 
 /**
@@ -288,7 +286,7 @@ export interface MediaPauseEvent extends MediaEvent<void> {
  */
 export interface MediaPlayEvent extends MediaEvent<void> {
   autoplay?: boolean;
-  request?: MediaPlayRequestEvent;
+  request?: RE.MediaPlayRequestEvent;
 }
 
 /**
@@ -296,7 +294,7 @@ export interface MediaPlayEvent extends MediaEvent<void> {
  */
 export interface MediaPlayFailEvent extends MediaEvent<Error> {
   autoplay?: boolean;
-  request?: MediaPlayRequestEvent;
+  request?: RE.MediaPlayRequestEvent;
 }
 
 /**
@@ -354,7 +352,7 @@ export interface MediaProviderSetupEvent extends MediaEvent<MediaProvider> {}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeked_event}
  */
 export interface MediaSeekedEvent extends MediaEvent<number> {
-  request?: MediaSeekRequestEvent;
+  request?: RE.MediaSeekRequestEvent;
 }
 
 /**
@@ -364,7 +362,7 @@ export interface MediaSeekedEvent extends MediaEvent<number> {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/seeking_event}
  */
 export interface MediaSeekingEvent extends MediaEvent<number> {
-  request?: MediaSeekingRequestEvent;
+  request?: RE.MediaSeekingRequestEvent;
 }
 
 /**
@@ -403,7 +401,7 @@ export interface MediaOrientationChangeEvent extends ScreenOrientationChangeEven
  * when the `loop` property is `true` and media loops, whereas the `play` event is not.
  */
 export interface MediaReplayEvent extends MediaEvent<void> {
-  request?: MediaPlayRequestEvent;
+  request?: RE.MediaPlayRequestEvent;
 }
 
 /**
@@ -442,7 +440,10 @@ export interface MediaVolumeChange {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volumechange_event}
  */
 export interface MediaVolumeChangeEvent extends MediaEvent<MediaVolumeChange> {
-  request?: MediaMuteRequestEvent | MediaUnmuteRequestEvent | MediaVolumeChangeRequestEvent;
+  request?:
+    | RE.MediaMuteRequestEvent
+    | RE.MediaUnmuteRequestEvent
+    | RE.MediaVolumeChangeRequestEvent;
 }
 
 /**

@@ -14,7 +14,14 @@ import type { MediaControllerProps } from './types';
 export function useMediaProviderDelegate(
   { $provider, $store: $media }: MediaContext,
   requestManager: MediaRequestManager,
-  { $paused, $volume, $muted, $currentTime, $playsinline }: Signals<MediaControllerProps>,
+  {
+    $paused,
+    $volume,
+    $muted,
+    $currentTime,
+    $playsinline,
+    $playbackRate,
+  }: Signals<MediaControllerProps>,
 ) {
   /** Queue ensures adapter is only updated if media is ready for playback. */
   const canPlayQueue = new RequestQueue();
@@ -29,6 +36,7 @@ export function useMediaProviderDelegate(
   effect(() => setVolume($volume()));
   effect(() => setCurrentTime($currentTime()));
   effect(() => setPlaysinline($playsinline()));
+  effect(() => setPlaybackRate($playbackRate()));
 
   function setPaused(paused: boolean) {
     if (paused) canPlayQueue._enqueue('paused', requestManager._pause);
@@ -64,9 +72,13 @@ export function useMediaProviderDelegate(
     canPlayQueue._enqueue('playsinline', () => ($provider()!.playsinline = playsinline));
   }
 
+  function setPlaybackRate(rate: number) {
+    canPlayQueue._enqueue('rate', () => ($provider()!.playbackRate = rate));
+  }
+
   const delegate = {} as Pick<
     MediaState,
-    'paused' | 'muted' | 'volume' | 'currentTime' | 'playsinline'
+    'paused' | 'muted' | 'volume' | 'currentTime' | 'playsinline' | 'playbackRate'
   >;
 
   const setters: Record<keyof typeof delegate, (value: any) => void> = {
@@ -75,6 +87,7 @@ export function useMediaProviderDelegate(
     volume: setVolume,
     currentTime: setCurrentTime,
     playsinline: setPlaysinline,
+    playbackRate: setPlaybackRate,
   };
 
   for (const prop of Object.keys(setters)) {

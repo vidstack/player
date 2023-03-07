@@ -28,6 +28,7 @@ export const mediaStore = createStore<MediaStore>({
   playing: false,
   playsinline: false,
   preload: 'metadata',
+  playbackRate: 1,
   seekable: createTimeRanges(),
   seeking: false,
   source: { src: '', type: '' },

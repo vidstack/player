@@ -269,6 +269,20 @@ export interface MediaState {
    */
   playsinline: boolean;
   /**
+   * Sets the rate at which the media is being played back. This is used to implement user
+   * controls for fast forward, slow motion, and so forth. The normal playback rate is multiplied
+   * by this value to obtain the current rate, so a value of 1.0 indicates normal speed.
+   *
+   * Examples:
+   *
+   * - `0.5` = slow down to 50% of the normal speed
+   * - `1.5` = speed up normal speed by 50%
+   * - `2` = double the normal speed
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playbackRate}
+   */
+  playbackRate: number;
+  /**
    * Configures the preload setting of the underlying media provider once it can load (see
    * `loading` property).
    *

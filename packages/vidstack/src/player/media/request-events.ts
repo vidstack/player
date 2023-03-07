@@ -1,22 +1,23 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 export interface MediaRequestEvents {
-  'media-start-loading': MediaStartLoadingRequestEvent;
-  'media-mute-request': MediaMuteRequestEvent;
-  'media-unmute-request': MediaUnmuteRequestEvent;
   'media-enter-fullscreen-request': MediaEnterFullscreenRequestEvent;
   'media-exit-fullscreen-request': MediaExitFullscreenRequestEvent;
+  'media-hide-poster-request': MediaHidePosterRequestEvent;
   'media-live-edge-request': MediaLiveEdgeRequestEvent;
-  'media-play-request': MediaPlayRequestEvent;
+  'media-loop-request': MediaLoopRequestEvent;
+  'media-mute-request': MediaMuteRequestEvent;
   'media-pause-request': MediaPauseRequestEvent;
+  'media-pause-user-idle-request': MediaPauseUserIdleRequestEvent;
+  'media-play-request': MediaPlayRequestEvent;
+  'media-rate-change-request': MediaRateChangeRequestEvent;
+  'media-resume-user-idle-request': MediaResumeUserIdleRequestEvent;
   'media-seek-request': MediaSeekRequestEvent;
   'media-seeking-request': MediaSeekingRequestEvent;
-  'media-volume-change-request': MediaVolumeChangeRequestEvent;
-  'media-resume-user-idle-request': MediaResumeUserIdleRequestEvent;
-  'media-pause-user-idle-request': MediaPauseUserIdleRequestEvent;
   'media-show-poster-request': MediaShowPosterRequestEvent;
-  'media-hide-poster-request': MediaHidePosterRequestEvent;
-  'media-loop-request': MediaLoopRequestEvent;
+  'media-start-loading': MediaStartLoadingRequestEvent;
+  'media-unmute-request': MediaUnmuteRequestEvent;
+  'media-volume-change-request': MediaVolumeChangeRequestEvent;
 }
 
 /**
@@ -83,6 +84,14 @@ export interface MediaLiveEdgeRequestEvent extends DOMEvent<void> {}
 export interface MediaPlayRequestEvent extends DOMEvent<void> {}
 
 /**
+ * Fired when requesting to change the current playback rate.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaRateChangeRequestEvent extends DOMEvent<number> {}
+
+/**
  * Fired when requesting media playback to temporarily stop.
  *
  * @bubbles
@@ -91,7 +100,7 @@ export interface MediaPlayRequestEvent extends DOMEvent<void> {}
 export interface MediaPauseRequestEvent extends DOMEvent<void> {}
 
 /**
- * Fired when requesting a time change. In other words, moving the playhead to a new position.
+ * Fired when requesting a time change. In other words, moving the play head to a new position.
  *
  * @bubbles
  * @composed

@@ -75,7 +75,11 @@ export function createMediaStateManager(
     skipInitialSrcChange = true;
   });
 
-  const eventHandlers = {
+  type EventHandlers = {
+    [Type in keyof ME.MediaEvents]: (event: ME.MediaEvents[Type]) => void;
+  };
+
+  const eventHandlers: Partial<EventHandlers> = {
     'provider-loader-change': onProviderLoaderChange,
     'provider-change': onProviderChange,
     autoplay: onAutoplay,
@@ -90,6 +94,7 @@ export function createMediaStateManager(
     'media-type-change': onMediaTypeChange,
     'stream-type-change': onStreamTypeChange,
     'play-fail': onPlayFail,
+    'rate-change': onRateChange,
     'source-change': onSourceChange,
     'sources-change': onSourcesChange,
     'time-update': onTimeUpdate,
@@ -153,6 +158,11 @@ export function createMediaStateManager(
     $media.canLoad = true;
     trackedEvents.set('can-load', event);
     satisfyMediaRequest('load', event);
+  }
+
+  function onRateChange(event: ME.MediaRateChangeEvent) {
+    $media.playbackRate = event.detail;
+    satisfyMediaRequest('rate', event);
   }
 
   function onSourcesChange(event: ME.MediaSourcesChangeEvent) {

@@ -163,6 +163,10 @@ export class MediaRemoteControl {
     this._dispatchRequest('media-resume-user-idle-request', trigger);
   }
 
+  rateChange(rate: number, trigger?: Event) {
+    this._dispatchRequest('media-rate-change-request', trigger, rate);
+  }
+
   /**
    * Dispatch a request to pause user idle tracking. Pausing tracking will result in the `user-idle`
    * attribute and state being `false` until `remote.resumeUserIdle()` is called. This method

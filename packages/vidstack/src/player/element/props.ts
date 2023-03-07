@@ -24,6 +24,7 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
   muted: { initial: false },
   paused: { initial: true },
   playsinline: { initial: false },
+  playbackRate: { initial: 1 },
   poster: { initial: '' },
   preload: { initial: 'metadata' },
   preferNativeHLS: {

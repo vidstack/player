@@ -30,6 +30,7 @@ export interface MediaControllerProps
     | 'playsinline'
     | 'poster'
     | 'preload'
+    | 'playbackRate'
     | 'viewType'
     | 'volume'
     // live

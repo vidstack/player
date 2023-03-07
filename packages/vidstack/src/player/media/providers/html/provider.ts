@@ -62,6 +62,14 @@ export class HTMLMediaProvider implements MediaProvider {
     setAttribute(this._media, 'playsinline', playsinline);
   }
 
+  get playbackRate() {
+    return this._media.playbackRate;
+  }
+
+  set playbackRate(rate) {
+    this._media.playbackRate = rate;
+  }
+
   async play() {
     return this._media.play();
   }
