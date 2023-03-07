@@ -2,6 +2,7 @@
 
 [![package-badge]][package]
 [![discord-badge]][discord]
+[![jsdelivr-badge]][jsdelivr]
 
 Build your media player only using HTML and CSS 🐼
 
@@ -39,6 +40,8 @@ A special thanks to the following sponsors who are kindly supporting Vidstack:
 [discord]: https://discord.com/invite/7RGU7wvsu9
 [website]: https://www.vidstack.io/
 [package]: https://www.npmjs.com/package/vidstack
-[package-badge]: https://img.shields.io/npm/v/vidstack
+[package-badge]: https://img.shields.io/npm/v/vidstack?style=flat-square
+[jsdelivr]: https://www.jsdelivr.com/package/npm/vidstack
+[jsdelivr-badge]: https://data.jsdelivr.com/v1/package/npm/vidstack/badge
 [discord]: https://discord.com/invite/7RGU7wvsu9
-[discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white
+[discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white&style=flat-square

@@ -2,6 +2,7 @@
 
 [![package-badge]][package]
 [![discord-badge]][discord]
+[![jsdelivr-badge]][jsdelivr]
 
 Design a modern media player only using HTML and CSS. The successor to [Plyr][plyr] `3.x` and
 [Vime][vime] `5.x`.
@@ -24,7 +25,8 @@ Vidstack is [MIT licensed](./LICENSE).
 [vime]: https://github.com/vime-js/vime
 [plyr]: https://github.com/sampotts/plyr
 [package]: https://www.npmjs.com/package/vidstack
-[package-badge]: https://img.shields.io/npm/v/vidstack
+[package-badge]: https://img.shields.io/npm/v/vidstack?style=flat-square
+[jsdelivr]: https://www.jsdelivr.com/package/npm/vidstack
+[jsdelivr-badge]: https://data.jsdelivr.com/v1/package/npm/vidstack/badge
 [discord]: https://discord.com/invite/7RGU7wvsu9
-[discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white
-[discussions]: https://github.com/vidstack/vidstack/discussions
+[discord-badge]: https://img.shields.io/discord/742612686679965696?color=%235865F2&label=%20&logo=discord&logoColor=white&style=flat-square
