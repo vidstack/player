@@ -12,6 +12,7 @@ import type { HLSProviderEvents } from '../providers/hls/events';
 import type { HLSProvider } from '../providers/hls/provider';
 import type { VideoPresentationEvents } from '../providers/video/presentation/events';
 import type { VideoProvider } from '../providers/video/provider';
+import type { VideoQualityList } from '../quality';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../request-events';
 import type { MediaStore } from '../store';
 import type { MediaLoadingStrategy, MediaResource } from '../types';
@@ -110,6 +111,11 @@ export interface MediaController {
    * This object contains all current media state (e.g., `paused`, `playing`, etc.).
    */
   readonly state: Readonly<MediaStore>;
+  /**
+   * This returns a `VideoQualityList` containing a listing of all `VideoQuality` objects
+   * representing the set of available video renditions.
+   */
+  readonly qualities: VideoQualityList;
   /**
    * Enables subscribing to live updates of individually selected media state.
    *

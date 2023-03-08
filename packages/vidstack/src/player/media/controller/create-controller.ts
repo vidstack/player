@@ -4,6 +4,7 @@ import { useLogger } from '../../../foundation/logger/logger';
 import type { MediaPlayerElement } from '../../element/types';
 import { mediaContext, MediaContext } from '../context';
 import type { MediaProviderLoader } from '../providers/types';
+import { VideoQualityList } from '../quality';
 import { MediaRemoteControl } from '../remote-control';
 import { mediaStore } from '../store';
 import { useMediaCanLoad } from './can-load';
@@ -21,6 +22,7 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
     $loader: signal<MediaProviderLoader | null>(null),
     $provider: signal<MediaProvider | null>(null),
     $store: mediaStore.create(),
+    qualities: new VideoQualityList(),
   } as MediaContext;
 
   provideContext(mediaContext, context);

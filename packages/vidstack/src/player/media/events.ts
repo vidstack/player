@@ -3,6 +3,12 @@ import type { DOMEvent } from 'maverick.js/std';
 import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
 import type { MediaPlayerElement } from '../element/types';
 import type { MediaProvider, MediaProviderLoader } from './providers/types';
+import type {
+  AddVideoQualityEvent,
+  ChangeVideoQualityEvent,
+  RemoveVideoQualityEvent,
+  VideoQuality,
+} from './quality';
 import type * as RE from './request-events';
 import type {
   MediaErrorDetail,
@@ -36,6 +42,8 @@ export interface MediaEvents {
   'provider-change': MediaProviderChangeEvent;
   'provider-loader-change': MediaProviderLoaderChangeEvent;
   'provider-setup': MediaProviderSetupEvent;
+  'qualities-change': MediaQualitiesChangeEvent;
+  'quality-change': MediaQualityChangeEvent;
   'rate-change': MediaRateChangeEvent;
   'source-change': MediaSourceChangeEvent;
   'sources-change': MediaSourcesChangeEvent;
@@ -344,6 +352,22 @@ export interface MediaProviderChangeEvent extends MediaEvent<MediaProvider | nul
  * here as it'll be too late - prefer the `provider-change` event.
  */
 export interface MediaProviderSetupEvent extends MediaEvent<MediaProvider> {}
+
+/**
+ * Fired when the list of available video qualities/renditions has changed.
+ */
+export interface MediaQualitiesChangeEvent extends MediaEvent<VideoQuality[]> {
+  trigger: AddVideoQualityEvent | RemoveVideoQualityEvent;
+}
+
+/**
+ * Fired when the current video quality/rendition has changed. The event detail will be null if
+ * video quality information is not available.
+ */
+export interface MediaQualityChangeEvent extends MediaEvent<VideoQuality | null> {
+  trigger: ChangeVideoQualityEvent;
+  request?: RE.MediaQualityChangeRequestEvent;
+}
 
 /**
  * Fired when a seek operation completed, the current playback position has changed, and the

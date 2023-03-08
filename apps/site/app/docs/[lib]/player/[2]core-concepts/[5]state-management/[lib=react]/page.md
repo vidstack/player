@@ -9,8 +9,8 @@ In this section, we'll look at the React hooks available for reading and updatin
 
 ## Reading
 
-The media state hook enables you to subscribe directly to specific media state changes, rather
-than listening to potentially multiple DOM events and binding it yourself.
+The `useMediaStore` hook enables you to subscribe directly to specific media state
+changes, rather than listening to potentially multiple DOM events and binding it yourself.
 
 {% no %}
 Tracking media state via events:
@@ -31,13 +31,13 @@ function Player() {
 ```
 
 {% yes %}
-Tracking media state via hook:
+Tracking media state via store hook:
 {% /yes %}
 
 ```tsx {% highlight="9" %}
-import { useMediaStore } from '@vidstack/react';
-import { MediaPlayer, type MediaPlayerElement } from '@vidstack/react';
+import { MediaPlayer, useMediaStore } from '@vidstack/react';
 import { useRef } from 'react';
+import { type MediaPlayerElement } from 'vidstack';
 
 function Player() {
   const player = useRef<MediaPlayerElement>(null);
@@ -108,13 +108,13 @@ function MediaPlayerUI() {
 
 ## Updating
 
-The media remote hook provides a simple facade for dispatching
+The `useMediaRemote` hook provides a simple facade for dispatching
 [media request events](/docs/player/core-concepts/events#request-events). This can be used to
 request media playback to play/pause, change the current volume level, seek to a different time
 position, and other actions that change media state.
 
 ```tsx {% highlight="10-13" %}
-import { MediaPlayer } from '@vidstack/react';
+import { MediaPlayer, useMediaRemote } from '@vidstack/react';
 import { useEffect, useRef } from 'react';
 import { type MediaPlayerElement } from 'vidstack';
 
@@ -192,8 +192,8 @@ function Foo() {
 
 ## Media Player
 
-The following hook provides you with a reference to the nearest parent `MediaPlayerElement` (i.e.,
-`<media–player>`).
+The `useMediaPlayer` hook provides you with a reference to the nearest parent
+`MediaPlayerElement` (i.e., `<media–player>`).
 
 ```tsx
 import { useMediaPlayer } from '@vidstack/react';
@@ -234,7 +234,7 @@ All player properties and methods can be found in the [`<media-player>` API refe
 
 ## Media Provider
 
-The following hook provides you with a reference to the current `MediaProvider`:
+The `useMediaProvider` hook provides you with a reference to the current `MediaProvider`:
 
 ```tsx
 import { useMediaProvider } from '@vidstack/react';

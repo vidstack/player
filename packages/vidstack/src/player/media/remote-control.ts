@@ -156,15 +156,40 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Dispatch a request to change the video quality. The special value `-1` represents auto quality
+   * selection.
+   *
+   * @example
+   * ```ts
+   * remote.changeQuality(-1); // auto
+   * remote.changeQuality(1); // quality at index 1
+   * ```
+   */
+  changeQuality(index: number, trigger?: Event) {
+    this._dispatchRequest('media-quality-change-request', trigger, index);
+  }
+
+  /**
+   * Dispatch a request to change the media playback rate.
+   *
+   * @example
+   * ```ts
+   * remote.changePlaybackRate(0.5); // Half the normal speed
+   * remote.changePlaybackRate(1); // Normal speed
+   * remote.changePlaybackRate(1.5); // 50% faster than normal
+   * remote.changePlaybackRate(2); // Double the normal speed
+   * ```
+   */
+  changePlaybackRate(rate: number, trigger?: Event) {
+    this._dispatchRequest('media-rate-change-request', trigger, rate);
+  }
+
+  /**
    * Dispatch a request to resume user idle tracking. Refer to {@link MediaRemoteControl.pauseUserIdle}
    * for more information.
    */
   resumeUserIdle(trigger?: Event) {
     this._dispatchRequest('media-resume-user-idle-request', trigger);
-  }
-
-  rateChange(rate: number, trigger?: Event) {
-    this._dispatchRequest('media-rate-change-request', trigger, rate);
   }
 
   /**

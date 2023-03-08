@@ -1,4 +1,5 @@
 import type { LogLevel } from '../../foundation/logger/log-level';
+import type { VideoQuality } from './quality';
 import type {
   MediaErrorDetail,
   MediaSrc,
@@ -293,6 +294,26 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-preload}
    */
   preload: 'none' | 'metadata' | 'auto';
+  /**
+   * Whether auto quality selection is active.
+   */
+  autoQuality: boolean;
+  /**
+   * The list of available video qualities/renditions. This will be empty if quality information
+   * is not provided by the current media provider.
+   */
+  qualities: VideoQuality[];
+  /**
+   * The current playback quality. This will be `null` if quality information is not provided
+   * by the current media provider.
+   */
+  quality: VideoQuality | null;
+  /**
+   * Whether the current video quality list is read-only, meaning quality selections can only
+   * be set internally by the media provider. This will only be `true` when working with particular
+   * third-party embeds such as YouTube.
+   */
+  canSetQuality: boolean;
   /**
    * Contains the time ranges that the user is able to seek to, if any. This tells us which parts
    * of the media can be played without delay; this is irrespective of whether that part has

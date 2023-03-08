@@ -6,6 +6,7 @@ if (__DEV__) {
 export * from './icons/types';
 
 // Foundation
+export * from './foundation/list/list';
 export * from './foundation/fullscreen/events';
 export * from './foundation/fullscreen/events';
 export * from './foundation/logger/events';
@@ -32,6 +33,7 @@ export * from './player/media/store';
 export * from './player/media/time-ranges';
 export * from './player/media/types';
 export * from './player/media/outlet/types';
+export * from './player/media/quality';
 
 // Media Player Providers
 export {

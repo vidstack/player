@@ -11,6 +11,7 @@ import {
   useDisposalBin,
 } from 'maverick.js/std';
 
+import { LIST_RESET } from '../../../foundation/list/symbols';
 import type { MediaContext } from '../context';
 import type * as ME from '../events';
 import { softResetMediaStore } from '../store';
@@ -42,7 +43,7 @@ const trackedEventType = new Set<keyof ME.MediaEvents>([
  * state context, and satisfying media requests if a manager arg is provided.
  */
 export function createMediaStateManager(
-  { $player, $loader, $provider, $store: $media, logger }: MediaContext,
+  { $player, $loader, $provider, $store: $media, qualities, logger }: MediaContext,
   requests: MediaRequestContext,
 ): MediaStateManager {
   if (__SERVER__) return { handle: noop };
@@ -62,18 +63,28 @@ export function createMediaStateManager(
   effect(() => {
     const target = $player();
     if (!target) return;
+    addQualityListeners();
     listenEvent(target, 'fullscreen-change', onFullscreenChange);
     listenEvent(target, 'fullscreen-error', onFullscreenError);
   });
 
   effect(() => {
     if ($provider()) return;
+    qualities[LIST_RESET]();
     resetTracking();
     softResetMediaStore($media);
     disposal.empty();
     requests._queue._reset();
     skipInitialSrcChange = true;
   });
+
+  function addQualityListeners() {
+    listenEvent(qualities, 'add' as any, onQualitiesChange);
+    listenEvent(qualities, 'remove' as any, onQualitiesChange);
+    listenEvent(qualities, 'change' as any, onQualityChange);
+    listenEvent(qualities, 'auto-change' as any, onAutoQualityChange);
+    listenEvent(qualities, 'readonly-change' as any, onCanSetQualityChange);
+  }
 
   type EventHandlers = {
     [Type in keyof ME.MediaEvents]: (event: ME.MediaEvents[Type]) => void;
@@ -165,6 +176,31 @@ export function createMediaStateManager(
     satisfyMediaRequest('rate', event);
   }
 
+  function onQualitiesChange(event) {
+    $media.qualities = qualities.toArray();
+    dispatchEvent($player(), 'qualities-change', {
+      detail: $media.qualities,
+      trigger: event,
+    });
+  }
+
+  function onQualityChange(event) {
+    $media.quality = qualities.selected;
+    satisfyMediaRequest('quality', event as any);
+    dispatchEvent($player(), 'quality-change', {
+      detail: $media.quality,
+      trigger: event,
+    });
+  }
+
+  function onAutoQualityChange() {
+    $media.autoQuality = qualities.auto;
+  }
+
+  function onCanSetQualityChange() {
+    $media.canSetQuality = !qualities.readonly;
+  }
+
   function onSourcesChange(event: ME.MediaSourcesChangeEvent) {
     $media.sources = event.detail;
   }
@@ -179,12 +215,13 @@ export function createMediaStateManager(
       logger?.infoGroup('📼 Media source change').labelledLog('Source', event.detail).dispatch();
     }
 
-    // Skip resets before first playback to ensure initial properties and track events are kept.
+    // Skip resets before first playback to ensure initial properties and tracked events are kept.
     if (skipInitialSrcChange) {
       skipInitialSrcChange = false;
       return;
     }
 
+    qualities[LIST_RESET](event);
     resetTracking();
     softResetMediaStore($media);
     trackedEvents.set(event.type, event);

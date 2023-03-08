@@ -25,7 +25,7 @@ import type { MediaControllerProps } from './types';
  * has connected.
  */
 export function createMediaRequestManager(
-  { $player, $store: $media, $provider, logger }: MediaContext,
+  { $player, $store: $media, $provider, logger, qualities }: MediaContext,
   handler: MediaStateManager,
   requests: MediaRequestContext,
   $props: Signals<MediaControllerProps>,
@@ -77,6 +77,7 @@ export function createMediaRequestManager(
     'media-pause-user-idle-request': onPauseIdlingRequest,
     'media-play-request': onPlayRequest,
     'media-rate-change-request': onRateChangeRequest,
+    'media-quality-change-request': onQualityChangeRequest,
     'media-resume-user-idle-request': onResumeIdlingRequest,
     'media-seek-request': onSeekRequest,
     'media-seeking-request': onSeekingRequest,
@@ -125,6 +126,29 @@ export function createMediaRequestManager(
     if ($media.playbackRate === event.detail) return;
     requests._queue._enqueue('rate', event);
     $provider()!.playbackRate = event.detail;
+  }
+
+  function onQualityChangeRequest(event: RE.MediaQualityChangeRequestEvent) {
+    if (qualities.readonly) {
+      if (__DEV__) {
+        logger
+          ?.warnGroup(`[vidstack] attempted to change video quality but it is currently read-only`)
+          .labelledLog('Event', event)
+          .dispatch();
+      }
+
+      return;
+    }
+
+    requests._queue._enqueue('quality', event);
+
+    const index = event.detail;
+    if (index < 0) {
+      qualities.requestAutoSelect(event);
+    } else {
+      const quality = qualities.at(index);
+      if (quality) quality.selected = true;
+    }
   }
 
   async function onPlayRequest(event: RE.MediaPlayRequestEvent) {
@@ -362,6 +386,7 @@ export interface MediaRequestQueueRecord {
   fullscreen: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
   seeked: RE.MediaSeekRequestEvent | RE.MediaLiveEdgeRequestEvent;
   seeking: RE.MediaSeekingRequestEvent;
+  quality: RE.MediaQualityChangeRequestEvent;
   userIdle: RE.MediaResumeUserIdleRequestEvent | RE.MediaPauseUserIdleRequestEvent;
 }
 

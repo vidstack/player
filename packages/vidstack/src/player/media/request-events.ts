@@ -10,6 +10,7 @@ export interface MediaRequestEvents {
   'media-pause-request': MediaPauseRequestEvent;
   'media-pause-user-idle-request': MediaPauseUserIdleRequestEvent;
   'media-play-request': MediaPlayRequestEvent;
+  'media-quality-change-request': MediaQualityChangeRequestEvent;
   'media-rate-change-request': MediaRateChangeRequestEvent;
   'media-resume-user-idle-request': MediaResumeUserIdleRequestEvent;
   'media-seek-request': MediaSeekRequestEvent;
@@ -82,6 +83,14 @@ export interface MediaLiveEdgeRequestEvent extends DOMEvent<void> {}
  * @composed
  */
 export interface MediaPlayRequestEvent extends DOMEvent<void> {}
+
+/**
+ * Fired when requesting to change the current video quality to the given index.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaQualityChangeRequestEvent extends DOMEvent<number> {}
 
 /**
  * Fired when requesting to change the current playback rate.

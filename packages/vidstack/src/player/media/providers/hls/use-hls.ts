@@ -1,9 +1,14 @@
 import type * as HLS from 'hls.js';
-import throttle from 'just-throttle';
 import { effect, peek, ReadSignal, WriteSignal } from 'maverick.js';
 import { camelToKebabCase, dispatchEvent, DOMEvent, kebabToCamelCase } from 'maverick.js/std';
 
 import { createRAFLoop } from '../../../../foundation/hooks/raf-loop';
+import {
+  LIST_ADD,
+  LIST_AUTO_SELECT,
+  LIST_SET_AUTO,
+  LIST_SET_SELECTED,
+} from '../../../../foundation/list/symbols';
 import { HLS_LISTENERS } from '../../../element/element';
 import type { MediaSetupContext } from '../types';
 import type { HLSProvider } from './provider';
@@ -17,7 +22,7 @@ export function useHLS(
   config: Partial<HLS.HlsConfig>,
   $ctor: ReadSignal<HLSConstructor | null>,
   $instance: WriteSignal<HLS.default | null>,
-  { player, logger, delegate, $store }: MediaSetupContext,
+  { player, logger, delegate, $store, qualities }: MediaSetupContext,
   callbacks: Set<HLSInstanceCallback>,
 ) {
   const listening = new Set<string>();
@@ -41,12 +46,22 @@ export function useHLS(
     dispatchEvent(player, 'hls-instance', { detail: instance });
 
     instance.attachMedia(provider.media);
-    const levelLoadedEvent = peek($ctor)!.Events.LEVEL_LOADED;
-    instance.on(levelLoadedEvent, onLevelLoaded);
+    instance.on(ctor.Events.LEVEL_SWITCHED, onLevelSwitched);
+    instance.on(ctor.Events.LEVEL_LOADED, onLevelLoaded);
+
+    qualities[LIST_AUTO_SELECT] = () => {
+      instance.currentLevel = -1;
+    };
+
+    qualities.addEventListener('change', () => {
+      if (qualities.auto) return;
+      instance.currentLevel = qualities.selectedIndex;
+    });
 
     delegate.dispatch('provider-setup', { detail: provider });
 
     return () => {
+      qualities[LIST_AUTO_SELECT] = undefined;
       listening.clear();
       instance.destroy();
       $instance.set(null);
@@ -81,11 +96,18 @@ export function useHLS(
     }
   }
 
+  function onLevelSwitched(eventType: string, data: HLS.LevelSwitchedData) {
+    qualities[LIST_SET_SELECTED](
+      qualities.at(data.level)!,
+      true,
+      new DOMEvent(eventType, { detail: data }),
+    );
+  }
+
   function onLevelLoaded(eventType: string, data: HLS.LevelLoadedData): void {
     if ($store.canPlay) return;
 
     const { type, live, totalduration: duration } = data.details;
-
     const event = new DOMEvent(eventType, { detail: data });
 
     delegate.dispatch('stream-type-change', {
@@ -101,6 +123,23 @@ export function useHLS(
 
     const instance = $instance()!;
     const media = instance.media!;
+
+    if (instance.currentLevel === -1) {
+      qualities[LIST_SET_AUTO](true, event);
+    }
+
+    for (const level of instance.levels) {
+      qualities[LIST_ADD](
+        {
+          width: level.width,
+          height: level.height,
+          codec: level.codecSet,
+          bitrate: level.bitrate,
+        },
+        event,
+      );
+    }
+
     media.dispatchEvent(new DOMEvent<void>('canplay', { trigger: event }));
   }
 

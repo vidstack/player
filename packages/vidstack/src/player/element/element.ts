@@ -151,6 +151,9 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
         get provider() {
           return context.$provider() as AnyMediaProvider;
         },
+        get qualities() {
+          return context.qualities;
+        },
         get $store() {
           return $media;
         },

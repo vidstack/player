@@ -146,7 +146,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     });
 
     return mergeProperties(members, {
-      // redeclare the following properties to ensure they're read only.
+      // redeclare the following properties to ensure they're read-only.
       get min() {
         return members.min;
       },
