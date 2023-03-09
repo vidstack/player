@@ -1,8 +1,8 @@
 import { MediaPlayer } from '@vidstack/react';
-import { type MediaPlayEvent } from 'vidstack';
+import { type MediaPlayingEvent } from 'vidstack';
 
 function Player() {
-  function onPlay(event: MediaPlayEvent) {
+  function onPlaying(event: MediaPlayingEvent) {
     // the event that triggered the media play request
     const origin = event.originEvent; // e.g., PointerEvent
 
@@ -13,5 +13,5 @@ function Player() {
     const isTrusted = event.originEvent?.isTrusted;
   }
 
-  return <MediaPlayer onPlay={onPlay}>{/* ... */}</MediaPlayer>;
+  return <MediaPlayer onPlaying={onPlaying}>{/* ... */}</MediaPlayer>;
 }

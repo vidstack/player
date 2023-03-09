@@ -51,13 +51,7 @@ seekable part of the media (`seekableEnd`). The
 covers the complexities involved in determining the live edge and why it can't be a single point
 in time, but rather a window.
 
-```sh
-|           |           |           |           |           |
-|___________|___________|___________|___________|___________|__________
-| <----------------------- Seekable Window ---------------------> |
-|                       | <--------- Live Edge Window ----------> |
-^ seekableStart         ^ liveEdgeStart                           ^ seekableEnd
-```
+![Seekable window and live edge window inside of it]($lib/img/live-edge-start.png)
 
 The method used to determine the starting edge of the live stream depends on the HLS playback
 engine used:

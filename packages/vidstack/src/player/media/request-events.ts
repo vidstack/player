@@ -1,6 +1,7 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 export interface MediaRequestEvents {
+  'media-audio-track-change-request': MediaAudioTrackChangeRequestEvent;
   'media-enter-fullscreen-request': MediaEnterFullscreenRequestEvent;
   'media-exit-fullscreen-request': MediaExitFullscreenRequestEvent;
   'media-hide-poster-request': MediaHidePosterRequestEvent;
@@ -53,6 +54,15 @@ export interface MediaUnmuteRequestEvent extends DOMEvent<void> {}
 export type MediaFullscreenRequestTarget = 'prefer-media' | 'media' | 'provider';
 
 /**
+ * Fired when requesting to change the current audio track to the given index in the
+ * `AudioTrackList` on the player.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaAudioTrackChangeRequestEvent extends DOMEvent<number> {}
+
+/**
  * Fired when requesting media to enter fullscreen. The event `detail` can specify the
  * fullscreen target, which can be the media or provider (defaults to `prefer-media`).
  *
@@ -85,7 +95,8 @@ export interface MediaLiveEdgeRequestEvent extends DOMEvent<void> {}
 export interface MediaPlayRequestEvent extends DOMEvent<void> {}
 
 /**
- * Fired when requesting to change the current video quality to the given index.
+ * Fired when requesting to change the current video quality to the given index in the
+ * `VideoQualityList` on the player.
  *
  * @bubbles
  * @composed

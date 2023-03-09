@@ -25,7 +25,7 @@ import type { MediaControllerProps } from './types';
  * has connected.
  */
 export function createMediaRequestManager(
-  { $player, $store: $media, $provider, logger, qualities }: MediaContext,
+  { $player, $store: $media, $provider, logger, qualities, audioTracks }: MediaContext,
   handler: MediaStateManager,
   requests: MediaRequestContext,
   $props: Signals<MediaControllerProps>,
@@ -67,6 +67,7 @@ export function createMediaRequestManager(
   };
 
   const eventHandlers: EventHandlers = {
+    'media-audio-track-change-request': onAudioTrackChangeRequest,
     'media-enter-fullscreen-request': onEnterFullscreenRequest,
     'media-exit-fullscreen-request': onExitFullscreenRequest,
     'media-hide-poster-request': onHidePosterRequest,
@@ -128,6 +129,27 @@ export function createMediaRequestManager(
     $provider()!.playbackRate = event.detail;
   }
 
+  function onAudioTrackChangeRequest(event: RE.MediaAudioTrackChangeRequestEvent) {
+    if (audioTracks.readonly) {
+      if (__DEV__) {
+        logger
+          ?.warnGroup(`[vidstack] attempted to change audio track but it is currently read-only`)
+          .labelledLog('Event', event)
+          .dispatch();
+      }
+
+      return;
+    }
+
+    const index = event.detail,
+      track = audioTracks.at(index);
+
+    if (track) {
+      requests._queue._enqueue('audioTrack', event);
+      track.selected = true;
+    }
+  }
+
   function onQualityChangeRequest(event: RE.MediaQualityChangeRequestEvent) {
     if (qualities.readonly) {
       if (__DEV__) {
@@ -144,7 +166,7 @@ export function createMediaRequestManager(
 
     const index = event.detail;
     if (index < 0) {
-      qualities.requestAutoSelect(event);
+      qualities.autoSelect(event);
     } else {
       const quality = qualities.at(index);
       if (quality) quality.selected = true;
@@ -378,6 +400,7 @@ export class MediaRequestContext {
 }
 
 export interface MediaRequestQueueRecord {
+  audioTrack: RE.MediaAudioTrackChangeRequestEvent;
   load: RE.MediaStartLoadingRequestEvent;
   play: RE.MediaPlayRequestEvent;
   pause: RE.MediaPauseRequestEvent;

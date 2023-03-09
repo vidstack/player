@@ -60,7 +60,7 @@ chain. Each event points to the event that came before it all the way up to the 
 The following is an example of a chain that is created when the play button is clicked and
 media begins playing:
 
-{% triggers_visual /%}
+![Playing event chain diagram]($lib/img/event-chain.png)
 
 {% code_snippet name="triggers" /%}
 

@@ -6,17 +6,18 @@ import type { LogLevel } from '../../../foundation/logger/log-level';
 import type { ScreenOrientationEvents } from '../../../foundation/orientation/events';
 import type { ScreenOrientationAdapter } from '../../../foundation/orientation/screen-orientation';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/types';
+import type { AudioTrackList } from '../audio-tracks';
 import type { MediaEvents, UserIdleChangeEvent } from '../events';
 import type { AudioProvider } from '../providers/audio/provider';
 import type { HLSProviderEvents } from '../providers/hls/events';
 import type { HLSProvider } from '../providers/hls/provider';
 import type { VideoPresentationEvents } from '../providers/video/presentation/events';
 import type { VideoProvider } from '../providers/video/provider';
-import type { VideoQualityList } from '../quality';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../request-events';
 import type { MediaStore } from '../store';
 import type { MediaLoadingStrategy, MediaResource } from '../types';
 import type { MediaUser } from '../user';
+import type { VideoQualityList } from '../video-quality';
 
 export interface MediaControllerProps
   // Prefer picking off the `MediaStore` type to ensure docs are kept in-sync.
@@ -42,6 +43,7 @@ export interface MediaControllerProps
   /**
    * The URL and optionally type of the current media resource/s to be considered for playback.
    *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-source}
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject}
    */
@@ -61,6 +63,8 @@ export interface MediaControllerProps
    * - `idle`: media will be loaded after the page has loaded and `requestIdleCallback` is fired.
    * - `visible`: media will delay loading until the provider has entered the viewport.
    * - `custom`: media will wait for the `startLoading()` method or `media-start-loading` event.
+   *
+   *  @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
    */
   load: MediaLoadingStrategy;
   /**
@@ -108,14 +112,23 @@ export interface MediaController {
    */
   readonly orientation: ScreenOrientationAdapter;
   /**
-   * This object contains all current media state (e.g., `paused`, `playing`, etc.).
+   * Contains all current media state (e.g., `paused`, `playing`, etc.).
    */
   readonly state: Readonly<MediaStore>;
   /**
-   * This returns a `VideoQualityList` containing a listing of all `VideoQuality` objects
-   * representing the set of available video renditions.
+   * A `VideoQualityList` containing a listing of all `VideoQuality` objects representing the
+   * set of available video renditions.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/quality#quality-list}
    */
   readonly qualities: VideoQualityList;
+  /**
+   * A `AudioTrackList` containing a listing of all `AudioTrack` objects representing the
+   * set of available audio tracks.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/tracks#audio-tracks}
+   */
+  readonly audioTracks: AudioTrackList;
   /**
    * Enables subscribing to live updates of individually selected media state.
    *
@@ -145,21 +158,29 @@ export interface MediaController {
   /**
    * Attempts to display this element in fullscreen. The promise will resolve if successful, and
    * reject if not. This will throw if any fullscreen API is _not_ currently available.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/fullscreen}
    */
   enterFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
   /**
    * Attempts to display this element inline by exiting fullscreen. This will throw if any
    * fullscreen API is _not_ currently available.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/fullscreen}
    */
   exitFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
   /**
    * Sets the current time to the live edge (i.e., `duration`). This is a no-op for non-live
    * streams and will throw if called before media is ready for playback.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/live#live-edge}
    */
   seekToLiveEdge(): void;
   /**
    * Called when media can begin loading. Calling this method will trigger the initial provider
    * loading process. Calling it more than once has no effect.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/loading#loading-strategies}
    */
   startLoading(): void;
 }

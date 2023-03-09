@@ -2,13 +2,13 @@ import type { DOMEvent } from 'maverick.js/std';
 
 import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
 import type { MediaPlayerElement } from '../element/types';
-import type { MediaProvider, MediaProviderLoader } from './providers/types';
 import type {
-  AddVideoQualityEvent,
-  ChangeVideoQualityEvent,
-  RemoveVideoQualityEvent,
-  VideoQuality,
-} from './quality';
+  AddAudioTrackEvent,
+  AudioTrack,
+  ChangeAudioTrackEvent,
+  RemoveAudioTrackEvent,
+} from './audio-tracks';
+import type { MediaProvider, MediaProviderLoader } from './providers/types';
 import type * as RE from './request-events';
 import type {
   MediaErrorDetail,
@@ -17,8 +17,16 @@ import type {
   MediaType,
   MediaViewType,
 } from './types';
+import type {
+  AddVideoQualityEvent,
+  ChangeVideoQualityEvent,
+  RemoveVideoQualityEvent,
+  VideoQuality,
+} from './video-quality';
 
 export interface MediaEvents {
+  'audio-tracks-change': MediaAudioTracksChangeEvent;
+  'audio-track-change': MediaAudioTrackChangeEvent;
   'autoplay-change': MediaAutoplayChangeEvent;
   'autoplay-fail': MediaAutoplayFailEvent;
   'can-load': MediaCanLoadEvent;
@@ -83,6 +91,21 @@ export interface MediaEvent<Detail = unknown> extends DOMEvent<Detail> {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/abort_event}
  */
 export interface MediaAbortEvent extends MediaEvent<void> {}
+
+/**
+ * Fired when an audio track has been added or removed.
+ */
+export interface MediaAudioTracksChangeEvent extends MediaEvent<AudioTrack[]> {
+  trigger: AddAudioTrackEvent | RemoveAudioTrackEvent;
+}
+
+/**
+ * Fired when the current audio track changes.
+ */
+export interface MediaAudioTrackChangeEvent extends MediaEvent<AudioTrack | null> {
+  trigger: ChangeAudioTrackEvent;
+  request?: RE.MediaAudioTrackChangeRequestEvent;
+}
 
 /**
  * Fired when the `autoplay` property has changed value.

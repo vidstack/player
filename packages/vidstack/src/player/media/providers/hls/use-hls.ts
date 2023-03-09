@@ -22,7 +22,7 @@ export function useHLS(
   config: Partial<HLS.HlsConfig>,
   $ctor: ReadSignal<HLSConstructor | null>,
   $instance: WriteSignal<HLS.default | null>,
-  { player, logger, delegate, $store, qualities }: MediaSetupContext,
+  { player, logger, delegate, $store, qualities, audioTracks }: MediaSetupContext,
   callbacks: Set<HLSInstanceCallback>,
 ) {
   const listening = new Set<string>();
@@ -46,6 +46,7 @@ export function useHLS(
     dispatchEvent(player, 'hls-instance', { detail: instance });
 
     instance.attachMedia(provider.media);
+    instance.on(ctor.Events.AUDIO_TRACK_SWITCHED, onAudioTrackSwitched);
     instance.on(ctor.Events.LEVEL_SWITCHED, onLevelSwitched);
     instance.on(ctor.Events.LEVEL_LOADED, onLevelLoaded);
 
@@ -55,7 +56,11 @@ export function useHLS(
 
     qualities.addEventListener('change', () => {
       if (qualities.auto) return;
-      instance.currentLevel = qualities.selectedIndex;
+      instance[qualities.switch + 'Level'] = qualities.selectedIndex;
+    });
+
+    audioTracks.addEventListener('change', () => {
+      instance.audioTrack = audioTracks.selectedIndex;
     });
 
     delegate.dispatch('provider-setup', { detail: provider });
@@ -96,6 +101,14 @@ export function useHLS(
     }
   }
 
+  function onAudioTrackSwitched(eventType: string, data: HLS.AudioTrackSwitchedData) {
+    audioTracks[LIST_SET_SELECTED](
+      audioTracks.at(data.id)!,
+      true,
+      new DOMEvent(eventType, { detail: data }),
+    );
+  }
+
   function onLevelSwitched(eventType: string, data: HLS.LevelSwitchedData) {
     qualities[LIST_SET_SELECTED](
       qualities.at(data.level)!,
@@ -126,6 +139,18 @@ export function useHLS(
 
     if (instance.currentLevel === -1) {
       qualities[LIST_SET_AUTO](true, event);
+    }
+
+    for (const track of instance.audioTracks) {
+      audioTracks[LIST_ADD](
+        {
+          id: track.id + '',
+          label: track.name,
+          language: track.lang || '',
+          kind: 'main',
+        },
+        event,
+      );
     }
 
     for (const level of instance.levels) {

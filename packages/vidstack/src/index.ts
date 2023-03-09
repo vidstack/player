@@ -32,8 +32,9 @@ export * from './player/media/state';
 export * from './player/media/store';
 export * from './player/media/time-ranges';
 export * from './player/media/types';
+export * from './player/media/audio-tracks';
+export * from './player/media/video-quality';
 export * from './player/media/outlet/types';
-export * from './player/media/quality';
 
 // Media Player Providers
 export {

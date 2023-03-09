@@ -7,7 +7,7 @@ autoMenuItem.addEventListener('pointerdown', (event) => {
   remote.changeQuality(-1, event);
 });
 
-menuItem.addEventListener('pointerdown', (event) => {
+firstMenuItem.addEventListener('pointerdown', (event) => {
   // select first playback quality in list (at index 0)
   remote.changeQuality(0, event);
 });

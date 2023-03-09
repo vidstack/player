@@ -1,4 +1,6 @@
 /** @internal */
+export const LIST_ITEMS = Symbol(__DEV__ ? 'LIST_ITEMS' : 0);
+/** @internal */
 export const LIST_ADD = Symbol(__DEV__ ? 'ADD' : 0);
 /** @internal */
 export const LIST_REMOVE = Symbol(__DEV__ ? 'REMOVE' : 0);

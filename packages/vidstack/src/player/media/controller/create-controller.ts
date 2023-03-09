@@ -2,11 +2,12 @@ import { effect, provideContext, signal, Signals } from 'maverick.js';
 
 import { useLogger } from '../../../foundation/logger/logger';
 import type { MediaPlayerElement } from '../../element/types';
+import { AudioTrackList } from '../audio-tracks';
 import { mediaContext, MediaContext } from '../context';
 import type { MediaProviderLoader } from '../providers/types';
-import { VideoQualityList } from '../quality';
 import { MediaRemoteControl } from '../remote-control';
 import { mediaStore } from '../store';
+import { VideoQualityList } from '../video-quality';
 import { useMediaCanLoad } from './can-load';
 import { createMediaControllerDelegate } from './controller-delegate';
 import { useMediaEventsLogger } from './events-logger';
@@ -23,6 +24,7 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
     $provider: signal<MediaProvider | null>(null),
     $store: mediaStore.create(),
     qualities: new VideoQualityList(),
+    audioTracks: new AudioTrackList(),
   } as MediaContext;
 
   provideContext(mediaContext, context);

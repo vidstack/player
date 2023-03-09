@@ -6,6 +6,8 @@ import { createTimeRanges, getTimeRangesEnd, getTimeRangesStart } from './time-r
 export interface MediaStore extends MediaState {}
 
 export const mediaStore = createStore<MediaStore>({
+  audioTracks: [],
+  audioTrack: null,
   autoplay: false,
   autoplayError: undefined,
   buffered: createTimeRanges(),

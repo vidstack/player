@@ -3,6 +3,7 @@ import { DOMEvent } from 'maverick.js/std';
 import {
   LIST_ADD,
   LIST_AUTO_SELECT,
+  LIST_ITEMS,
   LIST_REMOVE,
   LIST_RESET,
   LIST_SET_AUTO,
@@ -10,7 +11,6 @@ import {
   LIST_SET_SELECTED,
 } from './symbols';
 
-const ITEMS = Symbol(__DEV__ ? 'ITEMS' : 0);
 const SELECTED = Symbol(__DEV__ ? 'SELECTED' : 0);
 const AUTO = Symbol(__DEV__ ? 'AUTO' : 0);
 const READONLY = Symbol(__DEV__ ? 'READONLY' : 0);
@@ -20,10 +20,10 @@ export interface ListItem {
 }
 
 export class List<Item extends ListItem> extends EventTarget implements Iterable<Item> {
-  private [ITEMS]: Item[] = [];
+  private [LIST_ITEMS]: Item[] = [];
 
   get length() {
-    return this[ITEMS].length;
+    return this[LIST_ITEMS].length;
   }
 
   get readonly() {
@@ -35,39 +35,39 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
   }
 
   get selected() {
-    return this[ITEMS].find((item) => item.selected) ?? null;
+    return this[LIST_ITEMS].find((item) => item.selected) ?? null;
   }
 
   get selectedIndex() {
-    return this[ITEMS].findIndex((item) => item.selected);
+    return this[LIST_ITEMS].findIndex((item) => item.selected);
   }
 
   /**
    * Return item at given `index`.
    */
   at(index: number): Item | null {
-    return this[ITEMS][index] ?? null;
+    return this[LIST_ITEMS][index] ?? null;
   }
 
   /**
    * Transform list to an array.
    */
   toArray(): Item[] {
-    return [...this[ITEMS]];
+    return [...this[LIST_ITEMS]];
   }
 
   /**
-   * Requests automatic item selection (if supported). This will be a no-op if the list is
+   * Request automatic item selection (if supported). This will be a no-op if the list is
    * `readonly` as that already implies auto-selection.
    */
-  requestAutoSelect(trigger?: Event): void {
+  autoSelect(trigger?: Event): void {
     if (this.readonly || this[AUTO] || !this[LIST_AUTO_SELECT]) return;
     this[LIST_AUTO_SELECT]();
     this[LIST_SET_AUTO](true, trigger);
   }
 
   [Symbol.iterator]() {
-    return this[ITEMS].values();
+    return this[LIST_ITEMS].values();
   }
 
   /** @internal */
@@ -81,6 +81,8 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
 
   /** @internal */
   [LIST_ADD](item: Omit<Item, 'selected'>, trigger?: Event): void {
+    item[SELECTED] = false;
+
     Object.defineProperty(item, 'selected', {
       get() {
         return this[SELECTED]!;
@@ -92,24 +94,24 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
       },
     });
 
-    this[ITEMS].push(item as Item);
+    this[LIST_ITEMS].push(item as Item);
     this.dispatchEvent(new DOMEvent<any>('add', { detail: item, trigger }));
   }
 
   /** @internal */
   [LIST_REMOVE](item: Item, trigger?: Event): void {
-    const index = this[ITEMS].indexOf(item);
+    const index = this[LIST_ITEMS].indexOf(item);
     if (index >= 0) {
       item.selected = false;
-      this[ITEMS].splice(index, 1);
+      this[LIST_ITEMS].splice(index, 1);
       this.dispatchEvent(new DOMEvent<any>('remove', { detail: item, trigger }));
     }
   }
 
   /** @internal */
   [LIST_RESET](trigger?: Event): void {
-    for (const item of [...this[ITEMS]]) this[LIST_REMOVE](item, trigger);
-    this[ITEMS] = [];
+    for (const item of [...this[LIST_ITEMS]]) this[LIST_REMOVE](item, trigger);
+    this[LIST_ITEMS] = [];
     this[LIST_SET_AUTO](false, trigger);
     this[LIST_SET_READONLY](false, trigger);
   }

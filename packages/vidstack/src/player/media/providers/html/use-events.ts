@@ -2,9 +2,11 @@ import { onDispose } from 'maverick.js';
 import { dispatchEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
 
 import { createRAFLoop } from '../../../../foundation/hooks/raf-loop';
+import { LIST_ADD, LIST_REMOVE, LIST_SET_SELECTED } from '../../../../foundation/list/symbols';
 import { isHLSSrc } from '../../../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../../../utils/number';
 import { IS_SAFARI } from '../../../../utils/support';
+import type { AudioTrack } from '../../audio-tracks';
 import type { MediaCanPlayDetail } from '../../events';
 import type { MediaErrorCode } from '../../types';
 import type { MediaSetupContext } from '../types';
@@ -16,7 +18,7 @@ import type { HTMLMediaProvider } from './provider';
  */
 export function useHTMLMediaElementEvents(
   provider: HTMLMediaProvider,
-  { player, $store: $media, delegate, logger }: MediaSetupContext,
+  { player, $store: $media, delegate, logger, audioTracks }: MediaSetupContext,
 ): void {
   const disposal = useDisposalBin();
 
@@ -35,6 +37,7 @@ export function useHTMLMediaElementEvents(
   });
 
   attachInitialEventListeners();
+  attachAudioTracksListeners();
 
   onDispose(() => {
     timeRafLoop.stop();
@@ -69,6 +72,55 @@ export function useHTMLMediaElementEvents(
     attachMediaEventListener('error', onError);
     if (__DEV__) {
       logger?.debug('attached initial media event listeners');
+    }
+  }
+
+  function attachAudioTracksListeners() {
+    if ('audioTracks' in provider.media) {
+      const _tracks: any = provider.media.audioTracks;
+
+      function onAddAudioTrack(event) {
+        const _track = event.track;
+        const audioTrack: AudioTrack = {
+          id: _track.id + '',
+          label: _track.label,
+          language: _track.language,
+          kind: _track.kind,
+          selected: false,
+        };
+        audioTracks[LIST_ADD](audioTrack, event);
+        if (_track.enabled) audioTrack.selected = true;
+      }
+
+      function onRemoveAudioTrack(event) {
+        const track = audioTracks.getTrackById(event.track.id);
+        if (track) audioTracks[LIST_REMOVE](track, event);
+      }
+
+      function getEnabledAudioTrack(): any {
+        return Array.from(_tracks).find((track: any) => track.enabled);
+      }
+
+      function onAudioTrackChange(event) {
+        let enabledTrack = getEnabledAudioTrack();
+        if (!enabledTrack) return;
+        const track = audioTracks.getTrackById(enabledTrack.id);
+        if (track) audioTracks[LIST_SET_SELECTED](track, true, event);
+      }
+
+      _tracks.onaddtrack = onAddAudioTrack;
+      _tracks.onremovetrack = onRemoveAudioTrack;
+      _tracks.onchange = onAudioTrackChange;
+
+      audioTracks.addEventListener('change', (event) => {
+        const { current } = event.detail;
+        const track = _tracks.getTrackById(current.id);
+        if (track) {
+          const prev = getEnabledAudioTrack();
+          if (prev) prev.enabled = false;
+          track.enabled = true;
+        }
+      });
     }
   }
 

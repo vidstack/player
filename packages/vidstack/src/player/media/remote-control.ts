@@ -156,6 +156,18 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Dispatch a request to change the current audio track.
+   *
+   * @example
+   * ```ts
+   * remote.changeAudioTrack(1); // track at index 1
+   * ```
+   */
+  changeAudioTrack(index: number, trigger?: Event) {
+    this._dispatchRequest('media-audio-track-change-request', trigger, index);
+  }
+
+  /**
    * Dispatch a request to change the video quality. The special value `-1` represents auto quality
    * selection.
    *

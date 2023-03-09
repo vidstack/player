@@ -14,6 +14,13 @@ body {
   --article-max-width: 88ch;
 }
 
+.docs p > img {
+  margin: 2.5rem auto;
+  max-width: 600px;
+  border-radius: 2px;
+  border: 1px solid rgb(var(--color-border) / 0.5);
+}
+
 code *[style*='color: #676E95; font-'] {
   color: #838996 !important;
 }

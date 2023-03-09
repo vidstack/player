@@ -1,5 +1,5 @@
 import type { LogLevel } from '../../foundation/logger/log-level';
-import type { VideoQuality } from './quality';
+import type { AudioTrack } from './audio-tracks';
 import type {
   MediaErrorDetail,
   MediaSrc,
@@ -7,6 +7,7 @@ import type {
   MediaType,
   MediaViewType,
 } from './types';
+import type { VideoQuality } from './video-quality';
 
 export interface MediaState {
   /**
@@ -308,6 +309,16 @@ export interface MediaState {
    * by the current media provider.
    */
   quality: VideoQuality | null;
+  /**
+   * The list of available audio tracks. This will be empty if audio track information is not
+   * provided by the current media provider.
+   */
+  audioTracks: AudioTrack[];
+  /**
+   * The current audio track. This will be `null` if audio track information is not provided by
+   *  the current media provider.
+   */
+  audioTrack: AudioTrack | null;
   /**
    * Whether the current video quality list is read-only, meaning quality selections can only
    * be set internally by the media provider. This will only be `true` when working with particular

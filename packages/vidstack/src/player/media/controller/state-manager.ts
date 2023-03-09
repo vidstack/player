@@ -43,7 +43,7 @@ const trackedEventType = new Set<keyof ME.MediaEvents>([
  * state context, and satisfying media requests if a manager arg is provided.
  */
 export function createMediaStateManager(
-  { $player, $loader, $provider, $store: $media, qualities, logger }: MediaContext,
+  { $player, $loader, $provider, $store: $media, qualities, audioTracks, logger }: MediaContext,
   requests: MediaRequestContext,
 ): MediaStateManager {
   if (__SERVER__) return { handle: noop };
@@ -64,6 +64,7 @@ export function createMediaStateManager(
     const target = $player();
     if (!target) return;
     addQualityListeners();
+    addAudioTrackListeners();
     listenEvent(target, 'fullscreen-change', onFullscreenChange);
     listenEvent(target, 'fullscreen-error', onFullscreenError);
   });
@@ -71,12 +72,19 @@ export function createMediaStateManager(
   effect(() => {
     if ($provider()) return;
     qualities[LIST_RESET]();
+    audioTracks[LIST_RESET]();
     resetTracking();
     softResetMediaStore($media);
     disposal.empty();
     requests._queue._reset();
     skipInitialSrcChange = true;
   });
+
+  function addAudioTrackListeners() {
+    listenEvent(audioTracks, 'add' as any, onAudioTracksChange);
+    listenEvent(audioTracks, 'remove' as any, onAudioTracksChange);
+    listenEvent(audioTracks, 'change' as any, onAudioTrackChange);
+  }
 
   function addQualityListeners() {
     listenEvent(qualities, 'add' as any, onQualitiesChange);
@@ -176,6 +184,23 @@ export function createMediaStateManager(
     satisfyMediaRequest('rate', event);
   }
 
+  function onAudioTracksChange(event) {
+    $media.audioTracks = audioTracks.toArray();
+    dispatchEvent($player(), 'audio-tracks-change', {
+      detail: $media.audioTracks,
+      trigger: event,
+    });
+  }
+
+  function onAudioTrackChange(event) {
+    $media.audioTrack = audioTracks.selected;
+    satisfyMediaRequest('audioTrack', event);
+    dispatchEvent($player(), 'audio-track-change', {
+      detail: $media.audioTrack,
+      trigger: event,
+    });
+  }
+
   function onQualitiesChange(event) {
     $media.qualities = qualities.toArray();
     dispatchEvent($player(), 'qualities-change', {
@@ -186,7 +211,7 @@ export function createMediaStateManager(
 
   function onQualityChange(event) {
     $media.quality = qualities.selected;
-    satisfyMediaRequest('quality', event as any);
+    satisfyMediaRequest('quality', event);
     dispatchEvent($player(), 'quality-change', {
       detail: $media.quality,
       trigger: event,
@@ -222,6 +247,7 @@ export function createMediaStateManager(
     }
 
     qualities[LIST_RESET](event);
+    audioTracks[LIST_RESET](event);
     resetTracking();
     softResetMediaStore($media);
     trackedEvents.set(event.type, event);

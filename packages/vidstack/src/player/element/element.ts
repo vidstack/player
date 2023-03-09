@@ -154,6 +154,9 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
         get qualities() {
           return context.qualities;
         },
+        get audioTracks() {
+          return context.audioTracks;
+        },
         get $store() {
           return $media;
         },
