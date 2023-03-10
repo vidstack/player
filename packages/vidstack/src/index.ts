@@ -53,6 +53,7 @@ export * from './player/media/providers/hls/types';
 
 // Media Player UI
 export * from './player/ui/fullscreen-button/types';
+export * from './player/ui/pip-button/types';
 export * from './player/ui/live-indicator/types';
 export * from './player/ui/mute-button/types';
 export * from './player/ui/play-button/types';
@@ -71,6 +72,7 @@ export * from './player/ui/volume-slider/types';
 
 // Media Player Definitions
 export { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
+export { PIPButtonDefinition } from './player/ui/pip-button/element';
 export { LiveIndicatorDefinition } from './player/ui/live-indicator/element';
 export { MediaIconDefinition } from './icons/element';
 export { MuteButtonDefinition } from './player/ui/mute-button/element';

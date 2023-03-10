@@ -62,6 +62,8 @@
     media-mute-button[data-volume='high'] [slot='volume-high'],
     media-mute-button[data-volume='low'] [slot='volume-low'],
     media-mute-button[data-volume='muted'] [slot='volume-muted'],
+    media-pip-button:not([data-pip]) [slot='enter'],
+    media-pip-button[data-pip] [slot='exit'],
     media-fullscreen-button:not([data-fullscreen]) [slot='enter'],
     media-fullscreen-button[data-fullscreen] [slot='exit'],
     media-seek-button:not([seconds*='-']) [slot='forward'],
@@ -70,6 +72,7 @@
   opacity: 1;
 }
 
-:where(media-fullscreen-button[data-hidden]) {
+:where(media-fullscreen-button[data-hidden]),
+:where(media-pip-button[data-hidden]) {
   display: none;
 }

@@ -28,7 +28,7 @@ as a space-separated list of combinations (e.g., `p Control+Space`). This proper
 modelled after the [`aria-keyshortcuts`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-keyshortcuts)
 attribute, see the link for more information and tips for picking good shortcuts.
 
-{% code_snippet name="key-shortcuts" copyHighlight=true highlight="html:6-14|react:5-13" /%}
+{% code_snippet name="key-shortcuts" copyHighlight=true highlight="html:6-15|react:5-14" /%}
 
 ## ARIA Key Shortcuts
 

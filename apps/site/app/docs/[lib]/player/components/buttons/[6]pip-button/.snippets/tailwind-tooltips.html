@@ -1,0 +1,18 @@
+<media-pip-button
+  class="group flex h-12 w-12 items-center justify-center rounded-sm text-white outline-none data-[focus]:ring-4 data-[focus]:ring-blue-400"
+  aria-describedby="media-pip-tooltip"
+>
+  <!-- icons -->
+  <media-icon class="not-pip:block hidden" type="picture-in-picture"></media-icon>
+  <media-icon class="pip:block hidden" type="picture-in-picture-exit"></media-icon>
+  <!-- tooltip -->
+  <div
+    id="media-pip-tooltip"
+    class="ease pointer-events-none absolute bottom-full left-1/2 mb-4 -translate-x-1/2 translate-y-2.5 scale-75 transform whitespace-nowrap rounded-sm bg-black py-1 px-2 font-sans text-xs text-white opacity-0 transition-all duration-200 group-data-[hocus]:-translate-x-1/2 group-data-[hocus]:scale-100 group-data-[hocus]:opacity-100"
+    role="tooltip"
+    style="transform-origin: 50% 100%"
+  >
+    <span class="not-pip:inline hidden">Enter PIP</span>
+    <span class="pip:inline hidden">Exit PIP</span>
+  </div>
+</media-pip-button>

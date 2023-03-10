@@ -131,6 +131,8 @@
     media-play-button:not([data-paused]) [slot='pause-tooltip'],
     media-mute-button[data-muted] [slot='unmute-tooltip'],
     media-mute-button:not([data-muted]) [slot='mute-tooltip'],
+    media-pip-button:not([data-pip]) [slot='enter-tooltip'],
+    media-pip-button[data-pip] [slot='exit-tooltip'],
     media-fullscreen-button:not([data-fullscreen]) [slot='enter-tooltip'],
     media-fullscreen-button[data-fullscreen] [slot='exit-tooltip'],
     media-seek-button:not([seconds*='-']) [slot='forward-tooltip'],

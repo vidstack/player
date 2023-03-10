@@ -6,6 +6,7 @@ import { OutletDefinition } from './player/media/outlet/element';
 import { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
 import { LiveIndicatorDefinition } from './player/ui/live-indicator/element';
 import { MuteButtonDefinition } from './player/ui/mute-button/element';
+import { PIPButtonDefinition } from './player/ui/pip-button/element';
 import { PlayButtonDefinition } from './player/ui/play-button/element';
 import { PosterDefinition } from './player/ui/poster/element';
 import { SeekButtonDefinition } from './player/ui/seek-button/element';
@@ -20,22 +21,23 @@ import { VolumeSliderDefinition } from './player/ui/volume-slider/element';
 
 export default function registerAllElements(): void {
   [
-    MediaIconDefinition,
     PlayerDefinition,
     OutletDefinition,
-    PosterDefinition,
-    PlayButtonDefinition,
-    MuteButtonDefinition,
-    SeekButtonDefinition,
     FullscreenButtonDefinition,
-    TimeSliderDefinition,
-    VolumeSliderDefinition,
-    ToggleButtonDefinition,
-    TimeDefinition,
-    SliderDefinition,
-    SliderValueDefinition,
-    SliderThumbnailDefinition,
-    SliderVideoDefinition,
     LiveIndicatorDefinition,
+    MediaIconDefinition,
+    MuteButtonDefinition,
+    PIPButtonDefinition,
+    PlayButtonDefinition,
+    PosterDefinition,
+    SeekButtonDefinition,
+    SliderDefinition,
+    SliderThumbnailDefinition,
+    SliderValueDefinition,
+    SliderVideoDefinition,
+    TimeDefinition,
+    TimeSliderDefinition,
+    ToggleButtonDefinition,
+    VolumeSliderDefinition,
   ].map(registerLiteCustomElement);
 }
