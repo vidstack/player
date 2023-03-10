@@ -26,3 +26,8 @@ export function isHTMLAudioElement(element: unknown): element is HTMLAudioElemen
 export function isHTMLVideoElement(element: unknown): element is HTMLVideoElement {
   return !__SERVER__ && element instanceof HTMLVideoElement;
 }
+
+/** @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement} */
+export function isHTMLMediaElement(element: unknown): element is HTMLMediaElement {
+  return isHTMLAudioElement(element) || isHTMLVideoElement(element);
+}

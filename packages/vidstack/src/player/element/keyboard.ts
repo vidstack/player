@@ -3,6 +3,7 @@ import { CustomElementHost, onAttach } from 'maverick.js/element';
 import { DOMEvent, isKeyboardClick, listenEvent } from 'maverick.js/std';
 
 import { MediaContext, useMedia } from '../media/context';
+import { isHTMLMediaElement } from '../media/providers/type-check';
 import type { MediaKeyShortcuts } from '../media/types';
 import type { MediaPlayerProps } from './types';
 
@@ -19,7 +20,7 @@ export const MEDIA_KEY_SHORTCUTS: MediaKeyShortcuts = {
 
 const MODIFIER_KEYS = new Set(['Shift', 'Alt', 'Meta', 'Control']),
   BUTTON_SELECTORS = 'button, [role="button"]',
-  IGNORE_SELECTORS = 'video, input, textarea, select, [contenteditable], [role^="menuitem"]';
+  IGNORE_SELECTORS = 'input, textarea, select, [contenteditable], [role^="menuitem"]';
 
 export function useKeyboard(
   { $player, $store: $media, ariaKeys, remote }: MediaContext,
@@ -46,10 +47,17 @@ export function useKeyboard(
       });
     }
 
+    function onPreventVideoKeys(event: KeyboardEvent) {
+      if (isHTMLMediaElement(event.target) && getMatchingMethod(event)) {
+        event.preventDefault();
+      }
+    }
+
     effect(() => {
       if (!$active()) return;
       listenEvent(target, 'keyup', onKeyUp);
       listenEvent(target, 'keydown', onKeyDown);
+      listenEvent(target, 'keydown', onPreventVideoKeys, { capture: true });
     });
 
     let seekTotal;
@@ -91,6 +99,7 @@ export function useKeyboard(
 
       if (method?.startsWith('seek')) {
         event.preventDefault();
+        event.stopPropagation();
         if (timeSlider) {
           forwardTimeKeyEvent(event);
           timeSlider = null;
@@ -123,6 +132,7 @@ export function useKeyboard(
 
       if (!method && /[0-9]/.test(event.key) && !sliderFocused) {
         event.preventDefault();
+        event.stopPropagation();
         remote.seek(($media.duration / 10) * Number(event.key), event);
         return;
       }
@@ -130,6 +140,7 @@ export function useKeyboard(
       if (!method || (/volume|seek/.test(method) && sliderFocused)) return;
 
       event.preventDefault();
+      event.stopPropagation();
 
       switch (method) {
         case 'seekForward':
