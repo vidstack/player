@@ -77,6 +77,13 @@ export interface MediaState {
    */
   canFullscreen: boolean;
   /**
+   * Whether picture-in-picture mode is supported by the current media provider.
+   *
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API}
+   */
+  canPictureInPicture: boolean;
+  /**
    * Whether media is allowed to begin loading. This depends on the `loading` configuration.
    * If `eager`, `canLoad` will be `true` immediately, and if `lazy` this will become `true`
    * once the media has entered the viewport.
@@ -145,6 +152,7 @@ export interface MediaState {
    * Whether the player is currently in fullscreen mode.
    *
    * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API}
    */
   fullscreen: boolean;
   /**
@@ -284,6 +292,13 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playbackRate}
    */
   playbackRate: number;
+  /**
+   * Whether the player is currently in picture-in-picture mode.
+   *
+   * @defaultValue false
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API}
+   */
+  pictureInPicture: boolean;
   /**
    * Configures the preload setting of the underlying media provider once it can load (see
    * `loading` property).

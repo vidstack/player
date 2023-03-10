@@ -73,7 +73,7 @@ export interface MediaControllerProps
    */
   userIdleDelay: number;
   /**
-   * This will indicate the orientation to lock the screen to when in fullscreen mode and
+   * This method will indicate the orientation to lock the screen to when in fullscreen mode and
    * the Screen Orientation API is available. The default is `undefined` which indicates
    * no screen orientation change.
    */
@@ -108,7 +108,7 @@ export interface MediaController {
   readonly provider: AnyMediaProvider | null;
   /**
    * Controls the screen orientation of the current browser window and dispatches orientation
-   * change events on this element.
+   * change events on the player.
    */
   readonly orientation: ScreenOrientationAdapter;
   /**
@@ -126,7 +126,7 @@ export interface MediaController {
    * A `AudioTrackList` containing a listing of all `AudioTrack` objects representing the
    * set of available audio tracks.
    *
-   * @see {@link https://vidstack.io/docs/player/core-concepts/tracks#audio-tracks}
+   * @see {@link https://vidstack.io/docs/player/core-concepts/audio-tracks}
    */
   readonly audioTracks: AudioTrackList;
   /**
@@ -150,25 +150,41 @@ export interface MediaController {
    */
   play(): Promise<void>;
   /**
-   * Pauses playback of the media. This will throw if called before media is ready for playback.
+   * Pauses playback of the media. This method will throw if called before media is ready for
+   * playback.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause}
    */
   pause(): Promise<void>;
   /**
-   * Attempts to display this element in fullscreen. The promise will resolve if successful, and
-   * reject if not. This will throw if any fullscreen API is _not_ currently available.
+   * Attempts to display the player in fullscreen. The promise will resolve if successful, and
+   * reject if not. This method will throw if any fullscreen API is _not_ currently available.
    *
    * @see {@link https://vidstack.io/docs/player/core-concepts/fullscreen}
    */
   enterFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
   /**
-   * Attempts to display this element inline by exiting fullscreen. This will throw if any
+   * Attempts to display the player inline by exiting fullscreen. This method will throw if any
    * fullscreen API is _not_ currently available.
    *
    * @see {@link https://vidstack.io/docs/player/core-concepts/fullscreen}
    */
   exitFullscreen(target?: MediaFullscreenRequestTarget): Promise<void>;
+  /**
+   * Attempts to display the player in picture-in-picture mode. This method will throw if PIP is
+   * not supported. This method will also return a `PictureInPictureWindow` if the current
+   * provider supports it.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/picture-in-picture}
+   */
+  enterPictureInPicture(): Promise<void | PictureInPictureWindow>;
+  /**
+   * Attempts to display the player in inline by exiting picture-in-picture mode. This method
+   * will throw if not supported.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/picture-in-picture}
+   */
+  exitPictureInPicture(): Promise<void>;
   /**
    * Sets the current time to the live edge (i.e., `duration`). This is a no-op for non-live
    * streams and will throw if called before media is ready for playback.

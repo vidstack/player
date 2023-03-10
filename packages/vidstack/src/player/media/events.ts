@@ -50,6 +50,8 @@ export interface MediaEvents {
   'provider-change': MediaProviderChangeEvent;
   'provider-loader-change': MediaProviderLoaderChangeEvent;
   'provider-setup': MediaProviderSetupEvent;
+  'picture-in-picture-change': MediaPIPChangeEvent;
+  'picture-in-picture-error': MediaPIPErrorEvent;
   'qualities-change': MediaQualitiesChangeEvent;
   'quality-change': MediaQualityChangeEvent;
   'rate-change': MediaRateChangeEvent;
@@ -375,6 +377,28 @@ export interface MediaProviderChangeEvent extends MediaEvent<MediaProvider | nul
  * here as it'll be too late - prefer the `provider-change` event.
  */
 export interface MediaProviderSetupEvent extends MediaEvent<MediaProvider> {}
+
+/**
+ * Fired when media enters/exits picture-in-picture (PIP) mode. The event detail is a `boolean`
+ * indicating if PIP was entered (`true`) or exited (`false`).
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaPIPChangeEvent extends MediaEvent<boolean> {
+  request?: RE.MediaEnterPIPRequestEvent | RE.MediaExitPIPRequestEvent;
+}
+
+/**
+ * Fired when an error occurs either entering or exiting picture-in-picture (PIP) mode. This will
+ * generally occur if PIP is not supported or the user has not interacted with the page yet.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaPIPErrorEvent extends MediaEvent<unknown> {
+  request?: RE.MediaEnterPIPRequestEvent | RE.MediaExitPIPRequestEvent;
+}
 
 /**
  * Fired when the list of available video qualities/renditions has changed.

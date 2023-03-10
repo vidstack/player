@@ -98,14 +98,9 @@ the player like so:
 👉 The [MediaRemoteControl](/docs/react/player/core-concepts/state-management#updating) also provides a
 `seekToLiveEdge` method!
 
-## Media State
+## Media Store
 
-{% callout type="info" %}
-📖 See the [state management guide](/docs/player/core-concepts/state-management#reading) for how
-to read media state.
-{% /callout %}
-
-The following media state can be used during live streams:
+The following live properties are available on the media store:
 
 - `streamType`: Indicates the [type of live stream](#stream-type). This can be provided by you or
   inferred by the player.
@@ -130,6 +125,8 @@ The following media state can be used during live streams:
 - `userBehindLiveEdge`: Whether the user has intentionally seeked behind the live edge. The user
   must've seeked 2 or more seconds behind during a live stream for this to be considered
   true.
+
+{% code_snippet name="subscribe" /%}
 
 ## User Interface
 

@@ -1,10 +1,18 @@
+import { canUsePictureInPicture, canUseVideoPresentation } from '../../../../utils/support';
 import type { MediaContext } from '../../context';
 import { HTMLMediaProvider } from '../html/provider';
-import type { MediaProvider, MediaSetupContext } from '../types';
+import type {
+  MediaFullscreenAdapter,
+  MediaPictureInPictureAdapter,
+  MediaProvider,
+  MediaSetupContext,
+} from '../types';
+import { VideoPictureInPicture } from './picture-in-picture';
 import {
-  useVideoPresentation,
-  VideoPresentationAdapter,
-} from './presentation/use-video-presentation';
+  FullscreenPresentationAdapter,
+  PIPPresentationAdapter,
+  VideoPresentation,
+} from './presentation/video-presentation';
 
 export const VIDEO_PROVIDER = Symbol(__DEV__ ? 'VIDEO_PROVIDER' : 0);
 
@@ -31,11 +39,19 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProvider {
     return 'video';
   }
 
-  fullscreen: VideoPresentationAdapter;
+  fullscreen?: MediaFullscreenAdapter;
+  pictureInPicture?: MediaPictureInPictureAdapter;
 
-  constructor(media: HTMLVideoElement, context: MediaContext) {
-    super(media);
-    this.fullscreen = useVideoPresentation(media, context);
+  constructor(video: HTMLVideoElement, context: MediaContext) {
+    super(video);
+
+    if (canUseVideoPresentation(video)) {
+      const presentation = new VideoPresentation(video, context);
+      this.fullscreen = new FullscreenPresentationAdapter(presentation);
+      this.pictureInPicture = new PIPPresentationAdapter(presentation);
+    } else if (canUsePictureInPicture(video)) {
+      this.pictureInPicture = new VideoPictureInPicture(video, context);
+    }
   }
 
   override setup(context: MediaSetupContext): void {

@@ -34,6 +34,7 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'autoplay',
   'autoplayError',
   'canFullscreen',
+  'canPictureInPicture',
   'canLoad',
   'canPlay',
   'canSeek',
@@ -46,6 +47,7 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'mediaType',
   'muted',
   'paused',
+  'pictureInPicture',
   'playing',
   'playsinline',
   'seeking',
@@ -119,8 +121,14 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
         (!props.$playsinline() || $media.fullscreen),
     };
 
+    const mediaAttrName = {
+      canPictureInPicture: 'can-pip',
+      pictureInPicture: 'pip',
+    };
+
     for (const prop of MEDIA_ATTRIBUTES) {
-      $attrs['data-' + camelToKebabCase(prop as string)] = () => $media[prop] as string | number;
+      $attrs['data-' + (mediaAttrName[prop] ?? camelToKebabCase(prop as string))] = () =>
+        $media[prop] as string | number;
     }
 
     host.setAttributes($attrs);
@@ -171,6 +179,8 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
         seekToLiveEdge: controller._request._seekToLiveEdge,
         enterFullscreen: controller._request._enterFullscreen,
         exitFullscreen: controller._request._exitFullscreen,
+        enterPictureInPicture: controller._request._enterPictureInPicture,
+        exitPictureInPicture: controller._request._exitPictureInPicture,
       },
       accessors(),
       controller._provider,

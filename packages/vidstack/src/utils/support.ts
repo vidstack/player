@@ -14,17 +14,6 @@ export function currentSafariVersion(): number {
 }
 
 /**
- * Checks if a video player can enter fullscreen.
- *
- * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1633500-webkitenterfullscreen}
- */
-export function canFullscreenVideo(): boolean {
-  if (__SERVER__) return false;
-  const video = document.createElement('video');
-  return isFunction(video.webkitEnterFullscreen);
-}
-
-/**
  * Checks whether the `IntersectionObserver` API is available.
  */
 export function canObserveIntersection(): boolean {
@@ -84,36 +73,24 @@ export function canPlayHLSNatively(): boolean {
  *
  * @see {@link https://developers.google.com/web/updates/2018/10/watch-video-using-picture-in-picture}
  */
-export function canUsePiPInChrome(): boolean {
+export function canUsePictureInPicture(video: HTMLVideoElement): boolean {
   if (__SERVER__) return false;
-  const video = document.createElement('video');
   return !!document.pictureInPictureEnabled && !video.disablePictureInPicture;
 }
 
 /**
- * Checks if the native HTML5 video player can enter picture-in-picture (PIP) mode when using
- * the desktop Safari browser, iOS Safari appears to "support" PiP through the check, however PiP
- * does not function.
+ * Checks if the native HTML5 video player can use the presentation API in Safari. iOS Safari
+ * appears to "support" PIP through the check, however PIP does not function.
  *
- * @see {@link https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls}
+ * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode}
  */
-export function canUsePiPInSafari(): boolean {
+export function canUseVideoPresentation(video: HTMLVideoElement): boolean {
   if (__SERVER__) return false;
-
-  const video = document.createElement('video');
-
   return (
     isFunction(video.webkitSupportsPresentationMode) &&
     isFunction(video.webkitSetPresentationMode) &&
     !IS_IPHONE
   );
-}
-
-/**
- * Checks if the native HTML5 video player can enter PIP.
- */
-export function canUsePiP(): boolean {
-  return canUsePiPInChrome() || canUsePiPInSafari();
 }
 
 /**

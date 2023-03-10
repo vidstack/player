@@ -4,6 +4,8 @@ export interface MediaRequestEvents {
   'media-audio-track-change-request': MediaAudioTrackChangeRequestEvent;
   'media-enter-fullscreen-request': MediaEnterFullscreenRequestEvent;
   'media-exit-fullscreen-request': MediaExitFullscreenRequestEvent;
+  'media-enter-pip-request': MediaEnterPIPRequestEvent;
+  'media-exit-pip-request': MediaExitPIPRequestEvent;
   'media-hide-poster-request': MediaHidePosterRequestEvent;
   'media-live-edge-request': MediaLiveEdgeRequestEvent;
   'media-loop-request': MediaLoopRequestEvent;
@@ -79,6 +81,22 @@ export interface MediaEnterFullscreenRequestEvent extends DOMEvent<MediaFullscre
  * @composed
  */
 export interface MediaExitFullscreenRequestEvent extends DOMEvent<MediaFullscreenRequestTarget> {}
+
+/**
+ * Fired when requesting media to enter picture-in-picture mode.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaEnterPIPRequestEvent extends DOMEvent<void> {}
+
+/**
+ * Fired when requesting media to exit picture-in-picture mode.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaExitPIPRequestEvent extends DOMEvent<void> {}
 
 /**
  * Fired when requesting media to seek to the live edge (i.e., set the current time to the current

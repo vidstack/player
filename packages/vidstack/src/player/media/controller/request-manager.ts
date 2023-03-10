@@ -43,6 +43,8 @@ export function createMediaRequestManager(
       _seekToLiveEdge: noop,
       _enterFullscreen: noop as () => Promise<void>,
       _exitFullscreen: noop as () => Promise<void>,
+      _enterPictureInPicture: noop as () => Promise<void>,
+      _exitPictureInPicture: noop as () => Promise<void>,
     };
   }
 
@@ -50,10 +52,18 @@ export function createMediaRequestManager(
     user.idle.delay = $props.$userIdleDelay();
   });
 
+  // fullscreen support check.
   effect(() => {
     const supported = fullscreen.supported || $provider()?.fullscreen?.supported || false;
     if ($media.canLoad && peek(() => $media.canFullscreen) === supported) return;
     $media.canFullscreen = supported;
+  });
+
+  // picture-in-picture support check.
+  effect(() => {
+    const supported = $provider()?.pictureInPicture?.supported || false;
+    if ($media.canLoad && peek(() => $media.canPictureInPicture) === supported) return;
+    $media.canPictureInPicture = supported;
   });
 
   function logRequest(event: Event) {
@@ -70,6 +80,8 @@ export function createMediaRequestManager(
     'media-audio-track-change-request': onAudioTrackChangeRequest,
     'media-enter-fullscreen-request': onEnterFullscreenRequest,
     'media-exit-fullscreen-request': onExitFullscreenRequest,
+    'media-enter-pip-request': onEnterPictureInPictureRequest,
+    'media-exit-pip-request': onExitPictureInPictureRequest,
     'media-hide-poster-request': onHidePosterRequest,
     'media-live-edge-request': onSeekToLiveEdgeRequest,
     'media-loop-request': onLoopRequest,
@@ -247,9 +259,8 @@ export function createMediaRequestManager(
     try {
       requests._queue._enqueue('fullscreen', event);
       await enterFullscreen(event.detail);
-    } catch (e) {
-      const errorEvent = createEvent($player, 'fullscreen-error', { detail: coerceToError(e) });
-      handler.handle(errorEvent);
+    } catch (error) {
+      onFullscreenError(error);
     }
   }
 
@@ -257,10 +268,39 @@ export function createMediaRequestManager(
     try {
       requests._queue._enqueue('fullscreen', event);
       await exitFullscreen(event.detail);
-    } catch (e) {
-      const errorEvent = createEvent($player, 'fullscreen-error', { detail: coerceToError(e) });
-      handler.handle(errorEvent);
+    } catch (error) {
+      onFullscreenError(error);
     }
+  }
+
+  function onFullscreenError(error: unknown) {
+    handler.handle(createEvent($player, 'fullscreen-error', { detail: coerceToError(error) }));
+  }
+
+  async function onEnterPictureInPictureRequest(event: RE.MediaEnterPIPRequestEvent) {
+    try {
+      requests._queue._enqueue('pip', event);
+      await enterPictureInPicture();
+    } catch (error) {
+      onPictureInPictureError(error);
+    }
+  }
+
+  async function onExitPictureInPictureRequest(event: RE.MediaExitPIPRequestEvent) {
+    try {
+      requests._queue._enqueue('pip', event);
+      await exitPictureInPicture();
+    } catch (error) {
+      onPictureInPictureError(error);
+    }
+  }
+
+  function onPictureInPictureError(error: unknown) {
+    handler.handle(
+      createEvent($player, 'picture-in-picture-error', {
+        detail: coerceToError(error),
+      }),
+    );
   }
 
   function onResumeIdlingRequest(event: RE.MediaResumeUserIdleRequestEvent) {
@@ -328,37 +368,72 @@ export function createMediaRequestManager(
     return provider!.pause();
   }
 
+  let wasPictureInPictureActive = false;
   async function enterFullscreen(target: RE.MediaFullscreenRequestTarget = 'prefer-media') {
     const provider = peek($provider),
-      fs =
+      adapter =
         (target === 'prefer-media' && fullscreen.supported) || target === 'media'
           ? fullscreen
           : provider?.fullscreen;
 
-    throwIfFullscreenNotSupported(target, fs);
-    if (fs!.active) return;
+    throwIfFullscreenNotSupported(target, adapter);
+    if (adapter!.active) return;
 
-    // TODO: Check if PiP is active, if so make sure to exit.
+    if ($media.pictureInPicture) {
+      wasPictureInPictureActive = true;
+      await exitPictureInPicture();
+    }
+
     const lockType = peek($props.$fullscreenOrientation);
     if (orientation.supported && !isUndefined(lockType)) await orientation.lock(lockType);
 
-    return fs!.enter();
+    return adapter!.enter();
   }
 
   async function exitFullscreen(target: RE.MediaFullscreenRequestTarget = 'prefer-media') {
     const provider = peek($provider),
-      fs =
+      adapter =
         (target === 'prefer-media' && fullscreen.supported) || target === 'media'
           ? fullscreen
           : provider?.fullscreen;
 
-    throwIfFullscreenNotSupported(target, fs);
-    if (!fs!.active) return;
+    throwIfFullscreenNotSupported(target, adapter);
+    if (!adapter!.active) return;
 
     if (orientation.locked) await orientation.unlock();
-    // TODO: If PiP was active put it back _after_ exiting.
 
-    return fs!.exit();
+    try {
+      const result = await adapter!.exit();
+
+      if (wasPictureInPictureActive && $media.canPictureInPicture) {
+        await enterPictureInPicture();
+      }
+
+      return result;
+    } finally {
+      wasPictureInPictureActive = false;
+    }
+  }
+
+  function throwIfPictureInPictureNotSupported() {
+    if ($media.canPictureInPicture) return;
+    throw Error(
+      __DEV__
+        ? `[vidstack] picture-in-picture is not currently available`
+        : '[vidstack] no pip support',
+    );
+  }
+
+  async function enterPictureInPicture() {
+    throwIfPictureInPictureNotSupported();
+    if ($media.pictureInPicture) return;
+    return await $provider()!.pictureInPicture!.enter();
+  }
+
+  async function exitPictureInPicture() {
+    throwIfPictureInPictureNotSupported();
+    if (!$media.pictureInPicture) return;
+    return await $provider()!.pictureInPicture!.exit();
   }
 
   function seekToLiveEdge() {
@@ -376,6 +451,8 @@ export function createMediaRequestManager(
     _pause: pause,
     _enterFullscreen: enterFullscreen,
     _exitFullscreen: exitFullscreen,
+    _enterPictureInPicture: enterPictureInPicture,
+    _exitPictureInPicture: exitPictureInPicture,
     _seekToLiveEdge: seekToLiveEdge,
   };
 }
@@ -410,6 +487,7 @@ export interface MediaRequestQueueRecord {
   seeked: RE.MediaSeekRequestEvent | RE.MediaLiveEdgeRequestEvent;
   seeking: RE.MediaSeekingRequestEvent;
   quality: RE.MediaQualityChangeRequestEvent;
+  pip: RE.MediaEnterPIPRequestEvent | RE.MediaExitPIPRequestEvent;
   userIdle: RE.MediaResumeUserIdleRequestEvent | RE.MediaPauseUserIdleRequestEvent;
 }
 
@@ -421,4 +499,6 @@ export interface MediaRequestManager {
   _seekToLiveEdge(): void;
   _enterFullscreen(target?: RE.MediaFullscreenRequestTarget): Promise<void>;
   _exitFullscreen(target?: RE.MediaFullscreenRequestTarget): Promise<void>;
+  _enterPictureInPicture(): Promise<PictureInPictureWindow | void>;
+  _exitPictureInPicture(): Promise<void>;
 }

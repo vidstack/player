@@ -8,7 +8,7 @@ import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request
  * A simple facade for dispatching media requests to the nearest media player element.
  *
  * @docs {@link https://www.vidstack.io/docs/player/core-concepts/state-management#media-remote}
- * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/state-management#updating}
+ * @docs {@link https://www.vidstack.io/docs/player/core-concepts/state-management#updating}
  *
  */
 export class MediaRemoteControl {
@@ -67,7 +67,7 @@ export class MediaRemoteControl {
    * Dispatch a request to start the media loading process. This will only work if the media
    * player has been initialized with a custom loading strategy `<media-player load="custom">`.
    *
-   * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/loading#loading-strategies}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/loading#loading-strategies}
    */
   startLoading(trigger?: Event) {
     this._dispatchRequest('media-start-loading', trigger);
@@ -104,7 +104,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to enter fullscreen.
    *
-   * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/fullscreen#media-remote}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#media-remote}
    */
   enterFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     this._dispatchRequest('media-enter-fullscreen-request', trigger, target);
@@ -113,10 +113,28 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to exit fullscreen.
    *
-   * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/fullscreen#media-remote}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#media-remote}
    */
   exitFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     this._dispatchRequest('media-exit-fullscreen-request', trigger, target);
+  }
+
+  /**
+   * Dispatch a request to enter picture-in-picture mode.
+   *
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#media-remote}
+   */
+  enterPictureInPicture(trigger?: Event) {
+    this._dispatchRequest('media-enter-pip-request', trigger);
+  }
+
+  /**
+   * Dispatch a request to exit picture-in-picture mode.
+   *
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#media-remote}
+   */
+  exitPictureInPicture(trigger?: Event) {
+    this._dispatchRequest('media-exit-pip-request', trigger);
   }
 
   /**
@@ -273,7 +291,7 @@ export class MediaRemoteControl {
   /**
    * Dispatch a request to toggle the media fullscreen state.
    *
-   * @docs {@link https://www.vidstack.io/docs/react/player/core-concepts/fullscreen#media-remote}
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/fullscreen#media-remote}
    */
   toggleFullscreen(target?: MediaFullscreenRequestTarget, trigger?: Event) {
     const player = this.getPlayer(trigger?.target);
@@ -285,6 +303,23 @@ export class MediaRemoteControl {
 
     if (player.state.fullscreen) this.exitFullscreen(target, trigger);
     else this.enterFullscreen(target, trigger);
+  }
+
+  /**
+   * Dispatch a request to toggle the media picture-in-picture mode.
+   *
+   * @docs {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture#media-remote}
+   */
+  togglePictureInPicture(trigger?: Event) {
+    const player = this.getPlayer(trigger?.target);
+
+    if (!player) {
+      if (__DEV__) this._noPlayerWarning(this.togglePictureInPicture.name);
+      return;
+    }
+
+    if (player.state.pictureInPicture) this.exitPictureInPicture(trigger);
+    else this.enterPictureInPicture(trigger);
   }
 
   protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(

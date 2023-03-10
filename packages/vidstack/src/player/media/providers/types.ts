@@ -25,6 +25,7 @@ export interface MediaProvider
   > {
   readonly type: string;
   readonly fullscreen?: MediaFullscreenAdapter;
+  readonly pictureInPicture?: MediaPictureInPictureAdapter;
   readonly canLiveSync?: boolean;
   preconnect?(context: MediaContext): void;
   setup(context: MediaSetupContext): void;
@@ -39,3 +40,23 @@ export interface MediaSetupContext extends MediaContext {
 }
 
 export interface MediaFullscreenAdapter extends FullscreenAdapter {}
+
+export interface MediaPictureInPictureAdapter {
+  /**
+   * Whether picture-in-picture mode is active.
+   */
+  readonly active: boolean;
+  /**
+   * Whether picture-in-picture mode is supported. This does not mean that the operation is
+   * guaranteed to be successful, only that it can be attempted.
+   */
+  readonly supported: boolean;
+  /**
+   * Request to display the current provider in picture-in-picture mode.
+   */
+  enter(): Promise<void | PictureInPictureWindow>;
+  /**
+   * Request to display the current provider in inline by exiting picture-in-picture mode.
+   */
+  exit(): Promise<void>;
+}

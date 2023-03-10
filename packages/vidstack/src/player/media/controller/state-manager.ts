@@ -120,6 +120,8 @@ export function createMediaStateManager(
     'volume-change': onVolumeChange,
     'fullscreen-change': onFullscreenChange,
     'fullscreen-error': onFullscreenError,
+    'picture-in-picture-change': onPictureInPictureChange,
+    'picture-in-picture-error': onPictureInPictureError,
     abort: onAbort,
     ended: onEnded,
     error: onError,
@@ -499,6 +501,15 @@ export function createMediaStateManager(
 
   function onFullscreenError(event: ME.MediaFullscreenErrorEvent) {
     satisfyMediaRequest('fullscreen', event);
+  }
+
+  function onPictureInPictureChange(event: ME.MediaPIPChangeEvent) {
+    $media.pictureInPicture = event.detail;
+    satisfyMediaRequest('pip', event);
+  }
+
+  function onPictureInPictureError(event: ME.MediaPIPErrorEvent) {
+    satisfyMediaRequest('pip', event);
   }
 
   function satisfyMediaRequest<T extends keyof MediaRequestQueueRecord>(

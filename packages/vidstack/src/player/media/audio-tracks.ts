@@ -9,7 +9,7 @@ import {
 import { LIST_ITEMS } from '../../foundation/list/symbols';
 
 /**
- * @see {@link https://vidstack.io/docs/player/core-concepts/tracks#audio-tracks}
+ * @see {@link https://vidstack.io/docs/player/core-concepts/audio-tracks}
  */
 export class AudioTrackList extends List<AudioTrack> {
   getTrackById(id: string): AudioTrack | null {
@@ -18,7 +18,7 @@ export class AudioTrackList extends List<AudioTrack> {
 }
 
 /**
- * @see {@link https://vidstack.io/docs/player/core-concepts/tracks#audio-track}
+ * @see {@link https://vidstack.io/docs/player/core-concepts/audio-tracks}
  */
 export interface AudioTrack extends ListItem {
   /**

@@ -5,13 +5,30 @@ description: How to manage fullscreen with Vidstack Player.
 
 # {% $frontmatter.title %}
 
-In this section, we'll look at how to request and track fullscreen changes.
+In this section, we'll look at how to request and track fullscreen changes with Vidstack Player.
 
-## Requests
+## Methods
 
 You can request to enter or exit fullscreen on the `<media-player>` element like so:
 
-{% code_snippet name="request" highlight="html:5,15|react:10,20" /%}
+```ts {% copy=true highlight="2" %}
+try {
+  await player.enterFullscreen();
+} catch (e) {
+  // This will generally throw if:
+  // 1. Fullscreen API is not available.
+  // 2. Or, the user has not interacted with the document yet.
+}
+```
+
+```ts {% copy=true highlight="2" %}
+try {
+  await player.exitFullscreen();
+} catch (e) {
+  // This will generally throw if:
+  // 1. Fullscreen API is not available.
+}
+```
 
 ### Target
 
@@ -32,10 +49,20 @@ By setting `target` to `provider`, the controller will only request fullscreen o
 media provider, meaning your custom UI will _not_ be displayed when in fullscreen.
 {% /callout %}
 
-### Media Remote
+## Media Store
+
+The following fullscreen properties are available on the media store:
+
+- `canFullscreen`: Whether fullscreen API is currently available.
+- `fullscreen`: Whether the player is currently in fullscreen mode.
+
+{% code_snippet name="subscribe" highlight="react:8" /%}
+
+## Media Remote
 
 The [media remote](/docs/player/core-concepts/state-management#updating) provides methods for
-dispatching `media-enter-fullscreen` and `media-exit-fullscreen` requests like so:
+dispatching `media-enter-fullscreen-request` and `media-exit-fullscreen-request` request
+events like so:
 
 {% code_snippet name="remote" highlight="html:3,10|react:6,12" /%}
 
