@@ -222,6 +222,7 @@ export function useHTMLMediaElementEvents(
   }
 
   function onPlay(event: Event) {
+    if (!$media.canPlay) return;
     delegate.dispatch('play', { trigger: event });
   }
 
