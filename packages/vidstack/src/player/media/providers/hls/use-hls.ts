@@ -102,19 +102,17 @@ export function useHLS(
   }
 
   function onAudioTrackSwitched(eventType: string, data: HLS.AudioTrackSwitchedData) {
-    audioTracks[LIST_SET_SELECTED](
-      audioTracks.at(data.id)!,
-      true,
-      new DOMEvent(eventType, { detail: data }),
-    );
+    const track = audioTracks[data.id];
+    if (track) {
+      audioTracks[LIST_SET_SELECTED](track, true, new DOMEvent(eventType, { detail: data }));
+    }
   }
 
   function onLevelSwitched(eventType: string, data: HLS.LevelSwitchedData) {
-    qualities[LIST_SET_SELECTED](
-      qualities.at(data.level)!,
-      true,
-      new DOMEvent(eventType, { detail: data }),
-    );
+    const quality = qualities[data.level];
+    if (quality) {
+      qualities[LIST_SET_SELECTED](quality, true, new DOMEvent(eventType, { detail: data }));
+    }
   }
 
   function onLevelLoaded(eventType: string, data: HLS.LevelLoadedData): void {

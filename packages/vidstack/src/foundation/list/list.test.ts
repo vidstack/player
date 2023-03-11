@@ -42,6 +42,9 @@ it('should create track list', () => {
   expect(list).toHaveLength(2);
   expect(list.selectedIndex).toBe(1);
   expect(list.selected).toBe(secondItem);
+  expect(list[0]).toBe(firstItem);
+  expect(list[1]).toBe(secondItem);
+  expect(list[2]).toBeUndefined();
   expect(addCallback).toHaveBeenCalledTimes(2);
   expect(addCallback).toHaveBeenCalledWith(firstItem);
   expect(addCallback).toHaveBeenCalledWith(secondItem);

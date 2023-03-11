@@ -81,10 +81,10 @@ interface VideoQuality {
 The `selected` property can be used to set the current video quality like so:
 
 ```ts
-const firstQuality = player.qualities.at(0);
+const firstQuality = player.qualities[0];
 firstQuality.selected = true;
 
-const secondQuality = player.qualities.at(1);
+const secondQuality = player.qualities[1];
 // this statement will set `firstQuality` to false.
 secondQuality.selected = true;
 ```

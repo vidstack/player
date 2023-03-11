@@ -20,6 +20,8 @@ export interface ListItem {
 }
 
 export class List<Item extends ListItem> extends EventTarget implements Iterable<Item> {
+  [index: number]: Item | undefined;
+
   private [LIST_ITEMS]: Item[] = [];
 
   get length() {
@@ -40,13 +42,6 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
 
   get selectedIndex() {
     return this[LIST_ITEMS].findIndex((item) => item.selected);
-  }
-
-  /**
-   * Return item at given `index`.
-   */
-  at(index: number): Item | null {
-    return this[LIST_ITEMS][index] ?? null;
   }
 
   /**
@@ -82,6 +77,17 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
   /** @internal */
   [LIST_ADD](item: Omit<Item, 'selected'>, trigger?: Event): void {
     item[SELECTED] = false;
+
+    const index = this[LIST_ITEMS].length;
+    if (!('' + index in this)) {
+      Object.defineProperty(this, index, {
+        get() {
+          return this[LIST_ITEMS][index];
+        },
+      });
+    }
+
+    if (this[LIST_ITEMS].includes(item as Item)) return;
 
     Object.defineProperty(item, 'selected', {
       get() {

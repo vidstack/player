@@ -68,10 +68,10 @@ interface AudioTrack {
 The `selected` property can be used to set the current audio track like so:
 
 ```ts
-const firstTrack = player.audioTracks.at(0);
+const firstTrack = player.audioTracks[0];
 firstTrack.selected = true;
 
-const secondTrack = player.audioTracks.at(1);
+const secondTrack = player.audioTracks[1];
 // this statement will set `firstTrack` to false.
 secondTrack.selected = true;
 ```

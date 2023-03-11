@@ -154,7 +154,7 @@ export function createMediaRequestManager(
     }
 
     const index = event.detail,
-      track = audioTracks.at(index);
+      track = audioTracks[index];
 
     if (track) {
       requests._queue._enqueue('audioTrack', event);
@@ -180,7 +180,7 @@ export function createMediaRequestManager(
     if (index < 0) {
       qualities.autoSelect(event);
     } else {
-      const quality = qualities.at(index);
+      const quality = qualities[index];
       if (quality) quality.selected = true;
     }
   }
