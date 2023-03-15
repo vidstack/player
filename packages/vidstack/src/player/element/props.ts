@@ -1,4 +1,8 @@
-import type { CustomElementPropDefinitions } from 'maverick.js/element';
+import {
+  CustomElementAttributeType,
+  CustomElementPropDefinitions,
+  STRING,
+} from 'maverick.js/element';
 
 import { MEDIA_KEY_SHORTCUTS } from './keyboard';
 import type { MediaPlayerProps } from './types';
@@ -17,6 +21,11 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
   },
   controls: { initial: false },
   currentTime: { initial: 0 },
+  crossorigin: {
+    initial: null,
+    // Needs to be fixed in Maverick.
+    type: STRING as CustomElementAttributeType<string | null>,
+  },
   fullscreenOrientation: {},
   load: { initial: 'visible' },
   logLevel: { initial: 'silent' },
@@ -41,4 +50,5 @@ export const mediaPlayerProps: CustomElementPropDefinitions<MediaPlayerProps> = 
   keyDisabled: { initial: false },
   keyTarget: { initial: 'player' },
   keyShortcuts: { initial: MEDIA_KEY_SHORTCUTS },
+  textTracks: { initial: [] },
 };

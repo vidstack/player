@@ -1,5 +1,7 @@
 import type { LogLevel } from '../../foundation/logger/log-level';
-import type { AudioTrack } from './audio-tracks';
+import type { VideoQuality } from './quality/video-quality';
+import type { AudioTrack } from './tracks/audio-tracks';
+import type { TextTrack } from './tracks/text/text-track';
 import type {
   MediaErrorDetail,
   MediaSrc,
@@ -7,7 +9,6 @@ import type {
   MediaType,
   MediaViewType,
 } from './types';
-import type { VideoQuality } from './video-quality';
 
 export interface MediaState {
   /**
@@ -115,6 +116,13 @@ export interface MediaState {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/controls}
    */
   controls: boolean;
+  /**
+   * Defines how the media element handles cross-origin requests, thereby enabling the
+   * configuration of the CORS requests for the element's fetched data.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin}
+   */
+  crossorigin: string | null;
   /**
    * The URL of the current poster. Defaults to `''` if no media/poster has been given or
    * loaded.
@@ -414,6 +422,14 @@ export interface MediaState {
    */
   streamType: MediaStreamType;
   /**
+   * The list of all available text tracks.
+   */
+  textTracks: TextTrack[];
+  /**
+   * The current captions/subtitles text track that is showing.
+   */
+  textTrack: TextTrack | null;
+  /**
    * The type of player view that should be used (i.e., audio or video). By default this is set
    * to `video`.
    *
@@ -436,16 +452,16 @@ export interface MediaState {
 
   // !!! INTERNALS !!!
 
-  /** @internal */
+  /* @internal */
   attemptingAutoplay: boolean;
-  /** @internal */
+  /* @internal */
   canLoadPoster: boolean | null;
-  /** @internal */
+  /* @internal */
   providedViewType: MediaViewType;
-  /** @internal */
+  /* @internal */
   providedStreamType: MediaStreamType;
-  /** @internal */
+  /* @internal */
   inferredStreamType: MediaStreamType;
-  /** @internal */
+  /* @internal */
   liveSyncPosition: number | null;
 }

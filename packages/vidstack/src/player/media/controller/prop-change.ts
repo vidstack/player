@@ -16,6 +16,7 @@ export function useMediaPropChange(
     $poster,
     $loop,
     $controls,
+    $crossorigin,
     $playsinline,
     $logLevel,
     $liveEdgeTolerance,
@@ -56,6 +57,10 @@ export function useMediaPropChange(
       const controls = $controls();
       $store.controls = controls;
       dispatchEvent(player, 'controls-change', { detail: controls });
+    });
+
+    effect(() => {
+      $store.crossorigin = $crossorigin();
     });
 
     effect(() => {

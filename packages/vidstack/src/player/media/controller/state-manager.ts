@@ -15,6 +15,7 @@ import { LIST_RESET } from '../../../foundation/list/symbols';
 import type { MediaContext } from '../context';
 import type * as ME from '../events';
 import { softResetMediaStore } from '../store';
+import { TEXT_TRACK_UPDATE_ACTIVE_CUES } from '../tracks/text/symbols';
 import type { MediaRequestContext, MediaRequestQueueRecord } from './request-manager';
 
 const trackedEventType = new Set<keyof ME.MediaEvents>([
@@ -43,7 +44,16 @@ const trackedEventType = new Set<keyof ME.MediaEvents>([
  * state context, and satisfying media requests if a manager arg is provided.
  */
 export function createMediaStateManager(
-  { $player, $loader, $provider, $store: $media, qualities, audioTracks, logger }: MediaContext,
+  {
+    $player,
+    $loader,
+    $provider,
+    $store: $media,
+    qualities,
+    audioTracks,
+    textTracks,
+    logger,
+  }: MediaContext,
   requests: MediaRequestContext,
 ): MediaStateManager {
   if (__SERVER__) return { handle: noop };
@@ -63,6 +73,7 @@ export function createMediaStateManager(
   effect(() => {
     const target = $player();
     if (!target) return;
+    addTextTrackListeners();
     addQualityListeners();
     addAudioTrackListeners();
     listenEvent(target, 'fullscreen-change', onFullscreenChange);
@@ -71,6 +82,7 @@ export function createMediaStateManager(
 
   effect(() => {
     if ($provider()) return;
+    textTracks.clear();
     qualities[LIST_RESET]();
     audioTracks[LIST_RESET]();
     resetTracking();
@@ -79,6 +91,12 @@ export function createMediaStateManager(
     requests._queue._reset();
     skipInitialSrcChange = true;
   });
+
+  function addTextTrackListeners() {
+    listenEvent(textTracks, 'add' as any, onTextTracksChange);
+    listenEvent(textTracks, 'remove' as any, onTextTracksChange);
+    listenEvent(textTracks, 'mode-change' as any, onTextTrackChange);
+  }
 
   function addAudioTrackListeners() {
     listenEvent(audioTracks, 'add' as any, onAudioTracksChange);
@@ -186,6 +204,26 @@ export function createMediaStateManager(
     satisfyMediaRequest('rate', event);
   }
 
+  function onTextTracksChange(event) {
+    $media.textTracks = textTracks.toArray();
+    dispatchEvent($player(), 'text-tracks-change', {
+      detail: $media.textTracks,
+      trigger: event,
+    });
+  }
+
+  function onTextTrackChange(event) {
+    satisfyMediaRequest('textTrack', event);
+    const current = textTracks.selected;
+    if ($media.textTrack !== current) {
+      $media.textTrack = current;
+      dispatchEvent($player(), 'text-track-change', {
+        detail: current,
+        trigger: event,
+      });
+    }
+  }
+
   function onAudioTracksChange(event) {
     $media.audioTracks = audioTracks.toArray();
     dispatchEvent($player(), 'audio-tracks-change', {
@@ -248,8 +286,9 @@ export function createMediaStateManager(
       return;
     }
 
-    qualities[LIST_RESET](event);
+    textTracks.clear(event);
     audioTracks[LIST_RESET](event);
+    qualities[LIST_RESET](event);
     resetTracking();
     softResetMediaStore($media);
     trackedEvents.set(event.type, event);
@@ -422,6 +461,10 @@ export function createMediaStateManager(
     $media.currentTime = currentTime;
     $media.played = played;
     $media.waiting = false;
+    for (const track of textTracks) {
+      if (track.mode === 'disabled') continue;
+      track[TEXT_TRACK_UPDATE_ACTIVE_CUES](currentTime, event);
+    }
   }
 
   function onVolumeChange(event: ME.MediaVolumeChangeEvent) {

@@ -50,6 +50,9 @@ const player = document.querySelector('media-player');
 // Length
 const hasItems = player.qualities.length;
 
+// Index
+const quality = player.qualities[0];
+
 // Iterating
 for (const quality of player.qualities) {
 }
@@ -126,7 +129,7 @@ need to call `autoSelect()` to enable it again.
 
 ### List Events
 
-The `VideoQualityList` objects is an [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget)
+The `VideoQualityList` object is an [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget)
 which dispatches the following events:
 
 - `add`: Fired when a video quality has been added to the list.

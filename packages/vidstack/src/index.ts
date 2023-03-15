@@ -21,8 +21,7 @@ export {
 
 // Media Player
 export * from './player/element/types';
-export { MEDIA_KEY_SHORTCUTS } from './player/element/keyboard';
-export { MediaContext, mediaContext } from './player/media/context';
+export { type MediaContext, mediaContext } from './player/media/context';
 export * from './player/media/controller/types';
 export * from './player/media/events';
 export * from './player/media/types';
@@ -32,8 +31,12 @@ export * from './player/media/state';
 export * from './player/media/store';
 export * from './player/media/time-ranges';
 export * from './player/media/types';
-export * from './player/media/audio-tracks';
-export * from './player/media/video-quality';
+export * from './player/media/tracks/text/render/text-renderer';
+export * from './player/media/tracks/text/render/libass-text-renderer';
+export * from './player/media/tracks/text/text-track';
+export * from './player/media/tracks/text/text-tracks';
+export * from './player/media/tracks/audio-tracks';
+export * from './player/media/quality/video-quality';
 export * from './player/media/outlet/types';
 
 // Media Player Providers
@@ -50,6 +53,8 @@ export { type HLSProvider } from './player/media/providers/hls/provider';
 export * from './player/media/providers/video/presentation/events';
 export * from './player/media/providers/hls/events';
 export * from './player/media/providers/hls/types';
+
+export { MEDIA_KEY_SHORTCUTS } from './player/element/keyboard';
 
 // Media Player UI
 export * from './player/ui/fullscreen-button/types';

@@ -200,6 +200,21 @@ export class MediaRemoteControl {
   }
 
   /**
+   * Dispatch a request to change the mode of the text track at the given index.
+   *
+   * @example
+   * ```ts
+   * remote.changeTextTrackMode(1, 'showing'); // track at index 1
+   * ```
+   */
+  changeTextTrackMode(index: number, mode: TextTrackMode, trigger?: Event) {
+    this._dispatchRequest('media-text-track-change-request', trigger, {
+      index,
+      mode,
+    });
+  }
+
+  /**
    * Dispatch a request to change the media playback rate.
    *
    * @example

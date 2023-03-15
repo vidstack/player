@@ -61,7 +61,7 @@ export function createFullscreenAdapter(
   };
 }
 
-function canFullscreen(): boolean {
+export function canFullscreen(): boolean {
   return fscreen.fullscreenEnabled;
 }
 

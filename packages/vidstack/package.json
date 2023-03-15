@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "maverick.js": "^0.32.3",
+    "media-captions": "^0.0.7",
     "media-icons": "^0.4.2",
     "type-fest": "^3.5.0"
   },
@@ -49,6 +50,7 @@
     "jsdom": "^21.0.0",
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
+    "libass-wasm": "^4.1.0",
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
     "tailwindcss": "^3.2.0",

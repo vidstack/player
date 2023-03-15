@@ -141,7 +141,9 @@ importers:
       jsdom: ^21.0.0
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
+      libass-wasm: ^4.1.0
       maverick.js: ^0.32.3
+      media-captions: ^0.0.7
       media-icons: ^0.4.2
       postcss: ^8.4.0
       rimraf: ^3.0.0
@@ -154,6 +156,7 @@ importers:
       vitest: ^0.27.0
     dependencies:
       maverick.js: 0.32.3
+      media-captions: 0.0.7
       media-icons: 0.4.2
       type-fest: 3.5.1
     devDependencies:
@@ -167,6 +170,7 @@ importers:
       jsdom: 21.0.0
       just-debounce-it: 3.2.0
       just-throttle: 4.2.0
+      libass-wasm: 4.1.0
       postcss: 8.4.20
       rimraf: 3.0.2
       tailwindcss: 3.2.4
@@ -3619,6 +3623,10 @@ packages:
       type-check: 0.3.2
     dev: true
 
+  /libass-wasm/4.1.0:
+    resolution: {integrity: sha512-+RbYT/uuI6VHExCmGyUuMg3A2gQOaCRTzSn8GGDSf3q4cEoUNiINd9u4RGfZXA1UKafW+Hv8bmcKIX4FKbSh0Q==}
+    dev: true
+
   /lilconfig/2.0.6:
     resolution: {integrity: sha512-9JROoBW7pobfsx+Sq2JsASvCo6Pfo6WWoUW79HuB1BCoBXD4PLWJPqDF6fNj67pqBYTbAHkE57M1kS/+L1neOg==}
     engines: {node: '>=10'}
@@ -3858,6 +3866,11 @@ packages:
     dependencies:
       '@maverick-js/signals': 5.9.1
       type-fest: 2.19.0
+
+  /media-captions/0.0.7:
+    resolution: {integrity: sha512-FUz0sVnMrhNHL3AmmDMKs3SUYnjxQ5Yg4N7ijJUTojAOqd4KYjPqSj2+dGBwAuU7gJsU5TgKziggsXU17EGPOw==}
+    engines: {node: '>=16'}
+    dev: false
 
   /media-icons/0.4.2:
     resolution: {integrity: sha512-jrxoQzxsZFyzt6P3CoGZWa6FVKoR/Ii1plbVjtyTSyQGpeVWkJ++0oBAwGOv/F9mWRxmGkaQ04uEIKTFouRG1w==}

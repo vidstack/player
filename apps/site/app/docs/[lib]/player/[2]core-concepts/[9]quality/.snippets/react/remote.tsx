@@ -27,6 +27,7 @@ function MenuItems() {
 
 function MenuItem(quality: VideoQuality, index: number) {
   const remote = useMediaRemote();
+  const { quality: activeQuality } = useMediaStore();
 
   function onSelect(event: PointerEvent) {
     remote.changeQuality(index, event.nativeEvent);
@@ -34,7 +35,7 @@ function MenuItem(quality: VideoQuality, index: number) {
 
   return (
     <li onPointerDown={onSelect}>
-      {quality.selected ? <RadioButtonSelectedIcon /> : <RadioButtonIcon />}
+      {quality === activeQuality ? <RadioButtonSelectedIcon /> : <RadioButtonIcon />}
       {quality.height + 'p'}
     </li>
   );

@@ -20,6 +20,7 @@ export interface MediaRequestEvents {
   'media-seeking-request': MediaSeekingRequestEvent;
   'media-show-poster-request': MediaShowPosterRequestEvent;
   'media-start-loading': MediaStartLoadingRequestEvent;
+  'media-text-track-change-request': MediaTextTrackChangeRequestEvent;
   'media-unmute-request': MediaUnmuteRequestEvent;
   'media-volume-change-request': MediaVolumeChangeRequestEvent;
 }
@@ -32,6 +33,19 @@ export interface MediaRequestEvents {
  * @composed
  */
 export interface MediaStartLoadingRequestEvent extends DOMEvent<void> {}
+
+/**
+ * Fired when requesting to change the `mode` on a text track at the given index in the
+ * `TextTrackList` on the player.
+ *
+ * @bubbles
+ * @composed
+ */
+export interface MediaTextTrackChangeRequestEvent
+  extends DOMEvent<{
+    index: number;
+    mode: TextTrackMode;
+  }> {}
 
 /**
  * Fired when requesting the media to be muted.

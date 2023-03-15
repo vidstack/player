@@ -39,16 +39,23 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
           src={isString(src) ? src : null}
           muted={$store.muted}
           controls={$store.controls}
+          crossorigin={$store.crossorigin}
           playsinline={$store.playsinline}
           preload="none"
         ></audio>
       );
     }
 
-    const controls = () => $store.controls;
+    const $crossorigin = () => $store.crossorigin,
+      $controls = () => $store.controls;
 
     return (
-      <audio controls={controls()} preload="none" $ref={(el) => void (this._audio = el)}></audio>
+      <audio
+        controls={$controls()}
+        crossorigin={$crossorigin()}
+        preload="none"
+        $ref={(el) => void (this._audio = el)}
+      ></audio>
     );
   }
 }

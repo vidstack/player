@@ -28,6 +28,12 @@ const player = document.querySelector('media-player');
 // Length
 const hasItems = player.audioTracks.length;
 
+// Index
+const track = player.audioTracks[0];
+
+// Get by ID
+const track = player.audioTracks.getById('...');
+
 // Iterating
 for (const track of player.audioTracks) {
 }
@@ -80,7 +86,7 @@ Once set, the underlying provider will update the audio track.
 
 ### List Events
 
-The `AudioTrackList` objects is an [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget)
+The `AudioTrackList` object is an [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget)
 which dispatches the following events:
 
 - `add`: Fired when an audio track has been added to the list.

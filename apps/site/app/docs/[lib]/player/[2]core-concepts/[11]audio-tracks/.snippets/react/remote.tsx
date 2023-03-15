@@ -14,6 +14,7 @@ function MenuItems() {
 
 function MenuItem(track: AudioTrack, index: number) {
   const remote = useMediaRemote();
+  const { audioTrack: activeTrack } = useMediaStore();
 
   function onSelect(event: PointerEvent) {
     remote.changeAudioTrack(index, event.nativeEvent);
@@ -21,7 +22,7 @@ function MenuItem(track: AudioTrack, index: number) {
 
   return (
     <li onPointerDown={onSelect}>
-      {track.selected ? <RadioButtonSelectedIcon /> : <RadioButtonIcon />}
+      {track === activeTrack ? <RadioButtonSelectedIcon /> : <RadioButtonIcon />}
       {track.label}
     </li>
   );

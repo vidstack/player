@@ -1,13 +1,13 @@
-import { List } from './list';
+import { SelectList } from './select-list';
 import { LIST_ADD, LIST_REMOVE } from './symbols';
 
-interface ListItem {
+interface SelectListItem {
   id: string;
   selected: boolean;
 }
 
-it('should create track list', () => {
-  const list = new List();
+it('should create list', () => {
+  const list = new SelectList();
 
   const addCallback = vi.fn();
   list.addEventListener('add', (e) => {
@@ -24,12 +24,12 @@ it('should create track list', () => {
     changeCallback(e.detail);
   });
 
-  const firstItem: ListItem = {
+  const firstItem: SelectListItem = {
     id: 'a',
     selected: false,
   };
 
-  const secondItem: ListItem = {
+  const secondItem: SelectListItem = {
     id: 'b',
     selected: false,
   };

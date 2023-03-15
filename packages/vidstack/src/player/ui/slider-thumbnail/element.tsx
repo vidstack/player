@@ -24,7 +24,8 @@ export const SliderThumbnailDefinition = defineCustomElement<MediaSliderThumbnai
       $activeCue = signal<TextTrackCue | null>(null),
       $hidden = () => $error() || !Number.isFinite($media.duration),
       $slider = useSliderStore(),
-      { $store: $media } = useMedia();
+      { $store: $media } = useMedia(),
+      $crossorigin = () => $media.crossorigin;
 
     host.setAttributes({
       'data-loading': () => !$hidden() && !$imgLoaded(),
@@ -148,7 +149,7 @@ export const SliderThumbnailDefinition = defineCustomElement<MediaSliderThumbnai
       <div part="container">
         <img
           src={$imgSrc()}
-          crossorigin=""
+          crossorigin={$crossorigin()}
           part="img"
           loading="eager"
           decoding="async"

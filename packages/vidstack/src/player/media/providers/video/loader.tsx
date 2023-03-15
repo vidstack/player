@@ -43,20 +43,23 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
           poster={$store.poster}
           muted={$store.muted}
           controls={$store.controls}
+          crossorigin={$store.crossorigin}
           playsinline={$store.playsinline}
           preload="none"
         ></video>
       );
     }
 
-    const controls = () => $store.controls;
-    // === `true` because it's `null` to start with until we know if the poster can load.
-    const poster = () => ($store.poster && $store.canLoadPoster === true ? $store.poster : null);
+    const $controls = () => $store.controls,
+      $crossorigin = () => $store.crossorigin,
+      // === `true` because it's `null` to start with until we know if the poster can load.
+      $poster = () => ($store.poster && $store.canLoadPoster === true ? $store.poster : null);
 
     return (
       <video
-        controls={controls()}
-        poster={poster()}
+        controls={$controls()}
+        crossorigin={$crossorigin()}
+        poster={$poster()}
         preload="none"
         $ref={(el) => void (this._video = el)}
       ></video>

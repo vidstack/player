@@ -59,11 +59,11 @@ export interface MediaPlayerProps extends MediaControllerProps {
 
 export interface MediaPlayerEvents extends MediaControllerEvents {
   'media-player-connect': MediaPlayerConnectEvent;
-  /** @internal */
+  /* @internal */
   'find-media-player': FindMediaPlayerEvent;
 }
 
-export interface MediaPlayerMembers extends MediaPlayerProps, MediaController {}
+export interface MediaPlayerMembers extends Omit<MediaPlayerProps, 'textTracks'>, MediaController {}
 
 /**
  * Fired when the player element `<media-player>` connects to the DOM.
@@ -77,7 +77,7 @@ export interface FindMediaPlayerEventDetail {
   (player: MediaPlayerElement | null): void;
 }
 
-/** @internal @bubbles @composed */
+/* @internal @bubbles @composed */
 export interface FindMediaPlayerEvent extends DOMEvent<FindMediaPlayerEventDetail> {}
 
 export interface MediaElementCSSVars {

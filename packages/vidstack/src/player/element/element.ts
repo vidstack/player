@@ -11,7 +11,6 @@ import {
 
 import { createLogPrinter } from '../../foundation/logger/log-printer';
 import { useFocusVisible } from '../../foundation/observers/use-focus-visible';
-import { IS_IOS } from '../../utils/support';
 import { createMediaController } from '../media/controller/create-controller';
 import { useSourceSelection } from '../media/controller/source-selection';
 import type { AnyMediaProvider } from '../media/controller/types';
@@ -87,7 +86,6 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
       if (!host.el!.hasAttribute('aria-label')) {
         host.el!.setAttribute('aria-label', 'Media Player');
       }
-
       context.$player.set(host.el);
       context.remote.setTarget(host.el!);
       context.remote.setPlayer(host.el!);
@@ -114,11 +112,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
 
     const $attrs: AttributesRecord = {
       'aspect-ratio': props.$aspectRatio,
-      'data-ios-controls': () =>
-        IS_IOS &&
-        $media.mediaType === 'video' &&
-        $media.controls &&
-        (!props.$playsinline() || $media.fullscreen),
+      'data-ios-controls': context.$iosControls,
     };
 
     const mediaAttrName = {
@@ -149,6 +143,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
     });
 
     return mergeProperties(
+      accessors(),
       {
         get user() {
           return controller._request._user;
@@ -164,6 +159,12 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
         },
         get audioTracks() {
           return context.audioTracks;
+        },
+        get textTracks() {
+          return context.textTracks;
+        },
+        get textRenderers() {
+          return context.textRenderers;
         },
         get $store() {
           return $media;
@@ -182,7 +183,6 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
         enterPictureInPicture: controller._request._enterPictureInPicture,
         exitPictureInPicture: controller._request._exitPictureInPicture,
       },
-      accessors(),
       controller._provider,
     );
   },

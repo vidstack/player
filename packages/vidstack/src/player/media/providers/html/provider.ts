@@ -3,7 +3,7 @@ import { isString, setAttribute } from 'maverick.js/std';
 import { isMediaStream } from '../../../../utils/mime';
 import type { MediaSrc } from '../../types';
 import type { MediaProvider, MediaSetupContext } from '../types';
-import { useHTMLMediaElementEvents } from './use-events';
+import { setupHTMLMediaElementEvents } from './setup-events';
 
 /**
  * This HTML media provider adapts the underlying media element such as `<audio>` or `<video>` to
@@ -15,7 +15,7 @@ export class HTMLMediaProvider implements MediaProvider {
   constructor(protected _media: HTMLMediaElement) {}
 
   setup(context: MediaSetupContext) {
-    useHTMLMediaElementEvents(this, context);
+    setupHTMLMediaElementEvents(this, context);
   }
 
   get type() {

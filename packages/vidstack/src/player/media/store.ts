@@ -17,6 +17,7 @@ export const mediaStore = createStore<MediaStore>({
   canPictureInPicture: false,
   canPlay: false,
   controls: false,
+  crossorigin: null,
   poster: '',
   currentTime: 0,
   ended: false,
@@ -42,6 +43,8 @@ export const mediaStore = createStore<MediaStore>({
   source: { src: '', type: '' },
   sources: [],
   started: false,
+  textTracks: [],
+  textTrack: null,
   volume: 1,
   waiting: false,
   get viewType() {

@@ -23,6 +23,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
       $error = signal(false),
       $slider = useSliderStore(),
       { $store: $media } = useMedia(),
+      $crossorigin = () => $media.crossorigin,
       $videoSrc = () => ($media.canLoad ? $src() : null),
       $hidden = () => !!$error() || !Number.isFinite($media.duration);
 
@@ -64,6 +65,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
         playsinline
         preload="auto"
         src={$videoSrc()}
+        crossorigin={$crossorigin()}
         part="video"
         $on:canplay={onCanPlay}
         $on:error={onError}

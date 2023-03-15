@@ -2,12 +2,12 @@ import { onDispose } from 'maverick.js';
 import { dispatchEvent, isNil, listenEvent, useDisposalBin } from 'maverick.js/std';
 
 import { createRAFLoop } from '../../../../foundation/hooks/raf-loop';
-import { LIST_ADD, LIST_REMOVE, LIST_SET_SELECTED } from '../../../../foundation/list/symbols';
+import { LIST_ADD, LIST_REMOVE, LIST_SELECT } from '../../../../foundation/list/symbols';
 import { isHLSSrc } from '../../../../utils/mime';
 import { getNumberOfDecimalPlaces } from '../../../../utils/number';
 import { IS_SAFARI } from '../../../../utils/support';
-import type { AudioTrack } from '../../audio-tracks';
 import type { MediaCanPlayDetail } from '../../events';
+import type { AudioTrack } from '../../tracks/audio-tracks';
 import type { MediaErrorCode } from '../../types';
 import type { MediaSetupContext } from '../types';
 import type { HTMLMediaProvider } from './provider';
@@ -16,7 +16,7 @@ import type { HTMLMediaProvider } from './provider';
  * This is hook is mainly responsible for listening to events fired by a `HTMLMediaElement` and
  * dispatching the respective Vidstack media events (e.g., `canplay` -> `can-play`).
  */
-export function useHTMLMediaElementEvents(
+export function setupHTMLMediaElementEvents(
   provider: HTMLMediaProvider,
   { player, $store: $media, delegate, logger, audioTracks }: MediaSetupContext,
 ): void {
@@ -93,7 +93,7 @@ export function useHTMLMediaElementEvents(
       }
 
       function onRemoveAudioTrack(event) {
-        const track = audioTracks.getTrackById(event.track.id);
+        const track = audioTracks.getById(event.track.id);
         if (track) audioTracks[LIST_REMOVE](track, event);
       }
 
@@ -104,8 +104,8 @@ export function useHTMLMediaElementEvents(
       function onAudioTrackChange(event) {
         let enabledTrack = getEnabledAudioTrack();
         if (!enabledTrack) return;
-        const track = audioTracks.getTrackById(enabledTrack.id);
-        if (track) audioTracks[LIST_SET_SELECTED](track, true, event);
+        const track = audioTracks.getById(enabledTrack.id);
+        if (track) audioTracks[LIST_SELECT](track, true, event);
       }
 
       _tracks.onaddtrack = onAddAudioTrack;
@@ -297,6 +297,8 @@ export function useHTMLMediaElementEvents(
   }
 
   function onSeeked(event: Event) {
+    updateCurrentTime(provider.media.currentTime, event);
+
     delegate.dispatch('seeked', {
       detail: provider.media.currentTime,
       trigger: event,

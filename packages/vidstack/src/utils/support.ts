@@ -61,9 +61,9 @@ export function isReducedMotionPreferred(): boolean {
 /**
  * Checks if the native HTML5 video player can play HLS.
  */
-export function canPlayHLSNatively(): boolean {
+export function canPlayHLSNatively(video?: HTMLVideoElement): boolean {
   if (__SERVER__) return false;
-  const video = document.createElement('video');
+  if (!video) video = document.createElement('video');
   return video.canPlayType('application/vnd.apple.mpegurl').length > 0;
 }
 

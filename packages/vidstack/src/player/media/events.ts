@@ -2,14 +2,22 @@ import type { DOMEvent } from 'maverick.js/std';
 
 import type { ScreenOrientationChangeEvent } from '../../foundation/orientation/events';
 import type { MediaPlayerElement } from '../element/types';
-import type {
-  AddAudioTrackEvent,
-  AudioTrack,
-  ChangeAudioTrackEvent,
-  RemoveAudioTrackEvent,
-} from './audio-tracks';
 import type { MediaProvider, MediaProviderLoader } from './providers/types';
+import type {
+  VideoQuality,
+  VideoQualityAddEvent,
+  VideoQualityChangeEvent,
+  VideoQualityRemoveEvent,
+} from './quality/video-quality';
 import type * as RE from './request-events';
+import type {
+  AudioTrack,
+  AudioTrackAddEvent,
+  AudioTrackChangeEvent,
+  AudioTrackRemoveEvent,
+} from './tracks/audio-tracks';
+import type { TextTrack, TextTrackModeChangeEvent } from './tracks/text/text-track';
+import type { TextTrackAddEvent, TextTrackRemoveEvent } from './tracks/text/text-tracks';
 import type {
   MediaErrorDetail,
   MediaSrc,
@@ -17,12 +25,6 @@ import type {
   MediaType,
   MediaViewType,
 } from './types';
-import type {
-  AddVideoQualityEvent,
-  ChangeVideoQualityEvent,
-  RemoveVideoQualityEvent,
-  VideoQuality,
-} from './video-quality';
 
 export interface MediaEvents {
   'audio-tracks-change': MediaAudioTracksChangeEvent;
@@ -60,6 +62,8 @@ export interface MediaEvents {
   'time-update': MediaTimeUpdateEvent;
   'user-idle-change': UserIdleChangeEvent;
   'stream-type-change': MediaStreamTypeChangeEvent;
+  'text-tracks-change': MediaTextTracksChangeEvent;
+  'text-track-change': MediaTextTrackChangeEvent;
   'view-type-change': MediaViewTypeChangeEvent;
   'volume-change': MediaVolumeChangeEvent;
   abort: MediaAbortEvent;
@@ -98,14 +102,14 @@ export interface MediaAbortEvent extends MediaEvent<void> {}
  * Fired when an audio track has been added or removed.
  */
 export interface MediaAudioTracksChangeEvent extends MediaEvent<AudioTrack[]> {
-  trigger: AddAudioTrackEvent | RemoveAudioTrackEvent;
+  trigger: AudioTrackAddEvent | AudioTrackRemoveEvent;
 }
 
 /**
  * Fired when the current audio track changes.
  */
 export interface MediaAudioTrackChangeEvent extends MediaEvent<AudioTrack | null> {
-  trigger: ChangeAudioTrackEvent;
+  trigger: AudioTrackChangeEvent;
   request?: RE.MediaAudioTrackChangeRequestEvent;
 }
 
@@ -404,7 +408,7 @@ export interface MediaPIPErrorEvent extends MediaEvent<unknown> {
  * Fired when the list of available video qualities/renditions has changed.
  */
 export interface MediaQualitiesChangeEvent extends MediaEvent<VideoQuality[]> {
-  trigger: AddVideoQualityEvent | RemoveVideoQualityEvent;
+  trigger: VideoQualityAddEvent | VideoQualityRemoveEvent;
 }
 
 /**
@@ -412,7 +416,7 @@ export interface MediaQualitiesChangeEvent extends MediaEvent<VideoQuality[]> {
  * video quality information is not available.
  */
 export interface MediaQualityChangeEvent extends MediaEvent<VideoQuality | null> {
-  trigger: ChangeVideoQualityEvent;
+  trigger: VideoQualityChangeEvent;
   request?: RE.MediaQualityChangeRequestEvent;
 }
 
@@ -492,6 +496,21 @@ export interface MediaTimeUpdateEvent
  * stream (e.g., `on-demand`, `live`, `live:dvr`, etc.).
  */
 export interface MediaStreamTypeChangeEvent extends MediaEvent<MediaStreamType> {}
+
+/**
+ * Fired when an audio track has been added or removed.
+ */
+export interface MediaTextTracksChangeEvent extends MediaEvent<TextTrack[]> {
+  trigger: TextTrackAddEvent | TextTrackRemoveEvent;
+}
+
+/**
+ * Fired when the current captions/subtitles text track changes.
+ */
+export interface MediaTextTrackChangeEvent extends MediaEvent<TextTrack | null> {
+  trigger: TextTrackModeChangeEvent;
+  request?: RE.MediaTextTrackChangeRequestEvent;
+}
 
 /**
  * Fired when the `viewType` property changes value. This will generally fire when the

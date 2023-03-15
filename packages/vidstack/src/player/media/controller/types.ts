@@ -6,18 +6,21 @@ import type { LogLevel } from '../../../foundation/logger/log-level';
 import type { ScreenOrientationEvents } from '../../../foundation/orientation/events';
 import type { ScreenOrientationAdapter } from '../../../foundation/orientation/screen-orientation';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/types';
-import type { AudioTrackList } from '../audio-tracks';
 import type { MediaEvents, UserIdleChangeEvent } from '../events';
 import type { AudioProvider } from '../providers/audio/provider';
 import type { HLSProviderEvents } from '../providers/hls/events';
 import type { HLSProvider } from '../providers/hls/provider';
 import type { VideoPresentationEvents } from '../providers/video/presentation/events';
 import type { VideoProvider } from '../providers/video/provider';
+import type { VideoQualityList } from '../quality/video-quality';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from '../request-events';
 import type { MediaStore } from '../store';
+import type { AudioTrackList } from '../tracks/audio-tracks';
+import type { TextRenderers } from '../tracks/text/render/text-renderer';
+import type { TextTrack, TextTrackInit } from '../tracks/text/text-track';
+import type { TextTrackList } from '../tracks/text/text-tracks';
 import type { MediaLoadingStrategy, MediaResource } from '../types';
 import type { MediaUser } from '../user';
-import type { VideoQualityList } from '../video-quality';
 
 export interface MediaControllerProps
   // Prefer picking off the `MediaStore` type to ensure docs are kept in-sync.
@@ -25,6 +28,7 @@ export interface MediaControllerProps
     MediaStore,
     | 'autoplay'
     | 'controls'
+    | 'crossorigin'
     | 'currentTime'
     | 'loop'
     | 'muted'
@@ -88,6 +92,12 @@ export interface MediaControllerProps
    * present on the `<media-player>` element).
    */
   preferNativeHLS: boolean;
+  /**
+   * A list of text track objects to load.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/text-tracks}
+   */
+  textTracks: (TextTrack | TextTrackInit)[];
 }
 
 export type AnyMediaProvider =
@@ -96,7 +106,7 @@ export type AnyMediaProvider =
   | ({ type: 'hls' } & HLSProvider);
 
 export interface MediaController {
-  /** @internal */
+  /* @internal */
   readonly $store: MediaStore;
   /**
    * Media user settings which currently supports configuring user idling behavior.
@@ -116,19 +126,30 @@ export interface MediaController {
    */
   readonly state: Readonly<MediaStore>;
   /**
-   * A `VideoQualityList` containing a listing of all `VideoQuality` objects representing the
-   * set of available video renditions.
+   * A list of all `VideoQuality` objects representing the set of available video renditions.
    *
    * @see {@link https://vidstack.io/docs/player/core-concepts/quality#quality-list}
    */
   readonly qualities: VideoQualityList;
   /**
-   * A `AudioTrackList` containing a listing of all `AudioTrack` objects representing the
-   * set of available audio tracks.
+   * A list of all `AudioTrack` objects representing the set of available audio tracks.
    *
    * @see {@link https://vidstack.io/docs/player/core-concepts/audio-tracks}
    */
   readonly audioTracks: AudioTrackList;
+  /**
+   * A list of all `TextTrack` objects representing the set of available text tracks.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/text-tracks}
+   */
+  readonly textTracks: TextTrackList;
+  /**
+   * Contains text renderers which are responsible for loading, parsing, and rendering text
+   * tracks.
+   *
+   * @see {@link https://vidstack.io/docs/player/core-concepts/text-tracks#text-renderer}
+   */
+  readonly textRenderers: TextRenderers;
   /**
    * Enables subscribing to live updates of individually selected media state.
    *

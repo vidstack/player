@@ -1,5 +1,12 @@
-import { canUsePictureInPicture, canUseVideoPresentation } from '../../../../utils/support';
+import { onDispose } from 'maverick.js';
+
+import {
+  canPlayHLSNatively,
+  canUsePictureInPicture,
+  canUseVideoPresentation,
+} from '../../../../utils/support';
 import type { MediaContext } from '../../context';
+import { ATTACH_VIDEO } from '../../tracks/text/symbols';
 import { HTMLMediaProvider } from '../html/provider';
 import type {
   MediaFullscreenAdapter,
@@ -7,6 +14,7 @@ import type {
   MediaProvider,
   MediaSetupContext,
 } from '../types';
+import { discoverNativeTextTracks } from './native-text-tracks';
 import { VideoPictureInPicture } from './picture-in-picture';
 import {
   FullscreenPresentationAdapter,
@@ -44,7 +52,6 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProvider {
 
   constructor(video: HTMLVideoElement, context: MediaContext) {
     super(video);
-
     if (canUseVideoPresentation(video)) {
       const presentation = new VideoPresentation(video, context);
       this.fullscreen = new FullscreenPresentationAdapter(presentation);
@@ -56,6 +63,16 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProvider {
 
   override setup(context: MediaSetupContext): void {
     super.setup(context);
+
+    if (canPlayHLSNatively(this.video)) {
+      discoverNativeTextTracks(this.video, context);
+    }
+
+    context.textRenderers[ATTACH_VIDEO](this.video);
+    onDispose(() => {
+      context.textRenderers[ATTACH_VIDEO](null);
+    });
+
     if (this.type === 'video') context.delegate.dispatch('provider-setup', { detail: this });
   }
 

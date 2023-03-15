@@ -25,7 +25,7 @@ import type { MediaControllerProps } from './types';
  * has connected.
  */
 export function createMediaRequestManager(
-  { $player, $store: $media, $provider, logger, qualities, audioTracks }: MediaContext,
+  { $player, $store: $media, $provider, logger, qualities, audioTracks, textTracks }: MediaContext,
   handler: MediaStateManager,
   requests: MediaRequestContext,
   $props: Signals<MediaControllerProps>,
@@ -96,6 +96,7 @@ export function createMediaRequestManager(
     'media-seeking-request': onSeekingRequest,
     'media-show-poster-request': onShowPosterRequest,
     'media-start-loading': onStartLoading,
+    'media-text-track-change-request': onTextTrackChangeRequest,
     'media-unmute-request': onUnmuteRequest,
     'media-volume-change-request': onVolumeChangeRequest,
   };
@@ -141,6 +142,22 @@ export function createMediaRequestManager(
     $provider()!.playbackRate = event.detail;
   }
 
+  function onTextTrackChangeRequest(event: RE.MediaTextTrackChangeRequestEvent) {
+    const { index, mode } = event.detail,
+      track = textTracks[index];
+    if (track) {
+      requests._queue._enqueue('textTrack', event);
+      track.mode = mode;
+    } else if (__DEV__) {
+      logger
+        ?.warnGroup('[vidstack] failed text track change request (invalid index)')
+        .labelledLog('Text Tracks', textTracks.toArray())
+        .labelledLog('Index', index)
+        .labelledLog('Event', event)
+        .dispatch();
+    }
+  }
+
   function onAudioTrackChangeRequest(event: RE.MediaAudioTrackChangeRequestEvent) {
     if (audioTracks.readonly) {
       if (__DEV__) {
@@ -159,6 +176,13 @@ export function createMediaRequestManager(
     if (track) {
       requests._queue._enqueue('audioTrack', event);
       track.selected = true;
+    } else if (__DEV__) {
+      logger
+        ?.warnGroup('[vidstack] failed audio track change request (invalid index)')
+        .labelledLog('Audio Tracks', audioTracks.toArray())
+        .labelledLog('Index', index)
+        .labelledLog('Event', event)
+        .dispatch();
     }
   }
 
@@ -181,7 +205,16 @@ export function createMediaRequestManager(
       qualities.autoSelect(event);
     } else {
       const quality = qualities[index];
-      if (quality) quality.selected = true;
+      if (quality) {
+        quality.selected = true;
+      } else if (__DEV__) {
+        logger
+          ?.warnGroup('[vidstack] failed quality change request (invalid index)')
+          .labelledLog('Qualities', qualities.toArray())
+          .labelledLog('Index', index)
+          .labelledLog('Event', event)
+          .dispatch();
+      }
     }
   }
 
@@ -486,6 +519,7 @@ export interface MediaRequestQueueRecord {
   fullscreen: RE.MediaEnterFullscreenRequestEvent | RE.MediaExitFullscreenRequestEvent;
   seeked: RE.MediaSeekRequestEvent | RE.MediaLiveEdgeRequestEvent;
   seeking: RE.MediaSeekingRequestEvent;
+  textTrack: RE.MediaTextTrackChangeRequestEvent;
   quality: RE.MediaQualityChangeRequestEvent;
   pip: RE.MediaEnterPIPRequestEvent | RE.MediaExitPIPRequestEvent;
   userIdle: RE.MediaResumeUserIdleRequestEvent | RE.MediaPauseUserIdleRequestEvent;

@@ -25,7 +25,7 @@ export interface IconProps
    * @docs {@link https://www.vidstack.io/docs/player/styling/foundation#parts}
    */
   part?: string;
-  /** @internal */
+  /* @internal */
   __paths?: string;
 }
 

@@ -2,160 +2,88 @@ import { DOMEvent } from 'maverick.js/std';
 
 import {
   LIST_ADD,
-  LIST_AUTO_SELECT,
-  LIST_ITEMS,
+  LIST_ON_REMOVE,
+  LIST_ON_RESET,
+  LIST_READONLY,
   LIST_REMOVE,
   LIST_RESET,
-  LIST_SET_AUTO,
   LIST_SET_READONLY,
-  LIST_SET_SELECTED,
 } from './symbols';
 
-const SELECTED = Symbol(__DEV__ ? 'SELECTED' : 0);
-const AUTO = Symbol(__DEV__ ? 'AUTO' : 0);
-const READONLY = Symbol(__DEV__ ? 'READONLY' : 0);
-
-export interface ListItem {
-  selected: boolean;
-}
+export interface ListItem {}
 
 export class List<Item extends ListItem> extends EventTarget implements Iterable<Item> {
   [index: number]: Item | undefined;
 
-  private [LIST_ITEMS]: Item[] = [];
+  protected items: Item[] = [];
+
+  /* @internal */
+  protected [LIST_READONLY] = false;
+  /* @internal */
+  protected [LIST_ON_RESET]?(trigger?: Event): void;
+  /* @internal */
+  protected [LIST_ON_REMOVE]?(item: Item, trigger?: Event): void;
 
   get length() {
-    return this[LIST_ITEMS].length;
+    return this.items.length;
   }
 
   get readonly() {
-    return this[READONLY];
-  }
-
-  get auto() {
-    return this[AUTO] || this.readonly;
-  }
-
-  get selected() {
-    return this[LIST_ITEMS].find((item) => item.selected) ?? null;
-  }
-
-  get selectedIndex() {
-    return this[LIST_ITEMS].findIndex((item) => item.selected);
+    return this[LIST_READONLY];
   }
 
   /**
    * Transform list to an array.
    */
   toArray(): Item[] {
-    return [...this[LIST_ITEMS]];
-  }
-
-  /**
-   * Request automatic item selection (if supported). This will be a no-op if the list is
-   * `readonly` as that already implies auto-selection.
-   */
-  autoSelect(trigger?: Event): void {
-    if (this.readonly || this[AUTO] || !this[LIST_AUTO_SELECT]) return;
-    this[LIST_AUTO_SELECT]();
-    this[LIST_SET_AUTO](true, trigger);
+    return [...this.items];
   }
 
   [Symbol.iterator]() {
-    return this[LIST_ITEMS].values();
+    return this.items.values();
   }
 
-  /** @internal */
-  [AUTO] = false;
-
-  /** @internal */
-  [READONLY] = false;
-
-  /** @internal */
-  [LIST_AUTO_SELECT]?: () => void;
-
-  /** @internal */
-  [LIST_ADD](item: Omit<Item, 'selected'>, trigger?: Event): void {
-    item[SELECTED] = false;
-
-    const index = this[LIST_ITEMS].length;
+  /* @internal */
+  [LIST_ADD](item: Item, trigger?: Event): void {
+    const index = this.items.length;
     if (!('' + index in this)) {
       Object.defineProperty(this, index, {
         get() {
-          return this[LIST_ITEMS][index];
+          return this.items[index];
         },
       });
     }
-
-    if (this[LIST_ITEMS].includes(item as Item)) return;
-
-    Object.defineProperty(item, 'selected', {
-      get() {
-        return this[SELECTED]!;
-      },
-      set: (selected: boolean) => {
-        if (this.readonly) return;
-        this[LIST_SET_AUTO](false, trigger);
-        this[LIST_SET_SELECTED](item as Item, selected, trigger);
-      },
-    });
-
-    this[LIST_ITEMS].push(item as Item);
+    if (this.items.includes(item as Item)) return;
+    this.items.push(item as Item);
     this.dispatchEvent(new DOMEvent<any>('add', { detail: item, trigger }));
   }
 
-  /** @internal */
+  /* @internal */
   [LIST_REMOVE](item: Item, trigger?: Event): void {
-    const index = this[LIST_ITEMS].indexOf(item);
+    const index = this.items.indexOf(item);
     if (index >= 0) {
-      item.selected = false;
-      this[LIST_ITEMS].splice(index, 1);
+      this[LIST_ON_REMOVE]?.(item, trigger);
+      this.items.splice(index, 1);
       this.dispatchEvent(new DOMEvent<any>('remove', { detail: item, trigger }));
     }
   }
 
-  /** @internal */
+  /* @internal */
   [LIST_RESET](trigger?: Event): void {
-    for (const item of [...this[LIST_ITEMS]]) this[LIST_REMOVE](item, trigger);
-    this[LIST_ITEMS] = [];
-    this[LIST_SET_AUTO](false, trigger);
+    for (const item of [...this.items]) this[LIST_REMOVE](item, trigger);
+    this.items = [];
     this[LIST_SET_READONLY](false, trigger);
+    this[LIST_ON_RESET]?.();
   }
 
-  /** @internal */
-  [LIST_SET_AUTO](auto: boolean, trigger?: Event) {
-    if (this[AUTO] === auto) return;
-    this[AUTO] = auto;
-    this.dispatchEvent(new DOMEvent<any>('auto-change', { detail: auto, trigger }));
-  }
-
-  /** @internal */
+  /* @internal */
   [LIST_SET_READONLY](readonly: boolean, trigger?: Event) {
-    if (this[READONLY] === readonly) return;
-    this[READONLY] = readonly;
+    if (this[LIST_READONLY] === readonly) return;
+    this[LIST_READONLY] = readonly;
     this.dispatchEvent(new DOMEvent<any>('readonly-change', { detail: readonly, trigger }));
   }
 
-  /** @internal */
-  [LIST_SET_SELECTED](item: Item, selected: boolean, trigger?: Event) {
-    if (selected === item[SELECTED]) return;
-
-    const prev = this.selected;
-    item[SELECTED] = selected;
-
-    const changed = !selected ? prev === item : prev !== item;
-    if (changed) {
-      if (prev) prev[SELECTED] = false;
-      this.dispatchEvent(
-        new DOMEvent<ListChangeEventDetail<Item>>('change', {
-          detail: { prev, current: this.selected! },
-          trigger,
-        }),
-      );
-    }
-  }
-
-  override addEventListener<Type extends keyof ListEvents>(
+  override addEventListener<Type extends keyof ListEvents<Item>>(
     type: Type,
     callback:
       | ((event: ListEvents<Item>[Type]) => void)
@@ -163,10 +91,10 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
       | null,
     options?: boolean | AddEventListenerOptions | undefined,
   ): void {
-    super.addEventListener(type, callback as any, options);
+    super.addEventListener(type as any, callback as any, options);
   }
 
-  override removeEventListener<Type extends keyof ListEvents>(
+  override removeEventListener<Type extends keyof ListEvents<Item>>(
     type: Type,
     callback:
       | ((event: ListEvents<Item>[Type]) => void)
@@ -174,30 +102,27 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
       | null,
     options?: boolean | AddEventListenerOptions | undefined,
   ): void {
-    super.removeEventListener(type, callback as any, options);
+    super.removeEventListener(type as any, callback as any, options);
   }
 }
 
 export interface ListEvents<Item extends ListItem = ListItem> {
   add: ListAddEvent<Item>;
   remove: ListRemoveEvent<Item>;
-  change: ListChangeEvent<Item>;
-  'auto-change': ListAutoChangeEvent;
   'readonly-change': ListReadonlyChangeEvent;
 }
 
+/**
+ * Fired when an item has been added to the list.
+ */
 export interface ListAddEvent<Item extends ListItem> extends DOMEvent<Item> {}
 
+/**
+ * Fired when an item has been removed from the list.
+ */
 export interface ListRemoveEvent<Item extends ListItem> extends DOMEvent<Item> {}
 
-export interface ListChangeEvent<Item extends ListItem>
-  extends DOMEvent<ListChangeEventDetail<Item>> {}
-
-export interface ListChangeEventDetail<Item extends ListItem> {
-  prev: Item | null;
-  current: Item;
-}
-
-export interface ListAutoChangeEvent extends DOMEvent<boolean> {}
-
+/**
+ * Fired when the readonly state of the list has changed.
+ */
 export interface ListReadonlyChangeEvent extends DOMEvent<boolean> {}

@@ -9,7 +9,7 @@ import type { SliderStore } from './store';
 export { SliderProps, SliderEvents, SliderCSSVars };
 
 export interface SliderMembers extends SliderProps {
-  /** @internal */
+  /* @internal */
   $store: SliderStore;
   /**
    * This object contains all current slider state (e.g., `dragging`, `fillPercent`, etc.).

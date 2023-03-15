@@ -20,7 +20,8 @@ export const PosterDefinition = defineCustomElement<MediaPosterElement>({
     const { $store: $media } = useMedia(),
       remote = new MediaRemoteControl();
 
-    const $imgSrc = () => ($media.canLoad && $media.poster.length ? $media.poster : null),
+    const $crossorigin = () => $media.crossorigin,
+      $imgSrc = () => ($media.canLoad && $media.poster.length ? $media.poster : null),
       $imgAlt = () => ($imgSrc() ? $alt() : null),
       $imgLoading = signal(true),
       $imgError = signal(false);
@@ -56,7 +57,14 @@ export const PosterDefinition = defineCustomElement<MediaPosterElement>({
     }
 
     return () => (
-      <img src={$imgSrc()} alt={$imgAlt()} part="img" $on:load={onLoad} $on:error={onError} />
+      <img
+        src={$imgSrc()}
+        alt={$imgAlt()}
+        crossorigin={$crossorigin()}
+        part="img"
+        $on:load={onLoad}
+        $on:error={onError}
+      />
     );
   },
 });

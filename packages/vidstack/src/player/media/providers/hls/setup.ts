@@ -1,47 +1,45 @@
 import type * as HLS from 'hls.js';
-import { effect, peek, ReadSignal, WriteSignal } from 'maverick.js';
+import { effect, peek } from 'maverick.js';
 import { camelToKebabCase, dispatchEvent, DOMEvent, kebabToCamelCase } from 'maverick.js/std';
 
 import { createRAFLoop } from '../../../../foundation/hooks/raf-loop';
-import {
-  LIST_ADD,
-  LIST_AUTO_SELECT,
-  LIST_SET_AUTO,
-  LIST_SET_SELECTED,
-} from '../../../../foundation/list/symbols';
+import { LIST_ADD, LIST_SELECT } from '../../../../foundation/list/symbols';
 import { HLS_LISTENERS } from '../../../element/element';
+import { ENABLE_AUTO_QUALITY, SET_AUTO_QUALITY } from '../../quality/symbols';
+import { TEXT_TRACK_ON_MODE_CHANGE, TEXT_TRACK_READY_STATE } from '../../tracks/text/symbols';
+import { TextTrack } from '../../tracks/text/text-track';
 import type { MediaSetupContext } from '../types';
 import type { HLSProvider } from './provider';
-import type { HLSConstructor, HLSInstanceCallback } from './types';
+import type { HLSInstanceCallback } from './types';
 
 const toDOMEventType = (type: string) => camelToKebabCase(type);
 const toHLSEventType = (type: string) => kebabToCamelCase(type) as HLS.Events;
 
-export function useHLS(
+export function setupHLS(
   provider: HLSProvider,
-  config: Partial<HLS.HlsConfig>,
-  $ctor: ReadSignal<HLSConstructor | null>,
-  $instance: WriteSignal<HLS.default | null>,
-  { player, logger, delegate, $store, qualities, audioTracks }: MediaSetupContext,
+  { player, logger, delegate, $store, qualities, audioTracks, textTracks }: MediaSetupContext,
   callbacks: Set<HLSInstanceCallback>,
 ) {
   const listening = new Set<string>();
 
   // Create `hls.js` instance and attach listeners
   effect(() => {
-    const ctor = $ctor();
+    const ctor = provider.$ctor();
     if (!ctor) return;
 
-    const isLowLatencyStream = peek(() => $store.streamType).includes('ll-');
+    const isLive = peek(() => $store.streamType).includes('live'),
+      isLiveLowLatency = peek(() => $store.streamType).includes('ll-');
 
     const instance = new ctor({
-      lowLatencyMode: isLowLatencyStream,
-      ...config,
+      lowLatencyMode: isLiveLowLatency,
+      backBufferLength: isLiveLowLatency ? 4 : isLive ? 8 : undefined,
+      renderTextTracksNatively: false,
+      ...provider.config,
     });
 
     effect(() => void attachEventListeners(instance, player[HLS_LISTENERS]()));
     instance.on(ctor.Events.ERROR, onError);
-    $instance.set(instance);
+    provider.$instance.set(instance);
     for (const callback of callbacks) callback(instance);
     dispatchEvent(player, 'hls-instance', { detail: instance });
 
@@ -50,7 +48,45 @@ export function useHLS(
     instance.on(ctor.Events.LEVEL_SWITCHED, onLevelSwitched);
     instance.on(ctor.Events.LEVEL_LOADED, onLevelLoaded);
 
-    qualities[LIST_AUTO_SELECT] = () => {
+    instance.on(ctor.Events.NON_NATIVE_TEXT_TRACKS_FOUND, (eventType, data) => {
+      const event = new DOMEvent<HLS.NonNativeTextTracksData>(eventType, { detail: data });
+
+      let currentTrack = -1;
+      for (let i = 0; i < data.tracks.length; i++) {
+        const nonNativeTrack = data.tracks[i],
+          init = nonNativeTrack.subtitleTrack ?? nonNativeTrack.closedCaptions,
+          track = new TextTrack({
+            id: `hls-${nonNativeTrack!.kind}${i}`,
+            src: init?.url,
+            label: nonNativeTrack!.label,
+            language: init?.lang,
+            kind: nonNativeTrack!.kind as TextTrackKind,
+          });
+
+        track[TEXT_TRACK_READY_STATE] = 2;
+        track[TEXT_TRACK_ON_MODE_CHANGE] = () => {
+          if (track.mode === 'showing') {
+            instance.subtitleTrack = i;
+            currentTrack = i;
+          } else if (currentTrack === i) {
+            instance.subtitleTrack = -1;
+            currentTrack = -1;
+          }
+        };
+
+        if (nonNativeTrack.default) track.mode = 'showing';
+        textTracks.add(track, event);
+      }
+    });
+
+    instance.on(ctor.Events.CUES_PARSED, (eventType, data) => {
+      const track = textTracks.getById(`hls-${data.track}`);
+      if (!track) return;
+      const event = new DOMEvent<HLS.CuesParsedData>(eventType, { detail: data });
+      for (const cue of data.cues) track.addCue(cue, event);
+    });
+
+    qualities[ENABLE_AUTO_QUALITY] = () => {
       instance.currentLevel = -1;
     };
 
@@ -66,10 +102,10 @@ export function useHLS(
     delegate.dispatch('provider-setup', { detail: provider });
 
     return () => {
-      qualities[LIST_AUTO_SELECT] = undefined;
+      qualities[ENABLE_AUTO_QUALITY] = undefined;
       listening.clear();
       instance.destroy();
-      $instance.set(null);
+      provider.$instance.set(null);
       if (__DEV__) logger?.info('🏗️ Destroyed HLS instance');
     };
   });
@@ -77,7 +113,7 @@ export function useHLS(
   effect(() => {
     if (!$store.live) return;
 
-    const instance = $instance()!;
+    const instance = provider.$instance()!;
     if (!instance) return;
 
     const rafLoop = createRAFLoop(() => {
@@ -104,14 +140,14 @@ export function useHLS(
   function onAudioTrackSwitched(eventType: string, data: HLS.AudioTrackSwitchedData) {
     const track = audioTracks[data.id];
     if (track) {
-      audioTracks[LIST_SET_SELECTED](track, true, new DOMEvent(eventType, { detail: data }));
+      audioTracks[LIST_SELECT](track, true, new DOMEvent(eventType, { detail: data }));
     }
   }
 
   function onLevelSwitched(eventType: string, data: HLS.LevelSwitchedData) {
     const quality = qualities[data.level];
     if (quality) {
-      qualities[LIST_SET_SELECTED](quality, true, new DOMEvent(eventType, { detail: data }));
+      qualities[LIST_SELECT](quality, true, new DOMEvent(eventType, { detail: data }));
     }
   }
 
@@ -132,11 +168,11 @@ export function useHLS(
 
     delegate.dispatch('duration-change', { detail: duration, trigger: event });
 
-    const instance = $instance()!;
+    const instance = provider.instance!;
     const media = instance.media!;
 
     if (instance.currentLevel === -1) {
-      qualities[LIST_SET_AUTO](true, event);
+      qualities[SET_AUTO_QUALITY](true, event);
     }
 
     for (const track of instance.audioTracks) {
@@ -170,8 +206,8 @@ export function useHLS(
     if (__DEV__) {
       logger
         ?.errorGroup(`HLS error \`${eventType}\``)
-        .labelledLog('Media Element', $instance()?.media)
-        .labelledLog('HLS Instance', $instance())
+        .labelledLog('Media Element', provider.instance?.media)
+        .labelledLog('HLS Instance', provider.instance)
         .labelledLog('Event Type', eventType)
         .labelledLog('Data', data)
         .labelledLog('Src', $store.source)
@@ -182,15 +218,15 @@ export function useHLS(
     if (data.fatal) {
       switch (data.type) {
         case 'networkError':
-          $instance()?.startLoad();
+          provider.instance?.startLoad();
           break;
         case 'mediaError':
-          $instance()?.recoverMediaError();
+          provider.instance?.recoverMediaError();
           break;
         default:
           // We can't recover here - better course of action?
-          $instance()?.destroy();
-          $instance.set(null);
+          provider.instance?.destroy();
+          provider.$instance.set(null);
           break;
       }
     }

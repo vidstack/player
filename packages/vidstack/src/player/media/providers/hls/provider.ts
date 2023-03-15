@@ -8,8 +8,8 @@ import type { MediaSrc } from '../../types';
 import type { MediaProvider, MediaSetupContext } from '../types';
 import { VideoProvider } from '../video/provider';
 import { loadHLSLibrary } from './lib-loader';
+import { setupHLS } from './setup';
 import type { HLSConstructor, HLSInstanceCallback, HLSLibrary } from './types';
-import { useHLS } from './use-hls';
 
 export const HLS_PROVIDER = Symbol(__DEV__ ? 'HLS_PROVIDER' : 0);
 
@@ -49,8 +49,8 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
     return true;
   }
 
-  protected _$ctor = signal<HLSConstructor | null>(null);
-  protected _$instance = signal<HLS.default | null>(null);
+  $ctor = signal<HLSConstructor | null>(null);
+  $instance = signal<HLS.default | null>(null);
 
   protected _instanceCallbacks = new Set<HLSInstanceCallback>();
   protected _library: HLSLibrary = `${JS_DELIVR_CDN}/npm/hls.js@^1.0.0/dist/hls${
@@ -84,28 +84,28 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
 
   override setup(context: MediaSetupContext) {
     super.setup(context);
-    loadHLSLibrary(this._library, context).then((ctor) => this._$ctor.set(() => ctor));
-    useHLS(this, this.config, this._$ctor, this._$instance, context, this._instanceCallbacks);
+    loadHLSLibrary(this._library, context).then((ctor) => this.$ctor.set(() => ctor));
+    setupHLS(this, context, this._instanceCallbacks);
   }
 
   /**
    * The `hls.js` constructor.
    */
   get ctor() {
-    return this._$ctor();
+    return this.$ctor();
   }
 
   /**
    * The current `hls.js` instance.
    */
   get instance() {
-    return this._$instance();
+    return this.$instance();
   }
 
   override async loadSource({ src }: MediaSrc) {
     effect(() => {
       if (!isString(src)) return;
-      const instance = this._$instance();
+      const instance = this.$instance();
       instance?.loadSource(src);
     });
   }
@@ -115,7 +115,7 @@ export class HLSProvider extends VideoProvider implements MediaProvider {
    * attached to media.
    */
   onInstance(callback: HLSInstanceCallback): Dispose {
-    const instance = peek(this._$instance);
+    const instance = peek(this.$instance);
     if (instance) callback(instance);
     this._instanceCallbacks.add(callback);
     return () => this._instanceCallbacks.delete(callback);
