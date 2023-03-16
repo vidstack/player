@@ -325,7 +325,7 @@
       </a>
       <a
         class="flex items-center hover:underline ml-6 hover:text-brand"
-        href="https://github.com/vidstack/player/blob/main/packages/icons/README.md"
+        href="https://github.com/vidstack/media-icons"
         target="_blank"
         rel="noreferrer"
       >

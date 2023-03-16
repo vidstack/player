@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "maverick.js": "^0.32.3",
-    "media-icons": "workspace:*",
+    "media-icons": "^0.4.2",
     "type-fest": "^3.5.0"
   },
   "devDependencies": {

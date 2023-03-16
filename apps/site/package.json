@@ -16,7 +16,7 @@
     "@vidstack/react": "workspace:*",
     "clsx": "^1.2.0",
     "html-entities": "^2.3.3",
-    "media-icons": "workspace:*",
+    "media-icons": "^0.4.2",
     "svelte-class-transition": "^1.0.4",
     "vidstack": "workspace:*"
   },

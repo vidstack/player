@@ -1,8 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "jsx": "preserve",
-    "jsxImportSource": "maverick.js"
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
-}
