@@ -5,10 +5,12 @@
     const iconsDir = path.resolve(process.cwd(), 'node_modules/media-icons/raw');
     const files = await fs.readdir(iconsDir);
     const { tags } = await import('./tags.js');
+    const ignore = new Set(['.DS_Store']);
 
     const icons = {};
     for (const file of files) {
       const name = path.basename(file, path.extname(file));
+      if (ignore.has(name)) continue;
       const content = await fs.readFile(path.resolve(iconsDir, file), 'utf-8');
       icons[name] = {
         paths: content
