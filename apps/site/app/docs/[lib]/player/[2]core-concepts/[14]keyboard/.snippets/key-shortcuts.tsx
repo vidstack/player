@@ -7,6 +7,7 @@ import { MEDIA_KEY_SHORTCUTS } from 'vidstack';
     toggleMuted: 'm',
     toggleFullscreen: 'f',
     togglePictureInPicture: 'i',
+    toggleCaptions: 'c',
     seekBackward: 'ArrowLeft',
     seekForward: 'ArrowRight',
     volumeUp: 'ArrowUp',

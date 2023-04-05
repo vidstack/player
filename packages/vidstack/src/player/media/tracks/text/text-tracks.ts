@@ -30,11 +30,12 @@ export class TextTrackList extends List<TextTrack> {
     const isTrack = init instanceof TextTrack,
       track = isTrack ? init : new TextTrack(init);
 
+    if (this._default && init.default) delete init.default;
     track.addEventListener('mode-change', this._handleTrackModeChange);
     this[LIST_ADD](track, trigger);
     if (this._canLoad) track[TEXT_TRACK_CAN_LOAD]();
 
-    if (!this._default && init.default) {
+    if (init.default) {
       this._default = track;
       track.mode = 'showing';
     }

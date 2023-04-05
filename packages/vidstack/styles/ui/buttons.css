@@ -64,6 +64,8 @@
     media-mute-button[data-volume='muted'] [slot='volume-muted'],
     media-pip-button:not([data-pip]) [slot='enter'],
     media-pip-button[data-pip] [slot='exit'],
+    media-caption-button:not([data-pressed]) [slot='off'],
+    media-caption-button[data-pressed] [slot='on'],
     media-fullscreen-button:not([data-fullscreen]) [slot='enter'],
     media-fullscreen-button[data-fullscreen] [slot='exit'],
     media-seek-button:not([seconds*='-']) [slot='forward'],
@@ -73,6 +75,7 @@
 }
 
 :where(media-fullscreen-button[data-hidden]),
-:where(media-pip-button[data-hidden]) {
+:where(media-pip-button[data-hidden]),
+:where(media-caption-button[data-hidden]) {
   display: none;
 }

@@ -69,26 +69,23 @@ export class TextRenderers {
       return;
     }
 
-    const nativeDisplay = (this._nativeControls && !this._renderers.length) || this._nativeDisplay;
-
     // Fullscreen check to ensure we keep the native renderer loaded on iOS.
-    if (nativeDisplay || !canFullscreen()) {
-      if (!this._nativeRenderer) {
-        this._nativeRenderer = new NativeTextRenderer();
-        this._nativeRenderer.attach(this._video);
-        for (const track of this._textTracks) this._addNativeTrack(track);
-      }
-    } else {
-      this._nativeRenderer?.detach();
-      this._nativeRenderer = null;
+    if (this._nativeDisplay || !canFullscreen()) {
+      this._createNativeRenderer();
     }
 
     const currentTrack = this._textTracks.selected;
-    this._nativeRenderer?.setDisplay(nativeDisplay);
-    this._nativeRenderer?.changeTrack(currentTrack);
 
-    if (!currentTrack || nativeDisplay) {
+    if (this._nativeDisplay) {
       this._customRenderer?.changeTrack(null);
+      this._nativeRenderer!.setDisplay(true);
+      this._nativeRenderer!.changeTrack(currentTrack);
+      return;
+    }
+
+    if (!currentTrack) {
+      this._customRenderer?.changeTrack(null);
+      this._nativeRenderer?.changeTrack(null);
       return;
     }
 
@@ -102,7 +99,17 @@ export class TextRenderers {
       this._customRenderer = customRenderer ?? null;
     }
 
-    customRenderer?.changeTrack(!nativeDisplay ? currentTrack : null);
+    if (this._nativeControls && !customRenderer) {
+      this._createNativeRenderer();
+      this._nativeRenderer!.setDisplay(true);
+      this._nativeRenderer!.changeTrack(currentTrack);
+      return;
+    }
+
+    this._nativeRenderer?.setDisplay(false);
+    this._nativeRenderer?.changeTrack(null);
+
+    customRenderer?.changeTrack(currentTrack);
   }
 
   private _detach() {
@@ -110,6 +117,13 @@ export class TextRenderers {
     this._nativeRenderer = null;
     this._customRenderer?.detach();
     this._customRenderer = null;
+  }
+
+  private _createNativeRenderer() {
+    if (this._nativeRenderer) return;
+    this._nativeRenderer = new NativeTextRenderer();
+    this._nativeRenderer.attach(this._video!);
+    for (const track of this._textTracks) this._addNativeTrack(track);
   }
 }
 

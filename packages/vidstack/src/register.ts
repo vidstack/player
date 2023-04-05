@@ -3,6 +3,7 @@ import { registerLiteCustomElement } from 'maverick.js/element';
 import { MediaIconDefinition } from './icons/element';
 import { PlayerDefinition } from './player/element/element';
 import { OutletDefinition } from './player/media/outlet/element';
+import { CaptionButtonDefinition } from './player/ui/caption-button/element';
 import { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
 import { LiveIndicatorDefinition } from './player/ui/live-indicator/element';
 import { MuteButtonDefinition } from './player/ui/mute-button/element';
@@ -23,13 +24,13 @@ export default function registerAllElements(): void {
   [
     PlayerDefinition,
     OutletDefinition,
-    FullscreenButtonDefinition,
-    LiveIndicatorDefinition,
+    PosterDefinition,
     MediaIconDefinition,
+    PlayButtonDefinition,
     MuteButtonDefinition,
     PIPButtonDefinition,
-    PlayButtonDefinition,
-    PosterDefinition,
+    FullscreenButtonDefinition,
+    CaptionButtonDefinition,
     SeekButtonDefinition,
     SliderDefinition,
     SliderThumbnailDefinition,
@@ -39,5 +40,6 @@ export default function registerAllElements(): void {
     TimeSliderDefinition,
     ToggleButtonDefinition,
     VolumeSliderDefinition,
+    LiveIndicatorDefinition,
   ].map(registerLiteCustomElement);
 }

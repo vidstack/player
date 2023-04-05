@@ -3,6 +3,7 @@ import { DOMEvent } from 'maverick.js/std';
 import type { Logger } from '../../foundation/logger/create-logger';
 import type { MediaPlayerElement } from '../element/types';
 import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request-events';
+import { isTrackCaptionKind } from './tracks/text/text-track';
 
 /**
  * A simple facade for dispatching media requests to the nearest media player element.
@@ -12,10 +13,11 @@ import type { MediaFullscreenRequestTarget, MediaRequestEvents } from './request
  *
  */
 export class MediaRemoteControl {
-  protected _target: EventTarget | null = null;
-  protected _player: MediaPlayerElement | null = null;
+  private _target: EventTarget | null = null;
+  private _player: MediaPlayerElement | null = null;
+  private _prevTrackIndex = -1;
 
-  constructor(protected _logger?: Logger) {}
+  constructor(private _logger?: Logger) {}
 
   /**
    * Set the target from which to dispatch media requests events from. The events should bubble
@@ -337,7 +339,46 @@ export class MediaRemoteControl {
     else this.enterPictureInPicture(trigger);
   }
 
-  protected _dispatchRequest<EventType extends keyof MediaRequestEvents>(
+  /**
+   * Dispatch a request to toggle the current captions mode.
+   */
+  toggleCaptions(trigger?: Event) {
+    const player = this.getPlayer(trigger?.target);
+
+    if (!player) {
+      if (__DEV__) this._noPlayerWarning(this.toggleCaptions.name);
+      return;
+    }
+
+    const tracks = player.state.textTracks,
+      track = player.state.textTrack;
+
+    if (track) {
+      const index = tracks.indexOf(track);
+      this.changeTextTrackMode(index, 'disabled', trigger);
+      this._prevTrackIndex = index;
+    } else {
+      let index = this._prevTrackIndex;
+
+      if (!tracks[index] || !isTrackCaptionKind(tracks[index])) {
+        index = -1;
+      }
+
+      if (index === -1) {
+        index = tracks.findIndex((track) => isTrackCaptionKind(track) && track.default);
+      }
+
+      if (index === -1) {
+        index = tracks.findIndex((track) => isTrackCaptionKind(track));
+      }
+
+      if (index >= 0) this.changeTextTrackMode(index, 'showing', trigger);
+
+      this._prevTrackIndex = -1;
+    }
+  }
+
+  private _dispatchRequest<EventType extends keyof MediaRequestEvents>(
     type: EventType,
     trigger?: Event,
     detail?: MediaRequestEvents[EventType]['detail'],

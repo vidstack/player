@@ -198,7 +198,7 @@ export class TextTrack extends EventTarget {
         encoding: this.encoding,
       });
 
-      if (errors[0].code === 0) {
+      if (errors[0]?.code === 0) {
         throw errors[0];
       } else {
         this._metadata = metadata;

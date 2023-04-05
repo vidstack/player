@@ -9,6 +9,7 @@
 | `can-pip`        | Picture-in-Picture is available.                          |
 | `can-play`       | Media is ready to be played.                              |
 | `can-seek`       | Whether seeking is permitted for live stream.             |
+| `captions`       | Caption or subtitle text track is showing.                |
 | `ended`          | Playback has reached the end.                             |
 | `error`          | Issue with media loading/playback.                        |
 | `fullscreen`     | Media is in fullscreen mode.                              |

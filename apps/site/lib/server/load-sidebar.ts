@@ -41,7 +41,6 @@ const WIP = new Set([
   'Vimeo',
   'Captions',
   'User',
-  'Captions Button',
 ]);
 
 function links(slugs: string[], filter: RegExp): SidebarLink[] {

@@ -4,6 +4,7 @@ const mediaAttributes = [
   'autoplay',
   'autoplay-error',
   'duration',
+  'captions',
   'can-fullscreen',
   'can-pip',
   'can-load',

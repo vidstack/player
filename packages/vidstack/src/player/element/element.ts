@@ -15,6 +15,7 @@ import { createMediaController } from '../media/controller/create-controller';
 import { useSourceSelection } from '../media/controller/source-selection';
 import type { AnyMediaProvider } from '../media/controller/types';
 import type { MediaState } from '../media/state';
+import { isTrackCaptionKind } from '../media/tracks/text/text-track';
 import { useKeyboard } from './keyboard';
 import { mediaPlayerProps } from './props';
 import type { MediaPlayerConnectEvent, MediaPlayerElement } from './types';
@@ -112,6 +113,7 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
 
     const $attrs: AttributesRecord = {
       'aspect-ratio': props.$aspectRatio,
+      'data-captions': () => !!$media.textTrack && isTrackCaptionKind($media.textTrack),
       'data-ios-controls': context.$iosControls,
     };
 

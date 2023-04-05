@@ -1,6 +1,6 @@
 import { MediaPIPButton } from '@vidstack/react';
 
-function FullscreenButton() {
+function PIPButton() {
   const tooltipId = 'media-pip-tooltip';
 
   return (

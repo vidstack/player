@@ -45,7 +45,7 @@ export class NativeTextRenderer implements TextRenderer {
     if (!track || !this._display) {
       for (const track of this._tracks) {
         const nativeTrack = track[TEXT_TRACK_PROXY]?.track;
-        if (nativeTrack) nativeTrack.mode = 'disabled';
+        if (nativeTrack?.mode === 'showing') nativeTrack.mode = 'hidden';
       }
     } else {
       const nativeTrack = track[TEXT_TRACK_PROXY]?.track;

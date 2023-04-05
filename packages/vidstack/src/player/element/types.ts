@@ -47,6 +47,7 @@ export interface MediaPlayerProps extends MediaControllerProps {
    *   toggleMuted: 'm',
    *   toggleFullscreen: 'f',
    *   togglePictureInPicture: 'i',
+   *   toggleCaptions: 'c',
    *   seekBackward: 'ArrowLeft',
    *   seekForward: 'ArrowRight',
    *   volumeUp: 'ArrowUp',

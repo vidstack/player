@@ -6,6 +6,7 @@
 | `data-can-load`       | Media can begin loading.                           |
 | `data-can-pip`        | Picture-in-Picture is available.                   |
 | `data-can-play`       | Media is ready to be played.                       |
+| `data-captions`       | Caption or subtitle text track is showing.         |
 | `data-ended`          | Playback has reached the end.                      |
 | `data-error`          | Issue with media loading/playback.                 |
 | `data-fullscreen`     | Media is in fullscreen mode.                       |
