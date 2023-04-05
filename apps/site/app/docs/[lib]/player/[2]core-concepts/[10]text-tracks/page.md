@@ -84,10 +84,6 @@ There are a few things to keep in mind:
 - Text tracks will not load until media can load (see
   [loading guide](docs/player/core-concepts/loading#loading-strategies)) and the `mode` is set to
   `showing` or `hidden`.
-- Only one track per [`kind`](https://developer.mozilla.org/en-US/docs/Web/API/TextTrack/kind) can
-  have a [`mode`](https://developer.mozilla.org/en-US/docs/Web/API/TextTrack/mode) of `showing`.
-  Other tracks of the same kind that are specifically `showing` will have their mode set to
-  `disabled` on change.
 - Text tracks will be cleared on source or provider change.
 
 ### Remove Tracks
@@ -103,6 +99,23 @@ All text tracks can be removed by calling `clear()`:
 ```ts
 player.textTracks.clear();
 ```
+
+### Track Mode
+
+The `mode` property of a text track accepts the following values:
+
+- `showing`: Track will load, receive cue updates, and is visible on-screen.
+- `hidden`: Track will load, receive cue updates, but is not visible on-screen.
+- `disabled`: Track will not load and it will not receive cue updates.
+
+```ts
+textTrack.mode = 'showing';
+```
+
+Only one track per [`kind`](https://developer.mozilla.org/en-US/docs/Web/API/TextTrack/kind) can
+have a [`mode`](https://developer.mozilla.org/en-US/docs/Web/API/TextTrack/mode) of `showing`.
+Other tracks of the same kind that are specifically `showing` will have their mode set to
+`disabled` on change.
 
 ### Track Events
 

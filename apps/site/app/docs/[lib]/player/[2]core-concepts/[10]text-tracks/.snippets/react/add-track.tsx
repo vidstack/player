@@ -9,6 +9,7 @@ import { MediaPlayer } from '@vidstack/react';
       kind: 'subtitles',
       label: 'English',
       language: 'en-US',
+      default: true,
     },
   ]}
 >

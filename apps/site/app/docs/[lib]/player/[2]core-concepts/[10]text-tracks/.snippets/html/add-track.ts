@@ -9,6 +9,7 @@ player.addEventListener('source-change', (event) => {
       kind: 'subtitles',
       label: 'English',
       language: 'en-US',
+      default: true,
     })
     .add({
       // ...
