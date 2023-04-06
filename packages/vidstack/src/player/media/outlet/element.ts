@@ -15,15 +15,11 @@ export const OutletDefinition = defineCustomElement<MediaOutletElement>({
     });
 
     effect(() => {
-      context.$loader();
-      return () => $rendered.set(false);
-    });
-
-    effect(() => {
       const loader = context.$loader();
       if (!$rendered() || !loader) return;
       peek(() => {
         loader.load(context).then((provider) => {
+          if (!peek($rendered)) return;
           // The src/loader might've changed by the time we load the provider.
           if (peek(context.$loader) === loader) {
             context.delegate.dispatch('provider-change', {
@@ -35,8 +31,15 @@ export const OutletDefinition = defineCustomElement<MediaOutletElement>({
     });
 
     return () => () => {
+      const loader = context.$loader();
+
+      if (!loader) {
+        $rendered.set(false);
+        return;
+      }
+
       $rendered.set(true);
-      return context.$loader()?.render(context.$store);
+      return loader.render(context.$store);
     };
   },
 });

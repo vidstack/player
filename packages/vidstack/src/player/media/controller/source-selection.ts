@@ -1,4 +1,4 @@
-import { computed, effect, peek, ReadSignal, signal, tick } from 'maverick.js';
+import { computed, effect, peek, ReadSignal, tick } from 'maverick.js';
 import { isArray, isString } from 'maverick.js/std';
 
 import { preconnect } from '../../../utils/network';
