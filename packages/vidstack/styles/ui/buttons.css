@@ -7,8 +7,8 @@
 :where([data-media-button]) {
   border-radius: var(--media-button-border-radius, 0);
   color: var(--media-button-color, white);
-  min-width: 48px;
-  min-height: 48px;
+  width: 48px;
+  height: 48px;
   transition: transform 0.2s ease-out;
   touch-action: manipulation;
 }
