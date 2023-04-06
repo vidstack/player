@@ -70,10 +70,10 @@ export const CaptionsDefinition = defineCustomElement<MediaCaptionsElement>({
       }
 
       effect(() => {
-        if ($media.viewType === 'video') {
-          return setupVideo();
-        } else {
+        if ($media.viewType === 'audio') {
           return setupAudio();
+        } else {
+          return setupVideo();
         }
       });
 

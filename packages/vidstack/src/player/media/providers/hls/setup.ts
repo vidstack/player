@@ -83,7 +83,10 @@ export function setupHLS(
       const track = textTracks.getById(`hls-${data.track}`);
       if (!track) return;
       const event = new DOMEvent<HLS.CuesParsedData>(eventType, { detail: data });
-      for (const cue of data.cues) track.addCue(cue, event);
+      for (const cue of data.cues) {
+        cue.positionAlign = 'auto';
+        track.addCue(cue, event);
+      }
     });
 
     qualities[ENABLE_AUTO_QUALITY] = () => {

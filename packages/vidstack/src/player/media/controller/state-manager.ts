@@ -80,18 +80,6 @@ export function createMediaStateManager(
     listenEvent(target, 'fullscreen-error', onFullscreenError);
   });
 
-  effect(() => {
-    if ($provider()) return;
-    textTracks.clear();
-    qualities[LIST_RESET]();
-    audioTracks[LIST_RESET]();
-    resetTracking();
-    softResetMediaStore($media);
-    disposal.empty();
-    requests._queue._reset();
-    skipInitialSrcChange = true;
-  });
-
   function addTextTrackListeners() {
     onTextTracksChange();
     onTextTrackChange();
