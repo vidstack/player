@@ -276,7 +276,6 @@ export function createMediaStateManager(
       return;
     }
 
-    textTracks.clear(event);
     audioTracks[LIST_RESET](event);
     qualities[LIST_RESET](event);
     resetTracking();

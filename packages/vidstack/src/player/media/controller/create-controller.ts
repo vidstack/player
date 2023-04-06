@@ -1,4 +1,4 @@
-import { computed, effect, provideContext, ReadSignal, signal, Signals } from 'maverick.js';
+import { computed, effect, provideContext, signal, Signals } from 'maverick.js';
 
 import { canFullscreen } from '../../../foundation/fullscreen/fullscreen';
 import { useLogger } from '../../../foundation/logger/logger';
@@ -11,7 +11,6 @@ import { mediaStore } from '../store';
 import { AudioTrackList } from '../tracks/audio-tracks';
 import { TextRenderers } from '../tracks/text/render/text-renderer';
 import { TEXT_TRACK_CAN_LOAD } from '../tracks/text/symbols';
-import { TextTrack, TextTrackInit } from '../tracks/text/text-track';
 import { TextTrackList } from '../tracks/text/text-tracks';
 import { useMediaCanLoad } from './can-load';
 import { createMediaControllerDelegate } from './controller-delegate';
@@ -30,6 +29,11 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
     $store: mediaStore.create(),
     qualities: new VideoQualityList(),
     audioTracks: new AudioTrackList(),
+    $$props: {
+      $src: props.$src,
+      $textTracks: props.$textTracks,
+      $preferNativeHLS: props.$preferNativeHLS,
+    },
   } as MediaContext;
 
   provideContext(mediaContext, context);
@@ -47,7 +51,14 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
       (!props.$playsinline() || $store.fullscreen),
   );
 
-  setupTextTracks(props.$textTracks, context);
+  context.textTracks = new TextTrackList();
+  context.textRenderers = new TextRenderers(context);
+
+  const stop = effect(() => {
+    if (!context.$store.canLoad) return;
+    context.textTracks[TEXT_TRACK_CAN_LOAD]();
+    stop();
+  });
 
   const requests = new MediaRequestContext(),
     stateManager = createMediaStateManager(context, requests),
@@ -88,42 +99,4 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
     _request: requestManager,
     _provider: providerDelegate,
   };
-}
-
-function setupTextTracks(
-  $textTracks: ReadSignal<MediaControllerProps['textTracks']>,
-  context: MediaContext,
-) {
-  context.textTracks = new TextTrackList();
-  context.textRenderers = new TextRenderers(context);
-
-  const stop = effect(() => {
-    if (!context.$store.canLoad) return;
-    context.textTracks[TEXT_TRACK_CAN_LOAD]();
-    stop();
-  });
-
-  let prevTextTracks: (TextTrack | TextTrackInit)[] = [];
-  effect(() => {
-    context.$store.source;
-
-    const newTracks = $textTracks();
-    for (const newTrack of newTracks) {
-      const id = newTrack.id ?? TextTrack.createId(newTrack);
-      if (!context.textTracks.getById(id)) {
-        // @ts-expect-error - override readonly
-        newTrack.id = id;
-        context.textTracks.add(newTrack);
-      }
-    }
-
-    for (const oldTrack of prevTextTracks) {
-      if (!newTracks.some((t) => t.id === oldTrack.id)) {
-        const track = oldTrack.id && context.textTracks.getById(oldTrack.id);
-        if (track) context.textTracks.remove(track);
-      }
-    }
-
-    prevTextTracks = newTracks;
-  });
 }

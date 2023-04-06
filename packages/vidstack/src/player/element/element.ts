@@ -12,7 +12,6 @@ import {
 import { createLogPrinter } from '../../foundation/logger/log-printer';
 import { useFocusVisible } from '../../foundation/observers/use-focus-visible';
 import { createMediaController } from '../media/controller/create-controller';
-import { useSourceSelection } from '../media/controller/source-selection';
 import type { AnyMediaProvider } from '../media/controller/types';
 import type { MediaState } from '../media/state';
 import { isTrackCaptionKind } from '../media/tracks/text/text-track';
@@ -109,7 +108,6 @@ export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
     context.$keyShortcuts = props.$keyShortcuts;
     useKeyboard(context, props);
     useFocusVisible(host.$el);
-    useSourceSelection(props.$src, props.$preferNativeHLS, controller._context);
 
     const $attrs: AttributesRecord = {
       'aspect-ratio': props.$aspectRatio,

@@ -130,6 +130,8 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'poster',
   'source',
   'sources',
+  'textTracks',
+  'textTrack',
   'volume',
   'canLoadPoster',
   'providedStreamType',

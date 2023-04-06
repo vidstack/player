@@ -3,19 +3,20 @@ import { isArray, isString } from 'maverick.js/std';
 
 import { preconnect } from '../../../utils/network';
 import type { MediaContext } from '../context';
+import type { MediaControllerProps } from '../controller/types';
 import { AudioProviderLoader } from '../providers/audio/loader';
 import { HLSProviderLoader } from '../providers/hls/loader';
 import type { MediaProviderLoader } from '../providers/types';
 import { VideoProviderLoader } from '../providers/video/loader';
 import type { MediaSrc } from '../types';
-import type { MediaControllerProps } from './types';
 
 export function useSourceSelection(
-  $src: ReadSignal<MediaControllerProps['src']>,
-  $preferNativeHLS: ReadSignal<MediaControllerProps['preferNativeHLS']>,
+  $domSources: ReadSignal<MediaSrc[]>,
+  $rendered: ReadSignal<boolean>,
   context: MediaContext,
 ): void {
-  const { $loader, $store, delegate } = context;
+  const { $loader, $store: $media, $provider, delegate, $$props } = context;
+  const { $src, $preferNativeHLS } = $$props;
 
   const HLS_LOADER = new HLSProviderLoader(),
     VIDEO_LOADER = new VideoProviderLoader(),
@@ -28,12 +29,12 @@ export function useSourceSelection(
   });
 
   if (__SERVER__) {
-    $store.sources = normalizeSrc($src());
-    for (const src of $store.sources) {
+    $media.sources = normalizeSrc($src());
+    for (const src of $media.sources) {
       const loader = $loaders().find((loader) => loader.canPlay(src));
       if (loader) {
-        $store.source = src;
-        $store.mediaType = loader.mediaType(src);
+        $media.source = src;
+        $media.mediaType = loader.mediaType(src);
         $loader.set(loader);
       }
     }
@@ -41,13 +42,15 @@ export function useSourceSelection(
   }
 
   effect(() => {
-    delegate.dispatch('sources-change', { detail: normalizeSrc($src()) });
+    delegate.dispatch('sources-change', {
+      detail: [...normalizeSrc($src()), ...$domSources()],
+    });
   });
 
   effect(() => {
     // Read sources off store here because it's normalized above.
-    const sources = $store.sources,
-      currentSource = peek(() => $store.source);
+    const sources = $media.sources,
+      currentSource = peek(() => $media.source);
 
     let newSource: MediaSrc = { src: '', type: '' },
       newLoader: MediaProviderLoader | null = null;
@@ -76,12 +79,26 @@ export function useSourceSelection(
     tick();
   });
 
-  // !!! The loader is attached inside the `<MediaOutlet>` because it requires rendering. !!!
+  effect(() => {
+    const loader = $loader();
+    if (!$rendered() || !loader) return;
+    peek(() => {
+      loader.load(context).then((provider) => {
+        if (!peek($rendered)) return;
+        // The src/loader might've changed by the time we load the provider.
+        if (peek($loader) === loader) {
+          context.delegate.dispatch('provider-change', {
+            detail: provider,
+          });
+        }
+      });
+    });
+  });
 
   effect(() => {
-    const provider = context.$provider();
+    const provider = $provider();
     if (!provider) return;
-    if (context.$store.canLoad) {
+    if ($media.canLoad) {
       peek(() => provider.setup({ ...context, player: context.$player()! }));
       return;
     }
@@ -89,14 +106,14 @@ export function useSourceSelection(
   });
 
   effect(() => {
-    const provider = context.$provider(),
-      source = context.$store.source;
+    const provider = $provider(),
+      source = $media.source;
 
-    if (context.$store.canLoad) {
+    if ($media.canLoad) {
       peek(() =>
         provider?.loadSource(
           source,
-          peek(() => context.$store.preload),
+          peek(() => $media.preload),
         ),
       );
       return;

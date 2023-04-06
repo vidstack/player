@@ -1,7 +1,7 @@
 import { createContext, ReadSignal, useContext, WriteSignal } from 'maverick.js';
 
 import type { Logger } from '../../foundation/logger/create-logger';
-import type { MediaPlayerElement } from '../element/types';
+import type { MediaPlayerElement, MediaPlayerProps } from '../element/types';
 import type { MediaControllerDelegate } from './controller/controller-delegate';
 import type { MediaProvider, MediaProviderLoader } from './providers/types';
 import type { VideoQualityList } from './quality/video-quality';
@@ -27,6 +27,11 @@ export interface MediaContext {
   textRenderers: TextRenderers;
   ariaKeys: MediaKeyShortcuts;
   logger?: Logger;
+  $$props: {
+    $src: ReadSignal<MediaPlayerProps['src']>;
+    $textTracks: ReadSignal<MediaPlayerProps['textTracks']>;
+    $preferNativeHLS: ReadSignal<MediaPlayerProps['preferNativeHLS']>;
+  };
 }
 
 export const mediaContext = createContext<MediaContext>();

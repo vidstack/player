@@ -21,6 +21,10 @@ npm i hls.js
 
 {% code_preview name="usage" size="medium" copy=true /%}
 
+You can provide a `type` hint if you're loading the HLS playlist over a proxy like so:
+
+{% code_snippet name="source-type" copyHighlight=true highlight="html:3|react:2-5" /%}
+
 ## Loading `hls.js`
 
 The HLS provider will default to loading `hls.js` from [JSDelivr](https://jsdelivr.com). We load

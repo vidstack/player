@@ -79,16 +79,13 @@ Text tracks can be added like so:
 
 {% code_snippet name="add-track" /%}
 
-There are a few things to keep in mind:
-
-- Text tracks will not load until media can load (see
-  [loading guide](docs/player/core-concepts/loading#loading-strategies)) and the `mode` is set to
-  `showing` or `hidden`.
-- Text tracks will be cleared on source or provider change.
+👉 Do note, text tracks will not load until media can load (see
+[loading guide](docs/player/core-concepts/loading#loading-strategies)) and the `mode` is set to
+`showing` or `hidden`.
 
 ### Remove Tracks
 
-Text tracks can be removed like so:
+Text tracks can be dynamically removed from the DOM, or via JS like so:
 
 ```ts
 player.textTracks.remove(track);

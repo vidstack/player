@@ -1,7 +1,6 @@
 import { MediaPlayer } from '@vidstack/react';
 
 <MediaPlayer
-  // You can dynamically update this array by adding or removing tracks.
   textTracks={[
     {
       src: '/media/subs/english.vtt',

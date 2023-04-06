@@ -58,8 +58,8 @@ Here's another example using a custom loading strategy:
 
 ## Loading Source
 
-The `src` property on the player can accept one or more media sources. We recommend providing
-`type` information for each source so the correct provider is selected.
+The player can accept one or more media sources. We recommend providing `type` information for
+each source so the correct provider is selected.
 
 {% code_snippet name="loading-source" /%}
 
