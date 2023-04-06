@@ -24,8 +24,8 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
       $slider = useSliderStore(),
       { $store: $media } = useMedia(),
       $crossorigin = () => $media.crossorigin,
-      $videoSrc = () => ($media.canLoad ? $src() : null),
-      $hidden = () => !!$error() || !Number.isFinite($media.duration);
+      $videoSrc = () => ($media.canPlay ? $src() : null),
+      $hidden = () => !!$error() || !$media.canPlay || !Number.isFinite($media.duration);
 
     host.setAttributes({
       'data-loading': () => !$canPlay() && !$hidden(),

@@ -160,6 +160,7 @@ export function useKeyboard(
           break;
         case 'toggleFullscreen':
           remote.toggleFullscreen('prefer-media', event);
+          break;
         default:
           remote[method]?.(event);
       }

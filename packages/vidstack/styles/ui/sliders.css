@@ -132,3 +132,7 @@
   ) {
   margin-top: 8px;
 }
+
+:where(media-player:not([data-can-play]) media-time-slider media-slider-value) {
+  display: none;
+}
