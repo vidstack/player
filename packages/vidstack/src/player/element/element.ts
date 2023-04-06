@@ -1,4 +1,4 @@
-import { effect, getScope, onDispose, scoped, signal } from 'maverick.js';
+import { effect, getScope, onDispose, scoped } from 'maverick.js';
 import { AttributesRecord, defineCustomElement, onAttach, onConnect } from 'maverick.js/element';
 import {
   camelToKebabCase,
@@ -57,19 +57,9 @@ const MEDIA_ATTRIBUTES: (keyof MediaState)[] = [
   'waiting',
 ];
 
-export const HLS_LISTENERS = Symbol(__DEV__ ? 'HLS_LISTENERS' : 0);
-
 export const PlayerDefinition = defineCustomElement<MediaPlayerElement>({
   tagName: 'media-player',
   props: mediaPlayerProps,
-  construct(this: MediaPlayerElement) {
-    this[HLS_LISTENERS] = signal<string[]>([]);
-    const addEventListener = this.addEventListener;
-    this.addEventListener = function (type, handler, options) {
-      if (type.startsWith('hls-')) this[HLS_LISTENERS].set((x) => [...x, type]);
-      return addEventListener.call(this, type, handler, options);
-    };
-  },
   setup({ host, props, accessors }) {
     const scope = getScope()!,
       controller = createMediaController(props),

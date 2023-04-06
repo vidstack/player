@@ -1,10 +1,9 @@
 import type * as HLS from 'hls.js';
 import { effect, peek } from 'maverick.js';
-import { camelToKebabCase, dispatchEvent, DOMEvent, kebabToCamelCase } from 'maverick.js/std';
+import { camelToKebabCase, dispatchEvent, DOMEvent } from 'maverick.js/std';
 
 import { createRAFLoop } from '../../../../foundation/hooks/raf-loop';
 import { LIST_ADD, LIST_SELECT } from '../../../../foundation/list/symbols';
-import { HLS_LISTENERS } from '../../../element/element';
 import { ENABLE_AUTO_QUALITY, SET_AUTO_QUALITY } from '../../quality/symbols';
 import { TEXT_TRACK_ON_MODE_CHANGE, TEXT_TRACK_READY_STATE } from '../../tracks/text/symbols';
 import { TextTrack } from '../../tracks/text/text-track';
@@ -13,15 +12,12 @@ import type { HLSProvider } from './provider';
 import type { HLSInstanceCallback } from './types';
 
 const toDOMEventType = (type: string) => camelToKebabCase(type);
-const toHLSEventType = (type: string) => kebabToCamelCase(type) as HLS.Events;
 
 export function setupHLS(
   provider: HLSProvider,
   { player, logger, delegate, $store, qualities, audioTracks, textTracks }: MediaSetupContext,
   callbacks: Set<HLSInstanceCallback>,
 ) {
-  const listening = new Set<string>();
-
   // Create `hls.js` instance and attach listeners
   effect(() => {
     const ctor = provider.$ctor();
@@ -37,7 +33,8 @@ export function setupHLS(
       ...provider.config,
     });
 
-    effect(() => void attachEventListeners(instance, player[HLS_LISTENERS]()));
+    for (const event of Object.values(ctor.Events)) instance.on(event, dispatchHLSEvent);
+
     instance.on(ctor.Events.ERROR, onError);
     provider.$instance.set(instance);
     for (const callback of callbacks) callback(instance);
@@ -106,7 +103,6 @@ export function setupHLS(
 
     return () => {
       qualities[ENABLE_AUTO_QUALITY] = undefined;
-      listening.clear();
       instance.destroy();
       provider.$instance.set(null);
       if (__DEV__) logger?.info('🏗️ Destroyed HLS instance');
@@ -129,15 +125,6 @@ export function setupHLS(
 
   function dispatchHLSEvent(eventType: string, detail: any) {
     player.dispatchEvent(new DOMEvent(toDOMEventType(eventType), { detail }));
-  }
-
-  function attachEventListeners(instance: HLS.default, listeners: string[]) {
-    for (const type of listeners) {
-      if (!listening.has(type)) {
-        instance.on(toHLSEventType(type), dispatchHLSEvent);
-        listening.add(type);
-      }
-    }
   }
 
   function onAudioTrackSwitched(eventType: string, data: HLS.AudioTrackSwitchedData) {
