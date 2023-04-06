@@ -4,6 +4,7 @@ import { MediaIconDefinition } from './icons/element';
 import { PlayerDefinition } from './player/element/element';
 import { OutletDefinition } from './player/media/outlet/element';
 import { CaptionButtonDefinition } from './player/ui/caption-button/element';
+import { CaptionsDefinition } from './player/ui/captions/element';
 import { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
 import { LiveIndicatorDefinition } from './player/ui/live-indicator/element';
 import { MuteButtonDefinition } from './player/ui/mute-button/element';
@@ -41,5 +42,6 @@ export default function registerAllElements(): void {
     ToggleButtonDefinition,
     VolumeSliderDefinition,
     LiveIndicatorDefinition,
+    CaptionsDefinition,
   ].map(registerLiteCustomElement);
 }

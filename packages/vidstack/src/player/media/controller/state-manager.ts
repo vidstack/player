@@ -93,6 +93,8 @@ export function createMediaStateManager(
   });
 
   function addTextTrackListeners() {
+    onTextTracksChange();
+    onTextTrackChange();
     listenEvent(textTracks, 'add' as any, onTextTracksChange);
     listenEvent(textTracks, 'remove' as any, onTextTracksChange);
     listenEvent(textTracks, 'mode-change' as any, onTextTrackChange);
@@ -204,7 +206,7 @@ export function createMediaStateManager(
     satisfyMediaRequest('rate', event);
   }
 
-  function onTextTracksChange(event) {
+  function onTextTracksChange(event?: any) {
     $media.textTracks = textTracks.toArray();
     dispatchEvent($player(), 'text-tracks-change', {
       detail: $media.textTracks,
@@ -212,7 +214,7 @@ export function createMediaStateManager(
     });
   }
 
-  function onTextTrackChange(event) {
+  function onTextTrackChange(event?: any) {
     satisfyMediaRequest('textTrack', event);
     const current = textTracks.selected;
     if ($media.textTrack !== current) {

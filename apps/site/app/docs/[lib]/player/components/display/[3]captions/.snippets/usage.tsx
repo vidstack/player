@@ -1,0 +1,4 @@
+<MediaPlayer>
+  <MediaOutlet />
+  <MediaCaptions />
+</MediaPlayer>;

@@ -33,15 +33,7 @@ export function loadPlayerSidebar(): SidebarLinks {
   };
 }
 
-const WIP = new Set([
-  'Architecture',
-  'Accessibility',
-  'Skins',
-  'YouTube',
-  'Vimeo',
-  'Captions',
-  'User',
-]);
+const WIP = new Set(['Architecture', 'Accessibility', 'Skins', 'YouTube', 'Vimeo', 'User']);
 
 function links(slugs: string[], filter: RegExp): SidebarLink[] {
   return slugs

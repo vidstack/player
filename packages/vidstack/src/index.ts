@@ -57,6 +57,7 @@ export * from './player/media/providers/hls/types';
 export { MEDIA_KEY_SHORTCUTS } from './player/element/keyboard';
 
 // Media Player UI
+export * from './player/ui/captions/types';
 export * from './player/ui/caption-button/types';
 export * from './player/ui/fullscreen-button/types';
 export * from './player/ui/live-indicator/types';
@@ -77,6 +78,7 @@ export * from './player/ui/toggle-button/types';
 export * from './player/ui/volume-slider/types';
 
 // Media Player Definitions
+export { CaptionsDefinition } from './player/ui/captions/element';
 export { CaptionButtonDefinition } from './player/ui/caption-button/element';
 export { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
 export { PIPButtonDefinition } from './player/ui/pip-button/element';
