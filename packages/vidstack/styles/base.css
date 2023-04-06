@@ -27,6 +27,10 @@
   background-color: var(--media-outlet-bg-color, black);
 }
 
+:where(media-player[data-view-type='audio'] media-outlet) {
+  background-color: unset;
+}
+
 :where(media-outlet audio) {
   width: 100%;
 }
@@ -260,4 +264,15 @@
 :where(media-player:not([data-started]) media-poster) {
   opacity: 1;
   pointer-events: auto;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Captions
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(media-captions[data-hidden]) {
+  opacity: 0;
+  visibility: hidden;
 }
