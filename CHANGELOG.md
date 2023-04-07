@@ -1,3 +1,29 @@
+## [0.4.3](https://github.com/vidstack/player/compare/v0.4.2...v0.4.3) (2023-04-07)
+
+### Bug Fixes
+
+- invalid media state reset during provider swap ([3674dac](https://github.com/vidstack/player/commit/3674dac13c225d1f5b18db26e2fd5647c20fb319))
+- min-w/h on buttons makes it harder to style ([2672bd5](https://github.com/vidstack/player/commit/2672bd5dc63d5b105f4f45dffe1d7e9f6140d7cc))
+- **react:** hls callbacks are not being called ([914d90c](https://github.com/vidstack/player/commit/914d90c65ee0e0ee37aa04f17e25d774d4bfbd57))
+- remove default bg color on outlet when view type audio ([caa43a0](https://github.com/vidstack/player/commit/caa43a0016a054c50058d8c09935263acf91b4b4))
+- source change not loading new provider ([f3f5bc1](https://github.com/vidstack/player/commit/f3f5bc1d1a3efc3715ba94d219f773f2c5856e05))
+- time slider value/video should wait for can play ([c3be82a](https://github.com/vidstack/player/commit/c3be82a0f36cdeefcb5c4402aa7df4b22ce7300d))
+- **vidstack:** avoid conflicting keys with native media element ([480dced](https://github.com/vidstack/player/commit/480dcedea50b054c2743b20673892249b1ec1845)), closes [#788](https://github.com/vidstack/player/issues/788)
+- **vidstack:** ignore plays calls before media is ready ([463bda5](https://github.com/vidstack/player/commit/463bda5444bb08ea0e222b3db50501aea24705b9))
+
+### Features
+
+- new `<media-caption-button>` component ([12379d4](https://github.com/vidstack/player/commit/12379d4cdc46a4a6d9376dae766f3c467203fe24)), closes [#44](https://github.com/vidstack/player/issues/44)
+- new `<media-captions>` component ([27f3649](https://github.com/vidstack/player/commit/27f36491e4f2a9ebe876f88477630658748d3d60)), closes [#25](https://github.com/vidstack/player/issues/25)
+- support `<source>` and `<track>` elements ([6a16373](https://github.com/vidstack/player/commit/6a16373eb3a063128904a034ddb94f756b8659cc))
+- text tracks support ([4b4d146](https://github.com/vidstack/player/commit/4b4d146dc19630f0d5fb823d757e9a362003ae88)), closes [#22](https://github.com/vidstack/player/issues/22)
+- **vidstack:** add array index accessor on list objects ([72f1ac0](https://github.com/vidstack/player/commit/72f1ac0146a8a8f9c5119560751a3fcc57890f1a))
+- **vidstack:** audio tracks support ([58b96ce](https://github.com/vidstack/player/commit/58b96ceed4a2bfd28aebeacdb30c002512543f5f)), closes [#23](https://github.com/vidstack/player/issues/23)
+- **vidstack:** new `<media-pip-button>` ([df97a0d](https://github.com/vidstack/player/commit/df97a0dc9be845ff70da16602f22e014e4b09514)), closes [#41](https://github.com/vidstack/player/issues/41)
+- **vidstack:** picture-in-picture support ([8709645](https://github.com/vidstack/player/commit/870964563be98dd1fa4a5ea8a20f64b7d874784a)), closes [#21](https://github.com/vidstack/player/issues/21)
+- **vidstack:** playback rate support ([6eace92](https://github.com/vidstack/player/commit/6eace92364060564793b4c7503a34bdc79e607b4)), closes [#18](https://github.com/vidstack/player/issues/18)
+- **vidstack:** video quality support ([2fcdcf8](https://github.com/vidstack/player/commit/2fcdcf86c07217a3440401b450fe85de5da65e03)), closes [#19](https://github.com/vidstack/player/issues/19)
+
 ## [0.4.2](https://github.com/vidstack/player/compare/v0.4.1...v0.4.2) (2023-03-06)
 
 ### Bug Fixes
