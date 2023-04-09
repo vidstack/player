@@ -31,6 +31,9 @@ module.exports = {
         brand: {
           DEFAULT: 'rgb(var(--color-brand) / <alpha-value>)',
         },
+        secondary: {
+          DEFAULT: 'rgb(var(--color-secondary) / <alpha-value>)',
+        },
         focus: {
           DEFAULT: 'rgb(var(--color-focus) / <alpha-value>)',
         },
@@ -54,7 +57,7 @@ module.exports = {
       typography,
     },
   },
-  plugins: [require('@tailwindcss/typography'), customVariants],
+  plugins: [require('@tailwindcss/typography'), require('vidstack/tailwind.cjs'), customVariants],
 };
 
 function customVariants({ addVariant }) {

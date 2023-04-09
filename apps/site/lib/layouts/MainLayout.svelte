@@ -15,7 +15,6 @@
   import { addJSLibToPath } from '$lib/stores/js-lib';
   import { isLargeScreen } from '$lib/stores/screen';
   import { scrollDirection, scrollTop } from '$lib/stores/scroll';
-  import { hideDocumentScrollbar } from '$lib/utils/scroll';
 
   import { setNavbarContext, type NavLinks } from './navbar/context';
   import Navbar from './navbar/Navbar.svelte';
@@ -24,7 +23,7 @@
 
   const navLinks = writable<NavLinks>([
     {
-      title: 'Media Icons',
+      title: 'Icons',
       slug: addJSLibToPath(`/media-icons`),
       match: /\/media-icons/,
     },

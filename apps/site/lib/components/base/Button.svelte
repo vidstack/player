@@ -33,7 +33,7 @@
 
   $: contentClass = clsx(
     'inline-block transform transition-transform duration-100 group-hover:translate-x-0',
-    arrow === 'left' && '-translate-x-3 ',
+    arrow === 'left' && '-translate-x-3',
     arrow === 'right' && 'translate-x-2',
   );
 
