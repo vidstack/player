@@ -9,7 +9,7 @@ framework-agnostic. The successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
 
 <img src="./assets/video-player.png" alt="Preview of Vidstack Player (Video)" />
 
-<img src="./assets/audio-player.png" alt="Preview of Vidstack Player (Audio)" />
+<img src="./assets/audio-player.png" alt="Preview of Vidstack Player (Audio)" style="margin: 16px 0;" />
 
 💬 See our [Community Skin](https://github.com/vidstack/player/discussions/702) discussion for a more detailed exploration of our first player skin. Coming in the next release!
 
