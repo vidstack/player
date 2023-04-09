@@ -4,10 +4,21 @@
 [![discord-badge]][discord]
 [![jsdelivr-badge]][jsdelivr]
 
-Build your media player only using HTML and CSS 🐼
+Build and ship a production-ready player in minutes. Robust, customizable, accessible, and
+framework-agnostic. The successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
 
-Vidstack Player is customizable, lightweight, accessible, and framework agnostic. It is also the
-successor to [Plyr][plyr] `3.x` and [Vime][vime] `5.x`.
+<img src="./assets/video-player.png" alt="Preview of Vidstack Player (Video)" />
+
+<img src="./assets/audio-player.png" alt="Preview of Vidstack Player (Audio)" />
+
+💬 See our [Community Skin](https://github.com/vidstack/player/discussions/702) discussion for a more detailed exploration of our first player skin. Coming in the next release!
+
+## Quickstart
+
+- [Get Started with Web Components](https://www.vidstack.io/docs/player/getting-started/installation)
+- [Get Started with React](https://www.vidstack.io/docs/react/player/getting-started/installation)
+- [Use our Tailwind Plugin](https://www.vidstack.io/docs/player/styling/tailwind)
+- [See our Media Icons collection](https://www.vidstack.io/media-icons)
 
 ## Beta
 
