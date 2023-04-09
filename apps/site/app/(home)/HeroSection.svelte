@@ -14,7 +14,7 @@
       <div class="flex">
         <a
           class="flex items-center rounded-full bg-brand/10 text-brand py-1 px-4 text-sm 768:text-base transform transition-transform hover:scale-105"
-          href="https://github.com/vidstack/player/discussions/702"
+          href="https://github.com/vidstack/player/discussions/802"
           target="_blank"
           rel="noreferrer"
         >
