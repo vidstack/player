@@ -15,7 +15,7 @@
   <p class="text-soft text-lg max-w-2xl text-center mt-6">
     A community built for frontend devs who are working with audio and video. Join in on the
     discussions, share your designs and knowledge, ask for help, and connect with other devs
-    building awesome media experiences
+    building awesome media experiences.
   </p>
   <div class="flex space-x-6 mt-8">
     <SocialLink width={40} height={40} type="gitHub" />
