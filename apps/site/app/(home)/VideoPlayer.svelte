@@ -105,27 +105,6 @@
 <style>
   :global(.hero-video media-captions [part='cue']) {
     letter-spacing: 0.025em;
-    border-radius: 2px;
-    background-color: rgba(0 0 0 / 0.7);
-    backdrop-filter: blur(8px);
-  }
-
-  :global(.hero-video [part='track']) {
-    background-color: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(2px);
-  }
-
-  :global(.hero-video [part*='track-progress']) {
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(2px);
-  }
-
-  :global(.hero-video [part='thumb']) {
-    transition: box-shadow 0.15s ease;
-  }
-
-  :global(.hero-video media-volume-slider [part*='track-progress']) {
-    display: none;
   }
 
   :global(.hero-video [data-media-button] [slot*='tooltip']) {

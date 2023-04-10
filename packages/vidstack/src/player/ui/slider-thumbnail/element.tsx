@@ -96,8 +96,8 @@ export const SliderThumbnailDefinition = defineCustomElement<MediaSliderThumbnai
       const [_props, _values] = _coords.split('=');
 
       $imgSrc.set(
-        !peek($src).startsWith('/') && _src.startsWith('/')
-          ? `${new URL(peek($src)).origin}${_src}`
+        !peek($src).startsWith('/') && !/https?:/.test(_src)
+          ? `${new URL(peek($src)).origin}${_src.replace(/^\/?/, '/')}`
           : _src,
       );
 
