@@ -148,6 +148,10 @@
   outline-offset: 3px;
 }
 
+media-volume-slider [part*='track-progress'] {
+  display: none !important;
+}
+
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Slider Value Text Base

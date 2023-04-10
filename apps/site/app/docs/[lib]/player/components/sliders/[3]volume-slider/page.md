@@ -65,10 +65,6 @@ media-volume-slider[data-interactive] [part~='track'] {
 media-volume-slider [part~='track-fill'] {
 }
 
-/* Apply styles to track progress (buffered). */
-media-volume-slider [part~='track-progress'] {
-}
-
 /* Apply styles to thumb container. */
 media-volume-slider [part='thumb-container'] {
 }
