@@ -1,9 +1,10 @@
-import { MediaPlayButton, PauseIcon, PlayIcon } from '@vidstack/react';
+import { MediaPlayButton, PauseIcon, PlayIcon, ReplayIcon } from '@vidstack/react';
 
 <MediaPlayButton
   className="flex h-12 w-12 items-center justify-center rounded-sm text-white outline-none data-[focus]:ring-4 data-[focus]:ring-blue-400"
   aria-label="Play"
 >
-  <PlayIcon className="paused:block hidden" />
+  <PlayIcon className="paused:block ended:hidden hidden" />
   <PauseIcon className="not-paused:block hidden" />
+  <ReplayIcon className="ended:block hidden" />
 </MediaPlayButton>;

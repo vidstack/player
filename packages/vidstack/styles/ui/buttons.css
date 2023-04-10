@@ -36,6 +36,7 @@
     [slot='on'],
     [slot='off'],
     [slot='play'],
+    [slot='replay'],
     [slot='pause'],
     [slot='volume-high'],
     [slot='volume-low'],
@@ -57,7 +58,8 @@
 :where(
     media-toggle-button[data-pressed] [slot='on'],
     media-toggle-button:not([data-pressed]) [slot='off'],
-    media-play-button[data-paused] [slot='play'],
+    media-play-button[data-paused]:not([data-ended]) [slot='play'],
+    media-play-button[data-ended] [slot='replay'],
     media-play-button:not([data-paused]) [slot='pause'],
     media-mute-button[data-volume='high'] [slot='volume-high'],
     media-mute-button[data-volume='low'] [slot='volume-low'],

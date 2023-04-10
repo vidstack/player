@@ -17,6 +17,7 @@ export interface PlayButtonMembers extends ToggleButtonMembers {}
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/play-button}
  * @slot play - Used to override the default play icon.
+ * @slot replay - Used to override the default replay icon.
  * @slot pause - Used to override the default pause icon.
  * @slot tooltip-top-left - Used to place a tooltip above the button in the left corner.
  * @slot tooltip-top-center - Used to place a tooltip above the button in the center.

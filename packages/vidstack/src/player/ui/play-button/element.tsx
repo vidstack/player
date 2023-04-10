@@ -1,6 +1,6 @@
 import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { mergeProperties } from 'maverick.js/std';
-import { pausePaths, playPaths } from 'media-icons';
+import { pausePaths, playPaths, replayPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
 import { setARIALabel } from '../../../utils/dom';
@@ -36,6 +36,7 @@ export const PlayButtonDefinition = defineCustomElement<MediaPlayButtonElement>(
     host.setAttributes({
       'default-appearance': $defaultAppearance,
       'data-paused': () => $media.paused,
+      'data-ended': () => $media.ended,
     });
 
     function onPress(event: Event) {
@@ -48,6 +49,7 @@ export const PlayButtonDefinition = defineCustomElement<MediaPlayButtonElement>(
         return (
           <>
             <Icon paths={playPaths} slot="play" />
+            <Icon paths={replayPaths} slot="replay" />
             <Icon paths={pausePaths} slot="pause" />
           </>
         );

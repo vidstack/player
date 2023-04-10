@@ -51,10 +51,16 @@ media-play-button[data-paused] {
 media-play-button:not([data-paused]) {
 }
 
+/* Apply styles when media has ended. */
+media-play-button[data-ended] {
+}
+
 /* Style default icons. */
 media-play-button svg[slot='play'] {
 }
 media-play-button svg[slot='pause'] {
+}
+media-play-button svg[slot='replay'] {
 }
 ```
 
