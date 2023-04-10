@@ -85,7 +85,7 @@ export function createSlider(
       '--computed-width': rect.width + 'px',
       '--computed-height': rect.height + 'px',
       '--preview-top':
-        'calc(-1 * var(--media-slider-preview-gap, calc(var(--preview-height) + 6px)))',
+        'calc(-1 * var(--media-slider-preview-gap, calc(var(--preview-height) - 2px)))',
       '--preview-width': 'var(--media-slider-preview-width, var(--computed-width))',
       '--preview-height': 'var(--media-slider-preview-height, var(--computed-height))',
       '--preview-width-half': 'calc(var(--preview-width) / 2)',
