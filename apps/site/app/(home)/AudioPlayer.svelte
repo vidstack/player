@@ -17,6 +17,7 @@
     view-type="audio"
     style="contain: layout"
     volume={0.2}
+    key-target="document"
     on:playing={onPlaying}
     on:pause={onPause}
   >

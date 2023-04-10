@@ -36,9 +36,11 @@ export function useToggleButton(
 
     if (disabled || (isKeyboardEvent(event) && !isKeyboardClick(event))) {
       if (disabled) event.stopImmediatePropagation();
+
       return;
     }
 
+    event.preventDefault();
     props.onPress?.(event);
   }
 

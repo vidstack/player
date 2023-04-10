@@ -3,6 +3,7 @@
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
   poster="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/animated.webp?start=268&end=278&width=640"
   aspect-ratio="16/9"
+  key-target="document"
   volume={0.2}
 >
   <media-outlet>
