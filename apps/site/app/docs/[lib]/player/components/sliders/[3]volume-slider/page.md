@@ -22,6 +22,23 @@ The media volume range is between `0` (min) and `1` (max), but on the slider it'
 
 {% code_preview name="preview" size="small" copyHighlight=true highlight="html:2|react:7" /%}
 
+## Keyboard
+
+The volume slider will receive keyboard input when focused. The [interaction keys](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/slider_role#keyboard_interactions) are based on
+standard accessibility guidelines.
+
+The `$attr:key-step` and `$attr:shift-key-multiplier` can be used to configure how much to
+decrease/increase volume percentage by on key press like so:
+
+{% code_snippet name="keyboard" copy=true /%}
+
+In the snippet above, each keyboard step (e.g., pressing left or right arrow key) will
+respectively decrease/increase volume by 5%. Holding `shift` will multiply by the
+step by 2, so a change of 10%.
+
+👉 You can [configure global volume keys](/docs/player/core-concepts/keyboard#configuring-shortcuts)
+on the player.
+
 ## Styling
 
 You can override the default styles with CSS like so:

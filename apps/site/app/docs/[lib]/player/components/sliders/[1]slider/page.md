@@ -38,6 +38,20 @@ events and binding it yourself.
 
 {% code_snippet name="subscribe" copy=true /%}
 
+## Keyboard
+
+The slider will receive keyboard input when focused. The [interaction keys](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/slider_role#keyboard_interactions) are based on
+standard accessibility guidelines.
+
+The `$attr:key-step` and `$attr:shift-key-multiplier` can be used to configure the amount to
+decrease/increase the value by on key press like so:
+
+{% code_snippet name="keyboard" copy=true /%}
+
+In the snippet above, each keyboard step (e.g., pressing left or right arrow key) will
+respectively decrease/increase the current value by 5. Holding `shift` will multiply by the
+step by 2, so a change of 10.
+
 ## Styling
 
 You can override the default styles with CSS like so:

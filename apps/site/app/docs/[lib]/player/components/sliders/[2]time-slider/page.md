@@ -37,6 +37,23 @@ Previews can be grouped by using a parent container element for the `preview` sl
 
 {% code_preview name="preview-group" copyHighlight=true highlight="html:2-5|react:12-15" /%}
 
+## Keyboard
+
+The time slider will receive keyboard input when focused. The [interaction keys](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/slider_role#keyboard_interactions) are based on
+standard accessibility guidelines.
+
+The `$attr:key-step` and `$attr:shift-key-multiplier` can be used to configure how much to seek
+backward/forward by on key press like so:
+
+{% code_snippet name="keyboard" copy=true /%}
+
+In the snippet above, each keyboard step (e.g., pressing left or right arrow key) will
+respectively seek backward/forward by 5 seconds. Holding `shift` will multiply by the
+step by 2, so a change of 10 seconds.
+
+👉 You can [configure global seek keys](/docs/player/core-concepts/keyboard#configuring-shortcuts)
+on the player.
+
 ## Styling
 
 You can override the default styles with CSS like so:
