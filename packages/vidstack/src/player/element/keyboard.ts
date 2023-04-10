@@ -1,4 +1,4 @@
-import { effect, onDispose, signal, Signals } from 'maverick.js';
+import { effect, onDispose, peek, signal, Signals } from 'maverick.js';
 import { CustomElementHost, onAttach } from 'maverick.js/element';
 import { DOMEvent, isKeyboardClick, listenEvent } from 'maverick.js/std';
 
@@ -40,6 +40,10 @@ export function useKeyboard(
         if (!player.contains(event.target as Node)) $active.set(false);
       });
     } else {
+      if (!peek($active)) {
+        $active.set(document.querySelector('media-player') === player);
+      }
+
       listenEvent(document, 'focusin', (event) => {
         const activePlayer = event
           .composedPath()
