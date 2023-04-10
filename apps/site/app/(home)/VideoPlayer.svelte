@@ -106,8 +106,4 @@
   :global(.hero-video media-captions [part='cue']) {
     letter-spacing: 0.025em;
   }
-
-  :global(.hero-video [data-media-button] [slot*='tooltip']) {
-    bottom: 80%;
-  }
 </style>

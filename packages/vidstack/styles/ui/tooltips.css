@@ -8,7 +8,7 @@
 
   background-color: var(--media-tooltip-bg-color, black);
   border-radius: var(--media-tooltip-border-radius, 2px);
-  bottom: 100%;
+  bottom: 80%;
   color: var(--media-tooltip-color, hsl(0, 0%, 80%));
   font-size: var(--media-tooltip-font-size, 13px);
   font-family: var(--media-font-family, sans-serif);
@@ -71,7 +71,7 @@
  */
 
 :where([data-media-button] [slot='tooltip-bottom']) {
-  top: 100%;
+  top: 80%;
   bottom: unset;
   margin-top: var(--tooltip-spacing);
   transform: translate(-50%, -12px) scale(0.8);
@@ -88,7 +88,7 @@
  */
 
 :where([data-media-button] [slot='tooltip-bottom-left']) {
-  top: 100%;
+  top: 80%;
   left: 8px;
   bottom: unset;
   margin-top: var(--tooltip-spacing);
@@ -107,7 +107,7 @@
  */
 
 :where([data-media-button] [slot='tooltip-bottom-right']) {
-  top: 100%;
+  top: 80%;
   left: auto;
   right: 8px;
   bottom: unset;
