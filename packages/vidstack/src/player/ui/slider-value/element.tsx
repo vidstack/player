@@ -17,7 +17,7 @@ declare global {
 export const SliderValueDefinition = defineCustomElement<MediaSliderValueElement>({
   tagName: 'media-slider-value',
   props: sliderValueTextProps,
-  setup({ props: { $type, $format, $decimalPlaces, $padHours, $showHours } }) {
+  setup({ props: { $type, $format, $decimalPlaces, $padHours, $padMinutes, $showHours } }) {
     const $slider = useSliderStore(),
       formatters = useContext(sliderValueFormattersContext);
 
@@ -29,7 +29,7 @@ export const SliderValueDefinition = defineCustomElement<MediaSliderValueElement
         const percent = (value / range) * 100;
         return (formatters.percent ?? round)(percent, $decimalPlaces()) + '﹪';
       } else if (format === 'time') {
-        return (formatters.time ?? formatTime)(value, $padHours(), $showHours());
+        return (formatters.time ?? formatTime)(value, $padHours(), $padMinutes(), $showHours());
       } else {
         return formatters.value?.(value) ?? value.toFixed(2);
       }

@@ -24,6 +24,13 @@ export interface SliderValueProps {
    */
   padHours: boolean;
   /**
+   * Whether the minutes unit should be padded with zeroes to a length of 2. Only available if
+   * the `format` attribute is set to `time`.
+   *
+   * @example `5:22 -> 05:22`
+   */
+  padMinutes: boolean;
+  /**
    * Round the value when formatted as a percentage to the given number of decimal places. Only
    * available if `format` attribute is `percent`.
    */

@@ -16,7 +16,7 @@ declare global {
 export const TimeDefinition = defineCustomElement<MediaTimeElement>({
   tagName: 'media-time',
   props: timeProps,
-  setup({ props: { $remainder, $padHours, $showHours, $type } }) {
+  setup({ props: { $remainder, $padHours, $padMinutes, $showHours, $type } }) {
     const $media = useMedia().$store;
 
     const $formattedTime = computed(() => {
@@ -26,7 +26,7 @@ export const TimeDefinition = defineCustomElement<MediaTimeElement>({
       if (!Number.isFinite(seconds + duration)) return 'LIVE';
 
       const time = $remainder() ? Math.max(0, duration - seconds) : seconds;
-      return formatTime(time, $padHours(), $showHours());
+      return formatTime(time, $padHours(), $padMinutes(), $showHours());
     });
 
     return () => <span>{$formattedTime()}</span>;

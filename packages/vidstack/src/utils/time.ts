@@ -54,6 +54,7 @@ export function parseTime(duration: number): ParsedTime {
  *
  * @param duration - The length of time to parse in seconds.
  * @param shouldPadHours - Whether to pad the hours to be length of 2.
+ * @param shouldPadMinutes - Whether to pad the minutes to be length of 2.
  * @param shouldAlwaysShowHours - Whether to always show the hours unit.
  * @example `01:20 -> minutes:seconds`
  * @example `3:01:20 -> hours:minutes:seconds`
@@ -63,18 +64,19 @@ export function parseTime(duration: number): ParsedTime {
 export function formatTime(
   duration: number,
   shouldPadHours = false,
+  shouldPadMinutes = false,
   shouldAlwaysShowHours = false,
 ): string {
   const { hours, minutes, seconds } = parseTime(duration);
   const paddedHours = shouldPadHours ? padNumberWithZeroes(hours, 2) : hours;
-  const paddedMinutes = padNumberWithZeroes(minutes, 2);
+  const paddedMinutes = shouldPadMinutes ? padNumberWithZeroes(minutes, 2) : minutes;
   const paddedSeconds = padNumberWithZeroes(seconds, 2);
 
   if (hours > 0 || shouldAlwaysShowHours) {
     return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
   }
 
-  return `${minutes}:${paddedSeconds}`;
+  return `${paddedMinutes}:${paddedSeconds}`;
 }
 
 /**

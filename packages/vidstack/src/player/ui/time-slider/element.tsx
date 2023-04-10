@@ -136,11 +136,11 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
           ? ($media.live ? time - $media.duration : time).toFixed(0)
           : 'LIVE';
       },
-      time(percent, padHours, showHours) {
+      time(percent, padHours, padMinutes, showHours) {
         const time = getTime(percent);
         const value = $media.live ? time - $media.duration : time;
         return Number.isFinite(time)
-          ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), padHours, showHours)}`
+          ? `${value < 0 ? '-' : ''}${formatTime(Math.abs(value), padHours, padMinutes, showHours)}`
           : 'LIVE';
       },
     });

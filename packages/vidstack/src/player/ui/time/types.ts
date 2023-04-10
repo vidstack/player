@@ -19,6 +19,12 @@ export interface TimeProps {
    */
   padHours: boolean;
   /**
+   * Whether the minutes unit should be padded with zeroes to a length of 2.
+   *
+   * @example `5:22 -> 05:22`
+   */
+  padMinutes: boolean;
+  /**
    * Whether to display the remaining time from the current type, until the duration is reached.
    *
    * @example `duration` - `currentTime`

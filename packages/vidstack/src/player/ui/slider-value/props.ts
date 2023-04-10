@@ -7,5 +7,6 @@ export const sliderValueTextProps: CustomElementPropDefinitions<SliderValueProps
   format: {},
   showHours: { initial: false },
   padHours: { initial: false },
+  padMinutes: { initial: false },
   decimalPlaces: { initial: 2 },
 };

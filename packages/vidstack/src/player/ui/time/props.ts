@@ -6,5 +6,6 @@ export const timeProps: CustomElementPropDefinitions<TimeProps> = {
   type: { initial: 'current' },
   showHours: { initial: false },
   padHours: { initial: false },
+  padMinutes: { initial: false },
   remainder: { initial: false },
 };
