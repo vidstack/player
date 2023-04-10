@@ -23,7 +23,8 @@
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  background-color: #5a595a;
+  background-color: rgb(255 255 255 /0.3);
+  backdrop-filter: blur(2px);
 }
 
 :where([data-media-slider][data-focus] [part='track']) {
@@ -49,7 +50,8 @@
 :where(media-time-slider [part~='track-progress']) {
   z-index: 1; /** above track. */
   left: 0;
-  background-color: #878787;
+  background-color: rgb(255 255 255 / 0.5);
+  backdrop-filter: blur(2px);
   transform-origin: left center;
   will-change: transform;
   transform: translateY(-50%) scaleX(min(calc(var(--media-buffered) / var(--media-duration)), 1));
