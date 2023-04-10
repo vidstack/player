@@ -109,8 +109,8 @@ export function useKeyboard(
           forwardTimeKeyEvent(event);
           timeSlider = null;
         } else {
-          remote.seek(calcSeekAmount(event, method), event);
-          seekTotal = 0;
+          remote.seek(seekTotal, event);
+          seekTotal = null;
         }
       }
 
