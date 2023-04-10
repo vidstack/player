@@ -53,6 +53,7 @@
   left: 50%;
   opacity: 0;
   transform: translate(-50%, -50%);
+  border-radius: 2px;
 }
 
 :where(

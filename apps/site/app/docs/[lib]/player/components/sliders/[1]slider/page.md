@@ -111,13 +111,17 @@ media-slider [part='thumb'] {
 ### Focus
 
 ```css {% copy=true %}
+media-slider {
+  /* box shadow */
+  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
+}
+
 /* Apply styles to slider when focused via keyboard. */
 media-slider[data-focus] {
 }
 
 /* Apply styles to slider track when focused via keyboard. */
 media-slider[data-focus] [part='track'] {
-  outline: 3px solid blue;
 }
 ```
 

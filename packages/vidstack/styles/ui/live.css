@@ -34,6 +34,10 @@
   color: white;
 }
 
+:where(media-live-indicator[data-focus] [part='text']) {
+  box-shadow: var(--media-focus-ring);
+}
+
 :where(media-live-indicator:not([data-live]) > shadow-root) {
   display: none;
 }

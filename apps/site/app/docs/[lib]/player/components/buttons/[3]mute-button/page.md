@@ -71,9 +71,13 @@ media-mute-button svg[slot='volume-high'] {
 ### Focus
 
 ```css {% copy=true %}
+media-mute-button {
+  /* box shadow */
+  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
+}
+
 /* Apply styles when focused via keyboard. */
 media-mute-button[data-focus] {
-  outline: 3px solid blue;
 }
 ```
 

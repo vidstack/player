@@ -67,9 +67,13 @@ media-play-button svg[slot='replay'] {
 ### Focus
 
 ```css {% copy=true %}
+media-play-button {
+  /* box shadow */
+  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
+}
+
 /* Apply styles when focused via keyboard. */
 media-play-button[data-focus] {
-  outline: 3px solid blue;
 }
 ```
 

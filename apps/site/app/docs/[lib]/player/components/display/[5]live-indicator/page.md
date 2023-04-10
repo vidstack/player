@@ -49,9 +49,13 @@ media-live-indicator [part='text'] {
 ### Focus
 
 ```css
+media-live-indicator {
+  /* box shadow */
+  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
+}
+
 /* Apply styles when focused via keyboard. */
 media-live-indicator[data-focus] {
-  outline: 3px solid blue;
 }
 ```
 

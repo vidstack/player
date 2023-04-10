@@ -38,7 +38,7 @@
  */
 
 :where([data-media-button] [slot='tooltip-top-left']) {
-  left: 8px;
+  left: 4px;
   transform: translateY(12px) scale(0.8);
   transform-origin: 0 100%;
 }
@@ -55,7 +55,7 @@
 
 :where([data-media-button] [slot='tooltip-top-right']) {
   left: auto;
-  right: 8px;
+  right: 4px;
   transform: translateY(12px) scale(0.8);
   transform-origin: 100% 100%;
 }
@@ -89,7 +89,7 @@
 
 :where([data-media-button] [slot='tooltip-bottom-left']) {
   top: 80%;
-  left: 8px;
+  left: 4px;
   bottom: unset;
   margin-top: var(--tooltip-spacing);
   transform: translateY(-12px) scale(0.8);
@@ -109,7 +109,7 @@
 :where([data-media-button] [slot='tooltip-bottom-right']) {
   top: 80%;
   left: auto;
-  right: 8px;
+  right: 4px;
   bottom: unset;
   margin-top: var(--tooltip-spacing);
   transform: translateY(-12px) scale(0.8);

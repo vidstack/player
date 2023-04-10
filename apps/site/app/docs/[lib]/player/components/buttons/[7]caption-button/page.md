@@ -73,9 +73,13 @@ media-caption-button [slot='off'] {
 ### Focus
 
 ```css {% copy=true %}
+media-caption-button {
+  /* box shadow */
+  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
+}
+
 /* Apply styles when focused via keyboard. */
 media-caption-button[data-focus] {
-  outline: 3px solid blue;
 }
 ```
 

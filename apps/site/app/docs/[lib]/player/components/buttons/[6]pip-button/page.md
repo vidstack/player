@@ -73,9 +73,13 @@ media-pip-button [slot='exit'] {
 ### Focus
 
 ```css {% copy=true %}
+media-pip-button {
+  /* box shadow */
+  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
+}
+
 /* Apply styles when focused via keyboard. */
 media-pip-button[data-focus] {
-  outline: 3px solid blue;
 }
 ```
 

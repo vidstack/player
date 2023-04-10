@@ -10,6 +10,7 @@
  */
 
 :where(media-player) {
+  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
   width: 100%;
   display: inline-block;
   position: relative;
@@ -103,9 +104,8 @@
   outline: none;
 }
 
-:where([data-media-button][data-focus]) {
-  outline: var(--media-focus-ring, 3px solid Highlight);
-  outline: var(--media-focus-ring, 3px solid -webkit-focus-ring-color);
+:where([data-media-button][data-focus] *[slot]:not([slot*='tooltip'])) {
+  box-shadow: var(--media-focus-ring);
 }
 
 :where(media-live-indicator:not([data-live])) {
@@ -143,9 +143,7 @@
 }
 
 :where([data-media-slider][data-focus] [part='track']) {
-  outline: var(--media-focus-ring, 3px solid Highlight);
-  outline: var(--media-focus-ring, 3px solid -webkit-focus-ring-color);
-  outline-offset: 3px;
+  box-shadow: var(--media-focus-ring);
 }
 
 media-volume-slider [part*='track-progress'] {
