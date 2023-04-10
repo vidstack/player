@@ -89,7 +89,7 @@
 
 :where([data-media-slider][data-interactive] [part='thumb']) {
   opacity: 1;
-  transition: opacity 0.2s ease-in;
+  transition: opacity 0.2s ease-in, box-shadow 0.2s ease;
   width: var(--thumb-focus-size);
   height: var(--thumb-focus-size);
 }
