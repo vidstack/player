@@ -79,8 +79,7 @@ export function canUsePictureInPicture(video: HTMLVideoElement): boolean {
 }
 
 /**
- * Checks if the native HTML5 video player can use the presentation API in Safari. iOS Safari
- * appears to "support" PIP through the check, however PIP does not function.
+ * Checks if the native HTML5 video player can use the presentation API in Safari.
  *
  * @see {@link https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1631913-webkitpresentationmode}
  */

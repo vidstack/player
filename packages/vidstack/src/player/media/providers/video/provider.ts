@@ -14,7 +14,7 @@ import type {
   MediaProvider,
   MediaSetupContext,
 } from '../types';
-import { discoverNativeTextTracks } from './native-text-tracks';
+import { discoverNativeHLSTextTracks } from './native-hls-text-tracks';
 import { VideoPictureInPicture } from './picture-in-picture';
 import {
   FullscreenPresentationAdapter,
@@ -65,7 +65,7 @@ export class VideoProvider extends HTMLMediaProvider implements MediaProvider {
     super.setup(context);
 
     if (canPlayHLSNatively(this.video)) {
-      discoverNativeTextTracks(this.video, context);
+      discoverNativeHLSTextTracks(this.video, context);
     }
 
     context.textRenderers[ATTACH_VIDEO](this.video);

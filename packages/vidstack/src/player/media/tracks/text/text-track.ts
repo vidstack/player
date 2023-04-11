@@ -9,8 +9,8 @@ import type {
 
 import {
   TEXT_TRACK_CAN_LOAD,
+  TEXT_TRACK_NATIVE,
   TEXT_TRACK_ON_MODE_CHANGE,
-  TEXT_TRACK_PROXY,
   TEXT_TRACK_READY_STATE,
   TEXT_TRACK_UPDATE_ACTIVE_CUES,
 } from './symbols';
@@ -48,10 +48,13 @@ export class TextTrack extends EventTarget {
 
   /* @internal */
   [TEXT_TRACK_READY_STATE]: TextTrackReadyState = 0;
+
   /* @internal */
   [TEXT_TRACK_ON_MODE_CHANGE]: (() => void) | null = null;
+
   /* @internal */
-  [TEXT_TRACK_PROXY]: {
+  [TEXT_TRACK_NATIVE]: {
+    default?: boolean;
     track: {
       mode: TextTrackMode;
       addCue(cue: any): void;
@@ -91,19 +94,7 @@ export class TextTrack extends EventTarget {
   }
 
   set mode(mode) {
-    if (this._mode === mode) return;
-
-    this._mode = mode;
-
-    if (mode === 'disabled') {
-      this._activeCues = [];
-      this._activeCuesChanged();
-    } else {
-      this._load();
-    }
-
-    this.dispatchEvent(new DOMEvent<TextTrack>('mode-change', { detail: this }));
-    this[TEXT_TRACK_ON_MODE_CHANGE]?.();
+    this.setMode(mode);
   }
 
   constructor(init: TextTrackInit) {
@@ -128,7 +119,7 @@ export class TextTrack extends EventTarget {
 
     // Avoid infinite loop by checking if cue came from native track.
     if (trigger?.type !== 'cuechange') {
-      this[TEXT_TRACK_PROXY]?.track.addCue(cue);
+      this[TEXT_TRACK_NATIVE]?.track.addCue(cue);
     }
 
     this.dispatchEvent(new DOMEvent<VTTCue>('add-cue', { detail: cue, trigger }));
@@ -143,12 +134,28 @@ export class TextTrack extends EventTarget {
     if (index >= 0) {
       const isActive = this._activeCues.includes(cue);
       this._cues.splice(index, 1);
-      this[TEXT_TRACK_PROXY]?.track.removeCue(cue);
+      this[TEXT_TRACK_NATIVE]?.track.removeCue(cue);
       this.dispatchEvent(new DOMEvent<VTTCue>('remove-cue', { detail: cue, trigger }));
       if (isActive) {
         this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, trigger);
       }
     }
+  }
+
+  setMode(mode: TextTrackMode, trigger?: Event) {
+    if (this._mode === mode) return;
+
+    this._mode = mode;
+
+    if (mode === 'disabled') {
+      this._activeCues = [];
+      this._activeCuesChanged();
+    } else {
+      this._load();
+    }
+
+    this.dispatchEvent(new DOMEvent<TextTrack>('mode-change', { detail: this, trigger }));
+    this[TEXT_TRACK_ON_MODE_CHANGE]?.();
   }
 
   /* @internal */
@@ -205,8 +212,8 @@ export class TextTrack extends EventTarget {
         this._regions = regions;
         this._cues = cues;
         this[TEXT_TRACK_READY_STATE] = 2;
-        const proxyTrack = this[TEXT_TRACK_PROXY]?.track;
-        if (proxyTrack) for (const cue of this._cues) proxyTrack.addCue(cue);
+        const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
+        if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
         this.dispatchEvent(new DOMEvent<void>('load'));
       }
     } catch (error) {

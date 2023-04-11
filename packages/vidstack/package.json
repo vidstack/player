@@ -17,6 +17,7 @@
     "define/",
     "styles/",
     "tailwind.*",
+    "empty.vtt",
     "vscode.html-data.json"
   ],
   "scripts": {

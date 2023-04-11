@@ -1,9 +1,8 @@
 import { effect, onDispose } from 'maverick.js';
 import { listenEvent } from 'maverick.js/std';
 
-import { canFullscreen } from '../../../../../foundation/fullscreen/fullscreen';
 import type { MediaContext } from '../../../context';
-import { ATTACH_VIDEO } from '../symbols';
+import { ATTACH_VIDEO, TEXT_TRACK_NATIVE_HLS } from '../symbols';
 import { isTrackCaptionKind, TextTrack } from '../text-track';
 import type { TextTrackList } from '../text-tracks';
 import { NativeTextRenderer } from './native-text-renderer';
@@ -13,7 +12,6 @@ export class TextRenderers {
   private _textTracks: TextTrackList;
   private _renderers: TextRenderer[] = [];
 
-  private _nativeControls = false;
   private _nativeDisplay = false;
   private _nativeRenderer: NativeTextRenderer | null = null;
   private _customRenderer: TextRenderer | null = null;
@@ -22,8 +20,7 @@ export class TextRenderers {
     this._textTracks = textTracks;
 
     effect(() => {
-      this._nativeControls = $store.controls;
-      this._nativeDisplay = $iosControls();
+      this._nativeDisplay = $store.controls || $iosControls();
       this._update();
     });
 
@@ -49,6 +46,9 @@ export class TextRenderers {
   [ATTACH_VIDEO](video: HTMLVideoElement | null) {
     requestAnimationFrame(() => {
       this._video = video;
+      this._nativeRenderer = new NativeTextRenderer();
+      this._nativeRenderer.attach(this._video!);
+      for (const track of this._textTracks) this._addNativeTrack(track);
       this._update();
     });
   }
@@ -69,23 +69,23 @@ export class TextRenderers {
       return;
     }
 
-    // Fullscreen check to ensure we keep the native renderer loaded on iOS.
-    if (this._nativeDisplay || !canFullscreen()) {
-      this._createNativeRenderer();
-    }
-
     const currentTrack = this._textTracks.selected;
 
-    if (this._nativeDisplay) {
+    // We identify text tracks that were embedded in HLS playlists and loaded natively (e.g., iOS
+    // Safari) because we can't toggle mode to hidden and still get cue updates for some reason.
+    // See `native-hls-text-tracks.ts` for discovery.
+    if (this._nativeDisplay || currentTrack?.[TEXT_TRACK_NATIVE_HLS]) {
       this._customRenderer?.changeTrack(null);
       this._nativeRenderer!.setDisplay(true);
       this._nativeRenderer!.changeTrack(currentTrack);
       return;
     }
 
+    this._nativeRenderer!.setDisplay(false);
+    this._nativeRenderer!.changeTrack(null);
+
     if (!currentTrack) {
       this._customRenderer?.changeTrack(null);
-      this._nativeRenderer?.changeTrack(null);
       return;
     }
 
@@ -99,16 +99,6 @@ export class TextRenderers {
       this._customRenderer = customRenderer ?? null;
     }
 
-    if (this._nativeControls && !customRenderer) {
-      this._createNativeRenderer();
-      this._nativeRenderer!.setDisplay(true);
-      this._nativeRenderer!.changeTrack(currentTrack);
-      return;
-    }
-
-    this._nativeRenderer?.setDisplay(false);
-    this._nativeRenderer?.changeTrack(null);
-
     customRenderer?.changeTrack(currentTrack);
   }
 
@@ -117,13 +107,6 @@ export class TextRenderers {
     this._nativeRenderer = null;
     this._customRenderer?.detach();
     this._customRenderer = null;
-  }
-
-  private _createNativeRenderer() {
-    if (this._nativeRenderer) return;
-    this._nativeRenderer = new NativeTextRenderer();
-    this._nativeRenderer.attach(this._video!);
-    for (const track of this._textTracks) this._addNativeTrack(track);
   }
 }
 

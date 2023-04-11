@@ -71,7 +71,7 @@ export function setupHLS(
           }
         };
 
-        if (nonNativeTrack.default) track.mode = 'showing';
+        if (nonNativeTrack.default) track.setMode('showing', event);
         textTracks.add(track, event);
       }
     });

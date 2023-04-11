@@ -47,8 +47,7 @@ export function createMediaController(props: Signals<MediaControllerProps>) {
     () =>
       !canFullscreen() &&
       $store.mediaType === 'video' &&
-      $store.controls &&
-      (!props.$playsinline() || $store.fullscreen),
+      (($store.controls && !props.$playsinline()) || $store.fullscreen),
   );
 
   context.textTracks = new TextTrackList();

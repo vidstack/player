@@ -147,7 +147,7 @@ export function createMediaRequestManager(
       track = textTracks[index];
     if (track) {
       requests._queue._enqueue('textTrack', event);
-      track.mode = mode;
+      track.setMode(mode, event);
     } else if (__DEV__) {
       logger
         ?.warnGroup('[vidstack] failed text track change request (invalid index)')
