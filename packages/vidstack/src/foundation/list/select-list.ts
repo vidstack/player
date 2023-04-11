@@ -11,11 +11,11 @@ export interface SelectListItem extends ListItem {
 
 export class SelectList<Item extends SelectListItem> extends List<Item> {
   get selected() {
-    return this.items.find((item) => item.selected) ?? null;
+    return this._items.find((item) => item.selected) ?? null;
   }
 
   get selectedIndex() {
-    return this.items.findIndex((item) => item.selected);
+    return this._items.findIndex((item) => item.selected);
   }
 
   /* @internal */

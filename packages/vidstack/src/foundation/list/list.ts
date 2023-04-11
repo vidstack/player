@@ -15,7 +15,7 @@ export interface ListItem {}
 export class List<Item extends ListItem> extends EventTarget implements Iterable<Item> {
   [index: number]: Item | undefined;
 
-  protected items: Item[] = [];
+  protected _items: Item[] = [];
 
   /* @internal */
   protected [LIST_READONLY] = false;
@@ -25,7 +25,7 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
   protected [LIST_ON_REMOVE]?(item: Item, trigger?: Event): void;
 
   get length() {
-    return this.items.length;
+    return this._items.length;
   }
 
   get readonly() {
@@ -36,42 +36,42 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
    * Transform list to an array.
    */
   toArray(): Item[] {
-    return [...this.items];
+    return [...this._items];
   }
 
   [Symbol.iterator]() {
-    return this.items.values();
+    return this._items.values();
   }
 
   /* @internal */
   [LIST_ADD](item: Item, trigger?: Event): void {
-    const index = this.items.length;
+    const index = this._items.length;
     if (!('' + index in this)) {
       Object.defineProperty(this, index, {
         get() {
-          return this.items[index];
+          return this._items[index];
         },
       });
     }
-    if (this.items.includes(item as Item)) return;
-    this.items.push(item as Item);
+    if (this._items.includes(item as Item)) return;
+    this._items.push(item as Item);
     this.dispatchEvent(new DOMEvent<any>('add', { detail: item, trigger }));
   }
 
   /* @internal */
   [LIST_REMOVE](item: Item, trigger?: Event): void {
-    const index = this.items.indexOf(item);
+    const index = this._items.indexOf(item);
     if (index >= 0) {
       this[LIST_ON_REMOVE]?.(item, trigger);
-      this.items.splice(index, 1);
+      this._items.splice(index, 1);
       this.dispatchEvent(new DOMEvent<any>('remove', { detail: item, trigger }));
     }
   }
 
   /* @internal */
   [LIST_RESET](trigger?: Event): void {
-    for (const item of [...this.items]) this[LIST_REMOVE](item, trigger);
-    this.items = [];
+    for (const item of [...this._items]) this[LIST_REMOVE](item, trigger);
+    this._items = [];
     this[LIST_SET_READONLY](false, trigger);
     this[LIST_ON_RESET]?.();
   }

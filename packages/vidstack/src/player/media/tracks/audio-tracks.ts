@@ -9,7 +9,7 @@ import { SelectList, SelectListItem } from '../../../foundation/list/select-list
 export class AudioTrackList extends SelectList<AudioTrack> {
   getById(id: string): AudioTrack | null {
     if (id === '') return null;
-    return this.items.find((track) => track.id === id) ?? null;
+    return this._items.find((track) => track.id === id) ?? null;
   }
 }
 

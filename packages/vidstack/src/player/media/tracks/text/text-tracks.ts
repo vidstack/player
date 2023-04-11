@@ -22,7 +22,7 @@ export class TextTrackList extends List<TextTrack> {
   }
 
   get selected() {
-    const track = this.items.find((t) => t.mode === 'showing' && isTrackCaptionKind(t));
+    const track = this._items.find((t) => t.mode === 'showing' && isTrackCaptionKind(t));
     return track ?? null;
   }
 
@@ -44,7 +44,7 @@ export class TextTrackList extends List<TextTrack> {
   }
 
   remove(track: TextTrack, trigger?: Event) {
-    if (!this.items.includes(track)) return;
+    if (!this._items.includes(track)) return;
     if (track === this._default) this._default = null;
     track.mode = 'disabled';
     track[TEXT_TRACK_ON_MODE_CHANGE] = null;
@@ -54,23 +54,23 @@ export class TextTrackList extends List<TextTrack> {
   }
 
   clear(trigger?: Event) {
-    for (const track of this.items) this.remove(track, trigger);
+    for (const track of this._items) this.remove(track, trigger);
     return this;
   }
 
   getById(id: string): TextTrack | null {
-    return this.items.find((track) => track.id === id) ?? null;
+    return this._items.find((track) => track.id === id) ?? null;
   }
 
   getByKind(kind: TextTrackKind | TextTrackKind[]): TextTrack[] {
     const kinds = Array.isArray(kind) ? kind : [kind];
-    return this.items.filter((track) => kinds.includes(track.kind));
+    return this._items.filter((track) => kinds.includes(track.kind));
   }
 
   /* @internal */
   [TEXT_TRACK_CAN_LOAD]() {
     if (this._canLoad) return;
-    for (const track of this.items) track[TEXT_TRACK_CAN_LOAD]();
+    for (const track of this._items) track[TEXT_TRACK_CAN_LOAD]();
     this._canLoad = true;
   }
 
@@ -80,7 +80,7 @@ export class TextTrackList extends List<TextTrack> {
 
     if (track.mode === 'showing') {
       const kinds = isTrackCaptionKind(track) ? ['captions', 'subtitles'] : [track.kind];
-      for (const t of this.items) {
+      for (const t of this._items) {
         if (t.mode === 'showing' && t != track && kinds.includes(t.kind)) {
           t.mode = 'disabled';
         }
