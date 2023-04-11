@@ -63,7 +63,6 @@ export class NativeTextRenderer implements TextRenderer {
     el.label = track.label;
     el.kind = track.kind;
     el.default = track.default;
-    el.track.mode = this._display ? track.mode : 'disabled';
     track.language && (el.srclang = track.language);
     return el;
   }
@@ -74,10 +73,16 @@ export class NativeTextRenderer implements TextRenderer {
   }
 
   private _onChange(event?: Event) {
-    if (!this._display) return;
     for (const track of this._tracks) {
       const nativeTrack = track[TEXT_TRACK_NATIVE]?.track;
-      if (nativeTrack?.mode === 'showing') {
+      if (!nativeTrack) continue;
+
+      if (!this._display) {
+        nativeTrack.mode = 'disabled';
+        continue;
+      }
+
+      if (nativeTrack.mode === 'showing') {
         this._copyCues(track, nativeTrack);
         track.setMode('showing', event);
       } else if (track.mode === 'showing') {
