@@ -15,7 +15,7 @@ export function useTextTracks(
     const newTracks = [...$textTracks(), ...$domTracks()];
 
     for (const newTrack of newTracks) {
-      const id = newTrack.id ?? TextTrack.createId(newTrack);
+      const id = newTrack.id || TextTrack.createId(newTrack);
       if (!textTracks.getById(id)) {
         // @ts-expect-error - override readonly
         newTrack.id = id;
