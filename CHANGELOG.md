@@ -1,3 +1,31 @@
+## [0.4.4](https://github.com/vidstack/player/compare/v0.4.3...v0.4.4) (2023-04-11)
+
+### Bug Fixes
+
+- accept relative thumbnail urls without starting slash ([7784063](https://github.com/vidstack/player/commit/77840637b9aba192458e9d864fcbff52ec482d8d))
+- add box shadow transition to default slider thumb ([3c844a1](https://github.com/vidstack/player/commit/3c844a15c17b577142f5670e151b2f70fb17d389))
+- adjust default captions cue background ([cd3f543](https://github.com/vidstack/player/commit/cd3f543bbcb3451fb552b639fa3ac4ad47d39120))
+- adjust slider track and progress default colors ([5a62567](https://github.com/vidstack/player/commit/5a6256740072543e68c52559e6feda0c50714059))
+- avoid overlapping default tracks on iphone ([3334f7b](https://github.com/vidstack/player/commit/3334f7b49149f758cea93431566a2e63cf0bca83))
+- detecting pip/fullscreen on iphone not working ([c0b3810](https://github.com/vidstack/player/commit/c0b3810c1e0c385616d5a1e678daf523dc1cf02d))
+- handle text tracks edge cases on iphone ([3da422c](https://github.com/vidstack/player/commit/3da422ca0d77c20f30c426914f12f7a6d7c92cf0))
+- hide track progress on volume slider ([81277a4](https://github.com/vidstack/player/commit/81277a44a8a6d13bf952561b1d39c7a601811e0a))
+- hls.js freezing if setting same audio track ([0f26c6c](https://github.com/vidstack/player/commit/0f26c6cea1b7555fc2d447eedfca60852af6b49d))
+- key press on toggle button should prevent default ([b2e5d1e](https://github.com/vidstack/player/commit/b2e5d1e657fc81db5494045881b8fa77a14a3fc5))
+- keyboard seeking with native controls not working ([d5404bb](https://github.com/vidstack/player/commit/d5404bbce24cc8642d092cc6d6b7f29a6fd30be3)), closes [#803](https://github.com/vidstack/player/issues/803)
+- minify `items` list field ([0d19867](https://github.com/vidstack/player/commit/0d19867d3eaa354b415a7714a0dd098612fe8b0f))
+- move default left/right tooltips inward to stay in view ([586cfad](https://github.com/vidstack/player/commit/586cfadaeb2f640c0526f0fbe3391966a659ff03))
+- multiple `<track>` elements are not being included ([16acabe](https://github.com/vidstack/player/commit/16acabeb35ee20672a9a616f594a5858fe8d38a9))
+- set active player immediately when key target document ([389bcde](https://github.com/vidstack/player/commit/389bcde0f4eec192386713f71bee503a73cae0e6))
+- smaller default slider preview gap ([0c2d8b1](https://github.com/vidstack/player/commit/0c2d8b1bd891734586f2449e52273cf981c39f84))
+- smaller default tooltip gap ([0682579](https://github.com/vidstack/player/commit/06825799e1db2776abfbb58241e0c15b07469ef2))
+- use box shadow for focus ring ([578e418](https://github.com/vidstack/player/commit/578e418e2f3beea6a1740a719e87fa0bab0b9f48))
+
+### Features
+
+- add replay slot to play button ([cfe2993](https://github.com/vidstack/player/commit/cfe2993cc7729830d5a7fac218a2a9156fd34401))
+- new `padMinutes` option on time and slider value ([b78a49a](https://github.com/vidstack/player/commit/b78a49a2545bef3924586b5fa4d89fa957377ade)), closes [#794](https://github.com/vidstack/player/issues/794)
+
 ## [0.4.3](https://github.com/vidstack/player/compare/v0.4.2...v0.4.3) (2023-04-07)
 
 ### Bug Fixes
