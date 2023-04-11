@@ -16,6 +16,7 @@ export class NativeTextRenderer implements TextRenderer {
 
   attach(video: HTMLVideoElement) {
     this._video = video;
+    if (!video.crossOrigin) video.crossOrigin = 'anonymous';
     video.textTracks.onchange = this._onChange.bind(this);
   }
 

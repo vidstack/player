@@ -96,7 +96,9 @@ export function setupHLS(
     });
 
     audioTracks.addEventListener('change', () => {
-      instance.audioTrack = audioTracks.selectedIndex;
+      if (instance.audioTrack !== audioTracks.selectedIndex) {
+        instance.audioTrack = audioTracks.selectedIndex;
+      }
     });
 
     delegate.dispatch('provider-setup', { detail: provider });
