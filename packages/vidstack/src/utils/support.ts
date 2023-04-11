@@ -86,9 +86,7 @@ export function canUsePictureInPicture(video: HTMLVideoElement): boolean {
 export function canUseVideoPresentation(video: HTMLVideoElement): boolean {
   if (__SERVER__) return false;
   return (
-    isFunction(video.webkitSupportsPresentationMode) &&
-    isFunction(video.webkitSetPresentationMode) &&
-    !IS_IPHONE
+    isFunction(video.webkitSupportsPresentationMode) && isFunction(video.webkitSetPresentationMode)
   );
 }
 
