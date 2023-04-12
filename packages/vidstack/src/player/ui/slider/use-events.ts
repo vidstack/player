@@ -1,4 +1,4 @@
-import { effect, Signals } from 'maverick.js';
+import { effect, type Signals } from 'maverick.js';
 import type { CustomElementHost } from 'maverick.js/element';
 import {
   createEvent,

@@ -1,13 +1,13 @@
-import { effect, peek, ReadSignal, signal, Signals } from 'maverick.js';
+import { effect, peek, signal, type ReadSignal, type Signals } from 'maverick.js';
 import { createEvent, isUndefined, keysOf, listenEvent, noop } from 'maverick.js/std';
 
 import {
   createFullscreenAdapter,
-  FullscreenAdapter,
+  type FullscreenAdapter,
 } from '../../../foundation/fullscreen/fullscreen';
 import {
   createScreenOrientationAdapter,
-  ScreenOrientationAdapter,
+  type ScreenOrientationAdapter,
 } from '../../../foundation/orientation/screen-orientation';
 import { Queue } from '../../../foundation/queue/queue';
 import { coerceToError } from '../../../utils/error';
@@ -15,7 +15,7 @@ import type { MediaPlayerElement } from '../../element/types';
 import type { MediaContext } from '../context';
 import type { MediaProvider } from '../providers/types';
 import type * as RE from '../request-events';
-import { createMediaUser, MediaUser } from '../user';
+import { createMediaUser, type MediaUser } from '../user';
 import type { MediaStateManager } from './state-manager';
 import type { MediaControllerProps } from './types';
 

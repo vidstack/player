@@ -1,4 +1,4 @@
-import { computed, effect, peek, ReadSignal, signal } from 'maverick.js';
+import { computed, effect, peek, signal, type ReadSignal } from 'maverick.js';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
 import type { MediaControllerElement } from './controller/types';

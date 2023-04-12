@@ -1,13 +1,13 @@
 import { DOMEvent } from 'maverick.js/std';
 
-import { List, ListReadonlyChangeEvent } from '../../../../foundation/list/list';
+import { List, type ListReadonlyChangeEvent } from '../../../../foundation/list/list';
 import { LIST_ADD, LIST_REMOVE } from '../../../../foundation/list/symbols';
 import { TEXT_TRACK_CAN_LOAD, TEXT_TRACK_ON_MODE_CHANGE } from './symbols';
 import {
   isTrackCaptionKind,
   TextTrack,
-  TextTrackInit,
-  TextTrackModeChangeEvent,
+  type TextTrackInit,
+  type TextTrackModeChangeEvent,
 } from './text-track';
 
 /**

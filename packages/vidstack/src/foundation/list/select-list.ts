@@ -1,6 +1,6 @@
 import { DOMEvent } from 'maverick.js/std';
 
-import { List, ListEvents, ListItem } from './list';
+import { List, type ListEvents, type ListItem } from './list';
 import { LIST_ADD, LIST_ON_REMOVE, LIST_ON_USER_SELECT, LIST_SELECT } from './symbols';
 
 const SELECTED = Symbol(__DEV__ ? 'SELECTED' : 0);

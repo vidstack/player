@@ -1,5 +1,5 @@
-import { effect, Signals } from 'maverick.js';
-import { CustomElementHost, onAttach } from 'maverick.js/element';
+import { effect, type Signals } from 'maverick.js';
+import { onAttach, type CustomElementHost } from 'maverick.js/element';
 import { ariaBool, isKeyboardClick, isKeyboardEvent, listenEvent } from 'maverick.js/std';
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';

@@ -1,6 +1,6 @@
-import { effect, ReadSignal } from 'maverick.js';
+import { effect, type ReadSignal } from 'maverick.js';
 
-import { createLogger, Logger } from './create-logger';
+import { createLogger, type Logger } from './create-logger';
 
 const loggers = new WeakMap<ReadSignal<unknown>, Logger>();
 

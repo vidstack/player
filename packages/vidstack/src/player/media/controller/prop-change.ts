@@ -1,4 +1,4 @@
-import { effect, Signals } from 'maverick.js';
+import { effect, type Signals } from 'maverick.js';
 import { dispatchEvent } from 'maverick.js/std';
 
 import type { MediaContext } from '../context';

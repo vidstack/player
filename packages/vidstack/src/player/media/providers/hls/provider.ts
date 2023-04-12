@@ -1,5 +1,5 @@
 import type * as HLS from 'hls.js';
-import { Dispose, effect, peek, signal } from 'maverick.js';
+import { effect, peek, signal, type Dispose } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
 import { preconnect } from '../../../../utils/network';

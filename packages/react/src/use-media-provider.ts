@@ -1,7 +1,7 @@
 import { effect } from 'maverick.js';
 import { useReactContext } from 'maverick.js/react';
 import { useEffect, useState } from 'react';
-import { mediaContext, MediaProvider } from 'vidstack';
+import { mediaContext, type MediaProvider } from 'vidstack';
 
 /**
  * Returns the current parent media provider.

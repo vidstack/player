@@ -1,4 +1,4 @@
-import { effect, peek, ReadSignal, signal } from 'maverick.js';
+import { effect, peek, signal, type ReadSignal } from 'maverick.js';
 import { dispatchEvent, listenEvent } from 'maverick.js/std';
 
 import { canOrientScreen } from '../../utils/support';

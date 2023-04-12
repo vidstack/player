@@ -1,4 +1,4 @@
-import { createContext, ReadSignal, useContext, WriteSignal } from 'maverick.js';
+import { createContext, useContext, type ReadSignal, type WriteSignal } from 'maverick.js';
 
 import type { Logger } from '../../foundation/logger/create-logger';
 import type { MediaPlayerElement, MediaPlayerProps } from '../element/types';

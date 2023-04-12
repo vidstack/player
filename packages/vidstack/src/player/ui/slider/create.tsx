@@ -3,12 +3,12 @@ import {
   getScope,
   peek,
   provideContext,
-  ReadSignal,
   scoped,
-  Signals,
   useContext,
+  type ReadSignal,
+  type Signals,
 } from 'maverick.js';
-import { CustomElementHost, onAttach } from 'maverick.js/element';
+import { onAttach, type CustomElementHost } from 'maverick.js/element';
 import { ariaBool, mergeProperties, noop, setStyle } from 'maverick.js/std';
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
@@ -16,9 +16,9 @@ import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
 import { sliderValueFormattersContext } from './format';
 import type { SliderProps } from './props';
-import { SliderStore, sliderStoreContext } from './store';
+import { sliderStoreContext, type SliderStore } from './store';
 import type { MediaSliderElement, SliderMembers } from './types';
-import { SliderEventCallbacks, useSliderEvents } from './use-events';
+import { useSliderEvents, type SliderEventCallbacks } from './use-events';
 import { getClampedValue } from './utils';
 
 /**

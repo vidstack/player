@@ -1,9 +1,9 @@
-import { computed, effect, provideContext, signal, Signals } from 'maverick.js';
+import { computed, effect, provideContext, signal, type Signals } from 'maverick.js';
 
 import { canFullscreen } from '../../../foundation/fullscreen/fullscreen';
 import { useLogger } from '../../../foundation/logger/logger';
 import type { MediaPlayerElement } from '../../element/types';
-import { mediaContext, MediaContext } from '../context';
+import { mediaContext, type MediaContext } from '../context';
 import type { MediaProviderLoader } from '../providers/types';
 import { VideoQualityList } from '../quality/video-quality';
 import { MediaRemoteControl } from '../remote-control';

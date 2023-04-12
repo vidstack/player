@@ -19,6 +19,7 @@
   export let dialogId: string | null = null;
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
 <section
   class={clsx(
     'grid gap-4 grid-cols-[repeat(auto-fill,minmax(10rem,1fr))]',
@@ -28,6 +29,7 @@
   aria-label={label}
 >
   {#each filter as icon (icon)}
+    <!-- svelte-ignore a11y-role-supports-aria-props -->
     <button
       class={clsx('flex flex-col items-center group justify-center cursor-pointer p-2 rounded-sm')}
       role="option"

@@ -1,7 +1,7 @@
 import { DOMEvent } from 'maverick.js/std';
 
 import type { ListReadonlyChangeEvent } from '../../../foundation/list/list';
-import { SelectList, SelectListItem } from '../../../foundation/list/select-list';
+import { SelectList, type SelectListItem } from '../../../foundation/list/select-list';
 import { LIST_ON_RESET, LIST_ON_USER_SELECT } from '../../../foundation/list/symbols';
 import { ENABLE_AUTO_QUALITY, SET_AUTO_QUALITY } from './symbols';
 

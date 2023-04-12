@@ -10,7 +10,7 @@
   import type { ComponentApi } from '$lib/server/component-api';
   import { jsLib } from '$lib/stores/js-lib';
   import { ariaBool } from '$lib/utils/aria';
-  import { camelToKebabCase, camelToTitleCase, kebabToPascalCase } from '$lib/utils/string';
+  import { camelToTitleCase, kebabToPascalCase } from '$lib/utils/string';
 
   import SearchInput from '../base/SearchInput.svelte';
 
@@ -272,7 +272,7 @@
       <div class="text-soft mt-4 flex items-center justify-end text-sm">
         <button
           class="hover:text-inverse rounded-sm py-1 px-2.5 font-medium"
-          aria-checked={ariaBool(isAllOpen[category])}
+          aria-pressed={ariaBool(isAllOpen[category])}
           on:click={() => {
             isAllOpen[category] = !isAllOpen[category];
             for (const prop of api[category]) {
@@ -287,7 +287,7 @@
         {#if isAllOpen[category] || filterHasDocs(api[category]).length > 10}
           <button
             class="hover:text-inverse rounded-sm py-1 px-2.5 font-medium"
-            aria-checked={ariaBool(showAll)}
+            aria-pressed={ariaBool(showAll)}
             on:click={() => {
               _showAll[category] = !_showAll[category];
             }}

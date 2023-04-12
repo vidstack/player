@@ -1,4 +1,4 @@
-import { effect, ReadSignal, signal } from 'maverick.js';
+import { effect, signal, type ReadSignal } from 'maverick.js';
 
 export function createIntersectionObserverAdapter(
   $target: ReadSignal<Element | null>,
