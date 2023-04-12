@@ -8,7 +8,7 @@ import { ENABLE_AUTO_QUALITY, SET_AUTO_QUALITY } from './symbols';
 /**
  * @see {@link https://vidstack.io/docs/player/core-concepts/quality#quality-list}
  */
-export class VideoQualityList extends SelectList<VideoQuality> {
+export class VideoQualityList extends SelectList<VideoQuality, VideoQualityListEvents> {
   private _auto = false;
 
   /**
@@ -68,28 +68,6 @@ export class VideoQualityList extends SelectList<VideoQuality> {
         trigger,
       }),
     );
-  }
-
-  override addEventListener<Type extends keyof VideoQualityListEvents>(
-    type: Type,
-    callback:
-      | ((event: VideoQualityListEvents[Type]) => void)
-      | { handleEvent(event: VideoQualityListEvents[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.addEventListener(type as any, callback as any, options);
-  }
-
-  override removeEventListener<Type extends keyof VideoQualityListEvents>(
-    type: Type,
-    callback:
-      | ((event: VideoQualityListEvents[Type]) => void)
-      | { handleEvent(event: VideoQualityListEvents[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.removeEventListener(type as any, callback as any, options);
   }
 }
 

@@ -6,6 +6,15 @@ import { IS_SAFARI } from '../../utils/support';
 
 const PAGE_EVENTS = ['focus', 'blur', 'visibilitychange', 'pageshow', 'pagehide'] as const;
 
+declare global {
+  interface GlobalEventHandlersEventMap {
+    beforeunload: Event;
+    pageshow: Event;
+    pagehide: Event;
+    visibilitychange: Event;
+  }
+}
+
 export function usePageVisibility(): PageVisibilityAdapter {
   const $state = signal(determinePageState()),
     $visibility = signal<DocumentVisibility>(__SERVER__ ? 'visible' : document.visibilityState);
@@ -17,7 +26,6 @@ export function usePageVisibility(): PageVisibilityAdapter {
     $visibility.set(document.visibilityState);
 
     for (const eventType of PAGE_EVENTS) {
-      // @ts-expect-error - visibilitychange event type missing
       listenEvent(window, eventType, handlePageEvent);
     }
 
@@ -33,7 +41,6 @@ export function usePageVisibility(): PageVisibilityAdapter {
      * @see https://bugs.webkit.org/show_bug.cgi?id=151234
      */
     if (IS_SAFARI) {
-      // @ts-expect-error - beforeunload event type missing
       listenEvent(window, 'beforeunload', (event) => {
         safariBeforeUnloadTimeout = setTimeout(() => {
           if (!(event.defaultPrevented || (event.returnValue as any).length > 0)) {

@@ -13,7 +13,7 @@ import {
 /**
  * @see {@link https://vidstack.io/docs/player/core-concepts/text-tracks}
  */
-export class TextTrackList extends List<TextTrack> {
+export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   private _canLoad = false;
   private _default: TextTrack | null = null;
 
@@ -93,28 +93,6 @@ export class TextTrackList extends List<TextTrack> {
         trigger: event,
       }),
     );
-  }
-
-  override addEventListener<Type extends keyof TextTrackListEvents>(
-    type: Type,
-    callback:
-      | ((event: TextTrackListEvents[Type]) => void)
-      | { handleEvent(event: TextTrackListEvents[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.addEventListener(type as any, callback as any, options);
-  }
-
-  override removeEventListener<Type extends keyof TextTrackListEvents>(
-    type: Type,
-    callback:
-      | ((event: TextTrackListEvents[Type]) => void)
-      | { handleEvent(event: TextTrackListEvents[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.removeEventListener(type as any, callback as any, options);
   }
 }
 

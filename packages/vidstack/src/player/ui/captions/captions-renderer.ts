@@ -2,11 +2,7 @@ import { createDisposalBin, listenEvent } from 'maverick.js/std';
 import type { CaptionsRenderer } from 'media-captions';
 
 import type { TextRenderer } from '../../media/tracks/text/render/text-renderer';
-import type {
-  TextTrack,
-  TextTrackAddCueEvent,
-  TextTrackRemoveCueEvent,
-} from '../../media/tracks/text/text-track';
+import type { TextTrack } from '../../media/tracks/text/text-track';
 
 export class CaptionsTextRenderer implements TextRenderer {
   readonly priority = 10;
@@ -45,12 +41,10 @@ export class CaptionsTextRenderer implements TextRenderer {
     }
 
     this._disposal.add(
-      // @ts-expect-error - fix in Maverick
-      listenEvent(track, 'add-cue', (event: TextTrackAddCueEvent) => {
+      listenEvent(track, 'add-cue', (event) => {
         this._renderer.addCue(event.detail);
       }),
-      // @ts-expect-error - fix in Maverick
-      listenEvent(track, 'remove-cue', (event: TextTrackRemoveCueEvent) => {
+      listenEvent(track, 'remove-cue', (event) => {
         this._renderer.removeCue(event.detail);
       }),
     );
