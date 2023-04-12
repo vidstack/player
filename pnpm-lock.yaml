@@ -143,7 +143,7 @@ importers:
       just-throttle: ^4.2.0
       libass-wasm: ^4.1.0
       maverick.js: ^0.32.3
-      media-captions: ^0.0.7
+      media-captions: ^0.0.8
       media-icons: ^0.4.2
       postcss: ^8.4.0
       rimraf: ^3.0.0
@@ -156,7 +156,7 @@ importers:
       vitest: ^0.30.0
     dependencies:
       maverick.js: 0.32.3
-      media-captions: 0.0.7
+      media-captions: 0.0.8
       media-icons: 0.4.2
       type-fest: 3.8.0
     devDependencies:
@@ -3963,8 +3963,8 @@ packages:
       blueimp-md5: 2.19.0
     dev: true
 
-  /media-captions/0.0.7:
-    resolution: {integrity: sha512-FUz0sVnMrhNHL3AmmDMKs3SUYnjxQ5Yg4N7ijJUTojAOqd4KYjPqSj2+dGBwAuU7gJsU5TgKziggsXU17EGPOw==}
+  /media-captions/0.0.8:
+    resolution: {integrity: sha512-gX6ozU5smrAb90FwI+wd1VnqkwcAQ2NF8l72KZ67k+o3Vr0wYBAsTFRfdOePqde9IBhfBZbZsYEA5509npwtZA==}
     engines: {node: '>=16'}
     dev: false
 
