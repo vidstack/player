@@ -1,4 +1,4 @@
-import { deferredPromise, DeferredPromise, isNull } from 'maverick.js/std';
+import { deferredPromise, isNull, type DeferredPromise } from 'maverick.js/std';
 
 export function preconnect(
   url: string,

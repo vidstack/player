@@ -35,19 +35,19 @@
     "test:server:watch": "SERVER=true vitest --watch"
   },
   "dependencies": {
-    "maverick.js": "^0.32.3",
-    "media-captions": "^0.0.7",
+    "maverick.js": "^0.33.1",
+    "media-captions": "^0.0.8",
     "media-icons": "^0.4.2",
-    "type-fest": "^3.5.0"
+    "type-fest": "^3.8.0"
   },
   "devDependencies": {
-    "@maverick-js/compiler": "^0.32.3",
+    "@maverick-js/compiler": "^0.33.1",
     "@open-wc/semantic-dom-diff": "^0.19.5",
     "@open-wc/testing-helpers": "^2.1.2",
     "@types/fscreen": "^1.0.1",
     "autoprefixer": "^10.4.2",
     "fscreen": "^1.2.0",
-    "hls.js": "^1.3.4",
+    "hls.js": "^1.4.0",
     "jsdom": "^21.0.0",
     "just-debounce-it": "^3.2.0",
     "just-throttle": "^4.2.0",
@@ -55,11 +55,11 @@
     "postcss": "^8.4.0",
     "rimraf": "^3.0.0",
     "tailwindcss": "^3.2.0",
-    "tslib": "^2.4.0",
-    "tsup": "^6.5.0",
-    "typescript": "^4.9.0",
-    "vite": "^4.0.0",
-    "vitest": "^0.27.0"
+    "tslib": "^2.5.0",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.0",
+    "vite": "^4.2.0",
+    "vitest": "^0.30.0"
   },
   "contributors": [
     "Dave Furfero <furf@furf.com>",

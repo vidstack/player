@@ -1,8 +1,8 @@
-import { effect, onDispose, peek, signal, Signals } from 'maverick.js';
-import { CustomElementHost, onAttach } from 'maverick.js/element';
+import { effect, onDispose, peek, signal, type Signals } from 'maverick.js';
+import { onAttach, type CustomElementHost } from 'maverick.js/element';
 import { DOMEvent, isKeyboardClick, listenEvent } from 'maverick.js/std';
 
-import { MediaContext, useMedia } from '../media/context';
+import { useMedia, type MediaContext } from '../media/context';
 import { isHTMLMediaElement } from '../media/providers/type-check';
 import type { MediaKeyShortcuts } from '../media/types';
 import type { MediaPlayerProps } from './types';

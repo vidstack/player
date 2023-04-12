@@ -1,8 +1,8 @@
-import { effect, ReadSignal } from 'maverick.js';
+import { effect, type ReadSignal } from 'maverick.js';
 import { isString, isUndefined, listenEvent } from 'maverick.js/std';
 
 import { getLogColor, saveLogColor } from './colors';
-import { GroupedLog, isGroupedLog } from './create-grouped-log';
+import { isGroupedLog, type GroupedLog } from './create-grouped-log';
 import { LogLevelColor, LogLevelValue, type LogLevel } from './log-level';
 import { ms } from './ms';
 

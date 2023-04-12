@@ -1,7 +1,7 @@
 import {
-  CustomElementAttributeType,
-  CustomElementPropDefinitions,
   STRING,
+  type CustomElementAttributeType,
+  type CustomElementPropDefinitions,
 } from 'maverick.js/element';
 
 import { MEDIA_KEY_SHORTCUTS } from './keyboard';

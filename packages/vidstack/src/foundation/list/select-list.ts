@@ -1,6 +1,6 @@
 import { DOMEvent } from 'maverick.js/std';
 
-import { List, ListEvents, ListItem } from './list';
+import { List, type ListEvents, type ListItem } from './list';
 import { LIST_ADD, LIST_ON_REMOVE, LIST_ON_USER_SELECT, LIST_SELECT } from './symbols';
 
 const SELECTED = Symbol(__DEV__ ? 'SELECTED' : 0);
@@ -9,7 +9,10 @@ export interface SelectListItem extends ListItem {
   selected: boolean;
 }
 
-export class SelectList<Item extends SelectListItem> extends List<Item> {
+export class SelectList<
+  Item extends SelectListItem,
+  Events extends SelectListEvents<Item>,
+> extends List<Item, Events> {
   get selected() {
     return this._items.find((item) => item.selected) ?? null;
   }
@@ -60,28 +63,6 @@ export class SelectList<Item extends SelectListItem> extends List<Item> {
         }),
       );
     }
-  }
-
-  override addEventListener<Type extends keyof SelectListEvents<Item>>(
-    type: Type,
-    callback:
-      | ((event: SelectListEvents<Item>[Type]) => void)
-      | { handleEvent(event: SelectListEvents<Item>[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.addEventListener(type as any, callback as any, options);
-  }
-
-  override removeEventListener<Type extends keyof SelectListEvents<Item>>(
-    type: Type,
-    callback:
-      | ((event: SelectListEvents<Item>[Type]) => void)
-      | { handleEvent(event: SelectListEvents<Item>[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.removeEventListener(type as any, callback as any, options);
   }
 }
 

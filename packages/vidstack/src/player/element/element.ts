@@ -1,5 +1,10 @@
 import { effect, getScope, onDispose, scoped } from 'maverick.js';
-import { AttributesRecord, defineCustomElement, onAttach, onConnect } from 'maverick.js/element';
+import {
+  defineCustomElement,
+  onAttach,
+  onConnect,
+  type AttributesRecord,
+} from 'maverick.js/element';
 import {
   camelToKebabCase,
   dispatchEvent,

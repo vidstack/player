@@ -1,12 +1,12 @@
 import type { DOMEvent } from 'maverick.js/std';
 
 import type { ListReadonlyChangeEvent } from '../../../foundation/list/list';
-import { SelectList, SelectListItem } from '../../../foundation/list/select-list';
+import { SelectList, type SelectListItem } from '../../../foundation/list/select-list';
 
 /**
  * @see {@link https://vidstack.io/docs/player/core-concepts/audio-tracks}
  */
-export class AudioTrackList extends SelectList<AudioTrack> {
+export class AudioTrackList extends SelectList<AudioTrack, AudioTrackListEvents> {
   getById(id: string): AudioTrack | null {
     if (id === '') return null;
     return this._items.find((track) => track.id === id) ?? null;

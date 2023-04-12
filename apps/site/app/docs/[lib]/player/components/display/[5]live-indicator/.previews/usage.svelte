@@ -35,8 +35,15 @@
     </div>
   </media-outlet>
   <div class="w-full text-center flex">
-    <media-play-button />
+    <media-play-button class="live-play-button" />
     <media-time-slider />
     <media-live-indicator class="ml-2 mr-2" />
   </div>
 </media-player>
+
+<style>
+  .live-play-button {
+    min-width: 48px;
+    min-height: 48px;
+  }
+</style>

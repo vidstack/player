@@ -1,4 +1,4 @@
-import { DOMEvent } from 'maverick.js/std';
+import { DOMEvent, EventsTarget } from 'maverick.js/std';
 
 import {
   LIST_ADD,
@@ -12,7 +12,10 @@ import {
 
 export interface ListItem {}
 
-export class List<Item extends ListItem> extends EventTarget implements Iterable<Item> {
+export class List<Item extends ListItem, Events extends ListEvents>
+  extends EventsTarget<Events>
+  implements Iterable<Item>
+{
   [index: number]: Item | undefined;
 
   protected _items: Item[] = [];
@@ -81,28 +84,6 @@ export class List<Item extends ListItem> extends EventTarget implements Iterable
     if (this[LIST_READONLY] === readonly) return;
     this[LIST_READONLY] = readonly;
     this.dispatchEvent(new DOMEvent<any>('readonly-change', { detail: readonly, trigger }));
-  }
-
-  override addEventListener<Type extends keyof ListEvents<Item>>(
-    type: Type,
-    callback:
-      | ((event: ListEvents<Item>[Type]) => void)
-      | { handleEvent(event: ListEvents<Item>[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.addEventListener(type as any, callback as any, options);
-  }
-
-  override removeEventListener<Type extends keyof ListEvents<Item>>(
-    type: Type,
-    callback:
-      | ((event: ListEvents<Item>[Type]) => void)
-      | { handleEvent(event: ListEvents<Item>[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.removeEventListener(type as any, callback as any, options);
   }
 }
 

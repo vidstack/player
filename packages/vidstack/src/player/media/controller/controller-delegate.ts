@@ -1,5 +1,5 @@
 import { peek, tick } from 'maverick.js';
-import { DOMEvent, InferEventDetail, InferEventInit, noop } from 'maverick.js/std';
+import { DOMEvent, noop, type InferEventDetail, type InferEventInit } from 'maverick.js/std';
 
 import type { MediaContext } from '../context';
 import type { MediaEvents } from '../events';

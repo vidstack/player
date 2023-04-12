@@ -1,4 +1,4 @@
-import { effect, peek, Signals } from 'maverick.js';
+import { effect, peek, type Signals } from 'maverick.js';
 
 import { RequestQueue } from '../../../foundation/queue/request-queue';
 import { clampNumber } from '../../../utils/number';

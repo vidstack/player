@@ -46,7 +46,7 @@
           </media-time-slider>
           <media-time class="text-sm ml-1 mt-2 tracking-wide text-white" type="current" remainder />
         </div>
-        <div class="flex items-center transform -translate-y-2">
+        <div class="flex items-center -translate-y-2">
           <media-mute-button class="w-10 h-10" />
           <div class="w-full text-center text-sm text-white">Tears of Steel - 40 Years Later</div>
         </div>

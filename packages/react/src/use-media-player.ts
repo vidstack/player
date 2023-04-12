@@ -1,6 +1,6 @@
 import { useReactContext } from 'maverick.js/react';
 import { useEffect, useState } from 'react';
-import { mediaContext, MediaPlayerElement } from 'vidstack';
+import { mediaContext, type MediaPlayerElement } from 'vidstack';
 
 /**
  * Returns the nearest parent media player element (i.e., `<media-player>`).

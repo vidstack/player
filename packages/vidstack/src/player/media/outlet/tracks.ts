@@ -1,7 +1,7 @@
-import { effect, ReadSignal } from 'maverick.js';
+import { effect, type ReadSignal } from 'maverick.js';
 
 import type { MediaContext } from '../context';
-import { TextTrack, TextTrackInit } from '../tracks/text/text-track';
+import { TextTrack, type TextTrackInit } from '../tracks/text/text-track';
 
 export function useTextTracks(
   $domTracks: ReadSignal<TextTrackInit[]>,

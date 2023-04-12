@@ -4,6 +4,7 @@ import { camelToKebabCase, dispatchEvent, DOMEvent } from 'maverick.js/std';
 
 import { createRAFLoop } from '../../../../foundation/hooks/raf-loop';
 import { LIST_ADD, LIST_SELECT } from '../../../../foundation/list/symbols';
+import { IS_CHROME } from '../../../../utils/support';
 import { ENABLE_AUTO_QUALITY, SET_AUTO_QUALITY } from '../../quality/symbols';
 import { TEXT_TRACK_ON_MODE_CHANGE, TEXT_TRACK_READY_STATE } from '../../tracks/text/symbols';
 import { TextTrack } from '../../tracks/text/text-track';
@@ -93,6 +94,13 @@ export function setupHLS(
     qualities.addEventListener('change', () => {
       if (qualities.auto) return;
       instance[qualities.switch + 'Level'] = qualities.selectedIndex;
+      /**
+       * Chrome has some strange issue with detecting keyframes inserted before the current
+       * playhead position. This can cause playback to freeze until a new keyframe. It seems
+       * setting the current time forces chrome to seek back to the last keyframe and adjust
+       * playback. Weird fix, but it works!
+       */
+      if (IS_CHROME) provider.video.currentTime = provider.video.currentTime;
     });
 
     audioTracks.addEventListener('change', () => {

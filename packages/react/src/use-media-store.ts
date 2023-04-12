@@ -1,6 +1,6 @@
 import { useReactContext } from 'maverick.js/react';
 import type { RefObject } from 'react';
-import { mediaContext, MediaPlayerElement, MediaStore, mediaStore } from 'vidstack';
+import { mediaContext, mediaStore, type MediaPlayerElement, type MediaStore } from 'vidstack';
 
 import { useStore } from './use-store';
 

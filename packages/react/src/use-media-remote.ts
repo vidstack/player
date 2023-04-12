@@ -1,7 +1,7 @@
 import { peek } from 'maverick.js';
 import { useReactContext } from 'maverick.js/react';
 import { isUndefined } from 'maverick.js/std';
-import { RefObject, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, type RefObject } from 'react';
 import { mediaContext, MediaRemoteControl } from 'vidstack';
 
 /**

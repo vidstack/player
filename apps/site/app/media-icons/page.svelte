@@ -404,7 +404,6 @@
           )}
           role="dialog"
           tabindex="-1"
-          aria-orientation="vertical"
           aria-hidden={ariaBool(!isDialogOpen)}
           bind:this={dialog}
           on:pointerup|stopPropagation

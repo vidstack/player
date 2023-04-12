@@ -1,6 +1,11 @@
 import { useReactContext } from 'maverick.js/react';
 import type { RefObject } from 'react';
-import { MediaSliderElement, sliderStore, SliderStore, sliderStoreContext } from 'vidstack';
+import {
+  sliderStore,
+  sliderStoreContext,
+  type MediaSliderElement,
+  type SliderStore,
+} from 'vidstack';
 
 import { useStore } from './use-store';
 

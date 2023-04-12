@@ -1,4 +1,4 @@
-import { DOMEvent } from 'maverick.js/std';
+import { DOMEvent, EventsTarget } from 'maverick.js/std';
 import type {
   CaptionsFileFormat,
   CaptionsParserFactory,
@@ -23,7 +23,7 @@ import {
  */
 export type TextTrackReadyState = 0 | 1 | 2 | 3;
 
-export class TextTrack extends EventTarget {
+export class TextTrack extends EventsTarget<TextTrackEvents> {
   static createId(track: TextTrack | TextTrackInit) {
     return `id::${track.type}-${track.kind}-${track.src ?? track.label}`;
   }
@@ -224,28 +224,6 @@ export class TextTrack extends EventTarget {
 
   private _activeCuesChanged(trigger?: Event) {
     this.dispatchEvent(new DOMEvent<void>('cue-change', { trigger }));
-  }
-
-  override addEventListener<Type extends keyof TextTrackEvents>(
-    type: Type,
-    callback:
-      | ((event: TextTrackEvents[Type]) => void)
-      | { handleEvent(event: TextTrackEvents[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.addEventListener(type, callback as any, options);
-  }
-
-  override removeEventListener<Type extends keyof TextTrackEvents>(
-    type: Type,
-    callback:
-      | ((event: TextTrackEvents[Type]) => void)
-      | { handleEvent(event: TextTrackEvents[Type]): void }
-      | null,
-    options?: boolean | AddEventListenerOptions | undefined,
-  ): void {
-    super.removeEventListener(type, callback as any, options);
   }
 }
 

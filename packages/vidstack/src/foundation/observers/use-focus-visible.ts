@@ -1,4 +1,4 @@
-import { effect, ReadSignal, signal } from 'maverick.js';
+import { effect, signal, type ReadSignal } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
 import { listenEvent, setAttribute } from 'maverick.js/std';
 

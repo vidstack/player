@@ -1,6 +1,6 @@
-import { AnyRecord, effect, signal, Store } from 'maverick.js';
+import { effect, signal, type AnyRecord, type Store } from 'maverick.js';
 import { noop } from 'maverick.js/std';
-import { RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 
 export function useStore<
   Record extends AnyRecord,

@@ -1,4 +1,4 @@
-import { effect, ReadSignal, root } from 'maverick.js';
+import { effect, root, type ReadSignal } from 'maverick.js';
 import { onConnect } from 'maverick.js/element';
 
 import { createIntersectionObserverAdapter } from '../../../foundation/observers/intersection-observer';

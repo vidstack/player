@@ -1,8 +1,8 @@
 import {
   createElement,
   forwardRef,
-  ForwardRefExoticComponent,
-  PropsWithoutRef,
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
   type RefAttributes,
   type SVGProps,
 } from 'react';
