@@ -6,6 +6,7 @@ import {
   appendTriggerEvent,
   createEvent,
   dispatchEvent,
+  hasTriggerEvent,
   listenEvent,
   noop,
   useDisposalBin,
@@ -64,7 +65,7 @@ export function createMediaStateManager(
   let skipInitialSrcChange = true,
     fireWaitingEvent: { (): void; cancel(): void },
     firingWaiting = false,
-    lastWaitingEvent: Event | undefined;
+    waitingTriggerEvent: Event | undefined;
 
   onAttach(() => {
     $player()?.setAttribute('aria-busy', 'true');
@@ -147,7 +148,7 @@ export function createMediaStateManager(
     requests._$isReplay.set(false);
     requests._$isLooping.set(false);
     firingWaiting = false;
-    lastWaitingEvent = undefined;
+    waitingTriggerEvent = undefined;
     trackedEvents.clear();
   }
 
@@ -466,6 +467,10 @@ export function createMediaStateManager(
     $media.seeking = true;
     $media.currentTime = event.detail;
     satisfyMediaRequest('seeking', event);
+    if ($media.paused) {
+      waitingTriggerEvent = event;
+      fireWaitingEvent();
+    }
   }
 
   function onSeeked(event: ME.MediaSeekedEvent) {
@@ -473,8 +478,11 @@ export function createMediaStateManager(
       $media.seeking = true;
       event.stopImmediatePropagation();
     } else if ($media.seeking) {
-      appendTriggerEvent(event, trackedEvents.get('waiting'));
-      appendTriggerEvent(event, trackedEvents.get('seeking'));
+      const waitingEvent = trackedEvents.get('waiting');
+      appendTriggerEvent(event, waitingEvent);
+      if (waitingEvent?.trigger?.type !== 'seeking') {
+        appendTriggerEvent(event, trackedEvents.get('seeking'));
+      }
       if ($media.paused) stopWaiting();
       $media.seeking = false;
       if (event.detail !== $media.duration) $media.ended = false;
@@ -489,21 +497,23 @@ export function createMediaStateManager(
   }
 
   fireWaitingEvent = debounce(() => {
-    if (!lastWaitingEvent) return;
+    if (!waitingTriggerEvent) return;
     firingWaiting = true;
     $media.waiting = true;
     $media.playing = false;
-    const event = createEvent($player, 'waiting', { trigger: lastWaitingEvent });
+    const event = createEvent($player, 'waiting', {
+      trigger: waitingTriggerEvent,
+    });
     trackedEvents.set('waiting', event);
     $player()?.dispatchEvent(event);
-    lastWaitingEvent = undefined;
+    waitingTriggerEvent = undefined;
     firingWaiting = false;
   }, 300);
 
   function onWaiting(event: ME.MediaWaitingEvent) {
     if (firingWaiting || requests._$isSeeking()) return;
     event.stopImmediatePropagation();
-    lastWaitingEvent = event;
+    waitingTriggerEvent = event;
     fireWaitingEvent();
   }
 
