@@ -24,6 +24,13 @@ when being interacted with:
 Any element you slot in will be sized and positioned automatically by the slider. It will also
 ensure the preview is correctly clamped so it doesn't go out of bounds.
 
+## Orientation
+
+You can change the orientation of the slider to vertical by setting the `aria-orientation`
+attribute like so:
+
+{% code_preview name="vertical" size="small" copy=true /%}
+
 ## State
 
 You can retrieve a snapshot of the current slider state like so:
@@ -155,15 +162,12 @@ at the device pointer (mouse/thumb).
 
 The slider will also apply the following CSS variables to the element in the `preview` slot:
 
-| Variable                | Description                                               |
-| ----------------------- | --------------------------------------------------------- |
-| `--preview-top`         | Negative vertical offset based on the preview height.     |
-| `--preview-left`        | The clamped horizontal offset based on the preview width. |
-| `--preview-width`       | The computed width of the preview.                        |
-| `--preview-height`      | The computed height of the preview.                       |
-| `--preview-width-half`  | The computed width divided in half.                       |
-| `--preview-left-clamp`  | The left clamp offset based on the preview width.         |
-| `--preview-right-clamp` | The right clamp offset based on the preview width.        |
+| Variable           | Description                                                   |
+| ------------------ | ------------------------------------------------------------- |
+| `--preview-left`   | The clamped horizontal offset when orientation is horizontal. |
+| `--preview-bottom` | The clamped vertical offset when orientation is vertical.     |
+| `--preview-width`  | The computed width of the preview.                            |
+| `--preview-height` | The computed height of the preview.                           |
 
 ### Previews
 

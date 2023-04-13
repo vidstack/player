@@ -1,0 +1,1 @@
+<MediaVolumeSlider aria-orientation="vertical" />;

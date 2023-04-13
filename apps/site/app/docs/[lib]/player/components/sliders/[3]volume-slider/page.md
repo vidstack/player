@@ -22,6 +22,13 @@ The media volume range is between `0` (min) and `1` (max), but on the slider it'
 
 {% code_preview name="preview" size="small" copyHighlight=true highlight="html:2|react:7" /%}
 
+## Orientation
+
+You can change the orientation of the slider to vertical by setting the `aria-orientation`
+attribute like so:
+
+{% code_preview name="vertical" size="small" copy=true /%}
+
 ## Keyboard
 
 The volume slider will receive keyboard input when focused. The [interaction keys](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/slider_role#keyboard_interactions) are based on
@@ -125,10 +132,6 @@ media-volume-slider [slot='preview'] {
 
 ## Tailwind
 
-A complete volume slider example built with Tailwind:
-
-{% code_snippet name="tailwind" copy=true /%}
-
 {% callout type="tip" %}
 
 - 📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
@@ -136,3 +139,15 @@ A complete volume slider example built with Tailwind:
 - All of this code is reusable across other slider implementations.
 
 {% /callout %}
+
+### Horizontal
+
+A horizontal volume slider built with Tailwind:
+
+{% code_snippet name="tailwind" copy=true /%}
+
+### Vertical
+
+A vertical volume slider built with Tailwind:
+
+{% code_snippet name="tw-vertical" copy=true /%}

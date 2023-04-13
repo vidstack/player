@@ -1,5 +1,5 @@
-import { effect, type Signals } from 'maverick.js';
-import { onAttach, type CustomElementHost } from 'maverick.js/element';
+import { type Signals } from 'maverick.js';
+import { onAttach, onConnect, type CustomElementHost } from 'maverick.js/element';
 import { ariaBool, isKeyboardClick, isKeyboardEvent, listenEvent } from 'maverick.js/std';
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
@@ -24,11 +24,9 @@ export function useToggleButton(
     setAttributeIfEmpty(host.el!, 'role', 'button');
   });
 
-  effect(() => {
-    const target = host.$el();
-    if (!target) return;
+  onConnect(() => {
     const clickEvents = ['pointerup', 'keydown'] as const;
-    for (const eventType of clickEvents) listenEvent(target, eventType, onPress);
+    for (const eventType of clickEvents) listenEvent(host.el!, eventType, onPress);
   });
 
   function onPress(event: Event) {

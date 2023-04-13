@@ -4,11 +4,12 @@ import {
   peek,
   provideContext,
   scoped,
+  signal,
   useContext,
   type ReadSignal,
   type Signals,
 } from 'maverick.js';
-import { onAttach, type CustomElementHost } from 'maverick.js/element';
+import { onAttach, onConnect, type CustomElementHost } from 'maverick.js/element';
 import { ariaBool, mergeProperties, noop, setStyle } from 'maverick.js/std';
 
 import { useFocusVisible } from '../../../foundation/observers/use-focus-visible';
@@ -16,16 +17,16 @@ import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
 import { sliderValueFormattersContext } from './format';
 import type { SliderProps } from './props';
+import { setupSliderEvents, type SliderEventCallbacks } from './setup-events';
 import { sliderStoreContext, type SliderStore } from './store';
 import type { MediaSliderElement, SliderMembers } from './types';
-import { useSliderEvents, type SliderEventCallbacks } from './use-events';
 import { getClampedValue } from './utils';
 
 /**
  * This hook enables providing a custom built `input[type="range"]` that is cross-browser friendly,
  * ARIA friendly, mouse/touch friendly and easily stylable.
  */
-export function createSlider(
+export function setupSlider(
   host: CustomElementHost<MediaSliderElement>,
   { $props, readonly, aria, ...callbacks }: SliderInit,
   accessors: () => SliderProps,
@@ -36,6 +37,7 @@ export function createSlider(
   const scope = getScope()!,
     $store = useContext(sliderStoreContext),
     $focused = useFocusVisible(host.$el),
+    $orientation = signal(''),
     { $disabled, $min, $max, $value, $step } = $props;
 
   host.setAttributes({
@@ -60,7 +62,7 @@ export function createSlider(
     '--slider-pointer-percent': () => $store.pointerPercent + '%',
   });
 
-  useSliderEvents(host, $props, callbacks, $store);
+  setupSliderEvents(host, { ...$props, $orientation }, callbacks, $store);
 
   onAttach(() => {
     setAttributeIfEmpty(host.el!, 'role', 'slider');
@@ -69,45 +71,37 @@ export function createSlider(
     setAttributeIfEmpty(host.el!, 'autocomplete', 'off');
   });
 
-  effect(() => {
-    $store.focused = $focused();
+  onConnect(() => {
+    const preview = host.el!.querySelector('[slot="preview"]') as HTMLElement,
+      orientation = host.el!.getAttribute('aria-orientation') || '';
+
+    $orientation.set(orientation);
+
+    if (!preview) return;
+
+    effect(() => {
+      if ($disabled()) return;
+
+      function onPreviewResize() {
+        if (!preview) return;
+        const rect = preview.getBoundingClientRect();
+        setStyle(preview, '--computed-width', rect.width + 'px');
+        setStyle(preview, '--computed-height', rect.height + 'px');
+      }
+
+      window.requestAnimationFrame(onPreviewResize);
+      const observer = new ResizeObserver(onPreviewResize);
+      observer.observe(preview);
+      return () => observer.disconnect();
+    });
+
+    import('./preview').then(({ setupPreviewStyles }) => {
+      setupPreviewStyles(preview, orientation);
+    });
   });
 
   effect(() => {
-    const target = host.$el();
-    if (!target || $disabled()) return;
-
-    const preview = target.querySelector('[slot="preview"]') as HTMLElement;
-    if (!preview) return;
-
-    const rect = preview.getBoundingClientRect();
-    const styles = {
-      '--computed-width': rect.width + 'px',
-      '--computed-height': rect.height + 'px',
-      '--preview-top':
-        'calc(-1 * var(--media-slider-preview-gap, calc(var(--preview-height) - 2px)))',
-      '--preview-width': 'var(--media-slider-preview-width, var(--computed-width))',
-      '--preview-height': 'var(--media-slider-preview-height, var(--computed-height))',
-      '--preview-width-half': 'calc(var(--preview-width) / 2)',
-      '--preview-left-clamp': 'max(var(--preview-width-half), var(--slider-pointer-percent))',
-      '--preview-right-clamp': 'calc(100% - var(--preview-width-half))',
-      '--preview-left': 'min(var(--preview-left-clamp), var(--preview-right-clamp))',
-    };
-
-    for (const name of Object.keys(styles)) {
-      setStyle(preview, name, styles[name]);
-    }
-
-    function onPreviewResize() {
-      const rect = preview.getBoundingClientRect();
-      setStyle(preview, '--computed-width', rect.width + 'px');
-      setStyle(preview, '--computed-height', rect.height + 'px');
-    }
-
-    window.requestAnimationFrame(onPreviewResize);
-    const observer = new ResizeObserver(onPreviewResize);
-    observer.observe(preview);
-    return () => observer.disconnect();
+    $store.focused = $focused();
   });
 
   if (!readonly) {

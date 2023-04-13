@@ -1,11 +1,18 @@
 :where([data-media-slider]) {
+  --width: var(--media-slider-width, 100%);
   --height: var(--media-slider-height, 48px);
+
   --thumb-size: var(--media-slider-thumb-size, 14px);
   --thumb-focus-size: var(--media-slider-focused-thumb-size, calc(var(--thumb-size) * 1.1));
+
+  --track-width: var(--media-slider-track-width, 100%);
   --track-height: var(--media-slider-track-height, 4px);
+  --track-focus-width: var(--media-slider-focused-track-width, var(--track-width));
   --track-focus-height: var(--media-slider-focused-track-height, calc(var(--track-height) * 1.25));
+
   display: flex;
   align-items: center;
+  width: var(--width);
   height: var(--height);
   /** Prevent thumb flowing out of slider. */
   margin: 0 calc(var(--thumb-size) / 2);
@@ -18,8 +25,8 @@
 :where([data-media-slider] [part*='track']) {
   z-index: 0;
   position: absolute;
+  width: var(--track-width);
   height: var(--track-height);
-  width: 100%;
   top: 50%;
   left: 0;
   border-radius: 2px;
@@ -33,6 +40,7 @@
 }
 
 :where([data-media-slider][data-interactive] [part*='track']) {
+  width: var(--track-focus-width);
   height: var(--track-focus-height);
 }
 
@@ -41,7 +49,6 @@
   background-color: #fafafa;
   width: var(--slider-fill-percent);
   will-change: width;
-  transform: translateY(-50%);
 }
 
 :where(media-player[data-live] media-time-slider [part~='track-fill']) {
@@ -105,8 +112,8 @@
 :where([data-media-slider] [slot='preview']) {
   display: flex;
   position: absolute;
-  top: var(--preview-top);
   left: var(--preview-left);
+  bottom: calc(100% - 2px);
   flex-direction: column;
   align-items: center;
   opacity: 0;
@@ -137,4 +144,74 @@
 
 :where(media-player:not([data-can-play]) media-time-slider media-slider-value) {
   display: none;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Vertical
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where([data-media-slider][aria-orientation='vertical']) {
+  --width: var(--media-slider-width, 48px);
+  --height: var(--media-slider-height, 100%);
+
+  --track-width: var(--media-slider-track-width, 4px);
+  --track-height: var(--media-slider-track-height, 100%);
+  --track-focus-width: var(--media-slider-focused-track-width, calc(var(--track-width) * 1.25));
+  --track-focus-height: var(--media-slider-focused-track-height, var(--track-height));
+
+  /** Prevent thumb flowing out of slider. */
+  margin: calc(var(--thumb-size) / 2) 0;
+}
+
+:where([data-media-slider][aria-orientation='vertical'] [part*='track']) {
+  top: unset;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+:where([data-media-slider][aria-orientation='vertical'] [part~='track-fill']) {
+  width: var(--track-width);
+  height: var(--slider-fill-percent);
+  will-change: height;
+  transform: translateX(-50%);
+}
+
+:where([data-media-slider][aria-orientation='vertical'] [part~='track-progress']) {
+  top: unset;
+  bottom: 0;
+  width: var(--track-width);
+  height: var(--media-buffered-percent, 0%);
+  will-change: height;
+}
+
+:where([data-media-slider][aria-orientation='vertical'] [part='thumb-container']) {
+  top: unset;
+  bottom: var(--slider-fill-percent);
+  left: 50%;
+  width: 100%;
+  will-change: bottom;
+  transform: translateX(-50%);
+}
+
+:where([data-media-slider][aria-orientation='vertical'][data-dragging] [part='thumb-container']) {
+  top: unset;
+  bottom: var(--slider-pointer-percent);
+}
+
+:where([data-media-slider][aria-orientation='vertical'] [part='thumb']) {
+  top: unset;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(50%);
+}
+
+:where([data-media-slider][aria-orientation='vertical'] [slot='preview']) {
+  top: unset;
+  left: calc(100% - 4px);
+  bottom: var(--preview-bottom);
+  will-change: bottom;
+  transform: translateY(50%);
 }

@@ -1,5 +1,5 @@
-import { effect, type Signals } from 'maverick.js';
-import type { CustomElementHost } from 'maverick.js/element';
+import { effect, type ReadSignal, type Signals } from 'maverick.js';
+import { onConnect, type CustomElementHost } from 'maverick.js/element';
 import {
   createEvent,
   dispatchEvent,
@@ -35,31 +35,34 @@ const SliderKeyDirection = {
   ArrowDown: -1,
 } as const;
 
-export function useSliderEvents(
+export function setupSliderEvents(
   host: CustomElementHost<MediaSliderElement>,
-  { $disabled, $step, $keyStep, $shiftKeyMultiplier }: Signals<SliderProps>,
+  { $disabled, $step, $keyStep, $shiftKeyMultiplier, $orientation }: SetupSliderEventsProps,
   { onValueChange, onDragStart, onDragValueChange, onDragEnd }: SliderEventCallbacks,
   $store: SliderStore,
 ) {
   const remote = useMedia().remote;
 
-  effect(() => {
-    const target = host.$el();
-    if (!target || $disabled()) return;
-    listenEvent(target, 'focus', onFocus);
-    listenEvent(target, 'pointerenter', onPointerEnter);
-    listenEvent(target, 'pointermove', onPointerMove);
-    listenEvent(target, 'pointerleave', onPointerLeave);
-    listenEvent(target, 'pointerdown', onPointerDown);
-    listenEvent(target, 'keydown', onKeyDown);
-    listenEvent(target, 'keyup', onKeyUp);
-  });
+  onConnect(() => {
+    const target = host.el!;
 
-  effect(() => {
-    if ($disabled() || !$store.dragging) return;
-    listenEvent(document, 'pointerup', onDocumentPointerUp);
-    listenEvent(document, 'pointermove', onDocumentPointerMove);
-    if (IS_SAFARI) listenEvent(document, 'touchmove', onDocumentTouchMove, { passive: false });
+    effect(() => {
+      if ($disabled()) return;
+      listenEvent(target, 'focus', onFocus);
+      listenEvent(target, 'pointerenter', onPointerEnter);
+      listenEvent(target, 'pointermove', onPointerMove);
+      listenEvent(target, 'pointerleave', onPointerLeave);
+      listenEvent(target, 'pointerdown', onPointerDown);
+      listenEvent(target, 'keydown', onKeyDown);
+      listenEvent(target, 'keyup', onKeyUp);
+    });
+
+    effect(() => {
+      if ($disabled() || !$store.dragging) return;
+      listenEvent(document, 'pointerup', onDocumentPointerUp);
+      listenEvent(document, 'pointermove', onDocumentPointerMove);
+      if (IS_SAFARI) listenEvent(document, 'touchmove', onDocumentTouchMove, { passive: false });
+    });
   });
 
   function onFocus() {
@@ -87,9 +90,19 @@ export function useSliderEvents(
   }
 
   function getPointerValue(event: PointerEvent) {
-    const thumbClientX = event.clientX;
-    const { left: trackLeft, width: trackWidth } = host.el!.getBoundingClientRect();
-    const thumbPositionRate = (thumbClientX - trackLeft) / trackWidth;
+    let thumbPositionRate: number,
+      rect = host.el!.getBoundingClientRect();
+
+    if ($orientation() === 'vertical') {
+      const thumbClientY = event.clientY;
+      const { bottom: trackBottom, height: trackHeight } = rect;
+      thumbPositionRate = (trackBottom - thumbClientY) / trackHeight;
+    } else {
+      const thumbClientX = event.clientX;
+      const { left: trackLeft, width: trackWidth } = rect;
+      thumbPositionRate = (thumbClientX - trackLeft) / trackWidth;
+    }
+
     return getValueFromRate($store.min, $store.max, thumbPositionRate, $step());
   }
 
@@ -214,6 +227,10 @@ export function useSliderEvents(
   function onDocumentPointerMove(event: PointerEvent) {
     updatePointerValue(getPointerValue(event), event);
   }
+}
+
+interface SetupSliderEventsProps extends Signals<SliderProps> {
+  $orientation: ReadSignal<string>;
 }
 
 export interface SliderEventCallbacks {

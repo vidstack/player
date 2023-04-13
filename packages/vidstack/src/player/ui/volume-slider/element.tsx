@@ -6,8 +6,8 @@ import { dispatchEvent, mergeProperties } from 'maverick.js/std';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { round } from '../../../utils/number';
 import { useMedia } from '../../media/context';
-import { createSlider } from '../slider/create';
 import type { SliderDragValueChangeEvent, SliderValueChangeEvent } from '../slider/events';
+import { setupSlider } from '../slider/setup';
 import { volumeSliderProps } from './props';
 import type { MediaVolumeSliderElement } from './types';
 
@@ -22,7 +22,7 @@ export const VolumeSliderDefinition = defineCustomElement<MediaVolumeSliderEleme
   props: volumeSliderProps,
   setup({ host, props, accessors }) {
     const { $store: $media, remote } = useMedia(),
-      { $store, members } = createSlider(
+      { $store, members } = setupSlider(
         host,
         {
           $props: props,

@@ -6,7 +6,6 @@ import { dispatchEvent, mergeProperties } from 'maverick.js/std';
 import { setAttributeIfEmpty } from '../../../utils/dom';
 import { formatSpokenTime, formatTime } from '../../../utils/time';
 import { useMedia } from '../../media/context';
-import { createSlider } from '../slider/create';
 import type {
   SliderDragEndEvent,
   SliderDragStartEvent,
@@ -14,6 +13,7 @@ import type {
   SliderValueChangeEvent,
 } from '../slider/events';
 import { sliderValueFormattersContext } from '../slider/format';
+import { setupSlider } from '../slider/setup';
 import { timeSliderProps } from './props';
 import type { MediaTimeSliderElement } from './types';
 
@@ -32,7 +32,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     accessors,
   }) {
     const { $store: $media, remote } = useMedia(),
-      { $store, members } = createSlider(
+      { $store, members } = setupSlider(
         host,
         {
           $props: {
