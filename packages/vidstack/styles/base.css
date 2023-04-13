@@ -146,7 +146,13 @@
   box-shadow: var(--media-focus-ring);
 }
 
-media-volume-slider [part*='track-progress'] {
+:where(media-time-slider) {
+  --media-buffered-percent: calc(
+    min(calc(var(--media-buffered) / max(var(--media-duration), 1)), 1) * 100%
+  );
+}
+
+media-volume-slider [part~='track-progress'] {
   display: none !important;
 }
 
