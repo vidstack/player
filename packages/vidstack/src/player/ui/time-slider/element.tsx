@@ -14,6 +14,7 @@ import type {
 } from '../slider/events';
 import { sliderValueFormattersContext } from '../slider/format';
 import { setupSlider } from '../slider/setup';
+import { setupSliderChapters } from './chapters';
 import { timeSliderProps } from './props';
 import type { MediaTimeSliderElement } from './types';
 
@@ -31,7 +32,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
     props: { $pauseWhileDragging, $seekingRequestThrottle, $disabled, ...props },
     accessors,
   }) {
-    const { $store: $media, remote } = useMedia(),
+    const { $store: $media, remote, textTracks } = useMedia(),
       { $store, members } = setupSlider(
         host,
         {
@@ -145,6 +146,8 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
       },
     });
 
+    const $renderChapters = setupSliderChapters(host, $store, $media, textTracks);
+
     return mergeProperties(members, {
       // redeclare the following properties to ensure they're read-only.
       get min() {
@@ -155,6 +158,19 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
       },
       get value() {
         return members.value;
+      },
+      $render: () => {
+        return (
+          <>
+            {$renderChapters()}
+            <div part="track" />
+            <div part="track track-fill" />
+            <div part="track track-progress" />
+            <div part="thumb-container">
+              <div part="thumb"></div>
+            </div>
+          </>
+        );
       },
     });
   },

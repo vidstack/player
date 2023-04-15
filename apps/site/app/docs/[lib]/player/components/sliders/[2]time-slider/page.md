@@ -37,6 +37,33 @@ Previews can be grouped by using a parent container element for the `preview` sl
 
 {% code_preview name="preview-group" copyHighlight=true highlight="html:2-5|react:12-15" /%}
 
+## Chapters
+
+Chapters are set by providing a [WebVTT](https://developer.mozilla.org/en-US/docs/react/Web/API/WebVTT_API)
+file via the `<track>` element that specifies the time ranges and respective chapter titles. It
+should look something like this:
+
+```txt
+WEBVTT
+
+00:00:00 --> 00:01:13
+The Forest
+
+00:01:13 --> 00:02:31
+Camp Site
+```
+
+The time slider supports showing the current chapters text track that has a `mode` of showing:
+
+{% code_preview name="chapters" copyHighlight=true highlight="html:3|react:3" /%}
+
+### Title
+
+The `chapter-title` part attribute can be added to any element inside the time slider. When
+found, the current chapter title that is active or being previewed will be inserted inside of it:
+
+{% code_snippet name="chapter-title" copyHighlight=true highlight="4" /%}
+
 ## Keyboard
 
 The time slider will receive keyboard input when focused. The [interaction keys](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/slider_role#keyboard_interactions) are based on
@@ -147,6 +174,30 @@ media-time-slider {
 
 /** Override default preview styles. */
 media-time-slider [slot='preview'] {
+}
+```
+
+### Chapters
+
+```css
+/* Apply styles to slider when chapters are available. */
+media-time-slider[data-chapters] {
+}
+
+media-time-slider [part='chapter-container'] {
+  margin-right: 2px;
+}
+
+/* Apply styles to chapter when container is hovered. */
+media-time-slider [part='chapter-container']:hover [part='chapter'] {
+  transform: scaleY(1.75);
+  transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
+}
+
+media-time-slider [part='chapter'] {
+}
+
+media-time-slider [part='chapter-title'] {
 }
 ```
 

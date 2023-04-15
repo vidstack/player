@@ -2,21 +2,25 @@ import debounce from 'just-debounce-it';
 import throttle from 'just-throttle';
 import { effect } from 'maverick.js';
 import { onAttach } from 'maverick.js/element';
-import {
-  appendTriggerEvent,
-  createEvent,
-  dispatchEvent,
-  hasTriggerEvent,
-  listenEvent,
-  noop,
-  useDisposalBin,
-} from 'maverick.js/std';
+import { appendTriggerEvent, createEvent, dispatchEvent, listenEvent, noop } from 'maverick.js/std';
 
 import { LIST_RESET } from '../../../foundation/list/symbols';
 import type { MediaContext } from '../context';
 import type * as ME from '../events';
+import type {
+  VideoQualityAddEvent,
+  VideoQualityChangeEvent,
+  VideoQualityRemoveEvent,
+} from '../quality/video-quality';
 import { softResetMediaStore } from '../store';
+import type {
+  AudioTrackAddEvent,
+  AudioTrackChangeEvent,
+  AudioTrackRemoveEvent,
+} from '../tracks/audio-tracks';
 import { TEXT_TRACK_UPDATE_ACTIVE_CUES } from '../tracks/text/symbols';
+import type { TextTrackModeChangeEvent } from '../tracks/text/text-track';
+import type { TextTrackAddEvent, TextTrackRemoveEvent } from '../tracks/text/text-tracks';
 import type { MediaRequestContext, MediaRequestQueueRecord } from './request-manager';
 
 const trackedEventType = new Set<keyof ME.MediaEvents>([
@@ -59,8 +63,7 @@ export function createMediaStateManager(
 ): MediaStateManager {
   if (__SERVER__) return { handle: noop };
 
-  const disposal = useDisposalBin(),
-    trackedEvents = new Map<string, ME.MediaEvent>();
+  const trackedEvents = new Map<string, ME.MediaEvent>();
 
   let skipInitialSrcChange = true,
     fireWaitingEvent: { (): void; cancel(): void },
@@ -83,24 +86,24 @@ export function createMediaStateManager(
 
   function addTextTrackListeners() {
     onTextTracksChange();
-    onTextTrackChange();
-    listenEvent(textTracks, 'add' as any, onTextTracksChange);
-    listenEvent(textTracks, 'remove' as any, onTextTracksChange);
-    listenEvent(textTracks, 'mode-change' as any, onTextTrackChange);
+    onTextTrackModeChange();
+    listenEvent(textTracks, 'add', onTextTracksChange);
+    listenEvent(textTracks, 'remove', onTextTracksChange);
+    listenEvent(textTracks, 'mode-change', onTextTrackModeChange);
   }
 
   function addAudioTrackListeners() {
-    listenEvent(audioTracks, 'add' as any, onAudioTracksChange);
-    listenEvent(audioTracks, 'remove' as any, onAudioTracksChange);
-    listenEvent(audioTracks, 'change' as any, onAudioTrackChange);
+    listenEvent(audioTracks, 'add', onAudioTracksChange);
+    listenEvent(audioTracks, 'remove', onAudioTracksChange);
+    listenEvent(audioTracks, 'change', onAudioTrackChange);
   }
 
   function addQualityListeners() {
-    listenEvent(qualities, 'add' as any, onQualitiesChange);
-    listenEvent(qualities, 'remove' as any, onQualitiesChange);
-    listenEvent(qualities, 'change' as any, onQualityChange);
-    listenEvent(qualities, 'auto-change' as any, onAutoQualityChange);
-    listenEvent(qualities, 'readonly-change' as any, onCanSetQualityChange);
+    listenEvent(qualities, 'add', onQualitiesChange);
+    listenEvent(qualities, 'remove', onQualitiesChange);
+    listenEvent(qualities, 'change', onQualityChange);
+    listenEvent(qualities, 'auto-change', onAutoQualityChange);
+    listenEvent(qualities, 'readonly-change', onCanSetQualityChange);
   }
 
   type EventHandlers = {
@@ -195,7 +198,7 @@ export function createMediaStateManager(
     satisfyMediaRequest('rate', event);
   }
 
-  function onTextTracksChange(event?: any) {
+  function onTextTracksChange(event?: TextTrackAddEvent | TextTrackRemoveEvent) {
     $media.textTracks = textTracks.toArray();
     dispatchEvent($player(), 'text-tracks-change', {
       detail: $media.textTracks,
@@ -203,8 +206,8 @@ export function createMediaStateManager(
     });
   }
 
-  function onTextTrackChange(event?: any) {
-    satisfyMediaRequest('textTrack', event);
+  function onTextTrackModeChange(event?: TextTrackModeChangeEvent) {
+    if (event) satisfyMediaRequest('textTrack', event);
     const current = textTracks.selected;
     if ($media.textTrack !== current) {
       $media.textTrack = current;
@@ -215,7 +218,7 @@ export function createMediaStateManager(
     }
   }
 
-  function onAudioTracksChange(event) {
+  function onAudioTracksChange(event?: AudioTrackAddEvent | AudioTrackRemoveEvent) {
     $media.audioTracks = audioTracks.toArray();
     dispatchEvent($player(), 'audio-tracks-change', {
       detail: $media.audioTracks,
@@ -223,7 +226,7 @@ export function createMediaStateManager(
     });
   }
 
-  function onAudioTrackChange(event) {
+  function onAudioTrackChange(event?: AudioTrackChangeEvent) {
     $media.audioTrack = audioTracks.selected;
     satisfyMediaRequest('audioTrack', event);
     dispatchEvent($player(), 'audio-track-change', {
@@ -232,7 +235,7 @@ export function createMediaStateManager(
     });
   }
 
-  function onQualitiesChange(event) {
+  function onQualitiesChange(event?: VideoQualityAddEvent | VideoQualityRemoveEvent) {
     $media.qualities = qualities.toArray();
     dispatchEvent($player(), 'qualities-change', {
       detail: $media.qualities,
@@ -240,7 +243,7 @@ export function createMediaStateManager(
     });
   }
 
-  function onQualityChange(event) {
+  function onQualityChange(event?: VideoQualityChangeEvent) {
     $media.quality = qualities.selected;
     satisfyMediaRequest('quality', event);
     dispatchEvent($player(), 'quality-change', {
@@ -554,10 +557,7 @@ export function createMediaStateManager(
     satisfyMediaRequest('pip', event);
   }
 
-  function satisfyMediaRequest<T extends keyof MediaRequestQueueRecord>(
-    request: T,
-    event: ME.MediaEvent,
-  ) {
+  function satisfyMediaRequest<T extends keyof MediaRequestQueueRecord>(request: T, event: any) {
     requests._queue._serve(request, (requestEvent) => {
       event.request = requestEvent;
       appendTriggerEvent(event, requestEvent);

@@ -214,7 +214,9 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
         this[TEXT_TRACK_READY_STATE] = 2;
         const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
         if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
-        this.dispatchEvent(new DOMEvent<void>('load'));
+        const loadEvent = new DOMEvent<void>('load');
+        this.dispatchEvent(loadEvent);
+        this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, loadEvent);
       }
     } catch (error) {
       this[TEXT_TRACK_READY_STATE] = 3;

@@ -152,8 +152,8 @@
   );
 }
 
-media-volume-slider [part~='track-progress'] {
-  display: none !important;
+:where(media-time-slider [part='chapters']) {
+  display: none;
 }
 
 /*

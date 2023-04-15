@@ -10,8 +10,6 @@
   --track-focus-width: var(--media-slider-focused-track-width, var(--track-width));
   --track-focus-height: var(--media-slider-focused-track-height, calc(var(--track-height) * 1.25));
 
-  display: flex;
-  align-items: center;
   width: var(--width);
   height: var(--height);
   /** Prevent thumb flowing out of slider. */
@@ -29,9 +27,9 @@
   height: var(--track-height);
   top: 50%;
   left: 0;
-  border-radius: 2px;
+  border-radius: 1px;
   transform: translateY(-50%);
-  background-color: rgb(255 255 255 /0.3);
+  background-color: rgb(255 255 255 / 0.3);
   backdrop-filter: blur(2px);
 }
 
@@ -39,7 +37,7 @@
   outline-offset: var(--thumb-size);
 }
 
-:where([data-media-slider][data-interactive] [part*='track']) {
+:where([data-media-slider]:not([data-chapters])[data-interactive] [part*='track']) {
   width: var(--track-focus-width);
   height: var(--track-focus-height);
 }
@@ -73,6 +71,7 @@
   height: 100%;
   transform: translateX(-50%); /** re-center along x-axis. */
   will-change: left;
+  pointer-events: none;
 }
 
 :where([data-media-slider][data-dragging] [part='thumb-container']) {
@@ -90,6 +89,7 @@
   background-color: #fff;
   transform: translateY(-50%);
   transition: opacity 0.15s ease-in;
+  pointer-events: none;
 }
 
 :where([data-media-slider][data-dragging], [data-media-slider][data-focus]) :where([part='thumb']) {
@@ -137,7 +137,9 @@
 
 :where(
     media-slider-video:not([data-hidden]) + media-slider-value,
-    media-slider-thumbnail:not([data-hidden]) + media-slider-value
+    media-slider-video:not([data-hidden]) + [part='chapter-title'],
+    media-slider-thumbnail:not([data-hidden]) + media-slider-value,
+    media-slider-thumbnail:not([data-hidden]) + [part='chapter-title']
   ) {
   margin-top: 8px;
 }
@@ -214,4 +216,54 @@
   bottom: var(--preview-bottom);
   will-change: bottom;
   transform: translateY(50%);
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Chapters
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+media-time-slider[data-chapters] > :not(shadow-root, [slot]),
+media-time-slider[data-chapters] > shadow-root > [part*='track'] {
+  display: none !important;
+}
+
+:where(media-time-slider [part='chapters']) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+:where(media-time-slider [part='chapter-container']) {
+  display: flex;
+  align-items: center;
+  width: var(--width);
+  height: 100%;
+  margin-right: 2px;
+}
+
+:where(media-time-slider [part='chapter-container']:last-child) {
+  margin-right: 0;
+}
+
+:where(media-time-slider [part='chapter']) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--track-height);
+}
+
+:where(media-time-slider [part='chapter-container']:hover [part='chapter']) {
+  transform: scaleY(1.75);
+  transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
+}
+
+:where(media-time-slider [part='chapter-title']) {
+  font-family: var(--media-font-family, sans-serif);
+  font-size: 14px;
+  color: white;
 }

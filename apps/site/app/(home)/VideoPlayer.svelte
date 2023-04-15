@@ -1,3 +1,10 @@
+<script>
+  function onCanPlay(event) {
+    const player = event.target;
+    player.textTracks[1].mode = 'showing';
+  }
+</script>
+
 <media-player
   class="max-w-[680px] aspect-video hero-video rounded-sm overflow-hidden shadow-lg"
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
@@ -5,9 +12,16 @@
   aspect-ratio="16/9"
   key-target="document"
   volume={0.2}
+  on:can-play={onCanPlay}
 >
   <media-outlet>
-    <track src="/media/sprite-fight.vtt" label="English" srclang="en" kind="subtitles" default />
+    <track src="/media/sprite-fight.vtt" label="English" srclang="en-US" kind="subtitles" default />
+    <track
+      src="https://media-files.vidstack.io/sprite-fight/chapters.vtt"
+      srclang="en-US"
+      kind="chapters"
+      default
+    />
   </media-outlet>
   <div
     class="z-0 bg-black/30 transition-opacity opacity-0 not-user-idle:opacity-100 pointer-events-none bg-blur absolute inset-0 w-full h-full"
@@ -50,11 +64,14 @@
       <media-time class="text-sm tracking-wide mr-1" type="current" />
       <media-time-slider style="--media-slider-preview-gap: 130px">
         <div slot="preview">
-          <media-slider-thumbnail
-            src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
-            class="rounded-sm"
-          />
-          <media-slider-value class="rounded-sm" type="pointer" format="time" />
+          <div>
+            <media-slider-thumbnail
+              src="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
+              class="rounded-sm"
+            />
+            <div class="absolute bottom-8 w-full text-center" part="chapter-title" />
+          </div>
+          <media-slider-value class="rounded-sm mt-2" type="pointer" format="time" />
         </div>
       </media-time-slider>
       <media-time class="text-sm tracking-wide ml-1" type="current" remainder />
@@ -105,5 +122,9 @@
 <style>
   :global(.hero-video media-captions [part='cue']) {
     letter-spacing: 0.025em;
+  }
+
+  div[part='chapter-title'] {
+    text-shadow: -1px -1px 0 #212121, 1px -1px 0 #212121, -1px 1px 0 #212121, 1px 1px 0 #212121;
   }
 </style>

@@ -2,6 +2,7 @@
   function onConnect(event) {
     const player = event.target;
     player.$store.duration = 231;
+    player.setAttribute('data-can-play', '');
   }
 </script>
 
