@@ -1,5 +1,7 @@
 import { effect, peek, signal } from 'maverick.js';
 import { defineCustomElement } from 'maverick.js/element';
+import { noop } from 'maverick.js/std';
+import { parseResponse, VTTCue } from 'media-captions';
 
 import { useMedia } from '../../media/context';
 import { useSliderStore } from '../slider/store';
@@ -18,11 +20,10 @@ export const SliderThumbnailDefinition = defineCustomElement<MediaSliderThumbnai
     const $img = signal<HTMLImageElement | null>(null),
       $imgSrc = signal(''),
       $imgLoaded = signal(false),
-      $error = signal(false),
       $coords = signal<ThumbnailCoords | null>(null),
-      $cueList = signal<TextTrackCueList | null>(null),
-      $activeCue = signal<TextTrackCue | null>(null),
-      $hidden = () => $error() || !Number.isFinite($media.duration),
+      $cues = signal<VTTCue[] | null>(null),
+      $activeCue = signal<VTTCue | null>(null),
+      $hidden = () => !Number.isFinite($media.duration),
       $slider = useSliderStore(),
       { $store: $media } = useMedia(),
       $crossorigin = () => $media.crossorigin;
@@ -36,36 +37,22 @@ export const SliderThumbnailDefinition = defineCustomElement<MediaSliderThumbnai
     effect(() => {
       if (!$media.canLoad) return;
 
-      const video = document.createElement('video');
-      video.crossOrigin = '';
-
-      const track = document.createElement('track');
-      track.src = $src();
-      track.default = true;
-      track.kind = 'metadata';
-      video.append(track);
-
-      let cancelled = false;
-
-      $error.set(false);
       $imgLoaded.set(false);
 
-      track.onload = () => {
-        if (cancelled) return;
-        $cueList.set(track.track.cues);
-      };
-
-      track.onerror = () => $error.set(true);
+      const controller = new AbortController();
+      parseResponse(fetch($src(), { signal: controller.signal }))
+        .then(({ cues }) => $cues.set(cues))
+        .catch(noop);
 
       return () => {
-        cancelled = true;
-        $cueList.set(null);
+        controller.abort();
+        $cues.set(null);
       };
     });
 
     // Find active cue.
     effect(() => {
-      const cues = $cueList();
+      const cues = $cues();
 
       if (!cues || !Number.isFinite($media.duration)) {
         $activeCue.set(null);
@@ -92,12 +79,15 @@ export const SliderThumbnailDefinition = defineCustomElement<MediaSliderThumbnai
         return;
       }
 
-      const [_src, _coords] = ((cue as any).text || '').split('#');
+      const [_src, _coords] = (cue.text || '').split('#');
       const [_props, _values] = _coords.split('=');
 
       $imgSrc.set(
-        !peek($src).startsWith('/') && !/https?:/.test(_src)
-          ? `${new URL(peek($src)).origin}${_src.replace(/^\/?/, '/')}`
+        !/https?:/.test(_src)
+          ? `${peek($src).split('/').slice(0, -1).join('/')}${_src.replace(/^\/?/, '/')}`.replace(
+              /^\/\//,
+              '/',
+            )
           : _src,
       );
 

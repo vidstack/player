@@ -35,8 +35,8 @@
     "test:server:watch": "SERVER=true vitest --watch"
   },
   "dependencies": {
-    "maverick.js": "0.33.1",
-    "media-captions": "^0.0.8",
+    "maverick.js": "^0.33.1",
+    "media-captions": "^0.0.10",
     "media-icons": "^0.4.2",
     "type-fest": "^3.8.0"
   },
