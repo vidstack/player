@@ -83,6 +83,11 @@ Text tracks can be added like so:
 [loading guide](docs/player/core-concepts/loading#loading-strategies)) and the `mode` is set to
 `showing` or `hidden`.
 
+#### Default
+
+When `default` is set on a text track it will set the `mode` of that track to `showing`
+immediately. Only one default is allowed per `kind` (i.e., captions/subtitles, chapters).
+
 ### Remove Tracks
 
 Text tracks can be dynamically removed from the DOM, or via JS like so:

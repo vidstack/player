@@ -26,6 +26,7 @@ export function setupSliderChapters(
 
     effect(() => {
       const track = $track();
+
       const hasChapters = !!track?.cues.length;
       setAttribute(host.el!, 'data-chapters', hasChapters);
 
@@ -119,7 +120,7 @@ function findChaptersTrack($track: WriteSignal<TextTrack | null>, textTracks: Te
     $track.set(track);
   } else {
     $track.set(null);
-    listenEvent(track, 'load', () => $track.set(track), { once: true });
+    track.addEventListener('load', () => $track.set(track), { once: true });
   }
 }
 

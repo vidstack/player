@@ -1,10 +1,3 @@
-<script>
-  function onCanPlay(event) {
-    const player = event.target;
-    player.textTracks[1].mode = 'showing';
-  }
-</script>
-
 <media-player
   class="max-w-[680px] aspect-video hero-video rounded-sm overflow-hidden shadow-lg"
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
@@ -12,7 +5,6 @@
   aspect-ratio="16/9"
   key-target="document"
   volume={0.2}
-  on:can-play={onCanPlay}
 >
   <media-outlet>
     <track src="/media/sprite-fight.vtt" label="English" srclang="en-US" kind="subtitles" default />

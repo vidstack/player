@@ -15,11 +15,7 @@ import {
  */
 export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   private _canLoad = false;
-  private _default: TextTrack | null = null;
-
-  get default() {
-    return this._default;
-  }
+  private _defaults: Record<string, TextTrack | undefined> = {};
 
   get selected() {
     const track = this._items.find((t) => t.mode === 'showing' && isTrackCaptionKind(t));
@@ -30,13 +26,13 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     const isTrack = init instanceof TextTrack,
       track = isTrack ? init : new TextTrack(init);
 
-    if (this._default && init.default) delete init.default;
+    if (this._defaults[init.kind] && init.default) delete init.default;
     track.addEventListener('mode-change', this._handleTrackModeChange);
     this[LIST_ADD](track, trigger);
     if (this._canLoad) track[TEXT_TRACK_CAN_LOAD]();
 
     if (init.default) {
-      this._default = track;
+      this._defaults[init.kind] = track;
       track.mode = 'showing';
     }
 
@@ -45,7 +41,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
 
   remove(track: TextTrack, trigger?: Event) {
     if (!this._items.includes(track)) return;
-    if (track === this._default) this._default = null;
+    if (track === this._defaults[track.kind]) delete this._defaults[track.kind];
     track.mode = 'disabled';
     track[TEXT_TRACK_ON_MODE_CHANGE] = null;
     track.removeEventListener('mode-change', this._handleTrackModeChange);
