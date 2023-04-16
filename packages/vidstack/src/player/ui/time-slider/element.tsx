@@ -1,5 +1,5 @@
 import throttle from 'just-throttle';
-import { effect, peek, provideContext } from 'maverick.js';
+import { computed, effect, peek, provideContext } from 'maverick.js';
 import { defineCustomElement, onAttach } from 'maverick.js/element';
 import { dispatchEvent, mergeProperties } from 'maverick.js/std';
 
@@ -40,7 +40,7 @@ export const TimeSliderDefinition = defineCustomElement<MediaTimeSliderElement>(
             ...props,
             $step: () => (props.$step() / $media.duration) * 100,
             $keyStep: () => (props.$keyStep() / $media.duration) * 100,
-            $disabled: () => $disabled() || !$media.canSeek,
+            $disabled: computed(() => $disabled() || !$media.canSeek),
           },
           readonly: true,
           aria: { valueMin: 0, valueMax: 100, valueText: getSpokenText },

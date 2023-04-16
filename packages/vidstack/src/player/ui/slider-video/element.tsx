@@ -1,4 +1,4 @@
-import { effect, signal } from 'maverick.js';
+import { computed, effect, signal } from 'maverick.js';
 import { defineCustomElement, onConnect } from 'maverick.js/element';
 import { dispatchEvent } from 'maverick.js/std';
 
@@ -25,7 +25,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
       { $store: $media } = useMedia(),
       $crossorigin = () => $media.crossorigin,
       $videoSrc = () => ($media.canPlay ? $src() : null),
-      $hidden = () => !!$error() || !$media.canPlay || !Number.isFinite($media.duration);
+      $hidden = computed(() => !!$error() || !$media.canPlay || !Number.isFinite($media.duration));
 
     host.setAttributes({
       'data-loading': () => !$canPlay() && !$hidden(),

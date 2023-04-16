@@ -1,4 +1,4 @@
-import { effect, signal } from 'maverick.js';
+import { computed, effect, signal } from 'maverick.js';
 import { defineCustomElement, onConnect } from 'maverick.js/element';
 
 import { preconnect } from '../../../utils/network';
@@ -21,7 +21,7 @@ export const PosterDefinition = defineCustomElement<MediaPosterElement>({
       remote = new MediaRemoteControl();
 
     const $crossorigin = () => $media.crossorigin,
-      $imgSrc = () => ($media.canLoad && $media.poster.length ? $media.poster : null),
+      $imgSrc = computed(() => ($media.canLoad && $media.poster.length ? $media.poster : null)),
       $imgAlt = () => ($imgSrc() ? $alt() : null),
       $imgLoading = signal(true),
       $imgError = signal(false);

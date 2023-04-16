@@ -1,3 +1,4 @@
+import { computed } from 'maverick.js';
 import { isString } from 'maverick.js/std';
 
 import { isHLSSrc, VIDEO_EXTENSIONS, VIDEO_TYPES } from '../../../../utils/mime';
@@ -52,8 +53,10 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
 
     const $controls = () => $store.controls,
       $crossorigin = () => $store.crossorigin,
-      // === `true` because it's `null` to start with until we know if the poster can load.
-      $poster = () => ($store.poster && $store.canLoadPoster === true ? $store.poster : null);
+      $poster = computed(() =>
+        // === `true` because it's `null` to start with until we know if the poster can load.
+        $store.poster && $store.canLoadPoster === true ? $store.poster : null,
+      );
 
     return (
       <video
