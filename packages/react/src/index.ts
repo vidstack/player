@@ -1,3 +1,9 @@
+declare module 'react' {
+  interface DOMAttributes<T> {
+    part?: string | undefined;
+  }
+}
+
 export * from './components';
 export * from './use-media-player';
 export * from './use-media-provider';
