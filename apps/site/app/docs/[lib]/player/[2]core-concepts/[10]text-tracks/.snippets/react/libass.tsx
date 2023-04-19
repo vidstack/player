@@ -6,9 +6,9 @@ function Player() {
   const player = useRef<MediaPlayerElement>(null);
 
   useEffect(() => {
-    const renderer = new LibASSTextRenderer(() => import('libass-wasm'), {
-      workerUrl: '/libass/subtitles-octopus-worker.js',
-      legacyWorkerUrl: '/libass/subtitles-octopus-worker-legacy.js',
+    const renderer = new LibASSTextRenderer(() => import('jassub'), {
+      workerUrl: '/jassub/jassub-worker.js',
+      legacyWorkerUrl: '/jassub/jassub-worker-legacy.js',
     });
 
     player.current!.textRenderers.add(renderer);

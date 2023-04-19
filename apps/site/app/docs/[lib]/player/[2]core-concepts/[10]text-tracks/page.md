@@ -209,17 +209,14 @@ The following text track related events are available on the player:
 ### libass
 
 If you'd like to use advanced ASS features that are [not supported](https://github.com/vidstack/media-captions#ssaass)
-then we provide a direct integration for the popular
-[WASM port of libass](https://github.com/libass/JavascriptSubtitlesOctopus#options).
+then we provide a direct integration for a
+[WASM port of libass](https://github.com/ThaUnknown/jassub#options).
 
-1. `npm i libass-wasm`.
+1. `npm i jassub`.
 
-2. Copy the `node_modules/libass-wasm/dist/js` directory to your public directory (e.g,
-   `public/libass`).
+2. Copy the `node_modules/jassub/dist` directory to your public directory (e.g,
+   `public/jassub`).
 
-3. Download the [`default.woff2`](https://github.com/libass/JavascriptSubtitlesOctopus/blob/master/assets/default.woff2)
-   file from GitHub. Once downloaded, paste it in the same directory that contains your worker files.
-
-4. Add the libass text renderer to the player like so:
+3. Add the libass text renderer to the player like so:
 
 {% code_snippet name="libass" /%}

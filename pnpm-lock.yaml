@@ -138,10 +138,10 @@ importers:
       autoprefixer: ^10.4.2
       fscreen: ^1.2.0
       hls.js: ^1.4.0
+      jassub: ^1.5.12
       jsdom: ^21.0.0
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
-      libass-wasm: ^4.1.0
       maverick.js: 0.36.1
       media-captions: 0.0.12
       media-icons: 0.5.0
@@ -167,10 +167,10 @@ importers:
       autoprefixer: 10.4.14_postcss@8.4.23
       fscreen: 1.2.0
       hls.js: 1.4.1
+      jassub: 1.5.12
       jsdom: 21.1.2
       just-debounce-it: 3.2.0
       just-throttle: 4.2.0
-      libass-wasm: 4.1.0
       postcss: 8.4.23
       rimraf: 3.0.2
       tailwindcss: 3.3.2
@@ -3454,6 +3454,12 @@ packages:
       istanbul-lib-report: 3.0.0
     dev: true
 
+  /jassub/1.5.12:
+    resolution: {integrity: sha512-CJiuNCXMMGqfmVVlaDyxqaKfOy3RIHW4HBwVWvbq8pl/d1/y1fgTarfR31whUUupHZCe7Tfq8XB7WDgdu6IHaA==}
+    dependencies:
+      rvfc-polyfill: 1.0.6
+    dev: true
+
   /javascript-natural-sort/0.7.1:
     resolution: {integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw==}
     dev: true
@@ -3678,10 +3684,6 @@ packages:
     dependencies:
       prelude-ls: 1.1.2
       type-check: 0.3.2
-    dev: true
-
-  /libass-wasm/4.1.0:
-    resolution: {integrity: sha512-+RbYT/uuI6VHExCmGyUuMg3A2gQOaCRTzSn8GGDSf3q4cEoUNiINd9u4RGfZXA1UKafW+Hv8bmcKIX4FKbSh0Q==}
     dev: true
 
   /lilconfig/2.1.0:
@@ -4860,6 +4862,10 @@ packages:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
     dependencies:
       queue-microtask: 1.2.3
+    dev: true
+
+  /rvfc-polyfill/1.0.6:
+    resolution: {integrity: sha512-y7tu9Bh19CTnzBZWEQEEEo5UYvhVi5Ud9C3ndeWtm9m+tUO5vK8qqbpAMJfEDgRSFZokrVHmehnhGjd9LyazBg==}
     dev: true
 
   /rxjs/7.8.1:
