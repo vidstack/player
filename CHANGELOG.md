@@ -1,3 +1,16 @@
+## [0.4.5](https://github.com/vidstack/player/compare/v0.4.4...v0.4.5) (2023-04-23)
+
+### Bug Fixes
+
+- add finite check for pointer rate in slider video ([#808](https://github.com/vidstack/player/issues/808)) ([377d2a4](https://github.com/vidstack/player/commit/377d2a4cc1e42fa88bb766f44ba7f69c9e422ff2))
+- bump `maverick` to `0.33.1` ([0f1c5ae](https://github.com/vidstack/player/commit/0f1c5ae000582f4839c0dd1fd1e2870bdacd5e17))
+- chrome does not detect keyframes inserted before playhead ([c2ba7be](https://github.com/vidstack/player/commit/c2ba7bea0d6cb13a39b222d6b5162d31351e6ba3))
+- pin maverick version ([a988a18](https://github.com/vidstack/player/commit/a988a18562908b274c4932573de9df3a48e0186e))
+- position captions correctly when scrolled out of view ([b161e74](https://github.com/vidstack/player/commit/b161e746760bc341c75f8af9a583fd8745a069ac))
+- should not pass `null` to native text renderer ([e1e487f](https://github.com/vidstack/player/commit/e1e487fc1ef6200d612dabade576a4bd31389a2e)), closes [#811](https://github.com/vidstack/player/issues/811) [#814](https://github.com/vidstack/player/issues/814)
+- use width to scale slider fill/progress tracks ([995d82d](https://github.com/vidstack/player/commit/995d82d62d8551758eb991826250913d78be5d63))
+- waiting not triggered when seeking while paused ([2d50b59](https://github.com/vidstack/player/commit/2d50b59e733ce50c6fce6bed9084b2a4fec21b1e))
+
 ## [0.4.4](https://github.com/vidstack/player/compare/v0.4.3...v0.4.4) (2023-04-11)
 
 ### Bug Fixes
