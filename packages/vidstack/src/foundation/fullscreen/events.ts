@@ -1,7 +1,8 @@
-import type { HTMLCustomElement } from 'maverick.js/element';
 import type { DOMEvent } from 'maverick.js/std';
 
-export interface FullscreenEventTarget extends HTMLCustomElement<any, FullscreenEvents> {}
+export interface FullscreenAPI {
+  events: FullscreenEvents;
+}
 
 export interface FullscreenEvents {
   'fullscreen-change': FullscreenChangeEvent;

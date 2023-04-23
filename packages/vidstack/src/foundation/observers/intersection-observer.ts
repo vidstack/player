@@ -1,62 +1,27 @@
-import { effect, signal, type ReadSignal } from 'maverick.js';
+import { ComponentController, ComponentInstance } from 'maverick.js/element';
 
-export function createIntersectionObserverAdapter(
-  $target: ReadSignal<Element | null>,
-  init: IntersectionObserverInit = {},
-): IntersectionObserverAdapter {
-  const $intersecting = signal(false),
-    { skipInitial, callback, ...observerInit } = init;
+export class IntersectionObserverController extends ComponentController {
+  private _observer: IntersectionObserver | undefined;
 
-  let disconnect: (() => void) | undefined;
+  constructor(instance: ComponentInstance, private _init: IntersectionObserverInit) {
+    super(instance);
+  }
 
-  effect(() => {
-    const target = $target();
+  protected override onConnect(el: HTMLElement) {
+    this._observer = new IntersectionObserver((entries) => {
+      this._init.callback?.(entries, this._observer!);
+    }, this._init);
+    this._observer.observe(el);
+    return this._disconnect.bind(this);
+  }
 
-    if (!target) {
-      $intersecting.set(false);
-      return;
-    }
-
-    let first = true;
-
-    const observer = new IntersectionObserver((entries) => {
-      if (first && skipInitial) {
-        first = false;
-        return;
-      }
-
-      callback?.(entries, observer);
-      $intersecting.set(entries[0].isIntersecting);
-    }, observerInit);
-
-    observer.observe(target);
-    return (disconnect = () => {
-      observer.disconnect();
-      disconnect = undefined;
-    });
-  });
-
-  return {
-    get intersecting() {
-      return $intersecting();
-    },
-    disconnect() {
-      disconnect?.();
-    },
-  };
-}
-
-export interface IntersectionObserverAdapter {
-  /**
-   * Whether the current host element is intersecting with configured viewport.
-   *
-   * @signal
-   */
-  readonly intersecting: boolean;
   /**
    * Disconnect any active intersection observers.
    */
-  disconnect(): void;
+  _disconnect(): void {
+    this._observer?.disconnect();
+    this._observer = undefined;
+  }
 }
 
 export interface IntersectionObserverInit {
@@ -84,12 +49,6 @@ export interface IntersectionObserverInit {
    * visible.
    */
   threshold?: number | number[];
-  /**
-   * An IntersectionObserver reports the initial intersection state when observe is called.
-   * Setting this flag to `true` skips processing this initial state for cases when this is
-   * unnecessary.
-   */
-  skipInitial?: boolean;
   /**
    * Invoked when an intersection event occurs.
    */

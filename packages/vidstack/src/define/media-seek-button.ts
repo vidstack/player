@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { SeekButtonDefinition } from '../player/ui/seek-button/element';
+import { SeekButton } from '../player/ui/buttons/seek-button';
 
-registerLiteCustomElement(SeekButtonDefinition);
+registerLiteCustomElement(SeekButton);

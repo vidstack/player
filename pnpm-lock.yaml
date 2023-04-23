@@ -51,7 +51,7 @@ importers:
       '@docsearch/js': ^3.3.0
       '@iconify-json/ri': ^1.1.0
       '@leeoniya/ufuzzy': ^1.0.2
-      '@maverick-js/compiler': ^0.32.3
+      '@maverick-js/compiler': 0.35.2
       '@sveltejs/vite-plugin-svelte': ^2.0.0
       '@tailwindcss/typography': ^0.5.0
       '@types/markdown-it': ^12.2.0
@@ -89,7 +89,7 @@ importers:
     devDependencies:
       '@algolia/client-search': 4.14.3
       '@iconify-json/ri': 1.1.4
-      '@maverick-js/compiler': 0.32.3
+      '@maverick-js/compiler': 0.35.2
       '@sveltejs/vite-plugin-svelte': 2.0.2_svelte@3.58.0+vite@4.2.1
       '@tailwindcss/typography': 0.5.8_tailwindcss@3.3.1
       '@types/markdown-it': 12.2.3
@@ -112,8 +112,8 @@ importers:
   packages/react:
     specifiers:
       '@types/react': ^18.0.0
-      maverick.js: 0.33.1
-      media-icons: ^0.4.2
+      maverick.js: 0.35.2
+      media-icons: 0.4.2
       react: ^18.0.0
       rimraf: ^3.0.0
       tsup: ^6.7.0
@@ -121,7 +121,7 @@ importers:
       vidstack: workspace:*
     devDependencies:
       '@types/react': 18.0.27
-      maverick.js: 0.33.1
+      maverick.js: 0.35.2
       media-icons: 0.4.2
       react: 18.2.0
       rimraf: 3.0.2
@@ -131,7 +131,7 @@ importers:
 
   packages/vidstack:
     specifiers:
-      '@maverick-js/compiler': 0.33.1
+      '@maverick-js/compiler': 0.35.2
       '@open-wc/semantic-dom-diff': ^0.19.5
       '@open-wc/testing-helpers': ^2.1.2
       '@types/fscreen': ^1.0.1
@@ -142,9 +142,9 @@ importers:
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
       libass-wasm: ^4.1.0
-      maverick.js: ^0.33.1
-      media-captions: ^0.0.11
-      media-icons: ^0.4.2
+      maverick.js: 0.35.2
+      media-captions: 0.0.11
+      media-icons: 0.4.2
       postcss: ^8.4.0
       rimraf: ^3.0.0
       tailwindcss: ^3.2.0
@@ -155,12 +155,12 @@ importers:
       vite: ^4.2.0
       vitest: ^0.30.0
     dependencies:
-      maverick.js: 0.33.1
+      maverick.js: 0.35.2
       media-captions: 0.0.11
       media-icons: 0.4.2
       type-fest: 3.8.0
     devDependencies:
-      '@maverick-js/compiler': 0.33.1
+      '@maverick-js/compiler': 0.35.2
       '@open-wc/semantic-dom-diff': 0.19.7
       '@open-wc/testing-helpers': 2.1.4
       '@types/fscreen': 1.0.1
@@ -543,10 +543,6 @@ packages:
 
   /@dprint/formatter/0.2.0:
     resolution: {integrity: sha512-E1q1JaOPeEUBhG//IUayqJQvNpqprZ0OCF8B/bIhUqSsMIp0Y74PgF8JPvDCrOdq43qiGUYAavVO8iCBHOoU/A==}
-    dev: true
-
-  /@dprint/typescript/0.71.2:
-    resolution: {integrity: sha512-QpQJiJMxSMhqqOgVk1zrh+2ueQnZmBQ6aCtVgXKd3zxyVOEIj5CLarfDmza/9KFOU+5lKsprbGAQBskC+xODkw==}
     dev: true
 
   /@dprint/typescript/0.84.1:
@@ -1063,28 +1059,8 @@ packages:
       '@types/markdown-it': 12.2.3
     dev: true
 
-  /@maverick-js/compiler/0.32.3:
-    resolution: {integrity: sha512-DZrSUl7eLmustjSh6N2+dpIdhvtaK3SABnCbNYI7i59YvKRngu7rhPL092lhEHmyVP0nDvs8pXUe29soCtnuUw==}
-    engines: {node: '>=16'}
-    hasBin: true
-    dependencies:
-      '@dprint/formatter': 0.2.0
-      '@dprint/typescript': 0.71.2
-      '@rollup/pluginutils': 5.0.2
-      globby: 13.1.3
-      html-entities: 2.3.3
-      kleur: 4.1.5
-      lru-cache: 7.14.1
-      magic-string: 0.26.7
-      pathe: 1.0.0
-      unplugin: 1.0.1
-      yargs: 17.6.2
-    transitivePeerDependencies:
-      - rollup
-    dev: true
-
-  /@maverick-js/compiler/0.33.1:
-    resolution: {integrity: sha512-DAxuSDuqJ2ctPPqJjSQuOBdJLLT+rO3zcdXKJpnCgTMYyCP/zHHs3WoYOhN/YepoE9YOXCrtZB6YYg8hUHoZng==}
+  /@maverick-js/compiler/0.35.2:
+    resolution: {integrity: sha512-epFQ2Csq+9qbDnsF1CL7rHGNwp9qCu0xJjlbWBVgACnQQgzWLDDZUJuE/EndxNrEFsCA1uaOEB5Sl+1nrd1RqA==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
@@ -1103,8 +1079,8 @@ packages:
       - rollup
     dev: true
 
-  /@maverick-js/signals/5.9.2:
-    resolution: {integrity: sha512-3gplBFZFg0KFTBZkntSFs/8gyMYKLmJ8b0znanPw6XlojGspc8wvCOGC6z/2+DIkaHzyzDr97AHBCO4YfHTW+g==}
+  /@maverick-js/signals/5.9.4:
+    resolution: {integrity: sha512-NJizvl2Pk0pWOjB+h0u2k+9pbdcF/zQf3Msohc79cldwhHXbWoPakIAQphrRdxtLUHBM1hm3ZJwVndI+on0+Zg==}
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -3925,21 +3901,9 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /lru-cache/7.14.1:
-    resolution: {integrity: sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA==}
-    engines: {node: '>=12'}
-    dev: true
-
   /lru-cache/9.0.1:
     resolution: {integrity: sha512-C8QsKIN1UIXeOs3iWmiZ1lQY+EnKDojWd37fXy1aSbJvH4iSma1uy2OWuoB3m4SYRli5+CUjDv3Dij5DVoetmg==}
     engines: {node: 14 || >=16.14}
-    dev: true
-
-  /magic-string/0.26.7:
-    resolution: {integrity: sha512-hX9XH3ziStPoPhJxLq1syWuZMxbDvGNbVchfrdCtanC7D13888bMFow61x8axrx+GfHLtVeAx2kxL7tTGRl+Ow==}
-    engines: {node: '>=12'}
-    dependencies:
-      sourcemap-codec: 1.4.8
     dev: true
 
   /magic-string/0.27.0:
@@ -3973,11 +3937,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /maverick.js/0.33.1:
-    resolution: {integrity: sha512-p8L5V62CV6TmHAngmRAopp231oJKeH77mJja5SsKOfvzrPRoThT/Jo9U0jMRB5iMykqkvyg2J5V5Agn6FPXDWQ==}
+  /maverick.js/0.35.2:
+    resolution: {integrity: sha512-TWsuUx4QgUeds7/ybHVyOGfmTLxsci4ZEDXF2F7ORur0zR85jGjxfM4Ag+H4w8N0MXHb4V8ykpmLlMrM3T+qyA==}
     engines: {node: '>=16'}
     dependencies:
-      '@maverick-js/signals': 5.9.2
+      '@maverick-js/signals': 5.9.4
       type-fest: 3.8.0
 
   /md5-hex/3.0.1:
@@ -5097,11 +5061,6 @@ packages:
       whatwg-url: 7.1.0
     dev: true
 
-  /sourcemap-codec/1.4.8:
-    resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
-    deprecated: Please use @jridgewell/sourcemap-codec instead
-    dev: true
-
   /space-separated-tokens/2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
     dev: true
@@ -5802,15 +5761,6 @@ packages:
       - supports-color
     dev: true
 
-  /unplugin/1.0.1:
-    resolution: {integrity: sha512-aqrHaVBWW1JVKBHmGo33T5TxeL0qWzfvjWokObHA9bYmN7eNDkwOxmLjhioHl9878qDFMAaT51XNroRyuz7WxA==}
-    dependencies:
-      acorn: 8.8.1
-      chokidar: 3.5.3
-      webpack-sources: 3.2.3
-      webpack-virtual-modules: 0.5.0
-    dev: true
-
   /unplugin/1.3.1:
     resolution: {integrity: sha512-h4uUTIvFBQRxUKS2Wjys6ivoeofGhxzTe2sRWlooyjHXVttcVfV/JiavNd3d4+jty0SVV0dxGw9AkY9MwiaCEw==}
     dependencies:
@@ -6268,19 +6218,6 @@ packages:
       string-width: 4.2.3
       y18n: 5.0.8
       yargs-parser: 20.2.9
-    dev: true
-
-  /yargs/17.6.2:
-    resolution: {integrity: sha512-1/9UrdHjDZc0eOU0HxOHoS78C69UD3JRMvzlJ7S79S2nTaWRA/whGCTV8o9e/N/1Va9YIV7Q4sOxD8VV4pCWOw==}
-    engines: {node: '>=12'}
-    dependencies:
-      cliui: 8.0.1
-      escalade: 3.1.1
-      get-caller-file: 2.0.5
-      require-directory: 2.1.1
-      string-width: 4.2.3
-      y18n: 5.0.8
-      yargs-parser: 21.1.1
     dev: true
 
   /yargs/17.7.1:

@@ -1,8 +1,8 @@
 import { createDisposalBin, listenEvent } from 'maverick.js/std';
 import type { CaptionsRenderer } from 'media-captions';
 
-import type { TextRenderer } from '../../media/tracks/text/render/text-renderer';
-import type { TextTrack } from '../../media/tracks/text/text-track';
+import type { TextRenderer } from '../../core/tracks/text/render/text-renderer';
+import type { TextTrack } from '../../core/tracks/text/text-track';
 
 export class CaptionsTextRenderer implements TextRenderer {
   readonly priority = 10;

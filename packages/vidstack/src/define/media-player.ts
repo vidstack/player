@@ -1,7 +1,7 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { PlayerDefinition } from '../player/element/element';
-import { OutletDefinition } from '../player/media/outlet/element';
+import { Outlet } from '../player/core/outlet/outlet';
+import { Player } from '../player/core/player';
 
-registerLiteCustomElement(PlayerDefinition);
-registerLiteCustomElement(OutletDefinition);
+registerLiteCustomElement(Player);
+registerLiteCustomElement(Outlet);

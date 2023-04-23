@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { VolumeSliderDefinition } from '../player/ui/volume-slider/element';
+import { VolumeSlider } from '../player/ui/sliders/volume-slider';
 
-registerLiteCustomElement(VolumeSliderDefinition);
+registerLiteCustomElement(VolumeSlider);

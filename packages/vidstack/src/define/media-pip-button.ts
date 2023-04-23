@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { PIPButtonDefinition } from '../player/ui/pip-button/element';
+import { PIPButton } from '../player/ui/buttons/pip-button';
 
-registerLiteCustomElement(PIPButtonDefinition);
+registerLiteCustomElement(PIPButton);

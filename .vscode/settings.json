@@ -2,5 +2,5 @@
   "html.customData": ["./packages/vidstack/vscode.html-data.json"],
   "css.customData": [],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["crossorigin"]
+  "cSpell.words": ["crossorigin", "cssvars"]
 }

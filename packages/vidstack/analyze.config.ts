@@ -12,18 +12,21 @@ export default [
       if (component.tag.name === 'media-icon') {
         const type = data.attributes.find((attr) => attr.name === 'type')!;
         const icons = readdirSync('node_modules/media-icons/raw');
-        type.values = icons.map((fileName) => {
-          const iconName = path.basename(fileName, path.extname(fileName));
-          return {
-            name: iconName,
-            references: [
-              {
-                name: 'Preview Icon',
-                url: `https://vidstack.io/media-icons?lib=html&icon=${iconName}`,
-              },
-            ],
-          };
-        });
+        const ignore = new Set(['.DS_Store']);
+        type.values = icons
+          .filter((fileName) => !ignore.has(fileName))
+          .map((fileName) => {
+            const iconName = path.basename(fileName, path.extname(fileName));
+            return {
+              name: iconName,
+              references: [
+                {
+                  name: 'Preview Icon',
+                  url: `https://vidstack.io/media-icons?lib=html&icon=${iconName}`,
+                },
+              ],
+            };
+          });
       }
 
       component.doctags

@@ -1,32 +1,28 @@
-import { effect, type ReadSignal } from 'maverick.js';
-import { isString, isUndefined, listenEvent } from 'maverick.js/std';
+import { ComponentController } from 'maverick.js/element';
+import { isString, isUndefined } from 'maverick.js/std';
 
 import { getLogColor, saveLogColor } from './colors';
-import { isGroupedLog, type GroupedLog } from './create-grouped-log';
+import { isGroupedLog, type GroupedLog } from './grouped-log';
 import { LogLevelColor, LogLevelValue, type LogLevel } from './log-level';
 import { ms } from './ms';
 
-export function createLogPrinter($target: ReadSignal<EventTarget | null>): LogPrinter {
-  // No log printing in production.
-  if (!__DEV__) {
-    return {
-      get logLevel(): LogLevel {
-        return 'silent';
-      },
-      set logLevel(_: LogLevel) {
-        // no-op
-      },
-    };
+export class LogPrinter extends ComponentController {
+  private _level: LogLevel = __DEV__ ? 'warn' : 'silent';
+  private _lastLogged: number | undefined;
+
+  /**
+   * The current log level.
+   */
+  get logLevel(): LogLevel {
+    return __DEV__ ? this._level : 'silent';
   }
 
-  let logLevel: LogLevel = 'warn',
-    lastLogTimestamp: number | undefined = undefined;
+  set logLevel(level) {
+    if (__DEV__) this._level = level;
+  }
 
-  effect(() => {
-    const target = $target();
-    if (!target) return;
-
-    listenEvent(target, 'vds-log', (event) => {
+  protected override onConnect() {
+    this.listen('vds-log', (event) => {
       event.stopPropagation();
 
       const eventTargetName = (
@@ -35,7 +31,7 @@ export function createLogPrinter($target: ReadSignal<EventTarget | null>): LogPr
 
       const { level = 'warn', data } = event.detail ?? {};
 
-      if (LogLevelValue[logLevel] < LogLevelValue[level]) {
+      if (LogLevelValue[this._level] < LogLevelValue[level]) {
         return;
       }
 
@@ -63,43 +59,27 @@ export function createLogPrinter($target: ReadSignal<EventTarget | null>): LogPr
         print(level, ...data);
       }
 
-      printTimeDiff();
+      this._printTimeDiff();
       printStackTrace();
 
       console.groupEnd();
     });
 
     return () => {
-      lastLogTimestamp = undefined;
+      this._lastLogged = undefined;
     };
-  });
+  }
 
-  const calcLastLogTimeDiff = () => {
+  private _printTimeDiff() {
+    labelledPrint('Time since last log', this._calcLastLogTimeDiff());
+  }
+
+  private _calcLastLogTimeDiff() {
     const time = performance.now();
-    const diff = time - (lastLogTimestamp ?? (lastLogTimestamp = performance.now()));
-    lastLogTimestamp = time;
+    const diff = time - (this._lastLogged ?? (this._lastLogged = performance.now()));
+    this._lastLogged = time;
     return ms(diff);
-  };
-
-  const printTimeDiff = () => {
-    labelledPrint('Time since last log', calcLastLogTimeDiff());
-  };
-
-  return {
-    get logLevel() {
-      return logLevel;
-    },
-    set logLevel(level) {
-      logLevel = level;
-    },
-  };
-}
-
-export interface LogPrinter {
-  /**
-   * The current log level.
-   */
-  logLevel: LogLevel;
+  }
 }
 
 function print(level: LogLevel, ...data: any[]) {

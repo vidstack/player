@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { ToggleButtonDefinition } from '../player/ui/toggle-button/element';
+import { ToggleButton } from '../player/ui/buttons/toggle-button';
 
-registerLiteCustomElement(ToggleButtonDefinition);
+registerLiteCustomElement(ToggleButton);

@@ -11,6 +11,7 @@ module.exports = {
     require('@ianvs/prettier-plugin-sort-imports'),
   ],
   importOrder: ['.css$', '^node:', '<THIRD_PARTY_MODULES>', '^[$]', '^[../]', '^[./]'],
+  importOrderParserPlugins: ['jsx', 'typescript', 'decorators'],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrderCaseInsensitive: true,

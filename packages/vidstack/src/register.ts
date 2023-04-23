@@ -1,47 +1,47 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { MediaIconDefinition } from './icons/element';
-import { PlayerDefinition } from './player/element/element';
-import { OutletDefinition } from './player/media/outlet/element';
-import { CaptionButtonDefinition } from './player/ui/caption-button/element';
-import { CaptionsDefinition } from './player/ui/captions/element';
-import { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
-import { LiveIndicatorDefinition } from './player/ui/live-indicator/element';
-import { MuteButtonDefinition } from './player/ui/mute-button/element';
-import { PIPButtonDefinition } from './player/ui/pip-button/element';
-import { PlayButtonDefinition } from './player/ui/play-button/element';
-import { PosterDefinition } from './player/ui/poster/element';
-import { SeekButtonDefinition } from './player/ui/seek-button/element';
-import { SliderThumbnailDefinition } from './player/ui/slider-thumbnail/element';
-import { SliderValueDefinition } from './player/ui/slider-value/element';
-import { SliderVideoDefinition } from './player/ui/slider-video/element';
-import { SliderDefinition } from './player/ui/slider/element';
-import { TimeSliderDefinition } from './player/ui/time-slider/element';
-import { TimeDefinition } from './player/ui/time/element';
-import { ToggleButtonDefinition } from './player/ui/toggle-button/element';
-import { VolumeSliderDefinition } from './player/ui/volume-slider/element';
+import { Icon } from './icons/component';
+import { Outlet } from './player/core/outlet/outlet';
+import { Player } from './player/core/player';
+import { CaptionButton } from './player/ui/buttons/caption-button';
+import { FullscreenButton } from './player/ui/buttons/fullscreen-button';
+import { MuteButton } from './player/ui/buttons/mute-button';
+import { PIPButton } from './player/ui/buttons/pip-button';
+import { PlayButton } from './player/ui/buttons/play-button';
+import { SeekButton } from './player/ui/buttons/seek-button';
+import { ToggleButton } from './player/ui/buttons/toggle-button';
+import { Captions } from './player/ui/captions/captions';
+import { LiveIndicator } from './player/ui/live-indicator';
+import { Poster } from './player/ui/poster';
+import { SliderThumbnail } from './player/ui/sliders/slider-thumbnail';
+import { SliderValue } from './player/ui/sliders/slider-value';
+import { SliderVideo } from './player/ui/sliders/slider-video';
+import { Slider } from './player/ui/sliders/slider/slider';
+import { TimeSlider } from './player/ui/sliders/time-slider/time-slider';
+import { VolumeSlider } from './player/ui/sliders/volume-slider';
+import { Time } from './player/ui/time';
 
 export default function registerAllElements(): void {
   [
-    PlayerDefinition,
-    OutletDefinition,
-    PosterDefinition,
-    MediaIconDefinition,
-    PlayButtonDefinition,
-    MuteButtonDefinition,
-    PIPButtonDefinition,
-    FullscreenButtonDefinition,
-    CaptionButtonDefinition,
-    SeekButtonDefinition,
-    SliderDefinition,
-    SliderThumbnailDefinition,
-    SliderValueDefinition,
-    SliderVideoDefinition,
-    TimeDefinition,
-    TimeSliderDefinition,
-    ToggleButtonDefinition,
-    VolumeSliderDefinition,
-    LiveIndicatorDefinition,
-    CaptionsDefinition,
+    Player,
+    Outlet,
+    Poster,
+    Icon,
+    PlayButton,
+    MuteButton,
+    PIPButton,
+    FullscreenButton,
+    CaptionButton,
+    SeekButton,
+    Slider,
+    SliderThumbnail,
+    SliderValue,
+    SliderVideo,
+    Time,
+    TimeSlider,
+    ToggleButton,
+    VolumeSlider,
+    LiveIndicator,
+    Captions,
   ].map(registerLiteCustomElement);
 }

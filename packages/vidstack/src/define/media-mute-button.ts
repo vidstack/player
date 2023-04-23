@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { MuteButtonDefinition } from '../player/ui/mute-button/element';
+import { MuteButton } from '../player/ui/buttons/mute-button';
 
-registerLiteCustomElement(MuteButtonDefinition);
+registerLiteCustomElement(MuteButton);

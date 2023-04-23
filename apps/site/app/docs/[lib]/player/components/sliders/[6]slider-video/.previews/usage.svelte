@@ -1,7 +1,7 @@
 <script>
   function onConnect(event) {
     const player = event.target;
-    player.$store.duration = 231;
+    player.$store.duration.set(231);
   }
 </script>
 

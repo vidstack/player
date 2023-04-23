@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { SliderValueDefinition } from '../player/ui/slider-value/element';
+import { SliderValue } from '../player/ui/sliders/slider-value';
 
-registerLiteCustomElement(SliderValueDefinition);
+registerLiteCustomElement(SliderValue);

@@ -4,12 +4,14 @@ if (__DEV__) {
 
 // Icons
 export * from './icons/types';
+export * from './icons/component';
 
 // Foundation
 export * from './foundation/list/list';
-export * from './foundation/fullscreen/events';
+export * from './foundation/fullscreen/controller';
 export * from './foundation/fullscreen/events';
 export * from './foundation/logger/events';
+export * from './foundation/orientation/controller';
 export * from './foundation/orientation/events';
 export * from './foundation/orientation/types';
 export {
@@ -19,82 +21,70 @@ export {
   appendTriggerEvent,
 } from 'maverick.js/std';
 
-// Media Player
-export * from './player/element/types';
-export { type MediaContext, mediaContext } from './player/media/context';
-export * from './player/media/controller/types';
-export * from './player/media/events';
-export * from './player/media/types';
-export { MediaRemoteControl } from './player/media/remote-control';
-export * from './player/media/request-events';
-export * from './player/media/state';
-export * from './player/media/store';
-export * from './player/media/time-ranges';
-export * from './player/media/types';
-export * from './player/media/tracks/text/render/text-renderer';
-export * from './player/media/tracks/text/render/libass-text-renderer';
-export * from './player/media/tracks/text/text-track';
-export * from './player/media/tracks/text/text-tracks';
-export * from './player/media/tracks/audio-tracks';
-export * from './player/media/quality/video-quality';
-export * from './player/media/outlet/types';
+// Core
+export * from './player/core/api/types';
+export * from './player/core/player';
+export * from './player/core/outlet/outlet';
+export * from './player/core/api/events';
+export * from './player/core/api/request-events';
+export * from './player/core/api/store';
+export * from './player/core/time-ranges';
+export * from './player/core/api/types';
+export { type MediaContext, mediaContext } from './player/core/api/context';
+export { type PlayerProps, type MediaStateAccessors } from './player/core/api/player-props';
+export { type PlayerEvents } from './player/core/api/player-events';
+export { type PlayerCSSVars } from './player/core/api/player-cssvars';
+export { MediaRemoteControl } from './player/core/state/remote-control';
+export { MediaUserController } from './player/core/user';
+export * from './player/core/tracks/text/render/text-renderer';
+export * from './player/core/tracks/text/render/libass-text-renderer';
+export * from './player/core/tracks/text/text-track';
+export * from './player/core/tracks/text/text-tracks';
+export * from './player/core/tracks/audio-tracks';
+export * from './player/core/quality/video-quality';
 
-// Media Player Providers
+// Providers
 export {
   type MediaProvider,
   type MediaSetupContext,
   type MediaFullscreenAdapter,
   type MediaProviderLoader,
-} from './player/media/providers/types';
-export * from './player/media/providers/type-check';
-export { type AudioProvider } from './player/media/providers/audio/provider';
-export { type VideoProvider } from './player/media/providers/video/provider';
-export { type HLSProvider } from './player/media/providers/hls/provider';
-export * from './player/media/providers/video/presentation/events';
-export * from './player/media/providers/hls/events';
-export * from './player/media/providers/hls/types';
+} from './player/core/providers/types';
+export { type AudioProvider } from './player/core/providers/audio/provider';
+export { type VideoProvider } from './player/core/providers/video/provider';
+export { type HLSProvider } from './player/core/providers/hls/provider';
+export * from './player/core/providers/video/presentation/events';
+export * from './player/core/providers/hls/events';
+export * from './player/core/providers/hls/types';
+export * from './player/core/providers/type-check';
 
-export { MEDIA_KEY_SHORTCUTS } from './player/element/keyboard';
+// Keyboard
+export * from './player/core/keyboard/types';
+export { MEDIA_KEY_SHORTCUTS } from './player/core/keyboard/controller';
 
-// Media Player UI
-export * from './player/ui/captions/types';
-export * from './player/ui/caption-button/types';
-export * from './player/ui/fullscreen-button/types';
-export * from './player/ui/live-indicator/types';
-export * from './player/ui/mute-button/types';
-export * from './player/ui/pip-button/types';
-export * from './player/ui/play-button/types';
-export * from './player/ui/poster/types';
-export * from './player/ui/seek-button/types';
-export * from './player/ui/slider-thumbnail/types';
-export * from './player/ui/slider-value/types';
-export * from './player/ui/slider-video/types';
-export * from './player/ui/slider/events';
-export * from './player/ui/slider/store';
-export * from './player/ui/slider/types';
-export * from './player/ui/time-slider/types';
-export * from './player/ui/time/types';
-export * from './player/ui/toggle-button/types';
-export * from './player/ui/volume-slider/types';
+// Buttons
+export * from './player/ui/buttons/toggle-button';
+export * from './player/ui/buttons/play-button';
+export * from './player/ui/buttons/caption-button';
+export * from './player/ui/buttons/fullscreen-button';
+export * from './player/ui/buttons/mute-button';
+export * from './player/ui/buttons/pip-button';
+export * from './player/ui/buttons/seek-button';
 
-// Media Player Definitions
-export { CaptionsDefinition } from './player/ui/captions/element';
-export { CaptionButtonDefinition } from './player/ui/caption-button/element';
-export { FullscreenButtonDefinition } from './player/ui/fullscreen-button/element';
-export { PIPButtonDefinition } from './player/ui/pip-button/element';
-export { LiveIndicatorDefinition } from './player/ui/live-indicator/element';
-export { MediaIconDefinition } from './icons/element';
-export { MuteButtonDefinition } from './player/ui/mute-button/element';
-export { OutletDefinition } from './player/media/outlet/element';
-export { PlayButtonDefinition } from './player/ui/play-button/element';
-export { PlayerDefinition } from './player/element/element';
-export { PosterDefinition } from './player/ui/poster/element';
-export { SeekButtonDefinition } from './player/ui/seek-button/element';
-export { SliderDefinition } from './player/ui/slider/element';
-export { SliderThumbnailDefinition } from './player/ui/slider-thumbnail/element';
-export { SliderValueDefinition } from './player/ui/slider-value/element';
-export { SliderVideoDefinition } from './player/ui/slider-video/element';
-export { TimeDefinition } from './player/ui/time/element';
-export { TimeSliderDefinition } from './player/ui/time-slider/element';
-export { ToggleButtonDefinition } from './player/ui/toggle-button/element';
-export { VolumeSliderDefinition } from './player/ui/volume-slider/element';
+// Slider
+export * from './player/ui/sliders/slider/api/props';
+export * from './player/ui/sliders/slider/api/events';
+export * from './player/ui/sliders/slider/api/cssvars';
+export * from './player/ui/sliders/slider/api/store';
+export * from './player/ui/sliders/slider/slider';
+export * from './player/ui/sliders/slider-thumbnail';
+export * from './player/ui/sliders/slider-video';
+export * from './player/ui/sliders/slider-value';
+export * from './player/ui/sliders/volume-slider';
+export * from './player/ui/sliders/time-slider/time-slider';
+
+// Display
+export * from './player/ui/captions/captions';
+export * from './player/ui/live-indicator';
+export * from './player/ui/poster';
+export * from './player/ui/time';

@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { CaptionsDefinition } from '../player/ui/captions/element';
+import { Captions } from '../player/ui/captions/captions';
 
-registerLiteCustomElement(CaptionsDefinition);
+registerLiteCustomElement(Captions);

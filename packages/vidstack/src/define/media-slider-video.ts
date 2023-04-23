@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { SliderVideoDefinition } from '../player/ui/slider-video/element';
+import { SliderVideo } from '../player/ui/sliders/slider-video';
 
-registerLiteCustomElement(SliderVideoDefinition);
+registerLiteCustomElement(SliderVideo);

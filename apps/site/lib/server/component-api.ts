@@ -1,9 +1,9 @@
 import {
-  ComponentMeta,
-  EventMeta,
-  MethodMeta,
-  PropMeta,
   walkComponentDocs,
+  type ComponentMeta,
+  type EventMeta,
+  type MethodMeta,
+  type PropMeta,
 } from '@maverick-js/compiler/analyze';
 import { encode } from 'html-entities';
 import elements from 'vidstack/elements.json';
@@ -40,7 +40,7 @@ function extractProps(component: ComponentMeta) {
       name: prop.name,
       docs: prop.docs,
       readonly: prop.readonly,
-      type: prop.type?.serialized,
+      type: prop.type,
       link: findLink(prop),
     }));
 }
@@ -51,7 +51,7 @@ function extractEvents(component: ComponentMeta) {
     .map((event) => ({
       name: event.name,
       docs: event.docs,
-      type: event.type?.serialized,
+      type: event.type,
       detail: event.detail,
       link: findLink(event),
     }));
@@ -68,7 +68,7 @@ function extractCssVars(component: ComponentMeta) {
   return component.cssvars?.map((prop) => ({
     name: prop.name,
     docs: prop.docs,
-    type: prop.type?.serialized,
+    type: prop.type,
     readonly: prop.readonly,
   }));
 }
@@ -87,7 +87,7 @@ function extractInstanceProps(component: ComponentMeta) {
     .map((prop) => ({
       name: prop.name,
       docs: prop.docs,
-      type: prop.type?.serialized,
+      type: prop.type,
       readonly: prop.readonly,
       link: findLink(prop),
     }));

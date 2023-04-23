@@ -4,6 +4,7 @@
     "allowUnreachableCode": false,
     "alwaysStrict": true,
     "checkJs": true,
+    "declaration": true,
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,

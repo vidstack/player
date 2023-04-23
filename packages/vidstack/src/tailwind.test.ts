@@ -3,7 +3,7 @@ import tailwindcss from 'tailwindcss';
 
 import path from 'path';
 
-import vidstackPlugin, { PluginOptions } from '../tailwind.cjs';
+import vidstackPlugin, { type PluginOptions } from '../tailwind.cjs';
 
 const mediaAttributes = [
   'autoplay',

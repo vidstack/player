@@ -1,6 +1,6 @@
 import { isString, isUndefined } from 'maverick.js/std';
 
-import type { MediaSrc } from '../player/media/types';
+import type { MediaSrc } from '../player/core/api/types';
 
 // https://github.com/cookpete/react-player/blob/master/src/patterns.js#L16
 export const AUDIO_EXTENSIONS =

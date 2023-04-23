@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { PosterDefinition } from '../player/ui/poster/element';
+import { Poster } from '../player/ui/poster';
 
-registerLiteCustomElement(PosterDefinition);
+registerLiteCustomElement(Poster);

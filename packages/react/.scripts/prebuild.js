@@ -24,7 +24,7 @@ async function buildComponents() {
     });
   }
 
-  const definitions = [];
+  const imports = [];
   const content = [''];
   const ignore = new Set(['media-icon']);
 
@@ -43,9 +43,9 @@ async function buildComponents() {
   for (const component of components) {
     if (ignore.has(component.tag.name)) continue;
 
-    const name = component.name.replace('Element', '');
-    const defName = component.definition.name;
-    definitions.push(defName);
+    const elementName = `Media${component.name}Element`;
+    imports.push(component.name);
+    imports.push('type ' + elementName);
 
     const link = component.doctags
       ?.find((tag) => tag.name === 'docs')
@@ -76,7 +76,9 @@ async function buildComponents() {
 
     content.push(
       `/**\n${component.docs}${docsLinkTag}${exampleTags}\n*/`,
-      `export const ${name} = /* #__PURE__*/ createLiteReactElement(${defName});`,
+      `export const ${`Media${component.name}`} = /* #__PURE__*/ createLiteReactElement<${elementName}>(${
+        component.name
+      });`,
       '',
     );
   }
@@ -88,7 +90,7 @@ async function buildComponents() {
       '',
       "import { createLiteReactElement } from 'maverick.js/react';",
       'import {',
-      ' ' + definitions.join(',\n '),
+      ' ' + imports.join(',\n '),
       "} from 'vidstack';",
       ...content,
     ].join('\n'),

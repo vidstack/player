@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { TimeSliderDefinition } from '../player/ui/time-slider/element';
+import { TimeSlider } from '../player/ui/sliders/time-slider/time-slider';
 
-registerLiteCustomElement(TimeSliderDefinition);
+registerLiteCustomElement(TimeSlider);

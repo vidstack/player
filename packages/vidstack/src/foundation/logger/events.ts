@@ -10,22 +10,19 @@ export interface LoggerEvents {
   'vds-log': LogEvent;
 }
 
+export interface LogEventDetail {
+  /**
+   * The log level.
+   */
+  level: LogLevel;
+  /**
+   * Data to be logged.
+   */
+  data?: any[];
+}
+
 /**
  * @bubbles
  * @composed
  */
-export interface LogEvent
-  extends DOMEvent<{
-    /**
-     * The log level.
-     *
-     * @defaultValue 'info'
-     */
-    level?: LogLevel;
-    /**
-     * Data to be logged.
-     *
-     * @defaultValue undefined
-     */
-    data?: any[];
-  }> {}
+export interface LogEvent extends DOMEvent<LogEventDetail> {}

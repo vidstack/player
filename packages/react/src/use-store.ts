@@ -1,17 +1,14 @@
-import { effect, signal, type AnyRecord, type Store } from 'maverick.js';
+import { effect, signal, type ReadSignalRecord, type StoreFactory } from 'maverick.js';
+import type { HostElement } from 'maverick.js/element';
 import { noop } from 'maverick.js/std';
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 
-export function useStore<
-  Record extends AnyRecord,
-  StoreFactory extends Store<Record>,
-  StoreRecord extends Record,
->(
-  factory: StoreFactory,
-  ref?: RefObject<{ $store: StoreRecord } | null>,
-  init?: StoreRecord,
+export function useStore<Record extends {}>(
+  factory: StoreFactory<Record>,
+  ref?: RefObject<HostElement | null>,
+  init?: ReadSignalRecord<Record>,
 ): Record {
-  const [$store, $setStore] = useState<StoreRecord | undefined>(init),
+  const [$store, $setStore] = useState<ReadSignalRecord<Record> | undefined>(init),
     [_, update] = useState(0),
     tracking = useRef({
       $props: signal<(keyof Record)[]>([]),
@@ -19,29 +16,30 @@ export function useStore<
     });
 
   useEffect(() => {
-    if (ref?.current) $setStore(ref.current.$store);
+    const $store = ref?.current?.$store;
+    if ($store) $setStore($store);
   }, []);
 
   useEffect(() => {
     if (!$store) return;
     return effect(() => {
       const props = tracking.current.$props();
-      for (let i = 0; i < props.length; i++) $store[props[i]];
+      for (let i = 0; i < props.length; i++) $store[props[i]]();
       update((n) => n + 1);
     });
   }, [$store]);
 
   return useMemo(() => {
-    if (!$store) return factory.initial;
+    if (!$store) return factory.record;
     const { observing, $props } = tracking.current;
     return new Proxy($store, {
-      get(_, prop: any) {
+      get(_, prop: keyof Record & string) {
         if (!observing.has(prop)) {
           $props.set((prev) => [...prev, prop]);
           observing.add(prop);
         }
 
-        return $store[prop];
+        return $store[prop as keyof Record]();
       },
       // @ts-expect-error
       set: noop,

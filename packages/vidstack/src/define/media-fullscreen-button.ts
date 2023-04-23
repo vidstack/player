@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { FullscreenButtonDefinition } from '../player/ui/fullscreen-button/element';
+import { FullscreenButton } from '../player/ui/buttons/fullscreen-button';
 
-registerLiteCustomElement(FullscreenButtonDefinition);
+registerLiteCustomElement(FullscreenButton);

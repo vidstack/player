@@ -1,9 +1,9 @@
 import { useReactContext } from 'maverick.js/react';
 import type { RefObject } from 'react';
 import {
-  sliderStore,
-  sliderStoreContext,
+  SliderStoreFactory,
   type MediaSliderElement,
+  type SliderState,
   type SliderStore,
 } from 'vidstack';
 
@@ -15,8 +15,8 @@ import { useStore } from './use-store';
  *
  * @docs {@link https://vidstack.io/docs/react/player/components/sliders/slider#subscribe}
  */
-export function useSliderStore(ref?: RefObject<MediaSliderElement | null>): SliderStore {
-  const $store = useReactContext(sliderStoreContext);
+export function useSliderStore(ref?: RefObject<MediaSliderElement | null>): Readonly<SliderState> {
+  const $store = useReactContext<SliderStore>(SliderStoreFactory);
 
   if (__DEV__ && !$store && !ref) {
     console.warn(
@@ -25,5 +25,5 @@ export function useSliderStore(ref?: RefObject<MediaSliderElement | null>): Slid
     );
   }
 
-  return useStore(sliderStore, ref, $store);
+  return useStore(SliderStoreFactory, ref, $store);
 }

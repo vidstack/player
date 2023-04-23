@@ -1,4 +1,3 @@
-import { peek } from 'maverick.js';
 import { useReactContext } from 'maverick.js/react';
 import { isUndefined } from 'maverick.js/std';
 import { useEffect, useMemo, type RefObject } from 'react';
@@ -20,7 +19,7 @@ export function useMediaRemote(
     remote = useMemo(() => new MediaRemoteControl(), []);
 
   useEffect(() => {
-    const player = context && peek(context.$player);
+    const player = context && context.player;
 
     const ref = !isUndefined(target)
       ? target && 'current' in target

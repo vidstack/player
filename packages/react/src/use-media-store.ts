@@ -1,6 +1,12 @@
 import { useReactContext } from 'maverick.js/react';
 import type { RefObject } from 'react';
-import { mediaContext, mediaStore, type MediaPlayerElement, type MediaStore } from 'vidstack';
+import {
+  mediaContext,
+  MediaStoreFactory,
+  type MediaContext,
+  type MediaPlayerElement,
+  type MediaState,
+} from 'vidstack';
 
 import { useStore } from './use-store';
 
@@ -10,8 +16,8 @@ import { useStore } from './use-store';
  *
  * @docs {@link https://vidstack.io/docs/react/player/core-concepts/state-management#reading}
  */
-export function useMediaStore(ref?: RefObject<MediaPlayerElement | null>): Readonly<MediaStore> {
-  const context = useReactContext(mediaContext);
+export function useMediaStore(ref?: RefObject<MediaPlayerElement | null>): Readonly<MediaState> {
+  const context = useReactContext<MediaContext>(mediaContext);
 
   if (__DEV__ && !context && !ref) {
     console.warn(
@@ -20,5 +26,5 @@ export function useMediaStore(ref?: RefObject<MediaPlayerElement | null>): Reado
     );
   }
 
-  return useStore(mediaStore, ref, context?.$store);
+  return useStore(MediaStoreFactory, ref, context?.$store);
 }

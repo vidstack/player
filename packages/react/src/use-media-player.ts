@@ -19,8 +19,7 @@ export function useMediaPlayer(): MediaPlayerElement | null {
 
   useEffect(() => {
     if (!context) return;
-    const player = context.$player()!;
-    player.onAttach(() => void setPlayer(player));
+    context.player!.onAttach(() => void setPlayer(player));
     return () => setPlayer(null);
   }, []);
 

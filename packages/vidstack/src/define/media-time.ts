@@ -1,5 +1,5 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
-import { TimeDefinition } from '../player/ui/time/element';
+import { Time } from '../player/ui/time';
 
-registerLiteCustomElement(TimeDefinition);
+registerLiteCustomElement(Time);
