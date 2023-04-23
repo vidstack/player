@@ -112,7 +112,7 @@ importers:
   packages/react:
     specifiers:
       '@types/react': ^18.0.0
-      maverick.js: ^0.33.1
+      maverick.js: 0.33.1
       media-icons: ^0.4.2
       react: ^18.0.0
       rimraf: ^3.0.0
@@ -131,7 +131,7 @@ importers:
 
   packages/vidstack:
     specifiers:
-      '@maverick-js/compiler': ^0.33.1
+      '@maverick-js/compiler': 0.33.1
       '@open-wc/semantic-dom-diff': ^0.19.5
       '@open-wc/testing-helpers': ^2.1.2
       '@types/fscreen': ^1.0.1
@@ -142,7 +142,7 @@ importers:
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
       libass-wasm: ^4.1.0
-      maverick.js: ^0.33.1
+      maverick.js: 0.33.1
       media-captions: ^0.0.8
       media-icons: ^0.4.2
       postcss: ^8.4.0
