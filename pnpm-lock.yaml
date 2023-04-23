@@ -142,13 +142,8 @@ importers:
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
       libass-wasm: ^4.1.0
-<<<<<<< HEAD
-      maverick.js: 0.33.1
-      media-captions: ^0.0.8
-=======
       maverick.js: ^0.33.1
-      media-captions: ^0.0.10
->>>>>>> e4569c2c (fix: correctly resolve thumbnail image relative to given src)
+      media-captions: ^0.0.11
       media-icons: ^0.4.2
       postcss: ^8.4.0
       rimraf: ^3.0.0
@@ -161,11 +156,7 @@ importers:
       vitest: ^0.30.0
     dependencies:
       maverick.js: 0.33.1
-<<<<<<< HEAD
-      media-captions: 0.0.8
-=======
-      media-captions: 0.0.10
->>>>>>> e4569c2c (fix: correctly resolve thumbnail image relative to given src)
+      media-captions: 0.0.11
       media-icons: 0.4.2
       type-fest: 3.8.0
     devDependencies:
@@ -3996,8 +3987,8 @@ packages:
       blueimp-md5: 2.19.0
     dev: true
 
-  /media-captions/0.0.10:
-    resolution: {integrity: sha512-Ga6n8kGrXxSBm2mlsPIC6IEylkA9MBC6CwMuiYtsJm+zmCkbOr+7rzZb2sBpVhn3SP8x2PWP9qNy/HDEvnp2kw==}
+  /media-captions/0.0.11:
+    resolution: {integrity: sha512-NgDjTKrSSaZFKzHW/8YSl2Y0/PbkHvJ7kDccszQUSjDWaC9xTywF9oV7EmRB+8M4wwuPgpAXPRnYjIgAqFx2Kw==}
     engines: {node: '>=16'}
     dev: false
 
