@@ -33,7 +33,7 @@ export const SliderVideoDefinition = defineCustomElement<MediaSliderVideoElement
     });
 
     effect(() => {
-      if ($canPlay() && videoElement && Number.isFinite($media.duration)) {
+      if ($canPlay() && videoElement && Number.isFinite($media.duration) && Number.isFinite($slider.pointerRate)) {
         videoElement.currentTime = $slider.pointerRate * $media.duration;
       }
     });
