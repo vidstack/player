@@ -46,9 +46,13 @@ export class TextRenderers {
   [ATTACH_VIDEO](video: HTMLVideoElement | null) {
     requestAnimationFrame(() => {
       this._video = video;
-      this._nativeRenderer = new NativeTextRenderer();
-      this._nativeRenderer.attach(this._video!);
-      for (const track of this._textTracks) this._addNativeTrack(track);
+
+      if (video) {
+        this._nativeRenderer = new NativeTextRenderer();
+        this._nativeRenderer.attach(video);
+        for (const track of this._textTracks) this._addNativeTrack(track);
+      }
+
       this._update();
     });
   }
