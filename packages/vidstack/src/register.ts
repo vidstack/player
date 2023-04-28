@@ -11,6 +11,7 @@ import { PlayButton } from './player/ui/buttons/play-button';
 import { SeekButton } from './player/ui/buttons/seek-button';
 import { ToggleButton } from './player/ui/buttons/toggle-button';
 import { Captions } from './player/ui/captions/captions';
+import { Gesture } from './player/ui/gesture';
 import { LiveIndicator } from './player/ui/live-indicator';
 import { Poster } from './player/ui/poster';
 import { SliderThumbnail } from './player/ui/sliders/slider-thumbnail';
@@ -43,5 +44,6 @@ export default function registerAllElements(): void {
     VolumeSlider,
     LiveIndicator,
     Captions,
+    Gesture,
   ].map(registerLiteCustomElement);
 }

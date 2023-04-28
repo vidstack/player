@@ -7,6 +7,9 @@
   volume={0.2}
 >
   <media-outlet>
+    <media-poster
+      alt="Girl walks into a campfire with sprite gnomes around her friend on a campfire in danger!"
+    />
     <track src="/media/sprite-fight.vtt" label="English" srclang="en-US" kind="subtitles" default />
     <track
       src="https://media-files.vidstack.io/sprite-fight/chapters.vtt"
@@ -14,6 +17,14 @@
       kind="chapters"
       default
     />
+    <media-gesture class="top-0 left-0 h-full w-full" event="pointerup" action="toggle:paused" />
+    <media-gesture
+      class="top-0 left-0 h-full w-full"
+      event="dblpointerup"
+      action="toggle:fullscreen"
+    />
+    <media-gesture class="top-0 left-0 z-10 h-full w-1/5" event="dblpointerup" action="seek:-10" />
+    <media-gesture class="top-0 right-0 z-10 h-full w-1/5" event="dblpointerup" action="seek:10" />
   </media-outlet>
   <div
     class="z-0 bg-black/30 transition-opacity opacity-0 not-user-idle:opacity-100 pointer-events-none bg-blur absolute inset-0 w-full h-full"

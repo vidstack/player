@@ -157,7 +157,7 @@ export class MediaRequestManager
     provider!.currentTime = liveSyncPosition() ?? seekableEnd() - 2;
   }
 
-  private _wasPIPActive = true;
+  private _wasPIPActive = false;
   async _enterFullscreen(target: RE.MediaFullscreenRequestTarget = 'prefer-media') {
     if (__SERVER__) return;
     const provider = peek(this._provider);
@@ -171,7 +171,7 @@ export class MediaRequestManager
 
     if (adapter!.active) return;
 
-    if (this._store.pictureInPicture()) {
+    if (peek(this._store.pictureInPicture)) {
       this._wasPIPActive = true;
       await this._exitPictureInPicture();
     }
@@ -203,7 +203,7 @@ export class MediaRequestManager
     try {
       const result = await adapter!.exit();
 
-      if (this._wasPIPActive && this._store.canPictureInPicture()) {
+      if (this._wasPIPActive && peek(this._store.canPictureInPicture)) {
         await this._enterPictureInPicture();
       }
 

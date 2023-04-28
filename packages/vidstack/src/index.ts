@@ -83,6 +83,9 @@ export * from './player/ui/sliders/slider-value';
 export * from './player/ui/sliders/volume-slider';
 export * from './player/ui/sliders/time-slider/time-slider';
 
+// Media UI
+export * from './player/ui/gesture';
+
 // Display
 export * from './player/ui/captions/captions';
 export * from './player/ui/live-indicator';
