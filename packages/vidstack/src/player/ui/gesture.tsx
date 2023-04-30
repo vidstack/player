@@ -66,6 +66,8 @@ export class Gesture extends Component<GestureAPI> {
 
   protected _lastEventTime = 0;
   protected _acceptEvent(event: Event) {
+    if (!this._inBounds(event)) return;
+
     if (!peek(this.$props.event)?.startsWith('dbl')) {
       lastGesture.set(this._outlet!, this);
       setTimeout(() => {
@@ -73,7 +75,7 @@ export class Gesture extends Component<GestureAPI> {
         if (lastGesture.get(this._outlet!) === this) {
           this._handleEvent(event);
         }
-      }, 200);
+      }, 220);
     } else if (Date.now() - this._lastEventTime <= 200) {
       lastGesture.set(this._outlet!, this);
       queueMicrotask(() => {
@@ -85,10 +87,9 @@ export class Gesture extends Component<GestureAPI> {
   }
 
   protected _handleEvent(event: Event) {
-    if (!this._validateEvent(event)) return;
     this.el!.setAttribute('data-triggered', '');
     requestAnimationFrame(() => {
-      if (this._validateGesture()) {
+      if (this._isTopLayer()) {
         this._performAction(peek(this.$props.action), event);
       }
       requestAnimationFrame(() => {
@@ -97,19 +98,8 @@ export class Gesture extends Component<GestureAPI> {
     });
   }
 
-  protected _validateGesture() {
-    const gestures = this._outlet!.querySelectorAll(
-      'media-gesture[data-triggered]',
-    ) as NodeListOf<MediaGestureElement>;
-    return (
-      Array.from(gestures).sort(
-        (a, b) => +getComputedStyle(b).zIndex - +getComputedStyle(a).zIndex,
-      )[0]?.component === this
-    );
-  }
-
   /** Validate event occurred in gesture bounds. */
-  protected _validateEvent(event: Event) {
+  protected _inBounds(event: Event) {
     if (isPointerEvent(event) || isMouseEvent(event) || isTouchEvent(event)) {
       const touch = isTouchEvent(event) ? event.touches[0] : undefined;
 
@@ -127,6 +117,18 @@ export class Gesture extends Component<GestureAPI> {
     }
 
     return true;
+  }
+
+  /** Validate gesture has the highest z-index in this triggered group. */
+  protected _isTopLayer() {
+    const gestures = this._outlet!.querySelectorAll(
+      'media-gesture[data-triggered]',
+    ) as NodeListOf<MediaGestureElement>;
+    return (
+      Array.from(gestures).sort(
+        (a, b) => +getComputedStyle(b).zIndex - +getComputedStyle(a).zIndex,
+      )[0]?.component === this
+    );
   }
 
   protected _performAction(action: string | undefined, trigger: Event) {
