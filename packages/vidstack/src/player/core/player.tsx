@@ -36,6 +36,7 @@ import { MediaStoreSync } from './state/media-store-sync';
 import { MediaRemoteControl } from './state/remote-control';
 import { AudioTrackList } from './tracks/audio-tracks';
 import { TextRenderers } from './tracks/text/render/text-renderer';
+import { TEXT_TRACK_CROSSORIGIN } from './tracks/text/symbols';
 import { isTrackCaptionKind } from './tracks/text/text-track';
 import { TextTrackList } from './tracks/text/text-tracks';
 import { MediaUserController } from './user';
@@ -110,6 +111,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
     context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList();
+    context.textTracks[TEXT_TRACK_CROSSORIGIN] = this.$props.crossorigin;
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
 

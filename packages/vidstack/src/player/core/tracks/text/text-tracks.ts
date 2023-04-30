@@ -2,7 +2,7 @@ import { DOMEvent } from 'maverick.js/std';
 
 import { List, type ListReadonlyChangeEvent } from '../../../../foundation/list/list';
 import { LIST_ADD, LIST_REMOVE } from '../../../../foundation/list/symbols';
-import { TEXT_TRACK_CAN_LOAD, TEXT_TRACK_ON_MODE_CHANGE } from './symbols';
+import { TEXT_TRACK_CAN_LOAD, TEXT_TRACK_CROSSORIGIN, TEXT_TRACK_ON_MODE_CHANGE } from './symbols';
 import {
   isTrackCaptionKind,
   TextTrack,
@@ -17,6 +17,9 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
   private _canLoad = false;
   private _defaults: Record<string, TextTrack | undefined> = {};
 
+  /** @internal */
+  [TEXT_TRACK_CROSSORIGIN]?: () => string | null;
+
   get selected() {
     const track = this._items.find((t) => t.mode === 'showing' && isTrackCaptionKind(t));
     return track ?? null;
@@ -29,6 +32,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     if (this._defaults[init.kind] && init.default) delete init.default;
     track.addEventListener('mode-change', this._handleTrackModeChange);
     this[LIST_ADD](track, trigger);
+    track[TEXT_TRACK_CROSSORIGIN] = this[TEXT_TRACK_CROSSORIGIN];
     if (this._canLoad) track[TEXT_TRACK_CAN_LOAD]();
 
     if (init.default) {

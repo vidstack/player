@@ -1,4 +1,4 @@
-import { DOMEvent, EventsTarget } from 'maverick.js/std';
+import { DOMEvent, EventsTarget, isString } from 'maverick.js/std';
 import type {
   CaptionsFileFormat,
   CaptionsParserFactory,
@@ -9,6 +9,7 @@ import type {
 
 import {
   TEXT_TRACK_CAN_LOAD,
+  TEXT_TRACK_CROSSORIGIN,
   TEXT_TRACK_NATIVE,
   TEXT_TRACK_ON_MODE_CHANGE,
   TEXT_TRACK_READY_STATE,
@@ -48,6 +49,9 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
   /* @internal */
   [TEXT_TRACK_READY_STATE]: TextTrackReadyState = 0;
+
+  /* @internal */
+  [TEXT_TRACK_CROSSORIGIN]?: () => string | null;
 
   /* @internal */
   [TEXT_TRACK_ON_MODE_CHANGE]: (() => void) | null = null;
@@ -200,10 +204,21 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
     try {
       const { parseResponse } = await import('media-captions');
-      const { errors, metadata, regions, cues } = await parseResponse(fetch(this.src), {
-        type: this.type,
-        encoding: this.encoding,
-      });
+      const crossorigin = this[TEXT_TRACK_CROSSORIGIN]?.();
+      const { errors, metadata, regions, cues } = await parseResponse(
+        fetch(this.src, {
+          credentials:
+            crossorigin === 'use-credentials'
+              ? 'include'
+              : isString(crossorigin)
+              ? 'same-origin'
+              : undefined,
+        }),
+        {
+          type: this.type,
+          encoding: this.encoding,
+        },
+      );
 
       if (errors[0]?.code === 0) {
         throw errors[0];
