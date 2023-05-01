@@ -41,7 +41,7 @@
       <div class="flex w-full flex-col items-center">
         <div class="flex items-center w-full max-w-xl px-4">
           <media-time class="text-sm mr-1 mt-2 tracking-wide text-white" type="current" />
-          <media-time-slider step="0.1" class="-mb-2" style="--media-slider-preview-gap: 20px">
+          <media-time-slider step="0.1" class="-mb-2">
             <media-slider-value class="rounded-sm" type="pointer" format="time" slot="preview" />
           </media-time-slider>
           <media-time class="text-sm ml-1 mt-2 tracking-wide text-white" type="current" remainder />

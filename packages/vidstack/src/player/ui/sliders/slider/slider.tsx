@@ -26,7 +26,7 @@ import { sliderValueFormatContext } from './format';
 import { getClampedValue } from './utils';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-slider': MediaSliderElement;
   }
 }

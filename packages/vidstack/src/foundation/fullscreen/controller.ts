@@ -27,7 +27,7 @@ export class FullscreenController
     return CAN_FULLSCREEN;
   }
 
-  protected override onConnect(el: HTMLElement) {
+  protected override onConnect() {
     listenEvent(fscreen as any, 'fullscreenchange', this._onFullscreenChange.bind(this));
     listenEvent(fscreen as any, 'fullscreenerror', this._onFullscreenError.bind(this));
   }

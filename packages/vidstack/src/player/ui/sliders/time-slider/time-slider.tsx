@@ -26,7 +26,7 @@ import { Slider, type SliderAPI } from '../slider/slider';
 import { SliderChaptersRenderer } from './chapters';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-time-slider': MediaTimeSliderElement;
   }
 }

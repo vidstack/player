@@ -10,8 +10,7 @@ import {
 import { ariaBool, isKeyboardClick, isKeyboardEvent } from 'maverick.js/std';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
-import { setAttributeIfEmpty } from '../../../utils/dom';
-import { useMedia, type MediaContext } from '../../core/api/context';
+import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
 import { ARIAKeyShortcuts } from '../../core/keyboard/aria-shortcuts';
 import type { MediaKeyShortcut } from '../../core/keyboard/types';
 
@@ -81,10 +80,8 @@ export class ToggleButton<T extends ToggleButtonAPI = ToggleButtonAPI> extends C
     });
   }
 
-  protected override onConnect() {
-    const clickEvents = ['pointerup', 'keydown'] as const,
-      handlePress = this._onMaybePress.bind(this);
-    for (const eventType of clickEvents) this.listen(eventType, handlePress);
+  protected override onConnect(el: HTMLElement) {
+    onPress(el, this._onMaybePress.bind(this));
   }
 
   protected _isARIAPressed() {
@@ -100,7 +97,7 @@ export class ToggleButton<T extends ToggleButtonAPI = ToggleButtonAPI> extends C
   protected _onMaybePress(event: Event) {
     const disabled = this.$props.disabled();
 
-    if (disabled || (isKeyboardEvent(event) && !isKeyboardClick(event))) {
+    if (disabled) {
       if (disabled) event.stopImmediatePropagation();
       return;
     }
@@ -134,7 +131,7 @@ export interface ToggleButtonProps {
 export interface MediaToggleButtonElement extends HTMLCustomElement<ToggleButton> {}
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-toggle-button': MediaToggleButtonElement;
   }
 }

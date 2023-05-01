@@ -83,6 +83,21 @@ export * from './player/ui/sliders/slider-value';
 export * from './player/ui/sliders/volume-slider';
 export * from './player/ui/sliders/time-slider/time-slider';
 
+// Menu
+export * from './player/ui/menu/menu';
+export * from './player/ui/menu/menu-button';
+export * from './player/ui/menu/menu-items';
+export * from './player/ui/menu/radio/radio-group';
+export * from './player/ui/menu/radio/radio';
+export * from './player/ui/menu/audio/menu-items';
+export * from './player/ui/menu/audio/menu-button';
+export * from './player/ui/menu/captions/menu-items';
+export * from './player/ui/menu/captions/menu-button';
+export * from './player/ui/menu/playback-rate/menu-items';
+export * from './player/ui/menu/playback-rate/menu-button';
+export * from './player/ui/menu/quality/menu-items';
+export * from './player/ui/menu/quality/menu-button';
+
 // Media UI
 export * from './player/ui/gesture';
 

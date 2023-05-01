@@ -7,7 +7,7 @@ import { useMedia, type MediaContext } from '../../core/api/context';
 import { SliderStoreFactory } from './slider/api/store';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-slider-thumbnail': MediaSliderThumbnailElement;
   }
 }

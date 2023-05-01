@@ -30,7 +30,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
       track = isTrack ? init : new TextTrack(init);
 
     if (this._defaults[init.kind] && init.default) delete init.default;
-    track.addEventListener('mode-change', this._handleTrackModeChange);
+    track.addEventListener('mode-change', this._onTrackModeChangeBind);
     this[LIST_ADD](track, trigger);
     track[TEXT_TRACK_CROSSORIGIN] = this[TEXT_TRACK_CROSSORIGIN];
     if (this._canLoad) track[TEXT_TRACK_CAN_LOAD]();
@@ -48,7 +48,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     if (track === this._defaults[track.kind]) delete this._defaults[track.kind];
     track.mode = 'disabled';
     track[TEXT_TRACK_ON_MODE_CHANGE] = null;
-    track.removeEventListener('mode-change', this._handleTrackModeChange);
+    track.removeEventListener('mode-change', this._onTrackModeChangeBind);
     this[LIST_REMOVE](track, trigger);
     return this;
   }
@@ -74,7 +74,7 @@ export class TextTrackList extends List<TextTrack, TextTrackListEvents> {
     this._canLoad = true;
   }
 
-  private _handleTrackModeChange = this._onTrackModeChange.bind(this);
+  private _onTrackModeChangeBind = this._onTrackModeChange.bind(this);
   private _onTrackModeChange(event: TextTrackModeChangeEvent) {
     const track = event.detail;
 

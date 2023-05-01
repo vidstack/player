@@ -26,7 +26,7 @@
   display: none;
 }
 
-:where([data-media-button]:hover) {
+:where([data-media-button]:not([aria-expanded='true']):hover) {
   transform: scale(1.1);
   transition: transform 0.2s ease-in;
 }
@@ -35,6 +35,8 @@
   :where(
     [slot='on'],
     [slot='off'],
+    [slot='open'],
+    [slot='close'],
     [slot='play'],
     [slot='replay'],
     [slot='pause'],
@@ -72,7 +74,9 @@
     media-fullscreen-button:not([data-fullscreen]) [slot='enter'],
     media-fullscreen-button[data-fullscreen] [slot='exit'],
     media-seek-button:not([seconds*='-']) [slot='forward'],
-    media-seek-button[seconds*='-'] [slot='backward']
+    media-seek-button[seconds*='-'] [slot='backward'],
+    media-menu [data-media-menu-button][data-pressed] [slot='open'],
+    media-menu [data-media-menu-button]:not([data-pressed]) [slot='close']
   ) {
   opacity: 1;
 }

@@ -8,7 +8,7 @@ import type { MediaKeyShortcut } from '../../core/keyboard/types';
 import { ToggleButton, toggleButtonProps, type ToggleButtonAPI } from './toggle-button';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-mute-button': MediaMuteButtonElement;
   }
 }

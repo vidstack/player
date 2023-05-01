@@ -5,7 +5,7 @@ import { preconnect } from '../../utils/network';
 import { useMedia, type MediaContext } from '../core/api/context';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-poster': MediaPosterElement;
   }
 }

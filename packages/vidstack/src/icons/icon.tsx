@@ -1,4 +1,4 @@
-export function Icon({ slot, paths }: IconProps) {
+export function Icon({ slot, part, paths }: IconProps) {
   return (
     <svg
       viewBox="0 0 32 32"
@@ -7,6 +7,7 @@ export function Icon({ slot, paths }: IconProps) {
       focusable="false"
       data-media-icon="true"
       slot={slot}
+      part={part}
       $prop:innerHTML={paths}
     ></svg>
   );
@@ -14,5 +15,6 @@ export function Icon({ slot, paths }: IconProps) {
 
 export interface IconProps {
   slot?: string;
+  part?: string;
   paths: string;
 }

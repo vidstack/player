@@ -1,11 +1,10 @@
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Tooltips * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Tooltips
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
 :where([data-media-button] [slot*='tooltip']:not([slot*='-tooltip'])) {
-  --tooltip-spacing: var(--media-tooltip-spacing, 8px);
-
   background-color: var(--media-tooltip-bg-color, black);
   border-radius: var(--media-tooltip-border-radius, 2px);
   bottom: 80%;
@@ -15,7 +14,7 @@
   font-weight: var(--media-tooltip-font-weight, 500);
   left: 50%;
   opacity: 0;
-  margin-bottom: var(--tooltip-spacing);
+  margin-bottom: var(--media-tooltip-spacing, 8px);
   padding: 2.5px 8px;
   pointer-events: none;
   position: absolute;
@@ -73,7 +72,7 @@
 :where([data-media-button] [slot='tooltip-bottom']) {
   top: 80%;
   bottom: unset;
-  margin-top: var(--tooltip-spacing);
+  margin-top: var(--media-tooltip-spacing, 8px);
   transform: translate(-50%, -12px) scale(0.8);
 }
 
@@ -91,7 +90,7 @@
   top: 80%;
   left: 4px;
   bottom: unset;
-  margin-top: var(--tooltip-spacing);
+  margin-top: var(--media-tooltip-spacing, 8px);
   transform: translateY(-12px) scale(0.8);
   transform-origin: 0 100%;
 }
@@ -111,7 +110,7 @@
   left: auto;
   right: 4px;
   bottom: unset;
-  margin-top: var(--tooltip-spacing);
+  margin-top: var(--media-tooltip-spacing, 8px);
   transform: translateY(-12px) scale(0.8);
   transform-origin: 100% 100%;
 }
@@ -119,6 +118,12 @@
 :where([data-media-button][data-hocus]) :where([slot='tooltip-bottom-right']) {
   transform: translate(0) scale(1);
 }
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Display
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
+ */
 
 :where([data-media-button] [slot*='-tooltip']) {
   display: none;
@@ -138,7 +143,13 @@
     media-fullscreen-button:not([data-fullscreen]) [slot='enter-tooltip'],
     media-fullscreen-button[data-fullscreen] [slot='exit-tooltip'],
     media-seek-button:not([seconds*='-']) [slot='forward-tooltip'],
-    media-seek-button[seconds*='-'] [slot='backward-tooltip']
+    media-seek-button[seconds*='-'] [slot='backward-tooltip'],
+    media-menu [data-media-menu-button][data-pressed] [slot='close-tooltip'],
+    media-menu [data-media-menu-button]:not([data-pressed]) [slot='open-tooltip']
   ) {
   display: inline;
+}
+
+:where(media-menu [data-media-menu-button][role='button'][data-pressed] [slot='tooltip']) {
+  display: none;
 }

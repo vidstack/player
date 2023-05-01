@@ -1,20 +1,24 @@
 /* hide default UI - only shown if optional UI css files are loaded. */
-:where([data-media-button] > shadow-root, [data-media-slider] > shadow-root) {
+:where(
+    [data-media-button] > shadow-root,
+    [data-media-slider] > shadow-root,
+    [data-media-menu-button] > shadow-root
+  ) {
   display: none;
 }
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Media Base
+ * Media
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
 :where(media-player) {
-  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
+  --media-focus-ring: 0 0 0 3px rgb(78 156 246);
   width: 100%;
   display: inline-block;
   position: relative;
-  contain: layout;
+  contain: style;
   box-sizing: border-box;
 }
 
@@ -62,11 +66,11 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Display Base
+ * Display
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(media-icon) {
+:where(media-icon, svg[data-media-icon]) {
   width: 32px;
   height: 32px;
 }
@@ -86,7 +90,7 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Buttons Base
+ * Buttons
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -118,7 +122,7 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Sliders Base
+ * Sliders
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -158,7 +162,7 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Slider Value Text Base
+ * Slider Value Text
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -171,7 +175,7 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Slider Thumbnail Base
+ * Slider Thumbnail
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -205,7 +209,7 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Slider Video Base
+ * Slider Video
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -235,7 +239,7 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Poster Base
+ * Poster
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -299,4 +303,32 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none !important;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Menus
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(media-menu > [data-media-menu-items]:focus) {
+  outline: none;
+}
+
+:where(media-menu) :where([role='menuitem']:focus, [role='menuitemradio']:focus) {
+  outline: none;
+}
+
+:where(media-menu)
+  :where(
+    [role='menuitem']:focus-visible,
+    [role='menuitem'][data-focus],
+    [role='menuitemradio']:focus-visible,
+    [role='menuitemradio'][data-focus]
+  ),
+:where(media-menu > [data-media-menu-button][role='button'][data-focus] [data-media-icon]),
+:where(media-menu > [data-media-menu-button][role='button'][data-focus] svg),
+:where(media-radio[data-focus]) {
+  outline: none;
+  box-shadow: var(--media-focus-ring);
 }

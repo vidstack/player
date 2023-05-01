@@ -5,7 +5,7 @@ import { formatTime } from '../../utils/time';
 import { useMedia, type MediaContext } from '../core/api/context';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-time': MediaTimeElement;
   }
 }

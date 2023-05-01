@@ -9,7 +9,7 @@ import { isTrackCaptionKind } from '../../core/tracks/text/text-track';
 import { ToggleButton, toggleButtonProps, type ToggleButtonAPI } from './toggle-button';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-caption-button': MediaCaptionButtonElement;
   }
 }

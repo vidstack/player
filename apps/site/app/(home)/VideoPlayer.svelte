@@ -65,7 +65,7 @@
     <div class="flex-1" />
     <div class="flex items-center pointer-events-auto w-full px-4 -mb-2 z-10">
       <media-time class="text-sm tracking-wide mr-1" type="current" />
-      <media-time-slider style="--media-slider-preview-gap: 130px">
+      <media-time-slider>
         <div slot="preview">
           <div>
             <media-slider-thumbnail
@@ -92,7 +92,7 @@
           <span slot="unmute-tooltip">Unmute (m)</span>
         </div>
       </media-mute-button>
-      <media-volume-slider class="max-w-[64px] -ml-1.5" style="--media-slider-preview-gap: 16px">
+      <media-volume-slider class="max-w-[64px] -ml-1.5">
         <media-slider-value class="rounded-sm" type="pointer" format="percent" slot="preview" />
       </media-volume-slider>
       <div class="flex-1 text-center">Sprite Fight</div>

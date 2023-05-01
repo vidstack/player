@@ -9,7 +9,7 @@ import type { MediaKeyShortcut } from '../../core/keyboard/types';
 import { ToggleButton, toggleButtonProps, type ToggleButtonProps } from './toggle-button';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-fullscreen-button': MediaFullscreenButtonElement;
   }
 }

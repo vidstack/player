@@ -8,7 +8,7 @@ import { isTrackCaptionKind } from '../../core/tracks/text/text-track';
 import { CaptionsTextRenderer } from './captions-renderer';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-captions': MediaCaptionsElement;
   }
 }

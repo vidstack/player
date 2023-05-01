@@ -120,6 +120,7 @@ import 'vidstack/styles/ui/captions.css';
 import 'vidstack/styles/ui/tooltips.css';
 import 'vidstack/styles/ui/live.css';
 import 'vidstack/styles/ui/sliders.css';
+import 'vidstack/styles/ui/menus.css';
 ```
 
 #### `vidstack/styles/base.css`

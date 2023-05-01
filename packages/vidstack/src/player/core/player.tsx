@@ -42,7 +42,7 @@ import { TextTrackList } from './tracks/text/text-tracks';
 import { MediaUserController } from './user';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-player': MediaPlayerElement;
   }
 

@@ -5,7 +5,7 @@ import { lazyPaths, paths } from 'media-icons';
 import type { IconProps } from './types';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-icon': MediaIconElement;
   }
 }
@@ -68,8 +68,7 @@ export class Icon extends Component<IconAPI> {
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
         data-media-icon="true"
-        // @ts-expect-error - fix type in Maverick to accept fn
-        $prop:innerHTML={this._paths}
+        $prop:innerHTML={this._paths()}
       ></svg>
     );
   }
