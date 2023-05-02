@@ -311,8 +311,8 @@
   display: none;
  }
 
-:where(media-ads[data-playing]),
-:where(media-ads[data-playing]) > div  {
+:where(media-ads[data-started]),
+:where(media-ads[data-started]) > div  {
   display: block;
   position: absolute;
   width: 100%;

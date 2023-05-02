@@ -1,118 +1,11 @@
 import { google } from "@alugha/ima";
-import { effect } from "maverick.js";
+import { effect, computed } from "maverick.js";
 import { Component, defineElement } from "maverick.js/element";
 import { DOMEvent, isString } from "maverick.js/std";
 import { type MediaContext, useMedia } from "../api/context";
 import { ImaSdkLoader } from "./lib-loader";
 import { AdsStoreFactory } from "./store";
 import type { ImaSdk } from "./types";
-
-enum Type {
-  /**
-   * Fired when an ad rule or a VMAP ad break would have played if autoPlayAdBreaks is false.
-   */
-  AD_BREAK_READY = "adBreakReady",
-  /**
-   * Fired when the ad has stalled playback to buffer.
-   */
-  AD_BUFFERING = "adBuffering",
-  /**
-   * Fired when an ads list is loaded.
-   */
-  AD_METADATA = "adMetadata",
-  /**
-   * Fired when the ad's current time value changes. Calling getAdData() on this event will return an AdProgressData object.
-   */
-  AD_PROGRESS = "adProgress",
-  /**
-   * Fired when the ads manager is done playing all the ads.
-   */
-  ALL_ADS_COMPLETED = "allAdsCompleted",
-  /**
-   * Fired when the ad is clicked.
-   */
-  CLICK = "click",
-  /**
-   * Fired when the ad completes playing.
-   */
-  COMPLETE = "complete",
-  /**
-   * Fired when content should be paused. This usually happens right before an ad is about to cover the content.
-   */
-  CONTENT_PAUSE_REQUESTED = "contentPauseRequested",
-  /**
-   * Fired when content should be resumed. This usually happens when an ad finishes or collapses.
-   */
-  CONTENT_RESUME_REQUESTED = "contentResumeRequested",
-  /**
-   * Fired when the ad's duration changes.
-   */
-  DURATION_CHANGE = "durationChange",
-  /**
-   * Fired when the ad playhead crosses first quartile.
-   */
-  FIRST_QUARTILE = "firstQuartile",
-  /**
-   * Fired when the impression URL has been pinged.
-   */
-  IMPRESSION = "impression",
-  /**
-   * Fired when an ad triggers the interaction callback. Ad interactions contain an interaction ID string in the ad data.
-   */
-  INTERACTION = "interaction",
-  /**
-   * Fired when the displayed ad changes from linear to nonlinear, or vice versa.
-   */
-  LINEAR_CHANGED = "linearChanged",
-  /**
-   * Fired when ad data is available.
-   */
-  LOADED = "loaded",
-  /**
-   * Fired when a non-fatal error is encountered. The user need not take any action since the SDK will continue with the same or next ad playback depending on the error situation.
-   */
-  LOG = "log",
-  /**
-   * Fired when the ad playhead crosses midpoint.
-   */
-  MIDPOINT = "midpoint",
-  /**
-   * Fired when the ad is paused.
-   */
-  PAUSED = "pause",
-  /**
-   * Fired when the ad is resumed.
-   */
-  RESUMED = "resume",
-  /**
-   * Fired when the displayed ads skippable state is changed.
-   */
-  SKIPPABLE_STATE_CHANGED = "skippableStateChanged",
-  /**
-   * Fired when the ad is skipped by the user.
-   */
-  SKIPPED = "skip",
-  /**
-   * Fired when the ad starts playing.
-   */
-  STARTED = "start",
-  /**
-   * Fired when the ad playhead crosses third quartile.
-   */
-  THIRD_QUARTILE = "thirdQuartile",
-  /**
-   * Fired when the ad is closed by the user.
-   */
-  USER_CLOSE = "userClose",
-  /**
-   * Fired when the ad volume has changed.
-   */
-  VOLUME_CHANGED = "volumeChange",
-  /**
-   * Fired when the ad volume has been muted.
-   */
-  VOLUME_MUTED = "mute",
-}
 
 export class Ads extends Component<AdsAPI> {
 
@@ -131,80 +24,60 @@ export class Ads extends Component<AdsAPI> {
   protected _adsRequest: google.ima.AdsRequest | null = null;
   protected _adsManager: google.ima.AdsManager | null = null;
 
+  protected _adEventsToDispatch: EventDispatchMapping = {
+    adBreakReady: "ad_break_ready",
+    adBuffering: "ad_buffering",
+    adMetadata: "ad_metadata",
+    adProgress: "ad_progress",
+    allAdsCompleted: "ad_all_complete",
+    click: "ad_click",
+    complete: "ad_complete",
+    contentPauseRequested: "content_pause_requested",
+    contentResumeRequested: "content_resume_requested",
+    durationChange: "ad_duration_change",
+    firstQuartile: "ad_first_quartile",
+    impression: "ad_impression",
+    interaction: "ad_interaction",
+    linearChanged: "ad_linear_changed",
+    loaded: "ad_loaded",
+    log: "ad_log",
+    midpoint: "ad_midpoint",
+    pause: "ad_pause",
+    resume: "ad_resume",
+    skippableStateChanged: "ad_skippable_state_changed",
+    skip: "ad_skip",
+    start: "ad_start",
+    thirdQuartile: "ad_third_quartile",
+    userClose: "ad_user_close",
+    volumeChange: "ad_volume_change",
+    mute: "ad_mute",
+    adCanPlay: "ad_can_play"
+  }
+
   protected _adEventHandlerMapping: EventHandlerMapping  = {
-    adBuffering: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    adMetadata: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    allAdsCompleted: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    click: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    durationChange: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    firstQuartile: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    impression: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    interaction: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    linearChanged: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    log: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    midpoint: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    pause: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    resume: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    skippableStateChanged: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    skip: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
+    adBuffering: this._onAdBuffering,
+    pause: this._onAdPause,
+    resume: this._onAdResume,
     start: this._onAdStart,
-    thirdQuartile: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    userClose: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    volumeChange: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    mute: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
-    adBreakReady: function (event: google.ima.AdEvent): void {
-      throw new Error("Function not implemented.");
-    },
+    volumeChange: this._onAdVolumeChange,
+    mute: this._onAdMute,
     adProgress: this._onAdProgress,
     complete: this._onAdComplete,
     contentPauseRequested: this._onContentPauseRequested,
     contentResumeRequested: this._onContentResumeRequested,
-    loaded: this._onAdLoaded
+    loaded: this._onAdLoaded,
+    adCanPlay: this._onAdCanPlay
   }
 
   protected override onAttach(): void {
     this._media = useMedia();
     console.log('onAttach', this.$store)
     this.setAttributes({
+      'data-paused': computed(() => !this.$store.playing() && !this.$store.started()) ,
       'data-playing': this.$store.playing,
+      'data-buffering': this.$store.buffering,
+      'data-can-play': this.$store.canPlay,
+      'data-started': this.$store.started,
     })
   }
 
@@ -217,20 +90,7 @@ export class Ads extends Component<AdsAPI> {
     })
   }
 
-  protected override onDisconnect() {
-    this._adsManager?.destroy();
-    this._adsLoader?.destroy();
-  }
-
-  protected _getEnabled() {
-    return (
-      (this._media.$provider()?.type === 'video' || this._media.$provider()?.type === 'hls') &&
-      this.$props.enabled() && isString(this.$props.url())
-    );
-  }
-
-
-  setup(imaSdk: ImaSdk, adContainer: HTMLElement) {
+  protected setup(imaSdk: ImaSdk, adContainer: HTMLElement) {
     this._sdk = imaSdk;
     this._sdk.settings.setDisableCustomPlaybackForIOS10Plus(true)
     this._sdk.settings.setVpaidMode(this._sdk.ImaSdkSettings.VpaidMode.ENABLED);
@@ -265,6 +125,39 @@ export class Ads extends Component<AdsAPI> {
     this._adsLoader.requestAds(this._adsRequest);
   }
 
+  protected override onDisconnect() {
+    this._adsManager?.destroy();
+    this._adsLoader?.destroy();
+  }
+
+
+  private loadAds() {
+    // Prevent this function from running on if there are already ads loaded
+    if (this.$store.loaded()) {
+      return;
+    }
+    this.$store.loaded.set(true);
+
+    this._adDisplayContainer?.initialize()
+
+    var width = this._media.player!.clientWidth;
+    var height = this._media.player!.clientHeight;
+    try {
+      this._adsManager!.init(width, height, this._sdk!.ViewMode.NORMAL);
+      this._adsManager!.start();
+    } catch (adError) {
+      // Play the video without ads, if an error occurs
+      console.log("AdsManager could not be started", adError);
+    }
+  }
+
+  protected _getEnabled() {
+    return (
+      (this._media.$provider()?.type === 'video' || this._media.$provider()?.type === 'hls') &&
+      this.$props.enabled() && isString(this.$props.url())
+    );
+  }
+
   private _onResized() {
     if (this._adsManager) {
       this._adsManager.resize(this._media.player!.clientWidth, this._media.player!.clientHeight, this._sdk!.ViewMode.NORMAL);
@@ -285,28 +178,6 @@ export class Ads extends Component<AdsAPI> {
     }
   }
 
-  private loadAds() {
-    // Prevent this function from running on if there are already ads loaded
-    if (this.$store.loaded()) {
-      return;
-    }
-    this.$store.loaded.set(true);
-
-    console.log("loading ads");
-
-    this._adDisplayContainer?.initialize()
-
-    var width = this._media.player!.clientWidth;
-    var height = this._media.player!.clientHeight;
-    try {
-      this._adsManager!.init(width, height, this._sdk!.ViewMode.NORMAL);
-      this._adsManager!.start();
-    } catch (adError) {
-      // Play the video without ads, if an error occurs
-      console.log("AdsManager could not be started", adError);
-    }
-  }
-
   private _onAdsManagerLoaded(adsManagerLoadedEvent: google.ima.AdsManagerLoadedEvent) {
     // Load could occur after a source change (race condition)
     if (!this._getEnabled()) {
@@ -321,7 +192,6 @@ export class Ads extends Component<AdsAPI> {
     settings.restoreCustomPlaybackStateOnAdBreakComplete = true;
     settings.enablePreloading = true;
 
-
     // Instantiate the AdsManager from the adsLoader response and pass it the video element
     this._adsManager = adsManagerLoadedEvent.getAdsManager(
       this._media.player! as unknown as HTMLVideoElement,
@@ -332,10 +202,19 @@ export class Ads extends Component<AdsAPI> {
     console.log('Cue Points', this.$store.cuePoints())
 
     // Add listeners to the required events
+    for(const [event, mapping] of Object.entries(this._adEventsToDispatch)) {
+      this._adsManager.addEventListener(
+        event as google.ima.AdEvent.Type,
+        (e) => {
+          this._onAdEvent(e, mapping)
+        },
+      );
+    }
+
     for(const [event, mapping] of Object.entries(this._adEventHandlerMapping)) {
       console.log('Adding Event Listener', event, mapping)
       this._adsManager.addEventListener(
-        event,
+        event as google.ima.AdEvent.Type,
         mapping.bind(this),
       );
     }
@@ -353,6 +232,10 @@ export class Ads extends Component<AdsAPI> {
     }
   }
 
+  private _onAdBuffering() {
+    this.$store.buffering.set(true);
+  }
+
   private _onContentPauseRequested() {
     this._media.remote.pause();
   }
@@ -365,29 +248,49 @@ export class Ads extends Component<AdsAPI> {
 
   private _onAdLoaded(adEvent: google.ima.AdEvent) {
     let ad = adEvent.getAd();
-    console.log('Ad Loaded', ad)
     if (ad && !ad.isLinear()) {
       this._media.remote.play()
     }
   }
 
-  private _onAdStart(adEvent: google.ima.AdEvent) {
-    this.$store.playing.set(true)
-    this.dispatch('ad_started', {
-      trigger: adEvent as unknown as Event,
-    });
+  private _onAdStart() {
+    this.$store.started.set(true);
+    this.$store.playing.set(true);
+    this.$store.buffering.set(false);
   }
 
-  private _onAdComplete(adEvent: google.ima.AdEvent) {
-    this.$store.playing.set(false)
-    this.dispatch('ad_complete', {
-      trigger: adEvent as unknown as Event,
-    });
+  private _onAdComplete() {
+    this.$store.started.set(false);
+    this.$store.playing.set(false);
   }
 
-  private _onAdProgress(adEvent: google.ima.AdEvent) {
-    // let ad = adEvent.getAd();
-    this.dispatch('ad_progress', {
+  private _onAdProgress() {
+
+  }
+
+  private _onAdPause() {
+    this.$store.playing.set(false);
+  }
+
+  private _onAdResume() {
+    this.$store.playing.set(true);
+  }
+
+  private _onAdCanPlay() {
+    this.$store.canPlay.set(true);
+  }
+
+  private _onAdMute() {
+    this._media.$store.muted.set(true);
+  }
+
+  private _onAdVolumeChange() {
+    this._media.$store.volume.set(this._adsManager!.getVolume());
+  }
+
+  private _onAdEvent(adEvent: google.ima.AdEvent, mapping: keyof AdEvents) {
+    console.log('Dispatching event', mapping, adEvent)
+    this.dispatch(mapping, {
       trigger: adEvent as unknown as Event,
     });
   }
@@ -396,7 +299,7 @@ export class Ads extends Component<AdsAPI> {
 
 export interface AdsAPI {
   props: AdsProps;
-  events: AdsEvents;
+  events: AdEvents;
   store: typeof AdsStoreFactory;
 }
 
@@ -406,80 +309,47 @@ export interface AdsProps {
   locale: string | null;
 }
 
-export interface AdsEvents {
-  'ad_can_play': AdCanPlayEvent;
-  'ad_started': AdStartedEvent;
-  'ad_paused': AdPausedEvent;
-  'ad_resumed': AdResumedEvent;
-  'ad_skipped': AdSkippedEvent;
-  'ad_error': AdErrorEvent;
-  'ad_buffering': AdBufferingEvent;
-  'ad_progress': AdProgressEvent;
-  'ad_volume_change': AdVolumeChangeEvent;
-  'ad_complete': AdCompleteEvent;
-  'ad_all_complete': AdAllCompleteEvent;
-  'ad_clicked': AdClickedEvent;
+export interface AdEvents {
+  'ad_can_play': AdEvent;
+  'ad_error': AdEvent;
+  'ad_buffering': AdEvent;
+  'ad_progress': AdEvent;
+  'ad_volume_change': AdEvent;
+  'ad_complete': AdEvent;
+  'ad_all_complete': AdEvent;
+  'ad_clicked': AdEvent;
+  'ad_break_ready': AdEvent,
+  'ad_metadata': AdEvent,
+  'all_ads_completed': AdEvent,
+  'ad_click': AdEvent,
+  'content_pause_requested': AdEvent,
+  'content_resume_requested': AdEvent,
+  'ad_duration_change': AdEvent,
+  'ad_first_quartile': AdEvent,
+  'ad_impression': AdEvent,
+  'ad_interaction': AdEvent,
+  'ad_linear_changed': AdEvent,
+  'ad_loaded': AdEvent,
+  'ad_log': AdEvent,
+  'ad_midpoint': AdEvent,
+  'ad_pause': AdEvent,
+  'ad_resume': AdEvent,
+  'ad_skippable_state_changed': AdEvent,
+  'ad_skip': AdEvent,
+  'ad_start': AdEvent,
+  'ad_third_quartile': AdEvent,
+  'ad_user_close': AdEvent,
+  'ad_mute': AdEvent,
 }
 
-export interface AdCanPlayEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
+export interface AdEvent extends DOMEvent<void> {
   trigger?: Event;
 }
 
-export interface AdStartedEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
+type EventHandlerMapping = Partial<{
+  [value in google.ima.AdEvent.Type | 'adCanPlay']: (event: google.ima.AdEvent) => void;
+}>;
 
-export interface AdPausedEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
-
-export interface AdResumedEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
-
-export interface AdSkippedEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
-
-export interface AdErrorEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
-
-export interface AdBufferingEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
-
-export interface AdProgressEvent extends DOMEvent<void> {
-  trigger?: Event;
-}
-
-export interface AdVolumeChangeEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
-
-export interface AdCompleteEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
-
-export interface AdAllCompleteEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
-
-export interface AdClickedEvent extends DOMEvent<void> {
-  /** The `canplay` media event. */
-  trigger?: Event;
-}
-
-type EventHandlerMapping = {
-  [key in google.ima.AdEvent.Type]: (event: google.ima.AdEvent) => void;
+type EventDispatchMapping = {
+  [value in google.ima.AdEvent.Type | 'adCanPlay']: keyof AdEvents;
 };
