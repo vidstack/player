@@ -1,5 +1,5 @@
 import { google } from "@alugha/ima";
-import { effect, computed } from "maverick.js";
+import { effect, computed, peek } from "maverick.js";
 import { Component, defineElement } from "maverick.js/element";
 import { DOMEvent, isString } from "maverick.js/std";
 import { type MediaContext, useMedia } from "../api/context";
@@ -23,6 +23,7 @@ export class Ads extends Component<AdsAPI> {
   protected _adsLoader: google.ima.AdsLoader | null = null;
   protected _adsRequest: google.ima.AdsRequest | null = null;
   protected _adsManager: google.ima.AdsManager | null = null;
+  protected _resizeObserver: ResizeObserver | null = null;
 
   protected _adEventsToDispatch: EventDispatchMapping = {
     adBreakReady: "ad_break_ready",
@@ -87,6 +88,7 @@ export class Ads extends Component<AdsAPI> {
 
       effect(this._watchContentComplete.bind(this));
       effect(this._watchPlay.bind(this));
+      effect(this._watchFullScreen.bind(this));
     })
   }
 
@@ -104,7 +106,11 @@ export class Ads extends Component<AdsAPI> {
 
     this._adsLoader.addEventListener(this._sdk.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, this._onAdsManagerLoaded.bind(this), false);
     this._adsLoader.addEventListener(this._sdk.AdErrorEvent.Type.AD_ERROR, this._onAdsManagerAdError.bind(this), false);
-    window.addEventListener('resize', this._onResized.bind(this));
+
+    if(!__SERVER__ && window.ResizeObserver) {
+      this._resizeObserver = new ResizeObserver(this._onResized.bind(this));
+      this._resizeObserver.observe(this._media.player!);
+    }
 
     this._adsRequest = new this._sdk.AdsRequest();
     this._adsRequest.adTagUrl = this.$props.url();
@@ -128,6 +134,7 @@ export class Ads extends Component<AdsAPI> {
   protected override onDisconnect() {
     this._adsManager?.destroy();
     this._adsLoader?.destroy();
+    this._resizeObserver?.disconnect();
   }
 
 
@@ -143,7 +150,7 @@ export class Ads extends Component<AdsAPI> {
     var width = this._media.player!.clientWidth;
     var height = this._media.player!.clientHeight;
     try {
-      this._adsManager!.init(width, height, this._sdk!.ViewMode.NORMAL);
+      this._adsManager!.init(width, height, peek(this._media.$store.fullscreen) ? this._sdk!.ViewMode.FULLSCREEN : this._sdk!.ViewMode.NORMAL);
       this._adsManager!.start();
     } catch (adError) {
       // Play the video without ads, if an error occurs
@@ -178,6 +185,13 @@ export class Ads extends Component<AdsAPI> {
     }
   }
 
+  private _watchFullScreen() {
+    let { fullscreen } = this._media.$store;
+    if(this._adsManager && this._media.player && this._sdk) {
+      this._adsManager.resize(this._media.player.clientWidth, this._media.player.clientHeight, fullscreen() ? this._sdk.ViewMode.FULLSCREEN : this._sdk.ViewMode.NORMAL );
+    }
+  }
+
   private _onAdsManagerLoaded(adsManagerLoadedEvent: google.ima.AdsManagerLoadedEvent) {
     // Load could occur after a source change (race condition)
     if (!this._getEnabled()) {
@@ -190,12 +204,14 @@ export class Ads extends Component<AdsAPI> {
 
     // Tell the SDK to save and restore content video state on our behalf
     settings.restoreCustomPlaybackStateOnAdBreakComplete = true;
-    settings.enablePreloading = true;
+    if(this._media.player!.load = "eager") {
+      settings.enablePreloading = true;
+    }
 
     // Instantiate the AdsManager from the adsLoader response and pass it the video element
     this._adsManager = adsManagerLoadedEvent.getAdsManager(
       this._media.player! as unknown as HTMLVideoElement,
-      // settings
+      settings
     );
 
     this.$store.cuePoints.set(this._adsManager.getCuePoints());
