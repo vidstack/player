@@ -300,3 +300,24 @@
   visibility: hidden;
   pointer-events: none !important;
 }
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Gestures
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+ :not(:where(media-ads[data-playing])) > div {
+  display: none;
+ }
+
+:where(media-ads[data-playing]),
+:where(media-ads[data-playing]) > div  {
+  display: block;
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 10;
+  pointer: auto;
+}

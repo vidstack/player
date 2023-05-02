@@ -35,6 +35,7 @@
     "test:server:watch": "SERVER=true vitest --watch"
   },
   "dependencies": {
+    "@alugha/ima": "^2.1.0",
     "maverick.js": "0.35.2",
     "media-captions": "0.0.11",
     "media-icons": "0.4.2",

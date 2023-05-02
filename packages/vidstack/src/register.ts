@@ -1,6 +1,7 @@
 import { registerLiteCustomElement } from 'maverick.js/element';
 
 import { Icon } from './icons/component';
+import { Ads } from './player/core/ads/ads';
 import { Outlet } from './player/core/outlet/outlet';
 import { Player } from './player/core/player';
 import { CaptionButton } from './player/ui/buttons/caption-button';
@@ -45,5 +46,6 @@ export default function registerAllElements(): void {
     LiveIndicator,
     Captions,
     Gesture,
+    Ads
   ].map(registerLiteCustomElement);
 }
