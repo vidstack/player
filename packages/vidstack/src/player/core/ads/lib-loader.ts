@@ -31,8 +31,10 @@ export class ImaSdkLoader {
 
     // If the library is already loaded, we can just return it. Otherwise try to load it.
     // If we fail to load it, we return null.
-    let imaSdk =  !isObject((window as any).google) || !isObject((window as any).google.ima) ?
-      await loadImaSdkScript(this._lib, callbacks) : (window as any).google.ima as ImaSdk;
+    let imaSdk =
+      !isObject((window as any).google) || !isObject((window as any).google.ima)
+        ? await loadImaSdkScript(this._lib, callbacks)
+        : ((window as any).google.ima as ImaSdk);
     if (!imaSdk) return null;
 
     return imaSdk;
@@ -58,7 +60,7 @@ export class ImaSdkLoader {
     }
 
     this._context.player!.dispatchEvent(
-      new DOMEvent<ImaSdk>('hls-lib-loaded', {
+      new DOMEvent<ImaSdk>('ima-lib-loaded', {
         detail: imaSdk,
       }),
     );
@@ -104,7 +106,6 @@ async function loadImaSdkScript(
   callbacks.onLoadStart?.();
 
   try {
-
     await loadScript(src);
 
     if (!isObject((window as any).google) || !isObject((window as any).google.ima)) {

@@ -307,12 +307,12 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
- :not(:where(media-ads[data-playing])) > div {
+ :not(:where(media-player[data-ads-playing])) > div {
   display: none;
  }
 
-:where(media-ads[data-started]),
-:where(media-ads[data-started]) > div  {
+:where(media-ads[data-ads-started]),
+:where(media-ads[data-ads-started]) > div  {
   display: block;
   position: absolute;
   width: 100%;

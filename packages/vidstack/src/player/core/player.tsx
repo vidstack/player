@@ -8,7 +8,7 @@ import {
   type ElementAttributesRecord,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { camelToKebabCase, isNull, listenEvent } from 'maverick.js/std';
+import { camelToKebabCase, isNull, isString, listenEvent } from 'maverick.js/std';
 
 import { canFullscreen } from '../../foundation/fullscreen/controller';
 import { Logger } from '../../foundation/logger/controller';
@@ -17,6 +17,7 @@ import { FocusVisibleController } from '../../foundation/observers/focus-visible
 import { ScreenOrientationController } from '../../foundation/orientation/controller';
 import { RequestQueue } from '../../foundation/queue/request-queue';
 import { clampNumber } from '../../utils/number';
+import type { AdsController } from './ads/ads';
 import { mediaContext, type MediaContext } from './api/context';
 import { MEDIA_ATTRIBUTES } from './api/media-attrs';
 import type { PlayerCSSVars } from './api/player-cssvars';
@@ -132,6 +133,10 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
       context,
     );
 
+    if (!this.ads && isString(this.$props.adsUrl())) {
+      new MediaLoadController(instance, this._startLoadingAds.bind(this));
+    }
+
     effect(this._watchCanPlay.bind(this));
     effect(this._watchMuted.bind(this));
     effect(this._watchPaused.bind(this));
@@ -187,6 +192,11 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     else effect(this._onProvidedTypesChange.bind(this));
 
     this.$store.muted.set(this.$props.muted() || this.$props.volume() === 0);
+  }
+
+  private async _startLoadingAds(): Promise<void> {
+    console.log('Start loading ads controller');
+    this.ads = new (await import('./ads/ads')).AdsController(this.instance, this._media);
   }
 
   private _watchCanPlay() {
@@ -271,6 +281,12 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
    */
   @prop
   readonly orientation: ScreenOrientationController;
+
+  /**
+   * Controls advertising playback.
+   */
+  @prop
+  ads: AdsController | undefined;
 
   /**
    * A list of all `VideoQuality` objects representing the set of available video renditions.

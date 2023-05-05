@@ -113,6 +113,14 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
       ? this.seekableEnd - this.liveEdgeStart
       : 0;
   },
+  // ~~ ads props ~~
+  adsUrl: '',
+  adsLoaded: false,
+  adCanPlay: false,
+  adStarted: false,
+  adPlaying: false,
+  adBuffering: false,
+  adCuePoints: [],
   // ~~ internal props ~~
   autoplaying: false,
   canLoadPoster: null,
@@ -595,6 +603,44 @@ export interface MediaState {
    * @defaultValue false
    */
   waiting: boolean;
+  /**
+   * The url that should be used to load ads. This only works with the `video` or `hls` providers.
+   * We (partially) support VAST 4, VAST 3, VAST 2, VMAP, VPAID and OM SDK formats.
+   * @defaultValue 'video'
+   * @see {@link https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/compatibility}
+   */
+  adsUrl: string | undefined;
+  /**
+   * Whether the ads have been loaded.
+   * @defaultValue false
+   */
+  adsLoaded: boolean;
+  /**
+   * Wether the ad is ready to play without buffering.
+   * @defaultValue false
+   */
+  adCanPlay: boolean;
+  /**
+   * Whether an ad is currently playing.
+   * @defaultValue false
+   */
+  adStarted: boolean;
+  /**
+   * Whether an ad is currently playing.
+   * @defaultValue false
+   */
+  adPlaying: boolean;
+  /**
+   * Whether an ad is being buffered.
+   * @defaultValue false
+   */
+  adBuffering: boolean;
+  /**
+   * The cue point list represents a time-schedule of ad breaks.
+   * Note that individual ads in the ad break are not included in the schedule.
+   * @defaultValue []
+   */
+  adCuePoints: Number[];
 
   // !!! INTERNALS !!!
 

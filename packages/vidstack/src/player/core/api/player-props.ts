@@ -55,6 +55,7 @@ export const mediaPlayerProps: PropDeclarations<PlayerProps> = {
     value: [],
     attribute: false,
   }),
+  adsUrl: undefined,
 };
 
 export interface MediaStateAccessors
@@ -80,6 +81,8 @@ export interface PlayerProps
     | 'playbackRate'
     | 'viewType'
     | 'volume'
+    // ads
+    | 'adsUrl'
     // live
     | 'streamType'
     | 'liveEdgeTolerance'
