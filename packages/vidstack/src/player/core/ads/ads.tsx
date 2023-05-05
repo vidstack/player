@@ -1,7 +1,7 @@
 import { google } from '@alugha/ima';
-import { computed, peek } from 'maverick.js';
-import { ComponentController, ComponentInstance } from 'maverick.js/element';
-import { DisposalBin, DOMEvent, isString, useDisposalBin } from 'maverick.js/std';
+import { computed, effect, peek } from 'maverick.js';
+import { ComponentController, ComponentInstance, ElementAttributesRecord } from 'maverick.js/element';
+import { DisposalBin, DOMEvent, isFunction, isString, setAttribute, useDisposalBin } from 'maverick.js/std';
 
 import { type MediaContext } from '../api/context';
 import { PlayerAPI } from '../player';
@@ -11,6 +11,7 @@ import type { ImaSdk } from './types';
 export class AdsController extends ComponentController<PlayerAPI> {
   protected _libraryUrl: string = '//imasdk.googleapis.com/js/sdkloader/ima3.js';
   protected _sdk: typeof google.ima | null = null;
+  protected _adContainerElement: HTMLElement | null = null;
   protected _adDisplayContainer: google.ima.AdDisplayContainer | null = null;
   protected _adsLoader: google.ima.AdsLoader | null = null;
   protected _adsRequest: google.ima.AdsRequest | null = null;
@@ -65,18 +66,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
 
   constructor(instance: ComponentInstance<PlayerAPI>, protected _media: MediaContext) {
     super(instance);
-    console.log('AdsController constructor');
-
-    this.setAttributes({
-      'data-ads-paused': computed(() => !this.$store.adPlaying() && !this.$store.adStarted()),
-      'data-ads-playing': this.$store.adPlaying,
-      'data-ads-buffering': this.$store.adBuffering,
-      'data-ads-can-play': this.$store.adCanPlay,
-      'data-ads-started': this.$store.adStarted,
-    });
-
     new ImaSdkLoader(this._libraryUrl, _media, (imaSdk) => {
-      console.log('imaSdk loaded', imaSdk);
+      console.log('IMA SDK loaded', imaSdk);
       this.setup(imaSdk);
 
       this.listen('play', this.loadAds.bind(this));
@@ -87,15 +78,22 @@ export class AdsController extends ComponentController<PlayerAPI> {
 
   protected setup(imaSdk: ImaSdk) {
     console.log('setup ads', imaSdk, this._media);
-    const adContainer = document.createElement('media-ads');
-    this._media.player?.append(adContainer);
+    this._adContainerElement = document.createElement('media-ads');
+    this._media.player?.append(this._adContainerElement);
+    this._setAttributesOnAdContainer({
+      'data-ads-paused': computed(() => !this.$store.adPlaying() && this.$store.adStarted()),
+      'data-ads-playing': this.$store.adPlaying,
+      'data-ads-buffering': this.$store.adBuffering,
+      'data-ads-can-play': this.$store.adCanPlay,
+      'data-ads-started': this.$store.adStarted,
+    });
 
     this._sdk = imaSdk;
     this._sdk.settings.setDisableCustomPlaybackForIOS10Plus(true);
     this._sdk.settings.setVpaidMode(this._sdk.ImaSdkSettings.VpaidMode.ENABLED);
 
     this._adDisplayContainer = new imaSdk.AdDisplayContainer(
-      adContainer,
+      this._adContainerElement,
       this._media.player! as unknown as HTMLVideoElement,
     );
     this._adsLoader = new imaSdk.AdsLoader(this._adDisplayContainer);
@@ -137,9 +135,9 @@ export class AdsController extends ComponentController<PlayerAPI> {
 
   protected override onDisconnect() {
     this._disposablBin.empty(); // removes all the listeners
+    this._resizeObserver?.disconnect();
     this._adsManager?.destroy();
     this._adsLoader?.destroy();
-    this._resizeObserver?.disconnect();
   }
 
   protected loadAds() {
@@ -174,6 +172,20 @@ export class AdsController extends ComponentController<PlayerAPI> {
       (this._media.$provider()?.type === 'video' || this._media.$provider()?.type === 'hls') &&
       isString(this.$props.adsUrl())
     );
+  }
+
+  private _setAttributesOnAdContainer(attributes: ElementAttributesRecord) {
+    if (!this._adContainerElement) return;
+
+    for (const name of Object.keys(attributes)) {
+      if (isFunction(attributes[name])) {
+        console.log('Add effect for functional attribute', name, attributes[name])
+        effect(() => setAttribute(this._adContainerElement!, name, (attributes[name] as Function)()));
+      } else {
+        console.log('Add effect for attribute', name, attributes[name])
+        setAttribute(this._adContainerElement!, name, attributes[name]);
+      }
+    }
   }
 
   private _addEventListener(target: any, event: any, handler: (...args: any) => any) {
@@ -282,37 +294,45 @@ export class AdsController extends ComponentController<PlayerAPI> {
     }
   }
 
-  private _onAdStart() {
-    this.$store.started.set(true);
-    this.$store.playing.set(true);
+  private _onAdStart(adEvent: google.ima.AdEvent) {
+    let ad = adEvent.getAd();
+    this.$store.adDuration.set(ad?.getDuration() || 0);
+    this.$store.adStarted.set(true);
+    this.$store.adPlaying.set(true);
     this.$store.adBuffering.set(false);
   }
 
   private _onAdComplete() {
-    this.$store.started.set(false);
-    this.$store.playing.set(false);
+    this.$store.adStarted.set(false);
+    this.$store.adPlaying.set(false);
   }
 
-  private _onAdProgress() {}
+  private _onAdProgress() {
+    const { adDuration } = this.$store;
+    const remainingTime = this._adsManager?.getRemainingTime() || 0
+    const currentTime = adDuration() - remainingTime;
+    this.$store.adCurrentTime.set(currentTime);
+    console.log('Current ad time', adDuration(), remainingTime, currentTime)
+  }
 
   private _onAdPause() {
-    this.$store.playing.set(false);
+    this.$store.adPlaying.set(false);
   }
 
   private _onAdResume() {
-    this.$store.playing.set(true);
+    this.$store.adPlaying.set(true);
   }
 
   private _onAdCanPlay() {
-    this.$store.canPlay.set(true);
+    this.$store.adCanPlay.set(true);
   }
 
   private _onAdMute() {
-    this._media.$store.muted.set(true);
+    this.$store.muted.set(true);
   }
 
   private _onAdVolumeChange() {
-    this._media.$store.volume.set(this._adsManager!.getVolume());
+    this.$store.volume.set(this._adsManager!.getVolume());
   }
 
   private _onAdEvent(adEvent: google.ima.AdEvent, mapping: keyof AdEvents) {

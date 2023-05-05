@@ -303,21 +303,16 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Gestures
+ * Advertisement
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
- :not(:where(media-player[data-ads-playing])) > div {
-  display: none;
- }
-
-:where(media-ads[data-ads-started]),
-:where(media-ads[data-ads-started]) > div  {
-  display: block;
+:where(media-ads) {
   position: absolute;
+  display: inline-block;
+  top: 0;
+  left: 0;
   width: 100%;
-  top: 0px;
-  left: 0px;
-  z-index: 10;
-  pointer: auto;
+  height: 100%;
+  z-index: 0;
 }

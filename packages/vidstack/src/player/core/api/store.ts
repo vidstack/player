@@ -121,6 +121,8 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
   adPlaying: false,
   adBuffering: false,
   adCuePoints: [],
+  adCurrentTime: 0,
+  adDuration: 0,
   // ~~ internal props ~~
   autoplaying: false,
   canLoadPoster: null,
@@ -641,6 +643,16 @@ export interface MediaState {
    * @defaultValue []
    */
   adCuePoints: Number[];
+  /**
+   * The current time for the ad.
+   * @defaultValue 0 
+   */
+  adCurrentTime: number;
+  /**
+   * The duration of the current ad.
+   * @defaultValue 0 
+   */
+  adDuration: number;
 
   // !!! INTERNALS !!!
 

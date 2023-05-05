@@ -21,7 +21,7 @@
 }
 
 :where([data-media-slider] [part*='track']) {
-  z-index: 0;
+  z-index: 1;
   position: absolute;
   width: var(--track-width);
   height: var(--track-height);
@@ -43,7 +43,7 @@
 }
 
 :where([data-media-slider] [part~='track-fill']) {
-  z-index: 2; /** above track and track progress. */
+  z-index: 3; /** above track and track progress. */
   background-color: #fafafa;
   width: var(--slider-fill-percent);
   will-change: width;
@@ -54,7 +54,7 @@
 }
 
 :where(media-time-slider [part~='track-progress']) {
-  z-index: 1; /** above track. */
+  z-index: 2; /** above track. */
   left: 0;
   width: var(--media-buffered-percent, 0%);
   will-change: width;
@@ -63,7 +63,7 @@
 }
 
 :where([data-media-slider] [part='thumb-container']) {
-  z-index: 2; /** above track fill. */
+  z-index: 3; /** above track fill. */
   position: absolute;
   top: 0;
   left: var(--slider-fill-percent);

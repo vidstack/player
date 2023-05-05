@@ -96,7 +96,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
 
   protected _hasChapters() {
     const { duration } = this._media.$store;
-    return this._track()?.cues.length && Number.isFinite(duration()) && duration() > 0;
+    return this._track()?.cues.length && Number.isFinite(duration()) && duration() > 0 && !this._media.$store.adStarted();
   }
 
   protected override onConnect(el: HTMLElement) {
@@ -108,7 +108,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   override render() {
     return (
       <>
-        {this._chaptersRenderer.render(this._track()?.cues)}
+        {this._media.$store.adStarted() ? null : this._chaptersRenderer.render(this._track()?.cues)}
         <div part="track" />
         <div part="track track-fill" />
         <div part="track track-progress" />
@@ -127,11 +127,12 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   }
 
   protected _watchCurrentTime() {
-    const { currentTime } = this._media.$store,
+    const { currentTime, adCurrentTime, adStarted } = this._media.$store,
       { value, dragging } = this.$store,
-      newValue = this._timeToPercent(currentTime());
+      newValue = this._timeToPercent(adStarted() ? adCurrentTime() : currentTime());
     if (!peek(dragging)) {
       value.set(newValue);
+      console.log('value-change', newValue, adStarted(), adCurrentTime());
       this.dispatch('value-change', { detail: newValue });
     }
   }
@@ -196,8 +197,8 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   }
 
   override _isDisabled() {
-    const { canSeek } = this._media.$store;
-    return super._isDisabled() || !canSeek();
+    const { canSeek, adStarted } = this._media.$store;
+    return super._isDisabled() || !canSeek() || adStarted();
   }
 
   // -------------------------------------------------------------------------------------------
@@ -230,7 +231,8 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   }
 
   protected _timeToPercent(time: number) {
-    const { liveEdge, duration } = this._media.$store,
+    const { adStarted, liveEdge } = this._media.$store,
+      duration = adStarted() ? this._media.$store.adDuration : this._media.$store.duration,
       rate = Math.max(0, Math.min(1, liveEdge() ? 1 : Math.min(time, duration()) / duration()));
     return Number.isNaN(rate) ? 0 : Number.isFinite(rate) ? rate * 100 : 100;
   }
