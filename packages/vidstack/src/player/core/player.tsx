@@ -197,6 +197,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
   private async _startLoadingAds(): Promise<void> {
     console.log('Start loading ads controller');
     this.ads = new (await import('./ads/ads')).AdsController(this.instance, this._media);
+    this._media.ads = this.ads;
   }
 
   private _watchCanPlay() {

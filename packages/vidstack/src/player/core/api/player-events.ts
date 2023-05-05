@@ -2,7 +2,7 @@ import type { DOMEvent } from 'maverick.js/std';
 
 import type { LoggerEvents } from '../../../foundation/logger/events';
 import type { ScreenOrientationEvents } from '../../../foundation/orientation/events';
-import { AdEvents } from '../ads/ads';
+import type { AdEvents } from '../ads/ads';
 import type { MediaPlayerElement } from '../player';
 import type { HLSProviderEvents } from '../providers/hls/events';
 import type { VideoPresentationEvents } from '../providers/video/presentation/events';

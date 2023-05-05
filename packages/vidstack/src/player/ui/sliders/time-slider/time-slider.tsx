@@ -132,7 +132,6 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
       newValue = this._timeToPercent(adStarted() ? adCurrentTime() : currentTime());
     if (!peek(dragging)) {
       value.set(newValue);
-      console.log('value-change', newValue, adStarted(), adCurrentTime());
       this.dispatch('value-change', { detail: newValue });
     }
   }

@@ -119,6 +119,7 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
   adCanPlay: false,
   adStarted: false,
   adPlaying: false,
+  adPaused: false,
   adBuffering: false,
   adCuePoints: [],
   adCurrentTime: 0,
@@ -632,6 +633,11 @@ export interface MediaState {
    * @defaultValue false
    */
   adPlaying: boolean;
+  /**
+   * Whether an ad is currently paused.
+   * @defaultValue false
+   */
+   adPaused: boolean;
   /**
    * Whether an ad is being buffered.
    * @defaultValue false

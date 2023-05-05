@@ -1,10 +1,12 @@
-import { google } from '@alugha/ima';
+import type { google } from '@alugha/ima';
 import { computed, effect, peek } from 'maverick.js';
-import { ComponentController, ComponentInstance, ElementAttributesRecord } from 'maverick.js/element';
-import { DisposalBin, DOMEvent, isFunction, isString, setAttribute, useDisposalBin } from 'maverick.js/std';
+import { ComponentController, ComponentInstance, type ElementAttributesRecord } from 'maverick.js/element';
+import { type DisposalBin, DOMEvent, isFunction, isString, setAttribute, useDisposalBin } from 'maverick.js/std';
 
-import { type MediaContext } from '../api/context';
-import { PlayerAPI } from '../player';
+import type { MediaContext } from '../api/context';
+import type { PlayerEvents } from '../api/player-events';
+import type { MediaPauseRequestEvent, MediaPlayRequestEvent } from '../api/request-events';
+import type { PlayerAPI } from '../player';
 import { ImaSdkLoader } from './lib-loader';
 import type { ImaSdk } from './types';
 
@@ -19,7 +21,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
   protected _resizeObserver: ResizeObserver | null = null;
   protected _disposablBin: DisposalBin = useDisposalBin();
 
-  protected _adEventsToDispatch: EventDispatchMapping = {
+  protected _adEventsToDispatch: AdEventDispatchMapping = {
     adBreakReady: 'ad_break_ready',
     adBuffering: 'ad_buffering',
     adMetadata: 'ad_metadata',
@@ -49,7 +51,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
     adCanPlay: 'ad_can_play',
   };
 
-  protected _adEventHandlerMapping: EventHandlerMapping = {
+  protected _adEventHandlerMapping: AdEventHandlerMapping = {
     adBuffering: this._onAdBuffering,
     pause: this._onAdPause,
     resume: this._onAdResume,
@@ -64,15 +66,18 @@ export class AdsController extends ComponentController<PlayerAPI> {
     adCanPlay: this._onAdCanPlay,
   };
 
+  protected _mediaEventHandlerMapping: EventHandlerMapping = {
+    'play': this.loadAds.bind(this),
+    'ended': this._onContentEnded.bind(this),
+    'fullscreen-change': this._onFullscreenChange.bind(this),
+    'volume-change': this._onVolumeChange.bind(this),
+  }
+
   constructor(instance: ComponentInstance<PlayerAPI>, protected _media: MediaContext) {
     super(instance);
     new ImaSdkLoader(this._libraryUrl, _media, (imaSdk) => {
       console.log('IMA SDK loaded', imaSdk);
       this.setup(imaSdk);
-
-      this.listen('play', this.loadAds.bind(this));
-      this.listen('ended', this._onContentEnded.bind(this));
-      this.listen('fullscreen-change', this._onFullscreenChange.bind(this));
     });
   }
 
@@ -220,10 +225,16 @@ export class AdsController extends ComponentController<PlayerAPI> {
     }
   }
 
+  private _onVolumeChange() {
+    let { volume, muted } = this.$store;
+    if (this._adsManager) {
+      this._adsManager.setVolume(muted() ? 0 : volume());
+    }
+  }
+
   private _onAdsManagerLoaded(adsManagerLoadedEvent: google.ima.AdsManagerLoadedEvent) {
     // Load could occur after a source change (race condition)
     if (!this._getEnabled()) {
-      console.log('AdsManagerLoadedEvent ignored');
       return;
     }
 
@@ -256,6 +267,11 @@ export class AdsController extends ComponentController<PlayerAPI> {
     for (const [event, mapping] of Object.entries(this._adEventHandlerMapping)) {
       console.log('Adding Event Listener', event, mapping);
       this._addEventListener(this._adsManager, event, mapping.bind(this));
+    }
+
+    for (const [event, mapping] of Object.entries(this._mediaEventHandlerMapping)) {
+      console.log('Adding Event Listener', event, mapping);
+      this._addEventListener(this._media.player, event, mapping.bind(this));
     }
 
     this._addEventListener(
@@ -297,14 +313,14 @@ export class AdsController extends ComponentController<PlayerAPI> {
   private _onAdStart(adEvent: google.ima.AdEvent) {
     let ad = adEvent.getAd();
     this.$store.adDuration.set(ad?.getDuration() || 0);
-    this.$store.adStarted.set(true);
     this.$store.adPlaying.set(true);
     this.$store.adBuffering.set(false);
+    this.$store.adStarted.set(true);
   }
 
   private _onAdComplete() {
-    this.$store.adStarted.set(false);
     this.$store.adPlaying.set(false);
+    this.$store.adStarted.set(false);
   }
 
   private _onAdProgress() {
@@ -317,10 +333,12 @@ export class AdsController extends ComponentController<PlayerAPI> {
 
   private _onAdPause() {
     this.$store.adPlaying.set(false);
+    this.$store.adPaused.set(true);
   }
 
   private _onAdResume() {
     this.$store.adPlaying.set(true);
+    this.$store.adPaused.set(false);
   }
 
   private _onAdCanPlay() {
@@ -339,6 +357,18 @@ export class AdsController extends ComponentController<PlayerAPI> {
     this.dispatch(mapping, {
       trigger: adEvent as unknown as Event,
     });
+  }
+
+  play() {
+    if (this._adsManager && this._adsManager.getRemainingTime() > 0) {
+      this._adsManager.resume();
+    }
+  }
+
+  pause() {
+    if (this._adsManager && this._adsManager.getRemainingTime() > 0) {
+      this._adsManager.pause();
+    }
   }
 }
 
@@ -380,9 +410,14 @@ export interface AdEvent extends DOMEvent<void> {
 }
 
 type EventHandlerMapping = Partial<{
+  [value in keyof PlayerEvents]: (event: DOMEvent<void>) => void;
+}>;
+
+
+type AdEventHandlerMapping = Partial<{
   [value in google.ima.AdEvent.Type | 'adCanPlay']: (event: google.ima.AdEvent) => void;
 }>;
 
-type EventDispatchMapping = {
+type AdEventDispatchMapping = {
   [value in google.ima.AdEvent.Type | 'adCanPlay']: keyof AdEvents;
 };

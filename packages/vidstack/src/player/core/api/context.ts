@@ -7,6 +7,7 @@ import {
 } from 'maverick.js';
 
 import type { Logger } from '../../../foundation/logger/controller';
+import { AdsController } from '../ads/ads';
 import type { MediaKeyShortcuts } from '../keyboard/types';
 import type { MediaPlayerElement } from '../player';
 import type { MediaProvider, MediaProviderLoader } from '../providers/types';
@@ -34,6 +35,7 @@ export interface MediaContext {
   $iosControls: ReadSignal<boolean>;
   $props: ReadSignalRecord<PlayerProps>;
   $store: MediaStore;
+  ads: AdsController;
 }
 
 export const mediaContext = createContext<MediaContext>();

@@ -1,3 +1,4 @@
+import { computed } from 'maverick.js';
 import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
 import { pausePaths, playPaths, replayPaths } from 'media-icons';
 
@@ -47,26 +48,36 @@ export class PlayButton extends ToggleButton {
 
     setARIALabel(el, this._getLabel.bind(this));
 
-    const { paused, ended } = this._media.$store;
     this.setAttributes({
-      'data-paused': paused,
-      'data-ended': ended,
+      'data-paused': this.paused,
+      'data-ended': this.ended,
     });
   }
 
+  get paused() {
+    return computed(() => this._media.$store.adStarted() ? this._media.$store.adPaused() : this._media.$store.paused());
+  }
+
+  get ended() {
+    return computed(() => this._media.$store.adStarted() ? false : this._media.$store.ended());
+  }
+
+
   protected override _onPress(event: Event) {
     const remote = this._media.remote;
-    this._pressed() ? remote.pause(event) : remote.play(event);
+    if(this._media.$store.adStarted()) {
+      this._pressed() ? this._media.ads.pause() : this._media.ads.play()
+    } else {
+      this._pressed() ? remote.pause(event) : remote.play(event);
+    }
   }
 
   protected _isPressed() {
-    const { paused } = this._media.$store;
-    return !paused();
+    return !this.paused();
   }
 
   protected _getLabel() {
-    const { paused } = this._media.$store;
-    return paused() ? 'Play' : 'Pause';
+    return this.paused() ? 'Play' : 'Pause';
   }
 
   override render() {
