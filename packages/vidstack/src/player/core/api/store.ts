@@ -118,12 +118,7 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
   adsLoaded: false,
   adCanPlay: false,
   adStarted: false,
-  adPlaying: false,
-  adPaused: false,
-  adBuffering: false,
   adCuePoints: [],
-  adCurrentTime: 0,
-  adDuration: 0,
   // ~~ internal props ~~
   autoplaying: false,
   canLoadPoster: null,
@@ -629,36 +624,11 @@ export interface MediaState {
    */
   adStarted: boolean;
   /**
-   * Whether an ad is currently playing.
-   * @defaultValue false
-   */
-  adPlaying: boolean;
-  /**
-   * Whether an ad is currently paused.
-   * @defaultValue false
-   */
-   adPaused: boolean;
-  /**
-   * Whether an ad is being buffered.
-   * @defaultValue false
-   */
-  adBuffering: boolean;
-  /**
    * The cue point list represents a time-schedule of ad breaks.
    * Note that individual ads in the ad break are not included in the schedule.
    * @defaultValue []
    */
   adCuePoints: Number[];
-  /**
-   * The current time for the ad.
-   * @defaultValue 0 
-   */
-  adCurrentTime: number;
-  /**
-   * The duration of the current ad.
-   * @defaultValue 0 
-   */
-  adDuration: number;
 
   // !!! INTERNALS !!!
 

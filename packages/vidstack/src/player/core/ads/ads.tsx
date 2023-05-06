@@ -86,9 +86,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
     this._adContainerElement = document.createElement('media-ads');
     this._media.player?.append(this._adContainerElement);
     this._setAttributesOnAdContainer({
-      'data-ads-paused': computed(() => !this.$store.adPlaying() && this.$store.adStarted()),
-      'data-ads-playing': this.$store.adPlaying,
-      'data-ads-buffering': this.$store.adBuffering,
+      'data-ads-paused': computed(() => !this.$store.playing() && this.$store.adStarted()),
+      'data-ads-playing': computed(() => this.$store.playing() && this.$store.adStarted()),
       'data-ads-can-play': this.$store.adCanPlay,
       'data-ads-started': this.$store.adStarted,
     });
@@ -289,7 +288,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
   }
 
   private _onAdBuffering() {
-    this.$store.adBuffering.set(true);
+    // this.$store.adBuffering.set(true);
   }
 
   private _onContentPauseRequested() {
@@ -312,33 +311,32 @@ export class AdsController extends ComponentController<PlayerAPI> {
 
   private _onAdStart(adEvent: google.ima.AdEvent) {
     let ad = adEvent.getAd();
-    this.$store.adDuration.set(ad?.getDuration() || 0);
-    this.$store.adPlaying.set(true);
-    this.$store.adBuffering.set(false);
+    this.$store.duration.set(ad?.getDuration() || 0);
+    this.$store.playing.set(true);
     this.$store.adStarted.set(true);
   }
 
   private _onAdComplete() {
-    this.$store.adPlaying.set(false);
+    this.$store.playing.set(false);
     this.$store.adStarted.set(false);
   }
 
   private _onAdProgress() {
-    const { adDuration } = this.$store;
+    const { duration } = this.$store;
     const remainingTime = this._adsManager?.getRemainingTime() || 0
-    const currentTime = adDuration() - remainingTime;
-    this.$store.adCurrentTime.set(currentTime);
-    console.log('Current ad time', adDuration(), remainingTime, currentTime)
+    const currentTime = duration() - remainingTime;
+    this.$store.currentTime.set(currentTime);
+    console.log('Current ad time', duration(), remainingTime, currentTime)
   }
 
   private _onAdPause() {
-    this.$store.adPlaying.set(false);
-    this.$store.adPaused.set(true);
+    this.$store.playing.set(false);
+    this.$store.paused.set(true);
   }
 
   private _onAdResume() {
-    this.$store.adPlaying.set(true);
-    this.$store.adPaused.set(false);
+    this.$store.playing.set(true);
+    this.$store.paused.set(false);
   }
 
   private _onAdCanPlay() {

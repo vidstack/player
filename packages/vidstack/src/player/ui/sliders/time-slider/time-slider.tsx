@@ -127,9 +127,9 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   }
 
   protected _watchCurrentTime() {
-    const { currentTime, adCurrentTime, adStarted } = this._media.$store,
+    const { currentTime } = this._media.$store,
       { value, dragging } = this.$store,
-      newValue = this._timeToPercent(adStarted() ? adCurrentTime() : currentTime());
+      newValue = this._timeToPercent(currentTime());
     if (!peek(dragging)) {
       value.set(newValue);
       this.dispatch('value-change', { detail: newValue });
@@ -230,8 +230,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   }
 
   protected _timeToPercent(time: number) {
-    const { adStarted, liveEdge } = this._media.$store,
-      duration = adStarted() ? this._media.$store.adDuration : this._media.$store.duration,
+    const { liveEdge, duration } = this._media.$store,
       rate = Math.max(0, Math.min(1, liveEdge() ? 1 : Math.min(time, duration()) / duration()));
     return Number.isNaN(rate) ? 0 : Number.isFinite(rate) ? rate * 100 : 100;
   }

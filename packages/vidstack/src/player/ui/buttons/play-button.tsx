@@ -48,18 +48,13 @@ export class PlayButton extends ToggleButton {
 
     setARIALabel(el, this._getLabel.bind(this));
 
+    const { adStarted, paused, ended } = this._media.$store;
     this.setAttributes({
-      'data-paused': this.paused,
-      'data-ended': this.ended,
+      'data-paused': paused,
+      // we dont want to show the replay button when ads are playing
+      // e.g. in a post roll
+      'data-ended': computed(() => adStarted() ? false : ended())
     });
-  }
-
-  get paused() {
-    return computed(() => this._media.$store.adStarted() ? this._media.$store.adPaused() : this._media.$store.paused());
-  }
-
-  get ended() {
-    return computed(() => this._media.$store.adStarted() ? false : this._media.$store.ended());
   }
 
 
@@ -73,11 +68,11 @@ export class PlayButton extends ToggleButton {
   }
 
   protected _isPressed() {
-    return !this.paused();
+    return !this._media.$store.paused();
   }
 
   protected _getLabel() {
-    return this.paused() ? 'Play' : 'Pause';
+    return this._media.$store.paused() ? 'Play' : 'Pause';
   }
 
   override render() {

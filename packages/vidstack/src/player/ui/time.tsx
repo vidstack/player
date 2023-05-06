@@ -48,7 +48,7 @@ export class Time extends Component<TimeAPI> {
   protected _getTime() {
     const { type, remainder, padHours, padMinutes, showHours } = this.$props,
       seconds = this._getSeconds(type()),
-      duration = this._media.$store.adStarted() ? this._media.$store.adDuration() : this._media.$store.duration();
+      duration = this._media.$store.duration();
 
     if (!Number.isFinite(seconds + duration)) return 'LIVE';
 
@@ -59,18 +59,14 @@ export class Time extends Component<TimeAPI> {
   protected _getSeconds(type: TimeProps['type']) {
     const { 
       bufferedEnd,
-      duration: contentDuration,
-      currentTime: contentCurrentTime,
+      duration,
+      currentTime,
       adStarted,
-      adCurrentTime,
-      adDuration
     } = this._media.$store;
-    const duration = adStarted() ? adDuration : contentDuration;
-    const currentTime = adStarted() ? adCurrentTime : contentCurrentTime;
     switch (type) {
       case 'buffered':
         // we dont have buffered time for ads so we return the current time instead
-        return adStarted() ? adCurrentTime() : bufferedEnd();
+        return adStarted() ? currentTime() : bufferedEnd();
       case 'duration':
         return duration();
       default:
