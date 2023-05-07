@@ -114,7 +114,7 @@ export function setupHTMLMediaElementEvents(
 
       audioTracks.addEventListener('change', (event) => {
         const { current } = event.detail;
-        const track = _tracks.getTrackById(current.id);
+        const track = _tracks.getTrackById(current?.id);
         if (track) {
           const prev = getEnabledAudioTrack();
           if (prev) prev.enabled = false;
