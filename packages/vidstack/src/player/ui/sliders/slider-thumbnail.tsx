@@ -3,6 +3,7 @@ import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/el
 import { noop } from 'maverick.js/std';
 import { parseResponse, type VTTCue } from 'media-captions';
 
+import { getRequestCredentials } from '../../../utils/network';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import { SliderStoreFactory } from './slider/api/store';
 
@@ -106,8 +107,15 @@ export class SliderThumbnail extends Component<SliderThumbnailAPI> {
 
     this._loaded.set(false);
 
-    const controller = new AbortController();
-    parseResponse(fetch(this.$props.src(), { signal: controller.signal }))
+    const controller = new AbortController(),
+      { crossorigin } = this._media.$store;
+
+    parseResponse(
+      fetch(this.$props.src(), {
+        signal: controller.signal,
+        credentials: getRequestCredentials(crossorigin()),
+      }),
+    )
       .then(({ cues }) => this._cues.set(cues))
       .catch(noop);
 
