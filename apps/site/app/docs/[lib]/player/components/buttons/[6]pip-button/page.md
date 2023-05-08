@@ -11,7 +11,7 @@ event to the player.
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:6" /%}
 
 {% callout type="danger" %}
-The `data-hidden` attribute will be present on this element in the event PIP cannot be
+The `aria-hidden='true'` attribute will be present on this element in the event PIP cannot be
 requested (not supported by environment or provider). The button's `display` property will be
 set to `none`, so it'll be removed from the layout; therefore, you should account for the button
 not being displayed in your design.
@@ -60,7 +60,7 @@ media-pip-button:not([data-pip]) {
 }
 
 /* Apply styles when pip is not supported. */
-media-pip-button[data-hidden] {
+media-pip-button[aria-hidden='true'] {
 }
 
 /* Style default icons. */

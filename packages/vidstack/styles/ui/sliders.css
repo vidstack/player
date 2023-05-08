@@ -136,10 +136,10 @@
 }
 
 :where(
-    media-slider-video:not([data-hidden]) + media-slider-value,
-    media-slider-video:not([data-hidden]) + [part='chapter-title'],
-    media-slider-thumbnail:not([data-hidden]) + media-slider-value,
-    media-slider-thumbnail:not([data-hidden]) + [part='chapter-title']
+    media-slider-video:not([aria-hidden='true']) + media-slider-value,
+    media-slider-video:not([aria-hidden='true']) + [part='chapter-title'],
+    media-slider-thumbnail:not([aria-hidden='true']) + media-slider-value,
+    media-slider-thumbnail:not([aria-hidden='true']) + [part='chapter-title']
   ) {
   margin-top: 8px;
 }

@@ -28,7 +28,7 @@
   margin: 0;
 }
 
-:where(media-captions[data-hidden]) {
+:where(media-captions[aria-hidden='true']) {
   opacity: 0;
   visibility: hidden;
 }

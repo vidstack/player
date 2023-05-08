@@ -3,6 +3,7 @@ import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/el
 import { noop } from 'maverick.js/std';
 import { parseResponse, type VTTCue } from 'media-captions';
 
+import { $ariaBool } from '../../../utils/aria';
 import { getRequestCredentials } from '../../../utils/network';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import { SliderStoreFactory } from './slider/api/store';
@@ -53,7 +54,7 @@ export class SliderThumbnail extends Component<SliderThumbnailAPI> {
     this._hidden = this._isHidden.bind(this);
     this.setAttributes({
       'data-loading': this._isLoading.bind(this),
-      'data-hidden': this._hidden,
+      'aria-hidden': $ariaBool(this._hidden),
     });
   }
 
@@ -68,7 +69,7 @@ export class SliderThumbnail extends Component<SliderThumbnailAPI> {
   override render() {
     const { crossorigin } = this._media.$store;
     return (
-      <div part="container">
+      <div part="container" aria-hidden="true">
         <img
           src={this._src()}
           crossorigin={crossorigin()}

@@ -28,7 +28,7 @@ of the media player:
 The following data attributes are applied to the `media-poster` element:
 
 - `data-loading`: Present when poster image is being downloaded by the browser.
-- `data-hidden`: Present when the poster image has failed to load.
+- `aria-hidden='true'`: Present when the poster image has failed to load.
 
 ```html
 <media-poster data-loading />
@@ -44,6 +44,6 @@ media-poster[data-loading] {
 }
 
 /* Do something if poster image fails to load. */
-media-poster[data-hidden] {
+media-poster[aria-hidden='true'] {
 }
 ```

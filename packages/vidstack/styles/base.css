@@ -116,7 +116,7 @@
   cursor: unset;
 }
 
-:where(media-fullscreen-button[data-hidden], media-seek-button[data-hidden]) {
+:where([data-media-button][aria-hidden='true']) {
   display: none;
 }
 
@@ -203,7 +203,7 @@
   max-width: unset !important;
 }
 
-:where(media-slider-thumbnail[data-hidden]) {
+:where(media-slider-thumbnail[aria-hidden='true']) {
   display: none;
 }
 
@@ -232,7 +232,10 @@
 }
 
 /* Hide video if it fails to load. */
-:where(media-slider-video[data-hidden], media-slider-video[data-hidden] [part='video']) {
+:where(
+    media-slider-video[aria-hidden='true'],
+    media-slider-video[aria-hidden='true'] [part='video']
+  ) {
   display: none;
   width: 0px;
 }
@@ -269,7 +272,7 @@
   box-sizing: border-box;
 }
 
-:where(media-poster[data-hidden]) {
+:where(media-poster[aria-hidden='true']) {
   display: none;
 }
 
@@ -284,7 +287,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(media-captions[data-hidden]) {
+:where(media-captions[aria-hidden='true']) {
   opacity: 0;
   visibility: hidden;
 }

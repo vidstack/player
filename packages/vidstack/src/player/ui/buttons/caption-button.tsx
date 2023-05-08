@@ -2,6 +2,7 @@ import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
 import { closedCaptionsOnPaths, closedCaptionsPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
+import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import type { MediaKeyShortcut } from '../../core/keyboard/types';
@@ -48,7 +49,7 @@ export class CaptionButton extends ToggleButton {
     setARIALabel(el, this._getLabel.bind(this));
 
     this.setAttributes({
-      'data-hidden': this._isHidden.bind(this),
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
     });
   }
 

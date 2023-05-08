@@ -91,7 +91,7 @@ media-slider-thumbnail [part='img'] {
 }
 
 /* Apply styles when VTT file fails to load. */
-media-slider-thumbnail[data-hidden] {
+media-slider-thumbnail[aria-hidden='true'] {
 }
 ```
 

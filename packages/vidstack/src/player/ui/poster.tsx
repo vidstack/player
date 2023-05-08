@@ -1,6 +1,7 @@
 import { computed, effect, signal, type ReadSignal } from 'maverick.js';
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
+import { $ariaBool } from '../../utils/aria';
 import { preconnect } from '../../utils/network';
 import { useMedia, type MediaContext } from '../core/api/context';
 
@@ -40,7 +41,7 @@ export class Poster extends Component<PosterAPI> {
     this._imgAlt = this._getImgAlt.bind(this);
     this.setAttributes({
       'data-loading': this._imgLoading,
-      'data-hidden': this._imgError,
+      'aria-hidden': $ariaBool(this._imgError),
     });
   }
 

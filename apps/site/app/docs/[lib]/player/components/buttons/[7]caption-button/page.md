@@ -11,7 +11,7 @@ toggle between `showing` and `disabled`.
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:6" /%}
 
 {% callout type="danger" %}
-The `data-hidden` attribute will be present on this element in the event no text tracks with a
+The `aria-hidden='true'` attribute will be present on this element in the event no text tracks with a
 kind of `captions` or `subtitles` exists. The button's `display` property will be set to `none`,
 so it'll be removed from the layout; therefore, you should account for the button not being
 displayed in your design.
@@ -60,7 +60,7 @@ media-caption-button:not([data-pressed]) {
 }
 
 /* Apply styles when captions is not supported. */
-media-caption-button[data-hidden] {
+media-caption-button[aria-hidden='true'] {
 }
 
 /* Style default icons. */

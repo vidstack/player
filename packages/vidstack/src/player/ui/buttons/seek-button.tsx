@@ -8,6 +8,7 @@ import { seekBackwardPaths, seekForwardPaths } from 'media-icons';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { Icon } from '../../../icons/icon';
+import { $ariaBool } from '../../../utils/aria';
 import { onPress, setARIALabel, setAttributeIfEmpty } from '../../../utils/dom';
 import { useMedia, type MediaContext } from '../../core/api/context';
 
@@ -59,7 +60,7 @@ export class SeekButton extends Component<SeekButtonAPI> {
     this.setAttributes({
       seconds,
       'default-appearance': defaultAppearance,
-      'data-hidden': this._isHidden.bind(this),
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
       'data-media-button': true,
     });
   }

@@ -2,6 +2,7 @@ import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
 import { pictureInPictureExitPaths, pictureInPicturePaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
+import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import type { MediaKeyShortcut } from '../../core/keyboard/types';
@@ -49,7 +50,7 @@ export class PIPButton extends ToggleButton {
 
     const { pictureInPicture } = this._media.$store;
     this.setAttributes({
-      'data-hidden': this._isHidden.bind(this),
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
       'data-pip': pictureInPicture,
     });
   }

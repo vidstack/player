@@ -41,7 +41,7 @@ media-seek-button[seconds*='-'] {
 }
 
 /* Apply styles when media seeking is not permitted (e.g., live stream). */
-media-seek-button[data-hidden] {
+media-seek-button[aria-hidden='true'] {
 }
 
 /* Style default icons. */

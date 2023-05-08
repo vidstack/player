@@ -41,7 +41,7 @@ media-slider-video[data-loading] {
 }
 
 /* Apply styles when video fails to load. */
-media-slider-video[data-hidden] {
+media-slider-video[aria-hidden='true'] {
 }
 ```
 

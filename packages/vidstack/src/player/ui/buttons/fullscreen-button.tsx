@@ -2,6 +2,7 @@ import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
 import { fullscreenExitPaths, fullscreenPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
+import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import type { MediaFullscreenRequestTarget } from '../../core/api/request-events';
@@ -53,7 +54,7 @@ export class FullscreenButton extends ToggleButton<FullscreenButtonAPI> {
 
     const { fullscreen } = this._media.$store;
     this.setAttributes({
-      'data-hidden': this._isHidden.bind(this),
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
       'data-fullscreen': fullscreen,
     });
   }

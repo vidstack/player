@@ -81,8 +81,6 @@
   opacity: 1;
 }
 
-:where(media-fullscreen-button[data-hidden]),
-:where(media-pip-button[data-hidden]),
-:where(media-caption-button[data-hidden]) {
+:where([data-media-button][aria-hidden='true']) {
   display: none;
 }
