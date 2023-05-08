@@ -1,4 +1,4 @@
-import { VTTCue } from 'media-captions';
+import type { VTTCue } from 'media-captions';
 
 import type { MediaStore } from '../../../core/api/store';
 import type { SliderStore } from '../slider/api/store';
@@ -60,7 +60,7 @@ export class SliderChaptersRenderer {
       if (nextCue) {
         const timeDiff = nextCue.startTime - currentCue.endTime;
         if (timeDiff > 0) {
-          chapters.push(new VTTCue(currentCue.endTime, currentCue.endTime + timeDiff, ''));
+          chapters.push(new window.VTTCue(currentCue.endTime, currentCue.endTime + timeDiff, ''));
         }
       }
     }

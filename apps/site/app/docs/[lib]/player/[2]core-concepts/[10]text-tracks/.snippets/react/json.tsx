@@ -1,8 +1,8 @@
 <MediaPlayer
   textTracks={[
     {
-      src: '/media/subs/english.vtt',
-      type: 'vtt',
+      src: '/media/subs/english.json',
+      type: 'json',
       kind: 'subtitles',
       label: 'English',
       language: 'en-US',

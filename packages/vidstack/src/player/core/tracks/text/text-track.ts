@@ -1,12 +1,13 @@
-import { DOMEvent, EventsTarget, isString } from 'maverick.js/std';
-import type {
-  CaptionsFileFormat,
-  CaptionsParserFactory,
-  VTTCue,
-  VTTHeaderMetadata,
-  VTTRegion,
+import { DOMEvent, EventsTarget, isNumber } from 'maverick.js/std';
+import {
+  type CaptionsFileFormat,
+  type CaptionsParserFactory,
+  type VTTCue,
+  type VTTHeaderMetadata,
+  type VTTRegion,
 } from 'media-captions';
 
+import { getRequestCredentials } from '../../../../utils/network';
 import {
   TEXT_TRACK_CAN_LOAD,
   TEXT_TRACK_CROSSORIGIN,
@@ -30,7 +31,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   }
 
   readonly src?: string;
-  readonly type?: CaptionsFileFormat | CaptionsParserFactory;
+  readonly type?: 'json' | CaptionsFileFormat | CaptionsParserFactory;
   readonly encoding?: string;
 
   readonly id = '';
@@ -203,36 +204,56 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     this.dispatchEvent(new DOMEvent<void>('load-start'));
 
     try {
-      const { parseResponse } = await import('media-captions');
-      const crossorigin = this[TEXT_TRACK_CROSSORIGIN]?.();
-      const { errors, metadata, regions, cues } = await parseResponse(
-        fetch(this.src, {
-          credentials:
-            crossorigin === 'use-credentials'
-              ? 'include'
-              : isString(crossorigin)
-              ? 'same-origin'
-              : undefined,
-        }),
-        {
+      const { parseResponse, VTTCue, VTTRegion } = await import('media-captions'),
+        crossorigin = this[TEXT_TRACK_CROSSORIGIN]?.();
+
+      const response = fetch(this.src, {
+        headers: this.type === 'json' ? { 'Content-Type': 'application/json' } : undefined,
+        credentials: getRequestCredentials(crossorigin),
+      });
+
+      if (this.type === 'json') {
+        try {
+          const json = (await (await response).json()) as {
+            regions?: Partial<VTTRegion>[];
+            cues?: Partial<VTTCue>[];
+          };
+
+          if (json.regions) {
+            this._regions = json.regions.map((json) => Object.assign(new VTTRegion(), json));
+          }
+
+          if (json.cues) {
+            this._cues = json.cues
+              .filter((json) => isNumber(json.startTime) && isNumber(json.endTime))
+              .map((json) => Object.assign(new VTTCue(0, 0, ''), json));
+          }
+        } catch (e) {
+          if (__DEV__) {
+            console.error(`[vidstack] failed to parse JSON captions at: \`${this.src}\`\n\n`, e);
+          }
+        }
+      } else {
+        const { errors, metadata, regions, cues } = await parseResponse(response, {
           type: this.type,
           encoding: this.encoding,
-        },
-      );
+        });
 
-      if (errors[0]?.code === 0) {
-        throw errors[0];
-      } else {
-        this._metadata = metadata;
-        this._regions = regions;
-        this._cues = cues;
-        this[TEXT_TRACK_READY_STATE] = 2;
-        const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
-        if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
-        const loadEvent = new DOMEvent<void>('load');
-        this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, loadEvent);
-        this.dispatchEvent(loadEvent);
+        if (errors[0]?.code === 0) {
+          throw errors[0];
+        } else {
+          this._metadata = metadata;
+          this._regions = regions;
+          this._cues = cues;
+        }
       }
+
+      this[TEXT_TRACK_READY_STATE] = 2;
+      const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
+      if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
+      const loadEvent = new DOMEvent<void>('load');
+      this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, loadEvent);
+      this.dispatchEvent(loadEvent);
     } catch (error) {
       this[TEXT_TRACK_READY_STATE] = 3;
       this.dispatchEvent(new DOMEvent('error', { detail: error }));
@@ -253,9 +274,9 @@ export interface TextTrackInit {
   src?: string;
   /**
    * The captions file format to be parsed or a custom parser factory (functions that returns a
-   * captions parser). Supported types include: 'vtt', 'srt', 'ssa', and 'ass'.
+   * captions parser). Supported types include: 'vtt', 'srt', 'ssa', 'ass', and 'json'.
    */
-  type?: CaptionsFileFormat | CaptionsParserFactory;
+  type?: 'json' | CaptionsFileFormat | CaptionsParserFactory;
   /**
    * The text encoding type to be used when decoding data bytes to text.
    *

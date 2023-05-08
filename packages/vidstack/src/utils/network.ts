@@ -1,4 +1,4 @@
-import { deferredPromise, isNull, type DeferredPromise } from 'maverick.js/std';
+import { deferredPromise, isNull, isString, type DeferredPromise } from 'maverick.js/std';
 
 export function preconnect(
   url: string,
@@ -45,4 +45,12 @@ export function loadScript(src: string): Promise<void> {
 
   setTimeout(() => document.head.append(script), 0);
   return promise.promise;
+}
+
+export function getRequestCredentials(crossorigin?: string | null): RequestCredentials | undefined {
+  return crossorigin === 'use-credentials'
+    ? 'include'
+    : isString(crossorigin)
+    ? 'same-origin'
+    : undefined;
 }

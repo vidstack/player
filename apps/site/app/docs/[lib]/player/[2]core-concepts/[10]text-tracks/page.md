@@ -13,12 +13,53 @@ Player.
 The [`vidstack/media-captions`](https://github.com/vidstack/media-captions) library handles
 loading, parsing, and rendering captions inside of Vidstack Player. The following caption formats
 are supported: [VTT](https://github.com/vidstack/media-captions#vtt),
-[SRT](https://github.com/vidstack/media-captions#srt), and [SSA/ASS](https://github.com/vidstack/media-captions#ssaass).
-See the links provided for more information and any limitations. Do note, all caption formats are
-mapped to VTT which is extended to support custom styles.
+[SRT](https://github.com/vidstack/media-captions#srt), [SSA/ASS](https://github.com/vidstack/media-captions#ssaass),
+and [JSON](#json). See the links provided for more information and any limitations. Do note,
+all caption formats are mapped to VTT which is extended to support custom styles.
 
 Browsers or providers may also support loading additional text tracks. For example, Safari
 and the HLS provider will load captions embedded in HLS playlists.
+
+### JSON
+
+Text tracks also support the `json` type. The resource at the given `src` should return a JSON
+object with:
+
+- An optional `regions` array of partial
+  [`VTTRegion`](https://github.com/vidstack/media-captions/blob/main/src/vtt/vtt-region.ts) objects
+- An optional `cues` array of partial
+  [`VTTCue`](https://github.com/vidstack/media-captions/blob/main/src/vtt/vtt-cue.ts) objects.
+
+```ts
+interface JSONCaptions {
+  regions?: Partial<VTTRegion>[];
+  cues?: Partial<VTTCue>[];
+}
+```
+
+The `type` can be specified on the text track like so:
+
+{% code_snippet name="json" highlight="html:9|react:5" /%}
+
+Here is an example JSON response from the server:
+
+```json {% title="cues.json" %}
+{
+  "cues": [
+    { "startTime": 0, "endTime": 5, "text": "Cue One!" },
+    { "startTime": 5, "endTime": 10, "text": "Cue Two!" }
+  ]
+}
+```
+
+Example response with regions:
+
+```json {% title="regions+cues.json" %}
+{
+  "regions": [{ "id": "0", "lines": 3, "scroll": "up" }],
+  "cues": [{ "region": { "id": "0" }, "startTime": 0, "endTime": 5, "text": "Hello!" }]
+}
+```
 
 ## Tracks List
 
