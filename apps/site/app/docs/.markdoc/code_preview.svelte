@@ -38,7 +38,7 @@
 
 <div
   class="code-preview text-soft prefers-dark-scheme my-8 mx-auto overflow-hidden rounded-md shadow-xl border-border border"
-  style="background-color: var(--code-fence-bg);"
+  style="background-color: var(--code-fence-bg); --media-focus-ring: 0 0 0 3px rgb(78 156 246);"
   aria-busy={ariaBool(!hasLoaded)}
   use:intersectionObserver={{ callback: onIntersect }}
 >
