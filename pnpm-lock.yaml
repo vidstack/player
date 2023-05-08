@@ -63,7 +63,7 @@ importers:
       clsx: ^1.2.0
       gray-matter: ^4.0.0
       html-entities: ^2.3.3
-      media-icons: ^0.4.2
+      media-icons: 0.5.0
       nprogress: ^0.2.0
       postcss: ^8.4.0
       react: ^17.0.0
@@ -83,7 +83,7 @@ importers:
       '@vidstack/react': link:../../packages/react
       clsx: 1.2.1
       html-entities: 2.3.3
-      media-icons: 0.4.2
+      media-icons: 0.5.0
       svelte-class-transition: 1.0.4_svelte@3.59.0
       vidstack: link:../../packages/vidstack
     devDependencies:
@@ -113,7 +113,7 @@ importers:
     specifiers:
       '@types/react': ^18.0.0
       maverick.js: 0.36.1
-      media-icons: 0.4.2
+      media-icons: 0.5.0
       react: ^18.0.0
       rimraf: ^3.0.0
       tsup: ^6.7.0
@@ -122,7 +122,7 @@ importers:
     devDependencies:
       '@types/react': 18.2.6
       maverick.js: 0.36.1_typescript@5.0.4
-      media-icons: 0.4.2
+      media-icons: 0.5.0
       react: 18.2.0
       rimraf: 3.0.2
       tsup: 6.7.0_typescript@5.0.4
@@ -144,7 +144,7 @@ importers:
       libass-wasm: ^4.1.0
       maverick.js: 0.36.1
       media-captions: 0.0.11
-      media-icons: 0.4.2
+      media-icons: 0.5.0
       postcss: ^8.4.0
       rimraf: ^3.0.0
       tailwindcss: ^3.2.0
@@ -157,7 +157,7 @@ importers:
     dependencies:
       maverick.js: 0.36.1_typescript@5.0.4
       media-captions: 0.0.11
-      media-icons: 0.4.2
+      media-icons: 0.5.0
       type-fest: 3.10.0_typescript@5.0.4
     devDependencies:
       '@maverick-js/compiler': 0.36.1
@@ -3932,8 +3932,8 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /media-icons/0.4.2:
-    resolution: {integrity: sha512-jrxoQzxsZFyzt6P3CoGZWa6FVKoR/Ii1plbVjtyTSyQGpeVWkJ++0oBAwGOv/F9mWRxmGkaQ04uEIKTFouRG1w==}
+  /media-icons/0.5.0:
+    resolution: {integrity: sha512-fFZdWufnwYbKwTwPm0/1xYnTamUBG5EddOy+p8yT7ITV1Vw2sDByCZecNOGG3ynrQVCOQ68Rg/L19aCIxG/K0g==}
     engines: {node: '>=16'}
 
   /media-typer/0.3.0:

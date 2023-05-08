@@ -26,14 +26,11 @@
 </script>
 
 <script lang="ts">
-  import previews from ':virtual/code_previews';
   import uFuzzy from '@leeoniya/ufuzzy';
   import { staticData, useRouter } from '@vessel-js/svelte';
   import clsx from 'clsx';
   import { onMount, tick } from 'svelte';
   import Transition from 'svelte-class-transition';
-  import ArrowLeftIcon from '~icons/ri/arrow-left-fill';
-  import CloseIcon from '~icons/ri/close-fill';
   import DownloadIcon from '~icons/ri/file-download-fill';
 
   import { focusTrap } from '$lib/actions/focus-trap';
@@ -101,7 +98,7 @@
     tags = icons.map((name) => name + '-' + $staticData.icons[name].tags);
 
   $: indicies = fuzzy.filter(tags, normalizeSearchText(searchText));
-  $: filteredIcons = indicies.map((i) => icons[i]);
+  $: filteredIcons = indicies?.map((i) => icons[i]) || icons;
 
   $: currentTags = [
     ...currentIcon.split('-'),
