@@ -16,6 +16,7 @@ import { LogPrinter } from '../../foundation/logger/log-printer';
 import { FocusVisibleController } from '../../foundation/observers/focus-visible';
 import { ScreenOrientationController } from '../../foundation/orientation/controller';
 import { RequestQueue } from '../../foundation/queue/request-queue';
+import { setAttributeIfEmpty } from '../../utils/dom';
 import { clampNumber } from '../../utils/number';
 import { mediaContext, type MediaContext } from './api/context';
 import { MEDIA_ATTRIBUTES } from './api/media-attrs';
@@ -147,7 +148,8 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('tabindex', '0');
-    if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', 'Media Player');
+    setAttributeIfEmpty(el, 'role', 'region');
+    setAttributeIfEmpty(el, 'aria-label', 'Media Player');
     this._setMediaAttributes();
     this._setMediaVars();
     this._media.player = el as MediaPlayerElement;
