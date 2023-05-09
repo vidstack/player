@@ -51,14 +51,7 @@ on the player.
 You can override the default styles with CSS like so:
 
 ```css {% copy=true %}
-/* CSS vars are available for simple customization. */
 media-volume-slider {
-  /* Default values are shown below. */
-  --media-slider-height: 48px;
-  --media-slider-thumb-size: 14px;
-  --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
-  --media-slider-track-height: 4px;
-  --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
 }
 
 /* Apply styles when device pointer is within slider bounds. */
@@ -71,6 +64,10 @@ media-volume-slider[data-dragging] {
 
 /* Shorthand for both dragging and pointing. */
 media-volume-slider[data-interactive] {
+}
+
+/** Apply styles to preview. */
+media-volume-slider [slot='preview'] {
 }
 ```
 
@@ -115,20 +112,10 @@ media-volume-slider[data-focus] [part='track'] {
 }
 ```
 
-### Previews
+### CSS Variables
 
-```css
-/* CSS vars are available for simple customization. */
-media-volume-slider {
-  /* Default values are shown below. */
-  --media-slider-preview-width: var(--computed-width);
-  --media-slider-preview-gap: calc(var(--computed-height) + 8px);
-}
-
-/** Override default preview styles. */
-media-volume-slider [slot='preview'] {
-}
-```
+See the [slider CSS variables](/docs/player/components/sliders/slider#css-variables)
+for simple customization of the default slider styles.
 
 ## Tailwind
 

@@ -27,9 +27,9 @@
   height: var(--track-height);
   top: 50%;
   left: 0;
-  border-radius: 1px;
+  border-radius: var(--media-slider-track-border-radius, 2px);
   transform: translateY(-50%);
-  background-color: rgb(255 255 255 / 0.3);
+  background-color: var(--media-slider-track-bg, rgb(255 255 255 / 0.3));
   backdrop-filter: blur(2px);
 }
 
@@ -44,13 +44,13 @@
 
 :where([data-media-slider] [part~='track-fill']) {
   z-index: 2; /** above track and track progress. */
-  background-color: #fafafa;
+  background-color: var(--media-slider-track-fill-bg, #fafafa);
   width: var(--slider-fill-percent);
   will-change: width;
 }
 
 :where(media-player[data-live] media-time-slider [part~='track-fill']) {
-  background-color: #dc2626;
+  background-color: var(--media-slider-track-fill-live-bg, #dc2626);
 }
 
 :where(media-time-slider [part~='track-progress']) {
@@ -58,7 +58,7 @@
   left: 0;
   width: var(--media-buffered-percent, 0%);
   will-change: width;
-  background-color: rgb(255 255 255 / 0.5);
+  background-color: var(--media-slider-track-progress-bg, rgb(255 255 255 / 0.5));
   backdrop-filter: blur(2px);
 }
 
@@ -85,20 +85,20 @@
   opacity: 0;
   width: var(--thumb-size);
   height: var(--thumb-size);
-  border-radius: 9999px;
-  background-color: #fff;
+  border-radius: var(--media-slider-thumb-border-radius, 9999px);
+  background-color: var(--media-slider-thumb-bg, #fff);
   transform: translateY(-50%);
   transition: opacity 0.15s ease-in;
   pointer-events: none;
 }
 
 :where([data-media-slider][data-dragging], [data-media-slider][data-focus]) :where([part='thumb']) {
-  box-shadow: 0 0 0 4px hsla(0, 0%, 100%, 0.4);
+  box-shadow: var(--media-slider-focused-thumb-shadow, 0 0 0 4px hsla(0, 0%, 100%, 0.4));
 }
 
 :where([data-media-slider][data-interactive] [part='thumb']) {
   opacity: 1;
-  transition: opacity 0.2s ease-in, box-shadow 0.2s ease;
+  transition: var(--media-slider-thumb-transition, opacity 0.2s ease-in, box-shadow 0.2s ease);
   width: var(--thumb-focus-size);
   height: var(--thumb-focus-size);
 }
@@ -113,11 +113,12 @@
   display: flex;
   position: absolute;
   left: var(--preview-left);
-  bottom: calc(100% - 2px);
+  bottom: calc(100% + var(--media-slider-preview-gap, -2px));
   flex-direction: column;
   align-items: center;
   opacity: 0;
-  border-radius: 2px;
+  background-color: var(--media-slider-preview-bg);
+  border-radius: var(--media-slider-preview-border-radius, 2px);
   pointer-events: none;
   transform: translateX(-50%);
   transition: opacity 0.2s ease-out;
@@ -130,9 +131,9 @@
 }
 
 :where([data-media-slider] media-slider-value) {
-  padding: 1px 10px;
-  color: hsl(0, 0%, 80%);
-  background-color: black;
+  padding: var(--media-slider-value-padding, 1px 10px);
+  color: var(--media-slider-value-color, hsl(0, 0%, 80%));
+  background-color: var(--media-slider-value-bg, black);
 }
 
 :where(
@@ -141,7 +142,7 @@
     media-slider-thumbnail:not([aria-hidden='true']) + media-slider-value,
     media-slider-thumbnail:not([aria-hidden='true']) + [part='chapter-title']
   ) {
-  margin-top: 8px;
+  margin-top: var(--media-slider-value-spacing, 8px);
 }
 
 :where(media-player:not([data-can-play]) media-time-slider media-slider-value) {
@@ -212,7 +213,7 @@
 
 :where([data-media-slider][aria-orientation='vertical'] [slot='preview']) {
   top: unset;
-  left: calc(100% - 4px);
+  left: calc(100% + var(--media-slider-vertical-preview-gap, 4px));
   bottom: var(--preview-bottom);
   will-change: bottom;
   transform: translateY(50%);
@@ -258,12 +259,16 @@ media-time-slider[data-chapters] > shadow-root > [part*='track'] {
 }
 
 :where(media-time-slider [part='chapter-container']:hover [part='chapter']) {
-  transform: scaleY(1.75);
-  transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
+  transform: var(--media-slider-chapter-hover-transform, scaleY(1.75));
+  transition: var(
+    --media-slider-chapter-hover-transition,
+    transform 0.1s cubic-bezier(0.4, 0, 1, 1)
+  );
 }
 
 :where(media-time-slider [part='chapter-title']) {
   font-family: var(--media-font-family, sans-serif);
-  font-size: 14px;
-  color: white;
+  font-size: var(--media-slider-chapter-title-font-size: 14px);
+  color: var(--media-slider-chapter-title-color, white);
+  background-color: var(--media-slider-chapter-title-bg);
 }

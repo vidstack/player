@@ -86,14 +86,7 @@ on the player.
 You can override the default styles with CSS like so:
 
 ```css {% copy=true %}
-/* CSS vars are available for simple customization. */
 media-time-slider {
-  /* Default values are shown below. */
-  --media-slider-height: 48px;
-  --media-slider-thumb-size: 14px;
-  --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
-  --media-slider-track-height: 4px;
-  --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
 }
 
 /* Apply styles when device pointer is within slider bounds. */
@@ -110,6 +103,10 @@ media-time-slider[data-interactive] {
 
 /* Apply styles when at live edge. */
 media-player[data-live-edge] media-time-slider {
+}
+
+/** Apply styles to preview. */
+media-time-slider [slot='preview'] {
 }
 ```
 
@@ -162,21 +159,6 @@ media-time-slider[data-focus] [part='track'] {
 }
 ```
 
-### Previews
-
-```css
-/* CSS vars are available for simple customization. */
-media-time-slider {
-  /* Default values are shown below. */
-  --media-slider-preview-width: var(--computed-width);
-  --media-slider-preview-gap: calc(var(--computed-height) + 8px);
-}
-
-/** Override default preview styles. */
-media-time-slider [slot='preview'] {
-}
-```
-
 ### Chapters
 
 ```css
@@ -200,6 +182,11 @@ media-time-slider [part='chapter'] {
 media-time-slider [part='chapter-title'] {
 }
 ```
+
+### CSS Variables
+
+See the [slider CSS variables](/docs/player/components/sliders/slider#css-variables)
+for simple customization of the default slider styles.
 
 ## Tailwind
 

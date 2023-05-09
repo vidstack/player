@@ -64,14 +64,7 @@ step by 2, so a change of 10.
 You can override the default styles with CSS like so:
 
 ```css {% copy=true %}
-/* CSS vars are available for simple customization. */
 media-slider {
-  /* Default values are shown below. */
-  --media-slider-height: 48px;
-  --media-slider-thumb-size: 14px;
-  --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
-  --media-slider-track-height: 4px;
-  --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
 }
 
 /* Apply styles when device pointer is within slider bounds. */
@@ -146,6 +139,55 @@ desired.
 | `data-interactive` | Either dragging, pointing, or focus is true.          |
 
 ### CSS Variables
+
+The following snippet contains a complete list of CSS variables and their default values. Any
+of the variables can be set to adjust the default slider styles:
+
+```css
+media-player {
+  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
+
+  --media-slider-width: 100%;
+  --media-slider-height: 48px;
+
+  --media-slider-thumb-size: 14px;
+  --media-slider-thumb-bg: #fff;
+  --media-slider-thumb-border-radius: 9999px;
+  --media-slider-thumb-transition: opacity 0.2s ease-in, box-shadow 0.2s ease;
+  --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
+  --media-slider-focused-thumb-shadow: 0 0 0 4px hsla(0, 0%, 100%, 0.4);
+
+  --media-slider-track-width: 100%;
+  --media-slider-track-height: 4px;
+  --media-slider-track-border-radius: 2px;
+  --media-slider-track-height: 4px;
+  --media-slider-track-bg: rgb(255 255 255 / 0.3);
+  --media-slider-focused-track-width: 100%;
+  --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
+
+  --media-slider-track-fill-bg: #fafafa;
+  --media-slider-track-fill-live-bg: #dc2626;
+
+  --media-slider-track-progress-bg: rgb(255 255 255 / 0.5);
+
+  --media-slider-value-padding: 1px 10px;
+  --media-slider-value-bg: black;
+  --media-slider-value-color: hsl(0, 0%, 80%);
+  --media-slider-value-spacing: 8px;
+
+  --media-slider-preview-bg: unset;
+  --media-slider-preview-width: var(--computed-width);
+  --media-slider-preview-border-radius: 2px;
+  --media-slider-preview-gap: -2px;
+  --media-slider-vertical-preview-gap: 4px;
+
+  --media-slider-chapter-title-font-size: 14px;
+  --media-slider-chapter-title-color: white;
+  --media-slider-chapter-title-bg: unset;
+  --media-slider-chapter-hover-transform: scaleY(1.75);
+  --media-slider-chapter-hover-transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
+}
+```
 
 The CSS variables listed in the table below can be used to style your own slider. The `fill`
 variables represent the current value, and the `pointer` variables represent the current value
