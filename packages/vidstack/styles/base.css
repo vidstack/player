@@ -108,8 +108,12 @@
   outline: none;
 }
 
-:where([data-media-button][data-focus] *[slot]:not([slot*='tooltip'])) {
+:where([data-media-button][data-focus] [slot]) {
   box-shadow: var(--media-focus-ring);
+}
+
+:where([data-media-button][data-focus] media-tooltip [slot]) {
+  box-shadow: unset;
 }
 
 :where(media-live-indicator:not([data-live])) {

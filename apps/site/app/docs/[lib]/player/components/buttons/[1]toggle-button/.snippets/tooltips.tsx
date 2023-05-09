@@ -1,16 +1,10 @@
-import { MediaToggleButton, ThumbsDownIcon, ThumbsUpIcon } from '@vidstack/react';
+import { MediaToggleButton, MediaTooltip, ThumbsDownIcon, ThumbsUpIcon } from '@vidstack/react';
 
-function MyToggleButton() {
-  const tooltipId = 'media-...-tooltip';
-
-  return (
-    <MediaToggleButton aria-describedby={tooltipId}>
-      <ThumbsUpIcon slot="on" />
-      <ThumbsDownIcon slot="off" />
-      <div id={tooltipId} role="tooltip" slot="tooltip-top-center">
-        <span slot="on-tooltip">On</span>
-        <span slot="off-tooltip">Off</span>
-      </div>
-    </MediaToggleButton>
-  );
-}
+<MediaToggleButton>
+  <ThumbsUpIcon slot="on" />
+  <ThumbsDownIcon slot="off" />
+  <MediaTooltip position="top center">
+    <span slot="on">On</span>
+    <span slot="off">Off</span>
+  </MediaTooltip>
+</MediaToggleButton>;

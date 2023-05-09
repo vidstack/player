@@ -7,8 +7,8 @@
 :where([data-media-button]) {
   border-radius: var(--media-button-border-radius, 0);
   color: var(--media-button-color, white);
-  width: 48px;
-  height: 48px;
+  width: var(--media-button-size, 48px);
+  height: var(--media-button-size, 48px);
   transition: transform 0.2s ease-out;
   touch-action: manipulation;
 }
@@ -27,35 +27,21 @@
 }
 
 :where([data-media-button]:not([aria-expanded='true']):hover) {
-  transform: scale(1.1);
+  transform: var(--media-button-hover-transform, scale(1.1));
   transition: transform 0.2s ease-in;
 }
 
-:where([data-media-button])
-  :where(
-    [slot='on'],
-    [slot='off'],
-    [slot='open'],
-    [slot='close'],
-    [slot='play'],
-    [slot='replay'],
-    [slot='pause'],
-    [slot='volume-high'],
-    [slot='volume-low'],
-    [slot='volume-muted'],
-    [slot='enter'],
-    [slot='exit'],
-    [slot='forward'],
-    [slot='backward'],
+:where([data-media-button] [slot]) {
+  opacity: 0;
+  display: none;
+}
 
-  ) {
-  display: block;
+:where([data-media-button]) :where(media-icon[slot], svg[slot]) {
   position: absolute;
   top: 50%;
   left: 50%;
-  opacity: 0;
   transform: translate(-50%, -50%);
-  border-radius: 2px;
+  border-radius: var(--media-button-icon-border-radius, 2px);
 }
 
 :where(
@@ -67,6 +53,8 @@
     media-mute-button[data-volume='high'] [slot='volume-high'],
     media-mute-button[data-volume='low'] [slot='volume-low'],
     media-mute-button[data-volume='muted'] [slot='volume-muted'],
+    media-mute-button[data-volume='muted'] [slot='mute'],
+    media-mute-button:not([data-volume='muted']) [slot='unmute'],
     media-pip-button:not([data-pip]) [slot='enter'],
     media-pip-button[data-pip] [slot='exit'],
     media-caption-button:not([data-pressed]) [slot='off'],
@@ -75,9 +63,10 @@
     media-fullscreen-button[data-fullscreen] [slot='exit'],
     media-seek-button:not([seconds*='-']) [slot='forward'],
     media-seek-button[seconds*='-'] [slot='backward'],
-    media-menu [data-media-menu-button][data-pressed] [slot='open'],
-    media-menu [data-media-menu-button]:not([data-pressed]) [slot='close']
+    media-menu [data-media-menu-button][data-pressed] [slot='close'],
+    media-menu [data-media-menu-button]:not([data-pressed]) [slot='open']
   ) {
+  display: inline-block;
   opacity: 1;
 }
 

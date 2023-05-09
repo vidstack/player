@@ -63,6 +63,7 @@ export * from './player/core/keyboard/types';
 export { MEDIA_KEY_SHORTCUTS } from './player/core/keyboard/controller';
 
 // Buttons
+export * from './player/ui/tooltip/tooltip';
 export * from './player/ui/buttons/toggle-button';
 export * from './player/ui/buttons/play-button';
 export * from './player/ui/buttons/caption-button';

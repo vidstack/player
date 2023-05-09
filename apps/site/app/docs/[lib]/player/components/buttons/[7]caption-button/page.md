@@ -64,9 +64,9 @@ media-caption-button[aria-hidden='true'] {
 }
 
 /* Style default icons. */
-media-caption-button [slot='on'] {
+media-caption-button svg[slot='on'] {
 }
-media-caption-button [slot='off'] {
+media-caption-button svg[slot='off'] {
 }
 ```
 
@@ -83,6 +83,11 @@ media-caption-button[data-focus] {
 }
 ```
 
+### CSS Variables
+
+See the [toggle button CSS variables](/docs/player/components/buttons/toggle-button#css-variables)
+for simple customization of the default button and tooltip styles.
+
 ## Tailwind
 
 The following is a headless example using Tailwind:
@@ -93,4 +98,4 @@ The following is a headless example using Tailwind:
 
 The following extends the example above with tooltips:
 
-{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:3-" /%}
+{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:8-" /%}

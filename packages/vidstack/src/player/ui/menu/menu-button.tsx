@@ -7,6 +7,7 @@ import {
 } from 'maverick.js/element';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
+import { TooltipController } from '../tooltip/tooltip-controller';
 import { menuContext, type MenuContext } from './menu-context';
 
 declare global {
@@ -46,6 +47,7 @@ export class MenuButton<T extends MenuButtonAPI = MenuButtonAPI> extends Compone
   constructor(instance: ComponentInstance<T>) {
     super(instance);
     new FocusVisibleController(instance);
+    new TooltipController(instance);
   }
 
   protected override onAttach(el: HTMLElement) {

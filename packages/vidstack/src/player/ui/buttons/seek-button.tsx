@@ -11,6 +11,7 @@ import { Icon } from '../../../icons/icon';
 import { $ariaBool } from '../../../utils/aria';
 import { onPress, setARIALabel, setAttributeIfEmpty } from '../../../utils/dom';
 import { useMedia, type MediaContext } from '../../core/api/context';
+import { TooltipController } from '../tooltip/tooltip-controller';
 
 declare global {
   interface MaverickElements {
@@ -48,6 +49,7 @@ export class SeekButton extends Component<SeekButtonAPI> {
     super(instance);
     this._media = useMedia();
     new FocusVisibleController(instance);
+    new TooltipController(instance);
   }
 
   protected override onAttach(el: HTMLElement) {

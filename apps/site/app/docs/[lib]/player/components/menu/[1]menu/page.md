@@ -22,6 +22,13 @@ menu state is active:
 
 {% code_snippet name="button-slots" copy=true /%}
 
+## Button Tooltip
+
+[Tooltips](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tooltip_role) can
+be provided like so:
+
+{% code_snippet name="button-tooltip" copy=true /%}
+
 ## Rotate Icon
 
 The `data-rotate` attribute can be added to an icon so it rotates when the menu button is pressed:
@@ -115,7 +122,7 @@ The following snippet contains a complete list of CSS variables and their defaul
 the variables can be set to adjust the default menu styles:
 
 ```css {% copy=true %}
-media-menu {
+media-player {
   --media-menu-bg: rgb(10 10 10 / 0.95);
   --media-menu-padding: 10px;
   --media-menu-border-radius: 8px;

@@ -59,6 +59,11 @@
   display: contents;
 }
 
+:where(media-menu [data-media-menu-button] > shadow-root:only-child > [slot]) {
+  display: inline-block;
+  opacity: 1;
+}
+
 :where(media-menu [data-media-menu-button][role='button'] [data-rotate]) {
   transition: transform 0.2s ease-out;
 }

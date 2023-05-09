@@ -81,9 +81,9 @@ media-fullscreen-button[aria-hidden='true'] {
 }
 
 /* Style default icons. */
-media-fullscreen-button [slot='enter'] {
+media-fullscreen-button svg[slot='enter'] {
 }
-media-fullscreen-button [slot='exit'] {
+media-fullscreen-button svg[slot='exit'] {
 }
 ```
 
@@ -100,6 +100,11 @@ media-fullscreen-button[data-focus] {
 }
 ```
 
+### CSS Variables
+
+See the [toggle button CSS variables](/docs/player/components/buttons/toggle-button#css-variables)
+for simple customization of the default button and tooltip styles.
+
 ## Tailwind
 
 The following is a headless example using Tailwind:
@@ -110,4 +115,4 @@ The following is a headless example using Tailwind:
 
 The following extends the example above with tooltips:
 
-{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:3-" /%}
+{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:8-" /%}

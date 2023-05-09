@@ -34,6 +34,7 @@ import { Slider } from './player/ui/sliders/slider/slider';
 import { TimeSlider } from './player/ui/sliders/time-slider/time-slider';
 import { VolumeSlider } from './player/ui/sliders/volume-slider';
 import { Time } from './player/ui/time';
+import { Tooltip } from './player/ui/tooltip/tooltip';
 
 export default function registerAllElements(): void {
   [
@@ -41,6 +42,7 @@ export default function registerAllElements(): void {
     Outlet,
     Poster,
     Icon,
+    Tooltip,
     PlayButton,
     MuteButton,
     PIPButton,
