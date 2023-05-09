@@ -59,8 +59,6 @@ of the variables can be set to adjust the default button and tooltip styles:
 
 ```css {% copy=true %}
 media-player {
-  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
-
   --media-button-color: white;
   --media-button-border-radius: 0;
   --media-button-size: 48px;

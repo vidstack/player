@@ -143,10 +143,8 @@ desired.
 The following snippet contains a complete list of CSS variables and their default values. Any
 of the variables can be set to adjust the default slider styles:
 
-```css
+```css {% copy=true %}
 media-player {
-  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
-
   --media-slider-width: 100%;
   --media-slider-height: 48px;
 
