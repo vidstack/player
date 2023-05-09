@@ -71,6 +71,7 @@ export class NativeAudioTracks {
 
   private _onChangeTrack(event: AudioTrackChangeEvent) {
     const { current } = event.detail;
+    if (!current) return;
     const track = this._nativeTracks.getTrackById(current.id);
     if (track) {
       const prev = this._getEnabledNativeTrack();
