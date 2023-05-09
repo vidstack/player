@@ -46,7 +46,7 @@
   height: auto;
 }
 
-:where(media-player[aspect-ratio] media-outlet) {
+:where(media-player[aspect-ratio]:not([data-fullscreen]) media-outlet) {
   position: relative;
   width: 100%;
   height: 0;

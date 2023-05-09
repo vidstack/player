@@ -1,5 +1,5 @@
 <media-player
-  class="max-w-[680px] aspect-video hero-video rounded-sm overflow-hidden shadow-lg"
+  class="hero-video overflow-hidden shadow-lg"
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
   poster="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/animated.webp?start=268&end=278&width=640"
   aspect-ratio="16/9"
@@ -91,6 +91,12 @@
 </media-player>
 
 <style>
+  media-player:not([data-fullscreen]) {
+    max-width: 680px;
+    aspect-ratio: 16 / 9;
+    border-radius: 2px;
+  }
+
   :global(.hero-video media-captions [part='cue']) {
     letter-spacing: 0.025em;
   }
