@@ -70,6 +70,9 @@ media-captions [part='region'][data-scroll='up'] {
 
 ### CSS Variables
 
+The following snippet contains a complete list of CSS variables and their default values. Any
+of the variables can be set to adjust the default caption styles:
+
 ```css {% copy=true %}
 media-player {
   --media-captions-padding: 1%;
