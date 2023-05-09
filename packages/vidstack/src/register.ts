@@ -3,6 +3,7 @@ import { registerLiteCustomElement } from 'maverick.js/element';
 import { Icon } from './icons/component';
 import { Outlet } from './player/core/outlet/outlet';
 import { Player } from './player/core/player';
+import { BufferingIndicator } from './player/ui/buffering-indicator';
 import { CaptionButton } from './player/ui/buttons/caption-button';
 import { FullscreenButton } from './player/ui/buttons/fullscreen-button';
 import { MuteButton } from './player/ui/buttons/mute-button';
@@ -41,6 +42,7 @@ export default function registerAllElements(): void {
     Player,
     Outlet,
     Poster,
+    BufferingIndicator,
     Icon,
     Tooltip,
     PlayButton,

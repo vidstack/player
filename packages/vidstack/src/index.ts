@@ -103,6 +103,7 @@ export * from './player/ui/menu/quality/menu-button';
 export * from './player/ui/gesture';
 
 // Display
+export * from './player/ui/buffering-indicator';
 export * from './player/ui/captions/captions';
 export * from './player/ui/live-indicator';
 export * from './player/ui/poster';

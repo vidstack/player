@@ -30,35 +30,7 @@
     class="z-0 bg-black/30 transition-opacity opacity-0 not-user-idle:opacity-100 pointer-events-none bg-blur absolute inset-0 w-full h-full"
   />
   <media-captions class="not-user-idle:bottom-[80px] transition-[bottom] duration-300 z-10" />
-  <div
-    class="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center"
-  >
-    <svg
-      class="buffering:opacity-100 buffering:animate-spin h-24 w-24 opacity-0 text-white transition-opacity duration-200 ease-linear"
-      fill="none"
-      viewBox="0 0 120 120"
-      aria-hidden="true"
-    >
-      <circle
-        class="opacity-25 blur-bg"
-        cx="60"
-        cy="60"
-        r="54"
-        stroke="currentColor"
-        stroke-width="8"
-      />
-      <circle
-        class="opacity-75"
-        cx="60"
-        cy="60"
-        r="54"
-        stroke="currentColor"
-        stroke-width="10"
-        pathLength="100"
-        style="stroke-dasharray: 100; stroke-dashoffset: 50"
-      />
-    </svg>
-  </div>
+  <media-buffering-indicator />
   <div
     class="can-control:opacity-100 pointer-events-none absolute inset-0 z-10 flex h-full flex-col justify-between text-white opacity-0 transition-opacity duration-200 ease-linear"
   >
