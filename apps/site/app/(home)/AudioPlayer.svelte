@@ -29,11 +29,7 @@
         <media-seek-button seconds="-10">
           <media-icon class="w-7 h-7" type="seek-backward-10" slot="backward" />
         </media-seek-button>
-        <media-play-button class="-ml-1">
-          <media-icon class="ended:hidden" type="play" slot="play" />
-          <media-icon type="pause" slot="pause" />
-          <media-icon class="not-ended:hidden" type="replay" slot="play" />
-        </media-play-button>
+        <media-play-button class="-ml-1" />
         <media-seek-button class="-ml-1" seconds="10">
           <media-icon class="w-7 h-7" type="seek-forward-10" slot="forward" />
         </media-seek-button>

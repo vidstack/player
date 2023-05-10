@@ -32,8 +32,7 @@
 }
 
 :where([data-media-button] [slot]) {
-  opacity: 0;
-  display: none;
+  display: none !important;
 }
 
 :where([data-media-button]) :where(media-icon[slot], svg[slot]) {
@@ -66,8 +65,7 @@
     media-menu [data-media-menu-button][data-pressed] [slot='close'],
     media-menu [data-media-menu-button]:not([data-pressed]) [slot='open']
   ) {
-  display: inline-block;
-  opacity: 1;
+  display: inline-block !important;
 }
 
 :where([data-media-button][aria-hidden='true']) {

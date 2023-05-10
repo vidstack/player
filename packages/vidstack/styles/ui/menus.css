@@ -6,12 +6,16 @@
 
 :where(media-menu) {
   box-sizing: border-box;
-  display: inline-block;
+  display: inline-flex;
   font-family: var(--media-font-family, sans-serif);
   font-size: var(--media-menu-font-size, 15px);
   font-weight: var(--media-menu-font-weight, 500);
   position: relative;
   z-index: 99999;
+}
+
+:where(media-menu media-menu) {
+  display: inline-block;
 }
 
 /*
@@ -60,8 +64,7 @@
 }
 
 :where(media-menu [data-media-menu-button] > shadow-root:only-child > [slot]) {
-  display: inline-block;
-  opacity: 1;
+  display: inline-block !important;
 }
 
 :where(media-menu [data-media-menu-button][role='button'] [data-rotate]) {
@@ -106,7 +109,7 @@
 
 :where(media-menu [data-media-menu-button][role='button'])
   :where([slot='open-icon'], [slot='close-icon']) {
-  display: none;
+  display: none !important;
 }
 
 :where(media-menu [data-media-menu-button]) :where([slot='hint'], [slot='open-icon']) {
@@ -213,7 +216,7 @@
 
 :where(media-menu[aria-hidden='true']),
 :where(media-menu[data-submenu] > [data-media-menu-items][aria-hidden='true']) {
-  display: none;
+  display: none !important;
 }
 
 /*
@@ -281,7 +284,7 @@
 
 :where(media-menu [role='menuitem'][aria-hidden='true']),
 :where(media-menu [role='menuitem'][aria-expanded='true'] [slot='open-icon'], ) {
-  display: none;
+  display: none !important;
 }
 
 :where(media-menu [role='menuitem'][aria-disabled='true'] [slot='open-icon']) {
@@ -290,11 +293,11 @@
 
 :where([data-media-menu-button] [slot='close-icon']),
 :where(media-menu [role='menuitem'][aria-expanded='true'] [slot='icon']) {
-  display: none;
+  display: none !important;
 }
 
 :where(media-menu [role='menuitem'][aria-expanded='true'] [slot='close-icon']) {
-  display: inline;
+  display: inline !important;
 }
 
 /*

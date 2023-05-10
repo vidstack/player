@@ -74,6 +74,26 @@
           <span slot="off">Closed-Captions Off (c)</span>
         </media-tooltip>
       </media-caption-button>
+      <media-menu>
+        <media-menu-button>
+          <media-icon type="settings" data-rotate />
+          <media-tooltip>Settings</media-tooltip>
+        </media-menu-button>
+        <media-menu-items>
+          <media-menu>
+            <media-playback-rate-menu-button />
+            <media-playback-rate-menu-items />
+          </media-menu>
+          <media-menu>
+            <media-quality-menu-button />
+            <media-quality-menu-items />
+          </media-menu>
+          <media-menu>
+            <media-captions-menu-button />
+            <media-captions-menu-items />
+          </media-menu>
+        </media-menu-items>
+      </media-menu>
       <media-pip-button default-appearance>
         <media-tooltip>
           <span slot="enter">Enter PIP (i)</span>

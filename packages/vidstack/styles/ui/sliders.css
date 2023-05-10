@@ -27,7 +27,7 @@
   height: var(--track-height);
   top: 50%;
   left: 0;
-  border-radius: var(--media-slider-track-border-radius, 2px);
+  border-radius: var(--media-slider-track-border-radius, 1px);
   transform: translateY(-50%);
   background-color: var(--media-slider-track-bg, rgb(255 255 255 / 0.3));
   backdrop-filter: blur(2px);
