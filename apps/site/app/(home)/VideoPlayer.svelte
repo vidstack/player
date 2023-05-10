@@ -34,6 +34,30 @@
   <div
     class="can-control:opacity-100 pointer-events-none absolute inset-0 z-10 flex h-full flex-col justify-between text-white opacity-0 transition-opacity duration-200 ease-linear"
   >
+    <div class="flex items-center pointer-events-auto w-fill px-2 z-10">
+      <div class="flex-1" />
+      <media-menu>
+        <media-menu-button>
+          <media-icon type="settings" data-rotate />
+          <media-tooltip position="bottom right">Settings</media-tooltip>
+        </media-menu-button>
+        <media-menu-items data-bottom>
+          <media-menu>
+            <media-playback-rate-menu-button />
+            <media-playback-rate-menu-items />
+          </media-menu>
+          <media-menu>
+            <media-quality-menu-button />
+            <media-quality-menu-items />
+          </media-menu>
+          <media-menu>
+            <media-captions-menu-button />
+            <media-captions-menu-items />
+          </media-menu>
+        </media-menu-items>
+      </media-menu>
+    </div>
+
     <div class="flex-1" />
     <div class="flex items-center pointer-events-auto w-full px-4 -mb-2 z-10">
       <media-time class="text-sm tracking-wide mr-1" type="current" />
@@ -74,26 +98,6 @@
           <span slot="off">Closed-Captions Off (c)</span>
         </media-tooltip>
       </media-caption-button>
-      <media-menu>
-        <media-menu-button>
-          <media-icon type="settings" data-rotate />
-          <media-tooltip>Settings</media-tooltip>
-        </media-menu-button>
-        <media-menu-items>
-          <media-menu>
-            <media-playback-rate-menu-button />
-            <media-playback-rate-menu-items />
-          </media-menu>
-          <media-menu>
-            <media-quality-menu-button />
-            <media-quality-menu-items />
-          </media-menu>
-          <media-menu>
-            <media-captions-menu-button />
-            <media-captions-menu-items />
-          </media-menu>
-        </media-menu-items>
-      </media-menu>
       <media-pip-button default-appearance>
         <media-tooltip>
           <span slot="enter">Enter PIP (i)</span>

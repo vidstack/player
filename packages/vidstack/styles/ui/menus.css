@@ -162,6 +162,11 @@
   transition: height 0.25s linear, opacity 0.15s ease-out, transform 0.3s ease-in;
 }
 
+:where(media-menu > [data-media-menu-items][data-bottom]) {
+  top: 100%;
+  bottom: unset;
+}
+
 :where(media-menu [data-media-menu-items][data-resizing]) {
   overflow: hidden;
   pointer-events: none;
