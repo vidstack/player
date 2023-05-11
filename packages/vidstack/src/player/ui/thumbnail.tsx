@@ -20,6 +20,7 @@ declare global {
 /**
  * Used to load and display a preview thumbnail at the given `time`.
  *
+ * @docs {@link https://www.vidstack.io/docs/player/components/display/thumbnail}
  * @example
  * ```html
  * <media-player thumbnails="https://media-files.vidstack.io/thumbnails.vtt">
