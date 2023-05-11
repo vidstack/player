@@ -32,9 +32,8 @@ be provided like so:
 ## Thumbnails
 
 The chapters menu will automatically display thumbnails next to chapter items when the
-`thumbnails` property has been set on the player. See the
-[thumbnails WebVTT docs](/docs/player/components/sliders/slider-thumbnail#webvtt) for how the
-file should be formatted.
+`thumbnails` property has been set on the player. See the docs on how to correctly set up the
+[thumbnails VTT file](/docs/player/components/display/thumbnail#webvtt).
 
 {% code_snippet name="thumbnails" highlight="1" /%}
 
