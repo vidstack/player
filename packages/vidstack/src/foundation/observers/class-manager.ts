@@ -1,5 +1,5 @@
 import { effect, onDispose, peek, signal, type ReadSignal } from 'maverick.js';
-import { setAttribute } from 'maverick.js/std';
+import { isDOMElement, setAttribute } from 'maverick.js/std';
 
 /**
  * Efficient way of applying dynamic class signals to arbitrary DOM selectors. This is to avoid
@@ -7,13 +7,15 @@ import { setAttribute } from 'maverick.js/std';
  */
 export class ClassManager {
   protected _rafId = -1;
+  protected _root: Element;
   protected _observer: MutationObserver;
   protected _map = new Map<string, ReadSignal<string | null>>();
   protected _classes = signal<ReadSignal<string | null>[]>([]);
 
-  constructor(protected _el: HTMLElement) {
+  constructor(el: HTMLElement) {
+    this._root = el.firstChild! as Element;
     this._observer = new MutationObserver(this._onMutation.bind(this));
-    this._observer.observe(_el, { subtree: true, childList: true });
+    this._observer.observe(this._root, { subtree: true, childList: true });
     effect(this._watch.bind(this));
     onDispose(this._destroy.bind(this));
   }
@@ -22,7 +24,7 @@ export class ClassManager {
     const selector = Array.from(this._map.keys()).join(',');
     for (const record of records) {
       for (const node of record.addedNodes) {
-        if ((node as Element).matches(selector)) this._update();
+        if (isDOMElement(node) && node.matches(selector)) this._update();
       }
     }
   }
@@ -33,23 +35,23 @@ export class ClassManager {
     return this;
   }
 
-  protected _watch() {
-    for (const c of this._classes()) c();
-    this._update();
-  }
-
-  protected _update() {
+  _update() {
     window.cancelAnimationFrame(this._rafId);
     this._rafId = requestAnimationFrame(() => {
       for (const [selector, classes] of this._map) {
         const _class = peek(classes);
-        for (const el of this._el.querySelectorAll(selector)) {
+        for (const el of this._root.querySelectorAll(selector)) {
           setAttribute(el, 'class', _class);
         }
       }
 
       this._rafId = -1;
     });
+  }
+
+  protected _watch() {
+    for (const c of this._classes()) c();
+    this._update();
   }
 
   protected _destroy() {

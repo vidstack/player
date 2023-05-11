@@ -195,12 +195,3 @@ for simple customization of the default slider styles.
 A complete time slider example built with Tailwind:
 
 {% code_snippet name="tailwind" copy=true /%}
-
-{% callout type="tip" %}
-
-- 📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
-  contains background documentation on working with sliders.
-- All of this code is reusable across other slider implementations. The time slider example only
-  contains an additional `track-progress` div.
-
-{% /callout %}

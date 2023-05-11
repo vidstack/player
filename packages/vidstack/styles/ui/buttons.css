@@ -19,7 +19,7 @@
 }
 
 :where([data-media-button] > shadow-root) {
-  display: unset;
+  display: contents;
 }
 
 :where([data-media-button]:not([default-appearance]) > shadow-root:not(:only-child)) {

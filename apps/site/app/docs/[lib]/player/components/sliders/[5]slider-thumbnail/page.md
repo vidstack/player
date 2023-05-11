@@ -64,7 +64,5 @@ media-slider {
 
 {% code_snippet name="tailwind" copy=true  /%}
 
-{% callout type="info" %}
-A more complete [slider example](/docs/react/player/components/sliders/time-slider#tailwind) is
+A complete [Tailwind slider example](/docs/player/components/sliders/time-slider#tailwind) is
 available in the `$tag:media-time-slider` docs.
-{% /callout %}

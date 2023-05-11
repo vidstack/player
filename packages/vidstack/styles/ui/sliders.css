@@ -17,7 +17,7 @@
 }
 
 :where([data-media-slider] > shadow-root) {
-  display: unset;
+  display: contents;
 }
 
 :where([data-media-slider] [part*='track']) {
@@ -224,11 +224,6 @@
  * Chapters
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
-
-media-time-slider[data-chapters] > :not(shadow-root, [slot]),
-media-time-slider[data-chapters] > shadow-root > [part*='track'] {
-  display: none !important;
-}
 
 :where(media-time-slider [part='chapters']) {
   position: relative;

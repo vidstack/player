@@ -15,7 +15,7 @@
     <media-time-slider>
       <div slot="preview">
         <media-slider-thumbnail class="rounded-sm" />
-        <div class="absolute bottom-1 w-full text-center" part="chapter-title" />
+        <div class="absolute bottom-1 w-full text-center text-sm" part="chapter-title" />
       </div>
     </media-time-slider>
   </div>

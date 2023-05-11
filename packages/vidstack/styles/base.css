@@ -1,10 +1,14 @@
 /* hide default UI - only shown if optional UI css files are loaded. */
 :where(
     [data-media-button] > shadow-root,
-    [data-media-slider] > shadow-root,
+    [data-media-slider]:not([data-styled]) > shadow-root,
     [data-media-menu-button] > shadow-root
   ) {
   display: none;
+}
+
+:where([data-media-slider][data-styled] > shadow-root) {
+  display: contents;
 }
 
 /*
@@ -167,8 +171,13 @@
   );
 }
 
-:where(media-time-slider [part='chapters']) {
-  display: none;
+:where(media-time-slider[data-chapters] > :not(shadow-root, [slot])),
+:where(media-time-slider[data-chapters] > shadow-root > [part~='track']) {
+  display: none !important;
+}
+
+:where(media-volume-slider [part~='track-progress']) {
+  display: none !important;
 }
 
 /*

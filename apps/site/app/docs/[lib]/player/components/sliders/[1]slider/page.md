@@ -254,23 +254,8 @@ if you're using Tailwind CSS v3+ and use the [CSS variables listed above](#css-v
 <div class="left-[var(--slider-fill-percent)]" />
 ```
 
-### Exposing Parts
-
-You can expose slider parts and override the default styles using CSS like so:
-
-{% code_snippet name="tw-expose" copy=true /%}
-
 ### Example
 
 A complete slider example built with Tailwind:
 
 {% code_snippet name="tailwind" copy=true /%}
-
-{% callout type="tip" %}
-
-- All of this code is reusable across other slider implementations.
-
-- Too verbose? You might prefer overriding the [default styles](#exposing-parts). Remember to
-  load them first if you haven't yet.
-
-{% /callout %}

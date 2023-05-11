@@ -119,14 +119,6 @@ for simple customization of the default slider styles.
 
 ## Tailwind
 
-{% callout type="tip" %}
-
-- 📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
-  contains background documentation on working with sliders.
-- All of this code is reusable across other slider implementations.
-
-{% /callout %}
-
 ### Horizontal
 
 A horizontal volume slider built with Tailwind:
