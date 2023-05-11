@@ -15,6 +15,15 @@ is landscape.
 
 {% code_preview name="usage" copyHighlight=true highlight="react:3-" /%}
 
+## Menu Position
+
+When using the default styles, the menu can be positioned using the `position` property like
+so:
+
+{% code_snippet name="position" copy=true /%}
+
+Valid position values include: `top`, `bottom`, `top left`, and `bottom left`.
+
 ## Button Slots
 
 The menu button accepts an `open` and `close` slot for displaying content when the respective
