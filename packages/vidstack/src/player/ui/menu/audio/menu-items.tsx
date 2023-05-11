@@ -1,6 +1,7 @@
 import { effect } from 'maverick.js';
 import { ComponentInstance, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
+import { ClassManager } from '../../../../foundation/observers/class-manager';
 import { useMedia, type MediaContext } from '../../../core/api/context';
 import { MenuItems, type MenuItemsAPI } from '../menu-items';
 import { Radio } from '../radio/radio';
@@ -46,9 +47,14 @@ export class AudioMenuItems extends MenuItems<AudioMenuItemsAPI> {
     this._media = useMedia();
   }
 
-  protected override onConnect() {
+  protected override onConnect(el: HTMLElement) {
     effect(this._watchControllerDisabled.bind(this));
     effect(this._watchHintText.bind(this));
+
+    const { radioClass, radioCheckClass } = this.$props;
+    new ClassManager(el)
+      ._observe('media-radio', radioClass)
+      ._observe('[part="check"]', radioCheckClass);
   }
 
   protected _watchHintText() {
@@ -81,26 +87,27 @@ export class AudioMenuItems extends MenuItems<AudioMenuItemsAPI> {
     if (index >= 0) this._media.remote.changeAudioTrack(index, event);
   }
 
+  protected _getValue() {
+    const { audioTrack } = this._media.$store;
+    const track = audioTrack();
+    return track ? track.label.toLowerCase() : '';
+  }
+
+  protected _getOptions() {
+    const { audioTracks } = this._media.$store;
+    return audioTracks().map((track) => ({
+      value: track.label.toLowerCase(),
+      content: <span>{track.label}</span>,
+    }));
+  }
+
   override render() {
-    const { audioTrack, audioTracks } = this._media.$store,
-      onChange = this._onChange.bind(this);
-
-    const value = () => {
-      const track = audioTrack();
-      return track ? track.label.toLowerCase() : '';
-    };
-
-    const options = () =>
-      audioTracks().map((track) => ({
-        label: track.label,
-        value: track.label.toLowerCase(),
-      }));
-
+    const { radioGroupClass } = this.$props;
     return renderRadioGroup({
-      ...this.$props,
-      value,
-      options,
-      onChange,
+      value: this._getValue.bind(this),
+      options: this._getOptions.bind(this),
+      radioGroupClass,
+      onChange: this._onChange.bind(this),
     });
   }
 }

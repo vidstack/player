@@ -35,6 +35,7 @@ import { MediaRequestContext, MediaRequestManager } from './state/media-request-
 import { MediaStateManager } from './state/media-state-manager';
 import { MediaStoreSync } from './state/media-store-sync';
 import { MediaRemoteControl } from './state/remote-control';
+import { ThumbnailsLoader } from './thumbnails/loader';
 import { AudioTrackList } from './tracks/audio-tracks';
 import { TextRenderers } from './tracks/text/render/text-renderer';
 import { TEXT_TRACK_CROSSORIGIN } from './tracks/text/symbols';
@@ -124,6 +125,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     new FocusVisibleController(instance);
     new MediaKeyboardController(instance, context);
+    new ThumbnailsLoader(instance);
     if (__DEV__) new MediaEventsLogger(instance, context);
 
     const request = new MediaRequestContext();

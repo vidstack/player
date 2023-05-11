@@ -56,6 +56,7 @@ let idCount = 0;
 export class Menu extends Component<MenuAPI> {
   static el = defineElement<MenuAPI>({
     tagName: 'media-menu',
+    props: { position: null },
   });
 
   protected _menuId: string;
@@ -99,6 +100,8 @@ export class Menu extends Component<MenuAPI> {
 
   protected override onAttach(el: HTMLElement) {
     if (this._parentMenu) setAttribute(el, 'data-submenu', '');
+    const { position } = this.$props;
+    this.setAttributes({ position });
   }
 
   protected override onConnect(el: HTMLElement) {
@@ -311,7 +314,21 @@ export class Menu extends Component<MenuAPI> {
 }
 
 export interface MenuAPI {
+  props: MenuProps;
   events: MenuEvents;
+}
+
+export type MenuXPosition = 'left' | 'right';
+export type MenuYPosition = 'top' | 'bottom';
+export type MenuPosition = MenuYPosition | `${MenuYPosition} ${MenuXPosition}`;
+
+export interface MenuProps {
+  /**
+   * Specifies the position at which the main menu items are opened.
+   *
+   * @example `top left`
+   */
+  position: MenuPosition | null;
 }
 
 export interface MenuEvents {

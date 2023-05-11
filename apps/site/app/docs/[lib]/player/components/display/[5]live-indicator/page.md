@@ -77,7 +77,7 @@ media-player {
   --media-live-indicator-padding: 1px 4px;
 
   --media-live-indicator-edge-bg: #dc2626;
-  --media-live-indicator-edge-color: white;
+  --media-live-indicator-edge-color: #f5f5f5;
 }
 ```
 

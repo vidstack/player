@@ -56,11 +56,11 @@ media-player {
   --media-buffering-transition: opacity 200ms ease;
   --media-buffering-animation: media-buffering-spin 1s linear infinite;
 
-  --media-buffering-track-color: white;
+  --media-buffering-track-color: #f5f5f5;
   --media-buffering-track-opacity: 0.25;
   --media-buffering-track-width: 8;
 
-  --media-buffering-track-fill-color: white;
+  --media-buffering-track-fill-color: #f5f5f5;
   --media-buffering-track-fill-opacity: 0.75;
   --media-buffering-track-fill-width: 9;
   --media-buffering-track-fill-offset: 50;

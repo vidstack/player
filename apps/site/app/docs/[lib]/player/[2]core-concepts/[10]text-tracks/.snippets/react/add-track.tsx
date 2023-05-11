@@ -1,12 +1,12 @@
-<MediaPlayer
-  textTracks={[
-    {
-      src: '/media/subs/english.vtt',
-      type: 'vtt',
-      kind: 'subtitles',
-      label: 'English',
-      language: 'en-US',
-      default: true,
-    },
-  ]}
-></MediaPlayer>;
+<MediaPlayer>
+  <MediaOutlet>
+    <track
+      src="/media/subs/english.vtt"
+      kind="subtitles"
+      label="English"
+      srclang="en-US"
+      default
+      data-type="vtt"
+    />
+  </MediaOutlet>
+</MediaPlayer>;

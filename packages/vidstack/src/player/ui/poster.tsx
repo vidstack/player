@@ -18,7 +18,7 @@ declare global {
  * @docs {@link https://www.vidstack.io/docs/player/components/layout/poster}
  * @example
  * ```html
- * <media-player>
+ * <media-player poster="...">
  *   <media-poster alt="Large alien ship hovering over New York."></media-poster>
  * </media-player>
  * ```

@@ -142,7 +142,7 @@
     media-slider-thumbnail:not([aria-hidden='true']) + media-slider-value,
     media-slider-thumbnail:not([aria-hidden='true']) + [part='chapter-title']
   ) {
-  margin-top: var(--media-slider-value-spacing, 8px);
+  margin-top: var(--media-slider-value-gap, 8px);
 }
 
 :where(media-player:not([data-can-play]) media-time-slider media-slider-value) {
@@ -269,6 +269,6 @@ media-time-slider[data-chapters] > shadow-root > [part*='track'] {
 :where(media-time-slider [part='chapter-title']) {
   font-family: var(--media-font-family, sans-serif);
   font-size: var(--media-slider-chapter-title-font-size: 14px);
-  color: var(--media-slider-chapter-title-color, white);
+  color: var(--media-slider-chapter-title-color, #f5f5f5);
   background-color: var(--media-slider-chapter-title-bg);
 }

@@ -32,6 +32,10 @@
   background-color: var(--media-outlet-bg-color, black);
 }
 
+:where(media-player[data-fullscreen] media-outlet) {
+  height: 100%;
+}
+
 :where(media-player[data-view-type='audio'] media-outlet) {
   background-color: unset;
 }
@@ -187,29 +191,31 @@
  */
 
 :where(media-slider-thumbnail) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   contain: content;
   box-sizing: border-box;
-  min-width: 120px;
-  min-height: 80px;
-  max-width: 180px;
-  max-height: 160px;
-  background-color: black;
 }
 
-:where(media-slider-thumbnail [part='container']) {
+:where(media-thumbnail) {
   display: block;
   width: var(--thumbnail-width);
   height: var(--thumbnail-height);
+  background-color: var(--media-thumbnail-bg, black);
+  contain: content;
   overflow: hidden;
+  box-sizing: border-box;
+  min-width: var(--media-thumbnail-min-width, 120px);
+  min-height: var(--media-thumbnail-min-height, 80px);
+  max-width: var(--media-thumbnail-max-width, 180px);
+  max-height: var(--media-thumbnail-max-height, 160px);
 }
 
-:where(media-slider-thumbnail [part='img']) {
+:where(media-thumbnail [part='img']) {
+  min-width: unset !important;
   max-width: unset !important;
 }
 
+:where(media-thumbnail[aria-hidden='true']),
 :where(media-slider-thumbnail[aria-hidden='true']) {
   display: none;
 }

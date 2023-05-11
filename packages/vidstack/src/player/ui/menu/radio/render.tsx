@@ -1,4 +1,4 @@
-import type { ReadSignal } from 'maverick.js';
+import type { JSX, ReadSignal } from 'maverick.js';
 
 import type { RadioGroupChangeEvent } from './radio-group';
 
@@ -12,24 +12,19 @@ export function renderRadioGroup(props: RenderRadioGroupProps) {
 }
 
 function renderOptions(props: RenderRadioGroupProps) {
-  const { options, radioClass, radioCheckClass } = props;
+  const { options } = props;
   return () =>
     options().map((option) => (
-      <media-radio
-        class={radioClass()}
-        $prop:value={option.value}
-        $prop:checkClass={radioCheckClass()}
-      >
-        <span>{option.label}</span>
+      <media-radio part={props.part} $prop:value={option.value}>
+        {option.content}
       </media-radio>
     ));
 }
 
 export interface RenderRadioGroupProps {
+  part?: string;
   value: ReadSignal<string>;
-  options: ReadSignal<{ label: string; value: string }[]>;
+  options: ReadSignal<{ value: string; content: JSX.Element }[]>;
   radioGroupClass: ReadSignal<string | null>;
-  radioClass: ReadSignal<string | null>;
-  radioCheckClass: ReadSignal<string | null>;
   onChange(event: RadioGroupChangeEvent): void;
 }

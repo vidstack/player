@@ -1,6 +1,7 @@
 import { effect } from 'maverick.js';
 import { ComponentInstance, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
+import { ClassManager } from '../../../../foundation/observers/class-manager';
 import { useMedia, type MediaContext } from '../../../core/api/context';
 import { MenuItems, type MenuItemsAPI } from '../menu-items';
 import { Radio } from '../radio/radio';
@@ -47,10 +48,15 @@ export class PlaybackRateMenuItems extends MenuItems<PlaybackRateMenuAPI> {
     this._media = useMedia();
   }
 
-  protected override onConnect() {
+  protected override onConnect(el: HTMLElement) {
     // TODO: when we add embeds we'll need to manage disabling.
     // effect(this._watchControllerDisabled.bind(this));
     effect(this._watchHintText.bind(this));
+
+    const { radioClass, radioCheckClass } = this.$props;
+    new ClassManager(el)
+      ._observe('media-radio', radioClass)
+      ._observe('[part="check"]', radioCheckClass);
   }
 
   protected _watchHintText() {
@@ -65,24 +71,26 @@ export class PlaybackRateMenuItems extends MenuItems<PlaybackRateMenuAPI> {
     this._media.remote.changePlaybackRate(+radioGroup.value, event);
   }
 
+  protected _getValue() {
+    const { playbackRate } = this._media.$store;
+    return playbackRate() + '';
+  }
+
+  protected _getOptions() {
+    const { rates, normalLabel } = this.$props;
+    return rates().map((rate) => ({
+      value: rate + '',
+      content: <span>{rate === 1 ? normalLabel() : rate + '×'}</span>,
+    }));
+  }
+
   override render() {
-    const { rates, normalLabel } = this.$props,
-      { playbackRate } = this._media.$store,
-      onChange = this._onChange.bind(this);
-
-    const value = () => playbackRate() + '';
-
-    const options = () =>
-      rates().map((rate) => ({
-        label: rate === 1 ? normalLabel() : rate + '×',
-        value: rate + '',
-      }));
-
+    const { radioGroupClass } = this.$props;
     return renderRadioGroup({
-      ...this.$props,
-      value,
-      options,
-      onChange,
+      value: this._getValue.bind(this),
+      options: this._getOptions.bind(this),
+      radioGroupClass,
+      onChange: this._onChange.bind(this),
     });
   }
 }

@@ -130,6 +130,8 @@ media-player {
   --media-menu-font-weight: 500;
   --media-menu-scrollbar-track-bg: rgb(245 245 245 / 0.08);
   --media-menu-scrollbar-thumb-bg: rgb(245 245 245 / 0.1);
+  --media-menu-x-offset: 0;
+  --media-menu-y-offset: unset;
   --media-menu-hint-color: rgba(245, 245, 245, 0.5);
   --media-menu-min-width: 260px;
   --media-menu-max-height: calc(var(--media-height) * 0.7);
@@ -142,18 +144,20 @@ media-player {
   --media-menu-mobile-max-height: 40vh;
   --media-menu-mobile-landscape-max-height: 70vh;
 
-  --media-menu-item-color: white;
+  /* menu items */
+  --media-menu-item-color: #f5f5f5;
   --media-menu-item-border-radius: 2px;
-  --media-menu-item-padding: 10px;
+  --media-menu-item-padding: 12px;
   --media-menu-item-mobile-padding: 12px;
   --media-menu-item-hover-bg: rgb(245 245 245 / 0.08);
   --media-menu-item-icon-size: 22px;
 
+  /* radios */
   --media-menu-radio-check-size: 10px;
   --media-menu-radio-check-inner-size: 4px;
   --media-menu-radio-check-border: 2px solid rgb(245 245 245 / 0.5);
-  --media-menu-radio-check-active-color: white;
-  --media-menu-radio-check-active-border: 2px solid white;
+  --media-menu-radio-check-active-color: #f5f5f5;
+  --media-menu-radio-check-active-border: 2px solid #f5f5f5;
 }
 ```
 

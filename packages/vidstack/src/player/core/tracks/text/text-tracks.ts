@@ -103,17 +103,21 @@ export interface TextTrackListEvents {
   'readonly-change': ListReadonlyChangeEvent;
 }
 
+export interface TextTrackListEvent<T> extends DOMEvent<T> {
+  target: TextTrackList;
+}
+
 /**
  * Fired when a text track has been added to the list.
  */
-export interface TextTrackAddEvent extends DOMEvent<TextTrack> {}
+export interface TextTrackAddEvent extends TextTrackListEvent<TextTrack> {}
 
 /**
  * Fired when a text track has been removed from the list.
  */
-export interface TextTrackRemoveEvent extends DOMEvent<TextTrack> {}
+export interface TextTrackRemoveEvent extends TextTrackListEvent<TextTrack> {}
 
 /**
  * Fired when the mode of any text track in the list has changed.
  */
-export interface TextTrackListModeChangeEvent extends DOMEvent<TextTrack> {}
+export interface TextTrackListModeChangeEvent extends TextTrackListEvent<TextTrack> {}

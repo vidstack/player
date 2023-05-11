@@ -6,7 +6,7 @@
 
 :where([data-media-button]) {
   border-radius: var(--media-button-border-radius, 0);
-  color: var(--media-button-color, white);
+  color: var(--media-button-color, #f5f5f5);
   width: var(--media-button-size, 48px);
   height: var(--media-button-size, 48px);
   transition: transform 0.2s ease-out;

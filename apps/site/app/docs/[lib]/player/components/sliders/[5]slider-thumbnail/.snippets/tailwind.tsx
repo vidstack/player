@@ -1,10 +1,7 @@
 <MediaTimeSlider className="group">
   {/* ... */}
   <SliderPreview>
-    <MediaSliderThumbnail
-      className="max-h-[160px] max-w-[180px]"
-      src="https://media-files.vidstack.io/thumbnails.vtt"
-    />
+    <MediaSliderThumbnail className="max-h-[160px] max-w-[180px]" />
   </SliderPreview>
 </MediaTimeSlider>;
 

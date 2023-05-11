@@ -49,7 +49,6 @@ export interface TooltipAPI {
 
 export type TooltipXPosition = 'left' | 'center' | 'right';
 export type TooltipYPosition = 'top' | 'bottom';
-
 export type TooltipPosition = `${TooltipYPosition} ${TooltipXPosition}`;
 
 export interface TooltipProps {

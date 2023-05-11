@@ -59,10 +59,14 @@ export class MenuFocusController {
   protected _focusAt(index: number) {
     this._index = index;
     this._elements[index]?.focus();
+    this._elements[index]?.scrollIntoView({
+      block: 'center',
+    });
   }
 
   protected _onFocus() {
-    this._focusAt(0);
+    const index = this._elements.findIndex((el) => el.getAttribute('aria-checked') === 'true');
+    this._focusAt(index >= 0 ? index : 0);
   }
 
   protected _update() {

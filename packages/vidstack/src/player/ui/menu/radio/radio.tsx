@@ -38,10 +38,7 @@ declare global {
 export class Radio extends Component<RadioAPI> {
   static el = defineElement<RadioAPI>({
     tagName: 'media-radio',
-    props: {
-      value: '',
-      checkClass: null,
-    },
+    props: { value: '' },
   });
 
   protected _checked = signal(false);
@@ -116,8 +113,7 @@ export class Radio extends Component<RadioAPI> {
   }
 
   override render() {
-    const { checkClass } = this.$props;
-    return <div class={checkClass()} part="check" />;
+    return <div part="check" />;
   }
 }
 
@@ -129,8 +125,6 @@ export interface RadioAPI {
 export interface RadioProps {
   /** The radio value. */
   value: string;
-  /** The classes to be applied to the radio check element. */
-  checkClass: string | null;
 }
 
 export interface RadioEvents {

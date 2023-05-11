@@ -29,12 +29,12 @@ function Submenu({ children, ...buttonProps }) {
 
 function SubmenuButton({ label, hint, icon: Icon }) {
   return (
-    <MediaMenuButton className="group flex cursor-pointer items-center p-2.5 data-[hocus]:bg-gray-700/40 data-[focus]:ring-2 data-[focus]:ring-blue-400">
+    <MediaMenuButton className="group flex cursor-pointer items-center p-2.5 data-[hocus]:bg-white/10 data-[focus]:ring-2 data-[focus]:ring-blue-400">
       <ArrowLeftIcon className="hidden h-4 w-4 group-aria-expanded:inline" />
       <Icon className="h-6 w-6 group-aria-expanded:hidden" />
       <span className="ml-1.5">{label}</span>
-      <span className="ml-auto text-gray-500">{hint}</span>
-      <ChevronRightIcon className="ml-0.5 h-4 w-4 text-gray-500 group-aria-expanded:hidden" />
+      <span className="ml-auto text-white/50">{hint}</span>
+      <ChevronRightIcon className="ml-0.5 h-4 w-4 text-white/50 group-aria-expanded:hidden" />
     </MediaMenuButton>
   );
 }

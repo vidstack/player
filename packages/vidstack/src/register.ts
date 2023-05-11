@@ -18,6 +18,7 @@ import { AudioMenuButton } from './player/ui/menu/audio/menu-button';
 import { AudioMenuItems } from './player/ui/menu/audio/menu-items';
 import { CaptionsMenuButton } from './player/ui/menu/captions/menu-button';
 import { CaptionsMenuItems } from './player/ui/menu/captions/menu-items';
+import { ChaptersMenuItems } from './player/ui/menu/chapters-menu-items';
 import { Menu } from './player/ui/menu/menu';
 import { MenuButton } from './player/ui/menu/menu-button';
 import { MenuItems } from './player/ui/menu/menu-items';
@@ -34,6 +35,7 @@ import { SliderVideo } from './player/ui/sliders/slider-video';
 import { Slider } from './player/ui/sliders/slider/slider';
 import { TimeSlider } from './player/ui/sliders/time-slider/time-slider';
 import { VolumeSlider } from './player/ui/sliders/volume-slider';
+import { Thumbnail } from './player/ui/thumbnail';
 import { Time } from './player/ui/time';
 import { Tooltip } from './player/ui/tooltip/tooltip';
 
@@ -45,6 +47,7 @@ export default function registerAllElements(): void {
     BufferingIndicator,
     Icon,
     Tooltip,
+    Thumbnail,
     PlayButton,
     MuteButton,
     PIPButton,
@@ -71,6 +74,7 @@ export default function registerAllElements(): void {
     AudioMenuItems,
     CaptionsMenuButton,
     CaptionsMenuItems,
+    ChaptersMenuItems,
     QualityMenuButton,
     QualityMenuItems,
     PlaybackRateMenuButton,

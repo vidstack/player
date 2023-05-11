@@ -39,11 +39,11 @@ Previews can be grouped by using a parent container element for the `preview` sl
 
 ## Chapters
 
-Chapters are set by providing a [WebVTT](https://developer.mozilla.org/en-US/docs/react/Web/API/WebVTT_API)
-file via the `<track>` element that specifies the time ranges and respective chapter titles. It
-should look something like this:
+Chapters are set by providing a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
+file that specifies the time ranges and respective chapter titles. It should look something like
+this:
 
-```txt
+```js
 WEBVTT
 
 00:00:00 --> 00:01:13
@@ -51,6 +51,8 @@ The Forest
 
 00:01:13 --> 00:02:31
 Camp Site
+
+...
 ```
 
 The time slider supports showing the current chapters text track that has a `mode` of showing:

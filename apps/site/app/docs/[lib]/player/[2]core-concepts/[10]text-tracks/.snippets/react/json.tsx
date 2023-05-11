@@ -1,12 +1,12 @@
-<MediaPlayer
-  textTracks={[
-    {
-      src: '/media/subs/english.json',
-      type: 'json',
-      kind: 'subtitles',
-      label: 'English',
-      language: 'en-US',
-      default: true,
-    },
-  ]}
-></MediaPlayer>;
+<MediaPlayer>
+  <MediaOutlet>
+    <track
+      src="/media/subs/english.json"
+      kind="subtitles"
+      label="English"
+      srclang="en-US"
+      default
+      data-type="json"
+    />
+  </MediaOutlet>
+</MediaPlayer>;

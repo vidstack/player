@@ -1,6 +1,7 @@
 import { effect } from 'maverick.js';
 import { ComponentInstance, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
+import { ClassManager } from '../../../../foundation/observers/class-manager';
 import { useMedia, type MediaContext } from '../../../core/api/context';
 import { isTrackCaptionKind } from '../../../core/tracks/text/text-track';
 import { MenuItems, type MenuItemsAPI } from '../menu-items';
@@ -47,9 +48,14 @@ export class CaptionsMenuItems extends MenuItems<CaptionsMenuItemsAPI> {
     this._media = useMedia();
   }
 
-  protected override onConnect() {
+  protected override onConnect(el: HTMLElement) {
     effect(this._watchControllerDisabled.bind(this));
     effect(this._watchHintText.bind(this));
+
+    const { radioClass, radioCheckClass } = this.$props;
+    new ClassManager(el)
+      ._observe('media-radio', radioClass)
+      ._observe('[part="check"]', radioCheckClass);
   }
 
   protected _watchHintText() {
@@ -95,33 +101,35 @@ export class CaptionsMenuItems extends MenuItems<CaptionsMenuItemsAPI> {
     if (index >= 0) this._media.remote.changeTextTrackMode(index, 'showing', event);
   }
 
-  override render() {
+  protected _getValue() {
+    const { textTrack, textTracks } = this._media.$store,
+      track = textTrack();
+    return track && isTrackCaptionKind(track) && track.mode === 'showing'
+      ? track.label.toLowerCase()
+      : 'off';
+  }
+
+  protected _getOptions() {
     const { offLabel } = this.$props,
-      { textTrack, textTracks } = this._media.$store,
-      onChange = this._onChange.bind(this);
-
-    const value = () => {
-      const track = textTrack();
-      return track && isTrackCaptionKind(track) && track.mode === 'showing'
-        ? track.label.toLowerCase()
-        : 'off';
-    };
-
-    const options = () => [
-      { label: offLabel(), value: 'off' },
+      { textTracks } = this._media.$store;
+    return [
+      { value: 'off', content: <span>{offLabel()}</span> },
       ...textTracks()
         .filter(isTrackCaptionKind)
         .map((track) => ({
-          label: track.label,
           value: track.label.toLowerCase(),
+          content: <span>{track.label}</span>,
         })),
     ];
+  }
 
+  override render() {
+    const { radioGroupClass } = this.$props;
     return renderRadioGroup({
-      ...this.$props,
-      value,
-      options,
-      onChange,
+      value: this._getValue.bind(this),
+      options: this._getOptions.bind(this),
+      radioGroupClass,
+      onChange: this._onChange.bind(this),
     });
   }
 }

@@ -171,7 +171,7 @@ media-player {
   --media-slider-value-padding: 1px 10px;
   --media-slider-value-bg: black;
   --media-slider-value-color: hsl(0, 0%, 80%);
-  --media-slider-value-spacing: 8px;
+  --media-slider-value-gap: 8px;
 
   --media-slider-preview-bg: unset;
   --media-slider-preview-width: var(--computed-width);
@@ -180,10 +180,18 @@ media-player {
   --media-slider-vertical-preview-gap: 4px;
 
   --media-slider-chapter-title-font-size: 14px;
-  --media-slider-chapter-title-color: white;
+  --media-slider-chapter-title-color: #f5f5f5;
   --media-slider-chapter-title-bg: unset;
   --media-slider-chapter-hover-transform: scaleY(1.75);
   --media-slider-chapter-hover-transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
+
+  --media-thumbnail-bg: black;
+  /* Applies when scaling thumbnails up. */
+  --media-thumbnail-min-width: 120px;
+  --media-thumbnail-min-height: 80px;
+  /* Applies when scaling thumbnails down. */
+  --media-thumbnail-max-width: 180px;
+  --media-thumbnail-max-height: 160px;
 }
 ```
 

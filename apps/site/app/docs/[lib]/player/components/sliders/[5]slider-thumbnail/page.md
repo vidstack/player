@@ -11,7 +11,7 @@ The thumbnail image will be displayed when the user is hovering over or dragging
 and the time ranges in the WebVTT file will automatically be matched based on the current pointer
 position.
 
-{% code_preview name="usage" copyHighlight=true highlight="html:4-7|react:7" /%}
+{% code_preview name="usage" copyHighlight=true highlight="html:4|react:7" /%}
 
 ## WebVTT
 
@@ -70,20 +70,14 @@ WEBVTT
 
 ```css
 media-slider-thumbnail {
-  /* Min-width applies when scaling thumbnails up. */
-  min-width: 120px;
-  min-height: 80px;
-  /* Max-width applies when scaling thumbnails down. */
-  max-width: 180px;
-  max-height: 160px;
 }
 
 /* Apply styles when thumbnails are loading. */
 media-slider-thumbnail[data-loading] {
 }
 
-/* Apply styles to image container element part. */
-media-slider-thumbnail [part='container'] {
+/* Apply styles to thumbnail element. */
+media-slider-thumbnail [part='thumbnail'] {
 }
 
 /* Apply styles to <img> element part. */
@@ -95,9 +89,26 @@ media-slider-thumbnail[aria-hidden='true'] {
 }
 ```
 
+### CSS Variables
+
+The following snippet contains a complete list of CSS variables and their default values. Any
+of the variables can be set to adjust the default slider thumbnail styles:
+
+```css {% copy=true %}
+media-player {
+  --media-thumbnail-bg: black;
+  /* Applies when scaling thumbnails up. */
+  --media-thumbnail-min-width: 120px;
+  --media-thumbnail-min-height: 80px;
+  /* Applies when scaling thumbnails down. */
+  --media-thumbnail-max-width: 180px;
+  --media-thumbnail-max-height: 160px;
+}
+```
+
 ## Tailwind
 
-{% code_snippet name="tailwind" copyHighlight=true highlight="html:3-11|react:3-8,11-" /%}
+{% code_snippet name="tailwind" copy=true  /%}
 
 {% callout type="info" %}
 A more complete [slider example](/docs/react/player/components/sliders/time-slider#tailwind) is

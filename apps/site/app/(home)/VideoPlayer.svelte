@@ -2,6 +2,7 @@
   class="hero-video overflow-hidden shadow-lg"
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
   poster="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/animated.webp?start=268&end=278&width=640"
+  thumbnails="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
   aspect-ratio="16/9"
   key-target="document"
   volume={0.2}
@@ -34,14 +35,25 @@
   <div
     class="can-control:opacity-100 pointer-events-none absolute inset-0 z-10 flex h-full flex-col justify-between text-white opacity-0 transition-opacity duration-200 ease-linear"
   >
-    <div class="flex items-center pointer-events-auto w-fill px-2 z-10">
+    <div
+      class="absolute inset-0 z-50 pointer-events-none user-idle:pointer-events-auto user-idle:cursor-none"
+    />
+
+    <div class="flex items-center pointer-events-auto w-fill px-2 z-50">
       <div class="flex-1" />
-      <media-menu>
+      <media-menu position="bottom">
+        <media-menu-button>
+          <media-icon type="chapters" />
+          <media-tooltip position="bottom right">Chapters</media-tooltip>
+        </media-menu-button>
+        <media-chapters-menu-items />
+      </media-menu>
+      <media-menu position="bottom">
         <media-menu-button>
           <media-icon type="settings" data-rotate />
           <media-tooltip position="bottom right">Settings</media-tooltip>
         </media-menu-button>
-        <media-menu-items data-bottom>
+        <media-menu-items>
           <media-menu>
             <media-playback-rate-menu-button />
             <media-playback-rate-menu-items />
@@ -64,10 +76,7 @@
       <media-time-slider>
         <div slot="preview">
           <div>
-            <media-slider-thumbnail
-              src="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
-              class="rounded-sm"
-            />
+            <media-slider-thumbnail class="rounded-sm" />
             <div class="absolute bottom-8 w-full text-center" part="chapter-title" />
           </div>
           <media-slider-value class="rounded-sm mt-2" type="pointer" format="time" />

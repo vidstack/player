@@ -16,6 +16,7 @@ import {
   TEXT_TRACK_READY_STATE,
   TEXT_TRACK_UPDATE_ACTIVE_CUES,
 } from './symbols';
+import { isCueActive } from './utils';
 
 /**
  * - 0: Not Loading
@@ -129,7 +130,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
     this.dispatchEvent(new DOMEvent<VTTCue>('add-cue', { detail: cue, trigger }));
 
-    if (cue.startTime >= this._currentTime && cue.endTime <= this._currentTime) {
+    if (isCueActive(cue, this._currentTime)) {
       this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, trigger);
     }
   }
@@ -172,9 +173,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
     for (let i = 0, length = this._cues.length; i < length; i++) {
       const cue = this._cues[i]!;
-      if (currentTime >= cue.startTime && currentTime <= cue.endTime) {
-        activeCues.push(cue);
-      }
+      if (isCueActive(cue, currentTime)) activeCues.push(cue);
     }
 
     let changed = activeCues.length !== this._activeCues.length;
@@ -311,40 +310,44 @@ export interface TextTrackEvents {
   'mode-change': TextTrackModeChangeEvent;
 }
 
+export interface TextTrackEvent<T> extends DOMEvent<T> {
+  target: TextTrack;
+}
+
 /**
  * Fired when the text track begins the loading/parsing process.
  */
-export interface TextTrackLoadStartEvent extends DOMEvent<void> {}
+export interface TextTrackLoadStartEvent extends TextTrackEvent<void> {}
 
 /**
  * Fired when the text track has finished loading/parsing.
  */
-export interface TextTrackLoadEvent extends DOMEvent<void> {}
+export interface TextTrackLoadEvent extends TextTrackEvent<void> {}
 
 /**
  * Fired when loading or parsing the text track fails.
  */
-export interface TextTrackErrorEvent extends DOMEvent<Error> {}
+export interface TextTrackErrorEvent extends TextTrackEvent<Error> {}
 
 /**
  * Fired when a cue is added to the text track.
  */
-export interface TextTrackAddCueEvent extends DOMEvent<VTTCue> {}
+export interface TextTrackAddCueEvent extends TextTrackEvent<VTTCue> {}
 
 /**
  * Fired when a cue is removed from the text track.
  */
-export interface TextTrackRemoveCueEvent extends DOMEvent<VTTCue> {}
+export interface TextTrackRemoveCueEvent extends TextTrackEvent<VTTCue> {}
 
 /**
  * Fired when the active cues for the current text track have changed.
  */
-export interface TextTrackCueChangeEvent extends DOMEvent<void> {}
+export interface TextTrackCueChangeEvent extends TextTrackEvent<void> {}
 
 /**
  * Fired when the text track mode (showing/hidden/disabled) has changed.
  */
-export interface TextTrackModeChangeEvent extends DOMEvent<TextTrack> {}
+export interface TextTrackModeChangeEvent extends TextTrackEvent<TextTrack> {}
 
 const captionRE = /captions|subtitles/;
 export function isTrackCaptionKind(track: TextTrack): boolean {

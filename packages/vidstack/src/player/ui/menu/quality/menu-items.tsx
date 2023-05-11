@@ -1,6 +1,7 @@
 import { effect } from 'maverick.js';
 import { ComponentInstance, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
+import { ClassManager } from '../../../../foundation/observers/class-manager';
 import { useMedia, type MediaContext } from '../../../core/api/context';
 import { MenuItems, type MenuItemsAPI } from '../menu-items';
 import { Radio } from '../radio/radio';
@@ -46,9 +47,14 @@ export class QualityMenuItems extends MenuItems<QualityMenuItemsAPI> {
     this._media = useMedia();
   }
 
-  protected override onConnect() {
+  protected override onConnect(el: HTMLElement) {
     effect(this._watchControllerDisabled.bind(this));
     effect(this._watchHintText.bind(this));
+
+    const { radioClass, radioCheckClass } = this.$props;
+    new ClassManager(el)
+      ._observe('media-radio', radioClass)
+      ._observe('[part="check"]', radioCheckClass);
   }
 
   protected _watchHintText() {
@@ -83,26 +89,30 @@ export class QualityMenuItems extends MenuItems<QualityMenuItemsAPI> {
     if (index >= 0) this._media.remote.changeQuality(index, event);
   }
 
-  override render() {
+  protected _getValue() {
+    const { quality, autoQuality } = this._media.$store;
+    return autoQuality() ? 'auto' : (quality()?.height ?? 'auto') + '';
+  }
+
+  protected _getOptions() {
     const { autoLabel } = this.$props,
-      { quality, qualities, autoQuality } = this._media.$store,
-      onChange = this._onChange.bind(this);
-
-    const value = () => (autoQuality() ? 'auto' : (quality()?.height ?? 'auto') + '');
-
-    const options = () => [
-      { label: autoLabel(), value: 'auto' },
+      { qualities } = this._media.$store;
+    return [
+      { value: 'auto', content: <span>{autoLabel()}</span> },
       ...qualities().map((quality) => ({
-        label: quality.height + 'p',
         value: quality.height + '',
+        content: <span>{quality.height + 'p'}</span>,
       })),
     ];
+  }
 
+  override render() {
+    const { radioGroupClass } = this.$props;
     return renderRadioGroup({
-      ...this.$props,
-      value,
-      options,
-      onChange,
+      value: this._getValue.bind(this),
+      options: this._getOptions.bind(this),
+      radioGroupClass,
+      onChange: this._onChange.bind(this),
     });
   }
 }

@@ -13,6 +13,8 @@ import type { VTTCue } from 'media-captions';
 import { setAttributeIfEmpty } from '../../../../utils/dom';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
 import type { TextTrack } from '../../../core/tracks/text/text-track';
+import type { TextTrackListModeChangeEvent } from '../../../core/tracks/text/text-tracks';
+import { findActiveCue, onTrackChapterChange } from '../../../core/tracks/text/utils';
 import type {
   SliderDragEndEvent,
   SliderDragStartEvent,
@@ -260,23 +262,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   // -------------------------------------------------------------------------------------------
 
   protected _onTrackModeChange() {
-    const track = this._media.textTracks
-      .toArray()
-      .find((track) => track.kind === 'chapters' && track.mode === 'showing');
-
-    if (peek(this._track) === track) return;
-
-    if (!track) {
-      this._track.set(null);
-      return;
-    }
-
-    if (track.readyState == 2) {
-      this._track.set(track);
-    } else {
-      this._track.set(null);
-      track.addEventListener('load', () => this._track.set(track), { once: true });
-    }
+    onTrackChapterChange(this._media.textTracks, peek(this._track), this._track.set);
   }
 
   protected _chapterTitle: HTMLElement | null = null;
@@ -299,7 +285,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
     const { interactive, pointerValue, value } = this.$store,
       currentValue = interactive() ? pointerValue() : value(),
       time = this._percentToTime(currentValue),
-      cue = peek(this._track)!.cues.find((cue) => time >= cue.startTime && time <= cue.endTime);
+      cue = findActiveCue(time, peek(this._track)!.cues);
 
     if (cue !== this._activeCue) {
       this._chapterTitle.textContent = cue?.text || '';
