@@ -8,7 +8,13 @@ import {
   type ElementAttributesRecord,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { camelToKebabCase, isNull, listenEvent } from 'maverick.js/std';
+import {
+  camelToKebabCase,
+  isNull,
+  listenEvent,
+  setAttribute,
+  uppercaseFirstChar,
+} from 'maverick.js/std';
 
 import { canFullscreen } from '../../foundation/fullscreen/controller';
 import { Logger } from '../../foundation/logger/controller';
@@ -151,12 +157,17 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('tabindex', '0');
     setAttributeIfEmpty(el, 'role', 'region');
-    setAttributeIfEmpty(el, 'aria-label', 'Media Player');
+
+    if (__SERVER__) this._watchTitle();
+    else effect(this._watchTitle.bind(this));
+
     this._setMediaAttributes();
     this._setMediaVars();
+
     this._media.player = el as MediaPlayerElement;
     this._media.remote.setTarget(el);
     this._media.remote.setPlayer(el as MediaPlayerElement);
+
     listenEvent(el, 'find-media-player', this._onFindPlayer.bind(this));
   }
 
@@ -195,11 +206,21 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     this.$store.muted.set(this.$props.muted() || this.$props.volume() === 0);
   }
 
+  private _watchTitle() {
+    const { title, live, viewType } = this.$store,
+      isLive = live(),
+      type = uppercaseFirstChar(viewType()),
+      typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media';
+    setAttribute(
+      this.el!,
+      'aria-label',
+      title() ? `${typeText} - ${title()}` : typeText + ' Player',
+    );
+  }
+
   private _watchCanPlay() {
-    effect(() => {
-      if (this.$store.canPlay() && this._provider) this._canPlayQueue._start();
-      else this._canPlayQueue._stop();
-    });
+    if (this.$store.canPlay() && this._provider) this._canPlayQueue._start();
+    else this._canPlayQueue._stop();
   }
 
   private _onProvidedTypesChange() {

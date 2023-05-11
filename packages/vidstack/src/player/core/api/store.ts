@@ -52,6 +52,7 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
   source: { src: '', type: '' },
   sources: [],
   started: false,
+  title: '',
   textTracks: [],
   textTrack: null,
   thumbnails: null,
@@ -141,8 +142,11 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'poster',
   'source',
   'sources',
+  'title',
   'textTracks',
   'textTrack',
+  'thumbnails',
+  'thumbnailCues',
   'volume',
   'canLoadPoster',
   'providedStreamType',
@@ -570,6 +574,10 @@ export interface MediaState {
    * is permitted, set this value to `live:dvr` or `ll-live:dvr`.
    */
   streamType: MediaStreamType;
+  /**
+   * The title of the current media.
+   */
+  title: string;
   /**
    * The list of all available text tracks.
    */

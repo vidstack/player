@@ -20,6 +20,7 @@ export class MediaStoreSync extends ComponentController<PlayerAPI> {
     effect(this._onLiveChange.bind(this));
     effect(this._onLiveEdgeChange.bind(this));
     effect(this._onThumbnailsChange.bind(this));
+    effect(this._onTitleChange.bind(this));
   }
 
   private _onLogLevelChange() {
@@ -76,5 +77,9 @@ export class MediaStoreSync extends ComponentController<PlayerAPI> {
 
   protected _onThumbnailsChange() {
     this.$store.thumbnails.set(this.$props.thumbnails());
+  }
+
+  protected _onTitleChange() {
+    this.$store.title.set(this.$props.title());
   }
 }

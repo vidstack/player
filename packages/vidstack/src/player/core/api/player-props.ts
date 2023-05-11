@@ -48,6 +48,7 @@ export const mediaPlayerProps: PropDeclarations<PlayerProps> = {
   keyDisabled: false,
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
+  title: '',
   thumbnails: null,
   textTracks: defineProp<(TextTrack | TextTrackInit)[]>({
     value: [],
@@ -76,6 +77,7 @@ export interface PlayerProps
     | 'poster'
     | 'preload'
     | 'playbackRate'
+    | 'title'
     | 'thumbnails'
     | 'viewType'
     | 'volume'
