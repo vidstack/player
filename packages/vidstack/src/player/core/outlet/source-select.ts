@@ -1,4 +1,4 @@
-import { computed, effect, peek, tick, type ReadSignal } from 'maverick.js';
+import { computed, effect, peek, tick, type ReadSignal, type WriteSignal } from 'maverick.js';
 import { isArray, isString } from 'maverick.js/std';
 
 import { preconnect } from '../../../utils/network';
@@ -15,8 +15,8 @@ export class SourceSelection {
 
   constructor(
     private _domSources: ReadSignal<MediaSrc[]>,
-    private _rendered: ReadSignal<boolean>,
     private _media: MediaContext,
+    private _loader: WriteSignal<MediaProviderLoader | null>,
   ) {
     const HLS_LOADER = new HLSProviderLoader(),
       VIDEO_LOADER = new VideoProviderLoader(),
@@ -29,14 +29,14 @@ export class SourceSelection {
     });
 
     if (__SERVER__) {
-      const { $loader, $store } = _media;
+      const { $store } = _media;
       $store.sources.set(normalizeSrc(_media.$props.src()));
       for (const src of $store.sources()) {
         const loader = this._loaders().find((loader) => loader.canPlay(src));
         if (loader) {
           $store.source.set(src);
           $store.mediaType.set(loader.mediaType(src));
-          $loader.set(loader);
+          this._loader.set(loader);
         }
       }
       return;
@@ -44,7 +44,6 @@ export class SourceSelection {
 
     effect(this._onSourcesChange.bind(this));
     effect(this._onSourceChange.bind(this));
-    effect(this._onLoaderChange.bind(this));
     effect(this._onPreconnect.bind(this));
     effect(this._onLoadSource.bind(this));
   }
@@ -80,29 +79,14 @@ export class SourceSelection {
       });
     }
 
-    if (newLoader !== peek(this._media.$loader)) {
+    if (newLoader !== peek(this._loader)) {
       this._media.delegate._dispatch('provider-change', { detail: null });
       newLoader && peek(() => newLoader!.preconnect?.(this._media));
+      this._loader.set(newLoader);
       this._media.delegate._dispatch('provider-loader-change', { detail: newLoader });
     }
 
     tick();
-  }
-
-  private _onLoaderChange() {
-    const loader = this._media.$loader();
-    if (!this._rendered() || !loader) return;
-    peek(() => {
-      loader.load(this._media).then((provider) => {
-        if (!peek(this._rendered)) return;
-        // The src/loader might've changed by the time we load the provider.
-        if (peek(this._media.$loader) === loader) {
-          this._media.delegate._dispatch('provider-change', {
-            detail: provider,
-          });
-        }
-      });
-    });
   }
 
   private _onPreconnect() {

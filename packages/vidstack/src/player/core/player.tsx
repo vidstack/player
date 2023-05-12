@@ -102,7 +102,6 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
       player: null,
       qualities: new VideoQualityList(),
       audioTracks: new AudioTrackList(),
-      $loader: signal<MediaProviderLoader | null>(null),
       $provider: signal<MediaProvider | null>(null),
       $props: this.$props,
       $store: this.$store as MediaStore,

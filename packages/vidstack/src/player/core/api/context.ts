@@ -9,7 +9,7 @@ import {
 import type { Logger } from '../../../foundation/logger/controller';
 import type { MediaKeyShortcuts } from '../keyboard/types';
 import type { MediaPlayerElement } from '../player';
-import type { MediaProvider, MediaProviderLoader } from '../providers/types';
+import type { MediaProvider } from '../providers/types';
 import type { VideoQualityList } from '../quality/video-quality';
 import type { MediaPlayerDelegate } from '../state/media-player-delegate';
 import type { MediaRemoteControl } from '../state/remote-control';
@@ -29,7 +29,6 @@ export interface MediaContext {
   textRenderers: TextRenderers;
   ariaKeys: MediaKeyShortcuts;
   logger?: Logger;
-  $loader: WriteSignal<MediaProviderLoader | null>;
   $provider: WriteSignal<MediaProvider | null>;
   $iosControls: ReadSignal<boolean>;
   $props: ReadSignalRecord<PlayerProps>;

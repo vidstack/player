@@ -180,10 +180,6 @@ export class MediaStateManager extends ComponentController<PlayerAPI> {
     this._store.canSetQuality.set(!this._media.qualities.readonly);
   }
 
-  ['provider-loader-change'](event: ME.MediaProviderLoaderChangeEvent) {
-    this._media.$loader.set(event.detail);
-  }
-
   ['provider-change'](event: ME.MediaProviderChangeEvent) {
     this._media.$provider.set(event.detail);
   }

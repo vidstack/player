@@ -1,4 +1,4 @@
-import { signal } from 'maverick.js';
+import { peek, signal } from 'maverick.js';
 import {
   Component,
   ComponentInstance,
@@ -10,6 +10,7 @@ import type { CaptionsFileFormat } from 'media-captions';
 
 import { useMedia, type MediaContext } from '../api/context';
 import type { MediaSrc } from '../api/types';
+import type { MediaProviderLoader } from '../providers/types';
 import type { TextTrackInit } from '../tracks/text/text-track';
 import { SourceSelection } from './source-select';
 import { Tracks } from './tracks';
@@ -39,14 +40,14 @@ export class Outlet extends Component<OutletAPI> {
   });
 
   private _media!: MediaContext;
-  private _rendered = signal(false);
   private _domSources = signal<MediaSrc[]>([]);
   private _domTracks = signal<TextTrackInit[]>([]);
+  private _loader = signal<MediaProviderLoader | null>(null);
 
   constructor(instance: ComponentInstance<OutletAPI>) {
     super(instance);
     this._media = useMedia();
-    new SourceSelection(this._domSources, this._rendered, this._media);
+    new SourceSelection(this._domSources, this._media, this._loader);
     new Tracks(this._domTracks, this._media);
   }
 
@@ -68,6 +69,10 @@ export class Outlet extends Component<OutletAPI> {
       resize.disconnect();
       mutation.disconnect();
     };
+  }
+
+  protected override onDestroy() {
+    this._media.$store.currentTime.set(0);
   }
 
   protected _rafId = -1;
@@ -115,15 +120,22 @@ export class Outlet extends Component<OutletAPI> {
 
   override render() {
     return () => {
-      const loader = this._media.$loader();
+      const loader = this._loader();
+      if (!loader) return null;
 
-      if (!loader) {
-        this._rendered.set(false);
-        return;
-      }
+      const el = loader.render(this._media.$store);
 
-      this._rendered.set(true);
-      return loader.render(this._media.$store);
+      peek(() => {
+        loader.load(this._media).then((provider) => {
+          // The src/loader might've changed by the time we load the provider.
+          if (peek(this._loader) !== loader) return;
+          this._media.delegate._dispatch('provider-change', {
+            detail: provider,
+          });
+        });
+      });
+
+      return el;
     };
   }
 }
