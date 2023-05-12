@@ -32,6 +32,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   }
 
   readonly src?: string;
+  readonly content?: string;
   readonly type?: 'json' | CaptionsFileFormat | CaptionsParserFactory;
   readonly encoding?: string;
 
@@ -107,7 +108,20 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     super();
 
     for (const prop of Object.keys(init)) this[prop] = init[prop];
-    if (!init.src) this[TEXT_TRACK_READY_STATE] = 2;
+
+    if (!__SERVER__ && init.content) {
+      import('media-captions').then(({ parseText, VTTCue, VTTRegion }) => {
+        if (init.type === 'json') {
+          this._parseJSON(init.content!, VTTCue, VTTRegion);
+        } else {
+          parseText(init.content!, { type: init.type as 'vtt' }).then(({ cues, regions }) => {
+            this._cues = cues;
+            this._regions = regions;
+            this._readyState();
+          });
+        }
+      });
+    } else if (!init.src) this[TEXT_TRACK_READY_STATE] = 2;
 
     if (__DEV__ && isTrackCaptionKind(this) && !this.label) {
       throw Error(`[vidstack]: captions text track created without label: \`${this.src}\``);
@@ -212,26 +226,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
       });
 
       if (this.type === 'json') {
-        try {
-          const json = (await (await response).json()) as {
-            regions?: Partial<VTTRegion>[];
-            cues?: Partial<VTTCue>[];
-          };
-
-          if (json.regions) {
-            this._regions = json.regions.map((json) => Object.assign(new VTTRegion(), json));
-          }
-
-          if (json.cues) {
-            this._cues = json.cues
-              .filter((json) => isNumber(json.startTime) && isNumber(json.endTime))
-              .map((json) => Object.assign(new VTTCue(0, 0, ''), json));
-          }
-        } catch (e) {
-          if (__DEV__) {
-            console.error(`[vidstack] failed to parse JSON captions at: \`${this.src}\`\n\n`, e);
-          }
-        }
+        this._parseJSON(await (await response).text(), VTTCue, VTTRegion);
       } else {
         const { errors, metadata, regions, cues } = await parseResponse(response, {
           type: this.type,
@@ -247,15 +242,45 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
         }
       }
 
-      this[TEXT_TRACK_READY_STATE] = 2;
-      const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
-      if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
-      const loadEvent = new DOMEvent<void>('load');
-      this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, loadEvent);
-      this.dispatchEvent(loadEvent);
+      this._readyState();
     } catch (error) {
-      this[TEXT_TRACK_READY_STATE] = 3;
-      this.dispatchEvent(new DOMEvent('error', { detail: error }));
+      this._errorState(error);
+    }
+  }
+
+  private _readyState() {
+    this[TEXT_TRACK_READY_STATE] = 2;
+    const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
+    if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
+    const loadEvent = new DOMEvent<void>('load');
+    this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, loadEvent);
+    this.dispatchEvent(loadEvent);
+  }
+
+  private _errorState(error: unknown) {
+    this[TEXT_TRACK_READY_STATE] = 3;
+    this.dispatchEvent(new DOMEvent('error', { detail: error }));
+  }
+
+  private _parseJSON(json, VTTCue, VTTRegion) {
+    try {
+      json = JSON.parse(json);
+
+      if (json.regions) {
+        this._regions = json.regions.map((json) => Object.assign(new VTTRegion(), json));
+      }
+
+      if (json.cues) {
+        this._cues = json.cues
+          .filter((json) => isNumber(json.startTime) && isNumber(json.endTime))
+          .map((json) => Object.assign(new VTTCue(0, 0, ''), json));
+      }
+    } catch (error) {
+      if (__DEV__) {
+        console.error(`[vidstack] failed to parse JSON captions at: \`${this.src}\`\n\n`, error);
+      }
+
+      this._errorState(error);
     }
   }
 
@@ -271,6 +296,10 @@ export interface TextTrackInit {
    * element has a `crossorigin` attribute.
    */
   src?: string;
+  /**
+   * Directly pass in text track file contents.
+   */
+  content?: string;
   /**
    * The captions file format to be parsed or a custom parser factory (functions that returns a
    * captions parser). Supported types include: 'vtt', 'srt', 'ssa', 'ass', and 'json'.
