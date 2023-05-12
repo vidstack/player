@@ -1,5 +1,7 @@
 # [0.5.0](/compare/v0.4.5...v0.5.0) (2023-05-12)
 
+📝 [RELEASE NOTES](https://github.com/vidstack/player/discussions/832)
+
 ### Bug Fixes
 
 - `data-hidden` -> `aria-hidden` 73d857d
