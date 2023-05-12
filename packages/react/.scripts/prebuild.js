@@ -74,11 +74,12 @@ async function buildComponents() {
       ? `\n${examples.map((example) => `* @example\n${example}`).join('\n')}`
       : '';
 
+    const name = `Media${component.name}`;
+
     content.push(
       `/**\n${component.docs}${docsLinkTag}${exampleTags}\n*/`,
-      `export const ${`Media${component.name}`} = /* #__PURE__*/ createLiteReactElement<${elementName}>(${
-        component.name
-      });`,
+      `export const ${name} = /* #__PURE__*/ createLiteReactElement<${name}Props>(${component.name});`,
+      `export interface ${name}Props extends ReactElementProps<${elementName}> {};`,
       '',
     );
   }
@@ -88,7 +89,7 @@ async function buildComponents() {
     [
       '// !!!!!!!!!!!!!!!!! DO NOT EDIT! This file is auto-generated. !!!!!!!!!!!!!!!!!',
       '',
-      "import { createLiteReactElement } from 'maverick.js/react';",
+      "import { createLiteReactElement, type ReactElementProps } from 'maverick.js/react';",
       'import {',
       ' ' + imports.join(',\n '),
       "} from 'vidstack';",
