@@ -1,3 +1,45 @@
+# [0.5.0](/compare/v0.4.5...v0.5.0) (2023-05-12)
+
+### Bug Fixes
+
+- `data-hidden` -> `aria-hidden` 73d857d
+- add `role` to player component 33388e4
+- add captions css variables 08ffdaa
+- add live indicator css variables dbae587
+- add required aria attrs on captions overlay 5b0f2f0
+- add slider css variables dae03fb
+- add time css variables e8dea99
+- allow one default text track per kind ae3003c
+- aspect ratio setting should not be applied in fullscreen d0701b8
+- check gesture is in bounds before queueing f3525ea
+- correctly resolve thumbnail image relative to given src 512aaec
+- detach text renderer when removed c67b594
+- ensure display none on svgs is applied 48c3ceb
+- null track on audio track change event dfca7af, closes #828 #829
+- parse captions ms timestamp correctly b1634dd
+- **react:** add `part` jsx attr to dom elements e96f8e1
+- set `credentials` when fetching slider thumbnails 658e235
+- set credentials when fetching tracks based on `crossorigin` 1315aa7
+- time slider events re-connecting multiple times on setup 3c4fef3
+
+### Features
+
+- add missing chevron/arrow media icons 9f32bf8
+- bump all dependencies e55842c
+- migrate to jassub for `.ass` rendering (#810) d6c9c8f, closes #810
+- new `<media-buffering-indicator>` component 4e9432d
+- new `<media-chapters-menu-items>` ecbf921, closes #830
+- new `<media-gesture>` component 072b62d, closes #755
+- new `<media-thumbnail>` component 35f628d, closes #831
+- new `<media-tooltip>` component 44bd97d
+- new `title` prop on player dcbee0b
+- new class forwarding props on sliders 6c4bfaa
+- new maverick component system 4c22863
+- new menu components c90648a, closes #822 #54 #60 #61 #62 #823 #824 #825 #826
+- support `json` text tracks type b2fd876
+- time slider chapters 2c2014d, closes #805
+- vertical volume slider fcf313c, closes #804
+
 ## [0.4.5](https://github.com/vidstack/player/compare/v0.4.4...v0.4.5) (2023-04-23)
 
 ### Bug Fixes
