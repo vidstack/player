@@ -23,7 +23,7 @@
   "devDependencies": {
     "@algolia/client-search": "^4.14.0",
     "@iconify-json/ri": "^1.1.0",
-    "@maverick-js/compiler": "0.36.2",
+    "@maverick-js/compiler": "0.36.3",
     "@sveltejs/vite-plugin-svelte": "^2.0.0",
     "@tailwindcss/typography": "^0.5.0",
     "@types/markdown-it": "^12.2.0",
