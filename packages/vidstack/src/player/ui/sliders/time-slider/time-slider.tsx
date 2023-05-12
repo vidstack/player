@@ -74,7 +74,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   protected _dispatchSeeking!: ThrottledSeeking;
   protected _track = signal<TextTrack | null>(null);
   protected _chaptersRenderer!: SliderChaptersRenderer;
-  protected _classManager: ClassManager;
+  protected _classManager?: ClassManager;
 
   constructor(instance: ComponentInstance<TimeSliderAPI>) {
     super(instance);

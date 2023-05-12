@@ -35,7 +35,7 @@ when being interacted with:
 
 Previews can be grouped by using a parent container element for the `preview` slot:
 
-{% code_preview name="preview-group" copyHighlight=true highlight="html:2-5|react:12-15" /%}
+{% code_preview name="preview-group" copyHighlight=true highlight="html:3-6|react:12-15" /%}
 
 ## Chapters
 
