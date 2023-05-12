@@ -1,3 +1,14 @@
+## [0.5.2](/compare/v0.5.1...v0.5.2) (2023-05-12)
+
+### Bug Fixes
+
+- **react:** resolve correct event callback types d477db9
+- thumbnail get time is not bound c5168d9
+
+### Features
+
+- text track content can be passed in directly as string 7f3aba9
+
 ## [0.5.1](/compare/v0.5.0...v0.5.1) (2023-05-12)
 
 ### Bug Fixes
