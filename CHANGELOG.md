@@ -1,3 +1,14 @@
+## [0.5.1](/compare/v0.5.0...v0.5.1) (2023-05-12)
+
+### Bug Fixes
+
+- **react:** fast refresh breaking media outlet 63ee99a
+- **react:** player not attached in child components on connect f1162e4
+
+### Features
+
+- **react:** export all component props ebc5e6a
+
 # [0.5.0](/compare/v0.4.5...v0.5.0) (2023-05-12)
 
 📝 [RELEASE NOTES](https://github.com/vidstack/player/discussions/832)
