@@ -70,12 +70,19 @@ export class Outlet extends Component<OutletAPI> {
     };
   }
 
+  protected _rafId = -1;
   protected _onResize() {
-    const player = this._media.player!,
-      width = this.el!.offsetWidth,
-      height = this.el!.offsetHeight;
-    setStyle(player, '--media-width', width + 'px');
-    setStyle(player, '--media-height', height + 'px');
+    if (this._rafId >= 0) return;
+    this._rafId = window.requestAnimationFrame(() => {
+      const player = this._media.player!,
+        width = this.el!.offsetWidth,
+        height = this.el!.offsetHeight;
+
+      setStyle(player, '--media-width', width + 'px');
+      setStyle(player, '--media-height', height + 'px');
+
+      this._rafId = -1;
+    });
   }
 
   private _onMutation() {
