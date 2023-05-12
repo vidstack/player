@@ -53,7 +53,8 @@ export class SliderThumbnail extends Component<SliderThumbnailAPI> {
   }
 
   override render() {
-    return <media-thumbnail part="thumbnail" time={this._getTime()}></media-thumbnail>;
+    const time = this._getTime.bind(this);
+    return <media-thumbnail part="thumbnail" time={time()}></media-thumbnail>;
   }
 }
 
