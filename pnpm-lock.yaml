@@ -143,7 +143,7 @@ importers:
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
       maverick.js: 0.36.5
-      media-captions: 0.0.12
+      media-captions: 0.0.13
       media-icons: 0.5.0
       postcss: ^8.4.0
       rimraf: ^3.0.0
@@ -156,7 +156,7 @@ importers:
       vitest: ^0.30.0
     dependencies:
       maverick.js: 0.36.5_typescript@5.0.4
-      media-captions: 0.0.12
+      media-captions: 0.0.13
       media-icons: 0.5.0
       type-fest: 3.10.0_typescript@5.0.4
     devDependencies:
@@ -3929,8 +3929,8 @@ packages:
       blueimp-md5: 2.19.0
     dev: true
 
-  /media-captions/0.0.12:
-    resolution: {integrity: sha512-pOuEKYXjG5yvyXwQRmnVDdmOZCfj8yC0OKDSH1kNeuskHo7Rsy+f48g+76Xk5KoMeAO0qRc+ElReO7P6AeY6Qg==}
+  /media-captions/0.0.13:
+    resolution: {integrity: sha512-arrPBL46F/fO6fH+OI4VTxdYP2o5/3kfoivBIBy9WywcXvgeYXYlTFXg/PA9hTyjr4uBHzv1RIHzFkVwOKMD2w==}
     engines: {node: '>=16'}
     dev: false
 
