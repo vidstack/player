@@ -1,3 +1,14 @@
+## [0.5.3](/compare/v0.5.2...v0.5.3) (2023-05-13)
+
+### Bug Fixes
+
+- allow menu button/items to connect to existing menu 56d853e
+- improve handling of misaligned time slider chapters cc5b164
+- **react:** omit duplicate react event callbacks 652d547
+- **react:** resolve ssr/hydration issues 4697bee
+- reflect gesture props as attrs for styling 2ff0991
+- vtt parser should only accept whitelisted settings 077f659
+
 ## [0.5.2](/compare/v0.5.1...v0.5.2) (2023-05-12)
 
 ### Bug Fixes
