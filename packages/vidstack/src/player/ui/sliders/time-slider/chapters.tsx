@@ -5,7 +5,13 @@ import type { MediaStore } from '../../../core/api/store';
 import type { SliderStore } from '../slider/api/store';
 
 export class SliderChaptersRenderer {
-  constructor(protected _media: MediaStore, protected _slider: SliderStore) {}
+  protected _chapters: VTTCue[] = [];
+
+  constructor(
+    protected _media: MediaStore,
+    protected _slider: SliderStore,
+    protected _onChange: (chapter: string) => void,
+  ) {}
 
   render(cues: ReadonlyArray<VTTCue> | undefined, $class: ReadSignal<string | null>) {
     return cues?.length ? (
@@ -16,8 +22,12 @@ export class SliderChaptersRenderer {
   }
 
   protected _renderChapters(cues: ReadonlyArray<VTTCue>) {
-    const chapters = this._fillChapterGaps(cues);
-    return chapters.map((cue, i) => {
+    this._chapters = this._fillChapterGaps(cues);
+
+    const firstChapter = this._chapters[0];
+    this._onChange(firstChapter && firstChapter.startTime === 0 ? firstChapter.text : '');
+
+    return this._chapters.map((cue, i) => {
       const $width = this._computeWidth.bind(this, cue),
         $fill = this._computeFill.bind(this, cue),
         $buffered = this._computeBuffered.bind(this, cue);
@@ -39,15 +49,28 @@ export class SliderChaptersRenderer {
   }
 
   protected _computeWidth(cue: VTTCue) {
-    return ((cue.endTime - cue.startTime) / this._media.duration()) * 100 + '%';
+    const lastChapter = this._chapters[this._chapters.length - 1];
+    return ((cue.endTime - cue.startTime) / lastChapter.endTime) * 100 + '%';
   }
 
   protected _computeFill(cue: VTTCue) {
-    return this._calcChapterPercent(cue, this._percentToTime(this._slider.value())) + '%';
+    let percent = this._calcChapterPercent(cue, this._slider.fillPercent()),
+      currentPercent = percent;
+
+    if (this._slider.pointing()) {
+      currentPercent = this._calcChapterPercent(cue, this._slider.pointerPercent());
+    }
+
+    if (currentPercent > 0 && currentPercent < 100) {
+      this._onChange(cue.text);
+    }
+
+    return percent + '%';
   }
 
   protected _computeBuffered(cue: VTTCue) {
-    return this._calcChapterPercent(cue, this._media.bufferedEnd()) + '%';
+    const percent = (this._media.bufferedEnd() / this._media.duration()) * 100;
+    return this._calcChapterPercent(cue, percent) + '%';
   }
 
   protected _percentToTime(percent: number) {
@@ -57,8 +80,8 @@ export class SliderChaptersRenderer {
   protected _fillChapterGaps(cues: ReadonlyArray<VTTCue>) {
     const chapters: VTTCue[] = [];
 
-    // Fill any time gaps where chapters are missing
-    for (let i = 0; i < cues.length; i++) {
+    // Fill any time gaps where chapters are missing.
+    for (let i = 0; i < cues.length - 1; i++) {
       const currentCue = cues[i],
         nextCue = cues[i + 1];
       chapters.push(currentCue);
@@ -70,14 +93,17 @@ export class SliderChaptersRenderer {
       }
     }
 
+    chapters.push(cues[cues.length - 1]);
     return chapters;
   }
 
-  protected _calcChapterPercent(cue: VTTCue, time: number) {
-    return time >= cue.endTime
-      ? 100
-      : time < cue.startTime
-      ? 0
-      : ((time - cue.startTime) / (cue.endTime - cue.startTime)) * 100;
+  protected _calcChapterPercent(cue: VTTCue, percent: number) {
+    const lastChapter = this._chapters[this._chapters.length - 1],
+      startPercent = (cue.startTime / lastChapter.endTime) * 100,
+      endPercent = (cue.endTime / lastChapter.endTime) * 100;
+    return Math.max(
+      0,
+      percent >= endPercent ? 100 : ((percent - startPercent) / (endPercent - startPercent)) * 100,
+    );
   }
 }

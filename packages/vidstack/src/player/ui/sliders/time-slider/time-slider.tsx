@@ -13,7 +13,7 @@ import { ClassManager } from '../../../../foundation/observers/class-manager';
 import { setAttributeIfEmpty } from '../../../../utils/dom';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
 import type { TextTrack } from '../../../core/tracks/text/text-track';
-import { findActiveCue, onTrackChapterChange } from '../../../core/tracks/text/utils';
+import { onTrackChapterChange } from '../../../core/tracks/text/utils';
 import type {
   SliderDragEndEvent,
   SliderDragStartEvent,
@@ -88,7 +88,11 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
     setAttributeIfEmpty(el, 'aria-label', 'Media time');
     super.onAttach(el);
 
-    this._chaptersRenderer = new SliderChaptersRenderer(this._media.$store, this.$store);
+    this._chaptersRenderer = new SliderChaptersRenderer(
+      this._media.$store,
+      this.$store,
+      this._chapterTitle.set,
+    );
 
     this.setAttributes({
       'data-chapters': this._hasChapters.bind(this),
@@ -272,43 +276,26 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   // Chapters
   // -------------------------------------------------------------------------------------------
 
+  protected _chapterTitleEl: HTMLElement | null = null;
+  protected _chapterTitle = signal<string>('');
+
   protected _onTrackModeChange() {
     onTrackChapterChange(this._media.textTracks, peek(this._track), this._track.set);
   }
 
-  protected _chapterTitle: HTMLElement | null = null;
   protected _onTrackChange() {
-    const track = this._track();
-
-    if (!track) return;
-
-    this._chapterTitle = this.el!.querySelector('[part="chapter-title"]');
-    if (!this._chapterTitle) return;
-
-    effect(this._onActiveCueChange.bind(this));
-    return this._clearChapterTitle.bind(this);
+    this._track();
+    this._chapterTitleEl = this.el!.querySelector('[part="chapter-title"]');
+    if (!this._chapterTitleEl) return;
+    effect(this._onChapterTitleChange.bind(this));
+    return () => {
+      this._chapterTitleEl!.textContent = '';
+      this._chapterTitleEl = null;
+    };
   }
 
-  protected _activeCue: VTTCue | null | undefined;
-  protected _onActiveCueChange() {
-    if (!this._chapterTitle?.isConnected) return;
-
-    const { interactive, pointerValue, value } = this.$store,
-      currentValue = interactive() ? pointerValue() : value(),
-      time = this._percentToTime(currentValue),
-      cue = findActiveCue(time, peek(this._track)!.cues);
-
-    if (cue !== this._activeCue) {
-      this._chapterTitle.textContent = cue?.text || '';
-      this._activeCue = cue;
-    }
-  }
-
-  protected _clearChapterTitle() {
-    if (!this._chapterTitle) return;
-    this._chapterTitle.textContent = '';
-    this._chapterTitle = null;
-    this._activeCue = null;
+  protected _onChapterTitleChange() {
+    this._chapterTitleEl!.textContent = this._chapterTitle();
   }
 }
 
