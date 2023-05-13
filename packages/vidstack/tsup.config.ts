@@ -67,7 +67,9 @@ function dist({ dev, server, hydrate }: BundleOptions): Options {
       maverick({
         include: 'src/**/*.tsx',
         generate: server ? 'ssr' : 'dom',
-        hydratable: hydrate ? (id) => !id.includes('time-slider/chapters') : false,
+        hydratable: hydrate
+          ? (id) => !id.includes('time-slider/chapters') && !id.includes('menu/radio/render')
+          : false,
         diffArrays: false,
       }),
     ],

@@ -134,8 +134,6 @@ export class Menu extends Component<MenuAPI> {
   }
 
   protected _attachMenuButton(el: HTMLElement) {
-    if (this._menuButton) return;
-
     const isMenuItem = !!this._parentMenu,
       isExpanded = this._isExpanded.bind(this),
       isARIAExpanded = $ariaBool(isExpanded),
@@ -163,8 +161,6 @@ export class Menu extends Component<MenuAPI> {
   }
 
   protected _attachMenuItems(el: HTMLElement) {
-    if (this._menuItems) return;
-
     setAttributeIfEmpty(el, 'role', 'menu');
     setAttributeIfEmpty(el, 'tabindex', '-1');
     setAttribute(el, 'id', this._menuId);
