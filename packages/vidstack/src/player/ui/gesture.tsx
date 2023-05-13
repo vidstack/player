@@ -40,6 +40,14 @@ export class Gesture extends Component<GestureAPI> {
   protected _media!: MediaContext;
   protected _outlet: HTMLElement | null = null;
 
+  protected override onAttach() {
+    const { event, action } = this.$props;
+    this.setAttributes({
+      event,
+      action,
+    });
+  }
+
   protected override onConnect() {
     this._media = useMedia();
 
