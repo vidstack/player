@@ -135,9 +135,10 @@ function typography(theme) {
           margin: 0,
         },
         a: {
-          fontWeight: theme('fontWeight.normal'),
+          fontSize: '0.95em',
+          fontWeight: theme('fontWeight.medium'),
           textDecoration: 'none',
-          borderBottom: `1px solid rgb(var(--color-brand))`,
+          borderBottom: `1px solid rgb(var(--color-soft))`,
         },
         'a:hover': {
           borderBottomWidth: '2px',
@@ -155,6 +156,8 @@ function typography(theme) {
         },
         code: {
           fontWeight: theme('fontWeight.semibold'),
+          fontSize: '0.8em',
+          margin: '0 3px',
           fontVariantLigatures: 'none',
         },
         pre: {

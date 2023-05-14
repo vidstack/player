@@ -137,7 +137,7 @@
             </h5>
             <div class="flex-1" />
           </button>
-          <ul class={clsx('space-y-3 overflow-hidden ml-3', !isOpen ? 'hidden' : 'mt-2')}>
+          <ul class={clsx('space-y-3 overflow-hidden ml-2', !isOpen ? 'hidden' : 'mt-2')}>
             {#each categoryLinks as link (link.title + link.slug)}
               <li class="flex items-center">
                 <a
