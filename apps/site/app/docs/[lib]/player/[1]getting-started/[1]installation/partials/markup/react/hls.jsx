@@ -1,4 +1,5 @@
 <MediaPlayer
+  title="Agent 327: Operation Barbershop"
   src="https://media-files.vidstack.io/hls/index.m3u8"
   poster="https://media-files.vidstack.io/poster.png"
   controls

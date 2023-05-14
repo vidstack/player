@@ -5,6 +5,7 @@ import {
   defineElement,
   type HTMLCustomElement,
 } from 'maverick.js/element';
+import { setStyle } from 'maverick.js/std';
 import type { CaptionsFileFormat } from 'media-captions';
 
 import { useMedia, type MediaContext } from '../api/context';
@@ -14,7 +15,7 @@ import { SourceSelection } from './source-select';
 import { Tracks } from './tracks';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-outlet': MediaOutletElement;
   }
 }
@@ -37,16 +38,16 @@ export class Outlet extends Component<OutletAPI> {
     tagName: 'media-outlet',
   });
 
-  private _context!: MediaContext;
+  private _media!: MediaContext;
   private _rendered = signal(false);
   private _domSources = signal<MediaSrc[]>([]);
   private _domTracks = signal<TextTrackInit[]>([]);
 
   constructor(instance: ComponentInstance<OutletAPI>) {
     super(instance);
-    this._context = useMedia();
-    new SourceSelection(this._domSources, this._rendered, this._context);
-    new Tracks(this._domTracks, this._context);
+    this._media = useMedia();
+    new SourceSelection(this._domSources, this._rendered, this._media);
+    new Tracks(this._domTracks, this._media);
   }
 
   protected override onAttach(el: HTMLElement) {
@@ -54,10 +55,27 @@ export class Outlet extends Component<OutletAPI> {
   }
 
   protected override onConnect(el: HTMLElement) {
+    this._onResize();
     this._onMutation();
-    const observer = new MutationObserver(this._onMutation.bind(this));
-    observer.observe(el, { childList: true });
-    return () => observer.disconnect();
+
+    const resize = new ResizeObserver(this._onResize.bind(this));
+    resize.observe(el);
+
+    const mutation = new MutationObserver(this._onMutation.bind(this));
+    mutation.observe(el, { childList: true });
+
+    return () => {
+      resize.disconnect();
+      mutation.disconnect();
+    };
+  }
+
+  protected _onResize() {
+    const player = this._media.player!,
+      width = this.el!.offsetWidth,
+      height = this.el!.offsetHeight;
+    setStyle(player, '--media-width', width + 'px');
+    setStyle(player, '--media-height', height + 'px');
   }
 
   private _onMutation() {
@@ -90,7 +108,7 @@ export class Outlet extends Component<OutletAPI> {
 
   override render() {
     return () => {
-      const loader = this._context.$loader();
+      const loader = this._media.$loader();
 
       if (!loader) {
         this._rendered.set(false);
@@ -98,7 +116,7 @@ export class Outlet extends Component<OutletAPI> {
       }
 
       this._rendered.set(true);
-      return loader.render(this._context.$store);
+      return loader.render(this._media.$store);
     };
   }
 }

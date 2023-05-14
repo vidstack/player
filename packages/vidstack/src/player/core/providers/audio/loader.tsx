@@ -42,6 +42,7 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
           crossorigin={$store.crossorigin()}
           playsinline={$store.playsinline()}
           preload="none"
+          aria-hidden="true"
         ></audio>
       );
     }
@@ -51,6 +52,7 @@ export class AudioProviderLoader implements MediaProviderLoader<AudioProvider> {
         controls={$store.controls()}
         crossorigin={$store.crossorigin()}
         preload="none"
+        aria-hidden="true"
         $ref={(el) => void (this._audio = el)}
       ></audio>
     );

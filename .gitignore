@@ -4,6 +4,8 @@ dist-*/
 .tsbuildinfo
 tsconfig.tsbuildinfo
 tsup.config.bundled_*
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
 
 .vessel
 .vercel

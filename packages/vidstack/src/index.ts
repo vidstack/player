@@ -63,6 +63,7 @@ export * from './player/core/keyboard/types';
 export { MEDIA_KEY_SHORTCUTS } from './player/core/keyboard/controller';
 
 // Buttons
+export * from './player/ui/tooltip/tooltip';
 export * from './player/ui/buttons/toggle-button';
 export * from './player/ui/buttons/play-button';
 export * from './player/ui/buttons/caption-button';
@@ -83,11 +84,29 @@ export * from './player/ui/sliders/slider-value';
 export * from './player/ui/sliders/volume-slider';
 export * from './player/ui/sliders/time-slider/time-slider';
 
+// Menu
+export * from './player/ui/menu/menu';
+export * from './player/ui/menu/menu-button';
+export * from './player/ui/menu/menu-items';
+export * from './player/ui/menu/radio/radio-group';
+export * from './player/ui/menu/radio/radio';
+export * from './player/ui/menu/chapters-menu-items';
+export * from './player/ui/menu/audio/menu-items';
+export * from './player/ui/menu/audio/menu-button';
+export * from './player/ui/menu/captions/menu-items';
+export * from './player/ui/menu/captions/menu-button';
+export * from './player/ui/menu/playback-rate/menu-items';
+export * from './player/ui/menu/playback-rate/menu-button';
+export * from './player/ui/menu/quality/menu-items';
+export * from './player/ui/menu/quality/menu-button';
+
 // Media UI
 export * from './player/ui/gesture';
 
 // Display
+export * from './player/ui/buffering-indicator';
 export * from './player/ui/captions/captions';
 export * from './player/ui/live-indicator';
 export * from './player/ui/poster';
 export * from './player/ui/time';
+export * from './player/ui/thumbnail';

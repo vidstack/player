@@ -4,16 +4,17 @@ import {
   defineElement,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { isKeyboardClick, isKeyboardEvent } from 'maverick.js/std';
 import { seekBackwardPaths, seekForwardPaths } from 'media-icons';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
 import { Icon } from '../../../icons/icon';
-import { setARIALabel, setAttributeIfEmpty } from '../../../utils/dom';
+import { $ariaBool } from '../../../utils/aria';
+import { onPress, setARIALabel, setAttributeIfEmpty } from '../../../utils/dom';
 import { useMedia, type MediaContext } from '../../core/api/context';
+import { TooltipController } from '../tooltip/tooltip-controller';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-seek-button': MediaSeekButtonElement;
   }
 }
@@ -48,6 +49,7 @@ export class SeekButton extends Component<SeekButtonAPI> {
     super(instance);
     this._media = useMedia();
     new FocusVisibleController(instance);
+    new TooltipController(instance);
   }
 
   protected override onAttach(el: HTMLElement) {
@@ -60,15 +62,13 @@ export class SeekButton extends Component<SeekButtonAPI> {
     this.setAttributes({
       seconds,
       'default-appearance': defaultAppearance,
-      'data-hidden': this._isHidden.bind(this),
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
       'data-media-button': true,
     });
   }
 
-  protected override onConnect() {
-    const clickEvents = ['pointerup', 'keydown'] as const,
-      handlePress = this._onPress.bind(this);
-    for (const eventType of clickEvents) this.listen(eventType, handlePress);
+  protected override onConnect(el: HTMLElement) {
+    onPress(el, this._onPress.bind(this));
   }
 
   protected _isHidden() {
@@ -84,7 +84,7 @@ export class SeekButton extends Component<SeekButtonAPI> {
   protected _onPress(event: Event) {
     const { seconds, disabled } = this.$props;
 
-    if (disabled() || (isKeyboardEvent(event) && !isKeyboardClick(event))) return;
+    if (disabled()) return;
 
     const { currentTime } = this._media.$store,
       seekTo = currentTime() + seconds();

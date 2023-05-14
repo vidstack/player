@@ -7,10 +7,10 @@ import {
 
 function Player() {
   return (
-    <MediaPlayer>
+    <MediaPlayer thumbnails="https://media-files.vidstack.io/thumbnails.vtt">
       <MediaTimeSlider>
         <div slot="preview">
-          <MediaSliderThumbnail src="https://media-files.vidstack.io/thumbnails.vtt" />
+          <MediaSliderThumbnail />
           <MediaSliderValue type="pointer" format="time" />
         </div>
       </MediaTimeSlider>

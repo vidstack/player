@@ -1,4 +1,4 @@
-import { effect, peek, provideContext } from 'maverick.js';
+import { effect, peek, provideContext, type JSX } from 'maverick.js';
 import {
   Component,
   ComponentInstance,
@@ -26,7 +26,7 @@ import { sliderValueFormatContext } from './format';
 import { getClampedValue } from './utils';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-slider': MediaSliderElement;
   }
 }
@@ -90,12 +90,15 @@ export class Slider<T extends SliderAPI = SliderAPI> extends Component<T> {
   }
 
   override render() {
+    const { trackClass, trackFillClass, trackProgressClass, thumbContainerClass, thumbClass } =
+      this.$props;
     return (
       <>
-        <div part="track"></div>
-        <div part="track track-fill"></div>
-        <div part="thumb-container">
-          <div part="thumb"></div>
+        <div class={trackClass()} part="track" />
+        <div class={trackFillClass()} part="track track-fill" />
+        <div class={trackProgressClass()} part="track track-progress" />
+        <div class={thumbContainerClass()} part="thumb-container">
+          <div class={thumbClass()} part="thumb" />
         </div>
       </>
     );
@@ -194,6 +197,7 @@ export class Slider<T extends SliderAPI = SliderAPI> extends Component<T> {
       'aria-valuemax': this._getARIAValueMax.bind(this),
       'aria-valuenow': this._getARIAValueNow.bind(this),
       'aria-valuetext': this._getARIAValueText.bind(this),
+      'data-styled': this._isStyled.bind(this),
       'data-media-slider': true,
     });
 
@@ -205,6 +209,10 @@ export class Slider<T extends SliderAPI = SliderAPI> extends Component<T> {
       '--slider-pointer-value': pointerValue,
       '--slider-pointer-percent': () => pointerPercent() + '%',
     });
+  }
+
+  protected _isStyled() {
+    return !!this.$props.trackClass();
   }
 
   // -------------------------------------------------------------------------------------------

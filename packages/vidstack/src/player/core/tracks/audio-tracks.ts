@@ -46,20 +46,24 @@ export interface AudioTrackListEvents {
   'readonly-change': ListReadonlyChangeEvent;
 }
 
+export interface AudioTrackListEvent<T> extends DOMEvent<T> {
+  target: AudioTrackList;
+}
+
 /**
  * Fired when an audio track has been added to the list.
  */
-export interface AudioTrackAddEvent extends DOMEvent<AudioTrack> {}
+export interface AudioTrackAddEvent extends AudioTrackListEvent<AudioTrack> {}
 
 /**
  * Fired when an audio track has been removed from the list.
  */
-export interface AudioTrackRemoveEvent extends DOMEvent<AudioTrack> {}
+export interface AudioTrackRemoveEvent extends AudioTrackListEvent<AudioTrack> {}
 
 /**
  * Fired when the selected audio track has changed.
  */
-export interface AudioTrackChangeEvent extends DOMEvent<ChangeAudioTrackEventDetail> {}
+export interface AudioTrackChangeEvent extends AudioTrackListEvent<ChangeAudioTrackEventDetail> {}
 
 export interface ChangeAudioTrackEventDetail {
   prev: AudioTrack | null;

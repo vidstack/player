@@ -10,7 +10,7 @@ import { SliderStoreFactory } from './slider/api/store';
 import { Slider, type SliderAPI } from './slider/slider';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-volume-slider': MediaVolumeSliderElement;
   }
 }

@@ -39,11 +39,11 @@ Previews can be grouped by using a parent container element for the `preview` sl
 
 ## Chapters
 
-Chapters are set by providing a [WebVTT](https://developer.mozilla.org/en-US/docs/react/Web/API/WebVTT_API)
-file via the `<track>` element that specifies the time ranges and respective chapter titles. It
-should look something like this:
+Chapters are set by providing a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
+file that specifies the time ranges and respective chapter titles. It should look something like
+this:
 
-```txt
+```js
 WEBVTT
 
 00:00:00 --> 00:01:13
@@ -51,6 +51,8 @@ The Forest
 
 00:01:13 --> 00:02:31
 Camp Site
+
+...
 ```
 
 The time slider supports showing the current chapters text track that has a `mode` of showing:
@@ -86,14 +88,7 @@ on the player.
 You can override the default styles with CSS like so:
 
 ```css {% copy=true %}
-/* CSS vars are available for simple customization. */
 media-time-slider {
-  /* Default values are shown below. */
-  --media-slider-height: 48px;
-  --media-slider-thumb-size: 14px;
-  --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
-  --media-slider-track-height: 4px;
-  --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
 }
 
 /* Apply styles when device pointer is within slider bounds. */
@@ -110,6 +105,10 @@ media-time-slider[data-interactive] {
 
 /* Apply styles when at live edge. */
 media-player[data-live-edge] media-time-slider {
+}
+
+/** Apply styles to preview. */
+media-time-slider [slot='preview'] {
 }
 ```
 
@@ -162,21 +161,6 @@ media-time-slider[data-focus] [part='track'] {
 }
 ```
 
-### Previews
-
-```css
-/* CSS vars are available for simple customization. */
-media-time-slider {
-  /* Default values are shown below. */
-  --media-slider-preview-width: var(--computed-width);
-  --media-slider-preview-gap: calc(var(--computed-height) + 8px);
-}
-
-/** Override default preview styles. */
-media-time-slider [slot='preview'] {
-}
-```
-
 ### Chapters
 
 ```css
@@ -201,17 +185,13 @@ media-time-slider [part='chapter-title'] {
 }
 ```
 
+### CSS Variables
+
+See the [slider CSS variables](/docs/player/components/sliders/slider#css-variables)
+for simple customization of the default slider styles.
+
 ## Tailwind
 
 A complete time slider example built with Tailwind:
 
 {% code_snippet name="tailwind" copy=true /%}
-
-{% callout type="tip" %}
-
-- 📖 The `$tag:media-slider` [Tailwind guide](/docs/player/components/sliders/slider#tailwind)
-  contains background documentation on working with sliders.
-- All of this code is reusable across other slider implementations. The time slider example only
-  contains an additional `track-progress` div.
-
-{% /callout %}

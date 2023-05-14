@@ -1,4 +1,5 @@
-import { VTTCue } from 'media-captions';
+import type { ReadSignal } from 'maverick.js';
+import type { VTTCue } from 'media-captions';
 
 import type { MediaStore } from '../../../core/api/store';
 import type { SliderStore } from '../slider/api/store';
@@ -6,8 +7,12 @@ import type { SliderStore } from '../slider/api/store';
 export class SliderChaptersRenderer {
   constructor(protected _media: MediaStore, protected _slider: SliderStore) {}
 
-  render(cues?: ReadonlyArray<VTTCue>) {
-    return cues?.length ? <div part="chapters">{this._renderChapters(cues)}</div> : null;
+  render(cues: ReadonlyArray<VTTCue> | undefined, $class: ReadSignal<string | null>) {
+    return cues?.length ? (
+      <div class={$class()} part="chapters">
+        {this._renderChapters(cues)}
+      </div>
+    ) : null;
   }
 
   protected _renderChapters(cues: ReadonlyArray<VTTCue>) {
@@ -60,7 +65,7 @@ export class SliderChaptersRenderer {
       if (nextCue) {
         const timeDiff = nextCue.startTime - currentCue.endTime;
         if (timeDiff > 0) {
-          chapters.push(new VTTCue(currentCue.endTime, currentCue.endTime + timeDiff, ''));
+          chapters.push(new window.VTTCue(currentCue.endTime, currentCue.endTime + timeDiff, ''));
         }
       }
     }

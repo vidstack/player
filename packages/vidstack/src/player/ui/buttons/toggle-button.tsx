@@ -10,10 +10,10 @@ import {
 import { ariaBool, isKeyboardClick, isKeyboardEvent } from 'maverick.js/std';
 
 import { FocusVisibleController } from '../../../foundation/observers/focus-visible';
-import { setAttributeIfEmpty } from '../../../utils/dom';
-import { useMedia, type MediaContext } from '../../core/api/context';
+import { onPress, setAttributeIfEmpty } from '../../../utils/dom';
 import { ARIAKeyShortcuts } from '../../core/keyboard/aria-shortcuts';
 import type { MediaKeyShortcut } from '../../core/keyboard/types';
+import { TooltipController } from '../tooltip/tooltip-controller';
 
 export const toggleButtonProps: PropDeclarations<ToggleButtonProps> = {
   disabled: false,
@@ -26,12 +26,6 @@ export const toggleButtonProps: PropDeclarations<ToggleButtonProps> = {
  *
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/toggle-button}
  * @slot - Used to passing in content for showing pressed and not pressed states.
- * @slot tooltip-top-left - Used to place a tooltip above the button in the left corner.
- * @slot tooltip-top-center - Used to place a tooltip above the button in the center.
- * @slot tooltip-top-right - Used to place a tooltip above the button in the right corner.
- * @slot tooltip-bottom-left - Used to place a tooltip below the button in the left corner.
- * @slot tooltip-bottom-center - Used to place a tooltip below the button in the center.
- * @slot tooltip-bottom-right - Used to place a tooltip below the button in the right corner.
  * @example
  * ```html
  * <media-toggle-button aria-label="...">
@@ -52,6 +46,7 @@ export class ToggleButton<T extends ToggleButtonAPI = ToggleButtonAPI> extends C
   constructor(instance: ComponentInstance<T>) {
     super(instance);
     new FocusVisibleController(instance);
+    new TooltipController(instance);
     if (this._keyShortcut) new ARIAKeyShortcuts(instance, this._keyShortcut);
   }
 
@@ -81,10 +76,8 @@ export class ToggleButton<T extends ToggleButtonAPI = ToggleButtonAPI> extends C
     });
   }
 
-  protected override onConnect() {
-    const clickEvents = ['pointerup', 'keydown'] as const,
-      handlePress = this._onMaybePress.bind(this);
-    for (const eventType of clickEvents) this.listen(eventType, handlePress);
+  protected override onConnect(el: HTMLElement) {
+    onPress(el, this._onMaybePress.bind(this));
   }
 
   protected _isARIAPressed() {
@@ -100,7 +93,7 @@ export class ToggleButton<T extends ToggleButtonAPI = ToggleButtonAPI> extends C
   protected _onMaybePress(event: Event) {
     const disabled = this.$props.disabled();
 
-    if (disabled || (isKeyboardEvent(event) && !isKeyboardClick(event))) {
+    if (disabled) {
       if (disabled) event.stopImmediatePropagation();
       return;
     }
@@ -134,7 +127,7 @@ export interface ToggleButtonProps {
 export interface MediaToggleButtonElement extends HTMLCustomElement<ToggleButton> {}
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-toggle-button': MediaToggleButtonElement;
   }
 }

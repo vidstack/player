@@ -1,5 +1,6 @@
 <media-player
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
+  thumbnails="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
   class="w-full max-w-[350px] relative"
 >
   <media-outlet>
@@ -13,11 +14,8 @@
   <div class="w-full text-center flex">
     <media-time-slider>
       <div slot="preview">
-        <media-slider-thumbnail
-          class="rounded-sm"
-          src="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
-        />
-        <div class="absolute bottom-1 w-full text-center" part="chapter-title" />
+        <media-slider-thumbnail class="rounded-sm" />
+        <div class="absolute bottom-1 w-full text-center text-sm" part="chapter-title" />
       </div>
     </media-time-slider>
   </div>

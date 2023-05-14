@@ -1,4 +1,4 @@
-import { defineProp, STRING, type PropDeclarations } from 'maverick.js/element';
+import { defineProp, type PropDeclarations } from 'maverick.js/element';
 
 import type { LogLevel } from '../../../foundation/logger/log-level';
 import type { ScreenOrientationLockType } from '../../../foundation/orientation/types';
@@ -23,10 +23,7 @@ export const mediaPlayerProps: PropDeclarations<PlayerProps> = {
   }),
   controls: false,
   currentTime: 0,
-  crossorigin: defineProp({
-    value: null,
-    type: STRING,
-  }),
+  crossorigin: null,
   fullscreenOrientation: undefined,
   load: 'visible',
   logLevel: 'silent',
@@ -51,6 +48,8 @@ export const mediaPlayerProps: PropDeclarations<PlayerProps> = {
   keyDisabled: false,
   keyTarget: 'player',
   keyShortcuts: MEDIA_KEY_SHORTCUTS,
+  title: '',
+  thumbnails: null,
   textTracks: defineProp<(TextTrack | TextTrackInit)[]>({
     value: [],
     attribute: false,
@@ -79,6 +78,8 @@ export interface PlayerProps
     | 'poster'
     | 'preload'
     | 'playbackRate'
+    | 'title'
+    | 'thumbnails'
     | 'viewType'
     | 'volume'
     // ads

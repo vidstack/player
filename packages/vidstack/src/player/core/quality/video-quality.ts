@@ -86,20 +86,25 @@ export interface VideoQualityListEvents {
   'readonly-change': ListReadonlyChangeEvent;
 }
 
+export interface VideoQualityListEvent<T> extends DOMEvent<T> {
+  target: VideoQualityList;
+}
+
 /**
  * Fired when a video quality has been added to the list.
  */
-export interface VideoQualityAddEvent extends DOMEvent<VideoQuality> {}
+export interface VideoQualityAddEvent extends VideoQualityListEvent<VideoQuality> {}
 
 /**
  * Fired when a video quality has been removed from the list.
  */
-export interface VideoQualityRemoveEvent extends DOMEvent<VideoQuality> {}
+export interface VideoQualityRemoveEvent extends VideoQualityListEvent<VideoQuality> {}
 
 /**
  * Fired when the selected video quality has changed.
  */
-export interface VideoQualityChangeEvent extends DOMEvent<VideoQualityChangeEventDetail> {}
+export interface VideoQualityChangeEvent
+  extends VideoQualityListEvent<VideoQualityChangeEventDetail> {}
 
 export interface VideoQualityChangeEventDetail {
   prev: VideoQuality | null;
@@ -109,4 +114,4 @@ export interface VideoQualityChangeEventDetail {
 /**
  * Fired when auto quality selection is enabled or disabled.
  */
-export interface VideoQualityAutoChangeEvent extends DOMEvent<boolean> {}
+export interface VideoQualityAutoChangeEvent extends VideoQualityListEvent<boolean> {}

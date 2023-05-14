@@ -38,6 +38,7 @@ export class TextRenderers {
   }
 
   remove(renderer: TextRenderer) {
+    renderer.detach();
     this._renderers.splice(this._renderers.indexOf(renderer), 1);
     this._update();
   }

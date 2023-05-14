@@ -16,14 +16,14 @@
     "@vidstack/react": "workspace:*",
     "clsx": "^1.2.0",
     "html-entities": "^2.3.3",
-    "media-icons": "^0.4.2",
+    "media-icons": "0.5.0",
     "svelte-class-transition": "^1.0.4",
     "vidstack": "workspace:*"
   },
   "devDependencies": {
     "@algolia/client-search": "^4.14.0",
     "@iconify-json/ri": "^1.1.0",
-    "@maverick-js/compiler": "0.35.2",
+    "@maverick-js/compiler": "0.36.1",
     "@sveltejs/vite-plugin-svelte": "^2.0.0",
     "@tailwindcss/typography": "^0.5.0",
     "@types/markdown-it": "^12.2.0",

@@ -43,7 +43,9 @@ export class ScreenOrientationController extends ComponentController<ScreenOrien
   }
 
   protected override onConnect() {
-    listenEvent(screen.orientation, 'change', this._onOrientationChange.bind(this));
+    if (CAN_ORIENT_SCREEN) {
+      listenEvent(screen.orientation, 'change', this._onOrientationChange.bind(this));
+    }
   }
 
   protected override async onDisconnect() {

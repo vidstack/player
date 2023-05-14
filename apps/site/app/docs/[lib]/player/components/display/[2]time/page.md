@@ -23,3 +23,21 @@ The `type` property can be set to:
 You can use the `remainder` property to display the duration minus the selected `type`.
 
 {% code_snippet name="remainder" copyHighlight=true highlight="html:4|react:8" /%}
+
+## Styling
+
+### CSS Variables
+
+The following snippet contains a complete list of CSS variables and their default values. Any
+of the variables can be set to adjust the default time styles:
+
+```css {% copy=true %}
+media-player {
+  --media-time-font-size: 18px;
+  --media-time-font-weight: 500;
+  --media-font-family: sans-serif;
+  --media-time-color: inherit;
+  --media-time-bg: unset;
+  --media-time-border-radius: unset;
+}
+```

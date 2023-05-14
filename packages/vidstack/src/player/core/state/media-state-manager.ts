@@ -19,8 +19,11 @@ import type {
   AudioTrackRemoveEvent,
 } from '../tracks/audio-tracks';
 import { TEXT_TRACK_CAN_LOAD, TEXT_TRACK_UPDATE_ACTIVE_CUES } from '../tracks/text/symbols';
-import type { TextTrackModeChangeEvent } from '../tracks/text/text-track';
-import type { TextTrackAddEvent, TextTrackRemoveEvent } from '../tracks/text/text-tracks';
+import type {
+  TextTrackAddEvent,
+  TextTrackListModeChangeEvent,
+  TextTrackRemoveEvent,
+} from '../tracks/text/text-tracks';
 import type { MediaRequestContext, MediaRequestQueueRecord } from './media-request-manager';
 import { TRACKED_EVENT } from './tracked-media-events';
 
@@ -116,7 +119,7 @@ export class MediaStateManager extends ComponentController<PlayerAPI> {
     });
   }
 
-  private _onTextTrackModeChange(event?: TextTrackModeChangeEvent) {
+  private _onTextTrackModeChange(event?: TextTrackListModeChangeEvent) {
     if (event) this._satisfyRequest('textTrack', event);
 
     const current = this._media.textTracks.selected,

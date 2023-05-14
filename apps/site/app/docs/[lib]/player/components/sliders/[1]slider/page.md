@@ -64,14 +64,7 @@ step by 2, so a change of 10.
 You can override the default styles with CSS like so:
 
 ```css {% copy=true %}
-/* CSS vars are available for simple customization. */
 media-slider {
-  /* Default values are shown below. */
-  --media-slider-height: 48px;
-  --media-slider-thumb-size: 14px;
-  --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
-  --media-slider-track-height: 4px;
-  --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
 }
 
 /* Apply styles when device pointer is within slider bounds. */
@@ -147,6 +140,61 @@ desired.
 
 ### CSS Variables
 
+The following snippet contains a complete list of CSS variables and their default values. Any
+of the variables can be set to adjust the default slider styles:
+
+```css {% copy=true %}
+media-player {
+  --media-slider-width: 100%;
+  --media-slider-height: 48px;
+
+  --media-slider-thumb-size: 14px;
+  --media-slider-thumb-bg: #fff;
+  --media-slider-thumb-border-radius: 9999px;
+  --media-slider-thumb-transition: opacity 0.2s ease-in, box-shadow 0.2s ease;
+  --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
+  --media-slider-focused-thumb-shadow: 0 0 0 4px hsla(0, 0%, 100%, 0.4);
+
+  --media-slider-track-width: 100%;
+  --media-slider-track-height: 4px;
+  --media-slider-track-border-radius: 2px;
+  --media-slider-track-height: 4px;
+  --media-slider-track-bg: rgb(255 255 255 / 0.3);
+  --media-slider-focused-track-width: 100%;
+  --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
+
+  --media-slider-track-fill-bg: #fafafa;
+  --media-slider-track-fill-live-bg: #dc2626;
+
+  --media-slider-track-progress-bg: rgb(255 255 255 / 0.5);
+
+  --media-slider-value-padding: 1px 10px;
+  --media-slider-value-bg: black;
+  --media-slider-value-color: hsl(0, 0%, 80%);
+  --media-slider-value-gap: 8px;
+
+  --media-slider-preview-bg: unset;
+  --media-slider-preview-width: var(--computed-width);
+  --media-slider-preview-border-radius: 2px;
+  --media-slider-preview-gap: -2px;
+  --media-slider-vertical-preview-gap: 4px;
+
+  --media-slider-chapter-title-font-size: 14px;
+  --media-slider-chapter-title-color: #f5f5f5;
+  --media-slider-chapter-title-bg: unset;
+  --media-slider-chapter-hover-transform: scaleY(1.75);
+  --media-slider-chapter-hover-transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
+
+  --media-thumbnail-bg: black;
+  /* Applies when scaling thumbnails up. */
+  --media-thumbnail-min-width: 120px;
+  --media-thumbnail-min-height: 80px;
+  /* Applies when scaling thumbnails down. */
+  --media-thumbnail-max-width: 180px;
+  --media-thumbnail-max-height: 160px;
+}
+```
+
 The CSS variables listed in the table below can be used to style your own slider. The `fill`
 variables represent the current value, and the `pointer` variables represent the current value
 at the device pointer (mouse/thumb).
@@ -206,23 +254,8 @@ if you're using Tailwind CSS v3+ and use the [CSS variables listed above](#css-v
 <div class="left-[var(--slider-fill-percent)]" />
 ```
 
-### Exposing Parts
-
-You can expose slider parts and override the default styles using CSS like so:
-
-{% code_snippet name="tw-expose" copy=true /%}
-
 ### Example
 
 A complete slider example built with Tailwind:
 
 {% code_snippet name="tailwind" copy=true /%}
-
-{% callout type="tip" %}
-
-- All of this code is reusable across other slider implementations.
-
-- Too verbose? You might prefer overriding the [default styles](#exposing-parts). Remember to
-  load them first if you haven't yet.
-
-{% /callout %}

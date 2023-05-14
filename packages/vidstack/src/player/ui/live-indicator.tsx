@@ -7,11 +7,11 @@ import {
 import { isKeyboardClick, isKeyboardEvent } from 'maverick.js/std';
 
 import { FocusVisibleController } from '../../foundation/observers/focus-visible';
-import { setARIALabel } from '../../utils/dom';
+import { onPress, setARIALabel } from '../../utils/dom';
 import { useMedia, type MediaContext } from '../core/api/context';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-live-indicator': MediaLiveIndicatorElement;
   }
 }
@@ -65,10 +65,8 @@ export class LiveIndicator extends Component<LiveIndicatorAPI> {
     });
   }
 
-  protected override onConnect() {
-    const clickEvents = ['pointerup', 'keydown'] as const,
-      handlePress = this._onPress.bind(this);
-    for (const eventType of clickEvents) this.listen(eventType, handlePress);
+  protected override onConnect(el: HTMLElement) {
+    onPress(el, this._onPress.bind(this));
   }
 
   protected _getLabel() {
@@ -88,7 +86,7 @@ export class LiveIndicator extends Component<LiveIndicatorAPI> {
 
   protected _onPress(event: Event) {
     const { liveEdge } = this._media.$store;
-    if (liveEdge() || (isKeyboardEvent(event) && !isKeyboardClick(event))) return;
+    if (liveEdge()) return;
     this._media.remote.seekToLiveEdge(event);
   }
 

@@ -8,7 +8,14 @@ import {
   type ElementAttributesRecord,
   type HTMLCustomElement,
 } from 'maverick.js/element';
-import { camelToKebabCase, isNull, isString, listenEvent } from 'maverick.js/std';
+import {
+  camelToKebabCase,
+  isNull,
+  listenEvent,
+  setAttribute,
+  uppercaseFirstChar,
+  isString
+} from 'maverick.js/std';
 
 import { canFullscreen } from '../../foundation/fullscreen/controller';
 import { Logger } from '../../foundation/logger/controller';
@@ -16,6 +23,7 @@ import { LogPrinter } from '../../foundation/logger/log-printer';
 import { FocusVisibleController } from '../../foundation/observers/focus-visible';
 import { ScreenOrientationController } from '../../foundation/orientation/controller';
 import { RequestQueue } from '../../foundation/queue/request-queue';
+import { setAttributeIfEmpty } from '../../utils/dom';
 import { clampNumber } from '../../utils/number';
 import type { AdsController } from './ads/ads';
 import { mediaContext, type MediaContext } from './api/context';
@@ -35,14 +43,16 @@ import { MediaRequestContext, MediaRequestManager } from './state/media-request-
 import { MediaStateManager } from './state/media-state-manager';
 import { MediaStoreSync } from './state/media-store-sync';
 import { MediaRemoteControl } from './state/remote-control';
+import { ThumbnailsLoader } from './thumbnails/loader';
 import { AudioTrackList } from './tracks/audio-tracks';
 import { TextRenderers } from './tracks/text/render/text-renderer';
+import { TEXT_TRACK_CROSSORIGIN } from './tracks/text/symbols';
 import { isTrackCaptionKind } from './tracks/text/text-track';
 import { TextTrackList } from './tracks/text/text-tracks';
 import { MediaUserController } from './user';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-player': MediaPlayerElement;
   }
 
@@ -112,6 +122,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     context.remote = new MediaRemoteControl(__DEV__ ? context.logger : undefined);
     context.$iosControls = computed(this._isIOSControls.bind(this));
     context.textTracks = new TextTrackList();
+    context.textTracks[TEXT_TRACK_CROSSORIGIN] = this.$props.crossorigin;
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
 
@@ -127,6 +138,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
     new FocusVisibleController(instance);
     new MediaKeyboardController(instance, context);
+    new ThumbnailsLoader(instance);
     if (__DEV__) new MediaEventsLogger(instance, context);
 
     const request = new MediaRequestContext();
@@ -151,12 +163,18 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
 
   protected override onAttach(el: HTMLElement): void {
     el.setAttribute('tabindex', '0');
-    if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', 'Media Player');
+    setAttributeIfEmpty(el, 'role', 'region');
+
+    if (__SERVER__) this._watchTitle();
+    else effect(this._watchTitle.bind(this));
+
     this._setMediaAttributes();
     this._setMediaVars();
+
     this._media.player = el as MediaPlayerElement;
     this._media.remote.setTarget(el);
     this._media.remote.setPlayer(el as MediaPlayerElement);
+
     listenEvent(el, 'find-media-player', this._onFindPlayer.bind(this));
   }
 
@@ -195,16 +213,27 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     this.$store.muted.set(this.$props.muted() || this.$props.volume() === 0);
   }
 
+
   private async _startLoadingAds(): Promise<void> {
     this.ads = new (await import('./ads/ads')).AdsController(this.instance, this._media);
     this._media.ads.set(this.ads);
   }
+  
+  private _watchTitle() {
+    const { title, live, viewType } = this.$store,
+      isLive = live(),
+      type = uppercaseFirstChar(viewType()),
+      typeText = type !== 'Unknown' ? `${isLive ? 'Live ' : ''}${type}` : isLive ? 'Live' : 'Media';
+    setAttribute(
+      this.el!,
+      'aria-label',
+      title() ? `${typeText} - ${title()}` : typeText + ' Player',
+    );
+  }
 
   private _watchCanPlay() {
-    effect(() => {
-      if (this.$store.canPlay() && this._provider) this._canPlayQueue._start();
-      else this._canPlayQueue._stop();
-    });
+    if (this.$store.canPlay() && this._provider) this._canPlayQueue._start();
+    else this._canPlayQueue._stop();
   }
 
   private _onProvidedTypesChange() {

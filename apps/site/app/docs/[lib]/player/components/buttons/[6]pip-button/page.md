@@ -11,7 +11,7 @@ event to the player.
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:6" /%}
 
 {% callout type="danger" %}
-The `data-hidden` attribute will be present on this element in the event PIP cannot be
+The `aria-hidden='true'` attribute will be present on this element in the event PIP cannot be
 requested (not supported by environment or provider). The button's `display` property will be
 set to `none`, so it'll be removed from the layout; therefore, you should account for the button
 not being displayed in your design.
@@ -60,13 +60,13 @@ media-pip-button:not([data-pip]) {
 }
 
 /* Apply styles when pip is not supported. */
-media-pip-button[data-hidden] {
+media-pip-button[aria-hidden='true'] {
 }
 
 /* Style default icons. */
-media-pip-button [slot='enter'] {
+media-pip-button svg[slot='enter'] {
 }
-media-pip-button [slot='exit'] {
+media-pip-button svg[slot='exit'] {
 }
 ```
 
@@ -83,6 +83,11 @@ media-pip-button[data-focus] {
 }
 ```
 
+### CSS Variables
+
+See the [toggle button CSS variables](/docs/player/components/buttons/toggle-button#css-variables)
+for simple customization of the default button and tooltip styles.
+
 ## Tailwind
 
 The following is a headless example using Tailwind:
@@ -93,4 +98,4 @@ The following is a headless example using Tailwind:
 
 The following extends the example above with tooltips:
 
-{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:3-" /%}
+{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:8-" /%}

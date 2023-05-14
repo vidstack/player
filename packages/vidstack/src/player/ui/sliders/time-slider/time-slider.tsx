@@ -4,15 +4,16 @@ import {
   ComponentInstance,
   defineElement,
   defineProp,
-  NUMBER,
   type HTMLCustomElement,
 } from 'maverick.js/element';
 import { listenEvent } from 'maverick.js/std';
 import type { VTTCue } from 'media-captions';
 
+import { ClassManager } from '../../../../foundation/observers/class-manager';
 import { setAttributeIfEmpty } from '../../../../utils/dom';
 import { formatSpokenTime, formatTime } from '../../../../utils/time';
 import type { TextTrack } from '../../../core/tracks/text/text-track';
+import { findActiveCue, onTrackChapterChange } from '../../../core/tracks/text/utils';
 import type {
   SliderDragEndEvent,
   SliderDragStartEvent,
@@ -26,7 +27,7 @@ import { Slider, type SliderAPI } from '../slider/slider';
 import { SliderChaptersRenderer } from './chapters';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-time-slider': MediaTimeSliderElement;
   }
 }
@@ -61,6 +62,9 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
       value: defineProp({ value: 0, attribute: false }),
       pauseWhileDragging: false,
       seekingRequestThrottle: 100,
+      chaptersClass: null,
+      chapterContainerClass: null,
+      chapterClass: null,
     },
     store: SliderStoreFactory,
   });
@@ -70,6 +74,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   protected _dispatchSeeking!: ThrottledSeeking;
   protected _track = signal<TextTrack | null>(null);
   protected _chaptersRenderer!: SliderChaptersRenderer;
+  protected _classManager: ClassManager;
 
   constructor(instance: ComponentInstance<TimeSliderAPI>) {
     super(instance);
@@ -96,6 +101,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
 
   protected _hasChapters() {
     const { duration } = this._media.$store;
+    this._classManager?._update();
     return (
       this._track()?.cues.length &&
       Number.isFinite(duration()) &&
@@ -106,20 +112,28 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
 
   protected override onConnect(el: HTMLElement) {
     super.onConnect(el);
+
     this._onTrackModeChange();
     listenEvent(this._media.textTracks, 'mode-change', this._onTrackModeChange.bind(this));
+
+    const { chapterContainerClass, chapterClass, trackClass, trackFillClass, trackProgressClass } =
+      this.$props;
+    this._classManager = new ClassManager(el)
+      ._observe('[part="chapter-container"]', chapterContainerClass)
+      ._observe('[part="chapter"]', chapterClass)
+      ._observe('[part="track"]', trackClass)
+      ._observe('[part~="track-fill"]', trackFillClass)
+      ._observe('[part~="track-progress"]', trackProgressClass);
   }
 
   override render() {
+    const tracks = super.render(),
+      { chaptersClass } = this.$props;
     return (
       <>
-        {this._media.$store.adStarted() ? null : this._chaptersRenderer.render(this._track()?.cues)}
-        <div part="track" />
-        <div part="track track-fill" />
-        <div part="track track-progress" />
-        <div part="thumb-container">
-          <div part="thumb"></div>
-        </div>
+
+        {this._media.$store.adStarted() ? null : this._chaptersRenderer.render(this._track()?.cues, chaptersClass)}
+        {tracks}
       </>
     );
   }
@@ -265,23 +279,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
   // -------------------------------------------------------------------------------------------
 
   protected _onTrackModeChange() {
-    const track = this._media.textTracks
-      .toArray()
-      .find((track) => track.kind === 'chapters' && track.mode === 'showing');
-
-    if (peek(this._track) === track) return;
-
-    if (!track) {
-      this._track.set(null);
-      return;
-    }
-
-    if (track.readyState == 2) {
-      this._track.set(track);
-    } else {
-      this._track.set(null);
-      track.addEventListener('load', () => this._track.set(track), { once: true });
-    }
+    onTrackChapterChange(this._media.textTracks, peek(this._track), this._track.set);
   }
 
   protected _chapterTitle: HTMLElement | null = null;
@@ -304,7 +302,7 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
     const { interactive, pointerValue, value } = this.$store,
       currentValue = interactive() ? pointerValue() : value(),
       time = this._percentToTime(currentValue),
-      cue = peek(this._track)!.cues.find((cue) => time >= cue.startTime && time <= cue.endTime);
+      cue = findActiveCue(time, peek(this._track)!.cues);
 
     if (cue !== this._activeCue) {
       this._chapterTitle.textContent = cue?.text || '';
@@ -327,6 +325,11 @@ export interface TimeSliderAPI extends SliderAPI {
 }
 
 export interface TimeSliderProps extends SliderProps {
+  // Classes
+  chaptersClass: string | null;
+  chapterContainerClass: string | null;
+  chapterClass: string | null;
+
   /**
    * Whether it should request playback to pause while the user is dragging the
    * thumb. If the media was playing before the dragging starts, the state will be restored by

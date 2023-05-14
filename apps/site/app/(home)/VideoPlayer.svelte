@@ -1,7 +1,8 @@
 <media-player
-  class="max-w-[680px] aspect-video hero-video rounded-sm overflow-hidden shadow-lg"
+  class="hero-video overflow-hidden shadow-lg"
   src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
   poster="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/animated.webp?start=268&end=278&width=640"
+  thumbnails="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
   aspect-ratio="16/9"
   key-target="document"
   volume={0.2}
@@ -30,48 +31,52 @@
     class="z-0 bg-black/30 transition-opacity opacity-0 not-user-idle:opacity-100 pointer-events-none bg-blur absolute inset-0 w-full h-full"
   />
   <media-captions class="not-user-idle:bottom-[80px] transition-[bottom] duration-300 z-10" />
-  <div
-    class="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center"
-  >
-    <svg
-      class="buffering:opacity-100 buffering:animate-spin h-24 w-24 opacity-0 text-white transition-opacity duration-200 ease-linear"
-      fill="none"
-      viewBox="0 0 120 120"
-      aria-hidden="true"
-    >
-      <circle
-        class="opacity-25 blur-bg"
-        cx="60"
-        cy="60"
-        r="54"
-        stroke="currentColor"
-        stroke-width="8"
-      />
-      <circle
-        class="opacity-75"
-        cx="60"
-        cy="60"
-        r="54"
-        stroke="currentColor"
-        stroke-width="10"
-        pathLength="100"
-        style="stroke-dasharray: 100; stroke-dashoffset: 50"
-      />
-    </svg>
-  </div>
+  <media-buffering-indicator />
   <div
     class="can-control:opacity-100 pointer-events-none absolute inset-0 z-10 flex h-full flex-col justify-between text-white opacity-0 transition-opacity duration-200 ease-linear"
   >
+    <div
+      class="absolute inset-0 z-50 pointer-events-none user-idle:pointer-events-auto user-idle:cursor-none"
+    />
+
+    <div class="flex items-center pointer-events-auto w-fill px-2 z-50">
+      <div class="flex-1" />
+      <media-menu position="bottom">
+        <media-menu-button>
+          <media-icon type="chapters" />
+          <media-tooltip position="bottom right">Chapters</media-tooltip>
+        </media-menu-button>
+        <media-chapters-menu-items />
+      </media-menu>
+      <media-menu position="bottom">
+        <media-menu-button>
+          <media-icon type="settings" data-rotate />
+          <media-tooltip position="bottom right">Settings</media-tooltip>
+        </media-menu-button>
+        <media-menu-items>
+          <media-menu>
+            <media-playback-rate-menu-button />
+            <media-playback-rate-menu-items />
+          </media-menu>
+          <media-menu>
+            <media-quality-menu-button />
+            <media-quality-menu-items />
+          </media-menu>
+          <media-menu>
+            <media-captions-menu-button />
+            <media-captions-menu-items />
+          </media-menu>
+        </media-menu-items>
+      </media-menu>
+    </div>
+
     <div class="flex-1" />
     <div class="flex items-center pointer-events-auto w-full px-4 -mb-2 z-10">
       <media-time class="text-sm tracking-wide mr-1" type="current" />
-      <media-time-slider style="--media-slider-preview-gap: 130px">
+      <media-time-slider>
         <div slot="preview">
           <div>
-            <media-slider-thumbnail
-              src="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
-              class="rounded-sm"
-            />
+            <media-slider-thumbnail class="rounded-sm" />
             <div class="absolute bottom-8 w-full text-center" part="chapter-title" />
           </div>
           <media-slider-value class="rounded-sm mt-2" type="pointer" format="time" />
@@ -80,49 +85,51 @@
       <media-time class="text-sm tracking-wide ml-1" type="current" remainder />
     </div>
     <div class="flex items-center pointer-events-auto w-full mb-1 z-20 px-0.5">
-      <media-play-button aria-describedby="video-play-tooltip" default-appearance>
-        <div class="left-2" id="video-play-tooltip" role="tooltip" slot="tooltip-top-left">
-          <span slot="play-tooltip">Play (k)</span>
-          <span slot="pause-tooltip">Pause (k)</span>
-        </div>
+      <media-play-button default-appearance>
+        <media-tooltip position="top left">
+          <span slot="play">Play (k)</span>
+          <span slot="pause">Pause (k)</span>
+        </media-tooltip>
       </media-play-button>
-      <media-mute-button class="-ml-1" aria-describedby="video-mute-tooltip" default-appearance>
-        <div id="video-mute-tooltip" role="tooltip" slot="tooltip-top-center">
-          <span slot="mute-tooltip">Mute (m)</span>
-          <span slot="unmute-tooltip">Unmute (m)</span>
-        </div>
+      <media-mute-button class="-ml-1" default-appearance>
+        <media-tooltip>
+          <span slot="mute">Mute (m)</span>
+          <span slot="unmute">Unmute (m)</span>
+        </media-tooltip>
       </media-mute-button>
-      <media-volume-slider class="max-w-[64px] -ml-1.5" style="--media-slider-preview-gap: 16px">
+      <media-volume-slider class="max-w-[64px] -ml-1.5">
         <media-slider-value class="rounded-sm" type="pointer" format="percent" slot="preview" />
       </media-volume-slider>
       <div class="flex-1 text-center">Sprite Fight</div>
-      <media-caption-button aria-describedby="video-caption-tooltip" default-appearance>
-        <div id="video-caption-tooltip" role="tooltip" slot="tooltip-top-center">
-          <span slot="on-tooltip">Closed-Captions On (c)</span>
-          <span slot="off-tooltip">Closed-Captions Off (c)</span>
-        </div>
+      <media-caption-button default-appearance>
+        <media-tooltip>
+          <span slot="on">Closed-Captions On (c)</span>
+          <span slot="off">Closed-Captions Off (c)</span>
+        </media-tooltip>
       </media-caption-button>
-      <media-pip-button aria-describedby="video-pip-tooltip" default-appearance>
-        <div id="video-pip-tooltip" role="tooltip" slot="tooltip-top-center">
-          <span slot="enter-tooltip">Enter PIP (i)</span>
-          <span slot="exit-tooltip">Exit PIP (i)</span>
-        </div>
+      <media-pip-button default-appearance>
+        <media-tooltip>
+          <span slot="enter">Enter PIP (i)</span>
+          <span slot="exit">Exit PIP (i)</span>
+        </media-tooltip>
       </media-pip-button>
-      <media-fullscreen-button
-        class="right-2"
-        aria-describedby="video-fullscreen-tooltip"
-        default-appearance
-      >
-        <div id="video-fullscreen-tooltip" role="tooltip" slot="tooltip-top-right">
-          <span slot="enter-tooltip">Enter Fullscreen (f)</span>
-          <span slot="exit-tooltip">Exit Fullscreen (f)</span>
-        </div>
+      <media-fullscreen-button class="right-2" default-appearance>
+        <media-tooltip position="top right">
+          <span slot="enter">Enter Fullscreen (f)</span>
+          <span slot="exit">Exit Fullscreen (f)</span>
+        </media-tooltip>
       </media-fullscreen-button>
     </div>
   </div>
 </media-player>
 
 <style>
+  media-player:not([data-fullscreen]) {
+    max-width: 680px;
+    aspect-ratio: 16 / 9;
+    border-radius: 2px;
+  }
+
   :global(.hero-video media-captions [part='cue']) {
     letter-spacing: 0.025em;
   }

@@ -1,0 +1,43 @@
+<media-menu class="relative inline-block">
+  <!-- Main Button -->
+  <media-menu-button
+    class="group flex h-12 w-12 items-center justify-center rounded-sm outline-none"
+    aria-label="Settings"
+  >
+    <media-icon
+      class="h-8 w-8 rounded-sm transition-transform duration-200 ease-out group-aria-expanded:rotate-90 group-data-[focus]:ring-4 group-data-[focus]:ring-blue-400"
+      type="settings"
+    ></media-icon>
+  </media-menu-button>
+  <!-- Main Menu -->
+  <media-menu-items
+    class="absolute right-0 bottom-full h-[var(--menu-height)] min-w-[260px] overflow-y-auto rounded-lg bg-black/95 p-2.5 shadow-sm backdrop-blur-sm transition-all duration-200 ease-in aria-hidden:pointer-events-none aria-hidden:bottom-0 aria-hidden:opacity-0 data-[resizing]:overflow-hidden"
+  >
+    <!-- Playback Rate Submenu -->
+    <media-menu class="text-sm text-white">
+      <!-- Playback Rate Menu Button -->
+      <media-menu-button
+        class="group flex cursor-pointer items-center p-2.5 data-[hocus]:bg-white/10 data-[focus]:ring-2 data-[focus]:ring-blue-400"
+      >
+        <media-icon
+          type="arrow-left"
+          class="hidden h-4 w-4 group-aria-expanded:inline"
+        ></media-icon>
+        <media-icon type="odometer" class="h-6 w-6 group-aria-expanded:hidden"></media-icon>
+        <span class="ml-1.5">Speed</span>
+        <span class="ml-auto text-white/50" slot="hint"></span>
+        <media-icon
+          type="chevron-right"
+          class="ml-0.5 h-4 w-4 text-white/50 group-aria-disabled:opacity-0 group-aria-expanded:hidden"
+        ></media-icon>
+      </media-menu-button>
+      <!-- Playback Rate Menu Items -->
+      <media-playback-rate-menu-items
+        class="relative flex flex-col p-1 aria-hidden:hidden"
+        radio-group-class="w-full"
+        radio-class="group flex cursor-pointer items-center p-2.5 data-[hocus]:bg-white/10 data-[focus]:ring-2 data-[focus]:ring-blue-400"
+        radio-check-class="rounded-full border-1 flex items-center justify-center w-2.5 h-2.5 mr-2 border-gray-500 group-aria-checked:border-white after:content-[''] after:hidden after:border-2 after:border-white group-aria-checked:after:inline-block after:rounded-full after:w-1 after:h-1"
+      ></media-playback-rate-menu-items>
+    </media-menu>
+  </media-menu-items>
+</media-menu>

@@ -39,6 +39,8 @@ export class NativeAudioTracks {
   private _onAddNativeTrack(event: NativeAudioEvent) {
     const _track = event.track;
 
+    if (_track.label === '') return;
+
     const audioTrack: AudioTrack = {
       id: _track.id + '',
       label: _track.label,
@@ -69,6 +71,7 @@ export class NativeAudioTracks {
 
   private _onChangeTrack(event: AudioTrackChangeEvent) {
     const { current } = event.detail;
+    if (!current) return;
     const track = this._nativeTracks.getTrackById(current.id);
     if (track) {
       const prev = this._getEnabledNativeTrack();

@@ -14,6 +14,17 @@ a `.css` file to handle random outlier cases. It not only slows you down and bre
 but it also goes against all the
 [advantages of using utility classes](https://adamwathan.me/css-utility-classes-and-separation-of-concerns).
 
+## VSCode
+
+You will need to add the following VSCode setting to ensure Tailwind intellisense works with
+custom classes on components:
+
+```json {% title=".vscode/settings.json" %}
+{
+  "tailwindCSS.experimental.classRegex": ["[cC]lass=['\"](.*)['|\"]"]
+}
+```
+
 ## Installation
 
 You can register the plugin by adding the following to `tailwind.config.js`:

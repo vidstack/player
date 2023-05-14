@@ -41,15 +41,11 @@ media-slider-video[data-loading] {
 }
 
 /* Apply styles when video fails to load. */
-media-slider-video[data-hidden] {
+media-slider-video[aria-hidden='true'] {
 }
 ```
 
 ## Tailwind
 
-{% code_snippet name="tailwind" copyHighlight=true highlight="html:3-8|react:3-5,8-" /%}
-
-{% callout type="info" %}
-A more complete [slider example](/docs/react/player/components/sliders/time-slider#tailwind) is
+A complete [Tailwind slider example](/docs/player/components/sliders/time-slider#tailwind) is
 available in the `$tag:media-time-slider` docs.
-{% /callout %}

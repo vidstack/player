@@ -1,14 +1,8 @@
-import { MediaFullscreenButton } from '@vidstack/react';
+import { MediaFullscreenButton, MediaTooltip } from '@vidstack/react';
 
-function FullscreenButton() {
-  const tooltipId = 'media-fullscreen-tooltip';
-
-  return (
-    <MediaFullscreenButton aria-describedby={tooltipId} defaultAppearance>
-      <div id={tooltipId} role="tooltip" slot="tooltip-top-center">
-        <span slot="enter-tooltip">Enter Fullscreen</span>
-        <span slot="exit-tooltip">Exit Fullscreen</span>
-      </div>
-    </MediaFullscreenButton>
-  );
-}
+<MediaFullscreenButton defaultAppearance>
+  <MediaTooltip position="top center">
+    <span slot="enter">Enter Fullscreen</span>
+    <span slot="exit">Exit Fullscreen</span>
+  </MediaTooltip>
+</MediaFullscreenButton>;

@@ -1,4 +1,5 @@
 import { StoreFactory, tick, type Store } from 'maverick.js';
+import type { VTTCue } from 'media-captions';
 
 import type { LogLevel } from '../../../foundation/logger/log-level';
 import type { VideoQuality } from '../quality/video-quality';
@@ -51,8 +52,11 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
   source: { src: '', type: '' },
   sources: [],
   started: false,
+  title: '',
   textTracks: [],
   textTrack: null,
+  thumbnails: null,
+  thumbnailCues: [],
   volume: 1,
   waiting: false,
   get viewType() {
@@ -155,8 +159,11 @@ const DO_NOT_RESET_ON_SRC_CHANGE = new Set<keyof MediaStore>([
   'poster',
   'source',
   'sources',
+  'title',
   'textTracks',
   'textTrack',
+  'thumbnails',
+  'thumbnailCues',
   'volume',
   'canLoadPoster',
   'providedStreamType',
@@ -585,6 +592,10 @@ export interface MediaState {
    */
   streamType: MediaStreamType;
   /**
+   * The title of the current media.
+   */
+  title: string;
+  /**
    * The list of all available text tracks.
    */
   textTracks: TextTrack[];
@@ -592,6 +603,15 @@ export interface MediaState {
    * The current captions/subtitles text track that is showing.
    */
   textTrack: TextTrack | null;
+  /**
+   * The absolute or relative URL to a [WebVTT](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API)
+   * file resource.
+   */
+  thumbnails: string | null;
+  /**
+   * List of VTT cues that were parsed from the `thumbnails` WebVTT file.
+   */
+  thumbnailCues: VTTCue[];
   /**
    * The type of player view that should be used (i.e., audio or video). By default this is set
    * to `video`.

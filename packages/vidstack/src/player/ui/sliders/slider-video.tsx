@@ -9,11 +9,12 @@ import {
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 import type { DOMEvent } from 'maverick.js/std';
 
+import { $ariaBool } from '../../../utils/aria';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import { SliderStoreFactory } from './slider/api/store';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-slider-video': MediaSliderVideoElement;
   }
 }
@@ -55,7 +56,7 @@ export class SliderVideo extends Component<SliderVideoAPI> {
 
     this.setAttributes({
       'data-loading': this._isLoading.bind(this),
-      'data-hidden': this._hidden,
+      'aria-hidden': $ariaBool(this._hidden),
     });
 
     effect(this._onSrcChange.bind(this));

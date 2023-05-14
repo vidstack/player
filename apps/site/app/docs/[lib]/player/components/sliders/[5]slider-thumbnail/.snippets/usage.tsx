@@ -2,9 +2,9 @@ import { MediaPlayer, MediaSliderThumbnail, MediaTimeSlider } from '@vidstack/re
 
 function Player() {
   return (
-    <MediaPlayer>
+    <MediaPlayer thumbnails="https://media-files.vidstack.io/thumbnails.vtt">
       <MediaTimeSlider>
-        <MediaSliderThumbnail src="https://media-files.vidstack.io/thumbnails.vtt" slot="preview" />
+        <MediaSliderThumbnail slot="preview" />
       </MediaTimeSlider>
     </MediaPlayer>
   );
