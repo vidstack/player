@@ -48,12 +48,12 @@ export class MediaPlayerDelegate {
   }
 
   private async _attemptAutoplay() {
-    const { player, $store } = this._media;
+    const { player, $store, ads } = this._media;
 
     $store.autoplaying.set(true);
 
     try {
-      await player!.play();
+      $store.adsLoaded() ? await ads()!.play() : await player!.play();
       this._dispatch('autoplay', { detail: { muted: $store.muted() } });
     } catch (error) {
       this._dispatch('autoplay-fail', {

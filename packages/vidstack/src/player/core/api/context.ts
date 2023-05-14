@@ -35,7 +35,7 @@ export interface MediaContext {
   $iosControls: ReadSignal<boolean>;
   $props: ReadSignalRecord<PlayerProps>;
   $store: MediaStore;
-  ads: AdsController;
+  ads: WriteSignal<AdsController | null>;
 }
 
 export const mediaContext = createContext<MediaContext>();

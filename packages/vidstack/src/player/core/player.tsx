@@ -98,6 +98,7 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
       $provider: signal<MediaProvider | null>(null),
       $props: this.$props,
       $store: this.$store as MediaStore,
+      ads: signal<AdsController | null>(null),
     } as MediaContext;
 
     if (__DEV__) {
@@ -113,6 +114,10 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     context.textTracks = new TextTrackList();
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
+
+    if (!this.ads && isString(this.$props.adsUrl())) {
+      new MediaLoadController(instance, this._startLoadingAds.bind(this));
+    }
 
     this._media = context;
     provideContext(mediaContext, context);
@@ -132,10 +137,6 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
       this._stateMgr._handle.bind(this._stateMgr),
       context,
     );
-
-    if (!this.ads && isString(this.$props.adsUrl())) {
-      new MediaLoadController(instance, this._startLoadingAds.bind(this));
-    }
 
     effect(this._watchCanPlay.bind(this));
     effect(this._watchMuted.bind(this));
@@ -195,9 +196,8 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
   }
 
   private async _startLoadingAds(): Promise<void> {
-    console.log('Start loading ads controller');
     this.ads = new (await import('./ads/ads')).AdsController(this.instance, this._media);
-    this._media.ads = this.ads;
+    this._media.ads.set(this.ads);
   }
 
   private _watchCanPlay() {

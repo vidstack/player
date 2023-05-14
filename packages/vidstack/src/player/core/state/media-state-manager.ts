@@ -331,7 +331,7 @@ export class MediaStateManager extends ComponentController<PlayerAPI> {
   }
 
   ['play'](event: ME.MediaPlayEvent) {
-    const { paused, autoplayError, ended, autoplaying } = this._store;
+    const { paused, autoplayError, ended, autoplaying, adStarted } = this._store;
 
     event.autoplay = autoplaying();
 
@@ -346,7 +346,7 @@ export class MediaStateManager extends ComponentController<PlayerAPI> {
     paused.set(false);
     autoplayError.set(undefined);
 
-    if (ended() || this._request._replaying) {
+    if ((!adStarted() && ended()) || this._request._replaying) {
       this._request._replaying = false;
       ended.set(false);
       this._handle(this.createEvent('replay', { trigger: event }));
@@ -549,5 +549,12 @@ export class MediaStateManager extends ComponentController<PlayerAPI> {
 
   ['picture-in-picture-error'](event: ME.MediaPIPErrorEvent) {
     this._satisfyRequest('pip', event);
+  }
+
+  ['ad-ended'](event: ME.AdEndedEvent) {
+    const { paused, playing, seeking } = this._store;
+    paused.set(true);
+    playing.set(false);
+    seeking.set(false);
   }
 }

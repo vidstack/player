@@ -53,26 +53,23 @@ export class PlayButton extends ToggleButton {
       'data-paused': paused,
       // we dont want to show the replay button when ads are playing
       // e.g. in a post roll
-      'data-ended': computed(() => adStarted() ? false : ended())
+      'data-ended': computed(() => (adStarted() ? false : ended())),
     });
   }
 
-
   protected override _onPress(event: Event) {
     const remote = this._media.remote;
-    if(this._media.$store.adStarted()) {
-      this._pressed() ? this._media.ads.pause() : this._media.ads.play()
-    } else {
-      this._pressed() ? remote.pause(event) : remote.play(event);
-    }
+    this._pressed() ? remote.pause(event) : remote.play(event);
   }
 
   protected _isPressed() {
-    return !this._media.$store.paused();
+    const { paused } = this._media.$store;
+    return !paused();
   }
 
   protected _getLabel() {
-    return this._media.$store.paused() ? 'Play' : 'Pause';
+    const { paused } = this._media.$store;
+    return paused() ? 'Play' : 'Pause';
   }
 
   override render() {

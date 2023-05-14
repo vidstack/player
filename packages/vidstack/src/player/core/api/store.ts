@@ -120,6 +120,17 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
   adStarted: false,
   adCuePoints: [],
   // ~~ internal props ~~
+  get shouldPlayPreroll() {
+    // prerolls are represented by cue points with 0 as value
+    // or by an empty array so no cue points at all which means this ad break can be played anytime &
+    // also only should play a preroll if the currentTime is greater than 0
+    return (
+      (this.adCuePoints.some((cuePoint) => cuePoint === 0) || this.adCuePoints.length === 0) &&
+      this.currentTime === 0 &&
+      !this.playedPreroll
+    );
+  },
+  playedPreroll: false,
   autoplaying: false,
   canLoadPoster: null,
   providedViewType: 'unknown',
@@ -628,10 +639,14 @@ export interface MediaState {
    * Note that individual ads in the ad break are not included in the schedule.
    * @defaultValue []
    */
-  adCuePoints: Number[];
+  adCuePoints: number[];
 
   // !!! INTERNALS !!!
 
+  /** @internal */
+  readonly shouldPlayPreroll: boolean;
+  /* @internal */
+  playedPreroll: boolean;
   /* @internal */
   autoplaying: boolean;
   /* @internal */

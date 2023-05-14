@@ -1,6 +1,6 @@
 import { effect, peek, type ReadSignal } from 'maverick.js';
 import { ComponentController, ComponentInstance } from 'maverick.js/element';
-import { isUndefined } from 'maverick.js/std';
+import { DOMEvent, isUndefined } from 'maverick.js/std';
 
 import {
   FullscreenController,
@@ -9,6 +9,7 @@ import {
 import { ScreenOrientationController } from '../../../foundation/orientation/controller';
 import { Queue } from '../../../foundation/queue/queue';
 import { coerceToError } from '../../../utils/error';
+import { AdsController } from '../ads/ads';
 import type { MediaContext } from '../api/context';
 import * as RE from '../api/request-events';
 import type { MediaStore } from '../api/store';
@@ -59,6 +60,7 @@ export class MediaRequestManager
 
   private readonly _store: MediaStore;
   private readonly _provider: ReadSignal<MediaProvider | null>;
+  private readonly _ads: ReadSignal<AdsController | null>;
 
   constructor(
     instance: ComponentInstance<PlayerAPI>,
@@ -70,6 +72,7 @@ export class MediaRequestManager
 
     this._store = _media.$store;
     this._provider = _media.$provider;
+    this._ads = _media.ads;
 
     this._user = new MediaUserController(instance);
     this._fullscreen = new FullscreenController(instance);
@@ -107,7 +110,12 @@ export class MediaRequestManager
   async _play() {
     if (__SERVER__) return;
 
-    const { canPlay, paused, ended, autoplaying, seekableStart } = this._store;
+    const { adStarted, canPlay, paused, ended, autoplaying, seekableStart } = this._store;
+
+    if (peek(adStarted)) {
+      peek(this._ads)!.play();
+      return;
+    }
 
     if (!peek(paused)) return;
 
@@ -131,7 +139,12 @@ export class MediaRequestManager
   async _pause() {
     if (__SERVER__) return;
 
-    const { canPlay, paused } = this._store;
+    const { adStarted, canPlay, paused } = this._store;
+
+    if (peek(adStarted)) {
+      peek(this._ads)!.pause();
+      return;
+    }
 
     if (peek(paused)) return;
 
@@ -250,8 +263,8 @@ export class MediaRequestManager
   }
 
   private _onPiPSupportChange() {
-    const { canLoad, canPictureInPicture } = this._store,
-      supported = this._provider()?.pictureInPicture?.supported || false;
+    const { adStarted, canLoad, canPictureInPicture } = this._store,
+      supported = adStarted() ? false : this._provider()?.pictureInPicture?.supported || false;
 
     if (canLoad() && peek(canPictureInPicture) === supported) return;
 
@@ -290,6 +303,7 @@ export class MediaRequestManager
     try {
       this._request._queue._enqueue('fullscreen', event);
       await this._enterFullscreen(event.detail);
+      this._ads()?.enterFullscreen();
     } catch (error) {
       this._onFullscreenError(error);
     }
@@ -299,6 +313,7 @@ export class MediaRequestManager
     try {
       this._request._queue._enqueue('fullscreen', event);
       await this._exitFullscreen(event.detail);
+      this._ads()?.exitFullscreen();
     } catch (error) {
       this._onFullscreenError(error);
     }
@@ -374,7 +389,15 @@ export class MediaRequestManager
     if (this._store.paused()) return;
     try {
       this._request._queue._enqueue('pause', event);
-      await this._provider()!.pause();
+
+      if (this._store.adStarted() || this._store.shouldPlayPreroll()) {
+        this._ads()!.pause();
+        this._provider()!.media!.dispatchEvent(new DOMEvent<void>('pause'));
+        // we need to dispatch this event to make sure the player is in the right state
+        // since the pause event is actually happening on the seperate ad video player
+      } else {
+        await this._provider()!.pause();
+      }
     } catch (e) {
       this._request._queue._delete('pause');
       if (__DEV__) this._media.logger?.error('pause-fail', e);
@@ -385,7 +408,14 @@ export class MediaRequestManager
     if (!this._store.paused()) return;
     try {
       this._request._queue._enqueue('play', event);
-      await this._provider()!.play();
+      if (this._store.adStarted() || this._store.shouldPlayPreroll()) {
+        this._ads()!.play();
+        this._provider()!.media!.dispatchEvent(new DOMEvent<void>('play'));
+        // we need to dispatch this event to make sure the player is in the right state
+        // since the play event is actually happening on the seperate ad video player
+      } else {
+        await this._provider()!.play();
+      }
     } catch (e) {
       const errorEvent = this.createEvent('play-fail', { detail: coerceToError(e) });
       this._stateMgr._handle(errorEvent);
@@ -470,6 +500,7 @@ export class MediaRequestManager
     if (this._store.canLoad()) return;
     this._request._queue._enqueue('load', event);
     this._stateMgr._handle(this.createEvent('can-load'));
+    this._ads()?.loadAds();
   }
 
   ['media-text-track-change-request'](event: RE.MediaTextTrackChangeRequestEvent) {
@@ -492,6 +523,7 @@ export class MediaRequestManager
     if (this._store.muted()) return;
     this._request._queue._enqueue('volume', event);
     this._provider()!.muted = true;
+    this._ads()?.mute();
   }
 
   ['media-unmute-request'](event: RE.MediaUnmuteRequestEvent) {
@@ -501,10 +533,12 @@ export class MediaRequestManager
 
     this._request._queue._enqueue('volume', event);
     this._media.$provider()!.muted = false;
+    this._ads()?.setVolume(volume());
 
     if (volume() === 0) {
       this._request._queue._enqueue('volume', event);
       this._provider()!.volume = 0.25;
+      this._ads()?.setVolume(0.25);
     }
   }
 
@@ -516,6 +550,7 @@ export class MediaRequestManager
 
     this._request._queue._enqueue('volume', event);
     this._provider()!.volume = newVolume;
+    this._ads()?.setVolume(newVolume);
 
     if (newVolume > 0 && muted()) {
       this._request._queue._enqueue('volume', event);

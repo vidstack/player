@@ -96,7 +96,12 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
 
   protected _hasChapters() {
     const { duration } = this._media.$store;
-    return this._track()?.cues.length && Number.isFinite(duration()) && duration() > 0 && !this._media.$store.adStarted();
+    return (
+      this._track()?.cues.length &&
+      Number.isFinite(duration()) &&
+      duration() > 0 &&
+      !this._media.$store.adStarted()
+    );
   }
 
   protected override onConnect(el: HTMLElement) {

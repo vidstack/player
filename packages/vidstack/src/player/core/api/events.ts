@@ -84,6 +84,7 @@ export interface MediaEvents {
   started: MediaStartedEvent;
   suspend: MediaSuspendEvent;
   waiting: MediaWaitingEvent;
+  'ad-ended': AdEndedEvent;
 }
 
 export interface MediaEvent<Detail = unknown> extends DOMEvent<Detail> {
@@ -542,3 +543,11 @@ export interface MediaVolumeChangeEvent extends MediaEvent<MediaVolumeChange> {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/waiting_event}
  */
 export interface MediaWaitingEvent extends MediaEvent<void> {}
+
+/**
+ * Fired when playback or streaming has stopped because the end of the ad was reached or
+ * because no further data is available.
+ *
+ * @see {@link https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/reference/js/google.ima.AdEvent}
+ */
+export interface AdEndedEvent extends MediaEvent<void> {}

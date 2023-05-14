@@ -57,16 +57,10 @@ export class Time extends Component<TimeAPI> {
   }
 
   protected _getSeconds(type: TimeProps['type']) {
-    const { 
-      bufferedEnd,
-      duration,
-      currentTime,
-      adStarted,
-    } = this._media.$store;
+    const { bufferedEnd, duration, currentTime } = this._media.$store;
     switch (type) {
       case 'buffered':
-        // we dont have buffered time for ads so we return the current time instead
-        return adStarted() ? currentTime() : bufferedEnd();
+        return bufferedEnd();
       case 'duration':
         return duration();
       default:
