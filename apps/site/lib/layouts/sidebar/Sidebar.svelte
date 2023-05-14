@@ -2,6 +2,7 @@
   import { route } from '@vessel-js/svelte';
   import clsx from 'clsx';
   import { createEventDispatcher, onMount } from 'svelte';
+  import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-line';
   import CloseIcon from '~icons/ri/close-fill';
 
   import Overlay from '$lib/components/base/Overlay.svelte';
@@ -54,6 +55,10 @@
       preventFocus = false;
     }
   }
+
+  const isCategoryOpen = {
+    [Object.keys($links)[0]]: true,
+  };
 </script>
 
 <aside
@@ -83,7 +88,7 @@
 
   <nav class="992:px-1 992:mt-0 -mt-6">
     {#if search}
-      <div class="pointer-events-none sticky top-0 z-0 -ml-0.5 min-h-[80px]">
+      <div class="pointer-events-none sticky top-0 z-10 -ml-0.5 min-h-[80px]">
         <div class="992:h-6 bg-body" />
         <div class="bg-body pointer-events-auto relative">
           <div class="992:block hidden">
@@ -101,19 +106,43 @@
 
     <slot name="top" />
 
-    <ul class={clsx('text-base', !search && 'mt-8', '992:pb-0 pb-28')}>
+    <ul class={clsx('text-base z-0', !search && 'mt-8', '992:pb-0 pb-28')}>
       {#each Object.keys($links) as category (category)}
         {@const categoryLinks = $links[category]}
-        <li class="mt-9 first:mt-0">
-          <h5 class="text-strong font-semibold">
-            {category}
-          </h5>
-          <ul class="border-border space-y-3 border-l">
+        {@const isOpen = isCategoryOpen[category]}
+
+        <li class={clsx(isOpen && 'mb-4 last:mb-0')}>
+          {#if category === 'Getting Started'}
+            <div class="uppercase font-bold text-soft text-xs mb-5">Introduction</div>
+          {/if}
+          {#if category === 'Media'}
+            <div class="w-full h-px bg-border my-6 mb-7" />
+            <div class="uppercase font-bold text-soft text-xs mb-4">Components</div>
+          {/if}
+          <button
+            class="flex items-center min-w-full -ml-2.5 py-2 rounded-md hover:bg-soft/10 focus-visible:m-1"
+            aria-pressed={ariaBool(isOpen)}
+            aria-label={`${!isOpen ? 'Open' : 'Close'} ${category} Category`}
+            on:click={() => {
+              isCategoryOpen[category] = !isCategoryOpen[category];
+            }}
+          >
+            <ArrowDropDownIcon
+              class={clsx('text-inverse transition-transform', !isOpen && '-rotate-90')}
+              width={28}
+              height={28}
+            />
+            <h5 class="font-medium">
+              {category}
+            </h5>
+            <div class="flex-1" />
+          </button>
+          <ul class={clsx('space-y-3 overflow-hidden ml-3', !isOpen ? 'hidden' : 'mt-2')}>
             {#each categoryLinks as link (link.title + link.slug)}
-              <li class="first:mt-5 flex items-center">
+              <li class="flex items-center">
                 <a
                   class={clsx(
-                    '992:py-1 -ml-px flex items-center border-l-2 py-2 pl-4',
+                    '992:py-1 -ml-px flex items-center py-2 pl-4 w-full focus-visible:m-1 focus-visible:last:mb-2',
                     isActiveSidebarLink(link, $route.matchedURL.pathname)
                       ? 'text-brand font-semibold'
                       : 'hover:border-inverse focus-visible:border-inverse text-soft hover:text-inverse focus-visible:text-inverse border-transparent font-normal',
