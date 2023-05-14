@@ -24,6 +24,7 @@ export function loadPlayerSidebar(): SidebarLinks {
     'Getting Started': links(slugs, /^\/getting-started/),
     'Core Concepts': links(slugs, /^\/core-concepts/),
     Providers: links(slugs, /^\/providers/),
+    API: links(slugs, /^\/api/),
     Styling: links(slugs, /^\/styling/),
     Media: links(slugs, /^\/components\/media/),
     Layout: links(slugs, /^\/components\/layout/),

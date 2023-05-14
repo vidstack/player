@@ -2,6 +2,7 @@
   import { route } from '@vessel-js/svelte';
   import clsx from 'clsx';
   import { createEventDispatcher, onMount } from 'svelte';
+  import { get } from 'svelte/store';
   import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-line';
   import CloseIcon from '~icons/ri/close-fill';
 
@@ -29,7 +30,7 @@
   let _class: string | ((state: { open: boolean }) => string) = '';
   export { _class as class };
 
-  const { links, activeLink } = getSidebarContext();
+  const { links, activeLink, activeCategory } = getSidebarContext();
 
   function scrollToActiveItem() {
     if (!$activeLink) return;
@@ -57,7 +58,7 @@
   }
 
   const isCategoryOpen = {
-    [Object.keys($links)[0]]: true,
+    [get(activeCategory) as string]: true,
   };
 </script>
 
