@@ -79,13 +79,19 @@
               <h1 class="text-base font-bold">Socials</h1>
               <ul class="text-soft mt-4 space-y-4">
                 <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
-                  <a href="https://twitter.com/vidstackjs?lang=en">Twitter</a>
+                  <a href="https://twitter.com/vidstackjs?lang=en" target="_blank" rel="noreferrer">
+                    Twitter
+                  </a>
                 </li>
                 <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
-                  <a href="https://github.com/vidstack">GitHub</a>
+                  <a href="https://github.com/vidstack" target="_blank" rel="noreferrer">
+                    GitHub
+                  </a>
                 </li>
                 <li class="text-soft hover:font-medium font-base hover:underline hover:text-brand">
-                  <a href="https://discord.com/invite/7RGU7wvsu9">Discord</a>
+                  <a href="https://discord.com/invite/7RGU7wvsu9" target="_blank" rel="noreferrer">
+                    Discord
+                  </a>
                 </li>
               </ul>
             </section>
