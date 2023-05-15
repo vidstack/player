@@ -47,6 +47,12 @@ code *[style*='color: #676E95; font-'] {
   --code-fence-top-bar-bg: rgb(var(--color-elevate) / 0.8);
 }
 
+.code-snippets pre > code,
+.code-preview pre > code,
+.code-fence pre > code {
+  background-color: unset !important;
+}
+
 @supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {
   .code-preview,
   .code-snippets,
@@ -168,4 +174,9 @@ code *[style*='color: #676E95; font-'] {
 
 .DocSearch-Button-Key {
   @apply !ring-0;
+}
+
+.api-table tbody tr td:first-child > code,
+.api-table tbody tr td:first-child > div > code {
+  background-color: unset;
 }

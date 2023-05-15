@@ -155,11 +155,17 @@ function typography(theme) {
           fontWeight: 'inherit',
         },
         code: {
-          fontWeight: theme('fontWeight.semibold'),
-          fontSize: '0.8em',
-          margin: '0 3px',
+          fontWeight: theme('fontWeight.medium'),
+          fontSize: '0.75em',
+          margin: '0 2px',
           fontVariantLigatures: 'none',
+          borderRadius: '2px',
+          padding: '2.5px 6px',
+          color: 'rgb(0 0 0 / 0.7)',
+          backgroundColor: 'rgb(0 0 0 / 0.1)',
         },
+        'code::after': { content: '' },
+        'code::before': { content: '' },
         pre: {
           backgroundColor: 'var(--code-fence-bg)',
           boxShadow: 'none',
@@ -199,7 +205,7 @@ function typography(theme) {
           borderBottomWidth: '1px',
         },
         'tbody code': {
-          fontSize: theme('fontSize.sm')[0],
+          fontSize: '0.75rem',
         },
         'thead th:first-child': {
           paddingLeft: '0.5714286em',
@@ -213,9 +219,9 @@ function typography(theme) {
         'tbody td:last-child': {
           paddingRight: '0.5714286em',
         },
-        'tbody tr td:first-child code': {
-          color: theme('colors.indigo.500'),
-          paddingLeft: '8px',
+        'tbody tr td:first-child > code': {
+          color: 'rgb(65 69 233)',
+          backgroundColor: 'rgb(75 77 193 / 0.2)',
           '&::before': { display: 'none' },
           '&::after': { display: 'none' },
         },
@@ -236,11 +242,16 @@ function typography(theme) {
     invert: {
       css: {
         color: 'rgb(var(--color-soft))',
-        'tbody tr td:first-child code': {
-          color: theme('colors.indigo.300'),
+        code: {
+          color: 'rgb(181 193 209 / 0.8)',
+          backgroundColor: 'rgb(145 168 202 / 0.2)',
         },
         'tbody tr': {
           borderBottomColor: 'rgb(var(--color-border))',
+        },
+        'tbody tr td:first-child > code': {
+          color: 'rgb(165 180 252)',
+          backgroundColor: 'rgb(75 77 193 / 0.2)',
         },
       },
     },

@@ -1,12 +1,16 @@
-import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { PreprocessorGroup, svelte } from '@sveltejs/vite-plugin-svelte';
 import { vessel } from '@vessel-js/app/node';
 import { vesselSvelte } from '@vessel-js/svelte/node';
 import { transform as esbuildTransform } from 'esbuild';
 import icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
 
+import { loadPlayerSidebar } from './lib/server/load-sidebar';
 import highlight from './plugins/highlight.js';
 import snippets from './plugins/snippets.js';
+
+const sidebar = loadPlayerSidebar();
+const sidebarLinks = Object.values(sidebar).flat();
 
 export default defineConfig({
   resolve: {
@@ -36,6 +40,9 @@ export default defineConfig({
           ...['', '/audio', '/hls'].map(
             (p) => `/docs${lib}/player/getting-started/installation/cdn${p}`,
           ),
+          ...sidebarLinks
+            .filter((link) => link.slug.startsWith('/docs/player/components'))
+            .map((link) => link.slug.replace('/docs', `/docs${lib}`) + '/api'),
         ]),
         matchers: [{ name: 'lib', matcher: ':lib(react)?' }],
       },
@@ -60,10 +67,7 @@ export default defineConfig({
   ],
 });
 
-/**
- * @returns {import('svelte/types/compiler/preprocess').PreprocessorGroup}
- */
-function typescriptPreprocessor() {
+function typescriptPreprocessor(): PreprocessorGroup {
   const typescriptRE = /^(ts|typescript)($||\/)/;
   return {
     async script({ filename, attributes, content }) {

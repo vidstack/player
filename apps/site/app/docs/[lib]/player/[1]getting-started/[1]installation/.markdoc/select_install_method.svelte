@@ -7,7 +7,6 @@
     type InstallMethodType,
   } from '$lib/stores/install-method';
 
-  import ComponentDesc from '../../../components/.markdoc/component_desc.svelte';
   import CDN from '../partials/install/cdn.md';
   import NPM from '../partials/install/npm.md';
   import WhyCDN from '../partials/install/why-cdn.md';

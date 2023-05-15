@@ -1,7 +1,8 @@
 import { route } from '@vessel-js/svelte';
 import { derived } from 'svelte/store';
 
-import { kebabToTitleCase } from '$lib/utils/string';
+import { kebabToTitleCase } from '../utils/string';
+import { formatElementHeading } from './format';
 
 export const elementTagName = derived(route, ($route) =>
   getTagNameFromPath($route.matchedURL.pathname),
@@ -24,9 +25,3 @@ export const elementHeading = derived(elementTagName, ($elementTagName) => {
     ),
   )}`;
 });
-
-export function formatElementHeading(name: string) {
-  if (name === 'Pip Button') return 'PIP Button';
-  if (name === 'Youtube') return 'YouTube';
-  return name;
-}

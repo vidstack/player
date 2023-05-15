@@ -62,6 +62,11 @@ export interface MediaStateAccessors
     'paused' | 'muted' | 'volume' | 'currentTime' | 'playsinline' | 'playbackRate'
   > {}
 
+export type MediaSrc =
+  | MediaResource
+  | { src: MediaResource; type?: string }
+  | { src: MediaResource; type?: string }[];
+
 export interface PlayerProps
   // Prefer picking off the `MediaStore` type to ensure docs are kept in-sync.
   extends Pick<
@@ -93,10 +98,7 @@ export interface PlayerProps
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src}
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject}
    */
-  src:
-    | MediaResource
-    | { src: MediaResource; type?: string }
-    | { src: MediaResource; type?: string }[];
+  src: MediaSrc;
   /**
    * The current log level. Values in order of priority are: `silent`, `error`, `warn`, `info`,
    * and `debug`.

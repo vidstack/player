@@ -1,6 +1,6 @@
 import { useNavigation, useRouter } from '@vessel-js/svelte';
 import { onMount, tick } from 'svelte';
-import { get, Readable, writable } from 'svelte/store';
+import { get, writable, type Readable } from 'svelte/store';
 
 import { env } from '$lib/env';
 import { isExtraLargeScreen, isLargeScreen } from '$lib/stores/screen';

@@ -5,10 +5,7 @@
   export { __class as class };
 </script>
 
-<div
-  class={clsx('table-wrapper overflow-auto scrollbar scroll-contain my-[2em]', __class)}
-  style=""
->
+<div class={clsx('table-wrapper overflow-auto scrollbar scroll-contain my-[2em]', __class)}>
   <table>
     <slot />
   </table>

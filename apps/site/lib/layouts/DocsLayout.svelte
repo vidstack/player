@@ -32,7 +32,7 @@
 
   let canUpdateHash = false;
   setOnThisPageContext({
-    fallback: writable(null),
+    override: writable(null),
     config: writable<OnThisPageConfig>({
       canUpdateHash: (hash) => {
         const isApiHash = $route.matchedURL.hash.includes('--');

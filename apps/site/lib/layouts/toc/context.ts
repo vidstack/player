@@ -8,7 +8,7 @@ export type OnThisPageConfig = {
 };
 
 export type OnThisPageContext = {
-  fallback: Writable<MarkdownHeading[] | null>;
+  override: Writable<MarkdownHeading[] | null>;
   config: Readable<OnThisPageConfig>;
 };
 

@@ -56,13 +56,14 @@ importers:
       '@tailwindcss/typography': ^0.5.0
       '@types/markdown-it': ^12.2.0
       '@types/react': ^17.0.0
-      '@vessel-js/app': 0.3.0
-      '@vessel-js/svelte': 0.3.0
+      '@vessel-js/app': 0.3.2
+      '@vessel-js/svelte': 0.3.2
       '@vidstack/react': workspace:*
       autoprefixer: ^10.4.0
       clsx: ^1.2.0
       gray-matter: ^4.0.0
       html-entities: ^2.3.3
+      markdown-it: ^13.0.1
       media-icons: 0.5.0
       nprogress: ^0.2.0
       postcss: ^8.4.0
@@ -94,10 +95,11 @@ importers:
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.2
       '@types/markdown-it': 12.2.3
       '@types/react': 17.0.59
-      '@vessel-js/app': 0.3.0_bf2mibhfirb33bmr4l4tfgibza
-      '@vessel-js/svelte': 0.3.0_qbaju5gaxuleuyizhopktirbbi
+      '@vessel-js/app': 0.3.2_bf2mibhfirb33bmr4l4tfgibza
+      '@vessel-js/svelte': 0.3.2_2grd7zekpnv4es4nixlt5r6lou
       autoprefixer: 10.4.14_postcss@8.4.23
       gray-matter: 4.0.3
+      markdown-it: 13.0.1
       nprogress: 0.2.0
       postcss: 8.4.23
       react: 17.0.2
@@ -1431,8 +1433,8 @@ packages:
       '@types/node': 20.1.0
     dev: true
 
-  /@vessel-js/app/0.3.0_bf2mibhfirb33bmr4l4tfgibza:
-    resolution: {integrity: sha512-Rz0U0vc4KB2pnBdMK1XlG9Ppu8bs+ojPhUg2mbkcXv0O5gwFgDzeaaHxuMLlBzzXyT0BytpW7AykH2Xg58mY4Q==}
+  /@vessel-js/app/0.3.2_bf2mibhfirb33bmr4l4tfgibza:
+    resolution: {integrity: sha512-Ij+NK3GPIl5FHROx2a6kmywP6X3yePsBRid70C8AnnZRwlZRwfijhhY60rg4Cijtmzzv/vGSFml9DsLzf3XrSw==}
     engines: {node: '>=16'}
     peerDependencies:
       vite: ^4.0.0
@@ -1464,14 +1466,14 @@ packages:
       - rollup
     dev: true
 
-  /@vessel-js/svelte/0.3.0_qbaju5gaxuleuyizhopktirbbi:
-    resolution: {integrity: sha512-rCziF4TwWra9KO2c9VvwbcVzkKSr0/9QXgjrbML3SxUqlEq2E1THZeW8LWRTrVWaQXMY5Tmm8HKBbJGpcBaq0Q==}
+  /@vessel-js/svelte/0.3.2_2grd7zekpnv4es4nixlt5r6lou:
+    resolution: {integrity: sha512-j803eJEwxJcUyUzP6Asxa8Zl1YViNyVtjUVoCsv7AL5Q/2RVUejhpTWVTIJ2Du/tvAwCGyCgREy+uRnnd2hOiQ==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@vessel-js/app': 0.3.0
+      '@vessel-js/app': 0.3.2
       svelte: ^3.55.0
     dependencies:
-      '@vessel-js/app': 0.3.0_bf2mibhfirb33bmr4l4tfgibza
+      '@vessel-js/app': 0.3.2_bf2mibhfirb33bmr4l4tfgibza
       globby: 13.1.4
       pathe: 1.1.0
       svelte: 3.59.0
@@ -2549,6 +2551,11 @@ packages:
     engines: {node: '>=8.6'}
     dependencies:
       ansi-colors: 4.1.3
+    dev: true
+
+  /entities/3.0.1:
+    resolution: {integrity: sha512-WiyBqoomrwMdFG1e0kqvASYfnlb0lp8M5o5Fw2OFq1hNZxxcNk8Ik0Xm7LxzBhuidnZB/UtBqVCgUz3kBOP51Q==}
+    engines: {node: '>=0.12'}
     dev: true
 
   /entities/4.5.0:
@@ -3695,6 +3702,12 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
+  /linkify-it/4.0.1:
+    resolution: {integrity: sha512-C7bfi1UZmoj8+PQx22XyeXCuBlokoyWQL5pWSP+EI6nzRylyThouddufc2c1NDIcP9k5agmN9fLpA7VNJfIiqw==}
+    dependencies:
+      uc.micro: 1.0.6
+    dev: true
+
   /lint-staged/13.2.2_enquirer@2.3.6:
     resolution: {integrity: sha512-71gSwXKy649VrSU09s10uAT0rWCcY3aewhMaHyl2N84oBk4Xs9HgxvUp3AYu+bNsK4NrOYYxvSgg7FyGJ+jGcA==}
     engines: {node: ^14.13.1 || >=16.0.0}
@@ -3913,6 +3926,17 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /markdown-it/13.0.1:
+    resolution: {integrity: sha512-lTlxriVoy2criHP0JKRhO2VDG9c2ypWCsT237eDiLqi09rmbKoUetyGHq2uOIRoRS//kfoJckS0eUzzkDR+k2Q==}
+    hasBin: true
+    dependencies:
+      argparse: 2.0.1
+      entities: 3.0.1
+      linkify-it: 4.0.1
+      mdurl: 1.0.1
+      uc.micro: 1.0.6
+    dev: true
+
   /maverick.js/0.36.6_typescript@5.0.4:
     resolution: {integrity: sha512-vxfAg9sRUkuUNZGqEb80WLw8QwQHXj0aQ0P4WTAfbl5TD0kPDZeRSqQJ3HPFbme6PkMfpYdcdYkMT7X58TmqYg==}
     engines: {node: '>=16'}
@@ -3927,6 +3951,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       blueimp-md5: 2.19.0
+    dev: true
+
+  /mdurl/1.0.1:
+    resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
     dev: true
 
   /media-captions/0.0.13:
@@ -5600,6 +5628,10 @@ packages:
     resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
     engines: {node: '>=12.20'}
     hasBin: true
+
+  /uc.micro/1.0.6:
+    resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}
+    dev: true
 
   /ufo/1.1.2:
     resolution: {integrity: sha512-TrY6DsjTQQgyS3E3dBaOXf0TpPD8u9FVrVYmKVegJuFw51n/YB9XPt+U6ydzFG5ZIN7+DIjPbNmXoBj9esYhgQ==}

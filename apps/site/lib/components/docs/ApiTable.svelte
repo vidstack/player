@@ -1,29 +1,23 @@
 <script lang="ts">
-  import uFuzzy from '@leeoniya/ufuzzy';
-  import { route } from '@vessel-js/svelte';
-  import clsx from 'clsx';
-  import { onMount, tick } from 'svelte';
-  import ArrowDropDownIcon from '~icons/ri/arrow-drop-down-fill';
+  import { useRouter } from '@vessel-js/svelte';
+  import InfoIcon from '~icons/ri/information-line';
   import QuestionIcon from '~icons/ri/question-fill';
 
-  import { env } from '$lib/env';
   import type { ComponentApi } from '$lib/server/component-api';
   import { jsLib } from '$lib/stores/js-lib';
-  import { ariaBool } from '$lib/utils/aria';
+  import { isKeyboardClick } from '$lib/utils/keyboard';
   import { camelToTitleCase, kebabToPascalCase } from '$lib/utils/string';
 
-  import SearchInput from '../base/SearchInput.svelte';
+  import Popover from '../base/Popover.svelte';
 
   export let api: ComponentApi;
 
-  let currentKey;
-  let _isOpen = {};
-  let _showAll = {};
-  let isAllOpen = {};
+  const router = useRouter();
 
   const categories = Object.keys(api); // ['props', 'events', 'slots', ...]
 
   const readonlyRE = /props|instanceProps|cssVars/;
+  const descRE = /slots|cssParts/;
   const noTypes = new Set(['slots', 'cssParts']);
 
   const categoryLinks = {
@@ -37,265 +31,150 @@
     return /(mdn|mozilla)/.test(link);
   }
 
-  function filterHasDocs(category) {
-    if (!category) return [];
-    return category.filter((prop) => prop.docs);
-  }
-
   function propToKey(category: string, propName: string) {
-    return `${category}_${propName.toLowerCase()}`;
+    return `${category.toLowerCase()}_${propName.toLowerCase()}`;
   }
 
   function jsxEventName(eventName: string) {
     return `on${kebabToPascalCase(eventName)}`;
   }
-
-  function getInfo(category: string, prop: any) {
-    return [
-      category === 'props' &&
-        prop.attr &&
-        !prop.readonly &&
-        $jsLib !== 'react' && ['Attribute', prop.attr],
-      prop.type && ['Type', prop.type],
-      category === 'events' && ['Detail', prop.detail],
-    ].filter(Boolean);
-  }
-
-  onMount(() => {
-    tick().then(onHashChange);
-  });
-
-  function onHashChange() {
-    if (!$route.matchedURL.hash) return;
-
-    const hash = $route.matchedURL.hash;
-    const key = hash.slice(1);
-
-    if (!key.includes('_')) return;
-
-    const category = key.split('_')[0];
-    const heading = document.getElementById(category);
-    const scroll = document.getElementById(`scroll-${category}`);
-    const container = document.getElementById(key);
-
-    if (heading) {
-      tick().then(() => {
-        // 128 padding for navbar.
-        window.scrollTo({
-          top: window.pageYOffset + heading.getBoundingClientRect().top - 128,
-        });
-      });
-    }
-
-    if (scroll && container) {
-      currentKey = key;
-      _isOpen[key] = true;
-      tick().then(() => {
-        scroll.scrollTo({ top: container.offsetTop });
-      });
-    }
-  }
-
-  $: if (env.browser && $route.matchedURL.hash) {
-    tick().then(onHashChange);
-  }
-
-  const shortcutKeys = {
-    props: 'x',
-    events: 'e',
-    slots: 'b',
-    cssVars: 'v',
-    cssParts: 'c',
-    instanceProps: 'i',
-    instanceMethods: 'v',
-  };
-
-  const fuzzy = new uFuzzy();
-  const properties = {};
-  const searchedProperties = {};
-  for (const category of categories) {
-    properties[category] = filterHasDocs(api[category]);
-    searchedProperties[category] = properties[category];
-  }
 </script>
 
 {#each categories as category (category)}
-  {@const showAll = _showAll[category]}
+  {@const id = `api_${category.toLowerCase()}`}
+  {@const categoryTitle = camelToTitleCase(category).replace('Css', 'CSS')}
   {@const hasTypes = !noTypes.has(category)}
   {@const hasReadonly = readonlyRE.test(category)}
-  {@const searchNames = properties[category].map((p) => p.name.toLowerCase().replace(/-/g, ''))}
-  {#if properties[category].length > 0}
-    {@const categoryTitle = camelToTitleCase(category).replace('Css', 'CSS')}
-    <div class="mt-12 mb-6 flex flex-col justify-center">
-      <div class="flex items-center">
-        <h2 id={category} class="m-0">
-          <a class="header-anchor" href={`#${category}`} aria-hidden="true">#</a>
-          {categoryTitle}
-        </h2>
-        {#if categoryLinks[category]}
-          <a
-            class="flex h-full transform items-center border-0 px-2.5 transition-transform ease-in hover:scale-110"
-            href={categoryLinks[category]}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span class="sr-only">Learn more about {category}</span>
-            <QuestionIcon width="24" height="24" />
-          </a>
-        {/if}
-      </div>
-      {#if searchNames.length > 15}
-        <div class="mt-4">
-          <SearchInput
-            placeholder={`Search ${categoryTitle}...`}
-            shortcutKey={shortcutKeys[category]}
-            on:input={(e) => {
-              const value = e.target.value;
-              const indicies = fuzzy.filter(searchNames, value.toLowerCase().replace(/\s/g, ''));
-              searchedProperties[category] = indicies.map((i) => properties[category][i]);
-            }}
-          />
-        </div>
+  {@const hasDescription = descRE.test(category)}
+  <div class="mt-12 mb-6 flex flex-col justify-center">
+    <div class="flex items-center">
+      <h3 {id} class="m-0">
+        <a class="header-anchor" href={`#${id}`} aria-hidden="true">#</a>
+        {categoryTitle}
+      </h3>
+      {#if categoryLinks[category]}
+        <a
+          class="flex h-full transform items-center border-0 px-2.5 transition-transform ease-in hover:scale-110"
+          href={categoryLinks[category]}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span class="sr-only">Learn more about {category}</span>
+          <QuestionIcon width="24" height="24" />
+        </a>
       {/if}
     </div>
+  </div>
+  <div class="relative api-table my-[2em] overflow-visible">
+    <table class="overflow-visible min-w-full">
+      <thead>
+        <tr>
+          <th>Name</th>
+          {#if hasDescription}
+            <th>Description</th>
+          {/if}
+          {#if hasTypes}
+            <th>Type</th>
+          {/if}
+        </tr>
+      </thead>
+      <tbody>
+        {#each api[category] || [] as prop (prop)}
+          {@const key = propToKey(category, prop.name)}
+          {@const hasLink = 'link' in prop}
+          {@const hasAttr =
+            category === 'props' && $jsLib !== 'react' && prop.attr && !prop.readonly}
+          {@const hasDetail = category === 'events' && prop.detail}
+          <tr class="even:bg-elevate">
+            <td>
+              <div class="flex items-center">
+                {#if (prop.docs || hasAttr || hasDetail) && !hasDescription}
+                  <Popover lockScrollbar={false} side="right">
+                    <svelte:fragment slot="button">
+                      <div class="sr-only">{`${prop.name} description`}</div>
+                      <InfoIcon
+                        class="text-black/60 dark:text-white/60 group-hover:text-black dark:group-hover:text-white"
+                        width={16}
+                        height={16}
+                      />
+                      <div class="sr-only">{`${prop.name} description`}</div>
+                    </svelte:fragment>
+                    <div class="flex flex-col">
+                      <h1 class="inline-block text-xl mb-0 font-semibold">
+                        {(category === 'cssVars' ? '--' : '') + prop.name}
+                      </h1>
 
-    <div
-      id={`scroll-${category}`}
-      class={clsx(
-        'border-border scrollbar scroll-contain relative flex flex-col overflow-auto border',
-        !showAll && 'max-h-[445px]',
-      )}
-    >
-      {#each searchedProperties[category] as prop (prop)}
-        {@const key = propToKey(category, prop.name)}
-        {@const isOpen = _isOpen[key]}
-        {@const hasLink = 'link' in prop}
+                      {#if prop.docs}
+                        <div class="text-sm whitespace-normal max-w-[500px] overflow-y-auto">
+                          {@html prop.docs}
+                        </div>
+                      {/if}
 
-        <div
-          id={key}
-          class={clsx(
-            'border-border flex flex-col',
-            isOpen && (!currentKey || currentKey == key)
-              ? 'border-2 border-soft'
-              : 'border-b last:border-0',
-          )}
-        >
-          <div class="not-prose w-ful relative">
-            <h3 class="text-inverse font-medium">
-              <button
-                id={key}
-                class={clsx(
-                  'h-full w-full py-1.5 px-2.5 text-left select-text hover:text-inverse',
-                  isOpen && (!currentKey || key === currentKey)
-                    ? 'text-inverse'
-                    : 'text-soft hover:bg-elevate',
-                )}
-                aria-controls={`accordion-${key}`}
-                aria-expanded={ariaBool(isOpen)}
-                on:click={() => {
-                  _isOpen[currentKey] = false;
-                  _isOpen[key] = !_isOpen[key];
-                  currentKey = key;
-                  window.history.pushState({}, '', `#${key}`);
-                }}
-              >
-                <code class="font-medium text-sm">
-                  {category === 'events' && $jsLib === 'react'
-                    ? jsxEventName(prop.name)
-                    : prop.name}
-                </code>
+                      {#if hasAttr}
+                        <div class="flex items-center mt-2.5">
+                          <span class="text-sm font-medium">Attribute:</span>
+                          <code class="inline-block text-xs ml-1 py-0">{prop.attr}</code>
+                        </div>
+                      {/if}
 
-                {#if hasReadonly && prop.readonly}
-                  <span
-                    class="bg-border ml-1.5 rounded-md py-0.5 px-1.5 font-mono text-xs"
-                    aria-hidden="true"
-                  >
-                    readonly
-                  </span>
+                      {#if category === 'props'}
+                        <div class="flex items-center mt-2.5">
+                          <span class="text-sm font-medium">Default:</span>
+                          <code class="inline-block text-xs ml-1 py-0">{prop.default}</code>
+                        </div>
+                      {/if}
+
+                      {#if hasDetail}
+                        <div class="flex items-center mt-2.5">
+                          <span class="text-sm font-medium">Detail:</span>
+                          <code class="inline-block text-xs ml-1 py-0">{prop.detail}</code>
+                        </div>
+                      {/if}
+
+                      {#if hasLink}
+                        <div class="flex px-2">
+                          <div class="flex-1" />
+                          <a class="text-sm" href={prop.link} target="_blank" rel="noreferrer">
+                            {isMDNLink(prop.link) ? 'MDN' : 'Reference'}
+                          </a>
+                        </div>
+                      {/if}
+                    </div>
+                  </Popover>
                 {/if}
-              </button>
-            </h3>
-            <ArrowDropDownIcon
-              class={clsx(
-                'absolute top-2 right-2 transform transition-transform duration-150 pointer-events-none',
-                isOpen && 'rotate-180',
-              )}
-              width="20"
-              height="20"
-              role="none"
-            />
-          </div>
-
-          <div
-            id={`accordion-${key}`}
-            aria-labelledby={key}
-            class={clsx(
-              !isOpen && 'hidden',
-              'prose dark:prose-invert relative p-4 pt-2 pl-2.5 pb-0',
-            )}
-          >
-            {#if hasTypes}
-              <div class="flex flex-col space-y-2 font-mono">
-                {#each getInfo(category, prop) as [title, code] (title)}
-                  <div>
-                    <span class="text-inverse underline text-sm leading-relaxed">{title}:</span>
-                    <code
-                      class="-ml-1 text-indigo-500 text-xs dark:text-indigo-300 leading-relaxed"
-                    >
-                      {code}
-                    </code>
-                  </div>
-                {/each}
+                <code
+                  class="text-xs font-normal cursor-pointer text-inverse dark:text-inverse -ml-1"
+                  on:pointerup={(e) => {
+                    router.go(`#${key}`, { replace: true });
+                  }}
+                  on:keydown={(e) => {
+                    isKeyboardClick(e) && router.go(`#${key}`, { replace: true });
+                  }}
+                >
+                  <h4 class="inline my-0 text-inherit -mr-1" id={key} style="font-size: inherit;">
+                    {category === 'events' && $jsLib === 'react'
+                      ? jsxEventName(prop.name)
+                      : (category === 'cssVars' ? '--' : '') + prop.name}
+                  </h4>
+                </code>
               </div>
+            </td>
+
+            {#if hasDescription}
+              <td class="w-full whitespace-normal">{@html prop.docs}</td>
             {/if}
 
-            {#if hasLink}
-              <a
-                class="absolute top-2 right-5 text-sm"
-                href={prop.link}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {isMDNLink(prop.link) ? 'MDN' : 'Reference'}
-              </a>
+            {#if hasTypes}
+              <td>
+                {#if hasReadonly && prop.readonly}
+                  <code>readonly</code>
+                {/if}
+                <code>{prop.type}</code>
+              </td>
             {/if}
-
-            <div class={clsx('pb-4 text-sm', hasTypes && 'mt-5')}>
-              {@html prop.docs}
-            </div>
-          </div>
-        </div>
-      {/each}
-    </div>
-
-    {#if filterHasDocs(api[category]).length > 3}
-      <div class="text-soft mt-4 flex items-center justify-end text-sm">
-        <button
-          class="hover:text-inverse rounded-sm py-1 px-2.5 font-medium"
-          aria-pressed={ariaBool(isAllOpen[category])}
-          on:click={() => {
-            isAllOpen[category] = !isAllOpen[category];
-            for (const prop of api[category]) {
-              const key = propToKey(category, prop.name);
-              _isOpen[key] = isAllOpen[category];
-            }
-          }}
-        >
-          {!isAllOpen[category] ? 'Open All' : 'Close All'}
-        </button>
-
-        {#if isAllOpen[category] || filterHasDocs(api[category]).length > 10}
-          <button
-            class="hover:text-inverse rounded-sm py-1 px-2.5 font-medium"
-            aria-pressed={ariaBool(showAll)}
-            on:click={() => {
-              _showAll[category] = !_showAll[category];
-            }}
-          >
-            {showAll ? 'Show Less' : 'Show All'}
-          </button>
-        {/if}
-      </div>
-    {/if}
-  {/if}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
 {/each}

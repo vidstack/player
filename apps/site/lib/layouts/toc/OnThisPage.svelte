@@ -12,7 +12,7 @@
 
   export let style = '';
 
-  const { fallback, config } = getOnThisPageContext();
+  const { override, config } = getOnThisPageContext();
   const index = useActiveHeaderLinks(config);
 
   let headings: (MarkdownHeading & { children: MarkdownHeading[] })[] = [];
@@ -21,7 +21,7 @@
     headings = [];
 
     let i = -1;
-    let currentHeadings = ($markdown?.headings ?? $fallback ?? []).filter(({ level }) => level > 1);
+    let currentHeadings = ($override ?? $markdown?.headings ?? []).filter(({ level }) => level > 1);
 
     for (const heading of currentHeadings) {
       if (heading.level === 3) {

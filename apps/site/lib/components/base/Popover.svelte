@@ -19,6 +19,7 @@
   export let open = false;
   export let overlay = false;
   export let lockScrollbar = true;
+  export let side: 'left' | 'right' = 'left';
 
   const dispatch = createEventDispatcher();
 
@@ -45,13 +46,13 @@
   }
 </script>
 
-<div class="not-prose relative inline-block text-left">
+<div class="relative inline-block text-left">
   <button
     id={popoverButtonId}
     type="button"
     class={clsx(
       'inline-flex w-full items-center flex-col justify-center rounded-md p-2 text-lg font-medium',
-      'transform-gpu transition-transform hover:scale-[1.025]',
+      'transform-gpu transition-transform hover:scale-[1.025] cursor-pointer group',
       open ? 'text-inverse' : 'text-soft hover:text-inverse',
     )}
     aria-controls={popoverId}
@@ -83,30 +84,29 @@
     <div
       id={popoverId}
       class={clsx(
-        'absolute -top-4 -right-0 z-50 min-w-[340px] origin-top-right p-5 pt-4',
+        'absolute top-0 z-50 min-w-[340px]',
+        side === 'right' ? 'left-2 origin-top-left' : 'right-2 origin-top-right',
         !open && 'invisible',
       )}
       tabindex="-1"
       role="dialog"
     >
       <div
-        class="bg-elevate border-border flex min-h-[60px] flex-col overflow-hidden rounded-md border"
+        class={clsx(
+          'bg-elevate border-border flex min-h-[60px] flex-col overflow-hidden rounded-md border px-2',
+        )}
       >
         <div class="z-20 flex items-center">
           <div class="flex-1" />
           <button
-            class={clsx(
-              'text-soft hover:text-inverse mt-[0.125rem] mr-[0.125rem] p-4',
-              !open && 'pointer-events-none',
-            )}
+            class={clsx('text-soft hover:text-inverse p-3 mt-1', !open && 'pointer-events-none')}
             on:pointerup={() => closeDialog()}
             on:keydown={(e) => wasEnterKeyPressed(e) && closeDialog(true)}
           >
-            <CloseIcon width="28" height="28" />
+            <CloseIcon width="24" height="24" />
             <span class="sr-only">Close</span>
           </button>
         </div>
-
         <div class="-mt-[2.5rem] px-4 pt-8 pb-6">
           <slot />
         </div>

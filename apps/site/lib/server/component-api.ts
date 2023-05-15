@@ -5,21 +5,28 @@ import {
   type MethodMeta,
   type PropMeta,
 } from '@maverick-js/compiler/analyze';
-import { encode } from 'html-entities';
+import MarkdownIt from 'markdown-it';
 import elements from 'vidstack/elements.json';
 
 import { getTagNameFromPath } from '$lib/stores/element';
 
-const findRE = /`(.*?)`/g;
-const replace = (_, c) => `<code>${encode(c)}</code>`;
+const parser = new MarkdownIt({ html: true }),
+  parsed = new Set<string>();
 
 export async function loadComponentAPI(pathname: string): Promise<ComponentApi> {
   let tagName = getTagNameFromPath(pathname);
+
   const component = elements.components.find((component) => component.tag.name === tagName)!;
 
   if (!component) return {};
 
-  walkComponentDocs(component, (docs) => docs.replace(findRE, replace));
+  if (!parsed.has(tagName)) {
+    walkComponentDocs(component, (docs) => {
+      return parser.render(docs.trim());
+    });
+
+    parsed.add(tagName);
+  }
 
   return {
     props: extractProps(component),
@@ -39,6 +46,7 @@ function extractProps(component: ComponentMeta) {
       attr: prop.attribute,
       name: prop.name,
       docs: prop.docs,
+      default: prop.default,
       readonly: prop.readonly,
       type: prop.type,
       link: findLink(prop),
