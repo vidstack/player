@@ -1,6 +1,6 @@
 import { effect, signal, type ReadSignalRecord, type StoreFactory } from 'maverick.js';
 import type { HostElement } from 'maverick.js/element';
-import { noop } from 'maverick.js/std';
+import { isArray, noop } from 'maverick.js/std';
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 
 export function useStore<Record extends {}>(
@@ -39,7 +39,8 @@ export function useStore<Record extends {}>(
           observing.add(prop);
         }
 
-        return $store[prop as keyof Record]();
+        const value = $store[prop as keyof Record]();
+        return isArray(value) ? [...value] : value;
       },
       // @ts-expect-error
       set: noop,
