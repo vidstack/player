@@ -14,22 +14,6 @@ function applyFocusVisiblePolyfill(scope) {
   var hadFocusVisibleRecently = false;
   var hadFocusVisibleRecentlyTimeout = null;
 
-  var inputTypesAllowlist = {
-    text: true,
-    search: true,
-    url: true,
-    tel: true,
-    email: true,
-    password: true,
-    number: true,
-    date: true,
-    month: true,
-    week: true,
-    time: true,
-    datetime: true,
-    'datetime-local': true,
-  };
-
   /**
    * Helper function for legacy browsers and iframes which sometimes focus
    * elements like document, body, and non-interactive SVG.

@@ -37,7 +37,7 @@
 }
 
 .DocSearch-Button {
-  @apply bg-elevate hover:bg-elevate flex h-auto w-full items-center rounded-md py-1.5 px-3;
+  @apply bg-elevate hover:bg-elevate flex h-auto w-full items-center rounded-md px-3 py-1.5;
   @apply m-0 transform-gpu text-[15px] transition-transform hover:scale-[1.025];
   border: 1.5px solid rgb(var(--color-border));
 }
@@ -107,6 +107,10 @@
   box-shadow: none;
 }
 
+.js-focus-visible .DocSearch-Input[data-focus-visible-added]:not([data-focus]) {
+  @apply ring-0;
+}
+
 .DocSearch-Hit {
   @apply p-2;
 }
@@ -132,7 +136,7 @@
 }
 
 .DocSearch-Hit-source {
-  @apply px-1 pt-3 pb-1 text-[1rem];
+  @apply px-1 pb-1 pt-3 text-[1rem];
 }
 
 .DocSearch-Hit-source {
@@ -182,7 +186,7 @@
 
 @media screen and (max-width: 750px) {
   .DocSearch-Modal {
-    @apply top-4 left-0 right-0 mx-auto max-h-[75vh] max-w-[90vw] !overflow-hidden;
+    @apply left-0 right-0 top-4 mx-auto max-h-[75vh] max-w-[90vw] !overflow-hidden;
     --docsearch-vh: 0.75vh !important;
   }
 }

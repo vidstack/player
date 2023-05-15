@@ -80,28 +80,37 @@
       </thead>
       <tbody>
         {#each api[category] || [] as prop (prop)}
-          {@const key = propToKey(category, prop.name)}
+          {@const name =
+            category === 'events' && $jsLib === 'react'
+              ? jsxEventName(prop.name)
+              : (category === 'cssVars' ? '--' : '') + prop.name}
+          {@const key = propToKey(category, name)}
           {@const hasLink = 'link' in prop}
           {@const hasAttr =
             category === 'props' && $jsLib !== 'react' && prop.attr && !prop.readonly}
           {@const hasDetail = category === 'events' && prop.detail}
+          {@const info = [
+            [hasTypes && 'Type', prop.type],
+            [hasAttr && 'Attribute', prop.attr],
+            [category === 'props' && 'Default', prop.default],
+            [hasDetail && 'Detail', prop.detail],
+          ].filter((i) => i[0])}
           <tr class="even:bg-elevate">
             <td>
               <div class="flex items-center">
                 {#if (prop.docs || hasAttr || hasDetail) && !hasDescription}
                   <Popover lockScrollbar={false} side="right">
                     <svelte:fragment slot="button">
-                      <div class="sr-only">{`${prop.name} description`}</div>
+                      <div class="sr-only">{`${name} info`}</div>
                       <InfoIcon
                         class="text-black/60 dark:text-white/60 group-hover:text-black dark:group-hover:text-white"
                         width={16}
                         height={16}
                       />
-                      <div class="sr-only">{`${prop.name} description`}</div>
                     </svelte:fragment>
                     <div class="flex flex-col">
                       <h1 class="inline-block text-xl mb-0 font-semibold">
-                        {(category === 'cssVars' ? '--' : '') + prop.name}
+                        {name}
                       </h1>
 
                       {#if prop.docs}
@@ -110,26 +119,12 @@
                         </div>
                       {/if}
 
-                      {#if hasAttr}
+                      {#each info as [title, value]}
                         <div class="flex items-center mt-2.5">
-                          <span class="text-sm font-medium">Attribute:</span>
-                          <code class="inline-block text-xs ml-1 py-0">{prop.attr}</code>
+                          <span class="text-sm font-medium">{title}:</span>
+                          <code class="inline-block text-xs ml-1 py-0">{value}</code>
                         </div>
-                      {/if}
-
-                      {#if category === 'props'}
-                        <div class="flex items-center mt-2.5">
-                          <span class="text-sm font-medium">Default:</span>
-                          <code class="inline-block text-xs ml-1 py-0">{prop.default}</code>
-                        </div>
-                      {/if}
-
-                      {#if hasDetail}
-                        <div class="flex items-center mt-2.5">
-                          <span class="text-sm font-medium">Detail:</span>
-                          <code class="inline-block text-xs ml-1 py-0">{prop.detail}</code>
-                        </div>
-                      {/if}
+                      {/each}
 
                       {#if hasLink}
                         <div class="flex px-2">
@@ -152,9 +147,7 @@
                   }}
                 >
                   <h4 class="inline my-0 text-inherit -mr-1" id={key} style="font-size: inherit;">
-                    {category === 'events' && $jsLib === 'react'
-                      ? jsxEventName(prop.name)
-                      : (category === 'cssVars' ? '--' : '') + prop.name}
+                    {name}
                   </h4>
                 </code>
               </div>
