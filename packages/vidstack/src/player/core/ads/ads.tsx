@@ -25,6 +25,9 @@ import type { ImaSdk } from './types';
 const toDOMEventType = (type: string) => type.replace(/_/g, '-'); // ad_break_ready => ad-break-ready
 
 export class AdsController extends ComponentController<PlayerAPI> {
+  
+  protected _defaultBottomMargin = 50; // px
+
   protected _libraryUrl: string = '//imasdk.googleapis.com/js/sdkloader/ima3.js';
   protected _sdk: typeof google.ima | null = null;
   protected _adContainerElement: HTMLElement | null = null;
@@ -71,6 +74,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
   // same with the already played timeranges
   protected _previousPlaybackPosition = signal(0);
   protected _previousPlayedTimeranges = signal<TimeRanges | null>(null);
+  protected _playingNonLinear = signal(false);
 
   protected _adEventHandlerMapping: AdEventHandlerMapping = {
     adBuffering: this._onAdBuffering,
@@ -82,6 +86,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
     loaded: this._onAdLoaded,
     adCanPlay: this._onAdCanPlay,
     click: this._onAdClick,
+    skip: this._onAdSkip,
+    linearChanged: this._onAdLinearChanged
   };
 
   protected _mediaEventHandlerMapping: EventHandlerMapping = {
@@ -103,8 +109,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
       'data-ads-playing': computed(() => this.$store.playing() && this.$store.adStarted()),
       'data-ads-can-play': this.$store.adCanPlay,
       'data-ads-started': this.$store.adStarted,
+      'data-non-linear': this._playingNonLinear
     });
-
     this._sdk = imaSdk;
     this._sdk.settings.setDisableCustomPlaybackForIOS10Plus(true);
     this._sdk.settings.setVpaidMode(this._sdk.ImaSdkSettings.VpaidMode.ENABLED);
@@ -309,7 +315,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
     if (this._adsManager) {
       this._adsManager.resize(
         this._media.player!.clientWidth,
-        this._media.player!.clientHeight,
+        this._media.player!.clientHeight - (this._playingNonLinear() ? this._defaultBottomMargin : 0 ),
         this._sdk!.ViewMode.NORMAL,
       );
     }
@@ -359,6 +365,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
       this._media.delegate._dispatch('pause', { trigger: adEvent });
       this._media.remote.play();
     }
+    console.log('Ad Loaded');
   }
 
   private _onAdStart(adEvent: google.ima.AdEvent) {
@@ -366,6 +373,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
 
     // non linear ads overlay the content and the content should keep playing
     if (ad && ad.isLinear()) {
+
+      this._playingNonLinear.set(false);
       this._previousPlaybackPosition.set(this.$store.currentTime());
       this._previousPlayedTimeranges.set(this.$store.played());
 
@@ -375,14 +384,18 @@ export class AdsController extends ComponentController<PlayerAPI> {
       });
       this._media.delegate._dispatch('play', { trigger: adEvent });
       this.$store.adStarted.set(true);
+    } else {
+      this._playingNonLinear.set(true);
     }
+
+    this._onResized(); // resize the ad container to leave a margin for the controlbar if needed
   }
 
   /**
    * This is called a linear ad is completed.
    */
   private _onAdComplete() {
-    this.$store.adStarted.set(false);
+    console.log('on ad complete');
     this._media.delegate._dispatch('duration-change', { detail: this.$store.seekableEnd() });
     this._media.delegate._dispatch('time-update', {
       detail: {
@@ -393,10 +406,28 @@ export class AdsController extends ComponentController<PlayerAPI> {
     this._media.delegate._dispatch('ad-ended');
   }
 
-  /**
-   * This is called whenever the ad progress is updated BUT only for linear ads.
-   */
+  
+  private _onAdSkip() {
+    // if the ad is skipped the complete callback is not called so we have to manually do it
+    this._onAdComplete();
+  }
+
+  private _onAdLinearChanged(event: google.ima.AdEvent) {
+    // this is called when the ad changes from linear to non linear or vice versa
+    console.log('on ad linear changed');
+    const ad = event.getAd()
+    if(ad && ad.isLinear()) {
+      this._playingNonLinear.set(false);
+    } else {
+      this._playingNonLinear.set(true);
+    }
+
+    this._onResized(); // resize the ad container to leave a margin for the controlbar if needed
+  }
+
+
   private _onAdProgress() {
+    // this is called whenever the ad progress is updated BUT only for linear ads.
     const { duration } = this.$store;
     const remainingTime = this._adsManager?.getRemainingTime() || 0;
     const currentTime = duration() - remainingTime;
@@ -409,8 +440,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
   }
 
   private _onAdClick() {
-  // the ad gets paused on click so we want to update our state accordingly
-  this._media.delegate._dispatch('pause');
+    // the ad gets paused on click so we want to update our state accordingly
+    this._media.delegate._dispatch('pause');
   }
 
 
@@ -420,6 +451,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
   }
 
   private _onAdEvent(adEvent: google.ima.AdEvent, mapping: keyof AdEvents) {
+    console.log('ad event', mapping, adEvent)
     this.dispatch(toDOMEventType(mapping) as keyof AdEvents, {
       detail: adEvent.getAd(),
       trigger: adEvent as unknown as Event,

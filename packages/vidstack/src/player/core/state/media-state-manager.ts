@@ -552,9 +552,10 @@ export class MediaStateManager extends ComponentController<PlayerAPI> {
   }
 
   ['ad-ended'](event: ME.AdEndedEvent) {
-    const { paused, playing, seeking } = this._store;
+    const { paused, playing, seeking, adStarted } = this._store;
     paused.set(true);
     playing.set(false);
     seeking.set(false);
+    adStarted.set(false);
   }
 }

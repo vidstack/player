@@ -315,4 +315,10 @@
   width: 100%;
   height: 100%;
   z-index: 0;
+  pointer-events: none;
+}
+
+:where(media-ads[data-ads-started="true"]),
+:where(media-ads[data-non-linear="true"]) {
+  pointer-events: auto;
 }
