@@ -1,6 +1,7 @@
-import { hasProvidedContext, useContext } from 'maverick.js';
+import { getScope, hasProvidedContext, scoped, useContext } from 'maverick.js';
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
+import { scopedRaf } from '../../../utils/dom';
 import { tooltipContext } from './context';
 
 declare global {
@@ -33,8 +34,10 @@ export class Tooltip extends Component<TooltipAPI> {
 
   protected override onAttach(el: HTMLElement): void {
     if (hasProvidedContext(tooltipContext)) {
-      const tooltip = useContext(tooltipContext);
-      tooltip._attachTooltip(el);
+      scopedRaf(() => {
+        const tooltip = useContext(tooltipContext);
+        tooltip._attachTooltip(el);
+      });
     }
 
     this.setAttributes({

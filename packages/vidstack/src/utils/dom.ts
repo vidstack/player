@@ -1,4 +1,4 @@
-import { effect } from 'maverick.js';
+import { effect, getScope, scoped } from 'maverick.js';
 import { isKeyboardClick, listenEvent, setAttribute } from 'maverick.js/std';
 
 export function setAttributeIfEmpty(target: Element, name: string, value: string) {
@@ -42,4 +42,10 @@ export function onPress(
   listenEvent(target, 'keydown', (event) => {
     if (isKeyboardClick(event)) handler(event);
   });
+}
+
+export function scopedRaf(callback: () => void) {
+  if (__SERVER__) return callback();
+  const scope = getScope();
+  requestAnimationFrame(() => scoped(callback, scope));
 }

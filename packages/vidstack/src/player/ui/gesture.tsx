@@ -2,6 +2,7 @@ import { effect, getScope, peek, scoped } from 'maverick.js';
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 import { isMouseEvent, isPointerEvent, isTouchEvent, listenEvent } from 'maverick.js/std';
 
+import { scopedRaf } from '../../utils/dom';
 import { useMedia, type MediaContext } from '../core/api/context';
 
 /**
@@ -50,13 +51,9 @@ export class Gesture extends Component<GestureAPI> {
 
   protected override onConnect() {
     this._media = useMedia();
-
-    let scope = getScope();
-    requestAnimationFrame(() => {
+    scopedRaf(() => {
       this._outlet = this._media.player!.querySelector('media-outlet');
-      scoped(() => {
-        effect(this._attachListener.bind(this));
-      }, scope);
+      effect(this._attachListener.bind(this));
     });
   }
 
