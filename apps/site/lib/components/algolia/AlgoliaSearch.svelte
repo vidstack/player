@@ -33,6 +33,10 @@
             item._snippetResult.hierarchy.lvl1.value = `${item.hierarchy.lvl1} > ${item.hierarchy.lvl2}`;
           }
 
+          if (item.type === 'lvl4' && item.hierarchy.lvl3) {
+            item._snippetResult.hierarchy.lvl1.value = `${item.hierarchy.lvl1} > ${item.hierarchy.lvl2} > ${item.hierarchy.lvl3}`;
+          }
+
           return {
             ...item,
             url: `${url.pathname}${url.hash || ''}`,

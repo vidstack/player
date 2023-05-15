@@ -28,13 +28,18 @@ export async function loadComponentAPI(pathname: string): Promise<ComponentApi> 
     parsed.add(tagName);
   }
 
+  const props = extractProps(component);
+
   return {
-    props: extractProps(component),
+    props,
     events: extractEvents(component),
     slots: extractSlots(component),
     cssVars: extractCssVars(component),
     cssParts: extractCssParts(component),
-    instanceProps: extractInstanceProps(component),
+    instanceProps: extractInstanceProps(
+      component,
+      new Set(props ? props.filter((prop) => prop.attr).map((prop) => prop.name) : []),
+    ),
     instanceMethods: extractInstanceMethods(component),
   };
 }
@@ -88,10 +93,10 @@ function extractCssParts(component: ComponentMeta) {
   }));
 }
 
-function extractInstanceProps(component: ComponentMeta) {
+function extractInstanceProps(component: ComponentMeta, filter: Set<string>) {
   if (!component.members) return;
   return component.members.props
-    ?.filter((prop) => !prop.internal)
+    ?.filter((prop) => !prop.internal && !filter.has(prop.name))
     .map((prop) => ({
       name: prop.name,
       docs: prop.docs,
