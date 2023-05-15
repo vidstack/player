@@ -120,7 +120,6 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
   // ~~ ads props ~~
   adsUrl: '',
   adsLoaded: false,
-  adCanPlay: false,
   adStarted: false,
   adCuePoints: [],
   // ~~ internal props ~~
@@ -644,11 +643,6 @@ export interface MediaState {
    * @defaultValue false
    */
   adsLoaded: boolean;
-  /**
-   * Wether the ad is ready to play without buffering.
-   * @defaultValue false
-   */
-  adCanPlay: boolean;
   /**
    * Whether an ad is currently playing.
    * @defaultValue false

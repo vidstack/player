@@ -131,8 +131,9 @@ export class TimeSlider extends Slider<TimeSliderAPI> {
       { chaptersClass } = this.$props;
     return (
       <>
-
-        {this._media.$store.adStarted() ? null : this._chaptersRenderer.render(this._track()?.cues, chaptersClass)}
+        {this._media.$store.adStarted()
+          ? null
+          : this._chaptersRenderer.render(this._track()?.cues, chaptersClass)}
         {tracks}
       </>
     );

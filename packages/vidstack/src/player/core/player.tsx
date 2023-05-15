@@ -11,10 +11,10 @@ import {
 import {
   camelToKebabCase,
   isNull,
+  isString,
   listenEvent,
   setAttribute,
   uppercaseFirstChar,
-  isString
 } from 'maverick.js/std';
 
 import { canFullscreen } from '../../foundation/fullscreen/controller';
@@ -213,12 +213,11 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     this.$store.muted.set(this.$props.muted() || this.$props.volume() === 0);
   }
 
-
   private async _startLoadingAds(): Promise<void> {
     this.ads = new (await import('./ads/ads')).AdsController(this.instance, this._media);
     this._media.ads.set(this.ads);
   }
-  
+
   private _watchTitle() {
     const { title, live, viewType } = this.$store,
       isLive = live(),

@@ -25,7 +25,6 @@ import type { ImaSdk } from './types';
 const toDOMEventType = (type: string) => type.replace(/_/g, '-'); // ad_break_ready => ad-break-ready
 
 export class AdsController extends ComponentController<PlayerAPI> {
-  
   protected _defaultBottomMargin = 50; // px
 
   protected _libraryUrl: string = '//imasdk.googleapis.com/js/sdkloader/ima3.js';
@@ -74,6 +73,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
   // same with the already played timeranges
   protected _previousPlaybackPosition = signal(0);
   protected _previousPlayedTimeranges = signal<TimeRanges | null>(null);
+
+  // non linear ads behave differently so we need to keep track of this
   protected _playingNonLinear = signal(false);
 
   protected _adEventHandlerMapping: AdEventHandlerMapping = {
@@ -87,7 +88,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
     adCanPlay: this._onAdCanPlay,
     click: this._onAdClick,
     skip: this._onAdSkip,
-    linearChanged: this._onAdLinearChanged
+    linearChanged: this._onAdLinearChanged,
   };
 
   protected _mediaEventHandlerMapping: EventHandlerMapping = {
@@ -107,9 +108,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
     this._setAttributesOnAdContainer({
       'data-ads-paused': computed(() => !this.$store.playing() && this.$store.adStarted()),
       'data-ads-playing': computed(() => this.$store.playing() && this.$store.adStarted()),
-      'data-ads-can-play': this.$store.adCanPlay,
       'data-ads-started': this.$store.adStarted,
-      'data-non-linear': this._playingNonLinear
+      'data-non-linear': this._playingNonLinear,
     });
     this._sdk = imaSdk;
     this._sdk.settings.setDisableCustomPlaybackForIOS10Plus(true);
@@ -137,7 +137,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
         this._adsLoader,
         this._sdk!.AdErrorEvent.Type.AD_ERROR,
         (adErrorEvent: google.ima.AdErrorEvent) => {
-          this._onAdsLoaderError(adErrorEvent);
+          this._onAdsLoaderError();
           reject();
         },
       );
@@ -172,6 +172,13 @@ export class AdsController extends ComponentController<PlayerAPI> {
     this._resizeObserver?.disconnect();
     this._adsManager?.destroy();
     this._adsLoader?.destroy();
+  }
+
+  protected _getEnabled() {
+    return (
+      (this._media.$provider()?.type === 'video' || this._media.$provider()?.type === 'hls') &&
+      isString(this.$props.adsUrl())
+    );
   }
 
   async play() {
@@ -280,13 +287,6 @@ export class AdsController extends ComponentController<PlayerAPI> {
     );
   }
 
-  protected _getEnabled() {
-    return (
-      (this._media.$provider()?.type === 'video' || this._media.$provider()?.type === 'hls') &&
-      isString(this.$props.adsUrl())
-    );
-  }
-
   private _setAttributesOnAdContainer(attributes: ElementAttributesRecord) {
     if (!this._adContainerElement) return;
 
@@ -307,7 +307,7 @@ export class AdsController extends ComponentController<PlayerAPI> {
   }
 
   private _onResized() {
-    /* TODO 
+    /* TODO
      * for non linear ads we should adjust the size of the ad container
      * so that it will be visible on the screen and not overlap with the video controlbar ui
      */
@@ -315,7 +315,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
     if (this._adsManager) {
       this._adsManager.resize(
         this._media.player!.clientWidth,
-        this._media.player!.clientHeight - (this._playingNonLinear() ? this._defaultBottomMargin : 0 ),
+        this._media.player!.clientHeight -
+          (this._playingNonLinear() ? this._defaultBottomMargin : 0),
         this._sdk!.ViewMode.NORMAL,
       );
     }
@@ -327,13 +328,13 @@ export class AdsController extends ComponentController<PlayerAPI> {
     }
   }
 
-  private _onAdsLoaderError(adErrorEvent: google.ima.AdErrorEvent) {
+  private _onAdsLoaderError() {
     if (this._adsLoader) {
       this._adsLoader.destroy();
     }
   }
 
-  private _onAdsManagerAdError(adErrorEvent: google.ima.AdErrorEvent) {
+  private _onAdsManagerAdError() {
     if (this._adsManager) {
       this._adsManager.destroy();
     }
@@ -373,7 +374,6 @@ export class AdsController extends ComponentController<PlayerAPI> {
 
     // non linear ads overlay the content and the content should keep playing
     if (ad && ad.isLinear()) {
-
       this._playingNonLinear.set(false);
       this._previousPlaybackPosition.set(this.$store.currentTime());
       this._previousPlayedTimeranges.set(this.$store.played());
@@ -406,7 +406,6 @@ export class AdsController extends ComponentController<PlayerAPI> {
     this._media.delegate._dispatch('ad-ended');
   }
 
-  
   private _onAdSkip() {
     // if the ad is skipped the complete callback is not called so we have to manually do it
     this._onAdComplete();
@@ -415,8 +414,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
   private _onAdLinearChanged(event: google.ima.AdEvent) {
     // this is called when the ad changes from linear to non linear or vice versa
     console.log('on ad linear changed');
-    const ad = event.getAd()
-    if(ad && ad.isLinear()) {
+    const ad = event.getAd();
+    if (ad && ad.isLinear()) {
       this._playingNonLinear.set(false);
     } else {
       this._playingNonLinear.set(true);
@@ -424,7 +423,6 @@ export class AdsController extends ComponentController<PlayerAPI> {
 
     this._onResized(); // resize the ad container to leave a margin for the controlbar if needed
   }
-
 
   private _onAdProgress() {
     // this is called whenever the ad progress is updated BUT only for linear ads.
@@ -444,14 +442,8 @@ export class AdsController extends ComponentController<PlayerAPI> {
     this._media.delegate._dispatch('pause');
   }
 
-
-  // do we need this?
-  private _onAdCanPlay() {
-    this.$store.adCanPlay.set(true);
-  }
-
   private _onAdEvent(adEvent: google.ima.AdEvent, mapping: keyof AdEvents) {
-    console.log('ad event', mapping, adEvent)
+    console.log('ad event', mapping, adEvent);
     this.dispatch(toDOMEventType(mapping) as keyof AdEvents, {
       detail: adEvent.getAd(),
       trigger: adEvent as unknown as Event,
