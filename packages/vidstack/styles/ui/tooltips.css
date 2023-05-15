@@ -1,22 +1,24 @@
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Tooltips * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Tooltips
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where([data-media-button] [slot*='tooltip']:not([slot*='-tooltip'])) {
-  --tooltip-spacing: var(--media-tooltip-spacing, 8px);
-
+:where(media-tooltip) {
   background-color: var(--media-tooltip-bg-color, black);
   border-radius: var(--media-tooltip-border-radius, 2px);
-  bottom: 80%;
+  box-sizing: border-box;
   color: var(--media-tooltip-color, hsl(0, 0%, 80%));
-  font-size: var(--media-tooltip-font-size, 13px);
+  display: block;
   font-family: var(--media-font-family, sans-serif);
+  font-size: var(--media-tooltip-font-size, 13px);
   font-weight: var(--media-tooltip-font-weight, 500);
   left: 50%;
+  bottom: 80%;
+  margin-left: unset;
+  margin-bottom: var(--media-tooltip-y-offset, 8px);
   opacity: 0;
-  margin-bottom: var(--tooltip-spacing);
-  padding: 2.5px 8px;
+  padding: var(--media-tooltip-padding, 2.5px 8px);
   pointer-events: none;
   position: absolute;
   transform-origin: 50% 100%;
@@ -25,43 +27,32 @@
   white-space: nowrap;
 }
 
-:where([data-media-button][data-hocus]) :where([slot*='tooltip']:not([slot*='-tooltip'])) {
-  opacity: 1;
-  transform: translate(-50%) scale(1);
-  transition: transform 0.2s ease-in 0.1s, opacity 0.2s ease-in 0.1s;
-}
-
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Top Left
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Left
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
  */
 
-:where([data-media-button] [slot='tooltip-top-left']) {
-  left: 4px;
+:where(media-tooltip[position~='left']) {
+  left: 0;
   transform: translateY(12px) scale(0.8);
   transform-origin: 0 100%;
-}
-
-:where([data-media-button][data-hocus]) :where([slot='tooltip-top-left']) {
-  transform: translate(0) scale(1);
+  margin-left: var(--media-tooltip-x-offset, 8px);
 }
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Top Right
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Right
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
  */
 
-:where([data-media-button] [slot='tooltip-top-right']) {
+:where(media-tooltip[position~='right']) {
   left: auto;
-  right: 4px;
+  right: 0;
+  margin-left: unset;
+  margin-right: var(--media-tooltip-x-offset, 8px);
   transform: translateY(12px) scale(0.8);
   transform-origin: 100% 100%;
-}
-
-:where([data-media-button][data-hocus]) :where([slot='tooltip-top-right']) {
-  transform: translate(0) scale(1);
 }
 
 /*
@@ -70,75 +61,45 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
  */
 
-:where([data-media-button] [slot='tooltip-bottom']) {
+:where(media-tooltip[position~='bottom']) {
   top: 80%;
   bottom: unset;
-  margin-top: var(--tooltip-spacing);
-  transform: translate(-50%, -12px) scale(0.8);
+  margin-top: var(--media-tooltip-y-offset, 8px);
+  margin-bottom: unset;
+  transform: translate(-50%, -12px) scale(1);
 }
 
-:where([data-media-button][data-hocus]) :where([slot='tooltip-bottom']) {
-  transform: translate(-50%) scale(1);
+:where(media-tooltip[position='bottom left'], media-tooltip[position='bottom right']) {
+  transform: translateY(-12px) scale(0.8);
 }
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Bottom Left
+ * Display
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
  */
 
-:where([data-media-button] [slot='tooltip-bottom-left']) {
-  top: 80%;
-  left: 4px;
-  bottom: unset;
-  margin-top: var(--tooltip-spacing);
-  transform: translateY(-12px) scale(0.8);
-  transform-origin: 0 100%;
-}
-
-:where([data-media-button][data-hocus]) :where([slot='tooltip-bottom-left']) {
-  transform: translate(0) scale(1);
-}
-
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Bottom Right
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
- */
-
-:where([data-media-button] [slot='tooltip-bottom-right']) {
-  top: 80%;
-  left: auto;
-  right: 4px;
-  bottom: unset;
-  margin-top: var(--tooltip-spacing);
-  transform: translateY(-12px) scale(0.8);
-  transform-origin: 100% 100%;
-}
-
-:where([data-media-button][data-hocus]) :where([slot='tooltip-bottom-right']) {
-  transform: translate(0) scale(1);
-}
-
-:where([data-media-button] [slot*='-tooltip']) {
+:where(media-menu [data-media-menu-button][role='button'][data-pressed] media-tooltip) {
+  opacity: 0;
   display: none;
 }
 
-:where(
-    media-toggle-button[data-pressed] [slot='on-tooltip'],
-    media-toggle-button:not([data-pressed]) [slot='off-tooltip'],
-    media-play-button[data-paused] [slot='play-tooltip'],
-    media-play-button:not([data-paused]) [slot='pause-tooltip'],
-    media-mute-button[data-muted] [slot='unmute-tooltip'],
-    media-mute-button:not([data-muted]) [slot='mute-tooltip'],
-    media-pip-button:not([data-pip]) [slot='enter-tooltip'],
-    media-pip-button[data-pip] [slot='exit-tooltip'],
-    media-caption-button:not([data-pressed]) [slot='on-tooltip'],
-    media-caption-button[data-pressed] [slot='off-tooltip'],
-    media-fullscreen-button:not([data-fullscreen]) [slot='enter-tooltip'],
-    media-fullscreen-button[data-fullscreen] [slot='exit-tooltip'],
-    media-seek-button:not([seconds*='-']) [slot='forward-tooltip'],
-    media-seek-button[seconds*='-'] [slot='backward-tooltip']
-  ) {
-  display: inline;
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Hover / Focus
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~k
+ */
+
+:where([data-media-button][data-hocus] media-tooltip) {
+  opacity: 1;
+  transform: translate(-50%) scale(1);
+  transition: transform 0.2s ease-in 0.1s, opacity 0.2s ease-in 0.1s;
+}
+
+:where([data-media-button][data-hocus] media-tooltip[position~='left']) {
+  transform: translate(0) scale(1);
+}
+
+:where([data-media-button][data-hocus] media-tooltip[position~='right']) {
+  transform: translate(0) scale(1);
 }

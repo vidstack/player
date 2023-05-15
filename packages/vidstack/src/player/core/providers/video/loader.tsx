@@ -47,6 +47,7 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
           crossorigin={$store.crossorigin()}
           playsinline={$store.playsinline()}
           preload="none"
+          aria-hidden="true"
         ></video>
       );
     }
@@ -62,6 +63,7 @@ export class VideoProviderLoader implements MediaProviderLoader<VideoProvider> {
         crossorigin={$store.crossorigin()}
         poster={$poster()}
         preload="none"
+        aria-hidden="true"
         $ref={(el) => void (this._video = el)}
       ></video>
     );

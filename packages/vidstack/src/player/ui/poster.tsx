@@ -1,11 +1,12 @@
 import { computed, effect, signal, type ReadSignal } from 'maverick.js';
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
+import { $ariaBool } from '../../utils/aria';
 import { preconnect } from '../../utils/network';
 import { useMedia, type MediaContext } from '../core/api/context';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-poster': MediaPosterElement;
   }
 }
@@ -17,7 +18,7 @@ declare global {
  * @docs {@link https://www.vidstack.io/docs/player/components/layout/poster}
  * @example
  * ```html
- * <media-player>
+ * <media-player poster="...">
  *   <media-poster alt="Large alien ship hovering over New York."></media-poster>
  * </media-player>
  * ```
@@ -40,7 +41,7 @@ export class Poster extends Component<PosterAPI> {
     this._imgAlt = this._getImgAlt.bind(this);
     this.setAttributes({
       'data-loading': this._imgLoading,
-      'data-hidden': this._imgError,
+      'aria-hidden': $ariaBool(this._imgError),
     });
   }
 

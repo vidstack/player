@@ -1,7 +1,3 @@
-<script>
-  import '../../[4]buffering-indicator/.snippets/styling.css';
-</script>
-
 <media-player
   class="w-full max-w-xs relative"
   volume={0.1}
@@ -12,27 +8,7 @@
   stream-type="ll-live"
 >
   <media-outlet>
-    <div class="media-buffering-container">
-      <svg class="media-buffering-icon" fill="none" viewBox="0 0 120 120" aria-hidden="true">
-        <circle
-          class="media-buffering-track"
-          cx="60"
-          cy="60"
-          r="54"
-          stroke="currentColor"
-          stroke-width="8"
-        />
-        <circle
-          class="media-buffering-track-fill"
-          cx="60"
-          cy="60"
-          r="54"
-          stroke="currentColor"
-          stroke-width="10"
-          pathLength="100"
-        />
-      </svg>
-    </div>
+    <media-buffering-indicator />
   </media-outlet>
   <div class="w-full text-center flex">
     <media-play-button class="live-play-button" />

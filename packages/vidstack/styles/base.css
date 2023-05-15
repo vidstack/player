@@ -1,20 +1,28 @@
 /* hide default UI - only shown if optional UI css files are loaded. */
-:where([data-media-button] > shadow-root, [data-media-slider] > shadow-root) {
+:where(
+    [data-media-button] > shadow-root,
+    [data-media-slider]:not([data-styled]) > shadow-root,
+    [data-media-menu-button] > shadow-root
+  ) {
   display: none;
+}
+
+:where([data-media-slider][data-styled] > shadow-root) {
+  display: contents;
 }
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Media Base
+ * Media
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
 :where(media-player) {
-  --media-focus-ring: 0 0 0 4px rgb(78 156 246);
+  --media-focus-ring: 0 0 0 3px rgb(78 156 246);
   width: 100%;
   display: inline-block;
   position: relative;
-  contain: layout;
+  contain: style;
   box-sizing: border-box;
 }
 
@@ -26,6 +34,10 @@
   display: block;
   box-sizing: border-box;
   background-color: var(--media-outlet-bg-color, black);
+}
+
+:where(media-player[data-fullscreen] media-outlet) {
+  height: 100%;
 }
 
 :where(media-player[data-view-type='audio'] media-outlet) {
@@ -42,7 +54,7 @@
   height: auto;
 }
 
-:where(media-player[aspect-ratio] media-outlet) {
+:where(media-player[aspect-ratio]:not([data-fullscreen]) media-outlet) {
   position: relative;
   width: 100%;
   height: 0;
@@ -62,11 +74,11 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Display Base
+ * Display
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(media-icon) {
+:where(media-icon, svg[data-media-icon]) {
   width: 32px;
   height: 32px;
 }
@@ -79,14 +91,17 @@
 :where(media-time) {
   display: inline-block;
   contain: content;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: var(--media-time-font-size, 18px);
+  font-weight: var(--media-time-font-weight, 500);
   font-family: var(--media-font-family, sans-serif);
+  color: var(--media-time-color, inherit);
+  background-color: var(--media-time-bg);
+  border-radius: var(--media-time-border-radius);
 }
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Buttons Base
+ * Buttons
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -104,21 +119,25 @@
   outline: none;
 }
 
-:where([data-media-button][data-focus] *[slot]:not([slot*='tooltip'])) {
+:where([data-media-button][data-focus] [slot]) {
   box-shadow: var(--media-focus-ring);
+}
+
+:where([data-media-button][data-focus] media-tooltip [slot]) {
+  box-shadow: unset;
 }
 
 :where(media-live-indicator:not([data-live])) {
   cursor: unset;
 }
 
-:where(media-fullscreen-button[data-hidden], media-seek-button[data-hidden]) {
+:where([data-media-button][aria-hidden='true']) {
   display: none;
 }
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Sliders Base
+ * Sliders
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -152,13 +171,18 @@
   );
 }
 
-:where(media-time-slider [part='chapters']) {
-  display: none;
+:where(media-time-slider[data-chapters] > :not(shadow-root, [slot])),
+:where(media-time-slider[data-chapters] > shadow-root > [part~='track']) {
+  display: none !important;
+}
+
+:where(media-volume-slider [part~='track-progress']) {
+  display: none !important;
 }
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Slider Value Text Base
+ * Slider Value Text
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -171,41 +195,43 @@
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Slider Thumbnail Base
+ * Slider Thumbnail
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
 :where(media-slider-thumbnail) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   contain: content;
   box-sizing: border-box;
-  min-width: 120px;
-  min-height: 80px;
-  max-width: 180px;
-  max-height: 160px;
-  background-color: black;
 }
 
-:where(media-slider-thumbnail [part='container']) {
+:where(media-thumbnail) {
   display: block;
   width: var(--thumbnail-width);
   height: var(--thumbnail-height);
+  background-color: var(--media-thumbnail-bg, black);
+  contain: content;
   overflow: hidden;
+  box-sizing: border-box;
+  min-width: var(--media-thumbnail-min-width, 120px);
+  min-height: var(--media-thumbnail-min-height, 80px);
+  max-width: var(--media-thumbnail-max-width, 180px);
+  max-height: var(--media-thumbnail-max-height, 160px);
 }
 
-:where(media-slider-thumbnail [part='img']) {
+:where(media-thumbnail [part='img']) {
+  min-width: unset !important;
   max-width: unset !important;
 }
 
-:where(media-slider-thumbnail[data-hidden]) {
+:where(media-thumbnail[aria-hidden='true']),
+:where(media-slider-thumbnail[aria-hidden='true']) {
   display: none;
 }
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Slider Video Base
+ * Slider Video
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -228,14 +254,17 @@
 }
 
 /* Hide video if it fails to load. */
-:where(media-slider-video[data-hidden], media-slider-video[data-hidden] [part='video']) {
+:where(
+    media-slider-video[aria-hidden='true'],
+    media-slider-video[aria-hidden='true'] [part='video']
+  ) {
   display: none;
   width: 0px;
 }
 
 /*
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Poster Base
+ * Poster
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
@@ -265,7 +294,7 @@
   box-sizing: border-box;
 }
 
-:where(media-poster[data-hidden]) {
+:where(media-poster[aria-hidden='true']) {
   display: none;
 }
 
@@ -280,7 +309,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(media-captions[data-hidden]) {
+:where(media-captions[aria-hidden='true']) {
   opacity: 0;
   visibility: hidden;
 }
@@ -307,7 +336,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-:where(media-ads) {
+ :where(media-ads) {
   position: absolute;
   display: inline-block;
   top: 0;
@@ -321,4 +350,32 @@
 :where(media-ads[data-ads-started="true"]),
 :where(media-ads[data-non-linear="true"]) {
   pointer-events: auto;
+}
+
+/*
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Menus
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+:where(media-menu > [data-media-menu-items]:focus) {
+  outline: none;
+}
+
+:where(media-menu) :where([role='menuitem']:focus, [role='menuitemradio']:focus) {
+  outline: none;
+}
+
+:where(media-menu)
+  :where(
+    [role='menuitem']:focus-visible,
+    [role='menuitem'][data-focus],
+    [role='menuitemradio']:focus-visible,
+    [role='menuitemradio'][data-focus]
+  ),
+:where(media-menu > [data-media-menu-button][role='button'][data-focus] [data-media-icon]),
+:where(media-menu > [data-media-menu-button][role='button'][data-focus] svg),
+:where(media-radio[data-focus]) {
+  outline: none;
+  box-shadow: var(--media-focus-ring);
 }

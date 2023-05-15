@@ -11,21 +11,27 @@
   $: apiHref = !path.includes('/api') ? path + '/api' : path;
 
   /* remove API Tab for these elements */
-  const elements = new Set([
-    'media-buffering-indicator',
-    'media-controls',
-    'media-live-indicator',
-    'media-pip-button',
-    'media-captions-button',
-    'media-captions',
-  ]);
+  const elements = new Set(
+    [
+      'buffering-indicator',
+      'controls',
+      'live-indicator',
+      'pip-button',
+      'captions-button',
+      'captions',
+      'audio-menu',
+      'captions-menu',
+      'quality-menu',
+      'playback-rate-menu',
+    ].map((el) => `media-${el}`),
+  );
 
   $: hideAPI = elements.has($elementTagName);
 </script>
 
-<TabbedLinks>
-  <TabbedLink title="Docs" href={docsHref} />
-  {#if !hideAPI}
+{#if !hideAPI}
+  <TabbedLinks>
+    <TabbedLink title="Docs" href={docsHref} />
     <TabbedLink title="API" href={apiHref} />
-  {/if}
-</TabbedLinks>
+  </TabbedLinks>
+{/if}

@@ -52,6 +52,32 @@ media-toggle-button[data-focus] {
 }
 ```
 
+### CSS Variables
+
+The following snippet contains a complete list of CSS variables and their default values. Any
+of the variables can be set to adjust the default button and tooltip styles:
+
+```css {% copy=true %}
+media-player {
+  --media-button-color: #f5f5f5;
+  --media-button-border-radius: 0;
+  --media-button-size: 48px;
+  --media-button-hover-transform: scale(1.1);
+
+  --media-button-icon-size: 66.66%;
+  --media-button-icon-border-radius: 2px;
+
+  --media-tooltip-font-size: 13px;
+  --media-tooltip-font-weight: 500;
+  --media-tooltip-color: hsl(0, 0%, 80%);
+  --media-tooltip-bg-color: black;
+  --media-tooltip-padding: 2.5px 8px;
+  --media-tooltip-border-radius: 2px;
+  --media-tooltip-x-offset: 8px;
+  --media-tooltip-y-offset: 8px;
+}
+```
+
 ## Tailwind
 
 The following is a headless example using Tailwind:

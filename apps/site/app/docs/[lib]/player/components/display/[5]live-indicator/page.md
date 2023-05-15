@@ -59,6 +59,28 @@ media-live-indicator[data-focus] {
 }
 ```
 
+### CSS Variables
+
+The following snippet contains a complete list of CSS variables and their default values. Any
+of the variables can be set to adjust the default live indicator styles:
+
+```css {% copy=true %}
+media-player {
+  --media-live-indicator-width: 48px;
+  --media-live-indicator-height: 48px;
+  --media-live-indicator-bg: #8a8a8a;
+  --media-live-indicator-border-radius: 2px;
+  --media-live-indicator-color: #161616;
+  --media-live-indicator-font-size: 12px;
+  --media-live-indicator-font-weight: 600;
+  --media-live-indicator-letter-spacing: 1.5px;
+  --media-live-indicator-padding: 1px 4px;
+
+  --media-live-indicator-edge-bg: #dc2626;
+  --media-live-indicator-edge-color: #f5f5f5;
+}
+```
+
 ## Tailwind
 
 The following is a headless example using Tailwind:

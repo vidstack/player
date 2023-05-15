@@ -11,7 +11,7 @@ toggle between `showing` and `disabled`.
 {% code_preview name="usage" copyHighlight=true highlight="html:3|react:6" /%}
 
 {% callout type="danger" %}
-The `data-hidden` attribute will be present on this element in the event no text tracks with a
+The `aria-hidden='true'` attribute will be present on this element in the event no text tracks with a
 kind of `captions` or `subtitles` exists. The button's `display` property will be set to `none`,
 so it'll be removed from the layout; therefore, you should account for the button not being
 displayed in your design.
@@ -60,13 +60,13 @@ media-caption-button:not([data-pressed]) {
 }
 
 /* Apply styles when captions is not supported. */
-media-caption-button[data-hidden] {
+media-caption-button[aria-hidden='true'] {
 }
 
 /* Style default icons. */
-media-caption-button [slot='on'] {
+media-caption-button svg[slot='on'] {
 }
-media-caption-button [slot='off'] {
+media-caption-button svg[slot='off'] {
 }
 ```
 
@@ -83,6 +83,11 @@ media-caption-button[data-focus] {
 }
 ```
 
+### CSS Variables
+
+See the [toggle button CSS variables](/docs/player/components/buttons/toggle-button#css-variables)
+for simple customization of the default button and tooltip styles.
+
 ## Tailwind
 
 The following is a headless example using Tailwind:
@@ -93,4 +98,4 @@ The following is a headless example using Tailwind:
 
 The following extends the example above with tooltips:
 
-{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:3-" /%}
+{% code_snippet name="tailwind-tooltips" copyHighlight=true highlight="react:8-" /%}

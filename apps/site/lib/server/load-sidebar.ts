@@ -30,6 +30,7 @@ export function loadPlayerSidebar(): SidebarLinks {
     Display: links(slugs, /^\/components\/display/),
     Buttons: links(slugs, /^\/components\/buttons/),
     Sliders: links(slugs, /^\/components\/sliders/),
+    Menu: links(slugs, /^\/components\/menu/),
   };
 }
 

@@ -19,7 +19,6 @@
 </div>
 
 <media-toggle-button
-  aria-describedby="media-caption-tooltip"
   default-pressed
   on:click={onPress}
   on:keyup={(e) => isKeyboardClick(e) && onPress()}

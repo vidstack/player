@@ -3,12 +3,13 @@ import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/el
 import { listenEvent } from 'maverick.js/std';
 import { CaptionsRenderer, renderVTTCueString, updateTimedVTTCueNodes } from 'media-captions';
 
+import { $ariaBool } from '../../../utils/aria';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import { isTrackCaptionKind } from '../../core/tracks/text/text-track';
 import { CaptionsTextRenderer } from './captions-renderer';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-captions': MediaCaptionsElement;
   }
 }
@@ -36,7 +37,7 @@ export class Captions extends Component<CaptionsAPI> {
   protected override onAttach(): void {
     this._media = useMedia();
     this.setAttributes({
-      'data-hidden': this._isHidden.bind(this),
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
     });
   }
 

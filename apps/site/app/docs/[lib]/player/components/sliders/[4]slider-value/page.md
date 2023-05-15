@@ -21,13 +21,9 @@ display the current time as the user hovers over the scrubber:
 
 Or, with the `$tag:media-volume-slider` component to display the current volume percentage:
 
-{% code_snippet name="volume-slider" copyHighlight=true highlight="html:4-8|react:8" /%}
+{% code_snippet name="volume-slider" copyHighlight=true highlight="html:4|react:8" /%}
 
 ## Tailwind
 
-{% code_snippet name="tailwind" copyHighlight=true highlight="html:4-9|react:4-6,9-" /%}
-
-{% callout type="info" %}
-A more complete [slider example](/docs/react/player/components/sliders/time-slider#tailwind) is
-available in the `$tag:media-time-slider` docs.
-{% /callout %}
+A complete [Tailwind slider example](/docs/player/components/sliders/slider#example) is
+available in the `$tag:media-slider` docs.

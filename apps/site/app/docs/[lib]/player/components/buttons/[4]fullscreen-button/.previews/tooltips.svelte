@@ -1,8 +1,8 @@
-<media-toggle-button aria-describedby="media-fullscreen-tooltip" default-pressed>
+<media-toggle-button default-pressed>
   <media-icon type="fullscreen" slot="on" />
   <media-icon type="fullscreen-exit" slot="off" />
-  <div id="media-fullscreen-tooltip" role="tooltip" slot="tooltip">
-    <span slot="on-tooltip">Enter Fullscreen</span>
-    <span slot="off-tooltip">Exit Fullscreen</span>
-  </div>
+  <media-tooltip>
+    <span slot="on">Enter Fullscreen</span>
+    <span slot="off">Exit Fullscreen</span>
+  </media-tooltip>
 </media-toggle-button>

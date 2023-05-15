@@ -2,13 +2,14 @@ import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
 import { pictureInPictureExitPaths, pictureInPicturePaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
+import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import type { MediaKeyShortcut } from '../../core/keyboard/types';
 import { ToggleButton, toggleButtonProps, type ToggleButtonAPI } from './toggle-button';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-pip-button': MediaPIPButtonElement;
   }
 }
@@ -20,12 +21,6 @@ declare global {
  * @see {@link https://www.vidstack.io/docs/player/core-concepts/picture-in-picture}
  * @slot enter - Used to override the default enter PIP icon.
  * @slot exit - Used to override the default exit PIP icon.
- * @slot tooltip-top-left - Used to place a tooltip above the button in the left corner.
- * @slot tooltip-top-center - Used to place a tooltip above the button in the center.
- * @slot tooltip-top-right - Used to place a tooltip above the button in the right corner.
- * @slot tooltip-bottom-left - Used to place a tooltip below the button in the left corner.
- * @slot tooltip-bottom-center - Used to place a tooltip below the button in the center.
- * @slot tooltip-bottom-right - Used to place a tooltip below the button in the right corner.
  * @example
  * ```html
  * <media-pip-button></media-pip-button>
@@ -49,7 +44,7 @@ export class PIPButton extends ToggleButton {
 
     const { pictureInPicture } = this._media.$store;
     this.setAttributes({
-      'data-hidden': this._isHidden.bind(this),
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
       'data-pip': pictureInPicture,
     });
   }

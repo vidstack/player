@@ -8,9 +8,21 @@ export const sliderProps: PropDeclarations<SliderProps> = {
   step: 1,
   keyStep: 1,
   shiftKeyMultiplier: 5,
+  trackClass: null,
+  trackFillClass: null,
+  trackProgressClass: null,
+  thumbContainerClass: null,
+  thumbClass: null,
 };
 
 export interface SliderProps {
+  // Classes
+  trackClass: string | null;
+  trackFillClass: string | null;
+  trackProgressClass: string | null;
+  thumbContainerClass: string | null;
+  thumbClass: string | null;
+
   /**
    * The lowest slider value in the range of permitted values.
    */

@@ -83,27 +83,25 @@ export function formatTime(
  * Formats the given `duration` into human spoken form.
  *
  * @param duration - The length of time to parse in seconds.
- * @example `2 hours, 3 minutes, 4 seconds`
+ * @example `2 hour 3 min 4 sec`
  */
 export function formatSpokenTime(duration: number): string {
   const spokenParts: string[] = [];
   const { hours, minutes, seconds } = parseTime(duration);
 
-  const pluralize = (num: number, word: string): string => (num === 1 ? word : `${word}s`);
-
   if (hours > 0) {
-    spokenParts.push(`${hours} ${pluralize(hours, 'hour')}`);
+    spokenParts.push(`${hours} hour`);
   }
 
   if (minutes > 0) {
-    spokenParts.push(`${minutes} ${pluralize(minutes, 'minute')}`);
+    spokenParts.push(`${minutes} min`);
   }
 
   if (seconds > 0 || spokenParts.length === 0) {
-    spokenParts.push(`${seconds} ${pluralize(seconds, 'second')}`);
+    spokenParts.push(`${seconds} sec`);
   }
 
-  return spokenParts.join(', ');
+  return spokenParts.join(' ');
 }
 
 /**

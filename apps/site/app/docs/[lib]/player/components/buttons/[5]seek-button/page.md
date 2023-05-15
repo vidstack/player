@@ -41,7 +41,7 @@ media-seek-button[seconds*='-'] {
 }
 
 /* Apply styles when media seeking is not permitted (e.g., live stream). */
-media-seek-button[data-hidden] {
+media-seek-button[aria-hidden='true'] {
 }
 
 /* Style default icons. */
@@ -63,6 +63,11 @@ media-seek-button {
 media-seek-button[data-focus] {
 }
 ```
+
+### CSS Variables
+
+See the [toggle button CSS variables](/docs/player/components/buttons/toggle-button#css-variables)
+for simple customization of the default button and tooltip styles.
 
 ## Tailwind
 

@@ -8,7 +8,7 @@ import type { SliderValueFormat } from './slider/format';
 import { sliderValueFormatContext } from './slider/format';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-slider-value': MediaSliderValueElement;
   }
 }

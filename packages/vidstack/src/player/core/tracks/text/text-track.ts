@@ -1,19 +1,22 @@
-import { DOMEvent, EventsTarget } from 'maverick.js/std';
-import type {
-  CaptionsFileFormat,
-  CaptionsParserFactory,
-  VTTCue,
-  VTTHeaderMetadata,
-  VTTRegion,
+import { DOMEvent, EventsTarget, isNumber } from 'maverick.js/std';
+import {
+  type CaptionsFileFormat,
+  type CaptionsParserFactory,
+  type VTTCue,
+  type VTTHeaderMetadata,
+  type VTTRegion,
 } from 'media-captions';
 
+import { getRequestCredentials } from '../../../../utils/network';
 import {
   TEXT_TRACK_CAN_LOAD,
+  TEXT_TRACK_CROSSORIGIN,
   TEXT_TRACK_NATIVE,
   TEXT_TRACK_ON_MODE_CHANGE,
   TEXT_TRACK_READY_STATE,
   TEXT_TRACK_UPDATE_ACTIVE_CUES,
 } from './symbols';
+import { isCueActive } from './utils';
 
 /**
  * - 0: Not Loading
@@ -29,7 +32,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
   }
 
   readonly src?: string;
-  readonly type?: CaptionsFileFormat | CaptionsParserFactory;
+  readonly type?: 'json' | CaptionsFileFormat | CaptionsParserFactory;
   readonly encoding?: string;
 
   readonly id = '';
@@ -48,6 +51,9 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
   /* @internal */
   [TEXT_TRACK_READY_STATE]: TextTrackReadyState = 0;
+
+  /* @internal */
+  [TEXT_TRACK_CROSSORIGIN]?: () => string | null;
 
   /* @internal */
   [TEXT_TRACK_ON_MODE_CHANGE]: (() => void) | null = null;
@@ -124,7 +130,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
     this.dispatchEvent(new DOMEvent<VTTCue>('add-cue', { detail: cue, trigger }));
 
-    if (cue.startTime >= this._currentTime && cue.endTime <= this._currentTime) {
+    if (isCueActive(cue, this._currentTime)) {
       this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, trigger);
     }
   }
@@ -167,9 +173,7 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
 
     for (let i = 0, length = this._cues.length; i < length; i++) {
       const cue = this._cues[i]!;
-      if (currentTime >= cue.startTime && currentTime <= cue.endTime) {
-        activeCues.push(cue);
-      }
+      if (isCueActive(cue, currentTime)) activeCues.push(cue);
     }
 
     let changed = activeCues.length !== this._activeCues.length;
@@ -199,25 +203,56 @@ export class TextTrack extends EventsTarget<TextTrackEvents> {
     this.dispatchEvent(new DOMEvent<void>('load-start'));
 
     try {
-      const { parseResponse } = await import('media-captions');
-      const { errors, metadata, regions, cues } = await parseResponse(fetch(this.src), {
-        type: this.type,
-        encoding: this.encoding,
+      const { parseResponse, VTTCue, VTTRegion } = await import('media-captions'),
+        crossorigin = this[TEXT_TRACK_CROSSORIGIN]?.();
+
+      const response = fetch(this.src, {
+        headers: this.type === 'json' ? { 'Content-Type': 'application/json' } : undefined,
+        credentials: getRequestCredentials(crossorigin),
       });
 
-      if (errors[0]?.code === 0) {
-        throw errors[0];
+      if (this.type === 'json') {
+        try {
+          const json = (await (await response).json()) as {
+            regions?: Partial<VTTRegion>[];
+            cues?: Partial<VTTCue>[];
+          };
+
+          if (json.regions) {
+            this._regions = json.regions.map((json) => Object.assign(new VTTRegion(), json));
+          }
+
+          if (json.cues) {
+            this._cues = json.cues
+              .filter((json) => isNumber(json.startTime) && isNumber(json.endTime))
+              .map((json) => Object.assign(new VTTCue(0, 0, ''), json));
+          }
+        } catch (e) {
+          if (__DEV__) {
+            console.error(`[vidstack] failed to parse JSON captions at: \`${this.src}\`\n\n`, e);
+          }
+        }
       } else {
-        this._metadata = metadata;
-        this._regions = regions;
-        this._cues = cues;
-        this[TEXT_TRACK_READY_STATE] = 2;
-        const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
-        if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
-        const loadEvent = new DOMEvent<void>('load');
-        this.dispatchEvent(loadEvent);
-        this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, loadEvent);
+        const { errors, metadata, regions, cues } = await parseResponse(response, {
+          type: this.type,
+          encoding: this.encoding,
+        });
+
+        if (errors[0]?.code === 0) {
+          throw errors[0];
+        } else {
+          this._metadata = metadata;
+          this._regions = regions;
+          this._cues = cues;
+        }
       }
+
+      this[TEXT_TRACK_READY_STATE] = 2;
+      const nativeTrack = this[TEXT_TRACK_NATIVE]?.track;
+      if (nativeTrack) for (const cue of this._cues) nativeTrack.addCue(cue);
+      const loadEvent = new DOMEvent<void>('load');
+      this[TEXT_TRACK_UPDATE_ACTIVE_CUES](this._currentTime, loadEvent);
+      this.dispatchEvent(loadEvent);
     } catch (error) {
       this[TEXT_TRACK_READY_STATE] = 3;
       this.dispatchEvent(new DOMEvent('error', { detail: error }));
@@ -238,9 +273,9 @@ export interface TextTrackInit {
   src?: string;
   /**
    * The captions file format to be parsed or a custom parser factory (functions that returns a
-   * captions parser). Supported types include: 'vtt', 'srt', 'ssa', and 'ass'.
+   * captions parser). Supported types include: 'vtt', 'srt', 'ssa', 'ass', and 'json'.
    */
-  type?: CaptionsFileFormat | CaptionsParserFactory;
+  type?: 'json' | CaptionsFileFormat | CaptionsParserFactory;
   /**
    * The text encoding type to be used when decoding data bytes to text.
    *
@@ -275,40 +310,44 @@ export interface TextTrackEvents {
   'mode-change': TextTrackModeChangeEvent;
 }
 
+export interface TextTrackEvent<T> extends DOMEvent<T> {
+  target: TextTrack;
+}
+
 /**
  * Fired when the text track begins the loading/parsing process.
  */
-export interface TextTrackLoadStartEvent extends DOMEvent<void> {}
+export interface TextTrackLoadStartEvent extends TextTrackEvent<void> {}
 
 /**
  * Fired when the text track has finished loading/parsing.
  */
-export interface TextTrackLoadEvent extends DOMEvent<void> {}
+export interface TextTrackLoadEvent extends TextTrackEvent<void> {}
 
 /**
  * Fired when loading or parsing the text track fails.
  */
-export interface TextTrackErrorEvent extends DOMEvent<Error> {}
+export interface TextTrackErrorEvent extends TextTrackEvent<Error> {}
 
 /**
  * Fired when a cue is added to the text track.
  */
-export interface TextTrackAddCueEvent extends DOMEvent<VTTCue> {}
+export interface TextTrackAddCueEvent extends TextTrackEvent<VTTCue> {}
 
 /**
  * Fired when a cue is removed from the text track.
  */
-export interface TextTrackRemoveCueEvent extends DOMEvent<VTTCue> {}
+export interface TextTrackRemoveCueEvent extends TextTrackEvent<VTTCue> {}
 
 /**
  * Fired when the active cues for the current text track have changed.
  */
-export interface TextTrackCueChangeEvent extends DOMEvent<void> {}
+export interface TextTrackCueChangeEvent extends TextTrackEvent<void> {}
 
 /**
  * Fired when the text track mode (showing/hidden/disabled) has changed.
  */
-export interface TextTrackModeChangeEvent extends DOMEvent<TextTrack> {}
+export interface TextTrackModeChangeEvent extends TextTrackEvent<TextTrack> {}
 
 const captionRE = /captions|subtitles/;
 export function isTrackCaptionKind(track: TextTrack): boolean {

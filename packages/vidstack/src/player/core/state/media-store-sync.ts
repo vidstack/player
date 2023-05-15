@@ -19,6 +19,8 @@ export class MediaStoreSync extends ComponentController<PlayerAPI> {
     effect(this._onLiveToleranceChange.bind(this));
     effect(this._onLiveChange.bind(this));
     effect(this._onLiveEdgeChange.bind(this));
+    effect(this._onThumbnailsChange.bind(this));
+    effect(this._onTitleChange.bind(this));
   }
 
   private _onLogLevelChange() {
@@ -71,5 +73,13 @@ export class MediaStoreSync extends ComponentController<PlayerAPI> {
 
   private _onLiveEdgeChange() {
     this.dispatch('live-edge-change', { detail: this.$store.liveEdge() });
+  }
+
+  protected _onThumbnailsChange() {
+    this.$store.thumbnails.set(this.$props.thumbnails());
+  }
+
+  protected _onTitleChange() {
+    this.$store.title.set(this.$props.title());
   }
 }

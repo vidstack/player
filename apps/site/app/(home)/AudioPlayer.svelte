@@ -29,11 +29,7 @@
         <media-seek-button seconds="-10">
           <media-icon class="w-7 h-7" type="seek-backward-10" slot="backward" />
         </media-seek-button>
-        <media-play-button class="-ml-1">
-          <media-icon class="ended:hidden" type="play" slot="play" />
-          <media-icon type="pause" slot="pause" />
-          <media-icon class="not-ended:hidden" type="replay" slot="play" />
-        </media-play-button>
+        <media-play-button class="-ml-1" />
         <media-seek-button class="-ml-1" seconds="10">
           <media-icon class="w-7 h-7" type="seek-forward-10" slot="forward" />
         </media-seek-button>
@@ -41,7 +37,7 @@
       <div class="flex w-full flex-col items-center">
         <div class="flex items-center w-full max-w-xl px-4">
           <media-time class="text-sm mr-1 mt-2 tracking-wide text-white" type="current" />
-          <media-time-slider step="0.1" class="-mb-2" style="--media-slider-preview-gap: 20px">
+          <media-time-slider step="0.1" class="-mb-2">
             <media-slider-value class="rounded-sm" type="pointer" format="time" slot="preview" />
           </media-time-slider>
           <media-time class="text-sm ml-1 mt-2 tracking-wide text-white" type="current" remainder />

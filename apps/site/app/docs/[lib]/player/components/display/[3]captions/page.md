@@ -35,14 +35,6 @@ You can style cues, voices, timed cues (past/future), and regions like so:
 
 ```css
 media-captions {
-  /* simple CSS vars customization (defaults below) */
-  --overlay-padding: 1%;
-  --cue-color: white;
-  --cue-bg-color: rgba(0, 0, 0, 0.8);
-  --cue-font-size: calc(var(--overlay-height) / 100 * 5);
-  --cue-line-height: calc(var(--cue-font-size) * 1.2);
-  --cue-padding-x: calc(var(--cue-font-size) * 0.6);
-  --cue-padding-y: calc(var(--cue-font-size) * 0.4);
 }
 
 media-captions [part='cue'] {
@@ -73,6 +65,31 @@ media-captions [part='region'][data-active] {
 }
 
 media-captions [part='region'][data-scroll='up'] {
+}
+```
+
+### CSS Variables
+
+The following snippet contains a complete list of CSS variables and their default values. Any
+of the variables can be set to adjust the default caption styles:
+
+```css {% copy=true %}
+media-player {
+  --media-captions-padding: 1%;
+
+  --media-cue-display-bg: unset;
+  --media-cue-display-border-radius: unset;
+  --media-cue-display-padding: unset;
+
+  --media-cue-font-size: calc(var(--overlay-height) / 100 * 5);
+  --media-cue-line-height: calc(var(--media-cue-font-size) * 1.2);
+  --media-cue-color: white;
+  --media-cue-bg: rgba(0, 0, 0, 0.8);
+  --media-cue-border-radius: 2px;
+  --media-cue-box-shadow: unset;
+  --media-cue-backdrop: blur(8px);
+  --media-cue-padding-x: calc(var(--media-cue-font-size) * 0.6);
+  --media-cue-padding-y: calc(var(--media-cue-font-size) * 0.4);
 }
 ```
 

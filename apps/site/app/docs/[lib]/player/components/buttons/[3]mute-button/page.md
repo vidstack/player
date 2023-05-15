@@ -81,6 +81,11 @@ media-mute-button[data-focus] {
 }
 ```
 
+### CSS Variables
+
+See the [toggle button CSS variables](/docs/player/components/buttons/toggle-button#css-variables)
+for simple customization of the default button and tooltip styles.
+
 ## Tailwind
 
 The following is a headless example using Tailwind:

@@ -2,6 +2,7 @@ import { defineElement, type HTMLCustomElement } from 'maverick.js/element';
 import { closedCaptionsOnPaths, closedCaptionsPaths } from 'media-icons';
 
 import { Icon } from '../../../icons/icon';
+import { $ariaBool } from '../../../utils/aria';
 import { setARIALabel } from '../../../utils/dom';
 import { useMedia, type MediaContext } from '../../core/api/context';
 import type { MediaKeyShortcut } from '../../core/keyboard/types';
@@ -9,7 +10,7 @@ import { isTrackCaptionKind } from '../../core/tracks/text/text-track';
 import { ToggleButton, toggleButtonProps, type ToggleButtonAPI } from './toggle-button';
 
 declare global {
-  interface HTMLElementTagNameMap {
+  interface MaverickElements {
     'media-caption-button': MediaCaptionButtonElement;
   }
 }
@@ -20,12 +21,6 @@ declare global {
  * @docs {@link https://www.vidstack.io/docs/player/components/buttons/caption-button}
  * @slot on - Used to override the default caption on icon.
  * @slot off - Used to override the default caption off icon.
- * @slot tooltip-top-left - Used to place a tooltip above the button in the left corner.
- * @slot tooltip-top-center - Used to place a tooltip above the button in the center.
- * @slot tooltip-top-right - Used to place a tooltip above the button in the right corner.
- * @slot tooltip-bottom-left - Used to place a tooltip below the button in the left corner.
- * @slot tooltip-bottom-center - Used to place a tooltip below the button in the center.
- * @slot tooltip-bottom-right - Used to place a tooltip below the button in the right corner.
  * @example
  * ```html
  * <media-caption-button></media-caption-button>
@@ -48,7 +43,7 @@ export class CaptionButton extends ToggleButton {
     setARIALabel(el, this._getLabel.bind(this));
 
     this.setAttributes({
-      'data-hidden': this._isHidden.bind(this),
+      'aria-hidden': $ariaBool(this._isHidden.bind(this)),
     });
   }
 
