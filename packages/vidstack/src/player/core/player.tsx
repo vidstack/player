@@ -125,8 +125,8 @@ export class Player extends Component<PlayerAPI> implements MediaStateAccessors 
     context.textTracks[TEXT_TRACK_CROSSORIGIN] = this.$props.crossorigin;
     context.textRenderers = new TextRenderers(context);
     context.ariaKeys = {};
-
-    if (!this.ads && isString(this.$props.adsUrl())) {
+    
+    if (!this.ads && isString(this.$props.adsUrl()) && this.$props.viewType() !== 'audio') {
       new MediaLoadController(instance, this._startLoadingAds.bind(this));
     }
 
