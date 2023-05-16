@@ -49,9 +49,9 @@ media-player .baz {
 }
 ```
 
-{% callout type="tip" %}
-See our [media attributes](/docs/player/styling/references#media-attributes) and
-[media CSS variables](/docs/player/styling/references#media-css-variables) reference tables for a
+{% callout type="info" %}
+See our [media attributes](/docs/player/components/media/player#data-attributes) and
+[media CSS variables](/docs/player/components/media/player#api_cssvars) reference tables for a
 complete list with descriptions.
 {% /callout %}
 

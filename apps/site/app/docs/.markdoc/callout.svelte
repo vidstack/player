@@ -44,13 +44,13 @@
       type === 'experimental' && 'text-indigo-600 dark:text-indigo-400',
     )}
   >
-    <svelte:component this={icons[type]} class="mr-1.5 text-xl" />
+    <svelte:component this={icons[type]} class="mr-1.5 text-lg" />
     <span class="flex items-center">
       {heading}
     </span>
   </div>
 
-  <div class="text-inverse pl-1 text-lg">
+  <div class="text-inverse pl-1 text-base">
     <slot />
   </div>
 </div>

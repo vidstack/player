@@ -35,3 +35,16 @@ The `<media-player>` element will fire a `media-player-connect` event that will 
 DOM so you can obtain a reference to it when it's ready:
 
 {% code_snippet name="connect-event" copy=true  /%}
+
+## Data Attributes
+
+All media data attributes that are set on the `<media-player>` element that can be used
+for styling with CSS:
+
+```css
+/* Example: apply styles when media is playing. */
+media-player[data-playing] {
+}
+```
+
+{% component this="../../../[5]styling/.tables/attrs-table.md" /%}
