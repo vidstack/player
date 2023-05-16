@@ -23,7 +23,7 @@ export default defineConfig({
   plugins: [
     maverick({
       include: ['src/**/*.{jsx,tsx}'],
-      hydratable: (id) => !id.includes('time-slider/chapters') && !id.includes('menu/radio/render'),
+      hydratable: (id) => !id.includes('time-slider/chapters'),
       diffArrays: false,
     }),
   ],

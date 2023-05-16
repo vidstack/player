@@ -143,7 +143,7 @@ export class ChaptersMenuItems extends MenuItems<ChaptersMenuItemsAPI> {
     if (!track) return [];
     return track.cues.map((cue, i) => ({
       value: i + '',
-      content: (
+      content: () => (
         <>
           {this._hasThumbnails() && <media-thumbnail part="thumbnail" $prop:time={cue.startTime} />}
           <div part="content">

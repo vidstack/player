@@ -13,18 +13,19 @@ export function renderRadioGroup(props: RenderRadioGroupProps) {
 
 function renderOptions(props: RenderRadioGroupProps) {
   const { options } = props;
-  return () =>
-    options().map((option) => (
+  return options().map((option) => {
+    return (
       <media-radio part={props.part} $prop:value={option.value}>
-        {option.content}
+        {option.content()}
       </media-radio>
-    ));
+    );
+  });
 }
 
 export interface RenderRadioGroupProps {
   part?: string;
   value: ReadSignal<string>;
-  options: ReadSignal<{ value: string; content: JSX.Element }[]>;
+  options: ReadSignal<{ value: string; content: () => JSX.Element }[]>;
   radioGroupClass: ReadSignal<string | null>;
   onChange(event: RadioGroupChangeEvent): void;
 }

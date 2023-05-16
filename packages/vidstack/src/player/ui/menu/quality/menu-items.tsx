@@ -98,10 +98,10 @@ export class QualityMenuItems extends MenuItems<QualityMenuItemsAPI> {
     const { autoLabel } = this.$props,
       { qualities } = this._media.$store;
     return [
-      { value: 'auto', content: <span>{autoLabel()}</span> },
+      { value: 'auto', content: () => <span>{autoLabel()}</span> },
       ...qualities().map((quality) => ({
         value: quality.height + '',
-        content: <span>{quality.height + 'p'}</span>,
+        content: () => <span>{quality.height + 'p'}</span>,
       })),
     ];
   }

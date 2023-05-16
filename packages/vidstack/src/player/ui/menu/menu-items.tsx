@@ -37,15 +37,15 @@ export class MenuItems<T extends MenuItemsAPI = MenuItemsAPI> extends Component<
     tagName: 'media-menu-items',
   });
 
-  protected _menu!: MenuContext;
+  protected _menu: MenuContext;
 
   constructor(instance: ComponentInstance<T>) {
     super(instance);
+    this._menu = useContext(menuContext);
     new FocusVisibleController(instance);
   }
 
   protected override onAttach(el: HTMLElement) {
-    this._menu = useContext(menuContext);
     this._menu._attachMenuItems(el);
   }
 }

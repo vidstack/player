@@ -42,16 +42,16 @@ export class MenuButton<T extends MenuButtonAPI = MenuButtonAPI> extends Compone
     props: { disabled: false },
   });
 
-  protected _menu!: MenuContext;
+  protected _menu: MenuContext;
 
   constructor(instance: ComponentInstance<T>) {
     super(instance);
+    this._menu = useContext(menuContext);
     new FocusVisibleController(instance);
     new TooltipController(instance);
   }
 
   protected override onAttach(el: HTMLElement) {
-    this._menu = useContext(menuContext);
     this._menu._attachMenuButton(el);
     effect(this._watchDisabled.bind(this));
   }

@@ -51,7 +51,7 @@ importers:
       '@docsearch/js': ^3.3.0
       '@iconify-json/ri': ^1.1.0
       '@leeoniya/ufuzzy': ^1.0.2
-      '@maverick-js/compiler': 0.36.7
+      '@maverick-js/compiler': 0.36.8
       '@sveltejs/vite-plugin-svelte': ^2.0.0
       '@tailwindcss/typography': ^0.5.0
       '@types/markdown-it': ^12.2.0
@@ -90,7 +90,7 @@ importers:
     devDependencies:
       '@algolia/client-search': 4.17.0
       '@iconify-json/ri': 1.1.8
-      '@maverick-js/compiler': 0.36.7
+      '@maverick-js/compiler': 0.36.8
       '@sveltejs/vite-plugin-svelte': 2.2.0_svelte@3.59.0+vite@4.3.5
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.2
       '@types/markdown-it': 12.2.3
@@ -114,7 +114,7 @@ importers:
   packages/react:
     specifiers:
       '@types/react': ^18.0.0
-      maverick.js: 0.36.7
+      maverick.js: 0.36.8
       media-icons: 0.5.0
       react: ^18.0.0
       rimraf: ^3.0.0
@@ -123,7 +123,7 @@ importers:
       vidstack: workspace:*
     devDependencies:
       '@types/react': 18.2.6
-      maverick.js: 0.36.7_typescript@5.0.4
+      maverick.js: 0.36.8_typescript@5.0.4
       media-icons: 0.5.0
       react: 18.2.0
       rimraf: 3.0.2
@@ -133,7 +133,7 @@ importers:
 
   packages/vidstack:
     specifiers:
-      '@maverick-js/compiler': 0.36.7
+      '@maverick-js/compiler': 0.36.8
       '@open-wc/semantic-dom-diff': ^0.19.5
       '@open-wc/testing-helpers': ^2.1.2
       '@types/fscreen': ^1.0.1
@@ -144,7 +144,7 @@ importers:
       jsdom: ^21.0.0
       just-debounce-it: ^3.2.0
       just-throttle: ^4.2.0
-      maverick.js: 0.36.7
+      maverick.js: 0.36.8
       media-captions: 0.0.13
       media-icons: 0.5.0
       postcss: ^8.4.0
@@ -157,12 +157,12 @@ importers:
       vite: ^4.2.0
       vitest: ^0.30.0
     dependencies:
-      maverick.js: 0.36.7_typescript@5.0.4
+      maverick.js: 0.36.8_typescript@5.0.4
       media-captions: 0.0.13
       media-icons: 0.5.0
       type-fest: 3.10.0_typescript@5.0.4
     devDependencies:
-      '@maverick-js/compiler': 0.36.7
+      '@maverick-js/compiler': 0.36.8
       '@open-wc/semantic-dom-diff': 0.19.9
       '@open-wc/testing-helpers': 2.2.1
       '@types/fscreen': 1.0.1
@@ -1069,8 +1069,8 @@ packages:
       '@types/markdown-it': 12.2.3
     dev: true
 
-  /@maverick-js/compiler/0.36.7:
-    resolution: {integrity: sha512-WUH/MVXw41UJa4JHgCAur90F480HOhvqr/UEDX6Y2QdWoTv3Dh63HCPf74LtAoBw0Dk8HWx87C5Qgef/jfFilg==}
+  /@maverick-js/compiler/0.36.8:
+    resolution: {integrity: sha512-GLHTLfDx517H80rFn/a+NkIOzUDPr9TKFZqhDoVz8oW4Yhh/TdR/lXCNMKhkXqpE9v5s5R5nlic2/MPWMRbAIA==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
@@ -3937,8 +3937,8 @@ packages:
       uc.micro: 1.0.6
     dev: true
 
-  /maverick.js/0.36.7_typescript@5.0.4:
-    resolution: {integrity: sha512-4gTTfj2Q2cdKSRVfIXkjNHnWxJhtWoDQpFI+zOURxm1UEikmsa1X2PUIbR+OzS8tPn40aUFwm6ebXowsOsETYQ==}
+  /maverick.js/0.36.8_typescript@5.0.4:
+    resolution: {integrity: sha512-/QJpVdlcmvLL6NbQFFOx35uC2KD/3G1ZQEXvk5uFnE9+Sp0TLVGRpHmMON9AL68aIsjhozawxS5dKZPCYjF4Bg==}
     engines: {node: '>=16'}
     dependencies:
       '@maverick-js/signals': 5.10.2

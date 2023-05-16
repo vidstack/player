@@ -113,12 +113,12 @@ export class CaptionsMenuItems extends MenuItems<CaptionsMenuItemsAPI> {
     const { offLabel } = this.$props,
       { textTracks } = this._media.$store;
     return [
-      { value: 'off', content: <span>{offLabel()}</span> },
+      { value: 'off', content: () => <span>{offLabel()}</span> },
       ...textTracks()
         .filter(isTrackCaptionKind)
         .map((track) => ({
           value: track.label.toLowerCase(),
-          content: <span>{track.label}</span>,
+          content: () => <span>{track.label}</span>,
         })),
     ];
   }
