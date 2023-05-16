@@ -85,7 +85,6 @@ export class AdsController extends ComponentController<PlayerAPI> {
     contentPauseRequested: this._onContentPauseRequested,
     contentResumeRequested: this._onContentResumeRequested,
     loaded: this._onAdLoaded,
-    adCanPlay: this._onAdCanPlay,
     click: this._onAdClick,
     skip: this._onAdSkip,
     linearChanged: this._onAdLinearChanged,
