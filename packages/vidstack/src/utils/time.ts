@@ -80,6 +80,42 @@ export function formatTime(
 }
 
 /**
+ * Formats the given `duration` into an SMPTE timecode that can be displayed to the user.
+ *
+ * @param frame - The current frame in the video
+ * @param duration - The length of time to parse in seconds.
+ * @param frameRate - The frame rate (frames per second) of the video.
+ * @param shouldPadHours - Whether to pad the hours to be length of 2.
+ * @param shouldPadMinutes - Whether to pad the minutes to be length of 2.
+ * @param shouldAlwaysShowHours - Whether to always show the hours unit.
+ * @example `01:20:06 -> minutes:seconds`
+ * @example `3:01:20:21 -> hours:minutes:seconds`
+ * @example If `shouldPadHours` is `true` - `03:01:20:12`
+ * @example If `shouldAlwaysShowHours` is `true` - `0:01:20:01`
+ */
+export function formatTimeSmpte(
+  frame: number,
+  duration: number,
+  frameRate: number,
+  shouldPadHours = false,
+  shouldPadMinutes = false,
+  shouldAlwaysShowHours = false,
+): string {
+  const { hours, minutes, seconds } = parseTime(duration);
+  const paddedHours = shouldPadHours ? padNumberWithZeroes(hours, 2) : hours;
+  const paddedMinutes = shouldPadMinutes ? padNumberWithZeroes(minutes, 2) : minutes;
+  const paddedSeconds = padNumberWithZeroes(seconds, 2);
+
+  const smpteSuffix = padNumberWithZeroes(frame % frameRate, 2);
+
+  if (hours > 0 || shouldAlwaysShowHours) {
+    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}:${smpteSuffix}`;
+  }
+
+  return `${paddedMinutes}:${paddedSeconds}:${smpteSuffix}`;
+}
+
+/**
  * Formats the given `duration` into human spoken form.
  *
  * @param duration - The length of time to parse in seconds.

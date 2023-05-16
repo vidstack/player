@@ -1,7 +1,7 @@
 import { computed, type ReadSignal } from 'maverick.js';
 import { Component, defineElement, type HTMLCustomElement } from 'maverick.js/element';
 
-import { formatTime } from '../../utils/time';
+import { formatTime, formatTimeSmpte } from '../../utils/time';
 import { useMedia, type MediaContext } from '../core/api/context';
 
 declare global {
@@ -34,6 +34,8 @@ export class Time extends Component<TimeAPI> {
       padHours: false,
       padMinutes: false,
       remainder: false,
+      useSmpte: false,
+      frameRate: 30,
     },
   });
 
@@ -46,13 +48,20 @@ export class Time extends Component<TimeAPI> {
   }
 
   protected _getTime() {
-    const { type, remainder, padHours, padMinutes, showHours } = this.$props,
+    const { type, remainder, padHours, padMinutes, showHours, useSmpte, frameRate } = this.$props,
       seconds = this._getSeconds(type()),
       duration = this._media.$store.duration();
 
     if (!Number.isFinite(seconds + duration)) return 'LIVE';
 
     const time = remainder() ? Math.max(0, duration - seconds) : seconds;
+
+    if (useSmpte()) {
+      const frame = Number.parseFloat(seconds.toFixed(5)) * frameRate();
+
+      return formatTimeSmpte(frame, time, frameRate(), padHours(), padMinutes(), showHours());
+    }
+
     return formatTime(time, padHours(), padMinutes(), showHours());
   }
 
@@ -107,6 +116,18 @@ export interface TimeProps {
    * @example `duration` - `currentTime`
    */
   remainder: boolean;
+  /**
+   * Whether to use SMPTE timecodes
+   *
+   * @example `5:22 -> 5:22:03`
+   */
+  useSmpte: boolean;
+  /**
+   * The video's framerate - for use in SMPTE timecodes
+   *
+   * @example `24`
+   */
+  frameRate: number;
 }
 
 export interface MediaTimeElement extends HTMLCustomElement<Time> {}
