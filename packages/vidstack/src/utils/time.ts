@@ -106,7 +106,7 @@ export function formatTimeSmpte(
   const paddedMinutes = shouldPadMinutes ? padNumberWithZeroes(minutes, 2) : minutes;
   const paddedSeconds = padNumberWithZeroes(seconds, 2);
 
-  const smpteSuffix = padNumberWithZeroes(frame % frameRate, 2);
+  const smpteSuffix = padNumberWithZeroes(Math.floor(frame % frameRate), 2);
 
   if (hours > 0 || shouldAlwaysShowHours) {
     return `${paddedHours}:${paddedMinutes}:${paddedSeconds}:${smpteSuffix}`;

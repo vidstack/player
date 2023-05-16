@@ -57,7 +57,9 @@ export class Time extends Component<TimeAPI> {
 
     if (useSmpte()) {
       const frameRate = this._media.$props.frameRate;
-      const frame = Number.parseFloat(seconds.toFixed(5)) * frameRate();
+      const frame = Math.floor(Number.parseFloat(seconds.toFixed(5)) * frameRate());
+
+      console.log(frame);
 
       return formatTimeSmpte(frame, time, frameRate(), padHours(), padMinutes(), showHours());
     }
