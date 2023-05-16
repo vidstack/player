@@ -54,6 +54,7 @@ export const mediaPlayerProps: PropDeclarations<PlayerProps> = {
     value: [],
     attribute: false,
   }),
+  frameRate: 30,
 };
 
 export interface MediaStateAccessors
@@ -189,4 +190,10 @@ export interface PlayerProps
    * ```
    */
   keyShortcuts: MediaKeyShortcuts;
+  /**
+   * The video's framerate - for use in SMPTE timecodes
+   *
+   * @example `24`
+   */
+  frameRate: number;
 }

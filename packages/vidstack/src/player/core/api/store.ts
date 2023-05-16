@@ -58,6 +58,7 @@ export const MediaStoreFactory = new StoreFactory<MediaState>({
   thumbnails: null,
   thumbnailCues: [],
   volume: 1,
+  frameRate: 30,
   waiting: false,
   get viewType() {
     return this.providedViewType !== 'unknown' ? this.providedViewType : this.mediaType;
@@ -362,6 +363,12 @@ export interface MediaState {
    * @defaultValue 30
    */
   minLiveDVRWindow: number;
+  /**
+   * The video's framerate - for use in SMPTE timecodes
+   *
+   * @example `24`
+   */
+  frameRate: number;
   /**
    * Whether the current stream is at the live edge. This is true if:
    *

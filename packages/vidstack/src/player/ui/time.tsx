@@ -35,7 +35,6 @@ export class Time extends Component<TimeAPI> {
       padMinutes: false,
       remainder: false,
       useSmpte: false,
-      frameRate: 30,
     },
   });
 
@@ -48,7 +47,7 @@ export class Time extends Component<TimeAPI> {
   }
 
   protected _getTime() {
-    const { type, remainder, padHours, padMinutes, showHours, useSmpte, frameRate } = this.$props,
+    const { type, remainder, padHours, padMinutes, showHours, useSmpte } = this.$props,
       seconds = this._getSeconds(type()),
       duration = this._media.$store.duration();
 
@@ -57,6 +56,7 @@ export class Time extends Component<TimeAPI> {
     const time = remainder() ? Math.max(0, duration - seconds) : seconds;
 
     if (useSmpte()) {
+      const frameRate = this._media.$props.frameRate;
       const frame = Number.parseFloat(seconds.toFixed(5)) * frameRate();
 
       return formatTimeSmpte(frame, time, frameRate(), padHours(), padMinutes(), showHours());
@@ -122,12 +122,6 @@ export interface TimeProps {
    * @example `5:22 -> 5:22:03`
    */
   useSmpte: boolean;
-  /**
-   * The video's framerate - for use in SMPTE timecodes
-   *
-   * @example `24`
-   */
-  frameRate: number;
 }
 
 export interface MediaTimeElement extends HTMLCustomElement<Time> {}
