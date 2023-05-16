@@ -75,7 +75,7 @@
   bind:this={sidebar}
   {style}
 >
-  <div class="992:hidden sticky top-0 left-0 z-10 flex items-center">
+  <div class="992:hidden sticky top-0 left-0 z-20 flex items-center">
     <div class="flex-1" />
     <button
       class={clsx('text-soft hover:text-inverse -mx-6 p-4', !open && 'pointer-events-none')}
@@ -170,6 +170,6 @@
   </nav>
 </aside>
 
-<div class="992:hidden z-40">
+<div class="992:hidden z-[999999]">
   <Overlay {open} />
 </div>

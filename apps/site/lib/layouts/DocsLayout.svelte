@@ -105,7 +105,7 @@
         {search}
         class={({ open }) =>
           clsx(
-            'bg-body scrollbar scroll-contain-mobile fixed top-0 left-0 z-50 transform self-start',
+            'bg-body scrollbar scroll-contain-mobile fixed top-0 left-0 z-[9999999] transform self-start',
             '-translate-x-full transform transition-transform duration-200 ease-out will-change-transform',
             'max-h-screen min-h-screen min-w-[var(--sidebar-min-width)] max-w-[var(--sidebar-max-width)]',
             '992:translate-x-0 922:block 992:sticky 992:z-0 overflow-y-scroll p-[var(--sidebar-padding)]',

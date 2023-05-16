@@ -120,14 +120,16 @@
                       {/if}
 
                       {#each info as [title, value]}
-                        <div class="flex items-center mt-2.5">
-                          <span class="text-sm font-medium">{title}:</span>
-                          <code class="inline-block text-xs ml-1 py-0">{value}</code>
+                        <div class="mt-2">
+                          <span class="text-sm font-medium block">{title}</span>
+                          <code class="inline-block text-xs mt-2 py-0 whitespace-pre-wrap">
+                            {value}
+                          </code>
                         </div>
                       {/each}
 
                       {#if hasLink}
-                        <div class="flex px-2">
+                        <div class="flex px-2 mt-2">
                           <div class="flex-1" />
                           <a class="text-sm" href={prop.link} target="_blank" rel="noreferrer">
                             {isMDNLink(prop.link) ? 'MDN' : 'Reference'}
