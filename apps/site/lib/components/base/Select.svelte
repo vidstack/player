@@ -15,7 +15,7 @@
 <div class={clsx('inline-block', block && 'w-full')}>
   <label
     class={clsx(
-      'relative flex min-w-[85px] items-center border-[1.5px] pl-2.5 pr-1',
+      'relative flex min-w-[85px] items-center border pl-2.5 pr-1',
       'bg-elevate transform-gpu transition-transform hover:scale-[1.025]',
       rounded && 'rounded-md',
       block ? 'py-1' : 'py-0.5',
@@ -32,7 +32,7 @@
 
       <span
         class="mr-auto flex h-full items-center"
-        style="font-size: var(--select-value-font-size, 0.875rem);"
+        style="font-size: var(--select-value-font-size, 0.8rem);"
       >
         {value}
       </span>

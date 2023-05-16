@@ -114,14 +114,14 @@
 
         <li class={clsx(isOpen && 'mb-4 last:mb-0')}>
           {#if category === 'Getting Started'}
-            <div class="uppercase font-bold text-soft text-xs mb-5">Introduction</div>
+            <div class="uppercase font-bold text-soft text-xs mb-3">Introduction</div>
           {/if}
           {#if category === 'Media'}
-            <div class="w-full h-px bg-border my-6 mb-7" />
-            <div class="uppercase font-bold text-soft text-xs mb-4">Components</div>
+            <div class="w-full h-px bg-border my-5 mb-7" />
+            <div class="uppercase font-bold text-soft text-xs mb-3">Components</div>
           {/if}
           <button
-            class="flex items-center min-w-full -ml-2.5 py-2 rounded-md hover:bg-soft/10 focus-visible:m-1"
+            class="flex items-center min-w-full -ml-2.5 py-1.5 rounded-md hover:bg-soft/10 focus-visible:m-1"
             aria-pressed={ariaBool(isOpen)}
             aria-label={`${!isOpen ? 'Open' : 'Close'} ${category} Category`}
             on:click={() => {
@@ -130,22 +130,22 @@
           >
             <ArrowDropDownIcon
               class={clsx('text-inverse transition-transform', !isOpen && '-rotate-90')}
-              width={28}
-              height={28}
+              width={24}
+              height={24}
             />
-            <h5 class="font-medium">
+            <h5 class="font-medium text-[15px]">
               {category}
             </h5>
             <div class="flex-1" />
           </button>
-          <ul class={clsx('space-y-3 overflow-hidden ml-2', !isOpen ? 'hidden' : 'mt-2')}>
+          <ul class={clsx('space-y-1.5 overflow-hidden ml-1', !isOpen ? 'hidden' : 'mt-1')}>
             {#each categoryLinks as link (link.title + link.slug)}
               <li class="flex items-center">
                 <a
                   class={clsx(
-                    '992:py-1 -ml-px flex items-center py-2 pl-4 w-full focus-visible:m-1 focus-visible:last:mb-2',
+                    '992:py-1 -ml-px flex items-center py-2 pl-4 w-full focus-visible:m-1 focus-visible:last:mb-2 text-[15px]',
                     isActiveSidebarLink(link, $route.matchedURL.pathname)
-                      ? 'text-brand font-semibold'
+                      ? 'text-brand font-medium'
                       : 'hover:border-inverse focus-visible:border-inverse text-soft hover:text-inverse focus-visible:text-inverse border-transparent font-normal',
                   )}
                   href={link.slug}

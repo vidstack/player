@@ -39,7 +39,7 @@
         production-ready player in minutes (not weeks) only using hooks, components, and CSS.
       </p>
 
-      <div class="mt-10 flex space-x-6 items-center">
+      <div class="mt-8 flex space-x-6 items-center">
         <Button primary type="raised" href={addJSLibToPath(`/docs/player`, $jsLib)}>
           Try Beta
         </Button>

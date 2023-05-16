@@ -20,9 +20,9 @@
   $: isButton = __as === 'button' && isUndefined($$restProps['href']);
 
   $: buttonClass = clsx(
-    'group transform-gpu text-base font-medium transition-transform hover:scale-105',
+    'group transform-gpu text-[15px] font-medium transition-transform hover:scale-105',
     type === 'raised' && 'flex items-center justify-center',
-    (isButton || type === 'raised') && 'rounded-md px-4 992:px-5 py-2',
+    (isButton || type === 'raised') && 'rounded-md px-3 py-1.5',
     type === 'raised'
       ? primary
         ? 'bg-inverse text-body hover:bg-inverse/90'

@@ -74,7 +74,7 @@ function typography(theme) {
         '--tw-prose-counters': 'rgb(var(--color-inverse))',
         '--tw-prose-invert-counters': 'rgb(var(--color-inverse))',
         color: 'rgb(var(--color-soft))',
-        fontSize: '18px',
+        fontSize: '16px',
         maxWidth: 'none',
         hr: {
           borderColor: 'rgb(var(--color-border))',
@@ -83,6 +83,9 @@ function typography(theme) {
         },
         'h1, h2, h3': {
           letterSpacing: '-0.025em',
+        },
+        h1: {
+          fontSize: '2rem',
         },
         h2: {
           marginTop: `1.75em`,

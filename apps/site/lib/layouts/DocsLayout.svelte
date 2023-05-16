@@ -122,7 +122,7 @@
     </svelte:fragment>
 
     <div class="markdown prose dark:prose-invert z-10 max-w-[var(--article-max-width)]">
-      <p class="text-brand mb-3.5 text-[15px] font-semibold leading-6">
+      <p class="text-brand mb-2.5 text-[15px] font-semibold leading-6">
         {$activeCategory}
       </p>
 
@@ -130,11 +130,9 @@
     </div>
 
     {#if $previousLink || $nextLink}
-      <hr class="border-border 992:mt-20 mt-14" />
+      <hr class="border-border mt-14" />
 
-      <div
-        class="992:text-xl 992:pt-12 flex items-center pt-8 pb-20 text-lg font-semibold text-soft"
-      >
+      <div class="992:text-xl flex items-center pt-8 pb-20 text-lg font-semibold text-soft">
         {#if $previousLink}
           <div class="mb-4 flex flex-col items-start">
             <span class="text-inverse mb-4 inline-block">Previous</span>
@@ -146,7 +144,7 @@
 
         {#if $nextLink}
           <div class="ml-auto mb-4 flex flex-col items-end">
-            <span class="text-inverse mb-4 inline-block">Next</span>
+            <span class="text-inverse mb-2.5 inline-block">Next</span>
             <Button arrow="right" href={$nextLink.slug} class="-mr-3">
               {$nextLink.title}
             </Button>

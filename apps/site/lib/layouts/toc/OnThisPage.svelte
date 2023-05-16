@@ -47,18 +47,18 @@
 
 <div class={clsx('on-this-page', __class)} {style}>
   {#if headings.length > 1 || headings[0]?.children.length}
-    <h5 class="text-inverse w-full text-left text-lg font-semibold">On this page</h5>
-    <ul class="mt-4 space-y-4">
+    <h5 class="text-inverse w-full text-left text-[15px] font-semibold">On this page</h5>
+    <ul class="mt-3 space-y-3 text-[15px]">
       {#each headings as heading (heading)}
         {@const i = calcIndex(heading)}
         {@const activeParent =
           i === $index || heading.children.some((_, j) => i + j + 1 === $index)}
-        <li class={clsx(activeParent ? 'text-brand' : 'text-soft hover:text-inverse')}>
+        <li class={clsx(activeParent ? 'text-brand font-medium' : 'text-soft hover:text-inverse')}>
           <a href={`#${heading.id}`}>{heading.title}</a>
         </li>
 
         {#if heading.children.length > 0}
-          <ul class="space-y-3">
+          <ul class="space-y-2.5">
             {#each heading.children as childHeader, j (childHeader)}
               <li
                 class={clsx(
