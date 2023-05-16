@@ -20,7 +20,7 @@
       }>)
     | undefined = undefined;
 
-  $: estimatedCodeHeight = (lines || 0) * 27;
+  $: estimatedCodeHeight = (lines || 0) * 24;
   $: lineNums = $$restProps.nums ? [...Array(lines).keys()].map((n) => n + 1) : [];
 
   let tokens;

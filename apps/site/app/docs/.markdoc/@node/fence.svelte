@@ -155,7 +155,7 @@
 
     {#if currentHighlightedLines.length > 0}
       <div
-        class="pointer-events-none absolute inset-0 mt-[0.7em] h-full w-full leading-[27px]"
+        class="pointer-events-none absolute inset-0 mt-[0.7em] h-full w-full leading-[24px]"
         aria-hidden="true"
       >
         {#each lines as lineNumber}
